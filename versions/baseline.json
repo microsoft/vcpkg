@@ -5980,6 +5980,10 @@
       "baseline": "3.4.3",
       "port-version": 0
     },
+    "mysofa": {
+      "baseline": "1.3.2",
+      "port-version": 0
+    },
     "mysql-connector-cpp": {
       "baseline": "8.0.32",
       "port-version": 1

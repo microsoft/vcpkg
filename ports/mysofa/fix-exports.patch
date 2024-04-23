@@ -1,0 +1,234 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c092cb0..1a2a603 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,9 +39,9 @@ if(${ADDRESS_SANITIZE} STREQUAL "ON")
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1 -fno-omit-frame-pointer -g")
+ endif()
+ 
+-install(FILES share/default.sofa DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
+-install(FILES share/MIT_KEMAR_normal_pinna.sofa
+-        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
++#install(FILES share/default.sofa DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
++#install(FILES share/MIT_KEMAR_normal_pinna.sofa
++#        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
+ 
+ if(BUILD_TESTS)
+ 
+@@ -131,7 +131,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+ install(EXPORT mysofa_exports
+   NAMESPACE mysofa::
+   FILE mysofaTargets.cmake
+-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
++  DESTINATION share/mysofa
+ )
+ 
+ # Create a target export file for use from the build tree.
+@@ -145,7 +145,7 @@ include(CMakePackageConfigHelpers)
+ # Configure package config file
+ configure_package_config_file(mysofaConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/mysofaConfig.cmake
+-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
++  INSTALL_DESTINATION share/mysofa
+ )
+ 
+ # Create package version file
+@@ -159,5 +159,5 @@ write_basic_package_version_file(
+ install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/mysofaConfig.cmake
+   ${CMAKE_CURRENT_BINARY_DIR}/mysofaConfigVersion.cmake
+-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
++  DESTINATION share/mysofa
+ )
+diff --git a/build/.empty b/build/.empty
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/build/project.json b/build/project.json
+deleted file mode 100644
+index ce0c1c8..0000000
+--- a/build/project.json
++++ /dev/null
+@@ -1,9 +0,0 @@
+-{
+-    "dependencies": {
+-        "zlib": "1.2.8.8",
+-    },
+-     "frameworks": {
+-        ".NETFramework,Version=v4.0": { }
+-    },
+-    "runtimes": { "win-x64": { } }
+-}
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0de9632..2b6ff27 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -13,6 +13,8 @@ use_c99()
+ configure_file(config.h.in config.h)
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++find_package(ZLIB REQUIRED)
++
+ if(NOT MSVC)
+   if(NOT WIN32)
+     find_library(MATH m)
+@@ -81,6 +83,8 @@ set(public-headers
+     hrtf/mysofa.h
+ )
+ 
++install(FILES "${public-headers}" DESTINATION include)
++
+ if(BUILD_STATIC_LIBS)
+ add_library(mysofa-static STATIC ${libsrc})
+ target_include_directories(mysofa-static
+@@ -88,7 +92,7 @@ target_include_directories(mysofa-static
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
+   $<INSTALL_INTERFACE:include/>
+ )
+-target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ${ZLIB_LIBRARIES})
++target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ZLIB::ZLIB)
+ set_target_properties(
+   mysofa-static
+   PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1 POSITION_INDEPENDENT_CODE
+@@ -120,7 +124,7 @@ if(BUILD_SHARED_LIBS)
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
+     $<INSTALL_INTERFACE:include/>
+   )
+-  target_link_libraries(mysofa-shared PRIVATE ${MATH} ${ZLIB_LIBRARIES})
++  target_link_libraries(mysofa-shared PRIVATE ${MATH} ZLIB::ZLIB)
+   set_target_properties(mysofa-shared
+                         PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1)
+   # Rename the Windows import library (stub) of the DLL to prevent a name clash
+diff --git a/src/hrtf/mysofa.h b/src/hrtf/mysofa.h
+index 206e77b..538f0b6 100644
+--- a/src/hrtf/mysofa.h
++++ b/src/hrtf/mysofa.h
+@@ -14,6 +14,8 @@ extern "C" {
+ #include <stdint.h>
+ #include <stddef.h>
+ 
++#include "mysofa_export.h"
++
+ #define MYSOFA_DEFAULT_NEIGH_STEP_ANGLE 0.5f
+ #define MYSOFA_DEFAULT_NEIGH_STEP_RADIUS 0.01f
+ 
+@@ -127,44 +129,44 @@ enum {
+   MYSOFA_ONLY_SOURCES_WITH_MC_SUPPORTED
+ };
+ 
+-struct MYSOFA_HRTF *mysofa_load(const char *filename, int *err);
+-struct MYSOFA_HRTF *mysofa_load_data(const char *data, size_t size, int *err);
++MYSOFA_EXPORT struct MYSOFA_HRTF *mysofa_load(const char *filename, int *err);
++MYSOFA_EXPORT struct MYSOFA_HRTF *mysofa_load_data(const char *data, size_t size, int *err);
+ 
+-int mysofa_check(struct MYSOFA_HRTF *hrtf);
+-char *mysofa_getAttribute(struct MYSOFA_ATTRIBUTE *attr, char *name);
+-void mysofa_tospherical(struct MYSOFA_HRTF *hrtf);
+-void mysofa_tocartesian(struct MYSOFA_HRTF *hrtf);
+-void mysofa_free(struct MYSOFA_HRTF *hrtf);
++MYSOFA_EXPORT int mysofa_check(struct MYSOFA_HRTF *hrtf);
++MYSOFA_EXPORT char *mysofa_getAttribute(struct MYSOFA_ATTRIBUTE *attr, char *name);
++MYSOFA_EXPORT void mysofa_tospherical(struct MYSOFA_HRTF *hrtf);
++MYSOFA_EXPORT void mysofa_tocartesian(struct MYSOFA_HRTF *hrtf);
++MYSOFA_EXPORT void mysofa_free(struct MYSOFA_HRTF *hrtf);
+ 
+-struct MYSOFA_LOOKUP *mysofa_lookup_init(struct MYSOFA_HRTF *hrtf);
+-int mysofa_lookup(struct MYSOFA_LOOKUP *lookup, float *coordinate);
+-void mysofa_lookup_free(struct MYSOFA_LOOKUP *lookup);
++MYSOFA_EXPORT struct MYSOFA_LOOKUP *mysofa_lookup_init(struct MYSOFA_HRTF *hrtf);
++MYSOFA_EXPORT int mysofa_lookup(struct MYSOFA_LOOKUP *lookup, float *coordinate);
++MYSOFA_EXPORT void mysofa_lookup_free(struct MYSOFA_LOOKUP *lookup);
+ 
+-struct MYSOFA_NEIGHBORHOOD *
++MYSOFA_EXPORT struct MYSOFA_NEIGHBORHOOD *
+ mysofa_neighborhood_init(struct MYSOFA_HRTF *hrtf,
+                          struct MYSOFA_LOOKUP *lookup);
+-struct MYSOFA_NEIGHBORHOOD *mysofa_neighborhood_init_withstepdefine(
++MYSOFA_EXPORT struct MYSOFA_NEIGHBORHOOD *mysofa_neighborhood_init_withstepdefine(
+     struct MYSOFA_HRTF *hrtf, struct MYSOFA_LOOKUP *lookup,
+     float neighbor_angle_step, float neighbor_radius_step);
+-int *mysofa_neighborhood(struct MYSOFA_NEIGHBORHOOD *neighborhood, int pos);
+-void mysofa_neighborhood_free(struct MYSOFA_NEIGHBORHOOD *neighborhood);
++MYSOFA_EXPORT int *mysofa_neighborhood(struct MYSOFA_NEIGHBORHOOD *neighborhood, int pos);
++MYSOFA_EXPORT void mysofa_neighborhood_free(struct MYSOFA_NEIGHBORHOOD *neighborhood);
+ 
+-float *mysofa_interpolate(struct MYSOFA_HRTF *hrtf, float *cordinate,
++MYSOFA_EXPORT float *mysofa_interpolate(struct MYSOFA_HRTF *hrtf, float *cordinate,
+                           int nearest, int *neighborhood, float *fir,
+                           float *delays);
+ 
+-int mysofa_resample(struct MYSOFA_HRTF *hrtf, float samplerate);
+-float mysofa_loudness(struct MYSOFA_HRTF *hrtf);
+-int mysofa_minphase(struct MYSOFA_HRTF *hrtf, float threshold);
++MYSOFA_EXPORT int mysofa_resample(struct MYSOFA_HRTF *hrtf, float samplerate);
++MYSOFA_EXPORT float mysofa_loudness(struct MYSOFA_HRTF *hrtf);
++MYSOFA_EXPORT int mysofa_minphase(struct MYSOFA_HRTF *hrtf, float threshold);
+ 
+-struct MYSOFA_EASY *mysofa_cache_lookup(const char *filename, float samplerate);
+-struct MYSOFA_EASY *mysofa_cache_store(struct MYSOFA_EASY *,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_cache_lookup(const char *filename, float samplerate);
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_cache_store(struct MYSOFA_EASY *,
+                                        const char *filename, float samplerate);
+-void mysofa_cache_release(struct MYSOFA_EASY *);
+-void mysofa_cache_release_all(void);
++MYSOFA_EXPORT void mysofa_cache_release(struct MYSOFA_EASY *);
++MYSOFA_EXPORT void mysofa_cache_release_all(void);
+ 
+-void mysofa_c2s(float values[3]);
+-void mysofa_s2c(float values[3]);
++MYSOFA_EXPORT void mysofa_c2s(float values[3]);
++MYSOFA_EXPORT void mysofa_s2c(float values[3]);
+ 
+ struct MYSOFA_EASY {
+   struct MYSOFA_HRTF *hrtf;
+@@ -173,38 +175,38 @@ struct MYSOFA_EASY {
+   float *fir;
+ };
+ 
+-struct MYSOFA_EASY *mysofa_open(const char *filename, float samplerate,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open(const char *filename, float samplerate,
+                                 int *filterlength, int *err);
+-struct MYSOFA_EASY *mysofa_open_no_norm(const char *filename, float samplerate,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open_no_norm(const char *filename, float samplerate,
+                                         int *filterlength, int *err);
+-struct MYSOFA_EASY *mysofa_open_advanced(const char *filename, float samplerate,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open_advanced(const char *filename, float samplerate,
+                                          int *filterlength, int *err, bool norm,
+                                          float neighbor_angle_step,
+                                          float neighbor_radius_step);
+-struct MYSOFA_EASY *mysofa_open_data(const char *data, long size,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open_data(const char *data, long size,
+                                      float samplerate, int *filterlength,
+                                      int *err);
+-struct MYSOFA_EASY *mysofa_open_data_no_norm(const char *data, long size,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open_data_no_norm(const char *data, long size,
+                                              float samplerate,
+                                              int *filterlength, int *err);
+-struct MYSOFA_EASY *mysofa_open_data_advanced(
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open_data_advanced(
+     const char *data, long size, float samplerate, int *filterlength, int *err,
+     bool norm, float neighbor_angle_step, float neighbor_radius_step);
+-struct MYSOFA_EASY *mysofa_open_cached(const char *filename, float samplerate,
++MYSOFA_EXPORT struct MYSOFA_EASY *mysofa_open_cached(const char *filename, float samplerate,
+                                        int *filterlength, int *err);
+-void mysofa_getfilter_short(struct MYSOFA_EASY *easy, float x, float y, float z,
++MYSOFA_EXPORT void mysofa_getfilter_short(struct MYSOFA_EASY *easy, float x, float y, float z,
+                             short *IRleft, short *IRright, int *delayLeft,
+                             int *delayRight);
+-void mysofa_getfilter_float(struct MYSOFA_EASY *easy, float x, float y, float z,
++MYSOFA_EXPORT void mysofa_getfilter_float(struct MYSOFA_EASY *easy, float x, float y, float z,
+                             float *IRleft, float *IRright, float *delayLeft,
+                             float *delayRight);
+-void mysofa_getfilter_float_nointerp(struct MYSOFA_EASY *easy, float x, float y,
++MYSOFA_EXPORT void mysofa_getfilter_float_nointerp(struct MYSOFA_EASY *easy, float x, float y,
+                                      float z, float *IRleft, float *IRright,
+                                      float *delayLeft, float *delayRight);
+-void mysofa_close(struct MYSOFA_EASY *easy);
+-void mysofa_close_cached(struct MYSOFA_EASY *easy);
++MYSOFA_EXPORT void mysofa_close(struct MYSOFA_EASY *easy);
++MYSOFA_EXPORT void mysofa_close_cached(struct MYSOFA_EASY *easy);
+ 
+-void mysofa_getversion(int *major, int *minor, int *patch);
++MYSOFA_EXPORT void mysofa_getversion(int *major, int *minor, int *patch);
+ 
+ #ifdef __cplusplus
+ }
