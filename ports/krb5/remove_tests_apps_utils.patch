@@ -1,0 +1,30 @@
+diff --git a/src/configure.ac b/src/configure.ac
+--- a/src/configure.ac
++++ b/src/configure.ac
+@@ -1524,7 +1524,7 @@ V5_AC_OUTPUT_MAKEFILE(.
+ 	lib/gssapi lib/gssapi/generic lib/gssapi/krb5 lib/gssapi/spnego
+ 	lib/gssapi/mechglue
+ 
+-	lib/rpc lib/rpc/unit-test
++	lib/rpc
+ 
+ 	lib/kadm5 lib/kadm5/clnt lib/kadm5/srv
+ 	lib/krad
+@@ -1557,17 +1557,4 @@ V5_AC_OUTPUT_MAKEFILE(.
+ 	plugins/authdata/greet_client
+ 	plugins/authdata/greet_server
+ 	plugins/tls/k5tls
+-
+-	clients clients/klist clients/kinit clients/kvno
+-	clients/kdestroy clients/kpasswd clients/ksu clients/kswitch
+-
+-	kadmin kadmin/cli kadmin/dbutil kadmin/ktutil kadmin/server
+-
+-	appl
+-	appl/sample appl/sample/sclient appl/sample/sserver
+-	appl/simple appl/simple/client appl/simple/server
+-	appl/gss-sample appl/user_user
+-
+-	tests tests/asn.1 tests/create tests/hammer tests/verify tests/gssapi
+-	tests/threads tests/shlib tests/gss-threads tests/misc
+ )
