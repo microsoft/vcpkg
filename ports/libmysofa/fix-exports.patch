@@ -40,24 +40,6 @@ index c092cb0..1a2a603 100644
 -  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
 +  DESTINATION share/mysofa
  )
-diff --git a/build/.empty b/build/.empty
-deleted file mode 100644
-index e69de29..0000000
-diff --git a/build/project.json b/build/project.json
-deleted file mode 100644
-index ce0c1c8..0000000
---- a/build/project.json
-+++ /dev/null
-@@ -1,9 +0,0 @@
--{
--    "dependencies": {
--        "zlib": "1.2.8.8",
--    },
--     "frameworks": {
--        ".NETFramework,Version=v4.0": { }
--    },
--    "runtimes": { "win-x64": { } }
--}
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 0de9632..2b6ff27 100644
 --- a/src/CMakeLists.txt
