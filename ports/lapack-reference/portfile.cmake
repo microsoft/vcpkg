@@ -185,13 +185,17 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   list(REVERSE implicit_fortran_dirs)
   list(REMOVE_DUPLICATES implicit_fortran_dirs)
   list(REVERSE implicit_fortran_dirs)
-
   list(REMOVE_ITEM implicit_fortran_dirs ${implicit_c_dirs}) # libgfortran already has quadmath and m as a dependency
   if(VCPKG_TARGET_IS_OSX)
    list(APPEND implicit_fortran_dirs "/usr/local/lib")
   endif()
   list(JOIN implicit_fortran_dirs " -L" implicit_fortran_dirs)
 
+  string(REGEX MATCH "GFORTRAN_LIB:([^\n]+)" gfortran_lib "${config_log}")
+  set(gfortran_lib "${CMAKE_MATCH_1}")
+  find_library(GFORTRAN_LIB NAMES gfortran)
+
+  message(STATUS "gfortran_lib:${gfortran_lib}|GFORTRAN_LIB:${GFORTRAN_LIB}")
   message(STATUS "implicit_fortran_libs:${implicit_fortran_libs}|implicit_c_libs:${implicit_c_libs}")
   message(STATUS "implicit_fortran_dirs:${implicit_fortran_dirs}|implicit_c_dirs:${implicit_c_dirs}")
   if(NOT implicit_fortran_libs STREQUAL "" AND NOT implicit_fortran_dirs STREQUAL "")
