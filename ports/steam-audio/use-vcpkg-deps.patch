@@ -23,7 +23,7 @@ index 0682abf..20e504e 100644
  if (STEAMAUDIO_ENABLE_EMBREE)
      find_package(ISPC 1.12 EXACT)
 diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
-index 7c9226f..202455c 100644
+index 7c9226f..60dcb03 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
 @@ -26,6 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
@@ -194,10 +194,10 @@ index 7c9226f..202455c 100644
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(steam-audio-config.cmake.in
 +  ${CMAKE_CURRENT_BINARY_DIR}/steam-audio-config.cmake
-+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/share/steam-audio)
++  INSTALL_DESTINATION share/steam-audio)
 +
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/steam-audio-config.cmake
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/share/steam-audio )
++        DESTINATION share/steam-audio )
 +
 +
  
