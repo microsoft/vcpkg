@@ -23,7 +23,7 @@ index 0682abf..20e504e 100644
  if (STEAMAUDIO_ENABLE_EMBREE)
      find_package(ISPC 1.12 EXACT)
 diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
-index 7c9226f..16df3c3 100644
+index 7c9226f..202455c 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
 @@ -26,6 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
@@ -174,7 +174,7 @@ index 7c9226f..16df3c3 100644
  if (IPL_OS_WINDOWS AND IPL_CPU_X64)
      install(
          FILES       ${CMAKE_HOME_DIRECTORY}/deps/trueaudionext/bin/windows-x64/$<LOWER_CASE:$<CONFIG>>/TrueAudioNext.dll
-@@ -993,5 +1006,19 @@ if (IPL_OS_WINDOWS AND IPL_CPU_X64)
+@@ -993,5 +1006,27 @@ if (IPL_OS_WINDOWS AND IPL_CPU_X64)
          DESTINATION lib/${IPL_BIN_SUBDIR}
      )
  endif()
@@ -190,6 +190,14 @@ index 7c9226f..16df3c3 100644
 +  FILE steam-audioTargets.cmake
 +  DESTINATION share/steam-audio
 +)
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(steam-audio-config.cmake.in
++  ${CMAKE_CURRENT_BINARY_DIR}/steam-audio-config.cmake
++  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/share/steam-audio)
++
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/steam-audio-config.cmake
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/share/steam-audio )
 +
 +
  
@@ -207,3 +215,17 @@ index 95ba30e..e827f72 100644
  
  #include "array.h"
  #include "array_math.h"
+diff --git a/core/src/core/steam-audio-config.cmake.in b/core/src/core/steam-audio-config.cmake.in
+new file mode 100644
+index 0000000..776f7aa
+--- /dev/null
++++ b/core/src/core/steam-audio-config.cmake.in
+@@ -0,0 +1,7 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++
++include(${CMAKE_CURRENT_LIST_DIR}/steam-audioTargets.cmake)
++
++check_required_components(steam-audio)
+\ No newline at end of file
