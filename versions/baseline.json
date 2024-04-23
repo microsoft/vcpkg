@@ -4684,6 +4684,10 @@
       "baseline": "1.23.11",
       "port-version": 0
     },
+    "libmysofa": {
+      "baseline": "1.3.2",
+      "port-version": 0
+    },
     "libmysql": {
       "baseline": "8.0.34",
       "port-version": 1
