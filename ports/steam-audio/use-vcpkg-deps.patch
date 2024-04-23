@@ -22,3 +22,62 @@ index 0682abf..20e504e 100644
  
  if (STEAMAUDIO_ENABLE_EMBREE)
      find_package(ISPC 1.12 EXACT)
+diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
+index 7c9226f..de83040 100644
+--- a/core/src/core/CMakeLists.txt
++++ b/core/src/core/CMakeLists.txt
+@@ -596,7 +596,7 @@ if (IPL_OS_LINUX)
+     target_link_libraries(core PUBLIC -Wl,--start-group)
+ endif()
+ 
+-target_link_libraries(core PUBLIC FlatBuffers::FlatBuffers)
++target_link_libraries(core PUBLIC flatbuffers::flatbuffers)
+ 
+ if (STEAMAUDIO_ENABLE_IPP AND (IPL_OS_WINDOWS OR IPL_OS_LINUX OR IPL_OS_MACOS))
+     target_link_libraries(core PUBLIC IPP::IPP)
+@@ -610,10 +610,10 @@ if (FFT_LIBRARY STREQUAL "IPP")
+ elseif (FFT_LIBRARY STREQUAL "FFTS")
+     target_link_libraries(core PUBLIC FFTS::FFTS)
+ elseif (FFT_LIBRARY STREQUAL "PFFFT")
+-    target_link_libraries(core PUBLIC PFFFT::PFFFT)
++    target_link_libraries(core PUBLIC pffft::pffft)
+ endif()
+ 
+-target_link_libraries(core PUBLIC MySOFA::MySOFA)
++target_link_libraries(core PUBLIC libmysofa::libmysofa)
+ add_dependencies(core fbschemas)
+ 
+ if (STEAMAUDIO_ENABLE_EMBREE)
+@@ -729,8 +729,8 @@ if (NOT FMOD_LIB_DIR STREQUAL "")
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon.h ${FMOD_INCLUDE_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/phonon_version.h ${FMOD_INCLUDE_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon_interfaces.h ${FMOD_INCLUDE_DIR}
+-            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PFFFT::PFFFT> ${FMOD_LIB_DIR}
+-            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MySOFA::MySOFA> ${FMOD_LIB_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pffft::pffft> ${FMOD_LIB_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:libmysofa::libmysofa> ${FMOD_LIB_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${FMOD_LIB_DIR}
+         )
+     else()
+@@ -851,8 +851,8 @@ if (NOT UNITY_PLUGIN_DIR STREQUAL "")
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/phonon_version.h ${UNITY_INCLUDE_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon_interfaces.h ${UNITY_INCLUDE_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNITY_LIB_DIR}
+-            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PFFFT::PFFFT> ${UNITY_PLUGIN_DIR}
+-            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MySOFA::MySOFA> ${UNITY_PLUGIN_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pffft::pffft> ${UNITY_PLUGIN_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:libmysofa::libmysofa> ${UNITY_PLUGIN_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNITY_PLUGIN_DIR}
+         )
+     else()
+@@ -913,8 +913,8 @@ if (NOT UNREAL_PLUGIN_DIR STREQUAL "")
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon.h ${UNREAL_INCLUDE_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/phonon_version.h ${UNREAL_INCLUDE_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon_interfaces.h ${UNREAL_INCLUDE_DIR}
+-            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PFFFT::PFFFT> ${UNREAL_PLUGIN_DIR}
+-            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MySOFA::MySOFA> ${UNREAL_PLUGIN_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pffft::pffft> ${UNREAL_PLUGIN_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:libmysofa::libmysofa> ${UNREAL_PLUGIN_DIR}
+             COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNREAL_PLUGIN_DIR}
+         )
+     elseif (IPL_OS_MACOS)

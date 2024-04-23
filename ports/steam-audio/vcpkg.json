@@ -19,6 +19,9 @@
     },
     {
       "name": "flatbuffers"
+    },
+    {
+      "name": "libmysofa"
     }
   ]
 }
