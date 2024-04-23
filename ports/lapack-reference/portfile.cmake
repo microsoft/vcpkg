@@ -207,3 +207,4 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   endif()
 endif()
 
+message(FATAL_ERROR "Get logs from lapack-ref build")
