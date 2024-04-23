@@ -2818,7 +2818,7 @@
     },
     "fplus": {
       "baseline": "0.2.23",
-      "port-version": 0
+      "port-version": 1
     },
     "freealut": {
       "baseline": "1.1.0",
@@ -2882,6 +2882,10 @@
     },
     "function2": {
       "baseline": "4.2.4",
+      "port-version": 0
+    },
+    "functionalplus": {
+      "baseline": "0.2.24",
       "port-version": 0
     },
     "functions-framework-cpp": {
