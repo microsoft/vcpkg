@@ -27,7 +27,7 @@ else()
     target_compile_definitions(libodb PRIVATE
         -DLIBODB_STATIC_LIB)
 endif()
-install(TARGETS libodb EXPORT odb_libodbConfig
+install(TARGETS libodb EXPORT unofficial-libodbConfig
     COMPONENT libodb
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
@@ -43,5 +43,5 @@ install(DIRECTORY odb DESTINATION include/
         PATTERN "*.txx"
 )
 endif()
-install(EXPORT odb_libodbConfig NAMESPACE odb:: COMPONENT libodb DESTINATION share/odb)
-export(TARGETS libodb NAMESPACE odb:: FILE odb_libodbConfig.cmake)
+
+install(EXPORT unofficial-libodbConfig DESTINATION share/unofficial-libodb)

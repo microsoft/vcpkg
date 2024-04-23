@@ -9,6 +9,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-linux.patch
 )
 file(REMOVE "${SOURCE_PATH}/version")
 
@@ -25,18 +27,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if(NOT VCPKG_BUILD_TYPE)
-    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_libodbConfig-debug.cmake" LIBODB_DEBUG_TARGETS)
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/odb/odb_libodbConfig-debug.cmake" "${LIBODB_DEBUG_TARGETS}")
-endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/odbConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/odb")
-write_basic_package_version_file("${CURRENT_PACKAGES_DIR}/share/odb/odbConfigVersion.cmake"
-    VERSION 2.4.0
-    COMPATIBILITY SameMajorVersion
-)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 set(LIBODB_HEADER_PATH "${CURRENT_PACKAGES_DIR}/include/odb/details/export.hxx")
 file(READ "${LIBODB_HEADER_PATH}" LIBODB_HEADER)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -45,7 +37,6 @@ else()
     string(REPLACE "#ifdef LIBODB_STATIC_LIB" "#if 0" LIBODB_HEADER "${LIBODB_HEADER}")
 endif()
 file(WRITE "${LIBODB_HEADER_PATH}" "${LIBODB_HEADER}")
-
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
