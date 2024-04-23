@@ -1,11 +1,17 @@
 {
   "name": "steam-audio",
   "version": "4.5.3",
-  "port-version": 0,
   "description": "Valve's steam audio library",
   "homepage": "https://github.com/ValveSoftware/steam-audio",
   "license": "Apache-2.0",
   "dependencies": [
+    "flatbuffers",
+    {
+      "name": "flatbuffers",
+      "host": true
+    },
+    "libmysofa",
+    "pffft",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,19 +19,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "pffft"
-    },
-    {
-      "name": "flatbuffers"
-    },
-    {
-      "name": "flatbuffers",
-      "host": true
-    },
-    {
-      "name": "libmysofa"
     }
   ]
 }
