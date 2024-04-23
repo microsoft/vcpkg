@@ -208,23 +208,25 @@ index dcaa92a..f5223bb 100644
    add_test(
      NAME multithread
 diff --git a/src/hrtf/mysofa.h b/src/hrtf/mysofa.h
-index 206e77b..494aa70 100644
+index 206e77b..cfa7b33 100644
 --- a/src/hrtf/mysofa.h
 +++ b/src/hrtf/mysofa.h
-@@ -14,6 +14,12 @@ extern "C" {
+@@ -14,6 +14,14 @@ extern "C" {
  #include <stdint.h>
  #include <stddef.h>
  
++#ifdef _WIN32
 +#ifndef MYSOFA_EXPORT
 +    #define MYSOFA_EXPORT __declspec(dllexport)
 +#else
 +    #define MYSOFA_EXPORT __declspec(dllimport)
 +#endif
++#endif
 +
  #define MYSOFA_DEFAULT_NEIGH_STEP_ANGLE 0.5f
  #define MYSOFA_DEFAULT_NEIGH_STEP_RADIUS 0.01f
  
-@@ -127,44 +133,44 @@ enum {
+@@ -127,44 +135,44 @@ enum {
    MYSOFA_ONLY_SOURCES_WITH_MC_SUPPORTED
  };
  
@@ -293,7 +295,7 @@ index 206e77b..494aa70 100644
  
  struct MYSOFA_EASY {
    struct MYSOFA_HRTF *hrtf;
-@@ -173,38 +179,38 @@ struct MYSOFA_EASY {
+@@ -173,38 +181,38 @@ struct MYSOFA_EASY {
    float *fir;
  };
  
