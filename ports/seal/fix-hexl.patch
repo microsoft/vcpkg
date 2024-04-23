@@ -7,7 +7,7 @@ index edf69a3..e64672e 100644
          seal_fetch_thirdparty_content(ExternalIntelHEXL)
      else()
 -        find_package(HEXL 1.2.4)
-+        find_package(HEXL 1.2.5)
++        find_package(HEXL CONFIG REQUIRED)
          if (NOT TARGET HEXL::hexl)
              message(FATAL_ERROR "Intel HEXL: not found")
          endif()
