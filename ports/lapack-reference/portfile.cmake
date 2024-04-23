@@ -187,6 +187,9 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   list(REVERSE implicit_fortran_dirs)
 
   list(REMOVE_ITEM implicit_fortran_dirs ${implicit_c_dirs}) # libgfortran already has quadmath and m as a dependency
+  if(VCPKG_TARGET_IS_OSX)
+   list(APPEND implicit_fortran_dirs "/usr/local/lib")
+  endif()
   list(JOIN implicit_fortran_dirs " -L" implicit_fortran_dirs)
 
   message(STATUS "implicit_fortran_libs:${implicit_fortran_libs}|implicit_c_libs:${implicit_c_libs}")
