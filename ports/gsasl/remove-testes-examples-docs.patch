@@ -1,0 +1,55 @@
+diff --git a/Makefile.am b/Makefile.am
+index 04c2ece7..9b8fe573 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -19,7 +19,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --with-gssapi-impl=no
+ 
+ ACLOCAL_AMFLAGS = -I m4 -I lib/m4
+ 
+-SUBDIRS = lib po gl src examples tests doc
++SUBDIRS = lib po gl src
+ 
+ EXTRA_DIST = cfg.mk maint.mk CONTRIBUTING.md
+ EXTRA_DIST += build-aux/git2cl
+diff --git a/configure.ac b/configure.ac
+index 1a53887c..55b176f8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -64,11 +64,11 @@ AM_GNU_GETTEXT([external])
+ AM_GNU_GETTEXT_VERSION([0.19.8])
+ 
+ # https://developer.gnome.org/gtk-doc-manual/stable/settingup_autoconf.html.en
+-m4_ifdef([GTK_DOC_CHECK], [
+-GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
+-],[
+ AM_CONDITIONAL([ENABLE_GTK_DOC], false)
+-])
++AM_CONDITIONAL([GTK_DOC_USE_LIBTOOL], false)
++AM_CONDITIONAL([GTK_DOC_BUILD_HTML], false)
++AM_CONDITIONAL([GTK_DOC_BUILD_PDF], false)
++AM_CONDITIONAL([HAVE_GTK_DOC], false)
+ 
+ # ANONYMOUS
+ AC_ARG_ENABLE(anonymous,
+@@ -531,13 +531,6 @@ AS_IF([test "$enable_gcc_warnings" != no],
+ 
+ AC_CONFIG_FILES([
+   Makefile
+-  doc/Makefile
+-  doc/cyclo/Makefile
+-  doc/doxygen/Doxyfile
+-  doc/reference/Makefile
+-  examples/Makefile
+-  examples/openid20/Makefile
+-  examples/saml20/Makefile
+   gl/Makefile
+   lib/Makefile
+   lib/anonymous/Makefile
+@@ -559,7 +552,6 @@ AC_CONFIG_FILES([
+   lib/src/gsasl-version.h
+   po/Makefile.in
+   src/Makefile
+-  tests/Makefile
+ ])
+ AC_OUTPUT
+ 
