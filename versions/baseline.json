@@ -6989,7 +6989,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "2.3.0",
+      "baseline": "2.3.2",
       "port-version": 0
     },
     "proxygen": {
