@@ -72,7 +72,8 @@ else()
       message(FATAL_ERROR "Failed to configure nodejs debug (code ${NODE_BUILD_SH_RES})")
     endif()
     vcpkg_execute_build_process(
-      NO_PARALLEL_COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
+      COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
+      NO_PARALLEL_COMMAND "${MAKE}" "-j1" ${MAKE_OPTIONS}
       WORKING_DIRECTORY "${SOURCE_PATH}"
       LOGNAME "build-${TARGET_TRIPLET}-dbg"
     )
@@ -96,7 +97,8 @@ else()
     message(FATAL_ERROR "Failed to configure nodejs release (code ${NODE_BUILD_SH_RES})")
   endif()
   vcpkg_execute_build_process(
-    NO_PARALLEL_COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
+    COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
+    NO_PARALLEL_COMMAND "${MAKE}" "-j1" ${MAKE_OPTIONS}
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME "build-${TARGET_TRIPLET}-rel"
   )
