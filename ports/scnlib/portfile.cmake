@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-SCN_HAS_STD_REGEX_MULTILINE-marco.patch
         remove-simdutf-dependency-version.patch
+        fix_usage.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +19,6 @@ vcpkg_cmake_configure(
       -DSCN_EXAMPLES=OFF
       -DSCN_BENCHMARKS=OFF
       -DSCN_DOCS=OFF
-      -DSCN_RANGES=OFF
       -DSCN_USE_EXTERNAL_SIMDUTF=ON
       -DSCN_USE_EXTERNAL_FAST_FLOAT=ON
 )
@@ -32,6 +32,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/scn"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
