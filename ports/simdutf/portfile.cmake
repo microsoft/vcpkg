@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdutf/simdutf
     REF "v${VERSION}"
-    SHA512 b433abd2ace5fbb5ec598fd16af85c69cd8683f8cb35da27eab07e1e9e899eeee58f176ec7cee40daa6566b367bb9a3e90a96fe99b2007ff05c0d36afc11f5f7
+    SHA512 c854d7b5959ca173588686657c8774cfe6b27b03e19abcb3f5280f5182672e6094203707fe700934efec44388b3db31ee0a55840cc00de6cc83da6d2fbf958f2
     HEAD_REF master
 )
 

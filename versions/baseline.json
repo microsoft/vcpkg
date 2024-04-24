@@ -241,8 +241,8 @@
       "port-version": 5
     },
     "arrow": {
-      "baseline": "15.0.2",
-      "port-version": 1
+      "baseline": "16.0.0",
+      "port-version": 0
     },
     "arsenalgear": {
       "baseline": "2.1.0",
@@ -446,7 +446,7 @@
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-data-tables-cpp": {
       "baseline": "1.0.0-beta.2",
@@ -454,7 +454,7 @@
     },
     "azure-identity-cpp": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-iot-sdk-c": {
       "baseline": "2024-03-04",
@@ -470,7 +470,7 @@
     },
     "azure-messaging-eventhubs-checkpointstore-blob-cpp": {
       "baseline": "1.0.0-beta.1",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-messaging-eventhubs-cpp": {
       "baseline": "1.0.0-beta.7",
@@ -478,31 +478,31 @@
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-security-keyvault-administration-cpp": {
       "baseline": "4.0.0-beta.4",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-secrets-cpp": {
       "baseline": "4.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-common-cpp": {
       "baseline": "12.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
@@ -510,15 +510,15 @@
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-files-shares-cpp": {
       "baseline": "12.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-queues-cpp": {
       "baseline": "12.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-uamqp-c": {
       "baseline": "2024-03-04",
@@ -1986,7 +1986,7 @@
     },
     "crashpad": {
       "baseline": "2022-09-05",
-      "port-version": 4
+      "port-version": 5
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -2097,7 +2097,7 @@
       "port-version": 0
     },
     "cwapi3d": {
-      "baseline": "30.10.1",
+      "baseline": "30.475.1",
       "port-version": 0
     },
     "cxxgraph": {
@@ -4301,7 +4301,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.20.2",
+      "baseline": "0.20.3",
       "port-version": 0
     },
     "libdmx": {
@@ -5166,7 +5166,7 @@
     },
     "libx11": {
       "baseline": "1.8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libxau": {
       "baseline": "1.0.9",
@@ -6989,7 +6989,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "2.3.0",
+      "baseline": "2.3.2",
       "port-version": 0
     },
     "proxygen": {
@@ -8033,7 +8033,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2023.5.1",
+      "baseline": "2024.1.7",
       "port-version": 0
     },
     "shaderc": {
@@ -8105,7 +8105,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "5.2.3",
+      "baseline": "5.2.5",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -9577,8 +9577,8 @@
       "port-version": 0
     },
     "yomm2": {
-      "baseline": "1.4.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "yyjson": {
       "baseline": "0.8.0",
