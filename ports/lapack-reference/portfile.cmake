@@ -8,8 +8,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/clapack/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
@@ -18,11 +16,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
     REF "v${VERSION}"
-    SHA512 fc3258b9d91a833149a68a89c5589b5113e90a8f9f41c3a73fbfccb1ecddd92d9462802c0f870f1c3dab392623452de4ef512727f5874ffdcba6a4845f78fc9a
+    SHA512 f8f3c733a0221be0b3f5618235408ac59cbd4e5f1c4eab5f509b831a6ec6a9ef14b8849aa6ea10810df1aff90186ca454d15e9438d1dd271c2449d42d3da9dda
     HEAD_REF master
     PATCHES
         cmake-config.patch
-        lapacke.patch
+        #lapacke.patch
         print-implicit-libs.patch
 )
 
