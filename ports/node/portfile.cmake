@@ -13,7 +13,7 @@ vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 if(VCPKG_TARGET_IS_WINDOWS)
   set(nodejs_options openssl-no-asm static x64)
 
-  if(NOT DEFINED VCPKG_BUILD_TYPE)
+  if(NOT "${VCPKG_BUILD_TYPE}" STREQUAL "release")
     execute_process(
       COMMAND "${SOURCE_PATH}/vcbuild.bat" debug ${nodejs_options}
       WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -55,10 +55,35 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endforeach()
 else()
-  set(nodejs_options)
+  find_program(MAKE make REQUIRED)
+
+  if(NOT "${VCPKG_BUILD_TYPE}" STREQUAL "release")
+    execute_process(
+      COMMAND "${SOURCE_PATH}/configure" "--debug"
+      WORKING_DIRECTORY "${SOURCE_PATH}"
+
+      OUTPUT_VARIABLE NODE_BUILD_SH_OUT
+      ERROR_VARIABLE NODE_BUILD_SH_ERR
+      RESULT_VARIABLE NODE_BUILD_SH_RES
+      ECHO_OUTPUT_VARIABLE
+      ECHO_ERROR_VARIABLE
+    )
+    if(NOT NODE_BUILD_SH_RES EQUAL 0)
+      message(FATAL_ERROR "Failed to configure nodejs debug (code ${NODE_BUILD_SH_RES})")
+    endif()
+    vcpkg_execute_build_process(
+      NO_PARALLEL_COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
+      WORKING_DIRECTORY "${SOURCE_PATH}"
+      LOGNAME "build-${TARGET_TRIPLET}-dbg"
+    )
+    file(GLOB libs "${SOURCE_PATH}/Debug/*.a")
+    foreach(path ${libs})
+      file(COPY "${path}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endforeach()
+  endif()
 
   execute_process(
-    COMMAND "${SOURCE_PATH}/configure" "--ninja" ${nodejs_options}
+    COMMAND "${SOURCE_PATH}/configure"
     WORKING_DIRECTORY "${SOURCE_PATH}"
 
     OUTPUT_VARIABLE NODE_BUILD_SH_OUT
@@ -67,12 +92,19 @@ else()
     ECHO_OUTPUT_VARIABLE
     ECHO_ERROR_VARIABLE
   )
-
   if(NOT NODE_BUILD_SH_RES EQUAL 0)
-    message(FATAL_ERROR "Failed to configure nodejs (code ${NODE_BUILD_SH_RES})")
+    message(FATAL_ERROR "Failed to configure nodejs release (code ${NODE_BUILD_SH_RES})")
   endif()
+  vcpkg_execute_build_process(
+    NO_PARALLEL_COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+    LOGNAME "build-${TARGET_TRIPLET}-rel"
+  )
+  file(GLOB libs "${SOURCE_PATH}/Release/*.a")
+  foreach(path ${libs})
+    file(COPY "${path}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  endforeach()
 
-  vcpkg_install_make()
 endif()
 
 # main header
