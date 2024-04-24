@@ -3,7 +3,7 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 # Due to the interaction between BLAS and LAPACK, we need to choose implementations consistent with
 # each other.
 #
-# First, if we are on Apple, we use the Accelerate framework. -> would use accelerate but numpy says accelerate is buggy
+# First, if we are on Apple, we use the Accelerate framework.
 #
 # Then, we prefer to use openblas and lapack-reference for blas and lapack, respectively, but
 # sometimes are unable.
@@ -47,7 +47,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(requires "")
     set(libs "-framework Accelerate")
     set(cflags "-framework Accelerate")
-elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_UWP
+elseif(VCPKG_TARGET_IS_UWP
         OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
         OR NOT VCPKG_TARGET_IS_WINDOWS
         OR NOT (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
