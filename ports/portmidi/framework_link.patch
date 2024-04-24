@@ -35,14 +35,14 @@ index 062887b..e474244 100644
 +      ${CMAKE_THREAD_LIBS_INIT}
 +      -Wl,-framework,CoreAudio
 +      -Wl,-framework,CoreFoundation
-+      -Wl,-framework,CoreMidi
++      -Wl,-framework,CoreMIDI
 +      -Wl,-framework,CoreServices)
 +  target_link_libraries(portmidi
 +    PRIVATE
 +      Threads::Threads
 +      -Wl,-framework,CoreAudio
 +      -Wl,-framework,CoreFoundation
-+      -Wl,-framework,CoreMidi
++      -Wl,-framework,CoreMIDI
 +      -Wl,-framework,CoreServices)
    # set to CMake default; is this right?:
    set_target_properties(portmidi PROPERTIES MACOSX_RPATH ON)
