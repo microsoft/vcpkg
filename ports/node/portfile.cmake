@@ -50,7 +50,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
   file(GLOB libs "${SOURCE_PATH}/Release/*.lib")
   foreach(path ${libs})
-    file(COPY "${path}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    if(NOT "${path}" MATCHES ".*cctest\.lib|.*embedtest\.lib")
+      file(COPY "${path}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    endif()
   endforeach()
 else()
   set(nodejs_options)
@@ -80,8 +82,23 @@ file(COPY "${SOURCE_PATH}/src/node.h" DESTINATION "${CURRENT_PACKAGES_DIR}/inclu
 file(COPY "${SOURCE_PATH}/src/node_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(COPY "${SOURCE_PATH}/src/node_version.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# TODO: v8.h
-# TODO: v8-platform.h
+#file(COPY "${SOURCE_PATH}/src/deps/v8/include/v8.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+#file(COPY "${SOURCE_PATH}/src/deps/v8/include/v8-platform.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+file(GLOB v8_headers "${SOURCE_PATH}/src/deps/v8/include/*.h")
+foreach(v8_header ${v8_headers})
+  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+endforeach()
+
+file(GLOB v8_headers "${SOURCE_PATH}/src/deps/v8/include/cppgc/*.h")
+foreach(v8_header ${v8_headers})
+  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cppgc")
+endforeach()
+
+file(GLOB v8_headers "${SOURCE_PATH}/src/deps/v8/include/libplatform/*.h")
+foreach(v8_header ${v8_headers})
+  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/libplatform")
+endforeach()
 
 # node_api.h requirements
 file(COPY "${SOURCE_PATH}/src/js_native_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
