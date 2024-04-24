@@ -27,4 +27,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
   if (NOT NODE_BUILD_SH_RES EQUAL 0)
     message(FATAL_ERROR "Failed to build nodejs (code ${NODE_BUILD_SH_RES})")
   endif()
+
+  file(GLOB libs "${SOURCE_PATH}/Release/*.lib")
+  foreach(header ${libs})
+    file(COPY "${header}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  endforeach()
+else()
+  execute_process(
+    COMMAND "${SOURCE_PATH}/configure" "--ninja" ${nodejs_options}
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+
+    OUTPUT_VARIABLE NODE_BUILD_SH_OUT
+    ERROR_VARIABLE NODE_BUILD_SH_ERR
+    RESULT_VARIABLE NODE_BUILD_SH_RES
+    ECHO_OUTPUT_VARIABLE
+    ECHO_ERROR_VARIABLE
+  )
+
+  if (NOT NODE_BUILD_SH_RES EQUAL 0)
+    message(FATAL_ERROR "Failed to configure nodejs (code ${NODE_BUILD_SH_RES})")
+  endif()
+
+  vcpkg_install_make()
 endif()
+
+file(GLOB headers "${SOURCE_PATH}/src/*.h")
+foreach(header ${headers})
+  file(COPY "${header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+endforeach()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
