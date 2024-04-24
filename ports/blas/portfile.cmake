@@ -41,7 +41,7 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 # and for lapack-reference[blas], the DeMorgan'd inverse of that:
 # !uwp && !(windows && arm) && windows && static
 
-if(VCPKG_TARGET_IS_IOS)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Use Apple's accelerate framework where available
     set(BLA_VENDOR Apple)
     set(requires "")

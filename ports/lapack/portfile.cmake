@@ -11,7 +11,7 @@ endif()
 set(BLA_VENDOR Generic)
 set(installed_wrapper "${CURRENT_INSTALLED_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake")
 set(installed_module "${CURRENT_INSTALLED_DIR}/share/lapack/FindLAPACK.cmake")
-if(VCPKG_TARGET_IS_IOS)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Use Apple's accelerate framework where available
     set(BLA_VENDOR Apple)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" @ONLY)
