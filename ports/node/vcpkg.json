@@ -1,6 +1,6 @@
 {
     "name": "node",
-    "version": "20.10.0",
+    "version": "22.0.0",
     "description": "NodeJS API for embedding NodeJS in your C++ applications",
     "homepage": "https://nodejs.org/api/embedding.html",
     "license": "MIT",

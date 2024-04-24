@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node
   REF "v${VERSION}"
-  SHA512 f601686b17bac452c7d64551bdea51929bfe82ca5477da60ae3f52367c6e0b3f8172c8a407a80f2d4f98c6462a41a012a59aaa335b0e3f19cfff52b78d7ad93b
+  SHA512 0
   HEAD_REF main
 )
 
