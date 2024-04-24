@@ -1,6 +1,6 @@
 {
   "name": "numpy",
-  "version": "1.26.1",
+  "version": "1.26.4",
   "description": "The fundamental package for scientific computing with Python.",
   "homepage": "https://www.numpy.org/",
   "license": "BSD-3-Clause",
