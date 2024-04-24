@@ -6,14 +6,13 @@ vcpkg_from_github(
   HEAD_REF main
 )
 
-
-set(nodejs_options openssl-no-asm static x64)
-
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
+  set(nodejs_options openssl-no-asm static x64)
+
   execute_process(
     COMMAND "${SOURCE_PATH}/vcbuild.bat" ${nodejs_options}
     WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -33,6 +32,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY "${header}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
   endforeach()
 else()
+  set(nodejs_options)
+
   execute_process(
     COMMAND "${SOURCE_PATH}/configure" "--ninja" ${nodejs_options}
     WORKING_DIRECTORY "${SOURCE_PATH}"
