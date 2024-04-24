@@ -20,8 +20,7 @@
   ],
   "default-features": [
     "fontconfig",
-    "freetype",
-    "lzo"
+    "freetype"
   ],
   "features": {
     "fontconfig": {
