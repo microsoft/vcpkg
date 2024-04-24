@@ -4070,7 +4070,7 @@
     },
     "lapack-reference": {
       "baseline": "3.11.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lastools": {
       "baseline": "2.0.2+20230206",
@@ -6430,7 +6430,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 15
+      "port-version": 16
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6494,7 +6494,7 @@
     },
     "openmvs": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openni2": {
       "baseline": "2.2.0.33",
