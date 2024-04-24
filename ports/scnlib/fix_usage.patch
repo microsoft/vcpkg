@@ -7,11 +7,11 @@ index 5e9dfa1..5f0fd55 100644
  
  if (@SCN_USE_EXTERNAL_SIMDUTF@)
 -    find_dependency(simdutf 4.0.0)
-+    find_package(simdutf CONFIG REQUIRED)
++    find_dependency(simdutf)
  endif ()
  if (@SCN_USE_EXTERNAL_FAST_FLOAT@)
 -    find_dependency(FastFloat 6.0.0)
-+    find_package(FastFloat CONFIG REQUIRED)
++    find_dependency(FastFloat)
  endif ()
  
  if ((@SCN_REGEX_BACKEND@ STREQUAL "Boost") AND @SCN_USE_EXTERNAL_REGEX_BACKEND@)
