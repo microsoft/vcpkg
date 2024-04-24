@@ -153,7 +153,6 @@ cairo:arm64-android=fail
 cctag:x64-windows-static-md=fail
 cello:arm64-uwp=fail
 cello:x64-uwp=fail
-chakracore:x64-linux=skip
 # DCMTK currently has a vendored copy of libcharls.a, which causes conflicts with charls (TODO: use charls' copy)
 charls:arm64-windows=skip
 charls:arm64-uwp=skip
