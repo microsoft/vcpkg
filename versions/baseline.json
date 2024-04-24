@@ -3125,8 +3125,8 @@
       "port-version": 8
     },
     "google-cloud-cpp": {
-      "baseline": "2.22.0",
-      "port-version": 1
+      "baseline": "2.23.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
