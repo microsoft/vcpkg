@@ -2,6 +2,8 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # Numpy includes are stored in th
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 set(VCPKG_BUILD_TYPE release) # No debug builds required for pure python modules since vcpkg does not install a debug python executable. 
 
+#TODO: Fix E:\vcpkg_folders\numpy\installed\x64-windows-release\tools\python3\Lib\site-packages\numpy\testing\_private\extbuild.py
+
 find_program(VCPKG_PYTHON3 NAMES python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR} python${PYTHON3_VERSION_MAJOR} python PATHS "${VCPKG_PYTHON3_BASEDIR}" NO_DEFAULT_PATH)
 find_program(VCPKG_CYTHON NAMES cython PATHS "${VCPKG_PYTHON3_BASEDIR}" "${VCPKG_PYTHON3_BASEDIR}/Scripts" NO_DEFAULT_PATH)
 message(STATUS "PYTHON3:${VCPKG_PYTHON3}")
@@ -26,8 +28,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_SIMD
     REPO intel/x86-simd-sort
-    REF v5.0
-    SHA512 8e7a1929b7234399d8ac30cd296b69efdfc0d9d03a91507f3b4e06f486b6b715199b35e0495f330c21b70165bcab48842cd7c0a887df4e6508b6151ad1dc9c2a
+    REF 0631a88763a4a0a4c9e84d5eeb0ec5d36053730b
+    SHA512 cd44796fc10e13004932be05d5bee46070e061bcc429c7ee8d9e11520e18c45bdec2f4fcd3555d9769891a763e151b0a0a4c00385ea30f24c99da1c65d736e39
     HEAD_REF main
 )
 
@@ -46,8 +48,8 @@ file(COPY "${SOURCE_PATH_MESON_NUMPY}/mesonbuild/modules/features" DESTINATION "
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_SVML
     REPO numpy/SVML
-    REF 32bf2a98420762a63ab418aaa0a7d6e17eb9627a
-    SHA512 6242569840ac4b645c6070f72f0691ffc090b1c0c87cb935cb04ffd39c6d334bff0cbddcbf8a2ae5de2b1d5bb322f2a5a2dfd8a30b2e25bf7f6af732ffc47040
+    REF 1b21e453f6b1ba6a6aca392b1d810d9d41576123
+    SHA512 c9ea7bf9effbf5750750ddfdfc7db3d95614ed176bd4540d68eddb90a15f819510e9564c9454ef34be02dd6a8e48a7f292a70cb5b63c25c3d1c450a8e3b77d35
     HEAD_REF main
 )
 
