@@ -1,7 +1,7 @@
 {
   "name": "crashpad",
   "version-date": "2022-09-05",
-  "port-version": 4,
+  "port-version": 5,
   "description": [
     "Crashpad is a crash-reporting system.",
     "Crashpad is a library for capturing, storing and transmitting postmortem crash reports from a client to an upstream collection server. Crashpad aims to make it possible for clients to capture process state at the time of crash with the best possible fidelity and coverage, with the minimum of fuss."
@@ -10,6 +10,7 @@
   "license": "Apache-2.0",
   "supports": "linux | osx | (windows & !uwp)",
   "dependencies": [
+    "curl",
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true

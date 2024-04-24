@@ -1,8 +1,8 @@
 {
   "name": "cachelib",
   "version-string": "2023.05.08.00",
-  "port-version": 1,
-  "description": "facebook cachelib",
+  "port-version": 2,
+  "description": "Pluggable caching engine to build and scale high performance cache services.",
   "homepage": "https://github.com/facebook/CacheLib",
   "license": "Apache-2.0",
   "supports": "linux & x64 & static",
