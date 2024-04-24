@@ -1,14 +1,16 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.22.0",
-  "port-version": 1,
+  "version": "2.23.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "abseil",
-    "openssl",
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -123,6 +125,18 @@
         }
       ]
     },
+    "apphub": {
+      "description": "App Hub API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "artifactregistry": {
       "description": "Artifact Registry API C++ Client Library",
       "dependencies": [
@@ -164,6 +178,18 @@
     },
     "automl": {
       "description": "Cloud AutoML API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "backupdr": {
+      "description": "Backup and DR Service API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -286,6 +312,18 @@
     },
     "cloudbuild": {
       "description": "Cloud Build API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "cloudcontrolspartner": {
+      "description": "Cloud Controls Partner API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1311,6 +1349,18 @@
           "default-features": false,
           "features": [
             "rest-common"
+          ]
+        }
+      ]
+    },
+    "storagecontrol": {
+      "description": "Cloud Storage Control API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
           ]
         }
       ]
