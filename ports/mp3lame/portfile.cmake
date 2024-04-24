@@ -99,6 +99,10 @@ else()
         list(APPEND OPTIONS --with-pic=yes)
     endif()
 
+    if(VCPKG_TARGET_IS_OSX AND VCPKG_CROSSCOMPILING AND VCPKG_OSX_ARCHITECTURES STREQUAL "x86_64")
+        list(APPEND OPTIONS --host "${VCPKG_OSX_ARCHITECTURES}-apple-darwin")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
