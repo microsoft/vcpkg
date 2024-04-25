@@ -244,6 +244,16 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         list(APPEND headers_param "--header=${header}")
     endforeach()
 
+    vcpkg_execute_in_download_mode(
+        COMMAND "$ENV{VCPKG_COMMAND}" --version
+        OUTPUT_VARIABLE output
+    )
+    string(REGEX MATCH "[0-9]+-[0-9]+-[0-9]+(-[0-9a-f]+)?" vcpkg_version "${output}")
+    if (NOT vcpkg_version)
+        message(FATAL_ERROR "Failed to parse vcpkg version")
+    endif()
+    list(APPEND headers_param "--header=User-Agent: vcpkg/${vcpkg_version}")
+
     if(arg_SKIP_SHA512)
         vcpkg_list(SET sha512_param "--skip-sha512")
     else()
