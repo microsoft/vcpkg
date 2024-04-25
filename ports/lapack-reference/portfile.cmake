@@ -22,6 +22,7 @@ vcpkg_from_github(
         cmake-config.patch
         #lapacke.patch
         print-implicit-libs.patch
+        fix_prefix.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -69,7 +70,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${VERSION} CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
@@ -129,12 +130,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/lib/lapack.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/lapack.lib")
-    endif()
     if(NOT USE_OPTIMIZED_BLAS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libblas.lib")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/lib/blas.lib")
@@ -157,7 +152,6 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PA
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
   file(READ "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log" config_log)
