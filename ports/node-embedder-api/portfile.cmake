@@ -131,36 +131,35 @@ else()
 
 endif()
 
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
+
 # main header
-file(COPY "${SOURCE_PATH}/src/node.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/src/node.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
 
 # node.h requirements
-file(COPY "${SOURCE_PATH}/src/node_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(COPY "${SOURCE_PATH}/src/node_version.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-
-#file(COPY "${SOURCE_PATH}/src/deps/v8/include/v8.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-#file(COPY "${SOURCE_PATH}/src/deps/v8/include/v8-platform.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/src/node_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
+file(COPY "${SOURCE_PATH}/src/node_version.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
 
 file(GLOB v8_headers "${SOURCE_PATH}/src/deps/v8/include/*.h")
 foreach(v8_header ${v8_headers})
-  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
 endforeach()
 
 file(GLOB v8_headers "${SOURCE_PATH}/src/deps/v8/include/cppgc/*.h")
 foreach(v8_header ${v8_headers})
-  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cppgc")
+  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api/cppgc")
 endforeach()
 
 file(GLOB v8_headers "${SOURCE_PATH}/src/deps/v8/include/libplatform/*.h")
 foreach(v8_header ${v8_headers})
-  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/libplatform")
+  file(COPY "${v8_header}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api/libplatform")
 endforeach()
 
 # node_api.h requirements
-file(COPY "${SOURCE_PATH}/src/js_native_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(COPY "${SOURCE_PATH}/src/node_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/src/js_native_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
+file(COPY "${SOURCE_PATH}/src/node_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
 
 # js_native_api.h requirements
-file(COPY "${SOURCE_PATH}/src/js_native_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/src/js_native_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node-embedder-api")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

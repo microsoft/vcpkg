@@ -1,5 +1,5 @@
 {
-  "name": "node",
+  "name": "node-embedder-api",
   "version": "22.0.0",
   "description": "NodeJS API for embedding NodeJS in your C++ applications",
   "homepage": "https://nodejs.org/api/embedding.html",
