@@ -9029,7 +9029,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2023-05-04",
+      "baseline": "2024-04-23",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
