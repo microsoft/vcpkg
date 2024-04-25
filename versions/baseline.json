@@ -1962,7 +1962,7 @@
     },
     "cppzmq": {
       "baseline": "4.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cpr": {
       "baseline": "1.10.5",

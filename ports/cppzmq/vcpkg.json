@@ -1,6 +1,7 @@
 {
   "name": "cppzmq",
   "version": "4.10.0",
+  "port-version": 1,
   "description": "Header-only C++ binding for ZeroMQ",
   "homepage": "https://github.com/zeromq/cppzmq",
   "license": "MIT",
@@ -24,6 +25,18 @@
           "default-features": false,
           "features": [
             "draft"
+          ]
+        }
+      ]
+    },
+    "websockets": {
+      "description": "Enable WebSocket transport",
+      "dependencies": [
+        {
+          "name": "zeromq",
+          "default-features": false,
+          "features": [
+            "websockets"
           ]
         }
       ]
