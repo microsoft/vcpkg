@@ -7,7 +7,7 @@ vcpkg_from_github(
 )
 
 # Fixes arm64-windows host building x64-windows target
-vcpkg_replace_string("${SOURCE_PATH}/configure.py" "'ARM64'  : 'arm64'" "'ARM64'  : 'x64'")
+#vcpkg_replace_string("${SOURCE_PATH}/configure.py" "'ARM64'  : 'arm64'" "'ARM64'  : 'x64'")
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
