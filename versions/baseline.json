@@ -4750,7 +4750,7 @@
     },
     "libopnmidi": {
       "baseline": "1.5.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libopusenc": {
       "baseline": "0.2.1",
