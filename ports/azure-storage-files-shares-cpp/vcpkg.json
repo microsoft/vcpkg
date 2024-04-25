@@ -1,7 +1,11 @@
 {
-  "$comment": "NOTE: All changes made to this file will get overwritten by the next port release. Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp.",
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
   "name": "azure-storage-files-shares-cpp",
   "version-semver": "12.8.0",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Storage Files Shares SDK for C++",
     "This library provides Azure Storage Files Shares SDK."

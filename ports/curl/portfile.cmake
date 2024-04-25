@@ -45,6 +45,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winidn      USE_WIN32_IDN
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
+        psl         CURL_USE_LIBPSL
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
@@ -83,7 +84,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_LIBPSL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
