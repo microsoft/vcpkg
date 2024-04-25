@@ -143,6 +143,11 @@ function(vcpkg_python_test_import)
     ""
   )
 
+  if(VCPKG_CROSSCOMPILING)
+      message(STATUS "Unable to test python module: '${arg_MODULE}' in cross builds")
+      return()
+  endif()
+
   message(STATUS "Testing python module: '${arg_MODULE}'")
   
   set(DLL_DIR "${CURRENT_INSTALLED_DIR}/bin") # see https://bugs.python.org/issue43173 why this is needed
