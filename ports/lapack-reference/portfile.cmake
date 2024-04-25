@@ -61,6 +61,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
         "-DTEST_FORTRAN_COMPILER=OFF"
+        "-DCMAKE_Fortran_INIT_FLAGS=-fno-tree-vectorize" # This is used by openblas to compile lapack since there seems to be a bug in gfortran
         ${FORTRAN_CMAKE}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
