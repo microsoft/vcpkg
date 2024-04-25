@@ -361,9 +361,7 @@ gamenetworkingsockets:x64-android=fail
 # VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
 # gazebo is broken due it depend on old ports that already in the new versions.
 # There is an open PR that try to fix that.
-gazebo:x64-windows=fail
 gazebo:x64-linux=fail
-gazebo:x86-windows=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
 gdk-pixbuf:x64-android=fail
@@ -420,7 +418,6 @@ gstreamer:x64-android=fail
 # upstream issue https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1629.
 gstreamer:x64-windows-static = skip
 gstreamer:x64-windows-static-md = skip
-gtk:x64-windows-static-md=fail
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
