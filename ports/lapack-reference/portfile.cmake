@@ -22,7 +22,6 @@ vcpkg_from_github(
         cmake-config.patch
         #lapacke.patch
         print-implicit-libs.patch
-        fix_prefix.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
