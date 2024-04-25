@@ -10,6 +10,10 @@
       "version>=": "1.84.0"
     },
     {
+      "name": "vcpkg-boost",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

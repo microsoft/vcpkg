@@ -27,7 +27,6 @@ vcpkg_from_github(
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH_CMAKE}/CMakeLists.txt" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage.in" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH_CMAKE}")
 vcpkg_cmake_install()
@@ -35,7 +34,6 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH_CMAKE}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost/cmake-build")
 
 file(INSTALL
-    "${CMAKE_CURRENT_LIST_DIR}/boost-install.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
