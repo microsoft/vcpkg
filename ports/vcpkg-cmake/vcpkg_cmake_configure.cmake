@@ -111,8 +111,8 @@ function(vcpkg_cmake_configure)
         get_filename_component(ninja_path "${NINJA}" DIRECTORY)
         vcpkg_add_to_path("${ninja_path}")
         set(parallel_log_args
-            "../build.ninja" ALIAS "rel-ninaja.log"
-            "../../${TARGET_TRIPLET}-dbg/build.ninja" ALIAS "dbg-ninaja.log"
+            "../build.ninja" ALIAS "rel-ninja.log"
+            "../../${TARGET_TRIPLET}-dbg/build.ninja" ALIAS "dbg-ninja.log"
         )
         set(log_args "build.ninja")
     endif()
