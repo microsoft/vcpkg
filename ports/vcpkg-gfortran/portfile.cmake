@@ -43,7 +43,7 @@ if(VCPKG_USE_INTERNAL_Fortran)
     file(COPY ${MINGW_Fortran_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(COPY "${vcpkg_find_fortran_MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(INSTALL "${vcpkg_find_fortran_MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses/crt/COPYING.MinGW-w64-runtime.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-    set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled) # due to outdated msvcrt
+    set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
     set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 else()

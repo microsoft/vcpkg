@@ -1,87 +1,3 @@
-# DEPRECATED BY ports/vcpkg-cmake/vcpkg_cmake_configure
-#[===[.md:
-# vcpkg_configure_cmake
-
-Configure CMake for Debug and Release builds of a project.
-
-## Usage
-```cmake
-vcpkg_configure_cmake(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [PREFER_NINJA]
-    [DISABLE_PARALLEL_CONFIGURE]
-    [NO_CHARSET_FLAG]
-    [GENERATOR <"NMake Makefiles">]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [MAYBE_UNUSED_VARIABLES <OPTION_NAME>...]
-)
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the `CMakeLists.txt`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### PREFER_NINJA
-Indicates that, when available, Vcpkg should use Ninja to perform the build.
-This should be specified unless the port is known to not work under Ninja.
-
-### DISABLE_PARALLEL_CONFIGURE
-Disables running the CMake configure step in parallel.
-This is needed for libraries which write back into their source directory during configure.
-
-This also disables CMAKE_DISABLE_SOURCE_CHANGES.
-
-### NO_CHARSET_FLAG
-Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
-
-This is needed for libraries that set their own source code's character set.
-
-### GENERATOR
-Specifies the precise generator to use.
-
-This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
-If used for this purpose, it should be set to `"NMake Makefiles"`.
-
-### OPTIONS
-Additional options passed to CMake during the configuration.
-
-### OPTIONS_RELEASE
-Additional options passed to CMake during the Release configuration. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
-
-### MAYBE_UNUSED_VARIABLES
-Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
-For example:
-```cmake
-vcpkg_cmake_configure(
-    ...
-    OPTIONS
-        -DBUILD_EXAMPLE=OFF
-    ...
-    MAYBE_UNUSED_VARIABLES
-        BUILD_EXAMPLE
-)
-```
-
-### LOGNAME
-Name of the log to write the output of the configure call to.
-
-## Notes
-This command supplies many common arguments to CMake. To see the full list, examine the source.
-
-## Examples
-
-* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-* [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-* [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
-#]===]
-
 function(z_vcpkg_configure_cmake_both_or_neither_set var1 var2)
     if(DEFINED "${var1}" AND NOT DEFINED "${var2}")
         message(FATAL_ERROR "If ${var1} is set, ${var2} must be set.")
@@ -91,11 +7,12 @@ function(z_vcpkg_configure_cmake_both_or_neither_set var1 var2)
     endif()
 endfunction()
 function(z_vcpkg_configure_cmake_build_cmakecache out_var whereat build_type)
-    set(line "build ${whereat}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ${whereat} &&")
+    set(line "build ${whereat}/CMakeCache.txt: CreateProcess\n")
+    string(APPEND line "  process = \"${CMAKE_COMMAND}\" -E chdir \"${whereat}\"")
     foreach(arg IN LISTS "${build_type}_command")
         string(APPEND line " \"${arg}\"")
     endforeach()
-    set("${out_var}" "${${out_var}}${line}\"\n\n" PARENT_SCOPE)
+    set("${out_var}" "${${out_var}}${line}\n\n" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_get_visual_studio_generator)
@@ -110,16 +27,22 @@ function(z_vcpkg_get_visual_studio_generator)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
             message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 12 2013")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 14 2015")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
-        set(generator "Visual Studio 15 2017")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
-        set(generator "Visual Studio 16 2019")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
-        set(generator "Visual Studio 17 2022")
+
+    if(DEFINED ENV{VisualStudioVersion})
+        if("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "12.99" AND
+           "$ENV{VisualStudioVersion}" VERSION_GREATER_EQUAL  "12.0" AND
+           NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 12 2013")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "14.99" AND
+               NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 14 2015")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "15.99")
+            set(generator "Visual Studio 15 2017")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "16.99")
+            set(generator "Visual Studio 16 2019")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "17.99")
+            set(generator "Visual Studio 17 2022")
+        endif()
     endif()
 
     if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
@@ -232,8 +155,12 @@ function(vcpkg_configure_cmake)
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
             message(FATAL_ERROR
                 "Unable to determine appropriate generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
     platform toolset: ${VCPKG_PLATFORM_TOOLSET}
     architecture    : ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
+        if(DEFINED VCPKG_PLATFORM_TOOLSET)
+            vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
 
@@ -256,6 +183,10 @@ function(vcpkg_configure_cmake)
         elseif(VCPKG_TARGET_IS_ANDROID AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
+    endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
@@ -330,13 +261,13 @@ function(vcpkg_configure_cmake)
 
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
-        vcpkg_list(APPEND arg_OPTIONS "${VCPKG_CMAKE_CONFIGURE_OPTIONS}")
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_CMAKE_CONFIGURE_OPTIONS})
     endif()
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
-        vcpkg_list(APPEND arg_OPTIONS_RELEASE "${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE}")
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE})
     endif()
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG "${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG}")
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG})
     endif()
 
     vcpkg_list(SET rel_command
@@ -384,6 +315,9 @@ function(vcpkg_configure_cmake)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
+            SAVE_LOG_FILES
+                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
+                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
         )
         
         vcpkg_list(APPEND config_logs
@@ -397,6 +331,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                 LOGNAME "${arg_LOGNAME}-dbg"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-out.log"
@@ -410,6 +345,7 @@ function(vcpkg_configure_cmake)
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                 LOGNAME "${arg_LOGNAME}-rel"
+                SAVE_LOG_FILES CMakeCache.txt
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-out.log"

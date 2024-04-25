@@ -1,0 +1,26 @@
+diff --git a/cmake/compilation_flags.cmake b/cmake/compilation_flags.cmake
+index 395f1b5..bb10165 100644
+--- a/cmake/compilation_flags.cmake
++++ b/cmake/compilation_flags.cmake
+@@ -26,7 +26,7 @@ else ()
+     -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization
+     -Wformat=2 -Winit-self -Wlong-long -Wmissing-declarations -Wmissing-include-dirs -Wcomment
+     -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion
+-    -Wsign-promo -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wunused -Wuninitialized
++    -Wsign-promo -Wstrict-overflow=5 -Wswitch-default -Wundef -Wunused -Wuninitialized
+     -Wno-missing-declarations -Wno-strict-overflow
+   )
+ 
+diff --git a/examples/peaddrconv/CMakeLists.txt b/examples/peaddrconv/CMakeLists.txt
+index fbad06a..02c8bcf 100644
+--- a/examples/peaddrconv/CMakeLists.txt
++++ b/examples/peaddrconv/CMakeLists.txt
+@@ -26,7 +26,7 @@ else ()
+     -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization
+     -Wformat=2 -Winit-self -Wlong-long -Wmissing-declarations -Wmissing-include-dirs -Wcomment
+     -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion
+-    -Wsign-promo -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wunused -Wuninitialized
++    -Wsign-promo -Wstrict-overflow=5 -Wswitch-default -Wundef -Wunused -Wuninitialized
+     -Wno-missing-declarations
+   )
+ 

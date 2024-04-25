@@ -1,0 +1,56 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index e8179fbe..f3ac5ddf 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -215,13 +215,13 @@ endif()
+ # Cairo
+ 
+ if (MSVC)
+-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/include)
++   find_path(Cairo_INCLUDE_DIR cairo/cairo.h)
++   list(APPEND Cairo_INCLUDE_DIRS ${Cairo_INCLUDE_DIR})
++   list(APPEND Cairo_INCLUDE_DIRS ${Cairo_INCLUDE_DIR}/cairo)
++   target_include_directories(elements PUBLIC ${Cairo_INCLUDE_DIRS})
+ 
+-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+-      target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x64/cairo.lib)
+-   else()
+-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/lib/x86/cairo.lib)
+-   endif()
++   find_library(Cairo_LIBRARY cairo)
++   target_link_libraries(elements PUBLIC ${Cairo_LIBRARY})
+ elseif (APPLE)
+ 	# TODO: add a min version specifiction
+ 	pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
+@@ -240,13 +240,8 @@ endif()
+ # Fontconfig
+ 
+ if (MSVC)
+-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/include)
+-
+-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x64/fontconfig.lib)
+-   else()
+-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/fontconfig/x86/fontconfig.lib)
+-   endif()
++   find_package(Fontconfig REQUIRED)
++   target_link_libraries(elements PUBLIC Fontconfig::Fontconfig)
+ elseif (APPLE)
+    pkg_check_modules(fontconfig REQUIRED IMPORTED_TARGET fontconfig)
+    target_include_directories(elements PUBLIC ${fontconfig_INCLUDE_DIRS})
+@@ -261,13 +256,8 @@ endif()
+ # Freetype
+ 
+ if (MSVC)
+-   target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/include)
+-
+-   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win64/freetype.lib)
+-   else()
+-	  target_link_libraries(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/freetype/win32/freetype.lib)
+-   endif()
++   find_package(Freetype REQUIRED)
++   target_link_libraries(elements PUBLIC Freetype::Freetype)
+ elseif (APPLE)
+    pkg_check_modules(freetype2 REQUIRED IMPORTED_TARGET freetype2)
+    target_include_directories(elements PUBLIC ${freetype2_INCLUDE_DIRS})

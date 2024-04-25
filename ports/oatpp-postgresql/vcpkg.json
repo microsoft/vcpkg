@@ -1,8 +1,10 @@
 {
   "name": "oatpp-postgresql",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Oat++ PostgreSQL adapter for Oat++ ORM (alpha - not all datatypes are supported).",
   "homepage": "https://github.com/oatpp/oatpp-postgresql",
+  "license": "Apache-2.0",
   "dependencies": [
     "libpq",
     "oatpp",

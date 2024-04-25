@@ -1,0 +1,90 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9cd1b4b..3912b26 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 3.22)
+ project(GKlib C)
+ 
+ option(BUILD_SHARED_LIBS "Build shared libraries (.dll/.so) instead of static ones (.lib/.a)" OFF)
+@@ -22,10 +22,11 @@ if(UNIX)
+   target_link_libraries(GKlib m)
+ endif(UNIX)
+ 
+-include_directories("test")
+-add_subdirectory("test")
+ 
+ install(TARGETS GKlib
+-  ARCHIVE DESTINATION lib/${LINSTALL_PATH}
+-  LIBRARY DESTINATION lib/${LINSTALL_PATH})
++  EXPORT GKlibTargets
++  INCLUDES DESTINATION "include/GKlib"
++)
++install(EXPORT GKlibTargets FILE "GKlibConfig.cmake" DESTINATION "share/gklib")
++install(FILES "win32/adapt.h" DESTINATION "include/${HINSTALL_PATH}/win32")
+ install(FILES ${GKlib_includes} DESTINATION include/${HINSTALL_PATH})
+diff --git a/GKlibSystem.cmake b/GKlibSystem.cmake
+index 31a1cf1..172a386 100644
+--- a/GKlibSystem.cmake
++++ b/GKlibSystem.cmake
+@@ -18,7 +18,6 @@ option(NO_X86 "enable NO_X86 support" OFF)
+ 
+ # Add compiler flags.
+ if(MSVC)
+-  set(GKlib_COPTS "/Ox")
+   set(GKlib_COPTIONS "-DWIN32 -DMSC -D_CRT_SECURE_NO_DEPRECATE -DUSE_GKREGEX")
+ elseif(MINGW)
+   set(GKlib_COPTS "-DUSE_GKREGEX")
+@@ -33,6 +32,8 @@ if(CMAKE_COMPILER_IS_GNUCC)
+   set(GKlib_COPTIONS "${GKlib_COPTIONS} -std=c99 -fno-strict-aliasing")
+ if(VALGRIND)
+   set(GKlib_COPTIONS "${GK_COPTIONS} -march=x86-64 -mtune=generic")
++elseif(1)
++  # Use flags from toolchain and triplet
+ else()
+ # -march=native is not a valid flag on PPC:
+ if(CMAKE_SYSTEM_PROCESSOR MATCHES "power|ppc|powerpc|ppc64|powerpc64" OR (APPLE AND CMAKE_OSX_ARCHITECTURES MATCHES "ppc|ppc64"))
+@@ -46,6 +47,7 @@ endif(VALGRIND)
+   endif(NOT MINGW)
+ # GCC warnings.
+   set(GKlib_COPTIONS "${GKlib_COPTIONS} -Werror -Wall -pedantic -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unknown-pragmas -Wno-unused-label")
++  string(REPLACE " -Werror " " " GKlib_COPTIONS "${GKlib_COPTIONS}")
+ elseif(${CMAKE_C_COMPILER_ID} MATCHES "Sun")
+ # Sun insists on -xc99.
+   set(GKlib_COPTIONS "${GKlib_COPTIONS} -xc99")
+@@ -75,6 +77,8 @@ endif(NO_X86)
+ if(GDB)
+   set(GKlib_COPTS "${GKlib_COPTS} -g")
+   set(GKlib_COPTIONS "${GKlib_COPTIONS} -Werror")
++elseif(1)
++  # Use flags from toolchain and triplet
+ else()
+   set(GKlib_COPTS "-O3")
+ endif(GDB)
+diff --git a/gk_ms_inttypes.h b/gk_ms_inttypes.h
+index b89fc10..7247c38 100644
+--- a/gk_ms_inttypes.h
++++ b/gk_ms_inttypes.h
+@@ -35,6 +35,8 @@
+ 
+ #ifndef _MSC_INTTYPES_H_ // [
+ #define _MSC_INTTYPES_H_
++#include <inttypes.h>
++#elif 0
+ 
+ #if _MSC_VER > 1000
+ #pragma once
+diff --git a/gk_ms_stdint.h b/gk_ms_stdint.h
+index 7e200dc..1c51958 100644
+--- a/gk_ms_stdint.h
++++ b/gk_ms_stdint.h
+@@ -35,6 +35,8 @@
+ 
+ #ifndef _MSC_STDINT_H_ // [
+ #define _MSC_STDINT_H_
++#include <stdint.h>
++#elif 0
+ 
+ #if _MSC_VER > 1000
+ #pragma once

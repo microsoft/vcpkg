@@ -25,13 +25,25 @@ set (SRCS
 
 include_directories(win32 include/tre)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -DHAVE_CONFIG_H)
+if (WIN32)
+  add_definitions(-DHAVE_MALLOC_H)
+endif()
 add_library(tre ${SRCS})
+
+target_include_directories(tre PUBLIC "$<INSTALL_INTERFACE:include>")
 
 install(
   TARGETS tre
+  EXPORT unofficial-tre-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+install(
+  EXPORT unofficial-tre-targets
+  NAMESPACE unofficial::tre::
+  FILE unofficial-tre-config.cmake
+  DESTINATION share/unofficial-tre)
 
 install(FILES ${HEADERS} DESTINATION include/tre)

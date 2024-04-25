@@ -43,3 +43,6 @@ install(
     NAMESPACE unofficial::
     DESTINATION share/unofficial-hash-library
 )
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-hash-library-config.cmake" "include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-hash-library-targets.cmake)\n")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-hash-library-config.cmake" DESTINATION share/unofficial-hash-library)

@@ -1,41 +1,46 @@
-#[===[
-# z_vcpkg_setup_pkgconfig_path
-
-`z_vcpkg_setup_pkgconfig_path` sets up environment variables to use `pkgconfig`, such as `PKG_CONFIG` and `PKG_CONFIG_PATH`.
-The original values are restored with `z_vcpkg_restore_pkgconfig_path`. `BASE_DIRS` indicates the base directories to find `.pc` files; typically `${CURRENT_INSTALLED_DIR}`, or `${CURRENT_INSTALLED_DIR}/debug`.
-
-```cmake
-z_vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
-# Build process that may transitively invoke pkgconfig
-z_vcpkg_restore_pkgconfig_path()
-```
-
-#]===]
 function(z_vcpkg_setup_pkgconfig_path)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BASE_DIRS")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "CONFIG" "")
 
-    if(NOT DEFINED arg_BASE_DIRS OR "${arg_BASE_DIRS}" STREQUAL "")
-        message(FATAL_ERROR "BASE_DIRS is required.")
+    if("${arg_CONFIG}" STREQUAL "")
+        message(FATAL_ERROR "CONFIG is required.")
     endif()
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED ENV{${envvar}})
+            set("z_vcpkg_env_backup_${envvar}" "$ENV{${envvar}}" PARENT_SCOPE)
+        else()
+            unset("z_vcpkg_env_backup_${envvar}" PARENT_SCOPE)
+        endif()
+    endforeach()
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
-    vcpkg_add_to_path("${pkgconfig_path}")
+    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+    cmake_path(CONVERT "${pkgconfig_path}" TO_CMAKE_PATH_LIST pkgconfig_path NORMALIZE)
+    if(NOT "${pkgconfig_path}" IN_LIST path_list)
+      vcpkg_add_to_path("${pkgconfig_path}")
+    endif()
+    unset(path_list)
+    unset(pkgconfig_path)
 
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-    foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/share/pkgconfig/")
+    foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/share/pkgconfig")
+        if(arg_CONFIG STREQUAL "RELEASE")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/lib/pkgconfig")
+            # search order is lib, share, external
+        elseif(arg_CONFIG STREQUAL "DEBUG")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/debug/lib/pkgconfig")
+            # search order is debug/lib, share, external
+        else()
+            message(FATAL_ERROR "CONFIG must be either RELEASE or DEBUG.")
+        endif()
     endforeach()
-
-    foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/lib/pkgconfig/")
-    endforeach()
+    # total search order is current packages dir, current installed dir, external
 endfunction()
 
 function(z_vcpkg_restore_pkgconfig_path)
@@ -44,5 +49,11 @@ function(z_vcpkg_restore_pkgconfig_path)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED z_vcpkg_env_backup_${envvar})
+            set("ENV{${envvar}}" "${z_vcpkg_env_backup_${envvar}}")
+        else()
+            unset("ENV{${envvar}}")
+        endif()
+    endforeach()
 endfunction()

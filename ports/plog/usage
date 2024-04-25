@@ -1,4 +1,6 @@
 The package plog is header only and can be used from CMake via:
 
-    find_path(PLOG_INCLUDE_DIRS "plog/Log.h")
-    target_include_directories(main PRIVATE ${PLOG_INCLUDE_DIRS})
+Modern CMake:
+    find_package(plog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE plog::plog)
+

@@ -1,0 +1,14 @@
+{
+  "name": "qtquick3dphysics",
+  "version": "6.6.1",
+  "port-version": 1,
+  "description": "Qt Quick 3D Physics provides a high-level API for physics simulation.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtquick3d",
+      "default-features": false
+    }
+  ]
+}

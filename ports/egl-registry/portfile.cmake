@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/EGL-Registry
-  REF 992aa3914f8fea801b1034c992db389911d9f3c3
-  SHA512 75524ed23066e856f080f6551a6c7b6573d13ff7b4555594e2987e1e6a38ba13042d5037d56d656048e83c0b4ff002b5badacf9224516f9f5e521d4af653805a
+  REF 7db3005d4c2cb439f129a0adc931f3274f9019e6
+  SHA512 474d7a4d614efed18151e0ff18840aaa8349ec0b01ec3cc4e6ff3f60fdb918e0b8c68dbb13e09dc5e7b081a9eb637b008b48b1a4be537d360f9a6d247b7b8802
   HEAD_REF master
 )
 
@@ -19,8 +19,4 @@ file(
   DESTINATION "${CURRENT_PACKAGES_DIR}/share/opengl"
 )
 
-file(
-  INSTALL "${SOURCE_PATH}/sdk/docs/man/copyright.xml"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${CURRENT_PORT_DIR}/copyright")

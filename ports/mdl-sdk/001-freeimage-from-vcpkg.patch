@@ -1,0 +1,83 @@
+diff --git a/cmake/dependencies/add_freeimage.cmake b/cmake/dependencies/add_freeimage.cmake
+index 944d452..3916352 100644
+--- a/cmake/dependencies/add_freeimage.cmake
++++ b/cmake/dependencies/add_freeimage.cmake
+@@ -67,13 +67,4 @@ else()
+                 )
+         endif()
+     endif()
+-
+-    # copy runtime dependencies
+-    # copy system libraries only on windows, we assume the libraries are installed in a unix environment
+-    if(NOT __TARGET_ADD_DEPENDENCY_NO_RUNTIME_COPY AND WINDOWS)
+-        target_copy_to_output_dir(TARGET ${__TARGET_ADD_DEPENDENCY_TARGET}
+-            FILES
+-                ${MDL_DEPENDENCY_FREEIMAGE_SHARED}
+-            )
+-    endif()
+ endif()
+diff --git a/cmake/find/find_freeimage_ext.cmake b/cmake/find/find_freeimage_ext.cmake
+index b11573a..703458e 100644
+--- a/cmake/find/find_freeimage_ext.cmake
++++ b/cmake/find/find_freeimage_ext.cmake
+@@ -28,6 +28,9 @@
+ 
+ function(FIND_FREEIMAGE_EXT)
+ 
++    find_package(freeimage CONFIG REQUIRED)
++    if(0)
++
+     set(FREEIMAGE_DIR "NOT-SPECIFIED" CACHE PATH "Directory that contains the freeimage library and the corresponding headers.")
+     #-----------------------------------------------------------------------------------------------
+ 
+@@ -90,6 +93,37 @@ function(FIND_FREEIMAGE_EXT)
+         endif()
+     endif()
+ 
++    else()
++        get_target_property(_FREEIMAGE_INCLUDE      freeimage::FreeImage INTERFACE_INCLUDE_DIRECTORIES)
++        get_target_property(_FREEIMAGE_DEPENDENCIES freeimage::FreeImage INTERFACE_LINK_LIBRARIES     )
++        
++        get_target_property(_FREEIMAGE_SHARED freeimage::FreeImage IMPORTED_LOCATION)
++        if(NOT _FREEIMAGE_SHARED)
++            get_target_property(_FREEIMAGE_SHARED freeimage::FreeImage IMPORTED_LOCATION_RELEASE)
++        endif()
++        if(NOT _FREEIMAGE_SHARED)
++            get_target_property(_FREEIMAGE_SHARED freeimage::FreeImage IMPORTED_LOCATION_DEBUG)
++        endif()
++        
++        get_target_property(_FREEIMAGE_TYPE freeimage::FreeImage TYPE)
++        if(${_FREEIMAGE_TYPE} STREQUAL "SHARED_LIBRARY")
++            get_target_property(_FREEIMAGE_LIB freeimage::FreeImage IMPORTED_IMPLIB)
++            if(NOT _FREEIMAGE_LIB)
++                get_target_property(_FREEIMAGE_LIB freeimage::FreeImage IMPORTED_IMPLIB_RELEASE)
++            endif()
++            if(NOT _FREEIMAGE_LIB)
++                get_target_property(_FREEIMAGE_LIB freeimage::FreeImage IMPORTED_IMPLIB_DEBUG)
++            endif()
++        elseif(WINDOWS)
++            set(_FREEIMAGE_LIB "${_FREEIMAGE_SHARED}")
++        endif()
++        
++        find_file(_FREEIMAGE_HEADER_FILE "FreeImage.h"
++            HINTS
++                ${_FREEIMAGE_INCLUDE}
++        )
++    endif()
++
+     # error if dependencies can not be resolved
+     if(NOT EXISTS ${_FREEIMAGE_INCLUDE} OR (WINDOWS AND NOT EXISTS ${_FREEIMAGE_LIB}) OR NOT EXISTS ${_FREEIMAGE_SHARED})
+         message(STATUS "FREEIMAGE_DIR: ${FREEIMAGE_DIR}")
+diff --git a/src/shaders/plugin/freeimage/CMakeLists.txt b/src/shaders/plugin/freeimage/CMakeLists.txt
+index a28b50e..910141e 100644
+--- a/src/shaders/plugin/freeimage/CMakeLists.txt
++++ b/src/shaders/plugin/freeimage/CMakeLists.txt
+@@ -69,7 +69,7 @@ add_library(mdl::nv_freeimage ALIAS ${PROJECT_NAME})
+ # add dependencies other dependencies
+ target_add_dependencies(TARGET ${PROJECT_NAME} 
+     DEPENDS
+-        freeimage
++        freeimage::FreeImage
+         mdl::base-system-version
+     )
+ 

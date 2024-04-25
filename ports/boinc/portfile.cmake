@@ -1,13 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.18/7.18.1
-    SHA512 200587a0896aec6a7e7247132811141909aa333cb2bb9350c5ba016ffdf056413b1c5346361b311c087634b2d29cdbb204486385d8561a299b68739244c5a532
+    REF "client_release/${MAJOR_MINOR}/${VERSION}"
+    SHA512 ca3eeee36270c73926e2a3a10e400d356c95046c1bc9ea08378b835f4d4958c7145d55888c8f3048ef0b8f8136126cf442104fd57d8b75c9d7420c28fd50466b
     HEAD_REF master
-    PATCHES
-        001-add-openssl3-support.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -32,13 +30,26 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
+set(build_options "")
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND build_options "-DHAVE_STRCASECMP=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        ${build_options}
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
+file(READ "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" BOINC_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(OpenSSL)
+${BOINC_CONFIG}
+")
 
 vcpkg_copy_pdbs()
 

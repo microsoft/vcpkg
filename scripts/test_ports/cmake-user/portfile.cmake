@@ -38,35 +38,12 @@ if("cmake-3-7" IN_LIST FEATURES)
         message(FATAL_ERROR "Unable to test feature 'cmake-3-7' for '${HOST_TRIPLET}' host.")
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH legacy_cmake
+    vcpkg_extract_source_archive(legacy_cmake
         ARCHIVE "${legacy_cmake_archive}"
-        REF "${cmake_version}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${name}"
+        SOURCE_BASE "${cmake_version}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cmake"
     )
     list(APPEND cmake_commands "${legacy_cmake}${cmake_bin_dir}/cmake")
-endif()
-
-set(packages "")
-if("find-package" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" vcpkg_json)
-    string(JSON packages_json GET "${vcpkg_json}" "features" "find-package" "dependencies")
-    string(JSON packages_count LENGTH "${packages_json}")
-    if(packages_count GREATER 0)
-        math(EXPR last "${packages_count} - 1")
-        foreach(i RANGE 0 ${last})
-            string(JSON package GET "${packages_json}" ${i} "$package")
-            list(APPEND packages "${package}")
-        endforeach()
-    endif()
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        list(REMOVE_ITEM packages "Curses")
-    endif()
-    if(VCPKG_TARGET_IS_LINUX)
-        # Port wxwidgets requires linux system libraries which conflict with vcpkg ports.
-        # This line complements the "platform" restriction from vcpkg.json.
-        list(REMOVE_ITEM packages "wxWidgets")
-    endif()
 endif()
 
 if(DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
@@ -74,6 +51,40 @@ if(DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
 else()
     vcpkg_find_acquire_program(NINJA)
 endif()
+
+function(get_packages out_packages cmake_version)
+    set(packages "")
+    if("find-package" IN_LIST FEATURES)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" vcpkg_json)
+        string(JSON packages_json GET "${vcpkg_json}" "features" "find-package" "dependencies")
+        string(JSON packages_count LENGTH "${packages_json}")
+        if(packages_count GREATER 0)
+            math(EXPR last "${packages_count} - 1")
+            foreach(i RANGE 0 ${last})
+                # Some ports may be excluded via platform expressions,
+                # because they don't support particular platforms.
+                # Using the installed vcpkg_abi_info.txt as an indicator.
+                string(JSON port GET "${packages_json}" "${i}" "name")
+                if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/${port}/vcpkg_abi_info.txt")
+                    continue()
+                endif()
+                string(JSON since ERROR_VARIABLE since_not_found GET "${packages_json}" "${i}" "\$since")
+                if(since AND cmake_version VERSION_LESS since)
+                    continue()
+                endif()
+                if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/${port}/vcpkg_abi_info.txt")
+                    continue()
+                endif()
+                string(JSON package GET "${packages_json}" "${i}" "\$package")
+                list(APPEND packages "${package}")
+            endforeach()
+        endif()
+    endif()
+    if("pkg-check-modules" IN_LIST FEATURES)
+        list(APPEND packages "ZLIBviaPkgConfig")
+    endif()
+    set("${out_packages}" "${packages}" PARENT_SCOPE)
+endfunction()
 
 function(test_cmake_project)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "CMAKE_COMMAND;NAME" "OPTIONS")
@@ -96,25 +107,31 @@ function(test_cmake_project)
 
     set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-${arg_NAME}")
     set(base_options
+        # Interface: CMake
         -G "Ninja"
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
-        "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
-        "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
+        "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
+        # Interface: vcpkg.cmake
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
+        "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_MODE=OFF"
+        # Interface: project/CMakeLists.txt
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
     )
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        # Interface: CMake
         list(APPEND base_options "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
         endif()
-        if(DEFINED VCPKG_PLATFORM_TOOLSET)
-            list(APPEND base_options "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
-        endif()
+    endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -151,6 +168,7 @@ function(test_cmake_project)
     if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
         string(REPLACE "  CMake" "##vso[task.logissue type=error]CMake" message "${message}")
     endif()
+    get_packages(packages "${cmake_version}")
     foreach(package IN LISTS packages)
         string(MAKE_C_IDENTIFIER "${package}" package_string)
         set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}")
@@ -200,14 +218,10 @@ foreach(executable IN LISTS cmake_commands)
         CMAKE_COMMAND "${executable}"
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Release"
-            "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
-            "-DVCPKG_PREFER_SYSTEM_LIBS=OFF"
     )
     test_cmake_project(NAME "debug"
         CMAKE_COMMAND "${executable}"
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Debug"
-            "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
-            "-DVCPKG_PREFER_SYSTEM_LIBS=ON"
     )
 endforeach()

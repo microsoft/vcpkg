@@ -1,8 +1,8 @@
 {
   "name": "qt5-canvas3d",
-  "version-string": "0",
-  "port-version": 1,
-  "description": "Qt5 Canvas 3d Module;",
+  "version": "0",
+  "port-version": 3,
+  "description": "Qt Canvas3D offers a low level OpenGL-like API that enables you to execute 3D drawing commands from JavaScript.",
   "dependencies": [
     {
       "name": "qt5-base",

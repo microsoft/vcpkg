@@ -1,6 +1,7 @@
 {
   "name": "freetype",
-  "version": "2.12.1",
+  "version": "2.13.2",
+  "port-version": 1,
   "description": "A library to render fonts.",
   "homepage": "https://www.freetype.org/",
   "license": "FTL OR GPL-2.0-or-later",
@@ -33,11 +34,17 @@
         "bzip2"
       ]
     },
+    "error-strings": {
+      "description": "Enable support for meaningful error descriptions."
+    },
     "png": {
       "description": "Support PNG compressed OpenType embedded bitmaps.",
       "dependencies": [
         "libpng"
       ]
+    },
+    "subpixel-rendering": {
+      "description": "Enables subpixel rendering."
     },
     "zlib": {
       "description": "Use zlib instead of internal library for DEFLATE",

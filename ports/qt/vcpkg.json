@@ -1,10 +1,25 @@
 {
   "name": "qt",
-  "version": "6.3.0",
-  "description": "Qt",
+  "version": "6.6.1",
+  "port-version": 1,
+  "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    {
+      "name": "qt3d",
+      "default-features": false,
+      "features": [
+        "animation",
+        "assimp",
+        "extras",
+        "input",
+        "logic",
+        "qml",
+        "render",
+        "rhi"
+      ]
+    },
     {
       "name": "qt5compat",
       "default-features": false,
@@ -38,6 +53,8 @@
       "platform": "linux"
     },
     "qtdoc",
+    "qtgraphs",
+    "qtgrpc",
     {
       "name": "qtimageformats",
       "default-features": false,
@@ -48,6 +65,7 @@
       ]
     },
     "qtinterfaceframework",
+    "qtlanguageserver",
     {
       "name": "qtlottie",
       "default-features": false,
@@ -70,7 +88,16 @@
       "features": [
         "gstreamer"
       ],
-      "platform": "!(static & windows)"
+      "platform": "!windows"
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "ffmpeg",
+        "gstreamer"
+      ],
+      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {
@@ -115,6 +142,11 @@
     "qtserialbus",
     "qtserialport",
     "qtshadertools",
+    {
+      "name": "qtspeech",
+      "default-features": false,
+      "platform": "!(windows & x86)"
+    },
     "qtsvg",
     {
       "name": "qttools",
@@ -142,7 +174,7 @@
         "spellchecker",
         "webchannel"
       ],
-      "platform": "!static"
+      "platform": "!static & !(windows & arm)"
     },
     {
       "name": "qtwebsockets",
@@ -153,10 +185,7 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false,
-      "features": [
-        "qml"
-      ]
+      "default-features": false
     },
     {
       "name": "qtwebview",
@@ -164,7 +193,7 @@
       "features": [
         "webengine"
       ],
-      "platform": "!static"
+      "platform": "!static & !(windows & arm)"
     }
   ],
   "default-features": [

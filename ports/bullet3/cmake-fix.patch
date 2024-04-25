@@ -35,7 +35,7 @@ index f5dc7bd..50b3d67 100644
 +  set(_DIR)
 +endif()
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a695b71..607edde 100644
+index a695b71..f98cf4d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -44,7 +44,7 @@ index a695b71..607edde 100644
  set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
  cmake_policy(SET CMP0017 NEW)
  #this line has to appear before 'PROJECT' in order to be able to disable incremental linking
-@@ -489,7 +489,14 @@ IF (BUILD_UNIT_TESTS)
+@@ -489,24 +489,33 @@ IF (BUILD_UNIT_TESTS)
  	SUBDIRS(test)
  ENDIF()
  
@@ -58,17 +58,19 @@ index a695b71..607edde 100644
 +
 +set (BULLET_CONFIG_CMAKE_PATH share/bullet )
  list (APPEND BULLET_DEFINITIONS ${BULLET_DOUBLE_DEF})
- list (APPEND BULLET_LIBRARIES LinearMath)
+-list (APPEND BULLET_LIBRARIES LinearMath)
  list (APPEND BULLET_LIBRARIES Bullet3Common)
-@@ -497,16 +504,18 @@ list (APPEND BULLET_LIBRARIES BulletInverseDynamics)
- list (APPEND BULLET_LIBRARIES BulletCollision)
+ list (APPEND BULLET_LIBRARIES BulletInverseDynamics)
+-list (APPEND BULLET_LIBRARIES BulletCollision)
  list (APPEND BULLET_LIBRARIES BulletDynamics)
++list (APPEND BULLET_LIBRARIES BulletCollision)
  list (APPEND BULLET_LIBRARIES BulletSoftBody)
 -set (BULLET_USE_FILE ${BULLET_CONFIG_CMAKE_PATH}/UseBullet.cmake)
 -configure_file 	( ${CMAKE_CURRENT_SOURCE_DIR}/BulletConfig.cmake.in
 -					${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake
 -					@ONLY ESCAPE_QUOTES
 -				)
++list (APPEND BULLET_LIBRARIES LinearMath)
 +configure_package_config_file(
 +	${CMAKE_CURRENT_SOURCE_DIR}/BulletConfig.cmake.in
 +	${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake

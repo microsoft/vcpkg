@@ -1,14 +1,19 @@
 {
   "name": "gmime",
   "version": "3.2.6",
-  "port-version": 2,
+  "port-version": 6,
   "description": "GMime is a C/C++ library which may be used for the creation and parsing of messages using the Multipurpose Internet Mail Extension (MIME).",
   "homepage": "https://developer.gnome.org/gmime/",
-  "supports": "windows",
+  "license": "LGPL-2.1-or-later",
+  "supports": "windows & !xbox",
   "dependencies": [
     "glib",
     "libiconv",
     "libidn2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }

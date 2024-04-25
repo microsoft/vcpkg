@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 #Could probably be the beginning of a vcpkg_install_copyright?
 function(qt_install_copyright SOURCE_PATH)
     #Find the relevant license file and install it
@@ -14,5 +16,12 @@ function(qt_install_copyright SOURCE_PATH)
     elseif(EXISTS "${SOURCE_PATH}/LICENSE.FDL")
         set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.FDL")
     endif()
-    file(INSTALL "${LICENSE_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+    if(LICENSE_PATH)
+        file(INSTALL "${LICENSE_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+    elseif(EXISTS "${SOURCE_PATH}/LICENSES")
+        file(GLOB LICENSES "${SOURCE_PATH}/LICENSES/*")
+        vcpkg_install_copyright(FILE_LIST ${LICENSES})
+    else()
+        message(WARNING "No license/copyright file found!")
+    endif()
 endfunction()

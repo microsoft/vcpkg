@@ -1,12 +1,16 @@
 {
   "name": "qca",
-  "version": "2.3.4",
-  "port-version": 2,
+  "version": "2.3.7",
+  "port-version": 1,
   "description": "Qt Cryptographic Architecture (QCA).",
-  "homepage": "https://cgit.kde.org/qca.git/",
+  "homepage": "https://userbase.kde.org/QCA",
   "dependencies": [
     {
-      "name": "qt5-base",
+      "name": "qt5compat",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
       "default-features": false
     },
     {
@@ -26,6 +30,12 @@
       "description": "Build with botan",
       "dependencies": [
         "botan"
+      ]
+    },
+    "ossl": {
+      "description": "Build with openssl",
+      "dependencies": [
+        "openssl"
       ]
     }
   }

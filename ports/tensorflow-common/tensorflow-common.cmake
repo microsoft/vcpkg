@@ -1,10 +1,10 @@
-set(TF_VERSION 2.7.0)
-set(TF_VERSION_SHORT 2.7)
+set(TF_VERSION 2.10.0)
+set(TF_VERSION_SHORT 2.10)
 
-vcpkg_find_acquire_program(BAZEL)
+find_program(BAZEL bazel PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools" REQUIRED)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
-vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
-set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
+vcpkg_add_to_path(PREPEND "${BAZEL_DIR}")
+set(ENV{BAZEL_BIN_PATH} "${BAZEL_DIR}")
 
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	file(REMOVE_RECURSE ${PATH_TO_REMOVE})
@@ -43,6 +43,19 @@ if(CMAKE_HOST_WIN32)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 
+	# on macos arm64 use conda miniforge
+	if (VCPKG_HOST_IS_OSX)
+		EXEC_PROGRAM(uname ARGS -m OUTPUT_VARIABLE HOST_ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)
+		if(HOST_ARCH STREQUAL "arm64")
+			message(STATUS "Using python from miniforge3 ")
+
+			if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/miniforge3)
+				vcpkg_execute_required_process(COMMAND curl -fsSLo Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-miniforge3-${TARGET_TRIPLET})
+				vcpkg_execute_required_process(COMMAND bash ./Miniforge3.sh -p ${CURRENT_BUILDTREES_DIR}/miniforge3 -b WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-miniforge3-${TARGET_TRIPLET})
+				SET(PYTHON3 ${CURRENT_BUILDTREES_DIR}/miniforge3/bin/python3)
+			endif()
+		endif()
+	endif()
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
 	vcpkg_add_to_path(PREPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin)
 	set(PYTHON3 ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/python3)
@@ -88,9 +101,15 @@ set(ENV{TF_SET_ANDROID_WORKSPACE} 0)
 set(ENV{TF_DOWNLOAD_CLANG} 0)
 set(ENV{TF_NCCL_VERSION} ${TF_VERSION_SHORT})
 set(ENV{NCCL_INSTALL_PATH} "")
-set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
+set(ENV{CC_OPT_FLAGS} "-Wno-sign-compare")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+       if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" )
+               set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+       endif()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow${TF_LIB_SUFFIX}.dll)
@@ -152,7 +171,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 f1e892583c7b3a73d4d39ec65dc135a5b02c789b357d57414ad2b6d05ad9fbfc8ef81918ba6410e314abd6928b76f764e6ef64c0b0c84b58b50796634be03f39
+		SHA512 bf8a6f16393499c227fc70f27bcfb6d44ada53325aee2b217599309940f60db8ee00dd90e3d82b87d9c309f5621c404edab55e97ab8bfa09e4fc67859b9e3967
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
@@ -191,6 +210,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	set(COPTS)
 	set(CXXOPTS)
 	set(LINKOPTS)
+	set(BUILD_OPTS --jobs ${VCPKG_CONCURRENCY})
+	message(STATUS "Build Tensorflow with concurrent level: ${VCPKG_CONCURRENCY}")
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(PLATFORM_COMMAND WINDOWS_COMMAND)
 	else()
@@ -198,11 +219,15 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			list(APPEND BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		elseif(VCPKG_TARGET_IS_OSX)
-			set(BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS currently broken
+			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
+			else()
+				list(APPEND BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS x86_64 currently broken
+			endif()
 		else()
-			set(BUILD_OPTS --compilation_mode=dbg)
+			list(APPEND BUILD_OPTS --compilation_mode=dbg)
 		endif()
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
@@ -221,7 +246,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
-		set(BUILD_OPTS --compilation_mode=opt)
+		list(APPEND BUILD_OPTS --compilation_mode=opt)
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_RELEASE})
@@ -238,6 +263,13 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
 			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
+	endif()
+
+	if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+		# tensorflow supports 10.12.6 (Sierra) or higher (64-bit)
+		# but actually does not compile with < 10.14
+		# https://www.tensorflow.org/install/pip#macos
+		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

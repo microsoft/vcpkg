@@ -3,13 +3,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Cross
-    REF 2021-01-15
-    SHA512 f934ef61602223f6fe6d9c826ed5beb129beb7a30b18b389625d4fc0b1efa1b8df930a2a2d2a0b4f377ef2899e8e034239819a4c6629a78c666f72004464da93
+    REF vulkan-sdk-${VERSION}
+    SHA512 56172ce2a766ea83a04701a3253a17fb611c66e25303448d7ca34d507b0476f4d14420021066b382ae6f35a1b1ee4b35443e2e0475b468552f3bd1ad3413e3af
     HEAD_REF master
 )
 
 if(VCPKG_TARGET_IS_IOS)
-    message(STATUS "Using iOS trplet. Executables won't be created...")
+    message(STATUS "Using iOS triplet. Executables won't be created...")
     set(BUILD_CLI OFF)
 else()
     set(BUILD_CLI ON)
@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 foreach(COMPONENT core c cpp glsl hlsl msl reflect util)
     vcpkg_cmake_config_fixup(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake PACKAGE_NAME spirv_cross_${COMPONENT})
@@ -39,4 +40,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

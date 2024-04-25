@@ -1,0 +1,13 @@
+diff --git a/cpp/cmake_modules/Findutf8proc.cmake b/cpp/cmake_modules/Findutf8proc.cmake
+index e347414..83f2aa1 100644
+--- a/cpp/cmake_modules/Findutf8proc.cmake
++++ b/cpp/cmake_modules/Findutf8proc.cmake
+@@ -30,7 +30,7 @@ if(ARROW_PACKAGE_KIND STREQUAL "vcpkg")
+   if(utf8proc_FIND_REQUIRED)
+     list(APPEND find_package_args REQUIRED)
+   endif()
+-  find_package(utf8proc NAMES unofficial-utf8proc ${find_package_args})
++  find_package(utf8proc NAMES unofficial-utf8proc)
+   if(utf8proc_FOUND)
+     add_library(utf8proc::utf8proc ALIAS utf8proc)
+     return()

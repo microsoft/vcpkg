@@ -1,23 +1,15 @@
-set(GEOS_VERSION 3.10.2)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2"
-    FILENAME "geos-${GEOS_VERSION}.tar.bz2"
-    SHA512 390381711ccf56b862c2736cf6329200822f121de1c49df52b8b85cabea8c7787b199df2196acacc2e5c677ff3ebe042d93d70e89deadbc19d754499edb65126
+    URLS "https://download.osgeo.org/geos/geos-${VERSION}.tar.bz2"
+    FILENAME "geos-${VERSION}.tar.bz2"
+    SHA512 bbca43c1eb9c4001d2e3c29d054b597bfb2c1d4860784246dd20fec21882b54bc2a8a8f0f09b8816aec7a85b621d3d1645adca15318838d2b4f4b5c4c4a58a94
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "${GEOS_VERSION}"
+    SOURCE_BASE "v${VERSION}"
     PATCHES
-        disable-warning-4996.patch
+        win32.patch
         fix-exported-config.patch
 )
-
-vcpkg_list(SET EXTRA_OPTIONS)
-if(VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,7 +19,6 @@ vcpkg_cmake_configure(
         -DBUILD_GEOSOP=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
-        ${EXTRA_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GEOS)

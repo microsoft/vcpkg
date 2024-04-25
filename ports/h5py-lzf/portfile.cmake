@@ -1,34 +1,25 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(link_hdf5_SHARED 0)
-else()
-    set(link_hdf5_SHARED 1)
-endif()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO h5py/h5py
-    REF 81ba118ee66b97a94678e8f5675c4114649dfda4
-    SHA512 c789abdc563f8d2535f0a2ef5e233eb862281559a9cdc3ec560dd69b4d403b6f923f5390390da54851e1bfef1be8de7f80999c25a7f3ac4962ee0620179c6420
+    REF a6555f787e110b29af654ba6c350169c44ac8d2d
+    SHA512 1d601b499a6ccdcc5dd473b235d915b85501476ca3e9343d6f6f624a8eeb5acbeced227ec552a12936451a438d0c1f25c1d974549e80aaa724646b5bdb9ae20c
     HEAD_REF master
-    PATCHES
-		0001-disable-H5PLget_plugin-api.patch
+)
+file(REMOVE_RECURSE "${SOURCE_PATH}/lzf/lzf")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/lzf")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/lzf"
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/lzf)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/lzf
-    PREFER_NINJA
-    OPTIONS
-        -Dlink_hdf5_SHARED=${link_hdf5_SHARED}
-)
-
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-h5py-lzf)
+file(COPY "${CURRENT_PORT_DIR}/unofficial-h5py-lzf-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-h5py-lzf")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/lzf/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lzf/LICENSE.txt")

@@ -1,43 +1,6 @@
-#[===[.md:
-# vcpkg_cmake_get_vars
+include_guard(GLOBAL)
 
-Runs a cmake configure with a dummy project to extract certain cmake variables
-
-## Usage
-```cmake
-vcpkg_cmake_get_vars(<out-var>)
-```
-
-`vcpkg_cmake_get_vars(<out-var>)` sets `<out-var>` to
-a path to a generated CMake file, with the detected `CMAKE_*` variables
-re-exported as `VCPKG_DETECTED_CMAKE_*`.
-
-Additionally sets, for `RELEASE` and `DEBUG`:
-- VCPKG_COMBINED_CXX_FLAGS_<config>
-- VCPKG_COMBINED_C_FLAGS_<config>
-- VCPKG_COMBINED_SHARED_LINKER_FLAGS_<config>
-- VCPKG_COMBINED_STATIC_LINKER_FLAGS_<config>
-- VCPKG_COMBINED_EXE_LINKER_FLAGS_<config>
-
-Most users should use these pre-combined flags instead of attempting
-to read the `VCPKG_DETECTED_*` flags directly.
-
-## Notes
-Avoid usage in portfiles.
-
-All calls to `vcpkg_cmake_get_vars` will result in the same output file;
-the output file is not generated multiple times.
-
-### Basic Usage
-
-```cmake
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-message(STATUS "detected CXX flags: ${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
-```
-#]===]
-
-set(Z_VCPKG_CMAKE_GET_VARS_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(Z_VCPKG_CMAKE_GET_VARS_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "")
 
 function(vcpkg_cmake_get_vars out_file)
     cmake_parse_arguments(PARSE_ARGV 1 arg "" "" "")

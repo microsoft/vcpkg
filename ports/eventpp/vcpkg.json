@@ -1,6 +1,6 @@
 {
   "name": "eventpp",
-  "version-semver": "0.1.2",
+  "version-semver": "0.1.3",
   "description": "C++ library for event dispatcher and callback list",
   "homepage": "https://github.com/wqking/eventpp",
   "license": "Apache-2.0",

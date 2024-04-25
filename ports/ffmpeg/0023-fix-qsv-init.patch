@@ -1,0 +1,22 @@
+Subject: [PATCH] fix d3d11
+---
+Index: qsv.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
+--- a/libavcodec/qsv.c
++++ b/libavcodec/qsv.c
+@@ -383,7 +383,11 @@
+ int ff_qsv_init_internal_session(AVCodecContext *avctx, QSVSession *qs,
+                                  const char *load_plugins, int gpu_copy)
+ {
++#if CONFIG_D3D11VA
++    mfxIMPL          impl = MFX_IMPL_AUTO_ANY | MFX_IMPL_VIA_D3D11;
++#else
+     mfxIMPL          impl = MFX_IMPL_AUTO_ANY;
++#endif
+     mfxVersion        ver = { { QSV_VERSION_MINOR, QSV_VERSION_MAJOR } };
+     mfxInitParam init_par = { MFX_IMPL_AUTO_ANY };
+ 

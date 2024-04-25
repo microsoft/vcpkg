@@ -1,0 +1,16 @@
+diff --git a/CMake/Utils/MyGUIConfigTargets.cmake b/CMake/Utils/MyGUIConfigTargets.cmake
+index 6483339..0b35148 100644
+--- a/CMake/Utils/MyGUIConfigTargets.cmake
++++ b/CMake/Utils/MyGUIConfigTargets.cmake
+@@ -170,6 +170,11 @@ function(mygui_app PROJECTNAME SOLUTIONFOLDER)
+ 			set(MYGUI_EXEC_TYPE WIN32)
+ 		endif ()
+ 		add_executable(${PROJECTNAME} ${MYGUI_EXEC_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
++		if (APPLE)
++			install(TARGETS ${PROJECTNAME} BUNDLE DESTINATION bin)
++		else ()
++			install(TARGETS ${PROJECTNAME} RUNTIME DESTINATION bin)
++		endif ()
+ 	endif ()
+ 	set_target_properties(${PROJECTNAME} PROPERTIES FOLDER ${SOLUTIONFOLDER})
+ 

@@ -10,15 +10,18 @@ vcpkg_from_github(
     REF v0.0.1
     SHA512 a609b4ff23a01e9f9d9bf60bfa6e0b2346b054cf0c27e74e6da574dcfd2a6ead30dcb8464cf03cae2bb9995f15f01ffda5f862c0ec2744a9ad38b856ff27f073
     HEAD_REF master
+    PATCHES
+        disable-tests.patch
+        fix-clang-detection.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DWARNINGS_AS_ERRORS=FALSE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mfl)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mfl)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

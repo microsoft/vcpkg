@@ -1,7 +1,8 @@
 {
   "name": "qt5",
-  "version": "5.15.4",
-  "description": "Qt5 Application Framework",
+  "version": "5.15.13",
+  "port-version": 2,
+  "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
@@ -75,22 +76,23 @@
           "name": "qt5",
           "default-features": false,
           "features": [
-            "webengine"
+            "wayland"
           ],
-          "platform": "!static"
+          "platform": "linux"
         },
         {
           "name": "qt5",
           "default-features": false,
           "features": [
-            "wayland"
+            "webengine"
           ],
-          "platform": "!windows"
+          "platform": "!static"
         },
         {
           "name": "qt5-base",
           "default-features": false,
           "features": [
+            "icu",
             "mysqlplugin",
             "postgresqlplugin"
           ]
@@ -126,7 +128,7 @@
       "dependencies": [
         {
           "name": "qt5-doc",
-          "platform": "!windows"
+          "platform": "linux"
         }
       ]
     },
@@ -142,9 +144,12 @@
             "imageformats",
             "multimedia",
             "networkauth",
+            "quickcontrols",
             "quickcontrols2",
             "svg",
-            "tools"
+            "tools",
+            "translations",
+            "websockets"
           ]
         }
       ]

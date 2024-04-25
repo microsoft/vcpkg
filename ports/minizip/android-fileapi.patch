@@ -1,0 +1,17 @@
+diff --git a/contrib/minizip/ioapi.h b/contrib/minizip/ioapi.h
+index c588a18..b5395e2 100644
+--- a/contrib/minizip/ioapi.h
++++ b/contrib/minizip/ioapi.h
+@@ -21,6 +21,12 @@
+ #ifndef _ZLIBIOAPI64_H
+ #define _ZLIBIOAPI64_H
+ 
++#if defined(__ANDROID_API__) && __ANDROID_API__ < 24
++    // Cf. https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md#32_bit-and
++    // stdio functions for off_t are incomplete.
++    #define USE_FILE32API
++#endif
++
+ #if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
+ 
+   // Linux needs this to support file operation on files larger then 4+GB

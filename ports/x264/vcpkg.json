@@ -1,14 +1,46 @@
 {
   "name": "x264",
-  "version-string": "164-5db6aa6cab1b146",
-  "port-version": 4,
+  "version": "0.164.3107",
   "description": "x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format",
-  "homepage": "https://github.com/mirror/x264",
-  "supports": "!(arm & windows)",
+  "homepage": "https://www.videolan.org/developers/x264.html",
+  "license": "GPL-2.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
-      "name": "pthread",
-      "platform": "linux & osx"
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "asm": {
+      "description": "Enable platform-specific assembly optimizations",
+      "supports": "x86 | x64 | (arm & !windows) | arm64"
+    },
+    "chroma-format-all": {
+      "description": "Output all chroma formats"
+    },
+    "default-features": {
+      "description": "Default set of features",
+      "dependencies": [
+        {
+          "name": "x264",
+          "features": [
+            "asm",
+            "gpl"
+          ],
+          "platform": "x86 | x64 | (arm & !windows) | arm64"
+        }
+      ]
+    },
+    "gpl": {
+      "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
+    },
+    "tool": {
+      "description": "Build the command line tool",
+      "supports": "!uwp"
+    }
+  }
 }

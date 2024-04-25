@@ -1,0 +1,8 @@
+The package arg-router is a header-only library and so is typically used like this:
+
+    find_package(arg_router REQUIRED)
+    target_link_libraries(my_exe PUBLIC arg_router::arg_router)
+    
+For more information, see the docs here:
+
+    https://github.com/cmannett85/arg_router

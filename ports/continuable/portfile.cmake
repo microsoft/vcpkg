@@ -1,16 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Naios/continuable
-    REF 4.1.0
-    SHA512 b80b1c13b068382553b727fd3b346323e2051b1c92237efa151ba8ec92b6d722ca993ae4bbf0e6e308a92834ae92011a179e74fcf713a09beaa48676f7d08340
+    REF "${VERSION}"
+    SHA512 069b1fe37d5dd3495639942af40b9d5fe90408ee0f92f61e85c8aab3e1132300eb75df216a84595cb05c35e0fcb1b789fda4dae3fd2b263ac70910f5374536cc
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCTI_CONTINUABLE_WITH_INSTALL=ON
         -DCTI_CONTINUABLE_WITH_TESTS=OFF
@@ -21,10 +20,10 @@ vcpkg_configure_cmake(
         -DCTI_CONTINUABLE_WITH_EXPERIMENTAL_COROUTINE=ON
         -DCTI_CONTINUABLE_WITH_CPP_LATEST=ON # requires cxx_std_17
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib 
-                    ${CURRENT_PACKAGES_DIR}/debug
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" 
+                    "${CURRENT_PACKAGES_DIR}/debug"
 )

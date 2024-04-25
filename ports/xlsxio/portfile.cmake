@@ -1,33 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brechtsanders/xlsxio
-    REF e3acace39e5fb153f5ce3500a4952c2bf93175bd
-    SHA512 8148b89c43cf45653c583d51fb8050714d3cd0a76ab9a05d46604f3671a06487e4fc58d3f6f9f2a9f9b57a9f9fe1863ef07017c74197f151390576c5aac360ea
+    REF "${VERSION}"
+    SHA512 67b9a4e275446f3ca08e91d31f05236855e761c06ed84ea3aea8c25a7cd6729191f6c95b9efe07392775a75e2713e7ec2c6d216b8d310e7b46bee531cccba8be
     HEAD_REF master
-    PATCHES fix-dependencies.patch
+    PATCHES
+        fix-dependencies.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/CMake/FindMinizip.cmake)
+file(REMOVE "${SOURCE_PATH}/CMake/FindMinizip.cmake")
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        libzip WITH_LIBZIP
-)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)    
-    set(BUILD_STATIC ON)
-    set(BUILD_SHARED OFF)
-else()
-   set(BUILD_SHARED ON)
-   set(BUILD_STATIC OFF)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
+        -DCMAKE_POLICY_DEFAULT_CMP0012=NEW
         -DBUILD_SHARED=${BUILD_SHARED}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DWITH_WIDE=OFF
@@ -37,10 +26,12 @@ vcpkg_configure_cmake(
         -DBUILD_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

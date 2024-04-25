@@ -19,6 +19,11 @@ vcpkg_from_sourceforge(
     PATCHES ${PATCHES}
 )
 
+set(IS_PCRE_SUPPORT_JIT YES)
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
+    set(IS_PCRE_SUPPORT_JIT NO)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -27,7 +32,7 @@ vcpkg_cmake_configure(
         -DPCRE_BUILD_PCRE32=YES
         -DPCRE_BUILD_PCRE16=YES
         -DPCRE_BUILD_PCRE8=YES
-        -DPCRE_SUPPORT_JIT=YES
+        -DPCRE_SUPPORT_JIT=${IS_PCRE_SUPPORT_JIT}
         -DPCRE_SUPPORT_UTF=YES
         -DPCRE_SUPPORT_UNICODE_PROPERTIES=YES
         # optional dependencies for PCREGREP
@@ -62,10 +67,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pcre-config" "${CURRENT_PACKAGES_DIR}/debug/bin/pcre-config")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-else()
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pcre-config" "${CURRENT_PACKAGES_DIR}/debug/bin/pcre-config")
 endif()
 
 vcpkg_copy_pdbs()

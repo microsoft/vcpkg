@@ -1,0 +1,12 @@
+diff --git a/unicorn/utility.hpp b/unicorn/utility.hpp
+index e6a57b7..a2afa58 100644
+--- a/unicorn/utility.hpp
++++ b/unicorn/utility.hpp
+@@ -54,6 +54,7 @@
+ #include <istream>
+ #include <iterator>
+ #include <limits>
++#include <memory>
+ #include <mutex>
+ #include <new>
+ #include <optional>

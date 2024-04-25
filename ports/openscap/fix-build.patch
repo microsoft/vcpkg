@@ -1,33 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4de5b57..5f483a3 100644
+index 72d9aec..8938931 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -140,15 +140,25 @@ find_package(SWIG)
- find_package(LibXml2 REQUIRED)
- find_package(LibXslt REQUIRED)
- find_package(BZip2)
-+find_package(OpenSSL REQUIRED)
-+find_package(ZLIB REQUIRED)
- 
- # PThread
+@@ -164,12 +164,19 @@ if (WIN32 AND NOT MINGW)
+ else()
+ 	find_package(Threads REQUIRED)
+ endif()
 -set(CMAKE_THREAD_PREFER_PTHREAD)
 -set(THREADS_PREFER_PTHREAD_FLAG)
--set(THREADS_USE_PTHREADS_WIN32 true)
--find_package(Threads REQUIRED)
+-set(THREADS_USE_PTHREADS_WIN32 TRUE)
 -check_library_exists(pthread pthread_timedjoin_np "" HAVE_PTHREAD_TIMEDJOIN_NP)
 -check_library_exists(pthread pthread_setname_np "" HAVE_PTHREAD_SETNAME_NP)
 -check_library_exists(pthread pthread_getname_np "" HAVE_PTHREAD_GETNAME_NP)
 +if (WIN32)
 +    set(CMAKE_THREAD_PREFER_PTHREAD)
 +    set(THREADS_PREFER_PTHREAD_FLAG)
-+    set(THREADS_USE_PTHREADS_WIN32 true)
-+    find_package(pthread CONFIG REQUIRED)
-+    set(CMAKE_THREAD_LIBS_INIT ${PThreads4W_LIBRARY})
++    set(THREADS_USE_PTHREADS_WIN32 TRUE)
 +    check_library_exists(pthread pthread_timedjoin_np "" HAVE_PTHREAD_TIMEDJOIN_NP)
 +    check_library_exists(pthread pthread_setname_np "" HAVE_PTHREAD_SETNAME_NP)
 +    check_library_exists(pthread pthread_getname_np "" HAVE_PTHREAD_GETNAME_NP)
 +else()
-+    set(THREADS_USE_PTHREADS_WIN32 -pthread)
++    find_package(Threads REQUIRED)
 +endif()
 +
 +# OpenSSL
@@ -35,7 +28,7 @@ index 4de5b57..5f483a3 100644
  
  # WITH_CRYPTO
  set(WITH_CRYPTO "gcrypt" CACHE STRING "gcrypt|nss3")
-@@ -373,19 +383,9 @@ message(STATUS "asciidoc: ${ASCIIDOC_EXECUTABLE}")
+@@ -475,19 +482,9 @@ message(STATUS "asciidoc: ${ASCIIDOC_EXECUTABLE}")
  
  # ---------- PATHS
  
@@ -57,30 +50,26 @@ index 4de5b57..5f483a3 100644
 +set(OSCAP_DEFAULT_CPE_PATH share/openscap/cpe)
  set(OSCAP_TEMP_DIR "/tmp" CACHE STRING "use different temporary directory to execute sce scripts (default=/tmp)")
  
- # ---------- RPATHS for linking
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e9339c6..9347087 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -134,4 +134,8 @@ else()
+ 	set(OPENSCAP_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
+ 
+-install(TARGETS openscap DESTINATION ${OPENSCAP_INSTALL_DESTINATION})
++install(TARGETS openscap
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
 diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
-index 2a3f373..781d05a 100644
+index 93ce1f2..f500e1d 100644
 --- a/utils/CMakeLists.txt
 +++ b/utils/CMakeLists.txt
-@@ -6,27 +6,32 @@ if(ENABLE_OSCAP_UTIL)
- 	add_executable(oscap ${UTILS_SOURCES})
- 	target_link_libraries(oscap openscap)
- 	if(WIN32)
--		set(OSCAP_UTIL_DESTINATION ".")
-+        find_path(GETOPT_INCLUDE_DIR getopt.h)
-+        include(SelectLibraryConfigurations)
-+        find_library(GETOPT_LIBRARY_RELEASE NAMES getopt)
-+        find_library(GETOPT_LIBRARY_DEBUG NAMES getopt PATH_SUFFIXES debug/lib)
-+        select_library_configurations(GETOPT)
-+        
-+        message("GETOPT_INCLUDE_DIR: ${GETOPT_INCLUDE_DIR}")
-+        message("GETOPT_LIBRARY: ${GETOPT_LIBRARY}")
-+        
-+        target_include_directories(oscap PRIVATE ${GETOPT_INCLUDE_DIR})
-+        target_link_libraries(oscap PRIVATE ${GETOPT_LIBRARY})
-+        
-+		set(OSCAP_UTIL_DESTINATION tools)
- 		# Install the 'oscap' utility
+@@ -29,22 +29,15 @@ if(ENABLE_OSCAP_UTIL)
  		install(TARGETS "oscap"
  			DESTINATION ${OSCAP_UTIL_DESTINATION}
  		)
@@ -103,19 +92,5 @@ index 2a3f373..781d05a 100644
 -			DESTINATION "${CMAKE_INSTALL_MANDIR}/man8"
 +			DESTINATION share/openscap/man8
  		)
- 	endif()
- endif()
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9e18613..e84a21f 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -125,4 +125,8 @@ else()
- 	set(OPENSCAP_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR})
- endif()
  
--install(TARGETS openscap DESTINATION ${OPENSCAP_INSTALL_DESTINATION})
-+install(TARGETS openscap
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
+ 		add_custom_target(oscap-chrootable-nocap

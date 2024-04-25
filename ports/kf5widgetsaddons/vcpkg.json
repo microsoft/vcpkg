@@ -1,6 +1,6 @@
 {
   "name": "kf5widgetsaddons",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Addons to QtWidgets",
   "homepage": "https://api.kde.org/frameworks/kwidgetsaddons/html/index.html",
   "dependencies": [

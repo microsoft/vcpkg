@@ -9,6 +9,11 @@ target_compile_definitions(main PRIVATE ${wxWidgets_DEFINITIONS} "$<$<CONFIG:DEB
 target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
 
+add_executable(main2 WIN32 popup.cpp)
+
+find_package(wxWidgets CONFIG REQUIRED)
+target_link_libraries(main2 PRIVATE wx::core wx::base)
+
 option(USE_WXRC "Use the wxrc resource compiler" ON)
 if(USE_WXRC)
     execute_process(

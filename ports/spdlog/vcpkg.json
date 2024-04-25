@@ -1,8 +1,8 @@
 {
   "name": "spdlog",
-  "version-semver": "1.10.0",
+  "version-semver": "1.13.0",
   "port-version": 1,
-  "description": "Very fast, header only, C++ logging library",
+  "description": "Very fast, header-only/compiled, C++ logging library.",
   "homepage": "https://github.com/gabime/spdlog",
   "license": "MIT",
   "dependencies": [
@@ -24,7 +24,8 @@
       ]
     },
     "wchar": {
-      "description": "Build with wchar_t (Windows only)"
+      "description": "Build with wchar_t (Windows only)",
+      "supports": "windows"
     }
   }
 }

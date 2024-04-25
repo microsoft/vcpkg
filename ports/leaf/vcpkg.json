@@ -1,7 +1,7 @@
 {
   "name": "leaf",
-  "version-string": "0.2.2",
-  "port-version": 1,
+  "version": "0.2.2",
+  "port-version": 2,
   "description": "Deprecated boost-leaf port.",
   "dependencies": [
     "boost-leaf"

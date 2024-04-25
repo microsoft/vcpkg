@@ -1,16 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
-    REF f4a552a3fa24d9078f84157bd40e4f1bad49c488 #v1.5.2
-    SHA512 5e0343cfc06d756c3f09647df39f1c15b39707c0b9b6d343b1be8f1e99d567b52f5b9228925c2190d1600a5b54822c2a4546b2443b13f43eb9a75f97e7fa41f5
+    REF "v${VERSION}"
+    SHA512 ca12dffd86618ca008e1ecc79056c1129cb4e61668bf13a3cd5b2fa5c93bc9c92c80f64c1870c68b9c20009d9b3a834eac70db72242d5106125a1c53cccf8de8
     HEAD_REF dev
     PATCHES
-        install_pkgpc.patch
         no-static-suffix.patch
+        fix-emscripten-and-clang-cl.patch
+        fix-windows-rc-compile.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZSTD_BUILD_SHARED)
+
+if("tools" IN_LIST FEATURES)
+   set(ZSTD_BUILD_PROGRAMS 1)
+else()
+   set(ZSTD_BUILD_PROGRAMS 0)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
@@ -18,10 +25,13 @@ vcpkg_cmake_configure(
         -DZSTD_BUILD_SHARED=${ZSTD_BUILD_SHARED}
         -DZSTD_BUILD_STATIC=${ZSTD_BUILD_STATIC}
         -DZSTD_LEGACY_SUPPORT=1
-        -DZSTD_BUILD_PROGRAMS=0
         -DZSTD_BUILD_TESTS=0
         -DZSTD_BUILD_CONTRIB=0
         -DZSTD_MULTITHREAD_SUPPORT=1
+    OPTIONS_RELEASE
+        -DZSTD_BUILD_PROGRAMS=${ZSTD_BUILD_PROGRAMS}
+    OPTIONS_DEBUG
+        -DZSTD_BUILD_PROGRAMS=OFF
 )
 
 vcpkg_cmake_install()
@@ -45,19 +55,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endforeach()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(missing_target zstd::libzstd_static)
-    set(existing_target zstd::libzstd_shared)
-else()
-    set(existing_target zstd::libzstd_static)
-    set(missing_target zstd::libzstd_shared)
+if(VCPKG_TARGET_IS_WINDOWS AND ZSTD_BUILD_PROGRAMS)
+    vcpkg_copy_tools(TOOL_NAMES zstd AUTO_CLEAN)
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/zstd/zstdTargets-interface.cmake" "
-add_library(${missing_target} IMPORTED INTERFACE)
-set_target_properties(${missing_target} PROPERTIES INTERFACE_LINK_LIBRARIES ${existing_target})
-")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(READ "${SOURCE_PATH}/LICENSE" bsd)
-file(READ "${SOURCE_PATH}/COPYING" gpl)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "ZSTD is dual licensed under BSD and GPLv2.\n\n${bsd}\n\n${gpl}")
+vcpkg_install_copyright(
+    COMMENT "ZSTD is dual licensed under BSD and GPLv2."
+    FILE_LIST
+       "${SOURCE_PATH}/LICENSE"
+       "${SOURCE_PATH}/COPYING"
+)

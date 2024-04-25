@@ -26,16 +26,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
  )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/freealut-config")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/freealut-config")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/freealut-config")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/freealut-config")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/freealut-config")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/freealut-config")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

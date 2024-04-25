@@ -1,7 +1,8 @@
 diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
---- a/cmake/prebuild.cmake	2019-01-28 03:05:58.422245700 -0600
-+++ b/cmake/prebuild.cmake	2019-01-28 03:07:02.885495800 -0600
-@@ -37,6 +37,9 @@
+index 730555a..1b09e00 100644
+--- a/cmake/prebuild.cmake
++++ b/cmake/prebuild.cmake
+@@ -39,6 +39,9 @@
  
  # CPUIDEMU = ../../cpuid/table.o
  
@@ -11,7 +12,7 @@ diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
  
  if (DEFINED CPUIDEMU)
    set(EXFLAGS "-DCPUIDEMU -DVENDOR=99")
-@@ -310,8 +313,8 @@ else(NOT CMAKE_CROSSCOMPILING)
+@@ -1401,8 +1404,8 @@ else(NOT CMAKE_CROSSCOMPILING)
    message(STATUS "Running getarch")
  
    # use the cmake binary w/ the -E param to run a shell command in a cross-platform way
@@ -22,7 +23,7 @@ diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
  
    message(STATUS "GETARCH results:\n${GETARCH_MAKE_OUT}")
  
-@@ -337,8 +340,8 @@ execute_process(COMMAND "${PROJECT_BINAR
+@@ -1430,8 +1433,8 @@ execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIABLE
    endif ()
  
    # use the cmake binary w/ the -E param to run a shell command in a cross-platform way
@@ -32,10 +33,9 @@ diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
 +execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH2_BIN}" 1 OUTPUT_VARIABLE GETARCH2_CONF_OUT)
  
    # append config data from getarch_2nd to the TARGET file and read in CMake vars
-   file(APPEND ${TARGET_CONF_TEMP} ${GETARCH2_CONF_OUT})
-
+   file(APPEND "${TARGET_CONF_TEMP}" ${GETARCH2_CONF_OUT})
 diff --git a/cmake/system.cmake b/cmake/system.cmake
-index a060d98..52ffa5a 100644
+index 631e7fe..83220ce 100644
 --- a/cmake/system.cmake
 +++ b/cmake/system.cmake
 @@ -13,6 +13,9 @@ if(CMAKE_CROSSCOMPILING AND NOT DEFINED TARGET)
@@ -48,3 +48,38 @@ index a060d98..52ffa5a 100644
    else()
      message(FATAL_ERROR "When cross compiling, a TARGET is required.")
    endif()
+diff --git a/common_stackalloc.h b/common_stackalloc.h
+index d3d5466..cd157fc 100644
+--- a/common_stackalloc.h
++++ b/common_stackalloc.h
+@@ -36,7 +36,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #define STACK_ALLOC_PROTECT_CHECK
+ #endif
+ 
+-#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0
++#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0 && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+ 
+ /*
+  * Allocate a buffer on the stack if the size is smaller than MAX_STACK_ALLOC.
+@@ -63,7 +63,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #endif
+ 
+ 
+-#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0
++#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0 && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+ #define STACK_FREE(BUFFER)    \
+   STACK_ALLOC_PROTECT_CHECK   \
+   if(!stack_alloc_size)       \
+diff --git a/interface/zgemv.c b/interface/zgemv.c
+index 3e98dba..ee597f7 100644
+--- a/interface/zgemv.c
++++ b/interface/zgemv.c
+@@ -244,7 +244,7 @@ void CNAME(enum CBLAS_ORDER order,
+   buffer_size = (buffer_size + 3) & ~3;
+   STACK_ALLOC(buffer_size, FLOAT, buffer);
+ 
+-#if defined(ARCH_X86_64) && defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0
++#if defined(ARCH_X86_64) && defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0 && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+   // cgemv_t.S return NaN if there are NaN or Inf in the buffer (see bug #746)
+   if(trans && stack_alloc_size)
+     memset(buffer, 0, MIN(BUFFER_SIZE, sizeof(FLOAT) * buffer_size));

@@ -1,15 +1,14 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  inie0722/CTL
-    REF v1.0.0
-    SHA512 facd0afdb20437c0ffa5b097a68e2028faa314be6052e0db1e2c727ce5a0305bca8e575c946b0e10a6343dfaddc38770c1e5a56ae201e1aa906883df6d662398
+    REF a19d7db16232b160901cc65b8398ece2526b5e41 #v1.1.2
+    SHA512 867f3c07073a9c9ce60d95d8c6eff37e49bd10d45fd93891cbdd7b6e77e5302048b7b054b597d382f1f581636a8b3042291d87a9eadd7f2b33c4c532dc23ae5d
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS "-DCTL_CACHE_LINE_SIZE=0"
 )
 
 vcpkg_cmake_install()

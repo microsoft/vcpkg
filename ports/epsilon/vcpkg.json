@@ -1,10 +1,11 @@
 {
   "name": "epsilon",
-  "version-string": "0.9.2",
-  "port-version": 6,
+  "version": "0.9.2",
+  "port-version": 8,
   "description": "EPSILON is an Open Source wavelet image compressor, that is aimed on parallel and robust image processing.",
   "homepage": "https://sourceforge.net/projects/epsilon-project/",
-  "supports": "windows",
+  "license": "GPL-2.0-only OR LGPL-2.0-only",
+  "supports": "windows & !xbox",
   "dependencies": [
     "libpopt"
   ]

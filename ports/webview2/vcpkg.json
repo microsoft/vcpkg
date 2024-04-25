@@ -1,0 +1,12 @@
+{
+  "name": "webview2",
+  "version": "1.0.2277.86",
+  "description": "The WebView2 control allows you to embed web technologies (HTML, CSS, and JavaScript) using Microsoft Edge",
+  "homepage": "https://docs.microsoft.com/en-us/microsoft-edge/webview2",
+  "documentation": "https://docs.microsoft.com/en-us/microsoft-edge/webview2",
+  "license": "BSD-3-Clause",
+  "supports": "windows & (x86 | x64 | arm64)",
+  "dependencies": [
+    "wil"
+  ]
+}

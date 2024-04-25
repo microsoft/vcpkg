@@ -1,9 +1,9 @@
 {
   "name": "lcms",
-  "version": "2.12",
-  "port-version": 3,
+  "version": "2.14",
   "description": "Little CMS.",
   "homepage": "https://github.com/mm2/Little-CMS",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

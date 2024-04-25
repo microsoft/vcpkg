@@ -1,13 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6c2bb6..3351ab0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -222,7 +222,8 @@ else()
+   endif()
+ endif()
+ 
+-pkg_check_modules(minizip minizip)
++find_package(minizip NAMES unofficial-minizip REQUIRED)
++add_library(minizip ALIAS unofficial::minizip::minizip)
+ if(minizip_FOUND)
+   set(MINIZIP_INCLUDE_DIR ${minizip_INCLUDE_DIRS})
+ else()
+diff --git a/dom/include/dae/daeZAEUncompressHandler.h b/dom/include/dae/daeZAEUncompressHandler.h
+index e9b0e9e..3d120da 100644
+--- a/dom/include/dae/daeZAEUncompressHandler.h
++++ b/dom/include/dae/daeZAEUncompressHandler.h
+@@ -9,7 +9,7 @@
+ #ifndef __DAE_ZAE_UNCOMPRESS_HANDLER_H__
+ #define __DAE_ZAE_UNCOMPRESS_HANDLER_H__
+
+-#include <unzip.h>
++#include <../minizip/unzip.h>
+ #include <libxml/xmlreader.h>
+ #include <dae/daeURI.h>
+
 diff --git a/dom/src/modules/LIBXMLPlugin/daeLIBXMLPlugin.cpp b/dom/src/modules/LIBXMLPlugin/daeLIBXMLPlugin.cpp
-index 4536275..77651f9 100644
+index 4536275..2666959 100644
 --- a/dom/src/modules/LIBXMLPlugin/daeLIBXMLPlugin.cpp
 +++ b/dom/src/modules/LIBXMLPlugin/daeLIBXMLPlugin.cpp
-@@ -32,7 +32,7 @@
+@@ -32,9 +32,9 @@
  #include <iomanip>
  using namespace std;
- 
+
 -#include <zip.h> // for saving compressed files
-+#include <minizip/zip.h> // for saving compressed files
++#include <../minizip/zip.h> // for saving compressed files
  #ifdef _WIN32
- #include <iowin32.h>
+-#include <iowin32.h>
++#include <../minizip/iowin32.h>
  #else
+ #include <unistd.h>
+ #endif

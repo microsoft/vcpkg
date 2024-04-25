@@ -1,6 +1,6 @@
 {
   "name": "igloo",
-  "version-string": "1.1.1",
-  "port-version": 1,
+  "version": "1.1.1",
+  "port-version": 2,
   "description": "A framework for unit testing in C++"
 }

@@ -1,0 +1,13 @@
+diff --git a/GUISupport/MFC/CMakeLists.txt b/GUISupport/MFC/CMakeLists.txt
+index 66b52f1f6..7fbfef908 100644
+--- a/GUISupport/MFC/CMakeLists.txt
++++ b/GUISupport/MFC/CMakeLists.txt
+@@ -10,7 +10,7 @@ endif ()
+ # Determine whether the shared or static MFC implementation to use.
+ if (use_policy_0091) # XXX(cmake-3.15)
+   if (NOT CMAKE_MSVC_RUNTIME_LIBRARY OR # The default uses `DLL`.
+-      CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL$")
++      VCPKG_CRT_LINKAGE MATCHES "dynamic")
+     set(vtk_mfc_static 0)
+   else ()
+     set(vtk_mfc_static 1)

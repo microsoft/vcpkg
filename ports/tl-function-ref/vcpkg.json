@@ -1,6 +1,12 @@
 {
   "name": "tl-function-ref",
-  "version-string": "1.0.0",
-  "port-version": 2,
-  "description": "A lightweight, non-owning reference to a callable."
+  "version": "1.0.0",
+  "port-version": 4,
+  "description": "A lightweight, non-owning reference to a callable.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

@@ -1,9 +1,11 @@
+string(REPLACE "." "_" UNDERSCORES_VERSION "${VERSION}")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
-    REF gmsh_4_9_0
-    SHA512 e70a09741a86a9131094e77742078aec1cc94517e1d7c855c257bc93c21c057e25c7ac5168d31ec4d905d78f31d5704faf63bfd3a81b4b9e2ebbcfacf2fdaa8b
+    REF "${PORT}_${UNDERSCORES_VERSION}"
+    SHA512 65fbfd9bf30f1334c66345edb35e2a1cc9630c8d390d13f17dd0f0329066637d10fef652ff75114fa8d85046fe0871d60395612467c975bcaa10182454c2ad5e
     HEAD_REF master
     PATCHES fix-install.patch
 )
@@ -108,4 +110,4 @@ vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

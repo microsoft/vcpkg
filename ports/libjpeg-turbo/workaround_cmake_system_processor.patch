@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6dd83d3a..5cd717f5 100644
+index 3730326..0c2b87c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -54,7 +54,7 @@ message(STATUS "VERSION = ${VERSION}, BUILD = ${BUILD}")
+@@ -66,7 +66,7 @@ include(cmakescripts/PackageInfo.cmake)
  
  # Detect CPU type and whether we're building 64-bit or 32-bit code
  math(EXPR BITS "${CMAKE_SIZEOF_VOID_P} * 8")

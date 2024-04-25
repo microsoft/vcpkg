@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kholidays
-    REF v5.89.0
-    SHA512 df5a68c9faf2c05b30b161f2e9f363f252be2efd9ec89787a88952fecb91d36b0187e9c88bdedde6887086f5ead4aa5d6ff627c9ea267cd447d5d7ad938b5d65
+    REF v5.98.0
+    SHA512 e09eaa97094edd2feb5ec3677be8764bc1c3f6749c21eff8c0a2c9c047c21d35805f07b985d5d50a60e8acd48ff5096cc7f28a4fe22f49f45c74de390b7402ca
     HEAD_REF master
 )
 
@@ -27,4 +27,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

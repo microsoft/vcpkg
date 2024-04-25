@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7a97604..4967c4f 100644
+index 25990a5d8a..4bec4e1e72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -215,6 +215,9 @@ if(UNIX)
+@@ -219,6 +219,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -11,8 +11,8 @@ index 7a97604..4967c4f 100644
 +  endif()
  endif()
  
-  # Use C99 standard
-@@ -259,6 +262,9 @@ if(MSVC)
+  # Use C11 standard
+@@ -263,6 +266,9 @@ if(MSVC)
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4267")
    # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
@@ -21,8 +21,8 @@ index 7a97604..4967c4f 100644
 +  endif()
    # Silences thousands of trucation warnings
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4503")
- endif()
-@@ -336,6 +342,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+   # Tell MSVC to build grpc using utf-8
+@@ -430,6 +436,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -33,7 +33,7 @@ index 7a97604..4967c4f 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -408,6 +418,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
+@@ -552,6 +562,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
    list(APPEND _gRPC_PLUGIN_LIST grpc_ruby_plugin)
  endif ()
  
@@ -41,16 +41,16 @@ index 7a97604..4967c4f 100644
  add_custom_target(plugins
    DEPENDS ${_gRPC_PLUGIN_LIST}
  )
-@@ -424,6 +435,7 @@ add_custom_target(tools_cxx
+@@ -567,6 +578,7 @@ add_custom_target(tools_cxx
  
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)
 +endif()
  
- protobuf_generate_grpc_cpp(
-   src/proto/grpc/channelz/channelz.proto
+ protobuf_generate_grpc_cpp_with_import_path_correction(
+   src/proto/grpc/channelz/channelz.proto src/proto/grpc/channelz/channelz.proto
 diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-index 5d2bdc1..e9870c2 100644
+index 5d2bdc14de..e9870c2656 100644
 --- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 +++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 @@ -39,6 +39,7 @@ bool check_bios_data(const char*) { return false; }

@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
-    REF v5.89.0-rc2
-    SHA512 08df36c08b028998884983fa233aad5bfc05d4e9e5899ed85390015daa7e0703272edabc59189579957e9971435887c4486796061878ce0f252ac2259b78a799
+    REF v5.98.0
+    SHA512 6ffb44963b266f806150bc3ff9a1c3cf13f2fe7b4bda57e27d9bd9b931bfd757d50ee29f4143f6d282a25f675c8024aff16dc2f91e00ec0c7663eb8effdfee30
     HEAD_REF master
     PATCHES
         ${PATCHES}
@@ -24,6 +24,7 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
         -DCMAKE_VERBOSE_MAKEFILE=ON
@@ -31,6 +32,7 @@ vcpkg_cmake_configure(
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_LIBEXECDIR=bin
         ${FEATURE_OPTIONS}
+        --trace-expand
     MAYBE_UNUSED_VARIABLES CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
 )
 
@@ -62,4 +64,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+
+

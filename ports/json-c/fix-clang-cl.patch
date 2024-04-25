@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0aa1b64..54e7b3d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -295,7 +295,7 @@ message(STATUS "Wrote ${PROJECT_BINARY_DIR}/config.h")
+ configure_file(${PROJECT_SOURCE_DIR}/cmake/json_config.h.in   ${PROJECT_BINARY_DIR}/json_config.h)
+ message(STATUS "Wrote ${PROJECT_BINARY_DIR}/json_config.h")
+ 
+-if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
++if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" AND NOT MSVC)
+     set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -ffunction-sections -fdata-sections")
+ 	if ("${DISABLE_WERROR}" STREQUAL "OFF")
+ 	    set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Werror")
+@@ -316,7 +316,7 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+         # Remove this for 1.0 when we can bump the ABI and actually fix these warnings.
+         set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Wno-shorten-64-to-32")
+     endif()
+-elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
++elseif (MSVC)
+     set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} /DEBUG")
+     set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} /wd4100")
+     set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} /wd4996")

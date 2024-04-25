@@ -1,0 +1,20 @@
+diff --git a/contrib/ecalhdf5/CMakeLists.txt b/contrib/ecalhdf5/CMakeLists.txt
+index c167bacd4..45e754340 100644
+--- a/contrib/ecalhdf5/CMakeLists.txt
++++ b/contrib/ecalhdf5/CMakeLists.txt
+@@ -18,9 +18,14 @@
+ 
+ project(hdf5 LANGUAGES C CXX)
+ 
+-if(NOT CMAKE_CROSSCOMPILING)
++if(1)
+   find_package(HDF5 COMPONENTS C REQUIRED)
+   find_package(Threads REQUIRED)
++  if (TARGET hdf5::hdf5-shared)
++    set(ECAL_LINK_HDF5_SHARED 1)
++  else()
++    set(ECAL_LINK_HDF5_SHARED 0)
++  endif()
+ else()
+   find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
+   find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  

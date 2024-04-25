@@ -25,7 +25,7 @@ install_pc_file(libcrypto [[
 Name: OpenSSL-libcrypto
 Description: OpenSSL cryptography library
 Libs: -L"${libdir}" -llibcrypto
-Libs.private: -lcrypt32 -lws2_32
+Libs.private: -lcrypt32 -lws2_32 -ladvapi32 -luser32
 Cflags: -I"${includedir}"
 ]])
 

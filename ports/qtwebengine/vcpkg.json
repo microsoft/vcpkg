@@ -1,12 +1,12 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.3.0",
-  "port-version": 2,
-  "description": "Qt WebEngine",
+  "version": "6.6.1",
+  "port-version": 5,
+  "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & !((arm | x86) & windows)",
+  "supports": "!static & !((x86 | arm) & windows)",
   "dependencies": [
     {
       "name": "ffmpeg",
@@ -58,13 +58,17 @@
     },
     {
       "name": "libxml2",
+      "default-features": false,
+      "features": [
+        "icu"
+      ],
       "platform": "!windows"
     },
     {
       "name": "minizip",
       "platform": "!windows"
     },
-    "opengl-registry",
+    "opengl",
     {
       "name": "opus",
       "platform": "!windows"
@@ -81,10 +85,6 @@
         "network",
         "widgets"
       ]
-    },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
     },
     {
       "name": "qtdeclarative",
@@ -114,10 +114,6 @@
     },
     {
       "name": "vcpkg-tool-nodejs",
-      "host": true
-    },
-    {
-      "name": "vcpkg-tool-python2",
       "host": true
     },
     {
@@ -152,7 +148,10 @@
       "dependencies": [
         {
           "name": "qtwebchannel",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "qml"
+          ]
         }
       ]
     }

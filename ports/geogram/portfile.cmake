@@ -1,13 +1,44 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO alicevision/geogram
-    REF 8b2ae6148c7ab1564fa2700673b4275296ce80d3 #1.7.6
-    SHA512 0ec0deded92c8d5d100b6e77f8cfbbbaf7b744c230e10abd0b86861960cda9713ff65209575fdc09034afcb0e9137428a20c00d399c09fd58ce541fed2105a2d
+    REPO BrunoLevy/geogram
+    REF "v${VERSION}"
+    SHA512 ae3d95be1c5061ace92921b3fcfb0027d23c595b131b0d31f1788adbe0d8f92367bef71736d6c936504bd37eba5fcdae658369f03734e233bf3eab14bca6f9e5
     PATCHES
         fix-vcpkg-install.patch
 )
 
-file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
+#third_party: amgcl
+vcpkg_from_github(
+    OUT_SOURCE_PATH AMGCL_SOURCE_PATH
+    REPO ddemidov/amgcl
+    REF 8083b23fbe69c43cee0d4bc17e4334572e292c93
+    SHA512 1b29871ace68c53b46711012921261929f8bd612f93b47d2c59523cd3d68366956fe1c9ec81a94b3aaab63357001799c9e34af79376b940fa6b7a53cdf136897
+)
+
+#third_party: libMeshb
+vcpkg_from_github(
+    OUT_SOURCE_PATH LIBMESHB_SOURCE_PATH
+    REPO LoicMarechal/libMeshb
+    REF b4a91513317119ff71a1186906a052da0e535913
+    SHA512 bff30a233c2746a454d552be66f5654bf4af995d6f1eb00a4d21ed10c86234a5be4d6f31282645858e0a829b10fd98cad7188c69be65cdabbd18478fc26bad1f
+)
+
+#third_party: rply
+vcpkg_from_github(
+    OUT_SOURCE_PATH RPLY_SOURCE_PATH
+    REPO diegonehab/rply
+    REF 4296cc91b5c8c26d4e7d7aac0cee2b194ffc5800
+    SHA512 b236279d3f0e6e1062703555415236183da31a9e40c49d478954586725f8dc6c0582aef0db7b605cb7967c3bd4a96d2fe8e6601cc56b8a1d53129a25efa7d1f2
+)
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
+    "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb"
+	"${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
+file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
+file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+
+file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -47,10 +78,10 @@ else()
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     # Geogram cannot be built with ninja because it embeds $(Configuration) in some of the generated paths. These require MSBuild in order to be evaluated.
-    #PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DVORPALINE_BUILD_DYNAMIC=${VORPALINE_BUILD_DYNAMIC}
         -DGEOGRAM_LIB_ONLY=ON
@@ -60,22 +91,40 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# Remove all empty directories. 
+function(auto_clean dir) 
+     file(GLOB entries "${dir}/*") 
+     file(GLOB files LIST_DIRECTORIES false "${dir}/*") 
+     foreach(entry IN LISTS entries) 
+         if(entry IN_LIST files) 
+             continue() 
+         endif() 
+         file(GLOB_RECURSE children "${entry}/*") 
+         if(children) 
+             auto_clean("${entry}") 
+         else() 
+             file(REMOVE_RECURSE "${entry}") 
+         endif() 
+     endforeach() 
+endfunction()
+auto_clean("${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake
+    "${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake"
     [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
     [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]]
     )
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/devkit/license.dox")
 
 vcpkg_fixup_pkgconfig()

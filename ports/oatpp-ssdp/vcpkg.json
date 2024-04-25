@@ -1,8 +1,10 @@
 {
   "name": "oatpp-ssdp",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Oat++ SSDP (Simple Service Discovery Protocol) submodule.",
   "homepage": "https://github.com/oatpp/oatpp-ssdp",
+  "license": "Apache-2.0",
   "dependencies": [
     "oatpp",
     {

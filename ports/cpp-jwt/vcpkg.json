@@ -1,8 +1,10 @@
 {
   "name": "cpp-jwt",
-  "version-date": "2021-10-18",
+  "version-date": "2022-08-27",
+  "port-version": 1,
   "description": "JSON Web Token library for C++",
   "homepage": "https://github.com/arun11299/cpp-jwt",
+  "license": "MIT",
   "dependencies": [
     "nlohmann-json",
     "openssl",

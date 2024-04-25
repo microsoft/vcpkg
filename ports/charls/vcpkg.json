@@ -1,6 +1,6 @@
 {
   "name": "charls",
-  "version": "2.3.4",
+  "version": "2.4.2",
   "description": "CharLS, a C++ JPEG-LS library implementation.",
   "homepage": "https://github.com/team-charls/charls",
   "license": "BSD-3-Clause",

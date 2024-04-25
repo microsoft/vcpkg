@@ -1,58 +1,7 @@
-#[===[.md:
-# vcpkg_from_git
-
-Download and extract a project from git
-
-## Usage:
-```cmake
-vcpkg_from_git(
-    OUT_SOURCE_PATH <SOURCE_PATH>
-    URL <https://android.googlesource.com/platform/external/fdlibm>
-    REF <59f7335e4d...>
-    [HEAD_REF <ref>]
-    [PATCHES <patch1.patch> <patch2.patch>...]
-)
-```
-
-## Parameters:
-### OUT_SOURCE_PATH
-Specifies the out-variable that will contain the extracted location.
-
-This should be set to `SOURCE_PATH` by convention.
-
-### URL
-The url of the git repository.
-
-### REF
-The git sha of the commit to download.
-
-### FETCH_REF
-The git branch to fetch in non-HEAD mode. After this is fetched,
-then `REF` is checked out. This is useful in cases where the git server
-does not allow checking out non-advertised objects.
-
-### HEAD_REF
-The git branch to use when the package is requested to be built from the latest sources.
-
-Example: `main`, `develop`, `HEAD`
-
-### PATCHES
-A list of patches to be applied to the extracted sources.
-
-Relative paths are based on the port directory.
-
-## Notes:
-`OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
-
-## Examples:
-
-* [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
-#]===]
-
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG"
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS"
         "PATCHES"
     )
 
@@ -62,7 +11,6 @@ function(vcpkg_from_git)
     if(DEFINED arg_TAG)
         message(WARNING "The TAG argument to vcpkg_from_git has been deprecated and has no effect.")
     endif()
-
 
     if(NOT DEFINED arg_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
@@ -75,6 +23,9 @@ function(vcpkg_from_git)
     endif()
     if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
         message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
+    endif()
+    if(NOT DEFINED arg_LFS AND "LFS" IN_LIST arg_KEYWORDS_MISSING_VALUES)
+        set(arg_LFS "${arg_URL}")
     endif()
 
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
@@ -138,38 +89,78 @@ function(vcpkg_from_git)
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
+        if(arg_LFS)
+            # Running "git lfs" searches for "git-lfs[.exe]" on the path
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" lfs --version
+                OUTPUT_VARIABLE lfs_version_output
+                ERROR_VARIABLE lfs_version_error
+                RESULT_VARIABLE lfs_version_result
+                WORKING_DIRECTORY "${git_working_directory}"
+            )
+            if(lfs_version_result)
+                message(FATAL_ERROR "Git LFS is required for ${PORT}")
+            endif()
+
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND "${GIT}" lfs install --local --force
+                WORKING_DIRECTORY "${git_working_directory}"
+                LOGNAME "git-lfs-install-${TARGET_TRIPLET}"
+            )
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND "${GIT}" lfs fetch "${arg_LFS}" "${ref_to_fetch}"
+                WORKING_DIRECTORY "${git_working_directory}"
+                LOGNAME "git-lfs-fetch-${TARGET_TRIPLET}"
+            )
+        endif()
 
         if(VCPKG_USE_HEAD_VERSION)
-            vcpkg_execute_in_download_mode(
-                COMMAND "${GIT}" rev-parse FETCH_HEAD
-                OUTPUT_VARIABLE rev_parse_ref
-                ERROR_VARIABLE rev_parse_ref
-                RESULT_VARIABLE error_code
-                WORKING_DIRECTORY "${git_working_directory}"
-            )
-            if(error_code)
-                message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
-            endif()
-            string(STRIP "${rev_parse_ref}" rev_parse_ref)
-            set(VCPKG_HEAD_VERSION "${rev_parse_ref}" PARENT_SCOPE)
+            set(expected_rev_parse FETCH_HEAD)
         else()
-            vcpkg_execute_in_download_mode(
-                COMMAND "${GIT}" rev-parse "${arg_REF}"
-                OUTPUT_VARIABLE rev_parse_ref
-                ERROR_VARIABLE rev_parse_ref
-                RESULT_VARIABLE error_code
-                WORKING_DIRECTORY "${git_working_directory}"
+            set(expected_rev_parse "${arg_REF}")
+        endif()
+
+        vcpkg_execute_in_download_mode(
+            COMMAND "${GIT}" rev-parse "${expected_rev_parse}"
+            OUTPUT_VARIABLE rev_parse_ref
+            ERROR_VARIABLE rev_parse_ref
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY "${git_working_directory}"
+        )
+
+        if(error_code)
+            if(VCPKG_USE_HEAD_VERSION)
+                message(FATAL_ERROR "Unable to determine the commit SHA of the HEAD version to use after \
+fetching ${ref_to_fetch} from the git repository. (git rev-parse ${expected_rev_parse} failed)")
+            elseif(DEFINED arg_FETCH_REF)
+                message(FATAL_ERROR "After fetching ${ref_to_fetch}, the target ref ${expected_rev_parse} appears \
+inaccessible. A common cause of this failure is setting REF to a named branch or tag rather than a commit SHA. REF \
+must be a commit SHA. (git rev-parse ${expected_rev_parse} failed)")
+            else()
+                message(FATAL_ERROR "After fetching ${ref_to_fetch}, the target ref ${expected_rev_parse} appears \
+inaccessible. A common cause of this failure is setting REF to a named branch or tag rather than a commit SHA. REF \
+must be a commit SHA. If the git server does not advertise commit SHAs \
+(uploadpack.allowReachableSHA1InWant is false), you can set FETCH_REF to a named branch in which the desired commit \
+SHA is in the history. For example, you may be able to fix this error by changing \"REF ${arg_REF}\" to \
+\"REF a-commit-sha FETCH_REF ${arg_REF}\". (git rev-parse ${expected_rev_parse} failed)")
+            endif()
+        endif()
+
+        string(STRIP "${rev_parse_ref}" rev_parse_ref)
+        if(VCPKG_USE_HEAD_VERSION)
+            set(VCPKG_HEAD_VERSION "${rev_parse_ref}" PARENT_SCOPE)
+        elseif(NOT "${rev_parse_ref}" STREQUAL "${arg_REF}")
+                message(FATAL_ERROR "After fetching ${ref_to_fetch}, the requested REF (${arg_REF}) does not match \
+its commit SHA returned by git rev-parse (${rev_parse_ref}). This is usually caused by trying to set REF to a named \
+branch or tag rather than a commit SHA. REF must be a commit SHA. If the  git server does not advertise commit SHAs \
+(uploadpack.allowReachableSHA1InWant is false), you can set FETCH_REF to a named branch in which the desired commit \
+SHA is in the history. For example, you may be able to fix this error by changing \"REF ${arg_REF}\" to \
+\"REF a-commit-sha FETCH_REF ${arg_REF}\".
+    [Expected : ( ${arg_REF} )])
+    [  Actual : ( ${rev_parse_ref} )]"
             )
-            if(error_code)
-                message(FATAL_ERROR "unable to rev-parse ${arg_REF} after fetching git repository")
-            endif()
-            string(STRIP "${rev_parse_ref}" rev_parse_ref)
-            if(NOT "${rev_parse_ref}" STREQUAL "${arg_REF}")
-                message(FATAL_ERROR "REF (${arg_REF}) does not match rev-parse'd reference (${rev_parse_ref})
-        [Expected : ( ${arg_REF} )])
-        [  Actual : ( ${rev_parse_ref} )]"
-                )
-            endif()
         endif()
 
         file(MAKE_DIRECTORY "${DOWNLOADS}/temp")

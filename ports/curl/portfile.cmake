@@ -1,39 +1,31 @@
+string(REPLACE "." "_" curl_version "curl-${VERSION}")
+
+# Fix for HTTP compression introduced in 8.7.1; should be fixed the following release
+vcpkg_download_distfile(
+    COMPRESSION_FIX
+    URLS https://github.com/curl/curl/commit/b30d694a027eb771c02a3db0dee0ca03ccab7377.patch?full_index=1
+    FILENAME curl-compression-fix-b30d694a027eb771c02a3db0dee0ca03ccab7377.patch
+    SHA512 2658826a7331adb86cd7cd692dac6c7bf79bbd9c76c11780f33b1143b6d04edfe64223356701343c31209261decffc883ddba061d5370d7872a81f2a18780c33
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_83_1
-    SHA512 f4ede3c829aaa1142358d956cba4b33f06d3f0319c9f1cd65b63413de60a8690165e10fcb876fc413a20fcfa53bba2a064bb4b8c3070dbf474c2f2288eeab019
+    REF "${curl_version}"
+    SHA512 38a1f7d7f5c83922cd4e0a858ac803d230d691c8f4df7e5086062c6991da740e626aa86675683282bc8555fc4cb962a08ba1a7ce817d78961d749d6d580fb9fa
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
-        0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
-        wolfssl-ntlm.patch
+        dependencies.patch
+        cmake-config.patch
+        "${COMPRESSION_FIX}"
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
-
-# schannel will enable sspi, but sspi do not support uwp
-foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
-    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
-    endif()
-endforeach()
-
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
-endif()
-
-foreach(feature IN ITEMS "winldap" "winidn")
-    if(feature IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature ${feature} is not supported on non-Windows platforms.")
-    endif()
-endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -51,22 +43,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        winldap     USE_WIN32_LDAP
+        websockets  ENABLE_WEBSOCKETS
+        zstd        CURL_ZSTD
+        psl         CURL_USE_LIBPSL
     INVERTED_FEATURES
+        ldap        CURL_DISABLE_LDAP
+        ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
-        winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
 set(OPTIONS "")
-set(OPTIONS_RELEASE "")
-set(OPTIONS_DEBUG "")
-if("idn2" IN_LIST FEATURES)
+if("idn2" IN_LIST FEATURES OR ("ldap" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS))
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 if("sectransp" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DCURL_CA_PATH=none)
+    list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
 endif()
 
 # UWP targets
@@ -78,6 +71,10 @@ if(VCPKG_TARGET_IS_UWP)
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -DENABLE_UNICODE=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
@@ -85,15 +82,11 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
-        -DENABLE_MANUAL=OFF
-        -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-        -DENABLE_DEBUG=ON
+        -DENABLE_CURL_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
-    OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
+        -DENABLE_DEBUG=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -145,4 +138,21 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(READ "${SOURCE_PATH}/lib/krb5.c" krb5_c)
+string(REGEX REPLACE "#i.*" "" krb5_c "${krb5_c}")
+set(krb5_copyright "${CURRENT_BUILDTREES_DIR}/krb5.c Notice")
+file(WRITE "${krb5_copyright}" "${krb5_c}")
+
+file(READ "${SOURCE_PATH}/lib/inet_ntop.c" inet_ntop_c)
+string(REGEX REPLACE "#i.*" "" inet_ntop_c "${inet_ntop_c}")
+set(inet_ntop_copyright "${CURRENT_BUILDTREES_DIR}/inet_ntop.c and inet_pton.c Notice")
+file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${krb5_copyright}"
+        "${inet_ntop_copyright}"
+)

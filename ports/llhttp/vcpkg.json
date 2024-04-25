@@ -1,0 +1,17 @@
+{
+  "name": "llhttp",
+  "version": "9.2.0",
+  "description": "Port of http_parser to llparse.",
+  "homepage": "https://github.com/nodejs/llhttp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
