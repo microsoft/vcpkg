@@ -565,7 +565,6 @@ foreach ($library in $libraries) {
         # Remove optional dependencies that are only used for tests or examples
         $deps = @($deps | Where-Object {
             -not (
-                # ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325 # Doesnt look optional
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
             )
         })
@@ -635,23 +634,5 @@ if ($updateServicePorts) {
         -Description "Boost.Build" `
         -License "BSL-1.0" `
         -Dependencies @("boost-uninstall")
-
-    # Update Boost version in CMake files
-    $files_with_boost_version = @(
-        "$portsDir/boost-cmake/portfile.cmake"
-    )
-    $files_with_boost_version | % {
-        $content = Get-Content -LiteralPath $_ `
-            -Encoding UTF8 `
-            -Raw
-        $content = $content -replace `
-            "set\(BOOST_VERSION [0-9\.a-zA-Z]+\)", `
-            "set(BOOST_VERSION $version)"
-
-        Set-Content -LiteralPath $_ `
-            -Value $content `
-            -Encoding UTF8 `
-            -NoNewline
-    }
 
 }
