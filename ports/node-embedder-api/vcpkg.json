@@ -4,7 +4,7 @@
   "description": "NodeJS API for embedding NodeJS in your C++ applications",
   "homepage": "https://nodejs.org/api/embedding.html",
   "license": "MIT",
-  "supports": "(windows & !arm & !uwp) | linux | osx",
+  "supports": "(windows & x64 & !uwp) | linux | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
