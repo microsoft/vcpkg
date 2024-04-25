@@ -3,11 +3,10 @@ param (
     $libraries = @(),
     $version = "1.84.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
-# 2: Do not trust this script. Platform expressions in dependencies are blindly applied.
-#    So if you see a configure log with that another boost<lib>Config.cmake is missing
-#    You probably trusted this script too much. Example: boost-graph -> requires boost-random
-#    but will be marked with platform "!uwp" which is wrong. Furthermore boost-graph does not need
-#    supports !uwp since the dep on boost-random is the blocking one.
+# 2: This script treats support statements as platform expressions. This is incorrect
+#    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
+#    boost-python is not supported on uwp. Unless this script treats these cases correctly
+#    don't blindly stage/commit changes containing platform expressions in dependencies.
     $portsDir = $null
 )
 
