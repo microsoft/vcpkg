@@ -1,8 +1,8 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index e69ae168..65c9d62c 100644
+index 56adfe0a..4f81aa5a 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
-@@ -50,53 +50,31 @@ find_package(folly CONFIG REQUIRED)
+@@ -50,53 +50,32 @@ find_package(folly CONFIG REQUIRED)
  find_package(fmt CONFIG REQUIRED)
  
  find_package(OpenSSL REQUIRED)
@@ -52,7 +52,7 @@ index e69ae168..65c9d62c 100644
  
 +find_package(gflags CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
--
+ 
 -find_package(Libevent CONFIG QUIET)
 -if(TARGET event)
 -  message(STATUS "Found libevent from package config")
@@ -64,9 +64,9 @@ index e69ae168..65c9d62c 100644
 -endif()
 +find_package(Libevent CONFIG REQUIRED)
  
- # Fizz build time options
- include(FizzOptions)
-@@ -254,30 +232,25 @@ target_include_directories(
+ find_package(liboqs CONFIG)
+ if (liboqs_FOUND)
+@@ -265,30 +244,25 @@ target_include_directories(
      $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
      $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
@@ -105,7 +105,7 @@ index e69ae168..65c9d62c 100644
      ${CMAKE_DL_LIBS}
      ${LIBRT_LIBRARIES})
  
-@@ -334,8 +307,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
+@@ -349,8 +323,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
  SET(FIZZ_TEST_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
  
  if(BUILD_TESTS)
@@ -115,7 +115,7 @@ index e69ae168..65c9d62c 100644
  endif()
  
  add_library(fizz_test_support
-@@ -348,20 +320,7 @@ add_library(fizz_test_support
+@@ -363,20 +336,7 @@ add_library(fizz_test_support
  target_link_libraries(fizz_test_support
    PUBLIC
      fizz
@@ -137,7 +137,7 @@ index e69ae168..65c9d62c 100644
  )
  
  # export fizz headers and targets for unit tests utils
-@@ -386,14 +345,12 @@ macro(add_gtest test_source test_name)
+@@ -401,14 +361,12 @@ macro(add_gtest test_source test_name)
    add_executable(${test_name} ${test_source} test/CMakeTestMain.cpp)
  
    set_property(TARGET ${test_name} PROPERTY ENABLE_EXPORTS true)
