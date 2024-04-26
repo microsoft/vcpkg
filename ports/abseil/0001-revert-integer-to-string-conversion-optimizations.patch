@@ -1,4 +1,4 @@
-From 8b600d5888beb2b72d1fada6a4bf6b0cb85aae63 Mon Sep 17 00:00:00 2001
+From fe447768b741e6f4a1cb529f93174e6dc6f86bec Mon Sep 17 00:00:00 2001
 From: Abseil Team <absl-team@google.com>
 Date: Tue, 26 Mar 2024 11:41:28 -0700
 Subject: [PATCH] Revert integer-to-string conversion optimizations pending
@@ -7,23 +7,59 @@ Subject: [PATCH] Revert integer-to-string conversion optimizations pending
 PiperOrigin-RevId: 619261152
 Change-Id: Id3409b326c52ace0fda42537e0b91dbb2d6a2287
 ---
- absl/base/macros.h           |  12 +
+ absl/base/macros.h           |  48 ++++
  absl/strings/numbers.cc      | 440 +++++++++--------------------------
  absl/strings/numbers.h       | 163 +------------
  absl/strings/numbers_test.cc |   7 -
  absl/strings/str_cat.cc      | 146 +-----------
- absl/strings/str_cat.h       | 151 ++++++------
+ absl/strings/str_cat.h       | 150 ++++++------
  absl/strings/str_cat_test.cc |  46 ----
- 7 files changed, 209 insertions(+), 756 deletions(-)
+ 7 files changed, 245 insertions(+), 755 deletions(-)
 
 diff --git a/absl/base/macros.h b/absl/base/macros.h
-index f33cd192..cd7cf498 100644
+index f33cd192..b318f116 100644
 --- a/absl/base/macros.h
 +++ b/absl/base/macros.h
-@@ -138,4 +138,16 @@ ABSL_NAMESPACE_END
+@@ -138,4 +138,52 @@ ABSL_NAMESPACE_END
  #define ABSL_INTERNAL_RETHROW do {} while (false)
  #endif  // ABSL_HAVE_EXCEPTIONS
  
++// ABSL_DEPRECATE_AND_INLINE()
++//
++// Marks a function or type alias as deprecated and tags it to be picked up for
++// automated refactoring by go/cpp-inliner. It can added to inline function
++// definitions or type aliases. It should only be used within a header file. It
++// differs from `ABSL_DEPRECATED` in the following ways:
++//
++// 1. New uses of the function or type will be discouraged via Tricorder
++//    warnings.
++// 2. If enabled via `METADATA`, automated changes will be sent out inlining the
++//    functions's body or replacing the type where it is used.
++//
++// For example:
++//
++// ABSL_DEPRECATE_AND_INLINE() inline int OldFunc(int x) {
++//   return NewFunc(x, 0);
++// }
++//
++// will mark `OldFunc` as deprecated, and the go/cpp-inliner service will
++// replace calls to `OldFunc(x)` with calls to `NewFunc(x, 0)`. Once all calls
++// to `OldFunc` have been replaced, `OldFunc` can be deleted.
++//
++// See go/cpp-inliner for more information.
++//
++// Note: go/cpp-inliner is Google-internal service for automated refactoring.
++// While open-source users do not have access to this service, the macro is
++// provided for compatibility, and so that users receive deprecation warnings.
++#if ABSL_HAVE_CPP_ATTRIBUTE(deprecated) && \
++    ABSL_HAVE_CPP_ATTRIBUTE(clang::annotate)
++#define ABSL_DEPRECATE_AND_INLINE() [[deprecated, clang::annotate("inline-me")]]
++#elif ABSL_HAVE_CPP_ATTRIBUTE(deprecated)
++#define ABSL_DEPRECATE_AND_INLINE() [[deprecated]]
++#else
++#define ABSL_DEPRECATE_AND_INLINE()
++#endif
++
 +// Requires the compiler to prove that the size of the given object is at least
 +// the expected amount.
 +#if ABSL_HAVE_ATTRIBUTE(diagnose_if) && ABSL_HAVE_BUILTIN(__builtin_object_size)
@@ -1027,7 +1063,7 @@ index 098ab183..e7f7052a 100644
    char* const begin = &(*dest)[0];
    char* out = begin + old_size;
 diff --git a/absl/strings/str_cat.h b/absl/strings/str_cat.h
-index ea2c4dca..f224942f 100644
+index 1b52a36f..f224942f 100644
 --- a/absl/strings/str_cat.h
 +++ b/absl/strings/str_cat.h
 @@ -93,6 +93,8 @@
@@ -1140,7 +1176,7 @@ index ea2c4dca..f224942f 100644
  }  // namespace strings_internal
  
  ABSL_MUST_USE_RESULT inline std::string StrCat() { return std::string(); }
-@@ -553,68 +596,6 @@ inline void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a,
+@@ -553,67 +596,6 @@ inline void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a,
               static_cast<const AlphaNum&>(args).Piece()...});
  }
  
@@ -1192,18 +1228,17 @@ index ea2c4dca..f224942f 100644
 -  ptrdiff_t n;   // The length of the current argument
 -  typename String::pointer pos = &(*str)[old_size];
 -  using SomeTrivialEmptyType = std::false_type;
--  // Ugly code due to the lack of C++14 fold expression makes us.
--  const SomeTrivialEmptyType dummy1;
--  for (const SomeTrivialEmptyType& dummy2 :
--       {(/* Comma expressions are poor man's C++17 fold expression for C++14 */
--         (void)(n = lengths[i]),
--         (void)(n < 0 ? (void)(*pos++ = '-'), (n = ~n) : 0),
--         (void)absl::numbers_internal::FastIntToBufferBackward(
--             absl::numbers_internal::UnsignedAbsoluteValue(std::move(args)),
--             pos += n, static_cast<uint32_t>(n)),
--         (void)++i, dummy1)...}) {
--    (void)dummy2;  // Remove & migrate to fold expressions in C++17
--  }
+-  const SomeTrivialEmptyType dummy;
+-  // Ugly code due to the lack of C++17 fold expressions
+-  const SomeTrivialEmptyType dummies[] = {
+-      (/* Comma expressions are poor man's C++17 fold expression for C++14 */
+-       (void)(n = lengths[i]),
+-       (void)(n < 0 ? (void)(*pos++ = '-'), (n = ~n) : 0),
+-       (void)absl::numbers_internal::FastIntToBufferBackward(
+-           absl::numbers_internal::UnsignedAbsoluteValue(std::move(args)),
+-           pos += n, static_cast<uint32_t>(n)),
+-       (void)++i, dummy)...};
+-  (void)dummies;  // Remove & migrate to fold expressions in C++17
 -}
 -
  // Helper function for the future StrCat default floating-point format, %.6g
@@ -1274,5 +1309,5 @@ index b30a86fe..66eddf0d 100644
  
  TEST(StrCat, Enums) {
 -- 
-2.39.2.windows.1
+2.34.1
 

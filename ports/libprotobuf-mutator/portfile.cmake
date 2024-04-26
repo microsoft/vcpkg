@@ -6,11 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/libprotobuf-mutator
     REF "v${VERSION}"
-    SHA512 cafc59c6c1e26a3e4873ec47f12db290739e98f229a17352c740aa17ac41f1435268eb0c45518b07e5c33280c18da1c4e363a31200569ffe636250e7c904b55e
+    SHA512 9c752cf2bdbf9228ba5a7c1e7a552ea7e12bda226ad8268e4cb9f135a79aee9c3ff0c1f2dfebe5d011282835a63d3b9cf3b3f642f02a3e00bb0b5eee9580a3dd
     HEAD_REF master
     PATCHES
-        dont-use-syntax.patch
-        switch-to-requires_utf8_validation.patch
         protobuf-cmake.patch
 )
 
