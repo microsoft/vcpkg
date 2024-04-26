@@ -2816,10 +2816,6 @@
       "baseline": "2021-02-21",
       "port-version": 2
     },
-    "fplus": {
-      "baseline": "0.2.23",
-      "port-version": 1
-    },
     "freealut": {
       "baseline": "1.1.0",
       "port-version": 4

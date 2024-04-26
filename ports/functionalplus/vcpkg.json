@@ -1,7 +1,7 @@
 {
   "name": "functionalplus",
   "version": "0.2.24",
-  "description": "Functional Programming Library for C++. Write concise and readable C++ code",
+  "description": "This port is the new fplus port, the old fplus has been removed. Functional Programming Library for C++. Write concise and readable C++ code",
   "homepage": "https://github.com/Dobiasd/FunctionalPlus",
   "license": "BSL-1.0",
   "dependencies": [
