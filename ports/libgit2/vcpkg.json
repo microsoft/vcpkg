@@ -29,9 +29,6 @@
         "mbedtls"
       ]
     },
-    "openssh": {
-      "description": "SSH support via invoking command-line OpenSSH"
-    },
     "openssl": {
       "description": "SSL support (OpenSSL)",
       "dependencies": [
@@ -49,10 +46,6 @@
       "dependencies": [
         "pcre2"
       ]
-    },
-    "schannel": {
-      "description": "SSL support (Schannel)",
-      "supports": "windows"
     },
     "sectransp": {
       "description": "SSL support (sectransp)",

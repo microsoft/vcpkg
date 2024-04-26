@@ -35,7 +35,7 @@ endfunction()
 
 function(set_tls_backend VALUE)
     if(USE_HTTPS)
-        message(FATAL_ERROR "Only one TLS backend (openssl,winhttp,schannel,sectransp,mbedtls) is allowed")
+        message(FATAL_ERROR "Only one TLS backend (openssl,winhttp,sectransp,mbedtls) is allowed")
     endif()
     set(USE_HTTPS ${VALUE} PARENT_SCOPE)
 endfunction()
@@ -49,8 +49,6 @@ foreach(GIT2_FEATURE ${FEATURES})
         set_tls_backend("OpenSSL")
     elseif(GIT2_FEATURE STREQUAL "winhttp")
         set_tls_backend("WinHTTP")
-    elseif(GIT2_FEATURE STREQUAL "schannel")
-        set_tls_backend("Schannel")
     elseif(GIT2_FEATURE STREQUAL "sectransp")
         set_tls_backend("SecureTransport")
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
@@ -62,18 +60,12 @@ if(NOT REGEX_BACKEND)
     message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
 endif()
 
-set(USE_SSH OFF)
-if("openssh" IN_LIST "${FEATURES}")
-    set(USE_SHH "exec")
-elseif("ssh" IN_LIST "${FEATURES}")
-    set(USE_SHH "libssh2") # same as `ON`
-endif()
-
 vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
     FEATURES
+        ssh     USE_SSH
         tools   BUILD_CLI
 )
 
@@ -84,7 +76,6 @@ vcpkg_cmake_configure(
         -DUSE_HTTP_PARSER=system
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
-        -DUSE_SSH=${USE_SSH}
         -DSTATIC_CRT=${STATIC_CRT}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON
