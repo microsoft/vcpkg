@@ -13,6 +13,7 @@ vcpkg_from_github(
         Install-tools.patch
         opengl.patch
         sdl2-static.patch
+        fix-tools-lnk2005.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")

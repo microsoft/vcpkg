@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.5.13.tgz"
-    FILENAME "openldap-2.5.13.tgz"
-    SHA512 30fdc884b513c53169910eec377c2ad05013b9f06bab3123d50d028108b24548791f7f47f18bcb3a2b4868edeab02c10d81ffa320c02d7b562f2e8f2fa25d6c9
+    URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${VERSION}.tgz"
+    FILENAME "openldap-${VERSION}.tgz"
+    SHA512 c23aee0a68a02fa2f5d12fb3b8e31af0c5d70d9a86059d40ad6726fc427f8852ce088eb8ec3bae9f9cb4f2ce0e249b3dbe845ba5d5967cda3ae993c263f3dc03
 )
 
 vcpkg_list(SET EXTRA_PATCHES)
