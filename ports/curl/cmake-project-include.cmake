@@ -77,11 +77,6 @@ function(vcpkg_curl_flatten input output)
     set("${output}" "${output_libs}" PARENT_SCOPE)
 endfunction()
 
-if(USE_LIBIDN2)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBIDN2 REQUIRED libidn2)
-endif()
-
 if(NOT CURL_DISABLE_LDAP AND NOT WIN32)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LDAP REQUIRED ldap)
