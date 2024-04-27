@@ -60,12 +60,20 @@ if(NOT REGEX_BACKEND)
     message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
 endif()
 
+set(USE_SSH OFF)
+
+if("ssh" IN_LIST ${FEATURES})
+    set(USE_SSH ON)
+    message(STATUS "This version of `libgit2` uses the default (`libssh2`) backend. To use the newer backend which utilizes the `ssh` CLI from a local install of OpenSSH instead, create an overlay port of this with USE_SSH set to 'exec' and the `libssh2` dependency removed.")
+    message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
+    message(STATUS "See the overlay ports documentation at https://learn.microsoft.com/vcpkg/concepts/overlay-ports")
+endif()
+
 vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
     FEATURES
-        ssh     USE_SSH
         tools   BUILD_CLI
 )
 
@@ -76,6 +84,7 @@ vcpkg_cmake_configure(
         -DUSE_HTTP_PARSER=system
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
+        -DUSE_SSH=${USE_SSH}
         -DSTATIC_CRT=${STATIC_CRT}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON
