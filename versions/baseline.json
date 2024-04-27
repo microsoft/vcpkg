@@ -8449,7 +8449,7 @@
       "port-version": 1
     },
     "stringzilla": {
-      "baseline": "3.7.3",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "strong-type": {
