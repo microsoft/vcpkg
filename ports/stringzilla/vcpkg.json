@@ -1,6 +1,6 @@
 {
   "name": "stringzilla",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "description": "Up to 10x faster strings for C, C++, Python, Rust, and Swift.",
   "homepage": "https://github.com/ashvardanian/StringZilla",
   "license": "Apache-2.0"
