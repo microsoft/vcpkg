@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c99d71a..7333110 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,12 @@ set(
+   ${LAPACK_MAJOR_VERSION}.${LAPACK_MINOR_VERSION}.${LAPACK_PATCH_VERSION}
+   )
+ 
++if(WIN32)
++    set(CMAKE_STATIC_LIBRARY_PREFIX "")
++    set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
++    set(CMAKE_IMPORT_LIBRARY_PREFIX "")
++endif()
++
+ # Add the CMake directory for custom CMake modules
+ set(CMAKE_MODULE_PATH "${LAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
+ 
