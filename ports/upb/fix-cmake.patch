@@ -1,5 +1,5 @@
 diff --git a/upb/cmake/CMakeLists.txt b/upb/cmake/CMakeLists.txt
-index 3ebe25780..a97340124 100644
+index 3ebe25780..67a70cf81 100644
 --- a/upb/cmake/CMakeLists.txt
 +++ b/upb/cmake/CMakeLists.txt
 @@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.10...3.24)
@@ -54,65 +54,14 @@ index 3ebe25780..a97340124 100644
  
  add_library(generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me INTERFACE
      
-@@ -124,3 +128,145 @@ target_link_libraries(generated_reflection_support__only_for_generated_code_do_n
+@@ -123,4 +127,94 @@ target_link_libraries(generated_reflection_support__only_for_generated_code_do_n
+   mini_descriptor
    reflection_internal)
  
- 
-+target_sources(upb PRIVATE
-+  ../base/status.c
-+  ../hash/common.c
-+  ../io/tokenizer.c
-+  ../io/chunked_input_stream.c
-+  ../io/chunked_output_stream.c
-+  ../json/decode.c
-+  ../json/encode.c
-+  ../lex/atoi.c
-+  ../lex/round_trip.c
-+  ../lex/strtod.c
-+  ../lex/unicode.c
-+  ../mem/alloc.c
-+  ../mem/arena.c
-+  ../message/accessors.c
-+  ../message/copy.c
-+  ../message/array.c
-+  ../message/map.c
-+  ../message/map_sorter.c
-+  ../message/message.c
-+  ../message/promote.c
-+  ../mini_descriptor/build_enum.c
-+  ../mini_descriptor/decode.c
-+  ../mini_descriptor/link.c
-+  ../mini_descriptor/internal/base92.c
-+  ../mini_descriptor/internal/encode.c
-+  ../mini_table/compat.c
-+  ../mini_table/extension_registry.c
-+  ../mini_table/message.c
-+  ../mini_table/internal/message.c
-+  ../reflection/def_pool.c
-+  ../reflection/def_type.c
-+  ../reflection/desc_state.c
-+  ../reflection/enum_def.c
-+  ../reflection/enum_reserved_range.c
-+  ../reflection/enum_value_def.c
-+  ../reflection/extension_range.c
-+  ../reflection/field_def.c
-+  ../reflection/file_def.c
-+  ../reflection/internal/def_builder.c
-+  ../reflection/internal/strdup2.c
-+  ../reflection/message.c
-+  ../reflection/message_def.c
-+  ../reflection/message_reserved_range.c
-+  ../reflection/method_def.c
-+  ../reflection/oneof_def.c
-+  ../reflection/service_def.c
-+  ../text/encode.c
-+  ../wire/decode.c
-+  ../wire/decode_fast.c
-+  ../wire/encode.c
-+  ../wire/eps_copy_input_stream.c
-+  ../wire/reader.c
-+  ../reflection/stage0/google/protobuf/descriptor.upb.c
-+)
++file(GLOB_RECURSE source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../" "${CMAKE_CURRENT_SOURCE_DIR}/../*.c")
++list(FILTER source_files EXCLUDE REGEX ".*(_test|upb_so|util|cmake|conformance).*")
++list(TRANSFORM source_files PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/../")
++target_sources(upb PRIVATE ${source_files})
 +
 +target_include_directories(upb PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../reflection/stage0>)
 +target_link_libraries(upb PRIVATE utf8_range::utf8_range)
@@ -166,7 +115,7 @@ index 3ebe25780..a97340124 100644
 +
 +  list(APPEND _upb_codegen_targets protoc-gen-upbdefs protoc-gen-upb protoc-gen-upb_minitable)
 +endif()
-+
+ 
 +include(GNUInstallDirs)
 +
 +target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/reflection/stage0>)

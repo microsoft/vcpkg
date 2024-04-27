@@ -8977,7 +8977,7 @@
       "port-version": 0
     },
     "upb": {
-      "baseline": "3.25.1",
+      "baseline": "4.25.1",
       "port-version": 0
     },
     "urdfdom": {
@@ -9017,7 +9017,7 @@
       "port-version": 3
     },
     "utf8-range": {
-      "baseline": "3.25.1",
+      "baseline": "4.25.1",
       "port-version": 0
     },
     "utf8h": {
