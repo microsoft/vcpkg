@@ -7613,7 +7613,7 @@
       "port-version": 4
     },
     "realm-core": {
-      "baseline": "14.5.2",
+      "baseline": "14.6.0",
       "port-version": 0
     },
     "realsense2": {
