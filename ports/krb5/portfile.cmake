@@ -13,7 +13,7 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}/src"
     AUTOCONFIG
     OPTIONS
-    CFLAGS=-fcommon
+        "CFLAGS=-fcommon \$CFLAGS"
 )
 
 vcpkg_install_make()
@@ -28,5 +28,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/krb5/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/krb5/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var")
+
+# remove due to absolute path error
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/krb5/bin/compile_et")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/krb5/bin/krb5-config")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/krb5/debug/")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/copyright.rst")

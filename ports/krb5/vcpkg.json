@@ -3,5 +3,6 @@
   "version": "1.21.2",
   "description": "Network authentication protocol",
   "homepage": "https://web.mit.edu/kerberos/",
-  "license": "MIT"
+  "license": "MIT",
+  "supports": "!windows"
 }
