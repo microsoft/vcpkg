@@ -1,8 +1,8 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index 64eec10..6c5a934 100644
+index e69ae168..65c9d62c 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
-@@ -50,10 +50,9 @@ find_package(folly CONFIG REQUIRED)
+@@ -50,53 +50,31 @@ find_package(folly CONFIG REQUIRED)
  find_package(fmt CONFIG REQUIRED)
  
  find_package(OpenSSL REQUIRED)
@@ -15,7 +15,13 @@ index 64eec10..6c5a934 100644
  if (UNIX AND NOT APPLE)
    find_package(Librt)
  endif()
-@@ -66,37 +65,17 @@ SET(FIZZ_SHINY_DEPENDENCIES "")
+ 
+ include(CheckAtomic)
+ 
+-find_package(Sodium REQUIRED)
++find_package(unofficial-sodium CONFIG REQUIRED)
+ 
+ SET(FIZZ_SHINY_DEPENDENCIES "")
  SET(FIZZ_LINK_LIBRARIES "")
  SET(FIZZ_INCLUDE_DIRECTORIES "")
  
@@ -46,20 +52,21 @@ index 64eec10..6c5a934 100644
  
 +find_package(gflags CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
- 
- find_package(Libevent CONFIG REQUIRED)
--if(TARGET libevent::core)
+-
+-find_package(Libevent CONFIG QUIET)
+-if(TARGET event)
 -  message(STATUS "Found libevent from package config")
--  list(APPEND FIZZ_SHINY_DEPENDENCIES libevent::core)
+-  list(APPEND FIZZ_SHINY_DEPENDENCIES event)
 -else()
 -  find_package(Libevent MODULE REQUIRED)
 -  list(APPEND FIZZ_LINK_LIBRARIES ${LIBEVENT_LIB})
 -  list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
 -endif()
++find_package(Libevent CONFIG REQUIRED)
  
- configure_file(fizz-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/generated/fizz/fizz-config.h)
- install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/fizz/fizz-config.h DESTINATION ${INCLUDE_INSTALL_DIR}/fizz/)
-@@ -243,30 +222,25 @@ target_include_directories(
+ # Fizz build time options
+ include(FizzOptions)
+@@ -254,30 +232,25 @@ target_include_directories(
      $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
      $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
@@ -78,10 +85,11 @@ index 64eec10..6c5a934 100644
    PUBLIC
 -    ${FOLLY_LIBRARIES}
 -    ${OPENSSL_LIBRARIES}
+-    sodium
 +    Folly::folly
 +    OpenSSL::SSL
 +    OpenSSL::Crypto
-     unofficial-sodium::sodium
++    unofficial-sodium::sodium
      Threads::Threads
      ZLIB::ZLIB
 -    ${ZSTD_LIBRARY}
@@ -97,25 +105,24 @@ index 64eec10..6c5a934 100644
      ${CMAKE_DL_LIBS}
      ${LIBRT_LIBRARIES})
  
-@@ -323,8 +297,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
+@@ -334,8 +307,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
  SET(FIZZ_TEST_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
  
  if(BUILD_TESTS)
 -  find_package(GMock 1.8.0 MODULE REQUIRED)
 -  find_package(GTest 1.8.0 MODULE REQUIRED)
-+   find_package(GTest CONFIG REQUIRED)
++  find_package(GTest CONFIG REQUIRED)
  endif()
  
  add_library(fizz_test_support
-@@ -337,21 +310,9 @@ add_library(fizz_test_support
+@@ -348,20 +320,7 @@ add_library(fizz_test_support
  target_link_libraries(fizz_test_support
    PUBLIC
      fizz
 -    ${LIBGMOCK_LIBRARIES}
 -    ${GLOG_LIBRARY}
-+    glog::glog
- )
- 
+-)
+-
 -target_compile_definitions(fizz_test_support
 -  PUBLIC
 -    ${LIBGMOCK_DEFINES}
@@ -126,11 +133,11 @@ index 64eec10..6c5a934 100644
 -  PUBLIC
 -    ${LIBGMOCK_INCLUDE_DIR}
 -    ${LIBGTEST_INCLUDE_DIRS}
--)
++    glog::glog
+ )
  
  # export fizz headers and targets for unit tests utils
- # since other projects such as mvfst and proxygen use them
-@@ -375,14 +336,13 @@ macro(add_gtest test_source test_name)
+@@ -386,14 +345,12 @@ macro(add_gtest test_source test_name)
    add_executable(${test_name} ${test_source} test/CMakeTestMain.cpp)
  
    set_property(TARGET ${test_name} PROPERTY ENABLE_EXPORTS true)
@@ -143,24 +150,23 @@ index 64eec10..6c5a934 100644
      fizz_test_support
 -    ${LIBGMOCK_LIBRARIES})
 +    GTest::gtest
-+    GTest::gmock
-+    )
++    GTest::gmock)
  
    if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      # GMOCK_MOCK_METHOD() will complain otherwise
 diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
-index 3fb48b2..baa43a6 100644
+index 679b0e61..8a4b189e 100644
 --- a/fizz/cmake/fizz-config.cmake.in
 +++ b/fizz/cmake/fizz-config.cmake.in
-@@ -26,10 +26,19 @@ endif()
+@@ -26,9 +26,18 @@ endif()
  set(FIZZ_LIBRARIES fizz::fizz)
  
  include(CMakeFindDependencyMacro)
--find_dependency(unofficial-sodium CONFIG REQUIRED)
+-find_dependency(Sodium)
 +find_dependency(unofficial-sodium CONFIG)
  find_dependency(folly CONFIG)
  find_dependency(ZLIB)
- find_dependency(Libevent CONFIG)
++find_dependency(Libevent CONFIG)
 +find_dependency(fmt CONFIG)
 +find_dependency(OpenSSL)
 +find_dependency(glog CONFIG)
@@ -169,7 +175,6 @@ index 3fb48b2..baa43a6 100644
 +find_dependency(gflags CONFIG)
 +find_dependency(zstd CONFIG)
 +find_dependency(GTest CONFIG)
-+
  
  if (NOT fizz_FIND_QUIETLY)
    message(STATUS "Found fizz: ${PACKAGE_PREFIX_DIR}")

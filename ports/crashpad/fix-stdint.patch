@@ -1,0 +1,26 @@
+diff --git a/base/logging.h b/base/logging.h
+index a123535..a87de3d 100644
+--- a/base/logging.h
++++ b/base/logging.h
+@@ -7,7 +7,7 @@
+ 
+ #include <assert.h>
+ #include <errno.h>
+-
++#include <stdint.h>
+ #include <limits>
+ #include <sstream>
+ #include <string>
+diff --git a/base/strings/utf_string_conversion_utils.h b/base/strings/utf_string_conversion_utils.h
+index ed99a23..0ba3fea 100644
+--- a/base/strings/utf_string_conversion_utils.h
++++ b/base/strings/utf_string_conversion_utils.h
+@@ -6,7 +6,7 @@
+ #define MINI_CHROMIUM_BASE_STRINGS_UTF_STRING_CONVERSION_UTILS_H_
+ 
+ #include <string>
+-
++#include <stdint.h>
+ namespace base {
+ 
+ inline bool IsValidCodepoint(uint32_t code_point) {
