@@ -53,8 +53,7 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$PassingIsPassing = $false,
-    [switch]$IsLinuxHost = $false
+    [switch]$PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -104,22 +103,16 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
-if ($IsLinuxHost) {
-    $env:HOME = '/home/agent'
-    $executableExtension = [string]::Empty
-}
-elseif ($Triplet -eq 'x64-osx' -or $Triplet -eq 'arm64-osx') {
-    $executableExtension = [string]::Empty
-}
-else {
+if ($IsWindows) {
     $executableExtension = '.exe'
+} else {
+    $executableExtension = [string]::Empty
 }
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
-if ($IsWindows)
-{
+if ($IsWindows) {
     mkdir empty
     cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
     cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"

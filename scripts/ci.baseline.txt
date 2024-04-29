@@ -1322,6 +1322,7 @@ vcpkg-ci-openimageio:x64-osx=pass
 vcpkg-ci-openimageio:x64-linux=pass
 vcpkg-ci-paraview:x64-linux=pass
 vcpkg-ci-paraview:x64-osx=pass
+vcpkg-ci-paraview:arm64-osx=pass
 vcpkg-ci-paraview:x64-windows-static-md=pass
 vcpkg-ci-paraview:x64-windows-static=pass
 vcpkg-ci-paraview:x64-windows=pass

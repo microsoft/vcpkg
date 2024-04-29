@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencollab/arpack-ng
     REF ${VERSION}
-    SHA512 fbcaa2179dd1aa5a39fc3e7d80f377ec90ddf16ef93184a88e6ecfc464ed97e5659f2cf578294ac3e0b0c0da6408c86acf5bbdce533e1e9d2a3121848340d282
+    SHA512 1ca590a8c4f75aa74402f9bd62e63851039687f4cb11afa8acb05fce1f22a512bff5fd1709ea85fdbea90b344fbbc01e3944c770b5ddc4d1aabc98ac334f78d2
     HEAD_REF master
 )
 
