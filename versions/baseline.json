@@ -6494,7 +6494,7 @@
     },
     "openmvs": {
       "baseline": "2.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openni2": {
       "baseline": "2.2.0.33",
@@ -9178,7 +9178,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
