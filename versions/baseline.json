@@ -17,8 +17,8 @@
       "port-version": 0
     },
     "abseil": {
-      "baseline": "20240116.1",
-      "port-version": 1
+      "baseline": "20240116.2",
+      "port-version": 0
     },
     "absent": {
       "baseline": "0.3.1",
@@ -161,7 +161,7 @@
       "port-version": 0
     },
     "approval-tests-cpp": {
-      "baseline": "10.12.2",
+      "baseline": "10.13.0",
       "port-version": 0
     },
     "apr": {
@@ -1433,8 +1433,8 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2023.05.08.00",
-      "port-version": 2
+      "baseline": "2024.04.15.00",
+      "port-version": 0
     },
     "caf": {
       "baseline": "0.19.3",
@@ -1453,7 +1453,7 @@
       "port-version": 1
     },
     "calceph": {
-      "baseline": "3.5.5",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "camport3": {
@@ -2653,7 +2653,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 0
     },
     "fcl": {
@@ -2697,7 +2697,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2781,8 +2781,8 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2024.01.01.00",
-      "port-version": 3
+      "baseline": "2024.04.15.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -4554,7 +4554,7 @@
     },
     "libjxl": {
       "baseline": "0.10.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
@@ -5973,12 +5973,12 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 0
     },
     "mygui": {
       "baseline": "3.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "mysql-connector-cpp": {
       "baseline": "8.0.32",
@@ -6993,8 +6993,8 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.01.01.00",
-      "port-version": 1
+      "baseline": "2024.04.15.00",
+      "port-version": 0
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -7766,7 +7766,7 @@
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
-      "port-version": 3
+      "port-version": 4
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
@@ -7886,7 +7886,7 @@
     },
     "scnlib": {
       "baseline": "2.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "scope-guard": {
       "baseline": "1.1.0",
@@ -9241,7 +9241,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 0
     },
     "wasmedge": {

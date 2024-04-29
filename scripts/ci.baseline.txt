@@ -115,6 +115,8 @@ buck-yeh-bux:x64-android=fail
 c4core:arm-neon-android=fail
 c4core:arm64-android=fail
 c4core:x64-android=fail
+# Missing system libraries on linux: libaio1 & libaio-dev
+cachelib:x64-linux=fail
 caf:arm-neon-android=fail
 caf:arm64-uwp=fail
 caf:arm64-android=fail
