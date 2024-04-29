@@ -106,7 +106,6 @@ function(vcpkg_make_configure) #
         set(opts_cache "")
         if(NOT arg_NO_DEFAULT_OPTIONS)
           z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
-          z_vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
           vcpkg_list(APPEND arg_OPTIONS ${opts})
         endif()
 
