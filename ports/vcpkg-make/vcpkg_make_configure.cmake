@@ -8,7 +8,7 @@ function(vcpkg_make_configure) #
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "SOURCE_PATH;SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -132,9 +132,6 @@ function(vcpkg_make_configure) #
                                     "${target_dir}" 
                                  ${extra_configure_opts}
                                 )
-        foreach(cmd IN LISTS arg_POST_CONFIGURE_CMAKE_COMMANDS)
-            cmake_language(CALL ${cmd} ${configup})
-        endforeach()
     endforeach()
 
     # Restore environment
