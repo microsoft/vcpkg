@@ -79,9 +79,6 @@ APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
 ## required by gtk
 APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
 
-## required by gtk3 and at-spi2-atk
-APT_PACKAGES="$APT_PACKAGES libdbus-1-dev"
-
 ## required by at-spi2-atk
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
