@@ -16,9 +16,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "tool"
-  ],
   "features": {
     "bonding": {
       "description": "Enables the Connection Bonding feature"
