@@ -1,7 +1,6 @@
 {
   "name": "vtk",
-  "version-semver": "9.2.0-pv5.11.0",
-  "port-version": 12,
+  "version-semver": "9.3.0-pv5.12.0",
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -10,6 +9,7 @@
     "eigen3",
     "expat",
     "exprtk",
+    "fast-float",
     "fmt",
     "freetype",
     "glew",
@@ -167,6 +167,7 @@
       "description": "Build vtk modules required by paraview",
       "dependencies": [
         "cli11",
+        "openturns",
         {
           "name": "vtk",
           "default-features": false,
@@ -187,11 +188,7 @@
     "python": {
       "description": "Python functionality for VTK",
       "dependencies": [
-        "python3",
-        {
-          "name": "python3",
-          "host": true
-        }
+        "python3"
       ]
     },
     "qt": {
