@@ -57,7 +57,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES cjxl djxl cjpeg_hdr jxlinfo AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cjxl djxl jxlinfo AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

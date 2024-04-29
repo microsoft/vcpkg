@@ -4,7 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-core-amqp-cpp",
-  "version-semver": "1.0.0-beta.7",
+  "version-semver": "1.0.0-beta.8",
   "description": [
     "Microsoft Azure AMQP SDK for C++",
     "This library provides AMQP functionality to Azure SDK services."
@@ -17,7 +17,7 @@
     {
       "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.10.0"
+      "version>=": "1.11.3"
     },
     "azure-macro-utils-c",
     "umock-c",

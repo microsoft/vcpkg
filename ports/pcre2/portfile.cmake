@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PCRE2Project/pcre2
     REF "pcre2-${VERSION}"
-    SHA512 3d0ee66e23809d3da2fe2bf4ed6e20b0fb96c293a91668935f6319e8d02e480eeef33da01e08a7436a18a1a85a116d83186b953520f394c866aad3cea73c7f5c
+    SHA512 50f3b8b10faf432e0ffe87eca84fdebdb10869b092e4dc66c33bd6e2657638d4433698669af2c5ad9f691d27789663682a7235943761f716f5f2e0637deafc97
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
@@ -60,13 +60,17 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/man"
     "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(BUILD_STATIC)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
-    endif()
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/pcre2")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}/tools/pcre2/pcre2-config")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/pcre2/pcre2-config" "${CURRENT_PACKAGES_DIR}" [[$(cd "$(dirname "$0")/../.."; pwd -P)]])
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/pcre2/debug")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}/tools/pcre2/debug/pcre2-config")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/pcre2/debug/pcre2-config" "${CURRENT_PACKAGES_DIR}/debug" [[$(cd "$(dirname "$0")/../../../debug"; pwd -P)]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/pcre2/debug/pcre2-config" [[${prefix}/include]] [[${prefix}/../include]])
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
