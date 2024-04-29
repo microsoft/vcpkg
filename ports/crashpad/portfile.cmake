@@ -18,17 +18,21 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
+        PATCHES
+          "${PATCH_FILE}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
 # mini_chromium contains the toolchains and build configuration
+set(PATCH_FILE "fix-stdint.patch")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
     "5654edb4225bcad13901155c819febb5748e502b"
 )
+set(PATCH_FILE "")
 
 if(VCPKG_TARGET_IS_LINUX)
     # fetch lss
