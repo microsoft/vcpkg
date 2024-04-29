@@ -7505,7 +7505,7 @@
       "port-version": 2
     },
     "rapidcheck": {
-      "baseline": "2023-01-13",
+      "baseline": "2023-12-14",
       "port-version": 0
     },
     "rapidcsv": {
