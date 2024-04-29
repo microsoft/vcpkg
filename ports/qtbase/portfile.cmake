@@ -12,6 +12,7 @@ set(${PORT}_PATCHES
         # CVE fixes from https://download.qt.io/official_releases/qt/6.6/
         patches/0001-CVE-2023-51714-qtbase-6.6.diff
         patches/0002-CVE-2023-51714-qtbase-6.6.diff
+        patches/CVE-2024-25580-qtbase-6.6.diff
 
         allow_outside_prefix.patch
         config_install.patch

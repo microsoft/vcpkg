@@ -18,15 +18,17 @@ vcpkg_check_features(
         libmodplug SDL2MIXER_MOD_MODPLUG
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
+        wavpack SDL2MIXER_WAVPACK
+        wavpack SDL2MIXER_WAVPACK_DSD
         opusfile SDL2MIXER_OPUS
-    MAYBE_UNUSED_VARIABLES    
-        SDL2MIXER_MP3_DRMP3
 )
 
 if("fluidsynth" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND EXTRA_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -43,6 +45,9 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_MIDI_NATIVE=OFF
         -DSDL2MIXER_MIDI_TIMIDITY=OFF
         -DSDL2MIXER_MP3_DRMP3=OFF
+        -DSDL2MIXER_MOD_XMP_SHARED=${BUILD_SHARED}
+    MAYBE_UNUSED_VARIABLES
+        SDL2MIXER_MP3_DRMP3
 )
 
 vcpkg_cmake_install()
@@ -52,6 +57,10 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/SDL2_mixer"
 )
 vcpkg_fixup_pkgconfig()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_mixer.pc" "-lSDL2_mixer" "-lSDL2_mixerd")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

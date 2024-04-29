@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,6 +9,7 @@ vcpkg_from_gitlab(
         fix_build_error_windows.patch
         loaders-cache.patch
         use-libtiff-4-pkgconfig.patch
+        fix-static-deps.patch
 )
 
 if("introspection" IN_LIST FEATURES)
@@ -17,6 +17,24 @@ if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
 else()
     list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if("png" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dpng=enabled)
+else()
+    list(APPEND OPTIONS -Dpng=disabled)
+endif()
+
+if("tiff" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dtiff=enabled)
+else()
+    list(APPEND OPTIONS -Dtiff=disabled)
+endif()
+
+if("jpeg" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Djpeg=enabled)
+else()
+    list(APPEND OPTIONS -Djpeg=disabled)
 endif()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -34,9 +52,6 @@ vcpkg_configure_meson(
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
         -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
         -Ddocs=false
-        -Dpng=enabled               # Enable PNG loader (requires libpng)
-        -Dtiff=enabled              # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
-        -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
         -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dtests=false
         -Dinstalled_tests=false
@@ -74,4 +89,4 @@ vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

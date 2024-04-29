@@ -5,7 +5,9 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-# REPLACE WITH $CudnnUrl
+# If you are running this script outside of our Azure VMs, you will need to download cudnn from NVIDIA and place
+# it next to this script.
+$CudnnUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip'
 
 $CudnnLocalZipPath = "$PSScriptRoot\cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip"
 
@@ -82,16 +84,16 @@ catch {
 }
 
 try {
-  if ([string]::IsNullOrWhiteSpace($CudnnUrl)) {
-    if (-Not (Test-Path $CudnnLocalZipPath)) {
-      throw "CUDNN zip ($CudnnLocalZipPath) was missing, please download from NVidia and place next to this script."
-    }
-
+  if (Test-Path $CudnnLocalZipPath) {
     $cudnnZipPath = $CudnnLocalZipPath
   } else {
-    Write-Host 'Downloading CUDNN...'
+    Write-Host 'Attempting to download cudnn. If this fails, you need to agree to NVidia''s EULA, download cudnn, and place it next to this script.'
     $cudnnZipPath = Get-TempFilePath -Extension 'zip'
-    curl.exe -L -o $cudnnZipPath -s -S $CudnnUrl
+    $env:AZCOPY_AUTO_LOGIN_TYPE = 'MSI'
+    & "$env:PROGRAMFILES\azcopy_windows_amd64_10.23.0\azcopy.exe" copy $CudnnUrl $cudnnZipPath
+    if ($LASTEXITCODE -ne 0) {
+      throw 'Failed to download cudnn!'
+    }
   }
 
   Write-Host "Installing CUDNN to $destination..."

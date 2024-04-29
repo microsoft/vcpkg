@@ -1,7 +1,8 @@
 {
   "name": "qtimageformats",
   "version": "6.6.1",
-  "description": "Additional Image Format plugins for Qt",
+  "port-version": 1,
+  "description": "The Qt Image Formats add-on module provides optional support for other image file formats.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [

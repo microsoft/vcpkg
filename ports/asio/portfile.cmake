@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-29-0
-    SHA512 f8df39c5a5e89dcfe4bd37c7e757e44e3e94d9b79d7ab08d1804ad8980993a607070f7e12238ffe3286840cd08c0b3c8e3639d3a1177e5ff795994cbc42a8292
+    REF asio-1-30-2
+    SHA512 cfba1998d4f666156e751c4cab1e504441b368efbf344e22de30f8b983670a88d045d3ca82f197b95522a2026262274f93bc3061210781ce30c35c71a386ce6e
     HEAD_REF master
 )
 
@@ -26,4 +26,4 @@ file(INSTALL
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/asio/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/asio/LICENSE_1_0.txt")

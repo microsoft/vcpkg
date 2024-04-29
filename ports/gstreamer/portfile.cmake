@@ -203,7 +203,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:pulse=auto
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:shout2=disabled
-        -Dgst-plugins-good:soup=disabled
+        #-Dgst-plugins-good:soup=disabled 
         -Dgst-plugins-good:twolame=disabled
         -Dgst-plugins-good:waveform=auto
         -Dgst-plugins-good:wavpack=disabled # Error during plugin build
