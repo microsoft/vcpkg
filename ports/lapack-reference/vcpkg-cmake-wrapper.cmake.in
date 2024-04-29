@@ -22,10 +22,10 @@ unset(BLA_STATIC)
 
 if(@CBLAS@)
   include(SelectLibraryConfigurations)
-  find_library(CBLAS_LIBRARY_RELEASE NAMES libcblas PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH)
-  find_library(CBLAS_LIBRARY_DEBUG NAMES libcblas PATHS "${CURRENT_PACKAGES_DIR}/debug/lib" NO_DEFAULT_PATH)
+  find_library(CBLAS_LIBRARY_RELEASE NAMES libcblas cblas PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH)
+  find_library(CBLAS_LIBRARY_DEBUG NAMES libcblas cblas PATHS "${CURRENT_PACKAGES_DIR}/debug/lib" NO_DEFAULT_PATH)
   select_library_configurations(CBLAS)
-  set(LAPACK_LIBRARIES ${LAPACK_LIBRARIES})
+  set(LAPACK_LIBRARIES ${LAPACK_LIBRARIES} ${CBLAS_LIBRARIES})
 endif()
 
 set(CMAKE_MODULE_PATH "${LAPACK_PREV_MODULE_PATH}")
