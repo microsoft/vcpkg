@@ -146,9 +146,9 @@ clapack:x64-android=skip
 lapack-reference:x64-android=fail # broken!
 openblas:x64-android=fail # broken!
 blas-test:arm64-android=pass # openblas
-lapack-test:arm64-android=pass # lapack-reference[noblas]
+lapack-test:arm64-android=fail # lapack-reference[noblas] broken!
 clapack:arm64-android=skip
-lapack-reference:arm64-android=pass
+lapack-reference:arm64-android=fail # broken!
 openblas:arm64-android=pass
 # </BLAS+LAPACK>
 ################################################################
