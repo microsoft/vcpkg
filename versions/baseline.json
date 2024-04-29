@@ -2816,10 +2816,6 @@
       "baseline": "2021-02-21",
       "port-version": 2
     },
-    "fplus": {
-      "baseline": "0.2.23",
-      "port-version": 0
-    },
     "freealut": {
       "baseline": "1.1.0",
       "port-version": 4
@@ -2866,7 +2862,7 @@
     },
     "frugally-deep": {
       "baseline": "0.15.31",
-      "port-version": 0
+      "port-version": 1
     },
     "fruit": {
       "baseline": "3.7.1",
@@ -2882,6 +2878,10 @@
     },
     "function2": {
       "baseline": "4.2.4",
+      "port-version": 0
+    },
+    "functionalplus": {
+      "baseline": "0.2.24",
       "port-version": 0
     },
     "functions-framework-cpp": {
