@@ -51,8 +51,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMake/vtkInstallCMakePackage.cmake" "FindOG
 vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "find_dependency(OGG)" "find_dependency(Ogg CONFIG)")
 vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::ogg")
 
-
-
 # =============================================================================
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
