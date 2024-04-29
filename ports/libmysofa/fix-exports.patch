@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6e64623..439eb8d 100644
+index 6e64623..9fc1fd4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -39,9 +39,9 @@ if(${ADDRESS_SANITIZE} STREQUAL "ON")
@@ -15,31 +15,6 @@ index 6e64623..439eb8d 100644
  
  if(BUILD_TESTS)
  
-@@ -131,7 +131,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
- install(EXPORT mysofa_exports
-   NAMESPACE mysofa::
-   FILE mysofaTargets.cmake
--  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
-+  DESTINATION share/mysofa
- )
- 
- # Create a target export file for use from the build tree.
-@@ -145,7 +145,7 @@ include(CMakePackageConfigHelpers)
- # Configure package config file
- configure_package_config_file(mysofaConfig.cmake.in
-   ${CMAKE_CURRENT_BINARY_DIR}/mysofaConfig.cmake
--  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
-+  INSTALL_DESTINATION share/mysofa
- )
- 
- # Create package version file
-@@ -159,5 +159,5 @@ write_basic_package_version_file(
- install(FILES
-   ${CMAKE_CURRENT_BINARY_DIR}/mysofaConfig.cmake
-   ${CMAKE_CURRENT_BINARY_DIR}/mysofaConfigVersion.cmake
--  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mysofa
-+  DESTINATION share/mysofa
- )
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index dcaa92a..4cfce5d 100644
 --- a/src/CMakeLists.txt
