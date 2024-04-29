@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ADD_BIN_TO_PATH;DISABLE_PARALLEL;NO_DESTDIR;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
+        "DISABLE_PARALLEL;NO_DESTDIR;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS;SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
@@ -68,9 +68,6 @@ function(vcpkg_make_install)
     z_vcpkg_make_prepare_flags(${prepare_flags_opts})
 
     set(prepare_env_opts "")
-    if(arg_ADD_BIN_TO_PATH)
-        set(prepare_env_opts ADD_BIN_TO_PATH)
-    endif()
 
     foreach(buildtype IN LISTS buildtypes)
         string(TOUPPER "${buildtype}" cmake_buildtype)

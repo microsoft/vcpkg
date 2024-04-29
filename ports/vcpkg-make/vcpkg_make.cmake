@@ -201,10 +201,6 @@ function(z_vcpkg_make_prepare_env config)
         set(ENV{_LINK_} "${LINK_ENV_${config}}")
     endif()
 
-    if(arg_ADD_BIN_TO_PATH AND NOT VCPKG_CROSSCOMPILING)
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
-    endif()
-
     vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
     foreach(lib_env_var IN LISTS lib_env_vars)
         if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib")
@@ -238,9 +234,7 @@ function(vcpkg_make_run_configure)
     vcpkg_prepare_pkgconfig("${arg_CONFIG}")
 
     set(prepare_env_opts "")
-    if(arg_ADD_BIN_TO_PATH)
-        set(prepare_env_opts ADD_BIN_TO_PATH)
-    endif()
+
     z_vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
 
     vcpkg_list(SET tmp)

@@ -6,7 +6,7 @@ function(vcpkg_make_configure) #
 # z_vcpkg_is_autoconf
 # z_vcpkg_is_automake
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;ADD_BIN_TO_PATH;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
+        "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "SOURCE_PATH;SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
@@ -110,9 +110,7 @@ function(vcpkg_make_configure) #
         endif()
 
         set(configure_path_from_wd "./${relative_build_path}/configure")
-        if(arg_ADD_BIN_TO_PATH)
-            set(extra_configure_opts ADD_BIN_TO_PATH)
-        endif()
+
         foreach(cmd IN LISTS arg_PRE_CONFIGURE_CMAKE_COMMANDS)
             cmake_language(CALL ${cmd} ${configup})
         endforeach()
