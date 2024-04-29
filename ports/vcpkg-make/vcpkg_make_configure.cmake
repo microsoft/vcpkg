@@ -1,10 +1,7 @@
 include_guard(GLOBAL)
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
-function(vcpkg_make_configure) #
-# Replacement for vcpkg_configure_make
-# z_vcpkg_is_autoconf
-# z_vcpkg_is_automake
+function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "SOURCE_PATH;SHELL"
