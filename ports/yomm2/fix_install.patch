@@ -1,21 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c50fd44..f550c2e 100644
+index 9c5e446..f550c2d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,7 +15,7 @@
- # Find Boost dependency
- list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
- include(cmake/find_or_download_package.cmake)
--find_or_download_package(Boost INSTALL_WITH_YOMM)
-+find_package(Boost REQUIRED)
- message(STATUS "Using Boost libraries from ${Boost_INCLUDE_DIRS}")
- 
- if(NOT ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug") AND (CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c50fd44..f550c2d 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -73,7 +73,6 @@
+@@ -76,7 +76,6 @@
      COMMAND ${CMAKE_SOURCE_DIR}/dev/code2md "${readme_cpp}" "${readme_md}"
      DEPENDS "${readme_cpp}")
  endif()
@@ -24,3 +11,15 @@ index c50fd44..f550c2d 100644
  
  ## Install instruction
  # Create version file for cmake package
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9c5e446..f550c2d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -25,2 +25,3 @@
+   target_link_libraries(yomm2 PUBLIC Boost::headers)
++  target_compile_features(yomm2 PUBLIC cxx_std_17)
+   if (${YOMM2_CHECK_ABI_COMPATIBILITY})
+@@ -44,2 +44,3 @@
+   target_link_libraries(yomm2 INTERFACE Boost::headers)
++  target_compile_features(yomm2 INTERFACE cxx_std_17)
+ endif()
