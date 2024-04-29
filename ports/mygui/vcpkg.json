@@ -1,6 +1,7 @@
 {
   "name": "mygui",
   "version": "3.4.3",
+  "port-version": 1,
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
   "license": "MIT",

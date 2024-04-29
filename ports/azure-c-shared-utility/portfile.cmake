@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-utilityFunctions-conditions.patch
         disable-error.patch
         improve-dependencies.patch
+        modify-POSIX-c-version.patch
 )
 
 vcpkg_cmake_configure(
@@ -32,6 +33,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 
 file(COPY "${SOURCE_PATH}/configs/azure_iot_build_rules.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()
