@@ -1,0 +1,4870 @@
+
+dwarf_begin.o:
+0000000000000000 r CSWTCH.2
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __fxstat
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_begin
+                 U dwarf_begin_elf
+                 U elf_begin
+                 U elf_end
+                 U elf_version
+
+dwarf_begin_elf.o:
+0000000000000000 r .LC0
+0000000000000005 r .LC1
+0000000000000014 r .LC2
+0000000000000029 r .LC3
+0000000000000031 r .LC4
+000000000000003a r .LC5
+                 U Dwarf_Sig8_Hash_free
+                 U Dwarf_Sig8_Hash_init
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000003e0 T __libdw_debugdir
+                 U __libdw_oom
+                 U __libdw_seterrno
+                 U __sprintf_chk
+                 U __stack_chk_fail
+                 U calloc
+0000000000000000 t check_section
+0000000000000790 T dwarf_begin_elf
+0000000000000000 r dwarf_scnnames
+                 U elf_compress
+                 U elf_compress_gnu
+                 U elf_getdata
+                 U elf_getscn
+                 U elf_getshdrstrndx
+                 U elf_kind
+                 U elf_nextscn
+                 U elf_strptr
+                 U free
+                 U gelf_getehdr
+                 U gelf_getshdr
+                 U malloc
+                 U pthread_rwlock_init
+                 U realpath
+00000000000002e0 t scn_dwarf_type.isra.0
+                 U strcmp
+                 U strlen
+                 U strncmp
+                 U strrchr
+                 U strstr
+                 U sysconf
+0000000000000470 t valid_p
+
+dwarf_end.o:
+                 U Dwarf_Abbrev_Hash_free
+                 U Dwarf_Sig8_Hash_free
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_destroy_frame_cache
+                 U close
+0000000000000350 t cu_free
+0000000000000010 T dwarf_end
+                 U elf_end
+                 U free
+0000000000000000 t noop_free
+                 U pthread_rwlock_destroy
+                 U tdestroy
+
+dwarf_getelf.o:
+0000000000000000 T dwarf_getelf
+
+dwarf_getpubnames.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_getpubnames
+                 U free
+                 U memchr
+                 U realloc
+
+dwarf_getabbrev.o:
+                 U Dwarf_Abbrev_Hash_find
+                 U Dwarf_Abbrev_Hash_insert
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+0000000000000000 T __libdw_getabbrev
+                 U __libdw_seterrno
+                 U __libdw_thread_tail
+0000000000000a00 T dwarf_getabbrev
+
+dwarf_tag.o:
+                 U Dwarf_Abbrev_Hash_find
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_findabbrev
+                 U __libdw_getabbrev
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000130 T dwarf_tag
+
+dwarf_error.o:
+0000000000000000 r .LC0
+0000000000000009 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000030 T __libdw_seterrno
+                 U __tls_get_addr
+                 U dcgettext
+0000000000000060 T dwarf_errmsg
+0000000000000000 T dwarf_errno
+0000000000000000 d errmsgs
+0000000000000000 b global_error
+
+dwarf_nextcu.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_next_unit
+                 U __libdw_seterrno
+00000000000005e0 T dwarf_next_unit
+0000000000000620 T dwarf_nextcu
+
+dwarf_diename.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+0000000000000000 T dwarf_diename
+                 U dwarf_formstring
+
+dwarf_offdie.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_findcu
+0000000000000000 T __libdw_offdie
+                 U __libdw_seterrno
+0000000000000080 T dwarf_offdie
+0000000000000090 T dwarf_offdie_types
+
+dwarf_attr.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_attr
+0000000000000000 T dwarf_attr
+
+dwarf_formstring.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+0000000000000000 T dwarf_formstring
+                 U dwarf_formudata
+                 U dwarf_getalt
+
+dwarf_abbrev_hash.o:
+0000000000000680 T Dwarf_Abbrev_Hash_find
+0000000000000410 T Dwarf_Abbrev_Hash_free
+00000000000002e0 T Dwarf_Abbrev_Hash_init
+0000000000000430 T Dwarf_Abbrev_Hash_insert
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000780 T __libdwarf_next_prime
+                 U free
+0000000000000000 t insert_helper.isra.0
+                 U malloc
+                 U pthread_rwlock_destroy
+                 U pthread_rwlock_init
+                 U pthread_rwlock_tryrdlock
+                 U pthread_rwlock_unlock
+                 U pthread_rwlock_wrlock
+0000000000000110 t resize_helper
+0000000000000280 t resize_worker
+
+dwarf_sig8_hash.o:
+0000000000000580 T Dwarf_Sig8_Hash_find
+0000000000000390 T Dwarf_Sig8_Hash_free
+00000000000002e0 T Dwarf_Sig8_Hash_init
+00000000000003b0 T Dwarf_Sig8_Hash_insert
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwarf_next_prime
+                 U free
+0000000000000000 t insert_helper.isra.0
+                 U malloc
+                 U pthread_rwlock_destroy
+                 U pthread_rwlock_init
+                 U pthread_rwlock_tryrdlock
+                 U pthread_rwlock_unlock
+                 U pthread_rwlock_wrlock
+0000000000000110 t resize_helper
+0000000000000280 t resize_worker
+
+dwarf_attr_integrate.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_unit
+                 U __stack_chk_fail
+                 U dwarf_attr
+0000000000000000 T dwarf_attr_integrate
+                 U dwarf_formref_die
+
+dwarf_hasattr_integrate.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_unit
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_formref_die
+                 U dwarf_hasattr
+0000000000000000 T dwarf_hasattr_integrate
+
+dwarf_child.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_find_attr
+                 U __libdw_findabbrev
+                 U __libdw_form_val_compute_len
+                 U __libdw_seterrno
+0000000000000840 T dwarf_child
+0000000000000000 r form_lengths.5549
+
+dwarf_haschildren.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_findabbrev
+                 U __libdw_seterrno
+0000000000000000 T dwarf_haschildren
+
+dwarf_formaddr.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_addrx
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+0000000000000240 T dwarf_formaddr
+                 U dwarf_formudata
+
+dwarf_formudata.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_unit
+0000000000000900 T __libdw_formptr
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+0000000000000000 T dwarf_formudata
+
+dwarf_formsdata.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_formsdata
+
+dwarf_lowpc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_attr_integrate
+                 U dwarf_formaddr
+0000000000000000 T dwarf_lowpc
+
+dwarf_entrypc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr
+0000000000000000 T dwarf_entrypc
+                 U dwarf_formaddr
+
+dwarf_haspc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T dwarf_haspc
+                 U dwarf_ranges
+
+dwarf_highpc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_attr_integrate
+                 U dwarf_formaddr
+                 U dwarf_formudata
+0000000000000000 T dwarf_highpc
+                 U dwarf_lowpc
+
+dwarf_ranges.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_addrx
+                 U __libdw_cu_base_address
+                 U __libdw_find_split_unit
+                 U __libdw_formptr
+0000000000000000 T __libdw_read_begin_end_pair_inc
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_attr_integrate
+                 U dwarf_formudata
+                 U dwarf_highpc
+                 U dwarf_lowpc
+0000000000002c40 T dwarf_ranges
+
+dwarf_formref.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_formref
+                 U __libdw_seterrno
+00000000000002b0 T dwarf_formref
+
+dwarf_formref_die.o:
+                 U Dwarf_Sig8_Hash_find
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_formref
+                 U __libdw_intern_next_unit
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_errno
+0000000000000000 T dwarf_formref_die
+                 U dwarf_getalt
+                 U dwarf_offdie
+
+dwarf_siblingof.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_attr
+                 U __libdw_formref
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_siblingof
+
+dwarf_dieoffset.o:
+0000000000000000 T dwarf_dieoffset
+
+dwarf_cuoffset.o:
+0000000000000000 T dwarf_cuoffset
+
+dwarf_diecu.o:
+0000000000000000 T dwarf_diecu
+
+dwarf_hasattr.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_findabbrev
+                 U __libdw_seterrno
+0000000000000000 T dwarf_hasattr
+
+dwarf_hasform.o:
+0000000000000000 T dwarf_hasform
+
+dwarf_whatform.o:
+0000000000000000 T dwarf_whatform
+
+dwarf_whatattr.o:
+0000000000000000 T dwarf_whatattr
+
+dwarf_bytesize.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+0000000000000000 T dwarf_bytesize
+                 U dwarf_formudata
+
+dwarf_arrayorder.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T dwarf_arrayorder
+                 U dwarf_attr_integrate
+                 U dwarf_formudata
+
+dwarf_bitsize.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+0000000000000000 T dwarf_bitsize
+                 U dwarf_formudata
+
+dwarf_bitoffset.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+0000000000000000 T dwarf_bitoffset
+                 U dwarf_formudata
+
+dwarf_srclang.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+                 U dwarf_formudata
+0000000000000000 T dwarf_srclang
+
+dwarf_getabbrevtag.o:
+0000000000000000 T dwarf_getabbrevtag
+
+dwarf_getabbrevcode.o:
+0000000000000000 T dwarf_getabbrevcode
+
+dwarf_abbrevhaschildren.o:
+0000000000000000 T dwarf_abbrevhaschildren
+
+dwarf_getattrcnt.o:
+0000000000000000 T dwarf_getattrcnt
+
+dwarf_getabbrevattr.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000520 T dwarf_getabbrevattr
+0000000000000000 T dwarf_getabbrevattr_data
+
+dwarf_getsrclines.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+                 U __libdw_find_split_unit
+                 U __libdw_form_val_compute_len
+                 U __libdw_formptr
+0000000000000080 t __libdw_get_uleb128
+00000000000032c0 T __libdw_getcompdir
+00000000000030b0 T __libdw_getsrclines
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000220 t add_new_line
+0000000000000000 t compare_lines
+                 U dwarf_attr
+                 U dwarf_formstring
+                 U dwarf_formudata
+0000000000003310 T dwarf_getsrclines
+0000000000003310 t dwarf_getsrclines.localalias
+0000000000000060 t files_lines_compare
+0000000000000180 r form_lengths.6520
+                 U free
+                 U malloc
+                 U memchr
+                 U qsort
+0000000000000330 t read_srclines
+                 U stpcpy
+                 U strcpy
+                 U strlen
+                 U tfind
+                 U tsearch
+
+dwarf_getsrc_die.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_getsrc_die
+                 U dwarf_getsrclines
+
+dwarf_getscopes.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __libdw_visit_scopes
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_errno
+                 U dwarf_formref_die
+0000000000000270 T dwarf_getscopes
+                 U dwarf_haspc
+                 U dwarf_tag
+                 U free
+                 U malloc
+0000000000000000 t origin_match
+00000000000001f0 t pc_match
+00000000000000b0 t pc_record
+                 U realloc
+
+dwarf_getscopes_die.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __libdw_visit_scopes
+                 U __stack_chk_fail
+0000000000000080 T dwarf_getscopes_die
+                 U malloc
+0000000000000000 t scope_visitor
+
+dwarf_getscopevar.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_child
+                 U dwarf_diename
+                 U dwarf_formudata
+0000000000000000 T dwarf_getscopevar
+                 U dwarf_getsrcfiles
+                 U dwarf_haschildren
+                 U dwarf_siblingof
+                 U dwarf_tag
+                 U memcmp
+                 U strcmp
+                 U strlen
+
+dwarf_linesrc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_linesrc
+
+dwarf_lineno.o:
+0000000000000000 T dwarf_lineno
+
+dwarf_lineaddr.o:
+0000000000000000 T dwarf_lineaddr
+
+dwarf_linecol.o:
+0000000000000000 T dwarf_linecol
+
+dwarf_linebeginstatement.o:
+0000000000000000 T dwarf_linebeginstatement
+
+dwarf_lineendsequence.o:
+0000000000000000 T dwarf_lineendsequence
+
+dwarf_lineblock.o:
+0000000000000000 T dwarf_lineblock
+
+dwarf_linecontext.o:
+0000000000000000 T dwarf_linecontext
+
+dwarf_linefunctionname.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T dwarf_linefunctionname
+                 U memchr
+
+dwarf_lineprologueend.o:
+0000000000000000 T dwarf_lineprologueend
+
+dwarf_lineepiloguebegin.o:
+0000000000000000 T dwarf_lineepiloguebegin
+
+dwarf_lineisa.o:
+0000000000000000 T dwarf_lineisa
+
+dwarf_linediscriminator.o:
+0000000000000000 T dwarf_linediscriminator
+
+dwarf_lineop_index.o:
+0000000000000000 T dwarf_lineop_index
+
+dwarf_line_file.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_line_file
+
+dwarf_onesrcline.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_onesrcline
+
+dwarf_formblock.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_formblock
+
+dwarf_getsrcfiles.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_unit
+                 U __libdw_getcompdir
+                 U __libdw_getsrclines
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_getsrcfiles
+0000000000000000 t dwarf_getsrcfiles.localalias
+                 U dwarf_getsrclines
+
+dwarf_filesrc.o:
+0000000000000000 T dwarf_filesrc
+
+dwarf_getsrcdirs.o:
+0000000000000000 T dwarf_getsrcdirs
+
+dwarf_getlocation.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+0000000000002870 T __libdw_cu_base_address
+                 U __libdw_find_split_unit
+                 U __libdw_formptr
+0000000000002580 T __libdw_intern_expression
+0000000000000710 t __libdw_intern_expression.part.0
+                 U __libdw_read_begin_end_pair_inc
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_errno
+                 U dwarf_formaddr
+                 U dwarf_formblock
+                 U dwarf_formudata
+00000000000026c0 T dwarf_getlocation
+00000000000029c0 T dwarf_getlocation_addr
+00000000000024e0 T dwarf_getlocation_implicit_value
+0000000000003180 T dwarf_getlocations
+                 U dwarf_lowpc
+                 U free
+00000000000001d0 t initial_offset
+0000000000000020 t is_constant_offset.part.0
+0000000000000000 t loc_compare
+                 U malloc
+                 U tfind
+                 U tsearch
+
+dwarf_getstring.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_getstring
+                 U memchr
+
+dwarf_offabbrev.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_getabbrev
+0000000000000000 T dwarf_offabbrev
+
+dwarf_getaranges.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+                 U __libdw_findcu
+                 U __libdw_seterrno
+0000000000000000 t compare_aranges
+0000000000000020 T dwarf_getaranges
+                 U free
+                 U malloc
+                 U qsort
+
+dwarf_onearange.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_onearange
+
+dwarf_getarangeinfo.o:
+0000000000000000 T dwarf_getarangeinfo
+
+dwarf_getarange_addr.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_getarange_addr
+
+dwarf_getattrs.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_findabbrev
+                 U __libdw_form_val_compute_len
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_getattrs
+0000000000000000 r form_lengths.5549
+
+dwarf_formflag.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_formflag
+
+dwarf_getmacros.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+                 U __libdw_form_val_compute_len
+                 U __libdw_getcompdir
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_formudata
+                 U dwarf_get_units
+0000000000000f70 T dwarf_getmacros
+0000000000000ec0 T dwarf_getmacros_off
+                 U dwarf_hasattr
+00000000000000a0 r form_lengths.6520
+                 U free
+0000000000000000 t init_macinfo_table
+0000000000000000 b macinfo_data
+0000000000000e90 t macro_op_compare
+                 U malloc
+00000000000000da r proto.6844
+00000000000000d8 r proto.6848
+00000000000000d8 r proto.6852
+00000000000000d6 r proto.6893
+00000000000000d4 r proto.6897
+00000000000000d2 r proto.6901
+00000000000000d0 r proto.6905
+00000000000000ce r proto.6909
+00000000000000cd r proto.6913
+00000000000000cd r proto.6917
+0000000000000000 t read_macros
+                 U tfind
+                 U tsearch
+
+dwarf_macro_getparamcnt.o:
+0000000000000000 T dwarf_macro_getparamcnt
+
+dwarf_macro_opcode.o:
+0000000000000000 T dwarf_macro_opcode
+
+dwarf_macro_param.o:
+0000000000000000 T dwarf_macro_param
+
+dwarf_macro_param1.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_formudata
+                 U dwarf_macro_param
+0000000000000000 T dwarf_macro_param1
+
+dwarf_macro_param2.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_formstring
+                 U dwarf_formudata
+                 U dwarf_macro_param
+0000000000000000 T dwarf_macro_param2
+
+dwarf_macro_getsrcfiles.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_getsrclines
+0000000000000000 T dwarf_macro_getsrcfiles
+
+dwarf_addrdie.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T dwarf_addrdie
+                 U dwarf_getarange_addr
+                 U dwarf_getarangeinfo
+                 U dwarf_getaranges
+                 U dwarf_offdie
+
+dwarf_getfuncs.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_visit_scopes
+                 U __stack_chk_fail
+00000000000000c0 T dwarf_getfuncs
+                 U dwarf_hasattr
+                 U dwarf_srclang
+                 U dwarf_tag
+0000000000000000 t tree_visitor
+
+dwarf_decl_file.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+0000000000000000 T dwarf_decl_file
+                 U dwarf_formudata
+                 U dwarf_getsrclines
+
+dwarf_decl_line.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_attr_intval
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+0000000000000080 T dwarf_decl_line
+                 U dwarf_formudata
+
+dwarf_decl_column.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_attr_intval
+0000000000000000 T dwarf_decl_column
+
+dwarf_func_inline.o:
+0000000000000000 r CSWTCH.7
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_visit_scopes
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_formref_die
+                 U dwarf_formudata
+00000000000000a0 T dwarf_func_inline
+0000000000000120 T dwarf_func_inline_instances
+                 U dwarf_tag
+0000000000000000 t scope_visitor
+
+dwarf_getsrc_file.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U basename
+                 U dwarf_errno
+0000000000000000 T dwarf_getsrc_file
+                 U dwarf_getsrclines
+                 U dwarf_nextcu
+                 U dwarf_offdie
+                 U free
+                 U realloc
+                 U strchr
+                 U strcmp
+
+libdw_findcu.o:
+                 U Dwarf_Abbrev_Hash_init
+                 U Dwarf_Sig8_Hash_insert
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+00000000000006f0 T __libdw_find_split_dbg_addr
+0000000000000530 T __libdw_findcu
+0000000000000620 T __libdw_findcu_addr
+0000000000000000 T __libdw_finddbg_cb
+00000000000000b0 T __libdw_intern_next_unit
+                 U __libdw_next_unit
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_formudata
+                 U dwarf_hasattr
+                 U dwarf_haschildren
+                 U dwarf_tag
+0000000000000060 t findcu_cb
+                 U tfind
+                 U tsearch
+
+libdw_form.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_form_val_compute_len
+                 U __libdw_seterrno
+00000000000000a0 r form_lengths.5829
+                 U memchr
+
+libdw_alloc.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_alloc_tail
+0000000000000250 T __libdw_allocate
+0000000000000320 T __libdw_oom
+0000000000000200 T __libdw_thread_tail
+                 U __tls_get_addr
+0000000000000300 T dwarf_new_oom_handler
+                 U error
+                 U malloc
+0000000000000000 b next_id
+                 U pthread_rwlock_rdlock
+                 U pthread_rwlock_unlock
+                 U pthread_rwlock_wrlock
+                 U realloc
+0000000000000000 d thread_id
+
+libdw_visit_scopes.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T __libdw_visit_scopes
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_child
+                 U dwarf_formref_die
+                 U dwarf_haschildren
+                 U dwarf_siblingof
+                 U dwarf_tag
+00000000000002e0 t walk_children
+
+dwarf_entry_breakpoints.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_entry_breakpoints
+                 U dwarf_entrypc
+                 U dwarf_errno
+                 U dwarf_getsrclines
+                 U dwarf_ranges
+                 U free
+                 U realloc
+
+dwarf_next_cfi.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_next_cfi
+0000000000000000 t dwarf_next_cfi.cold
+                 U memchr
+
+cie.o:
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000002e0 T __libdw_find_cie
+00000000000003f0 T __libdw_intern_cie
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 t compare_cie
+                 U dwarf_next_cfi
+                 U free
+0000000000000020 t intern_new_cie
+0000000000000000 t intern_new_cie.cold
+                 U malloc
+                 U tfind
+                 U tsearch
+
+fde.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000f40 T __libdw_fde_by_offset
+                 U __libdw_find_cie
+0000000000001000 T __libdw_find_fde
+                 U __libdw_intern_cie
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 t compare_fde
+                 U dwarf_next_cfi
+                 U free
+0000000000000bd0 t intern_fde
+                 U malloc
+0000000000000050 t read_encoded_value
+0000000000000000 t read_encoded_value.cold
+                 U tfind
+                 U tsearch
+
+cfi.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000004460 T __libdw_frame_at_address
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U calloc
+                 U dwarf_errno
+                 U ebl_abi_cfi
+                 U ebl_openbackend
+0000000000000000 t execute_cfi
+                 U free
+                 U malloc
+                 U memcpy
+                 U memset
+                 U realloc
+
+frame-cache.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000040 T __libdw_destroy_frame_cache
+                 U ebl_closebackend
+                 U free
+0000000000000020 t free_cie
+0000000000000000 t free_expr
+                 U tdestroy
+
+dwarf_frame_info.o:
+0000000000000000 T dwarf_frame_info
+
+dwarf_frame_cfa.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_intern_expression
+                 U __libdw_seterrno
+                 U abort
+0000000000000000 T dwarf_frame_cfa
+0000000000000000 t dwarf_frame_cfa.cold
+
+dwarf_frame_register.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_intern_expression
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwarf_frame_register
+
+dwarf_cfi_addrframe.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_fde
+                 U __libdw_frame_at_address
+                 U __libdw_seterrno
+0000000000000000 T dwarf_cfi_addrframe
+
+dwarf_getcfi.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_alloc_tail
+                 U __libdw_allocate
+                 U __stack_chk_fail
+0000000000000000 T dwarf_getcfi
+                 U elf_getident
+                 U gelf_getehdr
+
+dwarf_getcfi_elf.o:
+0000000000000000 r .LC1
+000000000000000e r .LC2
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U calloc
+0000000000000cf0 T dwarf_getcfi_elf
+                 U elf_getdata_rawchunk
+                 U elf_getident
+                 U elf_getphdrnum
+                 U elf_getshdrstrndx
+                 U elf_kind
+                 U elf_nextscn
+                 U elf_rawdata
+                 U elf_rawfile
+                 U elf_strptr
+                 U free
+                 U gelf_getehdr
+                 U gelf_getphdr
+                 U gelf_getshdr
+0000000000000b80 t parse_eh_frame_hdr
+0000000000000000 t read_encoded_value
+0000000000000000 t read_encoded_value.cold
+
+dwarf_cfi_end.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_destroy_frame_cache
+0000000000000000 T dwarf_cfi_end
+                 U free
+
+dwarf_aggregate_size.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+00000000000004e0 t aggregate_size
+0000000000000000 t array_size
+0000000000000630 T dwarf_aggregate_size
+                 U dwarf_attr
+                 U dwarf_attr_integrate
+                 U dwarf_child
+                 U dwarf_default_lower_bound
+                 U dwarf_formref_die
+                 U dwarf_formsdata
+                 U dwarf_formudata
+                 U dwarf_peel_type
+                 U dwarf_siblingof
+                 U dwarf_srclang
+                 U dwarf_tag
+
+dwarf_getlocation_implicit_pointer.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdw_empty_loc_attr
+                 U __libdw_offdie
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+0000000000000040 T dwarf_getlocation_implicit_pointer
+0000000000000000 d empty_cu
+0000000000000000 b empty_exprloc
+
+dwarf_getlocation_die.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_offdie
+                 U __libdw_seterrno
+0000000000000000 T dwarf_getlocation_die
+
+dwarf_getlocation_attr.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_empty_loc_attr
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+0000000000000000 t addr_valp
+                 U dwarf_attr
+                 U dwarf_formudata
+0000000000000190 T dwarf_getlocation_attr
+                 U dwarf_getlocation_die
+
+dwarf_getalt.o:
+0000000000000000 r .LC0
+000000000000000c r .LC1
+000000000000001b r .LC2
+0000000000000020 r .LC3
+0000000000000026 r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000000 T __libdw_filepath
+                 U __sprintf_chk
+                 U __stack_chk_fail
+                 U close
+                 U dwarf_begin
+00000000000001a0 T dwarf_getalt
+                 U dwelf_dwarf_gnu_debugaltlink
+                 U free
+                 U malloc
+                 U memcpy
+                 U mempcpy
+                 U open
+                 U strdup
+                 U strlen
+
+dwarf_setalt.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U close
+                 U dwarf_end
+0000000000000000 T dwarf_setalt
+
+dwarf_cu_getdwarf.o:
+0000000000000000 T dwarf_cu_getdwarf
+
+dwarf_cu_die.o:
+0000000000000000 T dwarf_cu_die
+
+dwarf_peel_type.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+0000000000000000 T dwarf_peel_type
+                 U dwarf_tag
+
+dwarf_default_lower_bound.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwarf_default_lower_bound
+
+dwarf_die_addr_die.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_dbg_addr
+                 U __libdw_findcu_addr
+0000000000000000 T dwarf_die_addr_die
+                 U dwarf_getalt
+
+dwarf_get_units.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_unit
+                 U __libdw_findcu
+                 U __libdw_seterrno
+0000000000000000 T dwarf_get_units
+
+libdw_find_split_unit.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_filepath
+0000000000000280 T __libdw_find_split_unit
+                 U __libdw_finddbg_cb
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U close
+                 U dwarf_attr
+                 U dwarf_begin
+                 U dwarf_end
+                 U dwarf_formstring
+                 U dwarf_formudata
+                 U dwarf_get_units
+                 U elf_cntl
+                 U free
+                 U open
+0000000000000000 T try_split_file
+                 U tsearch
+
+dwarf_cu_info.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_find_split_unit
+                 U __libdw_seterrno
+0000000000000000 T dwarf_cu_info
+
+dwarf_next_lines.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_getcompdir
+                 U __libdw_getsrclines
+                 U __libdw_seterrno
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_formudata
+                 U dwarf_get_units
+                 U dwarf_hasattr
+0000000000000000 T dwarf_next_lines
+                 U elf_getident
+
+dwfl_begin.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_seterrno
+                 U calloc
+0000000000000000 T dwfl_begin
+                 U elf_version
+
+dwfl_end.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_debuginfod_end
+                 U __libdwfl_module_free
+                 U __libdwfl_process_free
+                 U close
+0000000000000000 T dwfl_end
+                 U elf_end
+                 U free
+
+dwfl_error.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000030 T __libdwfl_canon_error
+0000000000000090 T __libdwfl_seterrno
+                 U __tls_get_addr
+                 U dcgettext
+                 U dwarf_errmsg
+                 U dwarf_errno
+00000000000000f0 T dwfl_errmsg
+0000000000000000 T dwfl_errno
+                 U elf_errmsg
+                 U elf_errno
+0000000000000000 b global_error
+0000000000000000 r msgidx
+0000000000000160 r msgtable
+                 U strerror_r
+0000000000000000 d unknown.8794
+
+dwfl_version.o:
+0000000000000000 r .LC0
+0000000000000000 T dwfl_version
+
+dwfl_module.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000010 T __libdwfl_module_free
+                 U __libdwfl_seterrno
+                 U calloc
+                 U close
+                 U dwarf_cfi_end
+                 U dwarf_end
+0000000000000290 T dwfl_report_begin
+0000000000000280 T dwfl_report_begin_add
+0000000000000410 T dwfl_report_end
+00000000000002d0 T dwfl_report_module
+                 U ebl_closebackend
+                 U elf_end
+                 U free
+0000000000000000 t nofree
+                 U strcmp
+                 U strdup
+                 U tdestroy
+
+dwfl_report_elf.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_open_file
+0000000000000000 T __libdwfl_elf_address_range
+0000000000000520 T __libdwfl_report_elf
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U close
+00000000000006b0 T dwfl_report_elf
+                 U dwfl_report_module
+                 U elf_end
+                 U elf_getphdrnum
+                 U elf_nextscn
+                 U gelf_getehdr
+                 U gelf_getphdr
+                 U gelf_getshdr
+                 U gelf_update_shdr
+                 U open
+                 U strcmp
+                 U strdup
+
+relocate.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdwfl_module_getebl
+0000000000001490 T __libdwfl_relocate
+00000000000015e0 T __libdwfl_relocate_section
+0000000000000000 T __libdwfl_relocate_value
+                 U __stack_chk_fail
+                 U abort
+                 U dwfl_errno
+                 U dwfl_module_getsymtab
+                 U ebl_debugscn_p
+                 U ebl_get_elfmachine
+                 U ebl_reloc_simple_type
+                 U elf_compress
+                 U elf_compress_gnu
+                 U elf_getdata
+                 U elf_getphdrnum
+                 U elf_getscn
+                 U elf_getshdrnum
+                 U elf_getshdrstrndx
+                 U elf_nextscn
+                 U elf_rawdata
+                 U elf_strptr
+                 U gelf_fsize
+                 U gelf_getehdr
+                 U gelf_getrel
+                 U gelf_getrela
+                 U gelf_getshdr
+                 U gelf_getsymshndx
+                 U gelf_update_rel
+                 U gelf_update_rela
+                 U gelf_update_shdr
+                 U gelf_xlatetof
+                 U gelf_xlatetom
+00000000000001a0 t relocate.isra.0
+0000000000000000 t relocate.isra.0.cold
+0000000000000bc0 t relocate_section
+                 U strcmp
+
+dwfl_module_build_id.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdwfl_find_build_id
+                 U __libdwfl_find_elf_build_id
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+0000000000000120 T dwfl_module_build_id
+                 U malloc
+                 U memcmp
+                 U memcpy
+
+dwfl_module_report_build_id.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_module_report_build_id
+                 U free
+                 U malloc
+                 U memcmp
+                 U memcpy
+
+derelocate.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000006c0 T __libdwfl_find_section_ndx
+                 U __libdwfl_relocate_section
+                 U __libdwfl_relocate_value
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+0000000000000070 t cache_sections.part.0
+0000000000000000 t compare_secrefs
+                 U dwfl_errno
+0000000000000800 T dwfl_module_address_section
+                 U dwfl_module_getdwarf
+                 U dwfl_module_getsymtab
+0000000000000700 T dwfl_module_relocate_address
+00000000000005e0 T dwfl_module_relocation_info
+0000000000000590 T dwfl_module_relocations
+                 U elf_getscn
+                 U elf_getshdrstrndx
+                 U elf_ndxscn
+                 U elf_nextscn
+                 U elf_strptr
+00000000000004d0 t find_section
+                 U free
+                 U gelf_getshdr
+                 U malloc
+                 U qsort
+
+offline.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+000000000000000f r .LC2
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __asprintf_chk
+                 U __libdw_debugdir
+                 U __libdw_open_file
+                 U __libdwfl_report_elf
+00000000000004d0 T __libdwfl_report_offline
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U close
+00000000000003c0 T dwfl_offline_section_address
+00000000000005a0 T dwfl_report_offline
+                 U elf_begin
+                 U elf_cntl
+                 U elf_end
+                 U elf_getarhdr
+                 U elf_getscn
+                 U elf_kind
+                 U elf_next
+                 U elf_nextscn
+                 U free
+                 U gelf_getshdr
+                 U open
+0000000000000000 t process_file
+
+segment.o:
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000003c0 T __libdwfl_segment_end
+00000000000003a0 T __libdwfl_segment_start
+                 U __libdwfl_seterrno
+                 U calloc
+00000000000003e0 T dwfl_addrsegment
+00000000000007d0 T dwfl_report_segment
+                 U free
+0000000000000000 t insert
+                 U memmove
+                 U realloc
+
+dwfl_module_info.o:
+0000000000000000 T dwfl_module_info
+
+dwfl_getmodules.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_getmodules
+
+dwfl_getdwarf.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000080 T dwfl_getdwarf
+                 U dwfl_getmodules
+                 U dwfl_module_getdwarf
+0000000000000000 t module_callback
+
+dwfl_module_getdwarf.o:
+0000000000000000 r .LC0
+0000000000000000 r .LC1
+0000000000000012 r .LC2
+0000000000000021 r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdw_open_file
+                 U __libdw_unlzma
+                 U __libdwfl_canon_error
+                 U __libdwfl_find_build_id
+0000000000001a50 T __libdwfl_getelf
+0000000000000000 t __libdwfl_getelf.cold
+0000000000001e00 T __libdwfl_module_getebl
+                 U __libdwfl_relocate
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U abort
+                 U close
+                 U dwarf_begin_elf
+                 U dwarf_errno
+                 U dwarf_setalt
+                 U dwelf_dwarf_gnu_debugaltlink
+                 U dwelf_elf_gnu_debuglink
+                 U dwfl_errno
+0000000000002620 T dwfl_module_getdwarf
+00000000000027a0 T dwfl_module_getsymtab
+0000000000002e50 T dwfl_module_getsymtab_first_global
+                 U ebl_openbackend
+                 U elf_cntl
+                 U elf_compress
+                 U elf_compress_gnu
+                 U elf_end
+                 U elf_errno
+                 U elf_getdata
+                 U elf_getdata_rawchunk
+                 U elf_getident
+                 U elf_getphdrnum
+                 U elf_getscn
+                 U elf_getshdrstrndx
+                 U elf_kind
+                 U elf_memory
+                 U elf_nextscn
+                 U elf_rawdata
+                 U elf_strptr
+0000000000001650 t find_aux_sym
+0000000000000180 t find_debug_altlink
+0000000000001590 t find_debuginfo
+0000000000000950 t find_dynsym
+0000000000000bd0 t find_prelink_address_sync.isra.0
+                 U free
+                 U gelf_fsize
+                 U gelf_getclass
+                 U gelf_getdyn
+                 U gelf_getehdr
+                 U gelf_getphdr
+                 U gelf_getshdr
+                 U gelf_xlatetom
+0000000000001e50 t load_dw
+0000000000000000 t load_symtab
+                 U malloc
+                 U open
+0000000000001320 t open_elf
+                 U strdup
+                 U strncmp
+0000000000000350 t translate_offs.isra.0
+
+dwfl_module_getelf.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_getelf
+                 U __libdwfl_module_getebl
+                 U __libdwfl_relocate
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_module_getelf
+
+dwfl_validate_address.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U dwfl_addrmodule
+                 U dwfl_module_relocate_address
+0000000000000000 T dwfl_validate_address
+
+argp-std.o:
+0000000000000000 r .LC0
+0000000000000006 r .LC1
+0000000000000069 r .LC10
+0000000000000087 r .LC11
+0000000000000088 r .LC12
+00000000000000a6 r .LC13
+0000000000000030 r .LC14
+000000000000000d r .LC2
+0000000000000010 r .LC3
+0000000000000000 r .LC4
+0000000000000017 r .LC5
+0000000000000020 r .LC6
+0000000000000022 r .LC7
+0000000000000033 r .LC8
+000000000000004e r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdw_open_file
+                 U __stack_chk_fail
+                 U argp_error
+                 U argp_failure
+                 U calloc
+                 U close
+                 U dcgettext
+0000000000000000 b debuginfo_path
+                 U dwfl_begin
+                 U dwfl_build_id_find_elf
+                 U dwfl_core_file_attach
+                 U dwfl_core_file_report
+                 U dwfl_end
+                 U dwfl_errmsg
+                 U dwfl_linux_kernel_find_elf
+                 U dwfl_linux_kernel_module_section_address
+                 U dwfl_linux_kernel_report_kernel
+                 U dwfl_linux_kernel_report_modules
+                 U dwfl_linux_kernel_report_offline
+                 U dwfl_linux_proc_attach
+                 U dwfl_linux_proc_find_elf
+                 U dwfl_linux_proc_maps_report
+                 U dwfl_linux_proc_report
+                 U dwfl_offline_section_address
+                 U dwfl_report_end
+                 U dwfl_report_offline
+00000000000007c0 T dwfl_standard_argp
+                 U dwfl_standard_find_debuginfo
+                 U elf_end
+                 U fclose
+                 U fopen
+                 U free
+0000000000000000 d kernel_callbacks
+0000000000000000 d libdwfl_argp
+0000000000000040 d offline_callbacks
+                 U open
+0000000000000040 d options
+0000000000000000 t parse_opt
+0000000000000020 d proc_callbacks
+                 U strtol
+
+find-debuginfo.o:
+0000000000000000 r .LC0
+0000000000000006 r .LC1
+000000000000000f r .LC2
+0000000000000026 r .LC3
+000000000000002b r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __asprintf_chk
+                 U __errno_location
+                 U __fxstat
+                 U __libdw_open_file
+                 U __libdwfl_crc32_file
+                 U __libdwfl_debuginfod_find_debuginfo
+                 U __libdwfl_find_build_id
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U __xstat
+                 U basename
+                 U close
+                 U dwelf_dwarf_gnu_debugaltlink
+                 U dwelf_elf_gnu_build_id
+                 U dwfl_build_id_find_debuginfo
+                 U dwfl_module_build_id
+0000000000000950 T dwfl_standard_find_debuginfo
+                 U elf_end
+0000000000000190 t find_debuginfo_in_path
+                 U free
+                 U malloc
+                 U memcmp
+                 U memcpy
+                 U open
+                 U realpath
+                 U strchr
+                 U strcmp
+                 U strdup
+                 U strlen
+                 U strndup
+                 U strsep
+0000000000000000 t try_open.isra.0
+
+dwfl_build_id_find_elf.o:
+0000000000000000 r .LC0
+0000000000000017 r .LC1
+000000000000001d r .LC2
+0000000000000022 r .LC3
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdw_open_file
+                 U __libdwfl_debuginfod_find_executable
+                 U __libdwfl_find_build_id
+0000000000000000 T __libdwfl_open_by_build_id
+0000000000000360 T __libdwfl_open_mod_by_build_id
+                 U __libdwfl_seterrno
+                 U __snprintf_chk
+                 U __stack_chk_fail
+                 U close
+00000000000003b0 T dwfl_build_id_find_elf
+                 U elf_end
+                 U free
+                 U malloc
+                 U mempcpy
+                 U open
+                 U realpath
+                 U strdup
+                 U strlen
+                 U strsep
+
+dwfl_build_id_find_debuginfo.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdw_open_file
+                 U __libdwfl_find_build_id
+                 U __libdwfl_open_by_build_id
+                 U __libdwfl_open_mod_by_build_id
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U close
+                 U dwelf_dwarf_gnu_debugaltlink
+                 U dwelf_elf_gnu_build_id
+0000000000000000 T dwfl_build_id_find_debuginfo
+                 U dwfl_module_build_id
+                 U elf_end
+                 U free
+                 U memcmp
+
+linux-kernel-modules.o:
+0000000000000000 r .LC0
+0000000000000005 r .LC1
+0000000000000086 r .LC10
+000000000000009e r .LC11
+00000000000000a5 r .LC12
+00000000000000b5 r .LC13
+00000000000000bc r .LC14
+00000000000000d7 r .LC15
+00000000000000d9 r .LC16
+00000000000000e2 r .LC17
+00000000000000ef r .LC18
+00000000000000f5 r .LC19
+0000000000000010 r .LC2
+00000000000000fb r .LC20
+0000000000000117 r .LC21
+000000000000011c r .LC22
+000000000000012b r .LC23
+000000000000012e r .LC24
+0000000000000132 r .LC25
+0000000000000141 r .LC26
+0000000000000153 r .LC27
+0000000000000158 r .LC28
+0000000000000166 r .LC29
+0000000000000021 r .LC3
+0000000000000000 r .LC30
+0000000000000039 r .LC4
+0000000000000044 r .LC5
+0000000000000055 r .LC6
+000000000000007b r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __asprintf_chk
+                 U __errno_location
+                 U __fsetlocking
+                 U __getdelim
+                 U __isoc99_fscanf
+                 U __isoc99_sscanf
+                 U __libdwfl_report_offline
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U basename
+00000000000012d0 t check_notes
+0000000000000330 t check_suffix
+                 U close
+                 U dwfl_build_id_find_elf
+0000000000000af0 T dwfl_linux_kernel_find_elf
+0000000000000f70 T dwfl_linux_kernel_module_section_address
+00000000000014c0 T dwfl_linux_kernel_report_kernel
+00000000000018b0 T dwfl_linux_kernel_report_modules
+00000000000004d0 T dwfl_linux_kernel_report_offline
+                 U dwfl_module_report_build_id
+                 U dwfl_report_elf
+                 U dwfl_report_module
+                 U dwfl_report_offline
+                 U dwfl_standard_find_debuginfo
+                 U fclose
+00000000000001d0 t find_kernel_elf
+                 U fopen
+                 U free
+                 U fts_close
+                 U fts_open
+                 U fts_read
+                 U fts_set
+                 U malloc
+                 U memchr
+                 U memcmp
+                 U memcpy
+                 U mempcpy
+                 U open
+                 U read
+                 U strchr
+                 U strdup
+                 U strlen
+                 U strndup
+                 U strsep
+                 U strspn
+                 U strtoull
+                 U sysconf
+0000000000000000 t try_kernel_name
+                 U uname
+0000000000000000 b utsname.11223
+0000000000000000 d vmlinux_suffixes
+
+linux-proc-maps.o:
+0000000000000000 r .LC0
+000000000000001d r .LC1
+0000000000000028 r .LC2
+000000000000002b r .LC3
+0000000000000039 r .LC4
+0000000000000046 r .LC5
+0000000000000054 r .LC6
+0000000000000056 r .LC7
+0000000000000061 r .LC8
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __asprintf_chk
+                 U __errno_location
+                 U __fsetlocking
+                 U __getdelim
+                 U __isoc99_sscanf
+                 U __libdwfl_get_pid_arg
+                 U __libdwfl_ptrace_attach
+                 U __libdwfl_ptrace_detach
+                 U __stack_chk_fail
+                 U __xstat
+                 U close
+0000000000000a00 T dwfl_linux_proc_find_elf
+00000000000008e0 T dwfl_linux_proc_maps_report
+00000000000008f0 T dwfl_linux_proc_report
+                 U dwfl_pid
+                 U dwfl_report_module
+                 U elf_from_remote_memory
+                 U fclose
+                 U fopen
+                 U free
+00000000000004c0 t grovel_auxv.isra.0.constprop.0
+                 U lseek
+                 U open
+                 U pread
+0000000000000060 t proc_maps_report
+                 U read
+0000000000000000 t read_proc_memory
+                 U strcmp
+                 U strdup
+                 U strrchr
+                 U strspn
+                 U sysconf
+
+dwfl_addrmodule.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T dwfl_addrmodule
+                 U dwfl_addrsegment
+
+dwfl_addrdwarf.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T dwfl_addrdwarf
+                 U dwfl_addrmodule
+                 U dwfl_module_getdwarf
+
+cu.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000410 T __libdwfl_addrcu
+00000000000002e0 T __libdwfl_nextcu
+                 U __stack_chk_fail
+00000000000001d0 t compare_cukey
+                 U dwarf_getaranges
+                 U dwarf_nextcu
+                 U dwarf_offdie
+                 U free
+0000000000000010 t intern_cu
+                 U malloc
+0000000000000000 t nofree
+                 U realloc
+                 U tdestroy
+                 U tsearch
+
+dwfl_module_nextcu.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_nextcu
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U dwfl_module_getdwarf
+0000000000000000 T dwfl_module_nextcu
+
+dwfl_nextcu.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_nextcu
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U dwfl_module_getdwarf
+0000000000000000 T dwfl_nextcu
+
+dwfl_cumodule.o:
+0000000000000000 T dwfl_cumodule
+
+dwfl_module_addrdie.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_addrcu
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwfl_module_addrdie
+                 U dwfl_module_getdwarf
+
+dwfl_addrdie.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T dwfl_addrdie
+                 U dwfl_addrmodule
+                 U dwfl_module_addrdie
+
+lines.o:
+0000000000000000 r .LC0
+0000000000000010 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdwfl_cu_getsrclines
+                 U __stack_chk_fail
+                 U dwarf_getsrclines
+                 U malloc
+
+dwfl_lineinfo.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_lineinfo
+
+dwfl_line_comp_dir.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_formstring
+0000000000000000 T dwfl_line_comp_dir
+
+dwfl_linemodule.o:
+0000000000000000 T dwfl_linemodule
+
+dwfl_linecu.o:
+0000000000000000 T dwfl_linecu
+
+dwfl_dwarf_line.o:
+0000000000000000 T dwfl_dwarf_line
+
+dwfl_getsrclines.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_cu_getsrclines
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_getsrclines
+
+dwfl_onesrcline.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_cu_getsrclines
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_onesrcline
+
+dwfl_module_getsrc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_addrcu
+                 U __libdwfl_cu_getsrclines
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U dwfl_module_getdwarf
+0000000000000000 T dwfl_module_getsrc
+
+dwfl_getsrc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U dwfl_addrmodule
+0000000000000000 T dwfl_getsrc
+                 U dwfl_module_getsrc
+
+dwfl_module_getsrc_file.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_cu_getsrclines
+                 U __libdwfl_nextcu
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U basename
+                 U dwfl_module_getdwarf
+0000000000000000 T dwfl_module_getsrc_file
+                 U free
+                 U realloc
+                 U strchr
+                 U strcmp
+
+libdwfl_crc32.o:
+0000000000000000 T __libdwfl_crc32
+0000000000000000 r crc32_table
+
+libdwfl_crc32_file.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __fxstat
+                 U __libdwfl_crc32
+0000000000000000 T __libdwfl_crc32_file
+                 U __stack_chk_fail
+                 U mmap
+                 U munmap
+                 U pread
+                 U sysconf
+
+elf-from-memory.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U calloc
+                 U elf32_xlatetof
+                 U elf32_xlatetom
+                 U elf64_xlatetof
+                 U elf64_xlatetom
+0000000000000000 T elf_from_remote_memory
+                 U elf_memory
+                 U free
+                 U malloc
+                 U realloc
+
+dwfl_module_dwarf_cfi.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_module_getebl
+0000000000000000 T __libdwfl_set_cfi
+                 U __libdwfl_seterrno
+                 U dwarf_cfi_end
+                 U dwarf_getcfi
+0000000000000090 T dwfl_module_dwarf_cfi
+                 U dwfl_module_getdwarf
+
+dwfl_module_eh_cfi.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_getelf
+                 U __libdwfl_set_cfi
+                 U __libdwfl_seterrno
+                 U dwarf_getcfi_elf
+0000000000000000 T dwfl_module_eh_cfi
+
+dwfl_module_getsym.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T __libdwfl_getsym
+                 U __libdwfl_module_getebl
+                 U __libdwfl_relocate_value
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+0000000000000660 T dwfl_module_getsym
+0000000000000610 T dwfl_module_getsym_info
+                 U dwfl_module_getsymtab
+                 U ebl_func_addr_mask
+                 U ebl_resolve_sym_value
+                 U elf_getident
+                 U elf_getscn
+                 U gelf_getshdr
+                 U gelf_getsymshndx
+
+dwfl_module_addrname.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwfl_module_addrinfo
+0000000000000000 T dwfl_module_addrname
+
+dwfl_module_addrsym.o:
+0000000000000000 r CSWTCH.25
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_find_section_ndx
+                 U __libdwfl_getsym
+                 U __stack_chk_fail
+0000000000000a20 T dwfl_module_addrinfo
+0000000000000890 T dwfl_module_addrsym
+                 U dwfl_module_getsymtab
+                 U dwfl_module_getsymtab_first_global
+                 U elf_ndxscn
+                 U elf_nextscn
+                 U gelf_getshdr
+0000000000000000 t search_table
+
+dwfl_module_return_value_location.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_module_getebl
+                 U __libdwfl_seterrno
+0000000000000000 T dwfl_module_return_value_location
+                 U ebl_return_value_location
+
+dwfl_module_register_names.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_module_getebl
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+0000000000000000 T dwfl_module_register_names
+                 U ebl_register_info
+
+dwfl_segment_report_module.o:
+0000000000000000 r .LC0
+0000000000000006 r .LC1
+000000000000000c r .LC2
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_open_file
+                 U __stack_chk_fail
+0000000000000000 t addr_segndx
+                 U basename
+                 U calloc
+                 U close
+                 U dwelf_elf_gnu_build_id
+                 U dwfl_module_report_build_id
+                 U dwfl_report_module
+0000000000000080 T dwfl_segment_report_module
+                 U elf32_xlatetom
+                 U elf64_xlatetom
+                 U elf_end
+                 U elf_memory
+                 U free
+                 U malloc
+                 U memchr
+                 U memcmp
+                 U memcpy
+                 U open
+                 U strcmp
+
+link_map.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdw_open_file
+                 U __libdwfl_dynamic_vaddr_get
+                 U __libdwfl_elf_address_range
+                 U __libdwfl_find_elf_build_id
+                 U __libdwfl_report_elf
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U basename
+                 U close
+00000000000001b0 t consider_executable
+                 U dwfl_addrsegment
+0000000000000620 T dwfl_link_map_report
+                 U dwfl_module_address_section
+                 U elf32_xlatetom
+                 U elf64_xlatetom
+                 U elf_end
+                 U elf_getdata_rawchunk
+                 U elf_getphdrnum
+                 U elf_rawdata
+                 U free
+                 U gelf_fsize
+                 U gelf_getdyn
+                 U gelf_getehdr
+                 U gelf_getphdr
+0000000000000000 t integrated_memory_callback
+                 U malloc
+                 U memchr
+                 U memcmp
+                 U open
+                 U pread
+                 U strcpy
+                 U strlen
+
+core-file.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000ac0 T __libdwfl_dynamic_vaddr_get
+                 U __libdwfl_report_elf
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U basename
+                 U calloc
+                 U close
+00000000000006f0 t core_file_read_eagerly
+0000000000000b70 T dwfl_core_file_report
+0000000000000000 T dwfl_elf_phdr_memory_callback
+                 U dwfl_link_map_report
+0000000000000980 T dwfl_report_core_segments
+                 U dwfl_report_segment
+                 U dwfl_segment_report_module
+                 U elf_clone
+                 U elf_end
+                 U elf_getdata_rawchunk
+                 U elf_getphdrnum
+                 U elf_memory
+                 U free
+                 U gelf_getnote
+                 U gelf_getphdr
+                 U malloc
+                 U memchr
+                 U memcpy
+                 U pread
+                 U strdup
+                 U strtoll
+
+open.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_bunzip2
+                 U __libdw_gunzip
+                 U __libdw_image_header
+00000000000003e0 T __libdw_open_elf
+00000000000001a0 T __libdw_open_file
+                 U __libdw_unlzma
+                 U __libdw_unzstd
+                 U __stack_chk_fail
+                 U close
+0000000000000000 t decompress
+                 U elf_begin
+                 U elf_end
+                 U elf_kind
+                 U elf_memory
+                 U free
+
+image-header.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000000 T __libdw_image_header
+                 U __stack_chk_fail
+                 U pread
+
+dwfl_frame.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __libdwfl_canon_error
+                 U __libdwfl_frame_unwind
+                 U __libdwfl_module_getebl
+0000000000000000 T __libdwfl_process_free
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U abort
+0000000000000060 T dwfl_attach_state
+                 U dwfl_errno
+0000000000000300 T dwfl_frame_thread
+0000000000000730 T dwfl_getthread_frames
+0000000000000310 T dwfl_getthreads
+0000000000000240 T dwfl_pid
+0000000000000290 T dwfl_thread_dwfl
+00000000000003f0 T dwfl_thread_getframes
+0000000000000000 t dwfl_thread_getframes.cold
+00000000000002a0 T dwfl_thread_tid
+                 U ebl_abi_cfi
+                 U ebl_closebackend
+                 U ebl_frame_nregs
+                 U ebl_openbackend
+                 U ebl_ra_offset
+                 U free
+00000000000002b0 t get_one_thread_cb
+0000000000000720 t get_one_thread_frames_cb
+                 U malloc
+                 U strrchr
+
+frame_unwind.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000030 T __libdwfl_frame_reg_get
+00000000000015e0 T __libdwfl_frame_reg_set
+0000000000001b40 T __libdwfl_frame_unwind
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U dwarf_cfi_addrframe
+                 U dwarf_frame_cfa
+                 U dwarf_frame_register
+                 U dwfl_addrmodule
+                 U dwfl_frame_pc
+                 U dwfl_module_dwarf_cfi
+                 U dwfl_module_eh_cfi
+                 U ebl_dwarf_to_regno
+                 U ebl_frame_nregs
+                 U ebl_func_addr_mask
+                 U ebl_get_elfclass
+                 U ebl_ra_offset
+                 U ebl_unwind
+0000000000000120 t expr_eval
+                 U free
+00000000000000d0 t getfunc
+0000000000001710 t handle_cfi
+                 U malloc
+0000000000000000 t readfunc
+                 U realloc
+0000000000001690 t setfunc
+
+dwfl_frame_pc.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_frame_unwind
+0000000000000000 T dwfl_frame_pc
+                 U ebl_normalize_pc
+
+linux-pid-attach.o:
+0000000000000005 r .LC2
+0000000000000016 r .LC3
+000000000000001f r .LC5
+000000000000002b r .LC6
+0000000000000031 r .LC7
+0000000000000040 r .LC8
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+                 U __getdelim
+                 U __libdwfl_canon_error
+0000000000000a30 T __libdwfl_get_pid_arg
+0000000000000430 T __libdwfl_ptrace_attach
+0000000000000650 T __libdwfl_ptrace_detach
+                 U __libdwfl_seterrno
+                 U __snprintf_chk
+                 U __stack_chk_fail
+                 U close
+                 U closedir
+                 U dwfl_attach_state
+00000000000006c0 T dwfl_linux_proc_attach
+                 U dwfl_thread_state_register_pc
+                 U dwfl_thread_state_registers
+                 U dwfl_thread_tid
+                 U ebl_get_elfclass
+                 U ebl_set_initial_registers_tid
+                 U elf_begin
+                 U elf_end
+                 U fclose
+                 U fgets
+                 U fopen
+                 U free
+                 U kill
+                 U malloc
+                 U open
+                 U opendir
+0000000000000000 t pid_detach
+0000000000000080 t pid_getthread
+0000000000000200 t pid_memory_read
+00000000000000d0 t pid_next_thread
+00000000000005f0 t pid_set_initial_registers
+0000000000000000 d pid_thread_callbacks
+0000000000000680 t pid_thread_detach
+0000000000000040 t pid_thread_state_registers_cb
+                 U process_vm_readv
+                 U ptrace
+                 U readdir
+                 U rewinddir
+                 U strstr
+                 U strtol
+                 U syscall
+                 U waitpid
+
+linux-core-attach.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC2
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_canon_error
+                 U __libdwfl_frame_reg_get
+                 U __libdwfl_segment_end
+                 U __libdwfl_segment_start
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+                 U abort
+0000000000000000 t core_detach
+0000000000000020 t core_memory_read
+0000000000000550 t core_next_thread
+00000000000001d0 t core_set_initial_registers
+0000000000000000 t core_set_initial_registers.cold
+0000000000000000 d core_thread_callbacks
+                 U dwfl_attach_state
+0000000000000770 T dwfl_core_file_attach
+                 U dwfl_thread_state_register_pc
+                 U dwfl_thread_state_registers
+                 U ebl_closebackend
+                 U ebl_core_note
+                 U ebl_frame_nregs
+                 U ebl_get_elfclass
+                 U ebl_openbackend
+                 U elf_getdata_rawchunk
+                 U elf_getident
+                 U elf_getphdrnum
+                 U free
+                 U gelf_getclass
+                 U gelf_getehdr
+                 U gelf_getnote
+                 U gelf_getphdr
+                 U malloc
+0000000000000000 b phnum.10375
+
+dwfl_frame_regs.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdwfl_frame_reg_set
+                 U __libdwfl_seterrno
+0000000000000090 T dwfl_thread_state_register_pc
+0000000000000000 T dwfl_thread_state_registers
+
+gzip.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000000 T __libdw_gunzip
+                 U __stack_chk_fail
+                 U close
+                 U dup
+                 U free
+                 U gzclose
+                 U gzdirect
+                 U gzdopen
+                 U gzerror
+                 U gzread
+                 U lseek
+                 U malloc
+                 U pread
+                 U realloc
+
+bzip2.o:
+                 U BZ2_bzDecompress
+                 U BZ2_bzDecompressEnd
+                 U BZ2_bzDecompressInit
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000000 T __libdw_bunzip2
+                 U __stack_chk_fail
+                 U free
+                 U malloc
+                 U pread
+                 U realloc
+
+lzma.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000000 T __libdw_unlzma
+                 U __stack_chk_fail
+                 U free
+                 U lzma_auto_decoder
+                 U lzma_code
+                 U lzma_end
+                 U malloc
+                 U pread
+                 U realloc
+
+zstd.o:
+                 U ZSTD_createDCtx
+                 U ZSTD_decompressStream
+                 U ZSTD_freeDCtx
+                 U ZSTD_isError
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __errno_location
+0000000000000000 T __libdw_unzstd
+                 U __stack_chk_fail
+                 U free
+                 U malloc
+                 U pread
+                 U realloc
+
+debuginfod-client.o:
+0000000000000000 r .LC0
+0000000000000013 r .LC1
+0000000000000024 r .LC2
+000000000000003f r .LC3
+0000000000000059 r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000000e0 T __libdwfl_debuginfod_end
+0000000000000070 T __libdwfl_debuginfod_find_debuginfo
+0000000000000000 T __libdwfl_debuginfod_find_executable
+0000000000000000 T __libdwfl_debuginfod_init
+                 U dlclose
+                 U dlopen
+                 U dlsym
+0000000000000018 b fp_debuginfod_begin
+0000000000000000 b fp_debuginfod_end
+0000000000000008 b fp_debuginfod_find_debuginfo
+0000000000000010 b fp_debuginfod_find_executable
+
+dwelf_elf_gnu_debuglink.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T dwelf_elf_gnu_debuglink
+                 U elf_getshdrstrndx
+                 U elf_nextscn
+                 U elf_rawdata
+                 U elf_strptr
+                 U gelf_getehdr
+                 U gelf_getshdr
+                 U gelf_xlatetom
+                 U memchr
+
+dwelf_dwarf_gnu_debugaltlink.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_seterrno
+0000000000000000 T dwelf_dwarf_gnu_debugaltlink
+                 U memchr
+
+dwelf_elf_gnu_build_id.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000370 T __libdwfl_find_elf_build_id
+                 U __libdwfl_relocate_value
+                 U __libdwfl_seterrno
+                 U __stack_chk_fail
+0000000000000400 T dwelf_elf_gnu_build_id
+                 U elf_getdata
+                 U elf_getdata_rawchunk
+                 U elf_getphdrnum
+                 U elf_ndxscn
+                 U elf_nextscn
+0000000000000000 t find_elf_build_id
+                 U gelf_getehdr
+                 U gelf_getnote
+                 U gelf_getphdr
+                 U gelf_getshdr
+
+dwelf_scn_gnu_compressed_size.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T dwelf_scn_gnu_compressed_size
+                 U elf_rawdata
+                 U gelf_getshdr
+
+dwelf_strtab.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U calloc
+0000000000000290 t copystrings
+00000000000004c0 T dwelf_strent_off
+00000000000004d0 T dwelf_strent_str
+00000000000003b0 T dwelf_strtab_add
+00000000000003e0 T dwelf_strtab_add_len
+00000000000003f0 T dwelf_strtab_finalize
+0000000000000370 T dwelf_strtab_free
+0000000000000310 T dwelf_strtab_init
+                 U free
+                 U malloc
+                 U memcmp
+                 U mempcpy
+0000000000000000 b ps
+                 U strlen
+0000000000000000 t strtab_add
+                 U sysconf
+
+dwelf_elf_begin.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __libdw_open_elf
+                 U __stack_chk_fail
+0000000000000000 T dwelf_elf_begin
+                 U elf32_getehdr
+                 U elf_end
+                 U elf_memory
+
+dwelf_elf_e_machine_string.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+0000000000000059 r .LC10
+00000000000004d9 r .LC100
+00000000000002c0 r .LC101
+00000000000004f7 r .LC102
+0000000000000504 r .LC103
+0000000000000513 r .LC104
+0000000000000522 r .LC105
+0000000000000537 r .LC106
+000000000000054d r .LC107
+00000000000002e8 r .LC108
+0000000000000562 r .LC109
+000000000000005e r .LC11
+0000000000000579 r .LC110
+000000000000058f r .LC111
+0000000000000310 r .LC112
+0000000000000338 r .LC113
+0000000000000360 r .LC114
+0000000000000388 r .LC115
+00000000000003b8 r .LC116
+00000000000003e8 r .LC117
+000000000000059f r .LC118
+00000000000005ab r .LC119
+000000000000006d r .LC12
+00000000000005b8 r .LC120
+00000000000005d4 r .LC121
+00000000000005e2 r .LC122
+00000000000005fa r .LC123
+0000000000000410 r .LC124
+0000000000000614 r .LC125
+000000000000062b r .LC126
+0000000000000448 r .LC127
+0000000000000647 r .LC128
+0000000000000661 r .LC129
+0000000000000077 r .LC13
+000000000000067e r .LC130
+0000000000000689 r .LC131
+00000000000006a7 r .LC132
+00000000000006b3 r .LC133
+0000000000000470 r .LC134
+00000000000006ca r .LC135
+00000000000006e6 r .LC136
+00000000000006f1 r .LC137
+00000000000006fc r .LC138
+0000000000000704 r .LC139
+0000000000000083 r .LC14
+0000000000000710 r .LC140
+0000000000000728 r .LC141
+0000000000000736 r .LC142
+0000000000000745 r .LC143
+0000000000000757 r .LC144
+0000000000000763 r .LC145
+0000000000000772 r .LC146
+000000000000077e r .LC147
+0000000000000798 r .LC148
+00000000000007b2 r .LC149
+000000000000008b r .LC15
+00000000000007c5 r .LC150
+00000000000007d0 r .LC151
+00000000000007dd r .LC152
+00000000000007f2 r .LC153
+0000000000000800 r .LC154
+0000000000000816 r .LC155
+0000000000000821 r .LC156
+000000000000082c r .LC157
+0000000000000837 r .LC158
+000000000000084b r .LC159
+0000000000000095 r .LC16
+0000000000000856 r .LC160
+0000000000000862 r .LC161
+000000000000086e r .LC162
+0000000000000879 r .LC163
+0000000000000885 r .LC164
+0000000000000498 r .LC165
+0000000000000890 r .LC166
+00000000000008a4 r .LC167
+00000000000008bd r .LC168
+00000000000008c9 r .LC169
+000000000000009f r .LC17
+00000000000008d3 r .LC170
+00000000000008e2 r .LC171
+00000000000008f1 r .LC172
+00000000000008f7 r .LC173
+00000000000008ff r .LC174
+0000000000000906 r .LC175
+000000000000090a r .LC176
+0000000000000910 r .LC177
+00000000000000ab r .LC18
+00000000000000b4 r .LC19
+000000000000000e r .LC2
+00000000000000c1 r .LC20
+00000000000000cb r .LC21
+00000000000000d8 r .LC22
+00000000000000dc r .LC23
+00000000000000ea r .LC24
+00000000000000ed r .LC25
+00000000000000f6 r .LC26
+0000000000000106 r .LC27
+000000000000010a r .LC28
+0000000000000111 r .LC29
+000000000000001a r .LC3
+0000000000000119 r .LC30
+000000000000011d r .LC31
+0000000000000124 r .LC32
+0000000000000130 r .LC33
+0000000000000140 r .LC34
+0000000000000152 r .LC35
+0000000000000000 r .LC36
+0000000000000163 r .LC37
+000000000000016f r .LC38
+0000000000000187 r .LC39
+000000000000001f r .LC4
+00000000000001a1 r .LC40
+00000000000001be r .LC41
+00000000000001d4 r .LC42
+0000000000000028 r .LC43
+00000000000001ec r .LC44
+00000000000001f7 r .LC45
+000000000000020a r .LC46
+0000000000000219 r .LC47
+0000000000000228 r .LC48
+0000000000000245 r .LC49
+0000000000000024 r .LC5
+000000000000025d r .LC50
+0000000000000050 r .LC51
+0000000000000078 r .LC52
+00000000000000a0 r .LC53
+00000000000000c8 r .LC54
+0000000000000274 r .LC55
+0000000000000289 r .LC56
+00000000000002a1 r .LC57
+00000000000000f0 r .LC58
+0000000000000120 r .LC59
+000000000000002e r .LC6
+0000000000000150 r .LC60
+0000000000000170 r .LC61
+0000000000000190 r .LC62
+00000000000001c0 r .LC63
+00000000000002ad r .LC64
+00000000000001f0 r .LC65
+00000000000002ba r .LC66
+00000000000002c7 r .LC67
+00000000000002d7 r .LC68
+00000000000002e7 r .LC69
+000000000000003a r .LC7
+00000000000002f0 r .LC70
+0000000000000300 r .LC71
+0000000000000313 r .LC72
+0000000000000326 r .LC73
+000000000000032f r .LC74
+0000000000000338 r .LC75
+0000000000000354 r .LC76
+0000000000000372 r .LC77
+0000000000000210 r .LC78
+0000000000000388 r .LC79
+0000000000000045 r .LC8
+00000000000003a5 r .LC80
+00000000000003b7 r .LC81
+00000000000003c7 r .LC82
+00000000000003e0 r .LC83
+00000000000003ee r .LC84
+0000000000000240 r .LC85
+00000000000003fc r .LC86
+000000000000040b r .LC87
+0000000000000424 r .LC88
+0000000000000440 r .LC89
+0000000000000054 r .LC9
+0000000000000452 r .LC90
+0000000000000470 r .LC91
+000000000000047a r .LC92
+0000000000000482 r .LC93
+0000000000000268 r .LC94
+000000000000049a r .LC95
+0000000000000298 r .LC96
+00000000000004a9 r .LC97
+00000000000004b8 r .LC98
+00000000000004cc r .LC99
+0000000000000000 T dwelf_elf_e_machine_string
+
+eblopenbackend.o:
+0000000000000000 r .LC0
+0000000000000004 r .LC1
+0000000000000005 r .LC2
+000000000000000b r .LC3
+0000000000000013 r .LC4
+0000000000000022 r .LC5
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U __stack_chk_fail
+                 U aarch64_init
+                 U alpha_init
+                 U arm_init
+                 U bpf_init
+                 U calloc
+                 U csky_init
+0000000000000190 t default_abi_cfi
+00000000000000d0 t default_auxv_info
+0000000000000140 t default_bss_plt_p
+0000000000000160 t default_check_object_attribute
+0000000000000180 t default_check_reloc_target_type
+0000000000000080 t default_check_special_section
+0000000000000110 t default_check_special_symbol
+0000000000000130 t default_check_st_other_bits
+0000000000000220 t default_copy_reloc_p
+00000000000000e0 t default_core_note
+00000000000000c0 t default_core_note_type_name
+0000000000000120 t default_data_marker_symbol
+0000000000000240 t default_debugscn_p
+00000000000000b0 t default_destr
+00000000000000a0 t default_dynamic_tag_check
+0000000000000090 t default_dynamic_tag_name
+0000000000000210 t default_gotpc_reloc_check
+0000000000000060 t default_machine_flag_check
+0000000000000050 t default_machine_flag_name
+0000000000000070 t default_machine_section_flag_check
+0000000000000220 t default_none_reloc_p
+0000000000000100 t default_object_note
+00000000000000f0 t default_object_note_type_name
+0000000000000310 t default_osabi_name
+00000000000001a0 t default_register_info
+0000000000000220 t default_relative_reloc_p
+0000000000000030 t default_reloc_simple_type
+0000000000000010 t default_reloc_type_check
+0000000000000000 t default_reloc_type_name
+0000000000000020 t default_reloc_valid_use
+0000000000000150 t default_return_value_location
+0000000000000040 t default_section_name
+0000000000000330 t default_section_type_name
+0000000000000320 t default_segment_type_name
+0000000000000230 t default_symbol_binding_name
+0000000000000340 t default_symbol_type_name
+0000000000000000 d dwarf_scn_names.8986
+00000000000008f0 T ebl_openbackend
+0000000000000950 T ebl_openbackend_emulation
+0000000000000940 T ebl_openbackend_machine
+                 U gelf_getehdr
+                 U i386_init
+                 U ia64_init
+                 U m68k_init
+0000000000000000 d machines
+0000000000000350 t openbackend.constprop.0
+                 U ppc64_init
+                 U ppc_init
+                 U riscv_init
+                 U s390_init
+                 U sh_init
+                 U sparc_init
+                 U strcmp
+                 U x86_64_init
+
+eblclosebackend.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T ebl_closebackend
+                 U free
+
+eblreloctypename.o:
+0000000000000000 r .LC0
+0000000000000000 T ebl_reloc_type_name
+
+eblsegmenttypename.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+0000000000000065 r .LC10
+0000000000000015 r .LC2
+000000000000001f r .LC3
+0000000000000029 r .LC4
+0000000000000036 r .LC5
+0000000000000040 r .LC6
+0000000000000048 r .LC7
+0000000000000052 r .LC8
+000000000000005c r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_segment_type_name
+0000000000000000 d ptypes.4894
+
+eblsectiontypename.o:
+0000000000000000 r .LC0
+0000000000000009 r .LC1
+0000000000000018 r .LC2
+0000000000000024 r .LC3
+000000000000002d r .LC4
+0000000000000039 r .LC5
+0000000000000047 r .LC6
+0000000000000055 r .LC7
+000000000000005f r .LC8
+0000000000000068 r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_section_type_name
+0000000000000040 d knowntypes.4894
+0000000000000000 d sunwtypes.4895
+
+eblmachineflagname.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+0000000000000000 T ebl_machine_flag_name
+                 U mempcpy
+                 U strlen
+
+eblsymboltypename.o:
+0000000000000000 r .LC0
+000000000000000a r .LC1
+0000000000000014 r .LC2
+000000000000001c r .LC3
+000000000000002a r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_symbol_type_name
+                 U elf_getident
+0000000000000000 d stt_names.4894
+
+ebldynamictagname.o:
+0000000000000000 r .LC0
+000000000000000a r .LC1
+0000000000000011 r .LC2
+0000000000000018 r .LC3
+0000000000000028 r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+0000000000000040 d addrrntags.7279
+                 U dcgettext
+0000000000000000 T ebl_dynamic_tag_name
+0000000000000100 d stdtags.7275
+0000000000000000 d suntags.7280
+00000000000000a0 d valrntags.7278
+
+eblsectionname.o:
+0000000000000000 r .LC0
+0000000000000007 r .LC1
+0000000000000041 r .LC10
+000000000000004e r .LC11
+0000000000000058 r .LC12
+000000000000000d r .LC2
+0000000000000011 r .LC3
+0000000000000018 r .LC4
+000000000000001e r .LC5
+0000000000000021 r .LC6
+0000000000000028 r .LC7
+000000000000002f r .LC8
+0000000000000037 r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_section_name
+
+eblsymbolbindingname.o:
+0000000000000000 r .LC0
+000000000000000b r .LC1
+0000000000000015 r .LC2
+000000000000001d r .LC3
+000000000000002b r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_symbol_binding_name
+                 U elf_getident
+0000000000000000 d stb_names.4894
+
+eblbackendname.o:
+0000000000000000 r .LC0
+000000000000000b r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U dcgettext
+0000000000000000 T ebl_backend_name
+
+eblosabiname.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+000000000000004a r .LC10
+0000000000000052 r .LC11
+0000000000000056 r .LC12
+0000000000000062 r .LC13
+000000000000006b r .LC14
+0000000000000075 r .LC15
+0000000000000018 r .LC2
+000000000000001e r .LC3
+0000000000000025 r .LC4
+000000000000002b r .LC5
+0000000000000033 r .LC6
+0000000000000037 r .LC7
+000000000000003c r .LC8
+0000000000000044 r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_osabi_name
+
+eblmachineflagcheck.o:
+0000000000000000 T ebl_machine_flag_check
+
+eblmachinesectionflagcheck.o:
+0000000000000000 T ebl_machine_section_flag_check
+
+eblreloctypecheck.o:
+0000000000000000 T ebl_reloc_type_check
+
+eblrelocvaliduse.o:
+0000000000000000 T ebl_reloc_valid_use
+
+eblrelocsimpletype.o:
+0000000000000000 T ebl_reloc_simple_type
+
+ebldynamictagcheck.o:
+0000000000000000 T ebl_dynamic_tag_check
+
+eblcorenotetypename.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+0000000000000067 r .LC10
+0000000000000074 r .LC11
+000000000000007e r .LC12
+000000000000008a r .LC13
+000000000000009a r .LC14
+00000000000000ab r .LC15
+00000000000000b3 r .LC16
+00000000000000bb r .LC17
+00000000000000c8 r .LC18
+00000000000000d5 r .LC19
+0000000000000010 r .LC2
+00000000000000e5 r .LC20
+00000000000000ee r .LC21
+00000000000000f6 r .LC22
+00000000000000fb r .LC23
+0000000000000105 r .LC24
+000000000000010e r .LC25
+000000000000001b r .LC3
+0000000000000023 r .LC4
+000000000000002e r .LC5
+000000000000003d r .LC6
+0000000000000048 r .LC7
+0000000000000050 r .LC8
+000000000000005b r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_core_note_type_name
+0000000000000000 d knowntypes.4960
+
+eblobjnotetypename.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+0000000000000058 r .LC10
+000000000000005b r .LC11
+0000000000000010 r .LC2
+000000000000001c r .LC3
+0000000000000026 r .LC4
+000000000000002f r .LC5
+0000000000000036 r .LC6
+000000000000004a r .LC7
+000000000000004e r .LC8
+0000000000000053 r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U dcgettext
+0000000000000000 T ebl_object_note_type_name
+0000000000000040 d goknowntypes.7277
+0000000000000000 d knowntypes.7281
+                 U snprintf
+
+eblcorenote.o:
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T ebl_core_note
+                 U memchr
+0000000000000000 d platform.5245
+
+eblobjnote.o:
+0000000000000000 r .LC0
+0000000000000004 r .LC1
+000000000000006e r .LC10
+0000000000000074 r .LC11
+000000000000007c r .LC12
+0000000000000089 r .LC13
+000000000000008f r .LC14
+000000000000009e r .LC15
+00000000000000a2 r .LC16
+00000000000000aa r .LC17
+00000000000000b2 r .LC18
+00000000000000b8 r .LC19
+0000000000000008 r .LC2
+00000000000000cc r .LC20
+00000000000000db r .LC21
+00000000000000e6 r .LC22
+00000000000000f3 r .LC23
+0000000000000107 r .LC24
+000000000000010c r .LC25
+0000000000000116 r .LC26
+0000000000000123 r .LC27
+000000000000012b r .LC28
+0000000000000138 r .LC29
+0000000000000010 r .LC3
+000000000000013f r .LC30
+0000000000000145 r .LC31
+000000000000014b r .LC32
+0000000000000158 r .LC33
+000000000000015f r .LC34
+000000000000016b r .LC35
+000000000000016f r .LC36
+0000000000000174 r .LC37
+0000000000000179 r .LC38
+000000000000017f r .LC39
+0000000000000016 r .LC4
+0000000000000189 r .LC40
+0000000000000198 r .LC41
+000000000000019d r .LC42
+00000000000001a3 r .LC43
+00000000000001bd r .LC44
+00000000000001d6 r .LC45
+00000000000001e2 r .LC46
+00000000000001e7 r .LC47
+00000000000001fe r .LC48
+0000000000000214 r .LC49
+000000000000001e r .LC5
+0000000000000219 r .LC50
+0000000000000229 r .LC51
+000000000000022f r .LC52
+0000000000000233 r .LC53
+0000000000000239 r .LC54
+0000000000000241 r .LC55
+0000000000000252 r .LC56
+0000000000000256 r .LC57
+000000000000025e r .LC58
+0000000000000264 r .LC59
+0000000000000026 r .LC6
+000000000000026d r .LC60
+0000000000000271 r .LC61
+0000000000000275 r .LC62
+0000000000000283 r .LC63
+0000000000000290 r .LC64
+00000000000002a1 r .LC65
+00000000000002b3 r .LC66
+000000000000003e r .LC7
+0000000000000047 r .LC8
+0000000000000065 r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __overflow
+                 U __printf_chk
+                 U __stack_chk_fail
+                 U dcgettext
+0000000000000000 T ebl_object_note
+                 U elf32_xlatetom
+                 U elf_errmsg
+                 U elf_getident
+                 U free
+                 U gelf_fsize
+                 U gelf_getclass
+                 U gelf_getehdr
+                 U gelf_xlatetom
+                 U malloc
+                 U memchr
+                 U putchar
+                 U puts
+                 U stdout
+                 U strlen
+
+ebldebugscnp.o:
+0000000000000000 T ebl_debugscn_p
+
+eblgotpcreloccheck.o:
+0000000000000000 T ebl_gotpc_reloc_check
+
+eblcopyrelocp.o:
+0000000000000000 T ebl_copy_reloc_p
+
+eblsectionstripp.o:
+0000000000000000 r .LC0
+000000000000000e r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U ebl_debugscn_p
+0000000000000000 T ebl_section_strip_p
+                 U elf_getscn
+                 U elf_getshdrstrndx
+                 U elf_strptr
+                 U gelf_getshdr
+
+eblelfclass.o:
+0000000000000000 T ebl_get_elfclass
+
+eblelfdata.o:
+0000000000000000 T ebl_get_elfdata
+
+eblelfmachine.o:
+0000000000000000 T ebl_get_elfmachine
+
+ebl_check_special_symbol.o:
+0000000000000000 T ebl_check_special_symbol
+
+eblbsspltp.o:
+0000000000000000 T ebl_bss_plt_p
+
+eblretval.o:
+0000000000000000 T ebl_return_value_location
+
+eblreginfo.o:
+0000000000000000 T ebl_register_info
+
+eblnonerelocp.o:
+0000000000000000 T ebl_none_reloc_p
+
+eblrelativerelocp.o:
+0000000000000000 T ebl_relative_reloc_p
+
+eblsysvhashentrysize.o:
+0000000000000000 T ebl_sysvhash_entrysize
+
+eblauxvinfo.o:
+0000000000000000 d auxv_types
+0000000000000000 T ebl_auxv_info
+
+eblcheckobjattr.o:
+0000000000000000 r .LC0
+0000000000000004 r .LC1
+0000000000000000 T ebl_check_object_attribute
+
+ebl_check_special_section.o:
+0000000000000000 T ebl_check_special_section
+
+eblabicfi.o:
+0000000000000000 T ebl_abi_cfi
+0000000000000020 T ebl_ra_offset
+
+eblstother.o:
+0000000000000000 T ebl_check_st_other_bits
+
+eblinitreg.o:
+0000000000000020 T ebl_frame_nregs
+0000000000000030 T ebl_func_addr_mask
+0000000000000000 T ebl_set_initial_registers_tid
+
+ebldwarftoregno.o:
+0000000000000000 T ebl_dwarf_to_regno
+
+eblnormalizepc.o:
+0000000000000000 T ebl_normalize_pc
+
+eblunwind.o:
+0000000000000000 T ebl_unwind
+
+eblresolvesym.o:
+0000000000000000 T ebl_resolve_sym_value
+
+eblcheckreloctargettype.o:
+0000000000000000 T ebl_check_reloc_target_type
+
+ebl_data_marker_symbol.o:
+0000000000000000 T ebl_data_marker_symbol
+
+i386_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U generic_debugscn_p
+                 U i386_abi_cfi
+                 U i386_auxv_info
+0000000000000050 T i386_copy_reloc_p
+                 U i386_core_note
+                 U i386_debugscn_p
+                 U i386_disasm
+                 U i386_gotpc_reloc_check
+00000000000000f0 T i386_init
+0000000000000060 T i386_none_reloc_p
+                 U i386_register_info
+0000000000000070 T i386_relative_reloc_p
+0000000000000040 r i386_reloc_nameidx
+00000000000001a0 r i386_reloc_nametable
+                 U i386_reloc_simple_type
+0000000000000030 T i386_reloc_type_check
+0000000000000000 T i386_reloc_type_name
+0000000000000000 r i386_reloc_valid
+0000000000000080 T i386_reloc_valid_use
+                 U i386_return_value_location
+                 U i386_set_initial_registers_tid
+                 U i386_unwind
+
+i386_symbol.o:
+0000000000000000 r .LC0
+0000000000000006 r .LC1
+0000000000000000 r CSWTCH.4
+0000000000000008 C generic_debugscn_p
+0000000000000030 T i386_debugscn_p
+0000000000000000 T i386_gotpc_reloc_check
+0000000000000010 T i386_reloc_simple_type
+
+i386_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000050 r fpregset_regs
+0000000000000000 T i386_core_note
+0000000000000000 d ioperm_item.5936
+                 U memcmp
+0000000000000020 d prpsinfo_items
+00000000000001c0 d prstatus_items
+0000000000000080 r prstatus_regs
+0000000000000020 r prxfpreg_regs
+00000000000003c0 d tls_items
+0000000000000000 r vmcoreinfo_items
+
+i386_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T i386_abi_cfi
+
+i386_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+0000000000000000 T i386_return_value_location
+00000000000000a0 r loc_aggregate
+00000000000000c0 r loc_fpreg
+00000000000000e0 r loc_intreg
+
+i386_regs.o:
+0000000000000000 r .LC0
+0000000000000002 r .LC1
+000000000000000a r .LC2
+000000000000000e r .LC3
+0000000000000012 r .LC4
+0000000000000016 r .LC5
+0000000000000022 r .LC6
+000000000000002a r .LC7
+00000000000000c0 r baseregs.5420
+0000000000000000 T i386_register_info
+
+i386_auxv.o:
+0000000000000000 r .LC0
+0000000000000000 T i386_auxv_info
+0000000000000000 T x86_64_auxv_info
+
+i386_initreg.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T i386_set_initial_registers_tid
+                 U ptrace
+
+i386_unwind.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T i386_unwind
+
+sh_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+0000000000000060 T sh_copy_reloc_p
+                 U sh_core_note
+                 U sh_gotpc_reloc_check
+0000000000000100 T sh_init
+                 U sh_machine_flag_check
+0000000000000070 T sh_none_reloc_p
+                 U sh_register_info
+0000000000000080 T sh_relative_reloc_p
+00000000000000c0 r sh_reloc_nameidx
+0000000000000600 r sh_reloc_nametable
+                 U sh_reloc_simple_type
+0000000000000030 T sh_reloc_type_check
+0000000000000000 T sh_reloc_type_name
+0000000000000000 r sh_reloc_valid
+0000000000000090 T sh_reloc_valid_use
+                 U sh_return_value_location
+
+sh_symbol.o:
+0000000000000000 T sh_gotpc_reloc_check
+0000000000000030 T sh_machine_flag_check
+0000000000000010 T sh_reloc_simple_type
+
+sh_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000020 r fpregset_regs
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000060 r prstatus_regs
+0000000000000000 T sh_core_note
+0000000000000000 r vmcoreinfo_items
+
+sh_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000009 r .LC2
+0000000000000010 r .LC3
+0000000000000018 r .LC4
+0000000000000000 T sh_register_info
+
+sh_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_fpreg
+0000000000000120 r loc_intreg
+0000000000000000 T sh_return_value_location
+
+x86_64_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U x32_core_note
+                 U x86_64_abi_cfi
+                 U x86_64_auxv_info
+                 U x86_64_check_reloc_target_type
+0000000000000050 T x86_64_copy_reloc_p
+                 U x86_64_core_note
+                 U x86_64_disasm
+00000000000000f0 T x86_64_init
+0000000000000060 T x86_64_none_reloc_p
+                 U x86_64_register_info
+0000000000000070 T x86_64_relative_reloc_p
+0000000000000040 r x86_64_reloc_nameidx
+00000000000001a0 r x86_64_reloc_nametable
+                 U x86_64_reloc_simple_type
+0000000000000030 T x86_64_reloc_type_check
+0000000000000000 T x86_64_reloc_type_name
+0000000000000000 r x86_64_reloc_valid
+0000000000000080 T x86_64_reloc_valid_use
+                 U x86_64_return_value_location
+                 U x86_64_section_type_name
+                 U x86_64_set_initial_registers_tid
+                 U x86_64_unwind
+
+x86_64_symbol.o:
+0000000000000000 r .LC0
+0000000000000000 r CSWTCH.1
+0000000000000040 T x86_64_check_reloc_target_type
+0000000000000000 T x86_64_reloc_simple_type
+0000000000000020 T x86_64_section_type_name
+
+x86_64_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000020 r fpregset_regs
+0000000000000000 d ioperm_item.5926
+                 U memcmp
+0000000000000020 d prpsinfo_items
+00000000000001c0 d prstatus_items
+0000000000000060 r prstatus_regs
+0000000000000000 r vmcoreinfo_items
+0000000000000000 T x86_64_core_note
+
+x86_64_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T x86_64_abi_cfi
+
+x86_64_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000001c0 r loc_intreg
+00000000000000c0 r loc_ssereg
+0000000000000140 r loc_x87reg
+0000000000000000 T x86_64_return_value_location
+
+x86_64_regs.o:
+0000000000000000 r .LC0
+0000000000000002 r .LC1
+000000000000000a r .LC2
+000000000000000e r .LC3
+0000000000000012 r .LC4
+0000000000000016 r .LC5
+000000000000001e r .LC6
+0000000000000026 r .LC7
+000000000000002d r .LC8
+0000000000000110 r baseregs.5420
+0000000000000000 T x86_64_register_info
+
+x86_64_initreg.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U ptrace
+0000000000000000 T x86_64_set_initial_registers_tid
+
+x86_64_unwind.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T x86_64_unwind
+
+x32_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000020 r fpregset_regs
+0000000000000000 d ioperm_item.5926
+                 U memcmp
+0000000000000020 d prpsinfo_items
+00000000000001c0 d prstatus_items
+0000000000000060 r prstatus_regs
+0000000000000000 r vmcoreinfo_items
+0000000000000000 T x32_core_note
+
+ia64_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U ia64_check_reloc_target_type
+0000000000000060 T ia64_copy_reloc_p
+                 U ia64_dynamic_tag_check
+                 U ia64_dynamic_tag_name
+00000000000000f0 T ia64_init
+                 U ia64_machine_flag_check
+                 U ia64_machine_section_flag_check
+0000000000000070 T ia64_none_reloc_p
+                 U ia64_register_info
+00000000000000c0 r ia64_reloc_nameidx
+00000000000006a0 r ia64_reloc_nametable
+                 U ia64_reloc_simple_type
+0000000000000030 T ia64_reloc_type_check
+0000000000000000 T ia64_reloc_type_name
+0000000000000000 r ia64_reloc_valid
+0000000000000080 T ia64_reloc_valid_use
+                 U ia64_return_value_location
+                 U ia64_section_type_name
+                 U ia64_segment_type_name
+
+ia64_symbol.o:
+0000000000000000 r .LC0
+000000000000000e r .LC1
+000000000000001d r .LC2
+000000000000002f r .LC3
+0000000000000041 r .LC4
+000000000000004e r .LC5
+0000000000000060 r .LC6
+0000000000000190 T ia64_check_reloc_target_type
+0000000000000090 T ia64_dynamic_tag_check
+0000000000000070 T ia64_dynamic_tag_name
+00000000000000a0 T ia64_machine_flag_check
+00000000000000b0 T ia64_machine_section_flag_check
+00000000000000f0 T ia64_reloc_simple_type
+00000000000000c0 T ia64_section_type_name
+0000000000000000 T ia64_segment_type_name
+
+ia64_regs.o:
+0000000000000000 r .LC0
+0000000000000004 r .LC1
+0000000000000010 r .LC2
+0000000000000018 r .LC3
+0000000000000019 r .LC4
+000000000000001d r .LC5
+0000000000000025 r .LC6
+0000000000000029 r .LC7
+0000000000000033 r .LC8
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T ia64_register_info
+0000000000000000 r named_ar.5433
+0000000000000220 r named_special.5429
+                 U stpcpy
+
+ia64_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_child
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_siblingof
+                 U dwarf_tag
+0000000000000000 t hfa_type
+0000000000000430 T ia64_return_value_location
+0000000000000140 r loc_aggregate
+0000000000000160 r loc_fpreg_10
+0000000000000560 r loc_fpreg_4
+0000000000000360 r loc_fpreg_8
+0000000000000760 r loc_intreg
+
+alpha_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U alpha_auxv_info
+                 U alpha_check_special_section
+                 U alpha_check_special_symbol
+                 U alpha_check_st_other_bits
+0000000000000050 T alpha_copy_reloc_p
+                 U alpha_core_note
+                 U alpha_dynamic_tag_check
+                 U alpha_dynamic_tag_name
+00000000000000f0 T alpha_init
+                 U alpha_machine_section_flag_check
+0000000000000060 T alpha_none_reloc_p
+                 U alpha_register_info
+0000000000000070 T alpha_relative_reloc_p
+0000000000000040 r alpha_reloc_nameidx
+00000000000001a0 r alpha_reloc_nametable
+                 U alpha_reloc_simple_type
+0000000000000030 T alpha_reloc_type_check
+0000000000000000 T alpha_reloc_type_name
+0000000000000000 r alpha_reloc_valid
+0000000000000080 T alpha_reloc_valid_use
+                 U alpha_return_value_location
+                 U gelf_getehdr
+
+alpha_symbol.o:
+0000000000000000 r .LC0
+000000000000000c r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000060 T alpha_check_special_section
+00000000000001a0 T alpha_check_special_symbol
+00000000000001d0 T alpha_check_st_other_bits
+0000000000000020 T alpha_dynamic_tag_check
+0000000000000000 T alpha_dynamic_tag_name
+0000000000000050 T alpha_machine_section_flag_check
+0000000000000030 T alpha_reloc_simple_type
+                 U elf_getdata
+                 U elf_nextscn
+                 U gelf_getdyn
+                 U gelf_getshdr
+
+alpha_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T alpha_return_value_location
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000c0 r loc_fpreg
+0000000000000140 r loc_intreg
+
+alpha_regs.o:
+0000000000000000 r .LC0
+0000000000000002 r .LC1
+000000000000000a r .LC2
+0000000000000000 T alpha_register_info
+
+alpha_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T alpha_core_note
+0000000000000020 r fpregset_regs
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000030 r prstatus_regs
+0000000000000000 r vmcoreinfo_items
+
+alpha_auxv.o:
+0000000000000000 r .LC0
+0000000000000000 T alpha_auxv_info
+
+arm_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U arm_abi_cfi
+                 U arm_auxv_info
+                 U arm_check_object_attribute
+                 U arm_check_reloc_target_type
+0000000000000060 T arm_copy_reloc_p
+                 U arm_core_note
+                 U arm_data_marker_symbol
+0000000000000100 T arm_init
+                 U arm_machine_flag_check
+0000000000000070 T arm_none_reloc_p
+                 U arm_register_info
+0000000000000080 T arm_relative_reloc_p
+0000000000000100 r arm_reloc_nameidx
+0000000000000900 r arm_reloc_nametable
+                 U arm_reloc_simple_type
+0000000000000030 T arm_reloc_type_check
+0000000000000000 T arm_reloc_type_name
+0000000000000000 r arm_reloc_valid
+0000000000000090 T arm_reloc_valid_use
+                 U arm_return_value_location
+                 U arm_section_type_name
+                 U arm_segment_type_name
+                 U arm_set_initial_registers_tid
+                 U arm_symbol_type_name
+                 U gelf_getehdr
+
+arm_symbol.o:
+0000000000000000 r .LC0
+000000000000000a r .LC1
+0000000000000019 r .LC2
+0000000000000028 r .LC3
+0000000000000000 r CSWTCH.6
+00000000000000e0 T arm_check_reloc_target_type
+0000000000000110 T arm_data_marker_symbol
+0000000000000060 T arm_machine_flag_check
+00000000000000c0 T arm_reloc_simple_type
+0000000000000020 T arm_section_type_name
+0000000000000000 T arm_segment_type_name
+00000000000000f0 T arm_symbol_type_name
+
+arm_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000011 r .LC2
+0000000000000015 r .LC3
+0000000000000009 r .LC4
+000000000000000d r .LC5
+0000000000000000 T arm_register_info
+
+arm_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T arm_core_note
+0000000000000030 r fpregset_regs
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000040 r prstatus_regs
+00000000000003a0 d vfp_items
+0000000000000020 r vfp_regs
+0000000000000000 r vmcoreinfo_items
+
+arm_auxv.o:
+0000000000000000 r .LC0
+0000000000000000 T arm_auxv_info
+
+arm_attrs.o:
+0000000000000000 r .LC0
+0000000000000006 r .LC1
+0000000000000075 r .LC10
+000000000000007e r .LC11
+0000000000000088 r .LC12
+000000000000009b r .LC13
+00000000000000a6 r .LC14
+00000000000000b5 r .LC15
+00000000000000c5 r .LC16
+00000000000000d5 r .LC17
+00000000000000e5 r .LC18
+00000000000000f5 r .LC19
+0000000000000013 r .LC2
+0000000000000105 r .LC20
+0000000000000115 r .LC21
+0000000000000127 r .LC22
+000000000000013e r .LC23
+0000000000000152 r .LC24
+0000000000000164 r .LC25
+0000000000000179 r .LC26
+0000000000000187 r .LC27
+0000000000000196 r .LC28
+00000000000001a3 r .LC29
+000000000000001c r .LC3
+00000000000001b1 r .LC30
+00000000000001c8 r .LC31
+00000000000001e2 r .LC32
+00000000000001f7 r .LC33
+0000000000000208 r .LC34
+000000000000021c r .LC35
+0000000000000227 r .LC36
+000000000000023c r .LC37
+0000000000000245 r .LC38
+0000000000000251 r .LC39
+0000000000000025 r .LC4
+0000000000000264 r .LC40
+0000000000000036 r .LC5
+0000000000000042 r .LC6
+000000000000004b r .LC7
+000000000000005b r .LC8
+0000000000000067 r .LC9
+0000000000000000 T arm_check_object_attribute
+0000000000000340 d table.5421
+0000000000000330 d table.5428
+0000000000000310 d table.5430
+00000000000002e0 d table.5432
+00000000000002b0 d table.5434
+00000000000002a0 d table.5436
+0000000000000260 d table.5438
+0000000000000240 d table.5440
+0000000000000220 d table.5442
+00000000000001f0 d table.5444
+00000000000001d0 d table.5446
+00000000000001c0 d table.5449
+00000000000001a0 d table.5451
+00000000000001c0 d table.5453
+00000000000001c0 d table.5455
+0000000000000180 d table.5457
+0000000000000160 d table.5459
+0000000000000140 d table.5461
+0000000000000120 d table.5463
+0000000000000100 d table.5465
+00000000000000e0 d table.5467
+00000000000000c0 d table.5469
+0000000000000080 d table.5471
+0000000000000040 d table.5473
+0000000000000030 d table.5475
+0000000000000020 d table.5477
+0000000000000000 d table.5479
+0000000000000020 d table.5483
+0000000000000020 d table.5486
+0000000000000020 d table.5488
+
+arm_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T arm_return_value_location
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000c0 r loc_intreg
+
+arm_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T arm_abi_cfi
+
+arm_initreg.o:
+0000000000000000 T arm_set_initial_registers_tid
+
+aarch64_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U aarch64_abi_cfi
+                 U aarch64_check_special_symbol
+0000000000000060 T aarch64_copy_reloc_p
+                 U aarch64_core_note
+                 U aarch64_data_marker_symbol
+                 U aarch64_dynamic_tag_check
+                 U aarch64_dynamic_tag_name
+0000000000000100 T aarch64_init
+0000000000000070 T aarch64_none_reloc_p
+                 U aarch64_register_info
+0000000000000080 T aarch64_relative_reloc_p
+0000000000000420 r aarch64_reloc_nameidx
+0000000000002460 r aarch64_reloc_nametable
+                 U aarch64_reloc_simple_type
+0000000000000030 T aarch64_reloc_type_check
+0000000000000000 T aarch64_reloc_type_name
+0000000000000000 r aarch64_reloc_valid
+0000000000000090 T aarch64_reloc_valid_use
+                 U aarch64_return_value_location
+                 U aarch64_set_initial_registers_tid
+                 U aarch64_unwind
+                 U gelf_getehdr
+
+aarch64_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000009 r .LC2
+000000000000000d r .LC3
+0000000000000010 r .LC4
+0000000000000014 r .LC5
+000000000000001c r .LC6
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U __vsnprintf_chk
+00000000000000e0 T aarch64_register_info
+0000000000000000 t do_regtype
+
+aarch64_symbol.o:
+0000000000000000 r .LC0
+0000000000000016 r .LC1
+000000000000001b r .LC2
+0000000000000024 r .LC3
+0000000000000038 r .LC4
+0000000000000048 r .LC5
+0000000000000000 r CSWTCH.7
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000020 T aarch64_check_special_symbol
+00000000000001a0 T aarch64_data_marker_symbol
+0000000000000250 T aarch64_dynamic_tag_check
+0000000000000210 T aarch64_dynamic_tag_name
+0000000000000000 T aarch64_reloc_simple_type
+                 U elf_getshdrstrndx
+                 U elf_nextscn
+                 U elf_strptr
+                 U gelf_getshdr
+
+aarch64_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T aarch64_core_note
+0000000000000c80 d aarch64_fpregset_items
+0000000000000020 r aarch64_fpregset_regs
+0000000000000800 d aarch64_hw_bp_items
+00000000000003c0 d aarch64_hw_wp_items
+0000000000000c40 d aarch64_syscall_items
+0000000000000c60 d aarch64_tls_items
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000030 r prstatus_regs
+0000000000000000 r vmcoreinfo_items
+
+aarch64_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000320 T aarch64_return_value_location
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_bitsize
+                 U dwarf_bytesize
+                 U dwarf_child
+                 U dwarf_formflag
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_peel_type
+                 U dwarf_siblingof
+                 U dwarf_tag
+0000000000000160 t hfa_type
+0000000000000000 r loc.5933
+0000000000000480 r loc.5937
+0000000000000080 r loc_hfa_16.5951
+0000000000000380 r loc_hfa_2.5944
+0000000000000280 r loc_hfa_4.5947
+0000000000000180 r loc_hfa_8.5949
+0000000000000000 t member_is_fp
+
+aarch64_cfi.o:
+0000000000000000 T aarch64_abi_cfi
+0000000000000000 r abi_cfi.5134
+
+aarch64_initreg.o:
+0000000000000000 T aarch64_set_initial_registers_tid
+
+aarch64_unwind.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T aarch64_unwind
+
+sparc_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U sparc64_core_note
+                 U sparc_abi_cfi
+                 U sparc_auxv_info
+                 U sparc_check_object_attribute
+                 U sparc_check_special_section
+0000000000000060 T sparc_copy_reloc_p
+                 U sparc_core_note
+                 U sparc_dynamic_tag_check
+                 U sparc_dynamic_tag_name
+0000000000000100 T sparc_init
+                 U sparc_machine_flag_check
+0000000000000070 T sparc_none_reloc_p
+                 U sparc_register_info
+0000000000000080 T sparc_relative_reloc_p
+0000000000000100 r sparc_reloc_nameidx
+0000000000000900 r sparc_reloc_nametable
+                 U sparc_reloc_simple_type
+0000000000000030 T sparc_reloc_type_check
+0000000000000000 T sparc_reloc_type_name
+0000000000000000 r sparc_reloc_valid
+0000000000000090 T sparc_reloc_valid_use
+                 U sparc_return_value_location
+                 U sparc_set_initial_registers_tid
+                 U sparc_symbol_type_name
+
+sparc_symbol.o:
+0000000000000000 r .LC0
+0000000000000000 r CSWTCH.1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf_getdata
+                 U elf_nextscn
+                 U gelf_getdyn
+                 U gelf_getshdr
+0000000000000030 T sparc_check_special_section
+0000000000000180 T sparc_dynamic_tag_check
+0000000000000160 T sparc_dynamic_tag_name
+0000000000000020 T sparc_machine_flag_check
+0000000000000000 T sparc_reloc_simple_type
+0000000000000140 T sparc_symbol_type_name
+
+sparc_regs.o:
+0000000000000000 r .LC0
+0000000000000002 r .LC1
+000000000000000a r .LC2
+0000000000000016 r .LC3
+0000000000000012 r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 r names.5422
+0000000000000000 T sparc_register_info
+                 U stpncpy
+
+sparc_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_diecu
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000c0 r loc_fpreg
+00000000000001c0 r loc_intreg
+0000000000000000 T sparc_return_value_location
+
+sparc_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000020 r fpregset_regs
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000040 r prstatus_regs
+0000000000000000 T sparc_core_note
+0000000000000000 r vmcoreinfo_items
+
+sparc64_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000020 r fpregset_regs
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000040 r prstatus_regs
+0000000000000000 T sparc64_core_note
+0000000000000000 r vmcoreinfo_items
+
+sparc_auxv.o:
+0000000000000000 r .LC0
+0000000000000000 T sparc_auxv_info
+
+sparc_attrs.o:
+0000000000000000 r .LC0
+0000000000000011 r .LC1
+0000000000000023 r .LC2
+0000000000000027 r .LC3
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __strcat_chk
+0000000000000100 d hwcaps.5418
+0000000000000000 d hwcaps2.5419
+0000000000000000 b name.5420
+0000000000000000 T sparc_check_object_attribute
+
+sparc_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T sparc_abi_cfi
+
+sparc_initreg.o:
+0000000000000000 T sparc_set_initial_registers_tid
+
+ppc_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U ppc_abi_cfi
+                 U ppc_auxv_info
+                 U ppc_bss_plt_p
+                 U ppc_check_object_attribute
+                 U ppc_check_special_symbol
+0000000000000060 T ppc_copy_reloc_p
+                 U ppc_core_note
+                 U ppc_dwarf_to_regno
+                 U ppc_dynamic_tag_check
+                 U ppc_dynamic_tag_name
+0000000000000100 T ppc_init
+                 U ppc_machine_flag_check
+0000000000000070 T ppc_none_reloc_p
+                 U ppc_register_info
+0000000000000080 T ppc_relative_reloc_p
+0000000000000100 r ppc_reloc_nameidx
+0000000000000900 r ppc_reloc_nametable
+                 U ppc_reloc_simple_type
+0000000000000030 T ppc_reloc_type_check
+0000000000000000 T ppc_reloc_type_name
+0000000000000000 r ppc_reloc_valid
+0000000000000090 T ppc_reloc_valid_use
+                 U ppc_return_value_location
+                 U ppc_set_initial_registers_tid
+
+ppc_symbol.o:
+0000000000000000 r .LC0
+0000000000000008 r .LC1
+0000000000000010 r .LC2
+0000000000000026 r .LC3
+0000000000000031 r .LC4
+0000000000000038 r .LC5
+000000000000003e r .LC6
+000000000000004a r .LC7
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf_getdata
+                 U elf_getphdrnum
+                 U elf_getshdrstrndx
+                 U elf_strptr
+0000000000000000 t find_dyn_got
+                 U gelf_getdyn
+                 U gelf_getphdr
+                 U gelf_getshdr
+                 U gelf_offscn
+0000000000000380 T ppc_bss_plt_p
+00000000000001e0 T ppc_check_special_symbol
+00000000000001c0 T ppc_dynamic_tag_check
+0000000000000190 T ppc_dynamic_tag_name
+0000000000000180 T ppc_machine_flag_check
+0000000000000150 T ppc_reloc_simple_type
+
+ppc_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_formflag
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000e0 r loc_fpreg
+0000000000000100 r loc_intreg
+00000000000000c0 r loc_vmxreg
+0000000000000000 T ppc_return_value_location
+
+ppc_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000009 r .LC2
+0000000000000010 r .LC3
+000000000000001b r .LC4
+0000000000000000 T ppc64_register_info
+0000000000000000 T ppc_register_info
+
+ppc_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000050 r altivec_regs
+0000000000000070 r fpregset_regs
+                 U memcmp
+0000000000000000 T ppc_core_note
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+00000000000000a0 r prstatus_regs
+0000000000000040 r spe_regs
+0000000000000020 r tm_spr_regs
+0000000000000000 r vmcoreinfo_items
+
+ppc_auxv.o:
+0000000000000000 r .LC0
+0000000000000000 T ppc64_auxv_info
+0000000000000000 T ppc_auxv_info
+
+ppc_attrs.o:
+0000000000000000 r .LC0
+0000000000000004 r .LC1
+0000000000000015 r .LC2
+000000000000002a r .LC3
+0000000000000040 d fp_kinds.5419
+0000000000000000 T ppc64_check_object_attribute
+0000000000000000 T ppc_check_object_attribute
+0000000000000000 d struct_return_kinds.5423
+0000000000000020 d vector_kinds.5421
+
+ppc_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T ppc64_abi_cfi
+0000000000000000 T ppc_abi_cfi
+
+ppc_initreg.o:
+0000000000000000 T ppc64_dwarf_to_regno
+0000000000000040 T ppc64_set_initial_registers_tid
+0000000000000000 T ppc_dwarf_to_regno
+0000000000000040 T ppc_set_initial_registers_tid
+
+ppc64_init.o:
+0000000000000000 r .LC0
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf_getdata
+                 U elf_getshdrstrndx
+                 U elf_nextscn
+                 U elf_strptr
+                 U gelf_getehdr
+                 U gelf_getshdr
+                 U ppc64_abi_cfi
+                 U ppc64_auxv_info
+                 U ppc64_bss_plt_p
+                 U ppc64_check_object_attribute
+                 U ppc64_check_special_symbol
+                 U ppc64_check_st_other_bits
+0000000000000060 T ppc64_copy_reloc_p
+                 U ppc64_core_note
+                 U ppc64_dwarf_to_regno
+                 U ppc64_dynamic_tag_check
+                 U ppc64_dynamic_tag_name
+0000000000000100 T ppc64_init
+                 U ppc64_machine_flag_check
+0000000000000070 T ppc64_none_reloc_p
+                 U ppc64_register_info
+0000000000000080 T ppc64_relative_reloc_p
+0000000000000100 r ppc64_reloc_nameidx
+0000000000000900 r ppc64_reloc_nametable
+                 U ppc64_reloc_simple_type
+0000000000000030 T ppc64_reloc_type_check
+0000000000000000 T ppc64_reloc_type_name
+0000000000000000 r ppc64_reloc_valid
+0000000000000090 T ppc64_reloc_valid_use
+                 U ppc64_resolve_sym_value
+                 U ppc64_return_value_location
+                 U ppc64_set_initial_registers_tid
+                 U ppc64_unwind
+
+ppc64_symbol.o:
+0000000000000000 r .LC0
+000000000000000c r .LC1
+0000000000000016 r .LC2
+0000000000000022 r .LC3
+000000000000002c r .LC4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf_getshdrstrndx
+                 U elf_strptr
+0000000000000150 T ppc64_bss_plt_p
+00000000000000d0 T ppc64_check_special_symbol
+0000000000000170 T ppc64_check_st_other_bits
+00000000000000b0 T ppc64_dynamic_tag_check
+0000000000000050 T ppc64_dynamic_tag_name
+0000000000000160 T ppc64_machine_flag_check
+0000000000000000 T ppc64_reloc_simple_type
+
+ppc64_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_formflag
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000e0 r loc_fpreg
+00000000000001e0 r loc_intreg
+00000000000000c0 r loc_vmxreg
+0000000000000000 T ppc64_return_value_location
+
+ppc64_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000050 r altivec_regs
+0000000000000070 r fpregset_regs
+                 U memcmp
+0000000000000000 T ppc64_core_note
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+00000000000000a0 r prstatus_regs
+0000000000000040 r spe_regs
+0000000000000020 r tm_spr_regs
+0000000000000000 r vmcoreinfo_items
+
+ppc64_unwind.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T ppc64_unwind
+
+ppc64_resolve_sym.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf64_xlatetom
+                 U gelf_getehdr
+0000000000000000 T ppc64_resolve_sym_value
+
+s390_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U s390_abi_cfi
+                 U s390_check_special_symbol
+0000000000000050 T s390_copy_reloc_p
+                 U s390_core_note
+00000000000000f0 T s390_init
+0000000000000060 T s390_none_reloc_p
+                 U s390_normalize_pc
+                 U s390_register_info
+0000000000000070 T s390_relative_reloc_p
+0000000000000040 r s390_reloc_nameidx
+0000000000000240 r s390_reloc_nametable
+                 U s390_reloc_simple_type
+0000000000000030 T s390_reloc_type_check
+0000000000000000 T s390_reloc_type_name
+0000000000000000 r s390_reloc_valid
+0000000000000080 T s390_reloc_valid_use
+                 U s390_return_value_location
+                 U s390_set_initial_registers_tid
+                 U s390_unwind
+                 U s390x_core_note
+
+s390_symbol.o:
+0000000000000000 r .LC0
+0000000000000016 r .LC1
+000000000000001b r .LC2
+0000000000000000 r CSWTCH.4
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf_getshdrstrndx
+                 U elf_nextscn
+                 U elf_strptr
+                 U gelf_getshdr
+0000000000000020 T s390_check_special_symbol
+0000000000000000 T s390_reloc_simple_type
+
+s390_regs.o:
+0000000000000000 r .LC0
+0000000000000002 r .LC1
+000000000000000a r .LC2
+000000000000000e r .LC3
+0000000000000016 r .LC4
+0000000000000000 T s390_register_info
+
+s390_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr
+                 U dwarf_attr_integrate
+                 U dwarf_diecu
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000c0 r loc_fpreg
+00000000000000e0 r loc_intreg
+0000000000000000 T s390_return_value_location
+
+s390_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000005e0 d fpregset_items
+0000000000000020 r fpregset_regs
+00000000000003e0 d high_regs_items
+00000000000003c0 d last_break_items
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+00000000000000c0 r prstatus_regs
+0000000000000000 T s390_core_note
+00000000000003a0 d system_call_items
+0000000000000000 r vmcoreinfo_items
+
+s390x_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+00000000000003e0 d fpregset_items
+0000000000000020 r fpregset_regs
+00000000000003c0 d last_break_items
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+00000000000000c0 r prstatus_regs
+0000000000000000 T s390x_core_note
+00000000000003a0 d system_call_items
+0000000000000000 r vmcoreinfo_items
+
+s390_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T s390_abi_cfi
+
+s390_initreg.o:
+0000000000000010 T s390_normalize_pc
+0000000000000000 T s390_set_initial_registers_tid
+
+s390_unwind.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+0000000000000000 T s390_unwind
+
+m68k_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U m68k_abi_cfi
+0000000000000050 T m68k_copy_reloc_p
+                 U m68k_core_note
+                 U m68k_gotpc_reloc_check
+00000000000000f0 T m68k_init
+0000000000000060 T m68k_none_reloc_p
+                 U m68k_register_info
+0000000000000070 T m68k_relative_reloc_p
+0000000000000040 r m68k_reloc_nameidx
+00000000000001a0 r m68k_reloc_nametable
+                 U m68k_reloc_simple_type
+0000000000000030 T m68k_reloc_type_check
+0000000000000000 T m68k_reloc_type_name
+0000000000000000 r m68k_reloc_valid
+0000000000000080 T m68k_reloc_valid_use
+                 U m68k_return_value_location
+                 U m68k_set_initial_registers_tid
+
+m68k_symbol.o:
+0000000000000000 r CSWTCH.2
+0000000000000000 T m68k_gotpc_reloc_check
+0000000000000010 T m68k_reloc_simple_type
+
+m68k_regs.o:
+0000000000000000 r .LC0
+0000000000000002 r .LC1
+000000000000000a r .LC2
+0000000000000000 T m68k_register_info
+
+m68k_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_attr_integrate
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_hasattr_integrate
+                 U dwarf_peel_type
+                 U dwarf_tag
+00000000000000a0 r loc_aggregate
+00000000000000c0 r loc_fpreg
+0000000000000100 r loc_intreg
+00000000000000e0 r loc_ptrreg
+0000000000000000 T m68k_return_value_location
+
+m68k_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000020 r fpregset_regs
+0000000000000000 T m68k_core_note
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000040 r prstatus_regs
+0000000000000000 r vmcoreinfo_items
+
+m68k_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T m68k_abi_cfi
+
+m68k_initreg.o:
+0000000000000000 T m68k_set_initial_registers_tid
+
+bpf_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U bpf_disasm
+00000000000000d0 T bpf_init
+0000000000000050 T bpf_none_reloc_p
+                 U bpf_register_info
+0000000000000020 r bpf_reloc_nameidx
+0000000000000080 r bpf_reloc_nametable
+                 U bpf_reloc_simple_type
+0000000000000030 T bpf_reloc_type_check
+0000000000000000 T bpf_reloc_type_name
+0000000000000000 r bpf_reloc_valid
+0000000000000060 T bpf_reloc_valid_use
+                 U gelf_getehdr
+
+bpf_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000009 r .LC2
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+0000000000000000 T bpf_register_info
+
+bpf_symbol.o:
+0000000000000000 T bpf_reloc_simple_type
+
+riscv_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U gelf_getehdr
+                 U riscv64_core_note
+                 U riscv_abi_cfi
+                 U riscv_check_special_symbol
+0000000000000050 T riscv_copy_reloc_p
+                 U riscv_core_note
+                 U riscv_disasm
+00000000000000f0 T riscv_init
+                 U riscv_machine_flag_check
+0000000000000060 T riscv_none_reloc_p
+                 U riscv_register_info
+0000000000000070 T riscv_relative_reloc_p
+0000000000000040 r riscv_reloc_nameidx
+0000000000000220 r riscv_reloc_nametable
+                 U riscv_reloc_simple_type
+0000000000000030 T riscv_reloc_type_check
+0000000000000000 T riscv_reloc_type_name
+0000000000000000 r riscv_reloc_valid
+0000000000000080 T riscv_reloc_valid_use
+                 U riscv_return_value_location_lp64
+                 U riscv_return_value_location_lp64d
+                 U riscv_return_value_location_lp64f
+                 U riscv_set_initial_registers_tid
+
+riscv_symbol.o:
+0000000000000000 r .LC0
+0000000000000016 r .LC1
+000000000000001b r .LC2
+000000000000002d r .LC3
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U elf_getshdrstrndx
+                 U elf_strptr
+00000000000000b0 T riscv_check_special_symbol
+00000000000000a0 T riscv_machine_flag_check
+0000000000000000 T riscv_reloc_simple_type
+
+riscv_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T riscv_abi_cfi
+
+riscv_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000009 r .LC2
+0000000000000000 T riscv_register_info
+
+riscv_initreg.o:
+0000000000000000 T riscv_set_initial_registers_tid
+
+riscv_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000020 r prstatus_regs
+0000000000000000 T riscv_core_note
+0000000000000000 r vmcoreinfo_items
+
+riscv64_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000020 r prstatus_regs
+0000000000000000 T riscv64_core_note
+0000000000000000 r vmcoreinfo_items
+
+riscv_retval.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U dwarf_aggregate_size
+                 U dwarf_attr_integrate
+                 U dwarf_bitsize
+                 U dwarf_bytesize
+                 U dwarf_formref_die
+                 U dwarf_formudata
+                 U dwarf_peel_type
+                 U dwarf_tag
+0000000000000000 r loc.5885
+0000000000000080 r loc.5889
+0000000000000120 r loc.5894
+00000000000000a0 r loc.5899
+0000000000000420 T riscv_return_value_location_lp64
+00000000000003e0 T riscv_return_value_location_lp64d
+0000000000000400 T riscv_return_value_location_lp64f
+0000000000000000 T riscv_return_value_location_lp64ifd
+
+csky_attrs.o:
+0000000000000000 r .LC0
+0000000000000005 r .LC1
+0000000000000014 r .LC2
+0000000000000022 r .LC3
+0000000000000031 r .LC4
+0000000000000000 T csky_check_object_attribute
+
+csky_init.o:
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __stack_chk_fail
+                 U csky_abi_cfi
+                 U csky_check_object_attribute
+0000000000000050 T csky_copy_reloc_p
+                 U csky_core_note
+00000000000000f0 T csky_init
+                 U csky_machine_flag_check
+0000000000000060 T csky_none_reloc_p
+                 U csky_register_info
+0000000000000070 T csky_relative_reloc_p
+0000000000000040 r csky_reloc_nameidx
+0000000000000220 r csky_reloc_nametable
+                 U csky_reloc_simple_type
+0000000000000030 T csky_reloc_type_check
+0000000000000000 T csky_reloc_type_name
+0000000000000000 r csky_reloc_valid
+0000000000000080 T csky_reloc_valid_use
+                 U csky_section_type_name
+                 U csky_set_initial_registers_tid
+                 U gelf_getehdr
+
+csky_symbol.o:
+0000000000000000 r .LC0
+0000000000000020 T csky_machine_flag_check
+0000000000000000 T csky_reloc_simple_type
+0000000000000040 T csky_section_type_name
+
+csky_cfi.o:
+0000000000000000 r abi_cfi.5134
+0000000000000000 T csky_abi_cfi
+
+csky_regs.o:
+0000000000000000 r .LC0
+0000000000000001 r .LC1
+0000000000000000 T csky_register_info
+
+csky_initreg.o:
+0000000000000000 T csky_set_initial_registers_tid
+
+csky_corenote.o:
+0000000000000005 r .LC1
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000000 T csky_core_note
+                 U memcmp
+0000000000000000 d prpsinfo_items
+00000000000001a0 d prstatus_items
+0000000000000020 r prstatus_regs
+0000000000000000 r vmcoreinfo_items
+
+i386_disasm.o:
+0000000000000000 r .LC0
+0000000000000005 r .LC1
+0000000000000035 r .LC10
+000000000000003c r .LC11
+0000000000000045 r .LC12
+000000000000004d r .LC13
+0000000000000052 r .LC14
+0000000000000055 r .LC15
+0000000000000057 r .LC16
+0000000000000085 r .LC17
+000000000000005e r .LC18
+0000000000000082 r .LC19
+000000000000000c r .LC2
+000000000000006c r .LC20
+0000000000000073 r .LC21
+0000000000000088 r .LC22
+000000000000008a r .LC23
+0000000000000093 r .LC24
+0000000000000096 r .LC25
+0000000000000099 r .LC26
+000000000000009e r .LC27
+00000000000000b2 r .LC28
+00000000000000b7 r .LC29
+0000000000000013 r .LC3
+00000000000000bc r .LC30
+00000000000000c1 r .LC31
+00000000000000c6 r .LC32
+00000000000000cb r .LC33
+00000000000000d1 r .LC34
+00000000000000f3 r .LC36
+00000000000000fa r .LC37
+0000000000000016 r .LC4
+0000000000000019 r .LC5
+000000000000001e r .LC6
+000000000000001f r .LC7
+0000000000000021 r .LC8
+000000000000002f r .LC9
+0000000000002370 t FCT_MOD$R_M
+0000000000001b10 t FCT_Mod$R_m
+0000000000001760 t FCT_abs
+00000000000015c0 t FCT_absval
+0000000000000000 t FCT_ax
+0000000000000080 t FCT_ax$w
+00000000000002e0 t FCT_ccc
+0000000000000240 t FCT_crdb
+00000000000002f0 t FCT_ddd
+0000000000000300 t FCT_disp8
+0000000000001af0 t FCT_ds_bx
+0000000000001b00 t FCT_ds_si
+0000000000001900 t FCT_ds_xx
+0000000000000900 t FCT_dx
+0000000000000380 t FCT_es_di
+0000000000000790 t FCT_freg
+00000000000013d0 t FCT_imm$s
+00000000000003f0 t FCT_imm$w
+0000000000000590 t FCT_imm16
+0000000000000610 t FCT_imm8
+0000000000000510 t FCT_imms
+0000000000000510 t FCT_imms8
+0000000000000710 t FCT_mmxreg
+0000000000001fe0 t FCT_mod$16r_m
+0000000000002170 t FCT_mod$64r_m
+0000000000001e40 t FCT_mod$8r_m
+0000000000002170 t FCT_mod$r_m
+0000000000001170 t FCT_mod$r_m$w
+0000000000001cc0 t FCT_moda$r_m
+0000000000000940 t FCT_reg
+00000000000009f0 t FCT_reg$w
+0000000000001520 t FCT_reg16
+0000000000000ac0 t FCT_reg64
+0000000000000690 t FCT_rel
+0000000000000800 t FCT_sel
+0000000000000100 t FCT_sreg2
+0000000000000190 t FCT_sreg3
+0000000000000230 t FCT_string
+0000000000000880 t FCT_xmmreg
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __ctype_b_loc
+                 U __snprintf_chk
+                 U __stack_chk_fail
+                 U __stpcpy_chk
+                 U abort
+0000000000003380 r amd3dnow
+0000000000003440 r amd3dnowstr
+0000000000003360 r aregs
+00000000000000a0 r cmpops.7539
+                 U free
+0000000000000b70 t general_mod$r_m.part.0
+0000000000002540 T i386_disasm
+0000000000000000 t i386_disasm.cold
+0000000000000fa0 r instrtab
+                 U malloc
+0000000000000100 r match_data
+                 U memcpy
+00000000000034e0 r mneidx
+0000000000003900 r mnestr
+0000000000000100 d op1_fct
+0000000000003330 r op1_str
+0000000000003329 r op1_str_idx
+0000000000000040 d op2_fct
+0000000000003320 r op2_str
+000000000000331c r op2_str_idx
+0000000000000000 d op3_fct
+                 U puts
+                 U realloc
+                 U stpcpy
+                 U strlen
+0000000000000060 r tttn.7557
+
+x86_64_disasm.o:
+0000000000000000 r .LC0
+0000000000000005 r .LC1
+0000000000000036 r .LC10
+000000000000003d r .LC11
+0000000000000043 r .LC12
+000000000000004a r .LC13
+0000000000000053 r .LC14
+000000000000005b r .LC15
+000000000000005f r .LC16
+0000000000000064 r .LC17
+0000000000000069 r .LC18
+000000000000006c r .LC19
+000000000000000c r .LC2
+000000000000006e r .LC20
+000000000000006f r .LC21
+0000000000000076 r .LC22
+0000000000000085 r .LC23
+0000000000000093 r .LC24
+000000000000009a r .LC25
+000000000000009c r .LC26
+00000000000000a4 r .LC27
+00000000000000ad r .LC28
+00000000000000b0 r .LC29
+0000000000000013 r .LC3
+00000000000000b3 r .LC30
+00000000000000b8 r .LC31
+00000000000000c3 r .LC32
+00000000000000c9 r .LC33
+00000000000000cf r .LC34
+00000000000000d4 r .LC35
+00000000000000d9 r .LC36
+00000000000000de r .LC37
+00000000000000e2 r .LC38
+00000000000000f6 r .LC39
+0000000000000016 r .LC4
+00000000000000fb r .LC40
+0000000000000100 r .LC41
+0000000000000105 r .LC42
+000000000000010f r .LC43
+0000000000000131 r .LC45
+0000000000000138 r .LC46
+0000000000000019 r .LC5
+000000000000001e r .LC6
+0000000000000020 r .LC7
+0000000000000022 r .LC8
+0000000000000030 r .LC9
+00000000000027b0 t FCT_MOD$R_M
+0000000000002110 t FCT_Mod$R_m
+0000000000001b80 t FCT_abs
+00000000000019e0 t FCT_absval
+0000000000000000 t FCT_ax
+00000000000000a0 t FCT_ax$w
+0000000000000300 t FCT_ccc
+0000000000000260 t FCT_crdb
+0000000000000310 t FCT_ddd
+0000000000000320 t FCT_disp8
+00000000000020f0 t FCT_ds_bx
+0000000000002100 t FCT_ds_si
+0000000000001f00 t FCT_ds_xx
+0000000000000bf0 t FCT_dx
+00000000000003a0 t FCT_es_di
+0000000000000a80 t FCT_freg
+0000000000000680 t FCT_imm$s
+0000000000000410 t FCT_imm$w
+00000000000007d0 t FCT_imm16
+0000000000000560 t FCT_imm64$w
+0000000000000900 t FCT_imm8
+0000000000000850 t FCT_imms8
+0000000000000a00 t FCT_mmxreg
+0000000000002460 t FCT_mod$16r_m
+00000000000025f0 t FCT_mod$64r_m
+00000000000022c0 t FCT_mod$8r_m
+0000000000002b60 t FCT_mod$r_m
+0000000000001670 t FCT_mod$r_m$w
+0000000000002980 t FCT_oreg
+0000000000001d20 t FCT_oreg$w
+0000000000000c30 t FCT_reg
+0000000000000de0 t FCT_reg$w
+0000000000000f50 t FCT_reg64
+0000000000000980 t FCT_rel
+0000000000000af0 t FCT_sel
+0000000000000120 t FCT_sreg2
+00000000000001b0 t FCT_sreg3
+0000000000000250 t FCT_string
+0000000000000b70 t FCT_xmmreg
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __ctype_b_loc
+                 U __snprintf_chk
+                 U __stack_chk_fail
+                 U __stpcpy_chk
+                 U abort
+0000000000003440 r amd3dnow
+0000000000003500 r amd3dnowstr
+0000000000003400 r aregs
+00000000000001c0 r cmpops.7542
+00000000000033e0 r dregs
+                 U free
+0000000000001090 t general_mod$r_m.part.0
+0000000000003420 r hiregs
+00000000000010a0 r instrtab
+                 U malloc
+0000000000000220 r match_data
+                 U memcpy
+00000000000035a0 r mneidx
+00000000000039a0 r mnestr
+0000000000000120 d op1_fct
+00000000000033a0 r op1_str
+0000000000003391 r op1_str_idx
+0000000000000040 d op2_fct
+0000000000003388 r op2_str
+0000000000003380 r op2_str_idx
+0000000000000000 d op3_fct
+                 U puts
+                 U realloc
+00000000000033c0 r rex_8bit
+                 U stpcpy
+                 U strlen
+0000000000000180 r tttn.7560
+0000000000002dd0 T x86_64_disasm
+0000000000000000 t x86_64_disasm.cold
+
+bpf_disasm.o:
+0000000000000000 r .LC0
+000000000000000f r .LC1
+00000000000000bf r .LC10
+00000000000000d9 r .LC11
+00000000000000f3 r .LC12
+000000000000010d r .LC13
+0000000000000128 r .LC14
+0000000000000143 r .LC15
+000000000000015e r .LC16
+0000000000000179 r .LC17
+0000000000000194 r .LC18
+00000000000001af r .LC19
+0000000000000000 r .LC2
+0000000000000020 r .LC20
+00000000000001bd r .LC21
+00000000000001cb r .LC22
+00000000000001d9 r .LC23
+00000000000001e7 r .LC24
+00000000000001f5 r .LC25
+0000000000000203 r .LC26
+0000000000000211 r .LC27
+0000000000000220 r .LC28
+000000000000022f r .LC29
+0000000000000026 r .LC3
+000000000000023e r .LC30
+000000000000024c r .LC31
+0000000000000259 r .LC32
+000000000000026f r .LC33
+000000000000028c r .LC34
+00000000000002a8 r .LC35
+00000000000002c5 r .LC36
+0000000000000048 r .LC37
+0000000000000068 r .LC38
+0000000000000088 r .LC39
+000000000000003d r .LC4
+00000000000000a8 r .LC40
+00000000000000c8 r .LC41
+00000000000000e8 r .LC42
+0000000000000110 r .LC43
+0000000000000138 r .LC44
+0000000000000160 r .LC45
+00000000000002d4 r .LC46
+0000000000000180 r .LC47
+00000000000002e7 r .LC48
+00000000000002f6 r .LC49
+0000000000000047 r .LC5
+0000000000000305 r .LC50
+0000000000000314 r .LC51
+0000000000000323 r .LC52
+0000000000000332 r .LC53
+0000000000000341 r .LC54
+0000000000000351 r .LC55
+0000000000000361 r .LC56
+0000000000000371 r .LC57
+0000000000000380 r .LC58
+000000000000038e r .LC59
+000000000000005e r .LC6
+00000000000003aa r .LC60
+00000000000001a8 r .LC61
+00000000000001c8 r .LC62
+00000000000003be r .LC63
+00000000000003da r .LC64
+00000000000003f6 r .LC65
+0000000000000411 r .LC66
+00000000000001f0 r .LC67
+0000000000000210 r .LC68
+000000000000042d r .LC69
+0000000000000074 r .LC7
+0000000000000448 r .LC70
+0000000000000238 r .LC71
+0000000000000464 r .LC72
+0000000000000258 r .LC73
+000000000000047f r .LC74
+000000000000049c r .LC75
+00000000000004b9 r .LC76
+00000000000004d5 r .LC77
+0000000000000280 r .LC78
+00000000000002a8 r .LC79
+000000000000008f r .LC8
+00000000000004f2 r .LC80
+000000000000050e r .LC81
+00000000000002d0 r .LC82
+000000000000052b r .LC83
+0000000000000547 r .LC84
+0000000000000563 r .LC85
+000000000000057e r .LC86
+000000000000059a r .LC87
+00000000000002f8 r .LC88
+00000000000005b6 r .LC89
+00000000000000a5 r .LC9
+00000000000005d2 r .LC90
+00000000000005ef r .LC91
+000000000000060c r .LC92
+0000000000000628 r .LC93
+0000000000000645 r .LC94
+0000000000000662 r .LC95
+0000000000000320 r .LC96
+000000000000067f r .LC97
+000000000000069c r .LC98
+00000000000006a7 r .LC99
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __snprintf_chk
+                 U __stack_chk_fail
+0000000000000000 T bpf_disasm
+0000000000000380 r class_string
+
+riscv_disasm.o:
+0000000000000000 r .LC0
+0000000000000007 r .LC1
+000000000000002e r .LC10
+0000000000000033 r .LC11
+0000000000000038 r .LC12
+000000000000003d r .LC13
+0000000000000040 r .LC14
+0000000000000045 r .LC15
+0000000000000049 r .LC16
+000000000000004f r .LC17
+0000000000000054 r .LC18
+0000000000000059 r .LC19
+000000000000000c r .LC2
+000000000000005d r .LC20
+0000000000000060 r .LC21
+0000000000000066 r .LC22
+000000000000006c r .LC23
+0000000000000070 r .LC24
+0000000000000074 r .LC25
+0000000000000079 r .LC26
+000000000000007e r .LC27
+0000000000000084 r .LC28
+000000000000008a r .LC29
+0000000000000012 r .LC3
+000000000000008f r .LC30
+0000000000000095 r .LC31
+0000000000000099 r .LC32
+000000000000009e r .LC33
+00000000000000a3 r .LC34
+00000000000000a8 r .LC35
+00000000000000ac r .LC36
+00000000000000af r .LC37
+00000000000000b5 r .LC38
+00000000000000ba r .LC39
+0000000000000019 r .LC4
+00000000000000bf r .LC40
+00000000000000c4 r .LC41
+00000000000000ce r .LC42
+00000000000000d3 r .LC43
+00000000000000d8 r .LC44
+00000000000000dd r .LC45
+00000000000000e3 r .LC46
+00000000000000e8 r .LC47
+00000000000000ed r .LC48
+00000000000000f5 r .LC49
+000000000000001c r .LC5
+00000000000000fa r .LC50
+0000000000000100 r .LC51
+0000000000000104 r .LC52
+0000000000000106 r .LC53
+000000000000010d r .LC54
+0000000000000112 r .LC55
+0000000000000116 r .LC56
+000000000000011a r .LC57
+000000000000011e r .LC58
+0000000000000123 r .LC59
+000000000000001f r .LC6
+0000000000000127 r .LC60
+000000000000012d r .LC61
+0000000000000134 r .LC62
+0000000000000139 r .LC63
+000000000000013d r .LC64
+0000000000000140 r .LC65
+0000000000000144 r .LC66
+0000000000000147 r .LC67
+000000000000014d r .LC68
+0000000000000155 r .LC69
+0000000000000024 r .LC7
+000000000000015a r .LC70
+0000000000000162 r .LC71
+0000000000000169 r .LC72
+000000000000016d r .LC73
+0000000000000174 r .LC74
+0000000000000176 r .LC75
+000000000000018a r .LC76
+000000000000017b r .LC77
+000000000000017e r .LC78
+0000000000000185 r .LC79
+0000000000000027 r .LC8
+000000000000002b r .LC9
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __ctype_b_loc
+                 U __snprintf_chk
+                 U __stack_chk_fail
+                 U __stpcpy_chk
+                 U __strcat_chk
+                 U __strcpy_chk
+                 U abort
+00000000000007a0 d altsignmne.6085
+0000000000000a80 d amomne.6060
+0000000000000a60 d aqrlstr.6062
+0000000000000d40 d arithmne.6018
+0000000000000960 d arithmne2.6065
+0000000000000860 d arithmne3.6066
+0000000000000740 d branchmne.6094
+0000000000000cc0 d floadmne.6042
+0000000000000840 d fmamne.6072
+00000000000007e0 d fpop.6076
+                 U free
+0000000000000d80 d fregnames
+0000000000000b80 d fstoremne.6057
+0000000000000110 r intwidthchar.6032
+0000000000000040 d known.6107
+0000000000000d00 d loadmne.6041
+                 U malloc
+                 U memcpy
+0000000000000000 d mnecsr.6106
+00000000000007c0 d mnefpcmp.6081
+0000000000000780 d mnefpcmp.6084
+0000000000000c00 d opimmmne.6050
+0000000000000c40 d order.6045
+                 U realloc
+0000000000000e80 d regnames
+0000000000000000 T riscv_disasm
+0000000000000000 t riscv_disasm.cold
+0000000000000800 d rndmode.6033
+0000000000000bc0 d storemne.6056
+                 U stpcpy
+                 U strcpy
+                 U strlen
+0000000000000700 d unprivrolow.6102
+00000000000006e0 d unprivrs.6104
+00000000000006c0 d unprivrsi.6105
+0000000000000720 d unprivrw.6101
+0000000000000114 r widthchar.6031
