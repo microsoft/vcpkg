@@ -1,38 +1,17 @@
-set(VTK_SHORT_VERSION 9.2)
+set(VTK_SHORT_VERSION 9.3)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
 set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
-vcpkg_download_distfile(
-    STRING_PATCH
-    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff?full_index=1
-    FILENAME vtk-string-bfa3e4.diff
-    SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
-)
-
-vcpkg_download_distfile(
-    MPI4PY_PATCH_1
-    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/c938d30634a284fad026f6ae25c30bc84cadc07e.diff?full_index=1
-    FILENAME vtk-mpi4py-update-part1-c938d3.diff
-    SHA512 5704c1dd124075bd8f37b0734c5cebd48b470902c74bc23774fd4b69025dbc6bfddf48b7c4511520ed07f03bd666a444d6390569f02a0ab68b5d966ddde3a989
-)
-
-vcpkg_download_distfile(
-    MPI4PY_PATCH_2
-    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/53e6ce92ae4591552e7e00344d69803117d56bfe.diff?full_index=1
-    FILENAME vtk-mpi4py-update-part2-53e6ce.diff
-    SHA512 794a25bff6168fda94d920a6837c3a690bd6d79284ec34dcd67666c55de78962cc7b73c0f074ce58ed78198bb149eab6bf59b2822f29cbfa792e2fe667c9327c
-)
-
 # =============================================================================
 # Clone & patch
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 66143ef041b980a51e41ee470d053e67209150f8 # v9.2.x used by ParaView 5.11.0
-    SHA512 70662670622082bb8d8b16765bbdf645cfbe62151e93b9673c6f94b356df66ca003e5c78b45e99385f1630aed39c3a8eddecd1d9f5bc0cfb92f5e7e8c06e4dbb
+    REF 407d4b541111686c40fa53935e7d22c70d5a3f7c # v9.3.x used by ParaView 5.12.0
+    SHA512 4170d8b6e89ad90020b16d38d6e91c144eb4f1ffd6d6b82a5f2827bf5b16dac98896fcf1a57822bdb56470f56df02adb05836ce98871b779e4733e2cd60a9a76
     HEAD_REF master
     PATCHES
         FindLZMA.patch
@@ -52,12 +31,13 @@ vcpkg_from_github(
         vtkioss.patch
         jsoncpp.patch
         iotr.patch
-        "${STRING_PATCH}"
-        "${MPI4PY_PATCH_1}"
-        "${MPI4PY_PATCH_2}"
-        9690.diff
-        missing-include-fixes.patch
+        fast-float.patch
+        fix-exprtk.patch # just for dbow2 and theia
+        devendor_exodusII.patch
+        ot-dep.patch
         remove-prefix-changes.patch
+        10945.diff
+        10972.diff
 )
 
 # =============================================================================
@@ -111,6 +91,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
         "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
         "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOH5Rage
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
         "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOVPIC
@@ -118,6 +99,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
         "paraview"    VTK_MODULE_ENABLE_VTK_cli11
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersOpenTURNS
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelVerdict
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOOMF
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOPIO
         "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
@@ -133,7 +118,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 
-if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt5/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
 endif()
 if("qt" IN_LIST FEATURES)
@@ -147,19 +132,19 @@ endif()
 if("python" IN_LIST FEATURES)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
         string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
         set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
         set(python_ver "3.${PYTHON_VERSION_MINOR}")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
-        -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
+        -DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
@@ -177,12 +162,15 @@ endif()
 if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_WebCore=YES
+        -DVTK_MODULE_ENABLE_VTK_WebPython=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
     )
 endif()
 
 if("paraview" IN_LIST FEATURES AND "mpi" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingParallelLIC=YES
     )
 endif()
 
@@ -244,6 +232,7 @@ vcpkg_cmake_configure(
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
+        -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
         #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
@@ -329,9 +318,13 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_release_tool("${TOOL_NAME}")
 endforeach()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
-                        "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/vtktoken-9.3.dll" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  # vendored "token" library can be only build as a shared library
+  set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/bin"
+    "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -341,20 +334,7 @@ vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
-    set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType
-                         vtkSupportMacros vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
-    foreach(module ${VTK_CMAKE_NEEDED})
-        file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-    endforeach()
-
-    ## Check List on UPDATE !!
-    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-    file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/Parallel/vtkCompositeZPassFS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-
+    file(INSTALL "${SOURCE_PATH}/Rendering/ParallelLIC/vtkMPIPixelView.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -392,3 +372,5 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-properties.cmake" "_vtk_module_import_prefix}/lib/vtk-9.3/hierarchy" "_vtk_module_import_prefix}$<$<CONFIG:Debug>:/debug>/lib/vtk-9.3/hierarchy")
