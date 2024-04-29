@@ -1,0 +1,329 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc51b0e..7751353 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -392,9 +392,8 @@ if(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
+       GIT_REPOSITORY https://github.com/jeremy-rifkin/libdwarf-lite.git
+       # GIT_TAG c78e984f3abbd20f6e01d6f51819e826b1691f65 # v0.8.0
+       # GIT_TAG 71090c680b4c943448ba87a0f1f864f174e4edda # v0.9.0
+-      GIT_TAG 5c0cb251f94b27e90184e6b2d9a0c9c62593babc # v0.9.1 + some cmake changes
+-      # GIT_REPOSITORY https://github.com/jeremy-rifkin/libdwarf-code.git
+-      # GIT_TAG 308b55331b564d4fdbe3bc6856712270e5b2395b
++      # GIT_TAG 5c0cb251f94b27e90184e6b2d9a0c9c62593babc # v0.9.1 + some cmake changes
++      GIT_TAG 87401f22cd05628d23059cb29ee6448a55c3a88a # v0.9.2
+       GIT_SHALLOW 1
+     )
+     # FetchContent_MakeAvailable(libdwarf)
+diff --git a/README.md b/README.md
+index acadb08..312bffc 100644
+--- a/README.md
++++ b/README.md
+@@ -19,7 +19,9 @@ Cpptrace also has a C API, docs [here](docs/c-api.md).
+   - [CMake FetchContent Usage](#cmake-fetchcontent-usage)
+ - [FAQ](#faq)
+   - [What about C++23 `<stacktrace>`?](#what-about-c23-stacktrace)
++  - [What does cpptrace have over other C++ stacktrace libraries?](#what-does-cpptrace-have-over-other-c-stacktrace-libraries)
+ - [In-Depth Documentation](#in-depth-documentation)
++  - [Prerequisites](#prerequisites)
+   - [`namespace cpptrace`](#namespace-cpptrace)
+     - [Stack Traces](#stack-traces)
+     - [Object Traces](#object-traces)
+@@ -136,9 +138,22 @@ Some day C++23's `<stacktrace>` will be ubiquitous. And maybe one day the msvc i
+ The original motivation for cpptrace was to support projects using older C++ standards and as the library has grown its
+ functionality has extended beyond the standard library's implementation.
+ 
+-Cpptrace also provides additional functionality including showing inlined function calls, allowing generation of
+-lightweight "raw traces" that can be resolved later, offering exception objects that embed a lightweight trace when
+-thrown, and providing an API for safe tracing from signal handlers.
++Cpptrace provides functionality beyond what the standard library provides and what implementations provide, such as:
++- Walking inlined function calls
++- Providing a lightweight interface for "raw traces"
++- Resolving function parameter types
++- Providing traced exception objects
++- Providing an API for signal-safe stacktrace generation
++
++## What does cpptrace have over other C++ stacktrace libraries?
++
++Other C++ stacktrace libraries, such as boost stacktrace and backward-cpp, fall short when it comes to portability and
++ease of use. In testing, I found neither to provide adaquate coverage of various environments. Even when they can be
++made to work in an environment they require manual configuration from the end-user, possibly requiring manual
++installation of third-party dependencies. This is a highly undesirable burden to impose on users, especially when it is
++for a software package which just provides diagnostics as opposed to core functionality. Additionally, cpptrace provides
++support for resolving inlined calls by default for DWARF symbols (boost does not do this, backward-cpp can do this but
++only for some back-ends), better support for resolving full function signatures, and nicer API, among other features.
+ 
+ # In-Depth Documentation
+ 
+diff --git a/cmake/Findzstd.cmake b/cmake/Findzstd.cmake
+new file mode 100644
+index 0000000..fc8eb52
+--- /dev/null
++++ b/cmake/Findzstd.cmake
+@@ -0,0 +1,51 @@
++# Libdwarf needs zstd, cpptrace doesn't, and libdwarf has its own Findzstd but it doesn't define zstd::libzstd_static /
++# zstd::libzstd_shared targets which leads to issues, necessitating a find_dependency(zstd) in cpptrace's cmake config
++# and in order to support non-cmake-module installs we need to provide a Findzstd script.
++# https://github.com/jeremy-rifkin/cpptrace/issues/112
++
++# This will define
++# zstd_FOUND
++# zstd_INCLUDE_DIR
++# zstd_LIBRARY
++
++find_path(zstd_INCLUDE_DIR NAMES zstd.h)
++
++find_library(zstd_LIBRARY_DEBUG NAMES zstdd zstd_staticd)
++find_library(zstd_LIBRARY_RELEASE NAMES zstd zstd_static)
++
++include(SelectLibraryConfigurations)
++SELECT_LIBRARY_CONFIGURATIONS(zstd)
++
++include(FindPackageHandleStandardArgs)
++FIND_PACKAGE_HANDLE_STANDARD_ARGS(
++  zstd DEFAULT_MSG
++  zstd_LIBRARY zstd_INCLUDE_DIR
++)
++
++if(zstd_FOUND)
++  message(STATUS "Found Zstd: ${zstd_LIBRARY}")
++endif()
++
++mark_as_advanced(zstd_INCLUDE_DIR zstd_LIBRARY)
++
++if(zstd_FOUND)
++  # just defining them the same... cmake will figure it out
++  if(NOT TARGET zstd::libzstd_static)
++    add_library(zstd::libzstd_static UNKNOWN IMPORTED)
++    set_target_properties(
++      zstd::libzstd_static
++      PROPERTIES
++      IMPORTED_LOCATION "${zstd_LIBRARIES}"
++      INTERFACE_INCLUDE_DIRECTORIES "${zstd_INCLUDE_DIR}"
++    )
++  endif()
++  if(NOT TARGET zstd::libzstd_shared)
++    add_library(zstd::libzstd_shared UNKNOWN IMPORTED)
++    set_target_properties(
++      zstd::libzstd_shared
++      PROPERTIES
++      IMPORTED_LOCATION "${zstd_LIBRARIES}"
++      INTERFACE_INCLUDE_DIRECTORIES "${zstd_INCLUDE_DIR}"
++    )
++  endif()
++endif()
+diff --git a/cmake/InstallRules.cmake b/cmake/InstallRules.cmake
+index b35c4d7..529e51a 100644
+--- a/cmake/InstallRules.cmake
++++ b/cmake/InstallRules.cmake
+@@ -62,6 +62,15 @@ install(
+   COMPONENT ${package_name}-development
+ )
+ 
++# Findzstd.cmake
++# vcpkg doesn't like anything being put in share/, which is where this goes apparently on their setup
++if(NOT CPPTRACE_VCPKG)
++  install(
++    FILES "${PROJECT_SOURCE_DIR}/cmake/Findzstd.cmake"
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${package_name}"
++  )
++endif()
++
+ # support packaging library
+ if(PROJECT_IS_TOP_LEVEL)
+   include(CPack)
+diff --git a/cmake/in/cpptrace-config-cmake.in b/cmake/in/cpptrace-config-cmake.in
+index 412a9d0..fc017ad 100644
+--- a/cmake/in/cpptrace-config-cmake.in
++++ b/cmake/in/cpptrace-config-cmake.in
+@@ -4,7 +4,16 @@
+ # Dependencies
+ if(@CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF@)
+   include(CMakeFindDependencyMacro)
+-  find_dependency(zstd REQUIRED)
++  # we don't go the Findzstd.cmake route on vcpkg
++  if(@CPPTRACE_VCPKG@)
++    find_dependency(zstd CONFIG REQUIRED)
++  else()
++    set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}")
++    set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_LIST_DIR}")
++    find_dependency(zstd)
++    set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
++    unset(CMAKE_MODULE_PATH_OLD)
++  endif()
+   find_dependency(libdwarf REQUIRED)
+ endif()
+ 
+diff --git a/docs/signal-safe-tracing.md b/docs/signal-safe-tracing.md
+index 681c27e..e51e6d1 100644
+--- a/docs/signal-safe-tracing.md
++++ b/docs/signal-safe-tracing.md
+@@ -147,6 +147,9 @@ void do_signal_safe_trace(cpptrace::frame_ptr* buffer, std::size_t size) {
+         close(input_pipe.read_end);
+         close(input_pipe.write_end);
+         execl("signal_tracer", "signal_tracer", nullptr);
++        const char* exec_failure_message = "exec(signal_tracer) failed: Make sure the signal_tracer executable is in "
++            "the current working directory and the binary's permissions are correct.\n";
++        write(STDERR_FILENO, exec_failure_message, strlen(exec_failure_message));
+         _exit(1);
+     }
+     // Resolve to safe_object_frames and write those to the pipe
+diff --git a/src/symbols/symbols_with_libbacktrace.cpp b/src/symbols/symbols_with_libbacktrace.cpp
+index fc8011e..ce76442 100644
+--- a/src/symbols/symbols_with_libbacktrace.cpp
++++ b/src/symbols/symbols_with_libbacktrace.cpp
+@@ -38,6 +38,12 @@ namespace libbacktrace {
+     }
+ 
+     void error_callback(void*, const char* msg, int errnum) {
++        if(msg == std::string("no debug info in ELF executable")) {
++            // https://github.com/jeremy-rifkin/cpptrace/issues/114
++            // https://github.com/ianlancetaylor/libbacktrace/blob/ae1e707dbacd4a5cc82fcf2d3816f410e9c5fec4/elf.c#L592
++            // not a critical error, just return
++            return;
++        }
+         throw internal_error("Libbacktrace error: {}, code {}", msg, errnum);
+     }
+ 
+@@ -57,8 +63,8 @@ namespace libbacktrace {
+     // TODO: Handle backtrace_pcinfo calling the callback multiple times on inlined functions
+     stacktrace_frame resolve_frame(const frame_ptr addr) {
+         try {
+-            stacktrace_frame frame;
+-            frame.column = nullable<std::uint32_t>::null();
++            stacktrace_frame frame = null_frame;
++            frame.raw_address = addr;
+             backtrace_pcinfo(
+                 get_backtrace_state(),
+                 addr,
+diff --git a/src/utils/microfmt.hpp b/src/utils/microfmt.hpp
+index ba47db7..1db770e 100644
+--- a/src/utils/microfmt.hpp
++++ b/src/utils/microfmt.hpp
+@@ -10,7 +10,7 @@
+ #include <cstring>
+ #include <iostream>
+ #include <string>
+-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
++#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+ #include <string_view>
+ #endif
+ #ifdef _MSC_VER
+@@ -28,24 +28,22 @@ namespace microfmt {
+             throw std::runtime_error("Microfmt check failed" __FILE__ ":" STR(__LINE__) ": " #expr); \
+         }
+ 
+-        #ifdef _MSC_VER
+         inline std::uint64_t clz(std::uint64_t value) {
+-            unsigned long out = 0;
+-            #ifdef _WIN64
+-            _BitScanForward64(&out, value);
++            #ifdef _MSC_VER
++             unsigned long out = 0;
++             #ifdef _WIN64
++              _BitScanReverse64(&out, value);
++             #else
++              if(_BitScanReverse(&out, std::uint32_t(value >> 32))) {
++                  return 63 - int(out + 32);
++              }
++              _BitScanReverse(&out, std::uint32_t(value));
++             #endif
++             return 63 - out;
+             #else
+-            if(_BitScanForward(&out, std::uint32_t(value >> 32))) {
+-                return 63 ^ int(out + 32);
+-            }
+-            _BitScanForward(&out, std::uint32_t(value));
++             return __builtin_clzll(value);
+             #endif
+-            return out;
+-        }
+-        #else
+-        inline std::uint64_t clz(std::uint64_t value) {
+-            return __builtin_clzll(value);
+         }
+-        #endif
+ 
+         template<typename U, typename V> U to(V v) {
+             return static_cast<U>(v); // A way to cast to U without "warning: useless cast to type"
+@@ -118,7 +116,7 @@ namespace microfmt {
+                 int64_value,
+                 uint64_value,
+                 string_value,
+-                #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
++                #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+                 string_view_value,
+                 #endif
+                 c_string_value,
+@@ -128,7 +126,7 @@ namespace microfmt {
+                 std::int64_t int64_value;
+                 std::uint64_t uint64_value;
+                 const std::string* string_value;
+-                #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
++                #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+                 std::string_view string_view_value;
+                 #endif
+                 const char* c_string_value;
+@@ -147,7 +145,7 @@ namespace microfmt {
+             format_value(unsigned long int_val) : uint64_value(int_val), value(value_type::uint64_value) {}
+             format_value(unsigned long long int_val) : uint64_value(int_val), value(value_type::uint64_value) {}
+             format_value(const std::string& string) : string_value(&string), value(value_type::string_value) {}
+-            #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
++            #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+             format_value(std::string_view sv) : string_view_value(sv), value(value_type::string_view_value) {}
+             #endif
+             format_value(const char* c_string) : c_string_value(c_string), value(value_type::c_string_value) {}
+@@ -187,7 +185,7 @@ namespace microfmt {
+                     case value_type::string_value:
+                         do_write(out, string_value->begin(), string_value->end(), options);
+                         break;
+-                    #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
++                    #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+                     case value_type::string_view_value:
+                         do_write(out, string_view_value.begin(), string_view_value.end(), options);
+                         break;
+@@ -302,20 +300,27 @@ namespace microfmt {
+         }
+     }
+ 
++    #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+     template<typename... Args>
+-    #if defined(__cpp_lib_string_view) && __cpp_lib_string_view >= 201606L
+     std::string format(std::string_view fmt, Args&&... args) {
+-    #else
+-    std::string format(const std::string& fmt, Args&&... args) {
+-    #endif
+         return detail::format<sizeof...(args)>(fmt.begin(), fmt.end(), {detail::format_value(args)...});
+     }
+ 
++    inline std::string format(std::string_view fmt) {
++        return std::string(fmt);
++    }
++    #endif
++
+     template<typename... Args>
+     std::string format(const char* fmt, Args&&... args) {
+         return detail::format<sizeof...(args)>(fmt, fmt + std::strlen(fmt), {detail::format_value(args)...});
+     }
+ 
++    // working around an old msvc bug https://godbolt.org/z/88T8hrzzq mre: https://godbolt.org/z/drd8echbP
++    inline std::string format(const char* fmt) {
++        return detail::format<1>(fmt, fmt + std::strlen(fmt), {detail::format_value(1)});
++    }
++
+     template<typename S, typename... Args>
+     void print(const S& fmt, Args&&... args) {
+         std::cout<<format(fmt, args...);
+diff --git a/test/signal_demo.cpp b/test/signal_demo.cpp
+index 1d7b9a4..1f0d12a 100644
+--- a/test/signal_demo.cpp
++++ b/test/signal_demo.cpp
+@@ -52,6 +52,9 @@ void handler(int signo, siginfo_t* info, void* context) {
+             "signal_tracer",
+             nullptr
+         );
++        const char* exec_failure_message = "exec(signal_tracer) failed: Make sure the signal_tracer executable is in "
++            "the current working directory and the binary's permissions are correct.\n";
++        write(STDERR_FILENO, exec_failure_message, strlen(exec_failure_message));
+         _exit(1);
+     }
+     for(std::size_t i = 0; i < count; i++) {
