@@ -4232,6 +4232,10 @@
       "baseline": "1.13",
       "port-version": 4
     },
+    "libcerror": {
+      "baseline": "20240413",
+      "port-version": 0
+    },
     "libconfig": {
       "baseline": "1.7.3",
       "port-version": 5
