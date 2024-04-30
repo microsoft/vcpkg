@@ -2,6 +2,11 @@
 param (
     $libraries = @(),
     $version = "1.84.0",
+# 1: boost-cmake/ref_sha.cmake needs manual updating
+# 2: This script treats support statements as platform expressions. This is incorrect
+#    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
+#    boost-python is not supported on uwp. Unless this script treats these cases correctly
+#    don't blindly stage/commit changes containing platform expressions in dependencies.
     $portsDir = $null
 )
 
@@ -25,9 +30,10 @@ else {
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 0
+$defaultPortVersion = 1
 $portVersions = @{
-    'boost-modular-build-helper' = 3;
+  'boost-cmake' = 0;
+  'boost-headers' = 0;
 }
 
 function Get-PortVersion {
@@ -92,10 +98,10 @@ $portData = @{
             };
         };
     };
-    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android" };
+    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-coroutine2"       = @{ "supports" = "!emscripten" };
+    "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
@@ -118,10 +124,7 @@ $portData = @{
             }
         }
     };
-    "boost-graph-parallel"   = @{
-        "dependencies" = @("mpi");
-        "supports"     = "!uwp";
-    };
+    "boost-mysql"           = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
         "features" = @{
             "mpi" = @{
@@ -277,7 +280,6 @@ function GeneratePort() {
     param (
         [string]$Library,
         [string]$Hash,
-        [bool]$NeedsBuild,
         $Dependencies = @()
     )
 
@@ -314,14 +316,13 @@ function GeneratePort() {
         "    HEAD_REF master"
     )
     [Array]$patches = Get-Item -Path "$portsDir/$portName/*.patch"
-    if ($null -eq $patches -or $patches.Count -eq 0) {
-    }
-    elseif ($patches.Count -eq 1) {
-        $portfileLines += @("    PATCHES $($patches.name)")
+    [Array]$diffs = Get-Item -Path "$portsDir/$portName/*.diff"
+    [Array]$allmods = $patches + $diffs
+    if ($null -eq $allmods -or $allmods.Count -eq 0) {
     }
     else {
         $portfileLines += @("    PATCHES")
-        foreach ($patch in $patches) {
+        foreach ($patch in $allmods) {
             $portfileLines += @("        $($patch.name)")
         }
     }
@@ -334,42 +335,20 @@ function GeneratePort() {
         $portfileLines += @(Get-Content "$scriptsDir/post-source-stubs/$Library.cmake")
     }
 
-    if ($NeedsBuild) {
+    $portfileLines += @(
+        "set(FEATURE_OPTIONS `"`")"
+    )
+    if (Test-Path "$portsDir/$portName/features.cmake") {
         $portfileLines += @(
-            "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
+            "include(`"`${CMAKE_CURRENT_LIST_DIR}/features.cmake`")"
         )
-        # b2-options.cmake contains port-specific build options
-        if (Test-Path "$portsDir/$portName/b2-options.cmake") {
-            $portfileLines += @(
-                "boost_modular_build("
-                "    SOURCE_PATH `${SOURCE_PATH}"
-                "    BOOST_CMAKE_FRAGMENT `"`${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake`""
-                ")"
-            )
-        }
-        elseif (Test-Path "$portsDir/$portName/b2-options.cmake.in") {
-            $portfileLines += @(
-                'configure_file('
-                '    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"'
-                '    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"'
-                '    @ONLY'
-                ')'
-                'boost_modular_build('
-                '    SOURCE_PATH ${SOURCE_PATH}'
-                '    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"'
-                ')'
-            )
-        }
-        else {
-            $portfileLines += @(
-                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH})"
-            )
-        }
     }
 
     $portfileLines += @(
-        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
-        "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
+        "boost_configure_and_install("
+        "    SOURCE_PATH `"`${SOURCE_PATH}`""
+        "    OPTIONS `${FEATURE_OPTIONS}"
+        ")"
     )
 
     if (Test-Path "$scriptsDir/post-build-stubs/$Library.cmake") {
@@ -410,8 +389,6 @@ $foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Obje
         "interval"
         "odeint"
         "ublas"
-    }
-    elseif ($_ -eq "headers") {
     }
     else {
         $_
@@ -588,13 +565,12 @@ foreach ($library in $libraries) {
         # Remove optional dependencies that are only used for tests or examples
         $deps = @($deps | Where-Object {
             -not (
-                ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
             )
         })
 
         # Add dependency to the config for all libraries except the config library itself
-        if ($library -ne 'config') {
+        if ($library -ne 'config' -and $library -ne 'headers') {
             # Note: CMake's built-in finder (FindBoost.cmake) looks for Boost header files (boost/version.h or boost/config.h)
             # and stores the result in the Boost_INCLUDE_DIR variable. The files boost/version.h or boost/config.h are owned by the config library.
             # Without these files, the Boost_INCLUDE_DIR variable will not be set and the Boost version will not be detected.
@@ -603,23 +579,18 @@ foreach ($library in $libraries) {
         }
 
         $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
-        $deps += @("boost-vcpkg-helpers")
 
-        $needsBuild = $false
-        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
-            $deps += @(
-                @{ name = "boost-build"; host = $True },
-                @{ name = "boost-modular-build-helper"; host = $True },
-                @{ name = "vcpkg-cmake"; host = $True }
-            )
-            $needsBuild = $true
+        if ($library -ne 'cmake') {
+          $deps += @("boost-cmake")
+          if ($library -ne 'headers') {
+            $deps += @("boost-headers")
+          }
         }
 
         GeneratePort `
             -Library $library `
             -Hash $hash `
-            -Dependencies $deps `
-            -NeedsBuild $needsBuild
+            -Dependencies $deps
 
         $boostPortDependencies += @(GeneratePortDependency $library)
     }
@@ -650,17 +621,11 @@ if ($updateServicePorts) {
 
     # Generate manifest files for boost-vcpkg-helpers
     GeneratePortManifest `
-        -PortName "boost-vcpkg-helpers" `
-        -Description "Internal vcpkg port used to modularize Boost" `
-        -License "MIT" `
-        -Dependencies @("boost-uninstall")
+        -PortName "boost-cmake" `
+        -Description "Boost CMake support infrastructure" `
+        -License "BSL-1.0" `
+        -Dependencies @("boost-uninstall", @{ name = "vcpkg-boost"; host = $True }, @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-config"; host = $True })
 
-    # Generate manifest files for boost-modular-build-helper
-    GeneratePortManifest `
-        -PortName "boost-modular-build-helper" `
-        -Description "Internal vcpkg port used to build Boost libraries" `
-        -License "MIT" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
@@ -669,4 +634,5 @@ if ($updateServicePorts) {
         -Description "Boost.Build" `
         -License "BSL-1.0" `
         -Dependencies @("boost-uninstall")
+
 }
