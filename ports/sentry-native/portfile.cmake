@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 bf6d9aef8129d9ad9b1617e03bf7ac5e4ac5572ac87546f9428a359c4fc3364d2591cc001e7a28f50509d5cfddab9a17da2d4a33e344280fd490c8fe5173f2c7
+    SHA512 9f9fc5dbcafee310b3fb5383b4a4892e7e98094be04e21e730bfae4a0280a9c6f8610a077b24061b6051aeba8091d480e3b7ffa95f8e613d5ab1be45590953e5
 )
 
 vcpkg_extract_source_archive(
@@ -31,6 +31,10 @@ endif()
 
 if("wer" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_CRASHPAD_USE_WER=ON")
+endif()
+
+if("compression" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_COMPRESSION=ON")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

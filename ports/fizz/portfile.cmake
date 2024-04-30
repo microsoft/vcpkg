@@ -4,12 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 e940aacb6dd08163f292a6e3e07e5782ccaa7658c638791a75604ba4a05da6a827a383d1727e56c85823da99a678a60ae67207f64b64c274786ad85793fd04bb
+    SHA512 54c16c10f0cf432cb0965d1f223f6b8bbac8adc89da0c405396ad15a9621fe11cf4f1751a034b282dfa0f7ed03cb6d47292f19f9a677c4fdd8c01551430347a9
     HEAD_REF master
     PATCHES
-        0001-fix-libsodium.patch
-        0002-fix-libevent.patch
-        0003-fix-deps.patch
+        fix-build.patch
 )
 
 # Prefer installed config files

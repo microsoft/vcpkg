@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         000-fix-deps.patch
+        001-disable-werror.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,11 +20,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Trantor)
 
 vcpkg_fixup_pkgconfig()
 
-# # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-# Handle copyright
+
 file(INSTALL "${SOURCE_PATH}/License" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# Copy pdb files
 vcpkg_copy_pdbs()
