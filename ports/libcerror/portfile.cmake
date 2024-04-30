@@ -64,22 +64,6 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${options}
-        # Don't use system lib
-        --with-libfuse=no
-        # "no" means: use vendored libyal lib
-        --with-libbfio=no
-        --with-libcdata=no
-        --with-libcerror=no
-        --with-libcfile=no
-        --with-libclocale=no
-        --with-libcnotify=no
-        --with-libcpath=no
-        --with-libcsplit=no
-        --with-libcthreads=no
-        --with-libfcache=no
-        --with-libfdata=no
-        --with-libfguid=no
-        --with-libuna=no
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
