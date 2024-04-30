@@ -4236,6 +4236,10 @@
       "baseline": "20240413",
       "port-version": 0
     },
+    "libcnotify": {
+      "baseline": "20240414",
+      "port-version": 0
+    },
     "libconfig": {
       "baseline": "1.7.3",
       "port-version": 5
