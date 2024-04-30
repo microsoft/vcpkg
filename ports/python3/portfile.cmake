@@ -392,7 +392,7 @@ else:
   raise RuntimeError(f" \n \
    ******************************************************\n \
    {sys.executable} seems to be running outside of vcpkg.\n \
-   {os.path.abspath(__file__)} is not ment to be deployed, please delete it! \n \
+   {os.path.abspath(__file__)} is not meant to be deployed, please delete it! \n \
    ******************************************************")
 ]]
 )
