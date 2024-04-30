@@ -1,7 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.42.10",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -28,6 +28,10 @@
   "default-features": [
     "jpeg",
     "png",
+    {
+      "name": "svg",
+      "platform": "static"
+    },
     "tiff"
   ],
   "features": {
@@ -48,6 +52,17 @@
       "description": "Enable PNG loader (requires libpng)",
       "dependencies": [
         "libpng"
+      ]
+    },
+    "svg": {
+      "description": "Enable SVG loader (requires librsvg)",
+      "dependencies": [
+        {
+          "name": "librsvg",
+          "features": [
+            "pixbufloader"
+          ]
+        }
       ]
     },
     "tiff": {

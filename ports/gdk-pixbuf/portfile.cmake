@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
         loaders-cache.patch
         use-libtiff-4-pkgconfig.patch
         fix-static-deps.patch
+        add_librsvg_dependency.patch
 )
 
 if("introspection" IN_LIST FEATURES)
@@ -35,6 +36,12 @@ if("jpeg" IN_LIST FEATURES)
     list(APPEND OPTIONS -Djpeg=enabled)
 else()
     list(APPEND OPTIONS -Djpeg=disabled)
+endif()
+
+if("svg" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dsvg=enabled)
+else()
+    list(APPEND OPTIONS -Dsvg=disabled)
 endif()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")

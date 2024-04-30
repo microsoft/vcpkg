@@ -1,0 +1,155 @@
+diff --git a/gdk-pixbuf-loader/io-svg.c b/gdk-pixbuf-loader/io-svg.c
+index bcdfd0bb..326973ee 100644
+--- a/gdk-pixbuf-loader/io-svg.c
++++ b/gdk-pixbuf-loader/io-svg.c
+@@ -26,7 +26,6 @@
+ #include <stdlib.h>
+ 
+ #include <rsvg.h>
+-#include <gdk-pixbuf/gdk-pixbuf.h>
+ 
+ #define N_(string) (string)
+ #define _(string) (string)
+@@ -43,8 +42,8 @@ typedef struct {
+         gpointer                    user_data;
+ } SvgContext;
+ 
+-G_MODULE_EXPORT void fill_vtable (GdkPixbufModule *module);
+-G_MODULE_EXPORT void fill_info (GdkPixbufFormat *info);
++// G_MODULE_EXPORT void fill_vtable (GdkPixbufModule *module);
++// G_MODULE_EXPORT void fill_info (GdkPixbufFormat *info);
+ 
+ enum {
+         ERROR_WRITING = 1,
+@@ -173,16 +172,20 @@ gdk_pixbuf__svg_image_stop_load (gpointer data, GError **error)
+         return result;
+ }
+ 
+-void
+-fill_vtable (GdkPixbufModule *module)
++#ifdef BUILD_SHARED_LIBS
++#define MODULE_ENTRY(function) G_MODULE_EXPORT void function
++#else
++#define MODULE_ENTRY(function) void _gdk_pixbuf__svg_ ## function
++#endif
++
++MODULE_ENTRY (fill_vtable) (GdkPixbufModule *module)
+ {
+         module->begin_load     = gdk_pixbuf__svg_image_begin_load;
+         module->stop_load      = gdk_pixbuf__svg_image_stop_load;
+         module->load_increment = gdk_pixbuf__svg_image_load_increment;
+ }
+ 
+-void
+-fill_info (GdkPixbufFormat *info)
++MODULE_ENTRY (fill_info) (GdkPixbufFormat *info)
+ {
+         static const GdkPixbufModulePattern signature[] = {
+                 {  " <svg",  "*    ", 100 },
+diff --git a/rsvg-cairo-draw.c b/rsvg-cairo-draw.c
+index caa91049..7452cb4f 100644
+--- a/rsvg-cairo-draw.c
++++ b/rsvg-cairo-draw.c
+@@ -1230,7 +1230,6 @@ rsvg_cairo_surface_to_pixbuf (cairo_surface_t *surface)
+                           !!(content & CAIRO_CONTENT_ALPHA),
+                           8,
+                           width, height);
+-
+     if (gdk_pixbuf_get_has_alpha (dest))
+       convert_alpha (gdk_pixbuf_get_pixels (dest),
+                     gdk_pixbuf_get_rowstride (dest),
+diff --git a/rsvg.h b/rsvg.h
+index e4350da7..a968c3eb 100644
+--- a/rsvg.h
++++ b/rsvg.h
+@@ -31,7 +31,90 @@
+ #include <glib-object.h>
+ #include <gio/gio.h>
+ 
++#ifdef BUILD_SHARED_LIBS
+ #include <gdk-pixbuf/gdk-pixbuf.h>
++#else
++#include <stdio.h>
++typedef enum {
++	GDK_COLORSPACE_RGB
++} GdkColorspace;
++typedef enum
++{
++  GDK_PIXBUF_FORMAT_WRITABLE = 1 << 0,
++  GDK_PIXBUF_FORMAT_SCALABLE = 1 << 1,
++  GDK_PIXBUF_FORMAT_THREADSAFE = 1 << 2
++} GdkPixbufFormatFlags;
++typedef void GdkPixbuf;
++typedef void GdkPixbufLoader;
++typedef struct {
++	char *prefix;
++	char *mask;
++	int relevance;
++} GdkPixbufModulePattern;
++typedef struct {
++  gchar *name;
++  GdkPixbufModulePattern *signature;
++  gchar *domain;
++  gchar *description;
++  gchar **mime_types;
++  gchar **extensions;
++  guint32 flags;
++  gboolean disabled;
++  gchar *license;
++} GdkPixbufFormat;
++struct _GdkPixbufAnimation;
++typedef struct _GdkPixbufAnimation GdkPixbufAnimation;
++typedef GdkPixbuf *(* GdkPixbufModuleLoadFunc) (FILE*, GError**);
++typedef GdkPixbuf *(* GdkPixbufModuleLoadXpmDataFunc) (const char**);
++typedef void (* GdkPixbufModuleSizeFunc) (gint*, gint*, gpointer);
++typedef void (* GdkPixbufModulePreparedFunc) (GdkPixbuf*, GdkPixbufAnimation*, gpointer);
++typedef void (* GdkPixbufModuleUpdatedFunc) (GdkPixbuf*, int, int, int, int, gpointer);
++typedef gpointer (* GdkPixbufModuleBeginLoadFunc) (GdkPixbufModuleSizeFunc, GdkPixbufModulePreparedFunc, GdkPixbufModuleUpdatedFunc, gpointer, GError**);
++typedef gboolean (* GdkPixbufModuleStopLoadFunc) (gpointer, GError**);
++typedef gboolean (* GdkPixbufModuleIncrementLoadFunc) (gpointer, const guchar*, guint, GError**);
++typedef GdkPixbufAnimation *(* GdkPixbufModuleLoadAnimationFunc) (FILE*, GError**);
++typedef gboolean (* GdkPixbufModuleSaveFunc) (FILE*, GdkPixbuf*, gchar**, gchar**, GError**);
++typedef gboolean (*GdkPixbufSaveFunc) (const gchar*, gsize, GError**, gpointer);
++typedef gboolean (* GdkPixbufModuleSaveCallbackFunc) (GdkPixbufSaveFunc, gpointer, GdkPixbuf*, gchar**, gchar**, GError**);
++typedef gboolean (* GdkPixbufModuleSaveOptionSupportedFunc) (const gchar *option_key);
++typedef struct {
++	char *module_name;
++	char *module_path;
++	GModule *module;
++	GdkPixbufFormat *info;
++    GdkPixbufModuleLoadFunc load;
++    GdkPixbufModuleLoadXpmDataFunc load_xpm_data;
++    GdkPixbufModuleBeginLoadFunc begin_load;
++    GdkPixbufModuleStopLoadFunc stop_load;
++    GdkPixbufModuleIncrementLoadFunc load_increment;
++    GdkPixbufModuleLoadAnimationFunc load_animation;
++    GdkPixbufModuleSaveFunc save;
++    GdkPixbufModuleSaveCallbackFunc save_to_callback;
++    GdkPixbufModuleSaveOptionSupportedFunc is_save_option_supported;
++    void (*_reserved1) (void);
++    void (*_reserved2) (void);
++    void (*_reserved3) (void);
++    void (*_reserved4) (void);
++} GdkPixbufModule;
++extern GdkPixbufLoader *gdk_pixbuf_loader_new_with_mime_type(const char*, GError**);
++extern GdkPixbufLoader *gdk_pixbuf_loader_new(void);
++extern gboolean gdk_pixbuf_loader_write(GdkPixbufLoader*, const guchar*, gsize, GError**);
++extern gboolean gdk_pixbuf_loader_close(GdkPixbufLoader*, GError**);
++extern GdkPixbuf *gdk_pixbuf_loader_get_pixbuf(GdkPixbufLoader*);
++extern GdkPixbufFormat *gdk_pixbuf_loader_get_format(GdkPixbufLoader*);
++extern gchar **gdk_pixbuf_format_get_mime_types(GdkPixbufFormat*);
++extern int gdk_pixbuf_get_width(const GdkPixbuf*);
++extern int gdk_pixbuf_get_height(const GdkPixbuf*);
++extern guchar *gdk_pixbuf_get_pixels(const GdkPixbuf*);
++extern int gdk_pixbuf_get_rowstride(const GdkPixbuf*);
++extern int gdk_pixbuf_get_n_channels(const GdkPixbuf*);
++extern gboolean gdk_pixbuf_get_has_alpha(const GdkPixbuf*);
++extern GdkPixbuf *gdk_pixbuf_new (GdkColorspace, gboolean, int, int, int);
++extern GQuark gdk_pixbuf_error_quark(void);
++#define GDK_PIXBUF_ERROR gdk_pixbuf_error_quark ()
++#define GDK_PIXBUF_ERROR_FAILED 5
++#define GDK_COLORSPACE_RGB 0
++#endif
+ 
+ G_BEGIN_DECLS
+ 

@@ -11,7 +11,13 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix_libpixbufloader-svg_static_build.patch
 )
+
+if("pixbufloader" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DENABLE_GDK_PIXBUF_LOADER=ON")
+endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${CMAKE_CURRENT_LIST_DIR}/config.h.linux" DESTINATION "${SOURCE_PATH}")
 
@@ -20,6 +26,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        ${options}
 )
 
 vcpkg_cmake_install()

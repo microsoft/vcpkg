@@ -1,0 +1,83 @@
+diff --git a/gdk-pixbuf/gdk-pixbuf-io.c b/gdk-pixbuf/gdk-pixbuf-io.c
+index e207d8143..4366ba191 100644
+--- a/gdk-pixbuf/gdk-pixbuf-io.c
++++ b/gdk-pixbuf/gdk-pixbuf-io.c
+@@ -659,6 +659,9 @@ gdk_pixbuf_io_init_builtin (void)
+         /* Except the gdip-png loader which normally isn't built at all even */
+         load_one_builtin_module (png);
+ #endif
++#ifdef INCLUDE_svg
++        load_one_builtin_module (svg);
++#endif
+ 
+ #undef load_one_builtin_module
+ }
+@@ -695,6 +698,7 @@ module (xbm);
+ module (tga);
+ module (icns);
+ module (qtif);
++module (svg);
+ module (gdip_ico);
+ module (gdip_wmf);
+ module (gdip_emf);
+@@ -777,6 +781,9 @@ gdk_pixbuf_load_module_unlocked (GdkPixbufModule *image_module,
+ #ifdef INCLUDE_qtif
+         try_module (qtif,qtif);
+ #endif
++#ifdef INCLUDE_svg
++        try_module (svg,svg);
++#endif
+ 
+ #undef try_module
+         
+diff --git a/gdk-pixbuf/gdk-pixbuf.c b/gdk-pixbuf/gdk-pixbuf.c
+index 8bdd65035..241ddef5a 100644
+--- a/gdk-pixbuf/gdk-pixbuf.c
++++ b/gdk-pixbuf/gdk-pixbuf.c
+@@ -788,7 +788,6 @@ gboolean
+ gdk_pixbuf_get_has_alpha (const GdkPixbuf *pixbuf)
+ {
+ 	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), FALSE);
+-
+ 	return pixbuf->has_alpha ? TRUE : FALSE;
+ }
+ 
+diff --git a/meson.build b/meson.build
+index 8a16c8f97..e6734e41b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -335,6 +335,19 @@ if not tiff_opt.disabled() and not native_windows_loaders
+   endif
+ endif
+ 
++svg_opt = get_option('svg')
++if not svg_opt.disabled()
++  # We currently don't have a fallback subproject, but this handles error
++  # reporting if svg_opt is enabled.
++  svg_dep = dependency('librsvg-2.0', required: svg_opt)
++
++  if svg_dep.found()
++    enabled_loaders += 'svg'
++    gdk_pixbuf_deps += svg_dep
++    add_project_arguments([ '-DINCLUDE_svg' ], language: 'c')
++  endif
++endif
++
+ # Determine whether we enable application bundle relocation support, and we use
+ # this always on Windows
+ if host_system == 'windows'
+diff --git a/meson_options.txt b/meson_options.txt
+index d198d99d5..00ee61af8 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -10,6 +10,10 @@ option('jpeg',
+        description: 'Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used',
+        type: 'feature',
+        value: 'enabled')
++option('svg',
++       description: 'Enable SVG loader (requires librsvg)',
++       type: 'feature',
++       value: 'auto')
+ option('builtin_loaders',
+        description: 'Comma-separated list of loaders to build into gdk-pixbuf',
+        type: 'array',
