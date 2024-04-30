@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-install-path.patch
         skip-grpc-compilation.patch
+        fix-msc-ver.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
