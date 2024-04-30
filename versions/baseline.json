@@ -6462,7 +6462,7 @@
     },
     "openh264": {
       "baseline": "2021-03-16",
-      "port-version": 3
+      "port-version": 4
     },
     "openigtlink": {
       "baseline": "3.0",
