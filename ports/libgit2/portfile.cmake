@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.6.4
-    SHA512 fd73df91710f19b0d6c3765c37c7f529233196da91cf4d58028a8d3840244f11df44abafabd74a8ed1cbe4826d1afd6ff9f01316d183ace0924c65e7cf0eb8d5
-    HEAD_REF maint/v1.6
+    REF v1.8.0
+    SHA512 e5634267bd9c6a594c9a954d09c657e7b8aadf213609bf7dd83b99863d0d0c7109a5277617dd508abc2da54ea3f12c2af1908d1aeb73c000e94056e2f3653144
+    HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
@@ -25,6 +25,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 set(REGEX_BACKEND OFF)
 set(USE_HTTPS OFF)
+set(USE_SSH OFF)
 
 function(set_regex_backend VALUE)
     if(REGEX_BACKEND)
@@ -53,6 +54,11 @@ foreach(GIT2_FEATURE ${FEATURES})
         set_tls_backend("SecureTransport")
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
         set_tls_backend("mbedTLS")
+    elseif(GIT2_FEATURE STREQUAL "ssh")
+        set(USE_SSH ON)
+        message(STATUS "This version of `libgit2` uses the default (`libssh2`) backend. To use the newer backend which utilizes the `ssh` CLI from a local install of OpenSSH instead, create an overlay port of this with USE_SSH set to 'exec' and the `libssh2` dependency removed.")
+        message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
+        message(STATUS "See the overlay ports documentation at https://learn.microsoft.com/vcpkg/concepts/overlay-ports")
     endif()
 endforeach()
 
@@ -64,8 +70,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
-    FEATURES    
-        ssh     USE_SSH
+    FEATURES
         tools   BUILD_CLI
 )
 
@@ -76,6 +81,7 @@ vcpkg_cmake_configure(
         -DUSE_HTTP_PARSER=system
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
+        -DUSE_SSH=${USE_SSH}
         -DSTATIC_CRT=${STATIC_CRT}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON
