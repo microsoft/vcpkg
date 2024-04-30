@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512  84b5218dca3a6f793eec5427606a09cabcf108a2aad8316c15422c130d76d1ed6de14e93549c6d952e4f33bcd1e7621d30ebaa145986a5e6fc890e0655c00e07
     HEAD_REF master
-    PATCHES
-      fix-build.patch
 )
 
 file(WRITE "${SOURCE_PATH}/.tarball-version" "${VERSION}")
@@ -25,11 +23,6 @@ else()
     -Dalsa=disabled
     -Doss-output=disabled
   )
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_acquire_msys(MSYS_ROOT PACKAGES m4)
-  vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
 
 vcpkg_configure_meson(
@@ -100,29 +93,3 @@ vcpkg_copy_tools(TOOL_NAMES pacat pactl padsp pa-info pamon AUTO_CLEAN)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-#define DESKTOPFILEDIR "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/share/applications"
-#define PA_ALSA_DATA_DIR "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/share/pulseaudio/alsa-mixer"
-#define PA_BINARY "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/bin/pulseaudio"
-#define PA_BUILDDIR "/mnt/e/qt6-update/buildtrees/pulseaudio/x64-linux-release-rel"
-#define PA_CFLAGS "Not yet supported on meson"
-#define PA_DEFAULT_CONFIG_DIR "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/etc/pulse"
-#define PA_DEFAULT_CONFIG_DIR_UNQUOTED /mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/etc/pulse
-#define PA_DLSEARCHPATH "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/lib/pulseaudio/modules"
-#define PA_INCDIR /mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/include
-#define PA_LIBDIR /mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/lib
-#define PA_MACHINE_ID "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/etc/machine-id"
-#define PA_MACHINE_ID_FALLBACK "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/var/lib/dbus/machine-id"
-#define PA_MAJOR 17
-#define PA_MINOR 0
-#define PA_PROTOCOL_VERSION 35
-#define PA_SOEXT ".so"
-#define PA_SRCDIR "/mnt/e/qt6-update/buildtrees/pulseaudio/src/v17.0-bdc7dd31a8.clean/src"
-#define PA_SYSTEM_CONFIG_PATH "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/var/lib/pulse"
-#define PA_SYSTEM_GROUP "pulse"
-#define c "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/var/run/pulse"
-#define PA_SYSTEM_STATE_PATH "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/var/lib/pulse"
-#define PA_SYSTEM_USER "pulse"
-#define PULSEDSP_LOCATION /mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/lib/pulseaudio
-#define PULSE_LOCALEDIR "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/share/locale"
-#define top_srcdir /mnt/e/qt6-update/buildtrees/pulseaudio/src/v17.0-bdc7dd31a8.clean

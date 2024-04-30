@@ -1,6 +1,6 @@
 vcpkg_download_distfile(PATCH_488
     URLS https://github.com/google/re2/commit/9ebe4a22cad8a025b68a9594bdff3c047a111333.patch?full_index=1
-    SHA512 167a0153bf24e77db2b8555a7d6391acf740dc4720a71e6ce19a3533c7e0a49923d9584ff32544a454837a25eedace00cb2ef9ddbf4250deb5f2c5aeda04ac26
+    SHA512 83c1a4cc4ddd6e1443f5201f7f00cf6a0729d0a0fb8fc5068c3d80766238d72f019f1fddaeffebcc2d4322a07daf2203214121cdda039b10a5f39214b9fa8647
     FILENAME 9ebe4a22cad8a025b68a9594bdff3c047a111333.patch
 )
 

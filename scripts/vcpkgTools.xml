@@ -15,25 +15,25 @@
         <archiveName>python-3.11.8.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.29.0</version>
-        <exeRelativePath>cmake-3.29.0-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-windows-i386.zip</url>
-        <sha512>70cdd5e13ac40cd1a1e2faf0cb0c3e937734c70751bf804af999bcf01b562e34b9f4fbe7da160604278d7cea7cf8676190013ae9b50f198275da2b78d0e3da64</sha512>
-        <archiveName>cmake-3.29.0-windows-i386.zip</archiveName>
+        <version>3.29.2</version>
+        <exeRelativePath>cmake-3.29.2-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-windows-i386.zip</url>
+        <sha512>562de7b577c99fe347b00437d14ce375a8e5a60504909cb67d2f73c372d39a2f76d2b42b69e4aeb31a4879e1bcf6f7c2d41f2ace12180ea83ba7af48879d40ab</sha512>
+        <archiveName>cmake-3.29.2-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.29.0</version>
-        <exeRelativePath>cmake-3.29.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-macos-universal.tar.gz</url>
-        <sha512>0d4c6958ce88bd2ebbb3f3a1e6c9cf4f67017c195009b43bb2418a1b4f1068ab750c781a6eb6f43531a8423c8518957312dbf9234e1a8a5e32a350e775c884eb</sha512>
-        <archiveName>cmake-3.29.0-macos-universal.tar.gz</archiveName>
+        <version>3.29.2</version>
+        <exeRelativePath>cmake-3.29.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-macos-universal.tar.gz</url>
+        <sha512>26aab0163965f3d560dfd6b1f72c5e77192338237ebe286099fd62f243f1bbd4857b9193118386b801c00dc5cfbc5bc8af84814692fcfadcf56c7d2faab52533</sha512>
+        <archiveName>cmake-3.29.2-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.29.0</version>
-        <exeRelativePath>cmake-3.29.0-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-linux-x86_64.tar.gz</url>
-        <sha512>8bbcb45315f95e678fb559f11578c632028b1c69730db840db888d5e254f79b614b134b1b414a6f85d9d1e735965cb69fbfe1b692ccd6f1b9f3cee296b5d56b1</sha512>
-        <archiveName>cmake-3.29.0-linux-x86_64.tar.gz</archiveName>
+        <version>3.29.2</version>
+        <exeRelativePath>cmake-3.29.2-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-linux-x86_64.tar.gz</url>
+        <sha512>d88082d582f1774a3d89efbf3f31a03b08a663c359d603d87ee7c4afd862d4164d2b0b9f0b32cece8efee3acfa86b44214cd4f7606b99b8334183a05d5f06edc</sha512>
+        <archiveName>cmake-3.29.2-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
