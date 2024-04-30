@@ -1,0 +1,31 @@
+{
+    "name": "libcerror",
+    "version": "20240413",
+    "port-version": 0,
+    "description": "Library for cross-platform C error functions ",
+    "homepage": "https://github.com/libyal/libcerror",
+    "license": "LGPL-3.0-or-later",
+    "supports": "!uwp & !xbox & (!windows | mingw | x86 | x64)",
+    "dependencies": [
+      {
+        "name": "vcpkg-libyal-vstools",
+        "host": true,
+        "platform": "windows & !mingw"
+      },
+      {
+        "name": "vcpkg-msbuild",
+        "host": true,
+        "platform": "windows & !mingw"
+      }
+    ],
+    "features": {
+      "nls": {
+        "description": "Enable native language support",
+        "supports": "!windows | mingw",
+        "dependencies": [
+          "gettext-libintl"
+        ]
+      }
+    }
+  }
+  
