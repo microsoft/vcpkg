@@ -1,0 +1,30 @@
+{
+  "name": "libclocale",
+  "version": "20240414",
+  "description": "Library for cross-platform C locale functions",
+  "homepage": "https://github.com/libyal/libclocale",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!uwp & !xbox & (!windows | mingw | x86 | x64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-libyal-vstools",
+      "host": true,
+      "platform": "windows & !mingw"
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows & !mingw"
+    },
+    "libcerror"
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "gettext-libintl"
+      ]
+    }
+  }
+}
