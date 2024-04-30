@@ -55,6 +55,8 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 function (google_cloud_cpp_cmake_config_fixup library)
+    string(REPLACE "experimental-" "" library "${library}")
+    string(REPLACE "-" "_" library "${library}")
     set(config_path "lib/cmake/google_cloud_cpp_${library}")
     # If the library exists and is installed, tell vcpkg about it.
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
