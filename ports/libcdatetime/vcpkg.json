@@ -1,0 +1,30 @@
+{
+  "name": "libcdatetime",
+  "version": "20240414",
+  "description": "Library for cross-platform C date and time functions",
+  "homepage": "https://github.com/libyal/libcdatetime",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!uwp & !xbox & (!windows | mingw | x86 | x64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-libyal-vstools",
+      "host": true,
+      "platform": "windows & !mingw"
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows & !mingw"
+    },
+    "libcerror"
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "gettext-libintl"
+      ]
+    }
+  }
+}
