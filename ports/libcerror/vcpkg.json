@@ -4,7 +4,7 @@
   "description": "Library for cross-platform C error functions ",
   "homepage": "https://github.com/libyal/libcerror",
   "license": "LGPL-3.0-or-later",
-  "supports": "!uwp & !xbox",
+  "supports": "!uwp & !xbox & (!windows | mingw | x86 | x64)",
   "dependencies": [
     {
       "name": "vcpkg-libyal-vstools",
