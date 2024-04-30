@@ -6,6 +6,7 @@
   "license": "LGPL-3.0-or-later",
   "supports": "!uwp & !xbox & (!windows | mingw | x86 | x64)",
   "dependencies": [
+    "libcerror",
     {
       "name": "vcpkg-libyal-vstools",
       "host": true,
@@ -15,8 +16,7 @@
       "name": "vcpkg-msbuild",
       "host": true,
       "platform": "windows & !mingw"
-    },
-    "libcerror"
+    }
   ],
   "features": {
     "nls": {
