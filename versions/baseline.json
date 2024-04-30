@@ -4372,6 +4372,10 @@
       "baseline": "1.13.2",
       "port-version": 2
     },
+    "libfaketime": {
+      "baseline": "0.9.10",
+      "port-version": 0
+    },
     "libffi": {
       "baseline": "3.4.6",
       "port-version": 0
