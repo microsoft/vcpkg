@@ -3,6 +3,10 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 vcpkg_buildpath_length_warning(44)
 
+set(${PORT}_PATCHES
+  cb6b62f.diff
+)
+
  set(TOOL_NAMES 
         qml
         qmlcachegen
