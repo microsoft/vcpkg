@@ -1,5 +1,7 @@
 # Autoconfig stuff
 
+ac_cv_build=x86_64-pc-mingw32
+
 ac_cv_c_bigendian=no
 ac_cv_c_compiler_gnu=no
 ac_cv_c_undeclared_builtin_options='none needed'
@@ -18,7 +20,7 @@ ac_cv_cxx_compiler_gnu=no
 ac_cv_exeext=.exe
 ac_cv_objext=obj
 
-ac_cv_prog_cc_g=no # Normally yes but MSVC will just ignore it
+ac_cv_prog_cc_g=no # Normally yes but MSVC will just ignores it
 
 ac_cv_header_crtdefs_h=yes
 ac_cv_header_dlfcn_h=no
@@ -61,6 +63,7 @@ ac_cv_lib_gdi32_main=yes
 
 ac_cv_func__NSGetExecutablePath=no
 ac_cv_func__set_invalid_parameter_handler=yes
+ac_cv_func___fsetlocking=no
 ac_cv_func_alloca_works=yes
 ac_cv_func_canonicalize_file_name=no
 ac_cv_func_faccessat=no
@@ -71,6 +74,13 @@ ac_cv_func_getexecname=no
 ac_cv_func_getprogname=no
 ac_cv_func_lstat=no
 ac_cv_func_malloc_0_nonnull=yes
+ac_cv_func_asprintf=no
+ac_cv_func_getcwd=yes
+ac_cv_func_getegid=no
+ac_cv_func_geteuid=no
+ac_cv_func_getgid=no
+ac_cv_func_getpagesize=no
+ac_cv_func_getuid=no
 ac_cv_func_mbrtowc=yes
 ac_cv_func_mbsinit=no
 ac_cv_func_memmove=yes
@@ -85,8 +95,25 @@ ac_cv_func_setenv=no
 ac_cv_func_setlocale=yes
 ac_cv_func_strerror_r_char_p=no
 ac_cv_func_symlink=no
+ac_cv_func_mmap=no
+ac_cv_func_mmap_fixed_mapped=no
+ac_cv_func_mprotect=no
+ac_cv_func_munmap=no
+ac_cv_func_newlocale=no
+ac_cv_func_nl_langinfo=no
+ac_cv_func_snprintf=no
+ac_cv_func_stpcpy=no
+ac_cv_func_strcasecmp=no
+ac_cv_func_strnlen=yes
+ac_cv_func_swprintf=no
 ac_cv_func_tsearch=no
+ac_cv_func_twalk=no
+ac_cv_func_uselocale=no
+ac_cv_func_vasnprintf=no
 ac_cv_func_wcrtomb=yes
+ac_cv_func_wcslen=yes
+ac_cv_func_wcsnlen=yes
+ac_cv_func_wprintf=no
 
 ac_cv_have_decl___argv=yes
 ac_cv_have_decl_clearerr_unlocked=no
@@ -125,6 +152,10 @@ ac_cv_member_struct_stat_st_birthtim_tv_nsec=no
 ac_cv_member_struct_stat_st_birthtimensec=no
 ac_cv_member_struct_stat_st_birthtimespec_tv_nsec=no
 
+ac_cv_prog_cc_c11=no
+ac_cv_prog_cc_c89=no
+ac_cv_prog_cc_c99=no
+
 ac_cv_safe_to_define___extensions__=yes
 ac_cv_should_define__xopen_source=no
 
@@ -153,11 +184,38 @@ ac_cv_working_alloca_h=no
 
 # ac_cv_prog_cc_c11='-std:c11' # Requires VS2019 and a recent windows sdk
 # Libtool settings
+lt_cv_ar_at_file=@
+lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL'
+lt_cv_file_magic_cmd=func_win32_libid
+lt_cv_file_magic_test_file=
+lt_cv_ld_reload_flag=-r
+lt_cv_nm_interface='MS dumpbin'
+lt_cv_objdir=.libs
+lt_cv_path_LD='link.exe -verbose'
+lt_cv_path_NM='dumpbin.exe -symbols -headers'
+lt_cv_path_mainfest_tool=yes
+lt_cv_prog_compiler_c_o=yes
+lt_cv_prog_compiler_c_o_RC=yes
+lt_cv_prog_compiler_pic='-DDLL_EXPORT -DPIC'
+lt_cv_prog_compiler_pic_works=yes
+lt_cv_prog_compiler_static_works=yes
 lt_cv_prog_gnu_ld=no
+lt_cv_sharedlib_from_linklib_cmd=func_cygming_dll_for_implib_fallback
+lt_cv_sys_global_symbol_pipe='gawk '\''     {last_section=section; section=$ 3};     /^COFF SYMBOL TABLE/{for(i in hide) delete hide[i]};     /Section length .*#relocs.*(pick any)/{hide[last_section]=1};     /^ *Symbol name *: /{split($ 0,sn,":"); si=substr(sn[2],2)};     /^ *Type *: code/{print "T",si,substr(si,length(prfx))};     /^ *Type *: data/{print "I",si,substr(si,length(prfx))};     $ 0!~/External *\|/{next};     / 0+ UNDEF /{next}; / UNDEF \([^|]\)*()/{next};     {if(hide[section]) next};     {f="D"}; $ 0~/\(\).*\|/{f="T"};     {split($ 0,a,/\||\r/); split(a[2],s)};     s[1]~/^[@?]/{print f,s[1],s[1]; next};     s[1]~prfx {split(s[1],t,"@"); print f,t[1],substr(t[1],length(prfx))}     '\'' prfx=^ | /usr/bin/sed '\''/ __gnu_lto/d'\'''
+lt_cv_sys_global_symbol_to_c_name_address='/usr/bin/sed -n -e '\''s/^I .* \(.*\)$/  {"\1", (void *) 0},/p'\'' -e '\''s/^: \(.*\) .*$/  {"\1", (void *) 0},/p'\'' -e '\''s/^[ABCDGISTW][ABCDGISTW]* .* \(.*\)$/  {"\1", (void *) \&\1},/p'\'''
+lt_cv_sys_global_symbol_to_c_name_address_lib_prefix='/usr/bin/sed -n  -e '\''s/^I .* \(lib.*\)$/  {"\1", (void *) 0},/p'\''  -e '\''s/^I .* \(.*\)$/  {"lib\1", (void *) 0},/p'\'' -e '\''s/^: \(.*\) .*$/  {"\1", (void *) 0},/p'\'' -e '\''s/^[ABCDGISTW][ABCDGISTW]* .* \(lib.*\)$/  {"\1", (void *) \&\1},/p'\'' -e '\''s/^[ABCDGISTW][ABCDGISTW]* .* \(.*\)$/  {"lib\1", (void *) \&\1},/p'\'''
+lt_cv_sys_global_symbol_to_cdecl='/usr/bin/sed -n -e '\''s/^I .* \(.*\)$/extern __declspec(dllimport) char \1;/p'\'' -e '\''s/^T .* \(.*\)$/extern int \1();/p'\'' -e '\''s/^[ABCDGISTW][ABCDGISTW]* .* \(.*\)$/extern char \1;/p'\'''
+lt_cv_sys_global_symbol_to_import='/usr/bin/sed -n -e '\''s/^I .* \(.*\)$/\1/p'\'''
+lt_cv_sys_max_cmd_len=8192
+lt_cv_to_host_file_cmd=func_convert_file_msys_to_w32
+lt_cv_to_tool_file_cmd=func_convert_file_msys_to_w32
+lt_cv_truncate_bin='/usr/bin/dd bs=4096 count=1'
+
 
 #gnulib vars
 
 gl_cv___builtin_expect=no
+
 gl_cv_c___inline=yes
 gl_cv_c_amsterdam_compiler=no
 gl_cv_c_multiarch=no
@@ -207,5 +265,11 @@ gl_cv_type_max_align_t=no
 gl_cv_type_off_t_64=no
 gl_cv_type_sigset_t=no
 gl_cv_type_wint_t_large_enough=no
+
 gt_cv_c_wchar_t=yes
 gt_cv_c_wint_t=yes
+gt_cv_func_CFLocaleCopyPreferredLanguages=no
+gt_cv_func_CFPreferencesCopyAppValue=no
+gt_cv_func_gnugettext2_libc=no
+gt_cv_ssize_t=no
+gt_cv_var_environ_declaration=yes
