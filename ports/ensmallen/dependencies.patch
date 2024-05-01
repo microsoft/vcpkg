@@ -2,10 +2,11 @@ diff --git a/CMake/ensmallen-config.cmake.in b/CMake/ensmallen-config.cmake.in
 index 3a9a93c..a067e08 100644
 --- a/CMake/ensmallen-config.cmake.in
 +++ b/CMake/ensmallen-config.cmake.in
-@@ -1,4 +1,6 @@
+@@ -1,4 +1,7 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +find_dependency(Armadillo CONFIG)
++find_dependency(OpenMP)
  
  include(${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake)
  check_required_components(ensmallen)
