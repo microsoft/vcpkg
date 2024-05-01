@@ -14,8 +14,8 @@
     },
     {
       "name": "qtopcua",
-      "default-features": false,
-      "host": true
+      "host": true,
+      "default-features": false
     }
   ],
   "default-features": [
