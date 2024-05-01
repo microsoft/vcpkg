@@ -3,8 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "aeae2261c7d380404fb8e53eb6062338c4ba0367"
-    SHA512 74eabf6a7cc0ac0cc49a1075bf4ffcee4f006ebe67c02a76a4dc734da1fa430ddd7f3cb070cb0b1ed3ac99cf59d02dc0c8852f3487614ca851673984117ca612
+    REF "e7bf161ff959268a2a2f37530a6ea61c27019d33"
+    SHA512 9cb0c39c6721c5e27a24bee97c93925b7b1f4dd774c08520384ccdf736ab5097e49692529a9fe46f50ae799e6aa9f3e8d7ec43cf9177914fcd6f6f01b76a52c4
     PATCHES
         disable-msvc-env-setup.patch
         disable-dev-test.patch
@@ -31,7 +31,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "d3e0bd4770cc8115d1342a8dc051a36e50e8bd26"
+    REF "bac513d0ae286600ea0f75a75223a5b52a198b9b"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
@@ -54,11 +54,6 @@ declare_external_from_git(piex
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(sfntly
-    URL "https://github.com/googlei18n/sfntly.git"
-    REF "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
-    LICENSE_FILE README.md
-)
 declare_external_from_git(spirv-cross
     URL "https://github.com/KhronosGroup/SPIRV-Cross"
     REF "b8fcf307f1f347089e3c46eb4451d27f32ebc8d3"
@@ -66,12 +61,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "05cc486580771e4fa7ddc89f5c9ee1e97382689a"
+    REF "8b246ff75c6615ba4532fe4fde20f1be090c3764"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "dc6676445be97ab19d8191fee019af62e2aaf774"
+    REF "f20663ca7fec48fdc88e4c4d7c5889f8b4cc5664"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -141,7 +136,6 @@ set(required_externals
     libpng
     libwebp
     piex
-    sfntly
     zlib
     wuffs
 )
