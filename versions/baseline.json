@@ -7346,7 +7346,7 @@
     },
     "qtimageformats": {
       "baseline": "6.6.3",
-      "port-version": 2
+      "port-version": 1
     },
     "qtinterfaceframework": {
       "baseline": "6.6.3",
