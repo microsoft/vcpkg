@@ -11,8 +11,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
     vcpkg_libyal_msvscpp_convert(
         OUT_PROJECT_SUBPATH project_subpath
         SOURCE_PATH "${SOURCE_PATH}"
