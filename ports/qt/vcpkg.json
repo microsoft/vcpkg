@@ -1,7 +1,6 @@
 {
   "name": "qt",
-  "version": "6.6.1",
-  "port-version": 1,
+  "version": "6.6.3",
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -78,6 +77,7 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
+        "ffmpeg",
         "qml",
         "widgets"
       ]
@@ -89,15 +89,6 @@
         "gstreamer"
       ],
       "platform": "!windows"
-    },
-    {
-      "name": "qtmultimedia",
-      "default-features": false,
-      "features": [
-        "ffmpeg",
-        "gstreamer"
-      ],
-      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {
