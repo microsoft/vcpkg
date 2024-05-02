@@ -1,8 +1,9 @@
+diff --git a/mesonbuild/dependencies/misc.py b/mesonbuild/dependencies/misc.py
 --- a/mesonbuild/dependencies/misc.py
 +++ b/mesonbuild/dependencies/misc.py
-@@ -610,7 +610,8 @@ iconv_factory = DependencyFactory(
+@@ -593,7 +593,8 @@ iconv_factory = DependencyFactory(
  
- intl_factory = DependencyFactory(
+ packages['intl'] = intl_factory = DependencyFactory(
      'intl',
 +    [DependencyMethods.BUILTIN, DependencyMethods.SYSTEM, DependencyMethods.CMAKE],
 +    cmake_name='Intl',

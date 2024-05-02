@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO h4tr3d/avcpp
     REF "v${VERSION}"
-    SHA512 f709b0ef30d4a516747156788716476fb71dda12fbedf6b757bbb82340a0a33bae5cc0e5be1e7fb00e70c8a9a693610e383caab137875d4a5043c1a9801ec9dd
+    SHA512 10e3ab6bb52ceee2f7d6ea9364dbf5f09fdab5b10f34920f1a1df93ad853e0a4b3de9b554be8482d8444b62e10160c3e26f37907fee217bc9d5728329e06ad85
     HEAD_REF master
     PATCHES
         0002-av_init_packet_deprecation.patch

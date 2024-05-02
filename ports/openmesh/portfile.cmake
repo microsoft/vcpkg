@@ -1,8 +1,8 @@
 # Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.tar.gz"
+    URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.0.tar.gz"
     FILENAME "OpenMesh-${VERSION}.tar.gz"
-    SHA512 d4d1872204595c8ccdf1fd09b2e923b7fc5e71e95958cbee52aeca0c1a3de0e648e4fa4913aca14acee30a000ef54b5abd92a30db8cef310e87bfbfe26726afc
+    SHA512 b895e5eaabdf5d3671625df5314e1f95921ac672e9d9d945a5cf0973e20b4e395aac6517d86269a2e8c103f32bc9c8c2ecf57d811a260bbc69f592043e1307ba
 )
 
 vcpkg_extract_source_archive(
@@ -10,6 +10,12 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-library-install-path.patch
+        fix-pkgconfig.patch
+
+        # This patch is a combination of these two:
+        # https://gitlab.vci.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/commit/1d4a866282ace376c8e3ba05c21ce3bcc6643040
+        # https://gitlab.vci.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/commit/a7f30b6f70447932444f5b518840ca26e9461fa9
+        restore-c++11-compatibility.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -22,6 +28,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_APPS=OFF
+        -DVCI_COMMON_DO_NOT_COPY_POST_BUILD=ON
+        -DVCI_NO_LIBRARY_INSTALL=ON
         -DOPENMESH_BUILD_SHARED=${OPENMESH_BUILD_SHARED}
 	MAYBE_UNUSED_VARIABLES
 		OPENMESH_BUILD_SHARED
@@ -31,30 +39,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME OpenMesh CONFIG_PATH "share/OpenMesh/cmake")
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/libdata" "${CURRENT_PACKAGES_DIR}/libdata")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/OpenMesh/Tools/VDPM/xpm")
-# Only move dynamic libraries to bin on Windows
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/OpenMeshCore.dll" "${CURRENT_PACKAGES_DIR}/bin/OpenMeshCore.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/OpenMeshTools.dll" "${CURRENT_PACKAGES_DIR}/bin/OpenMeshTools.dll")
-  endif()
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/OpenMeshCored.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/OpenMeshCored.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/OpenMeshToolsd.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/OpenMeshToolsd.dll")
-  endif()
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

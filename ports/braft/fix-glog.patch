@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c88b0a2..bd3b74f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,12 +55,8 @@ if ((NOT GFLAGS_INCLUDE_PATH) OR (NOT GFLAGS_LIB))
+ endif()
+ 
+ if(BRPC_WITH_GLOG)
+-    find_path(GLOG_INCLUDE_PATH NAMES glog/logging.h)
+-    find_library(GLOG_LIB NAMES glog)
+-    if((NOT GLOG_INCLUDE_PATH) OR (NOT GLOG_LIB))
+-        message(FATAL_ERROR "Fail to find glog")
+-    endif()
+-    include_directories(${GLOG_INCLUDE_PATH})
++    find_package(glog CONFIG REQUIRED)
++    set(GLOG_LIB glog::glog)
+ endif()
+ 
+ if(LEVELDB_WITH_SNAPPY)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ff435a2..4e7591b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -10,6 +10,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ include_directories(${CMAKE_SOURCE_DIR}/src)
+ 
+ add_library(OBJ_LIB OBJECT ${SOURCES})
++target_include_directories(OBJ_LIB PUBLIC $<INSTALL_INTERFACE:include>)
++target_link_libraries(OBJ_LIB PUBLIC ${DYNAMIC_LIB})
++
+ 
+ set_property(TARGET ${OBJ_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
+ if (BUILD_SHARED_LIBS)
+@@ -18,13 +21,6 @@ else()
+ add_library(braft-static STATIC $<TARGET_OBJECTS:OBJ_LIB>)
+ endif()
+ 
+-if (BUILD_SHARED_LIBS)
+-target_include_directories(braft-shared PUBLIC $<INSTALL_INTERFACE:include>)
+-target_link_libraries(braft-shared PUBLIC ${DYNAMIC_LIB})
+-else()
+-target_include_directories(braft-static PUBLIC $<INSTALL_INTERFACE:include>)
+-target_link_libraries(braft-static PUBLIC ${DYNAMIC_LIB})
+-endif()
+ 
+ if (NOT BUILD_SHARED_LIBS)
+ SET_TARGET_PROPERTIES(braft-static PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUTPUT 1)

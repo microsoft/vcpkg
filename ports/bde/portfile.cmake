@@ -1,6 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(BDE_TOOLS_VERSION "${VERSION}")
 
 # Acquire Python and add it to PATH
 vcpkg_find_acquire_program(PYTHON3)
@@ -10,9 +9,9 @@ get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
-    REF "${BDE_TOOLS_VERSION}"
-    SHA512 e59560810acfe562d85a13585d908decce17ec76c89bd61f43dac56cddfdf6c56269566da75730f8eda14b5fc046d2ebce959b24110a428e8eac0e358d2597c2
-    HEAD_REF 3.123.0.0
+    REF "${VERSION}"
+    SHA512 3aa64215c473ccecbd213234826b0c8cffd9491e7bf358e5947c80103e0723ef56da8ec7cc9cf51c6b7a887e5b0b52e80f3201d933accf7f6d5cc95fc1cb35dc
+    HEAD_REF main
 )
 
 message(STATUS "Configure bde-tools-v${BDE_TOOLS_VERSION}")
@@ -24,8 +23,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 f1c3c5ddec7ff1d301ca6f8ab00e6be42ab6a5fa3c889639e7797df74f68425d57d8b71978098331c9247820c7c831edeaf4427ae64c890d81f704343b1bb112
-    HEAD_REF 3.123.0.0
+    SHA512 27e204e22883065e3ae9ab92d2c87d8e26a2871a36ede01367ee0e4d4a0e0de4f7b9452a0c219066dbb37a6f06ec3acabd6be029b8fdaab6c6ea4094300371d0
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

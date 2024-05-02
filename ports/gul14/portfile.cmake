@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gul-cpp/gul14
-    REF v2.10.0
-    SHA512 497e95a8bbd3a8060f3775de561afe755aac0054bd4279da6aea79b1bd35d111c41f92622a0a7e8ba99f6c5aa2dd3a2b2a10c2534482c36cf8c80d0b8ce3fe8a
+    REF v2.11.0
+    SHA512 d36bac6573f7eaee068df6b94481efb05270d55d2cf5b22bf57ccaaed650cefece61585fc518769da1308194cfde976854bf5ad89647c5a5808b7f8784c9c7f5
     HEAD_REF main
 )
 

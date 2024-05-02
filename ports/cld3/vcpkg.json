@@ -1,7 +1,7 @@
 {
   "name": "cld3",
   "version": "3.0.14",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Compact Language Detector v3",
   "homepage": "https://github.com/google/cld3",
   "license": "Apache-2.0",

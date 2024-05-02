@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e355e4d..3e2f346 100644
+index eaba327..dbd31d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1053,6 +1053,12 @@ if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
+@@ -1126,6 +1126,12 @@ if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
    install(EXPORT libpng
-           DESTINATION lib/libpng
+           DESTINATION ${CMAKE_INSTALL_LIBDIR}/libpng
            FILE libpng${PNGLIB_ABI_VERSION}.cmake)
 +  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake" "
 +  include(CMakeFindDependencyMacro)

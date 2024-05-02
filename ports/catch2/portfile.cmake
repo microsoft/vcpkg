@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
     REF v${VERSION}
-    SHA512 1b9d5f35144f6c7acef0e76558a4adf3ff41c2c2292fbdcb3e2c2917fa2deb7fba593738105dd3c111f02ee8aca64010cf68f69bb8fb1815dbf771b509ab0576
+    SHA512 c22ad6a2fbf8665b8775d72dcdc6bfde324eb224fcd897ebce5e62c7ac7640823550198fff45e1ea548a5923db4392ce7009ff784ef78bd59356a2aae5337976
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
+        fix-arm-build.patch
 )
 
 vcpkg_cmake_configure(

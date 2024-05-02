@@ -1,6 +1,6 @@
 {
   "name": "prometheus-cpp",
-  "version-semver": "1.1.0",
+  "version-semver": "1.2.4",
   "description": "Prometheus Client Library for Modern C++",
   "license": "MIT",
   "dependencies": [
