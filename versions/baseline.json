@@ -2198,7 +2198,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.8",
-      "port-version": 4
+      "port-version": 5
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2218,7 +2218,7 @@
     },
     "devil": {
       "baseline": "1.8.0",
-      "port-version": 12
+      "port-version": 13
     },
     "dimcli": {
       "baseline": "7.2.0",
@@ -3174,7 +3174,7 @@
     },
     "graphicsmagick": {
       "baseline": "1.3.41",
-      "port-version": 0
+      "port-version": 1
     },
     "graphite2": {
       "baseline": "1.3.14",
@@ -3686,7 +3686,7 @@
     },
     "itk": {
       "baseline": "5.3rc02",
-      "port-version": 0
+      "port-version": 1
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -4422,7 +4422,7 @@
     },
     "libgd": {
       "baseline": "2.3.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libgeotiff": {
       "baseline": "1.7.1",
@@ -4474,7 +4474,7 @@
     },
     "libgxps": {
       "baseline": "0.3.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libharu": {
       "baseline": "2.4.4",
@@ -5162,7 +5162,7 @@
     },
     "libwebp": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libwebsockets": {
       "baseline": "4.3.2",
@@ -5590,7 +5590,7 @@
     },
     "mapnik": {
       "baseline": "2023-06-12",
-      "port-version": 3
+      "port-version": 4
     },
     "marble": {
       "baseline": "24.02.0",
@@ -6426,15 +6426,15 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 19
+      "port-version": 20
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 13
+      "port-version": 14
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 17
+      "port-version": 18
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6470,11 +6470,11 @@
     },
     "openimageio": {
       "baseline": "2.5.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openjpeg": {
       "baseline": "2.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openldap": {
       "baseline": "2.5.17",
@@ -6494,11 +6494,11 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 9
+      "port-version": 10
     },
     "openmvs": {
       "baseline": "2.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openni2": {
       "baseline": "2.2.0.33",
@@ -6510,7 +6510,7 @@
     },
     "openslide": {
       "baseline": "3.4.1",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl": {
       "baseline": "3.3.0",
@@ -6646,7 +6646,7 @@
     },
     "pangolin": {
       "baseline": "0.8",
-      "port-version": 2
+      "port-version": 3
     },
     "pangomm": {
       "baseline": "2.50.1",
@@ -6902,7 +6902,7 @@
     },
     "poppler": {
       "baseline": "24.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "popsift": {
       "baseline": "0.9",
@@ -7170,7 +7170,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-location": {
       "baseline": "5.15.13",
@@ -7346,7 +7346,7 @@
     },
     "qtimageformats": {
       "baseline": "6.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtinterfaceframework": {
       "baseline": "6.6.3",
@@ -7842,7 +7842,7 @@
     },
     "sail": {
       "baseline": "0.9.4",
-      "port-version": 0
+      "port-version": 1
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -7954,7 +7954,7 @@
     },
     "sdl2-image": {
       "baseline": "2.8.2",
-      "port-version": 1
+      "port-version": 2
     },
     "sdl2-mixer": {
       "baseline": "2.8.0",
@@ -7994,7 +7994,7 @@
     },
     "selene": {
       "baseline": "0.3.1",
-      "port-version": 6
+      "port-version": 7
     },
     "sentencepiece": {
       "baseline": "0.2.0",
@@ -9190,7 +9190,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
@@ -9246,7 +9246,7 @@
     },
     "vxl": {
       "baseline": "2.0.2",
-      "port-version": 5
+      "port-version": 6
     },
     "wampcc": {
       "baseline": "2019-09-04",
@@ -9394,7 +9394,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "wyhash": {
       "baseline": "2023-12-03",
