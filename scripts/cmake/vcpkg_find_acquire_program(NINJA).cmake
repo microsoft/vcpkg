@@ -1,5 +1,5 @@
 set(program_name ninja)
-set(program_version 1.10.2)
+set(program_version 1.12.0)
 set(version_command --version)
 if(CMAKE_HOST_WIN32)
     set(download_filename "ninja-win-${program_version}.zip")
