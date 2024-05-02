@@ -6549,7 +6549,7 @@
       "port-version": 0
     },
     "openvino": {
-      "baseline": "2024.0.0",
+      "baseline": "2024.1.0",
       "port-version": 0
     },
     "openvpn3": {
