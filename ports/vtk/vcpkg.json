@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -46,7 +46,10 @@
       "name": "sqlite3",
       "host": true
     },
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     "utfcpp",
     {
       "name": "vcpkg-cmake",
