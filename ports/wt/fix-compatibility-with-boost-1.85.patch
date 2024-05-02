@@ -22,10 +22,11 @@ index 8d49571..a15f091 100644
 --- a/src/web/FileUtils.C
 +++ b/src/web/FileUtils.C
 @@ -8,6 +8,7 @@
+ #include "web/FileUtils.h"
  
- #ifndef WT_HAVE_POSIX_FILEIO
  #include <boost/filesystem/operations.hpp>
 +#include <boost/filesystem/directory.hpp>
- #else //WT_HAVE_POSIX_FILEIO
- #include <sys/types.h>
- #include <sys/stat.h>
+ 
+ #include "web/WebUtils.h"
+ #include "Wt/WException.h"
+ 
