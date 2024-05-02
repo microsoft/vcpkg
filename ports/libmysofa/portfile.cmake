@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO hoene/libmysofa
-    REF "v${VERSION}"
-    SHA512 de7f5d36079b8be06860f3380c7a359e22f59e3e57d86f5f5df1512a20b321e392e2452a34f3ea979779fb84c7493fd4febd386c89b6da4182d6c0cfb0ce1d75
-    HEAD_REF master
+    REPO honeybunch/libmysofa
+    REF "6d475b650a79c1b6bb926f07751d2ddc7ba19504"
+    SHA512 a26d3f01c7a36975022ded0010a8f4b947ef45a19221ed91fcd4e89595acc2b5a40091cd7b404c8a55fb5c4bd7703886bd7750191e5f6b19d209c794dc2ec60b
+    HEAD_REF "v${VERSION}"
     PATCHES
       fix-exports.patch
 )
@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME mysofa CONFIG_PATH share/mysofa)
+vcpkg_cmake_config_fixup(PACKAGE_NAME mysofa CONFIG_PATH lib/cmake/mysofa)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
