@@ -1,7 +1,7 @@
 {
   "name": "openturns",
   "version": "1.20",
-  "port-version": 1,
+  "port-version": 2,
   "description": "OpenTURNS is a scientific C++ and Python library featuring an internal data model and algorithms dedicated to the treatment of uncertainties.",
   "homepage": "http://www.openturns.org",
   "license": null,

@@ -1,6 +1,9 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-set(components COMPONENTS glslang)
+set(components COMPONENTS "")
+if("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.29.0")
+    list(APPEND components glslang)
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND components dxc)
 endif()

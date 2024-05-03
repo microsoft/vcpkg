@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
     REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
-    SHA512 a99ca6066490ef31b37f6be12f9fa1d7599c3736c04c8df50a4a0d2e489c99c1c776028fcfec4e6029c8aa5845f3bede364cceb39cd95b2689305d23277bdd8d
+    SHA512 6c2f98055792880abb298c9d8c4f20460fe33b7b247d450b33e9c4e87d58b32c8fce371084b4bde42f50508e957b3fa5c897b1a3dcdcd214506c2bad4fd90c66
     HEAD_REF main
     PATCHES
         avoid-docs.patch
@@ -36,7 +36,7 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/ares.h"
-        "#ifdef CARES_STATICLIB" "#if 1"
+        "#  ifdef CARES_STATICLIB" "#if 1"
     )
 endif()
 

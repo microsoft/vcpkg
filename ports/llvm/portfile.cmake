@@ -15,6 +15,7 @@ vcpkg_from_github(
         0006-create-destination-mlir-directory.patch
         0007-fix-compiler-rt-warnings.patch # fixed in upstream
         0008-add-missing-case.patch # From upstream https://github.com/llvm/llvm-project/pull/72401
+        0009-add-missing-typename.patch # Fixed in version 18.1.0 and later
 )
 
 vcpkg_check_features(
@@ -158,17 +159,14 @@ if("mlir" IN_LIST FEATURES)
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
+    # Perl is required for the OpenMP run-time
+    vcpkg_find_acquire_program(PERL)
     list(APPEND FEATURE_OPTIONS
         -DLIBOMP_INSTALL_ALIASES=OFF
         -DOPENMP_ENABLE_LIBOMPTARGET=OFF # Currently libomptarget cannot be compiled on Windows or MacOS X.
         -DOPENMP_ENABLE_OMPT_TOOLS=OFF # Currently tools are not tested well on Windows or MacOS X.
+        -DPERL_EXECUTABLE=${PERL}
     )
-    # Perl is required for the OpenMP run-time
-    vcpkg_find_acquire_program(PERL)
-    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-    vcpkg_add_to_path(${PERL_PATH})
-    # Skip post-build check
-    set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")

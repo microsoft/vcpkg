@@ -11,31 +11,27 @@ vcpkg_extract_source_archive(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(DUK_CONFIG_H_PATH "${SOURCE_PATH}/src/duk_config.h")
-  file(READ "${DUK_CONFIG_H_PATH}" CONTENT)
-  string(REPLACE "#undef DUK_F_DLL_BUILD" "#define DUK_F_DLL_BUILD" CONTENT "${CONTENT}")
-  file(WRITE "${DUK_CONFIG_H_PATH}" "${CONTENT}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${SOURCE_PATH}/src/duk_config.h"  "#undef DUK_F_DLL_BUILD" "#define DUK_F_DLL_BUILD")
 else()
-  set(DUK_CONFIG_H_PATH "${SOURCE_PATH}/src/duk_config.h")
-  file(READ "${DUK_CONFIG_H_PATH}" CONTENT)
-  string(REPLACE "#define DUK_F_DLL_BUILD" "#undef DUK_F_DLL_BUILD" CONTENT "${CONTENT}")
-  file(WRITE "${DUK_CONFIG_H_PATH}" "${CONTENT}")
+    vcpkg_replace_string("${SOURCE_PATH}/src/duk_config.h"  "#define DUK_F_DLL_BUILD" "#undef DUK_F_DLL_BUILD")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DVERSION=${VERSION}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-duktape)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
+# Legacy package based on find commands, not on exported config.
+file(COPY "${CURRENT_PORT_DIR}/duktapeConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

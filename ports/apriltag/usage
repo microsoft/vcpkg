@@ -1,4 +1,4 @@
-The package apriltag is compatible with built-in CMake targets:
+apriltag provides CMake targets: 
 
     find_package(apriltag REQUIRED)
     target_link_libraries(main PRIVATE apriltag::apriltag)

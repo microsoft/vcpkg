@@ -1,0 +1,13 @@
+diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
+index 9c8024e..baee592 100755
+--- a/libtiff/CMakeLists.txt
++++ b/libtiff/CMakeLists.txt
+@@ -148,7 +148,7 @@ if(JBIG_SUPPORT)
+ endif()
+ if(LERC_SUPPORT)
+   target_link_libraries(tiff PRIVATE LERC::LERC)
+-  list(APPEND tiff_libs_private_list "${LERC_LIBRARY}")
++  string(APPEND tiff_requires_private " Lerc")
+   if(NOT BUILD_SHARED_LIBS)
+     set_target_properties(tiff PROPERTIES COMPILE_DEFINITIONS LERC_STATIC)
+   endif()

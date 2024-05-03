@@ -3,16 +3,24 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HPX_WITH_STATIC_LINKING)
 
+vcpkg_download_distfile(
+    MSVC_STATIC_VARIABLES_PATCH
+    URLS https://github.com/STEllAR-GROUP/hpx/commit/6c378813a7e2304a3a0c8900156f147a3a44b0cb.patch?full_index=1
+    SHA512 6ed2ec4eab9593d8d1a76da183dd4ceb5ac332f50b0b5cd3a81c74248c61eeb869d301a33e266d06c5f8ddf041da6cd29d1b89b38e51527716a6e557b4a7e66e
+    FILENAME hpx-6c378813a7e2304a3a0c8900156f147a3a44b0cb.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
     REF "v${VERSION}"
     SHA512 a7972beada950cf6ef3b61f20496a08b220e4f48c28c11d57c20683906ca5124a9f36ac2552318883a5ab1db6efdbf63d1141b6e0c484c560a8c1311ae2d7090
-    HEAD_REF stable
+    HEAD_REF master
     PATCHES
         fix-dependency-hwloc.patch
         fix-debug.patch
         fix_output_name_clash.patch
+        "${MSVC_STATIC_VARIABLES_PATCH}"
 )
 
 vcpkg_check_features(
