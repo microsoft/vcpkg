@@ -231,6 +231,19 @@ index 7c9226f..0fadb20 100644
 +
  
  include(CMakeListsInternal.txt OPTIONAL)
+diff --git a/core/src/core/float4.h b/core/src/core/float4.h
+index 1cc2209..c0e5331 100644
+--- a/core/src/core/float4.h
++++ b/core/src/core/float4.h
+@@ -28,7 +28,7 @@
+ #include "neon_float4.h"
+ #endif
+ 
+-#if defined(IPL_OS_WINDOWS)
++#if defined(_MSC_VER)
+ 
+ namespace ipl {
+ 
 diff --git a/core/src/core/pffft_fft.cpp b/core/src/core/pffft_fft.cpp
 index 95ba30e..e827f72 100644
 --- a/core/src/core/pffft_fft.cpp
