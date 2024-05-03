@@ -8949,8 +8949,8 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "23.5",
-      "port-version": 3
+      "baseline": "24.5",
+      "port-version": 0
     },
     "usearch": {
       "baseline": "2.3.2",
