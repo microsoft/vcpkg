@@ -8,7 +8,13 @@ vcpkg_from_github(
       use-vcpkg-deps.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL "x64")
+  set(MACOS_ARCH "x86_64")
+elseif(${VCPKG_TARGET_ARCHITECTURE} STREQUAL "arm64")
+  set(MACOS_ARCH "arm64")
+else()
+  message(FATAL "Unsupported arch")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/core"
@@ -27,6 +33,7 @@ vcpkg_cmake_configure(
         -DSTEAMAUDIO_ENABLE_TRUEAUDIONEXT=OFF
         # So the patched port can find the vcpkg host flatc compiler
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
+        -DVCPKG_MACOS_ARCH=${MACOS_ARCH}
 )
 
 vcpkg_cmake_install()

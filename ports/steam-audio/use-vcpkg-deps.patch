@@ -1,7 +1,16 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index 0682abf..885e89b 100644
+index 0682abf..527989d 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
+@@ -186,7 +186,7 @@ endif()
+ 
+ # macOS flags
+ if (IPL_OS_MACOS)
+-    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
++    set(CMAKE_OSX_ARCHITECTURES "${VCPKG_MACOS_ARCH}")
+     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13")
+     add_compile_options(-Wno-extern-c-compat) # Suppress warning about empty API structs.
+     add_compile_options(-Wno-unknown-attributes) # Suppress warning in FlatBuffers.
 @@ -234,7 +234,7 @@ if (STEAMAUDIO_ENABLE_FFTS)
  endif()
  
