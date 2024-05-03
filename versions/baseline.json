@@ -2502,7 +2502,7 @@
     },
     "enkits": {
       "baseline": "1.11",
-      "port-version": 2
+      "port-version": 3
     },
     "ensmallen": {
       "baseline": "2.19.1",
