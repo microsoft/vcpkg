@@ -1,5 +1,5 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index 0682abf..20e504e 100644
+index 0682abf..885e89b 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -234,7 +234,7 @@ if (STEAMAUDIO_ENABLE_FFTS)
@@ -17,13 +17,13 @@ index 0682abf..20e504e 100644
  
 -find_package(MySOFA REQUIRED)
 -find_package(FlatBuffers REQUIRED)
-+find_package(MySOFA CONFIG REQUIRED)
++find_package(mysofa CONFIG REQUIRED)
 +find_package(FlatBuffers CONFIG REQUIRED)
  
  if (STEAMAUDIO_ENABLE_EMBREE)
      find_package(ISPC 1.12 EXACT)
 diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
-index 7c9226f..60dcb03 100644
+index 7c9226f..27826d1 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
 @@ -26,6 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
@@ -39,29 +39,27 @@ index 7c9226f..60dcb03 100644
  function (compile_fbs FBS_SOURCE)
      set(FBS_OUTPUT ${FBS_SOURCE}.h)
  
-@@ -176,7 +182,9 @@ endif()
+@@ -176,7 +182,8 @@ endif()
  #
  
  add_library(hrtf OBJECT hrtf.cpp)
 -target_include_directories(hrtf PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 +target_include_directories(hrtf PUBLIC 
-+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
-+  $<INSTALL_INTERFACE:include/>)
++  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
  
  
  #
-@@ -582,7 +590,9 @@ if (STEAMAUDIO_BUILD_CSHARP_BINDINGS)
+@@ -582,7 +589,8 @@ if (STEAMAUDIO_BUILD_CSHARP_BINDINGS)
  endif()
  
  # This is needed so we can include generated headers
 -target_include_directories(core PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 +target_include_directories(core PUBLIC 
-+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-+  $<INSTALL_INTERFACE:include/>)
++  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
  
  if (IPL_OS_WINDOWS)
      target_link_libraries(core PUBLIC delayimp)
-@@ -596,7 +606,7 @@ if (IPL_OS_LINUX)
+@@ -596,7 +604,7 @@ if (IPL_OS_LINUX)
      target_link_libraries(core PUBLIC -Wl,--start-group)
  endif()
  
@@ -70,7 +68,7 @@ index 7c9226f..60dcb03 100644
  
  if (STEAMAUDIO_ENABLE_IPP AND (IPL_OS_WINDOWS OR IPL_OS_LINUX OR IPL_OS_MACOS))
      target_link_libraries(core PUBLIC IPP::IPP)
-@@ -610,10 +620,10 @@ if (FFT_LIBRARY STREQUAL "IPP")
+@@ -610,10 +618,10 @@ if (FFT_LIBRARY STREQUAL "IPP")
  elseif (FFT_LIBRARY STREQUAL "FFTS")
      target_link_libraries(core PUBLIC FFTS::FFTS)
  elseif (FFT_LIBRARY STREQUAL "PFFFT")
@@ -83,7 +81,7 @@ index 7c9226f..60dcb03 100644
  add_dependencies(core fbschemas)
  
  if (STEAMAUDIO_ENABLE_EMBREE)
-@@ -671,7 +681,7 @@ if (IPL_OS_LINUX)
+@@ -671,7 +679,7 @@ if (IPL_OS_LINUX)
  endif()
  
  if (IPL_OS_WINDOWS AND IPL_CPU_X64 AND BUILD_SHARED_LIBS)
@@ -92,7 +90,7 @@ index 7c9226f..60dcb03 100644
  endif()
  
  if (IPL_OS_LINUX AND BUILD_SHARED_LIBS AND (NOT IPL_CPU_ARMV8))
-@@ -729,8 +739,8 @@ if (NOT FMOD_LIB_DIR STREQUAL "")
+@@ -729,8 +737,8 @@ if (NOT FMOD_LIB_DIR STREQUAL "")
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon.h ${FMOD_INCLUDE_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/phonon_version.h ${FMOD_INCLUDE_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon_interfaces.h ${FMOD_INCLUDE_DIR}
@@ -103,7 +101,7 @@ index 7c9226f..60dcb03 100644
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${FMOD_LIB_DIR}
          )
      else()
-@@ -851,8 +861,8 @@ if (NOT UNITY_PLUGIN_DIR STREQUAL "")
+@@ -851,8 +859,8 @@ if (NOT UNITY_PLUGIN_DIR STREQUAL "")
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/phonon_version.h ${UNITY_INCLUDE_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon_interfaces.h ${UNITY_INCLUDE_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNITY_LIB_DIR}
@@ -114,7 +112,7 @@ index 7c9226f..60dcb03 100644
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNITY_PLUGIN_DIR}
          )
      else()
-@@ -913,8 +923,8 @@ if (NOT UNREAL_PLUGIN_DIR STREQUAL "")
+@@ -913,8 +921,8 @@ if (NOT UNREAL_PLUGIN_DIR STREQUAL "")
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon.h ${UNREAL_INCLUDE_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/phonon_version.h ${UNREAL_INCLUDE_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/phonon_interfaces.h ${UNREAL_INCLUDE_DIR}
@@ -125,7 +123,7 @@ index 7c9226f..60dcb03 100644
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNREAL_PLUGIN_DIR}
          )
      elseif (IPL_OS_MACOS)
-@@ -953,29 +963,31 @@ get_bin_subdir(IPL_BIN_SUBDIR)
+@@ -953,29 +961,31 @@ get_bin_subdir(IPL_BIN_SUBDIR)
  
  install(
      TARGETS             phonon
@@ -166,7 +164,7 @@ index 7c9226f..60dcb03 100644
      )
  endif()
  
-@@ -986,6 +998,7 @@ install(
+@@ -986,6 +996,7 @@ install(
      DESTINATION include
  )
  
@@ -174,7 +172,7 @@ index 7c9226f..60dcb03 100644
  if (IPL_OS_WINDOWS AND IPL_CPU_X64)
      install(
          FILES       ${CMAKE_HOME_DIRECTORY}/deps/trueaudionext/bin/windows-x64/$<LOWER_CASE:$<CONFIG>>/TrueAudioNext.dll
-@@ -993,5 +1006,27 @@ if (IPL_OS_WINDOWS AND IPL_CPU_X64)
+@@ -993,5 +1004,27 @@ if (IPL_OS_WINDOWS AND IPL_CPU_X64)
          DESTINATION lib/${IPL_BIN_SUBDIR}
      )
  endif()
