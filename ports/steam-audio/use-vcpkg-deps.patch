@@ -23,7 +23,7 @@ index 0682abf..885e89b 100644
  if (STEAMAUDIO_ENABLE_EMBREE)
      find_package(ISPC 1.12 EXACT)
 diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
-index 7c9226f..27826d1 100644
+index 7c9226f..0fadb20 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
 @@ -26,6 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
@@ -77,10 +77,19 @@ index 7c9226f..27826d1 100644
  endif()
  
 -target_link_libraries(core PUBLIC MySOFA::MySOFA)
-+target_link_libraries(core PUBLIC mysofa::mysofa)
++target_link_libraries(core PUBLIC $<IF:$<TARGET_EXISTS:mysofa::mysofa-shared>,mysofa::mysofa-shared,mysofa::mysofa-static>)
  add_dependencies(core fbschemas)
  
  if (STEAMAUDIO_ENABLE_EMBREE)
+@@ -639,7 +647,7 @@ source_group("OpenCL Files" FILES ${CL_SOURCE})
+ 
+ target_compile_definitions(core PRIVATE STEAMAUDIO_BUILDING_CORE)
+ 
+-target_precompile_headers(core PUBLIC pch.h)
++target_precompile_headers(core PRIVATE pch.h)
+ 
+ 
+ #
 @@ -671,7 +679,7 @@ if (IPL_OS_LINUX)
  endif()
  
@@ -97,7 +106,7 @@ index 7c9226f..27826d1 100644
 -            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PFFFT::PFFFT> ${FMOD_LIB_DIR}
 -            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MySOFA::MySOFA> ${FMOD_LIB_DIR}
 +            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pffft::pffft> ${FMOD_LIB_DIR}
-+            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mysofa::mysofa> ${FMOD_LIB_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:$<IF:$<TARGET_EXISTS:mysofa::mysofa-shared>,mysofa::mysofa-shared,mysofa::mysofa-static>> ${FMOD_LIB_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${FMOD_LIB_DIR}
          )
      else()
@@ -108,7 +117,7 @@ index 7c9226f..27826d1 100644
 -            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PFFFT::PFFFT> ${UNITY_PLUGIN_DIR}
 -            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MySOFA::MySOFA> ${UNITY_PLUGIN_DIR}
 +            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pffft::pffft> ${UNITY_PLUGIN_DIR}
-+            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mysofa::mysofa> ${UNITY_PLUGIN_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:$<IF:$<TARGET_EXISTS:mysofa::mysofa-shared>,mysofa::mysofa-shared,mysofa::mysofa-static>> ${UNITY_PLUGIN_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNITY_PLUGIN_DIR}
          )
      else()
@@ -119,11 +128,11 @@ index 7c9226f..27826d1 100644
 -            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:PFFFT::PFFFT> ${UNREAL_PLUGIN_DIR}
 -            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MySOFA::MySOFA> ${UNREAL_PLUGIN_DIR}
 +            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pffft::pffft> ${UNREAL_PLUGIN_DIR}
-+            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mysofa::mysofa> ${UNREAL_PLUGIN_DIR}
++            COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:$<IF:$<TARGET_EXISTS:mysofa::mysofa-shared>,mysofa::mysofa-shared,mysofa::mysofa-static>> ${UNREAL_PLUGIN_DIR}
              COMMAND     ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phonon> ${UNREAL_PLUGIN_DIR}
          )
      elseif (IPL_OS_MACOS)
-@@ -953,29 +961,31 @@ get_bin_subdir(IPL_BIN_SUBDIR)
+@@ -953,30 +961,34 @@ get_bin_subdir(IPL_BIN_SUBDIR)
  
  install(
      TARGETS             phonon
@@ -149,22 +158,32 @@ index 7c9226f..27826d1 100644
      )
  endif()
  
- if (IPL_OS_WINDOWS)
-     install(
+-if (IPL_OS_WINDOWS)
+-    install(
 -        FILES       ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/phonon.pdb
 -        DESTINATION symbols/${IPL_BIN_SUBDIR}
-+        FILES       ${CMAKE_CURRENT_BINARY_DIR}/phonon.pdb
-+        DESTINATION bin
-     )
- elseif (IPL_OS_LINUX AND NOT IPL_CPU_ARMV8)
-     install(
-         FILES       ${CMAKE_CURRENT_BINARY_DIR}/libphonon.so.dbg
+-    )
+-elseif (IPL_OS_LINUX AND NOT IPL_CPU_ARMV8)
+-    install(
+-        FILES       ${CMAKE_CURRENT_BINARY_DIR}/libphonon.so.dbg
 -        DESTINATION symbols/${IPL_BIN_SUBDIR}
-+        DESTINATION bin
-     )
+-    )
++if(BUILD_SHARED_LIBS)
++  if (IPL_OS_WINDOWS)
++      install(
++          FILES       ${CMAKE_CURRENT_BINARY_DIR}/phonon.pdb
++          DESTINATION bin
++      )
++  elseif (IPL_OS_LINUX AND NOT IPL_CPU_ARMV8)
++      install(
++          FILES       ${CMAKE_CURRENT_BINARY_DIR}/libphonon.so.dbg
++          DESTINATION bin
++      )
++  endif()
  endif()
  
-@@ -986,6 +996,7 @@ install(
+ install(
+@@ -986,6 +998,7 @@ install(
      DESTINATION include
  )
  
@@ -172,7 +191,7 @@ index 7c9226f..27826d1 100644
  if (IPL_OS_WINDOWS AND IPL_CPU_X64)
      install(
          FILES       ${CMAKE_HOME_DIRECTORY}/deps/trueaudionext/bin/windows-x64/$<LOWER_CASE:$<CONFIG>>/TrueAudioNext.dll
-@@ -993,5 +1004,27 @@ if (IPL_OS_WINDOWS AND IPL_CPU_X64)
+@@ -993,5 +1006,30 @@ if (IPL_OS_WINDOWS AND IPL_CPU_X64)
          DESTINATION lib/${IPL_BIN_SUBDIR}
      )
  endif()
@@ -182,6 +201,9 @@ index 7c9226f..27826d1 100644
 +  NAMESPACE steam-audio::
 +  FILE ${CMAKE_CURRENT_BINARY_DIR}/steam-audioTargets.cmake
 +)
++
++# required to resolve object libraries on import
++install(TARGETS core hrtf EXPORT steam-audio_exports)
 +
 +install(EXPORT steam-audio_exports
 +  NAMESPACE steam-audio::
