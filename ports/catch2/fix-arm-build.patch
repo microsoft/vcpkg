@@ -1,0 +1,15 @@
+diff --git a/src/catch2/internal/catch_random_integer_helpers.hpp b/src/catch2/internal/catch_random_integer_helpers.hpp
+--- a/src/catch2/internal/catch_random_integer_helpers.hpp
++++ b/src/catch2/internal/catch_random_integer_helpers.hpp
+@@ -21,7 +21,10 @@
+ //       it, and it provides an escape hatch to the users who need it.
+ #if defined( __SIZEOF_INT128__ )
+ #    define CATCH_CONFIG_INTERNAL_UINT128
+-#elif defined( _MSC_VER ) && ( defined( _WIN64 ) || defined( _M_ARM64 ) )
++// Unlike GCC, MSVC does not polyfill umul as mulh + mul pair on ARM machines.
++// Currently we do not bother doing this ourselves, but we could if it became
++// important for perf.
++#elif defined( _MSC_VER ) && defined( _WIN64 ) && !defined( _M_ARM64 )
+ #    define CATCH_CONFIG_INTERNAL_MSVC_UMUL128
+ #endif
+ 

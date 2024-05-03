@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index a54c2ff..3b83a7f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -852,11 +852,8 @@ endif()
+@@ -852,11 +852,9 @@ endif()
  # Check for idn2
  option(USE_LIBIDN2 "Use libidn2 for IDN support" ON)
  if(USE_LIBIDN2)
@@ -13,6 +13,7 @@ index a54c2ff..3b83a7f 100644
 -  endif()
 +  set(HAVE_LIBIDN2 TRUE)
 +  list(INSERT CURL_LIBS 0 ${LIBIDN2_LINK_LIBRARIES})
++  set(HAVE_IDN2_H TRUE)
  else()
    set(HAVE_LIBIDN2 OFF)
  endif()
