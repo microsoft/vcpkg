@@ -257,6 +257,34 @@ index 95ba30e..e827f72 100644
  
  #include "array.h"
  #include "array_math.h"
+diff --git a/core/src/core/sse_float4.h b/core/src/core/sse_float4.h
+index 8bb0a57..ee29a03 100644
+--- a/core/src/core/sse_float4.h
++++ b/core/src/core/sse_float4.h
+@@ -168,7 +168,11 @@ namespace float4
+     // Aligned load.
+     inline float4_t load(const float* p)
+     {
++      #if defined(IPL_OS_WINDOWS) && defined(__clang__)
++        return _mm_loadu_ps(p);
++      #else
+         return _mm_load_ps(p);
++      #endif
+     }
+ 
+     // Unaligned load.
+@@ -187,7 +191,11 @@ namespace float4
+     inline void store(float* p,
+                       float4_t x)
+     {
++      #if defined(IPL_OS_WINDOWS) && defined(__clang__)
++        _mm_storeu_ps(p, x);
++      #else
+         _mm_store_ps(p, x);
++      #endif
+     }
+ 
+     // Unaligned store.
 diff --git a/core/src/core/steam-audio-config.cmake.in b/core/src/core/steam-audio-config.cmake.in
 new file mode 100644
 index 0000000..776f7aa
