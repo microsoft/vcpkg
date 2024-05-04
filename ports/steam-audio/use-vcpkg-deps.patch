@@ -232,18 +232,28 @@ index 7c9226f..0fadb20 100644
  
  include(CMakeListsInternal.txt OPTIONAL)
 diff --git a/core/src/core/float4.h b/core/src/core/float4.h
-index 1cc2209..c0e5331 100644
+index 1cc2209..c47298c 100644
 --- a/core/src/core/float4.h
 +++ b/core/src/core/float4.h
-@@ -28,7 +28,7 @@
- #include "neon_float4.h"
+@@ -22,6 +22,12 @@
+ // float4
+ // --------------------------------------------------------------------------------------------------------------------
+ 
++#ifdef __clang__
++
++typedef float __attribute__((ext_vector_type(4))) float4_t;
++
++#else
++
+ #if defined(IPL_CPU_X86) || defined(IPL_CPU_X64)
+ #include "sse_float4.h"
+ #elif (defined(IPL_CPU_ARMV7) || defined(IPL_CPU_ARM64))
+@@ -59,3 +65,5 @@ inline float4_t operator/(float4_t a,
+ }
+ 
  #endif
- 
--#if defined(IPL_OS_WINDOWS)
-+#if defined(_MSC_VER)
- 
- namespace ipl {
- 
++
++#endif
 diff --git a/core/src/core/pffft_fft.cpp b/core/src/core/pffft_fft.cpp
 index 95ba30e..e827f72 100644
 --- a/core/src/core/pffft_fft.cpp
