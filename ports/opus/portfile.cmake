@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
     REF "v${VERSION}"
-    SHA512 86df35cd62ebf3551b2739effb8f818d635656d91d386d7d600a424a92c4c0d6bfbc3986f1ec6cf4950910ac87b28dc9640b9df3b9a6a5a75eb37ae71782b72e
-    HEAD_REF master
+    SHA512 ba79ad035993e7bc4c09b7d77964ba913eb0b2be33305e8a04a8c49aaab21c4d96ac828e31ae45484896105851fdfc8c305c63c8400e4481dd76c62a1c12286b
+    HEAD_REF main
     PATCHES fix-pkgconfig-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        avx AVX_SUPPORTED
+        avx2 AVX2_SUPPORTED
 )
 
 set(ADDITIONAL_OPUS_OPTIONS "")
@@ -52,4 +52,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

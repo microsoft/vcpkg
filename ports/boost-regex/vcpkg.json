@@ -12,8 +12,7 @@
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-build",
-      "host": true,
+      "name": "boost-cmake",
       "version>=": "1.84.0"
     },
     {
@@ -33,12 +32,11 @@
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-integer",
+      "name": "boost-headers",
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-modular-build-helper",
-      "host": true,
+      "name": "boost-integer",
       "version>=": "1.84.0"
     },
     {
@@ -64,14 +62,6 @@
     {
       "name": "boost-type-traits",
       "version>=": "1.84.0"
-    },
-    {
-      "name": "boost-vcpkg-helpers",
-      "version>=": "1.84.0"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
     }
   ],
   "features": {
