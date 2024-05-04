@@ -1,6 +1,7 @@
 {
   "name": "qtimageformats",
   "version": "6.6.3",
+  "port-version": 1,
   "description": "The Qt Image Formats add-on module provides optional support for other image file formats.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -32,7 +33,10 @@
     "tiff": {
       "description": "Use TIFF",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "webp": {
