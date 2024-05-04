@@ -32,8 +32,10 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 1
 $portVersions = @{
-  'boost-cmake' = 0;
   'boost-headers' = 0;
+  'boost-fiber' = 2;
+  'boost-headers' = 0;
+  'boost-thread' = 2;
 }
 
 function Get-PortVersion {

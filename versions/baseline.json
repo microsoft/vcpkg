@@ -874,7 +874,7 @@
     },
     "boost-fiber": {
       "baseline": "1.84.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-filesystem": {
       "baseline": "1.84.0",
@@ -1234,7 +1234,7 @@
     },
     "boost-thread": {
       "baseline": "1.84.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-throw-exception": {
       "baseline": "1.84.0",
