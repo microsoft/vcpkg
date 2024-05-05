@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 	OPTIONS
 	    -DBUILD_GEN=ON
 	    -DBUILD_TESTING=OFF
-		-DCMAKE_CXX_STANDARD=11
+	    -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_cmake_install()
