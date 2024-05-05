@@ -2592,6 +2592,10 @@
       "baseline": "2.4.0",
       "port-version": 2
     },
+    "faker-cxx": {
+      "baseline": "v1.0.0",
+      "port-version": 0
+    },
     "fameta-counter": {
       "baseline": "2021-02-13",
       "port-version": 0
