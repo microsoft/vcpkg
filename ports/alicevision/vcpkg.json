@@ -34,11 +34,15 @@
     }
   ],
   "default-features": [
+    "openmp",
     "sfm"
   ],
   "features": {
+    "openmp": {
+      "description": "Enable OpenMP parallelization"
+    },
     "sfm": {
-      "description": "Install non-standard files required for building Apache httpd",
+      "description": "Build AliceVision SfM part",
       "dependencies": [
         {
           "name": "assimp",
