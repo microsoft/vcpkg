@@ -10,7 +10,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win64.zip"
 			FILENAME "slang-${VERSION}-win64.zip"
-			SHA512 3d6153d9cd8234d68d91273b97cfd66167e55bf3c526490603c79797aea4f5af839cbfdce29532da8c0e77cb9e6451a5823d40b98162fb53fffcbc5d18b0f841
+			SHA512 24d39f1f54230b7badc1e0e3b54b29a0fddbcf29c2370d2085870556529f8ee4d25d249b9dad9bead61079803061f6a7d7b126e136fcb8afe2a0ef61808f34ad
 		)
 		set(SLANG_BIN_PATH "bin/windows-x64/release")
 	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -18,7 +18,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win32.zip"
 			FILENAME "slang-${VERSION}-win32.zip"
-			SHA512 43992831be8f7fc954794482e947a20e421587cb999eebdd7ffb21c3fc477a660ae19c0e0a10df5331329ac46e7fdd6017fc416b6667127182ae6091b6431e6b
+			SHA512 b8fa6aed2fc4c7adb8c1810cfa5e655b317aebc4636e8d80e718aef25abf58bc9dc5c7c58dc9d0a375d61bed8000daa75e14d8bc11c1a7c4cd33350d698c8dd6
 		)
 		set(SLANG_BIN_PATH "bin/windows-x86/release")
 	else()
@@ -34,7 +34,7 @@ elseif (VCPKG_TARGET_IS_OSX)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x64.zip"
 			FILENAME "slang-${VERSION}-macosx-x64.zip"
-			SHA512 dc3b3f18c8e80cfc12960e76978dc1acb18df6de0704c5a889713128491827e26c169a2965d598b4904647384da2eeceb63a391b62925573da5d77a060bdb890
+			SHA512 e546c4c3e68880f75678c061457369f2c075bdd428080c4af7fae6145be8359dff182902d412dad6c0ce3903004ca9613d791a04a209e6e16960e036585efdae
 		)
 		set(SLANG_BIN_PATH "bin/macos-x64/release")
 	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
@@ -42,7 +42,7 @@ elseif (VCPKG_TARGET_IS_OSX)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 			FILENAME "slang-${VERSION}-macosx-aarch64.zip"
-			SHA512 db613040ea31fa2ff8a60fec96a16704e0241774332333a704530bee309f5037d50570fc590348f22d3bc7f018a5bd3c9a10aae800a4f30f0f5e273552690863
+			SHA512 df287ec31d366d88196ce5e1a9d3fa0d0c6973ff948c8ab4e51a04d3f5af5b84a8703925a6a5b721335f2cbfcb0fb0e70eac5d084f72565fe65730ae54a758fa
 		)
 		set(SLANG_BIN_PATH "bin/macos-aarch64/release")
 	else()
@@ -58,7 +58,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.tar.gz"
 			FILENAME "slang-${VERSION}-linux-x86_64.tar.gz"
-			SHA512 817e3c5ae9fa249c54b1f411877f4742a019aa27b63bfb06b726b721cd86973b4ebe481bf62192bb7380d092c57cbd8e2abc932a7dbacd06811b6afb856c428d
+			SHA512 5a7842bc4f41ebef1cd0db8ec74440ab38ba061862acced6812b23a9378f1dc9f4922624c3a946f5f655fc8c62172ea84d407bb0036620bbd5e5e4c7fdaffc45
 		)
 		set(SLANG_BIN_PATH "bin/linux-x64/release")
 	else()
