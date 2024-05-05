@@ -7,6 +7,12 @@ vcpkg_from_github(
   PATCHES fix-dynamic-boost.patch
 )
 
+vcpkg_check_features(
+  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    sfm ALICEVISION_BUILD_SFM
+)
+
 # MeshSDFilter
 vcpkg_from_github(
   OUT_SOURCE_PATH MESHSDFILTER_SOURCE_PATH
@@ -22,7 +28,7 @@ file(RENAME "${MESHSDFILTER_SOURCE_PATH}" "${SOURCE_PATH}/src/dependencies/MeshS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DALICEVISION_BUILD_SFM=OFF
+        ${FEATURE_OPTIONS}
         -DALICEVISION_BUILD_MVS=ON
         -DALICEVISION_BUILD_HDR=ON
         -DALICEVISION_BUILD_SEGMENTATION=ON

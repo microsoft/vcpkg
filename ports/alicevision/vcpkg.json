@@ -32,5 +32,41 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "sfm"
+  ],
+  "features": {
+    "sfm": {
+      "description": "Install non-standard files required for building Apache httpd",
+      "dependencies": [
+        {
+          "name": "assimp",
+          "default-features": false
+        },
+        {
+          "name": "ceres",
+          "default-features": false,
+          "features": [
+            "suitesparse"
+          ]
+        },
+        "coin-or-clp",
+        "coin-or-osi",
+        {
+          "name": "coinutils",
+          "default-features": false
+        },
+        {
+          "name": "flann",
+          "default-features": false
+        },
+        {
+          "name": "geogram",
+          "default-features": false
+        },
+        "liblemon"
+      ]
+    }
+  }
 }
