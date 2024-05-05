@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e9080fc..120ba8f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -172,9 +172,8 @@ install(EXPORT ${LIBRARY_NAME}-targets
+ if (APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
+     VERSION_LESS 12))
+ 
+-    add_subdirectory(externals/fmt)
+-    set(FMT_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/fmt/include")
+-    target_link_libraries(${LIBRARY_NAME} PRIVATE fmt)
++    find_package(fmt CONFIG REQUIRED)
++    target_link_libraries(${LIBRARY_NAME} PRIVATE fmt::fmt)
+ endif ()
+ 
+ if (BUILD_FAKER_TESTS)
