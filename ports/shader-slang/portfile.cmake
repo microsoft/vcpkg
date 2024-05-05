@@ -33,7 +33,7 @@ elseif (VCPKG_TARGET_IS_OSX)
 		vcpkg_download_distfile(
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x64.zip"
-			FILENAME "slang-${VERSION}-macos-x64.zip"
+			FILENAME "slang-${VERSION}-macosx-x64.zip"
 			SHA512 dc3b3f18c8e80cfc12960e76978dc1acb18df6de0704c5a889713128491827e26c169a2965d598b4904647384da2eeceb63a391b62925573da5d77a060bdb890
 		)
 		set(SLANG_BIN_PATH "bin/macos-x64/release")
@@ -41,7 +41,7 @@ elseif (VCPKG_TARGET_IS_OSX)
 		vcpkg_download_distfile(
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
-			FILENAME "slang-${VERSION}-macos-aarch64.zip"
+			FILENAME "slang-${VERSION}-macosx-aarch64.zip"
 			SHA512 db613040ea31fa2ff8a60fec96a16704e0241774332333a704530bee309f5037d50570fc590348f22d3bc7f018a5bd3c9a10aae800a4f30f0f5e273552690863
 		)
 		set(SLANG_BIN_PATH "bin/macos-aarch64/release")
