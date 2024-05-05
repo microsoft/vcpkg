@@ -13,7 +13,7 @@ vcpkg_from_github(
         fix-clang-cl.patch
         gh-5985-inline.patch
         io_ply.patch
-        fix-compatibility-with-boost-1.85.patch
+        #fix-compatibility-with-boost-1.85.patch
         fix-missing-include.patch
 )
 
