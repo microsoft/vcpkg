@@ -44,6 +44,12 @@ if("${FEATURES}" STREQUAL "core")
         "${CURRENT_PACKAGES_DIR}/debug"
     )
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+else()
+    file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/*")
+    list(LENGTH FILES COUNT)
+    if(COUNT EQUAL 0)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

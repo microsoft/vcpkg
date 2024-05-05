@@ -1,9 +1,9 @@
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO GPUOpen-LibrariesAndSDKs/AMF
-        REF v1.4.26
-        SHA512 2c931ef7d38ade88a96041e0012605a5d25ec484bb2134f58310cf1a2c7212a869797cef99e2e751c8a6b3c473ba1f8762d4a5d41466d38cb5e31bf664a25f55
-        HEAD_REF master
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO GPUOpen-LibrariesAndSDKs/AMF
+    REF "v${VERSION}"
+    SHA512 e0c4f583996ff2d1d61c53b8ce7ef2eadb32d2a13930e59146b935840e31d032c5cec48baced70b0007fa5f33e30537d03ddf71140ff51213085aba20e16f5ca
+    HEAD_REF master
 )
 
 # Install the AMF headers to the default vcpkg location

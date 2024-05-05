@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-event-stream
     REF "v${VERSION}"
-    SHA512 c92bb81e2dd1652a2aef2de391584055c44847736366f6c4afa4033529fdc64fc2ec5ea5604f33cc5fd755359e22dca9db7682f40cf75b187625d6670a68fdab
+    SHA512 5ae252c4b774f988ad81163a6e7ed8d971b7ffabcbc4ee1fc950cce3f5986f6ee57454178ee52dbdda1ff3ee74716fcfe0ac9349feb67b5bc10961fb92cf7ff9
     HEAD_REF master
 )
 

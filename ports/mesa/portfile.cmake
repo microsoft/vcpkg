@@ -1,14 +1,3 @@
-# Build-Depends: From X Window PR: zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
-# Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
-
-# Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
-set(PATCHES
-    # Fix symbols exporting for MinGW GCC x86
-    def-fixes.patch
-    # Clover build on Windows
-    clover.patch
-)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
@@ -18,21 +7,24 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-22.1.7
-    SHA512 41302fc55ef429c14b1595832db3a898380230f86d2b84ac1ae3bd453d0aad87ec7ad310004dc64fcf34f58d8ea2736c13971c04eba056bcc549a4e3cc7c9470
+    REF mesa-${VERSION}
+    SHA512 96f7602c98d532a269116bd5d3f9cbe87ca4425b309467cc19f83277a0faaa9804edea72dcaeb6f7774cac17790d5d76b58c357ef639cb6064e7480d93b861bf
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
-    PATCHES ${PATCHES}
-) 
+    PATCHES
+        gallium-fix-build-with-llvm-17.patch
+        clover-llvm-move-to-modern-pass-manager.patch
+)
 
-
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 vcpkg_find_acquire_program(FLEX)
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
@@ -113,6 +105,9 @@ vcpkg_configure_meson(
         #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
+    ADDITIONAL_BINARIES
+      python=['${PYTHON3}','-I']
+      python3=['${PYTHON3}','-I']
     )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
@@ -145,6 +140,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
+endif()
+
+if(FEATURES STREQUAL "core")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")

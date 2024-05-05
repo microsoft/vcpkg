@@ -8,11 +8,6 @@
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);${CURRENT_INSTALLED_DIR}/include
       </AdditionalIncludeDirectories>
-
-      <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|Debug'">MultiThreadedDebug</RuntimeLibrary>
-      <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'static|Release'">MultiThreaded</RuntimeLibrary>
-      <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
-      <RuntimeLibrary Condition="'${VCPKG_CRT_LINKAGE}|$(Configuration)' == 'dynamic|Release'">MultiThreadedDLL</RuntimeLibrary>
     </CLCompile>
     <Link>
       <!-- Required Libs -->
@@ -36,6 +31,22 @@
       <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
       <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x86'">MachineX86</TargetMachine>
       <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x64'">MachineX64</TargetMachine>
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='arm'">MachineARM</TargetMachine>
+      <!-- Required Libs -->
+      <AdditionalDependencies Condition="'$(Configuration)'=='Release'">
+        ${ZLIB_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">
+        ${ZLIB_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
+
+      <!-- Extension modules -->
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Release|true'">
+        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Debug|true'">
+        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
 </Project>

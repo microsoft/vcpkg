@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
     REF "v${VERSION}"
-    SHA512 497bd9a127caaafe4b2a97c8f16fe3847085c59ac5ef43d1819bcb9cc6ad32fbd3d1ec507cb42810871a5e5ce08033a1a36aced0e250b2538bf905bf61459950
+    SHA512 357fd22056b24e939d300a2e5f3eb61e6f2683cc1ec187a3a198b25b5908f07c07af38c3e862befb17254a0029f4994e4af43c070620a6a03e7d112c6eabcd25
     PATCHES
         no-werror.patch
 )

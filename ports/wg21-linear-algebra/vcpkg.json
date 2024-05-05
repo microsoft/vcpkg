@@ -1,6 +1,6 @@
 {
   "name": "wg21-linear-algebra",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "A linear algebra proposal for the C++ standard library",
   "license": "NCSA",
   "dependencies": [

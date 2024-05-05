@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wqking/eventpp
-    REF v0.1.2
-    SHA512 01fd536024dfef8c4025fc184f6b6326a901849dbf73d81430d7cfadeff25c9c140ab6a28b0143a4090703668c1d9e743a54e874c0321c3453cf40aeb4583db3
+    REF "v${VERSION}"
+    SHA512 b39994e9bd581d6bb61b634c434c46075e41ec2217e1174578fefd206a927bd725744ae0724d319cde8f2b2a43d2e030a04c271197500d94c6b1afd849f779fd
     HEAD_REF master
 )
 
@@ -19,4 +19,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/license" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license")

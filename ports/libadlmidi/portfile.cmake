@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 d827f13c60086b62bb4ffb098faeaa214fd83df52d3d5c19533b970d74b470c677e0aec76e91e05753574cf9bae1ccd02b77bd24d0ec1b2ad80b21cf541c7261
     PATCHES
+        # patches from master, they should be removed when a new version is out
         cmake-package-export.patch
         cmake-build-shared-libs-support.patch
 )

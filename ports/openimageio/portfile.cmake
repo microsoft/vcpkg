@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO OpenImageIO/oiio
+    REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 e7dd7aba8dc0baa9bc50f362c21119bf4008edbd03a0c9f31bb03e01b5b0cc18c39f8a368885a4d756f6b475965138409c7e91eeae90b0ebc18d253ff314f025
+    SHA512 8399d66a757297d646e0d9ce363cfc88a8f7b06d69582857093f13a0a398fc027ea68bf1a97f039320f3fe512c96b4e3ed084295da12359e7574ba460336ce10
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
+        fix-dependency-libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -40,7 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
-        tools       USE_QT
+        viewer      ENABLE_IV
 )
 
 vcpkg_cmake_configure(
@@ -48,6 +49,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DOIIO_BUILD_TESTS=OFF
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_OpenVDB=OFF
@@ -74,7 +76,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool iv
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        AUTO_CLEAN
+    )
+endif()
+
+if("viewer" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES iv
         AUTO_CLEAN
     )
 endif()

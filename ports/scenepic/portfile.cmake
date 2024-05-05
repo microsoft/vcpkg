@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  microsoft/scenepic 
     REF "v${VERSION}"
-    SHA512 2d9dfcefa7a054cf0addb12113ab65cb7dd3a8a6f7b42f60558a5d47a6de45a9e801be3266b81358ff8ac075dd9e9e2b9369905d62f2383531d6e28e93406ac9
+    SHA512 2ec8cdaa54a4432386175c545c4114d0682015cb34f77968622eac0b9ef6ccd8a5f14ba663339995bf109b472958407f694d40adf6025c02e464e94ef4fe5bd0
     HEAD_REF main
     PATCHES
         "fix_dependencies.patch"

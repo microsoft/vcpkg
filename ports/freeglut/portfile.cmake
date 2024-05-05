@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeGLUTProject/freeglut
@@ -13,8 +11,10 @@ vcpkg_from_github(
         windows-output-name.patch
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message("Freeglut currently requires the following libraries from the system package manager:\n    opengl\n    glu\n    libx11\n    xrandr\n    xi\n    xxf86vm\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev\nOn macOS Xquartz is required.")
+if(VCPKG_TARGET_IS_OSX)
+    message("Freeglut currently requires Xquartz for macOS.")
+elseif(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID)
+    message("Freeglut currently requires the following libraries from the system package manager:\n    opengl\n    glu\n    libx11\n    xrandr\n    xi\n    xxf86vm\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FREEGLUT_STATIC)
@@ -33,12 +33,20 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeGLUT)
 vcpkg_fixup_pkgconfig()
-file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freeglut.pc")
-if(NOT VCPKG_BUILD_TYPE)
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd")
+
+file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"  "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pc_files)
+    vcpkg_replace_string("${file}" ";-D" " -D")
+endforeach()
+
+if(NOT VCPKG_TARGET_IS_ANDROID)
+    file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freeglut.pc")
+    if(NOT VCPKG_BUILD_TYPE)
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd")
+        endif()
+        file(COPY_FILE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freeglut.pc")
     endif()
-    file(COPY_FILE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freeglut.pc")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

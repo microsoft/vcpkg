@@ -1,10 +1,7 @@
 {
   "name": "eve",
-  "version": "2022.9.1",
-  "description": [
-    "EVE - the Expressive Vector Engine",
-    "A header-only C++20 and onward implementation of a type based wrapper around SIMD extensions sets for most current architectures."
-  ],
+  "version": "2023.2.15",
+  "description": "EVE - the Expressive Vector Engine : C++20 SIMD Programming Library",
   "homepage": "https://github.com/jfalcou/eve",
   "documentation": "https://jfalcou.github.io/eve/",
   "license": "BSL-1.0",

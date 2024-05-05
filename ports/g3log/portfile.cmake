@@ -2,8 +2,8 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KjellKod/g3log
-    REF 6f6da0ed2a8b42b8a5d1a416fe1646fe45e45c99
-    SHA512 65d966e0cb35ae6903619349520f12abf473c98ce6c9ffcb9b196b0be5d2b75ee5b716eeec8285ddc909f65049d8feab9389347c28be376b46cdb0d9246ffbbd
+    REF "${VERSION}"
+    SHA512 f48c5bb30d734fc218a5bfb19a406101c89deaee4a2f76b21c7105215a29f558efc2759ee1c1664f62cb37e2d8ae0666f99fdce9b863221e4a9efc9814cdf30c
     HEAD_REF master
 )
 

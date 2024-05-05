@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO axboe/liburing
-    REF dda4848a9911120a903bef6284fb88286f4464c9 #liburing-2.2
-    SHA512 c2e4969ffb895996bf7465ce86143d4d3401a052624ec19580d34e8adbb2b57801e03541493f61e19a3137984714db645b135b1bc3b41987bccfd926bb486c09 
+    REF "liburing-${VERSION}"
+    SHA512 53742c23211de7194322874eb8186b942ccc1611c231d49f60fd1d8bc2bb93d231ed521af77802db68c30557d71fa5799ae40cbacfc24ba1db3d650c7ba8cc62
     HEAD_REF master
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED
@@ -13,12 +13,13 @@ vcpkg_from_github(
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
+    OPTIONS
+        [[--libdevdir=\${prefix}/lib]] # must match libdir
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CURRENT_PORT_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 

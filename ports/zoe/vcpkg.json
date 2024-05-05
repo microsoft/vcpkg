@@ -1,0 +1,22 @@
+{
+  "name": "zoe",
+  "version": "3.0",
+  "maintainers": "winsoft666 <winsoft666@outlook.com>",
+  "description": "C++ File Download Library, support Multithreading, Breakpoint Transmission, Speed Limit, Real-time Speed.",
+  "homepage": "https://github.com/winsoft666/zoe",
+  "supports": "!osx & !uwp & !arm & !android",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,12 +1,12 @@
-set(DIRECTXMESH_TAG dec2022)
+set(DIRECTXMESH_TAG feb2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF dec2022b
-    SHA512 8e7b757b311223b6ea10fcd6ca9729a4fed51526966239da7d9c3c22f09bc50bbae80b2f8f899badbcc0bfcabc62dcd8d7a662c5881118cce97d3198c014c51e
+    REF ${DIRECTXMESH_TAG}
+    SHA512 f15bba68982ffb69f2f07503aeb565a95b733feb14b5bfb546284e6be498e6e45a286e556228c4284c8fccddd3581cc7aa10b5b522f9ba4d511f0303757c83e8
     HEAD_REF main
 )
 
@@ -15,53 +15,67 @@ vcpkg_check_features(
     FEATURES
         dx12 BUILD_DX12
         spectre ENABLE_SPECTRE_MITIGATION
+        tools BUILD_TOOLS
 )
 
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
-set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
-
-if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_XBOX)
-  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
-else()
-  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
-endif()
-
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmesh)
 
-if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
-  vcpkg_download_distfile(
-    MESHCONVERT_EXE
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
-    FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
-    SHA512 46b5fc3dcf58a7c03075927511de5ae4c62c09ceb22076125d3be29044d7da1cc32225a43500ed53ddf0c30d969091b705345a5eb3bb49cc07233dba988357c8
-  )
+if("tools" IN_LIST FEATURES)
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
 
-  file(INSTALL
-    ${MESHCONVERT_EXE}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
-
-elseif(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_UWP) AND (NOT VCPKG_TARGET_IS_XBOX))
-
-  vcpkg_copy_tools(
-        TOOL_NAMES meshconvert
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    vcpkg_download_distfile(
+      MESHCONVERT_EXE
+      URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
+      FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
+      SHA512 a1a7187a19b5947dd5ab34097da55793f43fccb0cd1efc81d9b8ccdd8fcffeb638174c004c64a4cf9b720e878d9352fa3c2a7a1082de7123279dde14cc5a628c
     )
 
+    file(INSTALL
+      "${MESHCONVERT_EXE}"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
+
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe")
+
+  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+
+    vcpkg_download_distfile(
+      MESHCONVERT_EXE
+      URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert_arm64.exe"
+      FILENAME "meshconvert-${DIRECTXMESH_TAG}-arm64.exe"
+      SHA512 77e844accd195c859ca9501575e8aa83b2dda21efd0a313f46362321be0384c24bf8f16e45cfc543162488f4af18220260dc7155c8b49a0737cecc31fd152b2b
+    )
+
+    file(INSTALL
+      "${MESHCONVERT_EXE}"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
+
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}-arm64.exe" "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe")
+
+  else()
+
+    vcpkg_copy_tools(
+          TOOL_NAMES meshconvert
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin"
+      )
+
+  endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

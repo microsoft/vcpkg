@@ -1,7 +1,7 @@
 {
   "name": "zyre",
-  "version-string": "2019-07-07",
-  "port-version": 4,
+  "version-date": "2019-07-07",
+  "port-version": 5,
   "description": "An open-source framework for proximity-based peer-to-peer applications",
   "homepage": "https://github.com/zeromq/zyre",
   "dependencies": [

@@ -1,6 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.6.3",
+  "version-semver": "3.8.5",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -12,8 +12,17 @@
       "name": "pkgconf",
       "host": true
     },
-    "proj",
-    "tiff",
+    {
+      "name": "proj",
+      "default-features": false,
+      "features": [
+        "tiff"
+      ]
+    },
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -139,6 +148,19 @@
       "description": "Use JPEG compression library",
       "dependencies": [
         "libjpeg-turbo"
+      ]
+    },
+    "kea": {
+      "description": "Enable KEA driver",
+      "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ]
+        },
+        "kealib"
       ]
     },
     "lerc": {

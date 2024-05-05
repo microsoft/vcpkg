@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 8011f2181cb627c2b516c7e1b8ecec78a201f357f3be6e568f7814a6a9c42d5979f4bb4ed040a67d68f6649d1f5c564f3cb2fac7e52702f755749084d903a737
+    SHA512 1d19f30c0ae94e212326a15dc128612bce207e619c55c2a020401a27d01a933de71bb35e907521dc8fd853dd5578d74d74f7a5a282f0083fd22cf9cb07ccb96e
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        trim-shared-build.patch
+        fix-tools-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -57,7 +57,11 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES cjxl djxl cjpeg_hdr jxlinfo AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cjxl djxl jxlinfo AUTO_CLEAN)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_export.h" "ifdef JXL_STATIC_DEFINE" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

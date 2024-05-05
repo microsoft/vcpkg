@@ -1,6 +1,6 @@
 {
   "name": "ignition-common3",
-  "version": "3.14.1",
+  "version": "3.16.0",
   "description": "Common libraries for robotics applications",
   "homepage": "https://ignitionrobotics.org/libs/common",
   "license": null,

@@ -1,12 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8263f23..8906fed 100644
+index 2e854f2..ec2ec1d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -201,7 +201,8 @@ target_include_directories(${redwg} PRIVATE
-          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
- target_include_directories(${redwg} PUBLIC
-   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
--
+@@ -282,6 +282,8 @@ target_include_directories(${redwg} PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>)
+ 
 +find_path(JSMN_INCLUDE_DIRS "jsmn.h")
 +target_include_directories(${redwg} PRIVATE ${JSMN_INCLUDE_DIRS})
  link_libraries(${redwg} ${LIBS} ${CMAKE_THREAD_LIBS_INIT})

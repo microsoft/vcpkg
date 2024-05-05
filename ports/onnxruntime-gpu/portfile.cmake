@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/microsoft/onnxruntime/releases/download/v${VERSION}/onnxruntime-win-x64-gpu-${VERSION}.zip"
     FILENAME "onnxruntime-win-x64-gpu-${VERSION}.zip"
-    SHA512 f927302daa7b778eaf15693e446303060c0a38dfd18b8026c28ac65f545dd463ee7cd3f0aa6bfe59301c5c85ccf4512584ed968ac42ce8d78c12a79d8af2de1e
+    SHA512 7ab350a2ede0fc8c716cf083e16a9303acbcc855982e53900f8843773ec32fd20a7396f0bde82bb29f382012b1d05dea41708797f112d9096c8b5048fc5eb7d8
 )
 
 vcpkg_extract_source_archive(
@@ -11,6 +11,20 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
+
+# Download repo for experimental features
+vcpkg_from_github(
+    OUT_SOURCE_PATH REPO_PATH
+    REPO microsoft/onnxruntime
+    REF v${VERSION}
+    SHA512 f2fec4ded88da6bf67ae7d0aa3082736cb3b8ba29e723b5a516d7632b68ce02aed461f24d3e82cbab20757729e0ab45d736bd986c9b7395f2879b16a091c12a1
+)
+
+file(COPY
+        ${REPO_PATH}/include/onnxruntime/core/session/experimental_onnxruntime_cxx_api.h 
+        ${REPO_PATH}/include/onnxruntime/core/session/experimental_onnxruntime_cxx_inline.h
+        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    )
 
 file(MAKE_DIRECTORY
         ${CURRENT_PACKAGES_DIR}/include

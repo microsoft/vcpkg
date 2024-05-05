@@ -1,7 +1,7 @@
 {
   "name": "mstch",
-  "version-string": "1.0.2",
-  "port-version": 4,
+  "version": "1.0.2",
+  "port-version": 5,
   "description": "Mstch is a complete implementation of {{mustache}} templates using modern C++",
   "homepage": "https://github.com/no1msd/mstch",
   "dependencies": [

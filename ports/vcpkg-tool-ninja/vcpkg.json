@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-tool-ninja",
   "version-date": "2022-03-31",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Ninja is a small build system with a focus on speed.",
   "homepage": "https://ninja-build.org/",
   "license": "Apache-2.0",

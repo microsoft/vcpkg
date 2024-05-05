@@ -2,10 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brainboxdotcc/DPP
     REF "v${VERSION}"
-    SHA512 18bbb7d2c1385d179cac9ded31d1b11e8d24f172e7ffe2ba79071203e1e2f277657e21d660b18ee4b849bc093d350f4bc5401702400084b56c3ebd6f03ce28df
-    HEAD_REF master
-    PATCHES
-        remove-wrong-header.patch
+    SHA512 fcb9b8181827fc63fb2f9aff44e697d18a0bfd94714888492a63a04e0112f42f9506bfab8181e822aa5ce85e6b6a8aa44e0774baeac3e52c3f41348cbf55a76a
 )
 
 vcpkg_cmake_configure(
@@ -27,4 +24,3 @@ endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 679b4e7..08965d9 100644
+index 1705a8426..d13d41786 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -187,7 +187,7 @@ add_subdirectory(apps)
+@@ -192,7 +192,7 @@ add_subdirectory(apps)
  # so that users only need link libpdalcpp.
  #
  if (APPLE)

@@ -1,7 +1,7 @@
 {
   "name": "xframe",
-  "version-string": "0.3.0",
-  "port-version": 2,
+  "version": "0.3.0",
+  "port-version": 3,
   "description": "xframe is a dataframe for C++, based on xtensor and xtl.",
   "homepage": "https://github.com/xtensor-stack/xframe",
   "dependencies": [

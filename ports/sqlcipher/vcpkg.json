@@ -1,6 +1,6 @@
 {
   "name": "sqlcipher",
-  "version": "4.5.2",
+  "version": "4.5.6",
   "description": "SQLCipher extends the SQLite database library to add security enhancements that make it more suitable for encrypted local data storage.",
   "homepage": "https://www.zetetic.net/sqlcipher",
   "license": null,
@@ -18,6 +18,9 @@
     }
   ],
   "features": {
+    "fts5": {
+      "description": "enable FTS5 functionality for sqlite3"
+    },
     "geopoly": {
       "description": "enable geopoly functionality for sqlite3"
     },

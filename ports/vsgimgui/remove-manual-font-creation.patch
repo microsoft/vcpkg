@@ -1,0 +1,63 @@
+diff --git a/include/vsgImGui/RenderImGui.h b/include/vsgImGui/RenderImGui.h
+index e8186c6..8059d75 100644
+--- a/include/vsgImGui/RenderImGui.h
++++ b/include/vsgImGui/RenderImGui.h
+@@ -86,7 +86,6 @@ namespace vsgImGui
+                    vsg::ref_ptr<vsg::RenderPass> renderPass,
+                    uint32_t minImageCount, uint32_t imageCount,
+                    VkExtent2D imageSize, bool useClearAttachments);
+-        void _uploadFonts();
+     };
+ 
+ } // namespace vsgImGui
+diff --git a/src/vsgImGui/RenderImGui.cpp b/src/vsgImGui/RenderImGui.cpp
+index bda3137..7ec6136 100644
+--- a/src/vsgImGui/RenderImGui.cpp
++++ b/src/vsgImGui/RenderImGui.cpp
+@@ -60,7 +60,6 @@ namespace vsgImGui
+ RenderImGui::RenderImGui(const vsg::ref_ptr<vsg::Window>& window, bool useClearAttachments)
+ {
+     _init(window, useClearAttachments);
+-    _uploadFonts();
+ }
+ 
+ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
+@@ -69,7 +68,6 @@ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
+                          VkExtent2D imageSize, bool useClearAttachments)
+ {
+     _init(device, queueFamily, renderPass, minImageCount, imageCount, imageSize, useClearAttachments);
+-    _uploadFonts();
+ }
+ 
+ RenderImGui::~RenderImGui()
+@@ -183,30 +181,6 @@ void RenderImGui::_init(
+     }
+ }
+ 
+-void RenderImGui::_uploadFonts()
+-{
+-    auto commandPool = vsg::CommandPool::create(_device, _queueFamily, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT);
+-    auto fence = vsg::Fence::create(_device);
+-
+-    uint64_t timeout = 1000000000;
+-    vsg::submitCommandsToQueue(commandPool, fence, timeout, _queue, [&](vsg::CommandBuffer& commandBuffer) {
+-        ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
+-    });
+-
+-    VkResult result = fence->status();
+-    while (result == VK_NOT_READY)
+-    {
+-        result = fence->wait(timeout);
+-    }
+-
+-    if (result != VK_SUCCESS)
+-    {
+-        vsg::error("RenderImGui::_uploadFonts(), fence->state() = ", result);
+-    }
+-
+-    ImGui_ImplVulkan_DestroyFontUploadObjects();
+-}
+-
+ void RenderImGui::accept(vsg::RecordTraversal& rt) const
+ {
+     auto& commandBuffer = *(rt.getState()->_commandBuffer);

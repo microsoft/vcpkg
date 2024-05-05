@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(live555 C CXX)
 
+set(CMAKE_CXX_STANDARD 20)
 include_directories(
     BasicUsageEnvironment/include
     groupsock/include
@@ -14,6 +15,13 @@ endif(WIN32)
 
 if (NOT MSVC)
     add_compile_options(-DSOCKLEN_T=socklen_t)
+endif()
+
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+   add_compile_options(-DBSD=1)
+   add_compile_options(-DHAVE_SOCKADDR_LEN=1)
+   add_compile_options(-DTIME_BASE=int)
+   add_compile_options(-DNEED_XLOCALE_H=1)
 endif()
 
 file(GLOB BASIC_USAGE_ENVIRONMENT_SRCS BasicUsageEnvironment/*.c BasicUsageEnvironment/*.cpp)

@@ -1,3 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 427e82e..5a58e47 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -257,6 +257,9 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/deps)
+ if(${use_installed_dependencies})
+     find_package(parson REQUIRED CONFIG)
+ endif()
++if(NOT TARGET parson)
++    add_library(parson ALIAS parson::parson)
++endif()
+ 
+ include_directories(${MACRO_UTILS_INC_FOLDER})
+ include_directories(${UMOCK_C_INC_FOLDER})
 diff --git a/configs/azure_iot_sdksConfig.cmake b/configs/azure_iot_sdksConfig.cmake
 index b9c62e8..edf5847 100644
 --- a/configs/azure_iot_sdksConfig.cmake

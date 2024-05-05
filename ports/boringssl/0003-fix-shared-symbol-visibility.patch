@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -252,8 +252,6 @@ if(FUZZ)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,fuzzer-no-link -fsanitize-coverage=edge,indirect-calls")
+ endif()
+ 
+-add_definitions(-DBORINGSSL_IMPLEMENTATION)
+-
+ if(BUILD_SHARED_LIBS)
+   add_definitions(-DBORINGSSL_SHARED_LIBRARY)
+   # Enable position-independent code globally. This is needed because
+@@ -563,7 +561,7 @@ if(APPLE)
+ endif()
+ 
+ add_library(pki ${PKI_SOURCES})
+-target_compile_definitions(pki PRIVATE _BORINGSSL_LIBPKI_)
++target_compile_definitions(pki PRIVATE _BORINGSSL_LIBPKI_ BORINGSSL_IMPLEMENTATION)
+ target_link_libraries(pki crypto)
+ 
+ add_executable(pki_test ${PKI_TEST_SOURCES})
+diff --git a/crypto/CMakeLists.txt b/crypto/CMakeLists.txt
+--- a/crypto/CMakeLists.txt
++++ b/crypto/CMakeLists.txt
+@@ -294,6 +294,7 @@ add_library(
+   $<TARGET_OBJECTS:fipsmodule>
+   ${CRYPTO_FIPS_OBJECTS}
+ )
++target_compile_definitions(crypto PRIVATE BORINGSSL_IMPLEMENTATION)
+ if(OPENSSL_ASM)
+   target_sources(crypto PRIVATE ${CRYPTO_SOURCES_ASM})
+ endif()
+diff --git a/ssl/CMakeLists.txt b/ssl/CMakeLists.txt
+--- a/ssl/CMakeLists.txt
++++ b/ssl/CMakeLists.txt
+@@ -39,6 +39,7 @@ add_library(
+   tls13_enc.cc
+   tls13_server.cc
+ )
++target_compile_definitions(ssl PRIVATE BORINGSSL_IMPLEMENTATION)
+ # Although libssl also provides headers that require an include directory, the
+ # flag is already specified by libcrypto, so we omit target_include_directories
+ # here.

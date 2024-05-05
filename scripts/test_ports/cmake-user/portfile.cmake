@@ -129,6 +129,10 @@ function(test_cmake_project)
             list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
         endif()
     endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
+    endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND base_options -DBUILD_SHARED_LIBS=ON)

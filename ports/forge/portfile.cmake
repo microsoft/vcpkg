@@ -26,9 +26,9 @@ list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/forge/examples
-    ${CURRENT_PACKAGES_DIR}/forge/examples
+    ${CURRENT_PACKAGES_DIR}/debug/examples
+    ${CURRENT_PACKAGES_DIR}/examples
     ${DLLS}
 )
 
-file(INSTALL "${SOURCE_PATH}/.github/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/.github/LICENSE")

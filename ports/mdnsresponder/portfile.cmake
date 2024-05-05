@@ -14,25 +14,7 @@ ENDIF()
 
 function(FIX_VCXPROJ VCXPROJ_PATH)
   file(READ ${VCXPROJ_PATH} ORIG)
-  if(${VCPKG_CRT_LINKAGE} STREQUAL "dynamic")
-    string(REGEX REPLACE
-      "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
-      "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
-      ORIG "${ORIG}")
-    string(REGEX REPLACE
-      "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
-      "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
-      ORIG "${ORIG}")
-  else()
-    string(REGEX REPLACE
-      "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
-      "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
-      ORIG "${ORIG}")
-    string(REGEX REPLACE
-      "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
-      "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
-      ORIG "${ORIG}")
-  endif()
+
   if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
     string(REPLACE
       "<ConfigurationType>StaticLibrary</ConfigurationType>"
@@ -44,11 +26,7 @@ function(FIX_VCXPROJ VCXPROJ_PATH)
       "<ConfigurationType>StaticLibrary</ConfigurationType>"
       ORIG "${ORIG}")
   endif()
-  
-  string(REPLACE
-    "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
-    "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
-    ORIG "${ORIG}")
+
   file(WRITE ${VCXPROJ_PATH} "${ORIG}")
 endfunction()
 
@@ -58,15 +36,13 @@ if(${VCPKG_CRT_LINKAGE} STREQUAL "dynamic" AND ${VCPKG_LIBRARY_LINKAGE} STREQUAL
 endif()
 FIX_VCXPROJ("${SOURCE_PATH}/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj")
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "mDNSWindows/mDNSResponder.sln"
+    PROJECT_SUBPATH mDNSWindows/mDNSResponder.sln
     PLATFORM ${BUILD_ARCH}
     TARGET dns-sd
-    SKIP_CLEAN
 )
 
 file(INSTALL "${SOURCE_PATH}/mDNSShared/dns_sd.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

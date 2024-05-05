@@ -1,0 +1,13 @@
+diff --git a/cmake/opentelemetry-cpp-config.cmake.in b/cmake/opentelemetry-cpp-config.cmake.in
+index adae58d..2642772 100644
+--- a/cmake/opentelemetry-cpp-config.cmake.in
++++ b/cmake/opentelemetry-cpp-config.cmake.in
+@@ -69,6 +69,8 @@ set(OPENTELEMETRY_VERSION
+ # ##############################################################################
+
+ find_package(Threads)
++include(CMakeFindDependencyMacro)
++find_dependency(absl)
+
+ set_and_check(OPENTELEMETRY_CPP_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ set_and_check(OPENTELEMETRY_CPP_LIBRARY_DIRS "@PACKAGE_CMAKE_INSTALL_LIBDIR@")

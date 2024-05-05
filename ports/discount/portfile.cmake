@@ -4,11 +4,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Orc/discount
-    REF v2.2.6
-    SHA512 4c5956dea78aacd3a105ddac13f1671d811a5b2b04990cdf8485c36190c8872c4b1b9432a7236f669c34b07564ecd0096632dced54d67de9eaf4f23641417ecc
+    REF "v${VERSION}"
+    SHA512 d86bfc6d3e11131622046418a1f54bd9dfa5f1233e510189cd2c89dc857da31e88ffbe6670cc506ca8b9763e8fb74ed215f1018f83e25767c77acb8a7c296b8a
     HEAD_REF master
     PATCHES
-      cmake.patch
       generate-blocktags-command.patch
       disable-deprecated-warnings.patch
 )
@@ -33,6 +32,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/discount)
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

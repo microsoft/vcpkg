@@ -66,21 +66,21 @@ index 271bb9b..1b6ba8f 100644
          DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 +        
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(libADLMIDI-config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/libADLMIDI-config.cmake"
++configure_package_config_file(libADLMIDIConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/libADLMIDIConfig.cmake"
 +    PATH_VARS CMAKE_INSTALL_PREFIX CMAKE_INSTALL_FULL_BINDIR CMAKE_INSTALL_FULL_INCLUDEDIR CMAKE_INSTALL_FULL_LIBDIR
 +    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libADLMIDI"
 +)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libADLMIDI-config.cmake
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libADLMIDIConfig.cmake
 +    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libADLMIDI"
 +)
  
  file(GLOB DOCTXT_FILES
      "${libADLMIDI_SOURCE_DIR}/LICENSE*.txt"
-diff --git a/libADLMIDI-config.cmake.in b/libADLMIDI-config.cmake.in
+diff --git a/libADLMIDIConfig.cmake.in b/libADLMIDIConfig.cmake.in
 new file mode 100644
 index 0000000..bd875fc
 --- /dev/null
-+++ b/libADLMIDI-config.cmake.in
++++ b/libADLMIDIConfig.cmake.in
 @@ -0,0 +1,30 @@
 +include(FeatureSummary)
 +set_package_properties(libADLMIDI PROPERTIES

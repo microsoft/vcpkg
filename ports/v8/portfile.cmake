@@ -1,3 +1,14 @@
+vcpkg_get_windows_sdk(WINDOWS_SDK)
+
+if (WINDOWS_SDK MATCHES "10.")
+    set(LIBFILEPATH "$ENV{WindowsSdkDir}Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\Ws2_32.Lib")
+    set(HEADERSPATH "$ENV{WindowsSdkDir}Include\\${WINDOWS_SDK}\\um")
+elseif(WINDOWS_SDK MATCHES "8.")
+    set(LIBFILEPATH "$ENV{WindowsSdkDir}Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\Ws2_32.Lib")
+    set(HEADERSPATH "$ENV{WindowsSdkDir}Include\\um")
+else()
+    message(FATAL_ERROR "Portfile not yet configured for Windows SDK with version: ${WINDOWS_SDK}")
+endif()
 
 set(pkgver "9.1.269.39")
 
@@ -171,7 +182,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file("${CURRENT_PORT_DIR}/v8.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8.pc" @ONLY)
     configure_file("${CURRENT_PORT_DIR}/v8_libbase.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libbase.pc" @ONLY)
-    configure_file("${CURRENT_PORT_DIR}/v8_libplatform.pc.in" "{CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc" @ONLY)
+    configure_file("${CURRENT_PORT_DIR}/v8_libplatform.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc" @ONLY)
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/snapshot_blob.bin" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)

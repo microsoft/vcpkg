@@ -28,6 +28,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_POLICY_DEFAULT_CMP0022=NEW
+        # libkml uses std::unary_function that was deprecated in C++11 and removed in C++17
+        # compilers are starting to ship C++17 as the defualt so explicitly set C++11
+        -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_cmake_install()

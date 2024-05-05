@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(EDFlib VERSION 1.21 LANGUAGES C)
+project(EDFlib LANGUAGES C)
 
 option(BUILD_TOOLS "Build EDFlib tools." OFF)
 
@@ -9,6 +9,15 @@ include(GNUInstallDirs)
 set(sources edflib.h edflib.c)
 
 add_library(EDFlib ${sources})
+
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(EDFlib
+        PUBLIC
+            EDFLIB_SO_DLL
+        PRIVATE
+            $<BUILD_INTERFACE:EDFLIB_BUILD>
+    )
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     target_compile_definitions(EDFlib PRIVATE _LARGEFILE64_SOURCE _LARGEFILE_SOURCE)
@@ -21,6 +30,8 @@ install(TARGETS EDFlib
     EXPORT EDFlibTargets
     PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 

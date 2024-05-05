@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3837943..2c34d7fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -446,11 +446,25 @@ if(WARNINGS_AS_ERRORS)
+        endif()
+ endif()
+ 
++if(DATACHANNEL_STATIC_LINKAGE)
++set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
++set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 0)
++
++install(TARGETS datachannel-static EXPORT LibDataChannelTargets
++       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++else()
++set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 0)
++set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 1)
++
+ install(TARGETS datachannel EXPORT LibDataChannelTargets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++endif()
+ 
+ install(FILES ${LIBDATACHANNEL_HEADERS}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rtc

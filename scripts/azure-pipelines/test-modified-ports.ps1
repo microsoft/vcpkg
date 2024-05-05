@@ -70,10 +70,9 @@ if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
     $BinarySourceStub = "files,$ArchivesRoot"
 }
 
-$env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
-$buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
+$buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
-$packagesRoot = Join-Path $WorkingRoot 'packages'
+$packagesRoot = Join-Path $WorkingRoot 'p'
 
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
@@ -104,22 +103,16 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
-if ($Triplet -eq 'x64-linux') {
-    $env:HOME = '/home/agent'
-    $executableExtension = [string]::Empty
-}
-elseif ($Triplet -eq 'x64-osx') {
-    $executableExtension = [string]::Empty
-}
-else {
+if ($IsWindows) {
     $executableExtension = '.exe'
+} else {
+    $executableExtension = [string]::Empty
 }
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
-if ($IsWindows)
-{
+if ($IsWindows) {
     mkdir empty
     cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
     cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"
@@ -136,6 +129,8 @@ if ($LASTEXITCODE -ne 0)
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
+    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+
     # Prefetch tools for better output
     foreach ($tool in @('cmake', 'ninja', 'git')) {
         & "./vcpkg$executableExtension" fetch $tool
@@ -145,17 +140,25 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         }
     }
 
-    Write-Host "Determining parent hashes using HEAD~1"
-    $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
-    $parentHashes = @("--parent-hashes=$parentHashesFile")
+    Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
-    # The vcpkg.cmake toolchain file is not part of ABI hashing,
-    # but changes must trigger at least some testing.
-    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-    & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
-
-    Write-Host "Running CI using parent hashes"
+    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+    if ($parentBaseline -eq $headBaseline)
+    {
+        Write-Host "CI baseline unchanged, determining parent hashes"
+        $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
+        $parentHashes = @("--parent-hashes=$parentHashesFile")
+        # The vcpkg.cmake toolchain file is not part of ABI hashing,
+        # but changes must trigger at least some testing.
+        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+        & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+    }
+    else
+    {
+        Write-Host "CI baseline was modified, not using parent hashes"
+    }
+    Write-Host "Running CI for HEAD"
     & git reset --hard HEAD
 }
 

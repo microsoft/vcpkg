@@ -5,7 +5,7 @@ includedir=${prefix}/include/OpenSP
 
 Name: opensp
 Description: SGML parser algorithm library
-Version: @OPENSP_VERSION@
+Version: @VERSION@
 Libs: -L${libdir} -losp
 Libs.private: @EXTRA_LIBS@
 Cflags: -I${includedir}

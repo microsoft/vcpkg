@@ -1,7 +1,7 @@
 {
   "name": "qtopcua",
-  "version": "6.4.3",
-  "description": "Qt wrapper for existing OPC UA stacks",
+  "version": "6.6.3",
+  "description": "The Qt OPC UA module implements a Qt API to interact with OPC UA on top of a 3rd party OPC UA stack.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
@@ -27,7 +27,8 @@
       "description": "Support for global discovery server"
     },
     "ns0idgenerator": {
-      "description": "Namespace 0 NodeIds generator from the NodeIds.csv file."
+      "description": "Namespace 0 NodeIds generator from the NodeIds.csv file.",
+      "supports": "native"
     },
     "ns0idnames": {
       "description": "Support for namespace 0 NodeId names"

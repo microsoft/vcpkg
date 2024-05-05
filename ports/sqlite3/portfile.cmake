@@ -2,9 +2,9 @@ string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+)" "\\1,0\\2,0\\3
 string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "\\1\\2\\3\\4" SQLITE_VERSION "${SQLITE_VERSION}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2022/sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 863afdabbdbe27baaccc13477e08437ce3b4d7e6f0c51a294d1d71252476af474b6c275729ebe1bc801f004da7ca6775591a30fed1930c3a1920d8118864f1d2
+    URLS "https://sqlite.org/2024/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
+    FILENAME "sqlite-autoconf-${SQLITE_VERSION}.zip"
+    SHA512 ab4bb99186ccf81d288bc5150dacd5f8a32561303fbc0c607c24b5bb5ad44e0974655cea57d05122c62e957329f5260d170d2a71cbcf818501af29903c99a391
 )
 
 vcpkg_extract_source_archive(
@@ -25,21 +25,31 @@ else()
     set(SQLITE_API "")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        fts5                SQLITE_ENABLE_FTS5
+        math                SQLITE_ENABLE_MATH_FUNCTIONS
+        zlib                WITH_ZLIB
+    INVERTED_FEATURES
+        tool                SQLITE3_SKIP_TOOLS
+)
+vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
+    FEATURES
+        dbstat              SQLITE_ENABLE_DBSTAT_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
-        fts5                SQLITE_ENABLE_FTS5
         memsys3             SQLITE_ENABLE_MEMSYS3
         memsys5             SQLITE_ENABLE_MEMSYS5
-        math                SQLITE_ENABLE_MATH_FUNCTIONS
         limit               SQLITE_ENABLE_UPDATE_DELETE_LIMIT
         rtree               SQLITE_ENABLE_RTREE
         session             SQLITE_ENABLE_SESSION
         session             SQLITE_ENABLE_PREUPDATE_HOOK
+        snapshot            SQLITE_ENABLE_SNAPSHOT
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
-        json1               SQLITE_ENABLE_JSON1
+        soundex             SQLITE_SOUNDEX
+    INVERTED_FEATURES
+        json1               SQLITE_OMIT_JSON
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -55,13 +65,6 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/sqlite3-vcpkg-config.h.in" "${SOURCE_PATH}/sqlite3-vcpkg-config.h" @ONLY)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        zlib                WITH_ZLIB
-    INVERTED_FEATURES
-        tool                SQLITE3_SKIP_TOOLS
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -69,16 +72,18 @@ vcpkg_cmake_configure(
         -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
+    MAYBE_UNUSED_VARIABLES
+        SQLITE_ENABLE_FTS5
+        SQLITE_ENABLE_MATH_FUNCTIONS
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT SQLITE3_SKIP_TOOLS AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+if("tool" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES sqlite3 DESTINATION "${CURRENT_PACKAGES_DIR}/tools" AUTO_CLEAN)
 endif()
 
 configure_file(
@@ -88,6 +93,7 @@ configure_file(
 )
 
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

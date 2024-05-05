@@ -1,0 +1,10 @@
+diff --git a/dimbuilder/CMakeLists.txt b/dimbuilder/CMakeLists.txt
+index 615e2e9..db44505 100644
+--- a/dimbuilder/CMakeLists.txt
++++ b/dimbuilder/CMakeLists.txt
+@@ -39,3 +39,5 @@ target_link_libraries(dimbuilder
+ if (MSVC)
+     target_link_options(dimbuilder PRIVATE /SUBSYSTEM:CONSOLE /ENTRY:mainCRTStartup)
+ endif(MSVC)
++
++install(TARGETS dimbuilder)

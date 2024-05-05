@@ -76,21 +76,21 @@ index 66d4848..4276e23 100644
          DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(libOPNMIDI-config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/libOPNMIDI-config.cmake"
++configure_package_config_file(libOPNMIDIConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/libOPNMIDIConfig.cmake"
 +    PATH_VARS CMAKE_INSTALL_PREFIX CMAKE_INSTALL_FULL_BINDIR CMAKE_INSTALL_FULL_INCLUDEDIR CMAKE_INSTALL_FULL_LIBDIR
 +    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libOPNMIDI"
 +)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libOPNMIDI-config.cmake
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libOPNMIDIConfig.cmake
 +        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libOPNMIDI")
 +
  if(WITH_EXTRA_BANKS AND NOT APPLE)
      file(GLOB WOPN_FILES ${libOPNMIDI_SOURCE_DIR}/fm_banks/*.wopn)
      install(FILES ${WOPN_FILES}
-diff --git a/libOPNMIDI-config.cmake.in b/libOPNMIDI-config.cmake.in
+diff --git a/libOPNMIDIConfig.cmake.in b/libOPNMIDIConfig.cmake.in
 new file mode 100644
 index 0000000..f292e48
 --- /dev/null
-+++ b/libOPNMIDI-config.cmake.in
++++ b/libOPNMIDIConfig.cmake.in
 @@ -0,0 +1,33 @@
 +include(FeatureSummary)
 +set_package_properties(libOPNMIDI PROPERTIES

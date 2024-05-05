@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF ${OATPP_VERSION}
     SHA512 8a208145ee10ed858767b4b56c220b6befd83e6858759128103ce679b889e6218a95ed6627af5098e4d26367be8add82de26e1f1f8ef581b1913b8386f9d56de
     HEAD_REF master
+    PATCHES
+        fix-usage.patch
 )
 
 vcpkg_cmake_configure(
@@ -21,4 +23,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-sqlite CONFIG_PATH lib/cmake/oatpp-s
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

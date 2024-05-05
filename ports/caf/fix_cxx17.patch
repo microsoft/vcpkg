@@ -1,8 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed753b9..5dc80c2 100644
 --- a/CMakeLists.txt
-+++ a/CMakeLists.txt
-@@ -115,3 +115,4 @@
-+target_compile_features(caf_internal INTERFACE cxx_std_17)
- # TODO: simply set CXX_STANDARD when switching to CMake ≥ 3.9.6
--if(NOT CMAKE_CROSSCOMPILING)
-+if(0)
-   try_compile(caf_has_cxx_17
++++ b/CMakeLists.txt
+@@ -131,7 +131,7 @@ endif()
+ 
+ if(NOT DEFINED CAF_USE_STD_FORMAT)
+   set(CAF_USE_STD_FORMAT OFF CACHE BOOL "Enable std::format support" FORCE)
+-  if(NOT CMAKE_CROSSCOMPILING)
++  if(0)
+     set(snippet "#include <format>
+                  #include <iostream>
+                  int main() { std::cout << std::format(\"{}\", \"ok\"); }")
+@@ -177,7 +177,6 @@ endif()
+ 
+ # -- create the libcaf_test target ahead of time for caf_core ------------------
+ 
+-add_library(libcaf_test)
+ 
+ # -- add uninstall target if it does not exist yet -----------------------------
+ 
+@@ -289,8 +288,6 @@ function(caf_add_component name)
+       string(REPLACE "/" "-" test_name "${test_path}/${test_name}-test")
+       add_executable("${test_name}" ${source_file}
+                      $<TARGET_OBJECTS:${obj_lib_target}>)
+-      target_link_libraries(${test_name} PRIVATE libcaf_test
+-                            ${CAF_ADD_COMPONENT_DEPENDENCIES})
+       target_include_directories(${test_name} PRIVATE
+                                  "${CMAKE_CURRENT_SOURCE_DIR}"
+                                  "${CMAKE_CURRENT_BINARY_DIR}")
+@@ -314,8 +311,6 @@ function(caf_add_component name)
+     add_executable(${tst_bin_target}
+                    ${CAF_ADD_COMPONENT_LEGACY_TEST_SOURCES}
+                    $<TARGET_OBJECTS:${obj_lib_target}>)
+-    target_link_libraries(${tst_bin_target} PRIVATE libcaf_test
+-                          ${CAF_ADD_COMPONENT_DEPENDENCIES})
+     target_include_directories(${tst_bin_target} PRIVATE
+                                "${CMAKE_CURRENT_SOURCE_DIR}/tests/legacy")
+     if(CAF_ADD_COMPONENT_LEGACY_TEST_SUITES)
+@@ -373,7 +368,6 @@ endfunction()
+ 
+ add_subdirectory(libcaf_core)
+ 
+-add_subdirectory(libcaf_test)
+ 
+ if(CAF_ENABLE_NET_MODULE)
+   add_subdirectory(libcaf_net)

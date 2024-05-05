@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/lambda2
-    REF boost-1.81.0
-    SHA512 e9e07866168c8596926eb2c68a6dc9ee89a0ca3400edd751f02e1e6cda4799b4d6e932e49dca2d36ae932963b65b70fc1141145802488b872be8acb59338b32e
+    REF boost-${VERSION}
+    SHA512 6f64f262f75c394d69370f09f72de53e13cca9e5836f3feea4ba51b85ec6d6d50017c5c0d3822f2859db239f3e3eb199446902359155d999b6d159bc75793578
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

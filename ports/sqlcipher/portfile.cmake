@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
-    REF v4.5.2
-    SHA512 1de5b219392bb976631857e32b4523258fd660fedb558d478e536b7e10c711c72c7e7c9062e45bd8a5ceaecbc1fee717935d2357f6811c3ddf76702167f4601b
+    REF "v${VERSION}"
+    SHA512 656206cd6f8eaec15a8c409c47c1c2ca7fa3d30f3b124f89ceeff3c0c8772e0b3cc942ef93a18a4ce4dee12b1d9bd94d7e4132cea35707871fe8c08b13f87797
     HEAD_REF master
 )
 
@@ -49,10 +49,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    geopoly WITH_GEOPOLY
-    json1 WITH_JSON1
+        geopoly WITH_GEOPOLY
+        json1 WITH_JSON1
+        fts5 WITH_FTS5
     INVERTED_FEATURES
-    tool SQLITE3_SKIP_TOOLS
+        tool SQLITE3_SKIP_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -77,7 +78,8 @@ configure_file(
     @ONLY
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_fixup_pkgconfig()

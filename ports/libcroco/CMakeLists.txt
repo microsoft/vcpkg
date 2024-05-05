@@ -1,15 +1,9 @@
 cmake_minimum_required(VERSION 3.11)
 project(libcroco C)
 
-find_package(Iconv REQUIRED)
-find_package(Intl REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
-find_package(LibXml2 REQUIRED)
-if(NOT WIN32)
-    find_package(Threads REQUIRED)
-endif()
-find_path(GLIB_INCLUDE_DIR glib.h)
+set(libcroco_pc_requires glib-2.0 libxml-2.0)
+pkg_check_modules(LIBCROCO_LINK_PUBLIC ${libcroco_pc_requires} IMPORTED_TARGET REQUIRED)
 
 file(GLOB SOURCES
 	src/cr-utils.c
@@ -67,18 +61,10 @@ file(GLOB SOURCES
 	src/libcroco.def
 )
 
-set(CMAKE_DEBUG_POSTFIX "d")
-
 add_library(croco-0.6 ${SOURCES})
-
-target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
-target_link_libraries(croco-0.6 PRIVATE 
-    PkgConfig::GLIB2
-    ${LIBXML2_LIBRARIES} ${Intl_LIBRARIES} Iconv::Iconv
-)
+target_link_libraries(croco-0.6 PRIVATE PkgConfig::LIBCROCO_LINK_PUBLIC)
 
 install(TARGETS croco-0.6
-    EXPORT libcroco-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -113,26 +99,20 @@ install(FILES
 	src/cr-parsing-location.h
 	src/cr-string.h
 	src/libcroco-config.h
-    DESTINATION include/libcroco
+    DESTINATION include/libcroco-0.6/libcroco
 )
 
-install(
-    EXPORT libcroco-targets
-    NAMESPACE unofficial::libcroco::
-    FILE unofficial-libcroco-targets.cmake
-    DESTINATION share/unofficial-libcroco
-)
+string(REGEX MATCH "^([0-9]*)[.]([0-9]*)[.].*" unused "${VERSION}" )
+set(LIBCROCO_MAJOR_VERSION "${CMAKE_MATCH_1}")
+set(LIBCROCO_MINOR_VERSION "${CMAKE_MATCH_2}")
 
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake "
-include(CMakeFindDependencyMacro)
-find_dependency(Intl)
-find_dependency(Iconv)
-find_dependency(PkgConfig)
-pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
-find_dependency(LibXml2)
-if(NOT WIN32)
-    find_dependency(Threads)
-endif()
-include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-libcroco-targets.cmake)
-")
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake DESTINATION share/unofficial-libcroco)
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libcroco.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libcroco.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libcroco.pc"
+	DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+	RENAME "libcroco-${LIBCROCO_MAJOR_VERSION}.${LIBCROCO_MINOR_VERSION}.pc"
+)
