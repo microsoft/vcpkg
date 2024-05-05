@@ -8041,7 +8041,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2024.1.7",
+      "baseline": "2024.1.12",
       "port-version": 0
     },
     "shaderc": {
