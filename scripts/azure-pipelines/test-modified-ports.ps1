@@ -120,13 +120,13 @@ if ($IsWindows) {
     rmdir empty
 }
 
-if ($IsLinuxHost)
+if ($IsLinux)
 {
-    Write-Host "Downloading Android NDK r26c"
-    & "./vcpkg" x-download android-ndk-r26c-linux.zip "--sha512=81299e38c820edefcca7fe69f088be61101dcbe43057c27a80ff6b09c0105112dea75200b78943e25877a4596b236dd0aad6b5f302b81d183b471f3211405b69" "--url=https://dl.google.com/android/repository/android-ndk-r26c-linux.zip" @cachingArgs
+    Write-Host "Downloading Android NDK r26d"
+    & "./vcpkg" x-download android-ndk-r26d-linux.zip "--sha512=8163b196859f5290bdc38d02837544b21f341c9df0f65cd118dbf50beea3125bd6819064409de71a6f2a30531c0ae7e89e0ecfc9e47652e1d017c2c997d9d976" "--url=https://dl.google.com/android/repository/android-ndk-r26d-linux.zip" @cachingArgs
     Write-Host "Unpacking"
-    & unzip -q android-ndk-r26c-linux.zip
-    $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-r26c"
+    & unzip -q android-ndk-r26d-linux.zip
+    $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-r26d"
     $NoParentHashes = $true
 }
 
