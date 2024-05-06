@@ -11,7 +11,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cinatra RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${SOURCE_PATH}/.git)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
