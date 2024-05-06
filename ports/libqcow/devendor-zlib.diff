@@ -1,0 +1,32 @@
+diff --git a/msvscpp/libqcow.sln b/msvscpp/libqcow.sln
+index c5a7546..a767f32 100644
+--- a/msvscpp/libqcow.sln
++++ b/msvscpp/libqcow.sln
+@@ -22,7 +22,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libqcow", "libqcow\libqcow.
+ 		{41CFAFBF-A1C8-4704-AFEF-31979E6452B9} = {41CFAFBF-A1C8-4704-AFEF-31979E6452B9}
+ 		{3D19EAAD-9195-468B-BC5B-D147A89CA4F5} = {3D19EAAD-9195-468B-BC5B-D147A89CA4F5}
+ 		{F94DCC2D-2B49-453E-89B3-FD81992677D0} = {F94DCC2D-2B49-453E-89B3-FD81992677D0}
+-		{C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772} = {C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772}
+ 		{E2E45353-D420-4921-A2CF-59D9047262F8} = {E2E45353-D420-4921-A2CF-59D9047262F8}
+ 	EndProjectSection
+ EndProject
+@@ -244,8 +243,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcsplit", "libcsplit\libc
+ 		{BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C} = {BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C}
+ 	EndProjectSection
+ EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772}"
+-EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Release|Win32 = Release|Win32
+@@ -376,10 +373,6 @@ Global
+ 		{B86FB73A-4ACC-42DE-9545-586D93955B06}.Release|Win32.Build.0 = Release|Win32
+ 		{B86FB73A-4ACC-42DE-9545-586D93955B06}.VSDebug|Win32.ActiveCfg = VSDebug|Win32
+ 		{B86FB73A-4ACC-42DE-9545-586D93955B06}.VSDebug|Win32.Build.0 = VSDebug|Win32
+-		{C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772}.Release|Win32.ActiveCfg = Release|Win32
+-		{C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772}.Release|Win32.Build.0 = Release|Win32
+-		{C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772}.VSDebug|Win32.ActiveCfg = VSDebug|Win32
+-		{C8B8ED4C-F4F8-4602-B7B8-62A1F1BF6772}.VSDebug|Win32.Build.0 = VSDebug|Win32
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE

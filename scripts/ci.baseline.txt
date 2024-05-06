@@ -596,19 +596,8 @@ libpng-apng:x64-windows        = skip
 libpng-apng:x64-windows-static = skip
 libpng-apng:x64-windows-static-md=skip
 libpng-apng:x86-windows        = skip
-# The developer of libqcow does not offer stable release archives
-libqcow:arm-neon-android=skip
-libqcow:arm64-uwp=skip
-libqcow:arm64-android=skip
-libqcow:x64-android=skip
-libqcow:x64-uwp=skip
+# ONLY_DYNAMIC_LIBRARY
 libqcow:x64-windows-static=skip
-libqcow:x64-windows-static-md=skip
-libqcow:x64-osx=skip
-libqcow:x64-windows=skip
-libqcow:x64-linux=skip
-libqcow:x86-windows=skip
-libqcow:arm64-windows=skip
 # needs ftello
 libraw:arm-neon-android=fail
 # Conflicts with openssl
@@ -635,6 +624,8 @@ libtomcrypt:arm64-windows=fail
 libtomcrypt:arm64-uwp=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
+# ONLY_DYNAMIC_LIBRARY
+libvhdi:x64-windows-static=skip
 #Skip detection to avoid upstream remove older releases
 libvmdk:x86-windows=skip
 libvmdk:x64-windows=skip
