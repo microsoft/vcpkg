@@ -8,6 +8,14 @@
   "supports": "!static & !((x86 | arm) & windows)",
   "dependencies": [
     {
+      "name": "cups",
+      "platform": "!windows"
+    },
+    {
+      "name": "dbus",
+      "platform": "!windows"
+    },
+    {
       "name": "ffmpeg",
       "platform": "!windows"
     },
@@ -36,7 +44,7 @@
       "platform": "!windows"
     },
     {
-      "name": "libevent",
+      "name": "lcms",
       "platform": "!windows"
     },
     {
@@ -64,10 +72,23 @@
       "platform": "!windows"
     },
     {
+      "name": "libxslt",
+      "platform": "!windows"
+    },
+    {
       "name": "minizip",
       "platform": "!windows"
     },
+    {
+      "name": "nss",
+      "platform": "!windows"
+    },
     "opengl",
+    {
+      "name": "openjpeg",
+      "default-features": false,
+      "platform": "!windows"
+    },
     {
       "name": "opus",
       "platform": "!windows"
@@ -108,12 +129,21 @@
       "platform": "!windows"
     },
     {
+      "name": "tiff",
+      "default-features": false,
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-get-python-packages",
       "host": true
     },
     {
       "name": "vcpkg-tool-nodejs",
       "host": true
+    },
+    {
+      "name": "vcpkg-tool-nodejs",
+      "platform": "!windows"
     },
     {
       "name": "zlib",

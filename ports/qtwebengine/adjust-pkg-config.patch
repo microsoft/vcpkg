@@ -1,0 +1,72 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d4638139c..5715639c10 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,6 +19,13 @@ project(QtWebEngine
+     HOMEPAGE_URL "https://qt.io/"
+     LANGUAGES CXX C
+ )
++
++if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/pkgconfig")
++else()
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pkgconfig")
++endif()
++
+ qt_internal_project_setup()
+ 
+ find_package(Qt6 ${PROJECT_VERSION} CONFIG QUIET OPTIONAL_COMPONENTS
+diff --git a/cmake/Functions.cmake b/cmake/Functions.cmake
+index e1044de8f5..06b20a659e 100644
+--- a/cmake/Functions.cmake
++++ b/cmake/Functions.cmake
+@@ -84,6 +84,8 @@ function(create_static_config cmakeTarget arch configFileName)
+         set(lib Qt::${lib}Private)
+         list(APPEND contents "set(GN_${out}_INCLUDES \"$<$<STREQUAL:$<TARGET_NAME_IF_EXISTS:${lib}>,${lib}>:$<TARGET_PROPERTY:${lib},INTERFACE_INCLUDE_DIRECTORIES>>\")")
+     endforeach()
++    list(APPEND contents "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\")")
++    list(APPEND contents "set(VCPKG_INSTALLED_DIR \"${VCPKG_INSTALLED_DIR}\")")
+     list(JOIN contents "\n" contents)
+     file(GENERATE
+         OUTPUT $<CONFIG>/${arch}/${configFileName}
+diff --git a/cmake/Gn.cmake b/cmake/Gn.cmake
+index 15b349e089..39d4a0fc90 100644
+--- a/cmake/Gn.cmake
++++ b/cmake/Gn.cmake
+@@ -41,6 +41,7 @@ init_gn_config(${buildDir}/gn_config_target.cmake)
+ read_gn_config(${buildDir}/gn_config_cxx.cmake)
+ read_gn_config(${buildDir}/gn_config_c.cmake)
+ read_gn_config(${buildDir}/gn_static.cmake)
++include(${buildDir}/gn_static.cmake)
+ 
+ configure_gn_target(
+    "${sourceDir}"
+@@ -61,10 +62,27 @@ LIST(SORT printArgArg)
+ STRING(REGEX REPLACE ";" "\n" printArgArg "${printArgArg}")
+ list(JOIN gnArg " " printArg)
+ 
++if(NOT WIN32)
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(pcset "PKG_CONFIG_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/pkgconfig")
++  else()
++    set(pcset "PKG_CONFIG_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pkgconfig")
++  endif()
++endif()
++
++if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/pkgconfig")
++  set(ENV{LD_LIBRARY_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
++else()
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pkgconfig")
++  set(ENV{LD_LIBRARY_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
++endif()
++
+ message("-- Running gn in ${buildDir}\n"
+         "-- GN command:\n${gnCmd} ${printArg}\n"
+         "-- GN arg file:\n${buildDir}/args.gn\n"
+-        "-- GN args: \n${printArgArg}"
++        "-- GN args: \n${printArgArg}\n"
++        "-- pcset ${pcset}"
+ )
+ 
+ execute_process(

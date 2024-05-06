@@ -54,14 +54,24 @@ if (VCPKG_TARGET_IS_WINDOWS)
     execute_process(
         COMMAND ${MOZBUILD_BASH} -c pwd
         WORKING_DIRECTORY ${CURRENT_INSTALLED_DIR}/lib
-        OUTPUT_VARIABLE VCPKG_LIBDIR
+        OUTPUT_VARIABLE VCPKG_LIBDIR_REL
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    message(STATUS "Using libraries from: ${VCPKG_LIBDIR} arch: ${VCPKG_TARGET_ARCHITECTURE}")
+    message(STATUS "Using release libraries from: ${VCPKG_LIBDIR_REL} arch: ${VCPKG_TARGET_ARCHITECTURE}")
+
+    execute_process(
+        COMMAND ${MOZBUILD_BASH} -c pwd
+        WORKING_DIRECTORY ${CURRENT_INSTALLED_DIR}/debug/lib
+        OUTPUT_VARIABLE VCPKG_LIBDIR_DBG
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    message(STATUS "Using debug libraries from: ${VCPKG_LIBDIR_DBG} arch: ${VCPKG_TARGET_ARCHITECTURE}")
 
 else()
     # TODO: setup non-windows build environment
-
+  set(VCPKG_INCLUDEDIR "${CURRENT_INSTALLED_DIR}/include")
+  set(VCPKG_LIBDIR_DBG "${CURRENT_INSTALLED_DIR}/debug/lib")
+  set(VCPKG_LIBDIR_REL "${CURRENT_INSTALLED_DIR}/lib")
 endif()
 
 # setup gyp-next
@@ -69,7 +79,7 @@ set(GYP_NEXT_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/gyp-next")
 if (VCPKG_HOST_IS_WINDOWS)
     find_file(GYP_NEXT NAMES gyp.bat PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
 else()
-    find_program(GYP_NEXT NAMES gyp PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
+    find_program(GYP_NEXT NAMES gyp REQUIRED)
 endif()
 
 vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
@@ -86,9 +96,9 @@ set(OPTIONS
     "-v"
     "-g"
     "--disable-tests"
-    "--with-nspr=${VCPKG_INCLUDEDIR}/nspr:${VCPKG_LIBDIR}"
     "--system-sqlite"
     "-Dsign_libs=0"
+    #"--disable-keylog"
 )
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -136,6 +146,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Copying sources to debug build dir ...")
     file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-dbg")
     message(STATUS "Building debug ...")
+    list(APPEND OPTIONS     "--with-nspr=${VCPKG_INCLUDEDIR}/nspr:${VCPKG_LIBDIR_DBG}")
     vcpkg_execute_required_process(
         COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS}
         WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-dbg/nss
@@ -148,6 +159,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Copying sources to release build dir ...")
     file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
     message(STATUS "Building release ...")
+    list(APPEND OPTIONS     "--with-nspr=${VCPKG_INCLUDEDIR}/nspr:${VCPKG_LIBDIR_REL}")
     vcpkg_execute_required_process(
         COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS} --opt
         WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-rel/nss
@@ -175,19 +187,17 @@ file(GLOB LIB_RELEASE
     "${VCPKG_BINARY_DIR}-rel/dist/Release/lib/*.dll"
     "${VCPKG_BINARY_DIR}-rel/dist/Release/lib/*.pdb"
 )
-list(LENGTH LIB_RELEASE LIB_RELEASE_SIZE)
-
-if (LIB_RELEASE_SIZE GREATER 0)
+if (LIB_RELEASE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-
-    foreach(path ${LIB_RELEASE})
-        get_filename_component(name "${path}" NAME)
-        file(RENAME "${path}" "${CURRENT_PACKAGES_DIR}/bin/${name}")
-    endforeach()
-
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-    file(COPY "${VCPKG_BINARY_DIR}-rel/dist/Release/lib" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
+foreach(path ${LIB_RELEASE})
+    get_filename_component(name "${path}" NAME)
+    file(RENAME "${path}" "${CURRENT_PACKAGES_DIR}/bin/${name}")
+endforeach()
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
+file(COPY "${VCPKG_BINARY_DIR}-rel/dist/Release/lib" DESTINATION "${CURRENT_PACKAGES_DIR}")
+
 
 # Tools from the release build
 vcpkg_copy_tools(
@@ -216,20 +226,27 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.dll"
         "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.pdb"
     )
-    list(LENGTH LIB_DEBUG LIB_DEBUG_SIZE)
 
-    if (LIB_DEBUG_SIZE GREATER 0)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-        foreach(path ${LIB_DEBUG})
-            get_filename_component(name "${path}" NAME)
-            file(RENAME "${path}" "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
-        endforeach()
-
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-        file(COPY "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+    if(LIB_DEBUG)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
+
+    foreach(path ${LIB_DEBUG})
+        get_filename_component(name "${path}" NAME)
+        file(RENAME "${path}" "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
+    endforeach()
+
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+
 endif()
 
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/nss.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nss.pc" @ONLY)
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
+  configure_file("${CMAKE_CURRENT_LIST_DIR}/nss.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/nss.pc" @ONLY)
+endif()
+vcpkg_fixup_pkgconfig()
 # License
-file(INSTALL "${SOURCE_PATH}/nss/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nss" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/nss/COPYING")

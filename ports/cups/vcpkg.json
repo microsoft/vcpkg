@@ -1,0 +1,11 @@
+{
+  "name": "cups",
+  "version": "2.4.8",
+  "description": "OpenPrinting CUPS Sources",
+  "homepage": "https://openprinting.github.io/cups/cups3.html",
+  "license": "Apache-2.0",
+  "supports": "!windows",
+  "dependencies": [
+    "openssl"
+  ]
+}

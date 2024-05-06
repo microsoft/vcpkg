@@ -19,6 +19,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch
 )
 
 if(SOURCE_PATH MATCHES " ")

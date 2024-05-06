@@ -3,6 +3,8 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
       "clang-cl.patch"
+      "adjust-pkg-config.patch"
+      "vcpkg-dirs.patch"
 )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
@@ -40,10 +42,12 @@ if(VCPKG_TARGET_IS_LINUX)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus ffmpeg libvpx snappy glib zlib minizip libevent protobuf libxml libpng libjpeg harfbuzz freetype)
+
+    set(system_libs re2 icu libwebp opus ffmpeg libvpx snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype lcms2 libtiff libopenjpeg2) #libevent
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=OFF")     # libevent -> issues with getting the include?
 endif()
 
 vcpkg_find_acquire_program(FLEX)
@@ -51,10 +55,14 @@ vcpkg_find_acquire_program(BISON)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
-find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node"  "bin" NO_DEFAULT_PATHS)
-find_program(NODEJS NAMES node)
+find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
+#find_program(NODEJS NAMES node)
 if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/cups/bin")
 endif()
 
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
@@ -100,6 +108,14 @@ if(QT_UPDATE_VERSION)
     return()
 endif()
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  find_program(pkgconf NAMES pkgconf pkg-config REQUIRED)
+  set(ENV{PKG_CONFIG} "${pkgconf}")
+  set(ENV{LD_LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/lib")
+  set(ENV{CFLAGS} "-Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib")
+  set(ENV{CXXFLAGS} "-Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib")
+endif()
+
 qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                     OPTIONS ${FEATURE_OPTIONS}
                         -DGPerf_EXECUTABLE=${GPERF}
@@ -107,7 +123,12 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                         -DFLEX_EXECUTABLE=${FLEX}
                         -DNodejs_EXECUTABLE=${NODEJS}
                         -DPython3_EXECUTABLE=${PYTHON3}
+                        -DPKG_CONFIG_EXECUTABLE=${pkgconf}
                         -DQT_FEATURE_webengine_jumbo_build=0
+                        -DCMAKE_INSTALL_RPATH=${CURRENT_INSTALLED_DIR}/lib
+                        -DCMAKE_BUILD_RPATH=${CURRENT_INSTALLED_DIR}/lib
+                        #"-DCMAKE_C_FLAGS_RELEASE=-I${CURRENT_INSTALLED_DIR}/include -Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib"
+                        #"-DCMAKE_CXX_FLAGS_RELEASE=-I${CURRENT_INSTALLED_DIR}/include -Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib"
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
@@ -122,5 +143,3 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
 endif()
 
 qt_install_copyright("${SOURCE_PATH}")
-
-##### qt_install_submodule
