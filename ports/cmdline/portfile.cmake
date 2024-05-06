@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmdline)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(INSTALL ${SOURCE_PATH}/cmdline.h
      DESTINATION ${CURRENT_PACKAGES_DIR}/include)
