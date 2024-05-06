@@ -1,9 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e9080fc..120ba8f 100644
+index a7c70d1..4aade40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -172,9 +172,8 @@ install(EXPORT ${LIBRARY_NAME}-targets
- if (APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
+@@ -110,12 +110,11 @@ target_include_directories(
+     INTERFACE "${CMAKE_CURRENT_LIST_DIR}/include"
+     PRIVATE "${CMAKE_CURRENT_LIST_DIR}/include")
+ 
+-if (APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
++if (APPLE OR ANDROID OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
      VERSION_LESS 12))
  
 -    add_subdirectory(externals/fmt)
