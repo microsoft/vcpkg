@@ -1,6 +1,6 @@
 {
     "name": "cinatra",
-    "version-string": "0.9.1",
+    "version": "0.9.1",
     "description": "Cinatra is a high performance HTTP framework with modern C++ features.",
     "homepage": "https://github.com/qicosmos/cinatra",
     "dependencies": [
