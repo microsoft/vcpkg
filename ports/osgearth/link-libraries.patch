@@ -11,7 +11,7 @@ index 1c589252c..5e42c3b01 100644
 +-           TARGET_LINK_LIBRARIES(${TRGTNAME} ${${lwv_libraries}})
 ++           TARGET_LINK_LIBRARIES(${TRGTNAME} PRIVATE ${${lwv_libraries}})
 +            continue()
-+        endif()	
++        endif()
          IF(${varname}_DEBUG)
              IF(${varname}_RELEASE)
                  TARGET_LINK_LIBRARIES(${TRGTNAME} PRIVATE optimized "${${varname}_RELEASE}" debug "${${varname}_DEBUG}")
