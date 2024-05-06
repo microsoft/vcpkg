@@ -1,15 +1,19 @@
 diff --git a/CMakeModules/OsgEarthMacroUtils.cmake b/CMakeModules/OsgEarthMacroUtils.cmake
-index 1c589252c..5e42c3b01 100644
+index 1c589252c..615973513 100644
 --- a/CMakeModules/OsgEarthMacroUtils.cmake
 +++ b/CMakeModules/OsgEarthMacroUtils.cmake
-@@ -92,6 +92,11 @@ ENDMACRO(DETECT_OSG_VERSION)
+@@ -92,6 +92,16 @@ ENDMACRO(DETECT_OSG_VERSION)
  
  MACRO(LINK_WITH_VARIABLES TRGTNAME)
      FOREACH(varname ${ARGN})
++        string(REPLACE "_LIBRARY" "_LINK_LIBRARIES" lwv_link_libraries "${varname}")
++        if(DEFINED ${lwv_link_libraries})
++            TARGET_LINK_LIBRARIES(${TRGTNAME} PRIVATE ${${lwv_link_libraries}})
++            continue()
++        endif()
 +        string(REPLACE "_LIBRARY" "_LIBRARIES" lwv_libraries "${varname}")
 +        if(DEFINED ${lwv_libraries})
-+-           TARGET_LINK_LIBRARIES(${TRGTNAME} ${${lwv_libraries}})
-++           TARGET_LINK_LIBRARIES(${TRGTNAME} PRIVATE ${${lwv_libraries}})
++            TARGET_LINK_LIBRARIES(${TRGTNAME} PRIVATE ${${lwv_libraries}})
 +            continue()
 +        endif()
          IF(${varname}_DEBUG)
