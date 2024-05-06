@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF vcpkg
     PATCHES
         "CMakeLists.txt.patch"
+        "FormatHelper.h.patch"
         "Helper.h.patch"
 )
 
