@@ -16,9 +16,3 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${SOURCE_PATH}/.git)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
-
-
-
-
-
