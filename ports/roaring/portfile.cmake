@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RoaringBitmap/CRoaring
     REF "v${VERSION}"
-    SHA512 c04ef4003025451ac68ee92a60aa4274a111f6b6956e9ebd4c9f6d5d10c95a7f9d81dd581ba49948fca895be00a9d456f683db82b9a33908d8a599f437c30b7c
+    SHA512 3c07606edd201ef94a6fb783ffaeef4ea47edbde372dc0be69399c9fa432b70af04247b70b410737373239dd993c44af7322c685f4fb699198a728a68407fd0a
     HEAD_REF master
-    PATCHES
-        bswap_64.diff # https://github.com/RoaringBitmap/CRoaring/pull/534/files#r1545750905
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ROARING_BUILD_STATIC)
@@ -19,10 +17,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
 vcpkg_copy_pdbs()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/roaring)
-vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

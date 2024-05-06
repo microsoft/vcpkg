@@ -57,7 +57,10 @@
     "tiff": {
       "description": "Use Libtiff for .tif support",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     }
   }

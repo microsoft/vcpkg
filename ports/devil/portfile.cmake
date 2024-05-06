@@ -33,8 +33,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/DevIL"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        ${FEATURE_OPTIONS}
-        -DCMAKE_CXX_STANDARD=11 # 17 does not allow 'register'
+         ${FEATURE_OPTIONS}
         -DIL_NO_MNG=ON
         -DIL_USE_DXTC_NVIDIA=OFF
         -DIL_USE_DXTC_SQUISH=OFF
