@@ -10,7 +10,7 @@ function(vcpkg_find_fortran out_var)
     set(CMAKE_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
     set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
-    macro(z_vcpkg_catch_ambiguous_system_variables)
+    macro(z_vcpkg_warn_ambiguous_system_variables)
     # CMakeDetermineFortranCompiler is for project mode.
     endmacro()
     include(CMakeDetermineFortranCompiler)
