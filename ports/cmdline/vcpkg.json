@@ -3,5 +3,5 @@
   "version-date": "2014-02-04",
   "description": "A simple, header-only command line parser for C++.",
   "homepage": "https://github.com/tanakh/cmdline",
-  "dependencies": []
+  "license": "BSD-3-Clause"
 }
