@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a7c70d1..4aade40 100644
+index c0c1473..a85de65 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -110,12 +110,11 @@ target_include_directories(
-     INTERFACE "${CMAKE_CURRENT_LIST_DIR}/include"
-     PRIVATE "${CMAKE_CURRENT_LIST_DIR}/include")
+@@ -127,12 +127,11 @@ install(EXPORT ${LIBRARY_NAME}-targets
+     FILE ${LIBRARY_NAME}-config.cmake
+     DESTINATION lib/cmake/${LIBRARY_NAME})
  
 -if (APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
 +if (APPLE OR ANDROID OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
