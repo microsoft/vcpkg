@@ -37,7 +37,7 @@ if(key STREQUAL "windows-aarch64" OR VCPKG_SHADER_SLANG_UPDATE)
 		SHA512 0971394479f4da56b6340c1bc9b415ac1de001607ba5af0d5e3e3e95ad9a4e2fd6185603bb95fdc98e152d0a6012a5af144ba812c3af0ec1d1eb50837caad3dd
 	)
 endif()
-if(key STREQUAL "osx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
+if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x64.zip"
@@ -45,7 +45,7 @@ if(key STREQUAL "osx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		SHA512 e546c4c3e68880f75678c061457369f2c075bdd428080c4af7fae6145be8359dff182902d412dad6c0ce3903004ca9613d791a04a209e6e16960e036585efdae
 	)
 endif()
-if(key STREQUAL "osx-aarch64" OR VCPKG_SHADER_SLANG_UPDATE)
+if(key STREQUAL "macosx-aarch64" OR VCPKG_SHADER_SLANG_UPDATE)
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
@@ -103,7 +103,7 @@ endif()
 set(SLANG_BIN_PATH "bin/${key}/release")
 file(GLOB libs
 	"${BINDIST_PATH}/${SLANG_BIN_PATH}/*.lib"
-	"${BINDIST_PATH}/${SLANG_BIN_PATH}/*.dynlib"
+	"${BINDIST_PATH}/${SLANG_BIN_PATH}/*.dylib"
 	"${BINDIST_PATH}/${SLANG_BIN_PATH}/*.so"
 )
 file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
