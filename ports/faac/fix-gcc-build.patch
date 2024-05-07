@@ -1,0 +1,12 @@
+diff --git a/libfaac/quantize.c b/libfaac/quantize.c
+index 870737a..1a99570 100644
+--- a/libfaac/quantize.c
++++ b/libfaac/quantize.c
+@@ -30,6 +30,7 @@
+ #ifdef __SSE2__
+ # ifdef __GNUC__
+ #  include <cpuid.h>
++#  include <immintrin.h>
+ # endif
+ #endif
+ 
