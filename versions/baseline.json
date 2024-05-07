@@ -4140,6 +4140,10 @@
       "baseline": "2.3.0",
       "port-version": 0
     },
+    "liba52": {
+      "baseline": "0.7.4",
+      "port-version": 0
+    },
     "libaaplus": {
       "baseline": "2.36",
       "port-version": 1
