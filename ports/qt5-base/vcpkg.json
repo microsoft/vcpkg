@@ -10,10 +10,6 @@
       "name": "at-spi2-core",
       "platform": "linux"
     },
-    {
-      "name": "dbus",
-      "platform": "linux"
-    },
     "double-conversion",
     "egl-registry",
     {
