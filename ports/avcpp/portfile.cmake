@@ -12,6 +12,7 @@ vcpkg_from_github(
     PATCHES
         0002-av_init_packet_deprecation.patch
         fix-pkgconfig-location.patch
+        fix-dependencies.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" AVCPP_ENABLE_STATIC)
@@ -31,12 +32,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 vcpkg_fixup_pkgconfig()
-
-file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" _contents)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" 
-"include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
