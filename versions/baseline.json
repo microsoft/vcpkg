@@ -7054,7 +7054,7 @@
     },
     "pybind11": {
       "baseline": "2.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pystring": {
       "baseline": "1.1.4",
@@ -7066,7 +7066,7 @@
     },
     "python3": {
       "baseline": "3.11.8",
-      "port-version": 1
+      "port-version": 2
     },
     "qca": {
       "baseline": "2.3.7",
