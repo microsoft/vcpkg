@@ -3830,7 +3830,7 @@
     },
     "kddockwidgets": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kdsoap": {
       "baseline": "2.2.0",
