@@ -8109,7 +8109,7 @@
       "port-version": 1
     },
     "simde": {
-      "baseline": "0.8.0",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "simdjson": {
