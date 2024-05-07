@@ -1,12 +1,14 @@
 
 function(qt_build_submodule SOURCE_PATH)
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "" "RUNTIME_FOR_TOOLS")
+
     if(NOT PORT STREQUAL "qt5-webengine")
         vcpkg_find_acquire_program(PYTHON3)
         get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
         vcpkg_add_to_path("${PYTHON3_EXE_PATH}")
     endif()
 
-    vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH} ${ARGV})
+    vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH} ${arg_UNPARSED_ARGUMENTS})
 
     vcpkg_build_qmake(SKIP_MAKEFILES)
 
@@ -64,64 +66,9 @@ function(qt_build_submodule SOURCE_PATH)
                 endif()
             endforeach()
         endif()
-
-        #cleanup empty folders
-        file(GLOB PACKAGE_LIBS "${CURRENT_BUILD_PACKAGE_DIR}/lib/*")
-        if(NOT PACKAGE_LIBS)
-            file(REMOVE_RECURSE "${CURRENT_BUILD_PACKAGE_DIR}/lib")
-        endif()
-
-        file(GLOB PACKAGE_BINS "${CURRENT_BUILD_PACKAGE_DIR}/bin/*")
-        if(NOT PACKAGE_BINS)
-            file(REMOVE_RECURSE "${CURRENT_BUILD_PACKAGE_DIR}/bin")
-        endif()
     endforeach()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt5/bin")
-        file(COPY "${CURRENT_PACKAGES_DIR}/tools/qt5/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-        set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
-        set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
-        configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/qt.conf) # This makes the tools at least useable for release
-        set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
-
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-        if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(GLOB_RECURSE DLL_DEPS_AVAIL "${CURRENT_INSTALLED_DIR}/tools/qt5/bin/*.dll")
-            string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/qt5/bin/" "" DLL_DEPS_AVAIL "${DLL_DEPS_AVAIL}")
-            file(GLOB_RECURSE DLL_DEPS_NEEDED "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/*.dll")
-            string(REPLACE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" "" DLL_DEPS_NEEDED "${DLL_DEPS_NEEDED}")
-            if(DLL_DEPS_AVAIL AND DLL_DEPS_NEEDED)
-                list(REMOVE_ITEM DLL_DEPS_NEEDED ${DLL_DEPS_AVAIL})
-            endif()
-            foreach(dll_dep ${DLL_DEPS_NEEDED})
-                string(REGEX REPLACE "[^/]+$" "" dll_subpath "${dll_dep}")
-                file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${dll_dep}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/${dll_subpath}")
-            endforeach()
-        endif()
-    endif()
-
-    #This should be removed if somehow possible
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/bin")
-        set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
-        set(CURRENT_INSTALLED_DIR "./../../../.." ) # Making the qt.conf relative and not absolute
-        configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_debug.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/qt.conf) # This makes the tools at least useable for release
-        set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
-
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
-        if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(GLOB_RECURSE DLL_DEPS_AVAIL "${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/*.dll")
-            string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/" "" DLL_DEPS_AVAIL "${DLL_DEPS_AVAIL}")
-            file(GLOB_RECURSE DLL_DEPS_NEEDED "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/*.dll")
-            string(REPLACE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" "" DLL_DEPS_NEEDED "${DLL_DEPS_NEEDED}")
-            if(DLL_DEPS_AVAIL AND DLL_DEPS_NEEDED)
-                list(REMOVE_ITEM DLL_DEPS_NEEDED ${DLL_DEPS_AVAIL})
-            endif()
-            foreach(dll_dep ${DLL_DEPS_NEEDED})
-                string(REGEX REPLACE "[^/]+$" "" dll_subpath "${dll_dep}")
-                file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/${dll_dep}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/bin/${dll_subpath}")
-            endforeach()
-        endif()
-    endif()
+    qt_install_runtime_for_tools(${arg_RUNTIME_FOR_TOOLS})
 
     # Remove duplicate flags from qmodule.pri issue -> https://github.com/microsoft/vcpkg/issues/28835
     file(READ "${CURRENT_INSTALLED_DIR}/tools/qt5/mkspecs/qmodule.pri" QMODULE_PRI_CONTENT)

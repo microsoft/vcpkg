@@ -411,12 +411,10 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         qt_fix_prl("${CURRENT_INSTALLED_DIR}" "${PRL_FILES}")
-        file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         qt_fix_prl("${CURRENT_INSTALLED_DIR}/debug" "${PRL_FILES}")
-        file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
     endif()
 
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
@@ -473,24 +471,17 @@ else()
     endif()
     file(WRITE "${cmakefile}" "${_contents}")
 
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
-        file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
-    endif()
-    # This should be removed if possible! (Currently debug build of qt5-translations requires it.)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5/bin)
-        file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5/debug)
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/debug/bin)
-    endif()
-
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf)
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf")
-    endif()
-    set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
-    set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
-    configure_file(${CURRENT_PACKAGES_DIR}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf) # This makes the tools at least useable for release
-    set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
+    qt_install_runtime_for_tools(
+        Qt5Core             # for qt5-base
+        Qt5DBus             # for qt5-base
+        Qt5Gui              # for qt5-declarative
+        Qt5Network          # for qt5-declarative
+        Qt5PrintSupport     # for qt5-tools
+        Qt5Sql              # for qt5-tools
+        Qt5Test             # for qt5-declarative
+        Qt5Widgets          # for qt5-declarative
+        Qt5Xml              # for qt5-tools
+    )
 
     qt_install_copyright(${SOURCE_PATH})
 endif()
@@ -504,6 +495,7 @@ file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_download_submodule.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_build_submodule.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_runtime_for_tools.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_submodule_installation.cmake
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
