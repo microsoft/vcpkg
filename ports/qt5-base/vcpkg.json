@@ -10,10 +10,6 @@
       "name": "at-spi2-core",
       "platform": "linux"
     },
-    {
-      "name": "dbus",
-      "platform": "linux"
-    },
     "double-conversion",
     "egl-registry",
     {
@@ -47,7 +43,22 @@
     "zlib",
     "zstd"
   ],
+  "default-features": [
+    {
+      "name": "dbus",
+      "platform": "linux"
+    }
+  ],
   "features": {
+    "dbus": {
+      "description": "Enable DBus support",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "platform": "!uwp"
+        }
+      ]
+    },
     "icu": {
       "description": "Enable ICU support",
       "dependencies": [
