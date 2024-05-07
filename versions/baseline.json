@@ -2576,6 +2576,10 @@
       "baseline": "21.10",
       "port-version": 0
     },
+    "faac": {
+      "baseline": "1.30",
+      "port-version": 0
+    },
     "faad2": {
       "baseline": "2.11.1",
       "port-version": 0
