@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         ${_qarg_OPTIONS}
         -DKDDockWidgets_QT6=ON
         -DKDDockWidgets_STATIC=${KD_STATIC}
+        -DKDDockWidgets_FRONTENDS=qtwidgets
         -DKDDockWidgets_PYTHON_BINDINGS=OFF
         -DKDDockWidgets_EXAMPLES=OFF
 )
