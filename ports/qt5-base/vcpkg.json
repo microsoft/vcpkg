@@ -25,7 +25,10 @@
       "platform": "!windows"
     },
     "openssl",
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qt5-base",
       "host": true,
