@@ -121,12 +121,6 @@ list(APPEND CORE_OPTIONS
     -openssl-linked
     )
 
-if("dbus" IN_LIST FEATURES)
-    list(APPEND CORE_OPTIONS -dbus-linked)
-else()
-    list(APPEND CORE_OPTIONS -no-dbus)
-endif()
-
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
 else()
