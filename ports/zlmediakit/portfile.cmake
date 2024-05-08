@@ -37,12 +37,14 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" static ZLMEDIAKIT_CRT_STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openssl ENABLE_OPENSSL
+        openssl CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         mp4     ENABLE_MP4
         mp4     ENABLE_RTPPROXY
         mp4     ENABLE_HLS
         sctp    ENABLE_SCTP
         webrtc  ENABLE_WEBRTC
     INVERTED_FEATURES
+        openssl CMAKE_DISABLE_FIND_PACKAGE_OpenSSL
 )
 
 vcpkg_cmake_configure(
@@ -67,6 +69,9 @@ vcpkg_cmake_configure(
         -DUSE_SOLUTION_FOLDERS=ON
         -DENABLE_TESTS=OFF
         -DENABLE_MEM_DEBUG=OFF # only valid on Linux
+        -DCMAKE_DISABLE_FIND_PACKAGE_GIT=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_JEMALLOC=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=ON
         ${FEATURE_OPTIONS}
 )
 

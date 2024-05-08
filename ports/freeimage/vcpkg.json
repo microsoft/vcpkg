@@ -1,7 +1,7 @@
 {
   "name": "freeimage",
   "version": "3.18.0",
-  "port-version": 25,
+  "port-version": 26,
   "description": "Support library for graphics image formats",
   "homepage": "https://sourceforge.net/projects/freeimage/",
   "license": "GPL-2.0-only OR GPL-3.0-only OR FreeImage",
@@ -13,11 +13,15 @@
     "libraw",
     {
       "name": "libwebp",
+      "default-features": false,
       "platform": "!uwp"
     },
     "openexr",
     "openjpeg",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

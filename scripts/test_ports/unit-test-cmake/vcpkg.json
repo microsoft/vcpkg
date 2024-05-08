@@ -7,6 +7,10 @@
   "default-features": [
     "backup-restore-env-vars",
     "fixup-pkgconfig",
+    {
+      "name": "fixup-rpath",
+      "platform": "!windows"
+    },
     "function-arguments",
     "host-path-list",
     "list",
@@ -20,6 +24,10 @@
     },
     "fixup-pkgconfig": {
       "description": "Test the vcpkg_fixup_pkgconfig function"
+    },
+    "fixup-rpath": {
+      "description": "Test the rpath fixup function",
+      "supports": "!windows"
     },
     "function-arguments": {
       "description": "Test the z_vcpkg_function_arguments function"
