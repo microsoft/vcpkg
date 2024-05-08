@@ -43,6 +43,14 @@ vcpkg_from_github(
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
+
+file(REMOVE "${SOURCE_PATH}/CMake/FindOGG.cmake")
+vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/ogg/CMakeLists.txt" "OGG::OGG" "Ogg::ogg")
+vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/ogg/CMakeLists.txt" "OGG" "Ogg")
+vcpkg_replace_string("${SOURCE_PATH}/CMake/vtkInstallCMakePackage.cmake" "FindOGG.cmake\n" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "find_dependency(OGG)" "find_dependency(Ogg CONFIG)")
+vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::ogg")
+
 # =============================================================================
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
