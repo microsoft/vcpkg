@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/openvr
-    REF "v${VERSION}"
+    REF v2.5.1
     SHA512 e224737e75f21ec074ca8450a1f1d81764aafeec924cc92a3f5571efc466d74280cb59b0ddfcd251431165ffbfae8aa0c8afe94144fe1c9106a3aa4c2761f3dc
     HEAD_REF master
 )
