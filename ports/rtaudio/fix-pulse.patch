@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8e021dc..cecce4a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -149,9 +149,10 @@ endif()
+ # Pulse
+ if (RTAUDIO_API_PULSE)
+   set(NEED_PTHREAD ON)
+-  find_library(PULSE_LIB pulse)
+-  find_library(PULSESIMPLE_LIB pulse-simple)
+-  list(APPEND LINKLIBS ${PULSE_LIB} ${PULSESIMPLE_LIB})
++  find_package(PkgConfig)
++  pkg_check_modules(pulse REQUIRED IMPORTED_TARGET libpulse)
++  pkg_check_modules(pulse-simple REQUIRED IMPORTED_TARGET libpulse-simple)
++  list(APPEND LINKLIBS PkgConfig::pulse PkgConfig::pulse-simple)
+   list(APPEND PKGCONFIG_REQUIRES "libpulse-simple")
+   list(APPEND API_DEFS "-D__LINUX_PULSE__")
+   list(APPEND API_LIST "pulse")
