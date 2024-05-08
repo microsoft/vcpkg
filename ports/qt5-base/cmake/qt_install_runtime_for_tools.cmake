@@ -13,11 +13,6 @@ endfunction()
 function(z_qt_install_runtime_for_tools config path_suffix dll_suffix)
     set(arg_LIBRARIES "${ARGN}")
 
-    # Temporarily clone qtdeploy.ps1 --- applocal.ps1 loads it from <search_dir>/../plugins.
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(COPY "${CURRENT_INSTALLED_DIR}/plugins/qtdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}${path_suffix}/plugins")
-    endif()
-
     if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
         set(qt_conf "${CURRENT_INSTALLED_DIR}/tools/qt5/qt_${config}.conf")
         if(PORT STREQUAL "qt5-base")
@@ -29,7 +24,21 @@ function(z_qt_install_runtime_for_tools config path_suffix dll_suffix)
         configure_file("${qt_conf}" "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/qt.conf") # This makes the tools at least useable for release
         set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
 
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
+        # Not using vcpkg_copy_tool_dependencies (deployqt.ps1) because
+        # we must also deploy in advance for tools coming from other ports
+        file(GLOB tools "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/*.exe")
+        file(GLOB libs "${CURRENT_PACKAGES_DIR}/bin/*.dll")
+        file(GLOB plugins "${CURRENT_PACKAGES_DIR}/plugins/*/*.dll")
+        file(GET_RUNTIME_DEPENDENCIES
+            RESOLVED_DEPENDENCIES_VAR resolved
+            UNRESOLVED_DEPENDENCIES_VAR unresolved
+            EXECUTABLES tools
+            LIBRARIES libs
+            MODULES plugins
+            DIRECTORIES "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_INSTALLED_DIR}/bin"
+        )
+        file(INSTALL "${resolved}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
+        message(FATAL_ERROR "Unresolved: ${unresolved}")
         file(COPY "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}${path_suffix}")
     endif()
 
