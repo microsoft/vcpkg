@@ -1,7 +1,7 @@
 {
   "name": "mapnik",
   "version-date": "2023-06-12",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -171,7 +171,10 @@
     "tiff": {
       "description": "add tiff support",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "utility-geometry-to-wkb": {
