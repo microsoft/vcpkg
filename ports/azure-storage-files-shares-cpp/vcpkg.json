@@ -1,6 +1,10 @@
 {
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
   "name": "azure-storage-files-shares-cpp",
-  "version-semver": "12.5.0",
+  "version-semver": "12.9.0",
   "description": [
     "Microsoft Azure Storage Files Shares SDK for C++",
     "This library provides Azure Storage Files Shares SDK."
@@ -11,7 +15,7 @@
     {
       "name": "azure-storage-common-cpp",
       "default-features": false,
-      "version>=": "12.3.2"
+      "version>=": "12.6.0"
     },
     {
       "name": "vcpkg-cmake",
