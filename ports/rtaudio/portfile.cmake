@@ -18,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 set(PKG_OPT "")
 if("pulse" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
     set(PKG_OPT "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 vcpkg_cmake_configure(
