@@ -1,0 +1,21 @@
+--- a/mesonbuild/compilers/mixins/clike.py
++++ b/mesonbuild/compilers/mixins/clike.py
+@@ -33,6 +33,7 @@ import typing as T
+ from pathlib import Path
+ 
+ from ... import arglist
++from ... import coredata
+ from ... import mesonlib
+ from ... import mlog
+ from ...linkers.linkers import GnuLikeDynamicLinkerMixin, SolarisDynamicLinker, CompCertDynamicLinker
+@@ -463,6 +464,10 @@ class CLikeCompiler(Compiler):
+         largs += la
+ 
+         cargs += self.get_compiler_check_args(mode)
++        if mode is CompileCheckMode.LINK:
++            # Add <lang>_winlibs, accounting for machine file
++            options = coredata.OptionsView(env.coredata.options, '', {})
++            largs += self.get_option_link_args(options)
+ 
+         # on MSVC compiler and linker flags must be separated by the "/link" argument
+         # at this point, the '/link' argument may already be part of extra_args, otherwise, it is added here

@@ -11,6 +11,7 @@ set(patches
   remove-freebsd-pcfile-specialization.patch
   meson-1.4-llvm-18.diff
   cmake-generator-expressions.patch
+  winlibs.diff
 )
 set(scripts
   vcpkg-port-config.cmake
