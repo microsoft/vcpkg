@@ -812,9 +812,6 @@ ompl:x64-osx=fail
 ompl:arm64-osx=fail
 ompl:x64-linux=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
-omplapp:arm-neon-android=fail
-omplapp:arm64-android=fail
-omplapp:x64-android=fail
 onednn:x64-android=fail
 openblas:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
@@ -1238,11 +1235,13 @@ cmake-user:x64-windows-static=pass
 cmake-user:x64-windows=pass
 cmake-user:x86-windows=pass
 qt:x64-windows=pass
-qt:x64-windows-static=pass
+# qt:x64-windows-static=pass
 # qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass.
 qt:arm64-windows=pass
 qt:x64-linux=pass
 # qt:x64-osx=pass # gstreamer issues preventing qtmultimedia
+qtinterfaceframework:x64-windows-static=fail
+qtinterfaceframework:x64-windows-static-md=fail
 vcpkg-ci-arrow:x64-windows=pass
 vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
