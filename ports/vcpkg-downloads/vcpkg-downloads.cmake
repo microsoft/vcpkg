@@ -22,9 +22,10 @@ endfunction()
 function(z_vcpkg_download_from_json outs json_file)
   file(READ "${json_file}" json_data)
   z_read_json_member(outvars "${json_data}" "downloads")
-  foreach(o IN LISTS outvars)
-    message("${o}=${${o}}")
-  endforeach()
+
+  #foreach(o IN LISTS outvars)
+  #  message("${o}=${${o}}")
+  #endforeach()
 
   set(out "")
 
@@ -35,13 +36,13 @@ function(z_vcpkg_download_from_json outs json_file)
     endforeach()
 
     cmake_language(CALL z_vcpkg_download_from_${${prefix}.from} "${prefix}")
-    list(APPEND out "${${prefix}.output_variable}")
+    list(APPEND out "${${prefix}.output-variable}")
     
-    if(${prefix}.target_dir) # Check --editable?
-      file(REMOVE_RECURSE ${${prefix}.target_dir})
+    if(${prefix}.copy-to) # Check --editable?
+      file(REMOVE_RECURSE ${${prefix}.copy-to})
       # Would like to use rename here ?
-      file(COPY "${${${prefix}.output_variable}}/" DESTINATION "${${prefix}.target_dir}")
-      set("${${prefix}.output_variable}" "${${prefix}.target_dir}" PARENT_SCOPE)
+      file(COPY "${${${prefix}.output-variable}}/" DESTINATION "${${prefix}.copy-to}")
+      set("${${prefix}.output-variable}" "${${prefix}.copy-to}" PARENT_SCOPE)
     endif()
 
   endforeach()
@@ -59,13 +60,13 @@ function(z_vcpkg_download_from_url data_prefix)
     SHA512 "${${data_prefix}.sha512}"
   )
 
-  vcpkg_extract_source_archive("${${data_prefix}.output_variable}"
+  vcpkg_extract_source_archive("${${data_prefix}.output-variable}"
       ARCHIVE "${archive}"
       PATCHES ${patches}
   )
   unset(archive)
 
-  set("${${data_prefix}.output_variable}" "${${${data_prefix}.output_variable}}" PARENT_SCOPE)
+  set("${${data_prefix}.output-variable}" "${${${data_prefix}.output-variable}}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_download_from_github data_prefix)
@@ -77,15 +78,15 @@ function(z_vcpkg_download_from_github data_prefix)
   z_vcpkg_convert_json_array_to_cmake_list(patches "${data_prefix}.patches")
 
   vcpkg_from_github(
-      OUT_SOURCE_PATH "${${data_prefix}.output_variable}"
+      OUT_SOURCE_PATH "${${data_prefix}.output-variable}"
       REPO "${${data_prefix}.repository}"
       REF "${${data_prefix}.ref}"
       SHA512 "${${data_prefix}.sha512}"
-      HEAD_REF "${${data_prefix}.head_ref}"
+      HEAD_REF "${${data_prefix}.head-ref}"
       PATCHES ${patches}
       ${opts}
   )
-  set("${${data_prefix}.output_variable}" "${${${data_prefix}.output_variable}}" PARENT_SCOPE)
+  set("${${data_prefix}.output-variable}" "${${${data_prefix}.output-variable}}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_download_from_gitlab data_prefix)
@@ -97,57 +98,57 @@ function(z_vcpkg_download_from_gitlab data_prefix)
   z_vcpkg_convert_json_array_to_cmake_list(patches "${data_prefix}.patches")
 
   vcpkg_from_gitlab(
-    OUT_SOURCE_PATH "${${data_prefix}.output_variable}"
+    OUT_SOURCE_PATH "${${data_prefix}.output-variable}"
     REPO "${${data_prefix}.repository}"
     REF "${${data_prefix}.ref}"
     SHA512 "${${data_prefix}.sha512}"
-    HEAD_REF "${${data_prefix}.head_ref}"
+    HEAD_REF "${${data_prefix}.head-ref}"
     PATCHES ${patches}
     ${opts}
   )
-  set("${${data_prefix}.output_variable}" "${${${data_prefix}.output_variable}}" PARENT_SCOPE)
+  set("${${data_prefix}.output-variable}" "${${${data_prefix}.output-variable}}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_download_from_bitbucket data_prefix)
   z_vcpkg_convert_json_array_to_cmake_list(patches "${data_prefix}.patches")
   vcpkg_from_bitbucket(
-      OUT_SOURCE_PATH "${${data_prefix}.output_variable}"
+      OUT_SOURCE_PATH "${${data_prefix}.output-variable}"
       REPO "${${data_prefix}.repository}"
       REF "${${data_prefix}.ref}"
       SHA512 "${${data_prefix}.sha512}"
-      HEAD_REF "${${data_prefix}.head_ref}"
+      HEAD_REF "${${data_prefix}.head-ref}"
       PATCHES ${patches}
   )
-  set("${${data_prefix}.output_variable}" "${${${data_prefix}.output_variable}}" PARENT_SCOPE)
+  set("${${data_prefix}.output-variable}" "${${${data_prefix}.output-variable}}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_download_from_git data_prefix)
   z_vcpkg_convert_json_array_to_cmake_list(patches "${data_prefix}.patches")
   vcpkg_from_git(
-    OUT_SOURCE_PATH "${${data_prefix}.output_variable}"
+    OUT_SOURCE_PATH "${${data_prefix}.output-variable}"
     URL "${${data_prefix}.url}"
     REF "${${data_prefix}.ref}"
     #SHA512 "${${data_prefix}.sha512}"
-    HEAD_REF "${${data_prefix}.head_ref}"
+    HEAD_REF "${${data_prefix}.head-ref}"
     PATCHES ${patches}
     # [LFS [<url>]]
   )
-  set("${${data_prefix}.output_variable}" "${${${data_prefix}.output_variable}}" PARENT_SCOPE)
+  set("${${data_prefix}.output-variable}" "${${${data_prefix}.output-variable}}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_download_from_sourceforge data_prefix)
   z_vcpkg_convert_json_array_to_cmake_list(patches "${data_prefix}.patches")
   vcpkg_from_sourceforge(
-      OUT_SOURCE_PATH "${${data_prefix}.output_variable}"
+      OUT_SOURCE_PATH "${${data_prefix}.output-variable}"
       REPO "${${data_prefix}.repository}"
       REF "${${data_prefix}.ref}"
       SHA512 "${${data_prefix}.sha512}"
-      #HEAD_REF "${${data_prefix}.head_ref}"
+      #HEAD_REF "${${data_prefix}.head-ref}"
       PATCHES ${patches}
       FILENAME "${${data_prefix}.filename}"
       #[NO_REMOVE_ONE_LEVEL]
   )
-  set("${${data_prefix}.output_variable}" "${${${data_prefix}.output_variable}}" PARENT_SCOPE)
+  set("${${data_prefix}.output-variable}" "${${${data_prefix}.output-variable}}" PARENT_SCOPE)
 endfunction()
 ##### JSON Parser
 
