@@ -9569,8 +9569,8 @@
       "port-version": 1
     },
     "yara": {
-      "baseline": "4.3.2",
-      "port-version": 1
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "yas": {
       "baseline": "7.1.0",
