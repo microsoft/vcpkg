@@ -11,6 +11,7 @@
       "copy-to" : "${other_src_dir}/zstd"
     },
     {
+      "if": "VCPKG_TARGET_IS_OSX",
       "output-variable" : "extracted_src_gitlab",
       "from": "gitlab",
       "host": "https://gitlab.com",
@@ -32,6 +33,7 @@
       "copy-to" : "${other_src_dir}/blaze"
     },
     {
+      "if": "VCPKG_TARGET_IS_LINUX",
       "output-variable" : "extracted_src_sourceforge",
       "from": "sourceforge",
       "repository" : "cunit/CUnit",

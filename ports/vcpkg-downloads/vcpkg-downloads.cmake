@@ -35,6 +35,12 @@ function(z_vcpkg_download_from_json outs json_file)
       string(CONFIGURE "${${prefix}.${member}}" "${prefix}.${member}" ESCAPE_QUOTES)
     endforeach()
 
+    if(DEFINED ${prefix}.if AND NOT "${${prefix}.if}" STREQUAL "")
+      if(NOT ${${prefix}.if})
+        continue()
+      endif()
+    endif()
+
     cmake_language(CALL z_vcpkg_download_from_${${prefix}.from} "${prefix}")
     list(APPEND out "${${prefix}.output-variable}")
     
@@ -214,7 +220,7 @@ endfunction()
 function(z_read_json_member out_vars json_data)
   set(out "")
   set(argn_list ${ARGN})
-  message(STATUS "${ARGN}")
+
   list(JOIN argn_list "." argn_list_dot)
   string(JSON "z_${argn_list_dot}.json_type" TYPE "${json_data}" ${ARGN})
 
