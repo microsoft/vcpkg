@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF v2023.06.01
     SHA512 7a231bbaf88f94c79b1ace1c3e66bd520595905bfc8a7ffa1aa453ea6f056136b82aea3a321d97db4ccfd1212a41e8790badcc43222564d861e9e5c35e40a402
     HEAD_REF master
+    PATCHES "fix-static.patch"
 )
 
 if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
@@ -22,6 +23,7 @@ file(COPY
         "${CMAKE_CURRENT_LIST_DIR}/check_getcontext.cc"
         "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
         "${CMAKE_CURRENT_LIST_DIR}/unofficial-breakpadConfig.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/FindDiaSDK.cmake"
     DESTINATION
     "${SOURCE_PATH}")
 
@@ -44,19 +46,28 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES
-            microdump_stackwalk
-            minidump_dump
-            minidump_stackwalk
-            core2md
-            pid2md
-            dump_syms
-            minidump-2-core
-            minidump_upload
-            sym_upload
-            core_handler
-        AUTO_CLEAN)
+    if(LINUX)
+        vcpkg_copy_tools(
+            TOOL_NAMES
+                microdump_stackwalk
+                minidump_dump
+                minidump_stackwalk
+                core2md
+                pid2md
+                dump_syms
+                minidump-2-core
+                minidump_upload
+                sym_upload
+                core_handler
+            AUTO_CLEAN)
+    elseif(WIN32)
+        vcpkg_copy_tools(
+            TOOL_NAMES 
+                dump_syms 
+                sym_upload
+                google_converter
+            AUTO_CLEAN)
+    endif()
 endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad)

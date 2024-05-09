@@ -178,6 +178,32 @@ if(INSTALL_TOOLS)
             src/tools/linux/core_handler/core_handler.cc)
         target_link_libraries(core_handler PRIVATE libbreakpad_client)
         install(TARGETS core_handler DESTINATION bin)
+    elseif(WIN32)
+        message("VCPKG_TARGET_ARCHITECTURE is ${VCPKG_TARGET_ARCHITECTURE}")
+        set(CMAKE_GENERATOR_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
+        list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+        find_package(DiaSDK REQUIRED)
+        if(DiaSDK_FOUND)
+            message(STATUS "DiaSDK found")
+        endif()
+
+        add_executable(dump_syms src/tools/windows/dump_syms/dump_syms.cc)
+        target_link_libraries(dump_syms 
+            PRIVATE libbreakpad_client dbghelp.lib imagehlp.lib ${DIASDK_LIBRARIES})
+        install(TARGETS dump_syms DESTINATION bin)
+
+        add_executable(sym_upload src/tools/windows/symupload/symupload.cc)
+        target_link_libraries(sym_upload 
+            PRIVATE libbreakpad_client dbghelp.lib imagehlp.lib version.lib ${DIASDK_LIBRARIES})
+        install(TARGETS sym_upload DESTINATION bin)
+
+        file(GLOB_RECURSE GOOGLE_CONVERTER_SOURCES src/tools/windows/converter_exe/*.cc)
+        list(APPEND GOOGLE_CONVERTER_SOURCES src/tools/windows/converter/ms_symbol_server_converter.cc)
+        add_executable(google_converter ${GOOGLE_CONVERTER_SOURCES})
+        target_include_directories(google_converter PRIVATE src)
+        target_link_libraries(google_converter 
+            PRIVATE libbreakpad_client dbghelp.lib imagehlp.lib ${DIASDK_LIBRARIES})
+        install(TARGETS google_converter DESTINATION bin)
     endif()
 endif()
 

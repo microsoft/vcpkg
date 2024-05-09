@@ -27,7 +27,7 @@
   "features": {
     "tools": {
       "description": "Build breakpad tools",
-      "supports": "linux"
+      "supports": "linux | windows"
     }
   }
 }

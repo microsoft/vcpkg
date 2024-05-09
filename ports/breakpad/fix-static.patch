@@ -1,0 +1,29 @@
+diff --git a/src/common/windows/sym_upload_v2_protocol.cc b/src/common/windows/sym_upload_v2_protocol.cc
+index 450f3626..a202b8bf 100644
+--- a/src/common/windows/sym_upload_v2_protocol.cc
++++ b/src/common/windows/sym_upload_v2_protocol.cc
+@@ -46,15 +46,15 @@ using std::wstring;
+ 
+ namespace google_breakpad {
+ 
+-static bool SymUploadV2ProtocolSend(const wchar_t* api_url,
+-                                    const wchar_t* api_key,
+-                                    int* timeout_ms,
+-                                    const wstring& debug_file,
+-                                    const wstring& debug_id,
+-                                    const wstring& symbol_filename,
+-                                    const wstring& symbol_type,
+-                                    const wstring& product_name,
+-                                    bool force) {
++bool SymUploadV2ProtocolSend(const wchar_t* api_url,
++                             const wchar_t* api_key,
++                             int* timeout_ms,
++                             const wstring& debug_file,
++                             const wstring& debug_id,
++                             const wstring& symbol_filename,
++                             const wstring& symbol_type,
++                             const wstring& product_name,
++                             bool force) {
+   wstring url(api_url);
+   wstring key(api_key);
+ 
