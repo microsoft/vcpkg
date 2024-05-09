@@ -1,0 +1,55 @@
+{
+  "downloads" : [
+    {
+      "output_variable" : "extracted_src_github",
+      "from": "github",
+      "repository" : "facebook/zstd",
+      "ref": "v1.5.6",
+      "sha512" : "ca12dffd86618ca008e1ecc79056c1129cb4e61668bf13a3cd5b2fa5c93bc9c92c80f64c1870c68b9c20009d9b3a834eac70db72242d5106125a1c53cccf8de8",
+      "head_ref": "dev",
+      "patches" : [],
+      "target_dir" : "${other_src_dir}/zstd"
+    },
+    {
+      "output_variable" : "extracted_src_gitlab",
+      "from": "gitlab",
+      "host": "https://gitlab.com",
+      "repository" : "libeigen/eigen",
+      "ref": "3.4.0",
+      "sha512" : "ba75ecb760e32acf4ceaf27115468e65d4f77c44f8d519b5a13e7940af2c03a304ad433368cb6d55431f307c5c39e2666ab41d34442db3cf441638e51f5c3b6a",
+      "head_ref": "master",
+      "patches" : [],
+      "target_dir" : "${other_src_dir}/eigen"
+    },
+    {
+      "output_variable" : "extracted_src_bitbucket",
+      "from": "bitbucket",
+      "repository" : "blaze-lib/blaze",
+      "ref": "v3.8.2",
+      "sha512" : "9786628159991f547902ceb44a159f0ba84d08be16ccc45bfb9aad3cfbf16eaede4ea43d2d4981d420a8a387a07721b113754f6038a6db2d9c7ed2ea967b5361",
+      "head_ref": "master",
+      "patches" : [],
+      "target_dir" : "${other_src_dir}/blaze"
+    },
+    {
+      "output_variable" : "extracted_src_sourceforge",
+      "from": "sourceforge",
+      "repository" : "cunit/CUnit",
+      "ref": "2.1-3",
+      "filename": "CUnit-2.1-3.tar.bz2",
+      "sha512" : "547b417109332446dfab8fda17bf4ccd2da841dc93f824dc90a20635bcf1fb80fb2176500d8a0906940f3f3d3e2f77b2d70a71090c9ab84ad9af43f3582bc487",
+      "patches" : [],
+      "target_dir" : "${other_src_dir}/cunit"
+    },
+    {
+      "output_variable" : "extracted_src_git",
+      "from": "git",
+      "url" : "https://repo.or.cz/libtar.git",
+      "ref": "6d0ab4c78e7a8305c36a0c3d63fd25cd1493de65",
+      "sha512" : "0",
+      "patches" : [],
+      "target_dir" : "${other_src_dir}/libtar"
+    }
+    
+  ]
+}
