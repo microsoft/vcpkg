@@ -13,94 +13,62 @@ endfunction()
 function(z_qt_install_runtime_for_tools config path_suffix dll_suffix)
     set(arg_LIBRARIES "${ARGN}")
 
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
-        set(qt_conf "${CURRENT_INSTALLED_DIR}/tools/qt5/qt_${config}.conf")
-        if(PORT STREQUAL "qt5-base")
-            set(qt_conf "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${config}.conf")
-        endif()
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/qt.conf")
-        set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
+    if(NOT arg_LIBRARIES AND NOT EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
+        return()
+    endif()
+
+    if(PORT STREQUAL "qt5-base")
+        block(SCOPE_FOR VARIABLES)
+        set(qt_conf "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${config}.conf")
         string(REPLACE "/debug" "/.." CURRENT_INSTALLED_DIR "./../../..${path_suffix}") # Making the qt.conf relative and not absolute
         configure_file("${qt_conf}" "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/qt.conf") # This makes the tools at least useable for release
-        set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
-
-        # Not using vcpkg_copy_tool_dependencies (deployqt.ps1) because
-        # we must also deploy in advance for tools coming from other ports
-        file(GLOB tools "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/*.exe")
-        file(GLOB libs "${CURRENT_PACKAGES_DIR}/bin/*.dll")
-        file(GLOB plugins "${CURRENT_PACKAGES_DIR}/plugins/*/*.dll")
-        file(GET_RUNTIME_DEPENDENCIES
-            RESOLVED_DEPENDENCIES_VAR resolved
-            UNRESOLVED_DEPENDENCIES_VAR unresolved
-            EXECUTABLES tools
-            LIBRARIES libs
-            MODULES plugins
-            DIRECTORIES "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_INSTALLED_DIR}/bin"
-        )
-        file(INSTALL "${resolved}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
-        message(FATAL_ERROR "Unresolved: ${unresolved}")
-        file(COPY "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}${path_suffix}")
+        endblock()
     endif()
 
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        # qtdeploy.ps1 is tuned for user projects (one run), not ports (two runs). Fill gaps.
-        if(EXISTS "${CURRENT_PACKAGES_DIR}${path_suffix}/qml")
-            if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}${path_suffix}/bin/Qt5Qml${dll_suffix}.dll")
-                # qml libs from CURRENT_INSTALLED_DIR already copied by vcpkg_copy_tool_dependencies.
-                file(COPY "${CURRENT_PACKAGES_DIR}${path_suffix}/qml" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}${path_suffix}/bin")
-                file(COPY "${CURRENT_PACKAGES_DIR}${path_suffix}/qml" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
-            elseif("Qt5Qml" IN_LIST arg_LIBRARIES)
-                # qml libs as runtime for tools
-                file(COPY "${CURRENT_INSTALLED_DIR}${path_suffix}/qml" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
-            endif()
-        endif()
-        set(rerun_copy_tool_dependencies FALSE)
         foreach(lib IN LISTS arg_LIBRARIES)
             string(APPEND lib "${dll_suffix}")
             if(EXISTS "${CURRENT_PACKAGES_DIR}${path_suffix}/bin/${lib}.dll") # subject to features
                 file(COPY "${CURRENT_PACKAGES_DIR}${path_suffix}/bin/${lib}.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
-                set(rerun_copy_tool_dependencies TRUE)
             elseif(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix}/bin/${lib}.dll") # subject to features
-                # trigger for plugin deployment
+                message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "${PORT} tools require ${lib} but the port does not own this DLL.")
                 file(COPY "${CURRENT_INSTALLED_DIR}${path_suffix}/bin/${lib}.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
-                set(rerun_copy_tool_dependencies TRUE)
             else()
-                # probably a disabled feature
-                message(STATUS "No such lib: ${lib}")
+                message(STATUS "${lib} is not installed. Assuming a disabled feature.")
             endif()
         endforeach()
-        if(rerun_copy_tool_dependencies)
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
+
+        # Not using vcpkg_copy_tool_dependencies / deployqt.ps1
+        # because they cannot handle port tools in shared directories.
+        file(GLOB tools "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/*.exe")
+        file(GLOB libs "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/*.dll")
+        file(GLOB installed_libs "${CURRENT_INSTALLED_DIR}/tools/qt5${path_suffix}/bin/*.dll")
+        # TODO: inspect only necessary plugins and qml modules
+        file(GLOB plugins "${CURRENT_PACKAGES_DIR}${path_suffix}/plugins/*/*.dll")
+        file(GLOB qml "${CURRENT_PACKAGES_DIR}${path_suffix}/qml/*/*.dll")
+        file(GET_RUNTIME_DEPENDENCIES
+            RESOLVED_DEPENDENCIES_VAR resolved
+            UNRESOLVED_DEPENDENCIES_VAR unresolved
+            EXECUTABLES ${tools}
+            LIBRARIES ${libs}
+            MODULES ${plugins} ${qml}
+            DIRECTORIES
+                "${CURRENT_INSTALLED_DIR}/tools/qt5${path_suffix}/bin"
+                "${CURRENT_PACKAGES_DIR}${path_suffix}/bin"
+                "${CURRENT_INSTALLED_DIR}${path_suffix}/bin"
+        )
+        list(REMOVE_ITEM resolved ${libs} ${installed_libs})
+        foreach(lib IN LISTS resolved)
+            string(FIND "${lib}" "${CURRENT_PACKAGES_DIR}${path_suffix}/bin" in_packages)
+            string(FIND "${lib}" "${CURRENT_INSTALLED_DIR}${path_suffix}/bin" in_installed)
+            if(in_packages EQUAL "0" OR in_installed EQUAL "0")
+                file(INSTALL "${lib}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin")
+            endif()
+        endforeach()
+        if(unresolved)
+            message(WARNING "Unresolved: ${unresolved}")
         endif()
     endif()
 
-    # Remove temporary clones and runtime files which are already owned by other ports
-    file(GLOB files RELATIVE "${CURRENT_PACKAGES_DIR}"
-        "${CURRENT_PACKAGES_DIR}${path_suffix}/plugins/qtdeploy.ps1"
-        "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/qt.conf"
-        "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/*.dll"
-        "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/plugins/*/*.dll"
-        "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/qml/*" # files and dirs
-    )
-    foreach(file IN LISTS files)
-        if(EXISTS "${CURRENT_INSTALLED_DIR}/${file}")
-            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${file}")
-        endif()
-    endforeach()
-
-    # Prune empty runtime dirs
-    file(GLOB plugin_dirs "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/plugins/*")
-    set(base_dirs
-        "${CURRENT_PACKAGES_DIR}${path_suffix}/bin"
-        "${CURRENT_PACKAGES_DIR}${path_suffix}/lib"
-        "${CURRENT_PACKAGES_DIR}${path_suffix}/plugins"
-        "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/plugins"
-        "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin/qml"
-    )
-    foreach(dir IN LISTS plugin_dirs base_dirs)
-        file(GLOB plugins "${dir}/*")
-        if("${plugins}" STREQUAL "")
-            file(REMOVE_RECURSE "${dir}")
-        endif()
-    endforeach()
+    file(COPY "${CURRENT_PACKAGES_DIR}/tools/qt5${path_suffix}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}${path_suffix}")
 endfunction()
