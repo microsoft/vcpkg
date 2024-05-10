@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         apr-r1917051+r1917283+r1917612.patch
+        unglue.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
