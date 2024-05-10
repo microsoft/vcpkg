@@ -15,6 +15,7 @@ vcpkg_from_github(
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
         openexr3.patch
         unofficial-export.patch
+        fix-error-c3861.patch
 )
 
 file(REMOVE
