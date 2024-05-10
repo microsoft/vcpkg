@@ -8,7 +8,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
     REF mesa-${VERSION}
-    SHA512 39bd1a7ce618c95709594ab8c8ac72c38d24ea582ffe618d4746cc2c3ceafbc99019412289612f7d21be6851b8d8061649759e96096fedbec1e837ffa1136c18
+    SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
 )
@@ -46,7 +46,6 @@ list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
-list(APPEND MESA_OPTIONS -Dcpp_args="/Zc:preprocessor")
 
 if("offscreen" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dosmesa=true)
