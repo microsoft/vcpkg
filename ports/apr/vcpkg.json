@@ -21,5 +21,6 @@
     "private-headers": {
       "description": "Install non-standard files required for building Apache httpd"
     }
-  }
+  },
+  "default-features": []
 }
