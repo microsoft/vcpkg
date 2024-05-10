@@ -5,8 +5,8 @@
   "homepage": "https://github.com/conorwilliams/libfork",
   "license": "MPL-2.0",
   "dependencies": [
-    "pkgconf",
     "hwloc",
+    "pkgconf",
     {
       "name": "vcpkg-cmake",
       "host": true
