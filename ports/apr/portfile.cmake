@@ -22,12 +22,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" APR_BUILD_STATIC)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" APR_BUILD_SHARED)
 
-    if (FEATURE_MINIMAL_BUILD)
-        set(APU_USE_EXPAT OFF)
-    else()
-        set(APU_USE_EXPAT ON)
-    endif()
-
     vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
