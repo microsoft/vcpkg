@@ -74,3 +74,18 @@ index 049ac34..cc0fe19 100644
    if(LIBSSH2_FOUND)
      list(APPEND CURL_LIBS ${LIBSSH2_LIBRARY})
      list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBSSH2_INCLUDE_DIR}")
+@@ -917,6 +917,14 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
+ mark_as_advanced(CURL_USE_GSSAPI)
+ 
+ if(CURL_USE_GSSAPI)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(KRB5 REQUIRED krb5 krb5-gssapi)
++  list(APPEND CURL_LIBS ${KRB5_LINK_LIBRARIES} resolv)
++  set(HAVE_GSSAPI_GSSAPI_H ON)
++  set(HAVE_GSSAPI_GSSAPI_GENERIC_H ON)
++  set(HAVE_GSSAPI_GSSAPI_KRB5_H ON)
++  set(HAVE_GSSAPI ON)
++  elseif(0)
+   find_package(GSS)
+ 
+   set(HAVE_GSSAPI ${GSS_FOUND})

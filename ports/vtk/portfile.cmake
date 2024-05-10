@@ -38,6 +38,7 @@ vcpkg_from_github(
         remove-prefix-changes.patch
         10945.diff
         10972.diff
+        hdf5helper.patch
 )
 
 # =============================================================================
