@@ -1,13 +1,14 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.84.0",
+    $version = "1.85.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 #    boost-python is not supported on uwp. Unless this script treats these cases correctly
 #    don't blindly stage/commit changes containing platform expressions in dependencies.
-    $portsDir = $null
+    $portsDir = $null,
+    $vcpkg = $null
 )
 
 $ErrorActionPreference = 'Stop'
@@ -16,24 +17,17 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 if ($null -eq $portsDir) {
     $portsDir = "$scriptsDir/../../ports"
 }
-
-if ($IsWindows) {
-    $vcpkg = "$scriptsDir/../../vcpkg.exe"
-    $curl = "curl.exe"
-}
-else {
+if ($null -eq $vcpkg) {
     $vcpkg = "$scriptsDir/../../vcpkg"
-    $curl = "curl"
 }
+
 
 # Beta builds contains a text in the version string
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 0
 $portVersions = @{
-  'boost-cmake' = 0;
-  'boost-headers' = 0;
 }
 
 function Get-PortVersion {
@@ -407,11 +401,12 @@ if ($libraries.Length -eq 0) {
 $boostPortDependencies = @()
 
 foreach ($library in $libraries) {
-    "Handling boost/$library..."
     $archive = "$scriptsDir/downloads/$library-boost-$version.tar.gz"
+    "Handling boost/$library... $archive"
     if (!(Test-Path $archive)) {
         "Downloading boost/$library..."
-        & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
+        Invoke-WebRequest -Uri "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile "$scriptsDir/downloads/$library-boost-$version.tar.gz"
+        "Downloaded boost/$library..."
     }
     $hash = & $vcpkg --x-wait-for-lock hash $archive
     # Remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
@@ -437,7 +432,7 @@ foreach ($library in $libraries) {
         | Where-Object { $_ -is [System.IO.FileInfo] } `
         | ForEach-Object {
             Write-Verbose "${library}: processing file: $_"
-            Get-Content -LiteralPath $_
+            Get-Content -LiteralPath $_.FullName
         } `
         | Where-Object {
             $_ -match ' *# *include *[<"]boost\/'
@@ -624,7 +619,7 @@ if ($updateServicePorts) {
         -PortName "boost-cmake" `
         -Description "Boost CMake support infrastructure" `
         -License "BSL-1.0" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-boost"; host = $True }, @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-config"; host = $True })
+        -Dependencies @("boost-uninstall", @{ name = "vcpkg-boost"; host = $true }, @{ name = "vcpkg-cmake"; host = $true }, @{ name = "vcpkg-cmake-config"; host = $true })
 
 
     # Generate manifest files for boost-build
