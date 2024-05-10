@@ -81,12 +81,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/sbin")
 
 # Empty directories
 file(REMOVE_RECURSE
+	"${CURRENT_PACKAGES_DIR}/debug"
+	"${CURRENT_PACKAGES_DIR}/share/man"
 	"${CURRENT_PACKAGES_DIR}/var"
-	"${CURRENT_PACKAGES_DIR}/share/man/cat1"
-	"${CURRENT_PACKAGES_DIR}/share/man/cat5"
-	"${CURRENT_PACKAGES_DIR}/share/man/cat7"
-	"${CURRENT_PACKAGES_DIR}/share/man/cat8"
 )
+
 # Also empty when static
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/krb5")
