@@ -179,13 +179,9 @@ if(INSTALL_TOOLS)
         target_link_libraries(core_handler PRIVATE libbreakpad_client)
         install(TARGETS core_handler DESTINATION bin)
     elseif(WIN32)
-        message("VCPKG_TARGET_ARCHITECTURE is ${VCPKG_TARGET_ARCHITECTURE}")
         set(CMAKE_GENERATOR_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
         list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
         find_package(DiaSDK REQUIRED)
-        if(DiaSDK_FOUND)
-            message(STATUS "DiaSDK found")
-        endif()
 
         add_executable(dump_syms src/tools/windows/dump_syms/dump_syms.cc)
         target_link_libraries(dump_syms 
