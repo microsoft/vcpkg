@@ -1,7 +1,7 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO krb5/krb5
-	REF "krb5-1.21.2-final"
+	REF "krb5-${VERSION}-final"
 	SHA512 184ef8645d7e17f30a8e3d4005364424d2095b3d0c96f26ecef0c2dd2f3a096a0dd40558ed113121483717e44f6af41e71be0e5e079c76a205535d0c11a2ea34
 	PATCHES relative_paths.patch
 )
