@@ -4,6 +4,7 @@
   "description": "C++ Faker library for generating fake (but realistic) data.",
   "homepage": "https://github.com/cieslarmichal/faker-cxx",
   "license": "MIT",
+  "supports": "!android",
   "dependencies": [
     "fmt",
     {

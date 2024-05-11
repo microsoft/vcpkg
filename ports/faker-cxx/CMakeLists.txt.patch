@@ -1,22 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c0c1473..f2e5eae 100644
+index c0c1473..72e6244 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -11,6 +11,8 @@ option(BUILD_FAKER_TESTS DEFAULT ON)
- 
- if (MSVC)
+@@ -13,7 +13,7 @@ if (MSVC)
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20 /permissive- /bigobj")
-+elseif (ANDROID)
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -fexperimental-library")
  else ()
      set(CMAKE_CXX_FLAGS
-         "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wformat -Werror"
-@@ -127,12 +129,11 @@ install(EXPORT ${LIBRARY_NAME}-targets
-     FILE ${LIBRARY_NAME}-config.cmake
-     DESTINATION lib/cmake/${LIBRARY_NAME})
+-        "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wformat -Werror"
++        "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wformat"
+     )
+ endif ()
  
--if (APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
-+if (APPLE OR ANDROID OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
+@@ -130,9 +130,8 @@ install(EXPORT ${LIBRARY_NAME}-targets
+ if (APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
      VERSION_LESS 12))
  
 -    add_subdirectory(externals/fmt)
