@@ -8,6 +8,10 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "cppwinrt",
+      "platform": "windows"
+    },
+    {
       "name": "libb2",
       "platform": "!windows"
     },
