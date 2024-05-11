@@ -1,16 +1,16 @@
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following programs from the system package manager:
-    autoconf-archive
+    autoconf automake autoconf-archive
 On Debian and Ubuntu derivatives:
-    sudo apt-get install autoconf-archive
+    sudo apt-get install autoconf automake autoconf-archive
 On recent Red Hat and Fedora derivatives:
-    sudo dnf install autoconf-archive
+    sudo dnf install autoconf automake autoconf-archive
 On Arch Linux and derivatives:
-    sudo pacman -S autoconf-archive
+    sudo pacman -S autoconf automake autoconf-archive
 On Alpine:
-    apk add autoconf-archive
+    apk add autoconf automake autoconf-archive
 On macOS:
-    brew install autoconf-archive\n")
+    brew install autoconf automake autoconf-archive\n")
 endif()
 
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
