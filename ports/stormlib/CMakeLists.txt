@@ -265,7 +265,7 @@ target_link_libraries(stormlib PRIVATE ${LINK_LIBS})
 target_compile_definitions(stormlib PRIVATE _7ZIP_ST BZ_STRICT_ANSI)
 
 if(WIN32)
-	target_compile_definitions(stormlib PRIVATE  UNICODE _UNICODE)
+	target_compile_definitions(stormlib PUBLIC UNICODE _UNICODE)
 endif()
 
 if(NOT MSVC)
