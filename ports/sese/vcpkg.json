@@ -1,10 +1,10 @@
 {
   "name": "sese",
-  "version-string": "2.1.0",
+  "version-string": "2.1.1",
   "description": "a cross-platform framework",
   "homepage": "https://libsese.github.io/sese/",
   "license": "Apache-2.0",
-  "supports": "x64 & (windows | osx | linux) & !static",
+  "supports": "x64 & (windows | osx | linux) & !uwp & !static",
   "dependencies": [
     {
       "name": "asio",
