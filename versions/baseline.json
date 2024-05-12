@@ -2180,6 +2180,10 @@
       "baseline": "2.2.4",
       "port-version": 0
     },
+    "dawn": {
+      "baseline": "6475",
+      "port-version": 0
+    },
     "daxa": {
       "baseline": "2.0.0",
       "port-version": 0
