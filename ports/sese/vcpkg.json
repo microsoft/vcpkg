@@ -1,6 +1,8 @@
 {
     "name": "sese",
     "version-string": "2.1.0",
+    "description": "a cross-platform framework",
+    "homepage": "https://libsese.github.io/sese/",
     "supports": "x64",
     "license": "Apache-2.0",
     "dependencies": [
