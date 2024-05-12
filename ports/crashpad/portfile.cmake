@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
-    REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
+    REF 1174aa4fc3196f478b5b4b77fc970d1cb85cb7cf
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -27,7 +27,7 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
-    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"
+    "a6607b1fd76b740f31c2249fef2c0bec27ffbe52"
 )
 
 if(VCPKG_TARGET_IS_LINUX)
