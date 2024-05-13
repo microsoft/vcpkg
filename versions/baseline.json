@@ -8548,6 +8548,10 @@
       "baseline": "0.4.0",
       "port-version": 1
     },
+    "tanakh-cmdline": {
+      "baseline": "2014-02-04",
+      "port-version": 0
+    },
     "taocpp-json": {
       "baseline": "2020-09-14",
       "port-version": 3
