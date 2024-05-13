@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
 
 )
 vcpkg_cmake_install()
+message(FATAL_ERROR "reproduce ci error")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
