@@ -17,9 +17,9 @@
     "zlib"
   ],
   "default-features": [
+    "gssapi",
     "non-http",
-    "ssl",
-    "gssapi"
+    "ssl"
   ],
   "features": {
     "brotli": {
