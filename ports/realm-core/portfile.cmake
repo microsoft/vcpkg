@@ -3,7 +3,9 @@ vcpkg_from_github(
         REPO realm/realm-core
         REF "adbefab1b21e92c45c21e6cff8eb42632f14a09a"
         SHA512 "595a314a47dd12ced139bbb36c8e79d79f8a326b4da181b3badd53fc9d1294883448f3f18846a899b75c7593294caf24ef8fe2dc7818fe2710764043e785fc0e"
-        HEAD_REF "master")
+        HEAD_REF "master"
+        PATCHES 
+            "UWP_index_set.patch")
 
 set(REALMCORE_CMAKE_OPTIONS -DREALM_CORE_SUBMODULE_BUILD=OFF)
 list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_BUILD_LIB_ONLY=ON)
