@@ -14,9 +14,9 @@ parameters:
     type: string
     default: 'use default'
   - name: tripletPattern
-    displayName: 'Enable triplets which contain this substring'
+    displayName: 'tripletPattern1'
     type: string
-    default: '-'
+    default: 'x64-linux'
 
 jobs:
 - job: mintsas
