@@ -1,10 +1,23 @@
+function(remove_empty_directories_recursive dir)
+    file(GLOB before_subdirs "${dir}/*")
+    foreach (subdir ${before_subdirs})
+        if (IS_DIRECTORY ${subdir})
+            remove_empty_directories_recursive(${subdir})
+        endif ()
+    endforeach ()
+    file(GLOB after_subdirs "${dir}/*")
+    if ("${after_subdirs}" STREQUAL "")
+        file(REMOVE_RECURSE "${dir}")
+    endif ()
+endfunction()
+
 set(SOURCE_PATH ${CURRENT_BUILDTRESS_DIR}/sese)
 
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO libsese/sese
         REF 2.1.1
-        SHA512 2a3128aef5629a1e34db3271ee432a319eaea0be6c80662c65437273f281387033d3e3787fb543fb88139a120f47cc76a33d60ee49ec42c1efbf9850ab12e826
+        SHA512 1fc1495e8518f3becfd32459e1cc8d3442fb8c97c80b36558b9cfff05b2def0277be71156ac39a961b5800454015264301464fa1b9449db5c5144db2ecc5cbfe
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,7 +41,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sese-core)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/sese-core")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/sese-core/LICENSE" "${CURRENT_PACKAGES_DIR}/share/sese-core/copyright")
+remove_empty_directories_recursive("${CURRENT_PACKAGES_DIR}/include/sese")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/NOTICE")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
