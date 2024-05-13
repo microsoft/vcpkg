@@ -26,7 +26,7 @@
         "boost-predef",
         "boost-preprocessor",
         "boost-utility",
-        "boost-variant",
+        "boost-variant"
       ]
     }
   ]
