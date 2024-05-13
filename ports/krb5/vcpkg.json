@@ -11,5 +11,5 @@
   ],
   "homepage": "https://web.mit.edu/kerberos/",
   "license": "MIT",
-  "supports": "osx | (x64 & linux)"
+  "supports": "linux | (x64 & !static & !uwp & windows)"
 }

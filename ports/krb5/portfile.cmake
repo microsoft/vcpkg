@@ -1,94 +1,82 @@
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO krb5/krb5
-	REF "krb5-${VERSION}-final"
-	SHA512 184ef8645d7e17f30a8e3d4005364424d2095b3d0c96f26ecef0c2dd2f3a096a0dd40558ed113121483717e44f6af41e71be0e5e079c76a205535d0c11a2ea34
-	PATCHES relative_paths.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO krb5/krb5
+    REF krb5-${VERSION}-final
+    SHA512 184ef8645d7e17f30a8e3d4005364424d2095b3d0c96f26ecef0c2dd2f3a096a0dd40558ed113121483717e44f6af41e71be0e5e079c76a205535d0c11a2ea34
+    HEAD_REF master
+    PATCHES
+        relative_paths.patch
 )
 
-if ("${VCPKG_TARGET_IS_OSX}")
-	# Required for recent macOS and static build: https://mailman.mit.edu/pipermail/krbdev/2024-January/013653.html
-	if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-		set(LD_FLAGS "-framework Kerberos")
-	endif ()
-	set(EXTRA_OPTIONS
-		"--disable-nls"
-		"--disable-silent-rules"
-		"--without-system-verto"
-		"--without-keyutils"
-	)
-endif ()
-
-vcpkg_configure_make(
-	SOURCE_PATH "${SOURCE_PATH}"
-	PROJECT_SUBPATH src
-	AUTOCONFIG
-	NO_ADDITIONAL_PATHS
-	DETERMINE_BUILD_TRIPLET
-	OPTIONS
-		--disable-rpath
-		"CFLAGS=-fcommon \$CFLAGS"
-		"LDFLAGS=${LD_FLAGS}"
-    ${EXTRA_OPTIONS}
-)
-
-vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
-
-vcpkg_copy_tools(
-	SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
-	DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
-	TOOL_NAMES
-		gss-client
-		kadmin
-		kdestroy
-		kinit
-		klist
-		kpasswd
-		kswitch
-		ktutil
-		kvno
-		sclient
-		sim_client
-		uuclient
-		compile_et
-		k5srvutil
-		krb5-config
-	AUTO_CLEAN
-)
-
-vcpkg_copy_tools(
-	SEARCH_DIR "${CURRENT_PACKAGES_DIR}/sbin"
-	DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sbin"
-	TOOL_NAMES
-		gss-server
-		kadmind
-		kdb5_util
-		kprop
-		kpropd
-		kproplog
-		krb5kdc
-		sim_server
-		sserver
-		uuserver
-		kadmin.local
-		krb5-send-pr
-)
-
-# Required because AUTO_CLEAN doesn't work with sbin
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/sbin")
-
-# Empty directories
-file(REMOVE_RECURSE
-	"${CURRENT_PACKAGES_DIR}/debug"
-	"${CURRENT_PACKAGES_DIR}/share/man"
-	"${CURRENT_PACKAGES_DIR}/var"
-)
-
-# Also empty when static
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/krb5")
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    vcpkg_find_acquire_program(PERL)
+    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+    vcpkg_add_to_path("${PERL_PATH}")
+    vcpkg_build_nmake(
+        SOURCE_PATH "${SOURCE_PATH}/src"
+        PROJECT_NAME Makefile.in
+        TARGET prep-windows
+    )
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
+    vcpkg_install_nmake(
+        SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        PROJECT_NAME "Makefile"
+        OPTIONS
+            "NO_LEASH=1"
+        OPTIONS_RELEASE
+            "KRB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}"
+        OPTIONS_DEBUG
+            "KRB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug"
+    )
+    set(tools
+        ccapiserver
+        gss-client
+        gss-server
+        kcpytkt
+        kdeltkt
+        kdestroy
+        kfwcpcc
+        kinit
+        klist
+        kpasswd
+        kswitch
+        kvno
+        mit2ms
+        ms2mit
+    )
+    vcpkg_copy_tools(
+        TOOL_NAMES ${tools}
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"        
+        AUTO_CLEAN
+    )
+    foreach(tool_name ${tools})
+        list(APPEND debug_tools_to_remove "${CURRENT_PACKAGES_DIR}/debug/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    endforeach()
+    file(REMOVE ${debug_tools_to_remove})
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}/src"
+        AUTOCONFIG
+        OPTIONS
+            "CFLAGS=-fcommon \$CFLAGS"
+    )
+    vcpkg_install_make()
 endif()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat5")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat7")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat8")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/krb5/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/krb5/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE")
