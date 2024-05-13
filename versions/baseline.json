@@ -9480,6 +9480,10 @@
       "baseline": "0.3.0",
       "port-version": 3
     },
+    "xgboost": {
+      "baseline": "1.7.6",
+      "port-version": 0
+    },
     "xlnt": {
       "baseline": "1.5.0",
       "port-version": 4
