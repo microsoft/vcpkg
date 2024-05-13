@@ -3597,7 +3597,7 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.90.2",
+      "baseline": "1.90.6",
       "port-version": 0
     },
     "imgui-node-editor": {
@@ -9197,7 +9197,7 @@
       "port-version": 0
     },
     "vsgimgui": {
-      "baseline": "0.1.0",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "vsgxchange": {
