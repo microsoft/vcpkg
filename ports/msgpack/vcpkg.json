@@ -15,7 +15,7 @@
       "host": true
     }
   ],
-  "features": [
+  "features": {
     "boost": {
       "description": "Build msgpack using Boost",
       "dependencies": [
@@ -29,5 +29,5 @@
         "boost-variant"
       ]
     }
-  ]
+  }
 }
