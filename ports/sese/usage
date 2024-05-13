@@ -1,21 +1,7 @@
+sese provides CMake targets:
 
-##################################################################################
-#
-#      ___       ___       ___       ___
-#     /\  \     /\  \     /\  \     /\  \
-#    /::\  \   /::\  \   /::\  \   /::\  \
-#   /:/\:\__\ /:/\:\__\ /::\:\__\ /::\:\__\
-#   \:\ \/__/ \:\/:/  / \;:::/  / \:\:\/  /
-#    \:\__\    \::/  /   |:\/__/   \:\/  /
-#     \/__/     \/__/     \|__|     \/__/
-#
-#   Thank you for choosing the core library to use,
-#   just add the following build script:
-#       find_package(sese CONFIG REQUIRED)
-#       target_link_libraries(main PRIVATE Sese::Core)
-#
-#   For assistance, please contact the address below:
-#       shiinasama2001@gmail.com
-#       https://t.me/shiinasama
-#
-##################################################################################
+    find_package(sese CONFIG REQUIRED)
+    # build full features
+    target_link_libraries(main PRIVATE Sese::Core)
+    # build only plugin
+    target_link_libraries(main PRIVATE Sese::Plugin)
