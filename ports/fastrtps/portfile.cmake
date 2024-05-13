@@ -15,7 +15,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     # when cross-compiling, try_run will not work.
     set(extra_opts
         -DSM_RUN_RESULT=TRUE
-        -DSM_RUN_RESULT__TRYRUN_OUTPUT=""
+        -DSM_RUN_RESULT__TRYRUN_OUTPUT=''
     )
 endif()
 
