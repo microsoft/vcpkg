@@ -117,6 +117,10 @@
       "description": "Qt D-Bus",
       "dependencies": [
         {
+          "name": "dbus",
+          "default-features": false,
+        },
+        {
           "name": "qtbase",
           "default-features": false,
           "features": [
