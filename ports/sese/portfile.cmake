@@ -16,8 +16,8 @@ set(SOURCE_PATH ${CURRENT_BUILDTRESS_DIR}/sese)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO libsese/sese
-        REF 2.1.1
-        SHA512 1fc1495e8518f3becfd32459e1cc8d3442fb8c97c80b36558b9cfff05b2def0277be71156ac39a961b5800454015264301464fa1b9449db5c5144db2ecc5cbfe
+        REF "${VERSION}"
+        SHA512 ea8e61485c63f75d7ca52d08a3d3efb129abd65eb33de56729cebe8145ac6d22ded60b1678bf831e0d8edba0a94a5cbf1ea87b98d704c244b5905e3288525833
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,7 +37,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sese-core)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sese")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
