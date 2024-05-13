@@ -10,6 +10,7 @@ vcpkg_from_github(
         disable-symlink.patch
 )
 
+set(extra_opts "")
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     # when cross-compiling, try_run will not work.
     set(extra_opts
@@ -20,6 +21,8 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${extra_opts}
 )
 
 vcpkg_cmake_install()
