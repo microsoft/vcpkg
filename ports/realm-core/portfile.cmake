@@ -1,8 +1,8 @@
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO realm/realm-core
-        REF "adbefab1b21e92c45c21e6cff8eb42632f14a09a"
-        SHA512 "595a314a47dd12ced139bbb36c8e79d79f8a326b4da181b3badd53fc9d1294883448f3f18846a899b75c7593294caf24ef8fe2dc7818fe2710764043e785fc0e"
+        REF "9cf7ef4ad8e2f4c7a519c9a395ca3d253bb87aa8"
+        SHA512 "1bd11bfe70204213469687d1e224fabb2ff2798aa25f6d791b3d455acdcacf686248e7a692f23ed67148ef99faf1a7c1f823182f33a45340310477bc51b32bb7"
         HEAD_REF "master"
         PATCHES 
             "UWP_index_set.patch")
