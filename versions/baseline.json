@@ -4730,7 +4730,7 @@
     },
     "libodb": {
       "baseline": "2.4.0",
-      "port-version": 10
+      "port-version": 11
     },
     "libodb-boost": {
       "baseline": "2.4.0",
