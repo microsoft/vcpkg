@@ -1,6 +1,7 @@
 {
   "name": "libheif",
   "version": "1.17.6",
+  "port-version": 1,
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only",
@@ -18,7 +19,18 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "x265"
-  ]
+    }
+  ],
+  "default-features": [
+    "hevc"
+  ],
+  "features": {
+    "hevc": {
+      "description": "HEVC encoding via x265",
+      "license": "GPL-2.0-or-later",
+      "dependencies": [
+        "x265"
+      ]
+    }
+  }
 }

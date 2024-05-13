@@ -1,11 +1,14 @@
 diff -u -r a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -6,6 +6,23 @@
+@@ -6,6 +6,26 @@
  
  include(CMakeFindDependencyMacro)
  
-+if (@USE_LIBHEIF@)
++if(@USE_GIF@)
++    find_dependency(GIF)
++endif()
++if(@USE_LIBHEIF@)
 +    find_dependency(libheif CONFIG)
 +endif()
 +find_dependency(PNG)

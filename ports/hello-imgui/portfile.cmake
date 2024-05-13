@@ -34,7 +34,7 @@ endif()
 
 
 set(platform_options "")
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     # Standard win32 options (these are the defaults for HelloImGui)
     # we could add a vcpkg feature for this, but it would have to be platform specific
     list(APPEND platform_options
@@ -43,7 +43,7 @@ if(WIN32)
     )
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Standard macOS options (these are the defaults for HelloImGui)
     # we could add a vcpkg feature for this, but it would have to be platform specific
     list(APPEND platform_options

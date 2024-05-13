@@ -2,8 +2,8 @@ diff --git a/Makefile.am b/Makefile.am
 index 9f92a4f..e35629d 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -116,7 +116,7 @@ LIBGMPXX_LT_REVISION = 1
- LIBGMPXX_LT_AGE      = 6
+@@ -117,7 +117,7 @@ LIBGMPXX_LT_REVISION = 0
+ LIBGMPXX_LT_AGE      = 7
  
  
 -SUBDIRS = tests mpn mpz mpq mpf printf scanf rand cxx demos tune doc

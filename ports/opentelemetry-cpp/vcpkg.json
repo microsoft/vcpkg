@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
-  "version-semver": "1.13.0",
-  "port-version": 4,
+  "version-semver": "1.14.2",
+  "port-version": 1,
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
@@ -30,7 +30,16 @@
       "supports": "windows"
     },
     "geneva": {
-      "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository"
+      "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository",
+      "dependencies": [
+        {
+          "name": "opentelemetry-cpp",
+          "features": [
+            "etw"
+          ],
+          "platform": "windows"
+        }
+      ]
     },
     "otlp-grpc": {
       "description": "Whether to include the OTLP gRPC exporter in the SDK",
@@ -53,6 +62,20 @@
       "description": "Whether to include the Prometheus Client in the SDK",
       "dependencies": [
         "prometheus-cpp"
+      ]
+    },
+    "user-events": {
+      "description": "Whether to include the User Events Exporter from the opentelemetry-cpp-contrib repository",
+      "supports": "linux",
+      "dependencies": [
+        "libeventheader-tracepoint",
+        "libtracepoint",
+        {
+          "name": "opentelemetry-cpp",
+          "features": [
+            "otlp-http"
+          ]
+        }
       ]
     },
     "zipkin": {

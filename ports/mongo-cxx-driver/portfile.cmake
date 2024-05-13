@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 34ff303d496dd2c9b8cada16dc215c40fddccfe660bdc7fe59c92449861876b820c3ea4e3e5c91029e0322411bbe98a11cb1f3fa046b028d92d3c9a3509ce988
+    SHA512 cc09ccbb926b1f00ebd9ead5afda150d0d8a8619c2439f8a9bc01a1f49ebfc0cee91ca2019d97a883a469a8594961b5b74fcc06525dce38461e2003a9f1894c4
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -38,16 +38,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "bsoncxx" CONFIG_PATH "lib/cmake/bsoncxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(PACKAGE_NAME "mongocxx" CONFIG_PATH "lib/cmake/mongocxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libbsoncxx-static" CONFIG_PATH "lib/cmake/libbsoncxx-static-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libbsoncxx-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libbsoncxx")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libmongocxx-static" CONFIG_PATH "lib/cmake/libmongocxx-static-${VERSION}")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libmongocxx-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libmongocxx")
-else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libbsoncxx" CONFIG_PATH "lib/cmake/libbsoncxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libmongocxx" CONFIG_PATH "lib/cmake/libmongocxx-${VERSION}")
-endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "mongocxx" CONFIG_PATH "lib/cmake/mongocxx-${VERSION}")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -11,6 +11,14 @@ vcpkg_from_github(
         fix_link_tiff.patch
 )
 
+# Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
+file(GLOB src_files "${SOURCE_PATH}/dcmjpeg/libijg*/*.c" "${SOURCE_PATH}/dcmjpeg/libijg*/*.h")
+foreach(file_path ${src_files})
+    file(READ "${file_path}" file_string)
+    string(REGEX REPLACE "(#define[ \t\r\n]+[A-Za-z0-9_]*[ \t\r\n]+)(j[a-z]+[0-9]+_)" "\\1dcmtk_\\2" file_string "${file_string}")
+    file(WRITE "${file_path}" "${file_string}")
+endforeach()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "iconv"   DCMTK_WITH_ICONV
@@ -43,12 +51,11 @@ vcpkg_cmake_configure(
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
         -DDCMTK_ENABLE_STL=ON
         -DCMAKE_DEBUG_POSTFIX=d
+        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
         -DBUILD_APPS=OFF
-    MAYBE_UNUSED_VARIABLES
-        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
 )
 
 vcpkg_cmake_install()

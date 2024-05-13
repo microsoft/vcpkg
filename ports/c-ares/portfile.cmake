@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
     REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
-    SHA512 1ff8d35cc0e022a0478149ca80a0a1f80b2c8d04e108b6cb9912ecc8c391017b6443129b9b52c2cf82b21ef338de0c80d89c92c6d7f95fe1f9c42575ed1a3919
+    SHA512 6c2f98055792880abb298c9d8c4f20460fe33b7b247d450b33e9c4e87d58b32c8fce371084b4bde42f50508e957b3fa5c897b1a3dcdcd214506c2bad4fd90c66
     HEAD_REF main
     PATCHES
         avoid-docs.patch

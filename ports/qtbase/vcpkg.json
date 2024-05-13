@@ -1,8 +1,7 @@
 {
   "name": "qtbase",
-  "version": "6.6.1",
-  "port-version": 9,
-  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "version": "6.7.0",
+  "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!uwp",

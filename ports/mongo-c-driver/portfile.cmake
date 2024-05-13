@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 a80e20917edb752ac5eb42534beaa0122a383037f83a554ee00ce37ae690be68521eaa282b4a5802a5440b61038bcd5414356e16a2ce729ba1193d0738a6ce1c
+    SHA512 642264ec4358eb2de76b5dc0d7534c8751df980fc7fe21a010a44e4a7799a351ec6a8ed46fba54a6029b5d5e8c82df055a1a0eb01f23c1247a91bab8d6a5b306
     HEAD_REF master
     PATCHES
         disable-dynamic-when-static.patch
