@@ -55,7 +55,7 @@
     "concurrent",
     {
       "name": "cups",
-      "platform": "osx | linux"
+      "platform": "osx"
     },
     "dbus",
     "default-features",
