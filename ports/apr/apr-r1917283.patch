@@ -1,21 +1,11 @@
-Index: .
-===================================================================
---- .	(revision 1917624)
-+++ .	(working copy)
-
-Property changes on: .
-___________________________________________________________________
-Modified: svn:mergeinfo
-## -0,0 +0,3 ##
-   Merged /apr/apr/branches/1.7.x:r1917051,1917065,1917283,1917612
-   Merged /apr/apr/branches/1.7.x-cmake-improvements:r1917214-1917282
-   Merged /apr/apr/trunk:r1895471,1895519-1895520,1902517,1905416,1917107,1917109,1917112,1917114-1917115,1917162,1917250,1917604
 Index: CHANGES
 ===================================================================
---- CHANGES	(revision 1917624)
-+++ CHANGES	(working copy)
-@@ -1,4 +1,12 @@
-                                                      -*- coding: utf-8 -*-
+--- CHANGES	(revision 1917282)
++++ CHANGES	(revision 1917283)
+@@ -10,6 +10,14 @@
+   *) Improve platform detection by updating config.guess and config.sub.
+      [Rainer Jung]
+ 
 +  *) CMake: Add support for CMAKE_WARNING_AS_ERROR. [Ivan Zhakov]
 +
 +  *) CMake: Enable support for MSVC runtime library selection by abstraction.
@@ -29,9 +19,9 @@ Index: CHANGES
    *) Fix a regression where writing to a file opened with both APR_FOPEN_APPEND
 Index: CMakeLists.txt
 ===================================================================
---- CMakeLists.txt	(revision 1917624)
-+++ CMakeLists.txt	(working copy)
-@@ -21,14 +21,41 @@
+--- CMakeLists.txt	(revision 1917282)
++++ CMakeLists.txt	(revision 1917283)
+@@ -21,6 +21,23 @@
  
  PROJECT(APR C)
  
@@ -55,39 +45,7 @@ Index: CMakeLists.txt
  OPTION(APR_INSTALL_PRIVATE_H  "Install selected private .h files (for httpd)"  OFF)
  OPTION(APR_HAVE_IPV6        "IPv6 support"                 ON)
  OPTION(INSTALL_PDB          "Install .pdb files (if generated)"  ON)
- OPTION(APR_BUILD_TESTAPR    "Build the test suite"         OFF)
-+OPTION(APR_BUILD_SHARED     "Build shared libraries"       ON)
-+OPTION(APR_BUILD_STATIC     "Build static libraries."      ON)
- OPTION(TEST_STATIC_LIBS     "Test programs use APR static libraries instead of shared libraries?" OFF)
- SET(MIN_WINDOWS_VER             "Vista" 
-     CACHE STRING "Minimum Windows version")
- 
-+IF(NOT APR_BUILD_SHARED AND NOT APR_BUILD_STATIC)
-+  MESSAGE(FATAL_ERROR "Both APR_BUILD_SHARED and APR_BUILD_STATIC have been disabled")
-+ENDIF()
-+
-+IF(NOT APR_BUILD_STATIC AND TEST_STATIC_LIBS)
-+  MESSAGE(FATAL_ERROR "APR_BUILD_STATIC have been disabled, but TEST_STATIC_LIBS is enabled")
-+ENDIF()
-+
- # create 1-or-0 representation of feature tests for apr.h
- 
- SET(apr_have_ipv6_10 0)
-@@ -47,6 +74,13 @@
-   SET(win32_winnt_str ${MIN_WINDOWS_VER})
- ENDIF()
- 
-+# Read current version.
-+FILE(STRINGS include/apr_version.h VERSION_STRINGS REGEX "#define (APR_MAJOR_VERSION|APR_MINOR_VERSION|APR_PATCH_VERSION)")
-+
-+STRING(REGEX REPLACE ".*#define APR_MAJOR_VERSION[ \t]+([0-9]+).*" "\\1" APR_MAJOR_VERSION ${VERSION_STRINGS})
-+STRING(REGEX REPLACE ".*#define APR_MINOR_VERSION[ \t]+([0-9]+).*" "\\1" APR_MINOR_VERSION ${VERSION_STRINGS})
-+STRING(REGEX REPLACE ".*#define APR_PATCH_VERSION[ \t]+([0-9]+).*" "\\1" APR_PATCH_VERSION ${VERSION_STRINGS})
-+
- CONFIGURE_FILE(include/apr.hwc
-                ${PROJECT_BINARY_DIR}/apr.h)
- 
-@@ -71,11 +105,11 @@
+@@ -81,11 +98,11 @@
  #         you've generated apr.h before using a different build
  
  SET(APR_INCLUDE_DIRECTORIES
@@ -104,17 +62,16 @@ Index: CMakeLists.txt
  )
  
  SET(APR_SYSTEM_LIBS
-@@ -261,27 +295,55 @@
- SET(install_bin_pdb)
+@@ -278,33 +295,53 @@
  
  # libapr-1 is shared, apr-1 is static
--ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
--SET(install_targets ${install_targets} libapr-1)
--SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
--TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
--SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
--ADD_DEPENDENCIES(libapr-1 test_char_header)
-+IF (APR_BUILD_SHARED)
+ IF (APR_BUILD_SHARED)
+-  ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
+-  SET(install_targets ${install_targets} libapr-1)
+-  SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
+-  TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+-  SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
+-  ADD_DEPENDENCIES(libapr-1 test_char_header)
 +  ADD_LIBRARY(${apr_libname} SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
 +  LIST(APPEND install_targets ${apr_libname})
 +  LIST(APPEND install_bin_pdb ${PROJECT_BINARY_DIR}/${apr_libname}.pdb)
@@ -128,14 +85,14 @@ Index: CMakeLists.txt
 +    INTERFACE $<INSTALL_INTERFACE:include> ${APR_INCLUDE_DIRECTORIES}
 +  )
 +  ADD_DEPENDENCIES(${apr_libname} test_char_header)
-+ENDIF()
+ ENDIF()
  
--ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
--SET(install_targets ${install_targets} apr-1)
--TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
--SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
--ADD_DEPENDENCIES(apr-1 test_char_header)
-+IF (APR_BUILD_STATIC)
+ IF (APR_BUILD_STATIC)
+-  ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
+-  SET(install_targets ${install_targets} apr-1)
+-  TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
+-  SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
+-  ADD_DEPENDENCIES(apr-1 test_char_header)
 +  ADD_LIBRARY(${apr_name} STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
 +  LIST(APPEND install_targets ${apr_name})
 +  TARGET_LINK_LIBRARIES(${apr_name}
@@ -148,36 +105,31 @@ Index: CMakeLists.txt
 +    INTERFACE $<INSTALL_INTERFACE:include> ${APR_INCLUDE_DIRECTORIES}
 +  )
 +  ADD_DEPENDENCIES(${apr_name} test_char_header)
-+ENDIF()
+ ENDIF()
  
  # libaprapp-1 and aprapp-1 are static
--ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
--SET(install_targets ${install_targets} libaprapp-1)
--SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
-+IF (APR_BUILD_SHARED)
-+  ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+ IF (APR_BUILD_SHARED)
+   ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+-  SET(install_targets ${install_targets} libaprapp-1)
 +  LIST(APPEND install_targets libaprapp-1)
-+  SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
+   SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
 +  TARGET_INCLUDE_DIRECTORIES(libaprapp-1
 +    PRIVATE ${APR_INCLUDE_DIRECTORIES}
 +  )
-+ENDIF()
+ ENDIF()
  
--ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
--SET(install_targets ${install_targets} aprapp-1)
--SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
-+IF (APR_BUILD_STATIC)
-+  ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+ IF (APR_BUILD_STATIC)
+   ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+-  SET(install_targets ${install_targets} aprapp-1)
 +  LIST(APPEND install_targets aprapp-1)
-+  SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
+   SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
 +  TARGET_INCLUDE_DIRECTORIES(aprapp-1
 +    PRIVATE ${APR_INCLUDE_DIRECTORIES}
 +  )
-+ENDIF()
+ ENDIF()
  
  IF(APR_BUILD_TESTAPR)
-   ENABLE_TESTING()
-@@ -299,21 +361,16 @@
+@@ -323,21 +360,16 @@
                    ${PROJECT_BINARY_DIR}/data/mmap_datafile.txt)
  
    IF(TEST_STATIC_LIBS)
@@ -202,7 +154,7 @@ Index: CMakeLists.txt
    ADD_TEST(NAME testapp COMMAND testapp)
  
    SET (APR_TEST_SOURCES
-@@ -326,11 +383,8 @@
+@@ -350,11 +382,8 @@
    ENDFOREACH()
  
    ADD_EXECUTABLE(testall ${APR_TEST_SOURCES})
@@ -215,7 +167,7 @@ Index: CMakeLists.txt
  
    FOREACH(test ${APR_TEST_SUITES})
      ADD_TEST(NAME ${test} COMMAND testall -v ${test})
-@@ -337,7 +391,7 @@
+@@ -361,7 +390,7 @@
    ENDFOREACH()
  
    ADD_LIBRARY(mod_test MODULE test/mod_test.c)
@@ -224,7 +176,7 @@ Index: CMakeLists.txt
    SET_PROPERTY(TARGET mod_test APPEND PROPERTY LINK_FLAGS /export:print_hello)
    # nasty work-around for difficulties adding more than one additional flag
    # (they get joined in a bad way behind the scenes)
-@@ -344,9 +398,6 @@
+@@ -368,9 +397,6 @@
    GET_PROPERTY(link_flags TARGET mod_test PROPERTY LINK_FLAGS)
    SET(link_flags "${link_flags} /export:count_reps")
    SET_TARGET_PROPERTIES(mod_test PROPERTIES LINK_FLAGS ${link_flags})
@@ -234,7 +186,7 @@ Index: CMakeLists.txt
  
    # Build all the single-source executable files with no special build
    # requirements.
-@@ -370,11 +421,10 @@
+@@ -394,11 +420,10 @@
    FOREACH(sourcefile ${single_source_programs})
      STRING(REGEX REPLACE ".*/([^\\]+)\\.c" "\\1" proggie ${sourcefile})
      ADD_EXECUTABLE(${proggie} ${sourcefile})
@@ -249,20 +201,13 @@ Index: CMakeLists.txt
    ENDFOREACH()
  
    # Add tests for programs that run by themselves with no arguments.
-@@ -400,13 +450,31 @@
+@@ -424,13 +449,20 @@
  ENDIF (APR_BUILD_TESTAPR)
  
  # Installation
-+INCLUDE(CMakePackageConfigHelpers)
++string(TOLOWER "${PROJECT_NAME}" project_name_lower)
  
 -INSTALL(TARGETS ${install_targets}
-+string(TOLOWER "${PROJECT_NAME}" project_name_lower)
-+
-+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/${project_name_lower}-config-version.cmake"
-+  VERSION ${APR_MAJOR_VERSION}.${APR_MINOR_VERSION}.${APR_PATCH_VERSION}
-+  COMPATIBILITY SameMajorVersion
-+)
-+
 +INSTALL(TARGETS ${install_targets} EXPORT apr-config
          RUNTIME DESTINATION bin
          LIBRARY DESTINATION lib
@@ -275,19 +220,18 @@ Index: CMakeLists.txt
 +        FILE "${project_name_lower}-config.cmake"
 +)
 +
-+INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/${project_name_lower}-config-version.cmake"
-+        DESTINATION "lib/cmake/${project_name_lower}"
-+)
-+
  IF(INSTALL_PDB)
    INSTALL(FILES ${install_bin_pdb}
            DESTINATION bin
-@@ -438,6 +506,8 @@
- MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
- MESSAGE(STATUS "  IPv6 ............................ : ${APR_HAVE_IPV6}")
- MESSAGE(STATUS "  Minimum Windows version ......... : ${MIN_WINDOWS_VER}")
-+MESSAGE(STATUS "  Build shared libs ............... : ${APR_BUILD_SHARED}")
-+MESSAGE(STATUS "  Build static libs ............... : ${APR_BUILD_STATIC}")
- MESSAGE(STATUS "  Build test suite ................ : ${APR_BUILD_TESTAPR}")
- IF(TEST_STATIC_LIBS)
- MESSAGE(STATUS "    (testing static libraries)")
+Index: .
+===================================================================
+--- .	(revision 1917282)
++++ .	(revision 1917283)
+
+Property changes on: .
+___________________________________________________________________
+Modified: svn:mergeinfo
+## -0,0 +0,2 ##
+   Merged /apr/apr/branches/1.7.x-cmake-improvements:r1917214-1917282
+   Merged /apr/apr/trunk:r1895471,1895519-1895520,1902517,1905416,1917107,1917109,1917112,1917114-1917115,1917162,1917250
+

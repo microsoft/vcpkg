@@ -1,0 +1,89 @@
+Index: CMakeLists.txt
+===================================================================
+--- CMakeLists.txt	(revision 1917050)
++++ CMakeLists.txt	(revision 1917051)
+@@ -25,10 +25,20 @@
+ OPTION(APR_HAVE_IPV6        "IPv6 support"                 ON)
+ OPTION(INSTALL_PDB          "Install .pdb files (if generated)"  ON)
+ OPTION(APR_BUILD_TESTAPR    "Build the test suite"         OFF)
++OPTION(APR_BUILD_SHARED     "Build shared libraries"       ON)
++OPTION(APR_BUILD_STATIC     "Build static libraries."      ON)
+ OPTION(TEST_STATIC_LIBS     "Test programs use APR static libraries instead of shared libraries?" OFF)
+ SET(MIN_WINDOWS_VER             "Vista" 
+     CACHE STRING "Minimum Windows version")
+ 
++IF(NOT APR_BUILD_SHARED AND NOT APR_BUILD_STATIC)
++  MESSAGE(FATAL_ERROR "Both APR_BUILD_SHARED and APR_BUILD_STATIC have been disabled")
++ENDIF()
++
++IF(NOT APR_BUILD_STATIC AND TEST_STATIC_LIBS)
++  MESSAGE(FATAL_ERROR "APR_BUILD_STATIC have been disabled, but TEST_STATIC_LIBS is enabled")
++ENDIF()
++
+ # create 1-or-0 representation of feature tests for apr.h
+ 
+ SET(apr_have_ipv6_10 0)
+@@ -267,27 +277,35 @@
+ ENDIF()
+ 
+ # libapr-1 is shared, apr-1 is static
+-ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
+-SET(install_targets ${install_targets} libapr-1)
+-SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
+-TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+-SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
+-ADD_DEPENDENCIES(libapr-1 test_char_header)
++IF (APR_BUILD_SHARED)
++  ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
++  SET(install_targets ${install_targets} libapr-1)
++  SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
++  TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
++  SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
++  ADD_DEPENDENCIES(libapr-1 test_char_header)
++ENDIF()
+ 
+-ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
+-SET(install_targets ${install_targets} apr-1)
+-TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
+-SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
+-ADD_DEPENDENCIES(apr-1 test_char_header)
++IF (APR_BUILD_STATIC)
++  ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
++  SET(install_targets ${install_targets} apr-1)
++  TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
++  SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
++  ADD_DEPENDENCIES(apr-1 test_char_header)
++ENDIF()
+ 
+ # libaprapp-1 and aprapp-1 are static
+-ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+-SET(install_targets ${install_targets} libaprapp-1)
+-SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
++IF (APR_BUILD_SHARED)
++  ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
++  SET(install_targets ${install_targets} libaprapp-1)
++  SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
++ENDIF()
+ 
+-ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+-SET(install_targets ${install_targets} aprapp-1)
+-SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
++IF (APR_BUILD_STATIC)
++  ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
++  SET(install_targets ${install_targets} aprapp-1)
++  SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
++ENDIF()
+ 
+ IF(APR_BUILD_TESTAPR)
+   ENABLE_TESTING()
+@@ -443,7 +461,8 @@
+ MESSAGE(STATUS "  Install prefix .................. : ${CMAKE_INSTALL_PREFIX}")
+ MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
+ MESSAGE(STATUS "  IPv6 ............................ : ${APR_HAVE_IPV6}")
+-MESSAGE(STATUS "  Minimum Windows version ......... : ${MIN_WINDOWS_VER}")
++MESSAGE(STATUS "  Build shared libs ............... : ${APR_BUILD_SHARED}")
++MESSAGE(STATUS "  Build static libs ............... : ${APR_BUILD_STATIC}")
+ MESSAGE(STATUS "  Build test suite ................ : ${APR_BUILD_TESTAPR}")
+ IF(TEST_STATIC_LIBS)
+ MESSAGE(STATUS "    (testing static libraries)")
+
