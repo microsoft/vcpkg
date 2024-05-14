@@ -1,0 +1,21 @@
+diff --git a/src/network/configure.json b/src/network/configure.json
+index 271ff164..1243359c 100644
+--- a/src/network/configure.json
++++ b/src/network/configure.json
+@@ -103,6 +103,7 @@
+                 }
+             ]
+         },
++if(0)		
+         "gssapi": {
+             "label": "KRB5 GSSAPI Support",
+             "test": {
+@@ -128,7 +129,7 @@
+             ]
+         }
+     },
+-
++endif()
+     "tests": {
+         "getifaddrs": {
+             "label": "getifaddrs()",
