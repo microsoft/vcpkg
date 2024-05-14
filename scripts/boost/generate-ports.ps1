@@ -28,6 +28,7 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    "boost-math" = 1
 }
 
 function Get-PortVersion {
@@ -104,6 +105,13 @@ $portData = @{
             "icu" = @{
                 "description"  = "ICU backend for Boost.Locale";
                 "dependencies" = @("icu");
+            }
+        }
+    };
+    "boost-math"           = @{
+        "features" = @{
+            "c99-tr1" = @{
+                "description"  = "Build with C99 and TR1 Functions";
             }
         }
     };
