@@ -53,6 +53,10 @@
   "default-features": [
     "brotli",
     "concurrent",
+    {
+      "name": "cups",
+      "platform": "osx & linux"
+    },
     "dbus",
     "default-features",
     "doubleconversion",
@@ -112,6 +116,10 @@
           ]
         }
       ]
+    },
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System.",
+      "supports": "linux & osx"
     },
     "dbus": {
       "description": "Qt D-Bus",

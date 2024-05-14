@@ -261,11 +261,12 @@ foreach(_db IN LISTS DB_LIST)
 endforeach()
 
 # printsupport features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
-    # )
-if(NOT VCPKG_TARGET_IS_OSX) # print support on osx requires this
-  list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Cups:BOOL=ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
+  "cups" FEATURE_cups
+  INVERTED_FEATURES
+  "cups" CMAKE_DISABLE_FIND_PACKAGE_Cups
+)
+
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
     FEATURES
