@@ -179,7 +179,6 @@ if(INSTALL_TOOLS)
         target_link_libraries(core_handler PRIVATE libbreakpad_client)
         install(TARGETS core_handler DESTINATION bin)
     elseif(WIN32)
-        set(CMAKE_GENERATOR_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
         list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
         find_package(DiaSDK REQUIRED)
 
