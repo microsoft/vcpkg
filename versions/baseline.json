@@ -173,7 +173,7 @@
       "port-version": 0
     },
     "apriltag": {
-      "baseline": "3.4.0",
+      "baseline": "3.4.2",
       "port-version": 0
     },
     "apsi": {
