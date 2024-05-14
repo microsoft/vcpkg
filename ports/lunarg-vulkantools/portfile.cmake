@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
   OPTIONS
     -DVULKAN_HEADERS_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
     -DBUILD_TESTS:BOOL=OFF
+    -DCMAKE_DISABLE_FIND_PACKAGE_krb5=ON
   OPTIONS_RELEASE
     -DVULKAN_LOADER_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
   OPTIONS_DEBUG
@@ -26,7 +27,6 @@ vcpkg_cmake_configure(
 
 )
 vcpkg_cmake_install()
-message(FATAL_ERROR "reproduce ci error")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
