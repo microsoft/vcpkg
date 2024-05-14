@@ -1,22 +1,3 @@
-Index: CHANGES
-===================================================================
---- CHANGES	(revision 1917282)
-+++ CHANGES	(revision 1917283)
-@@ -10,6 +10,14 @@
-   *) Improve platform detection by updating config.guess and config.sub.
-      [Rainer Jung]
- 
-+  *) CMake: Add support for CMAKE_WARNING_AS_ERROR. [Ivan Zhakov]
-+
-+  *) CMake: Enable support for MSVC runtime library selection by abstraction.
-+     [Ivan Zhakov]
-+
-+  *) CMake: Export installed targets (libapr-1, apr-1, libaprapp-1, aprapp-1)
-+     to apr:: namespace. [Ivan Zhakov]
-+
- Changes for APR 1.7.4
- 
-   *) Fix a regression where writing to a file opened with both APR_FOPEN_APPEND
 Index: CMakeLists.txt
 ===================================================================
 --- CMakeLists.txt	(revision 1917282)

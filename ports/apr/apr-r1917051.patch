@@ -24,7 +24,7 @@ Index: CMakeLists.txt
  
  SET(apr_have_ipv6_10 0)
 @@ -267,27 +277,35 @@
- ENDIF()
+ SET(install_bin_pdb)
  
  # libapr-1 is shared, apr-1 is static
 -ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
