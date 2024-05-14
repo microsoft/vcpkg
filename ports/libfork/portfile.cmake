@@ -1,16 +1,16 @@
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO conorwilliams/libfork
-  REF "v${VERSION}"
-  SHA512 38a8a6fe0f360f1caa123b227996490f192f8b58340ecb5d91922c15d7ca9b364031716e139a3ab0d89cd7cdf3bfb22fcf75272e76a40513c55adaf00ff6454d
-  HEAD_REF main
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO conorwilliams/libfork
+    REF "v${VERSION}"
+    SHA512 38a8a6fe0f360f1caa123b227996490f192f8b58340ecb5d91922c15d7ca9b364031716e139a3ab0d89cd7cdf3bfb22fcf75272e76a40513c55adaf00ff6454d
+    HEAD_REF main
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
-  SOURCE_PATH "${SOURCE_PATH}" 
-  OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    SOURCE_PATH "${SOURCE_PATH}" 
+    OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
