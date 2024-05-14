@@ -262,6 +262,7 @@ endforeach()
 
 # printsupport features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
+  FEATURES
   "cups" FEATURE_cups
   INVERTED_FEATURES
   "cups" CMAKE_DISABLE_FIND_PACKAGE_Cups
