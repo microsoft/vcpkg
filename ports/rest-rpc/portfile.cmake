@@ -3,8 +3,8 @@ if (EXISTS ${CURRENT_INSTALLED_DIR}/include/msgpack/pack.h)
 endif()
 
 # header-only library
-set(RESTRPC_VERSION V0.07)
-set(RESTRPC_HASH 148152776c8c4f16e404c62ab3f46618e1817c0b4b186dbcc399c859efd110ed5a207bf56e961c312f80844f696f597068e0abc00e426409d50a2889d30c6d8e)
+set(RESTRPC_VERSION v0.12)
+set(RESTRPC_HASH 1d88085acc6c4f913901631725acd08a688a079878677d064d441c3c89167275c5eed371d24e370feb88879ac06270e9316b91c67ea41e350523fe670406ecc1)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rest-rpc-${RESTRPC_VERSION})
 
 vcpkg_from_github(
@@ -16,7 +16,7 @@ vcpkg_from_github(
 )
 
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/third/msgpack/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/thirdparty/msgpack-c/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/include/rest_rpc.hpp"
@@ -24,5 +24,7 @@ vcpkg_replace_string(
     "#define ASIO_STANDALONE\n#include \"rest_rpc/rpc_server.h\""
 )
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
