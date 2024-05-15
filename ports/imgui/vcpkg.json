@@ -107,6 +107,10 @@
         "sdl2"
       ]
     },
+    "test-engine": {
+      "description": "Build test engine",
+      "license": null
+    },
     "vulkan-binding": {
       "description": "Make available Vulkan binding",
       "dependencies": [
