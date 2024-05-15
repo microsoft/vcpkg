@@ -25,6 +25,7 @@ set(${PORT}_PATCHES
         qmltc
         qmlls
         qmljsrootgen
+        svgtoqml
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -34,7 +35,3 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/svgtoqml.exe")
-    vcpkg_copy_tools(TOOL_NAMES svgtoqml AUTO_CLEAN)
-endif()
