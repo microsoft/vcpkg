@@ -280,6 +280,10 @@
       "baseline": "5.4.0",
       "port-version": 0
     },
+    "astr": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "async-mqtt": {
       "baseline": "5.1.0",
       "port-version": 0
