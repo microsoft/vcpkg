@@ -11,11 +11,12 @@ file(READ ${SOURCE_PATH}/src/engines/ptrace.cc PTRACE_CC_CONTENT)
 string(REPLACE "ptrace_sys::disable_aslr()" "true" PTRACE_CC_CONTENT "${PTRACE_CC_CONTENT}")
 file(WRITE ${SOURCE_PATH}/src/engines/ptrace.cc "${PTRACE_CC_CONTENT}")
 
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
