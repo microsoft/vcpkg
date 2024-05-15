@@ -1,5 +1,5 @@
 diff --git a/src/network/configure.json b/src/network/configure.json
-index 271ff164..05652487 100644
+index 271ff164..98962b55 100644
 --- a/src/network/configure.json
 +++ b/src/network/configure.json
 @@ -102,30 +102,6 @@
@@ -33,3 +33,27 @@ index 271ff164..05652487 100644
          }
      },
  
+@@ -410,13 +386,6 @@
+             "section": "Networking",
+             "output": [ "publicFeature" ]
+         },
+-        "gssapi": {
+-            "label": "GSSAPI",
+-            "purpose": "Enable SPNEGO authentication through GSSAPI",
+-            "section": "Networking",
+-            "condition": "!config.win32 && libs.gssapi",
+-            "output": [ "publicFeature", "feature" ]
+-        },
+         "sspi": {
+             "label": "SSPI",
+             "purpose": "Enable NTLM/SPNEGO authentication through SSPI",
+@@ -489,8 +458,7 @@ For example:
+                 "dtls",
+                 "ocsp",
+                 "sctp",
+-                "system-proxies",
+-                "gssapi"
++                "system-proxies"
+             ]
+         }
+     ]
