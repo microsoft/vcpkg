@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "tinyorm",
-  "version-semver": "0.36.5",
-  "port-version": 2,
+  "version-semver": "0.37.3",
   "maintainers": "Silver Zachara <silver.zachara@gmail.com>",
   "description": "Modern C++ ORM library for Qt framework",
   "homepage": "https://github.com/silverqx/TinyORM",
@@ -12,10 +11,7 @@
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false,
-      "features": [
-        "sql"
-      ]
+      "default-features": false
     },
     "range-v3",
     "tabulate",
@@ -34,6 +30,12 @@
     "tom"
   ],
   "features": {
+    "build-mysql-driver": {
+      "description": "Build TinyDrivers MySQL database driver (provided by TinyDrivers)",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
     "disable-thread-local": {
       "description": "Remove all thread_local storage duration specifiers (disables multi-threading support)"
     },
@@ -50,7 +52,7 @@
       "description": "Enable ORM-related source code (without it only the query builder is compiled)"
     },
     "sql-mysql": {
-      "description": "Build Qt SQL Driver for MySQL",
+      "description": "Build Qt SQL MySQL database driver (provided by QtSql)",
       "dependencies": [
         {
           "name": "qtbase",
@@ -62,7 +64,7 @@
       ]
     },
     "sql-psql": {
-      "description": "Build Qt SQL Driver for PostgreSQL",
+      "description": "Build Qt SQL PostgreSQL database driver (provided by QtSql)",
       "dependencies": [
         {
           "name": "qtbase",
@@ -74,7 +76,7 @@
       ]
     },
     "sql-sqlite": {
-      "description": "Build Qt SQL Driver for SQLite",
+      "description": "Build Qt SQL SQLite database driver (provided by QtSql)",
       "dependencies": [
         {
           "name": "qtbase",

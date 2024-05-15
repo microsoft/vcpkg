@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-osx.patch
         0002-find-tbb.patch # Includes changes similar to https://github.com/alicevision/CCTag/pull/178/
+        fix-compatibility-with-boost-1.85.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake" "${SOURCE_PATH}/src/applications/cmake/FindTBB.cmake")

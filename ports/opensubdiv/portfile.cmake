@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-build-type.patch
         fix-dependencies.patch
         fix-feature-cuda.patch
+        fix-notfind-header.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)

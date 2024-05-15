@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         shared-zstd.patch
+        fix-hexl.patch
 )
 
 vcpkg_replace_string(

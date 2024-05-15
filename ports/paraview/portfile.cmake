@@ -1,4 +1,4 @@
-set(VERSION_MAJOR_MINOR 5.11)
+set(VERSION_MAJOR_MINOR 5.12)
 
 set(plat_feat "")
 if(VCPKG_TARGET_IS_LINUX)
@@ -18,18 +18,46 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     ${plat_feat}
 )
 
+vcpkg_download_distfile(
+    external_vtk_patch
+    URLS https://gitlab.kitware.com/paraview/paraview/-/merge_requests/6375.diff?full_index=1
+    FILENAME paraview_external_vtk_pr.diff
+    SHA512 c7760599239334817e9cad33ab7019c2dd0ce6740891e10ec15e1d63605ad73095fd7d48aed5ca8d002d25db356a7a5cf2a37188f0b43a7a9fa4c339e8f42adb
+)
+
+set(ext_vtk_patch_copy "${CURRENT_BUILDTREES_DIR}/paraview_external_vtk_pr.diff")
+file(COPY "${external_vtk_patch}" DESTINATION "${CURRENT_BUILDTREES_DIR}" )
+
+# Remove stuff which cannot be patched since it does not exist
+vcpkg_replace_string("${ext_vtk_patch_copy}"
+[[
+diff --git a/.gitlab/ci/sccache.sh b/.gitlab/ci/sccache.sh
+index f1897d6f719c3b61b6d4fa317966c007dab2fc23..e88d7c89198696832e5645bfb0e758fd5d92e6af 100755
+--- a/.gitlab/ci/sccache.sh
++++ b/.gitlab/ci/sccache.sh
+@@ -37,6 +37,6 @@ $shatool --check sccache.sha256sum
+ mv "$filename" sccache
+ chmod +x sccache
+ 
+-mkdir shortcuts
++mkdir -p shortcuts
+ cp ./sccache shortcuts/gcc
+ cp ./sccache shortcuts/g++
+]]
+""
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF 91aaf338c62f77fccd7d197dea05e7a68035ab25 # v5.11.0
-    SHA512  ddd72b127462a37dba220808925ab1991b3072ddd3f39ba7f26d260bd5abbaa6bd38a0c0181141f461df60dd718ec85df8c0faffff8e53a6cd1737b784565f4b
+    REF b701926ba2bd753eff36aec56e36ad4d5ac3168b # v5.12.0
+    SHA512  9fbebfa11b60c81deec0df7508a0433a1bced620367477e15314e232d50ba6a6196074d3d701434652cb9a2e0c946159f44e8e16682aa6326a89ebd6caa1f5d9
     HEAD_REF master
     PATCHES
-        external_vtk.patch
-        python_include.patch
-        python_wrapper.patch
+        ${ext_vtk_patch_copy}
         add-tools-option.patch
-        qt6-all.patch
+        fix-build.patch
+        fix-configure.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -44,8 +72,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH VISITIT_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/visitbridge
-    REF df098f4148a96d62c388861c1d476039e02224ae
-    SHA512 002c2c934ef7e64c89b1567f406db1ebb90532817062e7016c248ba8ae85a88f1a35bc3963a9577ec08ba742a0e7fb91022c29aaaa0bddf0a1d585074341733e
+    REF 92ad478e3d6b18b111ef45ab76d6dad5d3530381
+    SHA512 c4893929b99419a365e90450f9c6d8a72f30f88aadbfe5c7d23ec4a46e9cf301e0b9c31cd602d1ab717ffb6744ae45abe41cb0e9c1f02b83e4468c702e8d023d
     PATCHES 
         ${VisItPatches}
 )
@@ -56,9 +84,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH QTTESTING_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/qttesting
-    REF 08d96e9277bc4c26804fd77ce1b4fa5c791605ae # https://gitlab.kitware.com/paraview/qttesting/-/merge_requests/53 for Qt6
-    SHA512  cb4acdfe1206bd8bae4f70185c8ca1ce555cf983a1d1e97293dac544ab13b039638bfe0d1e448f9589db92b6ed23b9b940157e72d9ec9e3994ea9858ab1722ec
-    PATCHES 53.diff
+    REF 9d4346485cfce79ad448f7e5656b2525b255b2ca # https://gitlab.kitware.com/paraview/qttesting/-/merge_requests/53 for Qt6
+    SHA512  7561cd66e1a12053b7a81ab7a80ad2163922995317a503761521151668a905602fb1bb23c963e18d2739d17aa4187ccf1b4bd1010b0494aab6d4fc004e0e9760
 )
 
 vcpkg_from_gitlab(
@@ -76,21 +103,32 @@ file(COPY "${ICET_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/IceT/vtk
 if("python" IN_LIST FEATURES)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
         string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
         set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
         set(python_ver "3.${PYTHON_VERSION_MINOR}")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        -DPARAVIEW_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
+        -DVTK_MODULE_ENABLE_ParaView_PythonCatalyst:STRING=YES
         )
-    #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
+endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PARAVIEW_BUILD_SHARED_LIBS)
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  # Hitting pdb size limits when building debug paraview so increase it
+  string(APPEND VCPKG_LINKER_FLAGS_DEBUG " /PDBPAGESIZE:8192")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-     OPTIONS ${FEATURE_OPTIONS}
+     OPTIONS
+        ${FEATURE_OPTIONS}
+        -DPARAVIEW_USE_FORTRAN=OFF
+        -DPARAVIEW_BUILD_SHARED_LIBS=${PARAVIEW_BUILD_SHARED_LIBS}
         -DPARAVIEW_PLUGIN_DISABLE_XML_DOCUMENTATION:BOOL=ON
         -DPARAVIEW_BUILD_WITH_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
@@ -107,7 +145,6 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
 
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Graphviz=ON
 )
 if(CMAKE_HOST_UNIX)
     # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
@@ -169,9 +206,8 @@ foreach(tool ${TOOLS})
 endforeach()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-# # Handle copyright
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME Copyright.txt) # Which one is the correct one?
-file(INSTALL "${SOURCE_PATH}/License_v1.2.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     macro(move_bin_to_lib name)
@@ -200,7 +236,7 @@ endif()
 
 file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
 foreach(file IN LISTS cmake_files)
-    vcpkg_replace_string("${file}" "pv5.11d.exe" "pv5.11.exe")
+    vcpkg_replace_string("${file}" "pv${VERSION_MAJOR_MINOR}d.exe" "pv${VERSION_MAJOR_MINOR}.exe")
 endforeach() 
  
 # The plugins also work without these files

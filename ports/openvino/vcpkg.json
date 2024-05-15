@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version": "2024.0.0",
+  "version": "2024.1.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -86,6 +86,10 @@
     },
     "ir": {
       "description": "Enables IR frontend for reading models in OpenVINO IR format"
+    },
+    "npu": {
+      "description": "NPU Support",
+      "supports": "x64 & !(osx | uwp) & !static"
     },
     "onnx": {
       "description": "Enables ONNX frontend for reading models in ONNX format",

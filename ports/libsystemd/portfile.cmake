@@ -20,10 +20,45 @@ vcpkg_configure_meson(
     -Dmode=release
     -Dstatic-libsystemd=${static}
     -Dtests=false
-    # dependencies
+    # disabled capabilites
     -Ddns-over-tls=false
-    -Dlz4=enabled
     -Dtranslations=false
+    # disabled dependencies
+    -Dacl=disabled
+    -Dapparmor=disabled
+    -Daudit=disabled
+    -Dblkid=disabled
+    -Dbpf-framework=disabled
+    -Dbzip2=disabled
+    -Ddbus=disabled # tests only
+    -Delfutils=disabled
+    -Dfdisk=disabled
+    -Dgcrypt=disabled
+    -Dglib=disabled # tests only
+    -Dgnutls=disabled
+    -Dkmod=disabled
+    -Dlibcurl=disabled
+    -Dlibcryptsetup=disabled
+    -Dlibfido2=disabled
+    -Dlibidn=disabled
+    -Dlibidn2=disabled
+    -Dlibiptc=disabled
+    -Dmicrohttpd=disabled
+    -Dopenssl=disabled
+    -Dp11kit=disabled
+    -Dpam=disabled
+    -Dpcre2=disabled
+    -Dpolkit=disabled
+    -Dpwquality=disabled
+    -Dpasswdqc=disabled
+    -Dseccomp=disabled
+    -Dselinux=disabled
+    -Dtpm2=disabled
+    -Dxenctrl=disabled
+    -Dxkbcommon=disabled
+    -Dzlib=disabled
+    # enabled dependencies
+    -Dlz4=enabled
     -Dxz=enabled
     -Dzstd=enabled
   ADDITIONAL_BINARIES

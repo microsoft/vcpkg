@@ -11,7 +11,7 @@ index e8186c6..8059d75 100644
  
  } // namespace vsgImGui
 diff --git a/src/vsgImGui/RenderImGui.cpp b/src/vsgImGui/RenderImGui.cpp
-index bda3137..7ec6136 100644
+index 306030b..d662531 100644
 --- a/src/vsgImGui/RenderImGui.cpp
 +++ b/src/vsgImGui/RenderImGui.cpp
 @@ -60,7 +60,6 @@ namespace vsgImGui
@@ -30,32 +30,13 @@ index bda3137..7ec6136 100644
  }
  
  RenderImGui::~RenderImGui()
-@@ -183,30 +181,6 @@ void RenderImGui::_init(
+@@ -184,11 +182,6 @@ void RenderImGui::_init(
      }
  }
  
 -void RenderImGui::_uploadFonts()
 -{
--    auto commandPool = vsg::CommandPool::create(_device, _queueFamily, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT);
--    auto fence = vsg::Fence::create(_device);
--
--    uint64_t timeout = 1000000000;
--    vsg::submitCommandsToQueue(commandPool, fence, timeout, _queue, [&](vsg::CommandBuffer& commandBuffer) {
--        ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
--    });
--
--    VkResult result = fence->status();
--    while (result == VK_NOT_READY)
--    {
--        result = fence->wait(timeout);
--    }
--
--    if (result != VK_SUCCESS)
--    {
--        vsg::error("RenderImGui::_uploadFonts(), fence->state() = ", result);
--    }
--
--    ImGui_ImplVulkan_DestroyFontUploadObjects();
+-    ImGui_ImplVulkan_CreateFontsTexture();
 -}
 -
  void RenderImGui::accept(vsg::RecordTraversal& rt) const

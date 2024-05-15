@@ -1,11 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES fix-taglib-search.patch # Strictly this is only required if qt does not use pkg-config since it forces it to off. 
-                    )
-set(TOOL_NAMES 
-        ifmedia-simulation-server
-        ifvehiclefunctions-simulation-server
+set(TOOL_NAMES
     )
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
@@ -44,6 +40,7 @@ qt_install_copyright("${SOURCE_PATH}")
 
 if(NOT VCPKG_CROSSCOMPILING)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/ifcodegen")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ifcodegen" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/ifcodegen")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

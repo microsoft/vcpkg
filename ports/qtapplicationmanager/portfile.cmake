@@ -25,11 +25,14 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
-                        -DINPUT_libarchive=system
-                        -DINPUT_libyaml=system
+                        -DINPUT_libarchive='system'
+                        -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libyaml=ON
+                        -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libarchive=ON
-                        --trace-expand
+                        -DINPUT_libarchive='system'
+                        -DINPUT_libdbus='no'
+                        -DINPUT_libbacktrace='no'
                    OPTIONS_DEBUG
                    OPTIONS_RELEASE)
 

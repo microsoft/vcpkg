@@ -15,6 +15,7 @@ vcpkg_from_github(
         0006-create-destination-mlir-directory.patch
         0007-fix-compiler-rt-warnings.patch # fixed in upstream
         0008-add-missing-case.patch # From upstream https://github.com/llvm/llvm-project/pull/72401
+        0009-add-missing-typename.patch # Fixed in version 18.1.0 and later
 )
 
 vcpkg_check_features(

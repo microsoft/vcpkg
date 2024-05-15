@@ -1,7 +1,6 @@
 {
   "name": "breakpad",
-  "version-date": "2023-01-27",
-  "port-version": 1,
+  "version-date": "2023-06-01",
   "description": "a set of client and server components which implement a crash-reporting system.",
   "homepage": "https://github.com/google/breakpad",
   "license": "BSD-3-Clause",

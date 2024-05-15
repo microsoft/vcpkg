@@ -1,0 +1,94 @@
+diff --git a/odb/details/shared-ptr/base.cxx b/odb/details/shared-ptr/base.cxx
+index b95797b..6cf8ed7 100644
+--- a/odb/details/shared-ptr/base.cxx
++++ b/odb/details/shared-ptr/base.cxx
+@@ -54,7 +54,7 @@ namespace odb
+ }
+ 
+ void*
+-operator new (size_t n, odb::details::share s) throw (std::bad_alloc)
++operator new (size_t n, odb::details::share s)
+ {
+   if (s == odb::details::shared)
+   {
+@@ -74,7 +74,7 @@ operator new (size_t n, odb::details::share s) throw (std::bad_alloc)
+ }
+ 
+ void
+-operator delete (void* p, odb::details::share s) throw ()
++operator delete (void* p, odb::details::share s)
+ {
+   // This version of operator delete is only called when the c-tor
+   // fails. In this case there is no object and we can just free the
+diff --git a/odb/details/shared-ptr/base.hxx b/odb/details/shared-ptr/base.hxx
+index 4a38945..1c951a8 100644
+--- a/odb/details/shared-ptr/base.hxx
++++ b/odb/details/shared-ptr/base.hxx
+@@ -35,10 +35,10 @@ namespace odb
+ }
+ 
+ LIBODB_EXPORT void*
+-operator new (std::size_t, odb::details::share) throw (std::bad_alloc);
++operator new (std::size_t, odb::details::share);
+ 
+ LIBODB_EXPORT void
+-operator delete (void*, odb::details::share) throw ();
++operator delete (void*, odb::details::share);
+ 
+ namespace odb
+ {
+@@ -62,16 +62,16 @@ namespace odb
+       _ref_count () const;
+ 
+       void*
+-      operator new (std::size_t) throw (std::bad_alloc);
++      operator new (std::size_t);
+ 
+       void*
+-      operator new (std::size_t, share) throw (std::bad_alloc);
++      operator new (std::size_t, share);
+ 
+       void
+-      operator delete (void*, share) throw ();
++      operator delete (void*, share);
+ 
+       void
+-      operator delete (void*) throw ();
++      operator delete (void*);
+ 
+       struct refcount_callback
+       {
+diff --git a/odb/details/shared-ptr/base.ixx b/odb/details/shared-ptr/base.ixx
+index 9bf7c94..e03ea86 100644
+--- a/odb/details/shared-ptr/base.ixx
++++ b/odb/details/shared-ptr/base.ixx
+@@ -64,25 +64,25 @@ namespace odb
+     }
+ 
+     inline void* shared_base::
+-    operator new (std::size_t n) throw (std::bad_alloc)
++    operator new (std::size_t n)
+     {
+       return ::operator new (n);
+     }
+ 
+     inline void* shared_base::
+-    operator new (std::size_t n, share) throw (std::bad_alloc)
++    operator new (std::size_t n, share)
+     {
+       return ::operator new (n);
+     }
+ 
+     inline void shared_base::
+-    operator delete (void* p, share) throw ()
++    operator delete (void* p, share)
+     {
+       ::operator delete (p);
+     }
+ 
+     inline void shared_base::
+-    operator delete (void* p) throw ()
++    operator delete (void* p)
+     {
+       ::operator delete (p);
+     }

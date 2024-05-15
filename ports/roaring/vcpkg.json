@@ -1,6 +1,6 @@
 {
   "name": "roaring",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A better compressed bitset in C (and C++)",
   "homepage": "https://github.com/RoaringBitmap/CRoaring",
   "license": "Apache-2.0 OR MIT",

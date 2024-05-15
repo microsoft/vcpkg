@@ -33,6 +33,15 @@ function(vcpkg_cmake_configure)
         set(arg_LOGFILE_BASE "config-${TARGET_TRIPLET}")
     endif()
 
+    set(invalid_maybe_unused_vars "${arg_MAYBE_UNUSED_VARIABLES}")
+    list(FILTER invalid_maybe_unused_vars INCLUDE REGEX "^-D")
+    if(NOT invalid_maybe_unused_vars STREQUAL "")
+        list(JOIN invalid_maybe_unused_vars " " bad_items)
+        message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}
+            "Option MAYBE_UNUSED_VARIABLES must be used with variables names. "
+            "The following items are invalid: ${bad_items}")
+    endif()
+
     set(manually_specified_variables "")
 
     if(arg_Z_CMAKE_GET_VARS_USAGE)

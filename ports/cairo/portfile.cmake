@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
         fix-static-missing-lib-msimg32.patch
         ${PATCHES}
         fix-alloca-undefine.patch # Upstream PR: https://gitlab.freedesktop.org/cairo/cairo/-/merge_requests/520
+        cairo_add_lzo_feature_option.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -41,6 +42,12 @@ if("gobject" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dglib=enabled)
 else()
     list(APPEND OPTIONS -Dglib=disabled)
+endif()
+
+if("lzo" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dlzo=enabled)
+else()
+    list(APPEND OPTIONS -Dlzo=disabled)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

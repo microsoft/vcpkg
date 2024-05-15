@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 89c60aa8c73d91003f9fdd4e8f93213b98164ecdcd4a4264ba93352473666a290d1dd55b61cf9c5d62b0cef429f989bb31f5d4bfa67cf6d97dfc2abca45d4186
+    SHA512 ddada33aac43f707c36868ef12861445f08856f0df3b086e509bc294ff54ad1f55afd7e2b44c6f8444b0d74532b46cfc217f45a4635eeec4ef96bb55d12deab6
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cpu             ENABLE_INTEL_CPU
         gpu             ENABLE_INTEL_GPU
+        npu             ENABLE_INTEL_NPU
         auto            ENABLE_AUTO
         hetero          ENABLE_HETERO
         auto-batch      ENABLE_AUTO_BATCH
@@ -39,8 +40,8 @@ if(ENABLE_INTEL_GPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO oneapi-src/oneDNN
-            REF 494af5f9921bdae98f1a0e2955fa7d76ff386c4f
-            SHA512 30c555cbe1e2f4f536ccedc920a962751ba05e2c49e38948e5da83f9b89e14eebda7450edabe51865beeebdf6b6da5fe4673c30d1db67c803f474e9093759b1f
+            REF 4e6ff043c439652fcf6c400ac4e0c81bbac7c71c
+            SHA512 456332fdaf0d20d48bb1caaab1fa0b933c59d145f09ba4b1083d044207dd488d08a6eae84877b410cc7ba55cea251fa2652dabe92f25d75483fa723a0949df72
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
     endif()
@@ -54,8 +55,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF f82148befdbdc9576ec721c9d500155ee4de8060
-        SHA512 d4270b27ee274a5aa065ae5812db3c6ca9c898d72059eb5146f040a3ee354c8f114e45247ac37cab9fb2beee0f09eea2d0947d4f06ecbc7121b14011d3e1ce6d
+        REF 26633ae49edd4353a29b7170d9fcef6b2d7
+        SHA512 554c8050b5012248189c45bd51dbce6efa3a4b19f018a09a423b5dfa79da32a56a24c02ba24447e9a1f4d424b1e46e19322d8d02d622ef7c6a6910cdda991756
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -81,11 +82,29 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v23.08
-            SHA512 8379fdf804732ef4e69a3e91807810d413f35855d035cfde9d81059679f62cd625c0347f07dc1f76468dc82c06217a5ae8df25b4581a29558ac32b2a4f7d8af4
+            REF v24.02.1
+            SHA512 3a27458e5a0f72654aa7f7cd7145ec20678b49cd4e49846c9097855595c12d29b9753cd38b0825b5d6ffeeb40db1563defac8a0aebd71ee45a34abc26e21e285
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
     endif()
+endif()
+
+if(ENABLE_INTEL_NPU)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        REPO oneapi-src/level-zero
+        REF 4ed13f327d3389285592edcf7598ec3cb2bc712e
+        SHA512 1159b2dc59ffe201821aa6c4c65c1803f8be26654a5f7e09d4e2cea70afdaf6a49508acbc74279d2d5c8fc7b632ad29b70ea506c442cd599d7db47323de9e62d
+    )
+    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero")
+
+    vcpkg_from_github(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        REPO intel/level-zero-npu-extensions
+        REF 0e1c471356a724ef6d176ba027a68e210d90939e
+        SHA512 586c516e636afb9c1930fbc5faa0ceb130cd0507273fad10b96cd5c3450fb5c76b9bcbc9be630ac5ff3cd97f8108a96fa5d87dce7111be2ff2a59ab92053329c
+    )
+    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
 
 if(ENABLE_OV_TF_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_PADDLE_FRONTEND)
@@ -112,9 +131,7 @@ vcpkg_cmake_configure(
         "-DENABLE_CPPLINT=OFF"
         "-DENABLE_SAMPLES=OFF"
         "-DENABLE_TEMPLATE=OFF"
-        "-DENABLE_INTEL_GNA=OFF"
         "-DENABLE_PYTHON=OFF"
-        "-DENABLE_GAPI_PREPROCESSING=OFF"
         "-DCPACK_GENERATOR=VCPKG"
         "-DENABLE_JS=OFF"
 )

@@ -1,7 +1,7 @@
 {
   "name": "libgd",
   "version-semver": "2.3.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Open source code library for the dynamic creation of images by programmers.",
   "homepage": "https://github.com/libgd/libgd",
   "license": "GD",
@@ -48,7 +48,10 @@
     "tiff": {
       "description": "Support for TIFF",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "tools": {

@@ -1,5 +1,20 @@
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
+# Requirements from https://github.com/besser82/libxcrypt?tab=readme-ov-file#build-requirements-and-instructions
+message(
+"${PORT} currently requires the following libraries from the system package manager:
+    autoconf automake libtool pkg-config
+These can be installed on Debian systems via sudo apt install autoconf automake libtool pkg-config"
+)
+find_program(AUTORECONF_BIN autoreconf)
+if(NOT AUTORECONF_BIN)
+    message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt install autoconf\")")
+endif()
+find_program(LIBTOOL_BIN libtoolize)
+if(NOT LIBTOOL_BIN)
+    message(FATAL_ERROR "${PORT} requires libtool from the system package manager (example: \"sudo apt install libtool\")")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO besser82/libxcrypt

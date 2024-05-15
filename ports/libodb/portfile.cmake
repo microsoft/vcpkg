@@ -9,6 +9,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-linux.patch
 )
 file(REMOVE "${SOURCE_PATH}/version")
 

@@ -1,9 +1,9 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 3070c43..0052a4e 100644
+index 74c541f..737e566 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -820,7 +820,7 @@ set_property(
-    "MONGOC_CYRUS_PLUGIN_PATH_PREFIX=$<IF:$<STREQUAL:${CYRUS_PLUGIN_PATH_PREFIX},>,NULL,\"${CYRUS_PLUGIN_PATH_PREFIX}\">"
+@@ -826,7 +826,7 @@ set (
+    "${SOURCE_DIR}/src/uthash"
  )
  
 -if (ENABLE_SHARED)
@@ -11,7 +11,16 @@ index 3070c43..0052a4e 100644
     add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
     if(WIN32)
        # Add resource-definition script for Windows shared library (.dll).
-@@ -1262,7 +1262,7 @@ if (MONGOC_ENABLE_STATIC_INSTALL)
+@@ -902,7 +902,7 @@ if (ENABLE_SHARED)
+                RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    endif () # ENABLE_SHM_COUNTERS
+ 
+-endif () # ENABLE_SHARED
++endif () # NOT MONGOC_ENABLE_STATIC_BUILD
+ 
+ if (MONGOC_ENABLE_STATIC_BUILD)
+    add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+@@ -1272,7 +1272,7 @@ if (MONGOC_ENABLE_STATIC_INSTALL)
     list (APPEND TARGETS_TO_INSTALL mongoc_static)
  endif ()
  
@@ -20,15 +29,15 @@ index 3070c43..0052a4e 100644
     list (APPEND TARGETS_TO_INSTALL mongoc_shared)
  endif ()
  
-@@ -1317,6 +1317,7 @@ endif()
+@@ -1327,6 +1327,7 @@ endif()
  set_property(TARGET ${TARGETS_TO_INSTALL} APPEND PROPERTY pkg_config_INCLUDE_DIRECTORIES "${MONGOC_HEADER_INSTALL_DIR}")
  
  # Deprecated alias for libmongoc-1.0.pc, see CDRIVER-2086.
-+if(NOT MONGOC_ENABLE_STATIC_INSTALL)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
  if (MONGOC_ENABLE_SSL)
     configure_file (
        ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-ssl-1.0.pc.in
-@@ -1327,6 +1328,7 @@ if (MONGOC_ENABLE_SSL)
+@@ -1337,6 +1338,7 @@ if (MONGOC_ENABLE_SSL)
        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
     )
  endif ()

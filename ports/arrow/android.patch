@@ -1,8 +1,8 @@
-diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
-index 05c05c6..f2754a5 100644
---- a/cpp/CMakeLists.txt
-+++ b/cpp/CMakeLists.txt
-@@ -973,7 +973,7 @@ if(WIN32)
+diff --git a/cpp/src/arrow/CMakeLists.txt b/cpp/src/arrow/CMakeLists.txt
+index 026bb5c..5c1b5e3 100644
+--- a/cpp/src/arrow/CMakeLists.txt
++++ b/cpp/src/arrow/CMakeLists.txt
+@@ -166,7 +166,7 @@ if(WIN32)
    list(APPEND ARROW_SYSTEM_LINK_LIBS "ws2_32.dll")
  endif()
  

@@ -9,15 +9,9 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
-        # CVE fixes from https://download.qt.io/official_releases/qt/6.6/
-        patches/0001-CVE-2023-51714-qtbase-6.6.diff
-        patches/0002-CVE-2023-51714-qtbase-6.6.diff
-        patches/CVE-2024-25580-qtbase-6.6.diff
-
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
-        fix_cmake_build_type.patch
         harfbuzz.patch
         fix_egl.patch
         fix_egl_2.patch
@@ -502,4 +496,27 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
             remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
         endif()
     endforeach()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  # dlls owned but not automatically installed by qtbase
+  # this is required to avoid ownership troubles in downstream qt modules
+  set(qtbase_owned_dlls
+        double-conversion.dll
+        icudt74.dll
+        icuin74.dll
+        icuuc74.dll
+        libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
+        libcrypto-3.dll # for x86
+        pcre2-16.dll
+        zlib1.dll
+        zstd.dll
+  )
+  list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
+  foreach(dll IN LISTS qtbase_owned_dlls)
+    if(NOT EXISTS "${dll}") # Need to remove non-existant dlls since dependencies could have been build statically
+      list(REMOVE_ITEM qtbase_owned_dlls "${dll}")
+    endif()
+  endforeach()
+  file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()

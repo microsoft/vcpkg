@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gracicot/kangaru
-    REF v4.3.1
-    SHA512 5c1c6081b266089ad4ef310f4782505db5c514adce87091dd8164a6da71fc7ef72c0992c32e9ec3c991aa7a2ca43f1d96f2f524c7198bf899876af214fea28f3
+    REF "v${VERSION}"
+    SHA512 03835b156d6da9239e316bfad07684b7f3197798c314f7d8f707e9e225795546887867c5af7fd8ae075b7143d2f160b0185d6be16146975c868dea99c7334129
     HEAD_REF master
 )
 
@@ -30,4 +30,4 @@ file(REMOVE_RECURSE
 )
 
 # Put the license file where vcpkg expects it
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

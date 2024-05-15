@@ -10,6 +10,7 @@ vcpkg_from_github(
         link-keywords.patch
         multi-definition.patch
         rtabmap-res-tool.patch
+        gklib.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
