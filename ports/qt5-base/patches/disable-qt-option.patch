@@ -7,7 +7,7 @@ index 7282e20c..49bb5f4e 100644
  }
  
 -qtConfig(gssapi): QMAKE_USE_PRIVATE += gssapi
-+#qtConfig(gssapi): QMAKE_USE_PRIVATE += gssapi
++qtConfig(gssapi): QMAKE_USE_PRIVATE -= gssapi
  
  uikit:HEADERS += kernel/qnetworkinterface_uikit_p.h
  osx:SOURCES += kernel/qnetworkproxy_mac.cpp
