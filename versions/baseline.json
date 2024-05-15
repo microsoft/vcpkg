@@ -1526,7 +1526,7 @@
     },
     "cctag": {
       "baseline": "1.0.2",
-      "port-version": 6
+      "port-version": 7
     },
     "cctz": {
       "baseline": "2.4",
