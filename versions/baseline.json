@@ -9053,7 +9053,7 @@
       "port-version": 0
     },
     "vcpkg-boost": {
-      "baseline": "2024-04-25",
+      "baseline": "2024-05-15",
       "port-version": 0
     },
     "vcpkg-cmake": {
