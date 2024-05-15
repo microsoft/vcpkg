@@ -3,7 +3,6 @@ if (EXISTS ${CURRENT_INSTALLED_DIR}/include/msgpack/pack.h)
 endif()
 
 # header-only library
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rest-rpc-${RESTRPC_VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
