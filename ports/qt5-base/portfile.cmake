@@ -121,6 +121,7 @@ list(APPEND CORE_OPTIONS
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
+    -no-gssapi
     )
 
 if(WITH_PGSQL_PLUGIN)
@@ -139,8 +140,6 @@ if ("vulkan" IN_LIST FEATURES)
 else()
     list(APPEND CORE_OPTIONS --vulkan=no)
 endif()
-
-list(APPEND CORE_OPTIONS -no-gssapi)
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
