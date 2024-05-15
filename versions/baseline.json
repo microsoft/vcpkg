@@ -3824,6 +3824,10 @@
       "baseline": "4.3.2",
       "port-version": 0
     },
+    "kcov": {
+      "baseline": "42",
+      "port-version": 0
+    },
     "kcp": {
       "baseline": "1.7",
       "port-version": 0
