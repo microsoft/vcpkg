@@ -121,7 +121,7 @@ list(APPEND CORE_OPTIONS
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
-    -no-gssapi
+    --gssapi=no
     )
 
 if(WITH_PGSQL_PLUGIN)
