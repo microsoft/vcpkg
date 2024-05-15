@@ -1,6 +1,7 @@
 {
   "name": "libwebp",
   "version": "1.4.0",
+  "port-version": 1,
   "description": "WebP codec: library to encode and decode images in WebP format",
   "homepage": "https://github.com/webmproject/libwebp",
   "license": "BSD-3-Clause",
@@ -85,7 +86,10 @@
             "mux"
           ]
         },
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "cwebp": {
@@ -93,7 +97,10 @@
       "dependencies": [
         "libjpeg-turbo",
         "libpng",
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "dwebp": {
@@ -101,7 +108,10 @@
       "dependencies": [
         "libjpeg-turbo",
         "libpng",
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "extras": {
@@ -109,7 +119,10 @@
       "dependencies": [
         "libjpeg-turbo",
         "libpng",
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "gif2webp": {
@@ -137,7 +150,10 @@
             "libwebpmux"
           ]
         },
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "info": {

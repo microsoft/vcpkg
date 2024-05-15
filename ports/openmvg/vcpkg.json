@@ -1,7 +1,7 @@
 {
   "name": "openmvg",
   "version": "2.0",
-  "port-version": 9,
+  "port-version": 10,
   "description": "open Multiple View Geometry library. Basis for 3D computer vision and Structure from Motion.",
   "license": "MPL-2.0-no-copyleft-exception",
   "supports": "(x86 | x64 | arm64) & !xbox",
@@ -22,7 +22,10 @@
     "libjpeg-turbo",
     "liblemon",
     "libpng",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
