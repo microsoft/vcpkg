@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
-        "SOURCE_PATH;SHELL"
+        "SOURCE_PATH"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
 
@@ -62,9 +62,9 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
         vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
     endif()
 
-    if(NOT arg_SHELL)
-      vcpkg_make_get_shell(arg_SHELL)
-    endif()
+    set(arg_SHELL "")
+    vcpkg_make_get_shell(arg_SHELL)
+
     set(shell_cmd "${arg_SHELL}")
 
     if(arg_AUTOCONFIG)

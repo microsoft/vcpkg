@@ -5,7 +5,7 @@ function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "DISABLE_PARALLEL;NO_DESTDIR;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
-        "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS;SHELL"
+        "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -39,9 +39,9 @@ function(vcpkg_make_install)
         string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
 
-    if(NOT arg_SHELL)
-      vcpkg_make_get_shell(arg_SHELL)
-    endif()
+    set(arg_SHELL "")
+    vcpkg_make_get_shell(arg_SHELL)
+
     set(shell_cmd "${arg_SHELL}")
 
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
