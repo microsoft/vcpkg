@@ -1,0 +1,7 @@
+{
+  "name": "kcov",
+  "version": "42",
+  "description": "Code coverage tool for compiled programs, Python and Bash which uses debugging information to collect and report data without special compilation options",
+  "homepage": "https://github.com/SimonKagstrom/kcov",
+  "license": "GPL-2.0-only"
+}
