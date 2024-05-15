@@ -89,7 +89,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_BUILD_SHARED_LIB=${BUILD_SHARED}
         -Donnxruntime_BUILD_WEBASSEMBLY=OFF
         -Donnxruntime_CROSS_COMPILING=${VCPKG_CROSSCOMPILING}
-        -Donnxruntime_USE_FULL_PROTOBUF=OFF # minimalize protoc execution
+        -Donnxruntime_USE_FULL_PROTOBUF=ON # minimalize protoc execution?
         -Donnxruntime_USE_PREINSTALLED_EIGEN=ON
         -Donnxruntime_USE_EXTENSIONS=OFF
         -Donnxruntime_USE_NNAPI_BUILTIN=${VCPKG_TARGET_IS_ANDROID}
