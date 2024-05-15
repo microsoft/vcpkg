@@ -4401,7 +4401,7 @@
       "port-version": 0
     },
     "libfork": {
-      "baseline": "3.7.1",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "libfort": {
