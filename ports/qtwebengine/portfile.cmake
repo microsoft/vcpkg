@@ -121,7 +121,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/rescources" "${CURRENT_PACKAGES_DIR}/share/Qt6/rescources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
+file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
 
 qt_install_copyright("${SOURCE_PATH}")
 
