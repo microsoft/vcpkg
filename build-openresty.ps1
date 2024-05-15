@@ -54,6 +54,8 @@ cd buildtrees\openresty\lualocal
 .\luarocks.bat install lua-resty-openssl 0.8.26-1
 .\luarocks.bat install lua-resty-jwt 0.2.3-0
 .\luarocks.bat install lua-resty-http 0.15-0
+.\luarocks.bat install lua-resty-session 3.10-1
+.\luarocks.bat install lua-resty-openidc 1.7.6-3
 .\luarocks.bat install luafilesystem 1.8.0-1
 .\luarocks.bat install lsqlite3 0.9.5-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib"
 .\luarocks.bat install luasql-sqlite3 2.5.0-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib"
