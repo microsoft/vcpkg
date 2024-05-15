@@ -72,6 +72,10 @@ find_package(wil CONFIG REQUIRED)
 list(APPEND onnxruntime_EXTERNAL_LIBRARIES WIL::WIL)
 
 find_path(SAFEINT_INCLUDE_DIRS "SafeInt.hpp" REQUIRED)
+add_library(safeint_interface IMPORTED INTERFACE GLOBAL)
+set_target_properties(safeint_interface PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${SAFEINT_INCLUDE_DIRS}"
+)
 
 # XNNPACK EP
 if (onnxruntime_USE_XNNPACK)

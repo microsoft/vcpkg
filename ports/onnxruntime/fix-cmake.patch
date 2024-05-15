@@ -100,15 +100,6 @@ diff --git a/cmake/onnxruntime_common.cmake b/cmake/onnxruntime_common.cmake
 index 43d5fa9..c441304 100644
 --- a/cmake/onnxruntime_common.cmake
 +++ b/cmake/onnxruntime_common.cmake
-@@ -129,7 +129,7 @@ target_include_directories(onnxruntime_common
-         ${OPTIONAL_LITE_INCLUDE_DIR})
- 
- 
--target_link_libraries(onnxruntime_common PUBLIC safeint_interface ${GSL_TARGET} ${ABSEIL_LIBS})
-+target_link_libraries(onnxruntime_common PUBLIC ${GSL_TARGET} ${ABSEIL_LIBS})
- 
- add_dependencies(onnxruntime_common ${onnxruntime_EXTERNAL_DEPENDENCIES})
- 
 @@ -215,7 +215,7 @@ endif()
  
  if (NOT onnxruntime_BUILD_SHARED_LIB)
@@ -328,15 +319,6 @@ diff --git a/cmake/onnxruntime_session.cmake b/cmake/onnxruntime_session.cmake
 index 79bee3b..c49653b 100644
 --- a/cmake/onnxruntime_session.cmake
 +++ b/cmake/onnxruntime_session.cmake
-@@ -30,7 +30,7 @@ endif()
- source_group(TREE ${REPO_ROOT} FILES ${onnxruntime_session_srcs})
- 
- onnxruntime_add_static_library(onnxruntime_session ${onnxruntime_session_srcs})
--onnxruntime_add_include_to_target(onnxruntime_session onnxruntime_common onnxruntime_framework onnx onnx_proto ${PROTOBUF_LIB} flatbuffers::flatbuffers Boost::mp11 safeint_interface nlohmann_json::nlohmann_json)
-+onnxruntime_add_include_to_target(onnxruntime_session onnxruntime_common onnxruntime_framework onnx onnx_proto ${PROTOBUF_LIB} flatbuffers::flatbuffers Boost::mp11 nlohmann_json::nlohmann_json)
- if(onnxruntime_ENABLE_INSTRUMENT)
-   target_compile_definitions(onnxruntime_session PUBLIC ONNXRUNTIME_ENABLE_INSTRUMENT)
- endif()
 @@ -63,7 +63,7 @@ endif()
  
  if (NOT onnxruntime_BUILD_SHARED_LIB)
