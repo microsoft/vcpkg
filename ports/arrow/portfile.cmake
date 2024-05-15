@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
         msvc-static-name.patch
         utf8proc.patch
         thrift.patch
+        remove-dll-suffix.patch #Upstream PR: https://github.com/apache/arrow/pull/41341
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

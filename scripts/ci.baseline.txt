@@ -115,6 +115,8 @@ buck-yeh-bux:x64-android=fail
 c4core:arm-neon-android=fail
 c4core:arm64-android=fail
 c4core:x64-android=fail
+# Missing system libraries on linux: libaio1 & libaio-dev
+cachelib:x64-linux=fail
 caf:arm-neon-android=fail
 caf:arm64-uwp=fail
 caf:arm64-android=fail
@@ -361,6 +363,8 @@ gamenetworkingsockets:x64-android=fail
 # VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
 # gazebo is broken due it depend on old ports that already in the new versions.
 # There is an open PR that try to fix that.
+gazebo:x64-windows=fail
+gazebo:x86-windows=fail
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
@@ -574,7 +578,6 @@ libmpeg2:arm-neon-android=fail
 libmpeg2:arm64-android=fail
 libmpeg2:x64-android=fail
 libmysql:x86-windows=skip
-libodb:x64-linux=fail # dynamic exception specifications
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
@@ -807,9 +810,6 @@ ompl:x64-osx=fail
 ompl:arm64-osx=fail
 ompl:x64-linux=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
-omplapp:arm-neon-android=fail
-omplapp:arm64-android=fail
-omplapp:x64-android=fail
 onednn:x64-android=fail
 openblas:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
@@ -1034,6 +1034,7 @@ septag-sx:x64-android=fail
 sfml:arm-neon-android=fail
 sfml:arm64-android=fail
 sfml:x64-android=fail
+shader-slang:x64-windows-static=fail
 shogun:arm64-windows      = skip
 shogun:arm64-uwp            = skip
 shogun:x64-osx            = skip
@@ -1232,6 +1233,12 @@ cmake-user:x64-windows-static-md=pass
 cmake-user:x64-windows-static=pass
 cmake-user:x64-windows=pass
 cmake-user:x86-windows=pass
+gtk:arm64-osx=pass
+gtk:x64-linux=pass
+gtk:x64-osx=pass
+gtk:x64-windows-static-md=pass
+gtk:x64-windows=pass
+gtk:x86-windows=pass
 qt:x64-windows=pass
 qt:x64-windows-static=pass
 # qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass.
@@ -1320,6 +1327,7 @@ vcpkg-ci-openimageio:x64-osx=pass
 vcpkg-ci-openimageio:x64-linux=pass
 vcpkg-ci-paraview:x64-linux=pass
 vcpkg-ci-paraview:x64-osx=pass
+vcpkg-ci-paraview:arm64-osx=pass
 vcpkg-ci-paraview:x64-windows-static-md=pass
 vcpkg-ci-paraview:x64-windows-static=pass
 vcpkg-ci-paraview:x64-windows=pass
