@@ -1,7 +1,6 @@
 {
   "name": "litehtml",
-  "version": "0.6.0",
-  "port-version": 2,
+  "version": "0.9.0",
   "description": "litehtml is the lightweight HTML rendering engine with CSS2/CSS3 support.",
   "homepage": "https://github.com/litehtml/litehtml",
   "license": "BSD-3-Clause",
