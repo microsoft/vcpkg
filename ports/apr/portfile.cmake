@@ -33,6 +33,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DAPR_BUILD_SHARED=${APR_BUILD_SHARED}
             -DAPR_BUILD_TESTAPR=OFF
             -DINSTALL_PDB=OFF
+            -DMIN_WINDOWS_VER=Windows7
+            -DAPR_HAVE_IPV6=ON
             ${FEATURE_OPTIONS}
     )
 
