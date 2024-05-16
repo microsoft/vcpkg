@@ -46,6 +46,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
         psl         CURL_USE_LIBPSL
+        gssapi      CURL_USE_GSSAPI
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
