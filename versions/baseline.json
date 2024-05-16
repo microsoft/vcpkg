@@ -9128,6 +9128,14 @@
       "baseline": "16.18.0",
       "port-version": 1
     },
+    "vcpkg-tool-python-buildtime": {
+      "baseline": "0.0.0-alpha.202405+pypi-202405-cpython-3.12.3",
+      "port-version": 0
+    },
+    "vcpkg-tool-python-buildtime-e2e": {
+      "baseline": "0.0.0-alpha.202405",
+      "port-version": 0
+    },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
       "port-version": 1

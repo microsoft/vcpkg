@@ -1,0 +1,5 @@
+meson==1.4.0
+packaging==24.0
+pip==24.0
+setuptools==69.5.1
+wheel==0.43.0
