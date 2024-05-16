@@ -20,7 +20,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
-            private-headers INSTALL_PRIVATE_H
+            private-headers APR_INSTALL_PRIVATE_H
     )
 
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" APR_BUILD_STATIC)
@@ -33,7 +33,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DAPR_BUILD_SHARED=${APR_BUILD_SHARED}
             -DAPR_BUILD_TESTAPR=OFF
             -DINSTALL_PDB=OFF
-            -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
+            ${FEATURE_OPTIONS}
     )
 
     vcpkg_cmake_install()
