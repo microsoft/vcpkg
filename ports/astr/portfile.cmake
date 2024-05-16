@@ -2,22 +2,23 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO a4z/astr
   REF "${VERSION}"
-  SHA512 f5a16e1e33a28d475fc6b70a406d25a507d6e3fcc76bbe382193993ace9491ec60605e918aa0f986aebc1d22bdbfc2d44f0dcb4e1378ec1683d9109cf2a3d255
+  SHA512 4b730674d992efa94c3b4d290aeafc0b076fc6ca6033cc2aed90b92d77ff19498fb5af9fa83fa7b136d428e762518d9fb28bacf3965a9f4030f39e73aca89630
   HEAD_REF main
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-      -DFETCH_DOCTEST=OFF
+      -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 

@@ -1,11 +1,10 @@
 {
   "name": "astr",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Compile-time array string header-only library.",
   "homepage": "https://github.com/a4z/astr",
   "license": "MPL-2.0",
   "dependencies": [
-    "doctest",
     {
       "name": "vcpkg-cmake",
       "host": true
