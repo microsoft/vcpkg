@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9d6e33d..738f256 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -167,7 +167,7 @@ endif()
+ 
+ if(KDDockWidgets_FRONTENDS)
+     if("qtwidgets" IN_LIST KDDockWidgets_FRONTENDS)
+-        find_package(Qt${QT_VERSION_MAJOR} ${QT_MIN_VERSION} NO_MODULE REQUIRED COMPONENTS Widgets)
++        find_package(Qt6Widgets CONFIG REQUIRED)
+         set(KDDW_FRONTEND_QTWIDGETS ON)
+     endif()
+ 
