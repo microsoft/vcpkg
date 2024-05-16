@@ -3,5 +3,11 @@
   "version-date": "2024-05-15",
   "description": "Cinatra is a high performance HTTP framework with modern C++ features.",
   "homepage": "https://github.com/qicosmos/cinatra",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }
