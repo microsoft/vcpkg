@@ -9721,8 +9721,8 @@
       "port-version": 1
     },
     "zycore": {
-      "baseline": "1.3.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "zydis": {
       "baseline": "4.0.0",
