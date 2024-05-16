@@ -33,7 +33,10 @@
     "libpng",
     "nanosvg",
     "opengl",
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "tiff",
       "default-features": false
