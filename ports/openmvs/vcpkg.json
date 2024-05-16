@@ -1,7 +1,7 @@
 {
   "name": "openmvs",
   "version": "2.1.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "OpenMVS: open Multi-View Stereo reconstruction library",
   "homepage": "https://cdcseacave.github.io/openMVS",
   "license": "AGPL-3.0-only",
@@ -28,7 +28,10 @@
       ],
       "platform": "!(windows & static)"
     },
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     "vcglib",
     {
       "name": "vcpkg-cmake",
