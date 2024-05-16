@@ -34,7 +34,10 @@
     "nanosvg",
     "opengl",
     "pcre2",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
