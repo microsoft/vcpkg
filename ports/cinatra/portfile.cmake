@@ -22,9 +22,6 @@ vcpkg_cmake_install()
 # Copy the entire include directory
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 
-# Copy example web content
-file(COPY ${SOURCE_PATH}/example/www DESTINATION ${CURRENT_PACKAGES_DIR}/tools/cinatra/examples)
-
 # Copy executables to the tools directory
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cinatra_example.exe")
     file(COPY "${CURRENT_PACKAGES_DIR}/bin/cinatra_example.exe"
