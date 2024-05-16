@@ -121,6 +121,7 @@ openblas:arm64-osx=skip
 openblas:x64-osx=skip
 openblas:x64-windows-static-md=skip
 openblas:x64-windows-static=skip
+openblas:x64-android=fail
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
