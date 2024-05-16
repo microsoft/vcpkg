@@ -4,6 +4,7 @@
   "description": "Cinatra is a high performance HTTP framework with modern C++ features.",
   "homepage": "https://github.com/qicosmos/cinatra",
   "license": "MIT",
+  "supports": "!uwp & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

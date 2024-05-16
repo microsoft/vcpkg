@@ -23,20 +23,10 @@ vcpkg_cmake_install()
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 
 # Copy executables to the tools directory
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cinatra_example.exe")
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/cinatra_example.exe"
-         DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cinatra_press_tool.exe")
     file(COPY "${CURRENT_PACKAGES_DIR}/bin/cinatra_press_tool.exe"
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-vcpkg_copy_pdbs()
-
-# Cleanup unwanted directories
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE_RECURSE "${SOURCE_PATH}/.git")
 

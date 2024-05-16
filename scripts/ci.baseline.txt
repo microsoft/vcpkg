@@ -190,12 +190,6 @@ chromium-base:x64-linux=skip
 #  because the first attempt to build it fails, but subsequent attempts succeed
 chromium-base:x64-osx=skip
 
-cinatra:x64-android=fail
-cinatra:arm-neon-android=fail
-cinatra:arm64-android=fail
-cinatra:x64-uwp=fail
-cinatra:arm64-uwp=fail
-
 clamav:arm64-windows=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
