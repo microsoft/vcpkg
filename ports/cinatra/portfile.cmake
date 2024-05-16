@@ -6,16 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_EXAMPLES=ON
+        -DBUILD_EXAMPLES=OFF
         -DBUILD_PRESS_TOOL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
 
 # Copy the entire include directory
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
