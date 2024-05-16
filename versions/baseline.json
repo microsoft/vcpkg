@@ -7910,7 +7910,7 @@
     },
     "scnlib": {
       "baseline": "2.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "scope-guard": {
       "baseline": "1.1.0",
