@@ -541,7 +541,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.11.0",
+      "baseline": "3.12.0",
       "port-version": 0
     },
     "basisu": {
@@ -3353,8 +3353,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "8.4.0",
-      "port-version": 1
+      "baseline": "8.5.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
@@ -4401,7 +4401,7 @@
       "port-version": 0
     },
     "libfork": {
-      "baseline": "3.7.1",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "libfort": {
@@ -4465,7 +4465,7 @@
       "port-version": 0
     },
     "libgpiod": {
-      "baseline": "2.1",
+      "baseline": "2.1.2",
       "port-version": 0
     },
     "libgpod": {
@@ -9445,7 +9445,7 @@
       "port-version": 0
     },
     "xbyak": {
-      "baseline": "6.73",
+      "baseline": "7.6",
       "port-version": 0
     },
     "xcb": {
