@@ -1,0 +1,22 @@
+{
+  "name": "realm-core",
+  "version": "14.6.2",
+  "description": "Realm is a mobile database that runs directly inside phones, tablets or wearables.",
+  "homepage": "https://github.com/realm/realm-core",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "openssl",
+      "platform": "!osx",
+      "version>=": "3.2.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
