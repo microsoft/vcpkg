@@ -4,7 +4,7 @@
   "description": "A cross-platform framework for basic components.",
   "homepage": "https://github.com/libsese/sese",
   "license": "Apache-2.0",
-  "supports": "x64 & (windows | osx | linux) & !uwp & !static",
+  "supports": "x64 & (windows | osx | linux) & !uwp",
   "dependencies": [
     {
       "name": "asio",
