@@ -1,9 +1,9 @@
 set(program_name 7z)
 if(CMAKE_HOST_WIN32)
-    set(tool_subdirectory "23.01")
+    set(tool_subdirectory "24.05")
     set(paths_to_search "${DOWNLOADS}/tools/7zip_msi-${tool_subdirectory}-windows/Files/7-Zip") # vcpkg fetch 7zip_msi path
     list(APPEND paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}/Files/7-Zip")
-    set(download_urls "https://github.com/ip7z/7zip/releases/download/23.01/7z2301.msi" "https://7-zip.org/a/7z2301.msi")
-    set(download_filename "7z2301.msi")
-    set(download_sha512 002c8ab30be802fa5fa90896d2bdf710bfbd89e39487af25af9d63821986e6d11c42b1c4f4acc79d325719b10193cd31c38f648403ef16f0580609afa8da9596)
+    set(download_urls "https://github.com/ip7z/7zip/releases/download/24.05/7z2405.msi" "https://7-zip.org/a/7z2405.msi")
+    set(download_filename "7z2405.msi")
+    set(download_sha512 4b28c14910641f7008efe97e351f4895f7f44fdd1688a4dd578a77267120da583d1186701a7473e37b14933eca16493ac6668ed86e760fb33ce428c1fd9c210b)
 endif()
