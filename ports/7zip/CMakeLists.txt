@@ -420,11 +420,17 @@ install(FILES ${HEADERS} DESTINATION "include/7zip/C")
 file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/Common/*.h")
 install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/Common")
 
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/Windows/*.h")
+install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/Windows")
+
 file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/*.h")
 install(FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip")
 
 file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/Archive/*.h")
 install (FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip/Archive")
+
+file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CPP/7zip/Common/*.h")
+install (FILES ${HEADERS} DESTINATION "include/7zip/CPP/7zip/Common")
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
