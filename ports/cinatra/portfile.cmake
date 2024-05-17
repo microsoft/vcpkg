@@ -23,8 +23,8 @@ vcpkg_cmake_install()
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 
 # Copy executables to the tools directory
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cinatra_press_tool.exe")
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/cinatra_press_tool.exe"
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe")
+    file(COPY "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe"
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra")
 endif()
 
