@@ -7242,7 +7242,7 @@
     },
     "qt5-serialbus": {
       "baseline": "5.15.13",
-      "port-version": 2
+      "port-version": 1
     },
     "qt5-serialport": {
       "baseline": "5.15.13",
