@@ -5,7 +5,7 @@
   "port-version": 1,
   "description": "Metapackage for packages which provide BLAS",
   "license": null,
-  "supports": "!(android & arm & !arm64) & !(android & x64)",
+  "supports": "!(android & arm32) & !(android & x64)",
   "dependencies": [
     {
       "name": "lapack-reference",
