@@ -67,8 +67,9 @@ if ("test-engine" IN_LIST FEATURES)
         HEAD_REF master
     )
 
+    file(REMOVE_RECURSE "${SOURCE_PATH}/test-engine")
     file(COPY "${TEST_ENGINE_SOURCE_PATH}/imgui_test_engine/" DESTINATION "${SOURCE_PATH}/test-engine")
-    vcpkg_replace_string("${SOURCE_PATH}/imconfig.h" "#pragma once" "#pragma once\n\n#include \"imgui_te_imconfig.h\"")
+    vcpkg_replace_string("${SOURCE_PATH}/imconfig.h" "#pragma once" "#pragma  once\n\n#include \"imgui_te_imconfig.h\"")
     vcpkg_replace_string("${SOURCE_PATH}/test-engine/imgui_te_imconfig.h" "#define IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL 0" "#define IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL 1")
 endif()
 
