@@ -110,7 +110,10 @@
     },
     "test-engine": {
       "description": "Build test engine",
-      "license": null
+      "license": null,
+      "dependencies": [
+        "stb"
+      ]
     },
     "vulkan-binding": {
       "description": "Make available Vulkan binding",

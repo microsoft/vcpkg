@@ -127,6 +127,8 @@ if(IMGUI_USE_WCHAR32)
 endif()
 
 if(IMGUI_TEST_ENGINE)
+    find_package(Stb REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${Stb_INCLUDE_DIR})
     target_sources(
         ${PROJECT_NAME}
         PRIVATE

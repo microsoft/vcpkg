@@ -69,6 +69,8 @@ if ("test-engine" IN_LIST FEATURES)
 
     file(REMOVE_RECURSE "${SOURCE_PATH}/test-engine")
     file(COPY "${TEST_ENGINE_SOURCE_PATH}/imgui_test_engine/" DESTINATION "${SOURCE_PATH}/test-engine")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/test-engine/thirdparty/stb")
+    vcpkg_replace_string("${SOURCE_PATH}/test-engine/imgui_capture_tool.cpp" "#include \"thirdparty/stb/imstb_image_write.h\"" "#include <stb_image_write.h>")
     vcpkg_replace_string("${SOURCE_PATH}/imconfig.h" "#pragma once" "#pragma  once\n\n#include \"imgui_te_imconfig.h\"")
     vcpkg_replace_string("${SOURCE_PATH}/test-engine/imgui_te_imconfig.h" "#define IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL 0" "#define IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL 1")
 endif()
