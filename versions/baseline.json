@@ -2969,8 +2969,8 @@
       "port-version": 1
     },
     "gdk-pixbuf": {
-      "baseline": "2.42.10",
-      "port-version": 6
+      "baseline": "2.42.12",
+      "port-version": 0
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
