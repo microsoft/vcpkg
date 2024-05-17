@@ -5,8 +5,8 @@
       "port-version": 4
     },
     "7zip": {
-      "baseline": "23.01",
-      "port-version": 2
+      "baseline": "24.05",
+      "port-version": 0
     },
     "ableton": {
       "baseline": "3.0.6",
