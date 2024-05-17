@@ -81,8 +81,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
                             patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
                             patches/XKB_KEY_dead_lowline.patch # https://bugreports.qt.io/browse/QTBUG-117950
-                            #patches/disable-find-krb5.patch    #fix ci pipline for disable qt-base find krb5
-                            #patches/disable-qt-option.patch    #disable qmake add gasspi feature
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
