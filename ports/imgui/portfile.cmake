@@ -97,7 +97,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
 if ("test-engine" IN_LIST FEATURES)
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/test-engine/LICENSE.txt")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/test-engine/LICENSE.txt")
 else()
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 endif()
