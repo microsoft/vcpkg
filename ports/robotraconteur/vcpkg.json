@@ -1,8 +1,9 @@
 {
   "name": "robotraconteur",
   "version-semver": "1.2.0",
+  "port-version": 1,
   "description": "The Robot Raconteur communication framework core library",
-  "homepage": "http://robotraconteur.com",
+  "homepage": "https://www.robotraconteur.com",
   "license": "Apache-2.0",
   "supports": "(windows & (x86 | x64)) | (linux & (x86 | x64 | arm64 | arm32)) | (osx & (x64 | arm64))",
   "dependencies": [

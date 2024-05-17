@@ -8,6 +8,7 @@ vcpkg_from_github(
 	REF "v${VERSION}"
 	SHA512 39926abd6f4b66c528abade88c06e62a5d9e1c2d12fc1f235d6491b7b6e36eec18923a222a60420e98d3a57b86611483d62319227d91915a747aa7dc731dc5be
 	HEAD_REF master
+	PATCHES fix-compatibility-with-boost-1.85.patch
 )
 
 vcpkg_cmake_configure(

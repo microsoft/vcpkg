@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
-    REF 261679b3d2f3336d8531ed38e110254c3e2d1c10
+    REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -18,21 +18,17 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
-        PATCHES
-          "${PATCH_FILE}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
 # mini_chromium contains the toolchains and build configuration
-set(PATCH_FILE "fix-stdint.patch")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
-    "5654edb4225bcad13901155c819febb5748e502b"
+    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"
 )
-set(PATCH_FILE "")
 
 if(VCPKG_TARGET_IS_LINUX)
     # fetch lss
