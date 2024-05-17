@@ -241,8 +241,8 @@
       "port-version": 5
     },
     "arrow": {
-      "baseline": "16.0.0",
-      "port-version": 1
+      "baseline": "16.1.0",
+      "port-version": 0
     },
     "arsenalgear": {
       "baseline": "2.1.0",
@@ -553,7 +553,7 @@
       "port-version": 3
     },
     "bddisasm": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.4",
       "port-version": 0
     },
     "bde": {
@@ -1413,8 +1413,8 @@
       "port-version": 4
     },
     "bxzstr": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.1",
+      "port-version": 0
     },
     "byte-lite": {
       "baseline": "0.3.0",
@@ -7914,7 +7914,7 @@
     },
     "scnlib": {
       "baseline": "2.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "scope-guard": {
       "baseline": "1.1.0",
