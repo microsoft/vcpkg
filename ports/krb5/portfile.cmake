@@ -1,3 +1,4 @@
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO krb5/krb5
@@ -12,7 +13,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     vcpkg_find_acquire_program(PERL)
-    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+    get_filename_component(PERL_PATH "${PERL}" DIRECTORY)
     vcpkg_add_to_path("${PERL_PATH}")
     vcpkg_build_nmake(
         SOURCE_PATH "${SOURCE_PATH}/src"
@@ -57,6 +58,23 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND debug_tools_to_remove "${CURRENT_PACKAGES_DIR}/debug/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     endforeach()
     file(REMOVE ${debug_tools_to_remove})
+
+    set(WINDOWS_PC_FILES 
+        krb5-gssapi
+        krb5
+        mit-krb5-gssapi
+        mit-krb5
+    )
+
+    foreach (PC_FILE ${WINDOWS_PC_FILES})
+        configure_file("${CURRENT_PORT_DIR}/windows_pc_files/${PC_FILE}.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PC_FILE}.pc" @ONLY)
+    endforeach()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        foreach (PC_FILE ${WINDOWS_PC_FILES})
+            configure_file("${CURRENT_PORT_DIR}/windows_pc_files/${PC_FILE}.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PC_FILE}.pc" @ONLY)
+        endforeach()    
+    endif()
 else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}/src"
