@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 01e97c5..30af76f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,6 +15,13 @@ add_library(boost_container
+   src/synchronized_pool_resource.cpp
+   src/unsynchronized_pool_resource.cpp
+ )
++if(EMSCRIPTEN)
++  # BOOST_HAS_PTHREADS is required to avoid windows declarations in
++  # libs/container/include/boost/container/detail/thread_mutex.hpp
++  # This should come from include/boost/config/detail/posix_features.hpp,
++  # but ... https://github.com/microsoft/vcpkg/issues/38469
++  target_compile_options(boost_container PUBLIC -pthread)
++endif()
+ 
+ add_library(Boost::container ALIAS boost_container)
+ 
