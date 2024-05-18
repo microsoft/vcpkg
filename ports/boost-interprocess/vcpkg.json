@@ -49,6 +49,14 @@
     {
       "name": "boost-winapi",
       "version>=": "1.85.0"
+    },
+    {
+      "name": "boost-integer",
+      "version>=": "1.85.0"
+    },
+    {
+      "name": "boost-unordered",
+      "version>=": "1.85.0"
     }
   ]
 }
