@@ -389,7 +389,8 @@ $foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Obje
     }
 }
 
-New-Item -ItemType "Directory" $scriptsDir/downloads -erroraction SilentlyContinue | out-null
+$downloads = "$scriptsDir/../../downloads"
+New-Item -ItemType "Directory" $downloads -erroraction SilentlyContinue | out-null
 
 $updateServicePorts = $false
 
@@ -401,11 +402,11 @@ if ($libraries.Length -eq 0) {
 $boostPortDependencies = @()
 
 foreach ($library in $libraries) {
-    $archive = "$scriptsDir/downloads/$library-boost-$version.tar.gz"
+    $archive = "$downloads/boostorg-$library-boost-$version.tar.gz"
     "Handling boost/$library... $archive"
     if (!(Test-Path $archive)) {
         "Downloading boost/$library..."
-        Invoke-WebRequest -Uri "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile "$scriptsDir/downloads/$library-boost-$version.tar.gz"
+        Invoke-WebRequest -Uri "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile "$archive"
         "Downloaded boost/$library..."
     }
     $hash = & $vcpkg --x-wait-for-lock hash $archive
