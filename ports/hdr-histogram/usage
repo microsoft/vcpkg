@@ -1,0 +1,22 @@
+The package hdr_histogram can be used via CMake:
+
+  find_path(HDR_HISTOGRAM_INCLUDE_DIR NAMES "hdr/hdr_histogram.h" REQUIRED)
+  target_include_directories(main PRIVATE ${HDR_HISTOGRAM_INCLUDE_DIR})
+
+  find_library(HDR_HISTOGRAM_LIB_STATIC hdr_histogram_static REQUIRED)
+  target_link_libraries(main PRIVATE ${HDR_HISTOGRAM_LIB})
+
+  # Or you can also use dynamic linkage:
+  find_library(HDR_HISTOGRAM_LIB hdr_histogram REQUIRED)
+  target_link_libraries(main PRIVATE ${HDR_HISTOGRAM_LIB_STATIC})
+
+The package hdr_histogram can be imported via CMake FindPkgConfig module:
+
+  find_package(hdr_histogram CONFIG REQUIRED)
+
+  find_path(HDR_HISTOGRAM_INCLUDE_DIR NAMES "hdr/hdr_histogram.h" REQUIRED)
+  target_include_directories(main PRIVATE ${HDR_HISTOGRAM_INCLUDE_DIR})
+
+  target_link_libraries(main PRIVATE hdr_histogram::hdr_histogram_static)
+  # Or you can also use dynamic linkage:
+  target_link_libraries(main PRIVATE hdr_histogram::hdr_histogram)
