@@ -33,28 +33,24 @@ jobs:
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x86_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows_static
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows_static_md
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -67,14 +63,12 @@ jobs:
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: arm64_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: arm64_uwp
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
