@@ -26,7 +26,7 @@ if ($null -eq $vcpkg) {
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 0
+$defaultPortVersion = 1
 $portVersions = @{
 }
 
@@ -284,7 +284,7 @@ function GeneratePort() {
     # Generate vcpkg.json
     GeneratePortManifest `
         -PortName $portName `
-        -Homepage "https://github.com/boostorg/$Library" `
+        -Homepage "https://www.boost.org/libs/$Library" `
         -Description "Boost $Library module" `
         -License "BSL-1.0" `
         -Dependencies $Dependencies
@@ -618,6 +618,7 @@ if ($updateServicePorts) {
     # Generate manifest files for boost-vcpkg-helpers
     GeneratePortManifest `
         -PortName "boost-cmake" `
+        -Homepage "https://github.com/boostorg/cmake" `
         -Description "Boost CMake support infrastructure" `
         -License "BSL-1.0" `
         -Dependencies @("boost-uninstall", @{ name = "vcpkg-boost"; host = $true }, @{ name = "vcpkg-cmake"; host = $true }, @{ name = "vcpkg-cmake-config"; host = $true })
