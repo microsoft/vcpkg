@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  linux-pool: 'PrLin-1ES-Pool'
-  osx-pool: 'PrOsx-2024-01-18'
-  osx-arm64-pool: 'PrOsx-2024-01-22-arm64'
   linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-05-17'
 
 parameters:
@@ -60,7 +57,6 @@ jobs:
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_uwp
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -79,21 +75,20 @@ jobs:
 - template: osx/azure-pipelines.yml
   parameters:
     jobName: x64_osx
-    poolName: $(osx-pool)
+    poolName: 'PrOsx-2024-01-18'
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: osx/azure-pipelines.yml
   parameters:
     jobName: arm64_osx
-    poolName: $(osx-arm64-pool)
+    poolName: 'PrOsx-2024-01-22-arm64'
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: linux/azure-pipelines.yml
   parameters:
     jobName: x64_linux
-    poolName: $(linux-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
