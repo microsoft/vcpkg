@@ -61,6 +61,9 @@ $portData = @{
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
+    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
+    "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
+    "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-fiber"            = @{
         "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
@@ -70,6 +73,7 @@ $portData = @{
         }
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
+    "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
         "supports"         = "!uwp";
@@ -92,11 +96,6 @@ $portData = @{
             };
         };
     };
-    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
-    "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
-    "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
-    "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
         "supports"     = "!uwp";
@@ -107,6 +106,7 @@ $portData = @{
             }
         }
     };
+    "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
         "supports"     = "!uwp";
