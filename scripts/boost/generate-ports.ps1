@@ -5,7 +5,7 @@ param (
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
-#    boost-python is not supported on uwp. Unless this script treats these cases correctly
+#    boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
 #    don't blindly stage/commit changes containing platform expressions in dependencies.
     $portsDir = $null,
     $vcpkg = $null
@@ -158,6 +158,16 @@ $portData = @{
     "boost-wave"             = @{ "supports" = "!uwp" };
 }
 
+# For some dependent ports (LHS), the dependency's [RHS] "supports" is enough,
+# and no "platform" field shall be added to the dependency.
+$suppressPlatformForDependency = @{
+    "boost-coroutine2"            = @("boost-context");
+    "boost-dll"                   = @("boost-filesystem");
+    "boost-graph"                 = @("boost-random");
+    "boost-parameter-python"      = @("boost-python");
+    "boost-property-map-parallel" = @("boost-mpi");
+}
+
 function GeneratePortName() {
     param (
         [string]$Library
@@ -167,14 +177,36 @@ function GeneratePortName() {
 
 function GeneratePortDependency() {
     param (
-        [string]$Library
+        [string]$Library = '',
+        [string]$PortName = '',
+        [string]$ForLibrary = ''
     )
-    $portName = GeneratePortName $Library
-    if ($portData.Contains($portName) -and $portData[$portName].Contains('supports')) {
-        @{name = $portName; platform = $portData[$portName]['supports'] }
+    if ($PortName -eq '') { 
+        $PortName = GeneratePortName $Library
+    }
+    $forPortName = GeneratePortName $ForLibrary
+    if ($suppressPlatformForDependency.Contains($forPortName) -and $suppressPlatformForDependency[$forPortName].Contains($PortName)) {
+        $PortName
+    }
+    elseif ($portData.Contains($PortName) -and $portData[$PortName].Contains('supports')) {
+        @{name = $PortName; platform = $portData[$PortName]['supports'] }
+    }
+    elseif ($ForLibrary -eq '' -and $suppressPlatformForDependency.Contains($PortName)) {
+        # For 'boost'.
+        $platform = `
+            $suppressPlatformForDependency[$PortName] `
+            | ForEach-Object { (GeneratePortDependency -PortName $_).platform } `
+            | Group-Object -NoElement `
+            | Join-String -Property Name -Separator ' & '
+        if ($platform -ne '') {
+            @{name = $PortName; platform = $platform }
+        }
+        else {
+            $PortName
+        }
     }
     else {
-        $portName
+        $PortName
     }
 }
 
@@ -574,7 +606,7 @@ foreach ($library in $libraries) {
             $deps = $deps | Select-Object -Unique
         }
 
-        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
+        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library})
 
         if ($library -ne 'cmake') {
           $deps += @("boost-cmake")
