@@ -113,7 +113,8 @@
       "license": null,
       "dependencies": [
         "stb"
-      ]
+      ],
+      "supports": "!uwp"
     },
     "vulkan-binding": {
       "description": "Make available Vulkan binding",
