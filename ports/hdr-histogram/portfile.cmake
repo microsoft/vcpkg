@@ -5,11 +5,28 @@ vcpkg_from_github(
     SHA512 2ede4b8412c4f0070d555515498e163397de5edebe7560eaea13adcb95a52b7fea99686aed06bbca0c6e8afdf65715483c3889d750f6b5b727bcf43c4fbe18d4
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        log HDR_LOG_REQUIRED
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_STATIC:BOOL=OFF")
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_INSTALL_STATIC:BOOL=OFF")
+else()
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_SHARED:BOOL=OFF")
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_INSTALL_SHARED:BOOL=OFF")
+endif()
+
+# Do not build tests and examples
+list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_PROGRAMS:BOOL=OFF")
+
+message(STATUS "Using the following features: ${FEATURE_OPTIONS}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # Do not build tests and examples
-        -DHDR_HISTOGRAM_BUILD_PROGRAMS="OFF"
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

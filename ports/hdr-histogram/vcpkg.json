@@ -12,7 +12,14 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
-  ]
+    }
+  ],
+  "features": {
+    "log": {
+      "description": "Logging support for HdrHistogram",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }
