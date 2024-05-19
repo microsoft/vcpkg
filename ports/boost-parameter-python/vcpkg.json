@@ -6,7 +6,6 @@
   "description": "Boost parameter_python module",
   "homepage": "https://www.boost.org/libs/parameter_python",
   "license": "BSL-1.0",
-  "supports": "!emscripten",
   "dependencies": [
     {
       "name": "boost-cmake",

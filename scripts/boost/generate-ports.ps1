@@ -127,7 +127,6 @@ $portData = @{
             }
         }
     };
-    "boost-parameter-python" = @{ "supports" = "!emscripten" };
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
         "default-features" = @("python3");
