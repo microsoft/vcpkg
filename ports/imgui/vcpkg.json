@@ -110,11 +110,11 @@
     },
     "test-engine": {
       "description": "Build test engine",
+      "supports": "!uwp",
       "license": null,
       "dependencies": [
         "stb"
-      ],
-      "supports": "!uwp"
+      ]
     },
     "vulkan-binding": {
       "description": "Make available Vulkan binding",
