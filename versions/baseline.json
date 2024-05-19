@@ -958,7 +958,7 @@
     },
     "boost-interprocess": {
       "baseline": "1.85.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-interval": {
       "baseline": "1.85.0",
