@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-ASSERT-not-found.patch
         fmt.patch
         syntax.patch
+        remove-bitsery.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -57,6 +58,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_bitsery=TRUE
         -DINSTALL_TARGETS=shogun-static
         ${extra_opts}
         -DCMAKE_CXX_STANDARD=14 # protobuf

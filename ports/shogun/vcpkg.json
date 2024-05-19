@@ -4,7 +4,6 @@
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
   "dependencies": [
-    "bitsery",
     "blas",
     "bzip2",
     "curl",

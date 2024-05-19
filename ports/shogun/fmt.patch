@@ -64,6 +64,32 @@ index 336e35b03..0ba7b2c0b 100644
  		msg.push_back('\0');
  		env()->io()->message(io::MSG_ERROR, loc, msg.data());
  		throw ExceptionType(msg.data());
+diff --git a/src/shogun/io/serialization/JsonDeserializer.cpp b/src/shogun/io/serialization/JsonDeserializer.cpp
+index 24fd30edd..7667e34d3 100644
+--- a/src/shogun/io/serialization/JsonDeserializer.cpp
++++ b/src/shogun/io/serialization/JsonDeserializer.cpp
+@@ -49,7 +49,7 @@ public:
+ 	void on(std::vector<bool>::reference* v) override
+ 	{
+ 		*v = next_element<bool>(&ValueType::GetBool);
+-		SG_DEBUG("read bool with value {}", *v);
++		SG_DEBUG("read bool with value {}", (bool)*v);
+ 	}
+ 	void on(char* v) override
+ 	{
+diff --git a/src/shogun/io/serialization/JsonSerializer.cpp b/src/shogun/io/serialization/JsonSerializer.cpp
+index 22c99ec5c..530a14525 100644
+--- a/src/shogun/io/serialization/JsonSerializer.cpp
++++ b/src/shogun/io/serialization/JsonSerializer.cpp
+@@ -62,7 +62,7 @@ public:
+ 	}
+ 	void on(std::vector<bool>::reference* v) override
+ 	{
+-		SG_DEBUG("writing bool with value {}", *v);
++		SG_DEBUG("writing bool with value {}", (bool)*v);
+ 		m_json_writer.Bool(*v);
+ 		close_container();
+ 	}
 diff --git a/src/shogun/kernel/CustomKernel.cpp b/src/shogun/kernel/CustomKernel.cpp
 index 06a7e7abd..78be0ef6f 100644
 --- a/src/shogun/kernel/CustomKernel.cpp
@@ -129,6 +155,28 @@ index c0c342b82..87629b5cb 100644
  
  
  
+diff --git a/src/shogun/structure/BeliefPropagation.cpp b/src/shogun/structure/BeliefPropagation.cpp
+index e54228917..96b90c458 100644
+--- a/src/shogun/structure/BeliefPropagation.cpp
++++ b/src/shogun/structure/BeliefPropagation.cpp
+@@ -248,7 +248,7 @@ void TreeMaxProduct::bottom_up_pass()
+ 	for (uint32_t mi = 0; mi < m_msg_order.size(); ++mi)
+ 	{
+ 		SG_DEBUG("mi = {}, mtype: {} {} -> {}", mi,
+-			m_msg_order[mi]->mtype, m_msg_order[mi]->child, m_msg_order[mi]->parent);
++			(int)m_msg_order[mi]->mtype, m_msg_order[mi]->child, m_msg_order[mi]->parent);
+ 
+ 		if (m_msg_order[mi]->mtype == VAR_TO_FAC) // var -> factor
+ 		{
+@@ -392,7 +392,7 @@ void TreeMaxProduct::top_down_pass()
+ 	for (int32_t mi = (int32_t)(m_msg_order.size()-1); mi >= 0; --mi)
+ 	{
+ 		SG_DEBUG("mi = {}, mtype: {} {} <- {}", mi,
+-			m_msg_order[mi]->mtype, m_msg_order[mi]->child, m_msg_order[mi]->parent);
++			(int)m_msg_order[mi]->mtype, m_msg_order[mi]->child, m_msg_order[mi]->parent);
+ 
+ 		if (m_msg_order[mi]->mtype == FAC_TO_VAR) // factor <- var
+ 		{
 diff --git a/src/shogun/structure/CCSOSVM.cpp b/src/shogun/structure/CCSOSVM.cpp
 index 8dd920ad8..8267a402c 100644
 --- a/src/shogun/structure/CCSOSVM.cpp
