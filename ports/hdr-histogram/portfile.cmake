@@ -6,10 +6,11 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        log HDR_LOG_REQUIRED
-)
+if("log" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DHDR_LOG_REQUIRED=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DHDR_LOG_REQUIRED=DISABLED")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_STATIC:BOOL=OFF")
@@ -44,3 +45,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/COPYING.txt")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# hdr_histogram needs zlib only for 'log' option, but cmake-config.in contains a hardcoded dependecy on zlib
+if("log" IN_LIST FEATURES)
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hdr_histogram/hdr_histogram-config.cmake" "find_package(ZLIB)" "")
+endif()
