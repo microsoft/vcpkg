@@ -5,10 +5,9 @@
       "version": "2.4.0",
       "port-version": 0
     },
-    {
-      "git-tree": "b1b22cb051a97e7e7594ff3b3e3d637a8251d34b",
-      "version": "2.3.0",
-      "port-version": 1
+      "git-tree": "35a98b8fdd34b26ecfcb2a8d79f4eb288c2a800b",
+      "version": "2.3.2",
+      "port-version": 0
     },
     {
       "git-tree": "0536c50812252994282f92dc60c6be989da16ed3",
