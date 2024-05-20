@@ -1,4 +1,4 @@
-set(UVATLAS_TAG dec2023)
+set(UVATLAS_TAG feb2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,9 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF ${UVATLAS_TAG}
-    SHA512 44caebdb6c4c2fc42c8dbbe4acbaf7046996dfcd08e36d622c50a024c1ea3968e1174bd4bf35356068d163c76ac88b697bebb4904dcd2c2bdb6e3e2daf9781d3
+    SHA512 893626920207e0d6707bdb579cb70f74e1abc8e31f00bfedb8fccb4f4034862068ba6174cc0824e4fb1d463c6c5bbcc9edbbdbfde654bc1fff7e075df2a2838d
     HEAD_REF main
-    PATCHES openexr.patch
 )
 
 vcpkg_check_features(
@@ -19,15 +18,13 @@ vcpkg_check_features(
         tools BUILD_TOOLS
 )
 
-set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
-
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -44,7 +41,7 @@ if("tools" IN_LIST FEATURES)
       UVATLASTOOL_EXE
       URLS "https://github.com/Microsoft/UVAtlas/releases/download/${UVATLAS_TAG}/uvatlastool.exe"
       FILENAME "uvatlastool-${UVATLAS_TAG}.exe"
-      SHA512 d8c76c4745e120f45e99330be09498e53d013d64342c7df836a9d3bc6746cfc1d0d351b9d7d8ae76c24206f3032d98a4402a04b8a6450d2ced68594675f9be08
+      SHA512 14b606c57d0a1eeee573b5e484505d950534e6ab2d15693f5672fd52198de3b4986bddc48ee0957ee1936c7493c912212262c9c9ecdb91426ec74cd4f06d4d47
     )
 
     file(INSTALL
@@ -57,7 +54,7 @@ if("tools" IN_LIST FEATURES)
 
     vcpkg_copy_tools(
           TOOL_NAMES uvatlastool
-          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin"
       )
 
   endif()

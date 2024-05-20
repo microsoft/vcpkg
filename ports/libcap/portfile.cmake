@@ -1,7 +1,8 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-3c7dda330bd9a154bb5b878d31fd591e4951fe17.tar.gz
-    FILENAME libpcap-${VERSION}.tar.gz
-    SHA512 0732c9f07be38c2bb06409f1f31d7ed5ad31b38ae380650b334074856f89b885deabb9603e21a989e81b530050c068bbbf60157adbf3ca3893e4bca7d61f63d2
+    URLS "https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${VERSION}.tar.xz"
+    FILENAME "libcap-${VERSION}.tar.xz"
+    SHA512 647c307dc451517da9d089495ab959b4a6fbbe41c79f4e1e9bb663569dad630ead0c2e413dfb393319e3ea14dc9848c81b392107fe3382ce1813d278c3394a7f
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

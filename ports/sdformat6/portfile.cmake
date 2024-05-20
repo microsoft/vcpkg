@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Restore original path
-set(ENV{PATH} ${_path})
+set(ENV{PATH} "${_path}")
 
 # Move location of sdformat.dll from lib to bin
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sdformat.dll")

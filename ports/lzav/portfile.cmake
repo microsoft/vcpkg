@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO avaneev/lzav
     REF ${VERSION}
-    SHA512 09663ab9a9dcdedea0656c7ac1fbb062af2e7ce6b0e6cfb978dde376efaded22a97aadead9083212fdaea60d78021d870767f642de305209ebd0e445b412cef7
+    SHA512 2e5c852dbace404816efc136b99a79f7e453347b0b641fa7f35da54d089f376f779fe9801265ce642c2d0dc4e5b222aa21f2a53277a4c5c78824f000ece25ed6
     HEAD_REF master
 )
 

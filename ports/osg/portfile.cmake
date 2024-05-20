@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-sdl.patch
         fix-nvtt-squish.patch
         plugin-pdb-install.patch
-        use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
         openexr3.patch
         unofficial-export.patch
@@ -66,9 +65,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
+        rest-http-device CMAKE_REQUIRE_FIND_PACKAGE_Boost
         sdl1        BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES
         sdl1        CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
+        rest-http-device CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:

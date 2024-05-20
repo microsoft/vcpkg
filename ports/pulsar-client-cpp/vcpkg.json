@@ -1,7 +1,7 @@
 {
   "name": "pulsar-client-cpp",
   "version": "3.4.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The Apache Pulsar C++ library",
   "homepage": "https://github.com/apache/pulsar-client-cpp",
   "license": "Apache-2.0",
@@ -13,6 +13,7 @@
     "boost-asio",
     "boost-circular-buffer",
     "boost-date-time",
+    "boost-format",
     "boost-predef",
     "boost-property-tree",
     "boost-random",

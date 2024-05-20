@@ -7,40 +7,67 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-runtime-install.patch
+        001-downgrade-find-package-tbb-2020.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} static EMBREE_STATIC_RUNTIME)
 
-if (NOT VCPKG_TARGET_IS_OSX)
-    if ("avx512" IN_LIST FEATURES)
-        message(FATAL_ERROR "Microsoft Visual C++ Compiler does not support feature avx512 officially.")
-    endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        backface-culling      EMBREE_BACKFACE_CULLING 
+        compact-polys         EMBREE_COMPACT_POLYS   
+        filter-function       EMBREE_FILTER_FUNCTION  
+        ray-mask              EMBREE_RAY_MASK 
+        ray-packets           EMBREE_RAY_PACKETS 
 
-    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        FEATURES
-            avx     EMBREE_ISA_AVX
-            avx2    EMBREE_ISA_AVX2
-            avx512  EMBREE_ISA_AVX512
-            sse2    EMBREE_ISA_SSE2
-            sse42   EMBREE_ISA_SSE42
+        geometry-triangle     EMBREE_GEOMETRY_TRIANGLE
+        geometry-quad         EMBREE_GEOMETRY_QUAD
+        geometry-curve        EMBREE_GEOMETRY_CURVE
+        geometry-subdivision  EMBREE_GEOMETRY_SUBDIVISION
+        geometry-user         EMBREE_GEOMETRY_USER
+        geometry-instance     EMBREE_GEOMETRY_INSTANCE
+        geometry-grid         EMBREE_GEOMETRY_GRID
+        geometry-point        EMBREE_GEOMETRY_POINT
+)
+
+# Automatically select best ISA based on platform or VCPKG_CMAKE_CONFIGURE_OPTIONS.
+vcpkg_list(SET EXTRA_OPTIONS)
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    # Disable incorrect ISA set for Emscripten and enable NEON which is supported and should provide decent performance.
+    # cf. [Using SIMD with WebAssembly](https://emscripten.org/docs/porting/simd.html#using-simd-with-webassembly)
+    vcpkg_list(APPEND EXTRA_OPTIONS
+        -DEMBREE_MAX_ISA:STRING=NONE
+
+        -DEMBREE_ISA_AVX:BOOL=OFF
+        -DEMBREE_ISA_AVX2:BOOL=OFF
+        -DEMBREE_ISA_AVX512:BOOL=OFF
+        -DEMBREE_ISA_SSE2:BOOL=OFF
+        -DEMBREE_ISA_SSE42:BOOL=OFF
+        -DEMBREE_ISA_NEON:BOOL=ON
     )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(LENGTH FEATURES FEATURE_COUNT)
-    if (FEATURE_COUNT GREATER 2)
-        message(WARNING [[
-Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.
-Please install embree3 with only one feature using command "./vcpkg install embree3[core,FEATURE_NAME]"
-Only set feature avx automaticlly.
-    ]])
-        set(FEATURE_OPTIONS
-            -DEMBREE_ISA_AVX=ON
-            -DEMBREE_ISA_AVX2=OFF
-            -DEMBREE_ISA_AVX512=OFF
-            -DEMBREE_ISA_SSE2=OFF
-            -DEMBREE_ISA_SSE42=OFF
-        )
-    endif()
+elseif(VCPKG_TARGET_IS_OSX AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+    # The best ISA for Apple arm64 is unique and unambiguous.
+    vcpkg_list(APPEND EXTRA_OPTIONS
+        -DEMBREE_MAX_ISA:STRING=NONE
+    )
+elseif(VCPKG_TARGET_IS_OSX AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") AND (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+    # AppleClang >= 9.0 does not support selecting multiple ISAs.
+    # Let Embree select the best and unique one.
+    vcpkg_list(APPEND EXTRA_OPTIONS
+        -DEMBREE_MAX_ISA:STRING=DEFAULT
+    )
+else()
+    # Let Embree select the best ISA set for the targeted platform.
+    vcpkg_list(APPEND EXTRA_OPTIONS
+        -DEMBREE_MAX_ISA:STRING=NONE
+    )
+endif()
+
+if("tasking-tbb" IN_LIST FEATURES)
+    set(EMBREE_TASKING_SYSTEM "TBB")
+else()
+    set(EMBREE_TASKING_SYSTEM "INTERNAL")
 endif()
 
 vcpkg_replace_string("${SOURCE_PATH}/common/cmake/installTBB.cmake" "IF (EMBREE_STATIC_LIB)" "IF (0)")
@@ -48,12 +75,15 @@ vcpkg_replace_string("${SOURCE_PATH}/common/cmake/installTBB.cmake" "IF (EMBREE_
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
+        -DEMBREE_TASKING_SYSTEM:STRING=${EMBREE_TASKING_SYSTEM}
         -DEMBREE_INSTALL_DEPENDENCIES=OFF
+    MAYBE_UNUSED_VARIABLES
+        EMBREE_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install()
@@ -85,4 +115,4 @@ endif()
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

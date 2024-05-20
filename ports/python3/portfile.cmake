@@ -73,7 +73,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 63c1cc817844584c9ea880be0277ebcc18182c5050f59ebbb8dd42c971979bb2cee0f09af6a1e62a6c8c23143dfa6ff21fc1aba25ef50a425fdea46ff3e35896
+    SHA512 c2ebe72ce53dd2d59750a7b0bdaf15ebb7ecb6f67d2913a457bf5d32bd0f640815f9496f2fa3ebeac0722264d000735d90d3ffaeac2de1f066b7aee994bf9b24
     HEAD_REF master
     PATCHES ${PATCHES}
 )
