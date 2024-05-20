@@ -49,9 +49,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/COPYING.txt")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-# hdr_histogram needs zlib only for 'log' option, but cmake-config.in contains a hardcoded dependecy on zlib
-if("log" IN_LIST FEATURES)
-else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hdr_histogram/hdr_histogram-config.cmake" "find_package(ZLIB)" "")
-endif()
