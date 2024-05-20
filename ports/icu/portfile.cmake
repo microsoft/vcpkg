@@ -21,7 +21,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 e6c7876c0f3d756f3a6969cad9a8909e535eeaac352f3a721338b9cbd56864bf7414469d29ec843462997815d2ca9d0dab06d38c37cdd4d8feb28ad04d8781b0
+    SHA512 70ea842f0d5f1f6c6b65696ac71d96848c4873f4d794bebc40fd87af2ad4ef064c61a786bf7bc430ce4713ec6deabb8cc1a8cc0212eab148cee2d498a3683e45
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -61,6 +61,10 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
+    if(NOT MINGW)
+        string(APPEND VCPKG_C_FLAGS "/std:c11")
+        string(APPEND VCPKG_CXX_FLAGS "/std:c++17")
+    endif()
 endif()
 
 if("tools" IN_LIST FEATURES)
