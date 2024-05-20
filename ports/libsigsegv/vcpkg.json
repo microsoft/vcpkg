@@ -3,5 +3,5 @@
   "version": "2.14.0",
   "description": "GNU libsigsegv is a library for handling page faults in user mode.",
   "homepage": "https://www.gnu.org/software/libsigsegv/",
-  "supports": "!uwp"
+  "supports": "!uwp & !windows"
 }
