@@ -1,0 +1,142 @@
+Index: serf.sln
+===================================================================
+--- serf.sln	(nonexistent)
++++ serf.sln	(working copy)
+@@ -0,0 +1,31 @@
++﻿
++Microsoft Visual Studio Solution File, Format Version 12.00
++# Visual Studio Version 17
++VisualStudioVersion = 17.9.34714.143
++MinimumVisualStudioVersion = 10.0.40219.1
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "serf", "serf.vcxproj", "{1E26C6DB-2B29-447B-A1FF-65F6256825EF}"
++EndProject
++Global
++	GlobalSection(SolutionConfigurationPlatforms) = preSolution
++		Debug|x64 = Debug|x64
++		Debug|x86 = Debug|x86
++		Release|x64 = Release|x64
++		Release|x86 = Release|x86
++	EndGlobalSection
++	GlobalSection(ProjectConfigurationPlatforms) = postSolution
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Debug|x64.ActiveCfg = Debug|x64
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Debug|x64.Build.0 = Debug|x64
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Debug|x86.ActiveCfg = Debug|Win32
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Debug|x86.Build.0 = Debug|Win32
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Release|x64.ActiveCfg = Release|x64
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Release|x64.Build.0 = Release|x64
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Release|x86.ActiveCfg = Release|Win32
++		{1E26C6DB-2B29-447B-A1FF-65F6256825EF}.Release|x86.Build.0 = Release|Win32
++	EndGlobalSection
++	GlobalSection(SolutionProperties) = preSolution
++		HideSolutionNode = FALSE
++	EndGlobalSection
++	GlobalSection(ExtensibilityGlobals) = postSolution
++		SolutionGuid = {D635787C-6965-41AA-AA16-C5688021058F}
++	EndGlobalSection
++EndGlobal
+Index: serf.vcxproj
+===================================================================
+--- serf.vcxproj	(nonexistent)
++++ serf.vcxproj	(working copy)
+@@ -0,0 +1,100 @@
++<?xml version="1.0" encoding="utf-8"?>
++<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemGroup Label="ProjectConfigurations">
++    <ProjectConfiguration Include="Debug|Win32">
++      <Configuration>Debug</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|Win32">
++      <Configuration>Release</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|x64">
++      <Configuration>Debug</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|x64">
++      <Configuration>Release</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
++  </ItemGroup>
++  <PropertyGroup Label="Globals">
++    <Keyword>Win32Proj</Keyword>
++    <ProjectGuid>{1e26c6db-2b29-447b-a1ff-65f6256825ef}</ProjectGuid>
++    <RootNamespace>serf</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
++  <PropertyGroup Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++  </PropertyGroup>
++  <PropertyGroup>
++    <PlatformToolset>v143</PlatformToolset>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
++  <PropertyGroup Label="UserMacros" />
++  <PropertyGroup>
++    <OutDir>out\$(Configuration)-$(PlatformTarget)</OutDir>
++    <TargetName>serf-1</TargetName>
++  </PropertyGroup>
++  <ItemDefinitionGroup>
++    <ClCompile>
++      <AdditionalIncludeDirectories>$(CURRENT_INSTALLED_DIR)\include;.\</AdditionalIncludeDirectories>
++      <RuntimeLibrary Condition="'$(Configuration)-$(VCPKG_CRT_LINKAGE)'=='Debug-static'">MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary Condition="'$(Configuration)-$(VCPKG_CRT_LINKAGE)'=='Debug-dynamic'">MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary Condition="'$(Configuration)-$(VCPKG_CRT_LINKAGE)'=='Release-static'">MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary Condition="'$(Configuration)-$(VCPKG_CRT_LINKAGE)'=='Release-dynamic'">MultiThreadedDLL</RuntimeLibrary>
++      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_WINDLL;%(PreprocessorDefinitions);SERF_HAVE_SSPI</PreprocessorDefinitions>
++      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_WINDLL;%(PreprocessorDefinitions);SERF_HAVE_SSPI</PreprocessorDefinitions>
++      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDLL;%(PreprocessorDefinitions);SERF_HAVE_SSPI</PreprocessorDefinitions>
++      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDLL;%(PreprocessorDefinitions);SERF_HAVE_SSPI</PreprocessorDefinitions>
++    </ClCompile>
++    <Link>
++      <AdditionalLibraryDirectories>$(CURRENT_INSTALLED_DIR)\lib</AdditionalLibraryDirectories>
++      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(CoreLibraryDependencies);%(AdditionalDependencies);libapr-1.lib;libaprutil-1.lib;secur32.lib;ws2_32.lib;libssl.lib;zlib.lib</AdditionalDependencies>
++      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(CoreLibraryDependencies);%(AdditionalDependencies);libapr-1.lib;libaprutil-1.lib;secur32.lib;ws2_32.lib;libssl.lib;zlib.lib</AdditionalDependencies>
++      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CoreLibraryDependencies);%(AdditionalDependencies);libapr-1.lib;libaprutil-1.lib;secur32.lib;ws2_32.lib;libssl.lib;zlib.lib</AdditionalDependencies>
++      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CoreLibraryDependencies);%(AdditionalDependencies);libapr-1.lib;libaprutil-1.lib;secur32.lib;ws2_32.lib;libssl.lib;zlib.lib</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemGroup>
++    <ClCompile Include="auth\auth.c" />
++    <ClCompile Include="auth\auth_basic.c" />
++    <ClCompile Include="auth\auth_digest.c" />
++    <ClCompile Include="auth\auth_spnego.c" />
++    <ClCompile Include="auth\auth_spnego_gss.c" />
++    <ClCompile Include="auth\auth_spnego_sspi.c" />
++    <ClCompile Include="buckets\aggregate_buckets.c" />
++    <ClCompile Include="buckets\allocator.c" />
++    <ClCompile Include="buckets\barrier_buckets.c" />
++    <ClCompile Include="buckets\buckets.c" />
++    <ClCompile Include="buckets\bwtp_buckets.c" />
++    <ClCompile Include="buckets\chunk_buckets.c" />
++    <ClCompile Include="buckets\dechunk_buckets.c" />
++    <ClCompile Include="buckets\deflate_buckets.c" />
++    <ClCompile Include="buckets\file_buckets.c" />
++    <ClCompile Include="buckets\headers_buckets.c" />
++    <ClCompile Include="buckets\iovec_buckets.c" />
++    <ClCompile Include="buckets\limit_buckets.c" />
++    <ClCompile Include="buckets\mmap_buckets.c" />
++    <ClCompile Include="buckets\request_buckets.c" />
++    <ClCompile Include="buckets\response_body_buckets.c" />
++    <ClCompile Include="buckets\response_buckets.c" />
++    <ClCompile Include="buckets\simple_buckets.c" />
++    <ClCompile Include="buckets\socket_buckets.c" />
++    <ClCompile Include="buckets\ssl_buckets.c" />
++    <ClCompile Include="context.c" />
++    <ClCompile Include="incoming.c" />
++    <ClCompile Include="outgoing.c" />
++    <ClCompile Include="ssltunnel.c" />
++  </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="auth\auth.h" />
++    <ClInclude Include="auth\auth_spnego.h" />
++    <ClInclude Include="serf.h" />
++    <ClInclude Include="serf_bucket_types.h" />
++    <ClInclude Include="serf_bucket_util.h" />
++    <ClInclude Include="serf_private.h" />
++  </ItemGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
++</Project>
+\ No newline at end of file
