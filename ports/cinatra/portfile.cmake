@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-
 # Copy the entire include directory
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 
