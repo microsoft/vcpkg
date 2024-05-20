@@ -18,15 +18,17 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Copy the entire include directory
-file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
+# Copy the entire include directory to ${CURRENT_PACKAGES_DIR}/include/cinatra
+file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra)
 
 # Copy executables to the tools directory
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe")
-    file(COPY "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe"
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe")
+    file(COPY "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe"
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+
 
