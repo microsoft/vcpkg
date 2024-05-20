@@ -10,6 +10,7 @@ set(patches
   adjust-args.patch
   remove-freebsd-pcfile-specialization.patch
   meson-1.4-llvm-18.diff
+  cmake-no-sorted.diff
   cmake-generator-expressions.patch
   dependencies-misc.diff
   winlibs.diff

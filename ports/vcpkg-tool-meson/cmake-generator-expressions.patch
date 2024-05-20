@@ -34,20 +34,8 @@ index 750e4c2..f2e47c0 100644
      }
  
      # Recursively evaluate generator expressions
-diff --git a/mesonbuild/cmake/traceparser.py b/mesonbuild/cmake/traceparser.py
-index dd0dfb5..408d2e4 100644
---- a/mesonbuild/cmake/traceparser.py
-+++ b/mesonbuild/cmake/traceparser.py
-@@ -16,6 +16,7 @@
- # or an interpreter-based tool.
- from __future__ import annotations
- 
-+from .common import cmake_is_debug
- from .common import CMakeException
- from .generator import parse_generator_expressions
- from .. import mlog
 diff --git a/mesonbuild/cmake/tracetargets.py b/mesonbuild/cmake/tracetargets.py
-index 20c7462..b4ba9f0 100644
+index 1c31f91..b4ba9f0 100644
 --- a/mesonbuild/cmake/tracetargets.py
 +++ b/mesonbuild/cmake/tracetargets.py
 @@ -45,6 +45,10 @@ def resolve_cmake_trace_targets(target_name: str,
@@ -80,7 +68,7 @@ index 20c7462..b4ba9f0 100644
              res.public_compile_opts += [x for x in tgt.properties['INTERFACE_COMPILE_OPTIONS'] if x]
  
          if 'IMPORTED_CONFIGURATIONS' in tgt.properties:
-@@ -106,18 +113,15 @@ def resolve_cmake_trace_targets(target_name: str,
+@@ -106,13 +113,15 @@ def resolve_cmake_trace_targets(target_name: str,
          if 'LINK_LIBRARIES' in tgt.properties:
              targets += [x for x in tgt.properties['LINK_LIBRARIES'] if x]
          if 'INTERFACE_LINK_LIBRARIES' in tgt.properties:
@@ -96,9 +84,4 @@ index 20c7462..b4ba9f0 100644
 +        curr = curr_bak
          processed_targets += [curr]
  
--    res.include_directories = sorted(set(res.include_directories))
--    res.link_flags = sorted(set(res.link_flags))
--    res.public_compile_opts = sorted(set(res.public_compile_opts))
--    res.libraries = sorted(set(res.libraries))
--
      return res
