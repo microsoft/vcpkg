@@ -25,6 +25,7 @@ file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe")
     file(COPY "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe"
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cinatra_press_tool.exe")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
