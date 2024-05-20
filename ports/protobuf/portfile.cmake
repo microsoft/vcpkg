@@ -121,12 +121,28 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 vcpkg_copy_pdbs()
-set(packages protobuf protobuf-lite)
-foreach(_package IN LISTS packages)
-    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc")
-    if(EXISTS "${_file}")
-        vcpkg_replace_string(${_file} "-l${_package}" "-l${_package}d")
+
+function(replace_package_string package)
+    set(debug_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${package}.pc")
+    set(release_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${package}.pc")
+
+    if(EXISTS "${release_file}")
+        vcpkg_replace_string(${release_file} "-l${package}" "-llib${package}")
     endif()
+
+    if(EXISTS "${debug_file}")
+        vcpkg_replace_string(${debug_file} "-l${package}" "-llib${package}d")
+    endif()
+endfunction()
+
+set(packages protobuf protobuf-lite)
+foreach(package IN LISTS packages)
+    replace_package_string(${package})
+endforeach()
+
+set(packages protobuf protobuf-lite)
+foreach(package IN LISTS packages)
+    replace_package_string(${package})
 endforeach()
 
 vcpkg_fixup_pkgconfig()
