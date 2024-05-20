@@ -353,8 +353,8 @@
       "port-version": 1
     },
     "avcpp": {
-      "baseline": "2.3.0",
-      "port-version": 1
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "avisynthplus": {
       "baseline": "3.7.3",
