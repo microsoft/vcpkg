@@ -22,8 +22,6 @@ endif()
 # Do not build tests and examples
 list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_PROGRAMS:BOOL=OFF")
 
-message(STATUS "Using the following features: ${FEATURE_OPTIONS}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
