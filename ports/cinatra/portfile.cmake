@@ -25,10 +25,12 @@ file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/cin
 vcpkg_copy_tools(
     TOOL_NAMES cinatra_press_tool
     SEARCH_DIRS "${CURRENT_PACKAGES_DIR}/include/cinatra"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra"
     AUTO_CLEAN
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
 
 
 
