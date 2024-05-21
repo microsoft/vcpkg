@@ -1,0 +1,14 @@
+diff --git a/include/libpsl.h.in b/include/libpsl.h.in
+--- a/include/libpsl.h.in
++++ b/include/libpsl.h.in
+@@ -44,8 +44,10 @@
+ #ifndef __has_declspec_attribute
+ #  define __has_declspec_attribute(x) 0
+ #endif
+ 
++#define PSL_STATIC 1
++
+ #ifndef PSL_API
+ #if defined BUILDING_PSL && HAVE_VISIBILITY
+ #  define PSL_API __attribute__ ((__visibility__("default")))
+ #elif defined BUILDING_PSL && (defined _MSC_VER || __has_declspec_attribute(dllexport)) && !defined PSL_STATIC

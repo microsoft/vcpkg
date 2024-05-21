@@ -1,9 +1,14 @@
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(WINDOWS_STATIC_PATCH windows_statich.patch)
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rockdaboot/libpsl
     REF "${VERSION}"
     SHA512 "d8e224b2ce5d9a6ac78700eb8975d09aef4e5af7db29539e5e339c5cd100f1272371fe45757ab5383ddbcd569bdf9d697a78932ea9fdf43ff48d3cea02f644cd"
     HEAD_REF master
+    PATCHES
+        ${WINDOWS_STATIC_PATCH}
 )
 
 vcpkg_download_distfile(
