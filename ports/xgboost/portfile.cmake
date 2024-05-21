@@ -21,13 +21,6 @@ file(RENAME "${DMLC_CORE_SRC}" "${SOURCE_PATH}/dmlc-core")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-# Configure and build dmlc-core first
-# vcpkg_cmake_configure(
-#     SOURCE_PATH "${SOURCE_PATH}/dmlc-core"
-# )
-
-# vcpkg_cmake_install()
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 )
