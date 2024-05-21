@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 52cab0e1ee1ebd51097d28b2cd9a390110ce3f45e92d262fb301cfebdea369ea8b9290c44c26d6b6ba568b0dab1e4871ea819f8a440efeefb38c99f2776aac27
+    SHA512 f0196fadab18164a1b1313717329063167c003279d0898ecedd18ca562c4344a4a5be302bd951fa5c95582078fe5e88a1a8debbc66db8c8dfafedfdf7a019522
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -55,6 +55,8 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 function (google_cloud_cpp_cmake_config_fixup library)
+    string(REPLACE "experimental-" "" library "${library}")
+    string(REPLACE "-" "_" library "${library}")
     set(config_path "lib/cmake/google_cloud_cpp_${library}")
     # If the library exists and is installed, tell vcpkg about it.
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
