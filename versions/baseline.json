@@ -9369,7 +9369,7 @@
       "port-version": 4
     },
     "wolfmqtt": {
-      "baseline": "1.16.0",
+      "baseline": "1.19.0",
       "port-version": 0
     },
     "wolfssl": {
