@@ -6,11 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(list_ref 0ed17ee161ed2ae551c78f3b399ac8f2724d2154)
+string(SUBSTRING "${list_ref}" 0 6 short_hash)
 vcpkg_download_distfile(
     PUBLIC_SUFFIX_LIST_DAT 
-    URLS https://raw.githubusercontent.com/publicsuffix/list/5db9b65997e3c9230ac4353b01994c2ae9667cb9/public_suffix_list.dat
-    FILENAME libpsl_public_suffix_list.dat
-    SHA512 08ae73cb028ce9d57ad5ce09afd76a5b379fa18e1370f6a1d094f4242ce66b0f4bf005b05e796c287ab8074aca7f30d023e430f64d3563fa93adbb2371bda220
+    URLS https://raw.githubusercontent.com/publicsuffix/list/${list_ref}/public_suffix_list.dat
+    FILENAME "libpsl-public_suffix_list-${short_hash}.dat"
+    SHA512 7969c40b0600baf2786af0e6503b4282d487b6603418c41f28c3b39e9cd9320ac66c0d2e8fbfa2b794e461f26843e3479d60ec24ac5c0990fe8f0c6bfaeee69d
 )
 file(COPY "${PUBLIC_SUFFIX_LIST_DAT}" DESTINATION "${SOURCE_PATH}/list")
 file(RENAME "${SOURCE_PATH}/list/libpsl_public_suffix_list.dat" "${SOURCE_PATH}/list/public_suffix_list.dat")
