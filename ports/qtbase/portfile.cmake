@@ -342,6 +342,8 @@ set(other_files qt-cmake
                 qt-configure-module
                 qt-internal-configure-tests
                 qt-cmake-create
+                qt-internal-configure-examples
+                qt-internal-configure-tests
                  )
 if(CMAKE_HOST_WIN32)
     set(script_suffix ".bat")
