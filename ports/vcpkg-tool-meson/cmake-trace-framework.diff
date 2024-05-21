@@ -1,0 +1,21 @@
+diff --git a/mesonbuild/cmake/tracetargets.py b/mesonbuild/cmake/tracetargets.py
+index b4ba9f0..93d0ec2 100644
+--- a/mesonbuild/cmake/tracetargets.py
++++ b/mesonbuild/cmake/tracetargets.py
+@@ -33,6 +33,7 @@ def resolve_cmake_trace_targets(target_name: str,
+ 
+     # recognise arguments we should pass directly to the linker
+     reg_is_lib = re.compile(r'^(-l[a-zA-Z0-9_]+|-l?pthread)$')
++    reg_is_framework = re.compile(r'^-framework ')
+     reg_is_maybe_bare_lib = re.compile(r'^[a-zA-Z0-9_]+$')
+ 
+     is_debug = cmake_is_debug(env)
+@@ -52,6 +53,8 @@ def resolve_cmake_trace_targets(target_name: str,
+         if curr not in trace.targets:
+             if reg_is_lib.match(curr):
+                 res.libraries += [curr]
++            elif reg_is_framework.match(curr):
++                res.libraries += ['-framework', curr.replace('-framework ','')]
+             elif Path(curr).is_absolute() and Path(curr).exists():
+                 res.libraries += [curr]
+             elif reg_is_maybe_bare_lib.match(curr) and clib_compiler:
