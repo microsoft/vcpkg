@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF v1.19.0
     SHA512 354ab619144bd29258e65bd06219dddb4c89d5709c3246d6968239ab29426fb3882f2d5acad866cc431f6164c5e41b7da3a24ab7923fabc27deafd2801b92580
     HEAD_REF master
-    PATCHES
-      cmake-patch.diff
     )
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
