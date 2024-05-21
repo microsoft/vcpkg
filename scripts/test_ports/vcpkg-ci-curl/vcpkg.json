@@ -29,6 +29,13 @@
     {
       "name": "curl",
       "features": [
+        "psl"
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
         "ldap",
         "tool"
       ],
