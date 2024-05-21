@@ -1,6 +1,7 @@
 {
   "name": "qt",
-  "version": "6.7.0",
+  "version": "6.7.1",
+  "port-version": 1,
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,

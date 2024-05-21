@@ -1,6 +1,7 @@
 {
   "name": "qtactiveqt",
-  "version": "6.7.0",
+  "version": "6.7.1",
+  "port-version": 1,
   "description": "ActiveQt",
   "homepage": "https://www.qt.io/",
   "license": null,

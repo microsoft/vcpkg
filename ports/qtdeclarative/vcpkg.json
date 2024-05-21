@@ -1,6 +1,7 @@
 {
   "name": "qtdeclarative",
-  "version": "6.7.0",
+  "version": "6.7.1",
+  "port-version": 1,
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
   "license": null,

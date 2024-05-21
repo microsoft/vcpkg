@@ -1,6 +1,7 @@
 {
   "name": "qt3d",
-  "version": "6.7.0",
+  "version": "6.7.1",
+  "port-version": 1,
   "description": "Qt wrapper for existing OPC UA stacks",
   "homepage": "https://www.qt.io/",
   "license": null,
