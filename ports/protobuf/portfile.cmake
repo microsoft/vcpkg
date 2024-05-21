@@ -136,14 +136,11 @@ function(replace_package_string package)
 endfunction()
 
 set(packages protobuf protobuf-lite)
-foreach(package IN LISTS packages)
-    replace_package_string(${package})
-endforeach()
-
-set(packages protobuf protobuf-lite)
-foreach(package IN LISTS packages)
-    replace_package_string(${package})
-endforeach()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    foreach(package IN LISTS packages)
+        replace_package_string(${package})
+    endforeach() 
+endif()
 
 vcpkg_fixup_pkgconfig()
 
