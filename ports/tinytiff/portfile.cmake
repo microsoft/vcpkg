@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TinyTIFF)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TinyTIFF DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TinyTIFFXX)
 
 vcpkg_copy_pdbs()
