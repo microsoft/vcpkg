@@ -24,8 +24,8 @@ file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/cin
 # Copy executables to the tools directory using vcpkg_copy_tools
 vcpkg_copy_tools(
     TOOL_NAMES cinatra_press_tool
-    AUTO_CLEAN
     SEARCH_DIRS "${CURRENT_PACKAGES_DIR}/include/cinatra"
+    AUTO_CLEAN
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
