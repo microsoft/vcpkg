@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1d5710f..963ecd8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -333,7 +333,6 @@ if(NOT APPLE AND NOT EMSCRIPTEN AND NOT TARGET ZLIB::ZLIB)
+         set(_CMAKE_FIND_LIBRARY_SUFFIXES_orig ${CMAKE_FIND_LIBRARY_SUFFIXES})
+         set(CMAKE_FIND_LIBRARY_SUFFIXES .so)
+     endif()
+-    find_package(ZLIB REQUIRED)
+     if(ANDROID)
+         set(CMAKE_FIND_LIBRARY_SUFFIXES ${_CMAKE_FIND_LIBRARY_SUFFIXES_orig})
+     endif()
+diff --git a/src/realm/CMakeLists.txt b/src/realm/CMakeLists.txt
+index b5aebd5..f3e5ff6 100644
+--- a/src/realm/CMakeLists.txt
++++ b/src/realm/CMakeLists.txt
+@@ -392,6 +392,7 @@ if(REALM_HAVE_OPENSSL AND (UNIX OR WIN32))
+ endif()
+ 
+ # Use Zlib if the imported target is defined, otherise use -lz on Apple platforms
++find_package(ZLIB REQUIRED)
+ if(TARGET ZLIB::ZLIB)
+     target_link_libraries(Storage PUBLIC ZLIB::ZLIB)
+ elseif(APPLE)
