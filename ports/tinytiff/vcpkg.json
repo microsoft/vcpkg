@@ -3,6 +3,7 @@
   "version": "4.0.0.0",
   "description": "Lightweight TIFF reader/writer library",
   "homepage": "http://jkriege2.github.io/TinyTIFF/",
+  "license": "LGPL-3.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
