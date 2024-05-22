@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
         -DTinyTIFF_BUILD_TESTS=OFF
     PATCHES
         # without this patch, the MSVC compiler will crash during the build process 
-        "msvc-message-support.patch"
+        "msvc-support.patch"
 )
 
 vcpkg_cmake_install()

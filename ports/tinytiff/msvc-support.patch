@@ -1,0 +1,24 @@
+diff --git a/src/tinytiffreader.c b/src/tinytiffreader.c
+index 2cf2aa8..2bcedde 100644
+--- a/src/tinytiffreader.c
++++ b/src/tinytiffreader.c
+@@ -56,7 +56,6 @@
+ 
+ #ifdef TINYTIFF_USE_WINAPI_FOR_FILEIO
+ #  include <windows.h>
+-#  warning COMPILING TinyTIFFReader with WinAPI
+ #  define TinyTIFFReader_POSTYPE DWORD
+ #else
+ #  define TinyTIFFReader_POSTYPE fpos_t
+diff --git a/src/tinytiffwriter.c b/src/tinytiffwriter.c
+index 1b25379..3e83823 100644
+--- a/src/tinytiffwriter.c
++++ b/src/tinytiffwriter.c
+@@ -50,7 +50,6 @@
+ 
+ #ifdef TINYTIFF_USE_WINAPI_FOR_FILEIO
+ #  include <windows.h>
+-#  warning COMPILING TinyTIFFWriter with WinAPI
+ #  define TinyTIFFWriter_POSTYPE DWORD
+ #else
+ #  define TinyTIFFWriter_POSTYPE fpos_t
