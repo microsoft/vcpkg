@@ -79,7 +79,6 @@ find_dependency(ZLIB)
 find_dependency(CURL)]])
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/aws-cpp-sdk-core/aws-cpp-sdk-core-config.cmake" "find_dependency(aws-crt-cpp)" 
 [[find_dependency(aws-crt-cpp)
-include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
 find_dependency(CURL)]])
 
