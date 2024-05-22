@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
-    REF v5.6.4-stable
-    SHA512 12d9dd264e005f04854d71ded629b20b9563a42b04bfbfd2879c4e3b121902edf2ac4349de27498cddd75d4d9fd742e8f78b82cd319c240485f69b4828e2c80c
+    REF v5.7.0-stable
+    SHA512 52cc7bdda7e3cfbea7c60fad1e2b1565d7057607bbb66014ef03643a75e78777d10d53799fba314bab37e245b7e8a60e29c6f4177070ed44536a898e04b27b44
     HEAD_REF master
     PATCHES
     )

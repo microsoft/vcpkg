@@ -1,8 +1,9 @@
---- meson.build.orig	2022-03-19 03:40:07.000000000 +0900
-+++ meson.build	2022-03-29 21:32:41.000000000 +0900
-@@ -96,6 +96,13 @@
- endif
-
+diff --git a/meson.build b/meson.build
+index 9100152..7005f7e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -97,6 +97,13 @@ endif
+ 
  add_project_arguments('-D_GNU_SOURCE', language: 'c')
  
 +if host_machine.system() == 'windows'
@@ -12,6 +13,6 @@
 +  endif
 +endif
 +
- # Make sure source directory hasn't been configured with autotools
- fs = import('fs')
- if fs.exists('config.h') or fs.exists('src/cairo-features.h') or fs.exists('src/cairo-supported-features.h')
+ pkgmod = import('pkgconfig')
+ python3 = import('python').find_installation()
+ 

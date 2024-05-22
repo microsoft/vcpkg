@@ -1,9 +1,18 @@
 string(REPLACE "." "_" curl_version "curl-${VERSION}")
+
+# Fix for HTTP compression introduced in 8.7.1; should be fixed the following release
+vcpkg_download_distfile(
+    COMPRESSION_FIX
+    URLS https://github.com/curl/curl/commit/b30d694a027eb771c02a3db0dee0ca03ccab7377.patch?full_index=1
+    FILENAME curl-compression-fix-b30d694a027eb771c02a3db0dee0ca03ccab7377.patch
+    SHA512 2658826a7331adb86cd7cd692dac6c7bf79bbd9c76c11780f33b1143b6d04edfe64223356701343c31209261decffc883ddba061d5370d7872a81f2a18780c33
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 c8550fef49e2f1571f7392a351e10bbdb23821069db1e988094fe27fe0a881a265ba69a2cd34462e630563d153462a975ef70472ba39adaad1c5e5ab45cf7f4f
+    SHA512 38a1f7d7f5c83922cd4e0a858ac803d230d691c8f4df7e5086062c6991da740e626aa86675683282bc8555fc4cb962a08ba1a7ce817d78961d749d6d580fb9fa
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -14,7 +23,8 @@ vcpkg_from_github(
         mbedtls-ws2_32.patch
         export-components.patch
         dependencies.patch
-        cmake-config.patch # https://github.com/curl/curl/pull/11913
+        cmake-config.patch
+        "${COMPRESSION_FIX}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,16 +43,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
+        psl         CURL_USE_LIBPSL
+        gssapi      CURL_USE_GSSAPI
     INVERTED_FEATURES
+        ldap        CURL_DISABLE_LDAP
+        ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
-        winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
 set(OPTIONS "")
-if("idn2" IN_LIST FEATURES)
+if("idn2" IN_LIST FEATURES OR ("ldap" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS))
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
@@ -71,9 +83,8 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
-        -DENABLE_MANUAL=OFF
+        -DENABLE_CURL_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_LIBPSL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON

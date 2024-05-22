@@ -7,11 +7,17 @@ vcpkg_from_github(
         fix-runtime-destination.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl ENABLE_OPENSSL
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DTEST_APPS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO altseed/LLGI
-    REF 1b6b59b9f5bc9f81b4c2af2333d69f6e23670b3e
-    SHA512 c9011dee560897caf5ae53d8fa58869b774bd3bc7ce2e0cc4696ac034fc89a36adf3f5285e82cffe6430ca61f6509fd7fbadf5c77aef896c74e8d70e70ff4312
+    REF 8f8510e2dffa1d747ff6ebb0da341198e75291ec
+    SHA512 d521b47f293b90faed28f9648facdfae327c6122ea6391683a08e48558fdf62ce0d3977f78aef3bc276d77ab19fc40ab3cc4d27311dd5a292e0884635fe7c9d3
     HEAD_REF master
     PATCHES
         fix-cmake-use-vcpkg.patch

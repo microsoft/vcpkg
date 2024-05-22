@@ -23,10 +23,11 @@ vcpkg_from_github(
     PATCHES
         cmake-config.patch
         lapacke.patch
+        fix_prefix.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC")
+    set(ENV{FFLAGS} "$ENV{FFLAGS} -fPIC") # should come from toolchain
 endif()
 
 set(CBLAS OFF)
@@ -40,14 +41,6 @@ endif()
 set(USE_OPTIMIZED_BLAS OFF)
 if("noblas" IN_LIST FEATURES)
     set(USE_OPTIMIZED_BLAS ON)
-    set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openblas.pc")
-    if(EXISTS "${pcfile}")
-        file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
-    endif()
-    set(pcfile "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/openblas.pc")
-    if(EXISTS "${pcfile}")
-        file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
-    endif()
 endif()
 
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
@@ -69,6 +62,7 @@ vcpkg_cmake_configure(
         "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
+        "-DTEST_FORTRAN_COMPILER=OFF"
         ${FORTRAN_CMAKE}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
@@ -76,59 +70,66 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${VERSION} CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
     file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
+    file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
 endif()
 set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
     file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
+    file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
 endif()
+
 if(NOT USE_OPTIMIZED_BLAS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
     endif()
     set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
     endif()
 endif()
 if("cblas" IN_LIST FEATURES)
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
     endif()
     set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
-        set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-        file(WRITE "${pcfile}" "${_contents}")
+        file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
 
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack-reference.pc")
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack-reference.pc")
+endif()
+
+if(NOT "noblas" IN_LIST FEATURES)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas-reference.pc")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas-reference.pc")
+    endif()
+    if("cblas" IN_LIST FEATURES)
+      file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas-reference.pc")
+      if(NOT VCPKG_BUILD_TYPE)
+          file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas-reference.pc")
+      endif()
+    endif()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/lib/lapack.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/lapack.lib")
-    endif()
     if(NOT USE_OPTIMIZED_BLAS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libblas.lib")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/lib/blas.lib")
@@ -139,8 +140,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lapack")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lapack")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(BLA_STATIC ON)
+else()
+    set(BLA_STATIC OFF)
+endif()
+set(BLA_VENDOR Generic)
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/wrapper/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

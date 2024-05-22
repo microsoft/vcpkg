@@ -57,60 +57,6 @@ function Find-ResourceGroupName {
 
 <#
 .SYNOPSIS
-Returns whether there's a name collision for an image in the resource group.
-
-.DESCRIPTION
-Find-ImageNameCollision takes a list of images, and checks if $Test
-collides names with any of the image names.
-
-.PARAMETER Test
-The name to test.
-
-.PARAMETER Images
-The list of images.
-#>
-function Find-ImageNameCollision {
-  [CmdletBinding()]
-  Param([string]$Test, $Images)
-
-  foreach ($resource in $Images) {
-    if ($resource.Name -eq $Test) {
-      return $true
-    }
-  }
-
-  return $false
-}
-
-<#
-.SYNOPSIS
-Attempts to find a name that does not collide with any images in the resource group.
-
-.DESCRIPTION
-Find-ResourceGroupName takes a set of resources from Get-AzResourceGroup, and finds the
-first name in {$Prefix, $Prefix-1, $Prefix-2, ...} such that the name doesn't collide with
-any of the resources in the resource group.
-
-.PARAMETER Prefix
-The prefix of the final name; the returned name will be of the form "$Prefix(-[1-9][0-9]*)?"
-#>
-function Find-ImageName {
-  [CmdLetBinding()]
-  Param([string]$ResourceGroupName, [string]$Prefix)
-
-  $images = Get-AzImage -ResourceGroupName $ResourceGroupName
-  $result = $Prefix
-  $suffix = 0
-  while (Find-ImageNameCollision -Test $result -Images $images) {
-    $suffix++
-    $result = "$Prefix-$suffix"
-  }
-
-  return $result
-}
-
-<#
-.SYNOPSIS
 Generates a random password.
 
 .DESCRIPTION
@@ -233,6 +179,20 @@ function Create-LockedDownNetwork {
     [string]$Location
   )
 
+  $publicIp = New-AzPublicIpAddress `
+    -Name "$ResourceGroupName-ip" `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location `
+    -Sku 'Standard' `
+    -AllocationMethod 'Static'
+
+  $natGateway = New-AzNatGateway `
+    -Name "$ResourceGroupName-nat" `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location `
+    -Sku 'Standard' `
+    -PublicIpAddress $publicIp
+
   $allFirewallRules = @()
 
   $allFirewallRules += New-AzNetworkSecurityRuleConfig `
@@ -307,7 +267,8 @@ function Create-LockedDownNetwork {
     -Name $SubnetName `
     -AddressPrefix "10.0.0.0/16" `
     -NetworkSecurityGroup $NetworkSecurityGroup `
-    -ServiceEndpoint "Microsoft.Storage"
+    -ServiceEndpoint "Microsoft.Storage" `
+    -NatGateway $natGateway
 
   $VirtualNetworkName = $ResourceGroupName + 'Network'
   $VirtualNetwork = New-AzVirtualNetwork `
@@ -344,7 +305,6 @@ function Invoke-AzVMRunCommandWithRetries {
 }
 
 Export-ModuleMember -Function Find-ResourceGroupName
-Export-ModuleMember -Function Find-ImageName
 Export-ModuleMember -Function New-Password
 Export-ModuleMember -Function Wait-Shutdown
 Export-ModuleMember -Function Sanitize-Name

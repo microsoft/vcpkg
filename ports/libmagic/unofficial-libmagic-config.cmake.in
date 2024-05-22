@@ -1,8 +1,27 @@
 @PACKAGE_INIT@
 
-if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
-    include(CMakeFindDependencyMacro)
-    find_dependency(unofficial-tre)
+include(CMakeFindDependencyMacro)
+
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+    if(WIN32)
+        find_dependency(unofficial-tre)
+    endif()
+
+    if(@has_zlib@)
+        find_dependency(ZLIB)
+    endif()
+
+    if(@has_bzip2@)
+        find_dependency(BZip2)
+    endif()
+
+    if(@has_lzma@)
+        find_dependency(LibLZMA)
+    endif()
+
+    if(@has_zstd@)
+        find_dependency(zstd)
+    endif()
 endif()
 
 # Compute the installation prefix relative to this file.
@@ -23,9 +42,14 @@ set_target_properties(unofficial::libmagic::libmagic PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
 )
 
-if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     set_target_properties(unofficial::libmagic::libmagic PROPERTIES
-        INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:unofficial::tre::tre>"
+        INTERFACE_LINK_LIBRARIES
+            "\$<LINK_ONLY:$<$<BOOL:${WIN32}>:unofficial::tre::tre>>"
+            "\$<LINK_ONLY:$<@has_zlib@:ZLIB::ZLIB>>"
+            "\$<LINK_ONLY:$<@has_bzip2@:BZip2::BZip2>>"
+            "\$<LINK_ONLY:$<@has_lzma@:LibLZMA::LibLZMA>>"
+            "\$<LINK_ONLY:$<@has_zstd@:$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>>>"
     )
 endif()
 

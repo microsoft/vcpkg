@@ -4,9 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kistler-Group/sdbus-cpp
     REF "v${VERSION}"
-    SHA512 8f4cb9ae88b1ec0db0bcc27e131fcb9ad8a8bc88e39721b3b73f63e057bae4cd36619894e25114ccddb1a8e6c21db2f80adcabb3263ff5d8b34b72af7563afe2
-    PATCHES
-        pic.patch # can be dropped once https://github.com/Kistler-Group/sdbus-cpp/pull/361 is merged+released
+    SHA512 08dd88f59049c1d0760677561c1a441698e8a154143197e78721ac3ba144ae58f0ad856ca3a718e37d91cd8c83bfdd3bef90d83436adc529c68441283a2a7fbd
 )
 
 

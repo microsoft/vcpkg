@@ -1,7 +1,7 @@
 {
   "name": "copypp",
-  "version": "0.2.0",
-  "description": "support field copy in different c++ struct.",
+  "version": "0.3.0",
+  "description": "support field copy in different c++ data type.",
   "homepage": "https://github.com/i-curve/copypp",
   "license": "MIT",
   "dependencies": [
