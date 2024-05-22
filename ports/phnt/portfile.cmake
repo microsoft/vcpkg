@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO processhacker/phnt
-    REF 3f19efe9fd402378c7cd12fe1c0aacd154c8cd3c
-    SHA512 88f1f5ab1f2c8b3100e47f43cee7bdcb412ef9f688e3840ddc8a78d8b75b4baf714aadc27829e0ea95d97a22031019d25f9916d09bb63cea37304e9c9c08285a
+    REPO winsiderss/phnt
+    REF 4889215a26ece2105548103adba45238fc213fa4
+    SHA512 34e2113daf28be85f7053f48881d6b7dc9fc54a5edf10995f1ae9d74c57b5c521ca90d0cfbd498e09182f1a069ef9a8b27c62bb3bf116d2b0fbc13ed2e337a38
     HEAD_REF master
 )
 
