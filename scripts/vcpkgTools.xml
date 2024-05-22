@@ -88,22 +88,22 @@
         <sha512>40c534eb27f079c15c9782f53f82c12dabfede4d3d85f0edf8a855c2b0d5e12921a96506b37c210beab3c33220f8ff098447ad054e82d8c2603964975fc12076</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="coscli" os="windows">
         <version>0.11.0</version>
