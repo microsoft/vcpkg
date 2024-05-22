@@ -16,12 +16,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(BUILD_SHARED_LIBS OFF)
-else()
-    set(BUILD_SHARED_LIBS ON)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
