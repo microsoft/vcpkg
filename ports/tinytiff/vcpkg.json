@@ -16,7 +16,8 @@
   ],
   "features": {
     "winapi": {
-      "description": "Use WIN-API for File-IO"
+      "description": "Use WIN-API for File-IO",
+      "supports": "windows"
     }
   }
 }

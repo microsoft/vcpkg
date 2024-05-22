@@ -1,12 +1,8 @@
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "winapi"    TinyTIFF_USE_WINAPI_FOR_FILEIO
+        winapi      TinyTIFF_USE_WINAPI_FOR_FILEIO
 )
-
-if(NOT VCPKG_TARGET_IS_WINDOWS AND TinyTIFF_USE_WINAPI_FOR_FILEIO)
-    message(FATAL_ERROR "Can't build ${PORT}:${TARGET_TRIPLET} with 'winapi' feature.")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,8 +17,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DTinyTIFF_BUILD_TESTS=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-        -DTinyTIFF_USE_WINAPI_FOR_FILEIO=${TinyTIFF_USE_WINAPI_FOR_FILEIO}
     PATCHES
         # without this patch, the MSVC compiler will crash during the build process 
         "msvc-message-support.patch"
@@ -31,7 +25,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TinyTIFF DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TinyTIFFXX)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TinyTIFFXX PACKAGE_NAME tinytiffxx)
 
 vcpkg_copy_pdbs()
 
