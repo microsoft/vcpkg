@@ -3,8 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "e7bf161ff959268a2a2f37530a6ea61c27019d33"
-    SHA512 9cb0c39c6721c5e27a24bee97c93925b7b1f4dd774c08520384ccdf736ab5097e49692529a9fe46f50ae799e6aa9f3e8d7ec43cf9177914fcd6f6f01b76a52c4
+    REF "69980ce8d04144b41adbc5cc194f29adbc12ceaa"
+    SHA512 9687230628483887a99deed66b3b680f0a39eddc707e0abadf249de8af15bdc72d5778437c7f70a641c3e20909ee026d4eef44e0456573438aae00102c73fbf4
     PATCHES
         disable-msvc-env-setup.patch
         disable-dev-test.patch
@@ -31,7 +31,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "bac513d0ae286600ea0f75a75223a5b52a198b9b"
+    REF "1b2d3eb175fdf83e21e21b6167a34225a03d2bc2"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
@@ -61,12 +61,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "8b246ff75c6615ba4532fe4fde20f1be090c3764"
+    REF "49a1fceb9b1d087f3c25ad5ec077bb0e46231297"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "f20663ca7fec48fdc88e4c4d7c5889f8b4cc5664"
+    REF "199038f10cbe56bf7cbfeb5472eb0a25af2f09f5"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
