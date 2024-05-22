@@ -1,11 +1,11 @@
 {
   "name": "qttools",
   "version": "6.7.0",
+  "port-version": 1,
   "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    "litehtml",
     {
       "name": "qtbase",
       "default-features": false
@@ -15,7 +15,6 @@
       "host": true,
       "default-features": false,
       "features": [
-        "assistant",
         "linguist"
       ]
     }
@@ -25,6 +24,10 @@
       "description": "Build Qt Assistant",
       "dependencies": [
         {
+          "name": "litehtml",
+          "default-features": false
+        },
+        {
           "name": "qtbase",
           "default-features": false,
           "features": [
@@ -32,6 +35,14 @@
             "png",
             "sql-sqlite",
             "widgets"
+          ]
+        },
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "assistant"
           ]
         }
       ]
