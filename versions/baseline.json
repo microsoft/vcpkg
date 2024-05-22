@@ -7521,7 +7521,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "3.8.0",
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "quirc": {
