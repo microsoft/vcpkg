@@ -2057,7 +2057,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.8.1",
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "ctstraffic": {
