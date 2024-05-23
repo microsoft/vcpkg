@@ -8,10 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
-        0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0022-deduplicate-libs.patch
-        mbedtls-ws2_32.patch
         export-components.patch
         dependencies.patch
         cmake-config.patch
