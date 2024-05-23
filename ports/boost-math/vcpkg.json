@@ -4,7 +4,7 @@
   "version": "1.85.0",
   "port-version": 1,
   "description": "Boost math module",
-  "homepage": "https://github.com/boostorg/math",
+  "homepage": "https://www.boost.org/libs/math",
   "license": "BSL-1.0",
   "dependencies": [
     {
