@@ -353,7 +353,7 @@
       "port-version": 2
     },
     "avcpp": {
-      "baseline": "2.3.2",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "avisynthplus": {
@@ -617,7 +617,7 @@
       "port-version": 0
     },
     "bgfx": {
-      "baseline": "1.122.8595-458",
+      "baseline": "1.127.8725-469",
       "port-version": 0
     },
     "bigint": {
@@ -666,7 +666,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 0
+      "port-version": 1
     },
     "blaze": {
       "baseline": "3.8.2",
@@ -810,7 +810,7 @@
     },
     "boost-container": {
       "baseline": "1.85.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-container-hash": {
       "baseline": "1.85.0",
@@ -958,7 +958,7 @@
     },
     "boost-interprocess": {
       "baseline": "1.85.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-interval": {
       "baseline": "1.85.0",
@@ -1942,7 +1942,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.19",
-      "port-version": 0
+      "port-version": 1
     },
     "cppslippi": {
       "baseline": "1.4.3.16",
@@ -2057,7 +2057,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.8.1",
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "ctstraffic": {
@@ -2090,7 +2090,7 @@
     },
     "curl": {
       "baseline": "8.7.1",
-      "port-version": 3
+      "port-version": 4
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2649,8 +2649,8 @@
       "port-version": 1
     },
     "fastrtps": {
-      "baseline": "2.7.0",
-      "port-version": 5
+      "baseline": "2.14.0",
+      "port-version": 0
     },
     "faudio": {
       "baseline": "24.03",
@@ -2682,7 +2682,7 @@
     },
     "ffmpeg": {
       "baseline": "6.1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "ffnvcodec": {
       "baseline": "12.1.14.0",
@@ -4054,7 +4054,7 @@
     },
     "krb5": {
       "baseline": "1.21.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ktx": {
       "baseline": "4.3.1",
@@ -4086,7 +4086,7 @@
     },
     "lapack": {
       "baseline": "2023-06-10",
-      "port-version": 0
+      "port-version": 1
     },
     "lapack-reference": {
       "baseline": "3.11.0",
@@ -4206,7 +4206,7 @@
     },
     "libavif": {
       "baseline": "1.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -4321,7 +4321,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.20.3",
+      "baseline": "0.21.0",
       "port-version": 0
     },
     "libdmx": {
@@ -5634,7 +5634,7 @@
     },
     "mathgl": {
       "baseline": "8.0.1",
-      "port-version": 5
+      "port-version": 6
     },
     "matio": {
       "baseline": "1.5.26",
@@ -5937,8 +5937,8 @@
       "port-version": 0
     },
     "msgpack": {
-      "baseline": "6.0.0",
-      "port-version": 1
+      "baseline": "6.1.1",
+      "port-version": 0
     },
     "msgpack-c": {
       "baseline": "6.0.0",
@@ -7154,7 +7154,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.13",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7178,7 +7178,7 @@
     },
     "qt5-doc": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-gamepad": {
       "baseline": "5.15.13",
@@ -7262,7 +7262,7 @@
     },
     "qt5-tools": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-translations": {
       "baseline": "5.15.13",
@@ -8025,7 +8025,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.7.2",
+      "baseline": "0.7.3",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9118,7 +9118,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.3.2",
-      "port-version": 2
+      "port-version": 3
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
