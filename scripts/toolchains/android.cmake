@@ -15,21 +15,23 @@ else()
     set(ANDROID_STL c++_static CACHE STRING "")
 endif()
 
-if(DEFINED ENV{ANDROID_NDK_HOME})
-    set(ANDROID_NDK_HOME $ENV{ANDROID_NDK_HOME})
-else()
-    set(ANDROID_NDK_HOME "$ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b/")
-    if(NOT EXISTS "${ANDROID_NDK_HOME}")
-        # Use Xamarin default installation folder
-        set(ANDROID_NDK_HOME "$ENV{ProgramFiles\(x86\)}/Android/android-sdk/ndk-bundle")
+if(NOT DEFINED VCPKG_ANDROID_NDK_HOME)
+    if(DEFINED ENV{ANDROID_NDK_HOME})
+        set(VCPKG_ANDROID_NDK_HOME $ENV{ANDROID_NDK_HOME})
+    else()
+        set(VCPKG_ANDROID_NDK_HOME "$ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b/")
+        if(NOT EXISTS "${VCPKG_ANDROID_NDK_HOME}")
+            # Use Xamarin default installation folder
+            set(VCPKG_ANDROID_NDK_HOME "$ENV{ProgramFiles\(x86\)}/Android/android-sdk/ndk-bundle")
+        endif()
     endif()
 endif()
 
-if(NOT EXISTS "${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
-    message(FATAL_ERROR "Could not find android ndk. Searched at ${ANDROID_NDK_HOME}")
+if(NOT EXISTS "${VCPKG_ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
+    message(FATAL_ERROR "Could not find android ndk. Searched at ${VCPKG_ANDROID_NDK_HOME}")
 endif()
 
-include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
+include("${VCPKG_ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
 
 if(NOT _VCPKG_ANDROID_TOOLCHAIN)
     set(_VCPKG_ANDROID_TOOLCHAIN 1)
