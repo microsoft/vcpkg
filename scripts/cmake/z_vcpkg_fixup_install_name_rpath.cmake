@@ -281,13 +281,13 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
       set(install_name_file "${file_dir}/${filename_major}")
 
       # Try the major version file
-      if(NOT EXISTS "${install_name_file}")
+      if(NOT EXISTS "${install_name_file}" OR IS_SYMLINK "${install_name_file}")
         # Get the major.minor version if major version file is missing
         string(REGEX REPLACE "(lib[^\\.]+\\.[0-9]+.[0-9]+).*\\.(dylib|so)" "\\1.\\2" filename_major_minor "${filename}")
         set(install_name_file "${file_dir}/${filename_major_minor}")
 
-        # Fall back to if the major version file not found
-        if(NOT EXISTS "${install_name_file}")
+        # Fall back to the file name itself if the major.minor version file is missing or is a symlink
+        if(NOT EXISTS "${install_name_file}" OR IS_SYMLINK "${install_name_file}")
           set(install_name_file "${file}")
         endif()
       endif()
