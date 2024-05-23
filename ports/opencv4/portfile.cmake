@@ -1,17 +1,10 @@
 set(USE_QT_VERSION "6")
 
-# https://github.com/opencv/opencv/pull/24043
-vcpkg_download_distfile(ARM64_WINDOWS_FIX
-  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
-  SHA512 8ae2544e4a7ece19efe21261acc183f91202ac5352c1ac42fb86bf33d698352eff1b8962422b092240f4e8c7a691e9aa5ef20d6070adcd37e92bb94c6010ce56
-  FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
+    SHA512 1598ae59849e7805b3cbec5260bb501006f26edff452343b366b9262a0f48a6e09f4b2e760209cb677f2a64a7b22f4e70bc6195c104bcea74cc9fe04031d0292
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -30,7 +23,6 @@ vcpkg_from_github(
       0019-missing-include.patch
       0020-fix-compat-cuda12.2.patch
       0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
-      "${ARM64_WINDOWS_FIX}"
       0022-fix-supportqnx.patch
 )
 # Disallow accidental build of vendored copies
@@ -47,6 +39,10 @@ else()
   set(TARGET_IS_X86 1)
 endif()
 
+if (USE_QT_VERSION STREQUAL "6")
+  set(QT_CORE5COMPAT "Core5Compat")
+endif()
+
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -56,11 +52,13 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"       WITH_ADE
+ "calib3d"   BUILD_opencv_calib3d
  "contrib"   WITH_CONTRIB
  "cuda"      WITH_CUBLAS
  "cuda"      WITH_CUDA
  "cudnn"     WITH_CUDNN
  "dnn-cuda"  OPENCV_DNN_CUDA
+ "dshow"     WITH_DSHOW
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
  "freetype"  WITH_FREETYPE
@@ -68,11 +66,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gstreamer" WITH_GSTREAMER
  "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
+ "highgui"   BUILD_opencv_highgui
+ "intrinsics" CV_ENABLE_INTRINSICS
  "jasper"    WITH_JASPER
  "openjpeg"  WITH_OPENJPEG
  "jpeg"      WITH_JPEG
  "lapack"    WITH_LAPACK
  "nonfree"   OPENCV_ENABLE_NONFREE
+ "nofs"      OPENCV_DISABLE_FILESYSTEM_SUPPORT
+ "nothread"  OPENCV_DISABLE_THREAD_SUPPORT
+ "opencl"    WITH_OPENCL
  "openvino"  WITH_OPENVINO
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
@@ -83,6 +86,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "tiff"      WITH_TIFF
  "vtk"       WITH_VTK
  "webp"      WITH_WEBP
+ "win32ui"   WITH_WIN32UI
  "world"     BUILD_opencv_world
  "dc1394"    WITH_1394
  "vulkan"    WITH_VULKAN
@@ -103,6 +107,7 @@ if("dnn" IN_LIST FEATURES)
     LOGNAME flatc-${TARGET_TRIPLET}
   )
 endif()
+
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
@@ -380,6 +385,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ###### Verify that required components and only those are enabled
+        -DENABLE_CONFIG_VERIFICATION=ON
         ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
         -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
         -DAARCH64=${TARGET_IS_AARCH64}
@@ -400,6 +407,7 @@ vcpkg_cmake_configure(
         -DOPENCV_DLLVERSION=4
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_GENERATE_PKGCONFIG=ON
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -414,6 +422,7 @@ vcpkg_cmake_configure(
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
         -DBUILD_TBB=OFF
+        -DBUILD_IPP_IW=OFF
         -DBUILD_ITT=OFF
         ###### Disable build 3rd party components
         -DBUILD_PROTOBUF=OFF
@@ -460,6 +469,7 @@ vcpkg_cmake_configure(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENVINO=${WITH_OPENVINO}
         -DWITH_TBB=${WITH_TBB}
+        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
@@ -471,9 +481,16 @@ vcpkg_cmake_configure(
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags
-        ${ADDITIONAL_BUILD_FLAGS}
         -DBUILD_IPP_IW=${WITH_IPP}
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
+        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
+        -DWITH_OPENCL=${WITH_OPENCL}
+        -DWITH_WIN32UI=${WITH_WIN32UI}
+        -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
+        -DWITH_DSHOW=${WITH_DSHOW}
+        -DBUILD_opencv_calib3d=${BUILD_opencv_calib3d}
+        -DBUILD_opencv_highgui=${BUILD_opencv_highgui}
+        ${ADDITIONAL_BUILD_FLAGS}
 )
 
 vcpkg_cmake_install()
@@ -564,7 +581,7 @@ find_dependency(Tesseract)")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent Core5Compat)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT})")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
 find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")

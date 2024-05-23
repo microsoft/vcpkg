@@ -1,7 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.8.0",
-  "port-version": 19,
+  "version": "4.9.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -29,6 +28,9 @@
       "dependencies": [
         "ade"
       ]
+    },
+    "calib3d": {
+      "description": "calib3d module"
     },
     "contrib": {
       "description": "opencv_contrib module",
@@ -82,7 +84,11 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
+            "calib3d",
             "dnn",
+            "highgui",
+            "intrinsics",
+            "opencl",
             "jpeg",
             "png",
             "quirc",
@@ -97,6 +103,15 @@
             "gtk"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dshow",
+            "win32ui"
+          ],
+          "platform": "windows"
         }
       ]
     },
@@ -124,6 +139,9 @@
           ]
         }
       ]
+    },
+    "dshow": {
+      "description": "enable DirectShow"
     },
     "eigen": {
       "description": "Eigen support for opencv",
@@ -203,6 +221,12 @@
         }
       ]
     },
+    "highgui": {
+      "description": "highgui module"
+    },
+    "intrinsics": {
+      "description": "enable intrinsics"
+    },
     "ipp": {
       "description": "Enable Intel Integrated Performance Primitives"
     },
@@ -227,6 +251,18 @@
     },
     "nonfree": {
       "description": "allow nonfree and unredistributable libraries"
+    },
+    "nofs": {
+      "description": "disable filesystem support"
+    },
+    "nothread": {
+      "description": "disable thread support"
+    },
+    "opencl": {
+      "description": "enable opencl support",
+      "dependencies": [
+        "opencl"
+      ]
     },
     "openexr": {
       "description": "OpenEXR support for opencv",
@@ -392,6 +428,9 @@
       "dependencies": [
         "libwebp"
       ]
+    },
+    "win32ui": {
+      "description": "enable win32ui"
     },
     "world": {
       "description": "Compile to a single package support for opencv"
