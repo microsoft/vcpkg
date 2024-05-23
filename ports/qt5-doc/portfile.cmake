@@ -1,7 +1,12 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    message(STATUS "${PORT} will not build any artifacts on Windows!")
-endif()
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+set(VCPKG_BUILD_TYPE release)
+
+include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
 qt_submodule_installation()
+
+vcpkg_build_qmake(TARGETS docs SKIP_MAKEFILES BUILD_LOGNAME docs)
+qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+vcpkg_build_qmake(TARGETS install_docs SKIP_MAKEFILES BUILD_LOGNAME install-docs)
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/qt5/doc/qtdoc.qch")
+    message(FATAL_ERROR "Failed to install qtdoc.qch.")
+endif()
