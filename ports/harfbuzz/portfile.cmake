@@ -51,7 +51,7 @@ if("experimental-api" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_OPTIONS -Dexperimental_api=false)
 endif()
-if(VCPKG_TARGET_IS_WINDOWS AND "gdi" IN_LIST FEATURES)
+if("gdi" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
 endif()
 
