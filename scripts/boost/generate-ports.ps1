@@ -111,8 +111,8 @@ $portData = @{
     };
     "boost-math"           = @{
         "features" = @{
-            "c99-tr1" = @{
-                "description"  = "Build with C99 and TR1 Functions";
+            "legacy" = @{
+                "description"  = "Build the legacy C99 and TR1 libraries";
             }
         }
     };

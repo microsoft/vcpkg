@@ -21,7 +21,7 @@
     {
       "name": "boost-math",
       "features": [
-        "c99-tr1"
+        "legacy"
       ]
     },
     "boost-mpl",
