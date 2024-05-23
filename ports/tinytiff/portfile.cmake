@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jkriege2/TinyTIFF
     REF ${VERSION}
-    SHA512 28fb3d1ef1630a4d20da021ccca93f99df8bd29462525be312dfb028239176ca940a43407b2db10488d891a1fbca65d8a59bc6cc097765389f35021e8b423885
+    SHA512 9a6a00a1278e7040bf3057f069e6d4f106a15982c78c84112edfdbe8ca9a28d849fc63636d8011696dbf4059c5d9b205743fd77ece859d08b9dd33945835be54
     HEAD_REF master
 )
 
@@ -17,8 +17,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DTinyTIFF_BUILD_TESTS=OFF
-    PATCHES
-        "msvc-support.patch" # without this patch, the MSVC compiler will crash during the build process
 )
 
 vcpkg_cmake_install()
