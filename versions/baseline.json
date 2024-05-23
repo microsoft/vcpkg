@@ -9100,6 +9100,10 @@
       "baseline": "2023-03-22",
       "port-version": 1
     },
+    "vcpkg-sample-library": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
       "port-version": 0
