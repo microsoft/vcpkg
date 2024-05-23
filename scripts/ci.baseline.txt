@@ -62,7 +62,6 @@ avro-c:x64-android=fail
 azure-identity-cpp:arm-neon-android=fail
 azure-identity-cpp:arm64-android=fail
 azure-identity-cpp:x64-android=fail
-
 # C++20 conformant compiler required
 atliac-minitest:x64-linux=fail
 atliac-minitest:arm64-android=fail
@@ -72,7 +71,6 @@ atliac-minitest:arm-neon-android=fail
 atliac-minitest:x64-android=fail
 atliac-minitest:x64-osx=fail
 atliac-minitest:x64-uwp=fail
-
 backward-cpp:arm-neon-android=fail
 backward-cpp:arm64-android=fail
 backward-cpp:x64-android=fail
@@ -82,7 +80,52 @@ berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
-blas:arm-neon-android=fail
+################################################################
+# <BLAS+LAPACK>
+# These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
+blas-test:x86-windows=pass # openblas
+lapack-test:x86-windows=pass # lapack-reference[noblas]
+blas-test:x64-windows=pass # openblas
+lapack-test:x64-windows=pass # lapack-reference[noblas]
+blas-test:x64-windows-static=pass # lapack-reference[blas]
+lapack-test:x64-windows-static=pass # lapack-reference[blas]
+blas-test:x64-windows-static-md=pass # lapack-reference[blas]
+lapack-test:x64-windows-static-md=pass # lapack-reference[blas]
+blas-test:x64-uwp=pass # openblas
+lapack-test:x64-uwp=pass # clapack
+blas-test:arm64-windows=pass # openblas
+lapack-test:arm64-windows=pass # clapack
+blas-test:arm64-uwp=pass # openblas
+lapack-test:arm64-uwp=pass # clapack
+blas-test:x64-osx=pass # accelerate framework
+lapack-test:x64-osx=pass # accelerate framework
+blas-test:arm64-osx=pass # accelerate framework
+lapack-test:arm64-osx=pass # accelerate framework
+blas-test:x64-linux=pass # openblas
+lapack-test:x64-linux=pass # lapack-reference[noblas]
+blas-test:arm64-android=pass # openblas
+
+clapack:arm64-android=fail
+clapack:arm64-osx=skip
+clapack:x64-linux=skip
+clapack:x64-osx=skip
+clapack:x64-windows-static-md=skip
+clapack:x64-windows-static=skip
+clapack:x64-windows=skip
+clapack:x86-windows=skip
+lapack-reference:arm64-android=fail
+lapack-reference:arm64-osx=skip
+lapack-reference:arm64-uwp=skip
+lapack-reference:arm64-windows=skip
+lapack-reference:x64-osx=skip
+lapack-reference:x64-uwp=skip
+openblas:arm64-osx=skip
+openblas:x64-android=fail
+openblas:x64-osx=skip
+openblas:x64-windows-static-md=skip
+openblas:x64-windows-static=skip
+# </BLAS+LAPACK>
+################################################################
 blitz:x64-android=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
@@ -178,7 +221,6 @@ chartdir:x86-windows=skip
 chartdir:x64-windows=skip
 chartdir:x64-windows-static-md=skip
 chartdir:x64-osx=skip
-
 # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
 #  broken on Windows because it does not yet support VS2022
 chromium-base:x64-windows=skip
@@ -189,23 +231,7 @@ chromium-base:x64-linux=skip
 #  broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache
 #  because the first attempt to build it fails, but subsequent attempts succeed
 chromium-base:x64-osx=skip
-
 clamav:arm64-windows=fail
-
-# clapack is replaced by lapack-reference on the platforms lapack-reference supports
-clapack:x64-linux=skip
-clapack:x64-osx=skip
-clapack:arm64-android=skip
-clapack:arm64-osx=skip
-clapack:x64-windows-static=skip
-clapack:x64-windows-static-md=skip
-clapack:x64-windows=skip
-clapack:x86-windows=skip
-lapack-reference:arm64-android=skip
-lapack-reference:arm64-windows=skip
-lapack-reference:arm64-uwp=skip
-lapack-reference:x64-uwp=skip
-
 clblas:arm-neon-android=fail
 clblas:arm64-android=fail
 clblas:x64-android=fail
@@ -284,7 +310,6 @@ discord-rpc:x64-uwp=fail
 discordcoreapi:x64-linux=fail
 discordcoreapi:x64-osx=fail
 discount:x64-android=fail
-
 eathread:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
@@ -408,14 +433,12 @@ graphqlparser:arm-neon-android=fail
 graphqlparser:arm64-android=fail
 graphqlparser:arm64-osx=fail # python2 required
 graphqlparser:x64-android=fail
-
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
 gsoap:x64-windows-static = skip
 gsoap:x64-windows-static-md = skip
-
 gstreamer:arm-neon-android=fail
 gstreamer:arm64-android=fail
 gstreamer:x64-android=fail
@@ -811,7 +834,6 @@ ompl:arm64-osx=fail
 ompl:x64-linux=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 onednn:x64-android=fail
-openblas:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
 opencv2:arm-neon-android=fail
