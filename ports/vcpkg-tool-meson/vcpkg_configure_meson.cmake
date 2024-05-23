@@ -324,8 +324,12 @@ function(vcpkg_generate_meson_cmd_args)
 
     z_vcpkg_get_build_and_host_system(MESON_HOST_MACHINE MESON_BUILD_MACHINE IS_CROSS)
 
-    string(SUBSTRING "${arg_CONFIG}" 0 3 suffix)
-    string(TOLOWER "${suffix}" suffix)
+    if(arg_CONFIG STREQUAL "DEBUG")
+      set(suffix "dbg")
+    else()
+      string(SUBSTRING "${arg_CONFIG}" 0 3 suffix)
+      string(TOLOWER "${suffix}" suffix)
+    endif()
     set(meson_input_file_${buildtype} "${CURRENT_BUILDTREES_DIR}/meson-${TARGET_TRIPLET}-${suffix}.log")
 
     if(IS_CROSS)
