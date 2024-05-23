@@ -20,6 +20,7 @@ pkg-config= ['@PKGCONFIG@']
 [properties]
 cmake_toolchain_file  = '@SCRIPTS@/buildsystems/vcpkg.cmake'
 [cmake]
+CMAKE_BUILD_TYPE = '@buildconfig@'
 VCPKG_TARGET_TRIPLET = '@TARGET_TRIPLET@'
 VCPKG_HOST_TRIPLET = '@_HOST_TRIPLET@'
 VCPKG_CHAINLOAD_TOOLCHAIN_FILE = '@VCPKG_CHAINLOAD_TOOLCHAIN_FILE@'
