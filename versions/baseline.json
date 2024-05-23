@@ -8745,7 +8745,7 @@
       "port-version": 6
     },
     "tinytiff": {
-      "baseline": "4.0.0.0",
+      "baseline": "4.0.1.0",
       "port-version": 0
     },
     "tinytoml": {
