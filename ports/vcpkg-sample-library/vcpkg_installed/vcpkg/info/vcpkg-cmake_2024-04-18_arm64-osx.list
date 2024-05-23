@@ -1,0 +1,10 @@
+arm64-osx/
+arm64-osx/share/
+arm64-osx/share/vcpkg-cmake/
+arm64-osx/share/vcpkg-cmake/copyright
+arm64-osx/share/vcpkg-cmake/vcpkg-port-config.cmake
+arm64-osx/share/vcpkg-cmake/vcpkg.spdx.json
+arm64-osx/share/vcpkg-cmake/vcpkg_abi_info.txt
+arm64-osx/share/vcpkg-cmake/vcpkg_cmake_build.cmake
+arm64-osx/share/vcpkg-cmake/vcpkg_cmake_configure.cmake
+arm64-osx/share/vcpkg-cmake/vcpkg_cmake_install.cmake
