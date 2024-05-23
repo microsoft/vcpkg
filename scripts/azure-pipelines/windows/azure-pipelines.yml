@@ -10,6 +10,8 @@ parameters:
   - name: jobName
     type: string
     default: 'x86_windows'
+  - name: poolName
+    type: string
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -19,8 +21,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrWin-1ES
-    demands: ImageVersionOverride -equals 2024.05.20
+    name: ${{ parameters.poolName }}
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days

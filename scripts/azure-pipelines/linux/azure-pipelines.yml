@@ -10,6 +10,8 @@ parameters:
   - name: jobName
     type: string
     default: 'x64_linux'
+  - name: poolName
+    type: string
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -19,7 +21,7 @@ jobs:
 - job: x64_linux
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrLin-1ES-Pool
+    name: ${{ parameters.poolName }}
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
