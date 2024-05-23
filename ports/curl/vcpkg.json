@@ -1,7 +1,7 @@
 {
   "name": "curl",
   "version": "8.7.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -35,6 +35,7 @@
     },
     "gssapi": {
       "description": "krb5 support",
+      "supports": "!windows",
       "dependencies": [
         "krb5"
       ]
