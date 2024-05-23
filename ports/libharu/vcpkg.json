@@ -1,6 +1,7 @@
 {
   "name": "libharu",
   "version": "2.4.4",
+  "port-version": 1,
   "description": "libharu - free PDF library",
   "homepage": "https://github.com/libharu/libharu",
   "license": "Zlib",

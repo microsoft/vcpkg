@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
     REF boost-${VERSION}
-    SHA512 515450eef186277ec60c29230e31ba600aafde6157bd815ebfe262037c61e31263a44f007bb71a8372a824161a817afff9b89ba538b4f7a2b69a030623cf5217
+    SHA512 bd07d476cbf44fae8ebb5ada62e4a79dc89e0033190bc9c1c2a7b7e4113cd3ec78e18095c33cfa1bb2708870a7fb8525277576fb53664c307b0079197538889e
     HEAD_REF master
     PATCHES
         fix-dependencies.patch

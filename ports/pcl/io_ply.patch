@@ -41,7 +41,7 @@ index 7fc86b2..7a39033 100644
 --- a/io/CMakeLists.txt
 +++ b/io/CMakeLists.txt
 @@ -213,6 +213,8 @@ PCL_ADD_INCLUDES("${SUBSYS_NAME}" "${SUBSYS_NAME}/ply" ${PLY_INCLUDES})
- target_include_directories(pcl_io_ply PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ PCL_ADD_INCLUDES("${SUBSYS_NAME}" "${SUBSYS_NAME}/ply" ${PLY_INCLUDES})
  target_link_libraries(pcl_io_ply pcl_common Boost::boost)
  
 +PCL_MAKE_PKGCONFIG(pcl_io_ply COMPONENT ${SUBSYS_NAME} DESC "${SUBSYS_DESC}, PLY" PCL_DEPS common)

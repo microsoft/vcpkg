@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO silverqx/TinyORM
     REF "v${VERSION}"
-    SHA512 ba3bf73972a6265663122e2c260354cf213dcdcf7bfd1f7a6a7eb43eb11e06fbed581b3f6ce28898eb60a85d0c9bfe45bfaa9596d92b62ca40702ede9856b183
+    SHA512 f82702d712f845624698f799c7f5d2b30b7d2138f6c4c15e7ca50b316254b55b6606f60ce4356d7156b615b636a6b16e2d1923901825759e54ab60499c4f04cd
     HEAD_REF main
-    PATCHES
-        suppress-warning-STL4043.patch
 )
+
+# STL4043 _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING already defined, see:
+# https://github.com/silverqx/TinyORM/blob/main/cmake/CommonModules/TinyCommon.cmake#L122
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,8 +25,10 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_SCAN_FOR_MODULES:BOOL=OFF
         -DCMAKE_EXPORT_PACKAGE_REGISTRY:BOOL=OFF
         -DBUILD_TESTS:BOOL=OFF
+        -DBUILD_TREE_DEPLOY:BOOL=OFF
         -DTINY_PORT:STRING=${PORT}
         -DTINY_VCPKG:BOOL=ON
         -DVERBOSE_CONFIGURE:BOOL=ON

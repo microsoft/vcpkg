@@ -1,7 +1,7 @@
 {
   "name": "dcmtk",
   "version": "3.6.8",
-  "port-version": 4,
+  "port-version": 5,
   "description": "This DICOM ToolKit (DCMTK) package consists of source code, documentation and installation instructions for a set of software libraries and applications implementing part of the DICOM/MEDICOM Standard.",
   "homepage": "https://github.com/DCMTK/dcmtk",
   "license": "BSD-3-Clause OR BSD-2-Clause OR libtiff OR MIT OR Zlib OR Libpng",
@@ -47,7 +47,10 @@
     "tiff": {
       "description": "Enable TIFF support",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "tools": {
