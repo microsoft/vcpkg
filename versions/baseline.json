@@ -3342,7 +3342,7 @@
     },
     "halide": {
       "baseline": "17.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "happly": {
       "baseline": "2021-03-19",
@@ -5401,8 +5401,8 @@
       "port-version": 0
     },
     "llvm": {
-      "baseline": "17.0.2",
-      "port-version": 5
+      "baseline": "18.1.5",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "0.9.31",
@@ -5689,8 +5689,8 @@
       "port-version": 3
     },
     "mesa": {
-      "baseline": "23.2.1",
-      "port-version": 1
+      "baseline": "24.0.7",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
@@ -8522,7 +8522,7 @@
     },
     "symengine": {
       "baseline": "0.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "systemc": {
       "baseline": "2.3.3",
