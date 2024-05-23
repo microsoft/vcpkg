@@ -111,10 +111,6 @@ if("tools" IN_LIST FEATURES)
         list(APPEND HDF5_TOOLS ph5diff)
     endif()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(TRANSFORM HDF5_TOOLS REPLACE  "^(.+)$" "\\1-shared")
-    endif()
-
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         list(APPEND HDF5_TOOLS h5cc h5hlcc)
         if("cpp" IN_LIST FEATURES)
