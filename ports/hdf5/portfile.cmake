@@ -1,11 +1,11 @@
 # highfive should be updated together with hdf5
 
-string(REPLACE "." "_" hdf5_ref "hdf5-${VERSION}")
+string(REPLACE "." "." hdf5_ref "hdf5_${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 1282da256ca135588c63ff8c60f5e4bacdaf5571f01c0a357384bc45c189bdbb0f5f8e890a0f4d25b584def018546952f3b65c5577e78fb3c77e84ebe84b457c
+    SHA512 77849b644f5312eae5a3f2fe45666d9df95cc21b092207dae01ca7d019e428255d75fe0c27538e4101eabf2030927a73ceaec8e1471c72b51fed5370810f9a35
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
