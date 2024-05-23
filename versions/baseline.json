@@ -7154,7 +7154,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.13",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7178,7 +7178,7 @@
     },
     "qt5-doc": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-gamepad": {
       "baseline": "5.15.13",
@@ -7262,7 +7262,7 @@
     },
     "qt5-tools": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-translations": {
       "baseline": "5.15.13",
