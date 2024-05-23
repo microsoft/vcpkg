@@ -127,20 +127,25 @@ function(replace_package_string package)
     set(release_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${package}.pc")
 
     if(EXISTS "${release_file}")
-        vcpkg_replace_string(${release_file} "-l${package}" "-llib${package}")
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+            vcpkg_replace_string(${release_file} "-l${package}" "-llib${package}")
+        endif()
     endif()
 
     if(EXISTS "${debug_file}")
-        vcpkg_replace_string(${debug_file} "-l${package}" "-llib${package}d")
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+            vcpkg_replace_string(${debug_file} "-l${package}" "-llib${package}d")
+        else()
+            vcpkg_replace_string(${debug_file} "-l${package}" "-l${package}d")
+        endif()
     endif()
 endfunction()
 
 set(packages protobuf protobuf-lite)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    foreach(package IN LISTS packages)
-        replace_package_string(${package})
-    endforeach() 
-endif()
+foreach(package IN LISTS packages)
+    replace_package_string(${package})
+endforeach()
+
 
 vcpkg_fixup_pkgconfig()
 
