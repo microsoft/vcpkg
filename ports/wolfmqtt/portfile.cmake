@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+      -DWOLFMQTT_BUILD_OUT_OF_TREE=yes
       -DWOLFMQTT_EXAMPLES=no
     OPTIONS_DEBUG
       -DCMAKE_C_FLAGS='-DDEBUG_MQTT'
