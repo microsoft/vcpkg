@@ -816,6 +816,7 @@ x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG
 function(append_dependencies_from_libs out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
     string(REGEX REPLACE "[ ]+" ";" contents "${arg_LIBS}")
+    list(FILTER contents EXCLUDE REGEX "^-F.+")
     list(FILTER contents EXCLUDE REGEX "^-framework$")
     list(FILTER contents EXCLUDE REGEX "^-L.+")
     list(FILTER contents EXCLUDE REGEX "^-libpath:.+")
