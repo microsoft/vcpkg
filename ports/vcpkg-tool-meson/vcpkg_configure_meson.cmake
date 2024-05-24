@@ -423,6 +423,7 @@ function(vcpkg_configure_meson)
 
     if(NOT arg_NO_PKG_CONFIG)
       vcpkg_find_acquire_program(PKGCONFIG)
+      set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     endif()
 
     vcpkg_find_acquire_program(PYTHON3)
