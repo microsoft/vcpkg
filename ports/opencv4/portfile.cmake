@@ -391,6 +391,8 @@ vcpkg_cmake_configure(
         -DX86_64=${TARGET_IS_X86_64}
         -DX86=${TARGET_IS_X86}
         -DARM=${TARGET_IS_ARM}
+        ###### use cmake cuda new language support
+        -DENABLE_CUDA_FIRST_CLASS_LANGUAGE=ON
         ###### ocv_options
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=

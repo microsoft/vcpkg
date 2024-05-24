@@ -1,7 +1,6 @@
 {
   "name": "opencv",
-  "version": "4.8.0",
-  "port-version": 1,
+  "version": "4.9.0",
   "description": "Computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -23,6 +22,30 @@
           "default-features": false,
           "features": [
             "ade"
+          ]
+        }
+      ]
+    },
+    "avif": {
+      "description": "avif support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
+    "calib3d": {
+      "description": "opencv_calib3d module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "calib3d"
           ]
         }
       ]
@@ -82,8 +105,12 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
+            "calib3d",
             "dnn",
+            "highgui",
+            "intrinsics",
             "jpeg",
+            "opencl",
             "png",
             "quirc",
             "tiff",
@@ -97,6 +124,15 @@
             "gtk"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dshow",
+            "win32ui"
+          ],
+          "platform": "windows"
         }
       ]
     },
@@ -120,6 +156,18 @@
           "default-features": false,
           "features": [
             "dnn-cuda"
+          ]
+        }
+      ]
+    },
+    "dshow": {
+      "description": "opencv_dshow module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dshow"
           ]
         }
       ]
@@ -208,6 +256,30 @@
         }
       ]
     },
+    "highgui": {
+      "description": "opencv_highgui module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "highgui"
+          ]
+        }
+      ]
+    },
+    "intrinsics": {
+      "description": "opencv_intrinsics module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "intrinsics"
+          ]
+        }
+      ]
+    },
     "ipp": {
       "description": "Enable Intel Integrated Performance Primitives",
       "dependencies": [
@@ -256,6 +328,18 @@
         }
       ]
     },
+    "nofs": {
+      "description": "disable filesystem support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "nofs"
+          ]
+        }
+      ]
+    },
     "nonfree": {
       "description": "opencv nonfree module",
       "dependencies": [
@@ -264,6 +348,30 @@
           "default-features": false,
           "features": [
             "nonfree"
+          ]
+        }
+      ]
+    },
+    "nothread": {
+      "description": "disable thread support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "nothread"
+          ]
+        }
+      ]
+    },
+    "opencl": {
+      "description": "opencl support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "opencl"
           ]
         }
       ]
@@ -292,6 +400,18 @@
         }
       ]
     },
+    "openjpeg": {
+      "description": "openjpeg support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "openjpeg"
+          ]
+        }
+      ]
+    },
     "openmp": {
       "description": "Enable openmp support for opencv",
       "dependencies": [
@@ -300,6 +420,18 @@
           "default-features": false,
           "features": [
             "openmp"
+          ]
+        }
+      ]
+    },
+    "openvino": {
+      "description": "openvino support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "openvino"
           ]
         }
       ]
@@ -432,6 +564,18 @@
           "default-features": false,
           "features": [
             "webp"
+          ]
+        }
+      ]
+    },
+    "win32ui": {
+      "description": "opencv_win32ui module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "win32ui"
           ]
         }
       ]

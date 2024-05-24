@@ -10,12 +10,17 @@
       "default-features": false,
       "features": [
         "ade",
+        "avif",
+        "calib3d",
         "contrib",
         "dnn",
         "eigen",
         "ffmpeg",
+        "highgui",
+        "intrinsics",
         "jpeg",
         "nonfree",
+        "opencl",
         "png",
         "quirc",
         "tiff",
@@ -30,6 +35,15 @@
         "dc1394"
       ],
       "platform": "linux"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "dshow",
+        "win32ui"
+      ],
+      "platform": "windows"
     },
     {
       "name": "opencv",
