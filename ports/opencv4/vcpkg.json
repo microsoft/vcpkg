@@ -94,8 +94,8 @@
             "dnn",
             "highgui",
             "intrinsics",
-            "opencl",
             "jpeg",
+            "opencl",
             "png",
             "quirc",
             "tiff",
@@ -255,11 +255,11 @@
         "lapack"
       ]
     },
-    "nonfree": {
-      "description": "allow nonfree and unredistributable libraries"
-    },
     "nofs": {
       "description": "disable filesystem support"
+    },
+    "nonfree": {
+      "description": "allow nonfree and unredistributable libraries"
     },
     "nothread": {
       "description": "disable thread support"
