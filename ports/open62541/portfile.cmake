@@ -1,17 +1,25 @@
+vcpkg_download_distfile(PATCH_6501
+    URLS https://github.com/open62541/open62541/commit/14c1d6fb1175257b624bcd509817887f5e8a2543.patch?full_index=1
+    SHA512 c7ae62bbab66bdb306b7aded3bd0fc3d63ccc082528475151d1ffecb743a34227a2694294d5f8d17949a24f87d853337c948fcc995a2da4b85c198c4ed47ab4d
+    FILENAME 14c1d6fb1175257b624bcd509817887f5e8a2543.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "v${VERSION}"
-    SHA512 8771a70d1f38f2a02f21281200d98fdd8d41d842cc82704155793529a1768beeb2583382f7547e6aaefdab4a17c3130779af792b2a59487889a3cdea4a2fa776
+    SHA512 e0a2f9e748ee1b27b0bd400d56b6e90602d545c7a5c794ba9a1ccd1ab15bde3c2908440ec1662b4a6980b9e7ffcf532018f8894821405f8edbd5f0168ca4ccf3
     HEAD_REF master
     PATCHES
-        disable-docs.patch
+        "${PATCH_6501}"
 )
+
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        amalgamation UA_ENABLE_AMALGAMATION
         historizing UA_ENABLE_HISTORIZING
 )
 
