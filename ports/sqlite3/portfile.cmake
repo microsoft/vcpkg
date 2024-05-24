@@ -51,7 +51,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
     INVERTED_FEATURES
         json1               SQLITE_OMIT_JSON
 )
-  
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(SQLITE_OS_WIN "1")
     if(VCPKG_TARGET_IS_UWP)
