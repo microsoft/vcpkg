@@ -29,6 +29,12 @@
         "ade"
       ]
     },
+    "avif": {
+      "description": "enable libavif feature",
+      "dependencies": [
+        "libavif"
+      ]
+    },
     "calib3d": {
       "description": "calib3d module"
     },

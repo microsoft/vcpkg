@@ -18,12 +18,10 @@ vcpkg_from_github(
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
       0012-fix-zlib.patch
+      0013-fix-compat-cuda12.2.patch
+      0014-fix-supportqnx.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0019-missing-include.patch
-      0020-fix-compat-cuda12.2.patch
-      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
-      0022-fix-supportqnx.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -52,6 +50,7 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"       WITH_ADE
+ "avif"      WITH_AVIF
  "calib3d"   BUILD_opencv_calib3d
  "contrib"   WITH_CONTRIB
  "cuda"      WITH_CUBLAS
@@ -197,10 +196,10 @@ if("contrib" IN_LIST FEATURES)
     SHA512 81cc41cfe1ea03e60b0657edeaa76a90926e5e79a9f93a482e17bc9edbf1b5ce36b13d108fd8fb097f2fb3d6381fbeb102811f44bfc761c2de7f69bf3c5298a1
     HEAD_REF master
     PATCHES
-      0007-fix-hdf5.patch
-      0016-fix-freetype-contrib.patch
-      0018-fix-depend-tesseract.patch
-      0019-fix-ogre-dependency.patch
+      0007-contrib-fix-hdf5.patch
+      0016-contrib-fix-freetype.patch
+      0018-contrib-fix-tesseract.patch
+      0019-contrib-fix-ogre.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -471,6 +470,7 @@ vcpkg_cmake_configure(
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
+        -DWITH_SPNG=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}

@@ -1,6 +1,6 @@
 --- a/modules/gapi/cmake/init.cmake
 +++ b/modules/gapi/cmake/init.cmake
-@@ -20,7 +20,7 @@ if(NOT TARGET ade)
+@@ -21,7 +21,7 @@ if(NOT TARGET ade)
  endif()
  
  if(WITH_FREETYPE)
