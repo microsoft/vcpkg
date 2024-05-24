@@ -6,9 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dcmtk.patch
-        fix_link_xml2.patch
         dictionary_paths.patch
-        fix_link_tiff.patch
+        fix_find_package.patch
 )
 
 # Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
@@ -22,12 +21,18 @@ endforeach()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "iconv"   DCMTK_WITH_ICONV
+        "iconv"   CMAKE_REQUIRE_FIND_PACKAGE_Iconv
         "icu"     DCMTK_WITH_ICU
         "openssl" DCMTK_WITH_OPENSSL
+        "openssl" CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         "png"     DCMTK_WITH_PNG
+        "png"     CMAKE_REQUIRE_FIND_PACKAGE_PNG
         "tiff"    DCMTK_WITH_TIFF
+        "tiff"    CMAKE_REQUIRE_FIND_PACKAGE_TIFF
         "xml2"    DCMTK_WITH_XML
+        "xml2"    CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         "zlib"    DCMTK_WITH_ZLIB
+        "zlib"    CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         "tools"   BUILD_APPS
 )
 
@@ -43,6 +48,9 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         "-DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}" 
         -DDCMTK_WITH_DOXYGEN=OFF
+        -DDCMTK_WITH_OPENJPEG=OFF
+        -DDCMTK_WITH_SNDFILE=OFF
+        -DDCMTK_WITH_WRAP=OFF
         -DDCMTK_FORCE_FPIC_ON_UNIX=ON
         -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF
         -DDCMTK_ENABLE_PRIVATE_TAGS=ON
@@ -56,6 +64,14 @@ vcpkg_cmake_configure(
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
         -DBUILD_APPS=OFF
+    MAYBE_UNUSED_VARIABLES
+        DCMTK_USE_FIND_PACKAGE_WIN_DEFAULT
+        CMAKE_REQUIRE_FIND_PACKAGE_Iconv
+        CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
+        CMAKE_REQUIRE_FIND_PACKAGE_PNG
+        CMAKE_REQUIRE_FIND_PACKAGE_TIFF
+        CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
+        CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_install()
