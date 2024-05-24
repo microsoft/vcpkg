@@ -26,7 +26,9 @@ function(get_working_installed_python out_python)
   set(python_base "${CURRENT_BUILDTREES_DIR}/python-${TARGET_TRIPLET}")
 
   file(GLOB python_files LIST_DIRECTORIES false "${python_home}/*")
-  file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/DLLs/" DESTINATION "${python_base}/DLLs")
+  if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/DLLs")
+    file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/DLLs/" DESTINATION "${python_base}/DLLs")
+  endif()
   file(COPY ${python_files} DESTINATION "${python_base}/Scripts")
   file(MAKE_DIRECTORY "${python_base}/Lib/site-packages")
 
