@@ -94,10 +94,10 @@ index dfad5fd..8423d55 100644
    set(GFLAGS_FOUND TRUE)
  endif(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1b4b233..8ad65d8 100644
+index 1b4b233..8e836a4 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -31,9 +31,11 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
+@@ -31,6 +31,7 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
  set_property(TARGET ${SOURCES_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
  set_property(TARGET ${BUTIL_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
  
@@ -105,24 +105,18 @@ index 1b4b233..8ad65d8 100644
  add_library(brpc-static STATIC $<TARGET_OBJECTS:BUTIL_LIB>
                                 $<TARGET_OBJECTS:SOURCES_LIB>
                                 $<TARGET_OBJECTS:PROTO_LIB>)
-+endif()
+@@ -60,12 +61,19 @@ endfunction()
  
- function(check_thrift_version target_arg)
-     #use thrift command to get version
-@@ -58,14 +60,22 @@ function(check_thrift_version target_arg)
-     endif()
- endfunction()
  
--
-+if(NOT BUILD_SHARED_LIBS)
  if(WITH_THRIFT)
-    target_link_libraries(brpc-static ${THRIFT_LIB})
-    check_thrift_version(brpc-static)
+-   target_link_libraries(brpc-static ${THRIFT_LIB})
+-   check_thrift_version(brpc-static)
++   target_link_libraries(brpc-static PUBLIC ${THRIFT_LIB})
  endif()
  
 +target_link_libraries(brpc-static PUBLIC ${DYNAMIC_LIB})
 +if(BRPC_WITH_GLOG)
-+    target_link_libraries(brpc-static ${GLOG_LIB})
++    target_link_libraries(brpc-static PUBLIC ${GLOG_LIB})
 +endif()
 +target_include_directories(brpc-static PUBLIC $<INSTALL_INTERFACE:include>)
 +
@@ -133,7 +127,7 @@ index 1b4b233..8ad65d8 100644
  # for protoc-gen-mcpack
  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output/bin)
      
-@@ -74,12 +84,14 @@ set(protoc_gen_mcpack_SOURCES
+@@ -74,36 +82,64 @@ set(protoc_gen_mcpack_SOURCES
   )
      
  add_executable(protoc-gen-mcpack ${protoc_gen_mcpack_SOURCES})
@@ -143,21 +137,26 @@ index 1b4b233..8ad65d8 100644
      add_library(brpc-shared SHARED $<TARGET_OBJECTS:BUTIL_LIB> 
                                     $<TARGET_OBJECTS:SOURCES_LIB>
                                     $<TARGET_OBJECTS:PROTO_LIB>)
-     target_link_libraries(brpc-shared ${DYNAMIC_LIB})
+-    target_link_libraries(brpc-shared ${DYNAMIC_LIB})
++    target_link_libraries(brpc-shared PUBLIC ${DYNAMIC_LIB})
 +    target_include_directories(brpc-shared PUBLIC $<INSTALL_INTERFACE:include>)
      if(WITH_GLOG)
-         target_link_libraries(brpc-shared ${GLOG_LIB})
+-        target_link_libraries(brpc-shared ${GLOG_LIB})
++        target_link_libraries(brpc-shared PUBLIC ${GLOG_LIB})
      endif()
-@@ -88,22 +100,47 @@ if(BUILD_SHARED_LIBS)
-         check_thrift_version(brpc-shared)
+     if(WITH_THRIFT)
+-        target_link_libraries(brpc-shared ${THRIFT_LIB})
+-        check_thrift_version(brpc-shared)
++        target_link_libraries(brpc-shared PUBLIC ${THRIFT_LIB})
      endif()
      SET_TARGET_PROPERTIES(brpc-shared PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
 -
++    
 +    if(0)
      target_link_libraries(protoc-gen-mcpack brpc-shared ${DYNAMIC_LIB} pthread)
--
--    install(TARGETS brpc-shared
 +    endif()
+ 
+-    install(TARGETS brpc-shared
 +    install(TARGETS brpc-shared EXPORT unofficial-brpcTargets
              RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
              LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
