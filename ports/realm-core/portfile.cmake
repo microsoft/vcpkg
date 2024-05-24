@@ -5,7 +5,9 @@ vcpkg_from_github(
         SHA512 "1bd11bfe70204213469687d1e224fabb2ff2798aa25f6d791b3d455acdcacf686248e7a692f23ed67148ef99faf1a7c1f823182f33a45340310477bc51b32bb7"
         HEAD_REF "master"
         PATCHES 
-            "UWP_index_set.patch")
+            "UWP_index_set.patch"
+            fix-zlib.patch
+)
 
 set(REALMCORE_CMAKE_OPTIONS -DREALM_CORE_SUBMODULE_BUILD=OFF)
 list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_BUILD_LIB_ONLY=ON)
