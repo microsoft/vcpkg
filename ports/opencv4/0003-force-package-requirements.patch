@@ -59,7 +59,7 @@
      ocv_clear_vars(JASPER_FOUND)
    else()
 -    include(FindJasper)
-+    include(Jasper REQUIRED)
++    find_package(Jasper REQUIRED)
    endif()
  
    if(NOT JASPER_FOUND)
