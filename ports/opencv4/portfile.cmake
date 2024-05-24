@@ -18,7 +18,6 @@ vcpkg_from_github(
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
       0012-fix-zlib.patch
-      0013-fix-compat-cuda12.2.patch
       0014-fix-supportqnx.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
@@ -193,13 +192,13 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${VERSION}
-    SHA512 81cc41cfe1ea03e60b0657edeaa76a90926e5e79a9f93a482e17bc9edbf1b5ce36b13d108fd8fb097f2fb3d6381fbeb102811f44bfc761c2de7f69bf3c5298a1
+    SHA512 ebaee3b88bd7ae246727e65a98d9fbc1d9772a4181a1926f3af742410b78dc87d2386bcd96ac67d7fb1a3020c3717a2cdebdcf9304d6dfd9ea494004791cf043
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
+      0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
-      0019-contrib-fix-ogre.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -471,6 +470,8 @@ vcpkg_cmake_configure(
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_SPNG=OFF
+        -DWITH_OPENCLAMDFFT=OFF
+        -DWITH_ITT=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
