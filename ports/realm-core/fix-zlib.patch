@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1d5710f..c57e2dd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -331,7 +331,6 @@ if(NOT APPLE AND NOT EMSCRIPTEN AND NOT TARGET ZLIB::ZLIB)
+         # We want to link against the stub library instead of statically linking anyway,
+         # so we hack find_library to only consider shared object libraries when looking for libz
+         set(_CMAKE_FIND_LIBRARY_SUFFIXES_orig ${CMAKE_FIND_LIBRARY_SUFFIXES})
+-        set(CMAKE_FIND_LIBRARY_SUFFIXES .so)
+     endif()
+     find_package(ZLIB REQUIRED)
+     if(ANDROID)
