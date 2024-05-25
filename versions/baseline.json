@@ -6029,7 +6029,7 @@
       "port-version": 8
     },
     "nanoflann": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.5",
       "port-version": 0
     },
     "nanogui": {
