@@ -9,6 +9,8 @@ vcpkg_from_github(
   PATCHES
     # Module elf request new library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.
     Disable-module-elf.patch
+    # Linux builds are broken on various distributions (https://github.com/VirusTotal/yara/issues/2050), this is the backported fix for this issues
+    fix-linux-build-issues.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
