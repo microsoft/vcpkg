@@ -39,7 +39,21 @@
             "llvm"
           ],
           "platform": "x64"
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "egl"
+          ],
+          "platform": "!osx"
         }
+      ]
+    },
+    "egl": {
+      "description": "Build support for EGL platform",
+      "dependencies": [
+        "egl-registry"
       ]
     },
     "gles1": {

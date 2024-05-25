@@ -75,9 +75,13 @@ endif()
 
 if(use_gles)
     list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  # shared GLAPI required when building two or more of the following APIs - gles1 gles2
-    list(APPEND MESA_OPTIONS -Degl=enabled)
 else()
     list(APPEND MESA_OPTIONS -Dshared-glapi=auto)
+endif()
+
+if("egl" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Degl=enabled)
+else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
 endif()
 
