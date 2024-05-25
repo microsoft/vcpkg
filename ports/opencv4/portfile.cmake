@@ -132,6 +132,11 @@ if("openmp" IN_LIST FEATURES)
   endif()
 endif()
 
+set(ENABLE_CUDA_FIRST_CLASS_LANGUAGE OFF)
+if("cuda" IN_LIST FEATURES)
+  set(ENABLE_CUDA_FIRST_CLASS_LANGUAGE ON)
+endif()
+
 set(BUILD_opencv_ovis OFF)
 if("ovis" IN_LIST FEATURES)
   set(BUILD_opencv_ovis ON)
@@ -392,7 +397,7 @@ vcpkg_cmake_configure(
         -DX86=${TARGET_IS_X86}
         -DARM=${TARGET_IS_ARM}
         ###### use cmake cuda new language support
-        -DENABLE_CUDA_FIRST_CLASS_LANGUAGE=ON
+        -DENABLE_CUDA_FIRST_CLASS_LANGUAGE=${ENABLE_CUDA_FIRST_CLASS_LANGUAGE}
         ###### ocv_options
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=
