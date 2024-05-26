@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://codeload.github.com/mariadb-corporation/mariadb-connector-cpp/tar.gz/refs/tags/${VERSION}"
     FILENAME "mariadb-connector-cpp-${VERSION}.tar.gz"
-    SHA512 380380fb5f48db8a0e38de4db122207bc076df64ea1ad0d7c74180cf6d1a9c16868c107d32a563ff8b16454cd5089b029d2977f6022dfd27c6b49e243956ba20
+    SHA512 efc0d7866b76b1baa20ab6bbbeb45825ca5e3d8b460e09805343f0e6b638bb0cfcd812d01bd183c5c0077eece5f1bdd5f207e753aa54b5ed218576b7cb37b241
 )
 
 vcpkg_extract_source_archive_ex(
