@@ -1,29 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libass/libass
-    REF 0.17.1
-    SHA512 8bc83347c87c47577cd52230b3698c34301250e9a23f190a565c913defcd47a05695a4f7d9cd2e9a6ad0cfc6341e8ea2d6d779b1d714b2d6144466d2dea53951
+    REF 0.17.2
+    SHA512 a3e6d514c618a3d2a78287060a6de8002d926b606805a9306f41b902b382f221eff5a7276516c9b4dbe48fa2462936ec7a99585b2615fd44c6564c121ec4cb62
     HEAD_REF master
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libass.def DESTINATION ${SOURCE_PATH})
-
-# Since libass uses automake, make and configure, we use a custom CMake file
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-file(COPY ${SOURCE_PATH}/libass/ass.h ${SOURCE_PATH}/libass/ass_types.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ass)
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_EXE_PATH ${PKGCONFIG} DIRECTORY)
 vcpkg_add_to_path(${PKGCONFIG_EXE_PATH})
 
-vcpkg_cmake_configure(
+if("asm" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dasm=enabled)
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path(${NASM_EXE_PATH})
+endif()
+
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
-vcpkg_cmake_install()
+vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
