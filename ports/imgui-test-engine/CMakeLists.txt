@@ -11,6 +11,12 @@ endif()
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_compile_definitions(${PROJECT_NAME}
+    PUBLIC
+        IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL=1
+    PRIVATE
+        IMGUI_TEST_ENGINE_ENABLE_CAPTURE=1
+)
 
 find_package(Stb REQUIRED)
 
@@ -39,7 +45,7 @@ target_sources(
 if(IMGUI_TEST_ENGINE_IMPLOT)
     find_package(implot CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PRIVATE implot::implot)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_TEST_ENGINE_ENABLE_IMPLOT)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_TEST_ENGINE_ENABLE_IMPLOT=1)
 endif()
 
 install(
