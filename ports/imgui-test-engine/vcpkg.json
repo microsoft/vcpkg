@@ -28,6 +28,9 @@
       "dependencies": [
         "implot"
       ]
+    },
+    "std-function": {
+      "description": "Use std::function for function pointers"
     }
   }
 }
