@@ -1,0 +1,11 @@
+cmake_policy(SET CMP0012 NEW)
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (@IMGUI_TEST_ENGINE_IMPLOT@)
+    find_dependency(implot)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/imgui-test-engine-targets.cmake")

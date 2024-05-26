@@ -13,7 +13,7 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         $<INSTALL_INTERFACE:include>
 )
 
@@ -124,6 +124,10 @@ endif()
 
 if(IMGUI_USE_WCHAR32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_USE_WCHAR32)
+endif()
+
+if(IMGUI_TEST_ENGINE)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_TEST_ENGINE)
 endif()
 
 list(REMOVE_DUPLICATES BINDINGS_SOURCES)

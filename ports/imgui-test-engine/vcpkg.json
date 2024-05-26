@@ -1,0 +1,33 @@
+{
+  "name": "imgui-test-engine",
+  "version": "1.90.6",
+  "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
+  "homepage": "https://github.com/ocornut/imgui",
+  "license": null,
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "features": [
+        "test-engine"
+      ]
+    },
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "implot": {
+      "description": "Enable performance tests plotting",
+      "dependencies": [
+        "implot"
+      ]
+    }
+  }
+}
