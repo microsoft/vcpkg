@@ -127,7 +127,7 @@ if(IMGUI_USE_WCHAR32)
 endif()
 
 if(IMGUI_TEST_ENGINE)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_TEST_ENGINE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_ENABLE_TEST_ENGINE)
 endif()
 
 list(REMOVE_DUPLICATES BINDINGS_SOURCES)
