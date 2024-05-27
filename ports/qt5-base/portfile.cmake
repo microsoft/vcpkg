@@ -122,6 +122,15 @@ list(APPEND CORE_OPTIONS
     -no-feature-gssapi
     )
 
+if(VCPKG_TARGET_IS_LINUX)
+    # Accessibility uses at-spi2-core which links dbus,
+    # so we link to ensure to use the same dbus library.
+    list(APPEND CORE_OPTIONS -dbus-linked)
+else()
+    # Enable Qt DBus without linking to it.
+    list(APPEND CORE_OPTIONS -dbus-runtime)
+endif()
+
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
 else()

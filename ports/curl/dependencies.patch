@@ -1,5 +1,5 @@
 diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
-index 056907c..c89c686 100644
+index 9adb96e0a..a013adf7a 100644
 --- a/CMake/curl-config.cmake.in
 +++ b/CMake/curl-config.cmake.in
 @@ -31,6 +31,16 @@ if(@USE_ZLIB@)
@@ -20,7 +20,7 @@ index 056907c..c89c686 100644
  check_required_components("@PROJECT_NAME@")
  
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 049ac34..cc0fe19 100644
+index 656aa7c74..90a7c1371 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -163,7 +163,8 @@ set(CURL_LIBS "")
@@ -74,16 +74,16 @@ index 049ac34..cc0fe19 100644
    if(LIBSSH2_FOUND)
      list(APPEND CURL_LIBS ${LIBSSH2_LIBRARY})
      list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBSSH2_INCLUDE_DIR}")
-@@ -917,6 +917,14 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
+@@ -917,6 +925,14 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
  mark_as_advanced(CURL_USE_GSSAPI)
  
  if(CURL_USE_GSSAPI)
 +  find_package(PkgConfig REQUIRED)
 +  pkg_check_modules(KRB5 REQUIRED krb5 krb5-gssapi)
 +  list(APPEND CURL_LIBS ${KRB5_LINK_LIBRARIES} resolv)
-+  set(HAVE_GSSAPI_GSSAPI_H ON)
-+  set(HAVE_GSSAPI_GSSAPI_GENERIC_H ON)
-+  set(HAVE_GSSAPI_GSSAPI_KRB5_H ON)
++  check_include_file_concat("gssapi/gssapi.h"  HAVE_GSSAPI_GSSAPI_H)
++  check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
++  check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
 +  set(HAVE_GSSAPI ON)
 +  elseif(0)
    find_package(GSS)
