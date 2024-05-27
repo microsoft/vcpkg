@@ -35,6 +35,13 @@
         "tool"
       ],
       "platform": "!android & !uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "gssapi"
+      ],
+      "platform": "linux"
     }
   ]
 }

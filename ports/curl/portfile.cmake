@@ -1,18 +1,10 @@
 string(REPLACE "." "_" curl_version "curl-${VERSION}")
 
-# Fix for HTTP compression introduced in 8.7.1; should be fixed the following release
-vcpkg_download_distfile(
-    COMPRESSION_FIX
-    URLS https://github.com/curl/curl/commit/b30d694a027eb771c02a3db0dee0ca03ccab7377.patch?full_index=1
-    FILENAME curl-compression-fix-b30d694a027eb771c02a3db0dee0ca03ccab7377.patch
-    SHA512 2658826a7331adb86cd7cd692dac6c7bf79bbd9c76c11780f33b1143b6d04edfe64223356701343c31209261decffc883ddba061d5370d7872a81f2a18780c33
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 38a1f7d7f5c83922cd4e0a858ac803d230d691c8f4df7e5086062c6991da740e626aa86675683282bc8555fc4cb962a08ba1a7ce817d78961d749d6d580fb9fa
+    SHA512 e66cbf9bd3ae7b9b031475210b80b883b6a133042fbbc7cf2413f399d1b38aa54ab7322626abd3c6f1af56e0d540221f618aa903bd6b463ac8324f2c4e92dfa8
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -24,7 +16,6 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
-        "${COMPRESSION_FIX}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -54,10 +45,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(OPTIONS "")
-if("idn2" IN_LIST FEATURES OR ("ldap" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS))
-    vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
-endif()
 
 if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
@@ -76,10 +63,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DENABLE_UNICODE=ON)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
