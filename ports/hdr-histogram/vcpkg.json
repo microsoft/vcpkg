@@ -1,0 +1,26 @@
+{
+  "name": "hdr-histogram",
+  "version-semver": "0.11.8",
+  "description": "'C' port of High Dynamic Range (HDR) Histogram",
+  "homepage": "https://github.com/HdrHistogram/HdrHistogram_c",
+  "license": "CC0-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "log": {
+      "description": "Logging support for HdrHistogram",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}
