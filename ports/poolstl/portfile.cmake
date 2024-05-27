@@ -17,4 +17,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/poolSTL)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-BSD.txt" "${SOURCE_PATH}/LICENSE-Boost.txt" "${SOURCE_PATH}/LICENSE-MIT.txt")
+vcpkg_install_copyright(
+    COMMENT [[
+poolSTL is triple-licensed under the BSD 2-Clause License,
+the Boost Software License 1.0, and the MIT license.
+You may select, at your option, one of the above-listed licenses.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE-BSD.txt"
+        "${SOURCE_PATH}/LICENSE-Boost.txt"
+        "${SOURCE_PATH}/LICENSE-MIT.txt"
+)
