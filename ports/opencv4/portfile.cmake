@@ -49,7 +49,6 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"       WITH_ADE
- "avif"      WITH_AVIF
  "calib3d"   BUILD_opencv_calib3d
  "contrib"   WITH_CONTRIB
  "cuda"      WITH_CUBLAS
@@ -75,7 +74,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "nothread"  OPENCV_DISABLE_THREAD_SUPPORT
  "opencl"    WITH_OPENCL
  "openvino"  WITH_OPENVINO
- "openexr"   WITH_OPENEXR
+ #"openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "png"       WITH_PNG
@@ -294,7 +293,7 @@ if(WITH_IPP)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
-        FILENAME "opencv-cache/ippicv/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
         SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
     )
     else()
@@ -304,14 +303,14 @@ if(WITH_IPP)
   elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
-          FILENAME "opencv-cache/ippicv/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a-ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
-          SHA512 ce4a2fbcf77d435cabecd9b414950db4bd34f88dde385e4a9139586a9c6d31f09e32d13d7ae36ca64418d5511777b5ba212c06422fe5ae1508342846613ca26d
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
+        SHA512 ce4a2fbcf77d435cabecd9b414950db4bd34f88dde385e4a9139586a9c6d31f09e32d13d7ae36ca64418d5511777b5ba212c06422fe5ae1508342846613ca26d
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_ia32_20230919_general.tgz"
-        FILENAME "opencv-cache/ippicv/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a-ippicv_2021.10.0_lnx_ia32_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_ia32_20230919_general.tgz"
         SHA512 534fdd08b6f669665cf6a3f719f54505cf53e800f90ba93d96e77b1e149b260738cb59c685c424788c06d924a88756c3038d27bd0e33acdb51e0051f9aac421c
       )
     else()
@@ -322,13 +321,13 @@ if(WITH_IPP)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_intel64_20230919_general.zip"
-        FILENAME "opencv-cache/ippicv/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a-ippicv_2021.10.0_win_intel64_20230919_general.zip"
+        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_win_intel64_20230919_general.zip"
         SHA512 5aff6d9c8474e9f13e54d849a3e9b03de1e82590437d90cbde8e6c1d3be3a2b0f4263b5171796e8dab41181f8d7f8fd7c6d46e6f4aedacc98213aa5270bd1720
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_ia32_20230919_general.zip"
-        FILENAME "opencv-cache/ippicv/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a-ippicv_2021.10.0_win_ia32_20230919_general.zip"
+        FILENAME "opencv-cache/ippicv/8ff93c69415ab0835cc1e94dc5660f5d-ippicv_2021.10.0_win_ia32_20230919_general.zip"
         SHA512 bd63e8edf52e561154953217d26ca64cc500b529e55b8e3abb927d69766fff979fed2b16d51e453f75e61679d3569abbc5c1bbb2652a93f3f178fbf27354d624
       )
     else()
@@ -479,6 +478,10 @@ vcpkg_cmake_configure(
         -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
         -DWITH_ITT=OFF
+        -DWITH_NVCUVID=OFF
+        -DWITH_NVCUVENC=OFF
+        -DWITH_AVIF=OFF
+        -DWITH_OPENEXR=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}

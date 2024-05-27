@@ -10,7 +10,6 @@
       "default-features": false,
       "features": [
         "ade",
-        "avif",
         "calib3d",
         "contrib",
         "dnn",

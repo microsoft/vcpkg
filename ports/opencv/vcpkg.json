@@ -26,18 +26,6 @@
         }
       ]
     },
-    "avif": {
-      "description": "avif support",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "avif"
-          ]
-        }
-      ]
-    },
     "calib3d": {
       "description": "opencv_calib3d module",
       "dependencies": [

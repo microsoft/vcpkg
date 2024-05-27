@@ -81,12 +81,13 @@
    endif()
  
    if(NOT PNG_FOUND)
-@@ -296,7 +296,7 @@ if(WITH_OPENEXR)
+@@ -296,7 +296,8 @@ if(WITH_OPENEXR)
    ocv_clear_vars(HAVE_OPENEXR)
    if(NOT BUILD_OPENEXR)
      ocv_clear_internal_cache_vars(OPENEXR_INCLUDE_PATHS OPENEXR_LIBRARIES OPENEXR_ILMIMF_LIBRARY OPENEXR_VERSION)
 -    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
-+    find_package(OpenEXR REQUIRED)
++    find_package(OpenEXR CONFIG REQUIRED)
++    set(OPENEXR_FOUND TRUE)
    endif()
  
    if(OPENEXR_FOUND)
