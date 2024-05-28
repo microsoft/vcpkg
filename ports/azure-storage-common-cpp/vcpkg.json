@@ -4,8 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-storage-common-cpp",
-  "version-semver": "12.5.0",
-  "port-version": 1,
+  "version-semver": "12.6.0",
   "description": [
     "Microsoft Azure Common Storage SDK for C++",
     "This library provides common Azure Storage-related abstractions for Azure SDK."
@@ -16,7 +15,7 @@
     {
       "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.10.3"
+      "version>=": "1.11.3"
     },
     {
       "name": "libxml2",

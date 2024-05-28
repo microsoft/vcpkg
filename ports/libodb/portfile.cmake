@@ -9,6 +9,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-linux.patch
 )
 file(REMOVE "${SOURCE_PATH}/version")
 
@@ -21,7 +23,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DCMAKE_CXX_STANDARD=11 # C++17 does not allow dynamic exception specifications
+        -DCMAKE_CXX_STANDARD=11 # 17 removes 'auto_ptr'
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
