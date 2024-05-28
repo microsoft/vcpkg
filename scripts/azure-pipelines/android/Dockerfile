@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:focal-20240216
+FROM ubuntu:focal-20240427
 
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://dl.google.com/android/repository/android-ndk-r25c-linux.zip /android-ndk-r25c-linux.zip

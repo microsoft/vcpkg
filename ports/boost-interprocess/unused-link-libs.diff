@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2b3f13b..913fa25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,12 +18,10 @@ target_link_libraries(boost_interprocess
+     Boost::config
+     Boost::container
+     Boost::core
+-    Boost::integer
+     Boost::intrusive
+     Boost::move
+     Boost::static_assert
+     Boost::type_traits
+-    Boost::unordered
+     Boost::winapi
+ )
+ 
