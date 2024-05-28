@@ -75,7 +75,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 else()
     if(VCPKG_TARGET_IS_OSX)
-        vcpkg_replace_string("${SOURCE_PATH}/src/build-tools/mit-krb5.pc.in" "-lkrb5" "-framework Kerberos -lkrb5")
+        vcpkg_replace_string("${SOURCE_PATH}/src/build-tools/mit-krb5.pc.in" "@COM_ERR_LIB@" "@COM_ERR_LIB@ -framework Kerberos")
         set(OPTIONS_OSX "LDFLAGS=-framework Kerberos \$LDFLAGS")
     endif()
     vcpkg_configure_make(
