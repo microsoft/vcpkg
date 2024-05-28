@@ -294,7 +294,7 @@
     },
     "asyncplusplus": {
       "baseline": "1.1",
-      "port-version": 2
+      "port-version": 3
     },
     "at-spi2-atk": {
       "baseline": "2.38.0",
