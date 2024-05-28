@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -116,6 +116,15 @@
     },
     "geojson": {
       "description": "Convert Geo JSON format to vtkPolyData"
+    },
+    "ioocct": {
+      "description": "Build with IOOCCT module",
+      "dependencies": [
+        {
+          "name": "opencascade",
+          "default-features": false
+        }
+      ]
     },
     "mpi": {
       "description": "MPI functionality for VTK",
