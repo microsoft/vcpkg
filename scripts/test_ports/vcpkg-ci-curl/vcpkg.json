@@ -41,7 +41,7 @@
       "features": [
         "gssapi"
       ],
-      "platform": "linux | (x64 & osx)"
+      "platform": "linux | osx"
     }
   ]
 }
