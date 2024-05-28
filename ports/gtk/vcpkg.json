@@ -1,7 +1,7 @@
 {
   "name": "gtk",
   "version": "4.10.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": "LGPL-2.0-only",
@@ -24,7 +24,6 @@
       "platform": "linux"
     },
     "gdk-pixbuf",
-    "gettext",
     {
       "name": "gettext",
       "host": true,
@@ -33,6 +32,7 @@
         "tools"
       ]
     },
+    "gettext-libintl",
     "glib",
     {
       "name": "glib",
