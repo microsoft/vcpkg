@@ -9378,7 +9378,7 @@
     },
     "wolfssl": {
       "baseline": "5.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "2.7.0",
