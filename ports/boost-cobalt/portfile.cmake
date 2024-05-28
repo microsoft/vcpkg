@@ -4,19 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/cobalt
     REF boost-${VERSION}
-    SHA512 167e1d48eefe2517b9cd3796602798cb3d8d14655e30cb175b468f667fb8ae132aba508fc96987c4518d0a364aa9b70461d368c56b62d18fcd0f923cd6525e7f
+    SHA512 4a1128d9b659ad8aa66d95b2cbd9a9bea67ac0415f37b80922010f838787431f3345840873271ae2fc27495df5709d0542aee0b043258a8160c59c61a79916d4
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
-    "import ../../config/checks/config"
-    "import ../config/checks/config"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
-)
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

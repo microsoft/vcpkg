@@ -119,7 +119,17 @@ list(APPEND CORE_OPTIONS
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
+    -no-feature-gssapi
     )
+
+if(VCPKG_TARGET_IS_LINUX)
+    # Accessibility uses at-spi2-core which links dbus,
+    # so we link to ensure to use the same dbus library.
+    list(APPEND CORE_OPTIONS -dbus-linked)
+else()
+    # Enable Qt DBus without linking to it.
+    list(APPEND CORE_OPTIONS -dbus-runtime)
+endif()
 
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
