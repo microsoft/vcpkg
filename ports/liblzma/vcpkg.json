@@ -16,8 +16,7 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools",
-      "supports": "!windows, mingw"
+      "description": "Build tools"
     }
   }
 }
