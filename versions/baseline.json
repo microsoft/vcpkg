@@ -5146,7 +5146,7 @@
     },
     "libuvc": {
       "baseline": "0.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "libvault": {
       "baseline": "0.56.0",
