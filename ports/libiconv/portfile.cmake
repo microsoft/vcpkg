@@ -50,19 +50,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}") # share contains un
 
 # Please keep, the default usage is broken
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(READ "${SOURCE_PATH}/COPYING.LIB" copying_lib)
-file(READ "${SOURCE_PATH}/COPYING" copying_tool)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "
+
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB" "${SOURCE_PATH}/COPYING" COMMENT "
 The libiconv and libcharset libraries and their header files are under LGPL,
 see COPYING.LIB below.
 
-The iconv program and the documentation are under GPL, see COPYING below.
-
-# COPYING.LIB
-
-${copying_lib}
-
-# COPYING
-
-${copying_tool}
-")
+The iconv program and the documentation are under GPL, see COPYING below.")

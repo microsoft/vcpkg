@@ -6,10 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO baresip/re
     REF "v${VERSION}"
-    SHA512 7c03502aae0424bb05e03320c2497de0ec534d872334fe16ec0a688efbc1cc493ad1774e9802e0dc58bb396b4b8a065f3e338deeff4dd1ddd87cb76793e82306
+    SHA512 e911da81cca288d0e9f92273c4a8bbd89ceac7e46777483d143cc93f4d58e604976946d944a173ae823edb38f344b2c6cc6949611dacfeb7a97ede31e2089328
     HEAD_REF main
     PATCHES
-        fix-static-library-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBRE_BUILD_SHARED)

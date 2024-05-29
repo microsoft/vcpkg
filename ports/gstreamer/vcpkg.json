@@ -1,7 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.22.5",
-  "port-version": 7,
+  "port-version": 8,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -646,6 +646,19 @@
           ]
         },
         "soundtouch"
+      ]
+    },
+    "soup": {
+      "description": "Enable support for the soup plugin",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-good"
+          ]
+        },
+        "libsoup"
       ]
     },
     "speex": {

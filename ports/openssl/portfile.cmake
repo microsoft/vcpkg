@@ -7,23 +7,14 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if (NOT "${VERSION}" MATCHES [[^([0-9]+)\.([0-9]+)\.([0-9]+)$]])
-    message(FATAL_ERROR "Version regex did not match.")
-endif()
-set(OPENSSL_VERSION_MAJOR "${CMAKE_MATCH_1}")
-set(OPENSSL_VERSION_MINOR "${CMAKE_MATCH_2}")
-set(OPENSSL_VERSION_FIX "${CMAKE_MATCH_3}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 aaf4f13b7b8020be37837f8084ab7aa3db64e6eb1ecabf04473ed5bd09bcabb8790f0dc1f7604febbbf974702b1fbe41795a7b575e7f88b07cbe094493926a6b
+    SHA512 42cc11475d8b31706ec151c9aed0178e17b788c6b38636ae1cde363872139ed85f5b9efd0c75012f4d6f15ec8100e1afe5d528e72b88a5d3dea4125c9b0804aa
     PATCHES
-        asm-comments.patch
-        declspec-align.patch
-        qt-msvc.patch
+        cmake-config.patch
+        command-line-length.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
@@ -31,7 +22,6 @@ vcpkg_from_github(
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
-        unix/disable-quicserver.patch
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS
@@ -82,4 +72,13 @@ else()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if (NOT "${VERSION}" MATCHES [[^([0-9]+)\.([0-9]+)\.([0-9]+)$]])
+    message(FATAL_ERROR "Version regex did not match.")
+endif()
+set(OPENSSL_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(OPENSSL_VERSION_MINOR "${CMAKE_MATCH_2}")
+set(OPENSSL_VERSION_FIX "${CMAKE_MATCH_3}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

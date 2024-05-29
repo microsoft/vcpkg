@@ -490,7 +490,7 @@ endif()
 
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-if(${BUILD_opencv_dnn})
+if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
@@ -512,6 +512,9 @@ find_dependency(Threads)")
   endif()
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("ffmpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
   endif()
   if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "

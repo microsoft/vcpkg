@@ -7,13 +7,11 @@ else()
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(OMPL_VERSION 1.5.1)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ompl/ompl
-    REF 1.5.1
-    SHA512 2f28d29f32f3bb03e67b29ce251e4786364847a25e3c4cf66d7663ed38dca4da71d4e03cf9ce647710d9524a3907c76c09795e77f041cb8822f695d28f5ca570
+    REF "${VERSION}"
+    SHA512 d1024d7cc8e309a1df94a950be67eefae1e66abaccd6b6b8980939559aee3d73c05c838ab24c818b6b57ce6c4b3181fde7595d3d1dd36d6cd0c6d125338084ac
     HEAD_REF master
     PATCHES
         0001_Export_targets.patch

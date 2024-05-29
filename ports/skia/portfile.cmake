@@ -3,20 +3,25 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "canvaskit/${VERSION}"
-    SHA512 4672cfef8c92f37418e27df30a4e3fd6f7ca6273521e9d6b7755d9285800ad1ea6eff66639a17f591e6921ec8b78aa828500399a83295f9984ab58ebaff0ec24
+    REF "e7bf161ff959268a2a2f37530a6ea61c27019d33"
+    SHA512 9cb0c39c6721c5e27a24bee97c93925b7b1f4dd774c08520384ccdf736ab5097e49692529a9fe46f50ae799e6aa9f3e8d7ec43cf9177914fcd6f6f01b76a52c4
     PATCHES
         disable-msvc-env-setup.patch
-        uwp.patch
         disable-dev-test.patch
-        skdebug-stdio.patch
+        skia-include-string.patch
+        bentleyottmann-build.patch
+        graphite.patch
+        vulkan-headers.patch
 )
+
+# De-vendor
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
     URL "https://github.com/abseil/abseil-cpp.git"
-    REF "cb436cf0142b4cbe47aae94223443df7f82e2920"
+    REF "334aca32051ef6ede2711487acf45d959e9bdffc"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(d3d12allocator
@@ -26,10 +31,8 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "6e25bf7674bbcb1d1e613dc0700c958830950037"
+    REF "bac513d0ae286600ea0f75a75223a5b52a198b9b"
     LICENSE_FILE LICENSE
-    PATCHES
-        dawn-dedup-native-proc-gen.patch
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
@@ -38,12 +41,12 @@ declare_external_from_git(dng_sdk
 )
 declare_external_from_git(jinja2
     URL "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
-    REF "ee69aa00ee8536f61db6a451f3858745cf587de6"
+    REF "e2d024354e11cc6b041b0cff032d73f0c7e43a07"
     LICENSE_FILE LICENSE.rst
 )
 declare_external_from_git(markupsafe
     URL "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
-    REF "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
+    REF "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(piex
@@ -51,34 +54,24 @@ declare_external_from_git(piex
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(sfntly
-    URL "https://github.com/googlei18n/sfntly.git"
-    REF "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
-    LICENSE_FILE README.md
-)
 declare_external_from_git(spirv-cross
     URL "https://github.com/KhronosGroup/SPIRV-Cross"
-    REF "030d0be28c35bafebd20660c112852b1d8c8c6ca"
+    REF "b8fcf307f1f347089e3c46eb4451d27f32ebc8d3"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "8e2ad27488ed2f87c068c01a8f5e8979f7086405"
+    REF "8b246ff75c6615ba4532fe4fde20f1be090c3764"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "93c13345e176f3f8bdb4b07e59c5e3365b3dbf44"
+    REF "f20663ca7fec48fdc88e4c4d7c5889f8b4cc5664"
     LICENSE_FILE LICENSE
-)
-declare_external_from_git(vulkan-tools
-    URL "https://github.com/KhronosGroup/Vulkan-Tools"
-    REF "2c83dd6cb2ef710bab843b69776997d6f2c12ba4"
-    LICENSE_FILE LICENSE.txt
 )
 declare_external_from_git(wuffs
     URL "https://github.com/google/wuffs-mirror-release-c.git"
-    REF "a0041ac0310b3156b963e2f2bea09245f25ec073"
+    REF "e3f919ccfe3ef542cfc983a82146070258fb57f8"
     LICENSE_FILE LICENSE
 )
 
@@ -126,6 +119,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(APPEND OPTIONS " skia_enable_skparagraph=false")
+        string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
 endif()
 
@@ -142,7 +136,6 @@ set(required_externals
     libpng
     libwebp
     piex
-    sfntly
     zlib
     wuffs
 )
@@ -191,16 +184,8 @@ endif()
 if("vulkan" IN_LIST FEATURES)
     list(APPEND required_externals
         vulkan_headers
-        vulkan-tools
     )
-    string(APPEND OPTIONS " skia_use_vulkan=true")
-    find_file(vk_mem_alloc_h "vk_mem_alloc.h" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES "vma" REQUIRED)
-    file(COPY "${vk_mem_alloc_h}" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
-    # Cf. third_party/vulkanmemoryallocator/GrVulkanMemoryAllocator.h:25
-    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include/vk_mem_alloc.h"
-        "#include <vulkan/vulkan.h>"
-        "#ifndef VULKAN_H_\n    #include <vulkan/vulkan.h>\n#endif"
-    )
+    string(APPEND OPTIONS " skia_use_vulkan=true skia_vulkan_memory_allocator_dir=\"${CURRENT_INSTALLED_DIR}\"")
 endif()
 
 if("direct3d" IN_LIST FEATURES)
@@ -211,6 +196,10 @@ if("direct3d" IN_LIST FEATURES)
         d3d12allocator
     )
     string(APPEND OPTIONS " skia_use_direct3d=true")
+endif()
+
+if("graphite" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_enable_graphite=true")
 endif()
 
 if("dawn" IN_LIST FEATURES)
@@ -236,13 +225,14 @@ They can be installed on Debian based systems via
         markupsafe
         vulkan_headers
 ## Remove
-        vulkan-tools
         abseil-cpp
 ## REMOVE ^
         dawn
     )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/externals/opengl-registry")
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/share/opengl/" DESTINATION "${SOURCE_PATH}/third_party/externals/opengl-registry/xml")
     # cf. external dawn/src/dawn/native/BUILD.gn
-    string(APPEND OPTIONS " skia_use_dawn=true dawn_use_angle=false dawn_use_swiftshader=false")
+    string(APPEND OPTIONS " skia_use_dawn=true dawn_use_swiftshader=false")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(APPEND OPTIONS " dawn_complete_static_libs=true")
     endif()
@@ -252,7 +242,7 @@ get_externals(${required_externals})
 if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn")
     vcpkg_find_acquire_program(GIT)
     vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py"
-        "get_git()," 
+        "get_git(),"
         "\"${GIT}\","
     )
 endif()

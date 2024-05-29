@@ -12,7 +12,6 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
-        fix_cmake_build_type.patch
         harfbuzz.patch
         fix_egl.patch
         fix_egl_2.patch
@@ -21,6 +20,7 @@ set(${PORT}_PATCHES
         clang-cl_source_location.patch
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
+        fix_deploy_windows.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -95,6 +95,14 @@ INVERTED_FEATURES
 list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 list(APPEND FEATURE_OPTIONS -DFEATURE_xml:BOOL=ON)
 
+if("dbus" IN_LIST FEATURES AND VCPKG_TARGET_IS_LINUX)
+  list(APPEND FEATURE_OPTIONS -DINPUT_dbus=linked)
+elseif("dbus" IN_LIST FEATURES)
+  list(APPEND FEATURE_OPTIONS -DINPUT_dbus=runtime)
+else()
+  list(APPEND FEATURE_OPTIONS -DINPUT_dbus=no)
+endif()
+
 if(VCPKG_QT_NAMESPACE)
     list(APPEND FEATURE_OPTIONS "-DQT_NAMESPACE:STRING=${VCPKG_QT_NAMESPACE}")
 endif()
@@ -122,14 +130,13 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL=ON)
 #list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapAtomic:BOOL=ON) # Cannot be disabled on x64 platforms
 #list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapRt:BOOL=ON) # Cannot be disabled on osx
-list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
-list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
  FEATURES
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
+    "securetransport"     FEATURE_securetransport
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
@@ -164,6 +171,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
     "gles2"               FEATURE_opengles2
+    "gles3"               FEATURE_opengles3
     #Cannot be required since Qt will look in CONFIG mode first but is controlled via CMAKE_DISABLE_FIND_PACKAGE_Vulkan below
     #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_WrapVulkanHeaders 
     "egl"                 FEATURE_egl
@@ -182,6 +190,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
+    "gles3"               CMAKE_DISABLE_FIND_PACKAGE_GLESv3
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -196,7 +205,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
 
-if( "gles2" IN_LIST FEATURES)
+if("gles2" IN_LIST FEATURES)
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='es2')
     list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
 endif()
@@ -218,8 +227,7 @@ else()
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xkbcommon=no)
 endif()
 
-# Disable GLES3
-list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles3:BOOL=OFF)
+# Disable OpenGL ES 3.1 and 3.2
 list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles31:BOOL=OFF)
 list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles32:BOOL=OFF)
 
@@ -254,9 +262,13 @@ foreach(_db IN LISTS DB_LIST)
 endforeach()
 
 # printsupport features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
-    # )
-list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
+  FEATURES
+  "cups" FEATURE_cups
+  INVERTED_FEATURES
+  "cups" CMAKE_DISABLE_FIND_PACKAGE_Cups
+)
+
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
     FEATURES
@@ -495,4 +507,27 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
             remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
         endif()
     endforeach()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  # dlls owned but not automatically installed by qtbase
+  # this is required to avoid ownership troubles in downstream qt modules
+  set(qtbase_owned_dlls
+        double-conversion.dll
+        icudt74.dll
+        icuin74.dll
+        icuuc74.dll
+        libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
+        libcrypto-3.dll # for x86
+        pcre2-16.dll
+        zlib1.dll
+        zstd.dll
+  )
+  list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
+  foreach(dll IN LISTS qtbase_owned_dlls)
+    if(NOT EXISTS "${dll}") # Need to remove non-existant dlls since dependencies could have been build statically
+      list(REMOVE_ITEM qtbase_owned_dlls "${dll}")
+    endif()
+  endforeach()
+  file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()

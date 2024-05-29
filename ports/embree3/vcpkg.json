@@ -1,13 +1,12 @@
 {
   "name": "embree3",
   "version": "3.13.5",
-  "port-version": 2,
+  "port-version": 3,
   "description": "High Performance Ray Tracing Kernels.",
   "homepage": "https://github.com/embree/embree",
   "license": "Apache-2.0",
   "supports": "!arm | osx",
   "dependencies": [
-    "tbb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,39 +17,63 @@
     }
   ],
   "default-features": [
-    "default-features"
+    "filter-function",
+    "geometry-curve",
+    "geometry-grid",
+    "geometry-instance",
+    "geometry-point",
+    "geometry-quad",
+    "geometry-subdivision",
+    "geometry-triangle",
+    "geometry-user",
+    "ray-packets",
+    "tasking-tbb"
   ],
   "features": {
-    "avx": {
-      "description": "Enables AVX ISA."
+    "backface-culling": {
+      "description": "Enables backface culling."
     },
-    "avx2": {
-      "description": "Enables AVX2 ISA."
+    "compact-polys": {
+      "description": "Enables double indexed poly layout."
     },
-    "avx512": {
-      "description": "Enables AVX512 ISA."
+    "filter-function": {
+      "description": "Enables filter functions."
     },
-    "default-features": {
-      "description": "Enables all default features.",
+    "geometry-curve": {
+      "description": "Enables support for curve geometries."
+    },
+    "geometry-grid": {
+      "description": "Enables support for grid geometries."
+    },
+    "geometry-instance": {
+      "description": "Enables support for instances."
+    },
+    "geometry-point": {
+      "description": "Enables support for point geometries."
+    },
+    "geometry-quad": {
+      "description": "Enables support for quad geometries."
+    },
+    "geometry-subdivision": {
+      "description": "Enables support for subdiv geometries."
+    },
+    "geometry-triangle": {
+      "description": "Enables support for triangle geometries."
+    },
+    "geometry-user": {
+      "description": "Enables support for user geometries."
+    },
+    "ray-mask": {
+      "description": "Enables ray mask support."
+    },
+    "ray-packets": {
+      "description": "Enabled support for ray packets."
+    },
+    "tasking-tbb": {
+      "description": "Use oneTBB as task system.",
       "dependencies": [
-        {
-          "name": "embree3",
-          "default-features": false,
-          "features": [
-            "avx",
-            "avx2",
-            "sse2",
-            "sse42"
-          ],
-          "platform": "x64 | x86"
-        }
+        "tbb"
       ]
-    },
-    "sse2": {
-      "description": "Enables SSE2 ISA."
-    },
-    "sse42": {
-      "description": "Enables SSE4.2 ISA."
     }
   }
 }
