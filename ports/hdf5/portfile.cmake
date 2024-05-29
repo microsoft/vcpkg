@@ -27,8 +27,8 @@ if ("threadsafe" IN_LIST FEATURES AND
     set(ALLOW_UNSUPPORTED ON)
 endif()
 
-if ("fortran" IN_LIST FEATURE)
-    message(WARNING "Feature 'fortran' is not yet official supported within VCPKG. Build will most likly fail if ninja 1.10 and a Fortran compiler are not available.")
+if ("fortran" IN_LIST FEATURES)
+    message(WARNING "Feature 'fortran' is not yet officially supported within VCPKG. Build will most likly fail if ninja 1.10 and a Fortran compiler are not available.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
