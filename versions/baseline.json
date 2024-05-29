@@ -1953,7 +1953,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.5.4",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "cppunit": {
