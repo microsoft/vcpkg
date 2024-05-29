@@ -15,6 +15,7 @@ vcpkg_from_github(
         0006-create-destination-mlir-directory.patch
         75711.patch # [clang] Add intrin0.h header to mimic intrin0.h used by MSVC STL for clang-cl #75711
         79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
+        82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
 )
 
 vcpkg_check_features(
