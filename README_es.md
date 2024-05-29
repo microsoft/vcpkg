@@ -4,6 +4,7 @@
 [English](README.md)
 [한국어](README_ko_KR.md)
 [Français](README_fr.md)
+[Tiếng Việt](README_vn.md)
 
 Vcpkg ayuda a manejar bibliotecas de C y C++ en Windows, Linux y MacOS.
 Esta herramienta y ecosistema se encuentran en constante evolución ¡Siempre apreciamos contribuciones nuevas!
@@ -241,16 +242,8 @@ posteriormente agregue al path el archivo de cadena de herramientas de Vcpkg:
 
 #### Vcpkg con CLion
 
-Abra los ajustes de Cadena de Herramientas (Toolchains)
-(File > Settings en Windows y Linux, Clion > Preferences en macOS),
-y entre en la sección de ajustes de CMake (Build, Execution, Deployment > CMake).
-Finalmente, en `CMake options`, agregue la línea siguiente:
-
-```sh
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
-```
-
-Desafortunadamente, tendrá que hacerlo para cada perfil.
+Vcpkg dispone de integracion con el IDE Clion
+Para detalles visite la [documentación oficial](https://www.jetbrains.com/help/clion/package-management.html).
 
 #### Vcpkg como Submódulo
 
