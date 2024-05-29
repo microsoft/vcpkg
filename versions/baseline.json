@@ -3613,8 +3613,8 @@
       "port-version": 0
     },
     "imguizmo": {
-      "baseline": "1.83",
-      "port-version": 1
+      "baseline": "2024-05-29",
+      "port-version": 0
     },
     "immer": {
       "baseline": "0.8.1",
