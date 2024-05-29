@@ -7,6 +7,11 @@ option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
 
 set(PKGCONFIG_LIBS_PRIVATE "")
 
+if(MSVC)
+    add_compile_options(/guard:cf)
+    add_link_options(/guard:cf)
+endif()
+
 add_library(sqlite3 sqlite3.c sqlite3.rc)
 
 target_include_directories(sqlite3 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:include>)
