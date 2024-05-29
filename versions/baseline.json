@@ -1425,7 +1425,7 @@
       "port-version": 5
     },
     "c-ares": {
-      "baseline": "1.28.1",
+      "baseline": "1.29.0",
       "port-version": 0
     },
     "c-dbg-macro": {
