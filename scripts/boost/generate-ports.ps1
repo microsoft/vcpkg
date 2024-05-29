@@ -29,7 +29,7 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 $defaultPortVersion = 1
 $portVersions = @{
     'boost-container' = 1;
-    'boost-math' = 1;
+    'boost-math' = 2;
 }
 
 function Get-PortVersion {
