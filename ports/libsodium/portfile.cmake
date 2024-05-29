@@ -43,7 +43,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endblock()
 else()
     if(NOT VCPKG_TARGET_IS_MINGW)
-        list(APPEND OPTIONS --with-pic=yes)
+        list(APPEND OPTIONS --disable-pie)
     endif()
     
     vcpkg_configure_make(
