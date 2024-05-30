@@ -3,7 +3,7 @@
   "version": "1.1.1",
   "description": "Native File Dialog Extended",
   "homepage": "https://github.com/btzy/nativefiledialog-extended",
-  "license": "zlib",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
