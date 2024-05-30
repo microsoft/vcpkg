@@ -6,6 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
       fix-array.patch #https://github.com/facebookincubator/gloo/issues/332
+      fix-c++-standard.patch
   )
 
 # Determine which backend to build via specified feature
