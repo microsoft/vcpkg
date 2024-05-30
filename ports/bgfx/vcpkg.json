@@ -6,7 +6,7 @@
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
   "documentation": "https://bkaradzic.github.io/bgfx",
-  "license": "BSD-2-Clause",
+  "license": null,
   "dependencies": [
     "libsquish",
     "miniz",

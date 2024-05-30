@@ -48,7 +48,12 @@ if ("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES bin2c shaderc geometryc geometryv texturec texturev AUTO_CLEAN)
 endif ()
 
-vcpkg_install_copyright(FILE_LIST "${CURRENT_PACKAGES_DIR}/share/licences/${PORT}/LICENSE")
+vcpkg_install_copyright(
+  FILE_LIST "${CURRENT_PACKAGES_DIR}/share/licences/${PORT}/LICENSE"
+  COMMENT [[
+bgfx includes third-party components which are subject to specific license
+terms. Check the sources for details.
+]])
 
 file(REMOVE_RECURSE
   "${CURRENT_PACKAGES_DIR}/share/licences"
