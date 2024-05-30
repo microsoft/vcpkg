@@ -350,7 +350,7 @@
     },
     "autodock-vina": {
       "baseline": "1.2.5",
-      "port-version": 2
+      "port-version": 3
     },
     "avcpp": {
       "baseline": "2.4.0",
@@ -1022,7 +1022,7 @@
     },
     "boost-math": {
       "baseline": "1.85.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-metaparse": {
       "baseline": "1.85.0",
@@ -1526,7 +1526,7 @@
     },
     "cctag": {
       "baseline": "1.0.2",
-      "port-version": 6
+      "port-version": 7
     },
     "cctz": {
       "baseline": "2.4",
@@ -9061,7 +9061,7 @@
       "port-version": 0
     },
     "vcpkg-boost": {
-      "baseline": "2024-04-25",
+      "baseline": "2024-05-15",
       "port-version": 0
     },
     "vcpkg-cmake": {
