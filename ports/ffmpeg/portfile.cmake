@@ -19,6 +19,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -816,6 +817,7 @@ x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG
 function(append_dependencies_from_libs out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
     string(REGEX REPLACE "[ ]+" ";" contents "${arg_LIBS}")
+    list(FILTER contents EXCLUDE REGEX "^-F.+")
     list(FILTER contents EXCLUDE REGEX "^-framework$")
     list(FILTER contents EXCLUDE REGEX "^-L.+")
     list(FILTER contents EXCLUDE REGEX "^-libpath:.+")
