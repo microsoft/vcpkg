@@ -1,12 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f4add26d..b87e8455 100644
+index ecce87c..3d938d3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -80,9 +80,10 @@ include(GNUInstallDirs)
- configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/src/butil/config.h @ONLY)
+@@ -86,8 +86,10 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/src/butil
  
  set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
--
+ 
 -find_package(GFLAGS REQUIRED)
 -
 +set(GFLAGS_USE_TARGET_NAMESPACE ON)
@@ -16,7 +15,7 @@ index f4add26d..b87e8455 100644
  execute_process(
      COMMAND bash -c "grep \"namespace [_A-Za-z0-9]\\+ {\" ${GFLAGS_INCLUDE_PATH}/gflags/gflags_declare.h | head -1 | awk '{print $2}' | tr -d '\n'"
      OUTPUT_VARIABLE GFLAGS_NS
-@@ -93,6 +94,8 @@ if(${GFLAGS_NS} STREQUAL "GFLAGS_NAMESPACE")
+@@ -98,6 +100,8 @@ if(${GFLAGS_NS} STREQUAL "GFLAGS_NAMESPACE")
          OUTPUT_VARIABLE GFLAGS_NS
      )
  endif()
@@ -25,7 +24,7 @@ index f4add26d..b87e8455 100644
  
  include_directories(
      ${PROJECT_SOURCE_DIR}/src
-@@ -122,21 +125,21 @@ set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} ${DEBUG_SYMBOL} ${THRIFT_CPP_FLAG}")
+@@ -127,19 +131,19 @@ set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} ${DEBUG_SYMBOL} ${THRIFT_CPP_FLAG}")
  set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer")
  set(CMAKE_C_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-unused-parameter -fno-omit-frame-pointer")
  
@@ -48,43 +47,51 @@ index f4add26d..b87e8455 100644
 -endmacro(use_cxx11)
 +endmacro(use_cxx14)
  
--use_cxx11()
-+use_cxx14()
- 
  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      #required by butil/crc32.cc to boost performance for 10x
+@@ -199,7 +203,7 @@ if(Protobuf_VERSION GREATER 4.21)
+         absl::variant
+     )
+ else()
+-    use_cxx11()
++    use_cxx14()
+ endif()
+ find_package(Threads REQUIRED)
+ find_package(ZLIB REQUIRED)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 868270ea..a70ad23f 100644
+index 8e836a4..c1b1f36 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -31,6 +31,10 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
+@@ -30,6 +30,10 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
+ # shared library needs POSITION_INDEPENDENT_CODE
  set_property(TARGET ${SOURCES_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
  set_property(TARGET ${BUTIL_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
- 
 +if(BRPC_WITH_GLOG)
 +    target_link_libraries(BUTIL_LIB PUBLIC ${GLOG_LIB})
 +    target_link_libraries(SOURCES_LIB PUBLIC ${GLOG_LIB})
 +endif()
+ 
  if(NOT BUILD_SHARED_LIBS)
  add_library(brpc-static STATIC $<TARGET_OBJECTS:BUTIL_LIB>
-                                $<TARGET_OBJECTS:SOURCES_LIB>
-@@ -41,9 +45,6 @@ if(WITH_THRIFT)
+@@ -65,9 +69,7 @@ if(WITH_THRIFT)
  endif()
  
  target_link_libraries(brpc-static PUBLIC ${DYNAMIC_LIB})
 -if(BRPC_WITH_GLOG)
--    target_link_libraries(brpc-static ${GLOG_LIB})
+-    target_link_libraries(brpc-static PUBLIC ${GLOG_LIB})
 -endif()
++
  target_include_directories(brpc-static PUBLIC $<INSTALL_INTERFACE:include>)
- SET_TARGET_PROPERTIES(brpc-static PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
  
-@@ -65,9 +66,6 @@ if(BUILD_SHARED_LIBS)
+ SET_TARGET_PROPERTIES(brpc-static PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
+@@ -90,9 +92,7 @@ if(BUILD_SHARED_LIBS)
                                     $<TARGET_OBJECTS:PROTO_LIB>)
-     target_link_libraries(brpc-shared ${DYNAMIC_LIB})
+     target_link_libraries(brpc-shared PUBLIC ${DYNAMIC_LIB})
      target_include_directories(brpc-shared PUBLIC $<INSTALL_INTERFACE:include>)
--    if(BRPC_WITH_GLOG)
--        target_link_libraries(brpc-shared ${GLOG_LIB})
+-    if(WITH_GLOG)
+-        target_link_libraries(brpc-shared PUBLIC ${GLOG_LIB})
 -    endif()
++
      if(WITH_THRIFT)
-         target_link_libraries(brpc-shared ${THRIFT_LIB})
+         target_link_libraries(brpc-shared PUBLIC ${THRIFT_LIB})
      endif()

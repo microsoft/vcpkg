@@ -1,6 +1,6 @@
 {
   "name": "qtopcua",
-  "version": "6.6.3",
+  "version": "6.7.0",
   "description": "The Qt OPC UA module implements a Qt API to interact with OPC UA on top of a 3rd party OPC UA stack.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -11,6 +11,11 @@
       "features": [
         "network"
       ]
+    },
+    {
+      "name": "qtopcua",
+      "host": true,
+      "default-features": false
     }
   ],
   "default-features": [

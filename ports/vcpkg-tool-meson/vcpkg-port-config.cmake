@@ -2,8 +2,7 @@
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake")
 
-set(meson_path_hash @MESON_PATH_HASH@)
-string(SUBSTRING "${meson_path_hash}" 0 6 meson_short_hash)
+set(meson_short_hash @MESON_SHORT_HASH@)
 
 # Setup meson:
 set(program MESON)
@@ -34,10 +33,7 @@ if(NOT SCRIPT_MESON)
     z_vcpkg_apply_patches(
         SOURCE_PATH "${path_to_search}-tmp/meson-${ref}"
         PATCHES
-            "${CMAKE_CURRENT_LIST_DIR}/adjust-args.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
+            @PATCHES@
     )
     file(MAKE_DIRECTORY "${path_to_search}")
     file(RENAME "${path_to_search}-tmp/meson-${ref}/meson.py" "${path_to_search}/meson.py")
