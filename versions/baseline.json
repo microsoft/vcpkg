@@ -5078,11 +5078,11 @@
     },
     "libtracepoint": {
       "baseline": "1.3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libtracepoint-control": {
       "baseline": "1.3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libtracepoint-decode": {
       "baseline": "1.3.3",
