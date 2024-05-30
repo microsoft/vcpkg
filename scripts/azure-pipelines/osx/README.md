@@ -64,6 +64,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ./setup-guest.sh
     exit
     ```
+- [ ] In the guest, check that 'm4' works in the terminal.
 - [ ] Shut down the VM cleanly.
 - [ ] In Parallels control center, right click the VM and select "Prepare for Transfer"
 - [ ] In Parallels control center, right click the VM and remove it, but "Keep Files"
@@ -109,7 +110,8 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Enable remote login in the VM: Settings -> General -> Sharing -> Remote Login
 - [ ] Set the vcpkg user to be able to use sudo without a password:
     ```sh
-    ssh -o StrictHostKeychecking=no vcpkg@vcpkgs-Virtual-Machine.local
+    rm ~/.ssh/known_hosts
+    ssh vcpkg@vcpkgs-Virtual-Machine.local
     printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
     sudo chmod 0440 '/etc/sudoers.d/vcpkg'
     exit
@@ -126,6 +128,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm setup-guest.sh
     rm setup-box.sh
     ```
+- [ ] In the guest, check that 'm4' works in the terminal.
 - [ ] Shut down the VM cleanly.
 - [ ] Mint a SAS token to vcpkgimageminting/pvms with read, add, create, write, and list permissions.
 - [ ] Open a terminal on the host and package the VM into a tarball:
@@ -168,7 +171,8 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```
 - [ ] Open a terminal window on the host and run the agent
     ```
-    ssh -i ~/Parallels/*/id_guest -o StrictHostKeychecking=no vcpkg@`prlctl list --full | sed -nr 's/^.*running *([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*/\1/p'`
+    rm ~/.ssh/known_hosts
+    ssh -i ~/Parallels/*/id_guest vcpkg@`prlctl list --full | sed -nr 's/^.*running *([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*/\1/p'`
     ~/myagent/run.sh
     ```
 - [ ] Check that the machine shows up in the pool, and lock the vcpkg user on the host.
@@ -218,7 +222,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```
 - [ ] Open a terminal window on the host and run the agent
     ```sh
-    ssh -i ~/Parallels/*/id_guest -o StrictHostKeychecking=no vcpkg@vcpkgs-Virtual-Machine.local
+    ssh -i ~/Parallels/*/id_guest vcpkg@vcpkgs-Virtual-Machine.local
     ~/myagent/run.sh
     ```
 - [ ] Check that the machine shows up in the pool, and lock the vcpkg user on the host.
