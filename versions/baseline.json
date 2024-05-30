@@ -3601,8 +3601,8 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.90.6",
-      "port-version": 1
+      "baseline": "1.90.7",
+      "port-version": 0
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -3613,8 +3613,8 @@
       "port-version": 0
     },
     "imguizmo": {
-      "baseline": "1.83",
-      "port-version": 1
+      "baseline": "2024-05-29",
+      "port-version": 0
     },
     "immer": {
       "baseline": "0.8.1",
