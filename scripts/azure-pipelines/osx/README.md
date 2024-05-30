@@ -44,8 +44,6 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Restart the VM
 - [ ] Change the desktop background to a solid color
 - [ ] Enable remote login in System Settings -> General -> Sharing -> Remote Login
-- [ ] Shut down the VM cleanly
-- [ ] Set the VM 'Isolated'
 - [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.239.1/vsts-agent-osx-x64-3.239.1.tar.gz
 - [ ] Start the VM. Change the screen resolution to not be teeny weeny eyestrain o vision.
 - [ ] In the guest, set the vcpkg user to be able to use sudo without a password:
@@ -55,17 +53,23 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ```
 - [ ] Copy setup-guest, setup-box.sh, and the xcode installer renamed to 'clt.dmg' to the host, and run setup-guest.sh. For example:
     ```sh
-    scp ./setup-guest.sh vcpkg@MACHINE:/Users/vcpkg/Downloads
-    scp ./setup-box.sh vcpkg@MACHINE:/Users/vcpkg/Downloads
-    scp path/to/console/tools.dmg vcpkg@MACHINE:/Users/vcpkg/Downloads/clt.dmg
+    scp ./setup-guest.sh vcpkg@MACHINE:/Users/vcpkg
+    scp ./setup-box.sh vcpkg@MACHINE:/Users/vcpkg
+    scp path/to/console/tools.dmg vcpkg@MACHINE:/Users/vcpkg/clt.dmg
     ssh vcpkg@MACHINE
-    cd /Users/vcpkg/Downloads
-    chmod +x ./setup-guest.sh
-    ./setup-guest.sh
-    exit
+    rm ~/.ssh/known_hosts
+    chmod +x setup-guest.sh
+    rm setup-guest.sh
+    rm setup-box.sh
+    rm clt.dmg
     ```
-- [ ] In the guest, check that 'm4' works in the terminal.
-- [ ] Shut down the VM cleanly.
+- [ ] In the guest, check that 'm4' works in the terminal. If it tries to reinstall the command line tools, let it do that. You might need to manually run this workaround from https://developer.apple.com/documentation/xcode-release-notes/xcode-15-release-notes#Known-Issues
+    ```sh
+    sudo mkdir -p /Library/Developer/CommandLineTools
+    sudo touch /Library/Developer/CommandLineTools/.beta
+    ```
+- [ ] Shut down the VM cleanly
+- [ ] Set the VM 'Isolated'
 - [ ] In Parallels control center, right click the VM and select "Prepare for Transfer"
 - [ ] In Parallels control center, right click the VM and remove it, but "Keep Files"
 - [ ] Copy the packaged VM to Azure Storage, with something like:
@@ -127,8 +131,13 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ./setup-guest.sh
     rm setup-guest.sh
     rm setup-box.sh
+    rm clt.dmg
     ```
-- [ ] In the guest, check that 'm4' works in the terminal.
+- [ ] In the guest, check that 'm4' works in the terminal. If it tries to reinstall the command line tools, let it do that. You might need to manually run this workaround from https://developer.apple.com/documentation/xcode-release-notes/xcode-15-release-notes#Known-Issues
+    ```sh
+    sudo mkdir -p /Library/Developer/CommandLineTools
+    sudo touch /Library/Developer/CommandLineTools/.beta
+    ```
 - [ ] Shut down the VM cleanly.
 - [ ] Mint a SAS token to vcpkgimageminting/pvms with read, add, create, write, and list permissions.
 - [ ] Open a terminal on the host and package the VM into a tarball:
@@ -166,12 +175,12 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```sh
     scp ./register-guest.sh vcpkg@MACHINE:/Users/vcpkg
     ssh vcpkg@MACHINE
+    rm ~/.ssh/known_hosts
     chmod +x /Users/vcpkg/register-guest.sh
     /Users/vcpkg/register-guest.sh <PAT>
     ```
 - [ ] Open a terminal window on the host and run the agent
     ```
-    rm ~/.ssh/known_hosts
     ssh -i ~/Parallels/*/id_guest vcpkg@`prlctl list --full | sed -nr 's/^.*running *([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*/\1/p'`
     ~/myagent/run.sh
     ```
@@ -211,6 +220,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```sh
     scp ./register-guest.sh vcpkg@MACHINE:/Users/vcpkg
     ssh vcpkg@MACHINE
+    rm ~/.ssh/known_hosts
     chmod +x register-guest.sh
     ./register-guest.sh <PAT>
     rm register-guest.sh
