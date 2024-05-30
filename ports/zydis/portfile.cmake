@@ -1,19 +1,12 @@
-vcpkg_download_distfile(
-    OSX_INTEL_ALIGNMENT_FIX
-    URLS https://github.com/zyantific/zydis/commit/a605f54580c26d2164530fab323057834569d169.patch?full_index=1
-    SHA512 15fad10e4880ab2ee494babc0451b96604a6cc00c09c6740c6b97b83718e01d8e117614bf8f9ec8a6777e9baa1336c7f540709b21dcdc9b53f912bd117f1d3c0
-    FILENAME zydis-intel-alignment-fix-a605f54580c26d2164530fab323057834569d169.patch
-)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zyantific/zydis
     REF "v${VERSION}"
-    SHA512 334284bccfb6ce61cc530fd479d6278db3e4df1fb52b311acd7d21558843c9bf14e74a199cd937041d434260b65c506c07ae1a37243d2240eb9443ae5e56e000
+    SHA512 e07add4d43768ded02a238911fde6e74d2391abf8df282f774fca1a8c3fca3e97b03e90e0f3c7c0f3c75485fb29c0be4071d5e5b2e23dd5b8b1a864e3b713fbc
     HEAD_REF master
     PATCHES
-        zycore.patch
-        "${OSX_INTEL_ALIGNMENT_FIX}"
+
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYDIS_BUILD_SHARED_LIB)
