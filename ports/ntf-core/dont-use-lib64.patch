@@ -1,0 +1,17 @@
+diff --git a/repository.cmake b/repository.cmake
+index 9b6c699..ed2ce32 100644
+--- a/repository.cmake
++++ b/repository.cmake
+@@ -1737,11 +1737,7 @@ function (ntf_group_end)
+ 
+     ntf_ufid_string_has(UFID ${build_ufid} FLAG "64" OUTPUT is_64_bit)
+ 
+-    if (${is_64_bit} AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+-        set(lib_name "lib64" CACHE INTERNAL "")
+-    else()
+-        set(lib_name "lib" CACHE INTERNAL "")
+-    endif()
++    set(lib_name "lib" CACHE INTERNAL "")
+ 
+     # Set the relative path to the library directory under the prefix. For
+     # example: lib64

@@ -12,7 +12,7 @@ index 63b38df68..29f79d31b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -311,6 +311,10 @@ if(NOT (${FLANN_LIBRARY_TYPE} MATCHES ${PCL_FLANN_REQUIRED_TYPE}) AND NOT (${PCL
-   message(FATAL_ERROR "Flann was selected with ${PCL_FLANN_REQUIRED_TYPE} but found as ${FLANN_LIBRARY_TYPE}")
+   endif()
  endif()
  
 +if(UNIX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
-    REF v5.2.5
-    SHA512 ac0dc4243f9d1ff077966f0037187b4374075ac97e75e1a3cd6bdc1caf5f8e4d40953d9a8a316480969c09524d87daa9d3ed75e6ac6f037dd5b1c5f25fce3afb
+    REF "v${VERSION}"
+    SHA512 6b0e410160c9f60923283be5d948e60b3b8c7819a7e75c9e39608d72202c1c715c048bd615e33d14544394c63efa6ad01cd3eda4c997ebe5a8c6e15ae18d4715
     HEAD_REF master
     PATCHES
         build_fixes.patch
@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/cmake-modules/FindZLIB.cmake")
 
-#file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/clipper") # https://github.com/assimp/assimp/issues/788
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/clipper")
 file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/draco")
 file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/gtest")
 #file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/Open3DGC")      #TODO
@@ -56,19 +56,34 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
-find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ASSIMP_DBG NAMES assimp assimpd ${DBG_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/debug/lib" NO_DEFAULT_PATH)
 if(ASSIMP_REL)
     get_filename_component(ASSIMP_NAME_REL "${ASSIMP_REL}" NAME_WLE)
+    string(REGEX REPLACE "^lib(.*)" "\\1" ASSIMP_NAME_REL "${ASSIMP_NAME_REL}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_REL}")
 endif()
 if(ASSIMP_DBG)
     get_filename_component(ASSIMP_NAME_DBG "${ASSIMP_DBG}" NAME_WLE)
+    string(REGEX REPLACE "^lib(.*)" "\\1" ASSIMP_NAME_DBG "${ASSIMP_NAME_DBG}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_DBG}")
 endif()
-vcpkg_fixup_pkgconfig() # Probably requires more fixing for static builds. See qt5-3d and the config changes below
+
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
+    set(assimp_LIBS_REQUIRES "-lpoly2tri")
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs.private:" "Libs.private: ${assimp_LIBS_REQUIRES}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "Libs.private:" "Libs.private: ${assimp_LIBS_REQUIRES}")
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

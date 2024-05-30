@@ -14,43 +14,16 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_PLUGINS_STATIC)
 
-# Remove platform-specific feature that are not available
-# on current target platform from all features.
-
-# For documentation on VCPKG_CMAKE_SYSTEM_NAME see
-# https://github.com/microsoft/vcpkg/blob/master/docs/users/triplets.md#vcpkg_cmake_system_name
-
 set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
-# Windows Desktop
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES wglcontext windowlesswglapplication)
-endif()
-
-# Universal Windows Platform
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
-    # No UWP specific features
-endif()
-
-# Mac OSX
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES cglcontext windowlesscglapplication)
-endif()
-
-# Linux
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glxcontext windowlessglxapplication)
-endif()
-
-# WebAssembly / Linux
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" MATCHES "(Emscripten|Linux)")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES eglcontext windowlesseglapplication)
-endif()
 
 # Head only features
 if(NOT VCPKG_USE_HEAD_VERSION)
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter
-        vk-info)
-    message(WARNING "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+    foreach(_feature anyshaderconverter shadertools shaderconverter vk-info)
+        if("${_feature}" IN_LIST FEATURES)
+            message(FATAL_ERROR "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+        endif()
+    endforeach()
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter vk-info)
 endif()
 
 set(_COMPONENTS "")
@@ -68,10 +41,15 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
+if(VCPKG_CROSSCOMPILING)
+    set(CORRADE_RC_EXECUTABLE "-DCORRADE_RC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/corrade/corrade-rc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${CORRADE_RC_EXECUTABLE}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
@@ -92,9 +70,7 @@ set(_TOOLS
     imageconverter
     sceneconverter)
 if(VCPKG_USE_HEAD_VERSION)
-list(APPEND _TOOLS
-    shaderconverter
-    vk-info)
+    list(APPEND _TOOLS shaderconverter vk-info)
 endif()
 foreach(_tool IN LISTS _TOOLS)
     if("${_tool}" IN_LIST FEATURES)
@@ -152,24 +128,40 @@ else()
             file(REMOVE ${LIB_TO_REMOVE})
         endif()
 
-        file(GLOB_RECURSE LIB_TO_REMOVE_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*")
-        file(GLOB_RECURSE LIB_TO_KEEP_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*Any*")
+        if (VCPKG_TARGET_IS_UWP)
+            set(debug_dir "magnum")
+        else()
+            set(debug_dir "magnum-d")
+        endif()
+
+        file(GLOB_RECURSE LIB_TO_REMOVE_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}/*")
+        file(GLOB_RECURSE LIB_TO_KEEP_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}/*Any*")
         if(LIB_TO_KEEP_DBG)
             list(REMOVE_ITEM LIB_TO_REMOVE_DBG ${LIB_TO_KEEP_DBG})
         endif()
         if(LIB_TO_REMOVE_DBG)
             file(REMOVE ${LIB_TO_REMOVE_DBG})
         endif()
+        
+        # remove maybe empty dirs
+        foreach(subdir "fonts" "importers" "fontconverters" "imageconverters" "audioimporters")
+            file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/${subdir}/*")
+            if(maybe_empty STREQUAL "")
+                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/${subdir}")
+                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}/${subdir}")
+            endif()
+        endforeach()
 
-        # fonts and fontconverters don't have Any* plugins
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/fonts")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/fontconverters")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fonts")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fontconverters")
+        file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
+        if(maybe_empty STREQUAL "")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}")
+        endif()
+        
     endif()
 
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/magnum")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d")
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/${debug_dir}")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
     REF "v${VERSION}"
-    SHA512 4fc5253ad0e8fca2fd347ef139c8c150e2fb5dd2351da2b13adb9e00530a9d55943bc4952c1d42706a9ffbb57f81ed2854536d9e2f32dfab0dfc741696cc7e61
+    SHA512 fd94b35d0af2bbb4e932c6be5204c8a4bf011a9c62bcfc2115d263b269438bb5858627492c108c17140ccf872317f072619b59b6f583fed1bec001af53b8c0e2
     HEAD_REF main
 )
 
@@ -18,11 +18,11 @@ vcpkg_check_features(
         target-opengl-compute TARGET_OPENGLCOMPUTE
         target-hexagon TARGET_HEXAGON
         target-metal TARGET_METAL
-        target-mips TARGET_MIPS
         target-nvptx TARGET_NVPTX
         target-opencl TARGET_OPENCL
         target-powerpc TARGET_POWERPC
         target-riscv TARGET_RISCV
+        target-webassembly TARGET_WEBASSEMBLY
         target-x86 TARGET_X86
 )
 
@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
         -DWITH_TESTS=OFF
         -DWITH_TUTORIALS=OFF
         -DWITH_UTILS=OFF
+        -DWITH_SERIALIZATION=OFF # Disable experimental serializer
         -DCMAKE_INSTALL_LIBDIR=bin
         "-DCMAKE_INSTALL_DATADIR=share/${PORT}"
         "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"

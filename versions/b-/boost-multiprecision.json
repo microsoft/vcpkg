@@ -1,6 +1,36 @@
 {
   "versions": [
     {
+      "git-tree": "e273097fa247b246ba1e33388ef3c77679e0e313",
+      "version": "1.85.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "d4f5a5cc6531e13e93659a81be7ef247835166ac",
+      "version": "1.85.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "beebecb9b9d44353db537fb25e6901f76f4e1998",
+      "version": "1.85.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d065617f9299d2065d826620fa84f19f55c511ab",
+      "version": "1.84.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "4c868a1c871bf2be340548a13614ee761780ccd5",
+      "version": "1.84.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d5c0acb2f8f25475a0a69d41460e377e6ce66749",
+      "version": "1.83.0",
+      "port-version": 0
+    },
+    {
       "git-tree": "d678e2c33ccdd2e64aa71ea623e1b89109502482",
       "version": "1.82.0",
       "port-version": 2

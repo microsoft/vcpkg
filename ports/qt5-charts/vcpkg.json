@@ -1,7 +1,7 @@
 {
   "name": "qt5-charts",
-  "version": "5.15.10",
-  "description": "Qt5 Charts Module - UI components for displaying charts, driven by static or dynamic data models",
+  "version": "5.15.14",
+  "description": "The Qt Charts module provides a set of easy to use chart components.",
   "license": null,
   "dependencies": [
     {

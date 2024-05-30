@@ -1,12 +1,15 @@
 {
   "name": "botan",
-  "version": "2.19.3",
-  "port-version": 2,
+  "version": "3.3.0",
   "description": "A cryptography library written in C++11",
   "homepage": "https://botan.randombit.net",
   "license": "BSD-2-Clause",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true

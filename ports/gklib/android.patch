@@ -1,0 +1,14 @@
+diff --git a/GKlibSystem.cmake b/GKlibSystem.cmake
+index 31a1cf1..848fd05 100644
+--- a/GKlibSystem.cmake
++++ b/GKlibSystem.cmake
+@@ -113,7 +113,9 @@ endif(GKRAND)
+ 
+ 
+ # Check for features.
++if(NOT ANDROID OR ANDROID_NATIVE_API_LEVEL GREATER 32)
+ check_include_file(execinfo.h HAVE_EXECINFO_H)
++endif()
+ if(HAVE_EXECINFO_H)
+   set(GKlib_COPTIONS "${GKlib_COPTIONS} -DHAVE_EXECINFO_H")
+ endif(HAVE_EXECINFO_H)

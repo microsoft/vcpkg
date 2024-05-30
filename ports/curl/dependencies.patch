@@ -1,8 +1,8 @@
 diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
-index dbe4ed2..edf87fa 100644
+index 9adb96e0a..a013adf7a 100644
 --- a/CMake/curl-config.cmake.in
 +++ b/CMake/curl-config.cmake.in
-@@ -31,5 +31,15 @@ if(@USE_ZLIB@)
+@@ -31,6 +31,16 @@ if(@USE_ZLIB@)
    find_dependency(ZLIB @ZLIB_VERSION_MAJOR@)
  endif()
  
@@ -18,11 +18,12 @@ index dbe4ed2..edf87fa 100644
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
  check_required_components("@PROJECT_NAME@")
+ 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad3a63d..917cdbf 100644
+index 656aa7c74..90a7c1371 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -151,7 +151,8 @@ set(CURL_LIBS "")
+@@ -163,7 +163,8 @@ set(CURL_LIBS "")
  
  if(ENABLE_ARES)
    set(USE_ARES 1)
@@ -32,7 +33,7 @@ index ad3a63d..917cdbf 100644
    list(APPEND CURL_LIBS ${CARES_LIBRARY})
  endif()
  
-@@ -524,7 +525,9 @@ endif()
+@@ -575,7 +576,9 @@ endif()
  option(CURL_BROTLI "Set to ON to enable building curl with brotli support." OFF)
  set(HAVE_BROTLI OFF)
  if(CURL_BROTLI)
@@ -43,7 +44,22 @@ index ad3a63d..917cdbf 100644
    if(BROTLI_FOUND)
      set(HAVE_BROTLI ON)
      set(CURL_LIBS "${BROTLI_LIBRARIES};${CURL_LIBS}")  # For 'ld' linker. Emulate `list(PREPEND ...)` to stay compatible with <v3.15 CMake.
-@@ -796,7 +799,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
+@@ -876,11 +879,10 @@ mark_as_advanced(CURL_USE_LIBPSL)
+ set(USE_LIBPSL OFF)
+ 
+ if(CURL_USE_LIBPSL)
+-  find_package(LibPSL)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(LIBPSL REQUIRED libpsl)
+   if(LIBPSL_FOUND)
+-    list(APPEND CURL_LIBS ${LIBPSL_LIBRARY})
+-    list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBPSL_INCLUDE_DIR}")
+-    include_directories("${LIBPSL_INCLUDE_DIR}")
++    list(APPEND CURL_LIBS ${LIBPSL_LINK_LIBRARIES})
+     set(USE_LIBPSL ON)
+   endif()
+ endif()
+@@ -891,7 +893,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
  set(USE_LIBSSH2 OFF)
  
  if(CURL_USE_LIBSSH2)
@@ -58,3 +74,18 @@ index ad3a63d..917cdbf 100644
    if(LIBSSH2_FOUND)
      list(APPEND CURL_LIBS ${LIBSSH2_LIBRARY})
      list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBSSH2_INCLUDE_DIR}")
+@@ -917,6 +925,14 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
+ mark_as_advanced(CURL_USE_GSSAPI)
+ 
+ if(CURL_USE_GSSAPI)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(KRB5 REQUIRED krb5 krb5-gssapi)
++  list(APPEND CURL_LIBS ${KRB5_LINK_LIBRARIES} resolv)
++  check_include_file_concat("gssapi/gssapi.h"  HAVE_GSSAPI_GSSAPI_H)
++  check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
++  check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
++  set(HAVE_GSSAPI ON)
++  elseif(0)
+   find_package(GSS)
+ 
+   set(HAVE_GSSAPI ${GSS_FOUND})

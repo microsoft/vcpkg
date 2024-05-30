@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
-    REF v3.7.2
-    SHA512 82cf2afed4cc53c0e09d367ff3df1db0e9ac17ff2458e4660c646430d8e72f472b072a3910c9595b26eb5ac89c82fe74699acab3869014f87d8e2738b81568a1
+    REF "v${VERSION}"
+    SHA512 0e0daa83e3ab729fdc35a52c60c23c9142f1229187af893d0dbbd36f88eced36f63a3e8c767a3dc825edaa5395a49a5aad726f6b61de8f6b291557eec20de426
     HEAD_REF master
-    PATCHES
-        clang-cl.patch # the normal lookup is not working since it doesn't take Ninja as a Generator into account
 )
 
 vcpkg_download_distfile(GHC_ARCHIVE

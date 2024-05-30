@@ -9,11 +9,21 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
+# See ECM/kde-modules/KDEInstallDirs5.cmake
+# Relocate .desktop files for next ports
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND KDE_OPTIONS
+        -DKDE_INSTALL_KSERVICES5DIR="share/kservices5"
+        -DKDE_INSTALL_KSERVICETYPES5DIR="share/kservicetypes5"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
+        ${KDE_OPTIONS}
 )
 
 vcpkg_cmake_install()

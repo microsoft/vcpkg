@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8143963..784ac50 100644
+index 4a98749..bc121a5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -157,7 +157,7 @@ if(LIBIGL_INSTALL)
+@@ -166,7 +166,7 @@ if(LIBIGL_INSTALL)
      set(version_config_file "${CMAKE_CURRENT_BINARY_DIR}/LibiglConfigVersion.cmake")
      set(export_dest_dir "${CMAKE_INSTALL_LIBDIR}/cmake/igl")
  
@@ -12,12 +12,12 @@ index 8143963..784ac50 100644
              DESTINATION ${export_dest_dir}
              NAMESPACE igl${suffix}::
 diff --git a/cmake/igl/libigl-config.cmake.in b/cmake/igl/libigl-config.cmake.in
-index 629896d..0b05692 100644
+index d3ff19f..60e50c7 100644
 --- a/cmake/igl/libigl-config.cmake.in
 +++ b/cmake/igl/libigl-config.cmake.in
-@@ -4,5 +4,30 @@ include(CMakeFindDependencyMacro)
- find_dependency(Eigen3)
- find_dependency(Threads)
+@@ -4,4 +4,27 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Eigen3 REQUIRED)
+ find_dependency(Threads REQUIRED)
  include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets.cmake")
 +if(TARGET igl::igl_embree)
 +  find_dependency(embree 3)
@@ -33,9 +33,6 @@ index 629896d..0b05692 100644
 +  find_dependency(OpenGL)
 +  find_dependency(glad)
 +endif()
-+if(TARGET igl::igl_png)
-+  find_dependency(Stb)
-+endif()
 +if(TARGET igl::igl_xml)
 +  find_dependency(tinyxml2)
 +endif()
@@ -44,7 +41,7 @@ index 629896d..0b05692 100644
 +if(TARGET igl_copyleft::igl_copyleft_cgal)
 +  find_dependency(CGAL)
 +endif()
- 
++
  check_required_components(Libigl)
 diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
 index 7ee7d84..d06c6ee 100644
@@ -99,10 +96,10 @@ index 137d30b..597c26b 100644
  
  # 4. Install target & headers
 diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
-index de85066..052fc76 100644
+index de85066..c54949c 100644
 --- a/cmake/igl/modules/embree.cmake
 +++ b/cmake/igl/modules/embree.cmake
-@@ -20,6 +20,9 @@ target_link_libraries(igl_embree ${IGL_SCOPE}
+@@ -20,6 +20,8 @@ target_link_libraries(igl_embree ${IGL_SCOPE}
      $<TARGET_NAME:embree>
  )
  
@@ -111,47 +108,42 @@ index de85066..052fc76 100644
  # 5. Unit tests
  file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/embree/*.cpp")
  igl_add_test(igl_embree ${SRC_FILES})
-+
 diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
-index f42d22a..e9930d8 100644
+index 6d06775..7126a23 100644
 --- a/cmake/igl/modules/glfw.cmake
 +++ b/cmake/igl/modules/glfw.cmake
-@@ -21,3 +21,5 @@ target_link_libraries(igl_glfw ${IGL_SCOPE}
-     igl::opengl
+@@ -22,6 +22,9 @@ target_link_libraries(igl_glfw ${IGL_SCOPE}
      $<TARGET_NAME:glfw>
  )
+ 
 +
 +igl_install(igl_glfw ${INC_FILES} ${SRC_FILES})
++
+ # 5. Unit tests
+ if(LIBIGL_GLFW_TESTS)
+   file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/opengl/glfw/*.cpp")
 diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
-index f331854..7ff9738 100644
+index f331854..6e0de4c 100644
 --- a/cmake/igl/modules/imgui.cmake
 +++ b/cmake/igl/modules/imgui.cmake
-@@ -23,3 +23,5 @@ target_link_libraries(igl_imgui ${IGL_SCOPE}
+@@ -23,3 +23,6 @@ target_link_libraries(igl_imgui ${IGL_SCOPE}
      imgui::imgui
      imguizmo::imguizmo
  )
 +
 +igl_install(igl_imgui ${INC_FILES} ${SRC_FILES})
++
 diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
-index dfadb38..185494b 100644
+index dfadb38..d3deaba 100644
 --- a/cmake/igl/modules/opengl.cmake
 +++ b/cmake/igl/modules/opengl.cmake
-@@ -22,3 +22,5 @@ target_link_libraries(igl_opengl ${IGL_SCOPE}
+@@ -22,3 +22,6 @@ target_link_libraries(igl_opengl ${IGL_SCOPE}
      # Link against OpenGL::OpenGL if available, or fallback to OpenGL::GL
      $<IF:$<TARGET_EXISTS:OpenGL::OpenGL>,OpenGL::OpenGL,OpenGL::GL>
  )
 +
 +igl_install(igl_opengl ${INC_FILES} ${SRC_FILES})
-diff --git a/cmake/igl/modules/png.cmake b/cmake/igl/modules/png.cmake
-index 8d8decc..293da91 100644
---- a/cmake/igl/modules/png.cmake
-+++ b/cmake/igl/modules/png.cmake
-@@ -21,3 +21,5 @@ target_link_libraries(igl_png ${IGL_SCOPE}
-     igl::opengl
-     stb::stb
- )
 +
-+igl_install(igl_png ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
 index 31ab979..815ea62 100644
 --- a/cmake/igl/modules/xml.cmake
@@ -162,3 +154,17 @@ index 31ab979..815ea62 100644
  )
 +
 +igl_install(igl_xml ${INC_FILES} ${SRC_FILES})
+
+diff --git a/cmake/igl/modules/stb.cmake b/cmake/igl/modules/stb.cmake
+index 20607ec..5bc3211 100644
+--- a/cmake/igl/modules/stb.cmake
++++ b/cmake/igl/modules/stb.cmake
+@@ -21,7 +21,7 @@ endif()
+ igl_target_sources(igl_stb ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(stb)
++find_package(Stb REQUIRED)
+ target_link_libraries(igl_stb ${IGL_SCOPE}
+     igl::core
+     stb::stb

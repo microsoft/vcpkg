@@ -1,0 +1,21 @@
+diff --git a/src/idevice.h b/src/idevice.h
+index 2509e48..384f178 100644
+--- a/src/idevice.h
++++ b/src/idevice.h
+@@ -37,15 +37,11 @@
+ #include <mbedtls/ctr_drbg.h>
+ #endif
+ 
+-#ifdef WIN32
+-#define LIBIMOBILEDEVICE_API __declspec( dllexport )
+-#else
+-#ifdef HAVE_FVISIBILITY
++#if !defined(_WIN32) && !defined(LIBIMOBILEDEVICEGLUE_STATIC)
+ #define LIBIMOBILEDEVICE_API __attribute__((visibility("default")))
+ #else
+ #define LIBIMOBILEDEVICE_API
+ #endif
+-#endif
+ 
+ #include "common/userpref.h"
+ #include "libimobiledevice/libimobiledevice.h"

@@ -1,31 +1,35 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/brotli
-    REF e61745a6b7add50d380cfd7d3883dd6c62fc2c71 # v1.0.9
-    SHA512 303444695600b70ce59708e06bf21647d9b8dd33d772c53bbe49320f2f8f95ca8a7d6df2d29b7f36ff99001967e2d28380e0e305d778031940a3a5c6585f9a4f
+    REF v${VERSION} # v1.1.0 
+    SHA512 6eb280d10d8e1b43d22d00fa535435923c22ce8448709419d676ff47d4a644102ea04f488fc65a179c6c09fee12380992e9335bad8dfebd5d1f20908d10849d9
     HEAD_REF master
     PATCHES
         install.patch
         fix-arm-uwp.patch
         pkgconfig.patch
+        emscripten.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBROTLI_DISABLE_TESTS=ON
-        # Required for wasm32-emscripten triplet to avoid "install" being turned off
-        -DBROTLI_EMSCRIPTEN=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-brotli-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-brotli")
 vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-brotli PACKAGE_NAME unofficial-brotli)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/brotli")
+
+# Under emscripten the brotli executable tool is produced with .js extension but vcpkg_copy_tools
+# has no special behaviour in this case and searches for the tool name with no extension
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+	set(TOOL_SUFFIX ".js" )
+endif()
+
+vcpkg_copy_tools(TOOL_NAMES "brotli${TOOL_SUFFIX}" SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/brotli")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

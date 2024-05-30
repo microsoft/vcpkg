@@ -2,23 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strukturag/libde265
     REF "v${VERSION}"
-    SHA512 aa744c521fb15e68940956f70997ab969094aee1c129d404ee9a52f318248353bb8d53250b575b4040402645e44701086b78143f1e1122b61a925e9b6cd07566
+    SHA512 df380f1ea6345e20ed1f907df3c7cdaaac44358a6746e29e16699005783ce96524d30fec7bba457c9f9773a6373250aaaf0b9cd41224057b269798117964b8b5
     HEAD_REF master
     PATCHES
         fix-interface-include.patch
-        fix-lib-version.patch
-)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
-        sse DISABLE_SSE
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON
-        ${FEATURE_OPTIONS}
+        -DENABLE_SDL=OFF
 )
 
 vcpkg_cmake_install()

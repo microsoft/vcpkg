@@ -12,6 +12,7 @@ add_library(lpeg
     lpprint.c
     lpcap.c
     lpcode.c
+    lpcset.c
     lpeg.def)
 
 target_include_directories(lpeg PRIVATE ${LPEG_INCLUDES})

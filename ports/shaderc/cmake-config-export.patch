@@ -1,5 +1,5 @@
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index d3bc639..6432a9b 100644
+index e0eea6c..b54ace4 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
 @@ -28,7 +28,9 @@ if (NOT BUILD_SHARED_LIBS)
@@ -24,13 +24,14 @@ index d3bc639..6432a9b 100644
      PRIVATE ${glslang_SOURCE_DIR}
              ${SPIRV-Headers_SOURCE_DIR}/include)
  target_compile_definitions(shaderc_shared
-@@ -60,9 +64,14 @@ if(SHADERC_ENABLE_INSTALL)
+@@ -60,10 +64,15 @@ if(SHADERC_ENABLE_INSTALL)
        ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
  
    install(TARGETS ${shaderc_install_target} shaderc_util
 +    EXPORT unofficial-shaderc-targets
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +  install(EXPORT unofficial-shaderc-targets
 +    NAMESPACE unofficial::shaderc::
@@ -39,7 +40,7 @@ index d3bc639..6432a9b 100644
  endif(SHADERC_ENABLE_INSTALL)
  
  find_package(Threads)
-@@ -79,6 +88,15 @@ else()
+@@ -80,6 +89,15 @@ else()
  target_link_libraries(shaderc_shared PRIVATE ${SHADERC_LIBS})
  endif()
  

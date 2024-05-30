@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
         -DWAVPACK_BUILD_WINAMP_PLUGIN=OFF
         -DBUILD_TESTING=OFF
         -DWAVPACK_BUILD_DOCS=OFF
+        -DWAVPACK_ENABLE_LIBCRYPTO=OFF
 )
 
 vcpkg_cmake_install()

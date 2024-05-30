@@ -1,6 +1,6 @@
 {
   "name": "ztd-text",
-  "version-date": "2022-03-21",
+  "version-date": "2023-11-03",
   "description": "A spicy text library.",
   "homepage": "https://github.com/soasis/text",
   "license": "Apache-2.0",
@@ -9,6 +9,8 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "ztd-platform",
+    "ztd-static-containers"
   ]
 }

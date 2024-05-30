@@ -6,14 +6,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO configcat/cpp-sdk
     REF "v${VERSION}"
-    SHA512 cb86f575e1917edf10ec423d4ae85b47c979370bdb4381e1eecdb32bc64637f5088b3a3d91fa1b0aa2604fb0fe3011bc0964b3a45e5aa32aba1d53ba0da99fd5
+    SHA512 c36c136a16cc7206e1516546d075535a1cb1756649a51fc632f3ac1b0a31e3f23f41f8aac0989aee725bac9949a722db6cbc75111276b43403607e1fc25ce866
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        network CONFIGCAT_USE_EXTERNAL_NETWORK_ADAPTER
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCONFIGCAT_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 

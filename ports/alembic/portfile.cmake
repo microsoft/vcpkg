@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
     REF "${VERSION}"
-    SHA512 89a480970eb09893112bf650011ede852205d1fa3718680a3983392bbcf3eb3f22f4ec01f42d12bfcaf655ce43d7d6f583b764ec03f4c5a84023359502b3636e
+    SHA512 6371b830242be90d4ea833248df5fd42d9e713e305d15eb1383d04410319acdae5743d48d65e8f75f1cedce777d2af7d969cde095f678b17322c19f1c69f477b
     HEAD_REF master
     PATCHES
         fix-runtime-destination.patch

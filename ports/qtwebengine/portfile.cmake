@@ -1,9 +1,12 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES "")
+set(${PORT}_PATCHES 
+      "clang-cl.patch"
+      "fix-error2275-2672.patch"
+)
 
-set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
+set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -29,7 +32,7 @@ set(deactivated_features   webengine_webrtc_pipewire)
 foreach(_feat IN LISTS deactivated_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=OFF")
 endforeach()
-set(enabled_features  webengine_webrtc  webengine_v8_snapshot_support)
+set(enabled_features  webengine_webrtc)
 foreach(_feat IN LISTS enabled_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=ON")
 endforeach()
@@ -62,8 +65,7 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-vcpkg_find_acquire_program(PYTHON3)
-x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES html5lib OUT_PYTHON_VAR PYTHON3)
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -105,6 +107,7 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}
                         -DNodejs_EXECUTABLE=${NODEJS}
+                        -DPython3_EXECUTABLE=${PYTHON3}
                         -DQT_FEATURE_webengine_jumbo_build=0
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
@@ -112,6 +115,14 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
+endif()
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
 
 qt_install_copyright("${SOURCE_PATH}")
 

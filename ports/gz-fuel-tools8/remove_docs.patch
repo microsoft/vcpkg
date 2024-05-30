@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,6 +79,8 @@
+ 
++if(0)
+ #============================================================================
+ # gz command line support
+ #============================================================================
+ add_subdirectory(conf)
++endif(0)
+ 
+@@ -95,7 +95,9 @@
+ 
++if(0)
+ gz_create_docs(
+   API_MAINPAGE_MD "${CMAKE_BINARY_DIR}/api.md"
+   TUTORIALS_MAINPAGE_MD "${CMAKE_BINARY_DIR}/tutorials.md"
+   TAGFILES
+    "${GZ-COMMON_DOXYGEN_TAGFILE} = ${GZ-COMMON_API_URL}"
+   )
++endif(0)

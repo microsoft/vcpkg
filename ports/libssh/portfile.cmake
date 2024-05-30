@@ -14,7 +14,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        mbedtls WITH_MBEDTLS
         zlib    WITH_ZLIB
 )
 

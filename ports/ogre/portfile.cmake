@@ -10,16 +10,18 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
     REF "v${VERSION}"
-    SHA512 adadf0ce8510515c7519b87b502090c4a8d6694af0850ebd4a030d2dda497978eeb811746c74aa0cd1dc41adc0bf5f04fe38d02eb4ff03a56999c6635efe1e0e
+    SHA512 8c204aaf9be4e6c8ffcccc9361a3cd7962ac068fc2d88755c2983c821076427b3b0197d2a30f72636c2e35a86bfb89e43ea6f3efae6bd45b061bb64bfceae779
     HEAD_REF master
     PATCHES
-        ${PATCHLIB}       
+        fix-dependencies.patch
+        cfg-rel-paths.patch
+        swig-python-polyfill.patch
+        pkgconfig.patch
+        same-install-rules-all-platforms.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
@@ -28,33 +30,33 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OGRE_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" OGRE_CONFIG_STATIC_LINK_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    assimp   OGRE_BUILD_PLUGIN_ASSIMP
-    assimp   CMAKE_REQUIRE_FIND_PACKAGE_assimp
-    bullet   OGRE_BUILD_COMPONENT_BULLET
-    bullet   CMAKE_REQUIRE_FIND_PACKAGE_Bullet
-    d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
-    freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
-    freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
-    java     OGRE_BUILD_COMPONENT_JAVA
-    openexr  OGRE_BUILD_PLUGIN_EXRCODEC
-    openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
-    python   OGRE_BUILD_COMPONENT_PYTHON
-    python   CMAKE_REQUIRE_FIND_PACKAGE_Python3
-    csharp   OGRE_BUILD_COMPONENT_CSHARP
-    overlay  OGRE_BUILD_COMPONENT_OVERLAY
-    overlay  CMAKE_REQUIRE_FIND_PACKAGE_FREETYPE
-    zip      OGRE_CONFIG_ENABLE_ZIP
-    strict   OGRE_RESOURCEMANAGER_STRICT
-    tools    OGRE_BUILD_TOOLS
-    tools    OGRE_INSTALL_TOOLS
+    FEATURES
+        assimp   OGRE_BUILD_PLUGIN_ASSIMP
+        assimp   CMAKE_REQUIRE_FIND_PACKAGE_assimp
+        bullet   OGRE_BUILD_COMPONENT_BULLET
+        bullet   CMAKE_REQUIRE_FIND_PACKAGE_Bullet
+        d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
+        freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
+        freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
+        java     OGRE_BUILD_COMPONENT_JAVA
+        openexr  OGRE_BUILD_PLUGIN_EXRCODEC
+        openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
+        python   OGRE_BUILD_COMPONENT_PYTHON
+        python   CMAKE_REQUIRE_FIND_PACKAGE_Python3
+        csharp   OGRE_BUILD_COMPONENT_CSHARP
+        overlay  OGRE_BUILD_COMPONENT_OVERLAY
+        zip      OGRE_CONFIG_ENABLE_ZIP
+        strict   OGRE_RESOURCEMANAGER_STRICT
+        tools    OGRE_BUILD_TOOLS
+        tools    OGRE_INSTALL_TOOLS
+    INVERTED_FEATURES
+        assimp   CMAKE_DISABLE_FIND_PACKAGE_assimp
+        bullet   CMAKE_DISABLE_FIND_PACKAGE_Bullet
+        python   CMAKE_DISABLE_FIND_PACKAGE_Python3
 )
 
 if("java" IN_LIST FEATURES OR "python" IN_LIST FEATURES OR "csharp" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_SWIG=ON")
-endif()
-
-if(CMAKE_REQUIRE_FIND_PACKAGE_SWIG)
     vcpkg_find_acquire_program(SWIG)
     vcpkg_list(APPEND FEATURE_OPTIONS "-DSWIG_EXECUTABLE=${SWIG}")
 endif()
@@ -92,6 +94,8 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_FREETYPE=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_pugixml=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_QT=ON

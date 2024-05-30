@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Haivision/srt
-    REF v1.5.0
-    SHA512 68ab5fe316cfbbbba31b5b2354f657e23c90e14674f8dac01df2bf98c4776a7fafcd690a4dfad3a340e6be577a22360ca04ef2397c8a0dd507adebdd54dc22fb
+    REF "v${VERSION}"
+    SHA512 5b576d6fd325515e05074e4568e3b65d1ae265e3e971db6e6242e5138243fc1594df1e3a7d90962385dac38abc34c4c4b0a567439050f8c0ff818b3b3d497efc
     HEAD_REF master
     PATCHES
         fix-dependency-install.patch

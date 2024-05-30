@@ -1,6 +1,6 @@
 {
   "name": "caf",
-  "version": "0.19.1",
+  "version": "0.19.3",
   "description": "an open source implementation of the actor model for C++ featuring lightweight & fast actor implementations, pattern matching for messages, network transparent messaging, and more.",
   "homepage": "https://github.com/actor-framework/actor-framework",
   "license": "BSD-3-Clause",

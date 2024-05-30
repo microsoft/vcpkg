@@ -33,7 +33,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
-    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
+    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule-with-cmake)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -226,16 +226,8 @@ add the path to the vcpkg toolchain file:
 
 ### Vcpkg with CLion
 
-Open the Toolchains settings
-(File > Settings on Windows and Linux, CLion > Preferences on macOS),
-and go to the CMake settings (Build, Execution, Deployment > CMake).
-Finally, in `CMake options`, add the following line:
-
-```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
-```
-
-You must add this line to each profile.
+Vcpkg is integrated in the CLion IDE. 
+For details, see the [official documentation](https://www.jetbrains.com/help/clion/package-management.html).
 
 ### Vcpkg as a Submodule with CMake
 

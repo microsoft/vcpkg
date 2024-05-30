@@ -1,24 +1,21 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # for plugins
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled) # kitty and vt plugin not ready yet?
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 5872db8aefb9bebf6fea91dbe96759c42fa82dbe811238c7d6de8db5a0c6af77749083af60fc21f8e42c4fc159a2cbfefcc304967edda3d2832ef396c457530a
+    SHA512 6b0cffaf4bde7df260894b1b9d74e8a1d5aec11736511a86d99bc369e3f8db99f7050ae917cf1a066cc7d87695a57ef5b9c19521d211fee48c8a0c41ad0f4aac
     HEAD_REF main
     PATCHES
+        disable-pragma-lib.patch
         fix-dependencies.patch
         no-absolute-paths.patch
         select-plugins.patch
         static-linkage.patch
+        webp-install.patch
 )
-
-if(VCPKG_TARGET_IS_OSX)
-    message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with brew install libtool")
-elseif(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with apt-get install libtool")
-endif()
 
 vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -45,7 +42,6 @@ vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         "-DVERSION=${VERSION}"
         "-DBISON_EXECUTABLE=${BISON}"
@@ -56,8 +52,10 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -Dinstall_win_dependency_dlls=OFF
         -Duse_win_pre_inst_libs=OFF
+        -Dwith_gvedit=OFF
         -Dwith_smyrna=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_ANN=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_DevIL=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_CAIRO=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_EXPAT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_GD=ON
@@ -69,6 +67,24 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/graphviz/*.h")
+    foreach(file IN LISTS headers)
+        vcpkg_replace_string("${file}" "#ifdef GVDLL" "#if 1")
+    endforeach()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        # static libs built with dllexport must be used with dllexport
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/cdt.h" "#ifdef EXPORT_CDT" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/cgraph.h" "#ifdef EXPORT_CGRAPH" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/gvc.h" "#ifdef GVC_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/gvplugin_loadimage.h" "#ifdef GVC_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/pack.h" "#ifdef GVC_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/pathgeom.h" "#ifdef PATHPLAN_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/pathplan.h" "#ifdef PATHPLAN_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/xdot.h" "#ifdef EXPORT_XDOT" "#if 1")
+    endif()
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -84,7 +100,40 @@ foreach(script_or_link IN ITEMS "dot2gxl${VCPKG_TARGET_EXECUTABLE_SUFFIX}" gvmap
     endif()
 endforeach()
 vcpkg_copy_tools(
-    TOOL_NAMES acyclic bcomps ccomps circo diffimg dijkstra dot edgepaint fdp gc gml2gv graphml2gv gv2gml gvcolor gvgen gvmap gvpack gvpr gxl2gv mm2gv neato nop osage patchwork sccmap sfdp tred twopi unflatten
+    TOOL_NAMES
+        acyclic
+        bcomps
+        ccomps
+        circo
+        cluster
+        diffimg
+        dijkstra
+        dot
+        edgepaint
+        fdp
+        gc
+        gml2gv
+        graphml2gv
+        gv2gml
+        gv2gxl
+        gvcolor
+        gvgen
+        gvmap
+        gvpack
+        gvpr
+        gxl2dot
+        gxl2gv
+        mm2gv
+        neato
+        nop
+        osage
+        patchwork
+        prune
+        sccmap
+        sfdp
+        tred
+        twopi
+        unflatten
     AUTO_CLEAN
 )
 
