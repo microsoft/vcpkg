@@ -1,7 +1,7 @@
 {
   "name": "realm-core",
   "version": "14.6.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Realm is a mobile database that runs directly inside phones, tablets or wearables.",
   "homepage": "https://github.com/realm/realm-core",
   "license": "Apache-2.0",
