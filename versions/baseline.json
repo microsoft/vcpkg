@@ -1778,7 +1778,7 @@
     },
     "colmap": {
       "baseline": "2023-10-01",
-      "port-version": 0
+      "port-version": 1
     },
     "color-console": {
       "baseline": "2022-03-20",
