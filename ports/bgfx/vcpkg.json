@@ -20,25 +20,15 @@
     }
   ],
   "default-features": [
-    "platform-default-features"
+    {
+      "name": "multithreaded",
+      "platform": "!emscripten"
+    }
   ],
   "features": {
     "multithreaded": {
       "description": "Encode and render on different threads",
       "supports": "!emscripten"
-    },
-    "platform-default-features": {
-      "description": "Enables default features per platform",
-      "dependencies": [
-        {
-          "$comment": "bgfx does not support multithreading on emscripten",
-          "name": "bgfx",
-          "features": [
-            "multithreaded"
-          ],
-          "platform": "!emscripten"
-        }
-      ]
     },
     "tools": {
       "$comment": "Use '\"host\": true' in dependencies of vcpkg.json in manifest mode.",
