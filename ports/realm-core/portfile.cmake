@@ -46,4 +46,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/doc"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/THIRD-PARTY-NOTICES")
