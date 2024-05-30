@@ -6426,7 +6426,7 @@
     },
     "opencolorio": {
       "baseline": "2.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "opencsg": {
       "baseline": "1.6.0",
