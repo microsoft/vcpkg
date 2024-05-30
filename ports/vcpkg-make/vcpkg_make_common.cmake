@@ -135,7 +135,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     endforeach()
 
     # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
-    if(NOT arg_NO_CPPFLAGS)
+    if(TRUE)
         set(CPPFLAGS "")
         set(pattern "")
         foreach(arg IN LISTS CXXFLAGS)
