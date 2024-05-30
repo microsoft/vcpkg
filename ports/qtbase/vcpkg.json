@@ -21,16 +21,16 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "cups"
-      ],
-      "platform": "osx"
+        "doubleconversion"
+      ]
     },
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "doubleconversion"
-      ]
+        "cups"
+      ],
+      "platform": "osx"
     },
     {
       "name": "qtbase",
