@@ -38,6 +38,8 @@ vcpkg_cmake_configure(
     "-DBGFX_CMAKE_USER_SCRIPT=${CURRENT_PORT_DIR}/vcpkg-inject-packages.cmake"
     "-DBGFX_ADDITIONAL_TOOL_PATHS=${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/bgfx"
     ${FEATURE_OPTIONS}
+  OPTIONS_DEBUG
+    -DBGFX_BUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
