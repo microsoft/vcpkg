@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
+        ccasflags.patch
         use-gmp-pkgconfig.patch
         link-zlib.patch   # directly as before 3.8.4
 )
@@ -29,16 +30,6 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
-endif()
-
-if(VCPKG_CROSSCOMPILING)
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-    cmake_path(GET ccas PARENT_PATH ccas_dir)
-    vcpkg_add_to_path("${ccas_dir}")
-    cmake_path(GET ccas FILENAME ccas_command)
-    vcpkg_list(APPEND options "CCAS=${ccas_command}")
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program

@@ -25,6 +25,7 @@ set(${PORT}_PATCHES
         qmltc
         qmlls
         qmljsrootgen
+        svgtoqml
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
