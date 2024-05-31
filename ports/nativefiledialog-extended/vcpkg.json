@@ -4,7 +4,7 @@
   "description": "Native File Dialog Extended",
   "homepage": "https://github.com/btzy/nativefiledialog-extended",
   "license": "Zlib",
-  "supports": "windows | osx | linux",
+  "supports": "(windows & !uwp) | osx | linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
