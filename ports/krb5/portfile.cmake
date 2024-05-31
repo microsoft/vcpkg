@@ -79,6 +79,8 @@ else()
         SOURCE_PATH "${SOURCE_PATH}/src"
         AUTOCONFIG
         OPTIONS
+            --disable-nls
+            --with-tls-impl=no
             "CFLAGS=-fcommon \$CFLAGS"
     )
     vcpkg_install_make()
