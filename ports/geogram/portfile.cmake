@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 ae3d95be1c5061ace92921b3fcfb0027d23c595b131b0d31f1788adbe0d8f92367bef71736d6c936504bd37eba5fcdae658369f03734e233bf3eab14bca6f9e5
     PATCHES
         fix-vcpkg-install.patch
+        add-missing-int.patch
 )
 
 #third_party: amgcl
