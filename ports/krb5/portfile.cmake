@@ -1,10 +1,11 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO krb5/krb5
     REF krb5-${VERSION}-final
     SHA512 184ef8645d7e17f30a8e3d4005364424d2095b3d0c96f26ecef0c2dd2f3a096a0dd40558ed113121483717e44f6af41e71be0e5e079c76a205535d0c11a2ea34
     HEAD_REF master
+    PATCHES
+        static-deps.diff
 )
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -74,16 +75,11 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         endforeach()    
     endif()
 else()
-    if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_replace_string("${SOURCE_PATH}/src/build-tools/mit-krb5.pc.in" "@COM_ERR_LIB@" "@COM_ERR_LIB@ -framework Kerberos")
-        set(OPTIONS_OSX "LDFLAGS=-framework Kerberos \$LDFLAGS")
-    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}/src"
         AUTOCONFIG
         OPTIONS
             "CFLAGS=-fcommon \$CFLAGS"
-            ${OPTIONS_OSX}
     )
     vcpkg_install_make()
 
