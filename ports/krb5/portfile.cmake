@@ -98,13 +98,18 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat1")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat5")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat7")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/krb5/cat8")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/krb5/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/krb5/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug/lib/krb5/"
+        "${CURRENT_PACKAGES_DIR}/lib/krb5/"
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE")
