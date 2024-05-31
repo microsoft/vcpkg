@@ -7402,7 +7402,7 @@
     },
     "qtnetworkauth": {
       "baseline": "6.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtopcua": {
       "baseline": "6.7.0",
