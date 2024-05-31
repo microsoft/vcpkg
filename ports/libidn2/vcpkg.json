@@ -6,7 +6,11 @@
   "license": null,
   "dependencies": [
     "libiconv",
-    "libunistring"
+    "libunistring",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ],
   "features": {
     "nls": {
