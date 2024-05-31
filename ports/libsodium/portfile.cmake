@@ -42,9 +42,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         endif()
     endblock()
 else()
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        list(APPEND OPTIONS --disable-pie)
+    endif()
+    
     vcpkg_configure_make(
         AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS ${OPTIONS}        
     )
     vcpkg_install_make()
 
