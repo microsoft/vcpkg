@@ -1,0 +1,12 @@
+diff --git a/include/clockUtils/sockets/TcpSocket.h b/include/clockUtils/sockets/TcpSocket.h
+index 3bb97a9..cdd7810 100644
+--- a/include/clockUtils/sockets/TcpSocket.h
++++ b/include/clockUtils/sockets/TcpSocket.h
+@@ -33,6 +33,7 @@
+ #include <sstream>
+ #include <string>
+ #include <vector>
++#include <thread>
+ 
+ #include "clockUtils/errors.h"
+ 
