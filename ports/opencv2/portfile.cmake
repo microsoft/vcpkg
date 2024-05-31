@@ -11,8 +11,6 @@ vcpkg_from_github(
       0001-install-options.patch
       0002-fix-paths-containing-symbols.patch
       0003-force-package-requirements.patch
-      0004-add-ffmpeg-missing-defines.patch
-      0005-fix-cuda.patch
       0006-fix-jasper.patch
       0007-fix-config.patch
       0019-fix-openexr.patch
@@ -26,9 +24,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
- "cuda"     WITH_CUDA
  "eigen"    WITH_EIGEN
- "ffmpeg"   WITH_FFMPEG
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
  "openexr"  WITH_OPENEXR
@@ -52,23 +48,6 @@ if("gtk" IN_LIST FEATURES)
   else()
     message(WARNING "The gtk module cannot be enabled outside Linux")
   endif()
-endif()
-
-set(WITH_PYTHON OFF)
-if("python" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    message(STATUS "You need to manually ensure that python2 virtualenv module is installed")
-    message("This might require running")
-    message("wget https://bootstrap.pypa.io/pip/2.7/get-pip.py")
-    message("and then")
-    message("/usr/bin/python2 get-pip.py")
-    message("and finally")
-    message("pip install virtualenv")
-    message("On some system, these commands must be run as root, otherwise error about virtualenv module missing will persist!")
-  endif()
-  x_vcpkg_get_python_packages(PYTHON_VERSION "2" PACKAGES numpy OUT_PYTHON_VAR "PYTHON2")
-  set(ENV{PYTHON} "${PYTHON2}")
-  set(WITH_PYTHON ON)
 endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT_LNK)
@@ -108,10 +87,12 @@ vcpkg_cmake_configure(
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
-        -DWITH_PYTHON=${WITH_PYTHON}
+        -DWITH_PYTHON=OFF
+        -DWITH_FFMPEG=OFF
         -DWITH_ZLIB=ON
         -WITH_GTK=${WITH_GTK}
-        -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
+        -DWITH_CUBLAS=OFF
+        -DWITH_CUDA=OFF
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
@@ -126,9 +107,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 find_dependency(Threads)")
   if("tiff" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
-  endif()
-  if("cuda" IN_LIST FEATURES)
-    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
   endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(Imath CONFIG)\nfind_dependency(OpenEXR CONFIG)")

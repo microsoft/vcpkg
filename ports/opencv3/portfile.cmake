@@ -50,7 +50,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"      WITH_CUDA
  "dnn"       BUILD_opencv_dnn
  "eigen"     WITH_EIGEN
- "ffmpeg"    WITH_FFMPEG
  "flann"     BUILD_opencv_flann
  "freetype"  WITH_FREETYPE
  "gdcm"      WITH_GDCM
@@ -277,13 +276,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   endif()
 endif()
 
-if("ffmpeg" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_UWP)
-    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
-    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
-  endif()
-endif()
-
 if("halide" IN_LIST FEATURES)
   set(ENABLE_CXX11 OFF)
   list(APPEND ADDITIONAL_BUILD_FLAGS
@@ -311,6 +303,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ###### Verify that required components and only those are enabled
+        -DENABLE_CONFIG_VERIFICATION=ON
         ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
         -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
         -DAARCH64=${TARGET_IS_AARCH64}
@@ -393,6 +387,9 @@ vcpkg_cmake_configure(
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
+        -DWITH_OPENCLAMDFFT=OFF
+        -DWITH_ITT=OFF
+        -DWITH_FFMPEG=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
