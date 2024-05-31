@@ -6442,11 +6442,11 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 20
+      "port-version": 21
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 14
+      "port-version": 15
     },
     "opencv4": {
       "baseline": "4.9.0",
