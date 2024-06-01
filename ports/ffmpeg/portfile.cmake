@@ -8,16 +8,13 @@ vcpkg_from_github(
         0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch #upstreamed in future version
         0003-fix-windowsinclude.patch
-        0004-fix-debug-build.patch
+        0004-dependencies.patch
         0005-fix-nasm.patch #upstreamed in future version
-        0006-fix-StaticFeatures.patch
+        #0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
-        0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-iconv.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
 )
 
@@ -252,11 +249,6 @@ if("swscale" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-swscale")
     set(ENABLE_SWSCALE OFF)
-endif()
-
-set(STATIC_LINKAGE OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(STATIC_LINKAGE ON)
 endif()
 
 if ("alsa" IN_LIST FEATURES)
@@ -597,7 +589,7 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
 endif()
 
-set(OPTIONS_DEBUG "--debug --disable-optimizations")
+set(OPTIONS_DEBUG "--disable-optimizations")
 set(OPTIONS_RELEASE "--enable-optimizations")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
