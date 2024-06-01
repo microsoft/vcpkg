@@ -333,7 +333,7 @@
       "port-version": 0
     },
     "aubio": {
-      "baseline": "2022-01-26",
+      "baseline": "2024-01-03",
       "port-version": 1
     },
     "audiofile": {
