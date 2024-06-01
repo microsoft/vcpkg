@@ -39,8 +39,12 @@ index 3243e23021..6d3f31fc95 100755
                                 die "ERROR: opencl not found"; } &&
                               { test_cpp_condition "OpenCL/cl.h" "defined(CL_VERSION_1_2)" ||
                                 test_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
-@@ -7211,7 +7214,7 @@ enabled amf &&
- if enabled libc_iconv; then
+@@ -7208,10 +7211,10 @@ enabled amf &&
+         "(AMF_VERSION_MAJOR << 48 | AMF_VERSION_MINOR << 32 | AMF_VERSION_RELEASE << 16 | AMF_VERSION_BUILD_NUM) >= 0x00010004001d0000"
+ 
+ # Funny iconv installations are not unusual, so check it after all flags have been set
+-if enabled libc_iconv; then
++if enabled libc_iconv && disabled iconv; then
      check_func_headers iconv.h iconv
  elif enabled iconv; then
 -    check_func_headers iconv.h iconv || check_lib iconv iconv.h iconv -liconv
