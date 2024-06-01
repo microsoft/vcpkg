@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.7.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -23,6 +23,14 @@
       "features": [
         "doubleconversion"
       ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "cups"
+      ],
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -53,10 +61,6 @@
   "default-features": [
     "brotli",
     "concurrent",
-    {
-      "name": "cups",
-      "platform": "osx"
-    },
     "dbus",
     "default-features",
     "doubleconversion",
