@@ -149,10 +149,18 @@ if(VCPKG_DETECTED_CMAKE_RANLIB)
     list(APPEND prog_env "${RANLIB_path}")
 endif()
 
+if(VCPKG_DETECTED_CMAKE_STRIP)
+    get_filename_component(STRIP_path "${VCPKG_DETECTED_CMAKE_STRIP}" DIRECTORY)
+    get_filename_component(STRIP_filename "${VCPKG_DETECTED_CMAKE_STRIP}" NAME)
+    set(ENV{STRIP} "${STRIP_filename}")
+    string(APPEND OPTIONS " --strip=${STRIP_filename}")
+    list(APPEND prog_env "${STRIP_path}")
+endif()
+
 list(REMOVE_DUPLICATES prog_env)
 vcpkg_add_to_path(PREPEND ${prog_env})
 
-# More? OBJCC STRIP BIN2C
+# More? OBJCC BIN2C
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
