@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:focal-20240216
+FROM ubuntu:focal-20240427
 
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://dl.google.com/android/repository/android-ndk-r25c-linux.zip /android-ndk-r25c-linux.zip
@@ -17,6 +17,9 @@ ENV APT_PACKAGES="$APT_PACKAGES autoconf nasm bison python2 flex build-essential
 
 ## Python related
 ENV APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-pip python3-venv python3-mako python3-jinja2"
+
+## at-spi2-atk
+ENV APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
 ## freeglut
 ENV APT_PACKAGES="$APT_PACKAGES libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev"

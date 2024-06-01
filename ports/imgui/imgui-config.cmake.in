@@ -34,4 +34,8 @@ if (@IMGUI_BUILD_ALLEGRO5_BINDING@)
     find_dependency(Allegro CONFIG)
 endif()
 
+if (@IMGUI_TEST_ENGINE@)
+    find_dependency(Stb)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/imgui-targets.cmake")
