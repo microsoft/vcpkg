@@ -12,7 +12,6 @@ vcpkg_from_github(
         0005-fix-nasm.patch #upstreamed in future version
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
-        0009-Fix-fdk-detection.patch
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
@@ -613,6 +612,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(OPTIONS "${OPTIONS} --pkg-config=${PKGCONFIG}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
@@ -652,12 +653,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG RELEASE)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-rel"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 # Debug build
@@ -691,12 +696,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-dbg"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
