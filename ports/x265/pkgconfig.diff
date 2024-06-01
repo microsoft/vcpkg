@@ -1,0 +1,25 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index a407271..d6f0e3e 100755
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -693,7 +693,11 @@ endif()
+ 
+ if(X265_LATEST_TAG)
+     # convert lists of link libraries into -lstdc++ -lm etc..
++    cmake_policy(SET CMP0057 NEW)
+     foreach(LIB ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES} ${PLATFORM_LIBS})
++        if(LIB IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++            continue()
++        endif()
+         if(IS_ABSOLUTE ${LIB} AND EXISTS ${LIB})
+             list(APPEND PLIBLIST "${LIB}")
+         else()
+@@ -702,7 +706,7 @@ if(X265_LATEST_TAG)
+     endforeach()
+     if(PLIBLIST)
+         # blacklist of libraries that should not be in Libs.private
+-        list(REMOVE_ITEM PLIBLIST "-lc" "-lpthread" "-lmingwex" "-lmingwthrd"
++        list(REMOVE_ITEM PLIBLIST "-lc"             "-lmingwex" "-lmingwthrd"
+             "-lmingw32" "-lmoldname" "-lmsvcrt" "-ladvapi32" "-lshell32"
+             "-luser32" "-lkernel32")
+         string(REPLACE ";" " " PRIVATE_LIBS "${PLIBLIST}")
