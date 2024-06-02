@@ -23,7 +23,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/telnetpp)
-
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/telnetpp-config.cmake" "####################################################################################" 
+                    [[####################################################################################
+                      include(CMakeFindDependencyMacro)
+                      find_dependency(Boost)
+                      find_dependency(gsl-lite)
+                      find_dependency(ZLIB)]])
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
