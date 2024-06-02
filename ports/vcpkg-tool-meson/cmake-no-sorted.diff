@@ -1,22 +1,8 @@
-diff --git a/mesonbuild/cmake/tracetargets.py b/mesonbuild/cmake/tracetargets.py
-index 20c7462..1c31f91 100644
---- a/mesonbuild/cmake/tracetargets.py
-+++ b/mesonbuild/cmake/tracetargets.py
-@@ -115,9 +115,4 @@ def resolve_cmake_trace_targets(target_name: str,
- 
-         processed_targets += [curr]
- 
--    res.include_directories = sorted(set(res.include_directories))
--    res.link_flags = sorted(set(res.link_flags))
--    res.public_compile_opts = sorted(set(res.public_compile_opts))
--    res.libraries = sorted(set(res.libraries))
--
-     return res
 diff --git a/mesonbuild/dependencies/cmake.py b/mesonbuild/dependencies/cmake.py
-index 1070b10..0c15c9f 100644
+index 66d3319..51c6a43 100644
 --- a/mesonbuild/dependencies/cmake.py
 +++ b/mesonbuild/dependencies/cmake.py
-@@ -554,14 +554,14 @@ class CMakeDependency(ExternalDependency):
+@@ -539,14 +539,14 @@ class CMakeDependency(ExternalDependency):
                                                 not_found_warning=lambda x:
                                                     mlog.warning('CMake: Dependency', mlog.bold(x), 'for', mlog.bold(name), 'was not found')
                                                 )
