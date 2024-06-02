@@ -10,7 +10,6 @@ vcpkg_from_github(
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
         0005-fix-nasm.patch #upstreamed in future version
-        #0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
