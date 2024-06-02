@@ -8000,6 +8000,10 @@
       "baseline": "0.16.1",
       "port-version": 8
     },
+    "sdl3": {
+      "baseline": "3.1.2",
+      "port-version": 0
+    },
     "seacas": {
       "baseline": "2022-11-22",
       "port-version": 5
