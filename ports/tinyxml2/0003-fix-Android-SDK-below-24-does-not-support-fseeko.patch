@@ -14,7 +14,7 @@ index 083f54b..e7319db 100644
 -        #define TIXML_FSEEK fseeko
 -        #define TIXML_FTELL ftello
 -    #endif
-+#elif defined(__ANDROID__) && __ANDROID_API__ > 24
++#elif defined(__ANDROID__) && __ANDROID_API__ >= 24
 +	#define TIXML_FSEEK fseeko64
 +	#define TIXML_FTELL ftello64
  #else
