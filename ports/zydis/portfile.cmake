@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 e07add4d43768ded02a238911fde6e74d2391abf8df282f774fca1a8c3fca3e97b03e90e0f3c7c0f3c75485fb29c0be4071d5e5b2e23dd5b8b1a864e3b713fbc
     HEAD_REF master
     PATCHES
-  #      zycore.patch
+        zycore.patch
 
 )
 
