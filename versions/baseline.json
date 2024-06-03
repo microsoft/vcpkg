@@ -618,7 +618,7 @@
     },
     "bgfx": {
       "baseline": "1.127.8725-469",
-      "port-version": 0
+      "port-version": 1
     },
     "bigint": {
       "baseline": "2010.04.30",
@@ -3373,7 +3373,7 @@
       "port-version": 0
     },
     "hdf5": {
-      "baseline": "1.14.2",
+      "baseline": "1.14.4.3",
       "port-version": 0
     },
     "hdr-histogram": {
@@ -4645,7 +4645,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "24.3",
+      "baseline": "24.5",
       "port-version": 0
     },
     "libmesh": {
@@ -4802,7 +4802,7 @@
     },
     "libp7client": {
       "baseline": "5.6",
-      "port-version": 4
+      "port-version": 5
     },
     "libpcap": {
       "baseline": "1.10.4",
@@ -4826,7 +4826,7 @@
     },
     "libpng": {
       "baseline": "1.6.43",
-      "port-version": 1
+      "port-version": 2
     },
     "libpopt": {
       "baseline": "1.16",
@@ -4889,7 +4889,7 @@
       "port-version": 0
     },
     "libremidi": {
-      "baseline": "4.3.0",
+      "baseline": "4.5.0",
       "port-version": 0
     },
     "libressl": {
@@ -7062,7 +7062,7 @@
     },
     "pulseaudio": {
       "baseline": "17.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pulzed-mini": {
       "baseline": "0.9.14",
@@ -7521,7 +7521,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "4.1.0",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "quirc": {
@@ -7641,8 +7641,8 @@
       "port-version": 4
     },
     "realm-core": {
-      "baseline": "14.6.2",
-      "port-version": 1
+      "baseline": "14.8.0",
+      "port-version": 0
     },
     "realsense2": {
       "baseline": "2.54.2",
@@ -7761,7 +7761,7 @@
       "port-version": 0
     },
     "robotraconteur-companion": {
-      "baseline": "0.3.1",
+      "baseline": "0.4.1",
       "port-version": 0
     },
     "rocksdb": {
@@ -8585,8 +8585,8 @@
       "port-version": 0
     },
     "telnetpp": {
-      "baseline": "2.1.2",
-      "port-version": 3
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "tensorflow": {
       "baseline": "2.10.0",
@@ -8969,7 +8969,7 @@
       "port-version": 5
     },
     "uriparser": {
-      "baseline": "0.9.7",
+      "baseline": "0.9.8",
       "port-version": 0
     },
     "usbmuxd": {
