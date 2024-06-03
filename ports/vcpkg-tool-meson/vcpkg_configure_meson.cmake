@@ -42,7 +42,9 @@ function(z_vcpkg_meson_set_proglist_variables config_type)
                 list(FILTER ${prog}flags EXCLUDE REGEX "(-|/)nologo") # Breaks compiler detection otherwise
                 z_vcpkg_meson_convert_list_to_python_array(${prog}flags ${${prog}flags})
                 set("${var_to_set}" "${meson_${prog}} = ${${prog}flags}" PARENT_SCOPE)
-                if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$")
+                if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID
+                    AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$"
+                    AND VCPKG_DETECTED_CMAKE_LINKER)
                     string(TOUPPER "MESON_${prog}_LD" var_to_set)
                     set(${var_to_set} "${meson_${prog}}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
                 endif()
@@ -56,7 +58,9 @@ function(z_vcpkg_meson_set_proglist_variables config_type)
                 z_vcpkg_meson_convert_list_to_python_array(${prog}flags ${${prog}flags})
                 string(TOLOWER "${prog}" proglower)
                 set("${var_to_set}" "${proglower} = ${${prog}flags}" PARENT_SCOPE)
-                if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$")
+                if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID
+                    AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$"
+                    AND VCPKG_DETECTED_CMAKE_LINKER)
                     string(TOUPPER "MESON_${prog}_LD" var_to_set)
                     set(${var_to_set} "${proglower}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
                 endif()

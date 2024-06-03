@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.7.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -61,7 +61,6 @@
   "default-features": [
     "brotli",
     "concurrent",
-    "dbus",
     "default-features",
     "doubleconversion",
     "freetype",
@@ -130,8 +129,7 @@
       "dependencies": [
         {
           "name": "dbus",
-          "default-features": false,
-          "platform": "linux"
+          "default-features": false
         },
         {
           "name": "qtbase",
@@ -184,7 +182,7 @@
     },
     "egl": {
       "description": "EGL",
-      "supports": "linux",
+      "supports": "linux & !emscripten",
       "dependencies": [
         "egl"
       ]
@@ -279,17 +277,17 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "opengl"
+            "thread"
           ],
-          "platform": "osx"
+          "platform": "windows"
         },
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "thread"
+            "opengl"
           ],
-          "platform": "windows"
+          "platform": "osx | emscripten"
         }
       ]
     },
@@ -338,6 +336,14 @@
           "features": [
             "gui"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ],
+          "platform": "emscripten"
         }
       ]
     },
