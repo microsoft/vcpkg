@@ -8585,8 +8585,8 @@
       "port-version": 0
     },
     "telnetpp": {
-      "baseline": "2.1.2",
-      "port-version": 3
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "tensorflow": {
       "baseline": "2.10.0",
