@@ -1,5 +1,4 @@
-vcpkg_download_distfile(
-    OUT_SOURCE_PATH FIX_IMPLICIT_INT_PATCH
+vcpkg_download_distfile(FIX_IMPLICIT_INT_PATCH
     URLS https://github.com/BrunoLevy/geogram/commit/382da2d2f0d39bf8df2f65051c338e7e827e31db.patch?full_index=1
     FILENAME geogram-implicit-ini-382da2d2f0d39bf8df2f65051c338e7e827e31db.patch
     SHA512 1a85195b76cd7140fe890893bf1f57a1f9c30dbc2865bab28b7eda9d97b9bab5be7cbc638b24d8da489aee1e25e0e7289655ade13893bdc225d1b332f1d845a0
