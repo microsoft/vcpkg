@@ -4802,7 +4802,7 @@
     },
     "libp7client": {
       "baseline": "5.6",
-      "port-version": 4
+      "port-version": 5
     },
     "libpcap": {
       "baseline": "1.10.4",
