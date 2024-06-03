@@ -14,11 +14,27 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
-  - group: vcpkg-asset-caching-credentials
-  - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url-wus3),$(sas-wus3),readwrite"
 
   steps:
+  - task: PowerShell@2
+    name: mintsasstep
+    displayName: 'Generate Asset Cache SAS tokens'
+    inputs:
+      targetType: inline
+      script: |
+        if ($Null -eq (Get-PackageProvider -Name NuGet -ErrorAction Ignore)) {
+            Install-PackageProvider -Name NuGet -Force -Scope CurrentUser;
+        }
+        if ($Null -eq (Get-InstalledModule -Name PowerShellGet -MinimumVersion 2.2.1 -ErrorAction Ignore)) {
+            Install-Module PowerShellGet -MinimumVersion 2.2.1 -Scope CurrentUser -Force -AllowClobber
+        }
+        Install-Module -Name Az -Repository PSGallery -Scope CurrentUser -Force -AllowClobber
+        Connect-AzAccount -AccountId 'a81b4cd3-9d8d-4cb9-9a74-f2038f24f224' -Identity
+        $ctx = New-AzStorageContext -StorageAccountName 'vcpkgassetcachewus3' -UseConnectedAccount
+        $StartTime = Get-Date
+        $EndTime = $StartTime.AddDays(2)
+        $sas = New-AzStorageContainerSASToken -Name 'cache' -Permission rwd -StartTime $StartTime -ExpiryTime $EndTime -Context $ctx
+        Write-Host "##vso[task.setvariable variable=X_VCPKG_ASSET_SOURCES;isSecret=true;isOutput=true;isreadonly=true]x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$sas,readwrite"
   - task: DownloadBuildArtifacts@0
     displayName: 'Download DropBuildNumber if not specified'
     inputs:
@@ -63,6 +79,8 @@ jobs:
     displayName: 'Bootstrap vcpkg'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports'
+    env:
+      X_VCPKG_ASSET_SOURCES: $(mintsasstep.X_VCPKG_ASSET_SOURCES)
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'

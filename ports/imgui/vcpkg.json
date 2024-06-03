@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.90.2",
+  "version": "1.90.7",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -105,6 +105,14 @@
       "description": "Make available SDL2 Renderer binding",
       "dependencies": [
         "sdl2"
+      ]
+    },
+    "test-engine": {
+      "description": "Build test engine",
+      "supports": "!uwp",
+      "license": null,
+      "dependencies": [
+        "stb"
       ]
     },
     "vulkan-binding": {

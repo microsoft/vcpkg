@@ -1,18 +1,7 @@
 {
   "name": "quill",
-  "version": "3.8.0",
-  "description": "C++14 Asynchronous Low Latency Logging Library",
+  "version": "4.3.0",
+  "description": "Asynchronous Low Latency C++ Logging Library",
   "homepage": "https://github.com/odygrd/quill/",
-  "license": "MIT",
-  "dependencies": [
-    "fmt",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  "license": "MIT"
 }

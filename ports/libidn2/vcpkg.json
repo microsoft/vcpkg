@@ -1,7 +1,6 @@
 {
   "name": "libidn2",
-  "version": "2.3.4",
-  "port-version": 3,
+  "version": "2.3.7",
   "description": "GNU Libidn is an implementation of the Stringprep, Punycode and IDNA 2003 specifications. Libidn's purpose is to encode and decode internationalized domain names.",
   "homepage": "https://www.gnu.org/software/libidn/",
   "license": null,
@@ -13,14 +12,14 @@
     "nls": {
       "description": "Enable native language support",
       "dependencies": [
-        "gettext",
         {
           "name": "gettext",
           "host": true,
           "features": [
             "tools"
           ]
-        }
+        },
+        "gettext-libintl"
       ]
     }
   }
