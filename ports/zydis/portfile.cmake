@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 e07add4d43768ded02a238911fde6e74d2391abf8df282f774fca1a8c3fca3e97b03e90e0f3c7c0f3c75485fb29c0be4071d5e5b2e23dd5b8b1a864e3b713fbc
     HEAD_REF master
     PATCHES
-        zycore.patch
+  #      zycore.patch
 
 )
 
@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -DZYDIS_BUILD_SHARED_LIB=${ZYDIS_BUILD_SHARED_LIB}
         -DZYDIS_BUILD_DOXYGEN=OFF
         -DZYDIS_BUILD_EXAMPLES=OFF
+        -DZYDIS_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DZYDIS_BUILD_TOOLS=OFF
 )
