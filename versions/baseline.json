@@ -7194,7 +7194,7 @@
     },
     "qt5-location": {
       "baseline": "5.15.14",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-macextras": {
       "baseline": "5.15.14",
