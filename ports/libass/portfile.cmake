@@ -20,6 +20,7 @@ get_filename_component(PKGCONFIG_EXE_PATH ${PKGCONFIG} DIRECTORY)
 vcpkg_add_to_path(${PKGCONFIG_EXE_PATH})
 
 vcpkg_cmake_configure(
+    OPTIONS -DLIBASS_VERSION=${VERSION}
     SOURCE_PATH ${SOURCE_PATH}
 )
 
