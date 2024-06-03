@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-do-not-force-export-the-symbols-when-building-st.patch
         0002-fix-check-for-TINYXML2_EXPORT-on-non-windows.patch
-		0003-fix-Android-SDK-below-24-does-not-support-fseeko
+		0003-fix-Android-SDK-below-24-does-not-support-fseeko.patch
 )
 
 vcpkg_cmake_configure(
