@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(libass C)
 
-set(LIBASS_VERSION 0.17.2)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libass ${CMAKE_CURRENT_BINARY_DIR})
 
 set(CONFIG_FREETYPE 1)
