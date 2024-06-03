@@ -4645,7 +4645,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "24.3",
+      "baseline": "24.5",
       "port-version": 0
     },
     "libmesh": {
