@@ -738,9 +738,6 @@ moos-core:x64-android=fail
 mozjpeg:arm-neon-android=fail
 mozjpeg:arm64-android=fail
 mozjpeg:x64-android=fail
-mp3lame:arm-neon-android=fail
-mp3lame:arm64-android=fail
-mp3lame:x64-android=fail
 mpir:x64-android=fail
 # ms-gltf and ms-quic require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
 ms-gdkx:x64-windows=fail
