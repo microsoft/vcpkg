@@ -7,6 +7,11 @@
   "supports": "(windows & !uwp) | osx | linux",
   "dependencies": [
     {
+      "name": "gtk3",
+      "host": true,
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
