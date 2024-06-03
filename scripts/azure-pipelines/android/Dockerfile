@@ -21,9 +21,6 @@ ENV APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-pip python3-venv pyth
 ## at-spi2-atk
 ENV APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
-## coin
-ENV APT_PACKAGES="$APT_PACKAGES libx11-dev"
-
 ## freeglut
 ENV APT_PACKAGES="$APT_PACKAGES libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev"
 

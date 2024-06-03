@@ -12,7 +12,7 @@ parameters:
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
-    default: 'x64-android'
+    default: '-'
 
 jobs:
 - job: mintsas

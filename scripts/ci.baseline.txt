@@ -243,6 +243,7 @@ clrng:arm-neon-android=fail
 cnats:arm-neon-android=fail
 cnats:arm64-android=fail
 cnats:x64-android=fail
+coin:x64-android=fail
 coin-or-ipopt:x64-linux=fail
 concurrencpp:arm-neon-android=fail
 concurrencpp:arm64-android=fail
