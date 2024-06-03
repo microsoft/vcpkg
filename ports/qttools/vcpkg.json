@@ -105,7 +105,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "gui"
+            "gui",
+            "widgets"
           ]
         },
         {
