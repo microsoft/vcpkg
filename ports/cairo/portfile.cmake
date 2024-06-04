@@ -2,12 +2,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(PATCHES fix_clang-cl_build.patch)
 endif()
 
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.freedesktop.org
-    REPO cairo/cairo
-    REF "${VERSION}"
-    SHA512 2ef3b948b354a9be5c3afe2bbf47f559a00a6114c67ef50ce19d54a1d4232218311f2277e271faad4df598e19e03492ba97af934ede9411494618ebe46f9eee9
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://cairographics.org/releases/cairo-${VERSION}.tar.xz"
+    FILENAME "cairo-${VERSION}.tar.xz"
+    SHA512 6366c7d5e3fd3e12df2edc43aa4ed4c3a517de2ef0b1b3b30dfa8b69a7cae1dd55765801228cec308d2e9792037d0704ae49d95b7b12c06f20df092fa0534e1c
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         cairo_static_fix.patch
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554

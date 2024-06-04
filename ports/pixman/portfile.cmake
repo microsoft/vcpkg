@@ -46,12 +46,15 @@ if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -Da64-neon=disabled)
 endif()
 
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.freedesktop.org
-    REPO pixman/pixman
-    REF "pixman-${VERSION}"
-    SHA512 daeb25d91e9cb8d450a6f050cbec1d91e239a03188e993ceb6286605c5ed33d97e08d6f57efaf1d5c6a8a1eedb1ebe6c113849a80d9028d5ea189c54601be424
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://cairographics.org/releases/pixman-${VERSION}.tar.gz"
+    FILENAME "pixman-${VERSION}.tar.gz"
+    SHA512 08802916648bab51fd804fc3fd823ac2c6e3d622578a534052b657491c38165696d5929d03639c52c4f29d8850d676a909f0299d1a4c76a07df18a34a896e43d
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         no-host-cpu-checks.patch
         fix_clang-cl.patch
