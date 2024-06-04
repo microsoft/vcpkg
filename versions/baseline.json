@@ -9733,8 +9733,8 @@
       "port-version": 0
     },
     "zydis": {
-      "baseline": "4.0.0",
-      "port-version": 2
+      "baseline": "4.1.0",
+      "port-version": 0
     },
     "zyre": {
       "baseline": "2019-07-07",
