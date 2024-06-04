@@ -1698,7 +1698,7 @@
     },
     "clockutils": {
       "baseline": "1.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "clrng": {
       "baseline": "2020-12-01",
@@ -2682,7 +2682,7 @@
     },
     "ffmpeg": {
       "baseline": "6.1.1",
-      "port-version": 5
+      "port-version": 6
     },
     "ffnvcodec": {
       "baseline": "12.1.14.0",
@@ -2982,7 +2982,7 @@
     },
     "geogram": {
       "baseline": "1.8.3",
-      "port-version": 1
+      "port-version": 2
     },
     "geographiclib": {
       "baseline": "2.3",
@@ -7194,7 +7194,7 @@
     },
     "qt5-location": {
       "baseline": "5.15.14",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-macextras": {
       "baseline": "5.15.14",
@@ -7370,7 +7370,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.14.1",
@@ -8465,8 +8465,8 @@
       "port-version": 1
     },
     "stormlib": {
-      "baseline": "2019-05-10",
-      "port-version": 5
+      "baseline": "9.25",
+      "port-version": 0
     },
     "strict-variant": {
       "baseline": "0.5",
