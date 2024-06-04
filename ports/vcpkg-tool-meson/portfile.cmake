@@ -9,7 +9,6 @@ set(patches
   adjust-python-dep.patch
   adjust-args.patch
   remove-freebsd-pcfile-specialization.patch
-  cmake-no-sorted.diff
   cmake-generator-expressions.patch
   cmake-trace-framework.diff
   dependencies-misc.diff
