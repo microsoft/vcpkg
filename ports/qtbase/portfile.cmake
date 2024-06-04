@@ -473,7 +473,9 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
