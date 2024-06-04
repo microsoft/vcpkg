@@ -8550,7 +8550,7 @@
     },
     "taocpp-json": {
       "baseline": "2020-09-14",
-      "port-version": 3
+      "port-version": 4
     },
     "tap-windows6": {
       "baseline": "9.21.2-0e30f5c",
