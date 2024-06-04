@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-build.patch
+        OpenSSLKeyExchange.patch
 )
 
 # Prefer installed config files

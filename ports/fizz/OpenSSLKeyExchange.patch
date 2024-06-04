@@ -1,0 +1,49 @@
+From 3fc48355eb4a8d86f1fb8818ac6009a489156956 Mon Sep 17 00:00:00 2001
+From: Paul Cruz <paulcruz74@meta.com>
+Date: Mon, 3 Jun 2024 14:27:54 -0700
+Subject: [PATCH] Add OpenSSLKeyExchange.cpp to Cmake sources
+
+Summary:
+Context: FBOSS OSS builds depend on fizz and are currently failing with the following error message:
+
+```
+/bin/ld: /data/sandcastle/temp/skycastle/fbcode_builder_getdeps/installed/fizz/lib/libfizz.a(FizzUtil.cpp.o): in function `std::_MakeUniq<fizz::openssl::OpenSSLECKeyExchange>::__single_object std::make_unique<fizz::openssl::OpenSSLECKeyExchange, int const&, int const&>(int const&, int const&) [clone .isra.0]':
+FizzUtil.cpp:(.text+0x15c): undefined reference to `vtable for fizz::openssl::OpenSSLECKeyExchange'
+/bin/ld: /data/sandcastle/temp/skycastle/fbcode_builder_getdeps/installed/fizz/lib/libfizz.a(FizzUtil.cpp.o): in function `fizz::FizzUtil::createKeyExchangeFromBuf(fizz::hpke::KEMId, folly::Range<unsigned char const*>)':
+FizzUtil.cpp:(.text+0xc88): undefined reference to `fizz::openssl::OpenSSLECKeyExchange::setPrivateKey(std::unique_ptr<evp_pkey_st, folly::static_function_deleter<evp_pkey_st, &EVP_PKEY_free> >)'
+/bin/ld: FizzUtil.cpp:(.text+0xcea): undefined reference to `fizz::openssl::OpenSSLECKeyExchange::setPrivateKey(std::unique_ptr<evp_pkey_st, folly::static_function_deleter<evp_pkey_st, &EVP_PKEY_free> >)'
+/bin/ld: FizzUtil.cpp:(.text+0xd49): undefined reference to `fizz::openssl::OpenSSLECKeyExchange::setPrivateKey(std::unique_ptr<evp_pkey_st, folly::static_function_deleter<evp_pkey_st, &EVP_PKEY_free> >)'
+/bin/ld: /data/sandcastle/temp/skycastle/fbcode_builder_getdeps/installed/fizz/lib/libfizz.a(OpenSSLFactory.cpp.o): in function `std::_MakeUniq<fizz::openssl::OpenSSLECKeyExchange>::__single_object std::make_unique<fizz::openssl::OpenSSLECKeyExchange, int const&, int const&>(int const&, int const&) [clone .isra.0]':
+OpenSSLFactory.cpp:(.text+0x1b7): undefined reference to `vtable for fizz::openssl::OpenSSLECKeyExchange'
+/bin/ld: /data/sandcastle/temp/skycastle/fbcode_builder_getdeps/installed/fizz/lib/libfizz.a(Utils.cpp.o): in function `std::_MakeUniq<fizz::openssl::OpenSSLECKeyExchange>::__single_object std::make_unique<fizz::openssl::OpenSSLECKeyExchange, int const&, int const&>(int const&, int const&) [clone .isra.0]':
+Utils.cpp:(.text+0x18): undefined reference to `vtable for fizz::openssl::OpenSSLECKeyExchange'
+collect2: error: ld returned 1 exit status
+[1064/1080] Building CXX object CMakeFiles/fsdb_handler.dir/fboss/fsdb/server/ServiceHandler.cpp.o
+FAILED: CMakeFiles/fsdb_handler.dir/fboss/fsdb/server/ServiceHandler.cpp.o
+```
+
+taken from: https://www.internalfb.com/sandcastle/job/18014399822757787?no_redirect=true
+
+This seems to be caused by the fact that OpenSSLKeyExchange.cpp was recently added, but was not added to the OSS build via CMakeLists.txt, so we add it in this PR.
+
+Reviewed By: zalecodez
+
+Differential Revision: D58099797
+
+fbshipit-source-id: 2dcb05192f796a087786c34f3280f8996157f612
+---
+ fizz/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index 574f9aa381..0c292004eb 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -192,6 +192,7 @@ set(FIZZ_SOURCES
+   crypto/hpke/Hpke.cpp
+   crypto/hpke/Utils.cpp
+   backend/openssl/crypto/OpenSSLKeyUtils.cpp
++  backend/openssl/crypto/exchange/OpenSSLKeyExchange.cpp
+   record/Types.cpp
+   record/RecordLayer.cpp
+   record/EncryptedRecordLayer.cpp
