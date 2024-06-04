@@ -1458,7 +1458,7 @@
     },
     "cairo": {
       "baseline": "1.18.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cairomm": {
       "baseline": "1.17.1",
@@ -6806,7 +6806,7 @@
     },
     "pixman": {
       "baseline": "0.43.4",
-      "port-version": 1
+      "port-version": 2
     },
     "pkgconf": {
       "baseline": "2.2.0",
