@@ -106,6 +106,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         endif()
         vcpkg_list(APPEND flags ${lang}FLAGS)
     endforeach()
+
     separate_arguments(LDFLAGS NATIVE_COMMAND "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${var_suffix}}")
     separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${var_suffix}}")
     set(RCFLAGS "${VCPKG_COMBINED_RC_FLAGS_${var_suffix}}")
@@ -114,9 +115,11 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(APPEND flags ${var})
     endforeach()
 
-    set(ABIFLAGS "") # TODO: Investigate if vcpkg should simply pass all flags in CC/CXX without any filtering and ignore CFLAGS etc. 
+    separate_arguments(CFLAGS_LIST UNIX_COMMAND ${CFLAGS})  
+
+    set(ABIFLAGS "")
     set(pattern "")
-    foreach(arg IN LISTS CFLAGS)
+    foreach(arg IN LISTS CFLAGS_LIST)
         if(NOT pattern STREQUAL "")
             vcpkg_list(APPEND pattern "${arg}")
         elseif(arg MATCHES "^--(sysroot|target)=.")
