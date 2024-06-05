@@ -1,6 +1,6 @@
 {
   "name": "tinygltf",
-  "version": "2.8.21",
+  "version": "2.8.22",
   "description": "A header only C++11 glTF 2.0 library.",
   "homepage": "https://github.com/syoyo/tinygltf",
   "dependencies": [

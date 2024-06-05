@@ -20,6 +20,7 @@ set(${PORT}_PATCHES
         clang-cl_source_location.patch
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
+        fix_deploy_windows.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

@@ -27,6 +27,14 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "cups"
+      ],
+      "platform": "osx"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
         "thread"
       ],
       "platform": "osx"
