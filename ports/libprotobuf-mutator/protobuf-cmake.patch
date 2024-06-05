@@ -1,28 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2e4b78e..097c331 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -126,8 +126,7 @@ endif()
- if (LIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF)
-   include(protobuf)
- else()
--  find_package(Protobuf REQUIRED)
--  include_directories(${PROTOBUF_INCLUDE_DIRS})
-+  find_package(Protobuf CONFIG REQUIRED)
-   include_directories(${CMAKE_CURRENT_BINARY_DIR})
- endif()
- 
-diff --git a/libprotobuf-mutatorConfig.cmake.in b/libprotobuf-mutatorConfig.cmake.in
-index f62a501..5b158cf 100644
---- a/libprotobuf-mutatorConfig.cmake.in
-+++ b/libprotobuf-mutatorConfig.cmake.in
-@@ -1,5 +1,5 @@
- include(CMakeFindDependencyMacro)
- 
--find_dependency(Protobuf REQUIRED)
-+find_dependency(Protobuf CONFIG REQUIRED)
- 
- include("${CMAKE_CURRENT_LIST_DIR}/libprotobuf-mutatorTargets.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 321874c..2b4b492 100644
 --- a/src/CMakeLists.txt
