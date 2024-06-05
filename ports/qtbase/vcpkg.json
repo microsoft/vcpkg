@@ -133,8 +133,15 @@
       "dependencies": [
         {
           "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
           "default-features": false,
-          "platform": "linux"
+          "features": [
+            "dbus"
+          ]
         },
         {
           "name": "qtbase",
