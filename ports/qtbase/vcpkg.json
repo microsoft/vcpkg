@@ -60,10 +60,6 @@
   "default-features": [
     "brotli",
     "concurrent",
-    {
-      "name": "cups",
-      "platform": "osx"
-    },
     "dbus",
     "default-features",
     "doubleconversion",
