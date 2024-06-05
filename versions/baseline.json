@@ -4638,7 +4638,7 @@
     },
     "libmariadb": {
       "baseline": "3.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "libmaxminddb": {
       "baseline": "1.9.1",
