@@ -476,7 +476,7 @@ endif()
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 endif()
-
+ 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
     set(DLLS_TO_COPY "")
@@ -550,6 +550,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         pcre2-16.dll
         zlib1.dll
         zstd.dll
+        dbus-1-3.dll
   )
   list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
   foreach(dll IN LISTS qtbase_owned_dlls)
