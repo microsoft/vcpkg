@@ -1493,8 +1493,8 @@
       "port-version": 5
     },
     "casclib": {
-      "baseline": "2021-11-16",
-      "port-version": 1
+      "baseline": "2024-06-05",
+      "port-version": 0
     },
     "catch": {
       "baseline": "alias",
