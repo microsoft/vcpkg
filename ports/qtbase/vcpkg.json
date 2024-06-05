@@ -137,6 +137,14 @@
           "features": [
             "thread"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus"
+          ],
+          "host": true
         }
       ]
     },
