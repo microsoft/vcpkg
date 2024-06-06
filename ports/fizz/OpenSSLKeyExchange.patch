@@ -1,0 +1,12 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index 574f9aa381..0c292004eb 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -192,6 +192,7 @@ set(FIZZ_SOURCES
+   crypto/hpke/Hpke.cpp
+   crypto/hpke/Utils.cpp
+   backend/openssl/crypto/OpenSSLKeyUtils.cpp
++  backend/openssl/crypto/exchange/OpenSSLKeyExchange.cpp
+   record/Types.cpp
+   record/RecordLayer.cpp
+   record/EncryptedRecordLayer.cpp
