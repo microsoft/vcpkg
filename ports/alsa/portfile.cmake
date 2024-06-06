@@ -25,6 +25,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-plugin-dir.patch
+        libdl.diff
         ${ALSA_VERSION_SCRIPT_PATCH}
 )
 
