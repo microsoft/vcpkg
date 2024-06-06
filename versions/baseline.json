@@ -2666,7 +2666,7 @@
     },
     "fbgemm": {
       "baseline": "0.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "fbthrift": {
       "baseline": "2024.06.24.00",
