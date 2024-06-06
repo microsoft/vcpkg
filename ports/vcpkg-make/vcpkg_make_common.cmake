@@ -83,6 +83,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
+
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
     if(NOT DEFINED arg_LANGUAGES)
@@ -90,7 +91,6 @@ function(z_vcpkg_make_prepare_compile_flags)
     endif()
 
     set(var_suffix "${arg_CONFIG}")
-
     set(CFLAGS "")
     set(CXXFLAGS "")
 

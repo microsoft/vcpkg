@@ -9,18 +9,13 @@ z_vcpkg_make_prepare_compile_flags(
     COMPILER_FRONTEND "MSVC"
     CONFIG "Release"
     FLAGS_OUT flags_out
-    LANGUAGES "C;CXX"
+    LANGUAGES "C" "CXX"
 )
 
-message(STATUS "VCPKG_COMBINED_C_FLAGS_Release is: ${VCPKG_COMBINED_C_FLAGS_Release}")
-
 # Expected flags based on the function logic
-# Expected flags (changed to avoid matching the regex)
-set(expected_cflags "-DNDEBUG")  
-set(expected_cxxflags "-DNDEBUG")
-set(expected_ldflags "-L/mylibpath")
-
-message(STATUS "expected_cflags is: ${expected_cflags}")
+set(expected_cflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")  
+set(expected_cxxflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")
+set(expected_ldflags "-Xlinker -L/mylibpath")
 
 # Assertion for CFLAGS
 if(NOT "${CFLAGS_Release}" STREQUAL "${expected_cflags}")
@@ -28,15 +23,13 @@ if(NOT "${CFLAGS_Release}" STREQUAL "${expected_cflags}")
 endif()
 
 # Assertion for CXXFLAGS
-list(FIND "${CXXFLAGS_Release}" "${expected_cxxflags}" index)
-if(index EQUAL -1)
-    message(FATAL_ERROR "CXXFLAGS did not match expected value: ${CXXFLAGS_Release} vs ${expected_cxxflags}")
+if(NOT "${CXXFLAGS_Release}" STREQUAL "${expected_cxxflags}")
+    message(FATAL_ERROR "Test 2: CXXFLAGS did not match expected value: ${CXXFLAGS_Release} vs ${expected_cxxflags}")
 endif()
 
 # Assertion for LDFLAGS
-list(FIND "${LDFLAGS_Release}" "${expected_ldflags}" index)
-if(index EQUAL -1)
-    message(FATAL_ERROR "LDFLAGS did not match expected value: ${LDFLAGS_Release} vs ${expected_ldflags}")
+if(NOT "${LDFLAGS_Release}" STREQUAL "${expected_ldflags}")
+    message(FATAL_ERROR "Test 3: LDFLAGS did not match expected value: ${LDFLAGS_Release} vs ${expected_ldflags}")
 endif()
 
 # Test Case 2: Test Case for Use of Response Files and Wrappers
