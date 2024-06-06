@@ -242,7 +242,7 @@
     },
     "arrow": {
       "baseline": "16.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "arsenalgear": {
       "baseline": "2.1.0",
@@ -1802,7 +1802,7 @@
     },
     "concurrencpp": {
       "baseline": "0.1.7",
-      "port-version": 0
+      "port-version": 1
     },
     "concurrentqueue": {
       "baseline": "1.0.4",
@@ -7486,7 +7486,7 @@
     },
     "qtwebengine": {
       "baseline": "6.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qtwebsockets": {
       "baseline": "6.7.0",
