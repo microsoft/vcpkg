@@ -20,6 +20,7 @@ vcpkg_from_github(
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
+        0041-add-const-for-opengl-definition.patch
 )
 
 if(SOURCE_PATH MATCHES " ")

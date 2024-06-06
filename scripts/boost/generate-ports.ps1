@@ -29,6 +29,7 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 $defaultPortVersion = 1
 $portVersions = @{
     'boost-container' = 1;
+    'boost-math' = 2;
 }
 
 function Get-PortVersion {
@@ -108,6 +109,13 @@ $portData = @{
         }
     };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
+    "boost-math"             = @{
+        "features" = @{
+            "legacy" = @{
+                "description"  = "Build the legacy C99 and TR1 libraries";
+            }
+        }
+    };
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
         "supports"     = "!uwp";
