@@ -40,20 +40,20 @@ z_vcpkg_make_prepare_compile_flags(
     COMPILER_FRONTEND "MSVC"
     CONFIG "Release"
     FLAGS_OUT flags_out
-    LANGUAGES "C;CXX"
+    LANGUAGES "C" "CXX"
 )
 
 # Expected a response file to be created for linker flags
 set(expected_rspfile_ldflags "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-LDFLAGS-Release.rsp")
 if(NOT EXISTS "${expected_rspfile_ldflags}")
-    message(FATAL_ERROR "Expected response file for LDFLAGS not found: ${expected_rspfile_ldflags}")
+    message(FATAL_ERROR "Test 2: Expected response file for LDFLAGS not found: ${expected_rspfile_ldflags}")
 endif()
 
 # Verify the content of the response file
 file(READ "${expected_rspfile_ldflags}" content_ldflags)
 string(FIND "${content_ldflags}" "-link" found_index)
 if(found_index EQUAL -1)
-    message(FATAL_ERROR "Expected -link in response file for LDFLAGS: ${content_ldflags}")
+    message(FATAL_ERROR "Test 2: Expected -link in response file for LDFLAGS: ${content_ldflags}")
 endif()
 
 
@@ -65,13 +65,13 @@ z_vcpkg_make_prepare_compile_flags(
     COMPILER_FRONTEND "MSVC"
     CONFIG "Debug"
     FLAGS_OUT flags_out
-    LANGUAGES "C;CXX"
+    LANGUAGES "C" "CXX"
 )
 
 # Verify flags are not escaped
 string(FIND "${CFLAGS_Debug}" "-Xcompiler" index)
 if(NOT index EQUAL -1)
-    message(FATAL_ERROR "CFLAGS should not include -Xcompiler: ${CFLAGS_Debug}")
+    message(FATAL_ERROR "Test 3: CFLAGS should not include -Xcompiler: ${CFLAGS_Debug}")
 endif()
 
 # Test Case 4: Different Languages and Compiler Frontend (GCC)
@@ -80,19 +80,27 @@ z_vcpkg_make_prepare_compile_flags(
     COMPILER_FRONTEND "GCC"
     CONFIG "Release"
     FLAGS_OUT flags_out
-    LANGUAGES "C;CXX;ASM"
+    LANGUAGES "C" "CXX" "ASM"
 )
 
 # Verify that ASM flags are set
 if(NOT DEFINED ASMFLAGS_Release)
-    message(FATAL_ERROR "ASMFLAGS not set for ASM language.")
+    message(FATAL_ERROR "Test 4: ASMFLAGS not set for ASM language.")
 endif()
 
 # Expected C and CXX flags for GCC (assuming general flag differences)
-set(expected_gcc_cflags "-O2 -fPIC")  # Example, assuming PIC is default for shared libs
-list(FIND "${CFLAGS_Release}" "${expected_gcc_cflags}" index)
-if(index EQUAL -1)
-    message(FATAL_ERROR "CFLAGS for GCC did not match expected value: ${CFLAGS_Release}")
+
+# Convert lists to strings (if necessary) and ensure there are no extra spaces
+# Note: Encountered weird comparison issue 
+#  was failing with "CFLAGS for GCC did not match expected value: -O2 -DNDEBUG vs -O2 -DNDEBUG"
+
+set(expected_gcc_cflags "-O2 -DNDEBUG")
+string(REPLACE ";" " " cflags_normalized "${CFLAGS_Release}")
+string(STRIP "${cflags_normalized}" cflags_normalized)
+string(STRIP "${expected_gcc_cflags}" expected_normalized)
+
+if(NOT "${cflags_normalized}" STREQUAL "${expected_normalized}")
+    message(FATAL_ERROR "Test 4: CFLAGS for GCC did not match expected value: ${CFLAGS_Release} vs ${expected_gcc_cflags}")
 endif()
 
 # Test Case 5: No Languages Defined (Should Default to C;CXX)
@@ -106,5 +114,5 @@ z_vcpkg_make_prepare_compile_flags(
 
 # Verify that both CFLAGS and CXXFLAGS are set since they should default to C and C++
 if(NOT DEFINED CFLAGS_Release OR NOT DEFINED CXXFLAGS_Release)
-    message(FATAL_ERROR "Default languages C or CXX flags are not set as expected.")
+    message(FATAL_ERROR "Test 5: Default languages C or CXX flags are not set as expected.")
 endif()
