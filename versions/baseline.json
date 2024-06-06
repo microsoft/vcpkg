@@ -185,8 +185,8 @@
       "port-version": 2
     },
     "arcus": {
-      "baseline": "4.13.2",
-      "port-version": 0
+      "baseline": "4.10.0",
+      "port-version": 3
     },
     "arg-router": {
       "baseline": "1.4.0",
@@ -1494,7 +1494,7 @@
     },
     "cartographer": {
       "baseline": "1.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "casclib": {
       "baseline": "2024-06-05",
