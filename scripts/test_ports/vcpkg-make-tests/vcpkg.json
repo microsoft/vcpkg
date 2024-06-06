@@ -9,11 +9,15 @@
         }
     ],
     "default-features": [
-      "z-vcpkg-make-prepare-compile-flags"
+      "z-vcpkg-make-prepare-compile-flags",
+      "z-vcpkg-make-determine-arch"
     ],
     "features": {
       "z-vcpkg-make-prepare-compile-flags": {
         "description": "Test the z_vcpkg_make_prepare_compile_flags function"
+      },
+      "z-vcpkg-make-determine-arch":{
+        "description": "Test the z_vcpkg_make_determine_arch function"
       }
     }
   }
