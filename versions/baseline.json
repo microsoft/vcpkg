@@ -94,7 +94,7 @@
     },
     "alsa": {
       "baseline": "1.2.11",
-      "port-version": 1
+      "port-version": 2
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
@@ -558,7 +558,7 @@
     },
     "bde": {
       "baseline": "4.8.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "bdwgc": {
       "baseline": "8.2.6",
@@ -1445,7 +1445,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "caf": {
@@ -2021,7 +2021,7 @@
       "port-version": 3
     },
     "crow": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "cryptopp": {
@@ -2477,7 +2477,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "1.3.1",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "egl": {
@@ -2665,7 +2665,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "fcl": {
@@ -2674,7 +2674,7 @@
     },
     "fdk-aac": {
       "baseline": "2.0.2",
-      "port-version": 3
+      "port-version": 4
     },
     "fdlibm": {
       "baseline": "5.3",
@@ -2682,7 +2682,7 @@
     },
     "ffmpeg": {
       "baseline": "6.1.1",
-      "port-version": 6
+      "port-version": 7
     },
     "ffnvcodec": {
       "baseline": "12.1.14.0",
@@ -2709,7 +2709,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2793,7 +2793,7 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3057,7 +3057,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "2.6.4",
+      "baseline": "2.6.9",
       "port-version": 0
     },
     "glbinding": {
@@ -3342,7 +3342,7 @@
     },
     "halide": {
       "baseline": "17.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "happly": {
       "baseline": "2021-03-19",
@@ -3598,6 +3598,10 @@
     },
     "imath": {
       "baseline": "3.1.11",
+      "port-version": 0
+    },
+    "imcce-openfa": {
+      "baseline": "20231011.0.3",
       "port-version": 0
     },
     "imgui": {
@@ -4189,7 +4193,7 @@
       "port-version": 0
     },
     "libass": {
-      "baseline": "0.17.1",
+      "baseline": "0.17.2",
       "port-version": 0
     },
     "libassert": {
@@ -4221,7 +4225,7 @@
       "port-version": 4
     },
     "libbson": {
-      "baseline": "1.27.1",
+      "baseline": "1.27.2",
       "port-version": 0
     },
     "libcaer": {
@@ -4638,7 +4642,7 @@
     },
     "libmariadb": {
       "baseline": "3.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "libmaxminddb": {
       "baseline": "1.9.1",
@@ -5006,7 +5010,7 @@
     },
     "libsrt": {
       "baseline": "1.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libsrtp": {
       "baseline": "2.5.0",
@@ -5078,11 +5082,11 @@
     },
     "libtracepoint": {
       "baseline": "1.3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libtracepoint-control": {
       "baseline": "1.3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libtracepoint-decode": {
       "baseline": "1.3.3",
@@ -5401,8 +5405,8 @@
       "port-version": 0
     },
     "llvm": {
-      "baseline": "17.0.2",
-      "port-version": 5
+      "baseline": "18.1.6",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "0.9.31",
@@ -5438,7 +5442,7 @@
     },
     "lpeg": {
       "baseline": "1.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ltla-aarand": {
       "baseline": "2023-03-19",
@@ -5689,8 +5693,8 @@
       "port-version": 3
     },
     "mesa": {
-      "baseline": "23.2.1",
-      "port-version": 1
+      "baseline": "24.0.7",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
@@ -5825,7 +5829,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "1.27.1",
+      "baseline": "1.27.2",
       "port-version": 0
     },
     "mongo-cxx-driver": {
@@ -5993,7 +5997,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "mygui": {
@@ -6485,8 +6489,8 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.5.8.0",
-      "port-version": 3
+      "baseline": "2.5.12.0",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.5.2",
@@ -7017,7 +7021,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "psimd": {
@@ -7090,7 +7094,7 @@
     },
     "qcoro": {
       "baseline": "0.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qcustomplot": {
       "baseline": "2.1.1",
@@ -8206,7 +8210,7 @@
     },
     "snappy": {
       "baseline": "1.1.10",
-      "port-version": 0
+      "port-version": 1
     },
     "sndfile": {
       "baseline": "0",
@@ -8522,7 +8526,7 @@
     },
     "symengine": {
       "baseline": "0.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "systemc": {
       "baseline": "2.3.3",
@@ -8765,8 +8769,8 @@
       "port-version": 10
     },
     "tinyxml2": {
-      "baseline": "9.0.0",
-      "port-version": 2
+      "baseline": "10.0.0",
+      "port-version": 0
     },
     "tl-expected": {
       "baseline": "1.1.0",
@@ -9073,8 +9077,8 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2022-02-06",
-      "port-version": 1
+      "baseline": "2024-05-23",
+      "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
       "baseline": "2023-12-31",
@@ -9281,7 +9285,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.05.27.00",
+      "baseline": "2024.06.03.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9382,7 +9386,7 @@
     },
     "wolfssl": {
       "baseline": "5.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "3.2.0",
@@ -9438,7 +9442,7 @@
     },
     "x265": {
       "baseline": "3.5",
-      "port-version": 0
+      "port-version": 1
     },
     "x86-simd-sort": {
       "baseline": "4.0",
