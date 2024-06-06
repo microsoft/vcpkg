@@ -89,8 +89,6 @@ function(z_vcpkg_make_prepare_compile_flags)
         set(arg_LANGUAGES "C;CXX")
     endif()
 
-    # TODO: Check params
-
     set(var_suffix "${arg_CONFIG}")
 
     set(CFLAGS "")
@@ -115,11 +113,9 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(APPEND flags ${var})
     endforeach()
 
-    separate_arguments(CFLAGS_LIST UNIX_COMMAND ${CFLAGS})  
-
     set(ABIFLAGS "")
     set(pattern "")
-    foreach(arg IN LISTS CFLAGS_LIST)
+    foreach(arg IN LISTS CFLAGS)
         if(NOT pattern STREQUAL "")
             vcpkg_list(APPEND pattern "${arg}")
         elseif(arg MATCHES "^--(sysroot|target)=.")
@@ -138,14 +134,10 @@ function(z_vcpkg_make_prepare_compile_flags)
     endforeach()
 
     # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
-    if(TRUE)
-        # Split combined flags into lists
-        separate_arguments(CXXFLAGS_LIST UNIX_COMMAND ${CXXFLAGS}) 
-        separate_arguments(CFLAGS_LIST UNIX_COMMAND ${CFLAGS})
-
+    if(NOT arg_NO_CPPFLAGS)
         set(CPPFLAGS "")
         set(pattern "")
-        foreach(arg IN LISTS CXXFLAGS_LIST)
+        foreach(arg IN LISTS CXXFLAGS)
             if(NOT pattern STREQUAL "")
                 vcpkg_list(APPEND pattern "${arg}")
             elseif(arg MATCHES "^-(D|isystem).")
@@ -165,7 +157,7 @@ function(z_vcpkg_make_prepare_compile_flags)
             endif()
         endforeach()
         set(pattern "")
-        foreach(arg IN LISTS CFLAGS_LIST)
+        foreach(arg IN LISTS CFLAGS)
             if(NOT pattern STREQUAL "")
                 vcpkg_list(APPEND pattern "${arg}")
             elseif(arg MATCHES "^-(D|isystem)\$")

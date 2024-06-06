@@ -1,0 +1,20 @@
+{
+    "name": "vcpkg-make-tests",
+    "version-string": "0",
+    "description": "Ensures that the vcpkg-make port functions are unit tested.",
+    "dependencies": [
+        {
+            "name": "vcpkg-make",
+            "host": true
+        }
+    ],
+    "default-features": [
+      "z-vcpkg-make-prepare-compile-flags"
+    ],
+    "features": {
+      "z-vcpkg-make-prepare-compile-flags": {
+        "description": "Test the z_vcpkg_make_prepare_compile_flags function"
+      }
+    }
+  }
+  
