@@ -1,0 +1,17 @@
+# Test Case 1: x86_64 Architecture (Windows)
+set(ENV{PROCESSOR_ARCHITECTURE} "AMD64")
+set(result_arch)
+z_vcpkg_make_determine_host_arch(result_arch)
+if (NOT "${result_arch}" STREQUAL "x86_64")
+    message(FATAL_ERROR "Host arch test 1 failed: Expected 'x86_64', got '${result_arch}'")
+endif()
+
+# Test Case 2: i686 Architecture (Windows)
+set(ENV{PROCESSOR_ARCHITECTURE} "x86")
+set(result_arch)
+z_vcpkg_make_determine_host_arch(result_arch)
+if (NOT "${result_arch}" STREQUAL "i686")
+    message(FATAL_ERROR "Host arch test 2 failed: Expected 'i686', got '${result_arch}'")
+endif()
+
+message(STATUS "z_vcpkg_make_determine_host_arch tests passed.")

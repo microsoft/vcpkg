@@ -8,3 +8,11 @@ if("z-vcpkg-make-determine-arch" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_make_determine_arch.cmake")
 endif()
 
+if("z-vcpkg-make-determine-host-arch" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_make_determine_host_arch.cmake")
+endif()
+
+if("z-vcpkg-make-determine-target-arch" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_make_determine_target_arch.cmake")
+endif()
+

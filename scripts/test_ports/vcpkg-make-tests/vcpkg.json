@@ -10,7 +10,9 @@
     ],
     "default-features": [
       "z-vcpkg-make-prepare-compile-flags",
-      "z-vcpkg-make-determine-arch"
+      "z-vcpkg-make-determine-arch",
+      "z-vcpkg-make-determine-host-arch",
+      "z-vcpkg-make-determine-target-arch"
     ],
     "features": {
       "z-vcpkg-make-prepare-compile-flags": {
@@ -18,6 +20,12 @@
       },
       "z-vcpkg-make-determine-arch":{
         "description": "Test the z_vcpkg_make_determine_arch function"
+      },
+      "z-vcpkg-make-determine-host-arch":{
+        "description": "Test the z_vcpkg_make_determine_host_arch function"
+      },
+      "z-vcpkg-make-determine-target-arch":{
+        "description": "Test the z_vcpkg_make_determine_target_arch function"
       }
     }
   }
