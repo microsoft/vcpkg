@@ -12,6 +12,14 @@ if(NOT "${AUTOCONF_VERSION_STR}" STREQUAL "" AND "${AUTOCONF_VERSION_STR}" MATCH
     vcpkg_list(APPEND EXTRA_PATCHES m4.patch)
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    message(
+" openldap currently requires the following libraries from the system package manager:
+    libsasl2-dev
+These can be installed on Ubuntu systems via sudo apt install libsasl2-dev"
+    )
+endif()
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
