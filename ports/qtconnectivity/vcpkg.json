@@ -9,10 +9,17 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "dbus",
         "gui",
         "network"
       ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "!(windows & static)"
     }
   ]
 }

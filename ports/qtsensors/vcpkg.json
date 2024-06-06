@@ -10,7 +10,8 @@
       "default-features": false,
       "features": [
         "dbus"
-      ]
+      ],
+      "platform": "!(windows & static)"
     },
     {
       "name": "qtconnectivity",
