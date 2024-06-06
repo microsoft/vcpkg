@@ -112,7 +112,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     foreach(var IN ITEMS ABIFLAGS LDFLAGS ARFLAGS RCFLAGS)
         vcpkg_list(APPEND flags ${var})
     endforeach()
-
+    
     set(ABIFLAGS "")
     set(pattern "")
     foreach(arg IN LISTS CFLAGS)
