@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 362ddb94fdd22d05bd11c950f1711eafbd47424f6da0b1b061da012ef1b39dd8f7efeb91b53c036ea0708aa3845893fe39d1fb529ac3b928df738b88717d1aee
+    SHA512 9e9ec501336127339347c01ffd47768d501a84ef415c6a72fe56d31e867f982baeb3c4659be8e9b8475848a460357f33a6b2aa0ee9f81150e363963b98387bc0
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -13,9 +13,9 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
-        0007-fix-compiler-rt-warnings.patch # fixed in upstream
-        0008-add-missing-case.patch # From upstream https://github.com/llvm/llvm-project/pull/72401
-        0009-add-missing-typename.patch # Fixed in version 18.1.0 and later
+        75711.patch # [clang] Add intrin0.h header to mimic intrin0.h used by MSVC STL for clang-cl #75711
+        79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
+        82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
 )
 
 vcpkg_check_features(
@@ -326,20 +326,34 @@ llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
 
-set(empty_dirs)
+if("mlir" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
+endif()
 
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+# Move Clang's runtime libraries from bin/lib to tools/${PORT}/lib
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/lib")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/lib")
+endif()
+
+# Remove empty directories to avoid vcpkg warning
+set(empty_dirs)
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
 endif()
-
 if("pstl" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
     endif()
 endif()
-
 if("flang" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
@@ -349,7 +363,6 @@ if("flang" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/HLFIR/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles")
 endif()
-
 if(empty_dirs)
     foreach(empty_dir IN LISTS empty_dirs)
         if(NOT EXISTS "${empty_dir}")
@@ -365,12 +378,7 @@ if(empty_dirs)
     endforeach()
 endif()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
-endif()
-
+# Remove debug headers and tools
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -378,17 +386,9 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     )
 endif()
 
-if("mlir" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
-endif()
-
+# LLVM generates shared libraries in a static build (LLVM-C.dll, libclang.dll, LTO.dll, Remarks.dll, ...)
+# for the corresponding export targets (used in LLVMExports-<config>.cmake files on the Windows platform)
 if(VCPKG_TARGET_IS_WINDOWS)
-    # LLVM still generates a few DLLs in the static build:
-    # * LLVM-C.dll
-    # * libclang.dll
-    # * LTO.dll
-    # * Remarks.dll
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
