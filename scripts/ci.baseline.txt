@@ -21,10 +21,11 @@
 ##
 ##
 ## CI tested triplets:
-##    arm64-android
-##    arm64-windows
 ##    arm-neon-android
+##    arm64-android
+##    arm64-osx
 ##    arm64-uwp
+##    arm64-windows
 ##    x64-android
 ##    x64-linux
 ##    x64-osx
@@ -74,7 +75,13 @@ atliac-minitest:x64-uwp=fail
 backward-cpp:arm-neon-android=fail
 backward-cpp:arm64-android=fail
 backward-cpp:x64-android=fail
-bde:x64-linux=skip
+bde:arm64-osx               =skip   # conflict https://github.com/microsoft/vcpkg/pull/32645
+bde:x64-linux               =skip
+bde:x64-osx                 =skip
+bde:x64-windows-static-md   =skip
+bde:x64-windows-static      =skip
+bde:x64-windows             =skip
+bde:x86-windows             =skip
 bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
@@ -311,6 +318,9 @@ discordcoreapi:x64-linux=fail
 discordcoreapi:x64-osx=fail
 discount:x64-android=fail
 eathread:x64-android=fail
+ecal:arm-neon-android=fail
+ecal:arm64-android=fail
+ecal:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
 elfio:x64-android=fail
@@ -454,10 +464,6 @@ gz-tools2:x64-android=fail
 gz-tools2:arm64-android=fail
 gz-gui7:x64-osx=fail
 halide:x64-windows-static=fail
-hdf5:arm64-windows=fail
-hdf5:arm-neon-android=fail
-hdf5:arm64-android=fail
-hdf5:x64-android=fail
 hexl:x64-android=fail
 highs:arm-neon-android=fail
 highs:arm64-android=fail
@@ -501,6 +507,9 @@ intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
 irrlicht:x64-android=fail
 isal:x64-android=fail
+itk:arm-neon-android=fail
+itk:arm64-android=fail
+itk:x64-android=fail
 jaeger-client-cpp:arm-neon-android=fail
 jaeger-client-cpp:x64-android=fail
 jemalloc:arm-neon-android=fail
@@ -654,14 +663,17 @@ libtomcrypt:arm64-uwp=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
 #Skip detection to avoid upstream remove older releases
-libvmdk:x86-windows=skip
-libvmdk:x64-windows=skip
-libvmdk:x64-windows-static=skip
-libvmdk:x64-windows-static-md=skip
-libvmdk:arm64=skip
-libvmdk:x64-linux=skip
-libvmdk:x64-osx=skip
-libvmdk:arm64-osx=skip
+libvmdk:arm-neon-android        =skip   # upstream issue https://github.com/microsoft/vcpkg/pull/13765#issuecomment-699710253
+libvmdk:arm64-android           =skip
+libvmdk:arm64-osx               =skip
+libvmdk:arm64-windows           =skip
+libvmdk:x64-android             =skip
+libvmdk:x64-linux               =skip
+libvmdk:x64-osx                 =skip
+libvmdk:x64-windows-static-md   =skip
+libvmdk:x64-windows-static      =skip
+libvmdk:x64-windows             =skip
+libvmdk:x86-windows             =skip
 libwandio:arm-neon-android=fail
 libwandio:arm64-android=fail
 libwandio:x64-android=fail
@@ -710,6 +722,7 @@ memorymodule:x64-android=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
+mesa:arm64-osx=fail
 mfx-dispatch:arm-neon-android=fail
 mfx-dispatch:arm64-android=fail
 mfx-dispatch:x64-android=fail
@@ -795,6 +808,9 @@ nana:x64-linux=fail
 nana:x64-osx=fail
 nana:arm64-osx=fail
 nanodbc:x64-linux=skip
+netcdf-c:arm-neon-android=fail
+netcdf-c:arm64-android=fail
+netcdf-c:x64-android=fail
 netcdf-cxx4:x64-windows-static-md=fail
 ngspice:x64-android=fail
 ngspice:x64-windows-static=fail
@@ -874,6 +890,7 @@ openscap:arm64-osx=fail
 openscap:x64-windows-static-md=fail
 openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
+openturns:arm64-windows=fail
 openvpn3:x64-osx=fail
 openvpn3:arm64-osx=fail
 openvr:x64-windows-static=fail
@@ -899,6 +916,9 @@ paho-mqtt:x64-uwp=fail
 pcl:arm-neon-android=fail
 pcl:arm64-android=fail
 pcl:x64-android=fail
+pdal:arm-neon-android=fail
+pdal:arm64-android=fail
+pdal:x64-android=fail
 pixman:arm-neon-android=fail
 platform-folders:arm64-uwp=fail
 platform-folders:x64-uwp=fail
@@ -1132,9 +1152,9 @@ tensorflow-cc:x64-windows=fail
 # Also skipping because our macOS machines are relatively underpowered and this saves 8 hours of CI
 # time for a relatively unpopular library / system combo.
 tensorflow:x64-osx=skip
-tensorflow:arm-osx=skip
+tensorflow:arm64-osx                =skip
 tensorflow-cc:x64-osx=skip
-tensorflow-cc:arm-osx=skip
+tensorflow-cc:arm64-osx             =skip
 
 thorvg:arm-neon-android=fail
 tinycthread:arm-neon-android=fail
