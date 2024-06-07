@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-pc-and-config.patch
+        reduce-required-c-standard.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

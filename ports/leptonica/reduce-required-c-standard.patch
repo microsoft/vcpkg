@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 58c70f4..2afc739 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ project(
+   leptonica
+   LANGUAGES C
+   VERSION 1.84.1)
+-set(CMAKE_C_STANDARD 17)
++set(CMAKE_C_STANDARD 11)
+ set(CMAKE_C_STANDARD_REQUIRED ON)
+ 
+ # Standard installation paths
