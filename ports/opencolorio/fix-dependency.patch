@@ -49,7 +49,7 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index 6a4932a..2a08f5a 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,12 @@
+@@ -1,6 +1,11 @@
  @PACKAGE_INIT@
 
  include(CMakeFindDependencyMacro)
@@ -58,7 +58,6 @@ index 6a4932a..2a08f5a 100644
 +find_dependency(pystring CONFIG)
 +find_dependency(yaml-cpp CONFIG)
 +find_dependency(minizip-ng CONFIG)
-+find_dependency(lcms2 CONFIG)
 
  if (NOT @BUILD_SHARED_LIBS@) # NOT @BUILD_SHARED_LIBS@
      if (APPLE)
