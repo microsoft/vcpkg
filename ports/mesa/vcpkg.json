@@ -1,7 +1,6 @@
 {
   "name": "mesa",
-  "version": "23.2.1",
-  "port-version": 1,
+  "version": "24.0.7",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
@@ -30,8 +29,7 @@
           "default-features": false,
           "features": [
             "gles1",
-            "gles2",
-            "opengl"
+            "gles2"
           ]
         },
         {
@@ -41,6 +39,14 @@
             "llvm"
           ],
           "platform": "x64"
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "egl"
+          ],
+          "platform": "!osx"
         }
       ]
     },
@@ -53,25 +59,13 @@
     "gles1": {
       "description": "Build support for OpenGL ES 1.x",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ]
-        }
+        "opengl"
       ]
     },
     "gles2": {
       "description": "Build support for OpenGL ES 2.x and 3.x",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ]
-        }
+        "opengl"
       ]
     },
     "llvm": {
@@ -113,18 +107,6 @@
     },
     "offscreen": {
       "description": "Build with support for offscreen rendering (OSMesa)",
-      "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ]
-        }
-      ]
-    },
-    "opengl": {
-      "description": "Build support for OpenGL (all versions)",
       "dependencies": [
         "opengl"
       ]
