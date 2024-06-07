@@ -10,12 +10,12 @@ vcpkg_download_distfile(LIB_MARIADB
     SHA512 634aa71d0202634117c88dc82da060eb6b7c50afa3607301fecb7e15ad0d370175dec762b2be97072deb53bce9f2de5bf8f3da35fdf5abdf58635f56418b06da
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH LIB_MARIADB_CPP_SOURCE_PATH
     ARCHIVE "${LIB_MARIADB_CPP}"
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
     OUT_SOURCE_PATH LIB_MARIADB_SOURCE_PATH
     ARCHIVE "${LIB_MARIADB}"
 )
