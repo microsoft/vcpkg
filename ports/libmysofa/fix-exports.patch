@@ -1,0 +1,57 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e64623..9fc1fd4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,9 +39,9 @@ if(${ADDRESS_SANITIZE} STREQUAL "ON")
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1 -fno-omit-frame-pointer -g")
+ endif()
+ 
+-install(FILES share/default.sofa DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
+-install(FILES share/MIT_KEMAR_normal_pinna.sofa
+-        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
++#install(FILES share/default.sofa DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
++#install(FILES share/MIT_KEMAR_normal_pinna.sofa
++#        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
+ 
+ if(BUILD_TESTS)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index dcaa92a..4cfce5d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -13,6 +13,8 @@ use_c99()
+ configure_file(config.h.in config.h)
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++find_package(ZLIB REQUIRED)
++
+ if(NOT MSVC)
+   if(NOT WIN32)
+     find_library(MATH m)
+@@ -81,6 +83,8 @@ set(public-headers
+     hrtf/mysofa.h
+ )
+ 
++install(FILES "${public-headers}" DESTINATION include)
++
+ if(BUILD_STATIC_LIBS)
+ add_library(mysofa-static STATIC ${libsrc})
+ target_include_directories(mysofa-static
+@@ -88,7 +92,7 @@ target_include_directories(mysofa-static
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
+   $<INSTALL_INTERFACE:include/>
+ )
+-target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ${ZLIB_LIBRARIES})
++target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ZLIB::ZLIB)
+ set_target_properties(
+   mysofa-static
+   PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1 POSITION_INDEPENDENT_CODE
+@@ -120,7 +124,7 @@ if(BUILD_SHARED_LIBS)
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
+     $<INSTALL_INTERFACE:include/>
+   )
+-  target_link_libraries(mysofa-shared PRIVATE ${MATH} ${ZLIB_LIBRARIES})
++  target_link_libraries(mysofa-shared PRIVATE ${MATH} ZLIB::ZLIB)
+   set_target_properties(mysofa-shared
+                         PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1)
+   # Rename the Windows import library (stub) of the DLL to prevent a name clash
