@@ -6,7 +6,11 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" REFLECTCPP_BUILD_SHARED)
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" OR "${VCPKG_TARGET_IS_WINDOWS}")
+    set(REFLECTCPP_BUILD_SHARED OFF)
+else()
+    set(REFLECTCPP_BUILD_SHARED ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
