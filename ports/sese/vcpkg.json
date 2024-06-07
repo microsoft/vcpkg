@@ -1,6 +1,6 @@
 {
   "name": "sese",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A cross-platform framework for basic components.",
   "homepage": "https://github.com/libsese/sese",
   "license": "Apache-2.0",
@@ -10,13 +10,9 @@
       "name": "asio",
       "features": [
         "openssl"
-      ],
-      "version>=": "1.29.0"
+      ]
     },
-    {
-      "name": "openssl",
-      "version>=": "3.2.0#1"
-    },
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,10 +21,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "zlib",
-      "version>=": "1.3"
-    }
+    "zlib"
   ],
   "default-features": [
     "sqlite3"
@@ -37,10 +30,7 @@
     "archive": {
       "description": "add archive support",
       "dependencies": [
-        {
-          "name": "libarchive",
-          "version>=": "3.7.2"
-        }
+        "libarchive"
       ]
     },
     "async-logger": {
@@ -49,37 +39,25 @@
     "mysql": {
       "description": "add mysql and mariadb support",
       "dependencies": [
-        {
-          "name": "libmariadb",
-          "version>=": "3.3.1#3"
-        }
+        "libmariadb"
       ]
     },
     "psql": {
       "description": "add postgresql support",
       "dependencies": [
-        {
-          "name": "libpq",
-          "version>=": "16.0#1"
-        }
+        "libpq"
       ]
     },
     "sqlite3": {
       "description": "add sqlite3 support",
       "dependencies": [
-        {
-          "name": "sqlite3",
-          "version>=": "3.43.2"
-        }
+        "sqlite3"
       ]
     },
     "tests": {
       "description": "build the unit test",
       "dependencies": [
-        {
-          "name": "gtest",
-          "version>=": "1.14.0"
-        }
+        "gtest"
       ]
     }
   }
