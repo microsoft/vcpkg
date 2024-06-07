@@ -1,7 +1,6 @@
 {
   "name": "casclib",
-  "version-date": "2021-11-16",
-  "port-version": 1,
+  "version-date": "2024-06-05",
   "description": "An open-source implementation of library for reading CASC storage from Blizzard games since 2014",
   "homepage": "http://www.zezula.net/en/casc/casclib.html",
   "dependencies": [
