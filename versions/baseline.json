@@ -8442,7 +8442,7 @@
     },
     "stormlib": {
       "baseline": "2019-05-10",
-      "port-version": 5
+      "port-version": 6
     },
     "strict-variant": {
       "baseline": "0.5",
