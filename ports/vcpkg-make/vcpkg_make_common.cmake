@@ -37,7 +37,7 @@ macro(z_vcpkg_make_get_cmake_vars)
     include("${cmake_vars_file}")
 endmacro()
 
-####
+### normalize architectures to the ones used by vcpkg
 function(z_vcpkg_make_determine_arch out_var value)
     if(${value} MATCHES "^(amd|AMD|x)64$")
         set(${out_var} x86_64 PARENT_SCOPE)
