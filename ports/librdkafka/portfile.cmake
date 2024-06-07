@@ -13,7 +13,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl     WITH_SSL
-        ssl     WITH_WITH_SASL_OAUTHBEARER
+        ssl     WITH_SASL_OAUTHBEARER
         ssl     WITH_SASL_SCRAM
         zlib    WITH_ZLIB
         zstd    WITH_ZSTD
