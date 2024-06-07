@@ -6924,6 +6924,10 @@
       "baseline": "3.0.0",
       "port-version": 5
     },
+    "poolstl": {
+      "baseline": "0.3.5",
+      "port-version": 0
+    },
     "poppler": {
       "baseline": "24.3.0",
       "port-version": 1
