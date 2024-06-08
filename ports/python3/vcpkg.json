@@ -45,6 +45,10 @@
       "platform": "!(windows & static)"
     },
     {
+      "name": "vcpkg-get-python",
+      "host": true
+    },
+    {
       "name": "vcpkg-msbuild",
       "host": true,
       "platform": "windows"
