@@ -8064,6 +8064,10 @@
       "baseline": "0.1.4.1",
       "port-version": 0
     },
+    "sese": {
+      "baseline": "2.1.2",
+      "port-version": 0
+    },
     "sf2cute": {
       "baseline": "0.2.0",
       "port-version": 4
