@@ -37,6 +37,8 @@ jobs:
     value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_ASSET_SOURCES'] ]
   - name: X_VCPKG_BINARY_SOURCE_STUB
     value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_BINARY_SOURCE_STUB'] ]
+  - name: ANDROID_NDK_HOME
+    value: /android-ndk-r26d
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
