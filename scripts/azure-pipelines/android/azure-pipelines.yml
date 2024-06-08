@@ -90,6 +90,7 @@ jobs:
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
         --env X_VCPKG_ASSET_SOURCES="$(X_VCPKG_ASSET_SOURCES)" \
+        --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
         ${{ parameters.dockerImage }} \
         pwsh \
          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
