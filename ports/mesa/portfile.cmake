@@ -8,12 +8,9 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
     REF mesa-${VERSION}
-    SHA512 96f7602c98d532a269116bd5d3f9cbe87ca4425b309467cc19f83277a0faaa9804edea72dcaeb6f7774cac17790d5d76b58c357ef639cb6064e7480d93b861bf
+    SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
-    PATCHES
-        gallium-fix-build-with-llvm-17.patch
-        clover-llvm-move-to-modern-pass-manager.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
@@ -46,13 +43,9 @@ endif()
 
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
-list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
-list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
-list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
-list(APPEND MESA_OPTIONS -Dglvnd=false)
-list(APPEND MESA_OPTIONS -Dglx=disabled)
-list(APPEND MESA_OPTIONS -Dgbm=disabled)
+list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
+list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
 
 if("offscreen" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dosmesa=true)
@@ -66,28 +59,31 @@ else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
 
+set(use_gles OFF)
 if("gles1" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles1=enabled)
+    set(use_gles ON)
 else()
     list(APPEND MESA_OPTIONS -Dgles1=disabled)
 endif()
 if("gles2" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles2=enabled)
+    set(use_gles ON)
 else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
 endif()
-if("opengl" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dopengl=true)
+
+if(use_gles)
+    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  # shared GLAPI required when building two or more of the following APIs - gles1 gles2
 else()
-    list(APPEND MESA_OPTIONS -Dopengl=false)
+    list(APPEND MESA_OPTIONS -Dshared-glapi=auto)
 endif()
-if("egl" IN_LIST FEATURES) # EGL feature only works on Linux
+
+if("egl" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Degl=enabled)
 else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
 endif()
-
-list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
@@ -102,13 +98,12 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -Dgles-lib-suffix=_mesa
-        #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
     ADDITIONAL_BINARIES
-      python=['${PYTHON3}','-I']
-      python3=['${PYTHON3}','-I']
-    )
+        python=['${PYTHON3}','-I']
+        python3=['${PYTHON3}','-I']
+)
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
