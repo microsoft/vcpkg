@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF 6097093ab329fcd19aed03a8fe67949f6971a65d #v19.24
-    SHA512 4bdcecdf0f986abc748245d21616bf2c304461e9a37572c66743f69141fc3f37eb846fdaedc6c910135d986534f7989cbcc52a884ae7a52464fbb2a07b16a327
+    REF "v${VERSION}"
+    SHA512 36df942129ac00893056ca1db662a5fa655d2c8af24012df5001bed1675e9552b7b2dbec37841c21f4be60de932dc6453ea0e669a309377f8bc4cbf733da7821
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -78,6 +78,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_a
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_sse4")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libjpeg")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libpng")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libjxl")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libwebp")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm")
 
-file(INSTALL "${SOURCE_PATH}/dlib/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/dlib/LICENSE.txt")
