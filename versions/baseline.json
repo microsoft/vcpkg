@@ -9100,6 +9100,10 @@
       "baseline": "2023-12-31",
       "port-version": 0
     },
+    "vcpkg-get-python": {
+      "baseline": "2024-06-08",
+      "port-version": 0
+    },
     "vcpkg-get-python-packages": {
       "baseline": "2024-01-24",
       "port-version": 0
