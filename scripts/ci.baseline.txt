@@ -798,6 +798,15 @@ nana:x64-linux=fail
 nana:x64-osx=fail
 nana:arm64-osx=fail
 nanodbc:x64-linux=skip
+# nativefiledialog conflicts with nativefiledialog-extended
+# see https://github.com/microsoft/vcpkg/pull/39046
+nativefiledialog-extended:arm64-windows=skip
+nativefiledialog-extended:x64-linux=skip
+nativefiledialog-extended:x64-osx=skip
+nativefiledialog-extended:x64-windows=skip
+nativefiledialog-extended:x64-windows-static=skip
+nativefiledialog-extended:x64-windows-static-md=skip
+nativefiledialog-extended:x86-windows=skip
 netcdf-cxx4:x64-windows-static-md=fail
 ngspice:x64-android=fail
 ngspice:x64-windows-static=fail
