@@ -1,14 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ladislav-zezula/StormLib
-    REF 2f0e0e69e6b3739d7c450ac3d38816aee45ac3c2
-    SHA512 54cbe4270963944edf3d75b845047add2b004e0d95b20b75a4c4790c2a12a41bf19cc4f55aaeaec697a0a913827e11cfabde2123b2b13730556310dd89eef1e9
+    REF "v${VERSION}"
+    SHA512 0da78bda4bb89637da892fc73a0673b8a5f852ede4fdceba1029431d24dd1e59db9bfceafab1c5fb642e4b5d0d15d9865f7a138bfb190ce0c2d3601b22dd3023
     HEAD_REF master
-)
-
-file(COPY 
-    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-    DESTINATION "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_configure(
@@ -19,4 +14,3 @@ vcpkg_cmake_install()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_cmake_config_fixup()
