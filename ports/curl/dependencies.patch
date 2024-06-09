@@ -89,3 +89,16 @@ index 656aa7c74..90a7c1371 100644
    find_package(GSS)
  
    set(HAVE_GSSAPI ${GSS_FOUND})
+@@ -1018,8 +1018,12 @@
+ endif()
+ 
+ option(USE_LIBRTMP "Enable librtmp from rtmpdump" OFF)
+ if(USE_LIBRTMP)
++  find_package(OpenSSL REQUIRED)
++  find_package(unofficial-librtmp CONFIG REQUIRED)
++  list(APPEND CURL_LIBS unofficial::librtmp::librtmp)
++elseif(0)
+   cmake_push_check_state()
+   set(_extra_libs "rtmp")
+   if(WIN32)
+     list(APPEND _extra_libs "winmm")

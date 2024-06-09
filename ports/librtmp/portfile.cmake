@@ -9,21 +9,37 @@ vcpkg_from_github(
         hashswf.patch           #Openssl 1.1.1 patch
         fix_strncasecmp.patch
         hide_netstackdump.patch
+        0006-typedef-off_t.diff
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/librtmp.def" DESTINATION "${SOURCE_PATH}/librtmp")
+file(COPY
+        "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+        "${CMAKE_CURRENT_LIST_DIR}/librtmp.def"
+    DESTINATION "${SOURCE_PATH}/librtmp"
+)
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        crypto LIBRTMP_CRYPTO
+)
+if(LIBRTMP_CRYPTO)
+    list(APPEND FEATURE_OPTIONS "-DLIBRTMP_SSL=OPENSSL")
+endif()
+
+include(CMakePrintHelpers)
+cmake_print_variables(FEATURE_OPTIONS)
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}/librtmp"
+    OPTIONS
+        -DVERSION=2.3
+        -DLIBRTMP_SO_VERSION=1
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# License and man
-file(INSTALL "${SOURCE_PATH}/librtmp/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/librtmp/librtmp.3.html" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-librtmp")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/librtmp/COPYING")
