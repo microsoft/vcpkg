@@ -25,16 +25,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}")
 
-find_library(JINJA2CPP_REL NAMES jinja2cpp PATHS "${CURRENT_PACKAGES_DIR}/lib/" NO_DEFAULT_PATH) 
-find_library(JINJA2CPP_DBG NAMES jinja2cpp PATHS "${CURRENT_PACKAGES_DIR}/debug/lib/" NO_DEFAULT_PATH) 
-
-if(JINJA2CPP_REL)
-    file(RENAME "${JINJA2CPP_REL}" "${CURRENT_PACKAGES_DIR}/lib/jinja2cpp.lib")
-endif()
-
-if(JINJA2CPP_DBG)
-    file(RENAME "${JINJA2CPP_DBG}" "${CURRENT_PACKAGES_DIR}/debug/lib/jinja2cpp.lib")
-endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/static/jinja2cpp.lib" "${CURRENT_PACKAGES_DIR}/lib/jinja2cpp.lib")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/static/jinja2cpp.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jinja2cpp.lib")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/jinja2cpp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/jinja2cpp.pc")
