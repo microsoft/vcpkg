@@ -102,7 +102,7 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
         set(opts "")
         set(opts_cache "")
         if(NOT arg_NO_DEFAULT_OPTIONS)
-          z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
+          z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}")
           vcpkg_list(APPEND arg_OPTIONS ${opts})
         endif()
 

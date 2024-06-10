@@ -176,7 +176,6 @@ function(z_vcpkg_make_prepare_env config)
             string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
             string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
             string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
-            # Can somebody please check if CMake's compiler flags for UWP are correct?
             set(ENV{_CL_} "$ENV{_CL_} -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
         endif()
@@ -188,7 +187,6 @@ function(z_vcpkg_make_prepare_env config)
     set(ENV{CFLAGS} "${CFLAGS_${config}}")
     set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${config}}")
     set(ENV{CXXFLAGS} "${CXXFLAGS_${config}}")
-    #set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${current_buildtype}}") -> doesn't exist officially
     set(ENV{RCFLAGS} "${RCFLAGS_${config}}")
     set(ENV{LDFLAGS} "${LDFLAGS_${config}}")
     set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${config}}")
@@ -201,7 +199,7 @@ function(z_vcpkg_make_prepare_env config)
         set(ENV{_LINK_} "${LINK_ENV_${config}}")
     endif()
 
-    vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
+    vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH)
     foreach(lib_env_var IN LISTS lib_env_vars)
         if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib")
             vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib")
@@ -215,7 +213,6 @@ endfunction()
 function(z_vcpkg_make_restore_env)
     # Only variables which are inspected in vcpkg_make_prepare_env need to be restored here.
     # Rest is restored add the end of configure. 
-    # TODO: check how vcpkg_restore_env_variables actually works!
     vcpkg_restore_env_variables(VARS 
          LIBRARY_PATH LIB LIBPATH
          PATH

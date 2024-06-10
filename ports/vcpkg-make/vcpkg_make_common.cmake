@@ -473,7 +473,7 @@ function(z_vcpkg_make_prepare_link_flags)
             list(TRANSFORM link_flags REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
         endif()
     endif()
-    
+
     set(${ARG_IN_OUT_VAR} ${link_flags} PARENT_SCOPE)
 endfunction()
 
@@ -546,7 +546,6 @@ function(z_vcpkg_make_prepare_flags)
             string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
             string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
             string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
-            # Can somebody please check if CMake's compiler flags for UWP are correct?
             set(ENV{_CL_} "$ENV{_CL_} -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
         endif()
@@ -646,7 +645,6 @@ function(z_vcpkg_make_default_path_and_configure_options out_var)
                             "--bindir=\\\${prefix}/tools/${PORT}/bin"
                             "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
                             "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
-                            #"--includedir='\${prefix}'/include" # already the default!
                             "--mandir=\\\${prefix}/share/${PORT}"
                             "--docdir=\\\${prefix}/share/${PORT}"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
