@@ -9142,7 +9142,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
