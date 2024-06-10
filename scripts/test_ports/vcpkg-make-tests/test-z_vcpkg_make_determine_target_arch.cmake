@@ -17,5 +17,3 @@ if (APPLE)
         message(FATAL_ERROR "Test 2: z_vcpkg_make_determine_target_arch failed: Expected 'universal', got '${result_arch}'")
     endif()
 endif()
-
-message(STATUS "z_vcpkg_make_determine_target_arch tests passed.")

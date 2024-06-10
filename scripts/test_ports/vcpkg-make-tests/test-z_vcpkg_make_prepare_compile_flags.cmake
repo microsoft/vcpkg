@@ -108,5 +108,3 @@ z_vcpkg_make_prepare_compile_flags(
 if(NOT DEFINED CFLAGS_Release OR NOT DEFINED CXXFLAGS_Release)
     message(FATAL_ERROR "Default languages C or CXX flags are not set as expected.")
 endif()
-
-message(STATUS "z_vcpkg_make_prepare_compile_flags tests passed.")

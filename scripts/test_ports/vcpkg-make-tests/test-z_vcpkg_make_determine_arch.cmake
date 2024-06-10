@@ -32,5 +32,3 @@ foreach(idx RANGE 0 ${num_tests})
         message(FATAL_ERROR "Test failed for input '${input}': Expected '${expected}', got '${result_arch}'")
     endif()
 endforeach()
-
-message(STATUS "z_vcpkg_make_determine_arch passed.")

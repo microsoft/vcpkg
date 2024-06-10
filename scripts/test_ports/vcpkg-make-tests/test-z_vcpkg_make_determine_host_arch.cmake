@@ -16,4 +16,3 @@ endif()
 
 unset(ENV{PROCESSOR_ARCHITECTURE})
 unset(ENV{PROCESSOR_ARCHITEW6432})
-message(STATUS "z_vcpkg_make_determine_host_arch tests passed.")
