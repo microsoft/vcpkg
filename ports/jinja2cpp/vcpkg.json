@@ -1,0 +1,31 @@
+{
+  "name": "jinja2cpp",
+  "version": "1.0.1",
+  "description": "A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.",
+  "homepage": "https://github.com/jinja2cpp/Jinja2Cpp",
+  "license": "MIT",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-filesystem",
+    "boost-json",
+    "boost-lexical-cast",
+    "boost-numeric-conversion",
+    "boost-optional",
+    "boost-regex",
+    "boost-variant",
+    "expected-lite",
+    "fmt",
+    "optional-lite",
+    "rapidjson",
+    "string-view-lite",
+    "variant-lite",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
