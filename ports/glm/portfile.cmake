@@ -11,7 +11,6 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DGLM_ENABLE_CXX_17=ON
         -DGLM_BUILD_LIBRARY=ON
         -DGLM_BUILD_TESTS=OFF
         -DGLM_BUILD_INSTALL=ON

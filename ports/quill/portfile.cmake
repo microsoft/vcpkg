@@ -1,41 +1,11 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odygrd/quill
     REF v${VERSION}
-    SHA512 7adf5ac68324e0f5dd1b3e6816d1e8313cb349b721a145325e8fce9428da9b1f3121a0f63fcdfe1e2e41356230d73f069ee35379930543589a2241e31b5df1c0
+    SHA512 2d6d635397d57fd876ac237402138fb6b6abe9297b033473b8979cb6a1584c276fc805d8469dd851e108388310271cc691310469b8494016ff5f195944c0ede8
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_ANDROID)
-    set(ADDITIONAL_OPTIONS -DQUILL_NO_THREAD_NAME_SUPPORT=ON)
-endif()
-
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DQUILL_FMT_EXTERNAL=ON
-        ${ADDITIONAL_OPTIONS}
-)
-
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/quill)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/quill/bundled")
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-endif()
-vcpkg_fixup_pkgconfig()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quill/TweakMe.h" "// #define QUILL_FMT_EXTERNAL" "#define QUILL_FMT_EXTERNAL")
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quill/TweakMe.h" "// #define QUILL_NO_THREAD_NAME_SUPPORT" "#define QUILL_NO_THREAD_NAME_SUPPORT")
-endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(COPY ${SOURCE_PATH}/quill/include/ DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,9 +1,10 @@
 string(REPLACE "." "_" curl_version "curl-${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 ee9f6c3b5468ab547fc20822c18756a625f9f741e3d40958548a56b607f567f4ed782b8cce2d900c442e0da51faa8cb1fefa5d9f2d1581c79805a5b8fd4ec098
+    SHA512 e66cbf9bd3ae7b9b031475210b80b883b6a133042fbbc7cf2413f399d1b38aa54ab7322626abd3c6f1af56e0d540221f618aa903bd6b463ac8324f2c4e92dfa8
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -35,6 +36,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winidn      USE_WIN32_IDN
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
+        psl         CURL_USE_LIBPSL
+        gssapi      CURL_USE_GSSAPI
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
@@ -42,10 +45,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(OPTIONS "")
-if("idn2" IN_LIST FEATURES OR ("ldap" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS))
-    vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
-endif()
 
 if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
@@ -64,16 +63,18 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DENABLE_UNICODE=ON)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_LIBPSL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON

@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GameTechDev/PresentMon
-    REF 47669ad0efaddc9787772d5e4900734417b2c07c # 1.7.0
-    SHA512 fac2e2ca4d8476e2cdde7c3f77cf1881b7d7a9208387f12dbf07f3ea7f4012ce79602f4fedbf1e778871fd9ce898b101659a6f192de29dc6a4404213aee444be
+    REF "v${VERSION}"
+    SHA512 d593a4066e3087abd02df5bd049bb1cbe1a91ac07a4efb53bae7a44bcb98dc67f7e2f2688dd339292eeaf9b96f35d5790a86d355faacad5cf61dafa0fa584edc
     HEAD_REF main
 )
 

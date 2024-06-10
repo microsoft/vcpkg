@@ -1,6 +1,6 @@
 {
   "name": "harfbuzz",
-  "version": "8.3.1",
+  "version": "8.5.0",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
@@ -38,6 +38,9 @@
     "directwrite": {
       "description": "Enable DirectWrite support on Windows",
       "supports": "windows"
+    },
+    "experimental-api": {
+      "description": "Enable experimental api"
     },
     "freetype": {
       "description": "Enable FreeType support",

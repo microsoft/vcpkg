@@ -1,7 +1,6 @@
 {
   "name": "qt5-mqtt",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "Qt MQTT enables you to create applications and devices that can communicate over the MQ telemetry transport (MQTT) protocol.",
   "license": null,
   "dependencies": [

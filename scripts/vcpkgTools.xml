@@ -15,25 +15,25 @@
         <archiveName>python-3.11.8.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.27.1</version>
-        <exeRelativePath>cmake-3.27.1-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-windows-i386.zip</url>
-        <sha512>a847f636fb27ba41ba9e6eaafa56937c614bcb39c6d0c9723241c229a9b0a77b4d00ebee88639561035d43f9aa64895f387eab56c628990c01191da57839cda0</sha512>
-        <archiveName>cmake-3.27.1-windows-i386.zip</archiveName>
+        <version>3.29.2</version>
+        <exeRelativePath>cmake-3.29.2-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-windows-i386.zip</url>
+        <sha512>562de7b577c99fe347b00437d14ce375a8e5a60504909cb67d2f73c372d39a2f76d2b42b69e4aeb31a4879e1bcf6f7c2d41f2ace12180ea83ba7af48879d40ab</sha512>
+        <archiveName>cmake-3.29.2-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.27.1</version>
-        <exeRelativePath>cmake-3.27.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-macos-universal.tar.gz</url>
-        <sha512>78e639b93786eb994bdbc6263afc48267d42d9305c1cb1cb9482adf012e7b4f45934e744a98eaf93d8361f154e642cada13398cca064c1700f009a7795746fe7</sha512>
-        <archiveName>cmake-3.27.1-macos-universal.tar.gz</archiveName>
+        <version>3.29.2</version>
+        <exeRelativePath>cmake-3.29.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-macos-universal.tar.gz</url>
+        <sha512>26aab0163965f3d560dfd6b1f72c5e77192338237ebe286099fd62f243f1bbd4857b9193118386b801c00dc5cfbc5bc8af84814692fcfadcf56c7d2faab52533</sha512>
+        <archiveName>cmake-3.29.2-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.27.1</version>
-        <exeRelativePath>cmake-3.27.1-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz</url>
-        <sha512>192374a68e2971f04974a194645726196d9b8ee7abd650d1e6f65f7aa2ccc9b186c3edb473bb4958c764532edcdd42f4182ee1fcb86b17d78b0bcd6305ce3df1</sha512>
-        <archiveName>cmake-3.27.1-linux-x86_64.tar.gz</archiveName>
+        <version>3.29.2</version>
+        <exeRelativePath>cmake-3.29.2-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-linux-x86_64.tar.gz</url>
+        <sha512>d88082d582f1774a3d89efbf3f31a03b08a663c359d603d87ee7c4afd862d4164d2b0b9f0b32cece8efee3acfa86b44214cd4f7606b99b8334183a05d5f06edc</sha512>
+        <archiveName>cmake-3.29.2-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
@@ -88,22 +88,22 @@
         <sha512>40c534eb27f079c15c9782f53f82c12dabfede4d3d85f0edf8a855c2b0d5e12921a96506b37c210beab3c33220f8ff098447ad054e82d8c2603964975fc12076</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="coscli" os="windows">
         <version>0.11.0</version>
