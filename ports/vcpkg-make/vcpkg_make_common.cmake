@@ -471,14 +471,14 @@ function(z_vcpkg_make_prepare_link_flags in_out_var x_vcpkg_transform_libs VCPKG
     set(${in_out_var} "${${in_out_var}}" PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_make_prepare_flags) # Hmm change name?
+function(z_vcpkg_make_prepare_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
-    z_vcpkg_unparsed_args(FATAL_ERROR)
 
+    z_vcpkg_unparsed_args(FATAL_ERROR)
     z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
 
     # ==== LIBS
@@ -489,11 +489,13 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
     separate_arguments(cxx_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
     list(REMOVE_ITEM cxx_libs_list ${c_libs_list})
     set(all_libs_list ${cxx_libs_list} ${c_libs_list})
-    #Do lib list transformation from name.lib to -lname if necessary
+
+    # Do lib list transformation from name.lib to -lname if necessary
     set(x_vcpkg_transform_libs ON)
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" AND (arg_NO_FLAG_ESCAPING))
       set(x_vcpkg_transform_libs OFF)
     endif()
+
     if(VCPKG_TARGET_IS_UWP)
         set(x_vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
@@ -579,21 +581,13 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
     foreach(flag IN LISTS release_flags_list debug_flags_list)
         set("${flag}" "${${flag}}" PARENT_SCOPE)
     endforeach()
-    #list(FILTER z_vcm_all_flags INCLUDE REGEX " ") # TODO: Figure out where this warning belongs to. 
-    #if(z_vcm_all_flags)
-    #    list(REMOVE_DUPLICATES z_vcm_all_flags)
-    #    list(JOIN z_vcm_all_flags "\n   " flags)
-    #    message(STATUS "Warning: Arguments with embedded space may be handled incorrectly by configure:\n   ${flags}")
-    #endif()
 
-    #TODO: parent scope requiered vars
     cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME cname)
     set("${C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_configure_triplets
     set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_make_default_path_and_configure_options out_var)
-    # THIS IS TODO
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "AUTOMAKE" 
         "CONFIG;EXCLUDE_FILTER;INCLUDE_FILTER"
