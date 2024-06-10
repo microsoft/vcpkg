@@ -37,7 +37,7 @@ macro(z_vcpkg_make_get_cmake_vars)
     include("${cmake_vars_file}")
 endmacro()
 
-### normalize architectures to the ones used by vcpkg
+### normalize architectures
 function(z_vcpkg_make_determine_arch out_var value)
     if(${value} MATCHES "^(amd|AMD|x)64$")
         set(${out_var} x86_64 PARENT_SCOPE)
@@ -256,6 +256,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     set("${arg_FLAGS_OUT}" "${flags_out}" PARENT_SCOPE)
 endfunction()
 
+### Prepare environment for configure
 function(z_vcpkg_make_prepare_programs out_env)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS"
@@ -450,6 +451,26 @@ function(z_vcpkg_make_prepare_programs out_env)
     set("${out_env}" "${configure_env}" PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_make_prepare_link_flags in_out_var x_vcpkg_transform_libs VCPKG_TARGET_IS_WINDOWS VCPKG_TARGET_IS_MINGW VCPKG_LIBRARY_LINKAGE)
+    if(${x_vcpkg_transform_libs})
+
+        list(TRANSFORM ${in_out_var} REPLACE "[.](dll[.]lib|lib|a|so)$" "")
+
+        if(${VCPKG_TARGET_IS_WINDOWS})
+            list(REMOVE_ITEM ${in_out_var} "uuid")
+        endif()
+
+        list(TRANSFORM ${in_out_var} REPLACE "^([^-].*)" "-l\\1")
+        if(${VCPKG_TARGET_IS_MINGW} AND ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
+            # libtool must be told explicitly that there is no dynamic linkage for uuid.
+            # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
+            list(TRANSFORM ${in_out_var} REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
+        endif()
+    endif()
+
+    set(${in_out_var} "${${in_out_var}}" PARENT_SCOPE)
+endfunction()
+
 function(z_vcpkg_make_prepare_flags) # Hmm change name?
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
@@ -480,19 +501,9 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows.
         # It even does unix/dos-short/unix transformation with the path to get rid of spaces.
     endif()
-    if(x_vcpkg_transform_libs)
-        list(TRANSFORM all_libs_list REPLACE "[.](dll[.]lib|lib|a|so)$" "")
-        if(VCPKG_TARGET_IS_WINDOWS)
-            list(REMOVE_ITEM all_libs_list "uuid")
-        endif()
 
-        list(TRANSFORM all_libs_list REPLACE "^([^-].*)" "-l\\1")
-        if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            # libtool must be told explicitly that there is no dynamic linkage for uuid.
-            # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
-            list(TRANSFORM all_libs_list REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
-        endif()
-    endif()
+    z_vcpkg_make_prepare_link_flags(all_libs_list ${x_vcpkg_transform_libs} ${VCPKG_TARGET_IS_WINDOWS} ${VCPKG_TARGET_IS_MINGW} ${VCPKG_LIBRARY_LINKAGE})
+
     if(all_libs_list)
         list(JOIN all_libs_list " " all_libs_string)
         if(DEFINED ENV{LIBS})
