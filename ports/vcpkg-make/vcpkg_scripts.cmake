@@ -88,13 +88,6 @@ function(vcpkg_insert_msys_into_path msys_out)
     set("${msys_out}" "${MSYS_ROOT}" PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_convert_to_msys_path outvar invar)
-    if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" current_installed_dir_msys "${invar}")
-    endif()
-    set("${outvar}" "${current_installed_dir_msys}" PARENT_SCOPE)
-endfunction()
-
 ### Helper macros for argument checking
 macro(z_vcpkg_unparsed_args warning_level)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
