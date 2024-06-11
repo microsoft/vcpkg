@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/incubator-brpc
+    REPO apache/brpc
     REF "${VERSION}"
-    SHA512 da0004b7b50cc48da018627c9361ae62b006bb7cd2af53a5cfa1601aab7ad31174d37778a42809bdf2e0f2021a860dcbb02e2c3c938eae6c02808267c3b85025
+    SHA512 a908c3cf63224d6fb98f1855aca75c3adf528c40da5180c6e298cc52ee9ccbef08809a81078333bdd6ac1a4af54448edac8dd4e0333e72e9dec2790454355e7a
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-boost-ptr.patch
         fix-glog.patch
 )
 
@@ -28,6 +27,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/butil/third_party/superfast
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

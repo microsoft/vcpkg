@@ -39,6 +39,7 @@ vcpkg_from_github(
         10945.diff
         10972.diff
         hdf5helper.patch
+        opencascade-7.8.0.patch
 )
 
 # =============================================================================
@@ -121,6 +122,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
         "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
+        "ioocct"      VTK_MODULE_ENABLE_VTK_IOOCCT
 )
 
 # Replace common value to vtk value

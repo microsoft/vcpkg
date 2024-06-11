@@ -8,7 +8,11 @@ vcpkg_from_github(
     HEAD_REF main)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/libtracepoint-control-cpp")
+    SOURCE_PATH "${SOURCE_PATH}/libtracepoint-control-cpp"
+    OPTIONS
+        -DBUILD_SAMPLES=OFF
+        -DBUILD_TESTS=OFF
+        -DBUILD_TOOLS=OFF)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
