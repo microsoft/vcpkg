@@ -1944,6 +1944,10 @@
       "baseline": "2.1.0",
       "port-version": 0
     },
+    "cppparser": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "cpprestsdk": {
       "baseline": "2.10.19",
       "port-version": 1
