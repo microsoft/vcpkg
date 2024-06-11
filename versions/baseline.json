@@ -7592,6 +7592,10 @@
       "baseline": "3.0.2",
       "port-version": 0
     },
+    "rapidhash": {
+      "baseline": "2024-06-08",
+      "port-version": 0
+    },
     "rapidjson": {
       "baseline": "2023-07-17",
       "port-version": 1
