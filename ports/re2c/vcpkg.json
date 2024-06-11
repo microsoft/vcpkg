@@ -1,0 +1,16 @@
+{
+  "name": "re2c",
+  "version": "3.1",
+  "description": "Tool for generating C, C++, and go recognizers from regular expressions",
+  "homepage": "https://re2c.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
