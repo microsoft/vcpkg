@@ -24,25 +24,33 @@
     {
       "name": "llvm",
       "platform": "x64"
-    }
+    },
+    "opengl"
   ],
   "features": {
     "egl": {
       "description": "Build support for EGL platform",
       "dependencies": [
-        "egl-registry"
+        "egl-registry",
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "gles1": {
       "description": "Build support for OpenGL ES 1.x",
       "dependencies": [
-        "opengl"
+        "opengl-registry"
       ]
     },
     "gles2": {
       "description": "Build support for OpenGL ES 2.x and 3.x",
       "dependencies": [
-        "opengl"
+        "opengl-registry"
       ]
     },
     "llvm": {
@@ -85,7 +93,19 @@
     "offscreen": {
       "description": "Build with support for offscreen rendering (OSMesa)",
       "dependencies": [
-        "opengl"
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "opengl": {
+      "description": "Build support for OpenGL (all versions)",
+      "dependencies": [
+        "opengl-registry"
       ]
     }
   }
