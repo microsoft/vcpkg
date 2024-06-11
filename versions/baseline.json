@@ -2094,7 +2094,7 @@
     },
     "curl": {
       "baseline": "8.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -4862,7 +4862,7 @@
     },
     "libpsl": {
       "baseline": "0.21.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libqcow": {
       "baseline": "20221124",
