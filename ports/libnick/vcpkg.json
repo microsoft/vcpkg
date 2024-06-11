@@ -25,12 +25,12 @@
     },
     "maddy",
     {
-        "name": "openssl",
-        "platform": "linux"
+      "name": "openssl",
+      "platform": "linux"
     },
     {
-        "name": "sqlcipher",
-        "platform": "windows"
+      "name": "sqlcipher",
+      "platform": "windows"
     },
     {
       "name": "vcpkg-cmake",
