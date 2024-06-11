@@ -226,6 +226,15 @@
     <!-- Search %PATH% for pwsh.exe if it is available. -->
     <Exec
       Condition="'$(VcpkgXUseBuiltInApplocalDeps)' != 'true'"
+      Command="where.exe pwsh.exe &gt;NUL 2&gt;&amp;1"
+      IgnoreExitCode="true"
+      UseCommandProcessor="true">
+      <Output TaskParameter="ExitCode"
+              PropertyName="_ZSearchPwshInPathExitCode" />
+    </Exec>
+    <!-- Execute PowerShell Core commands to ensure compatibility with legacy code. -->
+    <Exec
+      Condition="'$(_ZSearchPwshInPathExitCode)' == '0'"
       Command="pwsh.exe $(_ZVcpkgAppLocalPowerShellCommonArguments)"
       IgnoreExitCode="true"
       UseCommandProcessor="false">
