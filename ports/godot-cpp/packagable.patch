@@ -1,0 +1,126 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e715102..b000066 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,7 +37,7 @@
+ # Todo
+ # Test build for Windows, Mac and mingw.
+ 
+-cmake_minimum_required(VERSION 3.12)
++cmake_minimum_required(VERSION 3.19)
+ project(godot-cpp LANGUAGES CXX)
+ 
+ option(GENERATE_TEMPLATE_GET_NODE "Generate a template version of the Node class's get_node." ON)
+@@ -65,9 +65,8 @@ if(NOT DEFINED BITS)
+ endif()
+ 
+ # Input from user for GDExtension interface header and the API JSON file
+-set(GODOT_GDEXTENSION_DIR "gdextension" CACHE STRING "")
++set(GODOT_GDEXTENSION_DIR "${CMAKE_CURRENT_SOURCE_DIR}/gdextension" CACHE STRING "")
+ set(GODOT_CUSTOM_API_FILE "" CACHE STRING "")
+-
+ set(GODOT_GDEXTENSION_API_FILE "${GODOT_GDEXTENSION_DIR}/extension_api.json")
+ if (NOT "${GODOT_CUSTOM_API_FILE}" STREQUAL "")  # User-defined override.
+ 	set(GODOT_GDEXTENSION_API_FILE "${GODOT_CUSTOM_API_FILE}")
+@@ -85,9 +84,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+ 	set(GODOT_COMPILE_FLAGS "/utf-8") # /GF /MP
+ 
+ 	if(CMAKE_BUILD_TYPE MATCHES Debug)
+-		set(GODOT_COMPILE_FLAGS "${GODOT_COMPILE_FLAGS} /MDd") # /Od /RTC1 /Zi
++		set(GODOT_COMPILE_FLAGS "${GODOT_COMPILE_FLAGS} /Od") # /Od /RTC1 /Zi
+ 	else()
+-		set(GODOT_COMPILE_FLAGS "${GODOT_COMPILE_FLAGS} /MD /O2") # /Oy /GL /Gy
++		set(GODOT_COMPILE_FLAGS "${GODOT_COMPILE_FLAGS} /O2") # /Oy /GL /Gy
+ 		STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+ 		string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
+ 	endif(CMAKE_BUILD_TYPE MATCHES Debug)
+@@ -117,7 +116,6 @@ else()
+ endif()
+ 
+ # Generate source from the bindings file
+-find_package(Python3 3.4 REQUIRED) # pathlib should be present
+ if(GENERATE_TEMPLATE_GET_NODE)
+ 	set(GENERATE_BINDING_PARAMETERS "True")
+ else()
+@@ -183,9 +181,10 @@ if (GODOT_CPP_SYSTEM_HEADERS)
+ endif ()
+ 
+ target_include_directories(${PROJECT_NAME} ${GODOT_CPP_SYSTEM_HEADERS_ATTRIBUTE} PUBLIC
+-	include
+-	${CMAKE_CURRENT_BINARY_DIR}/gen/include
+-	${GODOT_GDEXTENSION_DIR}
++	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++	$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/gen/include>
++	$<BUILD_INTERFACE:${GODOT_GDEXTENSION_DIR}>
++	$<INSTALL_INTERFACE:include>
+ )
+ 
+ # Add the compile flags
+@@ -213,4 +212,8 @@ set_target_properties(${PROJECT_NAME}
+ 		LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+ 		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+ 		OUTPUT_NAME "${OUTPUT_NAME}"
++		EXPORT_NAME "cpp"
+ )
++
++
++include("cmake/install.cmake")
+diff --git a/cmake/config.cmake b/cmake/config.cmake
+new file mode 100644
+index 0000000..bcddb3c
+--- /dev/null
++++ b/cmake/config.cmake
+@@ -0,0 +1 @@
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-godot-cpp-target.cmake")
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+new file mode 100644
+index 0000000..f48ab5c
+--- /dev/null
++++ b/cmake/install.cmake
+@@ -0,0 +1,46 @@
++
++include("CMakePackageConfigHelpers")
++include("GNUInstallDirs")
++
++install(TARGETS "godot-cpp"
++	EXPORT "unofficial-godot-cpp-target"
++	ARCHIVE
++		DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++)
++install(
++	DIRECTORY
++		"${CMAKE_CURRENT_SOURCE_DIR}/include/"
++		"${CMAKE_CURRENT_BINARY_DIR}/gen/include/"
++	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++)
++
++install(FILES "${GODOT_GDEXTENSION_DIR}/gdextension_interface.h"
++	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++)
++install(FILES "${GODOT_GDEXTENSION_API_FILE}"
++	DESTINATION "${CMAKE_INSTALL_DATADIR}/godot-cpp"
++)
++
++install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake"
++	RENAME "unofficial-godot-cpp-config.cmake"
++	DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-godot-cpp"
++)
++install(EXPORT "unofficial-godot-cpp-target"
++	NAMESPACE "unofficial::godot::"
++	DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-godot-cpp"
++)
++
++file(READ "${GODOT_GDEXTENSION_API_FILE}" GODOT_GDEXTENSION_API_JSON)
++string(JSON GODOT_API_VERSION_MAJOR GET "${GODOT_GDEXTENSION_API_JSON}" "header" "version_major")
++string(JSON GODOT_API_VERSION_MINOR GET "${GODOT_GDEXTENSION_API_JSON}" "header" "version_minor")
++string(JSON GODOT_API_VERSION_PATCH GET "${GODOT_GDEXTENSION_API_JSON}" "header" "version_patch")
++set(GODOT_API_VERSION "${GODOT_API_VERSION_MAJOR}.${GODOT_API_VERSION_MINOR}.${GODOT_API_VERSION_PATCH}")
++unset(GODOT_GDEXTENSION_API_JSON)
++
++write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-godot-cpp-config-version.cmake"
++	VERSION "${GODOT_API_VERSION}"
++	COMPATIBILITY SameMinorVersion
++)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-godot-cpp-config-version.cmake"
++	DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-godot-cpp"
++)

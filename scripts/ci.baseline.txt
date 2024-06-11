@@ -245,7 +245,6 @@ clblas:x64-android=fail
 clockutils:arm-neon-android=fail
 clockutils:arm64-android=fail
 clockutils:x64-android=fail
-clockutils:x64-linux=fail
 clrng:arm-neon-android=fail
 cnats:arm-neon-android=fail
 cnats:arm64-android=fail
