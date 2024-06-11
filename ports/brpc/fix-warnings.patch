@@ -1,58 +1,15 @@
-diff --git a/src/brpc/policy/thrift_protocol.cpp b/src/brpc/policy/thrift_protocol.cpp
-index d53ec5e9..afbb3a44 100755
---- a/src/brpc/policy/thrift_protocol.cpp
-+++ b/src/brpc/policy/thrift_protocol.cpp
-@@ -82,7 +82,7 @@ ReadThriftMessageBegin(butil::IOBuf* body,
-     size_t k = body->copy_to(version_and_len_buf, sizeof(version_and_len_buf));
-     if (k != sizeof(version_and_len_buf) ) {
-         return butil::Status(-1, "Fail to copy %" PRIu64 " bytes from body",
--                             sizeof(version_and_len_buf));
-+                             (uint64_t)sizeof(version_and_len_buf));
-     }
-     *mtype = (apache::thrift::protocol::TMessageType)
-         (ntohl(version_and_len_buf[0]) & 0x000000FF);
-@@ -95,7 +95,7 @@ ReadThriftMessageBegin(butil::IOBuf* body,
-     char buf[sizeof(version_and_len_buf) + method_name_length + 4];
-     k = body->cutn(buf, sizeof(buf));
-     if (k != sizeof(buf)) {
--        return butil::Status(-1, "Fail to cut %" PRIu64 " bytes", sizeof(buf));
-+        return butil::Status(-1, "Fail to cut %" PRIu64 " bytes", (uint64_t)sizeof(buf));
-     }
-     method_name->assign(buf + sizeof(version_and_len_buf), method_name_length);
-     // suppress strict-aliasing warning
-@@ -163,6 +163,7 @@ bool ReadThriftStruct(const butil::IOBuf& body,
-         }
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e9a776a..a8c4c1ea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,8 +124,8 @@ if(WITH_MESALINK)
+ endif()
+ set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -DBTHREAD_USE_FAST_PTHREAD_MUTEX -D__const__=__unused__ -D_GNU_SOURCE -DUSE_SYMBOLIZE -DNO_TCMALLOC -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -DBRPC_REVISION=\\\"${BRPC_REVISION}\\\" -D__STRICT_ANSI__")
+ set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} ${DEBUG_SYMBOL} ${THRIFT_CPP_FLAG}")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer")
+-set(CMAKE_C_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -Wall -W -fPIC -fstrict-aliasing -Wno-unused-parameter -fno-omit-frame-pointer")
++set(CMAKE_CXX_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -w -fPIC -fstrict-aliasing -Wno-invalid-offsetof -Wno-unused-parameter -fno-omit-frame-pointer")
++set(CMAKE_C_FLAGS "${CMAKE_CPP_FLAGS} -O2 -pipe -w -fPIC -fstrict-aliasing -Wno-unused-parameter -fno-omit-frame-pointer")
  
-         xfer += iprot.readStructEnd();
-+        (void)xfer;
-         iprot.getTransport()->readEnd();
-     } catch (std::exception& e) {
-         LOG(WARNING) << "Catched thrift exception: " << e.what();
-@@ -321,6 +322,7 @@ void ThriftClosure::DoRun() {
-         xfer += oprot.writeFieldEnd();
-         xfer += oprot.writeFieldStop();
-         xfer += oprot.writeStructEnd();
-+        (void)xfer;
- 
-         oprot.writeMessageEnd();
-         oprot.getTransport()->writeEnd();
-@@ -709,6 +711,7 @@ void SerializeThriftRequest(butil::IOBuf* request_buf, Controller* cntl,
-         xfer += oprot.writeFieldEnd();
-         xfer += oprot.writeFieldStop();
-         xfer += oprot.writeStructEnd();
-+        (void)xfer;
- 
-         oprot.writeMessageEnd();
-         oprot.getTransport()->writeEnd();
-diff --git a/src/butil/iobuf.cpp b/src/butil/iobuf.cpp
-index b585c92c..a355e4cb 100644
---- a/src/butil/iobuf.cpp
-+++ b/src/butil/iobuf.cpp
-@@ -142,7 +142,6 @@ inline iov_function get_pwritev_func() {
- 
- #else   // ARCH_CPU_X86_64
- 
--#warning "We don't check if the kernel supports SYS_preadv or SYS_pwritev on non-X86_64, use implementation on pread/pwrite directly."
- 
- inline iov_function get_preadv_func() {
-     return user_preadv;
+ macro(use_cxx11)
+ if(CMAKE_VERSION VERSION_LESS "3.1.3")
