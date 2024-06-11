@@ -1,0 +1,47 @@
+# Module to find the Readline library for Unix
+
+# Try to find the header
+find_path(unofficial-readline-unix_INCLUDE_DIR
+    NAMES readline/readline.h
+)
+mark_as_advanced(unofficial-readline-unix_INCLUDE_DIR)
+
+# Try to find the library
+find_library(unofficial-readline-unix_LIBRARY
+    NAMES readline libreadline
+)
+mark_as_advanced(unofficial-readline-unix_LIBRARY)
+
+file(READ "${unofficial-readline-unix_INCLUDE_DIR}/readline/readline.h" FILE_CONTENTS)
+string(REGEX MATCH "#define RL_VERSION_MAJOR[ \t]*([0-9]*)" _ ${FILE_CONTENTS})
+set(unofficial-readline-unix_VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "#define RL_VERSION_MINOR[ \t]*([0-9]*)" _ ${FILE_CONTENTS})
+set(unofficial-readline-unix_VERSION ${unofficial-readline-unix_VERSION}.${CMAKE_MATCH_1})
+
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(unofficial-readline-unix
+    REQUIRED_VARS unofficial-readline-unix_INCLUDE_DIR unofficial-readline-unix_LIBRARY
+    VERSION_VAR unofficial-readline-unix_VERSION
+)
+
+# Create target
+if(unofficial-readline-unix_FOUND)
+    set(unofficial-readline-unix_INCLUDE_DIRS ${unofficial-readline-unix_INCLUDE_DIR})
+    set(unofficial-readline-unix_LIBRARIES ${unofficial-readline-unix_LIBRARY})
+
+    if(NOT TARGET unofficial::readline-unix::readline)
+        add_library(unofficial::readline-unix::readline UNKNOWN IMPORTED)
+        set_target_properties(unofficial::readline-unix::readline
+            PROPERTIES
+            IMPORTED_LOCATION "${unofficial-readline-unix_LIBRARY}"
+            INTERFACE_INCLUDE_DIRECTORIES "${unofficial-readline-unix_INCLUDE_DIR}")
+
+        # Readline depends on ncurses
+        set(CURSES_NEED_NCURSES TRUE)
+        find_package(Curses REQUIRED)
+        target_include_directories(unofficial::readline-unix::readline INTERFACE ${CURSES_INCLUDE_DIRS})
+        target_compile_options(unofficial::readline-unix::readline INTERFACE ${CURSES_CFLAGS})
+        target_link_libraries(unofficial::readline-unix::readline INTERFACE ${CURSES_LIBRARIES})
+    endif()
+endif()
