@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-meson",
+  "version-string": "ci",
+  "description": "Validates vcpkg-tool-meson",
+  "dependencies": [
+    "gettext-libintl",
+    "libiconv",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

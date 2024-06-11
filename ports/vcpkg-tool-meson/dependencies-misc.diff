@@ -1,0 +1,27 @@
+diff --git a/mesonbuild/dependencies/misc.py b/mesonbuild/dependencies/misc.py
+index 5f43356..15a775e 100644
+--- a/mesonbuild/dependencies/misc.py
++++ b/mesonbuild/dependencies/misc.py
+@@ -16,6 +16,7 @@ from .cmake import CMakeDependency, CMakeDependencyFactory
+ from .configtool import ConfigToolDependency
+ from .detect import packages
+ from .factory import DependencyFactory, factory_methods
++from .framework import ExtraFrameworkDependency
+ from .pkgconfig import PkgConfigDependency
+ 
+ if T.TYPE_CHECKING:
+@@ -419,8 +420,12 @@ class IntlSystemDependency(SystemDependency):
+         if h[0] and self.link_args:
+             self.is_found = True
+ 
+-            if self.static:
+-                if not self._add_sub_dependency(iconv_factory(env, self.for_machine, {'static': True})):
++            code = '''#include <libintl.h>\n\nint main() {\n    gettext("Hello world");\n}'''
++            if self.static or not self.clib_compiler.links(code, env, dependencies=[self])[0]:
++                if self.env.machines[self.for_machine].is_darwin():
++                    foundation_dep = ExtraFrameworkDependency('foundation', env, {})
++                    self.ext_deps.append(foundation_dep)
++                if not self._add_sub_dependency(iconv_factory(env, self.for_machine, {'static': self.static})):
+                     self.is_found = False
+ 
+ 
