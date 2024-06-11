@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${COLMAP_REF}"
     SHA512 6ece735c403304c14887cd9b2b13a7e36bf07155fa959748c09d74854e0da6338766c11e6a371c26f983ccdb29f93b2600d685c907a5a137fe20d798b26805d8
     HEAD_REF main
+    PATCHES
+        fix-link-glog.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -84,6 +86,6 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,10 +1,10 @@
 {
   "name": "mathgl",
   "version": "8.0.1",
-  "port-version": 5,
+  "port-version": 6,
   "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
   "license": "GPL-3.0-only",
-  "supports": "!uwp & !xbox",
+  "supports": "!uwp & !xbox & !android",
   "dependencies": [
     "getopt",
     {

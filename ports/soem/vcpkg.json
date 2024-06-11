@@ -1,7 +1,7 @@
 {
   "name": "soem",
   "version-date": "2023-06-09",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Simple Open Source EtherCAT Master",
   "homepage": "https://github.com/OpenEtherCATsociety/SOEM",
   "supports": "!uwp",

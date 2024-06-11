@@ -1,7 +1,6 @@
 {
   "name": "qt5-quickcontrols",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "The Qt Quick Controls module provides a set of controls that can be used to build complete interfaces in Qt Quick.",
   "license": null,
   "dependencies": [
