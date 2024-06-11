@@ -1,12 +1,9 @@
-vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(BISON)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 8d5ea34a0a8ebb79e43186a17736706f1db4cf079a14dd2217106dfa4077a00ef2b3d87728d850029ea672b3ee5e6e643a18f0acde79164982d20c4c667d2966
-    HEAD_REF master
+    SHA512 5c392089c3a59e320a3d2940ffb58da629d5587b0399c26eb0cb637ee5fa9e4f36fa8276e2e0e7d545c8b82c334935cf377da705fba39e0c71e7d543bc0aa916
+    HEAD_REF main
     PATCHES 
         fix-glog.patch
         0002-fix-dependency.patch

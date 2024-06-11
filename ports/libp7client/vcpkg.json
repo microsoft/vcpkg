@@ -1,7 +1,7 @@
 {
   "name": "libp7client",
   "version": "5.6",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Open source, cross-platform, fastest library for sending logs, telemetry & trace data from your application.",
   "homepage": "https://baical.net/",
   "supports": "!(arm | uwp | osx)",
