@@ -1,8 +1,8 @@
 diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
-index 9adb96e0a..a013adf7a 100644
+index 9adb96e..9bf6900 100644
 --- a/CMake/curl-config.cmake.in
 +++ b/CMake/curl-config.cmake.in
-@@ -31,6 +31,16 @@ if(@USE_ZLIB@)
+@@ -31,6 +31,19 @@ if(@USE_ZLIB@)
    find_dependency(ZLIB @ZLIB_VERSION_MAJOR@)
  endif()
  
@@ -15,15 +15,18 @@ index 9adb96e0a..a013adf7a 100644
 +if("@HAVE_BROTLI@")
 +    find_dependency(unofficial-brotli CONFIG)
 +endif()
++if("@HAVE_ZSTD@")
++    find_dependency(zstd CONFIG)
++endif()
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
  check_required_components("@PROJECT_NAME@")
  
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 656aa7c74..90a7c1371 100644
+index c3525d3..aaeb237 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -163,7 +163,8 @@ set(CURL_LIBS "")
+@@ -164,7 +164,8 @@ set(CURL_LIBS "")
  
  if(ENABLE_ARES)
    set(USE_ARES 1)
@@ -33,7 +36,16 @@ index 656aa7c74..90a7c1371 100644
    list(APPEND CURL_LIBS ${CARES_LIBRARY})
  endif()
  
-@@ -575,7 +576,9 @@ endif()
+@@ -461,7 +462,7 @@ if(use_core_foundation_and_core_services)
+     message(FATAL_ERROR "CoreServices framework not found")
+   endif()
+ 
+-  list(APPEND CURL_LIBS "-framework CoreFoundation -framework CoreServices")
++  list(APPEND CURL_LIBS "-framework CoreFoundation" "-framework CoreServices")
+ endif()
+ 
+ if(CURL_USE_OPENSSL)
+@@ -577,10 +578,11 @@ endif()
  option(CURL_BROTLI "Set to ON to enable building curl with brotli support." OFF)
  set(HAVE_BROTLI OFF)
  if(CURL_BROTLI)
@@ -43,8 +55,37 @@ index 656aa7c74..90a7c1371 100644
 +  set(BROTLI_LIBRARIES "unofficial::brotli::brotlidec")
    if(BROTLI_FOUND)
      set(HAVE_BROTLI ON)
-     set(CURL_LIBS "${BROTLI_LIBRARIES};${CURL_LIBS}")  # For 'ld' linker. Emulate `list(PREPEND ...)` to stay compatible with <v3.15 CMake.
-@@ -876,11 +879,10 @@ mark_as_advanced(CURL_USE_LIBPSL)
+-    set(CURL_LIBS "${BROTLI_LIBRARIES};${CURL_LIBS}")  # For 'ld' linker. Emulate `list(PREPEND ...)` to stay compatible with <v3.15 CMake.
+     list(APPEND CURL_LIBS ${BROTLI_LIBRARIES})
+     include_directories(${BROTLI_INCLUDE_DIRS})
+     list(APPEND CMAKE_REQUIRED_INCLUDES ${BROTLI_INCLUDE_DIRS})
+@@ -590,7 +592,9 @@ endif()
+ option(CURL_ZSTD "Set to ON to enable building curl with zstd support." OFF)
+ set(HAVE_ZSTD OFF)
+ if(CURL_ZSTD)
+-  find_package(Zstd REQUIRED)
++  find_package(Zstd NAMES zstd REQUIRED)
++  set(Zstd_INCLUDE_DIRS "")
++  set(Zstd_LIBRARIES zstd::libzstd)
+   if(Zstd_FOUND AND NOT Zstd_VERSION VERSION_LESS "1.0.0")
+     set(HAVE_ZSTD ON)
+     list(APPEND CURL_LIBS ${Zstd_LIBRARIES})
+@@ -883,8 +887,13 @@ endif()
+ # Check for idn2
+ option(USE_LIBIDN2 "Use libidn2 for IDN support" ON)
+ if(USE_LIBIDN2)
+-  check_library_exists("idn2" "idn2_lookup_ul" "" HAVE_LIBIDN2)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(LIBIDN2 REQUIRED libidn2)
++  set(HAVE_LIBIDN2 TRUE)
+   if(HAVE_LIBIDN2)
++    list(APPEND CURL_LIBS ${LIBIDN2_LINK_LIBRARIES})
++    set(HAVE_IDN2_H TRUE)
++  elseif(0)
+     set(CURL_LIBS "idn2;${CURL_LIBS}")
+     check_include_file_concat("idn2.h" HAVE_IDN2_H)
+   endif()
+@@ -920,11 +929,18 @@ mark_as_advanced(CURL_USE_LIBPSL)
  set(USE_LIBPSL OFF)
  
  if(CURL_USE_LIBPSL)
@@ -55,11 +96,19 @@ index 656aa7c74..90a7c1371 100644
 -    list(APPEND CURL_LIBS ${LIBPSL_LIBRARY})
 -    list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBPSL_INCLUDE_DIR}")
 -    include_directories("${LIBPSL_INCLUDE_DIR}")
++    # Remove standard win32 libs pulled in transitively from icu
++    string(REPLACE " " "|" win32_standard_libraries "/(${CMAKE_C_STANDARD_LIBRARIES})[.]lib\$")
++    foreach(lib IN LISTS LIBPSL_LINK_LIBRARIES)
++      string(TOLOWER "${lib}" lib_lower)
++      if(lib_lower MATCHES win32_standard_libraries)
++        list(REMOVE_ITEM LIBPSL_LINK_LIBRARIES "${lib}")
++      endif()
++    endforeach()
 +    list(APPEND CURL_LIBS ${LIBPSL_LINK_LIBRARIES})
      set(USE_LIBPSL ON)
    endif()
  endif()
-@@ -891,7 +893,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
+@@ -935,7 +951,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
  set(USE_LIBSSH2 OFF)
  
  if(CURL_USE_LIBSSH2)
@@ -74,18 +123,24 @@ index 656aa7c74..90a7c1371 100644
    if(LIBSSH2_FOUND)
      list(APPEND CURL_LIBS ${LIBSSH2_LIBRARY})
      list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBSSH2_INCLUDE_DIR}")
-@@ -917,6 +925,14 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
+@@ -961,7 +983,11 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
  mark_as_advanced(CURL_USE_GSSAPI)
  
  if(CURL_USE_GSSAPI)
+-  find_package(GSS)
 +  find_package(PkgConfig REQUIRED)
-+  pkg_check_modules(KRB5 REQUIRED krb5 krb5-gssapi)
-+  list(APPEND CURL_LIBS ${KRB5_LINK_LIBRARIES} resolv)
-+  check_include_file_concat("gssapi/gssapi.h"  HAVE_GSSAPI_GSSAPI_H)
-+  check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
-+  check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
-+  set(HAVE_GSSAPI ON)
-+  elseif(0)
-   find_package(GSS)
++  pkg_check_modules(GSS REQUIRED krb5-gssapi)
++  list(APPEND CURL_LIBS ${GSS_LINK_LIBRARIES})
++  list(APPEND CURL_LIBS resolv) # Fixme: move to krb5 pc files
++  pkg_get_variable(GSS_FLAVOUR krb5-gssapi vendor)
  
    set(HAVE_GSSAPI ${GSS_FOUND})
+   if(GSS_FOUND)
+@@ -973,6 +999,7 @@ if(CURL_USE_GSSAPI)
+     check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
+     check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
+ 
++  elseif(0)
+     if(NOT GSS_FLAVOUR STREQUAL "Heimdal")
+       # MIT
+       set(_INCLUDE_LIST "")

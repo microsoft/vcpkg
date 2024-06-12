@@ -21,12 +21,17 @@
       "platform": "!osx"
     },
     {
-      "$comment": "Known to be fixed by libidn2 update.",
       "name": "curl",
       "features": [
         "idn"
+      ]
+    },
+    {
+      "name": "curl",
+      "features": [
+        "psl"
       ],
-      "platform": "!android"
+      "platform": "!uwp"
     },
     {
       "name": "curl",
@@ -41,7 +46,7 @@
       "features": [
         "gssapi"
       ],
-      "platform": "linux"
+      "platform": "linux | osx"
     }
   ]
 }
