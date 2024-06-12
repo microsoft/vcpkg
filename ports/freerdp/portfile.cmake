@@ -9,6 +9,7 @@ vcpkg_from_github(
         install-layout.patch
         keep-dup-libs.patch
         windows-linkage.patch
+        winpr_strerror.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")

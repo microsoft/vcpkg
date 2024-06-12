@@ -131,18 +131,18 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>23.01</version>
+        <version>24.06</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-x64.msi</url>
-        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
-        <archiveName>7z2301-x64.msi</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.06/7z2406-x64.msi</url>
+        <sha512>d5eb068a4a488ca1c6025230be9f9cfbc99bf13a2230c0edc69d014f63f2f15c6582050dcaf11e77b1a13df38e2be324a4590e6ea78852b6fcaa91681729326f</sha512>
+        <archiveName>7z2406-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>23.01</version>
+        <version>24.06</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-extra.7z</url>
-        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
-        <archiveName>7z2301-extra.7z</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.06/7z2406-extra.7z</url>
+        <sha512>6b88a761f7cc8b8affc074b24750bcdc65cc3ab18d127c8bfdd1eca953d43e21558eb1137c4b934689990564d7d24cf14e249a773dc1e5ddb7316b10d73682f8</sha512>
+        <archiveName>7z2406-extra.7z</archiveName>
      </tool>
     <tool name="aria2" os="windows">
         <version>1.37.0</version>

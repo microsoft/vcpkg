@@ -5,22 +5,9 @@ index be0e544..b0d44af 100644
 @@ -89,7 +89,7 @@ if(NOT IOS)
          main.cc
      )
- 
+
 -    if(LINUX)
 +    if(LINUX AND BUILD_SHARED_LIBS)
          target_sources(crashpad_handler PRIVATE
              ../client/pthread_create_linux.cc
          )
-diff --git a/sentry-config.cmake.in b/sentry-config.cmake.in
-index 8840f5d..af3e84c 100644
---- a/sentry-config.cmake.in
-+++ b/sentry-config.cmake.in
-@@ -9,7 +9,7 @@ set(SENTRY_LINK_PTHREAD @SENTRY_LINK_PTHREAD@)
- 
- if(SENTRY_BACKEND STREQUAL "crashpad" AND NOT SENTRY_BUILD_SHARED_LIBS)
- 	include("${CMAKE_CURRENT_LIST_DIR}/sentry_crashpad-targets.cmake")
--	if(NOT MSVC AND NOT SENTRY_BUILD_SHARED_LIBS)
-+	if(NOT SENTRY_BUILD_SHARED_LIBS)
- 		find_dependency(ZLIB)
- 	endif()
- endif()

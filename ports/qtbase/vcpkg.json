@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.7.0",
-  "port-version": 2,
+  "version": "6.7.1",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -61,7 +60,10 @@
   "default-features": [
     "brotli",
     "concurrent",
-    "dbus",
+    {
+      "name": "dbus",
+      "platform": "!(static & windows)"
+    },
     "default-features",
     "doubleconversion",
     "freetype",
@@ -130,8 +132,15 @@
       "dependencies": [
         {
           "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
           "default-features": false,
-          "platform": "linux"
+          "features": [
+            "dbus"
+          ]
         },
         {
           "name": "qtbase",
