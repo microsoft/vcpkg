@@ -8,11 +8,36 @@ vcpkg_from_github(
         re2c-3.1-optional-python.diff
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        go RE2C_BUILD_RE2GO
+        rust RE2C_BUILD_RE2RUST
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_tools(
+    TOOL_NAMES re2c
+    AUTO_CLEAN
+)
+if(RE2C_BUILD_RE2GO)
+    vcpkg_copy_tools(
+        TOOL_NAMES re2go
+        AUTO_CLEAN
+    )
+endif()
+if(RE2C_BUILD_RE2RUST)
+    vcpkg_copy_tools(
+        TOOL_NAMES re2rust
+        AUTO_CLEAN
+    )
+endif()
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
