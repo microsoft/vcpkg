@@ -67,7 +67,7 @@
       "features": [
         "python"
       ],
-      "platform": "!uwp"
+      "platform": "!uwp & !(windows & static)"
     }
   ]
 }

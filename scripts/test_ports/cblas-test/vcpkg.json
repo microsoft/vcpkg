@@ -1,0 +1,19 @@
+{
+  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
+  "name": "cblas-test",
+  "version-date": "2022-04-22",
+  "description": "Metapackage for packages which provide BLAS",
+  "license": null,
+  "dependencies": [
+    "cblas",
+    {
+      "name": "pkgconf",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

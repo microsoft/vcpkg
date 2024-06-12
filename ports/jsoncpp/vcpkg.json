@@ -1,8 +1,8 @@
 {
   "name": "jsoncpp",
   "version": "1.9.5",
-  "port-version": 3,
-  "description": "JsonCpp is an implementation of a JSON reader and writer in C++. JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy to parse and human-readable.",
+  "port-version": 4,
+  "description": "JsonCpp is a C++ library that allows manipulating JSON values, including serialization and deserialization to and from strings. It can also preserve existing comment in unserialization/serialization steps, making it a convenient format to store user input files.",
   "homepage": "https://github.com/open-source-parsers/jsoncpp",
   "license": "MIT",
   "dependencies": [

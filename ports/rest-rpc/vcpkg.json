@@ -1,7 +1,6 @@
 {
   "name": "rest-rpc",
-  "version-string": "0.07",
-  "port-version": 2,
+  "version": "0.12",
   "description": "c++11, high performance, cross platform, easy to use rpc framework",
   "homepage": "https://github.com/qicosmos/rest_rpc",
   "dependencies": [

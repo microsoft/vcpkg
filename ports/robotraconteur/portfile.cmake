@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
 	REPO robotraconteur/robotraconteur
 	REF "v${VERSION}"
-	SHA512 b9ebfb0803bf0efe46bbb8dd2c8d63837141f6f416256d2edcf4e78e4658e2d6c028a2fbd200b13571cfe08d6045273147144da4bcdafc6375b670713ba4f5f6
+	SHA512 7c155dd992253663d259da32a7cc3db00c5377802098cd8ab1a381c8a1371e8a42b600bacc9279329923cdaf4081e39b77b10238b39f57f701f58a6862e3632e
 	HEAD_REF master
 )
 
@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
 	OPTIONS
 	    -DBUILD_GEN=ON
 	    -DBUILD_TESTING=OFF
+	    -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_cmake_install()

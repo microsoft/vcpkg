@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/trantor
     REF "v${VERSION}"
-    SHA512 43202240968b90d0e6d211d3b7a918567587e4ad26c360848efee2661cc1d49d35de408db5e2ff7314be879faac99ffa29ffa1f3735f9606d95874130db05250
+    SHA512 76264df770b14702cae88bb77c8e863e85eb034fd14bb062d3414f981b759be61bff3ce5aa1c8cca44bf0ca0b3568ed77248c9986eb23b6715631cdae9445a02
     HEAD_REF master
     PATCHES
         000-fix-deps.patch
+        001-disable-werror.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,11 +20,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Trantor)
 
 vcpkg_fixup_pkgconfig()
 
-# # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-# Handle copyright
+
 file(INSTALL "${SOURCE_PATH}/License" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# Copy pdb files
 vcpkg_copy_pdbs()
