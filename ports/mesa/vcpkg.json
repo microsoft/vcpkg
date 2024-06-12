@@ -12,6 +12,10 @@
       "platform": "!(android | ios | osx | windows)"
     },
     {
+      "name": "libdrm",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-get-python-packages",
       "host": true
     },
