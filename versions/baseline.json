@@ -461,7 +461,7 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2024-03-04",
+      "baseline": "2024-05-21",
       "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
