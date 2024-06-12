@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     REF mesa-${VERSION}
     SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
     PATCHES
+        python.diff
         winflex-race.diff
 )
 

@@ -1,0 +1,67 @@
+diff --git a/src/nouveau/headers/class_parser.py b/src/nouveau/headers/class_parser.py
+index 3adb21c..94ef624 100644
+--- a/src/nouveau/headers/class_parser.py
++++ b/src/nouveau/headers/class_parser.py
+@@ -9,6 +9,16 @@ import sys
+ 
+ from mako.template import Template
+ 
++def str_removeprefix(s, prefix):
++    if s.startswith(prefix):
++        return s[len(prefix):]
++    return s
++
++def str_removesuffix(s, suffix):
++    if s.endswith(suffix):
++        return s[:len(s)-len(suffix)]
++    return s
++
+ METHOD_ARRAY_SIZES = {
+     'BIND_GROUP_CONSTANT_BUFFER'        : 16,
+     'CALL_MME_DATA'                     : 256,
+@@ -274,7 +284,7 @@ def parse_header(nvcl, f):
+                 if ":" in list[2]:
+                     state = 1
+                 elif teststr in list[1]:
+-                    curmthd.field_defs[curfield][list[1].removeprefix(teststr)] = list[2]
++                    curmthd.field_defs[curfield][str_removeprefix(list[1], teststr)] = list[2]
+                 else:
+                     state = 1
+ 
+@@ -284,7 +294,7 @@ def parse_header(nvcl, f):
+                     if ("0x" in list[2]):
+                         state = 1
+                     else:
+-                        field = list[1].removeprefix(teststr)
++                        field = str_removeprefix(list[1], teststr)
+                         bitfield = list[2].split(":")
+                         curmthd.field_name_start[field] = bitfield[1]
+                         curmthd.field_name_end[field] = bitfield[0]
+@@ -305,13 +315,13 @@ def parse_header(nvcl, f):
+                 is_array = 0
+                 if (':' in list[2]):
+                     continue
+-                name = list[1].removeprefix(teststr)
++                name = str_removeprefix(list[1], teststr)
+                 if name.endswith("(i)"):
+                     is_array = 1
+-                    name = name.removesuffix("(i)")
++                    name = str_removesuffix(name, "(i)")
+                 if name.endswith("(j)"):
+                     is_array = 1
+-                    name = name.removesuffix("(j)")
++                    name = str_removesuffix(name, "(j)")
+                 x = method()
+                 x.name = name
+                 x.addr = list[2]
+@@ -337,8 +347,8 @@ def main():
+ 
+     clheader = os.path.basename(args.in_h)
+     nvcl = clheader
+-    nvcl = nvcl.removeprefix("cl")
+-    nvcl = nvcl.removesuffix(".h")
++    nvcl = str_removeprefix(nvcl, "cl")
++    nvcl = str_removesuffix(nvcl, ".h")
+     nvcl = nvcl.upper()
+     nvcl = "NV" + nvcl
+ 
