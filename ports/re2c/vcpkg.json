@@ -5,10 +5,6 @@
   "homepage": "https://re2c.org/",
   "dependencies": [
     {
-      "name": "python3",
-      "version>=": "3.7.0"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },

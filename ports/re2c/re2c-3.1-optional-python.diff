@@ -1,0 +1,58 @@
+diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
+--- re2c-3.1.orig/CMakeLists.txt	2023-07-19 23:44:58.000000000 +0200
++++ re2c-3.1/CMakeLists.txt	2024-06-12 10:56:10.688500217 +0200
+@@ -24,6 +24,7 @@
+ 
+ option(RE2C_REBUILD_DOCS "Regenerate manpage" OFF)
+ option(RE2C_BUILD_LIBS "Build libraries" OFF)
++option(RE2C_BUILD_TESTS "Build tests" OFF)
+ 
+ 
+ option(RE2C_BUILD_RE2GO "Build re2go executable (an alias for `re2c --lang go`)" ON)
+@@ -33,11 +34,13 @@
+ option(RE2C_REGEN_BENCHMARKS "Regenerate C code for benchmarks" OFF)
+ 
+ # checks for programs
++if(RE2C_REBUILD_DOCS OR RE2C_BUILD_TESTS)
+ find_package(Python3 COMPONENTS Interpreter)
+ # starting from cmake 3.19 find_package can do version check, but we are on 3.12
+ if(Python3_VERSION VERSION_LESS 3.7)
+     message(FATAL_ERROR "python version 3.7 or higher is required")
+ endif()
++endif()
+ if(RE2C_REBUILD_DOCS)
+     execute_process(
+         COMMAND "${Python3_EXECUTABLE}" -c "import docutils"
+@@ -91,11 +94,13 @@
+ configure_file(doc/manpage.rst.in doc/manpage.rst @ONLY)
+ configure_file(doc/help.rst.in doc/help.rst @ONLY)
+ 
++if(RE2C_BUILD_TESTS)
+ configure_file(run_tests.py.in run_tests.py @ONLY)
+ set(RE2C_RUN_TESTS "${CMAKE_CURRENT_BINARY_DIR}/run_tests.py")
+ if(CMAKE_HOST_UNIX)
+     execute_process(COMMAND chmod +x "${RE2C_RUN_TESTS}")
+ endif()
++endif()
+ 
+ ac_config_headers("config.h")
+ 
+@@ -345,7 +350,9 @@
+         COMMAND "${CMAKE_COMMAND}" -E remove_directory "doc"
+         COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_CURRENT_BINARY_DIR}"
+     )
++endif()
+ 
++if (RE2C_BUILD_TESTS)
+     # tests
+     add_custom_target(tests
+         DEPENDS "${RE2C_RUN_TESTS}"
+@@ -531,7 +538,7 @@
+ endif()
+ 
+ # only add check target if toplevel project
+-if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
++if (RE2C_BUILD_TESTS)
+     add_custom_target(check)
+     add_dependencies(check check_re2c check_libre2c)
+ endif()
