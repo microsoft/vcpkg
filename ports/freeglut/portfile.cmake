@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 4bb6d6c086bac7a9c0ec78062dce58987555785abe6375f462ee249f65210a964a28fb10ba7ee8a42d7fafb00eb8d196eb403d65d255f02f88467369c187228b
     HEAD_REF master
-    PATCHES 
+    PATCHES
+        android.patch
+        gles.patch # amends https://github.com/freeglut/freeglut/commit/093a5a46
         x11-dependencies-export.patch
         fix-debug-macro.patch
         no_x64_enforcement.patch

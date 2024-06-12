@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2023.06.01
     SHA512 7a231bbaf88f94c79b1ace1c3e66bd520595905bfc8a7ffa1aa453ea6f056136b82aea3a321d97db4ccfd1212a41e8790badcc43222564d861e9e5c35e40a402
     HEAD_REF master
+    PATCHES
+        add-algorithm.patch # https://github.com/google/breakpad/commit/898a997855168c0e6a689072fefba89246271a5d
 )
 
 if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
