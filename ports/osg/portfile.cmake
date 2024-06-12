@@ -16,6 +16,7 @@ vcpkg_from_github(
         openexr3.patch
         unofficial-export.patch
         fix-min-max-macro.patch
+        fix-error-c3861.patch
 )
 
 file(REMOVE
