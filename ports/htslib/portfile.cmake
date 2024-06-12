@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 b9de3769db6153f66348c7c4ffbfc5ac7cd4a4d4450c9d1c5ea8fdd8f4f9d38d1d0ba5b4ac9c53f1a754d3985dc483fe22e76f93a8bbe8ae29ef3b98136e7d2e
     HEAD_REF develop
+    PATCHES
+        0001-set-linkage-${VCPKG_LIBRARY_LINKAGE}.patch
 )
 
 set(FEATURE_OPTIONS)

@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 99142c8..74d6138 100644
+--- a/Makefile
++++ b/Makefile
+@@ -857,7 +857,7 @@ $(srcprefix)htslib.map: libhts.so
+ 	    rm -f $@.tmp ; \
+ 	fi
+ 
+-install: libhts.a $(BUILT_PROGRAMS) $(BUILT_PLUGINS) installdirs install-$(SHLIB_FLAVOUR) install-pkgconfig
++install: libhts.a $(BUILT_PROGRAMS) $(BUILT_PLUGINS) installdirs install-pkgconfig
+ 	$(INSTALL_PROGRAM) $(BUILT_PROGRAMS) $(DESTDIR)$(bindir)
+ 	if test -n "$(BUILT_PLUGINS)"; then $(INSTALL_PROGRAM) $(BUILT_PLUGINS) $(DESTDIR)$(plugindir); fi
+ 	$(INSTALL_DATA) $(SRC)htslib/*.h $(DESTDIR)$(includedir)/htslib
