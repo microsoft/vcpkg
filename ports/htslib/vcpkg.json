@@ -17,41 +17,10 @@
         "bzip2"
       ]
     },
-    "curl": {
-      "description": "Enable libcurl-based support for http/https/etc URLs",
-      "dependencies": [
-        "curl"
-      ]
-    },
-    "gcs": {
-      "description": "Enable support for Google Cloud Storage URLs",
-      "dependencies": [
-        {
-          "name": "htslib",
-          "features": [
-            "curl"
-          ]
-        }
-      ]
-    },
     "lzma": {
       "description": "Enable support for LZMA-compressed CRAM files",
       "dependencies": [
         "liblzma"
-      ]
-    },
-    "plugins": {
-      "description": "Enable support for plugins"
-    },
-    "s3": {
-      "description": "Enable support for Amazon AWS S3 URLs",
-      "dependencies": [
-        {
-          "name": "htslib",
-          "features": [
-            "curl"
-          ]
-        }
       ]
     }
   }

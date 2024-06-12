@@ -21,17 +21,17 @@ macro(enable_feature feature switch)
 endmacro()
 
 enable_feature("bzip2" "bz2")
-enable_feature("curl" "libcurl")
-enable_feature("gcs" "gcs")
 enable_feature("lzma" "lzma")
-enable_feature("plugins" "plugins")
-enable_feature("s3" "s3")
 
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --with-external-htscodecs
+        --disable-libcurl
+        --disable-gcs
+        --disable-s3
+        --disable-plugins
         ${FEATURE_OPTIONS}
 )
 
