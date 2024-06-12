@@ -1,3 +1,9 @@
+vcpkg_download_distfile(FIX_IMPLICIT_INT_PATCH
+    URLS https://github.com/BrunoLevy/geogram/commit/382da2d2f0d39bf8df2f65051c338e7e827e31db.patch?full_index=1
+    FILENAME geogram-implicit-ini-382da2d2f0d39bf8df2f65051c338e7e827e31db.patch
+    SHA512 1a85195b76cd7140fe890893bf1f57a1f9c30dbc2865bab28b7eda9d97b9bab5be7cbc638b24d8da489aee1e25e0e7289655ade13893bdc225d1b332f1d845a0
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BrunoLevy/geogram
@@ -5,6 +11,7 @@ vcpkg_from_github(
     SHA512 ae3d95be1c5061ace92921b3fcfb0027d23c595b131b0d31f1788adbe0d8f92367bef71736d6c936504bd37eba5fcdae658369f03734e233bf3eab14bca6f9e5
     PATCHES
         fix-vcpkg-install.patch
+        "${FIX_IMPLICIT_INT_PATCH}"
 )
 
 #third_party: amgcl

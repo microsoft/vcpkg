@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
-set(DIRECTX_DXC_TAG v1.8.2403)
-set(DIRECTX_DXC_VERSION 2024_03_07)
+set(DIRECTX_DXC_TAG v1.8.2405)
+set(DIRECTX_DXC_VERSION 2024_05_24)
 
 if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
    message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
@@ -11,13 +11,13 @@ if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/linux_dxc_${DIRECTX_DXC_VERSION}.x86_64.tar.gz"
         FILENAME "linux_dxc_${DIRECTX_DXC_VERSION}.tar.gz"
-        SHA512 8212b31dd1f10b9896ab7cacc6230a8c1685a7dac8953e6adc85885e6305f39e2eb539119f3716de57c9ff3ebdb70fd746200bd390b341062a1aefae867d796c
+        SHA512 6ae58c86a061225b9ee8ed0f7900f2216017af3789bad35db84620c9ab31b65344ebdf8f816a6453a0c571e2db592fbc0148923f1566a43c651f83411c037673
     )
 else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/dxc_${DIRECTX_DXC_VERSION}.zip"
         FILENAME "dxc_${DIRECTX_DXC_VERSION}.zip"
-        SHA512 a0a8ec523d5937f545261dd3ad30d55c222444ba1872a0a8c6f0c869d809537afbc57cb605b7cf156650ca38fc12ec8c1add3ffc18b65dd7fe785afe6a7f85f2
+        SHA512 4df0131694e2fd551ffd91fde6ae876329308af3481826c16539b760004f4353aedaf90131e62f22fde64ff3ded4dc8981717cf8992b41ecf34b0808ba3b357f
     )
 endif()
 
@@ -46,20 +46,23 @@ if (VCPKG_TARGET_IS_LINUX)
     "${PACKAGE_PATH}/lib/libdxcompiler.so"
     "${PACKAGE_PATH}/lib/libdxil.so"
     DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL
-    "${PACKAGE_PATH}/lib/libdxcompiler.so"
-    "${PACKAGE_PATH}/lib/libdxil.so"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/lib/libdxcompiler.so"
+      "${PACKAGE_PATH}/lib/libdxil.so"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
   set(dll_name_dxc "libdxcompiler.so")
   set(dll_name_dxil "libdxil.so")
   set(dll_dir  "lib")
   set(lib_name "libdxcompiler.so")
-  set(tool_path "bin/dxc")
+  set(tool_path "tools/${PORT}/dxc")
 else()
   # VCPKG_TARGET_IS_WINDOWS
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -78,16 +81,21 @@ else()
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
   file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
     DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-  file(INSTALL
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
+      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+  endif()
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
@@ -101,14 +109,14 @@ else()
   set(dll_name_dxil "dxil.dll")
   set(dll_dir  "bin")
   set(lib_name "dxcompiler.lib")
-  set(tool_path "tools/directx-dxc/dxc.exe")
+  set(tool_path "tools/${PORT}/dxc.exe")
 endif()
+
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in"
   "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
   @ONLY)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${LICENSE_TXT}")

@@ -211,16 +211,7 @@ $ xcode-select --install
 
 ### CLion 中使用 vcpkg
 
-打开 Toolchains 设置
-(File > Settings on Windows and Linux, CLion > Preferences on macOS)，
-并打开 CMake 设置 (Build, Execution, Deployment > CMake)。
-最后在 `CMake options` 中添加以下行:
-
-```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
-```
-
-您必须手动将此选项加入每个项目配置文件中。
+Vcpkg 已经集成在 CLion IDE 中。具体操作请参见[官方文档](https://www.jetbrains.com/help/clion/package-management.html)。
 
 ### 将 vcpkg 作为一个子模块
 

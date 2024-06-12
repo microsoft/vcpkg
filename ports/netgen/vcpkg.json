@@ -8,19 +8,8 @@
   "supports": "arm64 | x64",
   "dependencies": [
     {
-      "name": "cgns",
-      "default-features": false
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "avcodec"
-      ]
-    },
-    "libjpeg-turbo",
-    {
-      "name": "opencascade",
+      "name": "netgen",
+      "host": true,
       "default-features": false
     },
     {
@@ -34,6 +23,42 @@
     "zlib"
   ],
   "features": {
+    "cgns": {
+      "description": "CGNS file read/write support",
+      "dependencies": [
+        {
+          "name": "cgns",
+          "default-features": false
+        }
+      ]
+    },
+    "jpeg": {
+      "description": "enable snapshots using library libjpeg",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "mpeg": {
+      "description": "enable video recording with FFmpeg",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec"
+          ]
+        }
+      ]
+    },
+    "occ": {
+      "description": "build with OpenCascade geometry kernel interface",
+      "dependencies": [
+        {
+          "name": "opencascade",
+          "default-features": false
+        }
+      ]
+    },
     "python": {
       "description": "Build python bindings",
       "dependencies": [

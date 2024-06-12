@@ -1,6 +1,6 @@
 {
   "name": "skia",
-  "version": "123",
+  "version": "124",
   "port-version": 1,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
@@ -61,11 +61,11 @@
     },
     {
       "name": "harfbuzz",
-      "platform": "!uwp & !(windows & !static)"
+      "platform": "!uwp"
     },
     {
       "name": "icu",
-      "platform": "!uwp & !(windows & !static)"
+      "platform": "!uwp"
     }
   ],
   "features": {
@@ -140,12 +140,18 @@
         {
           "name": "harfbuzz",
           "default-features": false
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         }
       ]
     },
     "icu": {
       "description": "Use icu.",
-      "supports": "!(windows & !static)",
       "dependencies": [
         "icu"
       ]

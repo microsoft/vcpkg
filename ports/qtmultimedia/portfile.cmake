@@ -2,27 +2,9 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
-                    remove_unistd.patch
-                    remove_export_macro.patch
                     static_find_modules.patch
                     fix_avfoundation_target.patch
 )
-
-#Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
-
-# qt_find_package(ALSA PROVIDED_TARGETS ALSA::ALSA MODULE_NAME multimedia QMAKE_LIB alsa)
-# qt_find_package(AVFoundation PROVIDED_TARGETS AVFoundation::AVFoundation MODULE_NAME multimedia QMAKE_LIB avfoundation)
-# qt_find_package(WrapPulseAudio PROVIDED_TARGETS WrapPulseAudio::WrapPulseAudio MODULE_NAME multimedia QMAKE_LIB pulseaudio)
-# qt_find_package(WMF PROVIDED_TARGETS WMF::WMF MODULE_NAME multimedia QMAKE_LIB wmf)
-
-# qt_configure_add_summary_section(NAME "Qt Multimedia")
-# qt_configure_add_summary_entry(ARGS "alsa")
-# qt_configure_add_summary_entry(ARGS "gstreamer_1_0")
-# qt_configure_add_summary_entry(ARGS "linux_v4l")
-# qt_configure_add_summary_entry(ARGS "pulseaudio")
-# qt_configure_add_summary_entry(ARGS "mmrenderer")
-# qt_configure_add_summary_entry(ARGS "avfoundation")
-# qt_configure_add_summary_entry(ARGS "wmf")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -36,13 +18,6 @@ INVERTED_FEATURES
     # Features not yet added in the manifest:
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if("gstreamer" IN_LIST FEATURES AND "ffmpeg" IN_LIST FEATURES)
-        message(FATAL_ERROR "Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports!\n 
-As such in static builds only one backend is allowed by default.\n If you plan to manually link the plugins feel free to remove this error in an overlay.")
-    endif()
-endif()
 
 if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
@@ -72,7 +47,12 @@ else()
 endif()
 
 # alsa is not ready
-list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
+if(NOT "ffmpeg" IN_LIST FEATURES AND NOT "gstreamer" IN_LIST FEATURES AND VCPKG_TARGET_IS_LINUX)
+  #list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON") # alsa is experimental so don't activate it (also missing the dep on it.)
+  message(FATAL_ERROR "You need to activate at least one backend.")
+else()
+  list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
+endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
