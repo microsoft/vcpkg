@@ -9,13 +9,10 @@ vcpkg_from_gitlab(
     REPO mesa/mesa
     REF mesa-${VERSION}
     SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
-    FILE_DISAMBIGUATOR 1
-    HEAD_REF master
+    HEAD_REF main
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
@@ -97,6 +94,7 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
+        -Degl-lib-suffix=_mesa
         -Dgles-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
@@ -137,7 +135,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(FEATURES STREQUAL "core")
+if(VCPKG_TARGET_IS_WINDOWS and "egl" IN_LIST FEATURES)
+    # egl.pc is owned by port egl. Override that port to make egl.pc require egl_mesa instead of egl from angle.
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/egl.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/egl_mesa.pc")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/egl.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/egl_mesa.pc")
+    endif()
+endif()
+
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
