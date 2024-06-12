@@ -1,24 +1,13 @@
-diff --git a/Makefile.am b/Makefile.am
-index c073421..98ccdbd 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -32,7 +32,7 @@
- AUTOMAKE_OPTIONS = foreign no-dependencies
- ACLOCAL_AMFLAGS = -I m4
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 873ad3e..0ab3638 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -31,7 +31,7 @@
+ # 
  
--SUBDIRS = htscodecs . tests
-+SUBDIRS = htscodecs .
+ # Standalone test programs
+-noinst_PROGRAMS = rans4x16pr tokenise_name3 arith_dynamic rans4x8 rans4x16pr fqzcomp_qual varint entropy
++check_PROGRAMS = rans4x16pr tokenise_name3 arith_dynamic rans4x8 rans4x16pr fqzcomp_qual varint entropy
  
- nobase_include_HEADERS = \
- 	htscodecs/arith_dynamic.h \
-diff --git a/configure.ac b/configure.ac
-index 7e60be6..92888c8 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -206,5 +206,5 @@ AC_CHECK_HEADER(zlib.h)
- dnl Checks for library functions.
- AX_SEARCH_LIBS_REV([pthread_join], [thr pthread])
- 
--AC_CONFIG_FILES([Makefile htscodecs/Makefile tests/Makefile])
-+AC_CONFIG_FILES([Makefile htscodecs/Makefile])
- AC_OUTPUT
+ LDADD = $(top_builddir)/htscodecs/libhtscodecs.la
+ AM_CPPFLAGS = -I$(top_srcdir)
