@@ -2456,10 +2456,6 @@
       "baseline": "2.0.10",
       "port-version": 0
     },
-    "ecsutil": {
-      "baseline": "1.0.7.15",
-      "port-version": 5
-    },
     "ed25519": {
       "baseline": "2017-02-10",
       "port-version": 0
