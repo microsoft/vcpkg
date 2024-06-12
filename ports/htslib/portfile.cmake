@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO samtools/htslib
     REF "${VERSION}"
-    SHA512 459af7d11f5ad2e15a07b393d36c15c9498ec709b301e62155ae31588bf40f7a536286a79b7324286f9d4dd337bf523cb22a0d15094c97a87207ad1aea1bdbc7
+    SHA512 b9de3769db6153f66348c7c4ffbfc5ac7cd4a4d4450c9d1c5ea8fdd8f4f9d38d1d0ba5b4ac9c53f1a754d3985dc483fe22e76f93a8bbe8ae29ef3b98136e7d2e
     HEAD_REF develop
 )
 

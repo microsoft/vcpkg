@@ -1,6 +1,6 @@
 {
   "name": "htslib",
-  "version": "1.19.1",
+  "version": "1.20",
   "description": "C library for high-throughput sequencing data formats",
   "homepage": "https://github.com/samtools/htslib",
   "license": "MIT",
