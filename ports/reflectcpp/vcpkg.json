@@ -1,6 +1,6 @@
 {
   "name": "reflectcpp",
-  "version": "0.10.0",
+  "version": "0.11.1",
   "description": "A C++ library for serialization and deserialization using reflection.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
@@ -12,6 +12,14 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "yyjson",
+      "version>=": "0.9.0"
+    },
+    {
+      "name": "ctre",
+      "version>=": "3.9.0"
     }
   ]
 }
