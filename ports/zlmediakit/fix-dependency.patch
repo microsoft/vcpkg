@@ -54,3 +54,4 @@ index 44e03587..723befe8 100644
  elseif(NOT ANDROID OR IOS)
    update_cached_list(MK_LINK_LIBRARIES pthread)
  endif()
+
