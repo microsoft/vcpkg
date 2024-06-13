@@ -5,10 +5,6 @@ function(vcpkg_get_vcpkg_installed_python out_python)
     return()
   endif()
 
-  if(PORT STREQUAL "python3") # Just for manual testing
-    set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
-  endif()
-
   # On windows python is unable to lookup DLLs, so a manual venv is created
   set(python_home "${CURRENT_HOST_INSTALLED_DIR}/tools/python3")
   set(python_base "${CURRENT_BUILDTREES_DIR}/python-${TARGET_TRIPLET}")
