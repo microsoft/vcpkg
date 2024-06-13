@@ -14,21 +14,18 @@ vcpkg_extract_source_archive(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${SOURCE_PATH}/lib/src/gsasl.h" "defined GSASL_STATIC" "1")
+    set(CPPFLAGS_WINDOWS_STATIC "CPPFLAGS=\$CPPFLAGS -DGSASL_STATIC=1")
 endif()
 
 set(ENV{AUTOPOINT} true)
 set(ENV{GTKDOCIZE} true)
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(CFLAGS_WINDOWS_STATIC "-DGSASL_STATIC=1")
-endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
+        ${CPPFLAGS_WINDOWS_STATIC}
         --disable-nls
         --disable-gssapi
-        CFLAGS="${CFLAGS_WINDOWS_STATIC}"
 )
 
 vcpkg_install_make()
