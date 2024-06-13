@@ -14,6 +14,9 @@
     "go": {
       "description": "Support for Go as output language"
     },
+    "libs": {
+      "description": "Also build as a library"
+    },
     "rust": {
       "description": "Support for Rust as output language"
     }

@@ -1,3 +1,6 @@
+# even with feature "libs", re2c does not necessarily install headers
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skvadrik/re2c
@@ -13,7 +16,12 @@ vcpkg_check_features(
     FEATURES
         go RE2C_BUILD_RE2GO
         rust RE2C_BUILD_RE2RUST
+        libs RE2C_BUILD_LIBS
 )
+
+if(NOT RE2C_BUILD_LIBS)
+    set(VCPKG_BUILD_TYPE release) # tools only
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -39,8 +47,9 @@ if(RE2C_BUILD_RE2RUST)
     )
 endif()
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+if(RE2C_BUILD_LIBS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
