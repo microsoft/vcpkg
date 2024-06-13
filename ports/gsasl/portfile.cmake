@@ -19,16 +19,24 @@ endif()
 
 set(ENV{AUTOPOINT} true)
 set(ENV{GTKDOCIZE} true)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(CFLAGS_WINDOWS_STATIC "-DGSASL_STATIC=1")
+endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
         --disable-nls
         --disable-gssapi
+        CFLAGS="${CFLAGS_WINDOWS_STATIC}"
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gsasl.h" "defined GSASL_STATIC" "1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
