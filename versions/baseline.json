@@ -8201,7 +8201,7 @@
       "port-version": 0
     },
     "cpp-sparrow": {
-      "baseline": "0.0.1",
+      "baseline": "0.0.2",
       "port-version": 0
     },
     "sparsehash": {
