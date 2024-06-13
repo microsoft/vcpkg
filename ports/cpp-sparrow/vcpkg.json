@@ -4,6 +4,7 @@
   "description": "C++20 idiomatic APIs for the Apache Arrow Columnar Format",
   "homepage": "https://github.com/man-group/sparrow",
   "license": "Apache-2.0",
+  "supports": "!android",
   "dependencies": [
     {
       "name": "date",
