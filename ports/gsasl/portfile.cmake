@@ -18,6 +18,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 set(ENV{AUTOPOINT} true)
+set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
