@@ -1,0 +1,92 @@
+ dom/include/dae.h                       | 2 +-
+ dom/src/dae/daeUtils.cpp                | 2 +-
+ dom/src/dae/daeZAEUncompressHandler.cpp | 2 +-
+ dom/test/1.4/domTest.cpp                | 4 ++--
+ dom/test/1.4/domTest.h                  | 2 +-
+ dom/test/1.5/domTest.cpp                | 4 ++--
+ 6 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/dom/include/dae.h b/dom/include/dae.h
+index e53388b..a14276a 100644
+--- a/dom/include/dae.h
++++ b/dom/include/dae.h
+@@ -25,7 +25,7 @@
+ #pragma warning(disable: 4180 4245)
+ #endif
+ #ifndef NO_BOOST
+-#include <boost/filesystem/convenience.hpp>
++#include <boost/filesystem/operations.hpp>
+ #endif
+ #ifdef _MSC_VER
+ #pragma warning(pop)
+diff --git a/dom/src/dae/daeUtils.cpp b/dom/src/dae/daeUtils.cpp
+index dc94b5b..156d889 100644
+--- a/dom/src/dae/daeUtils.cpp
++++ b/dom/src/dae/daeUtils.cpp
+@@ -18,7 +18,7 @@
+ #endif
+ 
+ #ifndef NO_BOOST
+-#include <boost/filesystem/convenience.hpp>       // THIS WAS NOT COMMENTED.
++#include <boost/filesystem/operations.hpp>       // THIS WAS NOT COMMENTED.
+ #endif
+ 
+ #include <cstdio> // for tmpnam
+diff --git a/dom/src/dae/daeZAEUncompressHandler.cpp b/dom/src/dae/daeZAEUncompressHandler.cpp
+index da2a344..2550000 100644
+--- a/dom/src/dae/daeZAEUncompressHandler.cpp
++++ b/dom/src/dae/daeZAEUncompressHandler.cpp
+@@ -271,7 +271,7 @@ bool daeZAEUncompressHandler::checkAndExtractInternalArchive( const std::string&
+     bool error = false;
+ 
+     boost::filesystem::path archivePath(filePath);
+-    std::string dir = archivePath.branch_path().string();
++    std::string dir = archivePath.parent_path().string();
+ 
+     const std::string& randomSegment = cdom::getRandomFileName();
+     std::string tmpDir = dir + cdom::getFileSeparator() + randomSegment + cdom::getFileSeparator();
+diff --git a/dom/test/1.4/domTest.cpp b/dom/test/1.4/domTest.cpp
+index 28aefa5..ad76358 100644
+--- a/dom/test/1.4/domTest.cpp
++++ b/dom/test/1.4/domTest.cpp
+@@ -1543,9 +1543,9 @@ int main(int argc, char* argv[]) {
+     // Shut the DOM up
+     daeErrorHandler::setErrorHandler(&quietErrorHandler::getInstance());
+ 
+-    dataPath() = (fs::path(argv[0]).branch_path()/"domTestData/").normalize();
++    dataPath() = (fs::path(argv[0]).parent_path()/"domTestData/").normalize();
+     if (!fs::exists(dataPath()))
+-        dataPath() = (fs::path(argv[0]).branch_path()/"../../test/1.4/data/").normalize();
++        dataPath() = (fs::path(argv[0]).parent_path()/"../../test/1.4/data/").normalize();
+     tmpPath() = dataPath() / "tmp";
+     tmpDir tmp(tmpPath(), !leaveTmpFiles);
+ 
+diff --git a/dom/test/1.4/domTest.h b/dom/test/1.4/domTest.h
+index a531e89..7dbf08c 100644
+--- a/dom/test/1.4/domTest.h
++++ b/dom/test/1.4/domTest.h
+@@ -26,7 +26,7 @@
+ #pragma warning(push)
+ #pragma warning(disable: 4180 4245)
+ #endif
+-#include <boost/filesystem/convenience.hpp>
++#include <boost/filesystem/operations.hpp>
+ #ifdef _MSC_VER
+ #pragma warning(pop)
+ #endif
+diff --git a/dom/test/1.5/domTest.cpp b/dom/test/1.5/domTest.cpp
+index 0ba3449..457c863 100644
+--- a/dom/test/1.5/domTest.cpp
++++ b/dom/test/1.5/domTest.cpp
+@@ -1609,9 +1609,9 @@ int main(int argc, char* argv[]) {
+     // Shut the DOM up
+     daeErrorHandler::setErrorHandler(&quietErrorHandler::getInstance());
+ 
+-    dataPath() = (fs::path(argv[0]).branch_path()/"domTestData/").normalize();
++    dataPath() = (fs::path(argv[0]).parent_path()/"domTestData/").normalize();
+     if (!fs::exists(dataPath()))
+-        dataPath() = (fs::path(argv[0]).branch_path()/"../../test/1.5/data/").normalize();
++        dataPath() = (fs::path(argv[0]).parent_path()/"../../test/1.5/data/").normalize();
+     tmpPath() = dataPath() / "tmp";
+     tmpDir tmp(tmpPath(), !leaveTmpFiles);
+ 

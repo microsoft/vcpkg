@@ -5,7 +5,8 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/03aef663-a3da-4cdd-ac33-9ff2935267ba/d08ca31938fde015b2fec26b18149cfd21a99b69309ac2726c00658d67e7ed4c/vs_Enterprise.exe'
+# See https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/a8a3940c-d415-4078-8df8-6af787f56dfa/ff486670bce61323e52b208ecbb71dc05b034c8bf156d0b7bfc0ad67b2611445/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',

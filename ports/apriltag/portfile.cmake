@@ -6,14 +6,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AprilRobotics/apriltag
     REF v${VERSION}
-    SHA512 45965f2f888475ea5aecdada0d41a5495f6f0c545d5219c96d82aea009e310a17308df858d4ba40ff191cfe15801dfe16298f20efcc5c117695dd0fa8d3a3fd7
+    SHA512 2e7edda62e1f196ac954cb999d11a43e81e4e8a5de296b7ce28744a0ec3a4a3209b413e2328aaebce61b2eef782209855ca1112c489bbcb5437387ab6379a849
     HEAD_REF master
-    PATCHES
-        fix-config.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_PYTHON_WRAPPER=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

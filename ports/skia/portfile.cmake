@@ -3,8 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "c3feddb877388498cc9a491e9504268a53607b15"
-    SHA512 33238a6d8db4d60edd4ca1255d42ce97f084145e3bc7520ae4723a584c8f99bea0404ff505d6a9be077c0a3cc42be557e00dab3ca572b5803a2453ce363cd8f5
+    REF "e7bf161ff959268a2a2f37530a6ea61c27019d33"
+    SHA512 9cb0c39c6721c5e27a24bee97c93925b7b1f4dd774c08520384ccdf736ab5097e49692529a9fe46f50ae799e6aa9f3e8d7ec43cf9177914fcd6f6f01b76a52c4
     PATCHES
         disable-msvc-env-setup.patch
         disable-dev-test.patch
@@ -31,7 +31,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "5b45794c2c24c3fa40dc480af92c5284a95423ef"
+    REF "bac513d0ae286600ea0f75a75223a5b52a198b9b"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
@@ -54,24 +54,19 @@ declare_external_from_git(piex
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(sfntly
-    URL "https://github.com/googlei18n/sfntly.git"
-    REF "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
-    LICENSE_FILE README.md
-)
 declare_external_from_git(spirv-cross
     URL "https://github.com/KhronosGroup/SPIRV-Cross"
-    REF "b82536766d1b81631b126d1ddbe49baf42929bd3"
+    REF "b8fcf307f1f347089e3c46eb4451d27f32ebc8d3"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "7b0309708da5126b89e4ce6f19835f36dc912f2f"
+    REF "8b246ff75c6615ba4532fe4fde20f1be090c3764"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "3e6bdd0f99655b1bc6a54aa73e5bfaaa4252198b"
+    REF "f20663ca7fec48fdc88e4c4d7c5889f8b4cc5664"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -141,7 +136,6 @@ set(required_externals
     libpng
     libwebp
     piex
-    sfntly
     zlib
     wuffs
 )

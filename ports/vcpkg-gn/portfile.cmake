@@ -8,5 +8,4 @@ file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_gn_configure.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_gn_install.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_fixup_path.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

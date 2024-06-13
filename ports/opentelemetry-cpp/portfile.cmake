@@ -22,6 +22,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
+        user-events WITH_USER_EVENTS
+    INVERTED_FEATURES
+        user-events BUILD_TRACEPOINTS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
@@ -43,21 +46,33 @@ if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
 endif()
 
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
-if(WITH_GENEVA)
-# Geneva exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, so they should be ported as a feature under opentelemetry-cpp.
+
+if(WITH_GENEVA OR WITH_USER_EVENTS)
+    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
+    # so they should be ported as a feature under opentelemetry-cpp.
     vcpkg_from_github(
         OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
         REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 68885bee3b160ee7a032872c8fa6ecf68a7f4edc
+        REF 4f3059390ad09d12d93255a10f7be8ff948d26fc
         HEAD_REF main
-        SHA512 5e7de7820e47327448f5f2cbfd5f21c1c66342579c369587ba2401497c55b7e8ebb1aec1e5e0eb1291b64a31bdd725fb6554436b7b95c0dbe777c669ff058ab6
+        SHA512 392e3a414ea0ee016768dd75a286d2a7a3a7a011cc0fce4ee2f796ad7e0cd70d534eb38cb1d22f91300f4670dfa212a4239ba8e008c2444d47e13c5fe3fb75c0
     )
+    
+    if(WITH_GENEVA)
+        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/geneva-trace")
+        else()
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/fluentd")
+        endif()
+    endif()
 
-    set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/geneva-trace")
-    else()
-        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/fluentd")
+    if(WITH_USER_EVENTS)
+        if(WITH_GENEVA)
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/user_events")
+        else()
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/user_events")
+        endif()
     endif()
 endif()
 
@@ -68,10 +83,13 @@ vcpkg_cmake_configure(
         -DWITH_EXAMPLES=OFF
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
+        -DWITH_BENCHMARK=OFF
         -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         WITH_GENEVA
+        WITH_USER_EVENTS
+        BUILD_TRACEPOINTS
 )
 
 vcpkg_cmake_install()

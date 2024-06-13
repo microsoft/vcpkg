@@ -1,8 +1,8 @@
 {
   "name": "fmt",
   "version": "10.2.1",
-  "port-version": 1,
-  "description": "Formatting library for C++. It can be used as a safe alternative to printf or as a fast alternative to IOStreams.",
+  "port-version": 2,
+  "description": "{fmt} is an open-source formatting library providing a fast and safe alternative to C stdio and C++ iostreams.",
   "homepage": "https://github.com/fmtlib/fmt",
   "license": "MIT",
   "dependencies": [
