@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gdk-pixbuf
     REF "${VERSION}"
-    SHA512 5b7ddb6e816a88ffd2b7f85583c841ea92719bef7da1acbd6f5714afebf8538660c5d391809f959eb1887613f9579cf51c85d6796c84335cedbf7af975d790c9
+    SHA512 f95c92974ed6efac9845790ef5c4ed74dd6e28b182ea3732013c46b016166e92f8bc10c1994358d79ff53e988c615c43cb1a2130c6ef531ef9d84c2fdcc87e52
     HEAD_REF master
     PATCHES
         fix_build_error_windows.patch

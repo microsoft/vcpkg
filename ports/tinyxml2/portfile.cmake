@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leethomason/tinyxml2
-    REF 9.0.0
-    SHA512 9C5CE8131984690DF302CA3E32314573B137180ED522C92FD631692979C942372A28F697FDB3D5E56BCF2D3DC596262B724D088153F3E1D721C9536F2A883367
+    REF 10.0.0
+    SHA512 a359d33bc12fad455b53d81011dbe12727cae0aabfaa5704f1a25807ca216dd854a571291029886c0beedeca5c3b6393dd49c4718773e18a0e008abbdb3de36a
     HEAD_REF master
     PATCHES
         0001-fix-do-not-force-export-the-symbols-when-building-st.patch
         0002-fix-check-for-TINYXML2_EXPORT-on-non-windows.patch
+		0003-fix-Android-SDK-below-24-does-not-support-fseeko.patch
 )
 
 vcpkg_cmake_configure(

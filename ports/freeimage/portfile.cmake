@@ -20,6 +20,7 @@ vcpkg_from_sourceforge(
         use-functions-to-override-libtiff-warning-error-handlers.patch
         remove_auto_ptr.patch
         rawlib-build-fix.patch
+        typedef-xcode.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"

@@ -1,7 +1,6 @@
 {
   "name": "qt5-tools",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "license": null,
   "dependencies": [
@@ -14,5 +13,19 @@
       "default-features": false
     },
     "qt5-declarative"
-  ]
+  ],
+  "features": {
+    "qdoc": {
+      "description": "Build the qdoc tool.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
+          ]
+        }
+      ]
+    }
+  }
 }

@@ -1,11 +1,18 @@
 {
   "name": "qt5-base",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    {
+      "name": "at-spi2-core",
+      "platform": "linux"
+    },
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
     "double-conversion",
     "egl-registry",
     {
@@ -21,7 +28,10 @@
       "platform": "!windows"
     },
     "openssl",
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qt5-base",
       "host": true,

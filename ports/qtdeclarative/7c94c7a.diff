@@ -1,0 +1,14 @@
+diff --git a/src/quicklayouts/qquicklayout.cpp b/src/quicklayouts/qquicklayout.cpp
+index e3d2457..97da0a6 100644
+--- a/src/quicklayouts/qquicklayout.cpp
++++ b/src/quicklayouts/qquicklayout.cpp
+@@ -949,7 +949,8 @@
+ {
+     Q_D(QQuickLayout);
+     QQuickItem::geometryChange(newGeometry, oldGeometry);
+-    if (invalidated() || d->m_disableRearrange || !isReady())
++    if ((invalidated() && !qobject_cast<QQuickLayout *>(parentItem())) ||
++        d->m_disableRearrange || !isReady())
+         return;
+ 
+     qCDebug(lcQuickLayouts) << "QQuickLayout::geometryChange" << newGeometry << oldGeometry;

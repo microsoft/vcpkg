@@ -16,10 +16,20 @@ vcpkg_from_github(
   HEAD_REF main
   )
 
+vcpkg_list(SET options)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_list(APPEND options
+        -DCMAKE_CXX_EXTENSIONS=OFF
+        -DCOMPILER_OPTION_CURRENT_MAX_CXX_STANDARD=20
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS "-DATFRAMEWORK_CMAKE_TOOLSET_DIR=${ATFRAMEWORK_CMAKE_TOOLSET}"
+    OPTIONS
+        ${options}
+        "-DATFRAMEWORK_CMAKE_TOOLSET_DIR=${ATFRAMEWORK_CMAKE_TOOLSET}"
 )
 
 vcpkg_cmake_install()

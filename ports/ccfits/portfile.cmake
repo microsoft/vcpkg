@@ -14,6 +14,8 @@ vcpkg_extract_source_archive(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 removes std::binary_function
 )
 
 vcpkg_cmake_install()

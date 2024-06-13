@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(Boost REQUIRED COMPONENTS
     filesystem
     log
-    math_tr1
     program_options
     random
     serialization
@@ -63,7 +62,6 @@ target_link_libraries(vina
         Boost::boost
         Boost::filesystem
         Boost::log
-        Boost::math_tr1
         Boost::program_options
         Boost::random
         Boost::serialization
@@ -76,7 +74,6 @@ target_link_libraries(vina_split
         Boost::boost
         Boost::filesystem
         Boost::log
-        Boost::math_tr1
         Boost::program_options
         Boost::random
         Boost::serialization

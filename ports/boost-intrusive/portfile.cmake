@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/intrusive
     REF boost-${VERSION}
-    SHA512 4e02c889b09bdd5a3597fe6c8970f6fdec87e6d1053d7fd60d8405559d53ebf324ce04e95b28f2a9bcd7baf25bdce5e3b8f6b87bc22ab58f45b474a2ec7cae4d
+    SHA512 f7d48b367130ae056a39de141f8c1890832e5dbef98341dd3206e0413e8154a036860a2382e90215819ec06fcff094bfc87da5e966da3109cf9d0de764df961d
     HEAD_REF master
 )
 

@@ -1,7 +1,6 @@
 {
   "name": "qt5-websockets",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "The Qt WebSockets module provides C++ and QML interfaces that enable Qt applications to act as a server that can process WebSocket requests, or a client that can consume data received from the server, or both.",
   "license": null,
   "dependencies": [

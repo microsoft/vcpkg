@@ -1,6 +1,7 @@
 {
   "name": "pulseaudio",
   "version": "17.0",
+  "port-version": 1,
   "description": "PulseAudio is a sound server, originally created to overcome the limitations of the Enlightened Sound Daemon (EsounD)",
   "homepage": "https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Community/",
   "license": null,

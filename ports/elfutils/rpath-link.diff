@@ -1,0 +1,26 @@
+diff --git a/debuginfod/Makefile.am b/debuginfod/Makefile.am
+index db27b2a..b90ed23 100644
+--- a/debuginfod/Makefile.am
++++ b/debuginfod/Makefile.am
+@@ -58,7 +58,7 @@ endif
+ libebl = ../libebl/libebl.a
+ libeu = ../lib/libeu.a
+ 
+-AM_LDFLAGS = -Wl,-rpath-link,../libelf:../libdw:.
++AM_LDFLAGS = -Wl,-rpath-link,../libelf:../libdw:.:$(libdir)
+ 
+ bin_PROGRAMS =
+ if DEBUGINFOD
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 8e35512..33f7f4b 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -23,7 +23,7 @@ AM_CPPFLAGS += -I$(srcdir)/../libelf -I$(srcdir)/../libebl \
+ 	    -I$(srcdir)/../libdw -I$(srcdir)/../libdwelf \
+ 	    -I$(srcdir)/../libdwfl -I$(srcdir)/../libasm -I../debuginfod
+ 
+-AM_LDFLAGS = -Wl,-rpath-link,../libelf:../libdw $(STACK_USAGE_NO_ERROR)
++AM_LDFLAGS = -Wl,-rpath-link,../libelf:../libdw:$(libdir) $(STACK_USAGE_NO_ERROR)
+ 
+ bin_PROGRAMS = readelf nm size strip elflint findtextrel addr2line \
+ 	       elfcmp objdump ranlib strings ar unstrip stack elfcompress \

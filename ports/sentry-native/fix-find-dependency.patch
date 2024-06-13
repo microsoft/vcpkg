@@ -1,0 +1,33 @@
+diff --git a/sentry-config.cmake.in b/sentry-config.cmake.in
+index 1e3871f..e38b0c7 100644
+--- a/sentry-config.cmake.in
++++ b/sentry-config.cmake.in
+@@ -9,14 +9,14 @@ set(SENTRY_LINK_PTHREAD @SENTRY_LINK_PTHREAD@)
+ if(SENTRY_BACKEND STREQUAL "crashpad")
+ 	include("${CMAKE_CURRENT_LIST_DIR}/sentry_crashpad-targets.cmake")
+ 	if(NOT SENTRY_BUILD_SHARED_LIBS)
+-		find_dependency(ZLIB REQUIRED)
++		find_dependency(ZLIB)
+ 	endif()
+ endif()
+
+ if(SENTRY_BACKEND STREQUAL "breakpad" AND NOT SENTRY_BUILD_SHARED_LIBS)
+ 	set(SENTRY_BREAKPAD_SYSTEM @SENTRY_BREAKPAD_SYSTEM@)
+ 	if(SENTRY_BREAKPAD_SYSTEM)
+-		find_dependency(PkgConfig REQUIRED)
++		find_dependency(PkgConfig)
+ 		pkg_check_modules(BREAKPAD REQUIRED IMPORTED_TARGET breakpad-client)
+ 	endif()
+ endif()
+@@ -24,9 +24,9 @@ endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/sentry-targets.cmake")
+
+ if(SENTRY_TRANSPORT STREQUAL "curl" AND (NOT @BUILD_SHARED_LIBS@ OR NOT SENTRY_BUILD_SHARED_LIBS))
+-	find_dependency(CURL REQUIRED)
++	find_dependency(CURL)
+ endif()
+
+ if(SENTRY_LINK_PTHREAD AND NOT SENTRY_BUILD_SHARED_LIBS)
+-	find_dependency(Threads REQUIRED)
++	find_dependency(Threads)
+ endif()

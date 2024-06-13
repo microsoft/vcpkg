@@ -4,8 +4,12 @@ if(VCPKG_TARGET_IS_UWP)
             -Dsse2=disabled
             -Dssse3=disabled)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}") # TODO: /arch: flag requires compiler check. needs to be MSVC
-    set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
+    if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
+    endif()
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}")
+    endif()
     list(APPEND OPTIONS
             -Dmmx=enabled
             -Dsse2=enabled

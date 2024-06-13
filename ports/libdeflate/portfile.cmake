@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove_wrong_c_flags_modification.diff
+        fix_gcc.patch #https://github.com/ebiggers/libdeflate/pull/366
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

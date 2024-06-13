@@ -1,17 +1,11 @@
 {
   "name": "crow",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Very fast and easy to use C++ micro web framework",
   "homepage": "https://github.com/CrowCpp/crow",
   "license": "BSD-3-Clause",
   "dependencies": [
     "asio",
-    "boost-algorithm",
-    "boost-array",
-    "boost-date-time",
-    "boost-functional",
-    "boost-lexical-cast",
-    "boost-optional",
     {
       "name": "vcpkg-cmake",
       "host": true

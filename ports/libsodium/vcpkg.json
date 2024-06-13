@@ -1,7 +1,7 @@
 {
   "name": "libsodium",
-  "version": "1.0.19",
-  "port-version": 2,
+  "version": "1.0.20",
+  "port-version": 1,
   "description": "A modern and easy-to-use crypto library",
   "homepage": "https://libsodium.org/",
   "license": "ISC",

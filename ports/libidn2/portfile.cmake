@@ -1,27 +1,17 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 set(IDN2_FILENAME "libidn2-${VERSION}.tar.gz")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
+    URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 a6e90ccef56cfd0b37e3333ab3594bb3cec7ca42a138ca8c4f4ce142da208fa792f6c78ca00c01001c2bc02831abcbaf1cf9bcc346a5290fd7b30708f5a462f3
+    SHA512 eab5702bc0baed45492f8dde43a4d2ea3560ad80645e5f9e0cfa8d3b57bccd7fd782d04638e000ba07924a5d9f85e760095b55189188c4017b94705bef9b4a66
 )
-
-vcpkg_list(SET patches)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # Fix linking static libidn2 into shared library
-    # https://gitlab.com/libidn/libidn2/-/issues/80
-    vcpkg_list(APPEND patches "fix-static-into-shared-linking.patch")
-endif()
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
-        ${patches}
         disable-subdirs.patch
-        fix-msvc.patch
         fix-uwp.patch
 )
 
@@ -71,6 +61,10 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(
+    COMMENT [[
+The installed C library libidn2 is dual-licensed under LGPLv3+|GPLv2+,
+while the rest of the package is GPLv3+.
+]]
     FILE_LIST
         "${SOURCE_PATH}/COPYING"
         "${SOURCE_PATH}/COPYING.LESSERv3"

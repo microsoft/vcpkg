@@ -1,6 +1,7 @@
 {
   "name": "libavif",
   "version-semver": "1.0.4",
+  "port-version": 1,
   "description": "Library for encoding and decoding AVIF files",
   "homepage": "https://github.com/AOMediaCodec/libavif",
   "license": "BSD-2-Clause AND Apache-2.0",
@@ -20,6 +21,12 @@
       "description": "AV1 codec library",
       "dependencies": [
         "aom"
+      ]
+    },
+    "dav1d": {
+      "description": "dav1d decoder library",
+      "dependencies": [
+        "dav1d"
       ]
     }
   }

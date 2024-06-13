@@ -1,11 +1,12 @@
 {
   "name": "bgfx",
-  "version": "1.122.8595-458",
+  "version": "1.127.8725-469",
+  "port-version": 1,
   "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
   "documentation": "https://bkaradzic.github.io/bgfx",
-  "license": "BSD-2-Clause",
+  "license": null,
   "dependencies": [
     "libsquish",
     "miniz",
@@ -20,25 +21,15 @@
     }
   ],
   "default-features": [
-    "platform-default-features"
+    {
+      "name": "multithreaded",
+      "platform": "!emscripten"
+    }
   ],
   "features": {
     "multithreaded": {
       "description": "Encode and render on different threads",
       "supports": "!emscripten"
-    },
-    "platform-default-features": {
-      "description": "Enables default features per platform",
-      "dependencies": [
-        {
-          "$comment": "bgfx does not support multithreading on emscripten",
-          "name": "bgfx",
-          "features": [
-            "multithreaded"
-          ],
-          "platform": "!emscripten"
-        }
-      ]
     },
     "tools": {
       "$comment": "Use '\"host\": true' in dependencies of vcpkg.json in manifest mode.",

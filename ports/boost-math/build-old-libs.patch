@@ -2,10 +2,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7e7790271c..cd08a77e4a 100644
 --- a/CMakeLists.txt	
 +++ b/CMakeLists.txt
-@@ -41,6 +41,104 @@ else()
+@@ -41,6 +41,108 @@ else()
  
  endif()
  
++option(BOOST_MATH_BUILD_WITH_LEGACY_FUNCTIONS "" OFF)
++if(BOOST_MATH_BUILD_WITH_LEGACY_FUNCTIONS)
 +include(CheckCXXSourceCompiles)
 +set(CMAKE_REQUIRED_LIBRARIES Boost::config)
 +set(CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -80,9 +82,11 @@ index 7e7790271c..cd08a77e4a 100644
 +
 +foreach(type IN LISTS types)
 +  add_library(boost_math_tr1${type} ${TR1_SOURCES${type}})
++  target_link_libraries(boost_math_tr1${type} PUBLIC Boost::config)
 +  target_include_directories(boost_math_tr1${type} PRIVATE src/tr1)
 +  target_include_directories(boost_math_tr1${type} PRIVATE include)
 +  add_library(boost_math_c99${type} ${C99_SOURCES${type}})
++  target_link_libraries(boost_math_c99${type} PUBLIC Boost::config)
 +  target_include_directories(boost_math_c99${type} PRIVATE src/tr1)
 +  target_include_directories(boost_math_c99${type} PRIVATE include)
 +  if(BUILD_SHARED_LIBS)
@@ -102,7 +106,7 @@ index 7e7790271c..cd08a77e4a 100644
 +  boost_install_target(TARGET boost_math_tr1${type} VERSION ${BOOST_SUPERPROJECT_VERSION})
 +  boost_install_target(TARGET boost_math_c99${type} VERSION ${BOOST_SUPERPROJECT_VERSION})
 +endforeach()
-+
++endif()
 +
  # Only enable tests when we're the root project
  if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)

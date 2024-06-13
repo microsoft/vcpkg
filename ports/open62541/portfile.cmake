@@ -2,11 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "v${VERSION}"
-    SHA512 8771a70d1f38f2a02f21281200d98fdd8d41d842cc82704155793529a1768beeb2583382f7547e6aaefdab4a17c3130779af792b2a59487889a3cdea4a2fa776
+    SHA512 47e2a8af03e3e6dfbf6edcf3bec665a639c5cd6a826d987bb72eafb981e0ebfde01f36e624798fa529e8fcd83b6f22972538c4ea181ccd1a5bd5988bd87331c5
     HEAD_REF master
-    PATCHES
-        disable-docs.patch
 )
+
+# disable docs
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS

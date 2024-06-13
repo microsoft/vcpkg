@@ -1,0 +1,18 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index d6f0e3e..11512ff 100755
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -582,9 +582,13 @@ endif()
+ if(SVTHEVC_FOUND)
+     target_link_libraries(x265-static ${SVT_HEVC_LIBRARY})
+ endif()
++if(ENABLE_SHARED)
++    set_target_properties(x265-static PROPERTIES EXCLUDE_FROM_ALL 1)
++else()
+ install(TARGETS x265-static
+     LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+     ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
++endif()
+ 
+ if(ENABLE_HDR10_PLUS)
+     install(TARGETS hdr10plus-static

@@ -37,6 +37,8 @@ jobs:
     value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_ASSET_SOURCES'] ]
   - name: X_VCPKG_BINARY_SOURCE_STUB
     value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_BINARY_SOURCE_STUB'] ]
+  - name: ANDROID_NDK_HOME
+    value: /android-ndk-r26d
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -88,6 +90,7 @@ jobs:
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
         --env X_VCPKG_ASSET_SOURCES="$(X_VCPKG_ASSET_SOURCES)" \
+        --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
         ${{ parameters.dockerImage }} \
         pwsh \
          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \

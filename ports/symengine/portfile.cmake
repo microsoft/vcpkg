@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF "v${VERSION}"
-    SHA512 91ea5d2d5b2b5ecbf7c3813bf2972a78384f7323ba328a556d7f8a2f54c39f44fceccd1465763a334df1b23f9031cbc87a8d930def0464345bb7fa271ecc508b
+    REF 450a0277e1116ab8c52582df9c77d42f9db3092a # unreleased version with LLVM 18 support
+    SHA512 fb9bfe3cf6d48051b86f28c749cfdc19a2d5c1fc750f3c45c422559e9b8b9736d1cb542af5023a876640d917ad2198b24385fd085d8e20ff97e7ee660e056605
     HEAD_REF master
 )
 

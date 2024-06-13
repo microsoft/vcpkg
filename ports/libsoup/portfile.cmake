@@ -14,6 +14,8 @@ vcpkg_configure_meson(
         -Ddocs=disabled
         -Dtests=false
         -Ddoc_tests=false
+        -Dkrb5_config=false
+        -Dgssapi=disabled
     ADDITIONAL_BINARIES
         "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gio-querymodules${CMAKE_EXECUTABLE_SUFFIX}'"
         "glib-compile-schemas = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${CMAKE_EXECUTABLE_SUFFIX}'"

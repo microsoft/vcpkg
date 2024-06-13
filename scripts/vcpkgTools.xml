@@ -88,22 +88,22 @@
         <sha512>40c534eb27f079c15c9782f53f82c12dabfede4d3d85f0edf8a855c2b0d5e12921a96506b37c210beab3c33220f8ff098447ad054e82d8c2603964975fc12076</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="coscli" os="windows">
         <version>0.11.0</version>
@@ -131,18 +131,18 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>23.01</version>
+        <version>24.06</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-x64.msi</url>
-        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
-        <archiveName>7z2301-x64.msi</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.06/7z2406-x64.msi</url>
+        <sha512>d5eb068a4a488ca1c6025230be9f9cfbc99bf13a2230c0edc69d014f63f2f15c6582050dcaf11e77b1a13df38e2be324a4590e6ea78852b6fcaa91681729326f</sha512>
+        <archiveName>7z2406-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>23.01</version>
+        <version>24.06</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-extra.7z</url>
-        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
-        <archiveName>7z2301-extra.7z</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.06/7z2406-extra.7z</url>
+        <sha512>6b88a761f7cc8b8affc074b24750bcdc65cc3ab18d127c8bfdd1eca953d43e21558eb1137c4b934689990564d7d24cf14e249a773dc1e5ddb7316b10d73682f8</sha512>
+        <archiveName>7z2406-extra.7z</archiveName>
      </tool>
     <tool name="aria2" os="windows">
         <version>1.37.0</version>

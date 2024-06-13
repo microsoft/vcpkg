@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO robotraconteur/robotraconteur_companion
-    REF v0.3.1
-    SHA512 ba6ac3777eb37411d1c52d3639aad668bc8bb6aa1a39e77a6b0288b6c130756f5bbbc0adcbaa13bb07fb152e76e29462eccc36c1cf1baf6aa0bfb81e3566a32f
+    REF "v${VERSION}"
+    SHA512 9df5fc4afe635b86cf150e59f06a809b856f17921507e75872f6afe723d2b9654cbb0ecc43533d3c7d673c11fb96545d627f4bbacdbd351a1a61d0ee65d71381
     HEAD_REF master
 )
 
@@ -18,6 +18,8 @@ file(COPY ${ROBDEF_SOURCE_PATH}/group1 DESTINATION ${SOURCE_PATH}/robdef/)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

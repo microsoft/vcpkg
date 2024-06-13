@@ -45,11 +45,11 @@ set_target_properties(unofficial::libmagic::libmagic PROPERTIES
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     set_target_properties(unofficial::libmagic::libmagic PROPERTIES
         INTERFACE_LINK_LIBRARIES
-            "\$<LINK_ONLY:$<$<BOOL:${WIN32}>:unofficial::tre::tre>>"
+            "\$<LINK_ONLY:$<$<BOOL:${WIN32}>:unofficial::tre::tre;shlwapi>>"
             "\$<LINK_ONLY:$<@has_zlib@:ZLIB::ZLIB>>"
             "\$<LINK_ONLY:$<@has_bzip2@:BZip2::BZip2>>"
             "\$<LINK_ONLY:$<@has_lzma@:LibLZMA::LibLZMA>>"
-            "\$<LINK_ONLY:$<@has_zstd@:$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>>>"
+            "\$<LINK_ONLY:$<@has_zstd@:zstd::libzstd>"
     )
 endif()
 

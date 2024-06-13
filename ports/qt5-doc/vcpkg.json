@@ -1,10 +1,9 @@
 {
   "name": "qt5-doc",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "The Qt documentation.",
   "license": null,
-  "supports": "linux",
+  "supports": "native",
   "dependencies": [
     {
       "name": "qt5-base",
@@ -12,6 +11,12 @@
     },
     "qt5-declarative",
     "qt5-quickcontrols2",
-    "qt5-tools"
+    {
+      "name": "qt5-tools",
+      "default-features": false,
+      "features": [
+        "qdoc"
+      ]
+    }
   ]
 }

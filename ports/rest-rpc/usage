@@ -1,0 +1,4 @@
+rest-rpc is header-only and can be used from CMake via:
+
+  find_path(REST_RPC_INCLUDE_DIRS "rest_rpc.hpp")
+  target_include_directories(main PRIVATE ${REST_RPC_INCLUDE_DIRS})

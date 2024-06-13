@@ -7,6 +7,8 @@ vcpkg_from_bitbucket(
     PATCHES
         disable-install-pdb.patch
         version.patch
+        linkage.diff
+        pkgconfig.diff
 )
 
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
@@ -32,36 +34,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 
-if(VCPKG_TARGET_IS_MINGW AND ENABLE_SHARED)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libx265.a")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libx265.a")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x265.h" "#ifdef X265_API_IMPORTS" "#if 1")
 endif()
 
-vcpkg_fixup_pkgconfig()
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND ENABLE_SHARED)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/x265-static.lib")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/x265-static.lib")
-endif()
-vcpkg_list(SET pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc")
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_list(APPEND pc_files "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc")
-endif()
-foreach(FILE IN LISTS pc_files)
-    file(READ "${FILE}" _contents)
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        if (NOT ENABLE_SHARED)
-            string(REPLACE "-lx265" "-lx265-static" _contents "${_contents}")
-        endif()
-    else()
-        string(REPLACE " -lgcc_s" "" _contents "${_contents}")
-        string(REPLACE " -lgcc" "" _contents "${_contents}")
-    endif()
-    file(WRITE "${FILE}" "${_contents}")
-endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

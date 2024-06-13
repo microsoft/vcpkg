@@ -9,6 +9,8 @@ endif()
 
 project(xqilla C CXX)
 
+set(CMAKE_CXX_STANDARD 11) # 17 does not allow 'register'
+
 add_library(xqilla  
 ./src/exceptions/XQException.cpp
 ./src/exceptions/XQillaException.cpp

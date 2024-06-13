@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # std::iterator<X,Y> is deprecated in C++17
         -DENTITYX_BUILD_TESTING=false
         -DENTITYX_BUILD_SHARED=0
 )

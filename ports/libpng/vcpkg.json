@@ -1,7 +1,7 @@
 {
   "name": "libpng",
   "version": "1.6.43",
-  "port-version": 1,
+  "port-version": 2,
   "description": "libpng is a library implementing an interface for reading and writing PNG (Portable Network Graphics) format files",
   "homepage": "https://github.com/glennrp/libpng",
   "license": "libpng-2.0",

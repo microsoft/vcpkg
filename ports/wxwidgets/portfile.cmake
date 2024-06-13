@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
     REF "v${VERSION}"
-    SHA512 f1ba875e6dfa3970e6f03741573f96ac224a8d0bace5a4c44dcf95dd4e861031fe086e2dc4429c1c6bcb22d40656fc2c6c287abe0b4678eb9af9698691eda3d9
+    SHA512 6d92635f88fc7b0ee52ef996f87d79d9af34428e2cb4469134b74514135b87b42acbc515c0d2d1e1ff5265b8383c9783ce58655bd410fa9215cfc7a8d528aa87
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
-        fix-glegl.patch
 )
 
 vcpkg_check_features(

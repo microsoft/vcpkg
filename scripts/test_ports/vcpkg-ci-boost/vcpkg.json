@@ -3,6 +3,7 @@
   "version": "1",
   "description": "Boost features testing within CI.",
   "dependencies": [
+    "boost",
     {
       "name": "boost",
       "default-features": false,
@@ -41,10 +42,6 @@
         "python3"
       ],
       "platform": "!staticcrt & !static & !uwp & !(arm & windows)"
-    },
-    {
-      "name": "boost-odeint",
-      "default-features": false
     },
     {
       "name": "boost-odeint",

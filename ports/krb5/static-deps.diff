@@ -1,0 +1,23 @@
+diff --git a/src/build-tools/mit-krb5.pc.in b/src/build-tools/mit-krb5.pc.in
+index fdc5577..dc9c4b9 100644
+--- a/src/build-tools/mit-krb5.pc.in
++++ b/src/build-tools/mit-krb5.pc.in
+@@ -12,4 +12,4 @@ Description: An implementation of Kerberos network authentication
+ Version: @KRB5_VERSION@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lkrb5 -lk5crypto @COM_ERR_LIB@
+-Libs.private: -lkrb5support
++Libs.private: -lkrb5support @GEN_LIB@ @MACOS_FRAMEWORK@ @LIBS@ @DL_LIB@
+diff --git a/src/config/pre.in b/src/config/pre.in
+index a0c60c7..a8432a8 100644
+--- a/src/config/pre.in
++++ b/src/config/pre.in
+@@ -379,7 +379,7 @@ SUPPORT_LIB			= -l$(SUPPORT_LIBNAME)
+ # HESIOD_LIBS is -lhesiod...
+ HESIOD_LIBS	= @HESIOD_LIBS@
+ 
+-KRB5_BASE_LIBS	= $(KRB5_LIB) $(K5CRYPTO_LIB) $(COM_ERR_LIB) $(SUPPORT_LIB) $(GEN_LIB) $(LIBS) $(DL_LIB)
++KRB5_BASE_LIBS	= $(KRB5_LIB) $(K5CRYPTO_LIB) $(COM_ERR_LIB) $(SUPPORT_LIB) $(GEN_LIB) @MACOS_FRAMEWORK@ $(LIBS) $(DL_LIB)
+ KDB5_LIBS	= $(KDB5_LIB) $(GSSRPC_LIBS)
+ GSS_LIBS	= $(GSS_KRB5_LIB)
+ # needs fixing if ever used on macOS!

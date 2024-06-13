@@ -8,17 +8,14 @@ vcpkg_from_github(
         0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch #upstreamed in future version
         0003-fix-windowsinclude.patch
-        0004-fix-debug-build.patch
+        0004-dependencies.patch
         0005-fix-nasm.patch #upstreamed in future version
-        0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
-        0009-Fix-fdk-detection.patch
-        0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-iconv.patch
+        0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
+        0041-add-const-for-opengl-definition.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -152,10 +149,18 @@ if(VCPKG_DETECTED_CMAKE_RANLIB)
     list(APPEND prog_env "${RANLIB_path}")
 endif()
 
+if(VCPKG_DETECTED_CMAKE_STRIP)
+    get_filename_component(STRIP_path "${VCPKG_DETECTED_CMAKE_STRIP}" DIRECTORY)
+    get_filename_component(STRIP_filename "${VCPKG_DETECTED_CMAKE_STRIP}" NAME)
+    set(ENV{STRIP} "${STRIP_filename}")
+    string(APPEND OPTIONS " --strip=${STRIP_filename}")
+    list(APPEND prog_env "${STRIP_path}")
+endif()
+
 list(REMOVE_DUPLICATES prog_env)
 vcpkg_add_to_path(PREPEND ${prog_env})
 
-# More? OBJCC STRIP BIN2C
+# More? OBJCC BIN2C
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -252,11 +257,6 @@ if("swscale" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-swscale")
     set(ENABLE_SWSCALE OFF)
-endif()
-
-set(STATIC_LINKAGE OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(STATIC_LINKAGE ON)
 endif()
 
 if ("alsa" IN_LIST FEATURES)
@@ -597,7 +597,7 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
 endif()
 
-set(OPTIONS_DEBUG "--debug --disable-optimizations")
+set(OPTIONS_DEBUG "--disable-optimizations")
 set(OPTIONS_RELEASE "--enable-optimizations")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
@@ -612,6 +612,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(OPTIONS "${OPTIONS} --pkg-config=${PKGCONFIG}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
@@ -651,12 +653,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG RELEASE)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-rel"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 # Debug build
@@ -690,12 +696,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-dbg"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -816,6 +826,7 @@ x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG
 function(append_dependencies_from_libs out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
     string(REGEX REPLACE "[ ]+" ";" contents "${arg_LIBS}")
+    list(FILTER contents EXCLUDE REGEX "^-F.+")
     list(FILTER contents EXCLUDE REGEX "^-framework$")
     list(FILTER contents EXCLUDE REGEX "^-L.+")
     list(FILTER contents EXCLUDE REGEX "^-libpath:.+")

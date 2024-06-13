@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 project(smpeg2 CXX)
 
+set(CMAKE_CXX_STANDARD 11) # 17 does not allow 'register'
+
 find_package(SDL2 CONFIG REQUIRED)
 
 if(MSVC)
@@ -66,6 +68,6 @@ install(EXPORT smpeg2-targets
     DESTINATION share/unofficial-smpeg2
 )
 
-if(NOT DEFINED SMPEG_SKIP_HEADERS)
+if(NOT SMPEG_SKIP_HEADERS)
     install(FILES smpeg.h MPEGframe.h DESTINATION include)
 endif()

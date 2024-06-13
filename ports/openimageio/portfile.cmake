@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 8399d66a757297d646e0d9ce363cfc88a8f7b06d69582857093f13a0a398fc027ea68bf1a97f039320f3fe512c96b4e3ed084295da12359e7574ba460336ce10
+    SHA512 c6e53b5484702c66f01490d23f272e597e016b984d54f81e400605bf2a2e1dd7843ce25a7ef51ffbc7ee7089b42e8d73a91699b93cb655b5ca9ef869c9a950f4
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -68,6 +68,7 @@ vcpkg_cmake_configure(
         "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
+        ENABLE_IV
 )
 
 vcpkg_cmake_install()
@@ -88,12 +89,16 @@ if("viewer" IN_LIST FEATURES)
     )
 endif()
 
-# Clean
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/OpenImageIO/export.h" "ifdef OIIO_STATIC_DEFINE" "if 1")
+endif()
+
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

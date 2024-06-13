@@ -28,6 +28,11 @@ endif()
 
 if("cyrus-sasl" IN_LIST FEATURES)
     vcpkg_list(APPEND FEATURE_OPTIONS --with-cyrus-sasl)
+    message(
+" openldap currently requires the following libraries from the system package manager:
+    libsasl2-dev
+These can be installed on Ubuntu systems via sudo apt install libsasl2-dev"
+    )
 else()
     vcpkg_list(APPEND FEATURE_OPTIONS --without-cyrus-sasl)
 endif()

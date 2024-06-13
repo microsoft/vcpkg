@@ -1,6 +1,6 @@
 {
   "name": "vladimirshaleev-ipaddress",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A library for working and manipulating IPv4/IPv6 addresses and networks in modern C++.",
   "homepage": "https://vladimirshaleev.github.io/ipaddress/",
   "license": "MIT",
