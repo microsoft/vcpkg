@@ -17,7 +17,7 @@ vcpkg_check_features(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS} "-DRE2C_BUILD_TESTS=OFF"
 )
 
 vcpkg_cmake_install()
