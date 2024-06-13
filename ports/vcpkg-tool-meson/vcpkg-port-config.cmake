@@ -44,11 +44,11 @@ endif()
 
 # Check required python version
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_execute_required_process(COMMAND "${PYTHON3}" --version
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-            LOGNAME "python3-version-${TARGET_TRIPLET}")
-
-file(READ "${CURRENT_BUILDTREES_DIR}/python3-version-${TARGET_TRIPLET}-out.log" version_contents)
+vcpkg_execute_in_download_mode(
+    COMMAND "${PYTHON3}" --version
+    OUTPUT_VARIABLE version_contents
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+)
 string(REGEX MATCH [[[0-9]+\.[0-9]+\.[0-9]+]] python_ver "${version_contents}")
 
 set(min_required 3.7)
