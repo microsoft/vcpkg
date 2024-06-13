@@ -11,29 +11,3 @@ index 04c2ece7..9b8fe573 100644
  
  EXTRA_DIST = cfg.mk maint.mk CONTRIBUTING.md
  EXTRA_DIST += build-aux/git2cl
-diff --git a/configure.ac b/configure.ac
-index 1a53887c..38a70139 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -531,13 +531,6 @@ AS_IF([test "$enable_gcc_warnings" != no],
- 
- AC_CONFIG_FILES([
-   Makefile
--  doc/Makefile
--  doc/cyclo/Makefile
--  doc/doxygen/Doxyfile
--  doc/reference/Makefile
--  examples/Makefile
--  examples/openid20/Makefile
--  examples/saml20/Makefile
-   gl/Makefile
-   lib/Makefile
-   lib/anonymous/Makefile
-@@ -559,7 +552,6 @@ AC_CONFIG_FILES([
-   lib/src/gsasl-version.h
-   po/Makefile.in
-   src/Makefile
--  tests/Makefile
- ])
- AC_OUTPUT
- 
