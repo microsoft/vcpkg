@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a4f5b35ef3..eeb0bb0b8f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -663,7 +670,7 @@ target_link_libraries( lapacktest
+ 
+ # ----------------------------------------
+ # compile tester library
+-add_library( tester ${libtest_all} )
++add_library( tester EXCLUDE_FROM_ALL ${libtest_all} )
+ target_link_libraries( tester
+     magma
+     lapacktest
+@@ -726,11 +726,12 @@ foreach( filename ${testing_all} )
+         list( APPEND testing_all_cpp ${filename} )
+     endif()
+ endforeach()
++set(testing_all_cpp "")
+ foreach( TEST ${testing_all_cpp} )
+     string( REGEX REPLACE "\\.(cpp|f90|F90)" "" EXE ${TEST} )
+     string( REGEX REPLACE "testing/" "" EXE ${EXE} )
+     #message( "${TEST} --> ${EXE}" )
+-    add_executable( ${EXE} ${TEST} )
++    add_executable( ${EXE} EXCLUDE_FROM_ALL ${TEST} )
+     target_link_libraries( ${EXE} tester lapacktest magma )
+     list( APPEND testing ${EXE} )
+ endforeach()
+@@ -749,6 +750,7 @@ endif()
+ 
+ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SPARSE_TEST_DIR}" )
+ cmake_policy( SET CMP0037 OLD)
++set(sparse_testing_all "")
+ foreach( TEST ${sparse_testing_all} )
+     string( REGEX REPLACE "\\.(cpp|f90|F90)"     "" EXE ${TEST} )
+     string( REGEX REPLACE "${SPARSE_TEST_DIR}/" "" EXE ${EXE} )

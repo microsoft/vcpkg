@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a4e779b..dc5f1a9 100644
+index 075641e..b2e92ef 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -121,11 +121,6 @@ if(${SHADERC_ENABLE_EXAMPLES})
+@@ -129,11 +129,6 @@ if(${SHADERC_ENABLE_EXAMPLES})
      add_subdirectory(examples)
  endif()
  
@@ -15,10 +15,10 @@ index a4e779b..dc5f1a9 100644
  function(define_pkg_config_file NAME LIBS)
    add_custom_target(${NAME}-pkg-config ALL
 diff --git a/glslc/CMakeLists.txt b/glslc/CMakeLists.txt
-index acf6fb0..d0df7db 100644
+index c8fa6d5..341865a 100644
 --- a/glslc/CMakeLists.txt
 +++ b/glslc/CMakeLists.txt
-@@ -26,7 +26,6 @@ shaderc_default_compile_options(glslc_exe)
+@@ -53,7 +53,6 @@ shaderc_default_compile_options(glslc_exe)
  target_include_directories(glslc_exe PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/.. ${spirv-tools_SOURCE_DIR}/include)
  set_target_properties(glslc_exe PROPERTIES OUTPUT_NAME glslc)
  target_link_libraries(glslc_exe PRIVATE glslc shaderc_util shaderc)

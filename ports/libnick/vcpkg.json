@@ -1,0 +1,44 @@
+{
+  "name": "libnick",
+  "version": "2024.6.5",
+  "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
+  "description": "A cross-platform base for native Nickvision applications.",
+  "homepage": "https://github.com/NickvisionApps/libnick",
+  "documentation": "https://github.com/NickvisionApps/libnick/tree/main/docs",
+  "license": "GPL-3.0",
+  "supports": "(windows & x64) | (linux & x64)",
+  "dependencies": [
+    "curl",
+    "gettext-libintl",
+    {
+      "name": "glib",
+      "platform": "linux"
+    },
+    "jsoncpp",
+    {
+      "name": "libsecret",
+      "platform": "linux"
+    },
+    {
+      "name": "libuuid",
+      "platform": "linux"
+    },
+    "maddy",
+    {
+      "name": "openssl",
+      "platform": "linux"
+    },
+    {
+      "name": "sqlcipher",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

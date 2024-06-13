@@ -1,0 +1,12 @@
+diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
+index e8e450d36c..8ba1778b4f 100644
+--- a/cmake/public/cuda.cmake
++++ b/cmake/public/cuda.cmake
+@@ -60,6 +60,7 @@ find_package(CUDAToolkit REQUIRED)
+ 
+ cmake_policy(POP)
+ 
++set(CUDAToolkit_INCLUDE_DIR "${CUDA_INCLUDE_DIRS}")
+ if(NOT CMAKE_CUDA_COMPILER_VERSION STREQUAL CUDAToolkit_VERSION OR
+     NOT CUDA_INCLUDE_DIRS STREQUAL CUDAToolkit_INCLUDE_DIR)
+   message(FATAL_ERROR "Found two conflicting CUDA installs:\n"

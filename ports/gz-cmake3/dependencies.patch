@@ -117,7 +117,7 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
  
  find_package(PkgConfig QUIET)
 -if (PkgConfig_FOUND)
-+if (NOT WIN32)
++if (UNIX AND NOT APPLE)
    set(PKG_CONFIG_PATH_ORIGINAL $ENV{PKG_CONFIG_PATH})
 -  foreach (GZ_OGRE2_PROJECT_NAME "OGRE2" "OGRE-Next")
 +  foreach (GZ_OGRE2_PROJECT_NAME "OGRE-Next")
@@ -146,7 +146,7 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
        if (NOT "${OGRE2-${component}}" STREQUAL "OGRE2-${component}-NOTFOUND")
          message(STATUS "  + component ${component}: found")
          # create a new target for each component
-@@ -403,15 +406,24 @@
+@@ -403,15 +406,23 @@
    set(OGRE2_SEARCH_VER "OGRE-${GzOGRE2_FIND_VERSION_MAJOR}.${GzOGRE2_FIND_VERSION_MINOR}")
    set(OGRE2_PATHS "")
    set(OGRE2_INC_PATHS "")
@@ -162,20 +162,19 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
 +      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/OGRE-Next")
    endforeach()
  
-+  if(CMAKE_BUILD_TYPE MATCHES Debug)
-+    set(OGRE_MAIN_LIB "OgreNextMain_d")
-+  else()
-+    set(OGRE_MAIN_LIB "OgreNextMain")
-+  endif()
-+
    find_library(OGRE2_LIBRARY
 -    NAMES "OgreMain"
-+    NAMES "${OGRE_MAIN_LIB}"
++    NAMES 
++     "OgreNextMain"
++     "OgreNextMainStatic"
++     "OgreNextMain_d"
++     "OgreNextMainStatic_d"
++    NAMES_PER_DIR
      HINTS ${OGRE2_PATHS}
      NO_DEFAULT_PATH)
  
    find_path(OGRE2_INCLUDE
-@@ -449,10 +461,10 @@
+@@ -449,10 +460,13 @@
                ${PATH_HINTS} ${COMPONENT} ${OGRE2_SEARCH_VER}/${COMPONENT})
  
        find_library(${PREFIX}_LIBRARY
@@ -184,11 +183,14 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
 -              "Ogre${COMPONENT}_d"
 +              "OgreNext${COMPONENT}"
 +              "OgreNext${COMPONENT}_d"
++              "OgreNext${COMPONENT}Static"
++              "OgreNext${COMPONENT}Static_d"
++              NAMES_PER_DIR
            HINTS
                ${OGRE2_LIBRARY_DIRS}
            NO_DEFAULT_PATH)
  
-@@ -509,8 +521,9 @@
+@@ -509,8 +522,9 @@
  
    ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
    ogre_find_plugin(RenderSystem_GL3Plus OgreGL3PlusRenderSystem.h RenderSystems/GL3Plus/include)
@@ -198,7 +200,7 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
    foreach(component ${GzOGRE2_FIND_COMPONENTS})
      set(PREFIX OGRE2_${component})
      if(${PREFIX}_FOUND)
-@@ -520,9 +533,9 @@
+@@ -520,9 +534,9 @@
        string(FIND ${component} "Hlms" HLMS_POS)
        if(${HLMS_POS} GREATER -1)
          foreach (dir ${OGRE2_INCLUDE_DIRS})

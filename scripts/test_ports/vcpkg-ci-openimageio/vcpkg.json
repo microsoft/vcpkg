@@ -13,7 +13,10 @@
         "libraw",
         "opencv",
         "openjpeg",
-        "pybind11",
+        {
+          "name": "pybind11",
+          "platform": "!(windows & static)"
+        }
         "tools",
         "webp"
       ]

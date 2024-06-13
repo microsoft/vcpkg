@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a52dc59..caacfa8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,6 +64,16 @@ else()
+ endif()
+ 
+ # Configure and install pkgconfig file
++set(FAKE_CXX_LINKAGE "")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++    elseif(EXISTS "${lib}")
++        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    else()
++        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    endif()
++endforeach()
+ configure_file(Lerc.pc.in ${CMAKE_CURRENT_BINARY_DIR}/Lerc.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Lerc.pc
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+diff --git a/Lerc.pc.in b/Lerc.pc.in
+index ab20d1a..4d2a967 100644
+--- a/Lerc.pc.in
++++ b/Lerc.pc.in
+@@ -9,4 +9,4 @@ URL: @PROJECT_HOMEPAGE_URL@
+ Version: @PROJECT_VERSION@
+ Cflags: -I${includedir}
+ Cflags.private: -DLERC_STATIC
+-Libs: -L${libdir} -lLerc
++Libs: -L${libdir} -lLerc @FAKE_CXX_LINKAGE@

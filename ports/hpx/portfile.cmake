@@ -7,12 +7,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
     REF "v${VERSION}"
-    SHA512 a7972beada950cf6ef3b61f20496a08b220e4f48c28c11d57c20683906ca5124a9f36ac2552318883a5ab1db6efdbf63d1141b6e0c484c560a8c1311ae2d7090
-    HEAD_REF stable
-    PATCHES
-        fix-dependency-hwloc.patch
-        fix-debug.patch
-        fix_output_name_clash.patch
+    SHA512 e1cc9fa72cba4e66b5d6eff2487e93d5d553c32e6eebcfe9131bf69c5b595ab72295ff0986c81d5dc6a7caa8303d6709df91333f64efe59ee256d99a8c289dc5
+    HEAD_REF master
 )
 
 vcpkg_check_features(

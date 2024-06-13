@@ -55,7 +55,7 @@ function(vcpkg_build_make)
         #TODO: optimize for install-data (release) and install-exec (release/debug)
 
     else()
-        if(VCPKG_HOST_IS_OPENBSD)
+        if(VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
             find_program(Z_VCPKG_MAKE gmake REQUIRED)
         else()
             find_program(Z_VCPKG_MAKE make REQUIRED)
@@ -70,45 +70,30 @@ function(vcpkg_build_make)
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
     vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
 
+    z_vcpkg_configure_make_common_definitions()
+
     foreach(buildtype IN ITEMS "debug" "release")
         if (buildtype STREQUAL "debug" AND _VCPKG_MAKE_NO_DEBUG)
             continue()
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
-            if("${buildtype}" STREQUAL "debug")
-                set(short_buildtype "-dbg")
-                set(cmake_buildtype "DEBUG")
-                set(path_suffix "/debug")
-            else()
-                # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                set(short_buildtype "-rel")
-                set(cmake_buildtype "RELEASE")
-                set(path_suffix "")
+            string(TOUPPER "${buildtype}" cmake_buildtype)
+            set(short_buildtype "${short_name_${cmake_buildtype}}")
+            set(path_suffix "${path_suffix_${cmake_buildtype}}")
+
+            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_buildtype}/${arg_SUBPATH}")
+            message(STATUS "Building ${TARGET_TRIPLET}-${short_buildtype}")
+
+            if("libtool-link-pass-target" IN_LIST VCPKG_BUILD_MAKE_FIXUP)
+                # Pass --target to the linker, e.g. for Android
+                file(GLOB_RECURSE libtool_files "${working_directory}/libtool")
+                foreach(file IN LISTS libtool_files)
+                    vcpkg_replace_string("${file}" [[-xtarget=*|]] [[-xtarget=*|--target=*|]])
+                endforeach()
             endif()
 
-            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}/${arg_SUBPATH}")
-            message(STATUS "Building ${TARGET_TRIPLET}${short_buildtype}")
+            z_vcpkg_configure_make_process_flags("${cmake_buildtype}")
 
-            z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
-
-            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
-            else() # dynamic
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
-            endif()            
-            set(LDFLAGS_${cmake_buildtype} "")
-            if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib")
-                string(APPEND LDFLAGS_${cmake_buildtype} " -L${Z_VCPKG_INSTALLED}${path_suffix}/lib")
-            endif()
-            if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
-                string(APPEND LDFLAGS_${cmake_buildtype} " -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
-            endif()
-            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-                set(LINK_ENV_${cmake_buildtype} "$ENV{_LINK_} ${LINKER_FLAGS_${cmake_buildtype}}")
-            else()
-                string(APPEND LDFLAGS_${cmake_buildtype} " ${LINKER_FLAGS_${cmake_buildtype}}")
-            endif()
-            
             # Setup environment
             set(ENV{CPPFLAGS} "${CPPFLAGS_${cmake_buildtype}}")
             set(ENV{CFLAGS} "${CFLAGS_${cmake_buildtype}}")
@@ -145,31 +130,31 @@ function(vcpkg_build_make)
                 vcpkg_execute_build_process(
                         COMMAND ${no_parallel_make_cmd_line}
                         WORKING_DIRECTORY "${working_directory}"
-                        LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}"
+                        LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}"
                 )
             else()
                 vcpkg_execute_build_process(
                         COMMAND ${make_cmd_line}
                         NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
                         WORKING_DIRECTORY "${working_directory}"
-                        LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}"
+                        LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}"
                 )
             endif()
 
-            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}-out.log" logdata) 
+            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 
             if(logdata MATCHES "Warning: linker path does not have real file for library")
                 message(FATAL_ERROR "libtool could not find a file being linked against!")
             endif()
 
             if (arg_ENABLE_INSTALL)
-                message(STATUS "Installing ${TARGET_TRIPLET}${short_buildtype}")
+                message(STATUS "Installing ${TARGET_TRIPLET}-${short_buildtype}")
                 vcpkg_list(SET make_cmd_line ${make_command} ${install_opts})
                 vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_install_opts})
                 vcpkg_execute_build_process(
                     COMMAND ${make_cmd_line}
                     NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
                     WORKING_DIRECTORY "${working_directory}"
-                    LOGNAME "install-${TARGET_TRIPLET}${short_buildtype}"
+                    LOGNAME "install-${TARGET_TRIPLET}-${short_buildtype}"
                 )
             endif()
 

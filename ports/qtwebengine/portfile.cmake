@@ -1,9 +1,13 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES "")
+set(${PORT}_PATCHES 
+      "clang-cl.patch"
+      "fix-error2275-2672.patch"
+      "add-include-string.patch"
+)
 
-set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
+set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -29,7 +33,7 @@ set(deactivated_features   webengine_webrtc_pipewire)
 foreach(_feat IN LISTS deactivated_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=OFF")
 endforeach()
-set(enabled_features  webengine_webrtc  webengine_v8_snapshot_support)
+set(enabled_features  webengine_webrtc)
 foreach(_feat IN LISTS enabled_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=ON")
 endforeach()
@@ -112,6 +116,14 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
+endif()
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
 
 qt_install_copyright("${SOURCE_PATH}")
 

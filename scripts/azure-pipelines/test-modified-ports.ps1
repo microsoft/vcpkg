@@ -53,8 +53,7 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$PassingIsPassing = $false,
-    [switch]$IsLinuxHost = $false
+    [switch]$PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -71,10 +70,9 @@ if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
     $BinarySourceStub = "files,$ArchivesRoot"
 }
 
-$env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
-$buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
+$buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
-$packagesRoot = Join-Path $WorkingRoot 'packages'
+$packagesRoot = Join-Path $WorkingRoot 'p'
 
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
@@ -105,22 +103,16 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
-if ($IsLinuxHost) {
-    $env:HOME = '/home/agent'
-    $executableExtension = [string]::Empty
-}
-elseif ($Triplet -eq 'x64-osx') {
-    $executableExtension = [string]::Empty
-}
-else {
+if ($IsWindows) {
     $executableExtension = '.exe'
+} else {
+    $executableExtension = [string]::Empty
 }
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
-if ($IsWindows)
-{
+if ($IsWindows) {
     mkdir empty
     cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
     cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"

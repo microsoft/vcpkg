@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO i-curve/copypp
     REF "v${VERSION}"
-    SHA512 a13a3ee105b3802f585c086846dbce7d5e9c23d11bf55fcc0c63e1a4b21fc6798f1a324cfb3da66b715dfc22a4f1f7ba51a2f4e10db331f7d4fd6b20a9be6d41
+    SHA512 1c34cfcc30234d6a0eb3f150dff40299f74be8cc7653dc494a5a6857ad4d42342815a8ef2cb3b06d05555cd9d6d4c9b9941a7a845ab40cc782ce4660fb1e2560
     HEAD_REF main
 )
 

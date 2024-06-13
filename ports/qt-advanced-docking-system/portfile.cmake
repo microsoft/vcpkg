@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
     REF "${VERSION}"
-    SHA512 2da93dfecdccf494ab051dd42c79ade681534530914ad4ddfc38ec77c32b3c1e56242bef7dd1bfe8b14bc63564c485d59da2518bf6d6b76c3be905accfe6297c
+    SHA512 fabb5329e93288993fa2d662fd1a7b678f61bdc9c12c9370de4879f82971471615c50c9a2313fe8d07647efc36bc8c4863333cd7ec573e52475aad48191718c7
     HEAD_REF master
 )
 

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF v1.5.2
-    SHA512 33cda9e0422c6e8cb56e48bd812f381bf07a92a0aa2fbadddbca7cfde585c66299142186a3a76a97163e5570042452a62c1e53180ebfbf016a44eee998b16286
+    REF "v${VERSION}"
+    SHA512 9e97d961da7b24070deb78d0ed0c7bd5b7889d7e4d0934aedcfb512313cc7e8586316391ddc2fe20a0be9695fb1b7fb09760b9246dd1ab1e61a927e807fb10ef
     HEAD_REF master
 )
 
@@ -50,6 +50,6 @@ if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES nngcat AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 vcpkg_copy_pdbs()

@@ -1,13 +1,12 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
+    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoconf libudev-dev")
 endif()
 
-set(VERSION 1.0.26)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
-    REF fcf0c710ef5911ae37fbbf1b39d48a89f6f14e8a # v1.0.26.11791 2023-03-12
-    SHA512 0aa6439f7988487adf2a3bff473fec80b5c722a47f117a60696d2aa25c87cc3f20fb6aaca7c66e49be25db6a35eb0bb5f71ed7b211d1b8ee064c5d7f1b985c73
+    REF "v${VERSION}"
+    SHA512 36afceae9a03c1543adb9c92fb9a9320b312282bfc8ac8db7b43983c2797c63f13ce94b8ae7aab2afa94ce68d53b6aa7a69efd8ab6b3711c072b89940d4ee734
     HEAD_REF master
 )
 
@@ -43,6 +42,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     vcpkg_list(SET MAKE_OPTIONS)
     vcpkg_list(SET LIBUSB_LINK_LIBRARIES)
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_list(APPEND MAKE_OPTIONS BUILD_TRIPLET --host=wasm32)
+    endif()
     if("udev" IN_LIST FEATURES)
         vcpkg_list(APPEND MAKE_OPTIONS "--enable-udev")
         vcpkg_list(APPEND LIBUSB_LINK_LIBRARIES udev)
@@ -52,7 +54,10 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
-        OPTIONS ${MAKE_OPTIONS}
+        OPTIONS 
+            ${MAKE_OPTIONS}
+            "--enable-examples-build=no"
+            "--enable-tests-build=no"
     )
     vcpkg_install_make()
 endif()
@@ -60,5 +65,4 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

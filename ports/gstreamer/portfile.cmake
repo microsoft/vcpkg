@@ -22,6 +22,7 @@ vcpkg_from_gitlab(
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         base-must-be-enabled.patch
+        no-downloads.patch
         ${PATCHES}
 )
 
@@ -80,6 +81,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
         plugins-bad     bad
         aes             gst-plugins-bad:aes
+        aom             gst-plugins-bad:aom
         assrender       gst-plugins-bad:assrender
         bzip2-bad       gst-plugins-bad:bz2
         chromaprint     gst-plugins-bad:chromaprint
@@ -201,7 +203,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:pulse=auto
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:shout2=disabled
-        -Dgst-plugins-good:soup=disabled
+        #-Dgst-plugins-good:soup=disabled 
         -Dgst-plugins-good:twolame=disabled
         -Dgst-plugins-good:waveform=auto
         -Dgst-plugins-good:wavpack=disabled # Error during plugin build
@@ -214,7 +216,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-ugly:mpeg2dec=disabled # libmpeg2 not found
         -Dgst-plugins-ugly:sidplay=disabled
         # gst-plugins-bad
-        -Dgst-plugins-bad:aom=disabled # Error during plugin build
         -Dgst-plugins-bad:avtp=disabled
         -Dgst-plugins-bad:androidmedia=auto
         -Dgst-plugins-bad:applemedia=auto

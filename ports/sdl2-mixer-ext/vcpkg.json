@@ -1,11 +1,15 @@
 {
   "name": "sdl2-mixer-ext",
   "version": "2.6.0",
+  "port-version": 1,
   "description": "An audio mixer library based on the SDL library, a fork of SDL_mixer",
   "homepage": "https://wohlsoft.github.io/SDL-Mixer-X",
   "license": "Zlib OR LGPL-2.1-or-later OR GPL-2.0-or-later OR GPL-3.0-or-later",
   "dependencies": [
-    "sdl2",
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

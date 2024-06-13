@@ -1,4 +1,4 @@
-The package UVAtlas is compatible with built-in CMake targets:
+The UVAtlas package provides CMake targets:
 
     find_package(uvatlas CONFIG REQUIRED)
     target_link_libraries(main PRIVATE Microsoft::UVAtlas)

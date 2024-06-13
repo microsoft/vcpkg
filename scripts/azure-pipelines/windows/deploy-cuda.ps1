@@ -5,9 +5,8 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-# REPLACE WITH $CudnnUrl
-
-$CudnnLocalZipPath = "$PSScriptRoot\cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip"
+# If you are running this script outside of our Azure VMs, you will need to download cudnn from NVIDIA and place
+# it next to this script.
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.1.0/network_installers/cuda_12.1.0_windows_network.exe'
 
@@ -78,27 +77,5 @@ try {
 }
 catch {
   Write-Error "Failed to install CUDA! $($_.Exception.Message)"
-  throw
-}
-
-try {
-  if ([string]::IsNullOrWhiteSpace($CudnnUrl)) {
-    if (-Not (Test-Path $CudnnLocalZipPath)) {
-      throw "CUDNN zip ($CudnnLocalZipPath) was missing, please download from NVidia and place next to this script."
-    }
-
-    $cudnnZipPath = $CudnnLocalZipPath
-  } else {
-    Write-Host 'Downloading CUDNN...'
-    $cudnnZipPath = Get-TempFilePath -Extension 'zip'
-    curl.exe -L -o $cudnnZipPath -s -S $CudnnUrl
-  }
-
-  Write-Host "Installing CUDNN to $destination..."
-  tar.exe -xvf "$cudnnZipPath" --strip 1 --directory "$destination"
-  Write-Host 'Installation successful!'
-}
-catch {
-  Write-Error "Failed to install CUDNN! $($_.Exception.Message)"
   throw
 }

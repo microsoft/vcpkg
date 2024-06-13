@@ -6,7 +6,7 @@ openssl requires Linux kernel headers from the system package manager.
 ]])
 endif()
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(MAKE "${MSYS_ROOT}/usr/bin/make.exe")
     set(PERL "${MSYS_ROOT}/usr/bin/perl.exe")
@@ -88,6 +88,7 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine
