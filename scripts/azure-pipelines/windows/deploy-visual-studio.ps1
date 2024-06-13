@@ -6,7 +6,8 @@
 # REPLACE WITH UTILITY-PREFIX.ps1
 
 # See https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history
-$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/a8a3940c-d415-4078-8df8-6af787f56dfa/ff486670bce61323e52b208ecbb71dc05b034c8bf156d0b7bfc0ad67b2611445/vs_Enterprise.exe'
+# 17.8.11
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/107aa087-4efd-4262-87ee-dc15a68f8e76/873485fe8715c7d3f8f81dc2d6288dcba12400bc560e265e470cf34da50581af/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
@@ -18,8 +19,8 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
-  "Microsoft.VisualStudio.Component.Windows11SDK.22621",
-  "Microsoft.VisualStudio.Component.Windows10SDK.20348",
+  'Microsoft.VisualStudio.Component.Windows11SDK.22621',
+  'Microsoft.VisualStudio.Component.Windows10SDK.20348',
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Net.Component.4.7.2.TargetingPack',
   'Microsoft.Component.NetFX.Native',
