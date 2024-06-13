@@ -7669,7 +7669,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.10.0",
+      "baseline": "0.11.1",
       "port-version": 0
     },
     "refprop-headers": {
