@@ -77,6 +77,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_OSX AND VCPKG_CROSSCOMPILING)
+    list(APPEND OPTIONS --host ${TARGET_TRIPLET}-darwin)
+endif()
+
 file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
 file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-dbg.log")
 vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime/intl"
