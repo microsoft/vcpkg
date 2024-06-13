@@ -5,9 +5,7 @@ vcpkg_from_github(
     SHA512 ec708bcddc64285b0c36b89c9e6413994af4c15bb6865a7bc243a048ce86afccd0df88d46d55aa23fb8071d137dcc19cf357117adc92f030919540f8993cacf9
     HEAD_REF master
     PATCHES
-        fix_config_include.patch
         win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
-        add_support_ios.patch # add install bundle info for support ios 
         build-tools.patch
 )
 
