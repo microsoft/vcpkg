@@ -9,6 +9,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Mongoose"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
         -DSUITESPARSE_USE_CUDA=OFF

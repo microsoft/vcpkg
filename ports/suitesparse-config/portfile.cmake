@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/${PACKAGE_NAME}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
         -DSUITESPARSE_USE_CUDA=OFF  # not applicable here, skip check
