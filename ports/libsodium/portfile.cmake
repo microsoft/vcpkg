@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}-RELEASE"
     SHA512 477b9dc10d87ae3c83db3fc207b50b9fe39593684a59f164986cce32bdaba95db0df7dee32149bf9a23c5794354fce8241d88a9a4bd4bbf2630483cbbc378c2f
     HEAD_REF master
+    PATCHES
+        001-mingw-i386.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
