@@ -4450,7 +4450,7 @@
     },
     "libgeotiff": {
       "baseline": "1.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libgig": {
       "baseline": "4.4.1",
