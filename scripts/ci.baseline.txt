@@ -40,6 +40,7 @@
 
 7zip:arm-neon-android=fail
 7zip:arm64-android=fail
+7zip:x64-android=fail
 ace:arm-neon-android=fail
 ace:arm64-android=fail
 ace:x64-android=fail
@@ -285,6 +286,10 @@ cserialport:arm64-android=fail
 cserialport:x64-android=fail
 ctbench:x64-osx=fail
 ctbench:arm64-osx=fail
+# Needs android-28 (hidden before NDK r26)
+cyclonedds:arm-neon-android=fail
+cyclonedds:arm64-android=fail
+cyclonedds:x64-android=fail
 czmq:arm-neon-android=fail
 czmq:arm64-android=fail
 czmq:x64-android=fail
@@ -522,6 +527,8 @@ jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
+# needs android-24
+kubazip:arm-neon-android=fail
 lastools:arm-neon-android=fail
 lastools:arm64-android=fail
 lastools:x64-android=fail
@@ -536,10 +543,18 @@ libaiff:x64-linux=fail
 libbson:arm-neon-android=fail
 libbson:arm64-android=fail
 libbson:x64-android=fail
+# needs android-28
+libcaer:arm-neon-android=fail
+libcaer:arm64-android=fail
+libcaer:x64-android=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
 libcerf:x64-windows-static-md=fail
+# needs android-24
+libconfuse:arm-neon-android=fail
+libconfuse:arm64-android=fail
+libconfuse:x64-android=fail
 libcoro:arm-neon-android=fail
 libcoro:arm64-android=fail
 libcoro:x64-android=fail
@@ -554,6 +569,8 @@ libcrafter:x64-android=fail
 libdc1394:arm-neon-android=fail
 libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
+# 32-bit needs android-24
+libflac:arm-neon-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
@@ -574,6 +591,10 @@ libhdfs3:x64-android=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
 libhdfs3:arm64-osx=fail
+# needs android-24
+libimobiledevice-glue:arm-neon-android=fail
+libimobiledevice-glue:arm64-android=fail
+libimobiledevice-glue:x64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
 liblo:arm-neon-android=fail
@@ -635,7 +656,7 @@ libqcow:x64-windows=skip
 libqcow:x64-linux=skip
 libqcow:x86-windows=skip
 libqcow:arm64-windows=skip
-# needs ftello
+# 32-bit needs android-24
 libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
@@ -661,6 +682,10 @@ libtomcrypt:arm64-windows=fail
 libtomcrypt:arm64-uwp=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
+# needs android-26
+libvhdi:arm-neon-android=fail
+libvhdi:arm64-android=fail
+libvhdi:x64-android=fail
 #Skip detection to avoid upstream remove older releases
 libvmdk:arm-neon-android        =skip   # upstream issue https://github.com/microsoft/vcpkg/pull/13765#issuecomment-699710253
 libvmdk:arm64-android           =skip
@@ -703,6 +728,8 @@ log4cpp:x64-linux=fail # dynamic exception specifications
 loguru:arm-neon-android=fail
 loguru:arm64-android=fail
 loguru:x64-android=fail
+# 32-bit needs android-24
+lua:arm-neon-android=fail
 magma:x64-linux=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
@@ -1181,6 +1208,10 @@ usd:x64-windows-static-md=skip
 usd:x64-linux=skip
 usd:x64-osx=skip
 usd:x86-windows=skip
+# needs android-24
+usrsctp:arm-neon-android=fail
+usrsctp:arm64-android=fail
+usrsctp:x64-android=fail
 # the version of v8 we have in the repo doesn't support VS2022
 v8:x64-android=fail
 v8:x64-windows-static-md=fail
@@ -1220,6 +1251,8 @@ wasmedge:arm64-android=fail
 wasmedge:x64-android=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
+# 32-bit needs android-24
+wcslib:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows = skip
 winpcap:x86-windows = skip

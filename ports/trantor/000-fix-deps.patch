@@ -1,39 +1,39 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 07c61b9..54ad99f 100644
+index a0b10de..ee63bc8 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -220,7 +220,7 @@ endif(HAVE_SPDLOG)
+@@ -245,7 +245,7 @@ endif(HAVE_SPDLOG)
  
  set(HAVE_C-ARES NO)
- if (BUILD_C-ARES)
--    find_package(c-ares)
-+    find_package(c-ares CONFIG)
-     if(c-ares_FOUND)
-       message(STATUS "c-ares found!")
-       set(HAVE_C-ARES TRUE)
-@@ -231,7 +231,7 @@ if(HAVE_C-ARES)
-   if (NOT BUILD_SHARED_LIBS)
+ if(BUILD_C-ARES)
+-  find_package(c-ares)
++  find_package(c-ares CONFIG)
+   if(c-ares_FOUND)
+     message(STATUS "c-ares found!")
+     set(HAVE_C-ARES TRUE)
+@@ -256,7 +256,7 @@ if(HAVE_C-ARES)
+   if(NOT BUILD_SHARED_LIBS)
      target_compile_definitions(${PROJECT_NAME} PRIVATE CARES_STATICLIB)
-   endif ()
+   endif()
 -  target_link_libraries(${PROJECT_NAME} PRIVATE c-ares_lib)
 +  target_link_libraries(${PROJECT_NAME} PRIVATE c-ares::cares)
-   set(TRANTOR_SOURCES
-       ${TRANTOR_SOURCES}
-       trantor/net/inner/AresResolver.cc)
-@@ -366,8 +366,6 @@ install(
-   FILES
-     "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/TrantorConfig.cmake"
-     "${CMAKE_CURRENT_BINARY_DIR}/TrantorConfigVersion.cmake"
--    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/Findc-ares.cmake"
--    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindBotan.cmake"
+   set(TRANTOR_SOURCES ${TRANTOR_SOURCES} trantor/net/inner/AresResolver.cc)
+   set(private_headers ${private_headers} trantor/net/inner/AresResolver.h)
+   if(APPLE)
+@@ -382,8 +382,6 @@ write_basic_package_version_file(
+ install(
+   FILES "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/TrantorConfig.cmake"
+         "${CMAKE_CURRENT_BINARY_DIR}/TrantorConfigVersion.cmake"
+-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/Findc-ares.cmake"
+-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindBotan.cmake"
    DESTINATION "${INSTALL_TRANTOR_CMAKE_DIR}"
-   COMPONENT dev)
- 
+   COMPONENT dev
+ )
 diff --git a/cmake/templates/TrantorConfig.cmake.in b/cmake/templates/TrantorConfig.cmake.in
-index 61007bd..c5dd363 100644
+index e9422ed..142d1d6 100644
 --- a/cmake/templates/TrantorConfig.cmake.in
 +++ b/cmake/templates/TrantorConfig.cmake.in
-@@ -17,7 +17,7 @@ if(@Botan_FOUND@)
+@@ -19,7 +19,7 @@ if(@Botan_FOUND@)
    find_dependency(Botan)
  endif()
  if(@c-ares_FOUND@)
