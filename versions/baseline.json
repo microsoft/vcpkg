@@ -7632,10 +7632,6 @@
       "baseline": "2024-04-01",
       "port-version": 2
     },
-    "re2c": {
-      "baseline": "3.1",
-      "port-version": 0
-    },
     "reactiveplusplus": {
       "baseline": "2.1.1",
       "port-version": 0
@@ -9167,6 +9163,10 @@
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
       "port-version": 1
+    },
+    "vcpkg-tool-re2c": {
+      "baseline": "3.1",
+      "port-version": 0
     },
     "vectorclass": {
       "baseline": "2.02.00",

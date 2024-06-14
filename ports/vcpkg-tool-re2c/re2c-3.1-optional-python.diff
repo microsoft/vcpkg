@@ -1,9 +1,9 @@
 diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
 --- re2c-3.1.orig/CMakeLists.txt	2023-07-19 23:44:58.000000000 +0200
-+++ re2c-3.1/CMakeLists.txt	2024-06-13 20:10:38.775549494 +0200
-@@ -32,12 +32,24 @@
- option(RE2C_BUILD_BENCHMARKS "Build benchmarks" OFF)
- option(RE2C_REGEN_BENCHMARKS "Regenerate C code for benchmarks" OFF)
++++ re2c-3.1/CMakeLists.txt	2024-06-14 17:23:55.738439188 +0200
+@@ -12,6 +12,13 @@
+ 
+ ac_subst(PACKAGE_VERSION "${PROJECT_VERSION}")
  
 +# check whether re2c is the root project
 +if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -12,6 +12,13 @@ diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
 +    set(RE2C_IS_ROOT_PROJECT FALSE)
 +endif()
 +
+ option(RE2C_REBUILD_LEXERS "Regenerate lexers" OFF)
+ if(RE2C_REBUILD_LEXERS AND NOT RE2C_FOR_BUILD)
+     message(FATAL_ERROR "option RE2C_FOR_BUILD is required for RE2C_REBUILD_LEXERS")
+@@ -32,11 +39,12 @@
+ option(RE2C_BUILD_BENCHMARKS "Build benchmarks" OFF)
+ option(RE2C_REGEN_BENCHMARKS "Regenerate C code for benchmarks" OFF)
+ 
 +# test targets are enabled by default only if re2c is the root project
 +option(RE2C_BUILD_TESTS "Build tests" "${RE2C_IS_ROOT_PROJECT}")
 +
@@ -20,17 +27,12 @@ diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
 -# starting from cmake 3.19 find_package can do version check, but we are on 3.12
 -if(Python3_VERSION VERSION_LESS 3.7)
 -    message(FATAL_ERROR "python version 3.7 or higher is required")
-+if(RE2C_REBUILD_DOCS OR RE2C_BUILD_TESTS)
-+    find_package(Python3 COMPONENTS Interpreter)
-+    if(Python3_VERSION VERSION_LESS 3.7)
-+        message(FATAL_ERROR "python version 3.7 or higher is required")
-+    endif()
++if(RE2C_REBUILD_DOCS OR RE2C_BUILD_TESTS OR RE2C_BUILD_BENCHMARKS)
++    find_package(Python3 3.7 REQUIRED COMPONENTS Interpreter)
  endif()
-+# starting from cmake 3.19 find_package can do version check, but we are on 3.12
  if(RE2C_REBUILD_DOCS)
      execute_process(
-         COMMAND "${Python3_EXECUTABLE}" -c "import docutils"
-@@ -91,10 +103,12 @@
+@@ -91,10 +99,12 @@
  configure_file(doc/manpage.rst.in doc/manpage.rst @ONLY)
  configure_file(doc/help.rst.in doc/help.rst @ONLY)
  
@@ -47,7 +49,7 @@ diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
  endif()
  
  ac_config_headers("config.h")
-@@ -324,8 +338,8 @@
+@@ -324,8 +334,8 @@
  re2c_gen_help("${re2c_help_source}" "${re2c_help}" "${re2c_help_bootstrap}")
  add_custom_target(docs DEPENDS "${re2c_docs}")
  
@@ -58,7 +60,7 @@ diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
      # install
      install(TARGETS re2c RUNTIME DESTINATION bin)
      install(FILES "${re2c_manpage_c}" DESTINATION "share/man/man1")
-@@ -345,7 +359,9 @@
+@@ -345,7 +355,9 @@
          COMMAND "${CMAKE_COMMAND}" -E remove_directory "doc"
          COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_CURRENT_BINARY_DIR}"
      )
@@ -68,7 +70,7 @@ diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
      # tests
      add_custom_target(tests
          DEPENDS "${RE2C_RUN_TESTS}"
-@@ -509,12 +525,14 @@
+@@ -509,12 +521,14 @@
      endif()
  
      # libre2c test
@@ -89,7 +91,7 @@ diff -ru re2c-3.1.orig/CMakeLists.txt re2c-3.1/CMakeLists.txt
  
      if(RE2C_BUILD_BENCHMARKS)
          add_subdirectory(benchmarks/submatch_nfa)
-@@ -523,15 +541,16 @@
+@@ -523,15 +537,16 @@
      endif()
  else()
      # empty check target

@@ -1,9 +1,10 @@
 {
-  "name": "re2c",
+  "name": "vcpkg-tool-re2c",
   "version": "3.1",
   "description": "Tool for generating C, C++, and go recognizers from regular expressions",
   "homepage": "https://re2c.org/",
   "license": null,
+  "supports": "native",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,9 +14,6 @@
   "features": {
     "go": {
       "description": "Support for Go as output language"
-    },
-    "libs": {
-      "description": "Also build as a library"
     },
     "rust": {
       "description": "Support for Rust as output language"
