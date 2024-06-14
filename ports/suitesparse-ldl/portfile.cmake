@@ -29,4 +29,7 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${PACKAGE_NAME}/Doc/License.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/${PACKAGE_NAME}/Doc/License.txt"
+    "${SOURCE_PATH}/${PACKAGE_NAME}/Doc/lesser.txt"
+)
