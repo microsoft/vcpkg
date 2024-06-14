@@ -40,6 +40,17 @@ jobs:
   - script: .\scripts\azure-pipelines\windows\bootstrap-from-source.cmd ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+  - task: PowerShell@2
+    displayName: Test module posh-vcpkg in PowerShell
+    condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
+    inputs:
+      targetType: inline
+      script: |
+        Install-Module Pester -Force -SkipPublisherCheck -MinimumVersion '5.0'
+        Import-Module Pester -Force -MinimumVersion '5.0'
+        $env:PATH+=";$($PWD.Path)"
+        Invoke-Pester .\scripts\posh-vcpkg\posh-vcpkg.Tests.ps1 -Output:Detailed
+      pwsh: true
   - script: '.\vcpkg.exe format-manifest --all'
     displayName: 'Format Manifests'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
