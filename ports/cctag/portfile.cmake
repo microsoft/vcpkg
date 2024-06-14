@@ -47,4 +47,4 @@ if ("apps" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${CCTAG_TOOLS} AUTO_CLEAN)
 endif()
 
-vcpkg_install_copyright(FILSE_LIST "${SOURCE_PATH}/COPYING.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.md")
