@@ -1,0 +1,14 @@
+The built import lib is named "libomp.dll.lib" otherwise, which causes install() to fail.
+https://github.com/llvm/llvm-project/issues/88876
+
+--- a/runtime/src/CMakeLists.txt
++++ b/runtime/src/CMakeLists.txt
+@@ -284,7 +284,7 @@
+     endif()
+   else()
+     set(LIBOMP_IMP_LIB_FILE ${LIBOMP_LIB_NAME}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+-    set(LIBOMP_GENERATED_IMP_LIB_FILENAME ${LIBOMP_LIB_FILE}${CMAKE_STATIC_LIBRARY_SUFFIX})
++    set(LIBOMP_GENERATED_IMP_LIB_FILENAME ${LIBOMP_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX})
+   endif()
+   set_target_properties(omp PROPERTIES
+     VERSION ${LIBOMP_VERSION_MAJOR}.${LIBOMP_VERSION_MINOR} # uses /version flag

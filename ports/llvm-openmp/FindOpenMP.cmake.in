@@ -1,0 +1,202 @@
+# Based on https://github.com/Kitware/CMake/blob/v3.30.0-rc3/Modules/FindOpenMP.cmake
+
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-llvm-openmp CONFIG REQUIRED)
+get_target_property(_OpenMP_INCLUDE_DIR unofficial::llvm-openmp::omp INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(_OpenMP_LIB_NAMES unofficial::llvm-openmp::omp INTERFACE_LINK_LIBRARIES)
+
+foreach(_lang C CXX)
+  set(OpenMP_${_lang}_INCLUDE_DIR "${_OpenMP_INCLUDE_DIR}")
+  set(OpenMP_${_lang}_INCLUDE_DIRS "${_OpenMP_INCLUDE_DIR}")
+  set(OpenMP_${_lang}_LIB_NAMES "${_OpenMP_LIB_NAMES}")
+  set(OpenMP_${_lang}_LIBRARIES "OpenMP::OpenMP_${_lang}")
+  if (NOT TARGET OpenMP::OpenMP_${_lang})
+    add_library(OpenMP::OpenMP_${_lang} ALIAS unofficial::llvm-openmp::omp)
+  endif()
+endforeach()
+
+function(_openmp_set_flags)
+  set(OMP_FLAG_GNU "-fopenmp")
+  set(OMP_FLAG_LCC "-fopenmp")
+  set(OMP_FLAG_Clang "-fopenmp=libomp")
+  set(OMP_FLAG_AppleClang "-Xclang -fopenmp")
+  set(OMP_FLAG_HP "+Oopenmp")
+  if(WIN32)
+    set(OMP_FLAG_Intel "-Qopenmp")
+  elseif(CMAKE_${LANG}_COMPILER_ID STREQUAL "Intel" AND
+      "${CMAKE_${LANG}_COMPILER_VERSION}" VERSION_LESS "15.0.0.20140528")
+    set(OMP_FLAG_Intel "-openmp")
+  else()
+    set(OMP_FLAG_Intel "-qopenmp")
+  endif()
+  if(CMAKE_${LANG}_COMPILER_ID STREQUAL "IntelLLVM" AND
+      "x${CMAKE_${LANG}_COMPILER_FRONTEND_VARIANT}" STREQUAL "xMSVC")
+    set(OMP_FLAG_IntelLLVM "-Qiopenmp")
+  else()
+    set(OMP_FLAG_IntelLLVM "-fiopenmp")
+  endif()
+  set(OMP_FLAG_MSVC "-openmp:llvm")
+  set(OMP_FLAG_PathScale "-openmp")
+  set(OMP_FLAG_NAG "-openmp")
+  set(OMP_FLAG_Absoft "-openmp")
+  set(OMP_FLAG_NVHPC "-mp")
+  set(OMP_FLAG_PGI "-mp")
+  set(OMP_FLAG_Flang "-fopenmp")
+  set(OMP_FLAG_SunPro "-xopenmp")
+  set(OMP_FLAG_XL "-qsmp=omp")
+  set(OMP_FLAG_Cray "-h omp")
+  set(OMP_FLAG_Fujitsu "-Kopenmp")
+  set(OMP_FLAG_FujitsuClang "-fopenmp")
+  foreach(_lang C CXX)
+    if(DEFINED OMP_FLAG_${CMAKE_${_lang}_COMPILER_ID})
+      set(OpenMP_C_FLAGS "${OMP_FLAG_${CMAKE_${_lang}_COMPILER_ID}}" PARENT_SCOPE)
+      set(OpenMP_CXX_FLAGS "${OMP_FLAG_${CMAKE_${_lang}_COMPILER_ID}}" PARENT_SCOPE)
+      break()
+    endif()
+  endforeach()
+endfunction()
+
+_openmp_set_flags()
+if(NOT DEFINED OpenMP_C_FLAGS)
+  message(FATAL_ERROR "OpenMP build flags not found for compiler \"${CMAKE_C_COMPILER_ID}\"")
+endif()
+set_target_properties(unofficial::llvm-openmp::omp PROPERTIES
+  INTERFACE_COMPILE_OPTIONS "${OpenMP_C_FLAGS}"
+  INTERFACE_LINK_OPTIONS "${OpenMP_C_FLAGS}"
+)
+
+# Determine OpenMP specification date and version supported by the compiler.
+function(_openmp_get_compiler_spec_date)
+  set(BUILD_DIR "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/FindOpenMP")
+  set(SRC_FILE "${BUILD_DIR}/ompver.c")
+  if(NOT CMAKE_C_COMPILER_LOADED)
+    set(SRC_FILE "${BUILD_DIR}/ompver.cpp")
+  endif()
+  set(BIN_FILE "${BUILD_DIR}/ompver.bin")
+  file(WRITE "${SRC_FILE}" "
+    #include <stdio.h>
+    #include <omp.h>
+    const char ompver_str[] = { 'I', 'N', 'F', 'O', ':', 'O', 'p', 'e', 'n', 'M',
+                                'P', '-', 'd', 'a', 't', 'e', '[',
+                                ('0' + ((_OPENMP/100000)%10)),
+                                ('0' + ((_OPENMP/10000)%10)),
+                                ('0' + ((_OPENMP/1000)%10)),
+                                ('0' + ((_OPENMP/100)%10)),
+                                ('0' + ((_OPENMP/10)%10)),
+                                ('0' + ((_OPENMP/1)%10)),
+                                ']', '\\0' };
+    int main(void)
+    {
+      puts(ompver_str);
+      return 0;
+    }
+  ")
+  set(CMAKE_REQUIRED_INCLUDES "${OpenMP_C_INCLUDE_DIR}")
+  try_compile(OpenMP_SPECTEST ${BUILD_DIR}
+    SOURCES "${SRC_FILE}"
+    COMPILE_DEFINITIONS "${OpenMP_C_FLAGS}"
+    COPY_FILE "${BIN_FILE}"
+  )
+  if(NOT OpenMP_SPECTEST)
+    if(OpenMP_FIND_REQUIRED)
+      message(FATAL_ERROR "Failed to build OpenMP test executable for specification date detection")
+    elseif(NOT OpenMP_FIND_QUIETLY)
+      message(SEND_ERROR "Failed to build OpenMP test executable for specification date detection")
+    endif()
+    return()
+  endif()
+  file(STRINGS ${BIN_FILE} specstr LIMIT_COUNT 1 REGEX "INFO:OpenMP-date")
+  if(specstr MATCHES ".*INFO:OpenMP-date\\[0*([^]]*)\\].*")
+    set(OpenMP_SPEC_DATE ${CMAKE_MATCH_1} PARENT_SCOPE)
+  else()
+    if(OpenMP_FIND_REQUIRED)
+      message(FATAL_ERROR "Failed to detect OpenMP specification date")
+    elseif(NOT OpenMP_FIND_QUIETLY)
+      message(SEND_ERROR "Failed to detect OpenMP specification date")
+    endif()
+    return()
+  endif()
+  set(OpenMP_SPEC_DATE ${OpenMP_SPEC_DATE} CACHE STRING "OpenMP specification date" FORCE)
+endfunction()
+
+function(_openmp_set_version_by_spec_date)
+  set(OpenMP_SPEC_DATE_MAP
+    "202111=5.2"
+    "202011=5.1"
+    # Preview versions
+    "201611=5.0" # OpenMP 5.0 preview 1
+    # Combined versions, 2.5 onwards
+    "201811=5.0"
+    "201611=5.0"
+    "201511=4.5"
+    "201307=4.0"
+    "201107=3.1"
+    "200805=3.0"
+    "200505=2.5"
+    # C/C++ version 2.0
+    "200203=2.0"
+    # Fortran version 2.0
+    "200011=2.0"
+    # Fortran version 1.1
+    "199911=1.1"
+    # C/C++ version 1.0 (there's no 1.1 for C/C++)
+    "199810=1.0"
+    # Fortran version 1.0
+    "199710=1.0"
+  )
+  if(OpenMP_SPEC_DATE_MAP MATCHES "${OpenMP_SPEC_DATE}=([0-9]+)\\.([0-9]+)")
+    set(major "${CMAKE_MATCH_1}")
+    set(minor "${CMAKE_MATCH_2}")
+  else()
+    if(OpenMP_FIND_REQUIRED)
+      message(FATAL_ERROR "Failed to detect OpenMP specification version")
+    elseif(NOT OpenMP_FIND_QUIETLY)
+      message(SEND_ERROR "Failed to detect OpenMP specification version")
+    endif()
+    return()
+  endif()
+  set(OpenMP_VERSION_MAJOR "${major}" PARENT_SCOPE)
+  set(OpenMP_VERSION_MINOR "${minor}" PARENT_SCOPE)
+  set(OpenMP_VERSION "${major}.${minor}" PARENT_SCOPE)
+endfunction()
+
+# Compare the OpenMP API version supported by the compiler to
+# the version supported by the LLVM OMP runtime and use the lower of the two.
+# Note that this differs slightly from the CMake's FindOpenMP.cmake implementation,
+# which checks only the version supported by the compiler.
+_openmp_get_compiler_spec_date()
+if(OpenMP_SPEC_DATE GREATER @OpenMP_SPEC_DATE@)
+  set(OpenMP_SPEC_DATE @OpenMP_SPEC_DATE@)
+  set(OpenMP_VERSION_MAJOR @OpenMP_VERSION_MAJOR@)
+  set(OpenMP_VERSION_MINOR @OpenMP_VERSION_MINOR@)
+  set(OpenMP_VERSION @OpenMP_VERSION@)
+else()
+  _openmp_set_version_by_spec_date()
+endif()
+
+foreach(_lang C CXX)
+  set(OpenMP_${_lang}_FOUND TRUE)
+  set(OpenMP_${_lang}_SPEC_DATE "${OpenMP_SPEC_DATE}")
+  set(OpenMP_${_lang}_VERSION_MAJOR "${OpenMP_VERSION_MAJOR}")
+  set(OpenMP_${_lang}_VERSION_MINOR "${OpenMP_VERSION_MINOR}")
+  set(OpenMP_${_lang}_VERSION "${OpenMP_VERSION}")
+endforeach()
+
+# Check specification version against the requested min version, validate components
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(OpenMP
+  VERSION_VAR OpenMP_VERSION
+  REQUIRED_VARS
+    OpenMP_C_FLAGS
+    OpenMP_C_LIB_NAMES
+    OpenMP_C_SPEC_DATE
+    OpenMP_C_VERSION
+    OpenMP_CXX_FLAGS
+    OpenMP_CXX_LIB_NAMES
+    OpenMP_CXX_SPEC_DATE
+    OpenMP_CXX_VERSION
+  HANDLE_COMPONENTS
+)
+set(OPENMP_FOUND ${OpenMP_FOUND})
+set(OpenMP_C_FOUND ${OpenMP_FOUND})
+set(OpenMP_CXX_FOUND ${OpenMP_FOUND})
