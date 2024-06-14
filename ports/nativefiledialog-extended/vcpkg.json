@@ -7,16 +7,16 @@
   "supports": "!android & !ios & !uwp",
   "dependencies": [
     {
+      "name": "dbus",
+      "platform": "!osx & !windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "dbus",
-      "platform": "!osx & !windows"
     }
   ]
 }
