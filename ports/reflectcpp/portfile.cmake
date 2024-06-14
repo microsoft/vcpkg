@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a231f1d210df769dc2a5f6a98fc29b587c4cba65eaab04326b7cb0c514697566539e7e6ad91e3960b592d0256f44bf4af2ada4ef07589ccd156bb16b9196a021
     HEAD_REF main
+    PATCHES
+        "reflectcpp.0.11.1.patch"
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
