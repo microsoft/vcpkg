@@ -28,5 +28,10 @@ vcpkg_cmake_config_fixup(
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/share/cmake/SPEX/FindGMP.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/cmake/SPEX/FindMPFR.cmake"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${PACKAGE_NAME}/LICENSE.txt")

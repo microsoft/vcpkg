@@ -35,7 +35,7 @@ vcpkg_cmake_config_fixup(
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# Remove FindGraphBLAS.cmake
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/cmake/LAGraph/FindGraphBLAS.cmake")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${PACKAGE_NAME}/LICENSE")

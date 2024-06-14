@@ -1,19 +1,113 @@
 {
   "name": "suitesparse",
-  "version-semver": "5.8.0",
-  "port-version": 2,
-  "description": "A suite of sparse matrix algorithms. Also provides libcxsparse.",
-  "homepage": "http://suitesparse.com",
+  "version-semver": "7.7.0",
+  "port-version": 3,
+  "description": "A suite of sparse matrix algorithms",
+  "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
+  "license": null,
   "dependencies": [
-    "lapack",
-    "metis",
     {
-      "name": "vcpkg-cmake",
-      "host": true
+        "name": "suitesparse-config",
+        "default-features": false
     },
     {
-      "name": "vcpkg-cmake-config",
-      "host": true
+        "name": "suitesparse-graphblas",
+        "default-features": false
+    },
+    {
+        "name": "suitesparse-lagraph",
+        "default-features": false
+    },
+    "suitesparse-amd",
+    "suitesparse-btf",
+    "suitesparse-camd",
+    "suitesparse-ccolamd",
+    "suitesparse-cholmod",
+    "suitesparse-colamd",
+    "suitesparse-cxsparse",
+    "suitesparse-klu",
+    "suitesparse-ldl",
+    "suitesparse-spex"
+  ],
+  "default-features": [
+    "gpl",
+    "openmp"
+  ],
+  "features": {
+    "gpl": {
+      "description": "Enable GPL-licensed packages",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "matrixops",
+            "modify",
+            "supernodal"
+          ]
+        },
+        "suitesparse-mongoose",
+        "suitesparse-paru",
+        "suitesparse-rbio",
+        "suitesparse-spqr",
+        "suitesparse-umfpack"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support for SuiteSparse libraries",
+      "dependencies": [
+        {
+          "name": "suitesparse-config",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-graphblas",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-lagraph",
+          "features": [
+            "openmp"
+          ]
+        }
+      ]
+    },
+    "cuda": {
+      "description": "Enable CUDA support for the current compute architecture of this machine",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "suitesparse-spqr",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "cuda-redist": {
+      "description": "Enable CUDA support for all major compute architectures",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "cuda-redist"
+          ]
+        },
+        {
+          "name": "suitesparse-spqr",
+          "features": [
+            "cuda-redist"
+          ]
+        }
+      ]
     }
-  ]
+  }
 }
