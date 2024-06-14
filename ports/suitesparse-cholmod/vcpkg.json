@@ -1,0 +1,59 @@
+{
+  "name": "suitesparse-cholmod",
+  "version-semver": "5.2.1",
+  "description": "CHOLMOD: Routines for factorizing sparse symmetric positive definite matrices in SuiteSparse",
+  "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
+  "license": "LGPL-2.1-or-later AND Apache-2.0",
+  "dependencies": [
+    "suitesparse-amd",
+    "suitesparse-camd",
+    "suitesparse-ccolamd",
+    "suitesparse-colamd",
+    "suitesparse-config",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "partition"
+  ],
+  "features": {
+    "matrixops": {
+      "description": "Build MatrixOps module",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0"
+    },
+    "modify": {
+      "description": "Build Modify module",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0"
+    },
+    "partition": {
+      "description": "Build Partition module"
+    },
+    "supernodal": {
+      "description": "Build SuperNodal module",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
+      "dependencies": [
+        "lapack"
+      ]
+    },
+    "cuda": {
+      "description": "Enable CUDA support for the current compute architecture of this machine",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "cuda-redist": {
+      "description": "Enable CUDA support for all major compute architectures",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
+      "dependencies": [
+        "cuda"
+      ]
+    }
+  }
+}
