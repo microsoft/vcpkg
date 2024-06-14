@@ -32,7 +32,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Armadillo CONFIG_PATH share/Armadillo/CMake)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Armadillo/ArmadilloConfig.cmake"
                     [[include("${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake")]]
-                    "include(CMakeFindDependencyMacro)\nfind_dependency(LAPACK)\ninclude(\"${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake\")"
+                    "include(CMakeFindDependencyMacro)\nfind_dependency(LAPACK)\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake\")"
                     )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
