@@ -1,7 +1,7 @@
 [binaries]
 cmake = ['@CMAKE_COMMAND@']
 ninja = ['@NINJA@']
-pkg-config= ['@PKGCONFIG@']
+pkg-config = ['@PKGCONFIG@']
 @MESON_MT@
 @MESON_AR@
 @MESON_RC@
@@ -19,8 +19,9 @@ pkg-config= ['@PKGCONFIG@']
 @MESON_ADDITIONAL_BINARIES@
 [properties]
 cmake_toolchain_file  = '@SCRIPTS@/buildsystems/vcpkg.cmake'
+@MESON_ADDITIONAL_PROPERTIES@
 [cmake]
-CMAKE_BUILD_TYPE = '@buildconfig@'
+CMAKE_BUILD_TYPE = '@MESON_CMAKE_BUILD_TYPE@'
 VCPKG_TARGET_TRIPLET = '@TARGET_TRIPLET@'
 VCPKG_HOST_TRIPLET = '@_HOST_TRIPLET@'
 VCPKG_CHAINLOAD_TOOLCHAIN_FILE = '@VCPKG_CHAINLOAD_TOOLCHAIN_FILE@'

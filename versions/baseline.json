@@ -130,7 +130,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 7
+      "port-version": 8
     },
     "ankurvdev-embedresource": {
       "baseline": "0.0.11",
@@ -229,7 +229,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "12.6.7",
+      "baseline": "12.8.4",
       "port-version": 0
     },
     "arpack-ng": {
@@ -1437,7 +1437,7 @@
       "port-version": 0
     },
     "c4core": {
-      "baseline": "0.1.11",
+      "baseline": "0.2.1",
       "port-version": 0
     },
     "c89stringutils": {
@@ -1453,7 +1453,7 @@
       "port-version": 0
     },
     "caf": {
-      "baseline": "0.19.3",
+      "baseline": "0.19.6",
       "port-version": 0
     },
     "caffe2": {
@@ -2458,7 +2458,7 @@
     },
     "ed25519": {
       "baseline": "2017-02-10",
-      "port-version": 0
+      "port-version": 1
     },
     "edflib": {
       "baseline": "1.25",
@@ -2506,7 +2506,7 @@
     },
     "embree3": {
       "baseline": "3.13.5",
-      "port-version": 3
+      "port-version": 4
     },
     "enet": {
       "baseline": "1.3.17",
@@ -3078,7 +3078,7 @@
     },
     "glib": {
       "baseline": "2.78.4",
-      "port-version": 2
+      "port-version": 3
     },
     "glib-networking": {
       "baseline": "2.78.0",
@@ -3258,7 +3258,7 @@
     },
     "gtsam": {
       "baseline": "4.2a9",
-      "port-version": 1
+      "port-version": 2
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -3362,7 +3362,7 @@
     },
     "hash-library": {
       "baseline": "8",
-      "port-version": 2
+      "port-version": 3
     },
     "hashids": {
       "baseline": "1.2.1",
@@ -3826,7 +3826,7 @@
     },
     "jxrlib": {
       "baseline": "2019.10.9",
-      "port-version": 6
+      "port-version": 7
     },
     "kaitai-struct-cpp-stl-runtime": {
       "baseline": "0.10.1",
@@ -3862,7 +3862,7 @@
     },
     "keccak-tiny": {
       "baseline": "2014-09-08",
-      "port-version": 1
+      "port-version": 2
     },
     "kenlm": {
       "baseline": "20230531",
@@ -4894,7 +4894,7 @@
     },
     "libredwg": {
       "baseline": "0.13.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libremidi": {
       "baseline": "4.5.0",
@@ -5334,7 +5334,7 @@
     },
     "libyaml": {
       "baseline": "0.2.5",
-      "port-version": 4
+      "port-version": 5
     },
     "libyuv": {
       "baseline": "1857",
@@ -5562,7 +5562,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 17
+      "port-version": 18
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -5574,7 +5574,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 12
+      "port-version": 13
     },
     "mailio": {
       "baseline": "0.23.0",
@@ -5698,7 +5698,7 @@
     },
     "mesa": {
       "baseline": "24.0.7",
-      "port-version": 1
+      "port-version": 2
     },
     "meschach": {
       "baseline": "1.2b",
@@ -5731,6 +5731,10 @@
     "mhook": {
       "baseline": "2.5.1",
       "port-version": 3
+    },
+    "michaelmiller-sec21": {
+      "baseline": "1.0.1",
+      "port-version": 0
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha4",
@@ -6076,8 +6080,8 @@
       "baseline": "2019-08-30",
       "port-version": 6
     },
-    "nativefiledialog": {
-      "baseline": "2022-01-20",
+    "nativefiledialog-extended": {
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "nayuki-qr-code-generator": {
@@ -6153,7 +6157,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.5.0",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "nifly": {
@@ -6757,7 +6761,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "45.0",
+      "baseline": "46.0",
       "port-version": 0
     },
     "pffft": {
@@ -7498,7 +7502,7 @@
     },
     "qtwebengine": {
       "baseline": "6.7.0",
-      "port-version": 3
+      "port-version": 4
     },
     "qtwebsockets": {
       "baseline": "6.7.1",
@@ -8142,7 +8146,7 @@
     },
     "simbody": {
       "baseline": "2023-01-10",
-      "port-version": 0
+      "port-version": 1
     },
     "simd": {
       "baseline": "5.3.128",
@@ -9089,7 +9093,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2024-04-18",
+      "baseline": "2024-04-23",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -9122,7 +9126,7 @@
     },
     "vcpkg-qmake": {
       "baseline": "2023-03-22",
-      "port-version": 2
+      "port-version": 3
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
@@ -9142,7 +9146,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.3.2",
-      "port-version": 5
+      "port-version": 7
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
@@ -9314,7 +9318,7 @@
     },
     "wavpack": {
       "baseline": "5.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "wayland": {
       "baseline": "1.21.0",
@@ -9546,7 +9550,7 @@
     },
     "xorg-macros": {
       "baseline": "1.19.3",
-      "port-version": 0
+      "port-version": 1
     },
     "xorstr": {
       "baseline": "2021-11-20",
@@ -9594,7 +9598,7 @@
     },
     "xtrans": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "xxhash": {
       "baseline": "0.8.2",
