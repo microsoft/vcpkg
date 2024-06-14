@@ -4,7 +4,7 @@
   "description": "Native File Dialog Extended",
   "homepage": "https://github.com/btzy/nativefiledialog-extended",
   "license": "Zlib",
-  "supports": "(windows & !uwp) | osx | linux | freebsd | openbsd",
+  "supports": "!android & !ios & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,8 +15,8 @@
       "host": true
     },
     {
-      "name": "xdg-desktop-portal",
-      "platform": "linux"
+      "name": "dbus",
+      "platform": "!osx & !windows"
     }
   ]
 }

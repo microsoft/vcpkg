@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DNFD_BUILD_TESTS=OFF
+        -DNFD_PORTAL=ON
 )
 
 vcpkg_cmake_install()
