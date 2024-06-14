@@ -155,13 +155,13 @@ index 56adfe0a..4f81aa5a 100644
    if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      # GMOCK_MOCK_METHOD() will complain otherwise
 diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
-index 679b0e61..8a4b189e 100644
+index bace1609..51251ea2 100644
 --- a/fizz/cmake/fizz-config.cmake.in
 +++ b/fizz/cmake/fizz-config.cmake.in
-@@ -26,9 +26,18 @@ endif()
- set(FIZZ_LIBRARIES fizz::fizz)
+@@ -29,9 +29,18 @@ set(FIZZ_LIBRARIES fizz::fizz)
  
  include(CMakeFindDependencyMacro)
+ 
 -find_dependency(Sodium)
 +find_dependency(unofficial-sodium CONFIG)
  find_dependency(folly CONFIG)
@@ -175,6 +175,6 @@ index 679b0e61..8a4b189e 100644
 +find_dependency(gflags CONFIG)
 +find_dependency(zstd CONFIG)
 +find_dependency(GTest CONFIG)
- 
- if (NOT fizz_FIND_QUIETLY)
-   message(STATUS "Found fizz: ${PACKAGE_PREFIX_DIR}")
+ if(FIZZ_HAVE_OQS)
+     find_dependency(liboqs CONFIG)
+ endif()
