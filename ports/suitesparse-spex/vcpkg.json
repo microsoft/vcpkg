@@ -1,0 +1,22 @@
+{
+  "name": "suitesparse-spex",
+  "version-semver": "3.1.0",
+  "description": "SPEX: Software package for SParse EXact algebra in SuiteSparse",
+  "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
+  "license": "GPL-2.0-or-later OR LGPL-3.0-or-later",
+  "dependencies": [
+    "gmp",
+    "mpfr",
+    "suitesparse-amd",
+    "suitesparse-colamd",
+    "suitesparse-config",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
