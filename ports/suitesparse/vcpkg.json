@@ -6,26 +6,26 @@
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": null,
   "dependencies": [
-    {
-        "name": "suitesparse-config",
-        "default-features": false
-    },
-    {
-        "name": "suitesparse-graphblas",
-        "default-features": false
-    },
-    {
-        "name": "suitesparse-lagraph",
-        "default-features": false
-    },
     "suitesparse-amd",
     "suitesparse-btf",
     "suitesparse-camd",
     "suitesparse-ccolamd",
     "suitesparse-cholmod",
     "suitesparse-colamd",
+    {
+      "name": "suitesparse-config",
+      "default-features": false
+    },
     "suitesparse-cxsparse",
+    {
+      "name": "suitesparse-graphblas",
+      "default-features": false
+    },
     "suitesparse-klu",
+    {
+      "name": "suitesparse-lagraph",
+      "default-features": false
+    },
     "suitesparse-ldl",
     "suitesparse-spex"
   ],
@@ -34,6 +34,40 @@
     "openmp"
   ],
   "features": {
+    "cuda": {
+      "description": "Enable CUDA support for the current compute architecture of this machine",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "suitesparse-spqr",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "cuda-redist": {
+      "description": "Enable CUDA support for all major compute architectures",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "cuda-redist"
+          ]
+        },
+        {
+          "name": "suitesparse-spqr",
+          "features": [
+            "cuda-redist"
+          ]
+        }
+      ]
+    },
     "gpl": {
       "description": "Enable GPL-licensed packages",
       "dependencies": [
@@ -71,40 +105,6 @@
           "name": "suitesparse-lagraph",
           "features": [
             "openmp"
-          ]
-        }
-      ]
-    },
-    "cuda": {
-      "description": "Enable CUDA support for the current compute architecture of this machine",
-      "dependencies": [
-        {
-          "name": "suitesparse-cholmod",
-          "features": [
-            "cuda"
-          ]
-        },
-        {
-          "name": "suitesparse-spqr",
-          "features": [
-            "cuda"
-          ]
-        }
-      ]
-    },
-    "cuda-redist": {
-      "description": "Enable CUDA support for all major compute architectures",
-      "dependencies": [
-        {
-          "name": "suitesparse-cholmod",
-          "features": [
-            "cuda-redist"
-          ]
-        },
-        {
-          "name": "suitesparse-spqr",
-          "features": [
-            "cuda-redist"
           ]
         }
       ]
