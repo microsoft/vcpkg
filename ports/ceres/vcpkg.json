@@ -60,10 +60,8 @@
             "lapack"
           ]
         },
-        {
-          "name": "suitesparse",
-          "default-features": false
-        }
+        "suitesparse-cholmod",
+        "suitesparse-spqr"
       ]
     },
     "tools": {
