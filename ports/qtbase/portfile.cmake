@@ -195,7 +195,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
-    #"png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG # Unable to disable if Freetype requires it
+    # "png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG # Unable to disable if Freetype requires it
     "xlib"                CMAKE_DISABLE_FIND_PACKAGE_X11
     "xkb"                 CMAKE_DISABLE_FIND_PACKAGE_XKB
     "xcb"                 CMAKE_DISABLE_FIND_PACKAGE_XCB
@@ -343,8 +343,6 @@ set(other_files qt-cmake
                 qt-configure-module
                 qt-internal-configure-tests
                 qt-cmake-create
-                qt-internal-configure-examples
-                qt-internal-configure-tests
                 qmake
                 qmake6
                 qtpaths
@@ -463,7 +461,7 @@ if(EXISTS "${target_qt_conf}")
     string(REGEX REPLACE "HostData=[^\n]+" "HostData=./../${TARGET_TRIPLET}/share/Qt6" qt_conf_contents ${qt_conf_contents})
     string(REGEX REPLACE "HostPrefix=[^\n]+" "HostPrefix=./../../../../${_HOST_TRIPLET}" qt_conf_contents ${qt_conf_contents})
     file(WRITE "${target_qt_conf}" "${qt_conf_contents}")
-    if(NOT VCPKG_BUILD_TYPE)
+    if(1)
       set(target_qt_conf_debug "${CURRENT_PACKAGES_DIR}/tools/Qt6/target_qt_debug.conf")
       configure_file("${target_qt_conf}" "${target_qt_conf_debug}" COPYONLY)
       file(READ "${target_qt_conf_debug}" qt_conf_contents)
@@ -475,10 +473,7 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
-endif()
-
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
@@ -554,9 +549,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         zlib1.dll
         zstd.dll
   )
-  if("dbus" IN_LIST FEATURES)
-    list(APPEND qtbase_owned_dlls dbus-1-3.dll)
-  endif()
   list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
   foreach(dll IN LISTS qtbase_owned_dlls)
     if(NOT EXISTS "${dll}") # Need to remove non-existant dlls since dependencies could have been build statically
