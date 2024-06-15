@@ -16,5 +16,18 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP support",
+      "dependencies": [
+        {
+          "name": "suitesparse-config",
+          "features": [
+            "openmp"
+          ]
+        }
+      ]
+    }
+  }
 }

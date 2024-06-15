@@ -9,6 +9,12 @@ vcpkg_from_github(
 set(PACKAGE_NAME SPEX)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    openmp SUITESPARSE_USE_OPENMP
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/${PACKAGE_NAME}"
     DISABLE_PARALLEL_CONFIGURE
@@ -18,6 +24,7 @@ vcpkg_cmake_configure(
         -DSUITESPARSE_USE_STRICT=ON
         -DSUITESPARSE_USE_FORTRAN=OFF
         -DSUITESPARSE_DEMOS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

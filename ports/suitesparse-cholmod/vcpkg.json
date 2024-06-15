@@ -45,6 +45,17 @@
       "description": "Build Modify module",
       "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0"
     },
+    "openmp": {
+      "description": "Enable OpenMP support",
+      "dependencies": [
+        {
+          "name": "suitesparse-config",
+          "features": [
+            "openmp"
+          ]
+        }
+      ]
+    },
     "partition": {
       "description": "Build Partition module"
     },

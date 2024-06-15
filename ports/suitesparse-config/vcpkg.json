@@ -15,12 +15,9 @@
       "host": true
     }
   ],
-  "default-features": [
-    "openmp"
-  ],
   "features": {
     "openmp": {
-      "description": "Enable OpenMP support for SuiteSparse libraries"
+      "description": "Enable OpenMP support (in SuiteSparse_config only)"
     }
   }
 }

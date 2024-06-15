@@ -14,13 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "openmp"
-  ],
-  "features": {
-    "openmp": {
-      "description": "Enable OpenMP support for SuiteSparse libraries"
-    }
-  }
+  ]
 }

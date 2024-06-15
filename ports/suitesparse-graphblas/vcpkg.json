@@ -15,8 +15,7 @@
     }
   ],
   "default-features": [
-    "compact",
-    "openmp"
+    "compact"
   ],
   "features": {
     "compact": {
