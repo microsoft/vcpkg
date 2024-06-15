@@ -1,9 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1
+param([string]$SasToken)
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
 # See https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history
 # 17.8.11
@@ -30,62 +32,10 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.CMake.Project'
 )
 
-<#
-.SYNOPSIS
-Install Visual Studio.
-
-.DESCRIPTION
-InstallVisualStudio takes the $Workloads array, and installs it with the
-installer that's pointed at by $BootstrapperUrl.
-
-.PARAMETER Workloads
-The set of VS workloads to install.
-
-.PARAMETER BootstrapperUrl
-The URL of the Visual Studio installer, i.e. one of vs_*.exe.
-
-.PARAMETER InstallPath
-The path to install Visual Studio at.
-
-.PARAMETER Nickname
-The nickname to give the installation.
-#>
-Function InstallVisualStudio {
-  Param(
-    [String[]]$Workloads,
-    [String]$BootstrapperUrl,
-    [String]$InstallPath = $null,
-    [String]$Nickname = $null
-  )
-
-  try {
-    Write-Host 'Downloading Visual Studio...'
-    [string]$bootstrapperExe = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $bootstrapperExe -s -S $BootstrapperUrl
-    Write-Host 'Installing Visual Studio...'
-    $vsArgs = @('/c', $bootstrapperExe, '--quiet', '--norestart', '--wait', '--nocache')
-    foreach ($workload in $Workloads) {
-      $vsArgs += '--add'
-      $vsArgs += $workload
-    }
-
-    if (-not ([String]::IsNullOrWhiteSpace($InstallPath))) {
-      $vsArgs += '--installpath'
-      $vsArgs += $InstallPath
-    }
-
-    if (-not ([String]::IsNullOrWhiteSpace($Nickname))) {
-      $vsArgs += '--nickname'
-      $vsArgs += $Nickname
-    }
-
-    $proc = Start-Process -FilePath cmd.exe -ArgumentList $vsArgs -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install Visual Studio! $($_.Exception.Message)"
-    throw
-  }
+$vsArgs = @('--quiet', '--norestart', '--wait', '--nocache')
+foreach ($workload in $Workloads) {
+  $vsArgs += '--add'
+  $vsArgs += $workload
 }
 
-InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+DownloadAndInstall -Name 'Visual Studio' -Url $VisualStudioBootstrapperUrl -Args $vsArgs
