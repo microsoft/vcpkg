@@ -8641,7 +8641,7 @@
       "port-version": 5
     },
     "tgbot-cpp": {
-      "baseline": "1.7.3",
+      "baseline": "1.8",
       "port-version": 0
     },
     "tgc": {
