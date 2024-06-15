@@ -1,0 +1,36 @@
+From 4c43bf60a2c65292b0242f59bc0a05a7f19049b8 Mon Sep 17 00:00:00 2001
+From: quqiOnfree <quqiOnfree@outlook.com>
+Date: Sun, 16 Jun 2024 02:02:04 +0800
+Subject: [PATCH 11/11] add include5
+
+---
+ CMakeLists.txt | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0421556..98e3abd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -514,12 +514,14 @@ install(TARGETS ${LIBRARY_NAME} ${STATIC_LIBRARY_NAME}
+         PUBLIC_HEADER DESTINATION include
+         )
+ 
++file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
++install(FILES ${HEADERS} DESTINATION include)
+ 
+-file(GLOB MARIADBCPP_HEADERS
+-    "${CMAKE_SOURCE_DIR}/include/*.hpp"
+-    "${CMAKE_SOURCE_DIR}/include/conncpp/*.hpp"
+-    "${CMAKE_SOURCE_DIR}/include/conncpp/compat/*.hpp")
+-install(FILES ${MARIADBCPP_HEADERS} DESTINATION include)
++file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/include/conncpp/*.hpp")
++install(FILES ${HEADERS} DESTINATION include/conncpp)
++
++file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/include/conncpp/compat/*.hpp")
++install(FILES ${HEADERS} DESTINATION include/conncpp/compat)
+ 
+ install(EXPORT ${LIBRARY_NAME}Targets
+         FILE ${LIBRARY_NAME}Targets.cmake
+-- 
+2.45.2.windows.1
+

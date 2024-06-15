@@ -1,0 +1,74 @@
+From e94f5b9a2e83e214bd74a26c5a358fda4871d99e Mon Sep 17 00:00:00 2001
+From: quqiOnfree <quqiOnfree@outlook.com>
+Date: Sun, 16 Jun 2024 01:57:59 +0800
+Subject: [PATCH 10/10] add include4
+
+---
+ CMakeLists.txt                       | 11 +++++++----
+ modify-configure_file-to-share.patch | 25 -------------------------
+ 2 files changed, 7 insertions(+), 29 deletions(-)
+ delete mode 100644 modify-configure_file-to-share.patch
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ee78ac7..0421556 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -503,10 +503,6 @@ ENDIF()
+ 
+ TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} ${PLATFORM_DEPENDENCIES} unofficial::libmariadb)
+ TARGET_LINK_LIBRARIES(${STATIC_LIBRARY_NAME} mariadbclient unofficial::libmariadb)
+-SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/conncpp.hpp)
+-SET_TARGET_PROPERTIES(${STATIC_LIBRARY_NAME} PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/conncpp.hpp)
+-TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+-TARGET_INCLUDE_DIRECTORIES(${STATIC_LIBRARY_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+ 
+ # install
+ 
+@@ -518,6 +514,13 @@ install(TARGETS ${LIBRARY_NAME} ${STATIC_LIBRARY_NAME}
+         PUBLIC_HEADER DESTINATION include
+         )
+ 
++
++file(GLOB MARIADBCPP_HEADERS
++    "${CMAKE_SOURCE_DIR}/include/*.hpp"
++    "${CMAKE_SOURCE_DIR}/include/conncpp/*.hpp"
++    "${CMAKE_SOURCE_DIR}/include/conncpp/compat/*.hpp")
++install(FILES ${MARIADBCPP_HEADERS} DESTINATION include)
++
+ install(EXPORT ${LIBRARY_NAME}Targets
+         FILE ${LIBRARY_NAME}Targets.cmake
+         NAMESPACE unofficial::
+diff --git a/modify-configure_file-to-share.patch b/modify-configure_file-to-share.patch
+deleted file mode 100644
+index 1c24614..0000000
+--- a/modify-configure_file-to-share.patch
++++ /dev/null
+@@ -1,25 +0,0 @@
+-From 5b48fbd16f468cfa31353eaa29c6e4e7c81bbfe6 Mon Sep 17 00:00:00 2001
+-From: quqiOnfree <quqiOnfree@outlook.com>
+-Date: Sun, 16 Jun 2024 00:45:11 +0800
+-Subject: [PATCH] modify configure_file to share
+-
+----
+- CMakeLists.txt | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/CMakeLists.txt b/CMakeLists.txt
+-index 66c1069..172947f 100644
+---- a/CMakeLists.txt
+-+++ b/CMakeLists.txt
+-@@ -555,7 +555,7 @@ install(EXPORT ${LIBRARY_NAME}Targets
+- 
+- configure_file(${LIBRARY_NAME}Config.cmake.in ${LIBRARY_NAME}Config.cmake @ONLY)
+- install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${LIBRARY_NAME}Config.cmake"
+--        DESTINATION lib/cmake/${LIBRARY_NAME}
+-+        DESTINATION share/${LIBRARY_NAME}
+-         )
+- 
+- # install_test/CMakeLists.txt configuration should go after packaging.cmake but before include(CPack). Since CPack included in packaging cmake,
+--- 
+-2.45.2.windows.1
+-
+-- 
+2.45.2.windows.1
+

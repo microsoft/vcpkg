@@ -1,0 +1,25 @@
+From 9ccafe9f83285a9de16b76e81eb03c1421daf216 Mon Sep 17 00:00:00 2001
+From: quqiOnfree <quqiOnfree@outlook.com>
+Date: Sun, 16 Jun 2024 01:35:09 +0800
+Subject: [PATCH 9/9] add include3
+
+---
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 28b93b9..ee78ac7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -503,6 +503,8 @@ ENDIF()
+ 
+ TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} ${PLATFORM_DEPENDENCIES} unofficial::libmariadb)
+ TARGET_LINK_LIBRARIES(${STATIC_LIBRARY_NAME} mariadbclient unofficial::libmariadb)
++SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/conncpp.hpp)
++SET_TARGET_PROPERTIES(${STATIC_LIBRARY_NAME} PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/conncpp.hpp)
+ TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+ TARGET_INCLUDE_DIRECTORIES(${STATIC_LIBRARY_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+ 
+-- 
+2.45.2.windows.1
+

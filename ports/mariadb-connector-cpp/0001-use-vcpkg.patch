@@ -1,7 +1,7 @@
 From 185e09998ddfefc9f1249db05a1b968990072ee1 Mon Sep 17 00:00:00 2001
 From: quqiOnfree <quqiOnfree@outlook.com>
 Date: Fri, 14 Jun 2024 22:16:59 +0800
-Subject: [PATCH] use-vcpkg
+Subject: [PATCH 1/9] use-vcpkg
 
 ---
  .gitignore         |  13 +++

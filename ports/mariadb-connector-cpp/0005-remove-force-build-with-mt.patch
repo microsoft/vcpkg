@@ -1,0 +1,47 @@
+From 5b3e902e46a060ca4077c78bca1706385c49b28c Mon Sep 17 00:00:00 2001
+From: quqiOnfree <quqiOnfree@outlook.com>
+Date: Sun, 16 Jun 2024 00:59:31 +0800
+Subject: [PATCH 5/9] remove-force-build-with-mt
+
+---
+ CMakeLists.txt | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c48580d..630a5ab 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -407,30 +407,6 @@ IF (WITH_MSAN)
+   MY_CHECK_AND_SET_COMPILER_FLAG("-fsanitize=memory -fsanitize-memory-track-origins -U_FORTIFY_SOURCE" DEBUG RELWITHDEBINFO)
+ ENDIF()
+ 
+-# This has to be before C/C's cmake run, or it will build with /MD
+-IF(WIN32)
+-  IF (MSVC)
+-    SET(CONFIG_TYPES "DEBUG" "RELEASE" "RELWITHDEBINFO" "MINSIZEREL")
+-    FOREACH(BUILD_TYPE ${CONFIG_TYPES})
+-      FOREACH(COMPILER ${MAODBC_LANGUAGES})
+-        SET(COMPILER_FLAGS "${CMAKE_${COMPILER}_FLAGS_${BUILD_TYPE}}")
+-        IF (NOT COMPILER_FLAGS STREQUAL "")
+-          IF(NOT WITH_ASAN)
+-            STRING(REPLACE "/MD" "/MT" COMPILER_FLAGS ${COMPILER_FLAGS})
+-            STRING(REPLACE "/Zi" "/ZI" COMPILER_FLAGS ${COMPILER_FLAGS})
+-          ENDIF(NOT WITH_ASAN)
+-          MESSAGE (STATUS "CMAKE_${COMPILER}_FLAGS_${BUILD_TYPE}= ${COMPILER_FLAGS}")
+-          SET(CMAKE_${COMPILER}_FLAGS_${BUILD_TYPE} ${COMPILER_FLAGS} CACHE
+-               STRING "Overwritten by mariadb-cpp" FORCE)
+-        ENDIF()
+-      ENDFOREACH()
+-    ENDFOREACH()
+-  ENDIF()
+-  ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN)
+-  SET(INSTALL_PLUGINDIR "${MARIADB_DEFAULT_PLUGINS_SUBDIR}")
+-  SET(PLATFORM_DEPENDENCIES ${PLATFORM_DEPENDENCIES} version.lib)
+-ENDIF()
+-
+ ### Build options, initial settings and platform defaults
+ INCLUDE("options_defaults")
+ 
+-- 
+2.45.2.windows.1
+

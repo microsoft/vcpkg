@@ -1,0 +1,26 @@
+From 88da503359f65c9c38b7243d988805ff81ac1d53 Mon Sep 17 00:00:00 2001
+From: quqiOnfree <quqiOnfree@outlook.com>
+Date: Sun, 16 Jun 2024 01:26:06 +0800
+Subject: [PATCH 8/9] add TARGET_INCLUDE_DIRECTORIES
+
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dacbb09..28b93b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -503,7 +503,8 @@ ENDIF()
+ 
+ TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} ${PLATFORM_DEPENDENCIES} unofficial::libmariadb)
+ TARGET_LINK_LIBRARIES(${STATIC_LIBRARY_NAME} mariadbclient unofficial::libmariadb)
+-TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
++TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
++TARGET_INCLUDE_DIRECTORIES(${STATIC_LIBRARY_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+ 
+ # install
+ 
+-- 
+2.45.2.windows.1
+
