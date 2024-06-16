@@ -9462,7 +9462,7 @@
     },
     "x265": {
       "baseline": "3.5",
-      "port-version": 1
+      "port-version": 2
     },
     "x86-simd-sort": {
       "baseline": "4.0",

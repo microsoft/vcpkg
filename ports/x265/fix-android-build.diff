@@ -1,0 +1,18 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 11512ff..9ac8057 100755
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -85,7 +85,12 @@
+ endif()
+ 
+ if(UNIX)
+-    list(APPEND PLATFORM_LIBS pthread)
++    if (ANDROID)
++        set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
++        set(THREADS_PREFER_PTHREAD_FLAG TRUE)
++    else()
++        list(APPEND PLATFORM_LIBS pthread)
++    endif()
+     find_library(LIBRT rt)
+     if(LIBRT)
+         list(APPEND PLATFORM_LIBS rt)
