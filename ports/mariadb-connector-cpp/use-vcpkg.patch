@@ -1,21 +1,17 @@
-From 185e09998ddfefc9f1249db05a1b968990072ee1 Mon Sep 17 00:00:00 2001
+From 2ab39817f6bb2416f64e1f63d38fed9732ae676b Mon Sep 17 00:00:00 2001
 From: quqiOnfree <quqiOnfree@outlook.com>
-Date: Fri, 14 Jun 2024 22:16:59 +0800
-Subject: [PATCH 1/9] use-vcpkg
+Date: Sun, 16 Jun 2024 10:57:26 +0800
+Subject: [PATCH] use vcpkg
 
 ---
- .gitignore         |  13 +++
- .gitmodules        |   3 -
- CMakeLists.txt     | 233 +++------------------------------------------
- CMakeSettings.json |  27 ++++++
- libmariadb         |   1 -
- 5 files changed, 54 insertions(+), 223 deletions(-)
- delete mode 100644 .gitmodules
- create mode 100644 CMakeSettings.json
- delete mode 160000 libmariadb
+ .gitignore                |  13 ++
+ CMakeLists.txt            | 294 +++++---------------------------------
+ mariadbcppConfig.cmake.in |   4 +
+ 3 files changed, 56 insertions(+), 255 deletions(-)
+ create mode 100644 mariadbcppConfig.cmake.in
 
 diff --git a/.gitignore b/.gitignore
-index 3fee95a..84ebaa1 100644
+index 3fee95a..6a87ed4 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -72,3 +72,16 @@ benchmark/main-benchmark
@@ -24,32 +20,54 @@ index 3fee95a..84ebaa1 100644
  *.app
 +
 +# Build directories
-+[Bb]uild/
++build/
 +out/
 +
-+# Work directories
++# Visual Studio directory
 +.vs/
 +.vscode/
 +
-+# Other directories
++# Other build files
 +install_test/CMakeLists.txt
-+src/Version.h
 +src/maconncpp.def
++src/Version.h
 \ No newline at end of file
-diff --git a/.gitmodules b/.gitmodules
-deleted file mode 100644
-index c1a5840..0000000
---- a/.gitmodules
-+++ /dev/null
-@@ -1,3 +0,0 @@
--[submodule "libmariadb"]
--	path = libmariadb
--	url = https://github.com/MariaDB/mariadb-connector-c.git
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 43bc4a2..e1b9a05 100644
+index 43bc4a2..93d705d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -469,138 +469,20 @@ IF(NOT WITH_SSL)
+@@ -407,30 +407,6 @@ IF (WITH_MSAN)
+   MY_CHECK_AND_SET_COMPILER_FLAG("-fsanitize=memory -fsanitize-memory-track-origins -U_FORTIFY_SOURCE" DEBUG RELWITHDEBINFO)
+ ENDIF()
+ 
+-# This has to be before C/C's cmake run, or it will build with /MD
+-IF(WIN32)
+-  IF (MSVC)
+-    SET(CONFIG_TYPES "DEBUG" "RELEASE" "RELWITHDEBINFO" "MINSIZEREL")
+-    FOREACH(BUILD_TYPE ${CONFIG_TYPES})
+-      FOREACH(COMPILER ${MAODBC_LANGUAGES})
+-        SET(COMPILER_FLAGS "${CMAKE_${COMPILER}_FLAGS_${BUILD_TYPE}}")
+-        IF (NOT COMPILER_FLAGS STREQUAL "")
+-          IF(NOT WITH_ASAN)
+-            STRING(REPLACE "/MD" "/MT" COMPILER_FLAGS ${COMPILER_FLAGS})
+-            STRING(REPLACE "/Zi" "/ZI" COMPILER_FLAGS ${COMPILER_FLAGS})
+-          ENDIF(NOT WITH_ASAN)
+-          MESSAGE (STATUS "CMAKE_${COMPILER}_FLAGS_${BUILD_TYPE}= ${COMPILER_FLAGS}")
+-          SET(CMAKE_${COMPILER}_FLAGS_${BUILD_TYPE} ${COMPILER_FLAGS} CACHE
+-               STRING "Overwritten by mariadb-cpp" FORCE)
+-        ENDIF()
+-      ENDFOREACH()
+-    ENDFOREACH()
+-  ENDIF()
+-  ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN)
+-  SET(INSTALL_PLUGINDIR "${MARIADB_DEFAULT_PLUGINS_SUBDIR}")
+-  SET(PLATFORM_DEPENDENCIES ${PLATFORM_DEPENDENCIES} version.lib)
+-ENDIF()
+-
+ ### Build options, initial settings and platform defaults
+ INCLUDE("options_defaults")
+ 
+@@ -469,148 +445,21 @@ IF(NOT WITH_SSL)
  ENDIF()
  
  ### Including C/C subproject
@@ -183,6 +201,12 @@ index 43bc4a2..e1b9a05 100644
 -  MESSAGE(STATUS "Linking Connector/C library statically(${MARIADB_CLIENT_TARGET_NAME})")
 -ENDIF()
 -
+-
+-ADD_LIBRARY(${LIBRARY_NAME}_obj OBJECT ${MACPP_SOURCES})
+-IF(UNIX)
+-  SET_TARGET_PROPERTIES(${LIBRARY_NAME}_obj PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
+-ENDIF()
+-SET(${LIBRARY_NAME}_OBJECTS $<TARGET_OBJECTS:${LIBRARY_NAME}_obj>)
 +FIND_PACKAGE(unofficial-libmariadb CONFIG REQUIRED)
 +INCLUDE_DIRECTORIES(${LIBRARY_NAME}
 +    include/conncpp
@@ -195,18 +219,36 @@ index 43bc4a2..e1b9a05 100644
 +    src
 +    class)
  
- ADD_LIBRARY(${LIBRARY_NAME}_obj OBJECT ${MACPP_SOURCES})
-+TARGET_LINK_LIBRARIES(${LIBRARY_NAME}_obj PRIVATE unofficial::libmariadb)
- IF(UNIX)
-   SET_TARGET_PROPERTIES(${LIBRARY_NAME}_obj PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
- ENDIF()
-@@ -652,99 +534,12 @@ ELSE()
+ IF(WIN32 AND NOT MINGW)
+-  ADD_LIBRARY(${LIBRARY_NAME} SHARED ${CMAKE_SOURCE_DIR}/src/maconncpp.rc ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
+-  ADD_LIBRARY(${STATIC_LIBRARY_NAME} STATIC ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_SOURCE_DIR}/src/maconncpp.rc)
+-
+-  TARGET_COMPILE_DEFINITIONS(${LIBRARY_NAME}_obj PRIVATE "MARIADB_EXPORTED=__declspec(dllexport)")
++  ADD_LIBRARY(${LIBRARY_NAME} SHARED ${CMAKE_SOURCE_DIR}/src/maconncpp.rc ${MACPP_SOURCES} ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
++  ADD_LIBRARY(${STATIC_LIBRARY_NAME} STATIC ${MACPP_SOURCES} ${CMAKE_SOURCE_DIR}/src/maconncpp.rc)
+ 
+   TARGET_COMPILE_DEFINITIONS(${LIBRARY_NAME} PRIVATE "MARIADB_EXPORTED=__declspec(dllexport)")
+   TARGET_COMPILE_DEFINITIONS(${LIBRARY_NAME} INTERFACE "MARIADB_EXPORTED=__declspec(dllimport)")
+@@ -624,8 +473,8 @@ ELSE()
+     SET(EMPTY_FILE ${CMAKE_BINARY_DIR}/empty.cpp)
+   ENDIF()
+   #  MESSAGE(STATUS "Version script: ${CMAKE_SOURCE_DIR}/src/maconncpp.def")
+-  ADD_LIBRARY(${LIBRARY_NAME} SHARED ${${LIBRARY_NAME}_OBJECTS} ${EMPTY_FILE})
+-  ADD_LIBRARY(${STATIC_LIBRARY_NAME} STATIC ${${LIBRARY_NAME}_OBJECTS} ${EMPTY_FILE})
++  ADD_LIBRARY(${LIBRARY_NAME} SHARED ${MACPP_SOURCES} ${EMPTY_FILE})
++  ADD_LIBRARY(${STATIC_LIBRARY_NAME} STATIC ${MACPP_SOURCES} ${EMPTY_FILE})
+ 
+   IF(APPLE)
+     SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES LINK_FLAGS "-Wl"
+@@ -652,102 +501,37 @@ ELSE()
    ENDIF()
  ENDIF()
  
 -TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} ${PLATFORM_DEPENDENCIES})
 -TARGET_LINK_LIBRARIES(${STATIC_LIBRARY_NAME} mariadbclient)
--
++TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} ${PLATFORM_DEPENDENCIES} unofficial::libmariadb)
++TARGET_LINK_LIBRARIES(${STATIC_LIBRARY_NAME} mariadbclient unofficial::libmariadb)
+ 
 -# MINGW Specific includes and linking
 -IF(MINGW)
 -  
@@ -217,7 +259,8 @@ index 43bc4a2..e1b9a05 100644
 -    # Should here and below be just warnings?
 -    MESSAGE(WARNING "Did not find shlwapi lib")
 -  ENDIF()
--
++# install
+ 
 -  IF(MARIADB_CONNECTORC_INCLUDE)
 -    # Probably has to be private, and not PUBLIC here
 -    TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME}_obj PUBLIC  ${MARIADB_CONNECTORC_INCLUDE})
@@ -235,16 +278,26 @@ index 43bc4a2..e1b9a05 100644
 -  ENDIF()
 -  
 -ENDIF()
--
++install(TARGETS ${LIBRARY_NAME} ${STATIC_LIBRARY_NAME}
++        EXPORT ${LIBRARY_NAME}Targets 
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++        RUNTIME DESTINATION bin
++        )
+ 
 -INCLUDE(symlink)
 -CREATE_SYMLINK(lib${LIBRARY_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX} ${STATIC_LIBRARY_NAME} ${INSTALL_LIBDIR})
-+TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${MARIADB_CLIENT_TARGET_NAME} ${PLATFORM_DEPENDENCIES} unofficial::libmariadb)
-+TARGET_LINK_LIBRARIES(${STATIC_LIBRARY_NAME} mariadbclient unofficial::libmariadb)
++file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
++install(FILES ${HEADERS} DESTINATION include/mariadbcpp)
  
- ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
+-ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
++file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/include/conncpp/*.hpp")
++install(FILES ${HEADERS} DESTINATION include/mariadbcpp/conncpp)
  
 -########## Packaging ##########
--
++file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/include/conncpp/compat/*.hpp")
++install(FILES ${HEADERS} DESTINATION include/mariadbcpp/conncpp/compat)
+ 
 -# MSI
 -IF(WIN32)
 -  IF(WITH_MSI)
@@ -296,53 +349,35 @@ index 43bc4a2..e1b9a05 100644
 -	  COMMAND ${CMAKE_COMMAND} ARGS -E copy $<TARGET_FILE:libmariadb> test)
 -  ENDIF()
 -ENDIF()
--
- # Packaging
++install(EXPORT ${LIBRARY_NAME}Targets
++        FILE ${LIBRARY_NAME}Targets.cmake
++        NAMESPACE unofficial::
++        DESTINATION share/${LIBRARY_NAME}
++        )
+ 
+-# Packaging
 -INCLUDE(packaging)
- MESSAGE(STATUS "License File: ${CPACK_RESOURCE_FILE_LICENSE}")
- MESSAGE(STATUS "ReadMe File: ${CPACK_PACKAGE_DESCRIPTION_FILE}")
- MESSAGE(STATUS "Source Package Filename: ${CPACK_SOURCE_PACKAGE_FILE_NAME}.${CPACK_SOURCE_GENERATOR}")
-diff --git a/CMakeSettings.json b/CMakeSettings.json
+-MESSAGE(STATUS "License File: ${CPACK_RESOURCE_FILE_LICENSE}")
+-MESSAGE(STATUS "ReadMe File: ${CPACK_PACKAGE_DESCRIPTION_FILE}")
+-MESSAGE(STATUS "Source Package Filename: ${CPACK_SOURCE_PACKAGE_FILE_NAME}.${CPACK_SOURCE_GENERATOR}")
++configure_file(${LIBRARY_NAME}Config.cmake.in ${LIBRARY_NAME}Config.cmake @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${LIBRARY_NAME}Config.cmake"
++        DESTINATION share/${LIBRARY_NAME}
++        )
+ 
+ # install_test/CMakeLists.txt configuration should go after packaging.cmake but before include(CPack). Since CPack included in packaging cmake,
+ # that configuration has been moved there. For the same reason there also moved the message with package name
+diff --git a/mariadbcppConfig.cmake.in b/mariadbcppConfig.cmake.in
 new file mode 100644
-index 0000000..0c5fbf9
+index 0000000..2a69b8b
 --- /dev/null
-+++ b/CMakeSettings.json
-@@ -0,0 +1,27 @@
-+﻿{
-+  "configurations": [
-+    {
-+      "name": "x64-Debug",
-+      "generator": "Ninja",
-+      "configurationType": "Debug",
-+      "inheritEnvironments": [ "msvc_x64_x64" ],
-+      "buildRoot": "${projectDir}\\out\\build\\${name}",
-+      "installRoot": "${projectDir}\\out\\install\\${name}",
-+      "cmakeCommandArgs": "",
-+      "buildCommandArgs": "",
-+      "ctestCommandArgs": ""
-+    },
-+    {
-+      "name": "x64-Release",
-+      "generator": "Ninja",
-+      "configurationType": "RelWithDebInfo",
-+      "buildRoot": "${projectDir}\\out\\build\\${name}",
-+      "installRoot": "${projectDir}\\out\\install\\${name}",
-+      "cmakeCommandArgs": "",
-+      "buildCommandArgs": "",
-+      "ctestCommandArgs": "",
-+      "inheritEnvironments": [ "msvc_x64_x64" ],
-+      "variables": []
-+    }
-+  ]
-+}
++++ b/mariadbcppConfig.cmake.in
+@@ -0,0 +1,4 @@
++﻿include(CMakeFindDependencyMacro)
++find_dependency(libmariadb CONFIG REQUIRED)
++
++include("${CMAKE_CURRENT_LIST_DIR}/mariadbcppTargets.cmake")
 \ No newline at end of file
-diff --git a/libmariadb b/libmariadb
-deleted file mode 160000
-index e714a67..0000000
---- a/libmariadb
-+++ /dev/null
-@@ -1 +0,0 @@
--Subproject commit e714a674827fbb8373dd71da634dd04736d7b5a6
 -- 
 2.45.2.windows.1
 
