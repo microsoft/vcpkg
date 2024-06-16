@@ -1,28 +1,46 @@
-vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO realm/realm-core
-        REF "9cf7ef4ad8e2f4c7a519c9a395ca3d253bb87aa8"
-        SHA512 "1bd11bfe70204213469687d1e224fabb2ff2798aa25f6d791b3d455acdcacf686248e7a692f23ed67148ef99faf1a7c1f823182f33a45340310477bc51b32bb7"
-        HEAD_REF "master"
-        PATCHES 
-            "UWP_index_set.patch"
-            fix-zlib.patch
+vcpkg_download_distfile(
+    android-alooper-patch
+    URLS https://github.com/realm/realm-core/commit/50a9895544a195afab0450d0c87730e8a31cf667.diff?full_index=1
+    FILENAME realm-core-android-alooper-50a989.diff
+    SHA512 7c10f166ab61f4ea7a46473aa04eb1b5f440edd81c2997cc10b84b9890eb6dfe7b77d51364fe2d4c537c7809ce03dd8b269309d7da2eede72be8dec3b71c2485
 )
 
-set(REALMCORE_CMAKE_OPTIONS -DREALM_CORE_SUBMODULE_BUILD=OFF)
-list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_BUILD_LIB_ONLY=ON)
-list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_NO_TESTS=ON)
-list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_NEEDS_OPENSSL=ON)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO realm/realm-core
+    REF "${VERSION}"
+    SHA512 474f5c6d62e42b221f7b934ca2d8070f83e92eeeeb1271594b7d750fc6f4d186889e04722e0f26ca725cf4f3130c5e1851e82e4ab944a05e25465f3115ffe8ce
+    HEAD_REF master
+    PATCHES 
+        UWP_index_set.patch
+        fix-zlib.patch
+        ${android-alooper-patch}
+)
 
-if (ANDROID OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)
+if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+    list(APPEND REALMCORE_CMAKE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON)
+else()
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_FORCE_OPENSSL=ON)
+        list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_ENABLE_SYNC=OFF) # https://github.com/realm/realm-core/issues/7752
+    endif()
     list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_USE_SYSTEM_OPENSSL=ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DREALM_BUILD_LIB_ONLY=ON
+        -DREALM_CORE_SUBMODULE_BUILD=OFF
+        -DREALM_NO_TESTS=ON
+        -DREALM_VERSION=${VERSION}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Backtrace=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BISON=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_FLEX=ON
         ${REALMCORE_CMAKE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenSSL
 )
 
 vcpkg_cmake_install()
@@ -36,4 +54,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/doc"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/THIRD-PARTY-NOTICES")
