@@ -600,7 +600,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
                 set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${VCPKG_TARGET_ARCHITECTURE}-apple-ios11.0")
             endif ()
         endif ()
-        set(vcpkg_osx_sysroot VCPKG_OSX_SYSROOT)
+        set(vcpkg_osx_sysroot "${VCPKG_OSX_SYSROOT}")
         # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
         # (on apple silicon it's not required but shouldn't cause any problems)
         if (NOT VCPKG_OSX_SYSROOT)
@@ -614,7 +614,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             )
             if (sdk_path)
                 message(STATUS "Found!")
-                set(vcpkg_osx_sysroot sdk_path)
+                set(vcpkg_osx_sysroot "${sdk_path}")
             else ()
                 message(FATAL_ERROR "Can't determine iphoneos SDK path. Error: ${xcrun_error}")
             endif ()
