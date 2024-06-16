@@ -587,6 +587,40 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             vcpkg_add_to_path("${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
+    elseif (VCPKG_TARGET_IS_IOS)
+        if (VCPKG_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 11.0) # nowadays ffmpeg needs to be built for ios 11.0 and later
+            set(OPTIONS "${OPTIONS} --extra-cflags=--target=${VCPKG_TARGET_ARCHITECTURE}-apple-ios${VCPKG_OSX_DEPLOYMENT_TARGET}")
+            set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${VCPKG_TARGET_ARCHITECTURE}-apple-ios${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        else ()
+            if (VCPKG_OSX_DEPLOYMENT_TARGET)
+                message(FATAL_ERROR "ffmpeg can be built only for iOS 11.0 and later but you set
+                                    VCPKG_OSX_DEPLOYMENT_TARGET to ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+            else ()
+                set(OPTIONS "${OPTIONS} --extra-cflags=--target=${VCPKG_TARGET_ARCHITECTURE}-apple-ios11.0")
+                set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${VCPKG_TARGET_ARCHITECTURE}-apple-ios11.0")
+            endif ()
+        endif ()
+        set(vcpkg_osx_sysroot VCPKG_OSX_SYSROOT)
+        # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
+        # (on apple silicon it's not required but shouldn't cause any problems)
+        if (NOT VCPKG_OSX_SYSROOT)
+            message(STATUS "VCPKG_OSX_SYSROOT not set, looking for iOS sdk with xcrun")
+            execute_process(
+                    COMMAND /usr/bin/xcrun --sdk iphoneos --show-sdk-path
+                    OUTPUT_VARIABLE sdk_path
+                    ERROR_VARIABLE xcrun_error
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    ERROR_STRIP_TRAILING_WHITESPACE
+            )
+            if (sdk_path)
+                message(STATUS "Found!")
+                set(vcpkg_osx_sysroot sdk_path)
+            else ()
+                message(FATAL_ERROR "Can't determine iphoneos SDK path. Error: ${xcrun_error}")
+            endif ()
+        endif ()
+        set(OPTIONS "${OPTIONS} --extra-cflags=-isysroot${vcpkg_osx_sysroot}")
+        set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot${vcpkg_osx_sysroot}")
     endif()
 endif()
 
