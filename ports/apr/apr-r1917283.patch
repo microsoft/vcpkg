@@ -1,0 +1,218 @@
+Index: CMakeLists.txt
+===================================================================
+--- CMakeLists.txt	(revision 1917282)
++++ CMakeLists.txt	(revision 1917283)
+@@ -21,6 +21,23 @@
+ 
+ PROJECT(APR C)
+ 
++# Enable support for MSVC runtime library selection by abstraction
++# if supported by CMake.
++IF(POLICY CMP0091)
++  CMAKE_POLICY(SET CMP0091 NEW)
++ENDIF()
++
++# Add simple support CMAKE_WARNING_AS_ERROR if CMake doesn't
++# support it.
++IF (CMAKE_VERSION VERSION_LESS 3.24)
++  IF(CMAKE_WARNING_AS_ERROR AND MSVC)
++    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")
++  ENDIF()
++ENDIF()
++
++SET(apr_name    apr-1)
++SET(apr_libname libapr-1)
++
+ OPTION(APR_INSTALL_PRIVATE_H  "Install selected private .h files (for httpd)"  OFF)
+ OPTION(APR_HAVE_IPV6        "IPv6 support"                 ON)
+ OPTION(INSTALL_PDB          "Install .pdb files (if generated)"  ON)
+@@ -81,11 +98,11 @@
+ #         you've generated apr.h before using a different build
+ 
+ SET(APR_INCLUDE_DIRECTORIES
+-  ${PROJECT_BINARY_DIR}
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/arch/win32
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/arch/unix
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/private
++  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/arch/win32>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/arch/unix>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/private>
+ )
+ 
+ SET(APR_SYSTEM_LIBS
+@@ -278,33 +295,53 @@
+ 
+ # libapr-1 is shared, apr-1 is static
+ IF (APR_BUILD_SHARED)
+-  ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
+-  SET(install_targets ${install_targets} libapr-1)
+-  SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
+-  TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+-  SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
+-  ADD_DEPENDENCIES(libapr-1 test_char_header)
++  ADD_LIBRARY(${apr_libname} SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
++  LIST(APPEND install_targets ${apr_libname})
++  LIST(APPEND install_bin_pdb ${PROJECT_BINARY_DIR}/${apr_libname}.pdb)
++  TARGET_LINK_LIBRARIES(${apr_libname}
++                        PRIVATE ${APR_SYSTEM_LIBS})
++  TARGET_COMPILE_DEFINITIONS(${apr_libname}
++                             PRIVATE "APR_DECLARE_EXPORT;WINNT"
++                             INTERFACE "APR_DECLARE_IMPORT;WINNT")
++  TARGET_INCLUDE_DIRECTORIES(${apr_libname}
++    PRIVATE ${APR_INCLUDE_DIRECTORIES}
++    INTERFACE $<INSTALL_INTERFACE:include> ${APR_INCLUDE_DIRECTORIES}
++  )
++  ADD_DEPENDENCIES(${apr_libname} test_char_header)
+ ENDIF()
+ 
+ IF (APR_BUILD_STATIC)
+-  ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
+-  SET(install_targets ${install_targets} apr-1)
+-  TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
+-  SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
+-  ADD_DEPENDENCIES(apr-1 test_char_header)
++  ADD_LIBRARY(${apr_name} STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
++  LIST(APPEND install_targets ${apr_name})
++  TARGET_LINK_LIBRARIES(${apr_name}
++                        PRIVATE ${APR_SYSTEM_LIBS})
++  TARGET_COMPILE_DEFINITIONS(${apr_name}
++                             PRIVATE "APR_DECLARE_STATIC;WINNT"
++                             INTERFACE "APR_DECLARE_STATIC;WINNT")
++  TARGET_INCLUDE_DIRECTORIES(${apr_name}
++    PRIVATE ${APR_INCLUDE_DIRECTORIES}
++    INTERFACE $<INSTALL_INTERFACE:include> ${APR_INCLUDE_DIRECTORIES}
++  )
++  ADD_DEPENDENCIES(${apr_name} test_char_header)
+ ENDIF()
+ 
+ # libaprapp-1 and aprapp-1 are static
+ IF (APR_BUILD_SHARED)
+   ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+-  SET(install_targets ${install_targets} libaprapp-1)
++  LIST(APPEND install_targets libaprapp-1)
+   SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
++  TARGET_INCLUDE_DIRECTORIES(libaprapp-1
++    PRIVATE ${APR_INCLUDE_DIRECTORIES}
++  )
+ ENDIF()
+ 
+ IF (APR_BUILD_STATIC)
+   ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
+-  SET(install_targets ${install_targets} aprapp-1)
++  LIST(APPEND install_targets aprapp-1)
+   SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
++  TARGET_INCLUDE_DIRECTORIES(aprapp-1
++    PRIVATE ${APR_INCLUDE_DIRECTORIES}
++  )
+ ENDIF()
+ 
+ IF(APR_BUILD_TESTAPR)
+@@ -323,21 +360,16 @@
+                   ${PROJECT_BINARY_DIR}/data/mmap_datafile.txt)
+ 
+   IF(TEST_STATIC_LIBS)
+-    SET(whichapr    apr-1)
++    SET(whichapr    ${apr_name})
+     SET(whichaprapp aprapp-1)
+-    SET(apiflag     -DAPR_DECLARE_STATIC)
+   ELSE()
+-    SET(whichapr    libapr-1)
++    SET(whichapr    ${apr_libname})
+     SET(whichaprapp libaprapp-1)
+-    SET(apiflag)
+   ENDIF()
+ 
+   ADD_EXECUTABLE(testapp test/testapp.c)
+-  TARGET_LINK_LIBRARIES(testapp ${whichapr} ${whichaprapp} ${APR_SYSTEM_LIBS})
++  TARGET_LINK_LIBRARIES(testapp ${whichapr} ${whichaprapp})
+   SET_TARGET_PROPERTIES(testapp PROPERTIES LINK_FLAGS /entry:wmainCRTStartup)
+-  IF(apiflag)
+-    SET_TARGET_PROPERTIES(testapp PROPERTIES COMPILE_FLAGS ${apiflag})
+-  ENDIF()
+   ADD_TEST(NAME testapp COMMAND testapp)
+ 
+   SET (APR_TEST_SOURCES
+@@ -350,11 +382,8 @@
+   ENDFOREACH()
+ 
+   ADD_EXECUTABLE(testall ${APR_TEST_SOURCES})
+-  TARGET_LINK_LIBRARIES(testall ${whichapr} ${APR_SYSTEM_LIBS})
++  TARGET_LINK_LIBRARIES(testall ${whichapr} ws2_32.lib)
+   SET_TARGET_PROPERTIES(testall PROPERTIES COMPILE_DEFINITIONS "BINPATH=$<TARGET_FILE_DIR:testall>")
+-  IF(apiflag)
+-    SET_TARGET_PROPERTIES(testall PROPERTIES COMPILE_FLAGS ${apiflag})
+-  ENDIF()
+ 
+   FOREACH(test ${APR_TEST_SUITES})
+     ADD_TEST(NAME ${test} COMMAND testall -v ${test})
+@@ -361,7 +390,7 @@
+   ENDFOREACH()
+ 
+   ADD_LIBRARY(mod_test MODULE test/mod_test.c)
+-  TARGET_LINK_LIBRARIES(mod_test ${whichapr} ${APR_SYSTEM_LIBS})
++  TARGET_LINK_LIBRARIES(mod_test ${whichapr})
+   SET_PROPERTY(TARGET mod_test APPEND PROPERTY LINK_FLAGS /export:print_hello)
+   # nasty work-around for difficulties adding more than one additional flag
+   # (they get joined in a bad way behind the scenes)
+@@ -368,9 +397,6 @@
+   GET_PROPERTY(link_flags TARGET mod_test PROPERTY LINK_FLAGS)
+   SET(link_flags "${link_flags} /export:count_reps")
+   SET_TARGET_PROPERTIES(mod_test PROPERTIES LINK_FLAGS ${link_flags})
+-  IF(apiflag)
+-    SET_TARGET_PROPERTIES(mod_test PROPERTIES COMPILE_FLAGS ${apiflag})
+-  ENDIF()
+ 
+   # Build all the single-source executable files with no special build
+   # requirements.
+@@ -394,11 +420,10 @@
+   FOREACH(sourcefile ${single_source_programs})
+     STRING(REGEX REPLACE ".*/([^\\]+)\\.c" "\\1" proggie ${sourcefile})
+     ADD_EXECUTABLE(${proggie} ${sourcefile})
+-    TARGET_LINK_LIBRARIES(${proggie} ${whichapr} ${APR_SYSTEM_LIBS})
++    TARGET_LINK_LIBRARIES(${proggie} ${whichapr})
+     SET_TARGET_PROPERTIES(${proggie} PROPERTIES COMPILE_DEFINITIONS "BINPATH=$<TARGET_FILE_DIR:${proggie}>")
+-    IF(apiflag)
+-      SET_TARGET_PROPERTIES(${proggie} PROPERTIES COMPILE_FLAGS ${apiflag})
+-    ENDIF()
++
++    ADD_DEPENDENCIES(testall ${proggie})
+   ENDFOREACH()
+ 
+   # Add tests for programs that run by themselves with no arguments.
+@@ -424,13 +449,20 @@
+ ENDIF (APR_BUILD_TESTAPR)
+ 
+ # Installation
++string(TOLOWER "${PROJECT_NAME}" project_name_lower)
+ 
+-INSTALL(TARGETS ${install_targets}
++INSTALL(TARGETS ${install_targets} EXPORT apr-config
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+         ARCHIVE DESTINATION lib
+        )
+ 
++INSTALL(EXPORT apr-config
++        NAMESPACE apr::
++        DESTINATION "lib/cmake/${project_name_lower}"
++        FILE "${project_name_lower}-config.cmake"
++)
++
+ IF(INSTALL_PDB)
+   INSTALL(FILES ${install_bin_pdb}
+           DESTINATION bin
+Index: .
+===================================================================
+--- .	(revision 1917282)
++++ .	(revision 1917283)
+
+Property changes on: .
+___________________________________________________________________
+Modified: svn:mergeinfo
+## -0,0 +0,2 ##
+   Merged /apr/apr/branches/1.7.x-cmake-improvements:r1917214-1917282
+   Merged /apr/apr/trunk:r1895471,1895519-1895520,1902517,1905416,1917107,1917109,1917112,1917114-1917115,1917162,1917250
+

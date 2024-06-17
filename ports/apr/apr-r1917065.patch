@@ -1,0 +1,13 @@
+Index: CMakeLists.txt
+===================================================================
+--- CMakeLists.txt	(revision 1917064)
++++ CMakeLists.txt	(revision 1917065)
+@@ -461,6 +461,7 @@
+ MESSAGE(STATUS "  Install prefix .................. : ${CMAKE_INSTALL_PREFIX}")
+ MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
+ MESSAGE(STATUS "  IPv6 ............................ : ${APR_HAVE_IPV6}")
++MESSAGE(STATUS "  Minimum Windows version ......... : ${MIN_WINDOWS_VER}")
+ MESSAGE(STATUS "  Build shared libs ............... : ${APR_BUILD_SHARED}")
+ MESSAGE(STATUS "  Build static libs ............... : ${APR_BUILD_STATIC}")
+ MESSAGE(STATUS "  Build test suite ................ : ${APR_BUILD_TESTAPR}")
+

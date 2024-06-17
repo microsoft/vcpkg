@@ -10,7 +10,10 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-configcmake.patch
+        apr-r1917051.patch
+        apr-r1917065.patch
+        apr-r1917283.patch
+        apr-r1917612.patch
         unglue.patch
 )
 
@@ -20,9 +23,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
             private-headers APR_INSTALL_PRIVATE_H
     )
 
+    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" APR_BUILD_STATIC)
+    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" APR_BUILD_SHARED)
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
+            -DAPR_BUILD_STATIC=${APR_BUILD_STATIC}
+            -DAPR_BUILD_SHARED=${APR_BUILD_SHARED}
+            -DAPR_BUILD_TESTAPR=OFF
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
@@ -30,11 +39,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
 
     vcpkg_cmake_install()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-apr CONFIG_PATH share/unofficial-apr)
-    # There is no way to suppress installation of the headers in debug builds.
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
     vcpkg_copy_pdbs()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "apr"
+                             CONFIG_PATH "lib/cmake/apr")
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 else()
     # To cross-compile you will need a triplet file that locates the tool chain and sets --host and --cache parameters of "./configure".
     # The ${VCPKG_PLATFORM_TOOLSET}.cache file must have been generated on the targeted host using "./configure -C".
@@ -91,6 +100,8 @@ else()
     endif()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
