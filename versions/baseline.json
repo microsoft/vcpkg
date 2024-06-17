@@ -7741,8 +7741,8 @@
       "port-version": 3
     },
     "ring-span-lite": {
-      "baseline": "0.6.0",
-      "port-version": 1
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "rioki-glow": {
       "baseline": "0.2.1",
