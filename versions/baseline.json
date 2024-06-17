@@ -5945,7 +5945,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.11.0",
+      "baseline": "1.12",
       "port-version": 0
     },
     "msgpack": {
