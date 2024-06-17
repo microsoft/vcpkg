@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-external-dependencies2.patch
         eigen-3.4.patch
         266.diff
+        suitesparse-v7-support.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
