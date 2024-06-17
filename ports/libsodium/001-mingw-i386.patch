@@ -1,0 +1,21 @@
+diff --git a/src/libsodium/randombytes/internal/randombytes_internal_random.c b/src/libsodium/randombytes/internal/randombytes_internal_random.c
+--- a/src/libsodium/randombytes/internal/randombytes_internal_random.c
++++ b/src/libsodium/randombytes/internal/randombytes_internal_random.c
+@@ -45,7 +45,7 @@
+ # include <poll.h>
+ #endif
+ #ifdef HAVE_RDRAND
+-# ifdef __clang__
++# if defined (__clang__) && (!defined(__MINGW32__) || !defined(__i386__))
+ #  pragma clang attribute push(__attribute__((target("rdrnd"))), apply_to = function)
+ # elif defined(__GNUC__)
+ #  pragma GCC target("rdrnd")
+@@ -639,7 +639,7 @@ struct randombytes_implementation randombytes_internal_implementation = {
+ };
+ 
+ #ifdef HAVE_RDRAND
+-# ifdef __clang__
++# if defined (__clang__) && (!defined(__MINGW32__) || !defined(__i386__))
+ #  pragma clang attribute pop
+ # endif
+ #endif
