@@ -7098,7 +7098,7 @@
     },
     "python3": {
       "baseline": "3.11.8",
-      "port-version": 2
+      "port-version": 3
     },
     "qca": {
       "baseline": "2.3.7",
@@ -9102,6 +9102,10 @@
     },
     "vcpkg-cmake-get-vars": {
       "baseline": "2023-12-31",
+      "port-version": 0
+    },
+    "vcpkg-get-python": {
+      "baseline": "2024-06-08",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
