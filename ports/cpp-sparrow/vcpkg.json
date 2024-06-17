@@ -6,10 +6,7 @@
   "license": "Apache-2.0",
   "supports": "!uwp & !android",
   "dependencies": [
-    {
-      "name": "date",
-      "host": true
-    },
+    "date",
     {
       "name": "vcpkg-cmake",
       "host": true
