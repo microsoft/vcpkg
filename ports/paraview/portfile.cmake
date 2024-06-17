@@ -45,6 +45,7 @@ index f1897d6f719c3b61b6d4fa317966c007dab2fc23..e88d7c89198696832e5645bfb0e758fd
  cp ./sccache shortcuts/g++
 ]]
 ""
+IGNORE_UNCHANGED
 )
 
 vcpkg_from_github(
@@ -236,7 +237,7 @@ endif()
 
 file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
 foreach(file IN LISTS cmake_files)
-    vcpkg_replace_string("${file}" "pv${VERSION_MAJOR_MINOR}d.exe" "pv${VERSION_MAJOR_MINOR}.exe")
+    vcpkg_replace_string("${file}" "pv${VERSION_MAJOR_MINOR}d.exe" "pv${VERSION_MAJOR_MINOR}.exe" IGNORE_UNCHANGED)
 endforeach() 
  
 # The plugins also work without these files
