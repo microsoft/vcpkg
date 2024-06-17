@@ -1,7 +1,6 @@
 {
   "name": "suitesparse",
   "version-semver": "7.7.0",
-  "port-version": 3,
   "description": "A suite of sparse matrix algorithms",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": null,
