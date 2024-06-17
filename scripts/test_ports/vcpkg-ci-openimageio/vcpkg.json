@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-openimageio",
-  "version": "1",
+  "version": "2",
   "description": "OpenImageIO features testing within CI.",
   "license": "MIT",
   "dependencies": [
@@ -16,7 +16,7 @@
         {
           "name": "pybind11",
           "platform": "!(windows & static)"
-        }
+        },
         "tools",
         "webp"
       ]
