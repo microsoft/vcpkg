@@ -11,26 +11,16 @@
     "suitesparse-ccolamd",
     "suitesparse-cholmod",
     "suitesparse-colamd",
-    {
-      "name": "suitesparse-config",
-      "default-features": false
-    },
+    "suitesparse-config",
     "suitesparse-cxsparse",
-    {
-      "name": "suitesparse-graphblas",
-      "default-features": false
-    },
+    "suitesparse-graphblas",
     "suitesparse-klu",
-    {
-      "name": "suitesparse-lagraph",
-      "default-features": false
-    },
+    "suitesparse-lagraph",
     "suitesparse-ldl",
     "suitesparse-spex"
   ],
   "default-features": [
-    "gpl",
-    "openmp"
+    "gpl"
   ],
   "features": {
     "cuda": {
@@ -89,6 +79,12 @@
       "description": "Enable OpenMP support for SuiteSparse libraries",
       "dependencies": [
         {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
           "name": "suitesparse-config",
           "features": [
             "openmp"
@@ -101,7 +97,13 @@
           ]
         },
         {
-          "name": "suitesparse-lagraph",
+          "name": "suitesparse-paru",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-spex",
           "features": [
             "openmp"
           ]
