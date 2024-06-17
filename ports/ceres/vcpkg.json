@@ -36,7 +36,8 @@
           "features": [
             "suitesparse"
           ]
-        }
+        },
+        "suitesparse-cxsparse"
       ]
     },
     "eigensparse": {
