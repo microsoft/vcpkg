@@ -1,0 +1,15 @@
+https://github.com/ceres-solver/ceres-solver/commit/9cca671273c2f205ca7350422f48b7b119c5dd78
+
+Enable compatibility with SuiteSparse 7.2.0
+
+--- a/internal/ceres/covariance_impl.cc
++++ b/internal/ceres/covariance_impl.cc
+@@ -630,7 +630,7 @@
+   // separately.
+   const SuiteSparse_long rank = SuiteSparseQR<double>(SPQR_ORDERING_BESTAMD,
+                                                       SPQR_DEFAULT_TOL,
+-                                                      cholmod_jacobian.ncol,
++                                                      static_cast<int64_t>(cholmod_jacobian.ncol),
+                                                       &cholmod_jacobian,
+                                                       &R,
+                                                       &permutation,
