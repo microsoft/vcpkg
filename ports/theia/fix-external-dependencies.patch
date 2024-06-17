@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 9c1b150..1adbfed 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -105,10 +105,10 @@ add_definitions(-DTHEIA_DATA_DIR="${CMAKE_SOURCE_DIR}/data")
+@@ -105,10 +105,10 @@
  
  # Eigen
  set(MIN_EIGEN_VERSION 3.2.0)
@@ -17,7 +17,7 @@ index 9c1b150..1adbfed 100644
  
  # Use a larger inlining threshold for Clang, since it hobbles Eigen,
  # resulting in an unreasonably slow version of the blas routines. The
-@@ -129,70 +129,27 @@ endif ()
+@@ -129,70 +129,28 @@
  
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
  # FindGflags.cmake)
@@ -63,8 +63,11 @@ index 9c1b150..1adbfed 100644
 -  message(FATAL_ERROR "Can't find OpenImageIO. Please set OPENIMAGEIO_INCLUDE_DIR & "
 -    "OPENIMAGEIO_LIBRARY")
 -endif (OPENIMAGEIO_FOUND)
- 
- # Suitesparse
+-
+-# Suitesparse
++
++# SuiteSparse
++message("-- Check for SuiteSparse")
  find_package(SuiteSparse REQUIRED)
 -if (SUITESPARSE_FOUND)
 -  # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
@@ -93,7 +96,7 @@ index 9c1b150..1adbfed 100644
  
  include_directories(
    include
-@@ -225,24 +182,19 @@ include_directories(
+@@ -225,24 +183,19 @@
    libraries/spectra
    ${akaze_SOURCE_DIR}
    ${akaze_INCLUDE_DIR}
@@ -121,7 +124,7 @@ index 9c1b150..1adbfed 100644
  
  if (BUILD_DOCUMENTATION)
    message("-- Documentation building is enabled")
-@@ -260,7 +212,13 @@ install(FILES ${THEIA_HDRS} DESTINATION include/theia)
+@@ -260,7 +213,13 @@
  file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
  install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
  
@@ -136,7 +139,7 @@ index 9c1b150..1adbfed 100644
  
  # Add an uninstall target to remove all installed files.
  configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
-@@ -272,17 +230,10 @@ add_custom_target(uninstall
+@@ -272,17 +231,10 @@
  
  # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -158,7 +161,7 @@ index 9c1b150..1adbfed 100644
  
  # This "exports" all targets which have been put into the export set
  # "TheiaExport". This means that CMake generates a file with the given
-@@ -319,9 +270,4 @@ configure_file("${CMAKE_SOURCE_DIR}/cmake/TheiaConfigVersion.cmake.in"
+@@ -319,9 +271,4 @@
  # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
                "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
@@ -168,13 +171,59 @@ index 9c1b150..1adbfed 100644
 -	      "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindSuiteSparse.cmake"
                DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+
 diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 index a3ea187..7e9d912 100644
 --- a/cmake/TheiaConfig.cmake.in
 +++ b/cmake/TheiaConfig.cmake.in
-@@ -124,14 +124,7 @@ list(APPEND CERES_INCLUDE_DIR_HINTS @CERES_INCLUDE_DIR@)
- get_filename_component(THEIA_BUILD_CERES_LIBRARY_DIR @CERES_LIBRARIES@ PATH)
- list(APPEND CERES_LIBRARY_DIR_HINTS ${THEIA_BUILD_CERES_LIBRARY_DIR})
+@@ -43,7 +43,7 @@
+   # use the camelcase library name, not uppercase.
+   if (Theia_FIND_QUIETLY)
+     message(STATUS "Failed to find Theia - " ${REASON_MSG} ${ARGN})
+-  else (Theia_FIND_REQUIRED)
++  elseif (Theia_FIND_REQUIRED)
+     message(FATAL_ERROR "Failed to find Theia - " ${REASON_MSG} ${ARGN})
+   else()
+     # Neither QUIETLY nor REQUIRED, use SEND_ERROR which emits an error
+@@ -101,104 +101,61 @@
+ # TheiaTargets-<release/debug>.cmake as link libraries for Theia target.
+ set(THEIA_INCLUDE_DIRS ${THEIA_INCLUDE_DIR})
+ 
++include(CMakeFindDependencyMacro)
++
+ # Eigen.
+ # Flag set during configuration and build of Theia.
+-set(THEIA_EIGEN_VERSION @EIGEN_VERSION@)
++set(THEIA_EIGEN_VERSION @EIGEN3_VERSION@)
+ # Append the locations of Eigen when Theia was built to the search path hints.
+-list(APPEND EIGEN_INCLUDE_DIR_HINTS @EIGEN_INCLUDE_DIR@)
++list(APPEND EIGEN_INCLUDE_DIR_HINTS @EIGEN3_INCLUDE_DIR@)
+ # Search quietly s/t we control the timing of the error message if not found.
+-find_package(Eigen ${THEIA_EIGEN_VERSION} EXACT QUIET)
+-if (EIGEN_FOUND)
++find_dependency(Eigen3 ${THEIA_EIGEN_VERSION} REQUIRED)
++if (EIGEN3_FOUND)
+   message(STATUS "Found required Theia dependency: "
+-    "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN_INCLUDE_DIRS}")
+-else (EIGEN_FOUND)
++  "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN3_INCLUDE_DIRS}")
++else (EIGEN3_FOUND)
+   theia_report_not_found("Missing required Theia "
+     "dependency: Eigen version ${THEIA_EIGEN_VERSION}, please set "
+     "EIGEN_INCLUDE_DIR.")
+-endif (EIGEN_FOUND)
+-list(APPEND THEIA_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
++endif (EIGEN3_FOUND)
++list(APPEND THEIA_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
+ 
+ # Ceres.
+ # Append the locations of ceres when Theia was built to the search path hints.
+-list(APPEND CERES_INCLUDE_DIR_HINTS @CERES_INCLUDE_DIR@)
+-get_filename_component(THEIA_BUILD_CERES_LIBRARY_DIR @CERES_LIBRARIES@ PATH)
+-list(APPEND CERES_LIBRARY_DIR_HINTS ${THEIA_BUILD_CERES_LIBRARY_DIR})
++#list(APPEND CERES_INCLUDE_DIR_HINTS @CERES_INCLUDE_DIR@)
++#get_filename_component(THEIA_BUILD_CERES_LIBRARY_DIR @CERES_LIBRARIES@ PATH)
++#list(APPEND CERES_LIBRARY_DIR_HINTS ${THEIA_BUILD_CERES_LIBRARY_DIR})
  # Search quietly s/t we control the timing of the error message if not found.
 -find_package(Ceres QUIET)
 -if (CERES_FOUND)
@@ -184,13 +233,17 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia "
 -    "dependency: Ceres, please set CERES_INCLUDE_DIR.")
 -endif (CERES_FOUND)
-+find_package(Ceres REQUIRED)
++find_dependency(Ceres REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${CERES_INCLUDE_DIRS})
  
  # Glog.
-@@ -140,64 +133,19 @@ list(APPEND GLOG_INCLUDE_DIR_HINTS @GLOG_INCLUDE_DIR@)
- get_filename_component(THEIA_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
- list(APPEND GLOG_LIBRARY_DIR_HINTS ${THEIA_BUILD_GLOG_LIBRARY_DIR})
+ # Append the locations of glog when Theia was built to the search path hints.
+-list(APPEND GLOG_INCLUDE_DIR_HINTS @GLOG_INCLUDE_DIR@)
+-get_filename_component(THEIA_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
+-list(APPEND GLOG_LIBRARY_DIR_HINTS ${THEIA_BUILD_GLOG_LIBRARY_DIR})
++#list(APPEND GLOG_INCLUDE_DIR_HINTS @GLOG_INCLUDE_DIR@)
++#get_filename_component(THEIA_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
++#list(APPEND GLOG_LIBRARY_DIR_HINTS ${THEIA_BUILD_GLOG_LIBRARY_DIR})
  # Search quietly s/t we control the timing of the error message if not found.
 -find_package(Glog QUIET)
 -if (GLOG_FOUND)
@@ -200,7 +253,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia "
 -    "dependency: Glog, please set GLOG_INCLUDE_DIR.")
 -endif (GLOG_FOUND)
-+find_package(Glog REQUIRED)
++find_dependency(Glog REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${GLOG_INCLUDE_DIRS})
  
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
@@ -214,7 +267,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia dependency: Google Flags, please set "
 -    "GFLAGS_INCLUDE_DIR.")
 -endif (GFLAGS_FOUND)
-+find_package(Gflags REQUIRED)
++find_dependency(Gflags REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIRS})
  
  # OpenImageIO
@@ -225,7 +278,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia dependency: OpenImageIO. Please set "
 -    "OPENIMAGEIO_INCLUDE_DIR & OPENIMAGEIO_LIBRARY")
 -endif (OPENIMAGEIO_FOUND)
-+find_package(OpenImageIO REQUIRED)
++find_dependency(OpenImageIO REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${OPENIMAGEIO_INCLUDE_DIRS})
  
 -find_package(SuiteSparse QUIET)
@@ -253,23 +306,20 @@ index a3ea187..7e9d912 100644
 -    "for bundle adjustment and for solving convex optimization problems. "
 -    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
 -endif (SUITESPARSE_FOUND)
-+find_package(SuiteSparse REQUIRED)
- list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
- 
- # Import exported Theia targets.
-@@ -207,22 +155,24 @@ endif (NOT TARGET theia AND NOT Theia_BINARY_DIR)
- # Set the expected XX_LIBRARIES variable for FindPackage().
- set(THEIA_LIBRARIES theia)
- 
-+find_package(cereal REQUIRED)
+-list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
++# SuiteSparse
++find_dependency(SuiteSparse REQUIRED)
++
++find_dependency(cereal REQUIRED)
 +list(APPEND THEIA_LIBRARIES cereal)
 +
-+find_package(Flann REQUIRED)
++find_dependency(Flann REQUIRED)
 +list(APPEND THEIA_INCLUDE_DIRS ${FLANN_INCLUDE_DIR})
 +list(APPEND THEIA_LIBRARIES ${FLANN_LIBRARY})
-+
- # Add the libraries included with the distribution.
- set(THEIA_INTERNAL_LIB_PREFIX ${THEIA_INCLUDE_DIR}/theia/libraries)
+ 
+ # Import exported Theia targets.
+ if (NOT TARGET theia AND NOT Theia_BINARY_DIR)
+@@ -212,17 +169,12 @@
  set(THEIA_INTERNAL_LIBS_INCLUDES
    ${THEIA_INTERNAL_LIB_PREFIX}
    ${THEIA_INTERNAL_LIB_PREFIX}/akaze
@@ -449,7 +499,8 @@ index 6830f71..768586d 100644
 +++ b/src/theia/CMakeLists.txt
 @@ -209,7 +209,6 @@ set(THEIA_LIBRARY_DEPENDENCIES
    ${SUITESPARSE_LIBRARIES}
-   ${OPENIMAGEIO_LIBRARIES}
+-  ${OPENIMAGEIO_LIBRARIES}
++  OpenImageIO::OpenImageIO
    akaze
 -  flann_cpp
    statx
