@@ -97,6 +97,12 @@
           ]
         },
         {
+          "name": "suitesparse-lagraph",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
           "name": "suitesparse-paru",
           "features": [
             "openmp"
