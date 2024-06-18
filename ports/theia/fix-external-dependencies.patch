@@ -1,5 +1,4 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9c1b150..1adbfed 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -105,10 +105,10 @@
@@ -17,7 +16,7 @@ index 9c1b150..1adbfed 100644
  
  # Use a larger inlining threshold for Clang, since it hobbles Eigen,
  # resulting in an unreasonably slow version of the blas routines. The
-@@ -129,70 +129,28 @@
+@@ -129,89 +129,39 @@
  
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
  # FindGflags.cmake)
@@ -63,9 +62,8 @@ index 9c1b150..1adbfed 100644
 -  message(FATAL_ERROR "Can't find OpenImageIO. Please set OPENIMAGEIO_INCLUDE_DIR & "
 -    "OPENIMAGEIO_LIBRARY")
 -endif (OPENIMAGEIO_FOUND)
--
+ 
 -# Suitesparse
-+
 +# SuiteSparse
 +message("-- Check for SuiteSparse")
  find_package(SuiteSparse REQUIRED)
@@ -89,14 +87,35 @@ index 9c1b150..1adbfed 100644
 -  add_definitions(-DTHEIA_SUITESPARSE_VERSION="${SUITESPARSE_VERSION}")
 -else (SUITESPARSE_FOUND)
 -  # Disable use of SuiteSparse if it cannot be found and continue.
--  message(FATAL ERROR "Can't find SuiteSparse. This library is required "
+-  message(FATAL_ERROR "Can't find SuiteSparse. This library is required "
 -    "for bundle adjustment and for solving convex optimization problems. "
 -    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
 -endif (SUITESPARSE_FOUND)
  
++# vlfeat
++find_package(vlfeat REQUIRED)
+ 
+ # RocksDB
+ message("-- Check for RocksDB")
+ find_package(RocksDB REQUIRED)
+-if (ROCKSDB_FOUND)
+-  message("-- Found RocksDB: ${ROCKSDB_INCLUDE_DIR}")
+-else (ROCKSDB_FOUND)
+-  message(FATAL_ERROR "Can't find RocksDB. Please set ROCKSDB_INCLUDE_DIR & ROCKSDB_LIBRARY to use RocksDB.")
+-endif (ROCKSDB_FOUND)
+ 
+ # RapidJSON.
+ message("-- Check for RapidJSON")
+ find_package(RapidJSON REQUIRED)
+-if (RapidJSON_FOUND)
+-  message("-- Found RapidJSON: ${RAPIDJSON_INCLUDE_DIRS}")
+-else (RapidJSON_FOUND)
+-  message(FATAL_ERROR "Can't find RapidJSON. Please set RAPIDJSON_INCLUDE_DIRS to use RapidJSON.")
+-endif (RapidJSON_FOUND)
+ 
  include_directories(
    include
-@@ -225,24 +183,19 @@
+@@ -246,24 +196,18 @@
    libraries/spectra
    ${akaze_SOURCE_DIR}
    ${akaze_INCLUDE_DIR}
@@ -109,7 +128,7 @@ index 9c1b150..1adbfed 100644
    ${optimo_SOURCE_DIR}
    ${statx_SOURCE_DIR}
    ${stlplus3_SOURCE_DIR}
-   ${vlfeat_SOURCE_DIR}
+-  ${vlfeat_SOURCE_DIR}
 -  ${visual_sfm_SOURCE_DIR})
 +  ${visual_sfm_SOURCE_DIR}
 +)
@@ -124,7 +143,7 @@ index 9c1b150..1adbfed 100644
  
  if (BUILD_DOCUMENTATION)
    message("-- Documentation building is enabled")
-@@ -260,7 +213,13 @@
+@@ -281,7 +225,12 @@
  file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
  install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
  
@@ -135,11 +154,10 @@ index 9c1b150..1adbfed 100644
 +install(DIRECTORY libraries/statx/ DESTINATION include/theia/libraries/statx FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/stlplus3/ DESTINATION include/theia/libraries/stlplus3 FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/visual_sfm/ DESTINATION include/theia/libraries/visual_sfm FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/vlfeat/ DESTINATION include/theia/libraries/vlfeat FILES_MATCHING PATTERN "*.h*")
  
  # Add an uninstall target to remove all installed files.
  configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
-@@ -272,17 +231,10 @@
+@@ -293,17 +242,10 @@
  
  # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -161,19 +179,18 @@ index 9c1b150..1adbfed 100644
  
  # This "exports" all targets which have been put into the export set
  # "TheiaExport". This means that CMake generates a file with the given
-@@ -319,9 +271,4 @@
+@@ -340,10 +282,4 @@
  # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
                "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindEigen.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindGlog.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindGflags.cmake"
--	      "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
+-	            "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
+-              "${CMAKE_SOURCE_DIR}/cmake/FindRocksDB.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindSuiteSparse.cmake"
                DESTINATION ${CMAKECONFIG_INSTALL_DIR})
-
 diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
-index a3ea187..7e9d912 100644
 --- a/cmake/TheiaConfig.cmake.in
 +++ b/cmake/TheiaConfig.cmake.in
 @@ -43,7 +43,7 @@
@@ -185,7 +202,7 @@ index a3ea187..7e9d912 100644
      message(FATAL_ERROR "Failed to find Theia - " ${REASON_MSG} ${ARGN})
    else()
      # Neither QUIETLY nor REQUIRED, use SEND_ERROR which emits an error
-@@ -101,104 +101,61 @@
+@@ -101,113 +101,48 @@
  # TheiaTargets-<release/debug>.cmake as link libraries for Theia target.
  set(THEIA_INCLUDE_DIRS ${THEIA_INCLUDE_DIR})
  
@@ -201,30 +218,23 @@ index a3ea187..7e9d912 100644
  # Search quietly s/t we control the timing of the error message if not found.
 -find_package(Eigen ${THEIA_EIGEN_VERSION} EXACT QUIET)
 -if (EIGEN_FOUND)
-+find_dependency(Eigen3 ${THEIA_EIGEN_VERSION} REQUIRED)
-+if (EIGEN3_FOUND)
-   message(STATUS "Found required Theia dependency: "
+-  message(STATUS "Found required Theia dependency: "
 -    "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN_INCLUDE_DIRS}")
 -else (EIGEN_FOUND)
-+  "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN3_INCLUDE_DIRS}")
-+else (EIGEN3_FOUND)
-   theia_report_not_found("Missing required Theia "
-     "dependency: Eigen version ${THEIA_EIGEN_VERSION}, please set "
-     "EIGEN_INCLUDE_DIR.")
+-  theia_report_not_found("Missing required Theia "
+-    "dependency: Eigen version ${THEIA_EIGEN_VERSION}, please set "
+-    "EIGEN_INCLUDE_DIR.")
 -endif (EIGEN_FOUND)
 -list(APPEND THEIA_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
-+endif (EIGEN3_FOUND)
++find_dependency(Eigen3 ${THEIA_EIGEN_VERSION} REQUIRED)
 +list(APPEND THEIA_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
  
  # Ceres.
- # Append the locations of ceres when Theia was built to the search path hints.
+-# Append the locations of ceres when Theia was built to the search path hints.
 -list(APPEND CERES_INCLUDE_DIR_HINTS @CERES_INCLUDE_DIR@)
 -get_filename_component(THEIA_BUILD_CERES_LIBRARY_DIR @CERES_LIBRARIES@ PATH)
 -list(APPEND CERES_LIBRARY_DIR_HINTS ${THEIA_BUILD_CERES_LIBRARY_DIR})
-+#list(APPEND CERES_INCLUDE_DIR_HINTS @CERES_INCLUDE_DIR@)
-+#get_filename_component(THEIA_BUILD_CERES_LIBRARY_DIR @CERES_LIBRARIES@ PATH)
-+#list(APPEND CERES_LIBRARY_DIR_HINTS ${THEIA_BUILD_CERES_LIBRARY_DIR})
- # Search quietly s/t we control the timing of the error message if not found.
+-# Search quietly s/t we control the timing of the error message if not found.
 -find_package(Ceres QUIET)
 -if (CERES_FOUND)
 -  message(STATUS "Found required Theia dependency: "
@@ -237,14 +247,11 @@ index a3ea187..7e9d912 100644
  list(APPEND THEIA_INCLUDE_DIRS ${CERES_INCLUDE_DIRS})
  
  # Glog.
- # Append the locations of glog when Theia was built to the search path hints.
+-# Append the locations of glog when Theia was built to the search path hints.
 -list(APPEND GLOG_INCLUDE_DIR_HINTS @GLOG_INCLUDE_DIR@)
 -get_filename_component(THEIA_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
 -list(APPEND GLOG_LIBRARY_DIR_HINTS ${THEIA_BUILD_GLOG_LIBRARY_DIR})
-+#list(APPEND GLOG_INCLUDE_DIR_HINTS @GLOG_INCLUDE_DIR@)
-+#get_filename_component(THEIA_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
-+#list(APPEND GLOG_LIBRARY_DIR_HINTS ${THEIA_BUILD_GLOG_LIBRARY_DIR})
- # Search quietly s/t we control the timing of the error message if not found.
+-# Search quietly s/t we control the timing of the error message if not found.
 -find_package(Glog QUIET)
 -if (GLOG_FOUND)
 -  message(STATUS "Found required Theia dependency: "
@@ -256,8 +263,8 @@ index a3ea187..7e9d912 100644
 +find_dependency(Glog REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${GLOG_INCLUDE_DIRS})
  
- # GFlags. The namespace patch is borrow from Ceres Solver (see license in
- # FindGflags.cmake)
+-# GFlags. The namespace patch is borrow from Ceres Solver (see license in
+-# FindGflags.cmake)
 -find_package(Gflags QUIET)
 -if (GFLAGS_FOUND)
 -  message(STATUS "Found required Theia dependency: Google Flags in "
@@ -267,6 +274,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia dependency: Google Flags, please set "
 -    "GFLAGS_INCLUDE_DIR.")
 -endif (GFLAGS_FOUND)
++# GFlags.
 +find_dependency(Gflags REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIRS})
  
@@ -280,6 +288,20 @@ index a3ea187..7e9d912 100644
 -endif (OPENIMAGEIO_FOUND)
 +find_dependency(OpenImageIO REQUIRED)
  list(APPEND THEIA_INCLUDE_DIRS ${OPENIMAGEIO_INCLUDE_DIRS})
+ 
+-find_package(RocksDB)
+-if (ROCKSDB_FOUND)
+-  message(STATUS "Found RocksDB: ${ROCKSDB_INCLUDE_DIRS}")
+-else (ROCKSDB_FOUND)
+-theia_report_not_found("Missing required Theia dependence: RocksDB. Please "
+-    "set ROCKSDB_INCLUDE_DIR & ROCKSDB_LIBRARY.")
+-endif (ROCKSDB_FOUND)
+-list(APPEND THEIA_INCLUDE_DIRS ${ROCKSDB_INCLUDE_DIRS})
++# SuiteSparse
++find_dependency(SuiteSparse REQUIRED)
++
++find_dependency(cereal REQUIRED)
++list(APPEND THEIA_LIBRARIES cereal)
  
 -find_package(SuiteSparse QUIET)
 -if (SUITESPARSE_FOUND)
@@ -307,19 +329,19 @@ index a3ea187..7e9d912 100644
 -    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
 -endif (SUITESPARSE_FOUND)
 -list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
-+# SuiteSparse
-+find_dependency(SuiteSparse REQUIRED)
-+
-+find_dependency(cereal REQUIRED)
-+list(APPEND THEIA_LIBRARIES cereal)
-+
 +find_dependency(Flann REQUIRED)
 +list(APPEND THEIA_INCLUDE_DIRS ${FLANN_INCLUDE_DIR})
 +list(APPEND THEIA_LIBRARIES ${FLANN_LIBRARY})
++
++find_dependency(vlfeat REQUIRED)
++list(APPEND THEIA_LIBRARIES unofficial::vlfeat::vl)
++
++find_dependency(RocksDB REQUIRED)
++find_dependency(RapidJSON REQUIRED)
  
  # Import exported Theia targets.
  if (NOT TARGET theia AND NOT Theia_BINARY_DIR)
-@@ -212,17 +169,12 @@
+@@ -221,17 +156,12 @@
  set(THEIA_INTERNAL_LIBS_INCLUDES
    ${THEIA_INTERNAL_LIB_PREFIX}
    ${THEIA_INTERNAL_LIB_PREFIX}/akaze
@@ -335,15 +357,14 @@ index a3ea187..7e9d912 100644
 -  ${THEIA_INTERNAL_LIB_PREFIX}/vlfeat
 -  ${THEIA_INTERNAL_LIB_PREFIX}/visual_sfm)
 +  ${THEIA_INTERNAL_LIB_PREFIX}/visual_sfm
-+  ${THEIA_INTERNAL_LIB_PREFIX}/vlfeat)
++)
  
  list(APPEND THEIA_INCLUDE_DIRS ${THEIA_INTERNAL_LIBS_INCLUDES})
  
 diff --git a/libraries/CMakeLists.txt b/libraries/CMakeLists.txt
-index 84f3829..f88d75a 100644
 --- a/libraries/CMakeLists.txt
 +++ b/libraries/CMakeLists.txt
-@@ -5,12 +5,6 @@ endif (${BUILD_TESTING})
+@@ -5,12 +5,6 @@
  # AKAZE feature extractor.
  add_subdirectory(akaze)
  
@@ -356,18 +377,19 @@ index 84f3829..f88d75a 100644
  # Add Optimo.
  add_subdirectory(optimo)
  
-@@ -24,4 +18,4 @@ add_subdirectory(stlplus3)
- add_subdirectory(vlfeat)
+@@ -21,7 +15,6 @@
+ add_subdirectory(stlplus3)
+ 
+ # Add VLFeat.
+-add_subdirectory(vlfeat)
  
  # Add VisualSfM files.
--add_subdirectory(visual_sfm)
+ add_subdirectory(visual_sfm)
 \ No newline at end of file
-+add_subdirectory(visual_sfm)
 diff --git a/libraries/optimo/CMakeLists.txt b/libraries/optimo/CMakeLists.txt
-index 80f5e5f..ea57f1b 100644
 --- a/libraries/optimo/CMakeLists.txt
 +++ b/libraries/optimo/CMakeLists.txt
-@@ -67,11 +67,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+@@ -67,11 +67,11 @@
  
  # Locations to search for Eigen
  # Eigen
@@ -385,10 +407,9 @@ index 80f5e5f..ea57f1b 100644
  # Setting CXX FLAGS appropriately. The code below was inspired from
  # Google CERES and modified for this library.
 diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
-index 23b9e49..c58a550 100644
 --- a/libraries/statx/CMakeLists.txt
 +++ b/libraries/statx/CMakeLists.txt
-@@ -72,11 +72,11 @@ message("-- Default Install prefix: ${CMAKE_INSTALL_PREFIX}")
+@@ -72,11 +72,11 @@
  option(STATX_WITH_CERES "Enables GEV parameter estimation using Ceres" ON)
  
  # Eigen
@@ -405,20 +426,7 @@ index 23b9e49..c58a550 100644
  
  # Google Flags
  find_package(Gflags REQUIRED)
-@@ -103,7 +103,11 @@ if(STATX_WITH_CERES)
-   endif(CERES_FOUND)
- 
-   # BLAS
--  find_package(BLAS REQUIRED)
-+  if(UNIX AND NOT APPLE)
-+    find_package(OpenBLAS REQUIRED)
-+  else()
-+    find_package(BLAS REQUIRED)
-+  endif()
- 
-   # LAPACK
-   find_package(LAPACK REQUIRED)
-@@ -129,7 +133,6 @@ set(XGAMMA_FILES ${XGAMMA_FUNCS}/asa121.cpp ${XGAMMA_FUNCS}/asa103.cpp)
+@@ -129,7 +129,6 @@
  
  # Setting CXX FLAGS appropriately. The code below was inspired from
  # Google CERES and modified for this library.
@@ -426,83 +434,23 @@ index 23b9e49..c58a550 100644
  set (STATX_CXX_FLAGS)
  
  if (CMAKE_BUILD_TYPE STREQUAL "Release")
-diff --git a/libraries/vlfeat/CMakeLists.txt b/libraries/vlfeat/CMakeLists.txt
-index 7f4ffc7..15bca12 100644
---- a/libraries/vlfeat/CMakeLists.txt
-+++ b/libraries/vlfeat/CMakeLists.txt
-@@ -18,14 +18,19 @@ set(vl_sources
-   vl/random.c
-   vl/sift.c
-   vl/vlad.c)
-+
- set_source_files_properties(${vl_sources} PROPERTIES LANGUAGE C)
- 
-+add_library(vlfeat ${vl_sources})
-+
- if (MSVC)
--  add_definitions(-DVL_BUILD_DLL)
--  add_definitions(-DVL_DISABLE_SSE2)
-+  if(BUILD_SHARED_LIBS)
-+    target_compile_definitions(vlfeat PRIVATE VL_BUILD_DLL)
-+    target_compile_definitions(vlfeat INTERFACE BUILD_DLL)
-+  endif()
-+  target_compile_definitions(vlfeat PUBLIC VL_DISABLE_SSE2)
- endif (MSVC)
- 
--add_library(vlfeat SHARED ${vl_sources})
- install(TARGETS vlfeat
-   EXPORT  TheiaExport
-   RUNTIME DESTINATION bin
-diff --git a/libraries/vlfeat/vl/host.h b/libraries/vlfeat/vl/host.h
-index 293fe1f..0ea3d42 100644
---- a/libraries/vlfeat/vl/host.h
-+++ b/libraries/vlfeat/vl/host.h
-@@ -312,27 +312,31 @@ defined(__DOXYGEN__)
- #if defined(VL_COMPILER_MSC) & ! defined(__DOXYGEN__)
- #  define VL_UNUSED
- #  define VL_INLINE static __inline
--#  define snprintf _snprintf
- #  define isnan _isnan
--#  ifdef VL_BUILD_DLL
-+#  if defined(VL_BUILD_DLL)
- #    ifdef __cplusplus
- #      define VL_EXPORT extern "C" __declspec(dllexport)
- #    else
- #      define VL_EXPORT extern __declspec(dllexport)
- #    endif
--#  else
-+#  elif defined(VL_DLL)
- #    ifdef __cplusplus
- #      define VL_EXPORT extern "C" __declspec(dllimport)
- #    else
- #      define VL_EXPORT extern __declspec(dllimport)
- #    endif
-+#  else
-+#    ifdef __cplusplus
-+#      define VL_EXPORT extern "C"
-+#    else
-+#      define VL_EXPORT extern
-+#    endif
- #  endif
- #endif
- 
- #if defined(VL_COMPILER_LCC) & ! defined(__DOXYGEN__)
- #  define VL_UNUSED
- #  define VL_INLINE static __inline
--#  define snprintf _snprintf
- #  define isnan _isnan
- VL_INLINE float fabsf(float x) { return (float) fabs((double) x) ; }
- #  ifdef VL_BUILD_DLL
 diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
-index 6830f71..768586d 100644
 --- a/src/theia/CMakeLists.txt
 +++ b/src/theia/CMakeLists.txt
-@@ -209,7 +209,6 @@ set(THEIA_LIBRARY_DEPENDENCIES
-   ${SUITESPARSE_LIBRARIES}
+@@ -217,14 +217,13 @@
+   ${CERES_LIBRARIES}
+   ${GFLAGS_LIBRARIES}
+   ${GLOG_LIBRARIES}
 -  ${OPENIMAGEIO_LIBRARIES}
 +  OpenImageIO::OpenImageIO
+   ${ROCKSDB_LIBRARIES}
+   ${SUITESPARSE_LIBRARIES}
    akaze
 -  flann_cpp
    statx
    stlplus3
-   vlfeat
+-  vlfeat
++  unofficial::vlfeat::vl
+   visual_sfm
+ )
+ 

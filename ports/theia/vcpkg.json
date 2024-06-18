@@ -1,7 +1,6 @@
 {
   "name": "theia",
-  "version": "0.8",
-  "port-version": 11,
+  "version-date": "2019-07-17",
   "description": "An open source library for multiview geometry and structure from motion",
   "homepage": "https://github.com/sweeneychris/TheiaSfM",
   "license": "BSD-3-Clause",
@@ -20,6 +19,8 @@
     },
     "glew",
     "openimageio",
+    "rapidjson",
+    "rocksdb",
     "suitesparse",
     {
       "name": "vcpkg-cmake",
@@ -28,6 +29,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "vlfeat"
   ]
 }

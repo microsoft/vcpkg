@@ -1,0 +1,61 @@
+diff --git a/src/theia/image/descriptor/sift_descriptor.h b/src/theia/image/descriptor/sift_descriptor.h
+--- a/src/theia/image/descriptor/sift_descriptor.h
++++ b/src/theia/image/descriptor/sift_descriptor.h
+@@ -36,7 +36,7 @@
+ #define THEIA_IMAGE_DESCRIPTOR_SIFT_DESCRIPTOR_H_
+ 
+ extern "C" {
+-#include <vl/sift.h>
++#include <vlfeat/sift.h>
+ }
+ 
+ #include <memory>
+diff --git a/src/theia/image/descriptor/sift_descriptor.cc b/src/theia/image/descriptor/sift_descriptor.cc
+--- a/src/theia/image/descriptor/sift_descriptor.cc
++++ b/src/theia/image/descriptor/sift_descriptor.cc
+@@ -36,7 +36,7 @@
+ 
+ #include <algorithm>
+ extern "C" {
+-#include "vl/sift.h"
++#include "vlfeat/sift.h"
+ }
+ #include <vector>
+ 
+diff --git a/src/theia/matching/fisher_vector_extractor.cc b/src/theia/matching/fisher_vector_extractor.cc
+--- a/src/theia/matching/fisher_vector_extractor.cc
++++ b/src/theia/matching/fisher_vector_extractor.cc
+@@ -33,7 +33,7 @@
+ // Author: Chris Sweeney (sweeney.chris.m@gmail.com)
+ 
+ extern "C" {
+-#include <vl/fisher.h>
+-#include <vl/gmm.h>
++#include <vlfeat/fisher.h>
++#include <vlfeat/gmm.h>
+ }
+ 
+diff --git a/src/theia/image/keypoint_detector/sift_detector.cc b/src/theia/image/keypoint_detector/sift_detector.cc
+--- a/src/theia/image/keypoint_detector/sift_detector.cc
++++ b/src/theia/image/keypoint_detector/sift_detector.cc
+@@ -35,7 +35,7 @@
+ #include "theia/image/keypoint_detector/sift_detector.h"
+ 
+ extern "C" {
+-#include <vl/sift.h>
++#include <vlfeat/sift.h>
+ }
+ 
+ #include <vector>
+diff --git a/src/theia/image/keypoint_detector/sift_detector.h b/src/theia/image/keypoint_detector/sift_detector.h
+--- a/src/theia/image/keypoint_detector/sift_detector.h
++++ b/src/theia/image/keypoint_detector/sift_detector.h
+@@ -36,7 +36,7 @@
+ #define THEIA_IMAGE_KEYPOINT_DETECTOR_SIFT_DETECTOR_H_
+ 
+ extern "C" {
+-#include <vl/sift.h>
++#include <vlfeat/sift.h>
+ }
+ 
+ #include <vector>
