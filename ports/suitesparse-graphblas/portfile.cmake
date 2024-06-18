@@ -14,6 +14,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openmp  GRAPHBLAS_USE_OPENMP
 )
 
+# Prevent JIT cache from being created at ~/.SuiteSparse by default. Only used during build.
+# see https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.7.0/GraphBLAS/cmake_modules/GraphBLAS_JIT_paths.cmake
+vcpkg_backup_env_variables(VARS GRAPHBLAS_CACHE_PATH)
+set(ENV{GRAPHBLAS_CACHE_PATH} "${CURRENT_BUILDTREES_DIR}/cache")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -23,10 +28,13 @@ vcpkg_cmake_configure(
         -DSUITESPARSE_USE_STRICT=ON
         -DSUITESPARSE_USE_FORTRAN=OFF
         -DSUITESPARSE_DEMOS=OFF
+        -DGRAPHBLAS_JIT_ENABLE_RELOCATE=ON
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+
+vcpkg_restore_env_variables(VARS GRAPHBLAS_CACHE_PATH)
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME GraphBLAS

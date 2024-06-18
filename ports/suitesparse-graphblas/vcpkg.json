@@ -19,7 +19,7 @@
   ],
   "features": {
     "compact": {
-      "description": "Compile kernels at run-time, via JIT, instead of pre-compiling. Reduces library size and compile time by about 15x."
+      "description": "Compile kernels at run-time, via JIT, instead of pre-compiling. Reduces library size and compile time by about 15x. Set the JIT cache directory location using the GRAPHBLAS_CACHE_PATH env var at runtime."
     },
     "openmp": {
       "description": "Enable OpenMP support"
