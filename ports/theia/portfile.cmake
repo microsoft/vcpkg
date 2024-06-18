@@ -25,8 +25,6 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_EXTENSIONS=OFF
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
         -DBUILD_TESTING=OFF
-        -DTHEIA_USE_EXTERNAL_CEREAL=ON
-        -DTHEIA_USE_EXTERNAL_FLANN=ON
 )
 
 vcpkg_cmake_install()
