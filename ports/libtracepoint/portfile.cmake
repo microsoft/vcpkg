@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/libtracepoint"
     OPTIONS
         -DBUILD_SAMPLES=OFF
+        -DBUILD_TOOLS=OFF
         -DBUILD_TESTS=OFF)
 
 vcpkg_cmake_install()

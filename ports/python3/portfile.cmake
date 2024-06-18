@@ -385,3 +385,9 @@ else()
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/python3/vcpkg-port-config.cmake" @ONLY)
+
+# For testing
+block()
+  set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
+  vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
+endblocK()
