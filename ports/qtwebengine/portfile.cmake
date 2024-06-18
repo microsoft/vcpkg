@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
@@ -50,7 +52,7 @@ if(VCPKG_TARGET_IS_LINUX)
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=OFF")     # libevent -> issues with getting the include?
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=ON")     # libevent -> issues with getting the include?
 endif()
 
 vcpkg_find_acquire_program(FLEX)
@@ -114,9 +116,6 @@ endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
   find_program(pkgconf NAMES pkgconf pkg-config REQUIRED)
   set(ENV{PKG_CONFIG} "${pkgconf}")
-  set(ENV{LD_LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/lib")
-  set(ENV{CFLAGS} "-Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib")
-  set(ENV{CXXFLAGS} "-Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib")
 endif()
 
 qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
@@ -128,10 +127,6 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                         -DPython3_EXECUTABLE=${PYTHON3}
                         -DPKG_CONFIG_EXECUTABLE=${pkgconf}
                         -DQT_FEATURE_webengine_jumbo_build=0
-                        -DCMAKE_INSTALL_RPATH=${CURRENT_INSTALLED_DIR}/lib
-                        -DCMAKE_BUILD_RPATH=${CURRENT_INSTALLED_DIR}/lib
-                        #"-DCMAKE_C_FLAGS_RELEASE=-I${CURRENT_INSTALLED_DIR}/include -Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib"
-                        #"-DCMAKE_CXX_FLAGS_RELEASE=-I${CURRENT_INSTALLED_DIR}/include -Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib"
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 

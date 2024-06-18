@@ -1,24 +1,3 @@
-diff --git a/cmake/Functions.cmake b/cmake/Functions.cmake
-index 06b20a659e..39eb0dc660 100644
---- a/cmake/Functions.cmake
-+++ b/cmake/Functions.cmake
-@@ -63,6 +63,6 @@ function(create_cxx_config cmakeTarget arch configFileName)
-             set(GN_INCLUDES \"$<TARGET_PROPERTY:INCLUDE_DIRECTORIES>\")\n\
-             set(GN_DEFINES \"$<TARGET_PROPERTY:COMPILE_DEFINITIONS>\")\n\
--            set(GN_LINK_OPTIONS \"$<TARGET_PROPERTY:LINK_OPTIONS>\")\n\
-+            set(GN_LINK_OPTIONS \"-rpath;${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:DEBUG>:/debug>/lib;$<TARGET_PROPERTY:LINK_OPTIONS>\")\n\
-             set(GN_CXX_COMPILE_OPTIONS \"$<TARGET_PROPERTY:COMPILE_OPTIONS>\")\n\
-             set(GN_MOC_PATH \"${mocFilePath}\")"
- #           set(GN_LIBS $<TARGET_PROPERTY:LINK_LIBRARIES>)
-@@ -96,7 +98,7 @@ endfunction()
- function(create_c_config cmakeTarget arch configFileName)
-     file(GENERATE
-           OUTPUT $<CONFIG>/${arch}/${configFileName}
--          CONTENT "set(GN_C_COMPILE_OPTIONS $<TARGET_PROPERTY:COMPILE_OPTIONS>)"
-+          CONTENT "set(GN_C_COMPILE_OPTIONS $<TARGET_PROPERTY:COMPILE_OPTIONS> -Wl,-rpath,${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:DEBUG>:/debug>/lib)"
-           CONDITION $<COMPILE_LANGUAGE:C>
-           TARGET ${cmakeTarget})
- endfunction()
 diff --git a/src/3rdparty/chromium/ui/gl/gl_context_glx.cc b/src/3rdparty/chromium/ui/gl/gl_context_glx.cc
 index c53bb43723..c1254adea7 100644
 --- a/src/3rdparty/chromium/ui/gl/gl_context_glx.cc
