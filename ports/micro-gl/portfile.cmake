@@ -14,4 +14,4 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME microgl CONFIG_PATH "share/microgl/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(INSTALL "${SOURCE_PATH}/LICENSE.MD" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MD")
