@@ -22,6 +22,7 @@
     "openimageio",
     "rapidjson",
     "rocksdb",
+    "spectra",
     "suitesparse",
     {
       "name": "vcpkg-cmake",

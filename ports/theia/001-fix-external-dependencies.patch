@@ -16,7 +16,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  # Use a larger inlining threshold for Clang, since it hobbles Eigen,
  # resulting in an unreasonably slow version of the blas routines. The
-@@ -129,89 +129,39 @@
+@@ -129,89 +129,42 @@
  
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
  # FindGflags.cmake)
@@ -94,6 +94,9 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
 +# vlfeat
 +find_package(vlfeat REQUIRED)
++
++# Spectra
++#find_package(spectra REQUIRED)
  
  # RocksDB
  message("-- Check for RocksDB")
@@ -115,8 +118,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  include_directories(
    include
-@@ -246,24 +196,18 @@
-   libraries/spectra
+@@ -246,24 +199,17 @@
+-  libraries/spectra
    ${akaze_SOURCE_DIR}
    ${akaze_INCLUDE_DIR}
 -  ${cereal_SOURCE_DIR}
@@ -143,21 +146,20 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  if (BUILD_DOCUMENTATION)
    message("-- Documentation building is enabled")
-@@ -281,7 +225,12 @@
+@@ -281,7 +227,11 @@
  file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
  install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
  
 -install(DIRECTORY libraries/ DESTINATION include/theia/libraries FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/akaze/ DESTINATION include/theia/libraries/akaze FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/optimo/ DESTINATION include/theia/libraries/optimo FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/spectra/ DESTINATION include/theia/libraries/spectra FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/statx/ DESTINATION include/theia/libraries/statx FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/stlplus3/ DESTINATION include/theia/libraries/stlplus3 FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/visual_sfm/ DESTINATION include/theia/libraries/visual_sfm FILES_MATCHING PATTERN "*.h*")
  
  # Add an uninstall target to remove all installed files.
  configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
-@@ -293,17 +242,10 @@
+@@ -293,17 +243,10 @@
  
  # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -179,7 +181,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  # This "exports" all targets which have been put into the export set
  # "TheiaExport". This means that CMake generates a file with the given
-@@ -340,10 +282,4 @@
+@@ -340,10 +283,4 @@
  # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
                "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
@@ -202,7 +204,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
      message(FATAL_ERROR "Failed to find Theia - " ${REASON_MSG} ${ARGN})
    else()
      # Neither QUIETLY nor REQUIRED, use SEND_ERROR which emits an error
-@@ -101,113 +101,48 @@
+@@ -101,113 +101,51 @@
  # TheiaTargets-<release/debug>.cmake as link libraries for Theia target.
  set(THEIA_INCLUDE_DIRS ${THEIA_INCLUDE_DIR})
  
@@ -336,12 +338,15 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 +find_dependency(vlfeat REQUIRED)
 +list(APPEND THEIA_LIBRARIES unofficial::vlfeat::vl)
 +
++find_dependency(spectra REQUIRED)
++list(APPEND THEIA_LIBRARIES Spectra::Spectra)
++
 +find_dependency(RocksDB REQUIRED)
 +find_dependency(RapidJSON REQUIRED)
  
  # Import exported Theia targets.
  if (NOT TARGET theia AND NOT Theia_BINARY_DIR)
-@@ -221,17 +156,12 @@
+@@ -221,17 +159,11 @@
  set(THEIA_INTERNAL_LIBS_INCLUDES
    ${THEIA_INTERNAL_LIB_PREFIX}
    ${THEIA_INTERNAL_LIB_PREFIX}/akaze
@@ -351,7 +356,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 -  ${THEIA_INTERNAL_LIB_PREFIX}/gtest
 -  ${THEIA_INTERNAL_LIB_PREFIX}/gtest/include
    ${THEIA_INTERNAL_LIB_PREFIX}/optimo
-   ${THEIA_INTERNAL_LIB_PREFIX}/spectra
+-  ${THEIA_INTERNAL_LIB_PREFIX}/spectra
    ${THEIA_INTERNAL_LIB_PREFIX}/statx
    ${THEIA_INTERNAL_LIB_PREFIX}/stlplus3
 -  ${THEIA_INTERNAL_LIB_PREFIX}/vlfeat
@@ -437,7 +442,7 @@ diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
 diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
 --- a/src/theia/CMakeLists.txt
 +++ b/src/theia/CMakeLists.txt
-@@ -217,14 +217,13 @@
+@@ -217,14 +217,14 @@
    ${CERES_LIBRARIES}
    ${GFLAGS_LIBRARIES}
    ${GLOG_LIBRARIES}
@@ -447,6 +452,7 @@ diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
    ${SUITESPARSE_LIBRARIES}
    akaze
 -  flann_cpp
++  Spectra::Spectra
    statx
    stlplus3
 -  vlfeat
