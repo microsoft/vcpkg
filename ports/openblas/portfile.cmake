@@ -8,6 +8,7 @@ vcpkg_from_github(
         uwp.patch
         fix-redefinition-function.patch
         install-tools.patch
+        gcc14.patch
 )
 
 find_program(GIT NAMES git git.cmd)

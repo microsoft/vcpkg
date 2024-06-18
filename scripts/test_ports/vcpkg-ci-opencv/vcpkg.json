@@ -30,8 +30,8 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "gtk",
-        "dc1394"
+        "dc1394",
+        "gtk"
       ],
       "platform": "linux"
     },
@@ -39,10 +39,9 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "dshow",
-        "win32ui"
+        "python"
       ],
-      "platform": "windows"
+      "platform": "!uwp & !(windows & static)"
     },
     {
       "name": "opencv",
@@ -73,14 +72,6 @@
         "vtk"
       ],
       "platform": "!uwp & !(windows & (arm | arm64))"
-    },
-    {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
-        "python"
-      ],
-      "platform": "!uwp & !(windows & static)"
     }
   ]
 }

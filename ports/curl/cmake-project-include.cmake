@@ -3,6 +3,10 @@ if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS 24)
     set(HAVE_FILE_OFFSET_BITS FALSE CACHE INTERNAL "")
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    add_compile_definitions(_WINSOCK_DEPRECATED_NO_WARNINGS)
+endif()
+
 # Process the libs and targets in the variable named by `input`
 # into a flat list of libs in the variable named by `output`.
 # Simplify -framework elements.
