@@ -1,4 +1,4 @@
-set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_BUILD_TYPE release) # tools only
 
 vcpkg_from_github(
@@ -20,7 +20,9 @@ vcpkg_check_features(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} "-DRE2C_BUILD_TESTS=OFF"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "-DRE2C_BUILD_TESTS=OFF"
 )
 
 vcpkg_cmake_install()
@@ -43,7 +45,3 @@ if(RE2C_BUILD_RE2RUST)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-file(INSTALL
-    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
