@@ -5,7 +5,6 @@
   "description": "An open source library for multiview geometry and structure from motion",
   "homepage": "https://github.com/sweeneychris/TheiaSfM",
   "license": "BSD-3-Clause",
-  "supports": "!uwp & !arm & !(windows & x86)",
   "dependencies": [
     "cereal",
     {
