@@ -5941,7 +5941,7 @@
       "port-version": 0
     },
     "ms-quic": {
-      "baseline": "1.2.0",
+      "baseline": "2.3.5",
       "port-version": 0
     },
     "msdfgen": {
