@@ -1,3 +1,5 @@
+Fix vlfeat include paths after unvendoring.
+
 diff --git a/src/theia/image/descriptor/sift_descriptor.h b/src/theia/image/descriptor/sift_descriptor.h
 --- a/src/theia/image/descriptor/sift_descriptor.h
 +++ b/src/theia/image/descriptor/sift_descriptor.h

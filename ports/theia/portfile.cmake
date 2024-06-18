@@ -7,11 +7,11 @@ vcpkg_from_github(
     SHA512 374ed9ecb837a03de0d59bc36907098a65c4ce1de5bbd68a14164d545f811eb3304723874c7119b741591b75c9d335111560b87d459e07d5f0d8519024b88c37
     HEAD_REF master
     PATCHES
-        fix-external-dependencies.patch
-        eigen-3.4.patch
-        vlfeat-includes.patch
-        rocksdb-includes.patch
-        replace-posix-getline.patch
+        001-fix-external-dependencies.patch
+        002-eigen-3.4.patch
+        003-vlfeat-includes.patch
+        004-rocksdb-includes.patch
+        005-replace-posix-getline.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
