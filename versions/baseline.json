@@ -7505,8 +7505,8 @@
       "port-version": 0
     },
     "qtwebengine": {
-      "baseline": "6.7.0",
-      "port-version": 4
+      "baseline": "6.7.1",
+      "port-version": 0
     },
     "qtwebsockets": {
       "baseline": "6.7.1",
