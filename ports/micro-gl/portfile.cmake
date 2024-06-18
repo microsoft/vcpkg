@@ -6,5 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/include/micro-gl" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(examples)" "")
+
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME microgl CONFIG_PATH "share/microgl/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(INSTALL "${SOURCE_PATH}/LICENSE.MD" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
