@@ -27,6 +27,11 @@ vcpkg_cmake_config_fixup(
 )
 vcpkg_fixup_pkgconfig()
 
+vcpkg_copy_tools(TOOL_NAMES suitesparse_mongoose AUTO_CLEAN)
+if (NOT "tools" IN_LIST FEATURES)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Mongoose/Doc/License.txt")
