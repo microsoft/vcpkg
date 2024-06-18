@@ -1,0 +1,63 @@
+--- a/src/theia/io/bundler_file_reader.cc
++++ b/src/theia/io/bundler_file_reader.cc
+@@ -46,16 +46,26 @@
+ 
+ namespace theia {
+ namespace {
++
++std::string getline(FILE* file) {
++    std::string line;
++    char buffer[1024];
++    while (fgets(buffer, sizeof(buffer), file)) {
++        line += buffer;
++        if (line.back() == '\n') {
++            break;
++        }
++    }
++    return line;
++}
++
+ bool ReadHeader(FILE* in, int* num_cameras, int* num_points) {
+   // Read the comment.
+-  char* line = nullptr;
+-  size_t length = 0;
+-  if ((getline(&line, &length, in) == -1) || line[0] != '#') {
+-    free(line);
++  std::string line = getline(in);
++  if (line.empty() || line[0] != '#') {
+     return false;
+   }
+   VLOG(3) << "Comment: " << line;
+-  free(line);
+   // Read number of points and cameras.
+   if (fscanf(in, "%d %d",
+              CHECK_NOTNULL(num_cameras),
+@@ -299,14 +309,16 @@
+     return false;
+   }
+   // Read line by line
+-  char* line = nullptr;
+-  size_t length = 0;
+   img_entries_.reserve(1024);
+   char filename[1024];
+-  while (getline(&line, &length, in) != -1) {
++  while (true) {
++    std::string line = getline(in);
++    if (line.empty()) {
++      break;
++    }
+     img_entries_.emplace_back();
+     ListImgEntry& entry = img_entries_.back();
+-    const int read_items = sscanf(line, "%s %f %f",
++    const int read_items = sscanf(line.c_str(), "%s %f %f",
+            filename, &entry.second_entry, &entry.focal_length);
+     if (read_items != 1 && read_items !=3 ) {
+       VLOG(3) << "Invalid line: " << line;
+@@ -314,7 +326,6 @@
+     }
+     entry.filename = filename;
+   }
+-  free(line);
+   fclose(in);
+   lists_file_parsed_ = true;
+   return true;
