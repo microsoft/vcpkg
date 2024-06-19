@@ -1,0 +1,13 @@
+{
+  "name": "openmp",
+  "version-date": "2024-06-19",
+  "description": "Metapackage for OpenMP libraries",
+  "license": null,
+  "dependencies": [
+    "llvm-openmp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
