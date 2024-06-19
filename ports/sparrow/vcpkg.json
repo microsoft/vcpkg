@@ -1,5 +1,5 @@
 {
-  "name": "cpp-sparrow",
+  "name": "sparrow",
   "version": "0.0.2",
   "description": "C++20 idiomatic APIs for the Apache Arrow Columnar Format",
   "homepage": "https://github.com/man-group/sparrow",
