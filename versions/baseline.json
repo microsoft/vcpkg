@@ -2961,7 +2961,7 @@
       "port-version": 0
     },
     "gdcm": {
-      "baseline": "3.0.23",
+      "baseline": "3.0.24",
       "port-version": 0
     },
     "gdcm2": {
