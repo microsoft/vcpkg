@@ -1,31 +1,11 @@
-Based on https://salsa.debian.org/science-team/vlfeat/-/blob/master/debian/patches/0018-Fixed-build-on-gcc-9.patch
-
-From: Dima Kogan <dkogan@debian.org>
-Date: Thu, 12 Dec 2019 22:27:51 -0800
-Subject: Fixed build on gcc-9
-
-The openmp release used in GCC-9 treats const data in an incompatible way, and
-kmeans.c was not building as a result. Here I explicitly mark a const varible as
-shared on gcc-9 to make vlfeat build on that platform.
-
-See the "OpenMP data sharing" section of
-https://gcc.gnu.org/gcc-9/porting_to.html
----
- vl/kmeans.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/vl/kmeans.c b/vl/kmeans.c
-index c250ca8..f0a67c9 100644
 --- a/vl/kmeans.c
 +++ b/vl/kmeans.c
-@@ -669,9 +669,8 @@ VL_XCAT(_vl_kmeans_quantize_, SFX)
- #endif
+@@ -669,7 +669,7 @@ VL_XCAT(_vl_kmeans_quantize_, SFX)
  
  #ifdef _OPENMP
  #pragma omp parallel default(none) \
 -            shared(self, distances, assignments, numData, distFn, data) \
--            num_threads(vl_get_max_threads())
-+    shared(self, distances, assignments, numData, distFn, data, vl_infinity_d) num_threads(vl_get_max_threads())
++            shared(self, distances, assignments, numData, distFn, data, vl_infinity_d) \
+             num_threads(vl_get_max_threads())
  #endif
    {
-     /* vl_malloc cannot be used here if mapped to MATLAB malloc */
