@@ -601,6 +601,12 @@ if (VCPKG_TARGET_IS_IOS)
     set(vcpkg_target_arch "${VCPKG_TARGET_ARCHITECTURE}")
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(vcpkg_target_arch "x86_64")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        message(FATAL_ERROR "You can build for arm up to iOS 10 but ffmpeg can only be built for iOS 11.0 and later.
+                            Did you mean arm64?")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        message(FATAL_ERROR "You can build for x86 up to iOS 10 but ffmpeg can only be built for iOS 11.0 and later.
+                            Did you mean x64")
     endif ()
 
     set(vcpkg_osx_deployment_target "${VCPKG_OSX_DEPLOYMENT_TARGET}")
