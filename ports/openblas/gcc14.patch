@@ -1,0 +1,19 @@
+Index: cmake/system.cmake
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/cmake/system.cmake b/cmake/system.cmake
+--- a/cmake/system.cmake	(revision ce3f668c992cb3cc80849d5c30ed637f5adbd5b2)
++++ b/cmake/system.cmake	(date 1718638483744)
+@@ -160,6 +160,10 @@
+   endif ()
+ endif ()
+ 
++if (${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
++  set(CCOMMON_OPT "${CCOMMON_OPT} -Wno-error=incompatible-pointer-types")
++endif ()
++
+ include("${PROJECT_SOURCE_DIR}/cmake/prebuild.cmake")
+ if (DEFINED TARGET)
+   if (${TARGET} STREQUAL COOPERLAKE AND NOT NO_AVX512)

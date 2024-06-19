@@ -9,11 +9,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 a305ac3d76a248b47428907a2e1115ca08bfd17f1e109ef187b1a52a1c121031495af61ffac1ffb9760e584f86df5b255f0eb9c0c19f75b1a1be01c9aec85a66
+    SHA512 4cf65f2511d94b41f315956d1e98ca881271c410d143ed0e967c4932f5d2df12de1222527ed12baba1c714426b071f00077a7d6cb59f7a39da6045ad830bc341
     HEAD_REF main
     PATCHES
         disable-non-underscore-posix-names.patch
-        boost-1.70.patch
         fix-windows-minmax.patch
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
