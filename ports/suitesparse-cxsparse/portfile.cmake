@@ -8,6 +8,11 @@ vcpkg_from_github(
 
 set(PACKAGE_NAME CXSparse)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    complex    CXSPARSE_USE_COMPLEX
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/${PACKAGE_NAME}"
@@ -18,6 +23,7 @@ vcpkg_cmake_configure(
         -DSUITESPARSE_USE_STRICT=ON
         -DSUITESPARSE_USE_FORTRAN=OFF
         -DSUITESPARSE_DEMOS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
