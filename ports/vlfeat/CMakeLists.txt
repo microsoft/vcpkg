@@ -1,21 +1,6 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required(VERSION 3.10)
 project(vlfeat LANGUAGES C)
 
-set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
-set(INSTALL_LIB_DIR      "lib"                      CACHE PATH "Path where lib will be installed")
-set(INSTALL_INCLUDE_DIR  "include/vl"               CACHE PATH "Path where headers will be installed")
-set(INSTALL_CMAKE_DIR    "share/vlfeat"             CACHE PATH "Path where cmake configs will be installed")
-
-# Make relative paths absolute (needed later on)
-set(RELATIVE_INSTALL_INCLUDE_DIR ${INSTALL_INCLUDE_DIR})
-foreach(p LIB BIN INCLUDE CMAKE)
-  set(var INSTALL_${p}_DIR)
-  if(NOT IS_ABSOLUTE "${${var}}")
-    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-  endif()
-endforeach()
-
-# make sure that the default is a RELEASE
 if(NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -127,11 +112,12 @@ set (H_SOURCES
   vl/vlad.h
 )
 
+include(GNUInstallDirs)
+
 add_library(vl ${C_SOURCES} ${H_SOURCES})
 set_property(TARGET vl PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_compile_definitions(vl PRIVATE -DVL_BUILD_DLL)
-target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}>)
-set_target_properties(vl PROPERTIES PUBLIC_HEADER "${H_SOURCES}")
+target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_compile_features(vl PRIVATE c_std_99)
 
 if(ENABLE_OPENMP)
@@ -140,16 +126,16 @@ if(ENABLE_OPENMP)
   target_link_libraries(vl PRIVATE OpenMP::OpenMP_C)
 endif()
 
-install(TARGETS vl EXPORT vlfeatTargets
-  RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
-  COMPONENT dev
+install(TARGETS vl
+    EXPORT vlfeatTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+install(FILES ${H_SOURCES} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/vl")
 
 install(EXPORT vlfeatTargets
   FILE vlfeatConfig.cmake
   NAMESPACE unofficial::vlfeat::
-  DESTINATION "${INSTALL_CMAKE_DIR}"
+  DESTINATION "share/vlfeat"
 )
