@@ -1,7 +1,5 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  OPTIONS
-    -DINSTALL_INCLUDE_DIR=include
   REPO crhowell3/opendis6
   REF "${VERSION}"
   SHA512 f83e2dc8c3c06f420c88af35bc818561383760adb026548ce69f483568d87c1457dfbb3d25279d24bb2f08b8ff539f1ad3ed42db1963e1618f01b442d4ff791a
@@ -10,6 +8,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DINSTALL_INCLUDE_DIR=include
 )
 
 vcpkg_cmake_install()
