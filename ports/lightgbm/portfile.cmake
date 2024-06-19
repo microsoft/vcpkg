@@ -7,6 +7,7 @@ vcpkg_from_github(
         vcpkg_lightgbm_use_vcpkg_libs.patch
 )
 
+# Fast double parser is a non-vcpkg dependency of LightGBM
 vcpkg_from_github(
     OUT_SOURCE_PATH FAST_DOUBLE_PARSER_SOURCE_PATH
     REPO lemire/fast_double_parser
@@ -24,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gpu USE_GPU
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
