@@ -25,9 +25,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gpu USE_GPU
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(BUILD_STATIC_LIB "OFF")
+else()
+    set(BUILD_STATIC_LIB "ON")
+endif()
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DBUILD_STATIC_LIB=${BUILD_STATIC_LIB}
         ${FEATURE_OPTIONS}
 )
 
