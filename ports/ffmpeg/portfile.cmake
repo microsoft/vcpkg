@@ -620,14 +620,16 @@ if (VCPKG_TARGET_IS_IOS)
     set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}")
     set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}")
 
-    set(cmake_osx_sysroot "${CMAKE_OSX_SYSROOT}")
+    set(vcpkg_osx_sysroot "${VCPKG_OSX_SYSROOT}")
     # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
     # (on apple silicon it's not required but shouldn't cause any problems)
-    if ((CMAKE_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$") OR (NOT CMAKE_OSX_SYSROOT)) # if it's not a path
-        if (NOT CMAKE_OSX_SYSROOT) # building for ios by default
+    if ((VCPKG_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$") OR (NOT VCPKG_OSX_SYSROOT)) # if it's not a path
+        if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             set(requested_sysroot "iphoneos")
+        elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(requested_sysroot "iphonesimulator")
         else ()
-            set(requested_sysroot "${CMAKE_OSX_SYSROOT}")
+            message(FATAL_ERROR "Unsupported build arch: ${VCPKG_TARGET_ARCHITECTURE}")
         endif ()
         message(STATUS "Retrieving default SDK for ${requested_sysroot}")
         execute_process(
@@ -639,13 +641,13 @@ if (VCPKG_TARGET_IS_IOS)
         )
         if (sdk_path)
             message(STATUS "Found!")
-            set(cmake_osx_sysroot "${sdk_path}")
+            set(vcpkg_osx_sysroot "${sdk_path}")
         else ()
             message(FATAL_ERROR "Can't determine ${CMAKE_OSX_SYSROOT} SDK path. Error: ${xcrun_error}")
         endif ()
     endif ()
-    set(OPTIONS "${OPTIONS} --extra-cflags=-isysroot\"${cmake_osx_sysroot}\"")
-    set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${cmake_osx_sysroot}\"")
+    set(OPTIONS "${OPTIONS} --extra-cflags=-isysroot\"${vcpkg_osx_sysroot}\"")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${vcpkg_osx_sysroot}\"")
 endif ()
 
 set(OPTIONS_DEBUG "--disable-optimizations")
