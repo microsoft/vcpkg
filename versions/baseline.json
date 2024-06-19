@@ -4184,6 +4184,10 @@
       "baseline": "5.0",
       "port-version": 9
     },
+    "libaio": {
+      "baseline": "0.3.113",
+      "port-version": 0
+    },
     "libalkimia": {
       "baseline": "8.1.72",
       "port-version": 0
