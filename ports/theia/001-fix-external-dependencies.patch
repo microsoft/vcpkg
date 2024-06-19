@@ -1,200 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -105,10 +105,10 @@
- 
- # Eigen
- set(MIN_EIGEN_VERSION 3.2.0)
--find_package(Eigen ${MIN_EIGEN_VERSION} REQUIRED)
--if (EIGEN_FOUND)
--  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
--endif (EIGEN_FOUND)
-+find_package(Eigen3 ${MIN_EIGEN_VERSION} REQUIRED)
-+if (EIGEN3_FOUND)
-+  message("-- Found Eigen version ${EIGEN3_VERSION}: ${EIGEN3_INCLUDE_DIRS}")
-+endif (EIGEN3_FOUND)
- 
- # Use a larger inlining threshold for Clang, since it hobbles Eigen,
- # resulting in an unreasonably slow version of the blas routines. The
-@@ -129,89 +129,42 @@
- 
- # GFlags. The namespace patch is borrow from Ceres Solver (see license in
- # FindGflags.cmake)
-+message("-- Check for Google Flags")
- find_package(Gflags REQUIRED)
--if (GFLAGS_FOUND)
--  message("-- Found Google Flags: ${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
--  add_definitions(-DTHEIA_GFLAGS_NAMESPACE=${GFLAGS_NAMESPACE})
--else (GFLAGS_FOUND)
--  message(FATAL_ERROR "Can't find Google FLAGS.")
--endif (GFLAGS_FOUND)
- 
- # Google Logging
- message("-- Check for Google Log")
- find_package(Glog REQUIRED)
--if (GLOG_FOUND)
--  message("-- Found Google Logging: ${GLOG_INCLUDE_DIRS}")
--else (GLOG_FOUND)
--  message(FATAL_ERROR "Can't find Google Logging. Please set GLOG_INCLUDE_DIR & "
--    "GLOG_LIBRARY")
--endif (GLOG_FOUND)
-+
-+# Flann
-+message("-- Check for Flann")
-+find_package(Flann REQUIRED)
- 
- # Ceres
- message("-- Check for Ceres")
- find_package(Ceres REQUIRED SuiteSparse)
--if (CERES_FOUND)
--  message("-- Found Ceres: ${CERES_INCLUDE_DIRS}")
--else (CERES_FOUND)
--  message(FATAL_ERROR "Can't find Ceres. Please set CERES_INCLUDE_DIR & "
--    "CERES_LIBRARY")
--endif (CERES_FOUND)
- 
- # OpenImageIO
- message("-- Check for OpenImageIO")
- find_package(OpenImageIO REQUIRED)
--if (OPENIMAGEIO_FOUND)
--  message("-- Found OpenImageIO: ${OPENIMAGEIO_INCLUDE_DIRS}")
--else (OPENIMAGEIO_FOUND)
--  message(FATAL_ERROR "Can't find OpenImageIO. Please set OPENIMAGEIO_INCLUDE_DIR & "
--    "OPENIMAGEIO_LIBRARY")
--endif (OPENIMAGEIO_FOUND)
- 
--# Suitesparse
-+# SuiteSparse
-+message("-- Check for SuiteSparse")
- find_package(SuiteSparse REQUIRED)
--if (SUITESPARSE_FOUND)
--  # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
--  # Ubuntu 13.10 cannot be used to link shared libraries.
--  if (BUILD_SHARED_LIBS AND
--      SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
--    message(FATAL_ERROR "You are attempting to build Theia as a shared "
--      "library on Ubuntu using a system package install of SuiteSparse "
--      "3.4.0. This package is broken and does not support the "
--      "construction of shared libraries (you can still build Theia as "
--      "a static library).  If you wish to build a shared version of Theia "
--      "you should uninstall the system install of SuiteSparse "
--      "(libsuitesparse-dev) and perform a source install of SuiteSparse "
--      "(we recommend that you use the latest version), "
--      "see http://theia-solver.org/building.html for more information.")
--  endif (BUILD_SHARED_LIBS AND
--    SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
--  message("-- Found SuiteSparse ${SUITESPARSE_VERSION}")
--  add_definitions(-DTHEIA_SUITESPARSE_VERSION="${SUITESPARSE_VERSION}")
--else (SUITESPARSE_FOUND)
--  # Disable use of SuiteSparse if it cannot be found and continue.
--  message(FATAL_ERROR "Can't find SuiteSparse. This library is required "
--    "for bundle adjustment and for solving convex optimization problems. "
--    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
--endif (SUITESPARSE_FOUND)
- 
-+# vlfeat
-+find_package(vlfeat REQUIRED)
-+
-+# Spectra
-+#find_package(spectra REQUIRED)
- 
- # RocksDB
- message("-- Check for RocksDB")
- find_package(RocksDB REQUIRED)
--if (ROCKSDB_FOUND)
--  message("-- Found RocksDB: ${ROCKSDB_INCLUDE_DIR}")
--else (ROCKSDB_FOUND)
--  message(FATAL_ERROR "Can't find RocksDB. Please set ROCKSDB_INCLUDE_DIR & ROCKSDB_LIBRARY to use RocksDB.")
--endif (ROCKSDB_FOUND)
- 
- # RapidJSON.
- message("-- Check for RapidJSON")
- find_package(RapidJSON REQUIRED)
--if (RapidJSON_FOUND)
--  message("-- Found RapidJSON: ${RAPIDJSON_INCLUDE_DIRS}")
--else (RapidJSON_FOUND)
--  message(FATAL_ERROR "Can't find RapidJSON. Please set RAPIDJSON_INCLUDE_DIRS to use RapidJSON.")
--endif (RapidJSON_FOUND)
- 
- include_directories(
-   include
-@@ -246,24 +199,17 @@
--  libraries/spectra
-   ${akaze_SOURCE_DIR}
-   ${akaze_INCLUDE_DIR}
--  ${cereal_SOURCE_DIR}
--  ${cereal_SOURCE_DIR}/include
--  ${flann_SOURCE_DIR}
--  ${flann_SOURCE_DIR}/src/cpp
--  ${gtest_SOURCE_DIR}/include
--  ${gtest_SOURCE_DIR}
-   ${optimo_SOURCE_DIR}
-   ${statx_SOURCE_DIR}
-   ${stlplus3_SOURCE_DIR}
--  ${vlfeat_SOURCE_DIR}
--  ${visual_sfm_SOURCE_DIR})
-+  ${visual_sfm_SOURCE_DIR}
-+)
- 
- list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
- include(OptimizeTheiaCompilerFlags)
- optimizetheiacompilerflags()
- 
- add_subdirectory(src/theia)
--add_subdirectory(applications)
-+#add_subdirectory(applications)
- 
- if (BUILD_DOCUMENTATION)
-   message("-- Documentation building is enabled")
-@@ -281,7 +227,11 @@
- file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
- install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
- 
--install(DIRECTORY libraries/ DESTINATION include/theia/libraries FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/akaze/ DESTINATION include/theia/libraries/akaze FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/optimo/ DESTINATION include/theia/libraries/optimo FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/statx/ DESTINATION include/theia/libraries/statx FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/stlplus3/ DESTINATION include/theia/libraries/stlplus3 FILES_MATCHING PATTERN "*.h*")
-+install(DIRECTORY libraries/visual_sfm/ DESTINATION include/theia/libraries/visual_sfm FILES_MATCHING PATTERN "*.h*")
- 
- # Add an uninstall target to remove all installed files.
- configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
-@@ -293,17 +243,10 @@
- 
- # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
- # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
--if (WIN32)
--  set(INCLUDE_INSTALL_DIR Include)
--  set(LIB_INSTALL_DIR Lib)
--  set(CMAKECONFIG_INSTALL_DIR CMake)
--  set(RELATIVE_CMAKECONFIG_INSTALL_DIR CMake)
--else ()
--  set(INCLUDE_INSTALL_DIR include)
--  set(LIB_INSTALL_DIR lib)
--  set(CMAKECONFIG_INSTALL_DIR share/Theia)
--  set(RELATIVE_CMAKECONFIG_INSTALL_DIR share/Theia)
--endif ()
-+set(INCLUDE_INSTALL_DIR include)
-+set(LIB_INSTALL_DIR lib)
-+set(CMAKECONFIG_INSTALL_DIR share/theia)
-+set(RELATIVE_CMAKECONFIG_INSTALL_DIR share/theia)
- 
- # This "exports" all targets which have been put into the export set
- # "TheiaExport". This means that CMake generates a file with the given
-@@ -340,10 +283,4 @@
- # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
- install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
-               "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
--              "${CMAKE_SOURCE_DIR}/cmake/FindEigen.cmake"
--              "${CMAKE_SOURCE_DIR}/cmake/FindGlog.cmake"
--              "${CMAKE_SOURCE_DIR}/cmake/FindGflags.cmake"
--	            "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
--              "${CMAKE_SOURCE_DIR}/cmake/FindRocksDB.cmake"
--              "${CMAKE_SOURCE_DIR}/cmake/FindSuiteSparse.cmake"
-               DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
---- a/cmake/TheiaConfig.cmake.in
-+++ b/cmake/TheiaConfig.cmake.in
+--- a/cmake/TheiaConfig.cmake.in	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
++++ b/cmake/TheiaConfig.cmake.in	(date 1718780964869)
 @@ -43,7 +43,7 @@
    # use the camelcase library name, not uppercase.
    if (Theia_FIND_QUIETLY)
@@ -204,7 +10,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
      message(FATAL_ERROR "Failed to find Theia - " ${REASON_MSG} ${ARGN})
    else()
      # Neither QUIETLY nor REQUIRED, use SEND_ERROR which emits an error
-@@ -101,113 +101,51 @@
+@@ -101,14 +101,16 @@
  # TheiaTargets-<release/debug>.cmake as link libraries for Theia target.
  set(THEIA_INCLUDE_DIRS ${THEIA_INCLUDE_DIR})
  
@@ -220,15 +26,16 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
  # Search quietly s/t we control the timing of the error message if not found.
 -find_package(Eigen ${THEIA_EIGEN_VERSION} EXACT QUIET)
 -if (EIGEN_FOUND)
--  message(STATUS "Found required Theia dependency: "
--    "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN_INCLUDE_DIRS}")
--else (EIGEN_FOUND)
--  theia_report_not_found("Missing required Theia "
--    "dependency: Eigen version ${THEIA_EIGEN_VERSION}, please set "
--    "EIGEN_INCLUDE_DIR.")
--endif (EIGEN_FOUND)
--list(APPEND THEIA_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
 +find_dependency(Eigen3 ${THEIA_EIGEN_VERSION} REQUIRED)
++if (TRUE)
+   message(STATUS "Found required Theia dependency: "
+     "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN_INCLUDE_DIRS}")
+ else (EIGEN_FOUND)
+@@ -116,16 +118,11 @@
+     "dependency: Eigen version ${THEIA_EIGEN_VERSION}, please set "
+     "EIGEN_INCLUDE_DIR.")
+ endif (EIGEN_FOUND)
+-list(APPEND THEIA_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
 +list(APPEND THEIA_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
  
  # Ceres.
@@ -239,13 +46,12 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 -# Search quietly s/t we control the timing of the error message if not found.
 -find_package(Ceres QUIET)
 -if (CERES_FOUND)
--  message(STATUS "Found required Theia dependency: "
--    "Ceres in ${CERES_INCLUDE_DIRS}")
--else (CERES_FOUND)
--  theia_report_not_found("Missing required Theia "
--    "dependency: Ceres, please set CERES_INCLUDE_DIR.")
--endif (CERES_FOUND)
 +find_dependency(Ceres REQUIRED)
++if (TRUE)
+   message(STATUS "Found required Theia dependency: "
+     "Ceres in ${CERES_INCLUDE_DIRS}")
+ else (CERES_FOUND)
+@@ -135,13 +132,8 @@
  list(APPEND THEIA_INCLUDE_DIRS ${CERES_INCLUDE_DIRS})
  
  # Glog.
@@ -256,81 +62,65 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 -# Search quietly s/t we control the timing of the error message if not found.
 -find_package(Glog QUIET)
 -if (GLOG_FOUND)
--  message(STATUS "Found required Theia dependency: "
--    "Glog in ${GLOG_INCLUDE_DIRS}")
--else (GLOG_FOUND)
--  theia_report_not_found("Missing required Theia "
--    "dependency: Glog, please set GLOG_INCLUDE_DIR.")
--endif (GLOG_FOUND)
 +find_dependency(Glog REQUIRED)
- list(APPEND THEIA_INCLUDE_DIRS ${GLOG_INCLUDE_DIRS})
++if (TRUE)
+   message(STATUS "Found required Theia dependency: "
+     "Glog in ${GLOG_INCLUDE_DIRS}")
+ else (GLOG_FOUND)
+@@ -152,8 +144,8 @@
  
--# GFlags. The namespace patch is borrow from Ceres Solver (see license in
--# FindGflags.cmake)
+ # GFlags. The namespace patch is borrow from Ceres Solver (see license in
+ # FindGflags.cmake)
 -find_package(Gflags QUIET)
 -if (GFLAGS_FOUND)
--  message(STATUS "Found required Theia dependency: Google Flags in "
--    "${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
--  add_definitions(-DTHEIA_GFLAGS_NAMESPACE=${GFLAGS_NAMESPACE})
--else (GFLAGS_FOUND)
--  theia_report_not_found("Missing required Theia dependency: Google Flags, please set "
--    "GFLAGS_INCLUDE_DIR.")
--endif (GFLAGS_FOUND)
-+# GFlags.
 +find_dependency(Gflags REQUIRED)
++if (TRUE)
+   message(STATUS "Found required Theia dependency: Google Flags in "
+     "${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
+   add_definitions(-DTHEIA_GFLAGS_NAMESPACE=${GFLAGS_NAMESPACE})
+@@ -164,8 +156,8 @@
  list(APPEND THEIA_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIRS})
  
  # OpenImageIO
 -find_package(OpenImageIO QUIET)
 -if (OPENIMAGEIO_FOUND)
--  message(STATUS "Found Theia dependency: OpenImageIO in ${OPENIMAGEIO_INCLUDE_DIRS}")
--else (OPENIMAGEIO_FOUND)
--  theia_report_not_found("Missing required Theia dependency: OpenImageIO. Please set "
--    "OPENIMAGEIO_INCLUDE_DIR & OPENIMAGEIO_LIBRARY")
--endif (OPENIMAGEIO_FOUND)
 +find_dependency(OpenImageIO REQUIRED)
++if (TRUE)
+   message(STATUS "Found Theia dependency: OpenImageIO in ${OPENIMAGEIO_INCLUDE_DIRS}")
+ else (OPENIMAGEIO_FOUND)
+   theia_report_not_found("Missing required Theia dependency: OpenImageIO. Please set "
+@@ -173,8 +165,8 @@
+ endif (OPENIMAGEIO_FOUND)
  list(APPEND THEIA_INCLUDE_DIRS ${OPENIMAGEIO_INCLUDE_DIRS})
  
 -find_package(RocksDB)
 -if (ROCKSDB_FOUND)
--  message(STATUS "Found RocksDB: ${ROCKSDB_INCLUDE_DIRS}")
--else (ROCKSDB_FOUND)
--theia_report_not_found("Missing required Theia dependence: RocksDB. Please "
--    "set ROCKSDB_INCLUDE_DIR & ROCKSDB_LIBRARY.")
--endif (ROCKSDB_FOUND)
--list(APPEND THEIA_INCLUDE_DIRS ${ROCKSDB_INCLUDE_DIRS})
-+# SuiteSparse
-+find_dependency(SuiteSparse REQUIRED)
-+
-+find_dependency(cereal REQUIRED)
-+list(APPEND THEIA_LIBRARIES cereal)
++find_dependency(RocksDB REQUIRED)
++if (TRUE)
+   message(STATUS "Found RocksDB: ${ROCKSDB_INCLUDE_DIRS}")
+ else (ROCKSDB_FOUND)
+ theia_report_not_found("Missing required Theia dependence: RocksDB. Please "
+@@ -182,8 +174,11 @@
+ endif (ROCKSDB_FOUND)
+ list(APPEND THEIA_INCLUDE_DIRS ${ROCKSDB_INCLUDE_DIRS})
  
 -find_package(SuiteSparse QUIET)
 -if (SUITESPARSE_FOUND)
--  # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
--  # Ubuntu 13.10 cannot be used to link shared libraries.
--  if (BUILD_SHARED_LIBS AND
--      SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
--    theia_report_not_found("You are attempting to build Theia as a shared "
--      "library on Ubuntu using a system package install of SuiteSparse "
--      "3.4.0. This package is broken and does not support the "
--      "construction of shared libraries (you can still build Theia as "
--      "a static library).  If you wish to build a shared version of Theia "
--      "you should uninstall the system install of SuiteSparse "
--      "(libsuitesparse-dev) and perform a source install of SuiteSparse "
--      "(we recommend that you use the latest version), "
--      "see http://theia-solver.org/building.html for more information.")
--  endif (BUILD_SHARED_LIBS AND
--    SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
--  message("-- Found SuiteSparse ${SUITESPARSE_VERSION}")
--  add_definitions(-DTHEIA_SUITESPARSE_VERSION="${SUITESPARSE_VERSION}")
--else (SUITESPARSE_FOUND)
--  # Disable use of SuiteSparse if it cannot be found and continue.
--  theia_report_not_found("Can't find SuiteSparse. This library is required "
--    "for bundle adjustment and for solving convex optimization problems. "
--    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
--endif (SUITESPARSE_FOUND)
--list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
++find_dependency(RapidJSON REQUIRED)
++list(APPEND THEIA_LIBRARIES ${RapidJSON_LIBRARIES})
++
++find_dependency(SuiteSparse REQUIRED)
++if (TRUE)
+   # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
+   # Ubuntu 13.10 cannot be used to link shared libraries.
+   if (BUILD_SHARED_LIBS AND
+@@ -209,6 +204,20 @@
+ endif (SUITESPARSE_FOUND)
+ list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
+ 
++find_dependency(cereal REQUIRED)
++list(APPEND THEIA_LIBRARIES cereal)
++
 +find_dependency(Flann REQUIRED)
 +list(APPEND THEIA_INCLUDE_DIRS ${FLANN_INCLUDE_DIR})
 +list(APPEND THEIA_LIBRARIES ${FLANN_LIBRARY})
@@ -341,12 +131,11 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 +find_dependency(spectra REQUIRED)
 +list(APPEND THEIA_LIBRARIES Spectra::Spectra)
 +
-+find_dependency(RocksDB REQUIRED)
-+find_dependency(RapidJSON REQUIRED)
- 
++
  # Import exported Theia targets.
  if (NOT TARGET theia AND NOT Theia_BINARY_DIR)
-@@ -221,17 +159,11 @@
+   include(${THEIA_CURRENT_CONFIG_INSTALL_DIR}/TheiaTargets.cmake)
+@@ -221,17 +230,11 @@
  set(THEIA_INTERNAL_LIBS_INCLUDES
    ${THEIA_INTERNAL_LIB_PREFIX}
    ${THEIA_INTERNAL_LIB_PREFIX}/akaze
@@ -366,34 +155,30 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
  
  list(APPEND THEIA_INCLUDE_DIRS ${THEIA_INTERNAL_LIBS_INCLUDES})
  
-diff --git a/libraries/CMakeLists.txt b/libraries/CMakeLists.txt
---- a/libraries/CMakeLists.txt
-+++ b/libraries/CMakeLists.txt
-@@ -5,12 +5,6 @@
- # AKAZE feature extractor.
- add_subdirectory(akaze)
+diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
+--- a/src/theia/CMakeLists.txt	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
++++ b/src/theia/CMakeLists.txt	(date 1718780483582)
+@@ -217,14 +217,14 @@
+   ${CERES_LIBRARIES}
+   ${GFLAGS_LIBRARIES}
+   ${GLOG_LIBRARIES}
+-  ${OPENIMAGEIO_LIBRARIES}
++  OpenImageIO::OpenImageIO
+   ${ROCKSDB_LIBRARIES}
+   ${SUITESPARSE_LIBRARIES}
+   akaze
+-  flann_cpp
++  Spectra::Spectra
+   statx
+   stlplus3
+-  vlfeat
++  unofficial::vlfeat::vl
+   visual_sfm
+ )
  
--# Cereal for portable IO.
--add_subdirectory(cereal)
--
--# Flann for fast approximate nearest neighbor searches.
--add_subdirectory(flann)
--
- # Add Optimo.
- add_subdirectory(optimo)
- 
-@@ -21,7 +15,6 @@
- add_subdirectory(stlplus3)
- 
- # Add VLFeat.
--add_subdirectory(vlfeat)
- 
- # Add VisualSfM files.
- add_subdirectory(visual_sfm)
-\ No newline at end of file
 diff --git a/libraries/optimo/CMakeLists.txt b/libraries/optimo/CMakeLists.txt
---- a/libraries/optimo/CMakeLists.txt
-+++ b/libraries/optimo/CMakeLists.txt
+--- a/libraries/optimo/CMakeLists.txt	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
++++ b/libraries/optimo/CMakeLists.txt	(date 1718780483562)
 @@ -67,11 +67,11 @@
  
  # Locations to search for Eigen
@@ -411,9 +196,35 @@ diff --git a/libraries/optimo/CMakeLists.txt b/libraries/optimo/CMakeLists.txt
  
  # Setting CXX FLAGS appropriately. The code below was inspired from
  # Google CERES and modified for this library.
+diff --git a/libraries/CMakeLists.txt b/libraries/CMakeLists.txt
+--- a/libraries/CMakeLists.txt	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
++++ b/libraries/CMakeLists.txt	(date 1718780964853)
+@@ -5,12 +5,6 @@
+ # AKAZE feature extractor.
+ add_subdirectory(akaze)
+ 
+-# Cereal for portable IO.
+-add_subdirectory(cereal)
+-
+-# Flann for fast approximate nearest neighbor searches.
+-add_subdirectory(flann)
+-
+ # Add Optimo.
+ add_subdirectory(optimo)
+ 
+@@ -20,8 +14,5 @@
+ # STLPlus for filepath tools.
+ add_subdirectory(stlplus3)
+ 
+-# Add VLFeat.
+-add_subdirectory(vlfeat)
+-
+ # Add VisualSfM files.
+ add_subdirectory(visual_sfm)
+\ No newline at end of file
 diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
---- a/libraries/statx/CMakeLists.txt
-+++ b/libraries/statx/CMakeLists.txt
+--- a/libraries/statx/CMakeLists.txt	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
++++ b/libraries/statx/CMakeLists.txt	(date 1718780483570)
 @@ -72,11 +72,11 @@
  option(STATX_WITH_CERES "Enables GEV parameter estimation using Ceres" ON)
  
@@ -439,24 +250,177 @@ diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
  set (STATX_CXX_FLAGS)
  
  if (CMAKE_BUILD_TYPE STREQUAL "Release")
-diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
---- a/src/theia/CMakeLists.txt
-+++ b/src/theia/CMakeLists.txt
-@@ -217,14 +217,14 @@
-   ${CERES_LIBRARIES}
-   ${GFLAGS_LIBRARIES}
-   ${GLOG_LIBRARIES}
--  ${OPENIMAGEIO_LIBRARIES}
-+  OpenImageIO::OpenImageIO
-   ${ROCKSDB_LIBRARIES}
-   ${SUITESPARSE_LIBRARIES}
-   akaze
--  flann_cpp
-+  Spectra::Spectra
-   statx
-   stlplus3
--  vlfeat
-+  unofficial::vlfeat::vl
-   visual_sfm
- )
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
++++ b/CMakeLists.txt	(date 1718780964861)
+@@ -105,10 +105,10 @@
  
+ # Eigen
+ set(MIN_EIGEN_VERSION 3.2.0)
+-find_package(Eigen ${MIN_EIGEN_VERSION} REQUIRED)
+-if (EIGEN_FOUND)
+-  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
+-endif (EIGEN_FOUND)
++find_package(Eigen3 ${MIN_EIGEN_VERSION} REQUIRED)
++if (EIGEN3_FOUND)
++  message("-- Found Eigen version ${EIGEN3_VERSION}: ${EIGEN3_INCLUDE_DIRS}")
++endif (EIGEN3_FOUND)
+ 
+ # Use a larger inlining threshold for Clang, since it hobbles Eigen,
+ # resulting in an unreasonably slow version of the blas routines. The
+@@ -129,8 +129,9 @@
+ 
+ # GFlags. The namespace patch is borrow from Ceres Solver (see license in
+ # FindGflags.cmake)
++message("-- Check for Google Flags")
+ find_package(Gflags REQUIRED)
+-if (GFLAGS_FOUND)
++if (TRUE)
+   message("-- Found Google Flags: ${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
+   add_definitions(-DTHEIA_GFLAGS_NAMESPACE=${GFLAGS_NAMESPACE})
+ else (GFLAGS_FOUND)
+@@ -140,17 +141,21 @@
+ # Google Logging
+ message("-- Check for Google Log")
+ find_package(Glog REQUIRED)
+-if (GLOG_FOUND)
++if (TRUE)
+   message("-- Found Google Logging: ${GLOG_INCLUDE_DIRS}")
+ else (GLOG_FOUND)
+   message(FATAL_ERROR "Can't find Google Logging. Please set GLOG_INCLUDE_DIR & "
+     "GLOG_LIBRARY")
+ endif (GLOG_FOUND)
+ 
++# Flann
++message("-- Check for Flann")
++find_package(Flann REQUIRED)
++
+ # Ceres
+ message("-- Check for Ceres")
+ find_package(Ceres REQUIRED SuiteSparse)
+-if (CERES_FOUND)
++if (TRUE)
+   message("-- Found Ceres: ${CERES_INCLUDE_DIRS}")
+ else (CERES_FOUND)
+   message(FATAL_ERROR "Can't find Ceres. Please set CERES_INCLUDE_DIR & "
+@@ -160,7 +165,7 @@
+ # OpenImageIO
+ message("-- Check for OpenImageIO")
+ find_package(OpenImageIO REQUIRED)
+-if (OPENIMAGEIO_FOUND)
++if (TRUE)
+   message("-- Found OpenImageIO: ${OPENIMAGEIO_INCLUDE_DIRS}")
+ else (OPENIMAGEIO_FOUND)
+   message(FATAL_ERROR "Can't find OpenImageIO. Please set OPENIMAGEIO_INCLUDE_DIR & "
+@@ -169,7 +174,7 @@
+ 
+ # Suitesparse
+ find_package(SuiteSparse REQUIRED)
+-if (SUITESPARSE_FOUND)
++if (TRUE)
+   # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
+   # Ubuntu 13.10 cannot be used to link shared libraries.
+   if (BUILD_SHARED_LIBS AND
+@@ -194,11 +199,13 @@
+     "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
+ endif (SUITESPARSE_FOUND)
+ 
++find_package(vlfeat REQUIRED)
++find_package(spectra REQUIRED)
+ 
+ # RocksDB
+ message("-- Check for RocksDB")
+ find_package(RocksDB REQUIRED)
+-if (ROCKSDB_FOUND)
++if (TRUE)
+   message("-- Found RocksDB: ${ROCKSDB_INCLUDE_DIR}")
+ else (ROCKSDB_FOUND)
+   message(FATAL_ERROR "Can't find RocksDB. Please set ROCKSDB_INCLUDE_DIR & ROCKSDB_LIBRARY to use RocksDB.")
+@@ -207,7 +214,7 @@
+ # RapidJSON.
+ message("-- Check for RapidJSON")
+ find_package(RapidJSON REQUIRED)
+-if (RapidJSON_FOUND)
++if (TRUE)
+   message("-- Found RapidJSON: ${RAPIDJSON_INCLUDE_DIRS}")
+ else (RapidJSON_FOUND)
+   message(FATAL_ERROR "Can't find RapidJSON. Please set RAPIDJSON_INCLUDE_DIRS to use RapidJSON.")
+@@ -243,27 +250,22 @@
+ add_subdirectory(libraries)
+ include_directories(
+   libraries
+-  libraries/spectra
+   ${akaze_SOURCE_DIR}
+   ${akaze_INCLUDE_DIR}
+-  ${cereal_SOURCE_DIR}
+-  ${cereal_SOURCE_DIR}/include
+-  ${flann_SOURCE_DIR}
+-  ${flann_SOURCE_DIR}/src/cpp
+-  ${gtest_SOURCE_DIR}/include
+-  ${gtest_SOURCE_DIR}
+   ${optimo_SOURCE_DIR}
+   ${statx_SOURCE_DIR}
+   ${stlplus3_SOURCE_DIR}
+-  ${vlfeat_SOURCE_DIR}
+-  ${visual_sfm_SOURCE_DIR})
++  ${visual_sfm_SOURCE_DIR}
++)
+ 
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+ include(OptimizeTheiaCompilerFlags)
+ optimizetheiacompilerflags()
+ 
+ add_subdirectory(src/theia)
+-add_subdirectory(applications)
++if(BUILD_APPLICATIONS)
++  add_subdirectory(applications)
++endif()
+ 
+ if (BUILD_DOCUMENTATION)
+   message("-- Documentation building is enabled")
+@@ -281,7 +283,11 @@
+ file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
+ install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
+ 
+-install(DIRECTORY libraries/ DESTINATION include/theia/libraries FILES_MATCHING PATTERN "*.h*")
++install(DIRECTORY libraries/akaze/ DESTINATION include/theia/libraries/akaze FILES_MATCHING PATTERN "*.h*")
++install(DIRECTORY libraries/optimo/ DESTINATION include/theia/libraries/optimo FILES_MATCHING PATTERN "*.h*")
++install(DIRECTORY libraries/statx/ DESTINATION include/theia/libraries/statx FILES_MATCHING PATTERN "*.h*")
++install(DIRECTORY libraries/stlplus3/ DESTINATION include/theia/libraries/stlplus3 FILES_MATCHING PATTERN "*.h*")
++install(DIRECTORY libraries/visual_sfm/ DESTINATION include/theia/libraries/visual_sfm FILES_MATCHING PATTERN "*.h*")
+ 
+ # Add an uninstall target to remove all installed files.
+ configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
+@@ -293,17 +299,10 @@
+ 
+ # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
+ # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
+-if (WIN32)
+-  set(INCLUDE_INSTALL_DIR Include)
+-  set(LIB_INSTALL_DIR Lib)
+-  set(CMAKECONFIG_INSTALL_DIR CMake)
+-  set(RELATIVE_CMAKECONFIG_INSTALL_DIR CMake)
+-else ()
+-  set(INCLUDE_INSTALL_DIR include)
+-  set(LIB_INSTALL_DIR lib)
+-  set(CMAKECONFIG_INSTALL_DIR share/Theia)
+-  set(RELATIVE_CMAKECONFIG_INSTALL_DIR share/Theia)
+-endif ()
++set(INCLUDE_INSTALL_DIR include)
++set(LIB_INSTALL_DIR lib)
++set(CMAKECONFIG_INSTALL_DIR share/theia)
++set(RELATIVE_CMAKECONFIG_INSTALL_DIR share/theia)
+ 
+ # This "exports" all targets which have been put into the export set
+ # "TheiaExport". This means that CMake generates a file with the given
+@@ -340,10 +339,4 @@
+ # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
+-              "${CMAKE_SOURCE_DIR}/cmake/FindEigen.cmake"
+-              "${CMAKE_SOURCE_DIR}/cmake/FindGlog.cmake"
+-              "${CMAKE_SOURCE_DIR}/cmake/FindGflags.cmake"
+-	            "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
+-              "${CMAKE_SOURCE_DIR}/cmake/FindRocksDB.cmake"
+-              "${CMAKE_SOURCE_DIR}/cmake/FindSuiteSparse.cmake"
+               DESTINATION ${CMAKECONFIG_INSTALL_DIR})
