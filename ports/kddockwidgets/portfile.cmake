@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}" 
     SHA512 4dccf24e901ab58d645478bc62ff9e72224dc11c3f39c53f5be5b188ece1bf8c682d50a42ece7a38400adfeb6147336795fcb86e903fd0957949c83f852c9b53 
     HEAD_REF master
+    PATCHES fix-qtwidgets.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KD_STATIC)
@@ -22,6 +23,7 @@ vcpkg_cmake_configure(
         ${_qarg_OPTIONS}
         -DKDDockWidgets_QT6=ON
         -DKDDockWidgets_STATIC=${KD_STATIC}
+        -DKDDockWidgets_FRONTENDS=qtwidgets
         -DKDDockWidgets_PYTHON_BINDINGS=OFF
         -DKDDockWidgets_EXAMPLES=OFF
 )
