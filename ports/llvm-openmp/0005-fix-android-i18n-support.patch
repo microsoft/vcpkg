@@ -19,7 +19,8 @@ Android NDK lacks catopen, catgets, and catclose. Use libintl instead.
 @@ -161,6 +161,10 @@
    add_library(omp ${LIBOMP_LIBRARY_KIND} ${LIBOMP_SOURCE_FILES})
    # Linking command will include libraries in LIBOMP_CONFIGURED_LIBFLAGS
-   target_link_libraries(omp ${LIBOMP_CONFIGURED_LIBFLAGS} ${LIBOMP_DL_LIBS})
+-  target_link_libraries(omp ${LIBOMP_CONFIGURED_LIBFLAGS} ${LIBOMP_DL_LIBS})
++  target_link_libraries(omp PUBLIC ${LIBOMP_CONFIGURED_LIBFLAGS} ${LIBOMP_DL_LIBS})
 +  if(ANDROID)
 +    find_package(Intl REQUIRED)
 +    target_link_libraries(omp PRIVATE Intl::Intl)
