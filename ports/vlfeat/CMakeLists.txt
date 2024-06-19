@@ -130,7 +130,7 @@ set (H_SOURCES
 add_library(vl ${C_SOURCES} ${H_SOURCES})
 set_property(TARGET vl PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_compile_definitions(vl PRIVATE -DVL_BUILD_DLL)
-target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vl>)
+target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}>)
 set_target_properties(vl PROPERTIES PUBLIC_HEADER "${H_SOURCES}")
 target_compile_features(vl PRIVATE c_std_99)
 
