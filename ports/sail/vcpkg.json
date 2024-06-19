@@ -1,6 +1,7 @@
 {
   "name": "sail",
   "version-semver": "0.9.5",
+  "port-version": 1,
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
   "license": "MIT",
