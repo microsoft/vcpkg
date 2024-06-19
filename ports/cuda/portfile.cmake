@@ -8,8 +8,6 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(target x86_64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
     set(target sbsa)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64" AND VCPKG_TARGET_IS_LINUX)
-    set(target ppc64le)
 else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
@@ -22,7 +20,6 @@ endif()
 
 set(components
         cccl # < contains cmake files
-        compat
         cudart
         nvtx
         nvml_dev
@@ -67,7 +64,6 @@ endif()
 
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND libs 
-            libcudla
             fabricmanager
             libnvidia_nscq
             #nvidia_driver
@@ -84,78 +80,60 @@ endif()
 if(target STREQUAL "sbsa")
     list(REMOVE_ITEM components "opencl")
     list(REMOVE_ITEM tools "nvprof" "nvvp")
-elseif(target STREQUAL "ppc64le")
-    list(REMOVE_ITEM components "opencl")
-    list(REMOVE_ITEM libs "fabricmanager" "libnvidia_nscq" "libcufile")
-    list(REMOVE_ITEM util "nvidia_fs")
 endif()
 
 list(TRANSFORM components PREPEND "cuda_")
 list(TRANSFORM tools PREPEND "cuda_")
 
 set(update_opt "")
-set(cuda_updating 1)
+#set(cuda_updating 1)
 if(cuda_updating)
     set(VCPKG_USE_HEAD_VERSION 1)
     set(update_opt SKIP_SHA512)
-
     message(STATUS "Running ${PORT} in update mode!")
 else()
     include("${CURRENT_PORT_DIR}/hash-${platform}-${target}.cmake")
 endif()
 
-vcpkg_download_distfile(
-    cuda_redist_json
-    URLS ${base_url}/redistrib_${VERSION}.json
-    FILENAME cuda-${VERSION}.json
-    SHA512 ${cuda-json_HASH}
-    ${update_opt}
-)
-
 if(cuda_updating)
-    file(SHA512 "${cuda_redist_json}" hash)
-    string(APPEND update_hash "set(cuda-json_HASH \"${hash}\")\n")
+  vcpkg_download_distfile(
+      cuda_redist_json
+      URLS ${base_url}/redistrib_${VERSION}.json
+      FILENAME cuda-${VERSION}.json
+      SHA512 ${cuda-json_HASH}
+      ${update_opt}
+  )
+  file(READ "${cuda_redist_json}" cuda_json)
 endif()
-
-file(READ "${cuda_redist_json}" cuda_json)
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/cuda")
 
 set(licenses "")
+set(dirs_to_remove "")
 foreach(comp IN LISTS components libs util tools)
-    string(JSON comp_json GET "${cuda_json}" "${comp}")
-    string(JSON lic_rel_url GET   "${comp_json}" "license_path")
-    string(JSON comp_plat_json GET "${comp_json}" "${platform}-${target}")
-    string(JSON comp_plat_rel_url GET "${comp_plat_json}" "relative_path")
+    message(STATUS "Downloading: ${comp}")
 
-    set(lic_url "${base_url}/${lic_rel_url}")
-    set(comp_url "${base_url}/${comp_plat_rel_url}")
+    if(cuda_updating)
+      string(JSON comp_json GET "${cuda_json}" "${comp}")
+      string(JSON comp_plat_json GET "${comp_json}" "${platform}-${target}")
+      string(JSON comp_plat_rel_url GET "${comp_plat_json}" "relative_path")
+      set(${comp}_URL "${comp_plat_rel_url}")
+    endif()
 
-    # vcpkg_download_distfile(
-        # lic_${comp}
-        # URLS ${lic_url}
-        # FILENAME ${lic_rel_url}
-        # SHA512 ${lic_${comp}_HASH}
-        # ${update_opt}
-    # )
-    # list(APPEND licenses "${lic_${comp}}")
-    # if(cuda_updating)
-        # file(SHA512 "${lic_${comp}}" hash)
-        # string(APPEND update_hash "set(lic_${comp}_HASH \"${hash}\")\n")
-    # endif()
-
-    cmake_path(GET comp_plat_rel_url FILENAME comp_filename)
+    cmake_path(GET ${comp}_URL FILENAME comp_filename)
 
     vcpkg_download_distfile(
         ${comp}
-        URLS ${comp_url}
+        URLS "${base_url}/${${comp}_URL}"
         FILENAME ${comp_filename}
         SHA512 ${${comp}_HASH}
         ${update_opt}
     )
+
     if(cuda_updating)
         file(SHA512 "${${comp}}" hash)
         string(APPEND update_hash "set(${comp}_HASH \"${hash}\")\n")
+        string(APPEND update_hash "set(${comp}_URL \"${comp_plat_rel_url}\")\n")
         continue()
     endif()
 
@@ -215,7 +193,9 @@ foreach(comp IN LISTS components libs util tools)
             PATTERN "LICENSE" EXCLUDE
         )
     endif()
-    #file(REMOVE_RECURSE "${comp-src}")
+    file(GLOB_RECURSE com_lic_file "${comp-src}/*LICENSE")
+    list(APPEND licenses "${com_lic_file}")
+    list(APPEND dirs_to_remove "${comp-src}")
 endforeach()
 
 if(cuda_updating)
@@ -256,12 +236,12 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/cuda/pkg-config")
   endforeach()
 endif()
 
-
-
 if(NOT VCPKG_BUILD_TYPE)
     file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
+
+vcpkg_install_copyright(FILE_LIST ${licenses})
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/src"
@@ -279,9 +259,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/README"
     "${CURRENT_PACKAGES_DIR}/LICENSE"
     "${CURRENT_PACKAGES_DIR}/CHANGELOG"
+    ${dirs_to_remove}
 )
-
-vcpkg_install_copyright(FILE_LIST ${licenses})
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

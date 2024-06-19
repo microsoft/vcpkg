@@ -1,11 +1,12 @@
 set(base_url "https://developer.download.nvidia.com/compute/cuda/redist")
 
+
+set(VCPKG_TARGET_IS_LINUX ON)
+unset(VCPKG_TARGET_IS_WINDOWS)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(target x86_64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
     set(target sbsa)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64" AND VCPKG_TARGET_IS_LINUX)
-    set(target ppc64le)
 else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
@@ -14,13 +15,12 @@ set(ext ".tar.xz")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(platform windows)
     set(ext ".zip")
-    
 else()
     set(platform linux)
 endif()
 
-set(cuDNN-windows-x86_64_HASH 55e7ddac92bbb1e7354ae7f1a2246da079c1147534357594419dcde740308a49854b79154e91b2970f8746c27f9564636cce955a21360cba003b93a786168e1d)
-set(cuDNN-linux-x86_64_HASH d066f1c736fbc1106809fc6fd0eb27a333e9d70413f339f36074f7289f91982913166d69bda3c6e1a939d0ed7bad16574c95d80c1cff51678b8f13cb6e355f5c)
+set(cuDNN-windows-x86_64_HASH fdb966ec9d44f90bc153e861f17b31e2cdba1339b7d9158b5106395b2468ee17b1dc21b83271aabfbb579f4ec0f3741cd193237aa8fbb75bd071c390aa6c1a0a)
+set(cuDNN-linux-x86_64_HASH 918e460e08259562e2fc92bd72f7a9f16aed9ab75b58706f84ef5ee7757b37788dcc20c8ade92d0844994038afc10465d6dda0792b4794ff67d86a6c0a63865a)
 
 vcpkg_download_distfile(
     cudnn
