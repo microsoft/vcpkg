@@ -5,6 +5,11 @@ find_dependency(unofficial-llvm-openmp CONFIG REQUIRED)
 get_target_property(_OpenMP_INCLUDE_DIR unofficial::llvm-openmp::omp INTERFACE_INCLUDE_DIRECTORIES)
 get_target_property(_OpenMP_LIB_NAMES unofficial::llvm-openmp::omp INTERFACE_LINK_LIBRARIES)
 
+# handle omp location being set directly via IMPORTED_LOCATION instead
+if(NOT _OpenMP_LIB_NAMES)
+  set(_OpenMP_LIB_NAMES omp)
+endif()
+
 foreach(_lang C CXX)
   set(OpenMP_${_lang}_INCLUDE_DIR "${_OpenMP_INCLUDE_DIR}")
   set(OpenMP_${_lang}_INCLUDE_DIRS "${_OpenMP_INCLUDE_DIR}")
@@ -91,10 +96,11 @@ function(_openmp_get_compiler_spec_date)
       return 0;
     }
   ")
-  set(CMAKE_REQUIRED_INCLUDES "${OpenMP_C_INCLUDE_DIR}")
   try_compile(OpenMP_SPECTEST ${BUILD_DIR}
     SOURCES "${SRC_FILE}"
-    COMPILE_DEFINITIONS "${OpenMP_C_FLAGS}"
+    CMAKE_FLAGS
+      "-DCOMPILE_DEFINITIONS:STRING=${OpenMP_C_FLAGS}"
+      "-DINCLUDE_DIRECTORIES:STRING=${OpenMP_C_INCLUDE_DIR}"
     COPY_FILE "${BIN_FILE}"
   )
   if(NOT OpenMP_SPECTEST)
