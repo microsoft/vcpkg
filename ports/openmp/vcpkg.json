@@ -4,7 +4,10 @@
   "description": "Metapackage for OpenMP libraries",
   "license": null,
   "dependencies": [
-    "llvm-openmp",
+    {
+      "name": "llvm-openmp",
+      "platform": "!android"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

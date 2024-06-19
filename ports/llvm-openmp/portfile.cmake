@@ -10,7 +10,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0002-disable-tests.patch
         0003-fix-windows-import-lib-name.patch
         0004-install-config.patch
-        0005-fix-android-i18n-support.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
