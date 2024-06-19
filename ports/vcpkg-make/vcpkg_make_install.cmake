@@ -33,7 +33,7 @@ function(vcpkg_make_install)
         list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_OPTIONS_DEBUG})
     endif()
 
-    if(WIN32)
+    if(CMAKE_HOST_WIN32)
         set(Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     else()
         string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
