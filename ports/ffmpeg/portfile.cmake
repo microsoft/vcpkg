@@ -598,10 +598,6 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 if (VCPKG_TARGET_IS_IOS)
-    set(vcpkg_target_arch "${VCPKG_TARGET_ARCHITECTURE}")
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(vcpkg_target_arch "x86_64")
-    endif ()
 
     set(vcpkg_osx_deployment_target "${VCPKG_OSX_DEPLOYMENT_TARGET}")
     if (NOT VCPKG_OSX_DEPLOYMENT_TARGET)
@@ -611,8 +607,8 @@ if (VCPKG_TARGET_IS_IOS)
                             ${VCPKG_OSX_DEPLOYMENT_TARGET}")
     endif ()
 
-    set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}")
-    set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}")
+    set(OPTIONS "${OPTIONS} --extra-cflags=--target=${CMAKE_SYSTEM_PROCESSOR}-apple-ios${vcpkg_osx_deployment_target}")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${CMAKE_SYSTEM_PROCESSOR}-apple-ios${vcpkg_osx_deployment_target}")
 
     set(cmake_osx_sysroot "${CMAKE_OSX_SYSROOT}")
     # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
