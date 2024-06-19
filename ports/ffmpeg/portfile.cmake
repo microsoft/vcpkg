@@ -613,7 +613,7 @@ if (VCPKG_TARGET_IS_IOS)
     set(cmake_osx_sysroot "${CMAKE_OSX_SYSROOT}")
     # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
     # (on apple silicon it's not required but shouldn't cause any problems)
-    if ((CMAKE_OSX_SYSROOT MATCHES "iphoneos|iphonesimulator") OR (NOT CMAKE_OSX_SYSROOT)) # if it's not a path
+    if ((CMAKE_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$") OR (NOT CMAKE_OSX_SYSROOT)) # if it's not a path
         if (NOT CMAKE_OSX_SYSROOT) # building for ios by default
             set(requested_sysroot "iphoneos")
         else ()
