@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..fdd3ce8
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,18 @@
++cmake_minimum_required(VERSION 3.5)
++
++project(libaio)
++
++file(GLOB SRC_FILES src/*.c)
++add_library(aio
++    ${SRC_FILES}
++)
++target_include_directories(aio
++    PUBLIC
++        ${PROJECT_SOURCE_DIR}/src
++)
++
++install(TARGETS aio
++    LIBRARY DESTINATION lib)
++
++install(FILES src/libaio.h
++    DESTINATION include)
