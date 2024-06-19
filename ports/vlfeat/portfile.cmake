@@ -7,6 +7,11 @@ vcpkg_from_github(
         expose_missing_symbols.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    openmp    ENABLE_OPENMP
+)
+
 set(USE_SSE ON)
 set(USE_AVX OFF)  # feature is broken, so it's always off anyway
 
@@ -22,6 +27,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DUSE_SSE=${USE_SSE}
         -DUSE_AVX=${USE_AVX}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
