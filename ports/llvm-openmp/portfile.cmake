@@ -10,7 +10,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0002-disable-tests.patch
         0003-fix-windows-import-lib-name.patch
         0004-install-config.patch
-        0005-disable-i18n-on-android.patch
+        0005-fix-android-i18n-support.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -23,6 +23,8 @@ vcpkg_extract_source_archive(CMAKE_SOURCE_PATH
 )
 file(GLOB_RECURSE CMAKE_MODULES "${CMAKE_SOURCE_PATH}/*.cmake")
 file(COPY ${CMAKE_MODULES} DESTINATION "${SOURCE_PATH}/cmake")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/llvm-openmp-config.cmake.in" DESTINATION "${SOURCE_PATH}/runtime/cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" ENABLE_SHARED)
 

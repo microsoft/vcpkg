@@ -1,0 +1,29 @@
+Android NDK lacks catopen, catgets, and catclose. Use libintl instead.
+
+--- a/runtime/src/kmp_i18n.cpp
++++ b/runtime/src/kmp_i18n.cpp
+@@ -73,7 +73,10 @@
+ #if KMP_OS_UNIX
+ #define KMP_I18N_OK
+ 
+ #include <nl_types.h>
++#if __ANDROID__
++#include <libintl.h>
++#endif
+ 
+ #define KMP_I18N_NULLCAT ((nl_catd)(-1))
+ static nl_catd cat = KMP_I18N_NULLCAT; // !!! Shall it be volatile?
+
+--- a/runtime/src/CMakeLists.txt
++++ b/runtime/src/CMakeLists.txt
+@@ -161,6 +161,10 @@
+   add_library(omp ${LIBOMP_LIBRARY_KIND} ${LIBOMP_SOURCE_FILES})
+   # Linking command will include libraries in LIBOMP_CONFIGURED_LIBFLAGS
+   target_link_libraries(omp ${LIBOMP_CONFIGURED_LIBFLAGS} ${LIBOMP_DL_LIBS})
++  if(ANDROID)
++    find_package(Intl REQUIRED)
++    target_link_libraries(omp PRIVATE Intl::Intl)
++  endif()
+ else()
+   add_llvm_library(omp ${LIBOMP_LIBRARY_KIND} ${LIBOMP_SOURCE_FILES} PARTIAL_SOURCES_INTENDED
+     LINK_LIBS ${LIBOMP_CONFIGURED_LIBFLAGS} ${LIBOMP_DL_LIBS}

@@ -18,7 +18,7 @@
  
    if(${LIBOMP_INSTALL_ALIASES})
      # Create aliases (symlinks) of the library for backwards compatibility
-@@ -415,3 +415,22 @@
+@@ -415,3 +415,27 @@
      DESTINATION ${LIBOMP_HEADERS_INSTALL_PATH}
    )
  endif()
@@ -27,17 +27,22 @@
 +
 +set(PORT_SHARE_DIR share/unofficial-llvm-openmp)
 +install(EXPORT llvm-openmp-targets
-+    FILE unofficial-llvm-openmp-config.cmake
++    FILE unofficial-llvm-openmp-targets.cmake
 +    NAMESPACE unofficial::llvm-openmp::
 +    DESTINATION ${PORT_SHARE_DIR}
 +)
 +include(CMakePackageConfigHelpers)
++configure_package_config_file(${CMAKE_SOURCE_DIR}/runtime/cmake/llvm-openmp-config.cmake.in
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-llvm-openmp-config.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/share/unofficial-llvm-openmp
++)
 +write_basic_package_version_file(
 +    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-llvm-openmp-config-version.cmake"
 +    VERSION ${LLVM_OPENMP_VERSION}
 +    COMPATIBILITY SameMajorVersion
 +)
 +install(FILES
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-llvm-openmp-config.cmake"
 +    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-llvm-openmp-config-version.cmake"
 +    DESTINATION ${PORT_SHARE_DIR}
 +)

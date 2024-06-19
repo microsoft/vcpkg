@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+if(ANDROID)
+    include(CMakeFindDependencyMacro)
+    find_dependency(Intl REQUIRED)
+endif()
+
+include(${CMAKE_CURRENT_LIST_DIR}/unofficial-llvm-openmp-targets.cmake)
