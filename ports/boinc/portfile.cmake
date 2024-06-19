@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
     REF "client_release/${MAJOR_MINOR}/${VERSION}"
-    SHA512 d66664df49b83fb71e8f06e6f9ca0aee720ec04b1fb95b08426ee9af365403605624ba6dc1f78f3fba3f966d365b610ed24ceffdc54b071509f4f0bf959e027c
+    SHA512 a53506bc3e92c813e7cc1a9be8741822aabc843f6ca824e35a0cd48cec34d0965d51bf97dfea2ec4898c5c36887c8bbdc4919a46a093ad2ac43b081eca3ad882
     HEAD_REF master
 )
 

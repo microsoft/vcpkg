@@ -22,6 +22,7 @@ endif()
 
 set(components
         cccl # < contains cmake files
+        compat
         cudart
         nvtx
         nvml_dev
@@ -66,6 +67,7 @@ endif()
 
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND libs 
+            libcudla
             fabricmanager
             libnvidia_nscq
             #nvidia_driver
@@ -92,7 +94,7 @@ list(TRANSFORM components PREPEND "cuda_")
 list(TRANSFORM tools PREPEND "cuda_")
 
 set(update_opt "")
-#set(cuda_updating 1)
+set(cuda_updating 1)
 if(cuda_updating)
     set(VCPKG_USE_HEAD_VERSION 1)
     set(update_opt SKIP_SHA512)
@@ -129,18 +131,18 @@ foreach(comp IN LISTS components libs util tools)
     set(lic_url "${base_url}/${lic_rel_url}")
     set(comp_url "${base_url}/${comp_plat_rel_url}")
 
-    vcpkg_download_distfile(
-        lic_${comp}
-        URLS ${lic_url}
-        FILENAME ${lic_rel_url}
-        SHA512 ${lic_${comp}_HASH}
-        ${update_opt}
-    )
-    list(APPEND licenses "${lic_${comp}}")
-    if(cuda_updating)
-        file(SHA512 "${lic_${comp}}" hash)
-        string(APPEND update_hash "set(lic_${comp}_HASH \"${hash}\")\n")
-    endif()
+    # vcpkg_download_distfile(
+        # lic_${comp}
+        # URLS ${lic_url}
+        # FILENAME ${lic_rel_url}
+        # SHA512 ${lic_${comp}_HASH}
+        # ${update_opt}
+    # )
+    # list(APPEND licenses "${lic_${comp}}")
+    # if(cuda_updating)
+        # file(SHA512 "${lic_${comp}}" hash)
+        # string(APPEND update_hash "set(lic_${comp}_HASH \"${hash}\")\n")
+    # endif()
 
     cmake_path(GET comp_plat_rel_url FILENAME comp_filename)
 
@@ -213,7 +215,7 @@ foreach(comp IN LISTS components libs util tools)
             PATTERN "LICENSE" EXCLUDE
         )
     endif()
-    file(REMOVE_RECURSE "${comp-src}")
+    #file(REMOVE_RECURSE "${comp-src}")
 endforeach()
 
 if(cuda_updating)

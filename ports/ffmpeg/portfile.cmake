@@ -8,17 +8,15 @@ vcpkg_from_github(
         0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch #upstreamed in future version
         0003-fix-windowsinclude.patch
-        0004-fix-debug-build.patch
+        0004-dependencies.patch
         0005-fix-nasm.patch #upstreamed in future version
-        0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
-        0009-Fix-fdk-detection.patch
-        0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
-        0022-fix-iconv.patch
+        0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
+        0041-add-const-for-opengl-definition.patch
+        0042-fix-arm64-linux.patch #https://github.com/FFmpeg/FFmpeg/commit/fcfd17dbb4a6cf270cdd82e91c21a5efdc878d12
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -152,10 +150,18 @@ if(VCPKG_DETECTED_CMAKE_RANLIB)
     list(APPEND prog_env "${RANLIB_path}")
 endif()
 
+if(VCPKG_DETECTED_CMAKE_STRIP)
+    get_filename_component(STRIP_path "${VCPKG_DETECTED_CMAKE_STRIP}" DIRECTORY)
+    get_filename_component(STRIP_filename "${VCPKG_DETECTED_CMAKE_STRIP}" NAME)
+    set(ENV{STRIP} "${STRIP_filename}")
+    string(APPEND OPTIONS " --strip=${STRIP_filename}")
+    list(APPEND prog_env "${STRIP_path}")
+endif()
+
 list(REMOVE_DUPLICATES prog_env)
 vcpkg_add_to_path(PREPEND ${prog_env})
 
-# More? OBJCC STRIP BIN2C
+# More? OBJCC BIN2C
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -254,11 +260,6 @@ else()
     set(ENABLE_SWSCALE OFF)
 endif()
 
-set(STATIC_LINKAGE OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(STATIC_LINKAGE ON)
-endif()
-
 if ("alsa" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-alsa")
 else()
@@ -273,14 +274,18 @@ endif()
 
 if("aom" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libaom")
+    set(WITH_AOM ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libaom")
+    set(WITH_AOM OFF)
 endif()
 
 if("ass" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libass")
+    set(WITH_ASS ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libass")
+    set(WITH_ASS OFF)
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
@@ -297,14 +302,18 @@ endif()
 
 if("dav1d" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libdav1d")
+    set(WITH_DAV1D ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libdav1d")
+    set(WITH_DAV1D OFF)
 endif()
 
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+    set(WITH_AAC ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libfdk-aac")
+    set(WITH_AAC OFF)
 endif()
 
 if("fontconfig" IN_LIST FEATURES)
@@ -327,32 +336,42 @@ endif()
 
 if("iconv" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-iconv")
+    set(WITH_ICONV ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-iconv")
+    set(WITH_ICONV OFF)
 endif()
 
 if("ilbc" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libilbc")
+    set(WITH_ILBC ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libilbc")
+    set(WITH_ILBC OFF)
 endif()
 
 if("lzma" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-lzma")
+    set(WITH_LZMA ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
+    set(WITH_LZMA OFF)
 endif()
 
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+    set(WITH_MP3LAME ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
+    set(WITH_MP3LAME OFF)
 endif()
 
 if("modplug" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmodplug")
+    set(WITH_MODPLUG ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmodplug")
+    set(WITH_MODPLUG OFF)
 endif()
 
 if("nvcodec" IN_LIST FEATURES)
@@ -364,8 +383,10 @@ endif()
 
 if("opencl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-opencl")
+    set(WITH_OPENCL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
+    set(WITH_OPENCL OFF)
 endif()
 
 if("opengl" IN_LIST FEATURES)
@@ -376,20 +397,26 @@ endif()
 
 if("openh264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenh264")
+    set(WITH_OPENH264 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenh264")
+    set(WITH_OPENH264 OFF)
 endif()
 
 if("openjpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+    set(WITH_OPENJPEG ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
+    set(WITH_OPENJPEG OFF)
 endif()
 
 if("openmpt" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenmpt")
+    set(WITH_OPENMPT ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenmpt")
+    set(WITH_OPENMPT OFF)
 endif()
 
 if("openssl" IN_LIST FEATURES)
@@ -407,8 +434,10 @@ endif()
 
 if("opus" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopus")
+    set(WITH_OPUS ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopus")
+    set(WITH_OPUS OFF)
 endif()
 
 if("sdl2" IN_LIST FEATURES)
@@ -419,26 +448,34 @@ endif()
 
 if("snappy" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsnappy")
+    set(WITH_SNAPPY ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsnappy")
+    set(WITH_SNAPPY OFF)
 endif()
 
 if("soxr" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsoxr")
+    set(WITH_SOXR ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsoxr")
+    set(WITH_SOXR OFF)
 endif()
 
 if("speex" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libspeex")
+    set(WITH_SPEEX ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libspeex")
+    set(WITH_SPEEX OFF)
 endif()
 
 if("ssh" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libssh")
+    set(WITH_SSH ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libssh")
+    set(WITH_SSH OFF)
 endif()
 
 if("tensorflow" IN_LIST FEATURES)
@@ -455,44 +492,58 @@ endif()
 
 if("theora" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtheora")
+    set(WITH_THEORA ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libtheora")
+    set(WITH_THEORA OFF)
 endif()
 
 if("vorbis" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvorbis")
+    set(WITH_VORBIS ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libvorbis")
+    set(WITH_VORBIS OFF)
 endif()
 
 if("vpx" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvpx")
+    set(WITH_VPX ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
+    set(WITH_VPX OFF)
 endif()
 
 if("webp" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libwebp")
+    set(WITH_WEBP ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libwebp")
+    set(WITH_WEBP OFF)
 endif()
 
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
+    set(WITH_X264 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
+    set(WITH_X264 OFF)
 endif()
 
 if("x265" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx265")
+    set(WITH_X265 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
+    set(WITH_X265 OFF)
 endif()
 
 if("xml2" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libxml2")
+    set(WITH_XML2 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libxml2")
+    set(WITH_XML2 OFF)
 endif()
 
 if("zlib" IN_LIST FEATURES)
@@ -503,14 +554,18 @@ endif()
 
 if ("srt" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsrt")
+    set(WITH_SRT ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
+    set(WITH_SRT OFF)
 endif()
 
 if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")   
+    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+    set(WITH_MFX ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmfx")
+    set(WITH_MFX OFF)
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")
@@ -543,7 +598,7 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
 endif()
 
-set(OPTIONS_DEBUG "--debug --disable-optimizations")
+set(OPTIONS_DEBUG "--disable-optimizations")
 set(OPTIONS_RELEASE "--enable-optimizations")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
@@ -558,6 +613,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(OPTIONS "${OPTIONS} --pkg-config=${PKGCONFIG}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
@@ -597,12 +654,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG RELEASE)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-rel"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 # Debug build
@@ -636,12 +697,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-dbg"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -762,6 +827,7 @@ x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG
 function(append_dependencies_from_libs out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
     string(REGEX REPLACE "[ ]+" ";" contents "${arg_LIBS}")
+    list(FILTER contents EXCLUDE REGEX "^-F.+")
     list(FILTER contents EXCLUDE REGEX "^-framework$")
     list(FILTER contents EXCLUDE REGEX "^-L.+")
     list(FILTER contents EXCLUDE REGEX "^-libpath:.+")
@@ -883,6 +949,6 @@ else()
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")

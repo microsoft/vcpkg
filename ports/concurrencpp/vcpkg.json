@@ -1,6 +1,7 @@
 {
   "name": "concurrencpp",
   "version": "0.1.7",
+  "port-version": 1,
   "description": "concurrencpp is a tasking library for C++ allowing developers to write highly concurrent applications easily and safely by using tasks, executors and coroutines.",
   "homepage": "https://github.com/David-Haim/concurrencpp/",
   "license": "MIT",

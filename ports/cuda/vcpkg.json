@@ -1,6 +1,6 @@
 {
   "name": "cuda",
-  "version": "12.3.1",
+  "version": "12.5.0",
   "description": "The NVIDIA CUDA Toolkit provides a development environment for creating high performance GPU-accelerated applications. With the CUDA Toolkit, you can develop, optimize, and deploy your applications on GPU-accelerated embedded systems, desktop workstations, enterprise data centers, cloud-based platforms and HPC supercomputers. The toolkit includes GPU-accelerated libraries, debugging and optimization tools, a C/C++ compiler, and a runtime library to deploy your application.",
   "homepage": "https://developer.nvidia.com/cuda-toolkit",
   "license": null,

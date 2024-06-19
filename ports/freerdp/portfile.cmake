@@ -2,17 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 6779d5d4098e0abf65c3c2a2321644a9c78bf7fb3cf0a692be7c88c7f04040c2fb54d63029a2771ead0453f3af17b64dd44136d387eb4a2a4586ccfb72a37c08
+    SHA512 aa96ad2bf30dbe09849ecfb64ec6e60ba4fd3bc2d144c7d576b1e59476ef45d9d744da37806b1c00e3a0413390b35c6d3d4401b89c07c5663122280eca39e501
     HEAD_REF master
     PATCHES
         dependencies.patch
         install-layout.patch
         keep-dup-libs.patch
         windows-linkage.patch
-        wfreerdp-server-cli.patch
-        wf-rdpsnd.patch
-        msvc-arm64.patch
-        mingw-tp.patch
+        winpr_strerror.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
@@ -94,13 +91,19 @@ elseif(VCPKG_TARGET_IS_OSX)
         list(APPEND tools mfreerdp-server)
     endif()
 endif()
-if("winpr-tools" IN_LIST FEATURES)
-    list(APPEND tools winpr-hash winpr-makecert)
-endif()
 if("server" IN_LIST FEATURES)
     list(APPEND tools freerdp-proxy freerdp-shadow-cli)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Proxy3 PACKAGE_NAME freerdp-Proxy3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Server3 PACKAGE_NAME freerdp-server3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endif()
+if("wayland" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/uwac0 PACKAGE_NAME uwac0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endif()
+if("winpr-tools" IN_LIST FEATURES)
+    list(APPEND tools winpr-hash winpr-makecert)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR-tools3 PACKAGE_NAME winpr-tools3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Client3 PACKAGE_NAME freerdp-client3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR3 PACKAGE_NAME winpr3 DO_NOT_DELETE_PARENT_CONFIG_PATH)

@@ -23,13 +23,13 @@
 #
 
 include(FindPackageHandleStandardArgs)
-
 find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
   PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
   PATH_SUFFIXES include )
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
   PATH_SUFFIXES lib )
+
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
 elseif(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_v8.h")
