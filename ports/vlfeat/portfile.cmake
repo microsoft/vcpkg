@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 6d317a1a9496ccac80244553d555fe060b150ccc7ee397a353b64f3a8451f24d1f03d8c00ed04cd9fc2dc066a5c5089b03695c614cb43ffa09be363660278255
     PATCHES
         expose_missing_symbols.patch
+        fix-openmp-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
