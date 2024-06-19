@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5c0aeff..7da416c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -158,6 +158,11 @@ foreach(LIB faad faad_drm faad_fixed faad_drm_fixed)
+   target_compile_options(${LIB} PRIVATE
+     ${FAAD_FLAGS}
+   )
++  if(BUILD_SHARED_LIBS)
++    target_compile_definitions(${LIB} PRIVATE
++      NEAACDECEXPORT
++    )
++  endif()
+ endforeach()
+ 
+ foreach(LIB faad_drm faad_drm_fixed)
+diff --git a/include/neaacdec.h b/include/neaacdec.h
+index f7d5f67..0be1b98 100644
+--- a/include/neaacdec.h
++++ b/include/neaacdec.h
+@@ -58,11 +58,15 @@ extern "C" {
+ #endif
+ 
+ 
+-#ifdef _WIN32
+-  #pragma pack(push, 8)
+-  #define NEAACDECAPI __declspec(dllexport)
+-#elif defined(__GNUC__) && __GNUC__ >= 4
+-  #define NEAACDECAPI __attribute__((visibility("default")))
++#ifdef NEAACDECEXPORT
++  #if defined(_WIN32)
++    #pragma pack(push, 8)
++    #define NEAACDECAPI __declspec(dllexport)
++  #elif defined(__GNUC__) && __GNUC__ >= 4
++    #define NEAACDECAPI __attribute__((visibility("default")))
++  #else
++    #define NEAACDECAPI
++  #endif
+ #else
+   #define NEAACDECAPI
+ #endif
