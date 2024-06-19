@@ -10,8 +10,8 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 407d4b541111686c40fa53935e7d22c70d5a3f7c # v9.3.x used by ParaView 5.12.0
-    SHA512 4170d8b6e89ad90020b16d38d6e91c144eb4f1ffd6d6b82a5f2827bf5b16dac98896fcf1a57822bdb56470f56df02adb05836ce98871b779e4733e2cd60a9a76
+    REF 09a76bc55b37caad94d0d8ebe865caaed1b438af # v9.3.x used by ParaView 5.12.0
+    SHA512 396ee901fafacae8aef860b9c9c17cb92ae8b4969527fd271ad8dd9f6a9e0dc8e3dc807c8d43cc585608ad101a64edcd7aff49e1580c7a61a817c2ea8e2655f5
     HEAD_REF master
     PATCHES
         FindLZMA.patch
@@ -34,10 +34,7 @@ vcpkg_from_github(
         fast-float.patch
         fix-exprtk.patch # just for dbow2 and theia
         devendor_exodusII.patch
-        ot-dep.patch
         remove-prefix-changes.patch
-        10945.diff
-        10972.diff
         hdf5helper.patch
         opencascade-7.8.0.patch
 )
@@ -343,11 +340,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 
-## Files Modules needed by ParaView
-if("paraview" IN_LIST FEATURES)
-    file(INSTALL "${SOURCE_PATH}/Rendering/ParallelLIC/vtkMPIPixelView.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python") #python headers
         file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
@@ -382,6 +374,6 @@ endif()
 # Usage
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-properties.cmake" "_vtk_module_import_prefix}/lib/vtk-9.3/hierarchy" "_vtk_module_import_prefix}$<$<CONFIG:Debug>:/debug>/lib/vtk-9.3/hierarchy")

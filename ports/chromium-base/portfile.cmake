@@ -68,7 +68,7 @@ set(OPTIONS "\
     treat_warnings_as_errors=false")
 set(DEFINITIONS "")
 
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     # Windows 10 SDK >= (10.0.19041.0) is required
     # https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk
     SET(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
@@ -76,7 +76,7 @@ if(WIN32)
     set(OPTIONS "${OPTIONS} use_lld=false")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(VCPKG_TARGET_IS_LINUX)
     set(OPTIONS "${OPTIONS} use_allocator=\"none\" use_sysroot=false use_glib=false")
 endif()
 
@@ -88,8 +88,8 @@ if(CLANG MATCHES "-NOTFOUND")
 endif()
 get_filename_component(CLANG "${CLANG}" DIRECTORY)
 get_filename_component(CLANG "${CLANG}" DIRECTORY)
-if((WIN32 AND NOT EXISTS "${CLANG}/bin/clang-cl.exe") OR
-   (APPLE AND NOT EXISTS "${CLANG}/bin/clang"))
+if((VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "${CLANG}/bin/clang-cl.exe") OR
+   (VCPKG_TARGET_IS_OSX AND NOT EXISTS "${CLANG}/bin/clang"))
     message(FATAL_ERROR "Clang needs to be inside a bin directory.")
 endif()
 set(OPTIONS "${OPTIONS} clang_base_path=\"${CLANG}\"")
@@ -101,7 +101,7 @@ else()
     set(OPTIONS "${OPTIONS} is_component_build=false")
 endif()
 
-if(APPLE)
+if(VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} enable_dsyms=true")
 endif()
 
@@ -126,7 +126,7 @@ set(TARGETS
     base/third_party/dynamic_annotations
     base/third_party/double_conversion)
 
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND TARGETS base/win:pe_image)
 endif()
 
