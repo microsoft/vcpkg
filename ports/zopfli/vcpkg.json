@@ -1,7 +1,7 @@
 {
   "name": "zopfli",
   "version": "1.0.3",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Zopfli Compression Algorithm compression library programmed in C",
   "homepage": "https://github.com/google/zopfli",
   "license": "Apache-2.0",

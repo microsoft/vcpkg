@@ -53,7 +53,7 @@ else()
 
         set(ACTIVEMQCPP_LIB_PREFFIX )
         set(ACTIVEMQCPP_LIB_SUFFIX d)
-        vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" ";apr-1.lib" ";libapr-1.lib")
+        vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" ";apr-1.lib" ";libapr-1.lib" IGNORE_UNCHANGED)
     else()
         set(RELEASE_CONF "Release")
         set(DEBUG_CONF   "Debug")
