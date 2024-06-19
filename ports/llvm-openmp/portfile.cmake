@@ -28,7 +28,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" ENABLE_SHARED)
 # Perl is required for the OpenMP run-time
 vcpkg_find_acquire_program(PERL)
 
-if(MSVC)
+if(VCPKG_HOST_IS_WINDOWS)
     # The library name otherwise includes a "lib" prefix on Windows, which is inconsistent with other platforms.
     set(EXTRA_VARS -DLIBOMP_LIB_NAME=omp)
 endif()
