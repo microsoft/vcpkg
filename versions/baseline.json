@@ -1753,7 +1753,7 @@
       "port-version": 0
     },
     "coin-or-cbc": {
-      "baseline": "2023-02-01",
+      "baseline": "2024-06-04",
       "port-version": 0
     },
     "coin-or-cgl": {
