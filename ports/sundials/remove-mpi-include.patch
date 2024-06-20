@@ -1,0 +1,10 @@
+--- "a/examples/sunlinsol/spbcgs/parallel/CMakeLists.txt"
++++ "b/examples/sunlinsol/spbcgs/parallel/CMakeLists.txt"
+@@ -65,7 +65,6 @@ foreach(example_tuple ${sunlinsol_spbcgs_examples})
+       ${EXE_EXTRA_LINK_LIBS})
+ 
+     if(NOT MPI_C_COMPILER)
+-      target_include_directories(${example} ${MPI_INCLUDE_PATH})
+       target_link_libraries(${example} ${MPI_LIBRARIES})
+     endif()
+   endif()
