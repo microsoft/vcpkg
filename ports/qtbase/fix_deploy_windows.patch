@@ -2,9 +2,10 @@ diff --git a/src/corelib/Qt6CoreMacros.cmake b/src/corelib/Qt6CoreMacros.cmake
 index 8a0d07feac..0e6a720c20 100644
 --- a/src/corelib/Qt6CoreMacros.cmake	
 +++ b/src/corelib/Qt6CoreMacros.cmake
-@@ -2977,13 +2977,15 @@ function(_qt_internal_setup_deploy_support)
+@@ -2977,17 +2977,19 @@ function(_qt_internal_setup_deploy_support)
      if(CMAKE_HOST_WIN32)
-         if(CMAKE_CROSSCOMPILING)
++        if(CMAKE_CROSSCOMPILING AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+-        if(CMAKE_CROSSCOMPILING)
              set(qt_paths_ext ".bat")
 +        elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 +            set(qt_paths_ext ".debug.bat")
@@ -14,8 +15,12 @@ index 8a0d07feac..0e6a720c20 100644
      else()
          set(qt_paths_ext "")
      endif()
--    set(target_qtpaths_path "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}/qtpaths${qt_paths_ext}")
-+    set(target_qtpaths_path "${QT6_INSTALL_PREFIX}/tools/Qt6/bin/qtpaths${qt_paths_ext}")
  
-     file(GENERATE OUTPUT "${QT_DEPLOY_SUPPORT}" CONTENT
- "cmake_minimum_required(VERSION 3.16...3.21)
+ 
+ 
+     set(target_qtpaths_path "")
+-    set(qtpaths_prefix "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}")
++    set(qtpaths_prefix "${QT6_INSTALL_PREFIX}/tools/Qt6/bin")
+     get_property(qt_major_version TARGET "${target}" PROPERTY INTERFACE_QT_MAJOR_VERSION)
+     if(qt_major_version)
+         set(target_qtpaths_with_major_version_path

@@ -23,12 +23,12 @@ index 64381cb..875bea2 100644
          colmap_util
          colmap_sensor
 diff --git a/src/colmap/retrieval/CMakeLists.txt b/src/colmap/retrieval/CMakeLists.txt
-index 2ff5dfd..687d8ea 100644
+index 903a935..cb8ad6a 100644
 --- a/src/colmap/retrieval/CMakeLists.txt
 +++ b/src/colmap/retrieval/CMakeLists.txt
 @@ -43,6 +43,7 @@ COLMAP_ADD_LIBRARY(
      PUBLIC_LINK_LIBS
-         Boost::graph
+         Boost::boost
          Eigen3::Eigen
 +        glog::glog
          flann

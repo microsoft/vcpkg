@@ -163,6 +163,22 @@ if(CMD STREQUAL "BUILD")
     set(TRIPLET_SYSTEM_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     include("${SCRIPTS}/cmake/vcpkg_common_definitions.cmake")
 
+    function(z_vcpkg_warn_ambiguous_system_variables VARIABLE ACCESS VALUE POS STACK)
+        message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "Unexpected ${ACCESS} on variable ${VARIABLE} in script mode.
+This variable name insufficiently expresses whether it refers to the \
+target system or to the host system. Use a prefixed variable instead.
+- Variables providing information about the host:
+  CMAKE_HOST_<SYSTEM>
+  VCPKG_HOST_IS_<SYSTEM>
+- Variables providing information about the target:
+  VCPKG_TARGET_IS_<SYSTEM>
+  VCPKG_DETECTED_<VARIABLE> (using vcpkg_cmake_get_vars)
+")
+    endfunction()
+    foreach(var IN ITEMS ANDROID APPLE BSD IOS LINUX MINGW MSVC UNIX WIN32)
+        variable_watch("${var}" z_vcpkg_warn_ambiguous_system_variables)
+    endforeach()
+
     if (DEFINED VCPKG_PORT_CONFIGS)
         foreach(VCPKG_PORT_CONFIG IN LISTS VCPKG_PORT_CONFIGS)
             include("${VCPKG_PORT_CONFIG}")
