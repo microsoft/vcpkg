@@ -52,7 +52,7 @@ if(VCPKG_TARGET_IS_LINUX)
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=ON")     # libevent -> issues with getting the include?
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=OFF")     # libevent -> issues with getting the include?
 endif()
 
 vcpkg_find_acquire_program(FLEX)
