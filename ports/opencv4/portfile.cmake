@@ -198,6 +198,18 @@ if("contrib" IN_LIST FEATURES)
     FILENAME opencv-contrib-1ed3dd2c53888e3289afdb22ec4e9ebbff3dba87.patch
   )
 
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX_2
+    URLS https://github.com/opencv/opencv_contrib/commit/9358ad2e56f6d0b99860856fc1b53b783d186e73.patch?full_index=1
+    SHA512 9d2fef86693e723af4c63417178f3082bf1e1cea2fd0164ecf9bd0ec02d348c374d9c3a707c8e0f224560c9671879ef6f8a6c54cdf38820fe5877faba3545732
+    FILENAME opencv-contrib-9358ad2e56f6d0b99860856fc1b53b783d186e73.patch
+  )
+
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX_3
+    URLS https://github.com/opencv/opencv_contrib/commit/baaeb68b3d6b557536f95b527c0dd87c8f1ce80d.patch?full_index=1
+    SHA512 1d5dc4fbcff57044f03b0620385d8b23eb99e3a39f211901b68c7622f2f00e4ccaa3a1e1999a6712285e1812ada72acb70280d62eb089d6bdd015b5545d2d4ae
+    FILENAME opencv-contrib-baaeb68b3d6b557536f95b527c0dd87c8f1ce80d.patch
+  )
+
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
@@ -210,6 +222,8 @@ if("contrib" IN_LIST FEATURES)
       0018-fix-depend-tesseract.patch
       0019-fix-ogre-dependency.patch
       "${CUDA_12_4_CONTRIB_FIX}"
+      "${CUDA_12_4_CONTRIB_FIX_2}"
+      "${CUDA_12_4_CONTRIB_FIX_3}"
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
