@@ -122,7 +122,6 @@ function(_openmp_get_compiler_spec_date)
     endif()
     return()
   endif()
-  set(OpenMP_SPEC_DATE ${OpenMP_SPEC_DATE} CACHE STRING "OpenMP specification date" FORCE)
 endfunction()
 
 function(_openmp_set_version_by_spec_date)
