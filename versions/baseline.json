@@ -545,7 +545,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.12.0",
+      "baseline": "3.13.0",
       "port-version": 0
     },
     "basisu": {
@@ -1865,7 +1865,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.15.3",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -1957,7 +1957,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.6.1",
+      "baseline": "0.6.2",
       "port-version": 0
     },
     "cppunit": {
@@ -6262,7 +6262,7 @@
     },
     "numcpp": {
       "baseline": "2.12.1",
-      "port-version": 1
+      "port-version": 2
     },
     "nuspell": {
       "baseline": "5.1.4",
@@ -6526,7 +6526,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 10
+      "port-version": 11
     },
     "openmvs": {
       "baseline": "2.1.0",
@@ -6581,7 +6581,7 @@
       "port-version": 0
     },
     "openvino": {
-      "baseline": "2024.1.0",
+      "baseline": "2024.2.0",
       "port-version": 0
     },
     "openvpn3": {
@@ -9218,7 +9218,7 @@
     },
     "vlfeat": {
       "baseline": "2020-07-10",
-      "port-version": 3
+      "port-version": 4
     },
     "vlpp": {
       "baseline": "1.1.0.0",
