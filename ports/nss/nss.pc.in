@@ -1,0 +1,11 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}/tools/nss
+libdir=${prefix}/lib
+includedir=${prefix}/include/nss
+
+Name: NSS
+Description: Network Security Services
+Version: @VERSION@
+Requires: nspr
+Libs: -L${libdir} -lssl3 -lsmime3 -lnss3 -lnssutil3
+Cflags: -I${includedir}

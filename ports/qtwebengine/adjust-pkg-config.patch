@@ -1,0 +1,202 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d4638139c..5715639c10 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,6 +19,13 @@ project(QtWebEngine
+     HOMEPAGE_URL "https://qt.io/"
+     LANGUAGES CXX C
+ )
++
++if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/pkgconfig")
++else()
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pkgconfig")
++endif()
++
+ qt_internal_project_setup()
+ 
+ find_package(Qt6 ${PROJECT_VERSION} CONFIG QUIET OPTIONAL_COMPONENTS
+diff --git a/cmake/Functions.cmake b/cmake/Functions.cmake
+index e1044de8f5..06b20a659e 100644
+--- a/cmake/Functions.cmake
++++ b/cmake/Functions.cmake
+@@ -84,6 +84,8 @@ function(create_static_config cmakeTarget arch configFileName)
+         set(lib Qt::${lib}Private)
+         list(APPEND contents "set(GN_${out}_INCLUDES \"$<$<STREQUAL:$<TARGET_NAME_IF_EXISTS:${lib}>,${lib}>:$<TARGET_PROPERTY:${lib},INTERFACE_INCLUDE_DIRECTORIES>>\")")
+     endforeach()
++    list(APPEND contents "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\")")
++    list(APPEND contents "set(VCPKG_INSTALLED_DIR \"${VCPKG_INSTALLED_DIR}\")")
+     list(JOIN contents "\n" contents)
+     file(GENERATE
+         OUTPUT $<CONFIG>/${arch}/${configFileName}
+@@ -829,13 +831,31 @@ macro(append_build_type_setup)
+         enable_rust=false # We do not yet support rust
+     )
+     if(${config} STREQUAL "Debug")
++        separate_arguments (ldlist UNIX_COMMAND "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_DEBUG} -L${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib -Wl,-rpath,${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
++        list(JOIN ldlist "\",\"" ldlist)
++        list(APPEND gnArgArg "vcpkg_ld=[\"${ldlist}\"]")
++        separate_arguments (clist UNIX_COMMAND "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG} -I${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
++        list(JOIN clist "\",\"" clist)
++        list(APPEND gnArgArg "vcpkg_cc=[\"${clist}\"]")
++        separate_arguments (cclist UNIX_COMMAND "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -I${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
++        list(JOIN cclist "\",\"" cclist)
++        list(APPEND gnArgArg "vcpkg_cxx=[\"${cclist}\"]")
+         list(APPEND gnArgArg is_debug=true symbol_level=2)
+         if(WIN32)
+             list(APPEND gnArgArg enable_iterator_debugging=true)
+         endif()
+     elseif(${config} STREQUAL "Release")
++        separate_arguments (ldlist UNIX_COMMAND "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_RELEASE} -L${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib -Wl,-rpath,${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
++        list(JOIN ldlist "\",\"" ldlist)
++        list(APPEND gnArgArg "vcpkg_ld=[\"${ldlist}\"]")
++        separate_arguments (clist UNIX_COMMAND "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE} -I${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
++        list(JOIN clist "\",\"" clist)
++        list(APPEND gnArgArg "vcpkg_cc=[\"${clist}\"]")
++        separate_arguments (cclist UNIX_COMMAND "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE} -I${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
++        list(JOIN cclist "\",\"" cclist)
++        list(APPEND gnArgArg "vcpkg_cxx=[\"${cclist}\"]")
+         list(APPEND gnArgArg is_debug=false symbol_level=0)
+     elseif(${config} STREQUAL "RelWithDebInfo")
+         list(APPEND gnArgArg is_debug=false)
+         if(WIN32 AND NOT CLANG)
+             list(APPEND gnArgArg symbol_level=2)
+@@ -1260,6 +1266,16 @@ function(add_gn_command)
+              -DPython3_EXECUTABLE=${Python3_EXECUTABLE}
+              -DGN_THREADS=$ENV{QTWEBENGINE_GN_THREADS}
+              -DQT_ALLOW_SYMLINK_IN_PATHS=${QT_ALLOW_SYMLINK_IN_PATHS}
++             -DQT_GN_BUILD_TYPE=$<CONFIG>
++             "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}"
++             "-DCMAKE_C_FLAGS_DEBUG=${CMAKE_C_FLAGS_DEBUG}"
++             "-DCMAKE_C_FLAGS_RELEASE=${CMAKE_C_FLAGS_RELEASE}"
++             "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
++             "-DCMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}"
++             "-DCMAKE_CXX_FLAGS_RELEASE=${CMAKE_CXX_FLAGS_RELEASE}"
++             "-DCMAKE_SHARED_LINKER_FLAGS=${CMAKE_SHARED_LINKER_FLAGS}"
++             "-DCMAKE_SHARED_LINKER_FLAGS_DEBUG=${CMAKE_SHARED_LINKER_FLAGS_DEBUG}"
++             "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=${CMAKE_SHARED_LINKER_FLAGS_RELEASE}"
+              -P ${WEBENGINE_ROOT_SOURCE_DIR}/cmake/Gn.cmake
+         WORKING_DIRECTORY ${WEBENGINE_ROOT_BUILD_DIR}
+         COMMENT "Run gn for target ${arg_CMAKE_TARGET} in ${arg_BUILDDIR}"
+diff --git a/cmake/Gn.cmake b/cmake/Gn.cmake
+index 15b349e089..39d4a0fc90 100644
+--- a/cmake/Gn.cmake
++++ b/cmake/Gn.cmake
+@@ -41,6 +41,7 @@ init_gn_config(${buildDir}/gn_config_target.cmake)
+ read_gn_config(${buildDir}/gn_config_cxx.cmake)
+ read_gn_config(${buildDir}/gn_config_c.cmake)
+ read_gn_config(${buildDir}/gn_static.cmake)
++include(${buildDir}/gn_static.cmake)
+ 
+ configure_gn_target(
+    "${sourceDir}"
+@@ -61,10 +62,24 @@ LIST(SORT printArgArg)
+ STRING(REGEX REPLACE ";" "\n" printArgArg "${printArgArg}")
+ list(JOIN gnArg " " printArg)
+ 
++if(NOT WIN32)
++  if(QT_GN_BUILD_TYPE  STREQUAL "Debug")
++    set(pcset "PKG_CONFIG_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/pkgconfig")
++  else()
++    set(pcset "PKG_CONFIG_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pkgconfig")
++  endif()
++endif()
++
++if(QT_GN_BUILD_TYPE  STREQUAL "Debug")
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/pkgconfig")
++else()
++  set(ENV{PKG_CONFIG_PATH} "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pkgconfig")
++endif()
++
+ message("-- Running gn in ${buildDir}\n"
+         "-- GN command:\n${gnCmd} ${printArg}\n"
+         "-- GN arg file:\n${buildDir}/args.gn\n"
+         "-- GN args: \n${printArgArg}"
+ )
+ 
+ execute_process(
+diff --git a/src/3rdparty/chromium/build/config/BUILD.gn b/src/3rdparty/chromium/build/config/BUILD.gn
+index e6fc74187..39ed0cf50 100644
+--- a/src/3rdparty/chromium/build/config/BUILD.gn
++++ b/src/3rdparty/chromium/build/config/BUILD.gn
+@@ -45,6 +45,21 @@ if (is_android) {
+ # .gni file if you need it from more than one place) rather than making global
+ # flags. See //build/config/BUILDCONFIG.gn for advice on where to define
+ # build flags.
++
++declare_args() {
++  vcpkg_ld = ""
++  vcpkg_cc = ""
++  vcpkg_cxx = ""
++}
++
++config("vcpkg_config") {
++  if (is_linux || is_chromeos) {
++    ldflags = vcpkg_ld
++    cflags = vcpkg_cc
++    cflags_cc = vcpkg_cxx
++  }
++}
++
+ config("feature_flags") {
+   defines = []
+   if (dcheck_always_on) {
+diff --git a/src/3rdparty/chromium/components/url_formatter/spoof_checks/top_domains/BUILD.gn b/src/3rdparty/chromium/components/url_formatter/spoof_checks/top_domains/BUILD.gn
+index 97c28c796..4a5439674 100644
+--- a/src/3rdparty/chromium/components/url_formatter/spoof_checks/top_domains/BUILD.gn
++++ b/src/3rdparty/chromium/components/url_formatter/spoof_checks/top_domains/BUILD.gn
+@@ -34,6 +34,7 @@ executable("top_domain_generator") {
+   if (is_ios) {
+     frameworks = [ "UIKit.framework" ]
+   }
++  configs += [ "//build/config:vcpkg_config" ]
+ }
+
+ compiled_action("generate_top_domains_trie") {
+diff --git a/src/3rdparty/chromium/third_party/blink/renderer/platform/BUILD.gn b/src/3rdparty/chromium/third_party/blink/renderer/platform/BUILD.gn
+index ee7d37507..bb8da713b 100644
+--- a/src/3rdparty/chromium/third_party/blink/renderer/platform/BUILD.gn
++++ b/src/3rdparty/chromium/third_party/blink/renderer/platform/BUILD.gn
+@@ -128,7 +128,7 @@ executable("character_data_generator") {
+     "text/character_property_data.h",
+     "text/character_property_data_generator.cc",
+   ]
+-  configs += [ "//third_party/blink/renderer:config" ]
++  configs += [ "//third_party/blink/renderer:config", "//build/config:vcpkg_config" ]
+   deps = [
+     # Default manifest on Windows(a no-op elsewhere).
+     "//base",
+diff --git a/src/3rdparty/chromium/tools/v8_context_snapshot/BUILD.gn b/src/3rdparty/chromium/tools/v8_context_snapshot/BUILD.gn
+index eba55aa65..87d8d9862 100644
+--- a/src/3rdparty/chromium/tools/v8_context_snapshot/BUILD.gn
++++ b/src/3rdparty/chromium/tools/v8_context_snapshot/BUILD.gn
+@@ -101,6 +101,7 @@ if (use_v8_context_snapshot) {
+       configs += [
+         "//v8:external_startup_data",
+         ":disable_icf",
++        "//build/config:vcpkg_config"
+       ]
+     }
+   }
+diff --git a/src/3rdparty/chromium/v8/BUILD.gn b/src/3rdparty/chromium/v8/BUILD.gn
+index b83b22ea0..f47218f79 100644
+--- a/src/3rdparty/chromium/v8/BUILD.gn
++++ b/src/3rdparty/chromium/v8/BUILD.gn
+@@ -6841,7 +6841,7 @@ if (current_toolchain == v8_snapshot_toolchain) {
+       sources += [ "src/deoptimizer/deoptimizer-cfi-empty.cc" ]
+     }
+
+-    configs = [ ":internal_config" ]
++    configs = [ ":internal_config", "//build/config:vcpkg_config" ]
+
+     deps = [
+       ":v8_base_without_compiler",
+@@ -6928,7 +6928,7 @@ if (v8_enable_i18n_support) {
+         v8_icu_path,
+       ]
+
+-      configs = [ ":internal_config" ]
++      configs = [ ":internal_config", "//build/config:vcpkg_config" ]
+     }
+   }
+

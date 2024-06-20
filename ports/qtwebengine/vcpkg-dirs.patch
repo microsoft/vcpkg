@@ -1,0 +1,27 @@
+diff --git a/src/3rdparty/chromium/ui/gl/gl_context_glx.cc b/src/3rdparty/chromium/ui/gl/gl_context_glx.cc
+index c53bb43723..c1254adea7 100644
+--- a/src/3rdparty/chromium/ui/gl/gl_context_glx.cc
++++ b/src/3rdparty/chromium/ui/gl/gl_context_glx.cc
+@@ -14,6 +14,7 @@
+ #include "ui/gl/GL/glextchromium.h"
+ #include "ui/gl/gl_bindings.h"
+ #include "ui/gl/gl_implementation.h"
++#include "ui/gl/gl_surface.h"
+ #include "ui/gl/gl_surface_glx.h"
+ 
+ #ifndef GLX_NV_robustness_video_memory_purge
+diff --git a/src/3rdparty/chromium/ui/gl/gl_display.cc b/src/3rdparty/chromium/ui/gl/gl_display.cc
+index dcd6d60f76..998b0137d7 100644
+--- a/src/3rdparty/chromium/ui/gl/gl_display.cc
++++ b/src/3rdparty/chromium/ui/gl/gl_display.cc
+@@ -28,6 +28,10 @@
+ #include "ui/gl/gl_implementation.h"
+ #include "ui/gl/gl_surface.h"
+ 
++#if defined(USE_GLX)
++#include "ui/base/x/x11_util.h"
++#endif
++
+ #if BUILDFLAG(IS_OZONE)
+ #include "ui/ozone/buildflags.h"
+ #endif  // BUILDFLAG(IS_OZONE)

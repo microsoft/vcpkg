@@ -2,11 +2,20 @@
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
   "version": "6.7.1",
+  "port-version": 1,
   "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & !((x86 | arm) & windows)",
+  "supports": "!((x86 | arm) & windows)",
   "dependencies": [
+    {
+      "name": "cups",
+      "platform": "!windows"
+    },
+    {
+      "name": "dbus",
+      "platform": "!windows"
+    },
     {
       "name": "ffmpeg",
       "platform": "!windows"
@@ -17,6 +26,10 @@
     },
     {
       "name": "freetype",
+      "platform": "!windows"
+    },
+    {
+      "name": "libevent",
       "platform": "!windows"
     },
     {
@@ -36,7 +49,7 @@
       "platform": "!windows"
     },
     {
-      "name": "libevent",
+      "name": "lcms",
       "platform": "!windows"
     },
     {
@@ -64,10 +77,23 @@
       "platform": "!windows"
     },
     {
+      "name": "libxslt",
+      "platform": "!windows"
+    },
+    {
       "name": "minizip",
       "platform": "!windows"
     },
+    {
+      "name": "nss",
+      "platform": "!windows"
+    },
     "opengl",
+    {
+      "name": "openjpeg",
+      "default-features": false,
+      "platform": "!windows"
+    },
     {
       "name": "opus",
       "platform": "!windows"
@@ -108,12 +134,21 @@
       "platform": "!windows"
     },
     {
+      "name": "tiff",
+      "default-features": false,
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-get-python-packages",
       "host": true
     },
     {
       "name": "vcpkg-tool-nodejs",
       "host": true
+    },
+    {
+      "name": "vcpkg-tool-nodejs",
+      "platform": "!windows"
     },
     {
       "name": "zlib",
