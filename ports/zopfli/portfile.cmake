@@ -43,19 +43,23 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake"
             "\"\${_IMPORT_PREFIX}/debug/bin/zopfli\""
             "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""
+            IGNORE_UNCHANGED
         )
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake"
             "\"\${_IMPORT_PREFIX}/debug/bin/zopflipng\""
             "\"\${_IMPORT_PREFIX}/tools/zopfli/zopflipng\""
+            IGNORE_UNCHANGED
         )
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-release.cmake"
         "\"\${_IMPORT_PREFIX}/bin/zopfli\""
         "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""
+        IGNORE_UNCHANGED
     )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-release.cmake"
         "\"\${_IMPORT_PREFIX}/bin/zopflipng\""
         "\"\${_IMPORT_PREFIX}/tools/zopfli/zopflipng\""
+        IGNORE_UNCHANGED
     )
 endif()
 
