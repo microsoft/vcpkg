@@ -1,3 +1,8 @@
+if (VCPKG_TARGET_IS_WINDOWS)
+    # https://github.com/llvm/llvm-project/blob/llvmorg-18.1.6/openmp/runtime/CMakeLists.txt#L331
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/openmp-${VERSION}.src.tar.xz"
     FILENAME "llvm-openmp-${VERSION}.src.tar.xz"
@@ -30,7 +35,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" ENABLE_SHARED)
 # Perl is required for the OpenMP run-time
 vcpkg_find_acquire_program(PERL)
 
-if(VCPKG_HOST_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     # The library name otherwise includes a "lib" prefix on Windows, which is inconsistent with other platforms.
     set(EXTRA_VARS -DLIBOMP_LIB_NAME=omp)
 endif()
