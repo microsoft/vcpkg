@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(libaio)
+file(GLOB SRC_FILES src/*.c)
+add_library(aio ${SRC_FILES})
+target_include_directories(aio PUBLIC "${PROJECT_SOURCE_DIR}/src")
+install(TARGETS aio LIBRARY DESTINATION lib)
+install(FILES src/libaio.h DESTINATION include)
