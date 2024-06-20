@@ -1773,8 +1773,8 @@
       "port-version": 0
     },
     "coinutils": {
-      "baseline": "2023-02-02",
-      "port-version": 1
+      "baseline": "2024-04-08",
+      "port-version": 0
     },
     "collada-dom": {
       "baseline": "2.5.0",
