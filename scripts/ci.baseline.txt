@@ -492,7 +492,6 @@ ijg-libjpeg:x86-windows        = skip
 intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
-irrlicht:x64-android=fail
 isal:x64-android=fail
 itk:arm-neon-android=fail
 itk:arm64-android=fail
