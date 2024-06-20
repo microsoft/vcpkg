@@ -79,6 +79,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
     endif()
 
+    if("disable-multithread" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS}  --disable-multithread")
+    endif()
+
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
     vcpkg_execute_required_process(
