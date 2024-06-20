@@ -1,9 +1,27 @@
 set(USE_QT_VERSION "6")
 
+vcpkg_download_distfile(CUDA_124_DNN_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25412.patch"
+  FILENAME "opencv-opencv4-25412.patch"
+  SHA512 0b8fcb19d81feeb506cdf596d317b137cc1d71d29c16ff1657c7744b389e9184e20e197a7f7398964c7c71e9950659814d9fbd2387f8d4a5875c2db252dd3f76
+)
+
 vcpkg_download_distfile(CUDA_124_TUPLE_PATCH
   URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25658.patch"
   FILENAME "opencv-opencv4-25658.patch"
   SHA512 ca5661ff2e3761b7f7ba9314539fffb7f1a3e9e6ff07ce0942ef4b88a342110a873d1c14081fbf57f3413af5542643089ee88b92ff3430cdd9e7d82dea2c40fd
+)
+
+vcpkg_download_distfile(CONTRIB_CUDA_124_NPP_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3726.patch"
+  FILENAME "opencv-opencv4-contrib-3726.patch"
+  SHA512 948811a6121e00009812c44c1fbd859cca10f80b447c2d0a69dec2e453eafddd15ece0b96a7f238f6e92f77d249f8f750f020d7913728ed21aba55ecaf07c2d3
+)
+
+vcpkg_download_distfile(CONTRIB_CUDA_124_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3742.patch"
+  FILENAME "opencv-opencv4-contrib-3742.patch"
+  SHA512 de3b428fe342cd2607bb53cf8c77e066925fd9d59d5b8600a60117f7a0f536424cadcbca7e60c1161a64794e785cceb806dc6d4e244c2c05a59678d2b61d8610
 )
 
 vcpkg_download_distfile(CONTRIB_CUDA_124_TUPLE_PATCH
@@ -12,10 +30,10 @@ vcpkg_download_distfile(CONTRIB_CUDA_124_TUPLE_PATCH
   SHA512 4b40aa81d708b184afcbd92da29b886139dead5d9b964a3906715864a393ce56737f2bfc3fc67aec18792f2d55932c32d3c18b1b238078949721247bbe985d5f
 )
 
-vcpkg_download_distfile(CONTRIB_CUDA_124_NPP_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3726.patch"
-  FILENAME "opencv-opencv4-contrib-3726.patch"
-  SHA512 948811a6121e00009812c44c1fbd859cca10f80b447c2d0a69dec2e453eafddd15ece0b96a7f238f6e92f77d249f8f750f020d7913728ed21aba55ecaf07c2d3
+vcpkg_download_distfile(CONTRIB_CUDA_124_INCLUDE_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3751.patch"
+  FILENAME "opencv-opencv4-contrib-3751.patch"
+  SHA512 3ba5d6e0a1f13c6513f5967d49f5941204eb39a064a402d54fe3a4fa5dbb2cfd8a8bebec99e06da9991098c95acfc816e367d27757f4a4f4d9fed1452debfd8a
 )
 
 vcpkg_from_github(
@@ -39,6 +57,7 @@ vcpkg_from_github(
       0014-fix-supportqnx.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
+      ${CUDA_124_DNN_PATCH}
       ${CUDA_124_TUPLE_PATCH}
 )
 # Disallow accidental build of vendored copies
@@ -228,8 +247,10 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
-      ${CONTRIB_CUDA_124_TUPLE_PATCH}
       ${CONTRIB_CUDA_124_NPP_PATCH}
+      ${CONTRIB_CUDA_124_PATCH}
+      ${CONTRIB_CUDA_124_TUPLE_PATCH}
+      ${CONTRIB_CUDA_124_INCLUDE_PATCH}
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
