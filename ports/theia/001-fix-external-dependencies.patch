@@ -46,7 +46,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 -# Search quietly s/t we control the timing of the error message if not found.
 -find_package(Ceres QUIET)
 -if (CERES_FOUND)
-+find_dependency(Ceres REQUIRED)
++find_dependency(Ceres REQUIRED CONFIG)
 +if (TRUE)
    message(STATUS "Found required Theia dependency: "
      "Ceres in ${CERES_INCLUDE_DIRS}")
@@ -62,7 +62,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 -# Search quietly s/t we control the timing of the error message if not found.
 -find_package(Glog QUIET)
 -if (GLOG_FOUND)
-+find_dependency(Glog REQUIRED)
++find_dependency(Glog REQUIRED CONFIG)
 +if (TRUE)
    message(STATUS "Found required Theia dependency: "
      "Glog in ${GLOG_INCLUDE_DIRS}")
@@ -73,7 +73,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
  # FindGflags.cmake)
 -find_package(Gflags QUIET)
 -if (GFLAGS_FOUND)
-+find_dependency(Gflags REQUIRED)
++find_dependency(Gflags REQUIRED CONFIG)
 +if (TRUE)
    message(STATUS "Found required Theia dependency: Google Flags in "
      "${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
@@ -84,7 +84,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
  # OpenImageIO
 -find_package(OpenImageIO QUIET)
 -if (OPENIMAGEIO_FOUND)
-+find_dependency(OpenImageIO REQUIRED)
++find_dependency(OpenImageIO REQUIRED CONFIG)
 +if (TRUE)
    message(STATUS "Found Theia dependency: OpenImageIO in ${OPENIMAGEIO_INCLUDE_DIRS}")
  else (OPENIMAGEIO_FOUND)
@@ -95,7 +95,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
  
 -find_package(RocksDB)
 -if (ROCKSDB_FOUND)
-+find_dependency(RocksDB REQUIRED)
++find_dependency(RocksDB REQUIRED CONFIG)
 +if (TRUE)
    message(STATUS "Found RocksDB: ${ROCKSDB_INCLUDE_DIRS}")
  else (ROCKSDB_FOUND)
@@ -109,33 +109,30 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 +find_dependency(RapidJSON REQUIRED)
 +list(APPEND THEIA_LIBRARIES ${RapidJSON_LIBRARIES})
 +
-+find_dependency(SuiteSparse REQUIRED)
++find_dependency(SuiteSparse REQUIRED CONFIG)
 +if (TRUE)
    # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
    # Ubuntu 13.10 cannot be used to link shared libraries.
    if (BUILD_SHARED_LIBS AND
-@@ -209,6 +204,20 @@
+@@ -209,6 +204,17 @@
  endif (SUITESPARSE_FOUND)
  list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
  
-+find_dependency(cereal REQUIRED)
++find_dependency(cereal REQUIRED CONFIG)
 +list(APPEND THEIA_LIBRARIES cereal)
 +
-+find_dependency(Flann REQUIRED)
++find_dependency(Flann REQUIRED CONFIG)
 +list(APPEND THEIA_INCLUDE_DIRS ${FLANN_INCLUDE_DIR})
 +list(APPEND THEIA_LIBRARIES ${FLANN_LIBRARY})
 +
-+find_dependency(vlfeat REQUIRED)
-+list(APPEND THEIA_LIBRARIES unofficial::vlfeat::vl)
-+
-+find_dependency(spectra REQUIRED)
++find_dependency(spectra REQUIRED CONFIG)
 +list(APPEND THEIA_LIBRARIES Spectra::Spectra)
 +
 +
  # Import exported Theia targets.
  if (NOT TARGET theia AND NOT Theia_BINARY_DIR)
    include(${THEIA_CURRENT_CONFIG_INSTALL_DIR}/TheiaTargets.cmake)
-@@ -221,17 +230,11 @@
+@@ -221,17 +230,12 @@
  set(THEIA_INTERNAL_LIBS_INCLUDES
    ${THEIA_INTERNAL_LIB_PREFIX}
    ${THEIA_INTERNAL_LIB_PREFIX}/akaze
@@ -148,7 +145,7 @@ diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 -  ${THEIA_INTERNAL_LIB_PREFIX}/spectra
    ${THEIA_INTERNAL_LIB_PREFIX}/statx
    ${THEIA_INTERNAL_LIB_PREFIX}/stlplus3
--  ${THEIA_INTERNAL_LIB_PREFIX}/vlfeat
+   ${THEIA_INTERNAL_LIB_PREFIX}/vlfeat
 -  ${THEIA_INTERNAL_LIB_PREFIX}/visual_sfm)
 +  ${THEIA_INTERNAL_LIB_PREFIX}/visual_sfm
 +)
@@ -171,8 +168,7 @@ diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
 +  Spectra::Spectra
    statx
    stlplus3
--  vlfeat
-+  unofficial::vlfeat::vl
+   vlfeat
    visual_sfm
  )
  
@@ -188,7 +184,7 @@ diff --git a/libraries/optimo/CMakeLists.txt b/libraries/optimo/CMakeLists.txt
 -  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
 -endif (EIGEN_FOUND)
 -include_directories(${EIGEN_INCLUDE_DIRS})
-+find_package(Eigen3 REQUIRED)
++find_package(Eigen3 REQUIRED CONFIG)
 +if (EIGEN3_FOUND)
 +  message("-- Found Eigen version ${EIGEN3_VERSION_STRING}: ${EIGEN3_INCLUDE_DIRS}")
 +endif (EIGEN3_FOUND)
@@ -211,17 +207,7 @@ diff --git a/libraries/CMakeLists.txt b/libraries/CMakeLists.txt
 -
  # Add Optimo.
  add_subdirectory(optimo)
- 
-@@ -20,8 +14,5 @@
- # STLPlus for filepath tools.
- add_subdirectory(stlplus3)
- 
--# Add VLFeat.
--add_subdirectory(vlfeat)
--
- # Add VisualSfM files.
- add_subdirectory(visual_sfm)
-\ No newline at end of file
+
 diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
 --- a/libraries/statx/CMakeLists.txt	(revision d2112f15aa69a53dda68fe6c4bd4b0f1e2fe915b)
 +++ b/libraries/statx/CMakeLists.txt	(date 1718780483570)
@@ -234,7 +220,7 @@ diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
 -  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
 -endif (EIGEN_FOUND)
 -include_directories(${EIGEN_INCLUDE_DIRS})
-+find_package(Eigen3 REQUIRED)
++find_package(Eigen3 REQUIRED CONFIG)
 +if (EIGEN3_FOUND)
 +  message("-- Found Eigen version ${EIGEN3_VERSION_STRING}: ${EIGEN3_INCLUDE_DIRS}")
 +endif (EIGEN3_FOUND)
@@ -261,7 +247,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -if (EIGEN_FOUND)
 -  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
 -endif (EIGEN_FOUND)
-+find_package(Eigen3 ${MIN_EIGEN_VERSION} REQUIRED)
++find_package(Eigen3 ${MIN_EIGEN_VERSION} REQUIRED CONFIG)
 +if (EIGEN3_FOUND)
 +  message("-- Found Eigen version ${EIGEN3_VERSION}: ${EIGEN3_INCLUDE_DIRS}")
 +endif (EIGEN3_FOUND)
@@ -293,7 +279,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
 +# Flann
 +message("-- Check for Flann")
-+find_package(Flann REQUIRED)
++find_package(Flann REQUIRED CONFIG)
 +
  # Ceres
  message("-- Check for Ceres")
@@ -306,7 +292,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 @@ -160,7 +165,7 @@
  # OpenImageIO
  message("-- Check for OpenImageIO")
- find_package(OpenImageIO REQUIRED)
+-find_package(OpenImageIO REQUIRED)
++find_package(OpenImageIO REQUIRED)
 -if (OPENIMAGEIO_FOUND)
 +if (TRUE)
    message("-- Found OpenImageIO: ${OPENIMAGEIO_INCLUDE_DIRS}")
@@ -324,8 +311,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 @@ -194,11 +199,13 @@
      "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
  endif (SUITESPARSE_FOUND)
- 
-+find_package(vlfeat REQUIRED)
+
++
 +find_package(spectra REQUIRED)
  
  # RocksDB
@@ -345,7 +332,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
    message("-- Found RapidJSON: ${RAPIDJSON_INCLUDE_DIRS}")
  else (RapidJSON_FOUND)
    message(FATAL_ERROR "Can't find RapidJSON. Please set RAPIDJSON_INCLUDE_DIRS to use RapidJSON.")
-@@ -243,27 +250,22 @@
+@@ -243,27 +250,23 @@
  add_subdirectory(libraries)
  include_directories(
    libraries
@@ -361,7 +348,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
    ${optimo_SOURCE_DIR}
    ${statx_SOURCE_DIR}
    ${stlplus3_SOURCE_DIR}
--  ${vlfeat_SOURCE_DIR}
+   ${vlfeat_SOURCE_DIR}
 -  ${visual_sfm_SOURCE_DIR})
 +  ${visual_sfm_SOURCE_DIR}
 +)
@@ -378,7 +365,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  if (BUILD_DOCUMENTATION)
    message("-- Documentation building is enabled")
-@@ -281,7 +283,11 @@
+@@ -281,7 +284,12 @@
  file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
  install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
  
@@ -388,10 +375,11 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 +install(DIRECTORY libraries/statx/ DESTINATION include/theia/libraries/statx FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/stlplus3/ DESTINATION include/theia/libraries/stlplus3 FILES_MATCHING PATTERN "*.h*")
 +install(DIRECTORY libraries/visual_sfm/ DESTINATION include/theia/libraries/visual_sfm FILES_MATCHING PATTERN "*.h*")
- 
++install(DIRECTORY libraries/vlfeat/ DESTINATION include/theia/libraries/vlfeat FILES_MATCHING PATTERN "*.h*")
+
  # Add an uninstall target to remove all installed files.
  configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
-@@ -293,17 +299,10 @@
+@@ -293,17 +301,10 @@
  
  # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -413,7 +401,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  # This "exports" all targets which have been put into the export set
  # "TheiaExport". This means that CMake generates a file with the given
-@@ -340,10 +339,4 @@
+@@ -340,10 +341,4 @@
  # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
                "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
@@ -424,3 +412,70 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -              "${CMAKE_SOURCE_DIR}/cmake/FindRocksDB.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindSuiteSparse.cmake"
                DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+diff --git a/libraries/vlfeat/CMakeLists.txt b/libraries/vlfeat/CMakeLists.txt
+index 7f4ffc7..15bca12 100644
+--- a/libraries/vlfeat/CMakeLists.txt
++++ b/libraries/vlfeat/CMakeLists.txt
+@@ -18,14 +18,19 @@ set(vl_sources
+   vl/random.c
+   vl/sift.c
+   vl/vlad.c)
++
+ set_source_files_properties(${vl_sources} PROPERTIES LANGUAGE C)
+
++add_library(vlfeat ${vl_sources})
++
+ if (MSVC)
+-  add_definitions(-DVL_BUILD_DLL)
+-  add_definitions(-DVL_DISABLE_SSE2)
++  if(BUILD_SHARED_LIBS)
++    target_compile_definitions(vlfeat PRIVATE VL_BUILD_DLL)
++    target_compile_definitions(vlfeat INTERFACE BUILD_DLL)
++  endif()
++  target_compile_definitions(vlfeat PUBLIC VL_DISABLE_SSE2)
+ endif (MSVC)
+
+-add_library(vlfeat SHARED ${vl_sources})
+ install(TARGETS vlfeat
+   EXPORT  TheiaExport
+   RUNTIME DESTINATION bin
+diff --git a/libraries/vlfeat/vl/host.h b/libraries/vlfeat/vl/host.h
+index 293fe1f..0ea3d42 100644
+--- a/libraries/vlfeat/vl/host.h
++++ b/libraries/vlfeat/vl/host.h
+@@ -312,27 +312,31 @@ defined(__DOXYGEN__)
+ #if defined(VL_COMPILER_MSC) & ! defined(__DOXYGEN__)
+ #  define VL_UNUSED
+ #  define VL_INLINE static __inline
+-#  define snprintf _snprintf
+ #  define isnan _isnan
+-#  ifdef VL_BUILD_DLL
++#  if defined(VL_BUILD_DLL)
+ #    ifdef __cplusplus
+ #      define VL_EXPORT extern "C" __declspec(dllexport)
+ #    else
+ #      define VL_EXPORT extern __declspec(dllexport)
+ #    endif
+-#  else
++#  elif defined(VL_DLL)
+ #    ifdef __cplusplus
+ #      define VL_EXPORT extern "C" __declspec(dllimport)
+ #    else
+ #      define VL_EXPORT extern __declspec(dllimport)
+ #    endif
++#  else
++#    ifdef __cplusplus
++#      define VL_EXPORT extern "C"
++#    else
++#      define VL_EXPORT extern
++#    endif
+ #  endif
+ #endif
+
+ #if defined(VL_COMPILER_LCC) & ! defined(__DOXYGEN__)
+ #  define VL_UNUSED
+ #  define VL_INLINE static __inline
+-#  define snprintf _snprintf
+ #  define isnan _isnan
+ VL_INLINE float fabsf(float x) { return (float) fabs((double) x) ; }
+ #  ifdef VL_BUILD_DLL

@@ -11,6 +11,7 @@ vcpkg_from_github(
         002-eigen-3.4.patch
         004-rocksdb-includes.patch
         005-replace-posix-getline.patch
+        266.diff
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
