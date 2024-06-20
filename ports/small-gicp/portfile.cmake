@@ -12,11 +12,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tbb   BUILD_WITH_TBB
 )
 
+if(VCPKG_TARGET_IS_OSX)
+    set(BUILD_WITH_OPENMP OFF)
+else()
+    set(BUILD_WITH_OPENMP "auto")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DBUILD_WITH_OPENMP=${BUILD_WITH_OPENMP}
 )
 
 vcpkg_cmake_install()
