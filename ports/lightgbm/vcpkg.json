@@ -2,9 +2,8 @@
   "name": "lightgbm",
   "version": "4.4.0",
   "description": [
-    "A fast, distributed, high performance gradient boosting (GBT, GBDT, GBRT, GBM or MART) framework based on decision tree algorithms, used for ranking, classification and many other machine learning tasks.",
-    "LightGBM is a gradient boosting framework that uses tree based learning algorithms. It is designed to be distributed and efficient with the following advantages: faster training speed and higher efficiency, lower memory usage, better accuracy, support of parallel, distributed, and GPU learning, capable of handling large-scale data.",
-    "Benefiting from these advantages, LightGBM is being widely-used in many winning solutions of machine learning competitions."
+    "A fast, distributed, high performance gradient boosting (GBT, GBDT, GBRT, GBM or MART) framework based on decision tree algorithms.",
+    "Designed to be distributed and efficient and comes with faster training speeds, higher efficiency, lower memory usage and support of parallel, distributed, and GPU learning."
   ],
   "homepage": "https://github.com/microsoft/LightGBM",
   "license": "Apache-2.0",
@@ -14,10 +13,6 @@
     "fmt",
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],

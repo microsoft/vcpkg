@@ -44,5 +44,4 @@ vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES lightgbm AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
