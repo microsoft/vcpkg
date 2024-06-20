@@ -617,8 +617,12 @@ if (VCPKG_TARGET_IS_IOS)
                             ${VCPKG_OSX_DEPLOYMENT_TARGET}")
     endif ()
 
-    set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}")
-    set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}")
+    if (VCPKG_OSX_SYSROOT STREQUAL "iphonesimulator")
+        set(simulator "-simulator")
+    endif ()
+
+    set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
 
     set(vcpkg_osx_sysroot "${VCPKG_OSX_SYSROOT}")
     # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
