@@ -248,6 +248,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/nvml"
     "${CURRENT_PACKAGES_DIR}/tools/cuda/nvml"
     "${CURRENT_PACKAGES_DIR}/share/cub"
+    "${CURRENT_PACKAGES_DIR}/tools/cuda/extras/Debugger/lib64"
 )
 
 file(REMOVE_RECURSE 
