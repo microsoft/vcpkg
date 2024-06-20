@@ -4,6 +4,7 @@
   "description": "Efficient and parallelized algorithms for point cloud registration",
   "homepage": "https://github.com/koide3/small_gicp",
   "license": "MIT",
+  "supports": "!(x86|arm32)",
   "dependencies": [
     "eigen3",
     {
