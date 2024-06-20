@@ -4248,6 +4248,10 @@
       "baseline": "0.11.0",
       "port-version": 0
     },
+    "libcdio": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "libcds": {
       "baseline": "2.3.3",
       "port-version": 4

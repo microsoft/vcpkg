@@ -1,0 +1,53 @@
+From f9193bfea663da751c8e2e7ed089c255daf2b673 Mon Sep 17 00:00:00 2001
+From: Sandy Carter <bwrsandman@gmail.com>
+Date: Wed, 20 Dec 2023 16:24:59 -0500
+Subject: [PATCH] Remove doc from config and make
+
+---
+ Makefile.am     | 2 +-
+ autogen.sh      | 2 --
+ src/Makefile.am | 5 -----
+ 3 files changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 24769c60..76de6dfb 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -40,7 +40,7 @@ EXTRA_DIST = \
+ 	make-check-filter.rb \
+ 	package/libcdio.spec.in
+ 
+-SUBDIRS = doc include lib src test example
++SUBDIRS = include lib src
+ 
+ # pkg-config(1) related rules
+ pkgconfigdir = $(libdir)/pkgconfig
+diff --git a/autogen.sh b/autogen.sh
+index 408af0ad..275bcbe5 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -14,5 +14,3 @@ if [ $? -ne 0 ]; then
+ fi
+ 
+ ./configure --enable-maintainer-mode "$@"
+-
+-(cd doc && make)
+diff --git a/src/Makefile.am b/src/Makefile.am
+index dcea939f..326ed68d 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -90,11 +90,6 @@ bin_PROGRAMS = $(bin_cd_drive) $(bin_cd_info)  $(bin_cdinfo_linux) $(bin_cd_read
+ 
+ AM_CPPFLAGS = -I$(top_srcdir) $(LIBCDIO_CFLAGS) $(VCDINFO_CFLAGS) $(CDDB_CFLAGS)
+ 
+-man_MANS = $(man_cd_drive) $(man_cd_info) $(man_cd_read) $(man_iso_read) $(man_iso_info)
+-EXTRA_DIST = cd-drive.help2man cd-info.help2man cd-read.help2man \
+-             iso-info.help2man iso-read.help2man $(GETOPT_C) getopt_int.h \
+-             $(man_MANS)
+-
+ check-leaks: $(check_programs)
+ 	for p in $(check_programs); do \
+ 	   valgrind ./$$p; \
+-- 
+2.39.3 (Apple Git-145)
+
