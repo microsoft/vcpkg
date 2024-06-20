@@ -35,22 +35,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 @@ -479,6 +479,7 @@
  # for assert.h
  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdpart)
-
+ 
 +find_package(jsoncpp CONFIG REQUIRED)
  add_subdirectory(3rdpart)
-
+ 
  add_subdirectory(src)
-
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 44e03587..723befe8 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -448,6 +448,8 @@ endif()
-
- if(WIN32)
-   update_cached_list(MK_LINK_LIBRARIES WS2_32 Iphlpapi shlwapi)
-+elseif(ANDROID)
-+  update_cached_list(MK_LINK_LIBRARIES log)
- elseif(NOT ANDROID OR IOS)
-   update_cached_list(MK_LINK_LIBRARIES pthread)
- endif()
