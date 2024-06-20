@@ -1,0 +1,4 @@
+libsword provides CMake targets:
+
+    find_package(libsword CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libsword::libsword)

@@ -5040,6 +5040,10 @@
       "baseline": "3.32",
       "port-version": 0
     },
+    "libsword": {
+      "baseline": "1.9.0",
+      "port-version": 0
+    },
     "libsystemd": {
       "baseline": "255",
       "port-version": 2
