@@ -1,6 +1,6 @@
 if (VCPKG_TARGET_IS_WINDOWS)
     # https://github.com/llvm/llvm-project/blob/llvmorg-18.1.6/openmp/runtime/CMakeLists.txt#L331
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
