@@ -66,4 +66,22 @@ file(WRITE "${SOURCE_PATH}/include/fftw3.h" "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+if("openmp" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/FFTW3Config.cmake"
+"# defined since 2.8.3"
+[[# defined since 2.8.3
+include(CMakeFindDependencyMacro)
+find_dependency(OpenMP)]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}f/FFTW3fConfig.cmake"
+"# defined since 2.8.3"
+[[# defined since 2.8.3
+include(CMakeFindDependencyMacro)
+find_dependency(OpenMP)]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}l/FFTW3lConfig.cmake"
+"# defined since 2.8.3"
+[[# defined since 2.8.3
+include(CMakeFindDependencyMacro)
+find_dependency(OpenMP)]])
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
