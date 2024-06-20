@@ -3090,7 +3090,7 @@
     },
     "glm": {
       "baseline": "1.0.1",
-      "port-version": 2
+      "port-version": 3
     },
     "globjects": {
       "baseline": "1.1.0",
