@@ -71,7 +71,7 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/graphviz/*.h")
     foreach(file IN LISTS headers)
-        vcpkg_replace_string("${file}" "#ifdef GVDLL" "#if 1")
+        vcpkg_replace_string("${file}" "#ifdef GVDLL" "#if 1" IGNORE_UNCHANGED)
     endforeach()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # static libs built with dllexport must be used with dllexport
