@@ -1,9 +1,21 @@
 set(USE_QT_VERSION "6")
 
-vcpkg_download_distfile(CUDA_125_PATCH
+vcpkg_download_distfile(CUDA_124_TUPLE_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25658.patch"
+  FILENAME "opencv-opencv4-25658.patch"
+  SHA512 ca5661ff2e3761b7f7ba9314539fffb7f1a3e9e6ff07ce0942ef4b88a342110a873d1c14081fbf57f3413af5542643089ee88b92ff3430cdd9e7d82dea2c40fd
+)
+
+vcpkg_download_distfile(CONTRIB_CUDA_124_TUPLE_PATCH
   URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3744.patch"
-  FILENAME "opencv-opencv4-3744.patch"
+  FILENAME "opencv-opencv4-contrib-3744.patch"
   SHA512 4b40aa81d708b184afcbd92da29b886139dead5d9b964a3906715864a393ce56737f2bfc3fc67aec18792f2d55932c32d3c18b1b238078949721247bbe985d5f
+)
+
+vcpkg_download_distfile(CONTRIB_CUDA_124_NPP_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3726.patch"
+  FILENAME "opencv-opencv4-contrib-3726.patch"
+  SHA512 948811a6121e00009812c44c1fbd859cca10f80b447c2d0a69dec2e453eafddd15ece0b96a7f238f6e92f77d249f8f750f020d7913728ed21aba55ecaf07c2d3
 )
 
 vcpkg_from_github(
@@ -27,6 +39,7 @@ vcpkg_from_github(
       0014-fix-supportqnx.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
+      ${CUDA_124_TUPLE_PATCH}
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -215,7 +228,8 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
-      ${CUDA_125_PATCH}
+      ${CONTRIB_CUDA_124_TUPLE_PATCH}
+      ${CONTRIB_CUDA_124_NPP_PATCH}
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
