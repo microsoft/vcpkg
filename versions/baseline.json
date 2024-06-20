@@ -1769,7 +1769,7 @@
       "port-version": 0
     },
     "coin-or-osi": {
-      "baseline": "2023-02-01",
+      "baseline": "2024-04-16",
       "port-version": 0
     },
     "coinutils": {
