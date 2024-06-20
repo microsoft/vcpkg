@@ -3,7 +3,7 @@ set(USE_QT_VERSION "6")
 vcpkg_download_distfile(CUDA_125_PATCH
   URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3744.patch"
   FILENAME "opencv-opencv4-3744.patch"
-  SHA512 0
+  SHA512 4b40aa81d708b184afcbd92da29b886139dead5d9b964a3906715864a393ce56737f2bfc3fc67aec18792f2d55932c32d3c18b1b238078949721247bbe985d5f
 )
 
 vcpkg_from_github(
