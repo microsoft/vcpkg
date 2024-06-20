@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         001-fix-external-dependencies.patch
         002-eigen-3.4.patch
-        003-vlfeat-includes.patch
         004-rocksdb-includes.patch
         005-replace-posix-getline.patch
 )
