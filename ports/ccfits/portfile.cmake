@@ -35,7 +35,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Patch installed headers to look in the correct subdirectory
 file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/CCfits/*")
 foreach(HEADER IN LISTS HEADERS)
-    vcpkg_replace_string("${HEADER}" "\"fitsio.h\"" "\"cfitsio/fitsio.h\"")
+    vcpkg_replace_string("${HEADER}" "\"fitsio.h\"" "\"cfitsio/fitsio.h\"" IGNORE_UNCHANGED)
 endforeach()
 
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
