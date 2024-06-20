@@ -1,0 +1,13 @@
+diff --git a/googletest/src/gtest.cc b/googletest/src/gtest.cc
+index a64e887c..45ff24c3 100644
+--- a/googletest/src/gtest.cc
++++ b/googletest/src/gtest.cc
+@@ -5434,7 +5434,7 @@ int UnitTest::Run() {
+   // used for the duration of the program.
+   impl()->set_catch_exceptions(GTEST_FLAG_GET(catch_exceptions));
+ 
+-#ifdef GTEST_OS_WINDOWS
++#if defined(GTEST_OS_WINDOWS) && defined(GTEST_HAS_DEATH_TEST)
+   // Either the user wants Google Test to catch exceptions thrown by the
+   // tests or this is executing in the context of death test child
+   // process. In either case the user does not want to see pop-up dialogs

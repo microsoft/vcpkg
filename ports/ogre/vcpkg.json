@@ -1,11 +1,16 @@
 {
   "name": "ogre",
-  "version": "13.4.4",
-  "port-version": 4,
+  "version": "14.2.2",
+  "port-version": 1,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     "pugixml",
     {
       "name": "sdl2",
@@ -71,10 +76,6 @@
     "overlay": {
       "description": "Build overlay component",
       "dependencies": [
-        {
-          "name": "freetype",
-          "default-features": false
-        },
         {
           "name": "imgui",
           "features": [

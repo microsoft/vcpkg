@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-checksums
-    REF 99bb0ad4b89d335d638536694352c45e0d2188f5 # v0.1.11
-    SHA512 cb9c249496fd41fda1efb9330e823d8b965adca6c8f372a50fe97eda821e277780bf9af8f5977102c44121568993cca55edbb750967b41f323e07e06a93c50a8
+    REF "v${VERSION}"
+    SHA512 2c2557bed09c77717d70814e86fb9a71284f8f3b9d87e2c2d477f39307a13fe1fbb652a6bb90021114154ee195e8da993ac7df965acc62cd53a597f12817a7a6
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -23,17 +22,18 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-checksums/cmake)
+string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" [[/${type}/]] "/")
 
 file(REMOVE_RECURSE
-	"${CURRENT_PACKAGES_DIR}/debug/include"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-checksums"
-	"${CURRENT_PACKAGES_DIR}/lib/aws-checksums"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/${PORT}"
 )
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

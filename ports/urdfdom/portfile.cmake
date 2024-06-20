@@ -3,12 +3,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom
-    REF 99ec1f99f2d175f07cc26e63082502ee62982dac # 3.1.0
-    SHA512 64bd96c6b56c300b92e2bd6a875c4bc3c4c5d2ee332a75a8d98099aee0db3e9c33fa7d75fdc4d013e7b6ac47296f524ef713639b06e66035135dfc2a8cca0276
+    REF ${VERSION}
+    SHA512 6386954bc7883e82d9db7c785ae074b47ca31efb7cc2686101e7813768824bed5b46a774a1296453c39ff76673a9dc77305bb2ac96b86ecf93fab22062ef2258
     HEAD_REF master
     PATCHES
         0001_use_math_defines.patch
         0005-fix-config-and-install.patch
+        0006-pc_file_for_windows.patch
 )
 
 vcpkg_cmake_configure(

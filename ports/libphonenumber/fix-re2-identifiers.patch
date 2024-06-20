@@ -1,0 +1,13 @@
+diff --git a/cpp/src/phonenumbers/regexp_adapter_re2.cc b/cpp/src/phonenumbers/regexp_adapter_re2.cc
+index bb542234..398f369b 100644
+--- a/cpp/src/phonenumbers/regexp_adapter_re2.cc
++++ b/cpp/src/phonenumbers/regexp_adapter_re2.cc
+@@ -31,6 +31,8 @@
+ namespace i18n {
+ namespace phonenumbers {
+ 
++using re2::StringPiece;
++
+ // Implementation of RegExpInput abstract class.
+ class RE2RegExpInput : public RegExpInput {
+  public:

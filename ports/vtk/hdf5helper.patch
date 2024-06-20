@@ -1,0 +1,11 @@
+--- src/IO/ERF/vtkHDF5Helper.h.old	2024-02-27 17:35:26.000000000 +0100
++++ src/IO/ERF/vtkHDF5Helper.h	2024-05-02 15:49:35.716258500 +0200
+@@ -42,7 +42,7 @@ public:
+   /**
+    *  Check existence of group defined by groupName relative to fileId.
+    */
+-  static bool GroupExists(int64_t fileId, const char* groupName);
++  static bool GroupExists(hid_t fileId, const char* groupName);
+ 
+   /**
+    *  Get length of array defined by arrayId.

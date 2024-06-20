@@ -33,6 +33,15 @@ function(vcpkg_cmake_configure)
         set(arg_LOGFILE_BASE "config-${TARGET_TRIPLET}")
     endif()
 
+    set(invalid_maybe_unused_vars "${arg_MAYBE_UNUSED_VARIABLES}")
+    list(FILTER invalid_maybe_unused_vars INCLUDE REGEX "^-D")
+    if(NOT invalid_maybe_unused_vars STREQUAL "")
+        list(JOIN invalid_maybe_unused_vars " " bad_items)
+        message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}
+            "Option MAYBE_UNUSED_VARIABLES must be used with variables names. "
+            "The following items are invalid: ${bad_items}")
+    endif()
+
     set(manually_specified_variables "")
 
     if(arg_Z_CMAKE_GET_VARS_USAGE)
@@ -100,6 +109,9 @@ function(vcpkg_cmake_configure)
             "${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
+    set(parallel_log_args "")
+    set(log_args "")
+
     if(generator STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
@@ -107,6 +119,11 @@ function(vcpkg_cmake_configure)
         # cf. https://gitlab.kitware.com/cmake/cmake/-/issues/23355.
         get_filename_component(ninja_path "${NINJA}" DIRECTORY)
         vcpkg_add_to_path("${ninja_path}")
+        set(parallel_log_args
+            "../build.ninja" ALIAS "rel-ninja.log"
+            "../../${TARGET_TRIPLET}-dbg/build.ninja" ALIAS "dbg-ninja.log"
+        )
+        set(log_args "build.ninja")
     endif()
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -130,6 +147,10 @@ function(vcpkg_cmake_configure)
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+    endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -185,7 +206,6 @@ function(vcpkg_cmake_configure)
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
         "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_INSTALL=OFF"
-        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
     )
 
     # Sets configuration variables for macOS builds
@@ -194,6 +214,8 @@ function(vcpkg_cmake_configure)
             vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
+
+    vcpkg_list(PREPEND arg_OPTIONS "-DFETCHCONTENT_FULLY_DISCONNECTED=ON")
 
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
@@ -248,7 +270,12 @@ function(vcpkg_cmake_configure)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
-            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
+            SAVE_LOG_FILES
+                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
+                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
+                "../../${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeConfigureLog.yaml" ALIAS "dbg-CMakeConfigureLog.yaml.log"
+                "../CMakeFiles/CMakeConfigureLog.yaml" ALIAS "rel-CMakeConfigureLog.yaml.log"
+                ${parallel_log_args}
         )
         
         vcpkg_list(APPEND config_logs
@@ -261,7 +288,10 @@ function(vcpkg_cmake_configure)
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${build_dir_debug}"
                 LOGNAME "${arg_LOGFILE_BASE}-dbg"
-                SAVE_LOG_FILES CMakeCache.txt
+                SAVE_LOG_FILES
+                  "CMakeCache.txt"
+                  "CMakeFiles/CMakeConfigureLog.yaml"
+                  ${log_args}
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
@@ -274,7 +304,10 @@ function(vcpkg_cmake_configure)
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${build_dir_release}"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
-                SAVE_LOG_FILES CMakeCache.txt
+                SAVE_LOG_FILES
+                  "CMakeCache.txt"
+                  "CMakeFiles/CMakeConfigureLog.yaml"
+                  ${log_args}
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"

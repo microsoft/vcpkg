@@ -4,18 +4,19 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbus/dbus
-    REF c91ca6edad658274607323a438eea7c7c6c5e392 #1.13.18
-    SHA512  4dd4d369152591040ebe9f474a0ba8911d8a91546d64b1d6f7335b7fd8026bd99a8a4fe1c78b80eb2e31e9e58324d432857e2a7af1d1cb950d22b4430cc0f7ac
+    REF "dbus-${VERSION}"
+    SHA512 8e476b408514e6540c36beb84e8025827c22cda8958b6eb74d22b99c64765eb3cd5a6502aea546e3e5f0534039857b37edee89c659acef40e7cab0939947d4af
     HEAD_REF master
-    PATCHES 
+    PATCHES
         cmake.dep.patch
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
-        rdynamic.patch # OSX doesn't like '-Wl,--export-dynamic'
-) 
+        libsystemd.patch
+)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
+        systemd ENABLE_SYSTEMD
         x11     DBUS_BUILD_X11
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
 )
@@ -31,12 +32,12 @@ vcpkg_cmake_configure(
         -DDBUS_INSTALL_SYSTEM_LIBS=OFF
         #-DDBUS_SERVICE=ON
         -DDBUS_WITH_GLIB=OFF
-        -DENABLE_SYSTEMD=ON
         -DTHREADS_PREFER_PTHREAD_FLAG=ON
         -DXSLTPROC_EXECUTABLE=FALSE
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"
         "-DWITH_SYSTEMD_SYSTEMUNITDIR=lib/systemd/system"
         "-DWITH_SYSTEMD_USERUNITDIR=lib/systemd/user"
+        ${options}
     OPTIONS_RELEASE
         -DDBUS_DISABLE_ASSERT=OFF
         -DDBUS_ENABLE_STATS=OFF
@@ -52,7 +53,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "DBus1" CONFIG_PATH "lib/cmake/DBus1")
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -82,6 +83,9 @@ else()
     list(APPEND TOOLS cleanup-sockets uuidgen)
 endif()
 list(TRANSFORM TOOLS PREPEND "dbus-" )
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_copy_tools(TOOL_NAMES ${TOOLS} SEARCH_DIR ${CURRENT_PACKAGES_DIR}/debug/bin DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+endif()
 vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

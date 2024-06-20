@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO reo7sp/tgbot-cpp
-  REF v1.3
-  SHA512 1b992c7705a5f7bb081df3eb032feb78b2b5eb2e73a7be822cd12552702a4d18ac9eecbd0c842f2d6c48757e91d3f8ceb5965237264b9ec18657e51c3bde7f79
+  REF v1.7.3
+  SHA512 845a051a4c7d753680759a09c1d2e1384d81f399b84d553e6785c65a6249a6a770f17eaf57ca28efd420dda78dc6c78096f045ddd87ac98a56c2c54d0b3a110b
   HEAD_REF master
 )
 
@@ -20,4 +20,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE)

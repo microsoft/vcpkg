@@ -12,16 +12,33 @@ vcpkg_from_github(
         eigen-3.4.patch
         fix-dirent.patch
         fix-ASSERT-not-found.patch
-        fix-cblas-path.patch
+        remove_cmake_flags.patch
+        fix_accelerate_detection.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_DIR})
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+# Shogun only checks libraries for symbols and assumes everything is fine. 
+# However openblas requires extra includes and mkl would require extra defines
+# So get the needed flags via the pkg-config files.
+
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_BLAS_LAPACK MODULES lapack blas CFLAGS)
+
+string(APPEND VCPKG_C_FLAGS_RELEASE " ${PC_BLAS_LAPACK_CFLAGS_RELEASE}")
+string(APPEND VCPKG_CXX_FLAGS_RELEASE " ${PC_BLAS_LAPACK_CFLAGS_RELEASE}")
+
+string(APPEND VCPKG_C_FLAGS_DEBUG " ${PC_BLAS_LAPACK_CFLAGS_DEBUG}")
+string(APPEND VCPKG_CXX_FLAGS_DEBUG " ${PC_BLAS_LAPACK_CFLAGS_DEBUG}")
+
+if(VCPKG_TARGET_IS_OSX)
+  # Eigen3 and accelerate disagree on prototypes for lapack generating compiler errors
+  set(extra_opts -DENABLE_EIGEN_LAPACK=OFF)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_META_EXAMPLES=OFF
         -DBUILD_EXAMPLES=OFF
@@ -45,17 +62,18 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
         -DINSTALL_TARGETS=shogun-static
+        ${extra_opts}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shogun)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/shogun)
 
 file(REMOVE_RECURSE
     # This directory is empty given the settings above
-    ${CURRENT_PACKAGES_DIR}/include/shogun/mathematics/linalg/backend
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/include/shogun/mathematics/linalg/backend"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

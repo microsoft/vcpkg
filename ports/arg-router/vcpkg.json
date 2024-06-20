@@ -1,0 +1,22 @@
+{
+  "name": "arg-router",
+  "version": "1.4.0",
+  "description": "C++ command line argument parsing and routing.",
+  "homepage": "https://github.com/cmannett85/arg_router",
+  "documentation": "https://cmannett85.github.io/arg_router/",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "boost-lexical-cast",
+    "boost-mp11",
+    "boost-preprocessor",
+    "span-lite",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

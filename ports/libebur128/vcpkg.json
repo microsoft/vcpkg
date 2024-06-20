@@ -1,8 +1,15 @@
 {
   "name": "libebur128",
-  "version-string": "1.2.6",
+  "version": "1.2.6",
+  "port-version": 2,
   "description": "A library implementing the EBU R128 audio loudness standard",
   "homepage": "https://github.com/jiixyj/libebur128",
   "license": "MIT",
-  "supports": "!(arm & windows)"
+  "supports": "!(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

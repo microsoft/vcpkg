@@ -1,9 +1,12 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/ensmallen
-    REF bf42276c5a44eed31e5bacec95d166d01d65f9a4 #v2.18.1
-    SHA512 09f96b2f0e0bd34245c34ee727e633bbb3957c2ab8076cfac66f976ba4e327096e2e76fadcc729dfffe73b56348bcc14fa61e3bb59a7ca0e17221f8f4cd0d59c
+    REF "${VERSION}"
+    SHA512 9cc058dcb777b7a59c361afcd02d2ce787b08c86a26aefc1d67c42658d67d7b62e8d7b5138c02912c182bc9b0e1e039c4036478985e12e2e35746853a169e067
     HEAD_REF master
+    PATCHES
+        dependencies.patch
 )
 
 vcpkg_cmake_configure(

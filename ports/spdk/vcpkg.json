@@ -1,12 +1,15 @@
 {
   "name": "spdk",
-  "version-string": "19.01.1",
-  "port-version": 2,
+  "version-string": "24.01",
   "description": "Storage Performance Development Kit",
   "supports": "linux",
   "dependencies": [
     "spdk-dpdk",
     "spdk-ipsec",
-    "spdk-isal"
+    "spdk-isal",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

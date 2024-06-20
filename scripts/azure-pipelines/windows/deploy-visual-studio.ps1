@@ -5,18 +5,18 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-$VisualStudioBootstrapperUrl = 'https://aka.ms/vs/17/release/vs_enterprise.exe'
+# See https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/a8a3940c-d415-4078-8df8-6af787f56dfa/ff486670bce61323e52b208ecbb71dc05b034c8bf156d0b7bfc0ad67b2611445/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
+  'Microsoft.VisualStudio.Component.UWP.VC.ARM64',
   'Microsoft.VisualStudio.Component.VC.Tools.x86.x64',
-  'Microsoft.VisualStudio.Component.VC.Tools.ARM',
   'Microsoft.VisualStudio.Component.VC.Tools.ARM64',
+  'Microsoft.VisualStudio.Component.VC.ASAN',
   'Microsoft.VisualStudio.Component.VC.ATL',
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
-  'Microsoft.VisualStudio.Component.VC.ATL.ARM',
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
-  'Microsoft.VisualStudio.Component.VC.MFC.ARM',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
   "Microsoft.VisualStudio.Component.Windows11SDK.22621",
   "Microsoft.VisualStudio.Component.Windows10SDK.20348",

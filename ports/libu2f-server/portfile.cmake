@@ -11,25 +11,24 @@ vcpkg_from_github(
         strndup-fix.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/u2f-server-version.h DESTINATION ${SOURCE_PATH}/u2f-server)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/u2f-server-version.h" DESTINATION "${SOURCE_PATH}/u2f-server")
 
-vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-    )
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # The include file must be patched after the build has completed, because the source files use the wrong subdirectory name!
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/libu2f-server/u2f-server.h
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libu2f-server/u2f-server.h"
     "#include <u2f-server/u2f-server-version.h>"
     "#include <libu2f-server/u2f-server-version.h>"
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

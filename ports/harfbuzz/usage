@@ -1,0 +1,4 @@
+The harfbuzz package provides CMake targets:
+
+    find_package(harfbuzz CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE harfbuzz::harfbuzz harfbuzz::harfbuzz-subset)

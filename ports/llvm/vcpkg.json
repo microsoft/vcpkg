@@ -1,11 +1,15 @@
 {
   "name": "llvm",
-  "version": "14.0.4",
+  "version": "18.1.6",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
+    {
+      "name": "atl",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -21,8 +25,11 @@
   ],
   "default-features": [
     "clang",
-    "default-options",
     "default-targets",
+    "enable-bindings",
+    "enable-terminfo",
+    "enable-zlib",
+    "enable-zstd",
     "lld",
     "tools"
   ],
@@ -46,31 +53,31 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "compiler-rt",
             "tools"
           ]
         }
       ]
     },
     "clang-tools-extra": {
-      "description": "Include Clang tools."
-    },
-    "compiler-rt": {
-      "description": "Include compiler's runtime libraries."
-    },
-    "default-options": {
-      "description": "Build with default options.",
+      "description": "Include Clang tools.",
       "dependencies": [
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "disable-assertions",
-            "disable-clang-static-analyzer",
-            "enable-bindings",
-            "enable-terminfo",
-            "enable-threads",
-            "enable-zlib"
+            "clang"
+          ]
+        }
+      ]
+    },
+    "compiler-rt": {
+      "description": "Include compiler's runtime libraries.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
           ]
         }
       ]
@@ -78,13 +85,6 @@
     "default-targets": {
       "description": "Build with platform-specific default targets.",
       "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-spirv"
-          ]
-        },
         {
           "name": "llvm",
           "default-features": false,
@@ -108,22 +108,8 @@
             "target-arm"
           ],
           "platform": "arm & !arm64"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-all"
-          ],
-          "platform": "!x86 & !x64 & !arm & !arm64"
         }
       ]
-    },
-    "disable-assertions": {
-      "description": "Build LLVM without assertions."
-    },
-    "disable-clang-static-analyzer": {
-      "description": "Build without static analyzer."
     },
     "enable-abi-breaking-checks": {
       "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON."
@@ -152,10 +138,37 @@
         "libffi"
       ]
     },
+    "enable-ios": {
+      "description": "Build compiler-rt for iOS SDK.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-arm"
+          ]
+        }
+      ]
+    },
     "enable-libxml2": {
       "description": "Build with LibXml2.",
       "dependencies": [
         "libxml2"
+      ]
+    },
+    "enable-mlir-python-bindings": {
+      "description": "Build MLIR Python bindings.",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "mlir"
+          ]
+        },
+        "pybind11",
+        "python3"
       ]
     },
     "enable-rtti": {
@@ -164,13 +177,16 @@
     "enable-terminfo": {
       "description": "Use terminfo database if available."
     },
-    "enable-threads": {
-      "description": "Use threads if available."
-    },
     "enable-zlib": {
       "description": "Build with ZLib.",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "enable-zstd": {
+      "description": "Build with zstd.",
+      "dependencies": [
+        "zstd"
       ]
     },
     "flang": {
@@ -187,6 +203,20 @@
         }
       ]
     },
+    "libc": {
+      "description": "Include libc library.",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "tools"
+          ]
+        }
+      ]
+    },
     "libclc": {
       "description": "Include OpenCL library."
     },
@@ -197,16 +227,38 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libcxxabi"
+            "clang",
+            "libcxxabi",
+            "tools"
           ]
         }
       ]
     },
     "libcxxabi": {
-      "description": "Include libcxxabi library."
+      "description": "Include libcxxabi library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "libcxx",
+            "tools"
+          ]
+        }
+      ]
     },
     "libunwind": {
-      "description": "Include libunwind library."
+      "description": "Include libunwind library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "lld": {
       "description": "Include LLVM linker.",
@@ -227,6 +279,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
+            "enable-terminfo",
             "tools"
           ]
         }
@@ -239,7 +293,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools"
+            "tools",
+            "utils"
           ]
         }
       ]
@@ -251,6 +306,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
             "utils"
           ]
         }
@@ -270,7 +326,16 @@
       ]
     },
     "pstl": {
-      "description": "Include pstl (Parallel STL) library."
+      "description": "Include pstl (Parallel STL) library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "target-aarch64": {
       "description": "Build with AArch64 backend."
@@ -284,11 +349,16 @@
           "features": [
             "target-aarch64",
             "target-amdgpu",
+            "target-arc",
             "target-arm",
             "target-avr",
             "target-bpf",
+            "target-csky",
+            "target-directx",
             "target-hexagon",
             "target-lanai",
+            "target-loongarch",
+            "target-m68k",
             "target-mips",
             "target-msp430",
             "target-nvptx",
@@ -300,13 +370,17 @@
             "target-ve",
             "target-webassembly",
             "target-x86",
-            "target-xcore"
+            "target-xcore",
+            "target-xtensa"
           ]
         }
       ]
     },
     "target-amdgpu": {
       "description": "Build with AMDGPU backend."
+    },
+    "target-arc": {
+      "description": "Build with ARC backend (experimental)."
     },
     "target-arm": {
       "description": "Build with ARM backend."
@@ -317,11 +391,23 @@
     "target-bpf": {
       "description": "Build with BPF backend."
     },
+    "target-csky": {
+      "description": "Build with CSKY backend (experimental)."
+    },
+    "target-directx": {
+      "description": "Build with DirectX backend (experimental)."
+    },
     "target-hexagon": {
       "description": "Build with Hexagon backend."
     },
     "target-lanai": {
       "description": "Build with Lanai backend."
+    },
+    "target-loongarch": {
+      "description": "Build with LoongArch backend."
+    },
+    "target-m68k": {
+      "description": "Build with M68k backend (experimental)."
     },
     "target-mips": {
       "description": "Build with Mips backend."
@@ -342,7 +428,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with Spriv backend."
+      "description": "Build with SPIRV backend (experimental)."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
@@ -359,17 +445,11 @@
     "target-xcore": {
       "description": "Build with XCore backend."
     },
+    "target-xtensa": {
+      "description": "Build with Xtensa backend (experimental)."
+    },
     "tools": {
-      "description": "Build LLVM tools.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "enable-threads"
-          ]
-        }
-      ]
+      "description": "Build LLVM tools."
     },
     "utils": {
       "description": "Build LLVM utils."

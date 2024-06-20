@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 1211613642269b7d53bea58b02de7fcd25ece3b9 # poco-1.12.4-release
-    SHA512 bf390f7c8d7c4f0d7602afa434a933b429274944d12560159761b0f984316c76abfdb49ad422c869e02d88041058a04d66e7b5ae05142819a4f583870cc00f44
-    HEAD_REF master
+    REF "poco-${VERSION}-release"
+    SHA512 084064fb462c9e7993d069ebdf395802af900ed92c5b294465a2c246162bb86caa3505985de329e8110d3e9fb3bc39ae9536d523843729d4ed5ce00c35289d92
+    HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
         0001-static-pcre.patch
@@ -28,24 +28,19 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        crypto      ENABLE_CRYPTO
+        netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
         sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
-if("netssl" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL_WIN=ON
-            -DENABLE_NETSSL=OFF
-            -DENABLE_CRYPTO=OFF
-        )
-    else()
-        list(APPEND FEATURE_OPTIONS
-            -DENABLE_NETSSL=ON
-            -DENABLE_CRYPTO=ON
-        )
-    endif()
+# POCO_ENABLE_NETSSL_WIN: 
+# Use the unreleased NetSSL_Win module instead of (OpenSSL) NetSSL.
+# This is a variable which can be set in the triplet file.
+if(POCO_ENABLE_NETSSL_WIN)
+    string(REPLACE "ENABLE_NETSSL" "ENABLE_NETSSL_WIN" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+    list(APPEND FEATURE_OPTIONS "-DENABLE_NETSSL:BOOL=OFF")
 endif()
 
 if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
@@ -64,14 +59,11 @@ vcpkg_cmake_configure(
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
         # Allow enabling and disabling components
-        # POCO_ENABLE_SQL_ODBC, POCO_ENABLE_SQL_MYSQL and POCO_ENABLE_SQL_POSTGRESQL are
-        # defined on the fly if the required librairies are present
         -DENABLE_ENCODINGS=ON
         -DENABLE_ENCODINGS_COMPILER=ON
         -DENABLE_XML=ON
         -DENABLE_JSON=ON
         -DENABLE_MONGODB=ON
-        # -DPOCO_ENABLE_SQL_SQLITE=ON # SQLITE are not supported.
         -DENABLE_REDIS=ON
         -DENABLE_UTIL=ON
         -DENABLE_NET=ON
@@ -94,7 +86,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec poco-arc AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -128,4 +120,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

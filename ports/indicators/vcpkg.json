@@ -1,6 +1,6 @@
 {
   "name": "indicators",
-  "version": "2.2",
+  "version": "2.3",
   "description": "Activity indicators for modern C++",
   "homepage": "https://github.com/p-ranav/indicators",
   "dependencies": [

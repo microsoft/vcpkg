@@ -1,4 +1,4 @@
-if (WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(PATCHES fix-POSIX_name.patch)
 endif()
 

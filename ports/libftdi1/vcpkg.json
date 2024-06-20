@@ -1,7 +1,7 @@
 {
   "name": "libftdi1",
   "version": "1.5",
-  "port-version": 3,
+  "port-version": 4,
   "description": "FTDI USB driver with bitbang mode",
   "dependencies": [
     "libconfuse",

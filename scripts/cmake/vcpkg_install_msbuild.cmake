@@ -133,6 +133,14 @@ function(vcpkg_install_msbuild)
         file(COPY "${arg_SOURCE_PATH}/${arg_INCLUDES_SUBPATH}/"
             DESTINATION "${CURRENT_PACKAGES_DIR}/include/"
         )
+        file(GLOB_RECURSE all_am_file "${CURRENT_PACKAGES_DIR}/include/*.am")
+        file(GLOB_RECURSE all_in_file "${CURRENT_PACKAGES_DIR}/include/*.in")
+        if(NOT "${all_am_file}" STREQUAL "")
+            file(REMOVE ${all_am_file})
+        endif()
+        if(NOT "${all_in_file}" STREQUAL "")
+            file(REMOVE ${all_in_file})
+        endif()
         file(GLOB root_includes
             LIST_DIRECTORIES false
             "${CURRENT_PACKAGES_DIR}/include/*")

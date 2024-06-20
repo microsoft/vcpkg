@@ -1,7 +1,7 @@
 {
   "name": "range-v3-vs2015",
-  "version-string": "20151130-vcpkg5",
-  "port-version": 1,
+  "version": "20151130-vcpkg5",
+  "port-version": 2,
   "description": "Range library for C++11/14/17.",
   "homepage": "https://github.com/Microsoft/Range-V3-VS2015"
 }

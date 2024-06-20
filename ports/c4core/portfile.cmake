@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
-    REF 8d1af00e2318e9d583c10fd3d89b8b1b1f923ea7
-    SHA512 a9b4e418d31f00682f4a5224c685ebc3c1ef96a5334f1a42bfeea773dbdc7f4d67191ca0e91dca45130e4c385708c9530696b9b038bbdb03d7a331c87793185d
+    REF "v${VERSION}"
+    SHA512 23e45d186d03a64701376fbb63b5e3608dfdac7188eefd869976e97149ee772c7547e460b305c938650a721eac0c0573b70b5a5a2cd7211192cf9c87f019548c
     HEAD_REF master
 )
 
@@ -28,13 +28,13 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(RENAME "${SOURCE_PATH_CMAKE}" "${SOURCE_PATH}/cmake")
 
-set(DB_COMMIT_HASH 78e525c6e74df6d62d782864a52c0d279dcee24f)
+set(DB_COMMIT_HASH 5dcbe41d2bd4712c8014aa7e843723ad7b40fd74)
 
 vcpkg_download_distfile(
     DEBUGBREAK_ARCHIVE
     URLS "https://github.com/biojppm/debugbreak/archive/${DB_COMMIT_HASH}.zip"
     FILENAME "debugbreak-${DB_COMMIT_HASH}.zip"
-    SHA512 25f3d45b09ce362f736fac0f6d6a6c7f2053fec4975b32b0565288893e4658fd0648a7988c3a5fe0e373e92705d7a3970eaa7cfc053f375ffb75e80772d0df64
+    SHA512 a4735225058b48031e68c91853c71d3cc31c8f2bfc3592cfc7a9a16f406224a814535ecade81ab4ead76458eeab8752e7e7cd521d893db5791dd4aaac3ba20d9
 )
 
 vcpkg_extract_source_archive(
@@ -46,13 +46,13 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
 file(RENAME "${SOURCE_PATH_DEBUGBREAK}" "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
-set(FF_COMMIT_HASH 8159e8bcf63c1b92f5a51fb550f966e56624b209)
+set(FF_COMMIT_HASH 052975dd5f8166d0f9e4a215fa75a349d5985b91)
 
 vcpkg_download_distfile(
     FAST_FLOAT_ARCHIVE
     URLS "https://github.com/biojppm/fast_float/archive/${FF_COMMIT_HASH}.zip"
     FILENAME "fast_float-${FF_COMMIT_HASH}.zip"
-    SHA512 ae71f74d3bae782f62f037c034bea4e7f45462188c8285971c2959c6b2884d3bb58826681c0989f4290f26fa33237c1b63ceed77ed94f9e97c1cd01b4aa21cd3
+    SHA512 af63cbf1d6620cda87a5f0ca06dcaf46ddfe63658ae5ba91232a2416e8179cba3b2b3d06ff53c1ab2ba3745ae39b0cb787e04be3a9dbe1287605704c2ed13019
 )
 
 vcpkg_extract_source_archive(
@@ -85,6 +85,4 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" "${_content
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

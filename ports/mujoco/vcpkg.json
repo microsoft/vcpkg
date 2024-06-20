@@ -1,0 +1,30 @@
+{
+  "name": "mujoco",
+  "version": "2.3.2",
+  "port-version": 1,
+  "description": "Multi-Joint dynamics with Contact.",
+  "homepage": "https://mujoco.org",
+  "license": "Apache-2.0",
+  "supports": "!(windows & static)",
+  "dependencies": [
+    {
+      "name": "ccd",
+      "features": [
+        "double-precision"
+      ]
+    },
+    "glfw3",
+    "lodepng",
+    "qhull",
+    "tinyobjloader",
+    "tinyxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

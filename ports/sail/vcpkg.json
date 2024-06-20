@@ -1,6 +1,6 @@
 {
   "name": "sail",
-  "version-semver": "0.9.0-rc1",
+  "version-semver": "0.9.5",
   "port-version": 1,
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
@@ -17,7 +17,7 @@
     }
   ],
   "default-features": [
-    "high-priority"
+    "highest-priority-codecs"
   ],
   "features": {
     "all": {
@@ -26,20 +26,11 @@
         {
           "name": "sail",
           "features": [
-            "avif",
-            "bmp",
-            "gif",
-            "ico",
-            "jpeg",
-            "jpeg2000",
-            "pcx",
-            "png",
-            "qoi",
-            "tga",
-            "tiff",
-            "wal",
-            "webp",
-            "xbm"
+            "high-priority-codecs",
+            "highest-priority-codecs",
+            "low-priority-codecs",
+            "lowest-priority-codecs",
+            "medium-priority-codecs"
           ]
         }
       ]
@@ -59,13 +50,24 @@
         "giflib"
       ]
     },
-    "high-priority": {
-      "description": "Enable high priority codecs such as JPEG or PNG",
+    "high-priority-codecs": {
+      "description": "Enable high priority codecs such as BMP",
       "dependencies": [
         {
           "name": "sail",
           "features": [
             "bmp",
+            "svg"
+          ]
+        }
+      ]
+    },
+    "highest-priority-codecs": {
+      "description": "Enable highest priority codecs such as JPEG or PNG",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
             "gif",
             "jpeg",
             "png",
@@ -89,7 +91,13 @@
         "jasper"
       ]
     },
-    "low-priority": {
+    "jpegxl": {
+      "description": "Enable JPEG XL codec",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
+    "low-priority-codecs": {
       "description": "Enable low priority codecs such as TGA",
       "dependencies": [
         {
@@ -97,13 +105,14 @@
           "features": [
             "ico",
             "pcx",
+            "psd",
             "qoi",
             "tga"
           ]
         }
       ]
     },
-    "lowest-priority": {
+    "lowest-priority-codecs": {
       "description": "Enable lowest priority codecs such as XBM",
       "dependencies": [
         {
@@ -115,7 +124,7 @@
         }
       ]
     },
-    "medium-priority": {
+    "medium-priority-codecs": {
       "description": "Enable medium priority codecs such as AVIF",
       "dependencies": [
         {
@@ -123,10 +132,14 @@
           "features": [
             "avif",
             "jpeg2000",
+            "jpegxl",
             "webp"
           ]
         }
       ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support"
     },
     "pcx": {
       "description": "Enable PCX codec"
@@ -137,11 +150,17 @@
         "libpng"
       ]
     },
+    "psd": {
+      "description": "Enable PSD codec"
+    },
     "qoi": {
       "description": "Enable QOI codec"
     },
     "svg": {
-      "description": "Enable SVG codec"
+      "description": "Enable SVG codec",
+      "dependencies": [
+        "nanosvg"
+      ]
     },
     "tga": {
       "description": "Enable TGA codec"
@@ -149,7 +168,10 @@
     "tiff": {
       "description": "Enable TIFF codec",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "wal": {

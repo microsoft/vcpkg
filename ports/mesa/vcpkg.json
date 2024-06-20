@@ -1,10 +1,11 @@
 {
   "name": "mesa",
-  "version": "22.1.7",
+  "version": "24.0.7",
+  "port-version": 2,
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
-  "supports": "!(windows & arm)",
+  "supports": "!(windows & arm) & !staticcrt & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-get-python-packages",
@@ -28,21 +29,8 @@
           "name": "mesa",
           "default-features": false,
           "features": [
-            "gles1"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
+            "gles1",
             "gles2"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "opengl"
           ]
         },
         {
@@ -58,28 +46,19 @@
     "egl": {
       "description": "Build support for EGL platform",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
+        "egl-registry"
       ]
     },
     "gles1": {
       "description": "Build support for OpenGL ES 1.x",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
+        "opengl"
       ]
     },
     "gles2": {
       "description": "Build support for OpenGL ES 2.x and 3.x",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
+        "opengl"
       ]
     },
     "llvm": {
@@ -120,15 +99,9 @@
       ]
     },
     "offscreen": {
-      "description": "Build with support for offscreen rendering (OSMesa)"
-    },
-    "opengl": {
-      "description": "Build support for OpenGL (all versions)",
+      "description": "Build with support for offscreen rendering (OSMesa)",
       "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false
-        }
+        "opengl"
       ]
     }
   }

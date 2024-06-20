@@ -1,0 +1,17 @@
+{
+  "name": "hnswlib",
+  "version": "0.8.0",
+  "description": "Header-only library for fast approximate nearest neighbors",
+  "homepage": "https://github.com/nmslib/hnswlib",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,23 +1,34 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nghttp2/nghttp2
-    REF v1.50.0
-    SHA512 0bc98be2e61940d78e9542d5391cecc24177a6a55012fb0df10c875d0daf5c6b480d12f00ead85f6d971d20f20af3a55abe4c8593f68c67ef3f016e87675f563
+    REF "v${VERSION}"
+    SHA512 debb43ad331c1a1e8a1591e9aab21a0e5f7a03372a845ee67f32307863aed5acf9d87feb4ca037158452c7482b59ce3e2a113992d5d696c8bfd7131bb02b38b1
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" ENABLE_STATIC_CRT)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_LIB_ONLY=ON
-        -DENABLE_ASIO_LIB=OFF
+        -DENABLE_DOC=OFF
+        -DBUILD_TESTING=OFF
         "-DENABLE_STATIC_CRT=${ENABLE_STATIC_CRT}"
-        "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
-        "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
+        "-DBUILD_STATIC_LIBS=${ENABLE_STATIC_LIB}"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libngtcp2=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libngtcp2_crypto_quictls=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libnghttp3=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Systemd=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Jansson=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libevent=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibXml2=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Jemalloc=ON
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_STATIC_CRT
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -26,15 +37,12 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+    "${CURRENT_PACKAGES_DIR}/lib/cmake"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
-    )
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/nghttp2/nghttp2ver.h" [[
 #ifndef NGHTTP2_STATICLIB
 #  define NGHTTP2_STATICLIB
@@ -42,4 +50,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 ]])
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,0 +1,4 @@
+The package arpack-ng provides CMake targets:
+
+    find_package(arpackng CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ARPACK::ARPACK)

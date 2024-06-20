@@ -1,0 +1,48 @@
+diff --git "a/examples/CMakeLists.txt" "b/examples/CMakeLists.txt"
+
+--- "a/examples/CMakeLists.txt"
++++ "b/examples/CMakeLists.txt"
+@@ -9,28 +9,22 @@ project(LinkExamples)
+ #
+ 
+ if(WIN32)
+-  function(configure_asio asio_sdk_path_OUT)
+-    # ASIO-related path/file variables
+-    set(asio_download_root "https://download.steinberg.net/sdk_downloads")
+-    set(asio_file_name "asiosdk_2.3.3_2019-06-14.zip")
+-    set(asio_dir_name "asiosdk_2.3.3_2019-06-14")
+-    set(asio_working_dir "${CMAKE_BINARY_DIR}/modules")
+-    set(asio_output_path "${asio_working_dir}/${asio_file_name}")
+-
+-    message(STATUS "Downloading ASIO SDK")
+-    file(DOWNLOAD "${asio_download_root}/${asio_file_name}" ${asio_output_path})
+-    file(SHA1 ${asio_output_path} asio_zip_hash)
+-    message("   ASIO SDK SHA1: ${asio_zip_hash}")
+-
+-    message("   Extracting ASIO SDK")
+-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar "xf" ${asio_output_path} --format=zip
+-      WORKING_DIRECTORY ${asio_working_dir}
+-      INPUT_FILE ${asio_output_path}
+-    )
++  if(LINK_BUILD_ASIO)
++    function(configure_asio asio_sdk_path_OUT)
++      # ASIO-related path/file variables
++      find_package(ASIOSDK)
++      if(NOT ASIOSDK_FOUND)
++        message(FATAL_ERROR "Steinberg ASIO audio driver SDK not found")
++      else()
++        message(STATUS "Steinberg ASIO audio driver SDK root dir: ${ASIOSDK_ROOT_DIR}")
++      endif()
++      set(asio_working_dir "${ASIOSDK_ROOT_DIR}")
++      set(asio_output_path "${CMAKE_BINARY_DIR}/modules/asiosdk")
+ 
+-    # Set the ASIO SDK path for the caller
+-    set(${asio_sdk_path_OUT} "${asio_working_dir}/${asio_dir_name}" PARENT_SCOPE)
+-  endfunction()
++      # Set the ASIO SDK path for the caller
++      set(${asio_sdk_path_OUT} "${asio_working_dir}" PARENT_SCOPE)
++    endfunction()
++  endif()
+ endif()
+ 
+ #     _             _ _

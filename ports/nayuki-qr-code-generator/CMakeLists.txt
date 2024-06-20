@@ -19,6 +19,6 @@ install(TARGETS nayuki-qr-code-generator EXPORT unofficial-nayuki-qr-code-genera
 install(
     EXPORT unofficial-nayuki-qr-code-generator-config
     NAMESPACE unofficial::nayuki-qr-code-generator::
-    DESTINATION share/nayuki-qr-code-generator
+    DESTINATION share/unofficial-nayuki-qr-code-generator
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )

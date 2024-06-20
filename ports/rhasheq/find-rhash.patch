@@ -1,0 +1,39 @@
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index c64c475..d57179e 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -1,4 +1,8 @@
+ 
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++find_dependency(unofficial-rhash)
++
+ include ( "${CMAKE_CURRENT_LIST_DIR}/rhasheqTargets.cmake" )
+diff --git a/rhasheq/CMakeLists.txt b/rhasheq/CMakeLists.txt
+index fb7357f..baaaaf8 100644
+--- a/rhasheq/CMakeLists.txt
++++ b/rhasheq/CMakeLists.txt
+@@ -23,8 +23,9 @@ else ()
+ endif (VCPKG_TOOLCHAIN)
+ 
+ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules;${CMAKE_MODULE_PATH}")
+-find_package(LibRHash)
++find_package(unofficial-rhash CONFIG REQUIRED)
+ 
++if(0)
+ if (NOT LibRHash_FOUND)
+     set(CMAKE_FIND_LIBRARY_PREFIXES ${CMAKE_FIND_LIBRARY_PREFIXES} lib)
+     set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} _imp.lib -d.lib -d_imp.lib)
+@@ -40,8 +41,9 @@ endif (NOT TARGET LibRHash)
+ if (NOT LibRHash_FOUND)
+     message(FATAL_ERROR "LibRHash not found")
+ endif (NOT LibRHash_FOUND)
++endif()
+ 
+-target_link_libraries("${LIBRARY_NAME}" INTERFACE "LibRHash::LibRHash")
++target_link_libraries("${LIBRARY_NAME}" INTERFACE unofficial::rhash::rhash)
+ 
+ include(GNUInstallDirs)
+ target_include_directories(

@@ -1,10 +1,14 @@
 {
   "name": "moos-ui",
-  "version-string": "10.0.1",
-  "port-version": 3,
+  "version": "10.0.1",
+  "port-version": 5,
   "description": "set of user interface tools to use and leverage the MOOS project.",
   "homepage": "https://sites.google.com/site/moossoftware/",
   "dependencies": [
-    "moos-core"
+    "moos-core",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

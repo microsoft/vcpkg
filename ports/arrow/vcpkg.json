@@ -1,6 +1,6 @@
 {
   "name": "arrow",
-  "version": "10.0.1",
+  "version": "16.1.0",
   "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
@@ -38,6 +38,12 @@
     "parquet"
   ],
   "features": {
+    "acero": {
+      "description": "Acero support"
+    },
+    "compute": {
+      "description": "Build all computational kernel functions"
+    },
     "csv": {
       "description": "CSV support"
     },
@@ -63,6 +69,18 @@
         "c-ares",
         "grpc",
         "protobuf"
+      ]
+    },
+    "flightsql": {
+      "description": "FlightSQL support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "flight"
+          ]
+        }
       ]
     },
     "gcs": {
@@ -102,10 +120,6 @@
       "dependencies": [
         "rapidjson"
       ]
-    },
-    "plasma": {
-      "description": "Plasma support",
-      "supports": "!windows"
     },
     "s3": {
       "description": "S3 support",

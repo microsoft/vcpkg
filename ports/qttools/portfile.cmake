@@ -1,7 +1,9 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES)
+set(${PORT}_PATCHES
+    devendor-litehtml.patch
+  )
 
 #TODO check features and setup: (means force features!)
 
@@ -37,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "assistant" FEATURE_assistant
     "designer" FEATURE_designer
     "linguist" FEATURE_linguist
+    "qdbus" FEATURE_qdbus
     "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
     #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
@@ -85,16 +88,25 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS 
                            ${FEATURE_OPTIONS}
                            -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
+                           -DQLITEHTML_USE_SYSTEM_LITEHTML:BOOL=ON
+                           -DCMAKE_REQUIRE_FIND_PACKAGE_litehtml:BOOL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
 
 if(VCPKG_TARGET_IS_OSX)
-    set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app qdbusviewer.app)
+    set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app)
+    if (FEATURE_qdbus)
+        message(STATUS "Built qdbusviewer")
+        list(APPEND OSX_APP_FOLDERS qdbusviewer.app)
+    endif()
     foreach(_appfolder IN LISTS OSX_APP_FOLDERS)
-        message(STATUS "Moving: ${_appfolder}")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}/")
+        # Folders are only existing in case of native builds 
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}")
+            message(STATUS "Moving: ${_appfolder}")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}/")
+        endif()    
     endforeach()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()

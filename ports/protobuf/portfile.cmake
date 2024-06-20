@@ -1,10 +1,10 @@
-set(version 3.21.8)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.21.8
-    SHA512 a9e3ff6fd4b5f4bf86ac58c9b0a35010e7069def08783c0aecc05cc0d6e38f04a1af6b6ad61191c3d3348c1e5e44062f63ce1377141ebbd10f122101ef089088
+    REF v3.21.12
+    SHA512 152f8441c325e808b942153c15e82fdb533d5273b50c25c28916ec568ada880f79242bb61ee332ac5fb0d20f21239ed6f8de02ef6256cc574b1fc354d002c6b0
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -32,6 +32,17 @@ if (VCPKG_DOWNLOAD_MODE)
     # download it here because `vcpkg_cmake_configure()` halts execution in download mode when running configure process.
     vcpkg_find_acquire_program(PKGCONFIG)
 endif()
+
+# Delete language backends we aren't targeting to reduce false positives in automated dependency
+# detectors like Dependabot.
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/csharp"
+    "${SOURCE_PATH}/java"
+    "${SOURCE_PATH}/objectivec"
+    "${SOURCE_PATH}/php"
+    "${SOURCE_PATH}/python"
+    "${SOURCE_PATH}/ruby"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -64,6 +75,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake"
         "\${_IMPORT_PREFIX}/bin/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "\${_IMPORT_PREFIX}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        IGNORE_UNCHANGED
     )
 endif()
 
@@ -80,7 +92,7 @@ if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${version}.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${VERSION}.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
@@ -110,13 +122,31 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 vcpkg_copy_pdbs()
-set(packages protobuf protobuf-lite)
-foreach(_package IN LISTS packages)
-    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc")
-    if(EXISTS "${_file}")
-        vcpkg_replace_string(${_file} "-l${_package}" "-l${_package}d")
+
+function(replace_package_string package)
+    set(debug_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${package}.pc")
+    set(release_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${package}.pc")
+
+    if(EXISTS "${release_file}")
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+            vcpkg_replace_string(${release_file} "-l${package}" "-llib${package}")
+        endif()
     endif()
+
+    if(EXISTS "${debug_file}")
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+            vcpkg_replace_string(${debug_file} "-l${package}" "-llib${package}d")
+        else()
+            vcpkg_replace_string(${debug_file} "-l${package}" "-l${package}d")
+        endif()
+    endif()
+endfunction()
+
+set(packages protobuf protobuf-lite)
+foreach(package IN LISTS packages)
+    replace_package_string(${package})
 endforeach()
+
 
 vcpkg_fixup_pkgconfig()
 

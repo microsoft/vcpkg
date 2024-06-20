@@ -16,6 +16,7 @@ vcpkg_from_github(
     PATCHES
         fix_dependency.patch
         testlib.patch
+        fix_limits.patch
 )
 
 set(USE_WIN_WCHAR_T OFF)
@@ -43,6 +44,9 @@ vcpkg_cmake_configure(
         -DVXL_USE_DCMTK=OFF # TODO : need fix dcmtk support to turn on
         -DVXL_USE_GEOTIFF=ON
         -DVXL_USE_WIN_WCHAR_T=${USE_WIN_WCHAR_T}
+    MAYBE_UNUSED_VARIABLES
+        VXL_USE_DCMTK
+        VXL_USING_NATIVE_BZLIB2
 )
 
 vcpkg_cmake_install()

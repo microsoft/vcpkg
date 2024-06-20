@@ -1,6 +1,6 @@
 {
   "name": "alpaca",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Alpaca is a serialization library written in C++17 - Pack C++ structs into a compact byte-array without any macros or boilerplate code",
   "homepage": "https://github.com/p-ranav/alpaca",
   "license": "MIT",

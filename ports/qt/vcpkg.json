@@ -1,7 +1,7 @@
 {
   "name": "qt",
-  "version": "6.4.1",
-  "description": "Qt",
+  "version": "6.7.1",
+  "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
@@ -52,6 +52,8 @@
       "platform": "linux"
     },
     "qtdoc",
+    "qtgraphs",
+    "qtgrpc",
     {
       "name": "qtimageformats",
       "default-features": false,
@@ -62,6 +64,7 @@
       ]
     },
     "qtinterfaceframework",
+    "qtlanguageserver",
     {
       "name": "qtlottie",
       "default-features": false,
@@ -74,6 +77,7 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
+        "ffmpeg",
         "qml",
         "widgets"
       ]
@@ -85,15 +89,6 @@
         "gstreamer"
       ],
       "platform": "!windows"
-    },
-    {
-      "name": "qtmultimedia",
-      "default-features": false,
-      "features": [
-        "ffmpeg",
-        "gstreamer"
-      ],
-      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {
@@ -138,6 +133,11 @@
     "qtserialbus",
     "qtserialport",
     "qtshadertools",
+    {
+      "name": "qtspeech",
+      "default-features": false,
+      "platform": "!(windows & x86)"
+    },
     "qtsvg",
     {
       "name": "qttools",
@@ -176,10 +176,7 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false,
-      "features": [
-        "qml"
-      ]
+      "default-features": false
     },
     {
       "name": "qtwebview",
@@ -203,13 +200,6 @@
             "qml"
           ],
           "platform": "windows"
-        },
-        {
-          "name": "qtbase",
-          "features": [
-            "gles2"
-          ],
-          "platform": "linux"
         },
         {
           "name": "qtwayland",

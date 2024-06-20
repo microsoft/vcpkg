@@ -1,8 +1,8 @@
 {
   "name": "qtbase",
-  "version": "6.4.1",
-  "port-version": 2,
-  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "version": "6.7.1",
+  "port-version": 1,
+  "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!uwp",
@@ -22,8 +22,23 @@
       "default-features": false,
       "features": [
         "doubleconversion"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "cups"
       ],
-      "platform": "windows"
+      "platform": "osx"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "thread"
+      ],
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -46,7 +61,10 @@
   "default-features": [
     "brotli",
     "concurrent",
-    "dbus",
+    {
+      "name": "dbus",
+      "platform": "!(static & windows)"
+    },
     "default-features",
     "doubleconversion",
     "freetype",
@@ -55,10 +73,20 @@
     "icu",
     "jpeg",
     "network",
-    "opengl",
-    "openssl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
+    {
+      "name": "openssl",
+      "platform": "!ios"
+    },
     "pcre2",
     "png",
+    {
+      "name": "securetransport",
+      "platform": "ios"
+    },
     "sql",
     "sql-psql",
     "sql-sqlite",
@@ -96,8 +124,33 @@
         }
       ]
     },
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System.",
+      "supports": "linux | osx"
+    },
     "dbus": {
-      "description": "Qt D-Bus"
+      "description": "Qt D-Bus",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "default-features": {
       "description": "Platform-dependent default features",
@@ -160,8 +213,8 @@
       ]
     },
     "framework": {
-      "$platform": "osx",
-      "description": "MAC framework build"
+      "description": "MAC framework build",
+      "supports": "osx & !static"
     },
     "freetype": {
       "description": "Supports the FreeType 2 font engine (and its supported font formats).",
@@ -174,7 +227,7 @@
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
-      "supports": "!windows",
+      "supports": "!windows & !osx",
       "dependencies": [
         {
           "name": "qtbase",
@@ -185,22 +238,60 @@
         }
       ]
     },
+    "gles3": {
+      "description": "OpenGL ES 3.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ]
+        }
+      ]
+    },
     "glib": {
       "description": "GLib",
       "dependencies": [
         "glib"
       ]
     },
+    "gtk3": {
+      "description": "GTK3 platform theme plugin",
+      "supports": "linux",
+      "dependencies": [
+        "gtk3",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
+      ]
+    },
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
-        "opengl",
+        {
+          "name": "opengl",
+          "platform": "!ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "freetype"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "osx"
         },
         {
           "name": "qtbase",
@@ -292,6 +383,10 @@
         }
       ]
     },
+    "securetransport": {
+      "description": "Enable Secure Transport",
+      "supports": "ios | osx"
+    },
     "sql": {
       "description": "Qt Sql",
       "dependencies": [
@@ -376,7 +471,10 @@
       "description": "Thread support; provides QThread and related classes."
     },
     "vulkan": {
-      "description": "Enable Vulkan support"
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "vulkan"
+      ]
     },
     "widgets": {
       "description": "Qt Widgets",

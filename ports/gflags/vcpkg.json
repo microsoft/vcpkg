@@ -1,8 +1,19 @@
 {
   "name": "gflags",
-  "version-string": "2.2.2",
-  "port-version": 5,
+  "version": "2.2.2",
+  "port-version": 9,
   "description": "A C++ library that implements commandline flags processing",
   "homepage": "https://github.com/gflags/gflags",
-  "supports": "!uwp"
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

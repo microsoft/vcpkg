@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arximboldi/immer
-    REF a1271fa712342f5c6dfad876820da17e10c28214
-    SHA512 7ea544c88b7a3742ebeedabe5ff7ba78178b3523c1c8564b5c0daae4044dda22340b0531e1382618557d1c118222da4a7ce06dde02e4bc05833514dde1cf2dd1
+    REF "v${VERSION}"
+    SHA512 3a9aafeb5daad1881d00fb999b78f86b1c8f0e8ef2d6befe9025d8eea10392557ce7186f14878b36cbce0f2f5d38c8ffb39c9115a9496803acfc0ef2289f5cbf
     HEAD_REF master
 )
 
@@ -31,4 +31,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Immer)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

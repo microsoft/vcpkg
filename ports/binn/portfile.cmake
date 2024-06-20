@@ -10,17 +10,15 @@ vcpkg_from_github(
         0001_fix_uwp.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-file(INSTALL ${SOURCE_PATH}/src/binn.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/binn)
+file(INSTALL "${SOURCE_PATH}/src/binn.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/binn")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/binn)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/binn/LICENSE ${CURRENT_PACKAGES_DIR}/share/binn/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

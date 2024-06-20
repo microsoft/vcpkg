@@ -41,6 +41,20 @@
     </BoolProperty.DataSource>
   </BoolProperty>
 
+  <BoolProperty Name="VcpkgApplocalDeps" DisplayName="App-locally deploy DLLs" Category="General" Default="true"
+                Description="Copies DLL dependencies from the vcpkg installed tree to the project output directory.">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="false" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+
+  <BoolProperty Name="VcpkgXUseBuiltInApplocalDeps" DisplayName="Use built-in app-local deployment" Category="General" Default="false"
+                Description="(experimental) When copying DLL dependencies, use built-in-to-vcpkg implementation rather than PowerShell script.">
+    <BoolProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="false" />
+    </BoolProperty.DataSource>
+  </BoolProperty>
+
   <StringProperty Name="VcpkgRoot" DisplayName="Vcpkg Root" Category="General" Subtype="folder" Visible="false"
                   Description="Root path where Vcpkg is located. Be careful with changing this one. It is, for example, unable to update this property page from the new location without restarting visual studio.">
     <StringProperty.DataSource>

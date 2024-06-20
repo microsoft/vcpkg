@@ -1,0 +1,4 @@
+kdalgorithms is header-only and can be used from CMake via:
+
+    find_path(KDALGORITHMS_INCLUDE_DIRS "kdalgorithms.h" PATH_SUFFIXES kdalgorithms)
+    target_include_directories(main PRIVATE ${KDALGORITHMS_INCLUDE_DIRS})

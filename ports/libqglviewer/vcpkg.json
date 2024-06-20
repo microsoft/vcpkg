@@ -1,12 +1,25 @@
 {
   "name": "libqglviewer",
-  "version-string": "2.7.2",
-  "port-version": 4,
+  "version": "2.9.1",
+  "port-version": 3,
   "description": "libQGLViewer is an open source C++ library based on Qt that eases the creation of OpenGL 3D viewers.",
+  "homepage": "http://libqglviewer.com/",
+  "license": "GPL-2.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
+    "opengl",
     {
-      "name": "qt5-base",
-      "default-features": false
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "opengl",
+        "widgets"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }

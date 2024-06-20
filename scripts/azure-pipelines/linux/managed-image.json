@@ -1,0 +1,16 @@
+{
+    "artifacts": [
+        {
+            "name": "linux-install-packages",
+            "parameters": {
+                "packages": "git curl zip unzip tar at libxt-dev gperf libxaw7-dev cifs-utils build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin libltdl-dev flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full pkg-config meson nasm cmake ninja-build libxext-dev libxfixes-dev libxrender-dev libxcb1-dev libx11-xcb-dev libxcb-dri3-dev libxcb-present-dev libxcb-glx0-dev libxcb-util0-dev libxkbcommon-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev libxcb-cursor-dev libkrb5-dev libxcb-res0-dev libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev python3-setuptools python3-mako python3-pip python3-venv python3-jinja2 nodejs libwayland-dev python-is-python3 guile-2.2-dev libxdamage-dev libxtst-dev haskell-stack golang-go wayland-protocols libbluetooth-dev"
+            }
+        },
+        {
+            "name": "linux-ubuntu2204-nvidia-cuda-cudnn"
+        },
+        {
+            "name": "linux-install-powershell"
+        }
+    ]
+}

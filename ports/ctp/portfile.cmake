@@ -17,15 +17,15 @@ if("datacollect" IN_LIST FEATURES)
     )
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH TRADEAPI_UNPACK_PATH
+vcpkg_extract_source_archive(
+    TRADEAPI_UNPACK_PATH
     ARCHIVE ${TRADEAPI_ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )
 
 if("datacollect" IN_LIST FEATURES)
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH DATACOLLECT_UNPACK_PATH
+    vcpkg_extract_source_archive(
+        DATACOLLECT_UNPACK_PATH
         ARCHIVE ${DATACOLLECT_ARCHIVE}
         NO_REMOVE_ONE_LEVEL
     )
@@ -37,8 +37,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(TRADEAPI_SOURCE_PATH "${TRADEAPI_UNPACK_PATH}/v6.6.1_P1_20210406_winApi/tradeapi/20210406_tradeapi64_se_windows")
 elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH TRADEAPI_LINUX_TAR_PATH
+    vcpkg_extract_source_archive(
+        TRADEAPI_LINUX_TAR_PATH
         ARCHIVE "${TRADEAPI_UNPACK_PATH}/v6.6.1_P1_20210406_api_tradeapi_linux64.tar"
     )
     set(TRADEAPI_SOURCE_PATH "${TRADEAPI_LINUX_TAR_PATH}/v6.6.1_P1_20210406_api_tradeapi_se_linux64")
@@ -52,8 +52,8 @@ if("datacollect" IN_LIST FEATURES)
     elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(DATACOLLECT_SOURCE_PATH "${DATACOLLECT_UNPACK_PATH}/v6.3.19_P1_20200106_winApi/20200106_clientdll64_windows")
     elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH DATACOLLECT_LINUX_TAR_PATH
+        vcpkg_extract_source_archive(
+            DATACOLLECT_LINUX_TAR_PATH
             ARCHIVE "${DATACOLLECT_UNPACK_PATH}/v6.3.19_P1_20200106_api.tar"
         )
         set(DATACOLLECT_SOURCE_PATH "${DATACOLLECT_LINUX_TAR_PATH}/v6.3.19_P1_20200106_api_clientdatacollectdll_linux64")

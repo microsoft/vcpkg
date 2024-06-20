@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nanomsg
-    REF 1.1.5
-    SHA512 773b8e169a7accac21414c63972423a249164f5b843c6c65c1b03a2eb90d21da788a98debdeb396dab795e52d30605696bc2cf65e5e05687bf115438d5b22717
+    REF "${VERSION}"
+    SHA512 cc119acafe6e000b75299e866b4bace56ec6d8c90e7843ad773efad7b534296d6baf2b75b107c70a0e4fd4cee9763315d87b6f354676b7915732961b89c3adcb
     HEAD_REF master
 )
 
@@ -14,9 +14,8 @@ else()
     set(NN_ENABLE_NANOCAT OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         -DNN_STATIC_LIB=${NN_STATIC_LIB}
@@ -26,11 +25,11 @@ vcpkg_configure_cmake(
         -DNN_ENABLE_NANOCAT=${NN_ENABLE_NANOCAT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(STRINGS ${SOURCE_PATH}/.version NN_PACKAGE_VERSION)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
 
 vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
@@ -50,11 +49,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "defined(NN_STATIC_LIB)"
         "1 // defined(NN_STATIC_LIB)"
     )
-
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
-        "set_and_check(nanomsg_BINDIR \${PACKAGE_PREFIX_DIR}/bin)"
+        "set_and_check(nanomsg_BINDIR \${VCPKG_IMPORT_PREFIX}/bin)"
         ""
+        IGNORE_UNCHANGED
     )
 endif()
 

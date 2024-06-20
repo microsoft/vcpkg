@@ -37,6 +37,11 @@ if(WITH_JSON1)
     add_compile_definitions(SQLITE_ENABLE_JSON1)
 endif()
 
+
+if(WITH_FTS5)
+    add_compile_definitions(SQLITE_ENABLE_FTS5)
+endif()
+
 target_include_directories(sqlcipher INTERFACE $<INSTALL_INTERFACE:include>)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
@@ -61,6 +66,14 @@ if(NOT SQLITE3_SKIP_TOOLS)
       ARCHIVE DESTINATION lib
     )
 endif()
+
+SET(prefix "${CMAKE_INSTALL_PREFIX}")
+SET(exec_prefix "\${prefix}")
+SET(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+SET(includedir "\${prefix}/include")
+SET(PACKAGE_VERSION ${SQLCIPHER_VERSION})
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/sqlcipher.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 install(
     TARGETS sqlcipher

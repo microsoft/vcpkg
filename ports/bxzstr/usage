@@ -1,0 +1,4 @@
+The package bxzstr is header only and can be used from CMake via:
+
+    find_path(BXZSTR_INCLUDE_DIRS "bxzstr.hpp" PATH_SUFFIXES "include/bxzstr")
+    target_include_directories(main PRIVATE ${BXZSTR_INCLUDE_DIRS})

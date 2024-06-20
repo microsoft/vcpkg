@@ -29,6 +29,13 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/FindSDL2PP.cmake" "HINTS \"${CURRENT_PACKAGES_DIR}/include\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/FindSDL2PP.cmake" "HINTS \"${CURRENT_PACKAGES_DIR}/lib\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/FindSDL2PP.cmake" "#  SDL2PP_LIBRARIES" 
+[[#  SDL2PP_LIBRARIES
+include(CMakeFindDependencyMacro)
+find_dependency(SDL2 CONFIG)
+find_dependency(SDL2_image CONFIG)
+find_dependency(SDL2_ttf CONFIG)
+find_dependency(SDL2_mixer CONFIG)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -9,22 +9,20 @@ vcpkg_from_github(
         0002_fix-compile-error.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
-        -DCPPREST_SO=${CURRENT_INSTALLED_DIR}/debug/lib/cpprest_2_10d.lib
+        "-DCPPREST_SO=${CURRENT_INSTALLED_DIR}/debug/lib/cpprest_2_10d.lib"
     OPTIONS_RELEASE
-        -DCPPREST_SO=${CURRENT_INSTALLED_DIR}/lib/cpprest_2_10.lib
+        "-DCPPREST_SO=${CURRENT_INSTALLED_DIR}/lib/cpprest_2_10.lib"
     OPTIONS
-        -DCPPREST_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        "-DCPPREST_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include"
         -DDISABLE_TESTS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # copy license
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/signalrclient)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/signalrclient/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/signalrclient/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

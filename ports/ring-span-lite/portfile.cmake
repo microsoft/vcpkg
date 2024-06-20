@@ -1,21 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/ring-span-lite
-    REF v0.6.0
-    SHA512 1C3C9560BC1F8CBDF9CDFD5593233020D8403CE707D8B129FED82080CB806E82E83CBB839BEA64D53B022A58400F817A54FFB30099A0D7D7B300E8D0103F483B
+    REF "v${VERSION}"
+    SHA512 aa3f199e4cef36ead644d9620e716c2f91bbb52fe3193919ed6aec099bc32841168eaf789c8ddc6700688a34335ad04e139822633d7e26184f511431ca4aaa12
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DRING_SPAN_LITE_OPT_BUILD_TESTS=OFF
         -DRING_SPAN_LITE_OPT_BUILD_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(
+vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/${PORT}"
 )
 
@@ -24,6 +23,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib"
 )
 
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

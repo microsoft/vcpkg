@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/x264
-    REF baee400fa9ced6f5481a728138fed6e867b0ff7f # 0.164.3095 in pc file, to be updated below
-    SHA512 3c7147457cbe0fea20cf3ed8cf7bbdca9ac15060cf86f81b9b5b54b018f922964e91b3c38962c81fedef92bc5b14489e04d0966d03d2b7a85b4dabab6ad816a2
+    REF eaa68fad9e5d201d42fde51665f2d137ae96baf0 # 0.164.3107 in pc file, to be updated below
+    SHA512 9181b222e7f8bbde4331141ff399e1ef20d3e2e7a8f939b373fbe08df6f3caa99b992afb0e559cc19f78c96f0105b88b2eb4e4b935484e25b2c15da7903d179b
     HEAD_REF stable
     PATCHES
         uwp-cflags.patch
@@ -77,6 +77,14 @@ else()
     vcpkg_list(APPEND OPTIONS_RELEASE --disable-cli)
 endif()
 
+if("chroma-format-all" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --chroma-format=all)
+endif()
+
+if(NOT "gpl" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --disable-gpl)
+endif()
+
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
@@ -129,7 +137,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT 
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "#ifdef X264_API_IMPORTS" "#if 1")
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1" IGNORE_UNCHANGED)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"

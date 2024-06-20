@@ -1,0 +1,18 @@
+{
+  "name": "lightningscanner",
+  "version": "1.0.1",
+  "description": "A lightning-fast memory signature/pattern scanner, capable of scanning gigabytes of data per second.",
+  "homepage": "https://localcc.github.io/LightningScanner/",
+  "license": "MIT",
+  "supports": "!arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

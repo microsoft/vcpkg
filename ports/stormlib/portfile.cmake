@@ -1,23 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ladislav-zezula/StormLib
-    REF 2f0e0e69e6b3739d7c450ac3d38816aee45ac3c2
-    SHA512 54cbe4270963944edf3d75b845047add2b004e0d95b20b75a4c4790c2a12a41bf19cc4f55aaeaec697a0a913827e11cfabde2123b2b13730556310dd89eef1e9
+    REF "v${VERSION}"
+    SHA512 5f0ce75019cfbe3a2dfc07ea312825e2babf226dbf8aa77ed60456862ae739ac4689cbe7d4a185cdc148ad9910fd8137d3f11c04ffe6c532bbdacb08838ecfba
     HEAD_REF master
 )
 
-file(COPY 
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    DESTINATION ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME StormLib)
+vcpkg_copy_pdbs()
 
-vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/stormlib RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets()
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

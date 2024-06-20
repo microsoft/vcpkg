@@ -1,9 +1,8 @@
 {
   "name": "liblzma",
-  "version-semver": "5.2.5",
-  "port-version": 6,
+  "version": "5.6.2",
   "description": "Compression library with an API similar to that of zlib.",
-  "homepage": "https://github.com/xz-mirror/xz",
+  "homepage": "https://tukaani.org/xz/",
   "license": null,
   "dependencies": [
     {
@@ -17,8 +16,7 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools",
-      "supports": "!windows, mingw"
+      "description": "Build tools"
     }
   }
 }

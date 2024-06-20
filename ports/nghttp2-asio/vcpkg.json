@@ -1,0 +1,26 @@
+{
+  "name": "nghttp2-asio",
+  "version-date": "2022-08-11",
+  "port-version": 1,
+  "description": "High level abstraction API to build HTTP/2 applications with nghttp2 and boost asio.",
+  "homepage": "https://github.com/nghttp2/nghttp2-asio",
+  "license": "MIT",
+  "supports": "!windows",
+  "dependencies": [
+    {
+      "name": "boost-asio",
+      "version>=": "1.81.0"
+    },
+    "boost-system",
+    "boost-thread",
+    {
+      "name": "nghttp2",
+      "version>=": "1.51.0"
+    },
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

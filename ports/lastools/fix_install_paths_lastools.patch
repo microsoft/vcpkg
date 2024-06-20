@@ -1,15 +1,15 @@
 diff --git a/LASlib/src/CMakeLists.txt b/LASlib/src/CMakeLists.txt
-index 1b170bf..b5c40cb 100644
+index 1b170bf..408628c 100644
 --- a/LASlib/src/CMakeLists.txt
 +++ b/LASlib/src/CMakeLists.txt
-@@ -99,17 +99,8 @@ if(MSVC)
+@@ -99,17 +99,9 @@ if(MSVC)
      )
  endif()
  
-+install(TARGETS LASlib EXPORT LASlib-targets
++install(TARGETS LASlib EXPORT laslib-targets
 +	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  install(FILES ${LAS_INCLUDES} DESTINATION include/LASlib)
--
+ 
 -if (MSVC)
 -	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 -		install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib/${OUTPUTCONFIG} DESTINATION lib/LASlib)
@@ -22,6 +22,5 @@ index 1b170bf..b5c40cb 100644
 -	install(EXPORT laslib-targets DESTINATION lib/cmake/LASlib)
 -	install(FILES ${CMAKE_SOURCE_DIR}/LASlib/src/laslib-config.cmake DESTINATION lib/cmake/LASlib)
 -endif(MSVC)
-+install(EXPORT LASlib-targets DESTINATION share/lastools/LASlib)
++install(EXPORT laslib-targets DESTINATION share/lastools/LASlib)
 +install(FILES ${CMAKE_SOURCE_DIR}/LASlib/src/laslib-config.cmake DESTINATION share/lastools/LASlib)
-\ No newline at end of file

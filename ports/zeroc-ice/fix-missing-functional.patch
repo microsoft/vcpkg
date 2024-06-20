@@ -1,0 +1,12 @@
+diff --git a/cpp/include/IceUtil/Timer.h b/cpp/include/IceUtil/Timer.h
+index 177a7f8..19b8c09 100644
+--- a/cpp/include/IceUtil/Timer.h
++++ b/cpp/include/IceUtil/Timer.h
+@@ -12,6 +12,7 @@
+ 
+ #include <set>
+ #include <map>
++#include <functional>
+ 
+ namespace IceUtil
+ {

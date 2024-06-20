@@ -3,52 +3,54 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
-    FILENAME "armadillo-11.2.3.tar.xz"
-    SHA512 db3457adbc799c68c928aaf22714598b4b9df91ec83aff33bf2d0096b755bd316d4bae12ac973bf1821759a71f3a58a7dd8dc64cbcb1f53ea2646d8bb0bc9a3b
+    FILENAME "armadillo-${VERSION}.tar.xz"
+    SHA512 567ed608098258749cf133022810c9296985ddd9d4dcce4eb00a938cbe8e767774d96cd030ba8c719e62895913e294b17299e4e8c064103b1f6f051021ee9e57
     PATCHES
-        remove_custom_modules.patch
-        fix-CMakePath.patch
-        add-disable-find-package.patch
+        cmake-config.patch
+        dependencies.patch
+        pkgconfig.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindBLAS.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindLAPACK.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindOpenBLAS.cmake")
+set(REQUIRES_PRIVATE "")
+foreach(module IN ITEMS lapack blas)
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/${module}.pc")
+        string(APPEND REQUIRES_PRIVATE " ${module}")
+    endif()
+endforeach()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DDETECT_HDF5=false
-        -DCMAKE_DISABLE_FIND_PACKAGE_SuperLU=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_ARPACK=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_ATLAS=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_MKL=ON
+        -DALLOW_FLEXIBLAS_LINUX=OFF
+        -DDETECT_HDF5=OFF
+        "-DREQUIRES_PRIVATE=${REQUIRES_PRIVATE}"
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Armadillo CONFIG_PATH share/Armadillo/CMake)
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME Armadillo CONFIG_PATH share/Armadillo/CMake)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Armadillo/ArmadilloConfig.cmake"
+                    [[include("${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake")]]
+                    "include(CMakeFindDependencyMacro)\nfind_dependency(LAPACK)\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake\")"
+                    )
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/Armadillo/CMake"
+)
 
-file(GLOB SHARE_CONTENT "${CURRENT_PACKAGES_DIR}/share/Armadillo")
-list(LENGTH SHARE_CONTENT SHARE_LEN)
-if(SHARE_LEN EQUAL 0)
+file(GLOB SHARE_ARMADILLO_FILES "${CURRENT_PACKAGES_DIR}/share/Armadillo/*")
+if(SHARE_ARMADILLO_FILES STREQUAL "")
     # On case sensitive file system there is an extra empty directory created that should be removed
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 endif()
 
-set(filename "${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp")
-if(EXISTS "${filename}")
-    file(READ "${filename}" contents)
-    string(REGEX REPLACE "\n#define ARMA_AUX_LIBS [^\n]*\n" "\n" contents "${contents}")
-    file(WRITE "${filename}" "${contents}")
-endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp" "#define ARMA_AUX_LIBS " "#define ARMA_AUX_LIBS //")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt"  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

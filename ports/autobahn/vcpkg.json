@@ -1,7 +1,7 @@
 {
   "name": "autobahn",
-  "version-string": "20.8.1",
-  "port-version": 1,
+  "version": "20.8.1",
+  "port-version": 2,
   "description": "WAMP for C++ in Boost/Asio",
   "homepage": "https://crossbar.io/autobahn",
   "dependencies": [

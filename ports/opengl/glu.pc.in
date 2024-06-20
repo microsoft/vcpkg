@@ -3,8 +3,8 @@ libdir=${prefix}/lib
 includedir=${prefix}/include
 
 Name: glu
-Description: OpenGL Utility Library
+Description: Windows OpenGL Utility library
 Version: @WINDOWS_SDK_SEMVER@
 Requires: opengl
-Libs: -L${libdir} -lGlU32
-Cflags: -I${includedir}
+Libs: -L${libdir} -lglu32
+Cflags: @WINDOWS_GL_CFLAGS@

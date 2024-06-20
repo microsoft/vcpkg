@@ -1,0 +1,159 @@
+{
+  "name": "libtorch",
+  "version": "2.1.2",
+  "port-version": 2,
+  "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
+  "homepage": "https://pytorch.org/",
+  "license": null,
+  "supports": "(windows & !static) | osx | linux",
+  "dependencies": [
+    "blas",
+    "cpuinfo",
+    "eigen3",
+    "flatbuffers",
+    {
+      "name": "flatbuffers",
+      "host": true
+    },
+    "fmt",
+    "foxi",
+    "foxi",
+    "fp16",
+    "gemmlowp",
+    "gflags",
+    "glog",
+    "lapack",
+    "lmdb",
+    "mimalloc",
+    "onnx",
+    "onnx-optimizer",
+    "opencl",
+    "pocketfft",
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "pthreadpool",
+    "sleef",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "cuda",
+      "platform": "windows & !x86"
+    },
+    "fftw3",
+    "opencv",
+    "xnnpack",
+    "zstd"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build with CUDA GPU backend",
+      "dependencies": [
+        "cuda",
+        "cudnn",
+        "magma"
+      ]
+    },
+    "dist": {
+      "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
+      "dependencies": [
+        {
+          "name": "gloo",
+          "platform": "linux"
+        },
+        {
+          "name": "libtorch",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "libuv",
+          "platform": "windows | osx"
+        },
+        {
+          "name": "tensorpipe",
+          "platform": "linux | osx"
+        }
+      ]
+    },
+    "fftw3": {
+      "description": "Build with fftw3",
+      "dependencies": [
+        "fftw3"
+      ]
+    },
+    "leveldb": {
+      "description": "Build with LevelDB",
+      "dependencies": [
+        "leveldb",
+        "snappy"
+      ]
+    },
+    "llvm": {
+      "description": "Build with LLVM",
+      "dependencies": [
+        "llvm"
+      ]
+    },
+    "mpi": {
+      "description": "Build with MPI",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "nnpack": {
+      "description": "Build with NNPack",
+      "supports": "linux | osx",
+      "dependencies": [
+        "nnpack"
+      ]
+    },
+    "opencv": {
+      "description": "Build with OpenCV 3.x",
+      "dependencies": [
+        "opencv"
+      ]
+    },
+    "vulkan": {
+      "description": "Build with Vulkan GPU backend",
+      "dependencies": [
+        "vulkan",
+        "vulkan-loader",
+        "vulkan-memory-allocator"
+      ]
+    },
+    "xnnpack": {
+      "description": "Build with XNNPack",
+      "dependencies": [
+        {
+          "name": "fxdiv",
+          "platform": "!windows"
+        },
+        "xnnpack"
+      ]
+    },
+    "zstd": {
+      "description": "Build with ZSTD",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

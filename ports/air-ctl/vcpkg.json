@@ -1,7 +1,7 @@
 {
   "name": "air-ctl",
   "version": "1.1.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C template container library",
   "homepage": "https://github.com/inie0722/CTL",
   "license": "BSL-1.0",

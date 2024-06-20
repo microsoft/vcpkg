@@ -1,5 +1,17 @@
+diff --git a/include/CPmsgpack.h b/include/CPmsgpack.h
+index e11f6be..948cc65 100644
+--- a/include/CPmsgpack.h
++++ b/include/CPmsgpack.h
+@@ -6,7 +6,6 @@
+ 
+ // Workaround MSVC endiannes issues
+ #if defined(_MSC_VER) && ( defined(_M_ARM) || defined(_M_ARM64) )
+-#    define MSGPACK_ENDIAN_LITTLE_BYTE
+ #endif
+ 
+ #include "msgpack.hpp"
 diff --git a/src/ODEIntegrators.cpp b/src/ODEIntegrators.cpp
-index 4152f01..e5986ca 100644
+index 23bd4c4..beab710 100644
 --- a/src/ODEIntegrators.cpp
 +++ b/src/ODEIntegrators.cpp
 @@ -4,6 +4,8 @@
@@ -9,5 +21,5 @@ index 4152f01..e5986ca 100644
 +#undef max
 +#undef min
  
- bool ODEIntegrators::AdaptiveRK54(AbstractODEIntegrator &ode, double tstart, double tend, double hmin, double hmax, double eps_allowed, double step_relax)
- {
+ bool ODEIntegrators::AdaptiveRK54(AbstractODEIntegrator& ode, double tstart, double tend, double hmin, double hmax, double eps_allowed,
+                                   double step_relax) {

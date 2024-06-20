@@ -13,14 +13,15 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF v13.4.4
-    SHA512 59e0929f5022b2d289030d42c651ce4f44a215be7aae262b1b6919e1d00225d226cce6bfa2e78525ae902290615c87eabe7b8dfe27b7087dd56081460bd35e1f
+    REF "v${VERSION}"
+    SHA512 8c204aaf9be4e6c8ffcccc9361a3cd7962ac068fc2d88755c2983c821076427b3b0197d2a30f72636c2e35a86bfb89e43ea6f3efae6bd45b061bb64bfceae779
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         cfg-rel-paths.patch
         swig-python-polyfill.patch
         pkgconfig.patch
+        same-install-rules-all-platforms.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
@@ -29,32 +30,33 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OGRE_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" OGRE_CONFIG_STATIC_LINK_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    assimp   OGRE_BUILD_PLUGIN_ASSIMP
-    assimp   CMAKE_REQUIRE_FIND_PACKAGE_assimp
-    bullet   OGRE_BUILD_COMPONENT_BULLET
-    bullet   CMAKE_REQUIRE_FIND_PACKAGE_Bullet
-    d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
-    freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
-    freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
-    java     OGRE_BUILD_COMPONENT_JAVA
-    java     CMAKE_REQUIRE_FIND_PACKAGE_SWIG
-    openexr  OGRE_BUILD_PLUGIN_EXRCODEC
-    openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
-    python   OGRE_BUILD_COMPONENT_PYTHON
-    python   CMAKE_REQUIRE_FIND_PACKAGE_Python3
-    python   CMAKE_REQUIRE_FIND_PACKAGE_SWIG
-    csharp   OGRE_BUILD_COMPONENT_CSHARP
-    csharp   CMAKE_REQUIRE_FIND_PACKAGE_SWIG
-    overlay  OGRE_BUILD_COMPONENT_OVERLAY
-    overlay  CMAKE_REQUIRE_FIND_PACKAGE_FREETYPE
-    zip      OGRE_CONFIG_ENABLE_ZIP
-    strict   OGRE_RESOURCEMANAGER_STRICT
-    tools    OGRE_BUILD_TOOLS
-    tools    OGRE_INSTALL_TOOLS
+    FEATURES
+        assimp   OGRE_BUILD_PLUGIN_ASSIMP
+        assimp   CMAKE_REQUIRE_FIND_PACKAGE_assimp
+        bullet   OGRE_BUILD_COMPONENT_BULLET
+        bullet   CMAKE_REQUIRE_FIND_PACKAGE_Bullet
+        d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
+        freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
+        freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
+        java     OGRE_BUILD_COMPONENT_JAVA
+        openexr  OGRE_BUILD_PLUGIN_EXRCODEC
+        openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
+        python   OGRE_BUILD_COMPONENT_PYTHON
+        python   CMAKE_REQUIRE_FIND_PACKAGE_Python3
+        csharp   OGRE_BUILD_COMPONENT_CSHARP
+        overlay  OGRE_BUILD_COMPONENT_OVERLAY
+        zip      OGRE_CONFIG_ENABLE_ZIP
+        strict   OGRE_RESOURCEMANAGER_STRICT
+        tools    OGRE_BUILD_TOOLS
+        tools    OGRE_INSTALL_TOOLS
+    INVERTED_FEATURES
+        assimp   CMAKE_DISABLE_FIND_PACKAGE_assimp
+        bullet   CMAKE_DISABLE_FIND_PACKAGE_Bullet
+        python   CMAKE_DISABLE_FIND_PACKAGE_Python3
 )
 
-if(CMAKE_REQUIRE_FIND_PACKAGE_SWIG)
+if("java" IN_LIST FEATURES OR "python" IN_LIST FEATURES OR "csharp" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_SWIG=ON")
     vcpkg_find_acquire_program(SWIG)
     vcpkg_list(APPEND FEATURE_OPTIONS "-DSWIG_EXECUTABLE=${SWIG}")
 endif()
@@ -92,6 +94,8 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_FREETYPE=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_pugixml=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_QT=ON
@@ -121,10 +125,10 @@ vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/${PORT}/resources.cfg" "=../../share" "=../../../share")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/${PORT}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/debug/Tests/Media" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OgreTargets-debug.cmake" "${_IMPORT_PREFIX}/plugins" "${_IMPORT_PREFIX}/debug/plugins")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/${PORT}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/debug/Tests/Media" "" IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OgreTargets-debug.cmake" "${_IMPORT_PREFIX}/plugins" "${_IMPORT_PREFIX}/debug/plugins" IGNORE_UNCHANGED)
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/etc/${PORT}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/Tests/Media" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/etc/${PORT}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/Tests/Media" "" IGNORE_UNCHANGED)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/etc/ogre/samples.cfg"
@@ -168,4 +172,4 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

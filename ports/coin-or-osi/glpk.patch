@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index e4bd1361e..4c3a2a166 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -78,7 +78,7 @@ AC_COIN_CHK_HERE([OsiLib],[OsiCommonTestLib],[osi])
+ # downloaded and built. The general flow here is as above: Initialise the
+ # library, add external components, finalize the flags, and add any components
+ # being built here.
+-AC_COIN_CHK_PKG(Glpk,[OsiGlpkLib OsiTest],[coinglpk])
++AC_COIN_CHK_PKG(Glpk,[OsiGlpkLib OsiTest],[glpk])
+ 
+ AC_LANG_PUSH(C++)
+ AC_COIN_CHK_LIBHDR(SoPlex,[OsiSpxLib OsiTest],[-lsoplex],[],[],

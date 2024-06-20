@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF bfa0f83dd5c9151c263c304300c79161ae8cb595 # 0.18.6
-    SHA512 58ebd40623edc0245dd38b3a2bbbda7af7d9b030155746949dfe7c4c30bdc07ee2ee84d195dc2e914d69f58c6c46bc9ad496bbc34e7cafe0530200458a4c5a76
+    REF "${VERSION}"
+    SHA512 8a7aacbd9bf18318d9ca1f5fb30c101220c1eef2c4bfe82c53760024022473109038872c0deb5a60d732a91da8d863c556a27018e6b667bfcfbf536df3cebcaf
     HEAD_REF master
     PATCHES
         fix_dependency.patch
@@ -34,4 +34,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

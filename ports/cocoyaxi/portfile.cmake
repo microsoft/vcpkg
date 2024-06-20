@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO idealvin/coost
-    REF v2.0.3
-    SHA512 b6d38181a8da7dd06cc6ee9c0310ebbc87db5fc0e82e1deb9afba7813d0741fed194887770c55a9a1c61ad677b365cac5ba4f0cf3f32ee376d86c6822d9e30c4
+    REF 43a8bb4c8fceafe8a86752f522f744301d2b8a7f #v3.0.0
+    SHA512 e34c65853d4280412219d35f55a745e20475474bb59c208562b78edf49bc54852ea1e5d58d7a4bb8bf771f8c51c4eae1ad7426902a32b99c3ee5358bb9426740
     HEAD_REF master
 )
 
@@ -25,10 +25,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/coost)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

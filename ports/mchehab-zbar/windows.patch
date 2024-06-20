@@ -11,19 +11,6 @@ index c8fea14..eb0a097 100644
  AM_CXXFLAGS="$AM_CFLAGS"
  AC_SUBST([AM_CPPFLAGS])
  AC_SUBST([AM_CFLAGS])
-diff --git a/zbar/Makefile.am b/zbar/Makefile.am
-index ca54d01..6c0cd83 100644
---- a/zbar/Makefile.am
-+++ b/zbar/Makefile.am
-@@ -68,7 +68,7 @@ if WIN32
- 
- libzbar_la_SOURCES += processor/win.c libzbar.rc
- libzbar_la_CPPFLAGS += -mthreads
--libzbar_la_LDFLAGS += -mthreads
-+libzbar_la_LDFLAGS += -mthreads -Xcompiler -Wl,-DEBUG
- # FIXME broken
- libzbar_la_LIBADD += libzbar-rc.lo
- else
 diff --git a/zbar/libzbar.rc b/zbar/libzbar.rc
 index 413635b..c241f82 100644
 --- a/zbar/libzbar.rc

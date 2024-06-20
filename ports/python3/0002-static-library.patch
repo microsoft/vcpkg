@@ -9,19 +9,38 @@ builds the pythoncore as a static library instead of a DLL
  PCbuild/pythoncore.vcxproj | 4 ++--
  2 files changed, 11 insertions(+), 2 deletions(-)
 
+diff --git a/Modules/getpath.c b/Modules/getpath.c
+index d7d3cf081e..34269f0b75 100644
+--- a/Modules/getpath.c
++++ b/Modules/getpath.c
+@@ -801,10 +801,12 @@ static int
+ library_to_dict(PyObject *dict, const char *key)
+ {
+ #ifdef MS_WINDOWS
++#ifdef Py_ENABLE_SHARED
+     extern HMODULE PyWin_DLLhModule;
+     if (PyWin_DLLhModule) {
+         return winmodule_to_dict(dict, key, PyWin_DLLhModule);
+     }
++#endif
+ #elif defined(WITH_NEXT_FRAMEWORK)
+     static char modPath[MAXPATHLEN + 1];
+     static int modPathInitialized = -1;
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
 index d7d3cf081e..34269f0b75 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
-@@ -251,6 +251,7 @@ typedef int pid_t;
+@@ -251,6 +251,9 @@ typedef int pid_t;
  
  /* For Windows the Python core is in a DLL by default.  Test
  Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
++#ifndef Py_NO_ENABLE_SHARED
 +#define Py_NO_ENABLE_SHARED
++#endif
  #if !defined(MS_NO_COREDLL) && !defined(Py_NO_ENABLE_SHARED)
  #       define Py_ENABLE_SHARED 1 /* standard symbol for shared library */
  #       define MS_COREDLL       /* deprecated old symbol */
-@@ -276,6 +277,14 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
+@@ -276,6 +277,15 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
  #                       endif /* _DEBUG */
  #               endif /* _MSC_VER */
  #       endif /* Py_BUILD_CORE */
@@ -30,6 +49,7 @@ index d7d3cf081e..34269f0b75 100644
 +#       pragma comment(lib, "version.lib")
 +#       pragma comment(lib, "shlwapi.lib")
 +#       pragma comment(lib, "ws2_32.lib")
++#       pragma comment(lib, "bcrypt.lib")
 +#       if Py_WINVER > 0x0601
 +#           pragma comment(lib, "pathcch.lib")
 +#       endif /* Py_WINVER */
@@ -71,6 +91,49 @@ index 2625d0293d..2f8bdaa931 100644
        <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
      </ClCompile>
      <Link>
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index 2625d0293d..2f8bdaa931 100644
+--- a/PCbuild/_freeze_module.vcxproj
++++ b/PCbuild/_freeze_module.vcxproj
+@@ -88,7 +88,7 @@
+   <PropertyGroup Label="UserMacros" />
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <PreprocessorDefinitions>Py_NO_ENABLE_SHARED;Py_BUILD_CORE;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>Py_NO_ENABLE_SHARED;Py_BUILD_CORE;_CONSOLE;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <Optimization>Disabled</Optimization>
+       <WholeProgramOptimization>false</WholeProgramOptimization>
+     </ClCompile>
+diff --git a/Python/dynload_win.c b/Python/dynload_win.c
+index ac49f7867a..f3583345ff 100644
+--- a/Python/dynload_win.c
++++ b/Python/dynload_win.c
+@@ -163,6 +163,7 @@ static char *GetPythonImport (HINSTANCE hModule)
+     return NULL;
+ }
+ 
++#ifdef Py_ENABLE_SHARED
+ /* Load python3.dll before loading any extension module that might refer
+    to it. That way, we can be sure that always the python3.dll corresponding
+    to this python DLL is loaded, not a python3.dll that might be on the path
+@@ -216,6 +217,7 @@ _Py_CheckPython3(void)
+     return hPython3 != NULL;
+     #undef MAXPATHLEN
+ }
++#endif /* Py_ENABLE_SHARED */
+ 
+ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
+                                               const char *shortname,
+@@ -224,7 +226,9 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
+     dl_funcptr p;
+     char funcname[258], *import_python;
+ 
++#ifdef Py_ENABLE_SHARED
+     _Py_CheckPython3();
++#endif /* Py_ENABLE_SHARED */
+ 
+ #if USE_UNICODE_WCHAR_CACHE
+     const wchar_t *wpathname = _PyUnicode_AsUnicode(pathname);
 diff --git a/Python/sysmodule.c b/Python/sysmodule.c
 index ac49f7867a..f3583345ff 100644
 --- a/Python/sysmodule.c

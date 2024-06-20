@@ -1,20 +1,21 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE3-team/BLAKE3
-    REF 1.3.1
-    SHA512 9906673a9eca100a6ad8c369f4c380ac66b59ed055cb8358fe99bb67ebbcc98e24da5860b257136a1f9cc8ece5733b2ac68c55b9be65ae6f2904ffd92ef34ce6
+    REF "${VERSION}"
+    SHA512 a2ac662b0e45d1f4c4ee01a5e556a47c49ab5407a6057034033ce6fd0fc6b88f66dd428d80f5e7c4a8413356cb4b5ab655924d96138213499893e0204d7c8d24
     HEAD_REF main
+    PATCHES
+        fix-windows-arm-build-error.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}/c"
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

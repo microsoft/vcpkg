@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneDNN
-    REF 58be3660fb57c4c4a3d306730e849237d1271572 #2.6.1
-    SHA512 8fc51655d0ecdb5b137d04c6b3ee01959d9505e0d7ee74cab872447b5873f214d38db55edf4040a56d4455557ec2c0707097337c6e276dbaf1c9c6e48b95a820
+    REF "v${VERSION}"
+    SHA512 8a4ae6251e12ee641a432011da8360e08866ac005a5930d3a6278ce470d8b4a88afbd5538504274ca5e0bf053845efb41c834acaab83121d9d986a41f31ff718
     HEAD_REF master
 )
 
@@ -21,6 +21,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME dnnl CONFIG_PATH lib/cmake/dnnl)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc/dnnl/reference/html")
 
-# Copyright and license
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

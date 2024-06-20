@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/geometry
-    REF boost-1.80.0
-    SHA512 3b195957afa51292f21430b9dad8f1ac4a69320bc423de86813c0f3740ee6dc5a33264f91eedbd022a1ccfd520fff45acc39d87c13e70031935b76ce3a584ce1
+    REF boost-${VERSION}
+    SHA512 8d53b80aad31ad9012c22a6471f06aeb9048b9178a7f5e626025c926f082257a3edb2f162032eb541818646953973f95a09a57871b61b379cd56f5cd1f4cbf8e
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

@@ -1,0 +1,38 @@
+{
+  "name": "libdeflate",
+  "version": "1.20",
+  "port-version": 1,
+  "description": "libdeflate is a library for fast, whole-buffer DEFLATE-based compression and decompression.",
+  "homepage": "https://github.com/ebiggers/libdeflate",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "compression",
+    "decompression",
+    "gzip",
+    "zlib"
+  ],
+  "features": {
+    "compression": {
+      "description": "Support compression"
+    },
+    "decompression": {
+      "description": "Support decompression"
+    },
+    "gzip": {
+      "description": "Support the gzip format"
+    },
+    "zlib": {
+      "description": "Support the zlib format"
+    }
+  }
+}

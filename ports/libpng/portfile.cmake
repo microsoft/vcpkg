@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-09-15) # for ${VERSION}
-
 # Download the apng patch
 set(LIBPNG_APNG_PATCH_PATH "")
 set(LIBPNG_APNG_OPTION "")
@@ -15,7 +13,7 @@ if ("apng" IN_LIST FEATURES)
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
         URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 97a182da0b3b54aecf735e3655d8e8f1a569ae957b23fc3d7a9c8cc65dcdd26f34f173ce9f60af99b01d5347267b2afefaf787c500ce1005e86bf2810b3d0738
+        SHA512 a724f7de486920cb119818f7172fb589bc2c3c1cc1f81bb5c4da0609ab108ef9ef7406cf689a20bc4e8da69647847f550ed497b3fa99a10539e9a0abf492c053
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -34,12 +32,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glennrp/libpng
     REF v${VERSION}
-    SHA512 d61408cee5850582baa57166547ccab6cc171bc809076e53494ace26157fd7787c3209e3b757fd68c541bfb95afe309745d887fb5cd2005b2024af7355c809a0
+    SHA512 3bb2a7b73113be42b09c2116e6c6f5a7ddb4e2ab06e0b13e10b7314acdccc4bb624ff602e16140c0484f6cde80efa190296226be3da195c6926819f07c723c12
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
         fix-export-targets.patch
+        libm.patch
         pkgconfig.patch
         fix-msa-support-for-mips.patch
 )
@@ -56,9 +55,19 @@ vcpkg_list(SET LD_VERSION_SCRIPT_OPTION)
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        # for armeabi-v7a, check whether NEON is available
-        vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
+            vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
+        else()
+            # for armeabi-v7a, check whether NEON is available
+            vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+        endif()
     endif()
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
+  vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
 endif()
 
 vcpkg_cmake_configure(
@@ -69,6 +78,7 @@ vcpkg_cmake_configure(
         ${LD_VERSION_SCRIPT_OPTION}
         -DPNG_STATIC=${PNG_STATIC}
         -DPNG_SHARED=${PNG_SHARED}
+        -DPNG_FRAMEWORK=OFF
         -DPNG_TESTS=OFF
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
@@ -98,4 +108,4 @@ file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng16.pc" DESTINATION "${
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

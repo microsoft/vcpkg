@@ -1,0 +1,62 @@
+diff --git a/cmakemod/libcaerConfig.cmake.in b/cmakemod/libcaerConfig.cmake.in
+index cdf9f88..f0a17ba 100644
+--- a/cmakemod/libcaerConfig.cmake.in
++++ b/cmakemod/libcaerConfig.cmake.in
+@@ -21,6 +21,10 @@
+ CMAKE_POLICY(PUSH)
+ CMAKE_POLICY(VERSION 3.10)
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(PkgConfig)
++pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++
+ INCLUDE(@PACKAGE_export_destination@/libcaer-exports.cmake)
+ SET(libcaer_INCLUDE_DIRS @PACKAGE_include_dirs@)
+ 
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3ce94a6..f03d7ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,16 +52,12 @@ MESSAGE(STATUS "Base libraries: ${BASE_LIBS}")
+ INCLUDE(FindPkgConfig)
+ 
+ # Required: basic USB devices support
+-IF(CC_MSVC)
+-	FIND_PACKAGE(libusb CONFIG REQUIRED)
+-ELSE()
+-	PKG_CHECK_MODULES(
+-		libusb
+-		REQUIRED
+-		IMPORTED_TARGET
+-		libusb-1.0>=1.0.17)
+-	SET(LIBCAER_PKGCONFIG_REQUIRES_PRIVATE "libusb-1.0 >= 1.0.17")
+-ENDIF()
++PKG_CHECK_MODULES(
++    libusb
++    REQUIRED
++    IMPORTED_TARGET
++    libusb-1.0>=1.0.17)
++SET(LIBCAER_PKGCONFIG_REQUIRES_PRIVATE "libusb-1.0 >= 1.0.17")
+ 
+ # Optional: serial devices support
+ IF(ENABLE_SERIALDEV)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0ef4ac7..6f70a26 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -49,12 +49,11 @@ ENDIF()
+ 
+ IF(CC_MSVC)
+ 	LIST(APPEND LIBCAER_SOURCES ../thirdparty/simple-stdatomic/stdatomic.c)
+-	INCLUDE_DIRECTORIES(${LIBUSB_INCLUDE_DIRS})
+-	LIST(APPEND LIBCAER_LINK_LIBRARIES_PRIVATE ${LIBUSB_LIBRARIES})
+-ELSE()
+-	LIST(APPEND LIBCAER_LINK_LIBRARIES_PRIVATE PkgConfig::libusb)
+ ENDIF()
+ 
++LIST(APPEND LIBCAER_LINK_LIBRARIES_PRIVATE PkgConfig::libusb)
++
++
+ # Set full RPATH
+ SET(CMAKE_INSTALL_RPATH ${USER_LOCAL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
+ 

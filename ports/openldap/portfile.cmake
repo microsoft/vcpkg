@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.5.13.tgz"
-    FILENAME "openldap-2.5.13.tgz"
-    SHA512 30fdc884b513c53169910eec377c2ad05013b9f06bab3123d50d028108b24548791f7f47f18bcb3a2b4868edeab02c10d81ffa320c02d7b562f2e8f2fa25d6c9
+    URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${VERSION}.tgz"
+    FILENAME "openldap-${VERSION}.tgz"
+    SHA512 c23aee0a68a02fa2f5d12fb3b8e31af0c5d70d9a86059d40ad6726fc427f8852ce088eb8ec3bae9f9cb4f2ce0e249b3dbe845ba5d5967cda3ae993c263f3dc03
 )
 
 vcpkg_list(SET EXTRA_PATCHES)
@@ -12,8 +12,8 @@ if(NOT "${AUTOCONF_VERSION_STR}" STREQUAL "" AND "${AUTOCONF_VERSION_STR}" MATCH
     vcpkg_list(APPEND EXTRA_PATCHES m4.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         openssl.patch
@@ -28,6 +28,11 @@ endif()
 
 if("cyrus-sasl" IN_LIST FEATURES)
     vcpkg_list(APPEND FEATURE_OPTIONS --with-cyrus-sasl)
+    message(
+" openldap currently requires the following libraries from the system package manager:
+    libsasl2-dev
+These can be installed on Ubuntu systems via sudo apt install libsasl2-dev"
+    )
 else()
     vcpkg_list(APPEND FEATURE_OPTIONS --without-cyrus-sasl)
 endif()

@@ -56,12 +56,13 @@ if(VCPKG_PREFER_SYSTEM_LIBS)
 endif()
 
 # Manifest options and settings
+set(Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE "${VCPKG_MANIFEST_DIR}")
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
-        set(VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
+        set(Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE "${CMAKE_SOURCE_DIR}")
     endif()
 endif()
-set(VCPKG_MANIFEST_DIR "${VCPKG_MANIFEST_DIR}"
+set(VCPKG_MANIFEST_DIR "${Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE}"
     CACHE PATH "The path to the vcpkg manifest directory." FORCE)
 
 if(DEFINED VCPKG_MANIFEST_DIR AND NOT VCPKG_MANIFEST_DIR STREQUAL "")
@@ -164,8 +165,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
     set(z_vcpkg_function_arguments_ARGC "${${z_vcpkg_function_arguments_ARGC_NAME}}")
 
     math(EXPR z_vcpkg_function_arguments_LAST_ARG "${z_vcpkg_function_arguments_ARGC} - 1")
-    # GREATER_EQUAL added in CMake 3.7
-    if(NOT z_vcpkg_function_arguments_LAST_ARG LESS z_vcpkg_function_arguments_FIRST_ARG)
+    if(z_vcpkg_function_arguments_LAST_ARG GREATER_EQUAL z_vcpkg_function_arguments_FIRST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
             # adds an extra `;` on the first time through
@@ -190,7 +190,7 @@ function(z_vcpkg_set_powershell_path)
             set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
         else()
             message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
-            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
+            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell)
             if(Z_VCPKG_BUILTIN_POWERSHELL_PATH)
                 set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
             else()
@@ -218,15 +218,15 @@ endif()
 #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES or the targets IMPORTED_CONFIGURATIONS.
 #In most cases this is the debug configuration which is wrong.
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
-    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
+    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;None;")
     if(VCPKG_VERBOSE)
-        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;None;")
     endif()
 endif()
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
-    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
+    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;None;")
     if(VCPKG_VERBOSE)
-        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;None;")
     endif()
 endif()
 
@@ -268,6 +268,39 @@ else()
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
     elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_ARCHITECTURES)
+        list(LENGTH CMAKE_OSX_ARCHITECTURES Z_VCPKG_OSX_ARCH_COUNT)
+        if(Z_VCPKG_OSX_ARCH_COUNT EQUAL "0")
+            message(WARNING "Unable to determine target architecture. "
+                            "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
+                            "Continuing without vcpkg.")
+            set(VCPKG_TOOLCHAIN ON)
+            cmake_policy(POP)
+            return()
+        endif()
+
+        if(Z_VCPKG_OSX_ARCH_COUNT GREATER "1")
+            message(WARNING "Detected more than one target architecture. Using the first one.")
+        endif()
+        list(GET CMAKE_OSX_ARCHITECTURES "0" Z_VCPKG_OSX_TARGET_ARCH)
+        if(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+        elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64s")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64s)
+        elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "armv7s")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH armv7s)
+        elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "armv7")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
+        elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "x86_64")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
+        elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "i386")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
+        else()
+            message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
+            set(VCPKG_TOOLCHAIN ON)
+            cmake_policy(POP)
+            return()
+        endif()
     else()
         find_program(Z_VCPKG_CL cl)
         if(Z_VCPKG_CL MATCHES "amd64/cl.exe$" OR Z_VCPKG_CL MATCHES "x64/cl.exe$")
@@ -278,39 +311,6 @@ else()
             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
         elseif(Z_VCPKG_CL MATCHES "bin/cl.exe$" OR Z_VCPKG_CL MATCHES "x86/cl.exe$")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-        elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_SYSTEM_NAME AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-            list(LENGTH CMAKE_OSX_ARCHITECTURES Z_VCPKG_OSX_ARCH_COUNT)
-            if(Z_VCPKG_OSX_ARCH_COUNT EQUAL "0")
-                message(WARNING "Unable to determine target architecture. "
-                                "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
-                                "Continuing without vcpkg.")
-                set(VCPKG_TOOLCHAIN ON)
-                cmake_policy(POP)
-                return()
-            endif()
-
-            if(Z_VCPKG_OSX_ARCH_COUNT GREATER "1")
-                message(WARNING "Detected more than one target architecture. Using the first one.")
-            endif()
-            list(GET CMAKE_OSX_ARCHITECTURES "0" Z_VCPKG_OSX_TARGET_ARCH)
-            if(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64")
-                set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
-            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64s")
-                set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64s)
-            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "armv7s")
-                set(Z_VCPKG_TARGET_TRIPLET_ARCH armv7s)
-            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "armv7")
-                set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "x86_64")
-                set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "i386")
-                set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-            else()
-                message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
-                set(VCPKG_TOOLCHAIN ON)
-                cmake_policy(POP)
-                return()
-            endif()
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
                CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR
                CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "amd64")
@@ -323,6 +323,14 @@ else()
             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+	elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "riscv32")
+	    set(Z_VCPKG_TARGET_TRIPLET_ARCH riscv32)
+	elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "riscv64")
+	    set(Z_VCPKG_TARGET_TRIPLET_ARCH riscv64)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "loongarch32")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH loongarch32)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "loongarch64")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH loongarch64)
         else()
             if(Z_VCPKG_CMAKE_IN_TRY_COMPILE)
                 message(STATUS "Unable to determine target architecture, continuing without vcpkg.")
@@ -347,9 +355,17 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 elseif(MINGW)
     set(Z_VCPKG_TARGET_TRIPLET_PLAT mingw-dynamic)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
-    set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
+    if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+        set(Z_VCPKG_TARGET_TRIPLET_PLAT xbox-scarlett)
+    elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+        set(Z_VCPKG_TARGET_TRIPLET_PLAT xbox-xboxone)
+    else()
+        set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Android" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Android"))
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT android)
 endif()
 
 if(EMSCRIPTEN)
@@ -383,16 +399,16 @@ if(NOT Z_VCPKG_ROOT_DIR)
 endif()
 
 if(DEFINED VCPKG_INSTALLED_DIR)
-    # do nothing
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${VCPKG_INSTALLED_DIR}")
 elseif(DEFINED _VCPKG_INSTALLED_DIR)
-    set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${_VCPKG_INSTALLED_DIR}")
 elseif(VCPKG_MANIFEST_MODE)
-    set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${CMAKE_BINARY_DIR}/vcpkg_installed")
 else()
-    set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${Z_VCPKG_ROOT_DIR}/installed")
 endif()
 
-set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+set(VCPKG_INSTALLED_DIR "${Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
 set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
@@ -497,7 +513,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
         endif()
 
-        if(NOT CMAKE_VERSION VERSION_LESS "3.18") # == GREATER_EQUAL, but that was added in CMake 3.7
+        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE)
         else()
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
@@ -510,7 +526,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
                 "--x-wait-for-lock"
                 "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-                "${Z_VCPKG_FEATURE_FLAGS}"
+                ${Z_VCPKG_FEATURE_FLAGS}
                 ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
             OUTPUT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
@@ -575,8 +591,6 @@ endif()
 
 cmake_policy(POP)
 
-# Any policies applied to the below macros and functions appear to leak into consumers
-
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
     _add_executable(${ARGS})
@@ -587,7 +601,7 @@ function(add_executable)
     list(FIND ARGV "MACOSX_BUNDLE" MACOSX_BUNDLE_IDX)
     if(IMPORTED_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         if(VCPKG_APPLOCAL_DEPS)
-            if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+            if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox")
                 z_vcpkg_set_powershell_path()
                 set(EXTRA_OPTIONS "")
                 if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
@@ -628,7 +642,7 @@ function(add_library)
     list(FIND ARGS "ALIAS" ALIAS_IDX)
     if(IMPORTED_IDX EQUAL "-1" AND INTERFACE_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
-        if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
+        if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
             z_vcpkg_set_powershell_path()
             add_custom_command(TARGET "${target_name}" POST_BUILD
                 COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
@@ -669,7 +683,7 @@ function(x_vcpkg_install_local_dependencies)
         message(FATAL_ERROR "DESTINATION must be specified")
     endif()
 
-    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
+    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp|xbox-.*)$")
         # Install CODE|SCRIPT allow the use of generator expressions
         cmake_policy(SET CMP0087 NEW) # CMake 3.14
 
@@ -732,7 +746,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                 if(last_command STREQUAL "DESTINATION" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
                     set(destination "${arg}")
                 endif()
-                if(last_command STREQUAL "COMPONENT")
+                if(last_command STREQUAL "COMPONENT" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
                     set(component_param "COMPONENT" "${arg}")
                 endif()
             endforeach()
@@ -894,15 +908,20 @@ set(Z_VCPKG_UNUSED "${CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY}")
 set(Z_VCPKG_UNUSED "${CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY}")
 set(Z_VCPKG_UNUSED "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP}")
 
-# Propogate these values to try-compile configurations so the triplet and toolchain load
+# Propagate these values to try-compile configurations so the triplet and toolchain load
 if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
         VCPKG_TARGET_TRIPLET
         VCPKG_TARGET_ARCHITECTURE
-        VCPKG_APPLOCAL_DEPS
+        VCPKG_HOST_TRIPLET
+        VCPKG_INSTALLED_DIR
+        VCPKG_PREFER_SYSTEM_LIBS
+        # VCPKG_APPLOCAL_DEPS # This should be off within try_compile!
         VCPKG_CHAINLOAD_TOOLCHAIN_FILE
         Z_VCPKG_ROOT_DIR
     )
+else()
+    set(VCPKG_APPLOCAL_DEPS OFF)
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)

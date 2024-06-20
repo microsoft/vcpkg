@@ -1,6 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.6.0",
+  "version-semver": "3.9.0",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -12,8 +12,17 @@
       "name": "pkgconf",
       "host": true
     },
-    "proj",
-    "tiff",
+    {
+      "name": "proj",
+      "default-features": false,
+      "features": [
+        "tiff"
+      ]
+    },
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -35,7 +44,7 @@
     "aws-ec2-windows": {
       "description": "Optimized detection of AWS EC2 Windows hosts",
       "dependencies": [
-        "atlmfc"
+        "atl"
       ]
     },
     "cfitsio": {
@@ -62,6 +71,7 @@
           "features": [
             "gif",
             "iconv",
+            "libkml",
             "libxml2",
             "lzma",
             "openjpeg",
@@ -140,10 +150,29 @@
         "libjpeg-turbo"
       ]
     },
+    "kea": {
+      "description": "Enable KEA driver",
+      "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ]
+        },
+        "kealib"
+      ]
+    },
     "lerc": {
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libkml": {
+      "description": "Enable the LibKML driver",
+      "dependencies": [
+        "libkml"
       ]
     },
     "libspatialite": {

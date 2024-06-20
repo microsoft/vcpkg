@@ -1,6 +1,7 @@
 {
   "name": "libwebp",
-  "version": "1.2.4",
+  "version": "1.4.0",
+  "port-version": 1,
   "description": "WebP codec: library to encode and decode images in WebP format",
   "homepage": "https://github.com/webmproject/libwebp",
   "license": "BSD-3-Clause",
@@ -12,6 +13,14 @@
         "unicode"
       ],
       "platform": "windows"
+    },
+    {
+      "name": "libwebp",
+      "default-features": false,
+      "features": [
+        "simd"
+      ],
+      "platform": "osx & x64"
     },
     {
       "name": "vcpkg-cmake",
@@ -37,6 +46,7 @@
             "anim",
             "cwebp",
             "dwebp",
+            "extras",
             "gif2webp",
             "img2webp",
             "info",
@@ -49,22 +59,25 @@
         {
           "name": "libwebp",
           "features": [
-            "extras"
+            "vwebp"
           ],
-          "platform": "!osx"
+          "platform": "!osx & !static"
         },
         {
           "name": "libwebp",
           "features": [
             "vwebp-sdl"
           ],
-          "platform": "!osx"
+          "platform": "!osx & !static & !uwp"
         }
       ]
     },
     "anim": {
       "description": "Build animation utilities.",
       "dependencies": [
+        "giflib",
+        "libjpeg-turbo",
+        "libpng",
         {
           "name": "libwebp",
           "default-features": false,
@@ -72,28 +85,43 @@
             "img2webp",
             "mux"
           ]
+        },
+        {
+          "name": "tiff",
+          "default-features": false
         }
       ]
     },
     "cwebp": {
-      "description": "Build the cwebp command line tool."
+      "description": "Build the cwebp command line tool.",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        {
+          "name": "tiff",
+          "default-features": false
+        }
+      ]
     },
     "dwebp": {
-      "description": "Build the dwebp command line tool."
+      "description": "Build the dwebp command line tool.",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        {
+          "name": "tiff",
+          "default-features": false
+        }
+      ]
     },
     "extras": {
-      "description": "Build extras.",
+      "description": "Build extras. (Doesn't include vwebp-sdl.)",
       "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
         {
-          "name": "libwebp",
-          "default-features": false,
-          "features": [
-            "vwebp"
-          ]
-        },
-        {
-          "name": "sdl1",
-          "platform": "windows"
+          "name": "tiff",
+          "default-features": false
         }
       ]
     },
@@ -122,7 +150,10 @@
             "libwebpmux"
           ]
         },
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "info": {
@@ -169,28 +200,24 @@
     },
     "vwebp": {
       "description": "Build the vwebp viewer tool.",
+      "supports": "!osx & !static",
       "dependencies": [
-        {
-          "name": "freeglut",
-          "platform": "!osx"
-        },
+        "freeglut",
         "opengl"
       ]
     },
     "vwebp-sdl": {
-      "description": "Build the vwebp viewer tool.",
+      "description": "Build the vwebp viewer tool for SDL.",
       "dependencies": [
         {
           "name": "libwebp",
           "default-features": false,
           "features": [
+            "extras",
             "vwebp"
           ]
         },
-        {
-          "name": "sdl1",
-          "platform": "windows"
-        }
+        "sdl1"
       ]
     }
   }

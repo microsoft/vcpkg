@@ -1,11 +1,10 @@
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odedevs/ode
-    REF 0.16.1
-    SHA512 04429cae1b8fc703e53880c5de78293cee46fe4855c96ca7006bd5848255a0df004b75716a6b30ff5176df004e2bec29b2a31d4af8e7ac59da18f0af2eed8396
+    REF ${VERSION}
+    SHA512 d253bc06bca85ed5af95e92acc57b5a9c4382393365c4a0c852a5872a4061ce1bff875a9121624276a60d74e919fb976c2a2b37864203f6c3bcd2def8af953c6
     HEAD_REF master
     PATCHES
-        fix-error-C3861.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,14 +15,17 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ode-0.16.1)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ode-${VERSION})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/ode-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/ode-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/ode-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    endif()
 endif()
+
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

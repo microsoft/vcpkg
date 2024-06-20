@@ -1,14 +1,21 @@
 {
   "name": "directxmesh",
-  "version-date": "2022-10-17",
+  "version-date": "2024-06-04",
   "description": "DirectXMesh geometry processing library",
   "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
   "license": "MIT",
   "supports": "windows | linux",
   "dependencies": [
-    "directx-headers",
+    {
+      "name": "directx-headers",
+      "platform": "mingw | linux"
+    },
     "directxmath",
+    {
+      "name": "ms-gdkx",
+      "platform": "xbox"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,7 +27,20 @@
   ],
   "features": {
     "dx12": {
-      "description": "Build with DirectX12 support for Windows 10"
+      "description": "Build with DirectX12 support for Windows 10/Windows 11",
+      "dependencies": [
+        {
+          "name": "directx-headers",
+          "platform": "windows & !xbox"
+        }
+      ]
+    },
+    "spectre": {
+      "description": "Build Spectre-mitigated library"
+    },
+    "tools": {
+      "description": "meshconvert command-line tool",
+      "supports": "windows & !uwp & !xbox"
     }
   }
 }

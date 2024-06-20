@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/ublas
-    REF boost-1.80.0
-    SHA512 8f081be2ceaadfba63fbb802bed2b29b814f9de8cb29ac212a0949570d458112000ba7e914c7547486086cc8467c59cebad860ad8aa685f1ac355f38ed543165
+    REF boost-${VERSION}
+    SHA512 90f5c577af269e4cad123bd35c612745c8ea3a2f3559eb75a4a89508df6b1c7264d4f51ba778674c7cd42b135441c17911c4ee035215695bdc3023f349d59eb1
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

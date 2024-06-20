@@ -20,7 +20,7 @@ index 248a701..f617dc4 100644
 @@ -2,6 +2,9 @@
  
  include(CMakeFindDependencyMacro)
- find_dependency(unofficial-nanosvg CONFIG)
+ find_dependency(NanoSVG CONFIG)
 +if("@wxUSE_LIBSDL@")
 +    find_dependency(SDL2 CONFIG)
 +endif()
