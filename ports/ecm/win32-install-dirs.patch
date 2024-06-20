@@ -1,0 +1,22 @@
+diff --git a/kde-modules/KDEInstallDirsCommon.cmake b/kde-modules/KDEInstallDirsCommon.cmake
+index aae70d6..d03b19a 100644
+--- a/kde-modules/KDEInstallDirsCommon.cmake
++++ b/kde-modules/KDEInstallDirsCommon.cmake
+@@ -241,7 +241,7 @@ _define_relative(LIBDIR EXECROOTDIR "${_LIBDIR_DEFAULT}"
+     "object code libraries"
+     LIB_INSTALL_DIR)
+ 
+-if(WIN32)
++if(0)
+     _define_relative(LIBEXECDIR BINDIR ""
+         "executables for internal use by programs and libraries"
+         LIBEXEC_INSTALL_DIR)
+@@ -265,7 +265,7 @@ _define_absolute(LOCALSTATEDIR "var"
+ _define_absolute(SHAREDSTATEDIR "com"
+     "modifiable architecture-independent data")
+ 
+-if (WIN32)
++if (0)
+     _define_relative(DATAROOTDIR BINDIR "data"
+         "read-only architecture-independent data root"
+         SHARE_INSTALL_PREFIX)
