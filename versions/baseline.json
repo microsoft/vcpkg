@@ -377,15 +377,15 @@
       "port-version": 0
     },
     "aws-c-auth": {
-      "baseline": "0.7.16",
+      "baseline": "0.7.22",
       "port-version": 0
     },
     "aws-c-cal": {
-      "baseline": "0.6.10",
+      "baseline": "0.6.15",
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.9.14",
+      "baseline": "0.9.21",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -397,23 +397,23 @@
       "port-version": 0
     },
     "aws-c-http": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.14.6",
+      "baseline": "0.14.9",
       "port-version": 0
     },
     "aws-c-mqtt": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.5.4",
+      "baseline": "0.5.10",
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.1.15",
+      "baseline": "0.1.16",
       "port-version": 0
     },
     "aws-checksums": {
@@ -421,7 +421,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.26.4",
+      "baseline": "0.26.12",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -429,8 +429,8 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.285",
-      "port-version": 4
+      "baseline": "1.11.352",
+      "port-version": 0
     },
     "azmq": {
       "baseline": "2023-03-23",
@@ -7881,7 +7881,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.4.8",
+      "baseline": "1.4.16",
       "port-version": 0
     },
     "safeint": {
