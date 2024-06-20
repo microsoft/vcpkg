@@ -1,4 +1,4 @@
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     # https://github.com/llvm/llvm-project/blob/llvmorg-18.1.6/openmp/runtime/CMakeLists.txt#L331
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
@@ -31,6 +31,9 @@ file(COPY ${CMAKE_MODULES} DESTINATION "${SOURCE_PATH}/cmake")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/llvm-openmp-config.cmake.in" DESTINATION "${SOURCE_PATH}/runtime/cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" ENABLE_SHARED)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENABLE_SHARED ON)
+endif()
 
 # Perl is required for the OpenMP run-time
 vcpkg_find_acquire_program(PERL)
@@ -66,7 +69,8 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/FindOpenMP.cmake.in" "${CURRENT_PACKAG
 
 # Remove debug headers and tools
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/debug/tools"
     )
