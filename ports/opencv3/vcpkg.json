@@ -43,20 +43,6 @@
         }
       ]
     },
-    "cuda": {
-      "description": "CUDA support for opencv",
-      "dependencies": [
-        "cuda",
-        "cudnn",
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "contrib"
-          ]
-        }
-      ]
-    },
     "dc1394": {
       "description": "Dc1394 support for opencv",
       "dependencies": [

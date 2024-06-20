@@ -1,5 +1,11 @@
 set(USE_QT_VERSION "6")
 
+vcpkg_download_distfile(CUDA_125_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3744.patch"
+  FILENAME "opencv-opencv4-3744.patch"
+  SHA512 0
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -203,6 +209,7 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      ${CUDA_125_PATCH}
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 

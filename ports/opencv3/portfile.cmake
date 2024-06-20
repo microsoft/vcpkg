@@ -46,8 +46,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "contrib"   WITH_CONTRIB
- "cuda"      WITH_CUBLAS
- "cuda"      WITH_CUDA
  "dnn"       BUILD_opencv_dnn
  "eigen"     WITH_EIGEN
  "flann"     BUILD_opencv_flann
@@ -390,6 +388,8 @@ vcpkg_cmake_configure(
         -DWITH_OPENCLAMDFFT=OFF
         -DWITH_ITT=OFF
         -DWITH_FFMPEG=OFF
+        -DWITH_CUDA=OFF
+        -DWITH_CUBLAS=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
@@ -437,9 +437,6 @@ endif()
 find_dependency(Threads)")
   if("tiff" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
-  endif()
-  if("cuda" IN_LIST FEATURES)
-    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
   endif()
   if(BUILD_opencv_quality)
     string(APPEND DEPS_STRING "

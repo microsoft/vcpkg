@@ -81,38 +81,19 @@
         }
       ]
     },
-    "opencv2-base": {
+    "opencv2": {
       "description": "Build darknet with support for OpenCV2",
       "dependencies": [
         "opencv2"
       ]
     },
-    "opencv3-base": {
+    "opencv3": {
       "description": "Build darknet with support for OpenCV3",
       "dependencies": [
         {
           "name": "opencv3",
           "features": [
             "contrib",
-            "dnn"
-          ]
-        }
-      ]
-    },
-    "opencv3-cuda": {
-      "description": "Build darknet with support for CUDA-enabled OpenCV3",
-      "dependencies": [
-        {
-          "name": "darknet",
-          "features": [
-            "cuda"
-          ]
-        },
-        {
-          "name": "opencv3",
-          "features": [
-            "contrib",
-            "cuda",
             "dnn"
           ]
         }
