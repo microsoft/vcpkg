@@ -3344,6 +3344,10 @@
       "baseline": "2022-05-24",
       "port-version": 0
     },
+    "half": {
+      "baseline": "2.2.0",
+      "port-version": 0
+    },
     "halide": {
       "baseline": "17.0.1",
       "port-version": 1
