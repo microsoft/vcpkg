@@ -8165,7 +8165,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.9.3",
+      "baseline": "3.9.4",
       "port-version": 0
     },
     "simdutf": {
