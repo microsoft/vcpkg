@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF ecc63d0d3b0e1a62c90b58b1ccdb5ac16cb2400a
-    SHA512 4e8f709691d8f3f64d41cc0f0fd70fe0a676247dc88b1283fa90f41b838f5b83100ccabd18714e5638cfa66c5cec0ac67943a3559d535357ff3499de62e47069
+    REF "v${VERSION}"
+    SHA512 108d9c5fa761c111585c30f9c651ed92942dda0ac661155bca52cc7b6dbeb3d27b0dd994abde206eacfc3bc88d19ed24e45b291050c38469e34dca5f8c9a037d
     PATCHES 
         fix-arm.patch
 )
@@ -13,16 +13,16 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sodium          WITH_LIBSODIUM
-        draft           ENABLE_DRAFTS
-        websockets      ENABLE_WS
+        sodium            WITH_LIBSODIUM
+        draft             ENABLE_DRAFTS
+        websockets        ENABLE_WS
         websockets-secure WITH_TLS
-        curve           ENABLE_CURVE
+        curve             ENABLE_CURVE
 )
 
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
-    set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_SYSTEM_VERSION=6.0" "-DZMQ_HAVE_IPC=0")
 endif()
 
 vcpkg_cmake_configure(
@@ -42,9 +42,9 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     MAYBE_UNUSED_VARIABLES
-        USE_PERF_TOOLS
         CMAKE_REQUIRE_FIND_PACKAGE_GnuTLS
         WITH_LIBBSD
+        WITH_PERF_TOOL
         WITH_TLS
 )
 

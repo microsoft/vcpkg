@@ -485,6 +485,7 @@ if (NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
       "\${_IMPORT_PREFIX}/sdk"
       "\${_IMPORT_PREFIX}/debug/sdk"
+      IGNORE_UNCHANGED
   )
 endif()
 
@@ -512,6 +513,9 @@ find_dependency(Threads)")
   endif()
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("ffmpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
   endif()
   if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "

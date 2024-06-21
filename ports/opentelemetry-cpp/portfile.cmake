@@ -6,13 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 38a3796a5f4c28fd54cc2a5475b3a024e2e73594acbc635fccc6358bf4d93ae897fc0ce55a93d27736a08622869ccc9fe9a9ee62e3884adadb3f135c27d378ec
+    SHA512 97635bbaf6dd567c201451dfaf7815b2052fe50d9bccc97aade86cfa4a92651374d167296a5453031b2681dc302806a289bca011a9e79ddc381a17d6118971d7
     HEAD_REF main
     PATCHES
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
-        # Fix problems from removing NOMINMAX on Windows. Fixed in 1.14.0
-        fix-nominmax-problems.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,18 +19,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
-        jaeger WITH_JAEGER
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
+        geneva WITH_GENEVA
+        user-events WITH_USER_EVENTS
+    INVERTED_FEATURES
+        user-events BUILD_TRACEPOINTS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC)
-    set(OTEL_PROTO_VERSION "1.0.0")
+if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+    set(OTEL_PROTO_VERSION "1.1.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 74de78304a91fe72cfcdbd87fcb19c0d6338c161d6624ce09eac0527b1b43b8a5d8790ae055e1d3d44319eaa070a506f47e740f888c91d724a0aef8b509688f0
+        SHA512 cd20991efb2d7f1bc8650fd0e124be707922b0717e429b6212390cd2c0d0afdb403c9aece196f07ae81ebed948863f4ec75c08ffbb3968795a0010d5cb34dc1b
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -44,19 +45,51 @@ if(WITH_OTLP_GRPC)
     list(APPEND FEATURE_OPTIONS "-DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
+set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
+
+if(WITH_GENEVA OR WITH_USER_EVENTS)
+    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
+    # so they should be ported as a feature under opentelemetry-cpp.
+    vcpkg_from_github(
+        OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
+        REPO open-telemetry/opentelemetry-cpp-contrib
+        REF 4f3059390ad09d12d93255a10f7be8ff948d26fc
+        HEAD_REF main
+        SHA512 392e3a414ea0ee016768dd75a286d2a7a3a7a011cc0fce4ee2f796ad7e0cd70d534eb38cb1d22f91300f4670dfa212a4239ba8e008c2444d47e13c5fe3fb75c0
+    )
+    
+    if(WITH_GENEVA)
+        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/geneva-trace")
+        else()
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/fluentd")
+        endif()
+    endif()
+
+    if(WITH_USER_EVENTS)
+        if(WITH_GENEVA)
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/user_events")
+        else()
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/user_events")
+        endif()
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
-        -DWITH_LOGS_PREVIEW=ON
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
+        -DWITH_BENCHMARK=OFF
+        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        WITH_OTLP_GRPC
-        WITH_JAEGER
-        WITH_LOGS_PREVIEW
+        WITH_GENEVA
+        WITH_USER_EVENTS
+        BUILD_TRACEPOINTS
 )
 
 vcpkg_cmake_install()

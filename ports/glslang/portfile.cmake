@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 e16b01925a657750733a2973dc803fc3910a3a169ae276af205de6cb1bf0536fd2dbb63c5fd4fc10f800ba95f71bce673417121ad640cb9c964f291596c80025
+    SHA512 570d2ff15116f48e195c73d9be1517b05e7c37541af10f6c05779a001e2d0295725349c1f4dd0bcca6f0c7e7e48c5162a60726c3e76cf04619c8e14bd0636ab6
     HEAD_REF master
-    PATCHES
-        cmake.patch # Remove on next version (Upstream PR #3406 and #3420).
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,18 +22,12 @@ if (ENABLE_GLSLANG_BINARIES)
     vcpkg_add_to_path("${PYTHON_PATH}")
 endif ()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(PLATFORM_OPTIONS "-DOVERRIDE_MSVCCRT=OFF")
-endif ()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXTERNAL=OFF
-        -DENABLE_CTEST=OFF
-        -DSKIP_GLSLANG_INSTALL=OFF
+        -DGLSLANG_TESTS=OFF
         ${FEATURE_OPTIONS}
-        ${PLATFORM_OPTIONS}
 )
 
 vcpkg_cmake_install()

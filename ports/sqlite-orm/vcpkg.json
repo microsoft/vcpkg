@@ -1,7 +1,7 @@
 {
   "name": "sqlite-orm",
   "version": "1.8.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "SQLite ORM light header only library for modern C++",
   "homepage": "https://github.com/fnc12/sqlite_orm",
   "license": "AGPL-3.0-or-later OR MIT",
@@ -22,7 +22,6 @@
     },
     "test": {
       "description": "Build sqlite_orm unit tests",
-      "supports": "!uwp",
       "dependencies": [
         "catch2"
       ]

@@ -2,16 +2,18 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 dd6cf6cbb817a48ef5275bb409367e5904526a3c16a17a37ea75101085ea19a71ba6bf936a6f099012e7c528811db1728ef2f14dcb16a1056a22088839280ce0
+    SHA512 28975f59e1fdde2dba4afaf4a5ba934b63db3a7f27656e2aa0af0f0d2a046c9dbfa9a6082de94629c36d03809b296566a37ea65ec5a2fc17fedac7d21e272d31
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
+        android.patch
         msvc-static-name.patch
         utf8proc.patch
         thrift.patch
-        fix-ci-error.patch
+        remove-dll-suffix.patch #Upstream PR: https://github.com/apache/arrow/pull/41341
+        add-include-string.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dataset     ARROW_DATASET
         filesystem  ARROW_FILESYSTEM
         flight      ARROW_FLIGHT
-        flight      ARROW_FLIGHT_SQL
+        flightsql   ARROW_FLIGHT_SQL
         gcs         ARROW_GCS
         jemalloc    ARROW_JEMALLOC
         json        ARROW_JSON
@@ -98,6 +100,14 @@ if("flight" IN_LIST FEATURES)
     )
 endif()
 
+if("flightsql" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ArrowFlightSql
+        CONFIG_PATH lib/cmake/ArrowFlightSql
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME parquet
@@ -124,6 +134,11 @@ endif()
 if("flight" IN_LIST FEATURES)
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flight" usage-flight)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
+endif()
+
+if("flightsql" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flightsql" usage-flightsql)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flightsql}")
 endif()
 
 if("example" IN_LIST FEATURES)

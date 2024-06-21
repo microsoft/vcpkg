@@ -1,8 +1,8 @@
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index 8ee9864..b8a22a5 100644
+index ea22103..bafb9b6 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
-@@ -47,7 +47,11 @@ endif()
+@@ -48,7 +48,11 @@ endif()
  # brotli
  if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR
      JPEGXL_FORCE_SYSTEM_BROTLI)
@@ -15,11 +15,11 @@ index 8ee9864..b8a22a5 100644
    if (NOT Brotli_FOUND)
      message(FATAL_ERROR
          "Brotli not found, install brotli-dev or download brotli source code to"
-@@ -111,7 +120,8 @@ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+@@ -106,7 +110,8 @@ if (JPEGXL_ENABLE_SKCMS)
  endif ()
- if (JPEGXL_ENABLE_VIEWERS OR NOT JPEGXL_ENABLE_SKCMS)
+ if (JPEGXL_ENABLE_VIEWERS OR NOT JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
    if( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lcms/.git" OR JPEGXL_FORCE_SYSTEM_LCMS2 )
--    find_package(LCMS2 2.13)
+-    find_package(LCMS2 2.12)
 +    find_package(LCMS2 NAMES lcms2 REQUIRED)
 +    add_library(lcms2 ALIAS lcms2::lcms2)
      if ( NOT LCMS2_FOUND )

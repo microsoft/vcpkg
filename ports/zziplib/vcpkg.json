@@ -1,7 +1,6 @@
 {
   "name": "zziplib",
-  "version": "0.13.72",
-  "port-version": 3,
+  "version": "0.13.73",
   "description": "library providing read access on ZIP-archives",
   "homepage": "https://github.com/gdraheim/zziplib",
   "license": "LGPL-2.0-or-later OR MPL-1.1",

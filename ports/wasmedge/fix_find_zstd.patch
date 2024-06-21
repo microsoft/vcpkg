@@ -1,0 +1,19 @@
+diff --git a/cmake/Helper.cmake b/cmake/Helper.cmake
+index f9cdcf2..a270b05 100644
+--- a/cmake/Helper.cmake
++++ b/cmake/Helper.cmake
+@@ -221,8 +221,12 @@ if((WASMEDGE_LINK_LLVM_STATIC OR WASMEDGE_BUILD_STATIC_LIB) AND WASMEDGE_BUILD_A
+   endif()
+   if (APPLE AND LLVM_VERSION_MAJOR GREATER_EQUAL 15)
+     # For LLVM 15 or greater on MacOS
+-    find_package(zstd REQUIRED)
+-    get_filename_component(ZSTD_PATH "${zstd_LIBRARY}" DIRECTORY)
++    find_package(zstd CONFIG REQUIRED)
++    if(CMAKE_BUILD_TYPE STREQUAL Debug)
++        set(ZSTD_PATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
++    else()
++        set(ZSTD_PATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
++    endif()
+     list(APPEND WASMEDGE_LLVM_LINK_STATIC_COMPONENTS
+       ${ZSTD_PATH}/libzstd.a
+     )
