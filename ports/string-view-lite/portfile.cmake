@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/string-view-lite
-    REF v1.8.0
+    REF "v${VERSION}"
     SHA512 c581ea08f25e70e84322da39abb36c4af4c31c4fbb33f9e9a723c3c68ecaff6d4553bc85902a1b7851e94581804d7f3d9a7765f128515d56621b30131e58722b
 )
 
