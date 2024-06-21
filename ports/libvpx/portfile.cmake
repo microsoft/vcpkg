@@ -82,7 +82,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if("disable-multithread" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} --disable-multithread")
         message(STATUS "Disable multithread may cause the vpx doesn't working!")
-        
+
     endif()
 
     message(STATUS "Generating makefile")
