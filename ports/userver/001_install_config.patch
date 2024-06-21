@@ -1,0 +1,21 @@
+--- 590431d7d2-0ee422b08a.clean/CMakeLists.txt	2023-09-20 20:12:48.000000000 +0300
++++ 590431d7d2-0ee422b08a.fixed/CMakeLists.txt	2023-10-20 21:44:03.351164897 +0300
+@@ -137,6 +137,8 @@
+   add_subdirectory(testsuite)
+ endif()
+ 
++include(GNUInstallDirs)
++
+ add_subdirectory(universal "${CMAKE_BINARY_DIR}/userver/universal")
+ 
+ if (USERVER_FEATURE_CORE)
+@@ -188,3 +190,9 @@
+ if (USERVER_IS_THE_ROOT_PROJECT AND USERVER_FEATURE_CORE)
+     add_subdirectory(samples)
+ endif()
++
++install(EXPORT userver
++    NAMESPACE userver::
++    FILE userver-config.cmake
++    DESTINATION share/userver
++)
