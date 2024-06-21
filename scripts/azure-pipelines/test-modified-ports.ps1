@@ -162,7 +162,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     & git reset --hard HEAD
 }
 
-$dependents = @('caffe2', 'saucer', 'qt', 'rtabmap', 'pcl', 'vtk-dicom', 'opencascade', 'netgen', 'itk', 'dv-processing', 'libcaer', 'opencv', 'darknet', 'dbow3','openimageio', 'theia', 'osg', 'osgearth', 'openmvs', 'openmvg', 'selene')
+$dependents = @('caffe2', 'saucer', 'qt', 'rtabmap', 'pcl', 'vtk-dicom', 'opencascade', 'netgen', 'itk', 'dv-processing', 'libcaer', 'opencv', 'darknet','openimageio', 'theia', 'osg', 'osgearth', 'openmvs', 'openmvg', 'selene')
 $libraries = @('tensorflow','tensorflow-cc','libtorch', 'qtwebengine', 'vtk', 'paraview', 'opencv4') + $dependents
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
