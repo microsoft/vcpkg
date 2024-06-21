@@ -8169,7 +8169,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "5.2.5",
+      "baseline": "5.2.8",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
