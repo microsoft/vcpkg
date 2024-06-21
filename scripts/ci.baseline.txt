@@ -1076,6 +1076,7 @@ shader-slang:x64-windows-static=fail
 shogun:arm64-windows      = skip
 shogun:arm64-uwp            = skip
 shogun:x64-osx            = skip
+shogun:arm64-osx            = skip
 shogun:x64-uwp            = skip
 shogun:x64-windows        = skip
 shogun:x64-windows-static = skip

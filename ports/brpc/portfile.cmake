@@ -6,7 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-glog.patch
+        fix-warnings.patch
+        protobuf.patch
 )
 
 vcpkg_cmake_configure(
