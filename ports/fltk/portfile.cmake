@@ -4,15 +4,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
-    REF release-1.3.8
-    SHA512 197848d3b80a65cca936daf4f0b74609f0fe8332a4cd11af53385fb2aa45ad698b1e239a48732b118cd3cb189bc531711b72fb2eeeb85be887dc6c5a558fa4b3
+    REF "release-${VERSION}"
+    SHA512 2dfeeed9fdc6db62a6620e7c846dbe0bf97dacce3077832e314a35bf16ba6a45803373188a7b3954eada5829385b9914241270b71f12aaf3e9e3df45eb2b1b95
     PATCHES
         dependencies.patch
         config-path.patch
         include.patch
         fix-system-link.patch
         math-h-polyfill.patch
-        fix-narrow.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"
@@ -31,6 +30,11 @@ if(VCPKG_CROSSCOMPILING)
     set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
+set(runtime_dll "ON")
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(runtime_dll "OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -45,6 +49,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
         ${fluid_path_param}
+        -DFLTK_MSVC_RUNTIME_DLL=${runtime_dll}
     MAYBE_UNUSED_VARIABLES
         Cocoa
 )

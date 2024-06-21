@@ -1,0 +1,105 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "juce",
+  "version": "7.0.12",
+  "description": "Open-source cross-platform C++ application framework for desktop and mobile applications, including VST, VST3, AU, AUv3, AAX and LV2 audio plug-ins and plug-in hosts",
+  "homepage": "https://juce.com",
+  "license": null,
+  "supports": "!android & !uwp",
+  "dependencies": [
+    {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
+      "name": "juce",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "curl",
+    "freetype",
+    "jack",
+    "opengl",
+    "xcursor",
+    "xinerama",
+    "xrandr",
+    "xrender"
+  ],
+  "features": {
+    "curl": {
+      "description": "Enable CURL support",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "extras": {
+      "description": "Enable JUCE Extras such as Projucer, AudioPluginHost, BinaryBuilder."
+    },
+    "freetype": {
+      "description": "Enable FreeType support",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "jack": {
+      "description": "Enable JACK audio support",
+      "dependencies": [
+        {
+          "name": "jack2",
+          "platform": "linux"
+        }
+      ]
+    },
+    "ladspa": {
+      "description": "Enable LADSPA plugin host support."
+    },
+    "opengl": {
+      "description": "Enable OpenGL support",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "web-browser": {
+      "description": "Enable WebBrowser support"
+    },
+    "xcursor": {
+      "description": "Enable XCursor support"
+    },
+    "xinerama": {
+      "description": "Enable Xinerama support",
+      "dependencies": [
+        {
+          "name": "libxinerama",
+          "platform": "linux"
+        }
+      ]
+    },
+    "xrandr": {
+      "description": "Enable XRandR support",
+      "dependencies": [
+        {
+          "name": "libxrandr",
+          "platform": "linux"
+        }
+      ]
+    },
+    "xrender": {
+      "description": "Enable XRender support",
+      "dependencies": [
+        {
+          "name": "libxrender",
+          "platform": "linux"
+        }
+      ]
+    }
+  }
+}

@@ -4,12 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 ff0dfe95640a24568a2950442576fbf4acd9a1dd354b7f7687cb1946cc2f896664e6e54b29ec051eccddb765bab276cb94c9920c724c4b4a5b1fc5f29c26e649
-    HEAD_REF master
+    SHA512 62d48d094a857caff6c52868be1387605ee315d5824516f6c1ade9e4586195eee48ab17b4a38a11c88399f1a863bbd1d948f739c6155aaa1d844320ea1d5dfe3
+    HEAD_REF main
     PATCHES
-        0001-fix-libsodium.patch
-        0002-fix-libevent.patch
-        0003-fix-deps.patch
+        fix-build.patch
 )
 
 # Prefer installed config files
@@ -34,8 +32,12 @@ vcpkg_copy_pdbs()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake" "lib/cmake/fizz" "share/fizz")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test" "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/include/fizz/crypto/aead/test/facebook"
+    "${CURRENT_PACKAGES_DIR}/include/fizz/record/test/facebook"
+    "${CURRENT_PACKAGES_DIR}/include/fizz/server/test/facebook"
+    "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test"
+    "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

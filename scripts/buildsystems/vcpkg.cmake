@@ -190,7 +190,7 @@ function(z_vcpkg_set_powershell_path)
             set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
         else()
             message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
-            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
+            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell)
             if(Z_VCPKG_BUILTIN_POWERSHELL_PATH)
                 set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
             else()
@@ -218,15 +218,15 @@ endif()
 #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES or the targets IMPORTED_CONFIGURATIONS.
 #In most cases this is the debug configuration which is wrong.
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
-    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
+    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;None;")
     if(VCPKG_VERBOSE)
-        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;None;")
     endif()
 endif()
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
-    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
+    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;None;")
     if(VCPKG_VERBOSE)
-        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;None;")
     endif()
 endif()
 
@@ -591,8 +591,6 @@ endif()
 
 cmake_policy(POP)
 
-# Any policies applied to the below macros and functions appear to leak into consumers
-
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
     _add_executable(${ARGS})
@@ -884,15 +882,20 @@ set(Z_VCPKG_UNUSED "${CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY}")
 set(Z_VCPKG_UNUSED "${CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY}")
 set(Z_VCPKG_UNUSED "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP}")
 
-# Propogate these values to try-compile configurations so the triplet and toolchain load
+# Propagate these values to try-compile configurations so the triplet and toolchain load
 if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
         VCPKG_TARGET_TRIPLET
         VCPKG_TARGET_ARCHITECTURE
-        VCPKG_APPLOCAL_DEPS
+        VCPKG_HOST_TRIPLET
+        VCPKG_INSTALLED_DIR
+        VCPKG_PREFER_SYSTEM_LIBS
+        # VCPKG_APPLOCAL_DEPS # This should be off within try_compile!
         VCPKG_CHAINLOAD_TOOLCHAIN_FILE
         Z_VCPKG_ROOT_DIR
     )
+else()
+    set(VCPKG_APPLOCAL_DEPS OFF)
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)

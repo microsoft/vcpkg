@@ -1,21 +1,18 @@
 string(REPLACE "." "_" curl_version "curl-${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 c8550fef49e2f1571f7392a351e10bbdb23821069db1e988094fe27fe0a881a265ba69a2cd34462e630563d153462a975ef70472ba39adaad1c5e5ab45cf7f4f
+    SHA512 e66cbf9bd3ae7b9b031475210b80b883b6a133042fbbc7cf2413f399d1b38aa54ab7322626abd3c6f1af56e0d540221f618aa903bd6b463ac8324f2c4e92dfa8
     HEAD_REF master
     PATCHES
-        0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
-        0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0022-deduplicate-libs.patch
-        mbedtls-ws2_32.patch
         export-components.patch
         dependencies.patch
-        cmake-config.patch # https://github.com/curl/curl/pull/11913
-        cmake-config-ios.patch
+        cmake-config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -34,19 +31,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
+        psl         CURL_USE_LIBPSL
+        gssapi      CURL_USE_GSSAPI
     INVERTED_FEATURES
+        ldap        CURL_DISABLE_LDAP
+        ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
-        winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
 set(OPTIONS "")
-if("idn2" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
-endif()
 
 if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
@@ -65,16 +60,18 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DENABLE_UNICODE=ON)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
-        -DENABLE_MANUAL=OFF
+        -DENABLE_CURL_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_LIBPSL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
@@ -100,14 +97,14 @@ endif()
 
 #Fix install path
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix=\${prefix}" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix=\${prefix}" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=] IGNORE_UNCHANGED)
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/curl-config")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix=\${prefix}/debug" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix=\${prefix}/debug" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=] IGNORE_UNCHANGED)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-l${namespec}-d")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "curl." "curl-d.")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")

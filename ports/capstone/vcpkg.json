@@ -1,6 +1,7 @@
 {
   "name": "capstone",
   "version": "5.0.1",
+  "port-version": 1,
   "description": "Multi-architecture disassembly framework",
   "homepage": "https://github.com/capstone-engine/capstone",
   "dependencies": [
@@ -20,6 +21,9 @@
     "arm64": {
       "description": "Capstone disassembly support for ARM64"
     },
+    "bpf": {
+      "description": "Capstone disassembly support for BPF"
+    },
     "diet": {
       "description": "Build Capstone in diet mode (reduced features for smaller size)"
     },
@@ -35,8 +39,14 @@
     "mips": {
       "description": "Capstone disassembly support for MIPS"
     },
+    "mos65xx": {
+      "description": "Capstone disassembly support for MOS65XX"
+    },
     "ppc": {
       "description": "Capstone disassembly support for PowerPC"
+    },
+    "riscv": {
+      "description": "Capstone disassembly support for RISC-V"
     },
     "sparc": {
       "description": "Capstone disassembly support for SPARC"
@@ -46,6 +56,12 @@
     },
     "tms320c64x": {
       "description": "Capstone disassembly support for TMS320C64X"
+    },
+    "tricore": {
+      "description": "Capstone disassembly support for TriCore"
+    },
+    "wasm": {
+      "description": "Capstone disassembly support for WebAssembly"
     },
     "x86": {
       "description": "Capstone disassembly support for x86"

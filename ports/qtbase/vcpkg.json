@@ -1,8 +1,8 @@
 {
   "name": "qtbase",
-  "version": "6.6.1",
-  "port-version": 3,
-  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "version": "6.7.1",
+  "port-version": 1,
+  "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!uwp",
@@ -23,6 +23,14 @@
       "features": [
         "doubleconversion"
       ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "cups"
+      ],
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -53,7 +61,10 @@
   "default-features": [
     "brotli",
     "concurrent",
-    "dbus",
+    {
+      "name": "dbus",
+      "platform": "!(static & windows)"
+    },
     "default-features",
     "doubleconversion",
     "freetype",
@@ -62,10 +73,20 @@
     "icu",
     "jpeg",
     "network",
-    "opengl",
-    "openssl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
+    {
+      "name": "openssl",
+      "platform": "!ios"
+    },
     "pcre2",
     "png",
+    {
+      "name": "securetransport",
+      "platform": "ios"
+    },
     "sql",
     "sql-psql",
     "sql-sqlite",
@@ -103,9 +124,25 @@
         }
       ]
     },
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System.",
+      "supports": "linux | osx"
+    },
     "dbus": {
       "description": "Qt D-Bus",
       "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
+        },
         {
           "name": "qtbase",
           "default-features": false,
@@ -201,6 +238,19 @@
         }
       ]
     },
+    "gles3": {
+      "description": "OpenGL ES 3.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ]
+        }
+      ]
+    },
     "glib": {
       "description": "GLib",
       "dependencies": [
@@ -224,7 +274,10 @@
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
-        "opengl",
+        {
+          "name": "opengl",
+          "platform": "!ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,
@@ -329,6 +382,10 @@
           ]
         }
       ]
+    },
+    "securetransport": {
+      "description": "Enable Secure Transport",
+      "supports": "ios | osx"
     },
     "sql": {
       "description": "Qt Sql",

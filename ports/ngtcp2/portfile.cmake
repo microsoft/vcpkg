@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 6411bdbce6995df68987a011ca7d604d5f942e1b8f6bea4a86f1ad7d1695400ef75fd3132d33a9d43b668529b83e726cec24cb41633bb849ab917e408daf7b61
-    HEAD_REF master
+    SHA512 15f9fad2d7a9181dcd3aa5d1873c6b58dd997c6a2782e1d45cb4630e22fb0caa218018376dc2ca4103c72d6a5b932ad0a7cf399665818e6181b3980200c8841a
+    HEAD_REF main
     PATCHES
       export-unofficical-target.patch
 )
@@ -16,10 +16,10 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
+        -DBUILD_TESTING=OFF
         -DENABLE_OPENSSL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Libev=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libnghttp3=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_CUnit=ON
         -DCMAKE_INSTALL_DOCDIR=share/ngtcp2
 )
 vcpkg_cmake_install()

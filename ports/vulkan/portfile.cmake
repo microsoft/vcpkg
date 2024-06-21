@@ -1,31 +1,31 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-
 set(vulkan_result_file "${CURRENT_BUILDTREES_DIR}/vulkan-${TARGET_TRIPLET}.cmake.log")
 vcpkg_cmake_configure(
     SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}"
-    OPTIONS
-        "-DVCPKG_VULKAN_VERSION=${VERSION}"
     OPTIONS_RELEASE
         "-DOUTFILE=${vulkan_result_file}"
 )
 
 include("${vulkan_result_file}")
 if(DETECTED_Vulkan_FOUND)
-    message(STATUS "Found Vulkan SDK ${DETECTED_Vulkan_VERSION} (${DETECTED_Vulkan_LIBRARIES})")
+    message(STATUS "Found Vulkan ${DETECTED_Vulkan_VERSION} (${DETECTED_Vulkan_LIBRARIES})")
 else()
-    set(message "The Vulkan SDK wasn't found. ")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        string(APPEND message "Refer to Getting Started with the Windows Vulkan SDK: https://vulkan.lunarg.com/doc/sdk/latest/windows/getting_started.html")
-    elseif(VCPKG_TARGET_IS_OSX)
-        string(APPEND message "Refer to Getting Started with the MacOS Vulkan SDK: https://vulkan.lunarg.com/doc/sdk/latest/mac/getting_started.html")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        string(APPEND message "Refer to Getting Started with the Linux Vulkan SDK: https://vulkan.lunarg.com/doc/sdk/latest/linux/getting_started.html")
+    set(message "Vulkan wasn't found.")
+    if(VCPKG_TARGET_IS_ANDROID AND DETECTED_ANDROID_NATIVE_API_LEVEL AND DETECTED_ANDROID_NATIVE_API_LEVEL LESS "24")
+        string(APPEND message " Vulkan support from the Android NDK requires API level 24 (found: ${DETECTED_ANDROID_NATIVE_API_LEVEL})")
     endif()
     message(FATAL_ERROR "${message}")
 endif()
 
-find_file(vulkan_license NAMES LICENSE.txt PATHS ${DETECTED_Vulkan_INCLUDE_DIRS} "${CURRENT_PORT_DIR}" PATH_SUFFIXES "..")
-vcpkg_install_copyright(FILE_LIST "${vulkan_license}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+             "${CMAKE_CURRENT_LIST_DIR}/vulkan-result.cmake.in"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/detect-vulkan"
+)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" [[
+This is a stub package. Copyright and license information
+is provided with Vulkan headers and loader.
+For Android, the loader is provided by the NDK.
+]])
