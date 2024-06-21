@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 43bc4a2..6d335cf 100644
+index 43bc4a2..996fbad 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -408,7 +408,7 @@ IF (WITH_MSAN)
@@ -66,7 +66,7 @@ index 43bc4a2..6d335cf 100644
 +TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME}
 +  INTERFACE
 +    $<INSTALL_INTERFACE:include>/${LIBRARY_NAME})
-+    TARGET_INCLUDE_DIRECTORIES(${STATIC_LIBRARY_NAME}
++TARGET_INCLUDE_DIRECTORIES(${STATIC_LIBRARY_NAME}
 +  INTERFACE
 +    $<INSTALL_INTERFACE:include>/${LIBRARY_NAME})
  
@@ -96,11 +96,12 @@ index 43bc4a2..6d335cf 100644
 -  MESSAGE(STATUS "Documentation installed to ${INSTALL_DOCDIR}")
 -  MESSAGE(STATUS "License file installed to ${INSTALL_LICENSEDIR}")
 +  install(TARGETS ${LIBRARY_NAME} ${STATIC_LIBRARY_NAME}
-+          EXPORT ${LIBRARY_NAME}Targets 
++          EXPORT unofficial-${LIBRARY_NAME}Targets 
 +          LIBRARY DESTINATION lib
 +          ARCHIVE DESTINATION lib
 +          RUNTIME DESTINATION bin)
 +
++  SET(INSTALL_INCLUDEDIR include/mariadbcpp)
    MESSAGE(STATUS "Public API header files installed to ${INSTALL_INCLUDEDIR}")
 -  INSTALL(FILES
 -          ${CMAKE_SOURCE_DIR}/README
@@ -112,21 +113,20 @@ index 43bc4a2..6d335cf 100644
 -          DESTINATION
 -          "${INSTALL_LICENSEDIR}"
 -          COMPONENT Documentation)
-+  SET(INSTALL_INCLUDEDIR include/mariadbcpp)
    ADD_SUBDIRECTORY(include)
 +
 +  include(CMakePackageConfigHelpers)
 +  configure_package_config_file(
-+    "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}Config.cmake.in"
-+    "${CMAKE_CURRENT_BINARY_DIR}/${LIBRARY_NAME}Config.cmake"
-+    INSTALL_DESTINATION "share/${LIBRARY_NAME}")
-+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${LIBRARY_NAME}Config.cmake"
-+          DESTINATION share/${LIBRARY_NAME})
++    "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-mariadbcppConfig.cmake.in"
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mariadbcppConfig.cmake"
++    INSTALL_DESTINATION "share/unofficial-mariadbcpp")
++  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mariadbcppConfig.cmake"
++          DESTINATION share/unofficial-mariadbcpp)
 +
-+  install(EXPORT ${LIBRARY_NAME}Targets
-+          FILE ${LIBRARY_NAME}Targets.cmake
++  install(EXPORT unofficial-${LIBRARY_NAME}Targets
++          FILE unofficial-${LIBRARY_NAME}Targets.cmake
 +          NAMESPACE unofficial::
-+          DESTINATION share/${LIBRARY_NAME})
++          DESTINATION share/unofficial-mariadbcpp)
  ENDIF()
  # Tests. Checking if we have them. May be not the case if we are building from source package
 -IF(WITH_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")

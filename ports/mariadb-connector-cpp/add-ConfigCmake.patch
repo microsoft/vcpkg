@@ -1,13 +1,13 @@
-diff --git a/mariadbcppConfig.cmake.in b/mariadbcppConfig.cmake.in
+diff --git a/unofficial-mariadbcppConfig.cmake.in b/unofficial-mariadbcppConfig.cmake.in
 new file mode 100644
-index 0000000..12805f8
+index 0000000..3aa7c10
 --- /dev/null
-+++ b/mariadbcppConfig.cmake.in
++++ b/unofficial-mariadbcppConfig.cmake.in
 @@ -0,0 +1,6 @@
-+﻿include(CMakeFindDependencyMacro)
++include(CMakeFindDependencyMacro)
 +
 +find_dependency(unofficial-libmariadb CONFIG REQUIRED)
 +
 +# Add the targets file
-+include("${CMAKE_CURRENT_LIST_DIR}/mariadbcppTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mariadbcppTargets.cmake")
 \ No newline at end of file
