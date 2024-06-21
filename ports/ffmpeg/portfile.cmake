@@ -16,6 +16,7 @@ vcpkg_from_github(
         0020-fix-aarch64-libswscale.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0041-add-const-for-opengl-definition.patch
+        0042-fix-arm64-linux.patch #https://github.com/FFmpeg/FFmpeg/commit/fcfd17dbb4a6cf270cdd82e91c21a5efdc878d12
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -782,7 +783,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 OUTPUT_VARIABLE CYG_INSTALLED_DIR
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}lib/pkgconfig/../../lib " "")
+            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}lib/pkgconfig/../../lib " "" IGNORE_UNCHANGED)
             # transform libdir, includedir, and prefix paths from cygwin style to windows style
             file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
             foreach(PATH_NAME prefix libdir includedir)
@@ -810,7 +811,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                     set(LIBS_VALUE_OLD "${LIBS_VALUE}")
                     string(REGEX REPLACE "([^ ]+)[.]lib" "-l\\1" LIBS_VALUE "${LIBS_VALUE}")
                     set(LIBS_VALUE_NEW "${LIBS_VALUE}")
-                    vcpkg_replace_string("${PKGCONFIG_FILE}" "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}")
+                    vcpkg_replace_string("${PKGCONFIG_FILE}" "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}" IGNORE_UNCHANGED)
                 endif()
             endforeach()
         endforeach()
