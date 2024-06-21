@@ -1,4 +1,0 @@
-fast-double provides CMake targets:
-
-    find_package(FastDouble CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE FastDouble::fast_double)
