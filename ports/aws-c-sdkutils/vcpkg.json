@@ -1,6 +1,6 @@
 {
   "name": "aws-c-sdkutils",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "C99 library implementing AWS SDK specific utilities. Includes utilities for ARN parsing, reading AWS profiles, etc...",
   "homepage": "https://github.com/awslabs/aws-c-sdkutils",
   "license": "Apache-2.0",
