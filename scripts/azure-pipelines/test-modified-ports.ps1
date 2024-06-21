@@ -162,11 +162,13 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     & git reset --hard HEAD
 }
 
+$dependents = @('caffe2', 'saucer', 'qt', 'rtabmap', 'pcl', 'vtk-dicom', 'opencascade', 'netgen', 'itk', 'dv-processing', 'libcaer', 'opencv', 'darknet', 'dbow3','openimageio', 'theia', 'osg', 'osgearth', 'openmvs', 'openmvg', 'selene')
+$libraries = @('tensorflow','tensorflow-cc','libtorch', 'qtwebengine', 'vtk', 'paraview', 'opencv4') + $dependents
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" install $libraries "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
