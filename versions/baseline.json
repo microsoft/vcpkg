@@ -6704,6 +6704,10 @@
       "baseline": "0",
       "port-version": 2
     },
+    "parsi": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "parson": {
       "baseline": "2022-11-13",
       "port-version": 0
