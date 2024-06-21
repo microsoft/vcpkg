@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3492289b..00fe28c0 100644
+index 3492289b..ed4c3b05 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -115,8 +115,7 @@ if(USE_SWIG)
@@ -62,20 +62,3 @@ index 3492289b..00fe28c0 100644
  
  if(BUILD_STATIC_LIB)
    add_library(_lightgbm STATIC)
-@@ -490,7 +491,7 @@ endif()
- 
- # LightGBM headers include openmp, cuda, R etc. headers,
- # thus PUBLIC is required for building _lightgbm_swig target.
--target_link_libraries(_lightgbm PUBLIC lightgbm_capi_objs lightgbm_objs)
-+target_link_libraries(_lightgbm PUBLIC lightgbm_capi_objs lightgbm_objs)# Eigen3::Eigen fmt::fmt)
- 
- if(MSVC AND NOT __BUILD_FOR_R)
-   set_target_properties(_lightgbm PROPERTIES OUTPUT_NAME "lib_lightgbm")
-@@ -803,6 +804,6 @@ if(INSTALL_HEADERS)
-     install(
-       DIRECTORY ${FMT_INCLUDE_DIR}/
-       DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
--      FILES_MATCHING PATTERN "*.h"
-+      FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-     )
- endif()
