@@ -3,25 +3,31 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
-    REF v1.2.0
-    SHA512 6f63d42d950cbba88764332b31818a8627e7d3ecf7393cdef77daedd35a7bb04ac39c642991afb7cca502a346999233023e3b36011916c67e348179838aa7042
+    REF "v${VERSION}"
+    SHA512 5937fbc2f287567d590fc0afc947459359e5413fa25f2f193434ad6d7016f7cb0dede4e2ef5e1e4e8b21b556c5ad8ce4cb612514403bb593a49af0fb42d1cb15
     HEAD_REF master
     PATCHES
-        fix-warnings.patch  # Remove /WX, -Werror
-        fix-platform.patch  # Make OpenSSL build use VCPKG_TARGET_ARCHITECTURE
         fix-install.patch   # Adjust install path of build outputs
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
     REPO quictls/openssl
-    REF a6e9d76db343605dae9b59d71d2811b195ae7434
-    SHA512 23510a11203b96476c194a1987c7d4e758375adef0f6dfe319cd8ec4b8dd9b12ea64c4099cf3ba35722b992dad75afb1cfc5126489a5fa59f5ee4d46bdfbeaf6
-    HEAD_REF OpenSSL_1_1_1k+quic
+    REF 612d8e44d687e4b71c4724319d7aa27a733bcbca
+    SHA512 ff487d882c2b70ed8915a88ecf0a64724435a96187a7bb3bf401f4a2c4dc572a93f7e788040ccbd29da8bc6ac49ee11550c9d56153262c05fae173ac1d242baa
+    HEAD_REF openssl-3.1.5+quic
 )
-file(REMOVE_RECURSE ${QUIC_SOURCE_PATH}/submodules)
-file(MAKE_DIRECTORY ${QUIC_SOURCE_PATH}/submodules)
+file(REMOVE_RECURSE ${QUIC_SOURCE_PATH}/submodules/openssl)
 file(RENAME ${OPENSSL_SOURCE_PATH} ${QUIC_SOURCE_PATH}/submodules/openssl)
+vcpkg_from_github(
+    OUT_SOURCE_PATH XDP_WINDOWS
+    REPO microsoft/xdp-for-windows
+    REF ce228a986fd30049ed58f569d2bf20efffc250f3
+    SHA512 4a26c5defe422ef42308d72cf8d1cab1c172ce5a10d8d830c446cb7dd93f0c41f35f3cbbfeceb687d5135272006dd1b1bc4c2089ace4866cede81d5c76206af7
+    HEAD_REF mian
+)
+file(REMOVE_RECURSE ${QUIC_SOURCE_PATH}/submodules/xdp-for-windows)
+file(RENAME ${XDP_WINDOWS} ${QUIC_SOURCE_PATH}/submodules/xdp-for-windows)
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
@@ -60,21 +66,17 @@ vcpkg_cmake_configure(
         -DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}
 )
 
-vcpkg_cmake_build(TARGET OpenSSL_Build) # separate build log for quictls/openssl
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME msquic CONFIG_PATH lib/cmake/msquic)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES quicattack quicinterop quicinteropserver quicipclient quicipserver
-                                quicpcp quicping quicpost quicreach quicsample spinquic
+                                quicpcp quicpost quicsample spinquic
         AUTO_CLEAN
     )
 endif()
 
-file(INSTALL ${QUIC_SOURCE_PATH}/LICENSE
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
-) 
+vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/include
 )
