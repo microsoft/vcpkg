@@ -1,11 +1,25 @@
 {
   "name": "vcpkg-python-scripts",
-  "version-date": "2023-06-28",
-  "port-version": 2,
+  "version-date": "2024-05-16",
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT",
-  "supports": "native",
   "dependencies": [
-    "python3"
+    {
+      "name": "py-crossenv",
+      "host": true,
+      "platform": "!native"
+    },
+    "py-gpep517",
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
+      "name": "python3"
+    },
+    {
+      "name": "vcpkg-python-scripts",
+      "host": true
+    }
   ]
 }

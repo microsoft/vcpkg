@@ -4,18 +4,23 @@ set(VCPKG_BUILD_TYPE release) # No debug builds required for pure python modules
 
 #TODO: Fix E:\vcpkg_folders\numpy\installed\x64-windows-release\tools\python3\Lib\site-packages\numpy\testing\_private\extbuild.py
 
-find_program(VCPKG_PYTHON3 NAMES python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR} python${PYTHON3_VERSION_MAJOR} python PATHS "${VCPKG_PYTHON3_BASEDIR}" NO_DEFAULT_PATH)
-find_program(VCPKG_CYTHON NAMES cython PATHS "${VCPKG_PYTHON3_BASEDIR}" "${VCPKG_PYTHON3_BASEDIR}/Scripts" NO_DEFAULT_PATH)
-message(STATUS "PYTHON3:${VCPKG_PYTHON3}")
+vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
+cmake_path(GET VCPKG_PYTHON3 PARENT_PATH VCPKG_PYTHON3_BASEDIR)
+
+find_program(VCPKG_CYTHON NAMES cython PATHS "${VCPKG_PYTHON3_BASEDIR}" "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/Scripts" NO_DEFAULT_PATH)
+
 set(ENV{PYTHON3} "${VCPKG_PYTHON3}")
 set(PYTHON3 "${VCPKG_PYTHON3}")
 
+cmake_path(GET SCRIPT_MESON PARENT_PATH MESON_DIR)
 vcpkg_add_to_path(PREPEND "${VCPKG_PYTHON3_BASEDIR}")
 if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_add_to_path(PREPEND "${VCPKG_PYTHON3_BASEDIR}/Scripts")
+  cmake_path(GET VCPKG_CYTHON PARENT_PATH CYTHON_DIR)
+  vcpkg_add_to_path(PREPEND "${CYTHON_DIR}")
 endif()
 
 cmake_path(GET SCRIPT_MESON PARENT_PATH MESON_DIR)
+set(ENV{MESON} "${SCRIPT_MESON}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,6 +28,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 01b6a124c72d082f1dafdd98cdaaa84ab57f2bf0112d89d9355fa458a04deb8309c7e78449767429049971793c040e51412060681218a51c671ac6086dba2fa4
     HEAD_REF main
+    PATCHES
+      fix-tests.patch
 )
 
 vcpkg_from_github(
@@ -68,57 +75,63 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTUR
   )
 endif()
 
-message(STATUS "PATH is: '$ENV{PATH}'")
-vcpkg_configure_meson(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
-        -Dblas=blas
-        -Dlapack=lapack
-        #-Duse-ilp64=true
-    ADDITIONAL_BINARIES
-      cython=['${VCPKG_CYTHON}']
-      python3=['${VCPKG_PYTHON3}']
-      python=['${VCPKG_PYTHON3}']
+vcpkg_generate_meson_cmd_args(
+    OUTPUT meson_opts
+    CONFIG RELEASE
+    LANGUAGES C;CXX
     ${opts}
-    )
-message(STATUS "PATH is: '$ENV{PATH}'")
-vcpkg_install_meson()
-message(STATUS "PATH is: '$ENV{PATH}'")
-vcpkg_fixup_pkgconfig()
+)
 
-#E:\vcpkg_folders\numpy\packages\numpy_arm64-windows-release\tools\python3\Lib\site-packages\numpy\__config__.py
-# "path": r"E:/vcpkg_folders/numpy/installed/x64-windows-release/tools/python3/python.exe", and full paths to compilers
-#"commands": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.39.33519/bin/Hostx64/arm64/cl.exe, -DWIN32, -D_WINDOWS, -W3, -utf-8, -MP, -MD, -O2, -Oi, -Gy, -DNDEBUG, -Z7",
+z_vcpkg_setup_pkgconfig_path(CONFIG "RELEASE")
+
+list(APPEND meson_opts  "--python.platlibdir" "${CURRENT_INSTALLED_DIR}/lib")
+list(JOIN meson_opts "\",\""  meson_opts)
+
+set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+file(REMOVE_RECURSE "${build_dir}")
+file(MAKE_DIRECTORY "${build_dir}")
+
+vcpkg_python_build_and_install_wheel(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS 
+    --config-json "{\"setup-args\" : [\"-Dblas=blas\", \"-Dlapack=lapack\", \"-Duse-ilp64=false\", \"-Dallow-noblas=true\", \"${meson_opts}\" ], \"build-dir\" : \"${build_dir}\" }"
+)
+
+
+# message(STATUS "PATH is: '$ENV{PATH}'")
+# vcpkg_configure_meson(
+    # SOURCE_PATH "${SOURCE_PATH}"
+    # OPTIONS 
+        # -Dblas=blas
+        # -Dlapack=lapack
+        # #-Duse-ilp64=true
+    # ADDITIONAL_BINARIES
+      # cython=['${VCPKG_CYTHON}']
+      # python3=['${VCPKG_PYTHON3}']
+      # python=['${VCPKG_PYTHON3}']
+    # ${opts}
+    # )
+# message(STATUS "PATH is: '$ENV{PATH}'")
+# vcpkg_install_meson()
+# message(STATUS "PATH is: '$ENV{PATH}'")
+# vcpkg_fixup_pkgconfig()
+
+# #E:\vcpkg_folders\numpy\packages\numpy_arm64-windows-release\tools\python3\Lib\site-packages\numpy\__config__.py
+# # "path": r"E:/vcpkg_folders/numpy/installed/x64-windows-release/tools/python3/python.exe", and full paths to compilers
+# #"commands": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.39.33519/bin/Hostx64/arm64/cl.exe, -DWIN32, -D_WINDOWS, -W3, -utf-8, -MP, -MD, -O2, -Oi, -Gy, -DNDEBUG, -Z7",
+
+find_program(REAL_PYTHON3_LOCATION NAMES python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR} python${PYTHON3_VERSION_MAJOR} python PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/python3" PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
+file(TO_NATIVE_PATH "${REAL_PYTHON3_LOCATION}" REAL_PYTHON3_LOCATION)
+
 
 set(subdir "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/")
-if(VCPKG_TARGET_IS_WINDOWS)
-  set(subdir "${CURRENT_PACKAGES_DIR}/lib/site-packages/")
-endif()
 set(pyfile "${subdir}/numpy/__config__.py")
 file(READ "${pyfile}" contents)
 string(REPLACE "${CURRENT_INSTALLED_DIR}" "$(prefix)" contents "${contents}")
-string(REPLACE "r\"${VCPKG_PYTHON3}\"" "sys.executable" contents "${contents}")
-file(WRITE "${pyfile}" "${contents}")
+string(REPLACE "r\"${REAL_PYTHON3_LOCATION}\"" "sys.executable" contents "${contents}")
+file(WRITE "${pyfile}" "import sys\n${contents}")
 
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/site-packages/numpy" "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/numpy")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-endif()
-
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-
-# Add required Metadata for some python build plugins
-file(WRITE "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/numpy-${VERSION}.dist-info/METADATA"
-"Metadata-Version: 2.1\n\
-Name: numpy\n\
-Version: ${VERSION}"
-)
 
 vcpkg_python_test_import(MODULE "numpy")

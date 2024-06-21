@@ -1,0 +1,10 @@
+{
+  "name": "vcpkg-python-test-import",
+  "version-date": "2024-05-17",
+  "description": "Helper script to test if python imports work as expected",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies" : [
+    "vcpkg-get-python"
+  ]
+}

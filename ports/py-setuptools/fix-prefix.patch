@@ -6,7 +6,7 @@ index fbeec342c0..ff28ab2df4 100644
          elif isinstance(self.rpath, str):
              self.rpath = self.rpath.split(os.pathsep)
  
-+        prefix = os.path.normpath(sys.prefix)
++        prefix = os.path.normpath(sys.base_prefix)
 +        vcpkg_prefix = os.path.dirname(os.path.dirname(prefix)) # Add debug compile?
 +
 +        if self.debug:
@@ -30,11 +30,25 @@ index fbeec342c0..ff28ab2df4 100644
              if self.debug:
                  self.build_temp = os.path.join(self.build_temp, "Debug")
              else:
+@@ -243,9 +243,10 @@ class build_ext(Command):
+             else:
+                 # win-amd64
+                 suffix = self.plat_name[4:]
+-            new_lib = os.path.join(sys.exec_prefix, 'PCbuild')
+-            if suffix:
+-                new_lib = os.path.join(new_lib, suffix)
++            if self.debug:
++                new_lib = os.path.join(sys.base_prefix, '../../debug/lib')
++            else:
++                new_lib = os.path.join(sys.base_prefix, '../../lib')
+             self.library_dirs.append(new_lib)
+ 
+         # For extensions under Cygwin, Python's library directory must be
 diff --git a/setuptools/_distutils/sysconfig.py b/setuptools/_distutils/sysconfig.py
 index a40a7231b3..7194f440b4 100644
 --- a/setuptools/_distutils/sysconfig.py	
 +++ b/setuptools/_distutils/sysconfig.py
-@@ -190,19 +190,22 @@ def _get_python_inc_from_config(plat_specific, spec_prefix):
+@@ -190,18 +190,21 @@ def _get_python_inc_from_config(plat_specific, spec_prefix):
  def _get_python_inc_posix_prefix(prefix):
      implementation = 'pypy' if IS_PYPY else 'python'
      python_dir = implementation + get_python_version() + build_flags
@@ -47,14 +61,13 @@ index a40a7231b3..7194f440b4 100644
 +    vcpkg_prefix = os.path.dirname(os.path.dirname(prefix))
 +    python_dir = 'python' + get_python_version()
      if python_build:
-         # Include both the include and PC dir to ensure we can find
-         # pyconfig.h
+         # Include both include dirs to ensure we can find pyconfig.h
          return (
 -            os.path.join(prefix, "include")
 +            os.path.join(vcpkg_prefix, "include", python_dir)
              + os.path.pathsep
--            + os.path.join(prefix, "PC")
-+            + os.path.join(vcpkg_prefix, "PC")
+-            + os.path.dirname(sysconfig.get_config_h_filename())
++            + os.path.join(vcpkg_prefix,os.path.dirname(sysconfig.get_config_h_filename()))
          )
 -    return os.path.join(prefix, "include")
 +    return os.path.join(vcpkg_prefix, "include", python_dir)

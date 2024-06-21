@@ -1,17 +1,22 @@
 {
   "name": "py-gpep517",
-  "version": "15",
-  "port-version": 1,
+  "version": "16",
   "description": "Python package builder and installer for non-pip-centric world",
   "homepage": "https://github.com/projg2/gpep517",
   "license": "MIT",
   "dependencies": [
-    "py-flit-core",
-    "py-installer",
-    "python3",
     {
-      "name": "vcpkg-python-scripts",
+      "name": "py-flit-core",
       "host": true
+    },
+    {
+      "name": "py-installer",
+      "host": true
+    },
+    {
+      "name": "python3",
+      "host": true,
+      "default-features": false
     }
   ]
 }

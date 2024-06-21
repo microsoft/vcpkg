@@ -6,6 +6,14 @@
   "homepage": "https://flit.pypa.io",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "python3"
+    {
+      "name": "python3",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "python3",
+      "default-features": false
+    }
   ]
 }

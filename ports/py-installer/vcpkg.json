@@ -6,6 +6,9 @@
   "homepage": "https://installer.pypa.io",
   "license": "MIT",
   "dependencies": [
-    "python3"
+    {
+      "name": "python3",
+      "default-features": false
+    }
   ]
 }

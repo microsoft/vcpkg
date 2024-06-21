@@ -3,6 +3,15 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+if("extensions" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+  endif()
+  set(PYTHON_ALLOW_EXTENSIONS ON)
+else()
+  set(PYTHON_ALLOW_EXTENSIONS OFF)
+endif()
+
 if(NOT VCPKG_HOST_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following programs from the system package manager:
     autoconf automake autoconf-archive
@@ -257,11 +266,16 @@ else()
         "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
-        "--without-readline"
         "--disable-test-modules"
     )
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
+    endif()
+
+    if("readline" IN_LIST FEATURES)
+      list(APPEND OPTIONS "--with-readline")
+    else()
+      list(APPEND OPTIONS "--without-readline")
     endif()
 
     # The version of the build Python must match the version of the cross compiled host Python.
@@ -395,10 +409,13 @@ else()
   file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/python3/vcpkg-port-config.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+
 
 # For testing
 block()
   set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
   vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
-endblocK()
+  message(STATUS "VCPKG_PYTHON3:${VCPKG_PYTHON3}")
+  vcpkg_python_test_import(PYTHON_EXECUTABLE "${VCPKG_PYTHON3}" MODULES "sys" "ctypes" "ssl")
+endblock()

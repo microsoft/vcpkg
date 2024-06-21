@@ -11,6 +11,14 @@
       "name": "py-cython",
       "host": true
     },
+    {
+      "name": "py-setuptools",
+      "host": true
+    },
+    {
+      "name": "py-meson",
+      "host": true
+    },
     "python3",
     {
       "name": "python3",

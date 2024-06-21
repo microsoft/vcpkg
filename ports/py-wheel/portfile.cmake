@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pypa/wheel
-    REF 0.41.3
-    SHA512 8bb1af302d3a80b4497a9f9399bfedfc5b72c405fb4512dc8ceba81233dc9e9ed7e38c09c1135e1522a0618c41562221ba2d12d9de341d5a5d7174b1b82a7325
+    REF ${VERSION}
+    SHA512 16e556272f6d47d33f2be39efc3c0882c8da90aa2945ec3574105df21ed2cb090390f7736d05a319a008f4842b3f109abea5e7607064ee80e663d499c2e67308
     HEAD_REF main
 )
 
-vcpkg_python_build_and_install_wheel(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -x)
+vcpkg_python_build_and_install_wheel(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
@@ -15,3 +15,5 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_python_test_import(MODULE "wheel")
