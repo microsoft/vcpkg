@@ -7597,7 +7597,7 @@
       "port-version": 0
     },
     "rapidfuzz": {
-      "baseline": "3.0.2",
+      "baseline": "3.0.4",
       "port-version": 0
     },
     "rapidhash": {
