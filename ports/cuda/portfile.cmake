@@ -206,8 +206,7 @@ endif()
 file(COPY "${CURRENT_PACKAGES_DIR}/tools/cuda/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/"
     PATTERN "/share/cub/" EXCLUDE
 )
-#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cub/cub-header-search.cmake" "lib/cmake/cub" "share/cub")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/thrust/thrust-header-search.cmake" "lib/cmake/thrust" "share/thrust")
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/thrust/thrust-header-search.cmake" "from_install_prefix}" "from_install_prefix}/tools/cuda/")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libcudacxx/libcudacxx-header-search.cmake" "../../../" "../../tools/cuda")
