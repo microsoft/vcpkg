@@ -7773,7 +7773,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "3.0.1",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "robin-hood-hashing": {
