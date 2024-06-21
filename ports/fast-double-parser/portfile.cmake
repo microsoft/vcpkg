@@ -10,8 +10,4 @@ set(VCPKG_BUILD_TYPE release) # header-only port
 
 file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME FastDoubleParser CONFIG_PATH share/cmake/FastDoubleParser)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
