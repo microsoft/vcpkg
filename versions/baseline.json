@@ -9709,7 +9709,7 @@
       "port-version": 1
     },
     "zoe": {
-      "baseline": "3.0",
+      "baseline": "3.1",
       "port-version": 0
     },
     "zookeeper": {
