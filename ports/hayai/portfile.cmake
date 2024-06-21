@@ -43,6 +43,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/hayai_main.lib")
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/hayai-targets-debug.cmake"
         "\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/hayai_main.lib"
         "\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/manual-link/hayai_main.lib"
+        IGNORE_UNCHANGED
     )
 endif()
 
@@ -57,6 +58,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/hayai_main.lib")
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/hayai-targets-release.cmake"
         "\${CMAKE_CURRENT_LIST_DIR}/../../lib/hayai_main.lib"
         "\${CMAKE_CURRENT_LIST_DIR}/../../lib/manual-link/hayai_main.lib"
+        IGNORE_UNCHANGED
     )
 endif()
 
