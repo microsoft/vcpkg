@@ -9221,7 +9221,7 @@
       "port-version": 4
     },
     "vlpp": {
-      "baseline": "1.2.7.0",
+      "baseline": "1.2.9.0",
       "port-version": 0
     },
     "volk": {
