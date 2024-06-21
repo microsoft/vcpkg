@@ -628,7 +628,7 @@ if (VCPKG_TARGET_IS_IOS)
     set(vcpkg_osx_sysroot "${VCPKG_OSX_SYSROOT}")
     # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
     # (on apple silicon it's not required but shouldn't cause any problems)
-    if ((VCPKG_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$") OR (NOT VCPKG_OSX_SYSROOT)) # if it's not a path
+    if ((VCPKG_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$") OR (NOT VCPKG_OSX_SYSROOT) OR (VCPKG_OSX_SYSROOT STREQUAL "")) # if it's not a path
         if (VCPKG_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$")
             set(requested_sysroot "${VCPKG_OSX_SYSROOT}")
         elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") # if the sysroot is not specified we have to guess
