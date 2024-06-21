@@ -8509,7 +8509,7 @@
       "port-version": 0
     },
     "string-view-lite": {
-      "baseline": "1.7.0",
+      "baseline": "1.8.0",
       "port-version": 1
     },
     "stringzilla": {
