@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3492289b..49b69b9e 100644
+index 3492289b..6284b6e0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -115,18 +115,18 @@ if(USE_SWIG)
+@@ -115,18 +115,17 @@ if(USE_SWIG)
    endif()
  endif()
  
@@ -23,11 +23,10 @@ index 3492289b..49b69b9e 100644
 -set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
 -include_directories(${FMT_INCLUDE_DIR})
 +find_path(FAST_DOUBLE_PARSER_INCLUDE_DIR fast_double_parser.h)
-+set(FAST_DOUBLE_PARSER_INCLUDE_DIR ${VCPKG_INCLUDE_DIR})
  
  if(__BUILD_FOR_R)
      find_package(LibR REQUIRED)
-@@ -181,15 +181,13 @@ if(USE_OPENMP)
+@@ -181,15 +180,13 @@ if(USE_OPENMP)
  endif()
  
  if(USE_GPU)
@@ -44,7 +43,7 @@ index 3492289b..49b69b9e 100644
      if(WIN32)
          # disable autolinking in boost
          add_definitions(-DBOOST_ALL_NO_LIB)
-@@ -458,9 +456,11 @@ endif()
+@@ -458,9 +455,11 @@ endif()
  
  add_library(lightgbm_objs OBJECT ${SOURCES})
  
@@ -57,7 +56,7 @@ index 3492289b..49b69b9e 100644
  endif()
  
  set(API_SOURCES "src/c_api.cpp")
-@@ -471,6 +471,7 @@ if(__BUILD_FOR_R)
+@@ -471,6 +470,7 @@ if(__BUILD_FOR_R)
  endif()
  
  add_library(lightgbm_capi_objs OBJECT ${API_SOURCES})
