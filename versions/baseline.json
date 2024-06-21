@@ -7781,7 +7781,7 @@
       "port-version": 0
     },
     "robin-map": {
-      "baseline": "1.2.2",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "robotraconteur": {
