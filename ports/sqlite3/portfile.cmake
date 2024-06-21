@@ -41,6 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
         memsys3             SQLITE_ENABLE_MEMSYS3
         memsys5             SQLITE_ENABLE_MEMSYS5
         limit               SQLITE_ENABLE_UPDATE_DELETE_LIMIT
+        recovery            SQLITE_ENABLE_DBPAGE_VTAB
         rtree               SQLITE_ENABLE_RTREE
         session             SQLITE_ENABLE_SESSION
         session             SQLITE_ENABLE_PREUPDATE_HOOK
