@@ -60,7 +60,7 @@ endif()
 if ("bzip2" IN_LIST FEATURES)
     file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/minizip/*.h")
     foreach(HEADER ${HEADERS})
-        vcpkg_replace_string("${HEADER}" "#ifdef HAVE_BZIP2" "#if 1")
+        vcpkg_replace_string("${HEADER}" "#ifdef HAVE_BZIP2" "#if 1" IGNORE_UNCHANGED)
     endforeach()
 endif()
 
