@@ -151,16 +151,3 @@ index 43bc4a2..6d335cf 100644
  
  # install_test/CMakeLists.txt configuration should go after packaging.cmake but before include(CPack). Since CPack included in packaging cmake,
  # that configuration has been moved there. For the same reason there also moved the message with package name
-diff --git a/mariadbcppConfig.cmake.in b/mariadbcppConfig.cmake.in
-new file mode 100644
-index 0000000..12805f8
---- /dev/null
-+++ b/mariadbcppConfig.cmake.in
-@@ -0,0 +1,6 @@
-+﻿include(CMakeFindDependencyMacro)
-+
-+find_dependency(unofficial-libmariadb CONFIG REQUIRED)
-+
-+# Add the targets file
-+include("${CMAKE_CURRENT_LIST_DIR}/mariadbcppTargets.cmake")
-\ No newline at end of file
