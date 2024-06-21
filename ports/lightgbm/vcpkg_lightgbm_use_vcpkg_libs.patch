@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3492289b..ed4c3b05 100644
+index 3492289b..49b69b9e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -115,8 +115,7 @@ if(USE_SWIG)
+@@ -115,18 +115,18 @@ if(USE_SWIG)
    endif()
  endif()
  
@@ -12,15 +12,18 @@ index 3492289b..ed4c3b05 100644
  
  # See https://gitlab.com/libeigen/eigen/-/blob/master/COPYING.README
  add_definitions(-DEIGEN_MPL2_ONLY)
-@@ -125,8 +124,9 @@ add_definitions(-DEIGEN_DONT_PARALLELIZE)
- set(FAST_DOUBLE_PARSER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fast_double_parser/include")
- include_directories(${FAST_DOUBLE_PARSER_INCLUDE_DIR})
+ add_definitions(-DEIGEN_DONT_PARALLELIZE)
  
--set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
--include_directories(${FMT_INCLUDE_DIR})
+-set(FAST_DOUBLE_PARSER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fast_double_parser/include")
+-include_directories(${FAST_DOUBLE_PARSER_INCLUDE_DIR})
 +find_package(fmt CONFIG REQUIRED)
 +get_target_property(VCPKG_INCLUDE_DIR fmt::fmt INTERFACE_INCLUDE_DIRECTORIES)
 +set(FMT_INCLUDE_DIR ${VCPKG_INCLUDE_DIR}/fmt)
+ 
+-set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
+-include_directories(${FMT_INCLUDE_DIR})
++find_path(FAST_DOUBLE_PARSER_INCLUDE_DIR fast_double_parser.h)
++set(FAST_DOUBLE_PARSER_INCLUDE_DIR ${VCPKG_INCLUDE_DIR})
  
  if(__BUILD_FOR_R)
      find_package(LibR REQUIRED)

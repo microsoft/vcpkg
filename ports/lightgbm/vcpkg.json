@@ -10,6 +10,7 @@
   "supports": "!android & !osx & !uwp",
   "dependencies": [
     "eigen3",
+    "fast-double-parser",
     "fmt",
     {
       "name": "vcpkg-cmake",
