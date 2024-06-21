@@ -2616,6 +2616,10 @@
       "baseline": "2021-01-03",
       "port-version": 2
     },
+    "fast-double-parser": {
+      "baseline": "0.7.0",
+      "port-version": 0
+    },
     "fast-float": {
       "baseline": "6.1.1",
       "port-version": 0
