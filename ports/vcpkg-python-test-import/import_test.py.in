@@ -1,0 +1,6 @@
+import os
+
+if os.name == 'nt':
+@PYTHON_DLL_SEARCH_DIRS@
+
+@PYTHON_IMPORTS@
