@@ -10,6 +10,8 @@ vcpkg_from_bitbucket(
         linkage.diff
         pkgconfig.diff
         pthread.diff
+        compiler-target.diff
+        neon.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -17,7 +19,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         tool   ENABLE_CLI
 )
 
-vcpkg_find_acquire_program(NASM)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    vcpkg_find_acquire_program(NASM)
+    list(APPEND OPTIONS "-DNASM_EXECUTABLE=${NASM}")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS "-DENABLE_ASSEMBLY=OFF")
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
@@ -26,8 +33,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
+        -DENABLE_PIC=ON
         -DENABLE_LIBNUMA=OFF
-        "-DNASM_EXECUTABLE=${NASM}"
         "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
