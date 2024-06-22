@@ -9481,8 +9481,8 @@
       "port-version": 1
     },
     "x265": {
-      "baseline": "3.5",
-      "port-version": 1
+      "baseline": "3.6",
+      "port-version": 0
     },
     "x86-simd-sort": {
       "baseline": "4.0",
