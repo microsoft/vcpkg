@@ -44,6 +44,7 @@ set(PATCHES
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
+    0019-fix-ssl-linkage.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
