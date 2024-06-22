@@ -10,5 +10,10 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build command line tool"
+    }
+  }
 }

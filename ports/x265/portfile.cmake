@@ -12,6 +12,11 @@ vcpkg_from_bitbucket(
         pthread.diff
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
+    FEATURES
+        tools   ENABLE_CLI
+)
+
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(NASM)
@@ -23,6 +28,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
     OPTIONS
+        ${OPTIONS}
         ${ASSEMBLY_OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_LIBNUMA=OFF
@@ -37,7 +43,9 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x265.h" "#ifdef X265_API_IMPORTS" "#if 1")
