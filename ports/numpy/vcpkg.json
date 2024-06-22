@@ -12,11 +12,11 @@
       "host": true
     },
     {
-      "name": "py-setuptools",
+      "name": "py-meson",
       "host": true
     },
     {
-      "name": "py-meson",
+      "name": "py-setuptools",
       "host": true
     },
     "python3",

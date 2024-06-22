@@ -1,8 +1,7 @@
-
-file(INSTALL 
+file(INSTALL
        "${CMAKE_CURRENT_LIST_DIR}/import_test.py.in"
        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
-     DESTINATION 
+     DESTINATION
        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 

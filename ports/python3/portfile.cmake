@@ -7,9 +7,9 @@ if("extensions" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
   endif()
-  set(PYTHON_ALLOW_EXTENSIONS ON)
+  set(PYTHON_HAS_EXTENSIONS ON)
 else()
-  set(PYTHON_ALLOW_EXTENSIONS OFF)
+  set(PYTHON_HAS_EXTENSIONS OFF)
 endif()
 
 if(NOT VCPKG_HOST_IS_WINDOWS)
@@ -44,6 +44,7 @@ set(PATCHES
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
+    0019-fix-ssl-linkage.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -393,17 +394,6 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/distutils/command/build_ext.py" "'libs'" "'../../lib'")
-  file(WRITE "${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/sitecustomize.py"
-[[
-import os
-import sys
-from pathlib import Path
-
-vcpkg_bin_path = Path(sys.prefix + '/../../bin')
-if vcpkg_bin_path.is_dir():
-  os.add_dll_directory(vcpkg_bin_path)
-]]
-)
 else()
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
   file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
@@ -411,11 +401,9 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 
-
 # For testing
 block()
   set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
   vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
-  message(STATUS "VCPKG_PYTHON3:${VCPKG_PYTHON3}")
   vcpkg_python_test_import(PYTHON_EXECUTABLE "${VCPKG_PYTHON3}" MODULES "sys" "ctypes" "ssl")
 endblock()

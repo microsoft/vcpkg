@@ -1,7 +1,7 @@
 {
   "name": "python3",
   "version": "3.11.8",
-  "port-version": 3,
+  "port-version": 5,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -25,10 +25,6 @@
       "default-features": false
     },
     {
-      "name": "vcpkg-get-python",
-      "host": true
-    },
-    {
       "name": "python3",
       "features": [
         "extensions"
@@ -36,13 +32,13 @@
       "platform": "!windows"
     },
     {
+      "name": "vcpkg-get-python",
+      "host": true
+    },
+    {
       "name": "vcpkg-msbuild",
       "host": true,
       "platform": "windows"
-    },
-    {
-      "name": "vcpkg-python-test-import",
-      "host": true
     },
     "zlib"
   ],
@@ -57,7 +53,7 @@
       "description": "Deprecated support for the Windows 7 platform -- may be removed at any time."
     },
     "extensions": {
-      "description": "Allow the build and usage of python extensions. On windows this requires python to by a dynamic library!",
+      "description": "Allow the build and usage of python extensions. On windows this requires python to be a dynamic library!",
       "supports": "!(staticcrt & windows)",
       "dependencies": [
         {
@@ -83,6 +79,10 @@
         {
           "name": "sqlite3",
           "default-features": false
+        },
+        {
+          "name": "vcpkg-python-test-import",
+          "host": true
         }
       ]
     },

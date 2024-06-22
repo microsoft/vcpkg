@@ -1,3 +1,6 @@
+include_guard(GLOBAL)
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python/vcpkg-port-config.cmake")
+
 function(vcpkg_python_test_import)
   cmake_parse_arguments(
     PARSE_ARGV 0
@@ -21,15 +24,16 @@ function(vcpkg_python_test_import)
     list(APPEND arg_MODULES "${arg_MODULE}")
   endif()
 
-  list(APPEND arg_DLL_SEARCH_PATHS "${CURRENT_INSTALLED_DIR}/bin")
-
   set(PYTHON_DLL_SEARCH_DIRS "")
-  foreach(dll_path IN LISTS arg_DLL_SEARCH_PATHS)
-    if(NOT EXISTS "${dll_path}")
-      message(FATAL_ERROR "Path '${dll_path}' in DLL_SEARCH_PATHS does not exist!")
-    endif()
-    string(APPEND PYTHON_DLL_SEARCH_DIRS "  os.add_dll_directory('${dll_path}')\n")
-  endforeach()
+  if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND arg_DLL_SEARCH_PATHS "${CURRENT_INSTALLED_DIR}/bin")
+    foreach(dll_path IN LISTS arg_DLL_SEARCH_PATHS)
+      if(NOT EXISTS "${dll_path}")
+        message(FATAL_ERROR "Path '${dll_path}' in DLL_SEARCH_PATHS does not exist!")
+      endif()
+      string(APPEND PYTHON_DLL_SEARCH_DIRS "os.add_dll_directory('${dll_path}')\n")
+    endforeach()
+  endif()
 
   set(PYTHON_IMPORTS "")
   foreach(module IN LISTS arg_MODULES)
