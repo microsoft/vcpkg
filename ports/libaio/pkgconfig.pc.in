@@ -1,6 +1,6 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-includedir=${prefix}/${CMAKE_INSTALL_INCLUDEDIR}
-libdir=${prefix}/${CMAKE_INSTALL_LIBDIR}
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
 
 Name: libaio
 Description: The Linux-native asynchronous I/O facility
