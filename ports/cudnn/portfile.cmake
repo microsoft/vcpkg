@@ -1,8 +1,6 @@
 set(base_url "https://developer.download.nvidia.com/compute/cuda/redist")
 
 
-set(VCPKG_TARGET_IS_LINUX ON)
-unset(VCPKG_TARGET_IS_WINDOWS)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(target x86_64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
