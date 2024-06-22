@@ -1,6 +1,6 @@
 # vcpkg_execute_required_process
 #[[
-        "ALLOW_IN_DOWNLOAD_MODE"
+        "ALLOW_IN_DOWNLOAD_MODE;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
         "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
         "COMMAND;SAVE_LOG_FILES"
 ]]
@@ -105,7 +105,7 @@ unit_test_check_variable_equal([[ count_log_files(count) ]] count 3)
 unit_test_check_variable_equal([[ file(STRINGS "${CURRENT_BUILDTREES_DIR}/${logname}-extra.log" extra) ]] extra "extra log")
 
 
-# OUTPUT_VARIABLE
+# OUTPUT_VARIABLE, OUTPUT_STRIP_TRAILING_WHITESPACE
 
 reset_log_files()
 unit_test_check_variable_equal([[count_log_files(count)]] count 0)
@@ -118,6 +118,16 @@ unit_test_check_variable_equal([[
         OUTPUT_VARIABLE outvar
     )]]
     outvar "Hello world\n"
+)
+unit_test_check_variable_equal([[
+    vcpkg_execute_required_process(
+        COMMAND "${CMAKE_COMMAND}" -E echo Hello world
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "${logname}"
+        OUTPUT_VARIABLE outvar
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )]]
+    outvar "Hello world"
 )
 unit_test_check_variable_equal([[ count_log_files(count) ]] count 2)
 

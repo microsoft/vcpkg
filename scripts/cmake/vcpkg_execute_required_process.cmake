@@ -1,6 +1,6 @@
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ALLOW_IN_DOWNLOAD_MODE"
+        "ALLOW_IN_DOWNLOAD_MODE;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
         "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
         "COMMAND;SAVE_LOG_FILES"
     )
@@ -48,6 +48,12 @@ Halting portfile execution.
         if(DEFINED arg_ERROR_VARIABLE)
             set(error_param ERROR_VARIABLE err_var)
         endif()
+    endif()
+    if(arg_OUTPUT_STRIP_TRAILING_WHITESPACE)
+        list(APPEND output_param OUTPUT_STRIP_TRAILING_WHITESPACE)
+    endif()
+    if(arg_ERROR_STRIP_TRAILING_WHITESPACE)
+        list(APPEND error_param ERROR_STRIP_TRAILING_WHITESPACE)
     endif()
 
     if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
