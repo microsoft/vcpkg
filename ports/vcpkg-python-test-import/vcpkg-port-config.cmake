@@ -31,7 +31,7 @@ function(vcpkg_python_test_import)
       if(NOT EXISTS "${dll_path}")
         message(FATAL_ERROR "Path '${dll_path}' in DLL_SEARCH_PATHS does not exist!")
       endif()
-      string(APPEND PYTHON_DLL_SEARCH_DIRS "  os.add_dll_directory('${dll_path}')\n")
+      string(APPEND PYTHON_DLL_SEARCH_DIRS "os.add_dll_directory('${dll_path}')\n")
     endforeach()
   endif()
 
