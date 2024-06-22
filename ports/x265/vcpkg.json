@@ -4,7 +4,7 @@
   "description": "x265 is a H.265 / HEVC video encoder application library, designed to encode video or images into an H.265 / HEVC encoded bitstream.",
   "homepage": "https://bitbucket.org/multicoreware/x265_git/",
   "license": "GPL-2.0-or-later",
-  "supports": "!uwp & !(arm & windows) & !xbox",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,7 +13,8 @@
   ],
   "features": {
     "tool": {
-      "description": "Build the command line tool"
+      "description": "Build the command line tool",
+      "supports": "!uwp"
     }
   }
 }
