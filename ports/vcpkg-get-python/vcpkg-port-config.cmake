@@ -1,7 +1,13 @@
+include_guard(GLOBAL)
+
 function(vcpkg_get_vcpkg_installed_python out_python)
   if(NOT VCPKG_TARGET_IS_WINDOWS)
     # vcpkg installed python on !windows works as normal python would work.
     set(${out_python} "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3" PARENT_SCOPE)
+    return()
+  endif()
+  if(DEFINED CACHE{z_vcpkg_get_vcpkg_installed_python})
+    set(${out_python} "${z_vcpkg_get_vcpkg_installed_python}" PARENT_SCOPE)
     return()
   endif()
 
@@ -43,4 +49,5 @@ if vcpkg_bin_path.is_dir():
 )
 
  set(${out_python} "${python_base}/Scripts/python.exe" PARENT_SCOPE)
+ set(z_vcpkg_get_vcpkg_installed_python "${python_base}/Scripts/python.exe" CACHE INTERNAL "")
 endfunction()
