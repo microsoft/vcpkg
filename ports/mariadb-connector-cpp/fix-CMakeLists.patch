@@ -6,29 +6,11 @@ index 43bc4a2..f92c548 100644
  ENDIF()
  
  # This has to be before C/C's cmake run, or it will build with /MD
--IF(WIN32)
-+IF(0)
+ IF(WIN32)
    IF (MSVC)
-     SET(CONFIG_TYPES "DEBUG" "RELEASE" "RELWITHDEBINFO" "MINSIZEREL")
+-    SET(CONFIG_TYPES "DEBUG" "RELEASE" "RELWITHDEBINFO" "MINSIZEREL")
++    SET(CONFIG_TYPES "")
      FOREACH(BUILD_TYPE ${CONFIG_TYPES})
-@@ -446,7 +446,7 @@ ENDIF()
- 
- # By now we have everything needed by tests. If we need to build them only - firing config now and exit
- # There is "normal" tests config below
--IF(BUILD_TESTS_ONLY)
-+IF(0)
-   IF(WIN32)
-     LINK_DIRECTORIES("$ENV{ProgramFiles}/MariaDB/MariaDB C++ Connector 64-bit")
-   ELSE()
-@@ -469,7 +469,7 @@ IF(NOT WITH_SSL)
- ENDIF()
- 
- ### Including C/C subproject
--IF(NOT USE_SYSTEM_INSTALLED_LIB)
-+IF(0)
-   IF(EXISTS ${CMAKE_SOURCE_DIR}/libmariadb)
-     IF(GIT_BUILD_SRCPKG)
-       # We don't want conn/c (wrong) src pkg to be built.
 @@ -525,6 +525,8 @@ IF(NOT USE_SYSTEM_INSTALLED_LIB)
    ENDIF()
  ENDIF()
@@ -158,25 +140,15 @@ index 43bc4a2..f92c548 100644
 +          DESTINATION share/unofficial-mariadbcpp)
  ENDIF()
  # Tests. Checking if we have them. May be not the case if we are building from source package
--IF(WITH_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
-+IF(0)
+ IF(WITH_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
    ADD_SUBDIRECTORY(test)
    ADD_CUSTOM_COMMAND(TARGET ${LIBRARY_NAME} POST_BUILD
  	  COMMAND ${CMAKE_COMMAND} ARGS -E copy $<TARGET_FILE:${LIBRARY_NAME}> test)
-@@ -744,10 +753,12 @@ IF(WITH_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
+@@ -744,7 +753,6 @@ IF(WITH_UNIT_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
  ENDIF()
  
  # Packaging
 -INCLUDE(packaging)
--MESSAGE(STATUS "License File: ${CPACK_RESOURCE_FILE_LICENSE}")
--MESSAGE(STATUS "ReadMe File: ${CPACK_PACKAGE_DESCRIPTION_FILE}")
--MESSAGE(STATUS "Source Package Filename: ${CPACK_SOURCE_PACKAGE_FILE_NAME}.${CPACK_SOURCE_GENERATOR}")
-+IF(0)
-+  INCLUDE(packaging)
-+  MESSAGE(STATUS "License File: ${CPACK_RESOURCE_FILE_LICENSE}")
-+  MESSAGE(STATUS "ReadMe File: ${CPACK_PACKAGE_DESCRIPTION_FILE}")
-+  MESSAGE(STATUS "Source Package Filename: ${CPACK_SOURCE_PACKAGE_FILE_NAME}.${CPACK_SOURCE_GENERATOR}")
-+ENDIF()
- 
- # install_test/CMakeLists.txt configuration should go after packaging.cmake but before include(CPack). Since CPack included in packaging cmake,
- # that configuration has been moved there. For the same reason there also moved the message with package name
+ MESSAGE(STATUS "License File: ${CPACK_RESOURCE_FILE_LICENSE}")
+ MESSAGE(STATUS "ReadMe File: ${CPACK_PACKAGE_DESCRIPTION_FILE}")
+ MESSAGE(STATUS "Source Package Filename: ${CPACK_SOURCE_PACKAGE_FILE_NAME}.${CPACK_SOURCE_GENERATOR}")
