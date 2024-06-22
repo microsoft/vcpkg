@@ -1,0 +1,91 @@
+{
+  "name": "casacore",
+  "version": "3.5.0",
+  "description": "The casacore libraries",
+  "homepage": "https://casacore.github.io/",
+  "supports": "!osx & !windows",
+  "dependencies": [
+    "blas",
+    "boost",
+    "cfitsio",
+    {
+      "name": "fftw3",
+      "features": [
+        "threads"
+      ]
+    },
+    "gsl",
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "wcslib",
+    "zlib"
+  ],
+  "default-features": [
+    "dysco",
+    "openmp",
+    "readline",
+    "stacktrace",
+    "tablelocking",
+    "threads"
+  ],
+  "features": {
+    "adios2": {
+      "description": "Enable ADIOS2 support",
+      "dependencies": [
+        "adios2"
+      ]
+    },
+    "deprecated": {
+      "description": "Enable deprecated feature support"
+    },
+    "dysco": {
+      "description": "Enable DYSCO Storage Manager support"
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support",
+      "dependencies": [
+        "hdf5"
+      ]
+    },
+    "mpi": {
+      "description": "Enable MPI support",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support"
+    },
+    "python3": {
+      "description": "Enable Python3 support",
+      "dependencies": [
+        "python3"
+      ]
+    },
+    "readline": {
+      "description": "Enable readline support",
+      "dependencies": [
+        "readline-unix"
+      ]
+    },
+    "stacktrace": {
+      "description": "Enable stacktrace support"
+    },
+    "tablelocking": {
+      "description": "Enable table locking"
+    },
+    "threads": {
+      "description": "Enable threading support",
+      "dependencies": [
+        "pthreads"
+      ]
+    }
+  }
+}
