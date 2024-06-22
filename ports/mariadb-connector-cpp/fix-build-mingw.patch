@@ -2,14 +2,12 @@ diff --git a/include/conncpp/CArray.hpp b/include/conncpp/CArray.hpp
 index f3e4634..0543a5a 100644
 --- a/include/conncpp/CArray.hpp
 +++ b/include/conncpp/CArray.hpp
-@@ -24,7 +24,9 @@
+@@ -24,7 +24,7 @@
  #include "buildconf.hpp"
  #include <initializer_list>
  #include <vector>
 -
-+#ifdef __MINGW32__
 +#include <cstdint>
-+#endif
  
  namespace sql
  {
