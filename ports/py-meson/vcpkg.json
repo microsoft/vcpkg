@@ -1,0 +1,30 @@
+{
+  "name": "py-meson",
+  "version": "0.15.0",
+  "description": "Meson PEP 517 Python build backend",
+  "homepage": "https://github.com/mesonbuild/meson-python",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "py-pyproject-metadata",
+      "host": true
+    },
+    {
+      "name": "py-setuptools",
+      "host": true
+    },
+    {
+      "name": "py-tomli",
+      "host": true
+    },
+    {
+      "name": "python3",
+      "default-features": false
+    },
+    "vcpkg-python-scripts",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
