@@ -4,10 +4,11 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO poppler/poppler
     REF "poppler-${POPPLER_VERSION}"
-    SHA512 23fe0f5445896e3a0731a0f3eae6aac84dc8f4b0718e947ae3ee3492295720408738f0c706eb2e5cbaa41e854dafc70e5c59c9c70e7d78ab33c318b2e8d7e4ff
+    SHA512 5997af5698a793aefcc1d0d98ea2e0732c0ce0adfa1e5be182ba2d425b1691ba84dfa89f0cdafacf19756d411b2b2de665d1a4682acf21ad5d3353dfeac0727c
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
+        private-namespace.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
@@ -106,6 +107,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

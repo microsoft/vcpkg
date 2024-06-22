@@ -16,7 +16,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 ad2fa2f69be996a637e9b51e8941a39e10050060245dcec1fe75c15b68d0ff973043c87b77e4e2830e407e3bdd040b578f8e24fd05bba43adb94eaee34001aa5
+    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -54,9 +54,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
         # Avoid unnecessary tests.
         am_cv_func_iconv_works=yes
-        ## This is required. For some reason these do not get correctly identified for release builds.
+        # This is required. For some reason these do not get correctly identified for release builds.
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
+        # May trigger debugger window in debug builds, even in unattended builds.
+        # Cf. https://github.com/microsoft/vcpkg/issues/35974
+        gl_cv_func_printf_directive_n=no
     )
     if(NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND OPTIONS

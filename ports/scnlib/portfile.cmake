@@ -4,29 +4,27 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eliaskosunen/scnlib
     REF "v${VERSION}"
-    SHA512 5dc2cc0f0817710453c7741cb61df46b4d4a43af0ec5cbbba77e3b6fb055e906840c232f92df5c3f3a9643191268922f059eacb798978767c717cc3578eb117d
+    SHA512 76f3196d6bd01a349c69bf1863cc0dc521a95b84ef25b841198acbef99e295b53c1c82c745a7498b9a86a6fd4cc0c395abcb02fdf18b1d7c9152321ab195945b
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DSCN_TESTS=OFF 
+      -DSCN_TESTS=OFF
       -DSCN_EXAMPLES=OFF
       -DSCN_BENCHMARKS=OFF
       -DSCN_DOCS=OFF
-      -DSCN_RANGES=OFF
+      -DSCN_USE_EXTERNAL_FAST_FLOAT=ON
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/scn)
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/scn"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

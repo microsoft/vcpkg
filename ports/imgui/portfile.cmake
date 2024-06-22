@@ -2,19 +2,19 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
-       OUT_SOURCE_PATH SOURCE_PATH
-       REPO ocornut/imgui
-       REF "v${VERSION}-docking"
-       SHA512 50953097ff809bca0e1cee55268eaa8dad001cf8fae85ae7623f484752d16bdf8e63c04227786361f27e73f7aeda5a8d1f9b0cee83c2aca108ce2712a21b74d9
-       HEAD_REF docking
-       )
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO ocornut/imgui
+        REF "v${VERSION}-docking"
+        SHA512 a700d6e4daa2f2d2bc0a61f96c813da03f9d0d6508bc077679d1acea08f546c913d2409008437dea5d993657f10a9e7077725d65bc55b7fb14d7ff6b52ff05d4
+        HEAD_REF docking
+    )
 else()
     vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO ocornut/imgui
-    REF "v${VERSION}"
-    SHA512 f6b33027c7050acc617c728b04b04572a13bf11589d4d2cab566901e94d349a3d91f133f7980049857ee44768d4bad426c9b2e53baf953f2efbf1a7951c3ba8a
-    HEAD_REF master
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO ocornut/imgui
+        REF "v${VERSION}"
+        SHA512 8cdec45c8b58b3768a2216af2a1cba3d0e772ac48420b57057a4a8eda5766c121b4a8457a81b5896defe00b822c40d6aac6ee2b31f4133f2b9a02b231b1529d2
+        HEAD_REF master
     )
 endif()
 
@@ -42,6 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     freetype                    IMGUI_FREETYPE
     freetype-lunasvg            IMGUI_FREETYPE_LUNASVG
     wchar32                     IMGUI_USE_WCHAR32
+    test-engine                 IMGUI_TEST_ENGINE
 )
 
 if ("libigl-imgui" IN_LIST FEATURES)
@@ -55,6 +56,23 @@ if ("libigl-imgui" IN_LIST FEATURES)
     )
 
     file(INSTALL "${IMGUI_FONTS_DROID_SANS_H}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+endif()
+
+if ("test-engine" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
+        REPO ocornut/imgui_test_engine
+        REF "v${VERSION}"
+        SHA512 0c3b11f46f7ed259e0bf2b0634848aee1fe0b34609349b30f445dd774c739690df4cf12498895f0734b16084be4d32ae80e9e2ada291dd88f7d4fad8fda49a2b
+        HEAD_REF master
+    )
+
+    file(REMOVE_RECURSE "${SOURCE_PATH}/test-engine")
+    file(COPY "${TEST_ENGINE_SOURCE_PATH}/imgui_test_engine/" DESTINATION "${SOURCE_PATH}/test-engine")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/test-engine/thirdparty/stb")
+    vcpkg_replace_string("${SOURCE_PATH}/test-engine/imgui_capture_tool.cpp" "//#define IMGUI_STB_IMAGE_WRITE_FILENAME \"my_folder/stb_image_write.h\"" "#define IMGUI_STB_IMAGE_WRITE_FILENAME <stb_image_write.h>\n#define STB_IMAGE_WRITE_STATIC")
+    vcpkg_replace_string("${SOURCE_PATH}/imconfig.h" "#pragma once" "#pragma  once\n\n#include \"imgui_te_imconfig.h\"")
+    vcpkg_replace_string("${SOURCE_PATH}/test-engine/imgui_te_imconfig.h" "#define IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL 0" "#define IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL 1")
 endif()
 
 vcpkg_cmake_configure(
@@ -80,4 +98,8 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+if ("test-engine" IN_LIST FEATURES)
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/test-engine/LICENSE.txt")
+else()
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+endif()

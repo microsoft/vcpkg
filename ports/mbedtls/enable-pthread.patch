@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b001bb7..a5e0479 100644
+index b001bb7..b9fb566 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -44,6 +44,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -58,11 +58,11 @@ index 11b417b..5ca44c3 100644
          DESTINATION include/mbedtls
          PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
-index 7b1f38a..5f29ba5 100644
+index ac2146e..4cd831a 100644
 --- a/include/mbedtls/config.h
 +++ b/include/mbedtls/config.h
-@@ -24,6 +24,8 @@
-  *  limitations under the License.
+@@ -12,6 +12,8 @@
+  *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
   */
  
 +#include "mbedtls/config_threading.h"
@@ -84,7 +84,7 @@ index 0000000..9d5d42e
 +#endif
 \ No newline at end of file
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 8d88101..2ba764c 100644
+index 1b2980d..8c495fe 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
 @@ -149,7 +149,11 @@ if(ENABLE_ZLIB_SUPPORT)

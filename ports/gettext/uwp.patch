@@ -38,10 +38,10 @@ index ec75427..9e063e4 100644
  # elif defined WINDOWS_NATIVE
  
    char buf[2 + 10 + 1];
-diff --git a/gettext-runtime/gnulib-lib/localename.c b/gettext-runtime/gnulib-lib/localename.c
+diff --git a/gettext-runtime/gnulib-lib/localename-unsafe.c b/gettext-runtime/gnulib-lib/localename-unsafe.c
 index d77bb81..3c6e055 100644
---- a/gettext-runtime/gnulib-lib/localename.c
-+++ b/gettext-runtime/gnulib-lib/localename.c
+--- a/gettext-runtime/gnulib-lib/localename-unsafe.c
++++ b/gettext-runtime/gnulib-lib/localename-unsafe.c
 @@ -69,6 +69,11 @@ extern char * getlocalename_l(int, locale_t);
  
  #if defined _WIN32 && !defined __CYGWIN__

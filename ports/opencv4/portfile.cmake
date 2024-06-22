@@ -85,6 +85,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
  "dc1394"    WITH_1394
+ "vulkan"    WITH_VULKAN
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
@@ -136,6 +137,11 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
+endif()
+
+set(WITH_VULKAN OFF)
+if("vulkan" IN_LIST FEATURES)
+  set(WITH_VULKAN ON)
 endif()
 
 set(WITH_PYTHON OFF)
@@ -445,6 +451,7 @@ vcpkg_cmake_configure(
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
+        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
@@ -478,12 +485,13 @@ if (NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
       "\${_IMPORT_PREFIX}/sdk"
       "\${_IMPORT_PREFIX}/debug/sdk"
+      IGNORE_UNCHANGED
   )
 endif()
 
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-if(${BUILD_opencv_dnn})
+if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
@@ -505,6 +513,9 @@ find_dependency(Threads)")
   endif()
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("ffmpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
   endif()
   if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anrieff/libcpuid
-    REF v0.6.2
-    SHA512 36175387ae86e6f602544c516a875ac7fe0a3bde52e3e3c09f8852a804dd252694e17c638723aa3d36219d4588981cfd2261086bcf561d175e7c038e3a69e2ff
+    REF "v${VERSION}"
+    SHA512 855dab45ec12b817fb18948442cebc22abaf915a7230e3d1a3f0e2fc7d0e3fe4a39e7c5744be1f4c7e3cb7b082012e6b0b0677a967beba5d404c6c48467eedce
     HEAD_REF master
     PATCHES
         fix-build.patch
@@ -23,4 +23,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
