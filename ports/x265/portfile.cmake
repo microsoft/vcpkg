@@ -9,6 +9,7 @@ vcpkg_from_bitbucket(
         version.patch
         linkage.diff
         pkgconfig.diff
+        pthread.diff
 )
 
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
