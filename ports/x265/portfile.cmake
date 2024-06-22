@@ -14,7 +14,7 @@ vcpkg_from_bitbucket(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
-        tools   ENABLE_CLI
+        tool   ENABLE_CLI
 )
 
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
@@ -43,7 +43,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if("tools" IN_LIST FEATURES)
+if("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 endif()
 

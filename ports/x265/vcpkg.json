@@ -12,8 +12,8 @@
     }
   ],
   "features": {
-    "tools": {
-      "description": "Build command line tool"
+    "tool": {
+      "description": "Build the command line tool"
     }
   }
 }
