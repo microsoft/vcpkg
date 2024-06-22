@@ -17,11 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         tool   ENABLE_CLI
 )
 
-set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(NASM)
-    set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=ON" "-DNASM_EXECUTABLE=${NASM}")
-endif()
+vcpkg_find_acquire_program(NASM)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
@@ -29,9 +25,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
     OPTIONS
         ${OPTIONS}
-        ${ASSEMBLY_OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_LIBNUMA=OFF
+        "-DNASM_EXECUTABLE=${NASM}"
         "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
