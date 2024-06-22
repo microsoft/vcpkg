@@ -40,10 +40,6 @@
       "host": true,
       "platform": "windows"
     },
-    {
-      "name": "vcpkg-python-test-import",
-      "host": true
-    },
     "zlib"
   ],
   "default-features": [
@@ -83,6 +79,10 @@
         {
           "name": "sqlite3",
           "default-features": false
+        },
+        {
+          "name": "vcpkg-python-test-import",
+          "host": true
         }
       ]
     },
