@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 43bf82a55d1000847fb74f786c36129c1fc6fa6cfbaf19e880284cfe3d97d7b5288a4615925266c8150c30f907c035c8c08d5168a2d873ee1774235ad5a80837
+    SHA512 806af6640f0cf962b4370f7b9f8f7587b69425d03ead693a5e5c395ff585ff39bcd7ee80c83dfa2de65971e7d754d64a3864e10bcf4df372fd603e444818fe81
     HEAD_REF main
     PATCHES 
         fix-glog.patch
         0002-fix-dependency.patch
-        fix-cmake.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")

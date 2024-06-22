@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         utf8proc.patch
         thrift.patch
         remove-dll-suffix.patch #Upstream PR: https://github.com/apache/arrow/pull/41341
+        add-include-string.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

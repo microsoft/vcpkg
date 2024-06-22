@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(libodb-sqlite VERSION 2.4.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 11) # 17 removes 'auto_ptr'
 find_package(odb 2.4.0 REQUIRED COMPONENTS libodb)
 find_package(unofficial-sqlite3 CONFIG)
 configure_file(config.unix.h.in odb/sqlite/details/config.h COPYONLY)
