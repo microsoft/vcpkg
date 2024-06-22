@@ -10,7 +10,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 			ARCHIVE
 			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win64.zip"
 			FILENAME "slang-${VERSION}-win64.zip"
-			SHA512 90944a5ca26dc979fac0dc96b7b749b75e73a2fca268d6eb5ef0243b0bee8fb0c7a8fb39a81928f3d052aaf5ee301fe3f186c54a4635e8dc4e892656c6a8a613
+			SHA512 2ccd30db91afbc927446e200ed1daaeb4feba2182782f1f45378ff1e339f9360fe74e9144ee7bb7d9811290ce273e1791860a751bf84bd78a244d5cdd6dbc095
 		)
 		set(SLANG_BIN_PATH "bin/windows-x64/release")
 	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
