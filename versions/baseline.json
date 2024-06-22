@@ -7114,7 +7114,7 @@
     },
     "python3": {
       "baseline": "3.11.8",
-      "port-version": 4
+      "port-version": 5
     },
     "qca": {
       "baseline": "2.3.7",
@@ -9121,7 +9121,7 @@
       "port-version": 0
     },
     "vcpkg-get-python": {
-      "baseline": "2024-06-08",
+      "baseline": "2024-06-22",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
@@ -9142,6 +9142,10 @@
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2024-04-03",
+      "port-version": 0
+    },
+    "vcpkg-python-test-import": {
+      "baseline": "2024-06-22",
       "port-version": 0
     },
     "vcpkg-qmake": {
