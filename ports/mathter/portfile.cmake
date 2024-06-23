@@ -24,7 +24,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "Mathter")
+vcpkg_cmake_config_fixup()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENCE.md")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
