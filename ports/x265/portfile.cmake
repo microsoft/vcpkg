@@ -22,6 +22,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_find_acquire_program(NASM)
     list(APPEND OPTIONS "-DNASM_EXECUTABLE=${NASM}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
+        # x265 doesn't create sufficient PIC for asm, breaking usage
+        # in shared libs, e.g. the libheif gdk pixbuf plugin.
+        # Users can override this in custom triplets.
+        list(APPEND OPTIONS "-DENABLE_ASSEMBLY=OFF")
+    endif()
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DENABLE_ASSEMBLY=OFF")
 endif()
