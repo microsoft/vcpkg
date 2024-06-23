@@ -124,7 +124,7 @@ target_compile_definitions(${LIBRSVG_TARGET} PRIVATE
     $<$<BOOL:${MINGW}>:HAVE_STRTOK_R>
 )
 
-target_link_libraries(rsvg-2.40 PRIVATE
+target_link_libraries(${LIBRSVG_TARGET} PRIVATE
     PkgConfig::GLIB2
     ${LIBXML2_LIBRARIES}
     PkgConfig::PANGO

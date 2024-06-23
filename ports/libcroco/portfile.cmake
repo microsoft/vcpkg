@@ -1,5 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/libcroco/0.6/libcroco-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/libcroco/0.6/libcroco-${VERSION}.tar.xz"
     FILENAME "libcroco-${VERSION}.tar.xz"
     SHA512 038a3ac9d160a8cf86a8a88c34367e154ef26ede289c93349332b7bc449a5199b51ea3611cebf3a2416ae23b9e45ecf8f9c6b24ea6d16a5519b796d3c7e272d4
 )
