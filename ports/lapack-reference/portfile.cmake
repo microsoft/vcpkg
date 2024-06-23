@@ -19,8 +19,8 @@ vcpkg_from_github(
     SHA512 f8f3c733a0221be0b3f5618235408ac59cbd4e5f1c4eab5f509b831a6ec6a9ef14b8849aa6ea10810df1aff90186ca454d15e9438d1dd271c2449d42d3da9dda
     HEAD_REF master
     PATCHES
+        fix-prefix.patch
         cmake-config.patch
-        #lapacke.patch
         print-implicit-libs.patch
 )
 
