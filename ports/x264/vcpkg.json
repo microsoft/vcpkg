@@ -12,28 +12,22 @@
     }
   ],
   "default-features": [
-    "default-features"
+    {
+      "name": "asm",
+      "platform": "!(arm32 & windows)"
+    },
+    {
+      "name": "gpl",
+      "platform": "!(arm32 & windows)"
+    }
   ],
   "features": {
     "asm": {
       "description": "Enable platform-specific assembly optimizations",
-      "supports": "x86 | x64 | (arm & !windows) | arm64"
+      "supports": "!(arm32 & windows)"
     },
     "chroma-format-all": {
       "description": "Output all chroma formats"
-    },
-    "default-features": {
-      "description": "Default set of features",
-      "dependencies": [
-        {
-          "name": "x264",
-          "features": [
-            "asm",
-            "gpl"
-          ],
-          "platform": "x86 | x64 | (arm & !windows) | arm64"
-        }
-      ]
     },
     "gpl": {
       "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
