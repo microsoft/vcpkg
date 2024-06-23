@@ -23,10 +23,8 @@ vcpkg_from_gitlab(
         uwp-cflags.patch
         parallel-install.patch
         allow-clang-cl.patch
-        configure-as.patch # Ignore ':' from `vcpkg_configure_make`
+        configure.patch
 )
-
-vcpkg_replace_string("${SOURCE_PATH}/configure" [[/bin/bash]] [[/usr/bin/env bash]])
 
 # Ensure that 'ENV{PATH}' leads to tool 'name' exactly at 'filepath'.
 function(ensure_tool_in_path name filepath)
@@ -56,9 +54,6 @@ transform_path_no_space(VCPKG_DETECTED_CMAKE_C_COMPILER)
 set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 
 vcpkg_list(SET OPTIONS)
-if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
-    vcpkg_list(APPEND OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
-endif()
 
 vcpkg_list(SET EXTRA_ARGS)
 set(nasm_archs x86 x64)
@@ -98,10 +93,6 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND OPTIONS --enable-pic)
-endif()
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_ADDITIONAL_PATHS
@@ -109,6 +100,7 @@ vcpkg_configure_make(
     ${EXTRA_ARGS}
     OPTIONS
         ${OPTIONS}
+        --enable-pic
         --disable-lavf
         --disable-swscale
         --disable-avs

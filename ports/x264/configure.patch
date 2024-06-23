@@ -1,0 +1,26 @@
+diff --git a/configure b/configure
+index e242e73c..a0006b6a 100755
+--- a/configure
++++ b/configure
+@@ -1,4 +1,9 @@
+-#!/bin/bash
++/usr/bin/env bash
++
++export ASFLAGS="${CPPFLAGS} ${ASFLAGS}"
++export CFLAGS="${CPPFLAGS} ${CFLAGS}"
++
++test "${AS:-:}" = ":" && unset AS
+ 
+ if test x"$1" = x"-h" -o x"$1" = x"--help" ; then
+ cat <<EOF
+@@ -1354,8 +1359,10 @@ if [ $SYS = WINDOWS -a $ARCH = X86 -a $compiler = GNU ] ; then
+ fi
+ 
+ if cc_check "stdio.h" "" "fseeko(stdin,0,0);" ; then
++  if cc_check "" "" "#if defined(__ANDROID_API__) && __ANDROID_API__ < 24\n#error\n#endif\n" ; then
+     define fseek fseeko
+     define ftell ftello
++  fi
+ elif cc_check "stdio.h" "" "fseeko64(stdin,0,0);" ; then
+     define fseek fseeko64
+     define ftell ftello64
