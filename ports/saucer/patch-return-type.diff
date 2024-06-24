@@ -1,5 +1,5 @@
 diff --git a/src/serializer.glaze.cpp b/src/serializer.glaze.cpp
-index 45ca691..71ea6cc 100644
+index 45ca691..36ff3da 100644
 --- a/src/serializer.glaze.cpp
 +++ b/src/serializer.glaze.cpp
 @@ -38,19 +38,20 @@ namespace saucer::serializers
@@ -13,7 +13,7 @@ index 45ca691..71ea6cc 100644
  
          T value;
          auto error = glz::read<opts>(value, buffer);
-+        using return_t = tl::expected<T, std::decay_t<decltype(glz::read<{}>(value, buffer))>>;
++        using return_t = tl::expected<T, std::decay_t<decltype(glz::read<opts>(value, buffer))>>;
  
          if (error)
          {
