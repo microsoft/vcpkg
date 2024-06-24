@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install.patch   # Adjust install path of build outputs
+        fix-platform-win32.patch
 )
 
 vcpkg_from_github(
