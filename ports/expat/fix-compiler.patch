@@ -7,7 +7,7 @@ index 8829f77..8a3278e 100644
  #endif
  
 -#define XMLPARSEAPI(type) XMLIMPORT type XMLCALL
-+##define XMLPARSEAPI(type) __declspec(dllimport) type XMLCALL
++#define XMLPARSEAPI(type) __declspec(dllimport) type XMLCALL
  
  #ifdef __cplusplus
  extern "C" {
