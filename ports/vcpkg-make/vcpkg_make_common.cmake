@@ -79,7 +79,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPPFLAGS;NO_FLAG_ESCAPING;USES_WRAPPERS;USE_RESPONSE_FILES" 
+        "DISABLE_CPPFLAGS;NO_FLAG_ESCAPING;USES_WRAPPERS;USE_RESPONSE_FILES" 
         "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
@@ -134,7 +134,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     endforeach()
 
     # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
-    if(NOT arg_NO_CPPFLAGS)
+    if(NOT arg_DISABLE_CPPFLAGS)
         set(CPPFLAGS "")
         set(pattern "")
         foreach(arg IN LISTS CXXFLAGS)
@@ -259,7 +259,7 @@ endfunction()
 ### Prepare environment for configure
 function(z_vcpkg_make_prepare_programs out_env)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS"
+        "DISABLE_CPPFLAGS;DISABLE_MSVC_WRAPPERS"
         "CONFIG"
         "LANGUAGES"
     )
@@ -473,7 +473,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
+        "DISABLE_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
@@ -550,8 +550,8 @@ function(z_vcpkg_make_prepare_flags)
     if(DEFINED arg_LANGUAGES)
         set(flags_opts "LANGUAGES;${arg_LANGUAGES}")
     endif()
-    if(arg_NO_CPPFLAGS)
-        list(APPEND flags_opts NO_CPPFLAGS)
+    if(arg_DISABLE_CPPFLAGS)
+        list(APPEND flags_opts DISABLE_CPPFLAGS)
     endif()
 
     if(NOT arg_DISABLE_MSVC_WRAPPERS)
