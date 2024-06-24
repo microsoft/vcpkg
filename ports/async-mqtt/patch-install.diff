@@ -1,0 +1,16 @@
+commit cb40240506bd1b1614abdeb2ec7a0d14419072b8
+Author: Jón Bjarni <jbbjarnason@gmail.com>
+Date:   Mon Jun 24 11:37:45 2024 +0000
+
+    install *.ipp files along with other header files
+
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index 67d87746..69c7752d 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -23,4 +23,4 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE $<$<BOOL:${ASYNC_MQTT_USE_S
+ target_compile_definitions(${PROJECT_NAME} INTERFACE $<$<BOOL:${ASYNC_MQTT_USE_LOG}>:ASYNC_MQTT_USE_LOG>)
+ target_compile_definitions(${PROJECT_NAME} INTERFACE $<$<BOOL:${ASYNC_MQTT_PRINT_PAYLOAD}>:ASYNC_MQTT_PRINT_PAYLOAD>)
+ 
+-install(DIRECTORY . DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
++install(DIRECTORY . DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h" PATTERN "*.ipp")
