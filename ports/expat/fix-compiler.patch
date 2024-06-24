@@ -1,0 +1,13 @@
+diff --git a/expat/lib/expat_external.h b/expat/lib/expat_external.h
+index 8829f77..8a3278e 100644
+--- a/expat/lib/expat_external.h
++++ b/expat/lib/expat_external.h
+@@ -122,7 +122,7 @@
+ #  define XML_ATTR_ALLOC_SIZE(x)
+ #endif
+ 
+-#define XMLPARSEAPI(type) XMLIMPORT type XMLCALL
++##define XMLPARSEAPI(type) __declspec(dllimport) type XMLCALL
+ 
+ #ifdef __cplusplus
+ extern "C" {

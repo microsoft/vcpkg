@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${REF}"
     SHA512 49b6be12bd6284106920abc61d86d441cba126615fc4019744fc56dc5e7c5efc72b02c09e5c7b491882a633c1c45dc4a03e92a96372ab62bcd70755f6878c6b6
     HEAD_REF master
+    PATCHES
+        fix-compiler.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
