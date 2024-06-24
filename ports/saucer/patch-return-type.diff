@@ -1,5 +1,5 @@
 diff --git a/src/serializer.glaze.cpp b/src/serializer.glaze.cpp
-index 38e891c..2bafd36 100644
+index 45ca691..a77336e 100644
 --- a/src/serializer.glaze.cpp
 +++ b/src/serializer.glaze.cpp
 @@ -38,7 +38,7 @@ namespace saucer::serializers
@@ -9,5 +9,5 @@ index 38e891c..2bafd36 100644
 -    tl::expected<T, glz::parse_error> parse_as(const std::string &buffer)
 +    auto parse_as(const std::string &buffer)
      {
-         static constexpr auto opts = glz::opts{.error_on_missing_keys = true, .raw_string = false};
+         static constexpr auto opts = glz::opts{.error_on_missing_keys = true};
  
