@@ -20,3 +20,16 @@ index a6c5929..0a0ddf0 100644
              set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32")
          elseif (${SYSTEM_PROCESSOR} STREQUAL "x64" OR ${SYSTEM_PROCESSOR} STREQUAL "amd64")
              set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64A")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1189536..da19723 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -565,7 +565,7 @@ if(WIN32)
+     message(STATUS "Using PGO file ${QUIC_PGO_NAME}")
+ 
+     # Configure PGO linker flags.
+-    if(QUIC_PGO)
++    if(1)
+         # Configured for training mode. Use the previous PGD file if present.
+         if(EXISTS "${QUIC_PGO_FILE}")
+             message(STATUS "/GENPROFILE:PDG")
