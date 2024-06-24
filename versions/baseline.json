@@ -3130,7 +3130,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gmsh": {
       "baseline": "4.12.2",
@@ -3754,7 +3754,7 @@
     },
     "jemalloc": {
       "baseline": "5.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jhasse-poly2tri": {
       "baseline": "2023-12-27",
@@ -4558,7 +4558,7 @@
     },
     "libidn2": {
       "baseline": "2.3.7",
-      "port-version": 0
+      "port-version": 1
     },
     "libigl": {
       "baseline": "2.5.0",
@@ -9117,7 +9117,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2023-12-31",
+      "baseline": "2024-01-30",
       "port-version": 0
     },
     "vcpkg-get-python": {
@@ -9482,7 +9482,7 @@
     },
     "x264": {
       "baseline": "0.164.3107",
-      "port-version": 1
+      "port-version": 2
     },
     "x265": {
       "baseline": "3.5",
