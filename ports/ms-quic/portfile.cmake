@@ -12,6 +12,10 @@ vcpkg_from_github(
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
 )
 
+# This avoids a link error on x86-windows:
+# LINK : fatal error LNK1268: inconsistent option 'NODEFAULTLIB:libucrt.lib' specified with /USEPROFILE but not with /GENPROFILE
+file(REMOVE "${QUIC_SOURCE_PATH}/src/bin/winuser/pgo_x86/msquic.pgd")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
     REPO quictls/openssl
