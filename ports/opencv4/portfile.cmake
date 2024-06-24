@@ -422,7 +422,6 @@ endif()
 if("halide" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS
     # Halide 13 requires C++17
-    "-DCMAKE_CXX_STANDARD=17"
     "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
     "-DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON"
     "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
@@ -452,6 +451,8 @@ vcpkg_cmake_configure(
         -DARM=${TARGET_IS_ARM}
         ###### use cmake cuda new language support
         -DENABLE_CUDA_FIRST_CLASS_LANGUAGE=${ENABLE_CUDA_FIRST_CLASS_LANGUAGE}
+        ###### use c++17 to enable features that fail with c++11 (halide, protobuf, etc.)
+        -DCMAKE_CXX_STANDARD=17
         ###### ocv_options
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=
