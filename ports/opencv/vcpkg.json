@@ -94,13 +94,13 @@
           "default-features": false,
           "features": [
             "calib3d",
-            "dnn",
+            "fs",
             "highgui",
             "intrinsics",
             "jpeg",
-            "opencl",
             "png",
             "quirc",
+            "thread",
             "tiff",
             "webp"
           ]
@@ -117,10 +117,27 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
+            "gapi",
+            "opencl"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn"
+          ],
+          "platform": "!android"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
             "dshow",
             "win32ui"
           ],
-          "platform": "windows"
+          "platform": "windows & !uwp"
         }
       ]
     },

@@ -12,7 +12,6 @@
         "ade",
         "calib3d",
         "contrib",
-        "dnn",
         "eigen",
         "ffmpeg",
         "highgui",
@@ -69,7 +68,15 @@
         "sfm",
         "vtk"
       ],
-      "platform": "!uwp & !(windows & (arm | arm64))"
+      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "dnn"
+      ],
+      "platform": "!android"
     }
   ]
 }

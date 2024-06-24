@@ -85,13 +85,13 @@
           "default-features": false,
           "features": [
             "calib3d",
-            "dnn",
+            "fs",
             "highgui",
             "intrinsics",
             "jpeg",
-            "opencl",
             "png",
             "quirc",
+            "thread",
             "tiff",
             "webp"
           ]
@@ -108,15 +108,33 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
+            "gapi",
+            "opencl"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn"
+          ],
+          "platform": "!android"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
             "dshow",
             "win32ui"
           ],
-          "platform": "windows"
+          "platform": "windows & !uwp"
         }
       ]
     },
     "dnn": {
       "description": "Enable dnn module",
+      "supports": "!android",
       "dependencies": [
         "flatbuffers",
         {
@@ -176,6 +194,13 @@
           "default-features": false
         }
       ]
+    },
+    "fs": {
+      "description": "Enable filesystem support"
+    },
+    "gapi": {
+      "description": "Enable gapi module",
+      "supports": "!uwp"
     },
     "gdcm": {
       "description": "GDCM support for opencv",
@@ -249,14 +274,8 @@
         "lapack"
       ]
     },
-    "nofs": {
-      "description": "disable filesystem support"
-    },
     "nonfree": {
       "description": "allow nonfree and unredistributable libraries"
-    },
-    "nothread": {
-      "description": "disable thread support"
     },
     "opencl": {
       "description": "enable opencl support",
@@ -283,7 +302,8 @@
       ]
     },
     "openmp": {
-      "description": "Enable openmp support for opencv"
+      "description": "Enable openmp support for opencv",
+      "supports": "!osx"
     },
     "openvino": {
       "description": "OpenVINO support for OpenCV DNN",
@@ -389,6 +409,9 @@
       "dependencies": [
         "tbb"
       ]
+    },
+    "thread": {
+      "description": "Enable thread support"
     },
     "tiff": {
       "description": "TIFF support for opencv",

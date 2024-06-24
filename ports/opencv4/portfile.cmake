@@ -91,6 +91,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
+# Cannot use vcpkg_check_features() for "ipp", "ovis", "python", "qt", "tbb"
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"       WITH_ADE
@@ -98,12 +99,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "contrib"   WITH_CONTRIB
  "cuda"      WITH_CUBLAS
  "cuda"      WITH_CUDA
+ "cuda"      ENABLE_CUDA_FIRST_CLASS_LANGUAGE
  "cudnn"     WITH_CUDNN
+ "dnn"       BUILD_opencv_dnn
  "dnn-cuda"  OPENCV_DNN_CUDA
  "dshow"     WITH_DSHOW
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
  "freetype"  WITH_FREETYPE
+ "gapi"      BUILD_opencv_gapi
  "gdcm"      WITH_GDCM
  "gstreamer" WITH_GSTREAMER
  "gtk"       WITH_GTK
@@ -112,14 +116,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "intrinsics" CV_ENABLE_INTRINSICS
  "jasper"    WITH_JASPER
  "openjpeg"  WITH_OPENJPEG
+ "openmp"    WITH_OPENMP
  "jpeg"      WITH_JPEG
  "lapack"    WITH_LAPACK
+ "lapack"    DOPENCV_LAPACK_FIND_PACKAGE_ONLY
  "nonfree"   OPENCV_ENABLE_NONFREE
- "nofs"      OPENCV_DISABLE_FILESYSTEM_SUPPORT
- "nothread"  OPENCV_DISABLE_THREAD_SUPPORT
+ "fs"        OPENCV_ENABLE_FILESYSTEM_SUPPORT
+ "thread"    OPENCV_ENABLE_THREAD_SUPPORT
  "opencl"    WITH_OPENCL
  "openvino"  WITH_OPENVINO
- #"openexr"   WITH_OPENEXR
+ "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "png"       WITH_PNG
@@ -134,14 +140,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "vulkan"    WITH_VULKAN
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
-set(BUILD_opencv_dnn OFF)
+
 if("dnn" IN_LIST FEATURES)
-  if(NOT VCPKG_TARGET_IS_ANDROID)
-    set(BUILD_opencv_dnn ON)
-  else()
-    message(WARNING "The dnn module cannot be enabled on Android")
-  endif()
   set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
   vcpkg_execute_required_process(
     COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
@@ -162,29 +162,9 @@ if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
 endif()
 
-set(BUILD_opencv_gapi ON)
-if(VCPKG_TARGET_IS_UWP)
-  set(BUILD_opencv_gapi OFF)
-  message(WARNING "The gapi module cannot be enabled on UWP platform")
-endif()
-
 set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
-endif()
-
-set(WITH_OPENMP OFF)
-if("openmp" IN_LIST FEATURES)
-  if(NOT VCPKG_TARGET_IS_OSX)
-    set(WITH_OPENMP ON)
-  else()
-    message(WARNING "The OpenMP feature is not supported on macOS")
-  endif()
-endif()
-
-set(ENABLE_CUDA_FIRST_CLASS_LANGUAGE OFF)
-if("cuda" IN_LIST FEATURES)
-  set(ENABLE_CUDA_FIRST_CLASS_LANGUAGE ON)
 endif()
 
 set(BUILD_opencv_ovis OFF)
@@ -471,33 +451,32 @@ vcpkg_cmake_configure(
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
+        -DBUILD_PERF_TESTS=OFF
+        -DBUILD_TESTS=OFF
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
+        -DBUILD_IPP_IW=OFF
+        -DBUILD_ITT=OFF
         -DBUILD_JASPER=OFF
-        -DBUILD_OPENJPEG=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
+        -DBUILD_OPENJPEG=OFF
         -DBUILD_PNG=OFF
+        -DBUILD_PROTOBUF=OFF
+        -DBUILD_TBB=OFF
         -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
-        -DBUILD_TBB=OFF
-        -DBUILD_IPP_IW=OFF
-        -DBUILD_ITT=OFF
-        ###### Disable build 3rd party components
-        -DBUILD_PROTOBUF=OFF
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_java=OFF
         -DBUILD_opencv_js=OFF
+        -DBUILD_JAVA=OFF
         -DBUILD_ANDROID_PROJECT=OFF
         -DBUILD_ANDROID_EXAMPLES=OFF
         -DBUILD_PACKAGE=OFF
-        -DBUILD_PERF_TESTS=OFF
-        -DBUILD_TESTS=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
-        -DBUILD_JAVA=OFF
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=${BUILD_opencv_dnn}
@@ -517,7 +496,7 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DWITH_GTK=${WITH_GTK}
+        -DBUILD_IPP_IW=${WITH_IPP}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_VULKAN=${WITH_VULKAN}
@@ -526,40 +505,31 @@ vcpkg_cmake_configure(
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_PYTHON=${WITH_PYTHON}
-        -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENVINO=${WITH_OPENVINO}
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
+        -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_ITT=OFF
         -DWITH_NVCUVID=OFF
         -DWITH_NVCUVENC=OFF
         -DWITH_AVIF=OFF
-        -DWITH_OPENEXR=OFF
+        -DWITH_OPENEXR=OFF #fixme
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
-        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         -DBUILD_opencv_python3=${BUILD_opencv_python3}
-        ###### The following modules are disabled for UWP
-        -DBUILD_opencv_quality=${BUILD_opencv_quality}
-        -DBUILD_opencv_gapi=${BUILD_opencv_gapi}
-        ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
-        -DBUILD_opencv_rgbd=OFF
-        ###### Additional build flags
-        -DBUILD_IPP_IW=${WITH_IPP}
-        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
-        -DOPENCV_LAPACK_SHARED_LIBS=${OPENCV_LAPACK_SHARED_LIBS}
-        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
-        -DWITH_OPENCL=${WITH_OPENCL}
-        -DWITH_WIN32UI=${WITH_WIN32UI}
-        -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
-        -DWITH_DSHOW=${WITH_DSHOW}
         -DBUILD_opencv_calib3d=${BUILD_opencv_calib3d}
         -DBUILD_opencv_highgui=${BUILD_opencv_highgui}
+        -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        -DBUILD_opencv_rgbd=OFF #fixme #https://github.com/opencv/opencv_contrib/issues/2307
+        ###### Additional build flags
+        -DOPENCV_LAPACK_SHARED_LIBS=${OPENCV_LAPACK_SHARED_LIBS}
+        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
+        -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
         ${ADDITIONAL_BUILD_FLAGS}
 )
 
@@ -638,7 +608,7 @@ find_dependency(Tesseract)")
   if("openjpeg" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
   endif()
-  if(WITH_OPENMP)
+  if("omp" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
@@ -668,7 +638,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  if(WITH_OPENMP)
+  if("omp" IN_LIST FEATURES)
     string(REPLACE "set_target_properties(opencv_core PROPERTIES
   INTERFACE_LINK_LIBRARIES \""
                    "set_target_properties(opencv_core PROPERTIES
@@ -709,7 +679,12 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
       "-lQt6::Core5Compat"
       ""
       IGNORE_UNCHANGED
-  )
+  ) #fixme
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+      "-lhdf5::hdf5-static"
+      ""
+      IGNORE_UNCHANGED
+  ) #fixme
 endif()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
@@ -717,9 +692,13 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
       "-lQt6::Core5Compat"
       ""
       IGNORE_UNCHANGED
-  )
+  ) #fixme
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+      "-lhdf5::hdf5-static"
+      ""
+      IGNORE_UNCHANGED
+  ) #fixme
 endif()
-
 
 vcpkg_fixup_pkgconfig()
 
@@ -728,3 +707,5 @@ configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${P
 file(GLOB extra_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/opencv4/*")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra_license_files})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
+
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled) #fixme
