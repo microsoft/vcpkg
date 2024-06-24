@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO koide3/small_gicp
-    REF v0.1.0
+    REF "v${VERSION}"
     SHA512 bdd0d1e39d25877e58b2753addbad082f2fdf3962809fe646cab8ba63438eff05e2276afb2803aaed0a3905e0251208e2faaf8c1c416b551ffbdd54b9743ddb6
     HEAD_REF master
     PATCHES disable_openmp_osx.patch
