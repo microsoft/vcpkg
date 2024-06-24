@@ -9153,7 +9153,7 @@
       "port-version": 0
     },
     "vcpkg-tool-gn": {
-      "baseline": "2024-02-22",
+      "baseline": "2024-06-23",
       "port-version": 0
     },
     "vcpkg-tool-gyp-next": {
