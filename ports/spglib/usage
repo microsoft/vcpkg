@@ -1,0 +1,18 @@
+spglib provides CMake targets:
+
+    find_package(Spglib CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Spglib::symspg)
+
+    # spglib is also compatible with modern CMake workflows
+    include(FetchContent)
+    FetchContent_Declare(Spglib
+            GIT_REPOSITORY https://github.com/spglib/spglib
+            GIT_TAG develop
+    )
+    FetchContent_MakeAvailable(Spglib ...)
+    target_link_libraries(main PRIVATE Spglib::symspg)
+
+spglib provides pkg-config modules:
+
+    # The spglib library
+    spglib
