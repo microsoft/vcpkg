@@ -63,14 +63,6 @@
             "tiff",
             "webp"
           ]
-        },
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
         }
       ]
     },
