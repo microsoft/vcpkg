@@ -36,36 +36,39 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
-
-    # remove tools from debug builds
+   
+    # copy tools from "debug/bin" to "tools/debug/bin" folder
     foreach(TOOL "fast-discovery-serverd-1.0.1.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
-        endif()
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
     endforeach()
 
     # adjust paths in batch files
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fastrtps/fast-discovery-server-targets-debug.cmake" "tools/fastrtps" "tools/fastrtps/debug/bin")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
-
+    
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 elseif(VCPKG_TARGET_IS_LINUX)
     # copy tools from "bin" to "tools" folder
     foreach(TOOL "fast-discovery-server-1.0.1" "fast-discovery-server" "fastdds" "ros-discovery")
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
+    
+    # copy tools from "debug/bin" to "tools/debug/bin" folder
+    foreach(TOOL "fast-discovery-serverd-1.0.1" "fast-discovery-server" "fastdds" "ros-discovery")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
+    endforeach()
 
     # replace symlink by a copy because symlinks do not work well together with vcpkg binary caching
     file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server-1.0.1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}" RENAME "fast-discovery-server")
 
-    # remove tools from debug builds
-    foreach(TOOL "fast-discovery-serverd-1.0.1" "fast-discovery-server" "fastdds" "ros-discovery")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
-    endforeach()
-
     # adjust paths in batch files
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fastrtps/fast-discovery-server-targets-debug.cmake" "tools/fastrtps" "tools/fastrtps/debug/bin")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
 endif()

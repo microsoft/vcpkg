@@ -2654,7 +2654,7 @@
     },
     "fastrtps": {
       "baseline": "2.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "faudio": {
       "baseline": "24.03",
