@@ -8,10 +8,11 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         fix_findpkg.patch
+        patch-return-type.diff
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH} 
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${BACKEND_OPTION}
         -Dsaucer_prefer_remote=OFF
