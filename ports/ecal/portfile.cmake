@@ -16,6 +16,7 @@ vcpkg_from_github(
         0005-remove-install-prefix-macro-value.patch
         0006-use-find_dependency-in-cmake-config.patch
         0007-allow-static-build-of-core.patch
+        0008-protobuf-linkage.patch
 )
 
 vcpkg_cmake_configure(
