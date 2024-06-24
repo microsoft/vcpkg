@@ -36,6 +36,12 @@ vcpkg_download_distfile(CONTRIB_CUDA_124_INCLUDE_PATCH
   SHA512 3ba5d6e0a1f13c6513f5967d49f5941204eb39a064a402d54fe3a4fa5dbb2cfd8a8bebec99e06da9991098c95acfc816e367d27757f4a4f4d9fed1452debfd8a
 )
 
+vcpkg_download_distfile(ARM64_WINDOWS_PATCH
+  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25069.patch"
+  FILENAME "opencv-opencv4-25069.patch"
+  SHA512 2842f32ced73beb89850f7dc0c55d501e32b616276557489ccba90959f63d8955dae3395a882e690fdd7db7b38569c06f0141c8a5b9debdeb3670d2d43a4e34b
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -59,6 +65,7 @@ vcpkg_from_github(
       0017-fix-flatbuffers.patch
       ${CUDA_124_DNN_PATCH}
       ${CUDA_124_TUPLE_PATCH}
+      ${ARM64_WINDOWS_PATCH}
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -369,7 +376,7 @@ if(WITH_IPP)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_intel64_20230919_general.zip"
-        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_win_intel64_20230919_general.zip"
+        FILENAME "opencv-cache/ippicv/538a819ec84193a9c9f3c0f8df0be8b7-ippicv_2021.10.0_win_intel64_20230919_general.zip"
         SHA512 5aff6d9c8474e9f13e54d849a3e9b03de1e82590437d90cbde8e6c1d3be3a2b0f4263b5171796e8dab41181f8d7f8fd7c6d46e6f4aedacc98213aa5270bd1720
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -530,6 +537,8 @@ vcpkg_cmake_configure(
         -DWITH_NVCUVENC=OFF
         -DWITH_AVIF=OFF
         -DWITH_OPENEXR=OFF
+        -DWITH_VA=OFF
+        -DWITH_VA_INTEL=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
@@ -693,6 +702,23 @@ if("python" IN_LIST FEATURES)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/${python_dir}/site-packages/cv2/typing")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${python_dir}/site-packages/cv2/typing")
 endif()
+
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+      "-lQt6::Core5Compat"
+      ""
+      IGNORE_UNCHANGED
+  )
+endif()
+
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+      "-lQt6::Core5Compat"
+      ""
+      IGNORE_UNCHANGED
+  )
+endif()
+
 
 vcpkg_fixup_pkgconfig()
 
