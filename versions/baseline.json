@@ -1754,7 +1754,7 @@
     },
     "coin-or-cbc": {
       "baseline": "2024-06-04",
-      "port-version": 0
+      "port-version": 1
     },
     "coin-or-cgl": {
       "baseline": "2023-02-01",
