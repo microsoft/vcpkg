@@ -1,6 +1,7 @@
 {
   "name": "pulsar-client-cpp",
   "version": "3.5.1",
+  "port-version": 1,
   "description": "The Apache Pulsar C++ library",
   "homepage": "https://github.com/apache/pulsar-client-cpp",
   "license": "Apache-2.0",
