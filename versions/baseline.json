@@ -4749,7 +4749,7 @@
       "port-version": 0
     },
     "libobjc2": {
-      "baseline": "2.2",
+      "baseline": "2.2.1",
       "port-version": 0
     },
     "libodb": {
