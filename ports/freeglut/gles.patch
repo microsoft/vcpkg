@@ -1,0 +1,22 @@
+diff --git a/src/fg_geometry.c b/src/fg_geometry.c
+index ee7cc89..ea42f72 100644
+--- a/src/fg_geometry.c
++++ b/src/fg_geometry.c
+@@ -44,7 +44,7 @@
+ 
+ /* declare for drawing using the different OpenGL versions here so we can
+    have a nice code order below */
+-#ifndef GL_VERSION_1_1
++#if !(defined(GL_VERSION_1_1) || defined(GL_VERSION_ES_CM_1_0))
+ static void fghDrawGeometryWire10(GLfloat *varr, GLfloat *narr, GLushort *iarr,
+ 		GLsizei nparts, GLsizei npartverts, GLenum prim, GLushort *iarr2,
+ 		GLsizei nparts2, GLsizei npartverts2);
+@@ -222,7 +222,7 @@ void fghDrawGeometrySolid(GLfloat *vertices, GLfloat *normals, GLfloat *textcs,
+     }
+ }
+ 
+-#ifndef GL_VERSION_1_1
++#if !(defined(GL_VERSION_1_1) || defined(GL_VERSION_ES_CM_1_0))
+ static void fghDrawGeometryWire10(GLfloat *varr, GLfloat *narr, GLushort *iarr,
+ 		GLsizei nparts, GLsizei npartverts, GLenum prim, GLushort *iarr2,
+ 		GLsizei nparts2, GLsizei npartverts2)
