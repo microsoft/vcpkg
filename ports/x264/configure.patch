@@ -4,7 +4,7 @@ index e242e73c..e0d1df76 100755
 +++ b/configure
 @@ -1,4 +1,7 @@
 -#!/bin/bash
-+/usr/bin/env bash
++#!/usr/bin/env bash
 +
 +export CFLAGS="${CPPFLAGS} ${CFLAGS}"
 +test "${AS:-:}" = ":" && unset AS
