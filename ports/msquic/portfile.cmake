@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 5937fbc2f287567d590fc0afc947459359e5413fa25f2f193434ad6d7016f7cb0dede4e2ef5e1e4e8b21b556c5ad8ce4cb612514403bb593a49af0fb42d1cb15
     HEAD_REF master
     PATCHES
-        fix-install.patch   # Adjust install path of build outputs
+        fix-install.patch # Adjust install path of build outputs
 )
 
 vcpkg_from_github(
@@ -39,23 +39,17 @@ if(NOT VCPKG_HOST_IS_WINDOWS)
     vcpkg_add_to_path(PREPEND ${MAKE_EXE_PATH})
 endif()
 
- if(VCPKG_TARGET_IS_WINDOWS)
-     vcpkg_find_acquire_program(NASM)
-     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-     vcpkg_add_to_path(PREPEND ${NASM_EXE_PATH})
- endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        tools QUIC_BUILD_TOOLS
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path(PREPEND ${NASM_EXE_PATH})
+endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${QUIC_SOURCE_PATH}
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DQUIC_SOURCE_LINK=OFF
         -DQUIC_TLS=openssl
         -DQUIC_TLS_SECRETS_SUPPORT=ON
@@ -68,14 +62,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES quicattack quicinterop quicinteropserver quicipclient quicipserver
-                                quicpcp quicpost quicsample spinquic
-        AUTO_CLEAN
-    )
-endif()
-
 vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/include
