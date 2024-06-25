@@ -68,7 +68,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
         endif()
 
         file(GLOB_RECURSE macho_files LIST_DIRECTORIES FALSE "${folder}/*")
-        list(FILTER macho_files EXCLUDE REGEX "\\\.(cpp|cc|cxx|c|hpp|h|hh|hxx|inc|json|toml|yaml|man|m4|ac|am|in|log|txt|pyi?|pyc|pyx|pxd|pc|cmake|f77|f90|f03|fi|f|cu|mod|ini|whl|cat|csv|rst|md|npy|npz|template|build)$")
+        list(FILTER macho_files EXCLUDE REGEX [[\.(cpp|cc|cxx|c|hpp|h|hh|hxx|inc|json|toml|yaml|man|m4|ac|am|in|log|txt|pyi?|pyc|pyx|pxd|pc|cmake|f77|f90|f03|fi|f|cu|mod|ini|whl|cat|csv|rst|md|npy|npz|template|build)$]])
         list(FILTER macho_files EXCLUDE REGEX "/(copyright|LICENSE|METADATA)$")
 
         foreach(macho_file IN LISTS macho_files)
