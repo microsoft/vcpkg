@@ -4,6 +4,10 @@ function(z_vcpkg_calculate_corrected_macho_rpath)
       "MACHO_FILE_DIR;OUT_NEW_RPATH_VAR"
       "")
 
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
     set(current_prefix "${CURRENT_PACKAGES_DIR}")
     set(current_installed_prefix "${CURRENT_INSTALLED_DIR}")
     file(RELATIVE_PATH relative_from_packages "${CURRENT_PACKAGES_DIR}" "${arg_MACHO_FILE_DIR}")
@@ -87,6 +91,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             elseif(file_output MATCHES ".*Mach-O.*executable.*")
                 set(file_type "executable")
             else()
+                debug_message("File `${macho_file}` reported as `${file_output}` is not a Mach-O file")
                 continue()
             endif()
 
@@ -94,8 +99,8 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             get_filename_component(macho_file_name "${macho_file}" NAME)
 
             z_vcpkg_calculate_corrected_macho_rpath(
-              MACHO_FILE_DIR "${macho_file_dir}"
-              OUT_NEW_RPATH_VAR new_rpath
+                MACHO_FILE_DIR "${macho_file_dir}"
+                OUT_NEW_RPATH_VAR new_rpath
             )
 
             if("${file_type}" STREQUAL "shared")
