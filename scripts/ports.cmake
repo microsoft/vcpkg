@@ -155,6 +155,13 @@ if(CMD STREQUAL "BUILD")
     endif()
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}" "${CURRENT_PACKAGES_DIR}")
 
+    # VCPKG_DEFAULT_BUILD_TYPE is set by the -x-build-type option when installing in manifest mode.
+    # Set VCPKG_BUILD_TYPE to it right before including the triplet file, to give the triplet file
+    # a chance to override the build type.
+    if(VCPKG_DEFAULT_BUILD_TYPE)
+        set(VCPKG_BUILD_TYPE "${VCPKG_DEFAULT_BUILD_TYPE}")
+    endif()
+
     include("${CMAKE_TRIPLET_FILE}")
 
     set(HOST_TRIPLET "${_HOST_TRIPLET}")

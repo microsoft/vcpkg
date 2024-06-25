@@ -107,6 +107,19 @@ Install the dependencies listed in your manifest:
     "VCPKG_MANIFEST_MODE"
     OFF)
 
+CMAKE_DEPENDENT_OPTION(VCPKG_DEFAULT_BUILD_TYPE [[
+Set the configurations to build the dependencies.
+    Supported values are "release", "debug" or "auto".
+    * A value of "release" or "debug" will build dependencies only in Release or Debug mode respectively.
+    * A value of "auto" will try to guess the configurations from the CMAKE_BUILD_TYPE or CMAKE_CONFIGURATION_TYPES variables.
+    * An empty or unset value will build dependencies in both Release and Debug modes.
+
+    The value of this option will be overriden by the VCPKG_BUILD_TYPE variable set by triplet files.
+]]
+    ""
+    "VCPKG_MANIFEST_MODE"
+    "")
+
 if(VCPKG_MANIFEST_INSTALL)
     set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
     set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
@@ -511,6 +524,41 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
 
         if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
             list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
+        endif()
+
+        if(VCPKG_DEFAULT_BUILD_TYPE STREQUAL "auto")
+            macro(z_vcpkg_process_build_type build_type)
+                if(${build_type} STREQUAL "Debug")
+                    set(Z_VCPKG_BUILD_TYPE_DEBUG ON)
+                elseif(${build_type} MATCHES "Release|RelWithDebInfo|MinSizeRel")
+                    set(Z_VCPKG_BUILD_TYPE_RELEASE ON)
+                else()
+                    set(Z_VCPKG_BUILD_TYPE_UNKNOWN ON)
+                endif()
+            endmacro()
+
+            get_cmake_property(Z_VCPKG_MULTI_CONFIG_GENERATOR GENERATOR_IS_MULTI_CONFIG)
+            if(Z_VCPKG_MULTI_CONFIG_GENERATOR)
+                foreach(Z_VCPKG_BUILD_TYPE IN LISTS CMAKE_CONFIGURATION_TYPES)
+                    z_vcpkg_process_build_type(${Z_VCPKG_BUILD_TYPE})
+                endforeach()
+            else()
+                z_vcpkg_process_build_type(${CMAKE_BUILD_TYPE})
+            endif()
+
+            if(NOT Z_VCPKG_BUILD_TYPE_UNKNOWN)
+                if(Z_VCPKG_BUILD_TYPE_DEBUG AND NOT Z_VCPKG_BUILD_TYPE_RELEASE)
+                    set(Z_VCPKG_DEFAULT_BUILD_TYPE "debug")
+                elseif(Z_VCPKG_BUILD_TYPE_RELEASE AND NOT Z_VCPKG_BUILD_TYPE_DEBUG)
+                    set(Z_VCPKG_DEFAULT_BUILD_TYPE "release")
+                endif()
+            endif()
+        elseif(VCPKG_DEFAULT_BUILD_TYPE)
+            set(Z_VCPKG_DEFAULT_BUILD_TYPE ${VCPKG_DEFAULT_BUILD_TYPE})
+        endif()
+
+        if (Z_VCPKG_DEFAULT_BUILD_TYPE)
+            list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-build-type=${Z_VCPKG_DEFAULT_BUILD_TYPE}")
         endif()
 
         if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
