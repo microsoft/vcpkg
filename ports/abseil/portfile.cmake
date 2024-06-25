@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-revert-integer-to-string-conversion-optimizations.patch # Fix openvino MSVC compile error
+		0002-Fix-missing-include-random-for-std-uniform_int_distr.patch # Fix missing include for std::uniform_int_distribution
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
