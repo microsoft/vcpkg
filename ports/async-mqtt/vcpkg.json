@@ -1,6 +1,6 @@
 {
   "name": "async-mqtt",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "Header-only Asynchronous MQTT communication library for C++17 based on Boost.Asio.",
   "homepage": "https://github.com/redboltz/async_mqtt",
   "license": "BSL-1.0",
@@ -11,10 +11,15 @@
     "boost-beast",
     "boost-container",
     "boost-container-hash",
+    "boost-date-time",
     "boost-endian",
+    "boost-filesystem",
+    "boost-hana",
+    "boost-lexical-cast",
     "boost-log",
     "boost-multi-index",
     "boost-numeric-conversion",
+    "boost-preprocessor",
     "boost-system",
     {
       "name": "vcpkg-cmake",
