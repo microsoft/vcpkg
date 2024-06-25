@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         bigobj.patch
         fix-openmp.patch
         install-subtargets.patch
+        fix_export_dll.patch #https://github.com/FFTW/fftw3/pull/119
 )
 
 vcpkg_check_features(
