@@ -106,15 +106,29 @@ index 5c40129..ac79361 100644
  install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/xml2-config DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT development)
  
 diff --git a/libxml-2.0.pc.in b/libxml-2.0.pc.in
-index 6d7b62f..7f3a1ea 100644
+index 6d7b62f..35eb1c4 100644
 --- a/libxml-2.0.pc.in
 +++ b/libxml-2.0.pc.in
-@@ -8,5 +8,7 @@ Name: libXML
+@@ -7,6 +7,7 @@ modules=@WITH_MODULES@
+ Name: libXML
  Version: @VERSION@
  Description: libXML library version2.
- Requires@XML_PC_PRIVATE@: @XML_PC_REQUIRES@
+-Requires@XML_PC_PRIVATE@: @XML_PC_REQUIRES@
 -Libs: -L${libdir} @XML_LIBS@ @XML_PC_LIBS_PRIVATE@ @XML_PC_LIBS@ @LIBS@
 +Requires.private: @ICU_LIBS@ @Z_LIBS@ @LZMA_LIBS@
 +Libs: -L${libdir} -l@XML_LIB_NAME@
-+Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WINSOCK_LIBS@ @LIBS@
++Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WINSOCK_LIBS@ @LIBS@ @CRYPTO_LIBS@
  Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@
+diff --git a/libxml2-config.cmake.cmake.in b/libxml2-config.cmake.cmake.in
+index aead949..20eb836 100644
+--- a/libxml2-config.cmake.cmake.in
++++ b/libxml2-config.cmake.cmake.in
+@@ -157,7 +157,7 @@ if(NOT LIBXML2_SHARED)
+   endif()
+ 
+   if(WIN32)
+-    list(APPEND LIBXML2_LIBRARIES ws2_32)
++    list(APPEND LIBXML2_LIBRARIES ws2_32 bcrypt)
+   endif()
+ endif()
+ 
