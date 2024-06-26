@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ac3f20..50c4264 100644
+index 5ac3f20..d4e3864 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -134,57 +134,17 @@ endif()
@@ -79,7 +79,7 @@ index 5ac3f20..50c4264 100644
  endif()
  
  # --------------------------------------------------------------------------------------------------------
-@@ -267,6 +227,5 @@ if (saucer_prefer_remote AND saucer_backend STREQUAL "WebView2")
+@@ -267,6 +227,4 @@ if (saucer_prefer_remote AND saucer_backend STREQUAL "WebView2")
  endif()
  
  install(DIRECTORY "include/saucer" TYPE INCLUDE)
@@ -87,7 +87,6 @@ index 5ac3f20..50c4264 100644
 -install(DIRECTORY "$<TARGET_PROPERTY:glaze_glaze,INTERFACE_INCLUDE_DIRECTORIES>/glaze" TYPE INCLUDE)
 -install(DIRECTORY "$<TARGET_PROPERTY:boost_callable_traits,INTERFACE_INCLUDE_DIRECTORIES>/boost" TYPE INCLUDE)
 +install(DIRECTORY "${BOOST_CALLTRA_INCLUDE_DIRS}/boost/callable_traits" DESTINATION "include/boost/callable_traits")
-+install(DIRECTORY "${BOOST_PREPROCESSOR_INCLUDE_DIRS}/boost/preprocessor" DESTINATION "include/boost/preprocessor")
 diff --git a/cmake/webview2.cmake b/cmake/webview2.cmake
 index 9ee3dbc..3827e94 100644
 --- a/cmake/webview2.cmake
