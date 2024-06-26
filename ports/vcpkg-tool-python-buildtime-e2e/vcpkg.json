@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "vcpkg-tool-python-buildtime-e2e",
+  "version-semver": "0.0.0-alpha.202405",
+  "description": "temp test",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-python-buildtime",
+      "host": true
+    }
+  ]
+}

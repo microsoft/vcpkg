@@ -1,0 +1,89 @@
+diff --git a/_internal/commands/__init__.py b/_internal/commands/__init__.py
+index 858a410..71d6f34 100644
+--- a/_internal/commands/__init__.py
++++ b/_internal/commands/__init__.py
+@@ -18,6 +18,11 @@ CommandInfo = namedtuple("CommandInfo", "module_path, class_name, summary")
+ # prefix, the full path makes testing easier (specifically when modifying
+ # `commands_dict` in test setup / teardown).
+ commands_dict: Dict[str, CommandInfo] = {
++    "prepare-candidate": CommandInfo(
++        "pip._internal.commands.prepare_candidate",
++        "PrepareCandidateCommand",
++        "Prepare candidate of packages.",
++    ),
+     "install": CommandInfo(
+         "pip._internal.commands.install",
+         "InstallCommand",
+diff --git a/_internal/commands/prepare_candidate.py b/_internal/commands/prepare_candidate.py
+new file mode 100644
+index 0000000..feebb30
+--- /dev/null
++++ b/_internal/commands/prepare_candidate.py
+@@ -0,0 +1,20 @@
++from optparse import Values
++from typing import List
++
++from pip._internal.cli.status_codes import SUCCESS
++from pip._internal.commands.install import InstallCommand
++
++import pip._internal.prepare_candidate_config as lic # type: ignore
++
++class PrepareCandidateCommand(InstallCommand):
++    def run(self, options: Values, args: List[str]) -> int:
++
++        lic.enable()
++        options.dry_run = True
++        try:
++            super().run(options, args)
++        except lic.PrepareCandidateException as e:
++            lic.prep_candidates_csv = str(e)
++
++        lic.print_prep_candidates()
++        return SUCCESS
+diff --git a/_internal/prepare_candidate_config.py b/_internal/prepare_candidate_config.py
+new file mode 100644
+index 0000000..024440c
+--- /dev/null
++++ b/_internal/prepare_candidate_config.py
+@@ -0,0 +1,23 @@
++import os
++from typing import List
++from urllib.parse import urlparse, unquote
++
++find_candidate: bool = False
++env_var: str = 'PREPARE_CANDIDATE_DOWNLOADED'
++candidates_downloaded: List[str] = []
++prep_candidates_csv: str = ''
++
++def enable() -> None:
++    global find_candidate
++    find_candidate = True
++    if env_var in os.environ:
++        candidates_downloaded.extend(os.environ[env_var].split(';'))
++
++def print_prep_candidates() -> None:
++    print(f'==PREP_CANDIDATES=[{prep_candidates_csv}]==')
++
++def filename_from_uri(uri:str) -> str:
++    return os.path.basename(unquote(urlparse(uri).path))
++
++class PrepareCandidateException(Exception):
++    pass
+diff --git a/_internal/resolution/resolvelib/factory.py b/_internal/resolution/resolvelib/factory.py
+index 4adeb43..e2305c4 100644
+--- a/_internal/resolution/resolvelib/factory.py
++++ b/_internal/resolution/resolvelib/factory.py
+@@ -301,6 +301,13 @@ class Factory:
+             )
+             icans = list(result.iter_applicable())
+ 
++            import pip._internal.prepare_candidate_config as lic # type: ignore
++            if lic.find_candidate:
++                cadicate_list = [lic.filename_from_uri(ican.link._url) for ican in icans]
++                prep_candidates = [candidate for candidate in cadicate_list if candidate not in lic.candidates_downloaded]
++                if prep_candidates:
++                    raise lic.PrepareCandidateException(';'.join(prep_candidates))
++
+             # PEP 592: Yanked releases are ignored unless the specifier
+             # explicitly pins a version (via '==' or '===') that can be
+             # solely satisfied by a yanked release.

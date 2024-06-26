@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "vcpkg-tool-python-buildtime",
+  "version-semver": "0.0.0-alpha.202405+pypi-202405-cpython-3.12.3",
+  "description": "Find Python installation and packages, optionally download and create virtual environment as fallback",
+  "license": "MIT",
+  "supports": "native",
+  "features": {
+    "pre-download": {
+      "description": "Pre-download candidate resources for current port"
+    }
+  }
+}
