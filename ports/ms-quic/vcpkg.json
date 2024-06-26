@@ -1,6 +1,7 @@
 {
   "name": "ms-quic",
   "version": "2.3.5",
+  "port-version": 1,
   "description": "Cross-platform, C implementation of the IETF QUIC protocol",
   "homepage": "https://github.com/microsoft/msquic",
   "license": "MIT",
@@ -17,7 +18,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Install the tools after build"
+      "description": "Install the tools after build",
+      "supports": "!uwp"
     }
   }
 }
