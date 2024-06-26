@@ -758,19 +758,13 @@ mozjpeg:arm-neon-android=fail
 mozjpeg:arm64-android=fail
 mozjpeg:x64-android=fail
 mpir:x64-android=fail
-# ms-gltf and ms-quic require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+# ms-gltf require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
 ms-gdkx:x64-windows=fail
 ms-gdkx:x64-windows-static=fail
 ms-gdkx:x64-windows-static-md=fail
 ms-gltf:arm-neon-android=fail
 ms-gltf:arm64-android=fail
 ms-gltf:x64-android=fail
-ms-quic:arm64-uwp=fail
-ms-quic:arm64-windows=fail
-ms-quic:x64-uwp=fail
-ms-quic:x64-windows-static-md=fail
-ms-quic:x64-windows=fail
-ms-quic:x86-windows=fail
 monkeys-audio:arm64-windows=fail
 monkeys-audio:x64-windows-static=fail
 moos-core:x64-windows-static=fail
@@ -1243,9 +1237,6 @@ wpilib:arm64-android=fail # requires full c++20 support
 wpilib:x64-android=fail # requires full c++20 support
 x264:arm-neon-android=fail
 x264:arm64-android=fail
-x265:arm-neon-android=fail
-x265:arm64-android=fail
-x265:x64-android=fail
 # No xorg-macros available on osx
 xbitmaps:arm-neon-android=fail
 xbitmaps:arm64-android=fail
