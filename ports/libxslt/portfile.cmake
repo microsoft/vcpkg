@@ -1,15 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF v1.1.37
-    SHA512 4e7a57cbe02ceea34404213a88bdbb63a756edfab63063ce3979b670816ae3f6fb3637a49508204e6e46b936628e0a3b8b77e9201530a1184225bd68da403b25
+    REF "v${VERSION}"
+    SHA512 fbcfbf49a4f0b643172d57a92f1e59f7a41c4c2c0fb22d5ca584328e369a64227a68f8903f31d193f78ad3e07216388a38cf8e89ef9d7857b92b6278e91ad52d
     HEAD_REF master
-    PATCHES
-        python3.patch
-        msvc-no-suffix.patch
-        libexslt-pkgconfig.patch
-        fix-gcrypt-deps.patch
-        skip-install-docs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -39,6 +33,8 @@ vcpkg_cmake_configure(
         -DLIBXSLT_WITH_XSLT_DEBUG:BOOL=ON
         -DLIBXSLT_WITH_MEM_DEBUG:BOOL=ON
         -DLIBXSLT_WITH_DEBUGGER:BOOL=ON
+    MAYBE_UNUSED_VARIABLES
+        LIBXSLT_WITH_MEM_DEBUG
     )
 vcpkg_cmake_install()
 file(GLOB config_path RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/libxslt-*")
@@ -55,7 +51,7 @@ if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config" [[$(cd "$(dirname "$0")"; pwd -P)/..]] [[$(cd "$(dirname "$0")/../../../debug"; pwd -P)]])
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/xslt-config" [[${prefix}/include]] [[${prefix}/../include]])
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "")
 vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
