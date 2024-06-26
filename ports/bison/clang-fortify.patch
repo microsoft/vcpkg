@@ -1,0 +1,47 @@
+diff --git a/lib/cdefs.h b/lib/cdefs.h
+index 4dac9d2..6612306 100644
+--- a/lib/cdefs.h
++++ b/lib/cdefs.h
+@@ -137,6 +137,7 @@
+ #endif
+ 
+ 
++#ifndef __GNULIB_CDEFS
+ /* Fortify support.  */
+ #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
+ #define __bos0(ptr) __builtin_object_size (ptr, 0)
+@@ -150,6 +151,8 @@
+ # define __glibc_objsize(__o) __bos (__o)
+ #endif
+ 
++#endif
++
+ #if __GNUC_PREREQ (4,3)
+ # define __warnattr(msg) __attribute__((__warning__ (msg)))
+ # define __errordecl(name, msg) \
+diff --git a/lib/libc-config.h b/lib/libc-config.h
+index 886c11f..ea9a22f 100644
+--- a/lib/libc-config.h
++++ b/lib/libc-config.h
+@@ -135,8 +135,10 @@
+ # undef __attribute_returns_twice__
+ # undef __attribute_used__
+ # undef __attribute_warn_unused_result__
++# ifndef __GNULIB_CDEFS
+ # undef __bos
+ # undef __bos0
++# endif
+ # undef __errordecl
+ # undef __extension__
+ # undef __extern_always_inline
+@@ -149,8 +151,10 @@
+ # undef __glibc_has_extension
+ # undef __glibc_macro_warning
+ # undef __glibc_macro_warning1
++# ifndef __GNULIB_CDEFS
+ # undef __glibc_objsize
+ # undef __glibc_objsize0
++# endif
+ # undef __glibc_unlikely
+ # undef __inline
+ # undef __ptr_t
