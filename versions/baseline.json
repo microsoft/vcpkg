@@ -4733,7 +4733,7 @@
       "port-version": 4
     },
     "libnick": {
-      "baseline": "2024.6.8",
+      "baseline": "2024.6.9",
       "port-version": 0
     },
     "libnoise": {
