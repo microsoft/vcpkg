@@ -1,0 +1,13 @@
+diff --git a/src/sbml/xml/LibXMLParser.cpp b/src/sbml/xml/LibXMLParser.cpp
+index 01c6fab..26bc704 100644
+--- a/src/sbml/xml/LibXMLParser.cpp
++++ b/src/sbml/xml/LibXMLParser.cpp
+@@ -424,7 +424,7 @@ LibXMLParser::parseNext ()
+ 
+   if ( xmlParseChunk(mParser, mBuffer, bytes, done) )
+   {
+-    xmlErrorPtr libxmlError = xmlGetLastError();
++    const xmlError* libxmlError = xmlGetLastError();
+ 
+     // I tried reporting the message from libXML that's available in
+     // libxmlError->message, but the thing is bogus: it will say things

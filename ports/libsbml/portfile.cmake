@@ -9,6 +9,7 @@ vcpkg_from_github(
         dirent.diff
         no-docs.diff
         test-shared.diff
+        fix-libxml2.patch #https://github.com/sbmlteam/libsbml/pull/358
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
