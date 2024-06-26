@@ -1,9 +1,9 @@
 {
   "name": "jinja2cpp",
-  "version": "1.0.1",
-  "description": "A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.",
+  "version": "1.3.2",
+  "description": "C++ implementation of the Jinja2 Python template engine. This library brings support of powerful Jinja2 template features into the C++ world, reports dynamic HTML pages and source code generation.",
   "homepage": "https://github.com/jinja2cpp/Jinja2Cpp",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "dependencies": [
     "boost-algorithm",
     "boost-filesystem",
