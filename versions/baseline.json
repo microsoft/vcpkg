@@ -3744,6 +3744,10 @@
       "baseline": "2023-12-27",
       "port-version": 0
     },
+    "jinja2cpp": {
+      "baseline": "1.3.2",
+      "port-version": 0
+    },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
       "port-version": 3
