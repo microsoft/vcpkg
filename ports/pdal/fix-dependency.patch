@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d13d417..011608d 100644
+index 1dc3343..cfdf3be 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -269,7 +269,7 @@ target_link_libraries(${PDAL_BASE_LIB_NAME}
+@@ -240,7 +240,7 @@ target_link_libraries(${PDAL_LIB_NAME}
      PRIVATE
          ${CMAKE_THREAD_LIBS_INIT}
          ${CMAKE_DL_LIBS}
 -        ${GDAL_LIBRARY}
 +        ${GDAL_LIBRARIES}
+         ${PROJ_LIBRARIES}
          ${GEOTIFF_LIBRARY}
          ${LIBXML2_LIBRARIES}
-         ${ZLIB_LIBRARIES}
 diff --git a/cmake/zstd.cmake b/cmake/zstd.cmake
 index dfe3dc0..42a78d6 100644
 --- a/cmake/zstd.cmake
