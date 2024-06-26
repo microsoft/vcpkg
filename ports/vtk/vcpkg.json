@@ -34,7 +34,13 @@
     "libogg",
     "libpng",
     "libtheora",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    },
     "lz4",
     "netcdf-c",
     "pegtl",
