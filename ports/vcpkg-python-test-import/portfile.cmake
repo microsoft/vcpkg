@@ -5,5 +5,5 @@ file(INSTALL
        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-file(INSTALL "${VCPKG_ROOT_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
 set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
