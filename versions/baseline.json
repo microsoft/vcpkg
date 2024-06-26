@@ -9477,8 +9477,8 @@
       "port-version": 0
     },
     "x264": {
-      "baseline": "0.164.3107",
-      "port-version": 1
+      "baseline": "0.164.3108",
+      "port-version": 0
     },
     "x265": {
       "baseline": "3.6",
