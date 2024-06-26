@@ -12,7 +12,13 @@
     "exprtk",
     "fast-float",
     "fmt",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    },
     "glew",
     {
       "name": "hdf5",
