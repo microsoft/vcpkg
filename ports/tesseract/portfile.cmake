@@ -55,7 +55,7 @@ if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS
         ambiguous_words classifier_tester combine_tessdata
         cntraining dawg2wordlist mftraining shapeclustering
-        wordlist2dawg combine_lang_model lstmeval lstmtraining
+        wordlist2dawg combine_lang_model lstmeval lstmtraining text2image
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
