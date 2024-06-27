@@ -25,7 +25,7 @@ jobs:
     - ImageOverride -equals vcpkg-mariner-docker-gen1
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   cancelTimeoutInMinutes: 1
   dependsOn: mintsas
   variables:

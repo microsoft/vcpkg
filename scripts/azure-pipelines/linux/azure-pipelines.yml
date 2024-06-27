@@ -22,7 +22,7 @@ jobs:
     name: PrLin-1ES-Pool
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   dependsOn: mintsas
   variables:
   - name: WORKING_ROOT
