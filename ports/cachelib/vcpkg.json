@@ -12,7 +12,8 @@
     {
       "name": "folly",
       "features": [
-        "libaio", "libdwarf"
+        "libaio",
+        "libdwarf"
       ]
     },
     "gflags",
