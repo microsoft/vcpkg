@@ -49,6 +49,12 @@
       "description": "Support compile with libaio",
       "supports": "linux & x64"
     },
+    "libdwarf": {
+      "description": "Support compile with libdwarf",
+      "dependencies": [
+        "libdwarf"
+      ]
+    },
     "libsodium": {
       "description": "Support libsodium for cryto",
       "dependencies": [
@@ -59,12 +65,6 @@
       "description": "Support compile with liburing",
       "dependencies": [
         "liburing"
-      ]
-    },
-    "libdwarf": {
-      "description": "Support compile with libdwarf",
-      "dependencies": [
-        "libdwarf"
       ]
     },
     "lz4": {
