@@ -1,0 +1,5 @@
+javascriptcore provides CMake targets:
+
+find_package(JavaScriptCore REQUIRED)
+target_link_libraries(main PRIVATE JavaScriptCore)
+
