@@ -8,13 +8,15 @@ if(APPLE)
     enable_language(OBJCXX)
 endif()
 
+include(GNUInstallDirs) # Defines CMAKE_INSTALL_INCLUDEDIR if not set
+
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_SOURCE_DIR}/test-engine>"
-        $<INSTALL_INTERFACE:include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_sources(
@@ -148,18 +150,32 @@ list(REMOVE_DUPLICATES BINDINGS_SOURCES)
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}_target
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+    ARCHIVE
+        COMPONENT Development
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY
+        COMPONENT Runtime
+        NAMELINK_COMPONENT Development
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME
+        COMPONENT Runtime
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 foreach(BINDING_TARGET ${BINDING_TARGETS})
     install(
         TARGETS ${BINDING_TARGET}
         EXPORT ${PROJECT_NAME}_target
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
+        ARCHIVE
+            COMPONENT Development
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY
+            COMPONENT Runtime
+            NAMELINK_COMPONENT Development
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME
+            COMPONENT Runtime
+            DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endforeach()
 
@@ -172,47 +188,47 @@ if(NOT IMGUI_SKIP_HEADERS)
         ${CMAKE_CURRENT_SOURCE_DIR}/imstb_rectpack.h
         ${CMAKE_CURRENT_SOURCE_DIR}/imstb_truetype.h
         ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
-        DESTINATION include
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
     if(IMGUI_BUILD_ALLEGRO5_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if (IMGUI_BUILD_ANDROID_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_android.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_android.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_DX9_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx9.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx9.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_DX10_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx10.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx10.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_DX11_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx11.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx11.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_DX12_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx12.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx12.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_GLFW_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glfw.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glfw.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_GLUT_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glut.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glut.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_METAL_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_OPENGL2_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_OPENGL3_BINDING)
@@ -221,32 +237,32 @@ if(NOT IMGUI_SKIP_HEADERS)
                 ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3_loader.h
             DESTINATION
-                include
+                ${CMAKE_INSTALL_INCLUDEDIR}
         )
     endif()
 
     if(IMGUI_BUILD_OSX_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_osx.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_osx.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_SDL2_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl2.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl2.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_VULKAN_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_vulkan.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_vulkan.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_BUILD_WIN32_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_win32.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_win32.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_FREETYPE)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.h DESTINATION include)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     endif()
 
     if(IMGUI_TEST_ENGINE)
@@ -269,13 +285,13 @@ if(NOT IMGUI_SKIP_HEADERS)
 endif()
 
 include(CMakePackageConfigHelpers)
-configure_package_config_file(imgui-config.cmake.in imgui-config.cmake INSTALL_DESTINATION share/imgui)
+configure_package_config_file(imgui-config.cmake.in imgui-config.cmake INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/imgui)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/imgui-config.cmake DESTINATION share/imgui)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/imgui-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/imgui)
 
 install(
     EXPORT ${PROJECT_NAME}_target
     NAMESPACE ${PROJECT_NAME}::
     FILE ${PROJECT_NAME}-targets.cmake
-    DESTINATION share/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
