@@ -1,7 +1,6 @@
 {
-  "name": "ms-quic",
+  "name": "msquic",
   "version": "2.3.5",
-  "port-version": 1,
   "description": "Cross-platform, C implementation of the IETF QUIC protocol",
   "homepage": "https://github.com/microsoft/msquic",
   "license": "MIT",
@@ -15,11 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "tools": {
-      "description": "Install the tools after build",
-      "supports": "!uwp"
-    }
-  }
+  ]
 }
