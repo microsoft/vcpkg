@@ -1,0 +1,145 @@
+diff --git a/57b00fa7ea-2210ebaf94.clean/CMakeLists.txt b/57b00fa7ea-10a10c16cc/CMakeLists.txt
+index a9f33b681..3ae0b004c 100644
+--- a/57b00fa7ea-2210ebaf94.clean/CMakeLists.txt
++++ b/57b00fa7ea-10a10c16cc/CMakeLists.txt
+@@ -35,13 +35,13 @@ endif()
+ 
+ include(cmake/modules/CaptureCommandLine.cmake)
+ 
+-macro(find_package)
++project(ROOT)
++macro(_find_package)
+   if(NOT "${ARGV0}" IN_LIST ROOT_BUILTINS)
+-    _find_package(${ARGV})
++    __find_package(${ARGV})
+   endif()
+ endmacro()
+ 
+-project(ROOT)
+ 
+ #---Set the locale to default C to prevent issued due to localization of commands---------------
+ # This is necessary as we for example call `clang -v` and parse its output. But on a localized
+diff --git a/57b00fa7ea-2210ebaf94.clean/cmake/modules/FindCFITSIO.cmake b/57b00fa7ea-10a10c16cc/cmake/modules/FindCFITSIO.cmake
+index d766a8c9f..119473875 100644
+--- a/57b00fa7ea-2210ebaf94.clean/cmake/modules/FindCFITSIO.cmake
++++ b/57b00fa7ea-10a10c16cc/cmake/modules/FindCFITSIO.cmake
+@@ -62,7 +62,7 @@ if(CFITSIO_FOUND)
+     if(${CFITSIO_VERSION} VERSION_GREATER_EQUAL 3.42)
+       find_package(CURL QUIET)
+       if(CURL_FOUND)
+-        set(CFITSIO_LIBRARIES ${CFITSIO_LIBRARIES} ${CURL_LIBRARIES})
++        set(CFITSIO_LIBRARIES ${CFITSIO_LIBRARIES} CURL::libcurl)
+       endif()
+     endif()
+   endif()
+@@ -72,7 +72,7 @@ if(CFITSIO_FOUND)
+     set_target_properties(CFITSIO::CFITSIO PROPERTIES
+       IMPORTED_LOCATION "${CFITSIO_LIBRARY}"
+       INTERFACE_INCLUDE_DIRECTORIES "${CFITSIO_INCLUDE_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}"
++      INTERFACE_LINK_LIBRARIES "CURL::libcurl"
+     )
+   endif()
+ endif()
+diff --git a/57b00fa7ea-2210ebaf94.clean/cmake/modules/FindLZ4.cmake b/57b00fa7ea-10a10c16cc/cmake/modules/FindLZ4.cmake
+index 221775a10..3ad09a70d 100644
+--- a/57b00fa7ea-2210ebaf94.clean/cmake/modules/FindLZ4.cmake
++++ b/57b00fa7ea-10a10c16cc/cmake/modules/FindLZ4.cmake
+@@ -36,7 +36,7 @@
+ find_path(LZ4_INCLUDE_DIR NAME lz4.h PATH_SUFFIXES include)
+ 
+ if(NOT LZ4_LIBRARY)
+-  find_library(LZ4_LIBRARY NAMES lz4 PATH_SUFFIXES lib)
++  find_library(LZ4_LIBRARY NAMES lz4 lz4d PATH_SUFFIXES lib NAMES_PER_DIR)
+ endif()
+ 
+ mark_as_advanced(LZ4_INCLUDE_DIR)
+diff --git a/57b00fa7ea-2210ebaf94.clean/cmake/modules/FindPCRE.cmake b/57b00fa7ea-10a10c16cc/cmake/modules/FindPCRE.cmake
+index a0d72ed05..75fcb96c9 100644
+--- a/57b00fa7ea-2210ebaf94.clean/cmake/modules/FindPCRE.cmake
++++ b/57b00fa7ea-10a10c16cc/cmake/modules/FindPCRE.cmake
+@@ -58,7 +58,7 @@ endif()
+ 
+ if(NOT PCRE_PCRE_LIBRARY)
+   find_library(PCRE_PCRE_LIBRARY_RELEASE NAMES pcre)
+-  find_library(PCRE_PCRE_LIBRARY_DEBUG NAMES pcre${CMAKE_DEBUG_POSTFIX} pcred)
++  find_library(PCRE_PCRE_LIBRARY_DEBUG NAMES pcred pcre${CMAKE_DEBUG_POSTFIX})
+   include(SelectLibraryConfigurations)
+   select_library_configurations(PCRE_PCRE)
+ endif()
+diff --git a/57b00fa7ea-2210ebaf94.clean/cmake/modules/SearchInstalledSoftware.cmake b/57b00fa7ea-10a10c16cc/cmake/modules/SearchInstalledSoftware.cmake
+index 3ea0b6aca..368a7f3e9 100644
+--- a/57b00fa7ea-2210ebaf94.clean/cmake/modules/SearchInstalledSoftware.cmake
++++ b/57b00fa7ea-10a10c16cc/cmake/modules/SearchInstalledSoftware.cmake
+@@ -1330,6 +1330,9 @@ int main() { return 0; }" tbb_exception_result)
+   endif()
+ 
+   set(TBB_CXXFLAGS "-DTBB_SUPPRESS_DEPRECATED_MESSAGES=1")
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    string(APPEND TBB_CXXFLAGS " -D_DEBUG=1")
++  endif()
+   set(TBB_TARGET TBB::tbb)
+   set(TBB_INCLUDE_DIRS "${VCPKG_INSTALLED_DIR}/include")
+   set(TBB_LIBRARIES "${TBB_TARGET}")
+diff --git a/57b00fa7ea-2210ebaf94.clean/io/io/src/TStreamerInfoWriteBuffer.cxx b/57b00fa7ea-10a10c16cc/io/io/src/TStreamerInfoWriteBuffer.cxx
+index 652a72885..fd5b25af1 100644
+--- a/57b00fa7ea-2210ebaf94.clean/io/io/src/TStreamerInfoWriteBuffer.cxx
++++ b/57b00fa7ea-10a10c16cc/io/io/src/TStreamerInfoWriteBuffer.cxx
+@@ -587,10 +587,12 @@ Int_t TStreamerInfo::WriteBufferAux(TBuffer &b, const T &arr,
+                         if (nobjects) {
+                            auto actions = proxy->GetWriteMemberWiseActions();
+ 
+-                           char startbuf[TVirtualCollectionProxy::fgIteratorArenaSize];
+-                           char endbuf[TVirtualCollectionProxy::fgIteratorArenaSize];
+-                           void *begin = &(startbuf[0]);
+-                           void *end = &(endbuf[0]);
++                           struct {
++                              char startbuf[TVirtualCollectionProxy::fgIteratorArenaSize];
++                              char endbuf[TVirtualCollectionProxy::fgIteratorArenaSize];
++                           } membuf ;
++                           void *begin = &(membuf.startbuf[0]);
++                           void *end = &(membuf.endbuf[0]);
+                            proxy->GetFunctionCreateIterators(/*read = */ kFALSE)(obj, &begin, &end, proxy);
+                            // We can not get here with a split vector of pointer, so we can indeed assume
+                            // that actions->fConfiguration != null.
+diff --git a/57b00fa7ea-2210ebaf94.clean/roofit/jsoninterface/CMakeLists.txt b/57b00fa7ea-10a10c16cc/roofit/jsoninterface/CMakeLists.txt
+index ae4b3430f..2e6a02d68 100644
+--- a/57b00fa7ea-2210ebaf94.clean/roofit/jsoninterface/CMakeLists.txt
++++ b/57b00fa7ea-10a10c16cc/roofit/jsoninterface/CMakeLists.txt
+@@ -13,8 +13,8 @@
+ # nlohmann-json backend. Like this we can also convert to yaml.
+ 
+ message(STATUS "Looking for RapidYAML (used by RooFit)")
+-find_package(ryml)
+-if(${RYML_FOUND})
++find_package(ryml CONFIG)
++if(ryml_FOUND)
+   message(STATUS "RapidYAML found, compiling also RooFit JSON Interface with RapidYAML parser")
+   set(ParserSources src/JSONParser.cxx src/RYMLParser.cxx)
+   add_compile_definitions(ROOFIT_WITH_RYML)
+@@ -35,10 +35,8 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooFitJSONInterface
+     Core
+ )
+ 
+-if(${RYML_FOUND})
+-  target_include_directories(RooFitJSONInterface PRIVATE ${RYML_INCLUDE_DIRS})
+-  target_link_libraries(RooFitJSONInterface PRIVATE -lc4core -lryml)
+-  target_link_directories(RooFitJSONInterface PRIVATE ${RYML_LIB_DIR})
++if(ryml_FOUND)
++  target_link_libraries(RooFitJSONInterface PRIVATE ryml::ryml)
+ endif()
+ 
+ if(builtin_nlohmannjson)
+diff --git a/57b00fa7ea-2210ebaf94.clean/roofit/jsoninterface/src/RYMLParser.cxx b/57b00fa7ea-10a10c16cc/roofit/jsoninterface/src/RYMLParser.cxx
+index f2e98bb58..89f283171 100644
+--- a/57b00fa7ea-2210ebaf94.clean/roofit/jsoninterface/src/RYMLParser.cxx
++++ b/57b00fa7ea-10a10c16cc/roofit/jsoninterface/src/RYMLParser.cxx
+@@ -13,7 +13,7 @@
+ #include <sstream>
+ #include <stdexcept>
+ 
+-#include <ryml.hpp>
++#include <ryml/ryml.hpp>
+ #include <c4/yml/std/map.hpp>
+ #include <c4/yml/std/string.hpp>
+ #include <c4/yml/common.hpp>
