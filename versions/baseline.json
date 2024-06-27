@@ -2818,7 +2818,7 @@
     },
     "foonathan-memory": {
       "baseline": "0.7.3",
-      "port-version": 1
+      "port-version": 2
     },
     "forge": {
       "baseline": "1.0.8",
