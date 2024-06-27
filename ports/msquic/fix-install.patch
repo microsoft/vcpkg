@@ -1,16 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0c89c5c..98bb1a6 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -752,6 +752,8 @@ add_subdirectory(src/bin)
- # Tool code
- if(QUIC_BUILD_TOOLS)
-     add_subdirectory(src/tools)
-+    install(TARGETS quicattack quicinterop quicinteropserver quicipclient quicipserver
-+                    quicpcp quicpost quicsample spinquic)
- endif()
-
- # Performance code
 diff --git a/src/bin/CMakeLists.txt b/src/bin/CMakeLists.txt
 index 2376823..d0592a3 100644
 --- a/src/bin/CMakeLists.txt
@@ -31,12 +18,12 @@ index 2376823..d0592a3 100644
 -        $<INSTALL_INTERFACE:${include_dest}>)
 +        $<INSTALL_INTERFACE:include>)
  endif()
-
+ 
  set(PUBLIC_HEADERS
 @@ -269,11 +269,10 @@ set(PUBLIC_HEADERS
      ../inc/msquic_posix.h
      ../inc/quic_sal_stub.h)
-
+ 
 -if(BUILD_SHARED_LIBS)
 -  install(TARGETS msquic EXPORT msquic DESTINATION lib)
 -else()
@@ -47,5 +34,5 @@ index 2376823..d0592a3 100644
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib)
  install(FILES ${PUBLIC_HEADERS} DESTINATION include)
-
+ 
  configure_file(msquic-config.cmake.in ${CMAKE_BINARY_DIR}/msquic-config.cmake)
