@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ec14eea..f83d678 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,11 +55,15 @@ if(NOT Eigen3_FOUND)
+   )
+ endif()
+ 
+-if(BUILD_WITH_OPENMP STREQUAL "auto")
+-  find_package(OpenMP)
+-  set(BUILD_WITH_OPENMP ${OpenMP_FOUND})
+-elseif(BUILD_WITH_OPENMP)
+-  find_package(OpenMP REQUIRED)
++if(APPLE)
++  set(BUILD_WITH_OPENMP FALSE)
++else()
++  if(BUILD_WITH_OPENMP STREQUAL "auto")
++    find_package(OpenMP)
++    set(BUILD_WITH_OPENMP ${OpenMP_FOUND})
++  elseif(BUILD_WITH_OPENMP)
++    find_package(OpenMP REQUIRED)
++  endif()
+ endif()
+ 
+ if (BUILD_WITH_TBB)
