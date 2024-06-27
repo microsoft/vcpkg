@@ -57,7 +57,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
