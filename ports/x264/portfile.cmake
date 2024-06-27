@@ -73,7 +73,7 @@ vcpkg_make_configure(
     DISABLE_CPPFLAGS # Build is not using CPP/CPPFLAGS
     DISABLE_MSVC_WRAPPERS
     LANGUAGES ASM C CXX # Requires NASM to compile
-    NO_MSVC_FLAG_ESCAPING # disable warnings about unknown -Xcompiler/-Xlinker flags
+    DISABLE_MSVC_FLAG_ESCAPING # disable warnings about unknown -Xcompiler/-Xlinker flags
     PRE_CONFIGURE_CMAKE_COMMANDS
         add_cross_prefix
     OPTIONS

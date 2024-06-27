@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
+        "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "SOURCE_PATH"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
@@ -39,7 +39,7 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
     endif()
 
     set(escaping "")
-    if(arg_NO_MSVC_FLAG_ESCAPING)
+    if(arg_DISABLE_MSVC_FLAG_ESCAPING)
       set(escaping NO_FLAG_ESCAPING)
     endif()
 
