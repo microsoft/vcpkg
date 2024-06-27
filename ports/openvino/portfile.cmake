@@ -6,6 +6,8 @@ vcpkg_from_github(
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
+        # https://github.com/openvinotoolkit/openvino/pull/25069: disable apiValidator
+        002-api-validator.patch
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -117,6 +119,10 @@ endif()
 
 if(ENABLE_OV_TF_LITE_FRONTEND)
     list(APPEND FEATURE_OPTIONS "-DENABLE_SYSTEM_FLATBUFFERS=ON")
+endif()
+
+if(CMAKE_HOST_WIN32)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_API_VALIDATOR=OFF")
 endif()
 
 vcpkg_cmake_configure(
