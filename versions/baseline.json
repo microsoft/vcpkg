@@ -706,7 +706,7 @@
     },
     "bond": {
       "baseline": "11.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "boolinq": {
       "baseline": "3.0.4",
