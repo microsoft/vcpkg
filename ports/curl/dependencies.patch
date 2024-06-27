@@ -1,5 +1,5 @@
 diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
-index 9adb96e..9bf6900 100644
+index 9adb96e0a..9bf69004d 100644
 --- a/CMake/curl-config.cmake.in
 +++ b/CMake/curl-config.cmake.in
 @@ -31,6 +31,19 @@ if(@USE_ZLIB@)
@@ -23,7 +23,7 @@ index 9adb96e..9bf6900 100644
  check_required_components("@PROJECT_NAME@")
  
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c3525d3..aaeb237 100644
+index c3525d3fc..1927464e8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -164,7 +164,8 @@ set(CURL_LIBS "")
@@ -123,7 +123,20 @@ index c3525d3..aaeb237 100644
    if(LIBSSH2_FOUND)
      list(APPEND CURL_LIBS ${LIBSSH2_LIBRARY})
      list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBSSH2_INCLUDE_DIR}")
-@@ -961,7 +983,11 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
+@@ -957,11 +979,24 @@ if(NOT USE_LIBSSH2 AND CURL_USE_LIBSSH)
+   endif()
+ endif()
+ 
++option(CURL_USE_GSASL "Use GSASL implementation" OFF)
++mark_as_advanced(CURL_USE_GSASL)
++if(CURL_USE_GSASL)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(GSASL REQUIRED libgsasl)
++  list(APPEND CURL_LIBS ${GSASL_LINK_LIBRARIES})
++  set(USE_GSASL ON)
++endif()
++
+ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is supported with CMake build)" OFF)
  mark_as_advanced(CURL_USE_GSSAPI)
  
  if(CURL_USE_GSSAPI)
@@ -136,7 +149,7 @@ index c3525d3..aaeb237 100644
  
    set(HAVE_GSSAPI ${GSS_FOUND})
    if(GSS_FOUND)
-@@ -973,6 +999,7 @@ if(CURL_USE_GSSAPI)
+@@ -973,6 +1008,7 @@ if(CURL_USE_GSSAPI)
      check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
      check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
  
@@ -144,3 +157,25 @@ index c3525d3..aaeb237 100644
      if(NOT GSS_FLAVOUR STREQUAL "Heimdal")
        # MIT
        set(_INCLUDE_LIST "")
+@@ -1618,6 +1654,7 @@ if(NOT CURL_DISABLE_INSTALL)
+   _add_if("UnixSockets"   USE_UNIX_SOCKETS)
+   _add_if("libz"          HAVE_LIBZ)
+   _add_if("brotli"        HAVE_BROTLI)
++  _add_if("gsasl"         USE_GSASL)
+   _add_if("zstd"          HAVE_ZSTD)
+   _add_if("AsynchDNS"     USE_ARES OR USE_THREADS_POSIX OR USE_THREADS_WIN32)
+   _add_if("IDN"           HAVE_LIBIDN2 OR USE_WIN32_IDN OR USE_APPLE_IDN)
+diff --git a/lib/curl_config.h.cmake b/lib/curl_config.h.cmake
+index 3a46c6490..7ce3facb6 100644
+--- a/lib/curl_config.h.cmake
++++ b/lib/curl_config.h.cmake
+@@ -713,6 +713,9 @@ ${SIZEOF_TIME_T_CODE}
+ /* if librtmp/rtmpdump is in use */
+ #cmakedefine USE_LIBRTMP 1
+ 
++/* if GSASL is in use */
++#cmakedefine USE_GSASL 1
++
+ /* Define to 1 if you don't want the OpenSSL configuration to be loaded
+    automatically */
+ #cmakedefine CURL_DISABLE_OPENSSL_AUTO_LOAD_CONFIG 1
