@@ -50,8 +50,8 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(NASM)
-     get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-     vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
+    get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
