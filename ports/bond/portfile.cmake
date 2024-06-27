@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install-path.patch
-        skip-grpc-compilation.patch
         fix-msc-ver.patch
 )
 
