@@ -9,6 +9,10 @@
     "coin-or-cgl",
     "coin-or-clp",
     "coin-or-osi",
-    "coinutils"
+    "coinutils",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ]
 }
