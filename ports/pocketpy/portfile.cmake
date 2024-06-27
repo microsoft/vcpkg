@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocketpy/pocketpy
     REF "v${VERSION}"
-    SHA512 e0c4b70727d47ae0b26c520528ffadfe63a8986b674f12b91260f42ae25975af4f64dfd71e056e7627d35b10eddcd34b396ca3b01c931f5bb8a4b15431da5426
+    SHA512 6c9872c4a402bc702e577067c05d593034f45f150ebbf033ef204b4c7deff6cd2da0f9db44e0bb37aefdeb7a4d99e5a9c4a93ece57316f561c5bf4cd33cd12e3
     HEAD_REF master
 )
 
