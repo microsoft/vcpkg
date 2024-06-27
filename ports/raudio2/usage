@@ -1,0 +1,4 @@
+raudio2 provides CMake targets:
+
+  find_package(raudio2 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE raudio2::raudio2)

@@ -1,0 +1,114 @@
+{
+  "name": "raudio2",
+  "version": "1.0.2",
+  "description": "A simple and easy-to-use audio library based on raudio + miniaudio",
+  "homepage": "https://github.com/oddlf/raudio2",
+  "license": "Zlib",
+  "supports": "!(android | osx | uwp)",
+  "dependencies": [
+    "miniaudio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "drflac",
+    "gme",
+    "modplug",
+    "mpg123",
+    "opus",
+    "vorbis",
+    "wav"
+  ],
+  "features": {
+    "drflac": {
+      "description": "FLAC (dr_flac) input plugin",
+      "dependencies": [
+        "drlibs"
+      ]
+    },
+    "drmp3": {
+      "description": "MP3 (dr_mp3) input plugin",
+      "dependencies": [
+        "drlibs"
+      ]
+    },
+    "flac": {
+      "description": "FLAC (libflac) input plugin",
+      "dependencies": [
+        "libflac"
+      ]
+    },
+    "gme": {
+      "description": "GME input plugin",
+      "dependencies": [
+        "libgme"
+      ]
+    },
+    "gzip": {
+      "description": "GZIP archive plugin",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "libarchive": {
+      "description": "LibArchive archive plugin",
+      "dependencies": [
+        "libarchive"
+      ]
+    },
+    "modplug": {
+      "description": "Tracker music (ModPlug) input plugin",
+      "dependencies": [
+        "libmodplug"
+      ]
+    },
+    "mpg123": {
+      "description": "MP3 (mpg123) input plugin",
+      "dependencies": [
+        "mpg123"
+      ]
+    },
+    "openmpt": {
+      "description": "Tracker music (OpenMPT) input plugin",
+      "dependencies": [
+        "libopenmpt"
+      ]
+    },
+    "opus": {
+      "description": "OPUS input plugin",
+      "dependencies": [
+        "opusfile"
+      ]
+    },
+    "sndfile": {
+      "description": "SndFile input plugin",
+      "dependencies": [
+        "sndfile"
+      ]
+    },
+    "stbvorbis": {
+      "description": "Vorbis (stb_vorbis) input plugin",
+      "dependencies": [
+        "stb"
+      ]
+    },
+    "vorbis": {
+      "description": "Vorbis (vorbisfile) input plugin",
+      "dependencies": [
+        "libvorbis"
+      ]
+    },
+    "wav": {
+      "description": "WAV (dr_wav) input plugin",
+      "dependencies": [
+        "drlibs"
+      ]
+    }
+  }
+}
