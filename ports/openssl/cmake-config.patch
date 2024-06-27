@@ -1,0 +1,52 @@
+diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
+index 4c24cae..2792083 100644
+--- a/Configurations/unix-Makefile.tmpl
++++ b/Configurations/unix-Makefile.tmpl
+@@ -338,7 +338,7 @@ bindir={- file_name_is_absolute($bindir)
+           ? $bindir : '$(INSTALLTOP)/$(BINDIR)' -}
+ 
+ PKGCONFIGDIR=$(libdir)/pkgconfig
+-CMAKECONFIGDIR=$(libdir)/cmake/OpenSSL
++CMAKECONFIGDIR=$(INSTALLTOP)/share/openssl
+ 
+ MANDIR=$(INSTALLTOP)/share/man
+ DOCDIR=$(INSTALLTOP)/share/doc/$(BASENAME)
+diff --git a/Configurations/windows-makefile.tmpl b/Configurations/windows-makefile.tmpl
+index 894834c..d6d3c41 100644
+--- a/Configurations/windows-makefile.tmpl
++++ b/Configurations/windows-makefile.tmpl
+@@ -254,7 +254,7 @@ MODULESDIR=$(MODULESDIR_dev)$(MODULESDIR_dir)
+ libdir={- file_name_is_absolute($libdir)
+           ? $libdir : '$(INSTALLTOP)\$(LIBDIR)' -}
+ 
+-CMAKECONFIGDIR=$(libdir)\cmake\OpenSSL
++CMAKECONFIGDIR=$(INSTALLTOP)\share\openssl
+ 
+ ##### User defined commands and flags ################################
+ 
+diff --git a/exporters/cmake/OpenSSLConfig.cmake.in b/exporters/cmake/OpenSSLConfig.cmake.in
+index 2d23219..3477e20 100644
+--- a/exporters/cmake/OpenSSLConfig.cmake.in
++++ b/exporters/cmake/OpenSSLConfig.cmake.in
+@@ -136,6 +136,14 @@ set(OPENSSL_APPLINK_SOURCE "${_ossl_prefix}/{- unixify($OpenSSL::safe::installda
+ {- output_on() if $disabled{uplink}; "" -}
+ set(OPENSSL_PROGRAM "${OPENSSL_RUNTIME_DIR}/{- platform->bin('openssl') -}")
+ 
++if(NOT Z_VCPKG_OPENSSL_USE_SINGLE_CONFIG)
++  # Prevent loop
++  set(Z_VCPKG_OPENSSL_USE_SINGLE_CONFIG "prevent-loop")
++  # Chainload vcpkg's module-based multi-config target setup
++  find_package(OpenSSL MODULE)
++  set(Z_VCPKG_OPENSSL_USE_SINGLE_CONFIG 0)
++else()
++  # Use official single-config target setup
+ # Set up the imported targets
+ if(_ossl_use_static_libs)
+ {- output_off() unless $no_static; "" -}
+@@ -235,5 +243,6 @@ set_property(TARGET OpenSSL::applink PROPERTY
+   INTERFACE_SOURCES "${OPENSSL_APPLINK_SOURCE}")
+ {- output_on() if $disabled{uplink}; "" -}
+ 
++endif()
+ unset(_ossl_prefix)
+ unset(_ossl_use_static_libs)

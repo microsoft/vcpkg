@@ -7,7 +7,7 @@ index 904bdf5..e751ffc 100755
  
  
 -subdirs="$subdirs gettext-runtime libtextstyle gettext-tools"
-+subdirs="$subdirs gettext-runtime ${VCPKG_GETTEXT_SUBDIRS/gettext-runtime/}"
++subdirs="$subdirs gettext-runtime $(echo ${VCPKG_GETTEXT_SUBDIRS} | sed 's/gettext-runtime//')"
  
  
  
