@@ -48,6 +48,10 @@ if vcpkg_bin_path.is_dir():
 "
 )
 
+ file(COPY "${CURRENT_INSTALLED_DIR}/${PYTHON3_INCLUDE}/" DESTINATION "${python_base}/include")
+ set(suffix "PCBuild/AMD64") # TODO: ask python for the correct suffix.
+ file(COPY "${CURRENT_INSTALLED_DIR}/lib/python${PYTHON3_VERSION_MAJOR}${PYTHON3_VERSION_MINOR}.lib" DESTINATION "${python_base}/${suffix}")
+
  set(${out_python} "${python_base}/Scripts/python.exe" PARENT_SCOPE)
  set(z_vcpkg_get_vcpkg_installed_python "${python_base}/Scripts/python.exe" CACHE INTERNAL "")
 endfunction()

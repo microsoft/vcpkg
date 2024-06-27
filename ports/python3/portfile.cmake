@@ -69,7 +69,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PYTHON_ALLOW_EXTENSIONS)
     if(PYTHON_HAS_EXTENSIONS AND NOT PYTHON_ALLOW_EXTENSIONS)
         # This should never be reached due to vcpkg_check_linkage above
-        message(FATAL_ERROR "Cannot build python extensions! Python extensions on windows can only be build if python is a dynamic library!")
+        message(FATAL_ERROR "Cannot build python extensions! Python extensions on windows can only be built if python is a dynamic library!")
     endif()
     # The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
     vcpkg_get_windows_sdk(WINSDK_VERSION)
@@ -407,7 +407,9 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PA
 
 # For testing
 block()
+  include("${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake")
   set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
+  set(CURRENT_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
   vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
   if(PYTHON_HAS_EXTENSIONS)
     vcpkg_python_test_import(PYTHON_EXECUTABLE "${VCPKG_PYTHON3}" MODULES "sys" "ctypes" "ssl")
