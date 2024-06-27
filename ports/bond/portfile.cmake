@@ -36,11 +36,6 @@ else()
     message("\nA recent version of Haskell Tool Stack is required to build.\n  For information on how to install see https://docs.haskellstack.org/en/stable/README/\n")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        bond-over-grpc BOND_ENABLE_GRPC
-)
-
 set(ENV{STACK_ROOT} "${CURRENT_BUILDTREES_DIR}/stack")
 
 vcpkg_cmake_configure(

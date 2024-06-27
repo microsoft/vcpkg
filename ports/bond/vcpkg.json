@@ -18,13 +18,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "bond-over-grpc": {
-      "description": "Bond-over-gRPC provides code generation from Bond IDL service definitions to send Bond objects via gRPC.",
-      "dependencies": [
-        "grpc"
-      ]
-    }
-  }
+  ]
 }
