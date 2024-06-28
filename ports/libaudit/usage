@@ -1,0 +1,9 @@
+The package libaudit provides CMake targets:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBAUDIT REQUIRED libaudit)
+    pkg_check_modules(LIBAUPARSE REQUIRED auparse)
+
+    target_link_libraries(main PRIVATE ${LIBAUDIT_LINK_LIBRARIES} ${LIBAUPARSE_LINK_LIBRARIES})
+    target_include_directories(main PUBLIC ${LIBAUDIT_INCLUDE_DIRS} ${LIBAUPARSE_INCLUDE_DIRS})
+    target_compile_options(main PUBLIC${LIBAUDIT_CFLAGS_OTHER} ${LIBAUPARSE_CFLAGS_OTHER})

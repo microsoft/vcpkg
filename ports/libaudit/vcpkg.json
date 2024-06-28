@@ -1,0 +1,11 @@
+{
+  "name": "libaudit",
+  "version-semver": "4.0.1",
+  "port-version": 0,
+  "description": "Library for working with audit subsystem",
+  "license": "GPL-2.0",
+  "homepage": "https://github.com/linux-audit/audit-userspace",
+  "supports": "linux",
+  "dependencies": [],
+  "features": {}
+}

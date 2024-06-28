@@ -1,0 +1,12 @@
+diff --git a/audisp/plugins/filter/audisp-filter.c b/audisp/plugins/filter/audisp-filter.c
+index ba602154..c9b3f784 100644
+--- a/audisp/plugins/filter/audisp-filter.c
++++ b/audisp/plugins/filter/audisp-filter.c
+@@ -21,6 +21,7 @@
+  *
+  */
+
++#include <unistd.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <signal.h>
