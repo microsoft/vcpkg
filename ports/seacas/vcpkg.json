@@ -19,13 +19,6 @@
       "name": "hdf5",
       "default-features": false
     },
-    {
-      "name": "matio",
-      "default-features": false,
-      "features": [
-        "hdf5"
-      ]
-    },
     "metis",
     {
       "name": "netcdf-c",
@@ -44,7 +37,22 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "matio"
+  ],
   "features": {
+    "matio": {
+      "description": "Enable Matio support",
+      "dependencies": [
+        {
+          "name": "matio",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ]
+        }
+      ]
+    },
     "mpi": {
       "description": "Enable MPI support",
       "dependencies": [
