@@ -190,6 +190,7 @@ if("fixup-pkgconfig" IN_LIST FEATURES)
 endif()
 if("fixup-rpath" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_calculate_corrected_rpath.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_calculate_corrected_rpath_macho.cmake")
 endif()
 
 if(Z_VCPKG_UNIT_TEST_HAS_ERROR)
