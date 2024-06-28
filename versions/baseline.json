@@ -6922,7 +6922,7 @@
     },
     "pocketpy": {
       "baseline": "1.4.6",
-      "port-version": 0
+      "port-version": 1
     },
     "poco": {
       "baseline": "1.13.3",
