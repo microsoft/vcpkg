@@ -7,7 +7,7 @@ index ed02678..9297b20 100644
          DESTINATION include 
          FILES_MATCHING PATTERN "*.h"
 -        PATTERN "typings" EXCLUDE
-+        PATTERN "typings"
++        PATTERN "typings" EXCLUDE
 +        PATTERN "pybind11" EXCLUDE
      )
      
