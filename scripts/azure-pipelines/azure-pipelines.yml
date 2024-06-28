@@ -15,21 +15,6 @@ parameters:
     default: '-'
 
 jobs:
-- job: mintsas
-  displayName: 'Mint SAS token for Asset and Binary Caches'
-  pool:
-    name: PrToken-1ES
-  steps:
-    - checkout: none
-    - script: |
-        az login --identity --username a81b4cd3-9d8d-4cb9-9a74-f2038f24f224
-        end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
-        echo Minting SAS tokens valid through $end
-        echo "##vso[task.setvariable variable=X_VCPKG_ASSET_SOURCES;isSecret=true;isOutput=true;isreadonly=true]x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,`az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`,readwrite"
-        echo "##vso[task.setvariable variable=X_VCPKG_BINARY_SOURCE_STUB;isSecret=true;isOutput=true;isreadonly=true]x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`"
-      name: mintsasstep
-      displayName: 'Mint Tokens'
-
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x86_windows
