@@ -22,7 +22,10 @@
     "glew",
     {
       "name": "hdf5",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
     },
     "jsoncpp",
     {
