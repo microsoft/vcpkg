@@ -1,0 +1,4 @@
+cppparser provides CMake targets:
+
+  find_package(cppparser CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE cppparser::cppparser)
