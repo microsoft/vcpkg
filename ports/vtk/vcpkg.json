@@ -45,7 +45,13 @@
       ]
     },
     "lz4",
-    "netcdf-c",
+    {
+      "name": "netcdf-c",
+      "default-features": false,
+      "features": [
+        "hdf5"
+      ]
+    },
     "pegtl",
     {
       "name": "proj",
