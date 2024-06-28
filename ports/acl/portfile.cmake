@@ -3,7 +3,7 @@ vcpkg_download_distfile(ARCHIVE
          "https://www.mirrorservice.org/sites/download.savannah.gnu.org/releases/acl/acl-${VERSION}.tar.xz"
          
     FILENAME "acl-${VERSION}.tar.xz"
-    SHA512 7d02f05d17305f8587ab485395b00c7fdb8e44c1906d0d04b70a43a3020803e8b2b8c707abb6147f794867dfa87bd51769c2d3e11a3db55ecbd2006a6e6231dc
+    SHA512 c2d061dbfd28c00cecbc1ae614d67f3138202bf4d39b383f2df4c6a8b10b830f33acec620fb211f268478737dde4037d338a5823af445253cb088c48a135099b
 )
 
 vcpkg_extract_source_archive(
