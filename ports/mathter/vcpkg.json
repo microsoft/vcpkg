@@ -12,20 +12,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "xsimd",
+      "version>=": "11.1.0"
     }
-  ],
-  "default-features": [
-    "simd"
-  ],
-  "features": {
-    "simd": {
-      "description": "hand-rolled vectorization using the xsimd library",
-      "dependencies": [
-        {
-          "name": "xsimd",
-          "version>=": "11.1.0"
-        }
-      ]
-    }
-  }
+  ]
 }

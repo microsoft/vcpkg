@@ -8,11 +8,6 @@ vcpkg_from_github(
 
 set(VCPKG_BUILD_TYPE release) # header-only port
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        simd MATHTER_ENABLE_SIMD
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -20,7 +15,7 @@ vcpkg_cmake_configure(
         -DMATHTER_BUILD_BENCHMARKS:BOOL=OFF
         -DMATHTER_VERSION:STRING=${VERSION}
         -DMATHTER_CMAKE_INSTALL_DIR:STRING=share/${PORT}
-        ${FEATURE_OPTIONS}
+        -DMATHTER_ENABLE_SIMD:BOOL=ON
 )
 
 vcpkg_cmake_install()
