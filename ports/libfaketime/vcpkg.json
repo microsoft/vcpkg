@@ -1,0 +1,8 @@
+{
+  "name": "libfaketime",
+  "version": "0.9.10",
+  "description": "libfaketime modifies the system time for a single application",
+  "homepage": "https://github.com/wolfcw/libfaketime",
+  "license": "GPL-2.0-only",
+  "supports": "linux | osx"
+}
