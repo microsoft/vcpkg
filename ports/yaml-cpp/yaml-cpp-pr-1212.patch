@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 46dc180..5055c24 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,6 +31,8 @@ cmake_dependent_option(YAML_CPP_BUILD_TESTS
+ cmake_dependent_option(YAML_MSVC_SHARED_RT
+   "MSVC: Build yaml-cpp with shared runtime libs (/MD)" ON
+   "CMAKE_SYSTEM_NAME MATCHES Windows" OFF)
++set(YAML_CPP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/yaml-cpp"
++  CACHE STRING "Path to install the CMake package to")
+  
+ if (YAML_CPP_FORMAT_SOURCE)
+     find_program(YAML_CPP_CLANG_FORMAT_EXE NAMES clang-format)
+@@ -143,13 +145,12 @@ set_target_properties(yaml-cpp PROPERTIES
+   PROJECT_LABEL "yaml-cpp ${yaml-cpp-label-postfix}"
+   DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
+ 
+-set(CONFIG_EXPORT_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/yaml-cpp")
+-set(EXPORT_TARGETS yaml-cpp)
++set(EXPORT_TARGETS yaml-cpp::yaml-cpp)
+ configure_package_config_file(
+   "${PROJECT_SOURCE_DIR}/yaml-cpp-config.cmake.in"
+   "${PROJECT_BINARY_DIR}/yaml-cpp-config.cmake"
+-  INSTALL_DESTINATION "${CONFIG_EXPORT_DIR}"
+-  PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR CONFIG_EXPORT_DIR YAML_BUILD_SHARED_LIBS)
++  INSTALL_DESTINATION "${YAML_CPP_INSTALL_CMAKEDIR}"
++  PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+ unset(EXPORT_TARGETS)
+ 
+ write_basic_package_version_file(
+@@ -169,15 +170,14 @@ if (YAML_CPP_INSTALL)
+                 FILES_MATCHING PATTERN "*.h")
+   install(EXPORT yaml-cpp-targets
+     NAMESPACE yaml-cpp::
+-    DESTINATION "${CONFIG_EXPORT_DIR}")
++    DESTINATION "${YAML_CPP_INSTALL_CMAKEDIR}")
+   install(FILES
+       "${PROJECT_BINARY_DIR}/yaml-cpp-config.cmake"
+       "${PROJECT_BINARY_DIR}/yaml-cpp-config-version.cmake"
+-    DESTINATION "${CONFIG_EXPORT_DIR}")
++    DESTINATION "${YAML_CPP_INSTALL_CMAKEDIR}")
+   install(FILES "${PROJECT_BINARY_DIR}/yaml-cpp.pc"
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif()
+-unset(CONFIG_EXPORT_DIR)
+ 
+ if(YAML_CPP_BUILD_TESTS)
+   add_subdirectory(test)
+diff --git a/yaml-cpp-config.cmake.in b/yaml-cpp-config.cmake.in
+index 799b9b4..cbbc773 100644
+--- a/yaml-cpp-config.cmake.in
++++ b/yaml-cpp-config.cmake.in
+@@ -11,12 +11,23 @@ set_and_check(YAML_CPP_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+ set_and_check(YAML_CPP_LIBRARY_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+ 
+ # Are we building shared libraries?
+-set(YAML_CPP_SHARED_LIBS_BUILT "@PACKAGE_YAML_BUILD_SHARED_LIBS@")
++set(YAML_CPP_SHARED_LIBS_BUILT @YAML_BUILD_SHARED_LIBS@)
+ 
+ # Our library dependencies (contains definitions for IMPORTED targets)
+-include(@PACKAGE_CONFIG_EXPORT_DIR@/yaml-cpp-targets.cmake)
++include("${CMAKE_CURRENT_LIST_DIR}/yaml-cpp-targets.cmake")
+ 
+ # These are IMPORTED targets created by yaml-cpp-targets.cmake
+ set(YAML_CPP_LIBRARIES "@EXPORT_TARGETS@")
+ 
+-check_required_components(@EXPORT_TARGETS@)
++# Protect against multiple inclusion, which would fail when already imported targets are added once more.
++if(NOT TARGET yaml-cpp)
++  add_library(yaml-cpp INTERFACE IMPORTED)
++  target_link_libraries(yaml-cpp INTERFACE yaml-cpp::yaml-cpp)
++  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.17)
++    set_target_properties(yaml-cpp PROPERTIES
++      DEPRECATION "The target yaml-cpp is deprecated and will be removed in version 0.10.0. Use the yaml-cpp::yaml-cpp target instead."
++    )
++  endif()
++endif()
++
++check_required_components(yaml-cpp)

@@ -18,7 +18,7 @@ index 741dc61..42f0e8f 100644
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lmbedcrypto -lpthread")
 +  else ()
 +    if (WIN32)
-+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -llibcrypto -lUser32 -lCrypt32")
++      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -llibcrypto -luser32 -lcrypt32")
 +    else ()
 +      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " libcrypto\nLibs.private:")
 +    endif ()
@@ -27,7 +27,7 @@ index 741dc61..42f0e8f 100644
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lpthread")
 +  endif ()
 +  if (WIN32)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lws2_32 -lShell32 -lAdvapi32")
++    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lws2_32 -lshell32 -ladvapi32")
 +  endif ()
  install(
    FILES

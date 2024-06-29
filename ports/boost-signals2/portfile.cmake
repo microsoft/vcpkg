@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/signals2
-    REF boost-1.82.0
-    SHA512 5452431b482b859e0d334bb6105301f781701a168aef2a2de596ff1c981008b357a53587135bd63ba060c55dea73a69b93a864401dd5cad04d21a5f1499e0533
+    REF boost-${VERSION}
+    SHA512 42c7e9f3131aa3fafb57ef661e7e5e1c51f2efaead47b34a780de2c101c18768370845f931f0ac12e08272b9b42dfa67c569b0c6e6b0dec30306e18ae78ab895
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

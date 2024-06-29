@@ -1,10 +1,11 @@
 {
   "name": "openmama",
   "version-semver": "6.3.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "OpenMAMA is a high performance vendor neutral lightweight wrapper that provides a common API interface to different middleware and messaging solutions across a variety of platforms and languages",
   "homepage": "https://github.com/finos/OpenMAMA",
   "license": "LGPL-2.1",
+  "supports": "!xbox",
   "dependencies": [
     "apr",
     "apr-util",

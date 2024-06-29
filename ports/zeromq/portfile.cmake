@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF ce6d48c578a08770fb171486750300fd534d0254
-    SHA512 e204db3e40d99df2206f9537bf7dbc9bb8994174f4f9c4770dcc7a92622e6ff0e2b1be537d7fff96cfbdb0cdd0174bfd11ba60d08c4bab0ccb4db3ec25c06593
+    REF "v${VERSION}"
+    SHA512 108d9c5fa761c111585c30f9c651ed92942dda0ac661155bca52cc7b6dbeb3d27b0dd994abde206eacfc3bc88d19ed24e45b291050c38469e34dca5f8c9a037d
     PATCHES 
         fix-arm.patch
-        include-dir-gnutls.patch # from https://github.com/zeromq/libzmq/pull/4533
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -14,15 +13,16 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sodium          WITH_LIBSODIUM
-        draft           ENABLE_DRAFTS
-        websockets      ENABLE_WS
+        sodium            WITH_LIBSODIUM
+        draft             ENABLE_DRAFTS
+        websockets        ENABLE_WS
         websockets-secure WITH_TLS
+        curve             ENABLE_CURVE
 )
 
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
-    set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_SYSTEM_VERSION=6.0" "-DZMQ_HAVE_IPC=0")
 endif()
 
 vcpkg_cmake_configure(
@@ -42,7 +42,10 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     MAYBE_UNUSED_VARIABLES
-        USE_PERF_TOOLS
+        CMAKE_REQUIRE_FIND_PACKAGE_GnuTLS
+        WITH_LIBBSD
+        WITH_PERF_TOOL
+        WITH_TLS
 )
 
 vcpkg_cmake_install()
@@ -65,8 +68,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/zmq/COPYING.LESSER.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/zmq")
 
 vcpkg_fixup_pkgconfig()

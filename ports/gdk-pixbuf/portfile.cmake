@@ -1,25 +1,40 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gdk-pixbuf
     REF "${VERSION}"
-    SHA512 5b7ddb6e816a88ffd2b7f85583c841ea92719bef7da1acbd6f5714afebf8538660c5d391809f959eb1887613f9579cf51c85d6796c84335cedbf7af975d790c9
+    SHA512 f95c92974ed6efac9845790ef5c4ed74dd6e28b182ea3732013c46b016166e92f8bc10c1994358d79ff53e988c615c43cb1a2130c6ef531ef9d84c2fdcc87e52
     HEAD_REF master
     PATCHES
         fix_build_error_windows.patch
         loaders-cache.patch
         use-libtiff-4-pkgconfig.patch
+        fix-static-deps.patch
 )
 
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
 else()
     list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if("png" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dpng=enabled)
+else()
+    list(APPEND OPTIONS -Dpng=disabled)
+endif()
+
+if("tiff" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dtiff=enabled)
+else()
+    list(APPEND OPTIONS -Dtiff=disabled)
+endif()
+
+if("jpeg" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Djpeg=enabled)
+else()
+    list(APPEND OPTIONS -Djpeg=disabled)
 endif()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -37,9 +52,6 @@ vcpkg_configure_meson(
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
         -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
         -Ddocs=false
-        -Dpng=enabled               # Enable PNG loader (requires libpng)
-        -Dtiff=enabled              # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
-        -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
         -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dtests=false
         -Dinstalled_tests=false
@@ -77,4 +89,4 @@ vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

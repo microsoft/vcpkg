@@ -1,0 +1,17 @@
+{
+  "name": "mtlt",
+  "version": "1.0.0",
+  "description": "Tonitaga 2024. MTLT is a header-only math matrix library that allows you to do compile-time calculations, perform atomic operations, and contains all the basic operations on matrices. The library is written in STL style, supports joint work with STL algorithms. Since C++11",
+  "homepage": "https://github.com/tonitaga/MTLT",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

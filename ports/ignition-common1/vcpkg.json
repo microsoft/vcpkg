@@ -1,9 +1,10 @@
 {
   "name": "ignition-common1",
   "version": "1.1.1",
-  "port-version": 3,
-  "description": "Common libraries for robotics applications",
+  "port-version": 4,
+  "description": "Deprecated: Use ignition-common3. Common libraries for robotics applications",
   "license": null,
+  "supports": "windows",
   "dependencies": [
     {
       "name": "dlfcn-win32",

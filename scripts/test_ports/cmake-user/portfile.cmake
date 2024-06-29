@@ -140,6 +140,10 @@ function(test_cmake_project)
             vcpkg_list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
         endif()
     endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
+    endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_list(APPEND base_options -DBUILD_SHARED_LIBS=ON)
@@ -191,6 +195,7 @@ function(test_cmake_project)
                 ${base_options}
                 ${arg_OPTIONS}
                 "-DFIND_PACKAGES=${package}"
+                --trace-expand
             OUTPUT_FILE "${log_out}"
             ERROR_FILE "${log_err}"
             RESULT_VARIABLE package_result

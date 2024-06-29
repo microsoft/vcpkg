@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 72a4544e..8f34f1c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -445,6 +445,8 @@ endif()
+ 
+ if(WIN32)
+   update_cached_list(MK_LINK_LIBRARIES WS2_32 Iphlpapi shlwapi)
++elseif(ANDROID)
++  update_cached_list(MK_LINK_LIBRARIES log)
+ elseif(NOT ANDROID OR IOS)
+   update_cached_list(MK_LINK_LIBRARIES pthread)
+ endif()

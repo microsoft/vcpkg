@@ -1,7 +1,7 @@
 {
   "name": "libtracepoint",
-  "version": "1.0.0",
-  "description": "Linux tracepoints interface for C/C++",
+  "version": "1.4.0",
+  "description": "C/C++ interface for generating Linux Tracepoints",
   "homepage": "https://github.com/microsoft/LinuxTracepoints/",
   "license": "MIT",
   "supports": "linux | windows",
@@ -14,5 +14,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build user tools: tracepoint-register",
+      "supports": "linux"
+    }
+  }
 }

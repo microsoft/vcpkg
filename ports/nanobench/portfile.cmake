@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinus/nanobench
-    REF v${VERSION}
-    SHA512 aa00dfc585445fda63b3ba1a802da259993b6b99d0bc2c9bb5f8a9dac64d25e9a61f072846d8f70ee2fea58482431749189179520ba7f6e075dbb223574a3a4d
+    REF "v${VERSION}"
+    SHA512 88697cc87e99b8c17f004dbd39efee664145b86d9feec02f5dba0d84be88e9bd272e537f392e670445d849f0d3c852b9870aea650d84968ee6fbc23a56bcff64
     HEAD_REF master
 )
 

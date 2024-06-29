@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 538cc8a..9221dab 100644
+index 8604a54..e08df91 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -25,6 +25,10 @@ option(test "Build all tests" OFF)
@@ -29,6 +29,6 @@ index 538cc8a..9221dab 100644
 +                add_definitions(-DELPP_FORCE_USE_STD_THREAD)
 +        endif()
 +
-         require_cpp11()
+         require_cpp14()
          add_library(easyloggingpp STATIC src/easylogging++.cc)
          set_property(TARGET easyloggingpp PROPERTY POSITION_INDEPENDENT_CODE ON)

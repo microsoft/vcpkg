@@ -35,8 +35,6 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/unofficial-libuuid PACKAGE_NAME unofficial-libuuid)
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL
-    "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_copy_pdbs()

@@ -38,3 +38,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
 
+# The following pattern has an absolute path, but is still ultimately relocatable, so skip absolute paths check:
+# share\KF5I18n\KF5I18nMacros.cmake
+# # The Python executable used for building ki18n will be used as a fallback
+# # solution if it cannot be found in $PATH when building applications.
+# set(_KI18N_PYTHON_EXECUTABLE "C:/Dev/vcpkg-downloads/tools/python/python-3.10.7-x64/python.exe")
+# 
+# find_program(KI18N_PYTHON_EXECUTABLE NAMES python3 python2 python)
+# if(NOT KI18N_PYTHON_EXECUTABLE)
+#     set(KI18N_PYTHON_EXECUTABLE "${_KI18N_PYTHON_EXECUTABLE}")
+# endif()
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)

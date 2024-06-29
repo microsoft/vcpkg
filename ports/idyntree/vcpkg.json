@@ -1,9 +1,10 @@
 {
   "name": "idyntree",
-  "version": "9.0.0",
+  "version": "12.3.1",
   "description": "Multibody Dynamics Library designed for Free Floating Robots.",
   "homepage": "https://github.com/robotology/idyntree",
-  "license": "LGPL-2.1-or-later",
+  "license": "BSD-3-Clause",
+  "supports": "!xbox",
   "dependencies": [
     "eigen3",
     "libxml2",

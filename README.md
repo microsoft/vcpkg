@@ -4,6 +4,7 @@
 [Español](README_es.md)
 [한국어](README_ko_KR.md)
 [Français](README_fr.md)
+[Tiếng Việt](README_vn.md)
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
 This tool and ecosystem are constantly evolving, and we always appreciate contributions!
@@ -32,7 +33,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
-    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
+    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule-with-cmake)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -62,11 +63,10 @@ Prerequisites:
 - [Git][getting-started:git]
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 or greater with the English language pack
 
-First, download and bootstrap vcpkg itself; it can be installed anywhere,
-but generally we recommend using vcpkg as a submodule for CMake projects,
-and installing it globally for Visual Studio projects.
-We recommend somewhere like `C:\src\vcpkg` or `C:\dev\vcpkg`,
-since otherwise you may run into path issues for some port build systems.
+First, download and bootstrap vcpkg itself; it can be installed anywhere, but generally we recommend using vcpkg as a
+submodule so the consuming repo can stay self-contained. Alternatively, vcpkg can be installed globally; we recommend
+somewhere like `C:\src\vcpkg` or `C:\dev\vcpkg`, since otherwise you may run into path issues for some port build
+systems.
 
 ```cmd
 > git clone https://github.com/microsoft/vcpkg
@@ -133,7 +133,7 @@ Prerequisites for macOS:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
 
 First, download and bootstrap vcpkg itself; it can be installed anywhere,
-but generally we recommend using vcpkg as a submodule for CMake projects.
+but generally we recommend using vcpkg as a submodule.
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
@@ -226,18 +226,10 @@ add the path to the vcpkg toolchain file:
 
 ### Vcpkg with CLion
 
-Open the Toolchains settings
-(File > Settings on Windows and Linux, CLion > Preferences on macOS),
-and go to the CMake settings (Build, Execution, Deployment > CMake).
-Finally, in `CMake options`, add the following line:
+Vcpkg is integrated in the CLion IDE. 
+For details, see the [official documentation](https://www.jetbrains.com/help/clion/package-management.html).
 
-```
--DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
-```
-
-You must add this line to each profile.
-
-### Vcpkg as a Submodule
+### Vcpkg as a Submodule with CMake
 
 When using vcpkg as a submodule of your project,
 you can add the following to your CMakeLists.txt before the first `project()` call,
@@ -252,7 +244,7 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
-[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages.md
+[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -282,9 +274,9 @@ depending on the shell you use, then restart your console.
 # Examples
 
 See the [documentation](https://learn.microsoft.com/vcpkg) for specific walkthroughs,
-including [installing and using a package](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages.md),
-[adding a new package from a zipfile](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles.md),
-and [adding a new package from a GitHub repo](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos.md).
+including [installing and using a package](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
+[adding a new package from a zipfile](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
+and [adding a new package from a GitHub repo](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos).
 
 Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
 
@@ -321,9 +313,9 @@ places the associated license(s) in the location `installed/<triplet>/share/<por
 Most ports in vcpkg build the libraries in question using the original build system preferred
 by the original developers of those libraries, and download source code and build tools from their
 official distribution locations. For use behind a firewall, the specific access needed will depend
-on which ports are being installed. If you must install in in an "air gapped" environment, consider
+on which ports are being installed. If you must install it in an "air gapped" environment, consider
 installing once in a non-"air gapped" environment, populating an
-[asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching.md) shared with the otherwise "air gapped" environment.
+[asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching) shared with the otherwise "air gapped" environment.
 
 # Telemetry
 

@@ -11,6 +11,9 @@ else()
 endif()
 
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
+if(VCPKG_ENABLE_OBJC)
+    list(APPEND VCPKG_LANGUAGES "OBJC")
+endif()
 
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 

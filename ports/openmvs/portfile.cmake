@@ -3,12 +3,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
-    REF v2.1.0
+    REF "v${VERSION}"
     SHA512 95d83c6694b63b6fd27657c4c5e22ddbc078d26b7324b8f17952a6c7e4547028698aa155077c0cfb916d3497ca31c365e0cbcd81f3cbe959ef40a7ee2e5cd300
     HEAD_REF master
     PATCHES
         fix-build.patch
         no-absolute-paths.patch
+        fix-static-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,6 +24,12 @@ file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(USE_SSE ON)
+else()
+    set(USE_SSE OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
@@ -33,6 +40,7 @@ vcpkg_cmake_configure(
         -DOpenMVS_USE_OPENGL=ON
         -DOpenMVS_USE_BREAKPAD=OFF
         -DOpenMVS_ENABLE_TESTS=OFF
+        -DOpenMVS_USE_SSE=${USE_SSE}
     OPTIONS_RELEASE
         -DOpenMVS_BUILD_TOOLS=ON
     OPTIONS_DEBUG
@@ -75,4 +83,4 @@ configure_file("${SOURCE_PATH}/MvgMvsPipeline.py.in" "${CURRENT_PACKAGES_DIR}/to
 configure_file("${SOURCE_PATH}/MvgOptimizeSfM.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/MvgOptimizeSfM.py" @ONLY)
 file(INSTALL "${SOURCE_PATH}/build/Modules/FindVCG.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

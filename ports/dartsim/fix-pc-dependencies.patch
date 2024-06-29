@@ -1,0 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -70,3 +70,3 @@
+ set(DART_PKG_DESC "Dynamic Animation and Robotics Toolkit.")
+-set(DART_PKG_EXTERNAL_DEPS "eigen, ccd, fcl, assimp, boost")
++set(DART_PKG_EXTERNAL_DEPS "assimp, ccd, eigen3, fcl, octomap")
+ 

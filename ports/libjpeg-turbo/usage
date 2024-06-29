@@ -6,4 +6,4 @@ libjpeg-turbo is compatible with built-in implementation-agnostic CMake targets:
 libjpeg-turbo provides CMake targets for the TurboJPEG C API:
 
     find_package(libjpeg-turbo CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE libjpeg-turbo::turbojpeg)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>)

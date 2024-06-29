@@ -1,4 +1,4 @@
-set(DIRECTXMESH_TAG apr2023)
+set(DIRECTXMESH_TAG jun2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF ${DIRECTXMESH_TAG}
-    SHA512 cd6608fafaa6d53c2f9ff9e7f316b0a79c8715e355d7362c83b08cae9a7add2561ce74e3350f41d71b1d2e99e61a3377e97073a562499a52677a22a87ba48f9b
+    SHA512 883149da7eefbff7630aa1d5b0e0104dbb7eca9153d385dd35b82319d3091f7ff75a353ef29f1f3ec5f34b4a89f5d08d4a69bd70842134db5ebe36111c654e71
     HEAD_REF main
 )
 
@@ -24,10 +24,11 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TESTING=OFF
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmesh)
 
 if("tools" IN_LIST FEATURES)
@@ -40,7 +41,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
-      SHA512 afe3d2ee57d933740ab380d3577d10511b4ca7e33ddd6eafc9408fbbabe6295c676c6313916a9bdb94f1708a3565675e23212cc7f237e2007407c8948e934d86
+      SHA512 fe1b2faab2f138a09706c956b5283a8f6e915bc57e670243f1ef21be85c6d030e45eff8b4e46551b7ccaa70e99651efbe99c63a927a24125f4bf1567d9f7698d
     )
 
     file(INSTALL
@@ -55,7 +56,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert_arm64.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}-arm64.exe"
-      SHA512 a28bc4c3aced8ac59fee80cd734ef44127499ab14e7cd680276accd74dcea2dee382282889cb3f565a21d446bfc3b097f986d72b69e7a19b5a7d6e43252e5abc
+      SHA512 d4be686a2e65f1385e71ed0a23e17827ae4717ab61e54c80c72170df60cc29cb3f5408b04ce9bec562519c0238c05ed976e04a58ec327775bc0d26cf13971c73
     )
 
     file(INSTALL
@@ -68,7 +69,7 @@ if("tools" IN_LIST FEATURES)
 
     vcpkg_copy_tools(
           TOOL_NAMES meshconvert
-          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin"
       )
 
   endif()
@@ -76,4 +77,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,21 @@
+diff --git a/ThirdParty/libproj/CMakeLists.txt b/ThirdParty/libproj/CMakeLists.txt
+index f8888876..d57c4c18 100644
+--- a/ThirdParty/libproj/CMakeLists.txt
++++ b/ThirdParty/libproj/CMakeLists.txt
+@@ -4,11 +4,13 @@ vtk_module_third_party(
+     VERSION
+       "8.1.0"
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+-    PACKAGE LibPROJ
+-    TARGETS LibPROJ::LibPROJ
+-    USE_VARIABLES LibPROJ_MAJOR_VERSION
++    PACKAGE PROJ
++    CONFIG_MODE
++    TARGETS PROJ::proj
++    USE_VARIABLES PROJ_VERSION_MAJOR
+     STANDARD_INCLUDE_DIRS)
++set(LibPROJ_MAJOR_VERSION "${PROJ_VERSION_MAJOR}")
+ 
+ if (NOT VTK_MODULE_USE_EXTERNAL_VTK_libproj)
+   set(LibPROJ_MAJOR_VERSION "8")

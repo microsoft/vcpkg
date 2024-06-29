@@ -1,6 +1,6 @@
 {
   "name": "qtdeclarative",
-  "version": "6.5.1",
+  "version": "6.7.2",
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -18,9 +18,11 @@
       "host": true,
       "default-features": false
     },
+    "qtlanguageserver",
     {
       "name": "qtshadertools",
       "default-features": false
-    }
+    },
+    "qtsvg"
   ]
 }

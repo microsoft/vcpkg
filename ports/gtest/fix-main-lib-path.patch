@@ -2,7 +2,7 @@ diff --git a/googlemock/CMakeLists.txt b/googlemock/CMakeLists.txt
 index e7df8ec..1ecd596 100644
 --- a/googlemock/CMakeLists.txt
 +++ b/googlemock/CMakeLists.txt
-@@ -120,7 +120,8 @@ endif()
+@@ -112,7 +112,8 @@ endif()
  ########################################################################
  #
  # Install rules
@@ -16,7 +16,7 @@ diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
 index abdd98b..7d1c01d 100644
 --- a/googletest/CMakeLists.txt
 +++ b/googletest/CMakeLists.txt
-@@ -148,7 +148,8 @@ target_link_libraries(gtest_main PUBLIC gtest)
+@@ -155,7 +155,8 @@ target_link_libraries(gtest_main PUBLIC gtest)
  ########################################################################
  #
  # Install rules
@@ -30,16 +30,17 @@ diff --git a/googletest/cmake/internal_utils.cmake b/googletest/cmake/internal_u
 index 8d8d60a..b08ce28 100644
 --- a/googletest/cmake/internal_utils.cmake
 +++ b/googletest/cmake/internal_utils.cmake
-@@ -315,11 +315,15 @@ function(install_project)
-     install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
+@@ -300,12 +300,16 @@ function(install_project)
+       COMPONENT "${PROJECT_NAME}"
        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
      # Install the project targets.
 +    set (LIB_INSTALL_DST ${CMAKE_INSTALL_LIBDIR})
 +    if (${ARGN} MATCHES "_main")
 +      set (LIB_INSTALL_DST ${CMAKE_INSTALL_LIBDIR}/manual-link)
-+    endif()    
++    endif()
      install(TARGETS ${ARGN}
        EXPORT ${targets_export_name}
+       COMPONENT "${PROJECT_NAME}"
        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 -      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 -      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
@@ -48,10 +49,10 @@ index 8d8d60a..b08ce28 100644
      if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
        # Install PDBs
        foreach(t ${ARGN})
-@@ -328,7 +332,7 @@ function(install_project)
-         get_target_property(t_pdb_output_directory ${t} PDB_OUTPUT_DIRECTORY)
+@@ -315,7 +319,7 @@ function(install_project)
          install(FILES
            "${t_pdb_output_directory}/\${CMAKE_INSTALL_CONFIG_NAME}/$<$<CONFIG:Debug>:${t_pdb_name_debug}>$<$<NOT:$<CONFIG:Debug>>:${t_pdb_name}>.pdb"
+           COMPONENT "${PROJECT_NAME}"
 -          DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +          DESTINATION ${LIB_INSTALL_DST}
            OPTIONAL)

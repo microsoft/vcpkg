@@ -1,7 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES )
+set(${PORT}_PATCHES fix-build.patch)
 
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,7 +27,12 @@ if("uacpp" IN_LIST FEATURES)
     message(WARNING "\nPlease note that you have to install the Unified Automation C++ SDK yourself.\n")
 endif()
 
+
+set(TOOL_NAMES 
+        qopcuaxmldatatypes2cpp
+)
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
+                     TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}
                         "-DPYTHON_EXECUTABLE=${PYTHON3}"

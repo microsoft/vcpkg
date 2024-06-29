@@ -1,0 +1,76 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 981ef20..89c5a6e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,20 +9,45 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+ add_library(rivers INTERFACE)
+ add_library(rivers::rivers ALIAS rivers)
+-target_include_directories(rivers INTERFACE include)
++target_include_directories(rivers
++                           INTERFACE
++                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++                            $<INSTALL_INTERFACE:include>
++                           )
+ 
+ option(RVR_IMPORT_FMT Off)
+ if(RVR_IMPORT_FMT)
+-    include(FetchContent)
+-    FetchContent_Declare(
+-        fmt
+-        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+-        GIT_TAG 713c7c7c62044329d26c19323ffa0e64d69d2d64
+-        )
+-    FetchContent_MakeAvailable(fmt)
+-
++    find_package(fmt CONFIG REQUIRED)
+     target_link_libraries(rivers INTERFACE fmt::fmt)
+ endif()
+ 
+-add_subdirectory(bench)
+-add_subdirectory(test)
++include(CMakePackageConfigHelpers)
++
++configure_package_config_file(
++  cmake/unofficial-rivers-config.cmake.in
++  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-rivers-config.cmake"
++  INSTALL_DESTINATION lib/cmake/unofficial-rivers/
++  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
++
++
++# Export.
++export(
++  TARGETS rivers
++  FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-rivers-targets.cmake")
++
++# Install.
++install(TARGETS rivers EXPORT unofficial-rivers)
++
++install(
++  EXPORT unofficial-rivers
++  NAMESPACE unofficial-rivers::
++  FILE unofficial-rivers-targets.cmake
++  DESTINATION lib/cmake/unofficial-rivers)
++
++install(DIRECTORY include/rivers DESTINATION include)
++
++install(
++  FILES
++  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-rivers-config.cmake"
++  DESTINATION lib/cmake/unofficial-rivers)
++
+diff --git a/cmake/unofficial-rivers-config.cmake.in b/cmake/unofficial-rivers-config.cmake.in
+new file mode 100644
+index 0000000..a347972
+--- /dev/null
++++ b/cmake/unofficial-rivers-config.cmake.in
+@@ -0,0 +1,9 @@
++
++@PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-rivers-targets.cmake")
++if(@RVR_IMPORT_FMT@)
++  find_dependency(fmt CONFIG)
++endif()
++

@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openexr
-    REF v3.1.7
-    SHA512 f72f5e728f10c06fca0172c9b4c1df752225c3aed7384b4eaa502f92f8547bb1df93fe96d4d132a81eb32b729cb9fd615be825aa6c5de78481d3038c0d47c4d5
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 6e0a6fdcfae57c6e8b060d9aeed57140d96d39bffe5e40edd6ea5beb06e569323833d07906316ffca05f48e8409d0ea4174e2cd84d554404a4ee432e07d7b5e6
+    HEAD_REF main
+    PATCHES
+        fix-cmake-package.patch # https://github.com/AcademySoftwareFoundation/openexr/pull/1674
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -17,7 +19,8 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DOPENEXR_INSTALL_EXAMPLES=OFF
-        -DBUILD_DOCS=OFF
+        -DBUILD_WEBSITE=OFF
+        -DOPENEXR_INSTALL_PKG_CONFIG=ON
     OPTIONS_DEBUG
         -DOPENEXR_BUILD_TOOLS=OFF
         -DOPENEXR_INSTALL_TOOLS=OFF
@@ -26,6 +29,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenEXR)
+
 vcpkg_fixup_pkgconfig()
 
 if(OPENEXR_INSTALL_TOOLS)
@@ -41,4 +45,4 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

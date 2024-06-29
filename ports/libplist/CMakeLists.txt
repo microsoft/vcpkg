@@ -1,79 +1,103 @@
-cmake_minimum_required(VERSION 3.8)
-project(plist C CXX)
+cmake_minimum_required(VERSION 3.15)
+project(libplist C CXX)
 
-file(GLOB_RECURSE PLIST_HEADER include/plist/*.h)
+option(BUILD_TOOLS "Build tools." OFF)
 
-set(PLIST_SRC
-    src/base64.c
-    src/bytearray.c
-    src/hashtable.c
-    src/ptrarray.c
-    src/time64.c
-    src/xplist.c
-    src/bplist.c
-    src/plist.c
-)
+include(GNUInstallDirs)
 
-set(PLISTPP_SRC
-    src/Node.cpp
-    src/Structure.cpp
-    src/Array.cpp
-    src/Boolean.cpp
-    src/Data.cpp
-    src/Date.cpp
-    src/Dictionary.cpp
-    src/Integer.cpp
-    src/Key.cpp
-    src/Real.cpp
-    src/String.cpp
-    src/Uid.cpp
-)
+file(GLOB_RECURSE LIBCNARY_SOURCE libcnary/node.c libcnary/node_list.c)
+file(GLOB_RECURSE LIBPLIST_SOURCE src/*.c)
+file(GLOB_RECURSE LIBPLISTPP_SOURCE src/*.cpp)
 
-file(GLOB_RECURSE LIBCNARY_HEADER libcnary/include/*.h)
-file(GLOB_RECURSE LIBCNARY_SRC libcnary/*c)
+set(DEFINITIONS)
 
-add_library(plist ${PLIST_SRC} ${PLIST_HEADER} ${LIBCNARY_SRC} ${LIBCNARY_HEADER})
-target_include_directories(plist PRIVATE src include libcnary/include)
-set_target_properties(plist PROPERTIES OUTPUT_NAME plist-2.0)
-
-add_library(plist++ STATIC ${PLISTPP_SRC} ${PLIST_HEADER} ${LIBCNARY_SRC} ${LIBCNARY_HEADER})
-set_target_properties(plist++ PROPERTIES OUTPUT_NAME plist++-2.0)
-target_include_directories(plist++ PRIVATE src include libcnary/include)
-
-if(WIN32 AND BUILD_SHARED_LIBS)
-    target_compile_options(plist PRIVATE -W3 -WX- -sdl-)
-    target_compile_definitions(plist PRIVATE -DLIBPLIST_EXPORTS)
-    target_compile_options(plist++ PRIVATE -W3 -WX- -sdl-)
-    target_compile_definitions(plist++ PRIVATE -DLIBPLIST_EXPORTS)
-endif()
-if(NOT BUILD_SHARED_LIBS)
-    target_compile_definitions(plist PRIVATE -DLIBPLIST_STATIC_LIBRARY)
+if(BUILD_SHARED_LIBS)
+    if(WIN32)
+        list(APPEND DEFINITIONS -DLIBPLIST_EXPORT)
+    endif()
+else()
+    list(APPEND DEFINITIONS -DLIBPLIST_STATIC)
 endif()
 
-target_link_libraries(plist++ PRIVATE plist)
+if(UNIX)
+    list(APPEND DEFINITIONS -DHAVE_STRNDUP)
+endif()
+
+if(WIN32)
+    list(APPEND DEFINITIONS -D_CRT_SECURE_NO_WARNINGS)
+endif()
+
+add_library(libplist ${LIBPLIST_SOURCE} ${LIBCNARY_SOURCE})
+target_include_directories(libplist PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libcnary/include>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+target_compile_definitions(libplist PRIVATE ${DEFINITIONS})
+set_target_properties(libplist PROPERTIES OUTPUT_NAME plist-2.0)
+if(UNIX AND NOT APPLE)
+    target_link_libraries(libplist PRIVATE m)
+endif()
+
+add_library(libplist++ STATIC ${LIBPLISTPP_SOURCE} ${LIBCNARY_SOURCE})
+target_include_directories(libplist++ PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libcnary/include>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+target_compile_definitions(libplist++ PRIVATE ${DEFINITIONS})
+target_link_libraries(libplist++ PUBLIC libplist)
+set_target_properties(libplist++ PROPERTIES OUTPUT_NAME plist++-2.0)
+
+install(TARGETS libplist libplist++ EXPORT unofficial-libplist)
 
 install(
-    TARGETS plist plist++
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
+    EXPORT unofficial-libplist
+    FILE unofficial-libplist-config.cmake
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-libplist"
+    NAMESPACE unofficial::libplist::
+)
+
+install(
+    DIRECTORY "${CMAKE_SOURCE_DIR}/include/plist"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
 set(PACKAGE_NAME libplist)
 set(PACKAGE_VERSION 2.0)
-set(prefix ${CMAKE_INSTALL_PREFIX})
-set(exec_prefix \${prefix})
-set(libdir \${prefix}/lib)
-set(includedir \${prefix}/../include)
-foreach (PLIST_PKGCONFIG libplist-2.0.pc libplist++-2.0.pc)
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/${PLIST_PKGCONFIG}.in
-    ${CMAKE_CURRENT_BINARY_DIR}/${PLIST_PKGCONFIG}
-    @ONLY
-)
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PLIST_PKGCONFIG}
-    DESTINATION lib/pkgconfig)
+set(prefix "")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+
+foreach(PLIST_PKGCONFIG libplist-2.0.pc libplist++-2.0.pc)
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/${PLIST_PKGCONFIG}.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PLIST_PKGCONFIG}"
+        @ONLY
+    )
+    install(
+        FILES "${CMAKE_CURRENT_BINARY_DIR}/${PLIST_PKGCONFIG}"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+    )
 endforeach()
 
-install(FILES ${PLIST_HEADER} DESTINATION include/plist)
+if(BUILD_TOOLS)
+    add_executable(plistutil "tools/plistutil.c")
+    target_compile_definitions(plistutil PRIVATE
+        -DPACKAGE_VERSION="2.3.0"
+        -DPACKAGE_URL="https://github.com/libimobiledevice/libplist"
+        -DPACKAGE_BUGREPORT="https://github.com/libimobiledevice/libplist/issues"
+    )
+    if(NOT BUILD_SHARED_LIBS)
+        target_compile_definitions(plistutil PRIVATE -DLIBPLIST_STATIC)
+    endif()
+    target_link_libraries(plistutil PRIVATE libplist)
+
+    install(
+        TARGETS plistutil
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    )
+endif()

@@ -1,7 +1,7 @@
 {
   "name": "microsoft-signalr",
   "version": "0.1.0-alpha4",
-  "port-version": 6,
+  "port-version": 8,
   "description": "C++ Client for ASP.NET Core SignalR.",
   "homepage": "https://github.com/aspnet/SignalR-Client-Cpp",
   "dependencies": [
@@ -16,7 +16,7 @@
     }
   ],
   "default-features": [
-    "default-features"
+    "cpprestsdk"
   ],
   "features": {
     "cpprestsdk": {
@@ -25,21 +25,8 @@
         {
           "name": "cpprestsdk",
           "features": [
-            "default-features",
             "websockets"
           ]
-        }
-      ]
-    },
-    "default-features": {
-      "description": "Features installed by default",
-      "dependencies": [
-        {
-          "name": "microsoft-signalr",
-          "features": [
-            "cpprestsdk"
-          ],
-          "platform": "!uwp"
         }
       ]
     },

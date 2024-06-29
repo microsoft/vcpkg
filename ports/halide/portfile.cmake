@@ -1,13 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(HALIDE_VERSION_TAG v${VERSION})
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF ${HALIDE_VERSION_TAG}
-    SHA512 918cd0a7e69e4414b98f17c5ec5cdb543ce3ae68ed07c9a80b7c0378c247a4a4fde62ade79b402e9ffcfce30c066a3fa662ea46c3a2a5b93eb5ec4e05b3fd808
-    HEAD_REF release/15.x
+    REF 8864e8ac1c0bb460f0034e9c46f7f944afad3a19 # unreleased version with LLVM 18 support
+    SHA512 286cbef25b5cc0f5095cbc80a2fd1cacf369948c58c14406ac6bcc28a7a37c81417d601975083f03670e22276a1886b8801bdc91aa6fe80049a276a1c8fd08b9
+    HEAD_REF main
 )
 
 vcpkg_check_features(
@@ -20,11 +18,11 @@ vcpkg_check_features(
         target-opengl-compute TARGET_OPENGLCOMPUTE
         target-hexagon TARGET_HEXAGON
         target-metal TARGET_METAL
-        target-mips TARGET_MIPS
         target-nvptx TARGET_NVPTX
         target-opencl TARGET_OPENCL
         target-powerpc TARGET_POWERPC
         target-riscv TARGET_RISCV
+        target-webassembly TARGET_WEBASSEMBLY
         target-x86 TARGET_X86
 )
 
@@ -38,6 +36,7 @@ vcpkg_cmake_configure(
         -DWITH_TESTS=OFF
         -DWITH_TUTORIALS=OFF
         -DWITH_UTILS=OFF
+        -DWITH_SERIALIZATION=OFF # Disable experimental serializer
         -DCMAKE_INSTALL_LIBDIR=bin
         "-DCMAKE_INSTALL_DATADIR=share/${PORT}"
         "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"
@@ -65,5 +64,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

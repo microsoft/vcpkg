@@ -14,6 +14,6 @@ index b6062c6..df955e3 100644
 +    if(SWIG_FOUND AND SWIG_VERSION VERSION_LESS "4.0.1" AND Python3_VERSION VERSION_GREATER_EQUAL "3.8")
 +        target_precompile_headers(${SWIG_MODULE_${target}_REAL_NAME} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/pyobject_gc_polyfill.h")
 +    endif()
-     set_target_properties(${SWIG_MODULE_${target}_REAL_NAME} PROPERTIES 
-                         DEBUG_POSTFIX "")
-     install(TARGETS ${SWIG_MODULE_${target}_REAL_NAME} LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
+     set_target_properties(${target} PROPERTIES DEBUG_POSTFIX "")
+     install(TARGETS ${target} LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
+     install(FILES ${PROJECT_BINARY_DIR}/Components/Python/${target}.py DESTINATION ${PYTHON_SITE_PACKAGES})

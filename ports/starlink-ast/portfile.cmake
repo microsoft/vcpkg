@@ -1,35 +1,26 @@
-# There is no 9.2.10 tarball with generated `configure`.
-# Reconfiguration needs a custom starlink autoconf.
-# Cf. https://github.com/Starlink/ast/issues/21
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_download_distfile(ARCHIVE
-    # regular: "https://github.com/Starlink/ast/releases/download/v${VERSION}/ast-${VERSION}.tar.gz"
-    URLS "https://github.com/Starlink/ast/files/8843897/ast-9.2.9.tar.gz" # not a release asset or tarball
+    URLS "https://github.com/Starlink/ast/releases/download/v${VERSION}/ast-${VERSION}.tar.gz"
     FILENAME "starlink-ast-${VERSION}.tar.gz"
-    SHA512 af19cdf41e20d9e92850d90ea760bd21bc9a53ca5bb181a6e27322a610fd13cd6cef30aaf8de6193a2c3fe3c66428b3bd46492a6b22ac22f18cd9be712aa357b
+    SHA512 b559535496b88b33845bd3732bb6ee80572dc0d8d963173e0199d44be09add244244d9aab90642de84c65714bca6c73b5bdc3b3290a55f171e6f3ce7643250f5
 )
-vcpkg_download_distfile(UPDATE_DIFF
-    URLS "https://github.com/Starlink/ast/compare/v9.2.9...v${VERSION}.diff"
-    FILENAME "starlink-ast-v9.2.9...v${VERSION}.diff"
-    SHA512 fd1255eaefcfdb57273ba241fc604e3ab5eabd2212c17f10daac8fd23436f6d50272bfa35bac292097441ff5334e3d28d12ea6d7d90838f6058e05fc7067c966
-)
-file(READ "${UPDATE_DIFF}" diff)
-set(files_to_ignore "(configure\\.ac|Makefile|\\.gitignore|component\\.xml)")
-string(REGEX REPLACE "diff --git a/${files_to_ignore}[^\n]*\n([-+@ i][^\n]*\n)*" "" diff "${diff}")
-file(WRITE "${CURRENT_BUILDTREES_DIR}/update-${VERSION}.diff" "${diff}")
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         cminpack.diff
-        "${CURRENT_BUILDTREES_DIR}/update-${VERSION}.diff"
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cminpack")
-vcpkg_replace_string("${SOURCE_PATH}/configure" "9.2.9" "9.2.10")
 
 set(CONFIGURE_OPTIONS
     --without-fortran
     --with-external-cminpack
+    "--with-starlink=${CURRENT_INSTALLED_DIR}"
+    FC=false
 )
 
 if ("yaml" IN_LIST FEATURES)
@@ -51,8 +42,13 @@ vcpkg_configure_make(
     ADDITIONAL_MSYS_PACKAGES perl
     OPTIONS
         ${CONFIGURE_OPTIONS}
+    OPTIONS_DEBUG
+        CMINPACK_DEBUG_SUFFIX=_d
 )
-vcpkg_install_make()
+vcpkg_install_make(
+    OPTIONS
+        STAR_LDFLAGS= # Do not override build type's lib dirs
+)
 
 # Avoid vcpkg artifact issues with symlinks
 foreach(ast_lib IN ITEMS "${CURRENT_PACKAGES_DIR}/lib/libast" "${CURRENT_PACKAGES_DIR}/debug/lib/libast")
@@ -74,6 +70,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/news"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/ast"
 )
+
+# Remove cl preprocessing comments
+foreach(file IN ITEMS "include/ast.h" "include/star/ast.h")
+    file(READ "${CURRENT_PACKAGES_DIR}/${file}" cpp_output)
+    string(REGEX REPLACE "#line [^ ]+ \"[^\"]*\"" "" cpp_output "${cpp_output}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/${file}" "${cpp_output}")
+endforeach()
 
 vcpkg_install_copyright(
     FILE_LIST

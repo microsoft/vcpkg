@@ -1,0 +1,4 @@
+parsi provides CMake targets:
+
+  find_package(parsi CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE parsi::parsi)

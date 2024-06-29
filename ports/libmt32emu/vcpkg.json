@@ -1,8 +1,8 @@
 {
   "name": "libmt32emu",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "A MT-32 emulator",
-  "homepage": "https://github.com/munt/munt/tree/master/mt32emu",
+  "homepage": "https://github.com/munt/munt",
   "license": "GPL-2.0-or-later",
   "dependencies": [
     {
