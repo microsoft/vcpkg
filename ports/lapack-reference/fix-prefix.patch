@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 73056dc2e9..56356bf354 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -14,6 +14,12 @@ set(
+ set(CMAKE_STATIC_LIBRARY_PREFIX "lib${LIBRARY_PREFIX}")
+ set(CMAKE_SHARED_LIBRARY_PREFIX "lib${LIBRARY_PREFIX}")
+ 
++if(WIN32 AND CMAKE_GNUtoMS)
++    set(CMAKE_STATIC_LIBRARY_PREFIX "")
++    set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
++    set(CMAKE_IMPORT_LIBRARY_PREFIX "")
++endif()
++
+ # Add the CMake directory for custom CMake modules
+ set(CMAKE_MODULE_PATH "${LAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
+ 

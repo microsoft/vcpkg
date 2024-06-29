@@ -13,3 +13,34 @@ index ebe371182..e351df7da 100644
          'scripts': '{base}/Scripts',
          'data': '{base}',
          },
+@@ -90,8 +90,8 @@ _INSTALL_SCHEMES = {
+         'platstdlib': '{base}/Lib',
+         'purelib': '{base}/Lib/site-packages',
+         'platlib': '{base}/Lib/site-packages',
+-        'include': '{installed_base}/Include',
+-        'platinclude': '{installed_base}/Include',
++        'include': '{installed_base}/../../include/python{py_version_short}{abiflags}',
++        'platinclude': '{installed_base}../../Include/python{py_version_short}{abiflags}',
+         'scripts': '{base}/Scripts',
+         'data': '{base}',
+         },
+diff --git a/Lib/distutils/command/build_ext.py b/Lib/distutils/command/build_ext.py
+index c90b85b872..eb9e5919b3 100644
+--- a/Lib/distutils/command/build_ext.py	
++++ b/Lib/distutils/command/build_ext.py
+@@ -211,9 +211,12 @@ class build_ext(Command):
+             else:
+                 # win-amd64
+                 suffix = self.plat_name[4:]
+-            new_lib = os.path.join(sys.exec_prefix, 'PCbuild')
+-            if suffix:
+-                new_lib = os.path.join(new_lib, suffix)
++            if self.debug:
++                new_lib = os.path.join(sys.base_prefix, '../../debug/lib')
++            else:
++                new_lib = os.path.join(sys.base_prefix, '../../lib')
++            #if suffix:
++                #new_lib = os.path.join(new_lib, suffix)
+             self.library_dirs.append(new_lib)
+ 
+         # For extensions under Cygwin, Python's library directory must be

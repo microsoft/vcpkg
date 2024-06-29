@@ -1,0 +1,36 @@
+diff --git a/numpy/testing/_private/extbuild.py b/numpy/testing/_private/extbuild.py
+index 292060e76f..49dd3b3556 100644
+--- a/numpy/testing/_private/extbuild.py	
++++ b/numpy/testing/_private/extbuild.py
+@@ -182,7 +182,7 @@ def _c_compile(cfile, outputfilename, include_dirs=[], libraries=[],
+                library_dirs=[]):
+     if sys.platform == 'win32':
+         compile_extra = ["/we4013"]
++        link_extra = ["/LIBPATH:" + os.path.join(sys.base_prefix, '../../lib')]
+-        link_extra = ["/LIBPATH:" + os.path.join(sys.base_prefix, 'libs')]
+     elif sys.platform.startswith('linux'):
+         compile_extra = [
+             "-O0", "-g", "-Werror=implicit-function-declaration", "-fPIC"]
+@@ -229,17 +229,19 @@ def build(cfile, outputfilename, compile_extra, link_extra,
+                 name_suffix: 'dummy',
+             )
+         """))
++    meson = os.environ.get('MESON', "meson.py")
++
+     if sys.platform == "win32":
+-        subprocess.check_call(["meson", "setup",
++        subprocess.check_call([sys.executable, meson, "setup",
+                                "--buildtype=release", 
+                                "--vsenv", ".."],
+                               cwd=build_dir,
+                               )
+     else:
+-        subprocess.check_call(["meson", "setup", "--vsenv", ".."],
++        subprocess.check_call([sys.executable, meson, "setup", "--vsenv", ".."],
+                               cwd=build_dir
+                               )
+-    subprocess.check_call(["meson", "compile"], cwd=build_dir)
++    subprocess.check_call([sys.executable, meson, "compile"], cwd=build_dir)
+     os.rename(str(build_dir / so_name) + ".dummy", cfile.parent / so_name)
+         
+ def get_so_suffix():

@@ -301,6 +301,7 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
+        "numpy",
         "python3"
       ]
     },
