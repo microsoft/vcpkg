@@ -1,0 +1,28 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 3f1400f61..f7c6893b1 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -153,6 +153,8 @@ endif()
+ 
+ # --TBB
+ find_package(TBB REQUIRED COMPONENTS tbb)
++# VCPKG does use TBB config file and it does not define the TBB_tbb_LIBRARY variable
++set(TBB_tbb_LIBRARY TBB::tbb)
+ add_definitions(${TBB_DEFINITIONS})
+ 
+ # --math
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index b26f1ea31..9ea095bf0 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -16,6 +16,10 @@ set(PXR_MINOR_VERSION "@PXR_MINOR_VERSION@")
+ set(PXR_PATCH_VERSION "@PXR_PATCH_VERSION@")
+ set(PXR_VERSION "@PXR_VERSION@")
+ 
++# We are using the target instead of full paths so the dependency has to be explicit
++include(CMakeFindDependencyMacro)
++find_dependency(TBB COMPONENTS tbb)
++
+ # If Python support was enabled for this USD build, find the import
+ # targets by invoking the appropriate FindPython module. Use the same
+ # LIBRARY and INCLUDE_DIR settings from the original build if they

@@ -1,0 +1,1130 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Alex Fuller <boberfly@gmail.com>
+Date: Wed, 17 May 2023 16:27:47 +0200
+Subject: [PATCH 01/14] oneTBB: tbb::atomic to std::atomic in sdf
+
+(cherry picked from commit c912d7864aa8920016dcd4425fce105f7243ed5e)
+---
+ pxr/usd/sdf/changeManager.cpp | 10 +++++-----
+ pxr/usd/sdf/layer.cpp         |  2 +-
+ pxr/usd/sdf/layer.h           |  2 +-
+ pxr/usd/sdf/pch.h             |  1 -
+ 4 files changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/pxr/usd/sdf/changeManager.cpp b/pxr/usd/sdf/changeManager.cpp
+index 7ea592d04..32a0d2149 100644
+--- a/pxr/usd/sdf/changeManager.cpp
++++ b/pxr/usd/sdf/changeManager.cpp
+@@ -34,7 +34,7 @@
+ #include "pxr/base/tf/instantiateSingleton.h"
+ #include "pxr/base/tf/stackTrace.h"
+ 
+-#include <tbb/atomic.h>
++#include <atomic>
+ 
+ using std::string;
+ using std::vector;
+@@ -150,9 +150,9 @@ Sdf_ChangeManager::_ProcessRemoveIfInert(_Data *data)
+     TF_VERIFY(data->outermostBlock);
+ }
+ 
+-static tbb::atomic<size_t> &
++static std::atomic<size_t> &
+ _InitChangeSerialNumber() {
+-    static tbb::atomic<size_t> value;
++    static std::atomic<size_t> value;
+     value = 1;
+     return value;
+ }
+@@ -191,8 +191,8 @@ Sdf_ChangeManager::_SendNotices(_Data *data)
+     }
+ 
+     // Obtain a serial number for this round of change processing.
+-    static tbb::atomic<size_t> &changeSerialNumber = _InitChangeSerialNumber();
+-    size_t serialNumber = changeSerialNumber.fetch_and_increment();
++    static std::atomic<size_t> &changeSerialNumber = _InitChangeSerialNumber();
++    size_t serialNumber = changeSerialNumber.fetch_add(1);
+ 
+     // Send global notice.
+     SdfNotice::LayersDidChange(changes, serialNumber).Send();
+diff --git a/pxr/usd/pcp/mapExpression.cpp b/pxr/usd/pcp/mapExpression.cpp
+index 6326f7b65..f586e974b 100644
+--- a/pxr/usd/pcp/mapExpression.cpp
++++ b/pxr/usd/pcp/mapExpression.cpp
+@@ -238,7 +238,7 @@ PcpMapExpression::_Node::New( _Op op_,
+         // Check for existing instance to re-use
+         _NodeMap::accessor accessor;
+         if (_nodeRegistry->map.insert(accessor, key) ||
+-            accessor->second->_refCount.fetch_and_increment() == 0) {
++            accessor->second->_refCount.fetch_add(1) == 0) {
+             // Either there was no node in the table, or there was but it had
+             // begun dying (another client dropped its refcount to 0).  We have
+             // to create a new node in the table.  When the client that is
+@@ -388,7 +388,7 @@ TfDelegatedCountIncrement(PcpMapExpression::_Node* p)
+ void
+ TfDelegatedCountDecrement(PcpMapExpression::_Node* p) noexcept
+ {
+-    if (p->_refCount.fetch_and_decrement() == 1)
++    if (p->_refCount.fetch_sub(1) == 1)
+         delete p;
+ }
+ 
+diff --git a/pxr/usd/pcp/mapExpression.h b/pxr/usd/pcp/mapExpression.h
+index f977eb43d..cf37895ae 100644
+--- a/pxr/usd/pcp/mapExpression.h
++++ b/pxr/usd/pcp/mapExpression.h
+@@ -30,7 +30,6 @@
+ 
+ #include "pxr/base/tf/delegatedCountPtr.h"
+ 
+-#include <tbb/atomic.h>
+ #include <tbb/spin_mutex.h>
+ 
+ #include <atomic>
+@@ -269,7 +268,7 @@ private: // data
+         struct _NodeMap;
+         static TfStaticData<_NodeMap> _nodeRegistry;
+ 
+-        mutable tbb::atomic<int> _refCount;
++        mutable std::atomic<int> _refCount;
+         mutable Value _cachedValue;
+         mutable std::set<_Node*> _dependentExpressions;
+         Value _valueForVariable;
+diff --git a/pxr/usd/sdf/layer.cpp b/pxr/usd/sdf/layer.cpp
+index d86607acc..06cdf910b 100644
+--- a/pxr/usd/sdf/layer.cpp
++++ b/pxr/usd/sdf/layer.cpp
+@@ -215,7 +215,7 @@ SdfLayer::SdfLayer(
+     _MarkCurrentStateAsClean();
+ }
+ 
+-SdfLayer::~SdfLayer()
++SdfLayer::~SdfLayer() noexcept
+ {
+     TF_PY_ALLOW_THREADS_IN_SCOPE();
+ 
+diff --git a/pxr/usd/sdf/layer.h b/pxr/usd/sdf/layer.h
+index 515f258a6..f99c6c753 100644
+--- a/pxr/usd/sdf/layer.h
++++ b/pxr/usd/sdf/layer.h
+@@ -101,7 +101,7 @@ class SdfLayer
+ public:
+     /// Destructor
+     SDF_API
+-    virtual ~SdfLayer(); 
++    virtual ~SdfLayer() noexcept; // noexcept needed for std::atomic member
+ 
+     /// Noncopyable
+     SdfLayer(const SdfLayer&) = delete;
+diff --git a/pxr/usd/sdf/pch.h b/pxr/usd/sdf/pch.h
+index 0728ebe68..6af480e7e 100644
+--- a/pxr/usd/sdf/pch.h
++++ b/pxr/usd/sdf/pch.h
+@@ -225,7 +225,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Alex Fuller <boberfly@gmail.com>
+Date: Wed, 17 May 2023 16:27:47 +0200
+Subject: [PATCH 02/14] oneTBB: tbb::atomic to std::atomic in usdGeom
+
+(cherry picked from commit 9bfec012962e9058e278c90b5462d407dcf7c590)
+---
+ pxr/usd/usdGeom/bboxCache.cpp | 21 +++++++++++++++++----
+ pxr/usd/usdGeom/pch.h         |  1 -
+ 2 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/pxr/usd/usdGeom/bboxCache.cpp b/pxr/usd/usdGeom/bboxCache.cpp
+index 2e52ddaa4..40eceb2a4 100644
+--- a/pxr/usd/usdGeom/bboxCache.cpp
++++ b/pxr/usd/usdGeom/bboxCache.cpp
+@@ -46,6 +46,7 @@
+ 
+ #include <tbb/enumerable_thread_specific.h>
+ #include <algorithm>
++#include <atomic>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+@@ -124,11 +125,24 @@ private:
+ 
+     struct _PrototypeTask
+     {
+-        _PrototypeTask() : numDependencies(0) { }
++        _PrototypeTask() noexcept
++            : numDependencies(0) { }
++
++        _PrototypeTask(const _PrototypeTask &other) noexcept
++            : dependentPrototypes(other.dependentPrototypes)
++        {
++            numDependencies.store(other.numDependencies.load());
++        }
++
++        _PrototypeTask(_PrototypeTask &&other) noexcept
++            : dependentPrototypes(std::move(other.dependentPrototypes))
++        {
++            numDependencies.store(other.numDependencies.load());
++        }
+ 
+         // Number of dependencies -- prototype prims that must be resolved
+         // before this prototype can be resolved.
+-        tbb::atomic<size_t> numDependencies;
++        std::atomic<size_t> numDependencies;
+ 
+         // List of prototype prims that depend on this prototype.
+         std::vector<_PrimContext> dependentPrototypes;
+@@ -220,7 +234,7 @@ private:
+             _PrototypeTask& dependentPrototypeData =
+                 prototypeTasks->find(dependentPrototype)->second;
+             if (dependentPrototypeData.numDependencies
+-                .fetch_and_decrement() == 1){
++                .fetch_sub(1) == 1){
+                 dispatcher->Run(
+                     &_PrototypeBBoxResolver::_ExecuteTaskForPrototype,
+                     this, dependentPrototype, prototypeTasks, xfCaches,
+@@ -1525,4 +1539,3 @@ UsdGeomBBoxCache::_PrimContext::ToString() const {
+ }
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+-
+diff --git a/pxr/usd/usdGeom/pch.h b/pxr/usd/usdGeom/pch.h
+index 824c5b0f9..1a5fd6507 100644
+--- a/pxr/usd/usdGeom/pch.h
++++ b/pxr/usd/usdGeom/pch.h
+@@ -181,7 +181,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Alex Fuller <boberfly@gmail.com>
+Date: Wed, 17 May 2023 16:27:47 +0200
+Subject: [PATCH 04/14] oneTBB: tbb::atomic to std::atomic in usdImagining
+
+(cherry picked from commit 01938648d13653bec26cb4d264417a40c483c567)
+---
+ pxr/usdImaging/plugin/usdShaders/pch.h        |  1 -
+ pxr/usdImaging/usdAppUtils/pch.h              |  1 -
+ pxr/usdImaging/usdImaging/pch.h               |  1 -
+ .../usdImaging/resolvedAttributeCache.h       | 24 +++++++++++++++----
+ pxr/usdImaging/usdImagingGL/pch.h             |  1 -
+ pxr/usdImaging/usdProcImaging/pch.h           |  1 -
+ pxr/usdImaging/usdRiPxrImaging/pch.h          |  1 -
+ pxr/usdImaging/usdSkelImaging/pch.h           |  1 -
+ pxr/usdImaging/usdVolImaging/pch.h            |  1 -
+ pxr/usdImaging/usdviewq/pch.h                 |  1 -
+ 10 files changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/pxr/usdImaging/plugin/usdShaders/pch.h b/pxr/usdImaging/plugin/usdShaders/pch.h
+index 2037e25b8..c5836624f 100644
+--- a/pxr/usdImaging/plugin/usdShaders/pch.h
++++ b/pxr/usdImaging/plugin/usdShaders/pch.h
+@@ -160,7 +160,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usdImaging/usdAppUtils/pch.h b/pxr/usdImaging/usdAppUtils/pch.h
+index 70b9602d5..f403f4500 100644
+--- a/pxr/usdImaging/usdAppUtils/pch.h
++++ b/pxr/usdImaging/usdAppUtils/pch.h
+@@ -173,7 +173,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usdImaging/usdImaging/pch.h b/pxr/usdImaging/usdImaging/pch.h
+index 35ea5620e..0419c53ef 100644
+--- a/pxr/usdImaging/usdImaging/pch.h
++++ b/pxr/usdImaging/usdImaging/pch.h
+@@ -173,7 +173,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usdImaging/usdImaging/resolvedAttributeCache.h b/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
+index 0e2e024ad..d103aef68 100644
+--- a/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
++++ b/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
+@@ -284,22 +284,36 @@ private:
+     // non-time varying data, entries may exist in the cache with invalid
+     // values. The version is used to determine validity.
+     struct _Entry {
+-        _Entry()
++        _Entry() noexcept
+             : value(Strategy::MakeDefault())
+             , version(_GetInitialEntryVersion()) 
+         { }
+ 
+         _Entry(const query_type & query_,
+                const value_type& value_,
+-               unsigned version_)
++               unsigned version_) noexcept
+             : query(query_)
+             , value(value_)
+             , version(version_)
+         { }
+ 
++        _Entry(const _Entry &other) noexcept
++            : query(other.query)
++            , value(other.value)
++        {
++            version.store(other.version.load());
++        }
++
++        _Entry(_Entry &&other) noexcept
++            : query(std::move(other.query))
++            , value(std::move(other.value))
++        {
++            version.store(other.version.load());
++        }
++
+         query_type query;
+         value_type value;
+-        tbb::atomic<unsigned> version;
++        std::atomic<unsigned> version;
+     };
+ 
+     // Returns the version number for a valid cache entry
+@@ -339,7 +353,7 @@ private:
+ 
+     // A serial number indicating the valid state of entries in the cache. When
+     // an entry has an equal or greater value, the entry is valid.
+-    tbb::atomic<unsigned> _cacheVersion;
++    std::atomic<unsigned> _cacheVersion;
+ 
+     // Value overrides for a set of descendents.
+     ValueOverridesMap _valueOverrides;
+@@ -358,7 +372,7 @@ UsdImaging_ResolvedAttributeCache<Strategy,ImplData>::_SetCacheEntryForPrim(
+     // Note: _cacheVersion is not allowed to change during cache access.
+     unsigned v = entry->version;
+     if (v < _cacheVersion 
+-        && entry->version.compare_and_swap(_cacheVersion, v) == v)
++        && entry->version.compare_exchange_strong(v, _cacheVersion.load()))
+     {
+         entry->value = value;
+         entry->version = _GetValidVersion();
+diff --git a/pxr/usdImaging/usdImagingGL/pch.h b/pxr/usdImaging/usdImagingGL/pch.h
+index b9dfa7e41..78b92909e 100644
+--- a/pxr/usdImaging/usdImagingGL/pch.h
++++ b/pxr/usdImaging/usdImagingGL/pch.h
+@@ -186,7 +186,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usdImaging/usdProcImaging/pch.h b/pxr/usdImaging/usdProcImaging/pch.h
+index 32358e284..95900985f 100644
+--- a/pxr/usdImaging/usdProcImaging/pch.h
++++ b/pxr/usdImaging/usdProcImaging/pch.h
+@@ -161,7 +161,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usdImaging/usdRiPxrImaging/pch.h b/pxr/usdImaging/usdRiPxrImaging/pch.h
+index 6ad2d403b..09a7a06cc 100644
+--- a/pxr/usdImaging/usdRiPxrImaging/pch.h
++++ b/pxr/usdImaging/usdRiPxrImaging/pch.h
+@@ -169,7 +169,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usdImaging/usdSkelImaging/pch.h b/pxr/usdImaging/usdSkelImaging/pch.h
+index 69caaac23..7086fc412 100644
+--- a/pxr/usdImaging/usdSkelImaging/pch.h
++++ b/pxr/usdImaging/usdSkelImaging/pch.h
+@@ -169,7 +169,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usdImaging/usdVolImaging/pch.h b/pxr/usdImaging/usdVolImaging/pch.h
+index 0fd54d571..b286bc759 100644
+--- a/pxr/usdImaging/usdVolImaging/pch.h
++++ b/pxr/usdImaging/usdVolImaging/pch.h
+@@ -167,7 +167,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usdImaging/usdviewq/pch.h b/pxr/usdImaging/usdviewq/pch.h
+index 2b6f4d782..d14b76bf7 100644
+--- a/pxr/usdImaging/usdviewq/pch.h
++++ b/pxr/usdImaging/usdviewq/pch.h
+@@ -164,7 +164,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+ #include <tbb/concurrent_queue.h>
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Fri, 23 Jun 2023 18:00:18 +0200
+Subject: [PATCH 05/14] oneTBB: use non-const iterator for
+ tbb::concurrent_unordered_map
+
+Older TBB versions incorrectly allowed these to be const.
+
+(cherry picked from commit 65c0d86e9136588505162e0d06688574d932260e)
+---
+ pxr/imaging/hd/dependencyForwardingSceneIndex.cpp  | 2 +-
+ pxr/usdImaging/usdImaging/resolvedAttributeCache.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp b/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp
+index d9bbc3b65..2a77dd92e 100644
+--- a/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp
++++ b/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp
+@@ -217,7 +217,7 @@ HdDependencyForwardingSceneIndex::_PrimDirtied(
+ void 
+ HdDependencyForwardingSceneIndex::_ClearDependencies(const SdfPath &primPath)
+ {
+-    _AffectedPrimToDependsOnPathsEntryMap::const_iterator it =
++    _AffectedPrimToDependsOnPathsEntryMap::iterator it =
+         _affectedPrimToDependsOnPathsMap.find(primPath);
+     if (it == _affectedPrimToDependsOnPathsMap.end()) {
+         return;
+diff --git a/pxr/usdImaging/usdImaging/resolvedAttributeCache.h b/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
+index d103aef68..4070ff106 100644
+--- a/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
++++ b/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
+@@ -392,7 +392,7 @@ typename UsdImaging_ResolvedAttributeCache<Strategy, ImplData>::_Entry*
+ UsdImaging_ResolvedAttributeCache<Strategy, ImplData>::_GetCacheEntryForPrim(
+     const UsdPrim &prim) const
+ {
+-    typename _CacheMap::const_iterator it = _cache.find(prim);
++    typename _CacheMap::iterator it = _cache.find(prim);
+     if (it != _cache.end()) {
+         return &it->second;
+     }
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Thu, 18 May 2023 00:51:28 +0200
+Subject: [PATCH 07/14] oneTBB: replace TBB utility functions for placement new
+
+(cherry picked from commit 84233cc4ee9ef52964ffb3aa65b7fd67687b06d6)
+---
+ pxr/base/trace/concurrentList.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pxr/base/trace/concurrentList.h b/pxr/base/trace/concurrentList.h
+index 0337933a3..01886a1b9 100644
+--- a/pxr/base/trace/concurrentList.h
++++ b/pxr/base/trace/concurrentList.h
+@@ -111,7 +111,7 @@ public:
+         while (curNode) {
+             Node* nodeToDelete = curNode;
+             curNode = curNode->next;
+-            _alloc.destroy(nodeToDelete);
++            nodeToDelete->~Node();
+             _alloc.deallocate(nodeToDelete, 1);
+         }
+     }
+@@ -130,7 +130,7 @@ public:
+     /// the newly created item.
+     iterator Insert() {
+         Node* newNode = _alloc.allocate(1);
+-        _alloc.construct(newNode);
++        new(newNode) Node();
+ 
+         // Add the node to the linked list in an atomic manner.
+         do {
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Thu, 18 May 2023 00:51:26 +0200
+Subject: [PATCH 08/14] oneTBB: change tbb::tbb_thread to std::thread
+
+(cherry picked from commit 9e7bb2bdb8c87b351fe99610cba8ee35f6ef37fe)
+---
+ pxr/base/tf/testenv/error.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pxr/base/tf/testenv/error.cpp b/pxr/base/tf/testenv/error.cpp
+index e8eed44a4..606b2a943 100644
+--- a/pxr/base/tf/testenv/error.cpp
++++ b/pxr/base/tf/testenv/error.cpp
+@@ -29,7 +29,7 @@
+ 
+ #include "pxr/base/arch/functionLite.h"
+ 
+-#include <tbb/tbb_thread.h>
++#include <thread>
+ 
+ #define FILENAME   "error.cpp"
+ 
+@@ -195,7 +195,7 @@ Test_TfErrorThreadTransport()
+     printf("Creating TfErrorMark\n");
+     TfErrorMark m;
+     printf("Launching thread\n");
+-    tbb::tbb_thread t([&transport]() { _ThreadTask(&transport); });
++    std::thread t([&transport]() { _ThreadTask(&transport); });
+     TF_AXIOM(m.IsClean());
+     t.join();
+     printf("Thread completed, posting error.\n");
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Thu, 18 May 2023 00:51:24 +0200
+Subject: [PATCH 09/14] oneTBB: change tbb::mutex to std::mutex
+
+(cherry picked from commit 40fbc9a4e8c0e619b792a611850cd8060ad6a655)
+---
+ pxr/usd/usd/clipCache.cpp | 22 ++++++++++------------
+ pxr/usd/usd/clipCache.h   |  4 ++--
+ 2 files changed, 12 insertions(+), 14 deletions(-)
+
+diff --git a/pxr/usd/usd/clipCache.cpp b/pxr/usd/usd/clipCache.cpp
+index c582e1d8b..b8215378e 100644
+--- a/pxr/usd/usd/clipCache.cpp
++++ b/pxr/usd/usd/clipCache.cpp
+@@ -218,10 +218,9 @@ Usd_ClipCache::PopulateClipsForPrim(
+     const bool primHasClips = !allClips.empty();
+     if (primHasClips) {
+         TRACE_SCOPE("Usd_ClipCache::PopulateClipsForPrim (primHasClips)");
+-        tbb::mutex::scoped_lock lock;
+-        if (_concurrentPopulationContext) {
+-            lock.acquire(_concurrentPopulationContext->_mutex);
+-        }
++        std::unique_lock<std::mutex> lock = (_concurrentPopulationContext) ?
++            std::unique_lock<std::mutex>(_concurrentPopulationContext->_mutex) :
++            std::unique_lock<std::mutex>();
+ 
+         // Find nearest ancestor with clips specified.
+         const std::vector<Usd_ClipSetRefPtr>* ancestralClips = nullptr;
+@@ -260,10 +259,10 @@ Usd_ClipCache::PopulateClipsForPrim(
+ SdfLayerHandleSet
+ Usd_ClipCache::GetUsedLayers() const
+ {
+-    tbb::mutex::scoped_lock lock;
+-    if (_concurrentPopulationContext) {
+-        lock.acquire(_concurrentPopulationContext->_mutex);
+-    }
++    std::unique_lock<std::mutex> lock = (_concurrentPopulationContext) ?
++        std::unique_lock<std::mutex>(_concurrentPopulationContext->_mutex) :
++        std::unique_lock<std::mutex>();
++
+     SdfLayerHandleSet layers;
+     for (_ClipTable::iterator::value_type const &clipsListIter : _table){
+         for (Usd_ClipSetRefPtr const &clipSet : clipsListIter.second){
+@@ -342,10 +341,9 @@ const std::vector<Usd_ClipSetRefPtr>&
+ Usd_ClipCache::GetClipsForPrim(const SdfPath& path) const
+ {
+     TRACE_FUNCTION();
+-    tbb::mutex::scoped_lock lock;
+-    if (_concurrentPopulationContext) {
+-        lock.acquire(_concurrentPopulationContext->_mutex);
+-    }
++    std::unique_lock<std::mutex> lock = (_concurrentPopulationContext) ?
++        std::unique_lock<std::mutex>(_concurrentPopulationContext->_mutex) :
++        std::unique_lock<std::mutex>();
+     return _GetClipsForPrim_NoLock(path);
+ }
+ 
+diff --git a/pxr/usd/usd/clipCache.h b/pxr/usd/usd/clipCache.h
+index 2bff0833a..fbe2ea72d 100644
+--- a/pxr/usd/usd/clipCache.h
++++ b/pxr/usd/usd/clipCache.h
+@@ -30,7 +30,7 @@
+ #include "pxr/usd/usd/clipSet.h"
+ #include "pxr/usd/sdf/pathTable.h"
+ 
+-#include <tbb/mutex.h>
++#include <mutex>
+ #include <vector>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+@@ -61,7 +61,7 @@ public:
+         explicit ConcurrentPopulationContext(Usd_ClipCache &cache);
+         ~ConcurrentPopulationContext();
+         Usd_ClipCache &_cache;
+-        tbb::mutex _mutex;
++        std::mutex _mutex;
+     };
+ 
+     /// Populate the cache with clips for \p prim. Returns true if clips
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Thu, 18 May 2023 00:51:27 +0200
+Subject: [PATCH 10/14] oneTBB: explicitly specify hasher
+
+(cherry picked from commit 34a0aa49faf63142b5abc59548941a446902a0a4)
+---
+ pxr/usd/usd/crateFile.h | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/pxr/usd/usd/crateFile.h b/pxr/usd/usd/crateFile.h
+index 828fc6017..2184fa955 100644
+--- a/pxr/usd/usd/crateFile.h
++++ b/pxr/usd/usd/crateFile.h
+@@ -349,12 +349,15 @@ private:
+                 bool operator!=(ZeroCopySource const &other) const {
+                     return !(*this == other);
+                 }
+-                friend size_t tbb_hasher(ZeroCopySource const &z) {
+-                    return TfHash::Combine(
+-                        reinterpret_cast<uintptr_t>(z._addr),
+-                        z._numBytes
+-                    );
+-                }
++
++                struct Hash {
++                    inline size_t operator()(const ZeroCopySource& z) const {
++                        return TfHash::Combine(
++                            reinterpret_cast<uintptr_t>(z._addr),
++                            z._numBytes
++                        );
++                    }
++                };
+                 
+                 // Return true if the refcount is nonzero.
+                 bool IsInUse() const { return _refCount; }
+@@ -422,7 +425,7 @@ private:
+             ArchConstFileMapping _mapping;
+             char const *_start;
+             int64_t _length;
+-            tbb::concurrent_unordered_set<ZeroCopySource> _outstandingRanges;
++            tbb::concurrent_unordered_set<ZeroCopySource, ZeroCopySource::Hash> _outstandingRanges;
+         };
+ 
+     public:
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Thu, 18 May 2023 00:51:30 +0200
+Subject: [PATCH 11/14] oneTBB: support thread limits
+
+This now modifies global_control::max_allowed_parallelism instead of
+task_scheduler_init, which leads to changes in API behavior.
+
+* Increasing number of threads beyond the number of cores now additionally
+  requires creating a task_arena with higher max concurrency.
+* All application threads are affected when setting the concurrency limit,
+  not just the current thread.
+* The winning call to set the number of threads may now be different due to
+  global_control always changing the number, while with task_scheduler_init
+  the first created instance determines the number of threads.
+
+Also, in the existing implementation task_scheduler_init is never freed, not on
+shutdown or on changing the concurrently limit back to the default. This seems
+unideal, but the new code does the same to keep the same behavior.
+
+(cherry picked from commit 69e35643a7e5b9d0f94a646b70ceccc2eeea97ac)
+---
+ .../work/testenv/testWorkThreadLimits.cpp     | 59 ++++++++++++++-----
+ pxr/base/work/threadLimits.cpp                | 43 ++++++++++++--
+ 2 files changed, 83 insertions(+), 19 deletions(-)
+
+diff --git a/pxr/base/work/testenv/testWorkThreadLimits.cpp b/pxr/base/work/testenv/testWorkThreadLimits.cpp
+index 414bba2c0..4c833199a 100644
+--- a/pxr/base/work/testenv/testWorkThreadLimits.cpp
++++ b/pxr/base/work/testenv/testWorkThreadLimits.cpp
+@@ -38,6 +38,10 @@
+ #include <set>
+ #include <thread>
+ 
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++#include <tbb/global_control.h>
++#endif
++
+ using namespace std::placeholders;
+ 
+ PXR_NAMESPACE_USING_DIRECTIVE
+@@ -56,16 +60,41 @@ _CountThreads(size_t begin, size_t end)
+     _uniqueThreads->insert(std::this_thread::get_id());
+ }
+ 
++static unsigned
++_GetConcurrencyLimit()
++{
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // For oneTBB, get limit in an arena with max concurrency as
++    // WorkSetConcurrencyLimit by itself no longer increases the concurrency
++    // beyond the number of cores by itself.
++    unsigned limit;
++    tbb::task_arena arena(tbb::global_control::active_value(tbb::global_control::max_allowed_parallelism));
++    arena.execute([&]() {
++        limit = WorkGetConcurrencyLimit();
++    });
++    return limit;
++#else
++  return WorkGetConcurrencyLimit();
++#endif
++}
++
+ static size_t
+ _ExpectedLimit(const int envVal, const size_t n)
+ {
+     // If envVal is non-zero, it wins over n!
+     // envVal may also be a negative number, which means all but that many
+     // cores.
+-    return envVal ? 
++    const size_t val = envVal ?
+         (envVal < 0 ?
+             std::max<int>(1, envVal+WorkGetPhysicalConcurrencyLimit()) : envVal)
+         : n;
++
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // oneTBB has an internal limit of 256 + 1 threads.
++    return std::min<size_t>(val, 257);
++#else
++    return val;
++#endif
+ }
+ 
+ static void
+@@ -101,41 +130,41 @@ _TestArguments(const int envVal)
+     // Set to maximum concurrency, which should remain within envVal.
+     const int numCores = WorkGetPhysicalConcurrencyLimit();
+     WorkSetConcurrencyLimitArgument(numCores);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
+ 
+     // n = 0, means "no change"
+     WorkSetConcurrencyLimitArgument(0);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
+ 
+     // n = 1 means no threading
+     WorkSetConcurrencyLimitArgument(1);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
+ 
+     // n = 3 means 3
+     WorkSetConcurrencyLimitArgument(3);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 3));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 3));
+ 
+     // n = 1000 means 1000
+     WorkSetConcurrencyLimitArgument(1000);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1000));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1000));
+ 
+     // n = -1 means numCores - 1, with a minimum of 1
+     WorkSetConcurrencyLimitArgument(-1);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+              _ExpectedLimit(envVal, std::max(1, numCores-1)));
+ 
+     // n = -3 means numCores - 3, with a minimum of 1
+     WorkSetConcurrencyLimitArgument(-3);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+              _ExpectedLimit(envVal, std::max(1, numCores-3)));
+ 
+     // n = -numCores means 1 (no threading)
+     WorkSetConcurrencyLimitArgument(-numCores);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
+ 
+     // n = -numCores*10 means 1 (no threading)
+     WorkSetConcurrencyLimitArgument(-numCores*10);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
+ }
+ 
+ struct _RawTBBCounter
+@@ -218,35 +247,35 @@ main(int argc, char **argv)
+     // Test with full concurrency.
+     std::cout << "Testing full concurrency...\n";
+     WorkSetMaximumConcurrencyLimit();
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, WorkGetPhysicalConcurrencyLimit()));
+     _TestThreadLimit(envVal, WorkGetPhysicalConcurrencyLimit());
+ 
+     // Test with no concurrency.
+     std::cout << "Testing turning off concurrency...\n";
+     WorkSetConcurrencyLimit(1);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 1));
+     _TestThreadLimit(envVal, 1);
+ 
+     // Test with 2 threads.
+     std::cout << "Testing with 2 threads...\n";
+     WorkSetConcurrencyLimit(2);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 2));
+     _TestThreadLimit(envVal, 2);
+ 
+     // Test with 4 threads.
+     std::cout << "Testing with 4 threads...\n";
+     WorkSetConcurrencyLimit(4);
+-    TF_AXIOM(WorkGetConcurrencyLimit() ==
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 4));
+     _TestThreadLimit(envVal, 4);
+ 
+     // Test with 1000 threads.
+     std::cout << "Testing with 1000 threads...\n";
+     WorkSetConcurrencyLimit(1000);
+-    TF_AXIOM(WorkGetConcurrencyLimit() ==
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 1000));
+     _TestThreadLimit(envVal, 1000);
+ 
+diff --git a/pxr/base/work/threadLimits.cpp b/pxr/base/work/threadLimits.cpp
+index bc629b812..ad6bae8ae 100644
+--- a/pxr/base/work/threadLimits.cpp
++++ b/pxr/base/work/threadLimits.cpp
+@@ -29,9 +29,18 @@
+ 
+ #include "pxr/base/tf/envSetting.h"
+ 
+-#include <tbb/task_scheduler_init.h>
++// Blocked range is not used in this file, but this header happens to pull in
++// the TBB version header in a way that works in all TBB versions.
++#include <tbb/blocked_range.h>
+ #include <tbb/task_arena.h>
+ 
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++#include <tbb/global_control.h>
++#include <tbb/info.h>
++#else
++#include <tbb/task_scheduler_init.h>
++#endif
++
+ #include <algorithm>
+ #include <atomic>
+ 
+@@ -58,16 +67,25 @@ TF_DEFINE_ENV_SETTING(
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+-// We create a task_scheduler_init instance at static initialization time if
+-// PXR_WORK_THREAD_LIMIT is set to a nonzero value.  Otherwise this stays NULL.
+-static tbb::task_scheduler_init *_tbbTaskSchedInit;
++// We create a global_control or task_scheduler_init instance at static
++// initialization time if PXR_WORK_THREAD_LIMIT is set to a nonzero value.
++// Otherwise this stays NULL.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++static tbb::global_control *_tbbGlobalControl = nullptr;
++#else
++static tbb::task_scheduler_init *_tbbTaskSchedInit = nullptr;
++#endif
+ 
+ unsigned
+ WorkGetPhysicalConcurrencyLimit()
+ {
+     // Use TBB here, since it pays attention to the affinity mask on Linux and
+     // Windows.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    return tbb::info::default_concurrency();
++#else
+     return tbb::task_scheduler_init::default_num_threads();
++#endif
+ }
+ 
+ // This function always returns an actual thread count >= 1.
+@@ -123,7 +141,11 @@ Work_InitializeThreading()
+     // previously initialized by the hosting environment (e.g. if we are running
+     // as a plugin to another application.)
+     if (settingVal) {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++        _tbbGlobalControl = new tbb::global_control(tbb::global_control::max_allowed_parallelism, threadLimit);
++#else
+         _tbbTaskSchedInit = new tbb::task_scheduler_init(threadLimit);
++#endif
+     }
+ }
+ static int _forceInitialization = (Work_InitializeThreading(), 0);
+@@ -153,6 +175,11 @@ WorkSetConcurrencyLimit(unsigned n)
+         threadLimit = WorkGetConcurrencyLimit();
+     }
+ 
++
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    delete _tbbGlobalControl;
++    _tbbGlobalControl = new tbb::global_control(tbb::global_control::max_allowed_parallelism, threadLimit);
++#else
+     // Note that we need to do some performance testing and decide if it's
+     // better here to simply delete the task_scheduler_init object instead
+     // of re-initializing it.  If we decide that it's better to re-initialize
+@@ -168,6 +195,7 @@ WorkSetConcurrencyLimit(unsigned n)
+     } else {
+         _tbbTaskSchedInit = new tbb::task_scheduler_init(threadLimit);
+     }
++#endif
+ }
+ 
+ void 
+@@ -185,7 +213,14 @@ WorkSetConcurrencyLimitArgument(int n)
+ unsigned
+ WorkGetConcurrencyLimit()
+ {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // The effective concurrency requires taking into account both the
++    // task_arena and internal thread pool size set by global_control.
++    // https://github.com/oneapi-src/oneTBB/issues/405
++    return std::min<unsigned>(tbb::global_control::active_value(tbb::global_control::max_allowed_parallelism), tbb::this_task_arena::max_concurrency());
++#else
+     return tbb::this_task_arena::max_concurrency();
++#endif
+ }
+ 
+ bool
+-- 
+2.43.2
+
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Brecht Van Lommel <brecht@blender.org>
+Date: Thu, 18 May 2023 00:51:31 +0200
+Subject: [PATCH 12/14] oneTBB: support work dispatcher
+
+To make concurrent wait thread safe this is accessing the internals of TBB,
+since the TBB wait implementation has a comment saying it is not thread safe.
+
+(cherry picked from commit 748039fe751dbb499bbdc3659d4046aae8721899)
+---
+ pxr/base/work/dispatcher.cpp | 23 ++++++++++++--
+ pxr/base/work/dispatcher.h   | 61 +++++++++++++++++++++++++++++++++---
+ 2 files changed, 77 insertions(+), 7 deletions(-)
+
+diff --git a/pxr/base/work/dispatcher.cpp b/pxr/base/work/dispatcher.cpp
+index adba7dff3..66ca5181a 100644
+--- a/pxr/base/work/dispatcher.cpp
++++ b/pxr/base/work/dispatcher.cpp
+@@ -32,27 +32,42 @@ WorkDispatcher::WorkDispatcher()
+         tbb::task_group_context::isolated,
+         tbb::task_group_context::concurrent_wait | 
+         tbb::task_group_context::default_traits)
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++      , _taskGroup(_context)
++#endif
+ {
+     _waitCleanupFlag.clear();
+-    
++
++#if TBB_INTERFACE_VERSION_MAJOR < 12
+     // The concurrent_wait flag used with the task_group_context ensures
+     // the ref count will remain at 1 after all predecessor tasks are
+     // completed, so we don't need to keep resetting it in Wait().
+     _rootTask = new(tbb::task::allocate_root(_context)) tbb::empty_task;
+     _rootTask->set_ref_count(1);
++#endif
+ }
+ 
+-WorkDispatcher::~WorkDispatcher()
++WorkDispatcher::~WorkDispatcher() noexcept
+ {
+     Wait();
++
++#if TBB_INTERFACE_VERSION_MAJOR < 12
+     tbb::task::destroy(*_rootTask);
++#endif
+ }
+ 
+ void
+ WorkDispatcher::Wait()
+ {
+     // Wait for tasks to complete.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // The native task_group::wait() has a comment saying its call to the
++    // context reset method is not thread safe. So we bypass that implementation
++    // and do our own synchronization to ensure it is called once.
++    tbb::detail::d1::wait(_taskGroup.get_internal_wait_context(), _context);
++#else
+     _rootTask->wait_for_all();
++#endif
+ 
+     // If we take the flag from false -> true, we do the cleanup.
+     if (_waitCleanupFlag.test_and_set() == false) {
+@@ -73,7 +88,11 @@ WorkDispatcher::Wait()
+ void
+ WorkDispatcher::Cancel()
+ {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    _taskGroup.cancel();
++#else
+     _context.cancel_group_execution();
++#endif
+ }
+ 
+ /* static */
+diff --git a/pxr/base/work/dispatcher.h b/pxr/base/work/dispatcher.h
+index 2c499d6ab..62eb7132d 100644
+--- a/pxr/base/work/dispatcher.h
++++ b/pxr/base/work/dispatcher.h
+@@ -33,8 +33,15 @@
+ #include "pxr/base/tf/errorMark.h"
+ #include "pxr/base/tf/errorTransport.h"
+ 
++// Blocked range is not used in this file, but this header happens to pull in
++// the TBB version header in a way that works in all TBB versions.
++#include <tbb/blocked_range.h>
+ #include <tbb/concurrent_vector.h>
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++#include <tbb/task_group.h>
++#else
+ #include <tbb/task.h>
++#endif
+ 
+ #include <functional>
+ #include <type_traits>
+@@ -79,7 +86,7 @@ public:
+     WORK_API WorkDispatcher();
+ 
+     /// Wait() for any pending tasks to complete, then destroy the dispatcher.
+-    WORK_API ~WorkDispatcher();
++    WORK_API ~WorkDispatcher() noexcept; // noexcept needed for tbb::task_group
+ 
+     WorkDispatcher(WorkDispatcher const &) = delete;
+     WorkDispatcher &operator=(WorkDispatcher const &) = delete;
+@@ -103,7 +110,11 @@ public:
+ 
+     template <class Callable>
+     inline void Run(Callable &&c) {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++        _taskGroup.run(std::move(_InvokerTask<typename std::remove_reference<Callable>::type>(std::move(c), &_errors)));
++#else
+         _rootTask->spawn(_MakeInvokerTask(std::forward<Callable>(c)));
++#endif
+     }
+ 
+     template <class Callable, class A0, class ... Args>
+@@ -136,12 +147,38 @@ private:
+     // Function invoker helper that wraps the invocation with an ErrorMark so we
+     // can transmit errors that occur back to the thread that Wait() s for tasks
+     // to complete.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
+     template <class Fn>
+-    struct _InvokerTask : public tbb::task {
++    struct _InvokerTask {
+         explicit _InvokerTask(Fn &&fn, _ErrorTransports *err) 
+-            : _fn(std::move(fn)), _errors(err) {}
++            : _fn(std::make_unique<Fn>(std::move(fn))), _errors(err) {}
+ 
+         explicit _InvokerTask(Fn const &fn, _ErrorTransports *err) 
++            : _fn(std::make_unique<Fn>(std::move(fn))), _errors(err) {}
++
++        // Ensure only moves happen, no copies or assignments.
++        _InvokerTask(_InvokerTask &&other) = default;
++        _InvokerTask(const _InvokerTask &other) = delete;
++        _InvokerTask &operator=(const _InvokerTask &other) = delete;
++        _InvokerTask &operator=(_InvokerTask &&other) = delete;
++
++        void operator()() const {
++            TfErrorMark m;
++            (*_fn)();
++            if (!m.IsClean())
++                WorkDispatcher::_TransportErrors(m, _errors);
++        }
++    private:
++        std::unique_ptr<Fn> _fn;
++        _ErrorTransports *_errors;
++    };
++#else
++    template <class Fn>
++    struct _InvokerTask : public tbb::task {
++        explicit _InvokerTask(Fn &&fn, _ErrorTransports *err)
++            : _fn(std::move(fn)), _errors(err) {}
++
++        explicit _InvokerTask(Fn const &fn, _ErrorTransports *err)
+             : _fn(fn), _errors(err) {}
+ 
+         virtual tbb::task* execute() {
+@@ -164,16 +201,30 @@ private:
+             _InvokerTask<typename std::remove_reference<Fn>::type>(
+                 std::forward<Fn>(fn), &_errors);
+     }
++#endif
+ 
+     // Helper function that removes errors from \p m and stores them in a new
+     // entry in \p errors.
+     WORK_API static void
+     _TransportErrors(const TfErrorMark &m, _ErrorTransports *errors);
+ 
+-    // Task group context and associated root task that allows us to cancel
+-    // tasks invoked directly by this dispatcher.
++    // Task group context to run tasks in.
+     tbb::task_group_context _context;
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // Custom task group that lets us implement thread safe concurrent wait.
++    class _TaskGroup : public tbb::task_group {
++    public:
++        _TaskGroup(tbb::task_group_context& ctx) : tbb::task_group(ctx) {}
++        tbb::detail::d1::wait_context& get_internal_wait_context() {
++            return m_wait_ctx;
++        }
++    };
++
++    _TaskGroup _taskGroup;
++#else
++    // Root task that allows us to cancel tasks invoked directly by this dispatcher.
+     tbb::empty_task* _rootTask;
++#endif
+ 
+     // The error transports we use to transmit errors in other threads back to
+     // this thread.
+-- 
+2.43.2
+
+
