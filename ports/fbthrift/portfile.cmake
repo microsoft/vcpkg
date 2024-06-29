@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 43bf82a55d1000847fb74f786c36129c1fc6fa6cfbaf19e880284cfe3d97d7b5288a4615925266c8150c30f907c035c8c08d5168a2d873ee1774235ad5a80837
+    SHA512 560584e1740d5b0fdb637ec7c455c4b340bae1427a15af9da7a084b889305b2a66f08afd67d9ab0ec4007ae3311f1f42129feb71cabe586bd7ab9c4c993fc01b
     HEAD_REF main
     PATCHES 
         fix-glog.patch
         0002-fix-dependency.patch
-        fix-cmake.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -70,7 +69,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake")
 endif()
 
 # Only used internally and removed in master
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "" IGNORE_UNCHANGED)
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

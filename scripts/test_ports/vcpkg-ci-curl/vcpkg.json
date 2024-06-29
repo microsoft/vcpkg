@@ -8,6 +8,12 @@
     {
       "name": "curl",
       "features": [
+        "idn"
+      ]
+    },
+    {
+      "name": "curl",
+      "features": [
         "http2",
         "zstd"
       ]
@@ -21,12 +27,19 @@
       "platform": "!osx"
     },
     {
-      "$comment": "Known to be fixed by libidn2 update.",
       "name": "curl",
       "features": [
-        "idn"
+        "psl",
+        "gsasl"
       ],
-      "platform": "!android"
+      "platform": "!uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "gssapi"
+      ],
+      "platform": "linux | osx"
     },
     {
       "name": "curl",
@@ -35,13 +48,6 @@
         "tool"
       ],
       "platform": "!android & !uwp"
-    },
-    {
-      "name": "curl",
-      "features": [
-        "gssapi"
-      ],
-      "platform": "linux | osx"
     }
   ]
 }

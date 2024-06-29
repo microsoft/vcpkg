@@ -1,6 +1,6 @@
 {
   "name": "harfbuzz",
-  "version": "8.5.0",
+  "version": "9.0.0",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
@@ -50,6 +50,10 @@
           "default-features": false
         }
       ]
+    },
+    "gdi": {
+      "description": "Enable GDI/Uniscribe support on Windows",
+      "supports": "windows"
     },
     "glib": {
       "description": "Glib Unicode callbacks support",

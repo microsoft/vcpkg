@@ -1,6 +1,6 @@
 {
   "name": "qtdeviceutilities",
-  "version": "6.7.0",
+  "version": "6.7.2",
   "description": "Qt Device Utilities provides functionality that is useful for controlling settings in embedded applications.",
   "homepage": "https://www.qt.io/",
   "license": null,

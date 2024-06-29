@@ -301,7 +301,7 @@ file(COPY "${SOURCE_PATH}/include"
 auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
 set(skia_dll_static "0")
 set(skia_dll_dynamic "1")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}" IGNORE_UNCHANGED)
 
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")
