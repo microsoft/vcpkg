@@ -120,6 +120,22 @@ if ($IsWindows) {
     rmdir empty
 }
 
+if ($IsLinuxHost)
+{
+    Write-Host "Downloading and setting up Java"
+    & "./vcpkg" x-download openjdk.tar.gz "--sha512=0bf168239a9a1738ad6368b8f931d072aeb122863ec39ea86dc0449837f06953ce18be87bab7e20fd2585299a680ea844ec419fa235da87dfdd7e37b73740a57" "--url=https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz" @cachingArgs
+    & tar -xvzf openjdk.tar.gz
+    $env:JAVA_HOME = Join-Path $Pwd "jdk-17.0.2"
+    Write-Host "Downloading Android SDK"
+    & "./vcpkg" x-download android-sdk.zip "--sha512=d143221d0957256c5b172a5be70e5f098a08b2b3097a20c576c8febf444a00a64f626a7f651a7d5123b9ba32418dc0ae7053d0b4b52c40f772a6a1fb19a95417" "--url=https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip" @cachingArgs
+    Write-Host "Setting up SDK"
+    & unzip -q android-sdk.zip -d android-sdk
+    $env:ANDROID_SDK_ROOT = Join-Path $Pwd "android-sdk"
+    & ./android-sdk/cmdline-tools/bin/sdkmanager "platforms;android-33"
+    $NoParentHashes = $true
+}
+
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 if ($LASTEXITCODE -ne 0)
 {
