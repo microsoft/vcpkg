@@ -1,0 +1,46 @@
+diff --git a/include/a52.h b/include/a52.h
+index 9db52cc..02459f6 100644
+--- a/include/a52.h
++++ b/include/a52.h
+@@ -24,6 +24,18 @@
+ #ifndef A52_H
+ #define A52_H
+ 
++#ifdef A52_EXPORT
++  #if defined(_WIN32)
++    #define A52_API __declspec(dllexport)
++  #elif defined(__GNUC__) && __GNUC__ >= 4
++    #define A52_API __attribute__((visibility("default")))
++  #else
++    #define A52_API
++  #endif
++#else
++  #define A52_API
++#endif
++
+ #ifndef LIBA52_DOUBLE
+ typedef float sample_t;
+ #else
+@@ -48,15 +60,15 @@ typedef struct a52_state_s a52_state_t;
+ #define A52_LFE 16
+ #define A52_ADJUST_LEVEL 32
+ 
+-a52_state_t * a52_init (uint32_t mm_accel);
+-sample_t * a52_samples (a52_state_t * state);
+-int a52_syncinfo (uint8_t * buf, int * flags,
++A52_API a52_state_t * a52_init (uint32_t mm_accel);
++A52_API sample_t * a52_samples (a52_state_t * state);
++A52_API int a52_syncinfo (uint8_t * buf, int * flags,
+ 		  int * sample_rate, int * bit_rate);
+-int a52_frame (a52_state_t * state, uint8_t * buf, int * flags,
++A52_API int a52_frame (a52_state_t * state, uint8_t * buf, int * flags,
+ 	       sample_t * level, sample_t bias);
+-void a52_dynrng (a52_state_t * state,
++A52_API void a52_dynrng (a52_state_t * state,
+ 		 sample_t (* call) (sample_t, void *), void * data);
+-int a52_block (a52_state_t * state);
+-void a52_free (a52_state_t * state);
++A52_API int a52_block (a52_state_t * state);
++A52_API void a52_free (a52_state_t * state);
+ 
+ #endif /* A52_H */
