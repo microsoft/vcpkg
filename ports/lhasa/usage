@@ -1,6 +1,4 @@
-The package lhasa can be imported via CMake FindPkgConfig module:
+lhasa provides pkg-config modules:
 
-    find_package(PkgConfig)
-    pkg_check_modules(LHASA REQUIRED IMPORTED_TARGET liblhasa)
-
-    target_link_libraries(main PRIVATE PkgConfig::LHASA)
+  # LHA (de)compression library
+  liblhasa

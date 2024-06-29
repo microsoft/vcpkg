@@ -1,13 +1,17 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/fragglet/lhasa/releases/download/v0.4.0/lhasa-${VERSION}.tar.gz"
-    FILENAME "lhasa-${VERSION}.tar.gz"
-    SHA512 55d11a9a23e6a9c847166f963bc11dcc7aba0db1e68c44ae6d0ee40e40494484ff797b649a386bea76ea9b4ff8096722283c82b9ad253d784488366c9d73c127
+vcpkg_download_distfile(
+    FIX_OUT_OF_TREE_BUILD_PATCH
+    URLS https://github.com/fragglet/lhasa/commit/7ad404dc5d178b91405c3ac906d0ee4b3ff40c72.patch?full_index=1
+    SHA512 4eb3a832d2da53f6b0b82085c89fe33ba94b4eee87c0e301c46684b7105481fe26c10f447a5adb69ee39cdd3c7e2cccd38ac4a3345fce150e21baa9bc1a42bc9
+    FILENAME lhasa-7ad404dc5d178b91405c3ac906d0ee4b3ff40c72.patch
 )
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    PATCHES fix-out-of-tree-build.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO fragglet/lhasa
+    REF "v${VERSION}"
+    SHA512 14e98f48e0401efb743cd79d2af85ce20c44465c9c1e89b709b5ae34df2dd59bb090f7562fc6b434a8e9cc0fd9cc1edaaad7027a58a3a8385a45d7cd4aa1defa
+    PATCHES
+        "${FIX_OUT_OF_TREE_BUILD_PATCH}"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
@@ -36,5 +40,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
-file(INSTALL "${CURRENT_PORT_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
