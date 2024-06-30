@@ -1,8 +1,8 @@
 {
-  "name": "opendis6",
+  "name": "libdis6",
   "version": "0.1.0",
   "description": "C++ implementation of the IEEE 1278.1a-1998 Distributed Interactive Simulation (DIS) application protocol.",
-  "homepage": "https://github.com/crhowell3/opendis6",
+  "homepage": "https://github.com/crhowell3/libdis6",
   "license": "BSD-2-Clause",
   "dependencies": [
     {

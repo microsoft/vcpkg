@@ -1,4 +1,0 @@
-opendis6 provides CMake targets:
-
-  find_package(OpenDIS CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE OpenDIS::OpenDIS6)
