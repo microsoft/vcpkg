@@ -1,7 +1,6 @@
 {
   "name": "nccl",
-  "version": "2.4.6",
-  "port-version": 2,
+  "version": "2.19.4",
   "description": "Optimized primitives for collective multi-GPU communication.",
   "supports": "linux & x64",
   "dependencies": [

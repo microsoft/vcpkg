@@ -1,0 +1,37 @@
+diff --git a/src/Makefile b/src/Makefile
+index 7a1881d9d6..7601d68978 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -112,8 +112,8 @@ $(PKGDIR)/%.pc : %.pc
+ $(OBJDIR)/%.o : %.cc $(INCTARGETS)
+ 	@printf "Compiling  %-35s > %s\n" $< $@
+ 	mkdir -p `dirname $@`
+-	$(CXX) -I. -I$(INCDIR) $(CXXFLAGS) -Iinclude -c $< -o $@
+-	@$(CXX) -I. -I$(INCDIR) $(CXXFLAGS) -Iinclude -M $< > $(@:%.o=%.d.tmp)
++	$(CXX) -I. -I$(INCDIR) $(CPPFLAGS) $(CXXFLAGS) -Iinclude -c $< -o $@
++	@$(CXX) -I. -I$(INCDIR) $(CPPFLAGS) $(CXXFLAGS) -Iinclude -M $< > $(@:%.o=%.d.tmp)
+ 	@sed "0,/^.*:/s//$(subst /,\/,$@):/" $(@:%.o=%.d.tmp) > $(@:%.o=%.d)
+ 	@sed -e 's/.*://' -e 's/\\$$//' < $(@:%.o=%.d.tmp) | fmt -1 | \
+                 sed -e 's/^ *//' -e 's/$$/:/' >> $(@:%.o=%.d)
+diff --git a/src/device/Makefile b/src/device/Makefile
+index 1e9311f1f0..065d7c8407 100644
+--- a/src/device/Makefile
++++ b/src/device/Makefile
+@@ -26,7 +26,7 @@ CXXFLAGS  += $(INCFLAGS)
+ SAY = @bash -c 'path="$$2"; [[ "$$(realpath "$$2")" =~ ^$(subst .,\.,$(abspath $(NCCLDIR)))/(.*)$$ ]] && path="$${BASH_REMATCH[1]}"; printf "%-15s %s\n" "$$1" "$$path"' SAY
+ 
+ COMPILE.cu = $(NVCC) $(NVCUFLAGS) -dc $2 -o $1
+-COMPILE.cc = $(CXX) $(CXXFLAGS) -c $2 -o $1
++COMPILE.cc = $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $2 -o $1
+ define COMPILE
+ @$(SAY) "Compiling" $2;\
+  mkdir -p $(dir $1);\
+@@ -34,7 +34,7 @@ define COMPILE
+ endef
+ 
+ DEPENDS.cu = $(NVCC) $(NVCUFLAGS) -M -dc $1
+-DEPENDS.cc = $(CXX) $(CXXFLAGS) -M -c $1
++DEPENDS.cc = $(CXX) $(CPPFLAGS) $(CXXFLAGS) -M -c $1
+ define DEPENDS
+ @$(SAY) "Dependencies" $2;\
+  mkdir -p $(dir $1);\
