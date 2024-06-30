@@ -111,14 +111,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "opencl"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "openh264"
           ],
           "platform": "!uwp"
@@ -154,6 +146,14 @@
             "amf"
           ],
           "platform": "!osx & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "opencl"
+          ],
+          "platform": "!uwp & !osx"
         },
         {
           "name": "ffmpeg",
