@@ -37,27 +37,17 @@ Subject: [PATCH 2/3] rsutils: specify required c++ version
  1 file changed, 1 insertion(+)
 
 diff --git a/third-party/rsutils/CMakeLists.txt b/third-party/rsutils/CMakeLists.txt
-index f6a0e41141..b31e684c43 100644
+index c72a912..61b4f6c 100644
 --- a/third-party/rsutils/CMakeLists.txt
 +++ b/third-party/rsutils/CMakeLists.txt
-@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.8.0)  # source_group(TREE)
- project( rsutils )
- 
+@@ -6,6 +6,7 @@ project( rsutils )
  add_library( ${PROJECT_NAME} STATIC "" )
+ # We cannot directly interface with nlohmann_json (doesn't work on bionic)
+ #target_link_libraries( ${PROJECT_NAME} PUBLIC nlohmann_json )
 +target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_11 )
  set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER Library )
  
  target_include_directories( ${PROJECT_NAME}
-
-From eaa61985dd54e88e943fc433264b1161c4482593 Mon Sep 17 00:00:00 2001
-From: Leander Schulten <Leander.Schulten@rwth-aachen.de>
-Date: Mon, 17 Jul 2023 00:57:00 +0200
-Subject: [PATCH 3/3] realsense-file: specify required c++ version
-
----
- third-party/realsense-file/CMakeLists.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
 diff --git a/third-party/realsense-file/CMakeLists.txt b/third-party/realsense-file/CMakeLists.txt
 index a805cddf8c..63c3526b1d 100644
 --- a/third-party/realsense-file/CMakeLists.txt
