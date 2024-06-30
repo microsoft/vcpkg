@@ -4320,6 +4320,10 @@
       "baseline": "1.20",
       "port-version": 1
     },
+    "libdis6": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "libdisasm": {
       "baseline": "0.23",
       "port-version": 11
