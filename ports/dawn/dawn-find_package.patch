@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6abb9f0c84..5c387071d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,6 +40,26 @@ project(
+     LANGUAGES C CXX
+     HOMEPAGE_URL "https://dawn.googlesource.com/dawn"
+ )
++
++find_package(absl CONFIG REQUIRED)
++add_library(libabsl INTERFACE)
++add_library(absl_strings ALIAS absl::strings)
++add_library(absl_flat_hash_map ALIAS absl::flat_hash_map)
++add_library(absl_flat_hash_set ALIAS absl::flat_hash_set)
++add_library(absl_str_format_internal ALIAS absl::str_format_internal)
++add_library(absl_inlined_vector ALIAS absl::inlined_vector)
++find_package(glfw3 CONFIG REQUIRED)
++find_package(glslang CONFIG REQUIRED)
++add_library(glslang ALIAS glslang::glslang)
++add_library(glslang-default-resource-limits INTERFACE)
++find_package(VulkanUtilityLibraries CONFIG REQUIRED)
++find_package(VulkanHeaders CONFIG REQUIRED)
++add_library(Vulkan-Headers ALIAS Vulkan::Headers)
++find_path(SPIRV_HEADERS_INCLUDE_DIRS "spirv/1.0/GLSL.std.450.h")
++add_library(SPIRV-Headers INTERFACE)
++target_include_directories(SPIRV-Headers INTERFACE "${SPIRV_HEADERS_INCLUDE_DIRS}")
++cmake_path(GET SPIRV_HEADERS_INCLUDE_DIRS PARENT_PATH SPIRV-Headers_SOURCE_DIR)
++
+ enable_testing()
+ 
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+@@ -567,6 +587,8 @@ add_subdirectory(third_party)
+ set(BUILD_SHARED_LIBS_SAVED ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS 0)
+ add_subdirectory(src/tint)
++target_include_directories(tint_lang_spirv_reader_ast_parser PRIVATE "${SPIRV-Tools_SOURCE_PATH}")
++target_include_directories(tint_lang_spirv_reader_parser PRIVATE "${SPIRV-Tools_SOURCE_PATH}")
+ set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_SAVED})
+ add_subdirectory(generator)
+ add_subdirectory(src/dawn)
+diff --git a/src/dawn/wire/CMakeLists.txt b/src/dawn/wire/CMakeLists.txt
+index 123a8e98dc..c14f4fd6be 100644
+--- a/src/dawn/wire/CMakeLists.txt
++++ b/src/dawn/wire/CMakeLists.txt
+@@ -111,6 +111,7 @@ target_link_libraries(dawn_wire
+     PUBLIC
+       dawn_headers
+     PRIVATE
++      libtint
+       absl_flat_hash_map
+       absl_flat_hash_set
+       dawn_common
