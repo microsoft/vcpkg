@@ -38,6 +38,11 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL C
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
+    if(CMAKE_CROSSCOMPILING)
+        if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+            set(TARGET "HASWELL")
+        endif()
+    endif()
     list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
