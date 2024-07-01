@@ -17,9 +17,6 @@ message(STATUS "${PORT} currently requires the following libraries from the syst
         "It can be installed with your package manager"
 )
 
-message(STATUS "Check: ${PORT} C compiler: ${CMAKE_C_COMPILER_ID}")
-message(STATUS "Check: ${PORT} CXX compiler: ${CMAKE_CXX_COMPILER_ID}")
-message(STATUS "Fixup: README requirements: ${SOURCE_PATH}/README.md -> ${SOURCE_PATH}/README")
 file(TOUCH "${SOURCE_PATH}/README")
 
 vcpkg_configure_make(
