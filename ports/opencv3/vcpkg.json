@@ -72,6 +72,7 @@
     },
     "dnn": {
       "description": "Enable dnn module",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "opencv3",
@@ -79,8 +80,7 @@
             "flann"
           ]
         }
-      ],
-      "supports": "!android"
+      ]
     },
     "eigen": {
       "description": "Eigen support for opencv",
@@ -115,10 +115,10 @@
     },
     "gtk": {
       "description": "GTK support for opencv",
+      "supports": "linux",
       "dependencies": [
         "gtk"
-      ],
-      "supports": "linux"
+      ]
     },
     "halide": {
       "description": "Halide support for opencv",
@@ -138,7 +138,7 @@
     },
     "ipp": {
       "description": "Enable Intel Integrated Performance Primitives",
-      "supports": "(osx&x64) | (windows&(x64|x86)) | (linux&(x64|x86))"
+      "supports": "(osx & x64) | (windows & (x64 | x86)) | (linux & (x64 | x86))"
     },
     "jasper": {
       "description": "JPEG 2000 support for opencv",
@@ -188,6 +188,7 @@
     },
     "ovis": {
       "description": "opencv_ovis module",
+      "supports": "!(windows & static)",
       "dependencies": [
         "ogre",
         {
@@ -197,8 +198,7 @@
             "contrib"
           ]
         }
-      ],
-      "supports": "!(windows&static)"
+      ]
     },
     "png": {
       "description": "PNG support for opencv",
@@ -208,6 +208,7 @@
     },
     "python": {
       "description": "Python wrapper support for opencv",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "opencv3",
@@ -217,8 +218,7 @@
           ]
         },
         "python3"
-      ],
-      "supports": "!(windows&static)"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",
@@ -263,10 +263,10 @@
     },
     "tbb": {
       "description": "Enable Intel Threading Building Blocks",
+      "supports": "!static",
       "dependencies": [
         "tbb"
-      ],
-      "supports": "!static"
+      ]
     },
     "tiff": {
       "description": "TIFF support for opencv",
