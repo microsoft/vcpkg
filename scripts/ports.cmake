@@ -91,6 +91,7 @@ include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_setup_pkgconfig_path.cmake")
 
 include("${SCRIPTS}/cmake/z_vcpkg_fixup_rpath.cmake")
+include("${SCRIPTS}/cmake/z_vcpkg_fixup_rpath_macho.cmake")
 
 function(debug_message)
     if(PORT_DEBUG)
@@ -190,9 +191,12 @@ target system or to the host system. Use a prefixed variable instead.
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
-        # Always fixup RPATH on linux unless explicitly disabled.
+        # Always fixup RPATH on linux and osx unless explicitly disabled.
         if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
             z_vcpkg_fixup_rpath_in_dir()
+        endif()
+        if(VCPKG_FIXUP_MACHO_RPATH OR (VCPKG_TARGET_IS_OSX AND NOT DEFINED VCPKG_FIXUP_MACHO_RPATH))
+            z_vcpkg_fixup_macho_rpath_in_dir()
         endif()
         include("${SCRIPTS}/build_info.cmake")
     endif()
