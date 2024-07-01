@@ -15,15 +15,15 @@ The package dcmtk provides CMake targets:
 
 User Guide:
 ﻿
-1. If you have not enabled the 'external-dict' feature in the 'vcpkg.json' file(default and recommended), 
+1、 If you have not enabled the 'external-dict' feature in the 'vcpkg.json' file(default and recommended), 
 you can skip the following content.
 ﻿
-2. Otherwise, you need to perform the following steps:
+2、 Otherwise, you need to perform the following steps:
  
-2.1. Copy or Move the '${VCPKG-INSTALLED-DIR}/${VCPKG-TARGet-TRIPLET}/share/dcmtk-@VERSION@' directory to any place where you like.
+2.1、 Copy or Move the '${VCPKG-INSTALLED-DIR}/${VCPKG-TARGet-TRIPLET}/share/dcmtk-@VERSION@' directory to any place where you like.
 		(e.g. 'usr/local/share/dcmdata' on Linux or 'C:/dcmdata' on Windows).
  
-2.2. Set two environment variables, e.g.
+2.2、 Set two environment variables, e.g.
  
 	Windows:
 		set DCMICONVPATH=C:/dcmdata
