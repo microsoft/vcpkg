@@ -1,7 +1,7 @@
 {
   "name": "libsoup",
   "version": "3.4.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "HTTP Library for GLib",
   "homepage": "https://libsoup.org",
   "license": "LGPL-2.0-or-later",
@@ -16,6 +16,10 @@
     "libpsl",
     "nghttp2",
     "sqlite3",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

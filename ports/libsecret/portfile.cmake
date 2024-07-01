@@ -7,6 +7,8 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES packaging)
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

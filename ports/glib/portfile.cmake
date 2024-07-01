@@ -2,7 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 6f3a06e10e7373a2dbf0688512de4126472fb73cbec488b7983b5ffecff09c64d7e1ca462f892e8f215d3d277d103ca802bad7ef0bd0f91edf26fc6ce67187b6
+    SHA512 1514d62aeb4c4a1a1048ae0f84f7db7f0dbf355772b2dadf6a34ec547045b163a5e28331b096e7616fe3c9c19bed98025a0202b05073f5d7ee901d0efaffe143
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -39,6 +39,8 @@ if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_list(APPEND ADDITIONAL_BINARIES "sh = ['${CMAKE_COMMAND}', '-E', 'false']")
 endif()
 
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES packaging)
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     LANGUAGES C CXX OBJC OBJCXX
@@ -46,10 +48,10 @@ vcpkg_configure_meson(
         ${ADDITIONAL_BINARIES}
     OPTIONS
         ${OPTIONS}
-        -Dgtk_doc=false
+        -Ddocumentation=false
         -Dinstalled_tests=false
         -Dlibelf=disabled
-        -Dman=false
+        -Dman-pages=disabled
         -Dtests=false
         -Dxattr=false
 )
@@ -72,6 +74,9 @@ endforeach()
 set(GLIB_TOOLS
     gapplication
     gdbus
+    gi-compile-repository
+    gi-decompile-typelib
+    gi-inspect-typelib
     gio
     gio-querymodules
     glib-compile-resources

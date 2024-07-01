@@ -48,6 +48,8 @@ else()
     set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
 endif()
 
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES packaging)
+
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
