@@ -656,13 +656,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv4/licenses")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv")
-
 if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.android")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
@@ -674,38 +667,53 @@ if("python" IN_LIST FEATURES)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${python_dir}/site-packages/cv2/typing")
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
-      "-lQt6::Core5Compat"
-      ""
-      IGNORE_UNCHANGED
-  ) #fixme
+    "-lQt6::Core5Compat"
+    "-lQt6Core5Compat"
+    IGNORE_UNCHANGED
+  )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
-      "-lhdf5::hdf5-static"
-      ""
-      IGNORE_UNCHANGED
-  ) #fixme
+    "-lhdf5::hdf5-static"
+    "-lhdf5-static"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
+    "\${prefix}"
+    IGNORE_UNCHANGED
+  )
 endif()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
-      "-lQt6::Core5Compat"
-      ""
-      IGNORE_UNCHANGED
-  ) #fixme
+    "-lQt6::Core5Compat"
+    "-lQt6Core5Compat"
+    IGNORE_UNCHANGED
+  )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
-      "-lhdf5::hdf5-static"
-      ""
-      IGNORE_UNCHANGED
-  ) #fixme
+    "-lhdf5::hdf5-static"
+    "-lhdf5-static"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/"
+    "\${prefix}"
+    IGNORE_UNCHANGED
+  )
 endif()
-
-vcpkg_fixup_pkgconfig()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-file(GLOB extra_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/opencv4/*")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra_license_files})
+file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
+file(GLOB_RECURSE extra1_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/*")
+file(GLOB_RECURSE extra2_license_files "${CURRENT_PACKAGES_DIR}/share/opencv4/licenses/*")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra1_license_files} ${extra2_license_files})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv4/licenses")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
-
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled) #fixme
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

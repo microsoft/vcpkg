@@ -1,10 +1,7 @@
-file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
-string(JSON OPENCV_VERSION GET "${_contents}" version)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF ${OPENCV_VERSION}
+    REF "${VERSION}"
     SHA512 de7d24ac7ed78ac14673011cbecc477cae688b74222a972e553c95a557b5cb8e5913f97db525421d6a72af30998ca300112fa0b285daed65f65832eb2cf7241a
     HEAD_REF master
     PATCHES
@@ -18,15 +15,16 @@ vcpkg_from_github(
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
-
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
  "eigen"    WITH_EIGEN
+ "gtk"      WITH_GTK
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
+ "msmf"     WITH_MSMF
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
  "png"      WITH_PNG
@@ -35,20 +33,6 @@ FEATURES
  "world"    BUILD_opencv_world
  "dc1394"   WITH_1394
 )
-
-set(WITH_MSMF ON)
-if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-  set(WITH_MSMF OFF)
-endif()
-
-set(WITH_GTK OFF)
-if("gtk" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_LINUX)
-    set(WITH_GTK ON)
-  else()
-    message(WARNING "The gtk module cannot be enabled outside Linux")
-  endif()
-endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT_LNK)
 
@@ -84,13 +68,11 @@ vcpkg_cmake_configure(
         -DWITH_1394=OFF
         -DWITH_IPP=OFF
         -DWITH_LAPACK=OFF
-        -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
         -DWITH_PYTHON=OFF
         -DWITH_FFMPEG=OFF
         -DWITH_ZLIB=ON
-        -WITH_GTK=${WITH_GTK}
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=OFF
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
@@ -143,4 +125,6 @@ vcpkg_fixup_pkgconfig()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(GLOB extra_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/opencv2/*")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra_license_files})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")

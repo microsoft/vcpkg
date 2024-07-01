@@ -51,6 +51,14 @@
             "gtk"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "msmf"
+          ],
+          "platform": "windows & !mingw"
         }
       ]
     },
@@ -64,7 +72,8 @@
       "description": "GTK support for opencv",
       "dependencies": [
         "gtk"
-      ]
+      ],
+      "supports": "linux"
     },
     "jasper": {
       "description": "JPEG 2000 support for opencv",
@@ -77,6 +86,10 @@
       "dependencies": [
         "libjpeg-turbo"
       ]
+    },
+    "msmf": {
+      "description": "Microsoft Media Foundation support for opencv",
+      "supports": "windows & !mingw"
     },
     "openexr": {
       "description": "OpenEXR support for opencv",
