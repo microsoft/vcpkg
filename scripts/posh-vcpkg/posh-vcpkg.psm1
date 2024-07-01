@@ -2,41 +2,63 @@ param()
 
 if (Get-Module posh-vcpkg) { return }
 
-if ($PSVersionTable.PSVersion.Major -lt 5) {
-    Write-Warning ("posh-vcpkg does not support PowerShell versions before 5.0.")
-    return
-}
-
-if (Test-Path Function:\TabExpansion) {
-    Rename-Item Function:\TabExpansion VcpkgTabExpansionBackup
-}
-
-function TabExpansion($line, $lastWord) {
-    $lastBlock = [regex]::Split($line, '[|;]')[-1].TrimStart()
-
-    switch -regex ($lastBlock) {
-        "^(?<vcpkgexe>(\./|\.\\|)vcpkg(\.exe|)) (?<remaining>.*)$"
-        {
-            & $matches['vcpkgexe'] autocomplete $matches['remaining']
-            return
+$VcpkgCompleterScriptBlock = {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    $commandTextBeforeCursor = & {
+        $line = $commandAst.Extent.StartScriptPosition.Line
+        $commandStartOffset = $commandAst.Extent.StartOffset
+        $commandEndOffset = $commandAst.Extent.EndOffset
+        # cut the command to the $cursorPosition with trailing spaces
+        if ($cursorPosition -gt $commandEndOffset) {
+            return $commandAst.Extent.Text + ' ' * ($cursorPosition - $commandEndOffset)
         }
-
-        # Fall back on existing tab expansion
-        default {
-            if (Test-Path Function:\VcpkgTabExpansionBackup) {
-                VcpkgTabExpansionBackup $line $lastWord
+        # cut the command to the $cursorPosition that after spaces
+        elseif ([string]::IsNullOrEmpty($wordToComplete)) {
+            return $line.Substring($commandStartOffset, $cursorPosition - $commandStartOffset)
+        }
+        # cut the command after the $wordToComplete
+        else {
+            $wordToCompleteAst = & {
+                $wordToCompleteAstList = $commandAst.FindAll(
+                    {
+                        # filter [System.Management.Automation.Language.StringConstantExpressionAst]
+                        ($args[0] -isnot [System.Management.Automation.Language.CommandAst]) `
+                            -and
+                        # cursor is on the $wordToComplete
+                        ($cursorPosition -gt $args[0].Extent.StartOffset -and $cursorPosition -le $args[0].Extent.EndOffset) `
+                            -and
+                        # ensure the text is $wordToComplete
+                        ($args[0].Extent.Text -eq $wordToComplete)
+                    },
+                    $true
+                )
+                # expect only and must be one
+                if ($wordToCompleteAstList -ne $null -or $wordToCompleteAstList.Count -eq 1) {
+                    return $wordToCompleteAstList[0]
+                }
+                # should not be possible
+                else { return $null }
             }
+            if ($wordToCompleteAst -eq $null) {
+                # should not be possible
+                return $null
+            }
+            return $line.Substring($commandStartOffset, $wordToCompleteAst.Extent.EndOffset - $commandStartOffset)
         }
+    }
+    if ($commandTextBeforeCursor -eq $null) {
+        # should not be possible
+        return $null
+    }
+    else {
+        $commandTextBeforeCursor -match "^(?<vcpkgexe>(\./|\.\\|)vcpkg(\.exe|)) +(?<remaining>.*)$" | Out-Null
+        return & $matches['vcpkgexe'] autocomplete $matches['remaining']
     }
 }
 
-$exportModuleMemberParams = @{
-    Function = @(
-        'TabExpansion'
-    )
-}
+Register-ArgumentCompleter -Native -CommandName vcpkg -ScriptBlock $VcpkgCompleterScriptBlock
 
-Export-ModuleMember @exportModuleMemberParams
+return
 
 # SIG # Begin signature block
 # MIInugYJKoZIhvcNAQcCoIInqzCCJ6cCAQExDzANBglghkgBZQMEAgEFADB5Bgor
