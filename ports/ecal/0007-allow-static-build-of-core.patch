@@ -1,18 +1,18 @@
 diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
-index 3c7d57189..775f8a7c8 100644
+index 8655d134a..03d0f7c81 100644
 --- a/ecal/core/CMakeLists.txt
 +++ b/ecal/core/CMakeLists.txt
-@@ -397,7 +397,7 @@ set(ecal_header_base
+@@ -449,7 +449,7 @@ set(ecal_header_public
      ${ecal_header_msg}
  )
  
 -ecal_add_ecal_shared_library(${PROJECT_NAME} 
 +ecal_add_library(${PROJECT_NAME} 
-     ${ecal_custom_tclap_cpp_src}
-     ${ecal_io_cpp_src} 
-     ${ecal_io_mem_cpp_src} 
-@@ -433,7 +433,7 @@ if(UNIX)
-   set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+     ${ecal_config_src}
+     ${ecal_io_mtx_src}
+     ${ecal_io_mtx_linux_src}
+@@ -483,7 +483,7 @@ if(UNIX)
+   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
  endif()
  
 -ecal_add_ecal_shared_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})
@@ -20,9 +20,9 @@ index 3c7d57189..775f8a7c8 100644
  
  add_library(eCAL::${PROJECT_NAME}   ALIAS ${PROJECT_NAME})
  add_library(eCAL::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
-@@ -457,6 +457,11 @@ target_compile_definitions(${PROJECT_NAME}
-     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
-     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>)
+@@ -514,6 +514,11 @@ target_compile_definitions(${PROJECT_NAME}
+     ECALC_NO_DEPRECATION_WARNINGS
+ )
  
 +if(BUILD_SHARED_LIBS)
 +  target_compile_definitions(${PROJECT_NAME}_c PUBLIC eCAL_SHARED_LIB)
@@ -32,7 +32,7 @@ index 3c7d57189..775f8a7c8 100644
  if(ECAL_NPCAP_SUPPORT)
    target_compile_definitions(${PROJECT_NAME}
      PRIVATE ECAL_NPCAP_SUPPORT)
-@@ -507,8 +512,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${SIMPLEINI_INCLUDE_DIRS})
+@@ -565,8 +570,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${SIMPLEINI_INCLUDE_DIRS})
  set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
  set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
  
@@ -44,7 +44,7 @@ index 3c7d57189..775f8a7c8 100644
  install(DIRECTORY
     "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
 diff --git a/ecal/core/include/ecal/ecal_os.h b/ecal/core/include/ecal/ecal_os.h
-index a962036f2..5d466cc86 100644
+index 2b051d893..f24cdc325 100644
 --- a/ecal/core/include/ecal/ecal_os.h
 +++ b/ecal/core/include/ecal/ecal_os.h
 @@ -47,7 +47,7 @@
@@ -56,19 +56,22 @@ index a962036f2..5d466cc86 100644
    #ifdef eCAL_EXPORTS
      #define ECALC_API __declspec(dllexport)
    #else /* eCAL_EXPORTS */
-@@ -64,11 +64,15 @@
- #endif
+@@ -65,11 +65,15 @@
  
- #ifdef _MSC_VER
+ #if !defined(ECALC_NO_DEPRECATION_WARNINGS)
+   #ifdef _MSC_VER
 +  #ifdef eCAL_SHARED_LIB
-   #ifdef eCAL_EXPORTS
-     #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
-   #else /* eCAL_EXPORTS */
-     #define ECALC_API_DEPRECATED __declspec(dllimport deprecated)
-   #endif /* eCAL_EXPORTS */
-+  #else
-+    #define ECALC_API_DEPRECATED  
-+  #endif
- #elif defined(__GNUC__) || defined(__clang__)
-   #define ECALC_API_DEPRECATED __attribute__((deprecated))
- #else
+     #ifdef eCAL_EXPORTS
+       #define ECALC_API_DEPRECATED __declspec(dllexport deprecated)
+     #else /* eCAL_EXPORTS */
+       #define ECALC_API_DEPRECATED __declspec(dllimport deprecated)
+     #endif /* eCAL_EXPORTS */
++    #else
++      #define ECALC_API_DEPRECATED  
++    #endif
+   #elif defined(__GNUC__) || defined(__clang__)
+     #define ECALC_API_DEPRECATED __attribute__((deprecated))
+   #else
+-- 
+2.45.0.windows.1
+

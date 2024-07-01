@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 64d5bb384..1f08d4bab 100644
+index 19d8f2a93..dca8948be 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -274,7 +274,7 @@ set(eCAL_install_app_dir           ${CMAKE_INSTALL_BINDIR})
+@@ -277,7 +277,7 @@ set(eCAL_install_app_dir           ${CMAKE_INSTALL_BINDIR})
  set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
  set(eCAL_install_archive_dyn_dir   ${CMAKE_INSTALL_LIBDIR})
  set(eCAL_install_bin_dir           ${CMAKE_INSTALL_BINDIR})
@@ -11,10 +11,10 @@ index 64d5bb384..1f08d4bab 100644
  set(eCAL_install_config_dir        ${CMAKE_INSTALL_SYSCONFDIR}/ecal)
  set(eCAL_install_doc_dir           ${CMAKE_INSTALL_DOCDIR})
  set(eCAL_install_include_dir       ${CMAKE_INSTALL_INCLUDEDIR})
-diff --git a/thirdparty/cmake_functions/CMakeLists.txt b/thirdparty/cmake_functions/CMakeLists.txt
-index 3ba185a97..aa9e8a736 100644
---- a/thirdparty/cmake_functions/CMakeLists.txt
-+++ b/thirdparty/cmake_functions/CMakeLists.txt
+diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
+index 6ed0d1a14..9a833a1f9 100644
+--- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
++++ b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
 @@ -4,12 +4,8 @@ include(cmake_functions.cmake)
  
  project(CMakeFunctions VERSION 0.4.1)
