@@ -2,6 +2,7 @@
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
 FROM ubuntu:focal-20240530
 
+ADD https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip /android-sdk-11076708.zip
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://dl.google.com/android/repository/android-ndk-r25c-linux.zip /android-ndk-r25c-linux.zip
 ADD https://dl.google.com/android/repository/android-ndk-r26d-linux.zip /android-ndk-r26d-linux.zip
@@ -37,10 +38,17 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev \
   libxcb-cursor-dev libxkbcommon-x11-dev"
 
+# qtwayland
+ENV APT_PACKAGES="$APT_PACKAGES libwayland-dev"
+
 ## PowerShell
 ENV APT_PACKAGES="$APT_PACKAGES powershell"
 
+## qtbase for android
+ENV APT_PACKAGES="$APT_PACKAGES  openjdk-17-jre-headless openjdk-17-jdk-headless"
+
 RUN <<END_OF_SCRIPT bash
+set -e
 export DEBIAN_FRONTEND=noninteractive
 
 # Apt prereqs itself
@@ -65,8 +73,20 @@ unzip /android-ndk-r25c-linux.zip
 rm -f android-ndk-r25c-linux.zip
 unzip /android-ndk-r26d-linux.zip
 rm -f android-ndk-r26d-linux.zip
+
+# Android SDK
+unzip /android-sdk-11076708.zip -d android-sdk
+rm -f android-sdk-11076708.zip
+
+shopt -s extglob
+mkdir /android-sdk/cmdline-tools/latest
+# https://stackoverflow.com/questions/65262340/cmdline-tools-could-not-determine-sdk-root
+mv /android-sdk/cmdline-tools/!(latest) /android-sdk/cmdline-tools/latest
+yes | /android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;29.0.2" "platform-tools" "tools"
 END_OF_SCRIPT
 
 ENV ANDROID_NDK_HOME /android-ndk-r25c
+ENV ANDROID_SDK_ROOT /android-sdk
 
 WORKDIR /vcpkg
