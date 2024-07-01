@@ -7,7 +7,7 @@ index 86175ce42..8228d20dc 100644
  [$1]
  EOF
 -gmp_assemble="$CCAS $CFLAGS $CPPFLAGS conftest.s >conftest.out 2>&1"
-+gmp_assemble="$CCAS $CPPFLAGS $ASMFLAGS conftest.s >conftest.out 2>&1"
++gmp_assemble="$CCAS $CPPFLAGS $CCASFLAGS conftest.s >conftest.out 2>&1"
  if AC_TRY_EVAL(gmp_assemble); then
    cat conftest.out >&AC_FD_CC
    ifelse([$2],,:,[$2])
@@ -16,7 +16,7 @@ index 86175ce42..8228d20dc 100644
  	addl	$ ${tmp_underscore}_GLOBAL_OFFSET_TABLE_, %ebx
  EOF
 -  gmp_compile="$CCAS $CFLAGS $CPPFLAGS $lt_prog_compiler_pic conftest.s >&AC_FD_CC && $CC $CFLAGS $CPPFLAGS $lt_prog_compiler_pic conftest.$OBJEXT >&AC_FD_CC"
-+  gmp_compile="$CCAS $CPPFLAGS $ASMFLAGS $lt_prog_compiler_pic conftest.s >&AC_FD_CC && $CC $CPPFLAGS $ASMFLAGS $lt_prog_compiler_pic conftest.$OBJEXT >&AC_FD_CC"
++  gmp_compile="$CCAS $CPPFLAGS $CCASFLAGS $lt_prog_compiler_pic conftest.s >&AC_FD_CC && $CC $CPPFLAGS $CCASFLAGS $lt_prog_compiler_pic conftest.$OBJEXT >&AC_FD_CC"
    if AC_TRY_EVAL(gmp_compile); then
      if test "$tmp_underscore" = "_"; then
        gmp_cv_asm_x86_got_underscore=yes
@@ -25,7 +25,7 @@ index 86175ce42..8228d20dc 100644
    AC_MSG_WARN([| WARNING WARNING WARNING])
    AC_MSG_WARN([| Host CPU has MMX code, but the assembler])
 -  AC_MSG_WARN([|     $CCAS $CFLAGS $CPPFLAGS])
-+  AC_MSG_WARN([|     $CCAS $CPPFLAGS $ASMFLAGS])
++  AC_MSG_WARN([|     $CCAS $CPPFLAGS $CCASFLAGS])
    AC_MSG_WARN([| has the Solaris 2.6 and 2.7 bug where register to register])
    AC_MSG_WARN([| movq operands are reversed.])
    AC_MSG_WARN([| Non-MMX replacements will be used.])
@@ -40,7 +40,7 @@ index 5d7306c22..75692128d 100644
 +# Only used with CCAS
  COMPILE_FLAGS = $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 -	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASMFLAGS)
-+	$(CPPFLAGS) $(ASMFLAGS)
++	$(CPPFLAGS) $(CCASFLAGS)
  
  # Flags used for preprocessing (in ansi2knr rules).
  #

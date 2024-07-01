@@ -30,58 +30,39 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND OPTIONS
-        "ac_cv_func_memset=yes"
         "gmp_cv_asm_w32=.word"
         "gmp_cv_check_libm_for_build=no"
     )
 endif()
 
 set(disable_assembly OFF)
-set(ccas "")
-set(asmflags "-c")
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+set(languages "C;CXX")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        string(APPEND asmflags " --target=i686-pc-windows-msvc")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        string(APPEND asmflags " --target=x86_64-pc-windows-msvc")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        string(APPEND asmflags " --target=arm64-pc-windows-msvc")
     else()
         set(disable_assembly ON)
-    endif()
-    if(NOT disable_assembly)
-        vcpkg_find_acquire_program(CLANG)
-        set(ccas "${CLANG}")
     endif()
 elseif(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # not exporting asm functions
     set(disable_assembly ON)
-elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-    vcpkg_list(APPEND OPTIONS "ABI=32")
-    string(APPEND asmflags " -m32")
-else()
-    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
 
 if(disable_assembly)
     vcpkg_list(APPEND OPTIONS "--enable-assembly=no")
-elseif(ccas)
-    cmake_path(GET ccas PARENT_PATH ccas_dir)
-    vcpkg_add_to_path("${ccas_dir}")
-    cmake_path(GET ccas FILENAME ccas_command)
+else()
+    list(APPEND languages "ASM")
 endif()
-vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
+vcpkg_make_configure(
     AUTOCONFIG
+    SOURCE_PATH "${SOURCE_PATH}"
+    LANGUAGES ${languages}
     OPTIONS
         ${OPTIONS}
         --enable-cxx
@@ -89,7 +70,7 @@ vcpkg_configure_make(
         --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
