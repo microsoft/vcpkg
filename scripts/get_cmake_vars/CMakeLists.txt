@@ -161,6 +161,7 @@ macro(_vcpkg_adjust_flags flag_var)
     unset(flags_to_add_target)
 endmacro()
 
+message(WARNING "wheyy ${VCPKG_FLAGS_TO_CHECK}.")
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
     string(STRIP "${${flag}}" ${flag}) # Strip leading and trailing whitespaces
     _vcpkg_adjust_flags(${flag})

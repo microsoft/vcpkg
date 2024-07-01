@@ -113,6 +113,7 @@ set(VCPKG_VARS_TO_CHECK "${VCPKG_DEFAULT_VARS_TO_CHECK}" CACHE STRING "Variables
 set(VCPKG_FLAGS_TO_CHECK "${VCPKG_DEFAULT_FLAGS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_ENV_VARS_TO_CHECK "${VCPKG_DEFAULT_ENV_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 
+message(WARNING "whaayy ${VCPKG_FLAGS_TO_CHECK}.")
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK VCPKG_FLAGS_TO_CHECK)
     escaped(value "${${VAR}}")
     string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${value}\")\n")
@@ -131,6 +132,8 @@ endforeach()
 set(EXTRA_FLAGS "")
 
 if(APPLE)
+    message(WARNING "whayy2 ${CMAKE_OSX_DEPLOYMENT_TARGET}.")
+
     if(CMAKE_OSX_SYSROOT)
         string(APPEND EXTRA_FLAGS " -isysroot \"${CMAKE_OSX_SYSROOT}\"")
     endif()
