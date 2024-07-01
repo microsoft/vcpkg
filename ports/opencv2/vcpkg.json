@@ -70,10 +70,10 @@
     },
     "gtk": {
       "description": "GTK support for opencv",
+      "supports": "linux",
       "dependencies": [
         "gtk"
-      ],
-      "supports": "linux"
+      ]
     },
     "jasper": {
       "description": "JPEG 2000 support for opencv",
