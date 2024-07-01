@@ -11,15 +11,32 @@ The package dcmtk provides CMake targets:
     # DCMTK::dcmrt DCMTK::dcmiod DCMTK::dcmfg DCMTK::dcmseg
     # DCMTK::dcmtract DCMTK::dcmpmap DCMTK::dcmect
 
-Add the following cmake code to your CMakeLists.txt to create definitions for DCMTK
-    if ("${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" STREQUAL "/")
-        message(WARNING "No vcpkg install dir found, DCMTK definitions are not set")
-    else()
-        target_compile_definitions(main
-            PUBLIC
-                "DCMTK_PREFIX=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-                "DCM_DICT_DEFAULT_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/dicom.dic:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/private.dic"
-                "DEFAULT_CONFIGURATION_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/etc/dcmtk-${DCMTK_VERSION}/"
-                "DEFAULT_SUPPORT_DATA_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/"
-        )
-    endif()
+
+
+User Guide:
+﻿
+1. If you have not enabled the 'external-dict' feature in the 'vcpkg.json' file(default and recommended), 
+you can skip the following content.
+﻿
+2. Otherwise, you need to perform the following steps:
+ 
+2.1. Copy or Move the '${VCPKG-INSTALLED-DIR}/${VCPKG-TARGet-TRIPLET}/share/dcmtk-@VERSION@' directory to any place where you like.
+		(e.g. 'usr/local/share/dcmdata' on Linux or 'C:/dcmdata' on Windows).
+ 
+2.2. Set two environment variables, e.g.
+ 
+	Windows:
+		set DCMICONVPATH=C:/dcmdata
+		set DCMDICTPATH=C:/dcmdata/dicom.dic;C:/dcmdata/private.dic
+ 
+	Unix like:
+		export DCMICONVPATH=usr/local/share/dcmdata
+		export DCMDICTPATH=usr/local/share/dcmdata/dicom.dic:usr/local/share/dcmdata/private.dic
+		
+		
+The DCMDICTPATH environment variable can even refer to several data dictionaries 
+	separated by colons (":") on Unix systems, or semicolons (";") on Windows systems.
+
+For more infomations about loading external data files, you can visit these websits: 
+https://support.dcmtk.org/docs/file_envvars.html
+https://support.dcmtk.org/docs/file_datadict.html
