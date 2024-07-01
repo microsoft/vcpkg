@@ -269,7 +269,7 @@
       "port-version": 7
     },
     "asmjit": {
-      "baseline": "2024-06-05",
+      "baseline": "2024-06-28",
       "port-version": 0
     },
     "asmtk": {
