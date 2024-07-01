@@ -125,8 +125,11 @@ macro(_vcpkg_adjust_flags flag_var)
         endif()
     endif()
     if(APPLE)
+        message(WARNING "wheyy ${CMAKE_OSX_DEPLOYMENT_TARGET}.")
+
         set(flags_to_add_osx_arch_sysroot "${VCPKG_LANG_FLAGS}" CMAKE_SHARED_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS)
         if("${flag_var}" IN_LIST flags_to_add_osx_arch_sysroot)
+            message(WARNING "wheyy ${CMAKE_OSX_DEPLOYMENT_TARGET}.")
             # macOS - append arch and isysroot if cross-compiling
             if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
                 foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
