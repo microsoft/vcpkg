@@ -4,7 +4,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO linux-audit/audit-userspace
         SHA512 297664a55ab44b40c9280202c19612cfbfdacc209c4d226461ea5faa638e35617cb516e53d1f0bc3748cdd038d9524f3e5ebe11c8de4a5511ab4f12b7d06478c
-        REF v4.0.1
+        REF "v${VERSION}"
         HEAD_REF master
         PATCHES
         0000-add-missing-unistd-include.patch
