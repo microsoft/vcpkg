@@ -19,6 +19,9 @@
     "json1"
   ],
   "features": {
+    "dbpage-vtab": {
+      "description": "Enable the recovery extension"
+    },
     "dbstat": {
       "description": "Enable the DBSTAT virtual table"
     },
@@ -51,9 +54,6 @@
     },
     "omit-load-extension": {
       "description": "Enable loading of external extensions"
-    },
-    "dbpage-vtab": {
-      "description": "Enable the recovery extension"
     },
     "rtree": {
       "description": "Enable the RTREE extension"
