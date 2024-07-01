@@ -10,8 +10,6 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 string(REPLACE "arm64" "aarch64" key "${key}")
 
-message(STATUS "---------------key: ${key}")
-
 set(ARCHIVE NOTFOUND)
 # For convenient updates, use 
 # vcpkg install shader-slang --cmake-args=-DVCPKG_SHADER_SLANG_UPDATE=1
