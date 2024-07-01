@@ -1,0 +1,75 @@
+{
+  "name": "onnxruntime",
+  "version": "1.17.3",
+  "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
+  "homepage": "https://onnxruntime.ai/",
+  "license": "MIT",
+  "dependencies": [
+    "boost-config",
+    "boost-mp11",
+    "cpuinfo",
+    "cxxopts",
+    "date",
+    "eigen3",
+    "flatbuffers",
+    {
+      "name": "flatbuffers",
+      "host": true
+    },
+    "ms-gsl",
+    "nlohmann-json",
+    {
+      "name": "nsync",
+      "platform": "!windows"
+    },
+    "onnx",
+    "optional-lite",
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "re2",
+    "safeint",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "wil",
+    "zlib"
+  ],
+  "features": {
+    "coreml": {
+      "description": "Build with CoreML support",
+      "supports": "osx | ios"
+    },
+    "openvino": {
+      "description": "Build with OpenVINO support",
+      "supports": "!(osx | ios | android | emscripten) & !static",
+      "dependencies": [
+        {
+          "name": "openvino",
+          "default-features": false,
+          "features": [
+            "cpu",
+            "gpu",
+            "onnx"
+          ]
+        }
+      ]
+    },
+    "python": {
+      "description": "Enable python bindings",
+      "dependencies": [
+        {
+          "name": "vcpkg-get-python-packages",
+          "host": true
+        }
+      ]
+    }
+  }
+}
