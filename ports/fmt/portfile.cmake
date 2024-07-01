@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
     REF "${VERSION}"
-    SHA512 27df90c681ec37e55625062a79e3b83589b6d7e94eff37a3b412bb8c1473f757a8adb727603acc9185c3490628269216843b7d7bd5a3cb37f0029da5d1495ffa
+    SHA512 ec9a989298a63233b939ee14372a9cd39902619e895800427629de835de95e4e0e637b4ba3834bc961e1573b7d214543286d7c7791b6ad61da8cff1830b4df8f
     HEAD_REF master
     PATCHES
-        fix-visibility.patch
         fix-write-batch.patch
 )
 
