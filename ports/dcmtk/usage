@@ -11,31 +11,21 @@ The package dcmtk provides CMake targets:
     # DCMTK::dcmrt DCMTK::dcmiod DCMTK::dcmfg DCMTK::dcmseg
     # DCMTK::dcmtract DCMTK::dcmpmap DCMTK::dcmect
 
-
-User Guide:
-
-1、	If the 'external-dict' feature is not enabled in the 'vcpkg.json' file in your project (which is the default and recommended setting), 
-	you can skip the following content.
-
-2、	Otherwise, follow these steps:
-
-2.1、Copy or Move the '${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-@VERSION@' directory to any desired location.
-	(e.g., /usr/local/share/dcmdata on Linux or C:\dcmdata on Windows).
-	
+DCMTK User Guide:
+1、If the 'external-dict' feature is not enabled in the 'vcpkg.json' file in your project (which is the default and recommended setting), 
+  you can skip the following content.
+2、Otherwise, follow these steps:
+2.1、Copy or Move the '${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-3.6.8' directory to any desired location.
+	(e.g., '/usr/local/share/dcmdata' on Linux or 'C:\dcmdata' on Windows).
 2.2、Set two environment variables:
-
-For Windows:
-	* `set DCMICONVPATH=C:\dcmdata`  
-	* `set DCMDICTPATH=C:\dcmdata\dicom.dic;C:\dcmdata\private.dic`
+  For Windows:
+	* set DCMICONVPATH=C:\dcmdata
+	* set DCMDICTPATH=C:\dcmdata\dicom.dic;C:\dcmdata\private.dic
+  For Unix-like systems (e.g., Linux or macOS):
+	* export DCMICONVPATH=/usr/local/share/dcmdata
+	* export DCMDICTPATH=/usr/local/share/dcmdata/dicom.dic:/usr/local/share/dcmdata/private.dic
 	
-For Unix-like systems (e.g., Linux or macOS):
-	* `export DCMICONVPATH=/usr/local/share/dcmdata`  
-	* `export DCMDICTPATH=/usr/local/share/dcmdata/dicom.dic:/usr/local/share/dcmdata/private.dic`
-	
-
 Note: The `DCMDICTPATH` environment variable can refer to multiple data dictionaries, separated by colons (":") on Unix-like systems or semicolons (";") on Windows.
-
 For further information on loading external data files, please visit the following websites:
-
 https://support.dcmtk.org/docs/file_envvars.html
 https://support.dcmtk.org/docs/file_datadict.html
