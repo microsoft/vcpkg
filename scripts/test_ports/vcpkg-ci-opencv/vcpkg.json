@@ -6,7 +6,7 @@
   "homepage": "https://github.com/microsoft/vcpkg",
   "dependencies": [
     {
-      "name": "opencv",
+      "name": "opencv4",
       "default-features": false,
       "features": [
         "ade",
@@ -14,8 +14,76 @@
         "contrib",
         "eigen",
         "ffmpeg",
+        "fs",
+        "gapi",
         "highgui",
         "intrinsics",
+        "jpeg",
+        "nonfree",
+        "png",
+        "quirc",
+        "thread",
+        "tiff",
+        "webp"
+      ]
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "python"
+      ],
+      "platform": "!uwp & !(windows & static)"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "cuda",
+        "cudnn",
+        "dnn-cuda",
+        "dshow",
+        "gstreamer",
+        "opencl",
+        "ovis",
+        "tbb",
+        "win32ui"
+      ],
+      "platform": "windows & x64 & !static & !uwp"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "freetype",
+        "gdcm",
+        "ipp",
+        "jasper",
+        "openexr",
+        "opengl",
+        "openjpeg",
+        "openmp",
+        "qt",
+        "sfm",
+        "vtk",
+        "vulkan"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "dnn"
+      ],
+      "platform": "!android"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "contrib",
+        "eigen",
         "jpeg",
         "nonfree",
         "png",
@@ -25,16 +93,7 @@
       ]
     },
     {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
-        "dc1394",
-        "gtk"
-      ],
-      "platform": "linux"
-    },
-    {
-      "name": "opencv",
+      "name": "opencv3",
       "default-features": false,
       "features": [
         "python"
@@ -42,11 +101,9 @@
       "platform": "!uwp & !(windows & static)"
     },
     {
-      "name": "opencv",
+      "name": "opencv3",
       "default-features": false,
       "features": [
-        "cuda",
-        "cudnn",
         "gstreamer",
         "ovis",
         "tbb"
@@ -54,7 +111,7 @@
       "platform": "windows & x64 & !static & !uwp"
     },
     {
-      "name": "opencv",
+      "name": "opencv3",
       "default-features": false,
       "features": [
         "freetype",
@@ -71,12 +128,33 @@
       "platform": "!uwp & !android & !(windows & (arm | arm64))"
     },
     {
-      "name": "opencv",
+      "name": "opencv3",
       "default-features": false,
       "features": [
         "dnn"
       ],
       "platform": "!android"
+    },
+    {
+      "name": "opencv2",
+      "default-features": false,
+      "features": [
+        "eigen",
+        "jpeg",
+        "png",
+        "tiff"
+      ]
+    },
+    {
+      "name": "opencv2",
+      "default-features": false,
+      "features": [
+        "jasper",
+        "openexr",
+        "opengl",
+        "qt"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64))"
     }
   ]
 }
