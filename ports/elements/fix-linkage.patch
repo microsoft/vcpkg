@@ -1,0 +1,13 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index f2a2e0ed..13d69653 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -172,7 +172,7 @@ source_group("Header Files\\elements"
+ )
+ 
+ add_subdirectory(infra)
+-add_library(elements STATIC)
++add_library(elements)
+ 
+ target_sources(elements
+    PRIVATE ${ELEMENTS_SOURCES} ${ELEMENTS_HOST}
