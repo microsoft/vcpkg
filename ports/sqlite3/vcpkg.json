@@ -52,7 +52,7 @@
     "omit-load-extension": {
       "description": "Enable loading of external extensions"
     },
-    "recovery": {
+    "dbpage-vtab": {
       "description": "Enable the recovery extension"
     },
     "rtree": {
