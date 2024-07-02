@@ -3,6 +3,6 @@
   "version-semver": "3.1.0",
   "description": "Library for working with cgroup",
   "homepage": "https://github.com/libcgroup/libcgroup",
-  "license": "GPL-2.1",
+  "license": "LGPL-2.1",
   "supports": "linux"
 }
