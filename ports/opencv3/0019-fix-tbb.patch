@@ -1,5 +1,3 @@
-diff --git a/modules/core/src/parallel.cpp b/modules/core/src/parallel.cpp
-index a4a7baf..b5981eb 100644
 --- a/modules/core/src/parallel.cpp
 +++ b/modules/core/src/parallel.cpp
 @@ -101,7 +101,6 @@
