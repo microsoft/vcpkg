@@ -1,0 +1,13 @@
+diff --git a/rsvg-css.c b/rsvg-css.c
+index 5b359a2..d44966b 100644
+--- a/rsvg-css.c
++++ b/rsvg-css.c
+@@ -863,7 +863,7 @@ rsvg_css_parse_xml_attribute_string (const char *attribute_string)
+ 
+     memset (&handler, 0, sizeof (handler));
+     xmlSAX2InitDefaultSAXHandler (&handler, 0);
+-    handler.serror = rsvg_xml_noerror;
++    handler.serror = (xmlStructuredErrorFunc)rsvg_xml_noerror;
+     parser = xmlCreatePushParserCtxt (&handler, NULL, tag, strlen (tag) + 1, NULL);
+     parser->options |= XML_PARSE_NONET;
+ 

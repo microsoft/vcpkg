@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 72d9aec..8938931 100644
+index fdeda6e..ac701f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -164,12 +164,19 @@ if (WIN32 AND NOT MINGW)
+@@ -168,12 +168,19 @@ if (WIN32 AND NOT MINGW)
  else()
  	find_package(Threads REQUIRED)
  endif()
@@ -27,11 +27,12 @@ index 72d9aec..8938931 100644
 +link_libraries(OpenSSL::SSL OpenSSL::Crypto)
  
  # WITH_CRYPTO
- set(WITH_CRYPTO "gcrypt" CACHE STRING "gcrypt|nss3")
-@@ -475,19 +482,9 @@ message(STATUS "asciidoc: ${ASCIIDOC_EXECUTABLE}")
+ set(WITH_CRYPTO "gcrypt" CACHE STRING "gcrypt|nss")
+@@ -493,20 +500,9 @@ message(STATUS "dot (graphviz): ${DOXYGEN_DOT_EXECUTABLE}")
+ message(STATUS "asciidoc: ${ASCIIDOC_EXECUTABLE}")
  
  # ---------- PATHS
- 
+-
 -if(WIN32)
 -	# Windows installer does not allow full paths.
 -	# The install path can be changed by user in Windows installer.
@@ -52,10 +53,10 @@ index 72d9aec..8938931 100644
  
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e9339c6..9347087 100644
+index 9460efc..4ee32e5 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -134,4 +134,8 @@ else()
+@@ -131,4 +131,8 @@ else()
  	set(OPENSCAP_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR})
  endif()
  
@@ -66,7 +67,7 @@ index e9339c6..9347087 100644
 +  ARCHIVE DESTINATION lib
 +)
 diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
-index 93ce1f2..f500e1d 100644
+index 9347c29..4ee41f2 100644
 --- a/utils/CMakeLists.txt
 +++ b/utils/CMakeLists.txt
 @@ -29,22 +29,15 @@ if(ENABLE_OSCAP_UTIL)

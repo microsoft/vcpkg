@@ -4,17 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
     REF "${VERSION}"
-    SHA512 cefc610682f8dafd5c186ed612edc2db904690c3a53d5111ece0965d197053b064bd8cbd9adab293c47ec1894949b5e33623b0f0e6b6cad35617a20f0039bd79
+    SHA512 4428f1f39a495235f2174e671bfe5fc103571736e732f625120b8692deb3aed698722b98ae260e09bbadbb2abef8b0bc7b97426ee088ffb054749a0c24d872fc
     HEAD_REF master
     PATCHES
         fix-dependency.patch
-        fix-unix-compiler-options.patch
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
-        fix-gcc-13-build.patch  #upstream PR: https://github.com/PDAL/PDAL/pull/4039
-        gdal-3.7.patch
-        mingw.patch
         install-dimbuilder.patch
 )
 
@@ -68,6 +64,7 @@ vcpkg_cmake_configure(
         ${DIMBUILDER_EXECUTABLE}
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
+        BUILD_PLUGIN_I3S
 )
 
 vcpkg_cmake_install()
