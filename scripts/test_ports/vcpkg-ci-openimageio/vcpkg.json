@@ -1,6 +1,7 @@
 {
   "name": "vcpkg-ci-openimageio",
   "version-string": "ci",
+  "port-version": 1,
   "description": "OpenImageIO testing within CI.",
   "license": "MIT",
   "dependencies": [
