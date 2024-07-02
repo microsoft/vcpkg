@@ -1,0 +1,32 @@
+{
+  "name": "cpprealm",
+  "version": "2.1.0",
+  "description": "Realm is a mobile database that runs directly inside phones, tablets or wearables.",
+  "homepage": "https://github.com/realm/realm-cpp",
+  "license": "Apache-2.0",
+  "supports": "!emscripten",
+  "dependencies": [
+    {
+      "name": "curl",
+      "platform": "linux",
+      "version>=": "8.4.0"
+    },
+    {
+      "name": "libuv",
+      "platform": "!osx, !ios",
+      "version>=": "1.43.0"
+    },
+    {
+      "name": "realm-core",
+      "version>=": "14.8.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
