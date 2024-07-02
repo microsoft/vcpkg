@@ -19,9 +19,10 @@ vcpkg_from_github(
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
       0012-fix-zlib.patch
-      0019-missing-include.patch
-      fix-tbb-error.patch
-      0020-fix-supportqnx.patch
+      0014-fix-pkgconf-name.patch
+      0015-fix-supportqnx.patch
+      0017-missing-include.patch
+      0019-fix-tbb-error.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -119,10 +120,10 @@ if("contrib" IN_LIST FEATURES)
     SHA512 a051497e61ae55f86c224044487fc2247a3bba1aa27031c4997c981ddf8402edf82f1dd0d307f562c638bc021cfd8bd42a723973f00ab25131495f84d33c5383
     HEAD_REF master
     PATCHES
-      0007-fix-hdf5.patch
-      0013-fix-ceres.patch
-      0016-fix-freetype-contrib.patch
-      0018-fix-depend-tesseract.patch
+      0007-contrib-fix-hdf5.patch
+      0013-contrib-fix-ceres.patch
+      0016-contrib-fix-freetype.patch
+      0018-contrib-fix-tesseract.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -417,11 +418,31 @@ if(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 vcpkg_fixup_pkgconfig()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" "\${prefix}" IGNORE_UNCHANGED)
+
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc"
+    "-lhdf5::hdf5-static"
+    "-lhdf5-static"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
+    "\${prefix}"
+    IGNORE_UNCHANGED
+  )
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/" "\${prefix}" IGNORE_UNCHANGED)
+
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv3.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv3.pc"
+    "-lhdf5::hdf5-static"
+    "-lhdf5-static"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv3.pc"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/"
+    "\${prefix}"
+    IGNORE_UNCHANGED
+  )
 endif()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

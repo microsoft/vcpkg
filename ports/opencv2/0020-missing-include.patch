@@ -1,5 +1,3 @@
-diff --git a/modules/ts/src/gpu_test.cpp b/modules/ts/src/gpu_test.cpp
-index 21d9ad9..a626b0b 100644
 --- a/modules/ts/src/gpu_test.cpp
 +++ b/modules/ts/src/gpu_test.cpp
 @@ -42,6 +42,7 @@

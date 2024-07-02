@@ -1,5 +1,3 @@
-diff --git a/modules/core/src/system.cpp b/modules/core/src/system.cpp
-index 9bade08..28f006e 100644
 --- a/modules/core/src/system.cpp
 +++ b/modules/core/src/system.cpp
 @@ -129,11 +129,15 @@ void* allocSingletonNewBuffer(size_t size) { return malloc(size); }

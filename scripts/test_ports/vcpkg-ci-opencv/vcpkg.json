@@ -96,14 +96,6 @@
       "name": "opencv3",
       "default-features": false,
       "features": [
-        "python"
-      ],
-      "platform": "!uwp & !(windows & static)"
-    },
-    {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
         "gstreamer",
         "ovis",
         "tbb"
