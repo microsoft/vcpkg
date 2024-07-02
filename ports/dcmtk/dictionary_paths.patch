@@ -1,16 +1,8 @@
 diff --git a/CMake/GenerateDCMTKConfigure.cmake b/CMake/GenerateDCMTKConfigure.cmake
-index 8a59d44..0417f18 100644
+index 8a59d44..6cd425a 100644
 --- a/CMake/GenerateDCMTKConfigure.cmake
 +++ b/CMake/GenerateDCMTKConfigure.cmake
-@@ -167,25 +167,17 @@ if(WIN32 AND NOT CYGWIN)
-   else()
-     set(CMAKE_INSTALL_FULL_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/dcmtk-${DCMTK_COMPLETE_PACKAGE_VERSION}")
-     set(CMAKE_INSTALL_FULL_DOCDIR "${CMAKE_INSTALL_FULL_DOCDIR}-${DCMTK_COMPLETE_PACKAGE_VERSION}")
--    set(DCMTK_DEFAULT_CONFIGURATION_DIR "")
--    set(DCMTK_DEFAULT_SUPPORT_DATA_DIR "")
-+    set(DCMTK_DEFAULT_CONFIGURATION_DIR "${DCMTK_PREFIX}\\\\etc")
-+    set(DCMTK_DEFAULT_SUPPORT_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}")
-   endif()
+@@ -173,19 +173,11 @@ if(WIN32 AND NOT CYGWIN)
  
    # Set dictionary path to the data dir inside install main dir (prefix)
    if(DCMTK_DEFAULT_DICT STREQUAL "external")
