@@ -81,7 +81,7 @@
         "sfm",
         "vtk"
       ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
     },
     {
       "name": "opencv4",
@@ -92,7 +92,6 @@
         "contrib",
         "eigen",
         "fs",
-        "gapi",
         "highgui",
         "intrinsics",
         "jpeg",
@@ -125,6 +124,7 @@
       "name": "opencv4",
       "default-features": false,
       "features": [
+        "gapi",
         "python"
       ],
       "platform": "!uwp & !(windows & static) & !android"
@@ -161,7 +161,7 @@
         "vtk",
         "vulkan"
       ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
     }
   ]
 }

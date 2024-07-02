@@ -15,7 +15,7 @@
         "openjpeg",
         {
           "name": "pybind11",
-          "platform": "!(windows & static)"
+          "platform": "!(windows & static) & !uwp & !mingw"
         },
         "tools",
         "webp"
