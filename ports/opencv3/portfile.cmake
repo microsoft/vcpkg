@@ -41,6 +41,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
+# Cannot use vcpkg_check_features() for "qt" because it requires the QT version number passed, not just a boolean
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "bgsegm"          BUILD_opencv_bgsegm

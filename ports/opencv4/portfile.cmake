@@ -70,6 +70,7 @@ vcpkg_from_github(
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
+file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -85,61 +86,68 @@ if (USE_QT_VERSION STREQUAL "6")
   set(QT_CORE5COMPAT "Core5Compat")
 endif()
 
-file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
-
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
-# Cannot use vcpkg_check_features() for "ipp", "ovis", "python", "qt", "tbb"
+# Cannot use vcpkg_check_features() for "qt" because it requires the QT version number passed, not just a boolean
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
- "ade"       WITH_ADE
- "calib3d"   BUILD_opencv_calib3d
- "contrib"   WITH_CONTRIB
- "cuda"      WITH_CUBLAS
- "cuda"      WITH_CUDA
- "cuda"      ENABLE_CUDA_FIRST_CLASS_LANGUAGE
- "cudnn"     WITH_CUDNN
- "dnn"       BUILD_opencv_dnn
- "dnn-cuda"  OPENCV_DNN_CUDA
- "dshow"     WITH_DSHOW
- "eigen"     WITH_EIGEN
- "ffmpeg"    WITH_FFMPEG
- "freetype"  WITH_FREETYPE
- "gapi"      BUILD_opencv_gapi
- "gdcm"      WITH_GDCM
- "gstreamer" WITH_GSTREAMER
- "gtk"       WITH_GTK
- "halide"    WITH_HALIDE
- "highgui"   BUILD_opencv_highgui
+ "ade"        WITH_ADE
+ "calib3d"    BUILD_opencv_calib3d
+ "contrib"    WITH_CONTRIB
+ "cuda"       WITH_CUBLAS
+ "cuda"       WITH_CUDA
+ "cuda"       ENABLE_CUDA_FIRST_CLASS_LANGUAGE
+ "cudnn"      WITH_CUDNN
+ "dc1394"     WITH_1394
+ "dnn"        BUILD_opencv_dnn
+ "dnn"        PROTOBUF_UPDATE_FILES
+ "dnn"        UPDATE_PROTO_FILES
+ "dnn"        WITH_PROTOBUF
+ "dnn-cuda"   OPENCV_DNN_CUDA
+ "dshow"      WITH_DSHOW
+ "eigen"      WITH_EIGEN
+ "ffmpeg"     WITH_FFMPEG
+ "freetype"   WITH_FREETYPE
+ "gapi"       BUILD_opencv_gapi
+ "gdcm"       WITH_GDCM
+ "gstreamer"  WITH_GSTREAMER
+ "gtk"        WITH_GTK
+ "halide"     WITH_HALIDE
+ "ipp"        WITH_IPP
+ "ipp"        BUILD_IPP_IW
+ "highgui"    BUILD_opencv_highgui
  "intrinsics" CV_ENABLE_INTRINSICS
- "jasper"    WITH_JASPER
- "openjpeg"  WITH_OPENJPEG
- "openmp"    WITH_OPENMP
- "jpeg"      WITH_JPEG
- "lapack"    WITH_LAPACK
- "lapack"    DOPENCV_LAPACK_FIND_PACKAGE_ONLY
- "nonfree"   OPENCV_ENABLE_NONFREE
- "fs"        OPENCV_ENABLE_FILESYSTEM_SUPPORT
- "thread"    OPENCV_ENABLE_THREAD_SUPPORT
- "opencl"    WITH_OPENCL
- "openvino"  WITH_OPENVINO
- "openexr"   WITH_OPENEXR
- "opengl"    WITH_OPENGL
- "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
- "png"       WITH_PNG
- "quirc"     WITH_QUIRC
- "sfm"       BUILD_opencv_sfm
- "tiff"      WITH_TIFF
- "vtk"       WITH_VTK
- "webp"      WITH_WEBP
- "win32ui"   WITH_WIN32UI
- "world"     BUILD_opencv_world
- "dc1394"    WITH_1394
- "vulkan"    WITH_VULKAN
+ "jasper"     WITH_JASPER
+ "openjpeg"   WITH_OPENJPEG
+ "openmp"     WITH_OPENMP
+ "jpeg"       WITH_JPEG
+ "lapack"     WITH_LAPACK
+ "lapack"     DOPENCV_LAPACK_FIND_PACKAGE_ONLY
+ "msmf"       WITH_MSMF
+ "nonfree"    OPENCV_ENABLE_NONFREE
+ "fs"         OPENCV_ENABLE_FILESYSTEM_SUPPORT
+ "thread"     OPENCV_ENABLE_THREAD_SUPPORT
+ "opencl"     WITH_OPENCL
+ "openvino"   WITH_OPENVINO
+ "openexr"    WITH_OPENEXR
+ "opengl"     WITH_OPENGL
+ "ovis"       CMAKE_REQUIRE_FIND_PACKAGE_OGRE
+ "ovis"       BUILD_opencv_ovis
+ "png"        WITH_PNG
+ "python"     BUILD_opencv_python3
+ "python"     WITH_PYTHON
+ "quirc"      WITH_QUIRC
+ "sfm"        BUILD_opencv_sfm
+ "tbb"        WITH_TBB
+ "tiff"       WITH_TIFF
+ "vtk"        WITH_VTK
+ "vulkan"     WITH_VULKAN
+ "webp"       WITH_WEBP
+ "win32ui"    WITH_WIN32UI
+ "world"      BUILD_opencv_world
 )
-
 
 if("dnn" IN_LIST FEATURES)
   set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -156,43 +164,14 @@ else()
   set(OPENCV_LAPACK_SHARED_LIBS ON)
 endif()
 
-
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
 endif()
 
-set(WITH_IPP OFF)
-if("ipp" IN_LIST FEATURES)
-  set(WITH_IPP ON)
-endif()
-
-set(BUILD_opencv_ovis OFF)
-if("ovis" IN_LIST FEATURES)
-  set(BUILD_opencv_ovis ON)
-endif()
-
-set(WITH_TBB OFF)
-if("tbb" IN_LIST FEATURES)
-  set(WITH_TBB ON)
-endif()
-
-set(WITH_VULKAN OFF)
-if("vulkan" IN_LIST FEATURES)
-  set(WITH_VULKAN ON)
-endif()
-
-set(WITH_PYTHON OFF)
-set(BUILD_opencv_python3 OFF)
 if("python" IN_LIST FEATURES)
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static AND VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "The python module is currently unsupported on Windows when building static OpenCV libraries")
-  else()
-    x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
-    set(ENV{PYTHON} "${PYTHON3}")
-    set(BUILD_opencv_python3 ON)
-    set(WITH_PYTHON ON)
-  endif()
+  x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
+  set(ENV{PYTHON} "${PYTHON3}")
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -331,9 +310,6 @@ if(WITH_IPP)
         FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
         SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
     )
-    else()
-      message(WARNING "This target architecture is not supported IPPICV")
-      set(WITH_IPP OFF)
     endif()
   elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -348,9 +324,6 @@ if(WITH_IPP)
         FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_ia32_20230919_general.tgz"
         SHA512 534fdd08b6f669665cf6a3f719f54505cf53e800f90ba93d96e77b1e149b260738cb59c685c424788c06d924a88756c3038d27bd0e33acdb51e0051f9aac421c
       )
-    else()
-      message(WARNING "This target architecture is not supported IPPICV")
-      set(WITH_IPP OFF)
     endif()
   elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -365,30 +338,7 @@ if(WITH_IPP)
         FILENAME "opencv-cache/ippicv/8ff93c69415ab0835cc1e94dc5660f5d-ippicv_2021.10.0_win_ia32_20230919_general.zip"
         SHA512 bd63e8edf52e561154953217d26ca64cc500b529e55b8e3abb927d69766fff979fed2b16d51e453f75e61679d3569abbc5c1bbb2652a93f3f178fbf27354d624
       )
-    else()
-      message(WARNING "This target architecture is not supported IPPICV")
-      set(WITH_IPP OFF)
     endif()
-  else()
-    message(WARNING "This target architecture is not supported IPPICV")
-    set(WITH_IPP OFF)
-  endif()
-endif()
-
-set(WITH_MSMF ON)
-if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_MINGW)
-  set(WITH_MSMF OFF)
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  if (WITH_TBB)
-    message(WARNING "TBB is currently unsupported in this build configuration, turning it off")
-    set(WITH_TBB OFF)
-  endif()
-
-  if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
-    message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
-    set(BUILD_opencv_ovis OFF)
   endif()
 endif()
 
@@ -429,8 +379,6 @@ vcpkg_cmake_configure(
         -DX86_64=${TARGET_IS_X86_64}
         -DX86=${TARGET_IS_X86}
         -DARM=${TARGET_IS_ARM}
-        ###### use cmake cuda new language support
-        -DENABLE_CUDA_FIRST_CLASS_LANGUAGE=${ENABLE_CUDA_FIRST_CLASS_LANGUAGE}
         ###### use c++17 to enable features that fail with c++11 (halide, protobuf, etc.)
         -DCMAKE_CXX_STANDARD=17
         ###### ocv_options
@@ -479,8 +427,6 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
-        -DPROTOBUF_UPDATE_FILES=${BUILD_opencv_dnn}
-        -DUPDATE_PROTO_FILES=${BUILD_opencv_dnn}
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
@@ -496,17 +442,8 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DBUILD_IPP_IW=${WITH_IPP}
         -DWITH_QT=${WITH_QT}
-        -DWITH_IPP=${WITH_IPP}
-        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_MATLAB=OFF
-        -DWITH_MSMF=${WITH_MSMF}
-        -DWITH_OPENMP=${WITH_OPENMP}
-        -DWITH_PROTOBUF=${BUILD_opencv_dnn}
-        -DWITH_PYTHON=${WITH_PYTHON}
-        -DWITH_OPENVINO=${WITH_OPENVINO}
-        -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_SPNG=OFF
@@ -520,10 +457,6 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
-        -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
-        -DBUILD_opencv_python3=${BUILD_opencv_python3}
-        -DBUILD_opencv_calib3d=${BUILD_opencv_calib3d}
-        -DBUILD_opencv_highgui=${BUILD_opencv_highgui}
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=OFF #fixme #https://github.com/opencv/opencv_contrib/issues/2307
         ###### Additional build flags
@@ -599,7 +532,7 @@ find_dependency(Tesseract)")
   if("lapack" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
   endif()
-  if(WITH_OPENVINO)
+  if("openvino" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
   endif()
   if("openexr" IN_LIST FEATURES)
@@ -611,7 +544,7 @@ find_dependency(Tesseract)")
   if("omp" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
-  if(BUILD_opencv_ovis)
+  if("ovis" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OGRE)")
   endif()
   if("quirc" IN_LIST FEATURES)
@@ -645,7 +578,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
   INTERFACE_LINK_LIBRARIES \"\$<LINK_ONLY:OpenMP::OpenMP_CXX>;" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()
 
-  if(BUILD_opencv_ovis)
+  if("ovis" IN_LIST FEATURES)
     string(REPLACE "OgreGLSupportStatic"
                    "OgreGLSupport" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()

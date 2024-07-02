@@ -253,7 +253,8 @@
       "description": "enable intrinsics"
     },
     "ipp": {
-      "description": "Enable Intel Integrated Performance Primitives"
+      "description": "Enable Intel Integrated Performance Primitives",
+      "supports": "(osx & x64) | (windows & (x64 | x86)) | (linux & (x64 | x86))"
     },
     "jasper": {
       "description": "JPEG 2000 support for opencv (deprecated)",
@@ -273,6 +274,10 @@
         "blas",
         "lapack"
       ]
+    },
+    "msmf": {
+      "description": "Microsoft Media Foundation support for opencv",
+      "supports": "windows & !uwp & !mingw"
     },
     "nonfree": {
       "description": "allow nonfree and unredistributable libraries"
@@ -346,7 +351,8 @@
             "contrib"
           ]
         }
-      ]
+      ],
+      "supports": "!(windows&static)"
     },
     "png": {
       "description": "PNG support for opencv",
@@ -358,7 +364,8 @@
       "description": "Python wrapper support for opencv",
       "dependencies": [
         "python3"
-      ]
+      ],
+      "supports": "!(windows&static)"
     },
     "qt": {
       "description": "Qt GUI support for opencv",
@@ -408,7 +415,8 @@
       "description": "Enable Intel Threading Building Blocks",
       "dependencies": [
         "tbb"
-      ]
+      ],
+      "supports": "!static"
     },
     "thread": {
       "description": "Enable thread support"
