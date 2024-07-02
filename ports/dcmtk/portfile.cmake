@@ -33,15 +33,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("external-dict" IN_LIST FEATURES)
     set(DCMTK_DEFAULT_DICT "external")
+	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA OFF)
 else()
     set(DCMTK_DEFAULT_DICT "builtin")
+	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        "-DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}" 
+        -DDCMTK_DEFAULT_DICT="${DCMTK_DEFAULT_DICT}"
+		-DDCMTK_ENABLE_BUILTIN_OFICONV_DATA=${DCMTK_ENABLE_BUILTIN_OFICONV_DATA}
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_FORCE_FPIC_ON_UNIX=ON
         -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF
@@ -147,11 +150,6 @@ vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCMTK_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCM_DICT_DEFAULT_PATH \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/dicom.dic:${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/private.dic\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_CONFIGURATION_DIR \"${CURRENT_PACKAGES_DIR}/etc/dcmtk-${VERSION}/\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_SUPPORT_DATA_DIR \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/\"" "" IGNORE_UNCHANGED)
 
 vcpkg_fixup_pkgconfig()
 
