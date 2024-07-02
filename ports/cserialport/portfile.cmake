@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO itas109/CSerialPort
-    REF v4.3.1
+    REF "v${VERSION}"
     SHA512 a642087f3683ec1c97009f1cbc0b1d277101cf08b3bf43207b9474f657e11d711160b011c5aeed6f99ca1307d90ec44f7c664533f7eaa112805cf994a0ce365e
     HEAD_REF master
 )
