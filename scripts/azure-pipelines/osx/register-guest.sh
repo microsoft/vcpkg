@@ -14,7 +14,7 @@ export POOL=`echo ~/Parallels/*.pvm | sed -nr 's/\/Users\/vcpkg\/Parallels\/vcpk
 export GUEST_IP=`prlctl list --full | sed -nr 's/^.*running *([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*/\1/p'`
 export SSH_COOKIE=vcpkg@$GUEST_IP
 fi
-ssh $SSH_COOKIE -i ~/Parallels/*/id_guest -o StrictHostKeychecking=no "~/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work ~/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
+ssh $SSH_COOKIE -i ~/Parallels/*/id_guest "~/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work ~/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
 if [ `uname -m` = 'arm64' ]; then
-ssh $SSH_COOKIE -i ~/Parallels/*/id_guest -o StrictHostKeychecking=no "sudo shutdown -h now"
+ssh $SSH_COOKIE -i ~/Parallels/*/id_guest "sudo shutdown -h now"
 fi

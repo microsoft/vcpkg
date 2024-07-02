@@ -47,9 +47,7 @@ endif()
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
                             # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
-                            patches/CVE-2023-32762-qtbase-5.15.diff
                             patches/CVE-2023-32763-qtbase-5.15.diff
-                            patches/CVE-2023-33285-qtbase-5.15.diff
                             patches/CVE-2023-34410-qtbase-5.15.diff
                             patches/CVE-2023-37369-qtbase-5.15.diff
                             patches/CVE-2023-38197-qtbase-5.15.diff
@@ -119,7 +117,17 @@ list(APPEND CORE_OPTIONS
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
+    -no-feature-gssapi
     )
+
+if(VCPKG_TARGET_IS_LINUX)
+    # Accessibility uses at-spi2-core which links dbus,
+    # so we link to ensure to use the same dbus library.
+    list(APPEND CORE_OPTIONS -dbus-linked)
+else()
+    # Enable Qt DBus without linking to it.
+    list(APPEND CORE_OPTIONS -dbus-runtime)
+endif()
 
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)

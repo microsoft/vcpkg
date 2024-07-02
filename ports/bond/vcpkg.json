@@ -1,7 +1,7 @@
 {
   "name": "bond",
-  "version": "10.0.0",
-  "port-version": 3,
+  "version": "11.0.1",
+  "port-version": 4,
   "description": "Bond is a cross-platform framework for working with schematized data. It supports cross-language de/serialization and powerful generic mechanisms for efficiently manipulating data. Bond is broadly used at Microsoft in high scale services.",
   "homepage": "https://github.com/Microsoft/bond",
   "dependencies": [
@@ -18,13 +18,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "bond-over-grpc": {
-      "description": "Bond-over-gRPC provides code generation from Bond IDL service definitions to send Bond objects via gRPC.",
-      "dependencies": [
-        "grpc"
-      ]
-    }
-  }
+  ]
 }
