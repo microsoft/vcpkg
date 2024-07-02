@@ -127,7 +127,7 @@
       "features": [
         "python"
       ],
-      "platform": "!uwp & !(windows & static)"
+      "platform": "!uwp & !(windows & static) & !android"
     },
     {
       "name": "opencv4",

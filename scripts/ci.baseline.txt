@@ -332,6 +332,7 @@ fastrtps:arm64-android=fail
 fastrtps:x64-android=fail
 fastrtps:x64-windows-static-md=fail
 fastrtps:x64-windows-static=fail
+ffmpeg:arm-neon-android=fail
 flashlight-cpu:x64-linux=fail
 flashlight-cuda:x64-linux=fail
 flint:arm-neon-android=fail
@@ -754,9 +755,6 @@ monkeys-audio:x64-android=fail
 moos-core:arm-neon-android=fail
 moos-core:arm64-android=fail
 moos-core:x64-android=fail
-mozjpeg:arm-neon-android=fail
-mozjpeg:arm64-android=fail
-mozjpeg:x64-android=fail
 mpir:x64-android=fail
 # ms-gltf require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
 ms-gdkx:x64-windows=fail
@@ -773,6 +771,9 @@ moos-essential:x64-windows-static-md=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
 # Conflicts with libjpeg-turbo
+mozjpeg:arm-neon-android=fail
+mozjpeg:arm64-android=fail
+mozjpeg:x64-android=fail
 mozjpeg:arm64-windows      = skip
 mozjpeg:arm64-uwp            = skip
 mozjpeg:x64-linux          = skip
