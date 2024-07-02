@@ -1,7 +1,0 @@
-libaudit provides pkg-config modules:
-
-    # Libraries needed for apps that use the kernel audit framework
-    audit
-
-    # Library for apps that want to parse and interpret audit events
-    auparse
