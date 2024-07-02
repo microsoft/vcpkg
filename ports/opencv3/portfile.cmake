@@ -22,7 +22,7 @@ vcpkg_from_github(
       0014-fix-pkgconf-name.patch
       0015-fix-supportqnx.patch
       0017-missing-include.patch
-      0019-fix-tbb-error.patch
+      0019-fix-tbb.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
