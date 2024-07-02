@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bcfe91d8..2f09704b 100644
+index bcfe91d8..a1e5a2b7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -471,10 +471,10 @@ if(MI_BUILD_SHARED)
@@ -11,7 +11,7 @@ index bcfe91d8..2f09704b 100644
    endif()
  
 -  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${mi_install_bindir} LIBRARY DESTINATION ${mi_install_libdir})
-+  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir} NAMELINK_SKIP)
++  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir})
    install(EXPORT mimalloc DESTINATION ${mi_install_cmakedir})
  endif()
  
