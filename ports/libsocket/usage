@@ -1,0 +1,4 @@
+libsocket provides CMake targets:
+
+    find_package(libsocket CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE socket++)

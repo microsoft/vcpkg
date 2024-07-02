@@ -4992,6 +4992,10 @@
       "baseline": "0.8.0",
       "port-version": 2
     },
+    "libsocket": {
+      "baseline": "2023-09-17",
+      "port-version": 0
+    },
     "libsodium": {
       "baseline": "1.0.20",
       "port-version": 3
