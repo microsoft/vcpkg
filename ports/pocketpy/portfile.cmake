@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 6c9872c4a402bc702e577067c05d593034f45f150ebbf033ef204b4c7deff6cd2da0f9db44e0bb37aefdeb7a4d99e5a9c4a93ece57316f561c5bf4cd33cd12e3
     HEAD_REF master
+    PATCHES
+        fix-conflict.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
