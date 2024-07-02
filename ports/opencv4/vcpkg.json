@@ -342,6 +342,7 @@
     },
     "ovis": {
       "description": "opencv_ovis module",
+      "supports": "!(windows & static)",
       "dependencies": [
         "ogre",
         {
@@ -351,8 +352,7 @@
             "contrib"
           ]
         }
-      ],
-      "supports": "!(windows&static)"
+      ]
     },
     "png": {
       "description": "PNG support for opencv",
@@ -362,10 +362,10 @@
     },
     "python": {
       "description": "Python wrapper support for opencv",
+      "supports": "!(windows & static)",
       "dependencies": [
         "python3"
-      ],
-      "supports": "!(windows&static)"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",
@@ -413,10 +413,10 @@
     },
     "tbb": {
       "description": "Enable Intel Threading Building Blocks",
+      "supports": "!static",
       "dependencies": [
         "tbb"
-      ],
-      "supports": "!static"
+      ]
     },
     "thread": {
       "description": "Enable thread support"
