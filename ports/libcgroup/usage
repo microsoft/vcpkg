@@ -1,0 +1,3 @@
+libcgroup provides pkg-config modules:
+    # Libraries needed for apps that want to control cgroups
+    libcgroup
