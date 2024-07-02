@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_PARALLEL;NO_DESTDIR;DISABLE_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
+        "DISABLE_PARALLEL;DISABLE_DESTDIR;DISABLE_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
@@ -82,7 +82,7 @@ function(vcpkg_make_install)
         z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${cmake_buildtype}")
 
         set(destdir_opt "")
-        if(NOT arg_NO_DESTDIR)
+        if(NOT arg_DISABLE_DESTDIR)
             set(destdir_opt "DESTDIR=${destdir}")
         endif()
 
