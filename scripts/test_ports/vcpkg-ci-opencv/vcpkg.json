@@ -91,7 +91,6 @@
         "calib3d",
         "contrib",
         "eigen",
-        "ffmpeg",
         "fs",
         "gapi",
         "highgui",
@@ -117,7 +116,8 @@
       "name": "opencv4",
       "default-features": false,
       "features": [
-        "dnn"
+        "dnn",
+        "ffmpeg"
       ],
       "platform": "!android"
     },
