@@ -39,7 +39,8 @@
           "name": "opencv3",
           "features": [
             "dnn"
-          ]
+          ],
+          "platform": "!android"
         },
         {
           "name": "tesseract",
@@ -60,7 +61,6 @@
           "name": "opencv3",
           "default-features": false,
           "features": [
-            "dnn",
             "jpeg",
             "png",
             "quirc",
@@ -188,7 +188,7 @@
     },
     "ovis": {
       "description": "opencv_ovis module",
-      "supports": "!(windows & static)",
+      "supports": "!(windows & static) & !android",
       "dependencies": [
         "ogre",
         {

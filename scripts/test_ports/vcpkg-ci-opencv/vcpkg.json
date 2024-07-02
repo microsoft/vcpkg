@@ -6,6 +6,84 @@
   "homepage": "https://github.com/microsoft/vcpkg",
   "dependencies": [
     {
+      "name": "opencv2",
+      "default-features": false,
+      "features": [
+        "eigen",
+        "jpeg",
+        "png",
+        "tiff"
+      ],
+      "platform": "!uwp & !(arm & windows) & !android"
+    },
+    {
+      "name": "opencv2",
+      "default-features": false,
+      "features": [
+        "jasper",
+        "openexr",
+        "opengl",
+        "qt"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "eigen",
+        "jpeg",
+        "nonfree",
+        "png",
+        "quirc",
+        "tiff",
+        "webp"
+      ]
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "openmp"
+      ],
+      "platform": "!osx"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "dnn"
+      ],
+      "platform": "!android"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "gstreamer",
+        "ovis",
+        "tbb"
+      ],
+      "platform": "windows & x64 & !static & !uwp"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "contrib",
+        "freetype",
+        "gdcm",
+        "ipp",
+        "jasper",
+        "openexr",
+        "opengl",
+        "qt",
+        "sfm",
+        "vtk"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+    },
+    {
       "name": "opencv4",
       "default-features": false,
       "features": [
@@ -26,6 +104,22 @@
         "tiff",
         "webp"
       ]
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "openmp"
+      ],
+      "platform": "!osx"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "dnn"
+      ],
+      "platform": "!android"
     },
     {
       "name": "opencv4",
@@ -62,89 +156,10 @@
         "openexr",
         "opengl",
         "openjpeg",
-        "openmp",
         "qt",
         "sfm",
         "vtk",
         "vulkan"
-      ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64))"
-    },
-    {
-      "name": "opencv4",
-      "default-features": false,
-      "features": [
-        "dnn"
-      ],
-      "platform": "!android"
-    },
-    {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
-        "contrib",
-        "eigen",
-        "jpeg",
-        "nonfree",
-        "png",
-        "quirc",
-        "tiff",
-        "webp"
-      ]
-    },
-    {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
-        "gstreamer",
-        "ovis",
-        "tbb"
-      ],
-      "platform": "windows & x64 & !static & !uwp"
-    },
-    {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
-        "freetype",
-        "gdcm",
-        "ipp",
-        "jasper",
-        "openexr",
-        "opengl",
-        "openmp",
-        "qt",
-        "sfm",
-        "vtk"
-      ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64))"
-    },
-    {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
-        "dnn"
-      ],
-      "platform": "!android"
-    },
-    {
-      "name": "opencv2",
-      "default-features": false,
-      "features": [
-        "eigen",
-        "jpeg",
-        "png",
-        "tiff"
-      ]
-    },
-    {
-      "name": "opencv2",
-      "default-features": false,
-      "features": [
-        "jasper",
-        "openexr",
-        "opengl",
-        "qt"
       ],
       "platform": "!uwp & !android & !(windows & (arm | arm64))"
     }
