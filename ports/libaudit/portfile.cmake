@@ -13,7 +13,7 @@ vcpkg_from_github(
         REF v${VERSION}
         HEAD_REF master
         PATCHES
-        "${PATCH_FIX_MISSING_HEADERS_IN_AUDISP_FILTER}"
+            "${PATCH_FIX_MISSING_HEADERS_IN_AUDISP_FILTER}"
 )
 
 message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n"
