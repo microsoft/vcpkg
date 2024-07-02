@@ -29,11 +29,11 @@ vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
-        --with-python3=no
-        --with-golang=no
-        --with-io_uring=no
-        --with-warn=no
-        --disable-zos-remote
+            --with-python3=no
+            --with-golang=no
+            --with-io_uring=no
+            --with-warn=no
+            --disable-zos-remote
 )
 
 vcpkg_install_make()
