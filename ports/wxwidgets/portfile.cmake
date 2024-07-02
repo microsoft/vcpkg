@@ -19,6 +19,7 @@ vcpkg_check_features(
     FEATURES
         fonts   wxUSE_PRIVATE_FONTS
         media   wxUSE_MEDIACTRL
+        secretstore wxUSE_SECRETSTORE
         sound   wxUSE_SOUND
         webview wxUSE_WEBVIEW
         webview wxUSE_WEBVIEW_EDGE
@@ -68,7 +69,6 @@ vcpkg_cmake_configure(
         -DwxUSE_NANOSVG=sys
         -DwxUSE_GLCANVAS=ON
         -DwxUSE_LIBGNOMEVFS=OFF
-        -DwxUSE_LIBNOTIFY=OFF
         -DwxUSE_SECRETSTORE=OFF
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
