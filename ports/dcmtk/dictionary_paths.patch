@@ -1,8 +1,16 @@
 diff --git a/CMake/GenerateDCMTKConfigure.cmake b/CMake/GenerateDCMTKConfigure.cmake
-index 8a59d44fa..8d3b4fc60 100644
+index 8a59d44..0417f18 100644
 --- a/CMake/GenerateDCMTKConfigure.cmake
 +++ b/CMake/GenerateDCMTKConfigure.cmake
-@@ -173,19 +173,11 @@ if(WIN32 AND NOT CYGWIN)
+@@ -167,25 +167,17 @@ if(WIN32 AND NOT CYGWIN)
+   else()
+     set(CMAKE_INSTALL_FULL_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/dcmtk-${DCMTK_COMPLETE_PACKAGE_VERSION}")
+     set(CMAKE_INSTALL_FULL_DOCDIR "${CMAKE_INSTALL_FULL_DOCDIR}-${DCMTK_COMPLETE_PACKAGE_VERSION}")
+-    set(DCMTK_DEFAULT_CONFIGURATION_DIR "")
+-    set(DCMTK_DEFAULT_SUPPORT_DATA_DIR "")
++    set(DCMTK_DEFAULT_CONFIGURATION_DIR "${DCMTK_PREFIX}\\\\etc")
++    set(DCMTK_DEFAULT_SUPPORT_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}")
+   endif()
  
    # Set dictionary path to the data dir inside install main dir (prefix)
    if(DCMTK_DEFAULT_DICT STREQUAL "external")
@@ -11,7 +19,7 @@ index 8a59d44fa..8d3b4fc60 100644
 -    else()
 -      set(DCM_DICT_DEFAULT_PATH "${DCMTK_PREFIX}\\\\${CMAKE_INSTALL_DATADIR}\\\\dcmtk\\\\dicom.dic")
 -    endif()
-+    set(DCM_DICT_DEFAULT_PATH "${CMAKE_INSTALL_FULL_DATADIR}\\\\dicom.dic")
++	set(DCM_DICT_DEFAULT_PATH "dicom.dic;${CMAKE_INSTALL_FULL_DATADIR}\\\\dicom.dic")
  
      # If private dictionary should be utilized, add it to default dictionary path.
      if(ENABLE_PRIVATE_TAGS)
@@ -20,7 +28,20 @@ index 8a59d44fa..8d3b4fc60 100644
 -      else()
 -        set(DCM_DICT_DEFAULT_PATH "${DCM_DICT_DEFAULT_PATH};${DCMTK_PREFIX}\\\\${CMAKE_INSTALL_DATADIR}\\\\dcmtk\\\\private.dic")
 -      endif()
-+      set(DCM_DICT_DEFAULT_PATH "${DCM_DICT_DEFAULT_PATH};${CMAKE_INSTALL_FULL_DATADIR}\\\\private.dic")
++      set(DCM_DICT_DEFAULT_PATH "${DCM_DICT_DEFAULT_PATH};private.dic;${CMAKE_INSTALL_FULL_DATADIR}\\\\private.dic")
      endif()
  
       # Again, for Windows strip all / from path and replace it with \\.
+@@ -212,10 +204,10 @@ else()
+ 
+   # Set dictionary path to the data dir inside install main dir (prefix).
+   if(DCMTK_DEFAULT_DICT STREQUAL "external")
+-    set(DCM_DICT_DEFAULT_PATH "${DCMTK_DEFAULT_SUPPORT_DATA_DIR}dicom.dic")
++    set(DCM_DICT_DEFAULT_PATH "dicom.dic:${DCMTK_DEFAULT_SUPPORT_DATA_DIR}dicom.dic")
+     # If private dictionary should be utilized, add it to default dictionary path.
+     if(ENABLE_PRIVATE_TAGS)
+-      set(DCM_DICT_DEFAULT_PATH "${DCM_DICT_DEFAULT_PATH}:${DCMTK_DEFAULT_SUPPORT_DATA_DIR}private.dic")
++      set(DCM_DICT_DEFAULT_PATH "${DCM_DICT_DEFAULT_PATH}:private.dic:${DCMTK_DEFAULT_SUPPORT_DATA_DIR}private.dic")
+     endif()
+   else()
+     set(DCM_DICT_DEFAULT_PATH "")

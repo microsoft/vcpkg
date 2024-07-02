@@ -13,10 +13,10 @@ The package dcmtk provides CMake targets:
 
 DCMTK User Guide:
 1、If the 'external-dict' feature is not enabled in the 'vcpkg.json' file in your project (which is the default and recommended setting), 
-  you can skip the following content.
+  you can skip the following steps.
 2、Otherwise, follow these steps:
-2.1、Copy or Move the '${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-3.6.8' directory to any desired location.
-	(e.g., '/usr/local/share/dcmdata' on Linux or 'C:\dcmdata' on Windows).
+2.1、Copy or Move the '@CURRENT_INSTALLED_DIR@/share/dcmtk-@VERSION@' directory to any desired location.
+	(e.g., 'C:\dcmdata' on Windows or '/usr/local/share/dcmdata' on Linux).
 2.2、Set two environment variables:
   For Windows:
 	* set DCMICONVPATH=C:\dcmdata
@@ -24,8 +24,10 @@ DCMTK User Guide:
   For Unix-like systems (e.g., Linux or macOS):
 	* export DCMICONVPATH=/usr/local/share/dcmdata
 	* export DCMDICTPATH=/usr/local/share/dcmdata/dicom.dic:/usr/local/share/dcmdata/private.dic
-	
 Note: The `DCMDICTPATH` environment variable can refer to multiple data dictionaries, separated by colons (":") on Unix-like systems or semicolons (";") on Windows.
+3、If you intend to enable the 'external-dict' feature but prefer not to configure environment variables, you should copy or move all the contents of the 
+  directory '@CURRENT_INSTALLED_DIR@/share/dcmtk-@VERSION@' to the same directory where your built binaries or executable files are located.
+
 For further information on loading external data files, please visit the following websites:
 https://support.dcmtk.org/docs/file_envvars.html
 https://support.dcmtk.org/docs/file_datadict.html
