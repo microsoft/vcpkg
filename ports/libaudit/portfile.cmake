@@ -36,7 +36,6 @@ vcpkg_configure_make(
         --disable-zos-remote
 )
 
-vcpkg_build_make()
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
