@@ -1,0 +1,330 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e537c90..b2e70fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,6 +16,15 @@ option(REFLECTCPP_BUILD_TESTS "Build tests" OFF)
+ option(REFLECTCPP_USE_BUNDLED_DEPENDENCIES "Use the bundled dependencies" ON)
+ 
+ set(REFLECTCPP_USE_VCPKG_DEFAULT OFF)
++if(REFLECTCPP_BUILD_BENCHMARKS)
++    set(REFLECTCPP_BSON ON CACHE BOOL "" FORCE)
++    set(REFLECTCPP_CBOR ON CACHE BOOL "" FORCE)
++    set(REFLECTCPP_FLEXBUFFERS ON CACHE BOOL "" FORCE)
++    set(REFLECTCPP_MSGPACK ON CACHE BOOL "" FORCE)
++    set(REFLECTCPP_XML ON CACHE BOOL "" FORCE)
++    set(REFLECTCPP_TOML ON CACHE BOOL "" FORCE)
++    set(REFLECTCPP_YAML ON CACHE BOOL "" FORCE)
++endif()
+ if (REFLECTCPP_BUILD_TESTS OR REFLECTCPP_BUILD_BENCHMARKS OR REFLECTCPP_BSON OR REFLECTCPP_CBOR OR REFLECTCPP_FLEXBUFFERS OR REFLECTCPP_MSGPACK OR REFLECTCPP_XML OR REFLECTCPP_TOML OR REFLECTCPP_YAML)
+     # enable vcpkg per default if require features other than JSON
+     set(REFLECTCPP_USE_VCPKG_DEFAULT ON)
+@@ -27,43 +36,49 @@ if (REFLECTCPP_USE_VCPKG)
+     set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
+ endif ()
+ 
+-project(reflectcpp)
++project(reflectcpp LANGUAGES CXX)
+ 
+ set(CMAKE_CXX_STANDARD 20)
+ 
+ if(REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
+-    if (REFLECTCPP_BUILD_SHARED)
+-        add_library(reflectcpp SHARED src/yyjson.c)
+-    else()
+-        add_library(reflectcpp STATIC src/yyjson.c)
+-    endif()
+-else()
+     if (REFLECTCPP_BUILD_SHARED)
+         add_library(reflectcpp SHARED)
+     else()
+         add_library(reflectcpp STATIC)
+     endif()
+-endif()
+ 
+-set_target_properties(reflectcpp PROPERTIES LINKER_LANGUAGE CXX)
+-target_compile_features(reflectcpp PUBLIC cxx_std_20)
++    target_sources(reflectcpp PRIVATE src/yyjson.c)
++    set_source_files_properties(src/yyjson.c PROPERTIES LANGUAGE CXX)
+ 
+-if(REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
+-    target_include_directories(reflectcpp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/rfl/thirdparty>)
++    set_target_properties(reflectcpp PROPERTIES LINKER_LANGUAGE CXX)
++    target_compile_features(reflectcpp PUBLIC cxx_std_20)
++
++    target_compile_options(reflectcpp PRIVATE $<$<CONFIG:Debug>:-Wall -Wextra>)
++    target_include_directories(reflectcpp PUBLIC
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++        $<INSTALL_INTERFACE:include>
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/rfl/thirdparty>)
+ else()
+-    target_include_directories(reflectcpp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include> )
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DREFLECTCPP_NO_BUNDLED_DEPENDENCIES")
++    add_library(reflectcpp INTERFACE)
++
++    target_compile_features(reflectcpp INTERFACE cxx_std_20)
++    target_compile_options(reflectcpp INTERFACE $<$<CONFIG:Debug>:-Wall -Wextra>)
++
++    target_include_directories(reflectcpp INTERFACE
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++        $<INSTALL_INTERFACE:include>)
++
+     find_package(ctre CONFIG REQUIRED)
+     find_package(yyjson CONFIG REQUIRED)
+-    target_link_libraries(reflectcpp INTERFACE yyjson::yyjson)
++    target_link_libraries(reflectcpp INTERFACE
++        yyjson::yyjson
++        ctre::ctre)
+ endif()
+ 
+-if (REFLECTCPP_BSON OR REFLECTCPP_BUILD_BENCHMARKS)
++if (REFLECTCPP_BSON)
+     find_package(bson-1.0 CONFIG REQUIRED)
+-    target_link_libraries(reflectcpp PRIVATE $<IF:$<TARGET_EXISTS:mongo::bson_static>,mongo::bson_static,mongo::bson_shared>) 
+-endif ()
++    target_link_libraries(reflectcpp PRIVATE $<IF:$<TARGET_EXISTS:mongo::bson_static>,mongo::bson_static,mongo::bson_shared>)
+ 
+-if (REFLECTCPP_CBOR OR REFLECTCPP_BUILD_BENCHMARKS)
+     if (MSVC)
+         target_link_libraries(reflectcpp PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/tinycbor${CMAKE_STATIC_LIBRARY_SUFFIX}")
+     else ()
+@@ -71,12 +86,12 @@ if (REFLECTCPP_CBOR OR REFLECTCPP_BUILD_BENCHMARKS)
+     endif ()
+ endif ()
+ 
+-if (REFLECTCPP_FLEXBUFFERS OR REFLECTCPP_BUILD_BENCHMARKS)
++if (REFLECTCPP_FLEXBUFFERS)
+     find_package(flatbuffers CONFIG REQUIRED)
+     target_link_libraries(reflectcpp INTERFACE flatbuffers::flatbuffers)
+ endif ()
+ 
+-if (REFLECTCPP_MSGPACK OR REFLECTCPP_BUILD_BENCHMARKS)
++if (REFLECTCPP_MSGPACK)
+     find_package(msgpack-c CONFIG REQUIRED)
+     if (MSVC)
+         target_link_libraries(reflectcpp PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/msgpack-c${CMAKE_STATIC_LIBRARY_SUFFIX}")
+@@ -85,7 +100,7 @@ if (REFLECTCPP_MSGPACK OR REFLECTCPP_BUILD_BENCHMARKS)
+     endif ()
+ endif ()
+ 
+-if (REFLECTCPP_TOML OR REFLECTCPP_BUILD_BENCHMARKS)
++if (REFLECTCPP_TOML)
+     if (MSVC)
+         target_link_libraries(reflectcpp PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/tomlplusplus${CMAKE_STATIC_LIBRARY_SUFFIX}")
+     else ()
+@@ -93,17 +108,16 @@ if (REFLECTCPP_TOML OR REFLECTCPP_BUILD_BENCHMARKS)
+     endif ()
+ endif()
+ 
+-if (REFLECTCPP_XML OR REFLECTCPP_BUILD_BENCHMARKS)
++if (REFLECTCPP_XML)
+     find_package(pugixml CONFIG REQUIRED)
+     target_link_libraries(reflectcpp INTERFACE pugixml::pugixml)
+ endif ()
+ 
+-if (REFLECTCPP_YAML OR REFLECTCPP_BUILD_BENCHMARKS)
++if (REFLECTCPP_YAML)
+     find_package(yaml-cpp CONFIG REQUIRED)
+     target_link_libraries(reflectcpp INTERFACE yaml-cpp::yaml-cpp)
+ endif ()
+ 
+-target_compile_options(reflectcpp PRIVATE -Wall)
+ 
+ if (REFLECTCPP_BUILD_TESTS)
+     if (MSVC)
+@@ -125,30 +139,30 @@ include(GNUInstallDirs)
+ include(CMakePackageConfigHelpers)
+ 
+ configure_package_config_file(reflectcpp-config.cmake.in
+-  ${CMAKE_CURRENT_BINARY_DIR}/reflectcpp-config.cmake
+-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflectcpp  
+-  )
++    ${CMAKE_CURRENT_BINARY_DIR}/reflectcpp-config.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflectcpp
++)
+ 
+ install(
+     FILES "${CMAKE_CURRENT_BINARY_DIR}/reflectcpp-config.cmake"
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/reflectcpp"
+ )
+ 
+-file(GLOB_RECURSE RFL_HEADERS RELATIVE ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/include/*" )
++file(GLOB_RECURSE RFL_HEADERS RELATIVE ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/include/*")
+ 
+ target_sources(reflectcpp
+     PUBLIC
+-    FILE_SET reflectcpp_headers    
++    FILE_SET reflectcpp_headers
+     TYPE HEADERS
+     BASE_DIRS $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+     FILES ${RFL_HEADERS})
+-   
++
+ install(
+     TARGETS reflectcpp
+     EXPORT reflectcpp-exports
+     FILE_SET reflectcpp_headers DESTINATION ${INCLUDE_INSTALL_DIR}
+-    )
+-    
++)
++
+ install(
+     EXPORT reflectcpp-exports
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/reflectcpp
+diff --git a/include/rfl/PatternValidator.hpp b/include/rfl/PatternValidator.hpp
+index 3034daf..e860eb5 100644
+--- a/include/rfl/PatternValidator.hpp
++++ b/include/rfl/PatternValidator.hpp
+@@ -1,13 +1,8 @@
+ #ifndef RFL_PATTERNVALIDATOR_HPP_
+ #define RFL_PATTERNVALIDATOR_HPP_
+ 
+-#include <string>
+-
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <ctre.hpp>
+-#else
+-#include "thirdparty/ctre.hpp"
+-#endif
++#include <string>
+ 
+ #include "Literal.hpp"
+ #include "Result.hpp"
+diff --git a/include/rfl/json/Reader.hpp b/include/rfl/json/Reader.hpp
+index 4bf6c1a..92f64b6 100644
+--- a/include/rfl/json/Reader.hpp
++++ b/include/rfl/json/Reader.hpp
+@@ -1,24 +1,12 @@
+ #ifndef RFL_JSON_READER_HPP_
+ #define RFL_JSON_READER_HPP_
+ 
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <yyjson.h>
+-#else
+-#include "../thirdparty/yyjson.h"
+-#endif
+ 
+-#include <array>
+-#include <concepts>
+ #include <exception>
+-#include <map>
+-#include <memory>
+-#include <sstream>
+-#include <stdexcept>
+ #include <string>
+ #include <string_view>
+ #include <type_traits>
+-#include <unordered_map>
+-#include <vector>
+ 
+ #include "../Result.hpp"
+ #include "../always_false.hpp"
+@@ -48,9 +36,8 @@ struct Reader {
+   using InputVarType = YYJSONInputVar;
+ 
+   template <class T>
+-  static constexpr bool has_custom_constructor = (requires(InputVarType var) {
+-    T::from_json_obj(var);
+-  });
++  static constexpr bool has_custom_constructor =
++      (requires(InputVarType var) { T::from_json_obj(var); });
+ 
+   rfl::Result<InputVarType> get_field(
+       const std::string& _name, const InputObjectType _obj) const noexcept {
+diff --git a/include/rfl/json/Writer.hpp b/include/rfl/json/Writer.hpp
+index ef5774c..7cdea54 100644
+--- a/include/rfl/json/Writer.hpp
++++ b/include/rfl/json/Writer.hpp
+@@ -1,22 +1,12 @@
+ #ifndef RFL_JSON_WRITER_HPP_
+ #define RFL_JSON_WRITER_HPP_
+ 
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <yyjson.h>
+-#else
+-#include "../thirdparty/yyjson.h"
+-#endif
+-
+-#include <exception>
+-#include <map>
+-#include <sstream>
+-#include <stdexcept>
++
+ #include <string>
+ #include <string_view>
+ #include <type_traits>
+-#include <vector>
+ 
+-#include "../Result.hpp"
+ #include "../always_false.hpp"
+ 
+ namespace rfl {
+diff --git a/include/rfl/json/read.hpp b/include/rfl/json/read.hpp
+index a5c1edf..30bef1b 100644
+--- a/include/rfl/json/read.hpp
++++ b/include/rfl/json/read.hpp
+@@ -1,11 +1,7 @@
+ #ifndef RFL_JSON_READ_HPP_
+ #define RFL_JSON_READ_HPP_
+ 
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <yyjson.h>
+-#else
+-#include "../thirdparty/yyjson.h"
+-#endif
+ 
+ #include <istream>
+ #include <string>
+diff --git a/include/rfl/json/save.hpp b/include/rfl/json/save.hpp
+index e6f66bc..fb685bd 100644
+--- a/include/rfl/json/save.hpp
++++ b/include/rfl/json/save.hpp
+@@ -1,14 +1,8 @@
+ #ifndef RFL_JSON_SAVE_HPP_
+ #define RFL_JSON_SAVE_HPP_
+ 
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <yyjson.h>
+-#else
+-#include "../thirdparty/yyjson.h"
+-#endif
+ 
+-#include <fstream>
+-#include <iostream>
+ #include <string>
+ 
+ #include "../Result.hpp"
+diff --git a/include/rfl/json/to_schema.hpp b/include/rfl/json/to_schema.hpp
+index d88affa..37ff2d5 100644
+--- a/include/rfl/json/to_schema.hpp
++++ b/include/rfl/json/to_schema.hpp
+@@ -1,11 +1,7 @@
+ #ifndef RFL_JSON_TOSCHEMA_HPP_
+ #define RFL_JSON_TOSCHEMA_HPP_
+ 
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <yyjson.h>
+-#else
+-#include "../thirdparty/yyjson.h"
+-#endif
+ 
+ #include <map>
+ #include <string>
+diff --git a/include/rfl/json/write.hpp b/include/rfl/json/write.hpp
+index 5877662..abf5642 100644
+--- a/include/rfl/json/write.hpp
++++ b/include/rfl/json/write.hpp
+@@ -1,14 +1,9 @@
+ #ifndef RFL_JSON_WRITE_HPP_
+ #define RFL_JSON_WRITE_HPP_
+ 
+-#ifdef REFLECTCPP_NO_BUNDLED_DEPENDENCIES
+ #include <yyjson.h>
+-#else
+-#include "../thirdparty/yyjson.h"
+-#endif
+ 
+ #include <ostream>
+-#include <sstream>
+ #include <string>
+ 
+ #include "../Processors.hpp"
