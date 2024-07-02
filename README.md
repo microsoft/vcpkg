@@ -110,7 +110,7 @@ questions or comments.
 
 * Ports: [Microsoft/vcpkg](<https://github.com/microsoft/vcpkg>)
 * Source code: [Microsoft/vcpkg-tool](<https://github.com/microsoft/vcpkg-tool>)
-* Docs: [Microsoft Learn | vcpkg](/vcpkg)
+* Docs: [Microsoft Learn | vcpkg](https://learn.microsoft.com/vcpkg)
 * Website: [vcpkg.io](<https://vcpkg.io>)
 * Email: [vcpkg@microsoft.com](<mailto:vcpkg@microsoft.com>)
 * Discord: [\#include \<C++\>'s Discord server](<https://www.includecpp.org>), in the #🌏vcpkg channel
