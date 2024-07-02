@@ -4669,7 +4669,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "24.5",
+      "baseline": "24.6",
       "port-version": 0
     },
     "libmesh": {
@@ -5569,7 +5569,7 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.9.5",
+      "baseline": "0.9.6",
       "port-version": 0
     },
     "magic-get": {
@@ -5869,7 +5869,7 @@
       "port-version": 0
     },
     "mongo-cxx-driver": {
-      "baseline": "3.10.1",
+      "baseline": "3.10.2",
       "port-version": 0
     },
     "mongoose": {
@@ -6526,7 +6526,7 @@
     },
     "openimageio": {
       "baseline": "2.5.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.2",
@@ -7026,7 +7026,7 @@
     },
     "proj": {
       "baseline": "9.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "projectm-eval": {
       "baseline": "1.0.0",
@@ -7330,7 +7330,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.14",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-webglplugin": {
       "baseline": "5.15.14",
@@ -8625,7 +8625,7 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2021.11.0",
+      "baseline": "2021.13.0",
       "port-version": 0
     },
     "tcb-span": {
