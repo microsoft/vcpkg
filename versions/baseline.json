@@ -2002,7 +2002,7 @@
     },
     "crashpad": {
       "baseline": "2024-04-11",
-      "port-version": 0
+      "port-version": 1
     },
     "crashrpt": {
       "baseline": "1.4.3",
