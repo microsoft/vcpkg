@@ -331,7 +331,7 @@ find_dependency(Threads)")
   if("tiff" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
   endif()
-  if(BUILD_opencv_quality)
+  if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP)
     string(APPEND DEPS_STRING "
 # C language is required for try_compile tests in FindHDF5
 enable_language(C)
@@ -373,7 +373,7 @@ set(CMAKE_AUTOUIC ON)
 find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL OpenGLWidgets)")
     endif()
   endif()
   if("ade" IN_LIST FEATURES)
