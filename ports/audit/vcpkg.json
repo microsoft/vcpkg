@@ -1,5 +1,5 @@
 {
-  "name": "libaudit",
+  "name": "audit",
   "version-semver": "4.0.1",
   "description": "Library for working with audit subsystem",
   "homepage": "https://github.com/linux-audit/audit-userspace",

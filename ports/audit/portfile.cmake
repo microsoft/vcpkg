@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_download_distfile(PATCH_FIX_MISSING_HEADERS_IN_AUDISP_FILTER
     URLS https://github.com/linux-audit/audit-userspace/commit/f8e9bc5914d715cdacb2edc938ab339d5094d017.patch?full_index=1
     SHA512 b9606c711befe99ce9540b9885e943733ab06faa55d32bf029b23e1984adf2e914d46bd95b81a2517380c6b9e714b3b3d2181b86586c97dc09a0418ae40bd33f
