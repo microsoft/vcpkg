@@ -7,7 +7,11 @@ get_target_property(_OpenMP_LIB_NAMES unofficial::llvm-openmp::omp INTERFACE_LIN
 
 # handle omp location being set directly via IMPORTED_LOCATION instead
 if(NOT _OpenMP_LIB_NAMES)
-  set(_OpenMP_LIB_NAMES omp)
+  if(WIN32)
+    set(_OpenMP_LIB_NAMES libomp)
+  else()
+    set(_OpenMP_LIB_NAMES omp)
+  endif()
 endif()
 
 foreach(_lang C CXX)

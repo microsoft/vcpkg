@@ -13,7 +13,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         0001-disable-libomp-aliases.patch
         0002-disable-tests.patch
-        0003-fix-windows-import-lib-name.patch
         0004-install-config.patch
 )
 
@@ -38,10 +37,6 @@ endif()
 # Perl is required for the OpenMP run-time
 vcpkg_find_acquire_program(PERL)
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    # The library name otherwise includes a "lib" prefix on Windows, which is inconsistent with other platforms.
-    set(EXTRA_VARS -DLIBOMP_LIB_NAME=omp)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
