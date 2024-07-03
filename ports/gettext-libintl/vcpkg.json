@@ -10,6 +10,11 @@
     {
       "name": "libiconv",
       "platform": "!linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "linux"
     }
   ]
 }
