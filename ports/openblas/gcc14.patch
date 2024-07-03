@@ -9,7 +9,7 @@ diff --git a/cmake/system.cmake b/cmake/system.cmake
 @@ -160,6 +160,10 @@
    endif ()
  endif ()
- 
+
 +if (${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 +  set(CCOMMON_OPT "${CCOMMON_OPT} -Wno-error=incompatible-pointer-types")
 +endif ()
