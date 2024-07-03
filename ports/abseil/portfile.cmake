@@ -14,16 +14,12 @@ vcpkg_from_github(
         779a356-test-allocator.diff
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cxx17 ABSL_USE_CXX17
-)
-
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
 # compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
 # header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
 # uses the compiler default behavior to update `absl/base/options.h` as needed.
-if (ABSL_USE_CXX17)
+set(ABSL_USE_CXX17_OPTION "")
+if ("cxx17" IN_LIST FEATURES)
     set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
 endif ()
 
