@@ -147,6 +147,7 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 vcpkg_cmake_config_fixup()
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
