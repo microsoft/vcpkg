@@ -458,6 +458,18 @@
         }
       ]
     },
+    "quality": {
+      "description": "Build opencv_quality module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "quality"
+          ]
+        }
+      ]
+    },
     "quirc": {
       "description": "Enable QR code module",
       "dependencies": [
@@ -466,6 +478,18 @@
           "default-features": false,
           "features": [
             "quirc"
+          ]
+        }
+      ]
+    },
+    "rgbd": {
+      "description": "Build opencv_rgbd module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "rgbd"
           ]
         }
       ]

@@ -138,7 +138,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "png"        WITH_PNG
  "python"     BUILD_opencv_python3
  "python"     WITH_PYTHON
+ "quality"    BUILD_opencv_quality
  "quirc"      WITH_QUIRC
+ "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
  "tbb"        WITH_TBB
  "tiff"       WITH_TIFF
@@ -190,22 +192,11 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
-# Build image quality module when building with 'contrib' feature and not UWP.
-set(BUILD_opencv_quality OFF)
 if("contrib" IN_LIST FEATURES)
-  if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS OR (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND VCPKG_TARGET_IS_WINDOWS))
-    set(BUILD_opencv_quality OFF)
-    message(WARNING "The image quality module (quality) does not build for UWP or iOS, the module has been disabled.")
-    # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
-    message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP or iOS, the module has been disabled.")
-  else()
-    set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
-  endif()
-
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 ebaee3b88bd7ae246727e65a98d9fbc1d9772a4181a1926f3af742410b78dc87d2386bcd96ac67d7fb1a3020c3717a2cdebdcf9304d6dfd9ea494004791cf043
     HEAD_REF master
     PATCHES
@@ -453,12 +444,11 @@ vcpkg_cmake_configure(
         -DWITH_NVCUVID=OFF
         -DWITH_NVCUVENC=OFF
         -DWITH_AVIF=OFF
-        -DWITH_OPENEXR=OFF #fixme
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
-        ###### BUILD_options (mainly modules which require additional libraries)
+        ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
-        -DBUILD_opencv_rgbd=OFF #fixme #https://github.com/opencv/opencv_contrib/issues/2307
+        -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
         ###### Additional build flags
         -DOPENCV_LAPACK_SHARED_LIBS=${OPENCV_LAPACK_SHARED_LIBS}
         -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}

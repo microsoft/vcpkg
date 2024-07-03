@@ -21,7 +21,6 @@
       "default-features": false,
       "features": [
         "jasper",
-        "openexr",
         "opengl",
         "qt"
       ],
@@ -75,7 +74,6 @@
         "gdcm",
         "ipp",
         "jasper",
-        "openexr",
         "opengl",
         "qt",
         "sfm",
@@ -153,7 +151,6 @@
         "gdcm",
         "ipp",
         "jasper",
-        "openexr",
         "opengl",
         "openjpeg",
         "qt",

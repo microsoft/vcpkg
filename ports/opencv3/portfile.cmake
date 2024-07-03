@@ -73,6 +73,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "png"             WITH_PNG
  "python"          BUILD_opencv_python3
  "python"          WITH_PYTHON
+ "quality"         BUILD_opencv_quality
  "quirc"           WITH_QUIRC
  "saliency"        BUILD_opencv_saliency
  "sfm"             BUILD_opencv_sfm
@@ -102,18 +103,7 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-# Build image quality module when building with 'contrib' feature and not UWP.
-set(BUILD_opencv_quality OFF)
 if("contrib" IN_LIST FEATURES)
-  if (VCPKG_TARGET_IS_UWP)
-    set(BUILD_opencv_quality OFF)
-    message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
-    # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
-    message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP, the module has been disabled.")
-  else()
-    set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
-  endif()
-
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
@@ -270,7 +260,6 @@ vcpkg_cmake_configure(
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_java=OFF
         -DBUILD_opencv_js=OFF
-        -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_JAVA=OFF
         -DBUILD_ANDROID_PROJECT=OFF
         -DBUILD_ANDROID_EXAMPLES=OFF
