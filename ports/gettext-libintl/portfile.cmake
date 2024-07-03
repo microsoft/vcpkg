@@ -4,8 +4,11 @@ if(VCPKG_TARGET_IS_LINUX)
         message(FATAL_ERROR
             "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
             "Please use the following commands or the equivalent to install development files. \n"
-            "On Debian and Ubuntu derivatives: \"sudo apt-get install libc-dev\"\n"
-            "On Alpine: \"apk add autoconf gettext-dev\"\n"
+            "On Debian and Ubuntu derivatives: \"sudo apt-get install libc6-dev\"\n"
+            "On Alpine: \"apk add gettext-dev\"\n"
+            "On CentOS and recent Red Hat: \"sudo yum install gettext-devel\"\n"
+            "On Fedora: \"sudo dnf install gettext-devel\"\n"
+            "On Arch Linux: \"sudo pacman -S gettext\"\n"
         )
     endif()
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
