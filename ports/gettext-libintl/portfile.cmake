@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX AND NOT X_VCPKG_FORCE_VCPKG_GETTEXT_LIBINTL)
     set(detection_results "${CURRENT_BUILDTREES_DIR}/detected-intl-${TARGET_TRIPLET}.cmake.log")
     file(REMOVE "${detection_results}")
     block(SCOPE_FOR VARIABLES)
