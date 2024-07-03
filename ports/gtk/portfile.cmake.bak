@@ -58,6 +58,7 @@ vcpkg_configure_meson(
         -Dbuild-tests=false
         -Ddocumentation=false
         -Dman-pages=false
+        #-Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
         -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
         -Dprint-cups=disabled       # Build the cups print backend
         -Dvulkan=disabled           # Enable support for the Vulkan graphics API
