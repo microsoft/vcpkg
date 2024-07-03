@@ -23,8 +23,4 @@ DCMTK User Guide:
   For Unix-like systems (e.g., Linux or macOS):
 	* export DCMICONVPATH=/usr/local/share/dcmdata
 	* export DCMDICTPATH=/usr/local/share/dcmdata/dicom.dic:/usr/local/share/dcmdata/private.dic
-Note: The `DCMDICTPATH` environment variable can refer to multiple data dictionaries, separated by colons (":") on Unix-like systems or semicolons (";") on Windows.
-
-For further information on loading external data files, please visit the following websites:
-https://support.dcmtk.org/docs/file_envvars.html
-https://support.dcmtk.org/docs/file_datadict.html
+The `DCMDICTPATH` environment variable can refer to multiple data dictionaries, separated by colons (":") on Unix-like systems or semicolons (";") on Windows.
