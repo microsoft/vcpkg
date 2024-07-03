@@ -5,7 +5,7 @@ if(VCPKG_TARGET_IS_LINUX)
             "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
             "Please use the following commands or the equivalent to install development files. \n"
             "On Debian and Ubuntu derivatives: \"sudo apt-get install libc-dev\"\n"
-            "On Alpine: \"apk add autoconf gettext-dev\"\n"
+            "On Alpine: \"apk add gettext-dev\"\n"
         )
     endif()
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
