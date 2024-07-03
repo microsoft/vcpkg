@@ -26,6 +26,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tensorflow-lite ENABLE_OV_TF_LITE_FRONTEND
 )
 
+vcpkg_find_acquire_program(PKGCONFIG) # openvino cmake requires pkgconfig or otherwise fails
+get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
+vcpkg_add_to_path("${PKGCONFIG_DIR}")
+
 if(ENABLE_INTEL_GPU)
     # python is required for conversion of OpenCL source files into .cpp.
     vcpkg_find_acquire_program(PYTHON3)
