@@ -1,0 +1,13 @@
+diff --git a/cachelib/navy/block_cache/BlockCache.cpp b/cachelib/navy/block_cache/BlockCache.cpp
+index 5394cd3..f9d2c23 100644
+--- a/cachelib/navy/block_cache/BlockCache.cpp
++++ b/cachelib/navy/block_cache/BlockCache.cpp
+@@ -266,7 +266,7 @@ Status BlockCache::lookup(HashedKey hk, Buffer& value) {
+       XLOGF(ERR,
+             "Retry reading an entry after checksum for debugging. Return code: "
+             "{}",
+-            retryStatus);
++            toString(retryStatus));
+ 
+       // Remove this item from index so no future lookup will
+       // ever attempt to read this key. Reclaim will also not be

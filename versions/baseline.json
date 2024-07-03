@@ -1449,7 +1449,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2024.06.24.00",
+      "baseline": "2024.07.01.00",
       "port-version": 0
     },
     "caf": {
@@ -2669,7 +2669,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2024.06.24.00",
+      "baseline": "2024.07.01.00",
       "port-version": 0
     },
     "fcl": {
@@ -2713,7 +2713,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.06.24.00",
+      "baseline": "2024.07.01.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2797,8 +2797,8 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2024.06.24.00",
-      "port-version": 1
+      "baseline": "2024.07.01.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3145,7 +3145,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "2.25.0",
+      "baseline": "2.26.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -4073,8 +4073,8 @@
       "port-version": 0
     },
     "krb5": {
-      "baseline": "1.21.2",
-      "port-version": 4
+      "baseline": "1.21.3",
+      "port-version": 0
     },
     "ktx": {
       "baseline": "4.3.1",
@@ -4566,7 +4566,7 @@
     },
     "libidn2": {
       "baseline": "2.3.7",
-      "port-version": 0
+      "port-version": 1
     },
     "libigl": {
       "baseline": "2.5.0",
@@ -5354,7 +5354,7 @@
     },
     "libyuv": {
       "baseline": "1857",
-      "port-version": 0
+      "port-version": 1
     },
     "libzen": {
       "baseline": "0.4.41",
@@ -6033,7 +6033,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.06.24.00",
+      "baseline": "2024.07.01.00",
       "port-version": 0
     },
     "mygui": {
@@ -6589,8 +6589,8 @@
       "port-version": 2
     },
     "opentelemetry-cpp": {
-      "baseline": "1.14.2",
-      "port-version": 2
+      "baseline": "1.16.0",
+      "port-version": 0
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -7065,7 +7065,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.06.24.00",
+      "baseline": "2024.07.01.00",
       "port-version": 0
     },
     "psimd": {
@@ -7134,7 +7134,7 @@
     },
     "qca": {
       "baseline": "2.3.7",
-      "port-version": 1
+      "port-version": 2
     },
     "qcoro": {
       "baseline": "0.10.0",
@@ -7989,7 +7989,7 @@
       "port-version": 3
     },
     "sdbus-cpp": {
-      "baseline": "1.5.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "sdformat10": {
@@ -8121,7 +8121,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2024.1.12",
+      "baseline": "2024.1.25",
       "port-version": 0
     },
     "shaderc": {
@@ -8446,7 +8446,7 @@
     },
     "sqlite3": {
       "baseline": "3.46.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sqlitecpp": {
       "baseline": "3.3.1",
@@ -9345,7 +9345,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.06.24.00",
+      "baseline": "2024.07.01.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9486,7 +9486,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "wyhash": {
       "baseline": "2023-12-03",
