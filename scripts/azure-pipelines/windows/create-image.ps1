@@ -24,14 +24,89 @@ $WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 17
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
 # debugging
 $Root = $PSScriptRoot
 
-Import-Module "$Root/../create-vmss-helpers.psm1" -DisableNameChecking -Force
+<#
+.SYNOPSIS
+Generates a random password.
+
+.DESCRIPTION
+New-Password generates a password, randomly, of length $Length, containing
+only alphanumeric characters, underscore, and dash.
+
+.PARAMETER Length
+The length of the returned password.
+#>
+function New-Password {
+  Param ([int] $Length = 32)
+
+  # This 64-character alphabet generates 6 bits of entropy per character.
+  # The power-of-2 alphabet size allows us to select a character by masking a random Byte with bitwise-AND.
+  $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
+  $mask = 63
+  if ($alphabet.Length -ne 64) {
+    throw 'Bad alphabet length'
+  }
+
+  [Byte[]]$randomData = [Byte[]]::new($Length)
+  $rng = $null
+  try {
+    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    $rng.GetBytes($randomData)
+  }
+  finally {
+    if ($null -ne $rng) {
+      $rng.Dispose()
+    }
+  }
+
+  $result = ''
+  for ($idx = 0; $idx -lt $Length; $idx++) {
+    $result += $alphabet[$randomData[$idx] -band $mask]
+  }
+
+  return $result
+}
+
+<#
+.SYNOPSIS
+Waits for the shutdown of the specified resource.
+
+.DESCRIPTION
+Wait-Shutdown takes a VM, and checks if there's a 'PowerState/stopped'
+code; if there is, it returns. If there isn't, it waits ten seconds and
+tries again.
+
+.PARAMETER ResourceGroupName
+The name of the resource group to look up the VM in.
+
+.PARAMETER Name
+The name of the virtual machine to wait on.
+#>
+function Wait-Shutdown {
+  [CmdletBinding()]
+  Param([string]$ResourceGroupName, [string]$Name)
+
+  Write-Host "Waiting for $Name to stop..."
+  while ($true) {
+    $Vm = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $Name -Status
+    $highestStatus = $Vm.Statuses.Count
+    for ($idx = 0; $idx -lt $highestStatus; $idx++) {
+      if ($Vm.Statuses[$idx].Code -eq 'PowerState/stopped') {
+        return
+      }
+    }
+
+    Write-Host "... not stopped yet, sleeping for 10 seconds"
+    Start-Sleep -Seconds 10
+  }
+}
+
 
 $AdminPW = New-Password
 $AdminPWSecure = ConvertTo-SecureString $AdminPW -AsPlainText -Force
@@ -82,53 +157,21 @@ $VMCreatedOsDisk = $VMCreated.StorageProfile.OsDisk.Name
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Granting permissions to use vcpkg-image-minting storage account' `
+  -Status 'Minting token for vcpkg-image-minting storage account' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $VcpkgImageMintingAccount = Get-AzStorageAccount -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkgimageminting'
 
-$CudnnStorageContext = New-AzStorageContext -StorageAccountName 'vcpkgimageminting' -UseConnectedAccount
+$AssetStorageContext = New-AzStorageContext -StorageAccountName 'vcpkgimageminting' -UseConnectedAccount
 $StartTime = Get-Date
-$ExpiryTime = $StartTime.AddDays(1)
-$CudnnSas = New-AzStorageContainerSASToken -Name 'assets' -Permission r -StartTime $StartTime -ExpiryTime $ExpiryTime -Context $CudnnStorageContext
-$CudnnUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip?$CudnnSas"
-
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Running provisioning script deploy-tlssettings.ps1 in VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$ProvisionImageResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName 'vcpkg-image-minting' `
-  -VMName $ProtoVMName `
-  -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$Root\deploy-tlssettings.ps1"
-
-Write-Host "deploy-tlssettings.ps1 output: $($ProvisionImageResult.value.Message)"
-Write-Host 'Waiting 1 minute for VM to reboot...'
-Start-Sleep -Seconds 60
-
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Running provisioning script deploy-psexec.ps1 in VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$DeployPsExecResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName 'vcpkg-image-minting' `
-  -VMName $ProtoVMName `
-  -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$Root\deploy-psexec.ps1"
-
-Write-Host "deploy-psexec.ps1 output: $($DeployPsExecResult.value.Message)"
+$ExpiryTime = $StartTime.AddHours(4)
+$AssetsSas = New-AzStorageContainerSASToken -Name 'assets' -Permission r -StartTime $StartTime -ExpiryTime $ExpiryTime -Context $AssetStorageContext
 
 ####################################################################################################
 function Invoke-ScriptWithPrefix {
   param(
     [string]$ScriptName,
-    [switch]$AddAdminPw,
-    [string]$CudnnUrl = $null
+    [switch]$SkipSas
   )
 
   Write-Progress `
@@ -136,29 +179,25 @@ function Invoke-ScriptWithPrefix {
     -Status "Running provisioning script $ScriptName in VM" `
     -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-  $DropToAdminUserPrefix = Get-Content "$Root\drop-to-admin-user-prefix.ps1" -Encoding utf8NoBOM -Raw
   $UtilityPrefixContent = Get-Content "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
 
   $tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
     $script = Get-Content "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
-    if ($AddAdminPw) {
-      $script = $script.Replace('# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1', $DropToAdminUserPrefix)
-    }
-
-    $script = $script.Replace('# REPLACE WITH UTILITY-PREFIX.ps1', $UtilityPrefixContent);
-    if (-not [string]::IsNullOrEmpty($CudnnUrl)) {
-      $script = $script.Replace('# REPLACE WITH CudnnUrl', "`$CudnnUrl = `"$CudnnUrl`"")
-    }
-
+$replacement = @"
+if (Test-Path "`$PSScriptRoot/utility-prefix.ps1") {
+  . "`$PSScriptRoot/utility-prefix.ps1"
+}
+"@
+    $script = $script.Replace($replacement, $UtilityPrefixContent);
     Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
 
     $parameter = $null
-    if ($AddAdminPw) {
-      $parameter = @{AdminUserPassword = $AdminPW;}
+    if (-not $SkipSas) {
+      $parameter = @{SasToken = "`"$AssetsSas`"";}
     }
 
-    $InvokeResult = Invoke-AzVMRunCommandWithRetries `
+    $InvokeResult = Invoke-AzVMRunCommand `
       -ResourceGroupName 'vcpkg-image-minting' `
       -VMName $ProtoVMName `
       -CommandId 'RunPowerShellScript' `
@@ -172,57 +211,37 @@ function Invoke-ScriptWithPrefix {
 }
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-sdks.ps1' -AddAdminPw
+Invoke-ScriptWithPrefix -ScriptName 'deploy-tlssettings.ps1' -SkipSas
+Write-Host 'Waiting 1 minute for VM to reboot...'
+Start-Sleep -Seconds 60
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1' -AddAdminPw
+Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-sdks.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1' -AddAdminPw
+Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1' -AddAdminPw
+Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-cudnn.ps1' -CudnnUrl $CudnnUrl
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'test-cudnn.ps1'
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cudnn.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1' -AddAdminPw
+Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1' -AddAdminPw
+Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Running provisioning script deploy-settings.txt (as a .ps1) in VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$ProvisionImageResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName 'vcpkg-image-minting' `
-  -VMName $ProtoVMName `
-  -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$Root\deploy-settings.txt"
-
-Write-Host "deploy-settings.txt output: $($ProvisionImageResult.value.Message)"
+Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas
 Restart-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Running provisioning script sysprep.ps1 in VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$SysprepResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName 'vcpkg-image-minting' `
-  -VMName $ProtoVMName `
-  -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$Root\sysprep.ps1"
-
-Write-Host "sysprep.ps1 output: $($SysprepResult.value.Message)"
+Invoke-ScriptWithPrefix -ScriptName 'sysprep.ps1'
 
 ####################################################################################################
 Write-Progress `
