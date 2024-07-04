@@ -32,14 +32,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
-
-if(VCPKG_TARGET_IS_OSX)
-    if(VCPKG_CROSSCOMPILING)
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-            list(APPEND COMMON_OPTIONS -DTARGET=HASWELL)
-        endif()
+#In case other targets are desired, allow specifying them via features (?)
+if(VCPKG_CROSSCOMPILING)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        list(APPEND COMMON_OPTIONS -DTARGET=HASWELL)
     endif()
-    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
+endif()
+ 
+if(VCPKG_TARGET_IS_OSX)
+   list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
     endif()
@@ -73,10 +74,6 @@ endif()
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
 endif()
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-	list(APPEND OPENBLAS_EXTRA_OPTIONS -DBUILD_STATIC_LIB=ON)
-endif()
-
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
