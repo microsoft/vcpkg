@@ -1,17 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bcfe91d8..75972780 100644
+index bcfe91d8..cc2b66d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -91,10 +91,10 @@ endif()
- 
- # put -Wall early so other warnings can be disabled selectively
- if(CMAKE_C_COMPILER_ID MATCHES "AppleClang|Clang")
--  list(APPEND mi_cflags -Wall -Wextra -Wpedantic)
-+  list(APPEND mi_cflags -Wall -Wextra -Wpedantic -std=c99)
- endif()
- if(CMAKE_C_COMPILER_ID MATCHES "GNU")
--    list(APPEND mi_cflags -Wall -Wextra)
-+    list(APPEND mi_cflags -Wall -Wextra -std=c99)
- endif()
- if(CMAKE_C_COMPILER_ID MATCHES "Intel")
-     list(APPEND mi_cflags -Wall)
+@@ -306,7 +306,7 @@ endif()
+ if(CMAKE_C_COMPILER_ID MATCHES "AppleClang|Clang|GNU")
+   list(APPEND mi_cflags -Wno-unknown-pragmas -fvisibility=hidden)
+   if(NOT MI_USE_CXX)
+-    list(APPEND mi_cflags -Wstrict-prototypes)
++    list(APPEND mi_cflags -Wstrict-prototypes -std=c99)
+   endif()
+   if(CMAKE_C_COMPILER_ID MATCHES "AppleClang|Clang")
+     list(APPEND mi_cflags -Wno-static-in-inline)
