@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO getml/reflect-cpp
-    REF "v${VERSION}"
-    SHA512 a231f1d210df769dc2a5f6a98fc29b587c4cba65eaab04326b7cb0c514697566539e7e6ad91e3960b592d0256f44bf4af2ada4ef07589ccd156bb16b9196a021
+    REF "c00e98ce371adf41283baae080bec3700bac7df3"
+    SHA512 a8e0c92367585f56aefcb356a6706f1137a2ca1eab5caab68ea883eec1253c6440148c370b10df6b2b98b0b508bc264416e929d016a7f11bf6efe426340ba9d4
     HEAD_REF main
-    PATCHES
-        "reflectcpp.0.11.1.patch"
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
