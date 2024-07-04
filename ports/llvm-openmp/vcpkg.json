@@ -4,7 +4,7 @@
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
-  "supports": "!android",
+  "supports": "!android & !(windows & static) & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
