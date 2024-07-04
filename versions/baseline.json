@@ -5094,7 +5094,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libtorrent": {
       "baseline": "2.0.10",
@@ -6490,7 +6490,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 20
+      "port-version": 21
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -8994,7 +8994,7 @@
     },
     "unittest-cpp": {
       "baseline": "2.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "unixodbc": {
       "baseline": "2.3.11",
