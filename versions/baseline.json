@@ -2033,8 +2033,8 @@
       "port-version": 0
     },
     "cserialport": {
-      "baseline": "4.3.0",
-      "port-version": 1
+      "baseline": "4.3.1",
+      "port-version": 0
     },
     "cspice": {
       "baseline": "67",
@@ -3881,7 +3881,7 @@
       "port-version": 1
     },
     "kerbal": {
-      "baseline": "2024.5.1",
+      "baseline": "2024.6.1",
       "port-version": 0
     },
     "keystone": {
