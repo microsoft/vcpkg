@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 af9c8743d34bbc8f371a018debfab5f857aadb9a1129b048dbce9085122bef209ade34837784f91424c9eba92406d2e222476d9f8038839908679f7b7dc9e3eb
     HEAD_REF master
     PATCHES
-        fix_find_zstd.patch
+        dependencies.diff
 )
 
 vcpkg_check_features(
