@@ -4213,7 +4213,7 @@
       "port-version": 0
     },
     "libass": {
-      "baseline": "0.17.2",
+      "baseline": "0.17.3",
       "port-version": 0
     },
     "libassert": {
