@@ -66,6 +66,7 @@ vcpkg_cmake_configure(
         -DENABLE_INSTALL_testtex=OFF
         "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
         "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
+        --trace-expand
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
         ENABLE_IV
