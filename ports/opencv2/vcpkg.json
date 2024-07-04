@@ -48,14 +48,6 @@
           "name": "opencv2",
           "default-features": false,
           "features": [
-            "gtk"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "opencv2",
-          "default-features": false,
-          "features": [
             "msmf"
           ],
           "platform": "windows & !mingw"
