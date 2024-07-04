@@ -1,6 +1,6 @@
 {
   "name": "reflectcpp",
-  "version-date": "2023-07-03",
+  "version": "0.13.0",
   "description": "A C++ library for serialization and deserialization using reflection.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
