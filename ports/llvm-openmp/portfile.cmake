@@ -6,7 +6,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/openmp-${VERSION}.src.tar.xz"
     FILENAME "llvm-openmp-${VERSION}.src.tar.xz"
-    SHA512 f96f5fd4c508f1390e53b943237aa7e1db1301ef660f0864305556d581275576d585ef222a82d2359d43ad8ed166096d9ec6c05ab0ee57a01679cff6b4ecba4b
+    SHA512 7c2ca736524fb741112be247ac6be39cfe1dc92381c5e2997d97044ab9705c224ae5eabcf43b59cdec9a715a14227c6fb02cb2d1829ebc47b82d3af6e4d197d3
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -19,7 +19,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/cmake-${VERSION}.src.tar.xz"
     FILENAME "llvm-cmake-${VERSION}.src.tar.xz"
-    SHA512 1334647f4be280b41858aa272bebc65e935cab772001032f77040396ba7472fbd5eb6a1a0c042ab7156540075705b7f05c8de2f02e2ce9d7ec1ec27be6bef86f
+    SHA512 e02243b491f9e688db28d7b53270fcf87debf09d3c95b136a7c7b96e26890de68712c60a1e85f5a448a95ad8c81f2d8ae77047780822443bbe39f1a9e6211007
 )
 vcpkg_extract_source_archive(CMAKE_SOURCE_PATH
     ARCHIVE "${ARCHIVE}"

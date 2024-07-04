@@ -1,6 +1,6 @@
 {
   "name": "llvm-openmp",
-  "version": "18.1.6",
+  "version": "18.1.8",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
