@@ -1,16 +1,15 @@
 --- a/runtime/src/CMakeLists.txt
 +++ b/runtime/src/CMakeLists.txt
-@@ -369,6 +369,7 @@
+@@ -369,6 +369,6 @@
  # We want to install libomp in ${DESTDIR}/${CMAKE_INSTALL_FULL_LIBDIR}
  # We want to install headers in ${DESTDIR}/${CMAKE_INSTALL_FULL_INCLUDEDIR}
  if(WIN32)
 -  install(TARGETS omp ${export_to_llvmexports} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 -  install(TARGETS ${LIBOMP_IMP_LIB_TARGET} ARCHIVE DESTINATION "${OPENMP_INSTALL_LIBDIR}")
-+  set_target_properties(omp PROPERTIES IMPORTED_IMPLIB ${LIBOMP_IMP_LIB_TARGET})
 +  install(TARGETS omp ${export_to_llvmexports} EXPORT llvm-openmp-targets RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 +  install(TARGETS ${LIBOMP_IMP_LIB_TARGET} EXPORT llvm-openmp-targets ARCHIVE DESTINATION "${OPENMP_INSTALL_LIBDIR}")
    # Create aliases (regular copies) of the library for backwards compatibility
-@@ -382,7 +383,7 @@
+@@ -382,7 +382,7 @@
    endforeach()
  else()
  
@@ -19,7 +18,7 @@
  
    if(${LIBOMP_INSTALL_ALIASES})
      # Create aliases (symlinks) of the library for backwards compatibility
-@@ -415,3 +416,27 @@
+@@ -415,3 +415,26 @@
      DESTINATION ${LIBOMP_HEADERS_INSTALL_PATH}
    )
  endif()
@@ -29,7 +28,6 @@
 +set(PORT_SHARE_DIR share/unofficial-llvm-openmp)
 +install(EXPORT llvm-openmp-targets
 +    FILE unofficial-llvm-openmp-targets.cmake
-+    NAMESPACE unofficial::llvm-openmp::
 +    DESTINATION ${PORT_SHARE_DIR}
 +)
 +include(CMakePackageConfigHelpers)

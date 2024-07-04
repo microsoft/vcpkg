@@ -2,16 +2,12 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(unofficial-llvm-openmp CONFIG REQUIRED)
-get_target_property(_OpenMP_INCLUDE_DIR unofficial::llvm-openmp::omp INTERFACE_INCLUDE_DIRECTORIES)
-get_target_property(_OpenMP_LIB_NAMES unofficial::llvm-openmp::omp INTERFACE_LINK_LIBRARIES)
+get_target_property(_OpenMP_INCLUDE_DIR omp INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(_OpenMP_LIB_NAMES omp INTERFACE_LINK_LIBRARIES)
 
 # handle omp location being set directly via IMPORTED_LOCATION instead
 if(NOT _OpenMP_LIB_NAMES)
-  if(WIN32)
-    set(_OpenMP_LIB_NAMES libomp)
-  else()
-    set(_OpenMP_LIB_NAMES omp)
-  endif()
+  set(_OpenMP_LIB_NAMES omp)
 endif()
 
 foreach(_lang C CXX)
@@ -20,7 +16,7 @@ foreach(_lang C CXX)
   set(OpenMP_${_lang}_LIB_NAMES "${_OpenMP_LIB_NAMES}")
   set(OpenMP_${_lang}_LIBRARIES "OpenMP::OpenMP_${_lang}")
   if (NOT TARGET OpenMP::OpenMP_${_lang})
-    add_library(OpenMP::OpenMP_${_lang} ALIAS unofficial::llvm-openmp::omp)
+    add_library(OpenMP::OpenMP_${_lang} ALIAS omp)
   endif()
 endforeach()
 
@@ -69,7 +65,7 @@ _openmp_set_flags()
 if(NOT DEFINED OpenMP_C_FLAGS)
   message(FATAL_ERROR "OpenMP build flags not found for compiler \"${CMAKE_C_COMPILER_ID}\"")
 endif()
-set_target_properties(unofficial::llvm-openmp::omp PROPERTIES
+set_target_properties(omp PROPERTIES
   INTERFACE_COMPILE_OPTIONS "${OpenMP_C_FLAGS}"
   INTERFACE_LINK_OPTIONS "${OpenMP_C_FLAGS}"
 )
