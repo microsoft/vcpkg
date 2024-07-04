@@ -42,6 +42,7 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
       set(CMAKE_${lang}_COMPILER_TARGET "${CMAKE_SYSTEM_PROCESSOR}-windows-gnu" CACHE STRING "")
     endforeach()
 
+	find_program(CMAKE_Fortran_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-gfortran")
     find_program(CMAKE_C_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-gcc")
     find_program(CMAKE_CXX_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-g++")
     find_program(CMAKE_RC_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-windres")
