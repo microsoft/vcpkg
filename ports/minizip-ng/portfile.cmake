@@ -16,17 +16,16 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pkcrypt MZ_PKCRYPT
-        wzaes MZ_WZAES
+        wzaes   MZ_WZAES
         openssl MZ_OPENSSL
-        bzip2 MZ_BZIP2
-        lzma MZ_LZMA
-        zlib MZ_ZLIB
-        zstd MZ_ZSTD
+        bzip2   MZ_BZIP2
+        lzma    MZ_LZMA
+        zlib    MZ_ZLIB
+        zstd    MZ_ZSTD
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         ${FEATURE_OPTIONS}
         -DMZ_FETCH_LIBS=OFF
