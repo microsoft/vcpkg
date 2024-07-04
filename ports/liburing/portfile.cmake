@@ -19,9 +19,6 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${CURRENT_PORT_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 # note: {SOURCE_PATH}/src/Makefile makes liburing.so from liburing.a.
 #   For dynamic, remove intermediate file liburing.a when install is finished.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
