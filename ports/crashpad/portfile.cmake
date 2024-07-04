@@ -106,9 +106,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
-        " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
-        "-std=c++20"
+    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
