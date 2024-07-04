@@ -37,7 +37,7 @@ if("cblas" IN_LIST FEATURES)
         message(FATAL_ERROR "Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas!")
     endif()
 endif()
-
+message(WARNING "${CMAKE_Fortran_COMPILER_LOADED}")
 set(USE_OPTIMIZED_BLAS OFF)
 if("noblas" IN_LIST FEATURES)
     set(USE_OPTIMIZED_BLAS ON)

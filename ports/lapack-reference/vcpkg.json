@@ -16,7 +16,7 @@
     },
     {
       "name": "vcpkg-gfortran",
-      "platform": "windows"
+      "platform": "windows & !mingw"
     }
   ],
   "default-features": [
