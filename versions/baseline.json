@@ -4801,8 +4801,8 @@
       "port-version": 3
     },
     "liborigin": {
-      "baseline": "3.0.2",
-      "port-version": 2
+      "baseline": "3.0.3",
+      "port-version": 0
     },
     "libosdp": {
       "baseline": "3.0.5",
