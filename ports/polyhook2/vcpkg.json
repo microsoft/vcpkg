@@ -1,6 +1,6 @@
 {
   "name": "polyhook2",
-  "version-date": "2024-02-08",
+  "version-date": "2024-06-03",
   "description": "C++17, x86/x64 Hooking Library v2.0",
   "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
   "license": "MIT",
