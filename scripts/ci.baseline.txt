@@ -265,6 +265,7 @@ cppcoro:arm64-osx=fail
 cppcoro:x64-linux=fail
 cppcoro:x64-osx=fail
 cpputest:arm-neon-android=fail
+crashpad:x64-linux=fail
 cserialport:arm-neon-android=fail
 cserialport:arm64-android=fail
 cserialport:x64-android=fail
