@@ -29,14 +29,13 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
-    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"   
+    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"
 )
 vcpkg_apply_patches(
     SOURCE_PATH "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     PATCHES
       "fix-std-20.patch"
 )      
-
 
 if(VCPKG_TARGET_IS_LINUX)
     # fetch lss
@@ -109,9 +108,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
-        " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
-        "-std=c++20"
+    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
