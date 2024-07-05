@@ -11,7 +11,7 @@ vcpkg_from_git(
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
-function(checkout_in_path PATH URL REF PAT)
+function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
@@ -20,7 +20,6 @@ function(checkout_in_path PATH URL REF PAT)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
-        PATCHES "${PAT}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -30,9 +29,14 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
-    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"
-    "fix-std-20.patch"
+    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"   
 )
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
+    PATCHES
+      "fix-std-20.patch"
+)      
+
 
 if(VCPKG_TARGET_IS_LINUX)
     # fetch lss
@@ -40,7 +44,6 @@ if(VCPKG_TARGET_IS_LINUX)
         "${SOURCE_PATH}/third_party/lss/lss"
         https://chromium.googlesource.com/linux-syscall-support
         9719c1e1e676814c456b55f5f070eabad6709d31
-        ""
     )
 endif()
 
@@ -106,7 +109,9 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
+    OPTIONS 
+        " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
+        "-std=c++20"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
