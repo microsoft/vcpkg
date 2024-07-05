@@ -8,30 +8,25 @@ vcpkg_from_github(
 
 set(VCPKG_BUILD_TYPE "release") # header-only port
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
-        -DBUILD_PRESS_TOOL=ON
-)
-
 vcpkg_cmake_install()
 
 # Copy the entire include directory to ${CURRENT_PACKAGES_DIR}/include/cinatra
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra)
+file(COPY ${SOURCE_PATH}/include/cinatra.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra.hpp)
 
 vcpkg_copy_tools(
     TOOL_NAMES cinatra_press_tool
     SEARCH_DIRS "${CURRENT_PACKAGES_DIR}/include/cinatra"
 )
 
-# Manually remove the tool from include directory
+# Copy executables to the tools directory
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe")
+    file(COPY "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe"
+         DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cinatra")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe")
 endif()
 
-vcpkg_installcopyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 
 
