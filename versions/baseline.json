@@ -3249,16 +3249,16 @@
       "port-version": 1
     },
     "gtk": {
-      "baseline": "4.10.5",
-      "port-version": 2
+      "baseline": "4.14.0",
+      "port-version": 0
     },
     "gtk3": {
       "baseline": "3.24.38",
       "port-version": 1
     },
     "gtkmm": {
-      "baseline": "4.10.0",
-      "port-version": 1
+      "baseline": "4.14.0",
+      "port-version": 0
     },
     "gtl": {
       "baseline": "1.1.8",
