@@ -1,7 +1,7 @@
 # Based on https://github.com/Kitware/CMake/blob/v3.30.0-rc3/Modules/FindOpenMP.cmake
 
 include(CMakeFindDependencyMacro)
-find_dependency(unofficial-llvm-openmp CONFIG REQUIRED)
+find_dependency(unofficial-llvm-openmp CONFIG)
 get_target_property(_OpenMP_INCLUDE_DIR omp INTERFACE_INCLUDE_DIRECTORIES)
 get_target_property(_OpenMP_LIB_NAMES omp INTERFACE_LINK_LIBRARIES)
 
