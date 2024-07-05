@@ -1,7 +1,6 @@
 {
   "name": "qt5-translations",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "Qt translations.",
   "license": null,
   "dependencies": [

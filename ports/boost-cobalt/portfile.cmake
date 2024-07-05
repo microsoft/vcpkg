@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/cobalt
     REF boost-${VERSION}
-    SHA512 167e1d48eefe2517b9cd3796602798cb3d8d14655e30cb175b468f667fb8ae132aba508fc96987c4518d0a364aa9b70461d368c56b62d18fcd0f923cd6525e7f
+    SHA512 805c9ddadf2f66adb2b594c234bfd1f69d398dacdbef3b0d3d03f7e4d4110d8bf8fc5fa3fb707eb9f2c41d039ffd77c27df17185ea94be4a172419c82f642b3a
     HEAD_REF master
 )
 

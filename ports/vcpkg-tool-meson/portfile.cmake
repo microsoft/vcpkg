@@ -4,35 +4,40 @@
 
 set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
-set(files 
-  vcpkg.json
-  portfile.cmake
-  vcpkg-port-config.cmake
-  vcpkg_configure_meson.cmake
-  vcpkg_install_meson.cmake
+set(patches
   meson-intl.patch
   adjust-python-dep.patch
   adjust-args.patch
   remove-freebsd-pcfile-specialization.patch
+  meson-1.4-llvm-18.diff
+)
+set(scripts
+  vcpkg-port-config.cmake
+  vcpkg_configure_meson.cmake
+  vcpkg_install_meson.cmake
   meson.template.in
 )
-
-set(MESON_PATH_HASH "")
-foreach(to_hash IN LISTS files)
-  file(SHA1 ${CMAKE_CURRENT_LIST_DIR}/${to_hash} to_append)
-  string(APPEND MESON_PATH_HASH "${to_append}")
+set(to_hash 
+  "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json"
+  "${CMAKE_CURRENT_LIST_DIR}/portfile.cmake"
+)
+foreach(file IN LISTS patches scripts)
+  set(filepath  "${CMAKE_CURRENT_LIST_DIR}/${file}")
+  list(APPEND to_hash "${filepath}")
+  file(COPY "${filepath}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endforeach()
-string(SHA512 MESON_PATH_HASH "${MESON_PATH_HASH}")
 
+set(meson_path_hash "")
+foreach(filepath IN LISTS to_hash)
+  file(SHA1 "${filepath}" to_append)
+  string(APPEND meson_path_hash "${to_append}")
+endforeach()
+string(SHA512 meson_path_hash "${meson_path_hash}")
+
+string(SUBSTRING "${meson_path_hash}" 0 6 MESON_SHORT_HASH)
+list(TRANSFORM patches REPLACE [[^(..*)$]] [["${CMAKE_CURRENT_LIST_DIR}/\0"]])
+list(JOIN patches "\n            " PATCHES)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake"
-          "${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake"
-          "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
-          "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
-          "${CMAKE_CURRENT_LIST_DIR}/adjust-args.patch"
-          "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
-          "${CMAKE_CURRENT_LIST_DIR}/meson.template.in"
-          DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
 
