@@ -17,15 +17,10 @@
     "z4kn4fein-semver"
   ],
   "default-features": [
-    "network", "sha"
+    "network",
+    "sha"
   ],
   "features": {
-    "sha": {
-      "description": "Use built-in hash-library",
-      "dependencies": [
-        "hash-library"
-      ]
-    },
     "network": {
       "description": "Use built-in curl network adapter",
       "dependencies": [
@@ -40,6 +35,12 @@
           "name": "openssl",
           "platform": "linux"
         }
+      ]
+    },
+    "sha": {
+      "description": "Use built-in hash-library",
+      "dependencies": [
+        "hash-library"
       ]
     }
   }
