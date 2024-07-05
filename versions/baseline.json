@@ -277,8 +277,8 @@
       "port-version": 1
     },
     "assimp": {
-      "baseline": "5.4.0",
-      "port-version": 1
+      "baseline": "5.4.2",
+      "port-version": 0
     },
     "astr": {
       "baseline": "0.2.1",
