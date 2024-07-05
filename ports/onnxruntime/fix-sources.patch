@@ -1,52 +1,26 @@
-diff --git a/onnxruntime/core/framework/kernel_type_str_resolver_utils.h b/onnxruntime/core/framework/kernel_type_str_resolver_utils.h
-index 3d06013..4121534 100644
---- a/onnxruntime/core/framework/kernel_type_str_resolver_utils.h
-+++ b/onnxruntime/core/framework/kernel_type_str_resolver_utils.h
-@@ -10,9 +10,7 @@
- #include "core/framework/kernel_type_str_resolver.h"
- #include "core/graph/op_identifier.h"
+diff --git a/onnxruntime/core/framework/kernel_type_str_resolver.cc b/onnxruntime/core/framework/kernel_type_str_resolver.cc
+index d05e02e..6f8a47c 100644
+--- a/onnxruntime/core/framework/kernel_type_str_resolver.cc
++++ b/onnxruntime/core/framework/kernel_type_str_resolver.cc
+@@ -50,7 +50,7 @@ Status KernelTypeStrResolver::ResolveKernelTypeStr(const Node& node, std::string
+   // TODO(edgchen1) maybe we can use transparent hash/eq to enable lookup with string_view
+   const auto type_str_it = type_str_map.find(std::string(kernel_type_str));
+ #else
+-  const auto type_str_it = type_str_map.find(kernel_type_str);
++  const auto type_str_it = type_str_map.find(std::string(kernel_type_str));
+ #endif
  
--namespace flatbuffers {
--class DetachedBuffer;
--}
-+#include <flatbuffers/flatbuffers.h>
- 
- namespace onnxruntime::kernel_type_str_resolver_utils {
- 
-diff --git a/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h b/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h
-index 0c21be1..3ee6061 100644
---- a/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h
-+++ b/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h
-@@ -5,6 +5,8 @@
- // while so far we mainly validate training during cooking the optimization.
- #ifdef ENABLE_TRAINING
- #pragma once
-+#include <variant>
-+#include <unordered_map>
- 
- #include "core/optimizer/compute_optimizer/shared_utils.h"
- 
-diff --git a/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h b/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h
-index 6e22fc7..79c8ac1 100644
---- a/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h
-+++ b/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h
-@@ -15,6 +15,7 @@
- #include <memory>
- #include <string>
- #include <vector>
-+#include <deque>
- 
- namespace onnxruntime::optimizer::compute_optimizer {
- 
-diff --git a/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc b/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc
-index 04f2679..9c4de02 100644
---- a/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc
-+++ b/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc
-@@ -1,6 +1,7 @@
- // Copyright (c) Microsoft Corporation. All rights reserved.
- // Licensed under the MIT License.
- 
-+#include <deque>
- #include <charconv>
- #include <vector>
- #include <utility>
+   ORT_RETURN_IF(type_str_it == type_str_map.end(),
+diff --git a/onnxruntime/core/framework/ort_value_name_idx_map.h b/onnxruntime/core/framework/ort_value_name_idx_map.h
+index 1b5f6bc..b721205 100644
+--- a/onnxruntime/core/framework/ort_value_name_idx_map.h
++++ b/onnxruntime/core/framework/ort_value_name_idx_map.h
+@@ -36,7 +36,7 @@ class OrtValueNameIdxMap {
+ #ifdef DISABLE_ABSEIL
+     auto it = map_.find(std::string(name));
+ #else
+-    auto it = map_.find(name);
++    auto it = map_.find(std::string(name));
+ #endif
+     if (it == map_.end()) {
+       return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, "Could not find OrtValue with name '", name, "'");

@@ -1,18 +1,25 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 755e20f..d668069 100644
+index 8edbb6a..9e6c664 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -572,7 +572,8 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
+@@ -38,6 +38,7 @@ include(CheckLanguage)
+ include(CMakeDependentOption)
+ include(FetchContent)
+ include(CheckFunctionExists)
++include(GNUInstallDirs) # onnxruntime_providers_* require CMAKE_INSTALL_* variables
+ 
+ # TODO: update this once all system adapt c++20
+ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+@@ -583,7 +584,7 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
  get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
  set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
  
 -include(external/onnxruntime_external_deps.cmake)
-+include(external/onnxruntime_vcpkg_deps.cmake) # see onnxruntime/portfile.cmake
-+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external")
++include(external/onnxruntime_vcpkg_deps.cmake)
  
  set(ORT_WARNING_FLAGS)
  if (WIN32)
-@@ -904,7 +905,7 @@ function(onnxruntime_set_compile_flags target_name)
+@@ -956,7 +957,7 @@ function(onnxruntime_set_compile_flags target_name)
        target_compile_definitions(${target_name} PRIVATE ORT_NEURAL_SPEED)
      endif()
  
@@ -21,35 +28,7 @@ index 755e20f..d668069 100644
      if (onnxruntime_USE_CUDA)
        # Suppress a "conversion_function_not_usable" warning in gsl/span
        target_compile_options(${target_name} PRIVATE "$<$<COMPILE_LANGUAGE:CUDA>:SHELL:-Xcudafe \"--diag_suppress=conversion_function_not_usable\">")
-@@ -967,7 +968,7 @@ function(onnxruntime_set_compile_flags target_name)
-         target_compile_options(${target_name} PRIVATE "-Wno-unused-parameter")
-       endif()
-       target_compile_definitions(${target_name} PUBLIC -DNSYNC_ATOMIC_CPP11)
--      onnxruntime_add_include_to_target(${target_name} nsync::nsync_cpp)
-+      onnxruntime_add_include_to_target(${target_name} nsync::nsync_cpp Eigen3::Eigen)
-     endif()
-     foreach(ORT_FLAG ${ORT_PROVIDER_FLAGS})
-       target_compile_definitions(${target_name} PRIVATE ${ORT_FLAG})
-@@ -1098,9 +1099,7 @@ endfunction()
- function(onnxruntime_add_include_to_target dst_target)
-     foreach(src_target ${ARGN})
-       if(TARGET ${src_target})
--        target_include_directories(${dst_target} PRIVATE $<TARGET_PROPERTY:${src_target},INTERFACE_INCLUDE_DIRECTORIES>)
--        target_compile_definitions(${dst_target} PRIVATE $<TARGET_PROPERTY:${src_target},INTERFACE_COMPILE_DEFINITIONS>)
--        target_sources(${dst_target} PRIVATE $<TARGET_PROPERTY:${src_target},INTERFACE_SOURCES>)
-+        target_link_libraries(${dst_target} PRIVATE ${src_target})
-       endif()
-     endforeach()
- endfunction()
-@@ -1721,6 +1720,7 @@ if (WIN32 AND NOT GDK_PLATFORM)
-   endif()
- endif()
- 
-+include(GNUInstallDirs) # some targets requires this...
- foreach(target_name ${ONNXRUNTIME_CMAKE_FILES})
-   include(${target_name}.cmake)
- endforeach()
-@@ -1767,20 +1767,16 @@ if (onnxruntime_ENABLE_EXTERNAL_CUSTOM_OP_SCHEMAS)
+@@ -1801,20 +1802,16 @@ if (onnxruntime_ENABLE_EXTERNAL_CUSTOM_OP_SCHEMAS)
    )
  endif()
  
@@ -73,12 +52,12 @@ index 755e20f..d668069 100644
  
    write_basic_package_version_file(
 diff --git a/cmake/onnxruntime.cmake b/cmake/onnxruntime.cmake
-index c900f4d..8d5fcd6 100644
+index e15c8a0..598a38c 100644
 --- a/cmake/onnxruntime.cmake
 +++ b/cmake/onnxruntime.cmake
-@@ -303,6 +303,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
-   # If it's an onnxruntime library, extract .o files to a separate directory for each library to avoid any clashes
-   # with filenames (e.g. utils.o)
+@@ -308,6 +308,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
+   # If it's an onnxruntime library, extract .o files from the original cmake build path to a separate directory for
+   # each library to avoid any clashes with filenames (e.g. utils.o)
    foreach(_LIB ${onnxruntime_INTERNAL_LIBRARIES} )
 +    if(NOT TARGET ${_LIB}) # if we didn't build from source. it may not a target
 +      continue()
@@ -86,7 +65,7 @@ index c900f4d..8d5fcd6 100644
      GET_TARGET_PROPERTY(_LIB_TYPE ${_LIB} TYPE)
      if(_LIB_TYPE STREQUAL "STATIC_LIBRARY")
        set(CUR_STATIC_LIB_OBJ_DIR ${STATIC_LIB_TEMP_DIR}/$<TARGET_LINKER_FILE_BASE_NAME:${_LIB}>)
-@@ -317,6 +320,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
+@@ -338,6 +341,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
  
    # for external libraries we create a symlink to the .a file
    foreach(_LIB ${onnxruntime_EXTERNAL_LIBRARIES})
@@ -97,10 +76,10 @@ index c900f4d..8d5fcd6 100644
      if(_LIB_TYPE STREQUAL "STATIC_LIBRARY")
        add_custom_command(TARGET onnxruntime POST_BUILD
 diff --git a/cmake/onnxruntime_common.cmake b/cmake/onnxruntime_common.cmake
-index 43d5fa9..c441304 100644
+index 69d8f5f..374e439 100644
 --- a/cmake/onnxruntime_common.cmake
 +++ b/cmake/onnxruntime_common.cmake
-@@ -215,7 +215,7 @@ endif()
+@@ -212,7 +212,7 @@ endif()
  
  if (NOT onnxruntime_BUILD_SHARED_LIB)
    install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/common  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core)
@@ -164,10 +143,10 @@ index 4d51325..fba1a68 100644
              LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
              RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
 diff --git a/cmake/onnxruntime_mlas.cmake b/cmake/onnxruntime_mlas.cmake
-index 17de2aa..9b284ac 100644
+index 682dcfc..107a8b6 100644
 --- a/cmake/onnxruntime_mlas.cmake
 +++ b/cmake/onnxruntime_mlas.cmake
-@@ -632,7 +632,7 @@ if (WIN32)
+@@ -651,7 +651,7 @@ if (PLATFORM_NAME STREQUAL "macabi")
  endif()
  
  if (NOT onnxruntime_BUILD_SHARED_LIB)
@@ -176,7 +155,7 @@ index 17de2aa..9b284ac 100644
              ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
              LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
              RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
-@@ -655,7 +655,7 @@ block()
+@@ -674,7 +674,7 @@ block()
  endblock()
  
  
@@ -198,43 +177,8 @@ index f15d5b8..c994fce 100644
              ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
              LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
              RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
-diff --git a/cmake/onnxruntime_providers_coreml.cmake b/cmake/onnxruntime_providers_coreml.cmake
-index aa8c355..fe6d397 100644
---- a/cmake/onnxruntime_providers_coreml.cmake
-+++ b/cmake/onnxruntime_providers_coreml.cmake
-@@ -14,7 +14,7 @@
-       "${COREML_PROTO_ROOT}/*.proto"
-     )
-     onnxruntime_add_static_library(onnxruntime_coreml_proto ${coreml_proto_srcs})
--    target_include_directories(onnxruntime_coreml_proto PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_INCLUDE_DIRECTORIES> "${CMAKE_CURRENT_BINARY_DIR}")
-+    target_include_directories(onnxruntime_coreml_proto PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_INCLUDE_DIRECTORIES> PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-     target_compile_definitions(onnxruntime_coreml_proto PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_COMPILE_DEFINITIONS>)
-     set_target_properties(onnxruntime_coreml_proto PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
-     set_target_properties(onnxruntime_coreml_proto PROPERTIES COMPILE_FLAGS "-fvisibility-inlines-hidden")
-@@ -27,7 +27,7 @@
-     )
- 
-     if (NOT onnxruntime_BUILD_SHARED_LIB)
--      install(TARGETS onnxruntime_coreml_proto
-+      install(TARGETS onnxruntime_coreml_proto EXPORT ${PROJECT_NAME}Targets
-               ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-               LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-               RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
-@@ -99,9 +99,9 @@
-   set_target_properties(onnxruntime_providers_coreml PROPERTIES LINKER_LANGUAGE CXX)
- 
-   if (NOT onnxruntime_BUILD_SHARED_LIB)
--    install(TARGETS onnxruntime_providers_coreml
-+    install(TARGETS onnxruntime_providers_coreml EXPORT ${PROJECT_NAME}Targets
-             ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
-             FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
--  endif()
-\ No newline at end of file
-+  endif()
 diff --git a/cmake/onnxruntime_providers_cpu.cmake b/cmake/onnxruntime_providers_cpu.cmake
-index b81a5c7..6f01091 100644
+index b211c02..f97b68b 100644
 --- a/cmake/onnxruntime_providers_cpu.cmake
 +++ b/cmake/onnxruntime_providers_cpu.cmake
 @@ -60,7 +60,7 @@ if(NOT onnxruntime_DISABLE_CONTRIB_OPS)
@@ -255,7 +199,7 @@ index b81a5c7..6f01091 100644
            ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
            LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
            RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
-@@ -268,9 +268,9 @@ if (NOT onnxruntime_MINIMAL_BUILD AND NOT onnxruntime_EXTENDED_MINIMAL_BUILD
+@@ -268,7 +268,7 @@ if (NOT onnxruntime_MINIMAL_BUILD AND NOT onnxruntime_EXTENDED_MINIMAL_BUILD
  endif()
  
  if (NOT onnxruntime_BUILD_SHARED_LIB)
@@ -264,59 +208,8 @@ index b81a5c7..6f01091 100644
            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
-           FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
--endif()
-\ No newline at end of file
-+endif()
-diff --git a/cmake/onnxruntime_providers_nnapi.cmake b/cmake/onnxruntime_providers_nnapi.cmake
-index 5ac25a3..cae13aa 100644
---- a/cmake/onnxruntime_providers_nnapi.cmake
-+++ b/cmake/onnxruntime_providers_nnapi.cmake
-@@ -76,9 +76,9 @@
-   endif()
- 
-   if (NOT onnxruntime_BUILD_SHARED_LIB)
--    install(TARGETS onnxruntime_providers_nnapi
-+    install(TARGETS onnxruntime_providers_nnapi EXPORT ${PROJECT_NAME}Targets
-             ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
-             FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
--  endif()
-\ No newline at end of file
-+  endif()
-diff --git a/cmake/onnxruntime_providers_openvino.cmake b/cmake/onnxruntime_providers_openvino.cmake
-index 5876b2b..cfca76b 100644
---- a/cmake/onnxruntime_providers_openvino.cmake
-+++ b/cmake/onnxruntime_providers_openvino.cmake
-@@ -42,8 +42,8 @@
-     target_compile_options(onnxruntime_providers_openvino PRIVATE "-Wno-parentheses")
-   endif()
-   add_dependencies(onnxruntime_providers_openvino onnxruntime_providers_shared ${onnxruntime_EXTERNAL_DEPENDENCIES})
--  target_include_directories(onnxruntime_providers_openvino SYSTEM PUBLIC ${ONNXRUNTIME_ROOT} ${CMAKE_CURRENT_BINARY_DIR} ${eigen_INCLUDE_DIRS} ${OpenVINO_INCLUDE_DIR} ${OPENVINO_INCLUDE_DIR_LIST} ${PYTHON_INCLUDE_DIRS} $ENV{OPENCL_INCS} $ENV{OPENCL_INCS}/../../cl_headers/)
--  target_link_libraries(onnxruntime_providers_openvino ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 ${OPENVINO_LIB_LIST} ${ABSEIL_LIBS})
-+  target_include_directories(onnxruntime_providers_openvino SYSTEM PRIVATE ${ONNXRUNTIME_ROOT} ${CMAKE_CURRENT_BINARY_DIR} ${eigen_INCLUDE_DIRS} ${OpenVINO_INCLUDE_DIR} ${OPENVINO_INCLUDE_DIR_LIST} ${PYTHON_INCLUDE_DIRS})
-+  target_link_libraries(onnxruntime_providers_openvino PUBLIC ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 ${OPENVINO_LIB_LIST} ${ABSEIL_LIBS})
- 
-   target_compile_definitions(onnxruntime_providers_openvino PRIVATE VER_MAJOR=${VERSION_MAJOR_PART})
-   target_compile_definitions(onnxruntime_providers_openvino PRIVATE VER_MINOR=${VERSION_MINOR_PART})
-@@ -72,12 +72,12 @@
-   endif()
- 
-   if (CMAKE_OPENVINO_LIBRARY_INSTALL_DIR)
--    install(TARGETS onnxruntime_providers_openvino
-+    install(TARGETS onnxruntime_providers_openvino EXPORT ${PROJECT_NAME}Targets
-             ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             LIBRARY  DESTINATION ${CMAKE_OPENVINO_LIBRARY_INSTALL_DIR}
-             RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
-   else()
--    install(TARGETS onnxruntime_providers_openvino
-+    install(TARGETS onnxruntime_providers_openvino EXPORT ${PROJECT_NAME}Targets
-             ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 diff --git a/cmake/onnxruntime_session.cmake b/cmake/onnxruntime_session.cmake
-index 79bee3b..c49653b 100644
+index 79bee3b..9f5c400 100644
 --- a/cmake/onnxruntime_session.cmake
 +++ b/cmake/onnxruntime_session.cmake
 @@ -63,7 +63,7 @@ endif()

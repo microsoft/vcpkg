@@ -6393,7 +6393,7 @@
       "port-version": 0
     },
     "onnxruntime": {
-      "baseline": "1.17.3",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "onnxruntime-gpu": {

@@ -1,20 +1,33 @@
 {
   "name": "onnxruntime",
-  "version": "1.17.3",
+  "version-semver": "1.18.0",
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://onnxruntime.ai/",
   "license": "MIT",
+  "supports": "windows | linux | osx",
   "dependencies": [
-    "boost-config",
-    "boost-mp11",
+    "abseil",
+    {
+      "name": "boost-config",
+      "version>=": "1.82.0"
+    },
+    {
+      "name": "boost-mp11",
+      "version>=": "1.82.0"
+    },
     "cpuinfo",
     "cxxopts",
     "date",
+    "dlpack",
     "eigen3",
-    "flatbuffers",
     {
       "name": "flatbuffers",
-      "host": true
+      "host": true,
+      "version>=": "23.5.26"
+    },
+    {
+      "name": "flatbuffers",
+      "version>=": "23.5.26"
     },
     "ms-gsl",
     "nlohmann-json",
@@ -22,12 +35,24 @@
       "name": "nsync",
       "platform": "!windows"
     },
-    "onnx",
+    {
+      "name": "nsync",
+      "platform": "!windows",
+      "version>=": "1.26.0"
+    },
+    {
+      "name": "onnx",
+      "version>=": "1.16.0"
+    },
     "optional-lite",
-    "protobuf",
     {
       "name": "protobuf",
-      "host": true
+      "version>=": "3.21.12"
+    },
+    {
+      "name": "protobuf",
+      "host": true,
+      "version>=": "3.21.12"
     },
     "re2",
     "safeint",
@@ -39,37 +64,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "wil",
-    "zlib"
-  ],
-  "features": {
-    "coreml": {
-      "description": "Build with CoreML support",
-      "supports": "osx | ios"
-    },
-    "openvino": {
-      "description": "Build with OpenVINO support",
-      "supports": "!(osx | ios | android | emscripten) & !static",
-      "dependencies": [
-        {
-          "name": "openvino",
-          "default-features": false,
-          "features": [
-            "cpu",
-            "gpu",
-            "onnx"
-          ]
-        }
-      ]
-    },
-    "python": {
-      "description": "Enable python bindings",
-      "dependencies": [
-        {
-          "name": "vcpkg-get-python-packages",
-          "host": true
-        }
-      ]
-    }
-  }
+    "wil"
+  ]
 }

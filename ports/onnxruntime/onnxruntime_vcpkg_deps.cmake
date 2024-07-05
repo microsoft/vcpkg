@@ -2,7 +2,30 @@ message(STATUS "Using Dependencies from vcpkg...")
 
 # ABSL should be included before protobuf because protobuf may use absl
 find_package(absl CONFIG REQUIRED)
-list(APPEND onnxruntime_EXTERNAL_LIBRARIES absl::base)
+list(APPEND ABSEIL_LIBS
+  absl::base
+  absl::city
+  absl::core_headers
+  absl::fixed_array
+  absl::flags
+  absl::flat_hash_map
+  absl::flat_hash_set
+  absl::hash
+  absl::inlined_vector
+  absl::low_level_hash
+  absl::node_hash_map
+  absl::node_hash_set
+  absl::optional
+  absl::raw_hash_set
+  absl::raw_logging_internal
+  absl::span
+  absl::str_format
+  absl::strings
+  absl::synchronization
+  absl::throw_delegate
+  absl::time
+)
+list(APPEND onnxruntime_EXTERNAL_LIBRARIES ${ABSEIL_LIBS})
 
 find_package(re2 CONFIG REQUIRED) # re2::re2
 list(APPEND onnxruntime_EXTERNAL_LIBRARIES re2::re2)
@@ -53,20 +76,30 @@ if (onnxruntime_ENABLE_CPUINFO)
 endif()
 
 if (NOT WIN32)
-  find_package(unofficial-nsync CONFIG REQUIRED) # unofficial::nsync::nsync_cpp
-  add_library(nsync::nsync_cpp ALIAS unofficial::nsync::nsync_cpp)
+  find_library(NSYNC_CPP_LIBRARY NAMES nsync_cpp REQUIRED)
+  add_library(nsync_cpp INTERFACE IMPORTED GLOBAL)
+  set_target_properties(nsync_cpp PROPERTIES INTERFACE_LINK_LIBRARIES "${NSYNC_CPP_LIBRARY}")
+  add_library(nsync::nsync_cpp ALIAS nsync_cpp)
   list(APPEND onnxruntime_EXTERNAL_LIBRARIES nsync::nsync_cpp)
 endif()
 
 find_package(Microsoft.GSL CONFIG REQUIRED)
 list(APPEND onnxruntime_EXTERNAL_LIBRARIES Microsoft.GSL::GSL)
+set(GSL_TARGET Microsoft.GSL::GSL) # see onnxruntime_mlas
 
 # ONNX
 find_package(ONNX CONFIG REQUIRED)
+if(TARGET ONNX::onnx AND NOT TARGET onnx)
+  add_library(onnx ALIAS ONNX::onnx)
+endif()
+if(TARGET ONNX::onnx_proto AND NOT TARGET onnx_proto)
+  add_library(onnx_proto ALIAS ONNX::onnx_proto)
+endif()
 list(APPEND onnxruntime_EXTERNAL_LIBRARIES onnx onnx_proto)
 
 find_package(Eigen3 CONFIG REQUIRED)
 list(APPEND onnxruntime_EXTERNAL_LIBRARIES Eigen3::Eigen)
+get_property(eigen_INCLUDE_DIRS TARGET Eigen3::Eigen PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
 
 find_package(wil CONFIG REQUIRED)
 list(APPEND onnxruntime_EXTERNAL_LIBRARIES WIL::WIL)
