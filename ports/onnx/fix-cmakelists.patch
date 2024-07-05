@@ -1,10 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4dd56b6..2ff3e29 100644
+index 6d7ca84..b72646f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -65,6 +65,27 @@ endif()
+@@ -129,6 +129,7 @@ if(ONNX_BUILD_TESTS)
+   endif()
+ endif()
  
- include(GNUInstallDirs)
++find_package(protobuf CONFIG REQUIRED)
+ if((ONNX_USE_LITE_PROTO AND TARGET protobuf::libprotobuf-lite) OR ((NOT ONNX_USE_LITE_PROTO) AND TARGET protobuf::libprotobuf))
+   # Sometimes we need to use protoc compiled for host architecture while linking
+   # libprotobuf against target architecture. See https://github.com/caffe2/caffe
+@@ -711,6 +712,27 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/onnx
+         FILES_MATCHING
+         PATTERN "*.h")
  
 +# install protobuf files
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-data.proto
@@ -27,41 +35,22 @@ index 4dd56b6..2ff3e29 100644
 +  )
 +endif()
 +
- set(ONNX_ROOT ${PROJECT_SOURCE_DIR})
+ configure_file(
+   ${PROJECT_SOURCE_DIR}/cmake/ONNXConfigVersion.cmake.in
+   ${PROJECT_BINARY_DIR}/ONNXConfigVersion.cmake
+diff --git a/cmake/ONNXConfig.cmake.in b/cmake/ONNXConfig.cmake.in
+index d588f8a..dbd4398 100644
+--- a/cmake/ONNXConfig.cmake.in
++++ b/cmake/ONNXConfig.cmake.in
+@@ -6,9 +6,8 @@
+ # library version information
+ set(ONNX_VERSION "@ONNX_VERSION@")
  
- # Read ONNX version
-@@ -116,7 +137,8 @@ endif()
- # find_package Python has replaced PythonInterp and PythonLibs since cmake 3.12
- # Use the following command in the future; now this is only compatible with the latest pybind11
- # find_package(Python ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
--find_package(PythonInterp ${PY_VERSION} REQUIRED)
-+find_package(Python3 ${PY_VERSION} COMPONENTS Interpreter REQUIRED)
-+set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
- if(BUILD_ONNX_PYTHON)
-   find_package(PythonLibs ${PY_VERSION})
- endif()
-@@ -434,6 +456,7 @@ target_link_libraries(onnx PUBLIC onnx_proto)
- add_onnx_global_defines(onnx)
+-list(APPEND CMAKE_PREFIX_PATH "@PROTOBUF_DIR@")
+-set(Protobuf_INCLUDE_DIR "@PROTOBUF_INCLUDE_DIR@")
+-find_package(Protobuf REQUIRED)
++include(CMakeFindDependencyMacro)
++find_dependency(protobuf CONFIG)
  
- if(BUILD_ONNX_PYTHON)
-+  find_package(Python3 ${PY_VERSION} COMPONENTS Development REQUIRED)
-   if("${PY_EXT_SUFFIX}" STREQUAL "")
-     if(MSVC)
-       set(PY_EXT_SUFFIX ".pyd")
-@@ -452,10 +475,14 @@ if(BUILD_ONNX_PYTHON)
-   target_include_directories(onnx_cpp2py_export PRIVATE
-                              $<BUILD_INTERFACE:${ONNX_ROOT}>
-                              $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
--                             $<INSTALL_INTERFACE:include>)
-+                             ${Python3_INCLUDE_DIRS})
-+  target_link_directories(onnx_cpp2py_export PRIVATE
-+                          ${Python3_LIBRARY_DIRS})
-+  target_link_libraries(onnx_cpp2py_export PRIVATE
-+                        ${Python3_LIBRARIES})
- 
-   # pybind11 is a header only lib
--  find_package(pybind11 2.2 CONFIG)
-+  find_package(pybind11 2.2 CONFIG REQUIRED)
-   if(NOT pybind11_FOUND)
-     if(EXISTS "${ONNX_ROOT}/third_party/pybind11/include/pybind11/pybind11.h")
-       add_subdirectory("${ONNX_ROOT}/third_party/pybind11")
+ # import targets
+ include ("${CMAKE_CURRENT_LIST_DIR}/ONNXTargets.cmake")
