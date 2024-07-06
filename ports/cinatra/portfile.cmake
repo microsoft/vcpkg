@@ -8,8 +8,6 @@ vcpkg_from_github(
 
 set(VCPKG_BUILD_TYPE "release") # header-only port
 
-vcpkg_cmake_install()
-
 # Copy the entire include directory to ${CURRENT_PACKAGES_DIR}/include/cinatra
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra)
 file(COPY ${SOURCE_PATH}/include/cinatra.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra.hpp)
