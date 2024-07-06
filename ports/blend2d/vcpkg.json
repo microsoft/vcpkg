@@ -1,6 +1,6 @@
 {
   "name": "blend2d",
-  "version-date": "2023-06-16",
+  "version-date": "2024-06-28",
   "port-version": 1,
   "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
