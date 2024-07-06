@@ -6,4 +6,4 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 set(ENV{MSMPI_INC} "${_IMPORT_PREFIX}/include")
 unset(_IMPORT_PREFIX)
 
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})

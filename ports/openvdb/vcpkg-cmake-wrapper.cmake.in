@@ -7,6 +7,6 @@ list(REMOVE_ITEM ARGS "MODULE")
 
 set(OPENVDB_USE_STATIC_LIBS @OPENVDB_STATIC@)
 
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 set(CMAKE_MODULE_PATH ${OPENVDB_PREV_MODULE_PATH})

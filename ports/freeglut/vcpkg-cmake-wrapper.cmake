@@ -1,4 +1,4 @@
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if(GLUT_FOUND AND UNIX AND NOT ANDROID)
     cmake_policy(PUSH)
     cmake_policy(SET CMP0012 NEW)

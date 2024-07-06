@@ -5,7 +5,7 @@ find_library(LibRaw_r_LIBRARY_DEBUG NAMES raw_rd raw_r PATHS "${CMAKE_CURRENT_LI
 
 set(LIBRAW_PREV_MODULE_PATH "${CMAKE_MODULE_PATH}")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 set(CMAKE_MODULE_PATH ${LIBRAW_PREV_MODULE_PATH})
 
 if(NOT LibRaw_r_LIBRARIES STREQUAL "")

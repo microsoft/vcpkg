@@ -1,5 +1,5 @@
 include(SelectLibraryConfigurations)
-z_vcpkg_underlying_find_package(GLEW CONFIG)
+vcpkg_underlying_find_package(GLEW CONFIG)
 if(GLEW_FOUND AND TARGET GLEW::GLEW AND NOT DEFINED GLEW_INCLUDE_DIRS)
     get_target_property(GLEW_INCLUDE_DIRS GLEW::GLEW INTERFACE_INCLUDE_DIRECTORIES)
     set(GLEW_INCLUDE_DIR ${GLEW_INCLUDE_DIRS})

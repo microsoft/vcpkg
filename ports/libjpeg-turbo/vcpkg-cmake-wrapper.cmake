@@ -7,7 +7,7 @@ find_library(JPEG_LIBRARY_DEBUG   NAMES jpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VC
 if(CMAKE_VERSION VERSION_LESS 3.12 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(JPEG_LIBRARY "${JPEG_LIBRARY_DEBUG}" CACHE FILEPATH "")
 endif()
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if(JPEG_FOUND AND NOT TARGET JPEG::JPEG)
     # Backfill JPEG::JPEG to versions of cmake before 3.12
     add_library(JPEG::JPEG UNKNOWN IMPORTED)

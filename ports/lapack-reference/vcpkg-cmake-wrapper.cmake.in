@@ -16,7 +16,7 @@ endif()
 
 set(BLA_VENDOR @BLA_VENDOR@)
 set(BLA_STATIC @BLA_STATIC@)
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 unset(BLA_VENDOR)
 unset(BLA_STATIC)
 

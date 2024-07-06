@@ -7,7 +7,7 @@ cmake_policy(SET CMP0057 NEW)
 # stomping on FindPython's default functionality.
 list(REMOVE_ITEM CMAKE_PROGRAM_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3")
 if(@PythonFinder_NO_OVERRIDE@)
-    z_vcpkg_underlying_find_package(${ARGS})
+    vcpkg_underlying_find_package(${ARGS})
     return()
 endif()
 
@@ -69,7 +69,7 @@ if(_PythonFinder_WantLibs)
     set(_@PythonFinder_PREFIX@_LIBRARY_RELEASE "${_@PythonFinder_PREFIX@_LIBRARY_RELEASE}")
     set(_@PythonFinder_PREFIX@_LIBRARY_DEBUG "${_@PythonFinder_PREFIX@_LIBRARY_DEBUG}")
 
-    z_vcpkg_underlying_find_package(${ARGS})
+    vcpkg_underlying_find_package(${ARGS})
 
     if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL static)
         # Python for Windows embeds the zlib module into the core, so we have to link against it.
@@ -122,7 +122,7 @@ if(_PythonFinder_WantLibs)
         endif()
     endif()
 else()
-    z_vcpkg_underlying_find_package(${ARGS})
+    vcpkg_underlying_find_package(${ARGS})
 endif()
 
 if(TARGET @PythonFinder_PREFIX@::Python)

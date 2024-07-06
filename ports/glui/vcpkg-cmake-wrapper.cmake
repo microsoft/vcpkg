@@ -1,4 +1,4 @@
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(TARGET glui::glui AND NOT TARGET glui::glui_static)
     add_library(glui::glui_static INTERFACE IMPORTED)

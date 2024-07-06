@@ -22,7 +22,7 @@ if(TARGET FFmpeg::swresample)
   set(vcpkg_no_swresample_target OFF)
 endif()
 
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(WIN32)
   set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)

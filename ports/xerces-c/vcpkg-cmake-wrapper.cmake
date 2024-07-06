@@ -1,4 +1,4 @@
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if (APPLE)
    if (TARGET XercesC::XercesC)

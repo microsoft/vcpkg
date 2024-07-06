@@ -1,4 +1,4 @@
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(TARGET flecs::flecs AND NOT TARGET flecs::flecs_static)
     add_library(flecs::flecs_static INTERFACE IMPORTED)

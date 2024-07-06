@@ -1,4 +1,4 @@
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if(NOT "@VCPKG_TARGET_IS_WINDOWS@")

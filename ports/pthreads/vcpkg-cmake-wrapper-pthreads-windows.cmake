@@ -1,4 +1,4 @@
-z_vcpkg_underlying_find_package(PThreads4W)
+vcpkg_underlying_find_package(PThreads4W)
 set(PThreads_windows_INCLUDE_DIR "${PThreads4W_INCLUDE_DIR}")
 set(PThreads_windows_LIBRARY "${PThreads4W_LIBRARY}")
 set(PThreads_windows_LIBRARIES "${PThreads4W_LIBRARY}")

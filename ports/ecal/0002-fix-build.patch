@@ -19,7 +19,7 @@ index 351fe6c3f..64d5bb384 100644
 +if(NOT DISABLE_FIND_PACKAGE_OVERLOAD)
  macro(find_package)
    if(NOT "${ARGV0}" IN_LIST as_subproject)
-     z_vcpkg_underlying_find_package(${ARGV})
+     vcpkg_underlying_find_package(${ARGV})
    endif()
  endmacro()
 +endif()

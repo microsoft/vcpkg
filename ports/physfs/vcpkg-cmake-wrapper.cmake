@@ -3,4 +3,4 @@ find_library(PHYSFS_LIBRARY_DEBUG   NAMES physfs physfs-static NAMES_PER_DIR PAT
 include(SelectLibraryConfigurations)
 select_library_configurations(PHYSFS)
 unset(PHYSFS_FOUND)
-z_vcpkg_underlying_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
