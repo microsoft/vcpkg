@@ -4714,7 +4714,7 @@
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
-      "port-version": 12
+      "port-version": 13
     },
     "libmorton": {
       "baseline": "0.2.12",
