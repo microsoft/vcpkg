@@ -12,11 +12,6 @@ set(VCPKG_BUILD_TYPE "release") # header-only port
 file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra)
 file(COPY ${SOURCE_PATH}/include/cinatra.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/cinatra.hpp)
 
-vcpkg_copy_tools(
-    TOOL_NAMES cinatra_press_tool
-    SEARCH_DIRS "${CURRENT_PACKAGES_DIR}/include/cinatra"
-)
-
 # Copy executables to the tools directory
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe")
     file(COPY "${CURRENT_PACKAGES_DIR}/include/cinatra/cinatra_press_tool.exe"
