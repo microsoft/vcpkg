@@ -23,7 +23,7 @@ if(NOT "CONFIG" IN_LIST ARGS AND NOT "NO_MODULE" IN_LIST ARGS AND NOT CMAKE_DISA
     set(LIBLZMA_HAS_LZMA_PRESET 1 CACHE INTERNAL "")
 endif()
 
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(z_vcpkg_liblzma_fixup_needed)
     include(SelectLibraryConfigurations)

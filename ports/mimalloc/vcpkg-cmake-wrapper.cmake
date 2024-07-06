@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(CMAKE_CURRENT_LIST_DIR STREQUAL "${MIMALLOC_CMAKE_DIR}/${MIMALLOC_VERSION_DIR}")
     set(MIMALLOC_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")

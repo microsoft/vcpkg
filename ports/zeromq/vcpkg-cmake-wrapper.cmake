@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(TARGET libzmq AND NOT TARGET libzmq-static)
     add_library(libzmq-static INTERFACE IMPORTED)

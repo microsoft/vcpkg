@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(TARGET xeus AND NOT TARGET xeus_static)
     add_library(xeus_static INTERFACE IMPORTED)

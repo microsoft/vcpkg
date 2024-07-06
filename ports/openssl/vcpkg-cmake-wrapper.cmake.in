@@ -34,7 +34,7 @@ else()
     find_library(OPENSSL_SSL_LIBRARY NAMES ssl)
 endif()
 
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 unset(OPENSSL_ROOT_DIR)
 if(DEFINED OPENSSL_ROOT_DIR_BAK)

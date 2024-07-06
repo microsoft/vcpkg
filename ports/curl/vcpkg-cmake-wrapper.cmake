@@ -8,7 +8,7 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.14 AND COMPONENTS IN_LIST ARGS)
 endif()
 
 list(REMOVE_ITEM ARGS "NO_MODULE" "CONFIG" "MODULE")
-_find_package(${ARGS} CONFIG)
+vcpkg_underlying_find_package(${ARGS} CONFIG)
 
 if(CURL_FOUND)
     include("${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake")

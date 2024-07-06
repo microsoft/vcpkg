@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if(GSL_FOUND AND TARGET GSL::gsl)
     set_property( TARGET GSL::gslcblas APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
     set_property( TARGET GSL::gsl APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )

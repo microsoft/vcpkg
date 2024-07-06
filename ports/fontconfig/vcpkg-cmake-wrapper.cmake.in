@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is installed it should be found!
     if(NOT TARGET Fontconfig::Fontconfig)
         # Simplify wrapper for case of vendored FindFontconfig.cmake

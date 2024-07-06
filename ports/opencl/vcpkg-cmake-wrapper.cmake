@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND (NOT CMAKE_SYSTEM_NAME MATCHES "Darwin"))
   find_package(Threads REQUIRED)
   set(OpenCL_Extra_Libs ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})

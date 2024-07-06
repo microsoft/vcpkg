@@ -9,7 +9,7 @@ if("QUIET" IN_LIST ARGS)
     list(APPEND z_vcpkg_libarchive_args "QUIET")
 endif()
 
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(LibArchive_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     set(z_vcpkg_libarchive_libs "")

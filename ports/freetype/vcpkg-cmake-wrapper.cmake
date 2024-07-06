@@ -3,7 +3,7 @@ cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 
 list(REMOVE_ITEM ARGS "NO_MODULE" "CONFIG" "MODULE")
-_find_package(${ARGS} CONFIG)
+vcpkg_underlying_find_package(${ARGS} CONFIG)
 
 if(Freetype_FOUND)
     include("${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake")

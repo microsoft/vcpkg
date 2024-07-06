@@ -1,6 +1,6 @@
 include(SelectLibraryConfigurations)
 
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if(Iconv_FOUND AND NOT Iconv_IS_BUILT_IN)
     find_path(CHARSET_INCLUDE_DIR NAMES "libcharset.h" HINTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
     find_library(CHARSET_LIBRARY_DEBUG NAMES charsetd libcharsetd charset libcharset NAMES_PER_DIR PATH_SUFFIXES lib HINTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")

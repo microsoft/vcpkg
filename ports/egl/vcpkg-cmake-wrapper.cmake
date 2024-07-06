@@ -19,4 +19,4 @@ elseif(WIN32)
     endif()
 endif()
 
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})

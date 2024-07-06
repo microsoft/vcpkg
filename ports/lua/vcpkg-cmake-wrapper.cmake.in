@@ -5,10 +5,10 @@ foreach(ARG IN_LISTS ${ARGS})
     endif()
 endforeach()
 
-_find_package(unofficial-lua CONFIG ${REQUIRES})
+vcpkg_underlying_find_package(unofficial-lua CONFIG ${REQUIRES})
 
 if (@COMPILE_AS_CPP@)
-    _find_package(unofficial-lua-cpp CONFIG ${REQUIRES})
+    vcpkg_underlying_find_package(unofficial-lua-cpp CONFIG ${REQUIRES})
 endif()
 
 get_filename_component(LUA_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}" PATH)

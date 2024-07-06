@@ -5,7 +5,7 @@ PATHS
   "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib"
 NO_DEFAULT_PATH
 )
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 if(PostgreSQL_FOUND AND NOT "@VCPKG_TARGET_IS_WINDOWS@")
     find_library(PostgreSQL_DL_LIBRARY NAMES dl)
     if(PostgreSQL_DL_LIBRARY)

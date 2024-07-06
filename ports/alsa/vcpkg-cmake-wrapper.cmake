@@ -27,7 +27,7 @@ if(NOT ALSA_INCLUDE_DIR OR NOT ALSA_LIBRARY)
   message(FATAL_ERROR "Broken installation of the alsa vcpkg port")
 endif()
 
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(TARGET ALSA::ALSA)
   if(ALSA_LIBRARY_DEBUG)

@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+vcpkg_underlying_find_package(${ARGS})
 
 if(NOT TARGET SLikeNet AND TARGET SLikeNetDLL)
 add_library(SLikeNet INTERFACE IMPORTED)
