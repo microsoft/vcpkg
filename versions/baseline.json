@@ -681,8 +681,8 @@
       "port-version": 1
     },
     "blend2d": {
-      "baseline": "2023-06-16",
-      "port-version": 1
+      "baseline": "2024-06-28",
+      "port-version": 0
     },
     "blingfire": {
       "baseline": "0.1.8.1",
