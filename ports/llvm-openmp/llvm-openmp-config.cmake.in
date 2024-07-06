@@ -8,5 +8,6 @@ set_and_check(unofficial-llvm-openmp_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../.
 set(unofficial-llvm-openmp_LIBRARIES omp)
 
 if(WIN32)
-    set_target_properties(omp PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_LIST_DIR}/../../lib/libomp.lib")
+    set_and_check(unofficial-llvm-openmp_IMPLIB "${CMAKE_CURRENT_LIST_DIR}/../../lib/unofficial-llvm-openmp/libomp.lib")
+    set_target_properties(omp PROPERTIES IMPORTED_IMPLIB "${unofficial-llvm-openmp_IMPLIB}")
 endif()
