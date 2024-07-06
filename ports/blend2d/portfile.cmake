@@ -19,8 +19,8 @@ if(NOT BLEND2D_NO_JIT)
   vcpkg_from_github(
     OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
     REPO asmjit/asmjit
-    REF 3577608cab0bc509f856ebf6e41b2f9d9f71acc4 # commited on 2023-04-28
-    SHA512 36557af5c82ccc8e5ef2d4effe22b75e22c2bf1f4504daae3ff813e907449be6e7b25678af071cb9dede7c6e02dc5c8ad2fc2a3da011aa660eb7f5c75ab23042
+    REF ffac9f36fb045dd2c6a81e1b5b9ccc115e5ef924 # commited on 2024-06-28
+    SHA512 3a594bdea7095f66356f8c21e03a4db2535811988726c25a29e66721cb703dc9dceddeb5f8a6c7daeafba3fbf6dd07e71375446d8dfb182f57c14bce28192774
     HEAD_REF master
   )
 
