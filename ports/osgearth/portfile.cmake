@@ -11,6 +11,7 @@ vcpkg_from_github(
 		remove-lerc-gltf.patch
 		export-plugins.patch
         protobuf.patch
+        blend2d.patch
 )
 
 if("tools" IN_LIST FEATURES)
