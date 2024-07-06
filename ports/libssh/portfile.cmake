@@ -7,8 +7,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${distfile}"
     PATCHES
         0001-export-pkgconfig-file.patch
-        0002-mingw_for_Android.patch
-        0003-create_symlink_unix_only.patch
+        0003-no-source-write.patch
         0004-file-permissions-constants.patch
 )
 
@@ -35,27 +34,22 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h"
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h"
         "#ifdef LIBSSH_STATIC"
         "#if 1"
     )
 endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh)
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" cmake_config)
-if(VCPKG_TARGET_IS_WINDOWS)
-    string(REPLACE ".dll" ".lib" cmake_config "${cmake_config}")
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
-"include(CMakeFindDependencyMacro)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" "
+include(CMakeFindDependencyMacro)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_dependency(Threads)
-${cmake_config}
-")
+${cmake_config}"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
