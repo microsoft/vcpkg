@@ -14,18 +14,14 @@ vcpkg_extract_source_archive(SOURCE_PATH
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        pcap    WITH_PCAP
+        server  WITH_SERVER
         zlib    WITH_ZLIB
 )
-
-if (VCPKG_TARGET_IS_ANDROID)
-    set(EXTRA_ARGS "-DWITH_SERVER=FALSE"
-                   "-DWITH_PCAP=FALSE")
-endif ()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${EXTRA_ARGS}
         ${FEATURE_OPTIONS}
         -DWITH_EXAMPLES=OFF
         -DUNIT_TESTING=OFF
