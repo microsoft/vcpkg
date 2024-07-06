@@ -4798,7 +4798,7 @@
     },
     "libopenmpt": {
       "baseline": "0.7.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libopensp": {
       "baseline": "1.5.2",
