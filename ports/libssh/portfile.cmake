@@ -23,13 +23,12 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenSSL=ON
         -DWITH_EXAMPLES=OFF
-        -DUNIT_TESTING=OFF
-        -DCLIENT_TESTING=OFF
-        -DSERVER_TESTING=OFF
-        -DWITH_NACL=OFF
         -DWITH_GSSAPI=OFF
-        -DWITH_SYMBOL_VERSIONING=OFF)
+        -DWITH_NACL=OFF
+        -DWITH_SYMBOL_VERSIONING=OFF
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
