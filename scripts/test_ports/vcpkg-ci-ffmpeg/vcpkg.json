@@ -60,6 +60,7 @@
       "default-features": false,
       "features": [
         "ass",
+        "ffmpeg",
         "fontconfig",
         "fribidi",
         "modplug",
