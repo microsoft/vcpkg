@@ -1,0 +1,12 @@
+diff --git a/absl/container/CMakeLists.txt b/absl/container/CMakeLists.txt
+index 449a2cad17e..ee9ca9c3c4a 100644
+--- a/absl/container/CMakeLists.txt
++++ b/absl/container/CMakeLists.txt
+@@ -213,6 +213,7 @@ absl_cc_library(
+   DEPS
+     absl::config
+     GTest::gmock
++  TESTONLY
+ )
+ 
+ absl_cc_test(

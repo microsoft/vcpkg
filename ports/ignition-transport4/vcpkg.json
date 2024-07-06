@@ -1,7 +1,7 @@
 {
   "name": "ignition-transport4",
   "version": "4.0.0",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Transport middleware for robotics",
   "license": null,
   "dependencies": [

@@ -1,7 +1,7 @@
 {
   "name": "hash-library",
   "version": "8",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Portable C++ hashing library",
   "homepage": "https://create.stephan-brumme.com/hash-library/",
   "license": "Zlib",

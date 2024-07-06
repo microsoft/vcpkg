@@ -1,23 +1,30 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO mirror/x264
-    REF eaa68fad9e5d201d42fde51665f2d137ae96baf0 # 0.164.3107 in pc file, to be updated below
-    SHA512 9181b222e7f8bbde4331141ff399e1ef20d3e2e7a8f939b373fbe08df6f3caa99b992afb0e559cc19f78c96f0105b88b2eb4e4b935484e25b2c15da7903d179b
-    HEAD_REF stable
-    PATCHES
-        uwp-cflags.patch
-        parallel-install.patch
-        allow-clang-cl.patch
-        configure-as.patch # Ignore ':' from `vcpkg_configure_make`
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/configure" [[/bin/bash]] [[/usr/bin/env bash]])
+# The latest ref in branch stable
+set(ref 31e19f92f00c7003fa115047ce50978bc98c3a0d)
 
 # Note on x264 versioning:
 # The pc file exports "0.164.<N>" where is the number of commits.
-# This must be fixed here because vcpkg uses a GH tarball instead of cloning the source.
-# (The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.)
-vcpkg_replace_string("${SOURCE_PATH}/version.sh" [[ver="x"]] [[ver="3095"]])
+# The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.
+# With a git clone, this can be determined by running `versions.sh`.
+# With vcpkg_from_gitlab, we modify `versions.sh` accordingly.
+# For --editable mode, use configured patch instead of vcpkg_replace_string.
+string(REGEX MATCH "^......." short_ref "${ref}")
+string(REGEX MATCH "[0-9]+\$" revision "${VERSION}")
+configure_file("${CURRENT_PORT_DIR}/version.diff.in" "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff" @ONLY)
+
+vcpkg_from_gitlab(
+    GITLAB_URL https://code.videolan.org/
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO videolan/x264
+    REF "${ref}"
+    SHA512 707ff486677a1b5502d6d8faa588e7a03b0dee45491c5cba89341be4be23d3f2e48272c3b11d54cfc7be1b8bf4a3dfc3c3bb6d9643a6b5a2ed77539c85ecf294
+    HEAD_REF master
+    PATCHES
+        "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff"
+        uwp-cflags.patch
+        parallel-install.patch
+        allow-clang-cl.patch
+        configure.patch
+)
 
 # Ensure that 'ENV{PATH}' leads to tool 'name' exactly at 'filepath'.
 function(ensure_tool_in_path name filepath)
@@ -47,9 +54,6 @@ transform_path_no_space(VCPKG_DETECTED_CMAKE_C_COMPILER)
 set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 
 vcpkg_list(SET OPTIONS)
-if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
-    vcpkg_list(APPEND OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
-endif()
 
 vcpkg_list(SET EXTRA_ARGS)
 set(nasm_archs x86 x64)
@@ -89,10 +93,6 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND OPTIONS --enable-pic)
-endif()
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_ADDITIONAL_PATHS
@@ -100,6 +100,7 @@ vcpkg_configure_make(
     ${EXTRA_ARGS}
     OPTIONS
         ${OPTIONS}
+        --enable-pic
         --disable-lavf
         --disable-swscale
         --disable-avs
@@ -137,7 +138,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT 
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "#ifdef X264_API_IMPORTS" "#if 1")
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1" IGNORE_UNCHANGED)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"

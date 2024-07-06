@@ -1,6 +1,7 @@
 {
   "name": "ed25519",
   "version-date": "2017-02-10",
+  "port-version": 1,
   "description": "Portable C implementation of Ed25519, a high-speed high-security public-key signature system.",
   "homepage": "https://github.com/orlp/ed25519",
   "license": "Zlib",

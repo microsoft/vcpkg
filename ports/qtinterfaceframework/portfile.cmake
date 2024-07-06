@@ -47,4 +47,4 @@ if(NOT VCPKG_CROSSCOMPILING)
     endif()
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Qt6/QtInterfaceFramework/${VERSION}/QtInterfaceFramework/private/qifqueryparser_flex_p.h" "${CURRENT_BUILDTREES_DIR}" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Qt6/QtInterfaceFramework/${VERSION}/QtInterfaceFramework/private/qifqueryparser_flex_p.h" "${CURRENT_BUILDTREES_DIR}" "" IGNORE_UNCHANGED)

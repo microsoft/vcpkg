@@ -189,13 +189,13 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
 
     set(build "[build_machine]\n") # Machine the build is performed on
     string(APPEND build "endian = 'little'\n")
-    if(WIN32)
+    if(CMAKE_HOST_WIN32)
         string(APPEND build "system = 'windows'\n")
-    elseif(DARWIN)
+    elseif(CMAKE_HOST_APPLE)
         string(APPEND build "system = 'darwin'\n")
-    elseif(CYGWIN)
+    elseif(VCPKG_HOST_IS_CYGWIN)
         string(APPEND build "system = 'cygwin'\n")
-    elseif(UNIX)
+    elseif(CMAKE_HOST_UNIX)
         string(APPEND build "system = 'linux'\n")
     else()
         set(build_unknown TRUE)
@@ -253,7 +253,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
        OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP
-       OR (VCPKG_TARGET_IS_MINGW AND NOT WIN32))
+       OR (VCPKG_TARGET_IS_MINGW AND NOT CMAKE_HOST_WIN32))
         set(${is_cross} TRUE PARENT_SCOPE)
     endif()
 endfunction()

@@ -414,6 +414,7 @@ if (NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv3/OpenCVModules-debug.cmake"
       "\${_IMPORT_PREFIX}/sdk"
       "\${_IMPORT_PREFIX}/debug/sdk"
+      IGNORE_UNCHANGED
   )
 endif()
 
@@ -530,10 +531,10 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" "\${prefix}")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" "\${prefix}" IGNORE_UNCHANGED)
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/" "\${prefix}")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/" "\${prefix}" IGNORE_UNCHANGED)
 endif()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

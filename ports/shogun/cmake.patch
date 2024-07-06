@@ -1,21 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c48bed..6f97c8b 100644
+index cb06e0cd3..e207fd5ef 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -60,8 +60,8 @@ SET(SYSTEM_C_FLAGS "${CMAKE_C_FLAGS}")
+@@ -113,8 +113,6 @@ SET(SYSTEM_C_FLAGS "${CMAKE_C_FLAGS}")
  SET(SYSTEM_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
  STRING(TOUPPER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_UC)
  IF(NOT ("${BUILD_TYPE_UC}" STREQUAL "DISTRIBUTION"))
 -	SET(CMAKE_C_FLAGS "")
 -	SET(CMAKE_CXX_FLAGS "")
-+#	SET(CMAKE_C_FLAGS "")
-+#	SET(CMAKE_CXX_FLAGS "")
  ENDIF(NOT ("${BUILD_TYPE_UC}" STREQUAL "DISTRIBUTION"))
  
- # CCACHE
-@@ -184,12 +184,12 @@ SET(SWIG_CXX_COMPILER_FLAGS "-O0 -g")
- SET(CMAKE_C_FLAGS "${COMPILER_WARNINGS} ${CMAKE_C_FLAGS}")
- SET(CMAKE_CXX_FLAGS "${COMPILER_WARNINGS} ${CMAKE_CXX_FLAGS}")
+ # compilation cache
+@@ -250,12 +248,6 @@ ELSEIF(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+ 	SET(RELEASE_COMPILER_FLAGS "-funroll-loops")
+ ENDIF()
  IF(MSVC)
 -	SET(CMAKE_C_FLAGS_RELEASE "/O2 ${RELEASE_COMPILER_FLAGS}")
 -	SET(CMAKE_CXX_FLAGS_RELEASE "/O2 ${RELEASE_COMPILER_FLAGS}")
@@ -23,17 +21,11 @@ index 6c48bed..6f97c8b 100644
 -	SET(CMAKE_CXX_FLAGS_DISTRIBUTION "/Ot")
 -	SET(CMAKE_C_FLAGS_DEBUG "/DEBUG /Od /Zi")
 -	SET(CMAKE_CXX_FLAGS_DEBUG "/DEBUG /Od /Zi")
-+	# SET(CMAKE_C_FLAGS_RELEASE "/O2 ${RELEASE_COMPILER_FLAGS}")
-+	# SET(CMAKE_CXX_FLAGS_RELEASE "/O2 ${RELEASE_COMPILER_FLAGS}")
-+	# SET(CMAKE_C_FLAGS_DISTRIBUTION "/Ot")
-+	# SET(CMAKE_CXX_FLAGS_DISTRIBUTION "/Ot")
-+	# SET(CMAKE_C_FLAGS_DEBUG "/DEBUG /Od /Zi")
-+	# SET(CMAKE_CXX_FLAGS_DEBUG "/DEBUG /Od /Zi")
  	add_compile_options("/bigobj")
+ 	SET(SWIG_CXX_COMPILER_FLAGS "/DEBUG /Od /Zi")
  ELSE()
- 	SET(CMAKE_C_FLAGS_RELEASE "-O3 ${RELEASE_COMPILER_FLAGS}")
 diff --git a/cmake/version.cmake b/cmake/version.cmake
-index fbca111..f6847f7 100644
+index f588caef3..204bc0c27 100644
 --- a/cmake/version.cmake
 +++ b/cmake/version.cmake
 @@ -5,7 +5,7 @@ SET(MAINVERSION ${VERSION})
@@ -41,15 +33,23 @@ index fbca111..f6847f7 100644
  SET(EXTRA "")
  
 -IF(EXISTS "${ROOT_DIR}/.git/")
-+IF(EXISTS "${ROOT_DIR}/.git/" AND FALSE)
++IF(0)
  	FIND_PACKAGE(Git QUIET)
  	IF (NOT GIT_FOUND)
  		MESSAGE(FATAL_ERROR "The source is checked out from a git repository, but cannot find git executable!")
 diff --git a/src/shogun/CMakeLists.txt b/src/shogun/CMakeLists.txt
-index 9e79786..fd76961 100644
+index 20c4b4fa6..8fcbd87ed 100644
 --- a/src/shogun/CMakeLists.txt
 +++ b/src/shogun/CMakeLists.txt
-@@ -145,7 +145,7 @@ endif()
+@@ -42,7 +42,6 @@ ELSE()
+ ENDIF()
+ set(INCLUDE_INSTALL_DIR include)
+ set(THIRD_PARTY_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/third_party)
+-set(SHOGUN_CLING_LIBRARY_DIR "\"${CMAKE_INSTALL_PREFIX}/${SHOGUN_LIB_INSTALL}\"")
+ 
+ if (MSVC OR BUILD_BENCHMARKS)
+   SET(LIBSHOGUN_BUILD_STATIC ON
+@@ -159,7 +158,7 @@ ENDIF()
  # add target for static library if enabled
  if (LIBSHOGUN_BUILD_STATIC)
    add_library(shogun-static STATIC $<TARGET_OBJECTS:libshogun> ${CMAKE_CURRENT_BINARY_DIR}/lib/config.h)
@@ -58,16 +58,36 @@ index 9e79786..fd76961 100644
    target_include_directories(shogun-static PUBLIC
      $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
      $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src>
-@@ -492,10 +492,12 @@ ELSE()
- ENDIF()
+@@ -441,7 +440,7 @@ if (NOT RapidJSON_FOUND)
+ endif()
+ SHOGUN_INCLUDE_DIRS(SCOPE PRIVATE ${RAPIDJSON_INCLUDE_DIRS})
+ 
+-include(external/bitsery)
++find_package(bitsery)
+ SHOGUN_INCLUDE_DIRS(SCOPE PRIVATE ${BITSERY_INCLUDE_DIR})
+ 
+ if (NOT WIN32)
+@@ -631,10 +630,6 @@ INSTALL(
+   PATTERN ".settings" EXCLUDE)
  
  # set the desidered targets to be installed
-+if(NOT INSTALL_TARGETS)
- set(INSTALL_TARGETS shogun)
- if (LIBSHOGUN_BUILD_STATIC)
-   LIST(APPEND INSTALL_TARGETS shogun-static)
- endif()
-+endif()
+-set(INSTALL_TARGETS shogun)
+-if (LIBSHOGUN_BUILD_STATIC)
+-  LIST(APPEND INSTALL_TARGETS shogun-static)
+-endif()
  
  INSTALL(
    TARGETS ${INSTALL_TARGETS}
+@@ -645,10 +640,10 @@ INSTALL(
+   INCLUDES DESTINATION ${INCLUDE_INSTALL_DIR}
+ )
+ 
+-file(TO_CMAKE_PATH ${SHOGUN_LIB_INSTALL}/cmake/shogun CONFIG_PACKAGE_DIR)
++file(TO_CMAKE_PATH share/shogun CONFIG_PACKAGE_DIR)
+ configure_package_config_file(
+   ${CMAKE_SOURCE_DIR}/cmake/ShogunConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/ShogunConfig.cmake
+-  INSTALL_DESTINATION ${SHOGUN_LIB_INSTALL}/cmake/shogun
++  INSTALL_DESTINATION share/shogun
+   PATH_VARS INCLUDE_INSTALL_DIR CONFIG_PACKAGE_DIR)
+ 
+ write_basic_package_version_file(

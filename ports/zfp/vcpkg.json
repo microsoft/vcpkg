@@ -1,7 +1,7 @@
 {
   "name": "zfp",
   "version": "1.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Zfp is an open source C/C++ library for compressed numerical arrays that support high throughput read and write random access. zfp also supports streaming compression of integer and floating-point data, e.g., for applications that read and write large data sets to and from disk. zfp is primarily written in C and C++ but also includes Python and Fortran bindings.",
   "homepage": "https://github.com/LLNL/zfp",
   "license": "BSD-3-Clause",

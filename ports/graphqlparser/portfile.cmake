@@ -37,7 +37,7 @@ endif()
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphqlparser/parser.tab.hpp" "${SOURCE_PATH}" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphqlparser/parser.tab.hpp" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/graphqlparser/copyright" COPYONLY)

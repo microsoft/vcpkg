@@ -1,20 +1,19 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 03b8301..820d08e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -584,6 +584,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/liblzma-config.cmake"
-         COMPONENT liblzma_Development)
+@@ -1484,7 +1484,7 @@ function(my_install_man COMPONENT SRC_FILE LINK_NAMES)
+     endif()
+ endfunction()
  
- 
+-
 +if(BUILD_TOOLS)
  #############################################################################
- # getopt_long
+ # libgnu (getopt_long)
  #############################################################################
-@@ -793,6 +794,7 @@ if(NOT MSVC AND HAVE_GETOPT_LONG)
-         endforeach()
-     endif()
+@@ -1982,6 +1982,7 @@ if(UNIX)
+     my_install_man(scripts_Documentation src/scripts/xzless.1 "${XZLESS_LINKS}")
  endif()
+ 
 +endif()
  
- 
  #############################################################################
+ # Documentation

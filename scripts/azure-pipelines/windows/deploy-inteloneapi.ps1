@@ -1,55 +1,64 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1
+param([string]$SasToken)
 
-# REPLACE WITH UTILITY-PREFIX.ps1
-
-$oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/19085/w_HPCKit_p_2023.0.0.25931_offline.exe'
-$oneAPIHPCComponents = 'intel.oneapi.win.cpp-compiler:intel.oneapi.win.ifort-compiler'
-
-<#
-.SYNOPSIS
-Installs Intel oneAPI compilers and toolsets. Examples for CI can be found here: https://github.com/oneapi-src/oneapi-ci
-
-.DESCRIPTION
-InstallInteloneAPI installs the Intel oneAPI Compiler & Toolkit with the components specified as a
-:-separated list of strings in $Components.
-
-.PARAMETER Url
-The URL of the Intel Toolkit installer.
-
-.PARAMETER Components
-A :-separated list of components to install.
-#>
-Function InstallInteloneAPI {
-  Param(
-    [String]$Url,
-    [String]$Components
-  )
-
-  try {
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    [string]$extractionPath = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName()
-    Write-Host 'Downloading Intel oneAPI...to: ' $installerPath
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Extracting Intel oneAPI...to folder: ' $extractionPath
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('-s ', '-x ', '-f ' + $extractionPath , '--log extract.log') -Wait -PassThru
-    Write-Host 'Install Intel oneAPI...from folder: ' $extractionPath
-    $proc = Start-Process -FilePath $extractionPath/bootstrapper.exe -ArgumentList @('-s ', '--action install', "--components=$Components" , '--eula=accept', '-p=NEED_VS2017_INTEGRATION=0', '-p=NEED_VS2019_INTEGRATION=0', '-p=NEED_VS2022_INTEGRATION=0', '--log-dir=.') -Wait -PassThru
-    $exitCode = $proc.ExitCode
-    if ($exitCode -eq 0) {
-      Write-Host 'Installation successful!'
-    }
-    else {
-      Write-Error "Installation failed! Exited with $exitCode."
-      throw
-    }
-  }
-  catch {
-    Write-Error "Failed to install Intel oneAPI! $($_.Exception.Message)"
-    throw
-  }
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-InstallInteloneAPI -Url $oneAPIBaseUrl -Components $oneAPIHPCComponents
+
+[string]$oneAPIBaseUrl
+if ([string]::IsNullOrEmpty($SasToken)) {
+  $oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/c95a3b26-fc45-496c-833b-df08b10297b9/w_HPCKit_p_2024.1.0.561_offline.exe'
+} else {
+  $SasToken = $SasToken.Replace('"', '')
+  $oneAPIBaseUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/w_HPCKit_p_2024.1.0.561_offline.exe?$SasToken"
+}
+
+$oneAPIHPCComponents = 'intel.oneapi.win.ifort-compiler'
+
+$LocalName = 'w_HPCKit_p_2024.1.0.561_offline.exe'
+
+try {
+  [bool]$doRemove = $false
+  [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
+  if (Test-Path $LocalPath) {
+    Write-Host "Using local Intel oneAPI..."
+  } else {
+    Write-Host "Downloading Intel oneAPI..."
+    $tempPath = Get-TempFilePath
+    New-Item -ItemType Directory -Path $tempPath -Force
+    $LocalPath = Join-Path $tempPath $LocalName
+    Invoke-WebRequest -Uri $oneAPIBaseUrl -Outfile $LocalPath
+    $doRemove = $true
+  }
+
+  [string]$extractionPath = Get-TempFilePath
+  Write-Host 'Extracting Intel oneAPI...to folder: ' $extractionPath
+  $proc = Start-Process -FilePath $LocalPath -ArgumentList @('-s ', '-x', '-f', $extractionPath) -Wait -PassThru
+  $exitCode = $proc.ExitCode
+  if ($exitCode -eq 0) {
+    Write-Host 'Extraction successful!'
+  } else {
+    Write-Error "Extraction failed! Exited with $exitCode."
+    throw
+  }
+
+  Write-Host 'Install Intel oneAPI...from folder: ' $extractionPath
+  $proc = Start-Process -FilePath "$extractionPath/bootstrapper.exe" -ArgumentList @('-s ', '--action install', "--components=$oneAPIHPCComponents" , '--eula=accept', '-p=NEED_VS2017_INTEGRATION=0', '-p=NEED_VS2019_INTEGRATION=0', '-p=NEED_VS2022_INTEGRATION=0', '--log-dir=.') -Wait -PassThru
+  $exitCode = $proc.ExitCode
+  if ($exitCode -eq 0) {
+    Write-Host 'Installation successful!'
+  } elseif ($exitCode -eq 3010) {
+    Write-Host 'Installation successful! Exited with 3010 (ERROR_SUCCESS_REBOOT_REQUIRED).'
+  } else {
+    Write-Error "Installation failed! Exited with $exitCode."
+  }
+
+  if ($doRemove) {
+    Remove-Item -Path $LocalPath -Force
+  }
+} catch {
+  Write-Error "Installation failed! Exception: $($_.Exception.Message)"
+}

@@ -1,6 +1,7 @@
 {
   "name": "simbody",
   "version-date": "2023-01-10",
+  "port-version": 1,
   "description": "High-performance C++ multibody dynamics/physics library for simulating articulated biomechanical and mechanical systems like vehicles, robots, and the human skeleton.",
   "homepage": "https://simtk.org/home/simbody",
   "license": "Apache-2.0",

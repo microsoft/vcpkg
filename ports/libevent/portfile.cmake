@@ -66,6 +66,7 @@ endif()
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_target_suffix}.cmake
     "${CURRENT_PACKAGES_DIR}"
     "${CURRENT_INSTALLED_DIR}"
+    IGNORE_UNCHANGED
 )
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventConfig.cmake "${SOURCE_PATH}/include;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" "")
 vcpkg_fixup_pkgconfig()

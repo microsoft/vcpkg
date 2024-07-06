@@ -1,0 +1,53 @@
+diff --git a/cmake/developer_package/api_validator/api_validator.cmake b/cmake/developer_package/api_validator/api_validator.cmake
+index 0fd1f2c03a..68e6d1fccb 100644
+--- a/cmake/developer_package/api_validator/api_validator.cmake
++++ b/cmake/developer_package/api_validator/api_validator.cmake
+@@ -2,7 +2,11 @@
+ # SPDX-License-Identifier: Apache-2.0
+ #
+ 
+-if(WIN32)
++function(ov_search_api_validator)
++    if(NOT ENABLE_API_VALIDATOR)
++        return()
++    endif()
++
+     # CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION is only set when
+     # Visual Studio generators are used, but we need it
+     # when we use Ninja as well
+@@ -11,8 +15,10 @@ if(WIN32)
+             string(REPLACE "\\" "" WINDOWS_SDK_VERSION $ENV{WindowsSDKVersion})
+             set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION ${WINDOWS_SDK_VERSION})
+             message(STATUS "Use ${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION} Windows SDK version")
++            # set to parent scope as well for later usage in '_ov_add_api_validator_post_build_step'
++            set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION ${WINDOWS_SDK_VERSION} PARENT_SCOPE)
+         else()
+-          message(FATAL_ERROR "WindowsSDKVersion environment variable is not set,\
++            message(FATAL_ERROR "WindowsSDKVersion environment variable is not set,\
+ can't find Windows SDK version. Try to use vcvarsall.bat script")
+         endif()
+     endif()
+@@ -41,7 +47,9 @@ can't find Windows SDK version. Try to use vcvarsall.bat script")
+             message(STATUS "Found apivalidator: ${ONECORE_API_VALIDATOR}")
+         endif()
+     endif()
+-endif()
++endfunction()
++
++ov_search_api_validator()
+ 
+ function(_ov_add_api_validator_post_build_step_recursive)
+     cmake_parse_arguments(API_VALIDATOR "" "TARGET" "" ${ARGN})
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index bfa3a05481..7b0c9249dc 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -192,6 +192,8 @@ ov_dependent_option(ENABLE_JS "Enables JS API building" ON "NOT ANDROID;NOT EMSC
+ 
+ ov_option(ENABLE_OPENVINO_DEBUG "Enable output for OPENVINO_DEBUG statements" OFF)
+ 
++ov_dependent_option (ENABLE_API_VALIDATOR "Enables API Validator usage" ON "WIN32" OFF)
++
+ if(NOT BUILD_SHARED_LIBS AND ENABLE_OV_TF_FRONTEND)
+     set(FORCE_FRONTENDS_USE_PROTOBUF ON)
+ else()

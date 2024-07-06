@@ -35,15 +35,6 @@ index a407271..a575642 100755
          if(IS_ABSOLUTE ${LIB} AND EXISTS ${LIB})
              list(APPEND PLIBLIST "${LIB}")
          else()
-@@ -702,7 +711,7 @@ if(X265_LATEST_TAG)
-     endforeach()
-     if(PLIBLIST)
-         # blacklist of libraries that should not be in Libs.private
--        list(REMOVE_ITEM PLIBLIST "-lc" "-lpthread" "-lmingwex" "-lmingwthrd"
-+        list(REMOVE_ITEM PLIBLIST "-lc"             "-lmingwex" "-lmingwthrd"
-             "-lmingw32" "-lmoldname" "-lmsvcrt" "-ladvapi32" "-lshell32"
-             "-luser32" "-lkernel32")
-         string(REPLACE ";" " " PRIVATE_LIBS "${PLIBLIST}")
 diff --git a/source/x265.pc.in b/source/x265.pc.in
 index 0bf99e9..fe76d20 100644
 --- a/source/x265.pc.in

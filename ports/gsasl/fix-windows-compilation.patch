@@ -1,0 +1,14 @@
+diff --git a/lib/src/gsasl.h b/lib/src/gsasl.h
+index 1b5072c2..999555f6 100644
+--- a/lib/src/gsasl.h
++++ b/lib/src/gsasl.h
+@@ -33,7 +33,9 @@
+ 
+ # include <stdio.h>		/* FILE */
+ # include <stddef.h>		/* size_t */
++#ifndef _WIN32
+ # include <unistd.h>		/* ssize_t */
++#endif
+ 
+ /* Get version symbols. */
+ # include <gsasl-version.h>

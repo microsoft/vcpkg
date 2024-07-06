@@ -20,7 +20,7 @@ vcpkg_from_github(
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)" IGNORE_UNCHANGED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

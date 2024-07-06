@@ -1,0 +1,29 @@
+From c025a934b199d069510bb68ee552ae58a4394916 Mon Sep 17 00:00:00 2001
+From: Derek Mauro <dmauro@google.com>
+Date: Tue, 21 May 2024 09:57:36 -0700
+Subject: [PATCH] Fix missing #include <random> for
+ std::uniform_int_distribution
+
+Fixes #1676
+
+PiperOrigin-RevId: 635840902
+Change-Id: Ifc4099175f1c5f040f55a9f5a47fe0c996af79d1
+---
+ absl/algorithm/container.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/absl/algorithm/container.h b/absl/algorithm/container.h
+index c7bafae1..a2d126b7 100644
+--- a/absl/algorithm/container.h
++++ b/absl/algorithm/container.h
+@@ -44,6 +44,7 @@
+ #include <cassert>
+ #include <iterator>
+ #include <numeric>
++#include <random>
+ #include <type_traits>
+ #include <unordered_map>
+ #include <unordered_set>
+-- 
+2.44.0.windows.1
+

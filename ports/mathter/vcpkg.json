@@ -1,0 +1,21 @@
+{
+  "name": "mathter",
+  "version": "1.1.2",
+  "description": "A flexible and fast matrix, transform, and geometry library.",
+  "homepage": "https://github.com/petiaccja/Mathter",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "xsimd",
+      "version>=": "11.1.0"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "python3",
   "version": "3.11.8",
-  "port-version": 2,
+  "port-version": 4,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -43,6 +43,10 @@
     {
       "name": "sqlite3",
       "platform": "!(windows & static)"
+    },
+    {
+      "name": "vcpkg-get-python",
+      "host": true
     },
     {
       "name": "vcpkg-msbuild",

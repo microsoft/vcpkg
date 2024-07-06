@@ -5,4 +5,5 @@ ignition_modular_library(NAME transport
                          DISABLE_PKGCONFIG_INSTALL
                          PATCHES
                             uuid-osx.patch
+                            fix-protobuf.patch
                          )

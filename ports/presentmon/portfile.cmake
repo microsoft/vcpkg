@@ -29,4 +29,4 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES presentmon AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

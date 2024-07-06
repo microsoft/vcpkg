@@ -76,6 +76,7 @@ vcpkg_replace_string(
     "${PROPS}"
     [=[_winrt</TargetName>]=]
     [=[</TargetName>]=]
+    IGNORE_UNCHANGED
 )
 vcpkg_replace_string(
     "${PROPS}"
@@ -92,6 +93,7 @@ vcpkg_replace_string(
     "${VCXPROJ}"
     "_winrt.lib"
     ".lib"
+    IGNORE_UNCHANGED
 )
 vcpkg_replace_string(
     "${VCXPROJ}"

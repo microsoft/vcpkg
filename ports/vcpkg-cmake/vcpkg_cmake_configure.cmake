@@ -109,6 +109,9 @@ function(vcpkg_cmake_configure)
             "${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
+    set(parallel_log_args "")
+    set(log_args "")
+
     if(generator STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
@@ -116,6 +119,11 @@ function(vcpkg_cmake_configure)
         # cf. https://gitlab.kitware.com/cmake/cmake/-/issues/23355.
         get_filename_component(ninja_path "${NINJA}" DIRECTORY)
         vcpkg_add_to_path("${ninja_path}")
+        set(parallel_log_args
+            "../build.ninja" ALIAS "rel-ninja.log"
+            "../../${TARGET_TRIPLET}-dbg/build.ninja" ALIAS "dbg-ninja.log"
+        )
+        set(log_args "build.ninja")
     endif()
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -265,6 +273,9 @@ function(vcpkg_cmake_configure)
             SAVE_LOG_FILES
                 "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
                 "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
+                "../../${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeConfigureLog.yaml" ALIAS "dbg-CMakeConfigureLog.yaml.log"
+                "../CMakeFiles/CMakeConfigureLog.yaml" ALIAS "rel-CMakeConfigureLog.yaml.log"
+                ${parallel_log_args}
         )
         
         vcpkg_list(APPEND config_logs
@@ -277,7 +288,10 @@ function(vcpkg_cmake_configure)
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${build_dir_debug}"
                 LOGNAME "${arg_LOGFILE_BASE}-dbg"
-                SAVE_LOG_FILES CMakeCache.txt
+                SAVE_LOG_FILES
+                  "CMakeCache.txt"
+                  "CMakeFiles/CMakeConfigureLog.yaml"
+                  ${log_args}
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
@@ -290,7 +304,10 @@ function(vcpkg_cmake_configure)
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${build_dir_release}"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
-                SAVE_LOG_FILES CMakeCache.txt
+                SAVE_LOG_FILES
+                  "CMakeCache.txt"
+                  "CMakeFiles/CMakeConfigureLog.yaml"
+                  ${log_args}
             )
             vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"

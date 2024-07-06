@@ -6,6 +6,7 @@ option(BUILD_TOOLS "Build tool PresentMon" OFF)
 
 set(PRESENTDATA_SRCS
     PresentData/Debug.cpp
+    PresentData/GpuTrace.cpp
     PresentData/MixedRealityTraceConsumer.cpp
     PresentData/PresentMonTraceConsumer.cpp
     PresentData/TraceConsumer.cpp
@@ -14,6 +15,7 @@ set(PRESENTDATA_SRCS
 
 set(PRESENTDATA_HDRS
     PresentData/Debug.hpp
+    PresentData/GpuTrace.hpp
     PresentData/MixedRealityTraceConsumer.hpp
     PresentData/PresentMonTraceConsumer.hpp
     PresentData/TraceConsumer.hpp

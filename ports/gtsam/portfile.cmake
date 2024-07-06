@@ -25,8 +25,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if (WIN32)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME GTSAM CONFIG_PATH CMAKE)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME GTSAM CONFIG_PATH CMake)
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME GTSAM CONFIG_PATH lib/cmake/GTSAM)
 endif()

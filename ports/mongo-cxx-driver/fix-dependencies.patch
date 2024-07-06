@@ -1,15 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a1b60bd..78c6907 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -100,7 +100,6 @@ if(NEED_DOWNLOAD_C_DRIVER)
-         set(BUILD_TESTING OFF)
-         string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-         string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
--        add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR})
-         set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
-         set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
-         set(ENABLE_TESTS ${OLD_ENABLE_TESTS})
 diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
 index 1e241f5..adf9a27 100644
 --- a/src/bsoncxx/CMakeLists.txt

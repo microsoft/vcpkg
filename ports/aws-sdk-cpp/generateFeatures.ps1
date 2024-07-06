@@ -15,7 +15,7 @@ if (-not (Test-Path $ExtractedSources)) {
     if (Test-Path "$ExtractedSources.tmp") {
         Remove-Item -Force "$ExtractedSources.tmp"
     }
-    git clone "https://github.com/aws/aws-sdk-cpp" "$ExtractedSources.tmp" | Out-Host
+    git clone --depth=1 "https://github.com/aws/aws-sdk-cpp" "$ExtractedSources.tmp" | Out-Host
     git -c "$ExtractedSources.tmp" checkout $SourcesRef
     Move-Item "$ExtractedSources.tmp" "$ExtractedSources"
 }

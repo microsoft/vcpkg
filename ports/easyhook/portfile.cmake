@@ -56,11 +56,13 @@ foreach(CSPROJ IN ITEMS
         "${CSPROJ}"
         "<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>"
         "<TargetFrameworkVersion>4.7.2</TargetFrameworkVersion>"
+        IGNORE_UNCHANGED
     )
     vcpkg_replace_string(
         "${CSPROJ}"
         "<TargetFrameworkProfile>Client</TargetFrameworkProfile>"
         ""
+        IGNORE_UNCHANGED
     )
 endforeach()
 

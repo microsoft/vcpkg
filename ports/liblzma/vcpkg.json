@@ -1,6 +1,6 @@
 {
   "name": "liblzma",
-  "version": "5.4.4",
+  "version": "5.6.2",
   "description": "Compression library with an API similar to that of zlib.",
   "homepage": "https://tukaani.org/xz/",
   "license": null,
@@ -16,8 +16,7 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools",
-      "supports": "!windows, mingw"
+      "description": "Build tools"
     }
   }
 }

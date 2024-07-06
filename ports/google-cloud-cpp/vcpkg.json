@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.25.0",
+  "version": "2.26.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -705,6 +705,7 @@
           "default-features": false,
           "features": [
             "grpc-common",
+            "opentelemetry",
             "storage"
           ]
         }
@@ -871,6 +872,18 @@
     },
     "managedidentities": {
       "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "managedkafka": {
+      "description": "Manage Apache Kafka clusters and resources.",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

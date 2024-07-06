@@ -9,14 +9,13 @@ vcpkg_download_distfile(
     URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${VERSION}.tar.gz"
          "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${VERSION}.tar.gz"
     FILENAME "${PORT}-${VERSION}.tar.gz"
-    SHA512 81765174fdd60223529182fab96249a28978c1d02b5894313d9b0b3aa365a1da2f7e5906403ab368114bdcba2fa861d1ad69b752f8344e6ea61d44666b483122
+    SHA512 b7b9f47c77fd27787b7c7ae7e78cd831fe9f7f32e280f54952994569bfe69ff03022e349aea9ea734c50b079693c6e15a3c1115ef0093e523437904074da5784
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
     PATCHES
-        0001-enable-ocspcheck-on-msvc.patch
         0002-suppress-msvc-warnings.patch
 )
 

@@ -1,6 +1,6 @@
 {
   "name": "libeventheader-decode",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "C++ classes for decoding EventHeader-encoded Linux Tracepoints",
   "homepage": "https://github.com/microsoft/LinuxTracepoints/",
   "license": "MIT",
@@ -8,11 +8,11 @@
   "dependencies": [
     {
       "name": "libeventheader-tracepoint",
-      "version>=": "1.3.3"
+      "version>=": "1.4.0"
     },
     {
       "name": "libtracepoint-decode",
-      "version>=": "1.3.3"
+      "version>=": "1.4.0"
     },
     {
       "name": "vcpkg-cmake",
@@ -22,5 +22,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build user tools: perf-decode"
+    }
+  }
 }

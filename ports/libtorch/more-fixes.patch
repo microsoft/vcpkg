@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7b8bc7cb6e..fa6da328b8 100644
+index 7b8bc7c..fa6da32 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -383,7 +383,7 @@ if(WIN32)
@@ -23,7 +23,7 @@ index 7b8bc7cb6e..fa6da328b8 100644
        ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
        DESTINATION share/cmake/Caffe2/
 diff --git a/aten/src/ATen/native/vulkan/api/Allocator.h b/aten/src/ATen/native/vulkan/api/Allocator.h
-index d0c8bdf9ec..50df97ae09 100644
+index d0c8bdf..50df97a 100644
 --- a/aten/src/ATen/native/vulkan/api/Allocator.h
 +++ b/aten/src/ATen/native/vulkan/api/Allocator.h
 @@ -47,7 +47,7 @@
@@ -36,7 +36,7 @@ index d0c8bdf9ec..50df97ae09 100644
  #ifdef __clang__
  #pragma clang diagnostic pop
 diff --git a/aten/src/ATen/native/vulkan/ops/Clamp.cpp b/aten/src/ATen/native/vulkan/ops/Clamp.cpp
-index dc22b987ef..f91fbf6788 100644
+index dc22b98..f91fbf6 100644
 --- a/aten/src/ATen/native/vulkan/ops/Clamp.cpp
 +++ b/aten/src/ATen/native/vulkan/ops/Clamp.cpp
 @@ -1,3 +1,6 @@
@@ -47,7 +47,7 @@ index dc22b987ef..f91fbf6788 100644
  #include <torch/library.h>
  
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
-index ad407e18cb..bbca41bab2 100644
+index ad407e1..bbca41b 100644
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
 @@ -139,7 +139,11 @@ endif()
@@ -64,7 +64,7 @@ index ad407e18cb..bbca41bab2 100644
          DESTINATION include
          FILES_MATCHING PATTERN "*.h")
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 74d0d55719..cf349c2fa8 100644
+index 74d0d55..cf349c2 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -632,7 +632,11 @@ if(USE_CUDA)
@@ -165,7 +165,7 @@ index 74d0d55719..cf349c2fa8 100644
  
  # ---[ Caffe2 HIP sources.
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index cd27c728ff..2c5c5b95d8 100644
+index cfaf83e..b46a444 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -1130,7 +1130,7 @@ if(BUILD_PYTHON)
@@ -196,7 +196,7 @@ index cd27c728ff..2c5c5b95d8 100644
  endif()
  
 diff --git a/cmake/Modules/FindCUSPARSELT.cmake b/cmake/Modules/FindCUSPARSELT.cmake
-index 8727f44a90..1e41281b1b 100644
+index 8727f44..1e41281 100644
 --- a/cmake/Modules/FindCUSPARSELT.cmake
 +++ b/cmake/Modules/FindCUSPARSELT.cmake
 @@ -24,13 +24,13 @@ list(APPEND CMAKE_PREFIX_PATH ${CUSPARSELT_ROOT})
@@ -217,7 +217,7 @@ index 8727f44a90..1e41281b1b 100644
  
  find_package_handle_standard_args(CUSPARSELT DEFAULT_MSG CUSPARSELT_LIBRARY_PATH CUSPARSELT_INCLUDE_PATH)
 diff --git a/cmake/Modules/FindMAGMA.cmake b/cmake/Modules/FindMAGMA.cmake
-index d2bff53d9b..3af9012503 100644
+index d2bff53..3af9012 100644
 --- a/cmake/Modules/FindMAGMA.cmake
 +++ b/cmake/Modules/FindMAGMA.cmake
 @@ -30,18 +30,13 @@ FIND_PATH(MAGMA_INCLUDE_DIR magma.h
@@ -254,7 +254,7 @@ index d2bff53d9b..3af9012503 100644
 +find_package_handle_standard_args(MAGMA REQUIRED_VARS MAGMA_INCLUDE_DIR MAGMA_LIBRARIES)
 \ No newline at end of file
 diff --git a/test/cpp/jit/CMakeLists.txt b/test/cpp/jit/CMakeLists.txt
-index 2376f1bc43..a8ae4367fd 100644
+index 2376f1b..a8ae436 100644
 --- a/test/cpp/jit/CMakeLists.txt
 +++ b/test/cpp/jit/CMakeLists.txt
 @@ -124,7 +124,7 @@ endif()
@@ -267,7 +267,7 @@ index 2376f1bc43..a8ae4367fd 100644
  
  target_link_libraries(test_jit PRIVATE ${JIT_TEST_DEPENDENCIES})
 diff --git a/third_party/nvfuser/CMakeLists.txt b/third_party/nvfuser/CMakeLists.txt
-index b148418af0..7b96083893 100644
+index b148418..7b96083 100644
 --- a/third_party/nvfuser/CMakeLists.txt
 +++ b/third_party/nvfuser/CMakeLists.txt
 @@ -158,7 +158,10 @@ endif()
@@ -283,7 +283,7 @@ index b148418af0..7b96083893 100644
  install(DIRECTORY "${NVFUSER_ROOT}/python_tests/"
          DESTINATION "${TORCH_ROOT}/test/_nvfuser"
 diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 62ee4c12a9..f75073cf3c 100644
+index 62ee4c1..f75073c 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
 @@ -107,7 +107,7 @@ set(TORCH_PYTHON_LINK_FLAGS "")
@@ -308,7 +308,7 @@ index 62ee4c12a9..f75073cf3c 100644
  # Generate torch/version.py from the appropriate CMake cache variables.
  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 diff --git a/torch/csrc/cuda/shared/nvtx.cpp b/torch/csrc/cuda/shared/nvtx.cpp
-index 4fb72c5f79..1abe1b76d6 100644
+index 4fb72c5..1abe1b7 100644
 --- a/torch/csrc/cuda/shared/nvtx.cpp
 +++ b/torch/csrc/cuda/shared/nvtx.cpp
 @@ -1,7 +1,7 @@
@@ -321,7 +321,7 @@ index 4fb72c5f79..1abe1b76d6 100644
  
  namespace torch::cuda::shared {
 diff --git a/torch/csrc/jit/tensorexpr/llvm_codegen.h b/torch/csrc/jit/tensorexpr/llvm_codegen.h
-index 7ab506fa8f..2ee3b68b6b 100644
+index 7ab506f..2ee3b68 100644
 --- a/torch/csrc/jit/tensorexpr/llvm_codegen.h
 +++ b/torch/csrc/jit/tensorexpr/llvm_codegen.h
 @@ -41,9 +41,9 @@ class TORCH_API LLVMCodeGen : public CodeGen {
@@ -338,7 +338,7 @@ index 7ab506fa8f..2ee3b68b6b 100644
    at::Tensor empty_strided(
        c10::IntArrayRef size,
 diff --git a/torch/csrc/profiler/stubs/cuda.cpp b/torch/csrc/profiler/stubs/cuda.cpp
-index dec87576f3..3bb368a4df 100644
+index dec8757..3bb368a 100644
 --- a/torch/csrc/profiler/stubs/cuda.cpp
 +++ b/torch/csrc/profiler/stubs/cuda.cpp
 @@ -1,6 +1,6 @@

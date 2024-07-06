@@ -1,8 +1,8 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 825cb25..4f453d6 100644
+index 998c2e31a..233f9e400 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -32,7 +32,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+@@ -49,7 +49,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
    install(TARGETS protoc EXPORT protobuf-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
      BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
@@ -11,3 +11,11 @@ index 825cb25..4f453d6 100644
      set_property(TARGET protoc
        PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
    elseif (APPLE)
+@@ -68,7 +68,6 @@ set(protobuf_HEADERS
+   ${cpp_features_proto_proto_srcs}
+   ${descriptor_proto_proto_srcs}
+   ${plugin_proto_proto_srcs}
+-  ${java_features_proto_proto_srcs}
+ )
+ foreach(_header ${protobuf_HEADERS})
+   string(FIND ${_header} "${protobuf_SOURCE_DIR}/src" _find_src)

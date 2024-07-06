@@ -1,7 +1,6 @@
 {
   "name": "type-lite",
-  "version": "0.1.0",
-  "port-version": 3,
+  "version": "0.2.0",
   "description": "Strong types for C++98, C++11 and later in a single-file header-only library.",
   "homepage": "https://github.com/martinmoene/type-lite",
   "dependencies": [

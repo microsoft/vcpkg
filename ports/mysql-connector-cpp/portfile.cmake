@@ -8,6 +8,8 @@ vcpkg_from_github(
         fix-static-build8.patch
         export-targets.patch
         dependencies.patch
+        protobuf-cmake.patch
+        protobuf-source.patch
 )
 
 vcpkg_check_features(
@@ -29,9 +31,12 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
-        "-DWITH_ZLIB=${CURRENT_INSTALLED_DIR}"
         "-DWITH_ZSTD=${CURRENT_INSTALLED_DIR}"
-        "-DWITH_PROTOBUF=${CURRENT_INSTALLED_DIR}"
+        "-DWITH_ZLIB=${CURRENT_INSTALLED_DIR}"
+        "-DProtobuf_DIR=${CURRENT_INSTALLED_DIR}/share/protobuf" # Without these Windows is unable to find protobuf
+        "-Dabsl_DIR=${CURRENT_INSTALLED_DIR}/share/absl"
+        "-Dutf8_range_DIR=${CURRENT_INSTALLED_DIR}/share/utf8_range"
+        "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc"
         -DBUILD_STATIC=${BUILD_STATIC}
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
@@ -57,5 +62,4 @@ file(REMOVE
 )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

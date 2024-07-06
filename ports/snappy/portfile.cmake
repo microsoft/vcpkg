@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/snappy
     REF ${VERSION}
-    SHA512 3578597f1d4ec09104ce0296b825b013590351230dfe56c635081fd282ce7a13a34caf2c283ac77bd24065e2d27af6db068d1f84b98cec2fd39a0e37a0d77070
+    SHA512 e7290d79ddd45605aafd02cba9eaa32309c94af04f137552a97a915c391f185dccab9b7b21a01b28f3f446be420232c3c22d91c06e0be6e1e2e32d645174798c
     HEAD_REF master
     PATCHES
         fix_clang-cl_build.patch

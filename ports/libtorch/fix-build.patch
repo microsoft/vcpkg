@@ -1,5 +1,5 @@
 diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
-index c0628d0c96..5dfb7f2abb 100644
+index c0628d0..5dfb7f2 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
 @@ -74,7 +74,11 @@ add_subdirectory(test)
@@ -16,7 +16,7 @@ index c0628d0c96..5dfb7f2abb 100644
    get_filename_component( dir ${file} DIRECTORY )
    install( FILES ${file} DESTINATION include/c10/cuda/${dir} )
 diff --git a/c10/util/Exception.h b/c10/util/Exception.h
-index ecbc7c1345..2dd1001c9e 100644
+index ecbc7c1..2dd1001 100644
 --- a/c10/util/Exception.h
 +++ b/c10/util/Exception.h
 @@ -14,6 +14,9 @@
@@ -30,7 +30,7 @@ index ecbc7c1345..2dd1001c9e 100644
  
  /// The primary ATen error class.
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 2c5c5b95d8..8c1742591f 100644
+index b46a444..255d7f4 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -1581,19 +1581,10 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
@@ -50,7 +50,7 @@ index 2c5c5b95d8..8c1742591f 100644
 -    endif()
 -    set_property(TARGET onnx_proto PROPERTY IMPORTED_LOCATION ${ONNX_PROTO_LIBRARY})
 -    message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")
-+    find_package(onnx REQUIRED)
++    find_package(ONNX REQUIRED)
 +    set(ONNX_LIBRARY onnx)
 +    set(ONNX_PROTO_LIBRARY onnx_proto)
 +    message("-- Found onnx")
@@ -58,7 +58,7 @@ index 2c5c5b95d8..8c1742591f 100644
    endif()
    include_directories(${FOXI_INCLUDE_DIRS})
 diff --git a/pyproject.toml b/pyproject.toml
-index eb764cb895..c70f317c2f 100644
+index eb764cb..c70f317 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -4,11 +4,9 @@ requires = [
@@ -75,7 +75,7 @@ index eb764cb895..c70f317c2f 100644
  # Use legacy backend to import local packages in setup.py
  build-backend = "setuptools.build_meta:__legacy__"
 diff --git a/setup.py b/setup.py
-index 17bf16b89a..b90ebbc9eb 100644
+index 7016441..a6416c7 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -263,7 +263,7 @@ from tools.setup_helpers.env import build_type, IS_DARWIN, IS_LINUX, IS_WINDOWS
@@ -109,7 +109,7 @@ index 17bf16b89a..b90ebbc9eb 100644
          all_commands = [entry for f in ninja_files + cmake_files for entry in load(f)]
  
 diff --git a/third_party/nvfuser/csrc/instrumentation.h b/third_party/nvfuser/csrc/instrumentation.h
-index cd57825a24..75e81e9fac 100644
+index cd57825..75e81e9 100644
 --- a/third_party/nvfuser/csrc/instrumentation.h
 +++ b/third_party/nvfuser/csrc/instrumentation.h
 @@ -2,7 +2,7 @@
@@ -122,7 +122,7 @@ index cd57825a24..75e81e9fac 100644
  // NOLINTNEXTLINE(modernize-deprecated-headers)
  #include <stdio.h>
 diff --git a/tools/setup_helpers/env.py b/tools/setup_helpers/env.py
-index d87e97a2bb..e1bc42e87c 100644
+index d87e97a..6c52f39 100644
 --- a/tools/setup_helpers/env.py
 +++ b/tools/setup_helpers/env.py
 @@ -19,7 +19,7 @@ CONDA_DIR = os.path.join(os.path.dirname(sys.executable), "..")
@@ -135,7 +135,7 @@ index d87e97a2bb..e1bc42e87c 100644
  
  def check_env_flag(name: str, default: str = "") -> bool:
 diff --git a/torch/lib/libshm/CMakeLists.txt b/torch/lib/libshm/CMakeLists.txt
-index 20158a9a25..7d3c475a9b 100644
+index 20158a9..7d3c475 100644
 --- a/torch/lib/libshm/CMakeLists.txt
 +++ b/torch/lib/libshm/CMakeLists.txt
 @@ -71,6 +71,10 @@ target_link_libraries(torch_shm_manager PRIVATE shm)
@@ -151,7 +151,7 @@ index 20158a9a25..7d3c475a9b 100644
  install(FILES libshm.h DESTINATION "include")
  install(TARGETS torch_shm_manager DESTINATION "bin")
 diff --git a/torch/lib/libshm_windows/CMakeLists.txt b/torch/lib/libshm_windows/CMakeLists.txt
-index df2a106493..b86e0b6872 100644
+index df2a106..b86e0b6 100644
 --- a/torch/lib/libshm_windows/CMakeLists.txt
 +++ b/torch/lib/libshm_windows/CMakeLists.txt
 @@ -19,9 +19,12 @@ target_include_directories(shm PRIVATE
@@ -170,7 +170,7 @@ index df2a106493..b86e0b6872 100644
 +  install(FILES $<TARGET_PDB_FILE:shm> DESTINATION "${LIBSHM_INSTALL_BIN_SUBDIR}" OPTIONAL)
  endif()
 diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
-index 6600eb3cb5..1d5e451c14 100644
+index 6600eb3..15ddc8c 100644
 --- a/torch/utils/cpp_extension.py
 +++ b/torch/utils/cpp_extension.py
 @@ -38,7 +38,7 @@ SHARED_FLAG = '/DLL' if IS_WINDOWS else '-shared'

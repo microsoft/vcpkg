@@ -1,7 +1,7 @@
 {
   "name": "keccak-tiny",
   "version-date": "2014-09-08",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A tiny implementation of SHA-3, SHAKE, Keccak, and sha3sum",
   "homepage": "https://github.com/coruus/keccak-tiny",
   "license": "CC0-1.0",

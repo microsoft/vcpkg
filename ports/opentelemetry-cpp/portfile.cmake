@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 97635bbaf6dd567c201451dfaf7815b2052fe50d9bccc97aade86cfa4a92651374d167296a5453031b2681dc302806a289bca011a9e79ddc381a17d6118971d7
+    SHA512 b0e035b2b15322ba75d22d775fb77e49d5e084099924cded32ea0b1cb1ad93f22157b01a90993a8af76db07136ec72724b3d7a583ef33ff9ce3f0658005e6394
     HEAD_REF main
     PATCHES
         # Missing find_dependency for Abseil

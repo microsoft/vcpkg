@@ -1,0 +1,27 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 321874c..2b4b492 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -20,7 +20,7 @@ add_library(protobuf-mutator
+             text_format.cc
+             utf8_fix.cc)
+ target_link_libraries(protobuf-mutator
+-                      ${Protobuf_LIBRARIES})
++                      PUBLIC protobuf::libprotobuf)
+ set_target_properties(protobuf-mutator PROPERTIES
+                       COMPILE_FLAGS "${NO_FUZZING_FLAGS}"
+                       SOVERSION 0)
+diff --git a/src/libfuzzer/CMakeLists.txt b/src/libfuzzer/CMakeLists.txt
+index 7100ef1..9863138 100644
+--- a/src/libfuzzer/CMakeLists.txt
++++ b/src/libfuzzer/CMakeLists.txt
+@@ -16,8 +16,7 @@ add_library(protobuf-mutator-libfuzzer
+             libfuzzer_mutator.cc
+             libfuzzer_macro.cc)
+ target_link_libraries(protobuf-mutator-libfuzzer
+-                      protobuf-mutator
+-                      ${Protobuf_LIBRARIES})
++                      PUBLIC protobuf-mutator)
+ set_target_properties(protobuf-mutator-libfuzzer PROPERTIES
+                       COMPILE_FLAGS "${NO_FUZZING_FLAGS}"
+                       SOVERSION 0)

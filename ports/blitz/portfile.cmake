@@ -30,10 +30,10 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_fixup_pkgconfig()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/matbops.h" "${SOURCE_PATH}" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/matuops.h" "${SOURCE_PATH}" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/mathfunc.h" "${SOURCE_PATH}" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/promote-old.h" "${SOURCE_PATH}" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/matbops.h" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/matuops.h" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/mathfunc.h" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/promote-old.h" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

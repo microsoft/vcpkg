@@ -1,25 +1,45 @@
 {
   "name": "vcpkg-ci-openimageio",
-  "version": "1",
-  "description": "OpenImageIO features testing within CI.",
+  "version-string": "ci",
+  "description": "OpenImageIO testing within CI.",
   "license": "MIT",
   "dependencies": [
     {
       "name": "openimageio",
-      "features": [
-        "ffmpeg",
-        "freetype",
-        "gif",
-        "libraw",
-        "opencv",
-        "openjpeg",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "openimageio-features"
+  ],
+  "features": {
+    "openimageio-features": {
+      "description": "Enable OpenImageIO features",
+      "dependencies": [
         {
-          "name": "pybind11",
-          "platform": "!(windows & static)"
+          "name": "openimageio",
+          "default-features": false,
+          "features": [
+            "ffmpeg",
+            "freetype",
+            "gif",
+            "libraw",
+            "opencolorio",
+            "opencv",
+            "openjpeg",
+            {
+              "name": "pybind11",
+              "platform": "!(windows & static)"
+            },
+            "tools",
+            "webp"
+          ]
         }
-        "tools",
-        "webp"
       ]
     }
-  ]
+  }
 }

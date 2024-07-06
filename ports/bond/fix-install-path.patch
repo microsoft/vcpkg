@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f2f8eaa..1b0c01c 100644
+index 7b22038a..400421c7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,7 +23,7 @@ set (BOND_FIND_RAPIDJSON
- # settings so that we don't apply our settings to third-party code.
- add_subdirectory (thirdparty)
+@@ -16,7 +16,7 @@ set (BOND_FIND_RAPIDJSON
+     "FALSE"
+     CACHE BOOL "If FALSE, then use and install rapidjson from the /thirdparty subdirectory")
  
 -enable_testing()
 +#enable_testing()
  
  set (BOND_IDL ${CMAKE_CURRENT_SOURCE_DIR}/idl)
  set (BOND_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/cpp/inc)
-@@ -85,6 +85,6 @@ if (BOND_GBC_PATH)
+@@ -78,6 +78,6 @@ if (BOND_GBC_PATH)
  
    install (
      FILES ${BOND_GBC_PATH}
@@ -20,10 +20,10 @@ index f2f8eaa..1b0c01c 100644
      RENAME ${INSTALLED_GBC_NAME})
  endif()
 diff --git a/compiler/CMakeLists.txt b/compiler/CMakeLists.txt
-index 1dff9d0..9a11575 100644
+index c8d06afd..6440e9fd 100644
 --- a/compiler/CMakeLists.txt
 +++ b/compiler/CMakeLists.txt
-@@ -108,7 +108,7 @@ set (test_sources
+@@ -107,7 +107,7 @@ set (test_sources
      tests/TestMain.hs
      ${tests})
  
@@ -32,7 +32,7 @@ index 1dff9d0..9a11575 100644
  set (completion ${CMAKE_CURRENT_BINARY_DIR}/gbc.comp)
  set (output ${CMAKE_CURRENT_BINARY_DIR}/build/gbc/gbc${CMAKE_EXECUTABLE_SUFFIX})
  set (GBC_EXECUTABLE ${output} PARENT_SCOPE)
-@@ -130,7 +130,7 @@ endif()
+@@ -129,7 +129,7 @@ endif()
  
  install (FILES ${output}
      PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
@@ -42,10 +42,10 @@ index 1dff9d0..9a11575 100644
  install (FILES ${completion}
           RENAME gbc
 diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
-index b45078e..1eebe9c 100644
+index 15203f66..c15becd5 100644
 --- a/cpp/CMakeLists.txt
 +++ b/cpp/CMakeLists.txt
-@@ -110,7 +110,7 @@ target_include_directories (bond_apply BEFORE PRIVATE
+@@ -91,7 +91,7 @@ target_include_directories (bond_apply BEFORE PRIVATE
  
  install (TARGETS bond bond_apply
      EXPORT bond
