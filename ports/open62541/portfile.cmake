@@ -2,9 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "v${VERSION}"
-    SHA512 bb45d288a097b461d2a7106153c7f4b4c38c73cf767fe15c6c9c2213a6e3fcaf9b436fb70c1e7c6dcbc8ef45f232a5bd2f140285fab486358cb5a3a17da96d6e
+    SHA512 47e2a8af03e3e6dfbf6edcf3bec665a639c5cd6a826d987bb72eafb981e0ebfde01f36e624798fa529e8fcd83b6f22972538c4ea181ccd1a5bd5988bd87331c5
     HEAD_REF master
 )
+
+# disable docs
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,13 +37,13 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${OPEN62541_ENCRYPTION_OPTIONS}
-        -DOPEN62541_VERSION=${VERSION}
-    OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX=d
+        "-DOPEN62541_VERSION=v${VERSION}"
+        -DUA_MSVC_FORCE_STATIC_CRT=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/open62541")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
@@ -47,4 +51,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/open62541/tools")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

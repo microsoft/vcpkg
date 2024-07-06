@@ -1,0 +1,4 @@
+libssh2 provides CMake targets:
+
+    find_package(Libssh2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:Libssh2::libssh2_shared>,Libssh2::libssh2_shared,Libssh2::libssh2_static>)

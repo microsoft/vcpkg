@@ -11,28 +11,28 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    SOURCE_BASE ${LIB_VERSION}
+    ARCHIVE "${ARCHIVE}"
+    SOURCE_BASE "${LIB_VERSION}"
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 # We can use file supplied with original sources
-configure_file(${SOURCE_PATH}/build/vs2017/unistd.h ${SOURCE_PATH} COPYONLY)
-configure_file(${SOURCE_PATH}/build/vs2017/config.h ${SOURCE_PATH} COPYONLY)
-configure_file(${SOURCE_PATH}/build/vs2017/gmime.def ${SOURCE_PATH} COPYONLY)
+configure_file("${SOURCE_PATH}/build/vs2017/unistd.h" "${SOURCE_PATH}" COPYONLY)
+configure_file("${SOURCE_PATH}/build/vs2017/config.h" "${SOURCE_PATH}" COPYONLY)
+configure_file("${SOURCE_PATH}/build/vs2017/gmime.def" "${SOURCE_PATH}" COPYONLY)
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # License and man
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${LIB_NAME} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${LIB_NAME}" RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -16,6 +16,7 @@ vcpkg_from_github(
       0006-fix-jasper.patch
       0007-fix-config.patch
       0019-fix-openexr.patch
+      0020-missing-include.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")

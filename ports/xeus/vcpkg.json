@@ -9,7 +9,7 @@
     "cppzmq",
     {
       "name": "libuuid",
-      "platform": "linux"
+      "platform": "!windows & !osx"
     },
     "nlohmann-json",
     "openssl",

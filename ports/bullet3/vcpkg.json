@@ -1,6 +1,7 @@
 {
   "name": "bullet3",
   "version": "3.25",
+  "port-version": 1,
   "description": "Bullet Physics is a professional collision detection, rigid body, and soft body dynamics library",
   "homepage": "https://github.com/bulletphysics/bullet3",
   "license": "Zlib",
@@ -17,6 +18,9 @@
   "features": {
     "double-precision": {
       "description": "Use float64 doubles for bullet3"
+    },
+    "extras": {
+      "description": "Build the extras"
     },
     "multithreading": {
       "description": "Multithreading functionality for bullet3"

@@ -1,0 +1,13 @@
+snappy provides CMake targets:
+
+    find_package(Snappy CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Snappy::snappy)
+
+Optimizations based on hardware support are disabled by default.
+You can enable them by adding corresponding flags to VCPKG_CMAKE_CONFIGURE_OPTIONS inside a custom triplet file, for example:
+
+    if("${PORT}" STREQUAL "snappy")
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS -DSNAPPY_HAVE_SSSE3=ON -DSNAPPY_HAVE_BMI2=ON)
+    endif()
+
+For a full list of possible options, see project's root CMakeLists.txt.

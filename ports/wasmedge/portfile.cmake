@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO WasmEdge/WasmEdge
-    REF 0.12.0-alpha.1
-    SHA512 4218ecb6fba34b4ae94fc8c63b7da03c37f9dd2e404a9a6008be972a799b981929ada0ef213d8fababa25d10e27b777df66d22e1e61c92ff8e60b5e1caf97562
+    REF "${VERSION}"
+    SHA512 fcd6b804876a5899ec8c21aa349b7ec3e8e0b87537e93d237cb14da2ecb162410ae9ad39212c5ab01e4408191768b806d84e55934616de094a696bf6f02fe1de
     HEAD_REF master
 )
 
@@ -62,6 +62,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

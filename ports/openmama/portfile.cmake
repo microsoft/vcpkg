@@ -31,6 +31,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/LICENSE.md"
     "${CURRENT_PACKAGES_DIR}/debug/LICENSE.md"
     "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/config"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

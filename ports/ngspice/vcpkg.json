@@ -1,10 +1,17 @@
 {
   "name": "ngspice",
-  "version": "39",
+  "version": "41",
   "description": "Ngspice is a mixed-level/mixed-signal electronic circuit simulator. It is a successor of the latest stable release of Berkeley SPICE",
   "homepage": "http://ngspice.sourceforge.net/",
   "license": "CC-BY-SA-4.0",
   "supports": "!(linux | osx | arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ],
   "default-features": [
     "codemodels"
   ],

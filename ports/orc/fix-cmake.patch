@@ -1,0 +1,144 @@
+diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
+index 33ad5848..2a41e427 100644
+--- a/c++/src/CMakeLists.txt
++++ b/c++/src/CMakeLists.txt
+@@ -208,15 +208,30 @@ endif(BUILD_ENABLE_AVX512)
+ 
+ add_library (orc STATIC ${SOURCE_FILES})
+ 
++include(GNUInstallDirs)
++
++target_include_directories(orc
++  PUBLIC
++  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
++
+ target_link_libraries (orc
+-  orc::protobuf
+-  orc::zlib
+-  orc::snappy
+-  orc::lz4
+-  orc::zstd
++  PRIVATE
++  protobuf::libprotobuf
++  ZLIB::ZLIB
++  Snappy::snappy
++  lz4::lz4
++  $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+   ${LIBHDFSPP_LIBRARIES}
+-  )
++)
+ 
+ add_dependencies(orc orc-format_ep)
+ 
+-install(TARGETS orc DESTINATION lib)
++install(TARGETS orc EXPORT unofficial-orc)
++
++install(
++    EXPORT unofficial-orc
++    FILE unofficial-orc-config.cmake
++    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-orc"
++    NAMESPACE unofficial::orc::
++)
+\ No newline at end of file
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index ec33193d..5b7a009d 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -83,7 +83,8 @@ ExternalProject_Add (orc-format_ep
+ 
+ # ----------------------------------------------------------------------
+ # Snappy
+-
++find_package(Snappy CONFIG REQUIRED)
++if (0)
+ if (NOT "${SNAPPY_HOME}" STREQUAL "" OR ORC_PACKAGE_KIND STREQUAL "conan")
+   find_package (Snappy REQUIRED)
+   set(SNAPPY_VENDORED FALSE)
+@@ -130,10 +131,12 @@ if (SNAPPY_VENDORED)
+             DESTINATION "lib")
+   endif ()
+ endif ()
++endif ()
+ 
+ # ----------------------------------------------------------------------
+ # ZLIB
+-
++find_package(ZLIB REQUIRED)
++if (0)
+ if (NOT "${ZLIB_HOME}" STREQUAL "" OR ORC_PACKAGE_KIND STREQUAL "conan")
+   find_package (ZLIB REQUIRED)
+   set(ZLIB_VENDORED FALSE)
+@@ -184,10 +187,11 @@ if (ZLIB_VENDORED)
+             DESTINATION "lib")
+   endif ()
+ endif ()
+-
++endif ()
+ # ----------------------------------------------------------------------
+ # Zstd
+-
++find_package(zstd CONFIG REQUIRED)
++if (0)
+ if (NOT "${ZSTD_HOME}" STREQUAL "" OR ORC_PACKAGE_KIND STREQUAL "conan")
+   find_package (ZSTD REQUIRED)
+   set(ZSTD_VENDORED FALSE)
+@@ -249,10 +253,11 @@ if (ZSTD_VENDORED)
+             DESTINATION "lib")
+   endif ()
+ endif ()
+-
++endif ()
+ # ----------------------------------------------------------------------
+ # LZ4
+-
++find_package(lz4 CONFIG REQUIRED)
++if (0)
+ if (NOT "${LZ4_HOME}" STREQUAL "" OR ORC_PACKAGE_KIND STREQUAL "conan")
+   find_package (LZ4 REQUIRED)
+   set(LZ4_VENDORED FALSE)
+@@ -307,11 +312,11 @@ if (LZ4_VENDORED)
+             DESTINATION "lib")
+   endif ()
+ endif ()
+-
++endif ()
+ # ----------------------------------------------------------------------
+ # IANA - Time Zone Database
+ 
+-if (WIN32)
++if (WIN32 AND TEST_VALGRIND_MEMCHECK)
+   SET(CURRENT_TZDATA_FILE "")
+   SET(CURRENT_TZDATA_SHA512 "")
+   File(DOWNLOAD "https://ftp.osuosl.org/pub/cygwin/noarch/release/tzdata/sha512.sum" ${CMAKE_CURRENT_BINARY_DIR}/sha512.sum)
+@@ -413,7 +418,8 @@ endif ()
+ 
+ # ----------------------------------------------------------------------
+ # Protobuf
+-
++find_package(Protobuf CONFIG REQUIRED)
++if (0)
+ if (NOT "${PROTOBUF_HOME}" STREQUAL "" OR ORC_PACKAGE_KIND STREQUAL "conan")
+   find_package (Protobuf REQUIRED)
+   set(PROTOBUF_VENDORED FALSE)
+@@ -493,6 +499,7 @@ if (PROTOBUF_VENDORED)
+             DESTINATION "lib")
+   endif ()
+ endif ()
++endif ()
+ 
+ # ----------------------------------------------------------------------
+ # LIBHDFSPP
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index 3863c408..b71ab5ea 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -70,7 +70,7 @@ add_executable (orc-metadata
+ 
+ target_link_libraries (orc-metadata
+   orc
+-  orc::protobuf
++  protobuf::libprotobuf
+   ${CMAKE_THREAD_LIBS_INIT}
+   )
+ 

@@ -1,0 +1,39 @@
+diff --git a/aes_siv.c b/aes_siv.c
+index 00a510d..2b31ed3 100644
+--- a/aes_siv.c
++++ b/aes_siv.c
+@@ -5,7 +5,7 @@
+ #define _POSIX_C_SOURCE 200112L
+ #define _ISOC99_SOURCE 1
+
+-#include "config.h"
++#include "aes_siv_config.h"
+ #include "aes_siv.h"
+
+ #include <assert.h>
+diff --git a/bench.c b/bench.c
+index ea5a29b..61cb485 100644
+--- a/bench.c
++++ b/bench.c
+@@ -2,7 +2,7 @@
+  * SPDX-License-Identifier: Apache-2.0
+  */
+
+-#include "config.h"
++#include "aes_siv_config.h"
+ #include "aes_siv.h"
+
+ #define _POSIX_C_SOURCE 200112L
+diff --git a/tests.c b/tests.c
+index 996cc58..9ff9637 100644
+--- a/tests.c
++++ b/tests.c
+@@ -5,7 +5,7 @@
+ #define _POSIX_C_SOURCE 200112L
+ #define _ISOC99_SOURCE 1
+
+-#include "config.h"
++#include "aes_siv_config.h"
+ #include "aes_siv.h"
+
+ #undef NDEBUG

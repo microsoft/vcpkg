@@ -3,7 +3,7 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO plplot/plplot
-    REF "${VERSION} Source"
+    REF "${VERSION}%20Source"
     FILENAME "plplot-${VERSION}.tar.gz"
     SHA512 54533245569b724a7ef90392cc6e9ae65873e6cbab923df0f841c8b43def5e4307690894c7681802209bd3c8df97f54285310a706428f79b3340cce3207087c8
     PATCHES

@@ -1,0 +1,99 @@
+{
+  "name": "qcoro",
+  "version": "0.10.0",
+  "port-version": 1,
+  "description": "Coroutine support for Qt",
+  "homepage": "https://www.github.com/danvratil/qcoro",
+  "documentation": "https://qcoro.dvratil.cz",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "thread"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "dbus",
+    "network",
+    "qml",
+    "quick",
+    "test",
+    "websockets"
+  ],
+  "features": {
+    "dbus": {
+      "description": "Coroutine support for QtDBus module",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
+        }
+      ]
+    },
+    "network": {
+      "description": "Coroutine support for QtNetwork module",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Coroutine support for QtQml module",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "quick": {
+      "description": "Coroutine support for QtQuick module",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "test": {
+      "description": "Support code for easier testing of coroutines with QtTest.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "testlib"
+          ]
+        }
+      ]
+    },
+    "websockets": {
+      "description": "Coroutine support for QtWebSockets module",
+      "dependencies": [
+        {
+          "name": "qtwebsockets",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

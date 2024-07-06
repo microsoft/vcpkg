@@ -1,0 +1,36 @@
+diff --git a/src/colmap/feature/CMakeLists.txt b/src/colmap/feature/CMakeLists.txt
+index 78a2814..3680d05 100644
+--- a/src/colmap/feature/CMakeLists.txt
++++ b/src/colmap/feature/CMakeLists.txt
+@@ -40,6 +40,7 @@ COLMAP_ADD_LIBRARY(
+         utils.h utils.cc
+     PUBLIC_LINK_LIBS
+         Eigen3::Eigen
++        glog::glog
+     PRIVATE_LINK_LIBS
+         colmap_util
+         colmap_math
+diff --git a/src/colmap/image/CMakeLists.txt b/src/colmap/image/CMakeLists.txt
+index 64381cb..875bea2 100644
+--- a/src/colmap/image/CMakeLists.txt
++++ b/src/colmap/image/CMakeLists.txt
+@@ -38,6 +38,7 @@ COLMAP_ADD_LIBRARY(
+         warp.h warp.cc
+     PUBLIC_LINK_LIBS
+         Eigen3::Eigen
++        glog::glog
+     PRIVATE_LINK_LIBS
+         colmap_util
+         colmap_sensor
+diff --git a/src/colmap/retrieval/CMakeLists.txt b/src/colmap/retrieval/CMakeLists.txt
+index 903a935..cb8ad6a 100644
+--- a/src/colmap/retrieval/CMakeLists.txt
++++ b/src/colmap/retrieval/CMakeLists.txt
+@@ -43,6 +43,7 @@ COLMAP_ADD_LIBRARY(
+     PUBLIC_LINK_LIBS
+         Boost::boost
+         Eigen3::Eigen
++        glog::glog
+         flann
+         lz4
+     PRIVATE_LINK_LIBS

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uni-algo/uni-algo
     REF "v${VERSION}"
-    SHA512 031d6ec2a1a2c09972a68d7b9bf49a209441e69802d5d8d37b2a37d9b6e002427496d420629d2119dc1d0e80f38c7b220e253b0858db5f172789472447041799
+    SHA512 262f02acd56e96f0e4b4ba3d9793f2cab65c124d431add56fca2a7793c41c4cac7cd364395d4e84937e09f6c682366cca8228886388c8cc021b2ff2483f58652
     HEAD_REF main
 )
 
@@ -19,9 +19,6 @@ vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# Remove empty directory
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/uni_algo/impl/doc")
 
-# Install copyright and usage
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

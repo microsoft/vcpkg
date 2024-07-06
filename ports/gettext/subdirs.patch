@@ -1,0 +1,127 @@
+diff --git a/configure b/configure
+index 904bdf5..e751ffc 100755
+--- a/configure
++++ b/configure
+@@ -2797,7 +2797,7 @@ am__tar='${AMTAR} chf - --format=ustar --owner=root --group=root "$$tardir"'
+ 
+ 
+ 
+-subdirs="$subdirs gettext-runtime libtextstyle gettext-tools"
++subdirs="$subdirs gettext-runtime $(echo ${VCPKG_GETTEXT_SUBDIRS} | sed 's/gettext-runtime//')"
+ 
+ 
+ 
+diff --git a/Makefile.in b/Makefile.in
+index a287d38..075ddc5 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -311,7 +311,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
+ ACLOCAL_AMFLAGS = -I m4
+-SUBDIRS = gnulib-local gettext-runtime libtextstyle gettext-tools
++SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS)
+ changelog_etc = \
+   gettext-runtime/ChangeLog.0 \
+   gettext-runtime/doc/ChangeLog.0 \
+diff --git a/gettext-runtime/Makefile.in b/gettext-runtime/Makefile.in
+index 8b8b5bc..bb75447 100644
+--- a/gettext-runtime/Makefile.in
++++ b/gettext-runtime/Makefile.in
+@@ -1487,7 +1487,7 @@ ACLOCAL_AMFLAGS = -I m4 -I ../m4 -I gnulib-m4
+ # The list of subdirectories depends on whether --disable-libasprintf was
+ # specified.
+ @ENABLE_LIBASPRINTF_TRUE@SUBDIR_libasprintf = libasprintf
+-SUBDIRS = doc intl intl-java intl-csharp gnulib-lib $(SUBDIR_libasprintf) src po man m4 tests
++SUBDIRS =     $(VCPKG_INTL)              gnulib-lib                       src po
+ 
+ # Allow users to use "gnulib-tool --update".
+ 
+diff --git a/gettext-runtime/configure b/gettext-runtime/configure
+index a7594ed..296f3b7 100644
+--- a/gettext-runtime/configure
++++ b/gettext-runtime/configure
+@@ -26906,7 +26906,7 @@ printf "%s\n" "$ac_res" >&6; }
+ 
+                                         if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" = "yes"; } \
+            || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
+-                && test "$PACKAGE" != gettext-runtime \
++                && test "$PACKAGE" != pristine-gettext-runtime \
+                 && test "$PACKAGE" != gettext-tools \
+                 && test "$PACKAGE" != libintl; }; then
+           gt_use_preinstalled_gnugettext=yes
+diff --git a/gettext-runtime/libasprintf/configure b/gettext-runtime/libasprintf/configure
+--- a/gettext-runtime/libasprintf/configure
++++ b/gettext-runtime/libasprintf/configure
+index ff1c212..0c0dbcd 100644
+@@ -11,6 +11,7 @@
+ #
+ # This configure script is free software; the Free Software Foundation
+ # gives unlimited permission to copy, distribute and modify it.
++exit 0;
+ ## -------------------- ##
+ ## M4sh Initialization. ##
+ ## -------------------- ##
+diff --git a/gettext-tools/Makefile.in b/gettext-tools/Makefile.in
+index 59e81a8..107856d 100644
+--- a/gettext-tools/Makefile.in
++++ b/gettext-tools/Makefile.in
+@@ -2872,7 +2872,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
+ ACLOCAL_AMFLAGS = -I m4 -I ../gettext-runtime/m4 -I ../m4 -I gnulib-m4 -I libgrep/gnulib-m4 -I libgettextpo/gnulib-m4
+-SUBDIRS = gnulib-lib libgrep src libgettextpo po its projects styles emacs misc man m4 tests system-tests gnulib-tests examples doc
++SUBDIRS = gnulib-lib libgrep src              po its projects styles       misc
+ 
+ # Allow users to use "gnulib-tool --update".
+ 
+diff --git a/gettext-tools/configure b/gettext-tools/configure
+index 056a830..9abca7e 100644
+--- a/gettext-tools/configure
++++ b/gettext-tools/configure
+@@ -29661,7 +29661,7 @@ printf "%s\n" "$ac_res" >&6; }
+                                         if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" = "yes"; } \
+            || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
+                 && test "$PACKAGE" != gettext-runtime \
+-                && test "$PACKAGE" != gettext-tools \
++                && test "$PACKAGE" != pristine-gettext-tools \
+                 && test "$PACKAGE" != libintl; }; then
+           gt_use_preinstalled_gnugettext=yes
+         else
+diff --git a/gettext-tools/examples/configure b/gettext-tools/examples/configure
+--- a/gettext-tools/examples/configure
++++ b/gettext-tools/examples/configure
+index ff1c212..0c0dbcd 100644
+@@ -11,6 +11,7 @@
+ #
+ # This configure script is free software; the Free Software Foundation
+ # gives unlimited permission to copy, distribute and modify it.
++exit 0;
+ ## -------------------- ##
+ ## M4sh Initialization. ##
+ ## -------------------- ##
+diff --git a/gettext-tools/src/Makefile.in b/gettext-tools/src/Makefile.in
+--- a/gettext-tools/src/Makefile.in
++++ b/gettext-tools/src/Makefile.in
+index ff1c212..0c0dbcd 100644
+@@ -4381,6 +4381,7 @@
+ 	$(AM_V_GEN)$(msgfilter_LINK) $(msgfilter_OBJECTS) $(msgfilter_LDADD) $(LIBS)
+ ../../gettext-runtime/intl/$(am__dirstamp):
+ 	@$(MKDIR_P) ../../gettext-runtime/intl
++	@$(MAKE) -C ../../gettext-runtime/intl libgnuintl.h
+ 	@: > ../../gettext-runtime/intl/$(am__dirstamp)
+ ../../gettext-runtime/intl/msgfmt-hash-string.$(OBJEXT):  \
+ 	../../gettext-runtime/intl/$(am__dirstamp)
+diff --git a/libtextstyle/Makefile.in b/libtextstyle/Makefile.in
+index ff1c212..0c0dbcd 100644
+--- a/libtextstyle/Makefile.in
++++ b/libtextstyle/Makefile.in
+@@ -1667,7 +1667,7 @@ AUTOMAKE_OPTIONS = 1.13 gnu no-dependencies
+ ACLOCAL_AMFLAGS = -I m4 -I gnulib-m4
+ 
+ # The list of subdirectories containing Makefiles.
+-SUBDIRS = lib tests adhoc-tests doc
++SUBDIRS = lib
+ 
+ # Allow users to use "gnulib-tool --update".
+ 

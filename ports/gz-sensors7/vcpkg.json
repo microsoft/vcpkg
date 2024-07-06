@@ -1,0 +1,21 @@
+{
+  "name": "gz-sensors7",
+  "version": "7.3.0",
+  "description": "Component of Gazebo, provides numerous sensor models designed to generate realistic data from simulation environments.",
+  "homepage": "https://gazebosim.org/libs/sensors",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "gz-cmake3",
+    "gz-common5",
+    "gz-math7",
+    "gz-msgs9",
+    "gz-rendering7",
+    "gz-transport12",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    "protobuf",
+    "sdformat13"
+  ]
+}

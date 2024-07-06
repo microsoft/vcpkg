@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
-    REF 5c94ec3205c30171ffd01056f5b4622b7c0ab54c
-    SHA512 2423b1fc86d5b46c32d8e3bde5fc2b410a5c25c001995ce234a94a3a6c7a8b1446fdf19eafe9d6a8a7356fe0857697053db5eb8380d18f8111818aa770b4c4ea
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 ba79ad035993e7bc4c09b7d77964ba913eb0b2be33305e8a04a8c49aaab21c4d96ac828e31ae45484896105851fdfc8c305c63c8400e4481dd76c62a1c12286b
+    HEAD_REF main
     PATCHES fix-pkgconfig-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        avx AVX_SUPPORTED
+        avx2 AVX2_SUPPORTED
 )
 
 set(ADDITIONAL_OPUS_OPTIONS "")
@@ -30,7 +30,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DPACKAGE_VERSION=1.3.1
+        -DPACKAGE_VERSION=${VERSION}
         -DOPUS_STACK_PROTECTOR=${STACK_PROTECTOR}
         -DOPUS_INSTALL_PKG_CONFIG_MODULE=ON
         -DOPUS_INSTALL_CMAKE_CONFIG_MODULE=ON
@@ -52,4 +52,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

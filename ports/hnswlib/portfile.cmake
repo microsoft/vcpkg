@@ -1,12 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nmslib/hnswlib
-    REF 359b2ba87358224963986f709e593d799064ace6 # v0.7.0
-    SHA512 59a0c02bbe8f7389a2ecad9188a76eb3847b719a213d306093753c04e4eeb11d95e8e310aa03888364be475a2f2e6e7976bd81117517eef81eff2983379ac743
+    REF "v${VERSION}"
+    SHA512 2bac86547374ef762083f33b5209c7c02c89b3270442dda2bc80fbc7b6a33766cb81248841deddc2ca1f7c49e3e19889955f45c91d0b601d1c883a5e1c930794
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/hnswlib" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+set(VCPKG_BUILD_TYPE "release") # header-only port
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DHNSWLIB_EXAMPLES=OFF
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/hnswlib)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

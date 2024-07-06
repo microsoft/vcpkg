@@ -39,6 +39,11 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "Boost",
+          "name": "boost",
+          "platform": "!uwp"
+        },
+        {
           "$package": "BZip2",
           "name": "bzip2"
         },
@@ -79,7 +84,7 @@
         },
         {
           "$package": "Intl",
-          "name": "gettext"
+          "name": "gettext-libintl"
         },
         {
           "$package": "GIF",
@@ -153,6 +158,8 @@
           "name": "tiff",
           "default-features": false,
           "features": [
+            "lerc",
+            "libdeflate",
             "zstd"
           ]
         },

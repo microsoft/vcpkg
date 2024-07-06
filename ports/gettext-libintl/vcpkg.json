@@ -1,0 +1,20 @@
+{
+  "name": "gettext-libintl",
+  "version": "0.22.5",
+  "port-version": 2,
+  "description": "The libintl C library from GNU gettext-runtime.",
+  "homepage": "https://www.gnu.org/software/gettext/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "libiconv",
+      "platform": "!linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "linux"
+    }
+  ]
+}

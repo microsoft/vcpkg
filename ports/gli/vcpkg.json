@@ -1,7 +1,7 @@
 {
   "name": "gli",
   "version-date": "2021-07-06",
-  "port-version": 1,
+  "port-version": 2,
   "description": "OpenGL Image (GLI)",
   "homepage": "https://gli.g-truc.net",
   "dependencies": [

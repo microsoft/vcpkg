@@ -1,7 +1,7 @@
 {
   "name": "qtcharts",
-  "version": "6.4.3",
-  "description": "QtCharts module",
+  "version": "6.7.2",
+  "description": "The Qt Charts module provides a set of easy-to-use chart components. It uses the Qt Graphics View Framework to integrate charts with modern user interfaces.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [

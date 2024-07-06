@@ -1,0 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 32371d4..22223ed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -33,6 +33,8 @@ project(ztd.static_containers
+ 	VERSION 0.5.0
+ 	DESCRIPTION "A library for a fixed-capacity vector."
+ 	LANGUAGES C CXX)
++include(CMakePackageConfigHelpers)
++include(GNUInstallDirs)
+ 
+ if(ZTD_STATIC_CONTAINERS_READTHEDOCS)
+ 	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
+@@ -113,10 +115,7 @@ option(ZTD_STATIC_CONTAINERS_BENCHMARKS "Enable build of benchmarks" OFF)
+ 
+ # # Dependencies
+ # ztd.idk
+-FetchContent_Declare(ztd.idk
+-	GIT_REPOSITORY https://github.com/soasis/idk.git
+-	GIT_TAG main)
+-FetchContent_MakeAvailable(ztd.idk)
++find_package(ztd.idk CONFIG REQUIRED)
+ 
+ file(GLOB_RECURSE ztd.static_containers.sources
+ 	LIST_DIRECTORIES FALSE
+@@ -126,7 +125,6 @@ file(GLOB_RECURSE ztd.static_containers.sources
+ 
+ add_library(ztd.static_containers INTERFACE)
+ add_library(ztd::static_containers ALIAS ztd.static_containers)
+-target_sources(ztd.static_containers INTERFACE ${ztd.static_containers.sources})
+ target_link_libraries(ztd.static_containers
+ 	INTERFACE
+ 	ztd::idk
+@@ -155,6 +153,18 @@ export(TARGETS ztd.static_containers
+ 	FILE
+ 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.static_containers/ztd.static_containers-targets.cmake")
+ 
++install(TARGETS ztd.static_containers
++	EXPORT ztd.static_containers-targets)
++install(EXPORT ztd.static_containers-targets
++  FILE ztd.static_containers-targets.cmake
++  DESTINATION share/ztd.static_containers
++)
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.static_containers/ztd.static_containers-config.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.static_containers/ztd.static_containers-config-version.cmake
++  DESTINATION share/ztd.static_containers
++)
++ 
+ # # Benchmarks, Tests, Examples
+ if(ZTD_STATIC_CONTAINERS_TESTS)
+ 	enable_testing()
+diff --git a/cmake/ztd.static_containers-config.cmake.in b/cmake/ztd.static_containers-config.cmake.in
+index f96ace2..94340c1 100644
+--- a/cmake/ztd.static_containers-config.cmake.in
++++ b/cmake/ztd.static_containers-config.cmake.in
+@@ -1,6 +1,9 @@
+ @PACKAGE_INIT@
+-
+-if (TARGET ztd::static_containers)
++include(CMakeFindDependencyMacro)
++find_dependency(ztd.idk CONFIG)
++include("${CMAKE_CURRENT_LIST_DIR}/ztd.static_containers-targets.cmake")
++if (TARGET ztd.static_containers)
++	add_library(ztd::static_containers ALIAS ztd.static_containers)
+ 	get_target_property(ZTD_STATIC_CONTAINERS_INCLUDE_DIRS
+ 		ztd.static_containers INTERFACE_INCLUDE_DIRECTORIES)
+ 	set_and_check(ZTD_STATIC_CONTAINERS_INCLUDE_DIRS "${ZTD_STATIC_CONTAINERS_INCLUDE_DIRS}")

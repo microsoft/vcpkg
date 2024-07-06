@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" GNUTLS_BRANCH "${VERSION}")
 vcpkg_download_distfile(tarball
     URLS
@@ -7,13 +5,15 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 4199bcf7c9e3aab2f52266aadceefc563dfe2d938d0ea1f3ec3be95d66f4a8c8e5494d3a800c03dd02ad386dec1738bd63e1fe0d8b394a2ccfc7d6c6a0cc9359
+    SHA512 4bac1aa7ec1dce9b3445cc515cc287a5af032d34c207399aa9722e3dc53ed652f8a57cfbc9c5e40ccc4a2631245d89ab676e3ba2be9563f60ba855aaacb8e23c
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
+        ccasflags.patch
         use-gmp-pkgconfig.patch
+        link-zlib.patch   # directly as before 3.8.4
 )
 
 vcpkg_list(SET options)
@@ -28,8 +28,8 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
@@ -42,7 +42,6 @@ vcpkg_configure_make(
         --disable-guile
         --disable-libdane
         --disable-maintainer-mode
-        --disable-silent-rules
         --disable-rpath
         --disable-tests
         --with-brotli=no
@@ -50,6 +49,7 @@ vcpkg_configure_make(
         --with-tpm=no
         --with-tpm2=no
         --with-zstd=no
+        --with-zlib=yes
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG
@@ -57,6 +57,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

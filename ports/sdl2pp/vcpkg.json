@@ -6,7 +6,10 @@
   "homepage": "https://sdl2pp.amdmi3.ru",
   "license": "Zlib",
   "dependencies": [
-    "sdl2",
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
     "sdl2-image",
     "sdl2-mixer",
     "sdl2-ttf",

@@ -26,10 +26,10 @@ index 53e8643..09baaa0 100644
 -  ${PROJECT_BINARY_DIR}/third_party/googletest EXCLUDE_FROM_ALL)
 +find_package(GTest CONFIG REQUIRED)
 +
-+if (TARGET uv)
-+    set(LIBUV_LIBRARY uv)
++if (TARGET libuv::uv)
++    set(LIBUV_LIBRARY libuv::uv)
 +else()
-+    set(LIBUV_LIBRARY uv_a)
++    set(LIBUV_LIBRARY libuv::uv_a)
 +endif()
  
  list(APPEND TP_TEST_LINK_LIBRARIES

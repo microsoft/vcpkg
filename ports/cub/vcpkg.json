@@ -1,6 +1,6 @@
 {
   "name": "cub",
-  "version": "1.16.0",
+  "version": "2.1.0",
   "description": "CUB is a flexible library of cooperative threadblock primitives and other utilities for CUDA kernel programming",
   "homepage": "https://github.com/NVIDIA/cub",
   "license": "BSD-3-Clause",

@@ -1,16 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF 6b5fb806a9190f7425c32db65d3ea905a55a9c16 #version 3.3
-    SHA512 fe79ce6c73341f83d4aee8cb4da5341dead56a92f998212f7898079b79725f46b2209d64e68fe3b4d99d3c5c25775a8efd1bf3c3b3a049d4f609d3e30172d3bf
+    REF "osgearth-${VERSION}"
+    SHA512 f65c31922bebcbf722474a047dc29c8c1ceec9c037b0704811af2627fc2d0a124b6e95888e7d3b9b0e5acc146a88ebf8669e3f864a75a91751c3a4571d05a630
     HEAD_REF master
     PATCHES
         link-libraries.patch
         find-package.patch
         remove-tool-debug-suffix.patch
 		remove-lerc-gltf.patch
-		fix-osgearth-config.patch
 		export-plugins.patch
+        protobuf.patch
 )
 
 if("tools" IN_LIST FEATURES)
@@ -33,11 +33,12 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 file(REMOVE
-    "${SOURCE_PATH}/CMakeModule/FindGEOS.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindLibZip.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindOSG.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindSqlite3.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindWEBP.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindBlend2D.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindGEOS.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindLibZip.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindOSG.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindSqlite3.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindWEBP.cmake"
     "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
 )
 
@@ -46,7 +47,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       OSGEARTH_BUILD_TOOLS
-        blend2d     CMAKE_REQUIRE_FIND_PACKAGE_BLEND2D
+        blend2d     WITH_BLEND2D
 )
 
 vcpkg_cmake_configure(
@@ -65,6 +66,8 @@ vcpkg_cmake_configure(
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
+    MAYBE_UNUSED_VARIABLES
+        LIB_POSTFIX
 )
 
 vcpkg_cmake_install()
@@ -84,14 +87,14 @@ if("tools" IN_LIST FEATURES)
             file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
         endif()
     endif()
-    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
-        osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
+        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
 		osgearth_createtile osgearth_mvtindex
         AUTO_CLEAN
     )
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

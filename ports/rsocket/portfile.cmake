@@ -14,6 +14,9 @@ vcpkg_from_github(
     fix-find-dependencies.patch
     use-cpp-17.patch
     fix-folly.patch
+    fix-rsockserver-build-error.patch
+    fix-yarpl.patch
+    fix-c2665.patch
 )
 
 vcpkg_cmake_configure(
@@ -41,4 +44,4 @@ file(REMOVE_RECURSE
   "${CURRENT_PACKAGES_DIR}/include/rsocket/test"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

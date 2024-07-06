@@ -1,0 +1,133 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+parameters:
+  - name: vcpkgToolSha
+    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+    type: string
+    default: 'use default'
+  - name: jobName
+    type: string
+  - name: dockerImage
+    type: string
+  - name: tripletPattern
+    displayName: 'Enable the triplets which contain this substring'
+    type: string
+    default: ''
+
+jobs:
+- job: ${{ parameters.jobName }}
+  condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
+  pool:
+    name: 'PrAnd-1ES-Pool'
+    demands:
+    - ImageOverride -equals vcpkg-mariner-docker-gen1
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  cancelTimeoutInMinutes: 1
+  dependsOn: mintsas
+  variables:
+  - name: WORKING_ROOT
+    value: /mnt/vcpkg-ci
+  - name: VCPKG_DOWNLOADS
+    value: /mnt/vcpkg-ci/downloads
+  - name: X_VCPKG_ASSET_SOURCES
+    value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_ASSET_SOURCES'] ]
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_BINARY_SOURCE_STUB'] ]
+  - name: ANDROID_NDK_HOME
+    value: /android-ndk-r26d
+  steps:
+    # Note: /mnt is the Azure machines' temporary disk.
+  - bash: |
+      az login --identity
+      az acr login --name vcpkgandroidwus3
+    displayName: 'Set up managed identity'
+  - bash: |
+      sudo mkdir /home/agent -m=777
+      sudo chown `id -u` /home/agent
+      sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
+      sudo rm -rf ${{ variables.WORKING_ROOT }}/failure-logs
+      sudo mkdir ${{ variables.WORKING_ROOT }}/failure-logs -m=777
+      sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      exit 0
+    displayName: 'Create working directories'
+  - bash: |
+      CONTAINERS=$(docker ps -a -q)
+      if [ -n "$CONTAINERS" ]; then
+        docker rm -f $CONTAINERS
+      fi
+    displayName: 'Stop and remove all docker containers'
+  - bash: |
+      docker pull ${{ parameters.dockerImage }}
+    displayName: 'Pull Docker Container'
+  - bash: |
+      docker run --rm \
+      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+      ${{ parameters.dockerImage }} \
+      ./bootstrap-vcpkg.sh
+    displayName: 'Bootstrap vcpkg'
+    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
+  - bash: |
+      docker run --rm \
+      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+      ${{ parameters.dockerImage }} \
+      ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
+    displayName: "Build vcpkg with CMake"
+    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+  - task: Bash@3
+    inputs:
+      targetType: inline
+      script: |
+        USER=$(id --user)
+        docker run --init -i \
+        -a stderr \
+        -a stdout \
+        --user $USER \
+        --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+        --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
+        --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
+        --env X_VCPKG_ASSET_SOURCES="$(X_VCPKG_ASSET_SOURCES)" \
+        --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
+        ${{ parameters.dockerImage }} \
+        pwsh \
+         -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
+         -Triplet ${{ replace(parameters.jobName, '_', '-') }} \
+         -BuildReason $(Build.Reason) \
+         -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" \
+         -WorkingRoot ${{ variables.WORKING_ROOT }}
+      failOnStderr: true
+    displayName: '*** Test Modified Ports'
+  - bash: |
+      CONTAINERS=$(docker ps -a -q)
+      if [ -n "$CONTAINERS" ]; then
+        docker rm -f $CONTAINERS
+      fi
+    displayName: 'Stop and remove all docker containers'
+    condition: always()
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
+    inputs:
+      PathtoPublish: '$(WORKING_ROOT)/failure-logs'
+      ArtifactName: "failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+  - bash: |
+      python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
+    displayName: 'Build a file list for all packages'
+    condition: always()
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: file lists for ${{ replace(parameters.jobName, '_', '-') }}"
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: "file lists for ${{ replace(parameters.jobName, '_', '-') }}"
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    condition: ne(variables['XML_RESULTS_FILE'], '')
+    inputs:
+      testRunTitle: ${{ replace(parameters.jobName, '_', '-') }}
+      testResultsFormat: xUnit
+      testResultsFiles: $(XML_RESULTS_FILE)
+      platform: ${{ replace(parameters.jobName, '_', '-') }}

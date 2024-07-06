@@ -1,0 +1,22 @@
+{
+  "name": "kerbal",
+  "version": "2024.6.1",
+  "description": "Kerbal C++ Template Library",
+  "homepage": "https://github.com/WentsingNee/Kerbal",
+  "license": "LGPL-3.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "pretty-printer": {
+      "description": "Pretty printer support for kerbal"
+    }
+  }
+}

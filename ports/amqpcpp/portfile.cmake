@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CopernicaMarketingSoftware/AMQP-CPP
     REF "v${VERSION}"
-    SHA512 6220d6cdd3114cf02f08f1d8599d1f6de94df204384f9da7db1c18f74732a5c23063cd50066b7d32906af0a968d600daf0d59f1649d9674fa67446197c6e4988
+    SHA512 0fb280bfea6dc665d44efa7321a4b69c130a5f0b10be7ada7909e00ec8a3ca0b98125bd96475386f1b3627bac9f8e5c9bbd71b462868b46919737da32e021cb4
     HEAD_REF master
     PATCHES
         find-openssl.patch
+        fix-max_min_macros.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)

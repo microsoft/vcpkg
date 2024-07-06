@@ -1,9 +1,11 @@
 {
   "name": "libxmp",
-  "version-date": "2023-04-13",
+  "version": "4.6.0",
+  "port-version": 1,
   "description": "Libxmp is a library that renders module files to PCM data.",
   "homepage": "https://sourceforge.net/projects/xmp/",
   "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -6,16 +6,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AngusJohnson/Clipper2
     REF "Clipper2_${VERSION}"
-    SHA512 e996ef8a2ec412189f0ba95a6f200c0818f9755930b05cd20b630d33760dec619c6a735ac056f5dfbaccf793bf6ebeb7b6c102fd9ff83b0d297a4d660389d8d9
+    SHA512 64028ab0610dc2b44e48a299d8498de59807f36d8471c4758e3bbf87de682b0d0a29d027a495f36dd5432737cedc44f09a8336f0d620846d58616244c72e226c
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/CPP"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DCLIPPER2_EXAMPLES=OFF
         -DCLIPPER2_TESTS=OFF
-        -DCLIPPER2_UTILS=OFF
+        -DCLIPPER2_UTILS=ON
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()

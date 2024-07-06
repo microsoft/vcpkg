@@ -1,7 +1,7 @@
 {
   "name": "json11",
   "version-date": "2017-06-20",
-  "port-version": 5,
+  "port-version": 6,
   "description": "json11 is a tiny JSON library for C++11, providing JSON parsing and serialization.",
   "dependencies": [
     {

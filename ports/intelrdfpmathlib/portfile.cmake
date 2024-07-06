@@ -9,6 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES missing-includes.patch
 )
 
 set(LIB_SOURCE_PATH "${SOURCE_PATH}/LIBRARY")

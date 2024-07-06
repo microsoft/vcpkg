@@ -20,7 +20,8 @@ vcpkg_configure_meson(
         -Dcache-build=disabled
         -Dtests=disabled
 )
-#https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+
+# https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
 # Adding OPTIONS for e.g. baseconfig-dir etc. won't work since meson will try to install into those dirs!
 # Since adding OPTIONS does not work use a replacement in the generated config.h instead
 set(replacement "")
@@ -29,9 +30,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h")
 vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}")
+vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"" IGNORE_UNCHANGED)
 if(NOT VCPKG_BUILD_TYPE)
     set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.h")
     vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}/debug" "${replacement}")
+    vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"" IGNORE_UNCHANGED)
 endif()
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
@@ -40,9 +43,9 @@ vcpkg_copy_pdbs()
 #Fix missing libintl static dependency
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl" IGNORE_UNCHANGED)
     endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl" IGNORE_UNCHANGED)
 endif()
 vcpkg_fixup_pkgconfig()
 
@@ -58,7 +61,7 @@ endif()
 # Make path to cache in fonts.conf relative
 set(_file "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
 if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" "${CURRENT_PACKAGES_DIR}/var/cache/fontconfig" "./../../var/cache/fontconfig")
+    vcpkg_replace_string("${_file}" "${CURRENT_PACKAGES_DIR}/var/cache/fontconfig" "./../../var/cache/fontconfig" IGNORE_UNCHANGED)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var"

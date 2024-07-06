@@ -1,11 +1,11 @@
 {
   "name": "libproxy",
   "version": "0.4.18",
-  "port-version": 2,
+  "port-version": 4,
   "description": "libproxy is a library that provides automatic proxy configuration management.",
   "homepage": "https://github.com/libproxy/libproxy",
   "license": "LGPL-2.1-only",
-  "supports": "!uwp",
+  "supports": "!(uwp | xbox | android)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

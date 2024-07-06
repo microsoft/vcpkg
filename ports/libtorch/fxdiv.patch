@@ -1,0 +1,45 @@
+diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+index d185233..11f285b 100644
+--- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
++++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+@@ -389,12 +389,12 @@ if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
+     "${FXDIV_SOURCE_DIR}"
+     "${CONFU_DEPENDENCIES_BINARY_DIR}/fxdiv")
+ elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
+-  find_file(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
++  find_path(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
+   if(NOT FXDIV_HDR)
+     message(FATAL_ERROR "Cannot find fxdiv")
+   endif()
+-  add_library(fxdiv STATIC "${FXDIV_HDR}")
+-  set_property(TARGET fxdiv PROPERTY LINKER_LANGUAGE C)
++  add_library(fxdiv INTERFACE IMPORTED)
++  target_include_directories(fxdiv INTERFACE "${FXDIV_HDR}")
+ endif()
+ target_link_libraries(pytorch_qnnpack PRIVATE fxdiv)
+ 
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index f7a595e..47faec5 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -108,12 +108,19 @@ endif()
+ # addressed yet.
+ 
+ if(NOT MSVC AND USE_XNNPACK)
+-  if(NOT TARGET fxdiv)
++  if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
+     set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+     set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+     add_subdirectory(
+       "${FXDIV_SOURCE_DIR}"
+       "${CMAKE_BINARY_DIR}/FXdiv")
++  elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
++    find_path(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
++    if(NOT FXDIV_HDR)
++      message(FATAL_ERROR "Cannot find fxdiv")
++    endif()
++    add_library(fxdiv INTERFACE IMPORTED)
++    target_include_directories(fxdiv INTERFACE "${FXDIV_HDR}")
+   endif()
+ endif()
+ 

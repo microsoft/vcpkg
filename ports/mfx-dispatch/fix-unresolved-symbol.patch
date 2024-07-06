@@ -54,11 +54,12 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 diff --git a/src/mfx_driver_store_loader.cpp b/src/mfx_driver_store_loader.cpp
 --- a/src/mfx_driver_store_loader.cpp	(revision 388559e9e8234eb0989e1598a9beea4035a04132)
 +++ b/src/mfx_driver_store_loader.cpp	(revision 5ebef171699530ca01594a5cef10a68811f4d105)
-@@ -24,6 +24,8 @@
+@@ -24,6 +24,9 @@
  #include "mfx_dispatcher_log.h"
  #include "mfx_load_dll.h"
  
 +#pragma comment(lib, "Ole32.lib")
++#pragma comment(lib, "Advapi32.lib")
 +
  namespace MFX
  {

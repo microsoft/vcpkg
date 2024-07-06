@@ -2,21 +2,14 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/
     message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
+    URLS
+        "https://ftpmirror.gnu.org/gmp/gmp-${VERSION}.tar.xz"
+        "https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz"
+        "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
     FILENAME "gmp-${VERSION}.tar.xz"
-    SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
-)
-
-# Avoid the x18 register since it is reserved on arm64 osx and windows.
-vcpkg_download_distfile(
-    ARM64PATCH
-    URLS https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
-    FILENAME gmp-arm64-asm-fix-5f32dbc41afc.patch
-    SHA512 4a7c50dc0a78e6c297c0ac53129ed367dbf669100a613653987d0eddf175376296254ed26ecce15d02b0544b99e44719af49635e54982b22e745f22e2f8d1eda
+    SHA512 e85a0dab5195889948a3462189f0e0598d331d3457612e2d3350799dba2e244316d256f8161df5219538eb003e4b5343f989aaa00f96321559063ed8c8f29fd2
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -28,7 +21,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         msvc_symbol.patch
         arm64-coff.patch
-        "${ARM64PATCH}"
 )
 
 vcpkg_list(SET OPTIONS)
@@ -40,6 +32,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND OPTIONS
         "ac_cv_func_memset=yes"
         "gmp_cv_asm_w32=.word"
+        "gmp_cv_check_libm_for_build=no"
     )
 endif()
 
@@ -65,6 +58,10 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 elseif(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # not exporting asm functions
     set(disable_assembly ON)
+elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    vcpkg_list(APPEND OPTIONS "ABI=32")
+    string(APPEND asmflags " -m32")
 else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
@@ -102,6 +99,7 @@ if(NOT VCPKG_CROSSCOMPILING)
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-fib${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-jacobitab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-psqr${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-sieve${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-trialdivtab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
         USE_SOURCE_PERMISSIONS

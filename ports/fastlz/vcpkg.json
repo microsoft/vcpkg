@@ -1,7 +1,7 @@
 {
   "name": "fastlz",
   "version-date": "2021-05-10",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A lightning-fast lossless compression library",
   "homepage": "https://github.com/ariya/FastLZ",
   "dependencies": [

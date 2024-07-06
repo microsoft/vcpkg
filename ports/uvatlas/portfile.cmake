@@ -1,4 +1,4 @@
-set(UVATLAS_TAG mar2023)
+set(UVATLAS_TAG jun2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,9 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF ${UVATLAS_TAG}
-    SHA512 f937c5881e963400c82bf5d780399e7733850a134f37aa40e819155fcef956631db19d4e14faa4db1381baad254015228afbb96523cce84c60087e877a6d5f59
+    SHA512 b1e4be095be8db87bdebbebb2069f8803dcf1db1033b69bef273a1d460fa4a83a33101202918d77f877dae7e7823768bea31726589d4f3a3c9a8cb54881ad6ea
     HEAD_REF main
-    PATCHES openexr.patch
 )
 
 vcpkg_check_features(
@@ -25,10 +24,11 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TESTING=OFF
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/uvatlas)
 
 if("tools" IN_LIST FEATURES)
@@ -41,7 +41,7 @@ if("tools" IN_LIST FEATURES)
       UVATLASTOOL_EXE
       URLS "https://github.com/Microsoft/UVAtlas/releases/download/${UVATLAS_TAG}/uvatlastool.exe"
       FILENAME "uvatlastool-${UVATLAS_TAG}.exe"
-      SHA512 8c0986581415449b4d9cb5c056e6f4ad8313bb1481e97479eddbdea200061275c7c77823cdb2719cdc06e3b46bab5e907c1483752d42304978e015b26058ebf6
+      SHA512 203f4b07ce1052e5263dc7f6ad6704c275ed2dde03cba278c35d7b113aade6e39596f106190527052648a65d43769c4bca0b11c3e058bb3a4d0e2ed5ca115986
     )
 
     file(INSTALL
@@ -54,7 +54,7 @@ if("tools" IN_LIST FEATURES)
 
     vcpkg_copy_tools(
           TOOL_NAMES uvatlastool
-          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin"
       )
 
   endif()
@@ -62,4 +62,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
