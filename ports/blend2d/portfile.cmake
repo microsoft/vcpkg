@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF 68ef9107503c0c5675daf310ea11e835b6a6f31f # commited on 2024-07-07
   SHA512 822acaa7eedecaa1fb5b8dca14e622057c28aa305e9df432e9e8a7448e365a24e76d6f162a3347853690f687dae73cfbf1f0463347aa2e48a7f75906bad664e2
   HEAD_REF master
+  PATCHES
+    cmake-config.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
