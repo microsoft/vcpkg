@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF 68ef9107503c0c5675daf310ea11e835b6a6f31f # commited on 2024-07-07
   SHA512 822acaa7eedecaa1fb5b8dca14e622057c28aa305e9df432e9e8a7448e365a24e76d6f162a3347853690f687dae73cfbf1f0463347aa2e48a7f75906bad664e2
   HEAD_REF master
+  PATCHES
+    cmake-config.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
@@ -29,14 +31,17 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(BLEND2D_STATIC)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d/api.h"
+        "#if !defined(BL_STATIC)"
+        "#if 0"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d-debug.h"
+        "#if defined(BL_STATIC)"
+        "#if 1"
+    )
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
-if(BLEND2D_STATIC)
-  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage_static.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
-else()
-  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-endif()
