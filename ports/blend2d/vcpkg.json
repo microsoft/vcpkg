@@ -5,7 +5,7 @@
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
   "license": "Zlib",
-  "supports": "!wasm32",
+  "supports": "!uwp & !wasm32",
   "dependencies": [
     "asmjit",
     {
