@@ -2793,8 +2793,8 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "10.2.1",
-      "port-version": 2
+      "baseline": "11.0.1",
+      "port-version": 0
     },
     "folly": {
       "baseline": "2024.06.24.00",
