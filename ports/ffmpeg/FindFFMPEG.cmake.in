@@ -161,4 +161,6 @@ endif()
 
 find_package_handle_standard_args(FFMPEG REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_LIBRARY_DIRS FFMPEG_INCLUDE_DIRS)
 
+set(z_vcpkg_using_vcpkg_find_ffmpeg ${FFMPEG_FOUND})
+
 endif()
