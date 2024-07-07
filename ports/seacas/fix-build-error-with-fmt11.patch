@@ -1,3 +1,15 @@
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_Decomposition.C b/packages/seacas/libraries/ioss/src/Ioss_Decomposition.C
+index fa2719a..0a7cfff 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_Decomposition.C
++++ b/packages/seacas/libraries/ioss/src/Ioss_Decomposition.C
+@@ -14,6 +14,7 @@
+ #include <algorithm>
+ #include <cassert>
+ #include <fmt/ostream.h>
++#include <fmt/ranges.h>
+ #include <numeric>
+ 
+ #if !defined(NO_ZOLTAN_SUPPORT)
 diff --git a/packages/seacas/libraries/ioss/src/Ioss_IOFactory.C b/packages/seacas/libraries/ioss/src/Ioss_IOFactory.C
 index ef20a45..faa7943 100644
 --- a/packages/seacas/libraries/ioss/src/Ioss_IOFactory.C
