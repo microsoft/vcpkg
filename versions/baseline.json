@@ -5413,7 +5413,7 @@
       "port-version": 0
     },
     "llvm-openmp": {
-      "baseline": "18.1.6",
+      "baseline": "18.1.8",
       "port-version": 0
     },
     "lmdb": {
