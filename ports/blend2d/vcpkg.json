@@ -1,11 +1,11 @@
 {
   "name": "blend2d",
   "version-date": "2024-06-28",
-  "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
+  "description": "2D Vector Graphics Engine Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
   "license": "Zlib",
-  "supports": "!uwp & !wasm32",
+  "supports": "!wasm32",
   "dependencies": [
     "asmjit",
     {
@@ -19,7 +19,6 @@
   ],
   "default-features": [
     "jit",
-    "logging",
     "tls"
   ],
   "features": {
@@ -28,20 +27,7 @@
       "dependencies": [
         {
           "name": "blend2d",
-          "default-features": false,
-          "platform": "windows"
-        }
-      ]
-    },
-    "logging": {
-      "description": "Default feature. Enables logging.",
-      "dependencies": [
-        {
-          "name": "blend2d",
-          "default-features": false,
-          "features": [
-            "jit"
-          ]
+          "default-features": false
         }
       ]
     },
@@ -50,8 +36,7 @@
       "dependencies": [
         {
           "name": "blend2d",
-          "default-features": false,
-          "platform": "windows"
+          "default-features": false
         }
       ]
     }
