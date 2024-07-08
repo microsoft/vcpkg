@@ -8,8 +8,8 @@ vcpkg_from_github(
         link-libraries.patch
         find-package.patch
         remove-tool-debug-suffix.patch
-		remove-lerc-gltf.patch
-		export-plugins.patch
+        remove-lerc-gltf.patch
+        export-plugins.patch
         protobuf.patch
         blend2d.patch
 )
