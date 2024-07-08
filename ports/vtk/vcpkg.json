@@ -238,8 +238,7 @@
             "widgets"
           ]
         },
-        "qtdeclarative",
-        "qtimageformats"
+        "qtdeclarative"
       ]
     },
     "utf8": {
