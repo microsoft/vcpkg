@@ -14,9 +14,7 @@
       "name": "libuv",
       "platform": "!osx, !ios"
     },
-    {
-      "name": "realm-core"
-    },
+    "realm-core",
     {
       "name": "vcpkg-cmake",
       "host": true
