@@ -1,10 +1,11 @@
 diff -u -r a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -6,6 +6,26 @@
+@@ -6,6 +6,27 @@
  
  include(CMakeFindDependencyMacro)
  
++find_dependency(Boost COMPONENTS @Boost_COMPONENTS@)
 +if(@USE_GIF@)
 +    find_dependency(GIF)
 +endif()
