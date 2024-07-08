@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF 907dfe275d9cdfce1a7c00520b9e8d7a163b852a # commited on 2024-07-08
   SHA512 bb83394e7a3895105e18621d447904baa1fb70a70f2fd609a7c33ddf5daa162aa833a9e62d118d09fa6101ba7d67405bb645fdb19297f38fd4d8393566145e3c
   HEAD_REF master
+  PATCHES
+    uwp_patch.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
