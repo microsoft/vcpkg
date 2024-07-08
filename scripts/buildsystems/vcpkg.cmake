@@ -797,6 +797,8 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     string(TOLOWER "${z_vcpkg_find_package_package_name}" z_vcpkg_find_package_lowercase_package_name)
     set(z_vcpkg_find_package_vcpkg_cmake_wrapper_path
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
+    message(WARNING "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+
     if(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
         if(VCPKG_TRACE_FIND_PACKAGE)
             string(REPEAT "  " "${z_vcpkg_find_package_backup_id}" z_vcpkg_find_package_indent)
