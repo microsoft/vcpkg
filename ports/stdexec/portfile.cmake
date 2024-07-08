@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF 089c4613385f808c3b39c4f4915f658157013a36
     SHA512 a9c1d4009b71bfc280801814272319312b8edcd3106c5fd8fdab6fc2eb2c64be4a01374026de02129389e4d2280599b14a3c037566a1bbefcd6b48c5052d583b
     HEAD_REF main
+    PATCHES
+        fix-version.patch
 )
 
 vcpkg_from_github(
