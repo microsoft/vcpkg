@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Vendor and platform neutral SDR interface library.",
   "homepage": "https://github.com/pothosware/SoapySDR/wiki",
+  "license": "BSL-1.0",
   "supports": "!uwp & !static",
   "dependencies": [
     {

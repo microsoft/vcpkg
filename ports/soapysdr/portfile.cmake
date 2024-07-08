@@ -10,9 +10,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DENABLE_DOCS=OFF
         -DENABLE_APPS=OFF
-	-DENABLE_PYTHON=OFF
-	-DENABLE_PYTHON3=OFF
-	-DENABLE_TESTS=OFF
+        -DENABLE_PYTHON=OFF
+        -DENABLE_PYTHON3=OFF
+        -DENABLE_TESTS=OFF
 )
 
 vcpkg_cmake_install()
@@ -21,15 +21,9 @@ vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt"
 )
 
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if (VCPKG_TARGET_IS_WINDOWS)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/cmake/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/soapysdr/)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
-endif()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
