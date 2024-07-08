@@ -1,7 +1,6 @@
 {
   "name": "date",
-  "version": "3.0.1",
-  "port-version": 5,
+  "version-date": "2024-05-14",
   "description": "A date and time library based on the C++17 <chrono> header",
   "homepage": "https://github.com/HowardHinnant/date",
   "license": "MIT",

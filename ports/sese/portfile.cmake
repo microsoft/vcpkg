@@ -17,17 +17,18 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO libsese/sese
         REF "${VERSION}"
-        SHA512 e7c3e014ff2eaecf9968c4fa304ec98445b57458b87da1c4af17f41655565b3cc187e07189ee280104e07b1511f6e2c490a3c689d49d8982d054fc9a462fe136
+        SHA512 6a87cabe6cbd69ab41de85be27ff397c1ae49f95c11151a27e8b9329afe4ff3b580084be53c129e883be50e13fadccb3b6cc1eed833c44ce4f8457dedc71b758
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
-        tests        SESE_BUILD_TEST
-        mysql        SESE_DB_USE_MARIADB
-        sqlite3      SESE_DB_USE_SQLITE
-        psql         SESE_DB_USE_POSTGRES
-        async-logger SESE_USE_ASYNC_LOGGER
-        archive      SESE_USE_ARCHIVE
+        tests            SESE_BUILD_TEST
+        mysql            SESE_DB_USE_MARIADB
+        sqlite3          SESE_DB_USE_SQLITE
+        psql             SESE_DB_USE_POSTGRES
+        async-logger     SESE_USE_ASYNC_LOGGER
+        archive          SESE_USE_ARCHIVE
+        replace-execinfo SESE_REPLACE_EXECINFO
 )
 
 vcpkg_cmake_configure(
@@ -42,6 +43,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sese")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 remove_empty_directories_recursive("${CURRENT_PACKAGES_DIR}/include/sese")
+
+vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/NOTICE")
 

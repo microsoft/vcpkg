@@ -36,6 +36,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-win-build.patch
         vcpkg-cross-data.patch
         darwin-rpath.patch
+        mingw-strict-ansi.diff # backport of https://github.com/unicode-org/icu/pull/3003
 )
 
 vcpkg_find_acquire_program(PYTHON3)
