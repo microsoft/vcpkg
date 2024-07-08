@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
     REF "v${VERSION}"
-    SHA512 48e38864d7cd20b4ff23cfca1a29b4cbf453ce842e037ca473ce5c7e9a5b1c0bf6b12e4c544c812bff2b4bb9feca409587175b6570929c9ac172cb4402d679da
+    SHA512 3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db
     HEAD_REF master
     PATCHES
         double-conversion.patch
@@ -15,7 +15,6 @@ vcpkg_from_github(
         opencl.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
-        cxx17.patch # See https://github.com/InsightSoftwareConsortium/ITK/issues/4213#issuecomment-1722547712
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -123,6 +122,12 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL
     set(USE_64BITS_IDS ON)
 endif()
 
+if (VCPKG_CRT_LINKAGE STREQUAL static)
+    set(STATIC_CRT_LNK ON)
+else()
+    set(STATIC_CRT_LNK OFF)
+endif()
+
 file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -131,6 +136,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_PKGCONFIG_FILES=OFF
+        -DITK_MSVC_STATIC_RUNTIME_LIBRARY=${STATIC_CRT_LNK}
         -DITK_DOXYGEN_HTML=OFF
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
@@ -200,14 +206,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.3/vcl_where_root_dir.h")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.4/vcl_where_root_dir.h")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
 
 if("rtk" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/rtkConfiguration.h" "#define RTK_BINARY_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Modules/Remote/RTK\"" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/rtkConfiguration.h" "#define RTK_DATA_ROOT \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ExternalData/Modules/Remote/RTK/test\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_BINARY_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Modules/Remote/RTK\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_DATA_ROOT \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ExternalData/Modules/Remote/RTK/test\"" "")
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "\${ITK_INSTALL_PREFIX}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${SOURCE_PATH}/Modules/Remote/RTK/utilities/lp_solve" "\${ITK_INSTALL_PREFIX}/include/RTK/lpsolve")
