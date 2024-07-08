@@ -1,6 +1,6 @@
 {
   "name": "sese",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "A cross-platform framework for basic components.",
   "homepage": "https://github.com/libsese/sese",
   "license": "Apache-2.0",
@@ -48,6 +48,12 @@
         "libpq"
       ]
     },
+    "replace-execinfo": {
+      "description": "replace the system execinfo implementation",
+      "dependencies": [
+        "libunwind"
+      ]
+    },
     "sqlite3": {
       "description": "add sqlite3 support",
       "dependencies": [
@@ -57,6 +63,7 @@
     "tests": {
       "description": "build the unit test",
       "dependencies": [
+        "benchmark",
         "gtest"
       ]
     }

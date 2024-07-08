@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF 089c4613385f808c3b39c4f4915f658157013a36
     SHA512 a9c1d4009b71bfc280801814272319312b8edcd3106c5fd8fdab6fc2eb2c64be4a01374026de02129389e4d2280599b14a3c037566a1bbefcd6b48c5052d583b
     HEAD_REF main
+    PATCHES
+        fix-version.patch
 )
 
 vcpkg_from_github(
@@ -23,9 +25,9 @@ vcpkg_download_distfile(RAPIDS_cmake
 file(COPY "${RAPIDS_cmake}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
 vcpkg_download_distfile(execution_bs
-    URLS "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/R7/execution.bs"
+    URLS "https://raw.githubusercontent.com/cplusplus/sender-receiver/main/execution.bs"
     FILENAME "execution.bs"
-    SHA512 90f2a1d150b03c29bb05a5420e091c2371cb973335a089916716d778bc1081764436dc1ff0fec60f642ddb0ca5492c8b0c3a6d5451c2d60a42911f918fe980fa
+    SHA512 90bb992356f22e4091ed35ca922f6a0143abd748499985553c0660eaf49f88d031a8f900addb6b4cf9a39ac8d1ab7c858b79677e2459136a640b2c52afe3dd23
 )
 file(COPY "${execution_bs}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
