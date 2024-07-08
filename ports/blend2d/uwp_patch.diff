@@ -1,5 +1,5 @@
 diff --git a/src/blend2d/filesystem.cpp b/src/blend2d/filesystem.cpp
-index 1c7c2d4..b4d48ec 100644
+index 1c7c2d4..af77873 100644
 --- a/src/blend2d/filesystem.cpp
 +++ b/src/blend2d/filesystem.cpp
 @@ -25,7 +25,7 @@
@@ -11,3 +11,47 @@ index 1c7c2d4..b4d48ec 100644
      #define BL_PLATFORM_UWP
    #endif
  #endif
+@@ -289,13 +289,7 @@ BL_API_IMPL BLResult blFileOpen(BLFileCore* self, const char* fileName, BLFileOp
+ 
+ #if defined(BL_PLATFORM_UWP)
+   // UWP platform doesn't provide CreateFileW, but we can use CreateFile2 instead.
+-  HANDLE handle = CreateFile2(
+-    fileNameW.dataAsWCharT(),
+-    dwDesiredAccess,
+-    dwShareMode,
+-    dwCreationDisposition,
+-    nullptr
+-  );
++  HANDLE handle = INVALID_HANDLE_VALUE;
+ #else
+   DWORD dwFlagsAndAttributes = 0;
+   LPSECURITY_ATTRIBUTES lpSecurityAttributes = nullptr;
+@@ -867,13 +861,7 @@ BLResult BLFileMapping::map(BLFile& file, size_t size, uint32_t flags) noexcept
+ 
+   // Create a file mapping handle and map view of file into it.
+ #if defined(BL_PLATFORM_UWP)
+-  HANDLE hFileMapping = CreateFileMappingFromApp(
+-    (HANDLE)file.handle, // hFile
+-    nullptr,             // SecurityAttributes
+-    dwProtect,           // PageProtection
+-    0,                   // MaximumSize
+-    nullptr              // Name
+-  );
++  HANDLE hFileMapping = nullptr;
+ #else
+   HANDLE hFileMapping = CreateFileMappingW(
+     (HANDLE)file.handle, // hFile
+@@ -889,12 +877,7 @@ BLResult BLFileMapping::map(BLFile& file, size_t size, uint32_t flags) noexcept
+     return blTraceError(blResultFromWinError(GetLastError()));
+ 
+ #if defined(BL_PLATFORM_UWP)
+-  void* data = MapViewOfFileFromApp(
+-    hFileMapping,        // hFileMappingObject
+-    dwDesiredAccess,     // DesiredAccess
+-    0,                   // FileOffset
+-    0                    // NumberOfBytesToMap
+-  );
++  void* data = nullptr;
+ #else
+   void* data = MapViewOfFile(
+     hFileMapping,        // hFileMappingObject
