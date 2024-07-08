@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
+        fix_vulkan_enabled.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -60,6 +61,7 @@ vcpkg_configure_meson(
         -Dman-pages=false
         -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
         -Dprint-cups=disabled       # Build the cups print backend
+        -Dvulkan=disabled           # Enable support for the Vulkan graphics API
         -Dcloudproviders=disabled   # Enable the cloudproviders support
         -Dsysprof=disabled          # include tracing support for sysprof
         -Dtracker=disabled          # Enable Tracker3 filechooser search

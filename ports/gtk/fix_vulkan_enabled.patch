@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 5ade7c2..927ce79 100644
+--- a/meson.build
++++ b/meson.build
+@@ -123,7 +123,7 @@ os_unix = not os_win32
+ 
+ if os_darwin
+   wayland_enabled = false
+-  vulkan_enabled = false
++  vulkan_enabled = vulkan_enabled.disable_if(true)
+ else
+   macos_enabled = false
+ endif
