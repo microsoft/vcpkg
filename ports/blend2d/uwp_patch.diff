@@ -1,57 +1,40 @@
+diff --git a/src/blend2d/api-build_p.h b/src/blend2d/api-build_p.h
+index 1e3288e..7f471f8 100644
+--- a/src/blend2d/api-build_p.h
++++ b/src/blend2d/api-build_p.h
+@@ -124,7 +124,19 @@ extern "C" void __tsan_release(void *addr);
+ #endif
+ 
+ #if defined(_WIN32) && !defined(_WIN32_WINNT)
+-  #define _WIN32_WINNT 0x0600
++  #if defined(WINAPI_FAMILY) && defined(__has_include)
++    #if __has_include(<winapifamily.h>)
++      #include <winapifamily.h>
++      #if WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
++        #define BL_PLATFORM_UWP
++        #define _WIN32_WINNT 0x0602 // Windows 8+ (CreateFile2, CreateFileMappingFromApp, ...)
++      #endif
++    #endif
++  #endif
++
++  #if !defined(_WIN32_WINNT)
++    #define _WIN32_WINNT 0x0600 // Windows Vista+ (CONDITION_VARIABLE, ...)
++  #endif
+ #endif
+ 
+ // The FileSystem API works fully with 64-bit file sizes and offsets, however, this feature must be enabled before
 diff --git a/src/blend2d/filesystem.cpp b/src/blend2d/filesystem.cpp
-index 1c7c2d4..af77873 100644
+index 1c7c2d4..9388821 100644
 --- a/src/blend2d/filesystem.cpp
 +++ b/src/blend2d/filesystem.cpp
-@@ -25,7 +25,7 @@
+@@ -24,10 +24,6 @@
+   #elif defined(__NetBSD__) || defined(__APPLE__)
      #define BL_FS_STAT_MTIMESPEC(s) s.st_mtimespec
    #endif
- #else
+-#else
 -  #if !defined(CreateFile)
-+  #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
-     #define BL_PLATFORM_UWP
-   #endif
+-    #define BL_PLATFORM_UWP
+-  #endif
  #endif
-@@ -289,13 +289,7 @@ BL_API_IMPL BLResult blFileOpen(BLFileCore* self, const char* fileName, BLFileOp
  
- #if defined(BL_PLATFORM_UWP)
-   // UWP platform doesn't provide CreateFileW, but we can use CreateFile2 instead.
--  HANDLE handle = CreateFile2(
--    fileNameW.dataAsWCharT(),
--    dwDesiredAccess,
--    dwShareMode,
--    dwCreationDisposition,
--    nullptr
--  );
-+  HANDLE handle = INVALID_HANDLE_VALUE;
- #else
-   DWORD dwFlagsAndAttributes = 0;
-   LPSECURITY_ATTRIBUTES lpSecurityAttributes = nullptr;
-@@ -867,13 +861,7 @@ BLResult BLFileMapping::map(BLFile& file, size_t size, uint32_t flags) noexcept
- 
-   // Create a file mapping handle and map view of file into it.
- #if defined(BL_PLATFORM_UWP)
--  HANDLE hFileMapping = CreateFileMappingFromApp(
--    (HANDLE)file.handle, // hFile
--    nullptr,             // SecurityAttributes
--    dwProtect,           // PageProtection
--    0,                   // MaximumSize
--    nullptr              // Name
--  );
-+  HANDLE hFileMapping = nullptr;
- #else
-   HANDLE hFileMapping = CreateFileMappingW(
-     (HANDLE)file.handle, // hFile
-@@ -889,12 +877,7 @@ BLResult BLFileMapping::map(BLFile& file, size_t size, uint32_t flags) noexcept
-     return blTraceError(blResultFromWinError(GetLastError()));
- 
- #if defined(BL_PLATFORM_UWP)
--  void* data = MapViewOfFileFromApp(
--    hFileMapping,        // hFileMappingObject
--    dwDesiredAccess,     // DesiredAccess
--    0,                   // FileOffset
--    0                    // NumberOfBytesToMap
--  );
-+  void* data = nullptr;
- #else
-   void* data = MapViewOfFile(
-     hFileMapping,        // hFileMappingObject
+ #ifdef _WIN32
