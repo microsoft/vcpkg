@@ -35,7 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("cufftw" IN_LIST FEATURES)
     # Alternativly set CUFFT_LIB and CUFFTW_LIB
-    if(WIN32)
+    if(VCPKG_TARGET_IS_WINDOWS)
         file(TO_CMAKE_PATH "$ENV{CUDA_PATH}" CUDA_PATH)
         set(CUDA_LIB_PATH "${CUDA_PATH}")
 
