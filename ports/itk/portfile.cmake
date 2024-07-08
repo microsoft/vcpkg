@@ -189,6 +189,10 @@ vcpkg_cmake_configure(
 
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
+    MAYBE_UNUSED_VARIABLES
+        DCMTK_USE_ICU # Used by DCMTK
+        ITK_USE_SYSTEM_GOOGLETEST
+        ITK_USE_SYSTEM_ICU # Used by DCMTK
 )
 if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
