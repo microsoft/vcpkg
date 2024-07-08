@@ -166,7 +166,7 @@ endif()
 
 if("icu" IN_LIST FEATURES)
     list(APPEND required_externals icu)
-    string(APPEND OPTIONS " skia_use_icu=true")
+    string(APPEND OPTIONS " skia_use_icu=true skia_use_system_icu=true")
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
@@ -245,6 +245,12 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn")
         "get_git(),"
         "\"${GIT}\","
     )
+endif()
+if("icu" IN_LIST FEATURES)
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/icu/BUILD.gn"
+        [[config("vcpkg_icu") {]]
+        [[import("icu.gni")
+config("vcpkg_icu")  {]])
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
