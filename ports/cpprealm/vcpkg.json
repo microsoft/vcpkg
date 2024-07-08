@@ -8,17 +8,14 @@
   "dependencies": [
     {
       "name": "curl",
-      "platform": "linux",
-      "version>=": "8.4.0"
+      "platform": "linux"
     },
     {
       "name": "libuv",
-      "platform": "!osx, !ios",
-      "version>=": "1.43.0"
+      "platform": "!osx, !ios"
     },
     {
-      "name": "realm-core",
-      "version>=": "14.8.0"
+      "name": "realm-core"
     },
     {
       "name": "vcpkg-cmake",
