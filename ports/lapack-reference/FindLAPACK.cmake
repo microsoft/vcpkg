@@ -466,7 +466,7 @@ if(BLAS_FOUND)
         "${BLAS_LIBRARIES}"
       )
     endif()
-    if(NOT LAPACK_LIBRARIES AND NOT WIN32)
+    if(NOT LAPACK_LIBRARIES)
       check_lapack_libraries(
         LAPACK_LIBRARIES
         LAPACK

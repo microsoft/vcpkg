@@ -12,11 +12,11 @@
       "features": [
         "cblas"
       ],
-      "platform": "!osx & !ios & !uwp & !(windows & arm) & windows & static"
+      "platform": "!osx & !ios & !uwp & !(windows & arm) & (windows & !mingw) & static"
     },
     {
       "name": "openblas",
-      "platform": "!osx & !ios & (uwp | (windows & arm) | !windows | !static)"
+      "platform": "!osx & !ios & (uwp | (windows & arm) | !(windows & !mingw) | !static)"
     },
     {
       "name": "vcpkg-cmake",
