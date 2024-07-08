@@ -215,7 +215,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ###### Verify that required components and only those are enabled
+        --trace-expand
+        ###### Verify that required components are enabled: NEVER TURN IT OFF!
         -DENABLE_CONFIG_VERIFICATION=ON
         ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
         -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE

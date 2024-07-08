@@ -48,6 +48,14 @@
           "name": "opencv2",
           "default-features": false,
           "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
             "msmf"
           ],
           "platform": "windows & !mingw"
@@ -64,7 +72,7 @@
       "description": "GTK support for opencv",
       "supports": "linux",
       "dependencies": [
-        "gtk"
+        "gtk3"
       ]
     },
     "jasper": {

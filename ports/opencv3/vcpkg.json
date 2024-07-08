@@ -67,6 +67,14 @@
             "tiff",
             "webp"
           ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
         }
       ]
     },
@@ -117,7 +125,7 @@
       "description": "GTK support for opencv",
       "supports": "linux",
       "dependencies": [
-        "gtk"
+        "gtk3"
       ]
     },
     "halide": {
