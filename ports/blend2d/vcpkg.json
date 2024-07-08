@@ -1,11 +1,11 @@
 {
   "name": "blend2d",
-  "version-date": "2024-07-07",
+  "version-date": "2024-07-08",
   "description": "2D Vector Graphics Engine Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
   "license": "Zlib",
-  "supports": "!uwp & !wasm32",
+  "supports": "!wasm32",
   "dependencies": [
     "asmjit",
     {

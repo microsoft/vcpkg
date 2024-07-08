@@ -5,7 +5,7 @@
   "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
-  "supports": "!(arm | x86 | wasm32 | xbox)",
+  "supports": "!(arm | x86 | wasm32 | xbox | uwp)",
   "dependencies": [
     "basisu",
     "blosc",
