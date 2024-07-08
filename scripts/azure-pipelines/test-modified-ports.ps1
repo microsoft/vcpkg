@@ -120,7 +120,7 @@ if ($IsWindows) {
     rmdir empty
 }
 
-if ($IsLinuxHost)
+if ($IsLinux)
 {
     Write-Host "Downloading and setting up Java"
     & "./vcpkg" x-download openjdk.tar.gz "--sha512=0bf168239a9a1738ad6368b8f931d072aeb122863ec39ea86dc0449837f06953ce18be87bab7e20fd2585299a680ea844ec419fa235da87dfdd7e37b73740a57" "--url=https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz" @cachingArgs
