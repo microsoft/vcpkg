@@ -6521,7 +6521,7 @@
       "port-version": 0
     },
     "openmp": {
-      "baseline": "2024-06-19",
+      "baseline": "2024-07-08",
       "port-version": 0
     },
     "openmpi": {
