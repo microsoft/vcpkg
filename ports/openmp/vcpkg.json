@@ -6,7 +6,7 @@
   "dependencies": [
     {
       "name": "llvm-openmp",
-      "platform": "!android & !(windows & static) & !uwp"
+      "platform": "!android & !uwp"
     },
     {
       "name": "vcpkg-cmake",

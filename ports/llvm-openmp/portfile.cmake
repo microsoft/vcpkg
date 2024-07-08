@@ -1,8 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    # https://github.com/llvm/llvm-project/blob/llvmorg-18.1.6/openmp/runtime/CMakeLists.txt#L331
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-endif()
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/openmp-${VERSION}.src.tar.xz"
     FILENAME "llvm-openmp-${VERSION}.src.tar.xz"
@@ -29,10 +24,11 @@ file(COPY ${CMAKE_MODULES} DESTINATION "${SOURCE_PATH}/cmake")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/llvm-openmp-config.cmake.in" DESTINATION "${SOURCE_PATH}/runtime/cmake")
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" ENABLE_SHARED)
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(ENABLE_SHARED ON)
+    # https://github.com/llvm/llvm-project/blob/llvmorg-18.1.6/openmp/runtime/CMakeLists.txt#L331
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
 # Perl is required for the OpenMP run-time
 vcpkg_find_acquire_program(PERL)
