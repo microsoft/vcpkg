@@ -1,0 +1,10 @@
+--- a/absl/container/CMakeLists.txt
++++ b/absl/container/CMakeLists.txt
+@@ -213,6 +213,7 @@ absl_cc_library(
+   DEPS
+     absl::config
+     GTest::gmock
++  TESTONLY
+ )
+ 
+ absl_cc_test(

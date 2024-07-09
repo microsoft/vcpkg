@@ -12,6 +12,7 @@ vcpkg_from_github(
         0001-revert-integer-to-string-conversion-optimizations.patch # Fix openvino MSVC compile error
 		0002-Fix-missing-include-random-for-std-uniform_int_distr.patch # Fix missing include for std::uniform_int_distribution
         779a356-test-allocator.diff
+        0004-test-allocator-testonly.patch # Do not build test_allocator target when tests are disabled
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
