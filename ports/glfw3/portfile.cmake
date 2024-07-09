@@ -6,30 +6,30 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_LINUX)
-    message(
-"GLFW3 currently requires the following libraries from the system package manager:
-    xinerama
-    xcursor
-    xorg
-    libglu1-mesa
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    message("${PORT} currently requires the following libraries from the system package manager:
+    X11
+    XRandR
+    Xinerama
+    Xcursor
+    XInput
     pkg-config
-
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config
-
+On Debian and Ubuntu derivatives:
+    sudo apt install libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev pkg-config
+On CentOS and recent Red Hat derivatives:
+    sudo yum install libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel pkgconfig
+On Fedora derivatives:
+    sudo dnf install libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel pkgconf-pkg-config
+On Arch Linux and derivatives:
+    sudo pacman -S libx11 libxrandr libxinerama libxcursor libxi pkgconf
+On Alpine:
+    apk add libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev pkgconfig
+On openSUSE:
+    sudo zypper install libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel pkg-config
+On macOS:
+    brew install pkg-config libx11 libxrandr libxinerama libxcursor libxix
 Alternatively, when targeting the Wayland display server, use the packages listed in the GLFW documentation here:
-
-https://www.glfw.org/docs/3.3/compile.html#compile_deps_wayland")
-else(VCPKG_TARGET_IS_OSX)
-    message(
-"GLFW3 currently requires the following libraries from the system package manager:
-    xinerama
-    xcursor
-    xorg
-    libglu1-mesa
-    pkg-config
-
-These can be installed via brew install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
+https://www.glfw.org/docs/3.4/compile.html#compile_deps_wayland \n")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -54,6 +54,6 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
 vcpkg_copy_pdbs()
