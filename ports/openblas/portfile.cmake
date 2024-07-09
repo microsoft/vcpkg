@@ -40,7 +40,7 @@ if(VCPKG_CROSSCOMPILING)
 endif()
  
 if(VCPKG_TARGET_IS_OSX)
-   list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
     endif()
