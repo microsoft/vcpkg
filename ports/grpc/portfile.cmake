@@ -6,18 +6,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 91c2406ed4198509ac0d5360b3da6898fa4f40f459eb6fff541faa44cc238eed98fd7489e7ef7a80a6f4a318bc5b9130eaa0ba1beaa358d1c074fc82825648ff
+    SHA512 18fbce2f77caca6bd21374db2234411ec37d27e5b171b1008aac6810f1a98e3f51826b9dc5e8bd29a746e4f2f31b2a87d6f1bbf988e72e321ca81e7b14f1a4b5
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
         00002-static-linking-in-linux.patch
-        00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00017-abseil.patch
 )
 # Ensure de-vendoring
 file(REMOVE_RECURSE

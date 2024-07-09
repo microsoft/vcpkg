@@ -1,0 +1,26 @@
+diff --git a/src/message/rpc_message_srpc.cc b/src/message/rpc_message_srpc.cc
+index 032bb6a..1ef8091 100644
+--- a/src/message/rpc_message_srpc.cc
++++ b/src/message/rpc_message_srpc.cc
+@@ -465,7 +465,7 @@ int SRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
+ 		options.add_whitespace = this->get_json_add_whitespace();
+ 		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
+ 		options.preserve_proto_field_names = this->get_json_preserve_names();
+-		options.always_print_primitive_fields = this->get_json_print_primitive();
++		options.always_print_fields_with_no_presence = this->get_json_print_primitive();
+ 
+ 		ret = BinaryToJsonStream(resolver, GetTypeUrl(pb_msg), &input_stream,
+ 								 &output_stream, options).ok() ? 0 : -1;
+diff --git a/src/message/rpc_message_trpc.cc b/src/message/rpc_message_trpc.cc
+index eb98218..a9d9d50 100644
+--- a/src/message/rpc_message_trpc.cc
++++ b/src/message/rpc_message_trpc.cc
+@@ -910,7 +910,7 @@ int TRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
+ 		options.add_whitespace = this->get_json_add_whitespace();
+ 		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
+ 		options.preserve_proto_field_names = this->get_json_preserve_names();
+-		options.always_print_primitive_fields = this->get_json_print_primitive();
++		options.always_print_fields_with_no_presence = this->get_json_print_primitive();
+ 
+ 		ret = BinaryToJsonStream(resolver, GetTypeUrl(pb_msg), &input_stream,
+ 								 &output_stream, options).ok() ? 0 : -1;
