@@ -13,8 +13,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_RAPIDS
     REPO rapidsai/rapids-cmake
-    REF c7a28304639a2ed460181b4753f3280c7833c718
-    SHA512 9a87fdef490199337778b8c9b4df31ca37d65df23803d058f13b406dcfda4d96d992b2780b0b878b61b027c0dc848351496a0f32e779f95298f259bab040b49b
+    REF v24.02.01 # stable tag (stdexec wants branch-24.02)
+    SHA512 bb8f2b1177f6451d61f2de26f39fd6d31c2f0fb80b4cd1409edc3e6e4f726e80716ec177d510d0f31b8f39169cd8b58290861f0f217daedbd299e8e426d25891
     HEAD_REF main
 )
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" 
