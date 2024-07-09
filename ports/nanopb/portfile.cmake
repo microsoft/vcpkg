@@ -43,7 +43,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 if(nanopb_BUILD_GENERATOR)
     file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/generator/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    if(WIN32)
+    if(VCPKG_TARGET_IS_WINDOWS)
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/nanopb_generator.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/protoc-gen-nanopb.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     else()

@@ -14,7 +14,7 @@
     },
     "ableton-link": {
       "baseline": "3.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "abseil": {
       "baseline": "20240116.2",
@@ -1453,7 +1453,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "caf": {
@@ -2010,7 +2010,7 @@
     },
     "crashpad": {
       "baseline": "2024-04-11",
-      "port-version": 0
+      "port-version": 1
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -2214,7 +2214,7 @@
     },
     "dbus": {
       "baseline": "1.15.8",
-      "port-version": 4
+      "port-version": 5
     },
     "dcmtk": {
       "baseline": "3.6.8",
@@ -2677,7 +2677,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "fcl": {
@@ -2702,7 +2702,7 @@
     },
     "fftw3": {
       "baseline": "3.3.10",
-      "port-version": 8
+      "port-version": 9
     },
     "fftwpp": {
       "baseline": "2019-12-19",
@@ -2721,7 +2721,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2805,7 +2805,7 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3630,7 +3630,7 @@
     },
     "imgui": {
       "baseline": "1.90.7",
-      "port-version": 0
+      "port-version": 1
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -4622,7 +4622,7 @@
     },
     "liblas": {
       "baseline": "1.8.1",
-      "port-version": 14
+      "port-version": 15
     },
     "liblbfgs": {
       "baseline": "1.10",
@@ -4654,7 +4654,7 @@
     },
     "liblsquic": {
       "baseline": "3.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "liblzf": {
       "baseline": "3.6",
@@ -4753,7 +4753,7 @@
       "port-version": 4
     },
     "libnick": {
-      "baseline": "2024.7.0",
+      "baseline": "2024.7.2",
       "port-version": 0
     },
     "libnoise": {
@@ -5042,7 +5042,7 @@
     },
     "libsrt": {
       "baseline": "1.5.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libsrtp": {
       "baseline": "2.5.0",
@@ -5066,7 +5066,7 @@
     },
     "libsvm": {
       "baseline": "3.32",
-      "port-version": 0
+      "port-version": 1
     },
     "libsystemd": {
       "baseline": "256.2",
@@ -5297,7 +5297,7 @@
       "port-version": 2
     },
     "libxml2": {
-      "baseline": "2.11.7",
+      "baseline": "2.11.8",
       "port-version": 0
     },
     "libxmlmm": {
@@ -5866,7 +5866,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "modern-cpp-kafka": {
       "baseline": "2023.03.07",
@@ -6045,7 +6045,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "mygui": {
@@ -6098,7 +6098,7 @@
     },
     "nanopb": {
       "baseline": "0.4.8",
-      "port-version": 0
+      "port-version": 1
     },
     "nanoprintf": {
       "baseline": "0.3.4",
@@ -6121,7 +6121,7 @@
       "port-version": 6
     },
     "nativefiledialog-extended": {
-      "baseline": "1.1.1",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "nayuki-qr-code-generator": {
@@ -7077,7 +7077,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "psimd": {
@@ -7394,7 +7394,7 @@
     },
     "qtconnectivity": {
       "baseline": "6.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtdatavis3d": {
       "baseline": "6.7.2",
@@ -7502,7 +7502,7 @@
     },
     "qtsensors": {
       "baseline": "6.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtserialbus": {
       "baseline": "6.7.2",
@@ -8296,6 +8296,10 @@
       "baseline": "1.6.1",
       "port-version": 0
     },
+    "soapysdr": {
+      "baseline": "0.8.1",
+      "port-version": 0
+    },
     "sobjectizer": {
       "baseline": "5.8.2",
       "port-version": 0
@@ -8658,6 +8662,10 @@
     },
     "tcp-pubsub": {
       "baseline": "1.0.3",
+      "port-version": 0
+    },
+    "tdscpp": {
+      "baseline": "20240707",
       "port-version": 0
     },
     "telnetpp": {
@@ -9114,7 +9122,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 7
+      "port-version": 8
     },
     "valijson": {
       "baseline": "1.0.2",
@@ -9361,7 +9369,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.07.01.00",
+      "baseline": "2024.07.08.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9750,7 +9758,7 @@
     },
     "zlmediakit": {
       "baseline": "2024-03-30",
-      "port-version": 2
+      "port-version": 3
     },
     "zoe": {
       "baseline": "3.1",
