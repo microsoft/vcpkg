@@ -12,6 +12,7 @@ vcpkg_from_github(
         bentleyottmann-build.patch
         graphite.patch
         vulkan-headers.patch
+        pdfsubsetfont-uwp.diff
 )
 
 # De-vendor
