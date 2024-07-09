@@ -17,27 +17,27 @@ vcpkg_from_github(
     SHA512 9a87fdef490199337778b8c9b4df31ca37d65df23803d058f13b406dcfda4d96d992b2780b0b878b61b027c0dc848351496a0f32e779f95298f259bab040b49b
     HEAD_REF main
 )
-
-vcpkg_download_distfile(RAPIDS_cmake
-    URLS "https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.02/RAPIDS.cmake"
-    FILENAME "RAPIDS.cmake"
-    SHA512 e7830364222a9ea46fe7756859dc8d36e401c720f6a49880a2945a9ebc5bd9aa7e40a8bd382e1cae3af4235d5c9a7998f38331e23b676af7c5c72e7f00e61f0c
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" 
+    [[file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-24.02/RAPIDS.cmake]]
+    "file(COPY_FILE \"${SOURCE_PATH_RAPIDS}/RAPIDS.cmake\""
 )
-file(COPY "${RAPIDS_cmake}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
 vcpkg_download_distfile(execution_bs
     URLS "https://raw.githubusercontent.com/cplusplus/sender-receiver/main/execution.bs"
     FILENAME "execution.bs"
     SHA512 90bb992356f22e4091ed35ca922f6a0143abd748499985553c0660eaf49f88d031a8f900addb6b4cf9a39ac8d1ab7c858b79677e2459136a640b2c52afe3dd23
 )
-file(COPY "${execution_bs}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" 
+    [[file(DOWNLOAD "https://raw.githubusercontent.com/cplusplus/sender-receiver/main/execution.bs"]]
+    "file(COPY_FILE \"${execution_bs}\""
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSTDEXEC_BUILD_TESTS=OFF
         -DSTDEXEC_BUILD_EXAMPLES=OFF
-        -DFETCHCONTENT_SOURCE_DIR_RAPIDS-CMAKE="${SOURCE_PATH_RAPIDS}"
+        "-DFETCHCONTENT_SOURCE_DIR_RAPIDS-CMAKE=${SOURCE_PATH_RAPIDS}"
 )
 
 vcpkg_cmake_install()
