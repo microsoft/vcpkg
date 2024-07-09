@@ -5297,7 +5297,7 @@
       "port-version": 2
     },
     "libxml2": {
-      "baseline": "2.11.7",
+      "baseline": "2.11.8",
       "port-version": 0
     },
     "libxmlmm": {
