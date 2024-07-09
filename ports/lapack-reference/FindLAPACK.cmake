@@ -158,7 +158,7 @@ macro(CHECK_LAPACK_LIBRARIES LIBRARIES _prefix _name _flags _list _threadlibs _a
           PATHS ${_extaddlibdir}
           PATH_SUFFIXES ${_subdirs}
         )
-        #message("DEBUG: find_library(${_library}) got ${${_prefix}_${_library}_LIBRARY}")
+        message("DEBUG: find_library(${_library}) got ${${_prefix}_${_library}_LIBRARY}")
         mark_as_advanced(${_prefix}_${_library}_LIBRARY)
         set(${LIBRARIES} ${${LIBRARIES}} ${${_prefix}_${_library}_LIBRARY})
         set(_libraries_work ${${_prefix}_${_library}_LIBRARY})
@@ -169,7 +169,7 @@ macro(CHECK_LAPACK_LIBRARIES LIBRARIES _prefix _name _flags _list _threadlibs _a
   if(_libraries_work)
     # Test this combination of libraries.
     set(CMAKE_REQUIRED_LIBRARIES ${_flags} ${${LIBRARIES}} ${_blas} ${_threadlibs})
-    #message("DEBUG: CMAKE_REQUIRED_LIBRARIES = ${CMAKE_REQUIRED_LIBRARIES}")
+    message("DEBUG: CMAKE_REQUIRED_LIBRARIES = ${CMAKE_REQUIRED_LIBRARIES}")
     if(CMAKE_Fortran_COMPILER_LOADED)
       check_fortran_function_exists("${_name}" ${_prefix}${_combined_name}_WORKS)
     else()
@@ -188,7 +188,7 @@ macro(CHECK_LAPACK_LIBRARIES LIBRARIES _prefix _name _flags _list _threadlibs _a
   else()
     set(${LIBRARIES} FALSE)
   endif()
-  #message("DEBUG: ${LIBRARIES} = ${${LIBRARIES}}")
+  message("DEBUG: ${LIBRARIES} = ${${LIBRARIES}}")
 endmacro()
 
 set(LAPACK_LINKER_FLAGS)
@@ -197,6 +197,8 @@ set(LAPACK95_LIBRARIES)
 
 include(CMakeFindDependencyMacro)
 find_dependency(BLAS)
+
+message("DEBUG: /${BLAS_FOUND}/")
 
 if(BLAS_FOUND)
   set(LAPACK_LINKER_FLAGS ${BLAS_LINKER_FLAGS})
@@ -207,6 +209,7 @@ if(BLAS_FOUND)
       set(BLA_VENDOR "All")
     endif()
   endif()
+  message("DEBUG: /${BLA_VENDOR}/")
 
   # LAPACK in the Intel MKL 10+ library?
   if(BLA_VENDOR MATCHES "Intel" OR BLA_VENDOR STREQUAL "All")
