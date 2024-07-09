@@ -8,15 +8,13 @@ vcpkg_from_github(
         0001-set-linkage-${VCPKG_LIBRARY_LINKAGE}.patch
 )
 
-set(FEATURE_OPTIONS)
+vcpkg_list(SET FEATURE_OPTIONS)
 
 macro(enable_feature feature switch)
     if("${feature}" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS "--enable-${switch}")
-        set(has_${feature} 1)
     else()
         list(APPEND FEATURE_OPTIONS "--disable-${switch}")
-        set(has_${feature} 0)
     endif()
 endmacro()
 
