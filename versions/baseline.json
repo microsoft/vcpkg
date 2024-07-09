@@ -5066,7 +5066,7 @@
     },
     "libsvm": {
       "baseline": "3.32",
-      "port-version": 0
+      "port-version": 1
     },
     "libsystemd": {
       "baseline": "256.2",
