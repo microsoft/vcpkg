@@ -11,18 +11,15 @@ vcpkg_from_github(
     PATCHES
         0001-revert-integer-to-string-conversion-optimizations.patch # Fix openvino MSVC compile error
 		0002-Fix-missing-include-random-for-std-uniform_int_distr.patch # Fix missing include for std::uniform_int_distribution
-)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cxx17 ABSL_USE_CXX17
+        779a356-test-allocator.diff
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
 # compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
 # header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
 # uses the compiler default behavior to update `absl/base/options.h` as needed.
-if (ABSL_USE_CXX17)
+set(ABSL_USE_CXX17_OPTION "")
+if ("cxx17" IN_LIST FEATURES)
     set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
 endif ()
 
@@ -46,16 +43,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata"
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB_RECURSE headers "${CURRENT_PACKAGES_DIR}/include/absl/*.h")
-    foreach(header IN LISTS ${headers})
-        vcpkg_replace_string("${header}"
-            "!defined(ABSL_CONSUME_DLL)" "0"
-        )
-        vcpkg_replace_string("${header}"
-            "defined(ABSL_CONSUME_DLL)" "1"
-        )
-    endforeach()
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/base/config.h" "defined(ABSL_CONSUME_DLL)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/base/internal/thread_identity.h" "defined(ABSL_CONSUME_DLL)" "1")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
