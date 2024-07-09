@@ -1,0 +1,108 @@
+diff --git a/third_party/kineto/libkineto/include/GenericTraceActivity.h b/third_party/kineto/libkineto/include/GenericTraceActivity.h
+index d840493f..3fa68735 100644
+--- a/third_party/kineto/libkineto/include/GenericTraceActivity.h
++++ b/third_party/kineto/libkineto/include/GenericTraceActivity.h
+@@ -9,6 +9,7 @@
+ #pragma once
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <string>
+ #include <thread>
+ #include <vector>
+diff --git a/third_party/kineto/libkineto/src/Config.cpp b/third_party/kineto/libkineto/src/Config.cpp
+index 18e8f987..9ac3377c 100644
+--- a/third_party/kineto/libkineto/src/Config.cpp
++++ b/third_party/kineto/libkineto/src/Config.cpp
+@@ -12,6 +12,7 @@
+ 
+ #include <fmt/chrono.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <chrono>
+ #include <fstream>
+ #include <functional>
+diff --git a/third_party/kineto/libkineto/src/CudaDeviceProperties.cpp b/third_party/kineto/libkineto/src/CudaDeviceProperties.cpp
+index 33f26921..b32a5a20 100644
+--- a/third_party/kineto/libkineto/src/CudaDeviceProperties.cpp
++++ b/third_party/kineto/libkineto/src/CudaDeviceProperties.cpp
+@@ -9,6 +9,7 @@
+ #include "CudaDeviceProperties.h"
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <vector>
+ 
+ #include <cuda_runtime.h>
+diff --git a/third_party/kineto/libkineto/src/CuptiRangeProfilerConfig.cpp b/third_party/kineto/libkineto/src/CuptiRangeProfilerConfig.cpp
+index 3ec272f8..cc1490d8 100644
+--- a/third_party/kineto/libkineto/src/CuptiRangeProfilerConfig.cpp
++++ b/third_party/kineto/libkineto/src/CuptiRangeProfilerConfig.cpp
+@@ -13,6 +13,7 @@
+ #include <unistd.h>
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <ostream>
+ 
+ 
+diff --git a/third_party/kineto/libkineto/src/EventProfiler.cpp b/third_party/kineto/libkineto/src/EventProfiler.cpp
+index 5d73a522..f55ace6d 100644
+--- a/third_party/kineto/libkineto/src/EventProfiler.cpp
++++ b/third_party/kineto/libkineto/src/EventProfiler.cpp
+@@ -10,6 +10,7 @@
+ 
+ #include <assert.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <time.h>
+ #include <algorithm>
+ #include <cmath>
+diff --git a/third_party/kineto/libkineto/test/CuptiRangeProfilerConfigTest.cpp b/third_party/kineto/libkineto/test/CuptiRangeProfilerConfigTest.cpp
+index 2d107db4..cb8ec294 100644
+--- a/third_party/kineto/libkineto/test/CuptiRangeProfilerConfigTest.cpp
++++ b/third_party/kineto/libkineto/test/CuptiRangeProfilerConfigTest.cpp
+@@ -10,6 +10,7 @@
+ #include "src/CuptiRangeProfilerConfig.h"
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <gtest/gtest.h>
+ #include <time.h>
+ #include <chrono>
+diff --git a/torch/csrc/distributed/c10d/socket.cpp b/torch/csrc/distributed/c10d/socket.cpp
+index 51ea05fa..3c3fbb39 100644
+--- a/torch/csrc/distributed/c10d/socket.cpp
++++ b/torch/csrc/distributed/c10d/socket.cpp
+@@ -29,6 +29,7 @@
+ 
+ #include <fmt/chrono.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include <torch/csrc/distributed/c10d/error.h>
+ #include <torch/csrc/distributed/c10d/exception.h>
+diff --git a/torch/csrc/profiler/standalone/execution_trace_observer.cpp b/torch/csrc/profiler/standalone/execution_trace_observer.cpp
+index 93d9e2d1..ea241a8b 100644
+--- a/torch/csrc/profiler/standalone/execution_trace_observer.cpp
++++ b/torch/csrc/profiler/standalone/execution_trace_observer.cpp
+@@ -10,6 +10,7 @@
+ #endif // _WIN32
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <algorithm>
+ #include <chrono>
+ #include <cmath>
+diff --git a/torch/csrc/profiler/util.cpp b/torch/csrc/profiler/util.cpp
+index 180555f9..1358c9ab 100644
+--- a/torch/csrc/profiler/util.cpp
++++ b/torch/csrc/profiler/util.cpp
+@@ -5,6 +5,7 @@
+ #include <c10/util/ArrayRef.h>
+ #include <c10/util/irange.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #ifdef USE_KINETO
+ #include <libkineto.h>
