@@ -2214,7 +2214,7 @@
     },
     "dbus": {
       "baseline": "1.15.8",
-      "port-version": 4
+      "port-version": 5
     },
     "dcmtk": {
       "baseline": "3.6.8",
@@ -7394,7 +7394,7 @@
     },
     "qtconnectivity": {
       "baseline": "6.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtdatavis3d": {
       "baseline": "6.7.2",
@@ -7502,7 +7502,7 @@
     },
     "qtsensors": {
       "baseline": "6.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtserialbus": {
       "baseline": "6.7.2",
