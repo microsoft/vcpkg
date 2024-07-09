@@ -1,6 +1,6 @@
 {
   "name": "edflib",
-  "version": "1.25",
+  "version": "1.26",
   "description": "A C library to read/write EDF/EDF+/BDF/BDF+ files",
   "homepage": "https://www.teuniz.net/edflib/",
   "license": "BSD-3-Clause",

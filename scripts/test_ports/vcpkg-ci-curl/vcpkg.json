@@ -29,7 +29,8 @@
     {
       "name": "curl",
       "features": [
-        "psl"
+        "psl",
+        "gsasl"
       ],
       "platform": "!uwp"
     },
