@@ -55,6 +55,8 @@ vcpkg_from_github(
         "${SOURCE_PATH}/cmake/cpm/patches/icm/regex-build-error.diff"
 )
 
+vcpkg_find_acquire_program(GIT)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -63,6 +65,7 @@ vcpkg_cmake_configure(
         "-DFETCHCONTENT_SOURCE_DIR_RAPIDS-CMAKE=${SOURCE_PATH_RAPIDS}"
         "-DCPM_SOURCE_CACHE=${CURRENT_BUILDTREES_DIR}/cpm"
         "-DCPM_icm_SOURCE=${SOURCE_PATH_ICM}"
+        "-DGIT_EXECUTABLE=${GIT}"
 )
 
 vcpkg_cmake_install()
