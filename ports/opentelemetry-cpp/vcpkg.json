@@ -44,7 +44,8 @@
             "etw"
           ],
           "platform": "windows"
-        }
+        },
+        "opentelemetry-cpp-contrib-version"
       ]
     },
     "otlp-grpc": {
@@ -81,7 +82,8 @@
           "features": [
             "otlp-http"
           ]
-        }
+        },
+        "opentelemetry-cpp-contrib-version"
       ]
     },
     "zipkin": {
