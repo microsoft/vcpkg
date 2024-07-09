@@ -23,7 +23,7 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
 )
 
 vcpkg_download_distfile(execution_bs
-    URLS "https://raw.githubusercontent.com/cplusplus/sender-receiver/main/execution.bs"
+    URLS "https://raw.githubusercontent.com/cplusplus/sender-receiver/12fde4af201017e49efd39178126f661a04dbb94/execution.bs"
     FILENAME "execution.bs"
     SHA512 90bb992356f22e4091ed35ca922f6a0143abd748499985553c0660eaf49f88d031a8f900addb6b4cf9a39ac8d1ab7c858b79677e2459136a640b2c52afe3dd23
 )
