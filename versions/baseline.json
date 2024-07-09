@@ -5594,7 +5594,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 18
+      "port-version": 19
     },
     "magnum-extras": {
       "baseline": "2020.06",
