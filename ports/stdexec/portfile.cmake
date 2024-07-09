@@ -32,12 +32,37 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "file(COPY_FILE \"${execution_bs}\""
 )
 
+# stdexec uses cpm (via rapids-cmake).
+# Setup a local cpm cache from assets cached by vcpkg
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/cpm")
+# Version from rapids-cmake cpm/detail/download.cmake
+set(CPM_DOWNLOAD_VERSION 0.38.5)
+vcpkg_download_distfile(CPM_CMAKE
+    URLS https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
+    FILENAME CPM_${CPM_DOWNLOAD_VERSION}.cmake
+    SHA512 a376162be4fe70408c000409f7a3798e881ed183cb51d57c9540718fdd539db9028755653bd3965ae7764b5c3e36adea81e0752fe85e40790f022fa1c4668cc6
+)
+file(INSTALL "${CPM_CMAKE}" DESTINATION "${CURRENT_BUILDTREES_DIR}/cpm/cpm")
+
+# Version and patch from stdexec CMakeLists.txt
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_ICM
+    REPO iboB/icm
+    REF v1.5.0 # from stdexec CMakeLists.txt
+    SHA512 0d5173d7640e2b411dddfc67e1ee19c921817e58de36ea8325430ee79408edc0a23e17159e22dc4a05f169596ee866effa69e7cd0000b08f47bd090d5003ba1c
+    HEAD_REF master
+    PATCHES
+        "${SOURCE_PATH}/cmake/cpm/patches/icm/regex-build-error.diff"
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSTDEXEC_BUILD_TESTS=OFF
         -DSTDEXEC_BUILD_EXAMPLES=OFF
         "-DFETCHCONTENT_SOURCE_DIR_RAPIDS-CMAKE=${SOURCE_PATH_RAPIDS}"
+        "-DCPM_SOURCE_CACHE=${CURRENT_BUILDTREES_DIR}/cpm"
+        "-DCPM_icm_SOURCE=${SOURCE_PATH_ICM}"
 )
 
 vcpkg_cmake_install()
