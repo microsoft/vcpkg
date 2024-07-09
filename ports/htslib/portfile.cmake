@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 b9de3769db6153f66348c7c4ffbfc5ac7cd4a4d4450c9d1c5ea8fdd8f4f9d38d1d0ba5b4ac9c53f1a754d3985dc483fe22e76f93a8bbe8ae29ef3b98136e7d2e
     HEAD_REF develop
     PATCHES
-        0001-set-linkage-${VCPKG_LIBRARY_LINKAGE}.patch
+        0001-set-linkage.patch
 )
 
 vcpkg_list(SET FEATURE_OPTIONS)
@@ -33,7 +33,9 @@ vcpkg_configure_make(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_make()
+vcpkg_install_make(
+    INSTALL_TARGET install-${VCPKG_LIBRARY_LINKAGE}
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
