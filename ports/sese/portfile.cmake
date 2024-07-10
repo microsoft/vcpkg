@@ -18,6 +18,8 @@ vcpkg_from_github(
         REPO libsese/sese
         REF "${VERSION}"
         SHA512 6a87cabe6cbd69ab41de85be27ff397c1ae49f95c11151a27e8b9329afe4ff3b580084be53c129e883be50e13fadccb3b6cc1eed833c44ce4f8457dedc71b758
+        PATCHES
+            001-fix-fmt-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
