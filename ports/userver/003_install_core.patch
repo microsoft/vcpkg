@@ -1,0 +1,14 @@
+--- 590431d7d2-0ee422b08a.clean/core/CMakeLists.txt	2023-09-20 20:12:48.000000000 +0300
++++ 590431d7d2-0ee422b08a.fixed/core/CMakeLists.txt	2023-10-20 21:43:02.968277848 +0300
+@@ -257,3 +257,11 @@
+     )
+     add_google_benchmark_tests(${PROJECT_NAME}-benchmark)
+ endif()
++
++install(TARGETS userver-core
++    EXPORT userver
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
