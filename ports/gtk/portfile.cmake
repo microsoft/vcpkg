@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
+        fix_vulkan_enabled.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
