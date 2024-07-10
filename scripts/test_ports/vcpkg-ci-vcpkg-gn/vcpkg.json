@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-vcpkg-gn",
+  "version-string": "ci",
+  "description": "Test vcpkg-gn behavior. The test project relies on g++.",
+  "homepage": "https://gn.googlesource.com/gn/+/main/examples/simple_build",
+  "license": null,
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-gn",
+      "host": true
+    }
+  ]
+}
