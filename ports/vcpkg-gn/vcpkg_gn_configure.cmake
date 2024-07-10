@@ -8,7 +8,11 @@ function(z_vcpkg_gn_configure_generate)
 
     message(STATUS "Generating build (${arg_CONFIG})...")
     vcpkg_execute_required_process(
-        COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
+        COMMAND "${GN}" gen
+            --ide=json
+            "--json-file-name=${CURRENT_BUILDTREES_DIR}/generate-${arg_CONFIG}-project.json.log"
+            "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}"
+            "${arg_ARGS}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
     )
