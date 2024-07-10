@@ -6602,7 +6602,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentracing": {
       "baseline": "1.6.0",
