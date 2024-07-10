@@ -22,7 +22,7 @@
   ],
   "features": {
     "network": {
-      "description": "Use built-in curl network adapter",
+      "description": "Use curl for network",
       "dependencies": [
         {
           "name": "curl",
@@ -38,7 +38,7 @@
       ]
     },
     "sha": {
-      "description": "Use built-in hash-library",
+      "description": "Use hash-library for SHA calculations",
       "dependencies": [
         "hash-library"
       ]
