@@ -51,11 +51,22 @@ vcpkg_gn_install(
     TARGETS
         :hello
 )
-# Legacy install: not using "${PORT}" subdir
+# Legacy (with SOURCE_PATH): tools go to [/debug]/tools without "${PORT}" subdir
 if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/tools/hello${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     message(SEND_ERROR "Missing installation of tools")
 endif()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools")
+
+
+vcpkg_gn_install(
+    TARGETS
+        :hello
+)
+# Proper (without SOURCE_PATH): tools go to /tools/${PORT}[/debug]
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/tools/hello${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    message(SEND_ERROR "Missing installation of tools")
+endif()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 
 # Portfile responsibility: copying relevant headers
