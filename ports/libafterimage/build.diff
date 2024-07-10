@@ -1,0 +1,379 @@
+diff --git a/libAfterImage/Makefile.in b/libAfterImage/Makefile.in
+index 124b0df88..46d1e0e2a 100644
+--- a/libAfterImage/Makefile.in
++++ b/libAfterImage/Makefile.in
+@@ -76,7 +76,7 @@ CCFLAGS         = @CFLAGS@  @MMX_CFLAGS@
+ EXTRA_DEFINES	= @DEFINE_XLOCALE@
+ 
+ RANLIB		= @RANLIB@
+-AR		= ar clq
++AR		= @AR@ cq
+ CP		= @CP@
+ MV		= @MV@
+ RM		= @RM@
+@@ -342,8 +342,8 @@ deps:
+ 		echo "" >> .shared ; \
+ 		(if test -d apps; then cd apps; $(MAKE) deps || exit 1; fi)
+ 
+-apps: 	@APPSDEPS@
+-		@(if test -d apps; then cd apps; $(MAKE); fi )
++#apps: 	@APPSDEPS@
++#		@(if test -d apps; then cd apps; $(MAKE); fi )
+ 
+ show_flags_cc:	$(LIB_OBJS) $(LIB_INCS) config.h
+ 		@touch show_flags_cc ; \
+@@ -431,7 +431,7 @@ install.doc:
+ 			cd ../..; \
+ 		fi
+ 
+-install:	install.lib install.man install.doc install.apps
++install:	install.lib
+ 
+ 
+ uninstall:	uninstall.lib
+diff --git a/libAfterImage/aftershow/Makefile.in b/libAfterImage/aftershow/Makefile.in
+index b7592923f..ac828b579 100644
+--- a/libAfterImage/aftershow/Makefile.in
++++ b/libAfterImage/aftershow/Makefile.in
+@@ -11,7 +11,7 @@ CCFLAGS         = @CFLAGS@
+ EXTRA_DEFINES	= @DEFINE_XLOCALE@
+ 
+ RANLIB		= @RANLIB@
+-AR		= ar clq
++AR		= @AR@ cq
+ CP		= @CP@
+ MV		= @MV@
+ RM		= @RM@
+diff --git a/libAfterImage/aftershow/aftershow.c b/libAfterImage/aftershow/aftershow.c
+index af7410516..03516f6e3 100644
+--- a/libAfterImage/aftershow/aftershow.c
++++ b/libAfterImage/aftershow/aftershow.c
+@@ -63,6 +63,10 @@
+ 
+ #include "aftershow.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ /**********************************************************************************/
+ /* main portion of AfterShow daemon                                               */
+ /**********************************************************************************/
+diff --git a/libAfterImage/aftershow/xutil.c b/libAfterImage/aftershow/xutil.c
+index d6e7ce321..6c77b0fbd 100644
+--- a/libAfterImage/aftershow/xutil.c
++++ b/libAfterImage/aftershow/xutil.c
+@@ -36,6 +36,9 @@
+ #include "../afterimage.h"
+ #include "aftershow.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
+ 
+ AfterShowXWindow* 
+ aftershow_XWindowID2XWindow (AfterShowContext *ctx, Window w)
+diff --git a/libAfterImage/apps/Makefile.in b/libAfterImage/apps/Makefile.in
+index 47a64bd5e..a2fffb3a2 100644
+--- a/libAfterImage/apps/Makefile.in
++++ b/libAfterImage/apps/Makefile.in
+@@ -8,7 +8,7 @@ CCFLAGS         = @CFLAGS@
+ EXTRA_DEFINES	= @DEFINE_XLOCALE@
+ 
+ RANLIB		= @RANLIB@
+-AR		= ar clq
++AR		= @AR@ cq
+ CP		= @CP@
+ MV		= @MV@
+ RM		= @RM@
+diff --git a/libAfterImage/apps/ascompose.c b/libAfterImage/apps/ascompose.c
+index 54ec30621..a213582db 100644
+--- a/libAfterImage/apps/ascompose.c
++++ b/libAfterImage/apps/ascompose.c
+@@ -60,6 +60,9 @@ int asvisual_empty_XErrorHandler (Display * dpy, XErrorEvent * event);
+ # endif /* SHAPE */
+ #endif /* X_DISPLAY_MISSING */
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
+ 
+ 
+ /****h* libAfterImage/ascompose
+diff --git a/libAfterImage/apps/asflip.c b/libAfterImage/apps/asflip.c
+index 682095b5f..4a284a587 100644
+--- a/libAfterImage/apps/asflip.c
++++ b/libAfterImage/apps/asflip.c
+@@ -27,6 +27,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ void usage()
+ {
+ 	printf( "Usage: asflip [-h]|[[-f flip]|[-m vertical] "
+diff --git a/libAfterImage/apps/asgrad.c b/libAfterImage/apps/asgrad.c
+index 39785b288..4d47860c9 100644
+--- a/libAfterImage/apps/asgrad.c
++++ b/libAfterImage/apps/asgrad.c
+@@ -27,6 +27,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ ARGB32 default_colors[] = {
+ 	0xFF000000,
+ 	0xFF700070,                                /* violet */
+diff --git a/libAfterImage/apps/asi18n.c b/libAfterImage/apps/asi18n.c
+index f003c00ff..177e9b772 100644
+--- a/libAfterImage/apps/asi18n.c
++++ b/libAfterImage/apps/asi18n.c
+@@ -10,6 +10,10 @@
+ #include "common.h"
+ #include "../char2uni.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ /* Usage:  astext [-f font] [-s size] [-t text] [-S 3D_style]
+                   [-c text_color] [-b background_color]
+                   [-T foreground_texture] [-B background_image]
+diff --git a/libAfterImage/apps/asmerge.c b/libAfterImage/apps/asmerge.c
+index ff784915f..c9392b469 100644
+--- a/libAfterImage/apps/asmerge.c
++++ b/libAfterImage/apps/asmerge.c
+@@ -35,6 +35,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ char *burning_rose[] =
+ {
+ 	"asmerge",
+diff --git a/libAfterImage/apps/asscale.c b/libAfterImage/apps/asscale.c
+index 26e2cdb43..c600bb909 100644
+--- a/libAfterImage/apps/asscale.c
++++ b/libAfterImage/apps/asscale.c
+@@ -28,6 +28,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ void usage()
+ {
+ 	printf( "Usage: asscale [-h]|[image [WIDTH[xHEIGHT]]]\n");
+diff --git a/libAfterImage/apps/astext.c b/libAfterImage/apps/astext.c
+index a0430fef6..e72a1e95f 100644
+--- a/libAfterImage/apps/astext.c
++++ b/libAfterImage/apps/astext.c
+@@ -35,6 +35,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ /* Usage:  astext [-f font] [-s size] [-t text] [-S 3D_style]
+                   [-c text_color] [-b background_color]
+                   [-T foreground_texture] [-B background_image]
+diff --git a/libAfterImage/apps/astile.c b/libAfterImage/apps/astile.c
+index 333176c44..d33878c66 100644
+--- a/libAfterImage/apps/astile.c
++++ b/libAfterImage/apps/astile.c
+@@ -45,6 +45,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ void usage()
+ {
+ 	printf( "Usage: astile [-h]|[[-g geometry][-t tint_color] image]\n");
+diff --git a/libAfterImage/apps/asvector.c b/libAfterImage/apps/asvector.c
+index 58e6a0aa6..95a41488c 100644
+--- a/libAfterImage/apps/asvector.c
++++ b/libAfterImage/apps/asvector.c
+@@ -25,6 +25,10 @@
+ #include "../afterimage.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ CARD16 chan_alpha[] = {0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 
+ 								0xffff, 0xffff, 0xffff, 0xffff};
+ CARD16 chan_red  [] = {0x0000, 0x7000, 0x0000, 0x0000, 0x0000, 
+diff --git a/libAfterImage/apps/asview.c b/libAfterImage/apps/asview.c
+index f88bc7090..8a2c6bd5c 100644
+--- a/libAfterImage/apps/asview.c
++++ b/libAfterImage/apps/asview.c
+@@ -34,6 +34,9 @@
+ #endif
+ #endif
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
+ 
+ void usage()
+ {
+diff --git a/libAfterImage/apps/asview_gl.c b/libAfterImage/apps/asview_gl.c
+index 67f22f00d..8b8e0854f 100644
+--- a/libAfterImage/apps/asview_gl.c
++++ b/libAfterImage/apps/asview_gl.c
+@@ -38,6 +38,10 @@
+ #include <GL/gl.h>
+ #include <GL/glx.h>
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ void usage()
+ {
+ 	printf( "Usage: asview [-h]|[image]\n");
+diff --git a/libAfterImage/apps/common.c b/libAfterImage/apps/common.c
+index 15534f2fe..88ace7422 100644
+--- a/libAfterImage/apps/common.c
++++ b/libAfterImage/apps/common.c
+@@ -5,6 +5,10 @@
+ #include "../afterbase.h"
+ #include "../afterimage.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ /****h* libAfterImage/tutorials/common.h
+  * SYNOPSIS
+  * Generic Xlib related functionality, common for all the tutorials.
+diff --git a/libAfterImage/asim_afterbase.h b/libAfterImage/asim_afterbase.h
+index 8023904a5..e9e789768 100644
+--- a/libAfterImage/asim_afterbase.h
++++ b/libAfterImage/asim_afterbase.h
+@@ -21,6 +21,9 @@
+ 
+ /* our own version of X Wrapper : */
+ #include "xwrap.h"
++#ifdef _MSC_VER
++#undef None
++#endif
+ 
+ /* the goal of this header is to provide sufficient code so that
+    libAfterImage could live without libAfterBase at all.
+diff --git a/libAfterImage/asimagexml.c b/libAfterImage/asimagexml.c
+index 4e4ebac7f..98667b678 100644
+--- a/libAfterImage/asimagexml.c
++++ b/libAfterImage/asimagexml.c
+@@ -60,6 +60,10 @@
+ #include "afterimage.h"
+ #include "imencdec.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
++
+ static char* cdata_str = XML_CDATA_STR;
+ 
+ /****h* libAfterImage/asimagexml
+diff --git a/libAfterImage/asvisual.c b/libAfterImage/asvisual.c
+index 9240c3892..7a11adeab 100644
+--- a/libAfterImage/asvisual.c
++++ b/libAfterImage/asvisual.c
+@@ -58,7 +58,9 @@
+ # undef HAVE_GLX
+ #endif
+ 
+-
++#ifdef _MSC_VER
++#define None 0
++#endif
+ 
+ #ifndef X_DISPLAY_MISSING
+ static int  get_shifts (unsigned long mask);
+diff --git a/libAfterImage/configure.in b/libAfterImage/configure.in
+index 7523a1b47..28eebba2d 100644
+--- a/libAfterImage/configure.in
++++ b/libAfterImage/configure.in
+@@ -80,6 +80,8 @@ dnl# Check for compiler tools
+ 
+ AC_PROG_CC
+ AC_PROG_LN_S
++AC_ARG_VAR([AR], [Specifies the archiver to use])
++AC_ARG_VAR([ARFLAGS], [Specifies the archiver flags to use])
+ dnl# AC_SUBST(CC)
+ dnl# AC_SUBST(GCC)
+ 
+diff --git a/libAfterImage/import.c b/libAfterImage/import.c
+index 3c36823a0..fb7089ca4 100644
+--- a/libAfterImage/import.c
++++ b/libAfterImage/import.c
+@@ -123,7 +123,9 @@
+ #include "asimagexml.h"
+ #include "transform.h"
+ 
+-
++#ifdef _MSC_VER
++#define None 0
++#endif
+ /***********************************************************************************/
+ /* High level interface : 														   */
+ static char *locate_image_file( const char *file, char **paths );
+diff --git a/libAfterImage/pixmap.c b/libAfterImage/pixmap.c
+index 87bbbd4cb..ddfd30881 100644
+--- a/libAfterImage/pixmap.c
++++ b/libAfterImage/pixmap.c
+@@ -68,6 +68,9 @@
+ #include "transform.h"
+ #include "pixmap.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
+ 
+ /*#define CREATE_TRG_PIXMAP(asv,w,h) XCreatePixmap(dpy, RootWindow(dpy,DefaultScreen(dpy)), (w), (h), DefaultDepth(dpy,DefaultScreen(dpy)))*/
+ #define CREATE_TRG_PIXMAP(asv,w,h) create_visual_pixmap(asv,RootWindow(asv->dpy,DefaultScreen(asv->dpy)),(w),(h),0)
+diff --git a/libAfterImage/ximage.c b/libAfterImage/ximage.c
+index 09f6f03b8..2126b3aae 100644
+--- a/libAfterImage/ximage.c
++++ b/libAfterImage/ximage.c
+@@ -58,6 +58,9 @@
+ #include "imencdec.h"
+ #include "ximage.h"
+ 
++#ifdef _MSC_VER
++#define None 0
++#endif
+ 
+ /* ***************************************************************************/
+ /* ASImage->XImage->pixmap->XImage->ASImage conversion						*/
+diff --git a/libAfterImage/Makefile.in b/libAfterImage/Makefile.in
+index 46d1e0e2a..4da657be2 100644
+--- a/libAfterImage/Makefile.in
++++ b/libAfterImage/Makefile.in
+@@ -131,7 +131,7 @@ APPS_DEPS=@LIBPROG@ $(LIB_OBJS) $(LIB_INCS) $(APPS_SRCS) $(APPS_INCS) config.h
+ # We want to build both static and dynamic libs, as some service apps may need 
+ # static library as they gets run at compile time (ASDocGen for example)
+ # but we only install whats selected
+-all:            $(LIB_STATIC) @LIBPROG@ $(INSTALLONBUILD) apps
++all:            $(LIB_STATIC) @LIBPROG@ $(INSTALLONBUILD)
+ 
+ install.bin:
+ 

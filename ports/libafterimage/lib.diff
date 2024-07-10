@@ -1,0 +1,13 @@
+diff --git a/libAfterImage/Makefile.in b/libAfterImage/Makefile.in
+index 46d1e0e2a..4da657be2 100644
+--- a/libAfterImage/Makefile.in
++++ b/libAfterImage/Makefile.in
+@@ -63,7 +63,7 @@ APPS_INCS=apps/common.h
+ 
+ LIB_DIR_NAME    = libAfterImage
+ LIB_NAME        = LIBAFTERIMAGE
+-LIB_STATIC      = libAfterImage.a
++LIB_STATIC      = libAfterImage.lib
+ LIB_SHARED      = libAfterImage.so
+ LIB_SHARED_CYG  = cygAfterImage.dll
+ LIB_SHARED_CYG_AR  = libAfterImage.dll.a
