@@ -7,7 +7,6 @@
   "license": "Zlib",
   "supports": "!wasm32",
   "dependencies": [
-    "asmjit",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,26 +17,14 @@
     }
   ],
   "default-features": [
-    "jit",
-    "tls"
+    "jit"
   ],
   "features": {
     "jit": {
-      "description": "Default feature. Enables jit pipeline compilation.",
+      "description": "Enables JIT compiler to generate optimized pipelines.",
+      "supports": "!arm32",
       "dependencies": [
-        {
-          "name": "blend2d",
-          "default-features": false
-        }
-      ]
-    },
-    "tls": {
-      "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported.",
-      "dependencies": [
-        {
-          "name": "blend2d",
-          "default-features": false
-        }
+        "asmjit"
       ]
     }
   }
