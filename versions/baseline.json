@@ -8237,8 +8237,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "124",
-      "port-version": 2
+      "baseline": "127",
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
