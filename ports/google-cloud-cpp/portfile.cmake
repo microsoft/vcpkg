@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
+        fix_mocks_dependent_option.patch
 )
 
 if ("grpc-common" IN_LIST FEATURES)
@@ -48,6 +49,7 @@ vcpkg_cmake_configure(
         -DGOOGLE_CLOUD_CPP_ENABLE_CCACHE=OFF
         -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DGOOGLE_CLOUD_CPP_WITH_MOCKS=OFF
 )
 
 vcpkg_cmake_install()
