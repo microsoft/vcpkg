@@ -38,7 +38,7 @@ if (VCPKG_UPB_BUILD_CODEGEN)
             protoc-gen-upb_minitable
     )
 else()
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/upb-config-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/upb/upb-config-vcpkg-tools.cmake" @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/upb-targets-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/upb/upb-targets-vcpkg-tools.cmake" @ONLY)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")

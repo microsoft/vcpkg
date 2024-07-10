@@ -1,5 +1,5 @@
 diff --git a/upb/cmake/CMakeLists.txt b/upb/cmake/CMakeLists.txt
-index 513d34041..a78bb1ee4 100644
+index 513d34041..6c70526ed 100644
 --- a/upb/cmake/CMakeLists.txt
 +++ b/upb/cmake/CMakeLists.txt
 @@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.10...3.24)
@@ -30,7 +30,7 @@ index 513d34041..a78bb1ee4 100644
  if(APPLE)
    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -undefined dynamic_lookup -flat_namespace")
  elseif(UNIX)
-@@ -94,3 +101,129 @@ target_include_directories(generated_cpp_support__only_for_generated_code_do_not
+@@ -94,3 +101,136 @@ target_include_directories(generated_cpp_support__only_for_generated_code_do_not
  )
  
  
@@ -98,11 +98,15 @@ index 513d34041..a78bb1ee4 100644
 +  )
 +
 +  list(APPEND _upb_codegen_targets protoc-gen-upbdefs protoc-gen-upb protoc-gen-upb_minitable)
-+  add_executable(upb::protoc-gen-upb ALIAS protoc-gen-upb)
-+  add_executable(upb::protoc-gen-upbdefs ALIAS protoc-gen-upbdefs)
-+  add_executable(upb::protoc-gen-upb_minitable ALIAS protoc-gen-upb_minitable)
++  set(protoc_program "\$<TARGET_FILE:protobuf::protoc>")
++  set(protoc_gen_upb_program "\$<TARGET_FILE:protoc-gen-upb>")
++  set(protoc_gen_upbdefs_program "\$<TARGET_FILE:protoc-gen-upbdefs>")
++  set(protoc_gen_upb_minitable_program "\$<TARGET_FILE:protoc-gen-upb_minitable>")
 +else()
-+  find_package(upb CONFIG REQUIRED)
++  find_program(protoc_program protoc)
++  find_program(protoc_gen_upb_program protoc-gen-upb)
++  find_program(protoc_gen_upbdefs_program protoc-gen-upbdefs)
++  find_program(protoc_gen_upb_minitable_program protoc-gen-upb_minitable)
 +endif()
 +
 +set(descriptor_sources
@@ -111,21 +115,24 @@ index 513d34041..a78bb1ee4 100644
 +    "${CMAKE_CURRENT_BINARY_DIR}/generated/google/protobuf/descriptor.upb_minitable.c")
 +
 +set(descriptor_proto "${CMAKE_CURRENT_SOURCE_DIR}/../../src/google/protobuf/descriptor.proto")
-+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated")
++set(descriptor_binary_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
++file(MAKE_DIRECTORY "${descriptor_binary_dir}")
 +add_custom_command(
 +    OUTPUT ${descriptor_sources}
 +    DEPENDS "${descriptor_proto}"
 +    COMMAND
-+        protobuf::protoc "-I${CMAKE_CURRENT_SOURCE_DIR}/../../src/"
-+        "--plugin=protoc-gen-upb=$<TARGET_FILE:upb::protoc-gen-upb>"
-+        "--plugin=protoc-gen-upbdefs=$<TARGET_FILE:upb::protoc-gen-upbdefs>"
-+        "--plugin=protoc-gen-upb_minitable=$<TARGET_FILE:upb::protoc-gen-upb_minitable>"
-+        "--upb_out=${CMAKE_CURRENT_BINARY_DIR}/generated" "--upbdefs_out=${CMAKE_CURRENT_BINARY_DIR}/generated"
-+        "--upb_minitable_out=${CMAKE_CURRENT_BINARY_DIR}/generated"
++        "${protoc_program}"
++        "-I${CMAKE_CURRENT_SOURCE_DIR}/../../src/"
++        "--plugin=protoc-gen-upb=${protoc_gen_upb_program}"
++        "--plugin=protoc-gen-upbdefs=${protoc_gen_upbdefs_program}"
++        "--plugin=protoc-gen-upb_minitable=${protoc_gen_upb_minitable_program}"
++        "--upb_out=${descriptor_binary_dir}"
++        "--upbdefs_out=${descriptor_binary_dir}"
++        "--upb_minitable_out=${descriptor_binary_dir}"
 +        "${descriptor_proto}")
 +
 +add_library(upb ${source_files} ${descriptor_sources})
-+target_include_directories(upb PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>)
++target_include_directories(upb PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..> $<BUILD_INTERFACE:${descriptor_binary_dir}>)
 +target_link_libraries(upb PRIVATE utf8_range::utf8_range)
 +
 +include(GNUInstallDirs)
