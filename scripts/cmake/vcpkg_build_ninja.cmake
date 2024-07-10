@@ -9,8 +9,6 @@ endfunction()
 
 
 function(vcpkg_build_ninja)
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
-
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "TARGETS")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
