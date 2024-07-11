@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         fix-dependency.patch
         fix-android-build.patch
+        fix-core.patch
 )
 
 vcpkg_from_github(
