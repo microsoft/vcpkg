@@ -2276,12 +2276,14 @@ realsense2:arm64-windows = fail # fw-update-device.h(1): warning C4828: The file
 realsense2[tools](osx) = feature-fails # Could NOT find Threads (missing: Threads_FOUND)
 restc-cpp[core,boost-log,openssl,threaded-ctx,zlib](osx) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31027
 restc-cpp[threaded-ctx](osx) = combination-fails # Fixed on master: error: copying member subobject of type 'std::atomic_bool' (aka 'atomic<bool>') invokes deleted constructor
+rtabmap[tools](osx) = feature-fails # 
 rubberband[cli](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32360
 sqlite-orm[test](uwp) = feature-fails # error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)". See https://github.com/microsoft/vcpkg/issues/33769
 sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 symengine[tcmalloc](windows) = feature-fails # tcmalloc not found. See https://github.com/microsoft/vcpkg/issues/33576
 tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
+vlfeat[openmp](osx) = feature-fails # No openmp on osx
 vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
@@ -2292,8 +2294,6 @@ wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See h
 wayland[force-build] = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
-vlfeat[openmp](osx) = feature-fails # No openmp on osx
-rtabmap[tools](osx) = feature-fails # 
 
 # skip
 entt[experimental] = skip # required head build
