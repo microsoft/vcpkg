@@ -13,6 +13,7 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
+        fix-mbedtls.patch # From https://github.com/curl/curl/commit/0c4b4c1e93c8e869af230090f32346fdfd548f21
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
