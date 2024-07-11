@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         hdf5_config.patch
         szip.patch
+	add-_Float16-type-on-aarch64.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
