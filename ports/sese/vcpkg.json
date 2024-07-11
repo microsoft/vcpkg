@@ -1,6 +1,7 @@
 {
   "name": "sese",
   "version": "2.2.0",
+  "port-version": 1,
   "description": "A cross-platform framework for basic components.",
   "homepage": "https://github.com/libsese/sese",
   "license": "Apache-2.0",

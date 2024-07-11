@@ -681,8 +681,8 @@
       "port-version": 1
     },
     "blend2d": {
-      "baseline": "2023-06-16",
-      "port-version": 1
+      "baseline": "2024-07-08",
+      "port-version": 0
     },
     "blingfire": {
       "baseline": "0.1.8.1",
@@ -1817,7 +1817,7 @@
       "port-version": 0
     },
     "configcat": {
-      "baseline": "4.0.1",
+      "baseline": "4.0.3",
       "port-version": 0
     },
     "console-bridge": {
@@ -3154,7 +3154,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.26.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -3254,7 +3254,7 @@
     },
     "gtk": {
       "baseline": "4.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk3": {
       "baseline": "3.24.38",
@@ -3725,8 +3725,8 @@
       "port-version": 0
     },
     "itk": {
-      "baseline": "5.3rc02",
-      "port-version": 1
+      "baseline": "5.4.0",
+      "port-version": 0
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -6670,7 +6670,7 @@
     },
     "osgearth": {
       "baseline": "3.4",
-      "port-version": 2
+      "port-version": 3
     },
     "osmanip": {
       "baseline": "4.6.1",
@@ -8034,7 +8034,7 @@
     },
     "sdl2": {
       "baseline": "2.30.5",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -8114,7 +8114,7 @@
     },
     "sese": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sf2cute": {
       "baseline": "0.2.0",
@@ -8237,8 +8237,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "124",
-      "port-version": 2
+      "baseline": "127",
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -8738,7 +8738,7 @@
     },
     "thrift": {
       "baseline": "0.20.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tidy-html5": {
       "baseline": "5.8.0",
