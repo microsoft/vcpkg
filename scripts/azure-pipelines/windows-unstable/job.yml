@@ -14,7 +14,8 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
-
+  - name: Codeql.Enabled
+    value: false
   steps:
   - task: PowerShell@2
     name: mintsasstep
