@@ -8261,7 +8261,7 @@
       "port-version": 3
     },
     "small-gicp": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "smf": {
