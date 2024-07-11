@@ -1,6 +1,7 @@
 {
   "name": "mesa",
   "version": "24.0.7",
+  "port-version": 2,
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
@@ -39,14 +40,6 @@
             "llvm"
           ],
           "platform": "x64"
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "egl"
-          ],
-          "platform": "!osx"
         }
       ]
     },

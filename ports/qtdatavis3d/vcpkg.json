@@ -1,6 +1,6 @@
 {
   "name": "qtdatavis3d",
-  "version": "6.7.0",
+  "version": "6.7.2",
   "description": "The Qt Data Visualization module enables you to visualize data in 3D as bar, scatter, and surface graphs.",
   "homepage": "https://www.qt.io/",
   "license": null,

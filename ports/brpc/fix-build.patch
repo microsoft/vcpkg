@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b14fe17..ecce87c 100644
+index b14fe178..9e9a776a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -68,7 +68,8 @@ endif()
@@ -12,12 +12,10 @@ index b14fe17..ecce87c 100644
      if (NOT THRIFT_LIB)
          message(FATAL_ERROR "Fail to find Thrift")
      endif()
-@@ -153,7 +154,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-     endif()
+@@ -154,6 +155,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
  endif()
  
--find_package(Protobuf REQUIRED)
-+find_package(protobuf CONFIG REQUIRED)
+ find_package(Protobuf REQUIRED)
 +get_target_property(PROTOBUF_INCLUDE_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
 +set(PROTOBUF_LIBRARIES protobuf::libprotobuf)
  if(Protobuf_VERSION GREATER 4.21)
@@ -78,8 +76,17 @@ index b14fe17..ecce87c 100644
  
  if(WITH_BORINGSSL)
      list(APPEND DYNAMIC_LIB ${BORINGSSL_SSL_LIBRARY})
+@@ -520,7 +527,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
+                                     ${PROJECT_SOURCE_DIR}/src
+                                     "${PROTO_FILES}")
+ add_library(PROTO_LIB OBJECT ${PROTO_SRCS} ${PROTO_HDRS})
+-
++target_link_libraries(PROTO_LIB PUBLIC ${DYNAMIC_LIB})
+ set(SOURCES
+     ${BVAR_SOURCES}
+     ${BTHREAD_SOURCES}
 diff --git a/cmake/FindGFLAGS.cmake b/cmake/FindGFLAGS.cmake
-index dfad5fd..8423d55 100644
+index dfad5fd8..8423d55a 100644
 --- a/cmake/FindGFLAGS.cmake
 +++ b/cmake/FindGFLAGS.cmake
 @@ -24,7 +24,9 @@ if (GFLAGS_STATIC)
@@ -94,10 +101,19 @@ index dfad5fd..8423d55 100644
    set(GFLAGS_FOUND TRUE)
  endif(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1b4b233..8e836a4 100644
+index 1b4b2332..638ec070 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -31,6 +31,7 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
+@@ -24,13 +24,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ include_directories(${PROJECT_SOURCE_DIR}/src)
+ 
+ add_library(BUTIL_LIB OBJECT ${BUTIL_SOURCES})
++target_link_libraries(BUTIL_LIB PUBLIC ${DYNAMIC_LIB})
+ add_library(SOURCES_LIB OBJECT ${SOURCES})
++target_link_libraries(SOURCES_LIB PUBLIC ${DYNAMIC_LIB})
+ add_dependencies(SOURCES_LIB PROTO_LIB)
+ 
+ # shared library needs POSITION_INDEPENDENT_CODE
  set_property(TARGET ${SOURCES_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
  set_property(TARGET ${BUTIL_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
  
@@ -105,7 +121,7 @@ index 1b4b233..8e836a4 100644
  add_library(brpc-static STATIC $<TARGET_OBJECTS:BUTIL_LIB>
                                 $<TARGET_OBJECTS:SOURCES_LIB>
                                 $<TARGET_OBJECTS:PROTO_LIB>)
-@@ -60,12 +61,19 @@ endfunction()
+@@ -60,12 +63,19 @@ endfunction()
  
  
  if(WITH_THRIFT)
@@ -127,7 +143,7 @@ index 1b4b233..8e836a4 100644
  # for protoc-gen-mcpack
  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output/bin)
      
-@@ -74,36 +82,64 @@ set(protoc_gen_mcpack_SOURCES
+@@ -74,36 +84,63 @@ set(protoc_gen_mcpack_SOURCES
   )
      
  add_executable(protoc-gen-mcpack ${protoc_gen_mcpack_SOURCES})
@@ -151,7 +167,6 @@ index 1b4b233..8e836a4 100644
      endif()
      SET_TARGET_PROPERTIES(brpc-shared PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
 -
-+    
 +    if(0)
      target_link_libraries(protoc-gen-mcpack brpc-shared ${DYNAMIC_LIB} pthread)
 +    endif()

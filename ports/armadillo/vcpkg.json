@@ -1,6 +1,6 @@
 {
   "name": "armadillo",
-  "version": "12.6.6",
+  "version": "12.8.4",
   "port-version": 1,
   "description": "Armadillo is a high quality linear algebra library (matrix maths) for the C++ language, aiming towards a good balance between speed and ease of use",
   "homepage": "https://arma.sourceforge.net/",
