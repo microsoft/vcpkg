@@ -114,7 +114,6 @@ vcpkg_gn_configure(
 )
 
 vcpkg_gn_install(
-    SOURCE_PATH "${SOURCE_PATH}"
     TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
 )
 
@@ -135,9 +134,8 @@ if(VCPKG_TARGET_IS_OSX)
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
-vcpkg_copy_tools(
-    TOOL_NAMES crashpad_handler
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
 # remove empty directories
 file(REMOVE_RECURSE
