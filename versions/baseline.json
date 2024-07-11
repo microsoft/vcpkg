@@ -2054,7 +2054,7 @@
     },
     "ctbignum": {
       "baseline": "2019-08-02",
-      "port-version": 4
+      "port-version": 5
     },
     "ctemplate": {
       "baseline": "2020-09-14",
