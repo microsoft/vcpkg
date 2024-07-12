@@ -4184,6 +4184,10 @@
       "baseline": "2.3.0",
       "port-version": 0
     },
+    "lib3mf": {
+      "baseline": "2.3.2",
+      "port-version": 0
+    },
     "libaaplus": {
       "baseline": "2.36",
       "port-version": 1
