@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 3a7c6c0515205338a023ada230128e658f4ecff3ccd371d33cd9bb82eb4992db972241faf44f325f7d536c7dedb0a02ee1574b7a84ba3c9856cae9e6d25bdbdc
+    SHA512 1df251333904c8530736a04cd699bcb2b786ad4bcb50e4d67e30cf7e857a46d60aeb48ebea8670f8aecc5632b3cfe635499721ed0cd72f6c8330d5e8ad32aacc
     HEAD_REF main
     PATCHES
         deps.patch
         alsa-dep-fix.patch
+        cxx-linkage-pkgconfig.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -16,14 +17,11 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         alsa     SDL_ALSA
-        alsa     CMAKE_REQUIRE_FIND_PACKAGE_ALSA
         ibus     SDL_IBUS
         samplerate SDL_LIBSAMPLERATE
         vulkan   SDL_VULKAN
         wayland  SDL_WAYLAND
         x11      SDL_X11
-    INVERTED_FEATURES
-        alsa     CMAKE_DISABLE_FIND_PACKAGE_ALSA
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -49,13 +47,11 @@ vcpkg_cmake_configure(
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
         -DSDL_TEST=OFF
-        -DSDL_INSTALL_CMAKEDIR="cmake"
+        -DSDL_INSTALL_CMAKEDIR=cmake
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         -DSDL_LIBSAMPLERATE_SHARED=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
-        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()
@@ -105,7 +101,7 @@ file(STRINGS "${SOURCE_PATH}/CMakeLists.txt" DYLIB_CURRENT_VERSION REGEX ${DYLIB
 string(REGEX REPLACE ${DYLIB_COMPATIBILITY_VERSION_REGEX} "\\1" DYLIB_COMPATIBILITY_VERSION "${DYLIB_COMPATIBILITY_VERSION}")
 string(REGEX REPLACE ${DYLIB_CURRENT_VERSION_REGEX} "\\1" DYLIB_CURRENT_VERSION "${DYLIB_CURRENT_VERSION}")
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT VCPKG_TARGET_IS_ANDROID)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2main" "-lSDL2maind" IGNORE_UNCHANGED)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2 " "-lSDL2d " IGNORE_UNCHANGED)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-static " "-lSDL2-staticd " IGNORE_UNCHANGED)
