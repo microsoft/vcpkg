@@ -95,6 +95,8 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 continue()
             endif()
 
+            list(APPEND macho_executables_and_shared_libs "${macho_file}")
+
             get_filename_component(macho_file_dir "${macho_file}" DIRECTORY)
             get_filename_component(macho_file_name "${macho_file}" NAME)
 
@@ -106,7 +108,16 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             if("${file_type}" STREQUAL "shared")
                 # Set the install name for shared libraries
                 execute_process(
-                    COMMAND "${install_name_tool_cmd}" -id "@rpath/${macho_file_name}" "${macho_file}"
+                    COMMAND "${otool_cmd}" -D "${macho_file}"
+                    OUTPUT_VARIABLE get_id_ov
+                    RESULT_VARIABLE get_id_rv
+                )
+                if(NOT get_id_rv EQUAL 0)
+                    message(FATAL_ERROR "Could not obtain install name id from '${macho_file}'")
+                endif()
+                set(macho_new_id "@rpath/${macho_file_name}")
+                execute_process(
+                    COMMAND "${install_name_tool_cmd}" -id "${macho_new_id}" "${macho_file}"
                     OUTPUT_QUIET
                     ERROR_VARIABLE set_id_error
                 )
@@ -115,6 +126,11 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                     message(WARNING "Couldn't adjust install name of '${macho_file}': ${set_id_error}")
                     continue()
                 endif()
+
+                string(REGEX REPLACE "${macho_file}:\n" "" get_id_ov "${get_id_ov}")
+                string(REGEX REPLACE "\n.*" "" get_id_ov "${get_id_ov}")
+                list(APPEND adjusted_shared_lib_old_ids "${get_id_ov}")
+                list(APPEND adjusted_shared_lib_new_ids "${macho_new_id}")
             endif()
 
             # Clear all existing rpaths
@@ -156,4 +172,40 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             message(STATUS "Adjusted RPATH of '${macho_file}' (To '${new_rpath}')")
         endforeach()
     endforeach()
+
+    # Check for dependent libraries in executables and shared libraries that
+    # need adjusting after id change
+    list(LENGTH adjusted_shared_lib_old_ids last_adjusted_index)
+    if(NOT last_adjusted_index EQUAL 0)
+        math(EXPR last_adjusted_index "${last_adjusted_index} - 1")
+        foreach(macho_file IN LISTS macho_executables_and_shared_libs)
+            execute_process(
+                COMMAND "${otool_cmd}" -L "${macho_file}"
+                OUTPUT_VARIABLE get_deps_ov
+                RESULT_VARIABLE get_deps_rv
+            )
+            if(NOT get_deps_rv EQUAL 0)
+                message(FATAL_ERROR "Could not obtain dependencies list from '${macho_file}'")
+            endif()
+            foreach(i RANGE ${last_adjusted_index})
+                list(GET adjusted_shared_lib_old_ids ${i} adjusted_old_id)
+                if(NOT get_deps_ov MATCHES "[ \t]${adjusted_old_id} ")
+                    continue()
+                endif()
+                list(GET adjusted_shared_lib_new_ids ${i} adjusted_new_id)
+
+                # Replace the old id with the new id
+                execute_process(
+                    COMMAND "${install_name_tool_cmd}" -change "${adjusted_old_id}" "${adjusted_new_id}" "${macho_file}"
+                    OUTPUT_QUIET
+                    ERROR_VARIABLE change_id_error
+                )
+                if(NOT "${change_id_error}" STREQUAL "")
+                    message(WARNING "Couldn't adjust dependent shared library install name in '${macho_file}': ${change_id_error}")
+                    continue()
+                endif()
+                message(STATUS "Adjusted dependent shared library install name in '${macho_file}' (From '${adjusted_old_id}' -> To '${adjusted_new_id}')")
+            endforeach()
+        endforeach()
+    endif()
 endfunction()
