@@ -1,6 +1,7 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
+vcpkg_download_distfile(
+    ARCHIVE
     URLS https://github.com/agl-alexglopez/str_view/releases/download/v${VERSION}/str_view-v${VERSION}.zip
     FILENAME str_view-v${VERSION}.zip
     SHA512 46343734382ba4f17286069b42dbb3d94a69b74c5836f09bf552a287d902c2f07f79829220029bff74e190d73aa2ff3b3000fc2487e862f74249331dce778cbb
@@ -8,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${archive}
+    ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )
 
@@ -24,5 +25,5 @@ vcpkg_cmake_config_fixup(
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${src}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
