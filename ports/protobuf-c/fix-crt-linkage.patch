@@ -1,0 +1,13 @@
+diff --git a/build-cmake/CMakeLists.txt b/build-cmake/CMakeLists.txt
+index f46fba7..ba0b730 100644
+--- a/build-cmake/CMakeLists.txt
++++ b/build-cmake/CMakeLists.txt
+@@ -103,7 +103,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}) # for generated files
+ 
+ ENDIF()
+ 
+-if (MSVC AND NOT BUILD_SHARED_LIBS)
++if (0)
+ 	# In case we are building static libraries, link also the runtime library statically
+ 	# so that MSVCR*.DLL is not required at runtime.
+ 	# https://msdn.microsoft.com/en-us/library/2kzt1wy3.aspx
