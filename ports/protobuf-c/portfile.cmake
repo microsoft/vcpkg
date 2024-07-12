@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 4c540ca58b65e59aaf7149124d915f106e91fc79d60c6ef80b62faf288843250375e13f8773fd24f2ff27485dc2d2e597f0a95e39c186a30069eb470abd28ae7
     HEAD_REF master
+    PATCHES
+        fix-crt-linkage.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
