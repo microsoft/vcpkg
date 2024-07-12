@@ -2125,7 +2125,7 @@
       "port-version": 0
     },
     "cxxgraph": {
-      "baseline": "2.0.0",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "cxxopts": {
