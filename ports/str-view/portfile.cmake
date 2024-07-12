@@ -1,7 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(
-    archive
+vcpkg_download_distfile(ARCHIVE
     URLS https://github.com/agl-alexglopez/str_view/releases/download/v${VERSION}/str_view-v${VERSION}.zip
     FILENAME str_view-v${VERSION}.zip
     SHA512 46343734382ba4f17286069b42dbb3d94a69b74c5836f09bf552a287d902c2f07f79829220029bff74e190d73aa2ff3b3000fc2487e862f74249331dce778cbb
