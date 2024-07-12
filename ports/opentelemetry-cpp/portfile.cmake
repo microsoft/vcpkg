@@ -50,7 +50,6 @@ set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 if(WITH_GENEVA OR WITH_USER_EVENTS)
     # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
     # so they should be ported as a feature under opentelemetry-cpp.
-    include(${CURRENT_HOST_INSTALLED_DIR}/share/opentelemetry-cpp-contrib-version/clone_opentelemetry_cpp_contrib.cmake)
     clone_opentelemetry_cpp_contrib(CONTRIB_SOURCE_PATH)
     
     if(WITH_GENEVA)
