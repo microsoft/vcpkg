@@ -21,8 +21,6 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: 'PrAnd-1ES-Pool'
-    demands:
-    - ImageOverride -equals vcpkg-mariner-docker-gen1
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
