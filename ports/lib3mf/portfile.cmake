@@ -1,17 +1,16 @@
 # Manually clone the repository with submodules
-set(REPO_URL "https://github.com/3MFConsortium/lib3mf.git")
-set(COMMIT_HASH "release/2.3.2")  # Replace with your specific commit hash or branch name
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/lib3mf/src)
-
-execute_process(
-    COMMAND git clone --recurse-submodules ${REPO_URL} ${SOURCE_PATH}
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+# Pull it from artifacts
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/3MFConsortium/lib3mf/releases/download/v2.3.2/lib3mf-2.3.2-source-with-submodules.zip"
+    FILENAME "lib3mf-2.3.2-source-with-submodules.zip"
+    SHA512 222821e4d739a3277b96977ec656a6498e75d19e62a34cd7cf204ef388643d2cfc1610f38abe9f8c60a4c450248f3a4de39822c367b6cbb405d43148d32d52d2
 )
 
-execute_process(
-    COMMAND git checkout ${COMMIT_HASH}
-    WORKING_DIRECTORY ${SOURCE_PATH}
+# Extract it
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    NO_REMOVE_ONE_LEVEL
 )
 
 # Proceed with the usual build process
