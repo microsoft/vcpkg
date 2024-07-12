@@ -173,8 +173,9 @@ jobs:
             for (let line of deprecated_license) {
               [file, line_number, match] = line.split(':');
               var license_output = `SPDX deprecated license identifier ${match}.`;
-              license_output += " If you feel able to do so, please consider replacing it."
-              license_output += " Updated license identifiers can be found at https://spdx.org/licenses/."
+              license_output += "\nIf you feel able to do so, please consider replacing it."
+              license_output += "\nUpdated license identifiers can be found at https://spdx.org/licenses/."
+
 
               core.notice(license_output, {file, startLine: line_number});
             }
