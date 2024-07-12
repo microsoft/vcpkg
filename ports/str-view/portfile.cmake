@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(
-    src
+    SOURCE_PATH
     ARCHIVE ${archive}
     NO_REMOVE_ONE_LEVEL
 )
