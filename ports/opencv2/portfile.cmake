@@ -39,7 +39,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT_LNK)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         ###### ocv_options
         -DCMAKE_DEBUG_POSTFIX=d
         -DBUILD_WITH_STATIC_CRT=${STATIC_CRT_LNK}
