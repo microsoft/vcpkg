@@ -1,15 +1,17 @@
-# Pull it from artifacts
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/vijaiaeroastro/3mfExamples/releases/download/2.3.1/lib3mf-2.3.0-vijai-develop.zip"
-    FILENAME "lib3mf-2.3.0-vijai-develop.zip"
-    SHA512 a43e1c685e0b72241ae0573becbaca1ac21177b65fa305e0add761c0a0670b6c224041492b7ce1f84e1838bc62e4a89ea94477ea45e0127c8272f1b30698fa48
+# Manually clone the repository with submodules
+set(REPO_URL "https://github.com/3MFConsortium/lib3mf.git")
+set(COMMIT_HASH "release/2.3.2")  # Replace with your specific commit hash or branch name
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/lib3mf/src)
+
+execute_process(
+    COMMAND git clone --recurse-submodules ${REPO_URL} ${SOURCE_PATH}
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
 )
 
-# Extract it
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    NO_REMOVE_ONE_LEVEL
+execute_process(
+    COMMAND git checkout ${COMMIT_HASH}
+    WORKING_DIRECTORY ${SOURCE_PATH}
 )
 
 # Proceed with the usual build process
@@ -24,7 +26,7 @@ vcpkg_cmake_install()
 # Copy all PDB's
 vcpkg_copy_pdbs()
 
-# This should help fix the path issue for CMake config files
+# Fix the path issue for CMake config files
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/lib3mf)
 
 # Fix up package configs (Get rid of absolute paths)
