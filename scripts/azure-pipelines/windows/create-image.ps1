@@ -24,7 +24,7 @@ $WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 17
+$TotalProgress = 18
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -235,6 +235,9 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-azure-cli.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas
