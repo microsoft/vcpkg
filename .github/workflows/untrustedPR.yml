@@ -165,13 +165,15 @@ jobs:
             if (missing_license !== "") {
               license_output = 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
               license_output += missing_license
-              license_output += "\n\nValid values for the license field can be found at https://learn.microsoft.com/en-us/vcpkg/reference/vcpkg-json#license\n\n"
+              license_output += "\n\nValid values for the license field can be found at https://learn.microsoft.com/vcpkg/reference/vcpkg-json#license\n\n"
+
               core.warning(license_output);
             }
 
             for (let line of deprecated_license) {
               [file, line_number, match] = line.split(':');
-              var license_output = `The license identifier ${match} is deprecated. `;
+              var license_output = `SPDX deprecated license identifier ${match}. Please check https://spdx.org/licenses/ for an updated identifier.`;
+
               license_output += "If you feel able to do so, please consider replacing it.\n"
               license_output += "License identifiers can be found at https://spdx.org/licenses/."
               core.notice(license_output, {file, startLine: line_number});
