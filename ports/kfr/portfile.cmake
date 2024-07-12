@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kfrlib/kfr
-    REF 5.0.1
-    SHA512 e2d19813fd80bfc19e05576103d0500637bc30f7e7780fbe80e9ab5126a9530188965e5cb63d5de508beaceb94c6ff5c2dcf5d5f81fc5aa6122c707e0e155113
+    REF "${VERSION}"
+    SHA512 90ae299b1d3b9cc73de665f7c5ace757978b95d1546a4b00383a1a677ecfcd56698ea80e7bf7367e3f169238fff6391ee1f2a3558cfba7cc11c762cc3fbb3292
     HEAD_REF master
 )
 
@@ -13,7 +13,6 @@ vcpkg_check_features(
     FEATURES
         capi KFR_ENABLE_CAPI_BUILD
         dft KFR_ENABLE_DFT
-        dft-np KFR_ENABLE_DFT_NP
 )
 
 vcpkg_cmake_configure(
@@ -29,6 +28,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

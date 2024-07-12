@@ -1,0 +1,7 @@
+sese provides CMake targets:
+
+    find_package(sese CONFIG REQUIRED)
+    # build full features
+    target_link_libraries(main PRIVATE Sese::Core)
+    # build only plugin
+    target_link_libraries(main PRIVATE Sese::Plugin)

@@ -17,109 +17,134 @@ Function Get-TempFilePath {
     [String]$Extension
   )
 
-  if ([String]::IsNullOrWhiteSpace($Extension)) {
-    throw 'Missing Extension'
-  }
-
   $tempPath = [System.IO.Path]::GetTempPath()
-  $tempName = [System.IO.Path]::GetRandomFileName() + '.' + $Extension
+  $tempName = [System.IO.Path]::GetRandomFileName()
+  if (-not [String]::IsNullOrWhiteSpace($Extension)) {
+    $tempName = $tempName + '.' + $Extension
+  }
   return Join-Path $tempPath $tempName
 }
 
 <#
 .SYNOPSIS
-Writes a message to the screen depending on ExitCode.
+Download and install a component.
 
 .DESCRIPTION
-Since msiexec can return either 0 or 3010 successfully, in both cases
-we write that installation succeeded, and which exit code it exited with.
-If msiexec returns anything else, we write an error.
+DownloadAndInstall downloads an executable from the given URL, and runs it with the given command-line arguments.
 
-.PARAMETER ExitCode
-The exit code that msiexec returned.
+.PARAMETER Name
+The name of the component, to be displayed in logging messages.
+
+.PARAMETER Url
+The URL of the installer.
+
+.PARAMETER Args
+The command-line arguments to pass to the installer.
 #>
-Function PrintMsiExitCodeMessage {
+Function DownloadAndInstall {
+  [CmdletBinding(PositionalBinding=$false)]
   Param(
-    $ExitCode
+    [Parameter(Mandatory)][String]$Name,
+    [Parameter(Mandatory)][String]$Url,
+    [Parameter(Mandatory)][String[]]$Args,
+    [String]$LocalName = $null
   )
 
-  # 3010 is probably ERROR_SUCCESS_REBOOT_REQUIRED
-  if ($ExitCode -eq 0 -or $ExitCode -eq 3010) {
-    Write-Host "Installation successful! Exited with $ExitCode."
-  }
-  else {
-    Write-Error "Installation failed! Exited with $ExitCode."
-    throw
+  try {
+    if ([string]::IsNullOrWhiteSpace($LocalName)) {
+      $LocalName = [uri]::new($Url).Segments[-1]
+    }
+
+    [bool]$doRemove = $false
+    [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
+    if (Test-Path $LocalPath) {
+      Write-Host "Using local $Name..."
+    } else {
+      Write-Host "Downloading $Name..."
+      $tempPath = Get-TempFilePath
+      New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+      $LocalPath = Join-Path $tempPath $LocalName
+      Invoke-WebRequest -Uri $Url -OutFile $LocalPath
+      $doRemove = $true
+    }
+
+    Write-Host "Installing $Name..."
+    $proc = Start-Process -FilePath $LocalPath -ArgumentList $Args -Wait -PassThru
+    $exitCode = $proc.ExitCode
+
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    } elseif ($exitCode -eq 3010) {
+      Write-Host 'Installation successful! Exited with 3010 (ERROR_SUCCESS_REBOOT_REQUIRED).'
+    } else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+
+    if ($doRemove) {
+      Remove-Item -Path $LocalPath -Force
+    }
+  } catch {
+    Write-Error "Installation failed! Exception: $($_.Exception.Message)"
   }
 }
 
 <#
 .SYNOPSIS
-Install a .msi file.
+Download and install a zip file component.
 
 .DESCRIPTION
-InstallMSI takes a url where an .msi lives, and installs that .msi to the system.
+DownloadAndUnzip downloads a zip from the given URL, and extracts it to the indicated path.
 
 .PARAMETER Name
-The name of the thing to install.
+The name of the component, to be displayed in logging messages.
 
 .PARAMETER Url
-The URL at which the .msi lives.
+The URL of the zip to download.
+
+.PARAMETER Destination
+The location to which the zip should be extracted
 #>
-Function InstallMSI {
+Function DownloadAndUnzip {
+  [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [String]$Name,
-    [String]$Url
+    [Parameter(Mandatory)][String]$Name,
+    [Parameter(Mandatory)][String]$Url,
+    [Parameter(Mandatory)][String]$Destination
   )
 
   try {
-    Write-Host "Downloading $Name..."
-    [string]$msiPath = Get-TempFilePath -Extension 'msi'
-    curl.exe -L -o $msiPath -s -S $Url
-    Write-Host "Installing $Name..."
-    $args = @('/i', $msiPath, '/norestart', '/quiet', '/qn')
-    $proc = Start-Process -FilePath 'msiexec.exe' -ArgumentList $args -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install $Name! $($_.Exception.Message)"
-    throw
-  }
-}
+    $fileName = [uri]::new($Url).Segments[-1]
+    if ([string]::IsNullOrWhiteSpace($LocalName)) {
+      $LocalName = $fileName
+    }
 
-<#
-.SYNOPSIS
-Unpacks a zip file to $Dir.
+    [string]$zipPath
+    [bool]$doRemove = $false
+    [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
+    if (Test-Path $LocalPath) {
+      Write-Host "Using local $Name..."
+      $zipPath = $LocalPath
+    } else {
+      $tempPath = Get-TempFilePath
+      New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+      $zipPath = Join-Path $tempPath $LocalName
+      Write-Host "Downloading $Name ( $Url -> $zipPath )..."
+      Invoke-WebRequest -Uri $Url -OutFile $zipPath
+      $doRemove = $true
+    }
 
-.DESCRIPTION
-InstallZip takes a URL of a zip file, and unpacks the zip file to the directory
-$Dir.
+    Write-Host "Installing $Name to $Destination..."
+    & tar.exe -xvf $zipPath --strip 1 --directory $Destination
+    if ($LASTEXITCODE -eq 0) {
+      Write-Host 'Installation successful!'
+    } else {
+      Write-Error "Installation failed! Exited with $LASTEXITCODE."
+    }
 
-.PARAMETER Name
-The name of the tool being installed.
-
-.PARAMETER Url
-The URL of the zip file to unpack.
-
-.PARAMETER Dir
-The directory to unpack the zip file to.
-#>
-Function InstallZip {
-  Param(
-    [String]$Name,
-    [String]$Url,
-    [String]$Dir
-  )
-
-  try {
-    Write-Host "Downloading $Name..."
-    [string]$zipPath = Get-TempFilePath -Extension 'zip'
-    curl.exe -L -o $zipPath -s -S $Url
-    Write-Host "Installing $Name..."
-    Expand-Archive -Path $zipPath -DestinationPath $Dir -Force
-  }
-  catch {
-    Write-Error "Failed to install $Name! $($_.Exception.Message)"
-    throw
+    if ($doRemove) {
+      Remove-Item -Path $zipPath -Force
+    }
+  } catch {
+    Write-Error "Installation failed! Exception: $($_.Exception.Message)"
   }
 }

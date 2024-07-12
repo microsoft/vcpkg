@@ -2,13 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "libunwind/libunwind"
     REF "v${VERSION}"
-    HEAD_REF "v1.8-stable"
-    SHA512 105bd4ff0f23f98046a4ed2cb58664083eba35154c92334a1f905ef13e1e92abbf87acb82556c9242c4209626f065d2519f3260e69d2146234a285b4ddd64470
+    HEAD_REF master
+    SHA512 dd8332b7a2cbabb4716c01feea422f83b4a7020c1bee20551de139c3285ea0e0ceadfa4171c6f5187448c8ddc53e0ec4728697d0a985ee0c3ff4835b94f6af6f
 )
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS
+        --disable-tests
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()

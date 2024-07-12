@@ -10,3 +10,4 @@ else()
 endif()
 set(PYTHON3_SITE "${site_base}/site-packages")
 
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python/vcpkg-port-config.cmake")
