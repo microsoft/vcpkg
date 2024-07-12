@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${src}"
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
