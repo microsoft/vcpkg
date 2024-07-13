@@ -2,19 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
     REF "pcl-${VERSION}"
-    SHA512 0ea388d5f4ccdc1e5fcace6a1e1b90843be1a4ed2e1d37cc3c80d8abc0e868324d8f9da80513f1cb3f16738e00586f29cac151ce0d501645514f280aee8b1d7f
+    SHA512 8e2d2839fe73a955d49b9a72861de2becf2da9a0dc906bd10ab8a3518e270a2f1900d801922d02871d704f2ed380273d35c2d0e04d8da7e24a21eb351c43c00b
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
-        pcl_config.patch
-        pcl_utils.patch
+        install-layout.patch
         install-examples.patch
-        no-absolute.patch
         fix-clang-cl.patch
-        fix-pcl-exports.patch
-        fix-kinfu.patch
+        gh-5985-inline.patch
+        io_ply.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -56,7 +54,6 @@ vcpkg_cmake_configure(
         -DWITH_DOCS=OFF
         -DWITH_DSSDK=OFF
         -DWITH_ENSENSO=OFF
-        -DWITH_OPENMP=OFF
         -DWITH_OPENNI=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
@@ -72,6 +69,10 @@ vcpkg_cmake_configure(
         PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
         PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32
 )
+
+if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/vtk.pc")
+    file(REMOVE "${CURRENT_PACKAGE_DIR}/lib/pkgconfig/pcl_gpu_kinfu_large_scale.pc" "${CURRENT_PACKAGE_DIR}/debug/lib/pkgconfig/pcl_gpu_kinfu_large_scale.pc")
+endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()

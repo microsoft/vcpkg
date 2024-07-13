@@ -1,10 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-CDR
-    REF v${VERSION}
-    SHA512 66040acb563d7c06efb67a1536eb178183776e71a6b54c7e02efbe50ff0926aa24d87fb7869273e985c5c0f2b5d1496d3b1a20f10358373c73171b51c71e7e6a
+    REF "v${VERSION}"
+    SHA512 4e3b39f371393e2be2b2a33cba1284f5eef9dea3e27ec8904db3f90b88b04aefbec2f095c078c7f4975bef4a7fb4a0dd53236636c4353a40378172559313f5c7
     HEAD_REF master
     PATCHES
         pdb-file.patch

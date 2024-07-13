@@ -1,5 +1,5 @@
 diff --git a/cmake/cpu.cmake b/cmake/cpu.cmake
-index 7513ca8..38ec73b 100644
+index 040c524..f345b89 100644
 --- a/cmake/cpu.cmake
 +++ b/cmake/cpu.cmake
 @@ -50,7 +50,7 @@ if(MSVC AND CMAKE_C_COMPILER_ID STREQUAL "MSVC")
@@ -11,8 +11,8 @@ index 7513ca8..38ec73b 100644
    endif()
    set(SIMD_DISABLE_FLAGS)
  else()
-@@ -110,6 +110,9 @@ foreach(I_SIMD RANGE ${WEBP_SIMD_FLAGS_RANGE})
-        "src/dsp/*${WEBP_SIMD_FILE_EXTENSION}")
+@@ -111,6 +111,9 @@ foreach(I_SIMD RANGE ${WEBP_SIMD_FLAGS_RANGE})
+        "${CMAKE_CURRENT_LIST_DIR}/../src/dsp/*${WEBP_SIMD_FILE_EXTENSION}")
    if(WEBP_HAVE_${WEBP_SIMD_FLAG})
      # Memorize the file and flags.
 +    if("${SIMD_COMPILE_FLAG}" STREQUAL "")

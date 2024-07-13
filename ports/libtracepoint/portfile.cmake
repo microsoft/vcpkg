@@ -6,18 +6,29 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "microsoft/LinuxTracepoints"
     REF "v${VERSION}"
-    SHA512 d2126bb8e89c952630e22d66f0c9f2be7e46debd8f8dbc27f3a886af77cf4c1d9c3efcf3b7cae886feacfb9fe142355b26a3fb468c9b3582d65eb16f4dc6c288
+    SHA512 baf27c967b2fa1fb8e8684951fd8e12e40fe9c23f5052a2d77c63eceab6ddfc112537422b97c37cfb0e479361fa8aedea6d8d7edfae91810f1ed696060fcb822
     HEAD_REF main)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools  BUILD_TOOLS)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/libtracepoint"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_SAMPLES=OFF
         -DBUILD_TESTS=OFF)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+if (BUILD_TOOLS)
+    vcpkg_copy_tools(
+        TOOL_NAMES tracepoint-register
+        AUTO_CLEAN)
+endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(
