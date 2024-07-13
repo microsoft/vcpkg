@@ -36,7 +36,7 @@ vcpkg_from_github(
         fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
         force-cuda-include.patch
-        # fix-aten-cutlass.patch
+        fix-aten-cutlass.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
