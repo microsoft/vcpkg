@@ -270,6 +270,9 @@ Set-AzVM `
   -Name $ProtoVMName `
   -Generalized
 
+$westus3Location = @{Name = 'West US 3';}
+$southEastAsiaLocation = @{Name = 'Southeast Asia';}
+
 New-AzGalleryImageVersion `
   -ResourceGroupName 'vcpkg-image-minting' `
   -GalleryName 'vcpkg_gallery_wus3' `
@@ -279,7 +282,8 @@ New-AzGalleryImageVersion `
   -SourceImageId $VMCreated.ID `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
-  -PublishingProfileExcludeFromLatest
+  -PublishingProfileExcludeFromLatest `
+  -TargetExtendedLocation @($westus3Location, $southEastAsiaLocation)
 
 ####################################################################################################
 Write-Progress `
