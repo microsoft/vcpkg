@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-source-utf8.patch
         find-dependency.patch # from https://github.com/AOMediaCodec/libavif/pull/1339
+	skip-nasm-non-x64.patch # from https://github.com/AOMediaCodec/libavif/pull/2267
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

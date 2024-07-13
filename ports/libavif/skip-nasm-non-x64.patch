@@ -1,0 +1,28 @@
+From b45c002ba6e021d5740cf8e25f83bdf8b392b78e Mon Sep 17 00:00:00 2001
+From: Andrew Kaster <akaster@serenityos.org>
+Date: Sat, 13 Jul 2024 16:28:24 -0600
+Subject: [PATCH] cmake: Only search for ASM_NASM language on x86_64 platforms
+
+The only use of the nasm assembler in the project is for the SVT-AV1
+dependency. SVT-AV1 only looks for ASM_NASM when it has detected that
+the target platform is x86_64/amd64[0].
+
+[0] https://gitlab.com/AOMediaCodec/SVT-AV1/-/blob/b13aec2a1a820efb8417e5c147240aa677ec8a74/CMakeLists.txt#L75-L98
+---
+ cmake/Modules/LocalSvt.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/Modules/LocalSvt.cmake b/cmake/Modules/LocalSvt.cmake
+index 7fd34f493..720613499 100644
+--- a/cmake/Modules/LocalSvt.cmake
++++ b/cmake/Modules/LocalSvt.cmake
+@@ -30,7 +30,7 @@ else()
+             enable_language(ASM)
+         endif()
+     endif()
+-    if(NOT CMAKE_ASM_NASM_COMPILER)
++    if(NOT CMAKE_ASM_NASM_COMPILER AND CMAKE_SYSTEM_PROCESSOR MATCHES "(x86_64|AMD64|amd64)")
+         include(CheckLanguage)
+         check_language(ASM_NASM)
+         if(CMAKE_ASM_NASM_COMPILER)
+
