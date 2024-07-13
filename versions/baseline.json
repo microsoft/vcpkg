@@ -8166,7 +8166,7 @@
     },
     "shogun": {
       "baseline": "2023-12-19",
-      "port-version": 0
+      "port-version": 1
     },
     "si": {
       "baseline": "2.5.1",
