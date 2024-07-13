@@ -283,7 +283,7 @@ New-AzGalleryImageVersion `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
   -PublishingProfileExcludeFromLatest `
-  -TargetExtendedLocation @($westus3Location, $southEastAsiaLocation)
+  -TargetRegion @($westus3Location, $southEastAsiaLocation)
 
 ####################################################################################################
 Write-Progress `
