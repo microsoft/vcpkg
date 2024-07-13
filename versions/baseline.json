@@ -4238,7 +4238,7 @@
     },
     "libavif": {
       "baseline": "1.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libb2": {
       "baseline": "0.98.1",
