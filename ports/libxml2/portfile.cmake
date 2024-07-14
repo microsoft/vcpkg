@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 289d8e30a894a3efde78e06d1cedadc1491f4abdc2c0b653bb5410be48338aacec29e0ca23e1f1cac2725fd4e2114a8d20dcdaa80cf7f5b34302342d6f5efe10
+    SHA512 21f6c0340fab0dc16bfe516493aa7ce96b26abf1719b69862829eaa682d87b7b5ece1d540b7f8c30127becd0691facc278fe1cb50cd2c87320cb6d73b077caf3
     HEAD_REF master
     PATCHES
         disable-docs.patch

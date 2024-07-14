@@ -1,6 +1,6 @@
 {
   "name": "small-gicp",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Efficient and parallelized algorithms for point cloud registration",
   "homepage": "https://github.com/koide3/small_gicp",
   "license": "MIT",
