@@ -8166,7 +8166,7 @@
     },
     "shogun": {
       "baseline": "2023-12-19",
-      "port-version": 0
+      "port-version": 1
     },
     "si": {
       "baseline": "2.5.1",
@@ -9374,7 +9374,7 @@
     },
     "wasmedge": {
       "baseline": "0.13.5",
-      "port-version": 1
+      "port-version": 2
     },
     "wavelib": {
       "baseline": "2021-11-26",
