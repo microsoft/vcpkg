@@ -61,10 +61,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
 elseif((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
   message(FATAL_ERROR "Arm64 building with MSVC is currently not supported.")
 else()
-  vcpkg_replace_string("${SOURCE_PATH}/src/Simd/SimdConfig.h"
-    "//#define SIMD_STATIC"
-    "#define SIMD_STATIC"
-  )
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${SOURCE_PATH}/src/Simd/SimdConfig.h"
+      "//#define SIMD_STATIC"
+      "#define SIMD_STATIC"
+    )
+  endif()
   string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SIMD_SHARED)
   vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
