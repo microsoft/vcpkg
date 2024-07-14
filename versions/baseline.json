@@ -8193,8 +8193,8 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "5.3.128",
-      "port-version": 1
+      "baseline": "6.1.139",
+      "port-version": 0
     },
     "simde": {
       "baseline": "0.8.2",
