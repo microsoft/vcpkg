@@ -1,0 +1,76 @@
+diff --git a/cdk/cmake/DepFindProtobuf.cmake b/cdk/cmake/DepFindProtobuf.cmake
+index 730389de..7c3fd78b 100644
+--- a/cdk/cmake/DepFindProtobuf.cmake
++++ b/cdk/cmake/DepFindProtobuf.cmake
+@@ -44,6 +44,7 @@
+ #
+ #
+ 
++if(0)
+ if(TARGET ext::protobuf)
+   return()
+ endif()
+@@ -64,7 +65,7 @@ add_ext_targets(protobuf
+   LIBRARY protobuf pb_libprotobuf
+   EXECUTABLE protoc pb_protoc
+ )
+-
++endif()
+ 
+ # Standard PROTOBUF_GENERATE_CPP modified to our usage
+ function(mysqlx_protobuf_generate_cpp SRCS HDRS)
+@@ -90,7 +91,7 @@ function(mysqlx_protobuf_generate_cpp SRCS HDRS)
+       "${CMAKE_CURRENT_BINARY_DIR}/protobuf/${FIL_WE}.pb.h"
+       COMMAND ${CMAKE_COMMAND}
+       -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/protobuf"
+-      COMMAND ext::protoc
++      COMMAND protobuf::protoc
+       ARGS --cpp_out "${CMAKE_CURRENT_BINARY_DIR}/protobuf"
+       -I ${ABS_PATH} ${ABS_FIL}
+ 
+diff --git a/cdk/core/CMakeLists.txt b/cdk/core/CMakeLists.txt
+index 30f7baf1..2a4a9434 100644
+--- a/cdk/core/CMakeLists.txt
++++ b/cdk/core/CMakeLists.txt
+@@ -33,6 +33,7 @@ cmake_minimum_required(VERSION 2.8)
+ 
+ #ADD_SUBDIRECTORY(tests)
+ 
++find_package(Protobuf CONFIG REQUIRED)
+ 
+ SET(cdk_sources
+   session.cc
+@@ -45,7 +46,7 @@ add_library(cdk STATIC ${cdk_sources} ${HEADERS})
+ 
+ target_link_libraries(cdk
+   PUBLIC  cdk_mysqlx cdk_parser
+-  PRIVATE ext::protobuf-lite  # required by codecc.cc
++  PRIVATE protobuf::libprotobuf-lite  # required by codecc.cc
+ )
+ 
+ add_coverage(cdk)
+diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
+index cfc81daf..6c484575 100644
+--- a/cdk/protocol/mysqlx/CMakeLists.txt
++++ b/cdk/protocol/mysqlx/CMakeLists.txt
+@@ -26,8 +26,9 @@
+ # along with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+ 
+-find_dependency(Protobuf)
+-find_dependency(Compression)
++include(DepFindCompression)
++find_package(Protobuf CONFIG REQUIRED)
++include(DepFindProtobuf)
+ 
+ include(CheckIncludeFile)
+ 
+@@ -132,7 +133,7 @@ target_include_directories(cdk_proto_mysqlx PRIVATE
+ if(use_full_protobuf)
+   target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf)
+ else()
+-  target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf-lite)
++  target_link_libraries(cdk_proto_mysqlx PRIVATE protobuf::libprotobuf-lite)
+ endif()
+ 
+ if (WIN32)
