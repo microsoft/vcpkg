@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO agl-alexglopez/str_view
     REF "v${VERSION}"
     SHA512 4dde3d91197ad78bbd808cc88058e6e1588c3ec3b6fbce198538b5ea390b1f3cc8429c76169794dec5d0576862e071feadb280128605ac30c2f12d25d66b9f34
-    HEAD_REF release
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
