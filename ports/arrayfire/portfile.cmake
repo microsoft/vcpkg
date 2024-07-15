@@ -91,10 +91,15 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+if(VCPKG_TARGET_IS_OSX)
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/ArrayFire/cmake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
-    "${CURRENT_PACKAGES_DIR}/debug/examples" 
+    "${CURRENT_PACKAGES_DIR}/debug/examples"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/examples"
     "${CURRENT_PACKAGES_DIR}/LICENSES"
     "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
