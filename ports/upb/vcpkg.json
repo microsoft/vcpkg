@@ -5,6 +5,13 @@
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-2-Clause",
   "dependencies": [
+    {
+      "name": "upb",
+      "host": true,
+      "features": [
+        "codegen"
+      ]
+    },
     "utf8-range",
     {
       "name": "vcpkg-cmake",

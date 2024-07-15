@@ -1,5 +1,262 @@
+diff --git a/src/brpc/esp_message.cpp b/src/brpc/esp_message.cpp
+index 0c17c181..5c28eadc 100644
+--- a/src/brpc/esp_message.cpp
++++ b/src/brpc/esp_message.cpp
+@@ -56,7 +56,7 @@ EspMessage* EspMessage::New() const {
+ 
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ EspMessage* EspMessage::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<EspMessage>(arena);
++    return DefaultConstruct<EspMessage>(arena);
+ }
+ #endif
+ 
+diff --git a/src/brpc/esp_message.h b/src/brpc/esp_message.h
+index aecc837c..985ab1ec 100644
+--- a/src/brpc/esp_message.h
++++ b/src/brpc/esp_message.h
+@@ -39,6 +39,7 @@ public:
+ public:
+     EspMessage();
+     virtual ~EspMessage();
++    explicit EspMessage(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+ 
+     EspMessage(const EspMessage& from);
+ 
+@@ -59,11 +60,12 @@ public:
+     EspMessage* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const EspMessage& from);
+     void MergeFrom(const EspMessage& from);
+     void Clear() override;
+     bool IsInitialized() const override;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+ 
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+diff --git a/src/brpc/memcache.cpp b/src/brpc/memcache.cpp
+index 43e8078a..f99b7040 100644
+--- a/src/brpc/memcache.cpp
++++ b/src/brpc/memcache.cpp
+@@ -65,7 +65,7 @@ MemcacheRequest* MemcacheRequest::New() const {
+ 
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ MemcacheRequest* MemcacheRequest::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<MemcacheRequest>(arena);
++    return DefaultConstruct<MemcacheRequest>(arena);
+ }
+ #endif
+ 
+@@ -216,7 +216,7 @@ MemcacheResponse* MemcacheResponse::New() const {
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ MemcacheResponse*
+ MemcacheResponse::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<MemcacheResponse>(arena);
++    return DefaultConstruct<MemcacheResponse>(arena);
+ }
+ #endif
+ 
+diff --git a/src/brpc/memcache.h b/src/brpc/memcache.h
+index 014f075b..b4535614 100644
+--- a/src/brpc/memcache.h
++++ b/src/brpc/memcache.h
+@@ -45,6 +45,7 @@ class MemcacheRequest : public ::google::protobuf::Message {
+ public:
+     MemcacheRequest();
+     virtual ~MemcacheRequest();
++    explicit MemcacheRequest(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+     MemcacheRequest(const MemcacheRequest& from);
+     inline MemcacheRequest& operator=(const MemcacheRequest& from) {
+         CopyFrom(from);
+@@ -95,11 +96,12 @@ public:
+     MemcacheRequest* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const MemcacheRequest& from);
+     void MergeFrom(const MemcacheRequest& from);
+     void Clear() override;
+     bool IsInitialized() const override;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+@@ -175,6 +177,7 @@ public:
+ 
+     MemcacheResponse();
+     virtual ~MemcacheResponse();
++    explicit MemcacheResponse(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+     MemcacheResponse(const MemcacheResponse& from);
+     inline MemcacheResponse& operator=(const MemcacheResponse& from) {
+         CopyFrom(from);
+@@ -208,11 +211,12 @@ public:
+     MemcacheResponse* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const MemcacheResponse& from);
+     void MergeFrom(const MemcacheResponse& from);
+     void Clear() override;
+     bool IsInitialized() const override;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+diff --git a/src/brpc/nshead_message.cpp b/src/brpc/nshead_message.cpp
+index f991604a..c0cec65f 100644
+--- a/src/brpc/nshead_message.cpp
++++ b/src/brpc/nshead_message.cpp
+@@ -56,7 +56,7 @@ NsheadMessage* NsheadMessage::New() const {
+ 
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ NsheadMessage* NsheadMessage::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<NsheadMessage>(arena);
++    return DefaultConstruct<NsheadMessage>(arena);
+ }
+ #endif
+ 
+diff --git a/src/brpc/nshead_message.h b/src/brpc/nshead_message.h
+index 6cd06caf..223a9b31 100644
+--- a/src/brpc/nshead_message.h
++++ b/src/brpc/nshead_message.h
+@@ -36,6 +36,7 @@ public:
+ public:
+     NsheadMessage();
+     virtual ~NsheadMessage();
++    explicit NsheadMessage(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+   
+     NsheadMessage(const NsheadMessage& from);
+   
+@@ -55,11 +56,12 @@ public:
+     NsheadMessage* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const NsheadMessage& from);
+     void MergeFrom(const NsheadMessage& from);
+     void Clear() override;
+     bool IsInitialized() const override;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+diff --git a/src/brpc/redis.cpp b/src/brpc/redis.cpp
+index 07313610..3e401526 100644
+--- a/src/brpc/redis.cpp
++++ b/src/brpc/redis.cpp
+@@ -61,7 +61,7 @@ RedisRequest* RedisRequest::New() const {
+ 
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ RedisRequest* RedisRequest::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<RedisRequest>(arena);
++    return DefaultConstruct<RedisRequest>(arena);
+ }
+ #endif
+ 
+@@ -279,7 +279,7 @@ RedisResponse* RedisResponse::New() const {
+ 
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ RedisResponse* RedisResponse::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<RedisResponse>(arena);
++    return DefaultConstruct<RedisResponse>(arena);
+ }
+ #endif
+ 
+diff --git a/src/brpc/redis.h b/src/brpc/redis.h
+index 6b949ea4..7f4eac40 100644
+--- a/src/brpc/redis.h
++++ b/src/brpc/redis.h
+@@ -50,6 +50,7 @@ class RedisRequest : public ::google::protobuf::Message {
+ public:
+     RedisRequest();
+     virtual ~RedisRequest();
++    explicit RedisRequest(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+     RedisRequest(const RedisRequest& from);
+     inline RedisRequest& operator=(const RedisRequest& from) {
+         CopyFrom(from);
+@@ -113,11 +114,12 @@ public:
+     RedisRequest* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const RedisRequest& from);
+     void MergeFrom(const RedisRequest& from);
+     void Clear() override;
+     bool IsInitialized() const override;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+@@ -153,6 +155,7 @@ class RedisResponse : public ::google::protobuf::Message {
+ public:
+     RedisResponse();
+     virtual ~RedisResponse();
++    explicit RedisResponse(::google::protobuf::Arena* arena) : Message(arena), _first_reply(&_arena) { SharedCtor(); }
+     RedisResponse(const RedisResponse& from);
+     inline RedisResponse& operator=(const RedisResponse& from) {
+         CopyFrom(from);
+@@ -186,11 +189,12 @@ public:
+     RedisResponse* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const RedisResponse& from);
+     void MergeFrom(const RedisResponse& from);
+     void Clear() override;
+     bool IsInitialized() const override;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+diff --git a/src/brpc/serialized_request.cpp b/src/brpc/serialized_request.cpp
+index 499738f6..ae0b427d 100644
+--- a/src/brpc/serialized_request.cpp
++++ b/src/brpc/serialized_request.cpp
+@@ -56,7 +56,7 @@ SerializedRequest* SerializedRequest::New() const {
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ SerializedRequest*
+ SerializedRequest::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<SerializedRequest>(arena);
++    return DefaultConstruct<SerializedRequest>(arena);
+ }
+ #endif
+ 
+diff --git a/src/brpc/serialized_request.h b/src/brpc/serialized_request.h
+index 5b68262e..fe57fd0d 100644
+--- a/src/brpc/serialized_request.h
++++ b/src/brpc/serialized_request.h
+@@ -30,6 +30,7 @@ class SerializedRequest : public ::google::protobuf::Message {
+ public:
+     SerializedRequest();
+     virtual ~SerializedRequest();
++    explicit SerializedRequest(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+   
+     SerializedRequest(const SerializedRequest& from);
+   
+@@ -67,11 +68,12 @@ private:
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+         ::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void MergeFrom(const SerializedRequest& from);
+     void SharedCtor();
+     void SharedDtor();
+     void SetCachedSize(int size) const PB_422_OVERRIDE;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+ private:
+     butil::IOBuf _serialized;
 diff --git a/src/brpc/thrift_message.cpp b/src/brpc/thrift_message.cpp
-index ed3d7557..7b9d210a 100644
+index ed3d7557..f8de6fe8 100644
 --- a/src/brpc/thrift_message.cpp
 +++ b/src/brpc/thrift_message.cpp
 @@ -22,7 +22,6 @@
@@ -10,11 +267,43 @@ index ed3d7557..7b9d210a 100644
  #include <google/protobuf/io/coded_stream.h>
  #include <google/protobuf/descriptor.h>
  #include <google/protobuf/reflection_ops.h>
+@@ -62,7 +61,7 @@ ThriftFramedMessage* ThriftFramedMessage::New() const {
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ ThriftFramedMessage*
+ ThriftFramedMessage::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<ThriftFramedMessage>(arena);
++    return DefaultConstruct<ThriftFramedMessage>(arena);
+ }
+ #endif
+ 
 diff --git a/src/brpc/thrift_message.h b/src/brpc/thrift_message.h
-index 53041c85..471bafb5 100644
+index 53041c85..9c8f8f93 100644
 --- a/src/brpc/thrift_message.h
 +++ b/src/brpc/thrift_message.h
-@@ -101,7 +101,7 @@ public:
+@@ -73,6 +73,7 @@ public:
+     ThriftFramedMessage();
+ 
+     virtual ~ThriftFramedMessage();
++    explicit ThriftFramedMessage(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+   
+     ThriftFramedMessage(const ThriftFramedMessage& from) = delete;
+   
+@@ -89,19 +90,20 @@ public:
+     ThriftFramedMessage* New(::google::protobuf::Arena* arena) const override;
+ #endif
+     void CopyFrom(const ::google::protobuf::Message& from) PB_321_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void CopyFrom(const ThriftFramedMessage& from);
+     void MergeFrom(const ThriftFramedMessage& from);
+     void Clear() override;
+     bool IsInitialized() const override;
+-  
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
++
+     int ByteSize() const;
+     bool MergePartialFromCodedStream(
+         ::google::protobuf::io::CodedInputStream* input) PB_310_OVERRIDE;
      void SerializeWithCachedSizes(
          ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
      ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
