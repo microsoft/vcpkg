@@ -449,7 +449,7 @@
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.12.0",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
@@ -625,8 +625,8 @@
       "port-version": 0
     },
     "bgfx": {
-      "baseline": "1.127.8725-469",
-      "port-version": 1
+      "baseline": "1.128.8777-475",
+      "port-version": 0
     },
     "bigint": {
       "baseline": "2010.04.30",
@@ -2102,7 +2102,7 @@
     },
     "curl": {
       "baseline": "8.8.0",
-      "port-version": 3
+      "port-version": 4
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2125,7 +2125,7 @@
       "port-version": 0
     },
     "cxxgraph": {
-      "baseline": "2.0.0",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "cxxopts": {
@@ -2165,7 +2165,7 @@
       "port-version": 3
     },
     "dataframe": {
-      "baseline": "3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "date": {
@@ -2453,8 +2453,8 @@
       "port-version": 0
     },
     "ecal": {
-      "baseline": "5.12.0",
-      "port-version": 1
+      "baseline": "5.13.2",
+      "port-version": 0
     },
     "ecm": {
       "baseline": "5.98.0",
@@ -2645,7 +2645,7 @@
       "port-version": 4
     },
     "fastgltf": {
-      "baseline": "0.7.1",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "fastio": {
@@ -2765,7 +2765,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "3.2.11",
+      "baseline": "3.2.12",
       "port-version": 0
     },
     "flint": {
@@ -3069,7 +3069,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "2.6.9",
+      "baseline": "2.9.2",
       "port-version": 0
     },
     "glbinding": {
@@ -5442,7 +5442,7 @@
     },
     "llvm": {
       "baseline": "18.1.6",
-      "port-version": 0
+      "port-version": 1
     },
     "lmdb": {
       "baseline": "0.9.31",
@@ -5594,7 +5594,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 18
+      "port-version": 19
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -7666,7 +7666,7 @@
     },
     "rbdl": {
       "baseline": "3.3.0",
-      "port-version": 6
+      "port-version": 7
     },
     "rbdl-orb": {
       "baseline": "3.2.0",
@@ -7705,7 +7705,7 @@
       "port-version": 4
     },
     "realm-core": {
-      "baseline": "14.8.0",
+      "baseline": "14.10.4",
       "port-version": 0
     },
     "realsense2": {
@@ -7953,7 +7953,7 @@
       "port-version": 0
     },
     "saucer": {
-      "baseline": "2.1.0",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "sbp": {
@@ -8261,7 +8261,7 @@
       "port-version": 3
     },
     "small-gicp": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "smf": {
