@@ -1110,6 +1110,14 @@ spscqueue:arm64-android=fail
 spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
+# upstream issue https://github.com/agl-alexglopez/str_view/issues/9
+str-view:arm64-uwp=fail
+str-view:arm64-windows=fail
+str-view:x64-uwp=fail
+str-view:x64-windows=fail
+str-view:x64-windows-static=fail
+str-view:x64-windows-static-md=fail
+str-view:x86-windows=fail
 stxxl:arm-neon-android=fail
 # upstream issue https://github.com/stxxl/stxxl/issues/99
 stxxl:x86-windows=skip

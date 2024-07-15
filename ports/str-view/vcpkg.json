@@ -1,9 +1,10 @@
 {
   "name": "str-view",
-  "version": "0.2.4",
+  "version": "0.3.4",
   "description": "A simple, robust, and convenient library for read-only string handling in C.",
   "homepage": "https://github.com/agl-alexglopez/str_view",
   "license": "MIT",
+  "supports": "!windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

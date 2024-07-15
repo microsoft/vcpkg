@@ -1,16 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS https://github.com/agl-alexglopez/str_view/releases/download/v${VERSION}/str_view-v${VERSION}.zip
-    FILENAME str_view-v${VERSION}.zip
-    SHA512 46343734382ba4f17286069b42dbb3d94a69b74c5836f09bf552a287d902c2f07f79829220029bff74e190d73aa2ff3b3000fc2487e862f74249331dce778cbb
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    NO_REMOVE_ONE_LEVEL
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO agl-alexglopez/str_view
+    REF "v${VERSION}"
+    SHA512 4dde3d91197ad78bbd808cc88058e6e1588c3ec3b6fbce198538b5ea390b1f3cc8429c76169794dec5d0576862e071feadb280128605ac30c2f12d25d66b9f34
+    HEAD_REF release
 )
 
 vcpkg_cmake_configure(
