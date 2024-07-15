@@ -84,10 +84,6 @@ vcpkg_cmake_configure(
   OPTIONS
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
-  OPTIONS_DEBUG
-    -DAF_INSTALL_CMAKE_DIR="${CURRENT_PACKAGES_DIR}/debug/share/${PORT}" # for CMake configs/targets
-  OPTIONS_RELEASE
-    -DAF_INSTALL_CMAKE_DIR="${CURRENT_PACKAGES_DIR}/share/${PORT}" # for CMake configs/targets
   MAYBE_UNUSED_VARIABLES
     AF_CPU_THREAD_PATH
 )
@@ -95,12 +91,12 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
     "${CURRENT_PACKAGES_DIR}/debug/examples" 
-    "${CURRENT_PACKAGES_DIR}/examples" 
-    "${CURRENT_PACKAGES_DIR}/debug/share" 
+    "${CURRENT_PACKAGES_DIR}/examples"
+    "${CURRENT_PACKAGES_DIR}/LICENSES"
     "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
 
 # Copyright and license
