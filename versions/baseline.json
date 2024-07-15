@@ -2178,7 +2178,7 @@
     },
     "dav1d": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "daw-header-libraries": {
       "baseline": "2.106.0",
