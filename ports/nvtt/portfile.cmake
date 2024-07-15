@@ -16,7 +16,8 @@ vcpkg_from_github(
         skip-building-libsquish.patch
         fix-intrinsic-function.patch
         fix-release-flags.patch
-)
+        add-support-for-arm64-linux.patch
+	)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,0 +1,28 @@
+diff --git a/extern/CMP_Core/source/cmp_math_vec4.h b/extern/CMP_Core/source/cmp_math_vec4.h
+index 4467deb..461d5d2 100644
+--- a/extern/CMP_Core/source/cmp_math_vec4.h
++++ b/extern/CMP_Core/source/cmp_math_vec4.h
+@@ -27,6 +27,10 @@
+ // Vector Class definitions for CPU & Intrinsics
+ //====================================================
+ 
++#if defined linux || defined __linux__
++#  define _LINUX 1
++#endif
++
+ #if defined (_LINUX) || defined (_WIN32)
+ 
+ //============================================= VEC2 ==================================================
+diff --git a/src/nvcore/Debug.h b/src/nvcore/Debug.h
+index 4aca31b..0c08dc4 100644
+--- a/src/nvcore/Debug.h
++++ b/src/nvcore/Debug.h
+@@ -166,7 +166,7 @@ NVCORE_API void NV_CDECL nvDebugPrint( const char *msg, ... ) __attribute__((for
+ namespace nv
+ {
+     inline bool isValidPtr(const void * ptr) {
+-    #if NV_CPU_X86_64 || POSH_CPU_PPC64 || NV_CPU_AARCH64
++    #if NV_CPU_X86_64 || POSH_CPU_PPC64 || POSH_CPU_AARCH64
+         if (ptr == NULL) return true;
+         if (reinterpret_cast<uint64>(ptr) < 0x10000ULL) return false;
+         if (reinterpret_cast<uint64>(ptr) >= 0x000007FFFFFEFFFFULL) return false;
