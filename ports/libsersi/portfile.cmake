@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO crhowell3/libdis6
+  REPO crhowell3/libsersi
   REF "v${VERSION}"
-  SHA512 8a6c5b317365e5bd895dd2199ab6ab1944e95e7a3ec653a1480ddbeec501bbe6007f42af8da83d51f4a62cd3134163f74c4e0eb8c5f2905c1335de2d8c2c83f2
+  SHA512 f8cd84e12a14d6c9dc424c176b3e0536293cfa96f4cb03f7e4c9008ce6272b70284179f16dca5f5fb82c4cad9003a16ed2639bcd52f18f39b9587cd63075e188
   HEAD_REF main
 )
 
@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libdis6)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libsersi)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

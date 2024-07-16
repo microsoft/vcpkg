@@ -1,4 +1,0 @@
-libdis6 provides CMake targets:
-
-  find_package(libdis6 CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE libdis6::dis6)
