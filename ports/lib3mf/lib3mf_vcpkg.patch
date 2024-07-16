@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aaca07d2..ba8c71ed 100644
+index aaca07d2..cad59e32 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -26,6 +26,8 @@ set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing
@@ -32,29 +32,31 @@ index aaca07d2..ba8c71ed 100644
  
  # allow FASTFLOAT_ALLOWS_LEADING_PLUS
  add_definitions(-DFASTFLOAT_ALLOWS_LEADING_PLUS=1)
-@@ -170,8 +172,8 @@ if (USE_INCLUDED_LIBZIP)
+@@ -170,20 +172,44 @@ if (USE_INCLUDED_LIBZIP)
      endif()
  
  else()
 -    find_package(PkgConfig REQUIRED)
 -    pkg_check_modules(LIBZIP REQUIRED libzip)
+-    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 +#    find_package(PkgConfig REQUIRED)
 +    find_package(LIBZIP REQUIRED)
-     target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARIES})
  endif()
  
-@@ -179,11 +181,35 @@ endif()
+ 
  if (USE_INCLUDED_ZLIB)
      target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
  else()
 -    find_package(PkgConfig REQUIRED)
 -    pkg_check_modules(ZLIB REQUIRED zlib)
+-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
 +#    find_package(PkgConfig REQUIRED)
 +    find_package(ZLIB REQUIRED)
 +    if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
 +        target_include_directories(${PROJECT_NAME} PRIVATE ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/)
 +    endif()
-     target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
  endif()
  
 +if (NOT USE_INCLUDED_BASE_64)
