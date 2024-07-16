@@ -17,6 +17,12 @@
         "bzip2"
       ]
     },
+    "deflate": {
+      "description": "Use libdeflate for faster crc and deflate algorithms",
+      "dependencies": [
+        "libdeflate"
+      ]
+    },
     "lzma": {
       "description": "Enable support for LZMA-compressed CRAM files",
       "dependencies": [

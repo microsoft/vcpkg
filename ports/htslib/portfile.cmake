@@ -22,6 +22,12 @@ endmacro()
 enable_feature("bzip2" "bz2")
 enable_feature("lzma" "lzma")
 
+if("deflate" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "--with-libdeflate")
+else()
+    list(APPEND FEATURE_OPTIONS "--without-libdeflate")
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
