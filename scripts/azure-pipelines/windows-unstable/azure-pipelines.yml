@@ -8,7 +8,7 @@ jobs:
     name: vcpkg-testing-msvc
   workspace:
     clean: resources
-  timeoutInMinutes: 5760 # 4 days
+  timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
     value: D:\
@@ -17,25 +17,6 @@ jobs:
   - name: Codeql.Enabled
     value: false
   steps:
-  - task: PowerShell@2
-    name: mintsasstep
-    displayName: 'Generate Asset Cache SAS tokens'
-    inputs:
-      targetType: inline
-      script: |
-        if ($Null -eq (Get-PackageProvider -Name NuGet -ErrorAction Ignore)) {
-            Install-PackageProvider -Name NuGet -Force -Scope CurrentUser;
-        }
-        if ($Null -eq (Get-InstalledModule -Name PowerShellGet -MinimumVersion 2.2.1 -ErrorAction Ignore)) {
-            Install-Module PowerShellGet -MinimumVersion 2.2.1 -Scope CurrentUser -Force -AllowClobber
-        }
-        Install-Module -Name Az -Repository PSGallery -Scope CurrentUser -Force -AllowClobber
-        Connect-AzAccount -AccountId 'a81b4cd3-9d8d-4cb9-9a74-f2038f24f224' -Identity
-        $ctx = New-AzStorageContext -StorageAccountName 'vcpkgassetcachewus3' -UseConnectedAccount
-        $StartTime = Get-Date
-        $EndTime = $StartTime.AddDays(2)
-        $sas = New-AzStorageContainerSASToken -Name 'cache' -Permission rwd -StartTime $StartTime -ExpiryTime $EndTime -Context $ctx
-        Write-Host "##vso[task.setvariable variable=X_VCPKG_ASSET_SOURCES;isSecret=true;isOutput=true;isreadonly=true]x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$sas,readwrite"
   - task: DownloadBuildArtifacts@0
     displayName: 'Download DropBuildNumber if not specified'
     inputs:
@@ -78,18 +59,24 @@ jobs:
       pwsh: true
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
-  - task: PowerShell@2
+  - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
-    env:
-      X_VCPKG_ASSET_SOURCES: $(mintsasstep.X_VCPKG_ASSET_SOURCES)
     inputs:
-      failOnStderr: true
-      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: "-Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -PassingIsPassing"
-      pwsh: true
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: 'pscore'
+      failOnStandardError: true
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+          $current = Get-Date -AsUtc
+          $endDate = $current.AddDays(2)
+          $end = Get-Date -Date $endDate -UFormat '+%Y-%m-%dT%H:%MZ'
+          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions r --expiry $end -o tsv | Out-String
+          $assetSas = $assetSas.Trim()
+          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,read"
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-windows -BuildReason $(Build.Reason) -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -PassingIsPassing
   - task: PublishBuildArtifacts@1
-    displayName: "Publish Artifact: failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
+    displayName: "Publish Artifact: failure logs for x64-windows"
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
-      ArtifactName: "failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
+      ArtifactName: "failure logs for x64-windows"
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
