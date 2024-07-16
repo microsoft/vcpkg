@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         0001-set-linkage.patch
+        0002-pthread-flag.patch
 )
 
 vcpkg_list(SET FEATURE_OPTIONS)
