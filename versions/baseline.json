@@ -4972,6 +4972,10 @@
       "baseline": "1.3.2",
       "port-version": 1
     },
+    "libsersi": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "libsigcpp": {
       "baseline": "3.6.0",
       "port-version": 1
