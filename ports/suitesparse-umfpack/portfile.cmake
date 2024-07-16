@@ -8,6 +8,12 @@ vcpkg_from_github(
 
 set(PACKAGE_NAME UMFPACK)
 
+configure_file(
+    "${CURRENT_INSTALLED_DIR}/share/SuiteSparse/SuiteSparseBLAS.cmake"
+    "${SOURCE_PATH}/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake"
+    COPYONLY
+)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     cholmod UMFPACK_USE_CHOLMOD

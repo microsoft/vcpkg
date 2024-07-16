@@ -10,6 +10,12 @@ vcpkg_from_github(
 
 set(PACKAGE_NAME ParU)
 
+configure_file(
+    "${CURRENT_INSTALLED_DIR}/share/SuiteSparse/SuiteSparseBLAS.cmake"
+    "${SOURCE_PATH}/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake"
+    COPYONLY
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
