@@ -37,9 +37,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    "matio"
-  ],
   "features": {
     "matio": {
       "description": "Enable Matio support",
