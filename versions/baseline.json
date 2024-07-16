@@ -5505,8 +5505,8 @@
       "port-version": 0
     },
     "lua": {
-      "baseline": "5.4.6",
-      "port-version": 0
+      "baseline": "5.3.5",
+      "port-version": 7
     },
     "lua-compat53": {
       "baseline": "0.10",
