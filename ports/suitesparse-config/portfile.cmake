@@ -10,7 +10,11 @@ set(PACKAGE_NAME SuiteSparse_config)
 
 # Avoid overriding of BLA_VENDOR and skip straight to find_package() as done here
 # https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.7.0/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake#L240-L245
-file(WRITE "${SOURCE_PATH}/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake" "find_package(BLAS REQUIRED)\nset(BLA_SIZEOF_INTEGER 4)\nset(SuiteSparse_BLAS_integer int32_t)\n")
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/SuiteSparseBLAS.cmake"
+    "${SOURCE_PATH}/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake"
+    COPYONLY
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
