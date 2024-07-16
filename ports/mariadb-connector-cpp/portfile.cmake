@@ -6,8 +6,8 @@ vcpkg_from_github(
     SHA512 efc0d7866b76b1baa20ab6bbbeb45825ca5e3d8b460e09805343f0e6b638bb0cfcd812d01bd183c5c0077eece5f1bdd5f207e753aa54b5ed218576b7cb37b241
     PATCHES
         fix-CMakeLists.patch
-        fix-build-mingw.patch
-        build-with-triplet.patch
+        fix-CArray-header.patch
+        fix-build-with-triplet.patch
 )
 
 file(COPY "${CURRENT_PORT_DIR}/unofficial-mariadbcpp-config.cmake.in"
