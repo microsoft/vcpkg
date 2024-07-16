@@ -8,15 +8,13 @@ vcpkg_from_github(
         0001-no-tests.patch # https://github.com/samtools/htscodecs/pull/120
 )
 
-set(FEATURE_OPTIONS)
+set(FEATURE_OPTIONS "")
 
 macro(enable_feature feature switch)
     if("${feature}" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS "--enable-${switch}")
-        set(has_${feature} 1)
     else()
         list(APPEND FEATURE_OPTIONS "--disable-${switch}")
-        set(has_${feature} 0)
     endif()
 endmacro()
 
