@@ -9,7 +9,7 @@ vcpkg_from_github(
         0002-pthread-flag.patch
 )
 
-vcpkg_list(SET FEATURE_OPTIONS)
+SET(FEATURE_OPTIONS "")
 
 macro(enable_feature feature switch)
     if("${feature}" IN_LIST FEATURES)
