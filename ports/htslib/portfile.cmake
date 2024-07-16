@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-set-linkage.patch
         0002-pthread-flag.patch
+        0003-no-tests.patch
 )
 
 SET(FEATURE_OPTIONS "")
