@@ -13,7 +13,10 @@
     "suitesparse-colamd",
     "suitesparse-config",
     "suitesparse-cxsparse",
-    "suitesparse-graphblas",
+    {
+      "name": "suitesparse-graphblas",
+      "platform": "!android"
+    },
     "suitesparse-klu",
     "suitesparse-lagraph",
     "suitesparse-ldl",
