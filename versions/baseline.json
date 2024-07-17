@@ -190,7 +190,7 @@
     },
     "arg-router": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "argagg": {
       "baseline": "0.4.7",
@@ -1453,7 +1453,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "caf": {
@@ -2677,7 +2677,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "fcl": {
@@ -2721,7 +2721,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2805,7 +2805,7 @@
       "port-version": 2
     },
     "folly": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "font-chef": {
@@ -2997,8 +2997,8 @@
       "port-version": 3
     },
     "geographiclib": {
-      "baseline": "2.3",
-      "port-version": 1
+      "baseline": "2.4",
+      "port-version": 0
     },
     "geos": {
       "baseline": "3.11.3",
@@ -4918,7 +4918,7 @@
     },
     "librdkafka": {
       "baseline": "2.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libredwg": {
       "baseline": "0.13.3",
@@ -6045,7 +6045,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "mygui": {
@@ -7081,7 +7081,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "psimd": {
@@ -7546,7 +7546,7 @@
     },
     "qtwebchannel": {
       "baseline": "6.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebengine": {
       "baseline": "6.7.2",
@@ -9373,7 +9373,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.07.08.00",
+      "baseline": "2024.07.15.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9414,7 +9414,7 @@
     },
     "wg21-linear-algebra": {
       "baseline": "0.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "wg21-sg14": {
       "baseline": "2019-08-13",
@@ -9794,7 +9794,7 @@
     },
     "ztd-cuneicode": {
       "baseline": "2023-11-03",
-      "port-version": 0
+      "port-version": 1
     },
     "ztd-encoding-tables": {
       "baseline": "2023-06-10",
@@ -9814,7 +9814,7 @@
     },
     "ztd-text": {
       "baseline": "2023-11-03",
-      "port-version": 0
+      "port-version": 1
     },
     "zug": {
       "baseline": "2021-04-23",
