@@ -24,7 +24,7 @@ $WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 17
+$TotalProgress = 18
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -237,6 +237,9 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
 
 ####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-azure-cli.ps1'
+
+####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas
 Restart-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 
@@ -267,6 +270,9 @@ Set-AzVM `
   -Name $ProtoVMName `
   -Generalized
 
+$westus3Location = @{Name = 'West US 3';}
+$southEastAsiaLocation = @{Name = 'Southeast Asia';}
+
 New-AzGalleryImageVersion `
   -ResourceGroupName 'vcpkg-image-minting' `
   -GalleryName 'vcpkg_gallery_wus3' `
@@ -276,7 +282,8 @@ New-AzGalleryImageVersion `
   -SourceImageId $VMCreated.ID `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
-  -PublishingProfileExcludeFromLatest
+  -PublishingProfileExcludeFromLatest `
+  -TargetRegion @($westus3Location, $southEastAsiaLocation)
 
 ####################################################################################################
 Write-Progress `
