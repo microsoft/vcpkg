@@ -96,6 +96,12 @@ else()
         endif()
     endif()
 
+    if("frontend" IN_LIST FEATURES)
+        list(APPEND OPTIONS --enable-frontend)
+    else()
+        list(APPEND OPTIONS --disable-frontend)
+    endif()
+
     if(NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND OPTIONS --with-pic=yes)
     endif()
