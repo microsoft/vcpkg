@@ -6189,7 +6189,7 @@
       "port-version": 1
     },
     "nghttp3": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "ngspice": {
