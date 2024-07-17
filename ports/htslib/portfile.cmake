@@ -10,7 +10,7 @@ vcpkg_from_github(
         0003-no-tests.patch
 )
 
-SET(FEATURE_OPTIONS "")
+set(FEATURE_OPTIONS "")
 
 macro(enable_feature feature switch)
     if("${feature}" IN_LIST FEATURES)

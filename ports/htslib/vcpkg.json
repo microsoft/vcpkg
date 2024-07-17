@@ -7,7 +7,6 @@
   "supports": "!windows",
   "dependencies": [
     "htscodecs",
-    "pthreads",
     "zlib"
   ],
   "features": {
