@@ -8213,7 +8213,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "5.2.8",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
