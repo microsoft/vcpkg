@@ -12,9 +12,6 @@
       "platform": "windows & !mingw"
     }
   ],
-  "default-features": [
-    "frontend"
-  ],
   "features": {
     "frontend": {
       "description": "Build the lame frontend"
