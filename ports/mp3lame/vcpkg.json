@@ -14,7 +14,13 @@
   ],
   "features": {
     "frontend": {
-      "description": "Build the lame frontend"
+      "description": "Build the lame frontend",
+      "dependencies": [
+        {
+          "name": "ncurses",
+          "platform": "!windows | mingw"
+        }
+      ]
     }
   }
 }
