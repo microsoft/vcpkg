@@ -8,11 +8,18 @@
   ],
   "homepage": "https://chromium.googlesource.com/crashpad/crashpad/+/master/README.md",
   "license": "Apache-2.0",
-  "supports": "linux | osx | (windows & !uwp)",
+  "supports": "android | linux | osx | (windows & !uwp)",
   "dependencies": [
-    "curl",
+    {
+      "name": "curl",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     {

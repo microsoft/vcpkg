@@ -52,17 +52,21 @@ function(z_vcpkg_gn_install_install)
     set(project_json "")
     if(NOT WITH_SOURCE_PATH)
         # modern usage
-        file(READ "${CURRENT_BUILDTREES_DIR}/generate-${TARGET_TRIPLET}-dbg-project.json.log" project_json)
+        file(READ "${CURRENT_BUILDTREES_DIR}/generate-${TARGET_TRIPLET}-rel-project.json.log" project_json)
         string(JSON arg_SOURCE_PATH GET "${project_json}" build_settings root_path)
         if(NOT IS_DIRECTORY "${arg_SOURCE_PATH}")
             message(FATAL_ERROR "build settings root path is not a directory (${arg_SOURCE_PATH}).")
         endif()
+
+        list(TRANSFORM arg_TARGETS PREPEND "//")
+        list(TRANSFORM arg_TARGETS REPLACE "/([^/:]+)\$" "/\\1:\\1")
+        z_vcpkg_gn_expand_targets(arg_TARGETS project_json "${arg_SOURCE_PATH}")
     endif()
 
     foreach(target IN LISTS arg_TARGETS)
-        # GN targets must start with //
-        string(PREPEND target "//")
         if(WITH_SOURCE_PATH)
+            # GN targets must start with //
+            string(PREPEND target "//")
             # explicit source path (legacy)
             z_vcpkg_gn_install_get_desc(outputs
                 SOURCE_PATH "${arg_SOURCE_PATH}"
@@ -76,9 +80,6 @@ function(z_vcpkg_gn_install_install)
                 TARGET "${target}"
             )
         else()
-            if(target MATCHES "^//([^:]+)\$")
-                set(target "//${CMAKE_MATCH_1}:${CMAKE_MATCH_1}")
-            endif()
             string(JSON target_type GET "${project_json}" targets "${target}" type)
             string(JSON outputs_json GET "${project_json}" targets "${target}" outputs)
             string(JSON length LENGTH "${outputs_json}")

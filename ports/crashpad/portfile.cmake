@@ -37,7 +37,7 @@ vcpkg_apply_patches(
       "fix-std-20.patch"
 )      
 
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     # fetch lss
     checkout_in_path(
         "${SOURCE_PATH}/third_party/lss/lss"
@@ -106,16 +106,31 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 endif()
 
+set(OPTIONS "")
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build/config/BUILD.gn" [[ndk_bin_dir + tool_prefix + "-ar"]] "\"${VCPKG_DETECTED_CMAKE_AR}\"")
+    string(APPEND OPTIONS " target_os=\"android\" android_ndk_root=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\"")
+endif()
+
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
+    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" ${OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
 vcpkg_gn_install(
-    TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
+    TARGETS
+        # Cf. https://chromium.googlesource.com/crashpad/crashpad/+/main/doc/overview_design.md#overview
+        client
+        handler:crashpad_handler
 )
+
+vcpkg_gn_export_cmake(TARGETS client handler:crashpad_handler)
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 message(STATUS "Installing headers...")
 set(PACKAGES_INCLUDE_DIR "${CURRENT_PACKAGES_DIR}/include/${PORT}")
@@ -127,12 +142,8 @@ install_headers("${SOURCE_PATH}/util")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
-if(VCPKG_TARGET_IS_OSX)
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-endif()
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")

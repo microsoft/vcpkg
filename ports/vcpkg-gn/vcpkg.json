@@ -7,6 +7,10 @@
   "supports": "native",
   "dependencies": [
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-gn",
       "host": true
     }

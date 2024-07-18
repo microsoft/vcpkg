@@ -293,10 +293,11 @@ vcpkg_gn_configure(
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-skia_gn_install(
-    SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS ${SKIA_TARGETS}
-)
+vcpkg_gn_install(TARGETS ${SKIA_TARGETS})
+
+vcpkg_gn_export_cmake(TARGETS ${SKIA_TARGETS} DEFINITIONS_PATTERN "^SK_")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Use skia repository layout in ${CURRENT_PACKAGES_DIR}/include/skia
 file(COPY "${SOURCE_PATH}/include"

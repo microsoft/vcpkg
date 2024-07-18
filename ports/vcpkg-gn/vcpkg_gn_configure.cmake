@@ -11,6 +11,7 @@ function(z_vcpkg_gn_configure_generate)
         COMMAND "${GN}" gen
             --ide=json
             "--json-file-name=${CURRENT_BUILDTREES_DIR}/generate-${arg_CONFIG}-project.json.log"
+            # "--runtime-deps-list-file=${CURRENT_BUILDTREES_DIR}/generate-${arg_CONFIG}-runtime-deps.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}"
             "${arg_ARGS}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
