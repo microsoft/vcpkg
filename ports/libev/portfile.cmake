@@ -6,20 +6,17 @@ vcpkg_download_distfile(ARCHIVE
 
 set(LIBEV_PATCHES "")
 
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND LIBEV_PATCHES "0000-add-ws2-link-and-no-undef.patch")
-    list(APPEND LIBEV_PATCHES "0001-event-fix-undefined-struct-timeval.patch")
-endif()
-
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES ${LIBEV_PATCHES})
+    PATCHES "0000-event-fix-undefined-struct-timeval.patch")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS
+        "LDFLAGS=-no-undefined \$LDFLAGS"
+        "LIBS=-lws2_32"
 )
 
 vcpkg_install_make()
