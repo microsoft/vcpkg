@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 8079b2690ef4fba491e96ef2ed3da61d0c0b7bee3f61fa6d1fb95c771f1a8220a7b15b489b21bf9b1627e8616f95c65b43b8f63ee93cb0193edac4cb54307b3a
     HEAD_REF main
+    PATCHES
+        fix-linux.patch
 )
 
 vcpkg_check_features(
@@ -38,4 +40,4 @@ vcpkg_copy_tools(
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
