@@ -1,0 +1,12 @@
+diff --git a/Makefile.am b/Makefile.am
+index 2814622..350e774 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -16,6 +16,6 @@ lib_LTLIBRARIES = libev.la
+ 
+ libev_la_SOURCES = ev.c event.c
+-libev_la_LDFLAGS = -version-info $(VERSION_INFO)
++libev_la_LDFLAGS = -no-undefined -version-info $(VERSION_INFO) -lws2_32
+ 
+ ev.3: ev.pod
+ 	pod2man -n LIBEV -r "libev-$(VERSION)" -c "libev - high performance full featured event loop" -s3 <$< >$@

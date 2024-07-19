@@ -4,10 +4,18 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 c662a65360115e0b2598e3e8824cf7b33360c43a96ac9233f6b6ea2873a10102551773cad0e89e738541e75af9fd4f3e3c11cd2f251c5703aa24f193128b896b
 )
 
+set(LIBEV_PATCHES "")
+
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND LIBEV_PATCHES "0000-add-ws2-link-and-no-undef.patch")
+    list(APPEND LIBEV_PATCHES "0001-event-fix-undefined-struct-timeval.patch")
+endif()
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-)
+    PATCHES ${LIBEV_PATCHES})
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
