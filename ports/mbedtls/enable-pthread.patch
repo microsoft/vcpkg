@@ -1,28 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 844491778..aa81d01f5 100644
+index 2eba16da5..5e7e242de 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -46,6 +46,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -58,6 +58,7 @@ endif()
+ # Set the project root directory.
+ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
  
- option(USE_PKCS11_HELPER_LIBRARY "Build Mbed TLS with the pkcs11-helper library." OFF)
- option(ENABLE_ZLIB_SUPPORT "Build Mbed TLS with zlib library." OFF)
 +option(ENABLE_PTHREAD "Build Mbed TLS with pthread" OFF)
- 
  option(ENABLE_PROGRAMS "Build Mbed TLS programs." ON)
  
-@@ -264,6 +265,8 @@ if(LIB_INSTALL_DIR)
-     set(CMAKE_INSTALL_LIBDIR "${LIB_INSTALL_DIR}")
+ option(UNSAFE_BUILD "Allow unsafe builds. These builds ARE NOT SECURE." OFF)
+@@ -288,6 +289,18 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/framework/CMakeLists.txt")
  endif()
+ add_subdirectory(framework)
  
 +include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
-+
- if(ENABLE_ZLIB_SUPPORT)
-     find_package(ZLIB)
- 
-@@ -272,6 +275,17 @@ if(ENABLE_ZLIB_SUPPORT)
-     endif(ZLIB_FOUND)
- endif(ENABLE_ZLIB_SUPPORT)
- 
 +if(ENABLE_PTHREAD)
 +    if(WIN32)
 +        find_package(pthreads_windows REQUIRED)
@@ -38,7 +30,7 @@ index 844491778..aa81d01f5 100644
  
  add_subdirectory(3rdparty)
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index 11b417bd3..5ca44c341 100644
+index e11e2715a..897c79785 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,10 +1,14 @@
@@ -57,22 +49,9 @@ index 11b417bd3..5ca44c341 100644
      install(FILES ${headers}
          DESTINATION include/mbedtls
          PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
-diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
-index 4842fd494..fbce34128 100644
---- a/include/mbedtls/config.h
-+++ b/include/mbedtls/config.h
-@@ -12,6 +12,8 @@
-  *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
-  */
- 
-+#include "mbedtls/config_threading.h"
-+
- #ifndef MBEDTLS_CONFIG_H
- #define MBEDTLS_CONFIG_H
- 
 diff --git a/include/mbedtls/config_threading.h.in b/include/mbedtls/config_threading.h.in
 new file mode 100644
-index 0000000..9d5d42e
+index 000000000..9d5d42ead
 --- /dev/null
 +++ b/include/mbedtls/config_threading.h.in
 @@ -0,0 +1,6 @@
@@ -83,19 +62,31 @@ index 0000000..9d5d42e
 +#define MBEDTLS_THREADING_PTHREAD
 +#endif
 \ No newline at end of file
+diff --git a/include/mbedtls/mbedtls_config.h b/include/mbedtls/mbedtls_config.h
+index 35921412c..3cefab75d 100644
+--- a/include/mbedtls/mbedtls_config.h
++++ b/include/mbedtls/mbedtls_config.h
+@@ -20,6 +20,7 @@
+  * introduced the config format we want to be compatible with.
+  */
+ //#define MBEDTLS_CONFIG_VERSION 0x03000000
++#include "mbedtls/config_threading.h"
+ 
+ /**
+  * \name SECTION: System support
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 48e51a158..4e752f777 100644
+index e6705de55..09ce3bf1b 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
-@@ -149,7 +149,11 @@ if(ENABLE_ZLIB_SUPPORT)
- endif(ENABLE_ZLIB_SUPPORT)
+@@ -232,7 +232,11 @@ if(HAIKU)
+ endif(HAIKU)
  
  if(LINK_WITH_PTHREAD)
--    set(libs ${libs} pthread)
+-    set(libs ${libs} ${CMAKE_THREAD_LIBS_INIT})
 +    if(WIN32)
 +        set(libs ${libs} ${PThreads4W_LIBRARY})
 +    else()
-+        set(libs ${libs} pthread)
++        set(libs ${libs}  ${CMAKE_THREAD_LIBS_INIT})
 +    endif()
  endif()
  

@@ -4,11 +4,21 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
     REF "v${VERSION}"
-    SHA512 72a25a6b2a132545d32c7a6819bde569a315f2e83049467653af6347c918e4781462dceca21c64c76a4af7d19cedaf968f48b3f0309a6b0289466c087e49dd38
-    HEAD_REF mbedtls-2.28
+    SHA512 7e50cf2bb2c9abeb56f18a25bc126b96ac5e3329702cf5b2e266df6b649b9544ab5f2ac00bd57e06091e10cdcf907e600c14eb415942d028000d7b6f1c0cfa42
     PATCHES
         enable-pthread.patch
 )
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH FRAMEWORK_SOURCE_PATH
+    REPO Mbed-TLS/mbedtls-framework
+    REF 750634d3a51eb9d61b59fd5d801546927c946588
+    SHA512 b22687ba164502a12bb39f46cde9bc012cd0e1e4493de815f8f43c835d3385b4bb43f423f2991ba8062191b40ce3ea14955e1a6601a9688819cead5861715267
+    HEAD_REF main
+)
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/framework")
+file(RENAME "${FRAMEWORK_SOURCE_PATH}" "${SOURCE_PATH}/framework")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,4 +46,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND pthreads IN_LIST FEATURES)
 endif ()
 
 vcpkg_copy_pdbs()
+
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
