@@ -20,6 +20,7 @@
   "features": {
     "openmp": {
       "description": "Enable OpenMP support",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "suitesparse-config",
@@ -27,8 +28,7 @@
             "openmp"
           ]
         }
-      ],
-      "supports": "!windows"
+      ]
     }
   }
 }
