@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001-set-linkage.patch
         0002-pthread-flag.patch
         0003-no-tests.patch
+        0004-fix-find-htscodecs.patch
 )
 
 set(FEATURE_OPTIONS "")
