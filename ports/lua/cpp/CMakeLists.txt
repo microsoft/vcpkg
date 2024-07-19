@@ -23,6 +23,11 @@ add_library(
 
 set_target_properties(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
 
+target_link_libraries(
+    lua-cpp
+    ${CMAKE_DL_LIBS}
+)
+
 if (NOT SKIP_INSTALL_HEADERS)
     set_target_properties(lua-cpp PROPERTIES PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA_CPP}")
 endif()
@@ -42,10 +47,8 @@ if (UNIX)
     if (APPLE)
         target_compile_definitions(lua-cpp PUBLIC LUA_USE_DLOPEN)
     else()
-        find_library(LIB_DLOPEN NAMES dl)
-        if (LIB_DLOPEN)
+        if (NOT CMAKE_DL_LIBS STREQUAL "")
             target_compile_definitions(lua-cpp PUBLIC LUA_USE_DLOPEN)
-            target_link_libraries(lua-cpp ${CMAKE_DL_LIBS})
         endif()
     endif()
 endif()

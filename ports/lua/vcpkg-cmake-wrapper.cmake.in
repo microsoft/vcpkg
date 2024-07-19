@@ -1,1 +1,10 @@
-_find_package(${ARGS})
+# The lua port exports 'unofficial-lua' use find_package(unofficial-lua) instead.
+# If the user calls find_package(lua) then forward to find_package(unofficial-lua)
+
+set(_is_required)
+list(FIND ARGS "REQUIRED" _found_index)
+if (_found_index GREATER -1)
+    set(_is_required "REQUIRED")
+endif()
+
+_find_package(unofficial-lua CONFIG ${_is_required})

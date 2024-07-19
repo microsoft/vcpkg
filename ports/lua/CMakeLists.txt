@@ -107,6 +107,11 @@ set_target_properties(
     POSITION_INDEPENDENT_CODE ON
 )
 
+target_link_libraries(
+    lua
+    ${CMAKE_DL_LIBS}
+)
+
 # Windows specific section
 if (BUILD_SHARED_LIBS AND WIN32)
     target_compile_definitions(lua PUBLIC LUA_BUILD_AS_DLL)
@@ -122,28 +127,14 @@ if (UNIX)
     # math library
     find_library(LIB_MATH NAMES m)
     if (LIB_MATH)
-        target_link_libraries(lua ${LIB_MATH})
+        target_link_libraries(lua m)
     endif()
     # dlopen library
     if (APPLE)
         target_compile_definitions(lua PUBLIC LUA_USE_DLOPEN)
     else()
-        find_library(LIB_DLOPEN NAMES dl)
-        if (LIB_DLOPEN)
+        if (NOT CMAKE_DL_LIBS STREQUAL "")
             target_compile_definitions(lua PUBLIC LUA_USE_DLOPEN)
-            target_link_libraries(lua ${CMAKE_DL_LIBS})
-        endif()
-    endif()
-endif()
-
-if (UNIX)
-    if (APPLE)
-        target_compile_definitions(lua PUBLIC LUA_USE_DLOPEN)
-    else()
-        find_library(LIB_DLOPEN NAMES dl)
-        if (LIB_DLOPEN)
-            target_compile_definitions(lua PUBLIC LUA_USE_DLOPEN)
-            target_link_libraries(lua ${CMAKE_DL_LIBS})
         endif()
     endif()
 endif()
@@ -212,16 +203,16 @@ endif()
 install(
     TARGETS ${targets_to_export}
     EXPORT unofficial-lua-config
-    RUNTIME         DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    LIBRARY         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    ARCHIVE         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    PUBLIC_HEADER   DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+    RUNTIME         DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
+    LIBRARY         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+    ARCHIVE         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+    PUBLIC_HEADER   DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
 )
 
 install(
     EXPORT unofficial-lua-config
     NAMESPACE unofficial::lua::
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/unofficial-lua
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
 )
 
 # append headers to sources to make them show up in MSVC GUI
