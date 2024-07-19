@@ -5701,7 +5701,7 @@
       "port-version": 2
     },
     "mbedtls": {
-      "baseline": "2.28.7",
+      "baseline": "2.28.8",
       "port-version": 0
     },
     "mchehab-zbar": {
