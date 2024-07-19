@@ -22,13 +22,15 @@
       "description": "Enable CUDA support for the current compute architecture of this machine",
       "dependencies": [
         "cuda"
-      ]
+      ],
+      "supports": "(linux & x64) | (linux & arm64)"
     },
     "cuda-redist": {
       "description": "Enable CUDA support for all major compute architectures",
       "dependencies": [
         "cuda"
-      ]
+      ],
+      "supports": "(linux & x64) | (linux & arm64)"
     }
   }
 }

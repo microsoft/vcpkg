@@ -41,7 +41,8 @@
             "cuda"
           ]
         }
-      ]
+      ],
+      "supports": "(linux & x64) | (linux & arm64)"
     },
     "cuda-redist": {
       "description": "Enable CUDA support for all major compute architectures",
@@ -58,7 +59,8 @@
             "cuda-redist"
           ]
         }
-      ]
+      ],
+      "supports": "(linux & x64) | (linux & arm64)"
     },
     "gpl": {
       "description": "Enable GPL-licensed packages",

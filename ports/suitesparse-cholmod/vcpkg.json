@@ -28,14 +28,16 @@
       "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
       "dependencies": [
         "cuda"
-      ]
+      ],
+      "supports": "(linux & x64) | (linux & arm64)"
     },
     "cuda-redist": {
       "description": "Enable CUDA support for all major compute architectures",
       "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
       "dependencies": [
         "cuda"
-      ]
+      ],
+      "supports": "(linux & x64) | (linux & arm64)"
     },
     "matrixops": {
       "description": "Build MatrixOps module",
