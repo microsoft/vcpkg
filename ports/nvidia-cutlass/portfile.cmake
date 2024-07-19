@@ -15,7 +15,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCMAKE_SUPPRESS_REGENERATION=ON # for some reason it keeps regenerating in Windows
         "-DCUTLASS_REVISION:STRING=v${VERSION}"
-        -DCUTLASS_NATIVE_CUDA=OFF
         -DCUTLASS_ENABLE_HEADERS_ONLY=ON
         -DCUTLASS_ENABLE_TOOLS=OFF
         -DCUTLASS_ENABLE_LIBRARY=OFF
