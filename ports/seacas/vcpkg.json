@@ -7,18 +7,17 @@
   "license": null,
   "dependencies": [
     "cereal",
-    "cgns",
-    "fmt",
     {
-      "name": "hdf5",
-      "default-features": false
-    },
-    {
-      "name": "matio",
+      "name": "cgns",
       "default-features": false,
       "features": [
         "hdf5"
       ]
+    },
+    "fmt",
+    {
+      "name": "hdf5",
+      "default-features": false
     },
     "metis",
     {
@@ -39,6 +38,18 @@
     "zlib"
   ],
   "features": {
+    "matio": {
+      "description": "Enable Matio support",
+      "dependencies": [
+        {
+          "name": "matio",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ]
+        }
+      ]
+    },
     "mpi": {
       "description": "Enable MPI support",
       "dependencies": [
