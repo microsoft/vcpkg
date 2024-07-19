@@ -109,7 +109,8 @@
           "name": "suitesparse-paru",
           "features": [
             "openmp"
-          ]
+          ],
+          "platform": "!windows"
         },
         {
           "name": "suitesparse-spex",

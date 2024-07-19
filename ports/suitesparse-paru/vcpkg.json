@@ -27,7 +27,8 @@
             "openmp"
           ]
         }
-      ]
+      ],
+      "supports": "!windows"
     }
   }
 }
