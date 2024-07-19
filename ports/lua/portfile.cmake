@@ -5,6 +5,7 @@ vcpkg_download_distfile(
     FILENAME "lua-${VERSION}.tar.gz"
     SHA512 4f9516acc4659dfd0a9e911bfa00c0788f0ad9348e5724fe8fb17aac59e9c0060a64378f82be86f8534e49c6c013e7488ad17321bafcc787831d3d67406bd0f4
 )
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -25,6 +26,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DLUA_RELEASE_VERSION="${VERSION}"
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
         -DSKIP_INSTALL_TOOLS=ON

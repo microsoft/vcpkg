@@ -202,16 +202,44 @@ endif()
 
 install(
     TARGETS ${targets_to_export}
-    EXPORT unofficial-lua-config
+    EXPORT unofficial-lua-targets
     RUNTIME         DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
     LIBRARY         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
     ARCHIVE         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+    INCLUDES        DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
     PUBLIC_HEADER   DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
 )
 
 install(
-    EXPORT unofficial-lua-config
+    EXPORT unofficial-lua-targets
+    FILE unofficial-lua-targets.cmake
     NAMESPACE unofficial::lua::
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "unofficial-lua-config-version.cmake"
+    VERSION ${LUA_RELEASE_VERSION}
+    COMPATIBILITY SameMinorVersion
+)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake.in"
+    "\@PACKAGE_INIT\@\n\n \
+    include(CMakeFindDependencyMacro)\n \
+    include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-lua-targets.cmake)\n"
+)
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
+)
+
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config-version.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
 )
 

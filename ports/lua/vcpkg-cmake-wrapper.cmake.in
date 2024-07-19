@@ -1,6 +1,9 @@
 # The lua port exports 'unofficial-lua' use find_package(unofficial-lua) instead.
 # If the user calls find_package(lua) then forward to find_package(unofficial-lua)
 
+file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
+message(AUTHOR_WARNING "find_package(lua) was called, however the lua vcpkg port exports 'unofficial-lua' use find_package(unofficial-lua) instead.\n${usage}")
+
 set(_is_required)
 list(FIND ARGS "REQUIRED" _found_index)
 if (_found_index GREATER -1)
@@ -8,3 +11,20 @@ if (_found_index GREATER -1)
 endif()
 
 _find_package(unofficial-lua CONFIG ${_is_required})
+
+# Set LUA_* variables to enable legacy flow as if using FindLua module, but this will only set the C library variables
+# A similar thing can be done for the C++ library as well, by the user if they so desire.
+
+set(LUA_FOUND 1)
+set(LUA_VERSION ${unofficial-lua_VERSION})
+set(LUA_VERSION_STRING ${unofficial-lua_VERSION})
+set(LUA_VERSION_MAJOR ${unofficial-lua_VERSION_MAJOR})
+set(LUA_VERSION_MINOR ${unofficial-lua_VERSION_MINOR})
+set(LUA_VERSION_PATCH ${unofficial-lua_VERSION_PATCH})
+get_target_property(LUA_INCLUDE_DIR unofficial::lua::lua INTERFACE_INCLUDE_DIRECTORIES)
+list(REMOVE_DUPLICATES LUA_INCLUDE_DIR)
+get_target_property(lua_libs unofficial::lua::lua INTERFACE_LINK_LIBRARIES)
+set(LUA_LIBRARIES ${lua_libs})
+get_target_property(lua_libs unofficial::lua::lua "LOCATION_${CMAKE_BUILD_TYPE}")
+list(APPEND LUA_LIBRARIES ${lua_libs})
+list(REMOVE_DUPLICATES LUA_LIBRARIES)
