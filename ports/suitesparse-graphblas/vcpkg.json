@@ -4,7 +4,7 @@
   "description": "SuiteSparse:GraphBLAS: graph algorithms in the language of linear algebra",
   "homepage": "https://people.engr.tamu.edu/davis/GraphBLAS.html",
   "license": "Apache-2.0",
-  "supports": "!android",
+  "supports": "!android & !(windows & x86)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
