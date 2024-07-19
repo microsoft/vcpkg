@@ -4370,7 +4370,7 @@
     },
     "libev": {
       "baseline": "4.33",
-      "port-version": 2
+      "port-version": 3
     },
     "libevent": {
       "baseline": "2.1.12+20230128",
