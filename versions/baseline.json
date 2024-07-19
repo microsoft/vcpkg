@@ -8074,7 +8074,7 @@
     },
     "seacas": {
       "baseline": "2022-11-22",
-      "port-version": 6
+      "port-version": 7
     },
     "seal": {
       "baseline": "4.1.1",
