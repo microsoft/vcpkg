@@ -16,14 +16,12 @@
     }
   ],
   "default-features": [
-    {
-      "name": "complex",
-      "platform": "!(android & arm) & !uwp & !windows"
-    }
+    "complex"
   ],
   "features": {
     "complex": {
-      "description": "Enable complex data type support"
+      "description": "Enable complex data type support",
+      "supports": "!windows & !(android & arm)"
     }
   }
 }
