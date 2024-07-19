@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-CMakeLists.patch
         fix-CArray-header.patch
-        fix-build-with-triplet.patch
+        build-with-triplet.patch
 )
 
 file(COPY "${CURRENT_PORT_DIR}/unofficial-mariadbcpp-config.cmake.in"
