@@ -13,5 +13,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "wolfssl": {
+      "description": "Compile with wolfssl",
+      "dependencies": [
+        "wolfssl"
+      ]      
+    },
+    "gnutls": {
+      "description": "Compile with gnutls",
+      "dependencies": [
+        "libgnutls"
+      ]
+    }
+  }
 }
