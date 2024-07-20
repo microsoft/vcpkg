@@ -25,6 +25,7 @@
     "gflags",
     "glew",
     "glog",
+    "metis",
     "qt5-base",
     "sqlite3",
     {
