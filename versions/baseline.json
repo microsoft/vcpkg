@@ -2982,7 +2982,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
-      "port-version": 0
+      "port-version": 1
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -4934,7 +4934,7 @@
     },
     "librsvg": {
       "baseline": "2.40.20",
-      "port-version": 11
+      "port-version": 12
     },
     "librsync": {
       "baseline": "2.3.4",

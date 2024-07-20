@@ -1,0 +1,75 @@
+diff --git a/gdk-pixbuf/gdk-pixbuf-io.c b/gdk-pixbuf/gdk-pixbuf-io.c
+index e1df5900f..d7018da6e 100644
+--- a/gdk-pixbuf/gdk-pixbuf-io.c
++++ b/gdk-pixbuf/gdk-pixbuf-io.c
+@@ -592,7 +592,10 @@ gdk_pixbuf_init_modules (const char  *path,
+ 	g_free (filename);
+ 	return ret;
+ }
+-
++#ifdef INCLUDE_svg
++extern void _gdk_pixbuf__svg_fill_info   (GdkPixbufFormat *info) __attribute__((weak));
++extern void _gdk_pixbuf__svg_fill_vtable (GdkPixbufModule *module) __attribute__((weak));
++#endif
+ static void
+ gdk_pixbuf_io_init_builtin (void)
+ {
+@@ -659,6 +662,10 @@ gdk_pixbuf_io_init_builtin (void)
+         /* Except the gdip-png loader which normally isn't built at all even */
+         load_one_builtin_module (png);
+ #endif
++#ifdef INCLUDE_svg
++        if (_gdk_pixbuf__svg_fill_info && _gdk_pixbuf__svg_fill_vtable)
++                load_one_builtin_module (svg);
++#endif
+ 
+ #undef load_one_builtin_module
+ }
+@@ -777,6 +784,15 @@ gdk_pixbuf_load_module_unlocked (GdkPixbufModule *image_module,
+ #ifdef INCLUDE_qtif
+         try_module (qtif,qtif);
+ #endif
++#ifdef INCLUDE_svg
++if (fill_info == NULL &&
++           strcmp (image_module->module_name, "svg") == 0) {
++               if (_gdk_pixbuf__svg_fill_info && _gdk_pixbuf__svg_fill_vtable) {
++                        fill_info = _gdk_pixbuf__svg_fill_info;
++                        fill_vtable = _gdk_pixbuf__svg_fill_vtable;
++               }
++       }
++#endif
+ 
+ #undef try_module
+         
+diff --git a/meson.build b/meson.build
+index 3eb3fcc15..b11331239 100644
+--- a/meson.build
++++ b/meson.build
+@@ -280,6 +280,12 @@ if not gif_opt.disabled()
+   enabled_loaders += 'gif'
+ endif
+ 
++svg_opt = get_option('svg')
++if not svg_opt.disabled()
++  enabled_loaders += 'svg'
++  add_project_arguments([ '-DINCLUDE_svg' ], language: 'c')
++endif
++
+ others_opt = get_option('others')
+ if not others_opt.disabled()
+   # Keep sorted alphabetically
+diff --git a/meson_options.txt b/meson_options.txt
+index 74830154a..6961c9530 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -18,6 +18,10 @@ option('others',
+        description: 'Enable other loaders, which are weakly maintained',
+        type: 'feature',
+        value: 'disabled')
++option('svg',
++       description: 'Enable SVG loader (requires manual librsvg linking)',
++       type: 'feature',
++       value: 'disabled')
+ option('builtin_loaders',
+        description: 'Comma-separated list of loaders to build into gdk-pixbuf',
+        type: 'array',

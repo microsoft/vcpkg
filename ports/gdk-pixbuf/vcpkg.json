@@ -1,6 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.42.12",
+  "port-version": 1,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -47,6 +48,10 @@
       "dependencies": [
         "libpng"
       ]
+    },
+    "svg": {
+      "description": "Enable SVG loader (requires librsvg to be added manually: https://github.com/microsoft/vcpkg/pull/39988)",
+      "supports": "!windows"
     },
     "tiff": {
       "description": "Enable TIFF loader (requires libtiff)",

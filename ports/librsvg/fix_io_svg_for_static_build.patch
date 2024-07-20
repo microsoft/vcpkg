@@ -1,0 +1,40 @@
+diff --git a/gdk-pixbuf-loader/io-svg.c b/gdk-pixbuf-loader/io-svg.c
+index bcdfd0bb..1d2fd7d1 100644
+--- a/gdk-pixbuf-loader/io-svg.c
++++ b/gdk-pixbuf-loader/io-svg.c
+@@ -43,8 +43,8 @@ typedef struct {
+         gpointer                    user_data;
+ } SvgContext;
+ 
+-G_MODULE_EXPORT void fill_vtable (GdkPixbufModule *module);
+-G_MODULE_EXPORT void fill_info (GdkPixbufFormat *info);
++// G_MODULE_EXPORT void fill_vtable (GdkPixbufModule *module);
++// G_MODULE_EXPORT void fill_info (GdkPixbufFormat *info);
+ 
+ enum {
+         ERROR_WRITING = 1,
+@@ -173,16 +173,20 @@ gdk_pixbuf__svg_image_stop_load (gpointer data, GError **error)
+         return result;
+ }
+ 
+-void
+-fill_vtable (GdkPixbufModule *module)
++#ifdef BUILD_SHARED_LIBS
++#define MODULE_ENTRY(function) G_MODULE_EXPORT void function
++#else
++#define MODULE_ENTRY(function) void _gdk_pixbuf__svg_ ## function
++#endif
++
++MODULE_ENTRY (fill_vtable) (GdkPixbufModule *module)
+ {
+         module->begin_load     = gdk_pixbuf__svg_image_begin_load;
+         module->stop_load      = gdk_pixbuf__svg_image_stop_load;
+         module->load_increment = gdk_pixbuf__svg_image_load_increment;
+ }
+ 
+-void
+-fill_info (GdkPixbufFormat *info)
++MODULE_ENTRY (fill_info) (GdkPixbufFormat *info)
+ {
+         static const GdkPixbufModulePattern signature[] = {
+                 {  " <svg",  "*    ", 100 },
