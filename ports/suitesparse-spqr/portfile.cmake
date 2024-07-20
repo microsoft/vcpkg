@@ -41,6 +41,18 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if("cuda" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME SuiteSparse_GPURuntime
+        CONFIG_PATH lib/cmake/SuiteSparse_GPURuntime
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME GPUQREngine
+        CONFIG_PATH lib/cmake/GPUQREngine
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME ${PACKAGE_NAME}
     CONFIG_PATH lib/cmake/${PACKAGE_NAME}

@@ -28,7 +28,6 @@
   "features": {
     "cuda": {
       "description": "Enable CUDA support for the current compute architecture of this machine",
-      "supports": "(linux & x64) | (linux & arm64)",
       "dependencies": [
         {
           "name": "suitesparse-cholmod",
@@ -46,8 +45,13 @@
     },
     "cuda-redist": {
       "description": "Enable CUDA support for all major compute architectures",
-      "supports": "(linux & x64) | (linux & arm64)",
       "dependencies": [
+        {
+          "name": "suitesparse",
+          "features": [
+            "cuda"
+          ]
+        },
         {
           "name": "suitesparse-cholmod",
           "features": [
