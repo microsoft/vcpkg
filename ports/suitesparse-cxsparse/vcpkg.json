@@ -16,7 +16,10 @@
     }
   ],
   "default-features": [
-    "complex"
+    {
+      "name": "complex",
+      "platform": "!windows & !(android & arm)"
+    }
   ],
   "features": {
     "complex": {
