@@ -2394,7 +2394,7 @@
     },
     "dv-processing": {
       "baseline": "1.7.9",
-      "port-version": 1
+      "port-version": 2
     },
     "dx": {
       "baseline": "1.0.1",
@@ -4972,6 +4972,10 @@
       "baseline": "1.3.2",
       "port-version": 1
     },
+    "libsersi": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "libsigcpp": {
       "baseline": "3.6.0",
       "port-version": 1
@@ -6166,7 +6170,7 @@
     },
     "netgen": {
       "baseline": "6.2.2401",
-      "port-version": 1
+      "port-version": 2
     },
     "nethost": {
       "baseline": "8.0.3",
@@ -8070,7 +8074,7 @@
     },
     "seacas": {
       "baseline": "2022-11-22",
-      "port-version": 5
+      "port-version": 6
     },
     "seal": {
       "baseline": "4.1.1",
@@ -8209,7 +8213,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "5.2.8",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -9310,7 +9314,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk-dicom": {
       "baseline": "0.8.14",

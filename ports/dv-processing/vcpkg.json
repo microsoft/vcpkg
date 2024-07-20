@@ -1,7 +1,7 @@
 {
   "name": "dv-processing",
   "version": "1.7.9",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Generic algorithms for event cameras. (C++20 required.)",
   "homepage": "https://gitlab.com/inivation/dv/dv-processing",
   "license": "Apache-2.0",
