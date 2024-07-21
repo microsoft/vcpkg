@@ -1,5 +1,5 @@
 <!-- 
-This document is a copy of the README file on the Microsoft/vcpkg-docs repository.
+This document is a copy of the README fil on the Microsoft/vcpkg-docs repository.
 
 To make changes modify this file instead:
 https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/readme/vcpkg-README.md
