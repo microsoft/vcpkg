@@ -51,6 +51,8 @@ These can be installed via brew install libxinerama-dev libxcursor-dev xorg-dev 
             -DGLFW_BUILD_TESTS=OFF
             -DGLFW_BUILD_DOCS=OFF
             ${FEATURE_OPTIONS}
+        MAYBE_UNUSED_VARIABLES
+            GLFW_USE_WAYLAND
     )
 
     vcpkg_cmake_install()
