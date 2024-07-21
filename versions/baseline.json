@@ -2801,7 +2801,7 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "11.0.1",
+      "baseline": "11.0.2",
       "port-version": 0
     },
     "folly": {
