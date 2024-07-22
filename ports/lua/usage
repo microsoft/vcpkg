@@ -3,3 +3,12 @@ lua provides CMake targets:
   find_package(unofficial-lua CONFIG REQUIRED)
   target_link_libraries(main PRIVATE unofficial::lua::lua)
   target_link_libraries(main PRIVATE unofficial::lua::lua-cpp)
+
+  CMake can drive program execution with targets:
+  unofficial::lua::lua-compiler
+  unofficial::lua::lua-interpreter
+
+  add_custom_command(..
+    COMMAND $<TARGET_FILE:unofficial::lua::lua-interpreter> ..
+    ...
+  )

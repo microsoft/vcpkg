@@ -16,13 +16,16 @@ _find_package(unofficial-lua CONFIG ${_is_required})
 # A similar thing can be done for the C++ library as well, by the user if they so desire.
 
 set(LUA_FOUND 1)
+
 set(LUA_VERSION ${unofficial-lua_VERSION})
 set(LUA_VERSION_STRING ${unofficial-lua_VERSION})
 set(LUA_VERSION_MAJOR ${unofficial-lua_VERSION_MAJOR})
 set(LUA_VERSION_MINOR ${unofficial-lua_VERSION_MINOR})
 set(LUA_VERSION_PATCH ${unofficial-lua_VERSION_PATCH})
+
 get_target_property(LUA_INCLUDE_DIR unofficial::lua::lua INTERFACE_INCLUDE_DIRECTORIES)
 list(REMOVE_DUPLICATES LUA_INCLUDE_DIR)
+
 get_target_property(lua_libs unofficial::lua::lua INTERFACE_LINK_LIBRARIES)
 set(LUA_LIBRARIES ${lua_libs})
 get_target_property(lua_libs unofficial::lua::lua "LOCATION_${CMAKE_BUILD_TYPE}")
