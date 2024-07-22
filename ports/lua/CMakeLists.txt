@@ -143,30 +143,36 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
 
     # compiler uses non-exported APIs, so must include sources directly.
     add_executable(
-            luac
-            src/luac.c
-            ${SRC_LIBLUA}
+        lua-compiler
+        src/luac.c
+        ${SRC_LIBLUA}
     )
-    add_executable(unofficial::lua::lua-compiler ALIAS luac)
+    add_executable(unofficial::lua::lua-compiler ALIAS lua-compiler)
+
+    set_target_properties(
+        lua-compiler
+        PROPERTIES
+        OUTPUT_NAME luac
+    )
 
     if (LIB_MATH)
-        target_link_libraries(luac m)
+        target_link_libraries(lua-compiler m)
     endif()
 
     # interpreter
     add_executable(
-        luai
+        lua-interpreter
         src/lua.c
     )
-    add_executable(unofficial::lua::lua-interpreter ALIAS luai)
+    add_executable(unofficial::lua::lua-interpreter ALIAS lua-interpreter)
 
     target_link_libraries(
-        luai
+        lua-interpreter
         lua
     )
 
     set_target_properties(
-        luai
+        lua-interpreter
         PROPERTIES
         OUTPUT_NAME lua
         PDB_NAME luai
@@ -180,16 +186,17 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
         endif()
         find_library(LIB_READLINE NAMES ${_LIB_READLINE_NAME})
         if (LIB_READLINE)
-            target_compile_definitions(luai PUBLIC LUA_USE_READLINE)
-            target_link_libraries(luai ${LIB_READLINE})
+            target_compile_definitions(lua-interpreter PUBLIC LUA_USE_READLINE)
+            target_link_libraries(lua-interpreter ${LIB_READLINE})
             if (_LIB_READLINE_NAME STREQUAL edit)
-                target_include_directories(luai PUBLIC /usr/include/edit)
+                target_include_directories(lua-interpreter PUBLIC /usr/include/edit)
             endif()
         endif()
     endif()
 
     install(
-        TARGETS luai luac
+        TARGETS lua-interpreter lua-compiler
+        EXPORT unofficial-lua-targets
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools/lua
     )
 
