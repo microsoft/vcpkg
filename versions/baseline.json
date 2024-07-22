@@ -9268,6 +9268,10 @@
       "baseline": "2.2.3",
       "port-version": 0
     },
+    "virtualgl": {
+      "baseline": "3.1.1",
+      "port-version": 0
+    },
     "visit-struct": {
       "baseline": "1.1.0",
       "port-version": 0
