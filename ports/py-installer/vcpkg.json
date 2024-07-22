@@ -1,0 +1,14 @@
+{
+  "name": "py-installer",
+  "version": "0.7.0",
+  "port-version": 1,
+  "description": "A low-level library for installing from a Python wheel distribution.",
+  "homepage": "https://installer.pypa.io",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "python3",
+      "default-features": false
+    }
+  ]
+}

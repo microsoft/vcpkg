@@ -8,8 +8,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/clapack/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
@@ -18,12 +16,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
     REF "v${VERSION}"
-    SHA512 fc3258b9d91a833149a68a89c5589b5113e90a8f9f41c3a73fbfccb1ecddd92d9462802c0f870f1c3dab392623452de4ef512727f5874ffdcba6a4845f78fc9a
+    SHA512 f8f3c733a0221be0b3f5618235408ac59cbd4e5f1c4eab5f509b831a6ec6a9ef14b8849aa6ea10810df1aff90186ca454d15e9438d1dd271c2449d42d3da9dda
     HEAD_REF master
     PATCHES
+        fix-prefix.patch
         cmake-config.patch
-        lapacke.patch
-        fix_prefix.patch
+        print-implicit-libs.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -63,6 +61,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
         "-DTEST_FORTRAN_COMPILER=OFF"
+        "-DCMAKE_Fortran_INIT_FLAGS=-fno-tree-vectorize" # This is used by openblas to compile lapack since there seems to be a bug in gfortran
         ${FORTRAN_CMAKE}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
@@ -105,6 +104,10 @@ if("cblas" IN_LIST FEATURES)
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)
         file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" " blas" " blas cblas")
+    if(NOT VCPKG_BUILD_TYPE)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" " blas" " blas cblas")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
@@ -152,3 +155,49 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PA
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  file(READ "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log" config_log)
+  string(REGEX MATCH "CMAKE_C_IMPLICIT_LINK_LIBRARIES:([^\n]+)" implicit_c_libs "${config_log}")
+  set(implicit_c_libs "${CMAKE_MATCH_1}")
+  list(REVERSE implicit_c_libs)
+  list(REMOVE_DUPLICATES implicit_c_libs)
+  list(REVERSE implicit_c_libs)
+  string(REGEX MATCH "CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES:([^\n]+)" implicit_fortran_libs "${config_log}")
+  set(implicit_fortran_libs "${CMAKE_MATCH_1}")
+  list(REVERSE implicit_fortran_libs)
+  list(REMOVE_DUPLICATES implicit_fortran_libs)
+  list(REVERSE implicit_fortran_libs)
+  list(REMOVE_ITEM implicit_fortran_libs ${implicit_c_libs} quadmath m) # libgfortran already has quadmath and m as a dependency
+  list(JOIN implicit_fortran_libs " -l" implicit_fortran_libs)
+  
+  string(REGEX MATCH "CMAKE_C_IMPLICIT_LINK_DIRECTORIES:([^\n]+)" implicit_c_dirs "${config_log}")
+  set(implicit_c_dirs "${CMAKE_MATCH_1}")
+  list(REVERSE implicit_c_dirs)
+  list(REMOVE_DUPLICATES implicit_c_dirs)
+  list(REVERSE implicit_c_dirs)
+  string(REGEX MATCH "CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES:([^\n]+)" implicit_fortran_dirs "${config_log}")
+  set(implicit_fortran_dirs "${CMAKE_MATCH_1}")
+  list(REVERSE implicit_fortran_dirs)
+  list(REMOVE_DUPLICATES implicit_fortran_dirs)
+  list(REVERSE implicit_fortran_dirs)
+  list(REMOVE_ITEM implicit_fortran_dirs ${implicit_c_dirs}) # libgfortran already has quadmath and m as a dependency
+  if(VCPKG_TARGET_IS_OSX)
+   list(APPEND implicit_fortran_dirs "/usr/local/lib")
+  endif()
+  list(JOIN implicit_fortran_dirs " -L" implicit_fortran_dirs)
+
+  message(STATUS "implicit_fortran_libs:${implicit_fortran_libs}|implicit_c_libs:${implicit_c_libs}")
+  message(STATUS "implicit_fortran_dirs:${implicit_fortran_dirs}|implicit_c_dirs:${implicit_c_dirs}")
+  if(NOT implicit_fortran_libs STREQUAL "" AND NOT implicit_fortran_dirs STREQUAL "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack-reference.pc" "-llapack" "-llapack -L${implicit_fortran_dirs} -l${implicit_fortran_libs}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack-reference.pc" "-llapack" "-llapack -L${implicit_fortran_dirs} -l${implicit_fortran_libs}")
+    endif()
+  elseif(NOT implicit_fortran_libs STREQUAL "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack-reference.pc" "-llapack" "-llapack -l${implicit_fortran_libs}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack-reference.pc" "-llapack" "-llapack -l${implicit_fortran_libs}")
+    endif()
+  endif()
+endif()

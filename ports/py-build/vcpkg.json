@@ -1,0 +1,11 @@
+{
+  "name": "py-build",
+  "version": "0.10.0",
+  "port-version": 1,
+  "description": "A simple, correct Python build frontend ",
+  "homepage": "https://python-build.readthedocs.io",
+  "license": "MIT",
+  "dependencies": [
+    "python3"
+  ]
+}
