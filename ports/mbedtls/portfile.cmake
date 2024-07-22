@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
     REF "v${VERSION}"
-    SHA512 b61dd319606c88c834b3a8e8f9f85e68a22b6b21ca177b340a972dfabe9efee984b8a9f6ed5d3b1829f229c689394e9f393b94efb38d82bda3a1e53d1e7a2861
+    SHA512 72a25a6b2a132545d32c7a6819bde569a315f2e83049467653af6347c918e4781462dceca21c64c76a4af7d19cedaf968f48b3f0309a6b0289466c087e49dd38
     HEAD_REF mbedtls-2.28
     PATCHES
         enable-pthread.patch
@@ -36,3 +36,4 @@ if (VCPKG_TARGET_IS_WINDOWS AND pthreads IN_LIST FEATURES)
 endif ()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()

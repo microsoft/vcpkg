@@ -505,11 +505,11 @@
       "port-version": 1
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.11.0",
+      "baseline": "12.12.0",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.6.0",
+      "baseline": "12.7.0",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -517,16 +517,16 @@
       "port-version": 6
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.10.0",
+      "baseline": "12.11.0",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.9.0",
+      "baseline": "12.10.0",
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.2.0",
-      "port-version": 1
+      "baseline": "12.3.0",
+      "port-version": 0
     },
     "azure-uamqp-c": {
       "baseline": "2024-06-24",
@@ -1893,7 +1893,7 @@
       "port-version": 5
     },
     "cpp-sort": {
-      "baseline": "1.15.0",
+      "baseline": "1.16.0",
       "port-version": 0
     },
     "cpp-taskflow": {
@@ -1929,8 +1929,8 @@
       "port-version": 3
     },
     "cppgraphqlgen": {
-      "baseline": "4.5.5",
-      "port-version": 1
+      "baseline": "4.5.7",
+      "port-version": 0
     },
     "cppitertools": {
       "baseline": "2.1",
@@ -2365,7 +2365,7 @@
       "port-version": 0
     },
     "dstorage": {
-      "baseline": "1.2.2",
+      "baseline": "1.2.3",
       "port-version": 0
     },
     "dtl": {
@@ -3467,6 +3467,14 @@
     "hpx": {
       "baseline": "1.10.0",
       "port-version": 1
+    },
+    "htscodecs": {
+      "baseline": "1.6.0",
+      "port-version": 0
+    },
+    "htslib": {
+      "baseline": "1.20",
+      "port-version": 0
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -5701,7 +5709,7 @@
       "port-version": 2
     },
     "mbedtls": {
-      "baseline": "2.28.7",
+      "baseline": "2.28.8",
       "port-version": 0
     },
     "mchehab-zbar": {
@@ -8161,8 +8169,8 @@
       "port-version": 1
     },
     "shiftmedia-libgnutls": {
-      "baseline": "3.7.6",
-      "port-version": 4
+      "baseline": "3.8.3",
+      "port-version": 0
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
@@ -8909,8 +8917,8 @@
       "port-version": 4
     },
     "tracy": {
-      "baseline": "0.10.0",
-      "port-version": 2
+      "baseline": "0.11.0",
+      "port-version": 0
     },
     "transwarp": {
       "baseline": "2.2.3",
