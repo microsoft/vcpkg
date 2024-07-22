@@ -49,7 +49,7 @@ index 6b95a71..e8bb3f7 100644
  
 +# Get definition of 'find_dependency' macro
 +include(CMakeFindDependencyMacro)
-+# Find lz4. This will create 'lz4::lz4' target
++# Find lz4. This will create 'LZ4::lz4' target
 +find_dependency(lz4)
 +@CMAKE_EXTERNAL_DEPS@
 +
@@ -89,7 +89,7 @@ index b421abb..474cd7e 100644
 -    target_link_libraries(flann_cpp -Wl,-whole-archive flann_cpp_s -Wl,-no-whole-archive)
 +if(NOT BUILD_SHARED_LIBS)
 +  add_library(flann_cpp_s STATIC ${CPP_SOURCES})
-+  target_link_libraries(flann_cpp_s PUBLIC lz4::lz4)
++  target_link_libraries(flann_cpp_s PUBLIC LZ4::lz4)
 +  set_property(TARGET flann_cpp_s PROPERTY OUTPUT_NAME flann_cpp)
 +  if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
 +      set_target_properties(flann_cpp_s PROPERTIES COMPILE_FLAGS -fPIC)
@@ -97,7 +97,7 @@ index b421abb..474cd7e 100644
 +
 +  if (BUILD_CUDA_LIB)
 +      cuda_add_library(flann_cuda_s STATIC ${CU_SOURCES})
-+      target_link_libraries(flann_cuda_s lz4::lz4)
++      target_link_libraries(flann_cuda_s LZ4::lz4)
 +      set_property(TARGET flann_cuda_s PROPERTY OUTPUT_NAME flann_cuda)
 +      set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC FLANN_USE_CUDA)
 +  endif()
@@ -109,7 +109,7 @@ index b421abb..474cd7e 100644
 +  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
 +      add_library(flann_cpp SHARED ${CPP_SOURCES})
 +      set_target_properties(flann_cpp PROPERTIES LINKER_LANGUAGE CXX)
-+      target_link_libraries(flann_cpp PUBLIC lz4::lz4)
++      target_link_libraries(flann_cpp PUBLIC LZ4::lz4)
 +      if (BUILD_CUDA_LIB)
 +        cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
          set_target_properties(flann_cuda PROPERTIES LINKER_LANGUAGE CXX)
@@ -143,12 +143,12 @@ index b421abb..474cd7e 100644
 +      endif()
 +  else()
 +      add_library(flann_cpp SHARED ${CPP_SOURCES})
-+      target_link_libraries(flann_cpp PUBLIC lz4::lz4)
++      target_link_libraries(flann_cpp PUBLIC LZ4::lz4)
 +      # export lz4 headers, so that MSVC to creates flann_cpp.lib
 +      set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
 +      if (BUILD_CUDA_LIB)
 +        cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
-+        target_link_libraries(flann_cuda lz4::lz4)
++        target_link_libraries(flann_cuda LZ4::lz4)
 +        set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
 +      endif()
 +  endif()
@@ -193,7 +193,7 @@ index b421abb..474cd7e 100644
 +  if(NOT BUILD_SHARED_LIBS)
      add_library(flann_s STATIC ${C_SOURCES})
 -    target_link_libraries(flann_s -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
-+    target_link_libraries(flann_s PUBLIC lz4::lz4)
++    target_link_libraries(flann_s PUBLIC LZ4::lz4)
 +    set_property(TARGET flann_s PROPERTY OUTPUT_NAME flann)
      if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
          set_target_properties(flann_s PROPERTIES COMPILE_FLAGS -fPIC)
@@ -206,13 +206,13 @@ index b421abb..474cd7e 100644
      if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
 -        add_library(flann SHARED "")
 +        add_library(flann SHARED ${C_SOURCES})
-+        target_link_libraries(flann PUBLIC lz4::lz4)
++        target_link_libraries(flann PUBLIC LZ4::lz4)
          set_target_properties(flann PROPERTIES LINKER_LANGUAGE CXX)
 -        target_link_libraries(flann -Wl,-whole-archive flann_s -Wl,-no-whole-archive)
      else()
          add_library(flann SHARED ${C_SOURCES})
 -        target_link_libraries(flann -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
-+        target_link_libraries(flann PUBLIC lz4::lz4)
++        target_link_libraries(flann PUBLIC LZ4::lz4)
  
          if(MINGW AND OPENMP_FOUND)
            target_link_libraries(flann gomp)

@@ -47,7 +47,7 @@ index 70f80a2..83d90d8 100644
  if(NOT DEACTIVATE_LZ4)
      if(LZ4_FOUND)
 -        set(LIBS ${LIBS} ${LZ4_LIBRARY})
-+        set(LIBS ${LIBS} lz4::lz4)
++        set(LIBS ${LIBS} LZ4::lz4)
      else(LZ4_FOUND)
          file(GLOB LZ4_FILES ${LZ4_LOCAL_DIR}/*.c)
          set(SOURCES ${SOURCES} ${LZ4_FILES})

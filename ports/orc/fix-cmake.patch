@@ -23,7 +23,7 @@ index 33ad5848..2a41e427 100644
 +  protobuf::libprotobuf
 +  ZLIB::ZLIB
 +  Snappy::snappy
-+  lz4::lz4
++  LZ4::lz4
 +  $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
    ${LIBHDFSPP_LIBRARIES}
 -  )

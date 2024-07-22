@@ -34,7 +34,8 @@ index 5cfc1b480..a18af5817 100644
 -    find_package(lz4 REQUIRED)
 +    find_package(lz4 CONFIG REQUIRED)
      add_definitions(-DLZ4)
-     list(APPEND THIRDPARTY_LIBS lz4::lz4)
+-    list(APPEND THIRDPARTY_LIBS lz4::lz4)
++    list(APPEND THIRDPARTY_LIBS LZ4::lz4)
    endif()
  
    if(WITH_ZSTD)

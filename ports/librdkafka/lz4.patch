@@ -24,5 +24,16 @@
  if(WITH_LZ4_EXT)
 -  target_include_directories(rdkafka PRIVATE ${LZ4_INCLUDE_DIRS})
 -  target_link_libraries(rdkafka PUBLIC LZ4::LZ4)
-+  target_link_libraries(rdkafka PUBLIC lz4::lz4)
++  target_link_libraries(rdkafka PUBLIC LZ4::lz4)
  endif()
+--- a/packaging/cmake/Config.cmake.in
++++ b/packaging/cmake/Config.cmake.in
+@@ -28,7 +28,7 @@ if(@WITH_SSL@)
+ endif()
+ 
+ if(@WITH_LZ4_EXT@)
+-  find_dependency(LZ4)
++  find_dependency(lz4)
+ endif()
+ 
+ find_dependency(Threads)

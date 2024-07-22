@@ -41,9 +41,24 @@ index 8c94e3bcd..ade3f9451 100644
 -      INTERFACE_INCLUDE_DIRECTORIES "${LZ4_INCLUDE_DIR}")
 -  endif ()
 -endif ()
-+find_package(LZ4 CONFIG REQUIRED)
++find_package(lz4 CONFIG REQUIRED)
 +if(NOT TARGET LZ4::LZ4)
 +    add_library(LZ4::LZ4 INTERFACE IMPORTED)
-+    target_link_libraries(LZ4::LZ4 INTERFACE lz4::lz4)
++    target_link_libraries(LZ4::LZ4 INTERFACE LZ4::lz4)
 +endif()
 \ No newline at end of file
+diff --git a/ThirdParty/lz4/CMakeLists.txt b/ThirdParty/lz4/CMakeLists.txt
+index eb37383..c24d352 100644
+--- a/ThirdParty/lz4/CMakeLists.txt
++++ b/ThirdParty/lz4/CMakeLists.txt
+@@ -12,8 +12,8 @@ vtk_module_third_party(
+       "1.9.3"
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+-    PACKAGE LZ4
+-    TARGETS LZ4::LZ4
++    PACKAGE lz4
++    TARGETS LZ4::lz4
+     STANDARD_INCLUDE_DIRS)
+ 
+ configure_file(

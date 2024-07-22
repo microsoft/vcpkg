@@ -124,8 +124,8 @@ index 41a513a30..32c8826ae 100644
 -  list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
 +if(NOT CMAKE_DISABLE_FIND_PACKAGE_LZ4)
 +  find_package(lz4 CONFIG)
-+  if(TARGET lz4::lz4)
-+    list(APPEND FOLLY_LINK_LIBRARIES lz4::lz4)
++  if(TARGET LZ4::lz4)
++    list(APPEND FOLLY_LINK_LIBRARIES LZ4::lz4)
 +  endif()
  endif()
  

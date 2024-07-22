@@ -37,6 +37,7 @@ index 67663ec..e67ba81 100644
      absl::int128
 -    cityhash::cityhash
 +    cityhash
-     lz4::lz4
+-    lz4::lz4
++    LZ4::lz4
  )
  TARGET_INCLUDE_DIRECTORIES (clickhouse-cpp-lib
