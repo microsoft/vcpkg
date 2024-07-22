@@ -8549,7 +8549,7 @@
       "port-version": 0
     },
     "str-view": {
-      "baseline": "0.3.9",
+      "baseline": "0.3.11",
       "port-version": 0
     },
     "strict-variant": {
