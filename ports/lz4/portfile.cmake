@@ -6,18 +6,28 @@ vcpkg_from_github(
     HEAD_REF dev
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools LZ4_BUILD_CLI
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
+    OPTIONS
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_copy_tools(
-    TOOL_NAMES lz4
-    AUTO_CLEAN
-)
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES lz4
+        AUTO_CLEAN
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(DLL_IMPORT "1 && defined(_MSC_VER)")
@@ -43,4 +53,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lib/LICENSE")
+
+set(LICENSE_FILES "${SOURCE_PATH}/lib/LICENSE")
+if("tools" IN_LIST FEATURES)
+    list(APPEND LICENSE_FILES "${SOURCE_PATH}/programs/COPYING")
+endif()
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

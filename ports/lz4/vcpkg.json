@@ -13,5 +13,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build lz4 binary",
+      "license": "GPL-2.0-or-later"
+    }
+  }
 }
