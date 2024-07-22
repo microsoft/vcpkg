@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fix8mt/conjure_enum
     REF "v${VERSION}"
-    SHA512 65fc1bc0364c6129b3b463b18c03ab38793c9632d0ece5b5e696a661e5ddad859c6b6ff2c5d8a1da98c7de2248e80f246e0a039d9e7be5fb507a4b61c71f69e8
+    SHA512 b9054a62ba10dd7b27b0fa6d2fd6a0c03eaea0f39fc0ba954e12351face02969fccd393278a9e29fa3f8af52b285b16e5ca6d0bc00a05a6ad08d7482bc1c587c
     HEAD_REF master
 )
 
