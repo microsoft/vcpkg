@@ -54,9 +54,6 @@
     {
       "name": "boost-python",
       "default-features": false,
-      "features": [
-        "python3"
-      ],
       "platform": "!emscripten & !ios & !android & !uwp"
     },
     {
