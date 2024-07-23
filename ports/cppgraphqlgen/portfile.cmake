@@ -1,5 +1,5 @@
 vcpkg_download_distfile(LINUX_PATCH
-    URLS https://github.com/microsoft/cppgraphqlgen/pull/305.patch?full_index=1
+    URLS https://github.com/microsoft/cppgraphqlgen/commit/aa02e66edcf248c61a198eec546c401c3ada3667.patch?full_index=1
     FILENAME fix-linux.patch
     SHA512 d3664dbcc1a8df0eb538e82a932d3df16697b2f457039faa8b6cf6b95d3381f92de23433936f7196502db6afa9c8f58197194a65a87437092c1eb1cad684d652
 )
