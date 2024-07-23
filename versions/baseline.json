@@ -698,7 +698,7 @@
     },
     "blosc": {
       "baseline": "1.21.5",
-      "port-version": 0
+      "port-version": 1
     },
     "blpapi": {
       "baseline": "3.20.2",
@@ -1690,7 +1690,7 @@
     },
     "clickhouse-cpp": {
       "baseline": "2.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "clipboardxx": {
       "baseline": "2022-02-04",
@@ -2730,7 +2730,7 @@
     },
     "flann": {
       "baseline": "2019-04-07",
-      "port-version": 7
+      "port-version": 8
     },
     "flash-runtime-extensions": {
       "baseline": "2.4",
@@ -2806,7 +2806,7 @@
     },
     "folly": {
       "baseline": "2024.07.15.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -4226,7 +4226,7 @@
     },
     "libarchive": {
       "baseline": "3.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libass": {
       "baseline": "0.17.3",
@@ -4926,7 +4926,7 @@
     },
     "librdkafka": {
       "baseline": "2.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libredwg": {
       "baseline": "0.13.3",
@@ -5569,8 +5569,8 @@
       "port-version": 1
     },
     "lz4": {
-      "baseline": "1.9.4",
-      "port-version": 2
+      "baseline": "1.10.0",
+      "port-version": 0
     },
     "lzav": {
       "baseline": "3.13",
@@ -6670,7 +6670,7 @@
     },
     "orc": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "orocos-kdl": {
       "baseline": "1.5.1",
@@ -7846,7 +7846,7 @@
     },
     "rocksdb": {
       "baseline": "9.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "rpclib": {
       "baseline": "2.3.0",
@@ -9322,7 +9322,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 2
+      "port-version": 3
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
