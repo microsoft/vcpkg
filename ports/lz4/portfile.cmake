@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 8c4ceb217e6dc8e7e0beba99adc736aca8963867bcf9f970d621978ba11ce92855912f8b66138037a1d2ae171e8e17beb7be99281fea840106aa60373c455b28
     HEAD_REF dev
+    PATCHES
+        target-lz4-lz4.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -41,9 +43,8 @@ foreach(FILE lz4.h lz4frame.h)
     )
 endforeach()
 
-vcpkg_cmake_config_fixup(
-    CONFIG_PATH "lib/cmake/lz4"
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/lz4")
+
 vcpkg_fixup_pkgconfig()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblz4.pc" " -llz4" " -llz4d")
