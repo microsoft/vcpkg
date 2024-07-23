@@ -6202,7 +6202,7 @@
     },
     "ngtcp2": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nifly": {
       "baseline": "1.0.0",
@@ -9478,7 +9478,7 @@
     },
     "wolfssl": {
       "baseline": "5.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "3.2.0",
