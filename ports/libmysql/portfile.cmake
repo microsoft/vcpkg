@@ -91,6 +91,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql)
 vcpkg_fixup_pkgconfig()
 
