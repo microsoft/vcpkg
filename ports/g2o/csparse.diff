@@ -1,0 +1,32 @@
+diff --git a/cmake_modules/FindCSparse.cmake b/cmake_modules/FindCSparse.cmake
+index 5af693d..8be574f 100644
+--- a/cmake_modules/FindCSparse.cmake
++++ b/cmake_modules/FindCSparse.cmake
+@@ -15,6 +15,8 @@ find_path(CSPARSE_INCLUDE_DIR NAMES cs.h
+   )
+ 
+ find_library(CSPARSE_LIBRARY NAMES cxsparse libcxsparse
++                                   cxsparsed libcxsparsed
++  NAMES_PER_DIR
+   PATHS
+   /usr/lib
+   /usr/local/lib
+diff --git a/g2o/solvers/csparse/CMakeLists.txt b/g2o/solvers/csparse/CMakeLists.txt
+index 60d1269..e6b80fc 100644
+--- a/g2o/solvers/csparse/CMakeLists.txt
++++ b/g2o/solvers/csparse/CMakeLists.txt
+@@ -2,13 +2,13 @@ if(NOT G2O_USE_CSPARSE)
+   return()
+ endif()
+ 
+-include_directories(${CSPARSE_INCLUDE_DIR})
+ 
+ add_library(csparse_extension ${G2O_LGPL_LIB_TYPE}
+   csparse_helper.cpp csparse_helper.h
+   csparse_extension.cpp csparse_extension.h
+   g2o_csparse_extension_api.h
+ )
++target_include_directories(csparse_extension PUBLIC ${CSPARSE_INCLUDE_DIR})
+ set_target_properties(csparse_extension PROPERTIES OUTPUT_NAME ${LIB_PREFIX}csparse_extension)
+ if (APPLE)
+   set_target_properties(csparse_extension PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")

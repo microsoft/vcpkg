@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO maxbachmann/rapidfuzz-cpp
     REF "v${VERSION}"
-    SHA512 02af141b123545303d634ffe84fbe83e635f06c9ffa3a6506661e53beb22fe7221942b3e46d33b2a49ef929c5de9acfb00c48cb5685c760506c5fcf37c716f9a
+    SHA512 c9cc50f7d68756d81a5d2c5efdd76e859fe5a199bf5e45179effcd85e32f0bb98b593b93c2aa57950a04c3d827af98efb13096b9669329881d658ababc059fd5
     HEAD_REF master
 )
 

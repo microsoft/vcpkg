@@ -1,0 +1,22 @@
+{
+  "name": "nativefiledialog-extended",
+  "version": "1.2.0",
+  "description": "Native File Dialog Extended",
+  "homepage": "https://github.com/btzy/nativefiledialog-extended",
+  "license": "Zlib",
+  "supports": "!android & !ios & !uwp",
+  "dependencies": [
+    {
+      "name": "dbus",
+      "platform": "!osx & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

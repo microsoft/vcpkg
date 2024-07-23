@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(chm C)
 
+include (CheckIncludeFiles)
+check_include_files(strings.h HAVE_STRINGS_H) # for ffs
+
 add_library(chm src/lzx.c src/chm_lib.c)
+if(HAVE_STRINGS_H)
+    target_compile_definitions(chm PRIVATE CHMLIB_HAVE_STRINGS_H)
+endif()
 
 if(BUILD_TOOLS)
     link_libraries(chm)

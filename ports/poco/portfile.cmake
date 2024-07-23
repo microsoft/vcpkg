@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF "poco-1.13.0-release"
-    SHA512 5e557b4c93dd5eacd7c43af9c89646c49e65217db9d9e0fc016b3f643aca993d70e58a85ec7e63743221eb2b29d36ce9f8a3bfbf4db489d8ff24e20127f450ea
+    REF "poco-${VERSION}-release"
+    SHA512 084064fb462c9e7993d069ebdf395802af900ed92c5b294465a2c246162bb86caa3505985de329e8110d3e9fb3bc39ae9536d523843729d4ed5ce00c35289d92
     HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -109,19 +109,6 @@ endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
-
-# Copy include files of sql-parser
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src")
-
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/parser/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/parser")
-
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/sql/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/sql")
-
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/util/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/util")
 
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_config_fixup(CONFIG_PATH cmake)

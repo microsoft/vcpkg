@@ -7,6 +7,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         FindCMath.patch
+        requires-lerc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,6 +17,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
         libdeflate libdeflate
         libdeflate CMAKE_REQUIRE_FIND_PACKAGE_Deflate
+        lerc    lerc
+        lerc    CMAKE_REQUIRE_FIND_PACKAGE_LERC
         lzma    lzma
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_liblzma
         tools   tiff-tools
@@ -37,7 +40,6 @@ vcpkg_cmake_configure(
         -Dtiff-tests=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
-        -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         -DZSTD_HAVE_DECOMPRESS_STREAM=ON

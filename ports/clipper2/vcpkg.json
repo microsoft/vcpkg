@@ -1,6 +1,7 @@
 {
   "name": "clipper2",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Polygon Clipping and Offsetting",
   "homepage": "http://www.angusj.com/clipper2",
   "license": "BSL-1.0",

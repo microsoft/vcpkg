@@ -1,0 +1,53 @@
+{
+  "name": "vcpkg-ci-curl",
+  "version-date": "2024-03-05",
+  "description": "Port to force features of certain ports within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "curl",
+      "features": [
+        "idn"
+      ]
+    },
+    {
+      "name": "curl",
+      "features": [
+        "http2",
+        "zstd"
+      ]
+    },
+    {
+      "$comment": "Known to break aws-sdk-cpp.",
+      "name": "curl",
+      "features": [
+        "brotli"
+      ],
+      "platform": "!osx"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "psl",
+        "gsasl"
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "gssapi"
+      ],
+      "platform": "linux | osx"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "ldap",
+        "tool"
+      ],
+      "platform": "!android & !uwp"
+    }
+  ]
+}

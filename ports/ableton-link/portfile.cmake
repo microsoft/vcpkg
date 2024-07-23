@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ableton/link
-    REF Link-3.0.6
-    SHA512 7dd811d3b7792722a8754cd0875777b8cf4902a0babff2822a6fd997137eb5feac576263169c71fca24358189e56b5106a32ae1313b33fb6148eb845691a6438
+    REF "Link-${VERSION}"
+    SHA512 d82529d08897833c3fd6f19eca1689dfbfeac945daa4f1cb5a5719248ba1428875084155761d4de9521d486552e82ea47c71009fa8ef868ed4dca86a561f5c3e
     HEAD_REF master
     PATCHES
         replace_local_asiostandalone_by_vcpkg_asio.patch
@@ -39,7 +39,7 @@ endif()
 
 set(NEED_ASIOSDK OFF)
 if ("hut" IN_LIST FEATURES)
-  if(WIN32)
+  if(VCPKG_TARGET_IS_WINDOWS)
     # Need Steinberg ASIO audio driver SDK (only this low-latency audio driver makes the developer tool 'hut' useful on Windows)
     set(NEED_ASIOSDK ON)
   endif()

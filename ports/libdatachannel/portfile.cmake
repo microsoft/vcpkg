@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 63551a9f2ce8de7f7aba13b2114418d3d705a6c190d91eac7cf6deba93ccbe9bda053000feb7ac109d538646c77da62b31686a58f83d752f191cac3a015f2d69
+    SHA512 67119f6d1280593696f71dc550ceba1076066d0f55ebf10b527bf1c75e5e9571be18e5d9732e43a2aa4d5106a49a0676e70938d35d3eb4005cf17612f8836c52
     HEAD_REF master
     PATCHES 
         ${PATCHES}
@@ -40,6 +40,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibDataChannel CONFIG_PATH lib/cmake/LibDataChannel)
 vcpkg_fixup_pkgconfig()
 
+if(srtp IN_LIST FEATURES)
+    set(FIND_DEP_SRTP "find_dependency(libSRTP CONFIG)")
+endif()
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" DATACHANNEL_CONFIG)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" "
 include(CMakeFindDependencyMacro)
@@ -48,7 +52,9 @@ find_dependency(OpenSSL)
 find_dependency(LibJuice)
 find_dependency(plog CONFIG)
 find_dependency(unofficial-usrsctp CONFIG)
+${FIND_DEP_SRTP}
 ${DATACHANNEL_CONFIG}")
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

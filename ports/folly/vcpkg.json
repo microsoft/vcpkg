@@ -1,6 +1,6 @@
 {
   "name": "folly",
-  "version-string": "2024.01.01.00",
+  "version-string": "2024.07.15.00",
   "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
   "homepage": "https://github.com/facebook/folly",
   "license": "Apache-2.0",
@@ -44,6 +44,13 @@
         "bzip2"
       ]
     },
+    "libaio": {
+      "description": "Support compile with libaio",
+      "supports": "linux",
+      "dependencies": [
+        "libaio"
+      ]
+    },
     "libsodium": {
       "description": "Support libsodium for cryto",
       "dependencies": [
@@ -52,6 +59,7 @@
     },
     "liburing": {
       "description": "Support compile with liburing",
+      "supports": "linux",
       "dependencies": [
         "liburing"
       ]

@@ -1,0 +1,72 @@
+{
+  "name": "sese",
+  "version": "2.2.0",
+  "port-version": 1,
+  "description": "A cross-platform framework for basic components.",
+  "homepage": "https://github.com/libsese/sese",
+  "license": "Apache-2.0",
+  "supports": "x64 & (windows | osx | linux) & !uwp",
+  "dependencies": [
+    {
+      "name": "asio",
+      "features": [
+        "openssl"
+      ]
+    },
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "sqlite3"
+  ],
+  "features": {
+    "archive": {
+      "description": "add archive support",
+      "dependencies": [
+        "libarchive"
+      ]
+    },
+    "async-logger": {
+      "description": "use the async logger"
+    },
+    "mysql": {
+      "description": "add mysql and mariadb support",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "psql": {
+      "description": "add postgresql support",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "replace-execinfo": {
+      "description": "replace the system execinfo implementation",
+      "dependencies": [
+        "libunwind"
+      ]
+    },
+    "sqlite3": {
+      "description": "add sqlite3 support",
+      "dependencies": [
+        "sqlite3"
+      ]
+    },
+    "tests": {
+      "description": "build the unit test",
+      "dependencies": [
+        "benchmark",
+        "gtest"
+      ]
+    }
+  }
+}
