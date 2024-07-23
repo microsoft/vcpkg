@@ -4,11 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/gnutls
     REF ${VERSION}
-    SHA512 4be02eac5fd52ba02a69f3fb70dc1100d930e7e5f50f0106cb7e266e9fb3c6e12c14741317c097de85b5dc924f993a1ad6f220d33ae187c24fe5f670380b0c96
+    SHA512 5bd515da85f9e87b98f09a29472f788e869ccc3355f9583fbb4215d954cc5f97239e017120a0b358d259e58d0bd8e538fd00ea102fdbc1b29363cd92f06d0299
     HEAD_REF master
     PATCHES
         external-libtasn1.patch
         pkgconfig.patch
+        ssize_t_already_define.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
