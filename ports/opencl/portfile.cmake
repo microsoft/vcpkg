@@ -47,6 +47,7 @@ block(SCOPE_FOR VARIABLES)
             -DBUILD_DOCS=OFF
             -DBUILD_EXAMPLES=OFF
             -DBUILD_TESTING=OFF
+            "-DOpenCLHeaders_DIR=${CURRENT_PACKAGES_DIR}/share/openclheaders"
     )
     vcpkg_cmake_install()
     vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/OpenCLHeadersCpp" PACKAGE_NAME "openclheaderscpp")
