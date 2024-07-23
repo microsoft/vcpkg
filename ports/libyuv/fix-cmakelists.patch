@@ -80,7 +80,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -INSTALL ( TARGETS ${ly_lib_static}						DESTINATION lib )
 -INSTALL ( TARGETS ${ly_lib_shared} LIBRARY				DESTINATION lib RUNTIME DESTINATION bin )
 -INSTALL ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/		DESTINATION include )
-+INSTALL ( TARGETS yuvconvert DESTINATION tools )
++INSTALL ( TARGETS yuvconvert DESTINATION bin )
 +INSTALL ( FILES ${ly_include_files} DESTINATION include/libyuv )
 +INSTALL ( TARGETS ${ly_lib_static} EXPORT libyuv-targets DESTINATION lib INCLUDES DESTINATION include PUBLIC_HEADER DESTINATION include )
 +INSTALL( EXPORT libyuv-targets DESTINATION share/cmake/libyuv/ EXPORT_LINK_INTERFACE_LIBRARIES )

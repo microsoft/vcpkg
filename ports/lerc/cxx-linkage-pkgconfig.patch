@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ec42013..8ac570a 100644
+index a52dc59..caacfa8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -52,6 +52,16 @@ install(EXPORT LercTargets
- )
+@@ -64,6 +64,16 @@ else()
+ endif()
  
  # Configure and install pkgconfig file
 +set(FAKE_CXX_LINKAGE "")
@@ -20,7 +20,7 @@ index ec42013..8ac570a 100644
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Lerc.pc
          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 diff --git a/Lerc.pc.in b/Lerc.pc.in
-index 96cf6eb..8856171 100644
+index ab20d1a..4d2a967 100644
 --- a/Lerc.pc.in
 +++ b/Lerc.pc.in
 @@ -9,4 +9,4 @@ URL: @PROJECT_HOMEPAGE_URL@

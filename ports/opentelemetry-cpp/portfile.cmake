@@ -6,13 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 38a3796a5f4c28fd54cc2a5475b3a024e2e73594acbc635fccc6358bf4d93ae897fc0ce55a93d27736a08622869ccc9fe9a9ee62e3884adadb3f135c27d378ec
+    SHA512 b0e035b2b15322ba75d22d775fb77e49d5e084099924cded32ea0b1cb1ad93f22157b01a90993a8af76db07136ec72724b3d7a583ef33ff9ce3f0658005e6394
     HEAD_REF main
     PATCHES
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
-        # Fix problems from removing NOMINMAX on Windows. Fixed in 1.14.0
-        fix-nominmax-problems.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,15 +22,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
+        user-events WITH_USER_EVENTS
+    INVERTED_FEATURES
+        user-events BUILD_TRACEPOINTS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.0.0")
+    set(OTEL_PROTO_VERSION "1.3.1")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 74de78304a91fe72cfcdbd87fcb19c0d6338c161d6624ce09eac0527b1b43b8a5d8790ae055e1d3d44319eaa070a506f47e740f888c91d724a0aef8b509688f0
+        SHA512 8c75e4ff79c4b5b251e0ec8ece92ec901d70ec601644505ffdd137fb728daac91fd9203e1f448500124906737d91d80f10b694977688c655418b94f61c828d06
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -45,18 +46,28 @@ if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
 endif()
 
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
-if(WITH_GENEVA)
-# Geneva exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, so they should be ported as a feature under opentelemetry-cpp.
-# TODO: merge the opentelemetry-fluentd port to opentelemery-cpp port.
-    vcpkg_from_github(
-        OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
-        REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 26e5ed48d81bb03fde52848ab394605dde0fb1a8
-        HEAD_REF main
-        SHA512 f483dc96a884450fbb17fdaf0b5514ba44546f1742c2f80f552fcb442e08fbfe399441594e95ffd2c644c20907baef83d52c326dd6d3d5eb70cf29d30b2c5a0e
-    )
-    set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "")
-    list(APPEND OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+
+if(WITH_GENEVA OR WITH_USER_EVENTS)
+    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
+    # so they should be ported as a feature under opentelemetry-cpp.
+    clone_opentelemetry_cpp_contrib(CONTRIB_SOURCE_PATH)
+    
+    if(WITH_GENEVA)
+        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/geneva-trace")
+        else()
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/fluentd")
+        endif()
+    endif()
+
+    if(WITH_USER_EVENTS)
+        if(WITH_GENEVA)
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/user_events")
+        else()
+            set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/user_events")
+        endif()
+    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -66,10 +77,13 @@ vcpkg_cmake_configure(
         -DWITH_EXAMPLES=OFF
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
-        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH="${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}"
+        -DWITH_BENCHMARK=OFF
+        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         WITH_GENEVA
+        WITH_USER_EVENTS
+        BUILD_TRACEPOINTS
 )
 
 vcpkg_cmake_install()

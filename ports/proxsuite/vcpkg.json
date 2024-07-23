@@ -1,6 +1,6 @@
 {
   "name": "proxsuite",
-  "version": "0.5.0",
+  "version": "0.6.4",
   "description": "The Advanced Proximal Optimization Toolbox",
   "homepage": "https://github.com/Simple-Robotics/proxsuite",
   "license": "BSD-2-Clause",

@@ -4,7 +4,7 @@ string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2024/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
     FILENAME "sqlite-autoconf-${SQLITE_VERSION}.zip"
-    SHA512 40ae9ba1dea234aacfecf44a6b1c0713c24348d8d475503c11f1d92ed2fffb54a765bbd0669f39aa09d20f42cbcfac4dedcf7e64f4421b8762eebfc66399aa9a
+    SHA512 631ffe4b39dffbafdcb8ac09a6a84cd7959505ecc588d8ad9278d0ff0c3ea467f87c11167e1b1a3f56d62178e679780e2be313ae3badae8ea056709d71bd4817
 )
 
 vcpkg_extract_source_archive(
@@ -36,6 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
     FEATURES
         dbstat              SQLITE_ENABLE_DBSTAT_VTAB
+        dbpage-vtab         SQLITE_ENABLE_DBPAGE_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
         memsys3             SQLITE_ENABLE_MEMSYS3
@@ -44,6 +45,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
         rtree               SQLITE_ENABLE_RTREE
         session             SQLITE_ENABLE_SESSION
         session             SQLITE_ENABLE_PREUPDATE_HOOK
+        snapshot            SQLITE_ENABLE_SNAPSHOT
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
         soundex             SQLITE_SOUNDEX
