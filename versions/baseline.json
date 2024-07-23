@@ -1050,7 +1050,7 @@
     },
     "boost-mpl": {
       "baseline": "1.85.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-msm": {
       "baseline": "1.85.0",
