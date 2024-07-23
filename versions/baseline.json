@@ -5122,7 +5122,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libtorrent": {
       "baseline": "2.0.10",
@@ -6318,6 +6318,10 @@
     },
     "nuspell": {
       "baseline": "5.1.4",
+      "port-version": 0
+    },
+    "nvidia-cutlass": {
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "nvtt": {

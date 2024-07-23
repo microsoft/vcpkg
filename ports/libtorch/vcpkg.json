@@ -1,7 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.1.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -65,7 +65,8 @@
       "dependencies": [
         "cuda",
         "cudnn",
-        "magma"
+        "magma",
+        "nvidia-cutlass"
       ]
     },
     "dist": {
