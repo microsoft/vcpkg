@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DONNX_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
+        -DONNX_TARGET_NAME=ONNX::onnx # after 1.16.0
 )
 if("pybind11" IN_LIST FEATURES)
     # This target is not in install/export

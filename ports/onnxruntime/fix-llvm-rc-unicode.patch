@@ -1,0 +1,16 @@
+diff --git a/onnxruntime/core/dll/onnxruntime.rc b/onnxruntime/core/dll/onnxruntime.rc
+index 4b08dfdb7e..c566a4f713 100644
+--- a/onnxruntime/core/dll/onnxruntime.rc
++++ b/onnxruntime/core/dll/onnxruntime.rc
+@@ -32,9 +32,9 @@ BEGIN
+             VALUE "FileDescription",  "ONNX Runtime"
+             VALUE "FileVersion",      VER_STRING
+             VALUE "InternalName",     "ONNX Runtime"
+-            VALUE "LegalCopyright",   "\251 Microsoft Corporation. All rights reserved."
++            VALUE "LegalCopyright",   L"\251 Microsoft Corporation. All rights reserved."
+             VALUE "OriginalFilename", FILE_NAME
+-            VALUE "ProductName",      "Microsoft\256 Windows\256 Operating System"
++            VALUE "ProductName",      L"Microsoft\256 Windows\256 Operating System"
+             VALUE "ProductVersion",   VER_STRING
+         END
+     END
