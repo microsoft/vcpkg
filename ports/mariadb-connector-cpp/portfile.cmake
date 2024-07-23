@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -DINSTALL_INCLUDEDIR=include/mariadbcpp
         -DWITH_UNIT_TESTS=OFF
         -DUSE_SYSTEM_INSTALLED_LIB=ON
+        -DWITH_ASAN=ON
 )
 
 vcpkg_cmake_install()
