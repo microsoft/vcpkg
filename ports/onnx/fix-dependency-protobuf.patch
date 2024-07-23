@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1295eab..0fb9f17 100644
+index d81ac1d..9f97998 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -126,6 +126,7 @@ if(ONNX_BUILD_TESTS)
-   include(googletest)
+@@ -149,6 +149,7 @@ if(ONNX_BUILD_TESTS)
+   set(googletest_STATIC_LIBRARIES GTest::gtest)
  endif()
  
 +find_package(protobuf CONFIG REQUIRED)
