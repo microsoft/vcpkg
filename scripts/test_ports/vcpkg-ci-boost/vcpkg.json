@@ -57,14 +57,6 @@
       "platform": "!emscripten & !ios & !android & !uwp"
     },
     {
-      "name": "boost-python",
-      "default-features": false,
-      "features": [
-        "python2"
-      ],
-      "platform": "!android & !emscripten & !ios & !(arm & osx) & !(arm & windows) & !uwp"
-    },
-    {
       "name": "boost-regex",
       "default-features": false,
       "features": [
