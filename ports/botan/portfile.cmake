@@ -177,7 +177,7 @@ else()
     endif()
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Botan-3.3.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Botan-3.5.0)
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
