@@ -1,22 +1,20 @@
 
-project(
-    lua-cpp-library
-    LANGUAGES CXX
-)
-
 set(SRC_LIBLUA_CPP ${SRC_LIBLUA})
 set(HDR_LIBLUA_CPP ${HDR_LIBLUA})
 set(PUBLIC_HDR_LIBLUA_CPP ${PUBLIC_HDR_LIBLUA})
 list(REMOVE_ITEM PUBLIC_HDR_LIBLUA_CPP "${LUA_SOURCE_DIR}/lua.hpp")
 
-add_library(
+set_source_files_properties(${SRC_LIBLUA_CPP} PROPERTIES LANGUAGE CXX)
+
+add_library(lua-cpp ${SRC_LIBLUA_CPP})
+
+set_target_properties(
     lua-cpp
-    ${SRC_LIBLUA_CPP}
+    PROPERTIES
+    OUTPUT_NAME "lua-c++"
+    PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA_CPP}"
+    POSITION_INDEPENDENT_CODE ON
 )
-
-set_target_properties(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
-
-set_target_properties(lua-cpp PROPERTIES PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA_CPP}")
 
 target_include_directories(
     lua-cpp

@@ -6,10 +6,7 @@
 
 cmake_minimum_required(VERSION 3.28)
 
-project(
-    lua-c-library
-    LANGUAGES C
-)
+project(unofficial-lua)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -142,16 +139,8 @@ if (INSTALL_TOOLS)
     endif()
 
     # interpreter
-    add_executable(
-        lua-interpreter
-        src/lua.c
-    )
-
-    target_link_libraries(
-        lua-interpreter
-        PRIVATE
-        lua
-    )
+    add_executable(lua-interpreter src/lua.c)
+    target_link_libraries(lua-interpreter PRIVATE lua)
 
     set_target_properties(
         lua-interpreter
