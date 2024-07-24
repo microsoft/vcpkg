@@ -8753,7 +8753,7 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.13.2",
+      "baseline": "0.14.3",
       "port-version": 0
     },
     "threadpool": {
