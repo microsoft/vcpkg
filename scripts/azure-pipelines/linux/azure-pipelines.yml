@@ -22,7 +22,7 @@ jobs:
     name: PrLin-1ES-Pool
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
     value: /mnt/vcpkg-ci
