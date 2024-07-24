@@ -42,6 +42,7 @@ You can also use any editor:
 * [vcpkg with Visual Sudio Code](https://learn.microsoft.com/vcpkg/get_started/get-started-vscode)
 * [vcpkg with
   CLion](<https://www.jetbrains.com/help/clion/package-management.html>)
+* [vcpkg with Qt Creator](<https://doc.qt.io/qtcreator/creator-vcpkg.html>)
 
 If a library you need is not present in the vcpkg registry, [open an issue on
 the GitHub repository][contributing:submit-issue] or [contribute the package
