@@ -2105,8 +2105,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.8.0",
-      "port-version": 4
+      "baseline": "8.9.0",
+      "port-version": 0
     },
     "curlpp": {
       "baseline": "2018-06-15",

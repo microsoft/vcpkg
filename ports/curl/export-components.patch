@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ec714a5..478527e 100644
+index f57e6fd74..956fbcf80 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1754,9 +1754,18 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -1948,8 +1948,17 @@ if(NOT CURL_DISABLE_INSTALL)
              DESTINATION ${CURL_INSTALL_CMAKE_DIR}
      )
    endif()
@@ -16,9 +16,8 @@ index ec714a5..478527e 100644
 +  endforeach()
 +  ]] @ONLY)
  
-   install(
--          FILES ${version_config} ${project_config}
-+          FILES ${version_config} ${project_config} ${components_file}
+-  install(FILES ${version_config} ${project_config}
++  install(FILES ${version_config} ${project_config} ${components_file}
            DESTINATION ${CURL_INSTALL_CMAKE_DIR}
    )
  

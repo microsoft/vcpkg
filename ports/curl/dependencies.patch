@@ -1,5 +1,5 @@
 diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
-index 9adb96e0a..9bf69004d 100644
+index 2ce8625ef..a0c039c66 100644
 --- a/CMake/curl-config.cmake.in
 +++ b/CMake/curl-config.cmake.in
 @@ -31,6 +31,19 @@ if(@USE_ZLIB@)
@@ -23,43 +23,36 @@ index 9adb96e0a..9bf69004d 100644
  check_required_components("@PROJECT_NAME@")
  
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c3525d3fc..1927464e8 100644
+index f57e6fd74..5cd234568 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -164,7 +164,8 @@ set(CURL_LIBS "")
+@@ -163,8 +163,9 @@ set(LIBCURL_PC_REQUIRES_PRIVATE "")
  
  if(ENABLE_ARES)
    set(USE_ARES 1)
 -  find_package(CARES REQUIRED)
-+  find_package(CARES NAMES c-ares CONFIG REQUIRED)
-+  set(CARES_LIBRARY c-ares::cares)
-   list(APPEND CURL_LIBS ${CARES_LIBRARY})
+-  list(APPEND CURL_LIBS ${CARES_LIBRARY})
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(CARES REQUIRED libcares)
++  list(APPEND CURL_LIBS ${CARES_LINK_LIBRARIES})
+   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "libcares")
  endif()
  
-@@ -461,7 +462,7 @@ if(use_core_foundation_and_core_services)
-     message(FATAL_ERROR "CoreServices framework not found")
-   endif()
- 
--  list(APPEND CURL_LIBS "-framework CoreFoundation -framework CoreServices")
-+  list(APPEND CURL_LIBS "-framework CoreFoundation" "-framework CoreServices")
- endif()
- 
- if(CURL_USE_OPENSSL)
-@@ -577,10 +578,11 @@ endif()
+@@ -591,10 +592,11 @@ endif()
  option(CURL_BROTLI "Set to ON to enable building curl with brotli support." OFF)
  set(HAVE_BROTLI OFF)
  if(CURL_BROTLI)
 -  find_package(Brotli REQUIRED)
-+  find_package(BROTLI NAMES unofficial-brotli REQUIRED)
-+  set(BROTLI_INCLUDE_DIRS "")
-+  set(BROTLI_LIBRARIES "unofficial::brotli::brotlidec")
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(BROTLI REQUIRED libbrotlidec)
    if(BROTLI_FOUND)
      set(HAVE_BROTLI ON)
--    set(CURL_LIBS "${BROTLI_LIBRARIES};${CURL_LIBS}")  # For 'ld' linker. Emulate `list(PREPEND ...)` to stay compatible with <v3.15 CMake.
-     list(APPEND CURL_LIBS ${BROTLI_LIBRARIES})
+-    list(APPEND CURL_LIBS ${BROTLI_LIBRARIES})
++    list(APPEND CURL_LIBS ${BROTLI_LINK_LIBRARIES})
+     list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "libbrotlidec")
      include_directories(${BROTLI_INCLUDE_DIRS})
      list(APPEND CMAKE_REQUIRED_INCLUDES ${BROTLI_INCLUDE_DIRS})
-@@ -590,7 +592,9 @@ endif()
+@@ -604,7 +606,9 @@ endif()
  option(CURL_ZSTD "Set to ON to enable building curl with zstd support." OFF)
  set(HAVE_ZSTD OFF)
  if(CURL_ZSTD)
@@ -70,22 +63,7 @@ index c3525d3fc..1927464e8 100644
    if(Zstd_FOUND AND NOT Zstd_VERSION VERSION_LESS "1.0.0")
      set(HAVE_ZSTD ON)
      list(APPEND CURL_LIBS ${Zstd_LIBRARIES})
-@@ -883,8 +887,13 @@ endif()
- # Check for idn2
- option(USE_LIBIDN2 "Use libidn2 for IDN support" ON)
- if(USE_LIBIDN2)
--  check_library_exists("idn2" "idn2_lookup_ul" "" HAVE_LIBIDN2)
-+  find_package(PkgConfig REQUIRED)
-+  pkg_check_modules(LIBIDN2 REQUIRED libidn2)
-+  set(HAVE_LIBIDN2 TRUE)
-   if(HAVE_LIBIDN2)
-+    list(APPEND CURL_LIBS ${LIBIDN2_LINK_LIBRARIES})
-+    set(HAVE_IDN2_H TRUE)
-+  elseif(0)
-     set(CURL_LIBS "idn2;${CURL_LIBS}")
-     check_include_file_concat("idn2.h" HAVE_IDN2_H)
-   endif()
-@@ -920,11 +929,18 @@ mark_as_advanced(CURL_USE_LIBPSL)
+@@ -963,12 +967,18 @@ mark_as_advanced(CURL_USE_LIBPSL)
  set(USE_LIBPSL OFF)
  
  if(CURL_USE_LIBPSL)
@@ -94,6 +72,7 @@ index c3525d3fc..1927464e8 100644
 +  pkg_check_modules(LIBPSL REQUIRED libpsl)
    if(LIBPSL_FOUND)
 -    list(APPEND CURL_LIBS ${LIBPSL_LIBRARY})
+-    list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "libpsl")
 -    list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBPSL_INCLUDE_DIR}")
 -    include_directories("${LIBPSL_INCLUDE_DIR}")
 +    # Remove standard win32 libs pulled in transitively from icu
@@ -108,7 +87,7 @@ index c3525d3fc..1927464e8 100644
      set(USE_LIBPSL ON)
    endif()
  endif()
-@@ -935,7 +951,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
+@@ -979,7 +989,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
  set(USE_LIBSSH2 OFF)
  
  if(CURL_USE_LIBSSH2)
@@ -122,21 +101,8 @@ index c3525d3fc..1927464e8 100644
 +  get_target_property(LIBSSH2_INCLUDE_DIR "${LIBSSH2_LIBRARY}" INTERFACE_INCLUDE_DIRECTORIES)
    if(LIBSSH2_FOUND)
      list(APPEND CURL_LIBS ${LIBSSH2_LIBRARY})
-     list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBSSH2_INCLUDE_DIR}")
-@@ -957,11 +979,24 @@ if(NOT USE_LIBSSH2 AND CURL_USE_LIBSSH)
-   endif()
- endif()
- 
-+option(CURL_USE_GSASL "Use GSASL implementation" OFF)
-+mark_as_advanced(CURL_USE_GSASL)
-+if(CURL_USE_GSASL)
-+  find_package(PkgConfig REQUIRED)
-+  pkg_check_modules(GSASL REQUIRED libgsasl)
-+  list(APPEND CURL_LIBS ${GSASL_LINK_LIBRARIES})
-+  set(USE_GSASL ON)
-+endif()
-+
- option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is supported with CMake build)" OFF)
+     list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "libssh2")
+@@ -1016,7 +1032,11 @@ option(CURL_USE_GSSAPI "Use GSSAPI implementation (right now only Heimdal is sup
  mark_as_advanced(CURL_USE_GSSAPI)
  
  if(CURL_USE_GSSAPI)
@@ -149,7 +115,7 @@ index c3525d3fc..1927464e8 100644
  
    set(HAVE_GSSAPI ${GSS_FOUND})
    if(GSS_FOUND)
-@@ -973,6 +1008,7 @@ if(CURL_USE_GSSAPI)
+@@ -1028,6 +1048,7 @@ if(CURL_USE_GSSAPI)
      check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
      check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
  
@@ -157,25 +123,3 @@ index c3525d3fc..1927464e8 100644
      if(NOT GSS_FLAVOUR STREQUAL "Heimdal")
        # MIT
        set(_INCLUDE_LIST "")
-@@ -1618,6 +1654,7 @@ if(NOT CURL_DISABLE_INSTALL)
-   _add_if("UnixSockets"   USE_UNIX_SOCKETS)
-   _add_if("libz"          HAVE_LIBZ)
-   _add_if("brotli"        HAVE_BROTLI)
-+  _add_if("gsasl"         USE_GSASL)
-   _add_if("zstd"          HAVE_ZSTD)
-   _add_if("AsynchDNS"     USE_ARES OR USE_THREADS_POSIX OR USE_THREADS_WIN32)
-   _add_if("IDN"           HAVE_LIBIDN2 OR USE_WIN32_IDN OR USE_APPLE_IDN)
-diff --git a/lib/curl_config.h.cmake b/lib/curl_config.h.cmake
-index 3a46c6490..7ce3facb6 100644
---- a/lib/curl_config.h.cmake
-+++ b/lib/curl_config.h.cmake
-@@ -713,6 +713,9 @@ ${SIZEOF_TIME_T_CODE}
- /* if librtmp/rtmpdump is in use */
- #cmakedefine USE_LIBRTMP 1
- 
-+/* if GSASL is in use */
-+#cmakedefine USE_GSASL 1
-+
- /* Define to 1 if you don't want the OpenSSL configuration to be loaded
-    automatically */
- #cmakedefine CURL_DISABLE_OPENSSL_AUTO_LOAD_CONFIG 1
