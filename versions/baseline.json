@@ -2682,7 +2682,7 @@
     },
     "fbthrift": {
       "baseline": "2024.07.22.00",
-      "port-version": 0
+      "port-version": 1
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2726,7 +2726,7 @@
     },
     "fizz": {
       "baseline": "2024.07.22.00",
-      "port-version": 0
+      "port-version": 1
     },
     "flagpp": {
       "baseline": "2.1",
@@ -2810,7 +2810,7 @@
     },
     "folly": {
       "baseline": "2024.07.22.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -5122,7 +5122,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 4
+      "port-version": 5
     },
     "libtorrent": {
       "baseline": "2.0.10",
