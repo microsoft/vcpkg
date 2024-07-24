@@ -8572,6 +8572,10 @@
       "baseline": "9.26",
       "port-version": 0
     },
+    "str-view": {
+      "baseline": "0.3.11",
+      "port-version": 0
+    },
     "strict-variant": {
       "baseline": "0.5",
       "port-version": 2
