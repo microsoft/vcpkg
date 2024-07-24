@@ -1222,7 +1222,7 @@
     },
     "boost-stacktrace": {
       "baseline": "1.85.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-statechart": {
       "baseline": "1.85.0",
