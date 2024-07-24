@@ -36,6 +36,7 @@ vcpkg_from_github(
         fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
         force-cuda-include.patch
+        fix-aten-cutlass.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -60,15 +61,6 @@ vcpkg_from_github(
 )
 file(COPY "${src_cudnn}/" DESTINATION "${SOURCE_PATH}/third_party/cudnn_frontend")
 
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH src_cutlass
-    REPO NVIDIA/cutlass # new port ?
-    REF 6f47420213f757831fae65c686aa471749fa8d60
-    SHA512 f3b3c43fbd7942f96407669405385c9a99274290e99f86cab5bb8657664bf1951e4da27f3069500a4825c427adeec883e05e81302b58390df3a3adb8c08e31ed
-    HEAD_REF main
-)
-file(COPY "${src_cutlass}/" DESTINATION "${SOURCE_PATH}/third_party/cutlass")
 
 file(REMOVE
   "${SOURCE_PATH}/cmake/Modules/FindBLAS.cmake"

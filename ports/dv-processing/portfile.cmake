@@ -1,3 +1,10 @@
+vcpkg_download_distfile(
+    XCODE_15_3_FIX_PATCH
+    URLS https://gitlab.com/inivation/homebrew-inivation/-/raw/master/Formula/dv-processing-xcode-15.3-fix.patch
+    FILENAME "xcode-15.3-fix.patch"
+    SHA512 cdbf77ee9619dbdad6e088d730d6d8dd6cf1cc12edc134fa8c905e538e94692c6b89e86ecb14766b133b87071459599e73ed61491db804bde0b9776307a6f157
+)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com/inivation
     OUT_SOURCE_PATH SOURCE_PATH
@@ -5,6 +12,8 @@ vcpkg_from_gitlab(
     REF 9cd21eede0c38e079e462cdce8434fcbe2a4d037
     SHA512 fc5d0083166ff4708e6d540d437429784f9f62b7c3b7fb4631abc27ee0e6f46e60314f5fcf571c6141352571fef52a32c85a8160c951b5243910a02a281b0855
     HEAD_REF rel_1.7
+    PATCHES
+        "${XCODE_15_3_FIX_PATCH}"
 )
 
 vcpkg_from_gitlab(
