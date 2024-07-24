@@ -65,7 +65,8 @@
       "dependencies": [
         "cuda",
         "cudnn",
-        "magma"
+        "magma",
+        "nvidia-cutlass"
       ]
     },
     "dist": {
