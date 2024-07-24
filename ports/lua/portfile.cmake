@@ -27,11 +27,11 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLUA_RELEASE_VERSION="${VERSION}"
-    OPTIONS_DEBUG
-        -DSKIP_INSTALL_HEADERS=ON
-        -DSKIP_INSTALL_TOOLS=ON
 )
 vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 vcpkg_copy_pdbs()
 

@@ -1,6 +1,4 @@
 
-cmake_minimum_required(VERSION 3.28)
-
 project(
     lua-cpp-library
     LANGUAGES CXX
@@ -18,16 +16,8 @@ add_library(
 
 set_target_properties(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
 
-target_link_libraries(
-    lua-cpp
-    ${CMAKE_DL_LIBS}
-)
+set_target_properties(lua-cpp PROPERTIES PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA_CPP}")
 
-if (NOT SKIP_INSTALL_HEADERS)
-    set_target_properties(lua-cpp PROPERTIES PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA_CPP}")
-endif()
-
-set_source_files_properties(${SRC_LIBLUA_CPP} PROPERTIES LANGUAGE CXX)
 target_include_directories(
     lua-cpp
     PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../src>
@@ -39,12 +29,9 @@ if (BUILD_SHARED_LIBS AND WIN32)
 endif()
 
 if (UNIX)
-    if (APPLE)
+    if (APPLE OR NOT CMAKE_DL_LIBS STREQUAL "")
         target_compile_definitions(lua-cpp PUBLIC LUA_USE_DLOPEN)
-    else()
-        if (NOT CMAKE_DL_LIBS STREQUAL "")
-            target_compile_definitions(lua-cpp PUBLIC LUA_USE_DLOPEN)
-        endif()
+        target_link_libraries(lua-cpp PRIVATE ${CMAKE_DL_LIBS})
     endif()
 endif()
 

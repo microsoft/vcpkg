@@ -86,16 +86,14 @@ set(SRC_LIBLUA
     "${LUA_SOURCE_DIR}/lzio.c"
 )
 
-set_source_files_properties(${SRC_LIBLUA} PROPERTIES LANGUAGE C)
+add_library(lua ${SRC_LIBLUA})
 
-add_library(
+set_target_properties(
     lua
-    ${SRC_LIBLUA}
+    PROPERTIES
+    PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA}"
+    POSITION_INDEPENDENT_CODE ON
 )
-
-if (NOT SKIP_INSTALL_HEADERS)
-    set_target_properties(lua PROPERTIES PUBLIC_HEADER "${PUBLIC_HDR_LIBLUA}")
-endif()
 
 target_include_directories(
     lua
@@ -103,45 +101,28 @@ target_include_directories(
     PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
 )
 
-set_target_properties(
-    lua
-    PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
-)
-
-target_link_libraries(
-    lua
-    ${CMAKE_DL_LIBS}
-)
-
-# Windows specific section
-if (BUILD_SHARED_LIBS AND WIN32)
-    target_compile_definitions(lua PUBLIC LUA_BUILD_AS_DLL)
-endif()
-
 if (WIN32)
     target_compile_definitions(lua PUBLIC _CRT_SECURE_NO_WARNINGS)
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(lua PUBLIC LUA_BUILD_AS_DLL)
+    endif()
 endif()
 
-# Unix specific section
 if (UNIX)
     target_compile_definitions(lua PUBLIC LUA_USE_POSIX)
     # math library
     find_library(LIB_MATH NAMES m)
     if (LIB_MATH)
-        target_link_libraries(lua m)
+        target_link_libraries(lua PRIVATE m)
     endif()
     # dlopen library
-    if (APPLE)
+    if (APPLE OR NOT CMAKE_DL_LIBS STREQUAL "")
         target_compile_definitions(lua PUBLIC LUA_USE_DLOPEN)
-    else()
-        if (NOT CMAKE_DL_LIBS STREQUAL "")
-            target_compile_definitions(lua PUBLIC LUA_USE_DLOPEN)
-        endif()
+        target_link_libraries(lua PRIVATE ${CMAKE_DL_LIBS})
     endif()
 endif()
 
-if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
+if (INSTALL_TOOLS)
 
     # compiler uses non-exported APIs, so must include sources directly.
     add_executable(
@@ -149,7 +130,6 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
         src/luac.c
         ${SRC_LIBLUA}
     )
-    add_executable(unofficial::lua::lua-compiler ALIAS lua-compiler)
 
     set_target_properties(
         lua-compiler
@@ -158,7 +138,7 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
     )
 
     if (LIB_MATH)
-        target_link_libraries(lua-compiler m)
+        target_link_libraries(lua-compiler PRIVATE m)
     endif()
 
     # interpreter
@@ -166,10 +146,10 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
         lua-interpreter
         src/lua.c
     )
-    add_executable(unofficial::lua::lua-interpreter ALIAS lua-interpreter)
 
     target_link_libraries(
         lua-interpreter
+        PRIVATE
         lua
     )
 
@@ -181,7 +161,7 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
     )
 
     if (UNIX)
-        if (CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
+        if (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
             set(_LIB_READLINE_NAME edit)
         else ()
             set(_LIB_READLINE_NAME readline)
@@ -190,7 +170,7 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
         if (LIB_READLINE)
             target_compile_definitions(lua-interpreter PUBLIC LUA_USE_READLINE)
             target_link_libraries(lua-interpreter ${LIB_READLINE})
-            if (_LIB_READLINE_NAME STREQUAL edit)
+            if (_LIB_READLINE_NAME STREQUAL "edit")
                 target_include_directories(lua-interpreter PUBLIC /usr/include/edit)
             endif()
         endif()
@@ -199,7 +179,7 @@ if (INSTALL_TOOLS AND NOT SKIP_INSTALL_TOOLS)
     install(
         TARGETS lua-interpreter lua-compiler
         EXPORT unofficial-lua-targets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools/lua
+        RUNTIME DESTINATION "tools/lua"
     )
 
 endif()
@@ -212,18 +192,18 @@ endif()
 install(
     TARGETS ${targets_to_export}
     EXPORT unofficial-lua-targets
-    RUNTIME         DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
-    LIBRARY         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
-    ARCHIVE         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
-    INCLUDES        DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
-    PUBLIC_HEADER   DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
+    RUNTIME         DESTINATION "bin"
+    LIBRARY         DESTINATION "lib"
+    ARCHIVE         DESTINATION "lib"
+    INCLUDES        DESTINATION "include"
+    PUBLIC_HEADER   DESTINATION "include"
 )
 
 install(
     EXPORT unofficial-lua-targets
     FILE unofficial-lua-targets.cmake
     NAMESPACE unofficial::lua::
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
+    DESTINATION "share/unofficial-lua"
 )
 
 include(CMakePackageConfigHelpers)
@@ -235,21 +215,20 @@ write_basic_package_version_file(
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake.in"
     "\@PACKAGE_INIT\@\n\n \
-    include(CMakeFindDependencyMacro)\n \
     include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-lua-targets.cmake)\n"
 )
 
 configure_package_config_file(
     "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake"
-    INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
+    INSTALL_DESTINATION "share/unofficial-lua"
 )
 
 install(
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config-version.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/unofficial-lua-config.cmake"
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unofficial-lua"
+    DESTINATION "share/unofficial-lua"
 )
 
 # append headers to sources to make them show up in MSVC GUI
