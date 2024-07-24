@@ -13,6 +13,7 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
+        fix-mbedtls.patch # From https://github.com/curl/curl/commit/0c4b4c1e93c8e869af230090f32346fdfd548f21
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,6 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zstd        CURL_ZSTD
         psl         CURL_USE_LIBPSL
         gssapi      CURL_USE_GSSAPI
+        gsasl       CURL_USE_GSASL
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
