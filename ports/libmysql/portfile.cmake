@@ -13,6 +13,7 @@ vcpkg_from_github(
         install-exports.patch
         fix_dup_symbols.patch
         cross-build.patch
+        fix-pdb-install-path.patch
 )
 
 file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_70_0")
