@@ -41,7 +41,7 @@ index aaca07d2..cad59e32 100644
 -    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 +#    find_package(PkgConfig REQUIRED)
 +    find_package(LIBZIP REQUIRED)
-+    target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE libzip::zip)
  endif()
  
  
@@ -56,7 +56,7 @@ index aaca07d2..cad59e32 100644
 +    if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
 +        target_include_directories(${PROJECT_NAME} PRIVATE ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/)
 +    endif()
-+    target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
  endif()
  
 +if (NOT USE_INCLUDED_BASE_64)
