@@ -15,6 +15,7 @@ file(COPY "${CURRENT_PORT_DIR}/unofficial-mariadbcpp-config.cmake.in"
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${LIB_MARIADB_CPP_SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DINSTALL_INCLUDEDIR=include/mariadbcpp
         -DWITH_UNIT_TESTS=OFF
