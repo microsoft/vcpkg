@@ -4,7 +4,7 @@
   "description": "lib3mf is an implementation of the 3D Manufacturing Format file standard",
   "homepage": "https://github.com/3MFConsortium/lib3mf",
   "license": "BSD-2-Clause",
-  "supports": "!static & !staticcrt",
+  "supports": "windows | linux | osx & !static & !staticcrt",
   "dependencies": [
     {
       "name": "cpp-base64",
