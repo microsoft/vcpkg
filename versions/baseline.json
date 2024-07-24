@@ -1046,7 +1046,7 @@
     },
     "boost-mpi": {
       "baseline": "1.85.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-mpl": {
       "baseline": "1.85.0",
@@ -1158,7 +1158,7 @@
     },
     "boost-python": {
       "baseline": "1.85.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-qvm": {
       "baseline": "1.85.0",
