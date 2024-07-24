@@ -1,18 +1,80 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 85ec6d2..c94106a 100644
+index 85ec6d2..9627e10 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -62,7 +62,7 @@ LIST(REMOVE_ITEM MAODBC_LANGUAGES "RC")
- SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+@@ -59,15 +59,15 @@ GET_PROPERTY(MAODBC_LANGUAGES GLOBAL PROPERTY ENABLED_LANGUAGES)
+ # We don't need RC for what we need MAODBC_LANGUAGES for
+ LIST(REMOVE_ITEM MAODBC_LANGUAGES "RC")
+ 
+-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
++SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
  
  SET(LIBRARY_NAME "mariadbcpp")
 -SET(STATIC_LIBRARY_NAME "${LIBRARY_NAME}-static")
 +# SET(STATIC_LIBRARY_NAME "${LIBRARY_NAME}-static")
  
- CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/Version.h.in
-                ${CMAKE_SOURCE_DIR}/src/Version.h)
-@@ -547,7 +547,7 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/maconncpp.def.in
-                ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
+-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/Version.h.in
+-               ${CMAKE_SOURCE_DIR}/src/Version.h)
+-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/maconncpp.rc.in
+-               ${CMAKE_SOURCE_DIR}/src/maconncpp.rc)
++CONFIGURE_FILE(${CMAKE_CURRENT_LIST_DIR}/src/Version.h.in
++               ${CMAKE_CURRENT_LIST_DIR}/src/Version.h)
++CONFIGURE_FILE(${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.rc.in
++               ${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.rc)
+ INCLUDE(SearchLibrary)
+ INCLUDE(SetValueMacro)
+ 
+@@ -453,10 +453,10 @@ IF(BUILD_TESTS_ONLY)
+     MESSAGE(STATUS "Configurig Tests: tcp://${TEST_UID}@${TEST_SERVER}:${TEST_PORT}/${TEST_SCHEMA} socket: ${TEST_SOCKET}")
+     SET(DRIVER_LIB_LOCATION "${libmariadb_prefix}/${INSTALL_LIBDIR}")
+   ENDIF()
+-  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+-  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include/conncpp)
++  INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/include)
++  INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/include/conncpp)
+   # At some point use of String.cpp from the driver was added to tests. Need to verify if it's still needed/a good idea.
+-  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
++  INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/src)
+   ADD_SUBDIRECTORY(test)
+   # Only means only
+   RETURN()
+@@ -470,7 +470,7 @@ ENDIF()
+ 
+ ### Including C/C subproject
+ IF(NOT USE_SYSTEM_INSTALLED_LIB)
+-  IF(EXISTS ${CMAKE_SOURCE_DIR}/libmariadb)
++  IF(EXISTS ${CMAKE_CURRENT_LIST_DIR}/libmariadb)
+     IF(GIT_BUILD_SRCPKG)
+       # We don't want conn/c (wrong) src pkg to be built.
+       SET(GIT_BUILD_SRCPKG FALSE)
+@@ -513,7 +513,7 @@ IF(NOT USE_SYSTEM_INSTALLED_LIB)
+                 COMPONENT Plugins)
+       ENDIF()
+     ENDFOREACH()
+-    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/libmariadb/include)
++    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/libmariadb/include)
+     INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/libmariadb/include)
+   ELSE()
+     SET(USE_SYSTEM_INSTALLED_LIB TRUE)
+@@ -536,18 +536,18 @@ IF(WITH_MSI AND WITH_SIGNCODE)
+   MARK_AS_ADVANCED(SIGN_OPTIONS)
+ ENDIF()
+ 
+-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include/conncpp)
+-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
+-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/class)
++INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/include)
++INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/include/conncpp)
++INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/src)
++INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/class)
+ IF(NOT CMAKE_BUILD_TYPE)
+   SET(CMAKE_BUILD_TYPE "RelWithDebInfo")
+ ENDIF()
+-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/maconncpp.def.in
+-               ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
++CONFIGURE_FILE(${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.def.in
++               ${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.def)
  
  # Dynamic linking is default on non-Windows
 -IF(0)
@@ -29,13 +91,14 @@ index 85ec6d2..c94106a 100644
        FIND_LIBRARY(CCLIB libmariadb.so)
        IF (${CCLIB} STREQUAL "CCLIB-NOTFOUND")
          # It won't be found by linker either unless user does some magic before build, so we actually could stop here with error
-@@ -610,15 +610,18 @@ ENDIF()
+@@ -610,15 +610,17 @@ ENDIF()
  SET(${LIBRARY_NAME}_OBJECTS $<TARGET_OBJECTS:${LIBRARY_NAME}_obj>)
  
  IF(WIN32 AND NOT MINGW)
-+  IF(BUILD_SHARED_LIBS)
-   ADD_LIBRARY(${LIBRARY_NAME} SHARED ${CMAKE_SOURCE_DIR}/src/maconncpp.rc ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
+-  ADD_LIBRARY(${LIBRARY_NAME} SHARED ${CMAKE_SOURCE_DIR}/src/maconncpp.rc ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
 -  ADD_LIBRARY(${STATIC_LIBRARY_NAME} STATIC ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_SOURCE_DIR}/src/maconncpp.rc)
++  IF(BUILD_SHARED_LIBS)
++  ADD_LIBRARY(${LIBRARY_NAME} SHARED ${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.rc ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.def)
  
    TARGET_COMPILE_DEFINITIONS(${LIBRARY_NAME}_obj PRIVATE "MARIADB_EXPORTED=__declspec(dllexport)")
  
@@ -44,16 +107,17 @@ index 85ec6d2..c94106a 100644
  
 -  TARGET_COMPILE_DEFINITIONS(${STATIC_LIBRARY_NAME} PUBLIC MARIADB_STATIC_LINK)
 +  ELSE()
-+  ADD_LIBRARY(${LIBRARY_NAME} STATIC ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_SOURCE_DIR}/src/maconncpp.rc)
-+  TARGET_COMPILE_DEFINITIONS(${LIBRARY_NAME} PUBLIC MARIADB_STATIC_LINK)
++  ADD_LIBRARY(${LIBRARY_NAME} STATIC ${${LIBRARY_NAME}_OBJECTS} ${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.rc)
 +  ENDIF()
  ELSE()
    # Xcode doesn't support targets that have only object files,
    # so let's add an empty file to keep Xcode happy
-@@ -627,42 +630,49 @@ ELSE()
+@@ -626,43 +628,50 @@ ELSE()
+     FILE(WRITE ${CMAKE_BINARY_DIR}/empty.cpp "")
      SET(EMPTY_FILE ${CMAKE_BINARY_DIR}/empty.cpp)
    ENDIF()
-   #  MESSAGE(STATUS "Version script: ${CMAKE_SOURCE_DIR}/src/maconncpp.def")
+-  #  MESSAGE(STATUS "Version script: ${CMAKE_SOURCE_DIR}/src/maconncpp.def")
++  #  MESSAGE(STATUS "Version script: ${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.def")
 +  IF(BUILD_SHARED_LIBS)
    ADD_LIBRARY(${LIBRARY_NAME} SHARED ${${LIBRARY_NAME}_OBJECTS} ${EMPTY_FILE})
 -  ADD_LIBRARY(${STATIC_LIBRARY_NAME} STATIC ${${LIBRARY_NAME}_OBJECTS} ${EMPTY_FILE})
@@ -87,7 +151,8 @@ index 85ec6d2..c94106a 100644
 -      SET_TARGET_PROPERTIES(${STATIC_LIBRARY_NAME} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
      ENDIF()
    ELSE()
- #    SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES LINK_FLAGS "-Wl,--version-script=${CMAKE_SOURCE_DIR}/src/maconncpp.def")
+-#    SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES LINK_FLAGS "-Wl,--version-script=${CMAKE_SOURCE_DIR}/src/maconncpp.def")
++#    SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_LIST_DIR}/src/maconncpp.def")
    ENDIF()
  ENDIF()
  
@@ -99,30 +164,40 @@ index 85ec6d2..c94106a 100644
      $<INSTALL_INTERFACE:include>/${LIBRARY_NAME})
 -TARGET_INCLUDE_DIRECTORIES(${STATIC_LIBRARY_NAME}
 +ELSE()
-+TARGET_LINK_LIBRARIES(${LIBRARY_NAME} unofficial::libmariadb)
-+TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME} 
++TARGET_LINK_LIBRARIES(${LIBRARY_NAME} PRIVATE unofficial::libmariadb)
++TARGET_INCLUDE_DIRECTORIES(${LIBRARY_NAME}
    INTERFACE
      $<INSTALL_INTERFACE:include>/${LIBRARY_NAME})
 +ENDIF()
  
  # MINGW Specific includes and linking
  IF(0)
-@@ -693,10 +703,12 @@ IF(0)
+@@ -693,11 +702,6 @@ IF(0)
    
  ENDIF()
  
-+IF(NOT BUILD_SHARED_LIBS)
- INCLUDE(symlink)
+-INCLUDE(symlink)
 -CREATE_SYMLINK(lib${LIBRARY_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX} ${STATIC_LIBRARY_NAME} ${INSTALL_LIBDIR})
 -
-+CREATE_SYMLINK(lib${LIBRARY_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX} ${LIBRARY_NAME} ${INSTALL_LIBDIR})
-+ELSE()
- ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
-+ENDIF()
- 
+-ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
+-
  ########## Packaging ##########
  
-@@ -718,7 +730,7 @@ ELSE()
+ # MSI
+@@ -707,9 +711,9 @@ IF(0)
+       COMMAND ${CMAKE_COMMAND} ARGS -DDRIVER_LIB_DIR=$<TARGET_FILE_DIR:${LIBRARY_NAME}>
+                                     -DPLUGINS_LIB_DIR=$<TARGET_FILE_DIR:dialog>
+                                     -DPLUGINS_SUBDIR_NAME=${MARIADB_DEFAULT_PLUGINS_SUBDIR}
+-                                    -DFILE_IN=${CMAKE_SOURCE_DIR}/wininstall/binaries_dir.xml.in
+-                                    -DFILE_OUT=${CMAKE_SOURCE_DIR}/wininstall/binaries_dir.xml
+-                                    -P ${CMAKE_SOURCE_DIR}/cmake/ConfigureFile.cmake
++                                    -DFILE_IN=${CMAKE_CURRENT_LIST_DIR}/wininstall/binaries_dir.xml.in
++                                    -DFILE_OUT=${CMAKE_CURRENT_LIST_DIR}/wininstall/binaries_dir.xml
++                                    -P ${CMAKE_CURRENT_LIST_DIR}/cmake/ConfigureFile.cmake
+                        )
+     ADD_SUBDIRECTORY(wininstall)
+   ENDIF()
+@@ -718,7 +722,7 @@ ELSE()
      #MESSAGE(STATUS "Configuring to generate PKG package")
      #ADD_SUBDIRECTORY(osxinstall)
    ENDIF()
