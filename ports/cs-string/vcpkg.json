@@ -1,0 +1,17 @@
+{
+  "name": "cs-string",
+  "version": "1.4.0",
+  "description": "Header-only library providing unicode aware string support for C++",
+  "homepage": "https://github.com/copperspice/cs_string",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
