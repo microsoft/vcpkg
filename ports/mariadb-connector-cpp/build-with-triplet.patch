@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 85ec6d2..9627e10 100644
+index 85ec6d2..cb607b7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -59,15 +59,15 @@ GET_PROPERTY(MAODBC_LANGUAGES GLOBAL PROPERTY ENABLED_LANGUAGES)
@@ -47,15 +47,6 @@ index 85ec6d2..9627e10 100644
      IF(GIT_BUILD_SRCPKG)
        # We don't want conn/c (wrong) src pkg to be built.
        SET(GIT_BUILD_SRCPKG FALSE)
-@@ -513,7 +513,7 @@ IF(NOT USE_SYSTEM_INSTALLED_LIB)
-                 COMPONENT Plugins)
-       ENDIF()
-     ENDFOREACH()
--    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/libmariadb/include)
-+    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/libmariadb/include)
-     INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/libmariadb/include)
-   ELSE()
-     SET(USE_SYSTEM_INSTALLED_LIB TRUE)
 @@ -536,18 +536,18 @@ IF(WITH_MSI AND WITH_SIGNCODE)
    MARK_AS_ADVANCED(SIGN_OPTIONS)
  ENDIF()
@@ -172,32 +163,16 @@ index 85ec6d2..9627e10 100644
  
  # MINGW Specific includes and linking
  IF(0)
-@@ -693,11 +702,6 @@ IF(0)
-   
+@@ -694,7 +703,7 @@ IF(0)
  ENDIF()
  
--INCLUDE(symlink)
+ INCLUDE(symlink)
 -CREATE_SYMLINK(lib${LIBRARY_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX} ${STATIC_LIBRARY_NAME} ${INSTALL_LIBDIR})
--
--ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
--
- ########## Packaging ##########
++# CREATE_SYMLINK(lib${LIBRARY_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX} ${LIBRARY_NAME} ${INSTALL_LIBDIR})
  
- # MSI
-@@ -707,9 +711,9 @@ IF(0)
-       COMMAND ${CMAKE_COMMAND} ARGS -DDRIVER_LIB_DIR=$<TARGET_FILE_DIR:${LIBRARY_NAME}>
-                                     -DPLUGINS_LIB_DIR=$<TARGET_FILE_DIR:dialog>
-                                     -DPLUGINS_SUBDIR_NAME=${MARIADB_DEFAULT_PLUGINS_SUBDIR}
--                                    -DFILE_IN=${CMAKE_SOURCE_DIR}/wininstall/binaries_dir.xml.in
--                                    -DFILE_OUT=${CMAKE_SOURCE_DIR}/wininstall/binaries_dir.xml
--                                    -P ${CMAKE_SOURCE_DIR}/cmake/ConfigureFile.cmake
-+                                    -DFILE_IN=${CMAKE_CURRENT_LIST_DIR}/wininstall/binaries_dir.xml.in
-+                                    -DFILE_OUT=${CMAKE_CURRENT_LIST_DIR}/wininstall/binaries_dir.xml
-+                                    -P ${CMAKE_CURRENT_LIST_DIR}/cmake/ConfigureFile.cmake
-                        )
-     ADD_SUBDIRECTORY(wininstall)
-   ENDIF()
-@@ -718,7 +722,7 @@ ELSE()
+ ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
+ 
+@@ -718,7 +727,7 @@ ELSE()
      #MESSAGE(STATUS "Configuring to generate PKG package")
      #ADD_SUBDIRECTORY(osxinstall)
    ENDIF()
