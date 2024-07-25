@@ -1,0 +1,13 @@
+diff --git a/include/faker-cxx/Helper.h b/include/faker-cxx/Helper.h
+index 51d5eab..c17e41c 100644
+--- a/include/faker-cxx/Helper.h
++++ b/include/faker-cxx/Helper.h
+@@ -89,7 +89,7 @@ public:
+         {
+             throw std::invalid_argument{"Data is empty."};
+         }
+-        T item;
++        T item{};
+         std::sample(data.begin(), data.end(), &item, 1, pseudoRandomGenerator);
+         return item;
+     }
