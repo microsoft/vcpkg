@@ -47,14 +47,12 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME RdKafka
-    CONFIG_PATH lib/cmake/RdKafka
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/RdKafka" PACKAGE_NAME "rdkafka")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/rdkafka/FindLZ4.cmake"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
