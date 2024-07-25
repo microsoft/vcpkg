@@ -1,0 +1,13 @@
+diff --git a/external/crashpad/handler/CMakeLists.txt b/external/crashpad/handler/CMakeLists.txt
+index be0e544..b0d44af 100644
+--- a/external/crashpad/handler/CMakeLists.txt
++++ b/external/crashpad/handler/CMakeLists.txt
+@@ -89,7 +89,7 @@ if(NOT IOS)
+         main.cc
+     )
+
+-    if(LINUX)
++    if(LINUX AND BUILD_SHARED_LIBS)
+         target_sources(crashpad_handler PRIVATE
+             ../client/pthread_create_linux.cc
+         )

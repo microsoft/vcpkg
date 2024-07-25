@@ -1,6 +1,7 @@
 {
   "name": "qtwebchannel",
-  "version": "6.7.0",
+  "version": "6.7.2",
+  "port-version": 1,
   "description": "Qt WebChannel enables peer-to-peer communication between a server (QML/C++ application) and a client (HTML/JavaScript or QML application).",
   "homepage": "https://www.qt.io/",
   "license": null,

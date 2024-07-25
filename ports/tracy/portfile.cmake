@@ -1,105 +1,66 @@
-
-# It is possible to run into some issues when profiling when we uses Tracy client as a shared client
-# As as safety measure let's build Tracy as a static library for now
-# More details on Tracy Discord (e.g. https://discord.com/channels/585214693895962624/585214693895962630/953599951328403506)
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF v0.10
-    SHA512 3fc406a42380f6ebe671d560482733f3cdbca16dd7721ac2fce8f1cdefb96ba87701714c2ee8161d65d9e185bc5f9a0fe587a3843eb75f851b10eb895358cb64
+    REF "v${VERSION}"
+    SHA512 8c33a22f43b895f3e00f231f002c8272f72a3d7ce60858d58caf916c2721de478710dbd6ab6b16621a796491303fbce9c2315008b00d7a53d05ee7660b414874
     HEAD_REF master
     PATCHES
-        001-fix-vcxproj-vcpkg.patch
-        002-use-internal-imgui.patch
+        build-tools.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         on-demand TRACY_ON_DEMAND
         fibers	  TRACY_FIBERS
+        cli-tools VCPKG_CLI_TOOLS
+        gui-tools VCPKG_GUI_TOOLS
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
 )
 
+set(EXTRA_OPTIONS "")
+if("cli-tools" IN_LIST FEATURES OR "gui-tools" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND EXTRA_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        -DDOWNLOAD_CAPSTONE=OFF
+        -DLEGACY=ON
+        ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        DOWNLOAD_CAPSTONE
+        LEGACY
 )
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 
-function(tracy_tool_install_unix tracy_TOOL tracy_TOOL_NAME)
-    foreach(buildtype IN ITEMS "debug" "release")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
-            if("${buildtype}" STREQUAL "debug")
-                set(short_buildtype "-dbg")
-                set(path_suffix "/debug")
-            else()
-                set(short_buildtype "-rel")
-                set(path_suffix "")
-            endif()
-
-            file(COPY "${SOURCE_PATH}/${tracy_TOOL}/build/unix" DESTINATION "${SOURCE_PATH}/${tracy_TOOL}/_build")
-            file(RENAME "${SOURCE_PATH}/${tracy_TOOL}/_build/unix" "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
-            file(REMOVE_RECURSE "${SOURCE_PATH}/${tracy_TOOL}/_build")
-
-            set(path_makefile_dir "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
-            cmake_path(RELATIVE_PATH path_makefile_dir 
-                BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
-                OUTPUT_VARIABLE relative_path_makefile_dir)
-
-            set(ENV{LEGACY} 1)
-            vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
-
-            message(STATUS "Building ${tracy_TOOL_NAME} ${TARGET_TRIPLET}${short_buildtype}")
-            vcpkg_build_make(
-                BUILD_TARGET ${buildtype}
-                SUBPATH ${relative_path_makefile_dir}
-                LOGFILE_ROOT "build-${tracy_TOOL}"
-            )
-            vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
-
-            file(INSTALL "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/${tracy_TOOL_NAME}-${buildtype}"
-                DESTINATION "${CURRENT_PACKAGES_DIR}${path_suffix}/tools/${PORT}"
-                RENAME "${tracy_TOOL_NAME}"
-                USE_SOURCE_PERMISSIONS)
-        endif()
-    endforeach()
-endfunction()
-
-function(tracy_tool_install_win32 tracy_TOOL tracy_TOOL_NAME)
-    vcpkg_install_msbuild(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
-        USE_VCPKG_INTEGRATION
+function(tracy_copy_tool tool_name)
+    vcpkg_copy_tools(
+        TOOL_NAMES "tracy-${tool_name}"
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${tool_name}"
+    )
+    vcpkg_copy_tools(
+        TOOL_NAMES "tracy-${tool_name}"
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${tool_name}"
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
     )
 endfunction()
 
-function(tracy_tool_install tracy_TOOL tracy_TOOL_NAME)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32("${tracy_TOOL}" "${tracy_TOOL_NAME}")
-    else()
-        tracy_tool_install_unix("${tracy_TOOL}" "${tracy_TOOL_NAME}")
-    endif()
-endfunction()
-
 if("cli-tools" IN_LIST FEATURES)
-    tracy_tool_install(capture capture)
-    tracy_tool_install(csvexport csvexport)
-    tracy_tool_install(import-chrome import-chrome)
-    tracy_tool_install(update update)
+    tracy_copy_tool(capture)
+    tracy_copy_tool(csvexport)
+    tracy_copy_tool(import-chrome)
+    tracy_copy_tool(import-fuchsia)
+    tracy_copy_tool(update)
 endif()
 if("gui-tools" IN_LIST FEATURES)
-    tracy_tool_install(profiler Tracy)
+    tracy_copy_tool(profiler)
 endif()
 
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
-vcpkg_fixup_pkgconfig()
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

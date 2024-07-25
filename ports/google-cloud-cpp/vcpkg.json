@@ -1,6 +1,7 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.24.0",
+  "version": "2.26.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -705,6 +706,7 @@
           "default-features": false,
           "features": [
             "grpc-common",
+            "opentelemetry",
             "storage"
           ]
         }
@@ -881,6 +883,18 @@
         }
       ]
     },
+    "managedkafka": {
+      "description": "Manage Apache Kafka clusters and resources.",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "memcache": {
       "description": "Cloud Memorystore for Memcached API C++ Client Library",
       "dependencies": [
@@ -1020,6 +1034,7 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
+            "monitoring",
             "rest-common",
             "trace"
           ]
@@ -1113,6 +1128,18 @@
     },
     "profiler": {
       "description": "Cloud Profiler API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "publicca": {
+      "description": "Public Certificate Authority API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
