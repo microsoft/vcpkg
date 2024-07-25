@@ -127,7 +127,8 @@ if ($IsLinux)
     & tar -xvzf openjdk.tar.gz
     $env:JAVA_HOME = Join-Path $Pwd "jdk-17.0.2"
     Write-Host "Downloading Android SDK"
-    & "./vcpkg" x-download android-sdk.zip "--sha512=d143221d0957256c5b172a5be70e5f098a08b2b3097a20c576c8febf444a00a64f626a7f651a7d5123b9ba32418dc0ae7053d0b4b52c40f772a6a1fb19a95417" "--url=https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip"
+    & "./vcpkg" x-download android-sdk.zip "--sha512=64b7d18ee7adeb1204eaa2978091e874dc9af9604796b64e1a185a11c15325657383fc9900e55e4590c8b8a2784b3881745d2f32daef1207e746c0ee41c2b72b" "--url=https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip"
+
 
     Write-Host "Setting up SDK"
     & unzip -q android-sdk.zip -d android-sdk
