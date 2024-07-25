@@ -42,8 +42,6 @@ if(VCPKG_TARGET_IS_MINGW)
     set(USE_SANITIZERS OFF)
 endif()
 
-message(${USE_SANITIZERS})
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
