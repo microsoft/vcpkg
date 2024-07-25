@@ -28,6 +28,9 @@
     },
     "use-audio": {
       "description": "Build raylib with audio module"
+    },
+    "use-sanitizers": {
+      "description": "Build raylib with Sanitizers in Debug Mode"
     }
   }
 }

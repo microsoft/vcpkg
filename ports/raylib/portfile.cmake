@@ -35,13 +35,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         hidpi SUPPORT_HIGH_DPI
         use-audio USE_AUDIO
+        use-sanitizers USE_SANITIZERS
 )
 
 if(VCPKG_TARGET_IS_MINGW)
-    set(DEBUG_ENABLE_SANITIZERS OFF)
-else()
-    set(DEBUG_ENABLE_SANITIZERS ON)
+    set(USE_SANITIZERS OFF)
 endif()
+
+message(${USE_SANITIZERS})
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -53,8 +54,8 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
     OPTIONS_DEBUG
-        -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}
-        -DENABLE_UBSAN=${DEBUG_ENABLE_SANITIZERS}
+        -DENABLE_ASAN=${USE_SANITIZERS}
+        -DENABLE_UBSAN=${USE_SANITIZERS}
         -DENABLE_MSAN=OFF
     OPTIONS_RELEASE
         -DENABLE_ASAN=OFF
