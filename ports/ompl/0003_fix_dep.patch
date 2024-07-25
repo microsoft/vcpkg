@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc81419..03f57d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,8 +49,10 @@ set_package_properties(Boost PROPERTIES
+     PURPOSE "Used throughout OMPL for data serialization, graphs, etc.")
+ set(Boost_USE_MULTITHREADED ON)
+ set(Boost_NO_BOOST_CMAKE ON)
+-find_package(Boost 1.58 QUIET REQUIRED COMPONENTS serialization filesystem system program_options)
+-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
++find_package(boost_serialization CONFIG REQUIRED)
++find_package(boost_filesystem CONFIG REQUIRED)
++find_package(boost_system CONFIG REQUIRED)
++find_package(boost_program_options CONFIG REQUIRED)
+ 
+ # Add support in Boost::Python for std::shared_ptr
+ # This is a hack that replaces boost::shared_ptr related code with std::shared_ptr.
+@@ -183,7 +185,7 @@ add_subdirectory(demos)
+ add_subdirectory(scripts)
+ add_subdirectory(doc)
+ 
+-if(NOT MSVC)
++if(0)
+     target_link_flags(ompl)
+     set(PKG_NAME "ompl")
+     set(PKG_DESC "The Open Motion Planning Library")
