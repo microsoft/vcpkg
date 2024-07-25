@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5a10e1e..deb2a21 100644
+index 5a10e1e..ffa175a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -690,14 +690,16 @@ IF(MINGW)
@@ -20,7 +20,7 @@ index 5a10e1e..deb2a21 100644
    IF(WITH_MSI)
      ADD_CUSTOM_COMMAND(TARGET ${LIBRARY_NAME} POST_BUILD
        COMMAND ${CMAKE_COMMAND} ARGS -DDRIVER_LIB_DIR=$<TARGET_FILE_DIR:${LIBRARY_NAME}>
-@@ -714,13 +716,27 @@ ELSE()
+@@ -714,13 +716,28 @@ ELSE()
      #MESSAGE(STATUS "Configuring to generate PKG package")
      #ADD_SUBDIRECTORY(osxinstall)
    ENDIF()
@@ -29,6 +29,7 @@ index 5a10e1e..deb2a21 100644
 +          EXPORT unofficial-mariadb-connector-cpp
 +          RUNTIME DESTINATION ${INSTALL_BINDIR}
            LIBRARY DESTINATION ${INSTALL_LIBDIR}
++          ARCHIVE DESTINATION ${INSTALL_LIBDIR}
            COMPONENT SharedLibraries)
 +  set_target_properties(${STATIC_LIBRARY_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
 +  else()

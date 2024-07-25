@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-carray.diff
         libmariadb.diff
+        mingw.diff
         install.diff
 )
 
