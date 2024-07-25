@@ -31,6 +31,7 @@ Invoke-VcpkgBuild "protobuf"
 Invoke-VcpkgBuild "pthreads"
 Invoke-VcpkgBuild "websocketpp"
 Invoke-VcpkgBuild "curl"
+Invoke-VcpkgBuild "cryptlex"
 Invoke-VcpkgBuild "gtest"
 
 # export created libraries and set version
