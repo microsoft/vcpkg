@@ -2128,6 +2128,10 @@
       "baseline": "30.475.1",
       "port-version": 0
     },
+    "cyrus-sasl": {
+      "baseline": "2.1.28",
+      "port-version": 0
+    },
     "cxxgraph": {
       "baseline": "4.1.0",
       "port-version": 0
