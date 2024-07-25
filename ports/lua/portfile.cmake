@@ -37,15 +37,34 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lua CONFIG_PATH share/unofficial-lua)
 
-if ("tools" IN_LIST FEATURE_OPTIONS)
-    vcpkg_copy_tools(TOOL_NAMES lua luac SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if (VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/luaconf.h" "defined(LUA_BUILD_AS_DLL)" "1")
     endif()
 endif()
+
+if (COMPILE_AS_CPP)
+    set(LUA_PORT_CPP_USAGE_MESSAGE "target_link_libraries(main PRIVATE unofficial::lua::lua-cpp)")
+endif()
+
+if (INSTALL_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES lua luac SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    string(APPEND LUA_PORT_TOOLS_USAGE_MESSAGE
+        "CMake can drive program execution with targets:\n"
+        "  unofficial::lua::lua-compiler\n"
+        "  unofficial::lua::lua-interpreter\n\n"
+        "  add_custom_command(...\n"
+        "      COMMAND \$<TARGET_FILE:unofficial::lua::lua-interpreter> ...\n"
+        "      ...\n"
+        "  )\n"
+    )
+endif()
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage"
+    @ONLY
+)
 
 # Handle post-build CMake instructions
 configure_file(
@@ -53,8 +72,6 @@ configure_file(
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake"
     @ONLY
 )
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Handle copyright
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
