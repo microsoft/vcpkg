@@ -609,7 +609,7 @@
       "port-version": 0
     },
     "bext-sml2": {
-      "baseline": "2024-02-02",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "bext-ut": {
