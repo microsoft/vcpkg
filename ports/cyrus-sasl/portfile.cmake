@@ -41,6 +41,7 @@ else()
     )
     vcpkg_install_make()
 endif()
+message(FATAL_ERROR STOP)
 
 vcpkg_fixup_pkgconfig()
 
