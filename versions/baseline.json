@@ -8578,7 +8578,7 @@
     },
     "str-view": {
       "baseline": "0.3.11",
-      "port-version": 0
+      "port-version": 1
     },
     "strict-variant": {
       "baseline": "0.5",
