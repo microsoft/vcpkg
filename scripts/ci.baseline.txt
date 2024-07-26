@@ -83,6 +83,7 @@ bde:x64-windows-static-md   =skip
 bde:x64-windows-static      =skip
 bde:x64-windows             =skip
 bde:x86-windows             =skip
+benchmark:arm-neon-android=fail
 bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
