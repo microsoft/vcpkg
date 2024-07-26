@@ -1,6 +1,6 @@
 {
   "name": "spirv-cross",
-  "version": "1.3.280.0",
+  "version": "1.3.290.0",
   "description": "SPIRV-Cross is a practical tool and library for performing reflection on SPIR-V and disassembling SPIR-V back to high level languages.",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Cross",
   "dependencies": [
