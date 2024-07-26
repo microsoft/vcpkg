@@ -136,6 +136,7 @@ if ($IsLinux)
     Move-Item -Path ./android-sdk/cmdline-tools/ -Destination ./android-sdk/tools
     New-Item -Path ./android-sdk -Name cmdline-tools -ItemType directory
     Move-Item -Path ./android-sdk/tools -Destination ./android-sdk/cmdline-tools
+    & bash -c 'yes | /android-sdk/cmdline-tools/tools/bin/sdkmanager --licenses'
     & ./android-sdk/cmdline-tools/tools/bin/sdkmanager "platforms;android-33"
     $NoParentHashes = $true
 }
