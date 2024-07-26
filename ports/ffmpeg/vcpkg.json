@@ -430,8 +430,8 @@
     "gpl": {
       "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
     },
-    "harfbuzz": {
-      "description": "Needed for drawtext filter",
+    "drawtext": {
+      "description": "Enable the drawtext filter",
       "dependencies": [
         "harfbuzz"
       ]
