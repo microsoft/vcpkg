@@ -9,7 +9,8 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES vs2015-impl-c99.patch
+    PATCHES
+        vs2015-impl-c99.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -23,10 +24,10 @@ vcpkg_check_features(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DLUA_RELEASE_VERSION="${VERSION}"
+        "-DLUA_RELEASE_VERSION=${VERSION}"
 )
 vcpkg_cmake_install()
 
@@ -43,11 +44,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     endif()
 endif()
 
-if (COMPILE_AS_CPP)
+if ("cpp" IN_LIST FEATURES)
     set(LUA_PORT_CPP_USAGE_MESSAGE "target_link_libraries(main PRIVATE unofficial::lua::lua-cpp)")
 endif()
 
-if (INSTALL_TOOLS)
+if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES lua luac SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     string(APPEND LUA_PORT_TOOLS_USAGE_MESSAGE
         "CMake can drive program execution with targets:\n"
@@ -74,4 +75,4 @@ configure_file(
 )
 
 # Handle copyright
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT")
