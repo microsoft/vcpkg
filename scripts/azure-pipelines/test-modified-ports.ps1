@@ -132,7 +132,7 @@ if ($IsLinux)
 
     Write-Host "Setting up SDK"
     & unzip -q android-sdk.zip -d android-sdk
-    & ln -s .. ./android-sdk/cmdline-tools/latest
+    & bash -c 'mv /android-sdk/cmdline-tools/!(latest) /android-sdk/cmdline-tools/latest'
     $env:ANDROID_SDK_ROOT = Join-Path $Pwd "android-sdk"
     & ./android-sdk/cmdline-tools/bin/sdkmanager "platforms;android-33"
     $NoParentHashes = $true
