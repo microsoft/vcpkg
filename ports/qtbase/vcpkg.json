@@ -63,7 +63,7 @@
     "concurrent",
     {
       "name": "dbus",
-      "platform": "!(static & windows)"
+      "platform": "!uwp & !staticcrt & !android & !ios"
     },
     "default-features",
     "doubleconversion",
