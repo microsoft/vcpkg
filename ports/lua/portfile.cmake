@@ -8,7 +8,7 @@ vcpkg_download_distfile(
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         vs2015-impl-c99.patch
 )
