@@ -343,6 +343,12 @@
         "dav1d"
       ]
     },
+    "drawtext": {
+      "description": "Enable the drawtext filter",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    },
     "fdk-aac": {
       "description": "AAC de/encoding via libfdk-aac, **including GPL-incompatible patent-encumbered HE-AAC**. If you do not require HE-AAC, use the built-in FFmpeg AAC codec.",
       "dependencies": [
@@ -429,12 +435,6 @@
     },
     "gpl": {
       "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
-    },
-    "drawtext": {
-      "description": "Enable the drawtext filter",
-      "dependencies": [
-        "harfbuzz"
-      ]
     },
     "iconv": {
       "description": "Iconv support",
