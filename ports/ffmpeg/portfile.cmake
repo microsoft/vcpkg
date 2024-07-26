@@ -334,7 +334,7 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libfribidi")
 endif()
 
-if("harfbuzz" IN_LIST FEATURES)
+if("drawtext" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libharfbuzz")
 else()
     set(OPTIONS "${OPTIONS} --disable-libharfbuzz")
