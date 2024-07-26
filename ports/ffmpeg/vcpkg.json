@@ -421,12 +421,6 @@
         "freetype"
       ]
     },
-    "harfbuzz": {
-      "description": "Needed for drawtext filter",
-      "dependencies": [
-        "harfbuzz"
-      ]
-    },
     "fribidi": {
       "description": "Improves drawtext filter",
       "dependencies": [
@@ -435,6 +429,12 @@
     },
     "gpl": {
       "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
+    },
+    "harfbuzz": {
+      "description": "Needed for drawtext filter",
+      "dependencies": [
+        "harfbuzz"
+      ]
     },
     "iconv": {
       "description": "Iconv support",
