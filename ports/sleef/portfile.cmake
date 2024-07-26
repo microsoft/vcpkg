@@ -6,6 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_TARGET_IS_LINUX)
+    set(openmp_options -DCOMPILER_SUPPORTS_OPENMP=FALSE)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -15,13 +19,14 @@ vcpkg_cmake_configure(
         -DBUILD_GNUABI_LIBS=${VCPKG_TARGET_IS_LINUX}
         -DBUILD_TESTS=OFF
         -DBUILD_INLINE_HEADERS=OFF
+        ${openmp_options}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 # Install DLL and PDB files
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
