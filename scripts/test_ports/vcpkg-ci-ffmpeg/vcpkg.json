@@ -17,6 +17,7 @@
         "bzip2",
         "freetype",
         "gpl",
+        "harfbuzz",
         "iconv",
         "lzma",
         "mp3lame",
