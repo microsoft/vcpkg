@@ -5,37 +5,8 @@
 # Usage Instructions for lib3mf
 ###############################################
 
-You can import the lib3mf package as follows. 
-The library supports four components: 
-"C", "CDynamic", "Cpp", and "CppDynamic". 
-Choose the component type based on your usage needs.
 
-
-
-find_package(lib3mf REQUIRED COMPONENTS Cpp) <----- This is how you import and specify the component (Here Cpp component is chosen)
-
-
-
-
-###############################################
-# Linking Instructions
-###############################################
-
-In all cases, linking is done as follows
-
-
-
-
-target_link_libraries(target_name lib3mf::lib3mf) <---- This remains the same irrespective of the component type
-
-
-
-
-
-For "C" and "Cpp" components:
-    * lib3mf library is linked to the executable
-For "CDynamic" and "CppDynamic" components:
-    * target_link_libraries is just an interface and it introduces a definition called LIB3MF_LIBRARY_LOCATION which points to the location of the library
-
+find_package(lib3mf REQUIRED)
+target_link_libraries(target_name lib3mf::lib3mf) 
 
 
