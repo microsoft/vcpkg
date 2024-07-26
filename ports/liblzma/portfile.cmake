@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 0aa74e01c019c1d3893cf16f53b300ba4e74c6aa9febabf57ddb49b28615d76862eeb746c54c2085efd37c7e8cc0829014d9b7ad481a76294bc929b3cca91336
+    SHA512 ec708bcddc64285b0c36b89c9e6413994af4c15bb6865a7bc243a048ce86afccd0df88d46d55aa23fb8071d137dcc19cf357117adc92f030919540f8993cacf9
     HEAD_REF master
     PATCHES
-        fix_config_include.patch
         win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
-        add_support_ios.patch # add install bundle info for support ios 
         build-tools.patch
 )
 
@@ -34,6 +32,7 @@ vcpkg_cmake_configure(
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
+        ENABLE_NLS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

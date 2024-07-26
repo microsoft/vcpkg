@@ -37,7 +37,7 @@ index 1b1fe9526..0da4aa0c4 100644
  
 @@ -139,22 +137,16 @@ JPEG2000ImageIO::ReadImageInformation()
  {
-   itkDebugMacro(<< "ReadImageInformation()");
+   itkDebugMacro("ReadImageInformation()");
  
 -  FILE * l_file = fopen(this->m_FileName.c_str(), "rb");
 -
@@ -136,7 +136,7 @@ index 1b1fe9526..0da4aa0c4 100644
 -  OPJ_UINT32 l_nb_tiles_x;
 -  OPJ_UINT32 l_nb_tiles_y;
  
-   itkDebugMacro(<< "Trying to read header now...");
+   itkDebugMacro("Trying to read header now...");
  
 -  bResult = opj_read_header(this->m_Internal->m_Dinfo,
 -                            &l_image,
@@ -175,7 +175,7 @@ index 1b1fe9526..0da4aa0c4 100644
 +  this->m_Internal->m_NumberOfTiles = l_nb_tiles;
  
  
-   itkDebugMacro(<< "Number of Components = " << l_image->numcomps);
+   itkDebugMacro("Number of Components = " << l_image->numcomps);
 @@ -319,7 +302,7 @@ JPEG2000ImageIO::ReadImageInformation()
        this->SetPixelType(IOPixelEnum::SCALAR);
        break;
@@ -183,18 +183,18 @@ index 1b1fe9526..0da4aa0c4 100644
 -      if (l_image->color_space != CLRSPC_SRGB)
 +      if (l_image->color_space != OPJ_CLRSPC_SRGB)
        {
-         itkWarningMacro(<< "file does not specify color space, assuming sRGB");
+         itkWarningMacro("file does not specify color space, assuming sRGB");
        }
 @@ -335,8 +318,7 @@ JPEG2000ImageIO::ReadImageInformation()
-   itkDebugMacro(<< "Tile Start Y = " << this->m_Internal->m_TileStartY);
-   itkDebugMacro(<< "Tile Width = " << this->m_Internal->m_TileWidth);
-   itkDebugMacro(<< "Tile Height = " << this->m_Internal->m_TileHeight);
--  itkDebugMacro(<< "Number of Tiles X = " << this->m_Internal->m_NumberOfTilesInX);
--  itkDebugMacro(<< "Number of Tiles Y = " << this->m_Internal->m_NumberOfTilesInY);
-+  itkDebugMacro(<< "Number of Tiles = " << this->m_Internal->m_NumberOfTiles);
+   itkDebugMacro("Tile Start Y = " << this->m_Internal->m_TileStartY);
+   itkDebugMacro("Tile Width = " << this->m_Internal->m_TileWidth);
+   itkDebugMacro("Tile Height = " << this->m_Internal->m_TileHeight);
+-  itkDebugMacro("Number of Tiles X = " << this->m_Internal->m_NumberOfTilesInX);
+-  itkDebugMacro("Number of Tiles Y = " << this->m_Internal->m_NumberOfTilesInY);
++  itkDebugMacro("Number of Tiles = " << this->m_Internal->m_NumberOfTiles);
  
-   itkDebugMacro(<< "image->x1 = " << l_image->x1);
-   itkDebugMacro(<< "image->y1 = " << l_image->y1);
+   itkDebugMacro("image->x1 = " << l_image->x1);
+   itkDebugMacro("image->y1 = " << l_image->y1);
 @@ -349,7 +331,6 @@ JPEG2000ImageIO::ReadImageInformation()
  
    /* close the byte stream */
@@ -205,7 +205,7 @@ index 1b1fe9526..0da4aa0c4 100644
    {
 @@ -368,16 +349,7 @@ JPEG2000ImageIO::Read(void * buffer)
  {
-   itkDebugMacro(<< "JPEG2000ImageIO::Read() Begin");
+   itkDebugMacro("JPEG2000ImageIO::Read() Begin");
  
 -  FILE * l_file = fopen(this->m_FileName.c_str(), "rb");
 -
@@ -307,13 +307,13 @@ index 1b1fe9526..0da4aa0c4 100644
                                                                << "Reason: opj_read_header returns false");
    }
 @@ -499,7 +458,7 @@ JPEG2000ImageIO::Read(void * buffer)
-   itkDebugMacro(<< "p_end_x = " << p_end_x);
-   itkDebugMacro(<< "p_end_y = " << p_end_y);
+   itkDebugMacro("p_end_x = " << p_end_x);
+   itkDebugMacro("p_end_y = " << p_end_y);
  
 -  bResult = opj_set_decode_area(this->m_Internal->m_Dinfo, p_start_x, p_start_y, p_end_x, p_end_y);
 +  bResult = opj_set_decode_area(this->m_Internal->m_Dinfo, l_image, p_start_x, p_start_y, p_end_x, p_end_y);
  
-   itkDebugMacro(<< "opj_set_decode_area() after");
+   itkDebugMacro("opj_set_decode_area() after");
  
 @@ -508,7 +467,6 @@ JPEG2000ImageIO::Read(void * buffer)
      opj_destroy_codec(this->m_Internal->m_Dinfo);

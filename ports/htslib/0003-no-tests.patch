@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index fb4f527..751df4b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -111,7 +111,7 @@ BUILT_THRASH_PROGRAMS = \
+ 	test/thrash_threads6 \
+ 	test/thrash_threads7
+ 
+-all: lib-static lib-shared $(BUILT_PROGRAMS) plugins $(BUILT_TEST_PROGRAMS) \
++all: lib-static lib-shared $(BUILT_PROGRAMS) plugins \
+      htslib_static.mk htslib-uninstalled.pc
+ 
+ ALL_CPPFLAGS = -I. $(CPPFLAGS)

@@ -6,17 +6,18 @@ else()
 set(PATCHES "")
 if(VCPKG_TARGET_IS_WINDOWS)
     #vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
-    set(PATCHES fix_msvc_build.patch 
-                build.patch)
+    set(PATCHES build.patch)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xkbcommon/libxkbcommon
-    REF 57af9cb71f19f37394399b549f7cb7b0d9fe3988 # v 1.4.1
-    SHA512  0f1ecdf12c3cc6ff547a9cf42aa8ce1c63acbf2f6fb766899e5e8dbda401e25dd8137c2f59a04dadd445b4873bb80b8ae8b23f88140e5a318186c308a65921f5
+    REF "xkbcommon-${VERSION}"
+    SHA512  454fbb2861405ca957d64035e924c1bbb7d43db7867903963fc053b7ecb64a8fba89a21cc8ac18ebeec9b61ae0789fb88c52521a850dc371857f28b08e80167b
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES
+        disable-test.patch
+        ${PATCHES}
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -51,5 +52,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 endif()

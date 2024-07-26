@@ -3,8 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "aeae2261c7d380404fb8e53eb6062338c4ba0367"
-    SHA512 74eabf6a7cc0ac0cc49a1075bf4ffcee4f006ebe67c02a76a4dc734da1fa430ddd7f3cb070cb0b1ed3ac99cf59d02dc0c8852f3487614ca851673984117ca612
+    REF "1c8089adffdabe3790cc4ca4fb36e24c2f6ab792"
+    SHA512 ef7c278802145215408646d564fd6b398c68a9c0ae7fb937e1517ac152fdf25a262896c78025b96a19ad965904ade37bc3de2de6f8255573301ca86e1271a022
     PATCHES
         disable-msvc-env-setup.patch
         disable-dev-test.patch
@@ -12,6 +12,7 @@ vcpkg_from_github(
         bentleyottmann-build.patch
         graphite.patch
         vulkan-headers.patch
+        pdfsubsetfont-uwp.diff
 )
 
 # De-vendor
@@ -21,7 +22,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
     URL "https://github.com/abseil/abseil-cpp.git"
-    REF "334aca32051ef6ede2711487acf45d959e9bdffc"
+    REF "65a55c2ba891f6d2492477707f4a2e327a0b40dc"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(d3d12allocator
@@ -31,7 +32,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "d3e0bd4770cc8115d1342a8dc051a36e50e8bd26"
+    REF "51d873f3e0d0e0dcc5c3a6b56019983a5a4cd155"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
@@ -54,11 +55,6 @@ declare_external_from_git(piex
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(sfntly
-    URL "https://github.com/googlei18n/sfntly.git"
-    REF "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
-    LICENSE_FILE README.md
-)
 declare_external_from_git(spirv-cross
     URL "https://github.com/KhronosGroup/SPIRV-Cross"
     REF "b8fcf307f1f347089e3c46eb4451d27f32ebc8d3"
@@ -66,12 +62,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "05cc486580771e4fa7ddc89f5c9ee1e97382689a"
+    REF "eb49bb7b1136298b77945c52b4bbbc433f7885de"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "dc6676445be97ab19d8191fee019af62e2aaf774"
+    REF "ce46482db7ab3ea9c52fce832d27ca40b14f8e87"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -141,7 +137,6 @@ set(required_externals
     libpng
     libwebp
     piex
-    sfntly
     zlib
     wuffs
 )
@@ -172,7 +167,7 @@ endif()
 
 if("icu" IN_LIST FEATURES)
     list(APPEND required_externals icu)
-    string(APPEND OPTIONS " skia_use_icu=true")
+    string(APPEND OPTIONS " skia_use_icu=true skia_use_system_icu=true")
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
@@ -252,6 +247,12 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn")
         "\"${GIT}\","
     )
 endif()
+if("icu" IN_LIST FEATURES)
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/icu/BUILD.gn"
+        [[config("vcpkg_icu") {]]
+        [[import("icu.gni")
+config("vcpkg_icu")  {]])
+endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
@@ -307,7 +308,7 @@ file(COPY "${SOURCE_PATH}/include"
 auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
 set(skia_dll_static "0")
 set(skia_dll_dynamic "1")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/private/base/SkAPI.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
 
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")

@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-skia",
-  "version-date": "2023-12-22",
+  "version-date": "2023-04-03",
   "description": "Builds an app in order to validate the skia port.",
   "license": "BSD-3-Clause",
   "dependencies": [
@@ -20,17 +20,17 @@
       "name": "skia",
       "default-features": false,
       "features": [
-        "dawn"
+        "graphite"
       ],
-      "platform": "linux"
+      "platform": "windows & !uwp"
     },
     {
       "name": "skia",
       "default-features": false,
       "features": [
-        "graphite"
+        "dawn"
       ],
-      "platform": "windows & !uwp"
+      "platform": "linux | (windows & !uwp)"
     },
     {
       "name": "skia",

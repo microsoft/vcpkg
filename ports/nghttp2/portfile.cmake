@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nghttp2/nghttp2
     REF "v${VERSION}"
-    SHA512 1526418b0cf8e065f00589c5abd0b4ebd32a3128fbedd7c1f8fc9a76b8b2ad9713a8f4b056d29fce454559fe9227392c59dcdffaa665249df94a1fcf85fcfc53
+    SHA512 debb43ad331c1a1e8a1591e9aab21a0e5f7a03372a845ee67f32307863aed5acf9d87feb4ca037158452c7482b59ce3e2a113992d5d696c8bfd7131bb02b38b1
     HEAD_REF master
-    PATCHES
-        no-tests.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" ENABLE_STATIC_CRT)
@@ -16,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DENABLE_LIB_ONLY=ON
         -DENABLE_DOC=OFF
+        -DBUILD_TESTING=OFF
         "-DENABLE_STATIC_CRT=${ENABLE_STATIC_CRT}"
         "-DBUILD_STATIC_LIBS=${ENABLE_STATIC_LIB}"
         -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON

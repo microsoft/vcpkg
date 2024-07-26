@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
     REF "v${VERSION}"
-    SHA512 9a7081e0dafc93f1610a20ad2026111667711336efa46b9208873b539251f5b00d95597acde53818664aa6ea1fcda0dbd3417222af2fa23dc2f6b4c2bb079124
-    HEAD_REF master
+    SHA512 aacc0c4c428bb9a1a7a10402282f995a89692cdd4576c02f1d8417b098c1fce404b0865178839ecd1b850a77b834a6517d792694fd3eb4ea3e5057dfad62f49c
+    HEAD_REF main
     PATCHES
         remove-register.patch
         fix-zstd-zlib-dependency.patch
@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES hq proxygen_curl proxygen_echo proxygen_h3datagram_client proxygen_httperf2 proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()

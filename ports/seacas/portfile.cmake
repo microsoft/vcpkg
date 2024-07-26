@@ -23,6 +23,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         mpi     TPL_ENABLE_MPI
+        matio   TPL_ENABLE_Matio
         # mpi     TPL_ENABLE_Pnetcdf # missing Pnetcdf port
         ${PARMETIS_FEATURES}
 )
@@ -33,7 +34,7 @@ endif()
 
 set(tpl_disable_list GTest DataWarp Pamgen X11 CUDA Kokkos Faodel Pnetcdf ADIOS2 Catalyst2)
 
-set(tpl_enable_list Zlib HDF5 Netcdf CGNS Matio fmt Cereal)
+set(tpl_enable_list Zlib HDF5 Netcdf CGNS fmt Cereal)
 
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND tpl_disable_list METIS)
