@@ -334,6 +334,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libfribidi")
 endif()
 
+if("harfbuzz" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libharfbuzz")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libharfbuzz")
+endif()
+
 if("iconv" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-iconv")
     set(WITH_ICONV ON)
