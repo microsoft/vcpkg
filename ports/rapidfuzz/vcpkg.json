@@ -1,6 +1,6 @@
 {
   "name": "rapidfuzz",
-  "version": "3.0.2",
+  "version": "3.0.5",
   "description": "Rapid fuzzy string matching library for C++17 using the Levenshtein Distance.",
   "homepage": "https://github.com/maxbachmann/rapidfuzz-cpp",
   "license": "MIT",

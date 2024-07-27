@@ -1,6 +1,7 @@
 {
   "name": "pocketpy",
-  "version": "1.4.5",
+  "version": "1.4.6",
+  "port-version": 1,
   "description": "pkpy is a lightweight(~15K LOC) Python interpreter for game scripting, built on C++17 with STL.",
   "homepage": "https://github.com/pocketpy/pocketpy",
   "license": "MIT",

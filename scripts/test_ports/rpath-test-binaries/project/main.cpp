@@ -4,5 +4,5 @@ extern const char* getTestString();
 
 int main()
 {
-    printf("%s\n", getTestString());
+    puts(getTestString());
 }

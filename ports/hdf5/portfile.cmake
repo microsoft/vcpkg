@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         hdf5_config.patch
         szip.patch
+	add-_Float16-type-on-aarch64.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
@@ -87,10 +88,10 @@ vcpkg_fixup_pkgconfig()
 file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
 foreach(file IN LISTS pc_files)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_replace_string("${file}" " -lhdf5" " -llibhdf5")
+        vcpkg_replace_string("${file}" " -lhdf5" " -llibhdf5" IGNORE_UNCHANGED)
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string("${file}" "/msmpi.lib\"" "/msmpi\"")
+        vcpkg_replace_string("${file}" "/msmpi.lib\"" "/msmpi\"" IGNORE_UNCHANGED)
     endif()
 endforeach()
 
@@ -136,7 +137,7 @@ if(HDF5_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
     foreach(tool h5cc h5pcc h5hlcc)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}")
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../..")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../.." IGNORE_UNCHANGED)
         endif()
     endforeach()
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/h5fuse.sh")

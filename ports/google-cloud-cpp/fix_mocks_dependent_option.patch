@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e1a1dc8..807f6e2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -173,7 +173,7 @@ provided mocks to test code involving the Cloud C++ clients may wish to turn
+ this flag off.]==]
+     ON
+     "NOT BUILD_TESTING"
+-    ON)
++    $<IF:$<BOOL:${BUILD_TESTING}>:OFF:ON>)
+ mark_as_advanced(GOOGLE_CLOUD_CPP_WITH_MOCKS)
+ 
+ # The examples use exception handling to simplify the code. Therefore they
+@@ -246,7 +246,7 @@ include(CTest)
+ # used in the depends condition of the next option.
+ include(EnableCxxExceptions)
+ 
+-if (BUILD_TESTING)
++if (BUILD_TESTING OR GOOGLE_CLOUD_CPP_WITH_MOCKS)
+     # Discover and add targets for the GTest::gtest and GTest::gmock libraries.
+     include(FindGMockWithTargets)
+ endif ()

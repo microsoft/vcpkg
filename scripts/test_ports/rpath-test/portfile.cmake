@@ -9,7 +9,7 @@ foreach(dir IN ITEMS tools/rpath-test-binaries manual-tools/rpath-test-binaries)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         LOGNAME "${logname}"
     )
-    if(NOT output MATCHES "^release")
+    if(NOT output STREQUAL "release")
         message(SEND_ERROR "${dir}: $Actual: '${output}', expected: 'release'")
     endif()
 endforeach()
@@ -24,7 +24,7 @@ if(NOT VCPKG_BUILD_TYPE)
             OUTPUT_STRIP_TRAILING_WHITESPACE
             LOGNAME "${logname}"
         )
-        if(NOT output MATCHES "^debug")
+        if(NOT output STREQUAL "debug")
             message(SEND_ERROR "${dir}: Actual: '${output}', expected: 'debug'")
         endif()
     endforeach()
