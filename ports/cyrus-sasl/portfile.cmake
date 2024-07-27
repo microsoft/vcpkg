@@ -15,18 +15,33 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE "${SOURCE_PATH}/include/md5global.h")
     file(COPY "${SOURCE_PATH}/win32/include/md5global.h" DESTINATION "${SOURCE_PATH}/include/md5global.h")
 
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY) # only DLL build rules
+
+    set(STATIC_CRT_LINKAGE no)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(STATIC_CRT_LINKAGE yes)
+    endif()
+
+    string(APPEND VCPKG_C_FLAGS " /DUNICODE /D_UNICODE /D_WINSOCK_DEPRECATED_NO_WARNINGS")
+    string(APPEND VCPKG_CXX_FLAGS " /DUNICODE /D_UNICODE /D_WINSOCK_DEPRECATED_NO_WARNINGS")
+
     cmake_path(NATIVE_PATH CURRENT_INSTALLED_DIR CURRENT_INSTALLED_DIR_NATIVE)
     cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR CURRENT_PACKAGES_DIR_NATIVE)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_NAME "NTMakefile"
         OPTIONS
-            GSSAPI=MITKerberos
-            SASLDB=LMDB
+            STATIC=${STATIC_CRT_LINKAGE}
+            # Note https://www.cyrusimap.org/sasl/sasl/windows.html#limitations
+            GSSAPI=MITKerberos    # but "GSSAPI - tested using CyberSafe"
             "GSSAPI_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
+            SASLDB=LMDB           # but "SASLDB - only SleepyCat version can be built"
             "LMDB_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
+            SRP=1
+            DO_SRP_SETPASS=1
+            OTP=1
             "OPENSSL_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
-            # silence log messages about default initialization
+            # Silence log messages about default initialization
             "DB_LIB=unused"
             "DB_INCLUDE=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
             "DB_LIBPATH=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
@@ -50,6 +65,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "OPENSSL_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\lib"
     )
 else()
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
