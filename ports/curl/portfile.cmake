@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 e66cbf9bd3ae7b9b031475210b80b883b6a133042fbbc7cf2413f399d1b38aa54ab7322626abd3c6f1af56e0d540221f618aa903bd6b463ac8324f2c4e92dfa8
+    SHA512 9f7e92292bde501334ee415335404da7c40e033443c34464ed48af5bab7d1fd594859278eac695bec77ee6d58c0629162a7a9876a38a5abd404faa1c43f2b14e
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
@@ -13,7 +13,6 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
-        fix-mbedtls.patch # From https://github.com/curl/curl/commit/0c4b4c1e93c8e869af230090f32346fdfd548f21
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
