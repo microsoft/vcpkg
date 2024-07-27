@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 18fbce2f77caca6bd21374db2234411ec37d27e5b171b1008aac6810f1a98e3f51826b9dc5e8bd29a746e4f2f31b2a87d6f1bbf988e72e321ca81e7b14f1a4b5
+    SHA512 deb6c874af7a9ab96ffea93674a4809d2e891dc123ae61fd044ec1c03db6652f9887186abede4bb54da8aedba50f88ce2b5c27b615dc519f2c8d5cf256d250e1
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
