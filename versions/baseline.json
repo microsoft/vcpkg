@@ -581,7 +581,7 @@
       "port-version": 0
     },
     "benchmark": {
-      "baseline": "1.8.4",
+      "baseline": "1.8.5",
       "port-version": 0
     },
     "bento4": {
