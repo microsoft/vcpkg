@@ -1554,7 +1554,7 @@
     },
     "ceres": {
       "baseline": "2.1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1782,7 +1782,7 @@
     },
     "colmap": {
       "baseline": "3.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -2910,7 +2910,7 @@
     },
     "g2o": {
       "baseline": "2020-02-07",
-      "port-version": 6
+      "port-version": 7
     },
     "g3log": {
       "baseline": "2.4",
