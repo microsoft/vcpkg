@@ -46,22 +46,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-function(auto_clean dir)
-    file(GLOB entries "${dir}/*")
-    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
-    foreach(entry IN LISTS entries)
-        if(entry IN_LIST files)
-            continue()
-        endif()
-        file(GLOB_RECURSE children "${entry}/*")
-        if(children)
-            auto_clean("${entry}")
-        else()
-            file(REMOVE_RECURSE "${entry}")
-        endif()
-    endforeach()
-endfunction()
-auto_clean("${CURRENT_PACKAGES_DIR}/include")
+vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

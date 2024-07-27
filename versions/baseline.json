@@ -130,7 +130,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 8
+      "port-version": 9
     },
     "ankurvdev-embedresource": {
       "baseline": "0.0.11",
@@ -5126,7 +5126,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 4
+      "port-version": 5
     },
     "libtorrent": {
       "baseline": "2.0.10",
@@ -5902,7 +5902,7 @@
     },
     "mongo-cxx-driver": {
       "baseline": "3.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "mongoose": {
       "baseline": "7.14",
@@ -8266,7 +8266,7 @@
     },
     "skia": {
       "baseline": "127",
-      "port-version": 0
+      "port-version": 1
     },
     "skyr-url": {
       "baseline": "1.13.0",

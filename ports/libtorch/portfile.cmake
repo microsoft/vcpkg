@@ -222,41 +222,8 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/caffe2/Caffe2Config.cmake"
   "set(Caffe2_MAIN_LIBS torch_library)"
   "set(Caffe2_MAIN_LIBS torch_library)\nfind_dependency(Eigen3)")
 
-
-
-# Traverse the folder and remove "some" empty folders
-function(cleanup_once folder)
-    if(NOT IS_DIRECTORY "${folder}")
-        return()
-    endif()
-    file(GLOB paths LIST_DIRECTORIES true "${folder}/*")
-    list(LENGTH paths count)
-    # 1. remove if the given folder is empty
-    if(count EQUAL 0)
-        file(REMOVE_RECURSE "${folder}")
-        message(STATUS "Removed ${folder}")
-        return()
-    endif()
-    # 2. repeat the operation for hop 1 sub-directories 
-    foreach(path ${paths})
-        cleanup_once(${path})
-    endforeach()
-endfunction()
-
-# Some folders may contain empty folders. They will become empty after `cleanup_once`.
-# Repeat given times to delete new empty folders.
-function(cleanup_repeat folder repeat)
-    if(NOT IS_DIRECTORY "${folder}")
-        return()
-    endif()
-    while(repeat GREATER_EQUAL 1)
-        math(EXPR repeat "${repeat} - 1" OUTPUT_FORMAT DECIMAL)
-        cleanup_once("${folder}")
-    endwhile()
-endfunction()
-
-cleanup_repeat("${CURRENT_PACKAGES_DIR}/include" 5)
-cleanup_repeat("${CURRENT_PACKAGES_DIR}/lib/site-packages" 13)
+vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/include")
+vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/lib/site-packages")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

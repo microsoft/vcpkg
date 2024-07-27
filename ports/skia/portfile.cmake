@@ -305,7 +305,7 @@ file(COPY "${SOURCE_PATH}/include"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia"
     FILES_MATCHING PATTERN "*.h"
 )
-auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
+vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/include/skia")
 set(skia_dll_static "0")
 set(skia_dll_dynamic "1")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/private/base/SkAPI.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")

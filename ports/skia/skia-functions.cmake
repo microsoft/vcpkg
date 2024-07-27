@@ -173,23 +173,6 @@ function(string_to_gn_list out_var input)
     set("${out_var}" "[${list}]" PARENT_SCOPE)
 endfunction()
 
-# Remove all empty directories.
-function(auto_clean dir)
-    file(GLOB entries "${dir}/*")
-    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
-    foreach(entry IN LISTS entries)
-        if(entry IN_LIST files)
-            continue()
-        endif()
-        file(GLOB_RECURSE children "${entry}/*")
-        if(children)
-            auto_clean("${entry}")
-        else()
-            file(REMOVE_RECURSE "${entry}")
-        endif()
-    endforeach()
-endfunction()
-
 function(list_from_json out_var json) # <path>
     vcpkg_list(SET list)
     string(JSON array ERROR_VARIABLE error GET "${json}" ${ARGN})
