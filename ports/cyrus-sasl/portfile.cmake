@@ -32,6 +32,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_NAME "NTMakefile"
         OPTIONS
             STATIC=${STATIC_CRT_LINKAGE}
+            "SUBDIRS=lib plugins utils"
             # Note https://www.cyrusimap.org/sasl/sasl/windows.html#limitations
             GSSAPI=MITKerberos    # but "GSSAPI - tested using CyberSafe"
             "GSSAPI_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
@@ -64,26 +65,33 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "LMDB_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\lib"
             "OPENSSL_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\lib"
     )
+    vcpkg_copy_tools(TOOL_NAMES pluginviewer sasldblistusers2 saslpasswd2 testsuite AUTO_CLEAN)
+
 else()
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
+            --enable-sample=no
             --with-dblib=lmdb
             --with-gss_impl=mit
             --disable-macos-framework
     )
     vcpkg_install_make()
 endif()
-message(FATAL_ERROR STOP)
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING"
+    COMMENT [[
+The top-level COPYING file represents the license identified as BSD with
+Attribution and HPND disclaimer. However, various source files are under
+different licenses, including other BSD license variants, MIT license
+variants, OpenLDAP, OpenSSL and others.
+]])

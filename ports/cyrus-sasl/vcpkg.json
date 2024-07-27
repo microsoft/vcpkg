@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "Cyrus SASL is an implementation of SASL that makes it easy for application developers to integrate authentication mechanisms into their application in a generic way.",
   "homepage": "https://github.com/cyrusimap/cyrus-sasl",
-  "license": "BSD-3-Clause-Attribution",
+  "license": null,
   "supports": "linux | osx | (windows & !uwp)",
   "dependencies": [
     "krb5",
