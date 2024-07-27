@@ -2146,7 +2146,7 @@
     },
     "cyrus-sasl": {
       "baseline": "2.1.28",
-      "port-version": 0
+      "port-version": 1
     },
     "czmq": {
       "baseline": "4.2.1",
