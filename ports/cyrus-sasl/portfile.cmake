@@ -7,37 +7,56 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        configure.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE "${SOURCE_PATH}/include/md5global.h")
     file(COPY "${SOURCE_PATH}/win32/include/md5global.h" DESTINATION "${SOURCE_PATH}/include/md5global.h")
+
+    cmake_path(NATIVE_PATH CURRENT_INSTALLED_DIR CURRENT_INSTALLED_DIR_NATIVE)
+    cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR CURRENT_PACKAGES_DIR_NATIVE)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        DETERMINE_BUILD_TRIPLET
         PROJECT_NAME "NTMakefile"
         OPTIONS
             GSSAPI=MITKerberos
-            "DB_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
-            "DB_LIB=libdb48.lib"
+            SASLDB=LMDB
+            "GSSAPI_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
+            "LMDB_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
+            "OPENSSL_INCLUDE=${CURRENT_INSTALLED_DIR_NATIVE}\\include"
+            # silence log messages about default initialization
+            "DB_LIB=unused"
+            "DB_INCLUDE=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "DB_LIBPATH=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "LDAP_INCLUDE=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "LDAP_LIB_BASE=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "SQLITE_INCLUDE=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "SQLITE_LIBPATH=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "SQLITE_INCLUDE3=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
+            "SQLITE_LIBPATH3=${CURRENT_PACKAGES_DIR_NATIVE}\\unused"
         OPTIONS_RELEASE
             CFG=Release
-            "prefix=${CURRENT_PACKAGES_DIR}"
-            "OPENSSL_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            "DB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+            "prefix=${CURRENT_PACKAGES_DIR_NATIVE}"
+            "GSSAPI_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\lib"
+            "LMDB_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\lib"
+            "OPENSSL_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\lib"
         OPTIONS_DEBUG
             CFG=Debug
-            "prefix=${CURRENT_PACKAGES_DIR}/debug"
-            "OPENSSL_LIBPATH=${CURRENT_INSTALLED_DIR}/lib/debug"
-            "DB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib/debug"
+            "prefix=${CURRENT_PACKAGES_DIR_NATIVE}\\debug"
+            "GSSAPI_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\lib"
+            "LMDB_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\lib"
+            "OPENSSL_LIBPATH=${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\lib"
     )
 else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        DETERMINE_BUILD_TRIPLET
+        AUTOCONFIG
         OPTIONS
-            "--with-gssapi"
-            "--disable-macos-framework"
+            --with-dblib=lmdb
+            --with-gss_impl=mit
+            --disable-macos-framework
     )
     vcpkg_install_make()
 endif()
