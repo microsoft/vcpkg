@@ -222,6 +222,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/caffe2/Caffe2Config.cmake"
   "set(Caffe2_MAIN_LIBS torch_library)"
   "set(Caffe2_MAIN_LIBS torch_library)\nfind_dependency(Eigen3)")
 
+include("${SCRIPTS}/cmake/vcpkg_remove_empty_dirs.cmake")
 vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/include")
 vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/lib/site-packages")
 

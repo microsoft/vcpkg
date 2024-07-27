@@ -305,10 +305,12 @@ file(COPY "${SOURCE_PATH}/include"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia"
     FILES_MATCHING PATTERN "*.h"
 )
-vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/include/skia")
 set(skia_dll_static "0")
 set(skia_dll_dynamic "1")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/private/base/SkAPI.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
+
+include("${SCRIPTS}/cmake/vcpkg_remove_empty_dirs.cmake")
+vcpkg_remove_empty_dirs("${CURRENT_PACKAGES_DIR}/include/skia")
 
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")

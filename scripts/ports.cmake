@@ -80,7 +80,6 @@ include("${SCRIPTS}/cmake/vcpkg_install_nmake.cmake")
 include("${SCRIPTS}/cmake/vcpkg_install_qmake.cmake")
 include("${SCRIPTS}/cmake/vcpkg_list.cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
-include("${SCRIPTS}/cmake/vcpkg_remove_empty_dirs.cmake")
 include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
 include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
