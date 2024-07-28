@@ -16,4 +16,4 @@ Write-Host "Setting up the Android SDK in $env:ANDROID_HOME"
 & unzip -q sdk-commandlinetools-linux-$ToolsVersion.zip -d android-sdk
 # https://doc.qt.io/qt-6/android-getting-started.html
 & bash -c 'yes | ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$ANDROID_HOME" "platform-tools" "platforms;android-34" "build-tools;34.0.0"'
-& ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$ANDROID_HOME" --list_installed
+& ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$env:ANDROID_HOME" --list_installed
