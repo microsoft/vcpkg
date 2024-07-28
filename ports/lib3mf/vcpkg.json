@@ -7,14 +7,8 @@
   "supports": "(windows & (x86 | x64) & !static & !staticcrt) | (linux & x64) | (osx & (x64 | arm64))",
   "dependencies": [
     "cpp-base64",
-    {
-      "name": "fast-float",
-      "version>=": "6.0.0"
-    },
-    {
-      "name": "libzip",
-      "version>=": "1.10.1"
-    },
+    "fast-float",
+    "libzip",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -23,9 +17,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "zlib",
-      "version>=": "1.3.1"
-    }
+    "zlib"
   ]
 }
