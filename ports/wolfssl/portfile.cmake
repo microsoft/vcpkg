@@ -13,6 +13,12 @@ else()
     set(ENABLE_DTLS no)
 endif()
 
+if ("quic" IN_LIST FEATURES)
+    set(ENABLE_QUIC yes)
+else()
+    set(ENABLE_QUIC no)
+endif()
+
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
@@ -40,6 +46,8 @@ vcpkg_cmake_configure(
       -DWOLFSSL_DTLS=${ENABLE_DTLS}
       -DWOLFSSL_DTLS13=${ENABLE_DTLS}
       -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}
+      -DWOLFSSL_QUIC=${ENABLE_QUIC}
+      -DWOLFSSL_SESSION_TICKET=${ENABLE_QUIC}
     OPTIONS_RELEASE
       -DCMAKE_C_FLAGS=${VCPKG_COMBINED_C_FLAGS_RELEASE}
     OPTIONS_DEBUG
