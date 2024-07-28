@@ -6,9 +6,8 @@ index 4f5353f84b..dd9147c677 100755
  check_cppflags -D_LARGEFILE_SOURCE
  
  add_host_cppflags -D_ISOC11_SOURCE
--check_host_cflags_cc -std=$stdc ctype.h "__STDC_VERSION__ >= 201112L" ||
+ check_host_cflags_cc -std=$stdc ctype.h "__STDC_VERSION__ >= 201112L" ||
 -    check_host_cflags_cc -std=c11 ctype.h "__STDC_VERSION__ >= 201112L" || die "Host compiler lacks C11 support"
-+check_host_cflags_cc -std=$stdc ctype.h "__STDC_VERSION__ >= 201112L" ||
 +    check_host_cflags_cc -std=c11 ctype.h "__STDC_VERSION__ >= 201112L"
  
  check_host_cflags -Wall
