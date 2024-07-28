@@ -4,5 +4,8 @@
   "description": "Meson build system",
   "homepage": "https://github.com/mesonbuild/meson",
   "license": "Apache-2.0",
-  "supports": "native"
+  "supports": "native",
+  "dependencies": [
+    "vcpkg-cmake-get-vars"
+  ]
 }
