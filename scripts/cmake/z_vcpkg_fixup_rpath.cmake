@@ -85,7 +85,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
         endif()
 
         file(GLOB_RECURSE elf_files LIST_DIRECTORIES FALSE "${folder}/*")
-        list(FILTER elf_files EXCLUDE REGEX "\\\.(cpp|cc|cxx|c|hpp|h|hh|hxx|inc|json|toml|yaml|man|m4|ac|am|in|log|txt|pyi?|pyc|pyx|pxd|pc|cmake|f77|f90|f03|fi|f|cu|mod|ini|whl|cat|csv|rst|md|npy|npz|template|build)$")
+        list(FILTER elf_files EXCLUDE REGEX "\\\.(a|cpp|cc|cxx|c|hpp|h|hh|hxx|inc|json|toml|yaml|man|m4|ac|am|in|log|txt|pyi?|pyc|pyx|pxd|pc|cmake|f77|f90|f03|fi|f|cu|mod|ini|whl|cat|csv|rst|md|npy|npz|template|build)$")
         list(FILTER elf_files EXCLUDE REGEX "/(copyright|LICENSE|METADATA)$")
 
         foreach(elf_file IN LISTS elf_files)

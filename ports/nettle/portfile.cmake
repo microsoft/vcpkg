@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://git.lysator.liu.se/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nettle/nettle
-    REF nettle_3.9.1_release_20230601
-    SHA512 4938d31d9183fd143c6d43a43bda8372bd8899c51c18dfb8640065bffd4c5928006481d16679b1ad057404697f7af06bf1630de4b8072592c38cbb7113d16b21
+    REF nettle_3.10_release_20240616
+    SHA512 8767e4f0c34ce76ead5d66f06f97e6b184d439fa94f848ee440196fafde3da2ea7cfc54f9bd8f9ab6a99929b0d14b3d5a28857e05d954551e94b619598c17659
     HEAD_REF master
     PATCHES 
         subdirs.patch
