@@ -10,3 +10,5 @@ find_package(lib3mf REQUIRED)
 target_link_libraries(target_name lib3mf::lib3mf) 
 
 
+For examples and use cases, kindly check https://github.com/3MFConsortium/lib3mf/tree/develop/SDK/CPackExamples
+

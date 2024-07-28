@@ -1,36 +1,28 @@
-# Manually clone the repository with submodules
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/3MFConsortium/lib3mf/archive/refs/tags/v2.3.2.zip"
-    FILENAME "lib3mf-2.3.2.zip"
-    SHA512 5bf888c06a2429bfaca45b5ed96b2a7077a84ca3d1c4d114967eca0798189d9cbe7454eb810dcc18ccf31561efca271c4f68e7666f9f2665a8592df530f0d0bb
-)
-
-# Extract it
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-)
-
-# Apply the patch
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "lib3mf_vcpkg.patch"
-)
-
 # Only dynamic libraries (Based on Jan's Port)
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+
+# Pull from github directly
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO 3MFConsortium/lib3mf
+    REF release/2.3.2
+    SHA512 df05d86f872a97fc129a4c316bffa5ba69cf8a266440ca31b32dd461c929d4d9111a54875f919d39dcd5dc69dba54255406f1164a062e33bce04d79c5a4533aa
+    PATCHES
+        lib3mf_vcpkg.patch
+)
 
 # Proceed with the usual build process
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-    -DUSE_INCLUDED_ZLIB=OFF
-    -DUSE_INCLUDED_LIBZIP=OFF
-    -DUSE_INCLUDED_BASE_64=OFF
-    -DUSE_INCLUDED_FAST_FLOAT=OFF
-    -DUSE_INCLUDED_SSL=OFF
-    -DBUILD_FOR_CODECOVERAGE=OFF
-    -DLIB3MF_TESTS=OFF
+        -DUSE_INCLUDED_ZLIB=OFF
+        -DUSE_INCLUDED_LIBZIP=OFF
+        -DUSE_INCLUDED_BASE_64=OFF
+        -DUSE_INCLUDED_FAST_FLOAT=OFF
+        -DUSE_INCLUDED_SSL=OFF
+        -DBUILD_FOR_CODECOVERAGE=OFF
+        -DLIB3MF_TESTS=OFF
 )
 
 vcpkg_cmake_install()

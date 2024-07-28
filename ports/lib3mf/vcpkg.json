@@ -7,8 +7,7 @@
   "supports": "(windows & (x86 | x64) & !static & !staticcrt) | (linux & x64) | (osx & (x64 | arm64))",
   "dependencies": [
     {
-      "name": "cpp-base64",
-      "version>=": "V2.rc.08"
+      "name": "cpp-base64"
     },
     {
       "name": "fast-float",
