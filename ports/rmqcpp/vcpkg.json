@@ -6,25 +6,12 @@
   "dependencies": [
     {
       "name": "bde",
-      "host": true,
       "version>=": "3.123.0.0"
     },
-    {
-      "name": "boost-asio",
-      "host": true
-    },
-    {
-      "name": "boost-iostreams",
-      "host": true
-    },
-    {
-      "name": "gtest",
-      "host": true
-    },
-    {
-      "name": "openssl",
-      "host": true
-    },
+    "boost-asio",
+    "boost-iostreams",
+    "gtest",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
