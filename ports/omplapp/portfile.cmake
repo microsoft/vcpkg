@@ -1,10 +1,8 @@
 vcpkg_buildpath_length_warning(37)
 
-set(OMPL_VERSION 1.5.1)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ompl/omplapp/releases/download/1.5.1/omplapp-1.5.1-Source.tar.gz"
-    FILENAME "omplapp-${OMPL_VERSION}.tar.gz"
+    URLS "https://github.com/ompl/omplapp/releases/download/${VERSION}/omplapp-${VERSION}-Source.tar.gz"
+    FILENAME "omplapp-${VERSION}-Source.tar.gz"
     SHA512 83b1b09d6be776f7e15a748402f0c2f072459921de61a92731daf5171bd1f91a829fbeb6e10a489b92fba0297f6272e7bb6b8f07830c387bb29ccdbc7b3731f3
 )
 
@@ -15,7 +13,7 @@ endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    SOURCE_BASE ${OMPL_VERSION}
+    SOURCE_BASE ${VERSION}
     PATCHES
         fix_dependency.patch
         ${STATIC_PATCH}
@@ -59,15 +57,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/ompl/cmake)
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
 vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/ompl"
-    "${CURRENT_PACKAGES_DIR}/bin"
     "${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles"
-    "${CURRENT_PACKAGES_DIR}/lib/ompl.lib"
-    "${CURRENT_PACKAGES_DIR}/share/ompl"
-    "${CURRENT_PACKAGES_DIR}/share/man"
-    "${CURRENT_PACKAGES_DIR}/debug/bin"
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
@@ -79,5 +70,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

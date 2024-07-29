@@ -1,7 +1,7 @@
 {
   "name": "omplapp",
   "version": "1.5.1",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Use OMPL for reading meshes and performing collision checking",
   "homepage": "https://ompl.kavrakilab.org/",
   "license": null,
