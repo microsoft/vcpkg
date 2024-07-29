@@ -2374,7 +2374,7 @@
     },
     "dstorage": {
       "baseline": "1.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "dtl": {
       "baseline": "1.20",
@@ -9570,7 +9570,7 @@
     },
     "xaudio2redist": {
       "baseline": "1.2.11",
-      "port-version": 2
+      "port-version": 3
     },
     "xbitmaps": {
       "baseline": "1.1.2",
