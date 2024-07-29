@@ -33,8 +33,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("external-dict" IN_LIST FEATURES)
     set(DCMTK_DEFAULT_DICT "external")
+	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA OFF)
 else()
     set(DCMTK_DEFAULT_DICT "builtin")
+	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA ON)
 endif()
 
 vcpkg_cmake_configure(
