@@ -1,8 +1,5 @@
-# Only dynamic libraries (Based on Jan's Port)
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-
-# Pull from github directly
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 3MFConsortium/lib3mf
@@ -12,7 +9,6 @@ vcpkg_from_github(
         lib3mf_vcpkg.patch
 )
 
-# Proceed with the usual build process
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
