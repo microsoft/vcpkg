@@ -7,7 +7,7 @@ index d40e71c1d..7247f276c 100644
  }
  
 -#ifdef __aarch64__
-+#ifdef __aarch64__&& defined(__GNUC__)
++#ifdef __aarch64__&& !defined(_MSC_VER)
  // Generally, speaking, the ARM-optimized Varint decode algorithm is to extract
  // and concatenate all potentially valid data bits, compute the actual length
  // of the Varint, and mask off the data bits which are not actually part of the
