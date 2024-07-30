@@ -20,7 +20,7 @@ jobs:
             const prNumber = context.payload.pull_request.number;
             const prBody = context.payload.pull_request.body;
             
-            const commentRegex = /<!--.*-->/;
+            const commentRegex = /<!--[\s\S]*?-->/;
             const hasComment = commentRegex.test(prBody);
 
             if (hasComment) {
