@@ -32,7 +32,7 @@ index aaca07d2..2a36cd31 100644
  
  # allow FASTFLOAT_ALLOWS_LEADING_PLUS
  add_definitions(-DFASTFLOAT_ALLOWS_LEADING_PLUS=1)
-@@ -170,20 +172,35 @@ if (USE_INCLUDED_LIBZIP)
+@@ -170,20 +172,36 @@ if (USE_INCLUDED_LIBZIP)
      endif()
  
  else()
@@ -56,10 +56,11 @@ index aaca07d2..2a36cd31 100644
  
 +if (NOT USE_INCLUDED_BASE_64)
 +    # Include the directory for header files
-+    include_directories(${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/cpp-base64)
++    find_path(CPP_BASE64_INCLUDE_DIRS "cpp-base64/base64.cpp")
++    include_directories("${CPP_BASE64_INCLUDE_DIRS}/cpp-base64")
 +    set(BASE64_SRC
-+            ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/cpp-base64/base64.h
-+            ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/cpp-base64/base64.cpp)
++            ${CPP_BASE64_INCLUDE_DIRS}/cpp-base64/base64.h
++            ${CPP_BASE64_INCLUDE_DIRS}/cpp-base64/base64.cpp)
 +    message("BASE64_SRC" ${BASE64_SRC})
 +    # Append BASE64_SRC to the target
 +    target_sources(${PROJECT_NAME} PRIVATE ${BASE64_SRC})
