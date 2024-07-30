@@ -22,7 +22,8 @@ function(z_vcpkg_qmake_fix_makefiles BUILD_DIR)
         #Set the correct install directory to packages
         vcpkg_replace_string("${MAKEFILE}"
             "${INSTALLED_DRIVE}$(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}"
-            "${PACKAGES_DRIVE}$(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}")
+            "${PACKAGES_DRIVE}$(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}"
+            IGNORE_UNCHANGED)
     endforeach()
 
 endfunction()

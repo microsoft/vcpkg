@@ -1,0 +1,18 @@
+diff --git a/source/cmake/FindNeon.cmake b/source/cmake/FindNeon.cmake
+index cb02180..6a939b8 100644
+--- a/source/cmake/FindNeon.cmake
++++ b/source/cmake/FindNeon.cmake
+@@ -16,6 +16,13 @@ else()
+                     OUTPUT_STRIP_TRAILING_WHITESPACE)
+ endif()
+ 
++if(CMAKE_ANDROID_ARCH_ABI STREQUAL "arm64-v8a")
++    set(neon_version 1)
++elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "armeabi-v7a")
++    set(neon_version "${CMAKE_ANDROID_ARM_NEON}")
++elseif(CMAKE_CROSSCOMPILING AND CMAKE_SIZEOF_VOID_P LESS "8")
++    set(neon_version 0)
++endif()
+ if(neon_version)
+     set(CPU_HAS_NEON 1)
+ endif()

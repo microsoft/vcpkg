@@ -1,0 +1,1313 @@
+From fe447768b741e6f4a1cb529f93174e6dc6f86bec Mon Sep 17 00:00:00 2001
+From: Abseil Team <absl-team@google.com>
+Date: Tue, 26 Mar 2024 11:41:28 -0700
+Subject: [PATCH] Revert integer-to-string conversion optimizations pending
+ more thorough analysis
+
+PiperOrigin-RevId: 619261152
+Change-Id: Id3409b326c52ace0fda42537e0b91dbb2d6a2287
+---
+ absl/base/macros.h           |  48 ++++
+ absl/strings/numbers.cc      | 440 +++++++++--------------------------
+ absl/strings/numbers.h       | 163 +------------
+ absl/strings/numbers_test.cc |   7 -
+ absl/strings/str_cat.cc      | 146 +-----------
+ absl/strings/str_cat.h       | 150 ++++++------
+ absl/strings/str_cat_test.cc |  46 ----
+ 7 files changed, 245 insertions(+), 755 deletions(-)
+
+diff --git a/absl/base/macros.h b/absl/base/macros.h
+index f33cd192..b318f116 100644
+--- a/absl/base/macros.h
++++ b/absl/base/macros.h
+@@ -138,4 +138,52 @@ ABSL_NAMESPACE_END
+ #define ABSL_INTERNAL_RETHROW do {} while (false)
+ #endif  // ABSL_HAVE_EXCEPTIONS
+ 
++// ABSL_DEPRECATE_AND_INLINE()
++//
++// Marks a function or type alias as deprecated and tags it to be picked up for
++// automated refactoring by go/cpp-inliner. It can added to inline function
++// definitions or type aliases. It should only be used within a header file. It
++// differs from `ABSL_DEPRECATED` in the following ways:
++//
++// 1. New uses of the function or type will be discouraged via Tricorder
++//    warnings.
++// 2. If enabled via `METADATA`, automated changes will be sent out inlining the
++//    functions's body or replacing the type where it is used.
++//
++// For example:
++//
++// ABSL_DEPRECATE_AND_INLINE() inline int OldFunc(int x) {
++//   return NewFunc(x, 0);
++// }
++//
++// will mark `OldFunc` as deprecated, and the go/cpp-inliner service will
++// replace calls to `OldFunc(x)` with calls to `NewFunc(x, 0)`. Once all calls
++// to `OldFunc` have been replaced, `OldFunc` can be deleted.
++//
++// See go/cpp-inliner for more information.
++//
++// Note: go/cpp-inliner is Google-internal service for automated refactoring.
++// While open-source users do not have access to this service, the macro is
++// provided for compatibility, and so that users receive deprecation warnings.
++#if ABSL_HAVE_CPP_ATTRIBUTE(deprecated) && \
++    ABSL_HAVE_CPP_ATTRIBUTE(clang::annotate)
++#define ABSL_DEPRECATE_AND_INLINE() [[deprecated, clang::annotate("inline-me")]]
++#elif ABSL_HAVE_CPP_ATTRIBUTE(deprecated)
++#define ABSL_DEPRECATE_AND_INLINE() [[deprecated]]
++#else
++#define ABSL_DEPRECATE_AND_INLINE()
++#endif
++
++// Requires the compiler to prove that the size of the given object is at least
++// the expected amount.
++#if ABSL_HAVE_ATTRIBUTE(diagnose_if) && ABSL_HAVE_BUILTIN(__builtin_object_size)
++#define ABSL_INTERNAL_NEED_MIN_SIZE(Obj, N)                     \
++  __attribute__((diagnose_if(__builtin_object_size(Obj, 0) < N, \
++                             "object size provably too small "  \
++                             "(this would corrupt memory)",     \
++                             "error")))
++#else
++#define ABSL_INTERNAL_NEED_MIN_SIZE(Obj, N)
++#endif
++
+ #endif  // ABSL_BASE_MACROS_H_
+diff --git a/absl/strings/numbers.cc b/absl/strings/numbers.cc
+index 882c3a8b..b57d9e82 100644
+--- a/absl/strings/numbers.cc
++++ b/absl/strings/numbers.cc
+@@ -20,9 +20,7 @@
+ #include <algorithm>
+ #include <cassert>
+ #include <cfloat>  // for DBL_DIG and FLT_DIG
+-#include <climits>
+ #include <cmath>   // for HUGE_VAL
+-#include <cstddef>
+ #include <cstdint>
+ #include <cstdio>
+ #include <cstdlib>
+@@ -30,7 +28,6 @@
+ #include <iterator>
+ #include <limits>
+ #include <system_error>  // NOLINT(build/c++11)
+-#include <type_traits>
+ #include <utility>
+ 
+ #include "absl/base/attributes.h"
+@@ -159,71 +156,28 @@ constexpr uint32_t kTwoZeroBytes = 0x0101 * '0';
+ constexpr uint64_t kFourZeroBytes = 0x01010101 * '0';
+ constexpr uint64_t kEightZeroBytes = 0x0101010101010101ull * '0';
+ 
+-template <typename T>
+-constexpr T Pow(T base, uint32_t n) {
+-  // Exponentiation by squaring
+-  return static_cast<T>((n > 1 ? Pow(base * base, n >> 1) : static_cast<T>(1)) *
+-                        ((n & 1) ? base : static_cast<T>(1)));
+-}
+-
+-// Given n, calculates C where the following holds for all 0 <= x < Pow(100, n):
+-// x / Pow(10, n) == x * C / Pow(2, n * 10)
+-// In other words, it allows us to divide by a power of 10 via a single
+-// multiplication and bit shifts, assuming the input will be smaller than the
+-// square of that power of 10.
+-template <typename T>
+-constexpr T ComputePowerOf100DivisionCoefficient(uint32_t n) {
+-  if (n > 4) {
+-    // This doesn't work for large powers of 100, due to overflow
+-    abort();
+-  }
+-  T denom = 16 - 1;
+-  T num = (denom + 1) - 10;
+-  T gcd = 3;  // Greatest common divisor of numerator and denominator
+-  denom = Pow(denom / gcd, n);
+-  num = Pow(num / gcd, 9 * n);
+-  T quotient = num / denom;
+-  if (num % denom >= denom / 2) {
+-    // Round up, since the remainder is more than half the denominator
+-    ++quotient;
+-  }
+-  return quotient;
+-}
+-
+-// * kDivisionBy10Mul / kDivisionBy10Div is a division by 10 for values from 0
+-// to 99. It's also a division of a structure [k takes 2 bytes][m takes 2
+-// bytes], then * kDivisionBy10Mul / kDivisionBy10Div will be [k / 10][m / 10].
+-// It allows parallel division.
+-constexpr uint64_t kDivisionBy10Mul =
+-    ComputePowerOf100DivisionCoefficient<uint64_t>(1);
+-static_assert(kDivisionBy10Mul == 103,
+-              "division coefficient for 10 is incorrect");
++// * 103 / 1024 is a division by 10 for values from 0 to 99. It's also a
++// division of a structure [k takes 2 bytes][m takes 2 bytes], then * 103 / 1024
++// will be [k / 10][m / 10]. It allows parallel division.
++constexpr uint64_t kDivisionBy10Mul = 103u;
+ constexpr uint64_t kDivisionBy10Div = 1 << 10;
+ 
+-// * kDivisionBy100Mul / kDivisionBy100Div is a division by 100 for values from
+-// 0 to 9999.
+-constexpr uint64_t kDivisionBy100Mul =
+-    ComputePowerOf100DivisionCoefficient<uint64_t>(2);
+-static_assert(kDivisionBy100Mul == 10486,
+-              "division coefficient for 100 is incorrect");
++// * 10486 / 1048576 is a division by 100 for values from 0 to 9999.
++constexpr uint64_t kDivisionBy100Mul = 10486u;
+ constexpr uint64_t kDivisionBy100Div = 1 << 20;
+ 
+-static_assert(ComputePowerOf100DivisionCoefficient<uint64_t>(3) == 1073742,
+-              "division coefficient for 1000 is incorrect");
+-
+-// Same as `PrepareEightDigits`, but produces 2 digits for integers < 100.
+-inline uint32_t PrepareTwoDigitsImpl(uint32_t i, bool reversed) {
+-  assert(i < 100);
+-  uint32_t div10 = (i * kDivisionBy10Mul) / kDivisionBy10Div;
+-  uint32_t mod10 = i - 10u * div10;
+-  return (div10 << (reversed ? 8 : 0)) + (mod10 << (reversed ? 0 : 8));
+-}
+-inline uint32_t PrepareTwoDigits(uint32_t i) {
+-  return PrepareTwoDigitsImpl(i, false);
++// Encode functions write the ASCII output of input `n` to `out_str`.
++inline char* EncodeHundred(uint32_t n, absl::Nonnull<char*> out_str) {
++  int num_digits = static_cast<int>(n - 10) >> 8;
++  uint32_t div10 = (n * kDivisionBy10Mul) / kDivisionBy10Div;
++  uint32_t mod10 = n - 10u * div10;
++  uint32_t base = kTwoZeroBytes + div10 + (mod10 << 8);
++  base >>= num_digits & 8;
++  little_endian::Store16(out_str, static_cast<uint16_t>(base));
++  return out_str + 2 + num_digits;
+ }
+ 
+-// Same as `PrepareEightDigits`, but produces 4 digits for integers < 10000.
+-inline uint32_t PrepareFourDigitsImpl(uint32_t n, bool reversed) {
++inline char* EncodeTenThousand(uint32_t n, absl::Nonnull<char*> out_str) {
+   // We split lower 2 digits and upper 2 digits of n into 2 byte consecutive
+   // blocks. 123 ->  [\0\1][\0\23]. We divide by 10 both blocks
+   // (it's 1 division + zeroing upper bits), and compute modulo 10 as well "in
+@@ -231,19 +185,22 @@ inline uint32_t PrepareFourDigitsImpl(uint32_t n, bool reversed) {
+   // strip trailing zeros, add ASCII '0000' and return.
+   uint32_t div100 = (n * kDivisionBy100Mul) / kDivisionBy100Div;
+   uint32_t mod100 = n - 100ull * div100;
+-  uint32_t hundreds =
+-      (mod100 << (reversed ? 0 : 16)) + (div100 << (reversed ? 16 : 0));
++  uint32_t hundreds = (mod100 << 16) + div100;
+   uint32_t tens = (hundreds * kDivisionBy10Mul) / kDivisionBy10Div;
+   tens &= (0xFull << 16) | 0xFull;
+-  tens = (tens << (reversed ? 8 : 0)) +
+-         static_cast<uint32_t>((hundreds - 10ull * tens) << (reversed ? 0 : 8));
+-  return tens;
+-}
+-inline uint32_t PrepareFourDigits(uint32_t n) {
+-  return PrepareFourDigitsImpl(n, false);
+-}
+-inline uint32_t PrepareFourDigitsReversed(uint32_t n) {
+-  return PrepareFourDigitsImpl(n, true);
++  tens += (hundreds - 10ull * tens) << 8;
++  ABSL_ASSUME(tens != 0);
++  // The result can contain trailing zero bits, we need to strip them to a first
++  // significant byte in a final representation. For example, for n = 123, we
++  // have tens to have representation \0\1\2\3. We do `& -8` to round
++  // to a multiple to 8 to strip zero bytes, not all zero bits.
++  // countr_zero to help.
++  // 0 minus 8 to make MSVC happy.
++  uint32_t zeroes = static_cast<uint32_t>(absl::countr_zero(tens)) & (0 - 8u);
++  tens += kFourZeroBytes;
++  tens >>= zeroes;
++  little_endian::Store32(out_str, tens);
++  return out_str + sizeof(tens) - zeroes / 8;
+ }
+ 
+ // Helper function to produce an ASCII representation of `i`.
+@@ -259,309 +216,126 @@ inline uint32_t PrepareFourDigitsReversed(uint32_t n) {
+ //  // Note two leading zeros:
+ //  EXPECT_EQ(absl::string_view(ascii, 8), "00102030");
+ //
+-// If `Reversed` is set to true, the result becomes reversed to "03020100".
+-//
+ // Pre-condition: `i` must be less than 100000000.
+-inline uint64_t PrepareEightDigitsImpl(uint32_t i, bool reversed) {
++inline uint64_t PrepareEightDigits(uint32_t i) {
+   ABSL_ASSUME(i < 10000'0000);
+   // Prepare 2 blocks of 4 digits "in parallel".
+   uint32_t hi = i / 10000;
+   uint32_t lo = i % 10000;
+-  uint64_t merged = (uint64_t{hi} << (reversed ? 32 : 0)) |
+-                    (uint64_t{lo} << (reversed ? 0 : 32));
++  uint64_t merged = hi | (uint64_t{lo} << 32);
+   uint64_t div100 = ((merged * kDivisionBy100Mul) / kDivisionBy100Div) &
+                     ((0x7Full << 32) | 0x7Full);
+   uint64_t mod100 = merged - 100ull * div100;
+-  uint64_t hundreds =
+-      (mod100 << (reversed ? 0 : 16)) + (div100 << (reversed ? 16 : 0));
++  uint64_t hundreds = (mod100 << 16) + div100;
+   uint64_t tens = (hundreds * kDivisionBy10Mul) / kDivisionBy10Div;
+   tens &= (0xFull << 48) | (0xFull << 32) | (0xFull << 16) | 0xFull;
+-  tens = (tens << (reversed ? 8 : 0)) +
+-         ((hundreds - 10ull * tens) << (reversed ? 0 : 8));
++  tens += (hundreds - 10ull * tens) << 8;
+   return tens;
+ }
+-inline uint64_t PrepareEightDigits(uint32_t i) {
+-  return PrepareEightDigitsImpl(i, false);
+-}
+-inline uint64_t PrepareEightDigitsReversed(uint32_t i) {
+-  return PrepareEightDigitsImpl(i, true);
+-}
+ 
+-template <typename T, typename BackwardIt>
+-class FastUIntToStringConverter {
+-  static_assert(
+-      std::is_same<T, decltype(+std::declval<T>())>::value,
+-      "to avoid code bloat, only instantiate this for int and larger types");
+-  static_assert(std::is_unsigned<T>::value,
+-                "this class is only for unsigned types");
+-
+- public:
+-  // Outputs the given number backward (like with std::copy_backward),
+-  // starting from the end of the string.
+-  // The number of digits in the number must have been already measured and
+-  // passed *exactly*, otherwise the behavior is undefined.
+-  // (This is an optimization, as calculating the number of digits again would
+-  // slow down the hot path.)
+-  // Returns an iterator to the start of the suffix that was appended.
+-  static BackwardIt FastIntToBufferBackward(T v, BackwardIt end) {
+-    // THIS IS A HOT FUNCTION with a very deliberate structure to exploit branch
+-    // prediction and shorten the critical path for smaller numbers.
+-    // Do not move around the if/else blocks or attempt to simplify it
+-    // without benchmarking any changes.
+-
+-    if (v < 10) {
+-      goto AT_LEAST_1 /* NOTE: mandatory for the 0 case */;
+-    }
+-    if (v < 1000) {
+-      goto AT_LEAST_10;
+-    }
+-    if (v < 10000000) {
+-      goto AT_LEAST_1000;
+-    }
+-
+-    if (v >= 100000000 / 10) {
+-      if (v >= 10000000000000000 / 10) {
+-        DoFastIntToBufferBackward<8>(v, end);
+-      }
+-      DoFastIntToBufferBackward<8>(v, end);
+-    }
+-
+-    if (v >= 10000 / 10) {
+-    AT_LEAST_1000:
+-      DoFastIntToBufferBackward<4>(v, end);
+-    }
+-
+-    if (v >= 100 / 10) {
+-    AT_LEAST_10:
+-      DoFastIntToBufferBackward<2>(v, end);
+-    }
+-
+-    if (v >= 10 / 10) {
+-    AT_LEAST_1:
+-      end = DoFastIntToBufferBackward(v, end, std::integral_constant<int, 1>());
+-    }
+-    return end;
++inline ABSL_ATTRIBUTE_ALWAYS_INLINE absl::Nonnull<char*> EncodeFullU32(
++    uint32_t n, absl::Nonnull<char*> out_str) {
++  if (n < 10) {
++    *out_str = static_cast<char>('0' + n);
++    return out_str + 1;
+   }
+-
+- private:
+-  // Only assume pointers are contiguous for now. String and vector iterators
+-  // could be special-cased as well, but there's no need for them here.
+-  // With C++20 we can probably switch to std::contiguous_iterator_tag.
+-  static constexpr bool kIsContiguousIterator =
+-      std::is_pointer<BackwardIt>::value;
+-
+-  template <int Exponent>
+-  static void DoFastIntToBufferBackward(T& v, BackwardIt& end) {
+-    constexpr T kModulus = Pow<T>(10, Exponent);
+-    T remainder = static_cast<T>(v % kModulus);
+-    v = static_cast<T>(v / kModulus);
+-    end = DoFastIntToBufferBackward(remainder, end,
+-                                    std::integral_constant<int, Exponent>());
+-  }
+-
+-  static BackwardIt DoFastIntToBufferBackward(const T&, BackwardIt end,
+-                                              std::integral_constant<int, 0>) {
+-    return end;
+-  }
+-
+-  static BackwardIt DoFastIntToBufferBackward(T v, BackwardIt end,
+-                                              std::integral_constant<int, 1>) {
+-    *--end = static_cast<char>('0' + v);
+-    return DoFastIntToBufferBackward(v, end, std::integral_constant<int, 0>());
+-  }
+-
+-  static BackwardIt DoFastIntToBufferBackward(T v, BackwardIt end,
+-                                              std::integral_constant<int, 4>) {
+-    if (kIsContiguousIterator) {
+-      const uint32_t digits =
+-          PrepareFourDigits(static_cast<uint32_t>(v)) + kFourZeroBytes;
+-      end -= sizeof(digits);
+-      little_endian::Store32(&*end, digits);
+-    } else {
+-      uint32_t digits =
+-          PrepareFourDigitsReversed(static_cast<uint32_t>(v)) + kFourZeroBytes;
+-      for (size_t i = 0; i < sizeof(digits); ++i) {
+-        *--end = static_cast<char>(digits);
+-        digits >>= CHAR_BIT;
+-      }
+-    }
+-    return end;
++  if (n < 100'000'000) {
++    uint64_t bottom = PrepareEightDigits(n);
++    ABSL_ASSUME(bottom != 0);
++    // 0 minus 8 to make MSVC happy.
++    uint32_t zeroes =
++        static_cast<uint32_t>(absl::countr_zero(bottom)) & (0 - 8u);
++    little_endian::Store64(out_str, (bottom + kEightZeroBytes) >> zeroes);
++    return out_str + sizeof(bottom) - zeroes / 8;
+   }
+-
+-  static BackwardIt DoFastIntToBufferBackward(T v, BackwardIt end,
+-                                              std::integral_constant<int, 8>) {
+-    if (kIsContiguousIterator) {
+-      const uint64_t digits =
+-          PrepareEightDigits(static_cast<uint32_t>(v)) + kEightZeroBytes;
+-      end -= sizeof(digits);
+-      little_endian::Store64(&*end, digits);
+-    } else {
+-      uint64_t digits = PrepareEightDigitsReversed(static_cast<uint32_t>(v)) +
+-                        kEightZeroBytes;
+-      for (size_t i = 0; i < sizeof(digits); ++i) {
+-        *--end = static_cast<char>(digits);
+-        digits >>= CHAR_BIT;
+-      }
+-    }
+-    return end;
+-  }
+-
+-  template <int Digits>
+-  static BackwardIt DoFastIntToBufferBackward(
+-      T v, BackwardIt end, std::integral_constant<int, Digits>) {
+-    constexpr int kLogModulus = Digits - Digits / 2;
+-    constexpr T kModulus = Pow(static_cast<T>(10), kLogModulus);
+-    bool is_safe_to_use_division_trick = Digits <= 8;
+-    T quotient, remainder;
+-    if (is_safe_to_use_division_trick) {
+-      constexpr uint64_t kCoefficient =
+-          ComputePowerOf100DivisionCoefficient<uint64_t>(kLogModulus);
+-      quotient = (v * kCoefficient) >> (10 * kLogModulus);
+-      remainder = v - quotient * kModulus;
+-    } else {
+-      quotient = v / kModulus;
+-      remainder = v % kModulus;
+-    }
+-    end = DoFastIntToBufferBackward(remainder, end,
+-                                    std::integral_constant<int, kLogModulus>());
+-    return DoFastIntToBufferBackward(
+-        quotient, end, std::integral_constant<int, Digits - kLogModulus>());
+-  }
+-};
+-
+-// Returns an iterator to the start of the suffix that was appended
+-template <typename T, typename BackwardIt>
+-std::enable_if_t<std::is_unsigned<T>::value, BackwardIt>
+-DoFastIntToBufferBackward(T v, BackwardIt end, uint32_t digits) {
+-  using PromotedT = std::decay_t<decltype(+v)>;
+-  using Converter = FastUIntToStringConverter<PromotedT, BackwardIt>;
+-  (void)digits;
+-  return Converter().FastIntToBufferBackward(v, end);
++  uint32_t div08 = n / 100'000'000;
++  uint32_t mod08 = n % 100'000'000;
++  uint64_t bottom = PrepareEightDigits(mod08) + kEightZeroBytes;
++  out_str = EncodeHundred(div08, out_str);
++  little_endian::Store64(out_str, bottom);
++  return out_str + sizeof(bottom);
+ }
+ 
+-template <typename T, typename BackwardIt>
+-std::enable_if_t<std::is_signed<T>::value, BackwardIt>
+-DoFastIntToBufferBackward(T v, BackwardIt end, uint32_t digits) {
+-  if (absl::numbers_internal::IsNegative(v)) {
+-    // Store the minus sign *before* we produce the number itself, not after.
+-    // This gets us a tail call.
+-    end[-static_cast<ptrdiff_t>(digits) - 1] = '-';
++inline ABSL_ATTRIBUTE_ALWAYS_INLINE char* EncodeFullU64(uint64_t i,
++                                                        char* buffer) {
++  if (i <= std::numeric_limits<uint32_t>::max()) {
++    return EncodeFullU32(static_cast<uint32_t>(i), buffer);
+   }
+-  return DoFastIntToBufferBackward(
+-      absl::numbers_internal::UnsignedAbsoluteValue(v), end, digits);
+-}
+-
+-template <class T>
+-std::enable_if_t<std::is_integral<T>::value, int>
+-GetNumDigitsOrNegativeIfNegativeImpl(T v) {
+-  const auto /* either bool or std::false_type */ is_negative =
+-      absl::numbers_internal::IsNegative(v);
+-  const int digits = static_cast<int>(absl::numbers_internal::Base10Digits(
+-      absl::numbers_internal::UnsignedAbsoluteValue(v)));
+-  return is_negative ? ~digits : digits;
++  uint32_t mod08;
++  if (i < 1'0000'0000'0000'0000ull) {
++    uint32_t div08 = static_cast<uint32_t>(i / 100'000'000ull);
++    mod08 =  static_cast<uint32_t>(i % 100'000'000ull);
++    buffer = EncodeFullU32(div08, buffer);
++  } else {
++    uint64_t div08 = i / 100'000'000ull;
++    mod08 =  static_cast<uint32_t>(i % 100'000'000ull);
++    uint32_t div016 = static_cast<uint32_t>(div08 / 100'000'000ull);
++    uint32_t div08mod08 = static_cast<uint32_t>(div08 % 100'000'000ull);
++    uint64_t mid_result = PrepareEightDigits(div08mod08) + kEightZeroBytes;
++    buffer = EncodeTenThousand(div016, buffer);
++    little_endian::Store64(buffer, mid_result);
++    buffer += sizeof(mid_result);
++  }
++  uint64_t mod_result = PrepareEightDigits(mod08) + kEightZeroBytes;
++  little_endian::Store64(buffer, mod_result);
++  return buffer + sizeof(mod_result);
+ }
+ 
+ }  // namespace
+ 
+ void numbers_internal::PutTwoDigits(uint32_t i, absl::Nonnull<char*> buf) {
+-  little_endian::Store16(
+-      buf, static_cast<uint16_t>(PrepareTwoDigits(i) + kTwoZeroBytes));
++  assert(i < 100);
++  uint32_t base = kTwoZeroBytes;
++  uint32_t div10 = (i * kDivisionBy10Mul) / kDivisionBy10Div;
++  uint32_t mod10 = i - 10u * div10;
++  base += div10 + (mod10 << 8);
++  little_endian::Store16(buf, static_cast<uint16_t>(base));
+ }
+ 
+ absl::Nonnull<char*> numbers_internal::FastIntToBuffer(
+-    uint32_t i, absl::Nonnull<char*> buffer) {
+-  const uint32_t digits = absl::numbers_internal::Base10Digits(i);
+-  buffer += digits;
+-  *buffer = '\0';  // We're going backward, so store this first
+-  FastIntToBufferBackward(i, buffer, digits);
+-  return buffer;
++    uint32_t n, absl::Nonnull<char*> out_str) {
++  out_str = EncodeFullU32(n, out_str);
++  *out_str = '\0';
++  return out_str;
+ }
+ 
+ absl::Nonnull<char*> numbers_internal::FastIntToBuffer(
+     int32_t i, absl::Nonnull<char*> buffer) {
+-  buffer += static_cast<int>(i < 0);
+-  uint32_t digits = absl::numbers_internal::Base10Digits(
+-      absl::numbers_internal::UnsignedAbsoluteValue(i));
+-  buffer += digits;
+-  *buffer = '\0';  // We're going backward, so store this first
+-  FastIntToBufferBackward(i, buffer, digits);
++  uint32_t u = static_cast<uint32_t>(i);
++  if (i < 0) {
++    *buffer++ = '-';
++    // We need to do the negation in modular (i.e., "unsigned")
++    // arithmetic; MSVC++ apparently warns for plain "-u", so
++    // we write the equivalent expression "0 - u" instead.
++    u = 0 - u;
++  }
++  buffer = EncodeFullU32(u, buffer);
++  *buffer = '\0';
+   return buffer;
+ }
+ 
+ absl::Nonnull<char*> numbers_internal::FastIntToBuffer(
+     uint64_t i, absl::Nonnull<char*> buffer) {
+-  uint32_t digits = absl::numbers_internal::Base10Digits(i);
+-  buffer += digits;
+-  *buffer = '\0';  // We're going backward, so store this first
+-  FastIntToBufferBackward(i, buffer, digits);
++  buffer = EncodeFullU64(i, buffer);
++  *buffer = '\0';
+   return buffer;
+ }
+ 
+ absl::Nonnull<char*> numbers_internal::FastIntToBuffer(
+     int64_t i, absl::Nonnull<char*> buffer) {
+-  buffer += static_cast<int>(i < 0);
+-  uint32_t digits = absl::numbers_internal::Base10Digits(
+-      absl::numbers_internal::UnsignedAbsoluteValue(i));
+-  buffer += digits;
+-  *buffer = '\0';  // We're going backward, so store this first
+-  FastIntToBufferBackward(i, buffer, digits);
++  uint64_t u = static_cast<uint64_t>(i);
++  if (i < 0) {
++    *buffer++ = '-';
++    // We need to do the negation in modular (i.e., "unsigned")
++    // arithmetic; MSVC++ apparently warns for plain "-u", so
++    // we write the equivalent expression "0 - u" instead.
++    u = 0 - u;
++  }
++  buffer = EncodeFullU64(u, buffer);
++  *buffer = '\0';
+   return buffer;
+ }
+ 
+-absl::Nonnull<char*> numbers_internal::FastIntToBufferBackward(
+-    uint32_t i, absl::Nonnull<char*> buffer_end, uint32_t exact_digit_count) {
+-  return DoFastIntToBufferBackward(i, buffer_end, exact_digit_count);
+-}
+-
+-absl::Nonnull<char*> numbers_internal::FastIntToBufferBackward(
+-    int32_t i, absl::Nonnull<char*> buffer_end, uint32_t exact_digit_count) {
+-  return DoFastIntToBufferBackward(i, buffer_end, exact_digit_count);
+-}
+-
+-absl::Nonnull<char*> numbers_internal::FastIntToBufferBackward(
+-    uint64_t i, absl::Nonnull<char*> buffer_end, uint32_t exact_digit_count) {
+-  return DoFastIntToBufferBackward(i, buffer_end, exact_digit_count);
+-}
+-
+-absl::Nonnull<char*> numbers_internal::FastIntToBufferBackward(
+-    int64_t i, absl::Nonnull<char*> buffer_end, uint32_t exact_digit_count) {
+-  return DoFastIntToBufferBackward(i, buffer_end, exact_digit_count);
+-}
+-
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(signed char v) {
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(unsigned char v) {
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(short v) {  // NOLINT
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(
+-    unsigned short v) {  // NOLINT
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(int v) {
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(unsigned int v) {
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(long v) {  // NOLINT
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(
+-    unsigned long v) {  // NOLINT
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(long long v) {  // NOLINT
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-int numbers_internal::GetNumDigitsOrNegativeIfNegative(
+-    unsigned long long v) {  // NOLINT
+-  return GetNumDigitsOrNegativeIfNegativeImpl(v);
+-}
+-
+ // Given a 128-bit number expressed as a pair of uint64_t, high half first,
+ // return that number multiplied by the given 32-bit value.  If the result is
+ // too large to fit in a 128-bit number, divide it by 2 until it fits.
+diff --git a/absl/strings/numbers.h b/absl/strings/numbers.h
+index ad4e66b6..739dbb28 100644
+--- a/absl/strings/numbers.h
++++ b/absl/strings/numbers.h
+@@ -32,7 +32,6 @@
+ #endif
+ 
+ #include <cstddef>
+-#include <cstdint>
+ #include <cstdlib>
+ #include <cstring>
+ #include <ctime>
+@@ -40,12 +39,10 @@
+ #include <string>
+ #include <type_traits>
+ 
+-#include "absl/base/attributes.h"
+ #include "absl/base/config.h"
+ #include "absl/base/internal/endian.h"
+ #include "absl/base/macros.h"
+ #include "absl/base/nullability.h"
+-#include "absl/base/optimization.h"
+ #include "absl/base/port.h"
+ #include "absl/numeric/bits.h"
+ #include "absl/numeric/int128.h"
+@@ -161,96 +158,6 @@ bool safe_strtou128_base(absl::string_view text,
+ static const int kFastToBufferSize = 32;
+ static const int kSixDigitsToBufferSize = 16;
+ 
+-template <class T>
+-std::enable_if_t<!std::is_unsigned<T>::value, bool> IsNegative(const T& v) {
+-  return v < T();
+-}
+-
+-template <class T>
+-std::enable_if_t<std::is_unsigned<T>::value, std::false_type> IsNegative(
+-    const T&) {
+-  // The integer is unsigned, so return a compile-time constant.
+-  // This can help the optimizer avoid having to prove bool to be false later.
+-  return std::false_type();
+-}
+-
+-template <class T>
+-std::enable_if_t<std::is_unsigned<std::decay_t<T>>::value, T&&>
+-UnsignedAbsoluteValue(T&& v ABSL_ATTRIBUTE_LIFETIME_BOUND) {
+-  // The value is unsigned; just return the original.
+-  return std::forward<T>(v);
+-}
+-
+-template <class T>
+-ABSL_ATTRIBUTE_CONST_FUNCTION
+-    std::enable_if_t<!std::is_unsigned<T>::value, std::make_unsigned_t<T>>
+-    UnsignedAbsoluteValue(T v) {
+-  using U = std::make_unsigned_t<T>;
+-  return IsNegative(v) ? U() - static_cast<U>(v) : static_cast<U>(v);
+-}
+-
+-// Returns the number of base-10 digits in the given number.
+-// Note that this strictly counts digits. It does not count the sign.
+-// The `initial_digits` parameter is the starting point, which is normally equal
+-// to 1 because the number of digits in 0 is 1 (a special case).
+-// However, callers may e.g. wish to change it to 2 to account for the sign.
+-template <typename T>
+-std::enable_if_t<std::is_unsigned<T>::value, uint32_t> Base10Digits(
+-    T v, const uint32_t initial_digits = 1) {
+-  uint32_t r = initial_digits;
+-  // If code size becomes an issue, the 'if' stage can be removed for a minor
+-  // performance loss.
+-  for (;;) {
+-    if (ABSL_PREDICT_TRUE(v < 10 * 10)) {
+-      r += (v >= 10);
+-      break;
+-    }
+-    if (ABSL_PREDICT_TRUE(v < 1000 * 10)) {
+-      r += (v >= 1000) + 2;
+-      break;
+-    }
+-    if (ABSL_PREDICT_TRUE(v < 100000 * 10)) {
+-      r += (v >= 100000) + 4;
+-      break;
+-    }
+-    r += 6;
+-    v = static_cast<T>(v / 1000000);
+-  }
+-  return r;
+-}
+-
+-template <typename T>
+-std::enable_if_t<std::is_signed<T>::value, uint32_t> Base10Digits(
+-    T v, uint32_t r = 1) {
+-  // Branchlessly add 1 to account for a minus sign.
+-  r += static_cast<uint32_t>(IsNegative(v));
+-  return Base10Digits(UnsignedAbsoluteValue(v), r);
+-}
+-
+-// These functions return the number of base-10 digits, but multiplied by -1 if
+-// the input itself is negative. This is handy and efficient for later usage,
+-// since the bitwise complement of the result becomes equal to the number of
+-// characters required.
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    signed char v);
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    unsigned char v);
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    short v);  // NOLINT
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    unsigned short v);  // NOLINT
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(int v);
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    unsigned int v);
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    long v);  // NOLINT
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    unsigned long v);  // NOLINT
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    long long v);  // NOLINT
+-ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+-    unsigned long long v);  // NOLINT
+-
+ // Helper function for fast formatting of floating-point values.
+ // The result is the same as printf's "%g", a.k.a. "%.6g"; that is, six
+ // significant digits are returned, trailing zeros are removed, and numbers
+@@ -259,18 +166,24 @@ ABSL_ATTRIBUTE_CONST_FUNCTION int GetNumDigitsOrNegativeIfNegative(
+ // Required buffer size is `kSixDigitsToBufferSize`.
+ size_t SixDigitsToBuffer(double d, absl::Nonnull<char*> buffer);
+ 
+-// All of these functions take an output buffer
++// WARNING: These functions may write more characters than necessary, because
++// they are intended for speed. All functions take an output buffer
+ // as an argument and return a pointer to the last byte they wrote, which is the
+ // terminating '\0'. At most `kFastToBufferSize` bytes are written.
+-absl::Nonnull<char*> FastIntToBuffer(int32_t i, absl::Nonnull<char*> buffer);
+-absl::Nonnull<char*> FastIntToBuffer(uint32_t i, absl::Nonnull<char*> buffer);
+-absl::Nonnull<char*> FastIntToBuffer(int64_t i, absl::Nonnull<char*> buffer);
+-absl::Nonnull<char*> FastIntToBuffer(uint64_t i, absl::Nonnull<char*> buffer);
++absl::Nonnull<char*> FastIntToBuffer(int32_t i, absl::Nonnull<char*> buffer)
++    ABSL_INTERNAL_NEED_MIN_SIZE(buffer, kFastToBufferSize);
++absl::Nonnull<char*> FastIntToBuffer(uint32_t n, absl::Nonnull<char*> out_str)
++    ABSL_INTERNAL_NEED_MIN_SIZE(out_str, kFastToBufferSize);
++absl::Nonnull<char*> FastIntToBuffer(int64_t i, absl::Nonnull<char*> buffer)
++    ABSL_INTERNAL_NEED_MIN_SIZE(buffer, kFastToBufferSize);
++absl::Nonnull<char*> FastIntToBuffer(uint64_t i, absl::Nonnull<char*> buffer)
++    ABSL_INTERNAL_NEED_MIN_SIZE(buffer, kFastToBufferSize);
+ 
+ // For enums and integer types that are not an exact match for the types above,
+ // use templates to call the appropriate one of the four overloads above.
+ template <typename int_type>
+-absl::Nonnull<char*> FastIntToBuffer(int_type i, absl::Nonnull<char*> buffer) {
++absl::Nonnull<char*> FastIntToBuffer(int_type i, absl::Nonnull<char*> buffer)
++    ABSL_INTERNAL_NEED_MIN_SIZE(buffer, kFastToBufferSize) {
+   static_assert(sizeof(i) <= 64 / 8,
+                 "FastIntToBuffer works only with 64-bit-or-less integers.");
+   // TODO(jorg): This signed-ness check is used because it works correctly
+@@ -294,58 +207,6 @@ absl::Nonnull<char*> FastIntToBuffer(int_type i, absl::Nonnull<char*> buffer) {
+   }
+ }
+ 
+-// These functions do NOT add any null-terminator.
+-// They return a pointer to the beginning of the written string.
+-// The digit counts provided must *exactly* match the number of base-10 digits
+-// in the number, or the behavior is undefined.
+-// (i.e. do NOT count the minus sign, or over- or under-count the digits.)
+-absl::Nonnull<char*> FastIntToBufferBackward(int32_t i,
+-                                             absl::Nonnull<char*> buffer_end,
+-                                             uint32_t exact_digit_count);
+-absl::Nonnull<char*> FastIntToBufferBackward(uint32_t i,
+-                                             absl::Nonnull<char*> buffer_end,
+-                                             uint32_t exact_digit_count);
+-absl::Nonnull<char*> FastIntToBufferBackward(int64_t i,
+-                                             absl::Nonnull<char*> buffer_end,
+-                                             uint32_t exact_digit_count);
+-absl::Nonnull<char*> FastIntToBufferBackward(uint64_t i,
+-                                             absl::Nonnull<char*> buffer_end,
+-                                             uint32_t exact_digit_count);
+-
+-// For enums and integer types that are not an exact match for the types above,
+-// use templates to call the appropriate one of the four overloads above.
+-template <typename int_type>
+-absl::Nonnull<char*> FastIntToBufferBackward(int_type i,
+-                                             absl::Nonnull<char*> buffer_end,
+-                                             uint32_t exact_digit_count) {
+-  static_assert(
+-      sizeof(i) <= 64 / 8,
+-      "FastIntToBufferBackward works only with 64-bit-or-less integers.");
+-  // This signed-ness check is used because it works correctly
+-  // with enums, and it also serves to check that int_type is not a pointer.
+-  // If one day something like std::is_signed<enum E> works, switch to it.
+-  // These conditions are constexpr bools to suppress MSVC warning C4127.
+-  constexpr bool kIsSigned = static_cast<int_type>(1) - 2 < 0;
+-  constexpr bool kUse64Bit = sizeof(i) > 32 / 8;
+-  if (kIsSigned) {
+-    if (kUse64Bit) {
+-      return FastIntToBufferBackward(static_cast<int64_t>(i), buffer_end,
+-                                     exact_digit_count);
+-    } else {
+-      return FastIntToBufferBackward(static_cast<int32_t>(i), buffer_end,
+-                                     exact_digit_count);
+-    }
+-  } else {
+-    if (kUse64Bit) {
+-      return FastIntToBufferBackward(static_cast<uint64_t>(i), buffer_end,
+-                                     exact_digit_count);
+-    } else {
+-      return FastIntToBufferBackward(static_cast<uint32_t>(i), buffer_end,
+-                                     exact_digit_count);
+-    }
+-  }
+-}
+-
+ // Implementation of SimpleAtoi, generalized to support arbitrary base (used
+ // with base different from 10 elsewhere in Abseil implementation).
+ template <typename int_type>
+diff --git a/absl/strings/numbers_test.cc b/absl/strings/numbers_test.cc
+index 1ceff70f..75c2dcf2 100644
+--- a/absl/strings/numbers_test.cc
++++ b/absl/strings/numbers_test.cc
+@@ -231,15 +231,10 @@ TEST(Numbers, TestFastPrints) {
+   CheckInt32(INT_MIN);
+   CheckInt32(INT_MAX);
+   CheckInt64(LONG_MIN);
+-  CheckInt64(uint64_t{10000000});
+-  CheckInt64(uint64_t{100000000});
+   CheckInt64(uint64_t{1000000000});
+   CheckInt64(uint64_t{9999999999});
+   CheckInt64(uint64_t{100000000000000});
+   CheckInt64(uint64_t{999999999999999});
+-  CheckInt64(uint64_t{1000000000000000});
+-  CheckInt64(uint64_t{10000000000000000});
+-  CheckInt64(uint64_t{100000000000000000});
+   CheckInt64(uint64_t{1000000000000000000});
+   CheckInt64(uint64_t{1199999999999999999});
+   CheckInt64(int64_t{-700000000000000000});
+@@ -251,8 +246,6 @@ TEST(Numbers, TestFastPrints) {
+   CheckUInt64(uint64_t{999999999999999});
+   CheckUInt64(uint64_t{1000000000000000000});
+   CheckUInt64(uint64_t{1199999999999999999});
+-  CheckUInt64(uint64_t{10000000000000000000u});
+-  CheckUInt64(uint64_t{10200300040000500006u});
+   CheckUInt64(std::numeric_limits<uint64_t>::max());
+ 
+   for (int i = 0; i < 10000; i++) {
+diff --git a/absl/strings/str_cat.cc b/absl/strings/str_cat.cc
+index 098ab183..e7f7052a 100644
+--- a/absl/strings/str_cat.cc
++++ b/absl/strings/str_cat.cc
+@@ -21,12 +21,10 @@
+ #include <cstring>
+ #include <initializer_list>
+ #include <string>
+-#include <type_traits>
+ 
+ #include "absl/base/config.h"
+ #include "absl/base/nullability.h"
+ #include "absl/strings/internal/resize_uninitialized.h"
+-#include "absl/strings/numbers.h"
+ #include "absl/strings/string_view.h"
+ 
+ namespace absl {
+@@ -43,7 +41,8 @@ ABSL_NAMESPACE_BEGIN
+ namespace {
+ // Append is merely a version of memcpy that returns the address of the byte
+ // after the area just overwritten.
+-absl::Nonnull<char*> Append(absl::Nonnull<char*> out, const AlphaNum& x) {
++inline absl::Nonnull<char*> Append(absl::Nonnull<char*> out,
++                                   const AlphaNum& x) {
+   // memcpy is allowed to overwrite arbitrary memory, so doing this after the
+   // call would force an extra fetch of x.size().
+   char* after = out + x.size();
+@@ -53,6 +52,11 @@ absl::Nonnull<char*> Append(absl::Nonnull<char*> out, const AlphaNum& x) {
+   return after;
+ }
+ 
++inline void STLStringAppendUninitializedAmortized(std::string* dest,
++                                                  size_t to_append) {
++  strings_internal::AppendUninitializedTraits<std::string>::Append(dest,
++                                                                   to_append);
++}
+ }  // namespace
+ 
+ std::string StrCat(const AlphaNum& a, const AlphaNum& b) {
+@@ -98,130 +102,6 @@ std::string StrCat(const AlphaNum& a, const AlphaNum& b, const AlphaNum& c,
+ namespace strings_internal {
+ 
+ // Do not call directly - these are not part of the public API.
+-void STLStringAppendUninitializedAmortized(std::string* dest,
+-                                           size_t to_append) {
+-  strings_internal::AppendUninitializedTraits<std::string>::Append(dest,
+-                                                                   to_append);
+-}
+-
+-template <typename Integer>
+-std::enable_if_t<std::is_integral<Integer>::value, std::string> IntegerToString(
+-    Integer i) {
+-  std::string str;
+-  const auto /* either bool or std::false_type */ is_negative =
+-      absl::numbers_internal::IsNegative(i);
+-  const uint32_t digits = absl::numbers_internal::Base10Digits(
+-      absl::numbers_internal::UnsignedAbsoluteValue(i));
+-  absl::strings_internal::STLStringResizeUninitialized(
+-      &str, digits + static_cast<uint32_t>(is_negative));
+-  absl::numbers_internal::FastIntToBufferBackward(i, &str[str.size()], digits);
+-  return str;
+-}
+-
+-template <>
+-std::string IntegerToString(long i) {  // NOLINT
+-  if (sizeof(i) <= sizeof(int)) {
+-    return IntegerToString(static_cast<int>(i));
+-  } else {
+-    return IntegerToString(static_cast<long long>(i));  // NOLINT
+-  }
+-}
+-
+-template <>
+-std::string IntegerToString(unsigned long i) {  // NOLINT
+-  if (sizeof(i) <= sizeof(unsigned int)) {
+-    return IntegerToString(static_cast<unsigned int>(i));
+-  } else {
+-    return IntegerToString(static_cast<unsigned long long>(i));  // NOLINT
+-  }
+-}
+-
+-template <typename Float>
+-std::enable_if_t<std::is_floating_point<Float>::value, std::string>
+-FloatToString(Float f) {
+-  std::string result;
+-  strings_internal::STLStringResizeUninitialized(
+-      &result, numbers_internal::kSixDigitsToBufferSize);
+-  char* start = &result[0];
+-  result.erase(numbers_internal::SixDigitsToBuffer(f, start));
+-  return result;
+-}
+-
+-std::string SingleArgStrCat(int x) { return IntegerToString(x); }
+-std::string SingleArgStrCat(unsigned int x) { return IntegerToString(x); }
+-// NOLINTNEXTLINE
+-std::string SingleArgStrCat(long x) { return IntegerToString(x); }
+-// NOLINTNEXTLINE
+-std::string SingleArgStrCat(unsigned long x) { return IntegerToString(x); }
+-// NOLINTNEXTLINE
+-std::string SingleArgStrCat(long long x) { return IntegerToString(x); }
+-// NOLINTNEXTLINE
+-std::string SingleArgStrCat(unsigned long long x) { return IntegerToString(x); }
+-std::string SingleArgStrCat(float x) { return FloatToString(x); }
+-std::string SingleArgStrCat(double x) { return FloatToString(x); }
+-
+-template <class Integer>
+-std::enable_if_t<std::is_integral<Integer>::value, void> AppendIntegerToString(
+-    std::string& str, Integer i) {
+-  const auto /* either bool or std::false_type */ is_negative =
+-      absl::numbers_internal::IsNegative(i);
+-  const uint32_t digits = absl::numbers_internal::Base10Digits(
+-      absl::numbers_internal::UnsignedAbsoluteValue(i));
+-  absl::strings_internal::STLStringAppendUninitializedAmortized(
+-      &str, digits + static_cast<uint32_t>(is_negative));
+-  absl::numbers_internal::FastIntToBufferBackward(i, &str[str.size()], digits);
+-}
+-
+-template <>
+-void AppendIntegerToString(std::string& str, long i) {  // NOLINT
+-  if (sizeof(i) <= sizeof(int)) {
+-    return AppendIntegerToString(str, static_cast<int>(i));
+-  } else {
+-    return AppendIntegerToString(str, static_cast<long long>(i));  // NOLINT
+-  }
+-}
+-
+-template <>
+-void AppendIntegerToString(std::string& str,
+-                           unsigned long i) {  // NOLINT
+-  if (sizeof(i) <= sizeof(unsigned int)) {
+-    return AppendIntegerToString(str, static_cast<unsigned int>(i));
+-  } else {
+-    return AppendIntegerToString(str,
+-                                 static_cast<unsigned long long>(i));  // NOLINT
+-  }
+-}
+-
+-// `SingleArgStrAppend` overloads are defined here for the same reasons as with
+-// `SingleArgStrCat` above.
+-void SingleArgStrAppend(std::string& str, int x) {
+-  return AppendIntegerToString(str, x);
+-}
+-
+-void SingleArgStrAppend(std::string& str, unsigned int x) {
+-  return AppendIntegerToString(str, x);
+-}
+-
+-// NOLINTNEXTLINE
+-void SingleArgStrAppend(std::string& str, long x) {
+-  return AppendIntegerToString(str, x);
+-}
+-
+-// NOLINTNEXTLINE
+-void SingleArgStrAppend(std::string& str, unsigned long x) {
+-  return AppendIntegerToString(str, x);
+-}
+-
+-// NOLINTNEXTLINE
+-void SingleArgStrAppend(std::string& str, long long x) {
+-  return AppendIntegerToString(str, x);
+-}
+-
+-// NOLINTNEXTLINE
+-void SingleArgStrAppend(std::string& str, unsigned long long x) {
+-  return AppendIntegerToString(str, x);
+-}
+-
+ std::string CatPieces(std::initializer_list<absl::string_view> pieces) {
+   std::string result;
+   size_t total_size = 0;
+@@ -258,7 +138,7 @@ void AppendPieces(absl::Nonnull<std::string*> dest,
+     ASSERT_NO_OVERLAP(*dest, piece);
+     to_append += piece.size();
+   }
+-  strings_internal::STLStringAppendUninitializedAmortized(dest, to_append);
++  STLStringAppendUninitializedAmortized(dest, to_append);
+ 
+   char* const begin = &(*dest)[0];
+   char* out = begin + old_size;
+@@ -277,7 +157,7 @@ void AppendPieces(absl::Nonnull<std::string*> dest,
+ void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a) {
+   ASSERT_NO_OVERLAP(*dest, a);
+   std::string::size_type old_size = dest->size();
+-  strings_internal::STLStringAppendUninitializedAmortized(dest, a.size());
++  STLStringAppendUninitializedAmortized(dest, a.size());
+   char* const begin = &(*dest)[0];
+   char* out = begin + old_size;
+   out = Append(out, a);
+@@ -289,8 +169,7 @@ void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a,
+   ASSERT_NO_OVERLAP(*dest, a);
+   ASSERT_NO_OVERLAP(*dest, b);
+   std::string::size_type old_size = dest->size();
+-  strings_internal::STLStringAppendUninitializedAmortized(dest,
+-                                                          a.size() + b.size());
++  STLStringAppendUninitializedAmortized(dest, a.size() + b.size());
+   char* const begin = &(*dest)[0];
+   char* out = begin + old_size;
+   out = Append(out, a);
+@@ -304,8 +183,7 @@ void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a,
+   ASSERT_NO_OVERLAP(*dest, b);
+   ASSERT_NO_OVERLAP(*dest, c);
+   std::string::size_type old_size = dest->size();
+-  strings_internal::STLStringAppendUninitializedAmortized(
+-      dest, a.size() + b.size() + c.size());
++  STLStringAppendUninitializedAmortized(dest, a.size() + b.size() + c.size());
+   char* const begin = &(*dest)[0];
+   char* out = begin + old_size;
+   out = Append(out, a);
+@@ -321,7 +199,7 @@ void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a,
+   ASSERT_NO_OVERLAP(*dest, c);
+   ASSERT_NO_OVERLAP(*dest, d);
+   std::string::size_type old_size = dest->size();
+-  strings_internal::STLStringAppendUninitializedAmortized(
++  STLStringAppendUninitializedAmortized(
+       dest, a.size() + b.size() + c.size() + d.size());
+   char* const begin = &(*dest)[0];
+   char* out = begin + old_size;
+diff --git a/absl/strings/str_cat.h b/absl/strings/str_cat.h
+index 1b52a36f..f224942f 100644
+--- a/absl/strings/str_cat.h
++++ b/absl/strings/str_cat.h
+@@ -93,6 +93,8 @@
+ #include <cstddef>
+ #include <cstdint>
+ #include <cstring>
++#include <initializer_list>
++#include <limits>
+ #include <string>
+ #include <type_traits>
+ #include <utility>
+@@ -448,36 +450,77 @@ std::string CatPieces(std::initializer_list<absl::string_view> pieces);
+ void AppendPieces(absl::Nonnull<std::string*> dest,
+                   std::initializer_list<absl::string_view> pieces);
+ 
+-void STLStringAppendUninitializedAmortized(std::string* dest, size_t to_append);
++template <typename Integer>
++std::string IntegerToString(Integer i) {
++  // Any integer (signed/unsigned) up to 64 bits can be formatted into a buffer
++  // with 22 bytes (including NULL at the end).
++  constexpr size_t kMaxDigits10 = 22;
++  std::string result;
++  strings_internal::STLStringResizeUninitialized(&result, kMaxDigits10);
++  char* start = &result[0];
++  // note: this can be optimized to not write last zero.
++  char* end = numbers_internal::FastIntToBuffer(i, start);
++  auto size = static_cast<size_t>(end - start);
++  assert((size < result.size()) &&
++         "StrCat(Integer) does not fit into kMaxDigits10");
++  result.erase(size);
++  return result;
++}
++template <typename Float>
++std::string FloatToString(Float f) {
++  std::string result;
++  strings_internal::STLStringResizeUninitialized(
++      &result, numbers_internal::kSixDigitsToBufferSize);
++  char* start = &result[0];
++  result.erase(numbers_internal::SixDigitsToBuffer(f, start));
++  return result;
++}
+ 
+ // `SingleArgStrCat` overloads take built-in `int`, `long` and `long long` types
+ // (signed / unsigned) to avoid ambiguity on the call side. If we used int32_t
+ // and int64_t, then at least one of the three (`int` / `long` / `long long`)
+ // would have been ambiguous when passed to `SingleArgStrCat`.
+-std::string SingleArgStrCat(int x);
+-std::string SingleArgStrCat(unsigned int x);
+-std::string SingleArgStrCat(long x);                // NOLINT
+-std::string SingleArgStrCat(unsigned long x);       // NOLINT
+-std::string SingleArgStrCat(long long x);           // NOLINT
+-std::string SingleArgStrCat(unsigned long long x);  // NOLINT
+-std::string SingleArgStrCat(float x);
+-std::string SingleArgStrCat(double x);
+-
+-// `SingleArgStrAppend` overloads are defined here for the same reasons as with
+-// `SingleArgStrCat` above.
+-void SingleArgStrAppend(std::string& str, int x);
+-void SingleArgStrAppend(std::string& str, unsigned int x);
+-void SingleArgStrAppend(std::string& str, long x);                // NOLINT
+-void SingleArgStrAppend(std::string& str, unsigned long x);       // NOLINT
+-void SingleArgStrAppend(std::string& str, long long x);           // NOLINT
+-void SingleArgStrAppend(std::string& str, unsigned long long x);  // NOLINT
+-
+-template <typename T,
+-          typename = std::enable_if_t<std::is_arithmetic<T>::value &&
+-                                      !std::is_same<T, char>::value &&
+-                                      !std::is_same<T, bool>::value>>
++inline std::string SingleArgStrCat(int x) { return IntegerToString(x); }
++inline std::string SingleArgStrCat(unsigned int x) {
++  return IntegerToString(x);
++}
++// NOLINTNEXTLINE
++inline std::string SingleArgStrCat(long x) { return IntegerToString(x); }
++// NOLINTNEXTLINE
++inline std::string SingleArgStrCat(unsigned long x) {
++  return IntegerToString(x);
++}
++// NOLINTNEXTLINE
++inline std::string SingleArgStrCat(long long x) { return IntegerToString(x); }
++// NOLINTNEXTLINE
++inline std::string SingleArgStrCat(unsigned long long x) {
++  return IntegerToString(x);
++}
++inline std::string SingleArgStrCat(float x) { return FloatToString(x); }
++inline std::string SingleArgStrCat(double x) { return FloatToString(x); }
++
++// As of September 2023, the SingleArgStrCat() optimization is only enabled for
++// libc++. The reasons for this are:
++// 1) The SSO size for libc++ is 23, while libstdc++ and MSSTL have an SSO size
++// of 15. Since IntegerToString unconditionally resizes the string to 22 bytes,
++// this causes both libstdc++ and MSSTL to allocate.
++// 2) strings_internal::STLStringResizeUninitialized() only has an
++// implementation that avoids initialization when using libc++. This isn't as
++// relevant as (1), and the cost should be benchmarked if (1) ever changes on
++// libstc++ or MSSTL.
++#ifdef _LIBCPP_VERSION
++#define ABSL_INTERNAL_STRCAT_ENABLE_FAST_CASE true
++#else
++#define ABSL_INTERNAL_STRCAT_ENABLE_FAST_CASE false
++#endif
++
++template <typename T, typename = std::enable_if_t<
++                          ABSL_INTERNAL_STRCAT_ENABLE_FAST_CASE &&
++                          std::is_arithmetic<T>{} && !std::is_same<T, char>{}>>
+ using EnableIfFastCase = T;
+ 
++#undef ABSL_INTERNAL_STRCAT_ENABLE_FAST_CASE
++
+ }  // namespace strings_internal
+ 
+ ABSL_MUST_USE_RESULT inline std::string StrCat() { return std::string(); }
+@@ -553,67 +596,6 @@ inline void StrAppend(absl::Nonnull<std::string*> dest, const AlphaNum& a,
+              static_cast<const AlphaNum&>(args).Piece()...});
+ }
+ 
+-template <class String, class T>
+-std::enable_if_t<
+-    std::is_integral<absl::strings_internal::EnableIfFastCase<T>>::value, void>
+-StrAppend(absl::Nonnull<String*> result, T i) {
+-  return absl::strings_internal::SingleArgStrAppend(*result, i);
+-}
+-
+-// This overload is only selected if all the parameters are numbers that can be
+-// handled quickly.
+-// Later we can look into how we can extend this to more general argument
+-// mixtures without bloating codegen too much, or copying unnecessarily.
+-template <typename String, typename... T>
+-std::enable_if_t<
+-    (sizeof...(T) > 1),
+-    std::common_type_t<std::conditional_t<
+-        true, void, absl::strings_internal::EnableIfFastCase<T>>...>>
+-StrAppend(absl::Nonnull<String*> str, T... args) {
+-  // Do not add unnecessary variables, logic, or even "free" lambdas here.
+-  // They can add overhead for the compiler and/or at run time.
+-  // Furthermore, assume this function will be inlined.
+-  // This function is carefully tailored to be able to be largely optimized away
+-  // so that it becomes near-equivalent to the caller handling each argument
+-  // individually while minimizing register pressure, so that the compiler
+-  // can inline it with minimal overhead.
+-
+-  // First, calculate the total length, so we can perform just a single resize.
+-  // Save all the lengths for later.
+-  size_t total_length = 0;
+-  const ptrdiff_t lengths[] = {
+-      absl::numbers_internal::GetNumDigitsOrNegativeIfNegative(args)...};
+-  for (const ptrdiff_t possibly_negative_length : lengths) {
+-    // Lengths are negative for negative numbers. Keep them for later use, but
+-    // take their absolute values for calculating total lengths;
+-    total_length += possibly_negative_length < 0
+-                        ? static_cast<size_t>(-possibly_negative_length)
+-                        : static_cast<size_t>(possibly_negative_length);
+-  }
+-
+-  // Now reserve space for all the arguments.
+-  const size_t old_size = str->size();
+-  absl::strings_internal::STLStringAppendUninitializedAmortized(str,
+-                                                                total_length);
+-
+-  // Finally, output each argument one-by-one, from left to right.
+-  size_t i = 0;  // The current argument we're processing
+-  ptrdiff_t n;   // The length of the current argument
+-  typename String::pointer pos = &(*str)[old_size];
+-  using SomeTrivialEmptyType = std::false_type;
+-  const SomeTrivialEmptyType dummy;
+-  // Ugly code due to the lack of C++17 fold expressions
+-  const SomeTrivialEmptyType dummies[] = {
+-      (/* Comma expressions are poor man's C++17 fold expression for C++14 */
+-       (void)(n = lengths[i]),
+-       (void)(n < 0 ? (void)(*pos++ = '-'), (n = ~n) : 0),
+-       (void)absl::numbers_internal::FastIntToBufferBackward(
+-           absl::numbers_internal::UnsignedAbsoluteValue(std::move(args)),
+-           pos += n, static_cast<uint32_t>(n)),
+-       (void)++i, dummy)...};
+-  (void)dummies;  // Remove & migrate to fold expressions in C++17
+-}
+-
+ // Helper function for the future StrCat default floating-point format, %.6g
+ // This is fast.
+ inline strings_internal::AlphaNumBuffer<
+diff --git a/absl/strings/str_cat_test.cc b/absl/strings/str_cat_test.cc
+index b30a86fe..66eddf0d 100644
+--- a/absl/strings/str_cat_test.cc
++++ b/absl/strings/str_cat_test.cc
+@@ -39,24 +39,6 @@
+ 
+ namespace {
+ 
+-template <typename Integer>
+-void VerifyInteger(Integer value) {
+-  const std::string expected = std::to_string(value);
+-
+-  EXPECT_EQ(absl::StrCat(value), expected);
+-
+-  const char* short_prefix = "x";
+-  const char* long_prefix = "2;k.msabxiuow2[09i;o3k21-93-9=29]";
+-
+-  std::string short_str = short_prefix;
+-  absl::StrAppend(&short_str, value);
+-  EXPECT_EQ(short_str, short_prefix + expected);
+-
+-  std::string long_str = long_prefix;
+-  absl::StrAppend(&long_str, value);
+-  EXPECT_EQ(long_str, long_prefix + expected);
+-}
+-
+ // Test absl::StrCat of ints and longs of various sizes and signdedness.
+ TEST(StrCat, Ints) {
+   const short s = -1;  // NOLINT(runtime/int)
+@@ -86,34 +68,6 @@ TEST(StrCat, Ints) {
+   EXPECT_EQ(answer, "-9-12");
+   answer = absl::StrCat(uintptr, 0);
+   EXPECT_EQ(answer, "130");
+-
+-  for (const uint32_t base : {2u, 10u}) {
+-    for (const int extra_shift : {0, 12}) {
+-      for (uint64_t i = 0; i < (1 << 8); ++i) {
+-        uint64_t j = i;
+-        while (true) {
+-          uint64_t v = j ^ (extra_shift != 0 ? (j << extra_shift) * base : 0);
+-          VerifyInteger(static_cast<bool>(v));
+-          VerifyInteger(static_cast<wchar_t>(v));
+-          VerifyInteger(static_cast<signed char>(v));
+-          VerifyInteger(static_cast<unsigned char>(v));
+-          VerifyInteger(static_cast<short>(v));               // NOLINT
+-          VerifyInteger(static_cast<unsigned short>(v));      // NOLINT
+-          VerifyInteger(static_cast<int>(v));                 // NOLINT
+-          VerifyInteger(static_cast<unsigned int>(v));        // NOLINT
+-          VerifyInteger(static_cast<long>(v));                // NOLINT
+-          VerifyInteger(static_cast<unsigned long>(v));       // NOLINT
+-          VerifyInteger(static_cast<long long>(v));           // NOLINT
+-          VerifyInteger(static_cast<unsigned long long>(v));  // NOLINT
+-          const uint64_t next = j == 0 ? 1 : j * base;
+-          if (next <= j) {
+-            break;
+-          }
+-          j = next;
+-        }
+-      }
+-    }
+-  }
+ }
+ 
+ TEST(StrCat, Enums) {
+-- 
+2.34.1
+
