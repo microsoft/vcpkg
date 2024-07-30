@@ -1,53 +1,34 @@
-name: Clean PR Commit Messages
+name: Check PR Comments Message
 
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  clean-commit-message:
+  Check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Extract PR commits
-        id: extract_pr_commits
+      - name: Check PR body for comments
+        id: check_pr_body
         uses: actions/github-script@v7
         with:
           script: |
-            const commits = await github.rest.pulls.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            });
-            return {
-              commits: commits.data.map(commit => commit.sha).join('\n')
-            };
+            const prNumber = context.payload.pull_request.number;
+            const prBody = context.payload.pull_request.body;
+            
+            const commentRegex = /<!--.*-->/;
+            const hasComment = commentRegex.test(prBody);
 
-      - name: Clean commit messages
-        run: |
-          commit_shas=$(echo "${{ steps.extract_pr_commits.outputs.commits }}" | tr '\n' ' ')
-          
-          cleaned_messages=""
-          for sha in $commit_shas; do
-            message=$(git log --format=%B -n 1 $sha)
-            cleaned_message=$(echo "$message" | sed 's/<!--.*-->//g' | sed '/^$/d')
-            cleaned_messages+="$cleaned_message"$'\n'
-          done
-
-          git reset --soft HEAD~$(echo $commit_shas | wc -w)
-          IFS=$'\n'
-          for cleaned_message in ${cleaned_messages}; do
-            git commit -m "${cleaned_message}"
-          done
-
-      - name: Push cleaned commit messages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
-        run: |
-          git push origin HEAD:$PR_BRANCH --force-with-lease
+            if (hasComment) {
+              const comment = "This pull request comments contains `<!-- ... -->` comments.";
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: comment
+              });
+            }
