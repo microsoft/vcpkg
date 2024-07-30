@@ -1,0 +1,53 @@
+name: Clean PR Commit Messages
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  clean-commit-message:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Extract PR commits
+        id: extract_pr_commits
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commits = await github.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            return {
+              commits: commits.data.map(commit => commit.sha).join('\n')
+            };
+
+      - name: Clean commit messages
+        run: |
+          // Extract the commit SHAs from the previous step output
+          commit_shas=$(echo "${{ steps.extract_pr_commits.outputs.commits }}" | tr '\n' ' ')
+          
+          // Extract and clean commit messages
+          cleaned_messages=""
+          for sha in $commit_shas; do
+            message=$(git log --format=%B -n 1 $sha)
+            cleaned_message=$(echo "$message" | sed 's/<!--.*-->//g' | sed '/^$/d')
+            cleaned_messages+="$cleaned_message"$'\n'
+          done
+
+          # Reset the commits with cleaned messages
+          git reset --soft HEAD~$(echo $commit_shas | wc -w)
+          IFS=$'\n'
+          for cleaned_message in ${cleaned_messages}; do
+            git commit -m "${cleaned_message}"
+          done
+
+      - name: Push cleaned commit messages
+        run: |
+          git push --force-with-lease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
