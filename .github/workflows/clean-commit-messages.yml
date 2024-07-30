@@ -46,7 +46,8 @@ jobs:
           done
 
       - name: Push cleaned commit messages
-        run: |
-          git push origin HEAD:${{ github.event.pull_request.head.ref }} --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git push origin HEAD:$PR_BRANCH --force-with-lease
