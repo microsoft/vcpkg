@@ -17,7 +17,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const commits = await github.pulls.listCommits({
+            const commits = await github.rest.pulls.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number
@@ -28,10 +28,8 @@ jobs:
 
       - name: Clean commit messages
         run: |
-          // Extract the commit SHAs from the previous step output
           commit_shas=$(echo "${{ steps.extract_pr_commits.outputs.commits }}" | tr '\n' ' ')
           
-          // Extract and clean commit messages
           cleaned_messages=""
           for sha in $commit_shas; do
             message=$(git log --format=%B -n 1 $sha)
@@ -39,7 +37,6 @@ jobs:
             cleaned_messages+="$cleaned_message"$'\n'
           done
 
-          # Reset the commits with cleaned messages
           git reset --soft HEAD~$(echo $commit_shas | wc -w)
           IFS=$'\n'
           for cleaned_message in ${cleaned_messages}; do
