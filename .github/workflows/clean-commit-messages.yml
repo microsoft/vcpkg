@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Extract PR commits
         id: extract_pr_commits
@@ -45,6 +47,6 @@ jobs:
 
       - name: Push cleaned commit messages
         run: |
-          git push --force-with-lease
+          git push origin HEAD:${{ github.event.pull_request.head.ref }} --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
