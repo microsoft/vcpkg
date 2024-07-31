@@ -1,21 +1,11 @@
 {
   "name": "numcpp",
   "version": "2.12.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++ implementation of the Python Numpy library",
   "homepage": "https://dpilger26.github.io/NumCpp",
   "license": "MIT",
   "dependencies": [
-    "boost-algorithm",
-    "boost-date-time",
-    "boost-endian",
-    "boost-integer",
-    "boost-log",
-    "boost-math",
-    "boost-predef",
-    "boost-python",
-    "boost-random",
-    "boost-type-traits",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -26,6 +16,21 @@
     }
   ],
   "features": {
+    "boost": {
+      "description": "Enable use boost",
+      "dependencies": [
+        "boost-algorithm",
+        "boost-date-time",
+        "boost-endian",
+        "boost-integer",
+        "boost-log",
+        "boost-math",
+        "boost-predef",
+        "boost-python",
+        "boost-random",
+        "boost-type-traits"
+      ]
+    },
     "python": {
       "description": "Interacting with Python with pybind11 interface",
       "dependencies": [

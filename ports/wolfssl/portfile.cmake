@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
-    REF v5.7.0-stable
-    SHA512 52cc7bdda7e3cfbea7c60fad1e2b1565d7057607bbb66014ef03643a75e78777d10d53799fba314bab37e245b7e8a60e29c6f4177070ed44536a898e04b27b44
+    REF "v${VERSION}-stable"
+    SHA512 daec6427cbee6628da0dcaad2f721efb0591532fcb3bd688e7212aaca8a442ac10176e5b9eb6b14fea6c49a613d6b086ff777eafc5c27b25d51f758ad0aa13bd
     HEAD_REF master
     PATCHES
     )
@@ -11,6 +11,12 @@ if ("dtls" IN_LIST FEATURES)
     set(ENABLE_DTLS yes)
 else()
     set(ENABLE_DTLS no)
+endif()
+
+if ("quic" IN_LIST FEATURES)
+    set(ENABLE_QUIC yes)
+else()
+    set(ENABLE_QUIC no)
 endif()
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -40,6 +46,8 @@ vcpkg_cmake_configure(
       -DWOLFSSL_DTLS=${ENABLE_DTLS}
       -DWOLFSSL_DTLS13=${ENABLE_DTLS}
       -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}
+      -DWOLFSSL_QUIC=${ENABLE_QUIC}
+      -DWOLFSSL_SESSION_TICKET=${ENABLE_QUIC}
     OPTIONS_RELEASE
       -DCMAKE_C_FLAGS=${VCPKG_COMBINED_C_FLAGS_RELEASE}
     OPTIONS_DEBUG

@@ -137,11 +137,14 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
     "securetransport"     FEATURE_securetransport
+    "dnslookup"           FEATURE_dnslookup
+    "dnslookup"           FEATURE_libresolv
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
+    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolve
     )
 
 if("openssl" IN_LIST FEATURES)
@@ -152,7 +155,6 @@ endif()
 
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
-list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapResolv:BOOL=ON)
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
@@ -500,7 +502,8 @@ file(WRITE "${hostinfofile}" "${_contents}")
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
                          "PACKAGE_PREFIX_DIR}/bin/syncqt"
-                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt")
+                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt"
+                         IGNORE_UNCHANGED)
 endif()
 
 set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")

@@ -1,6 +1,6 @@
 {
   "name": "fastgltf",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A modern C++17 glTF 2.0 library focused on speed, correctness, and usability",
   "homepage": "https://github.com/spnda/fastgltf",
   "license": "MIT",
