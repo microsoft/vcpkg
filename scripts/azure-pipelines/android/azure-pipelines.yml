@@ -78,7 +78,6 @@ jobs:
     inputs:
       azureSubscription: 'VcpkgPrFleet'
       scriptType: bash
-      failOnStandardError: true
       scriptLocation: 'inlineScript'
       inlineScript: |
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
