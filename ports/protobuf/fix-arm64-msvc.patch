@@ -1,8 +1,8 @@
 diff --git a/src/google/protobuf/parse_context.h b/src/google/protobuf/parse_context.h
-index d40e71c1d..22ed8212d 100644
+index df12ee1ab..91b2a08c4 100644
 --- a/src/google/protobuf/parse_context.h
 +++ b/src/google/protobuf/parse_context.h
-@@ -635,7 +635,7 @@ inline const char* VarintParseSlow(const char* p, uint32_t res, uint64_t* out) {
+@@ -653,7 +653,7 @@ inline const char* VarintParseSlow(const char* p, uint32_t res, uint64_t* out) {
    return tmp.first;
  }
  
@@ -11,12 +11,19 @@ index d40e71c1d..22ed8212d 100644
  // Generally, speaking, the ARM-optimized Varint decode algorithm is to extract
  // and concatenate all potentially valid data bits, compute the actual length
  // of the Varint, and mask off the data bits which are not actually part of the
-@@ -866,7 +866,7 @@ static const char* VarintParseSlowArm(const char* p, uint64_t* out,
- // The caller must ensure that p points to at least 10 valid bytes.
+@@ -883,7 +883,7 @@ static const char* VarintParseSlowArm(const char* p, uint64_t* out,
+ 
  template <typename T>
  PROTOBUF_NODISCARD const char* VarintParse(const char* p, T* out) {
--#if defined(__aarch64__) && defined(ABSL_IS_LITTLE_ENDIAN)
+-#if defined(__aarch64__) && defined(PROTOBUF_LITTLE_ENDIAN)
 +#if defined(__aarch64__) && defined(ABSL_IS_LITTLE_ENDIAN) && !defined(_MSC_VER)
    // This optimization is not supported in big endian mode
    uint64_t first8;
    std::memcpy(&first8, p, sizeof(first8));
+diff --git a/third_party/abseil-cpp b/third_party/abseil-cpp
+index fb3621f4f..4a2c63365 160000
+--- a/third_party/abseil-cpp
++++ b/third_party/abseil-cpp
+@@ -1 +1 @@
+-Subproject commit fb3621f4f897824c0dbe0615fa94543df6192f30
++Subproject commit 4a2c63365eff8823a5221db86ef490e828306f9d
