@@ -6,7 +6,7 @@ index f3e4634..e0f62eb 100644
  #include "buildconf.hpp"
  #include <initializer_list>
  #include <vector>
-+#include <cstdint>
++#include <stdint.h>
  
  
  namespace sql
