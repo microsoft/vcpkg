@@ -18,4 +18,4 @@ jobs:
       failOnStandardError: true
       scriptLocation: 'inlineScript'
       inlineScript: |
-        Write-Error "This should fail the run"
+        & ./scripts/azure-pipelines/write-an-error.ps1
