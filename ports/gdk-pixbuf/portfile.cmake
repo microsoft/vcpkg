@@ -37,6 +37,12 @@ else()
     list(APPEND OPTIONS -Djpeg=disabled)
 endif()
 
+if("others" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dothers=enabled)
+else()
+    list(APPEND OPTIONS -Dothers=disabled)
+endif()
+
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
 else()

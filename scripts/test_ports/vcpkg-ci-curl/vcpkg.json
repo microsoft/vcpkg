@@ -14,6 +14,7 @@
     {
       "name": "curl",
       "features": [
+        "c-ares",
         "http2",
         "zstd"
       ]
@@ -29,8 +30,8 @@
     {
       "name": "curl",
       "features": [
-        "psl",
-        "gsasl"
+        "gsasl",
+        "psl"
       ],
       "platform": "!uwp"
     },
