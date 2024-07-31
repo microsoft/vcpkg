@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 5b3e22ad14bf0c37d97835c8309d1a5797cfab67b14ebfad9fd69a999ee27fe97d42ecff5e57e598d21575d053c07c30995f8c2d5f3a23433fb59d6bab45e1e7
+    SHA512 5b5766d279d92659fd8e6d5d5aac8be7328a8eae7412085c96e7059ecc560f596bf55ff0a8df6d671de5169d2a80694a6bdd6561dbe9bbb4c3df56b687c50039
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
@@ -177,7 +177,7 @@ else()
     endif()
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Botan-3.3.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Botan-${VERSION}")
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 

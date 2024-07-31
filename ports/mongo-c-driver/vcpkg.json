@@ -1,6 +1,7 @@
 {
   "name": "mongo-c-driver",
   "version": "1.27.4",
+  "port-version": 1,
   "description": "Client library written in C for MongoDB.",
   "homepage": "https://github.com/mongodb/mongo-c-driver",
   "license": null,
@@ -14,6 +15,7 @@
       ],
       "platform": "!windows & !osx & !ios"
     },
+    "utf8proc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,12 +27,6 @@
     "zlib"
   ],
   "features": {
-    "icu": {
-      "description": "Enable ICU support, necessary to use non-ASCII usernames or passwords",
-      "dependencies": [
-        "icu"
-      ]
-    },
     "openssl": {
       "description": "Use OpenSSL (even on Windows or Apple systems)",
       "dependencies": [
@@ -46,10 +42,6 @@
     "zstd": {
       "description": "Enables zstd compressor support",
       "dependencies": [
-        {
-          "name": "pkgconf",
-          "host": true
-        },
         "zstd"
       ]
     }
