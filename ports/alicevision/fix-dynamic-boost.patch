@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8fcdd67..566890c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -288,7 +288,7 @@ else()
+ endif()
+ 
+ 
+-if(WIN32)
++if(OFF)
+   # Disable BOOST autolink
+   add_definitions(-DBOOST_ALL_NO_LIB)
+ 
