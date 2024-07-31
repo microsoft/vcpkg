@@ -7,6 +7,14 @@ vcpkg_from_github(
     PATCHES fix-dependencies.patch
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sdl2-image SDL2PP_WITH_IMAGE
+        sdl2-mixer SDL2PP_WITH_MIXER
+        sdl2-ttf   SDL2PP_WITH_TTF
+)
+
 file(REMOVE "${SOURCE_PATH}/cmake/FindSDL2.cmake"
             "${SOURCE_PATH}/cmake/FindSDL2_image.cmake"
             "${SOURCE_PATH}/cmake/FindSDL2_mixer.cmake"
@@ -18,6 +26,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL2PP_STATIC)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCMAKEMODDIR=share/${PORT}
         -DSDL2PP_WITH_EXAMPLES=OFF
         -DSDL2PP_WITH_TESTS=OFF
@@ -43,4 +52,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
