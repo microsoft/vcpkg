@@ -1,5 +1,5 @@
 diff --git a/src/google/protobuf/parse_context.h b/src/google/protobuf/parse_context.h
-index df12ee1ab..91b2a08c4 100644
+index df12ee1ab..3eb2e56c7 100644
 --- a/src/google/protobuf/parse_context.h
 +++ b/src/google/protobuf/parse_context.h
 @@ -653,7 +653,7 @@ inline const char* VarintParseSlow(const char* p, uint32_t res, uint64_t* out) {
@@ -16,7 +16,7 @@ index df12ee1ab..91b2a08c4 100644
  template <typename T>
  PROTOBUF_NODISCARD const char* VarintParse(const char* p, T* out) {
 -#if defined(__aarch64__) && defined(PROTOBUF_LITTLE_ENDIAN)
-+#if defined(__aarch64__) && defined(ABSL_IS_LITTLE_ENDIAN) && !defined(_MSC_VER)
++#if defined(__aarch64__) && defined(PROTOBUF_LITTLE_ENDIAN) && !defined(_MSC_VER)
    // This optimization is not supported in big endian mode
    uint64_t first8;
    std::memcpy(&first8, p, sizeof(first8));
