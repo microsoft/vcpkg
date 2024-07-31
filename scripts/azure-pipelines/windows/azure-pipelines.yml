@@ -57,7 +57,7 @@ jobs:
       PathtoPublish: '$(DiffFile)'
       ArtifactName: 'format.diff'
   - task: AzureCLI@2
-    displayName: '*** Test Modified Ports'
+    displayName: 'Initialize cache token'
     inputs:
       azureSubscription: 'VcpkgPrFleet'
       scriptType: 'pscore'
@@ -71,8 +71,26 @@ jobs:
           $assetSas = $assetSas.Trim()
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
-          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite"
-          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+          $assetSourcesStub = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite"
+          $binarySourceStub = "x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,$binarySas"
+          Write-Host "###vso[task.setvariable variable=assetSourcesStub;issecret=true]$assetSourcesStub"
+          Write-Host "###vso[task.setvariable variable=binarySourceStub;issecret=true]$binarySourceStub"
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports'
+    inputs:
+      failOnStderr: true
+      targetType: 'inline'
+      script: |
+          $env:X_VCPKG_ASSET_SOURCES = '$(assetSourcesStub)'
+          $Param = @{
+              BinarySourceStub            = '$(binarySourceStub)'
+              Triplet                     = '${{ replace(parameters.jobName, '_', '-') }}'
+              BuildReason                 = '$(Build.Reason)'
+              WorkingRoot                 = '$(WORKING_ROOT)'
+              ArtifactStagingDirectory    = '$(Build.ArtifactStagingDirectory)'
+          }
+          & scripts/azure-pipelines/test-modified-ports.ps1 @Param
+      pwsh: true
   - task: PowerShell@2
     displayName: 'Validate version files'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
