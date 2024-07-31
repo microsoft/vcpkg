@@ -3,10 +3,6 @@
 #
 
 parameters:
-  - name: vcpkgToolSha
-    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
-    type: string
-    default: 'use default'
   - name: jobName
     type: string
   - name: dockerImage
@@ -65,14 +61,6 @@ jobs:
       ${{ parameters.dockerImage }} \
       ./bootstrap-vcpkg.sh
     displayName: 'Bootstrap vcpkg'
-    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
-  - bash: |
-      docker run --rm \
-      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-      ${{ parameters.dockerImage }} \
-      ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
-    displayName: "Build vcpkg with CMake"
-    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
