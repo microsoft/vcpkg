@@ -23,4 +23,4 @@ jobs:
       failOnStandardError: true
       scriptLocation: 'inlineScript'
       inlineScript: |
-        & ./scripts/azure-pipelines/write-an-error.ps1
+        & pwsh ./scripts/azure-pipelines/write-an-error.ps1
