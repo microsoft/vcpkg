@@ -20,4 +20,3 @@ index df12ee1ab..3eb2e56c7 100644
    // This optimization is not supported in big endian mode
    uint64_t first8;
    std::memcpy(&first8, p, sizeof(first8));
-   
