@@ -20,10 +20,3 @@ index df12ee1ab..3eb2e56c7 100644
    // This optimization is not supported in big endian mode
    uint64_t first8;
    std::memcpy(&first8, p, sizeof(first8));
-diff --git a/third_party/abseil-cpp b/third_party/abseil-cpp
-index fb3621f4f..4a2c63365 160000
---- a/third_party/abseil-cpp
-+++ b/third_party/abseil-cpp
-@@ -1 +1 @@
--Subproject commit fb3621f4f897824c0dbe0615fa94543df6192f30
-+Subproject commit 4a2c63365eff8823a5221db86ef490e828306f9d
