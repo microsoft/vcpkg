@@ -3,10 +3,6 @@
 #
 
 parameters:
-  - name: vcpkgToolSha
-    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
-    type: string
-    default: 'use default'
   - name: jobName
     type: string
   - name: dockerImage
@@ -50,37 +46,18 @@ jobs:
       fi
     displayName: 'Stop and remove all docker containers'
   - task: AzureCLI@2
-    displayName: 'Pull Docker Container'
-    inputs:
-      azureSubscription: 'VcpkgPrFleet'
-      scriptType: bash
-      failOnStandardError: true
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-          az acr login --name vcpkgandroidwus3
-          docker pull ${{ parameters.dockerImage }}
-  - bash: |
-      docker run --rm \
-      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-      ${{ parameters.dockerImage }} \
-      ./bootstrap-vcpkg.sh
-    displayName: 'Bootstrap vcpkg'
-    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
-  - bash: |
-      docker run --rm \
-      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-      ${{ parameters.dockerImage }} \
-      ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
-    displayName: "Build vcpkg with CMake"
-    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
       azureSubscription: 'VcpkgPrFleet'
       scriptType: bash
-      failOnStandardError: true
-      scriptLocation: 'inlineScript'
+      scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
+        az acr login --name vcpkgandroidwus3
+        docker pull ${{ parameters.dockerImage }}
+        docker run --rm \
+          --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+          ${{ parameters.dockerImage }} \
+          ./bootstrap-vcpkg.sh
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
         assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
         binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
