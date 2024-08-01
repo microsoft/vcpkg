@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
-    REF  fdaac01bcc52888994f7afd029dcc045dd408484 #2.5.0
-    SHA512 214f6af92026987d9ee3bad5e1849ef96d8455b1de38a03d068b7d7ab88b66a08f3a1f7c11b0cabc8d0744c19855ee2fdd544ac15ad826d117ef1ba97a318a2f
+    REF  "v${VERSION}"
+    SHA512 39b92ec4c2479a3c0a8e99b2890643c9d76a7e5b61b485c1a3a5f5abff1da4e62b67b879dbcf6e18a43f98172fc9f87f0a6c92b99e2a1900e6f1d2e809899b11
     HEAD_REF master
     PATCHES
         dependencies.patch
