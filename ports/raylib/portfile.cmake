@@ -19,6 +19,15 @@ vcpkg_from_github(
     PATCHES
         android.diff
 )
+file(GLOB vendored_stb RELATIVE "${SOURCE_PATH}/src/external" "${SOURCE_PATH}/src/external/stb_*")
+foreach(header IN LISTS vendored_stb)
+    file(WRITE "${SOURCE_PATH}/src/external/${header}" "#include <${header}>\n")
+endforeach()
+# Undo https://github.com/raysan5/raylib/pull/3403
+file(WRITE "${SOURCE_PATH}/src/external/stb_image_resize2.h" "#include <stb_image_resize.h>\n#define stbir_resize_uint8_linear stbir_resize_uint8\n#define stbir_pixel_layout int\n")
+# For stb
+string(APPEND VCPKG_C_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
+string(APPEND VCPKG_CXX_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
 
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_ANDROID)

@@ -11,6 +11,7 @@
       "name": "glfw3",
       "platform": "!(android | emscripten | windows)"
     },
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
