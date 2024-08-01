@@ -58,13 +58,13 @@ Param(
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
-    return 1
+    exit 1
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
     if ((-Not [string]::IsNullOrWhiteSpace($BinarySourceStub))) {
         Write-Error "Only one binary caching setting may be used."
-        return 1
+        exit 1
     }
 
     $BinarySourceStub = "files,$ArchivesRoot"
@@ -125,7 +125,7 @@ $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
 {
     Write-Error "vcpkg clean failed"
-    return $lastLastExitCode
+    exit $lastLastExitCode
 }
 
 $parentHashes = @()
@@ -140,7 +140,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         if ($lastLastExitCode -ne 0)
         {
             Write-Error "Failed to fetch $tool"
-            return $lastLastExitCode
+            exit $lastLastExitCode
         }
     }
 
@@ -150,7 +150,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     if ($lastLastExitCode -ne 0)
     {
         Write-Error "git revert failed"
-        return $lastLastExitCode
+        exit $lastLastExitCode
     }
 
     $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
@@ -168,7 +168,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         if ($lastLastExitCode -ne 0)
         {
             Write-Error "Generating parent hashes failed; this is usually an infrastructure problem with vcpkg"
-            return $lastLastExitCode
+            exit $lastLastExitCode
         }
     }
     else
@@ -182,7 +182,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     if ($lastLastExitCode -ne 0)
     {
         Write-Error "git reset failed"
-        return $lastLastExitCode
+        exit $lastLastExitCode
     }
 }
 
@@ -203,4 +203,4 @@ if ($lastLastExitCode -ne 0)
     Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
 }
 
-return $lastLastExitCode
+exit $lastLastExitCode
