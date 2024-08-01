@@ -7,10 +7,17 @@
   "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
+    "cgltf",
+    "dirent",
+    "drlibs",
     {
       "name": "glfw3",
       "platform": "!(android | emscripten | windows)"
     },
+    "miniaudio",
+    "mmx",
+    "nanosvg",
+    "qoi",
     "stb",
     {
       "name": "vcpkg-cmake",

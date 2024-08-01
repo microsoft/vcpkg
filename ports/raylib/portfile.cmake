@@ -19,15 +19,29 @@ vcpkg_from_github(
     PATCHES
         android.diff
 )
-file(GLOB vendored_stb RELATIVE "${SOURCE_PATH}/src/external" "${SOURCE_PATH}/src/external/stb_*")
-foreach(header IN LISTS vendored_stb)
-    file(WRITE "${SOURCE_PATH}/src/external/${header}" "#include <${header}>\n")
+file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
+    "${SOURCE_PATH}/src/external/cgltf.h"
+    "${SOURCE_PATH}/src/external/dirent.h"
+    "${SOURCE_PATH}/src/external/dr_*.h"  # from drlibs
+    "${SOURCE_PATH}/src/external/miniaudio.h"
+    "${SOURCE_PATH}/src/external/nanosvg*.h"
+    "${SOURCE_PATH}/src/external/qoi.h"
+    "${SOURCE_PATH}/src/external/s*fl.h"  # from mmx
+    "${SOURCE_PATH}/src/external/stb_*"
+)
+set(optional_vendored_headers
+    "dirent.h"  # from dirent, otherwise system header
+    "stb_image_resize2.h"  # not yet in vcpkg
+)
+foreach(header IN LISTS vendored_headers)
+    find_file(vcpkg_file NAMES "${header}" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES mmx nanosvg NO_DEFAULT_PATH NO_CACHE)
+    if(vcpkg_file)
+        message(STATUS "Using vcpkg's '${header}'")
+        file(COPY "${vcpkg_file}" DESTINATION "${SOURCE_PATH}/src/external")
+    elseif(NOT header IN_LIST optional_vendored_headers)
+        message(FATAL_ERROR "No vcpkg replacement for vendored '${header}'")
+    endif()
 endforeach()
-# Undo https://github.com/raysan5/raylib/pull/3403
-file(WRITE "${SOURCE_PATH}/src/external/stb_image_resize2.h" "#include <stb_image_resize.h>\n#define stbir_resize_uint8_linear stbir_resize_uint8\n#define stbir_pixel_layout int\n")
-# For stb
-string(APPEND VCPKG_C_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
-string(APPEND VCPKG_CXX_FLAGS " -I${CURRENT_INSTALLED_DIR}/include")
 
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_ANDROID)
