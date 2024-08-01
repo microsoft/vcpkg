@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 9f7e92292bde501334ee415335404da7c40e033443c34464ed48af5bab7d1fd594859278eac695bec77ee6d58c0629162a7a9876a38a5abd404faa1c43f2b14e
+    SHA512 f5c425c3fbd7bfda13137e8e9bc969ed7dc94c5bfcf0681a2358ab7d3b5d10402781a93385255a80c402c9824aeb97d70213b412f2d208dee4abdba5bbed2ca4
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
@@ -13,6 +13,7 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
+        gnutls.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,11 +37,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         psl         CURL_USE_LIBPSL
         gssapi      CURL_USE_GSSAPI
         gsasl       CURL_USE_GSASL
+        gnutls      CURL_USE_GNUTLS
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
 )
+
+# Add warning on build failuer when using wolfssl and openssl features togther.
+if("openssl" IN_LIST FEATURES AND "wolfssl" IN_LIST FEATURES)
+    message(WARNING "Adding OpenSSL and WolfSSL simultaneously will result in a build failure. \
+                     Please remove one of these features from your build process.\
+                     If you are using OpenSSL version 1.1, you may disregard this warning."
+    )
+endif()
 
 set(OPTIONS "")
 
