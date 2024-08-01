@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES 
         fix-glog.patch
         0002-fix-dependency.patch
-        fix-build-error-with-fmt11.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
