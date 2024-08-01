@@ -28,8 +28,6 @@ vcpkg_from_github(
         ${patches}
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -40,14 +38,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DSHARED=${SHARED}
-        -DSTATIC=${STATIC}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
-    MAYBE_UNUSED_VARIABLES
-        SHARED
-        STATIC
 )
 
 vcpkg_cmake_install()
@@ -58,16 +51,12 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/include/raylib.h
-        "defined(USE_LIBTYPE_SHARED)"
-        "1 // defined(USE_LIBTYPE_SHARED)"
-    )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/raylib.h" "defined(USE_LIBTYPE_SHARED)" "1")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
