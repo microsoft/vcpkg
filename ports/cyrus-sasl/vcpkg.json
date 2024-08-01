@@ -1,16 +1,14 @@
 {
   "name": "cyrus-sasl",
   "version": "2.1.28",
+  "port-version": 1,
   "description": "Cyrus SASL is an implementation of SASL that makes it easy for application developers to integrate authentication mechanisms into their application in a generic way.",
   "homepage": "https://github.com/cyrusimap/cyrus-sasl",
-  "license": "BSD-3-Clause-Attribution",
-  "supports": "linux | osx | (x64 & windows & !static & !uwp)",
+  "license": null,
+  "supports": "linux | osx | (windows & !uwp)",
   "dependencies": [
-    {
-      "name": "berkeleydb",
-      "platform": "windows"
-    },
     "krb5",
+    "lmdb",
     "openssl"
   ]
 }
