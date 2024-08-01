@@ -1,6 +1,6 @@
 {
   "name": "commsdsl",
-  "version-semver": "4.0.0",
+  "version-semver": "6.3.3",
   "description": "DSL schemas parser and code generator for CommsChampion Ecosystem",
   "homepage": "https://commschamp.github.io/",
   "documentation": "https://github.com/commschamp/commsdsl",

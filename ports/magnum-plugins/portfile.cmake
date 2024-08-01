@@ -131,7 +131,7 @@ else()
     #
     # We delete the import libraries here to avoid the auto-magic linking
     # for plugins which are loaded at runtime.
-    if(WIN32)
+    if(VCPKG_TARGET_IS_WINDOWS)
         set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d")

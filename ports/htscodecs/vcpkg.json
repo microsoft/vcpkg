@@ -1,0 +1,16 @@
+{
+  "name": "htscodecs",
+  "version": "1.6.0",
+  "description": "Custom compression for CRAM and others.",
+  "homepage": "https://github.com/samtools/htscodecs",
+  "license": "MIT",
+  "supports": "!windows",
+  "features": {
+    "bzip2": {
+      "description": "Enable support for BZ2 within Arith streams",
+      "dependencies": [
+        "bzip2"
+      ]
+    }
+  }
+}

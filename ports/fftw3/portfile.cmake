@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         bigobj.patch
         fix-openmp.patch
         install-subtargets.patch
+        fix-wrong-version.patch # https://github.com/FFTW/fftw3/commit/0842f00ae6b6e1f3aade155bc0edd17a7313fa6a
 )
 
 vcpkg_check_features(
