@@ -24,9 +24,6 @@
     "use-audio"
   ],
   "features": {
-    "hidpi": {
-      "description": "Support high-DPI displays"
-    },
     "use-audio": {
       "description": "Build raylib with audio module"
     }

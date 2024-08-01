@@ -33,7 +33,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        hidpi SUPPORT_HIGH_DPI
         use-audio USE_AUDIO
 )
 
@@ -49,7 +48,6 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         SHARED
         STATIC
-        SUPPORT_HIGH_DPI
 )
 
 vcpkg_cmake_install()
