@@ -15,7 +15,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         curl    WITH_CURL
         sasl    WITH_SASL
         sasl    WITH_SASL_CYRUS
-        snappy  WITH_SNAPPY
         ssl     WITH_SSL
         ssl     WITH_SASL_OAUTHBEARER
         ssl     WITH_SASL_SCRAM

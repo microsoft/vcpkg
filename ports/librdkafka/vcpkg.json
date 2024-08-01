@@ -30,9 +30,6 @@
         "cyrus-sasl"
       ]
     },
-    "snappy": {
-      "description": "Build with snappy"
-    },
     "ssl": {
       "description": "Build with OpenSSL",
       "dependencies": [
