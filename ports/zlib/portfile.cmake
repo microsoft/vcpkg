@@ -11,6 +11,8 @@ vcpkg_from_github(
         0003-android-and-mingw-fixes.patch
 )
 
+message(FATAL_ERROR "Break intentionally as a demo")
+
 # This is generated during the cmake build
 file(REMOVE "${SOURCE_PATH}/zconf.h")
 
