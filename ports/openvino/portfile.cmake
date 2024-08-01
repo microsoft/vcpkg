@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 0ddd66a331d7f7da873bf4a0517c65973c77c50c05252f9402aae5fa5dc394ce2631ba98cf084e5787110f5e669716e99224af7ddb477ae5990e77982b0f1b06
+    SHA512 25ec2bb4c087f58033681920b027d43b1778b60042e3bee358b54c83b0296ac0b754880db6bd4fce94fefe8b53d129ff3ec51f17bcb42f4b7adcdc532701f801
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
-        # https://github.com/openvinotoolkit/openvino/pull/25069: disable apiValidator
-        002-api-validator.patch
+        # https://github.com/openvinotoolkit/openvino/pull/25937
+        # onnx codegen cmake script taints source directory
+        002-fix-onnx-codegen.patch
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -42,8 +43,8 @@ if(ENABLE_INTEL_GPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO oneapi-src/oneDNN
-            REF 37f48519b87cf8b5e5ef2209340a1948c3e87d72
-            SHA512 54801a402facf1b8d10d00594496430af94ce63152a026b449eae31aade6f040f788cd4d9b3f104b7dd6a2d8a689faf85cde2b8da9c150191792281d5cec7acc
+            REF 7ab8ee9adda866d675edeee7a3a6a29b2d0a1572
+            SHA512 03d0adab0cbb8b2841bd5de73a21911d63314f0a6299590e2396f42ca66673743c32ef1ec72e856cdac863802632b1e9a065bfffd75659e2007db581e1052e89
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
     endif()
@@ -57,8 +58,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF 373e65b660c0ba274631cf30c422f10606de1618
-        SHA512 eb876ef3c3a51d75565cdecde5872644f99c4b1420015ebe201dc91ead7c4501d8dcf8c1d61e78b277e30e114af13087d9ae6f8ae812d8a0debee597aca4232f
+        REF f0f8defe2dff5058391f2a66e775e20b5de33b08
+        SHA512 d52d1ea504bc3ae7cdd01f7fce80f28231827b3778acda232201ec90c119cb845c4b406ac639d63a8f05ccc91063fbf5f405ba36332c5f539531c01ce9443b5f
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -84,8 +85,8 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v24.04
-            SHA512 900f2e5bf399d298b9636f47a2f56131a2c8b9fe18a786c77b1f761a4f87283a891aec82328e6e6fc6fd62d36a84b7f397d66cd132a04c0d2605b7146a33026a
+            REF v24.06
+            SHA512 d020e4bb710534bb5789355f7396729a9230ce3ce8e0194df7e66750efe0667e38334e1e3696fa07496cf34de38ffcecd1ff6de266fb0e8d85f4f1c60ed9f782
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
     endif()
@@ -103,8 +104,8 @@ if(ENABLE_INTEL_NPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF d490a130fbb80e600b3aed3886c305abcb60d77c
-        SHA512 a0ee41745bda5b4a4d602b70bc8aa6eb131510ba1dd80e5d0829e594f3be5e371770b114ac3c1ce9aebed9345470ec8a233de51feb9f780a5d661577c2ee8c2d
+        REF 16c85231a82ee1a0b06ed7ab7da3f411a0878ed7
+        SHA512 983468c7706dc44cfc248c491cf51d2f69181c16ae1e400ca689df39c51112e03227c2f311173b1665115cdd33fa7d51d48e75adaf8353564a980b37c16aaa66
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
