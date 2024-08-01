@@ -4934,7 +4934,7 @@
     },
     "librdkafka": {
       "baseline": "2.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libredwg": {
       "baseline": "0.13.3",

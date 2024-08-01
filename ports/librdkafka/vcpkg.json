@@ -1,7 +1,7 @@
 {
   "name": "librdkafka",
   "version": "2.3.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The Apache Kafka C/C++ library",
   "homepage": "https://github.com/confluentinc/librdkafka",
   "license": null,
@@ -22,6 +22,12 @@
       "description": "Build with curl",
       "dependencies": [
         "curl"
+      ]
+    },
+    "sasl": {
+      "description": "Build with sasl/gssapi",
+      "dependencies": [
+        "cyrus-sasl"
       ]
     },
     "snappy": {
