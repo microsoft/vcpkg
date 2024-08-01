@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX)
     message(
     "raylib currently requires the following libraries from the system package manager:
     libgl1-mesa-dev
@@ -10,14 +10,6 @@ These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev li
     )
 endif()
 
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
-    set(patches fix-linkGlfw.patch)
-endif()
-
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(ADDITIONAL_OPTIONS "-DPLATFORM=Web")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
@@ -25,9 +17,17 @@ vcpkg_from_github(
     SHA512 5956bc1646b99baac6eb1652c4d72e96af874337158672155ba144f131de8a4fd19291a58335a92fcaaa2fc818682f93ff4230af0f815efb8b49f7d2a162e9b0
     HEAD_REF master
     PATCHES
-        ${patches}
+        android.diff
 )
 
+set(PLATFORM_OPTIONS "")
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND PLATFORM_OPTIONS -DPLATFORM=Android -DUSE_EXTERNAL_GLFW=OFF)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND PLATFORM_OPTIONS -DPLATFORM=Web -DUSE_EXTERNAL_GLFW=OFF)
+else()
+    list(APPEND PLATFORM_OPTIONS -DPLATFORM=Desktop -DUSE_EXTERNAL_GLFW=ON)
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -38,9 +38,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
+        -DCMAKE_POLICY_DEFAULT_CMP0072=NEW # Prefer GLVND
+        ${PLATFORM_OPTIONS}
         ${FEATURE_OPTIONS}
-        ${ADDITIONAL_OPTIONS}
 )
 
 vcpkg_cmake_install()
