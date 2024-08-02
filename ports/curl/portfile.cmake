@@ -14,6 +14,8 @@ vcpkg_from_github(
         dependencies.patch
         cmake-config.patch
         gnutls.patch
+        math.patch
+        gnutls-multissl.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -53,6 +55,28 @@ if("openssl" IN_LIST FEATURES AND "wolfssl" IN_LIST FEATURES)
 endif()
 
 set(OPTIONS "")
+
+if(FEATURES MATCHES "http3-(gnutls|wolfssl)")
+    if("http3-gnutls" IN_LIST FEATURES AND "http3-wolfssl" IN_LIST FEATURES)
+        message(FATAL_ERROR "Cannot have both features of http3 (http3-gnutls and http3-wolfssl). Choose one.")
+    endif()
+    if("http2" IN_LIST FEATURES)
+        message(FATAL_ERROR "Currently http2 depend on ssl. Add http2 cause multissl feature in curl that will cause build failure.")
+    endif()
+
+    set(NUM_TLS 0)
+    set(TLS_BACKEND_LIST "wolfssl" "openssl" "mbedtls" "schannel" "sectransp" "gnutls")
+    foreach(tls_backend IN LISTS TLS_BACKEND_LIST)
+        if(${tls_backend} IN_LIST FEATURES)
+            MATH(EXPR NUM_TLS "${NUM_TLS}+1")
+        endif()
+    endforeach()
+
+    if(NUM_TLS GREATER 1)
+        message(FATAL_ERROR "Cannot compile with more than one tls feature with http3. Make sure you choose only one that match your http3.")
+    endif()
+    list(APPEND OPTIONS -DUSE_NGTCP2=ON -DHAVE_SSL_CTX_SET_QUIC_METHOD=ON)
+endif()
 
 if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
