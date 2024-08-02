@@ -1,5 +1,5 @@
 diff --git a/vowpalwabbit/CMakeLists.txt b/vowpalwabbit/CMakeLists.txt
-index 6d41aa4a8..378e5084c 100644
+index cd3f6cd92..f6635ee35 100644
 --- a/vowpalwabbit/CMakeLists.txt
 +++ b/vowpalwabbit/CMakeLists.txt
 @@ -1,9 +1,9 @@
@@ -14,12 +14,12 @@ index 6d41aa4a8..378e5084c 100644
  add_subdirectory(cache_parser)
  add_subdirectory(common)
  add_subdirectory(config)
-@@ -16,7 +16,7 @@ add_subdirectory(io)
- add_subdirectory(json_parser)
+@@ -17,7 +17,7 @@ add_subdirectory(json_parser)
  add_subdirectory(model_merger)
  add_subdirectory(slim)
--add_subdirectory(spanning_tree_bin)
-+#add_subdirectory(spanning_tree_bin)
- add_subdirectory(spanning_tree)
+ if(VW_FEAT_NETWORKING)
+-  add_subdirectory(spanning_tree_bin)
++#  add_subdirectory(spanning_tree_bin)
+   add_subdirectory(spanning_tree)
+ endif()
  add_subdirectory(text_parser)
- if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
