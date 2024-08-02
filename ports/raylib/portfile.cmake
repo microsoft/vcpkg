@@ -34,6 +34,7 @@ set(optional_vendored_headers
     "stb_image_resize2.h"  # not yet in vcpkg
 )
 foreach(header IN LISTS vendored_headers)
+    unset(vcpkg_file)
     find_file(vcpkg_file NAMES "${header}" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES mmx nanosvg NO_DEFAULT_PATH NO_CACHE)
     if(vcpkg_file)
         message(STATUS "De-vendoring '${header}'")
