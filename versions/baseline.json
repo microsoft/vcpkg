@@ -4520,6 +4520,10 @@
       "baseline": "3.1",
       "port-version": 5
     },
+    "libgourou": {
+      "baseline": "0.8.0",
+      "port-version": 0
+    },
     "libgpg-error": {
       "baseline": "1.47",
       "port-version": 0
@@ -9079,6 +9083,10 @@
     "upb": {
       "baseline": "4.25.1",
       "port-version": 1
+    },
+    "updfparser": {
+      "baseline": "2022-12-19",
+      "port-version": 0
     },
     "urdfdom": {
       "baseline": "3.1.1",
