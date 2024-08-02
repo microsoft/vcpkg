@@ -6,10 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        wchart    PUGIXML_WCHAR_MODE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPUGIXML_BUILD_TESTS=OFF
+        ${options}
 )
 
 vcpkg_cmake_install()
