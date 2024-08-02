@@ -1,15 +1,6 @@
 # Don't file if the bin folder exists. We need exe and custom files.
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-message(STATUS [=[
-The usd port does not work with the version of Threading Building Blocks (tbb) currently chosen by vcpkg's baselines,
-and does not expect to be updated to work with current versions soon. See
-https://github.com/PixarAnimationStudios/USD/issues/1600
-
-If you must use this port in your project, pin a version of tbb of 2020_U3 or older via a manifest file.
-See https://vcpkg.io/en/docs/examples/versioning.getting-started.html for instructions.
-]=])
-
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
 
 vcpkg_from_github(
@@ -20,11 +11,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_build-location.patch
+        fix-tbb-targets.patch
+        fix-tbb-12.patch
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -39,6 +30,7 @@ vcpkg_cmake_configure(
         -DPXR_BUILD_EXAMPLES:BOOL=OFF
         -DPXR_BUILD_TUTORIALS:BOOL=OFF
         -DPXR_BUILD_USD_TOOLS:BOOL=OFF
+        -DPXR_ENABLE_PRECOMPILED_HEADERS:BOOL=OFF
 )
 
 vcpkg_cmake_install()

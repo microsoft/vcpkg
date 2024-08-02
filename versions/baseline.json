@@ -9102,7 +9102,7 @@
     },
     "usd": {
       "baseline": "24.5",
-      "port-version": 0
+      "port-version": 1
     },
     "usearch": {
       "baseline": "2.3.2",
