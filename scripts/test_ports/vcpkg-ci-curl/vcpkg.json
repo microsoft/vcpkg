@@ -49,6 +49,13 @@
         "tool"
       ],
       "platform": "!android & !uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "gnutls"
+      ],
+      "platform": "!arm & !xbox"
     }
   ]
 }
