@@ -1,0 +1,17 @@
+diff --git a/src/hello_imgui/internal/poor_man_log.cpp b/src/hello_imgui/internal/poor_man_log.cpp
+index 3aad6f7..69e04f0 100644
+--- a/src/hello_imgui/internal/poor_man_log.cpp
++++ b/src/hello_imgui/internal/poor_man_log.cpp
+@@ -16,9 +16,10 @@ void PoorManLog(const char* msg, ...)
+     char buffer[2000];
+     vsnprintf(buffer, sizeof(buffer), msg, args);
+     va_end(args);
+-
++    wchar_t wbuffer[2000];
++    mbstowcs(wbuffer, buffer, strlen(buffer) + 1);
+ #ifdef _MSC_VER
+-    OutputDebugString(buffer);
++    OutputDebugString(wbuffer);
+ #else
+     printf("%s", buffer);
+ #endif
