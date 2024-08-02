@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-cmake.patch
+        fix-NAN-on-Win11.patch
 )
 
 vcpkg_check_features(

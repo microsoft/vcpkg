@@ -1,0 +1,32 @@
+{
+  "name": "htslib",
+  "version": "1.20",
+  "description": "C library for high-throughput sequencing data formats",
+  "homepage": "https://github.com/samtools/htslib",
+  "license": "MIT",
+  "supports": "!windows",
+  "dependencies": [
+    "htscodecs",
+    "zlib"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Enable support for BZ2-compressed CRAM files",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "deflate": {
+      "description": "Use libdeflate for faster crc and deflate algorithms",
+      "dependencies": [
+        "libdeflate"
+      ]
+    },
+    "lzma": {
+      "description": "Enable support for LZMA-compressed CRAM files",
+      "dependencies": [
+        "liblzma"
+      ]
+    }
+  }
+}

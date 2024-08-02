@@ -1,10 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0ceaf5b..ec714a5 100644
+index bb6ccf1..a0df85f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1682,6 +1682,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -1913,8 +1913,10 @@ if(NOT CURL_DISABLE_INSTALL)
+     set(CPPFLAG_CURL_STATICLIB "")
    else()
      set(ENABLE_SHARED         "no")
++    set(LIBCURL_PC_REQUIRES_PRIVATE "") # flattened into LIBCURL_LIBS 
+     set(LIBCURL_PC_REQUIRES   "${LIBCURL_PC_REQUIRES_PRIVATE}")
      set(LIBCURL_NO_SHARED     "${LIBCURL_LIBS}")
 +    set(LIBCURL_LIBS          "")
      set(CPPFLAG_CURL_STATICLIB "-DCURL_STATICLIB")

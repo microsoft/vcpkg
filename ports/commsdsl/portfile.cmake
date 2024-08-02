@@ -25,6 +25,13 @@ vcpkg_copy_tools(
 )
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibCommsdsl CONFIG_PATH lib/LibCommsdsl/cmake)
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LibCommsdsl/LibCommsdslConfig.cmake"
+"if (TARGET cc::commsdsl)"
+[[include(CMakeFindDependencyMacro)
+find_dependency(LibXml2)
+if (TARGET cc::commsdsl)]])
+
 # after fixing the following dirs are empty
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/LibCommsdsl")

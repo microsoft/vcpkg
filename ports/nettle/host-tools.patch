@@ -1,5 +1,5 @@
 diff --git a/Makefile.in b/Makefile.in
-index 3a12fb4..d00b565 100644
+index 2bf7f1e8..4b80c8df 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -1,3 +1,6 @@
@@ -9,7 +9,7 @@ index 3a12fb4..d00b565 100644
  # Nettle Makefile
  
  @SET_MAKE@
-@@ -335,11 +338,11 @@ des_headers = rotors.h keymap.h
+@@ -347,11 +350,11 @@ des_headers = rotors.h keymap.h
  # Generate DES headers.
  $(des_headers): desdata.stamp
  	f="$(srcdir)/`basename $@`"; \
@@ -24,7 +24,7 @@ index 3a12fb4..d00b565 100644
  	echo stamp > desdata.stamp
  
  des.$(OBJEXT): des.c des.h $(des_headers)
-@@ -352,7 +355,7 @@ des.$(OBJEXT): des.c des.h $(des_headers)
+@@ -364,7 +367,7 @@ des.$(OBJEXT): des.c des.h $(des_headers)
  # k = 11, c =  6, S = 192, T =  44 ( 33 A + 11 D)  9 KB
  # k = 16, c =  6, S = 128, T =  48 ( 32 A + 16 D)  6 KB
  ecc-secp192r1.h: eccdata.stamp
@@ -33,7 +33,7 @@ index 3a12fb4..d00b565 100644
  
  # Some reasonable choices for 224:
  # k = 16, c =  7, S = 256, T =  48 ( 32 A + 16 D) ~16 KB
-@@ -360,7 +363,7 @@ ecc-secp192r1.h: eccdata.stamp
+@@ -372,7 +375,7 @@ ecc-secp192r1.h: eccdata.stamp
  # k = 13, c =  6, S = 192, T =  52 ( 39 A + 13 D) ~12 KB
  # k =  9, c =  5, S = 160, T =  54 ( 45 A +  9 D) ~10 KB
  ecc-secp224r1.h: eccdata.stamp
@@ -42,7 +42,7 @@ index 3a12fb4..d00b565 100644
  
  # Some reasonable choices for 256:
  # k =  9, c =  6, S = 320, T =  54 ( 45 A +  9 D) 20 KB
-@@ -368,7 +371,7 @@ ecc-secp224r1.h: eccdata.stamp
+@@ -380,7 +383,7 @@ ecc-secp224r1.h: eccdata.stamp
  # k = 19, c =  7, S = 256, T =  57 ( 38 A + 19 D) 16 KB
  # k = 15, c =  6, S = 192, T =  60 ( 45 A + 15 D) 12 KB
  ecc-secp256r1.h: eccdata.stamp
@@ -51,7 +51,7 @@ index 3a12fb4..d00b565 100644
  
  # Some reasonable choices for 384:
  # k = 16, c =  6, S = 256, T =  80 ( 64 A + 16 D) 24 KB
-@@ -379,7 +382,7 @@ ecc-secp256r1.h: eccdata.stamp
+@@ -391,7 +394,7 @@ ecc-secp256r1.h: eccdata.stamp
  # k = 16, c =  5, S = 160, T =  96 ( 80 A + 16 D) 15 KB
  # k = 32, c =  6, S = 128, T =  96 ( 64 A + 32 D) 12 KB
  ecc-secp384r1.h: eccdata.stamp
@@ -60,7 +60,7 @@ index 3a12fb4..d00b565 100644
  
  # Some reasonable choices for 521:
  # k = 29, c =  6, S = 192, T = 116 ( 87 A + 29 D) ~27 KB
-@@ -387,14 +390,14 @@ ecc-secp384r1.h: eccdata.stamp
+@@ -399,14 +402,14 @@ ecc-secp384r1.h: eccdata.stamp
  # k = 44, c =  6, S = 128, T = 132 ( 88 A + 44 D) ~18 KB
  # k = 35, c =  5, S =  96, T = 140 (105 A + 35 D) ~14 KB
  ecc-secp521r1.h: eccdata.stamp
@@ -78,7 +78,7 @@ index 3a12fb4..d00b565 100644
  
  # Some reasonable choices for 256:
  # k =  9, c =  6, S = 320, T =  54 ( 45 A +  9 D) 20 KB
-@@ -402,7 +405,7 @@ ecc-curve448.h: eccdata.stamp
+@@ -414,7 +417,7 @@ ecc-curve448.h: eccdata.stamp
  # k = 19, c =  7, S = 256, T =  57 ( 38 A + 19 D) 16 KB
  # k = 15, c =  6, S = 192, T =  60 ( 45 A + 15 D) 12 KB
  ecc-gost-gc256b.h: eccdata.stamp
@@ -87,7 +87,7 @@ index 3a12fb4..d00b565 100644
  
  # Some reasonable choices for 512:
  # k = 22, c =  6, S = 256, T = 110 ( 88 A + 22 D) 32 KB
-@@ -411,10 +414,10 @@ ecc-gost-gc256b.h: eccdata.stamp
+@@ -423,10 +426,10 @@ ecc-gost-gc256b.h: eccdata.stamp
  # k = 43, c =  6, S = 128, T = 129 ( 86 A + 43 D) 16 KB
  # k = 35, c =  5, S =  96, T = 140 (105 A + 35 D) 12 KB
  ecc-gost-gc512a.h: eccdata.stamp
@@ -102,11 +102,11 @@ index 3a12fb4..d00b565 100644
  
  ecc-curve25519.$(OBJEXT): ecc-curve25519.h
 diff --git a/aclocal.m4 b/aclocal.m4
-index 8822c18..1d218a0 100644
+index 629db8a7..0cf32544 100644
 --- a/aclocal.m4
 +++ b/aclocal.m4
-@@ -378,6 +378,7 @@ if AC_TRY_EVAL(gmp_compile); then
-   if (./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest) >&AC_FD_CC 2>&1; then
+@@ -345,6 +345,7 @@ if AC_TRY_EVAL(gmp_compile); then
+   if (./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest) >&AS_MESSAGE_LOG_FD 2>&1; then
      cc_for_build_works=yes
    fi
 +  cc_for_build_works=yes # forced
