@@ -10,6 +10,7 @@ vcpkg_from_github(
         external-libtasn1.patch
         pkgconfig.patch
         ssize_t_already_define.patch
+        fix-warnings.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")

@@ -422,10 +422,6 @@ glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
-graphqlparser:arm-neon-android=fail
-graphqlparser:arm64-android=fail
-graphqlparser:arm64-osx=fail # python2 required
-graphqlparser:x64-android=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows        = skip
