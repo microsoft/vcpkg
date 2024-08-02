@@ -5,14 +5,14 @@
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
   "license": "Zlib",
-  "supports": "!uwp",
+  "supports": "!arm32 & !uwp",
   "dependencies": [
     "cgltf",
     "dirent",
     "drlibs",
     {
       "name": "glfw3",
-      "platform": "!(android | emscripten | windows)"
+      "platform": "!(android | emscripten)"
     },
     "miniaudio",
     "mmx",
