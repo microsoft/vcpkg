@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
+        fix-arm64-msvc.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
