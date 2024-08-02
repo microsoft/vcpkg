@@ -337,8 +337,8 @@
       "port-version": 0
     },
     "aubio": {
-      "baseline": "2022-01-26",
-      "port-version": 1
+      "baseline": "2024-01-03",
+      "port-version": 0
     },
     "audiofile": {
       "baseline": "1.1.1",
@@ -2252,6 +2252,10 @@
       "baseline": "7.2.0",
       "port-version": 0
     },
+    "dingo": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "directx-dxc": {
       "baseline": "2024-07-31",
       "port-version": 0
@@ -2701,8 +2705,8 @@
       "port-version": 7
     },
     "ffmpeg": {
-      "baseline": "6.1.1",
-      "port-version": 11
+      "baseline": "7.0",
+      "port-version": 0
     },
     "ffnvcodec": {
       "baseline": "12.1.14.0",
@@ -4598,7 +4602,7 @@
     },
     "libigl": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libilbc": {
       "baseline": "3.0.4",
@@ -4934,7 +4938,7 @@
     },
     "librdkafka": {
       "baseline": "2.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libredwg": {
       "baseline": "0.13.3",
@@ -5874,7 +5878,7 @@
     },
     "mlpack": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mman": {
       "baseline": "git-f5ff813",
@@ -8766,7 +8770,7 @@
     },
     "thorvg": {
       "baseline": "0.14.3",
-      "port-version": 0
+      "port-version": 1
     },
     "threadpool": {
       "baseline": "0.2.5",
