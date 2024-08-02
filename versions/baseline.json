@@ -2252,6 +2252,10 @@
       "baseline": "7.2.0",
       "port-version": 0
     },
+    "dingo": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "directx-dxc": {
       "baseline": "2024-07-31",
       "port-version": 0
