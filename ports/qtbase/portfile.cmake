@@ -138,7 +138,6 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL
     "brotli"              FEATURE_brotli
     "securetransport"     FEATURE_securetransport
     "dnslookup"           FEATURE_dnslookup
-    "dnslookup"           FEATURE_libresolv
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
@@ -151,6 +150,10 @@ if("openssl" IN_LIST FEATURES)
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=linked)
 else()
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=no)
+endif()
+
+if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_NET_OPTIONS -DFEATURE_libresolv:BOOL=ON)
 endif()
 
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
