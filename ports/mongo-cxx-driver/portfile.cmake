@@ -19,6 +19,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         boost   CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -29,6 +31,7 @@ vcpkg_cmake_configure(
         -DENABLE_UNINSTALL=OFF
         -DMONGOCXX_HEADER_INSTALL_DIR=include
         -DNEED_DOWNLOAD_C_DRIVER=OFF
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Boost
         BSONCXX_HEADER_INSTALL_DIR
