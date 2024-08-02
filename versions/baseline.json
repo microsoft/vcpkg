@@ -7142,7 +7142,7 @@
     },
     "pugixml": {
       "baseline": "1.14",
-      "port-version": 0
+      "port-version": 1
     },
     "pulsar-client-cpp": {
       "baseline": "3.5.1",
