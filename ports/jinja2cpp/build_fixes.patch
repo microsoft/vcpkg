@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9c42efc..909c2f1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -312,7 +312,7 @@ if(JINJA2CPP_INSTALL)
+             InstallTargets
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         FILE_SET HEADERS
+     )
+ 
+diff --git a/cmake/public/FindJinja2Cpp.cmake b/cmake/public/FindJinja2Cpp.cmake
+index d7c0a60..8a0bc5e 100644
+--- a/cmake/public/FindJinja2Cpp.cmake
++++ b/cmake/public/FindJinja2Cpp.cmake
+@@ -4,7 +4,7 @@ function (_Jinja2Cpp_Find_Library varName)
+         HINTS
+             ENV JINJA2CPP_ROOT
+             ${JINJA2CPP_INSTALL_DIR}
+-        PATH_SUFFIXES lib/static lib64/static
++        PATH_SUFFIXES lib lib64
+     )
+     mark_as_advanced(${varName})
+ endfunction ()
