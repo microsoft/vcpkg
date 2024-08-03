@@ -1,11 +1,11 @@
 {
   "name": "directx12-agility",
-  "version": "1.614.0",
+  "version": "1.614.1",
   "description": "DirectX 12 Agility SDK",
   "homepage": "https://aka.ms/directx12agility",
   "documentation": "https://devblogs.microsoft.com/directx/gettingstarted-dx12agility/",
   "license": null,
-  "supports": "windows & !uwp & !xbox",
+  "supports": "windows & !uwp & !xbox & !arm32",
   "dependencies": [
     "directx-headers",
     {
