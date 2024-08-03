@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         curl.diff
+        rhash.diff
         fix-dependency-libuv.patch
 )
 set(OPTIONS)
@@ -38,22 +39,14 @@ vcpkg_cmake_configure(
     OPTIONS
         ${OPTIONS}
         -DBUILD_TESTING=OFF
-        #-DCMAKE_USE_SYSTEM_LIBRARIES=ON
-        -DCMAKE_USE_SYSTEM_LIBARCHIVE=ON
-        -DCMAKE_USE_SYSTEM_CURL=ON
-        -DCMAKE_USE_SYSTEM_EXPAT=ON
-        -DCMAKE_USE_SYSTEM_ZLIB=ON
-        -DCMAKE_USE_SYSTEM_BZIP2=ON
-        -DCMAKE_USE_SYSTEM_ZSTD=ON
-        -DCMAKE_USE_SYSTEM_FORM=ON
-        -DCMAKE_USE_SYSTEM_JSONCPP=ON
-        -DCMAKE_USE_SYSTEM_LIBRHASH=OFF # not yet in VCPKG
-        -DCMAKE_USE_SYSTEM_LIBUV=ON
+        -DCMAKE_USE_SYSTEM_LIBRARIES=ON
         -DBUILD_QtDialog=ON # Just to test Qt with CMake
         -DCMake_QT_MAJOR_VERSION:STRING=6
+        --trace-expand
 )
+file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cmake_install.cmake" "${CURRENT_BUILDTREES_DIR}//cmake_install.cmake-${TARGET_TRIPLET}-dbg.log")
 
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_TARGET_IS_OSX)

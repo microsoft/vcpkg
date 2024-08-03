@@ -6,24 +6,29 @@
   "homepage": "https://cmake.org/",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "bzip2",
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false
+    },
     "expat",
     "jsoncpp",
-    "libarchive",
-    "liblzma",
+    {
+      "name": "libarchive",
+      "default-features": false
+    },
     "libuv",
     {
       "name": "ncurses",
       "platform": "!(windows | uwp)"
     },
-    "nghttp2",
-    "qtbase",
+    "rhash",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
-    },
-    "zlib",
-    "zstd"
+    }
   ]
 }

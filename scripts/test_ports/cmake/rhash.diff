@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a5d69b41..9789ffb6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -435,7 +435,8 @@ macro (CMAKE_BUILD_UTILITIES)
+   endif()
+ 
+   if(CMAKE_USE_SYSTEM_LIBRHASH)
+-    find_package(LibRHash)
++    find_package(LibRHash NAMES unofficial-rhash REQUIRED)
++    add_library(LibRHash::LibRHash ALIAS unofficial::rhash::rhash)
+     if(NOT LibRHash_FOUND)
+       message(FATAL_ERROR
+         "CMAKE_USE_SYSTEM_LIBRHASH is ON but LibRHash is not found!")
