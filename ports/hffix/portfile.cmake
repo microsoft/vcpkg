@@ -1,10 +1,10 @@
-# header only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jamesdbrock/hffix
     REF "v${VERSION}"
-    SHA512 a04a22360074f383997756d36ddf520a565e5d200e32e8439ef92f33bcb30ab29e962fc4d85142c1da323ddf9fef2d8b6a023dcbeedf1a5c269889adfcd70fb8
+    SHA512 155c0e0bd57d952523343e94b0160baf3b20d366ff8260340d96c2ec4e638c94d192c08b7204303b0fa8610beb5c71046f62fa8b0212b477aaab88e49974cac1
     HEAD_REF master
 )
 
@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/hffix")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
