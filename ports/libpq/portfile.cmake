@@ -31,22 +31,18 @@ else()
     set(HAS_TOOLS FALSE)
 endif()
 
-set(required_programs "")
-if(NOT VCPKG_HOST_IS_WINDOWS)
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+set(required_programs BISON FLEX)
+if(VCPKG_DETECTED_MSVC OR NOT VCPKG_HOST_IS_WINDOWS)
     list(APPEND required_programs PERL)
 endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND required_programs BISON FLEX)
-endif()
 foreach(program_name IN LISTS required_programs)
-    # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(program_dir ${${program_name}} DIRECTORY)
     vcpkg_add_to_path(PREPEND "${program_dir}")
 endforeach()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 
 if(VCPKG_DETECTED_MSVC)
     if("nls" IN_LIST FEATURES)
