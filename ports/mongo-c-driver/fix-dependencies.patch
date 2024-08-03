@@ -1,17 +1,3 @@
-diff --git a/build/cmake/libmongoc-1.0-config.cmake.in b/build/cmake/libmongoc-1.0-config.cmake.in
-index a068408..d0aeadd 100644
---- a/build/cmake/libmongoc-1.0-config.cmake.in
-+++ b/build/cmake/libmongoc-1.0-config.cmake.in
-@@ -24,6 +24,9 @@ set (MONGOC_VERSION_FULL @libmongoc_VERSION_FULL@)
- 
- include(CMakeFindDependencyMacro)
- find_dependency (mongoc-1.0)
-+if("@ENABLE_SNAPPY@" STREQUAL "ON")
-+    find_dependency(Snappy CONFIG)
-+endif()
- 
- set(MONGOC_LIBRARY mongo::mongoc_shared)
- set(MONGOC_LIBRARIES mongo::mongoc_shared)
 diff --git a/build/cmake/libmongoc-static-1.0-config.cmake.in b/build/cmake/libmongoc-static-1.0-config.cmake.in
 index bec3163..a32d5f3 100644
 --- a/build/cmake/libmongoc-static-1.0-config.cmake.in
@@ -27,7 +13,7 @@ index bec3163..a32d5f3 100644
  set(MONGOC_STATIC_LIBRARY mongo::mongoc_static)
  set(MONGOC_STATIC_LIBRARIES mongo::mongoc_static)
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 5f553c5..4675313 100644
+index 0a18f5a..5346a9d 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
 @@ -50,7 +50,7 @@ endif ()
@@ -67,24 +53,33 @@ index 5f553c5..4675313 100644
        VERSION 0.0.0
        OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-static-${MONGOC_API_VERSION}"
 -      pkg_config_REQUIRES "libbson-static-1.0"
-+      pkg_config_REQUIRES "libbson-static-1.0;libutf8proc"
++      pkg_config_REQUIRES "libbson-static-1.0 libutf8proc"
        )
     if(MONGOC_ENABLE_STATIC_INSTALL)
        mongo_generate_pkg_config (mongoc_static FILENAME libmongoc-static-${MONGOC_API_VERSION}.pc INSTALL)
 diff --git a/src/libmongoc/src/mongoc-config.cmake b/src/libmongoc/src/mongoc-config.cmake
-index 31e6cbc..365fb5b 100644
+index 31e6cbc..cdbb756 100644
 --- a/src/libmongoc/src/mongoc-config.cmake
 +++ b/src/libmongoc/src/mongoc-config.cmake
 @@ -1,5 +1,8 @@
  include(CMakeFindDependencyMacro)
  find_dependency(bson-1.0 @libmongoc_VERSION@)
-+if("@ENABLE_SNAPPY@" STREQUAL "ON")
++if("@ENABLE_SNAPPY@")
 +    find_dependency(Snappy CONFIG)
 +endif()
  
  # If we need to import a TLS package for our imported targets, do that now:
  set(MONGOC_TLS_BACKEND [[@TLS_BACKEND@]])
-@@ -29,9 +32,8 @@ if(NOT _mongoc_built_with_bundled_utf8proc AND NOT TARGET PkgConfig::PC_UTF8PROC
+@@ -13,8 +16,6 @@ if(_tls_package)
+   set(CMAKE_MODULE_PATH "${_prev_path}")
+ endif()
+ 
+-include("${CMAKE_CURRENT_LIST_DIR}/mongoc-targets.cmake")
+-
+ unset(_required)
+ unset(_quiet)
+ if(${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
+@@ -29,9 +30,8 @@ if(NOT _mongoc_built_with_bundled_utf8proc AND NOT TARGET PkgConfig::PC_UTF8PROC
    # libmongoc was compiled against an external utf8proc and links against a
    # FindPkgConfig-generated IMPORTED target. Find that package and generate that
    # imported target here:
@@ -95,3 +90,9 @@ index 31e6cbc..365fb5b 100644
  
  # Find dependencies for SASL
  set(_sasl_backend [[@SASL_BACKEND@]])
+@@ -43,3 +43,5 @@ if(_sasl_backend STREQUAL "Cyrus")
+   find_dependency(SASL2 2.0)
+   set(CMAKE_MODULE_PATH "${_prev_path}")
+ endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/mongoc-targets.cmake")
