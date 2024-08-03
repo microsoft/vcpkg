@@ -53,6 +53,24 @@ index 5f553c5..4675313 100644
  endif ()
  
  mongo_bool01 (MONGOC_ENABLE_SHM_COUNTERS ENABLE_SHM_COUNTERS)
+@@ -759,7 +759,7 @@ set (STATIC_LIBRARIES
+ )
+ 
+ # utf8proc configuration
+-find_package(Utf8Proc REQUIRED)
++find_package(unofficial-utf8proc CONFIG REQUIRED)
+ set(UTF8PROC_INCLUDE_DIRS, "")
+ if (USE_BUNDLED_UTF8PROC)
+    set (
+@@ -955,7 +955,7 @@ if (MONGOC_ENABLE_STATIC_BUILD)
+    set_target_properties (mongoc_static PROPERTIES
+       VERSION 0.0.0
+       OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-static-${MONGOC_API_VERSION}"
+-      pkg_config_REQUIRES "libbson-static-1.0"
++      pkg_config_REQUIRES "libbson-static-1.0;libutf8proc"
+       )
+    if(MONGOC_ENABLE_STATIC_INSTALL)
+       mongo_generate_pkg_config (mongoc_static FILENAME libmongoc-static-${MONGOC_API_VERSION}.pc INSTALL)
 diff --git a/src/libmongoc/src/mongoc-config.cmake b/src/libmongoc/src/mongoc-config.cmake
 index 31e6cbc..365fb5b 100644
 --- a/src/libmongoc/src/mongoc-config.cmake
@@ -66,3 +84,14 @@ index 31e6cbc..365fb5b 100644
  
  # If we need to import a TLS package for our imported targets, do that now:
  set(MONGOC_TLS_BACKEND [[@TLS_BACKEND@]])
+@@ -29,9 +32,8 @@ if(NOT _mongoc_built_with_bundled_utf8proc AND NOT TARGET PkgConfig::PC_UTF8PROC
+   # libmongoc was compiled against an external utf8proc and links against a
+   # FindPkgConfig-generated IMPORTED target. Find that package and generate that
+   # imported target here:
+-  find_dependency(PkgConfig)
+-  pkg_check_modules(PC_UTF8PROC ${_required} ${_quiet} libutf8proc IMPORTED_TARGET GLOBAL)
+ endif()
++find_dependency(unofficial-utf8proc CONFIG)
+ 
+ # Find dependencies for SASL
+ set(_sasl_backend [[@SASL_BACKEND@]])
