@@ -5062,7 +5062,7 @@
     },
     "libsquish": {
       "baseline": "1.15",
-      "port-version": 13
+      "port-version": 14
     },
     "libsrt": {
       "baseline": "1.5.3",
