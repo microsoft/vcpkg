@@ -14,6 +14,28 @@ Write-Host "Downloading the Android SDK"
 $env:ANDROID_HOME = Join-Path $Pwd "android-sdk"
 Write-Host "Setting up the Android SDK in $env:ANDROID_HOME"
 & unzip -q sdk-commandlinetools-linux-$ToolsVersion.zip -d android-sdk
+
 # https://doc.qt.io/qt-6/android-getting-started.html
-& bash -c 'yes | ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$ANDROID_HOME" "platform-tools" "platforms;android-34" "build-tools;34.0.0"'
+if ($false) {
+    & bash -c 'yes | ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$ANDROID_HOME" "platform-tools" "platforms;android-34" "build-tools;34.0.0"'
+} else {
+    $filename = 'build-tools_r34-linux.zip'
+    Write-Host "Adding $filename"
+    & "./vcpkg" x-download $filename "--sha512=c28dd52f8eca82996726905617f3cb4b0f0aee1334417b450d296991d7112cab1288f5fd42c48a079ba6788218079f81caa3e3e9108e4a6f27163a1eb7f32bd7" "--url=https://dl.google.com/android/repository/$filename"
+    New-Item -Name android-sdk/build-tools -Type Directory
+    & unzip -q $filename -d android-sdk/build-tools
+    Rename-Item ./android-sdk/build-tools/android-14 34.0.0
+
+    $filename = 'platform-34-ext7_r03.zip'
+    Write-Host "Adding $filename"
+    & "./vcpkg" x-download $filename "--sha512=7d7feb2b04326578cc37fd80e9a8b604aa8bcd8360de160eadedf2a5f28f62a809d3bd6e386d72ba9d32cacbf0a0e3417d54c4195d5091d86d40b29404b222bb" "--url=https://dl.google.com/android/repository/$filename"
+    New-Item -Name android-sdk/platforms -Type Directory
+    & unzip -q $filename -d android-sdk/platforms
+
+    $filename = 'platform-tools_r35.0.1-linux.zip'
+    Write-Host "Adding $filename"
+    & "./vcpkg" x-download $filename "--sha512=6b95e496cbef1e0940aaca79ab7c3f149f8e670a1fd427fdc34ee22cac773aaa1b5619a4e964d0c176894fb6fb9ecb9d3a037a657c086aa737a2c104f9a1f229" "--url=https://dl.google.com/android/repository/$filename"
+    & unzip -q $filename -d android-sdk
+}
+& bash -c 'yes | ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$ANDROID_HOME" --licenses'
 & ./android-sdk/cmdline-tools/bin/sdkmanager "--sdk_root=$env:ANDROID_HOME" --list_installed
