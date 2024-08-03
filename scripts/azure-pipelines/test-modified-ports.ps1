@@ -122,23 +122,7 @@ if ($IsWindows) {
 
 if ($IsLinux)
 {
-    Write-Host "Downloading and setting up Java"
-    & "./vcpkg" x-download openjdk.tar.gz "--sha512=0bf168239a9a1738ad6368b8f931d072aeb122863ec39ea86dc0449837f06953ce18be87bab7e20fd2585299a680ea844ec419fa235da87dfdd7e37b73740a57" "--url=https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz" @cachingArgs
-    & tar -xvzf openjdk.tar.gz
-    $env:JAVA_HOME = Join-Path $Pwd "jdk-17.0.2"
-    Write-Host "Downloading Android SDK"
-    & "./vcpkg" x-download android-sdk.zip "--sha512=64b7d18ee7adeb1204eaa2978091e874dc9af9604796b64e1a185a11c15325657383fc9900e55e4590c8b8a2784b3881745d2f32daef1207e746c0ee41c2b72b" "--url=https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip"
-
-
-    Write-Host "Setting up SDK"
-    & unzip -q android-sdk.zip -d android-sdk
-    $env:ANDROID_SDK_ROOT = Join-Path $Pwd "android-sdk"
-    Move-Item -Path ./android-sdk/cmdline-tools/ -Destination ./android-sdk/tools
-    New-Item -Path ./android-sdk -Name cmdline-tools -ItemType directory
-    Move-Item -Path ./android-sdk/tools -Destination ./android-sdk/cmdline-tools
-    & bash -c 'yes | ./android-sdk/cmdline-tools/tools/bin/sdkmanager --licenses'
-
-    & ./android-sdk/cmdline-tools/tools/bin/sdkmanager "platforms;android-33"
+    . ./scripts/azure-pipelines/acquire-android-sdk.ps1
     $NoParentHashes = $true
 }
 
