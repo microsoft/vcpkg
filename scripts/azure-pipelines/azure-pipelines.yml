@@ -81,19 +81,16 @@ jobs:
   parameters:
     jobName: arm_neon_android
     dockerImage: $(linux-docker-image)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: x64_android
     dockerImage: $(linux-docker-image)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm64_android
     dockerImage: $(linux-docker-image)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}

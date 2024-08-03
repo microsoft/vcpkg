@@ -422,10 +422,6 @@ glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
-graphqlparser:arm-neon-android=fail
-graphqlparser:arm64-android=fail
-graphqlparser:arm64-osx=fail # python2 required
-graphqlparser:x64-android=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows        = skip
@@ -831,9 +827,6 @@ ois:x64-android=fail
 ompl:arm-neon-android=fail
 ompl:arm64-android=fail
 ompl:x64-android=fail
-ompl:x64-osx=fail
-ompl:arm64-osx=fail
-ompl:x64-linux=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 onednn:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.

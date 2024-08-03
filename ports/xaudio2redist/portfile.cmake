@@ -13,31 +13,37 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(XAUDIO_ARCH x86)
+else()
+    set(XAUDIO_ARCH x64)
+endif()
+
 file(GLOB HEADER_FILES "${PACKAGE_PATH}/build/native/include/*.h")
 file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
-file(INSTALL "${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${PACKAGE_PATH}/build/native/release/lib/${XAUDIO_ARCH}/xaudio2_9redist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-   file(INSTALL "${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist_md.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+   file(INSTALL "${PACKAGE_PATH}/build/native/release/lib/${XAUDIO_ARCH}/xapobaseredist_md.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
    set(lib_suffix "_md")
 else()
-   file(INSTALL "${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+   file(INSTALL "${PACKAGE_PATH}/build/native/release/lib/${XAUDIO_ARCH}/xapobaseredist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
    set(lib_suffix "")
 endif()
 
-file(INSTALL "${PACKAGE_PATH}/build/native/release/bin/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+file(INSTALL "${PACKAGE_PATH}/build/native/release/bin/${XAUDIO_ARCH}/xaudio2_9redist.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE)
-    file(INSTALL "${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(INSTALL "${PACKAGE_PATH}/build/native/debug/lib/${XAUDIO_ARCH}/xaudio2_9redist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        file(INSTALL "${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist_md.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${PACKAGE_PATH}/build/native/debug/lib/${XAUDIO_ARCH}/xapobaseredist_md.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     else()
-        file(INSTALL "${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${PACKAGE_PATH}/build/native/debug/lib/${XAUDIO_ARCH}/xapobaseredist.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     endif()
 
-    file(INSTALL "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(INSTALL "${PACKAGE_PATH}/build/native/debug/bin/${XAUDIO_ARCH}/xaudio2_9redist.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/xaudio2redist-config.cmake.in"

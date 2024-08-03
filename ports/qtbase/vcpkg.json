@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.7.2",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -66,6 +66,7 @@
       "platform": "!uwp & !staticcrt & !android & !ios"
     },
     "default-features",
+    "dnslookup",
     "doubleconversion",
     "freetype",
     "gui",
@@ -183,6 +184,18 @@
             "gles2"
           ],
           "platform": "android"
+        }
+      ]
+    },
+    "dnslookup": {
+      "description": "Enable DNS lookup support",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
         }
       ]
     },
