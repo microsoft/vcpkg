@@ -1,0 +1,36 @@
+diff --git a/ntcore/src/dev/native/cpp/main.cpp b/ntcore/src/dev/native/cpp/main.cpp
+index 6e43fdb..ad93644 100644
+--- a/ntcore/src/dev/native/cpp/main.cpp
++++ b/ntcore/src/dev/native/cpp/main.cpp
+@@ -13,6 +13,7 @@
+ #include <thread>
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <wpi/Synchronization.h>
+ #include <wpi/timestamp.h>
+ 
+diff --git a/wpiutil/examples/printlog/printlog.cpp b/wpiutil/examples/printlog/printlog.cpp
+index cb89934..4fe4817 100644
+--- a/wpiutil/examples/printlog/printlog.cpp
++++ b/wpiutil/examples/printlog/printlog.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include <fmt/chrono.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "wpi/DataLogReader.h"
+ #include "wpi/DenseMap.h"
+diff --git a/wpiutil/src/main/native/include/wpi/Logger.h b/wpiutil/src/main/native/include/wpi/Logger.h
+index 01a02fd..bd524a9 100644
+--- a/wpiutil/src/main/native/include/wpi/Logger.h
++++ b/wpiutil/src/main/native/include/wpi/Logger.h
+@@ -9,6 +9,7 @@
+ #include <utility>
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ namespace wpi {
+ 

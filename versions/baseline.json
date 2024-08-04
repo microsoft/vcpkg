@@ -337,8 +337,8 @@
       "port-version": 0
     },
     "aubio": {
-      "baseline": "2022-01-26",
-      "port-version": 1
+      "baseline": "2024-01-03",
+      "port-version": 0
     },
     "audiofile": {
       "baseline": "1.1.1",
@@ -1398,7 +1398,7 @@
     },
     "buck-yeh-bux": {
       "baseline": "1.6.8",
-      "port-version": 1
+      "port-version": 2
     },
     "buck-yeh-bux-mariadb-client": {
       "baseline": "1.0.3",
@@ -2252,6 +2252,10 @@
       "baseline": "7.2.0",
       "port-version": 0
     },
+    "dingo": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "directx-dxc": {
       "baseline": "2024-07-31",
       "port-version": 0
@@ -2701,8 +2705,8 @@
       "port-version": 7
     },
     "ffmpeg": {
-      "baseline": "6.1.1",
-      "port-version": 11
+      "baseline": "7.0",
+      "port-version": 0
     },
     "ffnvcodec": {
       "baseline": "12.1.14.0",
@@ -2730,7 +2734,7 @@
     },
     "fizz": {
       "baseline": "2024.07.29.00",
-      "port-version": 0
+      "port-version": 1
     },
     "flagpp": {
       "baseline": "2.1",
@@ -2809,12 +2813,12 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "10.2.1",
-      "port-version": 2
+      "baseline": "11.0.2",
+      "port-version": 0
     },
     "folly": {
       "baseline": "2024.07.29.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3211,10 +3215,6 @@
     "graphite2": {
       "baseline": "1.3.14",
       "port-version": 4
-    },
-    "graphqlparser": {
-      "baseline": "0.7.0",
-      "port-version": 5
     },
     "graphviz": {
       "baseline": "10.0.1",
@@ -4602,7 +4602,7 @@
     },
     "libigl": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libilbc": {
       "baseline": "3.0.4",
@@ -4938,7 +4938,7 @@
     },
     "librdkafka": {
       "baseline": "2.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libredwg": {
       "baseline": "0.13.3",
@@ -5130,7 +5130,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 4
+      "port-version": 5
     },
     "libtorrent": {
       "baseline": "2.0.10",
@@ -5878,7 +5878,7 @@
     },
     "mlpack": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mman": {
       "baseline": "git-f5ff813",
@@ -7990,7 +7990,7 @@
     },
     "saucer": {
       "baseline": "2.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sbp": {
       "baseline": "3.4.10",
@@ -8102,7 +8102,7 @@
     },
     "seacas": {
       "baseline": "2022-11-22",
-      "port-version": 6
+      "port-version": 7
     },
     "seal": {
       "baseline": "4.1.1",
@@ -8202,7 +8202,7 @@
     },
     "shogun": {
       "baseline": "2023-12-19",
-      "port-version": 0
+      "port-version": 1
     },
     "si": {
       "baseline": "2.5.1",
@@ -8770,7 +8770,7 @@
     },
     "thorvg": {
       "baseline": "0.14.3",
-      "port-version": 0
+      "port-version": 1
     },
     "threadpool": {
       "baseline": "0.2.5",
@@ -9326,7 +9326,7 @@
     },
     "vowpal-wabbit": {
       "baseline": "9.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "vs-yasm": {
       "baseline": "0.5.0",
@@ -9414,7 +9414,7 @@
     },
     "wasmedge": {
       "baseline": "0.13.5",
-      "port-version": 1
+      "port-version": 2
     },
     "wavelib": {
       "baseline": "2021-11-26",
@@ -9526,7 +9526,7 @@
     },
     "wpilib": {
       "baseline": "2023-08-24",
-      "port-version": 0
+      "port-version": 1
     },
     "wren": {
       "baseline": "0.4.0",
