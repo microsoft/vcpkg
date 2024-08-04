@@ -44,7 +44,7 @@ vcpkg_cmake_configure(
         -DCMake_QT_MAJOR_VERSION:STRING=6
         --trace-expand
 )
-file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cmake_install.cmake" "${CURRENT_BUILDTREES_DIR}//cmake_install.cmake-${TARGET_TRIPLET}-dbg.log")
+file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cmake_install.cmake" "${CURRENT_BUILDTREES_DIR}/cmake_install.cmake-${TARGET_TRIPLET}-dbg.log")
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
