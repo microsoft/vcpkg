@@ -15,29 +15,29 @@ set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTH
 set(_PYTHON_PATCHES "")
 if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND _PYTHON_PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-build-msvc.patch
-        ${CMAKE_CURRENT_LIST_DIR}/002-build-msvc.patch
-        ${CMAKE_CURRENT_LIST_DIR}/003-build-msvc.patch
+        "${CMAKE_CURRENT_LIST_DIR}/001-build-msvc.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/002-build-msvc.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/003-build-msvc.patch"
     )
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND _PYTHON_PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/004-static-library-msvc.patch
-        ${CMAKE_CURRENT_LIST_DIR}/006-static-fix-headers.patch
+        "${CMAKE_CURRENT_LIST_DIR}/004-static-library-msvc.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/006-static-fix-headers.patch"
     )
 endif()
 if (VCPKG_CRT_LINKAGE STREQUAL static)
-    list(APPEND _PYTHON_PATCHES ${CMAKE_CURRENT_LIST_DIR}/005-static-crt-msvc.patch)
+    list(APPEND _PYTHON_PATCHES "${CMAKE_CURRENT_LIST_DIR}/005-static-crt-msvc.patch")
 endif()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND _PYTHON_PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/007-fix-build-path.patch
+        "${CMAKE_CURRENT_LIST_DIR}/007-fix-build-path.patch"
     )
 else()
     list(APPEND _PYTHON_PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/008-bz2d.patch
+        "${CMAKE_CURRENT_LIST_DIR}/008-bz2d.patch"
     )
 endif()
 
@@ -50,7 +50,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES ${_PYTHON_PATCHES}
 )
 
@@ -67,27 +67,32 @@ if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
     
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
+ vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "PCBuild/pythoncore.vcxproj"
         PLATFORM ${BUILD_ARCH}
     )
 
     vcpkg_copy_pdbs()
     
-    file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
-    file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+    file(GLOB HEADERS "${SOURCE_PATH}/Include/*.h")
+    file(COPY ${HEADERS} "${SOURCE_PATH}/PC/pyconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
     
-    file(COPY ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR})
+    file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}")
     
-    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-        file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        if(NOT VCPKG_BUILD_TYPE)
+          file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        endif()
     endif()
 else()
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
     )
     
     vcpkg_install_make()
@@ -147,6 +152,4 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

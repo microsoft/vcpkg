@@ -46,7 +46,7 @@ vcpkg_extract_source_archive_ex(
     # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
     # REF 1.0.0
     # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
+    # https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/examples/patching.md
     # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch
@@ -55,7 +55,7 @@ vcpkg_extract_source_archive_ex(
 # # Check if one or more features are a part of a package installation.
 # # See /docs/maintainers/vcpkg_check_features.md for more details
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
+#   FEATURES
 #     tbb   WITH_TBB
 #   INVERTED_FEATURES
 #     tbb   ROCKSDB_IGNORE_PACKAGE_TBB

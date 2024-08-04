@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinygltf
-    REF "v.${VERSION}"
-    SHA512 e5309e4018db1c2fde8d5fcf0fef2a0a2fc37fc69524ee3cdc89cbf1a163da42e71c5e2154befe0eaac5d33e345698ff05b1aea6952f2cd18d908787c758d2f9
+    REF "v${VERSION}"
+    SHA512 daee181b4212c7ba96b3e791fc28aa77102555323a2fef167edaee24d6e13ba4c9a844d028a3f2734760a65440face0eb759d034daecd4c0e3b4c4b67dadfd72
     HEAD_REF master
 )
 

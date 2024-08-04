@@ -1,21 +1,25 @@
+if(VCPKG_TARGET_IS_LINUX)
+    message("Note: `mp-units` requires Clang16+ or GCC11+")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mpusz/units
     REF "v${VERSION}"
-    SHA512 6369c886629955c6457911b98a702c29bacce58e9049e1da700055a3f8b1981cce4f545c1d09550ec1c57f8805f7fc1f0198118950a14b2a7b797dd437ed72df
+    SHA512 7968b215c6b27a7a988ce41235139a57be6bb849db6d6ea0df46b0a40d279d4be4c53646c5a4bf695fb9e70ff4967d3fd443fec8ee40c4ab7f0c90d8695632c3
     PATCHES
       config.patch
 )
 
-set(USE_LIBFMT OFF)
+set(USE_STD_FORMAT TRUE)
 if ("use-libfmt" IN_LIST FEATURES)
-    set(USE_LIBFMT ON)
+    set(USE_STD_FORMAT FALSE)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
     OPTIONS
-      -DUNITS_USE_LIBFMT=${USE_LIBFMT}
+    -DMP_UNITS_API_STD_FORMAT=${USE_STD_FORMAT}
 )
 
 vcpkg_cmake_install()

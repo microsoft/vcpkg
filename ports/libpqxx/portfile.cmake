@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
-    REF 17e5a6c8ac3abc05329891aaa378bd6004b9c8ee # 7.7.4
-    SHA512 51dc5525e801696b7716e4a4a7d8d794baa5bf7372da62a30e4b602bfb09ff53a4355bfc5e39945636cff018095d2917c9a79181bb3f824091b7780863b0073c
+    REF "${VERSION}"
+    SHA512 134e28177f6a205c8a45462fa6b3cb4c407ab8f03a45708400fdc9f567d2ba1fae9cce9d541bdccd46694bf5d1b8dfd72bc6de5f6c915181909623357f86ce47
     HEAD_REF master
     PATCHES
         fix_build_with_vs2017.patch
+        fix_build_cmake_3.30.patch      # remove with > 7.9.1, upstream fix: https://github.com/jtv/libpqxx/commit/d5bf7cf83d0c86c502b6b30d5f0c8dc3b3049a38
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config-public-compiler.h.in" DESTINATION "${SOURCE_PATH}")
@@ -23,6 +24,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libpqxx)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()

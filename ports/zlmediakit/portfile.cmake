@@ -1,17 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZLMediaKit/ZLMediaKit
-    REF 2378617dd8bb208129ae7cbbafc26dfeae096d13
-    SHA512 ca1f212a9ccf20bdd38a2811909b8327df9fe3d1da17ecf15b996ab040071b267bbef697657b26001c157175d54c96f3156ffdf51f09b2ea1078a9ca283171d8
+    REF af3ef996b0ae265e000344e7faf753577f9abf4e
+    SHA512 e45572a579d4644b4e48e70c999796d032947d64f074d7f143bd760238523d46ae061f079d9fe539a21542032f3c94ff7465fe2ba6c9fb39dbeac245dffd188b
     HEAD_REF master
-    PATCHES fix-dependency.patch
+    PATCHES 
+        fix-dependency.patch
+        fix-android-build.patch
+        fix-core.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOL_KIT_SOURCE_PATH
     REPO ZLMediaKit/ZLToolKit
-    REF d2016522a0e4b1d8df51a78b7415fe148f7245ca
-    SHA512 350730903fb24ce8e22710adea7af67dc1f74d157ae17b9f2e5fabd1c5aced8f45de0abce985130f5013871a3e31f9eaf78b161f734c16a9966da5b876a90e1b
+    REF 04d1c47d2568f5ce1ff84260cefaf2754e514a5e
+    SHA512 f467168507cb99f70f1c8f3db4742ecee8cfb3d9ac982b8dfee59907a6fbaf5ca6db4e0c60d8c293843f802a0489270d7a35daf17338f30d78c6b0e854b6ac17
     HEAD_REF master
 )
 
@@ -22,8 +25,8 @@ if ("mp4" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH MEDIA_SRV_SOURCE_PATH
         REPO ireader/media-server
-        REF cdbb3d6b9ea254f454c6e466c5962af5ace01199
-        SHA512 c9b6ed487ec283572022fe6eb8562258063a84b513ccc3f8783e4da9f46b19705ce41baf9603277a7642683e24ac4168a11a0c4e7a18b5f56145bf4986064664
+        REF 527c0f5117b489fda78fcd123d446370ddd9ec9a
+        SHA512 d90788fea5bff79e951604a6b290042e36dae9295fe967c6bc72ec2b5db8159c4465dd3568fc116b6954f90185f845671a3b3e3c2d3ccca7aaf913391e69630c
         HEAD_REF master
     )
 
@@ -37,13 +40,14 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" static ZLMEDIAKIT_CRT_STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openssl ENABLE_OPENSSL
+        openssl CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         mp4     ENABLE_MP4
-        mp4     ENABLE_HLS_FMP4
         mp4     ENABLE_RTPPROXY
         mp4     ENABLE_HLS
         sctp    ENABLE_SCTP
         webrtc  ENABLE_WEBRTC
     INVERTED_FEATURES
+        openssl CMAKE_DISABLE_FIND_PACKAGE_OpenSSL
 )
 
 vcpkg_cmake_configure(
@@ -68,6 +72,9 @@ vcpkg_cmake_configure(
         -DUSE_SOLUTION_FOLDERS=ON
         -DENABLE_TESTS=OFF
         -DENABLE_MEM_DEBUG=OFF # only valid on Linux
+        -DCMAKE_DISABLE_FIND_PACKAGE_GIT=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_JEMALLOC=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=ON
         ${FEATURE_OPTIONS}
 )
 

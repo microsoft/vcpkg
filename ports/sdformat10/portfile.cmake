@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Restore original path
-set(ENV{PATH} ${_path})
+set(ENV{PATH} "${_path}")
 
 # Fix cmake targets and pkg-config file location
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sdformat10")

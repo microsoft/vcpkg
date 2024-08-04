@@ -1,6 +1,7 @@
 {
   "name": "at-spi2-atk",
   "version": "2.38.0",
+  "port-version": 1,
   "description": "Implementation of the ATK interfaces in terms of the libatspi2 API.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -8,6 +9,10 @@
   "dependencies": [
     "at-spi2-core",
     "atk",
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
     "libxml2",
     {
       "name": "vcpkg-tool-meson",

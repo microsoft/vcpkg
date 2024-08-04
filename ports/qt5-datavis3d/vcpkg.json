@@ -1,7 +1,7 @@
 {
   "name": "qt5-datavis3d",
-  "version": "5.15.10",
-  "description": "Qt5 Data Visualization 3d Module - UI Components for creating 3D data visualizations",
+  "version": "5.15.14",
+  "description": "The Qt Data Visualization module provides a way to visualize data in 3D as bar, scatter, and surface graphs.",
   "license": null,
   "dependencies": [
     {

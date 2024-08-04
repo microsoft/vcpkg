@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "capstone-engine/capstone"
-    REF 000561b4f74dc15bda9af9544fe714efda7a6e13 # 5.0.0-rc2
-    SHA512 66b09a7d2fda297836bbedaeece71dcfe39bdbd633d9b6ecb68ee2e5aa094b697226136ab172cdc4550e8b2ef1448d001c8ee4e0d456c6d277afe0b3d1aab5a1
+    REF "${VERSION}"
+    SHA512 350aba77ce2d96b5c25764913591ba80e4497177ae0a8b2c820c6755ee8310848fbfc54e7ccac27fafc2dbc6778118ad92c53d1b5cb601d4fa146dec7d7e11e5
     HEAD_REF next
     PATCHES
         001-silence-windows-crt-secure-warnings.patch
@@ -24,12 +24,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tms320c64x"  CAPSTONE_TMS320C64X_SUPPORT
         "x86"         CAPSTONE_X86_SUPPORT
         "xcore"       CAPSTONE_XCORE_SUPPORT
+        "mos65xx"     CAPSTONE_MOS65XX_SUPPORT
+        "tricore"     CAPSTONE_TRICORE_SUPPORT
+        "wasm"        CAPSTONE_WASM_SUPPORT
+        "bpf"         CAPSTONE_BPF_SUPPORT
+        "riscv"       CAPSTONE_RISCV_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCAPSTONE_ARCHITECTURE_DEFAULT=OFF
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
         -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}

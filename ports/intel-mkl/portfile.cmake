@@ -210,13 +210,13 @@ else()
     )
     file(REMOVE ${files_to_remove})
     file(COPY_FILE "${mkl_dir}/lib/pkgconfig/${main_pc_file}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "\${exec_prefix}/${package_libdir}" "\${exec_prefix}/lib/intel64")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "\${exec_prefix}/${package_libdir}" "\${exec_prefix}/lib/intel64" IGNORE_UNCHANGED)
   
     set(compiler_dir "${extract_1_dir}/_installdir/compiler/2023.0.0")
     if(threading STREQUAL "intel_thread")
       file(COPY "${compiler_dir}/${compiler_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
       file(COPY_FILE "${compiler_dir}/lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc")
-      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/${compiler_libdir}/" "/lib/intel64/")
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/${compiler_libdir}/" "/lib/intel64/" IGNORE_UNCHANGED)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "openmp" "libiomp5")
     endif()
 endif()
@@ -236,7 +236,7 @@ endif()
 
 file(COPY "${mkl_dir}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}/" "bin")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}" "bin")
 #TODO: Hardcode settings from portfile in config.cmake
 #TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
 

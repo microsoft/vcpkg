@@ -1,11 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nats-io/nats.c
-    REF 66cec7fce9a64f911015f0c516a086c1a74cd22a #v3.6.1
-    SHA512 c0d3ad62c9453dca1799e69c3fe9df63c57c29c3c596ba4a9c5053b4886014741b8ce1563adb28d3e64b6b221748884ef71d6b288fae2855ae1ed1fdd2d028fb
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 4cc127a461a5074d8a49d8cee633577951152cd54f57b4118ff6e4a8c0da73e2f61e9e54546a34c9e79a4557165a80bedc7e9cf6ed0fde28134019eb59a241b9
+    HEAD_REF main
     PATCHES
         fix-sodium-dep.patch
+        fix_install_path.patch
+        lowercase_ws2_32.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -74,5 +76,5 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 

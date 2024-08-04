@@ -1,7 +1,6 @@
 {
   "name": "tracy",
-  "version-semver": "0.9.1",
-  "port-version": 2,
+  "version": "0.11.0",
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "license": "BSD-3-Clause",
@@ -25,7 +24,7 @@
   ],
   "features": {
     "cli-tools": {
-      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome` and `update`",
+      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome`, `import-fuchsia` and `update`",
       "supports": "!(windows & x86)",
       "dependencies": [
         {
@@ -35,11 +34,25 @@
             "arm64",
             "x86"
           ]
+        },
+        {
+          "name": "dbus",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        "freetype",
+        "glfw3",
+        {
+          "name": "tbb",
+          "platform": "!windows"
         }
       ]
     },
     "crash-handler": {
       "description": "Enable crash handler"
+    },
+    "fibers": {
+      "description": "Enable fibers support"
     },
     "gui-tools": {
       "description": "Build Tracy GUI tool: `profiler` (aka `Tracy` executable)",
@@ -55,10 +68,15 @@
         },
         {
           "name": "dbus",
+          "default-features": false,
           "platform": "!windows"
         },
         "freetype",
-        "glfw3"
+        "glfw3",
+        {
+          "name": "tbb",
+          "platform": "!windows"
+        }
       ]
     },
     "on-demand": {

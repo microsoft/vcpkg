@@ -1,5 +1,5 @@
 diff --git a/build/make/configure.sh b/build/make/configure.sh
-index 119d206..41bac75 100644
+index 110f16e..c161d0e 100644
 --- a/build/make/configure.sh
 +++ b/build/make/configure.sh
 @@ -1038,7 +1038,7 @@ EOF
@@ -85,21 +85,19 @@ index 58bb66b..b4cad6c 100644
                  fi
              fi
 diff --git a/configure b/configure
-index beea650..91ae3c8 100644
+index ae289f7..78f5fc1 100644
 --- a/configure
 +++ b/configure
-@@ -102,16 +102,24 @@ all_platforms="${all_platforms} arm64-darwin-gcc"
- all_platforms="${all_platforms} arm64-darwin20-gcc"
+@@ -103,6 +103,8 @@ all_platforms="${all_platforms} arm64-darwin20-gcc"
  all_platforms="${all_platforms} arm64-darwin21-gcc"
+ all_platforms="${all_platforms} arm64-darwin22-gcc"
  all_platforms="${all_platforms} arm64-linux-gcc"
 +all_platforms="${all_platforms} arm64-uwp-vs16"
 +all_platforms="${all_platforms} arm64-uwp-vs17"
  all_platforms="${all_platforms} arm64-win64-gcc"
  all_platforms="${all_platforms} arm64-win64-vs15"
-+all_platforms="${all_platforms} arm64-win64-vs16"
-+all_platforms="${all_platforms} arm64-win64-vs17"
- all_platforms="${all_platforms} armv7-android-gcc"   #neon Cortex-A8
- all_platforms="${all_platforms} armv7-darwin-gcc"    #neon Cortex-A8
+ all_platforms="${all_platforms} arm64-win64-vs16"
+@@ -112,6 +114,8 @@ all_platforms="${all_platforms} armv7-darwin-gcc"    #neon Cortex-A8
  all_platforms="${all_platforms} armv7-linux-rvct"    #neon Cortex-A8
  all_platforms="${all_platforms} armv7-linux-gcc"     #neon Cortex-A8
  all_platforms="${all_platforms} armv7-none-rvct"     #neon Cortex-A8
@@ -108,12 +106,7 @@ index beea650..91ae3c8 100644
  all_platforms="${all_platforms} armv7-win32-gcc"
  all_platforms="${all_platforms} armv7-win32-vs14"
  all_platforms="${all_platforms} armv7-win32-vs15"
-+all_platforms="${all_platforms} armv7-win32-vs16"
-+all_platforms="${all_platforms} armv7-win32-vs17"
- all_platforms="${all_platforms} armv7s-darwin-gcc"
- all_platforms="${all_platforms} armv8-linux-gcc"
- all_platforms="${all_platforms} loongarch32-linux-gcc"
-@@ -138,6 +146,8 @@ all_platforms="${all_platforms} x86-linux-gcc"
+@@ -143,6 +147,8 @@ all_platforms="${all_platforms} x86-linux-gcc"
  all_platforms="${all_platforms} x86-linux-icc"
  all_platforms="${all_platforms} x86-os2-gcc"
  all_platforms="${all_platforms} x86-solaris-gcc"
@@ -122,7 +115,7 @@ index beea650..91ae3c8 100644
  all_platforms="${all_platforms} x86-win32-gcc"
  all_platforms="${all_platforms} x86-win32-vs14"
  all_platforms="${all_platforms} x86-win32-vs15"
-@@ -161,6 +171,8 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
+@@ -167,6 +173,8 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
  all_platforms="${all_platforms} x86_64-linux-gcc"
  all_platforms="${all_platforms} x86_64-linux-icc"
  all_platforms="${all_platforms} x86_64-solaris-gcc"
@@ -131,7 +124,7 @@ index beea650..91ae3c8 100644
  all_platforms="${all_platforms} x86_64-win64-gcc"
  all_platforms="${all_platforms} x86_64-win64-vs14"
  all_platforms="${all_platforms} x86_64-win64-vs15"
-@@ -485,11 +497,10 @@ process_targets() {
+@@ -491,11 +499,10 @@ process_targets() {
      ! enabled multithread && DIST_DIR="${DIST_DIR}-nomt"
      ! enabled install_docs && DIST_DIR="${DIST_DIR}-nodocs"
      DIST_DIR="${DIST_DIR}-${tgt_isa}-${tgt_os}"
@@ -147,7 +140,7 @@ index beea650..91ae3c8 100644
      if [ -f "${source_path}/build/make/version.sh" ]; then
          ver=`"$source_path/build/make/version.sh" --bare "$source_path"`
          DIST_DIR="${DIST_DIR}-${ver}"
-@@ -578,6 +589,10 @@ process_detect() {
+@@ -584,6 +591,10 @@ process_detect() {
  
              # Specialize windows and POSIX environments.
              case $toolchain in

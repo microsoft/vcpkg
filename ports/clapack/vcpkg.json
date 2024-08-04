@@ -1,9 +1,10 @@
 {
   "name": "clapack",
   "version": "3.2.1",
-  "port-version": 22,
+  "port-version": 23,
   "description": "CLAPACK (f2c'ed version of LAPACK)",
-  "homepage": "https://www.netlib.org/clapack",
+  "homepage": "https://netlib.org/lapack/",
+  "license": null,
   "dependencies": [
     "blas",
     {

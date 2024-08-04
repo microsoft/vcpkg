@@ -3,15 +3,15 @@
 
 if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://bcms.bloomberg.com/BLPAPI-Generic/blpapi_cpp_3.20.2.1-linux.tar.gz"
-        FILENAME "blpapi_cpp_3.20.2.1-linux.tar.gz"
-        SHA512 4d4cf999d6cc2bf924dfb79fdabd2a30c2d1251e4e56fe856684c4f8e0be03dcd33f69d75f8706d381bb35ad4b1ad954a5cc88156a80e053f2601d8257815863
+        URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_3.24.6.1-linux.tar.gz"
+        FILENAME "blpapi_cpp_3.24.6.1-linux.tar.gz"
+        SHA512 a70b43614a7c3414ca391b4b1a9499a545d6ec98779caafed4317b2bc5cdce3e493bcd600196b340c657ce23287ce6f85833ec270b5301e074884f4640cb19f4
     )
 elseif (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://bcms.bloomberg.com/BLPAPI-Generic/blpapi_cpp_3.20.2.2-windows.zip"
-        FILENAME "blpapi_cpp_3.20.2.2-windows.zip"
-        SHA512 f6e66d75a8f16c014737ae813c65304e38423e5ab955eb98fb7f487eecda06bcc9d84733b55957ac577f689da2af753fdeb132feb0eb02a9ec38e8f3868ad795
+        URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_3.24.6.1-windows.zip"
+        FILENAME "blpapi_cpp_3.24.6.1-windows.zip"
+        SHA512 1e1dba172767c9fcd0d015f2e8eaa16ef25f643a241144bf4a38ed35c8d8cce9f7fa9f4275636abd8a7307c21def17e50cda0a28bdb3f233d1e7a5affd87d3a5
     )
 endif()
 

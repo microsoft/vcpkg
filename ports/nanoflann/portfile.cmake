@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jlblancoc/nanoflann
     REF "v${VERSION}"
-    SHA512 2248eed37872737c1f3c031e65d2f892024e35aa81ccf14cf8222289cfe12b5ca3fe461749e060ff822ca9e40dd9cb918216468c1343a42305f7adf780888c50
+    SHA512 73ce51d5aae002741221692857ce189e17786db411229ca45e963469a204577ce55351aa4aee842afd195c3501d3417c51385d1b34862a72f1163f30f656c84d
     HEAD_REF master
 )
 
@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}/cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

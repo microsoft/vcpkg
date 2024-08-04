@@ -3,6 +3,21 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+if(NOT VCPKG_HOST_IS_WINDOWS)
+    message(WARNING "${PORT} currently requires the following programs from the system package manager:
+    autoconf automake autoconf-archive
+On Debian and Ubuntu derivatives:
+    sudo apt-get install autoconf automake autoconf-archive
+On recent Red Hat and Fedora derivatives:
+    sudo dnf install autoconf automake autoconf-archive
+On Arch Linux and derivatives:
+    sudo pacman -S autoconf automake autoconf-archive
+On Alpine:
+    apk add autoconf automake autoconf-archive
+On macOS:
+    brew install autoconf automake autoconf-archive\n")
+endif()
+
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
 set(PYTHON_VERSION_MAJOR "${CMAKE_MATCH_1}")
 set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_2}")
@@ -15,9 +30,11 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-curses.patch
+    0012-force-disable-modules.patch
     0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
+    0016-undup-ffi-symbols.patch # Required for lld-link.
+    0018-fix-sysconfig-include.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -47,6 +64,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     if(VCPKG_CROSSCOMPILING)
         list(APPEND PATCHES "0016-fix-win-cross.patch")
+    else()
+        list(APPEND PATCHES "0017-fix-win.patch")
     endif()
 endif()
 
@@ -54,7 +73,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 de64f0d09bf2c08873bb3d99bb95c0b675895ed05f8ac5f7bc071322c051ad537c61ea9df9b65bb67d74c4e5b3ab8a75f83da101b22046ee41ba4f77cf0bc549
+    SHA512 c2ebe72ce53dd2d59750a7b0bdaf15ebb7ecb6f67d2913a457bf5d32bd0f640815f9496f2fa3ebeac0722264d000735d90d3ffaeac2de1f066b7aee994bf9b24
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -90,8 +109,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD libexpatdMT PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(FFI_RELEASE NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -250,9 +269,6 @@ else()
     if(VCPKG_CROSSCOMPILING)
         set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
-    else()
-        vcpkg_find_acquire_program(PYTHON3)
-        list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
     endif()
 
     vcpkg_configure_make(
@@ -341,7 +357,7 @@ _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     function(replace_dirs_in_config_file python_config_file)
         vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
-        vcpkg_replace_string("${python_config_file}" "${CURRENT_HOST_INSTALLED_DIR}" "' + _base + '/../${HOST_TRIPLET}")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_HOST_INSTALLED_DIR}" "' + _base + '/../${HOST_TRIPLET}" IGNORE_UNCHANGED)
         vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     endfunction()
@@ -360,3 +376,18 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
         replace_dirs_in_config_file("${python_config_file}")
     endif()
 endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+else()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+  file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/python3/vcpkg-port-config.cmake" @ONLY)
+
+# For testing
+block()
+  set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
+  vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
+endblocK()

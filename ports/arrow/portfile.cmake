@@ -2,26 +2,28 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 551ae200551fcc73b7deddcc5f0b06633159ab1308506901a9086e4e2e34e4437f26d609fdbacba0ebe7d1fe83bdb8e92a268e9e41575d655d5b2d4fbef7a7ce
+    SHA512 4e2a617b8deeb9f94ee085653a721904a75696f0827bcba82b535cc7f4f723066a09914c7fa83c593e51a8a4031e8bf99e563cac1ebb1d89604cb406975d4864
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
+        android.patch
         msvc-static-name.patch
         utf8proc.patch
         thrift.patch
-        fix-ci-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
+        compute     ARROW_COMPUTE
         csv         ARROW_CSV
         cuda        ARROW_CUDA
         dataset     ARROW_DATASET
         filesystem  ARROW_FILESYSTEM
         flight      ARROW_FLIGHT
+        flightsql   ARROW_FLIGHT_SQL
         gcs         ARROW_GCS
         jemalloc    ARROW_JEMALLOC
         json        ARROW_JSON
@@ -88,6 +90,22 @@ if("acero" IN_LIST FEATURES)
     )
 endif()
 
+if("flight" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ArrowFlight
+        CONFIG_PATH lib/cmake/ArrowFlight
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
+if("flightsql" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ArrowFlightSql
+        CONFIG_PATH lib/cmake/ArrowFlightSql
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME parquet
@@ -111,6 +129,16 @@ if("acero" IN_LIST FEATURES)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
 endif()
 
+if("flight" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flight" usage-flight)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
+endif()
+
+if("flightsql" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flightsql" usage-flightsql)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flightsql}")
+endif()
+
 if("example" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")
 endif()
@@ -119,4 +147,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/NOTICE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

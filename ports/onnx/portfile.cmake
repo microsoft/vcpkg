@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 8a525b365fd203f0a59bcf82fa7f2e29d7e0563885ebe38269c596cd4eb949bcfc65d848b92b7abafa7ddecedcfc019f8779097ffcb5087f06037cace24462fc
+    SHA512 b46a4ab70af88053318eba45251c1f71528f15e45a33042877570e8d857febd3ec66e2e811fcda2105a4f17b84c9a1c6a0aaa22756c3287321b3ea29e83127fd
     PATCHES
         fix-cmakelists.patch
         fix-dependency-protobuf.patch
@@ -64,6 +64,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ONNXConfig.cmake" "# import targets" 
+[[# import targets
+include(CMakeFindDependencyMacro)
+find_dependency(protobuf CONFIG)]])
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -73,6 +77,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/bin"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/controlflow"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/generator"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/image"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/logical"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/math"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/nn"
@@ -82,6 +87,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/reduction"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/rnn"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/sequence"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/text"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/traditionalml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/training"
     "${CURRENT_PACKAGES_DIR}/include/onnx/examples"

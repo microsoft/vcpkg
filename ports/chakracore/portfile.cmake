@@ -3,29 +3,29 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF fd6908097f758ef65bd83680cf413313ad36c98d
-    SHA512 c35a2e3680d3ff5c7d715752570b5f12cf9da716ef28377694e9aa079553b5c0276c51a66b342956d217e9842edd12c25af4a001fae34175a2114134ee4428ee
+    REF 2af598f04ab508f9231d6e26f0f82f5a57561413
+    SHA512 a42138cb5906d8f6cbdab32fad042f626bacb62450839f66d6b27831fcd5bd93039f68423c82d460cf1147ce82908c04595442f90be3bf67e2066547d0fe0291
     HEAD_REF master
     PATCHES
-        add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
+        avoid_msvc_internal_STRINGIZE.patch
 )
 
-set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-file(REMOVE_RECURSE ${BUILDTREE_PATH})
-file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
-
-if(WIN32)
-    set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
+set(BUILDTREE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(additional_options NO_TOOLCHAIN_PROPS) # don't know how to fix the linker error about __guard_check_icall_thunk 
+    endif()
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(PLATFORM_ARG PLATFORM x86) # it's x86, not Win32 in sln file
     endif()
-    vcpkg_install_msbuild(
-        SOURCE_PATH "${BUILDTREE_PATH}"
-        PROJECT_SUBPATH "Build/Chakra.Core.sln"
+
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH Build/Chakra.Core.sln
         OPTIONS
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
-            "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
         ${PLATFORM_ARG}
+        ${additional_options}
     )
     file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
@@ -40,17 +40,18 @@ else()
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(CHAKRACORE_TARGET_ARCH x86)
     endif()
-
+	
     if (VCPKG_TARGET_IS_LINUX)
         message(WARNING "${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+	file(MAKE_DIRECTORY "${BUILDTREE_PATH}-dbg")
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
         list(APPEND configs "debug")
         execute_process(
             COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "-j=${VCPKG_CONCURRENCY}"
-            WORKING_DIRECTORY "${BUILDTREE_PATH}"
-
+            WORKING_DIRECTORY "${SOURCE_PATH}"
+	
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
             RESULT_VARIABLE CHAKRA_BUILD_SH_RES
@@ -58,50 +59,43 @@ else()
             ECHO_ERROR_VARIABLE
         )
     endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        list(APPEND configs "release")
-        execute_process(
-            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
-            WORKING_DIRECTORY "${BUILDTREE_PATH}"
-            OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
-            ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
-            RESULT_VARIABLE CHAKRA_BUILD_SH_RES
-            ECHO_OUTPUT_VARIABLE
-            ECHO_ERROR_VARIABLE
-        )
-    endif()
+	
+    file(MAKE_DIRECTORY "${BUILDTREE_PATH}-rel")
+    list(APPEND configs "release")
+    execute_process(
+        COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
+        ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
+        RESULT_VARIABLE CHAKRA_BUILD_SH_RES
+        ECHO_OUTPUT_VARIABLE
+        ECHO_ERROR_VARIABLE
+    )
 endif()
 
 file(INSTALL
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraCore.h"
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommon.h"
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraDebug.h"
+    "${SOURCE_PATH}/lib/Jsrt/ChakraCore.h"
+    "${SOURCE_PATH}/lib/Jsrt/ChakraCommon.h"
+    "${SOURCE_PATH}/lib/Jsrt/ChakraDebug.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
-if(WIN32)
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(INSTALL
-        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommonWindows.h"
-        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCoreWindows.h"
+        "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCommonWindows.h"
+        "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCoreWindows.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
-    # Do not install dll/exe/lib files here because they are handled by vcpkg_install_msbuild
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(out_file libChakraCore.so)
+		file(INSTALL "${SOURCE_PATH}/out/Debug/libChakraCore.so" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+	    file(INSTALL "${SOURCE_PATH}/out/Release/libChakraCore.so" DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     else()
-        set(out_file lib/libChakraCoreStatic.a)
+		file(INSTALL "${SOURCE_PATH}/out/Debug/lib/libChakraCoreStatic.a" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+	    file(INSTALL "${SOURCE_PATH}/out/Release/lib/libChakraCoreStatic.a"	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
 
-    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/lib")
-    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/lib")
-    set(out_dir_debug "${BUILDTREE_PATH}/out/Debug")
-    set(out_dir_release "${BUILDTREE_PATH}/out/Release")
-    foreach(config ${configs})
-        file(INSTALL
-            ${out_dir_${config}}/${out_file}
-            DESTINATION ${destination_dir_${config}}
-        )
-    endforeach()
+    set(out_dir_release "${SOURCE_PATH}/out/Release")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(INSTALL
@@ -112,17 +106,15 @@ else()
             SEARCH_DIR "${out_dir_release}"
         )
     endif()
-endif()
 
-vcpkg_copy_pdbs()
+
+endif()
 
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/unofficial-chakracore-config.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
 )
 
-file(INSTALL
+vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/chakracore"
-    RENAME copyright
 )

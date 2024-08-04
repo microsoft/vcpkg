@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.54.1
-    SHA512 9b7146a5f6a4152d95286f679e0f5314ab0b040f67a030e42dfe01ad995af486d3d158d1ac7ef0bbe783a90e067d32e4bb4ba1a524fe75a89be6c7fe9c3a30ed
+    REF "v${VERSION}"
+    SHA512 20561294da571e0e1f5f8c9ac1039828512f3361a4241e5ad320bbb684626c1e78cd18e6a6344ec80fcd86dc699742c51069bc2b6895aec1dcbd9f394d2c9998
     HEAD_REF master
     PATCHES
         fix_openni2.patch
@@ -70,5 +70,5 @@ if(BUILD_OPENNI2_BINDINGS)
     endif()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_fixup_pkgconfig()

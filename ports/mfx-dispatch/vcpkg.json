@@ -1,7 +1,7 @@
 {
   "name": "mfx-dispatch",
   "version": "1.35.1",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Open source Intel media sdk dispatcher",
   "homepage": "https://github.com/lu-zero/mfx_dispatch",
   "license": "BSD-3-Clause",

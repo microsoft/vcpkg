@@ -2,13 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
     HEAD_REF master
-    REF v2.0.14
-    SHA512 4b7066acd7d8ecb05fef6089997632381c34ce6631b7106afedf95b7f72d7280e45c9b2f8cce49349bf599520770ebbebb68ff71930bc44b615d177b4056a945
+    REF "v${VERSION}"
+    SHA512 667216f3e60f9916d5de200d3a205fb5a5c798564c96e44939af6c8e3af85fffa36a63eba47db009b432d14f43883dbca5b92547a458215dd269e91f6bcfb7fa
     PATCHES
-        0002-win64-support.patch
         0003-add-find_package-libwebsockets.patch
         0004-support-static-build.patch
         0005-websocket-shared-lib-name.patch
+        0006-pthreads-for-windows.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_LINKAGE)

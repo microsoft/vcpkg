@@ -1,8 +1,15 @@
 {
   "name": "winpcap",
   "version": "4.1.3",
-  "port-version": 10,
+  "port-version": 12,
   "description": "WinPcap is the industry-standard tool for link-layer network access in Windows environments.",
   "homepage": "https://www.winpcap.org",
-  "supports": "windows"
+  "supports": "windows & !uwp & !arm & !static",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
 }

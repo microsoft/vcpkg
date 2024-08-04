@@ -1,6 +1,6 @@
 {
   "name": "celero",
-  "version": "2.8.5",
+  "version": "2.9.0",
   "description": "Celero is a modern cross-platform (Windows, Linux, MacOS) Microbenchmarking library for C++ 11 and later.",
   "homepage": "https://github.com/DigitalInBlue/Celero",
   "license": "Apache-2.0",

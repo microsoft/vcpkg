@@ -9,14 +9,13 @@ vcpkg_download_distfile(
     URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${VERSION}.tar.gz"
          "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${VERSION}.tar.gz"
     FILENAME "${PORT}-${VERSION}.tar.gz"
-    SHA512 8fc81e05d1c9f9259d06508ca97d5a1ba5d46b857088c273c20e6b242921f7eac58a1136564ad9831c923758ee63f7b0897c8c6c7b1e53ab8132a995cc559aeb
+    SHA512 b7b9f47c77fd27787b7c7ae7e78cd831fe9f7f32e280f54952994569bfe69ff03022e349aea9ea734c50b079693c6e15a3c1115ef0093e523437904074da5784
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
     PATCHES
-        0001-enable-ocspcheck-on-msvc.patch
         0002-suppress-msvc-warnings.patch
 )
 
@@ -59,11 +58,5 @@ vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()
-
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
-    foreach(LIB ${LIBS})
-        string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")
-        file(CREATE_LINK "${LIB}" "${LINK}")
-    endforeach()
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LibreSSL")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

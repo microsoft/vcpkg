@@ -1,7 +1,7 @@
 {
   "name": "vtk",
-  "version-semver": "9.2.0-pv5.11.0",
-  "port-version": 9,
+  "version-semver": "9.3.0-pv5.12.1",
+  "port-version": 3,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -10,12 +10,22 @@
     "eigen3",
     "expat",
     "exprtk",
+    "fast-float",
     "fmt",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    },
     "glew",
     {
       "name": "hdf5",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
     },
     "jsoncpp",
     {
@@ -27,9 +37,21 @@
     "libogg",
     "libpng",
     "libtheora",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    },
     "lz4",
-    "netcdf-c",
+    {
+      "name": "netcdf-c",
+      "default-features": false,
+      "features": [
+        "hdf5"
+      ]
+    },
     "pegtl",
     {
       "name": "proj",
@@ -45,7 +67,10 @@
       "name": "sqlite3",
       "host": true
     },
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     "utfcpp",
     {
       "name": "vcpkg-cmake",
@@ -113,6 +138,15 @@
     "geojson": {
       "description": "Convert Geo JSON format to vtkPolyData"
     },
+    "ioocct": {
+      "description": "Build with IOOCCT module",
+      "dependencies": [
+        {
+          "name": "opencascade",
+          "default-features": false
+        }
+      ]
+    },
     "mpi": {
       "description": "MPI functionality for VTK",
       "dependencies": [
@@ -167,6 +201,7 @@
       "description": "Build vtk modules required by paraview",
       "dependencies": [
         "cli11",
+        "openturns",
         {
           "name": "vtk",
           "default-features": false,
@@ -187,11 +222,7 @@
     "python": {
       "description": "Python functionality for VTK",
       "dependencies": [
-        "python3",
-        {
-          "name": "python3",
-          "host": true
-        }
+        "python3"
       ]
     },
     "qt": {
@@ -203,15 +234,11 @@
           "features": [
             "gui",
             "opengl",
+            "sql-sqlite",
             "widgets"
           ]
         },
-        "qtdeclarative",
-        "qtimageformats",
-        {
-          "name": "qttools",
-          "default-features": false
-        }
+        "qtdeclarative"
       ]
     },
     "utf8": {

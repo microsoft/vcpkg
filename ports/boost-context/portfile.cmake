@@ -3,25 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
-    REF boost-1.82.0
-    SHA512 e4474d84a93a21e2e7ba67ce08a60a856080d1e2952097dca8fc61776a7eef7c72bb98ff322ec303e255b462e85fba341db1eb59db4b18fb60da20e56946f07f
+    REF boost-${VERSION}
+    SHA512 db4fc7ef2bfb6f1dae9018b39a8215a04a1df28d9af1b7a2a476f381e17e575458ae7f1a3dcdc35fe4cebb7a8baa3be49fa61d30f0af1cf31523d61e5906531f
     HEAD_REF master
+    PATCHES
+        marmasm.patch
+        
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "import ../../config/checks/config"
-    "import ../config/checks/config"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
-    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
-    @ONLY
-)
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
-)
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

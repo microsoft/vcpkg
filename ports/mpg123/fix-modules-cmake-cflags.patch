@@ -1,0 +1,19 @@
+diff --git a/ports/cmake/src/libout123/modules/CMakeLists.txt b/ports/cmake/src/libout123/modules/CMakeLists.txt
+index 21810c6..51c673d 100644
+--- a/ports/cmake/src/libout123/modules/CMakeLists.txt
++++ b/ports/cmake/src/libout123/modules/CMakeLists.txt
+@@ -17,11 +17,11 @@ if(NOT USE_MODULES)
+         $<$<STREQUAL:${DEFAULT_OUTPUT_MODULE},win32>:${WIN32_LIBRARIES}>
+         $<$<STREQUAL:${DEFAULT_OUTPUT_MODULE},win32_wasapi>:${WIN32_WASAPI_LIBRARIES}>)
+     if(DEFAULT_OUTPUT_MODULE STREQUAL "pulse")
+-        target_compile_definitions(defaultmodule PRIVATE ${PULSE_CFLAGS})
++        target_compile_options(defaultmodule PRIVATE ${PULSE_CFLAGS})
+     elseif(DEFAULT_OUTPUT_MODULE STREQUAL "jack")
+-        target_compile_definitions(defaultmodule PRIVATE ${JACK_CFLAGS})
++        target_compile_options(defaultmodule PRIVATE ${JACK_CFLAGS})
+     elseif(DEFAULT_OUTPUT_MODULE STREQUAL "tinyalsa")
+-        target_compile_definitions(defaultmodule PRIVATE ${TINYALSA_CFLAGS})
++        target_compile_options(defaultmodule PRIVATE ${TINYALSA_CFLAGS})
+     endif()
+     if(BUILD_SHARED_LIBS)
+         set_target_properties(defaultmodule PROPERTIES POSITION_INDEPENDENT_CODE ON)

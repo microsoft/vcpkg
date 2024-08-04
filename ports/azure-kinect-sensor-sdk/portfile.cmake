@@ -2,7 +2,7 @@ set(VERSION 1.4.1)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Azure-Kinect-Sensor-SDK
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 ef94c072caae43b0a105b192013e09082d267d4064e6676fac981b52e7576a663f59fcb53f0afe66b425ef2cea0cb3aa224ff7be6485c0b5543ff9cdabd82d4d
     HEAD_REF master
     PATCHES
@@ -14,6 +14,7 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
@@ -27,7 +28,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS 
+    "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    ${FEATURE_OPTIONS}
     -DK4A_SOURCE_LINK=OFF
     -DK4A_MTE_VERSION=ON
     -DBUILD_EXAMPLES=OFF
@@ -88,4 +91,4 @@ else()
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

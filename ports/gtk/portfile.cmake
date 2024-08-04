@@ -1,12 +1,16 @@
+# It installs only shared libs, regardless build type.
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  55bc7808cc7796b06c27b1e64f608cd83b9b18ec #v4.10.4
-    SHA512 70859173ffc52e4fad4997157c6eb59cdb4dd8395cad8fa24931f0bf5396a800c20de09be88355c2c5e7c055bddb54f6e7cb92cc1b9c77c2da0896f52a39dceb
+    REF ${VERSION}
+    SHA512 ccb78098f202b2d099908a1b92087697cfa8f5969ba0221d4e8ed3decb6cf2ec7ea3b3d1ae450b4e12e7aff640333de06333c53930f15ba6cc201b37cebb1838
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
+        fix_vulkan_enabled.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -33,9 +37,6 @@ list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (o
 list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
 else()
@@ -52,13 +53,12 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${OPTIONS}
-        -Ddemos=false
+        -Dbuild-demos=false
         -Dbuild-testsuite=false
         -Dbuild-examples=false
         -Dbuild-tests=false
-        -Dgtk_doc=false
+        -Ddocumentation=false
         -Dman-pages=false
-        -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
         -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
         -Dprint-cups=disabled       # Build the cups print backend
         -Dvulkan=disabled           # Enable support for the Vulkan graphics API
@@ -88,11 +88,13 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
+               gtk4-path-tool
                gtk4-query-settings
+               gtk4-rendernode-tool
                gtk4-update-icon-cache)
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)

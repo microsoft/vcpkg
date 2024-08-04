@@ -3,11 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OctoMap/octomap
-    REF c4a4304895f6cfc31723dc95df252fe7e756a0ef # v1.9.6
-    SHA512 ec321a5355091acbd3d3fda7c858e2078c29195e73461c8a34db2c4614c6b2e38b35a59671f1071f7eb397cac4df78869f14a13af2e68d64e5a2e2d8727846cd
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 1cbee4f6b3569587986774447ad9ec4190f597310c4d6865ffa7cd8865ece2492e4a42fa369b633d9d7a9da782560d49deaa62a18601ea4f56396bdf1a6a5f52
+    HEAD_REF devel
     PATCHES
-      "001-fix-exported-targets.patch"
+      001-fix-exported-targets.patch
+      fix-isnan.patch # Remove this patch in the next update
 )
 
 vcpkg_cmake_configure(
@@ -38,7 +39,7 @@ endif()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/octomap")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/octomap/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/octomap/LICENSE.txt")
 
 vcpkg_copy_pdbs()
 

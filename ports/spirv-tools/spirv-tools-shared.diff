@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8f3f91a..2cf1e40 100644
+index 75830b44..39cc039e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -389,10 +389,14 @@ add_custom_target(spirv-tools-shared-pkg-config ALL
+@@ -390,10 +390,14 @@ add_custom_target(spirv-tools-shared-pkg-config ALL
  
  # Install pkg-config file
  if (ENABLE_SPIRV_TOOLS_INSTALL)
@@ -19,10 +19,10 @@ index 8f3f91a..2cf1e40 100644
        ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
  endif()
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index 668579a..7874c1a 100644
+index acfa0c12..b3286db3 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -421,6 +421,10 @@ if (ANDROID)
+@@ -425,6 +425,10 @@ if (ANDROID)
  endif()
  
  if(ENABLE_SPIRV_TOOLS_INSTALL)
@@ -30,6 +30,6 @@ index 668579a..7874c1a 100644
 +    set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES EXCLUDE_FROM_ALL 1)
 +    list(REMOVE_ITEM SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-shared)
 +  endif()
-   install(TARGETS ${SPIRV_TOOLS_TARGETS} EXPORT ${SPIRV_TOOLS}Targets
-     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   install(TARGETS ${SPIRV_TOOLS_TARGETS} EXPORT ${SPIRV_TOOLS}Targets)
+   export(EXPORT ${SPIRV_TOOLS}Targets FILE ${SPIRV_TOOLS}Target.cmake)
+ 

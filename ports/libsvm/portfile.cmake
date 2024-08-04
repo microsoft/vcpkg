@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cjlin1/libsvm
-    REF v325
-    SHA512 D5323B128DFCDC7F64B2161E70FA7999C0A93D47C90B366BE066AA01EA92B5817F04812DEF2E05469DEE1F26C6A83DA5E50EEAE3F50B4062D9B24AC0944C6203
+    REF v332
+    SHA512 1b649e6baa7b23a082d510921d0be7b75c04331844c3057587db36b0f5a5a0a6a44ae3f187c2ffa19d70bc1bf25ea8c724ac2cd5c1842d684747469b5c99b9f6
     HEAD_REF master
 )
 
@@ -29,7 +29,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}" CONFIG_PATH "share/unofficial-${PORT}")
 
 if("tools" IN_LIST FEATURES)
-    if(WIN32)
+    if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES svm-predict svm-scale svm-toy svm-train AUTO_CLEAN)
     else()
         vcpkg_copy_tools(TOOL_NAMES svm-predict svm-scale svm-train AUTO_CLEAN)

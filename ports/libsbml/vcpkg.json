@@ -1,7 +1,6 @@
 {
   "name": "libsbml",
-  "version": "5.20.0",
-  "port-version": 1,
+  "version": "5.20.2",
   "description": "A library for reading / writing SBML files",
   "homepage": "https://github.com/sbmlteam/libsbml",
   "license": "LGPL-2.1",
@@ -69,6 +68,7 @@
       "dependencies": [
         {
           "name": "libsbml",
+          "default-features": false,
           "features": [
             "layout"
           ]
@@ -77,8 +77,10 @@
     },
     "test": {
       "description": "Unit testing of libSBMLs implementation",
+      "supports": "!windows | mingw | (windows & static)",
       "dependencies": [
-        "check"
+        "check",
+        "dirent"
       ]
     },
     "zlib": {

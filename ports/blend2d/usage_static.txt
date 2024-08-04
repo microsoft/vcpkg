@@ -1,6 +1,0 @@
-blend2d provides CMake targets:
-
-    find_package(blend2d CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE blend2d::blend2d)
-
-Also, define BL_STATIC before any blend2d includes.

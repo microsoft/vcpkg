@@ -1,11 +1,13 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/logging/log4cxx/${VERSION}/apache-log4cxx-${VERSION}.tar.gz"
     FILENAME "apache-log4cxx-${VERSION}.tar.gz"
-    SHA512 a6b928d7b5b4fb60a67504be082f436a6d1a750b752a89df51d0660670b6c008e7376cf56c1749fd5fc17777ae8a2d957f72879c9a89487ecb0f179999dc1283
+    SHA512 377234407c5f1128fbff6e5d2fcda3f53aae275962cd9207257674fa016095f4bc4ac0c318c1ba2a75f3252402cce0776c1211ffa917a60f8a89a12f01d45efb
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-find-package.patch
 )
 
 vcpkg_cmake_configure(

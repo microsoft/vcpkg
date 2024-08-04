@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ithewei/libhv
-    REF v${VERSION} #v1.3.0
-    SHA512 7d8f552947eb464a8dd644515b9543a7961631e427033de4e1f51f1e9d2b9ca1801553a478b0a20935b50dbc274632e38a6f0438732efed9fcbf0738738ddac5
+    REF "v${VERSION}"
+    SHA512 9dffb6e844df8ba825df88ef984c280923fbf1d50edcbbbe0b36927172ad82c057d65b9b752163c3e2383eb44db0261fd4e3623e3630a55a3f8987088bef0bd7
     HEAD_REF master
 )
 
@@ -30,4 +30,4 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libhv)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

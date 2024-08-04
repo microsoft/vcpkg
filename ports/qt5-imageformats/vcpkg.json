@@ -1,7 +1,7 @@
 {
   "name": "qt5-imageformats",
-  "version": "5.15.10",
-  "description": "Qt5 Image Formats Module - Plugins for additional image formats: TIFF, MNG, TGA, WBMP",
+  "version": "5.15.14",
+  "description": "The Qt Image Formats add-on module provides optional support for other image file formats.",
   "license": null,
   "dependencies": [
     {
@@ -30,7 +30,10 @@
     "tiff": {
       "description": "Enable TIFF support",
       "dependencies": [
-        "tiff",
+        {
+          "name": "tiff",
+          "default-features": false
+        },
         {
           "name": "vcpkg-pkgconfig-get-modules",
           "host": true

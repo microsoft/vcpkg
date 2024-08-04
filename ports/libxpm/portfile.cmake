@@ -8,8 +8,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxpm
-    REF libXpm-3.5.14
-    SHA512 1ae8c48b0d928265cfc6baac1286f241f20e70c88d6f9b6881ccccd7f2e290ca0afaf0f3a051ad5526449dec93c6cc41c48bb6e488e29e2baec87238f17f6bcf
+    REF "libXpm-${VERSION}"
+    SHA512 006d5fb2fd951b8857b8d409d65ebe4f819dc51df3bbe933ef9b879a9dc832b0828481c7c0cac453a82a1e81f39990fc49819314a443a1082bdaea6044bb3013
     PATCHES
         remove_strings_h.patch
         fix-dependency-gettext.patch

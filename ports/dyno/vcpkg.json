@@ -1,0 +1,19 @@
+{
+  "name": "dyno",
+  "version-date": "2019-11-13",
+  "description": "Runtime polymorphism done right",
+  "homepage": "https://github.com/ldionne/dyno/",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "boost-callable-traits",
+    "boost-hana",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

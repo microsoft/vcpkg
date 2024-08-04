@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protobuf-c/protobuf-c
     REF v${VERSION}
-    SHA512 cba4c6116c0f2ebb034236e8455d493bfaa2517733befcd87b6f8d6d3df0c0149b17fcbf59cd1763fa2318119c664d0dae3d2d3a46ebfe2a0fec3ef4719b033b
+    SHA512 4c540ca58b65e59aaf7149124d915f106e91fc79d60c6ef80b62faf288843250375e13f8773fd24f2ff27485dc2d2e597f0a95e39c186a30069eb470abd28ae7
     HEAD_REF master
     PATCHES
         fix-crt-linkage.patch
+        fix-dependency-protobuf.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,6 +31,8 @@ if("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/protobuf-c")
 
 # Include files should not be duplicated into the /debug/include directory.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

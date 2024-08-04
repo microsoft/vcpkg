@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 29d7d60..7e28ba4 100644
+index 46c6059..c0c047a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -555,7 +555,7 @@ endif()
+@@ -660,7 +660,7 @@ endif()
  if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
      install(
          TARGETS avif
@@ -11,7 +11,7 @@ index 29d7d60..7e28ba4 100644
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-@@ -563,7 +563,7 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -668,7 +668,7 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
  
      # Enable CMake configs in VCPKG mode
      if(BUILD_SHARED_LIBS OR VCPKG_TARGET_TRIPLET)
@@ -20,7 +20,7 @@ index 29d7d60..7e28ba4 100644
  
          include(CMakePackageConfigHelpers)
          write_basic_package_version_file(
-@@ -572,6 +572,28 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -677,6 +677,28 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
          install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
                  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
          )
@@ -48,4 +48,4 @@ index 29d7d60..7e28ba4 100644
 +        )
      endif()
  
-     configure_file(libavif.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libavif.pc @ONLY)
+     # Handle both relative and absolute paths (e.g. NixOS) for a relocatable package

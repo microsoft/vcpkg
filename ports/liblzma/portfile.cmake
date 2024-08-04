@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 67292be900a713035d2a3dab4c3b6697cf0db37a78faaa5e0d3f5a96909ef9645c15a6030af94fb7f4224c3ad8eacd1a653ba67dfdeb6372165c1c36e0cf16b7
+    SHA512 ec708bcddc64285b0c36b89c9e6413994af4c15bb6865a7bc243a048ce86afccd0df88d46d55aa23fb8071d137dcc19cf357117adc92f030919540f8993cacf9
     HEAD_REF master
     PATCHES
-        fix_config_include.patch
         win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
-        add_support_ios.patch # add install bundle info for support ios 
         build-tools.patch
 )
 
@@ -29,10 +27,12 @@ vcpkg_cmake_configure(
         -DCREATE_XZ_SYMLINKS=OFF
         -DCREATE_LZMA_SYMLINKS=OFF
         -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
+        -DENABLE_NLS=OFF # nls is not supported by this port, yet
     MAYBE_UNUSED_VARIABLES
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
+        ENABLE_NLS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -41,7 +41,7 @@ set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
 set(PACKAGE_URL https://tukaani.org/xz/)
-set(PACKAGE_VERSION 5.4.3)
+set(PACKAGE_VERSION "${VERSION}")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(PTHREAD_CFLAGS -pthread)
 endif()
@@ -67,7 +67,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-set(TOOLS xz xzdec)
+set(TOOLS xz xzdec lzmadec lzmainfo)
 foreach(_tool IN LISTS TOOLS)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         list(REMOVE_ITEM TOOLS ${_tool})

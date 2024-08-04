@@ -2,9 +2,15 @@ set(USE_QT_VERSION "6")
 
 # https://github.com/opencv/opencv/pull/24043
 vcpkg_download_distfile(ARM64_WINDOWS_FIX
-  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
-  SHA512 b91b45ac49994c3f4481d5ca04d708d9b063239fd2105e2eb1aae26cc70361ff042e99c51edd67beb9463624147ba77fd562097ab20676bba3b8ce068d455dbc
+  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
+  SHA512 8ae2544e4a7ece19efe21261acc183f91202ac5352c1ac42fb86bf33d698352eff1b8962422b092240f4e8c7a691e9aa5ef20d6070adcd37e92bb94c6010ce56
   FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
+)
+
+vcpkg_download_distfile(CUDA_12_4_FIX
+  URLS https://github.com/opencv/opencv/commit/3e3ee106fb8ccd003aa2c9a943a2340b066537bc.patch?full_index=1
+  SHA512 d50fd2e11563fc80467303a98d480f80f5587b1c1cb5a425c3a360dc14be937173ffb665d34167e27c67202bcce7b95d47ab68e2d5effb1ae8f7130610dac3e0
+  FILENAME opencv4-3e3ee106fb8ccd003aa2c9a943a2340b066537bc.patch
 )
 
 vcpkg_from_github(
@@ -26,10 +32,17 @@ vcpkg_from_github(
       0011-remove-python2.patch
       0012-fix-zlib.patch
       0015-fix-freetype.patch
+      0017-fix-flatbuffers.patch
+      0019-missing-include.patch
+      0020-fix-compat-cuda12.2.patch
+      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
       "${ARM64_WINDOWS_FIX}"
+      0022-fix-supportqnx.patch
+      "${CUDA_12_4_FIX}"
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -63,11 +76,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
+ "openjpeg"  WITH_OPENJPEG
  "jpeg"      WITH_JPEG
  "lapack"    WITH_LAPACK
  "nonfree"   OPENCV_ENABLE_NONFREE
+ "openvino"  WITH_OPENVINO
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
+ "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "png"       WITH_PNG
  "quirc"     WITH_QUIRC
  "sfm"       BUILD_opencv_sfm
@@ -76,6 +92,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
  "dc1394"    WITH_1394
+ "vulkan"    WITH_VULKAN
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
@@ -86,6 +103,12 @@ if("dnn" IN_LIST FEATURES)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
   endif()
+  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+  vcpkg_execute_required_process(
+    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
+    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
+    LOGNAME flatc-${TARGET_TRIPLET}
+  )
 endif()
 
 set(WITH_QT OFF)
@@ -121,6 +144,11 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
+endif()
+
+set(WITH_VULKAN OFF)
+if("vulkan" IN_LIST FEATURES)
+  set(WITH_VULKAN ON)
 endif()
 
 set(WITH_PYTHON OFF)
@@ -164,6 +192,24 @@ if("contrib" IN_LIST FEATURES)
     set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
   endif()
 
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX
+    URLS https://github.com/opencv/opencv_contrib/commit/1ed3dd2c53888e3289afdb22ec4e9ebbff3dba87.patch?full_index=1
+    SHA512 f4996cf8368b61dce9d434b608bbd5d49d8e0cd51d0f1b2f1536bfa8ce79823715e082ab5db70dcdd50603baf107c129fc4a804f04ee55cd974973e10716dd43
+    FILENAME opencv-contrib-1ed3dd2c53888e3289afdb22ec4e9ebbff3dba87.patch
+  )
+
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX_2
+    URLS https://github.com/opencv/opencv_contrib/commit/9358ad2e56f6d0b99860856fc1b53b783d186e73.patch?full_index=1
+    SHA512 9d2fef86693e723af4c63417178f3082bf1e1cea2fd0164ecf9bd0ec02d348c374d9c3a707c8e0f224560c9671879ef6f8a6c54cdf38820fe5877faba3545732
+    FILENAME opencv-contrib-9358ad2e56f6d0b99860856fc1b53b783d186e73.patch
+  )
+
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX_3
+    URLS https://github.com/opencv/opencv_contrib/commit/baaeb68b3d6b557536f95b527c0dd87c8f1ce80d.patch?full_index=1
+    SHA512 1d5dc4fbcff57044f03b0620385d8b23eb99e3a39f211901b68c7622f2f00e4ccaa3a1e1999a6712285e1812ada72acb70280d62eb089d6bdd015b5545d2d4ae
+    FILENAME opencv-contrib-baaeb68b3d6b557536f95b527c0dd87c8f1ce80d.patch
+  )
+
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
@@ -174,7 +220,12 @@ if("contrib" IN_LIST FEATURES)
       0007-fix-hdf5.patch
       0016-fix-freetype-contrib.patch
       0018-fix-depend-tesseract.patch
+      0019-fix-ogre-dependency.patch
+      "${CUDA_12_4_CONTRIB_FIX}"
+      "${CUDA_12_4_CONTRIB_FIX_2}"
+      "${CUDA_12_4_CONTRIB_FIX_3}"
   )
+
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
   vcpkg_download_distfile(OCV_DOWNLOAD
@@ -384,6 +435,7 @@ vcpkg_cmake_configure(
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
+        -DBUILD_OPENJPEG=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
         -DBUILD_PNG=OFF
@@ -428,14 +480,15 @@ vcpkg_cmake_configure(
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
+        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_PYTHON=${WITH_PYTHON}
         -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_OPENVINO=${WITH_OPENVINO}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
@@ -461,12 +514,13 @@ if (NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
       "\${_IMPORT_PREFIX}/sdk"
       "\${_IMPORT_PREFIX}/debug/sdk"
+      IGNORE_UNCHANGED
   )
 endif()
 
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-if(${BUILD_opencv_dnn})
+if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
@@ -488,6 +542,9 @@ find_dependency(Threads)")
   endif()
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("ffmpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
   endif()
   if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
@@ -514,14 +571,20 @@ find_dependency(Tesseract)")
   if("lapack" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
   endif()
+  if(WITH_OPENVINO)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
+  endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if("openjpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
   endif()
   if(WITH_OPENMP)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
-    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OGRE)")
   endif()
   if("quirc" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
@@ -575,6 +638,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv")
 if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.android")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
+endif()
+
+if("python" IN_LIST FEATURES)
+  file(GLOB python_dir LIST_DIRECTORIES true RELATIVE "${CURRENT_PACKAGES_DIR}/lib/" "${CURRENT_PACKAGES_DIR}/lib/python*")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/${python_dir}/site-packages/cv2/typing")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${python_dir}/site-packages/cv2/typing")
 endif()
 
 vcpkg_fixup_pkgconfig()

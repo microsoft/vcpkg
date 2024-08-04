@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF v14.2.4
+    REF "v${VERSION}"
     SHA512 c592521960f1950d626261738091d25efdf764ee1a0c72a58c28c66eaebf6073b2c978f1dc2c8dbe89b0be7ec1629a3a45cb1fafa0ebe21b5df8d4d27c992675
     HEAD_REF main
+    PATCHES
+        fix-gcc13-build-error.patch #Please remove it in the next release version
 )
 
 vcpkg_cmake_configure(
@@ -24,8 +26,4 @@ foreach(TARGET reproc reproc++)
     )
 endforeach()
 
-file(
-    INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

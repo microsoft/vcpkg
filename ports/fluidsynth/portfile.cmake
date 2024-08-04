@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 "702b80ff9c8e2ba9fadd46a0377a295be78900c831ec4b6b75c2f5fee7e453b2e1f5511b076ccc044be7e6eb87086230c50c317dad3597a16d610e16032410fc"
+    SHA512 35eaea8c1709ebbd5dee8f3946ab59c39afe31d92b972a44013fa23987aa48936f7d1326d5bda81c6e66f02bf988e48601367d49276a4dd78dbca7a2571f5e57
     HEAD_REF master
     PATCHES
         gentables.patch
