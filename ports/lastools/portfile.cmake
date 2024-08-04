@@ -2,8 +2,6 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} doesn't currently support UWP.")
 endif()
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
@@ -23,10 +21,9 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME LASlib CONFIG_PATH share/lastools/LASlib)
 
+vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64  AUTO_CLEAN)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
