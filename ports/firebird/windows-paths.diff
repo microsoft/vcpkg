@@ -1,0 +1,95 @@
+diff --git a/src/common/unicode_util.cpp b/src/common/unicode_util.cpp
+index 40871dcfdb..45c1bce046 100644
+--- a/src/common/unicode_util.cpp
++++ b/src/common/unicode_util.cpp
+@@ -239,6 +239,12 @@ void BaseICU::initialize(ModuleLoader::Module* module)
+ 
+ 		pathsToTry.add(Config::getRootDirectory());
+ 
++#ifdef FB_SHAREDIR
++		PathName sharePath;
++		PathUtils::concatPath(sharePath, Config::getRootDirectory(), FB_SHAREDIR);
++		pathsToTry.add(sharePath);
++#endif
++
+ 		file.printf("icudt%u%c.dat", majorVersion,
+ #ifdef WORDS_BIGENDIAN
+ 			'b'
+diff --git a/src/include/gen/autoconfig_msvc.h b/src/include/gen/autoconfig_msvc.h
+index 1e25478c64..7cf81bd668 100644
+--- a/src/include/gen/autoconfig_msvc.h
++++ b/src/include/gen/autoconfig_msvc.h
+@@ -318,6 +318,7 @@
+ 
+ #define FB_PREFIX "c:\\Program Files\\Firebird\\"
+ 
++#define FB_SHAREDIR "share/firebird"
+ #define FB_BINDIR ""
+ #define FB_CONFDIR ""
+ #define FB_DOCDIR ""
+@@ -327,13 +328,13 @@
+ #define FB_LIBDIR ""
+ #define FB_LOGDIR ""
+ #define FB_MISCDIR ""
+-#define FB_MSGDIR ""
+-#define FB_PLUGDIR ""
++#define FB_MSGDIR FB_SHAREDIR
++#define FB_PLUGDIR "plugins/firebird"
+ #define FB_SAMPLEDBDIR ""
+ #define FB_SAMPLEDIR ""
+ #define FB_SBINDIR ""
+ #define FB_SECDBDIR ""
+-#define FB_TZDATADIR ""
++#define FB_TZDATADIR (FB_SHAREDIR "/tzdata")
+ 
+ #define FB_LOGFILENAME "firebird.log"
+ 
+diff --git a/src/yvalve/config/os/win32/config_root.cpp b/src/yvalve/config/os/win32/config_root.cpp
+index 3658ee3d89..bcd6d5b3a0 100644
+--- a/src/yvalve/config/os/win32/config_root.cpp
++++ b/src/yvalve/config/os/win32/config_root.cpp
+@@ -68,40 +68,20 @@ void ConfigRoot::osConfigInstallDir()
+ 	// get the pathname of the running dll / executable
+ 	PathName module_path;
+ 	if (!getPathFromHInstance(module_path))
+-	{
+ 		module_path = fb_utils::get_process_name();
+-	}
+ 
+ 	if (module_path.hasData())
+ 	{
+ 		// get rid of the filename
+-		PathName bin_dir, file_name;
++		PathName bin_dir, file_name, parent_dir;
+ 		PathUtils::splitLastComponent(bin_dir, file_name, module_path);
++		PathUtils::splitLastComponent(parent_dir, file_name, bin_dir);
+ 
+-		// search for the configuration file in the bin directory
+-		PathUtils::concatPath(file_name, bin_dir, Firebird::CONFIG_FILE);
+-		DWORD attributes = GetFileAttributes(file_name.c_str());
+-		if (attributes == INVALID_FILE_ATTRIBUTES || attributes == FILE_ATTRIBUTE_DIRECTORY)
+-		{
+-			// search for the configuration file in the parent directory
+-			PathName parent_dir;
+-			PathUtils::splitLastComponent(parent_dir, file_name, bin_dir);
+-
+-			if (parent_dir.hasData())
+-			{
+-				PathUtils::concatPath(file_name, parent_dir, Firebird::CONFIG_FILE);
+-				attributes = GetFileAttributes(file_name.c_str());
+-				if (attributes != INVALID_FILE_ATTRIBUTES && attributes != FILE_ATTRIBUTE_DIRECTORY)
+-				{
+-					install_dir = parent_dir;
+-				}
+-			}
+-		}
++		if (parent_dir.hasData())
++			install_dir = parent_dir;
+ 
+ 		if (install_dir.isEmpty())
+-		{
+ 			install_dir = bin_dir;
+-		}
+ 	}
+ 
+ 	if (install_dir.isEmpty())
