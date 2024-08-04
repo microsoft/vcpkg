@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6a0ea6e..9e119c5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,7 +16,10 @@ if (BUILD_SHARED_LIBS AND UNIX AND NOT APPLE)
+ endif()
+ 
+ add_subdirectory(LASlib/src)
++option(BUILD_TOOLS "" OFF)
++if(BUILD_TOOLS)
+ add_subdirectory(src)
++endif()
+ if (EXISTS src_full)
+ 	add_subdirectory(src_full)
+ endif()
