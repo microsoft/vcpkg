@@ -21,6 +21,7 @@ vcpkg_from_github(
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"
+    #[[
     "${SOURCE_PATH}/src/external/dirent.h"
     "${SOURCE_PATH}/src/external/dr_*.h"  # from drlibs
     "${SOURCE_PATH}/src/external/miniaudio.h"
@@ -28,6 +29,7 @@ file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/qoi.h"
     "${SOURCE_PATH}/src/external/s*fl.h"  # from mmx
     "${SOURCE_PATH}/src/external/stb_*"
+]]
 )
 set(optional_vendored_headers
     "dirent.h"  # from dirent, otherwise system header
