@@ -1,7 +1,3 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} doesn't currently support UWP.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
@@ -13,6 +9,9 @@ vcpkg_from_github(
         "fix_include_directories_lastools.patch"
 )
 
+if(VCPKG_TARGET_IS_UWP)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(src)" "#add_subdirectory(src)")
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
@@ -21,10 +20,11 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME LASlib CONFIG_PATH share/lastools/LASlib)
 
-vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64  AUTO_CLEAN)
+if(NOT VCPKG_TARGET_IS_UWP)
+    vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64  AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
