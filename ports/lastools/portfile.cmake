@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
-    REF 2bbbfa918df01b7f364d176610e9785bceb4d5de
-    SHA512 3744aa9e50150261cc3a52272a4cdeafdb4f678a6f6a986a9549c2efead6b4c69bc3d9a6f9f302140ce363d6da965e47b63c0310364307e9caa82c86f75a509f
+    REF "v${VERSION}"
+    SHA512 cb150562b09c5a79df1e2c730481ceda340f235e1efb7824564d1f95a9981eada087af06bc3907a777a55d315a1521fb8a09249f2aeefd9e40e6c783b9c7a11c
     HEAD_REF master
     PATCHES 
         "fix_install_paths_lastools.patch"
