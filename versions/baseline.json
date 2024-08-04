@@ -6530,11 +6530,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 15
+      "port-version": 16
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 21
+      "port-version": 22
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6802,7 +6802,7 @@
     },
     "pcl": {
       "baseline": "1.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "pcre": {
       "baseline": "8.45",
@@ -9346,7 +9346,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
