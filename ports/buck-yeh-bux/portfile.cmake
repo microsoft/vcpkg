@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 b7750509af9b46e8ed16326a73de91085bb6e89b3f284bfd0602436399d171e78cd56a7a4fae5cd410861652c6916b4b0962d47cdf43c13b0812d4633fd7f160
     HEAD_REF main
-    PATCHES
-        fix-build-error-with-fmt11.patch
 )
 
 vcpkg_cmake_configure(
