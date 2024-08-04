@@ -8,6 +8,8 @@ vcpkg_from_github(
         fix_install_paths_lastools.patch
         fix_include_directories_lastools.patch
         build-tools.diff
+        insecure-fprintf.diff
+        signed-char.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
