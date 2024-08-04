@@ -2,6 +2,7 @@
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
 FROM ubuntu:focal-20240530
 
+ADD https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip /android-sdk-11076708.zip
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://dl.google.com/android/repository/android-ndk-r26d-linux.zip /android-ndk-r26d-linux.zip
 
@@ -62,8 +63,20 @@ apt-get -y --no-install-recommends install $APT_PACKAGES
 # Android NDK
 unzip /android-ndk-r26d-linux.zip
 rm -f android-ndk-r26d-linux.zip
+
+# Android SDK
+unzip /android-sdk-11076708.zip -d android-sdk
+rm -f android-sdk-11076708.zip
+
+shopt -s extglob
+mkdir /android-sdk/cmdline-tools/latest
+# https://stackoverflow.com/questions/65262340/cmdline-tools-could-not-determine-sdk-root
+mv /android-sdk/cmdline-tools/!(latest) /android-sdk/cmdline-tools/latest
+yes | /android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;29.0.2" "platform-tools" "tools"
 END_OF_SCRIPT
 
 ENV ANDROID_NDK_HOME /android-ndk-r26d
+ENV ANDROID_SDK_ROOT /android-sdk
 
 WORKDIR /vcpkg

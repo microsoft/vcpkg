@@ -120,6 +120,13 @@ if ($IsWindows) {
     rmdir empty
 }
 
+if ($IsLinux)
+{
+    . ./scripts/azure-pipelines/acquire-android-sdk.ps1
+    $NoParentHashes = $true
+}
+
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
