@@ -4,6 +4,7 @@
   "description": "A simple asynchronous network library",
   "homepage": "https://github.com/index1207/netcpp",
   "license": "MIT",
+  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,6 +13,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "winsock2"
   ]
 }
