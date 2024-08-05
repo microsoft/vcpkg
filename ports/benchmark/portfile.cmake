@@ -1,19 +1,16 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
     REF "v${VERSION}"
-    SHA512 4e12114251c79a426873cfba6e27270b69fc980cef9a68e9cb3170f8e2e203f77dee19ab1e65cad51cd67e60991d3bbfdd52553f22522ce5e6c611b5aa07602c
+    SHA512 86b16abf64961f5f9b8a539f81eefac580e8793e3270e826cf5c624cde2e64ed7e67a5f1c34c3d7250a11c61b1660c9287643df4502de598c1d9581c4a1df752
     HEAD_REF main
-    PATCHES
-        fix_qnx.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
+        -DBENCHMARK_INSTALL_DOCS=OFF
         -Werror=old-style-cast
 )
 
@@ -28,4 +25,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,6 @@
 {
   "name": "graphviz",
-  "version-semver": "9.0.0",
+  "version-semver": "10.0.1",
   "port-version": 2,
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
@@ -11,6 +11,8 @@
       "name": "cairo",
       "default-features": false
     },
+    "expat",
+    "gdk-pixbuf",
     "getopt",
     "gts",
     {

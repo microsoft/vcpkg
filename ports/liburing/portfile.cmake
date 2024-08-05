@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO axboe/liburing
     REF "liburing-${VERSION}"
-    SHA512 53742c23211de7194322874eb8186b942ccc1611c231d49f60fd1d8bc2bb93d231ed521af77802db68c30557d71fa5799ae40cbacfc24ba1db3d650c7ba8cc62
+    SHA512 e5ce61e80fe90f95128e62abfec7771912fe98674f7dbf5806ed61cb386adecedf495c50cb77b684f5b61f48deb44ccb4e3ba032613920213366132bbbc908db
     HEAD_REF master
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED
@@ -19,10 +19,6 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CURRENT_PORT_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 # note: {SOURCE_PATH}/src/Makefile makes liburing.so from liburing.a.
 #   For dynamic, remove intermediate file liburing.a when install is finished.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -34,3 +30,16 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man2")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7")
+
+# Cf. README
+vcpkg_install_copyright(COMMENT [[
+All software contained from liburing is dual licensed LGPL and MIT, see
+COPYING and LICENSE, except for a header coming from the kernel which is
+dual licensed GPL with a Linux-syscall-note exception and MIT, see
+COPYING.GPL and <https://spdx.org/licenses/Linux-syscall-note.html>.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/COPYING.GPL"
+)

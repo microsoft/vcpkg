@@ -647,6 +647,19 @@
         "soundtouch"
       ]
     },
+    "soup": {
+      "description": "Enable support for the soup plugin",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-good"
+          ]
+        },
+        "libsoup"
+      ]
+    },
     "speex": {
       "description": "Enable support for the speex codec",
       "dependencies": [

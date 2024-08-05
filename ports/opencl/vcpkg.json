@@ -1,10 +1,9 @@
 {
   "name": "opencl",
-  "version-string": "v2023.02.06",
-  "port-version": 2,
-  "description": "C/C++ headers and ICD loader (Installable Client Driver) for OpenCL",
-  "homepage": "https://github.com/KhronosGroup/OpenCL-Headers",
-  "license": "Apache-2.0",
+  "version-string": "v2024.05.08",
+  "description": "OpenCL SDK",
+  "homepage": "https://github.com/KhronosGroup/OpenCL-SDK",
+  "license": "Apache-2.0 AND (MIT OR WTFPL)",
   "supports": "!uwp",
   "dependencies": [
     {

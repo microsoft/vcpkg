@@ -8,7 +8,16 @@ vcpkg_from_github(
         dcmtk.patch
         fix_link_xml2.patch
         dictionary_paths.patch
+        fix_link_tiff.patch
 )
+
+# Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
+file(GLOB src_files "${SOURCE_PATH}/dcmjpeg/libijg*/*.c" "${SOURCE_PATH}/dcmjpeg/libijg*/*.h")
+foreach(file_path ${src_files})
+    file(READ "${file_path}" file_string)
+    string(REGEX REPLACE "(#define[ \t\r\n]+[A-Za-z0-9_]*[ \t\r\n]+)(j[a-z]+[0-9]+_)" "\\1dcmtk_\\2" file_string "${file_string}")
+    file(WRITE "${file_path}" "${file_string}")
+endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -24,8 +33,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("external-dict" IN_LIST FEATURES)
     set(DCMTK_DEFAULT_DICT "external")
+	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA OFF)
 else()
     set(DCMTK_DEFAULT_DICT "builtin")
+	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -33,6 +44,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}" 
+		-DDCMTK_ENABLE_BUILTIN_OFICONV_DATA=${DCMTK_ENABLE_BUILTIN_OFICONV_DATA}
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_FORCE_FPIC_ON_UNIX=ON
         -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF
@@ -42,12 +54,12 @@ vcpkg_cmake_configure(
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
         -DDCMTK_ENABLE_STL=ON
         -DCMAKE_DEBUG_POSTFIX=d
+        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
+        -DBUILD_TESTING=OFF
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
         -DBUILD_APPS=OFF
-    MAYBE_UNUSED_VARIABLES
-        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
 )
 
 vcpkg_cmake_install()
@@ -140,10 +152,10 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCMTK_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCM_DICT_DEFAULT_PATH \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/dicom.dic:${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/private.dic\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_CONFIGURATION_DIR \"${CURRENT_PACKAGES_DIR}/etc/dcmtk-${VERSION}/\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_SUPPORT_DATA_DIR \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCMTK_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCM_DICT_DEFAULT_PATH \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/dicom.dic:${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/private.dic\"" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_CONFIGURATION_DIR \"${CURRENT_PACKAGES_DIR}/etc/dcmtk-${VERSION}/\"" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_SUPPORT_DATA_DIR \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/\"" "" IGNORE_UNCHANGED)
 
 vcpkg_fixup_pkgconfig()
 

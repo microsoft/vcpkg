@@ -4,14 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO g-truc/glm
     REF "${VERSION}"
-    SHA512 62e22002a6369a54e1f0ee2885a65f2780af7d2a446573e5387b81518f5dc7e8076053837cb99ae850a0166ce8b0f077bed009e8986d9884d01c456ce467553f
+    SHA512 c6c6fa1ea7a7e97820e36ee042a78be248ae828c99c1b1111080d9bf334a5160c9993a70312351c92a867cd49907c95f9f357c8dfe2bc29946da6e83e27ba20c
     HEAD_REF master
+    PATCHES
+        fix-clang.patch # Backport https://github.com/g-truc/glm/pull/1286. Remove with next update.
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DGLM_ENABLE_CXX_17=ON
         -DGLM_BUILD_LIBRARY=ON
         -DGLM_BUILD_TESTS=OFF
         -DGLM_BUILD_INSTALL=ON
