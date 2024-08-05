@@ -2705,7 +2705,7 @@
       "port-version": 7
     },
     "ffmpeg": {
-      "baseline": "7.0.1",
+      "baseline": "7.0.2",
       "port-version": 0
     },
     "ffnvcodec": {
