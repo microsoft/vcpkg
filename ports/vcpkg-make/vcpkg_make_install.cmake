@@ -39,10 +39,8 @@ function(vcpkg_make_install)
         string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
 
-    set(arg_SHELL "")
-    vcpkg_make_get_shell(arg_SHELL)
-
-    set(shell_cmd "${arg_SHELL}")
+    vcpkg_make_get_shell(shell_var)
+    set(shell_cmd "${shell_var}")
 
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
     set(make_command "${Z_VCPKG_MAKE}")

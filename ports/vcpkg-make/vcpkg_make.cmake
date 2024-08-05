@@ -69,31 +69,16 @@ function(vcpkg_run_autoreconf shell_cmd work_dir)
 endfunction()
 
 function(vcpkg_make_setup_win_msys msys_out)
-    cmake_parse_arguments(PARSE_ARGV 1 arg
-        "" 
-        ""
-        "PACKAGES"
-    )
-    z_vcpkg_unparsed_args(FATAL_ERROR)
     list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make which)
-    vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages} ${arg_PACKAGES})
+    vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages})
     find_program(PKGCONFIG NAMES pkgconf NAMES_PER_DIR PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH)
     set("${msys_out}" "${msys}" PARENT_SCOPE)
 endfunction()
 
 function(vcpkg_make_get_shell out_var)
-    cmake_parse_arguments(PARSE_ARGV 1 arg
-        "" 
-        "MSYS_ROOT"
-        "PACKAGES"
-    )
     set(bash_options "")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        if(NOT arg_MSYS_ROOT)
-          vcpkg_make_setup_win_msys(msys_root PACKAGES "${arg_PACKAGES}")
-        else()
-          set(msys_root "${arg_MSYS_ROOT}")
-        endif()
+        vcpkg_make_setup_win_msys(msys_root)
         set(bash_options --noprofile --norc --debug)
         set(bash_cmd "${msys_root}/usr/bin/bash.exe")
     endif()

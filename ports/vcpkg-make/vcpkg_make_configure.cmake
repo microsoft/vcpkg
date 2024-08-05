@@ -59,10 +59,8 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
         vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
     endif()
 
-    set(arg_SHELL "")
-    vcpkg_make_get_shell(arg_SHELL)
-
-    set(shell_cmd "${arg_SHELL}")
+    vcpkg_make_get_shell(shell_var)
+    set(shell_cmd "${shell_var}")
 
     if(arg_AUTOCONFIG)
       vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
