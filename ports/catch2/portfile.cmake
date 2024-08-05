@@ -12,11 +12,17 @@ vcpkg_from_github(
         fix-install-path.patch
 )
 
+set (OPTIONS)
+if("disable-posix-signals-windows-seh-handling" IN_LIST FEATURES)
+    list(APPEND OPTIONS -DCATCH_CONFIG_NO_POSIX_SIGNALS=ON -DCATCH_CONFIG_NO_WINDOWS_SEH=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCATCH_INSTALL_DOCS=OFF
         -DCMAKE_CXX_STANDARD=17
+        ${OPTIONS}
 )
 
 vcpkg_cmake_install()
