@@ -5,7 +5,6 @@ option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_package(Iconv REQUIRED)
 
 FILE(GLOB SOURCESXMLSEC
 	src/*.c
@@ -141,9 +140,6 @@ if(INSTALL_HEADERS_TOOLS)
 	target_link_libraries(xmlsec PRIVATE
 		${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1 xmlsec1-openssl
 	)
-    if(NOT Iconv_IS_BUILT_IN)
-        target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
-    endif()
 
 	if(BUILD_SHARED_LIBS)
 		target_compile_definitions(xmlsec PRIVATE -DXMLSEC_CRYPTO_DYNAMIC_LOADING)
