@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fdfe456a..a5d69b41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -480,8 +480,8 @@ macro (CMAKE_BUILD_UTILITIES)
+       message(FATAL_ERROR
+         "CMAKE_USE_SYSTEM_CURL is ON but a curl is not found!")
+     endif()
+-    set(CMAKE_CURL_INCLUDES ${CURL_INCLUDE_DIRS})
+-    set(CMAKE_CURL_LIBRARIES ${CURL_LIBRARIES})
++    set(CMAKE_CURL_INCLUDES )
++    set(CMAKE_CURL_LIBRARIES CURL::libcurl)
+   else()
+     set(CURL_SPECIAL_ZLIB_H ${CMAKE_ZLIB_HEADER})
+     set(CURL_SPECIAL_LIBZ_INCLUDES ${CMAKE_ZLIB_INCLUDES})

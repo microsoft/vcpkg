@@ -2,18 +2,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 a84209fe36a2a0262ebc34b727e7600b12d4739991a95599d7b4df533791b12e2e43586ccc6ff26aab2f935a3049866204e322ec0c5e49e378fc175ded34e183
+    SHA512 ac147e52557b71cab0a38c0fee5f710a70d7e99107d1cb881e733c489a6b16f99d2c15e00e359ab48353bd710ead13399ee31840e6c5844a11d042eda71a0aa0
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
-        0002-fix-msvc-link.patch #upstreamed in future version
+        0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
-        0005-fix-nasm.patch #upstreamed in future version
+        0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
+        0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0041-add-const-for-opengl-definition.patch
         0042-fix-arm64-linux.patch #https://github.com/FFmpeg/FFmpeg/commit/fcfd17dbb4a6cf270cdd82e91c21a5efdc878d12
@@ -49,9 +50,9 @@ if(VCPKG_TARGET_IS_MINGW)
 elseif(VCPKG_TARGET_IS_LINUX)
     string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 elseif(VCPKG_TARGET_IS_UWP)
-    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-mediafoundation")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
     string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
 elseif(VCPKG_TARGET_IS_IOS)
@@ -91,7 +92,7 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
-    #string(APPEND OPTIONS " --host_cc=${CC_filename}") ffmpeg not yet setup for cross builds?
+    string(APPEND OPTIONS " --host_cc=${CC_filename}")
     list(APPEND prog_env "${CC_path}")
 endif()
 

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tzvetkoff/hashids.c
-    REF 11ea51510ba968438eb9b1bc3f8c9981be731521 # v1.2.1
-    SHA512 a6c066ff6544502f1c0ed55afcf994e6ed52b207e428de58992ec9e3ffef1e6fdb4439f2565e7cb039065403f497fcf8e95a8e3b9843e4f0b9bef22853816270
+    REF "v${VERSION}"
+    SHA512 f752a95118f729eb9e9651fc5d0112271c5cb95c8cefeaef33f61611274075ba4085edca58fb14823d4665de4044eff24397b891a22c2cb196e9c1c287fae378
     HEAD_REF master
     PATCHES
         hashids.patch
@@ -27,4 +27,4 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/hashids" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
