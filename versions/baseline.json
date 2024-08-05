@@ -5093,7 +5093,7 @@
       "port-version": 1
     },
     "libsystemd": {
-      "baseline": "256.2",
+      "baseline": "256.4",
       "port-version": 0
     },
     "libtar": {
