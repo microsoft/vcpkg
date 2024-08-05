@@ -8,10 +8,6 @@ vcpkg_from_github(
     HEAD_REF release
 )
 
-if(!VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    return()
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
