@@ -4,7 +4,7 @@
   "description": "Loose-coupled throw-on-error C++20 wrapper classes and utilities over mysql/mariadb Connector/C API",
   "homepage": "https://github.com/buck-yeh/bux-mariadb-client",
   "license": "MIT",
-  "supports": "!(x86 | android | uwp | osx | linux)",
+  "supports": "!(x86 | android | uwp | osx | linux) | (x64 & android)",
   "dependencies": [
     "buck-yeh-bux",
     "libmariadb",
