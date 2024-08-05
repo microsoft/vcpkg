@@ -72,7 +72,6 @@ target_link_libraries(xmlsec1-openssl PRIVATE
 
 add_compile_definitions(inline=__inline)
 add_compile_definitions(PACKAGE="xmlsec1")
-add_compile_definitions(XMLSEC_MSCRYPTO_NT4=1)
 add_compile_definitions(HAVE_STDIO_H)
 add_compile_definitions(HAVE_STDLIB_H)
 add_compile_definitions(HAVE_STRING_H)
