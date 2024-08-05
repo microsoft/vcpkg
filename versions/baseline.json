@@ -1401,8 +1401,8 @@
       "port-version": 0
     },
     "buck-yeh-bux-mariadb-client": {
-      "baseline": "1.0.3",
-      "port-version": 1
+      "baseline": "1.0.4",
+      "port-version": 0
     },
     "buck-yeh-bux-sqlite": {
       "baseline": "1.0.1",
