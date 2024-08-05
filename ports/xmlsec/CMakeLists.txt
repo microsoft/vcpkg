@@ -63,11 +63,9 @@ add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBXML2_INCLUDE_DIRS})
 
-target_link_libraries(xmlsec1 PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL
-)
+target_link_libraries(xmlsec1 PRIVATE ${LIBXML2_LIBRARIES})
 target_link_libraries(xmlsec1-openssl PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1
+    ${LIBXML2_LIBRARIES} OpenSSL::Crypto xmlsec1
 )
 
 add_compile_definitions(inline=__inline)
@@ -86,8 +84,7 @@ add_compile_definitions(_UNICODE)
 add_compile_definitions(_MBCS)
 add_compile_definitions(_REENTRANT)
 
-set_target_properties(xmlsec1 PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
-set_target_properties(xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
+set_target_properties(xmlsec1 xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 
 if(NOT BUILD_SHARED_LIBS)
     set(XMLSEC_CORE_CFLAGS "-DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING")
