@@ -1,4 +1,4 @@
-if (NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
@@ -15,9 +15,13 @@ vcpkg_from_github(
 # header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
 # uses the compiler default behavior to update `absl/base/options.h` as needed.
 set(ABSL_USE_CXX17_OPTION "")
-if ("cxx17" IN_LIST FEATURES)
+if("cxx17" IN_LIST FEATURES)
     set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
-endif ()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(ABSL_USE_CXX17_OPTION "-DABSL_MSVC_STATIC_RUNTIME=ON")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
