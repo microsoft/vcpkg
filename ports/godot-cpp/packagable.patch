@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e715102..b000066 100644
+index 7884a06..248756e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -37,7 +37,7 @@
  # Todo
  # Test build for Windows, Mac and mingw.
  
--cmake_minimum_required(VERSION 3.12)
+-cmake_minimum_required(VERSION 3.13)
 +cmake_minimum_required(VERSION 3.19)
  project(godot-cpp LANGUAGES CXX)
  
