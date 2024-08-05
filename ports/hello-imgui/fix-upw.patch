@@ -1,18 +1,13 @@
 diff --git a/src/hello_imgui/internal/poor_man_log.cpp b/src/hello_imgui/internal/poor_man_log.cpp
-index 3aad6f7..2fb93fc 100644
+index 3aad6f7..e9e474b 100644
 --- a/src/hello_imgui/internal/poor_man_log.cpp
 +++ b/src/hello_imgui/internal/poor_man_log.cpp
-@@ -18,7 +18,13 @@ void PoorManLog(const char* msg, ...)
+@@ -18,7 +18,7 @@ void PoorManLog(const char* msg, ...)
      va_end(args);
 
  #ifdef _MSC_VER
-+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
-+    wchar_t wbuffer[2000];
-+    mbstowcs(wbuffer, buffer, strlen(buffer) + 1);
-+    OutputDebugString(wbuffer);
-+#else
-     OutputDebugString(buffer);
-+#endif
+-    OutputDebugString(buffer);
++    OutputDebugStringA(buffer);
  #else
      printf("%s", buffer);
  #endif
