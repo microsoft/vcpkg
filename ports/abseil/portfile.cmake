@@ -8,10 +8,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 bd2cca8f007f2eee66f51c95a979371622b850ceb2ce3608d00ba826f7c494a1da0fba3c1427728f2c173fe50d59b701da35c2c9fdad2752a5a49746b1c8ef31
     HEAD_REF master
-    PATCHES
-        0001-revert-integer-to-string-conversion-optimizations.patch # Fix openvino MSVC compile error
-		0002-Fix-missing-include-random-for-std-uniform_int_distr.patch # Fix missing include for std::uniform_int_distribution
-        779a356-test-allocator.diff
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
