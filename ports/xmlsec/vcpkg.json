@@ -6,7 +6,10 @@
   "license": "X11 AND MPL-1.1",
   "supports": "!xbox & !uwp",
   "dependencies": [
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",
