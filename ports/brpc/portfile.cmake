@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-warnings.patch
         protobuf.patch
-        remove-override.patch
+        fix-compilation-error.patch
 )
 
 vcpkg_cmake_configure(
