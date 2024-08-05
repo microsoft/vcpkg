@@ -31,7 +31,6 @@ endif()
 set(flags_out)
 z_vcpkg_make_prepare_compile_flags(
     USES_WRAPPERS
-    USE_RESPONSE_FILES
     COMPILER_FRONTEND "MSVC"
     CONFIG "Release"
     FLAGS_OUT flags_out

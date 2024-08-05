@@ -17,7 +17,6 @@ vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_MSVC_WRAPPERS
     DISABLE_MSVC_FLAG_ESCAPING
-    USE_RESPONSE_FILES
     OPTIONS ${opts}
 )
 
