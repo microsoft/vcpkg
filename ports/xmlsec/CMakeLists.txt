@@ -78,7 +78,6 @@ add_compile_definitions(HAVE_STRING_H)
 add_compile_definitions(HAVE_CTYPE_H)
 add_compile_definitions(HAVE_MALLOC_H)
 add_compile_definitions(HAVE_MEMORY_H)
-add_compile_definitions(XMLSEC_NO_XSLT=1)
 add_compile_definitions(XMLSEC_DEFAULT_CRYPTO="openssl")
 add_compile_definitions(XMLSEC_NO_GOST)
 add_compile_definitions(XMLSEC_NO_GOST2012)
@@ -86,10 +85,6 @@ add_compile_definitions(UNICODE)
 add_compile_definitions(_UNICODE)
 add_compile_definitions(_MBCS)
 add_compile_definitions(_REENTRANT)
-
-target_compile_definitions(xmlsec1-openssl PRIVATE
-    -DXMLSEC_CRYPTO_OPENSSL
-)
 
 set_target_properties(xmlsec1 PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 set_target_properties(xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
@@ -102,7 +97,10 @@ else()
     set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
 endif()
 
-target_compile_definitions(xmlsec1 PRIVATE ${XMLSEC_CORE_CFLAGS})
+target_compile_definitions(xmlsec1
+    PRIVATE ${XMLSEC_CORE_CFLAGS}
+    PUBLIC XMLSEC_NO_XSLT XMLSEC_CRYPTO_OPENSSL
+)
 target_compile_definitions(xmlsec1-openssl PRIVATE ${XMLSEC_OPENSSL_CFLAGS})
 
 install(TARGETS xmlsec1 xmlsec1-openssl
@@ -149,10 +147,6 @@ if(INSTALL_HEADERS_TOOLS)
     if(NOT Iconv_IS_BUILT_IN)
         target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
     endif()
-    
-	target_compile_definitions(xmlsec PRIVATE
-		-DXMLSEC_CRYPTO_OPENSSL
-	)
 
 	if(BUILD_SHARED_LIBS)
 		target_compile_definitions(xmlsec PRIVATE -DXMLSEC_CRYPTO_DYNAMIC_LOADING)
