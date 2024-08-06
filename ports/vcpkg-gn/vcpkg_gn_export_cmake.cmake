@@ -141,7 +141,6 @@ function(z_vcpkg_gn_export_cmake_build_type)
         z_vcpkg_gn_get_link_libs(interface_link_libs "${desc}" "${gn_target}")
         set(interface_link_targets "")
         z_vcpkg_gn_list_from_json(deps "${desc}" "${gn_target}" "deps")
-        list(REMOVE_ITEM deps ${Z_VCPKG_GN_NO_EXPORT}) # tbd: transitive deps
         foreach(dep IN LISTS deps)
             z_vcpkg_gn_get_cmake_target(cmake_dep "${dep}")
             message(STATUS "*** ${basename} -> ${dep} -> ${cmake_dep}")
