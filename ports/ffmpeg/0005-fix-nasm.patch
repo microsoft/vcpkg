@@ -53,3 +53,16 @@ diff --git a/libavfilter/x86/Makefile b/libavfilter/x86/Makefile
  X86ASM-OBJS-$(CONFIG_OVERLAY_FILTER)         += x86/vf_overlay.o
  X86ASM-OBJS-$(CONFIG_PP7_FILTER)             += x86/vf_pp7.o
  X86ASM-OBJS-$(CONFIG_PSNR_FILTER)            += x86/vf_psnr.o
+diff --git a/libavcodec/x86/vvc/Makefile b/libavcodec/x86/vvc/Makefile
+--- a/libavcodec/x86/vvc/Makefile
++++ b/libavcodec/x86/vvc/Makefile
+@@ -3,5 +3,7 @@ clean::
+ 
+ OBJS-$(CONFIG_VVC_DECODER)             += x86/vvc/vvcdsp_init.o \
+                                           x86/h26x/h2656dsp.o
+-X86ASM-OBJS-$(CONFIG_VVC_DECODER)      += x86/vvc/vvc_mc.o       \
+-                                          x86/h26x/h2656_inter.o
++ifdef ARCH_X86_64
++X86ASM-OBJS-$(CONFIG_VVC_DECODER)      += x86/vvc/vvc_mc.o
++endif
++X86ASM-OBJS-$(CONFIG_VVC_DECODER)      += x86/h26x/h2656_inter.o

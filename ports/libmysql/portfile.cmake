@@ -13,6 +13,7 @@ vcpkg_from_github(
         install-exports.patch
         fix_dup_symbols.patch
         cross-build.patch
+        fix-pdb-install-path.patch
 )
 
 file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_70_0")
@@ -91,6 +92,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql)
 vcpkg_fixup_pkgconfig()
 

@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc81419..88046b3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -183,7 +183,7 @@ add_subdirectory(demos)
+ add_subdirectory(scripts)
+ add_subdirectory(doc)
+ 
+-if(NOT MSVC)
++if(0)
+     target_link_flags(ompl)
+     set(PKG_NAME "ompl")
+     set(PKG_DESC "The Open Motion Planning Library")
+diff --git a/src/ompl/CMakeLists.txt b/src/ompl/CMakeLists.txt
+index 7057838..405fa78 100644
+--- a/src/ompl/CMakeLists.txt
++++ b/src/ompl/CMakeLists.txt
+@@ -61,6 +61,7 @@ target_link_libraries(ompl
+     ${Boost_SYSTEM_LIBRARY}
+     ${CMAKE_THREAD_LIBS_INIT})
+ 
++target_include_directories(ompl PUBLIC $<INSTALL_INTERFACE:include>)
+ if (OMPL_EXTENSION_ODE)
+     if (NOT CMAKE_VERSION VERSION_LESS 3.13)
+         target_link_directories(ompl PUBLIC ${ODE_LIBRARY_DIRS})

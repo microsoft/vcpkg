@@ -4,11 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 c249270f528b504dbe86a60e92113e16dc8f9f9dd8edeeffcd265da699ee73b660c9fafa7992d8be5ee473a68a00201332d60d9980fc8b373e10bb3e0237b301
+    SHA512 9123a758374c3b62a84d993305053adff1f689299da0927bc73521f21a560fb6a5fdeacac5cd71a5bb316058ea0022de57d942aa4c77213904ffff71c5e20f04
     HEAD_REF main
-    PATCHES
-        support_absl_cxx17.patch
-        fix_mocks_dependent_option.patch
 )
 
 if ("grpc-common" IN_LIST FEATURES)
