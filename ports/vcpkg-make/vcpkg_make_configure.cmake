@@ -43,7 +43,6 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
       set(escaping NO_FLAG_ESCAPING)
     endif()
 
-
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
     z_vcpkg_make_prepare_flags(${prepare_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
