@@ -1,6 +1,6 @@
 {
   "name": "curl",
-  "version": "8.9.0",
+  "version": "8.9.1",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -30,6 +30,19 @@
       "description": "c-ares support",
       "dependencies": [
         "c-ares"
+      ]
+    },
+    "gnutls": {
+      "description": "SSL support (gnutls)",
+      "dependencies": [
+        {
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !mingw"
+        }
       ]
     },
     "gsasl": {
