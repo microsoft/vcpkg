@@ -1,11 +1,10 @@
 {
   "name": "theia",
-  "version": "0.8",
-  "port-version": 10,
+  "version-date": "2019-07-17",
   "description": "An open source library for multiview geometry and structure from motion",
   "homepage": "https://github.com/sweeneychris/TheiaSfM",
   "license": "BSD-3-Clause",
-  "supports": "!uwp & !arm & !(windows & x86)",
+  "supports": "!(windows & (x86 | arm64)) & !(osx & arm64)",
   "dependencies": [
     "cereal",
     {
@@ -20,12 +19,11 @@
       "platform": "!osx"
     },
     "glew",
-    {
-      "name": "openimageio",
-      "features": [
-        "viewer"
-      ]
-    },
+    "openimageio",
+    "rapidjson",
+    "rocksdb",
+    "spectra",
+    "suitesparse",
     {
       "name": "vcpkg-cmake",
       "host": true

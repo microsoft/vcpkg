@@ -1,0 +1,10 @@
+--- a/src/theia/matching/rocksdb_features_and_matches_database.cc
++++ b/src/theia/matching/rocksdb_features_and_matches_database.cc
+@@ -48,6 +48,7 @@
+ #include <cereal/types/vector.hpp>
+ #include <rocksdb/db.h>
+ #include <rocksdb/filter_policy.h>
++#include <rocksdb/statistics.h>
+ #include <rocksdb/table.h>
+ 
+ #include "theia/matching/image_pair_match.h"
