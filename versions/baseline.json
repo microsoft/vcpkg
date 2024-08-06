@@ -1410,7 +1410,7 @@
     },
     "bullet3": {
       "baseline": "3.25",
-      "port-version": 1
+      "port-version": 2
     },
     "bustache": {
       "baseline": "1.1.0",
@@ -4237,7 +4237,7 @@
       "port-version": 5
     },
     "libarchive": {
-      "baseline": "3.7.2",
+      "baseline": "3.7.4",
       "port-version": 0
     },
     "libass": {
@@ -4773,7 +4773,7 @@
       "port-version": 4
     },
     "libnick": {
-      "baseline": "2024.7.3",
+      "baseline": "2024.8.1",
       "port-version": 0
     },
     "libnoise": {
@@ -5093,7 +5093,7 @@
       "port-version": 1
     },
     "libsystemd": {
-      "baseline": "256.2",
+      "baseline": "256.4",
       "port-version": 0
     },
     "libtar": {
@@ -5469,7 +5469,7 @@
       "port-version": 1
     },
     "lmdb": {
-      "baseline": "0.9.31",
+      "baseline": "0.9.33",
       "port-version": 0
     },
     "lockpp": {
@@ -6486,7 +6486,7 @@
     },
     "openal-soft": {
       "baseline": "1.23.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openblas": {
       "baseline": "0.3.27",
@@ -8585,8 +8585,8 @@
       "port-version": 0
     },
     "str-view": {
-      "baseline": "0.3.11",
-      "port-version": 1
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "strict-variant": {
       "baseline": "0.5",
