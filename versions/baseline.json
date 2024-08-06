@@ -5877,8 +5877,8 @@
       "port-version": 0
     },
     "mlpack": {
-      "baseline": "4.3.0",
-      "port-version": 1
+      "baseline": "4.4.0",
+      "port-version": 0
     },
     "mman": {
       "baseline": "git-f5ff813",
