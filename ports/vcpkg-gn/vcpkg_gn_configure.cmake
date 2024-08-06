@@ -35,6 +35,14 @@ function(vcpkg_gn_configure)
 
     vcpkg_find_acquire_program(GN)
 
+    # Must get all required toolchain variables before configuring build directories.
+    # VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES: Used by vcpkg_gn_export_cmake
+    if(NOT DEFINED VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        set(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" PARENT_SCOPE)
+    endif()
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         z_vcpkg_gn_configure_generate(
             SOURCE_PATH "${arg_SOURCE_PATH}"

@@ -6,6 +6,7 @@ vcpkg_from_git(
     REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
     PATCHES
         fix-linux.patch
+        output-names.diff
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -36,6 +37,7 @@ vcpkg_apply_patches(
     PATCHES
       "fix-std-20.patch"
 )      
+vcpkg_replace_string("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build/config/BUILD.gn" "tool_prefix = \"arm-linux-androideabi\"" "# unused")
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     # fetch lss

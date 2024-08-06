@@ -1,0 +1,12 @@
+diff --git a/client/BUILD.gn b/client/BUILD.gn
+index bd150ab..3bb7a8d 100644
+--- a/client/BUILD.gn
++++ b/client/BUILD.gn
+@@ -114,6 +114,7 @@ crashpad_static_library("client") {
+ }
+ 
+ static_library("common") {
++  output_name = "crashpad_common"
+   sources = [
+     "annotation.cc",
+     "annotation.h",

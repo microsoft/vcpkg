@@ -166,9 +166,6 @@ function(vcpkg_gn_export_cmake)
         message(FATAL_ERROR "vcpkg_gn_install was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-
     set(auto_clean_debug_share TRUE)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         z_vcpkg_gn_export_cmake_build_type(
