@@ -6192,6 +6192,10 @@
       "baseline": "4.3.1",
       "port-version": 5
     },
+    "netcpp": {
+      "baseline": "0.3.4",
+      "port-version": 0
+    },
     "netgen": {
       "baseline": "6.2.2401",
       "port-version": 2
