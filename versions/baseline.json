@@ -9408,6 +9408,10 @@
       "baseline": "2.0.2",
       "port-version": 6
     },
+    "wabt": {
+      "baseline": "1.0.36",
+      "port-version": 0
+    },
     "wampcc": {
       "baseline": "2019-09-04",
       "port-version": 5
