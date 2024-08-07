@@ -9157,7 +9157,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.62.0",
+      "baseline": "20.65.0",
       "port-version": 0
     },
     "v-hacd": {
