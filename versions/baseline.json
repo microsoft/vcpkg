@@ -4273,7 +4273,7 @@
       "port-version": 4
     },
     "libbson": {
-      "baseline": "1.27.4",
+      "baseline": "1.27.5",
       "port-version": 0
     },
     "libcaer": {
