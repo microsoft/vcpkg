@@ -9778,7 +9778,7 @@
     },
     "zeromq": {
       "baseline": "4.3.5",
-      "port-version": 1
+      "port-version": 2
     },
     "zfp": {
       "baseline": "1.0.0",
