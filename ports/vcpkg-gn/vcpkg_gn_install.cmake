@@ -42,16 +42,14 @@ function(z_vcpkg_gn_install_install)
         message(FATAL_ERROR "Internal error: install was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    string(COMPARE NOTEQUAL "${arg_SOURCE_PATH}" "" WITH_SOURCE_PATH)
-    if(WITH_SOURCE_PATH)
-        # legacy behavior
+    string(COMPARE NOTEQUAL "${arg_SOURCE_PATH}" "" WITH_LEGACY_SOURCE_PATH)
+    if(WITH_LEGACY_SOURCE_PATH)
         set(arg_TOOLS_INSTALL_DIR "${arg_INSTALL_DIR}/tools")
         vcpkg_find_acquire_program(GN)
     endif()
 
     set(project_json "")
-    if(NOT WITH_SOURCE_PATH)
-        # modern usage
+    if(NOT WITH_LEGACY_SOURCE_PATH)
         file(READ "${CURRENT_BUILDTREES_DIR}/generate-${TARGET_TRIPLET}-rel-project.json.log" project_json)
         string(JSON arg_SOURCE_PATH GET "${project_json}" build_settings root_path)
         if(NOT IS_DIRECTORY "${arg_SOURCE_PATH}")
@@ -64,10 +62,9 @@ function(z_vcpkg_gn_install_install)
     endif()
 
     foreach(target IN LISTS arg_TARGETS)
-        if(WITH_SOURCE_PATH)
+        if(WITH_LEGACY_SOURCE_PATH)
             # GN targets must start with //
             string(PREPEND target "//")
-            # explicit source path (legacy)
             z_vcpkg_gn_install_get_desc(outputs
                 SOURCE_PATH "${arg_SOURCE_PATH}"
                 BUILD_DIR "${arg_BUILD_DIR}"
@@ -81,6 +78,9 @@ function(z_vcpkg_gn_install_install)
             )
         else()
             string(JSON target_type GET "${project_json}" targets "${target}" type)
+            if(target_type MATCHES "^(group|source_set)\$")
+                continue()
+            endif()
             string(JSON outputs_json GET "${project_json}" targets "${target}" outputs)
             string(JSON length LENGTH "${outputs_json}")
             vcpkg_list(SET outputs)
