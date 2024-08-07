@@ -3,8 +3,8 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF "${curl_version}"
-    SHA512 f5c425c3fbd7bfda13137e8e9bc969ed7dc94c5bfcf0681a2358ab7d3b5d10402781a93385255a80c402c9824aeb97d70213b412f2d208dee4abdba5bbed2ca4
+    REF b3490c5bc48cdf125be48fa98e40ca2e36630477 # HEAD
+    SHA512 e685ea4932b0d3552a1c8a51d373529949da0f7bffc0a866d35e5d4b1b10e787a39c87838ff82c611c894982cf195d0b212592ab40d242fdebba2dcbd8403d15
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
