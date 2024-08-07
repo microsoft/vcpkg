@@ -1,4 +1,4 @@
-###########################################################################
+##########################################################################
 ## This file defines the current expected build state of ports in CI.
 ##
 ## States
@@ -159,6 +159,7 @@ boringssl:x64-windows-static=skip
 boringssl:x64-windows-static-md=skip
 boringssl:x86-windows=skip
 brpc:x64-android=fail
+buck-yeh-bux:x64-uwp=fail
 caf:arm-neon-android=fail
 caf:arm64-uwp=fail
 caf:arm64-android=fail
