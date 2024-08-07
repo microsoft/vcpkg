@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a2128e..e9c9c92 100644
+index 7242d68..da69699 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1662,7 +1662,9 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -1918,7 +1918,9 @@ if(NOT CURL_DISABLE_INSTALL)
      endif()
    endforeach()
  
--  foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
+-  foreach(_lib IN LISTS CMAKE_C_IMPLICIT_LINK_LIBRARIES CURL_LIBS)
 +  set(CURL_LIBS_FLAT "")
 +  vcpkg_curl_flatten(CURL_LIBS CURL_LIBS_FLAT)
-+  foreach(_lib ${CURL_LIBS_FLAT})
++  foreach(_lib IN LISTS CURL_LIBS_FLAT)
      if(TARGET "${_lib}")
        set(_libname "${_lib}")
        get_target_property(_imported "${_libname}" IMPORTED)
