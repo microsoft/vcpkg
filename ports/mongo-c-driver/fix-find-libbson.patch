@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e20f7a2..422503a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -339,10 +339,7 @@ if (USE_SYSTEM_LIBBSON)
+    # The input variable BSON_ROOT_DIR is respected for backwards compatibility,
+    # but you should use the standard CMAKE_PREFIX_PATH instead.
+    message (STATUS "Searching for libbson CMake packages")
+-   find_package (bson-1.0
+-      "${PROJECT_VERSION}"
+-      HINTS
+-      ${BSON_ROOT_DIR})
++   find_package(bson-1.0 CONFIG REQUIRED)
+ 
+    if (NOT bson-1.0_FOUND)
+       message (FATAL_ERROR "System libbson not found")
