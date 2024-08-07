@@ -1,8 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3e2a2dc..011a4ca 100644
+index 5712462..66d63cf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,7 +66,7 @@ set(TESTS_SOURCES
+@@ -30,6 +30,10 @@ if(WIN32)
+ 	endif()
+ endif()
+ 
++if(DEFINED JUICE_STATIC)
++    add_definitions(-DJUICE_STATIC)
++endif()
++
+ if(CLANG_TIDY)
+ 	set(CMAKE_C_CLANG_TIDY clang-tidy)
+ endif()
+@@ -89,7 +93,7 @@ source_group("Fuzzer Files" FILES "${FUZZER_SOURCES}")
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -11,16 +22,16 @@ index 3e2a2dc..011a4ca 100644
  set_target_properties(juice PROPERTIES VERSION ${PROJECT_VERSION})
  target_include_directories(juice PUBLIC
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-@@ -96,11 +96,15 @@ if(WIN32)
+@@ -120,11 +124,15 @@ if(WIN32)
  endif()
  
  if (USE_NETTLE)
 -	find_package(Nettle REQUIRED)
-+	find_path(NETTLE_INCLUDE_PATH "nettle/hmac.h" REQUIRED)
++    find_path(NETTLE_INCLUDE_PATH "nettle/hmac.h" REQUIRED)
 +    find_library(NETTLE_LIBRARY_PATH NAMES nettle libnettle REQUIRED) 
 +    target_include_directories(juice PRIVATE ${NETTLE_INCLUDE_PATH})
 +    target_include_directories(juice-static PRIVATE ${NETTLE_INCLUDE_PATH})
-+    
++
      target_compile_definitions(juice PRIVATE USE_NETTLE=1)
 -    target_link_libraries(juice PRIVATE Nettle::Nettle)
 +    target_link_libraries(juice PRIVATE ${NETTLE_LIBRARY_PATH})
