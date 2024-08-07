@@ -1,0 +1,15 @@
+diff --git a/CMake/FLTKConfig.cmake.in b/CMake/FLTKConfig.cmake.in
+index e2de914..dfcc05c 100644
+--- a/CMake/FLTKConfig.cmake.in
++++ b/CMake/FLTKConfig.cmake.in
+@@ -43,7 +43,9 @@ if (CMAKE_CROSSCOMPILING)
+     PATHS ENV PATH
+     NO_CMAKE_FIND_ROOT_PATH
+   )
+-  add_executable(fluid IMPORTED)
++  if(NOT TARGET fluid)
++    add_executable(fluid IMPORTED)
++  endif()
+   set_target_properties(fluid
+     PROPERTIES IMPORTED_LOCATION ${FLUID_PATH}
+   )
