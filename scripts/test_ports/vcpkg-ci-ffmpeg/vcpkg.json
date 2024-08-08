@@ -15,10 +15,8 @@
         "avformat",
         "avresample",
         "bzip2",
-        "drawtext",
         "freetype",
         "gpl",
-        "drawtext",
         "iconv",
         "lzma",
         "mp3lame",
@@ -48,6 +46,14 @@
         "alsa"
       ],
       "platform": "linux"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "drawtext"
+      ],
+      "platform": "!(uwp | android)"
     },
     {
       "name": "ffmpeg",
