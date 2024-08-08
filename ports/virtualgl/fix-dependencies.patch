@@ -1,0 +1,108 @@
+From 52acb2f9493eca631f95a39833dc26405fc59b54 Mon Sep 17 00:00:00 2001
+From: aristotelos <arisvd@gmail.com>
+Date: Mon, 22 Jul 2024 11:16:36 +0200
+Subject: [PATCH] Fix dependencies
+
+Switch from including `Find...` modules and `find_path` to
+`find_package` and `find_library`, which support finding VCPKG
+dependencies.
+---
+ CMakeLists.txt                   |  4 ++--
+ cmakescripts/FindTurboJPEG.cmake | 36 +-------------------------------
+ server/CMakeLists.txt            |  2 +-
+ wgldemos/CMakeLists.txt          |  2 +-
+ 4 files changed, 5 insertions(+), 39 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be0a02b1..534fefcb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -298,11 +298,11 @@ else()
+ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+     set(CMAKE_LIBRARY_PATH /usr/lib/${CPU_TYPE}-linux-gnu;/usr/lib${BITS};/usr/lib)
+ endif()
+-include(FindX11)
++find_package(X11 REQUIRED)
+ # Clarify that we need to link with the legacy OpenGL library (libGL) rather
+ # than the GLVND OpenGL library.  This shuts up CMake 3.11 and later.
+ set(OpenGL_GL_PREFERENCE LEGACY)
+-include(FindOpenGL)
++find_package(OpenGL REQUIRED)
+
+ # Ensure that we build and link against the X11 version of OpenGL on OS X/macOS
+ if(APPLE)
+diff --git a/cmakescripts/FindTurboJPEG.cmake b/cmakescripts/FindTurboJPEG.cmake
+index 47983a37..382d8efd 100644
+--- a/cmakescripts/FindTurboJPEG.cmake
++++ b/cmakescripts/FindTurboJPEG.cmake
+@@ -1,5 +1,3 @@
+-include(CheckCSourceCompiles)
+-
+ set(DEFAULT_TJPEG_INCLUDE_DIR /opt/libjpeg-turbo/include)
+ if(NOT TJPEG_INCLUDE_DIR)
+     set(TJPEG_INCLUDE_DIR_HINTS ${DEFAULT_TJPEG_INCLUDE_DIR})
+@@ -19,38 +17,6 @@ else()
+ endif()
+ include_directories(${TJPEG_INCLUDE_DIR})
+
+-set(DEFAULT_TJPEG_LIBRARY /opt/libjpeg-turbo/lib${BITS}/libturbojpeg.a)
+-
+-set(TJPEG_LIBRARY_OVERRIDE 0)
+-if(TJPEG_LIBRARY)
+-	set(TJPEG_LIBRARY_OVERRIDE 1)
+-endif()
+-
+-set(TJPEG_LIBRARY ${DEFAULT_TJPEG_LIBRARY} CACHE STRING
+-	"Path to TurboJPEG library or flags necessary to link with it (default: ${DEFAULT_TJPEG_LIBRARY})")
+-
+-set(CMAKE_REQUIRED_INCLUDES ${TJPEG_INCLUDE_DIR})
+-set(CMAKE_REQUIRED_LIBRARIES ${TJPEG_LIBRARY})
+-check_c_source_compiles("#include <turbojpeg.h>\nint main(void) { tjhandle h = tjInitCompress();  return h != 0 ? 0 : 1; }" TURBOJPEG_WORKS)
+-if(NOT TURBOJPEG_WORKS AND NOT TJPEG_LIBRARY_OVERRIDE AND UNIX)
+-	message(STATUS "Could not link with official TurboJPEG library ${TJPEG_LIBRARY}.  Checking whether the operating system supplies it ...")
+-	set(CMAKE_REQUIRED_LIBRARIES turbojpeg)
+-	check_c_source_compiles("#include <turbojpeg.h>\nint main(void) { tjhandle h = tjInitCompress();  return h != 0 ? 0 : 1; }" SYSTEM_TURBOJPEG_WORKS)
+-	if(SYSTEM_TURBOJPEG_WORKS)
+-		set(TJPEG_LIBRARY turbojpeg CACHE STRING
+-			"Path to TurboJPEG library or flags necessary to link with it (default: ${DEFAULT_TJPEG_LIBRARY})"
+-			FORCE)
+-	endif()
+-endif()
+-set(CMAKE_REQUIRED_DEFINITIONS)
+-set(CMAKE_REQUIRED_INCLUDES)
+-set(CMAKE_REQUIRED_LIBRARIES)
+-if(NOT TURBOJPEG_WORKS AND NOT SYSTEM_TURBOJPEG_WORKS)
+-	unset(TURBOJPEG_WORKS)
+-	unset(TURBOJPEG_WORKS CACHE)
+-	unset(SYSTEM_TURBOJPEG_WORKS)
+-	unset(SYSTEM_TURBOJPEG_WORKS CACHE)
+-	message(FATAL_ERROR "Could not link with TurboJPEG library ${TJPEG_LIBRARY}.  If it is installed in a different place, then set TJPEG_LIBRARY accordingly.")
+-endif()
++find_library(TJPEG_LIBRARY NAMES turbojpeg REQUIRED HINTS /opt/libjpeg-turbo/lib${BITS})
+
+ message(STATUS "TJPEG_LIBRARY = ${TJPEG_LIBRARY}")
+diff --git a/server/CMakeLists.txt b/server/CMakeLists.txt
+index 7047a0ed..32694d73 100644
+--- a/server/CMakeLists.txt
++++ b/server/CMakeLists.txt
+@@ -45,7 +45,7 @@ boolean_number(VGL_FAKEOPENCL)
+ boolean_number(VGL_FAKEOPENCL PARENT_SCOPE)
+ report_option(VGL_FAKEOPENCL "OpenCL interposer")
+ if(VGL_FAKEOPENCL)
+-	include(FindOpenCL)
++	find_package(OpenCL REQUIRED)
+ endif()
+
+ get_directory_property(DEFS_PROP COMPILE_DEFINITIONS)
+diff --git a/wgldemos/CMakeLists.txt b/wgldemos/CMakeLists.txt
+index e73bbea5..bf80cc53 100644
+--- a/wgldemos/CMakeLists.txt
++++ b/wgldemos/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include(FindOpenGL)
++find_package(OpenGL REQUIRED)
+
+ include_directories(${OPENGL_INCLUDE_DIR})
+
+--
+2.43.0

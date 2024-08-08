@@ -1,0 +1,44 @@
+{
+  "name": "virtualgl",
+  "version": "3.1.1",
+  "description": "VirtualGL is a toolkit that allows most Linux/Unix OpenGL applications to be remotely displayed with 3D hardware acceleration to thin clients, regardless of whether the clients have 3D rendering capabilities, and regardless of the size of the 3D data being rendered or the speed of the network.",
+  "homepage": "https://virtualgl.org/",
+  "license": "wxWindows",
+  "supports": "linux",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libx11",
+    "libxext",
+    "libxtst",
+    "opengl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "opencl",
+      "platform": "!windows"
+    },
+    "xcb",
+    "xv"
+  ],
+  "features": {
+    "opencl": {
+      "description": "Interpose enough of the OpenCL API to make OpenCL/OpenGL interoperability work",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "xcb": {
+      "description": "Interpose enough of the XCB API to make Qt 5 work"
+    },
+    "xv": {
+      "description": "Enable X Video support",
+      "dependencies": [
+        "libxv"
+      ]
+    }
+  }
+}
