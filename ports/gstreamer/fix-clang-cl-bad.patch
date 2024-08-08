@@ -108,4 +108,4 @@ index 659b96c..92e6bc4 100644
 +  msdk_deps_found = d3d11_dep.found() and legacy_stdio_dep.found() and cc.get_argument_syntax() == 'msvc'
  else
    libdl_dep = cc.find_library('dl', required: get_option('msdk'))
-   libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'))
+   libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'), allow_fallback: true)
