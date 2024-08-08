@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_PARALLEL;DISABLE_DESTDIR;DISABLE_MSVC_FLAG_ESCAPING"
+        "DISABLE_PARALLEL;DISABLE_MSVC_FLAG_ESCAPING"
         "LOGFILE_ROOT;MAKEFILE;TARGETS"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
@@ -77,10 +77,7 @@ function(vcpkg_make_install)
         z_vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
         z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${cmake_buildtype}")
 
-        set(destdir_opt "")
-        if(NOT arg_DISABLE_DESTDIR)
-            set(destdir_opt "DESTDIR=${destdir}")
-        endif()
+        set(destdir_opt "DESTDIR=${destdir}")
 
         set(extra_opts "") # Use --environment-overrides as default?
         if(NOT VCPKG_TARGET_IS_OSX)
