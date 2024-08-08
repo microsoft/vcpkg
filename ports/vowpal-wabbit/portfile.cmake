@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 15dbec25430fb6b5885b4fb1f27b3c65b265c6cf5074015844de06ec59600d9142ca3a30e3edaca2ab25376ffb651811c9e5c3887b6ad9b4f8e0ecc2e57ccea6
     HEAD_REF master
-    PATCHES cmake_remove_bin_targets.patch
+    PATCHES 
+        cmake_remove_bin_targets.patch
+        fix-build-error-with-fmt11.patch
 )
 
 vcpkg_cmake_configure(

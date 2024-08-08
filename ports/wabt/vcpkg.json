@@ -1,0 +1,26 @@
+{
+  "name": "wabt",
+  "version": "1.0.36",
+  "description": "The WebAssembly Binary Toolkit",
+  "homepage": "https://github.com/WebAssembly/wabt/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "picosha2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build wabt commandline tools"
+    },
+    "wasm-rt-impl": {
+      "description": "Include the WABT C runtime implementation library"
+    }
+  }
+}

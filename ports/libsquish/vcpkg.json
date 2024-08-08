@@ -1,7 +1,7 @@
 {
   "name": "libsquish",
   "version": "1.15",
-  "port-version": 13,
+  "port-version": 14,
   "description": "Open source DXT compression library.",
   "homepage": "https://sourceforge.net/projects/libsquish",
   "license": "MIT",
