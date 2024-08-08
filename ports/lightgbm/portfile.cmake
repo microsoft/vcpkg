@@ -10,6 +10,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gpu USE_GPU
+        threadless USE_OPENMP_OFF
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -18,12 +19,18 @@ else()
     set(BUILD_STATIC_LIB "ON")
 endif()
 
+# Set CMake option based on feature
+set(OPENMP_OPTION "-DUSE_OPENMP=ON")
+if("x${USE_OPENMP_OFF}" STREQUAL "xON")
+    set(OPENMP_OPTION "-DUSE_OPENMP=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_STATIC_LIB=${BUILD_STATIC_LIB}
         ${FEATURE_OPTIONS}
+        ${OPENMP_OPTION}
 )
 
 vcpkg_cmake_install()
