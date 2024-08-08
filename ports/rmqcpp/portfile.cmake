@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 11859eb470f31008da522b59e96899585b4e94ce
     SHA512 f82cc1696d370e81dc410442465ecbe06940cd50ae8c93215e19a4b7de57ee7581a1d4f59d9775e08c646b63496ac18528b29edb852e0b9fb9cab7f761151b25
     HEAD_REF main
+    PATCHES
+      "disable-tests-and-examples.patch"
 )
 
 vcpkg_cmake_configure(
