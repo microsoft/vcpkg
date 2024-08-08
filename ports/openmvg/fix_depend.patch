@@ -1,0 +1,37 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c9956cf..f9a8dbc 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -329,7 +329,9 @@ if (NOT DEFINED COINUTILS_INCLUDE_DIR_HINTS)
+   set(COINUTILS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/CoinUtils/src/)
+   set(COINUTILS_LIBRARY lib_CoinUtils)
+ else()
+-  find_package(CoinUtils QUIET)
++  find_package(PkgConfig)
++  pkg_check_modules(CoinUtils REQUIRED IMPORTED_TARGET coinutils)
++  set(COINUTILS_LIBRARY PkgConfig::CoinUtils)
+ endif()
+ 
+ ## ==============================================================================
+@@ -347,7 +349,9 @@ if (NOT DEFINED CLP_INCLUDE_DIR_HINTS)
+      ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Clp/src/OsiClp/)
+   set(CLP_LIBRARIES lib_clp lib_OsiClpSolver)
+ else()
+-  find_package(Clp QUIET)
++  pkg_check_modules(clp REQUIRED IMPORTED_TARGET clp)
++  pkg_check_modules(osi-clp REQUIRED IMPORTED_TARGET osi-clp)
++  set(CLP_LIBRARIES PkgConfig::clp PkgConfig::osi-clp)
+ endif()
+ 
+ # ==============================================================================
+@@ -363,7 +367,9 @@ if (NOT DEFINED OSI_INCLUDE_DIR_HINTS)
+   set(OSI_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Osi/src/Osi/)
+   set(OSI_LIBRARY lib_Osi)
+ else()
+-  find_package(Osi QUIET)
++   find_package(PkgConfig)
++   pkg_check_modules(osi REQUIRED IMPORTED_TARGET osi)
++   set(OSI_LIBRARY PkgConfig::osi)
+ endif()
+ 
+ # ==============================================================================
