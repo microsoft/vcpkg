@@ -5,7 +5,7 @@ function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "DISABLE_PARALLEL;DISABLE_DESTDIR;DISABLE_MSVC_FLAG_ESCAPING"
-        "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS"
+        "LOGFILE_ROOT;MAKEFILE;TARGETS"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -70,7 +70,7 @@ function(vcpkg_make_install)
         set(short_buildtype "${suffix_${cmake_buildtype}}")
         set(path_suffix "${path_suffix_${cmake_buildtype}}")
 
-        set(working_directory "${workdir_${cmake_buildtype}}/${arg_SUBPATH}")
+        set(working_directory "${workdir_${cmake_buildtype}}")
         message(STATUS "Building/Installing ${TARGET_TRIPLET}-${short_buildtype}")
 
         # Setup environment
