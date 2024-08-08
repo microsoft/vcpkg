@@ -19,7 +19,6 @@ else()
     set(BUILD_STATIC_LIB "ON")
 endif()
 
-# Set CMake option based on feature
 set(OPENMP_OPTION "-DUSE_OPENMP=ON")
 if("x${USE_OPENMP_OFF}" STREQUAL "xON")
     set(OPENMP_OPTION "-DUSE_OPENMP=OFF")
