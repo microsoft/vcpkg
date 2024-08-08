@@ -1430,7 +1430,7 @@
     },
     "bzip2": {
       "baseline": "1.0.8",
-      "port-version": 5
+      "port-version": 6
     },
     "c-ares": {
       "baseline": "1.33.0",
