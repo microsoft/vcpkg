@@ -59,6 +59,7 @@ cd buildtrees\openresty\lualocal
 .\luarocks.bat install luafilesystem 1.8.0-1
 .\luarocks.bat install lsqlite3 0.9.5-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib"
 .\luarocks.bat install luasql-sqlite3 2.5.0-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib"
+.\luarocks.bat install luaxxhash 1.0.0-1
 
 .\luarocks.bat unpack luaossl 20190731-0
 cd luaossl-20190731-0\luaossl-rel-20190731
