@@ -1,0 +1,96 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 953dfbeaa..ec4ab0c43 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -260,6 +260,7 @@ if (PXR_BUILD_IMAGING)
+             message(FATAL_ERROR "VULKAN_SDK not valid")
+         endif()
+         find_package(unofficial-shaderc CONFIG REQUIRED)
++        find_package(unofficial-spirv-reflect CONFIG REQUIRED)
+     endif()
+     # --Opensubdiv
+     find_package(OpenSubdiv 3 CONFIG REQUIRED)
+diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeLists.txt
+index aaac93ee6..7dadea311 100644
+--- a/pxr/imaging/hgiVulkan/CMakeLists.txt
++++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
+@@ -15,6 +15,7 @@ pxr_library(hgiVulkan
+         trace
+         ${VULKAN_LIBS}
+         unofficial::shaderc::shaderc
++        unofficial::SPIRV-Reflect::SPIRV-Reflect
+ 
+     PUBLIC_CLASSES
+         blitCmds
+@@ -47,9 +48,6 @@ pxr_library(hgiVulkan
+         api.h
+         vulkan.h
+ 
+-    PRIVATE_CLASSES
+-        spirv_reflect
+-
+     RESOURCE_FILES
+         plugInfo.json
+ )
+diff --git a/pxr/imaging/hgiVulkan/shaderCompiler.cpp b/pxr/imaging/hgiVulkan/shaderCompiler.cpp
+index 7f285e7a6..bf934e071 100644
+--- a/pxr/imaging/hgiVulkan/shaderCompiler.cpp
++++ b/pxr/imaging/hgiVulkan/shaderCompiler.cpp
+@@ -10,8 +10,8 @@
+ #include "pxr/imaging/hgiVulkan/device.h"
+ #include "pxr/imaging/hgiVulkan/diagnostic.h"
+ #include "pxr/imaging/hgiVulkan/shaderCompiler.h"
+-#include "pxr/imaging/hgiVulkan/spirv_reflect.h"
+ 
++#include <spirv_reflect.h>
+ #include <shaderc/shaderc.hpp>
+ 
+ #include <unordered_map>
+diff --git a/pxr/imaging/hgiVulkan/spirv_reflect.cpp b/pxr/imaging/hgiVulkan/spirv_reflect.cpp
+deleted file mode 100644
+index b2862df17..000000000
+--- a/pxr/imaging/hgiVulkan/spirv_reflect.cpp
++++ /dev/null
+@@ -1,9 +0,0 @@
+-//
+-// Copyright 2023 Pixar
+-//
+-// Licensed under the terms set forth in the LICENSE.txt file available at
+-// https://openusd.org/license.
+-//
+-#include "pxr/imaging/hgiVulkan/spirv_reflect.h"
+-
+-#include <SPIRV-Reflect/spirv_reflect.c>
+diff --git a/pxr/imaging/hgiVulkan/spirv_reflect.h b/pxr/imaging/hgiVulkan/spirv_reflect.h
+deleted file mode 100644
+index b2779079a..000000000
+--- a/pxr/imaging/hgiVulkan/spirv_reflect.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-//
+-// Copyright 2023 Pixar
+-//
+-// Licensed under the terms set forth in the LICENSE.txt file available at
+-// https://openusd.org/license.
+-//
+-#ifndef PXR_IMAGING_HGIVULKAN_SPIRV_REFLECT_H
+-#define PXR_IMAGING_HGIVULKAN_SPIRV_REFLECT_H
+-
+-// This is an implementation of SPIRV-Reflect included
+-// from the Vulkan SDK.
+-
+-#include <SPIRV-Reflect/spirv_reflect.h>
+-
+-#endif
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 5da5543c4..8facdffbd 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -27,6 +27,7 @@ if(@PXR_BUILD_IMAGING@)
+     endif()
+     if(@PXR_ENABLE_VULKAN_SUPPORT@)
+         find_dependency(unofficial-shaderc)
++        find_dependency(unofficial-spirv-reflect)
+     endif()
+ endif()
+ 

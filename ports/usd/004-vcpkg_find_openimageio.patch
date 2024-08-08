@@ -1,0 +1,60 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 4e06391d3..88212a2fa 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -195,7 +195,7 @@ if (PXR_BUILD_IMAGING)
+     # --OpenImageIO
+     if (PXR_BUILD_OPENIMAGEIO_PLUGIN)
+         set(REQUIRES_Imath TRUE)
+-        find_package(OpenImageIO REQUIRED)
++        find_package(OpenImageIO CONFIG REQUIRED)
+         add_definitions(-DPXR_OIIO_PLUGIN_ENABLED)
+         if (OIIO_idiff_BINARY)
+             set(IMAGE_DIFF_TOOL ${OIIO_idiff_BINARY} CACHE STRING "Uses idiff for image diffing")
+diff --git a/pxr/imaging/plugin/hioOiio/CMakeLists.txt b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
+index 0a055b711..637420062 100644
+--- a/pxr/imaging/plugin/hioOiio/CMakeLists.txt
++++ b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
+@@ -7,14 +7,6 @@ if (NOT ${PXR_BUILD_GPU_SUPPORT})
+     return()
+ endif()
+ 
+-# Use the import targets set by Imath's package config
+-if (Imath_FOUND)
+-    set(__OIIO_IMATH_LIBS "Imath::Imath")
+-else()
+-    set(__OIIO_IMATH_INCLUDE ${OPENEXR_INCLUDE_DIRS})
+-    set(__OIIO_IMATH_LIBS ${OPENEXR_LIBRARIES})
+-endif()
+-
+ pxr_plugin(hioOiio
+     LIBRARIES
+         ar
+@@ -22,12 +14,7 @@ pxr_plugin(hioOiio
+         gf
+         hio
+         tf
+-        ${OIIO_LIBRARIES}
+-        ${__OIIO_IMATH_LIBS}
+-
+-    INCLUDE_DIRS
+-        ${OIIO_INCLUDE_DIRS}
+-        ${__OIIO_IMATH_INCLUDE}
++        OpenImageIO::OpenImageIO
+ 
+     CPPFILES
+         oiioImage.cpp
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 1835799cc..ab4df71b6 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -22,6 +22,9 @@ find_dependency(TBB)
+ 
+ if(@PXR_BUILD_IMAGING@)
+     find_dependency(OpenSubdiv 3)
++    if(@PXR_BUILD_OPENIMAGEIO_PLUGIN@)
++        find_dependency(OpenImageIO)
++    endif()
+ endif()
+ 
+ # If Python support was enabled for this USD build, find the import
