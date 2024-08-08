@@ -130,6 +130,10 @@ if ($IsLinux -and $Triplet -match 'android' -and $true)
     & unzip -q android-ndk-$override_ndk-linux.zip
     $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-$override_ndk"
     $NoParentHashes = $true
+
+    # https://github.com/android/ndk/issues/2032#issuecomment-2274923977
+    $flags_content = Get-Content -Raw -Path "$env:ANDROID_NDK_HOME/build/cmake/flags.cmake"
+    Set-Content -Path "$env:ANDROID_NDK_HOME/build/cmake/flags.cmake" -Value "cmake_policy(PUSH)`ncmake_policy(SET CMP0057 NEW)`n$flags_content`ncmake_policy(POP)`n"
 }
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
