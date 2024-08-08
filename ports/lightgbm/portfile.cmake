@@ -19,17 +19,11 @@ else()
     set(BUILD_STATIC_LIB "ON")
 endif()
 
-set(OPENMP_OPTION "-DUSE_OPENMP=ON")
-if("x${USE_OPENMP}" STREQUAL "xOFF")
-    set(OPENMP_OPTION "-DUSE_OPENMP=OFF")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_STATIC_LIB=${BUILD_STATIC_LIB}
         ${FEATURE_OPTIONS}
-        ${OPENMP_OPTION}
 )
 
 vcpkg_cmake_install()
