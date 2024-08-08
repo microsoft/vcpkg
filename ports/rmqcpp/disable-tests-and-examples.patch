@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 33db7ca..41ffd06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,6 @@ enable_testing()
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ add_subdirectory(src)
+-add_subdirectory(examples)
+ 
+ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+     add_compile_options(-Wall -Wextra -Wpedantic)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f051820..2db9e2a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -9,5 +9,3 @@ find_package(GTest REQUIRED)
+ find_package(bal REQUIRED)
+ 
+ add_subdirectory(rmq)
+-add_subdirectory(rmqtestmocks)
+-add_subdirectory(tests)
