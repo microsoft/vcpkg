@@ -18,6 +18,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "openmp"
+  ],
   "features": {
     "gpu": {
       "description": "GPU support using Boost.Compute",
@@ -26,8 +29,8 @@
         "opencl"
       ]
     },
-    "threadless": {
-      "description": "Build without OpenMP support for threadless operation"
+    "openmp": {
+      "description": "Support for multi-threading using OpenMP"
     }
   }
 }

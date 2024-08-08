@@ -10,7 +10,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gpu USE_GPU
-        threadless USE_OPENMP_OFF
+        openmp USE_OPENMP
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -20,7 +20,7 @@ else()
 endif()
 
 set(OPENMP_OPTION "-DUSE_OPENMP=ON")
-if("x${USE_OPENMP_OFF}" STREQUAL "xON")
+if("x${USE_OPENMP}" STREQUAL "xOFF")
     set(OPENMP_OPTION "-DUSE_OPENMP=OFF")
 endif()
 
