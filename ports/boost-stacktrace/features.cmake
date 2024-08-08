@@ -22,16 +22,10 @@
 
     # When ON, builds the boost_stacktrace_windbg_cached library variant. Defaults to ON under Windows when WinDbg support is autodetected and when thread_local is supported, otherwise OFF.
 
-list(APPEND FEATURE_OPTIONS 
-  -DBOOST_STACKTRACE_ENABLE_BACKTRACE=OFF 
-  )
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  list(APPEND FEATURE_OPTIONS 
-   -DBOOST_STACKTRACE_ENABLE_WINDBG=ON
-  )
-else()
-  list(APPEND FEATURE_OPTIONS 
-   -DBOOST_STACKTRACE_ENABLE_WINDBG=OFF
-  )
-endif()
+vcpkg_check_features(
+  OUT_FEATURE_OPTIONS
+    FEATURE_OPTIONS
+  FEATURES
+    "backtrace" BOOST_STACKTRACE_ENABLE_BACKTRACE
+    "windbg"    BOOST_STACKTRACE_ENABLE_WINDBG
+)
