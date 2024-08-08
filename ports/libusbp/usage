@@ -1,4 +1,4 @@
 The package libusbp provides CMake targets:
 
     find_package(libusbp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE libusbp)
+    target_link_libraries(main PRIVATE libusbp::libusbp)
