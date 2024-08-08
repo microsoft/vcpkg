@@ -5,7 +5,6 @@ option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_package(Iconv REQUIRED)
 
 FILE(GLOB SOURCESXMLSEC
 	src/*.c
@@ -63,38 +62,28 @@ add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBXML2_INCLUDE_DIRS})
 
-target_link_libraries(xmlsec1 PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL
-)
+target_link_libraries(xmlsec1 PRIVATE ${LIBXML2_LIBRARIES})
 target_link_libraries(xmlsec1-openssl PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1
+    ${LIBXML2_LIBRARIES} OpenSSL::Crypto xmlsec1
 )
 
 add_compile_definitions(inline=__inline)
 add_compile_definitions(PACKAGE="xmlsec1")
-add_compile_definitions(XMLSEC_MSCRYPTO_NT4=1)
 add_compile_definitions(HAVE_STDIO_H)
 add_compile_definitions(HAVE_STDLIB_H)
 add_compile_definitions(HAVE_STRING_H)
 add_compile_definitions(HAVE_CTYPE_H)
 add_compile_definitions(HAVE_MALLOC_H)
 add_compile_definitions(HAVE_MEMORY_H)
-add_compile_definitions(XMLSEC_NO_XSLT=1)
 add_compile_definitions(XMLSEC_DEFAULT_CRYPTO="openssl")
 add_compile_definitions(XMLSEC_NO_GOST)
 add_compile_definitions(XMLSEC_NO_GOST2012)
-add_compile_definitions(XMLSEC_NO_SIZE_T)
 add_compile_definitions(UNICODE)
 add_compile_definitions(_UNICODE)
 add_compile_definitions(_MBCS)
 add_compile_definitions(_REENTRANT)
 
-target_compile_definitions(xmlsec1-openssl PRIVATE
-    -DXMLSEC_CRYPTO_OPENSSL
-)
-
-set_target_properties(xmlsec1 PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
-set_target_properties(xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
+set_target_properties(xmlsec1 xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 
 if(NOT BUILD_SHARED_LIBS)
     set(XMLSEC_CORE_CFLAGS "-DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING")
@@ -104,7 +93,10 @@ else()
     set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
 endif()
 
-target_compile_definitions(xmlsec1 PRIVATE ${XMLSEC_CORE_CFLAGS})
+target_compile_definitions(xmlsec1
+    PRIVATE ${XMLSEC_CORE_CFLAGS}
+    PUBLIC XMLSEC_NO_XSLT XMLSEC_CRYPTO_OPENSSL
+)
 target_compile_definitions(xmlsec1-openssl PRIVATE ${XMLSEC_OPENSSL_CFLAGS})
 
 install(TARGETS xmlsec1 xmlsec1-openssl
@@ -147,13 +139,6 @@ if(INSTALL_HEADERS_TOOLS)
 
 	target_link_libraries(xmlsec PRIVATE
 		${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1 xmlsec1-openssl
-	)
-    if(NOT Iconv_IS_BUILT_IN)
-        target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
-    endif()
-    
-	target_compile_definitions(xmlsec PRIVATE
-		-DXMLSEC_CRYPTO_OPENSSL
 	)
 
 	if(BUILD_SHARED_LIBS)
