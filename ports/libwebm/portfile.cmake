@@ -8,24 +8,14 @@ vcpkg_from_github(
         Fix-cmake.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(LIBWEBM_CRT_LINKAGE -DMSVC_RUNTIME=dll)
-else()
-    set(LIBWEBM_CRT_LINKAGE -DMSVC_RUNTIME=static)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    ${LIBWEBM_CRT_LINKAGE}
-    -DENABLE_SAMPLE_PROGRAMS=OFF
-    -DENABLE_TESTS=OFF
-    -DENABLE_WEBMTS=OFF
-    -DENABLE_WEBMINFO=OFF
+        ${LIBWEBM_CRT_LINKAGE}
+        -DENABLE_SAMPLE_PROGRAMS=OFF
+        -DENABLE_TESTS=OFF
+        -DENABLE_WEBMTS=OFF
+        -DENABLE_WEBMINFO=OFF
 )
 
 vcpkg_cmake_install()
