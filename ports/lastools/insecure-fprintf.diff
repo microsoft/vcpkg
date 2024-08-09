@@ -22,7 +22,7 @@ index 1e3298d..6a80699 100644
              line[run] = '\0';
            }
 -          if (description) sprintf(description, name);
-+          if (description) strcpy(description, name);
++          if (description) sprintf(description, "%s", name);
            run++;
            // skip two commas
            while (line[run] != ',') run++;
