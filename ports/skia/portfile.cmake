@@ -255,7 +255,6 @@ config("vcpkg_icu")  {]])
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -288,15 +287,17 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    SCRIPT_EXECUTABLE "${PYTHON3}"
     OPTIONS "${OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-skia_gn_install(
-    SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS ${SKIA_TARGETS}
-)
+vcpkg_gn_install(TARGETS ${SKIA_TARGETS})
+
+vcpkg_gn_export_cmake(TARGETS ${SKIA_TARGETS} DEFINITIONS_PATTERN "^SK_")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Use skia repository layout in ${CURRENT_PACKAGES_DIR}/include/skia
 file(COPY "${SOURCE_PATH}/include"
@@ -330,3 +331,4 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 
 file(GLOB third_party_licenses "${SOURCE_PATH}/third_party_licenses/*")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${third_party_licenses})
+message(FATAL_ERROR STOP)
