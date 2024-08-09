@@ -1,0 +1,12 @@
+diff --git a/IO/Export/vtk.module b/IO/Export/vtk.module
+index 01b18a48..dcac24c0 100644
+--- a/IO/Export/vtk.module
++++ b/IO/Export/vtk.module
+@@ -36,7 +36,6 @@ PRIVATE_DEPENDS
+   VTK::IOGeometry
+   VTK::ImagingCore
+   VTK::nlohmannjson
+-  VTK::libharu
+   VTK::utf8
+ TEST_DEPENDS
+   VTK::ChartsCore
