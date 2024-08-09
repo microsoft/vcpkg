@@ -17,9 +17,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ViaHttpLib/ViaHttpLibConfig.
 "find_dependency(Boost 1.51)"
 [[find_dependency(Boost 1.51 COMPONENTS system)]])
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" 
-                    "${CURRENT_PACKAGES_DIR}/lib"
-                    "${CURRENT_PACKAGES_DIR}/debug"
-                    )
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/via-httplib" RENAME copyright)
