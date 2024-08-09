@@ -7846,7 +7846,7 @@
     },
     "rmqcpp": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "roaring": {
       "baseline": "4.0.0",
