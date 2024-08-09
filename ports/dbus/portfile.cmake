@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
         libsystemd.patch
+        0006-cmake.tempdir.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
@@ -88,4 +89,4 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

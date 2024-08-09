@@ -2222,7 +2222,7 @@
     },
     "dbus": {
       "baseline": "1.15.8",
-      "port-version": 5
+      "port-version": 6
     },
     "dcmtk": {
       "baseline": "3.6.8",
