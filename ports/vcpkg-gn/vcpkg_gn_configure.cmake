@@ -1,9 +1,13 @@
 include_guard(GLOBAL)
 
 function(z_vcpkg_gn_configure_generate)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;SCRIPT_EXECUTABLE;CONFIG;ARGS" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: generate was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+    if(NOT "${arg_SCRIPT_EXECUTABLE}" STREQUAL "")
+        string(PREPEND arg_SCRIPT_EXECUTABLE "--script-executable=")
     endif()
 
     message(STATUS "Generating build (${arg_CONFIG})...")
@@ -14,13 +18,14 @@ function(z_vcpkg_gn_configure_generate)
             # "--runtime-deps-list-file=${CURRENT_BUILDTREES_DIR}/generate-${arg_CONFIG}-runtime-deps.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}"
             "${arg_ARGS}"
+            ${arg_SCRIPT_EXECUTABLE}
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
     )
 endfunction()
 
 function(vcpkg_gn_configure)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;SCRIPT_EXECUTABLE;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_gn_configure was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -46,6 +51,7 @@ function(vcpkg_gn_configure)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         z_vcpkg_gn_configure_generate(
             SOURCE_PATH "${arg_SOURCE_PATH}"
+            SCRIPT_EXECUTABLE "${arg_SCRIPT_EXECUTABLE}"
             CONFIG "${TARGET_TRIPLET}-dbg"
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_DEBUG}"
         )
@@ -54,6 +60,7 @@ function(vcpkg_gn_configure)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         z_vcpkg_gn_configure_generate(
             SOURCE_PATH "${arg_SOURCE_PATH}"
+            SCRIPT_EXECUTABLE "${arg_SCRIPT_EXECUTABLE}"
             CONFIG "${TARGET_TRIPLET}-rel"
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_RELEASE}"
         )

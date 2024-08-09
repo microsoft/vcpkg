@@ -255,7 +255,6 @@ config("vcpkg_icu")  {]])
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -288,6 +287,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    SCRIPT_EXECUTABLE "${PYTHON3}"
     OPTIONS "${OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
