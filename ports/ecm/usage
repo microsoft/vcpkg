@@ -1,7 +1,7 @@
-The package ecm provides CMake targets:
+ecm provides CMake files:
 
     find_package(ECM CONFIG REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+    list(INSERT CMAKE_MODULE_PATH 0 ${ECM_MODULE_PATH})
     include(KDEInstallDirs)
     include(KDECompilerSettings)
     include(KDECMakeSettings)
