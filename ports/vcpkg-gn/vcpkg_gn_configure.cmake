@@ -21,6 +21,8 @@ function(z_vcpkg_gn_configure_generate)
             ${arg_SCRIPT_EXECUTABLE}
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
+        SAVE_LOG_FILES
+            args.gn
     )
 endfunction()
 
