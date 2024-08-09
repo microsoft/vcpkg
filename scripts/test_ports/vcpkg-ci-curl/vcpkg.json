@@ -31,6 +31,7 @@
       "name": "curl",
       "features": [
         "gsasl",
+        "mbedtls",
         "psl"
       ],
       "platform": "!uwp"

@@ -10,6 +10,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gpu USE_GPU
+        openmp USE_OPENMP
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -17,7 +18,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 else()
     set(BUILD_STATIC_LIB "ON")
 endif()
-
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}

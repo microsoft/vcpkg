@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8a61757..b35e4b1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -234,7 +234,7 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_package(Threads REQUIRED)
+ 
+ if(USE_SYSTEM_PLOG)
+-	find_package(plog REQUIRED)
++	find_package(plog CONFIG REQUIRED)
+ else()
+ 	set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
+ 	add_subdirectory(deps/plog EXCLUDE_FROM_ALL)
+@@ -245,7 +245,8 @@ if(SCTP_DEBUG)
+ endif()
+ 
+ if(USE_SYSTEM_USRSCTP)
+-	find_package(Usrsctp REQUIRED)
++	find_package(unofficial-usrsctp CONFIG REQUIRED)
++	add_library(Usrsctp::Usrsctp ALIAS unofficial::usrsctp::usrsctp)
+ else()
+ 	option(sctp_build_shared_lib OFF)
+ 	option(sctp_build_programs OFF)
+@@ -331,7 +332,7 @@ else()
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=1)
+ 	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_MEDIA=1)
+ 	if(USE_SYSTEM_SRTP)
+-		find_package(libSRTP REQUIRED)
++		find_package(libSRTP CONFIG REQUIRED)
+ 		if(NOT TARGET libSRTP::srtp2)
+ 			add_library(libSRTP::srtp2 UNKNOWN IMPORTED)
+ 			set_target_properties(libSRTP::srtp2 PROPERTIES
+@@ -475,8 +476,9 @@ install(
+ )
+ 
+ # Export config
++configure_file(cmake/LibDataChannelConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/cmake/LibDataChannelConfig.cmake @ONLY)
+ install(
+-	FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/LibDataChannelConfig.cmake
++	FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/LibDataChannelConfig.cmake
+ 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/LibDataChannel
+ )
+ 
+diff --git a/cmake/LibDataChannelConfig.cmake b/cmake/LibDataChannelConfig.cmake
+index cb2b884..d0b77ca 100644
+--- a/cmake/LibDataChannelConfig.cmake
++++ b/cmake/LibDataChannelConfig.cmake
+@@ -1,2 +1,15 @@
++if(NOT "@BUILD_SHARED_LIBS@")
++    include(CMakeFindDependencyMacro)
++    set(THREADS_PREFER_PTHREAD_FLAG ON)
++    find_dependency(Threads)
++    find_dependency(plog CONFIG)
++    find_dependency(unofficial-usrsctp CONFIG)
++    if(NOT "@NO_MEDIA@")
++        find_dependency(libSRTP CONFIG)
++    endif()
++    find_dependency(OpenSSL)
++    find_dependency(LibJuice)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/LibDataChannelTargets.cmake")
+ 
