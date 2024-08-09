@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sammycage/lunasvg
   REF "v${VERSION}"
-  SHA512 912e5f8ab186ac8c9275096ec8a82d2cf958e1fd0bb30d35fa8287817fe279e7247e99e3629ed2de854fb1deb80dd105faf0ef16cf1cc14ad077850469e1bee8
+  SHA512 05dec8310e04e6b2eeae265f9605446ce2da134b624951fa1dc4f7d3f16e62f5c5f3bfceae29f09111e2e22003310b6fba063945e75ba97e0cef82f7f31d4cae
   HEAD_REF master
   PATCHES
     fix-cmake.patch
