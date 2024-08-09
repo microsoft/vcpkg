@@ -130,7 +130,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 8
+      "port-version": 9
     },
     "ankurvdev-embedresource": {
       "baseline": "0.0.11",
@@ -1377,8 +1377,8 @@
       "port-version": 1
     },
     "brpc": {
-      "baseline": "1.9.0",
-      "port-version": 1
+      "baseline": "1.10.0",
+      "port-version": 0
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -2689,7 +2689,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.07.29.00",
+      "baseline": "2024.08.05.00",
       "port-version": 0
     },
     "fcl": {
@@ -2733,8 +2733,8 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.07.29.00",
-      "port-version": 1
+      "baseline": "2024.08.05.00",
+      "port-version": 0
     },
     "flagpp": {
       "baseline": "2.1",
@@ -2817,8 +2817,8 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2024.07.29.00",
-      "port-version": 1
+      "baseline": "2024.08.05.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3633,7 +3633,7 @@
       "port-version": 0
     },
     "imageinfo": {
-      "baseline": "2024-07-14",
+      "baseline": "2024-08-05",
       "port-version": 0
     },
     "imath": {
@@ -3885,7 +3885,7 @@
       "port-version": 0
     },
     "kddockwidgets": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "kdsoap": {
@@ -4317,7 +4317,7 @@
       "port-version": 1
     },
     "libcoro": {
-      "baseline": "0.11.1",
+      "baseline": "0.12.1",
       "port-version": 0
     },
     "libcorrect": {
@@ -4349,7 +4349,7 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.21.1",
+      "baseline": "0.21.2",
       "port-version": 0
     },
     "libdatrie": {
@@ -5414,7 +5414,7 @@
     },
     "lightgbm": {
       "baseline": "4.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lightningscanner": {
       "baseline": "1.0.1",
@@ -6073,7 +6073,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.07.29.00",
+      "baseline": "2024.08.05.00",
       "port-version": 0
     },
     "mygui": {
@@ -6657,8 +6657,8 @@
       "port-version": 0
     },
     "openvino": {
-      "baseline": "2024.2.0",
-      "port-version": 1
+      "baseline": "2024.3.0",
+      "port-version": 0
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -6845,7 +6845,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "46.0",
+      "baseline": "47.0",
       "port-version": 0
     },
     "pffft": {
@@ -7117,7 +7117,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.07.29.00",
+      "baseline": "2024.08.05.00",
       "port-version": 0
     },
     "psimd": {
@@ -9157,7 +9157,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.62.0",
+      "baseline": "20.65.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -9417,7 +9417,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.07.29.00",
+      "baseline": "2024.08.05.00",
       "port-version": 0
     },
     "wasmedge": {
