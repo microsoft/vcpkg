@@ -33,7 +33,18 @@ vcpkg_fixup_pkgconfig()
 
 if(OPENEXR_INSTALL_TOOLS)
     vcpkg_copy_tools(
-        TOOL_NAMES exrenvmap exrheader exrinfo exrmakepreview exrmaketiled exrmultipart exrmultiview exrstdattr exr2aces
+        TOOL_NAMES
+            exr2aces
+            # not installed: exrcheck
+            exrenvmap
+            exrheader
+            exrinfo
+            exrmakepreview
+            exrmaketiled
+            exrmanifest
+            exrmultipart
+            exrmultiview
+            exrstdattr
         AUTO_CLEAN
     )
 endif()
