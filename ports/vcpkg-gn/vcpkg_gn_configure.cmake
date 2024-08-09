@@ -22,6 +22,9 @@ function(z_vcpkg_gn_configure_generate)
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
     )
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}/args.gn")
+        file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}/args.gn" "${CURRENT_BUILDTREES_DIR}/generate-${arg_CONFIG}-args.gn.log")
+    endif()
 endfunction()
 
 function(vcpkg_gn_configure)

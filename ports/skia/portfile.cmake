@@ -331,3 +331,4 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 
 file(GLOB third_party_licenses "${SOURCE_PATH}/third_party_licenses/*")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${third_party_licenses})
+message(FATAL_ERROR STOP)
