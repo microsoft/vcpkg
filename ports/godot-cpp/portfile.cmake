@@ -5,17 +5,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "godotengine/godot-cpp"
     REF "godot-${VERSION}-stable"
-    SHA512 "820e07ffb0545324f01598898bb342d7e143dcc8b83818824e7e1bc22937d3e8016b435f1ec085ebaae8b26e6f6dfb5500f120089316fc0f0c4153c340226941"
+    SHA512 "aa7fbdc398eda9abbfbbe4d0cfed2ce4651cc5ca4d8d246d739dc3814e766011ff8bb221ad4033830bfb7926adbb69f6f26dc7356c9a7cb3f1e8d39f4db053fc"
     HEAD_REF "master"
     PATCHES
+        "hotreloadable.patch"
         "packagable.patch"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "hotreload"    "GODOT_ENABLE_HOT_RELOAD"
+)
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         "-DPython3_EXECUTABLE=${PYTHON3}"
 )
 
