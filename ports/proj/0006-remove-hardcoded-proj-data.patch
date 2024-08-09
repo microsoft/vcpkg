@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c29d812..b0e1016 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -270,6 +270,8 @@ endif()
+ 
+ ################################################################################
+ 
++option(EMBED_PROJ_DATA_PATH "Whether the PROJ_DATA_PATH should be embedded" ON)
++
+ if(DEFINED PROJ_LIB_ENV_VAR_TRIED_LAST)
+   set(PROJ_DATA_ENV_VAR_TRIED_LAST ${PROJ_LIB_ENV_VAR_TRIED_LAST})
+   message(WARNING "PROJ_LIB_ENV_VAR_TRIED_LAST option has been renamed to PROJ_DATA_ENV_VAR_TRIED_LAST. PROJ_LIB_ENV_VAR_TRIED_LAST is still working for now, but may be completely replaced by PROJ_DATA_ENV_VAR_TRIED_LAST in a future release")
+diff --git a/src/lib_proj.cmake b/src/lib_proj.cmake
+index 4c631c6..5c05eb2 100644
+--- a/src/lib_proj.cmake
++++ b/src/lib_proj.cmake
+@@ -303,7 +303,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ source_group("CMake Files" FILES CMakeLists.txt)
+ 
+ # Embed PROJ_DATA data files location
+-add_definitions(-DPROJ_DATA="${PROJ_DATA_PATH}")
++if(EMBED_PROJ_DATA_PATH)
++  add_definitions(-DPROJ_DATA="${PROJ_DATA_PATH}")
++endif()
+ 
+ 
+ ###########################################################
