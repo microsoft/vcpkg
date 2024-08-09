@@ -1,6 +1,6 @@
 --- a/cmake/OpenCVFindLibsPerf.cmake
 +++ b/cmake/OpenCVFindLibsPerf.cmake
-@@ -55,7 +55,7 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+@@ -59,7 +59,7 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
        OR NOT (CMAKE_VERSION VERSION_LESS "3.0.0")  # Eigen3Targets.cmake required CMake 3.0.0+
        ) AND NOT OPENCV_SKIP_EIGEN_FIND_PACKAGE_CONFIG
    )
