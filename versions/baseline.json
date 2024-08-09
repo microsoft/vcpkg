@@ -3624,10 +3624,6 @@
       "baseline": "9e",
       "port-version": 1
     },
-    "ilmbase": {
-      "baseline": "3",
-      "port-version": 0
-    },
     "im3d": {
       "baseline": "2022-10-11",
       "port-version": 0
