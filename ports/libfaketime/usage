@@ -1,0 +1,3 @@
+libfaketime provides runtime libraries:
+
+  find_library(LIBFAKETIME NAMES faketime)
