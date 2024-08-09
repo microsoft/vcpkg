@@ -1,6 +1,6 @@
 {
   "name": "vulkan-validationlayers",
-  "version": "1.3.280.0",
+  "version": "1.3.290.0",
   "description": "Vulkan Validation Layers (VVL)",
   "homepage": "https://github.com/KhronosGroup/Vulkan-ValidationLayers",
   "license": null,
