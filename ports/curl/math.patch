@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 580cc4357..cf0729e01 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -713,6 +713,12 @@ if(USE_NGTCP2)
+   if(USE_OPENSSL OR USE_WOLFSSL)
+     if(USE_WOLFSSL)
+       find_package(NGTCP2 REQUIRED wolfSSL)
++      if(NOT WIN32)
++        find_library(MATH_LIBRARY m)
++        if(MATH_LIBRARY)
++          set(MATH_LIBRARY m)
++        endif()
++      endif()
+       list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "libngtcp2_crypto_wolfssl")
+     elseif(HAVE_BORINGSSL OR HAVE_AWSLC)
+       find_package(NGTCP2 REQUIRED BoringSSL)
+@@ -730,7 +736,7 @@ if(USE_NGTCP2)
+   endif()
+   set(USE_NGTCP2 ON)
+   include_directories(${NGTCP2_INCLUDE_DIRS})
+-  list(APPEND CURL_LIBS ${NGTCP2_LIBRARIES})
++  list(APPEND CURL_LIBS ${NGTCP2_LIBRARIES} ${MATH_LIBRARY})
+   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "libngtcp2")
+ 
+   find_package(NGHTTP3 REQUIRED)
