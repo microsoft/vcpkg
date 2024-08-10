@@ -8,7 +8,6 @@ vcpkg_from_github(
         deps.patch
         alsa-dep-fix.patch
         cxx-linkage-pkgconfig.diff
-        android-fix-sensor.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
