@@ -1,0 +1,4 @@
+hlslpp provides header-only CMake targets:
+
+find_package(hlslpp CONFIG REQUIRED)
+target_include_directories(main PUBLIC ${hlslpp_INCLUDE_DIRS})
