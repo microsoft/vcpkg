@@ -2469,7 +2469,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "5.98.0",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "ecos": {
@@ -2917,7 +2917,7 @@
       "port-version": 0
     },
     "functionalplus": {
-      "baseline": "0.2.24",
+      "baseline": "0.2.25",
       "port-version": 0
     },
     "functions-framework-cpp": {
@@ -3421,8 +3421,8 @@
       "port-version": 0
     },
     "hello-imgui": {
-      "baseline": "1.4.2",
-      "port-version": 1
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "hexl": {
       "baseline": "1.2.5",
@@ -3645,8 +3645,8 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.90.7",
-      "port-version": 1
+      "baseline": "1.91.0",
+      "port-version": 0
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -4365,8 +4365,8 @@
       "port-version": 0
     },
     "libdeflate": {
-      "baseline": "1.20",
-      "port-version": 1
+      "baseline": "1.21",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -4761,8 +4761,8 @@
       "port-version": 0
     },
     "libmysql": {
-      "baseline": "8.0.34",
-      "port-version": 2
+      "baseline": "8.0.39",
+      "port-version": 0
     },
     "libnice": {
       "baseline": "0.1.21",
@@ -5569,7 +5569,7 @@
       "port-version": 0
     },
     "lunasvg": {
-      "baseline": "2.3.9",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "luv": {
@@ -5806,7 +5806,7 @@
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha4",
-      "port-version": 8
+      "port-version": 9
     },
     "mikktspace": {
       "baseline": "2020-10-06",
@@ -9778,7 +9778,7 @@
     },
     "zeromq": {
       "baseline": "4.3.5",
-      "port-version": 1
+      "port-version": 2
     },
     "zfp": {
       "baseline": "1.0.0",
