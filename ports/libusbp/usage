@@ -1,3 +1,9 @@
+The package libusbp can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig)
+    pkg_check_modules(libusbp REQUIRED IMPORTED_TARGET libusbp)
+    target_link_libraries(main PRIVATE PkgConfig::libusbp)
+
 The package libusbp provides CMake targets:
 
     find_package(unofficial-libusbp CONFIG REQUIRED)
