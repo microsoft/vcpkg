@@ -13,6 +13,7 @@ vcpkg_from_github(
         fmt.patch
         syntax.patch
         remove-bitsery.patch
+        fix-build-error-with-fmt11.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
