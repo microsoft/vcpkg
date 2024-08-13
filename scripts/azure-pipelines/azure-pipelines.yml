@@ -1,96 +1,192 @@
-# Copyright (c) Microsoft Corporation.
-# SPDX-License-Identifier: MIT
-#
-variables:
-  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-07-11'
-
-parameters:
-  - name: vcpkgToolSha
-    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
-    type: string
-    default: 'use default'
-  - name: tripletPattern
-    displayName: 'Enable triplets which contain this substring'
-    type: string
-    default: '-'
-
+pool:
+  vmImage: "windows-latest"
 jobs:
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x86_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - job: buildTest
+    displayName: "Build test.exe"
+    steps:
+      - checkout: none
+      - task: PowerShell@2
+        displayName: "build"
+        inputs:
+          pwsh: true
+          targetType: inline
+          script: |
+            @'
+            #include <windows.h>
+            #include <iostream>
+            int main() {
+                std::cout << "stdout" << std::endl;
+                HANDLE hStderr = ::GetStdHandle(STD_ERROR_HANDLE);
+                if (hStderr == INVALID_HANDLE_VALUE) {
+                  return 1;
+                }
+                DWORD written = 0;
+                const char* msg = "stderr\n";
+                if (!::WriteFile(hStderr, msg, strlen(msg), &written, nullptr)) {
+                    return 1;
+                }
+                return 0;
+            }
+            '@ > test.cxx
+            $dir = $PWD
+            & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1"
+            cd $dir
+            cl /nologo /std:c++20 /EHsc /Fe:test.exe test.cxx
+          failOnStderr: true
+      - publish: "test.exe"
+        artifact: test_bin
+  - job: test1
+    dependsOn: buildTest
+    displayName: Run stderr PowerShell@2
+    steps:
+      - checkout: none
+      - download: current
+        artifact: test_bin
+      - task: PowerShell@2
+        inputs:
+          pwsh: true
+          targetType: inline
+          script: |
+            & $(Pipeline.Workspace)/test_bin/test.exe
+          failOnStderr: true
+  - job: test2
+    dependsOn: buildTest
+    displayName: Run stderr PowerShell@2 redirect stderr to null
+    steps:
+      - checkout: none
+      - download: current
+        artifact: test_bin
+      - task: PowerShell@2
+        inputs:
+          pwsh: true
+          targetType: inline
+          script: |
+            & $(Pipeline.Workspace)/test_bin/test.exe 2>$null
+          failOnStderr: true
+  - job: test3
+    dependsOn: buildTest
+    displayName: Run stderr AzureCLI@2
+    steps:
+      - checkout: none
+      - download: current
+        artifact: test_bin
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: "VcpkgPrFleet"
+          scriptType: "pscore"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            & $(Pipeline.Workspace)/test_bin/test.exe
+          failOnStandardError: true
+  - job: test4
+    dependsOn: buildTest
+    displayName: Run stderr AzureCLI@2 redirect stderr to null
+    steps:
+      - checkout: none
+      - download: current
+        artifact: test_bin
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: "VcpkgPrFleet"
+          scriptType: "pscore"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            & $(Pipeline.Workspace)/test_bin/test.exe 2>$null
+          failOnStandardError: true
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# # Copyright (c) Microsoft Corporation.
+# # SPDX-License-Identifier: MIT
+# #
+# variables:
+#   linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-07-11'
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# parameters:
+#   - name: vcpkgToolSha
+#     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+#     type: string
+#     default: 'use default'
+#   - name: tripletPattern
+#     displayName: 'Enable triplets which contain this substring'
+#     type: string
+#     default: '-'
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static_md
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# jobs:
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x86_windows
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows_static
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows_static_md
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: osx/azure-pipelines.yml
-  parameters:
-    jobName: x64_osx
-    poolName: 'PrOsx-2024-07-12'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_uwp
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: osx/azure-pipelines.yml
-  parameters:
-    jobName: arm64_osx
-    poolName: 'PrOsx-2024-07-12-arm64'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_windows
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: linux/azure-pipelines.yml
-  parameters:
-    jobName: x64_linux
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_uwp
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: arm_neon_android
-    dockerImage: $(linux-docker-image)
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: osx/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_osx
+#     poolName: 'PrOsx-2024-07-12'
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: x64_android
-    dockerImage: $(linux-docker-image)
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: osx/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_osx
+#     poolName: 'PrOsx-2024-07-12-arm64'
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: arm64_android
-    dockerImage: $(linux-docker-image)
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: linux/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_linux
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+
+# - template: android/azure-pipelines.yml
+#   parameters:
+#     jobName: arm_neon_android
+#     dockerImage: $(linux-docker-image)
+#     tripletPattern: ${{ parameters.tripletPattern }}
+
+# - template: android/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_android
+#     dockerImage: $(linux-docker-image)
+#     tripletPattern: ${{ parameters.tripletPattern }}
+
+# - template: android/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_android
+#     dockerImage: $(linux-docker-image)
+#     tripletPattern: ${{ parameters.tripletPattern }}
