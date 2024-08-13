@@ -1,16 +1,15 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://jugit.fz-juelich.de/mlz/libcerf/uploads/924b8d245ad3461107ec630734dfc781/libcerf-${VERSION}.tgz"
-    FILENAME "libcerf-${VERSION}.tgz"
-    SHA512 4df711d3e9fd00de99959c3253a9565d1dc2c41f75a5800ced9c52f89cbd13185fbdca3ad75de788fd16c044082738ab345b7fb6a8820ac588edafe1812944aa
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://jugit.fz-juelich.de
+    REPO mlz/libcerf
+    REF "v${VERSION}"
+    SHA512 0e78a18c498705d5efa26e504932192c4d49485cc3f971235c86c4dc6ca7498063f33e188a55f4c939e25d0d2a2f215b22ef11d3776d80a4a7486ea62fad1d73
+    PATCHES
+        cxx-flags.diff
+        fix-source.diff
+        begin-end-decls.diff
+        install-dirs.diff
 )
-
-vcpkg_extract_source_archive(SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-)
-
-if(VCPKG_TARGET_IS_MINGW)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # missing exports
-endif()
 
 if(VCPKG_TARGET_IS_UWP)
     set(configure_opts WINDOWS_USE_MSBUILD)
@@ -26,8 +25,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cerf PACKAGE_NAME cerf)
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cerf.h" "dllexport" "dllimport")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
