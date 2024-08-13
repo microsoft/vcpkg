@@ -1,10 +1,9 @@
-The package libusbp can be imported via CMake FindPkgConfig module:
+libusbp provides pkg-config modules:
 
-    find_package(PkgConfig)
-    pkg_check_modules(libusbp REQUIRED IMPORTED_TARGET libusbp)
-    target_link_libraries(main PRIVATE PkgConfig::libusbp)
+  # Library for accessing USB devices.
+  libusbp
 
-The package libusbp provides CMake targets:
+libusbp provides CMake targets:
 
-    find_package(unofficial-libusbp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libusbp::libusbp)
+  find_package(unofficial-libusbp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::libusbp::libusbp)
