@@ -11,13 +11,8 @@ vcpkg_from_gitlab(
         install-dirs.diff
 )
 
-if(VCPKG_TARGET_IS_UWP)
-    set(configure_opts WINDOWS_USE_MSBUILD)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${configure_opts}
     OPTIONS
         -DCERF_CPP=ON
         -DLIB_MAN=OFF
