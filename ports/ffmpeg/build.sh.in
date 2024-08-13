@@ -70,12 +70,6 @@ merge_binaries() {
     done
 }
 
-export PKG_CONFIG_PATH="$(cygpath -p "${PKG_CONFIG_PATH}")"
-
-# Export HTTP(S)_PROXY as http(s)_proxy:
-[ -n "$HTTP_PROXY"  ] && export http_proxy="$HTTP_PROXY"
-[ -n "$HTTPS_PROXY" ] && export https_proxy="$HTTPS_PROXY"
-
 PATH_TO_BUILD_DIR=$(  cygpath "@BUILD_DIR@")
 PATH_TO_SRC_DIR=$(    cygpath "@SOURCE_PATH@")
 PATH_TO_PACKAGE_DIR=$(cygpath "@INST_PREFIX@")
