@@ -1,7 +1,7 @@
 {
   "name": "wasmedge",
   "version": "0.13.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "WasmEdge is a high-performance WebAssembly runtime for edge computing.",
   "homepage": "https://WasmEdge.org",
   "license": "Apache-2.0",

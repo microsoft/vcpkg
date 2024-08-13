@@ -19,10 +19,6 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CURRENT_PORT_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 # note: {SOURCE_PATH}/src/Makefile makes liburing.so from liburing.a.
 #   For dynamic, remove intermediate file liburing.a when install is finished.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -34,3 +30,16 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man2")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7")
+
+# Cf. README
+vcpkg_install_copyright(COMMENT [[
+All software contained from liburing is dual licensed LGPL and MIT, see
+COPYING and LICENSE, except for a header coming from the kernel which is
+dual licensed GPL with a Linux-syscall-note exception and MIT, see
+COPYING.GPL and <https://spdx.org/licenses/Linux-syscall-note.html>.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/COPYING.GPL"
+)

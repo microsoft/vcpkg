@@ -26,7 +26,7 @@ function(qt_download_submodule_impl)
         if(PORT STREQUAL "qttools") # Keep this for beta & rc's
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
-                URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
+                URL https://code.qt.io/playground/qlitehtml.git
                 REF "${${PORT}_qlitehtml_REF}"
                 FETCH_REF master
                 HEAD_REF master
@@ -44,7 +44,7 @@ function(qt_download_submodule_impl)
         elseif(PORT STREQUAL "qtwebengine")
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
-                URL git://code.qt.io/qt/qtwebengine-chromium.git
+                URL https://code.qt.io/qt/qtwebengine-chromium.git
                 REF "${${PORT}_chromium_REF}"
             )
             if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")

@@ -15,7 +15,6 @@
         "avformat",
         "avresample",
         "bzip2",
-        "fdk-aac",
         "freetype",
         "gpl",
         "iconv",
@@ -61,6 +60,7 @@
       "default-features": false,
       "features": [
         "ass",
+        "ffmpeg",
         "fontconfig",
         "fribidi",
         "modplug",
@@ -69,6 +69,14 @@
         "srt"
       ],
       "platform": "!uwp"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "fdk-aac"
+      ],
+      "platform": "!android"
     },
     {
       "name": "ffmpeg",
@@ -122,14 +130,6 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
-        "opengl"
-      ],
-      "platform": "!uwp & !(arm64 & windows)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
         "avisynthplus"
       ],
       "platform": "windows & !arm & !uwp & !static"
@@ -146,9 +146,17 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
+        "opengl"
+      ],
+      "platform": "!uwp & !(arm64 & windows) & !android"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
         "nvcodec"
       ],
-      "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
+      "platform": "!android & !osx & !uwp & !(arm64 & windows)"
     }
   ]
 }

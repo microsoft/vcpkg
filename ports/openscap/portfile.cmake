@@ -37,6 +37,7 @@ vcpkg_cmake_configure(
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         -DENABLE_TESTS=OFF
         -DENABLE_DOCS=OFF
+        -DWANT_BASE64=OFF
 )
 
 vcpkg_cmake_install()

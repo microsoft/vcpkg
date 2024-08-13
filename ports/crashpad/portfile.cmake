@@ -4,6 +4,8 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
     REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
+    PATCHES
+        fix-linux.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -29,6 +31,11 @@ checkout_in_path(
     "https://chromium.googlesource.com/chromium/mini_chromium"
     "dce72d97d1c2e9beb5e206c6a05a702269794ca3"
 )
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
+    PATCHES
+      "fix-std-20.patch"
+)      
 
 if(VCPKG_TARGET_IS_LINUX)
     # fetch lss

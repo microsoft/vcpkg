@@ -1,6 +1,7 @@
 {
   "name": "llvm",
   "version": "18.1.6",
+  "port-version": 1,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -452,7 +453,16 @@
       "description": "Build LLVM tools."
     },
     "utils": {
-      "description": "Build LLVM utils."
+      "description": "Build LLVM utils.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     }
   }
 }

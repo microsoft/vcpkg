@@ -180,11 +180,11 @@
         <archiveName>ninja-mac-1.11.1.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.16</version>
+        <version>7.2.21</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.16/PowerShell-7.2.16-win-x64.zip</url>
-        <sha512>de246b7719337ff0c16ef46cf1df2e0fb5e39f7d2754cb28422cf455df276be6e35e9efa9d2bac81c383df1d2d97c9281a24e86ec84af7c395b7671149111ca9</sha512>
-        <archiveName>PowerShell-7.2.16-win-x64.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.21/PowerShell-7.2.21-win-x64.zip</url>
+        <sha512>6323c84b4e55982525184948333a1c564bbb421e965cc5c076b1276cd00fe56cec1113f3634d65af6188571ca45da44c5eca6b4acd1f1e80c51142be90067590</sha512>
+        <archiveName>PowerShell-7.2.21-win-x64.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.15.1</version>
