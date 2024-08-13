@@ -11,18 +11,15 @@ index b89e360..06d444e 100644
        endif()
      endif()
  
-diff --git a/cmake/OpenCVUtils.cmake b/cmake/OpenCVUtils.cmake
-index 7d45974..b0ed51d 100644
---- a/cmake/OpenCVUtils.cmake
-+++ b/cmake/OpenCVUtils.cmake
-@@ -796,7 +796,9 @@ macro(ocv_extract_simple_libs _all_libs _simple _other)
-   set(${_simple} "")
-   set(${_other} "")
-   foreach(_l ${${_all_libs}})
--    if(TARGET ${_l})
-+    if(${_l} STREQUAL "optimized" OR ${_l} STREQUAL "debug")
-+	  continue()
-+    elseif(TARGET ${_l})
-         list(APPEND ${_other} ${_l})
-     elseif(EXISTS "${_l}")
-         list(APPEND ${_other} ${_l})
+diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
+index 56f8879..8ddab13 100644
+--- a/cmake/OpenCVModule.cmake
++++ b/cmake/OpenCVModule.cmake
+@@ -582,7 +582,6 @@ macro(ocv_create_module)
+     target_link_libraries(${the_module} LINK_PUBLIC ${OPENCV_MODULE_${the_module}_DEPS})
+     set(extra_deps ${OPENCV_MODULE_${the_module}_DEPS_EXT} ${OPENCV_LINKER_LIBS} ${IPP_LIBS} ${ARGN})
+     ocv_extract_simple_libs(extra_deps _simple_deps _other_deps)
+-    target_link_libraries(${the_module} LINK_PRIVATE ${_simple_deps}) # this list goes to "export"
+     target_link_libraries(${the_module} LINK_PRIVATE ${extra_deps})
+   endif()
+
