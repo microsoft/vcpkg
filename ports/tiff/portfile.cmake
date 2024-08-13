@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     PATCHES
         FindCMath.patch
         requires-lerc.patch
+        fix-lzma.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
