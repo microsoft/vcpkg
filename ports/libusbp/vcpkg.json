@@ -14,5 +14,17 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "udev",
+      "platform": "linux"
+    }
+  ],
+  "features": {
+    "udev": {
+      "description": "Enable udev",
+      "supports": "linux"
+    }
+  }
 }
