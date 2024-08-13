@@ -2,8 +2,6 @@
 
 set -e
 
-export PATH="$PATH:/usr/bin"
-
 command -v cygpath >/dev/null && have_cygpath=1
 
 cygpath() {
