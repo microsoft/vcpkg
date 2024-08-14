@@ -3257,7 +3257,7 @@
       "port-version": 8
     },
     "gtest": {
-      "baseline": "1.15.0",
+      "baseline": "1.15.2",
       "port-version": 0
     },
     "gtk": {
@@ -4137,8 +4137,8 @@
       "port-version": 6
     },
     "lastools": {
-      "baseline": "2.0.2+20230206",
-      "port-version": 1
+      "baseline": "2.0.3",
+      "port-version": 0
     },
     "laszip": {
       "baseline": "3.4.4",
@@ -4717,7 +4717,7 @@
       "port-version": 1
     },
     "libmidi2": {
-      "baseline": "0.10",
+      "baseline": "0.11",
       "port-version": 0
     },
     "libmikmod": {
@@ -6534,11 +6534,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 15
+      "port-version": 16
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 21
+      "port-version": 22
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6806,7 +6806,7 @@
     },
     "pcl": {
       "baseline": "1.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "pcre": {
       "baseline": "8.45",
@@ -8102,7 +8102,7 @@
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 10
+      "port-version": 11
     },
     "seacas": {
       "baseline": "2022-11-22",
@@ -8129,7 +8129,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.7.7",
+      "baseline": "0.7.8",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9350,7 +9350,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
