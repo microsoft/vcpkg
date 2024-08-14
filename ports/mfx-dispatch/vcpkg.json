@@ -5,7 +5,7 @@
   "description": "Open source Intel media sdk dispatcher",
   "homepage": "https://github.com/lu-zero/mfx_dispatch",
   "license": "BSD-3-Clause",
-  "supports": "!linux & !uwp & !osx",
+  "supports": "!uwp & !osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
