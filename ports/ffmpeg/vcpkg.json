@@ -346,7 +346,13 @@
     "drawtext": {
       "description": "Enable the drawtext filter",
       "dependencies": [
-        "freetype",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
         "harfbuzz"
       ]
     },
