@@ -5,7 +5,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 4bac1aa7ec1dce9b3445cc515cc287a5af032d34c207399aa9722e3dc53ed652f8a57cfbc9c5e40ccc4a2631245d89ab676e3ba2be9563f60ba855aaacb8e23c
+    SHA512 672d4085d950dbe4aecb105b398458745a1e5cec67b4171a7916daf87762f21db275f677fe048fb8323c52e201ea3da92efd02d20e4cae19a1fe6535723b2bc4
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
@@ -13,7 +13,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         ccasflags.patch
         use-gmp-pkgconfig.patch
-        link-zlib.patch   # directly as before 3.8.4
 )
 
 vcpkg_list(SET options)
@@ -50,6 +49,7 @@ vcpkg_configure_make(
         --with-tpm2=no
         --with-zstd=no
         --with-zlib=yes
+        ac_cv_dlopen_soname_works=no # ensure vcpkg libs
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG
