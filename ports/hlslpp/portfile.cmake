@@ -8,8 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# This is a header only library, copy them over.
-file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include/hlslpp/")
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/include" "${CURRENT_PACKAGES_DIR}/include/hlslpp")
 
 # Copy and rename License -> copyright.
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
