@@ -5,7 +5,7 @@
       "port-version": 4
     },
     "7zip": {
-      "baseline": "24.06",
+      "baseline": "24.08",
       "port-version": 0
     },
     "ableton": {
@@ -465,7 +465,7 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2024-06-24",
+      "baseline": "2024-08-12",
       "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
@@ -529,7 +529,7 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2024-06-24",
+      "baseline": "2024-08-12",
       "port-version": 0
     },
     "azure-uhttp-c": {
@@ -4042,7 +4042,7 @@
     },
     "kf5texteditor": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5textwidgets": {
       "baseline": "5.98.0",
@@ -5606,7 +5606,7 @@
     },
     "magic-enum": {
       "baseline": "0.9.6",
-      "port-version": 0
+      "port-version": 1
     },
     "magic-get": {
       "baseline": "2019-09-02",
@@ -6453,7 +6453,7 @@
       "port-version": 5
     },
     "onednn": {
-      "baseline": "3.4",
+      "baseline": "3.5.3",
       "port-version": 0
     },
     "oniguruma": {
@@ -6534,11 +6534,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 15
+      "port-version": 16
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 21
+      "port-version": 22
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6806,7 +6806,7 @@
     },
     "pcl": {
       "baseline": "1.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "pcre": {
       "baseline": "8.45",
@@ -7798,7 +7798,7 @@
     },
     "restc-cpp": {
       "baseline": "0.10.0",
-      "port-version": 2
+      "port-version": 3
     },
     "restclient-cpp": {
       "baseline": "2022-02-09",
@@ -9350,7 +9350,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
