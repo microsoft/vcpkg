@@ -21,6 +21,7 @@ vcpkg_from_github(
       "fix-mpi.diff"
       "no-prefix.diff"
       "no-config-suffix.diff"
+      "no-honor-static.diff"
       "add-optional-deps.diff"
 )
 
