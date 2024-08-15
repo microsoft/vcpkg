@@ -7,6 +7,7 @@ vcpkg_from_github(
         PATCHES
             fix-unresolved-symbol.patch
             fix-pkgconf.patch
+            fix-linux.patch
 )
 
 set(LIBRARY_TYPE ${VCPKG_LIBRARY_LINKAGE})
