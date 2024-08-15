@@ -5,7 +5,7 @@
   "description": "A cross-platform base for native Nickvision applications.",
   "homepage": "https://github.com/NickvisionApps/libnick",
   "documentation": "https://github.com/NickvisionApps/libnick/tree/main/docs",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-only",
   "supports": "windows | linux | osx",
   "dependencies": [
     "curl",
