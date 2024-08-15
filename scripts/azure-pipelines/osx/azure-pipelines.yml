@@ -47,7 +47,6 @@ jobs:
     inputs:
       azureSubscription: 'VcpkgPrFleet'
       scriptType: 'pscore'
-      failOnStandardError: true
       scriptLocation: 'inlineScript'
       inlineScript: |
           $current = Get-Date -AsUtc

@@ -1,6 +1,6 @@
 {
   "name": "7zip",
-  "version-string": "24.06",
+  "version-string": "24.08",
   "description": "Library for archiving file with a high compression ratio.",
   "homepage": "https://www.7-zip.org",
   "license": "LGPL-2.1-or-later",
