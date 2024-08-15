@@ -324,9 +324,9 @@ else()
 endif()
 
 if("drawtext" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libharfbuzz --enable-libfreetype")
+    set(OPTIONS "${OPTIONS} --enable-libharfbuzz")
 else()
-    set(OPTIONS "${OPTIONS} --disable-libharfbuzz --disable-libfreetype")
+    set(OPTIONS "${OPTIONS} --disable-libharfbuzz")
 endif()
 
 if("freetype" IN_LIST FEATURES)
