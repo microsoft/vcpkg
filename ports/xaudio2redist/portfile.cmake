@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(XAUDIO_ARCH STREQUAL "x86")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(XAUDIO_ARCH x86)
 else()
     set(XAUDIO_ARCH x64)

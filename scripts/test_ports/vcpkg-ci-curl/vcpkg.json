@@ -31,6 +31,7 @@
       "name": "curl",
       "features": [
         "gsasl",
+        "mbedtls",
         "psl"
       ],
       "platform": "!uwp"
@@ -49,6 +50,13 @@
         "tool"
       ],
       "platform": "!android & !uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "gnutls"
+      ],
+      "platform": "!arm & !xbox"
     }
   ]
 }

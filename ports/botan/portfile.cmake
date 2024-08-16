@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix_android.patch
         libcxx-winpthread-fixes.patch
         fix-cmake-usage.patch
+        add-include-string.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
