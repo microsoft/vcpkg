@@ -1128,6 +1128,9 @@ stxxl:x64-windows=skip
 stxxl:x64-windows-static=skip
 stxxl:x64-windows-static-md=skip
 # _Interlocked* intrinsic functions are not available on x86
+suitesparse-graphblas:arm64-uwp=fail
+suitesparse-graphblas:arm64-windows=fail
+suitesparse-graphblas:x64-uwp=fail
 suitesparse-graphblas:x86-windows=fail
 systemc:arm64-windows=fail
 systemc:arm64-uwp=fail
