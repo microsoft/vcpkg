@@ -153,8 +153,8 @@
       "port-version": 2
     },
     "aom": {
-      "baseline": "3.8.1",
-      "port-version": 1
+      "baseline": "3.9.1",
+      "port-version": 0
     },
     "apache-datasketches": {
       "baseline": "5.0.2",
@@ -1430,7 +1430,7 @@
     },
     "bzip2": {
       "baseline": "1.0.8",
-      "port-version": 5
+      "port-version": 6
     },
     "c-ares": {
       "baseline": "1.33.0",
@@ -1513,7 +1513,7 @@
       "port-version": 2
     },
     "catch2": {
-      "baseline": "3.6.0",
+      "baseline": "3.7.0",
       "port-version": 0
     },
     "cblas": {
@@ -1785,7 +1785,7 @@
       "port-version": 11
     },
     "colmap": {
-      "baseline": "3.9.1",
+      "baseline": "3.10",
       "port-version": 0
     },
     "color-console": {
@@ -2106,7 +2106,7 @@
     },
     "curl": {
       "baseline": "8.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2641,7 +2641,7 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "6.1.1",
+      "baseline": "6.1.4",
       "port-version": 0
     },
     "fastcdr": {
@@ -2777,8 +2777,8 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "4.0.0",
-      "port-version": 1
+      "baseline": "4.0.1",
+      "port-version": 0
     },
     "flint": {
       "baseline": "2.9.0",
@@ -3081,7 +3081,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "2.9.2",
+      "baseline": "3.2.5",
       "port-version": 0
     },
     "glbinding": {
@@ -3133,8 +3133,8 @@
       "port-version": 3
     },
     "glslang": {
-      "baseline": "14.2.0",
-      "port-version": 1
+      "baseline": "14.3.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -3623,10 +3623,6 @@
     "ijg-libjpeg": {
       "baseline": "9e",
       "port-version": 1
-    },
-    "ilmbase": {
-      "baseline": "3",
-      "port-version": 0
     },
     "im3d": {
       "baseline": "2022-10-11",
@@ -4773,7 +4769,7 @@
       "port-version": 4
     },
     "libnick": {
-      "baseline": "2024.8.1",
+      "baseline": "2024.8.2",
       "port-version": 0
     },
     "libnoise": {
@@ -5565,7 +5561,7 @@
       "port-version": 1
     },
     "lunarg-vulkantools": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "lunasvg": {
@@ -7169,7 +7165,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.13.1",
+      "baseline": "2.13.4",
       "port-version": 0
     },
     "pystring": {
@@ -7713,7 +7709,7 @@
       "port-version": 2
     },
     "re2": {
-      "baseline": "2024-06-01",
+      "baseline": "2024-07-02",
       "port-version": 0
     },
     "reactiveplusplus": {
@@ -8005,7 +8001,7 @@
       "port-version": 1
     },
     "scintilla": {
-      "baseline": "5.5.0",
+      "baseline": "5.5.1",
       "port-version": 0
     },
     "sciplot": {
@@ -8073,8 +8069,8 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.30.5",
-      "port-version": 1
+      "baseline": "2.30.6",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -8465,19 +8461,19 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.3.280.0",
-      "port-version": 1
+      "baseline": "1.3.290.0",
+      "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "spout2": {
@@ -8505,8 +8501,8 @@
       "port-version": 2
     },
     "sqlite3": {
-      "baseline": "3.46.0",
-      "port-version": 2
+      "baseline": "3.46.1",
+      "port-version": 0
     },
     "sqlitecpp": {
       "baseline": "3.3.1",
@@ -9325,7 +9321,7 @@
       "port-version": 0
     },
     "volk": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vowpal-wabbit": {
@@ -9365,7 +9361,7 @@
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vulkan-hpp": {
@@ -9373,7 +9369,7 @@
       "port-version": 0
     },
     "vulkan-loader": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
@@ -9385,19 +9381,19 @@
       "port-version": 0
     },
     "vulkan-sdk-components": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vulkan-tools": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vulkan-validationlayers": {
-      "baseline": "1.3.280.0",
+      "baseline": "1.3.290.0",
       "port-version": 0
     },
     "vvenc": {
