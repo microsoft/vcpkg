@@ -1,6 +1,7 @@
 {
   "name": "kf5texteditor",
   "version": "5.98.0",
+  "port-version": 1,
   "description": "Full text editor component",
   "homepage": "https://api.kde.org/frameworks/ktexteditor/html/",
   "dependencies": [
