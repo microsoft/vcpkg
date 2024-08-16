@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 a084c71effdd591b83a7fbff85bdea925da1436dc452267ceafd0f7bd875dcd9611cd28a92c06548e9130bb596703ea05932cd94063724cfecf6d861cceebe21
     HEAD_REF master
+    PATCHES
+        opt-filesystem.patch
 )
 
 set(FEATURE_OPTIONS "")
