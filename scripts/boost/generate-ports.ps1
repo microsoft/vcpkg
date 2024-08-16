@@ -167,6 +167,27 @@ function GeneratePortName() {
     "boost-" + ($Library -replace "_", "-")
 }
 
+function GetPortHomepage() {
+    param (
+        [string]$Library
+    )
+
+    $specicalHomepagePaths = @{
+        "interval"           = "numeric/interval";
+        "numeric_conversion" = "numeric/conversion";
+        "odeint"             = "numeric/odeint";
+        "ublas"              = "numeric/ublas";
+    }
+
+    if ($specicalHomepagePaths.ContainsKey($Library)) {
+        $homepagePath = $specicalHomepagePaths[$Library]
+    } else {
+        $homepagePath = $Library
+    }
+
+    "https://www.boost.org/libs/" + $homepagePath
+}
+
 function GeneratePortDependency() {
     param (
         [string]$Library = '',
@@ -302,13 +323,14 @@ function GeneratePort() {
     )
 
     $portName = GeneratePortName $Library
+    $homepage = GetPortHomepage  $Library
 
     New-Item -ItemType "Directory" "$portsDir/$portName" -erroraction SilentlyContinue | out-null
 
     # Generate vcpkg.json
     GeneratePortManifest `
         -PortName $portName `
-        -Homepage "https://www.boost.org/libs/$Library" `
+        -Homepage $homepage `
         -Description "Boost $Library module" `
         -License "BSL-1.0" `
         -Dependencies $Dependencies

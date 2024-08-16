@@ -3,7 +3,7 @@
   "name": "boost-numeric-conversion",
   "version": "1.86.0",
   "description": "Boost numeric_conversion module",
-  "homepage": "https://www.boost.org/libs/numeric_conversion",
+  "homepage": "https://www.boost.org/libs/numeric/conversion",
   "license": "BSL-1.0",
   "dependencies": [
     {

@@ -3,7 +3,7 @@
   "name": "boost-odeint",
   "version": "1.86.0",
   "description": "Boost odeint module",
-  "homepage": "https://www.boost.org/libs/odeint",
+  "homepage": "https://www.boost.org/libs/numeric/odeint",
   "license": "BSL-1.0",
   "dependencies": [
     {

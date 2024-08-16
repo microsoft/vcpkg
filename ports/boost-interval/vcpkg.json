@@ -3,7 +3,7 @@
   "name": "boost-interval",
   "version": "1.86.0",
   "description": "Boost interval module",
-  "homepage": "https://www.boost.org/libs/interval",
+  "homepage": "https://www.boost.org/libs/numeric/interval",
   "license": "BSL-1.0",
   "dependencies": [
     {

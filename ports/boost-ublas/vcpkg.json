@@ -3,7 +3,7 @@
   "name": "boost-ublas",
   "version": "1.86.0",
   "description": "Boost ublas module",
-  "homepage": "https://www.boost.org/libs/ublas",
+  "homepage": "https://www.boost.org/libs/numeric/ublas",
   "license": "BSL-1.0",
   "dependencies": [
     {
