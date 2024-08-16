@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         ccasflags.patch
         use-gmp-pkgconfig.patch
+        compression-libs.diff
 )
 
 vcpkg_list(SET options)
@@ -29,6 +30,10 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_list(APPEND options "ac_cv_dlopen_soname_works=no") # ensure vcpkg libs
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
@@ -49,7 +54,6 @@ vcpkg_configure_make(
         --with-tpm2=no
         --with-zstd=no
         --with-zlib=yes
-        ac_cv_dlopen_soname_works=no # ensure vcpkg libs
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG
