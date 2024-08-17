@@ -17,28 +17,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
+    SHA512 b4f7248f89f1cd146dbbae7860a17131cd29bd3cb81db1e678abfcfbf2d8fa4a7633bfd0edbf50afae7b838c8700e8c0d0bb05828139d5cb5662df6bbf3eb92c
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
-      0002-install-options.patch
-      0003-force-package-requirements.patch
-      0004-fix-eigen.patch
-      0005-fix-policy-CMP0057.patch
-      0006-fix-uwp.patch
-      0008-devendor-quirc.patch
-      0009-fix-protobuf.patch
-      0010-fix-uwp-tiff-imgcodecs.patch
-      0011-remove-python2.patch
-      0012-fix-zlib.patch
-      0015-fix-freetype.patch
-      0017-fix-flatbuffers.patch
-      0019-missing-include.patch
-      0020-fix-compat-cuda12.2.patch
-      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
-      "${ARM64_WINDOWS_FIX}"
-      0022-fix-supportqnx.patch
-      "${CUDA_12_4_FIX}"
+      0002-fix-flatbuffers.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -429,6 +412,7 @@ vcpkg_cmake_configure(
         -DOPENCV_DLLVERSION=4
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
+		-DOPENCV_GENERATE_PKGCONFIG=ON
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -509,17 +493,17 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-if (NOT VCPKG_BUILD_TYPE)
+#if (NOT VCPKG_BUILD_TYPE)
   # Update debug paths for libs in Android builds (e.g. sdk/native/staticlibs/armeabi-v7a)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
-      "\${_IMPORT_PREFIX}/sdk"
-      "\${_IMPORT_PREFIX}/debug/sdk"
-      IGNORE_UNCHANGED
-  )
-endif()
+#  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
+#      "\${_IMPORT_PREFIX}/sdk"
+#      "\${_IMPORT_PREFIX}/debug/sdk"
+#      IGNORE_UNCHANGED
+#  )
+#endif()
 
-  file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
-  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+# file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
+set(DEPS_STRING "include(CMakeFindDependencyMacro)
 if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
