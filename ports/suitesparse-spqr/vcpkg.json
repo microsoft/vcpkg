@@ -6,7 +6,12 @@
   "license": "GPL-2.0-or-later",
   "dependencies": [
     "lapack",
-    "suitesparse-cholmod",
+    {
+      "name": "suitesparse-cholmod",
+      "features": [
+        "supernodal"
+      ]
+    },
     "suitesparse-config",
     {
       "name": "vcpkg-cmake",
