@@ -15,6 +15,8 @@ vcpkg_cmake_configure(
         -DCLI11_BUILD_DOCS=OFF
         -DCLI11_BUILD_TESTS=OFF
         -DCLI11_PRECOMPILED=ON
+	CMAKE_OPTIONS
+        -DCMAKE_CXX_STANDARD=17
 )
 
 vcpkg_cmake_install()
