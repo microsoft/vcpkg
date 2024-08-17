@@ -8769,8 +8769,8 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.14.3",
-      "port-version": 1
+      "baseline": "0.14.6",
+      "port-version": 0
     },
     "threadpool": {
       "baseline": "0.2.5",
