@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-config",
-  "version-semver": "7.7.0",
+  "version-semver": "7.8.1",
   "description": "Configuration for SuiteSparse libraries",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "BSD-3-Clause",

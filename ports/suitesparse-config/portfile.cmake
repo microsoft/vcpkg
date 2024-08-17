@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/SuiteSparse
-    REF v7.7.0
-    SHA512 aa62dae81ae423ce7162ae83b46e5cf606d95482e6c6bb7ae6d61e15987761119d9418ef3a96648e6ba2327871a2847eef8ace197aa375279d71c80329d6f451
+    REF v${VERSION}
+    SHA512 d07709ad8567e5fe954f04d0c38a95a5610394aaa5ff5c809518c378b937d20556114b95c9dc052b316c8e8fcbb2eca294b425b21e8bbfa5c04f72c6f15a5eb6
     HEAD_REF dev
 )
 
 set(PACKAGE_NAME SuiteSparse_config)
 
 # Avoid overriding of BLA_VENDOR and skip straight to find_package() as done here
-# https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.7.0/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake#L240-L245
+# https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.8.1/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake#L240-L245
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/SuiteSparseBLAS.cmake"
     "${SOURCE_PATH}/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake"

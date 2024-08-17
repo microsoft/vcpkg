@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-mongoose",
-  "version-semver": "3.3.3",
+  "version-semver": "3.3.4",
   "description": "Mongoose: Graph partitioning library in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "GPL-3.0-only",

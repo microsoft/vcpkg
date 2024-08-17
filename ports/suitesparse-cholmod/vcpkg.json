@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-cholmod",
-  "version-semver": "5.2.1",
+  "version-semver": "5.3.0",
   "description": "CHOLMOD: Routines for factorizing sparse symmetric positive definite matrices in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "LGPL-2.1-or-later AND Apache-2.0",

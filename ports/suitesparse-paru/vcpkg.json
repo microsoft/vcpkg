@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-paru",
-  "version-semver": "0.1.3",
+  "version-semver": "0.2.0",
   "description": "ParU: Routines for solving sparse linear system via parallel multifrontal LU factorization algorithms in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "GPL-3.0-or-later",

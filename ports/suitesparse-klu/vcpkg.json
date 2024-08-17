@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-klu",
-  "version-semver": "2.3.3",
+  "version-semver": "2.3.4",
   "description": "KLU: Routines for solving sparse linear systems of equations in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "LGPL-2.1-or-later",

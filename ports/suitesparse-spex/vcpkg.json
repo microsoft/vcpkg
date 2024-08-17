@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-spex",
-  "version-semver": "3.1.0",
+  "version-semver": "3.2.0",
   "description": "SPEX: Software package for SParse EXact algebra in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "GPL-2.0-or-later OR LGPL-3.0-or-later",

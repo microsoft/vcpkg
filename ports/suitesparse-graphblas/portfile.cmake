@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/GraphBLAS
     REF v${VERSION}
-    SHA512 70bbf2331cdc013ef18456712a823e2f95e8f1773933f94bc55e5b7e1bc8a225bf56b21d9b66caabaf98ee909975820b0d899101289642c6e50253892c5af48e
+    SHA512 94ebb0c4fb8ed93c5fe71610a730a32f8e6b84389bd75ddc8d997fa82a60401608f75783f60c59209b13e50f922995a9ad745a2bb499e99c3cb32d05db73aea5
     HEAD_REF stable
 )
 
@@ -15,7 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Prevent JIT cache from being created at ~/.SuiteSparse by default. Only used during build.
-# see https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.7.0/GraphBLAS/cmake_modules/GraphBLAS_JIT_paths.cmake
+# see https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.8.1/GraphBLAS/cmake_modules/GraphBLAS_JIT_paths.cmake
 vcpkg_backup_env_variables(VARS GRAPHBLAS_CACHE_PATH)
 set(ENV{GRAPHBLAS_CACHE_PATH} "${CURRENT_BUILDTREES_DIR}/cache")
 

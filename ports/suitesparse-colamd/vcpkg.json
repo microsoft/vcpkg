@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-colamd",
-  "version-semver": "3.3.3",
+  "version-semver": "3.3.4",
   "description": "COLAMD: Routines for column approximate minimum degree ordering algorithm in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "BSD-3-Clause",

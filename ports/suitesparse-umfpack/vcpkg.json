@@ -1,6 +1,6 @@
 {
   "name": "suitesparse-umfpack",
-  "version-semver": "6.3.3",
+  "version-semver": "6.3.4",
   "description": "UMFPACK: Routines solving sparse linear systems via LU factorization in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "GPL-2.0-or-later",
