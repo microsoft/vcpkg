@@ -162,6 +162,14 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
+        "qsv"
+      ],
+      "platform": "!arm & (android | linux | windows) & !uwp"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
         "nvcodec"
       ],
       "platform": "!android & !osx & !uwp & !(arm64 & windows)"
