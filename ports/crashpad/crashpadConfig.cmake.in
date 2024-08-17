@@ -1,3 +1,5 @@
+include(SelectLibraryConfigurations)
+
 # Compute the installation prefix relative to this file.
 get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
@@ -11,20 +13,32 @@ add_library(crashpad::crashpad ALIAS crashpad)
 
 set(CRASHPAD_LIBRARIES common client util base)
 
+foreach(LIB_NAME ${CRASHPAD_LIBRARIES})
+  find_library(_LIB NAMES ${LIB_NAME} PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)  
+  list(APPEND crashpad_LIBRARY_DEBUG ${_LIB})
+  unset(_LIB CACHE)
+
+  find_library(_LIB NAMES ${LIB_NAME} PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+  list(APPEND crashpad_LIBRARY_RELEASE ${_LIB})
+  unset(_LIB CACHE)
+endforeach()
+
+select_library_configurations(crashpad)
+
+target_link_libraries(crashpad INTERFACE ${crashpad_LIBRARIES})
+
 if(WIN32)
 	target_compile_definitions(crashpad INTERFACE NOMINMAX)
 elseif(APPLE)
-	list(APPEND CRASHPAD_LIBRARIES ApplicationServices
+	set(APPLE_CRASHPAD_LIBRARIES ApplicationServices
         CoreFoundation Foundation IOKit Security bsm mig_output)
+  foreach(LIB_NAME ${APPLE_CRASHPAD_LIBRARIES})
+    find_library(_LIB ${LIB_NAME})
+    target_link_libraries(crashpad INTERFACE ${_LIB})
+    unset(_LIB CACHE)
+  endforeach()
 endif()
 
-foreach(LIB_NAME ${CRASHPAD_LIBRARIES})
-  find_library(_LIB_RELEASE NAMES ${LIB_NAME} NAMES_PER_DIR PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
-  find_library(_LIB_DEBUG NAMES ${LIB_NAME} NAMES_PER_DIR PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
-  target_link_libraries(crashpad INTERFACE debug ${_LIB_DEBUG} optimized ${_LIB_RELEASE})
-  unset(_LIB_DEBUG CACHE)
-  unset(_LIB_RELEASE CACHE)
-endforeach()
 
 find_package(ZLIB REQUIRED)
 target_link_libraries(crashpad INTERFACE ZLIB::ZLIB)
