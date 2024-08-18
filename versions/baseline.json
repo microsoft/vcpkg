@@ -8929,7 +8929,7 @@
       "port-version": 1
     },
     "toml11": {
-      "baseline": "4.0.0",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "tomlplusplus": {
