@@ -32,6 +32,8 @@ if(NOT TARGET crashpad::crashpad)
       find_library(CRASHPAD_${_lib}_LIBRARY NAMES ${_lib})
       target_link_libraries(crashpad::crashpad INTERFACE ${CRASHPAD_${_lib}_LIBRARY})
     endforeach()
+  elseif(ANDROID)
+    target_link_libraries(crashpad::crashpad INTERFACE log)
   endif()
 
   target_link_libraries(crashpad::crashpad INTERFACE ZLIB::ZLIB)

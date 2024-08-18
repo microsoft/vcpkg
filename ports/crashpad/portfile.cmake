@@ -34,10 +34,11 @@ checkout_in_path(
 vcpkg_apply_patches(
     SOURCE_PATH "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     PATCHES
-      "fix-std-20.patch"
+      fix-std-20.patch
+      ndk-toolchain.diff
 )      
 
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_LINUX)
     # fetch lss
     checkout_in_path(
         "${SOURCE_PATH}/third_party/lss/lss"
@@ -77,6 +78,7 @@ replace_gn_dependency(
     "z;zlib;zlibd"
 )
 
+set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "")
 
@@ -106,9 +108,15 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    string(APPEND OPTIONS " target_os=\"android\" android_ndk_root=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\"")
+endif()
+
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
+    OPTIONS "${OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
