@@ -9744,6 +9744,10 @@
       "baseline": "2020-03-11",
       "port-version": 1
     },
+    "yatm": {
+      "baseline": "1.1",
+      "port-version": 0
+    },
     "yato": {
       "baseline": "2022-03-06",
       "port-version": 0
