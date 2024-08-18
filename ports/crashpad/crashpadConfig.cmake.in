@@ -37,4 +37,5 @@ if(NOT TARGET crashpad::crashpad)
   target_link_libraries(crashpad::crashpad INTERFACE ZLIB::ZLIB)
 
   unset(_lib)
+  unset(_libs)
 endif()
