@@ -68,7 +68,20 @@ set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "")
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    string(APPEND OPTIONS " target_os=\"android\" android_ndk_root=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\"")
+
+elseif(VCPKG_TARGET_IS_LINUX)
+    string(APPEND OPTIONS " target_os=\"linux\"")
+
+elseif(VCPKG_TARGET_IS_OSX)
+    string(APPEND OPTIONS " target_os=\"mac\"")
+
+elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(APPEND OPTIONS " target_os=\"win\"")
+
     # Load toolchains
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
@@ -92,12 +105,6 @@ if(CMAKE_HOST_WIN32)
 
     set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-endif()
-
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    string(APPEND OPTIONS " target_os=\"android\" android_ndk_root=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\"")
 endif()
 
 vcpkg_gn_configure(
