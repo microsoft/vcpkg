@@ -15,7 +15,7 @@
     "suitesparse-cxsparse",
     {
       "name": "suitesparse-graphblas",
-      "platform": "!android & !uwp & !(windows & x86) & !(windows & arm)"
+      "platform": "!android"
     },
     "suitesparse-klu",
     "suitesparse-lagraph",
