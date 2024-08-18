@@ -1,0 +1,18 @@
+{
+  "name": "yatm",
+  "version": "1.1",
+  "description": "A simple to use threaded task manager, wrapping the native platform API.",
+  "homepage": "https://github.com/plekakis/yatm",
+  "license": "MIT",
+  "supports": "!x86",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

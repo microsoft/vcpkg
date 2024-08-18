@@ -1,0 +1,4 @@
+yatm provides a CMake package:
+
+  find_package(yatm CONFIG REQUIRED)
+  target_link_libraries(main PUBLIC yatm::yatm)
