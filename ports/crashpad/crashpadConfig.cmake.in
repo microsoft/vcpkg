@@ -38,6 +38,10 @@ if(NOT TARGET crashpad::crashpad)
 
   target_link_libraries(crashpad::crashpad INTERFACE ZLIB::ZLIB)
 
+  if(NOT TARGET crashpad)
+    add_library(crashpad ALIAS crashpad::crashpad)
+  endif()
+
   unset(_lib)
   unset(_libs)
 endif()
