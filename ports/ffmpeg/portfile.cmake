@@ -17,7 +17,7 @@ vcpkg_from_github(
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0041-add-const-for-opengl-definition.patch
-        0042-fix-arm64-linux.patch #https://github.com/FFmpeg/FFmpeg/commit/fcfd17dbb4a6cf270cdd82e91c21a5efdc878d12
+        0043-fix-miss-head.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -321,6 +321,12 @@ if("fontconfig" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfontconfig")
 else()
     set(OPTIONS "${OPTIONS} --disable-libfontconfig")
+endif()
+
+if("drawtext" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libharfbuzz")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libharfbuzz")
 endif()
 
 if("freetype" IN_LIST FEATURES)

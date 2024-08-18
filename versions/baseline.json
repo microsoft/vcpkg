@@ -561,7 +561,7 @@
       "port-version": 3
     },
     "bddisasm": {
-      "baseline": "2.1.4",
+      "baseline": "2.1.5",
       "port-version": 0
     },
     "bde": {
@@ -2353,8 +2353,8 @@
       "port-version": 1
     },
     "dpdk": {
-      "baseline": "22.07",
-      "port-version": 1
+      "baseline": "24.07",
+      "port-version": 0
     },
     "dpp": {
       "baseline": "10.0.30",
@@ -2706,7 +2706,7 @@
     },
     "ffmpeg": {
       "baseline": "7.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ffnvcodec": {
       "baseline": "12.1.14.0",
@@ -2817,7 +2817,7 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2024.08.05.00",
+      "baseline": "2024.08.12.00",
       "port-version": 0
     },
     "font-chef": {
@@ -2981,7 +2981,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.9.1",
+      "baseline": "3.9.2",
       "port-version": 0
     },
     "gdcm": {
@@ -5609,7 +5609,7 @@
       "port-version": 3
     },
     "magma": {
-      "baseline": "2.7.2",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "magnum": {
@@ -5782,7 +5782,7 @@
     },
     "mfx-dispatch": {
       "baseline": "1.35.1",
-      "port-version": 3
+      "port-version": 4
     },
     "mgnlibs": {
       "baseline": "2019-09-29",
@@ -6605,8 +6605,8 @@
       "port-version": 15
     },
     "openscap": {
-      "baseline": "1.3.7",
-      "port-version": 3
+      "baseline": "1.4.0",
+      "port-version": 0
     },
     "openslide": {
       "baseline": "3.4.1",
@@ -8181,7 +8181,7 @@
       "port-version": 0
     },
     "shapelib": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "shiftmedia-libgcrypt": {
@@ -8190,7 +8190,7 @@
     },
     "shiftmedia-libgnutls": {
       "baseline": "3.8.4",
-      "port-version": 1
+      "port-version": 2
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
@@ -9013,7 +9013,7 @@
       "port-version": 3
     },
     "tvision": {
-      "baseline": "2024-02-28",
+      "baseline": "2024-05-22",
       "port-version": 0
     },
     "tweeny": {
