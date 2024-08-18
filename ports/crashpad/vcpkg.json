@@ -10,7 +10,11 @@
   "license": "Apache-2.0",
   "supports": "linux | osx | (windows & !uwp)",
   "dependencies": [
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false,
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
