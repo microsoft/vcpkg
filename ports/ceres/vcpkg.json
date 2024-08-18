@@ -61,7 +61,12 @@
             "lapack"
           ]
         },
-        "suitesparse-cholmod",
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "matrixops"
+          ]
+        },
         "suitesparse-spqr"
       ]
     },
