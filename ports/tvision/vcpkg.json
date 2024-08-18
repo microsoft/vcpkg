@@ -1,6 +1,6 @@
 {
   "name": "tvision",
-  "version-date": "2024-02-28",
+  "version-date": "2024-05-22",
   "description": "A modern port of Turbo Vision 2.0, the classical framework for text-based user interfaces.",
   "homepage": "https://github.com/magiblot/tvision",
   "license": "MIT",
