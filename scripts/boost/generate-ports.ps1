@@ -123,7 +123,7 @@ $portData = @{
             "python3" = @{
                 "description"  = "Build Python3 bindings";
                 "supports"     = "!static";
-                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ); "platform" = "!uwp & !emscripten & !ios & !android" }, "python3");
+                "dependencies" = @(@{ "name" = "boost-python"; "platform" = "!uwp & !emscripten & !ios & !android" }, "python3");
             }
         }
     };
@@ -137,21 +137,7 @@ $portData = @{
         }
     };
     "boost-process"          = @{ "supports" = "!emscripten" };
-    "boost-python"           = @{
-        "default-features" = @("python3");
-        "supports"         = "!uwp & !emscripten & !ios & !android";
-        "features"         = @{
-            "python2" = @{
-                "description"  = "Build with Python2 support";
-                "supports"     = "!(arm & windows)";
-                "dependencies" = @("python2");
-            };
-            "python3" = @{
-                "description"  = "Build with Python3 support";
-                "dependencies" = @("python3");
-            }
-        }
-    };
+    "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
         "features" = @{

@@ -1,15 +1,17 @@
 {
   "name": "protobuf",
-  "version": "3.21.12",
-  "port-version": 3,
+  "version": "4.25.1",
+  "port-version": 1,
   "description": "Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",
   "dependencies": [
+    "abseil",
     {
       "name": "protobuf",
       "host": true
     },
+    "utf8-range",
     {
       "name": "vcpkg-cmake",
       "host": true

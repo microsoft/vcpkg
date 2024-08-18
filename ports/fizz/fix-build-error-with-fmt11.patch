@@ -1,0 +1,13 @@
+diff --git a/fizz/record/Types.h b/fizz/record/Types.h
+index 2cb449a..f1a370b 100644
+--- a/fizz/record/Types.h
++++ b/fizz/record/Types.h
+@@ -454,7 +454,7 @@ struct hash<fizz::ExtensionType> {
+ 
+ template <>
+ struct fmt::formatter<fizz::ExtensionType> : formatter<unsigned> {
+-  auto format(fizz::ExtensionType t, format_context& ctx) {
++  auto format(fizz::ExtensionType t, format_context& ctx) const {
+     return formatter<unsigned>::format(folly::to_underlying(t), ctx);
+   }
+ };

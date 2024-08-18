@@ -1,7 +1,6 @@
 {
   "name": "qttools",
-  "version": "6.7.0",
-  "port-version": 1,
+  "version": "6.7.2",
   "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -54,7 +53,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "network"
+            "network",
+            "png"
           ]
         }
       ]
@@ -104,7 +104,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "gui"
+            "gui",
+            "widgets"
           ]
         },
         {

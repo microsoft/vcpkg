@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.7.0",
+  "version": "6.7.2",
   "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
@@ -61,8 +61,12 @@
   "default-features": [
     "brotli",
     "concurrent",
-    "dbus",
+    {
+      "name": "dbus",
+      "platform": "!(static & windows)"
+    },
     "default-features",
+    "dnslookup",
     "doubleconversion",
     "freetype",
     "gui",
@@ -130,8 +134,15 @@
       "dependencies": [
         {
           "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
           "default-features": false,
-          "platform": "linux"
+          "features": [
+            "dbus"
+          ]
         },
         {
           "name": "qtbase",
@@ -173,6 +184,18 @@
             "gles2"
           ],
           "platform": "android"
+        }
+      ]
+    },
+    "dnslookup": {
+      "description": "Enable DNS lookup support",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
         }
       ]
     },

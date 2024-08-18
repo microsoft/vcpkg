@@ -39,7 +39,7 @@ endif()
 
 set(NEED_ASIOSDK OFF)
 if ("hut" IN_LIST FEATURES)
-  if(WIN32)
+  if(VCPKG_TARGET_IS_WINDOWS)
     # Need Steinberg ASIO audio driver SDK (only this low-latency audio driver makes the developer tool 'hut' useful on Windows)
     set(NEED_ASIOSDK ON)
   endif()

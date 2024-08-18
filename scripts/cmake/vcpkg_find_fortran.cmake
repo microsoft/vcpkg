@@ -10,11 +10,14 @@ function(vcpkg_find_fortran out_var)
     set(CMAKE_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
     set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
+    macro(z_vcpkg_warn_ambiguous_system_variables)
+    # CMakeDetermineFortranCompiler is for project mode.
+    endmacro()
     include(CMakeDetermineFortranCompiler)
 
     if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
         # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out fortran on their own.
-        if(WIN32)
+        if(CMAKE_HOST_WIN32)
             message(STATUS "No Fortran compiler found on the PATH. Using MinGW gfortran!")
             # If no Fortran compiler is on the path we switch to use gfortan from MinGW within vcpkg
             if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")

@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
     REF "v${VERSION}"
-    SHA512 33521f493f59e7d0a82d4307cd0178e45cd47a2daa768430190789b601a8b214b7e4d9ca0c8116a6190c804854a3bca8c7e4048b6d8e1c288d8c58f27aa2b476
+    SHA512 e2db7d24260ee725435ef6aa80a0e936f72bf8c8ce42a6a732d60b49349a3f6cc0603391a430c97f1aaa2368a07243fc2bed10189ebd965609494d59d41fb58c
     HEAD_REF master
+    PATCHES
+        fix-platform-detection.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
@@ -51,36 +53,33 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH "/prj/${SOLUTION_TYPE}/Simd.sln"
     PLATFORM ${SIMD_PLATFORM}
-    TARGET Simd
+    TARGET "lib\\Simd"
     RELEASE_CONFIGURATION "Release"
     DEBUG_CONFIGURATION "Debug"
   )
   vcpkg_copy_pdbs()
   file(GLOB SIMD_HEADERS "${SOURCE_PATH}/src/Simd/*.hpp" "${SOURCE_PATH}/src/Simd/*.h")
   file(COPY ${SIMD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Simd")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    message(FATAL_ERROR "Arm64 building with MSVC is currently not supported.")
-  else()
-    vcpkg_cmake_configure(
-      SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
-    OPTIONS
-      -DSIMD_TARGET="aarch64"
-    )
-    vcpkg_cmake_install()
-    vcpkg_cmake_config_fixup()
-    vcpkg_copy_pdbs()
-
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-  endif()
+elseif((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
+  message(FATAL_ERROR "Arm64 building with MSVC is currently not supported.")
 else()
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${SOURCE_PATH}/src/Simd/SimdConfig.h"
+      "//#define SIMD_STATIC"
+      "#define SIMD_STATIC"
+    )
+  endif()
+  string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SIMD_SHARED)
   vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/prj/cmake"
+    OPTIONS
+      -DSIMD_TEST=OFF
+      -DSIMD_SHARED=${SIMD_SHARED}
+      -DSIMD_PYTHON=OFF
   )
   vcpkg_cmake_install()
   vcpkg_cmake_config_fixup()
-  vcpkg_copy_pdbs()
-
+  file(COPY "${CMAKE_CURRENT_LIST_DIR}/SimdConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/simd/")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 8be12732e27eaabfbedae83ceee66ae0a269edebc614a5dd7645b8019d1f394be91391943baade93bad71e6100e22e46240b2b01c97ba3dedd7ef343113351e1
+    SHA512 15f9fad2d7a9181dcd3aa5d1873c6b58dd997c6a2782e1d45cb4630e22fb0caa218018376dc2ca4103c72d6a5b932ad0a7cf399665818e6181b3980200c8841a
     HEAD_REF main
     PATCHES
       export-unofficical-target.patch
@@ -11,9 +11,16 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        wolfssl     ENABLE_WOLFSSL
+        gnutls      ENABLE_GNUTLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
         -DBUILD_TESTING=OFF

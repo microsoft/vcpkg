@@ -16,6 +16,7 @@ vcpkg_from_github(
         cmake-config.patch
         command-line-length.patch
         script-prefix.patch
+        asm-armcap.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
         unix/android-cc.patch

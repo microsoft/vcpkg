@@ -4,7 +4,7 @@ index 16c611fd3..13978724c 100644
 +++ b/Modules/ThirdParty/DoubleConversion/CMakeLists.txt
 @@ -9,7 +9,16 @@ mark_as_advanced(ITK_USE_SYSTEM_DOUBLECONVERSION)
  if(ITK_USE_SYSTEM_DOUBLECONVERSION)
-   find_package(double-conversion REQUIRED)
+   find_package(double-conversion 3.1.6 REQUIRED)
    get_target_property(ITKDoubleConversion_INCLUDE_DIRS double-conversion::double-conversion INTERFACE_INCLUDE_DIRECTORIES)
 -  get_target_property(ITKDoubleConversion_LIBRARIES double-conversion::double-conversion LOCATION)
 +  get_target_property(ITKDoubleConversion_LIBRARY_RELEASE double-conversion::double-conversion IMPORTED_IMPLIB_RELEASE)

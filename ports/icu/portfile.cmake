@@ -36,6 +36,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-win-build.patch
         vcpkg-cross-data.patch
         darwin-rpath.patch
+        mingw-strict-ansi.diff # backport of https://github.com/unicode-org/icu/pull/3003
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -156,7 +157,7 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../" IGNORE_UNCHANGED)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

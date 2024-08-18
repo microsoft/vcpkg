@@ -1,7 +1,7 @@
 {
   "name": "wolfssl",
-  "version": "5.7.0",
-  "port-version": 1,
+  "version": "5.7.2",
+  "port-version": 2,
   "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",
@@ -23,6 +23,9 @@
   "features": {
     "dtls": {
       "description": "DTLS support"
+    },
+    "quic": {
+      "description": "Enable quic support"
     },
     "secret-callback": {
       "description": "Enables callback to provide TLS keys for debugging"

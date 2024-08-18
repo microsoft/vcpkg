@@ -4,7 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-messaging-eventhubs-cpp",
-  "version-semver": "1.0.0-beta.8",
+  "version-semver": "1.0.0-beta.9",
   "description": [
     "Microsoft Azure Messaging Event Hubs SDK for C++",
     "This library provides Azure Messaging Event Hubs SDK."

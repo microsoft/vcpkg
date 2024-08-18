@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
     REF  "${VERSION}"
-    SHA512 a5475d3f988928fc3d03b69fc34b33ada35bd790138a0f4a733642558c72945e79c5dcde88b656cbc1cafbc3cb2dd4ba28031e09e507d730056876148ef65014
+    SHA512 54316e955ce130ec8bb3795b45222fe38c6079cb29e4b5612a97bed8dd9876d378009af3ab0c554c0ded49ca5fde4544e87e3dc8a8c5f176947d439d73c662ee
     HEAD_REF master
     PATCHES
         fix-install-path.patch
-        skip-grpc-compilation.patch
         fix-msc-ver.patch
 )
 
@@ -16,7 +15,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
         URLS "https://github.com/microsoft/bond/releases/download/${VERSION}/gbc-${VERSION}-amd64.zip"
         FILENAME "gbc-${VERSION}-amd64.zip"
-        SHA512 590b051aa47ad161f8a8a5f782e22d2201ad536e0772c9e528f98df1d1fd2b154723d21587d35c8b948805ab229dfb3b515273ae37d05028554fd49b39dc5418
+        SHA512 fde9dc862b71c843278dcbb90137b86e23869d79036367008f01165f22b11b067bd78d21eff8385ab0e96d80fa3194380bdd661199c44a8552252bcc4c9e18c0
     )
 
     # Clear the generator to prevent it from updating
@@ -35,11 +34,6 @@ else()
     # For this reason the message is not guarded by checking to see if the tool is installed.
     message("\nA recent version of Haskell Tool Stack is required to build.\n  For information on how to install see https://docs.haskellstack.org/en/stable/README/\n")
 endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        bond-over-grpc BOND_ENABLE_GRPC
-)
 
 set(ENV{STACK_ROOT} "${CURRENT_BUILDTREES_DIR}/stack")
 
