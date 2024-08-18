@@ -217,7 +217,7 @@ index 6b949ea4..7f4eac40 100644
      int ByteSize() const;
      bool MergePartialFromCodedStream(
 diff --git a/src/brpc/serialized_request.cpp b/src/brpc/serialized_request.cpp
-index 499738f6..ae0b427d 100644
+index 33082883..09685882 100644
 --- a/src/brpc/serialized_request.cpp
 +++ b/src/brpc/serialized_request.cpp
 @@ -56,7 +56,7 @@ SerializedRequest* SerializedRequest::New() const {
@@ -251,6 +251,55 @@ index 5b68262e..fe57fd0d 100644
      void SharedCtor();
      void SharedDtor();
      void SetCachedSize(int size) const PB_422_OVERRIDE;
++    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
+   
+ private:
+     butil::IOBuf _serialized;
+diff --git a/src/brpc/serialized_response.cpp b/src/brpc/serialized_response.cpp
+index 817ccb4c..091a8bde 100644
+--- a/src/brpc/serialized_response.cpp
++++ b/src/brpc/serialized_response.cpp
+@@ -56,7 +56,7 @@ SerializedResponse* SerializedResponse::New() const {
+ #if GOOGLE_PROTOBUF_VERSION >= 3006000
+ SerializedResponse*
+ SerializedResponse::New(::google::protobuf::Arena* arena) const {
+-    return CreateMaybeMessage<SerializedResponse>(arena);
++    return DefaultConstruct<SerializedResponse>(arena);
+ }
+ #endif
+ 
+diff --git a/src/brpc/serialized_response.h b/src/brpc/serialized_response.h
+index 4e7d86e7..92700fbf 100644
+--- a/src/brpc/serialized_response.h
++++ b/src/brpc/serialized_response.h
+@@ -30,6 +30,7 @@ class SerializedResponse : public ::google::protobuf::Message {
+ public:
+     SerializedResponse();
+     virtual ~SerializedResponse();
++    explicit SerializedResponse(::google::protobuf::Arena* arena) : Message(arena) { SharedCtor(); }
+   
+     SerializedResponse(const SerializedResponse& from);
+   
+@@ -53,7 +54,7 @@ public:
+     void Clear() override;
+     bool IsInitialized() const override;
+     int ByteSize() const;
+-    int GetCachedSize() const override { return (int)_serialized.size(); }
++    int GetCachedSize() const { return (int)_serialized.size(); }
+     butil::IOBuf& serialized_data() { return _serialized; }
+     const butil::IOBuf& serialized_data() const { return _serialized; }
+ 
+@@ -67,11 +68,12 @@ private:
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+         ::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    void MergeFrom(const ::google::protobuf::Message& from) override;
++    void MergeFrom(const ::google::protobuf::Message& from);
+     void MergeFrom(const SerializedResponse& from);
+     void SharedCtor();
+     void SharedDtor();
+-    void SetCachedSize(int size) const override;
++    void SetCachedSize(int size) const;
 +    const ::google::protobuf::MessageLite::ClassData* GetClassData() const final { return nullptr; }
    
  private:
