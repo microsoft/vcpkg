@@ -14,7 +14,7 @@ index f356666739..1843f528cd 100644
          string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
          list(APPEND result ${dep})
  
-+      elseif(line MATCHES "^[ ]*$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
++      elseif(line MATCHES "^[ ]*\\$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
 +
 +        list(APPEND optional_components ${CMAKE_MATCH_1})
 +        string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
