@@ -51,9 +51,9 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
-        "fdk-aac"
+        "drawtext"
       ],
-      "platform": "!android"
+      "platform": "!(uwp | android)"
     },
     {
       "name": "ffmpeg",
@@ -157,6 +157,14 @@
         "opengl"
       ],
       "platform": "!uwp & !(arm64 & windows) & !android"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "qsv"
+      ],
+      "platform": "!arm & (android | linux | windows) & !uwp"
     },
     {
       "name": "ffmpeg",

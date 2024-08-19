@@ -299,7 +299,10 @@
             "contrib"
           ]
         },
-        "vtk"
+        {
+          "name": "vtk",
+          "default-features": false
+        }
       ]
     },
     "webp": {
