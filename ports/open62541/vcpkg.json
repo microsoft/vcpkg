@@ -17,7 +17,6 @@
   ],
   "default-features": [
     "methodcalls",
-    "openssl",
     "subscriptions",
     "subscriptions-events"
   ],
