@@ -12,13 +12,14 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        curl    WITH_CURL
+        sasl    WITH_SASL
+        sasl    WITH_SASL_CYRUS
         ssl     WITH_SSL
         ssl     WITH_SASL_OAUTHBEARER
         ssl     WITH_SASL_SCRAM
         zlib    WITH_ZLIB
         zstd    WITH_ZSTD
-        snappy  WITH_SNAPPY
-        curl    WITH_CURL
 )
 
 vcpkg_cmake_configure(
@@ -47,14 +48,12 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME RdKafka
-    CONFIG_PATH lib/cmake/RdKafka
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/RdKafka" PACKAGE_NAME "rdkafka")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/rdkafka/FindLZ4.cmake"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

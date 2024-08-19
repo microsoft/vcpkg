@@ -58,13 +58,13 @@ Param(
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
-    throw
+    exit 1
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
     if ((-Not [string]::IsNullOrWhiteSpace($BinarySourceStub))) {
         Write-Error "Only one binary caching setting may be used."
-        throw
+        exit 1
     }
 
     $BinarySourceStub = "files,$ArchivesRoot"
@@ -119,9 +119,11 @@ if ($IsWindows) {
 }
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
-if ($LASTEXITCODE -ne 0)
+$lastLastExitCode = $LASTEXITCODE
+if ($lastLastExitCode -ne 0)
 {
-    throw "vcpkg clean failed"
+    Write-Error "vcpkg clean failed"
+    exit $lastLastExitCode
 }
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
@@ -129,12 +131,16 @@ if ($LASTEXITCODE -ne 0)
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
 & "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
+$lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = True
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
-if ($LASTEXITCODE -ne 0)
+Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
+
+if ($lastLastExitCode -ne 0)
 {
-    throw "vcpkg test-features failed"
+    Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
 }
 
+exit $lastLastExitCode

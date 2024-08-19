@@ -83,6 +83,7 @@ bde:x64-windows-static-md   =skip
 bde:x64-windows-static      =skip
 bde:x64-windows             =skip
 bde:x86-windows             =skip
+benchmark:arm-neon-android=fail
 bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
@@ -300,8 +301,13 @@ directxsdk:x64-windows-static=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
-discordcoreapi:x64-linux=fail
+discordcoreapi:x64-linux=skip   # cause linux CI to hang https://github.com/microsoft/vcpkg/pull/40229
 discordcoreapi:x64-osx=fail
+# failed with dependency https://github.com/RealTimeChris/DiscordCoreAPI/issues/45
+discordcoreapi:x64-uwp=fail
+discordcoreapi:x64-windows=fail
+discordcoreapi:x64-windows-static=fail
+discordcoreapi:x64-windows-static-md=fail
 discount:x64-android=fail
 eathread:x64-android=fail
 ecal:arm-neon-android=fail
@@ -421,10 +427,6 @@ glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
-graphqlparser:arm-neon-android=fail
-graphqlparser:arm64-android=fail
-graphqlparser:arm64-osx=fail # python2 required
-graphqlparser:x64-android=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows        = skip
@@ -507,9 +509,6 @@ kfr:x64-android=fail
 kfr:x64-uwp=fail
 # needs android-24
 kubazip:arm-neon-android=fail
-lastools:arm-neon-android=fail
-lastools:arm64-android=fail
-lastools:x64-android=fail
 lcm:x64-windows-static=fail
 lcm:x64-windows-static-md=fail
 lcm:arm-neon-android=fail
@@ -724,9 +723,6 @@ memorymodule:x64-android=fail
 mesa:x64-linux=fail
 mesa:x64-osx=fail
 mesa:arm64-osx=fail
-mfx-dispatch:arm-neon-android=fail
-mfx-dispatch:arm64-android=fail
-mfx-dispatch:x64-android=fail
 milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-neon-android=fail
 minifb:arm64-android=fail
@@ -830,9 +826,10 @@ ois:x64-android=fail
 ompl:arm-neon-android=fail
 ompl:arm64-android=fail
 ompl:x64-android=fail
-ompl:x64-osx=fail
-ompl:arm64-osx=fail
-ompl:x64-linux=fail
+# failed with FILE_CONFLICTS https://github.com/microsoft/vcpkg/pull/40151
+omplapp:arm64-osx=skip
+omplapp:x64-osx=skip
+omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 onednn:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
@@ -1110,6 +1107,14 @@ spscqueue:arm64-android=fail
 spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
+# upstream issue https://github.com/agl-alexglopez/str_view/issues/9
+str-view:arm64-uwp=fail
+str-view:arm64-windows=fail
+str-view:x64-uwp=fail
+str-view:x64-windows=fail
+str-view:x64-windows-static=fail
+str-view:x64-windows-static-md=fail
+str-view:x86-windows=fail
 stxxl:arm-neon-android=fail
 # upstream issue https://github.com/stxxl/stxxl/issues/99
 stxxl:x86-windows=skip

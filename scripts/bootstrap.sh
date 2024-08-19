@@ -116,9 +116,9 @@ vcpkgCheckEqualFileHash()
 
     if command -v "sha512sum" >/dev/null 2>&1 ; then
         actualHash=$(sha512sum "$filePath")
-    elif command -v "gsha512sum" >/dev/null 2>&1 ; then
-        # OpenBSD's coreutil's sha512sum is prefixed with a `g`
-        actualHash=$(gsha512sum "$filePath")
+    elif command -v "sha512" >/dev/null 2>&1 ; then
+        # OpenBSD
+        actualHash=$(sha512 -q "$filePath")
     else
         # [g]sha512sum is not available by default on osx
         # shasum is not available by default on Fedora
