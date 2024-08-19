@@ -8736,6 +8736,10 @@
       "baseline": "5.4.1",
       "port-version": 0
     },
+    "tevclient": {
+      "baseline": "2024-08-19",
+      "port-version": 0
+    },
     "tfhe": {
       "baseline": "1.0.1",
       "port-version": 5
