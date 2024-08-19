@@ -413,7 +413,7 @@
     },
     {
       "name": "boost-process",
-      "platform": "!emscripten",
+      "platform": "!uwp & !emscripten & !android",
       "version>=": "1.86.0"
     },
     {

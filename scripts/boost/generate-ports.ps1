@@ -134,7 +134,7 @@ $portData = @{
             }
         }
     };
-    "boost-process"          = @{ "supports" = "!emscripten" };
+    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !android" };
     "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{

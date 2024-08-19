@@ -5,7 +5,7 @@
   "description": "Boost process module",
   "homepage": "https://www.boost.org/libs/process",
   "license": "BSL-1.0",
-  "supports": "!emscripten",
+  "supports": "!uwp & !emscripten & !android",
   "dependencies": [
     {
       "name": "boost-algorithm",
