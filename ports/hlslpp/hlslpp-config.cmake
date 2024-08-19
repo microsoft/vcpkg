@@ -1,4 +1,2 @@
-add_library(hlslpp INTERFACE)
-add_library(hlslpp::hlslpp ALIAS hlslpp)
-
-target_include_directories(hlslpp INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../include/hlslpp")
+add_library(unofficial::hlslpp::hlslpp INTERACE IMPORTED)
+target_include_directories(unofficial::hlslpp::hlslpp INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../include/hlslpp")
