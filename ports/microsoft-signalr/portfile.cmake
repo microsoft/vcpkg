@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
         -DWALL=OFF
+        -DWERROR=OFF
         "-DJSONCPP_LIB=JsonCpp::JsonCpp"
 )
 
