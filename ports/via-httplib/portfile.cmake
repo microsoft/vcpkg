@@ -15,7 +15,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME ViaHttpLib CONFIG_PATH lib/cmake/ViaHttpLi
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ViaHttpLib/ViaHttpLibConfig.cmake"
 "find_dependency(Boost 1.51)"
-[[find_dependency(Boost 1.51 COMPONENTS system)]])
+[[find_dependency(Boost COMPONENTS system)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
