@@ -173,3 +173,4 @@ configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gnutls")
