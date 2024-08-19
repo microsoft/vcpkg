@@ -224,18 +224,6 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
     endif()
 
-    if(arg_COMPILER_FRONTEND STREQUAL "MSVC")
-    # If LDFLAGS are passed to cl instead of link they need to be on a single line after -link
-    list(PREPEND LDFLAGS -link)
-    list(JOIN LDFLAGS " " LDFLAGS)
-    endif()
-    foreach(var IN ITEMS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS)
-        list(JOIN ${var} "\n" string)
-        set(rspfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${var}-${var_suffix}.rsp")
-        file(WRITE "${rspfile}" "${string}")
-        set(${var} "@${rspfile}")
-    endforeach()
-
     if(ARFLAGS AND NOT arg_COMPILER_FRONTEND STREQUAL "MSVC")
         # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
         # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
