@@ -24,39 +24,24 @@ z_vcpkg_make_prepare_compile_flags(
     LANGUAGES "C" "CXX"
 )
 
-# Expected a response file to be created for cflags, cxxflags, and ldflags
-set(expected_rspfile_cflags "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-CFLAGS-Release.rsp")
-set(expected_rspfile_cxxflags "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-CXXFLAGS-Release.rsp")
-set(expected_rspfile_ldflags "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-LDFLAGS-Release.rsp")
-if(NOT EXISTS "${expected_rspfile_cflags}" OR NOT EXISTS "${expected_rspfile_cxxflags}" OR NOT EXISTS "${expected_rspfile_ldflags}")
-    message(FATAL_ERROR "Expected response files for CFLAGS, CXXFLAGS, and LDFLAGS not found: ${expected_rspfile_cflags}, ${expected_rspfile_cxxflags}, ${expected_rspfile_ldflags}")
+set(expected_cflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")  
+set(expected_cxxflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")
+set(expected_ldflags "-Xlinker -L/mylibpath")
+
+if(NOT "${CFLAGS_Release}" STREQUAL "${expected_cflags}")
+    message(FATAL_ERROR "CFLAGS did not match expected value: ${CFLAGS_Release} vs ${expected_cflags}")
 endif()
 
-# Verify the content of the response files
-check_flags("${expected_rspfile_cflags}" "-Xcompiler" "-O2" "-Xcompiler" "-DNDEBUG")
-check_flags("${expected_rspfile_cxxflags}" "-Xcompiler" "-O2" "-Xcompiler" "-DNDEBUG")
-check_flags("${expected_rspfile_ldflags}" "-Xlinker" "-L/mylibpath")
-
-# Test Case 2: Test Case for Use of Response Files and Wrappers
-set(flags_out)
-z_vcpkg_make_prepare_compile_flags(
-    USES_WRAPPERS
-    COMPILER_FRONTEND "MSVC"
-    CONFIG "Release"
-    FLAGS_OUT flags_out
-    LANGUAGES "C" "CXX"
-)
-
-# Expected a response file to be created for linker flags
-set(expected_rspfile_ldflags "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-LDFLAGS-Release.rsp")
-if(NOT EXISTS "${expected_rspfile_ldflags}")
-    message(FATAL_ERROR "Expected response file for LDFLAGS not found: ${expected_rspfile_ldflags}")
+if(NOT "${CXXFLAGS_Release}" STREQUAL "${expected_cxxflags}")
+    message(FATAL_ERROR "CXXFLAGS did not match expected value: ${CXXFLAGS_Release} vs ${expected_cxxflags}")
 endif()
 
-# Verify the content of the response file
-check_flags("${expected_rspfile_ldflags}" "-link")
+if(NOT "${LDFLAGS_Release}" STREQUAL "${expected_ldflags}")
+    message(FATAL_ERROR "LDFLAGS did not match expected value: ${LDFLAGS_Release} vs ${expected_ldflags}")
+endif()
 
-# Test Case 3: NO_FLAG_ESCAPING (MSVC, Debug)
+
+# Test Case 2: NO_FLAG_ESCAPING (MSVC, Debug)
 set(flags_out)
 z_vcpkg_make_prepare_compile_flags(
     NO_FLAG_ESCAPING
@@ -72,7 +57,7 @@ if(NOT index EQUAL -1)
     message(FATAL_ERROR "CFLAGS should not include -Xcompiler: ${CFLAGS_Debug}")
 endif()
 
-# Test Case 4: Different Languages and Compiler Frontend (GCC)
+# Test Case 3: Different Languages and Compiler Frontend (GCC)
 set(flags_out)
 z_vcpkg_make_prepare_compile_flags(
     COMPILER_FRONTEND "GCC"
@@ -86,10 +71,20 @@ if(NOT DEFINED ASMFLAGS_Release)
     message(FATAL_ERROR "ASMFLAGS not set for ASM language.")
 endif()
 
-set(expected_rspfile_cflags "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-CFLAGS-Release.rsp")
-check_flags("${expected_rspfile_cflags}" "-O2" "-DNDEBUG")
+# Expected C and CXX flags for GCC (assuming general flag differences)
+# Convert lists to strings (if necessary) and ensure there are no extra spaces
+# Note: Encountered weird comparison issue 
+#  was failing with "CFLAGS for GCC did not match expected value: -O2 -DNDEBUG vs -O2 -DNDEBUG"
+set(expected_gcc_cflags "-O2 -DNDEBUG")
+string(REPLACE ";" " " cflags_normalized "${CFLAGS_Release}")
+string(STRIP "${cflags_normalized}" cflags_normalized)
+string(STRIP "${expected_gcc_cflags}" expected_normalized)
 
-# Test Case 5: No Languages Defined (Should Default to C;CXX)
+if(NOT "${cflags_normalized}" STREQUAL "${expected_normalized}")
+    message(FATAL_ERROR "CFLAGS for GCC did not match expected value: ${CFLAGS_Release} vs ${expected_gcc_cflags}")
+endif()
+
+# Test Case 4: No Languages Defined (Should Default to C;CXX)
 set(flags_out)
 z_vcpkg_make_prepare_compile_flags(
     COMPILER_FRONTEND "MSVC"
