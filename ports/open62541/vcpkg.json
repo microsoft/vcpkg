@@ -16,11 +16,20 @@
     }
   ],
   "default-features": [
-    "openssl"
+    "methodcalls",
+    "openssl",
+    "subscriptions",
+    "subscriptions-events"
   ],
   "features": {
     "amalgamation": {
       "description": "Concatenate the library to a single file open62541.h/.c"
+    },
+    "diagnostics": {
+      "description": "Enable diagnostics information exposed by the server"
+    },
+    "discovery": {
+      "description": "Enable Discovery Service (LDS)"
     },
     "historizing": {
       "description": "Enable basic support for historical access (client and server)"
@@ -31,11 +40,20 @@
         "mbedtls"
       ]
     },
+    "methodcalls": {
+      "description": "Enable the Method service set"
+    },
     "openssl": {
       "description": "Enable encryption support (uses OpenSSL)",
       "dependencies": [
         "openssl"
       ]
+    },
+    "subscriptions": {
+      "description": "Enable subscriptions support"
+    },
+    "subscriptions-events": {
+      "description": "Enable event monitoring"
     }
   }
 }

@@ -14,7 +14,12 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         amalgamation UA_ENABLE_AMALGAMATION
+        diagnostics UA_ENABLE_DIAGNOSTICS
+        discovery UA_ENABLE_DISCOVERY
         historizing UA_ENABLE_HISTORIZING
+        methodcalls UA_ENABLE_METHODCALLS
+        subscriptions UA_ENABLE_SUBSCRIPTIONS
+        subscriptions-events UA_ENABLE_SUBSCRIPTIONS_EVENTS
 )
 
 if("openssl" IN_LIST FEATURES)
