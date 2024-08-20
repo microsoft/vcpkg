@@ -1,0 +1,3 @@
+sdbus-cpp provides CMake targets:
+    find_package(sdbus-c++ REQUIRED)
+    target_link_libraries(main PRIVATE SDBusCpp::sdbus-c++)

@@ -1,0 +1,23 @@
+{
+  "name": "ignition-transport8",
+  "version": "8.1.0",
+  "port-version": 5,
+  "description": "Transport middleware for robotics",
+  "license": null,
+  "dependencies": [
+    "cppzmq",
+    "ignition-cmake2",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    "ignition-msgs5",
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp & !osx"
+    },
+    "protobuf",
+    "sqlite3",
+    "zeromq"
+  ]
+}

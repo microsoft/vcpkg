@@ -1,0 +1,7 @@
+{
+  "name": "kdalgorithms",
+  "version": "1.3",
+  "description": "KDAB's algorithm helpers for C++14 and up",
+  "homepage": "https://github.com/KDAB/KDAlgorithms",
+  "license": "MIT"
+}

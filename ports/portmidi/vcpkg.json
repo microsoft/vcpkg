@@ -1,0 +1,23 @@
+{
+  "name": "portmidi",
+  "version": "2.0.4",
+  "port-version": 3,
+  "description": "PortMidi is a cross platform (Windows, macOS, Linux, and BSDs which support alsalib) library for interfacing with operating systems' MIDI I/O APIs.",
+  "homepage": "https://github.com/PortMidi/portmidi",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "alsa",
+      "platform": "linux | android | freebsd | openbsd"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

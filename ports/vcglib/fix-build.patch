@@ -1,0 +1,13 @@
+diff --git a/vcg/simplex/tetrahedron/pos.h b/vcg/simplex/tetrahedron/pos.h
+index d47348ce..078b1f6a 100644
+--- a/vcg/simplex/tetrahedron/pos.h
++++ b/vcg/simplex/tetrahedron/pos.h
+@@ -385,7 +385,7 @@ public:
+     void Assert()
+ #ifdef _DEBUG
+     {
+-        HETYPE ht=*this;
++        BasePosType ht=*this;
+         ht.FlipT();
+         ht.FlipT();
+         assert(ht==*this);

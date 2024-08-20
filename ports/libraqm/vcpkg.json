@@ -1,0 +1,12 @@
+{
+  "name": "libraqm",
+  "version": "0.10.1",
+  "description": "A library for complex text layout",
+  "homepage": "https://github.com/HOST-Oman/libraqm",
+  "dependencies": [
+    "freetype",
+    "fribidi",
+    "harfbuzz",
+    "vcpkg-cmake"
+  ]
+}

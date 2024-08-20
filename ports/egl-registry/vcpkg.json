@@ -1,0 +1,6 @@
+{
+  "name": "egl-registry",
+  "version-date": "2024-01-25",
+  "description": "EGL API and Extension Registry",
+  "homepage": "https://github.com/KhronosGroup/EGL-Registry"
+}

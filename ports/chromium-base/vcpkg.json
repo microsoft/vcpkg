@@ -1,0 +1,19 @@
+{
+  "name": "chromium-base",
+  "version": "86.0.4199.1",
+  "port-version": 6,
+  "description": "Chromium is an open-source browser project that aims to build a safer, faster, and more stable way for all users to experience the web.",
+  "homepage": "https://chromium.googlesource.com/chromium/src",
+  "license": "BSD-3-Clause",
+  "supports": "x64 & (osx | windows | linux) & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-gn",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    }
+  ]
+}

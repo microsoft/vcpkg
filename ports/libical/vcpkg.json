@@ -1,0 +1,26 @@
+{
+  "name": "libical",
+  "version": "3.0.17",
+  "description": "Reference implementation of the iCalendar data type and serialization format",
+  "homepage": "https://github.com/libical/libical",
+  "license": "MPL-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "rscale": {
+      "description": "Support for RSCALE element",
+      "supports": "!static",
+      "dependencies": [
+        "icu"
+      ]
+    }
+  }
+}

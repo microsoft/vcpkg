@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1332a55..2ed3770 100755
+@@ -123,7 +125,8 @@ find_package(Threads REQUIRED)
+ find_package(APR REQUIRED)
+ 
+ if (WITH_PROTON)
+-    find_package(Proton REQUIRED)
++    find_package(PROTON NAMES Proton REQUIRED)
++    set(PROTON_LIBRARIES Proton::qpid-proton)
+ endif()
+ 
+ if (WITH_UNITTEST)
+diff --git a/cmake/FindUUID.cmake b/cmake/FindUUID.cmake
+index 7a11c70..07f21ed 100644
+--- a/cmake/FindUUID.cmake
++++ b/cmake/FindUUID.cmake
+@@ -90,6 +90,9 @@ else (UUID_LIBRARIES AND UUID_INCLUDE_DIRS)
+ 
+   if (UUID_INCLUDE_DIRS AND UUID_LIBRARIES)
+      set(UUID_FOUND TRUE)
++  elseif(UUID_INCLUDE_DIRS AND APPLE)
++     set(UUID_LIBRARIES "")
++     set(UUID_FOUND TRUE)
+   endif (UUID_INCLUDE_DIRS AND UUID_LIBRARIES)
+ 
+   if (UUID_FOUND)

@@ -1,0 +1,9 @@
+{
+  "name": "detours",
+  "version": "4.0.1",
+  "port-version": 8,
+  "description": "Detours is a software package for monitoring and instrumenting API calls on Windows.",
+  "homepage": "https://github.com/microsoft/Detours",
+  "license": "MIT",
+  "supports": "windows & !uwp"
+}

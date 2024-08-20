@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0063385..64458ef 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,15 @@ project(onnx_optimizer C CXX)
+ 
+ set(CMAKE_CXX_STANDARD 17)
+ 
++# Add MSVC RunTime Flag
++function(add_msvc_runtime_flag lib)
++  if(${ONNX_USE_MSVC_STATIC_RUNTIME})
++    target_compile_options(${lib} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/MT> $<$<CONFIG:Debug>:/MTd>)    
++  else()
++    target_compile_options(${lib} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/MD> $<$<CONFIG:Debug>:/MDd>)
++  endif()
++endfunction()
++
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ include(cmake/utils.cmake)
+@@ -23,12 +32,10 @@ option(ONNX_OPT_USE_SYSTEM_PROTOBUF "" OFF)
+ if(NOT ONNX_OPT_USE_SYSTEM_PROTOBUF)
+   option(protobuf_BUILD_TESTS "" OFF)
+   option(protobuf_MSVC_STATIC_RUNTIME "" ${ONNX_USE_MSVC_STATIC_RUNTIME})
+-  add_subdirectory_if_no_target(${PROJECT_SOURCE_DIR}/third_party/protobuf/cmake libprotobuf)
+ endif()
+ 
+-
+-set(ONNX_ROOT ${PROJECT_SOURCE_DIR}/third_party/onnx)
+-add_subdirectory_if_no_target(${ONNX_ROOT} ${ONNX_TARGET_NAME})
++find_package(protobuf CONFIG REQUIRED)
++find_package(ONNX CONFIG REQUIRED)
+ 
+ file(READ "${PROJECT_SOURCE_DIR}/VERSION_NUMBER" ONNX_OPTIMIZER_VERSION)
+ string(STRIP "${ONNX_OPTIMIZER_VERSION}" ONNX_OPTIMIZER_VERSION)
+@@ -70,7 +77,7 @@ if(BUILD_ONNX_PYTHON)
+       set(PY_EXT_SUFFIX ".so")
+     endif()
+   endif()
+-  find_package(Python COMPONENTS Interpreter REQUIRED)
++  find_package(Python3 COMPONENTS Development REQUIRED)
+ 
+   onnxopt_add_library(onnx_opt_cpp2py_export MODULE "onnxoptimizer/cpp2py_export.cc")
+   set_target_properties(onnx_opt_cpp2py_export PROPERTIES PREFIX "")
+@@ -84,7 +91,7 @@ if(BUILD_ONNX_PYTHON)
+                              $<INSTALL_INTERFACE:include>
+                              ${Python_INCLUDE_DIR})
+   # pybind11 is a header only lib
+-  find_package(pybind11 2.2)
++  find_package(pybind11 2.2 CONFIG REQUIRED)
+   if(pybind11_FOUND)
+     target_include_directories(onnx_opt_cpp2py_export PUBLIC
+       ${pybind11_INCLUDE_DIRS})
+@@ -121,9 +128,9 @@ if(BUILD_ONNX_PYTHON)
+ 
+   target_link_libraries(onnx_opt_cpp2py_export PRIVATE onnx_optimizer)
+ 
++  target_link_directories(onnx_opt_cpp2py_export PRIVATE ${Python3_LIBRARY_DIRS})
++  target_link_libraries(onnx_opt_cpp2py_export PRIVATE ${Python3_LIBRARIES})
+   if(MSVC)
+-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+-    target_link_libraries(onnx_opt_cpp2py_export PRIVATE ${Python_LIBRARIES})
+     target_compile_options(onnx_opt_cpp2py_export
+                            PRIVATE /MP
+                                    /WX
+diff --git a/cmake/utils.cmake b/cmake/utils.cmake
+index 6cca9f3..9d79f1a 100644
+--- a/cmake/utils.cmake
++++ b/cmake/utils.cmake
+@@ -1,5 +1,3 @@
+-include(${PROJECT_SOURCE_DIR}/third_party/onnx/cmake/Utils.cmake)
+-
+ # Poor man's FetchContent
+ function(add_subdirectory_if_no_target dir target)
+   if (NOT TARGET ${target})

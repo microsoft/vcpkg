@@ -1,0 +1,13 @@
+diff --git a/config.h b/config.h
+index 6a2b097..7db8a93 100644
+--- a/config.h
++++ b/config.h
+@@ -64,6 +64,8 @@
+ #pragma warning ( disable : 4251 ) // __declspec(dllexport)
+ #pragma warning ( disable : 4275 )
+ #pragma warning ( disable : 4237 ) // future reserved keyword
++#pragma warning ( disable : 4996 ) // 'getenv': This function or variable may be unsafe (on UWP)
++#pragma warning ( disable : 4703 ) // potentially uninitialized local pointer variable 'declaredValue'
+ #define huge verybig
+ #if _MSC_VER == 900
+ #define SP_DECLARE_PLACEMENT_OPERATOR_NEW

@@ -1,0 +1,18 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index d5f801e..141ab44 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -142,7 +142,12 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+       set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
+     endif ()
+     if (NOT SZIP_FOUND)
+-      find_package (SZIP NAMES ${LIBAEC_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
++      find_package(SZIP NAMES szip REQUIRED)
++      set(SZIP_INCLUDE_DIR "")
++      set(SZIP_LIBRARIES szip-static)
++      if (TARGET szip-shared)
++        set(SZIP_LIBRARIES szip-shared)
++      endif()
+       if (NOT SZIP_FOUND)
+         find_package (SZIP) # Legacy find
+       endif ()

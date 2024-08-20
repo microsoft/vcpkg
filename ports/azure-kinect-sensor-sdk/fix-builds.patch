@@ -1,0 +1,617 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4f002b5..dd9b1df 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,8 +27,6 @@ option(K4A_BUILD_DOCS "Build K4A doxygen documentation" OFF)
+ option(K4A_MTE_VERSION "Skip FW version check" OFF)
+ option(K4A_SOURCE_LINK "Enable source linking on MSVC" OFF)
+ 
+-include(GitCommands)
+-
+ # Set the project version
+ include(K4AProjectVersion)
+ 
+@@ -100,6 +98,42 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+     set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+ endif()
+ 
++find_package(azure_c_shared_utility CONFIG REQUIRED)
++find_package(glfw3 CONFIG REQUIRED)
++find_package(cJSON CONFIG REQUIRED)
++find_package(GTest CONFIG REQUIRED)
++find_package(imgui CONFIG REQUIRED)
++find_package(EBML CONFIG REQUIRED)
++find_path(TURBOJPEG_INCLUDE_DIR NAMES turbojpeg.h PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" NO_DEFAULT_PATH REQUIRED)
++find_library(TURBOJPEG_LIBRARY_RELEASE NAMES turbojpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH REQUIRED)
++add_library(libjpeg-turbo::libjpeg-turbo UNKNOWN IMPORTED)
++set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${TURBOJPEG_INCLUDE_DIR})
++set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION_RELEASE ${TURBOJPEG_LIBRARY_RELEASE})
++if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
++    find_library(TURBOJPEG_LIBRARY_DEBUG NAMES turbojpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH REQUIRED)
++    set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION_DEBUG ${TURBOJPEG_LIBRARY_DEBUG})
++endif()
++find_package(Matroska CONFIG REQUIRED)
++add_definitions(-DMATROSKA_VERSION=2)
++find_package(libsoundio CONFIG REQUIRED)
++if (NOT WIN32)
++   find_package(libuvc CONFIG REQUIRED)
++   add_library(libuvc::libuvc ALIAS LibUVC::UVCStatic)
++   find_package(OpenSSL REQUIRED)
++   find_package(ZLIB REQUIRED)
++endif()
++FIND_PACKAGE(PkgConfig REQUIRED)
++pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++find_package(libyuv CONFIG REQUIRED)
++find_package(spdlog CONFIG REQUIRED)
++if (BUILD_TOOLS)
++    find_package(gl3w CONFIG REQUIRED)
++endif()
++# Fix embl error
++if ("MSVC")
++add_compile_options(/wd4828 /wd4251 /wd4275)
++endif()
++
+ # Find all dependencies
+ add_subdirectory(extern)
+ 
+@@ -161,10 +196,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+     endif()
+ endif()
+ 
+-add_subdirectory(examples)
+-add_subdirectory(src)
+-add_subdirectory(tests)
+-add_subdirectory(tools)
++if (BUILD_EXAMPLES)
++ add_subdirectory(examples)
++endif()
++ add_subdirectory(src)
++if (WITH_TEST)
++ add_subdirectory(tests)
++endif()
++if (BUILD_TOOLS)
++ add_subdirectory(tools)
++endif()
+ 
+ if (K4A_BUILD_DOCS)
+     find_package(Doxygen 1.8.14 EXACT)
+diff --git a/examples/viewer/opengl/CMakeLists.txt b/examples/viewer/opengl/CMakeLists.txt
+index 166fe2a..a3db07f 100644
+--- a/examples/viewer/opengl/CMakeLists.txt
++++ b/examples/viewer/opengl/CMakeLists.txt
+@@ -14,6 +14,6 @@ add_executable(viewer_opengl
+ 
+ target_link_libraries(viewer_opengl PRIVATE
+     k4a::k4a
+-    glfw::glfw
++    glfw
+     imgui::imgui
+     ${OPENGL_LIBRARIES})
+\ No newline at end of file
+diff --git a/extern/CMakeLists.txt b/extern/CMakeLists.txt
+index cb4f7b4..3d00084 100644
+--- a/extern/CMakeLists.txt
++++ b/extern/CMakeLists.txt
+@@ -1,7 +1,6 @@
+ # External dependencies are pulled in via submodules. Lets make sure the user
+ # has updated all the submodules
+-if ((NOT K4A_TURNED_ON_GIT_SUBMODULES_RECURSE) OR
+-    (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/azure_c_shared/src/CMakeLists.txt"))
++if (0)
+     find_package(Git REQUIRED QUIET)
+     if (Git_FOUND)
+         get_git_dir(${K4A_SOURCE_DIR} GIT_DIR)
+@@ -57,18 +56,4 @@ endif()
+ # lower than CMake 3.3
+ set(CMAKE_POLICY_DEFAULT_CMP0063 NEW)
+ 
+-add_subdirectory(azure_c_shared)
+-add_subdirectory(cjson)
+-add_subdirectory(glfw)
+-add_subdirectory(googletest)
+-add_subdirectory(imgui)
+-add_subdirectory(libebml)
+-add_subdirectory(libjpeg-turbo)
+-add_subdirectory(libmatroska)
+-add_subdirectory(libsoundio)
+-add_subdirectory(libyuv)
+-add_subdirectory(libuvc)
+-add_subdirectory(spdlog)
+-if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+-    add_subdirectory(libusb)
+-endif()
++
+diff --git a/src/allocator/CMakeLists.txt b/src/allocator/CMakeLists.txt
+index 7140274..3bb6747 100644
+--- a/src/allocator/CMakeLists.txt
++++ b/src/allocator/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_include_directories(k4a_allocator PUBLIC
+ 
+ # Dependencies of this library
+ target_link_libraries(k4a_allocator PUBLIC 
+-    azure::aziotsharedutil
++    aziotsharedutil
+     k4ainternal::image
+     k4ainternal::logging)
+ 
+diff --git a/src/calibration/CMakeLists.txt b/src/calibration/CMakeLists.txt
+index e96b7d0..ed69f41 100644
+--- a/src/calibration/CMakeLists.txt
++++ b/src/calibration/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_include_directories(k4a_calibration PUBLIC
+ 
+ # Dependencies of this library
+ target_link_libraries(k4a_calibration PUBLIC 
+-    cJSON::cJSON
++    cjson
+     k4ainternal::logging)
+ 
+ # Define alias for other targets to link against
+diff --git a/src/calibration/calibration.c b/src/calibration/calibration.c
+index bf5f34a..d37c4e6 100644
+--- a/src/calibration/calibration.c
++++ b/src/calibration/calibration.c
+@@ -6,7 +6,7 @@
+ 
+ // Dependent libraries
+ #include <k4ainternal/common.h>
+-#include <cJSON.h>
++#include <cjson/cJSON.h>
+ #include <locale.h> //cJSON.h need this set correctly.
+ 
+ // System dependencies
+diff --git a/src/capturesync/CMakeLists.txt b/src/capturesync/CMakeLists.txt
+index a434593..bcb19ba 100644
+--- a/src/capturesync/CMakeLists.txt
++++ b/src/capturesync/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_include_directories(k4a_capturesync PUBLIC
+ 
+ # Dependencies of this library
+ target_link_libraries(k4a_capturesync PUBLIC 
+-    azure::aziotsharedutil
++    aziotsharedutil
+     k4ainternal::logging)
+ 
+ # Define alias for other targets to link against
+diff --git a/src/dewrapper/CMakeLists.txt b/src/dewrapper/CMakeLists.txt
+index 2756e43..f736fd1 100644
+--- a/src/dewrapper/CMakeLists.txt
++++ b/src/dewrapper/CMakeLists.txt
+@@ -10,7 +10,7 @@ target_include_directories(k4a_dewrapper PUBLIC
+     ${K4A_PRIV_INCLUDE_DIR})
+ 
+ target_link_libraries(k4a_dewrapper PUBLIC
+-    azure::aziotsharedutil
++    aziotsharedutil
+     k4ainternal::allocator
+     k4ainternal::calibration
+     k4ainternal::logging
+diff --git a/src/image/CMakeLists.txt b/src/image/CMakeLists.txt
+index c40999b..82406e2 100644
+--- a/src/image/CMakeLists.txt
++++ b/src/image/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_include_directories(k4a_image PUBLIC
+ 
+ # Dependencies of this library
+ target_link_libraries(k4a_image PUBLIC 
+-    azure::aziotsharedutil
++    aziotsharedutil
+     k4ainternal::allocator
+     k4ainternal::logging)
+ 
+diff --git a/src/logging/CMakeLists.txt b/src/logging/CMakeLists.txt
+index cbf0e4d..ca81c41 100644
+--- a/src/logging/CMakeLists.txt
++++ b/src/logging/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_include_directories(k4a_logging PUBLIC
+ 
+ # Dependencies of this library
+ target_link_libraries(k4a_logging PUBLIC 
+-    azure::aziotsharedutil
++    aziotsharedutil
+     spdlog::spdlog
+     k4ainternal::rwlock
+     k4ainternal::global
+diff --git a/src/logging/logging.cpp b/src/logging/logging.cpp
+index 05264c5..41185de 100644
+--- a/src/logging/logging.cpp
++++ b/src/logging/logging.cpp
+@@ -24,6 +24,9 @@
+ #pragma warning(disable : 4702)
+ #endif
+ #include <spdlog/spdlog.h>
++#include <spdlog/sinks/stdout_color_sinks.h>
++#include <spdlog/sinks/rotating_file_sink.h>
++#include <spdlog/sinks/stdout_sinks.h>
+ #ifdef _MSC_VER
+ #pragma warning(default : 4702)
+ #endif
+diff --git a/src/queue/CMakeLists.txt b/src/queue/CMakeLists.txt
+index 03d15f4..a42a135 100644
+--- a/src/queue/CMakeLists.txt
++++ b/src/queue/CMakeLists.txt
+@@ -10,7 +10,7 @@ target_include_directories(k4a_queue PUBLIC
+     ${K4A_PRIV_INCLUDE_DIR})
+ 
+ target_link_libraries(k4a_queue PUBLIC 
+-    azure::aziotsharedutil
++    aziotsharedutil
+     k4ainternal::allocator
+     k4ainternal::logging
+ )
+diff --git a/src/record/internal/CMakeLists.txt b/src/record/internal/CMakeLists.txt
+index 97c6cf3..e9f5b1a 100644
+--- a/src/record/internal/CMakeLists.txt
++++ b/src/record/internal/CMakeLists.txt
+@@ -22,16 +22,16 @@ target_include_directories(k4a_playback PUBLIC
+ target_link_libraries(k4a_record PUBLIC 
+     k4a::k4a
+     k4ainternal::logging
+-    ebml::ebml
+-    matroska::matroska
++    EBML::ebml
++    Matroska::matroska
+ )
+ 
+ target_link_libraries(k4a_playback PUBLIC 
+     k4a::k4a
+     k4ainternal::logging
+-    ebml::ebml
+-    matroska::matroska
+-    libyuv::libyuv
++    EBML::ebml
++    Matroska::matroska
++    yuv
+     libjpeg-turbo::libjpeg-turbo
+ )
+ 
+diff --git a/src/record/sdk/CMakeLists.txt b/src/record/sdk/CMakeLists.txt
+index 2e23295..d150e70 100644
+--- a/src/record/sdk/CMakeLists.txt
++++ b/src/record/sdk/CMakeLists.txt
+@@ -40,8 +40,8 @@ target_link_libraries(k4arecord PRIVATE
+     k4ainternal::record
+     k4ainternal::playback
+     k4ainternal::logging
+-    ebml::ebml
+-    matroska::matroska
++    EBML::ebml
++    Matroska::matroska
+ )
+ 
+ target_link_libraries(k4arecord PUBLIC
+diff --git a/src/tewrapper/CMakeLists.txt b/src/tewrapper/CMakeLists.txt
+index e4a696e..6ee6696 100644
+--- a/src/tewrapper/CMakeLists.txt
++++ b/src/tewrapper/CMakeLists.txt
+@@ -10,7 +10,7 @@ target_include_directories(k4a_tewrapper PUBLIC
+     ${K4A_PRIV_INCLUDE_DIR})
+ 
+ target_link_libraries(k4a_tewrapper PUBLIC
+-    azure::aziotsharedutil
++    aziotsharedutil
+     k4ainternal::logging
+     k4ainternal::deloader)
+ 
+diff --git a/src/usbcommand/CMakeLists.txt b/src/usbcommand/CMakeLists.txt
+index f75bd55..7130728 100644
+--- a/src/usbcommand/CMakeLists.txt
++++ b/src/usbcommand/CMakeLists.txt
+@@ -12,8 +12,8 @@ target_include_directories(k4a_usb_cmd PUBLIC
+ 
+ # Dependencies of this library
+ target_link_libraries(k4a_usb_cmd PUBLIC
+-    azure::aziotsharedutil
+-    LibUSB::LibUSB
++    aziotsharedutil
++    PkgConfig::libusb
+     k4ainternal::allocator
+     k4ainternal::image
+     k4ainternal::logging)
+diff --git a/src/usbcommand/usb_cmd_priv.h b/src/usbcommand/usb_cmd_priv.h
+index 0aa502c..0405b58 100644
+--- a/src/usbcommand/usb_cmd_priv.h
++++ b/src/usbcommand/usb_cmd_priv.h
+@@ -20,7 +20,7 @@
+ #include <azure_c_shared_utility/threadapi.h>
+ 
+ // Exteranl dependencis
+-#include <libusb.h>
++#include <libusb-1.0/libusb.h>
+ 
+ // Ensure we have LIBUSB_API_VERSION defined if not defined by libusb.h
+ #ifndef LIBUSB_API_VERSION
+diff --git a/tests/Calibration/CMakeLists.txt b/tests/Calibration/CMakeLists.txt
+index ea6a9dd..c107269 100644
+--- a/tests/Calibration/CMakeLists.txt
++++ b/tests/Calibration/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(calibration_ut calibration.cpp)
+ 
+ target_link_libraries(calibration_ut PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::calibration
+     k4ainternal::utcommon)
+ 
+diff --git a/tests/CaptureSync/CMakeLists.txt b/tests/CaptureSync/CMakeLists.txt
+index 0a9a8e2..f7bff42 100644
+--- a/tests/CaptureSync/CMakeLists.txt
++++ b/tests/CaptureSync/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(capturesync_ut capturesync.cpp)
+ 
+ target_link_libraries(capturesync_ut PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::allocator
+     k4ainternal::capturesync
+     k4ainternal::image
+diff --git a/tests/ColorTests/FunctionalTest/CMakeLists.txt b/tests/ColorTests/FunctionalTest/CMakeLists.txt
+index 1e65ad7..709dfb0 100644
+--- a/tests/ColorTests/FunctionalTest/CMakeLists.txt
++++ b/tests/ColorTests/FunctionalTest/CMakeLists.txt
+@@ -6,7 +6,7 @@ add_executable(color_ft color_ft.cpp)
+ target_link_libraries(color_ft PRIVATE 
+     k4a::k4a
+     k4ainternal::utcommon
+-    gtest::gtest
+-    azure::aziotsharedutil)
++    GTest::gtest
++    aziotsharedutil)
+ 
+ k4a_add_tests(TARGET color_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
+diff --git a/tests/DepthTests/FunctionalTest/CMakeLists.txt b/tests/DepthTests/FunctionalTest/CMakeLists.txt
+index 469c125..00f15f8 100644
+--- a/tests/DepthTests/FunctionalTest/CMakeLists.txt
++++ b/tests/DepthTests/FunctionalTest/CMakeLists.txt
+@@ -6,7 +6,7 @@ add_executable(depth_ft depth_ft.cpp)
+ target_link_libraries(depth_ft PRIVATE 
+     k4a::k4a
+     k4ainternal::utcommon
+-    gtest::gtest
+-    azure::aziotsharedutil)
++    GTest::gtest
++    aziotsharedutil)
+ 
+ k4a_add_tests(TARGET depth_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
+diff --git a/tests/ExternLibraries/azure_c_shared/CMakeLists.txt b/tests/ExternLibraries/azure_c_shared/CMakeLists.txt
+index a487cde..44170f4 100644
+--- a/tests/ExternLibraries/azure_c_shared/CMakeLists.txt
++++ b/tests/ExternLibraries/azure_c_shared/CMakeLists.txt
+@@ -6,7 +6,7 @@ add_executable(azure_c_shared_test
+     threading.cpp)
+ 
+ target_link_libraries(azure_c_shared_test PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest)
++    aziotsharedutil
++    GTest::gtest)
+ 
+ k4a_add_tests(TARGET azure_c_shared_test TEST_TYPE UNIT)
+diff --git a/tests/IMUTests/FunctionalTest/CMakeLists.txt b/tests/IMUTests/FunctionalTest/CMakeLists.txt
+index cc6b3c2..d8762f6 100644
+--- a/tests/IMUTests/FunctionalTest/CMakeLists.txt
++++ b/tests/IMUTests/FunctionalTest/CMakeLists.txt
+@@ -6,7 +6,7 @@ add_executable(imu_ft imu_ft.cpp)
+ target_link_libraries(imu_ft PRIVATE 
+     k4a::k4a
+     k4ainternal::utcommon
+-    gtest::gtest
+-    azure::aziotsharedutil)
++    GTest::gtest
++    aziotsharedutil)
+ 
+ k4a_add_tests(TARGET imu_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
+diff --git a/tests/Transformation/CMakeLists.txt b/tests/Transformation/CMakeLists.txt
+index 7f11a2f..c4ddaf8 100644
+--- a/tests/Transformation/CMakeLists.txt
++++ b/tests/Transformation/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(transformation_ut transformation.cpp)
+ 
+ target_link_libraries(transformation_ut PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::image
+     k4ainternal::transformation
+     k4ainternal::utcommon
+diff --git a/tests/UnitTests/allocator_ut/CMakeLists.txt b/tests/UnitTests/allocator_ut/CMakeLists.txt
+index 913a7d8..0b7baeb 100644
+--- a/tests/UnitTests/allocator_ut/CMakeLists.txt
++++ b/tests/UnitTests/allocator_ut/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(allocator_ut allocator.cpp)
+ 
+ target_link_libraries(allocator_ut PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::allocator
+     k4ainternal::image
+     k4ainternal::utcommon)
+diff --git a/tests/UnitTests/dynlib_ut/CMakeLists.txt b/tests/UnitTests/dynlib_ut/CMakeLists.txt
+index fbecc17..af73be2 100644
+--- a/tests/UnitTests/dynlib_ut/CMakeLists.txt
++++ b/tests/UnitTests/dynlib_ut/CMakeLists.txt
+@@ -34,7 +34,7 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+ endif()
+ 
+ target_link_libraries(dynlib_ut PRIVATE
+-    gtest::gtest
++    GTest::gtest
+     k4ainternal::dynlib
+     k4ainternal::utcommon)
+ 
+diff --git a/tests/UnitTests/queue_ut/CMakeLists.txt b/tests/UnitTests/queue_ut/CMakeLists.txt
+index cf9b040..ec4a024 100644
+--- a/tests/UnitTests/queue_ut/CMakeLists.txt
++++ b/tests/UnitTests/queue_ut/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(queue_ut queue.cpp)
+ 
+ target_link_libraries(queue_ut PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::allocator
+     k4ainternal::image
+     k4ainternal::queue
+diff --git a/tests/UnitTests/utcommon/CMakeLists.txt b/tests/UnitTests/utcommon/CMakeLists.txt
+index cca52c6..dfdd13d 100644
+--- a/tests/UnitTests/utcommon/CMakeLists.txt
++++ b/tests/UnitTests/utcommon/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_library(utcommon STATIC utcommon.cpp)
+ 
+ target_link_libraries(utcommon PUBLIC 
+-    gtest::gtest
+-    gtest::gmock
++    GTest::gtest
++    GTest::gmock
+     k4ainternal::logging
+ )
+ 
+diff --git a/tests/example/CMakeLists.txt b/tests/example/CMakeLists.txt
+index 3305a1a..be0b667 100644
+--- a/tests/example/CMakeLists.txt
++++ b/tests/example/CMakeLists.txt
+@@ -3,6 +3,6 @@
+ 
+ add_executable(k4a_example_test test.cpp)
+ target_link_libraries(k4a_example_test PRIVATE k4a::k4a)
+-target_link_libraries(k4a_example_test PRIVATE gtest::gtest)
++target_link_libraries(k4a_example_test PRIVATE GTest::gtest)
+ 
+ k4a_add_tests(TARGET k4a_example_test HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
+diff --git a/tests/executables/CMakeLists.txt b/tests/executables/CMakeLists.txt
+index 7b03d15..6c070ee 100644
+--- a/tests/executables/CMakeLists.txt
++++ b/tests/executables/CMakeLists.txt
+@@ -17,12 +17,12 @@ target_compile_definitions(executables_ft_custom PRIVATE -DUSE_CUSTOM_TEST_CONFI
+ target_link_libraries(executables_ft PRIVATE 
+     k4a::k4a
+     k4ainternal::utcommon
+-    gtest::gtest)
++    GTest::gtest)
+ 
+ target_link_libraries(executables_ft_custom PRIVATE 
+     k4a::k4a
+     k4ainternal::utcommon
+-    gtest::gtest)
++    GTest::gtest)
+ 
+ k4a_add_tests(TARGET executables_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
+ k4a_add_tests(TARGET executables_ft_custom HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL_CUSTOM)
+diff --git a/tests/global/CMakeLists.txt b/tests/global/CMakeLists.txt
+index ea0a0e5..d85728d 100644
+--- a/tests/global/CMakeLists.txt
++++ b/tests/global/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(global_ft global.cpp)
+ 
+ target_link_libraries(global_ft PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::global
+     k4ainternal::utcommon)
+ 
+diff --git a/tests/multidevice/CMakeLists.txt b/tests/multidevice/CMakeLists.txt
+index 3fe044b..85f3058 100644
+--- a/tests/multidevice/CMakeLists.txt
++++ b/tests/multidevice/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(multidevice_ft multidevice.cpp)
+ 
+ target_link_libraries(multidevice_ft PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4a::k4a
+     k4ainternal::utcommon)
+ 
+diff --git a/tests/projections/cpp/CMakeLists.txt b/tests/projections/cpp/CMakeLists.txt
+index 2fdfa2c..09b5303 100644
+--- a/tests/projections/cpp/CMakeLists.txt
++++ b/tests/projections/cpp/CMakeLists.txt
+@@ -6,6 +6,6 @@ add_executable(cpp_projection_ft cpp_projection_ft.cpp)
+ target_link_libraries(cpp_projection_ft PRIVATE
+     k4a::k4a
+     k4ainternal::utcommon
+-    gtest::gtest)
++    GTest::gtest)
+ 
+ k4a_add_tests(TARGET cpp_projection_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
+diff --git a/tests/rwlock/CMakeLists.txt b/tests/rwlock/CMakeLists.txt
+index 5889435..c6c1f73 100644
+--- a/tests/rwlock/CMakeLists.txt
++++ b/tests/rwlock/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ add_executable(rwlock_ft rwlock.cpp)
+ 
+ target_link_libraries(rwlock_ft PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4ainternal::rwlock
+     k4ainternal::utcommon)
+ 
+diff --git a/tests/throughput/CMakeLists.txt b/tests/throughput/CMakeLists.txt
+index c544e1e..9489bf8 100644
+--- a/tests/throughput/CMakeLists.txt
++++ b/tests/throughput/CMakeLists.txt
+@@ -6,8 +6,8 @@ add_executable(throughput_perf throughput_perf.cpp)
+ target_compile_definitions(throughput_perf PRIVATE _CRT_SECURE_NO_WARNINGS)
+ 
+ target_link_libraries(throughput_perf PRIVATE
+-    azure::aziotsharedutil
+-    gtest::gtest
++    aziotsharedutil
++    GTest::gtest
+     k4a::k4a
+     k4ainternal::logging
+     k4ainternal::utcommon)
+diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
+index 98578c0..244c867 100644
+--- a/tools/k4aviewer/CMakeLists.txt
++++ b/tools/k4aviewer/CMakeLists.txt
+@@ -60,10 +60,11 @@ set(EXTERNAL_LIBRARIES
+     imgui::imgui
+     libjpeg-turbo::libjpeg-turbo
+     libsoundio::libsoundio
+-    LibUSB::LibUSB
+-    libyuv::libyuv
+-    glfw::glfw
++    PkgConfig::libusb
++    yuv
++    glfw
+     ${OPENGL_LIBRARIES}
++    unofficial::gl3w::gl3w
+ )
+ 
+ # On Windows, we need to call into setupapi to get USB container ID information
+diff --git a/tools/k4aviewer/k4aaudiomanager.cpp b/tools/k4aviewer/k4aaudiomanager.cpp
+index 243c800..ef85d45 100644
+--- a/tools/k4aviewer/k4aaudiomanager.cpp
++++ b/tools/k4aviewer/k4aaudiomanager.cpp
+@@ -11,7 +11,7 @@
+ 
+ // Library headers
+ //
+-#include <libusb.h>
++#include <libusb-1.0/libusb.h>
+ 
+ // Project headers
+ //

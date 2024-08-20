@@ -1,0 +1,53 @@
+{
+  "name": "libadlmidi",
+  "version": "1.5.1",
+  "port-version": 1,
+  "description": "libADLMIDI is a free Software MIDI synthesizer library with OPL3 emulation",
+  "homepage": "https://github.com/Wohlstand/libADLMIDI",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "dosbox-emulator",
+    "embedded-banks",
+    "java-emulator",
+    "midi-sequencer",
+    "mus",
+    "nuked-emulator",
+    "opal-emulator",
+    "xmi"
+  ],
+  "features": {
+    "dosbox-emulator": {
+      "description": "Build with DosBox 0.74 OPL3 emulator (well-accurate and fast)"
+    },
+    "embedded-banks": {
+      "description": "Build with embedded banks"
+    },
+    "java-emulator": {
+      "description": "Build with Java OPL3 emulator (semi-accurate)"
+    },
+    "midi-sequencer": {
+      "description": "Build with embedded MIDI sequencer"
+    },
+    "mus": {
+      "description": "Support for DMX MUS files"
+    },
+    "nuked-emulator": {
+      "description": "Build with Nuked OPL3 emulator (very-accurate, needs more CPU power)"
+    },
+    "opal-emulator": {
+      "description": "Build with Opal OPL3 emulator (innacurate)"
+    },
+    "xmi": {
+      "description": "Support for AIL XMI files"
+    }
+  }
+}

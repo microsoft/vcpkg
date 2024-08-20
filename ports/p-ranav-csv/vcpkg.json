@@ -1,0 +1,13 @@
+{
+  "name": "p-ranav-csv",
+  "version-date": "2019-07-11",
+  "port-version": 3,
+  "description": "[deprecated] CSV for modern C++",
+  "homepage": "https://github.com/p-ranav/csv",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

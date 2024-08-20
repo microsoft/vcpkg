@@ -1,0 +1,40 @@
+{
+  "name": "libraw",
+  "version": "0.21.2",
+  "description": "raw image decoder library",
+  "homepage": "https://www.libraw.org",
+  "license": "LGPL-2.1-only OR CDDL-1.0",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "jasper",
+      "default-features": false
+    },
+    "lcms",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "dng-lossy": {
+      "description": "DNG lossy codec support",
+      "dependencies": [
+        {
+          "name": "libjpeg-turbo",
+          "features": [
+            "jpeg8"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "Build library with OpenMP support"
+    }
+  }
+}

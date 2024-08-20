@@ -1,0 +1,49 @@
+{
+  "name": "bitserializer",
+  "version": "0.70",
+  "description": "C++ 17 library for serialization to JSON, XML, YAML, CSV",
+  "homepage": "https://github.com/PavelKisliak/BitSerializer",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cpprestjson-archive": {
+      "description": "Module for support JSON (implementation based on the CppRestSDK library)",
+      "dependencies": [
+        "cpprestsdk"
+      ]
+    },
+    "csv-archive": {
+      "description": "Module for support CSV"
+    },
+    "msgpack-archive": {
+      "description": "Module for support MsgPack"
+    },
+    "pugixml-archive": {
+      "description": "Module for support XML (implementation based on the PugiXml library)",
+      "dependencies": [
+        "pugixml"
+      ]
+    },
+    "rapidjson-archive": {
+      "description": "Module for support JSON (implementation based on the RapidJson library)",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "rapidyaml-archive": {
+      "description": "Module for support YAML (implementation based on the RapidYaml library)",
+      "dependencies": [
+        "ryml"
+      ]
+    }
+  }
+}

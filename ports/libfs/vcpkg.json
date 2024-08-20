@@ -1,0 +1,14 @@
+{
+  "name": "libfs",
+  "version": "1.0.9",
+  "description": "X Font Service client library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libfs",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "xorg-macros",
+    "xproto",
+    "xtrans"
+  ]
+}

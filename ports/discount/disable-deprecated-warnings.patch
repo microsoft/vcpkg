@@ -1,0 +1,16 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index ae859a3..77a936a 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -23,6 +23,11 @@ set(${PROJECT_NAME}_ONLY_LIBRARY OFF CACHE BOOL
+ set(${PROJECT_NAME}_CXX_BINDING OFF CACHE BOOL
+     "Set to ON to install header files with c++ wrappers (default is OFF)")
+ 
++# MSVC deprecated warnings (C4996,strdup, ...)
++if(MSVC)
++    add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS)
++endif()
++
+ # Check headers
+ include(CheckIncludeFile)
+ check_include_file(libgen.h HAVE_LIBGEN_H)

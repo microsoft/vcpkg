@@ -1,0 +1,4 @@
+The package intel-ipsec is compatible with built-in CMake targets:
+
+    FIND_PACKAGE(intel-ipsec CONFIG REQUIRED)
+    TARGET_LINK_LIBRARIES(main PRIVATE IPSEC::ipsec)

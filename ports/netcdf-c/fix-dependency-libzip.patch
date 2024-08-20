@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1113c7b..69f465e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -960,7 +960,12 @@ OPTION(ENABLE_DAP_REMOTE_TESTS "Enable DAP remote tests." ON)
+ SET(REMOTETESTSERVERS "remotetest.unidata.ucar.edu" CACHE STRING "test servers to use for remote test")
+ 
+ # See if we have libzip
+-FIND_PACKAGE(Zip)
++if(ENABLE_NCZARR_ZIP)
++  find_package(Zip NAMES libzip REQUIRED)
++  set(Zip_LIBRARIES libzip::zip)
++else()
++  set(Zip_LIBRARIES "")
++endif()
+ 
+ # Define a test flag for have curl library
+ IF(Zip_FOUND)
+diff --git a/libnczarr/CMakeLists.txt b/libnczarr/CMakeLists.txt
+index 86e093b..c0efe1b 100644
+--- a/libnczarr/CMakeLists.txt
++++ b/libnczarr/CMakeLists.txt
+@@ -57,6 +57,7 @@ ENDIF()
+ # the netCDF library.
+ 
+ add_library(nczarr OBJECT ${libnczarr_SOURCES})
++target_link_libraries(nczarr PRIVATE ${Zip_LIBRARIES})
+ 
+ IF(MPI_C_INCLUDE_PATH)
+     target_include_directories(nczarr PUBLIC ${MPI_C_INCLUDE_PATH})
+diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
+index 715e33e..0167326 100644
+--- a/netCDFConfig.cmake.in
++++ b/netCDFConfig.cmake.in
+@@ -19,6 +19,9 @@ endif()
+ if("@FOUND_CURL@")
+   find_dependency(CURL CONFIG)
+ endif()
++if("@ENABLE_NCZARR_ZIP@")
++    find_dependency(libzip CONFIG)
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
+ 
+ # Compiling Options

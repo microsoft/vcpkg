@@ -1,0 +1,78 @@
+{
+  "name": "opencascade",
+  "version": "7.8.1",
+  "description": "Open CASCADE Technology (OCCT) is an open-source software development platform for 3D CAD, CAM, CAE.",
+  "homepage": "https://github.com/Open-Cascade-SAS/OCCT",
+  "license": "LGPL-2.1-only",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "angle",
+      "platform": "uwp"
+    },
+    {
+      "name": "opengl",
+      "platform": "!(android | ios | uwp | wasm32)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "freetype",
+      "platform": "!uwp"
+    }
+  ],
+  "features": {
+    "freeimage": {
+      "description": "Enable optional usage of freeimage",
+      "dependencies": [
+        "freeimage"
+      ]
+    },
+    "freetype": {
+      "description": "Use of freetype",
+      "supports": "!uwp",
+      "dependencies": [
+        "fontconfig",
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "rapidjson": {
+      "description": "Enable optional usage of rapidjson",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "samples": {
+      "description": "Enable optional samples"
+    },
+    "tbb": {
+      "description": "Enable optional usage of tbb",
+      "dependencies": [
+        "tbb"
+      ]
+    },
+    "vtk": {
+      "description": "Enable optional usage of vtk",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    }
+  }
+}

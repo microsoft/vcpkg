@@ -1,0 +1,37 @@
+{
+  "name": "atk",
+  "version": "2.38.0",
+  "port-version": 8,
+  "description": "GNOME Accessibility Toolkit",
+  "homepage": "https://developer.gnome.org/atk/",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        "gobject-introspection"
+      ]
+    }
+  }
+}

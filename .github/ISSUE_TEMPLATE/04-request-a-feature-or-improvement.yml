@@ -1,0 +1,29 @@
+name: Request a feature or improvement
+description: Suggest an improvement to vcpkg.
+title: ''
+labels: ["category:vcpkg-feature"]
+body:
+  - type: textarea
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed solution
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe alternatives you've considered
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional context
+      placeholder: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false

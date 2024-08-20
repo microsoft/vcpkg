@@ -1,0 +1,32 @@
+{
+  "name": "libxpm",
+  "version": "3.5.16",
+  "port-version": 1,
+  "description": "XPM format pixmap library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxpm",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    "libx11",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "xorg-macros",
+    "xproto"
+  ],
+  "features": {
+    "gettext": {
+      "description": "use xgettext to build source",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
+}

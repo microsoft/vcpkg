@@ -1,0 +1,36 @@
+{
+  "name": "ginkgo",
+  "version-semver": "1.8.0",
+  "description": "Ginkgo is a high-performance linear algebra library for manycore systems, with a focus on sparse solution of linear systems.",
+  "homepage": "https://github.com/ginkgo-project/ginkgo",
+  "license": "BSD-3-Clause",
+  "supports": "!(x86 | android)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build the CUDA backend of Ginkgo",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "mpi": {
+      "description": "Build the distributed MPI backend of Ginkgo",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "openmp": {
+      "description": "Build the OpenMP backend of Ginkgo",
+      "supports": "mingw | !windows"
+    }
+  }
+}

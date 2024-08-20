@@ -1,0 +1,23 @@
+{
+  "name": "attr",
+  "version-semver": "2.5.2",
+  "description": "Commands for Manipulating Filesystem Extended Attributes",
+  "homepage": "http://savannah.nongnu.org/projects/attr",
+  "license": "LGPL-2.1-or-later",
+  "supports": "linux",
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        },
+        "gettext-libintl"
+      ]
+    }
+  }
+}

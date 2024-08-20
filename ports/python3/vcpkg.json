@@ -1,0 +1,63 @@
+{
+  "name": "python3",
+  "version": "3.11.8",
+  "port-version": 4,
+  "description": "The Python programming language",
+  "homepage": "https://github.com/python/cpython",
+  "license": "Python-2.0",
+  "supports": "!uwp & !mingw",
+  "dependencies": [
+    {
+      "name": "bzip2",
+      "platform": "!(windows & static)"
+    },
+    "expat",
+    {
+      "name": "gettext",
+      "platform": "osx"
+    },
+    {
+      "name": "libffi",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "libiconv",
+      "platform": "osx"
+    },
+    {
+      "name": "liblzma",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "libuuid",
+      "platform": "!osx & !windows"
+    },
+    {
+      "name": "openssl",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
+      "name": "sqlite3",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "vcpkg-get-python",
+      "host": true
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
+    "zlib"
+  ],
+  "features": {
+    "deprecated-win7-support": {
+      "description": "Deprecated support for the Windows 7 platform -- may be removed at any time."
+    }
+  }
+}

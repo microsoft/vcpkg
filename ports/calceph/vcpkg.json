@@ -1,0 +1,19 @@
+{
+  "name": "calceph",
+  "version": "4.0.0",
+  "description": "C library to access the binary planetary ephemeris files.",
+  "homepage": "https://www.imcce.fr/inpop/calceph/",
+  "documentation": "https://calceph.imcce.fr/docs/latest/html/c/index.html",
+  "license": "CECILL-2.1 OR CECILL-B OR CECILL-C",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

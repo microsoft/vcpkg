@@ -1,0 +1,36 @@
+{
+  "name": "graphene",
+  "version": "1.10.8",
+  "port-version": 2,
+  "description": "A thin layer of types for graphic libraries.",
+  "homepage": "https://www.gtk.org/",
+  "license": "MIT",
+  "supports": "!(arm & windows)",
+  "dependencies": [
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        {
+          "name": "gobject-introspection",
+          "host": true
+        },
+        {
+          "name": "gobject-introspection",
+          "platform": "windows & x86"
+        }
+      ]
+    }
+  }
+}

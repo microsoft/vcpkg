@@ -1,0 +1,10 @@
+{
+  "name": "recast",
+  "version-string": "deprecated",
+  "description": "A stub package that pulls in recastnavigation. Do not depend on this package.",
+  "homepage": "https://github.com/recastnavigation/recastnavigation",
+  "license": "Zlib",
+  "dependencies": [
+    "recastnavigation"
+  ]
+}

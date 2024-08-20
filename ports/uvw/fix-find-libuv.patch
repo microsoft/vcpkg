@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 289c006..180383f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -193,6 +193,14 @@ if (BUILD_UVW_LIBS)
+         SOVERSION ${UVW_VERSION_MAJOR}
+     )
+ endif()
++
++find_package(libuv CONFIG REQUIRED)
++if (TARGET libuv::uv)
++    target_link_libraries(uvw PRIVATE libuv::uv)
++else()
++    target_link_libraries(uvw PRIVATE libuv::uv_a)
++endif()
++
+ install(
+     EXPORT uvwConfig 
+     NAMESPACE uvw:: 

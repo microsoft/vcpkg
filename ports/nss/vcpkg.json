@@ -1,0 +1,21 @@
+{
+  "name": "nss",
+  "version": "3.99",
+  "port-version": 1,
+  "description": "Network Security Services from Mozilla",
+  "homepage": "https://ftp.mozilla.org/pub/security/nss/releases/",
+  "license": "MPL-2.0",
+  "supports": "windows & !arm & !xbox",
+  "dependencies": [
+    "nspr",
+    "sqlite3",
+    {
+      "name": "vcpkg-tool-gyp-next",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-mozbuild",
+      "host": true
+    }
+  ]
+}

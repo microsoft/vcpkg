@@ -1,0 +1,30 @@
+{
+  "name": "nmap",
+  "version": "7.70",
+  "port-version": 11,
+  "description": "A library for scanning network ports.",
+  "dependencies": [
+    {
+      "name": "libpcap",
+      "platform": "!windows"
+    },
+    "libssh2",
+    "lua",
+    "openssl",
+    "pcre",
+    {
+      "name": "python2",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "winpcap",
+      "platform": "windows"
+    },
+    "zlib"
+  ]
+}

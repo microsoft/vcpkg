@@ -1,0 +1,17 @@
+{
+  "name": "kubazip",
+  "version": "0.2.6",
+  "description": "A portable, simple zip library written in C",
+  "homepage": "https://github.com/kuba--/zip",
+  "license": "Unlicense",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

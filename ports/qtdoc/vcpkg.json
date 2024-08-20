@@ -1,0 +1,13 @@
+{
+  "name": "qtdoc",
+  "version": "6.7.2",
+  "description": "The Qt documentation.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
+  ]
+}

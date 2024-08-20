@@ -1,0 +1,17 @@
+{
+  "name": "ragel",
+  "version": "6.10",
+  "port-version": 6,
+  "description": "Ragel State Machine Compiler",
+  "homepage": "https://www.colm.net/files/ragel",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

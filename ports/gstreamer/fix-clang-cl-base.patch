@@ -1,0 +1,13 @@
+diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
+index c040bc9..ce9071c 100644
+--- a/subprojects/gst-plugins-base/meson.build
++++ b/subprojects/gst-plugins-base/meson.build
+@@ -51,7 +51,7 @@ gst_libraries = []
+ 
+ cc = meson.get_compiler('c')
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it

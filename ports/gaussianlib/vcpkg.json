@@ -1,0 +1,6 @@
+{
+  "name": "gaussianlib",
+  "version-date": "2023-02-17",
+  "description": "Basic linear algebra C++ library for 2D and 3D applications",
+  "homepage": "https://github.com/LukasBanana/GaussianLib"
+}

@@ -1,0 +1,21 @@
+diff --git a/src/xcb_windefs.h b/src/xcb_windefs.h
+index df6026da3..7591c61e7 100644
+--- a/src/xcb_windefs.h
++++ b/src/xcb_windefs.h
+@@ -31,10 +31,13 @@
+ #define WINVER 0x0501 /* required for getaddrinfo/freeaddrinfo defined only for WinXP and above */
+ #endif
+ 
+-#include <winsock2.h>
++#include <stdio.h>
++#include <X11/Xwindows.h>
++#include <X11/Xwinsock.h>
++typedef unsigned char BYTE;
+-#include <ws2tcpip.h>
+-#include <windef.h>
+ 
++#define STDERR_FILENO _fileno( stderr )
++
+ struct iovec  {
+     void *iov_base;    /* Pointer to data.  */
+     int iov_len;       /* Length of data.  */

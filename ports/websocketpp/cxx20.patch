@@ -1,0 +1,93 @@
+diff --git "a/websocketpp/endpoint.hpp" "b/websocketpp/endpoint.hpp"
+index c124b1d..9ce8a62 100644
+--- "a/websocketpp/endpoint.hpp"
++++ "b/websocketpp/endpoint.hpp"
+@@ -109,7 +109,7 @@ public:
+ 
+ 
+     /// Destructor
+-    ~endpoint<connection,config>() {}
++    ~endpoint() {}
+ 
+     #ifdef _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
+         // no copy constructor because endpoints are not copyable
+diff --git "a/websocketpp/logger/basic.hpp" "b/websocketpp/logger/basic.hpp"
+index 8451413..4c9d836 100644
+--- "a/websocketpp/logger/basic.hpp"
++++ "b/websocketpp/logger/basic.hpp"
+@@ -58,33 +58,33 @@ namespace log {
+ template <typename concurrency, typename names>
+ class basic {
+ public:
+-    basic<concurrency,names>(channel_type_hint::value h =
++    basic(channel_type_hint::value h =
+         channel_type_hint::access)
+       : m_static_channels(0xffffffff)
+       , m_dynamic_channels(0)
+       , m_out(h == channel_type_hint::error ? &std::cerr : &std::cout) {}
+ 
+-    basic<concurrency,names>(std::ostream * out)
++    basic(std::ostream * out)
+       : m_static_channels(0xffffffff)
+       , m_dynamic_channels(0)
+       , m_out(out) {}
+ 
+-    basic<concurrency,names>(level c, channel_type_hint::value h =
++    basic(level c, channel_type_hint::value h =
+         channel_type_hint::access)
+       : m_static_channels(c)
+       , m_dynamic_channels(0)
+       , m_out(h == channel_type_hint::error ? &std::cerr : &std::cout) {}
+ 
+-    basic<concurrency,names>(level c, std::ostream * out)
++    basic(level c, std::ostream * out)
+       : m_static_channels(c)
+       , m_dynamic_channels(0)
+       , m_out(out) {}
+ 
+     /// Destructor
+-    ~basic<concurrency,names>() {}
++    ~basic() {}
+ 
+     /// Copy constructor
+-    basic<concurrency,names>(basic<concurrency,names> const & other)
++    basic(basic<concurrency,names> const & other)
+      : m_static_channels(other.m_static_channels)
+      , m_dynamic_channels(other.m_dynamic_channels)
+      , m_out(other.m_out)
+@@ -97,7 +97,7 @@ public:
+ 
+ #ifdef _WEBSOCKETPP_MOVE_SEMANTICS_
+     /// Move constructor
+-    basic<concurrency,names>(basic<concurrency,names> && other)
++    basic(basic<concurrency,names> && other)
+      : m_static_channels(other.m_static_channels)
+      , m_dynamic_channels(other.m_dynamic_channels)
+      , m_out(other.m_out)
+diff --git a/websocketpp/roles/server_endpoint.hpp b/websocketpp/roles/server_endpoint.hpp
+index 4a5865eff..04fee18f9 100644
+--- a/websocketpp/roles/server_endpoint.hpp
++++ b/websocketpp/roles/server_endpoint.hpp
+@@ -75,11 +75,11 @@ class server : public endpoint<connection<config>,config> {
+     }
+ 
+     /// Destructor
+-    ~server<config>() {}
++    ~server() {}
+ 
+ #ifdef _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
+     // no copy constructor because endpoints are not copyable
+-    server<config>(server<config> &) = delete;
++    server(server<config> &) = delete;
+ 
+     // no copy assignment operator because endpoints are not copyable
+     server<config> & operator=(server<config> const &) = delete;
+@@ -87,7 +87,7 @@ class server : public endpoint<connection<config>,config> {
+ 
+ #ifdef _WEBSOCKETPP_MOVE_SEMANTICS_
+     /// Move constructor
+-    server<config>(server<config> && o) : endpoint<connection<config>,config>(std::move(o)) {}
++    server(server<config> && o) : endpoint<connection<config>,config>(std::move(o)) {}
+ 
+ #ifdef _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
+     // no move assignment operator because of const member variables

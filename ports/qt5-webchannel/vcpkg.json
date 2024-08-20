@@ -1,0 +1,13 @@
+{
+  "name": "qt5-webchannel",
+  "version": "5.15.14",
+  "description": "Qt WebChannel enables peer-to-peer communication between a server (QML/C++ application) and a client (HTML/JavaScript or QML application).",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

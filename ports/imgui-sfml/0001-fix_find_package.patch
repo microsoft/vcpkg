@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 075d793..9bc635a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,13 +41,14 @@ if (IMGUI_SFML_FIND_SFML)
+   if (NOT BUILD_SHARED_LIBS)
+     set(SFML_STATIC_LIBRARIES ON)
+   endif()
+-  find_package(SFML 2.5 COMPONENTS graphics system window)
++  find_package(SFML COMPONENTS graphics system window)
+ 
+   if(NOT SFML_FOUND)
+     message(FATAL_ERROR "SFML 2 directory not found. Set SFML_DIR to directory where SFML was built (or one which contains SFMLConfig.cmake)")
+   endif()
+ endif()
+ 
++if(0)
+ # ImGui does not provide native support for CMakeLists, workaround for now to have
+ # users specify IMGUI_DIR. Waiting for this PR to get merged...
+ #    https://github.com/ocornut/imgui/pull/1713
+@@ -69,6 +70,8 @@ set(IMGUI_PUBLIC_HEADERS
+   ${IMGUI_INCLUDE_DIR}/imstb_truetype.h
+   ${IMGUI_INCLUDE_DIR}/misc/cpp/imgui_stdlib.h
+ )
++endif()
++find_package(imgui CONFIG REQUIRED)
+ 
+ if (IMGUI_SFML_IMGUI_DEMO)
+   list(APPEND IMGUI_SOURCES ${IMGUI_DEMO_SOURCES})
+@@ -93,6 +96,7 @@ add_library(ImGui-SFML::ImGui-SFML ALIAS ImGui-SFML)
+ 
+ target_link_libraries(ImGui-SFML
+   PUBLIC
++    imgui::imgui
+     sfml-graphics
+     sfml-system
+     sfml-window

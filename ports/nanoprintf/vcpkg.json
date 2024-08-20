@@ -1,0 +1,6 @@
+{
+  "name": "nanoprintf",
+  "version": "0.3.4",
+  "description": "A tiny embeddable printf replacement written in C99",
+  "homepage": "https://github.com/charlesnicholson/nanoprintf"
+}

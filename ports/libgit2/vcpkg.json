@@ -1,0 +1,97 @@
+{
+  "name": "libgit2",
+  "version-semver": "1.8.0",
+  "description": "A C library implementing the Git core methods with a solid API",
+  "homepage": "https://github.com/libgit2/libgit2",
+  "license": null,
+  "supports": "!uwp",
+  "dependencies": [
+    "http-parser",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "pcre",
+    "ssl"
+  ],
+  "features": {
+    "mbedtls": {
+      "description": "SSL support (mbedTLS)",
+      "supports": "!windows",
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "pcre": {
+      "description": "Build against external libpcre",
+      "dependencies": [
+        "pcre"
+      ]
+    },
+    "pcre2": {
+      "description": "Build against external libpcre2",
+      "dependencies": [
+        "pcre2"
+      ]
+    },
+    "sectransp": {
+      "description": "SSL support (sectransp)",
+      "supports": "osx"
+    },
+    "ssh": {
+      "description": "SSH support via libssh2",
+      "dependencies": [
+        "libssh2"
+      ]
+    },
+    "ssl": {
+      "description": "Default SSL backend",
+      "dependencies": [
+        {
+          "name": "libgit2",
+          "default-features": false,
+          "features": [
+            "sectransp"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "libgit2",
+          "default-features": false,
+          "features": [
+            "winhttp"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "libgit2",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows & !osx"
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build CLI tools"
+    },
+    "winhttp": {
+      "description": "SSL support (WinHTTP)",
+      "supports": "windows & !uwp"
+    }
+  }
+}

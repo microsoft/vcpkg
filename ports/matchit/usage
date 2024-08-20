@@ -1,0 +1,4 @@
+The package matchit provides CMake targets:
+
+    find_package(matchit CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE matchit::matchit)

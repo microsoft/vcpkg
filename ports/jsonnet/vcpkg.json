@@ -1,0 +1,15 @@
+{
+  "name": "jsonnet",
+  "version": "0.20.0",
+  "description": "Jsonnet - The data templating language",
+  "homepage": "https://github.com/google/jsonnet",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "nlohmann-json",
+    "ryml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "libgcrypt",
+  "version": "1.10.2",
+  "description": "A general purpose cryptographic library",
+  "homepage": "https://gnupg.org/software/libgcrypt/index.html",
+  "license": null,
+  "supports": "!windows | mingw",
+  "dependencies": [
+    {
+      "name": "libgcrypt",
+      "host": true
+    },
+    "libgpg-error",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
+}

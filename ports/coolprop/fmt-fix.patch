@@ -1,0 +1,156 @@
+diff --git a/include/CPstrings.h b/include/CPstrings.h
+index 711981cd..fda2f055 100644
+--- a/include/CPstrings.h
++++ b/include/CPstrings.h
+@@ -6,6 +6,8 @@
+ #include <algorithm>
+ #include <functional>
+ #include <cctype>
++#include <vector>
++#include <string>
+ 
+ #if !defined(NO_FMTLIB)
+ #    ifndef FMT_HEADER_ONLY
+@@ -74,17 +76,16 @@ inline bool endswith(const std::string& s1, const std::string& s2) {
+ #if defined(NO_FMTLIB)
+ // Missing string formatting function, this old guy is needed for ancient gcc compilers on PowerPC for VxWorks
+ inline std::string format(const char* fmt, ...);
++#elif FMT_VERSION >= 50000
++template <typename... Args>
++inline std::string format(const char* format_str, const Args&... args) {
++    return fmt::sprintf(format_str, args...);
++}
+ #else
+-// Missing std::string formatting function - provided by the fmtlib library
+ inline std::string format(const char* format, fmt::ArgList args) {
+     return fmt::sprintf(format, args);
+ }
+ FMT_VARIADIC(std::string, format, const char*)
+-// For latest FMTLIB
+-/*template <typename... Args>
+-    inline std::string format(const char *format_str, const Args & ... args) {
+-        return fmt::sprintf(format_str, args);
+-    }*/
+ #endif
+ 
+ // Missing string split - like in Python
+diff --git a/include/CoolPropFluid.h b/include/CoolPropFluid.h
+index 80fb9ff3..093bd294 100644
+--- a/include/CoolPropFluid.h
++++ b/include/CoolPropFluid.h
+@@ -562,5 +562,19 @@ class CoolPropFluid
+     };
+ };
+ 
++#if !defined(NO_FMTLIB) && FMT_VERSION >= 90000
++static int format_as(ViscosityDiluteVariables::ViscosityDiluteType type) {
++    return fmt::underlying(type);
++}
++
++static int format_as(TransportPropertyData::ViscosityHardcodedEnum viscosity) {
++    return fmt::underlying(viscosity);
++}
++
++static int format_as(TransportPropertyData::ConductivityHardcodedEnum conductivity) {
++    return fmt::underlying(conductivity);
++}
++#endif
++
+ } /* namespace CoolProp */
+ #endif /* COOLPROPFLUID_H_ */
+diff --git a/include/DataStructures.h b/include/DataStructures.h
+index 0aebc0b4..5265ac82 100644
+--- a/include/DataStructures.h
++++ b/include/DataStructures.h
+@@ -473,5 +473,40 @@ void extract_backend_families(std::string backend_string, backend_families& f1,
+ void extract_backend_families_string(std::string backend_string, backend_families& f1, std::string& f2);
+ std::string get_backend_string(backends backend);
+ 
++#if !defined(NO_FMTLIB) && FMT_VERSION >= 90000
++/// Allows enums to be formatted
++static int format_as(parameters parameter) {
++    return fmt::underlying(parameter);
++}
++
++static int format_as(phases phase) {
++    return fmt::underlying(phase);
++}
++
++static int format_as(schemes scheme) {
++    return fmt::underlying(scheme);
++}
++
++static int format_as(composition_types type) {
++    return fmt::underlying(type);
++}
++
++static int format_as(fluid_types type) {
++    return fmt::underlying(type);
++}
++
++static int format_as(input_pairs pair) {
++    return fmt::underlying(pair);
++}
++
++static int format_as(backend_families family) {
++    return fmt::underlying(family);
++}
++
++static int format_as(backends backend) {
++    return fmt::underlying(backend);
++}
++#endif
++
+ } /* namespace CoolProp */
+ #endif /* DATASTRUCTURES_H_ */
+diff --git a/include/IncompressibleFluid.h b/include/IncompressibleFluid.h
+index 1ea41775..b641d2e0 100644
+--- a/include/IncompressibleFluid.h
++++ b/include/IncompressibleFluid.h
+@@ -44,6 +44,12 @@ struct IncompressibleData
+     };
+ };
+ 
++#if !defined(NO_FMTLIB) && FMT_VERSION >= 90000
++static int format_as(IncompressibleData::IncompressibleTypeEnum type) {
++    return fmt::underlying(type);
++}
++#endif
++
+ /// A property provider for incompressible solutions and pure fluids
+ /**
+ This fluid instance is populated using an entry from a JSON file
+diff --git a/src/Backends/Helmholtz/VLERoutines.h b/src/Backends/Helmholtz/VLERoutines.h
+index e13c0295..c63d0cbc 100644
+--- a/src/Backends/Helmholtz/VLERoutines.h
++++ b/src/Backends/Helmholtz/VLERoutines.h
+@@ -97,6 +97,12 @@ struct saturation_PHSU_pure_options
+     }
+ };
+ 
++#if !defined(NO_FMTLIB) && FMT_VERSION >= 90000
++static int format_as(saturation_PHSU_pure_options::specified_variable_options option) {
++    return fmt::underlying(option);
++}
++#endif
++
+ void saturation_PHSU_pure(HelmholtzEOSMixtureBackend& HEOS, CoolPropDbl specified_value, saturation_PHSU_pure_options& options);
+ 
+ /* \brief This is a backup saturation_p solver for the case where the Newton solver cannot approach closely enough the solution
+diff --git a/src/HumidAirProp.cpp b/src/HumidAirProp.cpp
+index 640bd843..eb586a63 100644
+--- a/src/HumidAirProp.cpp
++++ b/src/HumidAirProp.cpp
+@@ -76,6 +76,12 @@ enum givens
+     GIVEN_ISENTROPIC_EXPONENT
+ };
+ 
++#if !defined(NO_FMTLIB) && FMT_VERSION >= 90000
++int format_as(givens given) {
++    return fmt::underlying(given);
++}
++#endif
++
+ void _HAPropsSI_inputs(double p, const std::vector<givens>& input_keys, const std::vector<double>& input_vals, double& T, double& psi_w);
+ double _HAPropsSI_outputs(givens OuputType, double p, double T, double psi_w);
+ double MoleFractionWater(double, double, int, double);

@@ -1,0 +1,54 @@
+{
+  "name": "qt5-imageformats",
+  "version": "5.15.14",
+  "description": "The Qt Image Formats add-on module provides optional support for other image file formats.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "tiff",
+    "webp"
+  ],
+  "features": {
+    "jasper": {
+      "description": "Enable JPEG-2000 support using the JasPer library",
+      "dependencies": [
+        {
+          "name": "jasper",
+          "default-features": false
+        },
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        }
+      ]
+    },
+    "tiff": {
+      "description": "Enable TIFF support",
+      "dependencies": [
+        {
+          "name": "tiff",
+          "default-features": false
+        },
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        }
+      ]
+    },
+    "webp": {
+      "description": "Enable WEBP support",
+      "dependencies": [
+        "libwebp",
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        }
+      ]
+    }
+  }
+}

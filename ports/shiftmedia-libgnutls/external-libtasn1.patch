@@ -1,0 +1,91 @@
+diff --git a/SMP/libgnutls.vcxproj.filters b/SMP/libgnutls.vcxproj.filters
+index 0e810b202..5a69f12ec 100644
+--- a/SMP/libgnutls.vcxproj.filters
++++ b/SMP/libgnutls.vcxproj.filters
+@@ -1520,30 +1520,6 @@
+     <ClCompile Include="..\lib\nettle\sysrng-bcrypt.c">
+       <Filter>Source Files\lib\nettle</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\coding.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\decoding.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\element.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\errors.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\gstr.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\parser_aux.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\structure.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\version.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+     <ClCompile Include="..\lib\nettle\gost\acpkm.c">
+       <Filter>Source Files\lib\nettle\gost</Filter>
+     </ClCompile>
+diff --git a/SMP/libgnutls_files.props b/SMP/libgnutls_files.props
+index 7fe1f88d5..cbc2d45c1 100644
+--- a/SMP/libgnutls_files.props
++++ b/SMP/libgnutls_files.props
+@@ -172,16 +172,6 @@
+   <ItemGroup>
+     <ClCompile Include="lib\gnutls_asn1_tab.c" />
+     <ClCompile Include="lib\pkix_asn1_tab.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\coding.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\decoding.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\element.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\errors.c">
+-      <ObjectFileName>$(IntDir)\tasn1_$(filename).obj</ObjectFileName>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\gstr.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\parser_aux.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\structure.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\version.c" />
+     <ClCompile Include="..\gnulib\lib\c-strcasecmp.c" />
+     <ClCompile Include="..\gnulib\lib\c-strncasecmp.c" />
+     <ClCompile Include="..\gnulib\lib\gl_linkedhash_list.c" />
+diff --git a/SMP/libgnutls_winrt.vcxproj.filters b/SMP/libgnutls_winrt.vcxproj.filters
+index 761877440..cd40b5bb7 100644
+--- a/SMP/libgnutls_winrt.vcxproj.filters
++++ b/SMP/libgnutls_winrt.vcxproj.filters
+@@ -1520,30 +1520,6 @@
+     <ClCompile Include="..\lib\nettle\sysrng-bcrypt.c">
+       <Filter>Source Files\lib\nettle</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\coding.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\decoding.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\element.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\errors.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\gstr.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\parser_aux.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\structure.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\version.c">
+-      <Filter>Source Files\libtasn1</Filter>
+-    </ClCompile>
+     <ClCompile Include="..\lib\accelerated\afalg.c">
+       <Filter>Source Files\lib\accelerated</Filter>
+     </ClCompile>

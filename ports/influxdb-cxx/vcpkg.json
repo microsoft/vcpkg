@@ -1,0 +1,29 @@
+{
+  "name": "influxdb-cxx",
+  "version": "0.7.2",
+  "description": "InfluxDB C++ client library",
+  "homepage": "https://github.com/offa/influxdb-cxx",
+  "license": "MIT",
+  "dependencies": [
+    "cpr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "boost": {
+      "description": "Enables UDP and Unix sockets as Transport Layer",
+      "supports": "!uwp",
+      "dependencies": [
+        "boost-asio",
+        "boost-conversion",
+        "boost-property-tree"
+      ]
+    }
+  }
+}

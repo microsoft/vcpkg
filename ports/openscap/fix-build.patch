@@ -1,0 +1,96 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 72d9aec..8938931 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -164,12 +164,19 @@ if (WIN32 AND NOT MINGW)
+ else()
+ 	find_package(Threads REQUIRED)
+ endif()
+-set(CMAKE_THREAD_PREFER_PTHREAD)
+-set(THREADS_PREFER_PTHREAD_FLAG)
+-set(THREADS_USE_PTHREADS_WIN32 TRUE)
+-check_library_exists(pthread pthread_timedjoin_np "" HAVE_PTHREAD_TIMEDJOIN_NP)
+-check_library_exists(pthread pthread_setname_np "" HAVE_PTHREAD_SETNAME_NP)
+-check_library_exists(pthread pthread_getname_np "" HAVE_PTHREAD_GETNAME_NP)
++if (WIN32)
++    set(CMAKE_THREAD_PREFER_PTHREAD)
++    set(THREADS_PREFER_PTHREAD_FLAG)
++    set(THREADS_USE_PTHREADS_WIN32 TRUE)
++    check_library_exists(pthread pthread_timedjoin_np "" HAVE_PTHREAD_TIMEDJOIN_NP)
++    check_library_exists(pthread pthread_setname_np "" HAVE_PTHREAD_SETNAME_NP)
++    check_library_exists(pthread pthread_getname_np "" HAVE_PTHREAD_GETNAME_NP)
++else()
++    find_package(Threads REQUIRED)
++endif()
++
++# OpenSSL
++link_libraries(OpenSSL::SSL OpenSSL::Crypto)
+ 
+ # WITH_CRYPTO
+ set(WITH_CRYPTO "gcrypt" CACHE STRING "gcrypt|nss3")
+@@ -475,19 +482,9 @@ message(STATUS "asciidoc: ${ASCIIDOC_EXECUTABLE}")
+ 
+ # ---------- PATHS
+ 
+-if(WIN32)
+-	# Windows installer does not allow full paths.
+-	# The install path can be changed by user in Windows installer.
+-	# We will use relative names - "schemas", "xsl" and "cpe"
+-	# directories will be located in the same directory as oscap.exe.
+-	set(OSCAP_DEFAULT_SCHEMA_PATH "schemas")
+-	set(OSCAP_DEFAULT_XSLT_PATH "xsl")
+-	set(OSCAP_DEFAULT_CPE_PATH "cpe")
+-else()
+-	set(OSCAP_DEFAULT_SCHEMA_PATH "${CMAKE_INSTALL_FULL_DATADIR}/openscap/schemas")
+-	set(OSCAP_DEFAULT_XSLT_PATH "${CMAKE_INSTALL_FULL_DATADIR}/openscap/xsl")
+-	set(OSCAP_DEFAULT_CPE_PATH "${CMAKE_INSTALL_FULL_DATADIR}/openscap/cpe")
+-endif()
++set(OSCAP_DEFAULT_SCHEMA_PATH share/openscap/schemas)
++set(OSCAP_DEFAULT_XSLT_PATH share/openscap/xsl)
++set(OSCAP_DEFAULT_CPE_PATH share/openscap/cpe)
+ set(OSCAP_TEMP_DIR "/tmp" CACHE STRING "use different temporary directory to execute sce scripts (default=/tmp)")
+ 
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e9339c6..9347087 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -134,4 +134,8 @@ else()
+ 	set(OPENSCAP_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
+ 
+-install(TARGETS openscap DESTINATION ${OPENSCAP_INSTALL_DESTINATION})
++install(TARGETS openscap
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index 93ce1f2..f500e1d 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -29,22 +29,15 @@ if(ENABLE_OSCAP_UTIL)
+ 		install(TARGETS "oscap"
+ 			DESTINATION ${OSCAP_UTIL_DESTINATION}
+ 		)
+-		# Install all recursively dependent DLLs for oscap.exe
+-		set(APPS "\${CMAKE_INSTALL_PREFIX}/oscap.exe") # the \ before $ is required by BundleUtilities
+-		set(VCPKG_DLL_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+-		install(CODE "
+-			include(BundleUtilities)
+-			fixup_bundle(\"${APPS}\" \"\" \"${VCPKG_DLL_DIR}\")
+-		")
+ 	else()
+-		set(OSCAP_UTIL_DESTINATION ${CMAKE_INSTALL_BINDIR})
++		set(OSCAP_UTIL_DESTINATION tools)
+ 		# Install the 'oscap' utility
+ 		install(TARGETS "oscap"
+ 			DESTINATION ${OSCAP_UTIL_DESTINATION}
+ 		)
+ 		# Install manual page
+ 		install(FILES "oscap.8"
+-			DESTINATION "${CMAKE_INSTALL_MANDIR}/man8"
++			DESTINATION share/openscap/man8
+ 		)
+ 
+ 		add_custom_target(oscap-chrootable-nocap

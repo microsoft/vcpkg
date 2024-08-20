@@ -1,0 +1,32 @@
+{
+  "name": "msgpack",
+  "version": "6.1.1",
+  "description": "MessagePack is an efficient binary serialization format, which lets you exchange data among multiple languages like JSON, except that it's faster and smaller.",
+  "homepage": "https://github.com/msgpack/msgpack-c",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "boost": {
+      "description": "Build msgpack using Boost",
+      "dependencies": [
+        "boost-assert",
+        "boost-fusion",
+        "boost-numeric-conversion",
+        "boost-optional",
+        "boost-predef",
+        "boost-preprocessor",
+        "boost-utility",
+        "boost-variant"
+      ]
+    }
+  }
+}

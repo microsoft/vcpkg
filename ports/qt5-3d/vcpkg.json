@@ -1,0 +1,20 @@
+{
+  "name": "qt5-3d",
+  "version": "5.15.14",
+  "description": "Qt 3D provides functionality for near-realtime simulation systems with support for 2D and 3D rendering in both Qt C++ and Qt Quick applications.",
+  "license": null,
+  "dependencies": [
+    "assimp",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-gamepad",
+    "qt5-imageformats",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    }
+  ]
+}

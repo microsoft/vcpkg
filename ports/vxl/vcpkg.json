@@ -1,0 +1,32 @@
+{
+  "name": "vxl",
+  "version": "2.0.2",
+  "port-version": 6,
+  "description": "A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.",
+  "dependencies": [
+    "bzip2",
+    "expat",
+    "libgeotiff",
+    "libjpeg-turbo",
+    "libpng",
+    "shapelib",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "core-imaging": {
+      "description": "core-imaging support for vxl"
+    }
+  }
+}

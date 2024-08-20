@@ -1,0 +1,60 @@
+{
+  "name": "outcome",
+  "version": "2.2.8",
+  "maintainers": [
+    "Niall Douglas <s_github@nedprod.com>",
+    "Henrik Gaßmann <henrik@gassmann.onl>"
+  ],
+  "description": "Provides very lightweight outcome<T> and result<T> (non-Boost edition)",
+  "homepage": "https://github.com/ned14/outcome",
+  "license": "Apache-2.0 OR BSL-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "ned14-internal-quickcpplib",
+    "status-code",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "polyfill-cxx17": {
+      "description": "Polyfill C++17 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx17"
+          ]
+        },
+        {
+          "name": "outcome",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
+          ]
+        }
+      ]
+    },
+    "polyfill-cxx20": {
+      "description": "Polyfill C++20 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
+          ]
+        }
+      ]
+    },
+    "run-tests": {
+      "description": "Build and run the dependency validation tests"
+    }
+  }
+}

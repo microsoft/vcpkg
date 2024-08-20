@@ -1,0 +1,10 @@
+{
+  "name": "jwt-cpp",
+  "version-semver": "0.7.0",
+  "description": "A header only library for creating and validating json web tokens in c++",
+  "homepage": "https://github.com/Thalhammer/jwt-cpp",
+  "license": "MIT",
+  "dependencies": [
+    "picojson"
+  ]
+}

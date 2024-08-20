@@ -1,0 +1,19 @@
+{
+  "name": "rioki-glow",
+  "version-semver": "0.2.1",
+  "description": "OpenGL Object Wrapper",
+  "homepage": "https://github.com/rioki/glow",
+  "license": "MIT",
+  "dependencies": [
+    "glew",
+    "glm",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

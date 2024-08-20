@@ -1,0 +1,9 @@
+The package pdal provides CMake variables:
+
+    find_package(PDAL CONFIG REQUIRED)
+    target_include_directories(main PRIVATE ${PDAL_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${PDAL_LIBRARIES})
+        
+If necessary, override the default plugin search path by setting the
+environment variable PDAL_DRIVER_PATH to a list of directories that
+pdal should search for plugins.

@@ -1,0 +1,27 @@
+From 85842ba83b70d99f90ee3fff8c956e82d17759f2 Mon Sep 17 00:00:00 2001
+From: Marek Roszko <mark.roszko@gmail.com>
+Date: Tue, 18 Aug 2020 23:11:27 -0400
+Subject: [PATCH] Remove broken exist check for shell install
+
+---
+ win/makefile.vc | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/win/makefile.vc b/win/makefile.vc
+index f5d2f4a..6bffe32 100644
+--- a/win/makefile.vc
++++ b/win/makefile.vc
+@@ -869,10 +869,8 @@ install-binaries:
+ 	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
+ !endif
+ 	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
+-!if exist($(TCLSH))
+ 	@echo Installing $(TCLSHNAME)
+ 	@$(CPY) "$(TCLSH)" "$(BIN_INSTALL_DIR)\"
+-!endif
+ 	@echo Installing $(TCLSTUBLIBNAME)
+ 	@$(CPY) "$(TCLSTUBLIB)" "$(LIB_INSTALL_DIR)\"
+ 
+-- 
+2.28.0.windows.1
+

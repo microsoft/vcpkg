@@ -1,0 +1,7 @@
+libraw provides CMake targets:
+
+    find_package(libraw CONFIG REQUIRED)
+    # non-thread-safe
+    target_link_libraries(main PRIVATE libraw::raw)
+    # thread-safe
+    target_link_libraries(main PRIVATE libraw::raw_r)

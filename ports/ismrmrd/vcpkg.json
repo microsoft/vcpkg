@@ -1,0 +1,20 @@
+{
+  "name": "ismrmrd",
+  "version": "1.13.7",
+  "description": "ISMRM Raw Data Format",
+  "homepage": "https://github.com/ismrmrd/ismrmrd",
+  "license": "BSD-3-Clause",
+  "supports": "!(x86 | arm | wasm32)",
+  "dependencies": [
+    "hdf5",
+    "pugixml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

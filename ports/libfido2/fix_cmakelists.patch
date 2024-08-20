@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6fa341a..8124d80 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,27 +169,20 @@ endif()
+ 
+ 
+ if(MSVC)
+-	if((NOT CBOR_INCLUDE_DIRS) OR (NOT CBOR_LIBRARY_DIRS) OR
+-	   (NOT CRYPTO_INCLUDE_DIRS) OR (NOT CRYPTO_LIBRARY_DIRS) OR
+-	   (NOT ZLIB_INCLUDE_DIRS) OR (NOT ZLIB_LIBRARY_DIRS))
+-		message(FATAL_ERROR "please define "
+-		   "{CBOR,CRYPTO,ZLIB}_{INCLUDE,LIBRARY}_DIRS when "
+-		   "building under msvc")
+-	endif()
+-	if(BUILD_TESTS AND BUILD_SHARED_LIBS AND
+-	   ((NOT CBOR_BIN_DIRS) OR (NOT ZLIB_BIN_DIRS) OR (NOT CRYPTO_BIN_DIRS)))
+-		message(FATAL_ERROR "please define {CBOR,CRYPTO,ZLIB}_BIN_DIRS "
+-		   "when building tests")
+-	endif()
+-	if(NOT CBOR_LIBRARIES)
+-		set(CBOR_LIBRARIES cbor)
+-	endif()
+-	if(NOT ZLIB_LIBRARIES)
+-		set(ZLIB_LIBRARIES zlib1)
+-	endif()
+-	if(NOT CRYPTO_LIBRARIES)
+-		set(CRYPTO_LIBRARIES crypto)
+-	endif()
++	find_package(PkgConfig)
++
++	find_package(LIBCBOR REQUIRED)
++	find_package(OpenSSL REQUIRED)
++	find_package(ZLIB REQUIRED) 
++
++	# Handling of different Packagenames in VCPKG
++	set(CBOR_INCLUDE_DIRS ${LIBCBOR_INCLUDE_DIR})
++	set(CRYPTO_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS})
++	set(CBOR_LIBRARY_DIRS ${LIBCBOR_LIBRARY_DIRS})
++	set(CRYPTO_LIBRARY_DIRS ${OPENSSL_LIBRARY_DIRS})
++	set(CBOR_LIBRARIES ${LIBCBOR_LIBRARIES})
++	set(CRYPTO_LIBRARIES ${OPENSSL_LIBRARIES})
++	add_definitions("-D_CRT_SECURE_NO_WARNINGS" "-D_CRT_NONSTDC_NO_DEPRECATE")
+ 
+ 	set(MSVC_DISABLED_WARNINGS_LIST
+ 		"C4152" # nonstandard extension used: function/data pointer
+@@ -469,6 +462,9 @@ message(STATUS "USE_PCSC: ${USE_PCSC}")
+ message(STATUS "USE_WINHELLO: ${USE_WINHELLO}")
+ message(STATUS "NFC_LINUX: ${NFC_LINUX}")
+ 
++set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /wd4996")
++set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /wd4996")
++
+ if(BUILD_TESTS)
+ 	enable_testing()
+ endif()

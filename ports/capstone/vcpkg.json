@@ -1,0 +1,73 @@
+{
+  "name": "capstone",
+  "version": "5.0.1",
+  "port-version": 1,
+  "description": "Multi-architecture disassembly framework",
+  "homepage": "https://github.com/capstone-engine/capstone",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "arm": {
+      "description": "Capstone disassembly support for ARM"
+    },
+    "arm64": {
+      "description": "Capstone disassembly support for ARM64"
+    },
+    "bpf": {
+      "description": "Capstone disassembly support for BPF"
+    },
+    "diet": {
+      "description": "Build Capstone in diet mode (reduced features for smaller size)"
+    },
+    "evm": {
+      "description": "Capstone disassembly support for EVM"
+    },
+    "m680x": {
+      "description": "Capstone disassembly support for M680X"
+    },
+    "m68k": {
+      "description": "Capstone disassembly support for M68k"
+    },
+    "mips": {
+      "description": "Capstone disassembly support for MIPS"
+    },
+    "mos65xx": {
+      "description": "Capstone disassembly support for MOS65XX"
+    },
+    "ppc": {
+      "description": "Capstone disassembly support for PowerPC"
+    },
+    "riscv": {
+      "description": "Capstone disassembly support for RISC-V"
+    },
+    "sparc": {
+      "description": "Capstone disassembly support for SPARC"
+    },
+    "sysz": {
+      "description": "Capstone disassembly support for SysZ"
+    },
+    "tms320c64x": {
+      "description": "Capstone disassembly support for TMS320C64X"
+    },
+    "tricore": {
+      "description": "Capstone disassembly support for TriCore"
+    },
+    "wasm": {
+      "description": "Capstone disassembly support for WebAssembly"
+    },
+    "x86": {
+      "description": "Capstone disassembly support for x86"
+    },
+    "xcore": {
+      "description": "Capstone disassembly support for XCore"
+    }
+  }
+}

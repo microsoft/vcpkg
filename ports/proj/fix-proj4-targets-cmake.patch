@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d736d129..2be8f8be9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -151,6 +165,7 @@ if(ENABLE_TIFF)
+   find_package(TIFF REQUIRED)
+   if(TIFF_FOUND)
+     set(TIFF_ENABLED TRUE)
++    set(TIFF_LIBRARY TIFF::TIFF)
+   else()
+     message(SEND_ERROR
+       "libtiff dependency not found! Use ENABLE_TIFF=OFF to force it off")

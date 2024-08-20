@@ -1,0 +1,12 @@
+{
+  "name": "shiftmedia-libgcrypt",
+  "version": "1.10.3-1",
+  "port-version": 1,
+  "description": "An unofficial LibGCrypt with added custom native Visual Studio project build tools. LibGCrypt",
+  "homepage": "https://github.com/ShiftMediaProject/libgcrypt",
+  "license": "LGPL-2.1-only",
+  "supports": "windows & !mingw",
+  "dependencies": [
+    "shiftmedia-libgpg-error"
+  ]
+}

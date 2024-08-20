@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aedc576..4f16abc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -165,6 +165,8 @@ SET(LIBFREENECT2_DLLS
+ SET(HAVE_VideoToolbox "no (Apple only)")
+ IF(APPLE)
+   FIND_LIBRARY(VIDEOTOOLBOX_LIBRARY VideoToolbox)
++  FIND_LIBRARY(CF_LIBRARY CoreFoundation)
++  FIND_LIBRARY(IOK_LIBRARY IOKit)
+ 
+   SET(HAVE_VideoToolbox no)
+   IF(VIDEOTOOLBOX_LIBRARY)
+@@ -184,6 +186,8 @@ IF(APPLE)
+       ${COREFOUNDATION_LIBRARY}
+       ${COREMEDIA_LIBRARY}
+       ${COREVIDEO_LIBRARY}
++      ${CF_LIBRARY}
++      ${IOK_LIBRARY}
+     )
+   ENDIF(VIDEOTOOLBOX_LIBRARY)
+ ENDIF(APPLE)

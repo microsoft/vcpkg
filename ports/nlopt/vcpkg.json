@@ -1,0 +1,17 @@
+{
+  "name": "nlopt",
+  "version": "2.7.1",
+  "port-version": 1,
+  "description": "Library for nonlinear local and global optimization, for functions with and without gradient information.",
+  "homepage": "https://github.com/stevengj/nlopt",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

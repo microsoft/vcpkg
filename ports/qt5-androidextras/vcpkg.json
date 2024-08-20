@@ -1,0 +1,13 @@
+{
+  "name": "qt5-androidextras",
+  "version": "5.15.14",
+  "description": "The Qt Android Extras module provided a set of classes and functions that were specific to Android applications written with Qt. This module helped developers to integrate various Android-specific features and services into their Qt applications.",
+  "license": null,
+  "supports": "android",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+diff --git a/cmake/modules/packages/FindFreeXL.cmake b/cmake/modules/packages/FindFreeXL.cmake
+index 6c86fb8..0634412 100644
+--- a/cmake/modules/packages/FindFreeXL.cmake
++++ b/cmake/modules/packages/FindFreeXL.cmake
+@@ -37,7 +37,15 @@ include(SelectLibraryConfigurations)
+ 
+ find_package(PkgConfig QUIET)
+ if(PKG_CONFIG_FOUND)
+-    pkg_check_modules(PC_FREEXL QUIET freexl)
++    pkg_check_modules(PC_FREEXL QUIET IMPORTED_TARGET freexl)
++endif()
++if(PC_FREEXL_FOUND)
++    set(FREEXL_INCLUDE_DIR "${PC_FREEXL_INCLUDE_DIRS}" CACHE STRING "")
++    set(FREEXL_LIBRARY "${PC_FREEXL_LIBRARIES}" CACHE STRING "")
++    if(NOT TARGET FREEXL::freexl)
++        add_library(FREEXL::freexl INTERFACE IMPORTED)
++        set_target_properties(FREEXL::freexl PROPERTIES INTERFACE_LINK_LIBRARIES PkgConfig::PC_FREEXL)
++    endif()
+ endif()
+ 
+ find_path(FREEXL_INCLUDE_DIR
+diff --git a/cmake/modules/packages/FindOpenJPEG.cmake b/cmake/modules/packages/FindOpenJPEG.cmake
+index c697484..6e83222 100644
+--- a/cmake/modules/packages/FindOpenJPEG.cmake
++++ b/cmake/modules/packages/FindOpenJPEG.cmake
+@@ -32,9 +32,18 @@ endfunction()
+ 
+ find_package(PkgConfig QUIET)
+ if(PKG_CONFIG_FOUND)
+-    pkg_check_modules(PC_OPENJPEG QUIET libopenjp2)
++    pkg_check_modules(PC_OPENJPEG QUIET IMPORTED_TARGET libopenjp2)
+     set(OpenJPEG_VERSION_STRING ${PC_OPENJPEG_VERSION})
+ endif()
++if(PC_OPENJPEG_FOUND)
++    set(OPENJPEG_INCLUDE_DIR "${PC_OPENJPEG_INCLUDE_DIRS}" CACHE STRING "")
++    set(OPENJPEG_LIBRARY "${PC_OPENJPEG_LIBRARIES}" CACHE STRING "")
++    if(NOT TARGET OPENJPEG::OpenJPEG)
++        add_library(OPENJPEG::OpenJPEG INTERFACE IMPORTED)
++        set_target_properties(OPENJPEG::OpenJPEG PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${PC_OPENJPEG_INCLUDE_DIRS}")
++        set_target_properties(OPENJPEG::OpenJPEG PROPERTIES INTERFACE_LINK_LIBRARIES PkgConfig::PC_OPENJPEG)
++    endif()
++endif()
+ 
+ 
+ find_path(OPENJPEG_INCLUDE_DIR opj_config.h
+diff --git a/cmake/modules/packages/FindPoppler.cmake b/cmake/modules/packages/FindPoppler.cmake
+index 3807ec0..8059eb4 100644
+--- a/cmake/modules/packages/FindPoppler.cmake
++++ b/cmake/modules/packages/FindPoppler.cmake
+@@ -42,11 +42,19 @@ This module defines the following variables:
+ 
+ find_package(PkgConfig QUIET)
+ if(PKG_CONFIG_FOUND)
+-  pkg_check_modules(PC_Poppler QUIET poppler)
++  pkg_check_modules(PC_Poppler QUIET IMPORTED_TARGET poppler)
+   if(PC_Poppler_VERSION)
+     set(Poppler_VERSION_STRING ${PC_Poppler_VERSION})
+   endif()
+ endif()
++if(PC_Poppler_FOUND)
++    find_path(Poppler_INCLUDE_DIR NAMES Object.h PATHS ${PC_Poppler_INCLUDE_DIRS} NO_DEFAULT_PATH)
++    set(Poppler_LIBRARY "${PC_Poppler_LIBRARIES}" CACHE STRING "")
++    if(NOT TARGET Poppler::Poppler)
++        add_library(Poppler::Poppler INTERFACE IMPORTED)
++        set_target_properties(Poppler::Poppler PROPERTIES INTERFACE_LINK_LIBRARIES PkgConfig::PC_Poppler)
++    endif()
++endif()
+ find_path(Poppler_INCLUDE_DIR NAMES "poppler-config.h" "cpp/poppler-version.h" "qt5/poppler-qt5.h" "qt4/poppler-qt4.h"
+           "glib/poppler.h"
+           HINTS ${PC_Poppler_INCLUDE_DIRS}
+@@ -77,6 +85,15 @@ endforeach()
+ foreach(_comp IN LISTS Poppler_known_components)
+   list(FIND Poppler_FIND_COMPONENTS "${_comp}" _nextcomp)
+   if(_nextcomp GREATER -1)
++    pkg_check_modules(PC_Poppler_${_comp} QUIET IMPORTED_TARGET ${Poppler_${_comp}_pkg_config})
++    if(PC_Poppler_${_comp}_FOUND)
++      set(Poppler_${_comp}_INCLUDE_DIR "${PC_Poppler_${_comp}_INCLUDE_DIRS}" CACHE STRING "")
++      set(Poppler_${_comp}_LIBRARY "${PC_Poppler_${_comp}_LIBRARIES}" CACHE STRING "")
++      if(NOT TARGET Poppler::Poppler_${_comp})
++          add_library(Poppler::${_comp} INTERFACE IMPORTED)
++          set_target_properties(Poppler::${_comp} PROPERTIES INTERFACE_LINK_LIBRARIES PkgConfig::PC_Poppler_${_comp})
++        endif()
++    endif()
+     find_path(Poppler_${_comp}_INCLUDE_DIR
+               NAMES ${Poppler_${_comp}_header}
+               PATH_SUFFIXES poppler
+diff --git a/cmake/modules/packages/FindSPATIALITE.cmake b/cmake/modules/packages/FindSPATIALITE.cmake
+index 00612b0..6388719 100644
+--- a/cmake/modules/packages/FindSPATIALITE.cmake
++++ b/cmake/modules/packages/FindSPATIALITE.cmake
+@@ -38,9 +38,17 @@ endif()
+ 
+ find_package(PkgConfig QUIET)
+ if(PKG_CONFIG_FOUND)
+-    pkg_check_modules(PC_SPATIALITE QUIET spatialite)
++    pkg_check_modules(PC_SPATIALITE QUIET IMPORTED_TARGET spatialite)
+     set(SPATIALITE_VERSION_STRING ${PC_SPATIALITE_VERSION})
+ endif()
++if(PC_SPATIALITE_FOUND)
++    set(SPATIALITE_INCLUDE_DIR "${PC_SPATIALITE_INCLUDE_DIRS}" CACHE STRING "")
++    set(SPATIALITE_LIBRARY "${PC_SPATIALITE_LIBRARIES}" CACHE STRING "")
++    if(NOT TARGET SPATIALITE::SPATIALITE)
++        add_library(SPATIALITE::SPATIALITE INTERFACE IMPORTED)
++        set_target_properties(SPATIALITE::SPATIALITE PROPERTIES INTERFACE_LINK_LIBRARIES PkgConfig::PC_SPATIALITE)
++    endif()
++endif()
+ 
+ find_path(SPATIALITE_INCLUDE_DIR
+           NAMES spatialite.h

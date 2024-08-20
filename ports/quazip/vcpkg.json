@@ -1,0 +1,36 @@
+{
+  "name": "quazip",
+  "version": "1.4",
+  "port-version": 1,
+  "description": "Qt/C++ wrapper over minizip",
+  "homepage": "https://stachenov.github.io/quazip/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "qt5compat",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "BZIP2 compression",
+      "dependencies": [
+        "bzip2"
+      ]
+    }
+  }
+}

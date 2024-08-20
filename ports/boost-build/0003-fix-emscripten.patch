@@ -1,0 +1,21 @@
+diff --git a/src/tools/emscripten.jam b/src/tools/emscripten.jam
+index 28175f6..c3c9968 100644
+--- a/src/tools/emscripten.jam
++++ b/src/tools/emscripten.jam
+@@ -7,12 +7,16 @@
+ import feature ;
+ import os ;
+ import toolset ;
++import generators ;
+ import common ;
+ import type ;
+ import version ;
+ 
+ feature.extend toolset : emscripten ;
+ 
++generators.override builtin.lib-generator : emscripten.prebuilt ;
++generators.override emscripten.searched-lib-generator : searched-lib-generator ;
++
+ feature.feature embind : off on : propagated ;
+ feature.feature closure : off on full : propagated ;
+ feature.feature link-optimization : off on full : propagated ;

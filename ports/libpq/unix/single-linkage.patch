@@ -1,0 +1,56 @@
+diff --git a/src/Makefile.shlib b/src/Makefile.shlib
+index 551023c..16255d7 100644
+--- a/src/Makefile.shlib
++++ b/src/Makefile.shlib
+@@ -260,10 +260,14 @@ endif
+ 
+ .PHONY: all-lib all-static-lib all-shared-lib
+ 
++ifndef LIBPQ_LIBRARY_TYPE
+ all-lib: all-shared-lib
+ ifdef soname
+ # no static library when building a dynamically loadable module
+ all-lib: all-static-lib
++endif
++else
++all-lib: all-$(LIBPQ_LIBRARY_TYPE)-lib
+ all-lib: lib$(NAME).pc
+ endif
+ 
+@@ -417,9 +421,13 @@ endif # PORTNAME == cygwin || PORTNAME == win32
+ ##
+ 
+ .PHONY: install-lib install-lib-static install-lib-shared installdirs-lib
++ifndef LIBPQ_LIBRARY_TYPE
+ install-lib: install-lib-shared
+ ifdef soname
+ install-lib: install-lib-static
++endif
++else
++install-lib: install-lib-$(LIBPQ_LIBRARY_TYPE)
+ install-lib: install-lib-pc
+ endif
+ 
+diff --git a/src/interfaces/libpq/Makefile b/src/interfaces/libpq/Makefile
+index 8abdb09..185461e 100644
+--- a/src/interfaces/libpq/Makefile
++++ b/src/interfaces/libpq/Makefile
+@@ -115,6 +115,7 @@ backend_src = $(top_srcdir)/src/backend
+ # Also skip the test on platforms where libpq infrastructure may be provided
+ # by statically-linked libraries, as we can't expect them to honor this
+ # coding rule.
++ifeq ($(LIBPQ_LIBRARY_TYPE), shared)
+ libpq-refs-stamp: $(shlib)
+ ifneq ($(enable_coverage), yes)
+ ifeq (,$(filter aix solaris,$(PORTNAME)))
+@@ -124,6 +125,10 @@ ifeq (,$(filter aix solaris,$(PORTNAME)))
+ endif
+ endif
+ 	touch $@
++else
++.PHONY: libpq-refs-stamp
++libpq-refs-stamp:
++endif
+ 
+ # Make dependencies on pg_config_paths.h visible in all builds.
+ fe-connect.o: fe-connect.c $(top_builddir)/src/port/pg_config_paths.h

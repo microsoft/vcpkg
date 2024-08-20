@@ -1,0 +1,43 @@
+diff --git a/cmake/SelectRegex.cmake b/cmake/SelectRegex.cmake
+index 2a3a91b..523fa72 100644
+--- a/cmake/SelectRegex.cmake
++++ b/cmake/SelectRegex.cmake
+@@ -17,7 +17,9 @@ if(REGEX_BACKEND STREQUAL "regcomp_l")
+ 	add_feature_info(regex ON "using system regcomp_l")
+ 	set(GIT_REGEX_REGCOMP_L 1)
+ elseif(REGEX_BACKEND STREQUAL "pcre2")
+-	find_package(PCRE2)
++	find_package(PkgConfig REQUIRED)
++	pkg_check_modules(PCRE2 REQUIRED libpcre2-8)
++	set(PCRE2_LIBRARIES "${PCRE2_LINK_LIBRARIES}")
+ 
+ 	if(NOT PCRE2_FOUND)
+ 		MESSAGE(FATAL_ERROR "PCRE2 support was requested but not found")
+@@ -33,6 +35,9 @@ elseif(REGEX_BACKEND STREQUAL "pcre")
+ 	add_feature_info(regex ON "using system PCRE")
+ 	set(GIT_REGEX_PCRE 1)
+ 
++	find_package(PkgConfig REQUIRED)
++	pkg_check_modules(PCRE REQUIRED libpcre)
++	set(PCRE_LIBRARIES "${PCRE_LINK_LIBRARIES}")
+ 	list(APPEND LIBGIT2_SYSTEM_INCLUDES ${PCRE_INCLUDE_DIRS})
+ 	list(APPEND LIBGIT2_SYSTEM_LIBS ${PCRE_LIBRARIES})
+ 	list(APPEND LIBGIT2_PC_REQUIRES "libpcre")
+diff --git a/cmake/SelectSSH.cmake b/cmake/SelectSSH.cmake
+index 079857f50..a2e2bd212 100644
+--- a/cmake/SelectSSH.cmake
++++ b/cmake/SelectSSH.cmake
+@@ -4,7 +4,11 @@ if(USE_SSH STREQUAL "exec")
+
+ 	add_feature_info(SSH ON "using OpenSSH exec support")
+ elseif(USE_SSH STREQUAL ON OR USE_SSH STREQUAL "libssh2")
+-	find_pkglibraries(LIBSSH2 libssh2)
++	find_package(PkgConfig REQUIRED)
++	pkg_check_modules(LIBSSH2 REQUIRED libssh2)
++	set(LIBSSH2_LIBRARIES "${LIBSSH2_LINK_LIBRARIES}")
++	set(LIBSSH2_LDFLAGS "")
++	list(APPEND LIBGIT2_PC_REQUIRES "libssh2")
+
+ 	if(NOT LIBSSH2_FOUND)
+ 		find_package(LibSSH2)
+

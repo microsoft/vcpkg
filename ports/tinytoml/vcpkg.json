@@ -1,0 +1,7 @@
+{
+  "name": "tinytoml",
+  "version": "20180219",
+  "port-version": 3,
+  "description": "A header only C++11 library for parsing TOML.",
+  "homepage": "https://github.com/mayah/tinytoml"
+}

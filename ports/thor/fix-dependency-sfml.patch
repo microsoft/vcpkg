@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 352fea9..01c1695 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,7 +111,7 @@ endif()
+ if(NOT THOR_SHARED_LIBS)
+ 	set(SFML_STATIC_LIBRARIES TRUE)
+ endif()
+-find_package(SFML 2.5 COMPONENTS audio graphics window system REQUIRED)
++find_package(SFML COMPONENTS audio graphics window system CONFIG REQUIRED)
+ 
+ if(NOT SFML_FOUND)
+ 	set(SFML_DIR "" CACHE PATH "SFML top-level directory")

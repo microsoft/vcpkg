@@ -1,0 +1,22 @@
+{
+  "name": "liblzma",
+  "version": "5.6.2",
+  "description": "Compression library with an API similar to that of zlib.",
+  "homepage": "https://tukaani.org/xz/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
+}

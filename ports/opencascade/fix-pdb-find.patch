@@ -1,0 +1,33 @@
+diff --git a/adm/cmake/cotire.cmake b/adm/cmake/cotire.cmake
+index acdca71a9f..aa41f2c8b8 100644
+--- a/adm/cmake/cotire.cmake
++++ b/adm/cmake/cotire.cmake
+@@ -3291,6 +3291,7 @@ function (cotire_setup_unity_build_target _languages _configurations _target)
+ 		OSX_ARCHITECTURES OSX_ARCHITECTURES_<CONFIG> PRIVATE_HEADER PUBLIC_HEADER RESOURCE XCTEST
+ 		IOS_INSTALL_COMBINED XCODE_EXPLICIT_FILE_TYPE XCODE_PRODUCT_TYPE)
+ 	# copy Windows platform specific stuff
++	if (BUILD_SHARED_LIBS)
+ 	cotire_copy_set_properties("${_configurations}" TARGET ${_target} ${_unityTargetName}
+ 		GNUtoMS
+ 		COMPILE_PDB_NAME COMPILE_PDB_NAME_<CONFIG>
+@@ -3306,6 +3307,7 @@ function (cotire_setup_unity_build_target _languages _configurations _target)
+ 		WIN32_EXECUTABLE WINDOWS_EXPORT_ALL_SYMBOLS
+ 		DEPLOYMENT_REMOTE_DIRECTORY VS_CONFIGURATION_TYPE
+ 		VS_SDK_REFERENCES VS_USER_PROPS VS_DEBUGGER_WORKING_DIRECTORY)
++	endif()
+ 	# copy Android platform specific stuff
+ 	cotire_copy_set_properties("${_configurations}" TARGET ${_target} ${_unityTargetName}
+ 		ANDROID_API ANDROID_API_MIN ANDROID_GUI
+diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
+index c9399159f1..ce74b918df 100644
+--- a/adm/cmake/occt_toolkit.cmake
++++ b/adm/cmake/occt_toolkit.cmake
+@@ -278,7 +278,7 @@ else()
+     # endif()
+   endif()
+ 
+-  if (MSVC)
++  if (MSVC AND BUILD_SHARED_LIBS)
+     if (BUILD_FORCE_RelWithDebInfo)
+       set (aReleasePdbConf "Release")
+     else()

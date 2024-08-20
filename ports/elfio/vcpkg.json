@@ -1,0 +1,17 @@
+{
+  "name": "elfio",
+  "version": "3.12",
+  "description": "A header-only C++ library intended for reading and generating files in the ELF binary format.",
+  "homepage": "https://github.com/serge1/ELFIO",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

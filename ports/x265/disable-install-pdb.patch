@@ -1,0 +1,13 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 11512ff..9ac8057 100755
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -603,7 +603,7 @@ if(SVTHEVC_FOUND)
+ endif()
+ 
+ install(FILES x265.h "${PROJECT_BINARY_DIR}/x265_config.h" DESTINATION include)
+-if((WIN32 AND ENABLE_CLI) OR (WIN32 AND ENABLE_SHARED))
++if(0)
+     if(MSVC_IDE)
+         install(FILES "${PROJECT_BINARY_DIR}/Debug/x265.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug)
+         install(FILES "${PROJECT_BINARY_DIR}/RelWithDebInfo/x265.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS RelWithDebInfo)

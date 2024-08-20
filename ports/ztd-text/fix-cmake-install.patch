@@ -1,0 +1,123 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 607394b..d80fb23 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,12 +34,6 @@ cmake_policy(VERSION 3.21)
+ # # Project kickstart
+ # Includes a bunch of basic flags and utilities shared across projects
+ # See more at the github repository link below
+-include(FetchContent)
+-FetchContent_Declare(ztd.cmake
+-	GIT_REPOSITORY https://github.com/soasis/cmake
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.cmake)
+ set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
+ 
+ # # Project declaration
+@@ -51,6 +45,8 @@ project(ztd.text
+ 	HOMEPAGE_URL "https://ztdtext.readthedocs.io/en/latest/"
+ 	LANGUAGES C CXX)
+ 
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
+ if(ZTD_TEXT_READTHEDOCS)
+ 	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
+ 	include(CheckCXXCompilerFlag)
+@@ -139,40 +135,18 @@ option(ZTD_TEXT_BOOST.TEXT "Enable usage of Boost.Text benchmarks and examples"
+ 
+ # # Dependencies
+ # ztd.idk
+-FetchContent_Declare(ztd.idk
+-	GIT_REPOSITORY https://github.com/soasis/idk.git
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.idk)
+ 
+ # ztd.static_containers
+-FetchContent_Declare(ztd.static_containers
+-	GIT_REPOSITORY https://github.com/soasis/static_containers.git
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.static_containers)
++find_package(ztd.static_containers CONFIG REQUIRED)
+ 
+ # ztd.encoding_tables
+-FetchContent_Declare(ztd.encoding_tables
+-	GIT_REPOSITORY https://github.com/soasis/encoding_tables.git
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.encoding_tables)
+ 
+ # ztd.cuneicode
++find_package(ztd.cuneicode CONFIG REQUIRED)
+ set(ZTD_CUNEICODE_SIMDUTF_SHARED ${ZTD_TEXT_BENCHMARKS})
+-FetchContent_Declare(ztd.cuneicode
+-	GIT_REPOSITORY https://github.com/soasis/cuneicode.git
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.cuneicode)
+ 
+ # ztd.platform
+-FetchContent_Declare(ztd.platform
+-	GIT_REPOSITORY https://github.com/soasis/platform.git
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.platform)
++find_package(ztd.platform CONFIG REQUIRED)
+ 
+ if (ZTD_TEXT_BENCHAMRKS OR ZTD_TEXT_GENERATE_SINGLE OR ZTD_TEXT_DOCUMENTATION)
+ 	find_package(Python3 REQUIRED COMPONENTS Interpreter)
+@@ -187,16 +161,17 @@ target_include_directories(ztd.text
+ 	INTERFACE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+-target_sources(ztd.text INTERFACE ${ztd.text.includes})
+ target_link_libraries(ztd.text
+ 	INTERFACE
+-	ztd::idk
+ 	ztd::static_containers
+ 	ztd::platform
+ 	ztd::cuneicode)
+ install(DIRECTORY include/
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
++install(TARGETS ztd.text
++        EXPORT ztd.text-targets
++        DESTINATION lib)
+ # # Config / Version packaging
+ # Version configurations
+ configure_package_config_file(
+@@ -213,6 +188,15 @@ export(TARGETS ztd.text
+ 	FILE
+ 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-targets.cmake")
+ 
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-config.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-config-version.cmake
++  DESTINATION share/ztd.text
++  )
++install(EXPORT ztd.text-targets
++  FILE ztd.text-targets.cmake
++  DESTINATION share/ztd.text
++)
+ if(ZTD_TEXT_GENERATE_SINGLE)
+ 	add_subdirectory(single)
+ endif()
+diff --git a/cmake/ztd.text-config.cmake.in b/cmake/ztd.text-config.cmake.in
+index a526740..e11ce0c 100644
+--- a/cmake/ztd.text-config.cmake.in
++++ b/cmake/ztd.text-config.cmake.in
+@@ -1,6 +1,11 @@
+ @PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++find_dependency(ztd.platform CONFIG)
++find_dependency(ztd.static_containers CONFIG)
+ 
+-if (TARGET ztd::text)
++include (${CMAKE_CURRENT_LIST_DIR}/ztd.text-targets.cmake)
++if (TARGET ztd.text)
++	add_library(ztd::text ALIAS ztd.text)
+ 	get_target_property(ZTD_TEXT_INCLUDE_DIRS
+ 		ztd.text INTERFACE_INCLUDE_DIRECTORIES)
+ 	set_and_check(ZTD_TEXT_INCLUDE_DIRS "${ZTD_TEXT_INCLUDE_DIRS}")

@@ -1,0 +1,38 @@
+{
+  "name": "openssl",
+  "version": "3.3.1",
+  "port-version": 1,
+  "description": "OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.",
+  "homepage": "https://www.openssl.org",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "features": {
+    "fips": {
+      "description": "Enable fips",
+      "supports": "!static"
+    },
+    "ssl3": {
+      "description": "Enable SSL3"
+    },
+    "tools": {
+      "description": "Install openssl executable and scripts",
+      "supports": "!uwp"
+    },
+    "weak-ssl-ciphers": {
+      "description": "Enable weak-ssl-ciphers"
+    }
+  }
+}

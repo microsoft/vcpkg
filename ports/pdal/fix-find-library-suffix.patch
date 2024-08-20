@@ -1,0 +1,11 @@
+diff --git a/cmake/libraries.cmake b/cmake/libraries.cmake
+index 665bc53..fcdcf2c 100644
+--- a/cmake/libraries.cmake
++++ b/cmake/libraries.cmake
+@@ -1,6 +1,3 @@
+ # Build shared libraries by default.
+ 
+ set(PDAL_LIB_TYPE "SHARED")
+-if (WIN32)
+-    set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_IMPORT_LIBRARY_SUFFIX})
+-endif()

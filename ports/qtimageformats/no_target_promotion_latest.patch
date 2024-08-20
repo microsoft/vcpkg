@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7fdd7ddbd..f189c472c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,6 +9,15 @@ project(QtImageFormats # special case
+     HOMEPAGE_URL "https://qt.io/"
+     LANGUAGES CXX C
+ )
+-
++find_package(Threads)
++set_property(TARGET Threads::Threads PROPERTY _qt_no_promote_global TRUE)
++find_package(ZLIB)
++if(TARGET ZLIB::ZLIB)
++	set_property(TARGET ZLIB::ZLIB PROPERTY _qt_no_promote_global TRUE)
++endif()
++find_package(JPEG)
++if(TARGET JPEG::JPEG)
++	set_property(TARGET JPEG::JPEG PROPERTY _qt_no_promote_global TRUE)
++endif()
+ find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
+ find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS Gui)

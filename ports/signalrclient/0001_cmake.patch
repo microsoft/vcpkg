@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8c73730..4cd9074 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,9 @@
+ cmake_minimum_required (VERSION 2.8.11)
+ project (signalrclient)
+ 
++if(NOT WIN32)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -L -lcpprest")
++endif()
+ 
+ set(CPPREST_INCLUDE_DIR "" CACHE FILEPATH "Path to casablanca include dir")
+ 
+@@ -16,4 +18,32 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+ 
+ add_subdirectory(src/signalrclient)
+-add_subdirectory(test)
++if(NOT DISABLE_TESTS)
++	add_subdirectory(test)
++endif()
++
++if(BUILD_SHARED_LIBS)
++	install(FILES include/signalrclient/_exports.h DESTINATION include/signalrclient)
++else()
++	file(READ include/signalrclient/_exports.h EXPORTS_H)
++	string(REPLACE "#ifdef NO_SIGNALRCLIENT_EXPORTS" "#if 1" EXPORTS_H_2 ${EXPORTS_H})
++	file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_exports.h "${EXPORTS_H_2}")
++
++	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/_exports.h DESTINATION include/signalrclient)
++endif()
++
++set(HEADERS
++	include/signalrclient/connection.h
++	include/signalrclient/connection_state.h
++	include/signalrclient/hub_connection.h
++	include/signalrclient/hub_exception.h
++	include/signalrclient/hub_proxy.h
++	include/signalrclient/log_writer.h
++	include/signalrclient/trace_level.h
++	include/signalrclient/transport_type.h
++	include/signalrclient/web_exception.h)
++
++install(
++  FILES ${HEADERS}
++  DESTINATION "include/signalrclient"
++)
+diff --git a/src/signalrclient/CMakeLists.txt b/src/signalrclient/CMakeLists.txt
+index 76a5e1b..db141eb 100644
+--- a/src/signalrclient/CMakeLists.txt
++++ b/src/signalrclient/CMakeLists.txt
+@@ -22,6 +22,21 @@ set (SOURCES
+  websocket_transport.cpp
+ )
+ 
+-add_library (signalrclient SHARED ${SOURCES})
++if(BUILD_SHARED_LIBS)
++  add_definitions(-DSIGNALRCLIENT_EXPORTS)
++else()
++  add_definitions(-DNO_SIGNALRCLIENT_EXPORTS)
++endif()
++
++add_definitions(-DUNICODE -D_UNICODE)
++
++add_library (signalrclient ${SOURCES})
+ 
+ target_link_libraries(signalrclient ${CPPREST_SO})
++
++install(
++  TARGETS signalrclient
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++  RUNTIME DESTINATION bin
++)

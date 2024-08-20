@@ -1,0 +1,120 @@
+{
+  "name": "itk",
+  "version": "5.4.0",
+  "description": "Insight Segmentation and Registration Toolkit (ITK) is used for image processing and analysis.",
+  "homepage": "https://github.com/InsightSoftwareConsortium/ITK",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "double-conversion",
+    "eigen3",
+    "expat",
+    {
+      "name": "fftw3",
+      "default-features": false
+    },
+    "gdcm",
+    {
+      "name": "hdf5",
+      "default-features": false,
+      "features": [
+        "cpp"
+      ]
+    },
+    "icu",
+    "libjpeg-turbo",
+    "libpng",
+    "minc",
+    {
+      "name": "openjpeg",
+      "default-features": false
+    },
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build CUDA module",
+      "dependencies": [
+        "cuda",
+        {
+          "name": "itk",
+          "default-features": false,
+          "features": [
+            "opencl"
+          ]
+        }
+      ]
+    },
+    "cufftw": {
+      "description": "Use CUDA FFTW",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "opencl": {
+      "description": "Use OpenCL",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "opencv": {
+      "description": "Build ITKVideoBridgeOpenCV module.",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "default-features"
+          ]
+        }
+      ]
+    },
+    "python": {
+      "description": "Python functionality for ITK",
+      "dependencies": [
+        "python3"
+      ]
+    },
+    "rtk": {
+      "description": "Build RTK Module"
+    },
+    "tbb": {
+      "description": "Build TBB Module",
+      "dependencies": [
+        "tbb"
+      ]
+    },
+    "tools": {
+      "description": "Build RTK with tools",
+      "dependencies": [
+        {
+          "name": "itk",
+          "default-features": false,
+          "features": [
+            "rtk"
+          ]
+        }
+      ]
+    },
+    "vtk": {
+      "description": "Build ITKVtkGlue module.",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

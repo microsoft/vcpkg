@@ -1,0 +1,32 @@
+{
+  "name": "autodock-vina",
+  "version-semver": "1.2.5",
+  "port-version": 3,
+  "description": "AutoDock Vina is one of the fastest and most widely used open-source docking engines.",
+  "homepage": "http://vina.scripps.edu/",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-array",
+    "boost-filesystem",
+    "boost-lexical-cast",
+    "boost-log",
+    "boost-math",
+    "boost-optional",
+    "boost-program-options",
+    "boost-ptr-container",
+    "boost-random",
+    "boost-serialization",
+    "boost-static-assert",
+    "boost-thread",
+    "boost-timer",
+    "boost-utility",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

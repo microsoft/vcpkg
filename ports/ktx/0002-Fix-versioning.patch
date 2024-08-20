@@ -1,0 +1,17 @@
+diff --git a/cmake/version.cmake b/cmake/version.cmake
+index 4094df1a..3b2af3bb 100644
+--- a/cmake/version.cmake
++++ b/cmake/version.cmake
+@@ -108,8 +108,10 @@ function(generate_version _var )
+     set(${_var} "${KTX_VERSION}" PARENT_SCOPE)
+ endfunction()
+ 
+-# Get latest tag
+-git_describe_raw(KTX_VERSION_FULL --abbrev=0 --match v[0-9]*)
++if (!KTX_VERSION_FULL)
++    # Get latest tag
++    git_describe_raw(KTX_VERSION_FULL --abbrev=0 --match v[0-9]*)
++endif()
+ #message("KTX full version: ${KTX_VERSION_FULL}")
+ 
+ # generate_version(TOKTX_VERSION tools/toktx)

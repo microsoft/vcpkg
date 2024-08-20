@@ -1,0 +1,88 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1633656..db346d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -149,7 +149,7 @@ message(STATUS "Git Revision ${GIT_REVISION}")
+ set(FREERDP_DEFAULT_PROJECT_VERSION ${FREERDP_VERSION} CACHE STRING INTERNAL)
+ 
+ set(FREERDP_MAJOR_DIR "freerdp${FREERDP_VERSION_MAJOR}")
+-set(FREERDP_INCLUDE_DIR "include/${FREERDP_MAJOR_DIR}/")
++set(FREERDP_INCLUDE_DIR "include/")
+ 
+ option(WITH_SMARTCARD_EMULATE "Emulate smartcards instead of redirecting readers" ON)
+ if (WITH_SMARTCARD_EMULATE)
+@@ -711,6 +711,9 @@ else()
+ 		set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/${FREERDP_MAJOR_DIR}")
+ 	endif()
+ endif()
++set(FREERDP_DATA_PATH "share/freerdp")
++set(FREERDP_LIBRARY_PATH "${CMAKE_INSTALL_LIBDIR}")
++set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/freerdp${FREERDP_VERSION_MAJOR}")
+ set(FREERDP_ADDIN_PATH "${FREERDP_PLUGIN_PATH}")
+ 
+ # Path to put extensions
+diff --git a/client/Windows/CMakeLists.txt b/client/Windows/CMakeLists.txt
+index cc94b99..0423242 100644
+--- a/client/Windows/CMakeLists.txt
++++ b/client/Windows/CMakeLists.txt
+@@ -107,7 +107,7 @@ endif()
+ target_link_libraries(${MODULE_NAME} PRIVATE ${LIBS})
+ 
+ if(WITH_CLIENT_INTERFACE)
+-	install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
++	install(TARGETS ${MODULE_NAME} COMPONENT libraries)
+ 	if (WITH_DEBUG_SYMBOLS AND MSVC AND BUILD_SHARED_LIBS)
+ 		install(FILES ${CMAKE_PDB_BINARY_DIR}/${MODULE_NAME}.pdb DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT symbols)
+ 	endif()
+diff --git a/libfreerdp/freerdp.pc.in b/libfreerdp/freerdp.pc.in
+index 7555957..21ea0c7 100644
+--- a/libfreerdp/freerdp.pc.in
++++ b/libfreerdp/freerdp.pc.in
+@@ -4,7 +4,7 @@ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/@FREERDP_INCLUDE_DIR@
+ libs=-lfreerdp@FREERDP_API_VERSION@
+ datarootdir=${prefix}/share
+-datadir=${datarootdir}/@FREERDP_MAJOR_DIR@
++datadir=${datarootdir}/freerdp
+ plugindir=${libdir}/@FREERDP_MAJOR_DIR@
+ proxy_plugindir=${plugindir}/proxy
+ extensiondir=${plugindir}/extensions
+diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
+index 4769741..eb3fe11 100644
+--- a/winpr/CMakeLists.txt
++++ b/winpr/CMakeLists.txt
+@@ -320,7 +320,7 @@ endif()
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+ 
+-set(WINPR_INCLUDE_DIR "include/winpr${WINPR_VERSION_MAJOR}")
++set(WINPR_INCLUDE_DIR "include")
+ 
+ 
+ add_subdirectory(libwinpr)
+diff --git a/winpr/libwinpr/CMakeLists.txt b/winpr/libwinpr/CMakeLists.txt
+index 4be2015..00c64e0 100644
+--- a/winpr/libwinpr/CMakeLists.txt
++++ b/winpr/libwinpr/CMakeLists.txt
+@@ -195,7 +195,7 @@ else()
+ endif()
+ target_link_options(${MODULE_NAME} ${LINK_OPTS_MODE} ${WINPR_LINK_OPTIONS})
+ target_include_directories(${MODULE_NAME} PRIVATE ${WINPR_INCLUDES})
+-target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include/winpr${WINPR_VERSION_MAJOR}>)
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:${WINPR_INCLUDE_DIR}>)
+ target_link_directories(${MODULE_NAME} PRIVATE ${WINPR_LINK_DIRS})
+ target_compile_options(${MODULE_NAME} PRIVATE ${WINPR_COMPILE_OPTIONS})
+ target_compile_definitions(${MODULE_NAME} PRIVATE ${WINPR_DEFINITIONS})
+diff --git a/winpr/tools/CMakeLists.txt b/winpr/tools/CMakeLists.txt
+index e995172..f612718 100644
+--- a/winpr/tools/CMakeLists.txt
++++ b/winpr/tools/CMakeLists.txt
+@@ -110,7 +110,7 @@ if (WITH_LIBRARY_VERSIONING)
+ endif()
+ 
+ add_definitions(${WINPR_DEFINITIONS})
+-target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include/winpr${WINPR_VERSION_MAJOR}>)
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:${WINPR_INCLUDE_DIR}>)
+ target_link_libraries(${MODULE_NAME} PRIVATE ${WINPR_TOOLS_LIBS})
+ 
+ install(TARGETS ${MODULE_NAME} COMPONENT libraries EXPORT WinPR-toolsTargets

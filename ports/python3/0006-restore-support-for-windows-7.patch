@@ -1,0 +1,326 @@
+From e30a560527d17ae81685dd11d3268bc982af2048 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Tue, 16 Feb 2021 18:03:07 -0500
+Subject: [PATCH 7/7] restore support for windows 7
+
+this backports the windows 7 compatible fix for bpo-39401 from gh-18234,
+originally authored by Steve Dower, and removes explicit dependencies on
+pathcch. 
+
+The same mechanism is applied to fix posixmodule.c
+---
+index 25ddc82..ff51042 100644
+--- a/Modules/_winapi.c
++++ b/Modules/_winapi.c
+@@ -44,6 +44,15 @@
+ 
+ #include "pycore_runtime.h"       // _Py_ID
+ 
++// The Windws 7 patch lowers the API version such that these constants
++// are no longer defined by the Windows SDK. Debounce that.
++#ifndef LCMAP_SORTHANDLE
++#   define LCMAP_SORTHANDLE   0x20000000
++#endif
++#ifndef LCMAP_HASH
++#   define LCMAP_HASH         0x00040000
++#endif
++
+ #if defined(MS_WIN32) && !defined(MS_WIN64)
+ #define HANDLE_TO_PYNUM(handle) \
+     PyLong_FromUnsignedLong((unsigned long) handle)
+diff --git a/Modules/getpath.c b/Modules/getpath.c
+index bc730fc..7d3d559 100644
+--- a/Modules/getpath.c
++++ b/Modules/getpath.c
+@@ -11,7 +11,7 @@
+ 
+ #ifdef MS_WINDOWS
+ #  include <windows.h>            // GetFullPathNameW(), MAX_PATH
+-#  include <pathcch.h>
++#  include <Shlwapi.h>
+ #endif
+ 
+ #ifdef __APPLE__
+@@ -217,6 +217,11 @@ getpath_isfile(PyObject *Py_UNUSED(self), PyObject *args)
+     return r;
+ }
+ 
++#ifdef MS_WINDOWS
++static int _PathCchFindExtension_Initialized = 0;
++typedef HRESULT (__stdcall *PPathCchFindExtension) (PCWSTR pszPath, size_t cchPath, PCWSTR *ppszExt);
++static PPathCchFindExtension _PathCchFindExtension;
++#endif
+ 
+ static PyObject *
+ getpath_isxfile(PyObject *Py_UNUSED(self), PyObject *args)
+@@ -231,13 +235,51 @@ getpath_isxfile(PyObject *Py_UNUSED(self), PyObject *args)
+     path = PyUnicode_AsWideCharString(pathobj, &cchPath);
+     if (path) {
+ #ifdef MS_WINDOWS
++
++        if (_PathCchFindExtension_Initialized == 0) {
++            HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                             LOAD_LIBRARY_SEARCH_SYSTEM32);
++
++            if (pathapi) {
++                _PathCchFindExtension = (PPathCchFindExtension)GetProcAddress(pathapi, "PathCchFindExtension");
++            } else {
++                _PathCchFindExtension = NULL;
++            }
++
++            _PathCchFindExtension_Initialized = 1;
++        }
++
+         const wchar_t *ext;
+         DWORD attr = GetFileAttributesW(path);
+-        r = (attr != INVALID_FILE_ATTRIBUTES) &&
+-            !(attr & FILE_ATTRIBUTE_DIRECTORY) &&
+-            SUCCEEDED(PathCchFindExtension(path, cchPath + 1, &ext)) &&
+-            (CompareStringOrdinal(ext, -1, L".exe", -1, 1 /* ignore case */) == CSTR_EQUAL)
+-            ? Py_True : Py_False;
++        if (attr == INVALID_FILE_ATTRIBUTES || (attr & FILE_ATTRIBUTE_DIRECTORY)) {
++            r = Py_False;
++        }
++        else {
++            HRESULT hr = S_OK;
++            if (_PathCchFindExtension) {
++                hr = _PathCchFindExtension(path, cchPath + 1, &ext);
++            }
++            else {
++                if (cchPath > MAX_PATH) {
++                    hr = E_FAIL;
++                }
++                else {
++                    ext = PathFindExtensionW(path);
++                    if (*ext == '\0')
++                        hr = E_FAIL;
++                }
++            }
++
++            if (!SUCCEEDED(hr)) {
++                r = Py_False;
++            }
++            else if (CompareStringOrdinal(ext, -1, L".exe", -1, 1 /* ignore case */) != CSTR_EQUAL) {
++                r = Py_False;
++            }
++            else {
++                r = Py_True;
++            }
++        }
+ #else
+         struct stat st;
+         r = (_Py_wstat(path, &st) == 0) &&
+diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
+--- a/Modules/posixmodule.c
++++ b/Modules/posixmodule.c
+@@ -15,7 +15,7 @@
+ // whereas pycore_condvar.h defines the WIN32_LEAN_AND_MEAN macro.
+ #ifdef MS_WINDOWS
+ #  include <windows.h>
+-#  include <pathcch.h>
++#  include <Shlwapi.h>
+ #  include <lmcons.h>             // UNLEN
+ #  include "osdefs.h"             // SEP
+ #  define HAVE_SYMLINK
+@@ -4471,6 +4471,11 @@ os__getvolumepathname_impl(PyObject *module, path_t *path)
+     return result;
+ }
+ 
++#ifdef MS_WINDOWS
++static int _PathCchSkipRoot_Initialized = 0;
++typedef HRESULT (__stdcall *PPathCchSkipRoot) (PCWSTR pszPath, PCWSTR *ppszRootEnd);
++static PPathCchSkipRoot _PathCchSkipRoot;
++#endif
+ 
+ /*[clinic input]
+ os._path_splitroot
+@@ -4489,6 +4493,19 @@ os__path_splitroot_impl(PyObject *module, path_t *path)
+     PyObject *result = NULL;
+     HRESULT ret;
+ 
++    if (_PathCchSkipRoot_Initialized == 0) {
++        HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                         LOAD_LIBRARY_SEARCH_SYSTEM32);
++
++        if (pathapi) {
++            _PathCchSkipRoot = (PPathCchSkipRoot)GetProcAddress(pathapi, "PathCchSkipRoot");
++        } else {
++            _PathCchSkipRoot = NULL;
++        }
++
++        _PathCchSkipRoot_Initialized = 1;
++    }
++
+     buffer = (wchar_t*)PyMem_Malloc(sizeof(wchar_t) * (wcslen(path->wide) + 1));
+     if (!buffer) {
+         return NULL;
+@@ -4499,7 +4516,14 @@ os__path_splitroot_impl(PyObject *module, path_t *path)
+     }
+ 
+     Py_BEGIN_ALLOW_THREADS
+-    ret = PathCchSkipRoot(buffer, &end);
++    if (_PathCchSkipRoot) {
++        ret = _PathCchSkipRoot(buffer, &end);
++    } else {
++        end = PathSkipRootW(buffer);
++        if (!end) {
++            ret = E_FAIL;
++        }
++    }
+     Py_END_ALLOW_THREADS
+     if (FAILED(ret)) {
+         result = Py_BuildValue("sO", "", path->object);
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index d7d3cf0..6e9c090 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -130,8 +130,8 @@ WIN32 is still required for the locale module.
+ 
+ /* set the version macros for the windows headers */
+ /* Python 3.9+ requires Windows 8 or greater */
+-#define Py_WINVER 0x0602 /* _WIN32_WINNT_WIN8 */
+-#define Py_NTDDI NTDDI_WIN8
++#define Py_WINVER 0x0601 /* _WIN32_WINNT_WIN7 */
++#define Py_NTDDI NTDDI_WIN7
+ 
+ /* We only set these values when building Python - we don't want to force
+    these values on extensions, as that will affect the prototypes and
+diff --git a/PCbuild/_freeze_module.vcxproj b/PCbuild/_freeze_module.vcxproj
+index 442e343..ef0a43e 100644
+--- a/PCbuild/_freeze_module.vcxproj
++++ b/PCbuild/_freeze_module.vcxproj
+@@ -94,7 +94,7 @@
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
+-      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>version.lib;ws2_32.lib;shlwapi.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+     </Link>
+   </ItemDefinitionGroup>
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index c39ba3e1a9..0ef3a05fb6 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -106,7 +106,7 @@
+       <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>version.lib;ws2_32.lib;shlwapi.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/Python/fileutils.c b/Python/fileutils.c
+index c86ed40..6b1535d 100644
+--- a/Python/fileutils.c
++++ b/Python/fileutils.c
+@@ -8,7 +8,7 @@
+ #ifdef MS_WINDOWS
+ #  include <malloc.h>
+ #  include <windows.h>
+-#  include <pathcch.h>            // PathCchCombineEx
++#  include <Shlwapi.h>
+ extern int winerror_to_errno(int);
+ #endif
+ 
+@@ -1999,13 +1999,46 @@ _Py_wrealpath(const wchar_t *path,
+ }
+ #endif
+ 
++#ifdef MS_WINDOWS
++static int _PathCchSkipRoot_Initialized = 0;
++typedef HRESULT (__stdcall *PPathCchSkipRoot) (PCWSTR pszPath, PCWSTR *ppszRootEnd);
++static PPathCchSkipRoot _PathCchSkipRoot;
++
++#ifndef PATHCCH_ALLOW_LONG_PATHS
++#define PATHCCH_ALLOW_LONG_PATHS 0x00000001
++#endif
++#endif
+ 
+ int
+ _Py_isabs(const wchar_t *path)
+ {
+ #ifdef MS_WINDOWS
++    if (_PathCchSkipRoot_Initialized == 0) {
++        HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                         LOAD_LIBRARY_SEARCH_SYSTEM32);
++
++        if (pathapi) {
++            _PathCchSkipRoot = (PPathCchSkipRoot)GetProcAddress(pathapi, "PathCchSkipRoot");
++        } else {
++            _PathCchSkipRoot = NULL;
++        }
++
++        _PathCchSkipRoot_Initialized = 1;
++    }
++
++    HRESULT hr;
+     const wchar_t *tail;
+-    HRESULT hr = PathCchSkipRoot(path, &tail);
++    if (_PathCchSkipRoot) {
++        hr = _PathCchSkipRoot(path, &tail);
++    } else {
++        tail = PathSkipRootW(path);
++        if (!tail) {
++            hr = E_FAIL;
++        } else {
++            hr = S_OK;
++        }
++    }
++
+     if (FAILED(hr) || path == tail) {
+         return 0;
+     }
+@@ -2086,6 +2117,11 @@ _Py_abspath(const wchar_t *path, wchar_t **abspath_p)
+ #endif
+ }
+ 
++#ifdef MS_WINDOWS
++static int _PathCchCombineEx_Initialized = 0;
++typedef HRESULT (__stdcall *PPathCchCombineEx) (PWSTR  pszPathOut, size_t cchPathOut, PCWSTR pszPathIn, PCWSTR pszMore, ULONG  dwFlags);
++static PPathCchCombineEx _PathCchCombineEx;
++#endif
+ 
+ // The caller must ensure "buffer" is big enough.
+ static int
+@@ -2093,9 +2127,36 @@ join_relfile(wchar_t *buffer, size_t bufsize,
+              const wchar_t *dirname, const wchar_t *relfile)
+ {
+ #ifdef MS_WINDOWS
+-    if (FAILED(PathCchCombineEx(buffer, bufsize, dirname, relfile,
+-        PATHCCH_ALLOW_LONG_PATHS))) {
+-        return -1;
++
++    if (_PathCchCombineEx_Initialized == 0) {
++        HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                         LOAD_LIBRARY_SEARCH_SYSTEM32);
++
++        if (pathapi) {
++            _PathCchCombineEx = (PPathCchCombineEx)GetProcAddress(pathapi, "PathCchCombineEx");
++        } else {
++            _PathCchCombineEx = NULL;
++        }
++
++        _PathCchCombineEx_Initialized = 1;
++    }
++
++    if (_PathCchCombineEx) {
++        if (FAILED(_PathCchCombineEx(buffer, bufsize, dirname, relfile,
++            PATHCCH_ALLOW_LONG_PATHS))) {
++            return -1;
++        }
++    }
++    else {
++        size_t dirlen = wcslen(dirname);
++        size_t rellen = wcslen(relfile);
++        size_t maxlen = bufsize - 1;
++        if (maxlen > MAX_PATH || dirlen >= maxlen || rellen >= maxlen - dirlen) {
++            return -1;
++        }
++        wchar_t * r = PathCombineW(buffer, dirname, relfile);
++        if (!r)
++            return -1;
+     }
+ #else
+     assert(!_Py_isabs(relfile));

@@ -1,0 +1,19 @@
+{
+  "name": "gul14",
+  "version": "2.11.2",
+  "description": [
+    "General Utility Library for C++14.",
+    "GUL14 contains often-used utility functions and types that form the foundation for other libraries and programs.",
+    "It provides basic functionality that is not available in the C++14 standard library, including some backports from later versions of the standard."
+  ],
+  "homepage": "https://github.desy.de/gul-cpp/gul14.git",
+  "documentation": "https://gul14.info",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

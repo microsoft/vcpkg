@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e63a431..aa46c07 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,20 +25,6 @@ if (MINGW)
+   add_definitions(-D_WIN32_WINNT=0x0600)
+ endif (MINGW)
+ 
+-if (WIN32)
+-  # replace /MD to /MT to avoid link msvcr*.dll
+-  # this needs to be before add_subdirectory calls so that they inherit the modified flags
+-  set(CompilerFlags
+-    CMAKE_C_FLAGS
+-    CMAKE_C_FLAGS_DEBUG
+-    CMAKE_C_FLAGS_MINSIZEREL
+-    CMAKE_C_FLAGS_RELWITHDEBINFO
+-    CMAKE_C_FLAGS_RELEASE)
+-  foreach(CompilerFlag ${CompilerFlags})
+-    string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+-  endforeach()
+-endif ()
+-
+ if (NOT WITH_LUA_ENGINE)
+   set(WITH_LUA_ENGINE "LuaJIT"
+     CACHE STRING "Link to LuaJIT or PUC Lua" FORCE)
+

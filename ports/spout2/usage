@@ -1,0 +1,13 @@
+spout2 provides CMake targets:
+
+    # SpoutGL
+    find_package(Spout2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Spout2::Spout)
+    target_link_libraries(main PRIVATE Spout2::Spout_static)
+
+    # SpoutLibrary
+    target_link_libraries(main PRIVATE Spout2::SpoutLibrary)
+
+    # SpoutDX
+    target_link_libraries(main PRIVATE Spout2::SpoutDX)
+    target_link_libraries(main PRIVATE Spout2::SpoutDX_static)

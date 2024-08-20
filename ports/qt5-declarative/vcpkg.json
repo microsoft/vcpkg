@@ -1,0 +1,35 @@
+{
+  "name": "qt5-declarative",
+  "version": "5.15.14",
+  "description": "Qt Declarative (Quick 2)",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-imageformats",
+    "qt5-svg"
+  ],
+  "default-features": [
+    "platform-default-features"
+  ],
+  "features": {
+    "d3d12": {
+      "description": "Provides a Direct3D 12 backend for the scenegraph.",
+      "supports": "windows & !mingw"
+    },
+    "platform-default-features": {
+      "description": "Enable platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "qt5-declarative",
+          "features": [
+            "d3d12"
+          ],
+          "platform": "windows & !mingw"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "angelscript",
+  "version": "2.36.1",
+  "port-version": 1,
+  "description": "The AngelCode Scripting Library, or AngelScript as it is also known, is an extremely flexible cross-platform scripting library designed to allow applications to extend their functionality through external scripts. It has been designed from the beginning to be an easy to use component, both for the application programmer and the script writer.",
+  "homepage": "https://angelcode.com/angelscript",
+  "license": "Zlib",
+  "supports": "!arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "addons": {
+      "description": "Installs all addons for use in compiling scripts addons"
+    }
+  }
+}

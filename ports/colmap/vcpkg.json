@@ -1,0 +1,59 @@
+{
+  "name": "colmap",
+  "version": "3.9.1",
+  "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface. It offers a wide range of features for reconstruction of ordered and unordered image collections. The software is licensed under the new BSD license.",
+  "homepage": "https://colmap.github.io/",
+  "license": "BSD-3-Clause",
+  "supports": "(linux | (windows & !static) | osx) & (x86 | x64)",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-graph",
+    "boost-program-options",
+    "boost-system",
+    "boost-test",
+    {
+      "name": "ceres",
+      "features": [
+        "lapack",
+        "suitesparse"
+      ]
+    },
+    "cgal",
+    "eigen3",
+    "flann",
+    "freeimage",
+    "gflags",
+    "glew",
+    "glog",
+    "qt5-base",
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "CUDA support for current compute architecture of this machine.",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "cuda-redist": {
+      "description": "Redistributable CUDA support for common supported compute architectures.",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "tests": {
+      "description": "Build all tests.",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
+}

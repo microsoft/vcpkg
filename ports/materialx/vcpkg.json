@@ -1,0 +1,32 @@
+{
+  "name": "materialx",
+  "version": "1.38.9",
+  "description": "MaterialX is an open standard for the exchange of rich material and look-development content across applications and renderers.",
+  "homepage": "https://www.materialx.org/",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "glsl-generator": {
+      "description": "Build the GLSL shader generator back-end."
+    },
+    "mdl-generator": {
+      "description": "Build the MDL shader generator back-end."
+    },
+    "osl-generator": {
+      "description": "Build the OSL shader generator back-end."
+    },
+    "render": {
+      "description": "Build the MaterialX Render library."
+    }
+  }
+}

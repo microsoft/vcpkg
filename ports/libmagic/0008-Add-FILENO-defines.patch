@@ -1,0 +1,26 @@
+From e449e3fb47aee00f0d82782183cc7fd6b446d27b Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sun, 9 May 2021 13:24:42 +0700
+Subject: [PATCH 08/14] Add FILENO defines
+
+---
+ src/file.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/file.h b/src/file.h
+index 5da838c..ccfe0da 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -91,6 +91,9 @@
+ #define W_OK 2
+ #define X_OK R_OK
+ #define F_OK 0
++#define STDIN_FILENO _fileno(stdin)
++#define STDOUT_FILENO _fileno(stdout)
++#define STDERR_FILENO _fileno(stderr)
+ #endif
+ /* Do this here and now, because struct stat gets re-defined on solaris */
+ #include <sys/stat.h>
+-- 
+2.29.2.windows.2
+

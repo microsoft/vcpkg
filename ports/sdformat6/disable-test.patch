@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 78e72e6..8f97304 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -252,7 +252,9 @@ else (buid_errors)
+ 
+     link_directories(${PROJECT_BINARY_DIR}/src)
+ 
++    if (BUILD_TESTING)
+     add_subdirectory(test)
++    endif()
+     add_subdirectory(src)
+     add_subdirectory(include/sdf)
+     add_subdirectory(sdf)
+diff --git a/cmake/SDFUtils.cmake b/cmake/SDFUtils.cmake
+index acd57f8..3626e68 100644
+--- a/cmake/SDFUtils.cmake
++++ b/cmake/SDFUtils.cmake
+@@ -119,6 +119,7 @@ endmacro()
+ include_directories(${PROJECT_SOURCE_DIR}/test/gtest/include)
+ macro (sdf_build_tests)
+   # Build all the tests
++  if (BUILD_TESTING)
+   foreach(GTEST_SOURCE_file ${ARGN})
+     string(REGEX REPLACE ".cc" "" BINARY_NAME ${GTEST_SOURCE_file})
+     set(BINARY_NAME ${TEST_TYPE}_${BINARY_NAME})
+@@ -205,6 +206,7 @@ macro (sdf_build_tests)
+                --error-exitcode=1 --show-leak-kinds=all ${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME})
+     endif()
+   endforeach()
++  endif()
+ endmacro()
+ 
+ #################################################

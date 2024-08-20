@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc4ed65..23a9738 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,7 +63,7 @@ set_target_properties(
+ 	OUTPUT_NAME "jsonifier"
+ 	CXX_STANDARD_REQUIRED ON
+ 	CXX_EXTENSIONS OFF
+-	PUBLIC_HEADER "${HEADERS}"
++	#PUBLIC_HEADER "${HEADERS}"
+ )
+ 
+ target_include_directories(

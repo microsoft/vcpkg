@@ -1,0 +1,50 @@
+{
+  "name": "highfive",
+  "version": "2.9.0",
+  "description": "HighFive is a modern header-only C++/C++11 friendly interface for libhdf5",
+  "homepage": "https://github.com/BlueBrain/HighFive",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "hdf5",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "boost": {
+      "description": "Enables Boost support",
+      "dependencies": [
+        "boost-multi-array",
+        "boost-serialization",
+        "boost-system",
+        "boost-ublas"
+      ]
+    },
+    "eigen3": {
+      "description": "Enable Eigen testing",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "tests": {
+      "description": "Build unit tests",
+      "dependencies": [
+        "catch2"
+      ]
+    },
+    "xtensor": {
+      "description": "Enable xtensor testing",
+      "dependencies": [
+        "xtensor"
+      ]
+    }
+  }
+}

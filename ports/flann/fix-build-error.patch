@@ -1,0 +1,278 @@
+From c111a280591aa542914ca845c0be6099a94315ad Mon Sep 17 00:00:00 2001
+From: Lars Glud <larshg@gmail.com>
+Date: Tue, 16 Mar 2021 10:40:06 +0100
+Subject: [PATCH] fix build error
+
+---
+ CMakeLists.txt         |   8 ++-
+ cmake/Config.cmake.in  |   5 ++
+ src/cpp/CMakeLists.txt | 149 ++++++++++++++++++++++++-----------------
+ 3 files changed, 96 insertions(+), 66 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4b94d2..33b2c26 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 2.8.12)
+ 
+ if(COMMAND cmake_policy)
+     cmake_policy(SET CMP0003 NEW)
+@@ -49,6 +49,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+ # set output path for tests
+ set(TEST_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test)
+ 
++option(BUILD_SHARED_LIBS "Build shared version of libs" ON)
++option(WITH_HDF5 "Build hdf5 library" OFF)
+ option(BUILD_C_BINDINGS "Build C bindings" ON)
+ option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+ option(BUILD_MATLAB_BINDINGS "Build Matlab bindings" ON)
+@@ -146,8 +148,9 @@ if (BUILD_CUDA_LIB)
+     endif(CUDA_FOUND)
+ endif(BUILD_CUDA_LIB)
+ 
+-find_package(PkgConfig REQUIRED)
+-pkg_check_modules(LZ4 REQUIRED liblz4)
++find_package(PkgConfig)
++find_package(lz4 CONFIG REQUIRED)
++set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} liblz4")
+ 
+ #set the C/C++ include path to the "include" directory
+ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/cpp)
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index 6b95a71..e8bb3f7 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -1,5 +1,11 @@
+ @PACKAGE_INIT@
+ 
++# Get definition of 'find_dependency' macro
++include(CMakeFindDependencyMacro)
++# Find lz4. This will create 'lz4::lz4' target
++find_dependency(lz4)
++@CMAKE_EXTERNAL_DEPS@
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
+ check_required_components("flann")
+ 
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index b421abb..474cd7e 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -8,13 +8,7 @@ file(GLOB_RECURSE C_SOURCES flann.cpp)
+ file(GLOB_RECURSE CPP_SOURCES flann_cpp.cpp)
+ file(GLOB_RECURSE CU_SOURCES *.cu)
+ 
+-add_library(flann_cpp_s STATIC ${CPP_SOURCES})
+-target_link_libraries(flann_cpp_s ${LZ4_LIBRARIES})
+-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
+-    set_target_properties(flann_cpp_s PROPERTIES COMPILE_FLAGS -fPIC)
+-endif()
+-set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC FLANN_USE_CUDA)
+-
++#Set flags if we build CUDA versions
+ if (BUILD_CUDA_LIB)
+     SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-DFLANN_USE_CUDA")
+     if(CMAKE_COMPILER_IS_GNUCC)
+@@ -25,75 +19,93 @@ if (BUILD_CUDA_LIB)
+     else()
+ 	    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};" )
+     endif()
+-    cuda_add_library(flann_cuda_s STATIC ${CU_SOURCES})
+-    set_property(TARGET flann_cuda_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
+ endif()
+ 
+-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
+-    add_library(flann_cpp SHARED "")
+-    set_target_properties(flann_cpp PROPERTIES LINKER_LANGUAGE CXX)
+-    target_link_libraries(flann_cpp -Wl,-whole-archive flann_cpp_s -Wl,-no-whole-archive)
++if(NOT BUILD_SHARED_LIBS)
++  add_library(flann_cpp_s STATIC ${CPP_SOURCES})
++  target_link_libraries(flann_cpp_s PUBLIC lz4::lz4)
++  set_property(TARGET flann_cpp_s PROPERTY OUTPUT_NAME flann_cpp)
++  if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
++      set_target_properties(flann_cpp_s PROPERTIES COMPILE_FLAGS -fPIC)
++  endif()
++
++  if (BUILD_CUDA_LIB)
++      cuda_add_library(flann_cuda_s STATIC ${CU_SOURCES})
++      target_link_libraries(flann_cuda_s lz4::lz4)
++      set_property(TARGET flann_cuda_s PROPERTY OUTPUT_NAME flann_cuda)
++      set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC FLANN_USE_CUDA)
++  endif()
++endif()
+ 
+-    if (BUILD_CUDA_LIB)
+-	    cuda_add_library(flann_cuda SHARED "")
++if(BUILD_SHARED_LIBS)
++  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
++      add_library(flann_cpp SHARED ${CPP_SOURCES})
++      set_target_properties(flann_cpp PROPERTIES LINKER_LANGUAGE CXX)
++      target_link_libraries(flann_cpp PUBLIC lz4::lz4)
++      if (BUILD_CUDA_LIB)
++        cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
+         set_target_properties(flann_cuda PROPERTIES LINKER_LANGUAGE CXX)
+-        target_link_libraries(flann_cuda -Wl,-whole-archive flann_cuda_s -Wl,-no-whole-archive)
+-        set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
+-    # 	target_link_libraries(flann_cuda cudpp_x86_64)
+-    endif()
+-else()
+-    add_library(flann_cpp SHARED ${CPP_SOURCES})
+-    target_link_libraries(flann_cpp -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
+-    # export lz4 headers, so that MSVC to creates flann_cpp.lib
+-    set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
+-    if (BUILD_CUDA_LIB)
+-		cuda_add_library(flann_cuda SHARED ${CPP_SOURCES})
+         set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
+-    endif()
+-endif()
+-
+-set_target_properties(flann_cpp PROPERTIES
+-   VERSION ${FLANN_VERSION}
+-   SOVERSION ${FLANN_SOVERSION}
+-   DEFINE_SYMBOL FLANN_EXPORTS
+-)
+-
+-if (BUILD_CUDA_LIB)
+-    set_target_properties(flann_cuda PROPERTIES
+-       VERSION ${FLANN_VERSION}
+-       SOVERSION ${FLANN_SOVERSION}
+-       DEFINE_SYMBOL FLANN_EXPORTS
+-    )
++      endif()
++  else()
++      add_library(flann_cpp SHARED ${CPP_SOURCES})
++      target_link_libraries(flann_cpp PUBLIC lz4::lz4)
++      # export lz4 headers, so that MSVC to creates flann_cpp.lib
++      set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
++      if (BUILD_CUDA_LIB)
++        cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
++        target_link_libraries(flann_cuda lz4::lz4)
++        set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
++      endif()
++  endif()
++    
++  set_target_properties(flann_cpp PROPERTIES
++     VERSION ${FLANN_VERSION}
++     SOVERSION ${FLANN_SOVERSION}
++     DEFINE_SYMBOL FLANN_EXPORTS
++  )
++
++  if (BUILD_CUDA_LIB)
++      set_target_properties(flann_cuda PROPERTIES
++         VERSION ${FLANN_VERSION}
++         SOVERSION ${FLANN_SOVERSION}
++         DEFINE_SYMBOL FLANN_EXPORTS
++      )
++  endif()
+ endif()
+ 
+-
+ if (USE_MPI AND HDF5_IS_PARALLEL)
+-    add_executable(flann_mpi_server flann/mpi/flann_mpi_server.cpp)
+-    target_link_libraries(flann_mpi_server flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
++  if(BUILD_SHARED_LIBS)
++      add_executable(flann_mpi_server flann/mpi/flann_mpi_server.cpp)
++      target_link_libraries(flann_mpi_server flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
+ 
+-    add_executable(flann_mpi_client flann/mpi/flann_mpi_client.cpp)
+-    target_link_libraries(flann_mpi_client flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
++      add_executable(flann_mpi_client flann/mpi/flann_mpi_client.cpp)
++      target_link_libraries(flann_mpi_client flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
+ 
+-    install (TARGETS flann_mpi_client flann_mpi_server
+-        DESTINATION bin)
++      install (TARGETS flann_mpi_client flann_mpi_server
++          DESTINATION bin)
++  endif()
+ endif()
+ 
+-
+ if (BUILD_C_BINDINGS)
++  if(NOT BUILD_SHARED_LIBS)
+     add_library(flann_s STATIC ${C_SOURCES})
+-    target_link_libraries(flann_s -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
++    target_link_libraries(flann_s PUBLIC lz4::lz4)
++    set_property(TARGET flann_s PROPERTY OUTPUT_NAME flann)
+     if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG)
+         set_target_properties(flann_s PROPERTIES COMPILE_FLAGS -fPIC)
+     endif()
+     set_property(TARGET flann_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
+-
++  endif()
++  
++  if(BUILD_SHARED_LIBS)
+     if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_COMPILER_IS_GNUCC)
+-        add_library(flann SHARED "")
++        add_library(flann SHARED ${C_SOURCES})
++        target_link_libraries(flann PUBLIC lz4::lz4)
+         set_target_properties(flann PROPERTIES LINKER_LANGUAGE CXX)
+-        target_link_libraries(flann -Wl,-whole-archive flann_s -Wl,-no-whole-archive)
+     else()
+         add_library(flann SHARED ${C_SOURCES})
+-        target_link_libraries(flann -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
++        target_link_libraries(flann PUBLIC lz4::lz4)
+ 
+         if(MINGW AND OPENMP_FOUND)
+           target_link_libraries(flann gomp)
+@@ -105,20 +117,31 @@ if (BUILD_C_BINDINGS)
+        SOVERSION ${FLANN_SOVERSION}
+        DEFINE_SYMBOL FLANN_EXPORTS
+     )
++  endif()
+ endif()
+ 
+ if(WIN32)
+-if (BUILD_C_BINDINGS AND BUILD_MATLAB_BINDINGS)
+-    install (
+-        TARGETS flann
+-        RUNTIME DESTINATION share/flann/matlab
+-    )
+-endif()
++  if (BUILD_C_BINDINGS AND BUILD_MATLAB_BINDINGS)
++      install (
++          TARGETS flann
++          RUNTIME DESTINATION share/flann/matlab
++      )
++  endif()
+ endif(WIN32)
+ 
++if(NOT BUILD_SHARED_LIBS)
++  list(APPEND FLANN_TARGETS_CPP "flann_cpp_s")
++  list(APPEND FLANN_TARGETS_C "flann_s")
++  list(APPEND FLANN_TARGETS_CUDA "flann_cuda_s")
++endif()
++if(BUILD_SHARED_LIBS)
++  list(APPEND FLANN_TARGETS_CPP "flann_cpp")
++  list(APPEND FLANN_TARGETS_C "flann")
++  list(APPEND FLANN_TARGETS_CUDA "flann_cuda")
++endif()
+ 
+ install (
+-    TARGETS flann_cpp flann_cpp_s
++    TARGETS ${FLANN_TARGETS_CPP}
+     EXPORT ${targets_export_name}
+     INCLUDES DESTINATION include
+     RUNTIME DESTINATION bin
+@@ -128,7 +151,7 @@ install (
+ 
+ if (BUILD_CUDA_LIB)
+     install (
+-        TARGETS flann_cuda flann_cuda_s
++        TARGETS ${FLANN_TARGETS_CUDA}
+         EXPORT ${targets_export_name}
+         INCLUDES DESTINATION include
+         RUNTIME DESTINATION bin
+@@ -139,7 +162,7 @@ endif()
+ 
+ if (BUILD_C_BINDINGS)
+     install (
+-        TARGETS flann flann_s
++        TARGETS ${FLANN_TARGETS_C}
+         EXPORT ${targets_export_name}
+         INCLUDES DESTINATION include
+         RUNTIME DESTINATION bin
+-- 
+2.29.2.windows.2
+

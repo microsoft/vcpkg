@@ -1,0 +1,4 @@
+ngtcp2 provides CMake targets:
+
+    find_package(unofficial-ngtcp2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::ngtcp2::ngtcp2)

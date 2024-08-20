@@ -1,0 +1,58 @@
+diff --git a/libfabric.vcxproj b/libfabric.vcxproj
+index c1e1792..3acbc81 100644
+--- a/libfabric.vcxproj
++++ b/libfabric.vcxproj
+@@ -187,7 +187,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>WIN32;_WINSOCKAPI_=;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WINDOWS;_USRDLL;LIBFABRIC_EXPORTS;HAVE_CONFIG_H;ENABLE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;$(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <CompileAs>CompileAsC</CompileAs>
+       <DisableSpecificWarnings>4127;4200;4204;4221;4115;4201;4100</DisableSpecificWarnings>
+       <C99Support>true</C99Support>
+@@ -215,7 +215,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>WIN32;_WINSOCKAPI_=;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WINDOWS;_USRDLL;LIBFABRIC_EXPORTS;HAVE_CONFIG_H;ENABLE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;$(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <CompileAs>CompileAsC</CompileAs>
+       <DisableSpecificWarnings>4127;4200;94;4204;4221;869</DisableSpecificWarnings>
+       <C99Support>true</C99Support>
+@@ -239,7 +239,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>WIN32;_WINSOCKAPI_=;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WINDOWS;_USRDLL;LIBFABRIC_EXPORTS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;$(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <DisableSpecificWarnings>4127;4200;4204;4221;4115;4201;4100</DisableSpecificWarnings>
+       <C99Support>true</C99Support>
+       <ShowIncludes>false</ShowIncludes>
+@@ -265,7 +265,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>WIN32;_WINSOCKAPI_=;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WINDOWS;_USRDLL;LIBFABRIC_EXPORTS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;$(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <DisableSpecificWarnings>4127;4200;4204;4221;4115;4201;4100</DisableSpecificWarnings>
+       <C99Support>true</C99Support>
+       <ShowIncludes>false</ShowIncludes>
+@@ -285,7 +285,7 @@
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>WIN32;_WINSOCKAPI_=;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WINDOWS;_USRDLL;LIBFABRIC_EXPORTS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;$(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <DisableSpecificWarnings>4127;4200;4204;4221;4115;4201;4100</DisableSpecificWarnings>
+       <SDLCheck>true</SDLCheck>
+       <C99Support>true</C99Support>
+@@ -307,7 +307,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>WIN32;_WINSOCKAPI_=;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WINDOWS;_USRDLL;LIBFABRIC_EXPORTS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)include\windows;$(ProjectDir)prov\netdir\NetDirect;$(ProjectDir)prov\hook\src;$(ProjectDir)prov\hook\include;$(ProjectDir)prov\hook\perf\include;$(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <DisableSpecificWarnings>4127;4200;94;4204;4221;869</DisableSpecificWarnings>
+       <C99Support>true</C99Support>
+       <ShowIncludes>false</ShowIncludes>

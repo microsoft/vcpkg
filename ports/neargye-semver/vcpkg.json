@@ -1,0 +1,17 @@
+{
+  "name": "neargye-semver",
+  "version": "0.3.1",
+  "description": "C++17 header-only dependency-free versioning library complying with Semantic Versioning 2.0.0",
+  "homepage": "https://github.com/Neargye/semver",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

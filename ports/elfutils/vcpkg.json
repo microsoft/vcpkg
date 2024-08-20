@@ -1,0 +1,39 @@
+{
+  "name": "elfutils",
+  "version": "0.191",
+  "description": "elfutils is a collection of utilities and libraries to read, create and modify ELF binary files, find and handle DWARF debug data, symbols, thread state and stacktraces for processes and core files on GNU/Linux.",
+  "homepage": "https://sourceware.org/elfutils/",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "liblzma",
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "libdebuginfod": {
+      "description": "Build the debuginfod library.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
+    "nls": {
+      "description": "Enable native language support",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        },
+        "gettext-libintl"
+      ]
+    }
+  }
+}

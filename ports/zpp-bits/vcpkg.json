@@ -1,0 +1,7 @@
+{
+  "name": "zpp-bits",
+  "version": "4.4.17",
+  "description": "A lightweight C++20 serialization and RPC library",
+  "homepage": "https://github.com/eyalz800/zpp_bits",
+  "license": "MIT"
+}

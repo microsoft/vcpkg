@@ -1,0 +1,7 @@
+{
+  "name": "dirent",
+  "version": "1.24",
+  "description": "Dirent is a C/C++ programming interface that allows programmers to retrieve information about files and directories under Linux/UNIX. This project provides Linux compatible Dirent interface for Microsoft Windows.",
+  "homepage": "https://github.com/tronkko/dirent",
+  "license": "MIT"
+}

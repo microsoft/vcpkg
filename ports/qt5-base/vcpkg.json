@@ -1,0 +1,85 @@
+{
+  "name": "qt5-base",
+  "version": "5.15.14",
+  "port-version": 2,
+  "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "at-spi2-core",
+      "platform": "linux"
+    },
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
+    "double-conversion",
+    "egl-registry",
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    "freetype",
+    "harfbuzz",
+    "libjpeg-turbo",
+    "libpng",
+    {
+      "name": "opengl",
+      "platform": "!windows"
+    },
+    "openssl",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
+    {
+      "name": "qt5-base",
+      "host": true,
+      "default-features": false
+    },
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        {
+          "name": "icu",
+          "platform": "!uwp"
+        }
+      ]
+    },
+    "latest": {
+      "description": "(deprecated)"
+    },
+    "mysqlplugin": {
+      "description": "Build the sql plugin for connecting to mysql databases",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "postgresqlplugin": {
+      "description": "Build the sql plugin for connecting to postgresql databases",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "vulkan": {
+      "description": "Enable Vulkan support in QtGui",
+      "dependencies": [
+        "vulkan"
+      ]
+    }
+  }
+}

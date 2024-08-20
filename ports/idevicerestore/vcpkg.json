@@ -1,0 +1,23 @@
+{
+  "name": "idevicerestore",
+  "version-date": "2023-05-23",
+  "description": "Restore/upgrade firmware of iOS devices",
+  "homepage": "https://libimobiledevice.org/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "(!windows & !android & !ios) | mingw",
+  "dependencies": [
+    "curl",
+    "dirent",
+    "getopt",
+    "libimobiledevice",
+    "libimobiledevice-glue",
+    "libirecovery",
+    "libzip",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

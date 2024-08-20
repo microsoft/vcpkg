@@ -1,0 +1,28 @@
+diff --git "a/gdk-pixbuf/CMakeLists.txt" "b/gdk-pixbuf/CMakeLists.txt"
+index eeb2727..20a6b16 100644
+--- "a/gdk-pixbuf/CMakeLists.txt"
++++ "b/gdk-pixbuf/CMakeLists.txt"
+@@ -1,12 +1,9 @@
+ if(UNIX OR MINGW)
+   find_package(PkgConfig)
+-  pkg_check_modules(GDKPIXBUF2 gdk-pixbuf-2.0)
++  pkg_check_modules(GDKPIXBUF2 gdk-pixbuf-2.0 IMPORTED_TARGET)
+ 
+   if(GDKPIXBUF2_FOUND)
+-    execute_process(
+-      COMMAND ${PKG_CONFIG_EXECUTABLE} gdk-pixbuf-2.0 --variable gdk_pixbuf_moduledir
+-              --define-variable=prefix=${CMAKE_INSTALL_PREFIX} OUTPUT_VARIABLE GDKPIXBUF2_MODULE_DIR
+-      OUTPUT_STRIP_TRAILING_WHITESPACE)
++    pkg_get_variable(GDKPIXBUF2_MODULE_DIR gdk-pixbuf-2.0 gdk_pixbuf_moduledir)
+ 
+     add_library(pixbufloader-heif MODULE pixbufloader-heif.c)
+ 
+@@ -14,7 +11,7 @@ if(UNIX OR MINGW)
+ 
+     target_link_directories(pixbufloader-heif PRIVATE ${GDKPIXBUF2_LIBRARY_DIRS})
+ 
+-    target_link_libraries(pixbufloader-heif PUBLIC ${GDKPIXBUF2_LIBRARIES} heif)
++    target_link_libraries(pixbufloader-heif PUBLIC PkgConfig::GDKPIXBUF2 heif)
+ 
+     install(TARGETS pixbufloader-heif DESTINATION ${GDKPIXBUF2_MODULE_DIR})
+   endif()

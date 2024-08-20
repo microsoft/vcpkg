@@ -1,0 +1,32 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b87af66..10ec58f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -87,9 +87,26 @@ if(UNIX AND NOT APPLE)
+     target_link_libraries (hpdf ${M_LIB})
+ endif()
+ 
++if(LIBHPDF_SHARED)
++  if(WIN32 AND NOT CYGWIN)
++    set_target_properties(hpdf PROPERTIES DEFINE_SYMBOL HPDF_DLL_MAKE)
++  endif()
++endif()
++
++target_include_directories(hpdf PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
++
++add_library(haru INTERFACE)
++set_property(TARGET haru APPEND PROPERTY INTERFACE_LINK_LIBRARIES hpdf)
++
+ install(
+-   TARGETS hpdf
++   TARGETS hpdf haru
++   EXPORT unofficial-libharu-config
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
++
++install(EXPORT unofficial-libharu-config
++  NAMESPACE unofficial::libharu::
++  DESTINATION share/unofficial-libharu
++)

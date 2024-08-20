@@ -1,0 +1,89 @@
+{
+  "versions": [
+    {
+      "git-tree": "4c51a07152ad871b913be51d20251c0e92c7c440",
+      "version-string": "2024.07.15.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fad64d7286723130f0af63e88f1d345823e6e509",
+      "version-string": "2024.07.08.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3bb4c5e9a819c0c75b19b571c9b788ae9deeed8a",
+      "version-string": "2024.07.01.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fc6513f7e57c438020e51abbe83c14e46b2c3a09",
+      "version-string": "2024.06.24.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9d7f653356aba43fa58d8626e9158811bc838834",
+      "version-string": "2024.06.17.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "de918e2a00b4afd8b793a7178ad5af0097e131c5",
+      "version-string": "2024.06.10.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "54491c8aa8f069587e092e2d8e0f4e6ff5267ff6",
+      "version-string": "2024.06.03.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9f2bce7e86fdd262568966b21c107302803becf7",
+      "version-string": "2024.05.27.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "01da6a9868cf626c3d8658f100f86f8df069eb65",
+      "version-string": "2024.05.20.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c50db801a7cca549cee7de167964ad91c34e8498",
+      "version-string": "2024.05.06.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "eee238ddfcd4227de83489012606769fb2e17089",
+      "version-string": "2024.05.02.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3069208e74474384f29d8a14865d74b6a0e3c06b",
+      "version-string": "2024.04.22.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "f06b7028d67ad69b208b340bd8a8f173dd2ee444",
+      "version-string": "2024.04.15.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1c83d8147b39a2ed0182a49deb8afa181ac6a54b",
+      "version-string": "2023.05.08.00",
+      "port-version": 2
+    },
+    {
+      "git-tree": "2776e1f2137ef0df48a05a4e52d905077b60eb82",
+      "version-string": "2023.05.08.00",
+      "port-version": 1
+    },
+    {
+      "git-tree": "0a22cdb1063bfa706ab5a7085ba8724785eabc53",
+      "version-string": "2023.05.08.00",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0311771f0b688e0ff8ffd3c6d297dfbbf43dfd33",
+      "version-string": "2023.02.27.00",
+      "port-version": 0
+    }
+  ]
+}

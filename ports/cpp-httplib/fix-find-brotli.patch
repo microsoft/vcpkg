@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e27481b..51bfdf1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -146,10 +146,10 @@ endif()
+ # This is so we can use our custom FindBrotli.cmake
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ if(HTTPLIB_REQUIRE_BROTLI)
+-	find_package(Brotli COMPONENTS encoder decoder common REQUIRED)
++	find_package(unofficial-brotli CONFIG REQUIRED)
+ 	set(HTTPLIB_IS_USING_BROTLI TRUE)
+ elseif(HTTPLIB_USE_BROTLI_IF_AVAILABLE)
+-	find_package(Brotli COMPONENTS encoder decoder common QUIET)
++	find_package(unofficial-brotli CONFIG QUIET)
+ 	set(HTTPLIB_IS_USING_BROTLI ${Brotli_FOUND})
+ endif()
+ 
+@@ -223,9 +223,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
+ 		# Needed for API from MacOS Security framework
+ 		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>,$<BOOL:${HTTPLIB_USE_CERTS_FROM_MACOSX_KEYCHAIN}>>:-framework CoreFoundation -framework Security>"
+ 		# Can't put multiple targets in a single generator expression or it bugs out.
+-		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::common>
+-		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::encoder>
+-		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::decoder>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlicommon>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlienc>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlidec>
+ 		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
+ 		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
+ 		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::Crypto>
+@@ -281,9 +281,6 @@ if(HTTPLIB_INSTALL)
+ 	install(FILES
+ 		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+ 		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+-		# Install it so it can be used later by the httplibConfig.cmake file.
+-		# Put it in the same dir as our config file instead of a global path so we don't potentially stomp on other packages.
+-		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindBrotli.cmake"
+ 		DESTINATION ${_TARGET_INSTALL_CMAKEDIR}
+ 	)
+ 
+diff --git a/cmake/httplibConfig.cmake.in b/cmake/httplibConfig.cmake.in
+index 93dff32..8c6bc11 100644
+--- a/cmake/httplibConfig.cmake.in
++++ b/cmake/httplibConfig.cmake.in
+@@ -32,7 +32,7 @@ if(@HTTPLIB_IS_USING_BROTLI@)
+ 	# Note that the FindBrotli.cmake file is installed in the same dir as this file.
+ 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 	set(BROTLI_USE_STATIC_LIBS @BROTLI_USE_STATIC_LIBS@)
+-	find_dependency(Brotli COMPONENTS common encoder decoder)
++	find_dependency(unofficial-brotli COMPONENTS common encoder decoder)
+ endif()
+ 
+ # Mildly useful for end-users

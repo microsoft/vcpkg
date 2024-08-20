@@ -1,0 +1,16 @@
+{
+  "name": "libmaxminddb",
+  "version": "1.9.1",
+  "description": "C library for the MaxMind DB file format",
+  "homepage": "https://github.com/maxmind/libmaxminddb",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

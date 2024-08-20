@@ -1,0 +1,29 @@
+diff --git a/src/loslib.c b/src/loslib.c
+index ad5a927..7812011 100644
+--- a/src/loslib.c
++++ b/src/loslib.c
+@@ -4,6 +4,10 @@
+ ** See Copyright Notice in lua.h
+ */
+ 
++#if defined(__APPLE__)
++#include <TargetConditionals.h>
++#endif
++
+ #define loslib_c
+ #define LUA_LIB
+ 
+@@ -143,7 +147,12 @@ static int os_execute (lua_State *L) {
+   const char *cmd = luaL_optstring(L, 1, NULL);
+   int stat;
+   errno = 0;
+-  stat = l_system(cmd);
++#if defined(__APPLE__) && !TARGET_OS_OSX
++   // system() is __IOS_PROHIBITED, __WATCHOS_PROHIBITED, and __TVOS_PROHIBITED.
++   stat = 127; // error: shell execution failed
++#else
++   stat = system(cmd);
++#endif
+   if (cmd != NULL)
+     return luaL_execresult(L, stat);
+   else {

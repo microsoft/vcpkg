@@ -1,0 +1,9 @@
+{
+  "name": "irrxml",
+  "version": "0",
+  "port-version": 1,
+  "description": "Alias port for irrlicht",
+  "dependencies": [
+    "irrlicht"
+  ]
+}

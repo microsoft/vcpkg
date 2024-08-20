@@ -1,0 +1,14 @@
+diff --git a/libzip-config.cmake.in b/libzip-config.cmake.in
+index 8061530..81a38bb 100644
+--- a/libzip-config.cmake.in
++++ b/libzip-config.cmake.in
+@@ -2,7 +2,7 @@
+ 
+ # We need to supply transitive dependencies if this config is for a static library
+ set(IS_SHARED @BUILD_SHARED_LIBS@)
+-if (NOT IS_SHARED)
++if (1)
+   include(CMakeFindDependencyMacro)
+   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/modules")
+ 
+ 

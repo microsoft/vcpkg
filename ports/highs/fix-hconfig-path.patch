@@ -1,0 +1,21 @@
+diff --git a/src/HConfig.h.in b/src/HConfig.h.in
+index 198e07b0d..0d9eba53f 100644
+--- a/src/HConfig.h.in
++++ b/src/HConfig.h.in
+@@ -5,7 +5,7 @@
+ #cmakedefine ZLIB_FOUND
+ #cmakedefine CUPDLP_CPU
+ #cmakedefine CMAKE_BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+-#cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
++#cmakedefine CMAKE_INSTALL_PREFIX ""
+ #cmakedefine HIGHSINT64
+ #cmakedefine HIGHS_NO_DEFAULT_THREADS
+ #cmakedefine HIGHS_HAVE_MM_PAUSE
+@@ -16,6 +16,6 @@
+ #define HIGHS_VERSION_MAJOR @HIGHS_VERSION_MAJOR@
+ #define HIGHS_VERSION_MINOR @HIGHS_VERSION_MINOR@
+ #define HIGHS_VERSION_PATCH @HIGHS_VERSION_PATCH@
+-#define HIGHS_DIR "@CMAKE_SOURCE_DIR@"
++#define HIGHS_DIR ""
+ 
+ #endif /* HCONFIG_H_ */

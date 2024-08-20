@@ -1,0 +1,13 @@
+{
+  "name": "sentencepiece",
+  "version": "0.2.0",
+  "description": "SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems where the vocabulary size is predetermined prior to the neural model training",
+  "license": "Apache-2.0",
+  "supports": "static",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

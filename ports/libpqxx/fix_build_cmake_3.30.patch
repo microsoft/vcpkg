@@ -1,0 +1,42 @@
+From d5bf7cf83d0c86c502b6b30d5f0c8dc3b3049a38 Mon Sep 17 00:00:00 2001
+From: Jeroen Vermeulen <jtvjtv@gmail.com>
+Date: Sun, 23 Jun 2024 21:03:24 +0200
+Subject: [PATCH] Fixes https://github.com/jtv/libpqxx/issues/851
+
+Thanks @tt4g.
+---
+ cmake/config.cmake | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/config.cmake b/cmake/config.cmake
+index ef2ebf5fc..4d9f7e935 100644
+--- a/cmake/config.cmake
++++ b/cmake/config.cmake
+@@ -8,10 +8,18 @@ function(detect_code_compiled code macro msg)
+     endif()
+ endfunction(detect_code_compiled)
+ 
++if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.30.0)
++    include(CMakeDetermineCompilerSupport)
++    cmake_determine_compiler_support(CXX)
++else()
++    # This function changed names in CMake 3.30.  :-(
++    include(CMakeDetermineCompileFeatures)
++    cmake_determine_compile_features(CXX)
++endif()
++
+ include(CheckIncludeFileCXX)
+ include(CheckFunctionExists)
+ include(CheckSymbolExists)
+-include(CMakeDetermineCompileFeatures)
+ include(CheckCXXSourceCompiles)
+ include(CMakeFindDependencyMacro)
+ 
+@@ -39,7 +47,6 @@ check_function_exists("poll" PQXX_HAVE_POLL)
+ 
+ set(CMAKE_REQUIRED_LIBRARIES pq)
+ 
+-cmake_determine_compile_features(CXX)
+ cmake_policy(SET CMP0057 NEW)
+ 
+ # check_cxx_source_compiles requires CMAKE_REQUIRED_DEFINITIONS to specify

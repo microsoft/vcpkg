@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea4b2d2..f622d45 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,7 +32,11 @@ install(FILES
+ )
+ 
+ install(TARGETS lunasvg
++    EXPORT unofficial-lunasvg-config
++    PUBLIC_HEADER DESTINATION  include
++    RUNTIME     DESTINATION    bin
+     LIBRARY     DESTINATION    ${LUNASVG_LIBDIR}
+     ARCHIVE     DESTINATION    ${LUNASVG_LIBDIR}
+     INCLUDES    DESTINATION    ${LUNASVG_INCDIR}
+ )
++install(EXPORT unofficial-lunasvg-config NAMESPACE unofficial::lunasvg:: DESTINATION share/unofficial-lunasvg)
+\ No newline at end of file
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index de58954..74149dc 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -1,4 +1,5 @@
+ target_include_directories(lunasvg
+ PUBLIC
+-    "${CMAKE_CURRENT_LIST_DIR}"
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
++    $<INSTALL_INTERFACE:include>
+ )

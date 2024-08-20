@@ -1,0 +1,46 @@
+{
+  "name": "aubio",
+  "version-date": "2024-01-03",
+  "description": "Aubio is a tool designed for the extraction of annotations from audio signals. Its features include segmenting a sound file before each of its attacks, performing pitch detection, tapping the beat and producing midi streams from live audio.",
+  "homepage": "https://github.com/aubio/aubio",
+  "license": "GPL-3.0-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "tools"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools and add extra dependencies",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample"
+          ]
+        },
+        "libflac",
+        "liblzma",
+        "libogg",
+        {
+          "name": "libsndfile",
+          "default-features": false
+        },
+        "libvorbis"
+      ]
+    }
+  }
+}

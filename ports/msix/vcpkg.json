@@ -1,0 +1,22 @@
+{
+  "name": "msix",
+  "version": "1.7",
+  "port-version": 5,
+  "description": "The MSIX Packaging SDK project is an effort to enable developers on a variety of platforms to pack and unpack packages for the purposes of distribution from either the Microsoft Store, or their own content distribution networks.The MSIX Packaging APIs that a client app would use to interact with .msix/.appx packages are a subset of those documented here. See sample/ExtractContentsSample/ExtractContentsSample.cpp for additional details.",
+  "homepage": "https://github.com/microsoft/msix-packaging",
+  "license": "MIT",
+  "supports": "!static",
+  "dependencies": [
+    "catch2",
+    {
+      "name": "openssl",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "xerces-c",
+    "zlib"
+  ]
+}

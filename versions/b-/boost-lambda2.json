@@ -1,0 +1,84 @@
+{
+  "versions": [
+    {
+      "git-tree": "fc62df395caf4130ddbae2adbfb5f251371dadf4",
+      "version": "1.85.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "7e901e36c760e1cc0288bb68601319da7e96ba38",
+      "version": "1.85.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fedbc3e3176a0c1c7eeee4f306f69bf010d6d428",
+      "version": "1.84.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "09bd21488a9a351da1a26d00dbd76f1da8f50a8a",
+      "version": "1.84.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "399a7528e08b7a9e7a888cbb7d4a60c3212d3fc4",
+      "version": "1.83.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0594208903bfe03699a0b1c4a549156425bc0bdd",
+      "version": "1.82.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "5ac3cfaa7a77c860f9ad676a028c0a79976c4e64",
+      "version": "1.82.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "551076a74a5ed1a80ddac2c5838406b3d23968bc",
+      "version": "1.82.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b86a3afd40cb32ccb1b8e6e59df60d471e5d11a1",
+      "version": "1.81.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "2a549d2ddd842ded64c2b98af01e8d963c93dbcd",
+      "version": "1.81.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "aeb97944da37816d5edea13b87bf8aec9c05a554",
+      "version": "1.81.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fee0b83871eaf93b97a052e4612aab52f2d8b271",
+      "version": "1.80.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "ea6068a8cd06ecf372e93ec9967af05735e0e64a",
+      "version": "1.80.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2ef167f48c1b762124536fd34843f247e9af8b89",
+      "version": "1.79.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fe85b4be83b3a88ec04a16d0704acc722502a128",
+      "version": "1.78.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d97e933c5109b73c577e20f53bc095224e9ca198",
+      "version": "1.77.0",
+      "port-version": 0
+    }
+  ]
+}

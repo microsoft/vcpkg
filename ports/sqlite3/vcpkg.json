@@ -1,0 +1,81 @@
+{
+  "name": "sqlite3",
+  "version": "3.46.0",
+  "port-version": 2,
+  "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
+  "homepage": "https://sqlite.org/",
+  "license": "blessing",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "json1"
+  ],
+  "features": {
+    "dbpage-vtab": {
+      "description": "Enable the recovery extension"
+    },
+    "dbstat": {
+      "description": "Enable the DBSTAT virtual table"
+    },
+    "fts3": {
+      "description": "Enable the FTS3 extension"
+    },
+    "fts4": {
+      "description": "Enable the FTS4 extension"
+    },
+    "fts5": {
+      "description": "Enable the FTS5 extension"
+    },
+    "geopoly": {
+      "description": "Enable geopoly functionality for sqlite3"
+    },
+    "json1": {
+      "description": "Enable JSON functionality for sqlite3"
+    },
+    "limit": {
+      "description": "Enable the UPDATE/DELETE LIMIT clause"
+    },
+    "math": {
+      "description": "Enable math functions"
+    },
+    "memsys3": {
+      "description": "Enable MEMSYS3"
+    },
+    "memsys5": {
+      "description": "Enable MEMSYS5"
+    },
+    "omit-load-extension": {
+      "description": "Enable loading of external extensions"
+    },
+    "rtree": {
+      "description": "Enable the RTREE extension"
+    },
+    "session": {
+      "description": "Enable the SESSION extension"
+    },
+    "snapshot": {
+      "description": "Enable the snapshot function"
+    },
+    "soundex": {
+      "description": "Enable the SOUNDEX scalar function"
+    },
+    "tool": {
+      "description": "Build sqlite3 executable",
+      "supports": "!uwp"
+    },
+    "zlib": {
+      "description": "Build sqlite3 command line tool with zlib support; has no effect on the library itself",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "libb2",
+  "version": "0.98.1",
+  "port-version": 6,
+  "description": "C library providing BLAKE2b, BLAKE2s, BLAKE2bp, BLAKE2sp",
+  "homepage": "https://github.com/BLAKE2/libb2",
+  "supports": "!windows"
+}

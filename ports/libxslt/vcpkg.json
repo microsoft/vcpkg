@@ -1,0 +1,46 @@
+{
+  "name": "libxslt",
+  "version": "1.1.37",
+  "port-version": 4,
+  "description": "Libxslt is a XSLT library implemented in C for XSLT 1.0 and most of EXSLT",
+  "homepage": "https://github.com/GNOME/libxslt",
+  "license": null,
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "crypto": {
+      "description": "Build with crypto support",
+      "supports": "!windows",
+      "dependencies": [
+        "libgcrypt"
+      ]
+    },
+    "default-features": {
+      "description": "default features for the current platform"
+    },
+    "plugins": {
+      "description": "(deprecated)",
+      "supports": "!static"
+    },
+    "python": {
+      "description": "Builds with python support",
+      "supports": "!windows"
+    }
+  }
+}

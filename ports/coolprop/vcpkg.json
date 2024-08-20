@@ -1,0 +1,20 @@
+{
+  "name": "coolprop",
+  "version-semver": "6.4.3",
+  "port-version": 3,
+  "description": "Thermophysical properties for the masses",
+  "homepage": "https://github.com/CoolProp/CoolProp",
+  "license": "MIT",
+  "dependencies": [
+    "eigen3",
+    "fmt",
+    "if97",
+    "msgpack",
+    "rapidjson",
+    "refprop-headers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

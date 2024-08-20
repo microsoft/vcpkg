@@ -1,0 +1,34 @@
+diff --git a/folly/portability/Windows.h b/folly/portability/Windows.h
+index 86fd0f9..ccad11e 100644
+--- a/folly/portability/Windows.h
++++ b/folly/portability/Windows.h
+@@ -32,24 +32,17 @@
+ // disabled to ensure all of the normal names get declared properly.
+ #include <stdio.h>
+ 
+-#ifndef __STDC__
+-/* nolint */
+-#define __STDC__ 1
+ #pragma push_macro("_CRT_DECLARE_NONSTDC_NAMES")
+ #ifdef _CRT_DECLARE_NONSTDC_NAMES
+ #undef _CRT_DECLARE_NONSTDC_NAMES
+ #endif
++
++#include <corecrt.h>
+ #pragma push_macro("_CRT_INTERNAL_NONSTDC_NAMES")
+-#undef _CRT_INTERNAL_NONSTDC_NAMES
+-#include <direct.h> // @manual nolint
+-#include <io.h> // @manual nolint
+-#undef __STDC__
++#define _CRT_INTERNAL_NONSTDC_NAMES 0
++#include <direct.h>
++#include <io.h>
+ #pragma pop_macro("_CRT_INTERNAL_NONSTDC_NAMES")
+-#pragma pop_macro("_CRT_DECLARE_NONSTDC_NAMES")
+-#else
+-#include <direct.h> // @manual nolint
+-#include <io.h> // @manual nolint
+-#endif
+ 
+ #if defined(min) || defined(max)
+ #error Windows.h needs to be included by this header, or else NOMINMAX needs \

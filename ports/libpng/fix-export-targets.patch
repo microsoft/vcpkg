@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eaba327..dbd31d7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1126,6 +1126,12 @@ if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
+   install(EXPORT libpng
+           DESTINATION ${CMAKE_INSTALL_LIBDIR}/libpng
+           FILE libpng${PNGLIB_ABI_VERSION}.cmake)
++  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake" "
++  include(CMakeFindDependencyMacro)
++  find_dependency(ZLIB)
++  include(\"\${CMAKE_CURRENT_LIST_DIR}/libpng${PNGLIB_ABI_VERSION}.cmake\")
++  ")
++  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/libpng")
+ endif()
+ 
+ # TODO: Create MSVC import lib for MinGW-compiled shared lib.

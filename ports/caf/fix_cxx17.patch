@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f088f6a..a8bcf80 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,7 @@ endif()
+ 
+ if(NOT DEFINED CAF_USE_STD_FORMAT)
+   set(CAF_USE_STD_FORMAT OFF CACHE BOOL "Enable std::format support" FORCE)
+-  if(NOT CMAKE_CROSSCOMPILING)
++  if(0)
+     set(snippet "#include <format>
+                  #include <iostream>
+                  int main() { std::cout << std::format(\"{}\", \"ok\"); }")
+@@ -180,8 +180,6 @@ endif()
+ 
+ # -- create the libcaf_test target ahead of time for caf_core ------------------
+ 
+-add_library(libcaf_test)
+-
+ # -- add uninstall target if it does not exist yet -----------------------------
+ 
+ if(NOT TARGET uninstall)
+@@ -326,8 +324,6 @@ function(caf_add_component name)
+     list(APPEND targets ${tst_bin_target})
+     add_executable(${tst_bin_target}
+                    ${CAF_ADD_COMPONENT_LEGACY_TEST_SOURCES})
+-    target_link_libraries(${tst_bin_target} PRIVATE libcaf_test
+-                          ${CAF_ADD_COMPONENT_DEPENDENCIES} ${lib_target})
+     target_include_directories(${tst_bin_target} PRIVATE
+                                "${CMAKE_CURRENT_SOURCE_DIR}/tests/legacy")
+     if(CAF_ADD_COMPONENT_LEGACY_TEST_SUITES)
+@@ -383,8 +379,6 @@ endfunction()
+ 
+ add_subdirectory(libcaf_core)
+ 
+-add_subdirectory(libcaf_test)
+-
+ if(CAF_ENABLE_NET_MODULE)
+   add_subdirectory(libcaf_net)
+ endif()

@@ -1,0 +1,23 @@
+{
+  "name": "nlohmann-json",
+  "version-semver": "3.11.3",
+  "port-version": 1,
+  "description": "JSON for Modern C++",
+  "homepage": "https://github.com/nlohmann/json",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "diagnostics": {
+      "description": "Build json_diagnostics"
+    }
+  }
+}

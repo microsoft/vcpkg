@@ -1,0 +1,152 @@
+{
+  "name": "zeroc-ice",
+  "version": "3.7.9",
+  "port-version": 4,
+  "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
+  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
+  "homepage": "https://github.com/zeroc-ice/ice",
+  "license": null,
+  "supports": "!uwp & !(windows & arm) & !wasm32",
+  "dependencies": [
+    "bzip2",
+    "expat",
+    "lmdb",
+    "mcpp",
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "glacier2lib",
+    "icegridlib",
+    "icestormlib"
+  ],
+  "features": {
+    "glacier2lib": {
+      "description": "Glacier2 libraries"
+    },
+    "glacier2router": {
+      "description": "Glacier2Router",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "icessl"
+          ]
+        }
+      ]
+    },
+    "iceboxlib": {
+      "description": "IceBox libraries and runtime",
+      "supports": "!(windows & static)"
+    },
+    "iceboxtools": {
+      "description": "IceBox tools",
+      "supports": "!(windows & static)"
+    },
+    "icebridge": {
+      "description": "IceBridge",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "iceboxlib"
+          ]
+        }
+      ]
+    },
+    "icediscovery": {
+      "description": "IceDiscovery",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icessl",
+            "icestormlib"
+          ]
+        }
+      ]
+    },
+    "icegridlib": {
+      "description": "IceGrid library",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib"
+          ]
+        }
+      ]
+    },
+    "icegridtools": {
+      "description": "IceGrid tools",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        "expat",
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icegridlib",
+            "icessl"
+          ]
+        }
+      ]
+    },
+    "icelocatordiscovery": {
+      "description": "IceLocatorDiscovery",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icessl",
+            "icestormlib"
+          ]
+        }
+      ]
+    },
+    "icessl": {
+      "description": "IceSSL",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "icestormlib": {
+      "description": "IceStorm library"
+    },
+    "icestormtools": {
+      "description": "IceStorm tools",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        "lmdb",
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icegridlib",
+            "icestormlib"
+          ]
+        }
+      ]
+    }
+  }
+}

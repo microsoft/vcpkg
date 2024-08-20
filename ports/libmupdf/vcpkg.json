@@ -1,0 +1,32 @@
+{
+  "name": "libmupdf",
+  "version": "1.23.11",
+  "description": "a lightweight PDF, XPS, and E-book library",
+  "homepage": "https://github.com/ArtifexSoftware/mupdf",
+  "license": "AGPL-3.0-only",
+  "supports": "!osx",
+  "dependencies": [
+    "curl",
+    "freetype",
+    "glfw3",
+    "gumbo",
+    "harfbuzz",
+    "jbig2dec",
+    "libjpeg-turbo",
+    "openjpeg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "ocr": {
+      "description": "Enable OCR support",
+      "dependencies": [
+        "leptonica",
+        "tesseract"
+      ]
+    }
+  }
+}

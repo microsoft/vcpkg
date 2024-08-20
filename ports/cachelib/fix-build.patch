@@ -1,0 +1,53 @@
+diff --git a/cachelib/cachebench/util/JSONConfig.h b/cachelib/cachebench/util/JSONConfig.h
+index 7da93fc4..cb46b33b 100644
+--- a/cachelib/cachebench/util/JSONConfig.h
++++ b/cachelib/cachebench/util/JSONConfig.h
+@@ -146,10 +146,6 @@ struct Options {};
+
+ template <typename Type, size_t size>
+ constexpr void checkCorrectSize() {
+-#ifndef SKIP_OPTION_SIZE_VERIFY
+-  Options<sizeof(Type)> var = Options<size>{};
+-  (void)var;
+-#endif
+ }
+ } // namespace cachebench
+ } // namespace cachelib
+diff --git a/cachelib/common/CMakeLists.txt b/cachelib/common/CMakeLists.txt
+index 1e6d1a88..fad14a18 100644
+--- a/cachelib/common/CMakeLists.txt
++++ b/cachelib/common/CMakeLists.txt
+@@ -36,9 +36,6 @@ target_link_libraries(cachelib_common PUBLIC
+   FBThrift::thriftprotocol
+   Folly::folly
+   Folly::follybenchmark
+-  Folly::folly_exception_tracer
+-  Folly::folly_exception_tracer_base
+-  Folly::folly_exception_counter
+ )
+
+ install(TARGETS cachelib_common
+diff --git a/cachelib/common/Utils.cpp b/cachelib/common/Utils.cpp
+index 3e149469..0e6b6d9c 100644
+--- a/cachelib/common/Utils.cpp
++++ b/cachelib/common/Utils.cpp
+@@ -15,7 +15,6 @@
+  */
+
+ #include <dirent.h>
+-#include <folly/debugging/exception_tracer/ExceptionTracer.h>
+ #include <sys/mman.h>
+ #include <sys/resource.h>
+ #include <sys/shm.h>
+@@ -420,10 +419,6 @@ size_t getMemAvailable() {
+ }
+
+ void printExceptionStackTraces() {
+-  auto exceptions = folly::exception_tracer::getCurrentExceptions();
+-  for (auto& exc : exceptions) {
+-    std::cerr << exc << std::endl;
+-  }
+ }
+
+ } // namespace util
+

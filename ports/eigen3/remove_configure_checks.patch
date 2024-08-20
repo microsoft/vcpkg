@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f3e69b8..f32ffee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,6 +59,7 @@ include(CheckCXXCompilerFlag)
+ include(GNUInstallDirs)
+ include(CMakeDependentOption)
+ 
++if(0)
+ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ 
+ 
+@@ -419,6 +420,7 @@ endif()
+ set(EIGEN_CUDA_COMPUTE_ARCH 30 CACHE STRING "The CUDA compute architecture level to target when compiling CUDA code")
+ 
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++endif()
+ 
+ # Backward compatibility support for EIGEN_INCLUDE_INSTALL_DIR
+ if(EIGEN_INCLUDE_INSTALL_DIR)
+@@ -495,6 +497,7 @@ if(BUILD_TESTING)
+   add_subdirectory(failtest)
+ endif()
+ 
++if(0)
+ if(EIGEN_LEAVE_TEST_IN_ALL_TARGET)
+   add_subdirectory(blas)
+   add_subdirectory(lapack)
+@@ -532,9 +535,11 @@ if(EIGEN_TEST_SYCL)
+     add_definitions(-DEIGEN_DONT_VECTORIZE_SYCL=1)
+   endif()
+ endif()
++endif()
+ 
+ add_subdirectory(unsupported)
+ 
++if(0)
+ add_subdirectory(demos EXCLUDE_FROM_ALL)
+ 
+ # must be after test and unsupported, for configuring buildtests.in
+@@ -554,6 +559,7 @@ configure_file(scripts/cdashtesting.cmake.in cdashtesting.cmake @ONLY)
+ if(BUILD_TESTING)
+   ei_testing_print_summary()
+ endif()
++endif()
+ 
+ message(STATUS "")
+ message(STATUS "Configured Eigen ${EIGEN_VERSION_NUMBER}")

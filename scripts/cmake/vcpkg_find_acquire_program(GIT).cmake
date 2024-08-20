@@ -1,0 +1,15 @@
+set(program_name git)
+if(CMAKE_HOST_WIN32)
+    set(base_version 2.32.0)
+    set(program_version 2.32.0.2)
+    set(tool_subdirectory "git-${program_version}-2-windows")
+    set(download_urls "https://github.com/git-for-windows/git/releases/download/v${base_version}.windows.2/PortableGit-${program_version}-32-bit.7z.exe")
+    set(download_filename "PortableGit-${program_version}-32-bit.7z.exe")
+    set(download_sha512 867d8534972cbaf7a4224e25a14d484f8d17ef186f8d79e9a758afb90cf69541375cb7615a39702311f4809cb8371ef85c2b1a15bfffe9e48f0e597ac011b348)
+    set(paths_to_search
+        "${DOWNLOADS}/tools/${tool_subdirectory}/mingw32/bin"
+        "${DOWNLOADS}/tools/git/${tool_subdirectory}/mingw32/bin")
+else()
+    set(brew_package_name "git")
+    set(apt_package_name "git")
+endif()

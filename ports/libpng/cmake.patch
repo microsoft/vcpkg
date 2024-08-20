@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e355e4d..6dfe543 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -632,7 +632,7 @@ else()
+   # We also need to use a custom suffix, in order to distinguish between the
+   # shared import library name and the static library name.
+   set(PNG_SHARED_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
+-  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}_static")
++  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
+ endif()
+ 
+ if(PNG_SHARED)

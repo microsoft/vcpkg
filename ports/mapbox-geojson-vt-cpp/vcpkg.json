@@ -1,0 +1,9 @@
+{
+  "name": "mapbox-geojson-vt-cpp",
+  "version-semver": "6.6.5",
+  "description": "Port to C++ of JS GeoJSON-VT for slicing GeoJSON into vector tiles on the fly",
+  "homepage": "https://github.com/mapbox/geojson-vt-cpp",
+  "dependencies": [
+    "mapbox-geometry"
+  ]
+}

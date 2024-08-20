@@ -1,0 +1,17 @@
+{
+  "name": "xproperty",
+  "version": "0.8.1",
+  "port-version": 3,
+  "description": "Traitlets-like C++ properties and implementation of the observer pattern",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "xtl"
+  ]
+}

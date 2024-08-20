@@ -1,0 +1,16 @@
+{
+  "name": "ignition-msgs1",
+  "version": "1.0.0",
+  "port-version": 7,
+  "description": "Middleware protobuf messages for robotics",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "ignition-cmake0",
+    "ignition-math4",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    "protobuf"
+  ]
+}

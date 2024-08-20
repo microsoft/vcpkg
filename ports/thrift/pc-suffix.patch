@@ -1,0 +1,44 @@
+diff --git a/lib/cpp/thrift-nb.pc.in b/lib/cpp/thrift-nb.pc.in
+index 2c6a96973..e99eff2bc 100644
+--- a/lib/cpp/thrift-nb.pc.in
++++ b/lib/cpp/thrift-nb.pc.in
+@@ -26,5 +26,5 @@ Name: Thrift
+ Description: Thrift Nonblocking API
+ Version: @VERSION@
+ Requires: thrift = @VERSION@
+-Libs: -L${libdir} -lthriftnb
++Libs: -L${libdir} -lthriftnb@THRIFT_RUNTIME_POSTFIX@
+ Cflags: -I${includedir}
+diff --git a/lib/cpp/thrift-qt5.pc.in b/lib/cpp/thrift-qt5.pc.in
+index a8b16663e..2720bea79 100644
+--- a/lib/cpp/thrift-qt5.pc.in
++++ b/lib/cpp/thrift-qt5.pc.in
+@@ -26,5 +26,5 @@ Name: Thrift
+ Description: Thrift Qt5 API
+ Version: @VERSION@
+ Requires: thrift = @VERSION@
+-Libs: -L${libdir} -lthriftqt5
++Libs: -L${libdir} -lthriftqt5@THRIFT_RUNTIME_POSTFIX@
+ Cflags: -I${includedir}
+diff --git a/lib/cpp/thrift-z.pc.in b/lib/cpp/thrift-z.pc.in
+index 467d2e11c..cde44158a 100644
+--- a/lib/cpp/thrift-z.pc.in
++++ b/lib/cpp/thrift-z.pc.in
+@@ -26,5 +26,5 @@ Name: Thrift
+ Description: Thrift Zlib API
+ Version: @VERSION@
+ Requires: thrift = @VERSION@
+-Libs: -L${libdir} -lthriftz
++Libs: -L${libdir} -lthriftz@THRIFT_RUNTIME_POSTFIX@
+ Cflags: -I${includedir}
+diff --git a/lib/cpp/thrift.pc.in b/lib/cpp/thrift.pc.in
+index d11e6db29..77da61c3e 100644
+--- a/lib/cpp/thrift.pc.in
++++ b/lib/cpp/thrift.pc.in
+@@ -25,5 +25,5 @@ includedir=@includedir@
+ Name: Thrift
+ Description: Thrift C++ API
+ Version: @VERSION@
+-Libs: -L${libdir} -lthrift
++Libs: -L${libdir} -lthrift@THRIFT_RUNTIME_POSTFIX@
+ Cflags: -I${includedir}

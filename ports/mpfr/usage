@@ -1,0 +1,6 @@
+The package mpfr can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig)
+    pkg_check_modules(mpfr REQUIRED IMPORTED_TARGET mpfr)
+    
+    target_link_libraries(main PRIVATE PkgConfig::mpfr)

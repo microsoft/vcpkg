@@ -1,0 +1,13 @@
+{
+  "name": "qt5-gamepad",
+  "version": "5.15.14",
+  "description": "Qt Gamepad is an add-on library that enables Qt applications to support the use of gamepad hardware and in some cases remote control equipment.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

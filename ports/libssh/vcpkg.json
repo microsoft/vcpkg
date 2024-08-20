@@ -1,0 +1,46 @@
+{
+  "name": "libssh",
+  "version": "0.10.6",
+  "description": "libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side",
+  "homepage": "https://www.libssh.org/",
+  "license": "LGPL-2.1-only",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "openssl",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "pcap",
+      "platform": "!android"
+    },
+    {
+      "name": "server",
+      "platform": "!android"
+    }
+  ],
+  "features": {
+    "pcap": {
+      "description": "SSH server support"
+    },
+    "server": {
+      "description": "Pcap generation support"
+    },
+    "zlib": {
+      "description": "zlib compression support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-get-python-packages",
+  "version-date": "2024-01-24",
+  "documentation": "https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_get_python_packages",
+  "license": "MIT",
+  "supports": "native"
+}

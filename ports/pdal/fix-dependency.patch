@@ -1,0 +1,111 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d13d417..011608d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -269,7 +269,7 @@ target_link_libraries(${PDAL_BASE_LIB_NAME}
+     PRIVATE
+         ${CMAKE_THREAD_LIBS_INIT}
+         ${CMAKE_DL_LIBS}
+-        ${GDAL_LIBRARY}
++        ${GDAL_LIBRARIES}
+         ${GEOTIFF_LIBRARY}
+         ${LIBXML2_LIBRARIES}
+         ${ZLIB_LIBRARIES}
+diff --git a/cmake/zstd.cmake b/cmake/zstd.cmake
+index dfe3dc0..42a78d6 100644
+--- a/cmake/zstd.cmake
++++ b/cmake/zstd.cmake
+@@ -4,7 +4,14 @@
+ option(WITH_ZSTD
+     "Build support for compression/decompression with Zstd." TRUE)
+ if (WITH_ZSTD)
+-    find_package(ZSTD QUIET)
++    find_package(ZSTD NAMES zstd REQUIRED)
++    set(ZSTD_INCLUDE_DIRS "")
++    if(TARGET zstd::libzstd_static)
++        set(ZSTD_LIBRARIES zstd::libzstd_static)
++        set(ZSTD_STATIC_LIB zstd::libzstd_static)
++    else()
++        set(ZSTD_LIBRARIES zstd::libzstd_shared)
++    endif()
+     set_package_properties(ZSTD PROPERTIES TYPE
+         PURPOSE "General compression support")
+     if (ZSTD_FOUND)
+diff --git a/pdal/private/KDImpl.hpp b/pdal/private/KDImpl.hpp
+index 473ffba..db6a7b0 100644
+--- a/pdal/private/KDImpl.hpp
++++ b/pdal/private/KDImpl.hpp
+@@ -97,7 +97,7 @@ public:
+         resultSet.init(&output[0], &out_dist_sqr[0]);
+ 
+         std::array<double, 2> pt { x, y };
+-        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParams(10));
++        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParameters(10));
+         return output;
+     }
+ 
+@@ -110,14 +110,14 @@ public:
+         resultSet.init(&indices->front(), &sqr_dists->front());
+ 
+         std::array<double, 2> pt { x, y };
+-        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParams(10));
++        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParameters(10));
+     }
+ 
+     PointIdList radius(double const& x, double const& y, double const& r) const
+     {
+         PointIdList output;
+-        std::vector<std::pair<std::size_t, double>> ret_matches;
+-        nanoflann::SearchParams params;
++        std::vector<nanoflann::ResultItem<std::size_t, double>> ret_matches;
++        nanoflann::SearchParameters params;
+         params.sorted = true;
+ 
+         std::array<double, 2> pt { x, y };
+@@ -217,7 +217,7 @@ public:
+         // neighbor at the given stride.
+         nanoflann::KNNResultSet<double, PointId, point_count_t> resultSet(k2);
+         resultSet.init(&output[0], &out_dist_sqr[0]);
+-        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParams());
++        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParameters());
+ 
+         // Perform the downsampling if a stride is provided.
+         if (stride > 1)
+@@ -241,14 +241,14 @@ public:
+         pt.push_back(x);
+         pt.push_back(y);
+         pt.push_back(z);
+-        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParams(10));
++        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParameters(10));
+     }
+ 
+     PointIdList radius(double x, double y, double z, double r) const
+     {
+         PointIdList output;
+-        std::vector<std::pair<std::size_t, double>> ret_matches;
+-        nanoflann::SearchParams params;
++        std::vector<nanoflann::ResultItem<std::size_t, double>> ret_matches;
++        nanoflann::SearchParameters params;
+         params.sorted = true;
+ 
+         std::vector<double> pt { x, y, z };
+@@ -315,7 +315,7 @@ public:
+         // neighbor at the given stride.
+         nanoflann::KNNResultSet<double, PointId, point_count_t> resultSet(k2);
+         resultSet.init(&output[0], &out_dist_sqr[0]);
+-        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParams());
++        m_index.findNeighbors(resultSet, &pt[0], nanoflann::SearchParameters());
+ 
+         // Perform the downsampling if a stride is provided.
+         if (stride > 1)
+@@ -330,8 +330,8 @@ public:
+     PointIdList radius(PointId idx, double r) const
+     {
+         PointIdList output;
+-        std::vector<std::pair<std::size_t, double>> ret_matches;
+-        nanoflann::SearchParams params;
++        std::vector<nanoflann::ResultItem<std::size_t, double>> ret_matches;
++        nanoflann::SearchParameters params;
+         params.sorted = true;
+ 
+         std::vector<double> pt;

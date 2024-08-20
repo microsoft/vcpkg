@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b39f0e..507eb4c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2028,7 +2028,7 @@ ADD_SUBDIRECTORY(docs)
+ # install them in the binary dir. Grab all of the .libs, put them
+ # in the libdir.
+ ##
+-IF(MSVC)
++IF(MSVC AND NOT DISABLE_INSTALL_DEPENDENCIES)
+   FILE(GLOB COPY_FILES ${CMAKE_PREFIX_PATH}/lib/*.lib)
+   INSTALL(FILES ${COPY_FILES}
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}

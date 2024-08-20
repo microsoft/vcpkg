@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4d31492a4..38c009b3cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,7 +161,7 @@ endif()
+
+ include(cmake/extra_modules.cmake)
+ add_subdirectory(docs)
+-add_subdirectory(tools)
++# add_subdirectory(tools)
+ add_subdirectory(scripts)
+ add_subdirectory(licensing)
+ 

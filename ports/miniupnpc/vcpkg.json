@@ -1,0 +1,16 @@
+{
+  "name": "miniupnpc",
+  "version": "2.2.6",
+  "description": "UPnP client library/tool to access Internet Gateway Devices",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

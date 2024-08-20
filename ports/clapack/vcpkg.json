@@ -1,0 +1,19 @@
+{
+  "name": "clapack",
+  "version": "3.2.1",
+  "port-version": 23,
+  "description": "CLAPACK (f2c'ed version of LAPACK)",
+  "homepage": "https://netlib.org/lapack/",
+  "license": null,
+  "dependencies": [
+    "blas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

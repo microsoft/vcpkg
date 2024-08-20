@@ -1,0 +1,228 @@
+diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
+index ab10ec5..6c43d82 100644
+--- a/Lib/ctypes/util.py
++++ b/Lib/ctypes/util.py
+@@ -19,6 +19,8 @@ if os.name == "nt":
+         i = i + len(prefix)
+         s, rest = sys.version[i:].split(" ", 1)
+         majorVersion = int(s[:-2]) - 6
++        if majorVersion >= 13:
++           majorVersion += 1
+         minorVersion = int(s[2:3]) / 10.0
+         # I don't think paths are affected by minor version in version 6
+         if majorVersion == 6:
+@@ -36,8 +38,10 @@ if os.name == "nt":
+             return None
+         if version <= 6:
+             clibname = 'msvcrt'
+-        else:
++        elif version <= 13:
+             clibname = 'msvcr%d' % (version * 10)
++        else:
++            clibname = 'appcrt%d' % (version * 10)
+ 
+         # If python was built with in debug mode
+         import imp
+diff --git a/Lib/distutils/command/build_ext.py b/Lib/distutils/command/build_ext.py
+index 65a60b5..b2ee260 100644
+--- a/Lib/distutils/command/build_ext.py
++++ b/Lib/distutils/command/build_ext.py
+@@ -196,7 +196,7 @@ class build_ext (Command):
+             if MSVC_VERSION >= 9:
+                 # Use the .lib files for the correct architecture
+                 if self.plat_name == 'win32':
+-                    suffix = ''
++                    suffix = 'win32'
+                 else:
+                     # win-amd64 or win-ia64
+                     suffix = self.plat_name[4:]
+diff --git a/Lib/distutils/msvc9compiler.py b/Lib/distutils/msvc9compiler.py
+index 9fe6417..57d42b7 100644
+--- a/Lib/distutils/msvc9compiler.py
++++ b/Lib/distutils/msvc9compiler.py
+@@ -182,6 +182,9 @@ def get_build_version():
+     i = i + len(prefix)
+     s, rest = sys.version[i:].split(" ", 1)
+     majorVersion = int(s[:-2]) - 6
++    if majorVersion >= 13:
++        # v13 was skipped and should be v14
++        majorVersion += 1
+     minorVersion = int(s[2:3]) / 10.0
+     # I don't think paths are affected by minor version in version 6
+     if majorVersion == 6:
+diff --git a/Lib/distutils/msvccompiler.py b/Lib/distutils/msvccompiler.py
+index 0e69fd3..77025c6 100644
+--- a/Lib/distutils/msvccompiler.py
++++ b/Lib/distutils/msvccompiler.py
+@@ -164,6 +164,9 @@ def get_build_version():
+     i = i + len(prefix)
+     s, rest = sys.version[i:].split(" ", 1)
+     majorVersion = int(s[:-2]) - 6
++    if majorVersion >= 13:
++        # v13 was skipped and should be v14
++        majorVersion += 1
+     minorVersion = int(s[2:3]) / 10.0
+     # I don't think paths are affected by minor version in version 6
+     if majorVersion == 6:
+diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
+index 7a1a694..7d07150 100644
+--- a/Modules/posixmodule.c
++++ b/Modules/posixmodule.c
+@@ -558,15 +558,33 @@ _PyInt_FromDev(PY_LONG_LONG v)
+ /* The actual size of the structure is determined at runtime.
+  * Only the first items must be present.
+  */
++
++#if _MSC_VER >= 1900
++
++typedef struct {
++    CRITICAL_SECTION lock;
++    intptr_t osfhnd;
++    __int64 startpos;
++    char osfile;
++} my_ioinfo;
++
++#define IOINFO_L2E 6
++#define IOINFO_ARRAYS 128
++
++#else
++
+ typedef struct {
+     intptr_t osfhnd;
+     char osfile;
+ } my_ioinfo;
+ 
+-extern __declspec(dllimport) char * __pioinfo[];
+ #define IOINFO_L2E 5
+-#define IOINFO_ARRAY_ELTS   (1 << IOINFO_L2E)
+ #define IOINFO_ARRAYS 64
++
++#endif
++
++extern __declspec(dllimport) char * __pioinfo[];
++#define IOINFO_ARRAY_ELTS   (1 << IOINFO_L2E)
+ #define _NHANDLE_           (IOINFO_ARRAYS * IOINFO_ARRAY_ELTS)
+ #define FOPEN 0x01
+ #define _NO_CONSOLE_FILENO (intptr_t)-2
+diff --git a/Modules/timemodule.c b/Modules/timemodule.c
+index 61b8d61..7678283 100644
+--- a/Modules/timemodule.c
++++ b/Modules/timemodule.c
+@@ -808,7 +808,7 @@ inittimezone(PyObject *m) {
+ #ifdef PYOS_OS2
+     PyModule_AddIntConstant(m, "timezone", _timezone);
+ #else /* !PYOS_OS2 */
+-    PyModule_AddIntConstant(m, "timezone", timezone);
++    PyModule_AddIntConstant(m, "timezone", _timezone);
+ #endif /* PYOS_OS2 */
+ #ifdef HAVE_ALTZONE
+     PyModule_AddIntConstant(m, "altzone", altzone);
+@@ -816,7 +816,7 @@ inittimezone(PyObject *m) {
+ #ifdef PYOS_OS2
+     PyModule_AddIntConstant(m, "altzone", _timezone-3600);
+ #else /* !PYOS_OS2 */
+-    PyModule_AddIntConstant(m, "altzone", timezone-3600);
++    PyModule_AddIntConstant(m, "altzone", _timezone-3600);
+ #endif /* PYOS_OS2 */
+ #endif
+     PyModule_AddIntConstant(m, "daylight", daylight);
+diff --git a/PC/bdist_wininst/install.c b/PC/bdist_wininst/install.c
+index e3b52a8..a7d1c2c 100644
+--- a/PC/bdist_wininst/install.c
++++ b/PC/bdist_wininst/install.c
+@@ -1185,7 +1185,7 @@ static void CenterWindow(HWND hwnd)
+ 
+ #include <prsht.h>
+ 
+-BOOL CALLBACK
++INT_PTR CALLBACK
+ IntroDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+ {
+     LPNMHDR lpnm;
+@@ -1534,7 +1534,7 @@ SCHEME *GetScheme(int major, int minor)
+     return old_scheme;
+ }
+ 
+-BOOL CALLBACK
++INT_PTR CALLBACK
+ SelectPythonDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+ {
+     LPNMHDR lpnm;
+@@ -1836,7 +1836,7 @@ static void CloseLogfile(void)
+         fclose(logfile);
+ }
+ 
+-BOOL CALLBACK
++INT_PTR CALLBACK
+ InstallFilesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+ {
+     LPNMHDR lpnm;
+@@ -1991,7 +1991,7 @@ InstallFilesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+ }
+ 
+ 
+-BOOL CALLBACK
++INT_PTR CALLBACK
+ FinishedDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+ {
+     LPNMHDR lpnm;
+@@ -2167,23 +2167,6 @@ BOOL NeedAutoUAC()
+     return TRUE;
+ }
+ 
+-// Returns TRUE if the platform supports UAC.
+-BOOL PlatformSupportsUAC()
+-{
+-    // Note that win2k does seem to support ShellExecute with 'runas',
+-    // but does *not* support IsUserAnAdmin - so we just pretend things
+-    // only work on XP and later.
+-    BOOL bIsWindowsXPorLater;
+-    OSVERSIONINFO winverinfo;
+-    winverinfo.dwOSVersionInfoSize = sizeof(winverinfo);
+-    if (!GetVersionEx(&winverinfo))
+-        return FALSE; // something bad has gone wrong
+-    bIsWindowsXPorLater =
+-       ( (winverinfo.dwMajorVersion > 5) ||
+-       ( (winverinfo.dwMajorVersion == 5) && (winverinfo.dwMinorVersion >= 1) ));
+-    return bIsWindowsXPorLater;
+-}
+-
+ // Spawn ourself as an elevated application.  On failure, a message is
+ // displayed to the user - but this app will always terminate, even
+ // on error.
+@@ -2239,7 +2222,7 @@ int DoInstall(void)
+ 
+     // See if we need to do the Vista UAC magic.
+     if (strcmp(user_access_control, "force")==0) {
+-        if (PlatformSupportsUAC() && !MyIsUserAnAdmin()) {
++        if (!MyIsUserAnAdmin()) {
+             SpawnUAC();
+             return 0;
+         }
+@@ -2247,7 +2230,7 @@ int DoInstall(void)
+     } else if (strcmp(user_access_control, "auto")==0) {
+         // Check if it looks like we need UAC control, based
+         // on how Python itself was installed.
+-        if (PlatformSupportsUAC() && !MyIsUserAnAdmin() && NeedAutoUAC()) {
++        if (!MyIsUserAnAdmin() && NeedAutoUAC()) {
+             SpawnUAC();
+             return 0;
+         }
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index 0cbd236..d896a38 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -226,6 +226,13 @@ typedef int pid_t;
+ #define Py_IS_FINITE(X) _finite(X)
+ #define copysign _copysign
+ 
++/* VS 2015 defines these names with a leading underscore */
++#if _MSC_VER >= 1900
++// #define timezone _timezone
++#define daylight _daylight
++#define tzname _tzname
++#endif
++
+ /* Side by Side assemblies supported in VS 2005 and VS 2008 but not 2010*/
+ #if _MSC_VER >= 1400 && _MSC_VER < 1600
+ #define HAVE_SXS 1

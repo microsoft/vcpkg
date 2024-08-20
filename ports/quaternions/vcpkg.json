@@ -1,0 +1,10 @@
+{
+  "name": "quaternions",
+  "version": "1.0.0",
+  "port-version": 2,
+  "description": "A C++11 library to work with quaternions, as a single header file.",
+  "homepage": "https://github.com/ferd36/quaternions",
+  "dependencies": [
+    "boost-mpl"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "comms-ublox",
+  "version-semver": "1.0.0",
+  "description": "UBLOX (UBX) protocol definition, generated out of cc.ublox.commsdsl",
+  "homepage": "https://commschamp.github.io/",
+  "documentation": "https://github.com/commschamp/cc.ublox.generated",
+  "license": null,
+  "dependencies": [
+    "comms",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

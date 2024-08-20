@@ -1,0 +1,18 @@
+{
+  "name": "xnnpack",
+  "version-date": "2022-12-22",
+  "description": "High-efficiency floating-point neural network inference operators for mobile, server, and Web",
+  "homepage": "https://github.com/google/XNNPACK",
+  "license": "BSD-3-Clause",
+  "supports": "!(arm & windows) & !uwp & !arm32",
+  "dependencies": [
+    "cpuinfo",
+    "fp16",
+    "fxdiv",
+    "pthreadpool",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

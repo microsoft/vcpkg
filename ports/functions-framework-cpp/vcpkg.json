@@ -1,0 +1,23 @@
+{
+  "name": "functions-framework-cpp",
+  "version": "1.2.0",
+  "description": "Functions Framework for C++.",
+  "homepage": "https://github.com/GoogleCloudPlatform/functions-framework-cpp/",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "abseil",
+    "boost-beast",
+    "boost-program-options",
+    "boost-serialization",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

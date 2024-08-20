@@ -1,0 +1,23 @@
+{
+  "name": "licensepp",
+  "version-date": "2020-11-24",
+  "description": "Cross platform software licensing library",
+  "homepage": "https://github.com/zuhd-org/licensepp",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "cryptopp",
+      "features": [
+        "pem-pack"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "telnetpp",
+  "version": "3.1.0",
+  "description": "Telnet++ is an implementation of the Telnet Session Layer protocol using C++17",
+  "homepage": "https://github.com/KazDragon/telnetpp",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-container",
+    "boost-exception",
+    "boost-range",
+    "boost-signals2",
+    "boost-variant",
+    "gsl-lite",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "zlib"
+  ],
+  "features": {
+    "zlib": {
+      "description": "Zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

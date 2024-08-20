@@ -1,0 +1,40 @@
+{
+  "name": "x264",
+  "version": "0.164.3108",
+  "description": "x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format",
+  "homepage": "https://www.videolan.org/developers/x264.html",
+  "license": "GPL-2.0-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "asm",
+      "platform": "!(arm32 & windows)"
+    },
+    {
+      "name": "gpl",
+      "platform": "!(arm32 & windows)"
+    }
+  ],
+  "features": {
+    "asm": {
+      "description": "Enable platform-specific assembly optimizations",
+      "supports": "!(arm32 & windows)"
+    },
+    "chroma-format-all": {
+      "description": "Output all chroma formats"
+    },
+    "gpl": {
+      "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
+    },
+    "tool": {
+      "description": "Build the command line tool",
+      "supports": "!uwp"
+    }
+  }
+}

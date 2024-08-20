@@ -1,0 +1,61 @@
+{
+  "name": "exiv2",
+  "version": "0.28.1",
+  "port-version": 1,
+  "description": "Image metadata library and tools",
+  "homepage": "https://exiv2.org",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "inih",
+    {
+      "name": "libiconv",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "bmff": {
+      "description": "Support for BMFF files (e.g., CR3, HEIF, HEIC, AVIF, and JPEG XL)",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "nls": {
+      "description": "Build native language support",
+      "dependencies": [
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "png": {
+      "description": "Build with png support",
+      "dependencies": [
+        "libpng",
+        "zlib"
+      ]
+    },
+    "video": {
+      "description": "Deprecated. it will be removed in the future."
+    },
+    "xmp": {
+      "description": "Build with XMP metadata support",
+      "dependencies": [
+        "expat"
+      ]
+    }
+  }
+}

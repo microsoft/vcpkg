@@ -1,0 +1,25 @@
+{
+  "name": "cpp-netlib",
+  "version": "0.13.0",
+  "port-version": 9,
+  "description": "A collection of network-related routines/implementations geared towards providing a robust cross-platform networking library",
+  "homepage": "https://cpp-netlib.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-assign",
+    "boost-logic",
+    "boost-program-options",
+    "boost-scope-exit",
+    "boost-smart-ptr",
+    "boost-spirit",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

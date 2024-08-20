@@ -1,0 +1,17 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -102,5 +102,5 @@
+-  if(gz_msgs_protoc_GENERATE_RUBY)
++  if(0)
+     file(MAKE_DIRECTORY ${gz_msgs_protoc_OUTPUT_RUBY_DIR})
+     set(output_ruby "${gz_msgs_protoc_OUTPUT_RUBY_DIR}${proto_package_dir}/${FIL_WE}_pb.rb")
+     list(APPEND ${gz_msgs_protoc_OUTPUT_RUBY_VAR} ${output_ruby})
+     list(APPEND output_files ${output_ruby})
+@@ -126,5 +126,5 @@
+-  if(${gz_msgs_protoc_GENERATE_RUBY})
++  if(0)
+     list(APPEND GENERATE_ARGS
+       --generate-ruby
+       --output-ruby-path "${gz_msgs_protoc_OUTPUT_RUBY_DIR}")
+   endif()

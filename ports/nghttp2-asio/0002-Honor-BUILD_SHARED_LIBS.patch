@@ -1,0 +1,26 @@
+From c68e0a22f8a96ceb5011aa09c4ad93d26c31dc0c Mon Sep 17 00:00:00 2001
+From: m8mble <m8mble@vivaldi.net>
+Date: Fri, 24 Feb 2023 11:36:19 +0100
+Subject: [PATCH 1/1] Honor BUILD_SHARED_LIBS
+
+Signed-off-by: m8mble <m8mble@vivaldi.net>
+---
+ lib/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index ee8f87d..0a67c14 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -36,7 +36,7 @@ set(NGHTTP2_ASIO_SOURCES
+   asio_client_tls_context.cc
+ )
+ 
+-add_library(nghttp2_asio SHARED
++add_library(nghttp2_asio
+   ${NGHTTP2_ASIO_SOURCES}
+   $<TARGET_OBJECTS:url-parser>
+ )
+-- 
+2.39.1
+

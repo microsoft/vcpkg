@@ -1,0 +1,11 @@
+{
+  "name": "tsl-hopscotch-map",
+  "version": "2.3.1",
+  "description": "C++ implementation of a fast hash map and hash set using hopscotch hashing",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

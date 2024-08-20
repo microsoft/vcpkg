@@ -1,0 +1,55 @@
+diff --git a/include/BoostInstall.cmake b/include/BoostInstall.cmake
+index f9342f1715..a6bd9c349a 100644
+--- a/include/BoostInstall.cmake	
++++ b/include/BoostInstall.cmake
+@@ -315,6 +315,12 @@ function(boost_install_target)
+         string(APPEND CONFIG_FILE_CONTENTS "  find_dependency(boost_${CMAKE_MATCH_1} ${__VERSION} EXACT)\n")
+         string(APPEND CONFIG_FILE_CONTENTS "endif()\n")
+ 
++      elseif(dep MATCHES "^\\$<TARGET_NAME_IF_EXISTS:Boost::(.*)>$")
++
++        string(APPEND CONFIG_FILE_CONTENTS "if(NOT boost_${CMAKE_MATCH_1}_FOUND)\n")
++        string(APPEND CONFIG_FILE_CONTENTS "  find_package(boost_${CMAKE_MATCH_1} ${__VERSION} EXACT QUIET)\n")
++        string(APPEND CONFIG_FILE_CONTENTS "endif()\n")
++
+       elseif(dep STREQUAL "Threads::Threads")
+ 
+         string(APPEND CONFIG_FILE_CONTENTS "set(THREADS_PREFER_PTHREAD_FLAG ON)\n")
+diff --git a/include/BoostRoot.cmake b/include/BoostRoot.cmake
+index f356666739..1843f528cd 100644
+--- a/include/BoostRoot.cmake	
++++ b/include/BoostRoot.cmake
+@@ -189,6 +189,7 @@ function(__boost_scan_dependencies lib var)
+ 
+   set(result "")
+   set(required_components "")
++  set(optional_components "")
+ 
+   if(EXISTS "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${lib}/CMakeLists.txt")
+ 
+@@ -202,6 +203,12 @@ function(__boost_scan_dependencies lib var)
+         string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
+         list(APPEND result ${dep})
+ 
++      elseif(line MATCHES "^[ ]*$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
++
++        list(APPEND optional_components ${CMAKE_MATCH_1})
++        string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
++        list(APPEND result ${dep})
++
+       endif()
+ 
+     endforeach()
+@@ -209,9 +216,10 @@ function(__boost_scan_dependencies lib var)
+   endif()
+ 
+   list(REMOVE_DUPLICATES required_components)
++  list(REMOVE_DUPLICATES optional_components)
+   list(REMOVE_ITEM required_components boost ${lib}) # due to property_tree and python
+-  if(required_components)
++  if(required_components OR optional_components)
+-    find_package(Boost COMPONENTS ${required_components} REQUIRED CONFIG)
++    find_package(Boost COMPONENTS ${required_components} OPTIONAL_COMPONENTS ${optional_components} REQUIRED CONFIG)
+   endif()
+   set(${var} ${result} PARENT_SCOPE)
+ 

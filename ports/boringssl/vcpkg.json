@@ -1,0 +1,17 @@
+{
+  "name": "boringssl",
+  "version-date": "2023-10-13",
+  "description": "BoringSSL is a fork of OpenSSL developed by Google",
+  "homepage": "https://boringssl.googlesource.com/boringssl",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

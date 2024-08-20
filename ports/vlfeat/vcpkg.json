@@ -1,0 +1,22 @@
+{
+  "name": "vlfeat",
+  "version-date": "2020-07-10",
+  "port-version": 4,
+  "description": "An open library of computer vision algorithms",
+  "homepage": "https://www.vlfeat.org",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP support"
+    }
+  }
+}

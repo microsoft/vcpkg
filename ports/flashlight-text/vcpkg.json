@@ -1,0 +1,25 @@
+{
+  "name": "flashlight-text",
+  "version": "0.0.4",
+  "description": "Flashlight Text is a library for tokenization, beam search, and text processing.",
+  "homepage": "https://github.com/flashlight/text",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "kenlm": {
+      "description": "Build with KenLM",
+      "dependencies": [
+        "kenlm"
+      ]
+    }
+  }
+}

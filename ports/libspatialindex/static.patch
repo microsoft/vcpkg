@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c34ee8d71..84e4a9247 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ SET(SIDX_VERSION_MINOR "9")
+ SET(SIDX_VERSION_PATCH "3")
+ SET(SIDX_LIB_VERSION "6.1.1")
+ SET(SIDX_LIB_SOVERSION "6")
+-SET(BUILD_SHARED_LIBS ON)
++option(BUILD_SHARED_LIBS "Build shared libs" ON)
+ 
+ 
+ set(SIDX_VERSION_STRING "${SIDX_VERSION_MAJOR}.${SIDX_VERSION_MINOR}.${SIDX_VERSION_PATCH}")
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 90f4501bc..aad327181 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -188,9 +188,13 @@ set(SIDX_SOURCES
+ #endif()
+ 
+ 
+-add_library(${SIDX_LIB_NAME} ${SIDX_SOURCES})
+-
+-add_library(${SIDX_C_LIB_NAME} ${SIDX_CAPI_CPP})
++if(BUILD_SHARED_LIBS)
++  add_library(${SIDX_LIB_NAME} SHARED ${SIDX_SOURCES})
++  add_library(${SIDX_C_LIB_NAME} SHARED ${SIDX_CAPI_CPP})
++else(BUILD_SHARED_LIBS)
++  add_library(${SIDX_LIB_NAME} STATIC ${SIDX_SOURCES})
++  add_library(${SIDX_C_LIB_NAME} STATIC ${SIDX_CAPI_CPP})
++endif(BUILD_SHARED_LIBS)
+ 
+ target_link_libraries(${SIDX_C_LIB_NAME}
+   ${SIDX_LIB_NAME}
+@@ -208,9 +212,10 @@ if(WIN32)
+     target_compile_options(${SIDX_LIB_NAME} PRIVATE "/wd4068")
+     target_compile_options(${SIDX_C_LIB_NAME} PRIVATE "/wd4068")
+ 
+-    target_compile_definitions(${SIDX_C_LIB_NAME} PRIVATE "-DSIDX_DLL_EXPORT=1")
+-    target_compile_definitions(${SIDX_LIB_NAME} PRIVATE "-DSIDX_DLL_EXPORT=1")
+-    if (NOT WITH_STATIC_SIDX)
++    if (BUILD_SHARED_LIBS)
++        target_compile_definitions(${SIDX_C_LIB_NAME} PRIVATE "-DSIDX_DLL_EXPORT=1")
++        target_compile_definitions(${SIDX_LIB_NAME} PRIVATE "-DSIDX_DLL_EXPORT=1")
++    else()
+         target_compile_definitions(${SIDX_LIB_NAME} PRIVATE "-DSIDX_DLL_IMPORT=1")
+         target_compile_definitions(${SIDX_C_LIB_NAME} PRIVATE "-DSIDX_DLL_IMPORT=1")
+     endif()
+
+diff --git a/include/spatialindex/capi/sidx_export.h b/include/spatialindex/capi/sidx_export.h
+index b6c84f1ef..7b0a39364 100644
+--- a/include/spatialindex/capi/sidx_export.h
++++ b/include/spatialindex/capi/sidx_export.h
+@@ -29,7 +29,7 @@
+ #pragma once
+ 
+ #ifndef SIDX_C_DLL
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) && defined(SIDX_DLL_EXPORT)
+ #  define SIDX_C_DLL     __declspec(dllexport)
+ #  define SIDX_DLL     __declspec(dllexport)
+ #else
+
+diff --git a/include/spatialindex/tools/Tools.h b/include/spatialindex/tools/Tools.h
+index 322bc819e..46b62fa00 100644
+--- a/include/spatialindex/tools/Tools.h
++++ b/include/spatialindex/tools/Tools.h
+@@ -46,7 +46,7 @@
+   #ifdef SIDX_DLL_EXPORT
+     #define SIDX_DLL __declspec(dllexport)
+   #else
+-    #define SIDX_DLL __declspec(dllimport)
++    #define SIDX_DLL
+   #endif
+ 
+   // Nuke this annoying warning.  See http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html

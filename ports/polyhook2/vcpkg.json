@@ -1,0 +1,55 @@
+{
+  "name": "polyhook2",
+  "version-date": "2024-06-03",
+  "description": "C++17, x86/x64 Hooking Library v2.0",
+  "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
+  "license": "MIT",
+  "supports": "(x86 | x64) & !(uwp | osx)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zydis"
+  ],
+  "default-features": [
+    "detours",
+    {
+      "name": "exception",
+      "platform": "windows"
+    },
+    "inlinentd",
+    {
+      "name": "pe",
+      "platform": "windows"
+    },
+    "virtuals"
+  ],
+  "features": {
+    "detours": {
+      "description": "Implement detour functionality",
+      "dependencies": [
+        "asmtk"
+      ]
+    },
+    "exception": {
+      "description": "Implement all exception hooking functionality"
+    },
+    "inlinentd": {
+      "description": "Support inline hooks without specifying typedefs by generating callback stubs at runtime with AsmJit",
+      "dependencies": [
+        "asmjit"
+      ]
+    },
+    "pe": {
+      "description": "Implement all win pe hooking functionality"
+    },
+    "virtuals": {
+      "description": "Implement all virtual table hooking functionality"
+    }
+  }
+}

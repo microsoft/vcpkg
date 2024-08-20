@@ -1,0 +1,4 @@
+glslang provides CMake targets:
+
+    find_package(glslang CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper)

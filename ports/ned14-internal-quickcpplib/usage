@@ -1,0 +1,2 @@
+You should NOT DIRECTLY USE quickcpplib in your own libraries!
+It is intended for internal use by ned14's vcpkg libraries only.

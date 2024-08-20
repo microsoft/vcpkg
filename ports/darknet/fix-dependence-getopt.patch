@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d34b8f8..a8488c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -203,6 +203,7 @@ if(MSVC AND USE_INTEGRATED_LIBS)
+   find_package(PThreads4W REQUIRED)
+ elseif(MSVC)
+   find_package(pthreads REQUIRED)
++  find_package(unofficial-getopt-win32 REQUIRED)
+ endif()
+ if(ENABLE_OPENCV)
+   find_package(OpenCV REQUIRED)
+@@ -371,9 +372,9 @@ list(APPEND headers
+ if(NOT MSVC)
+   list(REMOVE_ITEM headers
+     ${CMAKE_CURRENT_LIST_DIR}/src/gettimeofday.h
+-    ${CMAKE_CURRENT_LIST_DIR}/src/getopt.h
+   )
+ endif()
++
+ #set(exported_headers ${headers})
+ 
+ #look for all *.c files in src folder
+@@ -391,10 +392,13 @@ list(REMOVE_ITEM sources
+ if(NOT MSVC)
+   list(REMOVE_ITEM sources
+     ${CMAKE_CURRENT_LIST_DIR}/src/gettimeofday.c
+-    ${CMAKE_CURRENT_LIST_DIR}/src/getopt.c
+   )
+ endif()
+ 
++#remove local getopt files
++list(REMOVE_ITEM headers ${CMAKE_CURRENT_LIST_DIR}/src/getopt.h)
++list(REMOVE_ITEM sources ${CMAKE_CURRENT_LIST_DIR}/src/getopt.c)
++
+ if(ENABLE_CUDA)
+   file(GLOB cuda_sources "${CMAKE_CURRENT_LIST_DIR}/src/*.cu")
+ endif()
+@@ -478,6 +482,7 @@ endif()
+ if(MSVC)
+   target_link_libraries(darknet PRIVATE PThreads_windows::PThreads_windows)
+   target_link_libraries(darknet PRIVATE wsock32)
++  target_link_libraries(dark PRIVATE unofficial::getopt-win32::getopt)
+   target_link_libraries(dark PUBLIC PThreads_windows::PThreads_windows)
+   target_link_libraries(dark PUBLIC wsock32)
+   target_link_libraries(uselib PRIVATE PThreads_windows::PThreads_windows)
+diff --git a/DarknetConfig.cmake.in b/DarknetConfig.cmake.in
+index 1221206..6bdff49 100644
+--- a/DarknetConfig.cmake.in
++++ b/DarknetConfig.cmake.in
+@@ -9,6 +9,10 @@ if(@OpenCV_FOUND@)
+   find_dependency(OpenCV)
+ endif()
+ 
++if(@unofficial-getopt-win32_FOUND@)
++  find_dependency(unofficial-getopt-win32)
++endif()
++
+ if(@ENABLE_CUDA@)
+   include(CheckLanguage)
+   check_language(CUDA)

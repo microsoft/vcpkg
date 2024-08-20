@@ -1,0 +1,25 @@
+{
+  "name": "alpaka",
+  "version": "1.1.0",
+  "description": "The alpaka library is a header-only abstraction library for accelerator development",
+  "homepage": "https://github.com/alpaka-group/alpaka",
+  "license": "MPL-2.0",
+  "dependencies": [
+    {
+      "name": "boost-core",
+      "version>=": "1.74.0"
+    },
+    {
+      "name": "boost-predef",
+      "version>=": "1.74.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

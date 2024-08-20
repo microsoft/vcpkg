@@ -1,0 +1,4 @@
+libimobiledevice provides CMake targets:
+
+    find_package(unofficial-libimobiledevice CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libimobiledevice::libimobiledevice)

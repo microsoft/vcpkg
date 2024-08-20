@@ -1,0 +1,23 @@
+{
+  "name": "nettle",
+  "version": "3.10",
+  "description": "Nettle is a low-level cryptographic library that is designed to fit easily in more or less any context: In crypto toolkits for object-oriented languages (C++, Python, Pike, ...), in applications like LSH or GNUPG, or even in kernel space.",
+  "homepage": "https://git.lysator.liu.se/nettle/nettle",
+  "license": null,
+  "dependencies": [
+    "gmp",
+    {
+      "name": "nettle",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
+}

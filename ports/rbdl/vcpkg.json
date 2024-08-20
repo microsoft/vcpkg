@@ -1,0 +1,21 @@
+{
+  "name": "rbdl",
+  "version": "3.3.0",
+  "port-version": 7,
+  "description": "Rigid Body Dynamics Library",
+  "homepage": "https://github.com/rbdl/rbdl",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-lexical-cast",
+    "eigen3",
+    "lua",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

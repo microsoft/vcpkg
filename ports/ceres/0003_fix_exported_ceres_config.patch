@@ -1,0 +1,66 @@
+diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
+index 4745483..b55462d 100644
+--- a/cmake/CeresConfig.cmake.in
++++ b/cmake/CeresConfig.cmake.in
+@@ -217,55 +217,14 @@ else (Eigen3_FOUND)
+ endif (Eigen3_FOUND)
+ 
+ # glog (and maybe gflags).
+-#
+-# Flags set during configuration and build of Ceres.
+-set(CERES_USES_MINIGLOG @MINIGLOG@)
+-set(CERES_GLOG_VERSION @glog_VERSION@)
+-set(CERES_GLOG_WAS_BUILT_WITH_CMAKE @FOUND_INSTALLED_GLOG_CMAKE_CONFIGURATION@)
+-
+-set(CERES_USES_GFLAGS @GFLAGS@)
+-set(CERES_GFLAGS_VERSION @gflags_VERSION@)
+-
+-if (CERES_USES_MINIGLOG)
+-  # Output message at standard log level (not the lower STATUS) so that
+-  # the message is output in GUI during configuration to warn user.
+-  ceres_message("-- Found Ceres compiled with miniglog substitute "
+-    "for glog, beware this will likely cause problems if glog is later linked.")
+-else(CERES_USES_MINIGLOG)
+-  if (CERES_GLOG_WAS_BUILT_WITH_CMAKE)
+-    find_package(glog ${CERES_GLOG_VERSION} CONFIG QUIET)
+-    set(GLOG_FOUND ${glog_FOUND})
+-  else()
+-    # Version of glog against which Ceres was built was not built with CMake,
+-    # use the exported glog find_package() module from Ceres to find it again.
+-    # Append the locations of glog when Ceres was built to the search path hints.
+-    list(APPEND GLOG_INCLUDE_DIR_HINTS "@GLOG_INCLUDE_DIR@")
+-    get_filename_component(CERES_BUILD_GLOG_LIBRARY_DIR "@GLOG_LIBRARY@" PATH)
+-    list(APPEND GLOG_LIBRARY_DIR_HINTS ${CERES_BUILD_GLOG_LIBRARY_DIR})
+-
+-    # Search quietly s/t we control the timing of the error message if not found.
+-    find_package(Glog QUIET)
+-  endif()
+ 
+-  if (GLOG_FOUND)
+-    ceres_message(STATUS "Found required Ceres dependency: glog")
+-  else()
+-    ceres_report_not_found("Missing required Ceres dependency: glog.")
+-  endif()
++include (CMakeFindDependencyMacro)
++find_dependency (glog NO_MODULE)
+ 
+-  # gflags is only a public dependency of Ceres via glog, thus is not required
+-  # if Ceres was built with MINIGLOG.
+-  if (CERES_USES_GFLAGS)
+-    # Search quietly s/t we control the timing of the error message if not found.
+-    find_package(gflags ${CERES_GFLAGS_VERSION} QUIET)
+-    if (gflags_FOUND AND TARGET gflags)
+-      ceres_message(STATUS "Found required Ceres dependency: gflags")
+-    else()
+-      ceres_report_not_found("Missing required Ceres "
+-        "dependency: gflags (not found, or not found as exported CMake target).")
+-    endif()
+-  endif()
+-endif(CERES_USES_MINIGLOG)
++# SuiteSparse
++if (@SUITESPARSE@)
++    find_dependency(SuiteSparse CONFIG)
++endif()
+ 
+ # Import exported Ceres targets, if they have not already been imported.
+ if (NOT TARGET ceres AND NOT Ceres_BINARY_DIR)

@@ -1,0 +1,35 @@
+{
+  "name": "sqlitecpp",
+  "version": "3.3.1",
+  "description": "SQLiteC++ (SQLiteCpp) is a smart and easy to use C++ SQLite3 wrapper.",
+  "homepage": "https://github.com/SRombauts/SQLiteCpp",
+  "license": "MIT",
+  "dependencies": [
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "sqlite"
+  ],
+  "features": {
+    "sqlcipher": {
+      "description": "Use the sqlcipher port",
+      "dependencies": [
+        {
+          "name": "sqlcipher",
+          "default-features": false
+        }
+      ]
+    },
+    "sqlite": {
+      "description": "Deprecated; no effects"
+    }
+  }
+}

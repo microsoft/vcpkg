@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b47cb7f8..bd12f519 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -203,8 +203,9 @@ target_include_directories(lslobj
+ target_include_directories(lslobj
+ 	SYSTEM PUBLIC
+ 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/thirdparty/loguru>
+-		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/thirdparty/asio>
+ )
++find_package(asio CONFIG REQUIRED)
++target_link_libraries(lslobj PUBLIC asio::asio)
+ target_compile_definitions(lslobj PRIVATE
+ 	LIBLSL_EXPORTS
+ 	LOGURU_DEBUG_LOGGING=$<BOOL:${LSL_DEBUGLOG}>

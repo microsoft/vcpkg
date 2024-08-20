@@ -1,0 +1,30 @@
+{
+  "name": "rsocket",
+  "version-string": "2021.08.30.00",
+  "port-version": 5,
+  "description": "C++ implementation of RSocket http://rsocket.io",
+  "homepage": "https://github.com/rsocket/rsocket-cpp",
+  "dependencies": [
+    "boost-context",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "double-conversion",
+    "fmt",
+    "folly",
+    "gflags",
+    "glog",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

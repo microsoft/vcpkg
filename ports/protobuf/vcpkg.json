@@ -1,0 +1,32 @@
+{
+  "name": "protobuf",
+  "version": "4.25.1",
+  "port-version": 1,
+  "description": "Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.",
+  "homepage": "https://github.com/protocolbuffers/protobuf",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "utf8-range",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "zlib": {
+      "description": "ZLib based features like Gzip streams",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

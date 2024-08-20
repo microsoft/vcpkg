@@ -1,0 +1,13 @@
+diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
+index 70e1debd5..236ec96a7 100644
+--- a/include/X11/Xwindows.h
++++ b/include/X11/Xwindows.h
+@@ -54,7 +54,7 @@ The Open Group.
+  *
+  */
+ #define NOMINMAX
+-
++#define WIN32_LEAN_AND_MEAN // Otherwise this will include winsock.h!
+ /*
+  * mingw-w64 headers define BOOL as a typedef, protecting against macros
+  * mingw.org headers define BOOL in terms of WINBOOL

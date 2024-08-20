@@ -1,0 +1,33 @@
+{
+  "name": "libimobiledevice",
+  "version-date": "2023-07-05",
+  "port-version": 1,
+  "description": "A cross-platform protocol library to communicate with iOS devices",
+  "homepage": "http://www.libimobiledevice.org",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    "dirent",
+    "libimobiledevice-glue",
+    "libplist",
+    "libusbmuxd",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "build command line tool",
+      "supports": "!android & !ios & !xbox",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
+}

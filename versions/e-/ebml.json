@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "211ad9219c349adeae527edf0bc1ae9c57028751",
+      "version": "1.4.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4dd27fceafb402b6a634a2a934e7c3df0c1a64c0",
+      "version": "1.4.4",
+      "port-version": 1
+    },
+    {
+      "git-tree": "a4b2091951270259a38b2b900547a544bfad046f",
+      "version": "1.4.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4fc7059101f067e639c84844996c77eaba7908e6",
+      "version": "1.4.2",
+      "port-version": 1
+    },
+    {
+      "git-tree": "ba8376ad269930aee17a0890ccbd267639122616",
+      "version": "1.4.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "92e5e7a92a8bd6a496911ea44a032088e776471f",
+      "version-string": "1.4.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "bcf2ed38acfba94d49dfe9f4c96559771d8032c8",
+      "version-string": "1.4.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "73fbf83ff5922adc1d576b12287760ac62746470",
+      "version-string": "1.3.10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "22aa8d7b36297a2dea4cea042eabb89b34213213",
+      "version-string": "1.3.9",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2b9aad9296245c45e56d8970d7f21cf5a3766f5b",
+      "version-string": "1.3.8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "599c3901990b47d7ef9fec6e744501ca88b71834",
+      "version-string": "1.3.7-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c2c669762fcb37711b0d70252ba49d6fda41ff71",
+      "version-string": "1.3.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3aeaa0b4b3d5066303e1b70b62853314e60c07a5",
+      "version-string": "1.3.6-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9c56155357fe56cd5f933290136cdc0555edcd29",
+      "version-string": "1.3.5-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1e2d9637ba70018f164465daccbd3ec9a7dd8f2c",
+      "version-string": "1.3.5",
+      "port-version": 0
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "earcut-hpp",
+  "version": "2.2.4",
+  "description": "earcut.hpp is a C++ port of earcut.js, a fast, header-only polygon triangulation library.",
+  "homepage": "https://github.com/mapbox/earcut.hpp",
+  "license": "ISC"
+}

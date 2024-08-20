@@ -1,0 +1,46 @@
+{
+  "name": "prometheus-cpp",
+  "version-semver": "1.2.4",
+  "description": "Prometheus Client Library for Modern C++",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "compression",
+    "pull"
+  ],
+  "features": {
+    "compression": {
+      "description": "Enable zlib compression",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "pull": {
+      "description": "Support for regular pull mode",
+      "dependencies": [
+        "civetweb"
+      ]
+    },
+    "push": {
+      "description": "Support push gateway",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "tests": {
+      "description": "Additional testing support",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
+}

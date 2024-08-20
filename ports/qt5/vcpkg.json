@@ -1,0 +1,352 @@
+{
+  "name": "qt5",
+  "version": "5.15.14",
+  "description": "A cross-platform application and UI framework.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "essentials"
+  ],
+  "features": {
+    "3d": {
+      "description": [],
+      "dependencies": [
+        "qt5-3d"
+      ]
+    },
+    "activeqt": {
+      "description": "Windows Only",
+      "dependencies": [
+        {
+          "name": "qt5-activeqt",
+          "platform": "windows"
+        }
+      ]
+    },
+    "all": {
+      "description": "Install all Qt5 submodules (Warning: Could take a long time and fail...)",
+      "dependencies": [
+        {
+          "name": "qt5",
+          "features": [
+            "3d",
+            "activeqt",
+            "charts",
+            "connectivity",
+            "datavis3d",
+            "declarative",
+            "doc",
+            "extras",
+            "gamepad",
+            "graphicaleffects",
+            "imageformats",
+            "location",
+            "mqtt",
+            "multimedia",
+            "networkauth",
+            "purchasing",
+            "quickcontrols",
+            "quickcontrols2",
+            "remoteobjects",
+            "script",
+            "scxml",
+            "sensors",
+            "serialbus",
+            "serialport",
+            "speech",
+            "svg",
+            "tools",
+            "translations",
+            "virtualkeyboard",
+            "webchannel",
+            "webglplugin",
+            "websockets",
+            "webview",
+            "xmlpatterns"
+          ]
+        },
+        {
+          "name": "qt5",
+          "default-features": false,
+          "features": [
+            "wayland"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "qt5",
+          "default-features": false,
+          "features": [
+            "webengine"
+          ],
+          "platform": "!static"
+        },
+        {
+          "name": "qt5-base",
+          "default-features": false,
+          "features": [
+            "icu",
+            "mysqlplugin",
+            "postgresqlplugin"
+          ]
+        }
+      ]
+    },
+    "charts": {
+      "description": [],
+      "dependencies": [
+        "qt5-charts"
+      ]
+    },
+    "connectivity": {
+      "description": [],
+      "dependencies": [
+        "qt5-connectivity"
+      ]
+    },
+    "datavis3d": {
+      "description": [],
+      "dependencies": [
+        "qt5-datavis3d"
+      ]
+    },
+    "declarative": {
+      "description": [],
+      "dependencies": [
+        "qt5-declarative"
+      ]
+    },
+    "doc": {
+      "description": [],
+      "dependencies": [
+        {
+          "name": "qt5-doc",
+          "platform": "linux"
+        }
+      ]
+    },
+    "essentials": {
+      "description": "Build the essential qt modules",
+      "dependencies": [
+        {
+          "name": "qt5",
+          "default-features": false,
+          "features": [
+            "activeqt",
+            "declarative",
+            "imageformats",
+            "multimedia",
+            "networkauth",
+            "quickcontrols",
+            "quickcontrols2",
+            "svg",
+            "tools",
+            "translations",
+            "websockets"
+          ]
+        }
+      ]
+    },
+    "extras": {
+      "description": [],
+      "dependencies": [
+        {
+          "name": "qt5-androidextras",
+          "platform": "android"
+        },
+        {
+          "name": "qt5-macextras",
+          "platform": "osx"
+        },
+        {
+          "name": "qt5-winextras",
+          "features": [
+            "declarative"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "qt5-x11extras",
+          "platform": "linux"
+        }
+      ]
+    },
+    "gamepad": {
+      "description": [],
+      "dependencies": [
+        "qt5-gamepad"
+      ]
+    },
+    "graphicaleffects": {
+      "description": [],
+      "dependencies": [
+        "qt5-graphicaleffects"
+      ]
+    },
+    "imageformats": {
+      "description": [],
+      "dependencies": [
+        "qt5-imageformats"
+      ]
+    },
+    "latest": {
+      "description": "(deprecated)"
+    },
+    "location": {
+      "description": [],
+      "dependencies": [
+        "qt5-location"
+      ]
+    },
+    "mqtt": {
+      "description": [],
+      "dependencies": [
+        "qt5-mqtt"
+      ]
+    },
+    "multimedia": {
+      "description": [],
+      "dependencies": [
+        "qt5-multimedia"
+      ]
+    },
+    "networkauth": {
+      "description": [],
+      "dependencies": [
+        "qt5-networkauth"
+      ]
+    },
+    "purchasing": {
+      "description": [],
+      "dependencies": [
+        "qt5-purchasing"
+      ]
+    },
+    "quickcontrols": {
+      "description": "(deprecated)",
+      "dependencies": [
+        "qt5-quickcontrols"
+      ]
+    },
+    "quickcontrols2": {
+      "description": [],
+      "dependencies": [
+        "qt5-quickcontrols2"
+      ]
+    },
+    "remoteobjects": {
+      "description": [],
+      "dependencies": [
+        "qt5-remoteobjects"
+      ]
+    },
+    "script": {
+      "description": "(deprecated)",
+      "dependencies": [
+        "qt5-script"
+      ]
+    },
+    "scxml": {
+      "description": [],
+      "dependencies": [
+        "qt5-scxml"
+      ]
+    },
+    "sensors": {
+      "description": [],
+      "dependencies": [
+        "qt5-sensors"
+      ]
+    },
+    "serialbus": {
+      "description": [],
+      "dependencies": [
+        "qt5-serialbus"
+      ]
+    },
+    "serialport": {
+      "description": [],
+      "dependencies": [
+        "qt5-serialport"
+      ]
+    },
+    "speech": {
+      "description": [],
+      "dependencies": [
+        "qt5-speech"
+      ]
+    },
+    "svg": {
+      "description": [],
+      "dependencies": [
+        "qt5-svg"
+      ]
+    },
+    "tools": {
+      "description": [],
+      "dependencies": [
+        "qt5-tools"
+      ]
+    },
+    "translations": {
+      "description": [],
+      "dependencies": [
+        "qt5-translations"
+      ]
+    },
+    "virtualkeyboard": {
+      "description": [],
+      "dependencies": [
+        "qt5-virtualkeyboard"
+      ]
+    },
+    "wayland": {
+      "description": [],
+      "dependencies": [
+        "qt5-wayland"
+      ]
+    },
+    "webchannel": {
+      "description": [],
+      "dependencies": [
+        "qt5-webchannel"
+      ]
+    },
+    "webengine": {
+      "description": [],
+      "dependencies": [
+        "qt5-webengine"
+      ]
+    },
+    "webglplugin": {
+      "description": [],
+      "dependencies": [
+        "qt5-webglplugin"
+      ]
+    },
+    "websockets": {
+      "description": [],
+      "dependencies": [
+        "qt5-websockets"
+      ]
+    },
+    "webview": {
+      "description": [],
+      "dependencies": [
+        "qt5-webview"
+      ]
+    },
+    "xmlpatterns": {
+      "description": "(deprecated)",
+      "dependencies": [
+        "qt5-xmlpatterns"
+      ]
+    }
+  }
+}

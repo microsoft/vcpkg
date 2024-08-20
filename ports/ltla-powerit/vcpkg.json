@@ -1,0 +1,18 @@
+{
+  "name": "ltla-powerit",
+  "version-date": "2023-03-19",
+  "description": "Lightweight C++ library for power iterations",
+  "homepage": "https://github.com/LTLA/powerit",
+  "license": "MIT",
+  "dependencies": [
+    "ltla-aarand",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

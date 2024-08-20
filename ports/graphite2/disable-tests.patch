@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 496712d..3df05c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,10 +82,12 @@ if (BUILD_SHARED_LIBS)
+ endif()
+ 
+ add_subdirectory(src)
+-add_subdirectory(tests)
+-add_subdirectory(doc)
+-if (NOT GRAPHITE2_NFILEFACE)
+-    add_subdirectory(gr2fonttest)
++if(NOT DISABLE_TESTS)
++    add_subdirectory(tests)
++    add_subdirectory(doc)
++    if (NOT GRAPHITE2_NFILEFACE)
++        add_subdirectory(gr2fonttest)
++    endif()
+ endif()
+ 
+ set(version 3.0.1)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b6ac26b..851a97f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -127,9 +127,9 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+         endif ()
+     endif()
+     include(Graphite)
+-    if (BUILD_SHARED_LIBS)
++    if (NOT DISABLE_TESTS)
+         nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
+-    endif ()
++    endif()
+     set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
+     CREATE_LIBTOOL_FILE(graphite2 "/lib${LIB_SUFFIX}")
+ endif()
+@@ -144,7 +144,9 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+     endif()
+     target_link_libraries(graphite2 c)
+     include(Graphite)
+-    nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
++    if (NOT DISABLE_TESTS)
++        nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
++    endif()
+     set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
+     CREATE_LIBTOOL_FILE(graphite2 "/lib${LIB_SUFFIX}")
+ endif()

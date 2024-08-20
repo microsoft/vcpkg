@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d868883..e4c5ecc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -114,6 +114,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   add_definitions(-DOS_MACOSX)
+   set(CMAKE_MACOS_RPATH TRUE)
+   set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++elseif(MSVC)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ endif()
+ 
+ if(BROTLI_EMSCRIPTEN)

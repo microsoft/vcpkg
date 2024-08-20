@@ -1,0 +1,28 @@
+{
+  "name": "3fd",
+  "version": "2.6.3",
+  "port-version": 4,
+  "description": "C++ Framework For Fast Development",
+  "supports": "windows & !static & !arm64",
+  "dependencies": [
+    {
+      "name": "boost-lockfree",
+      "platform": "windows"
+    },
+    {
+      "name": "boost-regex",
+      "platform": "windows"
+    },
+    {
+      "name": "poco",
+      "platform": "windows"
+    },
+    "rapidxml",
+    "sqlite3",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

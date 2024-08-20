@@ -1,0 +1,19 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1484,7 +1484,7 @@ function(my_install_man COMPONENT SRC_FILE LINK_NAMES)
+     endif()
+ endfunction()
+ 
+-
++if(BUILD_TOOLS)
+ #############################################################################
+ # libgnu (getopt_long)
+ #############################################################################
+@@ -1982,6 +1982,7 @@ if(UNIX)
+     my_install_man(scripts_Documentation src/scripts/xzless.1 "${XZLESS_LINKS}")
+ endif()
+ 
++endif()
+ 
+ #############################################################################
+ # Documentation

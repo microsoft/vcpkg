@@ -1,0 +1,22 @@
+{
+  "name": "status-code",
+  "version-date": "2023-11-06",
+  "port-version": 1,
+  "maintainers": [
+    "Niall Douglas <s_github@nedprod.com>",
+    "Henrik Gaßmann <henrik@gassmann.onl>"
+  ],
+  "description": "Proposed SG14 status_code for the C++ standard (https://wg21.link/P1028).",
+  "homepage": "https://github.com/ned14/status-code",
+  "license": "Apache-2.0 OR BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

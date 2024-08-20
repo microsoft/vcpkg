@@ -1,0 +1,65 @@
+{
+  "name": "sdl2-mixer",
+  "version": "2.8.0",
+  "port-version": 3,
+  "description": "Multi-channel audio mixer library for SDL.",
+  "homepage": "https://github.com/libsdl-org/SDL_mixer",
+  "license": "Zlib",
+  "dependencies": [
+    "libvorbis",
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "wavpack"
+  ],
+  "features": {
+    "fluidsynth": {
+      "description": "Use FluidSynth to play MIDI audio format.",
+      "dependencies": [
+        "fluidsynth"
+      ]
+    },
+    "libflac": {
+      "description": "Use libflac to play FLAC audio format.",
+      "dependencies": [
+        "libflac"
+      ]
+    },
+    "libmodplug": {
+      "description": "Use libmodplug to play MOD audio format.",
+      "dependencies": [
+        "libmodplug",
+        "libxmp"
+      ]
+    },
+    "mpg123": {
+      "description": "Use mpg123 to play MP3 audio format.",
+      "dependencies": [
+        "mpg123"
+      ]
+    },
+    "opusfile": {
+      "description": "Use opusfile to play Opus audio format.",
+      "dependencies": [
+        "opusfile"
+      ]
+    },
+    "wavpack": {
+      "description": "Enable WavPack music.",
+      "dependencies": [
+        "wavpack"
+      ]
+    }
+  }
+}

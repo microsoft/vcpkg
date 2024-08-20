@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a735c53..53ddaed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -229,7 +229,9 @@ add_subdirectory(src)
+ if(BUILD_UNIT_TESTS)
+     add_subdirectory(test)
+ endif()
++if(BUILD_TOOLS)
+ add_subdirectory(tools)
++endif()
+ 
+ file(COPY ${CMAKE_CURRENT_BINARY_DIR}/braft/
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/output/include/braft/
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f587464..78adc56 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -12,22 +12,34 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
+ add_library(OBJ_LIB OBJECT ${SOURCES})
+ 
+ set_property(TARGET ${OBJ_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
++if (BUILD_SHARED_LIBS)
+ add_library(braft-shared SHARED $<TARGET_OBJECTS:OBJ_LIB>)
++else()
+ add_library(braft-static STATIC $<TARGET_OBJECTS:OBJ_LIB>)
+-target_link_libraries(braft-shared ${DYNAMIC_LIB})
+-target_link_libraries(braft-static ${DYNAMIC_LIB})
++endif()
++
++if (BUILD_SHARED_LIBS)
++target_link_libraries(braft-shared PUBLIC ${DYNAMIC_LIB})
++else()
++target_link_libraries(braft-static PUBLIC ${DYNAMIC_LIB})
++endif()
+ 
++if (NOT BUILD_SHARED_LIBS)
+ SET_TARGET_PROPERTIES(braft-static PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUTPUT 1)
++else()
+ SET_TARGET_PROPERTIES(braft-shared PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUTPUT 1)
++endif()
+ 
++if (NOT BUILD_SHARED_LIBS)
+ install(TARGETS braft-static
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib${LIBSUFFIX}
+         ARCHIVE DESTINATION lib${LIBSUFFIX}
+         )
+-
++else()
+ install(TARGETS braft-shared
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib${LIBSUFFIX}
+         ARCHIVE DESTINATION lib${LIBSUFFIX}
+         )
++endif()

@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 60f9de4..e980ef7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -261,51 +261,12 @@ if (CGNS_ENABLE_HDF5)
+      cmake_policy(SET CMP0074 NEW)
+   endif()
+ 
+-  find_package (HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS ${FIND_HDF_COMPONENTS})
+-  message (STATUS "HDF5 C libs:${HDF5_FOUND} static:${HDF5_static_C_FOUND} and shared:${HDF5_shared_C_FOUND}")
+-  if (HDF5_FOUND)
+-    if (NOT HDF5_static_C_FOUND AND NOT HDF5_shared_C_FOUND)
+-      if (CG_HDF5_LINK_TYPE STREQUAL "shared")
+-        set(CG_HDF5_LINK_TYPE "static")
+-        set(CG_HDF5_LINK_TYPE_UPPER "STATIC")
+-      else()
+-        set(CG_HDF5_LINK_TYPE "shared")
+-        set(CG_HDF5_LINK_TYPE_UPPER "SHARED")
+-      endif()
+-
+-      set (FIND_HDF_COMPONENTS C ${CG_HDF5_LINK_TYPE})
+-
+-      find_package (HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS ${FIND_HDF_COMPONENTS} REQUIRED)
+-      message (STATUS "HDF5 libs:${HDF5_FOUND} C:${HDF5_C_${CG_HDF5_LINK_TYPE_UPPER}_LIBRARY}")
+-    endif()
+- 
+-    set(LINK_LIBS ${HDF5_C_${CG_HDF5_LINK_TYPE_UPPER}_LIBRARY})
+-  else ()
+-    find_package (HDF5) # Legacy find
+-    
+-    #Legacy find_package does not set HDF5_TOOLS_DIR, so we set it here
+-    set(HDF5_TOOLS_DIR ${HDF5_LIBRARY}/../bin)
+-    
+-    #Legacy find_package does not set HDF5_BUILD_SHARED_LIBS, so we set it here
+-    set(GUESS_SHARED "${HDF5_LIBRARY}/libhdf5${CMAKE_SHARED_LIBRARY_SUFFIX}")
+-    foreach (ITEM ${HDF5_LIBRARIES})
+-      if (ITEM MATCHES "(.*)hdf5${CMAKE_SHARED_LIBRARY_SUFFIX}")
+-        set(GUESS_SHARED "${ITEM}")
+-        break()
+-      endif()
+-    endforeach()
+-    if (CGNS_BUILD_SHARED AND EXISTS "${GUESS_SHARED}")
+-      set (HDF5_BUILD_SHARED_LIBS 1)
+-      set (CG_HDF5_LINK_TYPE "shared")
+-      set (CG_HDF5_LINK_TYPE_UPPER "SHARED")
+-    else ()
+-      set (HDF5_BUILD_SHARED_LIBS 0)
+-      set (CG_HDF5_LINK_TYPE "static")
+-      set (CG_HDF5_LINK_TYPE_UPPER "STATIC")
+-    endif ()
+-    set (LINK_LIBS ${HDF5_LIBRARIES})
++  find_package (HDF5 CONFIG REQUIRED)
++  if (TARGET hdf5::hdf5-shared)
++    set (LINK_LIBS ${LINK_LIBS} hdf5::hdf5-shared)
++  else ()
++    set (LINK_LIBS ${LINK_LIBS} hdf5::hdf5-static)
+   endif ()
+-  set (HDF5_PACKAGE_NAME ${SEARCH_PACKAGE_NAME})
+ 
+   if (HDF5_FOUND)
+     if (NOT DEFINED HDF5_INCLUDE_DIRS)

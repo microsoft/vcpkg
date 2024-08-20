@@ -1,0 +1,35 @@
+diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
+index 1e241f5..adf9a27 100644
+--- a/src/bsoncxx/CMakeLists.txt
++++ b/src/bsoncxx/CMakeLists.txt
+@@ -105,7 +105,7 @@ else()
+     else()
+         # Require package of old libbson name (with lib).
+         if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
+-            find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
++            find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)
+             message(STATUS "found libbson version ${BSON_VERSION}")
+             set(libbson_target ${BSON_LIBRARIES})
+             set(libbson_include_directories ${BSON_INCLUDE_DIRS})
+diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
+index 4fe323f..2e27410 100644
+--- a/src/mongocxx/CMakeLists.txt
++++ b/src/mongocxx/CMakeLists.txt
+@@ -41,7 +41,7 @@ if(TARGET mongoc_shared OR TARGET mongoc_static)
+     set(MONGOCXX_PKG_DEP "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
+ else()
+     # Attempt to find libmongoc by new package name (without lib).
+-    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
++    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} CONFIG REQUIRED)
+ 
+     if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
+         message(STATUS "found libmongoc version ${mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_VERSION}")
+@@ -56,7 +56,7 @@ else()
+     else()
+         # Require package of old libmongoc name (with lib).
+         if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
+-            find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
++            find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)
+             message(STATUS "found libmongoc version ${MONGOC_VERSION}")
+             set(libmongoc_target ${MONGOC_LIBRARIES})
+             set(libmongoc_definitions ${MONGOC_DEFINITIONS})

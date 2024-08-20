@@ -1,0 +1,17 @@
+{
+  "name": "tinynpy",
+  "version": "1.0.0",
+  "port-version": 6,
+  "description": "tiny C++ loader/exporter of python numpy array NPY/NPZ files",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "flint",
+  "version-semver": "2.9.0",
+  "description": "Fast Library for Number Theory",
+  "homepage": "https://www.flintlib.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    "gettimeofday",
+    "gmp",
+    "mpfr",
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

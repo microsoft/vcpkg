@@ -1,0 +1,4 @@
+libdeflate provides CMake targets:
+
+    find_package(libdeflate CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:libdeflate::libdeflate_shared>,libdeflate::libdeflate_shared,libdeflate::libdeflate_static>)

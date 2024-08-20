@@ -1,0 +1,67 @@
+{
+  "name": "cctag",
+  "version-semver": "1.0.4",
+  "maintainers": "alicevision-team@googlegroups.com",
+  "description": "Computer vision library for detecting CCTag markers made up of concentric circles",
+  "homepage": "https://github.com/alicevision/CCTag",
+  "documentation": "https://cctag.readthedocs.io/",
+  "license": "MPL-2.0",
+  "supports": "!(uwp | arm | arm64 | android | x86 | xbox)",
+  "dependencies": [
+    "boost-accumulators",
+    "boost-algorithm",
+    "boost-container",
+    "boost-date-time",
+    "boost-exception",
+    "boost-filesystem",
+    "boost-foreach",
+    "boost-iterator",
+    "boost-lexical-cast",
+    {
+      "name": "boost-math",
+      "features": [
+        "legacy"
+      ]
+    },
+    "boost-mpl",
+    "boost-multi-array",
+    "boost-program-options",
+    "boost-ptr-container",
+    "boost-serialization",
+    "boost-spirit",
+    "boost-stacktrace",
+    "boost-static-assert",
+    "boost-test",
+    "boost-thread",
+    "boost-throw-exception",
+    "boost-timer",
+    "boost-type-traits",
+    "boost-unordered",
+    "eigen3",
+    "opencv",
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "apps": {
+      "description": "Sample applications for detecting CCTag markers in images and videos",
+      "dependencies": [
+        "boost-program-options",
+        "boost-system"
+      ]
+    },
+    "cuda": {
+      "description": "Enable Cuda support for faster detection",
+      "dependencies": [
+        "cuda"
+      ]
+    }
+  }
+}

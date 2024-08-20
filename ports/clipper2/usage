@@ -1,0 +1,12 @@
+The package clipper2 can be imported via CMake FindPkgConfig module:
+
+    # Clipper2
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(Clipper2 REQUIRED IMPORTED_TARGET Clipper2)
+    target_link_libraries(main PkgConfig::Clipper2)
+
+    # Clipper2Z
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(Clipper2Z REQUIRED IMPORTED_TARGET Clipper2Z)
+    target_link_libraries(main PkgConfig::Clipper2Z)
+

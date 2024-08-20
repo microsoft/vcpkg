@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0303a8f..be43838 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -97,7 +97,7 @@ if(UNIX)
+ endif(UNIX)
+ 
+ add_subdirectory(src)
+-add_subdirectory(examples)
++#add_subdirectory(examples)
+ #add_subdirectory(doc)
+ 
+ include(CMakePackageConfigHelpers)

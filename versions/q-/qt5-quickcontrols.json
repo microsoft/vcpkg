@@ -1,0 +1,154 @@
+{
+  "versions": [
+    {
+      "git-tree": "dbfe2aab6a84f092177e276c8947096bfa1de8ce",
+      "version": "5.15.14",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b447abbe0f7bb140e91e562de4b26bd36b09aeb1",
+      "version": "5.15.13",
+      "port-version": 1
+    },
+    {
+      "git-tree": "c1b99bdf7e6457509e5d334d3d5c50d8a15447ac",
+      "version": "5.15.13",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fbb429884146fe7493bf515aa1762c495de51c9b",
+      "version": "5.15.12",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9e63a158c8c9551554c2986dab6d771efabd38c7",
+      "version": "5.15.11",
+      "port-version": 0
+    },
+    {
+      "git-tree": "342b8c5a23f4f9690bedb464a32e171dbb5ef2e4",
+      "version": "5.15.10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e50966048714ac6d7e309ff3f7b07f848d6c4cbe",
+      "version": "5.15.9",
+      "port-version": 0
+    },
+    {
+      "git-tree": "216c7c7cbdce99d9243b50236cb14ab65720c724",
+      "version": "5.15.8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c29e130635d3758fe562d1c6013aed35cffbafa1",
+      "version": "5.15.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2c660d5cf5bc79f926233b3a11f9e8413d0e3135",
+      "version": "5.15.6",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2692aa4bc8d7c32494df72815bf952c403afe2af",
+      "version": "5.15.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "5c24b1552fada859bf5061ab7c004ea12edca056",
+      "version": "5.15.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0023d4eae57568295996c372c262c746fce54cd1",
+      "version": "5.15.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "49313a150ff19dacc9614849648f29c90e424cd3",
+      "version-string": "5.15.2",
+      "port-version": 1
+    },
+    {
+      "git-tree": "b7a753736c9da0675d2c65b5f2fd0ba55243ed98",
+      "version-string": "5.15.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ba0a7677baa9c89cb30bb792bbe990d84a46133b",
+      "version-string": "5.15.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "62742d1350ad7d44e3ee6be29c5fa030883cef64",
+      "version-string": "5.15.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9988b19aeba65bbbc34bbf55fb064ef56aad9357",
+      "version-string": "5.12.8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7c0adf2f65202ac6a4b1d8b3a92a524e782f9514",
+      "version-string": "5.12.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d2e2d349ba82b281d1aaa79d3b76aa5962b19ec6",
+      "version-string": "5.12.5-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0a1168794a5335392729e39882f8b28a73292f3f",
+      "version-string": "5.12.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "23c6f45f0767716d58c6009ed97eed62f70880d3",
+      "version-string": "5.12.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c5ea26e184537f6eba0a39a1eb708c50988d3314",
+      "version-string": "5.12.3-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "f0b318eadd961e6c1b09f92b34f3ceffe05258a7",
+      "version-string": "5.12.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2f8da6cbd12fbdb3dd4096123c5876c6c1f82698",
+      "version-string": "5.12.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8daeb80a4a00d61ecd69dcf1e08bc246a257b5d3",
+      "version-string": "5.12.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e63607858735fa3fbca80ca06cfb1d1c11650e68",
+      "version-string": "5.11.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "158fc7583861ff08f860b4c36684a96dc479b313",
+      "version-string": "5.11.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "88f5dda4d9123a8b58f18ccc9ebacc48ee69e602",
+      "version-string": "5.9.2-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7cd48c2b5abb5936b040fe3a9220dadde6dd59bd",
+      "version-string": "5.9.2-0",
+      "port-version": 0
+    }
+  ]
+}

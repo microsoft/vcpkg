@@ -1,0 +1,61 @@
+{
+  "name": "unit-test-cmake",
+  "version-string": "ci",
+  "description": "Ensures that the CMake scripts are unit tested.",
+  "license": "MIT",
+  "supports": "x64",
+  "default-features": [
+    "backup-restore-env-vars",
+    "execute-required-process",
+    "fixup-pkgconfig",
+    {
+      "name": "fixup-rpath",
+      "platform": "!windows"
+    },
+    "function-arguments",
+    "host-path-list",
+    "list",
+    "merge-libs",
+    "minimum-required",
+    "setup-pkgconfig-path"
+  ],
+  "features": {
+    "backup-restore-env-vars": {
+      "description": "Test the vcpkg_backup/restore_env_vars functions"
+    },
+    "execute-required-process": {
+      "description": "Test the vcpkg_execute_required_process function"
+    },
+    "fixup-pkgconfig": {
+      "description": "Test the vcpkg_fixup_pkgconfig function"
+    },
+    "fixup-rpath": {
+      "description": "Test the rpath fixup function",
+      "supports": "!windows"
+    },
+    "function-arguments": {
+      "description": "Test the z_vcpkg_function_arguments function"
+    },
+    "host-path-list": {
+      "description": "Test the vcpkg_host_path_list function"
+    },
+    "list": {
+      "description": "Test the vcpkg_list function"
+    },
+    "merge-libs": {
+      "description": "Test the z_vcpkg_cmake_config_fixup_merge_lists function",
+      "dependencies": [
+        {
+          "name": "vcpkg-cmake-config",
+          "host": true
+        }
+      ]
+    },
+    "minimum-required": {
+      "description": "Test the vcpkg_minimum_required function"
+    },
+    "setup-pkgconfig-path": {
+      "description": "Test the z_vcpkg_setup/restore_pkgconfig_path functions"
+    }
+  }
+}

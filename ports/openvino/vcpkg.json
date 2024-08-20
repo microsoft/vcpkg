@@ -1,0 +1,159 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "openvino",
+  "version": "2024.3.0",
+  "maintainers": "OpenVINO Developers <openvino@intel.com>",
+  "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
+  "description": [
+    "Intel® Distribution of OpenVINO™ toolkit is an open-source toolkit for optimizing ",
+    "and deploying AI inference. It can be used to develop applications and solutions based ",
+    "on deep learning tasks, such as: emulation of human vision, automatic speech recognition, ",
+    "natural language processing, recommendation systems, etc. It provides high-performance ",
+    "and rich deployment options, from edge to cloud"
+  ],
+  "homepage": "https://github.com/openvinotoolkit/openvino",
+  "documentation": "https://docs.openvino.ai/latest/index.html",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !x86",
+  "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    "pugixml",
+    {
+      "name": "tbb",
+      "version>=": "2021.10.0#2"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "xbyak",
+      "platform": "!(arm | uwp)",
+      "version>=": "6.69"
+    }
+  ],
+  "default-features": [
+    "auto",
+    "auto-batch",
+    {
+      "name": "cpu",
+      "platform": "!(windows & arm)"
+    },
+    {
+      "name": "gpu",
+      "platform": "x64 & !(osx | uwp)"
+    },
+    "hetero",
+    "ir",
+    "onnx",
+    "paddle",
+    "pytorch",
+    "tensorflow",
+    "tensorflow-lite"
+  ],
+  "features": {
+    "auto": {
+      "description": "Enables Auto plugin for inference"
+    },
+    "auto-batch": {
+      "description": "Enables Auto Batch plugin for inference, useful for throughput mode"
+    },
+    "cpu": {
+      "description": "Enables CPU plugin for inference",
+      "supports": "!(windows & arm)"
+    },
+    "gpu": {
+      "description": "Enables GPU plugin for inference",
+      "supports": "x64 & !(osx | uwp)",
+      "dependencies": [
+        "opencl",
+        "rapidjson"
+      ]
+    },
+    "hetero": {
+      "description": "Enables Hetero plugin for inference"
+    },
+    "ir": {
+      "description": "Enables IR frontend for reading models in OpenVINO IR format"
+    },
+    "npu": {
+      "description": "NPU Support",
+      "supports": "x64 & !(osx | uwp) & !static"
+    },
+    "onnx": {
+      "description": "Enables ONNX frontend for reading models in ONNX format",
+      "dependencies": [
+        {
+          "name": "onnx",
+          "version>=": "1.13.1"
+        },
+        {
+          "name": "protobuf",
+          "version>=": "3.21.2"
+        },
+        {
+          "name": "protobuf",
+          "host": true,
+          "version>=": "3.21.2"
+        }
+      ]
+    },
+    "paddle": {
+      "description": "Enables PaddlePaddle frontend for reading models in PaddlePaddle format",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "version>=": "3.21.2"
+        },
+        {
+          "name": "protobuf",
+          "host": true,
+          "version>=": "3.21.2"
+        }
+      ]
+    },
+    "pytorch": {
+      "description": "Enables PyTorch frontend to convert models in PyTorch format"
+    },
+    "tensorflow": {
+      "description": "Enables TensorFlow frontend for reading models in TensorFlow format",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "version>=": "3.21.2"
+        },
+        {
+          "name": "protobuf",
+          "host": true,
+          "version>=": "3.21.2"
+        },
+        "snappy"
+      ]
+    },
+    "tensorflow-lite": {
+      "description": "Enables TensorFlow Lite frontend for reading models in TensorFlow Lite format",
+      "dependencies": [
+        {
+          "name": "flatbuffers",
+          "version>=": "2.0.6"
+        },
+        {
+          "name": "flatbuffers",
+          "host": true,
+          "version>=": "2.0.6"
+        }
+      ]
+    }
+  }
+}

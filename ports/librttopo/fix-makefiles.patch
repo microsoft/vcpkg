@@ -1,0 +1,13 @@
+diff --git a/makefile.vc b/makefile.vc
+index 1f790f0..f78d0c9 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -17,7 +17,7 @@ LIBOBJ	 = src\box2d.obj src\bytebuffer.obj src\g_box.obj \
+ 	src\rtout_kml.obj src\rtout_svg.obj src\rtout_twkb.obj src\rtout_wkb.obj \
+ 	src\rtout_wkt.obj src\rtout_x3d.obj src\rtpoint.obj src\rtpoly.obj src\rtprint.obj \
+ 	src\rtpsurface.obj src\rtspheroid.obj src\rtstroke.obj src\rttin.obj src\rttree.obj \
+-	src\rttriangle.obj src\rtutil.obj src\stringbuffer.obj src\varint.obj
++	src\rttriangle.obj src\rtutil.obj src\stringbuffer.obj src\varint.obj src\rtt_tpsnap.obj
+ 
+ LIBRTTOPO_DLL	 	       =	librttopo$(VERSION).dll
+ 

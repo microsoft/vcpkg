@@ -1,0 +1,15 @@
+{
+  "name": "ocilib",
+  "version": "4.7.6",
+  "description": "OCILIB is an open source and cross platform Oracle Driver that delivers efficient access to Oracle databases.",
+  "homepage": "https://vrogier.github.io/ocilib/",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

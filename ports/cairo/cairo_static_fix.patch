@@ -1,0 +1,18 @@
+diff --git a/meson.build b/meson.build
+index 9100152..7005f7e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -97,6 +97,13 @@ endif
+ 
+ add_project_arguments('-D_GNU_SOURCE', language: 'c')
+ 
++if host_machine.system() == 'windows'
++  lib_default = get_option('default_library')
++  if lib_default == 'static'
++    add_project_arguments('-DCAIRO_WIN32_STATIC_BUILD', language: 'c')
++  endif
++endif
++
+ pkgmod = import('pkgconfig')
+ python3 = import('python').find_installation()
+ 

@@ -1,0 +1,193 @@
+diff --git a/alac.c b/alac.c
+index 469000d..c6fe479 100644
+--- a/alac.c
++++ b/alac.c
+@@ -33,11 +33,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++#include <stdint.h>
+ 
+ #include "decomp.h"
+ 
+@@ -54,7 +50,7 @@
+ struct {signed int x:24;} se_struct_24;
+ #define SignExtend24(val) (se_struct_24.x = val)
+ 
+-extern int host_bigendian;
++#define host_bigendian  set_endian()
+ 
+ struct alac_file
+ {
+diff --git a/decomp.h b/decomp.h
+index 23dbc52..679a320 100644
+--- a/decomp.h
++++ b/decomp.h
+@@ -8,6 +8,7 @@ void decode_frame(alac_file *alac,
+                   unsigned char *inbuffer,
+                   void *outbuffer, int *outputsize);
+ void alac_set_info(alac_file *alac, char *inputbuffer);
++int set_endian();
+ 
+ #endif /* __ALAC__DECOMP_H */
+ 
+diff --git a/demux.c b/demux.c
+index ae77a9d..9e858a9 100644
+--- a/demux.c
++++ b/demux.c
+@@ -33,11 +33,7 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++#include <stdint.h>
+ 
+ #include "stream.h"
+ #include "demux.h"
+diff --git a/demux.h b/demux.h
+index 8447bf8..8874ba4 100644
+--- a/demux.h
++++ b/demux.h
+@@ -1,11 +1,8 @@
+ #ifndef DEMUX_H
+ #define DEMUX_H
+ 
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++
++#include <stdint.h>
+ 
+ #include "stream.h"
+ 
+diff --git a/main.c b/main.c
+index 7449ca1..dd58699 100644
+--- a/main.c
++++ b/main.c
+@@ -37,11 +37,7 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <string.h>
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++#include <stdint.h>
+ 
+ #include "demux.h"
+ #include "decomp.h"
+@@ -267,19 +263,7 @@ static void setup_environment(int argc, char **argv)
+     }
+ }
+ 
+-/* this could quite easily be done at compile time,
+- * however I don't want to have to bother with all the
+- * various possible #define's for endianness, worrying about
+- * different compilers etc. and I'm too lazy to use autoconf.
+- */
+-void set_endian()
+-{
+-    uint32_t integer = 0x000000aa;
+-    unsigned char *p = (unsigned char*)&integer;
+ 
+-    if (p[0] == 0xaa) host_bigendian = 0;
+-    else host_bigendian = 1;
+-}
+ 
+ int main(int argc, char **argv)
+ {
+@@ -288,7 +272,7 @@ int main(int argc, char **argv)
+ 
+     memset(&demux_res, 0, sizeof(demux_res));
+ 
+-    set_endian();
++    host_bigendian = set_endian();
+ 
+     setup_environment(argc, argv);
+ 
+diff --git a/stream.c b/stream.c
+index 565db54..56727a0 100644
+--- a/stream.c
++++ b/stream.c
+@@ -33,13 +33,10 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <errno.h>
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++#include <stdint.h>
+ 
+ #include "stream.h"
++#include "decomp.h"
+ 
+ #define _Swap32(v) do { \
+                    v = (((v) & 0x000000FF) << 0x18) | \
+@@ -51,7 +48,7 @@
+                    v = (((v) & 0x00FF) << 0x08) | \
+                        (((v) & 0xFF00) >> 0x08); } while (0)
+ 
+-extern int host_bigendian;
++#define host_bigendian set_endian()
+ 
+ struct stream_tTAG {
+     FILE *f;
+diff --git a/stream.h b/stream.h
+index 18d6aa0..ff6325e 100644
+--- a/stream.h
++++ b/stream.h
+@@ -3,11 +3,8 @@
+ 
+ /* stream.h */
+ 
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++#include <stdint.h>
++
+ 
+ typedef struct stream_tTAG stream_t;
+ 
+diff --git a/wavwriter.c b/wavwriter.c
+index fd19502..ce941c7 100644
+--- a/wavwriter.c
++++ b/wavwriter.c
+@@ -32,11 +32,8 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-#ifdef _WIN32
+-	#include "stdint_win.h"
+-#else
+-	#include <stdint.h>
+-#endif
++#include <stdint.h>
++
+ 
+ #ifndef MAKEFOURCC
+ #define MAKEFOURCC(ch0, ch1, ch2, ch3) ( \
+@@ -56,7 +53,7 @@
+                    v = (((v) & 0x00FF) << 0x08) | \
+                        (((v) & 0xFF00) >> 0x08); } while (0)
+ 
+-extern int host_bigendian;
++#define host_bigendian set_endian()
+ 
+ static void write_uint32(FILE *f, uint32_t v, int bigendian)
+ {

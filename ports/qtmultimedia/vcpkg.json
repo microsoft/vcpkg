@@ -1,0 +1,90 @@
+{
+  "name": "qtmultimedia",
+  "version": "6.7.2",
+  "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "gui",
+        "network"
+      ]
+    },
+    {
+      "name": "qtshadertools",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    {
+      "name": "gstreamer",
+      "platform": "linux"
+    },
+    "widgets"
+  ],
+  "features": {
+    "ffmpeg": {
+      "description": "Build with ffmpeg",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avdevice",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        },
+        {
+          "name": "pulseaudio",
+          "platform": "linux"
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "gstreamer": {
+      "description": "Build with gstreamer",
+      "supports": "linux",
+      "dependencies": [
+        "egl",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "widgets": {
+      "description": "Build Multimedia Widgets",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
+    }
+  }
+}

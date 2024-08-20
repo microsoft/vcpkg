@@ -1,0 +1,84 @@
+{
+  "versions": [
+    {
+      "git-tree": "eeefed8ea3d0bded7e8333a05870153f5e4899a0",
+      "version": "4.0.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3ca6fa97c975c5c3ccac257be25a5b41232f2bc2",
+      "version": "4.0.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "cfab4e259bccd7d7f1a0470b32c7b7bf912609f4",
+      "version": "4.0.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "33b696b13c4de3a5319c042daab76baa51945f8f",
+      "version": "4.0.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d77f713bae64d416bf60adb3395a3b295feccc9b",
+      "version": "4.0.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fb59eb8b735f74193a79326e33fb6f9abc66846a",
+      "version": "4.0.0",
+      "port-version": 4
+    },
+    {
+      "git-tree": "1483ef1293bbd3eea5edd9b5051bb4457eebfa2e",
+      "version": "4.0.0",
+      "port-version": 3
+    },
+    {
+      "git-tree": "89c9968274d731d513a3eadc259c73c95cfe058c",
+      "version": "4.0.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "1e55bf50acfd71d5f37f98bee270ff687f65219f",
+      "version": "4.0.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "f9a2226720f5e72647d6b0399f9c0bd5baf8f9b9",
+      "version": "4.0.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e97e41aa57defe3c82bebab5941a4e4320f5a704",
+      "version": "3.0.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "36ef459c57047fcfc0ddbfc97d7360d7307acb24",
+      "version": "3.0.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4a8de7f8609b758c48eea13b67d47c22efc832a3",
+      "version": "3.0.2",
+      "port-version": 1
+    },
+    {
+      "git-tree": "9c49a3f4d6bb3e5173cf17e1539b439dcf4bf6ea",
+      "version": "3.0.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c3f833fb14771ffd8f32496aa12035c86ab1cb9a",
+      "version": "3.0.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "0512bceae574c70ea907a8ebfc88709dc196164e",
+      "version": "3.0.1",
+      "port-version": 0
+    }
+  ]
+}

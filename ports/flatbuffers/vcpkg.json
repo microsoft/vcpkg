@@ -1,0 +1,21 @@
+{
+  "name": "flatbuffers",
+  "version": "24.3.25",
+  "description": "FlatBuffers is a cross platform serialization library architected for maximum memory efficiency. It allows you to directly access serialized data without parsing/unpacking it first, while still having great forwards/backwards compatibility.",
+  "homepage": "https://google.github.io/flatbuffers/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "flatbuffers",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

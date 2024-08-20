@@ -1,0 +1,7 @@
+{
+  "name": "dbg-macro",
+  "version": "0.5.1",
+  "description": "A dbg(...) macro for C++",
+  "homepage": "https://github.com/sharkdp/dbg-macro",
+  "license": "MIT"
+}

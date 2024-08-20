@@ -1,0 +1,13 @@
+diff --git a/CMake/setup.cmake b/CMake/setup.cmake
+index 60b7da1..6831d29 100644
+--- a/CMake/setup.cmake
++++ b/CMake/setup.cmake
+@@ -65,6 +65,8 @@ else ()
+   set (FLTK_CONFIG_PATH ${FLTK_DATADIR}/fltk)
+ endif (WIN32 AND NOT CYGWIN)
+ 
++set(FLTK_CONFIG_PATH share/fltk)
++
+ include(TestBigEndian)
+ TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
+ 

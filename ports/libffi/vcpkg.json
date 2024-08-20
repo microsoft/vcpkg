@@ -1,0 +1,13 @@
+{
+  "name": "libffi",
+  "version": "3.4.6",
+  "description": "Portable, high level programming interface to various calling conventions",
+  "homepage": "https://github.com/libffi/libffi",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
+}

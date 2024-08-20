@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a80e39e6..bb6ab2db 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1273,6 +1273,11 @@ foreach (OCCT_MODULE ${OCCT_MODULES})
+ endforeach()
+ set (OCCT_MODULES_ENABLED ${OCCT_MODULES_ENABLED_SORTED})
+ 
++foreach (OCCT_LIBRARY IN LISTS OCCT_LIBRARIES)
++  target_include_directories(${OCCT_LIBRARY} INTERFACE $<INSTALL_INTERFACE:include/opencascade>) # OpenCASCADE_INCLUDE_DIR
++  target_include_directories(${OCCT_LIBRARY} INTERFACE $<INSTALL_INTERFACE:include>) # vcpkg lock-in
++endforeach()
++
+ # Add all targets to the build-tree export set
+ export (TARGETS ${OCCT_LIBRARIES} FILE "${CMAKE_BINARY_DIR}/OpenCASCADETargets.cmake")
+ 

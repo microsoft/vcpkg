@@ -1,0 +1,29 @@
+{
+  "name": "forge",
+  "version-semver": "1.0.8",
+  "port-version": 3,
+  "description": "An OpenGL interop library that can be used with ArrayFire or any other application using CUDA or OpenCL compute backend.",
+  "homepage": "https://github.com/arrayfire/forge",
+  "license": "BSD-3-Clause",
+  "supports": "!(windows & (arm | uwp))",
+  "dependencies": [
+    "boost-container-hash",
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    "freeimage",
+    "freetype",
+    "glad",
+    "glfw3",
+    "glm",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

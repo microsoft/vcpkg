@@ -1,0 +1,68 @@
+{
+  "name": "hdf5",
+  "version": "1.14.4.3",
+  "port-version": 2,
+  "description": "HDF5 is a data model, library, and file format for storing and managing data",
+  "homepage": "https://www.hdfgroup.org/downloads/hdf5/",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "szip",
+    "zlib"
+  ],
+  "features": {
+    "cpp": {
+      "description": "Builds cpp lib"
+    },
+    "fortran": {
+      "description": "Build with fortran"
+    },
+    "map": {
+      "description": "Build the map API"
+    },
+    "parallel": {
+      "description": "parallel support for HDF5",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "szip": {
+      "description": "Build with szip",
+      "dependencies": [
+        "szip"
+      ]
+    },
+    "threadsafe": {
+      "description": "thread safety for HDF5",
+      "supports": "!(static & windows)",
+      "dependencies": [
+        {
+          "name": "pthreads",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build hdf tools"
+    },
+    "utils": {
+      "description": "Build HDF5 Utils"
+    },
+    "zlib": {
+      "description": "Build with zlib",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

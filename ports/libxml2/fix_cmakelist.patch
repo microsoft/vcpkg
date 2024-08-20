@@ -1,0 +1,119 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9701bdc..39e96ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -393,15 +393,15 @@ endif()
+ if(LIBXML2_WITH_ICU)
+ 	target_link_libraries(LibXml2 PRIVATE ICU::data ICU::i18n ICU::uc)
+ 	if(WIN32)
+-		set(ICU_LIBS "-licudt -licuin -licuuc")
++		set(ICU_LIBS "icu-i18n")
+ 	else()
+-		set(ICU_LIBS "-licudata -licui18n -licuuc")
++		set(ICU_LIBS "icu-i18n")
+ 	endif()
+ endif()
+ 
+ if(LIBXML2_WITH_LZMA)
+ 	target_link_libraries(LibXml2 PRIVATE LibLZMA::LibLZMA)
+-	set(LZMA_LIBS "-llzma")
++	set(LZMA_LIBS "liblzma")
+ endif()
+ 
+ if(LIBXML2_WITH_THREADS)
+@@ -411,7 +411,7 @@ endif()
+ 
+ if(LIBXML2_WITH_ZLIB)
+ 	target_link_libraries(LibXml2 PRIVATE ZLIB::ZLIB)
+-	set(Z_LIBS "-lz")
++	set(Z_LIBS "zlib")
+ endif()
+ 
+ set_target_properties(
+@@ -425,23 +425,9 @@ set_target_properties(
+         SOVERSION ${LIBXML_MAJOR_VERSION}
+ )
+ 
++set(XML_LIB_NAME xml2)
+ if(MSVC)
+-	if(BUILD_SHARED_LIBS)
+-		set_target_properties(
+-			LibXml2
+-			PROPERTIES
+-			DEBUG_POSTFIX d
+-		)
+-	else()
+-		set_target_properties(
+-			LibXml2
+-			PROPERTIES
+-			DEBUG_POSTFIX sd
+-			MINSIZEREL_POSTFIX s
+-			RELEASE_POSTFIX s
+-			RELWITHDEBINFO_POSTFIX s
+-		)
+-	endif()
++	set(XML_LIB_NAME libxml2)
+ endif()
+ 
+ install(FILES ${LIBXML2_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libxml2/libxml COMPONENT development)
+@@ -574,30 +560,30 @@ endif()
+ 
+ configure_package_config_file(
+ 	libxml2-config.cmake.cmake.in libxml2-config.cmake
+-	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ )
+ 
+ install(
+ 	FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config.cmake
+-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ 	COMPONENT development
+ )
+ 
+ write_basic_package_version_file(
+ 	${CMAKE_CURRENT_BINARY_DIR}/libxml2-config-version.cmake
+ 	VERSION ${PROJECT_VERSION}
+-	COMPATIBILITY ExactVersion
++	COMPATIBILITY SameMinorVersion
+ )
+ 
+ install(
+ 	FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config-version.cmake
+-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ 	COMPONENT development
+ )
+ 
+ install(
+ 	EXPORT LibXml2
+-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ 	NAMESPACE LibXml2::
+ 	FILE libxml2-export.cmake
+ 	COMPONENT development
+@@ -635,9 +621,7 @@ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+ configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml-2.0.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT development)
+ 
+-if(WIN32)
+-	set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
+-endif()
++set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
+ configure_file(xml2-config.in xml2-config @ONLY)
+ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/xml2-config DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT development)
+
+diff --git a/libxml-2.0.pc.in b/libxml-2.0.pc.in
+index 88e3963b..0d1706c9 100644
+--- a/libxml-2.0.pc.in
++++ b/libxml-2.0.pc.in
+@@ -8,6 +8,7 @@ Name: libXML
+ Version: @VERSION@
+ Description: libXML library version2.
+ Requires:
+-Libs: -L${libdir} @XML_LIBS@
+-Libs.private: @XML_PRIVATE_LIBS@ @LIBS@
++Requires.private: @ICU_LIBS@ @Z_LIBS@ @LZMA_LIBS@
++Libs: -L${libdir} -l@XML_LIB_NAME@
++Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WINSOCK_LIBS@ @LIBS@
+ Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@

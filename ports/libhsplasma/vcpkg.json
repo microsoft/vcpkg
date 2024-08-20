@@ -1,0 +1,30 @@
+{
+  "name": "libhsplasma",
+  "version-date": "2024-03-07",
+  "description": "Cross-platform Plasma data and network library",
+  "homepage": "https://github.com/H-uru/libhsplasma",
+  "license": "GPL-3.0-or-later",
+  "supports": "!(arm | uwp | xbox)",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
+    "string-theory",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "net": {
+      "description": "Network functionality",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

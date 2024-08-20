@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e2a2dc..011a4ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,7 +66,7 @@ set(TESTS_SOURCES
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_package(Threads REQUIRED)
+ 
+-add_library(juice SHARED ${LIBJUICE_SOURCES})
++add_library(juice ${LIBJUICE_SOURCES})
+ set_target_properties(juice PROPERTIES VERSION ${PROJECT_VERSION})
+ target_include_directories(juice PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+@@ -96,11 +96,15 @@ if(WIN32)
+ endif()
+ 
+ if (USE_NETTLE)
+-	find_package(Nettle REQUIRED)
++	find_path(NETTLE_INCLUDE_PATH "nettle/hmac.h" REQUIRED)
++    find_library(NETTLE_LIBRARY_PATH NAMES nettle libnettle REQUIRED) 
++    target_include_directories(juice PRIVATE ${NETTLE_INCLUDE_PATH})
++    target_include_directories(juice-static PRIVATE ${NETTLE_INCLUDE_PATH})
++    
+     target_compile_definitions(juice PRIVATE USE_NETTLE=1)
+-    target_link_libraries(juice PRIVATE Nettle::Nettle)
++    target_link_libraries(juice PRIVATE ${NETTLE_LIBRARY_PATH})
+     target_compile_definitions(juice-static PRIVATE USE_NETTLE=1)
+-    target_link_libraries(juice-static PRIVATE Nettle::Nettle)
++    target_link_libraries(juice-static PRIVATE ${NETTLE_LIBRARY_PATH})
+ else()
+     target_compile_definitions(juice PRIVATE USE_NETTLE=0)
+     target_compile_definitions(juice-static PRIVATE USE_NETTLE=0)

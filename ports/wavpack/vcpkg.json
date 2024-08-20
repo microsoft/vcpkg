@@ -1,0 +1,19 @@
+{
+  "name": "wavpack",
+  "version": "5.6.0",
+  "port-version": 2,
+  "description": "WavPack encode/decode library, command-line programs, and several plugins",
+  "homepage": "https://github.com/dbry/WavPack",
+  "license": "BSD-3-Clause",
+  "supports": "!(windows & arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

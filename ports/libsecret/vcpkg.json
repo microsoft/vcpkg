@@ -1,0 +1,20 @@
+{
+  "name": "libsecret",
+  "version": "0.21.4",
+  "description": "libsecret is a GObject-based library for accessing the Secret Service API of the freedesktop.org project, a cross-desktop effort to access passwords, tokens and other types of secrets. libsecret provides a convenient wrapper for these methods so consumers do not have to call the low-level DBus methods.",
+  "homepage": "https://gitlab.gnome.org/GNOME/libsecret/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!(windows | uwp | osx)",
+  "dependencies": [
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "libgcrypt",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

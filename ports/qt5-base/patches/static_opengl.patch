@@ -1,0 +1,62 @@
+diff --git a/mkspecs/features/win32/opengl.prf b/mkspecs/features/win32/opengl.prf
+index f21848f94..202c49688 100644
+--- a/mkspecs/features/win32/opengl.prf	
++++ b/mkspecs/features/win32/opengl.prf
+@@ -30,7 +30,7 @@ qtConfig(opengles2) {
+         LIBS += $$QMAKE_LIBS_OPENGL_ES2
+         QMAKE_LIBDIR += $$QMAKE_LIBDIR_OPENGL_ES2_RELEASE
+     }
+-    qtConfig(static): DEFINES += GL_APICALL= EGLAPI=
++    qtConfig(static): DEFINES += _GDI32_ GL_APICALL= EGLAPI= ANGLE_EXPORT= ANGLE_PLATFORM_EXPORT= 
+ } else {
+     !qtConfig(dynamicgl) {
+         QMAKE_LIBS += $$QMAKE_LIBS_OPENGL
+diff --git a/src/angle/src/common/gles_common.pri b/src/angle/src/common/gles_common.pri
+index 70b65dd4c..1dcc96af5 100644
+--- a/src/angle/src/common/gles_common.pri	
++++ b/src/angle/src/common/gles_common.pri
+@@ -23,7 +23,8 @@ for(libname, STATICLIBS) {
+     PRE_TARGETDEPS += $$staticlib
+ }
+ 
+-DEFINES += LIBANGLE_IMPLEMENTATION LIBGLESV2_IMPLEMENTATION GL_APICALL= GL_GLEXT_PROTOTYPES= EGLAPI=
++!qtConfig(static): DEFINES += LIBANGLE_IMPLEMENTATION LIBGLESV2_IMPLEMENTATION 
++qtConfig(static): DEFINES += GL_APICALL= EGLAPI= ANGLE_EXPORT= ANGLE_PLATFORM_EXPORT= 
+ !winrt: DEFINES += ANGLE_ENABLE_D3D9 ANGLE_SKIP_DXGI_1_2_CHECK
+ 
+ QT_FOR_CONFIG += gui-private
+diff --git a/src/3rdparty/angle/include/platform/Platform.h b/src/3rdparty/angle/include/platform/Platform.h
+index aa1221a86..a49ee4f6d 100644
+--- a/src/3rdparty/angle/include/platform/Platform.h	
++++ b/src/3rdparty/angle/include/platform/Platform.h
+@@ -12,7 +12,7 @@
+ #include <stdint.h>
+ #include <array>
+ 
+-#if defined(_WIN32)
++#if defined(_WIN32) && !defined(ANGLE_PLATFORM_EXPORT)
+ #   if !defined(LIBANGLE_IMPLEMENTATION)
+ #       define ANGLE_PLATFORM_EXPORT __declspec(dllimport)
+ #   else
+diff --git a/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp b/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp
+index d4459ec28..d1416041e 100644
+--- a/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp	
++++ b/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp
+@@ -3505,7 +3505,7 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
+     }
+ }
+ 
+-GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum target,
++ANGLE_EXPORT void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum target,
+                                                                     GLenum attachment,
+                                                                     GLuint texture,
+                                                                     GLint level,
+@@ -3530,7 +3530,7 @@ GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum targe
+     }
+ }
+ 
+-GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewSideBySideANGLE(GLenum target,
++ANGLE_EXPORT void GL_APIENTRY FramebufferTextureMultiviewSideBySideANGLE(GLenum target,
+                                                                        GLenum attachment,
+                                                                        GLuint texture,
+                                                                        GLint level,

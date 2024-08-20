@@ -1,0 +1,18 @@
+{
+  "name": "opencl",
+  "version-string": "v2024.05.08",
+  "description": "OpenCL SDK",
+  "homepage": "https://github.com/KhronosGroup/OpenCL-SDK",
+  "license": "Apache-2.0 AND (MIT OR WTFPL)",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

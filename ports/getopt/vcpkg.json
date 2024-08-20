@@ -1,0 +1,13 @@
+{
+  "name": "getopt",
+  "version": "0",
+  "port-version": 3,
+  "description": "The getopt and getopt_long functions automate some of the chore involved in parsing typical unix command line options.",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "getopt-win32",
+      "platform": "windows & !mingw"
+    }
+  ]
+}

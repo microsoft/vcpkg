@@ -1,0 +1,29 @@
+{
+  "name": "cmake",
+  "version": "3.22.2",
+  "port-version": 5,
+  "description": "CMake is an open-source, cross-platform family of tools designed to build, test and package software.",
+  "homepage": "https://cmake.org/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "bzip2",
+    "curl",
+    "expat",
+    "jsoncpp",
+    "libarchive",
+    "liblzma",
+    "libuv",
+    {
+      "name": "ncurses",
+      "platform": "!(windows | uwp)"
+    },
+    "nghttp2",
+    "qtbase",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "blpapi",
+  "version": "3.24.6",
+  "description": "Bloomberg API Library (BLPAPI)",
+  "homepage": "https://www.bloomberg.com/professional/support/api-library/",
+  "supports": "(linux | (windows & !uwp)) & !static & (x86 | x64)"
+}

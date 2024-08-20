@@ -1,0 +1,469 @@
+diff --git a/FITS.h b/FITS.h
+index e21f3db..3e97c83 100644
+--- a/FITS.h
++++ b/FITS.h
+@@ -21,6 +21,8 @@
+ #include "HDUCreator.h"
+ // FitsError
+ #include "FitsError.h"
++//DLL Exporting
++#include "ccfits_export.h"
+ 
+ namespace CCfits {
+   class FITSBase;
+@@ -665,7 +667,7 @@ do this either).
+ 
+ 
+ 
+-  class FITS 
++  class CCFITS_EXPORT FITS 
+   {
+ 
+     public:
+diff --git a/HDU.h b/HDU.h
+index 07f68e7..047e731 100644
+--- a/HDU.h
++++ b/HDU.h
+@@ -568,7 +568,7 @@ and return its value.
+ 
+ 
+ 
+-  class HDU 
++  class CCFITS_EXPORT HDU 
+   {
+ 
+     public:
+diff --git a/Table.h b/Table.h
+index a0c1afe..9a8a5db 100644
+--- a/Table.h
++++ b/Table.h
+@@ -268,7 +268,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class Table : public ExtHDU  //## Inherits: <unnamed>%3804A126EB10
++  class CCFITS_EXPORT Table : public ExtHDU  //## Inherits: <unnamed>%3804A126EB10
+   {
+ 
+     public:
+diff --git a/Column.h b/Column.h
+index e4496a7..b798947 100644
+--- a/Column.h
++++ b/Column.h
+@@ -838,14 +838,14 @@ namespace CCfits {
+ 
+ 
+ 
+-  class Column 
++  class CCFITS_EXPORT Column 
+   {
+ 
+     public:
+ 
+ 
+ 
+-      class RangeError : public FitsException  //## Inherits: <unnamed>%3946526D031A
++      class CCFITS_EXPORT RangeError : public FitsException  //## Inherits: <unnamed>%3946526D031A
+       {
+         public:
+             RangeError (const String& msg, bool silent = true);
+@@ -857,7 +857,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class InvalidDataType : public FitsException  //## Inherits: <unnamed>%3947CF30033E
++      class CCFITS_EXPORT InvalidDataType : public FitsException  //## Inherits: <unnamed>%3947CF30033E
+       {
+         public:
+             InvalidDataType (const String& str = string(), bool silent = true);
+@@ -869,7 +869,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class InvalidRowParameter : public FitsException  //## Inherits: <unnamed>%39B5310F01A0
++      class CCFITS_EXPORT InvalidRowParameter : public FitsException  //## Inherits: <unnamed>%39B5310F01A0
+       {
+         public:
+             InvalidRowParameter (const String& diag, bool silent = true);
+@@ -881,7 +881,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class WrongColumnType : public FitsException  //## Inherits: <unnamed>%39B545780082
++      class CCFITS_EXPORT WrongColumnType : public FitsException  //## Inherits: <unnamed>%39B545780082
+       {
+         public:
+             WrongColumnType (const String& diag, bool silent = true);
+@@ -893,7 +893,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class UnspecifiedLengths : public FitsException  //## Inherits: <unnamed>%3A018C9D007D
++      class CCFITS_EXPORT UnspecifiedLengths : public FitsException  //## Inherits: <unnamed>%3A018C9D007D
+       {
+         public:
+             UnspecifiedLengths (const String& diag, bool silent = true);
+@@ -905,7 +905,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class InvalidRowNumber : public FitsException  //## Inherits: <unnamed>%3B0A850F0307
++      class CCFITS_EXPORT InvalidRowNumber : public FitsException  //## Inherits: <unnamed>%3B0A850F0307
+       {
+         public:
+             InvalidRowNumber (const String& diag, bool silent = true);
+@@ -917,7 +917,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class InsufficientElements : public FitsException  //## Inherits: <unnamed>%3B0BE611010A
++      class CCFITS_EXPORT InsufficientElements : public FitsException  //## Inherits: <unnamed>%3B0BE611010A
+       {
+         public:
+             InsufficientElements (const String& msg, bool silent = true);
+@@ -929,7 +929,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class NoNullValue : public FitsException  //## Inherits: <unnamed>%3B0D589A0092
++      class CCFITS_EXPORT NoNullValue : public FitsException  //## Inherits: <unnamed>%3B0D589A0092
+       {
+         public:
+             NoNullValue (const String& diag, bool silent = true);
+@@ -941,7 +941,7 @@ namespace CCfits {
+ 
+ 
+ 
+-      class InvalidNumberOfRows : public FitsException  //## Inherits: <unnamed>%3B20EB8B0205
++      class CCFITS_EXPORT InvalidNumberOfRows : public FitsException  //## Inherits: <unnamed>%3B20EB8B0205
+       {
+         public:
+             InvalidNumberOfRows (int number, bool silent = true);
+diff --git a/AsciiTable.h b/AsciiTable.h
+index 620cf41..d03aa44 100644
+--- a/AsciiTable.h
++++ b/AsciiTable.h
+@@ -133,7 +133,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class AsciiTable : public Table  //## Inherits: <unnamed>%3804A75CE420
++  class CCFITS_EXPORT AsciiTable : public Table  //## Inherits: <unnamed>%3804A75CE420
+   {
+ 
+     public:
+diff --git a/CCfits.h b/CCfits.h
+index d09438a..a62b8a6 100644
+--- a/CCfits.h
++++ b/CCfits.h
+@@ -23,7 +23,7 @@ namespace CCfits {
+ #include <sys/types.h>
+ #include "longnam.h"
+ #include "float.h"
+-
++#include "ccfits_export.h"
+ 
+ namespace CCfits {
+   /*! \namespace CCfits
+@@ -32,8 +32,8 @@ namespace CCfits {
+   static const int BITPIX = -32;
+   static const int  NAXIS =   2;
+   static const int  MAXDIM = 99;
+-  extern const unsigned long USBASE;
+-  extern const unsigned long  ULBASE;
++  extern const CCFITS_EXPORT unsigned long USBASE;
++  extern const CCFITS_EXPORT unsigned long ULBASE;
+ 
+   extern  char BSCALE[7];
+   extern  char BZERO[6];
+diff --git a/FITSBase.h b/FITSBase.h
+index 996fdae..0c985f9 100644
+--- a/FITSBase.h
++++ b/FITSBase.h
+@@ -30,7 +30,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class FITSBase 
++  class CCFITS_EXPORT FITSBase 
+   {
+ 
+     public:
+diff --git a/Keyword.h b/Keyword.h
+index 816c119..b6df1f1 100644
+--- a/Keyword.h
++++ b/Keyword.h
+@@ -195,7 +195,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class Keyword 
++  class CCFITS_EXPORT Keyword 
+   {
+ 
+     public:
+diff --git a/ExtHDU.h b/ExtHDU.h
+index d075fa1..e2d7dc6 100644
+--- a/ExtHDU.h
++++ b/ExtHDU.h
+@@ -435,7 +435,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class ExtHDU : public HDU  //## Inherits: <unnamed>%38048213E7A8
++  class CCFITS_EXPORT ExtHDU : public HDU  //## Inherits: <unnamed>%38048213E7A8
+   {
+ 
+     public:
+diff --git a/PHDU.h b/PHDU.h
+index fe5f799..d9669b4 100644
+--- a/PHDU.h
++++ b/PHDU.h
+@@ -264,7 +264,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class PHDU : public HDU  //## Inherits: <unnamed>%394E6F9800C3
++  class CCFITS_EXPORT PHDU : public HDU  //## Inherits: <unnamed>%394E6F9800C3
+   {
+ 
+     public:
+diff --git a/BinTable.h b/BinTable.h
+index 68851e3..906005a 100644
+--- a/BinTable.h
++++ b/BinTable.h
+@@ -127,7 +127,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class BinTable : public Table  //## Inherits: <unnamed>%3804A7E75F10
++  class CCFITS_EXPORT BinTable : public Table  //## Inherits: <unnamed>%3804A7E75F10
+   {
+ 
+     public:
+diff --git a/ColumnCreator.h b/ColumnCreator.h
+index 104bd4f..15cd0ea 100644
+--- a/ColumnCreator.h
++++ b/ColumnCreator.h
+@@ -28,7 +28,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class ColumnCreator 
++  class CCFITS_EXPORT ColumnCreator 
+   {
+ 
+     public:
+diff --git a/FitsError.h b/FitsError.h
+index 593723c..52941f6 100644
+--- a/FitsError.h
++++ b/FitsError.h
+@@ -13,6 +13,7 @@
+ //#include <exception>
+ //#include <iostream>
+ //#include <stl.h>
++#include "ccfits_export.h"
+ #include <string>
+ using std::string;
+ 
+@@ -90,7 +91,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class FitsException 
++  class CCFITS_EXPORT FitsException 
+   {
+     public:
+         FitsException (const string& msg, bool& silent);
+@@ -109,7 +110,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class FitsError : public FitsException  //## Inherits: <unnamed>%399170BD017D
++  class CCFITS_EXPORT FitsError : public FitsException  //## Inherits: <unnamed>%399170BD017D
+   {
+     public:
+         FitsError (int errornum, bool silent = true);
+@@ -123,7 +124,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class FitsFatal 
++  class CCFITS_EXPORT FitsFatal 
+   {
+     public:
+         FitsFatal (const string& diag);
+diff --git a/HDUCreator.h b/HDUCreator.h
+index 65b82b7..2b5f717 100644
+--- a/HDUCreator.h
++++ b/HDUCreator.h
+@@ -35,7 +35,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class HDUCreator 
++  class CCFITS_EXPORT HDUCreator 
+   {
+ 
+     public:
+diff --git a/ccfits_export.h b/ccfits_export.h
+new file mode 100644
+index 0000000..a2540a6 100644
+--- /dev/null
++++ b/ccfits_export.h
+@@ -0,0 +1,22 @@
++#ifndef CCFITS_EXPORT_H
++#define CCFITS_EXPORT_H
++
++#ifdef CCFITS_STATIC_DEFINE
++#  define CCFITS_EXPORT
++#else
++#  ifndef CCFITS_EXPORT
++#    ifdef _MSC_VER
++#      ifdef CCfits_EXPORTS
++         /* We are building this library */
++#        define CCFITS_EXPORT __declspec(dllexport)
++#      else
++         /* We are using this library */
++#        define CCFITS_EXPORT __declspec(dllimport)
++#      endif
++#    else
++#        define CCFITS_EXPORT __attribute__((visibility("default")))
++#    endif
++#  endif
++#endif
++
++#endif
+\ No newline at end of file
+diff --git a/FITSUtil.h b/FITSUtil.h
+index 762d430..e2eee33 100644
+--- a/FITSUtil.h
++++ b/FITSUtil.h
+@@ -22,6 +22,7 @@
+ #include <string>
+ // FitsError
+ #include "FitsError.h"
++#include "ccfits_export.h"
+ #include <typeinfo>
+ 
+ 
+@@ -287,21 +288,21 @@ object.
+     template <typename T>
+     void swap(std::vector<T>& left, std::vector<T>& right);
+ 
+-    string lowerCase(const string& inputString);
++    string CCFITS_EXPORT lowerCase(const string& inputString);
+ 
+-    string upperCase(const string& inputString);
++    string CCFITS_EXPORT upperCase(const string& inputString);
+ 
+   // Check if a file name includes an image compression specifier,
+   // and return its location if it exists.
+-    string::size_type checkForCompressString(const string& fileName);
++    string::size_type CCFITS_EXPORT checkForCompressString(const string& fileName);
+ 
+-  struct InvalidConversion : public FitsException
++  struct CCFITS_EXPORT InvalidConversion : public FitsException
+   {
+ 		InvalidConversion(const string& diag, bool silent=false);
+ 
+   };
+ 
+-  struct MatchStem : public std::binary_function<string,string,bool>
++  struct CCFITS_EXPORT MatchStem : public std::binary_function<string,string,bool>
+   {
+           bool operator()(const string& left, const string& right) const;
+   };
+@@ -323,7 +324,7 @@ object.
+ 
+   char** CharArray(const std::vector<string>& inArray);
+ 
+-  string FITSType2String( int typeInt );
++  string CCFITS_EXPORT FITSType2String( int typeInt );
+ 
+ 
+   template <typename S, typename T> 
+@@ -633,7 +634,7 @@ object.
+ 
+ 
+ 
+-    class UnrecognizedType : public FitsException  //## Inherits: <unnamed>%3CE143AB00C6
++    class CCFITS_EXPORT UnrecognizedType : public FitsException  //## Inherits: <unnamed>%3CE143AB00C6
+     {
+       public:
+           UnrecognizedType (string diag, bool silent = true);
+diff --git a/KeywordCreator.h b/KeywordCreator.h
+index d878a26..b2c0c70 100644
+--- a/KeywordCreator.h
++++ b/KeywordCreator.h
+@@ -24,7 +24,7 @@ namespace CCfits {
+ 
+ 
+ 
+-  class KeywordCreator 
++  class CCFITS_EXPORT KeywordCreator 
+   {
+ 
+     public:
+diff --git a/CCfits b/CCfits
+index e9848c9..f30c9ad 100644
+--- a/CCfits
++++ b/CCfits
+@@ -2,20 +2,20 @@
+ #ifndef CCFITS
+ #define CCFITS  20031208
+ 
+-#include <CCfits/CCfits.h>
++#include <CCfits.h>
+ 
+-#include <CCfits/FITS.h>
+-#include <CCfits/BinTable.h>
+-#include <CCfits/AsciiTable.h>
+-#include <CCfits/ColumnVectorData.h>
+-#include <CCfits/ColumnData.h>
+-#include <CCfits/ColumnT.h>
+-#include <CCfits/ExtHDUT.h>
+-#include <CCfits/KeywordT.h>
+-#include <CCfits/KeyData.h>
+-#include <CCfits/FitsError.h>
+-#include <CCfits/FITSUtilT.h>
+-#include <CCfits/PHDUT.h>
++#include <FITS.h>
++#include <BinTable.h>
++#include <AsciiTable.h>
++#include <ColumnVectorData.h>
++#include <ColumnData.h>
++#include <ColumnT.h>
++#include <ExtHDUT.h>
++#include <KeywordT.h>
++#include <KeyData.h>
++#include <FitsError.h>
++#include <FITSUtilT.h>
++#include <PHDUT.h>
+ 
+ 
+ #endif
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b958fc7..0b1fb4e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,11 @@ IF (BUILD_SHARED_LIBS)
+   SET (LIB_TYPE SHARED)
+ ENDIF (BUILD_SHARED_LIBS)
+ 
++
++IF (NOT BUILD_SHARED_LIBS)
++    ADD_DEFINITIONS(-DCCFITS_STATIC_DEFINE)
++ENDIF()
++
+ FILE(GLOB H_FILES "*.h")
+ SET(H_FILES ${H_FILES} CCfits)
+ 
+@@ -55,6 +60,7 @@ SET(SRC_FILES
+ )
+ 
+ ADD_LIBRARY(${LIB_NAME} ${LIB_TYPE} ${H_FILES} ${SRC_FILES})
++
+ TARGET_LINK_LIBRARIES(${LIB_NAME} ${CFITSIO_LIBRARY}
+ )
+ 

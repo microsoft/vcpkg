@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "bde",
+  "version": "4.8.0.0",
+  "port-version": 1,
+  "description": "Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.",
+  "homepage": "https://techatbloomberg.com/",
+  "documentation": "https://bloomberg.github.io/bde/",
+  "license": "Apache-2.0",
+  "supports": "!android & !(arm64 & windows) & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

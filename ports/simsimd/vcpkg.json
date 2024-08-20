@@ -1,0 +1,7 @@
+{
+  "name": "simsimd",
+  "version": "1.4.0",
+  "description": "Fastest similarity-measures and distance functions on the Wild West – vectors, strings, short molecules, and even DNA sequences. All with a pinch of SIMD for both x86 and ARM.",
+  "homepage": "https://github.com/ashvardanian/SimSIMD",
+  "license": "Apache-2.0"
+}

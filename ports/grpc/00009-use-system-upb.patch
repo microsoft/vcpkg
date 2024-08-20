@@ -1,0 +1,143 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3b39a1..8d7c1f6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3213,17 +3213,6 @@ add_library(grpc_unsecure
+   src/core/tsi/local_transport_security.cc
+   src/core/tsi/transport_security.cc
+   src/core/tsi/transport_security_grpc.cc
+-  third_party/upb/upb/message/accessors.c
+-  third_party/upb/upb/mini_descriptor/build_enum.c
+-  third_party/upb/upb/mini_descriptor/decode.c
+-  third_party/upb/upb/mini_descriptor/internal/base92.c
+-  third_party/upb/upb/mini_descriptor/internal/encode.c
+-  third_party/upb/upb/mini_descriptor/link.c
+-  third_party/upb/upb/wire/decode.c
+-  third_party/upb/upb/wire/decode_fast.c
+-  third_party/upb/upb/wire/encode.c
+-  third_party/upb/upb/wire/eps_copy_input_stream.c
+-  third_party/upb/upb/wire/reader.c
+   ${gRPC_ADDITIONAL_DLL_SRC}
+ )
+ 
+@@ -3456,6 +3445,7 @@ target_link_libraries(gtest
+ endif()
+ 
+ 
++if(0) # vcpkg upb
+ add_library(upb ${_gRPC_STATIC_WIN32}
+   third_party/upb/upb/base/status.c
+   third_party/upb/upb/mem/alloc.c
+@@ -3818,6 +3808,7 @@ if(gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
++endif() # vcpkg upb
+ 
+ if(gRPC_BUILD_TESTS)
+ 
+@@ -5190,25 +5181,6 @@ add_library(grpc_authorization_provider
+   src/core/tsi/alts/handshaker/transport_security_common_api.cc
+   src/core/tsi/transport_security.cc
+   src/core/tsi/transport_security_grpc.cc
+-  third_party/upb/upb/hash/common.c
+-  third_party/upb/upb/message/accessors.c
+-  third_party/upb/upb/message/array.c
+-  third_party/upb/upb/message/map.c
+-  third_party/upb/upb/message/map_sorter.c
+-  third_party/upb/upb/message/message.c
+-  third_party/upb/upb/mini_descriptor/build_enum.c
+-  third_party/upb/upb/mini_descriptor/decode.c
+-  third_party/upb/upb/mini_descriptor/internal/base92.c
+-  third_party/upb/upb/mini_descriptor/internal/encode.c
+-  third_party/upb/upb/mini_descriptor/link.c
+-  third_party/upb/upb/mini_table/extension_registry.c
+-  third_party/upb/upb/mini_table/internal/message.c
+-  third_party/upb/upb/mini_table/message.c
+-  third_party/upb/upb/wire/decode.c
+-  third_party/upb/upb/wire/decode_fast.c
+-  third_party/upb/upb/wire/encode.c
+-  third_party/upb/upb/wire/eps_copy_input_stream.c
+-  third_party/upb/upb/wire/reader.c
+ )
+ 
+ target_compile_features(grpc_authorization_provider PUBLIC cxx_std_14)
+@@ -30412,9 +30384,9 @@ generate_pkgconfig(
+   "high performance general RPC framework"
+   "${gRPC_CORE_VERSION}"
+   "absl_algorithm_container absl_any_invocable absl_base absl_bind_front absl_cleanup absl_cord absl_core_headers absl_flags absl_flags_marshalling absl_flat_hash_map absl_flat_hash_set absl_function_ref absl_hash absl_inlined_vector absl_memory absl_optional absl_random_bit_gen_ref absl_random_distributions absl_random_random absl_span absl_status absl_statusor absl_str_format absl_strings absl_synchronization absl_time absl_type_traits absl_utility absl_variant gpr"
+-  "libcares openssl re2 zlib"
++  "libcares openssl re2 zlib utf8_range"
+   "-lgrpc"
+-  "-laddress_sorting -lupb -lupb_textformat_lib -lupb_json_lib -lutf8_range_lib -lupb_collections_lib"
++  "-laddress_sorting -lupb"
+   "grpc.pc")
+ 
+ # grpc_unsecure .pc file
+@@ -30423,9 +30395,9 @@ generate_pkgconfig(
+   "high performance general RPC framework without SSL"
+   "${gRPC_CORE_VERSION}"
+   "absl_algorithm_container absl_any_invocable absl_base absl_bind_front absl_cleanup absl_cord absl_core_headers absl_flags absl_flags_marshalling absl_flat_hash_map absl_flat_hash_set absl_function_ref absl_hash absl_inlined_vector absl_memory absl_optional absl_random_bit_gen_ref absl_random_distributions absl_random_random absl_span absl_status absl_statusor absl_str_format absl_strings absl_synchronization absl_time absl_type_traits absl_utility absl_variant gpr"
+-  "libcares zlib"
++  "libcares zlib utf8_range"
+   "-lgrpc_unsecure"
+-  "-laddress_sorting -lutf8_range_lib -lupb -lupb_collections_lib"
++  "-laddress_sorting -lupb"
+   "grpc_unsecure.pc")
+ 
+ # grpc++ .pc file
+@@ -30434,9 +30406,9 @@ generate_pkgconfig(
+   "C++ wrapper for gRPC"
+   "${gRPC_CPP_VERSION}"
+   "absl_algorithm_container absl_any_invocable absl_base absl_bind_front absl_cleanup absl_cord absl_core_headers absl_flags absl_flags_marshalling absl_flat_hash_map absl_flat_hash_set absl_function_ref absl_hash absl_inlined_vector absl_memory absl_optional absl_random_bit_gen_ref absl_random_distributions absl_random_random absl_span absl_status absl_statusor absl_str_format absl_strings absl_synchronization absl_time absl_type_traits absl_utility absl_variant gpr grpc"
+-  "libcares openssl re2 zlib"
++  "libcares openssl re2 zlib utf8_range"
+   "-lgrpc++"
+-  "-laddress_sorting -lupb -lupb_textformat_lib -lupb_json_lib -lutf8_range_lib -lupb_collections_lib"
++  "-laddress_sorting -lupb"
+   "grpc++.pc")
+ 
+ # grpc++_unsecure .pc file
+@@ -30445,7 +30417,7 @@ generate_pkgconfig(
+   "C++ wrapper for gRPC without SSL"
+   "${gRPC_CPP_VERSION}"
+   "absl_algorithm_container absl_any_invocable absl_base absl_bind_front absl_cleanup absl_cord absl_core_headers absl_flags absl_flags_marshalling absl_flat_hash_map absl_flat_hash_set absl_function_ref absl_hash absl_inlined_vector absl_memory absl_optional absl_random_bit_gen_ref absl_random_distributions absl_random_random absl_span absl_status absl_statusor absl_str_format absl_strings absl_synchronization absl_time absl_type_traits absl_utility absl_variant gpr grpc_unsecure"
+-  "libcares zlib"
++  "libcares zlib utf8_range"
+   "-lgrpc++_unsecure"
+-  "-laddress_sorting -lutf8_range_lib -lupb -lupb_collections_lib"
++  "-laddress_sorting -lupb"
+   "grpc++_unsecure.pc")
+diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
+index 98d8c6d..7cad2ab 100644
+--- a/cmake/gRPCConfig.cmake.in
++++ b/cmake/gRPCConfig.cmake.in
+@@ -8,6 +8,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/modules)
+ @_gRPC_FIND_CARES@
+ @_gRPC_FIND_ABSL@
+ @_gRPC_FIND_RE2@
++@_gRPC_FIND_UPB@
+ 
+ # Targets
+ include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
+diff --git a/cmake/upb.cmake b/cmake/upb.cmake
+index 9156e5f..31324fa 100644
+--- a/cmake/upb.cmake
++++ b/cmake/upb.cmake
+@@ -14,7 +14,15 @@
+ 
+ set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
+ 
+-set(_gRPC_UPB_INCLUDE_DIR "${UPB_ROOT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/third_party/utf8_range")
++set(_gRPC_UPB_INCLUDE_DIR "")
+ set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-gen" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-gen")
+ 
+ set(_gRPC_UPB_LIBRARIES upb)
++
++find_package(upb CONFIG REQUIRED)
++set(_gRPC_FIND_UPB "find_dependency(upb CONFIG)")
++add_library(upb_collections_lib ALIAS upb::upb)
++add_library(upb_json_lib ALIAS upb::upb)
++add_library(upb_textformat_lib ALIAS upb::upb)
++add_library(upb ALIAS upb::upb)
++add_library(utf8_range_lib ALIAS utf8_range::utf8_range)

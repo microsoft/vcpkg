@@ -1,0 +1,14 @@
+{
+  "name": "gmmlib",
+  "version": "22.3.20",
+  "description": "Intel(R) Graphics Memory Management Library",
+  "homepage": "https://github.com/intel/gmmlib",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "name": "pcl",
+  "version": "1.14.1",
+  "description": "Point Cloud Library (PCL) is open source library for 2D/3D image and point cloud processing.",
+  "homepage": "https://github.com/PointCloudLibrary/pcl",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "boost-asio",
+    "boost-date-time",
+    "boost-dynamic-bitset",
+    "boost-filesystem",
+    "boost-foreach",
+    "boost-graph",
+    "boost-interprocess",
+    "boost-iostreams",
+    "boost-multi-array",
+    "boost-property-map",
+    "boost-ptr-container",
+    "boost-random",
+    "boost-signals2",
+    "boost-sort",
+    "boost-system",
+    "boost-thread",
+    "boost-uuid",
+    "eigen3",
+    "flann",
+    "libpng",
+    "qhull",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "apps": {
+      "description": "Build application examples/samples that show how PCL works",
+      "dependencies": [
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "opengl",
+            "openni2",
+            "qt",
+            "vtk"
+          ]
+        }
+      ]
+    },
+    "cuda": {
+      "description": "CUDA support for PCL",
+      "supports": "x64",
+      "dependencies": [
+        "cuda",
+        "vtk"
+      ]
+    },
+    "examples": {
+      "description": "Build PCL examples",
+      "dependencies": [
+        "boost-format",
+        {
+          "name": "pcl",
+          "features": [
+            "visualization"
+          ]
+        }
+      ]
+    },
+    "libusb": {
+      "description": "Build USB RGBD-Camera drivers",
+      "dependencies": [
+        "libusb"
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL support for PCL",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "openni2": {
+      "description": "OpenNI2 support for PCL",
+      "dependencies": [
+        "openni2",
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "libusb"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
+    "pcap": {
+      "description": "PCAP support for PCL",
+      "dependencies": [
+        {
+          "name": "libpcap",
+          "platform": "!windows"
+        },
+        {
+          "name": "winpcap",
+          "platform": "windows"
+        }
+      ]
+    },
+    "qt": {
+      "description": "Qt support for PCL",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "features": [
+            "qt"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "description": "Build Point Cloud Library Simulation",
+      "dependencies": [
+        "glew",
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "surface-on-nurbs": {
+      "description": "Fitting NURBS to point clouds",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "tools": {
+      "description": "Build PCL utilities",
+      "supports": "!static",
+      "dependencies": [
+        "boost-accumulators"
+      ]
+    },
+    "visualization": {
+      "description": "Build visualization",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "vtk": {
+      "description": "An alias for visualization",
+      "dependencies": [
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "visualization"
+          ]
+        }
+      ]
+    }
+  }
+}

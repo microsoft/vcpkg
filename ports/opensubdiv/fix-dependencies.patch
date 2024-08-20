@@ -1,0 +1,146 @@
+diff --git a/cmake/FindDXSDK.cmake b/cmake/FindDXSDK.cmake
+index a396d97..edd06db 100644
+--- a/cmake/FindDXSDK.cmake
++++ b/cmake/FindDXSDK.cmake
+@@ -48,15 +48,8 @@ if (WIN32)
+             "C:/Program Files/Microsoft DirectX SDK*/Include"
+     )
+ 
+-    if ("${CMAKE_GENERATOR}" MATCHES "[Ww]in64" OR
+-        "${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
+-        set(ARCH x64)
+-    else()
+-        set(ARCH x86)
+-    endif()
+-
+     find_path(LIBRARY_DIR
+-            d3d11.lib
++            d3dx11.lib
+         PATHS
+             "${DXSDK_LOCATION}/Lib/${ARCH}"
+             "$ENV{DXSDK_LOCATION}/Lib/${ARCH}"
+@@ -70,7 +63,7 @@ if (WIN32)
+ 
+     set(DXSDK_LIBRARY_DIR ${LIBRARY_DIR})
+ 
+-    foreach(DX_LIB d3d11 d3dcompiler)
++    foreach(DX_LIB d3dx11 d3dcompiler)
+ 
+         find_library(DXSDK_${DX_LIB}_LIBRARY
+             NAMES 
+diff --git a/cmake/FindTBB.cmake b/cmake/FindTBB.cmake
+index 2f4efd3..5f4f85b 100644
+--- a/cmake/FindTBB.cmake
++++ b/cmake/FindTBB.cmake
+@@ -30,6 +30,10 @@
+ #  TBB_LIBRARIES - The libraries needed to use TBB
+ 
+ # Obtain include directory
++find_package(TBB CONFIG REQUIRED)
++set(TBB_FOUND 1)
++set(TBB_LIBRARIES TBB::tbb)
++if (0)
+ if (WIN32)
+     find_path(TBB_INCLUDE_DIR
+         NAMES
+@@ -180,4 +184,4 @@ mark_as_advanced(
+   TBB_INCLUDE_DIR
+   TBB_LIBRARIES
+ )
+-
++endif()
+diff --git a/examples/dxPtexViewer/CMakeLists.txt b/examples/dxPtexViewer/CMakeLists.txt
+index 2743423..81c8806 100644
+--- a/examples/dxPtexViewer/CMakeLists.txt
++++ b/examples/dxPtexViewer/CMakeLists.txt
+@@ -36,6 +36,19 @@ set(PLATFORM_LIBRARIES
+     "${ZLIB_LIBRARY}"
+ )
+ 
++if (OPENCL_FOUND)
++    list(APPEND PLATFORM_LIBRARIES
++        Opengl32
++        Cfgmgr32
++    )
++endif()
++
++if (DXSDK_FOUND)
++    list(APPEND PLATFORM_LIBRARIES
++        D3D11
++    )
++endif()
++
+ include_directories(
+     "${OPENSUBDIV_INCLUDE_DIR}"
+     "${DXSDK_INCLUDE_DIR}"
+diff --git a/examples/dxViewer/CMakeLists.txt b/examples/dxViewer/CMakeLists.txt
+index 245ecbd..83b39b8 100644
+--- a/examples/dxViewer/CMakeLists.txt
++++ b/examples/dxViewer/CMakeLists.txt
+@@ -33,6 +33,19 @@ set(PLATFORM_LIBRARIES
+     "${DXSDK_LIBRARIES}"
+ )
+ 
++if (OPENCL_FOUND)
++    list(APPEND PLATFORM_LIBRARIES
++        Opengl32
++        Cfgmgr32
++    )
++endif()
++
++if (DXSDK_FOUND)
++    list(APPEND PLATFORM_LIBRARIES
++        D3D11
++    )
++endif()
++
+ include_directories(
+     "${OPENSUBDIV_INCLUDE_DIR}"
+     "${DXSDK_INCLUDE_DIR}"
+diff --git a/examples/glEvalLimit/CMakeLists.txt b/examples/glEvalLimit/CMakeLists.txt
+index 1a71f72..8eaaccb 100644
+--- a/examples/glEvalLimit/CMakeLists.txt
++++ b/examples/glEvalLimit/CMakeLists.txt
+@@ -41,7 +41,6 @@ if( OPENCL_FOUND )
+ endif()
+ 
+ if( TBB_FOUND )
+-    include_directories("${TBB_INCLUDE_DIR}")
+     list(APPEND PLATFORM_LIBRARIES
+         "${TBB_LIBRARIES}"
+     )
+diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
+index adb0191..0f90a37 100644
+--- a/opensubdiv/CMakeLists.txt
++++ b/opensubdiv/CMakeLists.txt
+@@ -49,7 +49,6 @@ if (NOT NO_LIB)
+     endif()
+ 
+     if( TBB_FOUND )
+-        include_directories("${TBB_INCLUDE_DIR}")
+         list(APPEND PLATFORM_CPU_LIBRARIES
+             ${TBB_LIBRARIES}
+         )
+diff --git a/opensubdiv/osd/CMakeLists.txt b/opensubdiv/osd/CMakeLists.txt
+index 75f64b6..90d5ea2 100644
+--- a/opensubdiv/osd/CMakeLists.txt
++++ b/opensubdiv/osd/CMakeLists.txt
+@@ -88,7 +88,6 @@ set(TBB_PUBLIC_HEADERS
+ )
+ 
+ if( TBB_FOUND )
+-    include_directories("${TBB_INCLUDE_DIR}")
+ 
+     list(APPEND CPU_SOURCE_FILES
+         tbbEvaluator.cpp
+@@ -379,6 +378,10 @@ add_library(osd_cpu_obj
+         ${PUBLIC_HEADER_FILES}
+ )
+ 
++if (TBB_FOUND)
++    target_link_libraries(osd_cpu_obj ${TBB_LIBRARIES})
++endif()
++
+ set_target_properties(osd_cpu_obj
+     PROPERTIES
+         FOLDER "opensubdiv"

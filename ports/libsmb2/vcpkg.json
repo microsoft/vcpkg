@@ -1,0 +1,17 @@
+{
+  "name": "libsmb2",
+  "version-date": "2023-08-11",
+  "description": "SMB2/3 Userspace Client",
+  "homepage": "https://github.com/sahlberg/libsmb2",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

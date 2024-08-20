@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "fd29cd78a6d8aa5689620b077e062c8844d27871",
+      "version-date": "2023-11-22",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7be7cf3170221b9393f84ec28a2b940956cabb9f",
+      "version-date": "2023-11-06",
+      "port-version": 0
+    },
+    {
+      "git-tree": "59fa084ab6de6874b5dc5e56665312104d0f454a",
+      "version-date": "2023-03-13",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8af495e842a0c358990dca7ed7a463673ff9c768",
+      "version-date": "2023-01-27",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e9c41d87d7d3dc77a9d7dfaddef8571574721f0d",
+      "version-date": "2022-09-08",
+      "port-version": 1
+    },
+    {
+      "git-tree": "89d5a8630a97d2e3a7cae1a56253de75014a0738",
+      "version-date": "2022-09-08",
+      "port-version": 0
+    },
+    {
+      "git-tree": "081192c8586e086ef1fe8beb576255f86dc9458e",
+      "version-date": "2022-07-04",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3ab059ed3893e5635482409f22bd73cdbcec2166",
+      "version-date": "2022-06-17",
+      "port-version": 0
+    },
+    {
+      "git-tree": "be7fa7b222ea2c080583b12ad2f203d63c7ed55c",
+      "version": "0.0.0-cad832c8",
+      "port-version": 1
+    },
+    {
+      "git-tree": "af77893b0d87106812194f8bc866ecfbc6ade24a",
+      "version-string": "0.0.0-cad832c8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e27f2efe92a17e1c67c5115c9ef15e7e63b1f3e8",
+      "version-string": "0.0.0-8089a948",
+      "port-version": 0
+    },
+    {
+      "git-tree": "801be68901e5e7e84e4069015346fc457e72953c",
+      "version-string": "0.0.0-e691a6dc",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3cd8528057f78bdbc43616bbe7349acd5cc41c77",
+      "version-string": "0.0.0-7cb75d4e",
+      "port-version": 1
+    },
+    {
+      "git-tree": "22e381237aadb997367803430ddb3f4290acc88c",
+      "version-string": "0.0.0-7cb75d4e",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d71cb92f85e0f089d1d2f4161be4f08be9de26d1",
+      "version-string": "0.0.0-24d92c71",
+      "port-version": 0
+    }
+  ]
+}

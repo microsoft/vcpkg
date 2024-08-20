@@ -1,0 +1,19 @@
+{
+  "name": "ode",
+  "version": "0.16.4",
+  "port-version": 1,
+  "description": "Open Dynamics Engine",
+  "homepage": "https://bitbucket.org/odedevs/ode/src/master/",
+  "license": "BSD-3-Clause OR LGPL-2.1-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

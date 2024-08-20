@@ -1,0 +1,157 @@
+diff --git a/Accelerators/Vtkm/Core/CMakeLists.txt b/Accelerators/Vtkm/Core/CMakeLists.txt
+index 397dca9f6..bc9c62ac5 100644
+--- a/Accelerators/Vtkm/Core/CMakeLists.txt
++++ b/Accelerators/Vtkm/Core/CMakeLists.txt
+@@ -1,4 +1,3 @@
+-list(INSERT CMAKE_MODULE_PATH 0
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
+ 
+ set(private_headers
+@@ -31,8 +31,5 @@ vtkm_add_target_information(${vtkm_accel_target}
+   NOWRAP_HEADERS  ${nowrap_headers}
+   NOWRAP_CLASSES  ${nowrap_classes}
+   PRIVATE_HEADERS ${private_headers})
+-vtk_module_set_property(VTK::AcceleratorsVTKmCore
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
+ 
+ _vtk_module_real_target(vtkm_accel_target VTK::AcceleratorsVTKmCore)
+diff --git a/Accelerators/Vtkm/DataModel/CMakeLists.txt b/Accelerators/Vtkm/DataModel/CMakeLists.txt
+index 9d5dfe100..7fea257b7 100644
+--- a/Accelerators/Vtkm/DataModel/CMakeLists.txt
++++ b/Accelerators/Vtkm/DataModel/CMakeLists.txt
+@@ -1,7 +1,6 @@
+ set(VTKm_NO_DEPRECATED_VIRTUAL ON)
+ 
+-list(INSERT CMAKE_MODULE_PATH 0
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
+ 
+ set(sources
+   vtkmlib/ArrayConvertersReal.cxx
+@@ -40,6 +39,3 @@ vtkm_add_target_information(${vtkm_accel_target}
+   NOWRAP_CLASSES  ${nowrap_classes}
+   PRIVATE_HEADERS ${private_headers})
+-vtk_module_set_property(VTK::AcceleratorsVTKmDataModel
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
+ _vtk_module_real_target(vtkm_accel_target VTK::AcceleratorsVTKmDataModel)
+diff --git a/Accelerators/Vtkm/Filters/CMakeLists.txt b/Accelerators/Vtkm/Filters/CMakeLists.txt
+index 0f51c436d..567b49197 100644
+--- a/Accelerators/Vtkm/Filters/CMakeLists.txt
++++ b/Accelerators/Vtkm/Filters/CMakeLists.txt
+@@ -1,7 +1,6 @@
+ set(VTKm_NO_DEPRECATED_VIRTUAL ON)
+ 
+-list(INSERT CMAKE_MODULE_PATH 0
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
+ 
+ set(classes
+   vtkmAverageToCells
+@@ -91,7 +90,4 @@ vtkm_add_target_information(${vtkm_accel_target}
+   HEADERS ${headers}
+   CLASSES ${classes})
+-vtk_module_set_property(VTK::AcceleratorsVTKmFilters
+-  PROPERTY  JOB_POOL_COMPILE
+-  VALUE     vtkm_pool)
+ vtk_module_link(VTK::AcceleratorsVTKmFilters
+   PRIVATE
+diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
+index a8c40085a..764298f0e 100644
+--- a/CMake/vtk-config.cmake.in
++++ b/CMake/vtk-config.cmake.in
+@@ -126,9 +126,7 @@ set("${CMAKE_FIND_PACKAGE_NAME}_AVAILABLE_COMPONENTS" "@vtk_all_components@")
+ unset("${CMAKE_FIND_PACKAGE_NAME}_FOUND")
+ set("${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm" "@vtk_has_vtkm@")
+ if (${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm)
+-  find_package(VTKm
+-    PATHS "${CMAKE_CURRENT_LIST_DIR}/vtkm"
+-    NO_DEFAULT_PATH)
++  find_package(VTKm CONFIG REQUIRED)
+   if (NOT VTKm_FOUND)
+     set("${CMAKE_FIND_PACKAGE_NAME}_FOUND" 0)
+   endif ()
+diff --git a/ThirdParty/vtkm/CMakeLists.txt b/ThirdParty/vtkm/CMakeLists.txt
+index 8cfbf92b0..ad78cc8f5 100644
+--- a/ThirdParty/vtkm/CMakeLists.txt
++++ b/ThirdParty/vtkm/CMakeLists.txt
+@@ -1,15 +1,34 @@
+-vtk_module_third_party_internal(
+-  LICENSE_FILES
+-    "vtkvtkm/vtk-m/LICENSE.txt"
+-  SPDX_LICENSE_IDENTIFIER
+-    "BSD-3-Clause"
+-  SPDX_COPYRIGHT_TEXT
+-    "Copyright (c) 2014-2023 Kitware Inc., National Technology & Engineering Solutions of Sandia, LLC (NTESS),"
+-    "UT-Battelle, LLC., Los Alamos National Security, LLC."
+-  SPDX_DOWNLOAD_LOCATION
+-    "git+https://gitlab.kitware.com/vtk/vtk-m.git@2.0.0@v2.0.0"
+-  VERSION
+-    "2.0.0"
+-  SUBDIRECTORY            vtkvtkm
+-  STANDARD_INCLUDE_DIRS
+-  INTERFACE)
++message(STATUS "VTK_MODULE_USE_EXTERNAL_VTK_vtkm: ${VTK_MODULE_USE_EXTERNAL_VTK_vtkm}")
++if(TRUE)
++    message(STATUS "Searching for external VTKm")
++    find_package(VTKm CONFIG REQUIRED)
++    if(TARGET vtkm::compiler_flags)
++        get_target_property(VTKm_INCLUDE_DIRS vtkm::compiler_flags INTERFACE_INCLUDE_DIRECTORIES)
++        message(STATUS "INCLUDE: ${VTKm_INCLUDE_DIRS}")
++        get_target_property(VTKm_DIY_INCLUDE_DIRS vtkm::vtkmdiy INTERFACE_INCLUDE_DIRECTORIES)
++        get_target_property(VTKm_OPTION_INCLUDE_DIRS vtkm::optionparser INTERFACE_INCLUDE_DIRECTORIES)
++        if(MSVC)
++            set(VTKm_DEFINITIONS /bigobj)
++        endif()
++    else()
++        message(FATAL_ERROR "VTKM target missing")
++    endif()
++    if(VTKM_FOUND)
++        message(STATUS "Found VTKm")
++    endif()
++endif()
++
++vtk_module_third_party(
++  INTERNAL
++    HEADER_ONLY
++    LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
++    VERSION       "master"
++    SUBDIRECTORY  vtkvtkm
++    STANDARD_INCLUDE_DIRS
++    INTERFACE
++  EXTERNAL
++    PACKAGE VTKm
++    TARGETS vtkm::cont vtkm::filter vtkm::vtkmdiy vtkm::optionparser
++    #LIBRARIES vtkm_cont vtkm_filter vtkm_diy vtkm_optionparser vtkm_taotuple
++    INCLUDE_DIRS VTKm_INCLUDE_DIRS VTKm_DIY_INCLUDE_DIRS VTKm_OPTION_INCLUDE_DIRS
++)
+diff --git a/ThirdParty/vtkm/vtk.module b/ThirdParty/vtkm/vtk.module
+index a8e4dad0f..c7bbbf0e8 100644
+--- a/ThirdParty/vtkm/vtk.module
++++ b/ThirdParty/vtkm/vtk.module
+@@ -3,5 +3,7 @@ NAME
+ PRIVATE_DEPENDS
+   # While not needed to satisfy symbols, this is necessary to guarantee that
+   # VTK_SMP_IMPLEMENTATION_TYPE is available when configuring vtk-m.
+-  VTK::CommonCore
++  # VTK::CommonCore
++LIBRARY_NAME
++  VTKm
+ THIRD_PARTY
+diff --git a/Accelerators/Vtkm/Filters/CMakeLists.txt b/Accelerators/Vtkm/Filters/CMakeLists.txt
+index 7c1b10410c..610bf831fb 100644
+--- a/Accelerators/Vtkm/Filters/CMakeLists.txt
++++ b/Accelerators/Vtkm/Filters/CMakeLists.txt
+@@ -91,8 +91,8 @@ vtk_module_add_module(VTK::AcceleratorsVTKmFilters
+   CLASSES ${classes})
+ vtk_module_link(VTK::AcceleratorsVTKmFilters
+   PRIVATE
+-    vtkm_worklet
+-    vtkm_filter)
++    vtkm::worklet
++    vtkm::filter)
+ vtk_module_definitions(VTK::AcceleratorsVTKmFilters
+   PUBLIC "VTK_ENABLE_VTKM_OVERRIDES=$<BOOL:${VTK_ENABLE_VTKM_OVERRIDES}>")
+ 

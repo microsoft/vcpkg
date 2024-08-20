@@ -1,0 +1,307 @@
+ gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln       |   8 +-
+ .../soapcpp2/soapcpp2/soapcpp2.vcxproj             | 114 +++++++++++++++++
+ gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln           |   8 +-
+ .../VisualStudio2005/wsdl2h/wsdl2h/wsdl2h.vcxproj  | 139 +++++++++++++++++++++
+ 4 files changed, 263 insertions(+), 6 deletions(-)
+
+diff --git a/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln b/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
+index 68bacf1..5d74e6b 100644
+--- a/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
++++ b/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
+@@ -1,7 +1,9 @@
+ ﻿
+-Microsoft Visual Studio Solution File, Format Version 9.00
+-# Visual C++ Express 2005
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soapcpp2", "soapcpp2\soapcpp2.vcproj", "{BDD1B293-CE39-4BEC-8E63-8B1621F3EB56}"
++Microsoft Visual Studio Solution File, Format Version 12.00
++# Visual Studio 14
++VisualStudioVersion = 14.0.25420.1
++MinimumVisualStudioVersion = 10.0.40219.1
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soapcpp2", "soapcpp2\soapcpp2.vcxproj", "{BDD1B293-CE39-4BEC-8E63-8B1621F3EB56}"
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+diff --git a/gsoap/VisualStudio2005/soapcpp2/soapcpp2/soapcpp2.vcxproj b/gsoap/VisualStudio2005/soapcpp2/soapcpp2/soapcpp2.vcxproj
+new file mode 100644
+index 0000000..17f1d75
+--- /dev/null
++++ b/gsoap/VisualStudio2005/soapcpp2/soapcpp2/soapcpp2.vcxproj
+@@ -0,0 +1,114 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemGroup Label="ProjectConfigurations">
++    <ProjectConfiguration Include="Debug|Win32">
++      <Configuration>Debug</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|Win32">
++      <Configuration>Release</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++  </ItemGroup>
++  <PropertyGroup Label="Globals">
++    <ProjectGuid>{BDD1B293-CE39-4BEC-8E63-8B1621F3EB56}</ProjectGuid>
++    <RootNamespace>soapcpp2</RootNamespace>
++    <Keyword>Win32Proj</Keyword>
++    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
++    <ConfigurationType>Application</ConfigurationType>
++    <PlatformToolset>v140</PlatformToolset>
++    <CharacterSet>Unicode</CharacterSet>
++    <WholeProgramOptimization>true</WholeProgramOptimization>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
++    <ConfigurationType>Application</ConfigurationType>
++    <PlatformToolset>v140</PlatformToolset>
++    <CharacterSet>Unicode</CharacterSet>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
++  <ImportGroup Label="ExtensionSettings">
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
++  <PropertyGroup Label="UserMacros" />
++  <PropertyGroup>
++    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
++    <IntDir>$(Configuration)\</IntDir>
++    <LinkIncremental>true</LinkIncremental>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
++    <IntDir>$(Configuration)\</IntDir>
++    <LinkIncremental>false</LinkIncremental>
++  </PropertyGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <MinimalRebuild>true</MinimalRebuild>
++      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level3</WarningLevel>
++      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <SubSystem>Console</SubSystem>
++      <TargetMachine>MachineX86</TargetMachine>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level3</WarningLevel>
++      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <SubSystem>Console</SubSystem>
++      <OptimizeReferences>true</OptimizeReferences>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <TargetMachine>MachineX86</TargetMachine>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemGroup>
++    <ClCompile Include="error2.c" />
++    <ClCompile Include="init2.c" />
++    <ClCompile Include="lex.soapcpp2_lex.c" />
++    <ClCompile Include="soapcpp2.c">
++      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
++      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
++      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
++      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
++    </ClCompile>
++    <ClCompile Include="soapcpp2_yacc.tab.c" />
++    <ClCompile Include="symbol2.c" />
++  </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="error2.h" />
++    <ClInclude Include="soapcpp2.h" />
++    <ClInclude Include="soapcpp2_yacc.tab.h" />
++  </ItemGroup>
++  <ItemGroup>
++    <None Include="soapcpp2_lex.l" />
++    <None Include="soapcpp2_yacc.y" />
++  </ItemGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
++  <ImportGroup Label="ExtensionTargets">
++  </ImportGroup>
++</Project>
+\ No newline at end of file
+diff --git a/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln b/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln
+index ffa3fa4..3f23607 100644
+--- a/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln
++++ b/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln
+@@ -1,7 +1,9 @@
+ ﻿
+-Microsoft Visual Studio Solution File, Format Version 9.00
+-# Visual C++ Express 2005
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wsdl2h", "wsdl2h\wsdl2h.vcproj", "{6CBC554A-4FFB-461F-91D4-11B358802815}"
++Microsoft Visual Studio Solution File, Format Version 12.00
++# Visual Studio 14
++VisualStudioVersion = 14.0.25420.1
++MinimumVisualStudioVersion = 10.0.40219.1
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wsdl2h", "wsdl2h\wsdl2h.vcxproj", "{6CBC554A-4FFB-461F-91D4-11B358802815}"
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+diff --git a/gsoap/VisualStudio2005/wsdl2h/wsdl2h/wsdl2h.vcxproj b/gsoap/VisualStudio2005/wsdl2h/wsdl2h/wsdl2h.vcxproj
+new file mode 100644
+index 0000000..abf3ea6
+--- /dev/null
++++ b/gsoap/VisualStudio2005/wsdl2h/wsdl2h/wsdl2h.vcxproj
+@@ -0,0 +1,139 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemGroup Label="ProjectConfigurations">
++    <ProjectConfiguration Include="Debug|Win32">
++      <Configuration>Debug</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|Win32">
++      <Configuration>Release</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++  </ItemGroup>
++  <PropertyGroup Label="Globals">
++    <ProjectGuid>{6CBC554A-4FFB-461F-91D4-11B358802815}</ProjectGuid>
++    <RootNamespace>wsdl2h</RootNamespace>
++    <Keyword>Win32Proj</Keyword>
++    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
++    <ConfigurationType>Application</ConfigurationType>
++    <PlatformToolset>v140</PlatformToolset>
++    <CharacterSet>Unicode</CharacterSet>
++    <WholeProgramOptimization>true</WholeProgramOptimization>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
++    <ConfigurationType>Application</ConfigurationType>
++    <PlatformToolset>v140</PlatformToolset>
++    <CharacterSet>Unicode</CharacterSet>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
++  <ImportGroup Label="ExtensionSettings">
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
++  <PropertyGroup Label="UserMacros" />
++  <PropertyGroup>
++    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
++    <IntDir>$(Configuration)\</IntDir>
++    <LinkIncremental>true</LinkIncremental>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
++    <IntDir>$(Configuration)\</IntDir>
++    <LinkIncremental>false</LinkIncremental>
++  </PropertyGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <MinimalRebuild>true</MinimalRebuild>
++      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level3</WarningLevel>
++      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <SubSystem>Console</SubSystem>
++      <TargetMachine>MachineX86</TargetMachine>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level3</WarningLevel>
++      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <SubSystem>Console</SubSystem>
++      <OptimizeReferences>true</OptimizeReferences>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <TargetMachine>MachineX86</TargetMachine>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemGroup>
++    <ClCompile Include="bpel.cpp" />
++    <ClCompile Include="mime.cpp" />
++    <ClCompile Include="schema.cpp" />
++    <ClCompile Include="service.cpp" />
++    <ClCompile Include="soap.cpp" />
++    <ClCompile Include="stdsoap2.cpp" />
++    <ClCompile Include="types.cpp" />
++    <ClCompile Include="wadl.cpp" />
++    <ClCompile Include="wsdl.cpp" />
++    <ClCompile Include="wsdl2h.cpp" />
++    <ClCompile Include="wsdlC.cpp" />
++    <ClCompile Include="wsp.cpp" />
++  </ItemGroup>
++  <ItemGroup>
++    <ClInclude Include="bpel.h" />
++    <ClInclude Include="dime.h" />
++    <ClInclude Include="gwsdl.h" />
++    <ClInclude Include="http.h" />
++    <ClInclude Include="imports.h" />
++    <ClInclude Include="includes.h" />
++    <ClInclude Include="mime.h" />
++    <ClInclude Include="schema.h" />
++    <ClInclude Include="service.h" />
++    <ClInclude Include="soap.h" />
++    <ClInclude Include="sp.h" />
++    <ClInclude Include="stdsoap2.h" />
++    <ClInclude Include="types.h" />
++    <ClInclude Include="wadl.h" />
++    <ClInclude Include="wsam.h" />
++    <CustomBuild Include="wsdl.h">
++      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Parsing WSDL and Schema definitions</Message>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">soapcpp2.exe -SC -pwsdl %(Filename)%(Extension)
++</Command>
++      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">wsdlStub.h wsdlH.h wsdlC.cpp;%(Outputs)</Outputs>
++      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Parsing WSDL and Schema definitions</Message>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">soapcpp2.exe -SC -pwsdl %(Filename)%(Extension)
++</Command>
++      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">wsdlStub.h wsdlH.h wsdlC.cpp;%(Outputs)</Outputs>
++    </CustomBuild>
++    <ClInclude Include="wsdlH.h" />
++    <ClInclude Include="wsdlStub.h" />
++    <ClInclude Include="wsp.h" />
++    <ClInclude Include="wsrmp.h" />
++    <ClInclude Include="wst.h" />
++    <ClInclude Include="wsu.h" />
++  </ItemGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
++  <ImportGroup Label="ExtensionTargets">
++  </ImportGroup>
++</Project>
+\ No newline at end of file

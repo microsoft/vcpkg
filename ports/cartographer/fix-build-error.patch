@@ -1,0 +1,25 @@
+diff --git a/cartographer/common/internal/testing/thread_pool_for_testing.cc b/cartographer/common/internal/testing/thread_pool_for_testing.cc
+index f804e13..c987f68 100644
+--- a/cartographer/common/internal/testing/thread_pool_for_testing.cc
++++ b/cartographer/common/internal/testing/thread_pool_for_testing.cc
+@@ -16,7 +16,7 @@
+ 
+ #include "cartographer/common/internal/testing/thread_pool_for_testing.h"
+ 
+-#include <unistd.h>
++//#include <unistd.h>
+ #include <algorithm>
+ #include <chrono>
+ #include <numeric>
+diff --git a/cartographer/mapping/pose_graph_interface.h b/cartographer/mapping/pose_graph_interface.h
+index 6483ef4..6456720 100644
+--- a/cartographer/mapping/pose_graph_interface.h
++++ b/cartographer/mapping/pose_graph_interface.h
+@@ -18,6 +18,7 @@
+ #define CARTOGRAPHER_MAPPING_POSE_GRAPH_INTERFACE_H_
+ 
+ #include <vector>
++#include <array>
+ 
+ #include "cartographer/common/optional.h"
+ #include "cartographer/mapping/id.h"

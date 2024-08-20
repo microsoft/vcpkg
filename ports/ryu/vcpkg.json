@@ -1,0 +1,17 @@
+{
+  "name": "ryu",
+  "version": "2.0",
+  "port-version": 9,
+  "description": "Ryu generates the shortest decimal representation of a floating point number that maintains round-trip safety.",
+  "homepage": "https://github.com/ulfjack/ryu",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-bazel",
+      "host": true
+    }
+  ]
+}

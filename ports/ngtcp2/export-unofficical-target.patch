@@ -1,0 +1,44 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index b1b977af..eef6a1a6 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -70,8 +70,9 @@ set(ngtcp2_SOURCES
+ )
+ 
+ set(ngtcp2_INCLUDE_DIRS
+-  "${CMAKE_CURRENT_SOURCE_DIR}/includes"
+-  "${CMAKE_CURRENT_BINARY_DIR}/includes"
++  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes>"
++  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes>"
++  "$<INSTALL_INTERFACE:include>"
+ )
+ 
+ # Public shared library
+@@ -86,6 +87,7 @@ if(ENABLE_SHARED_LIB)
+   target_include_directories(ngtcp2 PUBLIC ${ngtcp2_INCLUDE_DIRS})
+ 
+   install(TARGETS ngtcp2
++    EXPORT unofficial-ngtcp2-config
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+@@ -102,10 +104,18 @@ if(ENABLE_STATIC_LIB)
+   )
+   target_compile_definitions(ngtcp2_static PUBLIC "-DNGTCP2_STATICLIB")
+   target_include_directories(ngtcp2_static PUBLIC ${ngtcp2_INCLUDE_DIRS})
+-
++  add_library(ngtcp2 INTERFACE)
++  target_link_libraries(ngtcp2 INTERFACE ngtcp2_static)
+   install(TARGETS ngtcp2_static
++    ngtcp2
++    EXPORT unofficial-ngtcp2-config
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ endif()
+
++install(
++  EXPORT unofficial-ngtcp2-config
++  NAMESPACE unofficial::ngtcp2::
++  DESTINATION share/unofficial-ngtcp2)
++
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libngtcp2.pc"
+   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

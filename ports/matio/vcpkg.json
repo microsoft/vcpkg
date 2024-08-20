@@ -1,0 +1,59 @@
+{
+  "name": "matio",
+  "version": "1.5.26",
+  "description": "MATLAB MAT File I/O Library",
+  "homepage": "https://github.com/tbeu/matio",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "hdf5",
+    "zlib"
+  ],
+  "features": {
+    "extended-sparse": {
+      "description": "Enable extended sparse matrix data types not supported in MATLAB"
+    },
+    "hdf5": {
+      "description": "Check for HDF5 library",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false
+        },
+        {
+          "name": "matio",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ]
+        }
+      ]
+    },
+    "mat73": {
+      "description": "Enable support for version 7.3 MAT files",
+      "dependencies": [
+        {
+          "name": "matio",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ]
+        }
+      ]
+    },
+    "pic": {
+      "description": "Enable position-independent code (PIC), i.e., compilation with the -fPIC flag"
+    },
+    "zlib": {
+      "description": "Check for zlib library",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

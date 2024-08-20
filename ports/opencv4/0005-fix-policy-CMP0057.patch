@@ -1,0 +1,7 @@
+--- a/modules/videoio/CMakeLists.txt
++++ b/modules/videoio/CMakeLists.txt
+@@ -1,3 +1,4 @@
++cmake_minimum_required(VERSION 3.3)
+ set(VIDEOIO_ENABLE_PLUGINS_DEFAULT ON)
+ if(EMSCRIPTEN OR IOS OR WINRT)
+   set(VIDEOIO_ENABLE_PLUGINS_DEFAULT OFF)

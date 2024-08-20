@@ -1,0 +1,47 @@
+diff --git a/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h b/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h
+index 6378d46..c8563db 100644
+--- a/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h
++++ b/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h
+@@ -38,6 +38,9 @@
+ #if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32)
+ #  include <io.h>
+ #endif
++#ifdef __APPLE__
++#  include <unistd.h>
++#endif
+ 
+ #if defined(_WIN32)
+ #  define WIDECHAR
+diff --git a/Source/ThirdParty/Civetweb/src/civetweb.c b/Source/ThirdParty/Civetweb/src/civetweb.c
+index 4d26e0a..2bd577e 100644
+--- a/Source/ThirdParty/Civetweb/src/civetweb.c
++++ b/Source/ThirdParty/Civetweb/src/civetweb.c
+@@ -167,6 +167,8 @@ mg_static_assert(sizeof(void *) >= sizeof(int), "data type size check");
+ 
+ #endif
+ 
++#include <stdlib.h>
++
+ #if !defined(DEBUG_TRACE)
+ #if defined(DEBUG)
+ 
+diff --git a/Source/ThirdParty/SDL/CMakeLists.txt b/Source/ThirdParty/SDL/CMakeLists.txt
+index 5c4ef27..fd4c4dd 100644
+--- a/Source/ThirdParty/SDL/CMakeLists.txt
++++ b/Source/ThirdParty/SDL/CMakeLists.txt
+@@ -428,15 +428,6 @@ if(USE_GCC OR USE_CLANG)
+     list(APPEND EXTRA_CFLAGS "-fno-strict-aliasing")
+   endif()
+ 
+-  check_c_compiler_flag(-Wdeclaration-after-statement HAVE_GCC_WDECLARATION_AFTER_STATEMENT)
+-  if(HAVE_GCC_WDECLARATION_AFTER_STATEMENT)
+-    check_c_compiler_flag(-Werror=declaration-after-statement HAVE_GCC_WERROR_DECLARATION_AFTER_STATEMENT)
+-    # Urho3D - bug fix - SDL does not build cleanly for Android platform with this flag on, make a tweak here rather than changing on their code
+-    if(HAVE_GCC_WERROR_DECLARATION_AFTER_STATEMENT AND NOT ANDROID)
+-      list(APPEND EXTRA_CFLAGS "-Werror=declaration-after-statement")
+-    endif()
+-    list(APPEND EXTRA_CFLAGS "-Wdeclaration-after-statement")
+-  endif()
+ 
+   if(DEPENDENCY_TRACKING)
+     check_c_source_compiles("

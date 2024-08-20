@@ -1,0 +1,141 @@
+{
+  "name": "arrow",
+  "version": "17.0.0",
+  "description": "Cross-language development platform for in-memory analytics",
+  "homepage": "https://arrow.apache.org",
+  "license": "Apache-2.0",
+  "supports": "x64 | (arm64 & !windows)",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-multiprecision",
+    "boost-system",
+    "brotli",
+    "bzip2",
+    "gflags",
+    "lz4",
+    "openssl",
+    "re2",
+    "snappy",
+    "thrift",
+    "utf8proc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "xsimd",
+    "zlib",
+    "zstd"
+  ],
+  "default-features": [
+    "csv",
+    "filesystem",
+    "json",
+    "parquet"
+  ],
+  "features": {
+    "acero": {
+      "description": "Acero support"
+    },
+    "compute": {
+      "description": "Build all computational kernel functions"
+    },
+    "csv": {
+      "description": "CSV support"
+    },
+    "cuda": {
+      "description": "cuda support",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "dataset": {
+      "description": "Dataset support"
+    },
+    "example": {
+      "description": "Install the minimal example (source code)"
+    },
+    "filesystem": {
+      "description": "Filesystem support"
+    },
+    "flight": {
+      "description": "Arrow Flight RPC support",
+      "dependencies": [
+        "abseil",
+        "c-ares",
+        "grpc",
+        "protobuf"
+      ]
+    },
+    "flightsql": {
+      "description": "FlightSQL support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "flight"
+          ]
+        }
+      ]
+    },
+    "gcs": {
+      "description": "GCS support",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "storage"
+          ]
+        }
+      ]
+    },
+    "jemalloc": {
+      "description": "jemalloc allocator",
+      "supports": "!windows"
+    },
+    "json": {
+      "description": "JSON support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "mimalloc": {
+      "description": "mimalloc allocator",
+      "supports": "windows"
+    },
+    "orc": {
+      "description": "ORC support",
+      "dependencies": [
+        "orc"
+      ]
+    },
+    "parquet": {
+      "description": "Parquet support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "s3": {
+      "description": "S3 support",
+      "dependencies": [
+        {
+          "name": "aws-sdk-cpp",
+          "default-features": false,
+          "features": [
+            "cognito-identity",
+            "config",
+            "identity-management",
+            "s3",
+            "sts",
+            "transfer"
+          ]
+        }
+      ]
+    }
+  }
+}

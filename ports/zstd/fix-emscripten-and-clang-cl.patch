@@ -1,0 +1,31 @@
+diff --git a/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake b/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake
+index 0265349..4a50a67 100644
+--- a/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake
++++ b/build/cmake/CMakeModules/AddZstdCompilationFlags.cmake
+@@ -54,10 +54,22 @@ macro(ADD_ZSTD_COMPILATION_FLAGS)
+         endif ()
+         # Add noexecstack flags
+         # LDFLAGS
+-        EnableCompilerFlag("-z noexecstack" false false true)
+-        # CFLAGS & CXXFLAGS
+-        EnableCompilerFlag("-Qunused-arguments" true true false)
+-        EnableCompilerFlag("-Wa,--noexecstack" true true false)
++        if(MSVC)
++            # UNICODE SUPPORT
++            EnableCompilerFlag("/D_UNICODE" true true false)
++            EnableCompilerFlag("/DUNICODE" true true false)
++            # Enable asserts in Debug mode
++            if (CMAKE_BUILD_TYPE MATCHES "Debug")
++                EnableCompilerFlag("/DDEBUGLEVEL=1" true true false)
++            endif ()
++        else()
++        if(NOT EMSCRIPTEN)
++            EnableCompilerFlag("-z noexecstack" false false true)
++        endif()
++            # CFLAGS & CXXFLAGS
++            EnableCompilerFlag("-Qunused-arguments" true true false)
++            EnableCompilerFlag("-Wa,--noexecstack" true true false)
++        endif()
+     elseif (MSVC) # Add specific compilation flags for Windows Visual
+ 
+         set(ACTIVATE_MULTITHREADED_COMPILATION "ON" CACHE BOOL "activate multi-threaded compilation (/MP flag)")

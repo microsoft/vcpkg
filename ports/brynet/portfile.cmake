@@ -1,0 +1,13 @@
+#header-only library
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO IronsDu/brynet
+    REF d9dda06cb2207f42e0a657c52c8278496fa4732c # v1.12.2
+    SHA512  9900277bca019339cdca8da9a8d21b3df96f86ca6642e7d212fdf68a0899b48d2b9d803a334dc8ff4b372bc40c74a0095419a02dd8a6d4aa431a44666c19214e
+    HEAD_REF master
+)
+
+file(INSTALL ${SOURCE_PATH}/include/brynet DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

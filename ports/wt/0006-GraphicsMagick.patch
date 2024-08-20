@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96eff0a..c31fd49 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -352,9 +356,9 @@ SET(WT_WRASTERIMAGE_IMPLEMENTATION ${WT_WRASTERIMAGE_DEFAULT_IMPLEMENTATION} CAC
+ SET_PROPERTY(CACHE WT_WRASTERIMAGE_IMPLEMENTATION PROPERTY STRINGS GraphicsMagick Direct2D none)
+ 
+ IF (${WT_WRASTERIMAGE_IMPLEMENTATION} STREQUAL "GraphicsMagick")
+-  IF (NOT GM_FOUND)
++  IF (0)
+     MESSAGE(FATAL_ERROR "WT_WRASTERIMAGE_IMPLEMENTATION set to GraphicsMagick but GM is not found. Indicate the location of your graphicsmagick library using -DGM_PREFIX=...")
+-  ENDIF (NOT GM_FOUND)
++  ENDIF ()
+   SET(WT_HAS_WRASTERIMAGE true)
+ ELSEIF (${WT_WRASTERIMAGE_IMPLEMENTATION} STREQUAL "Direct2D")
+   IF (WIN32)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4bc0e5d..eb52234 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -637,8 +637,8 @@ else()
+ endif()
+ 
+ IF("${WT_WRASTERIMAGE_IMPLEMENTATION}" STREQUAL "GraphicsMagick")
+-  TARGET_LINK_LIBRARIES(wt PRIVATE ${GM_LIBRARIES})
+-  INCLUDE_DIRECTORIES(${GM_INCLUDE_DIRS})
++  find_package(unofficial-graphicsmagick REQUIRED)
++  TARGET_LINK_LIBRARIES(wt PRIVATE unofficial::graphicsmagick::graphicsmagick)
+   ADD_DEFINITIONS(-DHAVE_GRAPHICSMAGICK)
+ ELSEIF("${WT_WRASTERIMAGE_IMPLEMENTATION}" STREQUAL "Direct2D")
+   TARGET_LINK_LIBRARIES(wt PRIVATE d2d1 dwrite windowscodecs shlwapi)

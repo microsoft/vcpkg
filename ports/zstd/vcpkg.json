@@ -1,0 +1,23 @@
+{
+  "name": "zstd",
+  "version": "1.5.6",
+  "description": "Zstandard - Fast real-time compression algorithm",
+  "homepage": "https://facebook.github.io/zstd/",
+  "license": "BSD-3-Clause OR GPL-2.0-only",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build zstd binary",
+      "supports": "!uwp & static"
+    }
+  }
+}

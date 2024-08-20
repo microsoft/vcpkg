@@ -1,0 +1,73 @@
+{
+  "name": "ixwebsocket",
+  "version-semver": "11.4.5",
+  "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
+  "homepage": "https://github.com/machinezone/IXWebSocket",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "ssl"
+  ],
+  "features": {
+    "mbedtls": {
+      "description": "SSL support (mbedTLS)",
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "supports": "!uwp",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "sectransp": {
+      "description": "SSL support (sectransp)",
+      "supports": "osx | ios"
+    },
+    "ssl": {
+      "description": "Default SSL backend",
+      "dependencies": [
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "mbedtls"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "sectransp"
+          ],
+          "platform": "osx | ios"
+        },
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "mbedtls"
+          ],
+          "platform": "windows & uwp"
+        },
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "openssl"
+          ],
+          "platform": "!uwp & !windows & !osx & !ios"
+        }
+      ]
+    }
+  }
+}

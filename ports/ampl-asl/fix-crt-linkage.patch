@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 976af78..35d248d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -256,7 +256,7 @@ macro(createSingleASL name sourcedir sources)
+   endif()
+   if(MSVC)
+     target_compile_options(${name} PRIVATE 
+-      /wd4013 /wd4018 /wd4101 /wd4244 /wd4273 /wd4267 /wd4996 /MT$<$<CONFIG:Debug>:d>)
++      /wd4013 /wd4018 /wd4101 /wd4244 /wd4273 /wd4267 /wd4996)
+   else()
+     target_compile_options(${name} PRIVATE -Wno-unused-result -Wno-parentheses)
+   endif()

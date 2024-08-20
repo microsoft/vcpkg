@@ -1,0 +1,241 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index d2bfb6129d..c5ab18ee44 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -5366,6 +5366,7 @@ if (is_component_build) {
+ 
+     public_deps = [
+       ":v8_base",
++      ":v8_initializers",
+       ":v8_snapshot",
+     ]
+ 
+diff --git a/src/codegen/code-stub-assembler.h b/src/codegen/code-stub-assembler.h
+index 72b8fbc8a8..3ebfc23f1f 100644
+--- a/src/codegen/code-stub-assembler.h
++++ b/src/codegen/code-stub-assembler.h
+@@ -303,7 +303,7 @@ enum class PrimitiveType { kBoolean, kNumber, kString, kSymbol };
+ // it's possible to add JavaScript-specific useful CodeAssembler "macros"
+ // without modifying files in the compiler directory (and requiring a review
+ // from a compiler directory OWNER).
+-class V8_EXPORT_PRIVATE CodeStubAssembler
++class V8_EXPORT CodeStubAssembler
+     : public compiler::CodeAssembler,
+       public TorqueGeneratedExportedMacrosAssembler {
+  public:
+diff --git a/src/common/globals.h b/src/common/globals.h
+index f51c3210f8..5291285337 100644
+--- a/src/common/globals.h
++++ b/src/common/globals.h
+@@ -1364,7 +1364,7 @@ class BinaryOperationFeedback {
+ // This is distinct from BinaryOperationFeedback on purpose, because the
+ // feedback that matters differs greatly as well as the way it is consumed.
+ class CompareOperationFeedback {
+-  enum {
++  enum : uint32_t {
+     kSignedSmallFlag = 1 << 0,
+     kOtherNumberFlag = 1 << 1,
+     kBooleanFlag = 1 << 2,
+@@ -1378,7 +1378,7 @@ class CompareOperationFeedback {
+   };
+ 
+  public:
+-  enum Type {
++  enum Type : uint32_t {
+     kNone = 0,
+ 
+     kBoolean = kBooleanFlag,
+diff --git a/src/compiler/node-cache.h b/src/compiler/node-cache.h
+index 8e1d3d4eae..c55d8329de 100644
+--- a/src/compiler/node-cache.h
++++ b/src/compiler/node-cache.h
+@@ -29,7 +29,7 @@ class Node;
+ // nodes such as constants, parameters, etc.
+ template <typename Key, typename Hash = base::hash<Key>,
+           typename Pred = std::equal_to<Key> >
+-class EXPORT_TEMPLATE_DECLARE(V8_EXPORT_PRIVATE) NodeCache final {
++class V8_EXPORT_PRIVATE NodeCache final {
+  public:
+   explicit NodeCache(Zone* zone) : map_(zone) {}
+   ~NodeCache() = default;
+diff --git a/src/heap/paged-spaces-inl.h b/src/heap/paged-spaces-inl.h
+index e135e30efc..0c055247bc 100644
+--- a/src/heap/paged-spaces-inl.h
++++ b/src/heap/paged-spaces-inl.h
+@@ -19,7 +19,7 @@ namespace internal {
+ // -----------------------------------------------------------------------------
+ // PagedSpaceObjectIterator
+ 
+-HeapObject PagedSpaceObjectIterator::Next() {
++inline HeapObject PagedSpaceObjectIterator::Next() {
+   do {
+     HeapObject next_obj = FromCurrentPage();
+     if (!next_obj.is_null()) return next_obj;
+diff --git a/src/heap/paged-spaces.h b/src/heap/paged-spaces.h
+index 621d92aa89..a8592a5b4d 100644
+--- a/src/heap/paged-spaces.h
++++ b/src/heap/paged-spaces.h
+@@ -45,7 +45,7 @@ class V8_EXPORT_PRIVATE PagedSpaceObjectIterator : public ObjectIterator {
+   // Advance to the next object, skipping free spaces and other fillers and
+   // skipping the special garbage section of which there is one per space.
+   // Returns nullptr when the iteration has ended.
+-  inline HeapObject Next() override;
++  HeapObject Next() override;
+ 
+  private:
+   // Fast (inlined) path of next().
+diff --git a/src/objects/feedback-vector.cc b/src/objects/feedback-vector.cc
+index a77ea5d265..0cddb92a02 100644
+--- a/src/objects/feedback-vector.cc
++++ b/src/objects/feedback-vector.cc
+@@ -114,9 +114,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(LocalIsolate* isolate,
+   return metadata;
+ }
+ 
+-template Handle<FeedbackMetadata> FeedbackMetadata::New(
++template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
+     Isolate* isolate, const FeedbackVectorSpec* spec);
+-template Handle<FeedbackMetadata> FeedbackMetadata::New(
++template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
+     LocalIsolate* isolate, const FeedbackVectorSpec* spec);
+ 
+ bool FeedbackMetadata::SpecDiffersFrom(
+diff --git a/src/objects/fixed-array-inl.h b/src/objects/fixed-array-inl.h
+index cca6d40070..d6d36ff59f 100644
+--- a/src/objects/fixed-array-inl.h
++++ b/src/objects/fixed-array-inl.h
+@@ -88,7 +88,7 @@ bool FixedArray::is_the_hole(Isolate* isolate, int index) {
+   return get(isolate, index).IsTheHole(isolate);
+ }
+ 
+-void FixedArray::set(int index, Smi value) {
++inline V8_EXPORT_PRIVATE void FixedArray::set(int index, Smi value) {
+   DCHECK_NE(map(), GetReadOnlyRoots().fixed_cow_array_map());
+   DCHECK_LT(static_cast<unsigned>(index), static_cast<unsigned>(length()));
+   DCHECK(Object(value).IsSmi());
+diff --git a/src/objects/fixed-array.h b/src/objects/fixed-array.h
+index 98c5d8d5b5..bd5303e44c 100644
+--- a/src/objects/fixed-array.h
++++ b/src/objects/fixed-array.h
+@@ -132,7 +132,7 @@ class FixedArray
+   inline bool is_the_hole(Isolate* isolate, int index);
+ 
+   // Setter that doesn't need write barrier.
+-  inline void set(int index, Smi value);
++  inline V8_EXPORT_PRIVATE void set(int index, Smi value);
+   // Setter with explicit barrier mode.
+   inline void set(int index, Object value, WriteBarrierMode mode);
+ 
+diff --git a/src/snapshot/snapshot-utils.cc b/src/snapshot/snapshot-utils.cc
+index eb2372372c..7defadb4b1 100644
+--- a/src/snapshot/snapshot-utils.cc
++++ b/src/snapshot/snapshot-utils.cc
+@@ -5,7 +5,7 @@
+ #include "src/snapshot/snapshot-utils.h"
+ 
+ #include "src/sanitizer/msan.h"
+-#include "third_party/zlib/zlib.h"
++#include "zlib.h"
+ 
+ namespace v8 {
+ namespace internal {
+diff --git a/src/wasm/function-body-decoder-impl.h b/src/wasm/function-body-decoder-impl.h
+index d37f718681..3a409e1d76 100644
+--- a/src/wasm/function-body-decoder-impl.h
++++ b/src/wasm/function-body-decoder-impl.h
+@@ -2013,7 +2013,7 @@ class WasmDecoder : public Decoder {
+   }
+ 
+   // TODO(clemensb): This is only used by the interpreter; move there.
+-  V8_EXPORT_PRIVATE std::pair<uint32_t, uint32_t> StackEffect(const byte* pc) {
++  std::pair<uint32_t, uint32_t> StackEffect(const byte* pc) {
+     WasmOpcode opcode = static_cast<WasmOpcode>(*pc);
+     // Handle "simple" opcodes with a fixed signature first.
+     const FunctionSig* sig = WasmOpcodes::Signature(opcode);
+diff --git a/test/cctest/BUILD.gn b/test/cctest/BUILD.gn
+index ffa4e3a136..a279faee9b 100644
+--- a/test/cctest/BUILD.gn
++++ b/test/cctest/BUILD.gn
+@@ -493,6 +493,10 @@ v8_source_set("cctest_sources") {
+     # C4309: 'static_cast': truncation of constant value
+     cflags += [ "/wd4309" ]
+ 
++    if(!is_clang) {
++      cflags += [ "/wd4789" ]
++    }
++
+     # MSVS wants this for gay-{precision,shortest}.cc.
+     cflags += [ "/bigobj" ]
+ 
+diff --git a/tools/debug_helper/BUILD.gn b/tools/debug_helper/BUILD.gn
+index 2256df1f55..29e27c6af9 100644
+--- a/tools/debug_helper/BUILD.gn
++++ b/tools/debug_helper/BUILD.gn
+@@ -100,10 +100,12 @@ v8_component("v8_debug_helper") {
+     "../..:v8_libbase",
+     "../..:v8_shared_internal_headers",
+     "../..:v8_tracing",
++    "../..:v8",
+   ]
+ 
+   configs = [ ":internal_config" ]
+   if (v8_enable_i18n_support) {
++    public_deps = [ "//third_party/icu" ]
+     configs += [ "//third_party/icu:icu_config" ]
+   }
+ 
+diff --git a/tools/v8windbg/BUILD.gn b/tools/v8windbg/BUILD.gn
+index 5618d2d945..71568f1670 100644
+--- a/tools/v8windbg/BUILD.gn
++++ b/tools/v8windbg/BUILD.gn
+@@ -6,7 +6,7 @@ import("../../gni/v8.gni")
+ 
+ config("v8windbg_config") {
+   # Required for successful compilation of SDK header file DbgModel.h.
+-  cflags_cc = [ "/Zc:twoPhase-" ]
++  cflags_cc = [ "/Zc:twoPhase-", "/std:c++latest" ]
+ 
+   include_dirs = [ "../.." ]
+ }
+diff --git a/tools/v8windbg/base/dbgext.h b/tools/v8windbg/base/dbgext.h
+index 8b36a8f361..f8d9f0d64e 100644
+--- a/tools/v8windbg/base/dbgext.h
++++ b/tools/v8windbg/base/dbgext.h
+@@ -9,6 +9,7 @@
+ #error Unicode not defined
+ #endif
+ 
++#include <new>
+ #include <DbgEng.h>
+ #include <DbgModel.h>
+ #include <Windows.h>
+diff --git a/tools/v8windbg/src/v8-debug-helper-interop.h b/tools/v8windbg/src/v8-debug-helper-interop.h
+index f7d78c5dd3..1c70e54e7a 100644
+--- a/tools/v8windbg/src/v8-debug-helper-interop.h
++++ b/tools/v8windbg/src/v8-debug-helper-interop.h
+@@ -5,10 +5,11 @@
+ #ifndef V8_TOOLS_V8WINDBG_SRC_V8_DEBUG_HELPER_INTEROP_H_
+ #define V8_TOOLS_V8WINDBG_SRC_V8_DEBUG_HELPER_INTEROP_H_
+ 
+-#include <wrl/client.h>
+-
++#include <new>
++#include <DbgEng.h>
+ #include <DbgModel.h>
+ 
++#include <wrl/client.h>
+ #include <cstdint>
+ #include <map>
+ #include <string>
+diff --git a/tools/v8windbg/test/debug-callbacks.h b/tools/v8windbg/test/debug-callbacks.h
+index 8855d6ffbc..ed2b0f62e9 100644
+--- a/tools/v8windbg/test/debug-callbacks.h
++++ b/tools/v8windbg/test/debug-callbacks.h
+@@ -9,6 +9,7 @@
+ #error Unicode not defined
+ #endif
+ 
++#include <new>
+ #include <DbgEng.h>
+ #include <DbgModel.h>
+ #include <Windows.h>

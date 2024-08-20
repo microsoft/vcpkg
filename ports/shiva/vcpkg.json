@@ -1,0 +1,33 @@
+{
+  "name": "shiva",
+  "version": "1.0",
+  "port-version": 7,
+  "description": "Modern C++ Game Engine",
+  "homepage": "https://github.com/Milerius/shiva",
+  "license": "MIT",
+  "supports": "!(static & windows)",
+  "dependencies": [
+    "boost-dll",
+    "boost-filesystem",
+    "boost-stacktrace",
+    "entt",
+    "lua",
+    {
+      "name": "luafilesystem",
+      "platform": "windows"
+    },
+    "nlohmann-json",
+    "pybind11",
+    "python3",
+    "sol2",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

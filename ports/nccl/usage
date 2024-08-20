@@ -1,0 +1,5 @@
+The package nccl provides CMake variables:
+
+    find_package(NCCL REQUIRED)
+    target_link_libraries(main PRIVATE ${NCCL_LIBRARIES})
+    target_include_directories(main PRIVATE ${NCCL_INCLUDE_DIRS})

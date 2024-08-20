@@ -1,0 +1,13 @@
+diff --git a/source/Irrlicht/CImageLoaderJPG.cpp b/source/Irrlicht/CImageLoaderJPG.cpp
+index 404bd53..71684d8 100644
+--- a/source/Irrlicht/CImageLoaderJPG.cpp
++++ b/source/Irrlicht/CImageLoaderJPG.cpp
+@@ -68,7 +68,7 @@ void CImageLoaderJPG::init_source (j_decompress_ptr cinfo)
+ boolean CImageLoaderJPG::fill_input_buffer (j_decompress_ptr cinfo)
+ {
+ 	// DO NOTHING
+-	return 1;
++	return TRUE;
+ }
+ 
+ 

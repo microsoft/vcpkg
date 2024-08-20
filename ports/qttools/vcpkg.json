@@ -1,0 +1,118 @@
+{
+  "name": "qttools",
+  "version": "6.7.2",
+  "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "linguist"
+      ]
+    }
+  ],
+  "features": {
+    "assistant": {
+      "description": "Build Qt Assistant",
+      "dependencies": [
+        {
+          "name": "litehtml",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network",
+            "png",
+            "sql-sqlite",
+            "widgets"
+          ]
+        },
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "assistant"
+          ]
+        }
+      ]
+    },
+    "designer": {
+      "description": "Build Qt Designer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network",
+            "png"
+          ]
+        }
+      ]
+    },
+    "linguist": {
+      "description": "Build Qt Linguist components",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "designer"
+          ]
+        }
+      ]
+    },
+    "qdbus": {
+      "description": "Build QDBusViewer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus",
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "qdoc": {
+      "description": "Build QDoc",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "enable-rtti"
+          ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui",
+            "widgets"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

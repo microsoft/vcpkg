@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0abcb93..75195a9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -150,5 +150,5 @@ INSTALL(FILES
+   oss_c_sdk/oss_xml.h
+   DESTINATION include/oss_c_sdk)
+ 
+-add_subdirectory(oss_c_sdk_sample)
+-add_subdirectory(oss_c_sdk_test)
++#add_subdirectory(oss_c_sdk_sample)
++#add_subdirectory(oss_c_sdk_test)

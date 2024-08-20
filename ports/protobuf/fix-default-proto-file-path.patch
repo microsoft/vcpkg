@@ -1,0 +1,21 @@
+diff --git a/src/google/protobuf/compiler/command_line_interface.cc b/src/google/protobuf/compiler/command_line_interface.cc
+index f9e9666..d453a4c 100644
+--- a/src/google/protobuf/compiler/command_line_interface.cc
++++ b/src/google/protobuf/compiler/command_line_interface.cc
+@@ -280,12 +280,15 @@ void AddDefaultProtoPaths(
+     paths->emplace_back("", std::move(include_path));
+     return;
+   }
+-  // Check if the upper level directory has an "include" subdirectory.
++  // change "'$/bin' is next to 'include'" assumption to "'$/bin/tools' is next to 'include'"
++  for (int i = 0; i < 2; i++)
++  {
+   pos = path.find_last_of("/\\");
+   if (pos == std::string::npos || pos == 0) {
+     return;
+   }
+   path = path.substr(0, pos);
++  }
+   include_path = absl::StrCat(path, "/include");
+   if (IsInstalledProtoPath(include_path)) {
+     paths->emplace_back("", std::move(include_path));

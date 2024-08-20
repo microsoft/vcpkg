@@ -1,0 +1,26 @@
+{
+  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
+  "name": "blas",
+  "version-date": "2023-04-14",
+  "port-version": 1,
+  "description": "Metapackage for packages which provide BLAS",
+  "license": null,
+  "supports": "!(android & arm32) & !(android & x64)",
+  "dependencies": [
+    {
+      "name": "lapack-reference",
+      "features": [
+        "cblas"
+      ],
+      "platform": "!osx & !ios & !uwp & !(windows & arm) & windows & static"
+    },
+    {
+      "name": "openblas",
+      "platform": "!osx & !ios & (uwp | (windows & arm) | !windows | !static)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "rabit",
+  "version": "0.1",
+  "port-version": 5,
+  "description": "rabit is a light weight library that provides a fault tolerant interface of Allreduce and Broadcast. It is designed to support easy implementations of distributed machine learning programs, many of which fall naturally under the Allreduce abstraction.",
+  "homepage": "https://github.com/dmlc/rabit",
+  "supports": "!uwp",
+  "dependencies": [
+    "dmlc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

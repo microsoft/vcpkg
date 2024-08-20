@@ -1,0 +1,80 @@
+diff --git a/interface/coroutine/net.h b/interface/coroutine/net.h
+index 17b70a8..3c44827 100644
+--- a/interface/coroutine/net.h
++++ b/interface/coroutine/net.h
+@@ -344,7 +344,7 @@ void poll_net_tasks(uint64_t nano) noexcept(false);
+  * @ingroup Network
+  */
+ uint32_t get_address(const addrinfo& hint, //
+-                     gsl::czstring<> host, gsl::czstring<> serv,
++                     gsl::czstring host, gsl::czstring serv,
+                      gsl::span<sockaddr_in> output) noexcept;
+ 
+ /**
+@@ -361,7 +361,7 @@ uint32_t get_address(const addrinfo& hint, //
+  * @ingroup Network
+  */
+ uint32_t get_address(const addrinfo& hint, //
+-                     gsl::czstring<> host, gsl::czstring<> serv,
++                     gsl::czstring host, gsl::czstring serv,
+                      gsl::span<sockaddr_in6> output) noexcept;
+ 
+ /**
+@@ -377,7 +377,7 @@ uint32_t get_address(const addrinfo& hint, //
+  * @ingroup Network
+  */
+ uint32_t get_name(const sockaddr_in& addr, //
+-                  gsl::zstring<NI_MAXHOST> name, gsl::zstring<NI_MAXSERV> serv,
++                  gsl::basic_zstring<char, NI_MAXHOST> name, gsl::basic_zstring<char, NI_MAXSERV> serv,
+                   int32_t flags = NI_NUMERICHOST | NI_NUMERICSERV) noexcept;
+ 
+ /**
+@@ -392,7 +392,7 @@ uint32_t get_name(const sockaddr_in& addr, //
+  * @ingroup Network
+  */
+ uint32_t get_name(const sockaddr_in6& addr, //
+-                  gsl::zstring<NI_MAXHOST> name, gsl::zstring<NI_MAXSERV> serv,
++                  gsl::basic_zstring<char, NI_MAXHOST> name, gsl::basic_zstring<char, NI_MAXSERV> serv,
+                   int32_t flags = NI_NUMERICHOST | NI_NUMERICSERV) noexcept;
+ 
+ } // namespace coro
+diff --git a/modules/net/resolver.cpp b/modules/net/resolver.cpp
+index 21a9800..5328939 100644
+--- a/modules/net/resolver.cpp
++++ b/modules/net/resolver.cpp
+@@ -9,7 +9,7 @@ namespace coro {
+ 
+ GSL_SUPPRESS(type .1)
+ uint32_t get_name(const sockaddr_in& addr, //
+-                  gsl::zstring<NI_MAXHOST> name, gsl::zstring<NI_MAXSERV> serv,
++                  gsl::basic_zstring<char, NI_MAXHOST> name, gsl::basic_zstring<char, NI_MAXSERV> serv,
+                   int32_t flags) noexcept {
+     const auto* ptr = reinterpret_cast<const sockaddr*>(addressof(addr));
+     return ::getnameinfo(ptr, sizeof(sockaddr_in),                 //
+@@ -20,7 +20,7 @@ uint32_t get_name(const sockaddr_in& addr, //
+ 
+ GSL_SUPPRESS(type .1)
+ uint32_t get_name(const sockaddr_in6& addr, //
+-                  gsl::zstring<NI_MAXHOST> name, gsl::zstring<NI_MAXSERV> serv,
++                  gsl::basic_zstring<char, NI_MAXHOST> name, gsl::basic_zstring<char, NI_MAXSERV> serv,
+                   int32_t flags) noexcept {
+     const auto* ptr = reinterpret_cast<const sockaddr*>(addressof(addr));
+     return ::getnameinfo(ptr, sizeof(sockaddr_in6),                //
+@@ -58,7 +58,7 @@ auto get_address(addrinfo* list, sockaddr_in6 addr) noexcept
+ }
+ 
+ uint32_t get_address(const addrinfo& hint, //
+-                     gsl::czstring<> host, gsl::czstring<> serv,
++                     gsl::czstring host, gsl::czstring serv,
+                      gsl::span<sockaddr_in> output) noexcept {
+     addrinfo* list = nullptr;
+     if (const auto ec = ::getaddrinfo(host, serv, //
+@@ -74,7 +74,7 @@ uint32_t get_address(const addrinfo& hint, //
+ }
+ 
+ uint32_t get_address(const addrinfo& hint, //
+-                     gsl::czstring<> host, gsl::czstring<> serv,
++                     gsl::czstring host, gsl::czstring serv,
+                      gsl::span<sockaddr_in6> output) noexcept {
+     addrinfo* list = nullptr;
+     if (const auto ec = ::getaddrinfo(host, serv, //

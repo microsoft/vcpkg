@@ -1,0 +1,12 @@
+BitSerializer provides CMake targets:
+
+    find_package(bitserializer CONFIG REQUIRED)
+    # Link only archives which you are specified in the features list when install
+    target_link_libraries(main PRIVATE
+        BitSerializer::cpprestjson-archive
+        BitSerializer::rapidjson-archive
+        BitSerializer::pugixml-archive
+        BitSerializer::rapidyaml-archive
+        BitSerializer::csv-archive
+        BitSerializer::msgpack-archive
+    )

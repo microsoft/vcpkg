@@ -1,0 +1,39 @@
+diff --git a/src/plugins/hunspell/module/hunspellworker_p.h b/src/plugins/hunspell/module/hunspellworker_p.h
+index b79354429..a843bdfa6 100644
+--- a/src/plugins/hunspell/module/hunspellworker_p.h
++++ b/src/plugins/hunspell/module/hunspellworker_p.h
+@@ -50,7 +50,7 @@
+ #include <QLoggingCategory>
+ #include <QStringDecoder>
+ #include <QStringEncoder>
+-#include <hunspell/hunspell.h>
++#include <hunspell.h>
+ #include "hunspellwordlist_p.h"
+ 
+ QT_BEGIN_NAMESPACE
+diff --git a/config.tests/hunspell/main.cpp b/config.tests/hunspell/main.cpp
+index 76f2cb3df..91906bc48 100644
+--- a/config.tests/hunspell/main.cpp	
++++ b/config.tests/hunspell/main.cpp
+@@ -1,7 +1,7 @@
+ // Copyright (C) 2020 The Qt Company Ltd.
+ // SPDX-License-Identifier: BSD-3-Clause
+ 
+-#include <hunspell/hunspell.h>
++#include <hunspell.h>
+ 
+ int main(int argc, char** argv)
+ {
+diff --git a/src/plugins/hunspell/module/hunspellwordlist.cpp b/src/plugins/hunspell/module/hunspellwordlist.cpp
+index ec55d4d3b..846af4726 100644
+--- a/src/plugins/hunspell/module/hunspellwordlist.cpp	
++++ b/src/plugins/hunspell/module/hunspellwordlist.cpp
+@@ -3,7 +3,7 @@
+ 
+ #include "hunspellwordlist_p.h"
+ #include <QtAlgorithms>
+-#include <hunspell/hunspell.h>
++#include <hunspell.h>
+ 
+ QT_BEGIN_NAMESPACE
+ namespace QtVirtualKeyboard {

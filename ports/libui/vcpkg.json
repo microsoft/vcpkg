@@ -1,0 +1,23 @@
+{
+  "name": "libui",
+  "version-date": "2018-11-03",
+  "port-version": 3,
+  "description": "Simple and portable (but not inflexible) native GUI library in C.",
+  "homepage": "https://github.com/andlabs/libui",
+  "license": "MIT",
+  "supports": "!android & !emscripten & !ios & !uwp",
+  "dependencies": [
+    {
+      "name": "gtk3",
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

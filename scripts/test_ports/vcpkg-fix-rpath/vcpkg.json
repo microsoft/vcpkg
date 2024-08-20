@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-fix-rpath",
+  "version-date": "2024-02-10",
+  "description": "Test port to check the string replacement in z_vcpkg_fixup_rpath",
+  "supports": "native & linux"
+}

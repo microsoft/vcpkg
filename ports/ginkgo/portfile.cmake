@@ -1,0 +1,44 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ginkgo-project/ginkgo
+    REF "v${VERSION}"
+    SHA512 9d121a5eec9f5d17d1bd4b8924ebb32985a68e8087addc7385b619e365ed260a40ab73eb7a8a16f46a590d3162a78c9311ff41dd3dc74a9117a61e0445d96c52
+    HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    openmp    GINKGO_BUILD_OMP
+    cuda      GINKGO_BUILD_CUDA
+    mpi       GINKGO_BUILD_MPI
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DGINKGO_BUILD_REFERENCE=ON
+        -DGINKGO_BUILD_TESTS=OFF
+        -DGINKGO_BUILD_EXAMPLES=OFF
+        -DGINKGO_BUILD_HIP=OFF
+        -DGINKGO_BUILD_DPCPP=OFF
+        -DGINKGO_BUILD_HWLOC=OFF
+        -DGINKGO_BUILD_BENCHMARKS=OFF
+        -DGINKGO_DEVEL_TOOLS=OFF
+        -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ginkgo)
+vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/CMakeFiles")

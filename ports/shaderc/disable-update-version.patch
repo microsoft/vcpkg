@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 075641e..b2e92ef 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,11 +129,6 @@ if(${SHADERC_ENABLE_EXAMPLES})
+     add_subdirectory(examples)
+ endif()
+ 
+-add_custom_target(build-version
+-  ${PYTHON_EXECUTABLE}
+-  ${CMAKE_CURRENT_SOURCE_DIR}/utils/update_build_version.py
+-  ${shaderc_SOURCE_DIR} ${spirv-tools_SOURCE_DIR} ${glslang_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/build-version.inc
+-  COMMENT "Update build-version.inc in the Shaderc build directory (if necessary).")
+ 
+ function(define_pkg_config_file NAME LIBS)
+   add_custom_target(${NAME}-pkg-config ALL
+diff --git a/glslc/CMakeLists.txt b/glslc/CMakeLists.txt
+index c8fa6d5..341865a 100644
+--- a/glslc/CMakeLists.txt
++++ b/glslc/CMakeLists.txt
+@@ -53,7 +53,6 @@ shaderc_default_compile_options(glslc_exe)
+ target_include_directories(glslc_exe PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/.. ${spirv-tools_SOURCE_DIR}/include)
+ set_target_properties(glslc_exe PROPERTIES OUTPUT_NAME glslc)
+ target_link_libraries(glslc_exe PRIVATE glslc shaderc_util shaderc)
+-add_dependencies(glslc_exe build-version)
+ 
+ shaderc_add_tests(
+   TEST_PREFIX glslc

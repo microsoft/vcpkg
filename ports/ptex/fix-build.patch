@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2f8c3af..d4d4425 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,7 +27,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ include(GNUInstallDirs)
+ 
+ include(CTest)
++if(0)
+ enable_testing()
++endif()
+ 
+ # Setup platform-specific threading flags.
+ find_package(Threads REQUIRED)
+@@ -112,7 +114,9 @@ endif ()
+ include_directories(src/ptex)
+ 
+ add_subdirectory(src/ptex)
++if(0)
+ add_subdirectory(src/utils)
+ add_subdirectory(src/tests)
+ add_subdirectory(src/doc)
++endif()
+ add_subdirectory(src/build)
+diff --git a/src/ptex/CMakeLists.txt b/src/ptex/CMakeLists.txt
+index 4dfe372..4572dd5 100644
+--- a/src/ptex/CMakeLists.txt
++++ b/src/ptex/CMakeLists.txt
+@@ -40,7 +40,10 @@ if(PTEX_BUILD_SHARED_LIBS)
+     target_compile_definitions(Ptex_dynamic PRIVATE PTEX_EXPORTS)
+     target_link_libraries(Ptex_dynamic
+         PUBLIC Threads::Threads ZLIB::ZLIB)
+-    install(TARGETS Ptex_dynamic EXPORT Ptex DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    install(TARGETS Ptex_dynamic EXPORT Ptex
++                                 RUNTIME DESTINATION ${BIN_INSTALL_DIR}
++                                 LIBRARY DESTINATION ${LIB_INSTALL_DIR}
++                                 ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
+ endif()
+ 
+ install(FILES

@@ -1,0 +1,27 @@
+{
+  "name": "ada-url",
+  "version": "2.7.7",
+  "description": "WHATWG-compliant and fast URL parser written in modern C++",
+  "homepage": "https://ada-url.com/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build CLI tools (adaparse)",
+      "supports": "!uwp",
+      "dependencies": [
+        "cxxopts",
+        "fmt"
+      ]
+    }
+  }
+}

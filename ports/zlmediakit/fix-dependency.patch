@@ -1,0 +1,42 @@
+Index: 3rdpart/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/3rdpart/CMakeLists.txt b/3rdpart/CMakeLists.txt
+--- a/3rdpart/CMakeLists.txt	(revision af3ef996b0ae265e000344e7faf753577f9abf4e)
++++ b/3rdpart/CMakeLists.txt	(date 1711782947005)
+@@ -24,6 +24,7 @@
+ ##############################################################################
+
+ # jsoncpp
++if (0)
+ file(GLOB JSONCPP_SRC_LIST
+   ${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp/include/json/*.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp/src/lib_json/*.cpp
+@@ -38,7 +39,8 @@
+   PUBLIC
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/jsoncpp/include")
+
+-update_cached_list(MK_LINK_LIBRARIES jsoncpp)
++endif()
++update_cached_list(MK_LINK_LIBRARIES JsonCpp::JsonCpp)
+
+ ##############################################################################
+
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision af3ef996b0ae265e000344e7faf753577f9abf4e)
++++ b/CMakeLists.txt	(date 1711782947012)
+@@ -479,6 +479,7 @@
+ # for assert.h
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdpart)
+ 
++find_package(jsoncpp CONFIG REQUIRED)
+ add_subdirectory(3rdpart)
+ 
+ add_subdirectory(src)

@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c36908b..390ac0a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -944,6 +944,15 @@ OPTION(ENABLE_BYTERANGE "Enable byte-range access to remote datasets.." OFF)
+ 
+ # Check for the math library so it can be explicitly linked.
+ IF(NOT WIN32)
++  block(SCOPE_FOR VARIABLES)
++    if(VCPKG_CRT_LINKAGE STREQUAL "static")
++      list(PREPEND CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
++    endif()
++    find_library(HAVE_LIBM_PATH m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++    if(HAVE_LIBM_PATH)
++      set(HAVE_LIBM m CACHE STRING "Math link library")
++    endif()
++  endblock()
+   FIND_LIBRARY(HAVE_LIBM NAMES math m libm)
+   MESSAGE(STATUS "Found Math library: ${HAVE_LIBM}")
+   IF(NOT HAVE_LIBM)

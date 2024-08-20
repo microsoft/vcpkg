@@ -1,0 +1,30 @@
+{
+  "name": "kissfft",
+  "version": "131.1.0",
+  "description": "A Fast Fourier Transform (FFT) library that tries to Keep it Simple, Stupid",
+  "homepage": "https://github.com/mborgerding/kissfft",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "Build kissfft with OpenMP support",
+      "supports": "!windows"
+    },
+    "tools": {
+      "description": "Build kissfft tools",
+      "supports": "linux | osx",
+      "dependencies": [
+        "libpng"
+      ]
+    }
+  }
+}

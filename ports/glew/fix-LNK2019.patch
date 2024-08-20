@@ -1,0 +1,17 @@
+diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
+index 419c243..f81fab4 100644
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -120,9 +120,9 @@ if (MSVC)
+   target_compile_options (glew PRIVATE -GS-)
+   target_compile_options (glew_s PRIVATE -GS-)
+   # remove stdlib dependency
+-  target_link_libraries (glew LINK_PRIVATE -nodefaultlib -noentry)
+-  target_link_libraries (glew LINK_PRIVATE libvcruntime.lib)
+-  target_link_libraries (glew LINK_PRIVATE msvcrt.lib )
++  #target_link_libraries (glew LINK_PRIVATE -nodefaultlib -noentry)
++  #target_link_libraries (glew LINK_PRIVATE libvcruntime.lib)
++  #target_link_libraries (glew LINK_PRIVATE msvcrt.lib )
+   string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
+ elseif (WIN32 AND ((CMAKE_C_COMPILER_ID MATCHES "GNU") OR (CMAKE_C_COMPILER_ID MATCHES "Clang")))
+   # remove stdlib dependency on windows with GCC and Clang (for similar reasons

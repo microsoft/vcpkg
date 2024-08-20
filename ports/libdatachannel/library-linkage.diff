@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b35e4b1..1b5190b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -457,11 +457,17 @@ if(WARNINGS_AS_ERRORS)
+ 	endif()
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
+ install(TARGETS datachannel EXPORT LibDataChannelTargets
+ 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++else()
++	set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
++	set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 0)
++	install(TARGETS datachannel-static EXPORT LibDataChannelTargets)
++endif()
+ 
+ install(FILES ${LIBDATACHANNEL_HEADERS}
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rtc

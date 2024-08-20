@@ -1,0 +1,22 @@
+{
+  "name": "log4cplus",
+  "version": "2.1.1",
+  "description": "A simple to use C++ logging API providing thread--safe, flexible, and arbitrarily granular control over log management and configuration",
+  "homepage": "https://github.com/log4cplus/log4cplus",
+  "license": "Apache-2.0 AND BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "unicode": {
+      "description": "Unicode logger"
+    }
+  }
+}

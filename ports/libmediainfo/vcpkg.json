@@ -1,0 +1,20 @@
+{
+  "name": "libmediainfo",
+  "version": "24.6",
+  "description": "Get most relevant technical and tag data from video and audio files",
+  "homepage": "https://github.com/MediaArea/MediaInfoLib",
+  "dependencies": [
+    "curl",
+    "libzen",
+    "tinyxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

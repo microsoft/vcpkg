@@ -1,0 +1,53 @@
+From 47eb8d07a8caaa6cc1e6e906a7cd5b44ee0fb624 Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Thu, 27 Jul 2017 04:24:36 +0300
+Subject: [PATCH] remove redundant assignments
+
+---
+ lib/tokenize.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/lib/tokenize.c b/lib/tokenize.c
+index 57b7aa8..3f53fb5 100644
+--- a/lib/tokenize.c
++++ b/lib/tokenize.c
+@@ -487,11 +487,11 @@ int oc_enc_tokenize_ac(oc_enc_ctx *_enc,int _pli,ptrdiff_t _fragi,
+   zzj=64;
+   for(zzi=OC_MINI(_zzi,63);zzi>0;zzi--){
+     ogg_uint32_t best_cost;
+-    int          best_bits=best_bits;
+-    int          best_next=best_next;
+-    int          best_token=best_token;
+-    int          best_eb=best_eb;
+-    int          best_qc=best_qc;
++    int          best_bits;
++    int          best_next;
++    int          best_token;
++    int          best_eb;
++    int          best_qc;
+     ogg_uint32_t d2;
+     int          dq;
+     int          qc_m;
+@@ -1091,8 +1091,8 @@ void oc_enc_tokenize_dc_frag_list(oc_enc_ctx *_enc,int _pli,
+   int                neobs1;
+   int                token;
+   int                eb;
+-  int                token1=token1;
+-  int                eb1=eb1;
++  int                token1;
++  int                eb1;
+   /*Return immediately if there are no coded fragments; otherwise we'd flush
+      any trailing EOB run into the AC 1 list and never read it back out.*/
+   if(_ncoded_fragis<=0)return;
+@@ -1328,7 +1328,7 @@ void oc_enc_tokenize_finish(oc_enc_ctx *_enc){
+     int       new_eb;
+     int       zzj;
+     int       plj;
+-    ptrdiff_t ti=ti;
++    ptrdiff_t ti;
+     int       run_count;
+     /*Make sure this coefficient has tokens at all.*/
+     if(_enc->ndct_tokens[pli][zzi]<=0)continue;
+-- 
+2.12.2.windows.2
+

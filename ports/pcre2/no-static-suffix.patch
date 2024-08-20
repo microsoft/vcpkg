@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2815dbb..3c915d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -713,8 +713,8 @@ IF(PCRE2_BUILD_PCRE2_8)
+     set(targets ${targets} pcre2-posix-static)
+ 
+     IF(MSVC)
+-      SET_TARGET_PROPERTIES(pcre2-8-static PROPERTIES OUTPUT_NAME pcre2-8-static)
+-      SET_TARGET_PROPERTIES(pcre2-posix-static PROPERTIES OUTPUT_NAME pcre2-posix-static)
++      SET_TARGET_PROPERTIES(pcre2-8-static PROPERTIES OUTPUT_NAME pcre2-8)
++      SET_TARGET_PROPERTIES(pcre2-posix-static PROPERTIES OUTPUT_NAME pcre2-posix)
+     ELSE(MSVC)
+       SET_TARGET_PROPERTIES(pcre2-8-static PROPERTIES OUTPUT_NAME pcre2-8)
+       SET_TARGET_PROPERTIES(pcre2-posix-static PROPERTIES OUTPUT_NAME pcre2-posix)
+@@ -793,7 +793,7 @@ IF(PCRE2_BUILD_PCRE2_16)
+     set(targets ${targets} pcre2-16-static)
+ 
+     IF(MSVC)
+-      SET_TARGET_PROPERTIES(pcre2-16-static PROPERTIES OUTPUT_NAME pcre2-16-static)
++      SET_TARGET_PROPERTIES(pcre2-16-static PROPERTIES OUTPUT_NAME pcre2-16)
+     ELSE(MSVC)
+       SET_TARGET_PROPERTIES(pcre2-16-static PROPERTIES OUTPUT_NAME pcre2-16)
+     ENDIF(MSVC)
+@@ -855,7 +855,7 @@ IF(PCRE2_BUILD_PCRE2_32)
+     set(targets ${targets} pcre2-32-static)
+ 
+     IF(MSVC)
+-      SET_TARGET_PROPERTIES(pcre2-32-static PROPERTIES OUTPUT_NAME pcre2-32-static)
++      SET_TARGET_PROPERTIES(pcre2-32-static PROPERTIES OUTPUT_NAME pcre2-32)
+     ELSE(MSVC)
+       SET_TARGET_PROPERTIES(pcre2-32-static PROPERTIES OUTPUT_NAME pcre2-32)
+     ENDIF(MSVC)

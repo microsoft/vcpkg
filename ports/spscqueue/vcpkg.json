@@ -1,0 +1,17 @@
+{
+  "name": "spscqueue",
+  "version": "1.1",
+  "port-version": 3,
+  "description": "A bounded single-producer single-consumer wait-free and lock-free queue written in C++11",
+  "homepage": "https://github.com/rigtorp/SPSCQueue",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

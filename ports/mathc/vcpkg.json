@@ -1,0 +1,17 @@
+{
+  "name": "mathc",
+  "version-date": "2019-09-29",
+  "port-version": 3,
+  "description": "Pure C math library for 2D and 3D programming",
+  "homepage": "https://github.com/felselva/mathc",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

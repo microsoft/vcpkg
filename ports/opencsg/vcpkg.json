@@ -1,0 +1,14 @@
+{
+  "name": "opencsg",
+  "version": "1.6.0",
+  "description": "OpenCSG is a library that does image-based CSG rendering using OpenGL. OpenCSG is written in C++ and supports most modern graphics hardware using Microsoft Windows or the Linux operating system.",
+  "homepage": "https://github.com/floriankirsch/OpenCSG",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    "glew",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

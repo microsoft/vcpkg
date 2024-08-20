@@ -1,0 +1,12 @@
+diff --git a/src/thread.h b/src/thread.h
+index d4ca10c..43bd542 100644
+--- a/src/thread.h
++++ b/src/thread.h
+@@ -19,6 +19,7 @@
+ #define ARGON2_THREAD_H
+ 
+ #if !defined(ARGON2_NO_THREADS)
++#include <stdint.h>
+ 
+ /*
+         Here we implement an abstraction layer for the simpĺe requirements

@@ -1,0 +1,88 @@
+{
+  "name": "harfbuzz",
+  "version": "9.0.0",
+  "description": "HarfBuzz OpenType text shaping engine",
+  "homepage": "https://github.com/harfbuzz/harfbuzz",
+  "license": "MIT-Modern-Variant",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "gettext",
+      "platform": "osx"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "freetype"
+  ],
+  "features": {
+    "cairo": {
+      "description": "Enable Cairo graphics library support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
+    "coretext": {
+      "description": "Enable CoreText shaper backend on macOS",
+      "supports": "osx"
+    },
+    "directwrite": {
+      "description": "Enable DirectWrite support on Windows",
+      "supports": "windows"
+    },
+    "experimental-api": {
+      "description": "Enable experimental api"
+    },
+    "freetype": {
+      "description": "Enable FreeType support",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "gdi": {
+      "description": "Enable GDI/Uniscribe support on Windows",
+      "supports": "windows"
+    },
+    "glib": {
+      "description": "Glib Unicode callbacks support",
+      "dependencies": [
+        "glib",
+        {
+          "name": "glib",
+          "host": true
+        }
+      ]
+    },
+    "graphite2": {
+      "description": "Graphite2 shaper support",
+      "dependencies": [
+        "graphite2"
+      ]
+    },
+    "icu": {
+      "description": "icu support for harfbuzz",
+      "dependencies": [
+        "icu"
+      ]
+    },
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        "glib",
+        "gobject-introspection"
+      ]
+    }
+  }
+}

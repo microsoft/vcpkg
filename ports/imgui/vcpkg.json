@@ -1,0 +1,132 @@
+{
+  "name": "imgui",
+  "version": "1.91.0",
+  "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
+  "homepage": "https://github.com/ocornut/imgui",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "allegro5-binding": {
+      "description": "Make available Allegro5 binding",
+      "dependencies": [
+        "allegro5"
+      ]
+    },
+    "android-binding": {
+      "description": "Make available Android native app support",
+      "supports": "android"
+    },
+    "docking-experimental": {
+      "description": "Build with docking support"
+    },
+    "dx10-binding": {
+      "description": "Make available DirectX10 binding",
+      "supports": "windows & !uwp"
+    },
+    "dx11-binding": {
+      "description": "Make available DirectX11 binding",
+      "supports": "windows & !uwp"
+    },
+    "dx12-binding": {
+      "description": "Make available DirectX12 binding",
+      "supports": "!x86 & windows & !uwp"
+    },
+    "dx9-binding": {
+      "description": "Make available DirectX9 binding",
+      "supports": "windows & !uwp"
+    },
+    "freetype": {
+      "description": "Build font atlases using FreeType instead of stb_truetype",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "freetype-lunasvg": {
+      "description": "Add support to render OpenType SVG fonts using LunaSVG",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "freetype"
+          ]
+        },
+        "lunasvg"
+      ]
+    },
+    "glfw-binding": {
+      "description": "Make available GLFW binding",
+      "dependencies": [
+        {
+          "name": "glfw3",
+          "platform": "!emscripten"
+        }
+      ]
+    },
+    "glut-binding": {
+      "description": "Make available Glut binding",
+      "dependencies": [
+        "freeglut"
+      ]
+    },
+    "libigl-imgui": {
+      "description": "Install the libigl-imgui headers"
+    },
+    "metal-binding": {
+      "description": "Make available Metal binding",
+      "supports": "osx"
+    },
+    "opengl2-binding": {
+      "description": "Make available OpenGL (legacy) binding",
+      "supports": "!uwp"
+    },
+    "opengl3-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding"
+    },
+    "osx-binding": {
+      "description": "Make available OSX binding",
+      "supports": "osx"
+    },
+    "sdl2-binding": {
+      "description": "Make available SDL2 binding",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "sdl2-renderer-binding": {
+      "description": "Make available SDL2 Renderer binding",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "test-engine": {
+      "description": "Build test engine",
+      "supports": "!uwp",
+      "license": null,
+      "dependencies": [
+        "stb"
+      ]
+    },
+    "vulkan-binding": {
+      "description": "Make available Vulkan binding",
+      "dependencies": [
+        "vulkan"
+      ]
+    },
+    "wchar32": {
+      "description": "Use WCHAR32 instead of WCHAR16"
+    },
+    "win32-binding": {
+      "description": "Make available Win32 binding",
+      "supports": "windows & !uwp"
+    }
+  }
+}

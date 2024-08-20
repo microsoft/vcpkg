@@ -1,0 +1,19 @@
+{
+  "name": "arcus",
+  "version-semver": "4.10.0",
+  "port-version": 3,
+  "description": "This library contains C++ bindings for creating a socket in a thread and using this socket to send and receive messages based on the Protocol Buffers library.",
+  "homepage": "https://github.com/Ultimaker/libArcus",
+  "supports": "!uwp",
+  "dependencies": [
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "bond",
+  "version": "11.0.1",
+  "port-version": 4,
+  "description": "Bond is a cross-platform framework for working with schematized data. It supports cross-language de/serialization and powerful generic mechanisms for efficiently manipulating data. Bond is broadly used at Microsoft in high scale services.",
+  "homepage": "https://github.com/Microsoft/bond",
+  "dependencies": [
+    "boost-assign",
+    "boost-config",
+    "boost-locale",
+    "boost-utility",
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
