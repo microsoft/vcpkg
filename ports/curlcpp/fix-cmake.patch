@@ -1,66 +1,13 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index f3c6d78..4cd17e9 100644
+index f3c6d78..a457717 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -23,44 +23,23 @@ set(CURLCPP_HEADER_LIST
-   ../include/curl_utility.h
- )
- 
--
--if(NOT BUILD_SHARED_LIBS)
--    add_library(curlcpp
--        curl_easy.cpp
--        curl_header.cpp
--        curl_global.cpp
--        curl_form.cpp
--        curl_multi.cpp
--        curl_share.cpp
--        curl_info.cpp
--        curl_cookie.cpp
--        curl_exception.cpp
--        cookie.cpp
--        cookie_date.cpp
--        cookie_time.cpp
--        cookie_datetime.cpp
--        
--        ${CURLCPP_HEADER_LIST}
--    )
--else()
+@@ -43,7 +43,7 @@ if(NOT BUILD_SHARED_LIBS)
+         ${CURLCPP_HEADER_LIST}
+     )
+ else()
 -    add_library(curlcpp ${BUILD_SHARED_LIBS}
--        curl_easy.cpp
--        curl_header.cpp
--        curl_global.cpp
--        curl_form.cpp
--        curl_multi.cpp
--        curl_share.cpp
--        curl_info.cpp
--        curl_cookie.cpp
--        curl_exception.cpp
--        cookie.cpp
--        cookie_date.cpp
--        cookie_time.cpp
--        cookie_datetime.cpp
--        
--        ${CURLCPP_HEADER_LIST}
--    )
--endif()
-+add_library(curlcpp
-+    curl_easy.cpp
-+    curl_header.cpp
-+    curl_global.cpp
-+    curl_form.cpp
-+    curl_multi.cpp
-+    curl_share.cpp
-+    curl_info.cpp
-+    curl_cookie.cpp
-+    curl_exception.cpp
-+    cookie.cpp
-+    cookie_date.cpp
-+    cookie_time.cpp
-+    cookie_datetime.cpp
-+    
-+    ${CURLCPP_HEADER_LIST}
-+)
- 
- add_library(curlcpp::curlcpp ALIAS curlcpp)
- 
++    add_library(curlcpp SHARED
+         curl_easy.cpp
+         curl_header.cpp
+         curl_global.cpp
