@@ -5,9 +5,6 @@ vcpkg_from_github(
     SHA512 c8338a118feefa104d73932890c732247c884ab9ce1d170c43a22ab5884517a0e2a7fd1febde7705b8290fbbbc29e64738610404816e4db2b56a70fc444ca049
     HEAD_REF master
     PATCHES
-        #fix-expat.patch
-        #fix-inih.patch
-        #fix-brotli.patch
         dependencies.diff
 )
 
