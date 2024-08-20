@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-build.patch
-        fix-build-error-with-fmt11.patch
 )
 
 # Prefer installed config files
