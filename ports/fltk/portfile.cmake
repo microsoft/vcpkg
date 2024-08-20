@@ -12,7 +12,7 @@ vcpkg_from_github(
         include.patch
         fix-system-link.patch
         math-h-polyfill.patch
-        fix-add-fluid.patch #https://github.com/fltk/fltk/pull/898
+        fix-build-executable.patch #https://github.com/fltk/fltk/commit/63d7c71e1a926f487f22aa26042a2582624b3b17
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"
