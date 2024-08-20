@@ -20,4 +20,4 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
