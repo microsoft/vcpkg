@@ -7,7 +7,10 @@
   "license": "LGPL-2.1-or-later",
   "supports": "!xbox",
   "dependencies": [
-    "acl",
+    {
+      "name": "acl",
+      "platform": "linux"
+    },
     "curl",
     "glib",
     "libpopt",
