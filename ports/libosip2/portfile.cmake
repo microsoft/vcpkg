@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
     )
 
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}")
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()

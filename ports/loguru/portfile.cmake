@@ -11,7 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SOURCE_PATH}/loguru.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/loguru)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/loguruConfig.cmake.in  ${SOURCE_PATH}/loguruConfig.cmake.in COPYONLY)
 
@@ -34,4 +34,4 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_copy_pdbs()
 endif()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/copyright")
