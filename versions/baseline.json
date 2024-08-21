@@ -6193,7 +6193,7 @@
       "port-version": 5
     },
     "netcpp": {
-      "baseline": "0.4.1",
+      "baseline": "0.4.2",
       "port-version": 0
     },
     "netgen": {
