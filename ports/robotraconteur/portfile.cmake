@@ -8,6 +8,8 @@ vcpkg_from_github(
 	REF "v${VERSION}"
 	SHA512 e338e36ad6612e6d3bf3ed97661592a54f7bfc3d41c025f97af020095971fcf4af55f76350c5b3e81bb5880cda48515dae2bc3c1ebd587c4a33a87d087be6f25
 	HEAD_REF master
+    PATCHES
+        "boost-uuid-fix.diff" # https://github.com/robotraconteur/robotraconteur/pull/266
 )
 
 vcpkg_cmake_configure(

@@ -1,0 +1,15 @@
+diff --git a/RobotRaconteurCore/src/HardwareTransport_linux.cpp b/RobotRaconteurCore/src/HardwareTransport_linux.cpp
+index 1d395c16..d75d3e23 100644
+--- a/RobotRaconteurCore/src/HardwareTransport_linux.cpp
++++ b/RobotRaconteurCore/src/HardwareTransport_linux.cpp
+@@ -281,8 +281,8 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
+             {
+                 try
+                 {
+-                    boost::uuids::uuid svc_uuid = {0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74,
+-                                                   0xa1, 0xb8, 0x18, 0xed, 0x54, 0x95, 0xaa, 0x07};
++                    boost::uuids::uuid svc_uuid = {{0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74, 0xa1, 0xb8, 0x18,
++                                                    0xed, 0x54, 0x95, 0xaa, 0x07}};
+ 
+                     dbus_f->dbus_message_iter_recurse(&dict_entry, &iter_dict_val);
+ 
