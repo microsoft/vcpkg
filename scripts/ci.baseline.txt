@@ -955,8 +955,6 @@ qt5-canvas3d:x86-windows=skip
 qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
 # Missing system libraries
-qt5-x11extras:x64-osx=fail
-qt5-x11extras:arm64-osx=fail
 quickfix:arm-neon-android=fail
 quickfix:arm64-android=fail
 qwt-qt6:x64-osx=fail
