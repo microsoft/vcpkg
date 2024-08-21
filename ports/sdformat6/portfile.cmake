@@ -50,10 +50,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ignition/sdformat6.yaml" "${CURRENT_PACKAGES_DIR}" "../..")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sdformat-6.2/sdf/sdf_config.h" "#define SDF_SHARE_PATH \"${CURRENT_PACKAGES_DIR}/share/\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sdformat-6.2/sdf/sdf_config.h" "#define SDF_VERSION_PATH \"${CURRENT_PACKAGES_DIR}/share/sdformat/\"" "")
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()
