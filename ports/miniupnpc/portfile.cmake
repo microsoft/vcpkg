@@ -30,15 +30,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 else()
-    file(GLOB DEBUG_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
     file(GLOB RELEASE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-    if(DEBUG_TOOLS OR RELEASE_TOOLS)
-        file(
-            INSTALL ${RELEASE_TOOLS}
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-        )
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        file(REMOVE_RECURSE ${DEBUG_TOOLS} ${RELEASE_TOOLS})
-    endif()
+    vcpkg_copy_tools(TOOL_NAMES ${RELEASE_TOOLS} AUTO_CLEAN)
 endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
