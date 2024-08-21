@@ -1,8 +1,9 @@
 {
   "name": "tevclient",
-  "version-date": "2024-08-19",
+  "version-date": "2023-12-04",
   "description": "C++ client library for communicating to the tev image viewer",
   "homepage": "https://github.com/westlicht/tevclient",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
