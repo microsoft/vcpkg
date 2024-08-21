@@ -1,0 +1,10 @@
+{
+  "name": "libmpv",
+  "version": "0.38.0",
+  "port-version": 3,
+  "description": "libmpv (v3-20240822-e3a9ce2) is a freedom media player library. It supports a wide variety of media file formats, audio and video codecs, and subtitle types.",
+  "homepage": "https://mpv.io/",
+  "documentation": "https://mpv.io/manual/master/",
+  "license": "GPL-2.0-or-later OR LGPL-2.1-or-later",
+  "supports": "windows & x64"
+}

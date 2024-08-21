@@ -1,0 +1,18 @@
+The package libmpv provides CMake targets:
+
+    find_package(libmpv REQUIRED)
+    target_link_libraries(main PRIVATE libmpv)
+
+
+libmpv API provides general control over mpv playback. It does not give you
+direct access to individual components of the player, only the whole thing.
+It's somewhat equivalent to MPlayer's slave mode. You can send commands,
+retrieve or set playback status or settings with properties, and receive
+events.
+The API can be used in two ways:
+(1) Internally in mpv, to provide additional features to the command line
+   player. Lua scripting uses this. (Currently there is no plugin API to
+   get a client API handle in external user code. It has to be a fixed
+   part of the player at compilation time.)
+(2) Using mpv as a library with mpv_create(). This basically allows embedding
+   mpv in other applications.

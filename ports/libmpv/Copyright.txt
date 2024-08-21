@@ -1,0 +1,74 @@
+mpv is a fork of mplayer2, which is a fork of MPlayer.
+
+mpv as a whole is licensed under the GNU General Public License GPL version 2
+or later (called GPLv2+ in this document, see LICENSE.GPL for full license
+text) by default, or the GNU Lesser General Public License LGPL version 2 or
+later (LGPLv2.1+ in this document, see LICENSE.LGPL for full license text) if
+built with the -Dgpl=false configure switch.
+
+Most source files are LGPLv2.1+ or GPLv2+, but some files are available under
+more liberal licenses, such as BSD, MIT, ISC, and possibly others. Look at the
+copyright header of each source file, and grep the sources for "Copyright" if
+you need to know details. C source files without Copyright notice are usually
+licensed as LGPLv2.1+. Also see the list of files with specific licenses below
+(not all files can have a standard license header).
+
+All new contributions must be LGPLv2.1+ licensed. Using a more liberal license
+compatible to LGPLv2.1+ is also ok.
+
+Changes done to GPL code must come with the implicit/explicit agreement that the
+project can relicense the changes to LGPLv2.1+ at a later point without asking
+the contributor. This is a safeguard for making potential relicensing of
+remaining GPL code to LGPLv2.1+ easier.
+
+See DOCS/contribute.md for binding rules wrt. licensing for contributions.
+
+For information about authors and contributors, consult the git log, which
+contains the complete SVN and CVS history as well.
+
+"v2.1+" in this context means "version 2.1 or later".
+
+Some libraries are GPLv2+ or GPLv3+ only. Building mpv with Samba support makes
+it GPLv3+.
+
+mpv can be built as LGPLv2.1+ with the -Dgpl=false configure option. To add a
+LGPL mode to mpv, MPlayer code had to be relicensed from GPLv2+ to LGPLv2.1+ by
+asking the MPlayer authors for permission. Since permission could not be
+obtained from everyone, LGPL mode disables the following features, some of them
+quite central:
+- Linux X11 video output
+- BSD audio output via OSS
+- NVIDIA/Linux hardware decoding (vdpau, although nvdec usually works)
+- Linux TV input
+- minor features: jack, DVD, CDDA, SMB, CACA, legacy direct3d VO
+Some of these will be fixed in the future. The intended use for LGPL mode is
+with libmpv, and currently it's not recommended to build mpv CLI in LGPL mode
+at all.
+
+The following files are still GPL only (-Dgpl=false disables them):
+
+    audio/out/ao_jack.c             will stay GPL
+    audio/out/ao_oss.c              will stay GPL
+    stream/dvb*                     must stay GPL
+    stream/stream_cdda.c            unknown
+    stream/stream_dvb.*             must stay GPL
+    stream/stream_dvdnav.c          unknown
+    video/out/vo_caca.c             unknown
+    video/out/vo_direct3d.c         unknown
+    video/out/vo_vaapi.c            probably impossible (some company's code)
+    video/out/vo_vdpau.c            probably impossible (nVidia's code)
+    video/out/vo_x11.c              probably impossible
+    video/out/vo_xv.c               probably impossible
+    video/out/x11_common.*          probably impossible
+    video/vdpau.c                   hard (GPL-only parts must be ifdefed)
+    video/vdpau.h                   unknown
+    video/vdpau_mixer.*             actual code must be rewritten
+    DOCS/man/                       GPLv2+
+    bootstrap.py                    unknown license, probably GPLv2+ or LGPLv2+
+    etc/mplayer-input.conf          unknown license, probably GPLv2+
+    mpv.desktop                     unknown license, probably GPLv2+
+    etc/restore-old-bindings.conf   unknown license, probably GPLv2+
+
+None of the cases listed above affect the final binary if it's built as
+LGPL. Linked libraries still can affect the final license (for example if
+FFmpeg was built as GPL).
