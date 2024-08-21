@@ -1,15 +1,11 @@
 {
   "name": "netcpp",
-  "version": "0.4.2",
+  "version": "0.3.4",
   "description": "A simple asynchronous network library",
   "homepage": "https://github.com/index1207/netcpp",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "windows",
   "dependencies": [
-    {
-      "name": "liburing",
-      "platform": "linux"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,9 +14,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "winsock2",
-      "platform": "windows"
-    }
+    "winsock2"
   ]
 }
