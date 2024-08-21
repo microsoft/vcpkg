@@ -39,5 +39,31 @@
       "name": "boost-winapi",
       "version>=": "1.86.0"
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "backtrace",
+      "platform": "!windows"
+    },
+    {
+      "name": "windbg",
+      "platform": "windows"
+    }
+  ],
+  "features": {
+    "backtrace": {
+      "description": "Use boost_stacktrace_backtrace",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "libbacktrace",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "windbg": {
+      "description": "Use boost_stacktrace_windbg",
+      "supports": "windows"
+    }
+  }
 }
