@@ -2,12 +2,15 @@ if("subpixel-rendering" IN_LIST FEATURES)
     set(SUBPIXEL_RENDERING_PATCH "subpixel-rendering.patch")
 endif()
 
-vcpkg_from_sourceforge(
+string(REPLACE "." "-" VERSION_HYPHEN "${VERSION}")
+
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO freetype/freetype2
-    REF "${VERSION}"
-    FILENAME freetype-${VERSION}.tar.xz
-    SHA512 a5917edaa45cb9f75786f8a4f9d12fdf07529247e09dfdb6c0cf7feb08f7588bb24f7b5b11425fb47f8fd62fcb426e731c944658f6d5a59ce4458ad5b0a50194
+    REPO freetype/freetype
+    REF "VER-${VERSION_HYPHEN}"
+    SHA512  9d7600af7e981227e37585dca71fbd7bc78b367a54d7705fe03e0f5549ce49e420548fa09b21c6bb137830f779a0a0b965611f50b163297b79fdc5903b4dc11d
+    HEAD_REF master
     PATCHES
         0003-Fix-UWP.patch
         brotli-static.patch
