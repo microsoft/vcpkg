@@ -31,4 +31,8 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES xpstojpeg xpstopdf xpstopng xpstops xpstosvg AUTO_CLEAN)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
