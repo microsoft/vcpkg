@@ -4,15 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO index1207/netcpp
     REF "v${VERSION}"
-    SHA512 b0b523f2bd0811c10ffb302ab110c0acdfd8de60c214555d7bd823a673ee5087b63327284b7d418d0232cf44c3f000b6e6002c60695fa3dabb4e7c61cef4776e
+    SHA512 5f4f99a65ce373f1712bf8fb90e5de4f9945f3467e6535e69fad49898fd8dae1fa534e27070d16557b05ee9fa4e3551900062f6c8220a2bd3b197cce82a57182
     HEAD_REF release
 )
 
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DINCLUDE_TEST=OFF
 )
 
 vcpkg_cmake_install()
