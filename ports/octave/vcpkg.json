@@ -1,0 +1,30 @@
+{
+  "name": "octave",
+  "version": "9.2.0",
+  "description": "High-level interpreted language, primarily intended for numerical computations.",
+  "homepage": "https://octave.org/",
+  "license": "GPL-3.0-or-later",
+  "supports": "!arm",
+  "dependencies": [
+    "blas",
+    {
+      "name": "curl",
+      "default-features": false
+    },
+    "fftw3",
+    "lapack",
+    "opengl",
+    "pcre2",
+    "qhull",
+    "readline",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}
