@@ -4622,7 +4622,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "3.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libjuice": {
       "baseline": "1.5.2",
@@ -5942,7 +5942,7 @@
     },
     "mozjpeg": {
       "baseline": "4.1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "mp-units": {
       "baseline": "2.2.0",
