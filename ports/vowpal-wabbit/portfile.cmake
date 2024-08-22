@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
     REF "${VERSION}"
-    SHA512 15dbec25430fb6b5885b4fb1f27b3c65b265c6cf5074015844de06ec59600d9142ca3a30e3edaca2ab25376ffb651811c9e5c3887b6ad9b4f8e0ecc2e57ccea6
+    SHA512 f87229caf65c6c32fb863fa426a39592d41990a43ce4d79f0a076323e47cd3d1a8bd02884afceb662527c87d290e68c51df6263d6a97f3a044f3f7254a38f86a
     HEAD_REF master
     PATCHES 
         cmake_remove_bin_targets.patch
