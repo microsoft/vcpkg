@@ -9122,7 +9122,7 @@
     },
     "usrsctp": {
       "baseline": "0.9.5.0",
-      "port-version": 3
+      "port-version": 4
     },
     "utf8-range": {
       "baseline": "4.25.1",
