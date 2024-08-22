@@ -6412,6 +6412,10 @@
       "baseline": "4.7.6",
       "port-version": 0
     },
+    "octave": {
+      "baseline": "9.2.0",
+      "port-version": 0
+    },
     "octomap": {
       "baseline": "1.10.0",
       "port-version": 0
