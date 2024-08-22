@@ -6,5 +6,5 @@
   "homepage": "https://mpv.io/",
   "documentation": "https://mpv.io/manual/master/",
   "license": "GPL-2.0-or-later OR LGPL-2.1-or-later",
-  "supports": "windows & x64"
+  "supports": "(windows & x64) & !uwp"
 }
