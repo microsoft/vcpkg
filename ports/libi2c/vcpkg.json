@@ -1,0 +1,17 @@
+{
+  "name": "libi2c",
+  "version": "2023-06-13",
+  "description": "A library for I2C communication",
+  "homepage": "https://github.com/busytester/libi2c",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
