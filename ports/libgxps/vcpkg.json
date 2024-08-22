@@ -4,6 +4,7 @@
   "port-version": 4,
   "description": "libgxps is a GObject based library for handling and rendering XPS documents.",
   "homepage": "https://wiki.gnome.org/Projects/libgxps",
+  "supports": "!staticcrt",
   "dependencies": [
     "cairo",
     "glib",
