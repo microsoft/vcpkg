@@ -11,10 +11,3 @@ index a41f2c1..f6c1f0b 100644
         PATHS ${ACL_PKGCONF_INCLUDE_DIRS}
  )
 
- # Finally the library itself
- find_library(ACL_LIBRARY
--       NAMES acl
-+       NAMES libacl
-        PATHS ${ACL_PKGCONF_LIBRARY_DIRS}
- )
-
