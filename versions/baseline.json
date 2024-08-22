@@ -6610,7 +6610,7 @@
     },
     "openscap": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 0
     },
     "openslide": {
       "baseline": "3.4.1",
