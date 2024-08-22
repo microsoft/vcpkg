@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN)
 
@@ -16,7 +18,7 @@ vcpkg_add_to_path("${GPERF_EXE_PATH}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
     FILENAME "octave-${VERSION}.tar.xz"
-    SHA512 95799fc3f8217b11316926570874bf0e25cdac8cead416ae000ecfeba2643d3a688c015fa07935671a9f8a338f2f070ea75d452a36b295400f177c5a13890905
+    SHA512 cb1667cd6557d48ecd7ae191bc44c9b9fd4f79e7cf4bf6c917093d120c4312e9594e6dddc5287661627ac053e9f23faaec40a1286d792d859f1fefbfdb3eeb8c
 )
 
 vcpkg_extract_source_archive(

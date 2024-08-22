@@ -1,10 +1,10 @@
 {
   "name": "octave",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "license": "GPL-3.0-or-later",
-  "supports": "!static",
+  "supports": "!arm",
   "dependencies": [
     "blas",
     {
