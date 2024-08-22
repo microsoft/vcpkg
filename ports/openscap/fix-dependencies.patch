@@ -1,8 +1,8 @@
 diff --git a/cmake/FindACL.cmake b/cmake/FindACL.cmake
-index a41f2c1..f6c1f0b 100644
+index a41f2c1..9675498 100644
 --- a/cmake/FindACL.cmake
 +++ b/cmake/FindACL.cmake
-@@ -12,13 +12,13 @@ libfind_pkg_check_modules(ACL_PKGCONF libacl)
+@@ -12,7 +12,7 @@ libfind_pkg_check_modules(ACL_PKGCONF libacl)
 
  # Include dir
  find_path(ACL_INCLUDE_DIR
