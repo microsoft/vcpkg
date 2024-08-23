@@ -558,6 +558,7 @@ libfreenect2:arm64-windows=fail
 libgpod:arm-neon-android=fail
 libgpod:arm64-android=fail
 libgpod:x64-android=fail
+libgxps:x64-windows-static=fail
 libhdfs3:arm-neon-android=fail
 libhdfs3:arm64-android=fail
 libhdfs3:x64-android=fail
