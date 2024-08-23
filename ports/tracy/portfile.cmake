@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
     REF "v${VERSION}"
-    SHA512 8c33a22f43b895f3e00f231f002c8272f72a3d7ce60858d58caf916c2721de478710dbd6ab6b16621a796491303fbce9c2315008b00d7a53d05ee7660b414874
+    SHA512 d3d99284e3c3172236c3f02b3bc52df111ef650fb8609e54fb3302ece28e55a06cd16713ed532f1e1aad66678ff09639dfc7e01a1e96880fb923b267a1b1b79b
     HEAD_REF master
     PATCHES
         build-tools.patch
@@ -39,27 +39,31 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 
-function(tracy_copy_tool tool_name)
-    vcpkg_copy_tools(
-        TOOL_NAMES "tracy-${tool_name}"
-        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${tool_name}"
-    )
-    vcpkg_copy_tools(
-        TOOL_NAMES "tracy-${tool_name}"
-        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${tool_name}"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
-    )
+function(tracy_copy_tool tool_name tool_dir)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_copy_tools(
+            TOOL_NAMES "${tool_name}"
+            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${tool_dir}"
+        )
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_copy_tools(
+            TOOL_NAMES "${tool_name}"
+            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${tool_dir}"
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
+        )
+    endif()
 endfunction()
 
 if("cli-tools" IN_LIST FEATURES)
-    tracy_copy_tool(capture)
-    tracy_copy_tool(csvexport)
-    tracy_copy_tool(import-chrome)
-    tracy_copy_tool(import-fuchsia)
-    tracy_copy_tool(update)
+    tracy_copy_tool(tracy-capture capture)
+    tracy_copy_tool(tracy-csvexport csvexport)
+    tracy_copy_tool(tracy-import-chrome import)
+    tracy_copy_tool(tracy-import-fuchsia import)
+    tracy_copy_tool(tracy-update update)
 endif()
 if("gui-tools" IN_LIST FEATURES)
-    tracy_copy_tool(profiler)
+    tracy_copy_tool(tracy-profiler profiler)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
