@@ -19,9 +19,9 @@ endfunction ()
 
 parse_header_single_define(${ALIYUN_OSS_CPP_SDK_INCLUDE_DIR}/alibabacloud/oss/Config.h ALIBABACLOUD_OSS_VERSION_STR "[0-9]+\\.[0-9]+\\.[0-9]+")
 
-add_library(aliyun-oss-cpp-sdk INTERFACE IMPORTED)
+add_library(unofficial::aliyun-oss-cpp-sdk INTERFACE IMPORTED)
 
-set_target_properties(aliyun-oss-cpp-sdk PROPERTIES
+set_target_properties(unofficial::aliyun-oss-cpp-sdk PROPERTIES
                       INTERFACE_LINK_LIBRARIES "\$<\$<NOT:\$<CONFIG:DEBUG>>:${ALIYUN_OSS_CPP_SDK_LIBRARY_RELEASE}>;\$<\$<CONFIG:DEBUG>:${ALIYUN_OSS_CPP_SDK_LIBRARY_DEBUG}>"
                       INTERFACE_INCLUDE_DIRECTORIES "${ALIYUN_OSS_CPP_SDK_INCLUDE_DIR}")
 
