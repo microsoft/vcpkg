@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 18b322ec599dc2ece84d31bf723e8d1c8bf107e93a39a58dee27e7e59de7e0387c72a638d5a59eda43706f39a054b3325e3f40f093edf8d673061c526d30b06b
     HEAD_REF release
     PATCHES
-        patch.diff
+        01.patch
 )
 
 
