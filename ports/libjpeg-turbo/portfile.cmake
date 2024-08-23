@@ -1,7 +1,9 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if mozjpeg is installed. Please remove mozjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
-
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/ijg-libjpeg/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if ijg-libjpeg is installed. Please remove ijg-libjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo

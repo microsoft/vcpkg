@@ -147,7 +147,21 @@ $portData = @{
             }
         }
     }
-    "boost-stacktrace"       = @{ "supports" = "!uwp" };
+    "boost-stacktrace"       = @{
+        "default-features" = @(@{ "name" = "backtrace"; "platform" = "!windows" }; @{ "name" = "windbg"; "platform" = "windows" });
+        "supports"         = "!uwp";
+        "features"         = @{
+            "backtrace" = @{
+                "description"  = "Use boost_stacktrace_backtrace";
+                "supports"     = "!windows";
+                "dependencies" = @(@{ "name" = "libbacktrace"; "platform" = "!windows" });
+            };
+            "windbg" = @{
+                "description"  = "Use boost_stacktrace_windbg";
+                "supports"     = "windows";
+            };
+        }
+    };
     "boost-test"             = @{ "supports" = "!uwp" };
     "boost-wave"             = @{ "supports" = "!uwp" };
 }
