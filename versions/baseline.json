@@ -2206,7 +2206,7 @@
     },
     "dbg-macro": {
       "baseline": "0.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "dbghelp": {
       "baseline": "0",
@@ -3622,7 +3622,7 @@
     },
     "ijg-libjpeg": {
       "baseline": "9e",
-      "port-version": 1
+      "port-version": 2
     },
     "im3d": {
       "baseline": "2022-10-11",
@@ -4622,7 +4622,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "3.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libjuice": {
       "baseline": "1.5.2",
@@ -5806,7 +5806,7 @@
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha4",
-      "port-version": 10
+      "port-version": 11
     },
     "mikktspace": {
       "baseline": "2020-10-06",
@@ -5942,7 +5942,7 @@
     },
     "mozjpeg": {
       "baseline": "4.1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "mp-units": {
       "baseline": "2.2.0",
@@ -7662,11 +7662,11 @@
     },
     "range-v3": {
       "baseline": "0.12.0",
-      "port-version": 2
+      "port-version": 3
     },
     "range-v3-vs2015": {
       "baseline": "20151130-vcpkg5",
-      "port-version": 2
+      "port-version": 3
     },
     "rapidcheck": {
       "baseline": "2023-12-14",
@@ -8222,7 +8222,7 @@
     },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",
-      "port-version": 5
+      "port-version": 6
     },
     "sigslot": {
       "baseline": "1.0.0",
