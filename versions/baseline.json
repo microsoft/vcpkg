@@ -3464,6 +3464,10 @@
       "baseline": "2.4.1",
       "port-version": 0
     },
+    "hlslpp": {
+      "baseline": "3.5",
+      "port-version": 0
+    },
     "hnswlib": {
       "baseline": "0.8.0",
       "port-version": 0
