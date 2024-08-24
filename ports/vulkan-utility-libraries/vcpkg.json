@@ -1,6 +1,7 @@
 {
   "name": "vulkan-utility-libraries",
   "version": "1.3.290.0",
+  "port-version": 1,
   "description": "Utility libraries for Vulkan developers",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Utility-Libraries",
   "license": null,
@@ -13,6 +14,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "vulkan-headers"
+    {
+      "name": "vulkan-headers",
+      "version>=": "1.3.290.0"
+    }
   ]
 }
