@@ -1,3 +1,5 @@
+message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
 if(NOT _VCPKG_LINUX_TOOLCHAIN)
     set(_VCPKG_LINUX_TOOLCHAIN 1)
 
@@ -48,9 +50,13 @@ if(NOT _VCPKG_LINUX_TOOLCHAIN)
             message(STATUS "Cross compiling arm on host ${CMAKE_HOST_SYSTEM_PROCESSOR}, use cross compiler: ${CMAKE_CXX_COMPILER}/${CMAKE_C_COMPILER}")
         endif()
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+		message(STATUS "FORTRAN!!!???")
         set(CMAKE_SYSTEM_PROCESSOR aarch64 CACHE STRING "")
         if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
-
+            if(NOT DEFINED CMAKE_Fortran_COMPILER)
+				message(STATUS "FORTRAN!!!")
+                set(CMAKE_Fortran_COMPILER "aarch64-linux-gnu-gfortran")
+            endif()
             if(NOT DEFINED CMAKE_CXX_COMPILER)
                 set(CMAKE_CXX_COMPILER "aarch64-linux-gnu-g++")
             endif()
