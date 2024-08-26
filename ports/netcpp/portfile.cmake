@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 18b322ec599dc2ece84d31bf723e8d1c8bf107e93a39a58dee27e7e59de7e0387c72a638d5a59eda43706f39a054b3325e3f40f093edf8d673061c526d30b06b
     HEAD_REF release
     PATCHES
-        01.patch
+        pkgconfig.patch
 )
 
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DINCLUDE_TEST=OFF
 )
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netcpp PACKAGE_NAME netcpp)
 
