@@ -1,4 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+string(SUBSTRING "${VERSION}" 5 -1 VERSION)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://snowballstem.org/dist/libstemmer_c-${VERSION}.tar.gz"
