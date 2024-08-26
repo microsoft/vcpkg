@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       export-unofficical-target.patch
+      openssl_required.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -15,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         wolfssl     ENABLE_WOLFSSL
         gnutls      ENABLE_GNUTLS
+        libressl    ENABLE_OPENSSL
 )
 
 vcpkg_cmake_configure(
@@ -24,7 +26,6 @@ vcpkg_cmake_configure(
         "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
         -DBUILD_TESTING=OFF
-        -DENABLE_OPENSSL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Libev=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libnghttp3=ON
         -DCMAKE_INSTALL_DOCDIR=share/ngtcp2
