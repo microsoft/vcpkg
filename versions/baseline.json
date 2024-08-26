@@ -4550,7 +4550,7 @@
     },
     "libgxps": {
       "baseline": "0.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libharu": {
       "baseline": "2.4.4",
