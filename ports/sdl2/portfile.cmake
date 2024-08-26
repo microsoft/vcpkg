@@ -8,6 +8,7 @@ vcpkg_from_github(
         deps.patch
         alsa-dep-fix.patch
         cxx-linkage-pkgconfig.diff
+        poll-fix.patch # Remove with next version (2.30.7).
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
