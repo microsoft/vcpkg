@@ -1,4 +1,5 @@
 {
+  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
   "name": "suitesparse-ldl",
   "version-semver": "3.3.2",
   "description": "LDL: A sparse LDL' factorization and solve package in SuiteSparse",

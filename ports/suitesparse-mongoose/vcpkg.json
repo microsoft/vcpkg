@@ -1,4 +1,5 @@
 {
+  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
   "name": "suitesparse-mongoose",
   "version-semver": "3.3.4",
   "description": "Mongoose: Graph partitioning library in SuiteSparse",

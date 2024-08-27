@@ -1,4 +1,5 @@
 {
+  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
   "name": "suitesparse-camd",
   "version-semver": "3.3.3",
   "description": "AMD: Routines for permuting sparse matrices prior to factorization in SuiteSparse",
