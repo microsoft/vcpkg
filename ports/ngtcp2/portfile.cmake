@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 15f9fad2d7a9181dcd3aa5d1873c6b58dd997c6a2782e1d45cb4630e22fb0caa218018376dc2ca4103c72d6a5b932ad0a7cf399665818e6181b3980200c8841a
+    SHA512 891a7339122f60b1796bb24d29ab75d0316717c2a64a45bade805242b70cb8713abc7642cdf0ec646ab9e80085d65117f0ea9b1e671d76bcd54038b0ea9bc868
     HEAD_REF main
     PATCHES
-      export-unofficical-target.patch
       openssl_required.patch
 )
 
@@ -33,12 +32,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ngtcp2)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ngtcp2")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
