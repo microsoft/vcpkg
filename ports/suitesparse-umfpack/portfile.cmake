@@ -9,7 +9,7 @@ vcpkg_from_github(
 set(PACKAGE_NAME UMFPACK)
 
 configure_file(
-    "${CURRENT_INSTALLED_DIR}/share/SuiteSparse/SuiteSparseBLAS.cmake"
+    "${CURRENT_INSTALLED_DIR}/share/suitesparse/SuiteSparseBLAS.cmake"
     "${SOURCE_PATH}/SuiteSparse_config/cmake_modules/SuiteSparseBLAS.cmake"
     COPYONLY
 )

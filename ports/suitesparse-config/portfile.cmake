@@ -39,7 +39,7 @@ vcpkg_cmake_install()
 
 # Move SuiteSparseBLAS.cmake, SuiteSparsePolicy.cmake etc files
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/SuiteSparse" "${CURRENT_PACKAGES_DIR}/share/SuiteSparse")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/SuiteSparse" "${CURRENT_PACKAGES_DIR}/share/suitesparse")
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME ${PACKAGE_NAME}
