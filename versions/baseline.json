@@ -1969,7 +1969,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.6.3",
+      "baseline": "0.7.0",
       "port-version": 0
     },
     "cppunit": {
@@ -2093,7 +2093,7 @@
       "port-version": 13
     },
     "cuda-api-wrappers": {
-      "baseline": "0.6.9",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "cudnn": {
@@ -2107,6 +2107,10 @@
     "curl": {
       "baseline": "8.9.1",
       "port-version": 1
+    },
+    "curlcpp": {
+      "baseline": "3.1",
+      "port-version": 0
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -3081,7 +3085,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "3.2.5",
+      "baseline": "3.3.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3166,7 +3170,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.28.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -4262,7 +4266,7 @@
     },
     "libavif": {
       "baseline": "1.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -4289,8 +4293,8 @@
       "port-version": 4
     },
     "libcap": {
-      "baseline": "2.69",
-      "port-version": 5
+      "baseline": "2.70",
+      "port-version": 0
     },
     "libcbor": {
       "baseline": "0.11.0",
@@ -4393,7 +4397,7 @@
       "port-version": 3
     },
     "libdwarf": {
-      "baseline": "0.10.1",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "libe57": {
@@ -4550,7 +4554,7 @@
     },
     "libgxps": {
       "baseline": "0.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libharu": {
       "baseline": "2.4.4",
@@ -5085,8 +5089,8 @@
       "port-version": 2
     },
     "libstemmer": {
-      "baseline": "2017-9",
-      "port-version": 8
+      "baseline": "2021.2.2.0",
+      "port-version": 0
     },
     "libstk": {
       "baseline": "4.6.1",
@@ -5185,8 +5189,8 @@
       "port-version": 0
     },
     "liburing": {
-      "baseline": "2.6",
-      "port-version": 1
+      "baseline": "2.7",
+      "port-version": 0
     },
     "libusb": {
       "baseline": "1.0.27",
@@ -5393,8 +5397,8 @@
       "port-version": 5
     },
     "libyuv": {
-      "baseline": "1857",
-      "port-version": 1
+      "baseline": "1895",
+      "port-version": 0
     },
     "libzen": {
       "baseline": "0.4.41",
@@ -5577,7 +5581,7 @@
       "port-version": 0
     },
     "lunasvg": {
-      "baseline": "2.4.0",
+      "baseline": "2.4.1",
       "port-version": 0
     },
     "luv": {
@@ -6117,7 +6121,7 @@
       "port-version": 8
     },
     "nanoflann": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "nanogui": {
@@ -6201,7 +6205,7 @@
       "port-version": 5
     },
     "netcpp": {
-      "baseline": "0.3.4",
+      "baseline": "0.4.1",
       "port-version": 0
     },
     "netgen": {
@@ -6622,7 +6626,7 @@
     },
     "openscap": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openslide": {
       "baseline": "3.4.1",
@@ -6806,7 +6810,7 @@
     },
     "pcapplusplus": {
       "baseline": "23.9",
-      "port-version": 1
+      "port-version": 2
     },
     "pcg": {
       "baseline": "2021-04-06",
@@ -7181,7 +7185,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.13.4",
+      "baseline": "2.13.5",
       "port-version": 0
     },
     "pystring": {
@@ -7861,7 +7865,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.0.0",
+      "baseline": "4.1.1",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -8245,7 +8249,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.1.139",
+      "baseline": "6.1.140",
       "port-version": 0
     },
     "simde": {
@@ -8257,7 +8261,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "5.3.4",
+      "baseline": "5.4.15",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -9485,7 +9489,7 @@
       "port-version": 2
     },
     "wil": {
-      "baseline": "2024-01-22",
+      "baseline": "1.0.240803.1",
       "port-version": 0
     },
     "wildmidi": {
