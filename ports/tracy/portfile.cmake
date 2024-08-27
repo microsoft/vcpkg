@@ -12,16 +12,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         on-demand TRACY_ON_DEMAND
         fibers	  TRACY_FIBERS
-        cli-tools VCPKG_CLI_TOOLS
-        gui-tools VCPKG_GUI_TOOLS
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
 )
 
-set(EXTRA_OPTIONS "")
+vcpkg_check_features(OUT_FEATURE_OPTIONS TOOLS_OPTIONS
+    FEATURES
+        cli-tools VCPKG_CLI_TOOLS
+        gui-tools VCPKG_GUI_TOOLS
+)
+
 if("cli-tools" IN_LIST FEATURES OR "gui-tools" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND EXTRA_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+    list(APPEND TOOLS_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 vcpkg_cmake_configure(
@@ -30,7 +33,8 @@ vcpkg_cmake_configure(
         -DDOWNLOAD_CAPSTONE=OFF
         -DLEGACY=ON
         ${FEATURE_OPTIONS}
-        ${EXTRA_OPTIONS}
+    OPTIONS_RELEASE
+        ${TOOLS_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         DOWNLOAD_CAPSTONE
         LEGACY
@@ -40,19 +44,10 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 
 function(tracy_copy_tool tool_name tool_dir)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_copy_tools(
-            TOOL_NAMES "${tool_name}"
-            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${tool_dir}"
-        )
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_copy_tools(
-            TOOL_NAMES "${tool_name}"
-            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${tool_dir}"
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
-        )
-    endif()
+    vcpkg_copy_tools(
+        TOOL_NAMES "${tool_name}"
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${tool_dir}"
+    )
 endfunction()
 
 if("cli-tools" IN_LIST FEATURES)
