@@ -12,10 +12,10 @@ index ffb6c54..e5656c6 100644
  endif(MSVC)
  add_compile_definitions(NETCPP_BUILD)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9c54dca..fb8575f 100644
+index 9c54dca..f67ed18 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -4,6 +4,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+@@ -4,6 +4,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
  add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
  add_library(${EXPORT_NAMESPACE}${PROJECT_NAME} ALIAS ${PROJECT_NAME})
  
@@ -27,8 +27,7 @@ index 9c54dca..fb8575f 100644
 +if (MSVC)
 +    target_link_libraries(${PROJECT_NAME} PRIVATE ws2_32)
 +else ()
-+    link_directories(${URING_LIBRARY_DIRS})
-+    target_include_directories(${PROJECT_NAME} PUBLIC ${URING_INCLUDE_DIRS})
-+    target_link_libraries(${PROJECT_NAME} PUBLIC ${URING_LIBRARIES})
++    target_include_directories(${PROJECT_NAME} PRIVATE ${URING_INCLUDE_DIRS})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${URING_LINK_LIBRARIES})
 +endif ()
 \ No newline at end of file

@@ -17,10 +17,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "winsock2",
-      "platform": "windows"
     }
   ]
 }

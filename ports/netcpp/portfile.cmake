@@ -10,11 +10,17 @@ vcpkg_from_github(
         pkgconfig.patch
 )
 
+if (VCPKG_TARGET_IS_LINUX)
+    vcpkg_find_acquire_program(PKGCONFIG)
+endif ()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DINCLUDE_TEST=OFF
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_install()
