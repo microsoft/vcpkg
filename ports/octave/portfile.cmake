@@ -36,6 +36,13 @@ vcpkg_configure_make(
     OPTIONS
     --disable-docs
     --without-hdf5
+    --without-amd
+    --without-camd
+    --without-colamd
+    --without-ccolamd
+    --without-cholmod
+    --without-cxsparse
+    --without-umfpack
 )
 
 vcpkg_install_make()
