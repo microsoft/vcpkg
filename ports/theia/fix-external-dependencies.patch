@@ -243,7 +243,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia "
 -    "dependency: Ceres, please set CERES_INCLUDE_DIR.")
 -endif (CERES_FOUND)
-+find_dependency(Ceres REQUIRED)
++find_dependency(Ceres)
  list(APPEND THEIA_INCLUDE_DIRS ${CERES_INCLUDE_DIRS})
  
  # Glog.
