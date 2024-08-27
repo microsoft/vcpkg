@@ -4266,7 +4266,7 @@
     },
     "libavif": {
       "baseline": "1.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -5397,8 +5397,8 @@
       "port-version": 5
     },
     "libyuv": {
-      "baseline": "1857",
-      "port-version": 1
+      "baseline": "1895",
+      "port-version": 0
     },
     "libzen": {
       "baseline": "0.4.41",
