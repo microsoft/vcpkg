@@ -1,7 +1,7 @@
 {
   "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
   "name": "suitesparse-paru",
-  "version-semver": "0.2.0",
+  "version-semver": "0.3.0",
   "description": "ParU: Routines for solving sparse linear system via parallel multifrontal LU factorization algorithms in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "GPL-3.0-or-later",
