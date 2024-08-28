@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         on-demand TRACY_ON_DEMAND
         fibers	  TRACY_FIBERS
+        verbose   TRACY_VERBOSE
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
 )

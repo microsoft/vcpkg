@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenSCAP/openscap
@@ -8,6 +10,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-buildflag-and-install.patch
         fix-utils.patch
+        fix-dependencies.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
