@@ -2,3 +2,4 @@ hwinfo provides CMake targets :
     # this is heuristically generated, and may not be correct
     find_package(hwinfo CONFIG REQUIRED)
     target_link_libraries(main PRIVATE hwinfo::hwinfo)
+
