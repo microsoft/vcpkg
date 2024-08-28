@@ -1,0 +1,13 @@
+diff --git a/src/StdPrs/StdPrs_BRepFont.cxx b/src/StdPrs/StdPrs_BRepFont.cxx
+index ab2d9b3c9f..cd701879b1 100644
+--- a/src/StdPrs/StdPrs_BRepFont.cxx
++++ b/src/StdPrs/StdPrs_BRepFont.cxx
+@@ -457,7 +457,7 @@ Standard_Boolean StdPrs_BRepFont::renderGlyph (const Standard_Utf32Char theChar,
+   for (short aContour = 0, aStartIndex = 0; aContour < anOutline->n_contours; ++aContour)
+   {
+     const FT_Vector* aPntList = &anOutline->points[aStartIndex];
+-    const char* aTags      = &anOutline->tags[aStartIndex];
++    const auto* aTags      = &anOutline->tags[aStartIndex];
+     const short anEndIndex = anOutline->contours[aContour];
+     const short aPntsNb    = (anEndIndex - aStartIndex) + 1;
+     aStartIndex = anEndIndex + 1;
