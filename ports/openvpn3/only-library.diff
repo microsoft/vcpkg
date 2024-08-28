@@ -20,7 +20,7 @@ diff --git a/client/CMakeLists.txt b/client/CMakeLists.txt
 index e1ecf8f..5afe6ec 100644
 --- a/client/CMakeLists.txt
 +++ b/client/CMakeLists.txt
-@@ -1,5 +1,27 @@
+@@ -1,5 +1,29 @@
  include(findcoredeps)
  include(findswigdeps)
 +add_library(ovpnclilib ovpncli.cpp)
@@ -37,10 +37,12 @@ index e1ecf8f..5afe6ec 100644
 +    DESTINATION share/unofficial-openvpn3
 +)
 +file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openvpn3-config.cmake" "\
-+if(NOT \"${BUILD_SHARED_LIBS}\")
-+  include(CMakeFindDependencyMacro)
-+  find_dependency(asio CONFIG)
-+  find_dependency(lz4 CONFIG)
++include(CMakeFindDependencyMacro)
++find_dependency(asio CONFIG)
++find_dependency(lz4 CONFIG)
++if(UNIX)
++  set(THREADS_PREFER_PTHREAD_FLAG 1)
++  find_dependency(Threads)
 +endif()
 +include(\"\${CMAKE_CURRENT_LIST_DIR}/unofficial-openvpn3-targets.cmake\")
 +")
