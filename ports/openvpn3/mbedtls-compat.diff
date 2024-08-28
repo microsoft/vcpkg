@@ -17,7 +17,7 @@ index 19e6f25..9db4e01 100644
  #endif
  
 diff --git a/openvpn/mbedtls/ssl/sslctx.hpp b/openvpn/mbedtls/ssl/sslctx.hpp
-index f6c3d28..f16f03e 100644
+index f6c3d28..83763e4 100644
 --- a/openvpn/mbedtls/ssl/sslctx.hpp
 +++ b/openvpn/mbedtls/ssl/sslctx.hpp
 @@ -1589,10 +1589,13 @@ class MbedTLSContext : public SSLFactoryAPI
@@ -37,3 +37,14 @@ index f6c3d28..f16f03e 100644
                                    << " md_alg=" << md_alg << " hashlen=" << hashlen);
                      return MBEDTLS_ERR_RSA_BAD_INPUT_DATA;
                  }
+@@ -1627,9 +1630,7 @@ class MbedTLSContext : public SSLFactoryAPI
+             else
+             {
+                 OVPN_LOG_INFO("MbedTLSContext::epki_sign unrecognized parameters"
+-#if MBEDTLS_VERSION_NUMBER < 0x03000000
+-                              << "mode=" << mode
+-#endif
++                              MAYBE_LOG_MODE
+                               << " md_alg=" << md_alg << " hashlen=" << hashlen);
+                 return MBEDTLS_ERR_RSA_BAD_INPUT_DATA;
+             }
