@@ -27,8 +27,18 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ls-qpack)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-ls-qpack/unofficial-ls-qpack-config.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-ls-qpack/unofficial-ls-qpack-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(xxhash CONFIG)
+${cmake_config}
+")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
