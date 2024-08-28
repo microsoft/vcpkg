@@ -1,8 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b35e4b1..1b5190b 100644
+index b35e4b1..b052d02 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -457,11 +457,17 @@ if(WARNINGS_AS_ERRORS)
+@@ -48,7 +48,6 @@ endif()
+ 
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-set(BUILD_SHARED_LIBS OFF) # to force usrsctp to be built static
+ 
+ if(WIN32)
+ 	add_definitions(-DWIN32_LEAN_AND_MEAN)
+@@ -457,11 +456,17 @@ if(WARNINGS_AS_ERRORS)
  	endif()
  endif()
  

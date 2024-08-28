@@ -11,7 +11,7 @@ vcpkg_download_distfile(
     dist_file
     URLS https://icl.utk.edu/projectsfiles/magma/downloads/magma-${VERSION}.tar.gz
     FILENAME magma-${VERSION}.tar.gz
-    SHA512 7ab52ad09f452f7b997da573f74465d5bc8c83392f724747b131a7015b1445c457defdb59ae7a2fd4930e2cdc5bce3c7b99a069f04db1752a5df36ddc6e84987
+    SHA512 4c2d7c472a69f3b0d491410900db1622478476673e4896dcec26060b839918cdf3cfdfb2680ecbb2042335e8bcc11c44244a82d11e15ba93c489ae5c66d7385a
 )
 
 vcpkg_extract_source_archive(
