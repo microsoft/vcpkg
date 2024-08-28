@@ -20,6 +20,7 @@
     "boost-thread",
     "boost-variant",
     "double-conversion",
+    "fast-float",
     "fmt",
     "gflags",
     "glog",
