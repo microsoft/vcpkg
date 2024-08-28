@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 358266c0..314e878c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -179,3 +179,16 @@ if(TRACY_CLIENT_PYTHON)
+@@ -179,3 +179,15 @@ if(TRACY_CLIENT_PYTHON)
  
      add_subdirectory(python)
  endif()
@@ -12,8 +12,7 @@ index 358266c0..314e878c 100644
 +if(VCPKG_CLI_TOOLS)
 +    add_subdirectory(csvexport)
 +    add_subdirectory(capture)
-+    add_subdirectory(import-chrome)
-+    add_subdirectory(import-fuchsia)
++    add_subdirectory(import)
 +    add_subdirectory(update)
 +endif()
 +if(VCPKG_GUI_TOOLS)

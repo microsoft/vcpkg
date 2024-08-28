@@ -40,6 +40,18 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 
+function(tracy_copy_import_tool tool_name)
+    vcpkg_copy_tools(
+        TOOL_NAMES "tracy-import-${tool_name}"
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/import"
+    )
+    vcpkg_copy_tools(
+        TOOL_NAMES "tracy-import-${tool_name}"
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/import"
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
+    )
+endfunction()
+
 function(tracy_copy_tool tool_name)
     vcpkg_copy_tools(
         TOOL_NAMES "tracy-${tool_name}"
@@ -55,8 +67,8 @@ endfunction()
 if("cli-tools" IN_LIST FEATURES)
     tracy_copy_tool(capture)
     tracy_copy_tool(csvexport)
-    tracy_copy_tool(import-chrome)
-    tracy_copy_tool(import-fuchsia)
+    tracy_copy_import_tool(chrome)
+    tracy_copy_import_tool(fuchsia)
     tracy_copy_tool(update)
 endif()
 if("gui-tools" IN_LIST FEATURES)
