@@ -8,16 +8,15 @@
   "supports": "!arm",
   "dependencies": [
     "blas",
-    {
-      "name": "curl",
-      "default-features": false
-    },
     "fftw3",
+    "glpk",
     "lapack",
+    "libsndfile",
     "opengl",
     "pcre2",
-    "qhull",
+    "portaudio",
     "readline",
+    "sundials",
     {
       "name": "vcpkg-cmake",
       "host": true

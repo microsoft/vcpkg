@@ -35,13 +35,16 @@ vcpkg_configure_make(
     AUTOCONFIG
     OPTIONS
     --disable-docs
-    --without-hdf5
     --without-amd
     --without-camd
-    --without-colamd
     --without-ccolamd
     --without-cholmod
+    --without-colamd
+    --without-curl
     --without-cxsparse
+    --without-hdf5
+    --without-qhull
+    --without-qrupdate
     --without-umfpack
 )
 
