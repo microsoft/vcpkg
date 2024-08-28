@@ -1,0 +1,530 @@
+commit 2c72a50fb032d1bbdf487b92d9e3e8ea13e82f9b
+Author: Capric <capric8416@gmail.com>
+Date:   Thu Aug 29 11:37:36 2024 +0800
+
+    [feature] add uwp support
+
+diff --git a/msvc/uwpapi.cpp b/msvc/uwpapi.cpp
+new file mode 100644
+index 0000000..0a32e72
+--- /dev/null
++++ b/msvc/uwpapi.cpp
+@@ -0,0 +1,111 @@
++
++#include <windows.h>
++#include <string>
++#include <locale>
++#include <map>
++
++using namespace Platform;
++using namespace Windows::ApplicationModel;
++using namespace Windows::System::UserProfile;
++using namespace Windows::Storage;
++using namespace Windows::Storage::Streams;
++using namespace Windows::Security::Cryptography;
++using namespace Windows::Security::Cryptography::Certificates;
++using namespace Windows::Foundation;
++
++std::wstring Utf8ToWide(const std::string &text)
++{
++  if (text.empty())
++    return L"";
++
++  int bufSize = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, text.c_str(), -1, NULL, 0);
++  if (bufSize == 0)
++    return L"";
++  wchar_t *converted = new wchar_t[bufSize];
++  if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, text.c_str(), -1, converted, bufSize) != bufSize)
++  {
++    delete[] converted;
++    return L"";
++  }
++
++  std::wstring Wret(converted);
++  delete[] converted;
++  return Wret;
++}
++
++std::string WideToUtf8(const std::wstring &text)
++{
++  if (text.empty())
++    return "";
++
++  int bufSize = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, text.c_str(), -1, NULL, 0, NULL, NULL);
++  if (bufSize == 0)
++    return "";
++  char * converted = new char[bufSize];
++  if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, text.c_str(), -1, converted, bufSize, NULL, NULL) != bufSize)
++  {
++    delete[] converted;
++    return "";
++  }
++
++  std::string ret(converted);
++  delete[] converted;
++
++  return ret;
++}
++
++extern "C" {
++    
++size_t uwp_Utf8ToW(const char* src, wchar_t* buffer, int maxlen)
++{
++  std::wstring converted = Utf8ToWide(std::string(src));
++  int len = min(converted.length(), maxlen - 1);
++  wcsncpy(buffer, converted.c_str(), len);
++  buffer[len] = '\0';
++
++  return len;
++}
++
++size_t uwp_cachepath(char *buffer, size_t cch)
++{
++  try
++  {
++    Platform::String^ path = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
++    path = Platform::String::Concat(path, "\\dvdcss");
++
++    std::string utf8path = WideToUtf8(std::wstring(path->Data()));
++
++    strncpy(buffer, utf8path.c_str(), min(cch, path->Length()));
++    return min(cch, path->Length());
++  }
++  catch (Platform::Exception^)
++  {
++    return 0;
++  }
++}
++
++char* uwp_getenv(const char* n)
++{
++  static std::map<std::string, std::string> sEnvironment;
++
++  if (n == nullptr)
++    return nullptr;
++
++  std::string name(n);
++
++  // check key
++  if (!name.empty())
++  {
++    uint32_t valLen = GetEnvironmentVariableA(name.c_str(), nullptr, 0);
++    if (!valLen)
++      return nullptr;
++
++    std::string value(valLen, 0);
++    GetEnvironmentVariableA(name.c_str(), const_cast<char*>(value.c_str()), valLen);
++
++    sEnvironment[name] = value;
++    return const_cast<char*>(sEnvironment[name].c_str());
++  }
++  return nullptr;
++}
++}
+diff --git a/src/device.c b/src/device.c
+index 34b610b..b4eb138 100644
+--- a/src/device.c
++++ b/src/device.c
+@@ -93,6 +93,12 @@ static int win2k_seek  ( dvdcss_t, int );
+ static int win2k_read  ( dvdcss_t, void *, int );
+ static int win2k_readv ( dvdcss_t, const struct iovec *, int );
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++extern char* uwp_getenv(const char* n);
++size_t uwp_cachepath(char *buffer, size_t cch);
++#define getenv uwp_getenv
++#endif
++
+ #elif defined( __OS2__ )
+ static int os2_open ( dvdcss_t, const char * );
+ #endif
+@@ -474,6 +480,64 @@ static int libc_open ( dvdcss_t dvdcss, const char *psz_device )
+ }
+ 
+ #if defined( _WIN32 )
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++HANDLE WINAPI CreateFileW(LPCWSTR lpFileName,
++  DWORD dwDesiredAccess,
++  DWORD dwShareMode,
++  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
++  DWORD dwCreationDisposition,
++  DWORD dwFlagsAndAttributes,
++  HANDLE hTemplateFile)
++{
++  CREATEFILE2_EXTENDED_PARAMETERS createExParams;
++  createExParams.dwSize = sizeof(CREATEFILE2_EXTENDED_PARAMETERS);
++  createExParams.dwFileAttributes = dwFlagsAndAttributes & 0xFFFF;
++  createExParams.dwFileFlags = dwFlagsAndAttributes & 0xFFF00000;
++  createExParams.dwSecurityQosFlags = dwFlagsAndAttributes & 0x000F00000;
++  createExParams.lpSecurityAttributes = lpSecurityAttributes;
++  createExParams.hTemplateFile = hTemplateFile;
++  return CreateFile2(lpFileName, dwDesiredAccess, dwShareMode, dwCreationDisposition, &createExParams);
++}
++extern size_t uwp_Utf8ToW(const char* src, wchar_t* buffer, int maxlen);
++
++static int win2k_open(dvdcss_t dvdcss, const char *psz_device)
++{
++  char psz_dvd[7] = "\\\\.\\\0:";
++  psz_dvd[4] = psz_device[0];
++  wchar_t pathW[7];
++  uwp_Utf8ToW(psz_dvd, pathW, 8);
++
++  /* To work around an M$ bug in IOCTL_DVD_READ_STRUCTURE, we need read
++  * _and_ write access to the device (so we can make SCSI Pass Through
++  * Requests). Unfortunately this is only allowed if you have
++  * administrator privileges so we allow for a fallback method with
++  * only read access to the device (in this case ioctl_ReadCopyright()
++  * won't send back the right result).
++  * (See Microsoft Q241374: Read and Write Access Required for SCSI
++  * Pass Through Requests) */
++  dvdcss->i_fd = (int)
++    CreateFileW(pathW, GENERIC_READ | GENERIC_WRITE,
++      FILE_SHARE_READ | FILE_SHARE_WRITE,
++      NULL, OPEN_EXISTING,
++      FILE_FLAG_RANDOM_ACCESS, NULL);
++
++  if ((HANDLE)dvdcss->i_fd == INVALID_HANDLE_VALUE)
++    dvdcss->i_fd = (int)
++    CreateFileW(pathW, GENERIC_READ, FILE_SHARE_READ,
++      NULL, OPEN_EXISTING,
++      FILE_FLAG_RANDOM_ACCESS, NULL);
++
++  if ((HANDLE)dvdcss->i_fd == INVALID_HANDLE_VALUE)
++  {
++    print_error(dvdcss, "failed to open device %s", psz_device);
++    return -1;
++  }
++
++  dvdcss->i_pos = 0;
++
++  return 0;
++}
++#else
+ static int win2k_open ( dvdcss_t dvdcss, const char *psz_device )
+ {
+     char psz_dvd[7] = "\\\\.\\\0:";
+@@ -509,6 +573,7 @@ static int win2k_open ( dvdcss_t dvdcss, const char *psz_device )
+ 
+     return 0;
+ }
++#endif
+ #endif /* defined( _WIN32 ) */
+ 
+ #ifdef __OS2__
+diff --git a/src/ioctl.c b/src/ioctl.c
+index 07bcb0d..b0775de 100644
+--- a/src/ioctl.c
++++ b/src/ioctl.c
+@@ -111,7 +111,7 @@ static void OS2InitSDC( struct OS2_ExecSCSICmd *, int );
+  *****************************************************************************/
+ int ioctl_ReadCopyright( int i_fd, int i_layer, int *pi_copyright )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_struct dvd = { 0 };
+@@ -169,6 +169,7 @@ int ioctl_ReadCopyright( int i_fd, int i_layer, int *pi_copyright )
+     *pi_copyright = dvdbs.copyrightProtectionSystemType;
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     SCSI_PASS_THROUGH_DIRECT sptd = { 0 };
+     uint8_t p_buffer[8];
+@@ -195,7 +196,7 @@ int ioctl_ReadCopyright( int i_fd, int i_layer, int *pi_copyright )
+     {
+         *pi_copyright = p_buffer[ 4 ];
+     }
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_READ_DVD_STRUCTURE, 8 );
+@@ -231,7 +232,7 @@ int ioctl_ReadCopyright( int i_fd, int i_layer, int *pi_copyright )
+  *****************************************************************************/
+ int ioctl_ReadDiscKey( int i_fd, const int *pi_agid, uint8_t *p_key )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_struct dvd = { 0 };
+@@ -305,6 +306,7 @@ int ioctl_ReadDiscKey( int i_fd, const int *pi_agid, uint8_t *p_key )
+     memcpy( p_key, dvdbs.discKeyStructures, DVD_DISCKEY_SIZE );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_DISK_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -323,7 +325,7 @@ int ioctl_ReadDiscKey( int i_fd, const int *pi_agid, uint8_t *p_key )
+     }
+ 
+     memcpy( p_key, key->KeyData, DVD_DISCKEY_SIZE );
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_READ_DVD_STRUCTURE, DVD_DISCKEY_SIZE + 4 );
+@@ -364,7 +366,7 @@ int ioctl_ReadDiscKey( int i_fd, const int *pi_agid, uint8_t *p_key )
+  *****************************************************************************/
+ int ioctl_ReadTitleKey( int i_fd, const int *pi_agid, int i_pos, uint8_t *p_key )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -437,6 +439,7 @@ int ioctl_ReadTitleKey( int i_fd, const int *pi_agid, int i_pos, uint8_t *p_key
+     memcpy( p_key, dvdbs.titleKeyValue, DVD_KEY_SIZE );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_TITLE_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -452,7 +455,7 @@ int ioctl_ReadTitleKey( int i_fd, const int *pi_agid, int i_pos, uint8_t *p_key
+             key->KeyLength, key, key->KeyLength, &tmp, NULL ) ? 0 : -1;
+ 
+     memcpy( p_key, key->KeyData, DVD_KEY_SIZE );
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 12 );
+@@ -496,7 +499,7 @@ int ioctl_ReadTitleKey( int i_fd, const int *pi_agid, int i_pos, uint8_t *p_key
+  *****************************************************************************/
+ int ioctl_ReportAgid( int i_fd, int *pi_agid )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -553,11 +556,12 @@ int ioctl_ReportAgid( int i_fd, int *pi_agid )
+     *pi_agid = dvdbs.grantID;
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp = 0;
+ 
+     i_ret = DeviceIoControl( (HANDLE) i_fd, IOCTL_DVD_START_SESSION, &tmp, 4,
+                              pi_agid, sizeof( *pi_agid ), &tmp, NULL ) ? 0 : -1;
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 8 );
+@@ -591,7 +595,7 @@ int ioctl_ReportAgid( int i_fd, int *pi_agid )
+  *****************************************************************************/
+ int ioctl_ReportChallenge( int i_fd, const int *pi_agid, uint8_t *p_challenge )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -647,6 +651,7 @@ int ioctl_ReportChallenge( int i_fd, const int *pi_agid, uint8_t *p_challenge )
+     memcpy( p_challenge, dvdbs.challengeKeyValue, DVD_CHALLENGE_SIZE );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_CHALLENGE_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -665,7 +670,7 @@ int ioctl_ReportChallenge( int i_fd, const int *pi_agid, uint8_t *p_challenge )
+     }
+ 
+     memcpy( p_challenge, key->KeyData, DVD_CHALLENGE_SIZE );
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 16 );
+@@ -699,7 +704,7 @@ int ioctl_ReportChallenge( int i_fd, const int *pi_agid, uint8_t *p_challenge )
+  *****************************************************************************/
+ int ioctl_ReportASF( int i_fd, int *pi_asf )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -753,6 +758,7 @@ int ioctl_ReportASF( int i_fd, int *pi_asf )
+     *pi_asf = dvdbs.successFlag;
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_ASF_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -775,7 +781,7 @@ int ioctl_ReportASF( int i_fd, int *pi_asf )
+ 
+     keyData = (PDVD_ASF)key->KeyData;
+     *pi_asf = keyData->SuccessFlag;
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 8 );
+@@ -809,7 +815,7 @@ int ioctl_ReportASF( int i_fd, int *pi_asf )
+  *****************************************************************************/
+ int ioctl_ReportKey1( int i_fd, const int *pi_agid, uint8_t *p_key )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -865,6 +871,7 @@ int ioctl_ReportKey1( int i_fd, const int *pi_agid, uint8_t *p_key )
+     memcpy( p_key, dvdbs.key1Value, DVD_KEY_SIZE );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_BUS_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -878,7 +885,7 @@ int ioctl_ReportKey1( int i_fd, const int *pi_agid, uint8_t *p_key )
+             key->KeyLength, key, key->KeyLength, &tmp, NULL ) ? 0 : -1;
+ 
+     memcpy( p_key, key->KeyData, DVD_KEY_SIZE );
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 12 );
+@@ -912,7 +919,7 @@ int ioctl_ReportKey1( int i_fd, const int *pi_agid, uint8_t *p_key )
+  *****************************************************************************/
+ int ioctl_InvalidateAgid( int i_fd, int *pi_agid )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -958,11 +965,12 @@ int ioctl_InvalidateAgid( int i_fd, int *pi_agid )
+     i_ret = ioctl( i_fd, DKIOCDVDSENDKEY, &dvd );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+ 
+     i_ret = DeviceIoControl( (HANDLE) i_fd, IOCTL_DVD_END_SESSION,
+                 pi_agid, sizeof( *pi_agid ), NULL, 0, &tmp, NULL ) ? 0 : -1;
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 0 );
+@@ -995,7 +1003,7 @@ int ioctl_InvalidateAgid( int i_fd, int *pi_agid )
+  *****************************************************************************/
+ int ioctl_SendChallenge( int i_fd, const int *pi_agid, const uint8_t *p_challenge )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -1055,6 +1063,7 @@ int ioctl_SendChallenge( int i_fd, const int *pi_agid, const uint8_t *p_challeng
+     i_ret = ioctl( i_fd, DKIOCDVDSENDKEY, &dvd );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_CHALLENGE_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -1068,7 +1077,7 @@ int ioctl_SendChallenge( int i_fd, const int *pi_agid, const uint8_t *p_challeng
+ 
+     i_ret = DeviceIoControl( (HANDLE) i_fd, IOCTL_DVD_SEND_KEY, key,
+              key->KeyLength, key, key->KeyLength, &tmp, NULL ) ? 0 : -1;
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_SEND_KEY, 16 );
+@@ -1104,7 +1113,7 @@ int ioctl_SendChallenge( int i_fd, const int *pi_agid, const uint8_t *p_challeng
+  *****************************************************************************/
+ int ioctl_SendKey2( int i_fd, const int *pi_agid, const uint8_t *p_key )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT )
+     dvd_authinfo auth_info = { 0 };
+@@ -1164,6 +1173,7 @@ int ioctl_SendKey2( int i_fd, const int *pi_agid, const uint8_t *p_key )
+     i_ret = ioctl( i_fd, DKIOCDVDSENDKEY, &dvd );
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_BUS_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -1177,7 +1187,7 @@ int ioctl_SendKey2( int i_fd, const int *pi_agid, const uint8_t *p_key )
+ 
+     i_ret = DeviceIoControl( (HANDLE) i_fd, IOCTL_DVD_SEND_KEY, key,
+              key->KeyLength, key, key->KeyLength, &tmp, NULL ) ? 0 : -1;
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_SEND_KEY, 12 );
+@@ -1213,7 +1223,7 @@ int ioctl_SendKey2( int i_fd, const int *pi_agid, const uint8_t *p_key )
+  *****************************************************************************/
+ int ioctl_ReportRPC( int i_fd, int *p_type, int *p_mask, int *p_scheme )
+ {
+-    int i_ret;
++    int i_ret = 0;
+ 
+ #if defined( HAVE_LINUX_DVD_STRUCT ) && defined( DVD_LU_SEND_RPC_STATE )
+     dvd_authinfo auth_info = { 0 };
+@@ -1281,6 +1291,7 @@ int ioctl_ReportRPC( int i_fd, int *p_type, int *p_mask, int *p_scheme )
+     *p_scheme = dvdbs.rpcScheme;
+ 
+ #elif defined( _WIN32 )
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     DWORD tmp;
+     uint8_t buffer[DVD_RPC_KEY_LENGTH] = { 0 };
+     PDVD_COPY_PROTECT_KEY key = (PDVD_COPY_PROTECT_KEY) &buffer;
+@@ -1302,7 +1313,7 @@ int ioctl_ReportRPC( int i_fd, int *p_type, int *p_mask, int *p_scheme )
+     *p_type = keyData->TypeCode;
+     *p_mask = keyData->RegionMask;
+     *p_scheme = keyData->RpcScheme;
+-
++#endif
+ #elif defined( __QNXNTO__ )
+ 
+     INIT_CPT( GPCMD_REPORT_KEY, 8 );
+diff --git a/src/libdvdcss.c b/src/libdvdcss.c
+index 78067a1..46c907d 100644
+--- a/src/libdvdcss.c
++++ b/src/libdvdcss.c
+@@ -143,6 +143,12 @@
+ #define MANUFACTURING_DATE_OFFSET 813
+ #define MANUFACTURING_DATE_LENGTH  16
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++extern char* uwp_getenv(const char* n);
++size_t uwp_cachepath(char *buffer, size_t cch);
++#define getenv uwp_getenv
++#endif
++
+ static int exists_or_mkdir( const char *path, int perm )
+ {
+     /* mkdir() may return an error if making the directory would fail,
+@@ -215,11 +221,14 @@ static int set_cache_directory( dvdcss_t dvdcss )
+     {
+ #ifdef _WIN32
+         char psz_home[PATH_MAX];
+-
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++        if (uwp_cachepath(psz_home, PATH_MAX))
++#else
+         /* Cache our keys in
+          * C:\Documents and Settings\$USER\Application Data\dvdcss\ */
+         if (SHGetFolderPathA (NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE,
+                               NULL, SHGFP_TYPE_CURRENT, psz_home ) == S_OK)
++#endif
+         {
+             snprintf( dvdcss->psz_cachefile, PATH_MAX, "%s\\dvdcss", psz_home );
+             dvdcss->psz_cachefile[PATH_MAX - 1] = '\0';

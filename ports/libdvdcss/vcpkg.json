@@ -1,0 +1,17 @@
+{
+  "name": "libdvdcss",
+  "version-semver": "1.4.2",
+  "description": "Accessing DVDs like a block device library",
+  "homepage": "https://www.videolan.org/developers/libdvdcss.html",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

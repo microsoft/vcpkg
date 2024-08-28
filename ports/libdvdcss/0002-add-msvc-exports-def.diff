@@ -1,0 +1,25 @@
+commit dd623fcb9075d1f7c4a25b7e416bff2c5e9db73a
+Author: Capric <capric8416@gmail.com>
+Date:   Thu Aug 29 17:07:54 2024 +0800
+
+    [feature] add msvc exports def
+
+diff --git a/msvc/libdvdcss.def b/msvc/libdvdcss.def
+new file mode 100644
+index 0000000..72be4e3
+--- /dev/null
++++ b/msvc/libdvdcss.def
+@@ -0,0 +1,13 @@
++;------------------------------------------------------------
++; LIBDVDCSS DLL DEFINITIONS FILE
++
++EXPORTS
++
++dvdcss_open
++dvdcss_open_stream
++dvdcss_close
++dvdcss_seek
++dvdcss_read
++dvdcss_readv
++dvdcss_error
++dvdcss_is_scrambled

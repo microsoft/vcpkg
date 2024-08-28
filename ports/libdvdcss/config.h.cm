@@ -1,0 +1,169 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Have IOKit DVD IOCTL headers */
+#cmakedefine DARWIN_DVD_IOCTL 1
+
+/* Define if <linux/cdrom.h> defines DVD_STRUCT. */
+#cmakedefine DVD_STRUCT_IN_LINUX_CDROM_H 1
+
+/* Define if <sys/cdio.h> defines dvd_struct. */
+#cmakedefine DVD_STRUCT_IN_SYS_CDIO_H 1
+
+/* Define if <sys/dvdio.h> defines dvd_struct. */
+#cmakedefine DVD_STRUCT_IN_SYS_DVDIO_H 1
+
+/* Define if you have a broken mkdir */
+#cmakedefine HAVE_BROKEN_MKDIR 1
+
+/* Define if FreeBSD-like dvd_struct is defined. */
+#cmakedefine HAVE_BSD_DVD_STRUCT 1
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#cmakedefine HAVE_DLFCN_H 1
+
+/* Define to 1 if you have the <dvd.h> header file. */
+#cmakedefine HAVE_DVD_H 1
+
+/* Define to 1 if you have the <errno.h> header file. */
+#cmakedefine HAVE_ERRNO_H 1
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#cmakedefine HAVE_FCNTL_H 1
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <io.h> header file. */
+#cmakedefine HAVE_IO_H 1
+
+/* Define to 1 if you have the <linux/cdrom.h> header file. */
+#cmakedefine HAVE_LINUX_CDROM_H 1
+
+/* Define if Linux-like dvd_struct is defined. */
+#cmakedefine HAVE_LINUX_DVD_STRUCT 1
+
+/* Define to 1 if you have the <memory.h> header file. */
+#cmakedefine HAVE_MEMORY_H 1
+
+/* Define if OpenBSD-like dvd_struct is defined. */
+#cmakedefine HAVE_OPENBSD_DVD_STRUCT 1
+
+/* Define to 1 if you have the <pwd.h> header file. */
+#cmakedefine HAVE_PWD_H 1
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H 1
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine HAVE_STDLIB_H 1
+
+/* Define to 1 if you have the <strings.h> header file. */
+#cmakedefine HAVE_STRINGS_H 1
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine HAVE_STRING_H 1
+
+/* Define to 1 if you have the <sys/cdio.h> header file. */
+#cmakedefine HAVE_SYS_CDIO_H 1
+
+/* Define to 1 if you have the <sys/dvdio.h> header file. */
+#cmakedefine HAVE_SYS_DVDIO_H 1
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#cmakedefine HAVE_SYS_IOCTL_H 1
+
+/* Define to 1 if you have the <sys/param.h> header file. */
+#cmakedefine HAVE_SYS_PARAM_H 1
+
+/* Define to 1 if you have the <sys/scsi/impl/uscsi.h> header file. */
+#cmakedefine HAVE_SYS_SCSI_IMPL_USCSI_H 1
+
+/* Define to 1 if you have the <sys/scsi/scsi_types.h> header file. */
+#cmakedefine HAVE_SYS_SCSI_SCSI_TYPES_H 1
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#cmakedefine HAVE_SYS_STAT_H 1
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine HAVE_SYS_TYPES_H 1
+
+/* Define to 1 if you have the <sys/uio.h> header file. */
+#cmakedefine HAVE_SYS_UIO_H 1
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H 1
+
+/* Define to 1 if you have the <windows.h> header file. */
+#cmakedefine HAVE_WINDOWS_H 1
+
+/* Define to 1 if you have the <winioctl.h> header file. */
+#cmakedefine HAVE_WINIOCTL_H 1
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#cmakedefine LT_OBJDIR "${LT_OBJDIR}"
+
+/* Define O_BINARY if missing */
+#cmakedefine O_BINARY ${O_BINARY}
+
+/* Name of package */
+#cmakedefine PACKAGE "${PACKAGE}"
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine PACKAGE_BUGREPORT "${PACKAGE_BUGREPORT}"
+
+/* Define to the full name of this package. */
+#cmakedefine PACKAGE_NAME "${PACKAGE_NAME}"
+
+/* Define to the full name and version of this package. */
+#cmakedefine PACKAGE_STRING "${PACKAGE_STRING}"
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine PACKAGE_TARNAME "${PACKAGE_TARNAME}"
+
+/* Define to the home page for this package. */
+#cmakedefine PACKAGE_URL "${PACKAGE_URL}"
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION "${PACKAGE_VERSION}"
+
+/* Have userspace SCSI headers. */
+#cmakedefine SOLARIS_USCSI 1
+
+/* Define to 1 if you have the ANSI C header files. */
+#cmakedefine STDC_HEADERS 1
+
+/* Define this if the compiler supports __attribute__((visibility("default")))
+   */
+#cmakedefine SUPPORT_ATTRIBUTE_VISIBILITY_DEFAULT 1
+
+/* Define this if the compiler supports the -fvisibility flag */
+#cmakedefine SUPPORT_FLAG_VISIBILITY 1
+
+/* Version number of package */
+#cmakedefine VERSION "${VERSION}"
+
+/* Enable large inode numbers on Mac OS X 10.5.  */
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#cmakedefine _FILE_OFFSET_BITS ${_FILE_OFFSET_BITS}
+
+/* Define for large files, on AIX-style hosts. */
+#cmakedefine _LARGE_FILES 1
+
+/* Define to '0x0501' for IE 5.01 (and shell) APIs. */
+#cmakedefine _WIN32_IE ${_WIN32_IE}
+
+/* Define to empty if `const' does not conform to ANSI C. */
+/* #undef const */
+
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
+#cmakedefine inline
+#endif
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#cmakedefine size_t ${size_t}
