@@ -1,0 +1,18 @@
+diff --git a/openvpn/mbedtls/mbedtls_compat.hpp b/openvpn/mbedtls/mbedtls_compat.hpp
+index 19e6f25..9db4e01 100644
+--- a/openvpn/mbedtls/mbedtls_compat.hpp
++++ b/openvpn/mbedtls/mbedtls_compat.hpp
+@@ -27,11 +27,11 @@
+ #include <mbedtls/version.h>
+ #include <mbedtls/pem.h>
+ 
+-#if not defined(MBEDTLS_ERR_SSL_BAD_PROTOCOL_VERSION)
++#if ! defined(MBEDTLS_ERR_SSL_BAD_PROTOCOL_VERSION)
+ #define MBEDTLS_ERR_SSL_BAD_PROTOCOL_VERSION MBEDTLS_ERR_SSL_BAD_HS_PROTOCOL_VERSION
+ #endif
+ 
+-#if not defined(MBEDTLS_OID_X509_EXT_EXTENDED_KEY_USAGE)
++#if ! defined(MBEDTLS_OID_X509_EXT_EXTENDED_KEY_USAGE)
+ #define MBEDTLS_OID_X509_EXT_EXTENDED_KEY_USAGE MBEDTLS_X509_EXT_KEY_USAGE
+ #endif
+ 
