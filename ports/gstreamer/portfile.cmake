@@ -24,6 +24,7 @@ vcpkg_from_gitlab(
         base-must-be-enabled.patch
         no-downloads.patch
         ${PATCHES}
+        fix-multiple-def.patch
 )
 
 vcpkg_find_acquire_program(FLEX)

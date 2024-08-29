@@ -1,0 +1,25 @@
+diff --git a/subprojects/gst-plugins-bad/gst/siren/common.c b/subprojects/gst-plugins-bad/gst/siren/common.c
+index 2e07748..48ef10f 100644
+--- a/subprojects/gst-plugins-bad/gst/siren/common.c
++++ b/subprojects/gst-plugins-bad/gst/siren/common.c
+@@ -44,7 +44,7 @@ int max_bin[8] = {
+   1
+ };
+ 
+-float step_size[8] = {
++float static step_size[8] = {
+   0.3536f,
+   0.5f,
+   0.70709997f,
+diff --git a/subprojects/gst-plugins-bad/gst/siren/common.h b/subprojects/gst-plugins-bad/gst/siren/common.h
+index e09e533..8d6bb71 100644
+--- a/subprojects/gst-plugins-bad/gst/siren/common.h
++++ b/subprojects/gst-plugins-bad/gst/siren/common.h
+@@ -95,7 +95,6 @@ extern int vector_dimension[8];
+ extern int number_of_vectors[8];
+ extern float dead_zone[8];
+ extern int max_bin[8];
+-extern float step_size[8];
+ extern float step_size_inverse[8];
+ 
+ 
