@@ -1,0 +1,112 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define if building universal (internal helper macro) */
+#cmakedefine AC_APPLE_UNIVERSAL_BUILD 1
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#cmakedefine HAVE_DLFCN_H 1
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#cmakedefine HAVE_GETTIMEOFDAY 1
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <memory.h> header file. */
+#cmakedefine HAVE_MEMORY_H 1
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H 1
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine HAVE_STDLIB_H 1
+
+/* Define to 1 if you have the <strings.h> header file. */
+#cmakedefine HAVE_STRINGS_H 1
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine HAVE_STRING_H 1
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#cmakedefine HAVE_SYS_STAT_H 1
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine HAVE_SYS_TYPES_H 1
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H 1
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#cmakedefine LT_OBJDIR "${LT_OBJDIR}"
+
+/* Name of package */
+#cmakedefine PACKAGE "${PACKAGE}"
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine PACKAGE_BUGREPORT "${PACKAGE_BUGREPORT}"
+
+/* Define to the full name of this package. */
+#cmakedefine PACKAGE_NAME "${PACKAGE_NAME}"
+
+/* Define to the full name and version of this package. */
+#cmakedefine PACKAGE_STRING "${PACKAGE_STRING}"
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine PACKAGE_TARNAME "${PACKAGE_TARNAME}"
+
+/* Define to the home page for this package. */
+#cmakedefine PACKAGE_URL "${PACKAGE_URL}"
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION "${PACKAGE_VERSION}"
+
+/* Define to 1 if you have the ANSI C header files. */
+#cmakedefine STDC_HEADERS 1
+
+/* Unused parameter annotation */
+#cmakedefine UNUSED ${UNUSED}
+
+/* "Define to 1 to use builtin dlfcn" */
+#cmakedefine USING_BUILTIN_DLFCN 1
+
+/* Version number of package */
+#cmakedefine VERSION "${VERSION}"
+
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
+
+/* Enable large inode numbers on Mac OS X 10.5.  */
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#cmakedefine _FILE_OFFSET_BITS ${_FILE_OFFSET_BITS}
+
+/* Define for large files, on AIX-style hosts. */
+#cmakedefine _LARGE_FILES 1
+
+#ifdef _MSC_VER
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#define inline __inline
+#define strcasecmp stricmp
+#define strncasecmp strnicmp
+
+#define S_ISDIR(m) ((m) & _S_IFDIR)
+#define S_ISREG(m) ((m) & _S_IFREG)
+#define S_ISBLK(m) 0
+#define S_ISCHR(m) 0
+
+#define PRIx64    "llx"
+#define PRId64    "lld"
+#endif

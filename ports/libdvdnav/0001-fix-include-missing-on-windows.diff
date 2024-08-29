@@ -1,0 +1,179 @@
+commit cc4731c2ec19af1d790ed96b66c623d0d633b646
+Author: Capric <capric8416@gmail.com>
+Date:   Thu Aug 29 21:45:02 2024 +0800
+
+    [hotfix] fix include missing on windows
+
+diff --git a/msvc/contrib/timer/timer.h b/msvc/contrib/timer/timer.h
+index efab6f4..77b1b66 100644
+--- a/msvc/contrib/timer/timer.h
++++ b/msvc/contrib/timer/timer.h
+@@ -1,5 +1,5 @@
+ #include <time.h>
+-#include <winsock.h>
++#include <winsock2.h>
+ #include "pthread.h"
+ 
+ #ifndef _ITIMER_
+diff --git a/msvc/include/dvdnav_internal.h b/msvc/include/dvdnav_internal.h
+index a5e7eb4..fc8af27 100644
+--- a/msvc/include/dvdnav_internal.h
++++ b/msvc/include/dvdnav_internal.h
+@@ -32,6 +32,7 @@
+ #include <limits.h>
+ #include <string.h>
+ #include <pthread.h>
++#include <stdint.h>
+ 
+ #undef WORDS_BIGENDIAN
+ 
+diff --git a/msvc/include/sys/time.h b/msvc/include/sys/time.h
+index fe7fd84..e0767a7 100644
+--- a/msvc/include/sys/time.h
++++ b/msvc/include/sys/time.h
+@@ -25,4 +25,10 @@
+  *				timer functions.
+  */
+ 
++#pragma once
++
+ #include <time.h>
++
++#ifdef _MSC_VER
++#include <WinSock2.h>
++#endif
+diff --git a/msvc/include/timer.h b/msvc/include/timer.h
+index efab6f4..77b1b66 100644
+--- a/msvc/include/timer.h
++++ b/msvc/include/timer.h
+@@ -1,5 +1,5 @@
+ #include <time.h>
+-#include <winsock.h>
++#include <winsock2.h>
+ #include "pthread.h"
+ 
+ #ifndef _ITIMER_
+diff --git a/src/dvdnav.c b/src/dvdnav.c
+index 4ef7d1a..2cd9b7a 100644
+--- a/src/dvdnav.c
++++ b/src/dvdnav.c
+@@ -34,6 +34,7 @@
+ #include <unistd.h>
+ #include <limits.h>
+ #include <string.h>
++#include <stdint.h>
+ #include <sys/time.h>
+ #include "dvdnav/dvdnav.h"
+ #include <dvdread/dvd_reader.h>
+diff --git a/src/dvdnav/dvdnav.h b/src/dvdnav/dvdnav.h
+index 85136a4..bb82549 100644
+--- a/src/dvdnav/dvdnav.h
++++ b/src/dvdnav/dvdnav.h
+@@ -31,6 +31,7 @@ extern "C" {
+ #endif
+ 
+ #include "version.h"
++#include <stdint.h>
+ #include <dvdnav/dvd_types.h>
+ #include <dvdread/dvd_reader.h>
+ #include <dvdread/nav_types.h>
+diff --git a/src/dvdnav_internal.h b/src/dvdnav_internal.h
+index 3b49aa2..04b16d7 100644
+--- a/src/dvdnav_internal.h
++++ b/src/dvdnav_internal.h
+@@ -43,7 +43,7 @@ static inline int _private_gettimeofday( struct timeval *tv, void *tz )
+ {
+   struct timeb t;
+   ftime( &t );
+-  tv->tv_sec = t.time;
++  tv->tv_sec = (long)t.time;
+   tv->tv_usec = t.millitm * 1000;
+   return 0;
+ }
+diff --git a/src/highlight.c b/src/highlight.c
+index 9954347..17e0eef 100644
+--- a/src/highlight.c
++++ b/src/highlight.c
+@@ -29,6 +29,7 @@
+ #include <limits.h>
+ #include <string.h>
+ #include <sys/time.h>
++#include <stdint.h>
+ #include <dvdread/nav_types.h>
+ #include "dvdnav/dvdnav.h"
+ #include "vm/decoder.h"
+diff --git a/src/vm/decoder.c b/src/vm/decoder.c
+index 7dd8da2..6563129 100644
+--- a/src/vm/decoder.c
++++ b/src/vm/decoder.c
+@@ -27,6 +27,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <inttypes.h>
++#include <stdint.h>
+ #include <limits.h>
+ #include <string.h>  /* For memset */
+ #include <sys/time.h>
+diff --git a/src/vm/decoder.h b/src/vm/decoder.h
+index 82cd6ed..f8bea88 100644
+--- a/src/vm/decoder.h
++++ b/src/vm/decoder.h
+@@ -24,6 +24,10 @@
+ 
+ #include <sys/time.h>
+ 
++#ifdef _WIN32
++#include <WinSock2.h>
++#endif
++
+ /* link command types */
+ typedef enum {
+   LinkNoLink  = 0,
+diff --git a/src/vm/getset.c b/src/vm/getset.c
+index 4132b1c..f3e6612 100644
+--- a/src/vm/getset.c
++++ b/src/vm/getset.c
+@@ -29,6 +29,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <inttypes.h>
++#include <stdint.h>
+ 
+ #include <dvdread/nav_types.h>
+ #include <dvdread/ifo_read.h>
+diff --git a/src/vm/play.c b/src/vm/play.c
+index 8830883..f9abadd 100644
+--- a/src/vm/play.c
++++ b/src/vm/play.c
+@@ -28,6 +28,7 @@
+ #include <assert.h>
+ #include <stdlib.h>
+ #include <stdio.h>
++#include <stdint.h>
+ 
+ #include <dvdread/nav_types.h>
+ #include <dvdread/ifo_read.h>
+diff --git a/src/vm/vm.c b/src/vm/vm.c
+index 9276c91..08cd61c 100644
+--- a/src/vm/vm.c
++++ b/src/vm/vm.c
+@@ -37,6 +37,7 @@
+ #include <sys/time.h>
+ #include <fcntl.h>
+ #include <ctype.h>
++#include <stdint.h>
+ 
+ #include <dvdread/nav_types.h>
+ #include <dvdread/ifo_read.h>
+diff --git a/src/vm/vmget.c b/src/vm/vmget.c
+index 5816f2c..ae14b31 100644
+--- a/src/vm/vmget.c
++++ b/src/vm/vmget.c
+@@ -30,6 +30,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ 
+ #include <dvdread/nav_types.h>
+ #include <dvdread/ifo_read.h>

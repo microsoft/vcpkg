@@ -1,0 +1,19 @@
+{
+  "name": "libdvdnav",
+  "version-semver": "6.1.1",
+  "description": "Library to navigate DVD disks",
+  "homepage": "https://www.videolan.org/developers/libdvdnav.html",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    "libdvdcss",
+    "libdvdread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
