@@ -1,3 +1,6 @@
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/range-v3/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'range-v3'. Please remove range-v3:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/Range-V3-VS2015
@@ -6,7 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3-vs2015)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3-vs2015/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3-vs2015/copyright)
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
 vcpkg_copy_pdbs()

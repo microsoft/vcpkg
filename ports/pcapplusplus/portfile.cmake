@@ -11,6 +11,8 @@ vcpkg_from_github(
     REF "v${PCAPPLUSPLUS_VERSION}"
     SHA512 e7dc1dbd85c9f0d2f9c5d3e436456c2cd183fb508c869fa8fb83f46aac99b868a16283204e5d57a0bfd7587f6ac2582b3e14c6098683fad4501708c8fededd6a
     HEAD_REF master
+    PATCHES
+        0001-warn-STL4043-for-v23.09.patch # just workaround, which has been fixed on mainline
 )
 
 vcpkg_cmake_configure(
