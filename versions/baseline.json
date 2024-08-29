@@ -5514,7 +5514,7 @@
     },
     "ls-qpack": {
       "baseline": "2.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "ltla-aarand": {
       "baseline": "2023-03-19",
