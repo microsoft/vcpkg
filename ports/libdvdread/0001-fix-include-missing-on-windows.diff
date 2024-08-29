@@ -1,0 +1,69 @@
+commit 50e22aa0e8a75ecd32c75a342267272bc8a3cc95
+Author: Capric <capric8416@gmail.com>
+Date:   Thu Aug 29 15:18:43 2024 +0800
+
+    [hotfix] fix include missing on windows
+
+diff --git a/src/dvd_reader.c b/src/dvd_reader.c
+index c4d9641..6b74f95 100644
+--- a/src/dvd_reader.c
++++ b/src/dvd_reader.c
+@@ -61,6 +61,7 @@
+ #if defined(_WIN32)
+ # include <windows.h>
+ # include "msvc/contrib/win32_cs.h"
++# include <winsock2.h>
+ #endif
+ 
+ /* misc win32 helpers */
+diff --git a/src/dvd_udf.c b/src/dvd_udf.c
+index 4d90ba4..b341561 100644
+--- a/src/dvd_udf.c
++++ b/src/dvd_udf.c
+@@ -32,7 +32,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#if HAVE_STRINGS_H
+ #include <strings.h>
++#endif
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+diff --git a/src/dvdread/bitreader.h b/src/dvdread/bitreader.h
+index 801e3a9..109f2d5 100644
+--- a/src/dvdread/bitreader.h
++++ b/src/dvdread/bitreader.h
+@@ -21,6 +21,8 @@
+ #ifndef LIBDVDREAD_BITREADER_H
+ #define LIBDVDREAD_BITREADER_H
+ 
++#include <stdint.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+diff --git a/src/dvdread/dvd_reader.h b/src/dvdread/dvd_reader.h
+index 54ef5dd..9246fc9 100644
+--- a/src/dvdread/dvd_reader.h
++++ b/src/dvdread/dvd_reader.h
+@@ -33,6 +33,7 @@
+ #include <sys/types.h>
+ #include <inttypes.h>
+ #include <stdarg.h>
++#include <stdint.h>
+ 
+ /**
+  * The DVD access interface.
+diff --git a/src/dvdread/ifo_types.h b/src/dvdread/ifo_types.h
+index 9293ce7..19cfa4c 100644
+--- a/src/dvdread/ifo_types.h
++++ b/src/dvdread/ifo_types.h
+@@ -23,6 +23,7 @@
+ #define LIBDVDREAD_IFO_TYPES_H
+ 
+ #include <inttypes.h>
++#include <stdint.h>
+ #include "dvdread/dvd_reader.h"
+ 
+ 

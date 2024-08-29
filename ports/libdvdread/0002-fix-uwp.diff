@@ -1,0 +1,44 @@
+commit f4056ae4c1948030f80a85d977fc7bec38369c60
+Author: Capric <capric8416@gmail.com>
+Date:   Thu Aug 29 15:31:55 2024 +0800
+
+    [feature] add uwp support
+
+diff --git a/msvc/contrib/dlfcn.c b/msvc/contrib/dlfcn.c
+index 01b5781..027c5bb 100644
+--- a/msvc/contrib/dlfcn.c
++++ b/msvc/contrib/dlfcn.c
+@@ -36,6 +36,7 @@ void *dlopen(const char *module_name, int mode)
+      * same path or can be found in the usual places.  Failing that, let's
+      * let that dso look in the apache root.
+      */
++    #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+     em = SetErrorMode(SEM_FAILCRITICALERRORS);
+     dsoh = LoadLibraryEx(path, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
+     if (!dsoh)
+@@ -45,6 +46,11 @@ void *dlopen(const char *module_name, int mode)
+     }
+     SetErrorMode(em);
+     SetLastError(0); // clear the last error
++    #else
++    wchar_t pathW[MAX_PATH];
++    mbstowcs(pathW, path, MAX_PATH);
++    dsoh = LoadPackagedLibrary(pathW, 0);
++    #endif
+     return (void *)dsoh;
+ }
+ 
+diff --git a/src/dvd_reader.c b/src/dvd_reader.c
+index 7ce6de1..dca3014 100644
+--- a/src/dvd_reader.c
++++ b/src/dvd_reader.c
+@@ -31,7 +31,9 @@
+ #include <string.h>         /* memcpy, strlen */
+ #include <unistd.h>         /* pclose */
+ #include <limits.h>         /* PATH_MAX */
++#if HAVE_DIRENT_H
+ #include <dirent.h>         /* opendir, readdir */
++#endif
+ #include <ctype.h>          /* isalpha */
+ 
+ #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__bsdi__) || defined(__APPLE__)

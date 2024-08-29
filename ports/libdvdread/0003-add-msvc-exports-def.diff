@@ -1,0 +1,98 @@
+commit 117b6f345306efa46aab0d4b0b08502f28e37bbc
+Author: Capric <capric8416@gmail.com>
+Date:   Thu Aug 29 22:41:50 2024 +0800
+
+    [feature] add msvc exports def
+
+diff --git a/msvc/libdvdread.def b/msvc/libdvdread.def
+new file mode 100644
+index 0000000..13235a4
+--- /dev/null
++++ b/msvc/libdvdread.def
+@@ -0,0 +1,86 @@
++;------------------------------------------------------------
++; LIBDVDREAD DLL DEFINITIONS FILE
++
++EXPORTS
++
++
++
++; libdvdcss
++dvdcss_open
++dvdcss_open_stream
++dvdcss_close
++dvdcss_seek
++dvdcss_read
++dvdcss_readv
++dvdcss_error
++dvdcss_is_scrambled
++
++
++
++; libdvdread
++dvdread_getbits_init
++dvdread_getbits
++
++DVDOpen
++DVDOpen2
++DVDOpenStream
++DVDOpenStream2
++DVDClose
++DVDFileStat
++DVDOpenFile
++DVDCloseFile
++DVDReadBlocks
++DVDFileSeek
++DVDReadBytes
++DVDFileSize
++DVDDiscID
++DVDUDFVolumeInfo
++DVDFileSeekForce
++DVDISOVolumeInfo
++DVDUDFCacheLevel
++
++UDFFindFile
++UDFGetVolumeIdentifier
++UDFGetVolumeSetIdentifier
++
++ifo_print
++dvdread_print_time
++
++ifoOpen
++ifoOpenVMGI
++ifoOpenVTSI
++ifoClose
++ifoRead_PTL_MAIT
++ifoRead_VTS_ATRT
++ifoRead_TT_SRPT
++ifoRead_VTS_PTT_SRPT
++ifoRead_FP_PGC
++ifoRead_PGCIT
++ifoRead_PGCI_UT
++ifoRead_VTS_TMAPT
++ifoRead_C_ADT
++ifoRead_TITLE_C_ADT
++ifoRead_VOBU_ADMAP
++ifoRead_TITLE_VOBU_ADMAP
++ifoRead_TXTDT_MGI
++ifoFree_PTL_MAIT
++ifoFree_VTS_ATRT
++ifoFree_TT_SRPT
++ifoFree_VTS_PTT_SRPT
++ifoFree_FP_PGC
++ifoFree_PGCIT
++ifoFree_PGCI_UT
++ifoFree_VTS_TMAPT
++ifoFree_C_ADT
++ifoFree_TITLE_C_ADT
++ifoFree_VOBU_ADMAP
++ifoFree_TITLE_VOBU_ADMAP
++ifoFree_TXTDT_MGI
++
++navPrint_PCI
++navPrint_DSI
++
++navRead_DSI
++navRead_PCI
++
++
