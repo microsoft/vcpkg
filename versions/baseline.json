@@ -6054,7 +6054,7 @@
     },
     "msquic": {
       "baseline": "2.3.5",
-      "port-version": 0
+      "port-version": 1
     },
     "mstch": {
       "baseline": "1.0.2",
