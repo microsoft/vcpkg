@@ -4854,7 +4854,7 @@
     },
     "libosip2": {
       "baseline": "5.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libosmium": {
       "baseline": "2.20.0",
@@ -5510,7 +5510,7 @@
     },
     "loguru": {
       "baseline": "2.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "lpeg": {
       "baseline": "1.1.0",
