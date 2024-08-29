@@ -1645,7 +1645,7 @@
       "port-version": 2
     },
     "cjson": {
-      "baseline": "1.7.17",
+      "baseline": "1.7.18",
       "port-version": 0
     },
     "clamav": {
