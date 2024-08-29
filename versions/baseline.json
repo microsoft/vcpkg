@@ -8145,7 +8145,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.7.8",
+      "baseline": "0.7.9",
       "port-version": 0
     },
     "septag-dmon": {
