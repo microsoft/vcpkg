@@ -1,7 +1,7 @@
 {
   "name": "ngtcp2",
   "version": "1.6.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "ngtcp2 project is an effort to implement RFC9000 QUIC protocol.",
   "homepage": "https://github.com/ngtcp2/ngtcp2",
   "license": "MIT",
@@ -27,6 +27,12 @@
           "name": "shiftmedia-libgnutls",
           "platform": "windows & !mingw"
         }
+      ]
+    },
+    "libressl": {
+      "description": "Compile with libressl",
+      "dependencies": [
+        "libressl"
       ]
     },
     "wolfssl": {
