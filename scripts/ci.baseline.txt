@@ -393,6 +393,7 @@ gamenetworkingsockets:x64-android=fail
 # gazebo is broken due it depend on old ports that already in the new versions.
 # There is an open PR that try to fix that.
 gazebo:x64-windows=fail
+gazebo:x64-windows-static-md=fail
 gazebo:x86-windows=fail
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
@@ -1041,9 +1042,6 @@ sciter:x64-windows=skip
 sciter:x64-windows-static=skip
 sciter:x64-windows-static-md=skip
 sciter:x86-windows=skip
-sdformat10:x64-windows-static-md=fail
-sdformat6:x64-windows-static-md=fail
-sdformat9:x64-windows-static-md=fail
 sdl1:arm-neon-android=fail
 sdl1:arm64-android=fail
 sdl1:x64-android=fail
