@@ -67,10 +67,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/libigl-config.cmake"
-"find_dependency(imguizmo)"
-[[find_dependency(unofficial-imguizmo)]])
-
 if(NOT LIBIGL_COPYLEFT_CGAL)
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2")
 else()
