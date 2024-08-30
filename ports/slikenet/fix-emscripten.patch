@@ -197,19 +197,6 @@ index 10fab3462..1bc7990c7 100644
  #include "slikenet/_FindFirst.h"
  #include "slikenet/DS_List.h"
  
-diff --git a/Source/src/gettimeofday.cpp b/Source/src/gettimeofday.cpp
-index 0391948d2..83112d263 100644
---- a/Source/src/gettimeofday.cpp
-+++ b/Source/src/gettimeofday.cpp
-@@ -13,7 +13,7 @@
-  *  license found in the license.txt file in the root directory of this source tree.
-  */
- 
--#if defined(_WIN32) && !defined(__GNUC__)  &&!defined(__GCCXML__)
-+#if defined(_WIN32) && !defined(__GNUC__)  &&!defined(__GCCXML__) && !defined(__EMSCRIPTEN__)
- 
- #include "slikenet/gettimeofday.h"
- 
 diff --git a/Source/src/linux_adapter.cpp b/Source/src/linux_adapter.cpp
 index fe25abe96..9d1f66e71 100644
 --- a/Source/src/linux_adapter.cpp
