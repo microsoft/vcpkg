@@ -9,10 +9,6 @@
     "gmp",
     {
       "name": "pcre2",
-      "platform": "windows & !mingw"
-    },
-    {
-      "name": "pcre2",
       "platform": "windows"
     },
     {
