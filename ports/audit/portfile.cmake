@@ -4,6 +4,8 @@ vcpkg_from_github(
     SHA512 558b9211a5dc1062eee98aa7bcd292797f06109a8ee735da1d704bc18d97b0bee93487ef9303404016df2e08cff32d90f1dd056797ac05beaabe3cccb5db5af2
     REF "v${VERSION}"
     HEAD_REF master
+    PATCHES
+        fix-multiple-def.patch
 )
 
 message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n"
