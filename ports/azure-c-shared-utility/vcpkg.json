@@ -1,6 +1,6 @@
 {
   "name": "azure-c-shared-utility",
-  "version-date": "2024-03-04",
+  "version-date": "2024-06-24",
   "port-version": 1,
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",

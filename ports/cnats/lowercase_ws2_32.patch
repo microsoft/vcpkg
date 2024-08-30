@@ -1,0 +1,19 @@
+Subject: [PATCH] Change "Ws2_32" to "ws2_32" for MinGW compatibility with no adverse effect for native Windows build.
+---
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision 1cb8d8cacec14bb9760a50f712b5f62d16ddc91e)
++++ b/CMakeLists.txt	(revision c1d98cd1d3484e3d41b7236fbd272295e9ef72ce)
+@@ -196,7 +196,7 @@
+ elseif(WIN32)
+   set(NATS_LIBDIR "lib")
+   set(NATS_INCLUDE_DIR "include")
+-  set(NATS_EXTRA_LIB "Ws2_32")
++  set(NATS_EXTRA_LIB "ws2_32")
+   set(NATS_OS "_WIN32")
+   set(NATS_PLATFORM_INCLUDE "win")
+   if(sodium_USE_STATIC_LIBS)

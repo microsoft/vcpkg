@@ -4,29 +4,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/test
     REF boost-${VERSION}
-    SHA512 a1aad9916bce40020770451541ba933da7998deada172504560727587a19f9859ef6e02439e1d2774b4e6e1590da2b358b066d02d00115719d80644700caf170
+    SHA512 122c07e8e3d889de7455756e517f0dc0fd836bcb371e6212c2ab83e539b2567ce01a621d3d8e73a73e10c858b2662d40016378d43353eaba7e33e9ca7fd808ad
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "import ../../predef/check/predef"
-    "import ../predef/check/predef"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${SOURCE_PATH}/predef")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(GLOB MONITOR_LIBS ${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)
-    file(COPY ${MONITOR_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(COPY ${MONITOR_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(REMOVE ${MONITOR_LIBS})
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
     file(GLOB DEBUG_MONITOR_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)
-    file(COPY ${DEBUG_MONITOR_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(COPY ${DEBUG_MONITOR_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
     file(REMOVE ${DEBUG_MONITOR_LIBS})
 endif()

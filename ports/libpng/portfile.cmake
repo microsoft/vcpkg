@@ -1,6 +1,5 @@
 # Download the apng patch
 set(LIBPNG_APNG_PATCH_PATH "")
-set(LIBPNG_APNG_OPTION "")
 if ("apng" IN_LIST FEATURES)
     if(VCPKG_HOST_IS_WINDOWS)
         # Get (g)awk and gzip installed
@@ -25,7 +24,6 @@ if ("apng" IN_LIST FEATURES)
             LOGNAME extract-patch.log
         )
     endif()
-    set(LIBPNG_APNG_OPTION "-DPNG_PREFIX=a")
 endif()
 
 vcpkg_from_github(
@@ -66,14 +64,18 @@ if(VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
+  vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${LIBPNG_APNG_OPTION}
         ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
         ${LD_VERSION_SCRIPT_OPTION}
         -DPNG_STATIC=${PNG_STATIC}
         -DPNG_SHARED=${PNG_SHARED}
+        -DPNG_FRAMEWORK=OFF
         -DPNG_TESTS=OFF
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON

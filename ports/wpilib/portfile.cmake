@@ -8,6 +8,7 @@ vcpkg_from_github(
         windows-install-location.patch
         missing-find_dependency.patch
         fix-usage.patch
+        fix-build-error-with-fmt11.patch
 )
 
 if("allwpilib" IN_LIST FEATURES)

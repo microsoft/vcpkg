@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
-  "version-semver": "1.14.2",
-  "port-version": 1,
+  "version-semver": "1.16.1",
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
@@ -23,7 +22,13 @@
   ],
   "features": {
     "elasticsearch": {
-      "description": "Whether to include the Elasticsearch Client in the SDK"
+      "description": "Whether to include the Elasticsearch Client in the SDK",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
     },
     "etw": {
       "description": "Whether to include the ETW Exporter in the SDK",
@@ -38,7 +43,8 @@
             "etw"
           ],
           "platform": "windows"
-        }
+        },
+        "opentelemetry-cpp-contrib-version"
       ]
     },
     "otlp-grpc": {
@@ -75,7 +81,8 @@
           "features": [
             "otlp-http"
           ]
-        }
+        },
+        "opentelemetry-cpp-contrib-version"
       ]
     },
     "zipkin": {

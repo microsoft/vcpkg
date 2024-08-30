@@ -1,7 +1,7 @@
 {
   "name": "freerdp",
   "version": "3.4.0",
-  "port-version": 1,
+  "port-version": 3,
   "description": "A free implementation of the Remote Desktop Protocol (RDP)",
   "homepage": "https://github.com/FreeRDP/FreeRDP",
   "license": "Apache-2.0",

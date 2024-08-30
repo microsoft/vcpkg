@@ -1,11 +1,8 @@
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO brunoos/luasec
+    REPO lunarmodules/luasec
     REF "v${VERSION}"
     SHA512 8f0c4b5ff87c024685b23770e1d342467554b8dc19a1704076e184d9e84b966f171091c31d1da135ab009e850275adc2bf2720fc9f32c83ac23f0a42f13d311f
     HEAD_REF master

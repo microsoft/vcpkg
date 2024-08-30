@@ -1,6 +1,7 @@
 {
   "name": "chakracore",
-  "version-date": "2024-04-20",
+  "version-date": "2022-11-09",
+  "port-version": 7,
   "description": "Core part of the Chakra Javascript engine",
   "homepage": "https://github.com/Microsoft/ChakraCore",
   "license": "MIT",

@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 01d3a536fbfa62f276fd6b1ad0e218fb3d91f41545fc83ddc74979fa26372d8389f0baa20334badfe0adacd77bd944c50a47ac920577373fcc1d495553084373
+    SHA512 4accc5282244946157b7940211181e011940154ff47855702c68f57a0af2fa5a306f49e47b8c22c02eeff61760c6c220465f05a316a33ee3265bfce65ca4cb84
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-redefinition-function.patch
         install-tools.patch
+        gcc14.patch
 )
 
 find_program(GIT NAMES git git.cmd)

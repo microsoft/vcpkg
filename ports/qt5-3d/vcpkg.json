@@ -1,7 +1,6 @@
 {
   "name": "qt5-3d",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "Qt 3D provides functionality for near-realtime simulation systems with support for 2D and 3D rendering in both Qt C++ and Qt Quick applications.",
   "license": null,
   "dependencies": [

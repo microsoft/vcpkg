@@ -1,7 +1,6 @@
 {
   "name": "qt5-script",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "Qt Script provides support for application scripting with ECMAScript.",
   "license": null,
   "dependencies": [

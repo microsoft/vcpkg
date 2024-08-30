@@ -40,17 +40,18 @@ else()
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(CHAKRACORE_TARGET_ARCH x86)
     endif()
-
+	
     if (VCPKG_TARGET_IS_LINUX)
         message(WARNING "${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
     endif()
 
+	file(MAKE_DIRECTORY "${BUILDTREE_PATH}-dbg")
     if(NOT DEFINED VCPKG_BUILD_TYPE)
         list(APPEND configs "debug")
         execute_process(
             COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "-j=${VCPKG_CONCURRENCY}"
-            WORKING_DIRECTORY "${BUILDTREE_PATH}-dbg"
-
+            WORKING_DIRECTORY "${SOURCE_PATH}"
+	
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
             RESULT_VARIABLE CHAKRA_BUILD_SH_RES
@@ -58,26 +59,27 @@ else()
             ECHO_ERROR_VARIABLE
         )
     endif()
-
+	
+    file(MAKE_DIRECTORY "${BUILDTREE_PATH}-rel")
     list(APPEND configs "release")
     execute_process(
         COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
-        WORKING_DIRECTORY "${BUILDTREE_PATH}-rel"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
         OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
         ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
         RESULT_VARIABLE CHAKRA_BUILD_SH_RES
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE
     )
-
 endif()
 
 file(INSTALL
-    "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCore.h"
-    "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCommon.h"
-    "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraDebug.h"
+    "${SOURCE_PATH}/lib/Jsrt/ChakraCore.h"
+    "${SOURCE_PATH}/lib/Jsrt/ChakraCommon.h"
+    "${SOURCE_PATH}/lib/Jsrt/ChakraDebug.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(INSTALL
         "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCommonWindows.h"
@@ -86,21 +88,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(out_file libChakraCore.so)
+		file(INSTALL "${SOURCE_PATH}/out/Debug/libChakraCore.so" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+	    file(INSTALL "${SOURCE_PATH}/out/Release/libChakraCore.so" DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     else()
-        set(out_file lib/libChakraCoreStatic.a)
+		file(INSTALL "${SOURCE_PATH}/out/Debug/lib/libChakraCoreStatic.a" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+	    file(INSTALL "${SOURCE_PATH}/out/Release/lib/libChakraCoreStatic.a"	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
 
-    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/bin")
-    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/bin")
-    set(out_dir_debug "${BUILDTREE_PATH}-dbg/out/Debug")
-    set(out_dir_release "${BUILDTREE_PATH}-rel/out/Release")
-    foreach(config ${configs})
-        file(INSTALL
-            ${out_dir_${config}}/${out_file}
-            DESTINATION ${destination_dir_${config}}
-        )
-    endforeach()
+    set(out_dir_release "${SOURCE_PATH}/out/Release")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(INSTALL

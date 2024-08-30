@@ -1,0 +1,12 @@
+diff --git a/ThirdParty/fast_float/CMakeLists.txt b/ThirdParty/fast_float/CMakeLists.txt
+index e6e63cbfe6..919b12a509 100644
+--- a/ThirdParty/fast_float/CMakeLists.txt
++++ b/ThirdParty/fast_float/CMakeLists.txt
+@@ -13,7 +13,6 @@ vtk_module_third_party(
+     STANDARD_INCLUDE_DIRS
+     HEADER_ONLY
+   EXTERNAL
+-    VERSION "3.9.0"
+     PACKAGE FastFloat
+     TARGETS FastFloat::fast_float
+     STANDARD_INCLUDE_DIRS
