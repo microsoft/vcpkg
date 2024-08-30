@@ -1,5 +1,5 @@
 diff --git a/sdk/CMakeLists.txt b/sdk/CMakeLists.txt
-index 28d04c2..41ec7a0 100644
+index 28d04c2..d547557 100644
 --- a/sdk/CMakeLists.txt
 +++ b/sdk/CMakeLists.txt
 @@ -210,16 +210,22 @@ install(FILES ${sdk_encryption_header}
@@ -26,6 +26,6 @@ index 28d04c2..41ec7a0 100644
 +
 +install(
 +    EXPORT unofficial-aliyun-oss-cpp-sdk-config
-+    NAMESPACE unofficial::${TARGET_OUTPUT_NAME_PREFIX}
++    NAMESPACE unofficial::aliyun-oss-cpp-sdk::
 +    DESTINATION share/unofficial-aliyun-oss-cpp-sdk
 +)
