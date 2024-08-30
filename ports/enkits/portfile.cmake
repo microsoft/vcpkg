@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "03e6a2c0c97208ade44478d617d2002b0f95faf4"
     SHA512 2889a7b015319115f6acf74036f709b30786602f3b7205bdf401644172e2d92307f325719ccc02ad93a09557a9155e31db4d8e07f9f77e0c700d5a3365091ad3
     HEAD_REF master
+    PATCHES
+        fix_shared_install.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
