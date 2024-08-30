@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_SAMPLE=OFF
+        -DTARGET_OUTPUT_NAME_PREFIX=\"\"
 )
 
 vcpkg_cmake_install()
