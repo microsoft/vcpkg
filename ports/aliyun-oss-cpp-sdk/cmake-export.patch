@@ -1,16 +1,7 @@
 diff --git a/sdk/CMakeLists.txt b/sdk/CMakeLists.txt
-index 28d04c2..a08f1df 100644
+index 28d04c2..41ec7a0 100644
 --- a/sdk/CMakeLists.txt
 +++ b/sdk/CMakeLists.txt
-@@ -14,7 +14,7 @@
- # limitations under the License.
- #
- 
--project(cpp-sdk VERSION ${version})
-+project(aliyun-oss-cpp-sdk VERSION ${version})
- 
- configure_file(src/Config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/alibabacloud/oss/Config.h @ONLY)
- 
 @@ -210,16 +210,22 @@ install(FILES ${sdk_encryption_header}
  install(FILES ${sdk_public_header}
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/alibabacloud/oss)
@@ -35,6 +26,6 @@ index 28d04c2..a08f1df 100644
 +
 +install(
 +    EXPORT unofficial-aliyun-oss-cpp-sdk-config
-+    NAMESPACE unofficial::
++    NAMESPACE unofficial::${TARGET_OUTPUT_NAME_PREFIX}
 +    DESTINATION share/unofficial-aliyun-oss-cpp-sdk
 +)
