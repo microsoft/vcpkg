@@ -106,17 +106,6 @@ index 0a5583a0c..95bb2a093 100644
  int _stricmp(const char* s1, const char* s2)
 diff --git a/Source/src/PacketLogger.cpp b/Source/src/PacketLogger.cpp
 index 65c19500a..f82383959 100644
---- a/Source/src/PacketLogger.cpp
-+++ b/Source/src/PacketLogger.cpp
-@@ -504,7 +504,7 @@ void PacketLogger::SetSuffix(const char *_suffix)
- }
- void PacketLogger::GetLocalTime(char buffer[128])
- {
--#if defined(_WIN32) && !defined(__GNUC__)  && !defined(__GCCXML__)
-+#if defined(_WIN32) && !defined(__GNUC__)  && !defined(__GCCXML__) && !defined(__EMSCRIPTEN__)
-     time_t rawtime;
- 	struct timeval tv;
- 	// If you get an arror about an incomplete type, just delete this file
 diff --git a/Source/src/RakNetSocket2_Berkley.cpp b/Source/src/RakNetSocket2_Berkley.cpp
 index 0592beed1..1a4aac8a2 100644
 --- a/Source/src/RakNetSocket2_Berkley.cpp
