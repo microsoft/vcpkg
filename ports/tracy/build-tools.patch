@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 358266c0..314e878c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,3 +179,16 @@ if(TRACY_CLIENT_PYTHON)
+ 
+     add_subdirectory(python)
+ endif()
++
++option(VCPKG_CLI_TOOLS "library" OFF)
++option(VCPKG_GUI_TOOLS "library" OFF)
++if(VCPKG_CLI_TOOLS)
++    add_subdirectory(csvexport)
++    add_subdirectory(capture)
++    add_subdirectory(import-chrome)
++    add_subdirectory(import-fuchsia)
++    add_subdirectory(update)
++endif()
++if(VCPKG_GUI_TOOLS)
++    add_subdirectory(profiler)
++endif()
+diff --git a/cmake/server.cmake b/cmake/server.cmake
+index c12a3408..0d55cf91 100644
+--- a/cmake/server.cmake
++++ b/cmake/server.cmake
+@@ -1,3 +1,4 @@
++include_guard(GLOBAL)
+ set(TRACY_COMMON_DIR ${CMAKE_CURRENT_LIST_DIR}/../public/common)
+ 
+ set(TRACY_COMMON_SOURCES
+diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
+index bd53a4db..f8836666 100644
+--- a/cmake/vendor.cmake
++++ b/cmake/vendor.cmake
+@@ -1,3 +1,4 @@
++include_guard(GLOBAL)
+ # Vendor Specific CMake
+ # The Tracy project keeps most vendor source locally
+ 

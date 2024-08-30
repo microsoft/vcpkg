@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${VERSION}.tgz"
     FILENAME "openldap-${VERSION}.tgz"
-    SHA512 c23aee0a68a02fa2f5d12fb3b8e31af0c5d70d9a86059d40ad6726fc427f8852ce088eb8ec3bae9f9cb4f2ce0e249b3dbe845ba5d5967cda3ae993c263f3dc03
+    SHA512 b119d60e179b4e27e9285c7c485f5728ab65dca7010879ffba41530f11f8ba359ea5693a3d1b9bb7279b7b8954f51c12db50e29aa231a5fa0bef11c7d1b5773a
 )
 
 vcpkg_list(SET EXTRA_PATCHES)
@@ -28,6 +28,11 @@ endif()
 
 if("cyrus-sasl" IN_LIST FEATURES)
     vcpkg_list(APPEND FEATURE_OPTIONS --with-cyrus-sasl)
+    message(
+" openldap currently requires the following libraries from the system package manager:
+    libsasl2-dev
+These can be installed on Ubuntu systems via sudo apt install libsasl2-dev"
+    )
 else()
     vcpkg_list(APPEND FEATURE_OPTIONS --without-cyrus-sasl)
 endif()
@@ -62,5 +67,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

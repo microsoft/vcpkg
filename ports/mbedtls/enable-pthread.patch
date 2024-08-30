@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b001bb7..b9fb566 100644
+index 844491778..aa81d01f5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,6 +44,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -46,6 +46,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
  
  option(USE_PKCS11_HELPER_LIBRARY "Build Mbed TLS with the pkcs11-helper library." OFF)
  option(ENABLE_ZLIB_SUPPORT "Build Mbed TLS with zlib library." OFF)
@@ -10,8 +10,8 @@ index b001bb7..b9fb566 100644
  
  option(ENABLE_PROGRAMS "Build Mbed TLS programs." ON)
  
-@@ -263,6 +264,8 @@ else()
-     set(LIB_INSTALL_DIR lib)
+@@ -264,6 +265,8 @@ if(LIB_INSTALL_DIR)
+     set(CMAKE_INSTALL_LIBDIR "${LIB_INSTALL_DIR}")
  endif()
  
 +include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
@@ -19,7 +19,7 @@ index b001bb7..b9fb566 100644
  if(ENABLE_ZLIB_SUPPORT)
      find_package(ZLIB)
  
-@@ -271,6 +274,17 @@ if(ENABLE_ZLIB_SUPPORT)
+@@ -272,6 +275,17 @@ if(ENABLE_ZLIB_SUPPORT)
      endif(ZLIB_FOUND)
  endif(ENABLE_ZLIB_SUPPORT)
  
@@ -38,7 +38,7 @@ index b001bb7..b9fb566 100644
  
  add_subdirectory(3rdparty)
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index 11b417b..5ca44c3 100644
+index 11b417bd3..5ca44c341 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,10 +1,14 @@
@@ -58,7 +58,7 @@ index 11b417b..5ca44c3 100644
          DESTINATION include/mbedtls
          PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
-index ac2146e..4cd831a 100644
+index 4842fd494..fbce34128 100644
 --- a/include/mbedtls/config.h
 +++ b/include/mbedtls/config.h
 @@ -12,6 +12,8 @@
@@ -84,7 +84,7 @@ index 0000000..9d5d42e
 +#endif
 \ No newline at end of file
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 1b2980d..8c495fe 100644
+index 48e51a158..4e752f777 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
 @@ -149,7 +149,11 @@ if(ENABLE_ZLIB_SUPPORT)

@@ -8,7 +8,7 @@ function(boost_configure_and_install)
   set(boost_lib_name_config "${boost_lib_name}")
 
   set(headers_only OFF)
-  if(NOT EXISTS "${arg_SOURCE_PATH}/src") # regex|system|math are header only and only install libs due to compat
+  if(NOT EXISTS "${arg_SOURCE_PATH}/src" OR Z_VCPKG_BOOST_FORCE_HEADER_ONLY) # regex|system|math are header only and only install libs due to compat
     set(headers_only ON)
     set(VCPKG_BUILD_TYPE release)
   endif()

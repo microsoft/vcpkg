@@ -1,0 +1,21 @@
+{
+  "name": "mariadb-connector-cpp",
+  "version": "1.1.4",
+  "description": "Connector/c++ for MariaDB.",
+  "homepage": "https://mariadb.com/docs/appdev/connector-cpp/",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    {
+      "name": "libmariadb",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

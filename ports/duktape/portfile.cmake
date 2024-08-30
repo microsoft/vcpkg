@@ -13,15 +13,15 @@ vcpkg_extract_source_archive(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${SOURCE_PATH}/src/duk_config.h"  "#undef DUK_F_DLL_BUILD" "#define DUK_F_DLL_BUILD")
+    vcpkg_replace_string("${SOURCE_PATH}/src/duk_config.h" "#undef DUK_F_DLL_BUILD" "#define DUK_F_DLL_BUILD")
 else()
-    vcpkg_replace_string("${SOURCE_PATH}/src/duk_config.h"  "#define DUK_F_DLL_BUILD" "#undef DUK_F_DLL_BUILD")
+    vcpkg_replace_string("${SOURCE_PATH}/src/duk_config.h" "#define DUK_F_DLL_BUILD" "#undef DUK_F_DLL_BUILD" IGNORE_UNCHANGED)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DVERSION=${VERSION}
+        "-DVERSION=${VERSION}"
 )
 
 vcpkg_cmake_install()

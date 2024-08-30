@@ -1,6 +1,6 @@
 {
   "name": "utf8-range",
-  "version-date": "2023-11-09",
+  "version": "4.25.1",
   "description": "Fast UTF-8 validation with Range algorithm (NEON+SSE4+AVX2)",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "MIT",

@@ -4,8 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-identity-cpp",
-  "version-semver": "1.6.0",
-  "port-version": 1,
+  "version-semver": "1.9.0",
   "description": [
     "Microsoft Azure Identity SDK for C++",
     "This library provides common authentication-related abstractions for Azure SDK."

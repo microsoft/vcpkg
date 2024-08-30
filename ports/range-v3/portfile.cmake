@@ -1,3 +1,6 @@
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/range-v3-vs2015/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'range-v3-vs2015'. Please remove range-v3-vs2015:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
@@ -23,4 +26,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

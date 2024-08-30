@@ -19,7 +19,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME sigc++-3 CONFIG_PATH lib/cmake/sigc++-3)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sigc++config.h" "ifdef BUILD_SHARED" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sigc++config.h" "ifdef BUILD_SHARED" "if 1" IGNORE_UNCHANGED)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

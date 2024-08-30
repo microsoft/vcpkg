@@ -1,7 +1,6 @@
 {
   "name": "mapnik",
-  "version-date": "2023-06-12",
-  "port-version": 4,
+  "version-date": "2024-04-18",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -10,6 +9,7 @@
     "boost-assign",
     "boost-bimap",
     "boost-filesystem",
+    "boost-format",
     "boost-geometry",
     "boost-gil",
     "boost-interprocess",
@@ -171,10 +171,7 @@
     "tiff": {
       "description": "add tiff support",
       "dependencies": [
-        {
-          "name": "tiff",
-          "default-features": false
-        }
+        "tiff"
       ]
     },
     "utility-geometry-to-wkb": {
