@@ -1,16 +1,5 @@
 diff --git a/Source/include/slikenet/Export.h b/Source/include/slikenet/Export.h
 index 4487ef7e0..4bcd868f3 100644
---- a/Source/include/slikenet/Export.h
-+++ b/Source/include/slikenet/Export.h
-@@ -15,7 +15,7 @@
- 
- #include "defines.h"
- 
--#if defined(_WIN32) && !(defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_RAKNET_LIB) && defined(_RAKNET_DLL)
-+#if defined(_WIN32) && !(defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_RAKNET_LIB) && defined(_RAKNET_DLL)
- #define RAK_DLL_EXPORT __declspec(dllexport)
- #else
- #define RAK_DLL_EXPORT  
 diff --git a/Source/include/slikenet/LinuxStrings.h b/Source/include/slikenet/LinuxStrings.h
 index c0fd72bee..53e02c834 100644
 --- a/Source/include/slikenet/LinuxStrings.h
