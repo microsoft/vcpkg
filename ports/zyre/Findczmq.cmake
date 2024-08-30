@@ -6,6 +6,6 @@ set(libzmq_FOUND TRUE)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
-    CZMQ
+    czmq
     REQUIRED_VARS czmq_INCLUDE_DIRS czmq_LIBRARIES libzmq_FOUND
 )
