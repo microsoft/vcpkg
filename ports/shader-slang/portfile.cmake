@@ -29,7 +29,6 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
-	set(unavailable_for_x64 "${VERSION}")
 	string(REPLACE "2024.1.33" "2024.1.32" VERSION "${VERSION}")
 	message(WARNING "${unavailable} is not available. Using ${VERSION} instead.")
 	vcpkg_download_distfile(
@@ -89,7 +88,6 @@ file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 file(GLOB dyn_libs
 	"${BINDIST_PATH}/lib/*.dylib"
 	"${BINDIST_PATH}/lib/*.so"
-	"${BINDIST_PATH}/bin/*.dll"
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
