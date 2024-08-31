@@ -3,7 +3,7 @@ set( LIBNOISE_COMMIT "d7e68784a2b24c632868506780eba336ede74ecd" )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO RobertHue/libnoise
+    REPO qknight/libnoise
     REF ${LIBNOISE_COMMIT}
     SHA512 8c4d654acb4ae3d90ee62ebdf0447f876022dcb887ebfad88f39b09d29183a58e6fc1b1f1d03edff804975c8befcc6eda33c44797495285aae338c2e869a14d7
     HEAD_REF master
