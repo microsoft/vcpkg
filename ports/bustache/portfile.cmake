@@ -1,13 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jamboree/bustache
-    REF abb25ca189425783c6b7ec5c17c5284dccb59faf
-    SHA512 be00451f6a85edccacbdd5d8478d7af4f3162f9a9a31af876004237ca7f303c1262b2ea623e6ec595d73440dc14fcf22d185bc521fd3aca6e28ec43890d611c5
+    REF 1a6d4422bff46c7c8f37d2ba48c910532bdc8b37
+    SHA512 0
+
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        fmt BUSTACHE_USE_FMT)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        BUSTACHE_USE_FMT
 )
 
 vcpkg_cmake_install()
