@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 31c5e66..250d499 100644
+index 718a251..21d253f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -291,9 +291,9 @@ ELSEIF(MSVC)
@@ -33,7 +33,7 @@ index 31c5e66..250d499 100644
    set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-plain-config.cmake.in")
    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
    set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
-@@ -471,14 +471,14 @@ ENDIF()
+@@ -473,14 +473,14 @@ ENDIF()
  
  # Search for external dependencies, and build them from source if not found
  # Search for zlib
@@ -52,8 +52,8 @@ index 31c5e66..250d499 100644
 +  set(ASSIMP_BUILD_MINIZIP OFF)
  ELSE()
    # If the zlib is already found outside, add an export in case assimpTargets can't find it.
-   IF( ZLIB_FOUND )
-@@ -523,12 +523,12 @@ ELSE()
+   IF( ZLIB_FOUND AND ASSIMP_INSTALL)
+@@ -525,12 +525,12 @@ ELSE()
  ENDIF()
  
  IF( NOT IOS )
@@ -202,10 +202,10 @@ index d7f512c..94275f1 100644
  #include <memory>
  
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 0a7be62..88550e3 100644
+index f4c2936..979e688 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
-@@ -906,8 +906,8 @@ SET( Extra_SRCS
+@@ -922,8 +922,8 @@ SET( Extra_SRCS
  SOURCE_GROUP( Extra FILES ${Extra_SRCS})
  
  # pugixml
@@ -216,7 +216,7 @@ index 0a7be62..88550e3 100644
    find_package(pugixml CONFIG REQUIRED)
  ELSE()
    SET( Pugixml_SRCS
-@@ -919,30 +919,30 @@ ELSE()
+@@ -935,30 +935,30 @@ ELSE()
  ENDIF()
  
  # utf8
@@ -256,7 +256,7 @@ index 0a7be62..88550e3 100644
    SET( Poly2Tri_SRCS
      ../contrib/poly2tri/poly2tri/common/shapes.cc
      ../contrib/poly2tri/poly2tri/common/shapes.h
-@@ -957,12 +957,12 @@ ENDIF()
+@@ -973,12 +973,12 @@ ENDIF()
      ../contrib/poly2tri/poly2tri/sweep/sweep_context.h
    )
    SOURCE_GROUP( Contrib\\Poly2Tri FILES ${Poly2Tri_SRCS})
@@ -273,7 +273,7 @@ index 0a7be62..88550e3 100644
  ELSE()
    SET( unzip_SRCS
      ../contrib/unzip/crypt.h
-@@ -977,9 +977,9 @@ ENDIF()
+@@ -993,9 +993,9 @@ ENDIF()
  # zip (https://github.com/kuba--/zip)
  separate_arguments(ASSIMP_EXPORTERS_LIST UNIX_COMMAND ${ASSIMP_EXPORTERS_ENABLED})
  IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
@@ -286,7 +286,7 @@ index 0a7be62..88550e3 100644
    ELSE()
      SET( ziplib_SRCS
        ../contrib/zip/src/miniz.h
-@@ -999,7 +999,7 @@ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
+@@ -1015,7 +1015,7 @@ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
  ENDIF()
  
  # openddlparser
@@ -295,7 +295,7 @@ index 0a7be62..88550e3 100644
    hunter_add_package(openddlparser)
    find_package(openddlparser CONFIG REQUIRED)
  ELSE()
-@@ -1022,7 +1022,7 @@ ELSE()
+@@ -1038,7 +1038,7 @@ ELSE()
  ENDIF()
  
  # Open3DGC
@@ -304,7 +304,7 @@ index 0a7be62..88550e3 100644
    # Nothing to do, not available in Hunter yet.
  ELSE()
    SET ( open3dgc_SRCS
-@@ -1057,6 +1057,7 @@ ELSE()
+@@ -1073,6 +1073,7 @@ ELSE()
      ../contrib/Open3DGC/o3dgcVector.inl
    )
    SOURCE_GROUP( Contrib\\open3dgc FILES ${open3dgc_SRCS})
@@ -312,7 +312,7 @@ index 0a7be62..88550e3 100644
  ENDIF()
  
  # Check dependencies for glTF importer with Open3DGC-compression.
-@@ -1065,7 +1066,7 @@ ENDIF()
+@@ -1081,7 +1082,7 @@ ENDIF()
  IF (NOT WIN32)
    FIND_PACKAGE(RT QUIET)
  ENDIF ()
@@ -321,7 +321,7 @@ index 0a7be62..88550e3 100644
    SET( ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC 1 )
    ADD_DEFINITIONS( -DASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1 )
  ELSE ()
-@@ -1075,9 +1076,10 @@ ELSE ()
+@@ -1091,9 +1092,10 @@ ELSE ()
  ENDIF ()
  
  # RapidJSON
@@ -334,7 +334,7 @@ index 0a7be62..88550e3 100644
  ELSE()
    INCLUDE_DIRECTORIES("../contrib/rapidjson/include")
    ADD_DEFINITIONS( -DRAPIDJSON_HAS_STDSTRING=1)
-@@ -1088,9 +1090,9 @@ ELSE()
+@@ -1104,9 +1106,9 @@ ELSE()
  ENDIF()
  
  # stb
@@ -347,7 +347,7 @@ index 0a7be62..88550e3 100644
  ELSE()
    SET( stb_SRCS
      ../contrib/stb/stb_image.h
-@@ -1112,7 +1114,7 @@ IF( MSVC OR "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC") # clang with MSVC ABI
+@@ -1128,7 +1130,7 @@ IF( MSVC OR "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC") # clang with MSVC ABI
    ADD_DEFINITIONS( -D_CRT_SECURE_NO_WARNINGS )
  endif ()
  
@@ -356,7 +356,7 @@ index 0a7be62..88550e3 100644
    if (UNZIP_FOUND)
      SET (unzip_compile_SRCS "")
    else ()
-@@ -1164,7 +1166,7 @@ SET( assimp_src
+@@ -1180,7 +1182,7 @@ SET( assimp_src
  )
  ADD_DEFINITIONS( -DOPENDDLPARSER_BUILD )
  
@@ -365,7 +365,7 @@ index 0a7be62..88550e3 100644
    INCLUDE_DIRECTORIES(
        ${IRRXML_INCLUDE_DIR}
        ../contrib/openddlparser/include
-@@ -1266,45 +1268,48 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1282,45 +1284,48 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
    $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
@@ -403,8 +403,7 @@ index 0a7be62..88550e3 100644
    endif()
  
    if (ASSIMP_BUILD_DRACO)
--    target_link_libraries(assimp PUBLIC ${draco_LIBRARIES})
-+    target_link_libraries(assimp PRIVATE ${draco_LIBRARIES})
+     target_link_libraries(assimp PRIVATE ${draco_LIBRARIES})
    endif()
  ELSE()
 -  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES})
@@ -432,7 +431,7 @@ index 0a7be62..88550e3 100644
  ENDIF ()
  
  if( MSVC )
-@@ -1345,13 +1350,13 @@ if (MINGW)
+@@ -1361,13 +1366,13 @@ if (MINGW)
      ARCHIVE_OUTPUT_NAME assimp
    )
    if (NOT BUILD_SHARED_LIBS)
@@ -448,7 +447,7 @@ index 0a7be62..88550e3 100644
  endif()
  
  SET_TARGET_PROPERTIES( assimp PROPERTIES
-@@ -1381,14 +1386,14 @@ ENDIF()
+@@ -1397,14 +1402,14 @@ ENDIF()
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -466,7 +465,7 @@ index 0a7be62..88550e3 100644
      endif()
    else ()
      INCLUDE_DIRECTORIES("../")
-@@ -1397,7 +1402,7 @@ ENDIF()
+@@ -1413,7 +1418,7 @@ ENDIF()
  
  # Add RT-extension library for glTF importer with Open3DGC-compression.
  IF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
@@ -474,7 +473,7 @@ index 0a7be62..88550e3 100644
 +  TARGET_LINK_LIBRARIES(assimp PRIVATE rt)
  ENDIF ()
  
- 
+ IF(ASSIMP_INSTALL)
 diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
 index 3a4c7c3..f247927 100644
 --- a/code/Common/BaseImporter.cpp

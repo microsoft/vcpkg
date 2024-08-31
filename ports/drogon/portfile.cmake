@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
     REF "v${VERSION}"
-    SHA512 cb1ace1e6fcc9112c71c221d24b80dea62245b908037f5f1065b899c62142c568f0e3410a06210ddb599f7771b56ea8acd1c7b5070893f4effb07cfd4b61f8e4
+    SHA512 e0a1b4a0f3b9d2804169d050e2038418baf4107f94299e2b969a185f5624f9d4101d1ef24795789c48c8b2ed8dfd5c748d6162eb5ce789cad3b253c7e8692fa9
     HEAD_REF master
     PATCHES
          0001-vcpkg.patch
@@ -10,6 +10,7 @@ vcpkg_from_github(
          0003-deps-redis.patch
          0004-drogon-ctl.patch
          0005-drogon-cross-compile.patch
+         0006-log.patch
 )
 
 set(DROGON_CTL_TOOL "")

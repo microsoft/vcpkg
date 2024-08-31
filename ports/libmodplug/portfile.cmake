@@ -13,13 +13,15 @@ vcpkg_from_github(
         ${STATIC_PATCH}
         002-detect_sinf.patch
         003-use-static-cast-for-ctype.patch
-        004-export-pkgconfig.patch  # https://github.com/Konstanty/libmodplug/pull/59
+        004-export-pkgconfig.patch
         005-fix-install-paths.patch # https://github.com/Konstanty/libmodplug/pull/61
 )
 
-set(EXTRA_OPTIONS)
+set(EXTRA_OPTIONS "")
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND EXTRA_OPTIONS "-DCMAKE_CXX_STANDARD=11")
+elseif(VCPKG_TARGET_IS_ANDROID)
     list(APPEND EXTRA_OPTIONS "-DCMAKE_CXX_STANDARD=11")
 endif()
 

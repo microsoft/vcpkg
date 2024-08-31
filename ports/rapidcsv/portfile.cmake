@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO d99kris/rapidcsv
     REF "v${VERSION}"
-    SHA512 cf1d8b9b23c03702496e63aedbc97cc1cbb64ca25bfd5a47a5fde5db80f5b1072a658b0b629a2e1c334e6d12c4511401f3e0aaef14843b1bce71a27c138ddba4
+    SHA512 721e82306315481dbec88a1c150568d038ab57f50dd2d8fd13bfe66cc55f62bedcca1392610ff678ef06fa7908a876a6d38a8fb7afd5c17f2b3d1b3a57661d26
     HEAD_REF master
 )
 

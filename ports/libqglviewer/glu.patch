@@ -1,0 +1,14 @@
+diff --git a/QGLViewer/config.h b/QGLViewer/config.h
+index 25f0e95ef4..010c54168f 100644
+--- a/QGLViewer/config.h
++++ b/QGLViewer/config.h
+@@ -53,6 +53,9 @@ Error : libQGLViewer requires a minimum Qt version of 5.4 Error
+ #ifdef Q_OS_MAC
+ # include <OpenGL/glu.h>
+ #else
++#if defined(Q_OS_WIN)
++# include <QtCore/qt_windows.h>
++#endif
+ # include <GL/glu.h>
+ #endif
+ 

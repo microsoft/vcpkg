@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/dbg.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/dbg.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/dbg-macro")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

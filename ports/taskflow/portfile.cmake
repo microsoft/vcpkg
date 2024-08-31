@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taskflow/taskflow
     REF "v${VERSION}"
-    SHA512 1bf17b69cdb29b982fc74b9091f5b6c8fc4fd3004b26afe7e73e71569738e492cf8663b71d98cfbc4e240c08ceb8a99bf51cccce95254710722f89929a4bbea8
+    SHA512 2faecc9eaf9e7f24253a5aedbb4ef6164ba8b5181b7f2c65d8646c21300f28278d7817e928eeab7e85ec2b9644508a8665bab1a7482ec85a7f6de18cecb32d6f
     HEAD_REF master
 )
 

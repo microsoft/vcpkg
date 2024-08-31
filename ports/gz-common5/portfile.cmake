@@ -16,7 +16,8 @@ ignition_modular_library(
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gz-common5-graphics/gz-common5-graphics-config.cmake" "find_package(GTS "
 "# Ensure that consumers get a pkg-config tool which is needed for GTS
 set(PKG_CONFIG_EXECUTABLE \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}\" CACHE STRING vcpkg)
-find_package(GTS ")
+find_package(GTS "
+IGNORE_UNCHANGED)
 
 foreach(component IN ITEMS av events geospatial graphics io profiler testing)
    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}-${component}/${PORT}-${component}-config.cmake")

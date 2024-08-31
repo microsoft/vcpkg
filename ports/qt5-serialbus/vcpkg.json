@@ -1,7 +1,6 @@
 {
   "name": "qt5-serialbus",
-  "version": "5.15.13",
-  "port-version": 1,
+  "version": "5.15.14",
   "description": "The Qt Serial Bus API provides classes and functions to access the various industrial serial buses and protocols, such as CAN, ModBus, and others.",
   "license": null,
   "dependencies": [

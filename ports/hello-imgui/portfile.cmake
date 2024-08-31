@@ -3,9 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # this mirrors ImGui's portfile behavio
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthom/hello_imgui
-    REF b9bdca77cb58bd879228f34a9bcf1f1c2e6b96bd
-    SHA512 2044fb34bdd64377335e46802f8546ccc30077e84f122c895b820bef0d692f62e1c5bc175cf8003c518db2bc0f1e07ed94bf1ccdc4a4720b7c0e0812c192bf7f
+    REF "v${VERSION}"
+    SHA512 cc39a7d1a6b360afb26305bcca4d4c83fce69fb7babc26e452160985c127771b24b51de7c1a85c53b93e6fa1bc87bfc7a57e6fb7216e5bf4136c449771d8bcc4
     HEAD_REF master
+    PATCHES
+        fix-upw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

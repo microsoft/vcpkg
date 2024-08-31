@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         Add-compile-definitions.patch
         Fix-error-c2039.patch #https://github.com/GillesDebunne/libQGLViewer/pull/80
+        glu.patch
 )
 
 vcpkg_cmake_configure(

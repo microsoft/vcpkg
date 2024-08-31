@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-lpeg-targets.cmake")
+set(UNOFFICIAL_LPEG_LUA_FILES "${PACKAGE_PREFIX_DIR}/share/lua/re.lua")
+check_required_components(lpeg)

@@ -65,6 +65,7 @@ target_sources(7zip PRIVATE
     CPP/7zip/Compress/ZDecoder.cpp
     CPP/7zip/Compress/ZlibDecoder.cpp
     CPP/7zip/Compress/ZlibEncoder.cpp
+    CPP/7zip/Compress/ZstdDecoder.cpp
 
     CPP/7zip/Crypto/7zAes.cpp
     CPP/7zip/Crypto/7zAesRegister.cpp
@@ -122,6 +123,8 @@ target_sources(7zip PRIVATE
     C/Aes.c
     C/7zCrc.c
     C/XzCrc64.c
+    C/Xxh64.c
+    C/ZstdDec.c
 
     CPP/Common/CRC.cpp
     CPP/Common/CrcReg.cpp
@@ -144,6 +147,7 @@ target_sources(7zip PRIVATE
     CPP/Common/Wildcard.cpp
     CPP/Common/XzCrc64Init.cpp
     CPP/Common/XzCrc64Reg.cpp
+    CPP/Common/Xxh64Reg.cpp
 
     CPP/Windows/FileDir.cpp
     CPP/Windows/FileFind.cpp
@@ -219,6 +223,7 @@ target_sources(7zip PRIVATE
     CPP/7zip/Archive/ZHandler.cpp
     CPP/7zip/Archive/ArchiveExports.cpp
     CPP/7zip/Archive/DllExports2.cpp
+    CPP/7zip/Archive/ZstdHandler.cpp
 
     CPP/7zip/Archive/Common/CoderMixer2.cpp
     CPP/7zip/Archive/Common/DummyOutStream.cpp

@@ -3,6 +3,8 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 vcpkg_buildpath_length_warning(44)
 
+set(${PORT}_PATCHES "7c94c7a.diff")
+
  set(TOOL_NAMES 
         qml
         qmlcachegen
@@ -20,6 +22,8 @@ vcpkg_buildpath_length_warning(44)
         qmldom
         qmltc
         qmlls
+        qmljsrootgen
+        svgtoqml
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
