@@ -1,0 +1,33 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ffb6c54..e5656c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,8 @@ include(GNUInstallDirs)
+ if (MSVC)
+     set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG")
+ else()
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(URING REQUIRED liburing)
+     add_compile_definitions(_LIBCPP_ENABLE_EXPERIMENTAL)
+ endif(MSVC)
+ add_compile_definitions(NETCPP_BUILD)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9c54dca..f67ed18 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -4,6 +4,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+ add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+ add_library(${EXPORT_NAMESPACE}${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ 
+-target_include_directories(netcpp PUBLIC
++target_include_directories(${PROJECT_NAME} PUBLIC
+         $<BUILD_INTERFACE:${INCLUDES}>
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++
++if (MSVC)
++    target_link_libraries(${PROJECT_NAME} PRIVATE ws2_32)
++else ()
++    target_include_directories(${PROJECT_NAME} PRIVATE ${URING_INCLUDE_DIRS})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${URING_LINK_LIBRARIES})
++endif ()
+\ No newline at end of file

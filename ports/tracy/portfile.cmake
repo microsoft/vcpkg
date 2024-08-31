@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
     REF "v${VERSION}"
-    SHA512 8c33a22f43b895f3e00f231f002c8272f72a3d7ce60858d58caf916c2721de478710dbd6ab6b16621a796491303fbce9c2315008b00d7a53d05ee7660b414874
+    SHA512 d3d99284e3c3172236c3f02b3bc52df111ef650fb8609e54fb3302ece28e55a06cd16713ed532f1e1aad66678ff09639dfc7e01a1e96880fb923b267a1b1b79b
     HEAD_REF master
     PATCHES
         build-tools.patch
@@ -14,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         fibers	  TRACY_FIBERS
         cli-tools VCPKG_CLI_TOOLS
         gui-tools VCPKG_GUI_TOOLS
+        verbose   TRACY_VERBOSE
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
 )

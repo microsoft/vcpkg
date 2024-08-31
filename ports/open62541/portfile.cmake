@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "v${VERSION}"
-    SHA512 47e2a8af03e3e6dfbf6edcf3bec665a639c5cd6a826d987bb72eafb981e0ebfde01f36e624798fa529e8fcd83b6f22972538c4ea181ccd1a5bd5988bd87331c5
+    SHA512 7fd5f9a4df38dbe973995f410fe51ee9228e3a06554e9c02168a9851b7480f90fc1e2f522962be73d1e4b9ede5fe889e9131de57f8d12f334f5db74a96fb8061
     HEAD_REF master
 )
 
@@ -14,7 +14,12 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         amalgamation UA_ENABLE_AMALGAMATION
+        diagnostics UA_ENABLE_DIAGNOSTICS
+        discovery UA_ENABLE_DISCOVERY
         historizing UA_ENABLE_HISTORIZING
+        methodcalls UA_ENABLE_METHODCALLS
+        subscriptions UA_ENABLE_SUBSCRIPTIONS
+        subscriptions-events UA_ENABLE_SUBSCRIPTIONS_EVENTS
 )
 
 if("openssl" IN_LIST FEATURES)
