@@ -6686,7 +6686,7 @@
     },
     "openvpn3": {
       "baseline": "3.10",
-      "port-version": 0
+      "port-version": 1
     },
     "openvr": {
       "baseline": "2.5.1",
