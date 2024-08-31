@@ -102,8 +102,6 @@ index 0a5583a0c..95bb2a093 100644
  #include <string.h>
  #ifndef _stricmp
  int _stricmp(const char* s1, const char* s2)
-diff --git a/Source/src/PacketLogger.cpp b/Source/src/PacketLogger.cpp
-index 65c19500a..f82383959 100644
 diff --git a/Source/src/RakNetSocket2_Berkley.cpp b/Source/src/RakNetSocket2_Berkley.cpp
 index 0592beed1..1a4aac8a2 100644
 --- a/Source/src/RakNetSocket2_Berkley.cpp
