@@ -36,6 +36,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_cmake_install()
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/apr")
+    file(
+        INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-config.cmake"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-apr"
+    )
     # There is no way to suppress installation of the headers in debug builds.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

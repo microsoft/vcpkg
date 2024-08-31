@@ -1,0 +1,11 @@
+message(WARNING "find_package(unofficial-apr) is deprecated.\nUse find_package(apr) instead")
+include(CMakeFindDependencyMacro)
+find_dependency(apr CONFIG)
+
+if("${VCPKG_LIBRARY_LINKAGE}" "static")
+    add_library(unofficial::apr::apr-1 ALIAS apr::apr-1)
+    add_library(unofficial::apr::aprapp-1 ALIAS apr::aprapp-1)
+else()
+    add_library(unofficial::apr::libapr-1 ALIAS apr::libapr-1)
+    add_library(unofficial::apr::libaprapp-1 ALIAS apr::libaprapp-1)
+endif()
