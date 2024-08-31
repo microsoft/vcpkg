@@ -31,7 +31,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
-            -DAPR_INSTALL_INCLUDE_DIR=include/apr-1
             ${FEATURE_OPTIONS}
     )
 
