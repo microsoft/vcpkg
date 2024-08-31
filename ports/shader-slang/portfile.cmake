@@ -86,8 +86,15 @@ file(GLOB libs
 )
 file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
+file(GLOB dyn_libs
+	"${BINDIST_PATH}/lib/*.dylib"
+	"${BINDIST_PATH}/lib/*.so"
+	"${BINDIST_PATH}/bin/*.dll"
+)
+
 if(VCPKG_TARGET_IS_WINDOWS)
 	file(GLOB dlls "${BINDIST_PATH}/bin/*.dll")
+	list(APPEND dyn_libs ${dlls})
 	file(INSTALL ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
@@ -98,6 +105,8 @@ if(NOT VCPKG_BUILD_TYPE)
 	endif()
 endif()
 
+# Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
+file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang/")
 vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
