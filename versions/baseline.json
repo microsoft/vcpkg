@@ -5789,7 +5789,7 @@
       "port-version": 6
     },
     "meshoptimizer": {
-      "baseline": "0.20",
+      "baseline": "0.21",
       "port-version": 0
     },
     "metis": {
