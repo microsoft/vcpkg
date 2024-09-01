@@ -2,16 +2,18 @@ message(WARNING "find_package(unofficial-apr) is deprecated.\nUse find_package(a
 include(CMakeFindDependencyMacro)
 find_dependency(apr CONFIG)
 
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+if(TARGET apr::apr-1 AND NOT TARGET unofficial::apr::apr-1)
     add_library(unofficial::apr::apr-1 INTERFACE IMPORTED)
     target_link_libraries(unofficial::apr::apr-1 INTERFACE apr::apr-1)
-
-    add_library(unofficial::apr::aprapp-1 INTERFACE IMPORTED)
-    target_link_libraries(unofficial::apr::aprapp-1 INTERFACE apr::aprapp-1)
-else()
+elseif(TARGET apr::libapr-1 AND NOT TARGET unofficial::apr::libapr-1)
     add_library(unofficial::apr::libapr-1 INTERFACE IMPORTED)
     target_link_libraries(unofficial::apr::libapr-1 INTERFACE apr::libapr-1)
+endif()
 
+if(TARGET apr::aprapp-1 AND NOT TARGET unofficial::apr::aprapp-1)
+    add_library(unofficial::apr::aprapp-1 INTERFACE IMPORTED)
+    target_link_libraries(unofficial::apr::aprapp-1 INTERFACE apr::aprapp-1)
+elseif(TARGET apr::libaprapp-1 AND NOT TARGET unofficial::apr::libaprapp-1)
     add_library(unofficial::apr::libaprapp-1 INTERFACE IMPORTED)
     target_link_libraries(unofficial::apr::libaprapp-1 INTERFACE apr::libaprapp-1)
 endif()
