@@ -2708,6 +2708,10 @@
       "baseline": "5.3",
       "port-version": 7
     },
+    "fenster": {
+      "baseline": "2024-08-19",
+      "port-version": 0
+    },
     "ffmpeg": {
       "baseline": "7.0.2",
       "port-version": 3
