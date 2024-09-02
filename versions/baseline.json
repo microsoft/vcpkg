@@ -4209,7 +4209,7 @@
       "port-version": 0
     },
     "lfreist-hwinfo": {
-      "baseline": "2024-08-24",
+      "baseline": "2024-09-01",
       "port-version": 0
     },
     "lib3mf": {
@@ -9910,4 +9910,3 @@
     }
   }
 }
-

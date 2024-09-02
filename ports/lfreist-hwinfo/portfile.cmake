@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lfreist/hwinfo
-    REF 90829612dd4b67356fd643bd9ceee44b04dc8fde
-    SHA512 9f27c983d8e435c12455001cb7c2a535e9c7d94fec871a8b82d965d41f9a6e739fe4263bb18a66cf50fb826e505cbc0ff6a7c8408a3d74f783f56fefb88110cc
+    REF 46690dd36727b868c5bb7a7316bb2ee52a898349
+    SHA512 31ac0f2c405a817893146f4f8899ea05d831393bd1776c12257675385be25990cb77251d644fefb8ea0d179940ff782ede9036ea42a3f3050c36a66d978f0da6
     HEAD_REF main
 )
 
@@ -17,8 +17,10 @@ vcpkg_cmake_configure(
         -DHWINFO_SHARED=${HWINFO_BUILD_SHARED}
         -DHWINFO_STATIC=${HWINFO_BUILD_STATIC}
     )
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
+    PACKAGE_NAME lfreist-hwinfo
     CONFIG_PATH "lib/cmake/hwinfo"
 )
 vcpkg_copy_pdbs()
