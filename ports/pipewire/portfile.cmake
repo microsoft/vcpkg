@@ -70,6 +70,7 @@ vcpkg_configure_meson(
         -Dx11-xfixes=disabled
         -Dx11=disabled
         -Dsession-managers=[]
+        -Dc_args=-Wno-strict-prototypes
 )
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
