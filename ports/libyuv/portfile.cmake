@@ -16,6 +16,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
