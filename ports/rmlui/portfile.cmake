@@ -12,6 +12,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         lua             RMLUI_LUA_BINDINGS
+        svg             RMLUI_SVG_PLUGIN
 )
 
 if("freetype" IN_LIST FEATURES)
