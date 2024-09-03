@@ -373,7 +373,7 @@
       "port-version": 0
     },
     "avro-cpp": {
-      "baseline": "1.11.3",
+      "baseline": "1.12.0",
       "port-version": 0
     },
     "awlib": {
