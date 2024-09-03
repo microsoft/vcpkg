@@ -8010,7 +8010,7 @@
     },
     "sassc": {
       "baseline": "3.6.2",
-      "port-version": 0
+      "port-version": 1
     },
     "saucer": {
       "baseline": "2.3.0",
