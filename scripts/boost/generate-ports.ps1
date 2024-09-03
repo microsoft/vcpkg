@@ -28,8 +28,38 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 1
 $portVersions = @{
-    'boost-container' = 1;
-    'boost-math' = 2;
+    'boost-asio'            = 2
+    'boost-beast'           = 2
+    'boost-bimap'           = 2
+    'boost-build'           = 2
+    'boost-cobalt'          = 2
+    'boost-compat'          = 2
+    'boost-core'            = 2
+    'boost-describe'        = 2
+    'boost-filesystem'      = 2
+    'boost-geometry'        = 2
+    'boost-intrusive'       = 2
+    'boost-json'            = 2
+    'boost-locale'          = 2
+    'boost-log'             = 2
+    'boost-math'            = 2
+    'boost-mpi'             = 2
+    'boost-msm'             = 2
+    'boost-multi-index'     = 2
+    'boost-multiprecision'  = 2
+    'boost-mysql'           = 2
+    'boost-nowide'          = 2
+    'boost-outcome'         = 2
+    'boost-pfr'             = 2
+    'boost-process'         = 2
+    'boost-program-options' = 2
+    'boost-python'          = 2
+    'boost-redis'           = 2
+    'boost-stacktrace'      = 3
+    'boost-timer'           = 2
+    'boost-unordered'       = 2
+    'boost-variant2'        = 2
+    'boost-wave'            = 2
 }
 
 function Get-PortVersion {
