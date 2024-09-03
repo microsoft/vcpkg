@@ -9889,8 +9889,8 @@
       "port-version": 1
     },
     "zug": {
-      "baseline": "2021-04-23",
-      "port-version": 1
+      "baseline": "2024-04-26",
+      "port-version": 0
     },
     "zycore": {
       "baseline": "1.5.0",
