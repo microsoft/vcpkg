@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ff26bc3..6df9654 100644
+index 56c3e23..7a4a2d6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -17,7 +17,10 @@ option(LSQPACK_XXH "Include XXH" ON)

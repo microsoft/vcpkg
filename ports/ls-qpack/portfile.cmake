@@ -37,7 +37,8 @@ file(REMOVE_RECURSE
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-ls-qpack/unofficial-ls-qpack-config.cmake" cmake_config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-ls-qpack/unofficial-ls-qpack-config.cmake"
 "include(CMakeFindDependencyMacro)
-find_dependency(xxHash CONFIG)
+find_dependency(PkgConfig)
+pkg_check_modules(XXH REQUIRED IMPORTED_TARGET libxxhash)
 ${cmake_config}
 ")
 
