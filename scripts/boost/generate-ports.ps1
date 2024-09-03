@@ -189,7 +189,7 @@ function GeneratePortDependency() {
         [string]$PortName = '',
         [string]$ForLibrary = ''
     )
-    if ($PortName -eq '') { 
+    if ($PortName -eq '') {
         $PortName = GeneratePortName $Library
     }
     $forPortName = GeneratePortName $ForLibrary
@@ -203,9 +203,9 @@ function GeneratePortDependency() {
         # For 'boost'.
         $platform = `
             $suppressPlatformForDependency[$PortName] `
-            | ForEach-Object { (GeneratePortDependency -PortName $_).platform } `
-            | Group-Object -NoElement `
-            | Join-String -Property Name -Separator ' & '
+        | ForEach-Object { (GeneratePortDependency -PortName $_).platform } `
+        | Group-Object -NoElement `
+        | Join-String -Property Name -Separator ' & '
         if ($platform -ne '') {
             @{name = $PortName; platform = $platform }
         }
@@ -291,7 +291,8 @@ function GeneratePortManifest() {
                 | Where-Object {
                     if ($_.Contains("name")) {
                         $_.name -notmatch "$dep_name"
-                    } else {
+                    }
+                    else {
                         $_ -notmatch "$dep_name"
                     }
                 }
@@ -600,10 +601,11 @@ foreach ($library in $libraries) {
 
         # Remove optional dependencies that are only used for tests or examples
         $deps = @($deps | Where-Object {
-            -not (
+                -not (
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
-            )
-        })
+                )
+            }
+        )
 
         # Add dependency to the config for all libraries except the config library itself
         if ($library -ne 'config' -and $library -ne 'headers') {
@@ -614,13 +616,13 @@ foreach ($library in $libraries) {
             $deps = $deps | Select-Object -Unique
         }
 
-        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library})
+        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library })
 
         if ($library -ne 'cmake') {
-          $deps += @("boost-cmake")
-          if ($library -ne 'headers') {
-            $deps += @("boost-headers")
-          }
+            $deps += @("boost-cmake")
+            if ($library -ne 'headers') {
+                $deps += @("boost-headers")
+            }
         }
 
         GeneratePort `
