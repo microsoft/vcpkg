@@ -1,13 +1,9 @@
-#vcpkg_from_github(
-#	OUT_SOURCE_PATH SOURCE_PATH
-#	REPO F-I-D-O/Future-Config
-#	REF master
-#	SHA512 0
-#)
-#set(SOURCE_PATH "D:/Workspaces/Fido/Future-Config")
-#set(SOURCE_PATH "/mnt/d/Workspaces/Fido/Future-Config")
-#set(SOURCE_PATH "C:/Workspaces/ninja/Future-Config")
-set(SOURCE_PATH "/mnt/c/Workspaces/ninja/Future-Config")
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO F-I-D-O/Future-Config
+	REF master
+	SHA512 e9d807645a3b3a3124948c1b63ec004b4a02767084603bdfec213124ea246ad0d85f60dc9b655bac9ab6ca696a3923f581917a490f1ce0c4b3c22f967f1ab19d
+)
 
 set(PACKAGE_NAME "future-config")
 
