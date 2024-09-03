@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
+        all_headers.patch
 )
 
 # This avoids a link error on x86-windows:

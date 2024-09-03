@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4bd7155..b7adecc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,7 +72,7 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+ option(LSQPACK_TESTS "Build tests" OFF)
+ option(LSQPACK_BIN "Build binaries" OFF)
+-add_subdirectory(ls-qpack)
++find_package(unofficial-ls-qpack CONFIG REQUIRED)
+ 
+ # Configure and build msquic dependency.
+ if (WIN32)
+@@ -83,8 +83,9 @@ endif()
+ set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
+ set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
+ set(CMAKE_BUILD_TYPE "Release")
+-add_subdirectory(msquic)
+-target_compile_features(inc INTERFACE cxx_std_20)
++find_package(msquic CONFIG REQUIRED)
++
++target_compile_features(msh3_headers INTERFACE cxx_std_20)
+ 
+ # Build msh3 library (and cmd line tool).
+ add_subdirectory(lib)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index ab7fc24..c488486 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -7,10 +7,7 @@ else()
+     set(SOURCES msh3.cpp)
+ endif()
+ add_library(msh3 SHARED ${SOURCES})
+-target_link_libraries(msh3 PRIVATE inc warnings msquic ls-qpack msh3_headers)
+-if (NOT BUILD_SHARED_LIBS)
+-    target_link_libraries(msh3 PRIVATE base_link)
+-endif()
++target_link_libraries(msh3 PRIVATE msquic unofficial::ls-qpack::ls-qpack msh3_headers)
+ if (MSH3_SERVER_SUPPORT)
+     target_link_libraries(msh3 PRIVATE platform) # For selfsign APIs
+ endif()
+@@ -26,7 +23,11 @@ elseif (CX_PLATFORM STREQUAL "darwin")
+         PROPERTIES LINK_FLAGS "-exported_symbols_list \"${CMAKE_CURRENT_SOURCE_DIR}/darwin/exports.txt\"")
+ endif()
+ 
+-install(TARGETS msh3 EXPORT msh3 DESTINATION lib)
++install(TARGETS msh3 EXPORT msh3
++    RUNTIME DESTINATION bin
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++)
+ install(FILES ../msh3.h DESTINATION include)
+ configure_file(msh3-config.cmake.in ${CMAKE_BINARY_DIR}/msh3-config.cmake)
+ install(FILES ${CMAKE_BINARY_DIR}/msh3-config.cmake DESTINATION share/msh3)
+diff --git a/lib/msh3-config.cmake.in b/lib/msh3-config.cmake.in
+index b4a54bf..a6a0fd2 100644
+--- a/lib/msh3-config.cmake.in
++++ b/lib/msh3-config.cmake.in
+@@ -1,4 +1,4 @@
+ include(CMakeFindDependencyMacro)
+ @FILENAME_DEP_REPLACE@
+ 
+-include(${SELF_DIR}/msh3.cmake)
++include(${CMAKE_INSTALL_PREFIX}/share/msh3/msh3.cmake)
