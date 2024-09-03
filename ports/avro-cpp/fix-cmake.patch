@@ -1,8 +1,8 @@
 diff --git a/lang/c++/CMakeLists.txt b/lang/c++/CMakeLists.txt
-index 472684f4c..edde09e40 100644
+index 19059a4..b9960ec 100644
 --- a/lang/c++/CMakeLists.txt
 +++ b/lang/c++/CMakeLists.txt
-@@ -51,20 +51,16 @@ list(GET AVRO_VERSION 2 AVRO_VERSION_PATCH)
+@@ -55,20 +55,16 @@ list(GET AVRO_VERSION 2 AVRO_VERSION_PATCH)
  project (Avro-cpp)
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
  
@@ -22,13 +22,30 @@ index 472684f4c..edde09e40 100644
  endif()
  
  if (CMAKE_COMPILER_IS_GNUCXX)
--    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Werror")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wuseless-cast -Wconversion -pedantic -Werror")
 +    # Remove " -Werror" because of warning from boost-math (will require C++ 14 soon)
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wuseless-cast -Wconversion -pedantic")
  if (AVRO_ADD_PROTECTOR_FLAGS)
      set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fstack-protector-all -D_GLIBCXX_DEBUG")
      # Unset _GLIBCXX_DEBUG for avrogencpp.cc because using Boost Program Options
-@@ -114,7 +110,7 @@ set (AVRO_SOURCE_FILES
+@@ -82,15 +78,7 @@ endif ()
+ find_package (Boost 1.38 REQUIRED
+     COMPONENTS filesystem iostreams program_options regex system)
+ 
+-include(FetchContent)
+-FetchContent_Declare(
+-        fmt
+-        GIT_REPOSITORY  https://github.com/fmtlib/fmt.git
+-        GIT_TAG         10.2.1
+-        GIT_PROGRESS    TRUE
+-        USES_TERMINAL_DOWNLOAD TRUE
+-)
+-FetchContent_MakeAvailable(fmt)
++find_package(fmt CONFIG REQUIRED)
+ 
+ find_package(Snappy)
+ if (SNAPPY_FOUND)
+@@ -128,14 +116,14 @@ set (AVRO_SOURCE_FILES
          impl/CustomAttributes.cc
          )
  
@@ -37,27 +54,26 @@ index 472684f4c..edde09e40 100644
  
  set_property (TARGET avrocpp
      APPEND PROPERTY COMPILE_DEFINITIONS AVRO_DYN_LINK)
-@@ -131,12 +127,12 @@ set_target_properties (avrocpp PROPERTIES
+ 
+ add_library (avrocpp_s STATIC ${AVRO_SOURCE_FILES})
+ target_include_directories(avrocpp_s PRIVATE ${SNAPPY_INCLUDE_DIR})
+-target_link_libraries(avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} fmt::fmt-header-only)
++target_link_libraries(avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} fmt::fmt-header-only ZLIB::ZLIB)
+ 
+ set_property (TARGET avrocpp avrocpp_s
+     APPEND PROPERTY COMPILE_DEFINITIONS AVRO_SOURCE)
+@@ -146,7 +134,7 @@ set_target_properties (avrocpp PROPERTIES
  set_target_properties (avrocpp_s PROPERTIES
      VERSION ${AVRO_VERSION_MAJOR}.${AVRO_VERSION_MINOR}.${AVRO_VERSION_PATCH})
  
--target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
-+target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
+-target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} fmt::fmt-header-only)
++target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} fmt::fmt-header-only ZLIB::ZLIB)
  target_include_directories(avrocpp PRIVATE ${SNAPPY_INCLUDE_DIR})
  
  add_executable (precompile test/precompile.cc)
- 
--target_link_libraries (precompile avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
-+target_link_libraries (precompile avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
- 
- macro (gen file ns)
-     add_custom_command (OUTPUT ${file}.hh
-@@ -166,13 +162,14 @@ gen (primitivetypes pt)
- gen (cpp_reserved_words cppres)
- 
- add_executable (avrogencpp impl/avrogencpp.cc)
--target_link_libraries (avrogencpp avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
-+target_link_libraries (avrogencpp avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES} ZLIB::ZLIB)
+@@ -194,11 +182,12 @@ target_include_directories(avrocpp PUBLIC
+   $<INSTALL_INTERFACE:include>
+ )
  
 +if(BUILD_TESTING)
  enable_testing()
@@ -70,15 +86,15 @@ index 472684f4c..edde09e40 100644
      add_test (NAME ${name} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${name})
  endmacro (unittest)
-@@ -197,6 +194,7 @@ add_dependencies (AvrogencppTests bigrecord_hh bigrecord_r_hh bigrecord2_hh
-     union_array_union_hh union_map_union_hh union_conflict_hh
+@@ -225,6 +214,7 @@ add_dependencies (AvrogencppTests bigrecord_hh bigrecord_r_hh bigrecord2_hh
      recursive_hh reuse_hh circulardep_hh tree1_hh tree2_hh crossref_hh
-     primitivetypes_hh empty_record_hh)
+     primitivetypes_hh empty_record_hh cpp_reserved_words_union_typedef_hh
+     union_empty_record_hh)
 +endif()
  
  include (InstallRequiredSystemLibraries)
  
-@@ -204,10 +202,14 @@ set (CPACK_PACKAGE_FILE_NAME "avrocpp-${AVRO_VERSION_MAJOR}")
+@@ -232,10 +222,14 @@ set (CPACK_PACKAGE_FILE_NAME "avrocpp-${AVRO_VERSION_MAJOR}")
  
  include (CPack)
  
