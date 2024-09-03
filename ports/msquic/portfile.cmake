@@ -65,6 +65,7 @@ vcpkg_cmake_configure(
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
         "-DQUIC_STATIC_LINK_CRT=${STATIC_CRT}"
+        "-DQUIC_STATIC_LINK_PARTIAL_CRT=${STATIC_CRT}"
         "-DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}"
 )
 
