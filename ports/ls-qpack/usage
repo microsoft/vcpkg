@@ -1,7 +1,0 @@
-The package ls-qpack can be used via CMake:
-
-    find_path(LSQPACK_INCLUDE_DIRS "lsqpack.h")
-    find_library(LSQPACK_LIBRARY ls-qpack REQUIRED)
-
-    target_include_directories(main PRIVATE ${LSQPACK_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${LSQPACK_LIBRARY})

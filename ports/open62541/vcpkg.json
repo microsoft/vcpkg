@@ -1,6 +1,6 @@
 {
   "name": "open62541",
-  "version": "1.3.10",
+  "version": "1.3.12",
   "description": "open62541 is an open source C (C99) implementation of OPC UA licensed under the Mozilla Public License v2.0.",
   "homepage": "https://open62541.org",
   "license": "MPL-2.0",
@@ -16,11 +16,19 @@
     }
   ],
   "default-features": [
-    "openssl"
+    "methodcalls",
+    "subscriptions",
+    "subscriptions-events"
   ],
   "features": {
     "amalgamation": {
       "description": "Concatenate the library to a single file open62541.h/.c"
+    },
+    "diagnostics": {
+      "description": "Enable diagnostics information exposed by the server"
+    },
+    "discovery": {
+      "description": "Enable Discovery Service (LDS)"
     },
     "historizing": {
       "description": "Enable basic support for historical access (client and server)"
@@ -31,11 +39,20 @@
         "mbedtls"
       ]
     },
+    "methodcalls": {
+      "description": "Enable the Method service set"
+    },
     "openssl": {
       "description": "Enable encryption support (uses OpenSSL)",
       "dependencies": [
         "openssl"
       ]
+    },
+    "subscriptions": {
+      "description": "Enable subscriptions support"
+    },
+    "subscriptions-events": {
+      "description": "Enable event monitoring"
     }
   }
 }

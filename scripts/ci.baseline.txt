@@ -393,6 +393,7 @@ gamenetworkingsockets:x64-android=fail
 # gazebo is broken due it depend on old ports that already in the new versions.
 # There is an open PR that try to fix that.
 gazebo:x64-windows=fail
+gazebo:x64-windows-static-md=fail
 gazebo:x86-windows=fail
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
@@ -604,9 +605,6 @@ libmysql:x86-windows=skip
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
-libosip2:arm-neon-android=fail
-libosip2:arm64-android=fail
-libosip2:x64-android=fail
 libp7client:x64-android=fail
 libpng-apng:arm64-windows      = skip
 libpng-apng:arm64-uwp            = skip
@@ -699,9 +697,6 @@ llvm:x64-android=fail
 log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
-loguru:arm-neon-android=fail
-loguru:arm64-android=fail
-loguru:x64-android=fail
 # 32-bit needs android-24
 lua:arm-neon-android=fail
 magma:x64-linux=fail
@@ -955,11 +950,11 @@ qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
 # Missing system libraries
-qtwayland:x64-osx=fail
-qtwayland:arm64-osx=fail
+qtwayland:x64-osx=skip
+qtwayland:arm64-osx=skip
 # Missing system libraries
-qt5-x11extras:x64-osx=fail
-qt5-x11extras:arm64-osx=fail
+qt5-x11extras:x64-osx=skip
+qt5-x11extras:arm64-osx=skip
 quickfix:arm-neon-android=fail
 quickfix:arm64-android=fail
 qwt-qt6:x64-osx=fail
@@ -1041,9 +1036,6 @@ sciter:x64-windows=skip
 sciter:x64-windows-static=skip
 sciter:x64-windows-static-md=skip
 sciter:x86-windows=skip
-sdformat10:x64-windows-static-md=fail
-sdformat6:x64-windows-static-md=fail
-sdformat9:x64-windows-static-md=fail
 sdl1:arm-neon-android=fail
 sdl1:arm64-android=fail
 sdl1:x64-android=fail
