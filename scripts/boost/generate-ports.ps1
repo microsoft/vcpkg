@@ -32,6 +32,7 @@ $portVersions = @{
     'boost-beast'           = 2
     'boost-bimap'           = 2
     'boost-build'           = 2
+    'boost-cmake'           = 2
     'boost-cobalt'          = 2
     'boost-compat'          = 2
     'boost-core'            = 2
