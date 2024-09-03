@@ -1,12 +1,12 @@
 {
   "name": "pybind11",
   "version": "2.13.5",
+  "port-version": 1,
   "description": "pybind11 is a lightweight header-only library that exposes C++ types in Python and vice versa, mainly to create Python bindings of existing C++ code",
   "homepage": "https://github.com/pybind/pybind11",
   "license": "BSD-3-Clause",
   "supports": "!(arm & windows)",
   "dependencies": [
-    "python3",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,5 +15,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "local-python3"
+  ],
+  "features": {
+    "local-python3": {
+      "description": "Use python3 from vcpkg instead of the system's one",
+      "dependencies": [
+        "python3"
+      ]
+    }
+  }
 }
