@@ -55,3 +55,15 @@ index b0897c3..e559666 100644
    message ( "-- inih_INCLUDE_DIRS : " ${inih_INCLUDE_DIRS} )
    message ( "-- inih_LIBRARIES : " ${inih_LIBRARIES} )
    message ( "-- inih_inireader_INCLUDE_DIRS : " ${inih_inireader_INCLUDE_DIRS} )
+diff --git a/xmpsdk/CMakeLists.txt b/xmpsdk/CMakeLists.txt
+index 87c59c0..d2f23e6 100644
+--- a/xmpsdk/CMakeLists.txt
++++ b/xmpsdk/CMakeLists.txt
+@@ -31,6 +31,7 @@ target_include_directories(exiv2-xmp SYSTEM
+         ${PROJECT_SOURCE_DIR}/xmpsdk/include
+         ${EXPAT_INCLUDE_DIRS}
+ )
++target_link_libraries(exiv2-xmp PRIVATE expat::expat)
+ 
+ # Prevent a denial-service-attack related to XML entity expansion
+ # ("billion laughs attack").
