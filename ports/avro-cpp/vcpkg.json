@@ -16,6 +16,7 @@
     "boost-program-options",
     "boost-random",
     "boost-tuple",
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
