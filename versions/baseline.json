@@ -6914,7 +6914,7 @@
     },
     "pipewire": {
       "baseline": "1.0.4",
-      "port-version": 2
+      "port-version": 3
     },
     "pistache": {
       "baseline": "2021-03-31",
