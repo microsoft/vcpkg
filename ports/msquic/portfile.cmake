@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
+        all_headers.patch
 )
 
 # This avoids a link error on x86-windows:
@@ -65,6 +66,7 @@ vcpkg_cmake_configure(
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
         "-DQUIC_STATIC_LINK_CRT=${STATIC_CRT}"
+        "-DQUIC_STATIC_LINK_PARTIAL_CRT=${STATIC_CRT}"
         "-DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}"
 )
 
