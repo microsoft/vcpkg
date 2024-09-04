@@ -265,8 +265,9 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             WORKING_DIRECTORY "${DOWNLOADS}"
         )
 
+        message("${output}")
+
         if(NOT "${error_code}" EQUAL "0")
-            message("${output}")
             z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
         endif()
     endif()
