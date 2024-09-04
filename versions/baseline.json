@@ -1413,7 +1413,7 @@
       "port-version": 2
     },
     "bustache": {
-      "baseline": "0.1.0",
+      "baseline": "2024-09-04.0.1.0",
       "port-version": 0
     },
     "butteraugli": {

@@ -1,6 +1,6 @@
 {
   "name": "bustache",
-  "version": "0.1.0",
+  "version": "2024-09-04.0.1.0",
   "description": "C++20 implementation of {{ mustache }}",
   "homepage": "https://github.com/jamboree/bustache",
   "license": "BSL-1.0",
