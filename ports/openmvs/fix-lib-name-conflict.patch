@@ -1,0 +1,71 @@
+diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
+index 18899af..56ad041 100644
+--- a/libs/Common/CMakeLists.txt
++++ b/libs/Common/CMakeLists.txt
+@@ -2,22 +2,22 @@
+ FILE(GLOB LIBRARY_FILES_C "*.cpp")
+ FILE(GLOB LIBRARY_FILES_H "*.h" "*.inl")
+ 
+-cxx_library_with_type(Common "Libs" "" "${cxx_default}"
++cxx_library_with_type(CommonMVS "Libs" "" "${cxx_default}"
+ 	${LIBRARY_FILES_C} ${LIBRARY_FILES_H}
+ )
+ 
+ # Manually set Common.h as the precompiled header
+ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+-	TARGET_PRECOMPILE_HEADERS(Common PRIVATE "Common.h")
++	TARGET_PRECOMPILE_HEADERS(CommonMVS PRIVATE "Common.h")
+ endif()
+ 
+ # Link its dependencies
+-TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
++TARGET_LINK_LIBRARIES(CommonMVS ${Boost_LIBRARIES} ${OpenCV_LIBS})
+ 
+ # Install
+-SET_TARGET_PROPERTIES(Common PROPERTIES
++SET_TARGET_PROPERTIES(CommonMVS PROPERTIES
+ 	PUBLIC_HEADER "${LIBRARY_FILES_H}")
+-INSTALL(TARGETS Common
++INSTALL(TARGETS CommonMVS
+ 	EXPORT OpenMVSTargets
+ 	LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+ 	ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
+diff --git a/libs/IO/CMakeLists.txt b/libs/IO/CMakeLists.txt
+index da3c159..a2e866e 100644
+--- a/libs/IO/CMakeLists.txt
++++ b/libs/IO/CMakeLists.txt
+@@ -38,7 +38,7 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+ endif()
+ 
+ # Link its dependencies
+-TARGET_LINK_LIBRARIES(IO Common ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXIV2_LIBS})
++TARGET_LINK_LIBRARIES(IO CommonMVS ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXIV2_LIBS})
+ 
+ # Install
+ SET_TARGET_PROPERTIES(IO PROPERTIES
+diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
+index 79dbaba..30106c1 100644
+--- a/libs/MVS/CMakeLists.txt
++++ b/libs/MVS/CMakeLists.txt
+@@ -45,7 +45,7 @@ endif()
+ if(_USE_CUDA)
+ 	set_target_properties(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
+ endif()
+-TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PRIVATE CommonMVS Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
+ 
+ # Install
+ SET_TARGET_PROPERTIES(MVS PROPERTIES
+diff --git a/libs/Math/CMakeLists.txt b/libs/Math/CMakeLists.txt
+index 407e2e4..54afb9d 100644
+--- a/libs/Math/CMakeLists.txt
++++ b/libs/Math/CMakeLists.txt
+@@ -29,7 +29,7 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+ endif()
+ 
+ # Link its dependencies
+-TARGET_LINK_LIBRARIES(Math Common)
++TARGET_LINK_LIBRARIES(Math CommonMVS)
+ 
+ # Install
+ INSTALL(FILES ${LIBRARY_FILES_H} DESTINATION "${INSTALL_INCLUDE_DIR}/Math")

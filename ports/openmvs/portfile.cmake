@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-build.patch
         no-absolute-paths.patch
         fix-static-build.patch
+        fix-lib-name-conflict.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -82,16 +83,5 @@ set(SENSOR_WIDTH_CAMERA_DATABASE_TXT_PATH "${OPENMVG_TOOLS_PATH}/sensor_width_ca
 configure_file("${SOURCE_PATH}/MvgMvsPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/MvgMvsPipeline.py" @ONLY)
 configure_file("${SOURCE_PATH}/MvgOptimizeSfM.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/MvgOptimizeSfM.py" @ONLY)
 file(INSTALL "${SOURCE_PATH}/build/Modules/FindVCG.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Because of the installation order of CI, openmvs's Common.lib will replace crashpad's common.lib.
-    # https://github.com/microsoft/vcpkg/pull/40519#issuecomment-2304229773
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/Common.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/Common.lib")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/Common.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/Common.lib")
-    endif()
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
