@@ -1,6 +1,7 @@
 {
   "name": "rmqcpp",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "rmqcpp - A C++ library for RabbitMQ.",
   "dependencies": [
     {
