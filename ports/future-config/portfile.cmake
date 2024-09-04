@@ -5,13 +5,13 @@ vcpkg_from_github(
 	SHA512 e9d807645a3b3a3124948c1b63ec004b4a02767084603bdfec213124ea246ad0d85f60dc9b655bac9ab6ca696a3923f581917a490f1ce0c4b3c22f967f1ab19d
 )
 
-set(PACKAGE_NAME "future-config")
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
 	SOURCE_PATH ${SOURCE_PATH}/cpp
-	OPTIONS -DFCONFIG_BUILD_SHARED_LIBS=${BUILD_SHARED}
+	OPTIONS 
+	    -DFCONFIG_BUILD_SHARED_LIBS=${BUILD_SHARED}
+
 )
 
 vcpkg_cmake_install()
@@ -37,7 +37,7 @@ if("${dir_to_rm_content}" STREQUAL "")
 	file(REMOVE_RECURSE "${BIN_DIR}")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 # copy the usage example
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
