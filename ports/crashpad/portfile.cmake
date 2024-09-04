@@ -6,6 +6,7 @@ vcpkg_from_git(
     REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
     PATCHES
         fix-linux.patch
+        fix-lib-name-conflict.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
