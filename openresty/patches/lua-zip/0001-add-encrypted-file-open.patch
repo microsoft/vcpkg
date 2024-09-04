@@ -1,0 +1,120 @@
+From 6fefe78f9af12bd0c34830cb19f3263562d10d75 Mon Sep 17 00:00:00 2001
+From: thomas-creel <137831176+thomas-creel@users.noreply.github.com>
+Date: Thu, 29 Aug 2024 23:49:47 -0400
+Subject: [PATCH] add-encrypted-file-open
+
+---
+ lua-zip/lua-zip-0.2-0.rockspec | 27 ++++++++++++++++++++
+ lua-zip/lua_zip.c              | 45 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
+
+diff --git a/lua-zip/lua-zip-0.2-0.rockspec b/lua-zip/lua-zip-0.2-0.rockspec
+index 0f45def..984e186 100644
+--- a/lua-zip/lua-zip-0.2-0.rockspec
++++ b/lua-zip/lua-zip-0.2-0.rockspec
+@@ -39,5 +39,32 @@ build = {
+             "lua_zip.c"
+          }
+       }
++   },
++   platforms = {
++      windows = {
++         modules = {
++            ["brimworks.zip"] = {
++               libraries = {
++                  "zip",
++                  "zlib",
++                  "advapi32",
++                  "kernel32",
++                  "user32"
++               },
++               defines = {
++                  "ZIP_STATIC"
++               }
++            }
++         }
++      },
++      linux = {
++         modules = {
++            ["brimworks.zip"] = {
++               defines = {
++                  "ZIP_STATIC"
++               }
++            }
++         }
++      }
+    }
+ }
+diff --git a/lua-zip/lua_zip.c b/lua-zip/lua_zip.c
+index 6570595..1a11449 100644
+--- a/lua-zip/lua_zip.c
++++ b/lua-zip/lua_zip.c
+@@ -643,6 +643,47 @@ static int S_archive_file_open(lua_State* L) {
+     return 1;
+ }
+ 
++
++static int S_archive_file_open_encrypted(lua_State* L) {
++    struct zip** ar        = check_archive(L, 1);
++    const char*  path      = (lua_isnumber(L, 2)) ? NULL : luaL_checkstring(L, 2);
++    int          path_idx  = (lua_isnumber(L, 2)) ? luaL_checkint(L, 2)-1 : -1;
++    int          flags     = (lua_gettop(L) < 3)  ? 0 : luaL_checkint(L, 3);
++    const char* password   = (lua_gettop(L) < 4)  ? "" : luaL_checkstring(L, 4);
++
++    struct zip_file** file = (struct zip_file**)
++        lua_newuserdata(L, sizeof(struct zip_file*));
++
++    *file = NULL;
++
++    if ( ! *ar ) return 0;
++
++    if ( NULL == path ) {
++        *file = zip_fopen_index_encrypted(*ar, path_idx, flags, password);
++    } else {
++        *file = zip_fopen_encrypted(*ar, path, flags, password);
++    }
++
++
++    if ( ! *file ) {
++        lua_pushnil(L);
++        lua_pushstring(L, zip_strerror(*ar));
++        return 2;
++    }
++
++    luaL_getmetatable(L, ARCHIVE_FILE_MT);
++    assert(!lua_isnil(L, -1)/* ARCHIVE_FILE_MT found? */);
++
++    lua_setmetatable(L, -2);
++
++    S_archive_add_ref(L, 1, 1, -1);
++
++    return 1;
++}
++
++
++
++
+ static int S_archive_file_close(lua_State* L) {
+     struct zip_file** file = check_archive_file(L, 1);
+     int err;
+@@ -694,6 +735,7 @@ static int S_archive_file_read(lua_State* L) {
+     return 1;
+ }
+ 
++// these all act on an exisitng instnace I think
+ static void S_register_archive(lua_State* L) {
+     luaL_newmetatable(L, ARCHIVE_MT);
+ 
+@@ -709,6 +751,9 @@ static void S_register_archive(lua_State* L) {
+     lua_pushcfunction(L, S_archive_file_open);
+     lua_setfield(L, -2, "open");
+ 
++    lua_pushcfunction(L, S_archive_file_open_encrypted);
++    lua_setfield(L, -2, "open_encrypted");
++
+     lua_pushcfunction(L, S_archive_stat);
+     lua_setfield(L, -2, "stat");
+ 
+-- 
+2.44.0.windows.1
+
