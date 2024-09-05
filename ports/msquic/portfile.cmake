@@ -4,12 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 5937fbc2f287567d590fc0afc947459359e5413fa25f2f193434ad6d7016f7cb0dede4e2ef5e1e4e8b21b556c5ad8ce4cb612514403bb593a49af0fb42d1cb15
+    SHA512 9025520d5a4cf1f2046959942fa83f73e49e836dcd20a0dde34bd34cbe071c9ffd5b195a13ab77a6a85d71ae91baa839b12a7f1fc27fcb79660561a2a07b6013
     HEAD_REF master
     PATCHES
         fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
+        all_headers.patch
 )
 
 # This avoids a link error on x86-windows:
@@ -65,6 +66,7 @@ vcpkg_cmake_configure(
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
         "-DQUIC_STATIC_LINK_CRT=${STATIC_CRT}"
+        "-DQUIC_STATIC_LINK_PARTIAL_CRT=${STATIC_CRT}"
         "-DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}"
 )
 

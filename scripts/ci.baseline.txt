@@ -878,8 +878,6 @@ openscap:arm64-osx=fail
 openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows=fail
-openvpn3:x64-osx=fail
-openvpn3:arm64-osx=fail
 openvr:x64-windows-static=fail
 # Conflicts with optional-lite, by the same author
 optional-bare:arm-neon-android=skip
