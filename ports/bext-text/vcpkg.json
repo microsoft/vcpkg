@@ -1,7 +1,7 @@
 {
   "name": "bext-text",
   "version-date": "2024-01-19",
-  "description": "What a c++ standard Unicode library might look like.What a c++ standard Unicode library might look like.",
+  "description": "What a c++ standard Unicode library might look like.",
   "homepage": "https://tzlaine.github.io/text/doc/html/index.html",
   "license": "BSL-1.0",
   "dependencies": [
