@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2b7b03d6..47cac2d4 100644
+index 2b7b03d6..1228484f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
@@ -26,7 +26,7 @@ index 2b7b03d6..47cac2d4 100644
 +
 +configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/text-config.cmake.in"
 +  "${CMAKE_CURRENT_BINARY_DIR}/cmake/text-config.cmake"
-+  INSTALL_DESTINATION "lib/cmake/MathFunctions"
++  INSTALL_DESTINATION "lib/cmake/text"
 +  NO_SET_AND_CHECK_MACRO
 +  NO_CHECK_REQUIRED_COMPONENTS_MACRO
 +  )
