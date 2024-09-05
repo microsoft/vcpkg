@@ -18,6 +18,7 @@ vcpkg_from_github(
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
         fix-fmt11-cmake.patch
+        fix-character-in-folder.patch # https://github.com/facebook/folly/commit/0f698c382d34a2e139d5b2c071151ab33e1ffbd3
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
