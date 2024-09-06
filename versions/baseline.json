@@ -2293,7 +2293,7 @@
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2024-09-05",
+      "baseline": "2024-09-04",
       "port-version": 0
     },
     "dirent": {
@@ -9181,7 +9181,7 @@
       "port-version": 1
     },
     "uvatlas": {
-      "baseline": "2024-09-05",
+      "baseline": "2024-09-04",
       "port-version": 0
     },
     "uvw": {
