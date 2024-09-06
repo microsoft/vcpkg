@@ -2,7 +2,6 @@ include_guard(GLOBAL)
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_install)
-# Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "DISABLE_PARALLEL"
         "LOGFILE_ROOT;MAKEFILE;TARGETS"
@@ -76,10 +75,9 @@ function(vcpkg_make_install)
 
         set(destdir_opt "DESTDIR=${destdir}")
 
-        set(extra_opts "") # Use --environment-overrides as default?
+        set(extra_opts "")
         if(NOT VCPKG_TARGET_IS_OSX)
             set(extra_opts --trace)
-            # TODO: Introspect the found make for available options?
         endif()
 
         foreach(target IN LISTS arg_TARGETS)

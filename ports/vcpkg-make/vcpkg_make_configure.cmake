@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
-function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
+function(vcpkg_make_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_FLAG_ESCAPING"
         "SOURCE_PATH"
@@ -66,8 +66,8 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
     endif()
 
     # Backup environment variables
-    # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(cm_FLAGS AR AS CC C CCAS CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R RC UPC Y)
+
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS 
         ${cm_FLAGS}
@@ -94,7 +94,6 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
         z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
 
         set(opts "")
-        set(opts_cache "")
         if(NOT arg_DISABLE_DEFAULT_OPTIONS)
           z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}")
           vcpkg_list(APPEND arg_OPTIONS ${opts})
@@ -108,14 +107,13 @@ function(vcpkg_make_configure) # Replacement for vcpkg_configure_make
 
         vcpkg_make_run_configure(SHELL
                                     "${shell_cmd}"
-                                 CONFIG  #configure_env
+                                 CONFIG
                                     "${configup}"
                                  CONFIGURE_ENV
                                     "${configure_env}"
                                  CONFIGURE_PATH
                                     "${configure_path_from_wd}"
                                  OPTIONS 
-                                    ${opts_cache}
                                     ${arg_BUILD_TRIPLET}
                                     ${arg_OPTIONS} 
                                     ${arg_OPTIONS_${configup}}

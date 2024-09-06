@@ -52,9 +52,7 @@ function(vcpkg_run_shell_as_build)
 endfunction()
 
 function(vcpkg_run_autoreconf shell_cmd work_dir)
-# TODO:
-# Check: does it make sense to parse configure.ac ?
-    find_program(AUTORECONF NAMES autoreconf) # find_file instead ? autoreconf is a perl script.
+    find_program(AUTORECONF NAMES autoreconf)
     if(NOT AUTORECONF)
         message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
     endif()

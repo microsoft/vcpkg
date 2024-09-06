@@ -79,7 +79,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_CPPFLAGS;NO_FLAG_ESCAPING;USES_WRAPPERS" 
+        "DISABLE_CPPFLAGS;NO_FLAG_ESCAPING;DISABLE_MSVC_WRAPPERS" 
         "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
@@ -188,7 +188,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     # due to that; just ignore them.
     set(compiler_flag_escape "")
     if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND NOT arg_NO_FLAG_ESCAPING)
-        set(compiler_flag_escape "-Xcompiler") # TODO: Check why this had a trailing space? We are using lists so it shouldn't be necessary here
+        set(compiler_flag_escape "-Xcompiler")
     endif()
     if(compiler_flag_escape)
         list(TRANSFORM CFLAGS PREPEND "${compiler_flag_escape};")
@@ -201,7 +201,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND NOT arg_NO_FLAG_ESCAPING)
         # Removed by libtool
         set(linker_flag_escape "-Xlinker ")
-        if(arg_USES_WRAPPERS)
+        if(NOT arg_DISABLE_MSVC_WRAPPERS)
             # 1st and 3rd are removed by libtool, 2nd by wrapper
             set(linker_flag_escape "-Xlinker -Xlinker -Xlinker ")
         endif()
@@ -229,7 +229,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
         # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
         vcpkg_list(PREPEND ARFLAGS "cr")
-    elseif(arg_USES_WRAPPERS AND arg_COMPILER_FRONTEND STREQUAL "MSVC")
+    elseif(NOT arg_DISABLE_MSVC_WRAPPERS AND arg_COMPILER_FRONTEND STREQUAL "MSVC")
         # The wrapper needs an action and that action needs to be defined AFTER all flags
         vcpkg_list(APPEND ARFLAGS "cr")
     endif()
@@ -265,7 +265,6 @@ function(z_vcpkg_make_prepare_programs out_env)
     set(configure_env "")
     # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
     if (VCPKG_TARGET_IS_WINDOWS)
-        # TODO More languages ?
         set(progs   C_COMPILER CXX_COMPILER AR
                     LINKER RANLIB OBJDUMP
                     STRIP NM DLLTOOL RC_COMPILER)
@@ -541,8 +540,8 @@ function(z_vcpkg_make_prepare_flags)
         list(APPEND flags_opts DISABLE_CPPFLAGS)
     endif()
 
-    if(NOT arg_DISABLE_MSVC_WRAPPERS)
-        list(APPEND flags_opts USES_WRAPPERS)
+    if(arg_DISABLE_MSVC_WRAPPERS)
+        list(APPEND flags_opts DISABLE_MSVC_WRAPPERS)
     endif()
 
     if(arg_NO_FLAG_ESCAPING)

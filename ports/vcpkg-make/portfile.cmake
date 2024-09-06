@@ -1,16 +1,16 @@
 set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
-vcpkg_download_distfile(
-    ar_lib_wrapper
-    URLS https://raw.githubusercontent.com/autotools-mirror/automake/43a53bdf4b76377b5c012b8c8e8f478fb56d1ec0/lib/ar-lib
-    FILENAME ar-lib
-    SHA512 6019ffebf4b7b0547aa018c7d19bc915a228825d2acdee953a36919a88c30352e620f61c27a3e6f701af2885c8eb8d4ba3a4a3c2e821c54c03dceeef8eec108f
+vcpkg_download_distfile(ARCHIVE
+    URLS https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz
+    FILENAME automake.tar.gz
+    SHA512 640a008fee3099f5afbb1fb12d0d3e3d802fda43d44f7ef7985d5dd952b9fe384c03dc4a9693d782531bd851d4fe1bf4e3718beabc29ca061212bad70f8af6ee
 )
-vcpkg_download_distfile(
-    compile_wrapper
-    URLS https://raw.githubusercontent.com/autotools-mirror/automake/43a53bdf4b76377b5c012b8c8e8f478fb56d1ec0/lib/compile
-    FILENAME compile
-    SHA512 3ef82f486f59be4cae1f1f95a9b70d4404f0333100be84c2e7061bd466201224a2bd1c7d871d97801eb9a441809bb47e7821fca8c85c29cc43ab15e6edda7f8c
+
+vcpkg_extract_source_archive(
+    automake_source
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        "compile_wrapper_consider_clang-cl.patch"
 )
 
 file(COPY 
@@ -18,9 +18,10 @@ file(COPY
     DESTINATION 
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
+
 file(COPY 
-        "${ar_lib_wrapper}"
-        "${compile_wrapper}"
+        "${automake_source}/lib/ar-lib"
+        "${automake_source}/lib/compile"
     DESTINATION 
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/wrappers"
 )
@@ -31,4 +32,3 @@ file(REMOVE
 )
 
 vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
-

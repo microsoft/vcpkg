@@ -295,7 +295,8 @@ function(vcpkg_configure_make)
 
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(cm_FLAGS AR AS CC C CCAS CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R RC UPC Y)
+
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS ${cm_FLAGS})
 

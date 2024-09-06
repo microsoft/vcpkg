@@ -1,20 +1,3 @@
-set(VCPKG_COMBINED_C_FLAGS_Release "-O2 -DNDEBUG")
-set(VCPKG_COMBINED_CXX_FLAGS_Release "-O2 -DNDEBUG")
-set(VCPKG_COMBINED_SHARED_LINKER_FLAGS_Release "-L/mylibpath")
-set(CURRENT_INSTALLED_DIR "C:/vcpkg_installed/x64-windows")
-
-function(check_flags response_file flags)
-  file(READ "${response_file}" content)
-  string(REGEX REPLACE "\n" ";" flags_list "${content}")
-
-  foreach(flag ${flags})
-    string(FIND "${flags_list}" "${flag}" index)
-    if(index EQUAL -1)
-      message(FATAL_ERROR "Missing flag '${flag}' in response file '${response_file}'")
-    endif()
-  endforeach()
-endfunction()
-
 # Test Case 1: Basic Flag Generation
 set(flags_out)
 z_vcpkg_make_prepare_compile_flags(
