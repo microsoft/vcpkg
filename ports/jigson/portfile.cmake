@@ -8,6 +8,6 @@ vcpkg_from_github(
 file(INSTALL "${SOURCE_PATH}/Jigson.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
