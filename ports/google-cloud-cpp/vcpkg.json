@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.26.0",
+  "version": "2.28.0",
   "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
@@ -257,6 +257,19 @@
           "default-features": false,
           "features": [
             "grpc-common"
+          ]
+        }
+      ]
+    },
+    "bigquerycontrol": {
+      "description": "Cloud BigQuery Control API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
@@ -568,6 +581,18 @@
     },
     "deploy": {
       "description": "Google Cloud Deploy API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "developerconnect": {
+      "description": "Developer Connect API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1116,6 +1141,18 @@
     },
     "privateca": {
       "description": "Certificate Authority API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "privilegedaccessmanager": {
+      "description": "Privileged Access Manager API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

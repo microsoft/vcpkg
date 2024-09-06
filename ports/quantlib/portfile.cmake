@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
     REF "v${VERSION}"
-    SHA512 b99051ec5b621e9bfd91851487d3dd2153618785b458fbe039b7ab58de8f6da0a36eb0240182a11696ab8ab67788069fc2c4e7efa347ddf3bb77fafe5b190a05
+    SHA512 5017548669fec649a9324298d828e11e44b9fb12924f5bfebbe90d2893bd02c627c38f7e8516416d894ab82f3fa3c77cba2a2ba09a25c19dc0efa130a3dba72c
     HEAD_REF master
 )
 
@@ -14,7 +14,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DQL_BUILD_BENCHMARK=OFF
         -DQL_BUILD_EXAMPLES=OFF
         -DQL_BUILD_TEST_SUITE=OFF
 )

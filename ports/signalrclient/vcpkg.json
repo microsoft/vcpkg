@@ -1,7 +1,7 @@
 {
   "name": "signalrclient",
   "version": "1.0.0-beta1-9",
-  "port-version": 5,
+  "port-version": 6,
   "description": "C++ client for SignalR.",
   "homepage": "https://github.com/SignalR/SignalR-Client-Cpp",
   "dependencies": [

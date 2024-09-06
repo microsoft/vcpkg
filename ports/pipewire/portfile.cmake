@@ -43,6 +43,7 @@ vcpkg_configure_meson(
         -Dlibusb=disabled
         -Dlv2=disabled
         -Dman=disabled
+        -Dopus=disabled
         -Dpipewire-alsa=disabled
         -Dpipewire-jack=disabled
         -Dpipewire-v4l2=disabled
@@ -70,6 +71,7 @@ vcpkg_configure_meson(
         -Dx11-xfixes=disabled
         -Dx11=disabled
         -Dsession-managers=[]
+        -Dc_args=-Wno-strict-prototypes
 )
 vcpkg_install_meson()
 vcpkg_copy_pdbs()

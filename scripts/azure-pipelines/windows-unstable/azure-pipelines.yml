@@ -1,10 +1,83 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 #
-variables:
-  unstable-pool: 'vcpkg-testing-msvc'
 
 jobs:
-- template: job.yml
-  parameters:
-    jobName: x64_windows
+- job: x64_windows
+  pool:
+    name: vcpkg-testing-msvc
+    demands: ImageVersionOverride -equals 2024.08.28
+  workspace:
+    clean: resources
+  timeoutInMinutes: 2880 # 2 days
+  variables:
+  - name: WORKING_ROOT
+    value: D:\
+  - name: VCPKG_DOWNLOADS
+    value: D:\downloads
+  - name: Codeql.Enabled
+    value: false
+  steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download DropBuildNumber if not specified'
+    inputs:
+      buildType: specific
+      project: '0bdbc590-a062-4c3f-b0f6-9383f67865ee'
+      pipeline: 16549
+      buildVersionToDownload: latestFromBranch
+      branchName: 'refs/heads/$(MSVCBranchName)'
+      artifactName: BuildNumber
+      downloadPath: 'D:\msvc-drops'
+    condition: eq(variables['DropBuildNumber'], '')
+  - task: PowerShell@2
+    displayName: 'Set DropBuildNumber if not specified'
+    inputs:
+      targetType: inline
+      script: |
+        $DropBuildNumber = Get-Content -Path D:\msvc-drops\BuildNumber\Build.BuildNumber.txt
+        Write-Host "##vso[task.setvariable variable=DropBuildNumber]$DropBuildNumber"
+        Write-Host "Build Number set to: $DropBuildNumber"
+      pwsh: true
+    condition: eq(variables['DropBuildNumber'], '')
+  - task: ms-vscs-artifact.build-tasks.artifactDropDownloadTask-1.artifactDropDownloadTask@0
+    displayName: 'Download msvc x86 ret'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      buildNumber: 'msvc/builds/$(DropBuildNumber)/x86ret'
+      destinationPath: 'D:\msvc-drops\$(DropBuildNumber)\binaries.x86ret'
+  - task: ms-vscs-artifact.build-tasks.artifactDropDownloadTask-1.artifactDropDownloadTask@0
+    displayName: 'Download msvc amd64 ret'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      buildNumber: 'msvc/builds/$(DropBuildNumber)/amd64ret'
+      destinationPath: 'D:\msvc-drops\$(DropBuildNumber)\binaries.amd64ret'
+  - task: PowerShell@2
+    displayName: 'Rearrange MSVC Drop Layout'
+    inputs:
+      targetType: filePath
+      filePath: 'scripts/azure-pipelines/windows-unstable/rearrange-msvc-drop-layout.ps1'
+      arguments: '-DropRoot "D:\msvc-drops\$(DropBuildNumber)" -BuildType ret'
+      pwsh: true
+  - script: .\bootstrap-vcpkg.bat
+    displayName: 'Bootstrap vcpkg'
+  - task: AzureCLI@2
+    displayName: '*** Test Modified Ports'
+    inputs:
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: 'pscore'
+      failOnStandardError: true
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+          $current = Get-Date -AsUtc
+          $endDate = $current.AddDays(2)
+          $end = Get-Date -Date $endDate -UFormat '+%Y-%m-%dT%H:%MZ'
+          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions r --expiry $end -o tsv | Out-String
+          $assetSas = $assetSas.Trim()
+          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,read"
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet x64-windows -BuildReason $(Build.Reason) -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -PassingIsPassing
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: failure logs for x64-windows"
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
+      ArtifactName: "failure logs for x64-windows"
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')

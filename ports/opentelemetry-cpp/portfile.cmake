@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 b0e035b2b15322ba75d22d775fb77e49d5e084099924cded32ea0b1cb1ad93f22157b01a90993a8af76db07136ec72724b3d7a583ef33ff9ce3f0658005e6394
+    SHA512 c93005c9b24b358a9998141f6c7fd9675778731775dacaad18f0e81117fd00aaabff371c04cf96688a9c86117727181052a141d961d4db28fc457b454351c570
     HEAD_REF main
     PATCHES
         # Missing find_dependency for Abseil
@@ -50,13 +50,7 @@ set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 if(WITH_GENEVA OR WITH_USER_EVENTS)
     # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
     # so they should be ported as a feature under opentelemetry-cpp.
-    vcpkg_from_github(
-        OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
-        REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 4f3059390ad09d12d93255a10f7be8ff948d26fc
-        HEAD_REF main
-        SHA512 392e3a414ea0ee016768dd75a286d2a7a3a7a011cc0fce4ee2f796ad7e0cd70d534eb38cb1d22f91300f4670dfa212a4239ba8e008c2444d47e13c5fe3fb75c0
-    )
+    clone_opentelemetry_cpp_contrib(CONTRIB_SOURCE_PATH)
     
     if(WITH_GENEVA)
         set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
