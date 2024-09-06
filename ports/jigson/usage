@@ -1,0 +1,7 @@
+The package jigson is header only and can be used from CMake via:
+
+    find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+
+    find_path(JIGSON_INCLUDE_DIRS "jigson.hpp")
+    target_include_directories(main PRIVATE ${JIGSON_INCLUDE_DIRS})
