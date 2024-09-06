@@ -10,6 +10,11 @@ set(patches
   adjust-args.patch
   remove-freebsd-pcfile-specialization.patch
 )
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${LIBRARY_PATH}")
+endif()
+
 set(scripts
   vcpkg-port-config.cmake
   vcpkg_configure_meson.cmake
