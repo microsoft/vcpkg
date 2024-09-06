@@ -8133,7 +8133,7 @@
       "port-version": 11
     },
     "sdl3": {
-      "baseline": "3.0.0-8d25c2d",
+      "baseline": "3.0.0-6e5bd58",
       "port-version": 0
     },
     "seacas": {
