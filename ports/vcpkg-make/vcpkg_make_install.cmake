@@ -47,7 +47,7 @@ function(vcpkg_make_install)
     set(destdir "${CURRENT_PACKAGES_DIR}")
     if (CMAKE_HOST_WIN32)
         set(path_backup "$ENV{PATH}")
-        vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers") # This probably doesn't hurt but should it be guarded?
+        vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
         string(REPLACE " " [[\ ]] vcpkg_package_prefix "${CURRENT_PACKAGES_DIR}")
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] destdir "${vcpkg_package_prefix}")
     endif()
@@ -111,7 +111,7 @@ function(vcpkg_make_install)
         vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH)
     endforeach()
 
-    ## Cleanup
+    ## TODO: Fix DESTDIR handling
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" destdir_suffix "${CURRENT_INSTALLED_DIR}")
     if (EXISTS "${CURRENT_PACKAGES_DIR}${destdir_suffix}") # <- Means DESTDIR was correctly used; need to move files.
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
