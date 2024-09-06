@@ -1,7 +1,8 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
+         "https://www.mirrorservice.org/sites/ftp.postgresql.org/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 c66b72d2d9bc503b9ad19c67384517ae921c494b2916f32157c2528dcbb38aefeb4a8cd5003fd40ba8a19612ea64511d534ff5d99e7a1b266024232f983bcf39
+    SHA512 f2070299f0857a270317ac984f8393374cf00d4f32a082fe3c5481e36c560595ea711fed95e40d1bc90c5089edf8f165649d443d8b9c68614e1c83fc91268e96
 )
 
 vcpkg_extract_source_archive(
@@ -15,11 +16,10 @@ vcpkg_extract_source_archive(
         unix/mingw-install.patch
         unix/python.patch
         windows/macro-def.patch
-        windows/python_lib.patch
         windows/win_bison_flex.patch
         windows/msbuild.patch
         windows/spin_delay.patch
-	android/unversioned_so.patch
+        android/unversioned_so.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
@@ -32,19 +32,18 @@ else()
     set(HAS_TOOLS FALSE)
 endif()
 
-set(required_programs PERL)
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND required_programs BISON FLEX)
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+set(required_programs BISON FLEX)
+if(VCPKG_DETECTED_MSVC OR NOT VCPKG_HOST_IS_WINDOWS)
+    list(APPEND required_programs PERL)
 endif()
 foreach(program_name IN LISTS required_programs)
-    # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(program_dir ${${program_name}} DIRECTORY)
     vcpkg_add_to_path(PREPEND "${program_dir}")
 endforeach()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 
 if(VCPKG_DETECTED_MSVC)
     if("nls" IN_LIST FEATURES)

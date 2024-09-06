@@ -70,3 +70,9 @@ jobs:
               let body = "The build failed due to an internal compiler error. Please update your compiler or revert to an old version."
               return await commentLabelClose(body, "category:question");
             }
+
+            // configure: error: 'autoconf-archive' is missing like #37013
+            if (issue.data.body.indexOf("configure: error: 'autoconf-archive' is missing") !== -1){
+              let body = "Please install `autoconf-archive` via `brew install autoconf-archive` (macos) or `sudo apt-get install autoconf-archive` (linux)"
+              return await commentLabelClose(body, "category:question");
+            }

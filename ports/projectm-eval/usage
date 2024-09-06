@@ -1,0 +1,4 @@
+projectm-eval provides CMake targets:
+
+  find_package(projectM-Eval REQUIRED)
+  target_link_libraries(main PRIVATE projectM::Eval)

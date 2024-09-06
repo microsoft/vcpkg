@@ -13,8 +13,8 @@ index 25ddc82..ff51042 100644
 --- a/Modules/_winapi.c
 +++ b/Modules/_winapi.c
 @@ -44,6 +44,15 @@
- #include <crtdbg.h>
- #include "winreparse.h"
+ 
+ #include "pycore_runtime.h"       // _Py_ID
  
 +// The Windws 7 patch lowers the API version such that these constants
 +// are no longer defined by the Windows SDK. Debounce that.

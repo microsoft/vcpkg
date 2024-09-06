@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
     REF "v${VERSION}"
-    SHA512 f4fd81db731b60eebd7d67b8a7f2aa67f44d788f4c0a3f2cef9490fd4f0f1ae9caea1a9a8727619edab6aeda815ae6ace5266b1428b9bea81b7c984deb78bbac
+    SHA512 a1c45434e925ddac293993014686865aecf1b6745013ed6a141b6ee1bdbe7ddef6abcfc2491583e63f33f4292617ee65412da4c41f38731409df9149903a8772
     HEAD_REF master
     PATCHES
         use-openjpeg-config.patch

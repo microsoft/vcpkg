@@ -1,9 +1,9 @@
 {
   "name": "ptex",
-  "version": "2.3.2",
-  "port-version": 4,
+  "version": "2.4.2",
   "description": "Per-Face Texture Mapping for Production Rendering.",
   "homepage": "https://github.com/wdas/ptex",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     {

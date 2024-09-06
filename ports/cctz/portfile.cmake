@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/cctz
-    REF v2.3
-    SHA512 e688ddac1bff108e8315bf94cb61483b72b0d16f601e4e1eeb0fd5c064aefe5a573eee66e8903401aa4c2be71ea9f10dd6c9a9cdf8379f5bb6073248a21a83ff
+    REF "v${VERSION}"
+    SHA512 6d50fe5263b66f93bc3f9aee0da395352d0e95187e6a761afd1b82a461c127823fe93e06139e9d8989f24875b70de3058aab6e66639b408c7930f117e1815e5e
     HEAD_REF master
-    PATCHES
-        fix_vs177.patch #https://github.com/google/cctz/pull/273
 )
 
 vcpkg_cmake_configure(

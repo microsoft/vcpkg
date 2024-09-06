@@ -9,11 +9,11 @@ index d1b3db53..9a9ce91d 100644
 -#define SDF_VERSION_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${SDF_MAJOR_VERSION}/${SDF_PKG_VERSION}"
  
 diff --git a/src/SDF.cc b/src/SDF.cc
-index 20dcd4c6..802cbde3 100644
+index 07056d7..57e8a2c 100644
 --- a/src/SDF.cc
 +++ b/src/SDF.cc
-@@ -97,22 +97,6 @@ std::string findFile(const std::string &_filename, bool _searchLocalPath,
-     filename = filename.substr(idx + sep.length());
+@@ -108,24 +108,8 @@ std::string findFile(const std::string &_filename, bool _searchLocalPath,
+     }
    }
  
 -  // Next check the install path.
@@ -32,7 +32,9 @@ index 20dcd4c6..802cbde3 100644
 -    return path;
 -  }
 -
-   // Next check to see if the given file exists.
--   path = filename;
-+   std::string path = filename;
+   // Finally check to see if the given file exists.
+-  path = filename;
++  std::string path = filename;
    if (sdf::filesystem::exists(path))
+   {
+     return path;

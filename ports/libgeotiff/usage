@@ -1,5 +1,10 @@
-The package libgeotiff provides a CMake config file:
+libgeotiff provides a CMake config file:
 
-    find_package(GeoTIFF CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${GEOTIFF_INCLUDE_DIR})
-    target_link_libraries(main PRIVATE ${GEOTIFF_LIBRARIES})
+  find_package(GeoTIFF CONFIG REQUIRED)
+  target_include_directories(main PRIVATE ${GEOTIFF_INCLUDE_DIR})
+  target_link_libraries(main PRIVATE ${GEOTIFF_LIBRARIES})
+
+libgeotiff provides pkg-config modules:
+
+  # GeoTIFF file format library
+  libgeotiff

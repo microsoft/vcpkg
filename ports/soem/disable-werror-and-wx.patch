@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7fa930c..5d96ae4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,16 +27,13 @@ if(WIN32)
+   find_library(packet_LIBRARY NAMES packet)
+   include_directories(${winpcap_INCLUDE_DIRS})
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D _CRT_SECURE_NO_WARNINGS")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  /WX")
+   set(OS_LIBS ${winpcap_LIBRARY} ${packet_LIBRARY} Ws2_32.lib Winmm.lib)
+ elseif(UNIX AND NOT APPLE)
+   set(OS "linux")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror")
+   set(OS_LIBS pthread rt)
+ elseif(APPLE)
+   # This must come *before* linux or MacOSX will identify as Unix.
+   set(OS "macosx")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror")
+   set(OS_LIBS pthread pcap)
+ elseif(${CMAKE_SYSTEM_NAME} MATCHES "rt-kernel")
+   set(OS "rtk")
+@@ -45,10 +42,6 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "rt-kernel")
+   include_directories(oshw/${OS}/${ARCH})
+   file(GLOB OSHW_EXTRA_SOURCES oshw/${OS}/${ARCH}/*.c)
+   set(OSHW_SOURCES "${OS_HW_SOURCES} ${OSHW_ARCHSOURCES}")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-but-set-variable")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-function")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-format")
+   set(OS_LIBS "-Wl,--start-group -l${BSP} -l${ARCH} -lkern -ldev -lsio -lblock -lfs -lusb -llwip -leth -li2c -lrtc -lcan -lnand -lspi -lnor -lpwm -ladc -ltrace -lc -lm -Wl,--end-group")
+ elseif(${CMAKE_SYSTEM_NAME} MATCHES "rtems")
+   message(STATUS "Building for RTEMS")

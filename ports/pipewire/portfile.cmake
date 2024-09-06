@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pipewire/pipewire
     REF "${VERSION}"
-    SHA512 97bac72c3d0e4ff8b5a68ef1c41f5ea530eaa8ff411adc3f3a5837374f62b8b04316eaf5a7815264935655c6fd0b13b09d3e15c4a9a85e2cac8754dc26d34580
+    SHA512 4ef85f17b0364fe1ef994bf58fe9232fb201002b9fd6644542f58f91595cca48dc70a6a17b50713809c618998626b18e7f1436a090fea826a80b41df9418e2bf
     HEAD_REF master # branch name
 )
 
@@ -43,6 +43,7 @@ vcpkg_configure_meson(
         -Dlibusb=disabled
         -Dlv2=disabled
         -Dman=disabled
+        -Dopus=disabled
         -Dpipewire-alsa=disabled
         -Dpipewire-jack=disabled
         -Dpipewire-v4l2=disabled
@@ -70,6 +71,7 @@ vcpkg_configure_meson(
         -Dx11-xfixes=disabled
         -Dx11=disabled
         -Dsession-managers=[]
+        -Dc_args=-Wno-strict-prototypes
 )
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
@@ -85,9 +87,9 @@ endif()
 # remove absolute paths
 file(GLOB config_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.conf")
 foreach(file ${config_files})
-    vcpkg_replace_string("${file}" "in ${CURRENT_PACKAGES_DIR}/etc/pipewire for system-wide changes\n# or" "")
+    vcpkg_replace_string("${file}" "in ${CURRENT_PACKAGES_DIR}/etc/pipewire for system-wide changes\n# or" "" IGNORE_UNCHANGED)
     cmake_path(GET file FILENAME filename)
-    vcpkg_replace_string("${file}" "# ${CURRENT_PACKAGES_DIR}/etc/pipewire/${filename}.d/ for system-wide changes or in" "")
+    vcpkg_replace_string("${file}" "# ${CURRENT_PACKAGES_DIR}/etc/pipewire/${filename}.d/ for system-wide changes or in" "" IGNORE_UNCHANGED)
 endforeach()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pipewire/pipewire.conf" "${CURRENT_PACKAGES_DIR}/bin" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pipewire/minimal.conf" "${CURRENT_PACKAGES_DIR}/bin" "")

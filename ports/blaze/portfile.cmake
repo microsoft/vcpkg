@@ -6,9 +6,16 @@ vcpkg_from_bitbucket(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        lapack   USE_LAPACK
+        openmp   BLAZE_SHARED_MEMORY_PARALLELIZATION
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBLAZE_SMP_THREADS=OpenMP
 )
 

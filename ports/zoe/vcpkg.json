@@ -1,6 +1,6 @@
 {
   "name": "zoe",
-  "version": "3.0",
+  "version": "3.1",
   "maintainers": "winsoft666 <winsoft666@outlook.com>",
   "description": "C++ File Download Library, support Multithreading, Breakpoint Transmission, Speed Limit, Real-time Speed.",
   "homepage": "https://github.com/winsoft666/zoe",

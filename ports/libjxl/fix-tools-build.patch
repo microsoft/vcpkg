@@ -1,0 +1,13 @@
+diff --git a/lib/jxl_extras.cmake b/lib/jxl_extras.cmake
+index 597f691..b1c184c 100644
+--- a/lib/jxl_extras.cmake
++++ b/lib/jxl_extras.cmake
+@@ -151,7 +151,7 @@ endif()
+ 
+ ### Library that does not depend on internal parts of jxl library.
+ ### Used by cjxl and djxl binaries.
+-add_library(jxl_extras_codec
++add_library(jxl_extras_codec STATIC
+   $<TARGET_OBJECTS:jxl_extras_core-obj>
+ )
+ target_link_libraries(jxl_extras_codec PRIVATE

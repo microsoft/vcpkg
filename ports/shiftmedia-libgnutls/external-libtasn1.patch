@@ -1,8 +1,8 @@
 diff --git a/SMP/libgnutls.vcxproj.filters b/SMP/libgnutls.vcxproj.filters
-index 5c4d1070d..df4aa2b9f 100644
+index 0e810b202..5a69f12ec 100644
 --- a/SMP/libgnutls.vcxproj.filters
 +++ b/SMP/libgnutls.vcxproj.filters
-@@ -1514,30 +1514,6 @@
+@@ -1520,30 +1520,6 @@
      <ClCompile Include="..\lib\nettle\sysrng-bcrypt.c">
        <Filter>Source Files\lib\nettle</Filter>
      </ClCompile>
@@ -34,10 +34,10 @@ index 5c4d1070d..df4aa2b9f 100644
        <Filter>Source Files\lib\nettle\gost</Filter>
      </ClCompile>
 diff --git a/SMP/libgnutls_files.props b/SMP/libgnutls_files.props
-index 8bc3e2406..10e113e93 100644
+index 7fe1f88d5..cbc2d45c1 100644
 --- a/SMP/libgnutls_files.props
 +++ b/SMP/libgnutls_files.props
-@@ -170,16 +170,6 @@
+@@ -172,16 +172,6 @@
    <ItemGroup>
      <ClCompile Include="lib\gnutls_asn1_tab.c" />
      <ClCompile Include="lib\pkix_asn1_tab.c" />
@@ -53,12 +53,12 @@ index 8bc3e2406..10e113e93 100644
 -    <ClCompile Include="..\devel\libtasn1\lib\version.c" />
      <ClCompile Include="..\gnulib\lib\c-strcasecmp.c" />
      <ClCompile Include="..\gnulib\lib\c-strncasecmp.c" />
-     <ClCompile Include="..\gnulib\lib\hash-pjw-bare.c" />
+     <ClCompile Include="..\gnulib\lib\gl_linkedhash_list.c" />
 diff --git a/SMP/libgnutls_winrt.vcxproj.filters b/SMP/libgnutls_winrt.vcxproj.filters
-index 49778942d..804248636 100644
+index 761877440..cd40b5bb7 100644
 --- a/SMP/libgnutls_winrt.vcxproj.filters
 +++ b/SMP/libgnutls_winrt.vcxproj.filters
-@@ -1514,30 +1514,6 @@
+@@ -1520,30 +1520,6 @@
      <ClCompile Include="..\lib\nettle\sysrng-bcrypt.c">
        <Filter>Source Files\lib\nettle</Filter>
      </ClCompile>
