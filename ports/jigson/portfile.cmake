@@ -1,0 +1,13 @@
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO JoshuaSledden/Jigson
+  REF v0.1.2
+  SHA512 a46f0fba97af44a01776214ffed17de67d21fafc73b0be32d40b6d11f39f8fb6c2e5762a57e8394c3eb80c8202cdc94621f4cd860c4a467a8a79ae0478bc48fb
+)
+
+file(INSTALL "${SOURCE_PATH}/Jigson.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
