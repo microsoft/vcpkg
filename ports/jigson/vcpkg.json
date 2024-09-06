@@ -4,11 +4,7 @@
   "description": "A JSON mapping library for C++",
   "homepage": "https://github.com/JoshuaSledden/Jigson",
   "license": "MIT",
-  "dependencies": ["nlohmann-json"],
-  "features": {
-    "test": {
-      "description": "Build tests",
-      "dependencies": ["gtest"]
-    }
-  }
+  "dependencies": [
+    "nlohmann-json"
+  ]
 }
