@@ -6653,8 +6653,8 @@
       "port-version": 4
     },
     "openssl": {
-      "baseline": "3.3.1",
-      "port-version": 1
+      "baseline": "3.3.2",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "deprecated",
