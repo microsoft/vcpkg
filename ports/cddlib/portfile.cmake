@@ -16,4 +16,4 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING")
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
