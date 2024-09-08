@@ -1,11 +1,13 @@
 {
   "name": "libftdi1",
   "version": "1.5",
-  "port-version": 4,
+  "port-version": 5,
   "description": "FTDI USB driver with bitbang mode",
   "dependencies": [
-    "libconfuse",
-    "libusb",
+    {
+      "name": "libusb",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,5 +16,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cpp": {
+      "description": "C++ bindings",
+      "dependencies": [
+        "boost-smart-ptr"
+      ]
+    }
+  }
 }
