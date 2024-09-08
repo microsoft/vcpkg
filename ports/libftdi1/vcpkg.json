@@ -3,6 +3,8 @@
   "version": "1.5",
   "port-version": 5,
   "description": "FTDI USB driver with bitbang mode",
+  "homepage": "https://www.intra2net.com/en/developer/libftdi/",
+  "license": "LGPL-2.1-only AND MIT",
   "dependencies": [
     {
       "name": "libusb",
@@ -20,6 +22,7 @@
   "features": {
     "cpp": {
       "description": "C++ bindings",
+      "license": "GPL-2.0-only WITH eCos-exception-2.0",
       "dependencies": [
         "boost-smart-ptr"
       ]

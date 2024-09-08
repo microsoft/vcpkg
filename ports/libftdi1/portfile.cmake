@@ -71,4 +71,9 @@ if(NOT "cpp" IN_LIST FEATURES)
     file(REMOVE  "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libftdipp1.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libftdipp1.pc")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(file_list "${SOURCE_PATH}/COPYING.LIB")
+if("cpp" IN_LIST FEATURES)
+    set(file_list "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/COPYING.LIB" "${SOURCE_PATH}/COPYING.GPL")
+endif()
+
+vcpkg_install_copyright(FILE_LIST ${file_list})
