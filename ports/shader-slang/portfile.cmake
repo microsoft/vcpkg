@@ -128,7 +128,9 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   # Important to remove existing files
   # Otherwise we will run afoul of code signature
   file(GLOB existing "${CURRENT_PACKAGES_DIR}/tools/shader-slang/*")
-  file(REMOVE ${existing})
+  if(existing)
+    file(REMOVE ${existing})
+  endif()
   file(GLOB osx_tools "${TOOL_BINDIST_PATH}/*")
   file(INSTALL ${osx_tools} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
 else()
