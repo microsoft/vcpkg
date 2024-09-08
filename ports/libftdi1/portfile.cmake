@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
         cmake-version.diff
         disable-config-script.diff
         linkage.diff
+        libdir.diff
         libftdipp1.diff
         libusb.diff
 )
