@@ -18,6 +18,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         alsa     SDL_ALSA
+        dbus     SDL_DBUS
         ibus     SDL_IBUS
         samplerate SDL_LIBSAMPLERATE
         vulkan   SDL_VULKAN

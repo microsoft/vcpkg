@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 693e49f..b0f26f6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -26,7 +26,6 @@ SET(libftgl_la_SOURCES
+     FTGlyphContainer.h
+     FTInternals.h
+     FTLibrary.cpp
+-    FTLibrary.h
+     FTList.h
+     FTPoint.cpp
+     FTSize.cpp

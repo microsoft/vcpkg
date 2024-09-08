@@ -6,6 +6,7 @@ jobs:
 - job: x64_windows
   pool:
     name: vcpkg-testing-msvc
+    demands: ImageVersionOverride -equals 2024.08.28
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days

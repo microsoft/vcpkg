@@ -7,14 +7,24 @@ vcpkg_from_git(
         cmake.diff
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
-vcpkg_copy_tools(TOOL_NAMES yuvconvert AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES yuvconvert yuvconstants AUTO_CLEAN)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libyuv/basic_types.h" "defined(LIBYUV_USING_SHARED_LIBRARY)" "1")

@@ -51,7 +51,7 @@ function New-Password {
 
   $result = New-Object SecureString
   for ($idx = 0; $idx -lt $Length; $idx++) {
-    $result.AppendChar($alphabet[[System.Security.Cryptography.RandomNumberGenerator]::GetInt32($alphabet.Length)])
+    $result.AppendChar($alphabet[(Get-SecureRandom -Maximum $alphabet.Length)])
   }
 
   return $result
