@@ -29,10 +29,6 @@ if ("ibus" IN_LIST FEATURES)
     message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
 endif()
 
-if(VCPKG_TARGET_IS_UWP)
-    set(configure_opts WINDOWS_USE_MSBUILD)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     ${configure_opts}
@@ -85,15 +81,6 @@ file(STRINGS "${SOURCE_PATH}/CMakeLists.txt" DYLIB_COMPATIBILITY_VERSION REGEX $
 file(STRINGS "${SOURCE_PATH}/CMakeLists.txt" DYLIB_CURRENT_VERSION REGEX ${DYLIB_CURRENT_VERSION_REGEX})
 string(REGEX REPLACE ${DYLIB_COMPATIBILITY_VERSION_REGEX} "\\1" DYLIB_COMPATIBILITY_VERSION "${DYLIB_COMPATIBILITY_VERSION}")
 string(REGEX REPLACE ${DYLIB_CURRENT_VERSION_REGEX} "\\1" DYLIB_CURRENT_VERSION "${DYLIB_CURRENT_VERSION}")
-
-if(VCPKG_TARGET_IS_UWP)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl3.pc" "-l-nodefaultlib:" "-nodefaultlib:")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl3.pc" "-l-nodefaultlib:" "-nodefaultlib:")
-    endif()
-endif()
 
 vcpkg_fixup_pkgconfig()
 
