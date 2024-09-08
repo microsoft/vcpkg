@@ -8149,7 +8149,7 @@
       "port-version": 11
     },
     "sdl3": {
-      "baseline": "3.0.0-6e5bd58",
+      "baseline": "3.0.0-pre",
       "port-version": 0
     },
     "seacas": {
