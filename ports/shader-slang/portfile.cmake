@@ -134,7 +134,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   file(GLOB existing "${CURRENT_PACKAGES_DIR}/tools/shader-slang/*")
   file(REMOVE ${existing})
   file(GLOB osx_tools "${TOOL_BINDIST_PATH}/*")
-  file(INSTALL ${osx_tools} "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
+  file(INSTALL ${osx_tools} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
 endif()
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
