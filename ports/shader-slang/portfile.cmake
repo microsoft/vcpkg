@@ -35,12 +35,6 @@ if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
 		SHA512 88a920f44650bc99ed97b04d3d674fd256b1414c60697dee7bc234472abe9216d7a3d3e5b75537fe01f7da56fe1fe5348d2cd38dad43f4f143105e4cb2e1ec53
 	)
-  vcpkg_download_distfile(
-    TOOL_ARCHIVE
-      URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-macos-dist-x86_64.zip"
-      FILENAME "slang-macos-dist-x86_64.zip"
-      SHA512 1b375c4ef24e74b3a11d79333081fc1154cd0273a017ea4983185eb9877f56e83e651dcd9e835ca9be0e90bc652fc6d9a965ac43d45cac4bc43bb5892cfcd652
-    )
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 	vcpkg_download_distfile(
@@ -48,12 +42,6 @@ if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
 		SHA512 f3de6277d06a9aaadffe4e3d7d74a2352edc12001055142682eb65834cedfdea8f37daa65b7719178a4419f7e87842de6814c03a68b843c5c0085239bb895058
-	)
-  vcpkg_download_distfile(
-		TOOL_ARCHIVE
-		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-macos-dist-aarch64.zip"
-		FILENAME "slang-macos-dist-aarch64.zip"
-		SHA512 1f05918650bcbe68981810f9b0c286fbead709b9b13e4356006d894b3f7651160168d5e28ab422d35c1c370e620029220b901b373196cd0f3b0240468f5a80cf
 	)
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -81,18 +69,6 @@ vcpkg_extract_source_archive(
 	ARCHIVE "${ARCHIVE}"
 	NO_REMOVE_ONE_LEVEL
 )
-
-# On macos we need to download and copy tools slightly different due to code-signing reasons
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-  if(NOT TOOL_ARCHIVE)
-    message(FATAL_ERROR "Failed to retrieve relocatable macos executables.")
-  endif()
-  vcpkg_extract_source_archive(
-    TOOL_BINDIST_PATH
-    ARCHIVE "${TOOL_ARCHIVE}"
-    NO_REMOVE_ONE_LEVEL
-  )
-endif()
 
 if(VCPKG_SHADER_SLANG_UPDATE)
 	message(STATUS "All downloads are up-to-date.")
@@ -124,21 +100,17 @@ if(NOT VCPKG_BUILD_TYPE)
   endif()
 endif()
 
+# On macos, slang has signed their binaries
+# vcpkg wants to be helpful and update the rpath as it moves binaries around but this 
+# breaks the code signature and makes the binaries useless
+# Removing the signature is rude so instead we will disable rpath fixup
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-  # Important to remove existing files
-  # Otherwise we will run afoul of code signature
-  file(GLOB existing "${CURRENT_PACKAGES_DIR}/tools/shader-slang/*")
-  if(existing)
-    file(REMOVE ${existing})
-  endif()
-  vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${TOOL_BINDIST_PATH}")
-  file(GLOB osx_libs "${TOOL_BINDIST_PATH}/*.dylib")
-  file(INSTALL ${osx_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
-else()
-  # Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
-  file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
-  vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
+  set(VCPKG_FIXUP_MACHO_RPATH OFF)
 endif()
+
+# Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
+file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
+vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
 file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
