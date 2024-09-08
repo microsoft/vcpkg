@@ -8357,7 +8357,7 @@
       "port-version": 2
     },
     "snitch": {
-      "baseline": "1.2.4",
+      "baseline": "1.2.5",
       "port-version": 0
     },
     "snowhouse": {
