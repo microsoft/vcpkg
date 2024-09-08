@@ -89,7 +89,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   endif()
   vcpkg_extract_source_archive(
     TOOL_BINDIST_PATH
-    TOOL_ARCHIVE "${TOOL_ARCHIVE}"
+    ARCHIVE "${TOOL_ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
   )
 endif()
