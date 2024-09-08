@@ -1,0 +1,44 @@
+diff --git a/client/BUILD.gn b/client/BUILD.gn
+index bd150ab..5cbf469 100644
+--- a/client/BUILD.gn
++++ b/client/BUILD.gn
+@@ -15,6 +15,7 @@
+ import("../build/crashpad_buildconfig.gni")
+ 
+ crashpad_static_library("client") {
++  output_name = "crashpad_client"
+   sources = [
+     "crashpad_client.h",
+     "prune_crash_reports.cc",
+@@ -114,6 +115,7 @@ crashpad_static_library("client") {
+ }
+ 
+ static_library("common") {
++  output_name = "crashpad_client_common"
+   sources = [
+     "annotation.cc",
+     "annotation.h",
+diff --git a/handler/BUILD.gn b/handler/BUILD.gn
+index a2d6f7f..70a997e 100644
+--- a/handler/BUILD.gn
++++ b/handler/BUILD.gn
+@@ -94,6 +94,7 @@ if (crashpad_is_android) {
+ }
+ 
+ static_library("common") {
++  output_name = "crashpad_handler_common"
+   sources = [
+     "crash_report_upload_thread.cc",
+     "crash_report_upload_thread.h",
+diff --git a/util/BUILD.gn b/util/BUILD.gn
+index e7ff4a8..9efcb41 100644
+--- a/util/BUILD.gn
++++ b/util/BUILD.gn
+@@ -167,6 +167,7 @@ if (crashpad_is_win) {
+ }
+ 
+ crashpad_static_library("util") {
++  output_name = "crashpad_util"
+   sources = [
+     "file/delimited_file_reader.cc",
+     "file/delimited_file_reader.h",

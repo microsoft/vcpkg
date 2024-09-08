@@ -13,7 +13,7 @@ if(NOT TARGET crashpad::crashpad)
   add_library(crashpad::crashpad INTERFACE IMPORTED)
   target_include_directories(crashpad::crashpad INTERFACE "${_IMPORT_PREFIX}/include/crashpad")
 
-  set(_libs client common util base)
+  set(_libs crashpad_client crashpad_client_common crashpad_util crashpad_base)
   if(APPLE)
     list(APPEND _libs mig_output)
   endif()

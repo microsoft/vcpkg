@@ -2018,7 +2018,7 @@
     },
     "crashpad": {
       "baseline": "2024-04-11",
-      "port-version": 2
+      "port-version": 3
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -6638,7 +6638,7 @@
     },
     "openmvs": {
       "baseline": "2.1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openni2": {
       "baseline": "2.2.0.33",
