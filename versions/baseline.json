@@ -6748,6 +6748,10 @@
       "baseline": "4.0.476",
       "port-version": 0
     },
+    "outcome": {
+      "baseline": "2.2.9",
+      "port-version": 0
+    },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
       "port-version": 3
