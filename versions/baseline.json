@@ -612,6 +612,10 @@
       "baseline": "2.0.0",
       "port-version": 0
     },
+    "bext-text": {
+      "baseline": "2024-01-19",
+      "port-version": 0
+    },
     "bext-ut": {
       "baseline": "2.0.1",
       "port-version": 0
