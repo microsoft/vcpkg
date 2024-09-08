@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bloomberg/rmqcpp
-    REF 52e583c2eb3f06707ce5fde7f29089b17428f6b2
-    SHA512 c4232f37e7bc61d0cc77c52a1283fefc1a7925b4ef8cfbe9b404393540c773feabdc2ad3adc263beb06fe079cbf22010bf1551e15eb2f55b1347f6d8c8f35f8b
+    REF 11859eb470f31008da522b59e96899585b4e94ce
+    SHA512 f82cc1696d370e81dc410442465ecbe06940cd50ae8c93215e19a4b7de57ee7581a1d4f59d9775e08c646b63496ac18528b29edb852e0b9fb9cab7f761151b25
     HEAD_REF main
+    PATCHES
+      "disable-tests-and-examples.patch"
 )
 
 vcpkg_cmake_configure(
