@@ -124,10 +124,6 @@ if(NOT VCPKG_BUILD_TYPE)
   endif()
 endif()
 
-# Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
-file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
-vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
-
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   # Important to remove existing files
   # Otherwise we will run afoul of code signature
@@ -135,6 +131,10 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   file(REMOVE ${existing})
   file(GLOB osx_tools "${TOOL_BINDIST_PATH}/*")
   file(INSTALL ${osx_tools} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
+else()
+  # Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
+  file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
+  vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
 endif()
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
