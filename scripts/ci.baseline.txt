@@ -305,11 +305,6 @@ discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
 discordcoreapi:x64-linux=skip   # cause linux CI to hang https://github.com/microsoft/vcpkg/pull/40229
 discordcoreapi:x64-osx=fail
-# failed with dependency https://github.com/RealTimeChris/DiscordCoreAPI/issues/45
-discordcoreapi:x64-uwp=fail
-discordcoreapi:x64-windows=fail
-discordcoreapi:x64-windows-static=fail
-discordcoreapi:x64-windows-static-md=fail
 discount:x64-android=fail
 eathread:x64-android=fail
 ecal:arm-neon-android=fail
