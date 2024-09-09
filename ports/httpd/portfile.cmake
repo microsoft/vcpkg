@@ -29,8 +29,22 @@ vcpkg_cmake_configure(
         PKG_CONFIG_EXECUTABLE
 )
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_ALLOW_EXES_IN_BIN enabled)
 
 vcpkg_cmake_install()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(REMOVE_RECURSE
+    # Empty directories
+    "${CURRENT_PACKAGES_DIR}/manual/style/lang"
+    "${CURRENT_PACKAGES_DIR}/manual/style/xsl"
+    "${CURRENT_PACKAGES_DIR}/debug/cgi-bin"
+    "${CURRENT_PACKAGES_DIR}/cgi-bin"
+    "${CURRENT_PACKAGES_DIR}/debug/logs"
+    "${CURRENT_PACKAGES_DIR}/logs"
+
+    # Should not exist in debug build.
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/manual"
+)
