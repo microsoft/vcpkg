@@ -47,10 +47,6 @@ endif()
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
                             # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
-                            patches/CVE-2023-32763-qtbase-5.15.diff
-                            patches/CVE-2023-34410-qtbase-5.15.diff
-                            patches/CVE-2023-37369-qtbase-5.15.diff
-                            patches/CVE-2023-38197-qtbase-5.15.diff
                             patches/CVE-2023-43114-5.15.patch
                             patches/0001-CVE-2023-51714-qtbase-5.15.diff
                             patches/0002-CVE-2023-51714-qtbase-5.15.diff
@@ -101,7 +97,8 @@ set(CORE_OPTIONS
     #-combined-angle-lib
     # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
     #-optimized-tools
-    #-force-debug-info
+    -force-debug-info
+    -no-separate-debug-info
     -verbose
 )
 
