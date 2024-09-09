@@ -25,11 +25,14 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
-                        -DINPUT_libarchive=system
-                        -DINPUT_libyaml=system
+                        -DINPUT_libarchive='system'
+                        -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libyaml=ON
+                        -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libarchive=ON
-                        --trace-expand
+                        -DINPUT_libarchive='system'
+                        -DINPUT_libdbus='no'
+                        -DINPUT_libbacktrace='no'
                    OPTIONS_DEBUG
                    OPTIONS_RELEASE)
 
@@ -38,7 +41,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(scriptfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tools/dumpqmltypes/CMakeFiles/appman-dumpqmltypes.dir/post-build.bat")
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" CURRENT_INSTALLED_DIR_NATIVE)
     if(EXISTS "${scriptfile}")
-        vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
+        vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin" IGNORE_UNCHANGED)
     endif()
 endif()
 vcpkg_cmake_install(ADD_BIN_TO_PATH)

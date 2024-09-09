@@ -1,13 +1,21 @@
+vcpkg_download_distfile(PATCH_ADD_OPTION_EMBED_PROJ_DATA_PATH
+    URLS https://github.com/OSGeo/PROJ/commit/bddac146b2aa9db78cd491153aaad260eb307b11.patch?full_index=1
+    SHA512 06511fe82f85498813e1b99a419359e9877689f7c763db392a66ae0202027ee12f9a4015a5bb9c13a357d0ba22d002b021e5c0dc9c31d33293c48fc71e766a69
+    FILENAME OSGeo-PROJ-bddac146b2aa9db78cd491153aaad260eb307b11.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 5bc53723a81d9950599d6c47a837de5e9052aa56f943951e3ad0911cbeb71585bac648f37b9b626f32bb5d0b481ce5aef9be0833910e53b4b015b573808b8981
+    SHA512 4b3ceb9e3b2213b0bb2fc839f4dd70e08ee53323465c7bb473131907e4b66c836623da115c7413dfd8bafd0a992fa173003063e2233ab577139ab8462655b6cc
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         remove_toolset_restriction.patch
+        fix-gcc-version-less-8.patch
+        "${PATCH_ADD_OPTION_EMBED_PROJ_DATA_PATH}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,7 +40,10 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DNLOHMANN_JSON=external
         -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
         "-DEXE_SQLITE3=${EXE_SQLITE3}"
+        -DPROJ_DATA_ENV_VAR_TRIED_LAST=ON
+        -DEMBED_PROJ_DATA_PATH=OFF
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
 )
@@ -69,4 +80,4 @@ if(NOT DEFINED VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

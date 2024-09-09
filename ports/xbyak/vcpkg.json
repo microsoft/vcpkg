@@ -1,6 +1,6 @@
 {
   "name": "xbyak",
-  "version": "6.73",
+  "version": "7.6",
   "description": "Xbyak is a JIT assembler for x86(IA-32)/x64(AMD64, x86-64).",
   "homepage": "https://github.com/herumi/xbyak",
   "license": "BSD-3-Clause",

@@ -14,12 +14,12 @@ vcpkg_replace_string ("${SOURCE_PATH}/meson.build"
 
 set(opts "")
 if(VCPKG_TARGET_IS_LINUX)
-  set(opts
+  list(APPEND opts
     -Dalsa=enabled
     -Doss-output=enabled
   )
 else()
-  set(opts
+  list(APPEND opts
     -Dalsa=disabled
     -Doss-output=disabled
   )
@@ -38,7 +38,7 @@ vcpkg_configure_meson(
       -Dbashcompletiondir=no
       -Dzshcompletiondir=no
       
-      -Dasyncns=disabled # rerquires port?
+      -Dasyncns=disabled # requires port?
       -Davahi=disabled
       -Dbluez5=disabled
       -Dbluez5-native-headset=false
@@ -80,9 +80,9 @@ endif()
 
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME PulseAudio CONFIG_PATH "lib/cmake/PulseAudio")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/PulseAudio")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/padsp" "${CURRENT_PACKAGES_DIR}" "$(dirname "$0")/../..")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/padsp" "${CURRENT_PACKAGES_DIR}" [[$(dirname "$0")/../..]])
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/etc/pulse/client.conf" "${CURRENT_PACKAGES_DIR}" "<path-to-pulseaudio>")
 if(NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/pulse/client.conf" "${CURRENT_PACKAGES_DIR}" "<path-to-pulseaudio>")

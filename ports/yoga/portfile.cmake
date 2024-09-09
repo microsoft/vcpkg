@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
     REF "v${VERSION}"
-    SHA512 3831e467428a54d256b75aa9fa86830b9ceb124eb6e16d817affa72b6093c768c7763e1d13bcdc3b332e4354df4367f88289ecd533790d89ccd90cef206563f8
+    SHA512 04fdb398a402c499cc876ccb36a3edfd741ee4013f0ac6b5b33ce495add1d3b76c09d7672b3e3842e5e50c0d7f42a97b19fd7e8085c6fa964c063a161d9a0fe2
     HEAD_REF master
     PATCHES
         disable_tests.patch

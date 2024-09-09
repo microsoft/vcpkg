@@ -3,10 +3,6 @@
 #
 
 parameters:
-  - name: vcpkgToolSha
-    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
-    type: string
-    default: 'use default'
   - name: jobName
     type: string
   - name: dockerImage
@@ -21,28 +17,19 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: 'PrAnd-1ES-Pool'
-    demands:
-    - ImageOverride -equals vcpkg-mariner-docker-gen1
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
   cancelTimeoutInMinutes: 1
-  dependsOn: mintsas
   variables:
   - name: WORKING_ROOT
     value: /mnt/vcpkg-ci
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
-  - name: X_VCPKG_ASSET_SOURCES
-    value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_ASSET_SOURCES'] ]
-  - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_BINARY_SOURCE_STUB'] ]
+  - name: ANDROID_NDK_HOME
+    value: /android-ndk-r26d
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
-  - bash: |
-      az login --identity
-      az acr login --name vcpkgandroidwus3
-    displayName: 'Set up managed identity'
   - bash: |
       sudo mkdir /home/agent -m=777
       sudo chown `id -u` /home/agent
@@ -58,27 +45,23 @@ jobs:
         docker rm -f $CONTAINERS
       fi
     displayName: 'Stop and remove all docker containers'
-  - bash: |
-      docker pull ${{ parameters.dockerImage }}
-    displayName: 'Pull Docker Container'
-  - bash: |
-      docker run --rm \
-      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-      ${{ parameters.dockerImage }} \
-      ./bootstrap-vcpkg.sh
-    displayName: 'Bootstrap vcpkg'
-    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
-  - bash: |
-      docker run --rm \
-      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-      ${{ parameters.dockerImage }} \
-      ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
-    displayName: "Build vcpkg with CMake"
-    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - task: Bash@3
+  - task: AzureCLI@2
+    displayName: '*** Test Modified Ports'
     inputs:
-      targetType: inline
-      script: |
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: bash
+      scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
+      inlineScript: |
+        az acr login --name vcpkgandroidwus3
+        docker pull ${{ parameters.dockerImage }}
+        docker run --rm \
+          --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+          ${{ parameters.dockerImage }} \
+          ./bootstrap-vcpkg.sh
+        end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
+        assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
+        binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
+        echo Minting SAS tokens valid through $end
         USER=$(id --user)
         docker run --init -i \
         -a stderr \
@@ -87,16 +70,15 @@ jobs:
         --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
-        --env X_VCPKG_ASSET_SOURCES="$(X_VCPKG_ASSET_SOURCES)" \
+        --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite" \
+        --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
         ${{ parameters.dockerImage }} \
         pwsh \
          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
          -Triplet ${{ replace(parameters.jobName, '_', '-') }} \
          -BuildReason $(Build.Reason) \
-         -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" \
+         -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,$binarySas" \
          -WorkingRoot ${{ variables.WORKING_ROOT }}
-      failOnStderr: true
-    displayName: '*** Test Modified Ports'
   - bash: |
       CONTAINERS=$(docker ps -a -q)
       if [ -n "$CONTAINERS" ]; then

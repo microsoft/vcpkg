@@ -1,6 +1,6 @@
 {
   "name": "nghttp2",
-  "version": "1.61.0",
+  "version": "1.62.1",
   "description": "Implementation of the Hypertext Transfer Protocol version 2 in C",
   "homepage": "https://github.com/nghttp2/nghttp2",
   "license": "MIT",

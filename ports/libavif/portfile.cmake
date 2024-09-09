@@ -12,13 +12,14 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         aom AVIF_CODEC_AOM
+        dav1d AVIF_CODEC_DAV1D
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DAVIF_BUILD_APPS=OFF
-        -DCMAKE_REQUIRE_FIND_PACKAGE_libyuv=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_libsharpyuv=ON
         ${FEATURE_OPTIONS}
 )
 

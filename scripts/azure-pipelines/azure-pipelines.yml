@@ -2,11 +2,7 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-1ES'
-  osx-pool: 'PrOsx-2024-01-18'
-  osx-arm64-pool: 'PrOsx-2024-01-22-arm64'
-  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-04-11'
+  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-07-11'
 
 parameters:
   - name: vcpkgToolSha
@@ -19,88 +15,65 @@ parameters:
     default: '-'
 
 jobs:
-- job: mintsas
-  displayName: 'Mint SAS token for Asset and Binary Caches'
-  pool:
-    name: PrToken-1ES
-  steps:
-    - checkout: none
-    - script: |
-        az login --identity --username a81b4cd3-9d8d-4cb9-9a74-f2038f24f224
-        end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
-        echo Minting SAS tokens valid through $end
-        echo "##vso[task.setvariable variable=X_VCPKG_ASSET_SOURCES;isSecret=true;isOutput=true;isreadonly=true]x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,`az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`,readwrite"
-        echo "##vso[task.setvariable variable=X_VCPKG_BINARY_SOURCE_STUB;isSecret=true;isOutput=true;isreadonly=true]x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`"
-      name: mintsasstep
-      displayName: 'Mint Tokens'
-
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x86_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows_static
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows_static_md
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_uwp
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: arm64_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: arm64_uwp
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: osx/azure-pipelines.yml
   parameters:
     jobName: x64_osx
-    poolName: $(osx-pool)
+    poolName: 'PrOsx-2024-07-12'
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: osx/azure-pipelines.yml
   parameters:
     jobName: arm64_osx
-    poolName: $(osx-arm64-pool)
+    poolName: 'PrOsx-2024-07-12-arm64'
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: linux/azure-pipelines.yml
   parameters:
     jobName: x64_linux
-    poolName: $(linux-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -108,19 +81,16 @@ jobs:
   parameters:
     jobName: arm_neon_android
     dockerImage: $(linux-docker-image)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: x64_android
     dockerImage: $(linux-docker-image)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm64_android
     dockerImage: $(linux-docker-image)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}

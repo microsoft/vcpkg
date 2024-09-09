@@ -1,11 +1,11 @@
 {
   "name": "directxtex",
-  "version-date": "2024-03-06",
+  "version-date": "2024-09-04",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "(windows & !arm32) | linux",
   "dependencies": [
     {
       "name": "directx-headers",

@@ -1,11 +1,11 @@
 {
   "name": "directxmesh",
-  "version-date": "2024-02-21",
+  "version-date": "2024-09-04",
   "description": "DirectXMesh geometry processing library",
   "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "(windows & !arm32) | linux",
   "dependencies": [
     {
       "name": "directx-headers",

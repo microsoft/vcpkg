@@ -16,11 +16,12 @@ vcpkg_from_github(
     PATCHES
         0001_Export_targets.patch
         0002_Fix_config.patch
+        0003_fix_dep.patch
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)" IGNORE_UNCHANGED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -37,7 +38,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/ompl/cmake)
-vcpkg_fixup_pkgconfig()
 
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
 file(REMOVE_RECURSE

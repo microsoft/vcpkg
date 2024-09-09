@@ -3,9 +3,11 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
       "clang-cl.patch"
+      "fix-error2275-2672.patch"
+      "add-include-string.patch"
 )
 
-set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
+set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -69,7 +71,7 @@ x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES html5lib OUT_PYTHON_VAR 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
-if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+if(CMAKE_HOST_WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
@@ -120,6 +122,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
 endif()
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
 
 qt_install_copyright("${SOURCE_PATH}")
 

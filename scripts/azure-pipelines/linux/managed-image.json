@@ -11,6 +11,9 @@
         },
         {
             "name": "linux-install-powershell"
+        },
+        {
+            "name": "linux-azcli"
         }
     ]
 }

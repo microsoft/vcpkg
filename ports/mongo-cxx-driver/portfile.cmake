@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 cc09ccbb926b1f00ebd9ead5afda150d0d8a8619c2439f8a9bc01a1f49ebfc0cee91ca2019d97a883a469a8594961b5b74fcc06525dce38461e2003a9f1894c4
+    SHA512 a2e303c503b3e79b30c994888a4a9a31178352a1bb4a9ae73a2e41787c113fdd28e3a0e806abbb9e14419fe1b9aea512bcfe3a54edc126b66f0b732f3df09595
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DMONGOCXX_HEADER_INSTALL_DIR=include
+        -DNEED_DOWNLOAD_C_DRIVER=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Boost
         BSONCXX_HEADER_INSTALL_DIR

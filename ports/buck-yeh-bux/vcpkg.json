@@ -1,13 +1,11 @@
 {
   "name": "buck-yeh-bux",
-  "version": "1.6.8",
-  "port-version": 1,
+  "version": "1.7.0",
   "description": "A supplemental C++ library with functionalities not directly supported from Modern C++ standard.",
   "homepage": "https://github.com/buck-yeh/bux",
   "license": "MIT",
-  "supports": "!(arm | uwp | osx | linux)",
+  "supports": "!(android | linux | osx | uwp)",
   "dependencies": [
-    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
