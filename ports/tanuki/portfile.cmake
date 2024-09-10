@@ -6,6 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-file(INSTALL ${SOURCE_PATH}/include/tanuki/tanuki.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${SOURCE_PATH}/include/tanuki/tanuki.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
