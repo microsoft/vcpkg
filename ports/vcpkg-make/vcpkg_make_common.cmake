@@ -21,19 +21,19 @@ macro(z_vcpkg_make_get_cmake_vars)
         "" "" "LANGUAGES" ${ARGN}
     )
     z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
+
     if(NOT has_cmake_vars_file)
         if(vmgcv_arg_LANGUAGES)
-          string(REPLACE ";" "\;" vmgcv_arg_langs "${vmgcv_arg_LANGUAGES}")
-          list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_langs}")
-          unset(langs)
+          list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_LANGUAGES}")
         endif()
+
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
         vcpkg_cmake_get_vars(cmake_vars_file)
         z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
-        unset(vmgcv_arg_langs)
     else()
         z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
     endif()
+
     include("${cmake_vars_file}")
 endmacro()
 
@@ -87,9 +87,9 @@ function(z_vcpkg_make_prepare_compile_flags)
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
     if(NOT DEFINED arg_LANGUAGES)
-        set(arg_LANGUAGES "C;CXX")
+        set(arg_LANGUAGES "C" "CXX")
     endif()
-
+    
     set(var_suffix "${arg_CONFIG}")
     set(CFLAGS "")
     set(CXXFLAGS "")
@@ -251,7 +251,7 @@ function(z_vcpkg_make_prepare_programs out_env)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    z_vcpkg_make_get_cmake_vars(LANGUAGES "${arg_LANGUAGES}")
+    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
 
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
         # Allows to overwrite settings in custom triplets via the environment
@@ -404,7 +404,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             set(ENV{CPP_FOR_BUILD} "umask 0 | touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
             set(ENV{CXX_FOR_BUILD} "umask 0 | touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
         endif()
-        if("ASM" IN_LIST arg_LANGUAGES )
+        if("ASM" IN_LIST arg_LANGUAGES)
             z_vcpkg_make_set_env(CCAS ASM_COMPILER "-c" ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(AS ASM_COMPILER "-c" ${ABIFLAGS_${arg_CONFIG}})
         endif()
@@ -533,7 +533,7 @@ function(z_vcpkg_make_prepare_flags)
     ####
     set(flags_opts "")
     if(DEFINED arg_LANGUAGES)
-        set(flags_opts "LANGUAGES;${arg_LANGUAGES}")
+        list(APPEND flags_opts LANGUAGES ${arg_LANGUAGES})
     endif()
 
     if(arg_DISABLE_CPPFLAGS)

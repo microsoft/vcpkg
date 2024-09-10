@@ -27,15 +27,13 @@ function(vcpkg_make_configure)
 
     set(prepare_flags_opts "")
     if(arg_DISABLE_MSVC_WRAPPERS)
-        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")
-    else()
-        
+        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")        
     endif()
     if(arg_DISABLE_CPPFLAGS)
         list(APPEND prepare_flags_opts "DISABLE_CPPFLAGS")
     endif()
     if(DEFINED arg_LANGUAGES)
-        list(APPEND prepare_flags_opts "LANGUAGES" "${arg_LANGUAGES}")
+        list(APPEND prepare_flags_opts "LANGUAGES" ${arg_LANGUAGES})
     endif()
 
     set(escaping "")
@@ -47,10 +45,10 @@ function(vcpkg_make_configure)
     z_vcpkg_make_prepare_flags(${prepare_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
-        set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
+        set(BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
     endif()
-    if(NOT DEFINED arg_BUILD_TRIPLET)
-        z_vcpkg_make_get_configure_triplets(arg_BUILD_TRIPLET COMPILER_NAME ccname)
+    if(NOT DEFINED BUILD_TRIPLET)
+        z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME ccname)
     endif()
 
     if(NOT arg_DISABLE_MSVC_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
@@ -114,7 +112,7 @@ function(vcpkg_make_configure)
                                  CONFIGURE_PATH
                                     "${configure_path_from_wd}"
                                  OPTIONS 
-                                    ${arg_BUILD_TRIPLET}
+                                    ${BUILD_TRIPLET}
                                     ${arg_OPTIONS} 
                                     ${arg_OPTIONS_${configup}}
                                  WORKING_DIRECTORY 
