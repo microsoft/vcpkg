@@ -8700,10 +8700,6 @@
       "baseline": "0.4.0",
       "port-version": 1
     },
-    "tanuki": {
-      "baseline": "2024-08-17",
-      "port-version": 0
-    },
     "taocpp-json": {
       "baseline": "2020-09-14",
       "port-version": 4
