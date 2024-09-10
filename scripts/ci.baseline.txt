@@ -329,7 +329,6 @@ epsilon:x64-uwp=fail
 evpp:arm-neon-android=fail
 evpp:arm64-android=fail
 evpp:x64-android=fail
-faiss:arm64-windows=fail
 fastrtps:arm-neon-android=fail
 fastrtps:arm64-android=fail
 fastrtps:x64-android=fail
@@ -878,8 +877,6 @@ openscap:arm64-osx=fail
 openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows=fail
-openvpn3:x64-osx=fail
-openvpn3:arm64-osx=fail
 openvr:x64-windows-static=fail
 # Conflicts with optional-lite, by the same author
 optional-bare:arm-neon-android=skip

@@ -11,6 +11,7 @@ vcpkg_from_github(
         pkgconfig.patch
         ssize_t_already_define.patch
         fix-warnings.patch
+        mkdir.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
