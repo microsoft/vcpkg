@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 80353ed..222a95f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -316,7 +316,7 @@ ELSEIF(MSVC)
+     message("-- MSVC PDB generation disabled. Release binary will not be debuggable.")
+   endif()
+   # Source code is encoded in UTF-8
+-  ADD_COMPILE_OPTIONS(/source-charset:utf-8)
++  #ADD_COMPILE_OPTIONS(/source-charset:utf-8)
+ ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+   IF(NOT ASSIMP_HUNTER_ENABLED)
+     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+diff --git a/code/AssetLib/3MF/D3MFExporter.cpp b/code/AssetLib/3MF/D3MFExporter.cpp
+index 6c09f09..7b3410a 100644
+--- a/code/AssetLib/3MF/D3MFExporter.cpp
++++ b/code/AssetLib/3MF/D3MFExporter.cpp
+@@ -57,7 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #include <zip/zip.h>
+ #else
+-#include <contrib/zip/src/zip.h>
++#include <zip/zip.h>
+ #endif
+ 
+ namespace Assimp {
