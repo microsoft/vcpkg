@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e64623..9fc1fd4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,9 +39,9 @@ if(${ADDRESS_SANITIZE} STREQUAL "ON")
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1 -fno-omit-frame-pointer -g")
+ endif()
+ 
+-install(FILES share/default.sofa DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
+-install(FILES share/MIT_KEMAR_normal_pinna.sofa
+-        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
++#install(FILES share/default.sofa DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
++#install(FILES share/MIT_KEMAR_normal_pinna.sofa
++#        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
+ 
+ if(BUILD_TESTS)
+ 

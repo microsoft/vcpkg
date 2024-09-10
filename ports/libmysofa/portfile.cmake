@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO honeybunch/libmysofa
-    REF "6d475b650a79c1b6bb926f07751d2ddc7ba19504"
-    SHA512 a26d3f01c7a36975022ded0010a8f4b947ef45a19221ed91fcd4e89595acc2b5a40091cd7b404c8a55fb5c4bd7703886bd7750191e5f6b19d209c794dc2ec60b
+    REPO hoene/libmysofa
+    REF "1f9c8df42dfd6765e390ed8840341f15e1ab997b"
+    SHA512 67ce39d78981dc95cf190b1be4addceec4ecc7c2b14660da53a856be8fcff97a2f238343fccac2d042212e5a101eaf26fd12b78c86d0f6ce022bb79aa9815c67
     HEAD_REF "v${VERSION}"
     PATCHES
-      fix-exports.patch
+      use-vcpkg-zlib.patch
+      skip-install-sample.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
