@@ -16,6 +16,10 @@ set(cppflags "")
 if(VCPKG_TARGET_IS_WINDOWS)
     # PATH_MAX from msvc/libdvdcss.vcxproj
     set(cppflags "CPPFLAGS=\$CPPFLAGS -DPATH_MAX=2048 -DWIN32_LEAN_AND_MEAN")
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        cmake_path(RELATIVE_PATH SOURCE_PATH BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}" OUTPUT_VARIABLE sources)
+        string(APPEND cppflags " -I../${sources}/msvc/include")
+    endif()
 endif()
 
 vcpkg_configure_make(
