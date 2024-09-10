@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-build.patch
         no-absolute-paths.patch
         fix-static-build.patch
+        fix-lib-name-conflict.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

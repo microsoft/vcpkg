@@ -43,6 +43,7 @@ vcpkg_configure_meson(
         -Dlibusb=disabled
         -Dlv2=disabled
         -Dman=disabled
+        -Dopus=disabled
         -Dpipewire-alsa=disabled
         -Dpipewire-jack=disabled
         -Dpipewire-v4l2=disabled

@@ -329,7 +329,6 @@ epsilon:x64-uwp=fail
 evpp:arm-neon-android=fail
 evpp:arm64-android=fail
 evpp:x64-android=fail
-faiss:arm64-windows=fail
 fastrtps:arm-neon-android=fail
 fastrtps:arm64-android=fail
 fastrtps:x64-android=fail
