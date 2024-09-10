@@ -16,10 +16,6 @@ set(expected_cflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")
 set(expected_cxxflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")
 set(expected_ldflags "-Xlinker -Xlinker -Xlinker -L/mylibpath")
 
-message(STATUS "linker_flag_escape: ${linker_flag_escape}")
-message(STATUS "VCPKG_COMBINED_SHARED_LINKER_FLAGS_Release: ${VCPKG_COMBINED_SHARED_LINKER_FLAGS_Release}")
-message(STATUS "LDFLAGS: ${LDFLAGS_Release}")
-
 if(NOT "${CFLAGS_Release}" STREQUAL "${expected_cflags}")
     message(FATAL_ERROR "CFLAGS did not match expected value: ${CFLAGS_Release} vs ${expected_cflags}")
 endif()
