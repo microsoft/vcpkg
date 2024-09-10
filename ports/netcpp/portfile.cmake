@@ -8,10 +8,7 @@ vcpkg_from_github(
 
 set(options -DNETCPP_TEST=OFF)
 
-if(VCPKG_TARGET_IS_LINUX)
-    vcpkg_find_acquire_program(PKGCONFIG)
-    vcpkg_fixup_pkgconfig()
-    
+if(VCPKG_TARGET_IS_LINUX)    
     list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
@@ -26,6 +23,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_find_acquire_program(PKGCONFIG)
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netcpp PACKAGE_NAME netcpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
