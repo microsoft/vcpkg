@@ -6,16 +6,14 @@ vcpkg_from_github(
     HEAD_REF release
 )
 
-if (VCPKG_TARGET_IS_LINUX)
+set(options -DNETCPP_TEST=OFF)
+
+if(VCPKG_TARGET_IS_LINUX)
     vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif ()
 
-
-set (options
-        -DNETCPP_TEST=OFF 
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
     list(APPEND options -DNETCPP_BUILD_SHARED=ON)
 endif ()
 
@@ -29,7 +27,7 @@ vcpkg_cmake_configure(
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netcpp PACKAGE_NAME netcpp   )
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netcpp PACKAGE_NAME netcpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
