@@ -5,6 +5,8 @@ vcpkg_from_gitlab(
     REF ${VERSION}
     SHA512 9eb6d551489ab1d214c56461eebafd6ecba7de8dcc60aecb7e22f82c019fd3d045fc09af66507c2e14bc53e099aec8e87620dfd988fe047a7bfa5e5d1d2c46bd
     HEAD_REF master
+    PATCHES
+        inttypes.diff
 )
 file(WRITE "${SOURCE_PATH}/ChangeLog" "Cf. https://code.videolan.org/videolan/libdvdread/-/commits/${VERSION}/") # not in git
 
