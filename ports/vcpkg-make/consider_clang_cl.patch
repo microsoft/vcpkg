@@ -1,0 +1,69 @@
+diff --git a/lib/compile b/lib/compile
+index 0bb9d0f..5978420 100755
+--- a/lib/compile
++++ b/lib/compile
+@@ -1,9 +1,9 @@
+ #! /bin/sh
+ # Wrapper for compilers which do not understand '-c -o'.
+ 
+-scriptversion=2017-09-16.17; # UTC
++scriptversion=2024-06-19.01; # UTC
+ 
+-# Copyright (C) 1999-2018 Free Software Foundation, Inc.
++# Copyright (C) 1999-2024 Free Software Foundation, Inc.
+ # Written by Tom Tromey <tromey@cygnus.com>.
+ #
+ # This program is free software; you can redistribute it and/or modify
+@@ -53,7 +53,7 @@ func_file_conv ()
+ 	  MINGW*)
+ 	    file_conv=mingw
+ 	    ;;
+-	  CYGWIN*)
++	  CYGWIN* | MSYS*)
+ 	    file_conv=cygwin
+ 	    ;;
+ 	  *)
+@@ -67,7 +67,7 @@ func_file_conv ()
+ 	mingw/*)
+ 	  file=`cmd //C echo "$file " | sed -e 's/"\(.*\) " *$/\1/'`
+ 	  ;;
+-	cygwin/*)
++	cygwin/* | msys/*)
+ 	  file=`cygpath -m "$file" || echo "$file"`
+ 	  ;;
+ 	wine/*)
+@@ -143,7 +143,7 @@ func_cl_wrapper ()
+ 	  # configure might choose to run compile as 'compile cc -o foo foo.c'.
+ 	  eat=1
+ 	  case $2 in
+-	    *.o | *.[oO][bB][jJ])
++	    *.o | *.lo | *.[oO][bB][jJ])
+ 	      func_file_conv "$2"
+ 	      set x "$@" -Fo"$file"
+ 	      shift
+@@ -248,6 +248,8 @@ If you are trying to build a whole package this is not the
+ right script to run: please start by reading the file 'INSTALL'.
+ 
+ Report bugs to <bug-automake@gnu.org>.
++GNU Automake home page: <https://www.gnu.org/software/automake/>.
++General help using GNU software: <https://www.gnu.org/gethelp/>.
+ EOF
+     exit $?
+     ;;
+@@ -256,6 +258,7 @@ EOF
+     exit $?
+     ;;
+   cl | *[/\\]cl | cl.exe | *[/\\]cl.exe | \
++  clang-cl | *[/\\]clang-cl | clang-cl.exe | *[/\\]clang-cl.exe | \
+   icl | *[/\\]icl | icl.exe | *[/\\]icl.exe )
+     func_cl_wrapper "$@"      # Doesn't return...
+     ;;
+@@ -340,7 +343,7 @@ exit $ret
+ # Local Variables:
+ # mode: shell-script
+ # sh-indentation: 2
+-# eval: (add-hook 'write-file-hooks 'time-stamp)
++# eval: (add-hook 'before-save-hook 'time-stamp)
+ # time-stamp-start: "scriptversion="
+ # time-stamp-format: "%:y-%02m-%02d.%02H"
+ # time-stamp-time-zone: "UTC0"

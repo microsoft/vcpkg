@@ -10,7 +10,7 @@ vcpkg_extract_source_archive(
     automake_source
     ARCHIVE ${ARCHIVE}
     PATCHES
-        "compile_wrapper_consider_clang-cl.patch"
+       "consider_clang_cl.patch"
 )
 
 file(COPY 
