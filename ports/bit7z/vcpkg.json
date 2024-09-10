@@ -1,0 +1,51 @@
+{
+  "name": "bit7z",
+  "version": "4.0.8",
+  "description": "A C++ static library offering a clean and simple interface to the 7-zip shared libraries.",
+  "homepage": "https://github.com/rikyoz/bit7z",
+  "license": "MPL-2.0",
+  "dependencies": [
+    "7zip",
+    "ghc-filesystem",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "auto-format": {
+      "description": "Enables the automatic format detection of input archives"
+    },
+    "auto-prefix-long-paths": {
+      "description": "Enables or disables automatically prepending paths with the Windows long path prefix, allowing to handle archives and files with long paths",
+      "supports": "windows"
+    },
+    "disable-use-std-filesystem": {
+      "description": "Disable using the standard filesystem library and always use ghc::filesystem"
+    },
+    "disable-zip-ascii-pwd-check": {
+      "description": "Disables checking if passwords are ASCII when compressing using the Zip format"
+    },
+    "path-sanitization": {
+      "description": "Enables or disables path sanitization when extracting archives containing files with invalid Windows filenames",
+      "supports": "windows"
+    },
+    "regex-matching": {
+      "description": "Enables the support for extracting files matching regular expressions"
+    },
+    "use-native-string": {
+      "description": "Enables using the OS native string type(i.e., std::wstring on Windows, std::string elsewhere)"
+    },
+    "use-std-byte": {
+      "description": "Enables using a type-safe byte type (like C++17's std::byte) for buffers"
+    },
+    "use-system-codepage": {
+      "description": "Enables or disables using the default Windows codepage for string conversions",
+      "supports": "windows"
+    }
+  }
+}

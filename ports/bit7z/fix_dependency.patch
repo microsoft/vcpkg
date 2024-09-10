@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b308be0..d4f8feb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -194,14 +194,23 @@ include( cmake/BuildOptions.cmake )
+ include( cmake/CompilerOptions.cmake )
+ 
+ # dependencies
+-include( cmake/Dependencies.cmake )
++# include( cmake/Dependencies.cmake )
++find_package(7zip CONFIG REQUIRED)
+ 
+ # 7-zip source code
+-target_link_libraries( ${LIB_TARGET} PRIVATE 7-zip )
++target_link_libraries( ${LIB_TARGET} PRIVATE 7zip::7zip )
+ 
+ # filesystem library (needed if std::filesystem is not available)
+-if( ghc_filesystem_ADDED )
+-    target_link_libraries( ${LIB_TARGET} PRIVATE ghc_filesystem )
++if(0)
++ # filesystem library (needed if std::filesystem is not available)
++ if( ghc_filesystem_ADDED )
++     target_link_libraries( ${LIB_TARGET} PRIVATE ghc_filesystem )
++ endif()
++else()
++if(NOT USE_STANDARD_FILESYSTEM OR NOT STANDARD_FILESYSTEM_COMPILES)
++    find_package(ghc_filesystem CONFIG REQUIRED)
++    target_link_libraries(${LIB_TARGET} PRIVATE ghcFilesystem::ghc_filesystem )
++endif()
+ endif()
+ 
+ # public includes
