@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE}
     PATCHES
        "consider_clang_cl.patch"
+       "consider_clang_cl_ar_lib.patch"
 )
 
 file(COPY 
