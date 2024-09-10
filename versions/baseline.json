@@ -4329,8 +4329,8 @@
       "port-version": 5
     },
     "libconfuse": {
-      "baseline": "2019-07-14",
-      "port-version": 4
+      "baseline": "3.3",
+      "port-version": 0
     },
     "libcopp": {
       "baseline": "2.2.0",
