@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         inttypes.diff
         ssize_t.diff
 )
+file(TOUCH "${SOURCE_PATH}/msvc/include/strings.h")
 file(WRITE "${SOURCE_PATH}/ChangeLog" "Cf. https://code.videolan.org/videolan/libdvdread/-/commits/${VERSION}/") # not in git
 
 vcpkg_find_acquire_program(PKGCONFIG)
