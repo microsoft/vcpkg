@@ -24,3 +24,16 @@ index 6c09f09..7b3410a 100644
  #endif
  
  namespace Assimp {
+diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
+index a6db1cb..be3b731 100644
+--- a/code/CMakeLists.txt
++++ b/code/CMakeLists.txt
+@@ -1236,7 +1236,7 @@ ENDIF()
+ # stb
+ IF(1)
+   #hunter_add_package(stb)
+-  find_package(stb REQUIRED)
++  find_package(Stb REQUIRED)
+ ELSE()
+   SET( stb_SRCS
+     ../contrib/stb/stb_image.h
