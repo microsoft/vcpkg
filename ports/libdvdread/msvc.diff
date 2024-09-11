@@ -1,0 +1,36 @@
+diff --git a/msvc/include/inttypes.h b/msvc/include/inttypes.h
+index 4e1cbe1..5b7f18f 100644
+--- a/msvc/include/inttypes.h
++++ b/msvc/include/inttypes.h
+@@ -28,5 +28,6 @@
+ #define _SYS_INTTYPES_H_
+ 
+ #include <config.h>
++#include <stdint.h>
+ 
+ #endif
+diff --git a/src/dvd_reader.c b/src/dvd_reader.c
+index c4d9641..b3b0158 100644
+--- a/src/dvd_reader.c
++++ b/src/dvd_reader.c
+@@ -60,6 +60,7 @@
+ 
+ #if defined(_WIN32)
+ # include <windows.h>
++# include <winsock2.h>
+ # include "msvc/contrib/win32_cs.h"
+ #endif
+ 
+diff --git a/src/dvdread/dvd_reader.h b/src/dvdread/dvd_reader.h
+index 5681e0e..d1495c2 100644
+--- a/src/dvdread/dvd_reader.h
++++ b/src/dvdread/dvd_reader.h
+@@ -25,6 +25,8 @@
+ 
+ #ifdef _MSC_VER
+ #include <config.h>
++#include <windows.h>
++typedef SSIZE_T ssize_t;
+ 
+ #include <stdio.h>
+ #include <stdlib.h>

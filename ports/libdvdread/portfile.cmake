@@ -6,8 +6,7 @@ vcpkg_from_gitlab(
     SHA512 9eb6d551489ab1d214c56461eebafd6ecba7de8dcc60aecb7e22f82c019fd3d045fc09af66507c2e14bc53e099aec8e87620dfd988fe047a7bfa5e5d1d2c46bd
     HEAD_REF master
     PATCHES
-        inttypes.diff
-        ssize_t.diff
+        msvc.diff
 )
 file(TOUCH "${SOURCE_PATH}/msvc/include/strings.h")
 file(WRITE "${SOURCE_PATH}/ChangeLog" "Cf. https://code.videolan.org/videolan/libdvdread/-/commits/${VERSION}/") # not in git
@@ -22,7 +21,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(cppflags "CPPFLAGS=\$CPPFLAGS -DPATH_MAX=2048 -DWIN32_LEAN_AND_MEAN")
     if(NOT VCPKG_TARGET_IS_MINGW)
         cmake_path(RELATIVE_PATH SOURCE_PATH BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}" OUTPUT_VARIABLE sources)
-        string(APPEND cppflags " -I../${sources}/msvc/include")
+        string(APPEND cppflags " -I../${sources}/msvc/include -D_CRT_SECURE_NO_WARNINGS")
     endif()
 endif()
 
