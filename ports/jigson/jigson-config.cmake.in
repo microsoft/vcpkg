@@ -1,0 +1,6 @@
+if(NOT TARGET jigson::jigson)
+    add_library(jigson::jigson INTERFACE IMPORTED)
+    set_target_properties(jigson::jigson PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
+    )
+endif()
