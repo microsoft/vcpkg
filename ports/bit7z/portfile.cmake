@@ -14,15 +14,15 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        auto-format                   BIT7Z_AUTO_FORMAT
-        auto-prefix-long-paths        BIT7Z_AUTO_PREFIX_LONG_PATHS
-        disable-use-std-filesystem    BIT7Z_DISABLE_USE_STD_FILESYSTEM
-        disable-zip-ascii-pwd-check   BIT7Z_DISABLE_ZIP_ASCII_PWD_CHECK
-        path-sanitization             BIT7Z_PATH_ANITIZATION
-        regex-matching                BIT7Z_REGEX_MATCHING
-        use-std-byte                  BIT7Z_USE_STD_BYTE
-        use-native-string             BIT7Z_USE_NATIVE_STRING
-        use-system-codepage           BIT7Z_USE_SYSTEM_CODEPAGE
+        auto-format                     BIT7Z_AUTO_FORMAT
+        auto-prefix-long-paths          BIT7Z_AUTO_PREFIX_LONG_PATHS
+        disable-use-std-filesystem      BIT7Z_DISABLE_USE_STD_FILESYSTEM
+        disable-zip-ascii-pwd-check     BIT7Z_DISABLE_ZIP_ASCII_PWD_CHECK
+        path-sanitization               BIT7Z_PATH_ANITIZATION
+        regex-matching                  BIT7Z_REGEX_MATCHING
+        use-std-byte                    BIT7Z_USE_STD_BYTE
+        use-native-string               BIT7Z_USE_NATIVE_STRING
+        use-system-codepage             BIT7Z_USE_SYSTEM_CODEPAGE
 )
 
 vcpkg_cmake_configure(
