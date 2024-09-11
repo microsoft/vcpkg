@@ -3,9 +3,13 @@ set(MINIMUM_CUDNN_VERSION "7.6.5")
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT OUT_CUDA_VERSION CUDA_VERSION)
 
 # Try to find CUDNN if it exists; only download if it doesn't exist
-find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
-  HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.0 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.1 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.2 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.3 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.4 /usr/include /usr/include/x86_64-linux-gnu/ /usr/include/aarch64-linux-gnu/
-  PATH_SUFFIXES cuda/include include include/11.8 include/12.0 include/12.1 include/12.2 include/12.3 include/12.4 include/12.5 include/12.6)
+file(GLOB_RECURSE CUDNN_INCLUDE_FILES
+  HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.0 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.1 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.2 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.3 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.4
+  PATHS /usr/include /usr/include/x86_64-linux-gnu/ /usr/include/aarch64-linux-gnu/
+  NAMES cudnn.h cudnn_v*.h
+)
+list(GET CUDNN_INCLUDE_FILES 0 FIRST_CUDNN_INCLUDE_FILE)
+get_filename_component(CUDNN_INCLUDE_DIR ${FIRST_CUDNN_INCLUDE_FILE} DIRECTORY)
 message(STATUS "CUDNN_INCLUDE_DIR: ${CUDNN_INCLUDE_DIR}")
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.0 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.1 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.2 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.3 $ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v9.4 /usr/lib/x86_64-linux-gnu/ /usr/include/aarch64-linux-gnu/ /usr/
