@@ -28,6 +28,8 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBIT7Z_BUILD_TESTS=OFF
+        -DBIT7Z_BUILD_DOCS=OFF
         ${FEATURE_OPTIONS}
 )
 
