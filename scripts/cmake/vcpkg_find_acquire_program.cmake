@@ -200,6 +200,7 @@ function(vcpkg_find_acquire_program program)
                 )
             endif()
         else()
+            file(REMOVE_RECURSE "${full_subdirectory}")
             vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}")
         endif()
 
