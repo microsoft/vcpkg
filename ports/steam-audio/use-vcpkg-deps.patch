@@ -35,15 +35,13 @@ diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
 index 7c9226f..0fadb20 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
-@@ -26,6 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
+@@ -26,6 +26,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
  # FLATBUFFERS
  #
  
-+# Must manually craft the path to flatc executable manually
-+if(WIN32)
-+  set(EXE_SUFF ".exe")
-+endif()
-+set(FlatBuffers_EXECUTABLE "${_VCPKG_ROOT_DIR}/packages/flatbuffers_${VCPKG_HOST_TRIPLET}/tools/flatbuffers/flatc${EXE_SUFF}")
++find_program(FlatBuffers_EXECUTABLE flatc
++  PATHS ${_VCPKG_ROOT_DIR}/packages/flatbuffers_${VCPKG_HOST_TRIPLET}/tools/flatbuffers
++  REQUIRED)
 +
  function (compile_fbs FBS_SOURCE)
      set(FBS_OUTPUT ${FBS_SOURCE}.h)
