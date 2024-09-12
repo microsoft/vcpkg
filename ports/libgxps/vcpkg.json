@@ -1,7 +1,7 @@
 {
   "name": "libgxps",
   "version": "0.3.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "libgxps is a GObject based library for handling and rendering XPS documents.",
   "homepage": "https://wiki.gnome.org/Projects/libgxps",
   "dependencies": [

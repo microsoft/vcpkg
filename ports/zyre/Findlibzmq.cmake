@@ -1,10 +1,11 @@
 find_package(ZeroMQ CONFIG REQUIRED)
 
-set(LIBZMQ_INCLUDE_DIRS ${ZeroMQ_INCLUDE_DIR})
-set(LIBZMQ_LIBRARIES libzmq libzmq-static)
+set(libzmq_INCLUDE_DIRS ${ZeroMQ_INCLUDE_DIR})
+set(libzmq_LIBRARIES libzmq libzmq-static)
+set(libzmq_FOUND TRUE)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
     LIBZMQ
-    REQUIRED_VARS LIBZMQ_LIBRARIES LIBZMQ_INCLUDE_DIRS
+    REQUIRED_VARS libzmq_LIBRARIES libzmq_INCLUDE_DIRS libzmq_FOUND
 )

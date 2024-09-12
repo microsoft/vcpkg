@@ -1,6 +1,7 @@
 {
   "name": "shogun",
   "version-date": "2023-12-19",
+  "port-version": 1,
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
   "dependencies": [

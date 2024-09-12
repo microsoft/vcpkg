@@ -1,8 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd8e1c8..c92aaa5 100644
+index 607394b..d80fb23 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -51,6 +51,8 @@ project(ztd.text
+@@ -34,12 +34,6 @@ cmake_policy(VERSION 3.21)
+ # # Project kickstart
+ # Includes a bunch of basic flags and utilities shared across projects
+ # See more at the github repository link below
+-include(FetchContent)
+-FetchContent_Declare(ztd.cmake
+-	GIT_REPOSITORY https://github.com/soasis/cmake
+-	GIT_SHALLOW    ON
+-	GIT_TAG        main)
+-FetchContent_MakeAvailable(ztd.cmake)
+ set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
+ 
+ # # Project declaration
+@@ -51,6 +45,8 @@ project(ztd.text
  	HOMEPAGE_URL "https://ztdtext.readthedocs.io/en/latest/"
  	LANGUAGES C CXX)
  
@@ -11,7 +24,7 @@ index fd8e1c8..c92aaa5 100644
  if(ZTD_TEXT_READTHEDOCS)
  	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
  	include(CheckCXXCompilerFlag)
-@@ -139,40 +141,17 @@ option(ZTD_TEXT_BOOST.TEXT "Enable usage of Boost.Text benchmarks and examples"
+@@ -139,40 +135,18 @@ option(ZTD_TEXT_BOOST.TEXT "Enable usage of Boost.Text benchmarks and examples"
  
  # # Dependencies
  # ztd.idk
@@ -37,6 +50,7 @@ index fd8e1c8..c92aaa5 100644
 -FetchContent_MakeAvailable(ztd.encoding_tables)
  
  # ztd.cuneicode
++find_package(ztd.cuneicode CONFIG REQUIRED)
  set(ZTD_CUNEICODE_SIMDUTF_SHARED ${ZTD_TEXT_BENCHMARKS})
 -FetchContent_Declare(ztd.cuneicode
 -	GIT_REPOSITORY https://github.com/soasis/cuneicode.git
@@ -54,7 +68,7 @@ index fd8e1c8..c92aaa5 100644
  
  if (ZTD_TEXT_BENCHAMRKS OR ZTD_TEXT_GENERATE_SINGLE OR ZTD_TEXT_DOCUMENTATION)
  	find_package(Python3 REQUIRED COMPONENTS Interpreter)
-@@ -187,16 +166,17 @@ target_include_directories(ztd.text
+@@ -187,16 +161,17 @@ target_include_directories(ztd.text
  	INTERFACE
  	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
  	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
@@ -74,7 +88,7 @@ index fd8e1c8..c92aaa5 100644
  # # Config / Version packaging
  # Version configurations
  configure_package_config_file(
-@@ -213,6 +193,15 @@ export(TARGETS ztd.text
+@@ -213,6 +188,15 @@ export(TARGETS ztd.text
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-targets.cmake")
  

@@ -1,0 +1,69 @@
+diff --git a/cmake/exiv2Config.cmake.in b/cmake/exiv2Config.cmake.in
+index c9e2eba..ca170e1 100644
+--- a/cmake/exiv2Config.cmake.in
++++ b/cmake/exiv2Config.cmake.in
+@@ -8,7 +8,15 @@ if(@EXIV2_ENABLE_PNG@) # if(EXIV2_ENABLE_PNG)
+ endif()
+ 
+ if(@EXIV2_ENABLE_XMP@) # if(EXIV2_ENABLE_XMP)
+-  find_dependency(EXPAT REQUIRED)
++  find_dependency(expat)
++endif()
++
++if(@EXIV2_ENABLE_BMFF@ AND @EXIV2_ENABLE_BROTLI@)
++  find_dependency(unofficial-brotli)
++endif()
++
++if(@EXIV2_ENABLE_INIH@)
++  find_dependency(unofficial-inih)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/exiv2Export.cmake")
+diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
+index b0897c3..e559666 100644
+--- a/cmake/findDependencies.cmake
++++ b/cmake/findDependencies.cmake
+@@ -49,7 +49,8 @@ if( EXIV2_ENABLE_PNG )
+ endif( )
+ 
+ if( EXIV2_ENABLE_BMFF AND EXIV2_ENABLE_BROTLI )
+-    find_package( Brotli REQUIRED )
++    find_package(BROTLI NAMES unofficial-brotli REQUIRED)
++    set(Brotli_LIBRARIES unofficial::brotli::brotlidec)
+ endif( )
+ 
+ if( EXIV2_ENABLE_WEBREADY )
+@@ -62,7 +63,9 @@ if (EXIV2_ENABLE_XMP AND EXIV2_ENABLE_EXTERNAL_XMP)
+     message(FATAL_ERROR "EXIV2_ENABLE_XMP AND EXIV2_ENABLE_EXTERNAL_XMP are mutually exclusive.  You can only choose one of them")
+ else()
+     if (EXIV2_ENABLE_XMP)
+-        find_package(EXPAT REQUIRED)
++        find_package(EXPAT NAMES expat REQUIRED)
++        add_library(EXPAT::EXPAT ALIAS expat::expat)
++        set(EXPAT_LIBRARIES expat::expat)
+     elseif (EXIV2_ENABLE_EXTERNAL_XMP)
+         find_package(XmpSdk REQUIRED)
+     endif ()
+@@ -79,7 +82,9 @@ if( ICONV_FOUND )
+ endif()
+ 
+ if( EXIV2_ENABLE_INIH )
+-  find_package(inih)
++  find_package(unofficial-inih CONFIG REQUIRED)
++  add_library(inih::libinih ALIAS unofficial::inih::libinih)
++  add_library(inih::inireader ALIAS unofficial::inih::inireader)
+   message ( "-- inih_INCLUDE_DIRS : " ${inih_INCLUDE_DIRS} )
+   message ( "-- inih_LIBRARIES : " ${inih_LIBRARIES} )
+   message ( "-- inih_inireader_INCLUDE_DIRS : " ${inih_inireader_INCLUDE_DIRS} )
+diff --git a/xmpsdk/CMakeLists.txt b/xmpsdk/CMakeLists.txt
+index 87c59c0..d2f23e6 100644
+--- a/xmpsdk/CMakeLists.txt
++++ b/xmpsdk/CMakeLists.txt
+@@ -31,6 +31,7 @@ target_include_directories(exiv2-xmp SYSTEM
+         ${PROJECT_SOURCE_DIR}/xmpsdk/include
+         ${EXPAT_INCLUDE_DIRS}
+ )
++target_link_libraries(exiv2-xmp PRIVATE expat::expat)
+ 
+ # Prevent a denial-service-attack related to XML entity expansion
+ # ("billion laughs attack").

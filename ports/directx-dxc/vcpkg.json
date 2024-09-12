@@ -1,6 +1,6 @@
 {
   "name": "directx-dxc",
-  "version-date": "2024-05-28",
+  "version-date": "2024-07-31",
   "description": "DirectX Shader Compiler (LLVM/Clang)",
   "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
   "documentation": "https://github.com/microsoft/DirectXShaderCompiler/wiki",

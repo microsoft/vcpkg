@@ -1,0 +1,20 @@
+{
+  "name": "ls-qpack",
+  "version": "2.5.4",
+  "port-version": 3,
+  "description": "QPACK compression library for use with HTTP/3",
+  "homepage": "https://github.com/litespeedtech/ls-qpack",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "xxhash"
+  ]
+}

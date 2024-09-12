@@ -12,10 +12,6 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] An Xcode installer - you can get this from Apple's developer website,
   although you'll need to sign in first: <https://developer.apple.com/downloads>  
   If you are doing this from a local macos box, you can skip to the "update the macos host" step.  
-  If copying from a local box to one of the macOS machines, you can use scp:
-    ```sh
-    scp Command_Line_Tools_for_Xcode_15.dmg vcpkg@<DNS of the machine>:/Users/vcpkg/clt.dmg
-    ```
 
 ### Instructions (AMD64)
 
@@ -29,7 +25,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
       Note: This portion of the instructions is that which breaks most often depending on what Parallels and macOS are doing.
       You might need to use `softwareupdate --fetch-full-installer --full-installer-version 14.5` and point Parallels
       at that resulting installer in 'Applications' instead.
-- [ ] Run parallels, and select that installer you just downloaded. Name the VM "vcpkg-osx-<DATE>-amd64", for example "vcpkg-osx-2024-05-20-amd64".
+- [ ] Run parallels, and select that installer you just downloaded. Name the VM "vcpkg-osx-<DATE>-amd64", for example "vcpkg-osx-2024-07-12-amd64".
 - [ ] When creating the VM, customize the hardware to the following:
     * 12 processors
     * 24000 MB of memory
@@ -44,7 +40,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Restart the VM
 - [ ] Change the desktop background to a solid color
 - [ ] Enable remote login in System Settings -> General -> Sharing -> Remote Login
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.239.1/vsts-agent-osx-x64-3.239.1.tar.gz
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.241.0/vsts-agent-osx-x64-3.241.0.tar.gz
 - [ ] Start the VM. Change the screen resolution to not be teeny weeny eyestrain o vision.
 - [ ] In the guest, set the vcpkg user to be able to use sudo without a password:
     ```sh
@@ -59,6 +55,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ssh vcpkg@MACHINE
     rm ~/.ssh/known_hosts
     chmod +x setup-guest.sh
+    ./setup-guest.sh
     rm setup-guest.sh
     rm setup-box.sh
     rm clt.dmg
@@ -76,8 +73,8 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ```sh
     ssh vcpkg@MACHINE
     brew install azcopy
-    azcopy copy ~/Parallels/vcpkg-osx-2024-05-20-amd64.pvmp "https://vcpkgimageminting...../pvms?<SAS>"
-    azcopy copy ~/Parallels/vcpkg-osx-2024-05-20-amd64.sha256.txt "https://vcpkgimageminting...../pvms?<SAS>"
+    azcopy copy ~/Parallels/vcpkg-osx-2024-07-12-amd64.pvmp "https://vcpkgimageminting...../pvms?<SAS>"
+    azcopy copy ~/Parallels/vcpkg-osx-2024-07-12-amd64.sha256.txt "https://vcpkgimageminting...../pvms?<SAS>"
     ```
 - [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD` based on the current date. Check 'Grant access permission to all pipelines.'
 - [ ] Remove the macOS installer from Applications
@@ -96,11 +93,11 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm macosvm-0.2-1-arm64-darwin21.tar.gz
     ```
 - [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: https://updates.cdn-apple.com/2024SpringFCS/fullrestores/062-01897/C874907B-9F82-4109-87EB-6B3C9BF1507D/UniversalMac_14.5_23F79_Restore.ipsw
-- [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2024-05-20-arm64".
-- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2024-05-20-arm64 and UniversalMac_14.5_23F79_Restore.ipsw replaced as appropriate.
+- [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2024-07-12-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2024-07-12-arm64 and UniversalMac_14.5_23F79_Restore.ipsw replaced as appropriate.
     ```sh
-    mkdir -p ~/Parallels/vcpkg-osx-2024-05-20-arm64
-    cd ~/Parallels/vcpkg-osx-2024-05-20-arm64
+    mkdir -p ~/Parallels/vcpkg-osx-2024-07-12-arm64
+    cd ~/Parallels/vcpkg-osx-2024-07-12-arm64
     ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_14.5_23F79_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
@@ -114,13 +111,12 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Enable remote login in the VM: Settings -> General -> Sharing -> Remote Login
 - [ ] Set the vcpkg user to be able to use sudo without a password:
     ```sh
-    rm ~/.ssh/known_hosts
     ssh vcpkg@vcpkgs-Virtual-Machine.local
     printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
     sudo chmod 0440 '/etc/sudoers.d/vcpkg'
     exit
     ```
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.239.1/vsts-agent-osx-arm64-3.239.1.tar.gz
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.241.0/vsts-agent-osx-arm64-3.241.0.tar.gz
 - [ ] Copy setup-box.sh and the xcode installer renamed to 'clt.dmg' to the host. For example from a dev workstation:
     ```sh
     scp ./setup-guest.sh vcpkg@MACHINE:/Users/vcpkg
@@ -128,6 +124,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     scp path/to/console/tools.dmg vcpkg@MACHINE:/Users/vcpkg/clt.dmg
     ssh vcpkg@MACHINE
     chmod +x setup-guest.sh
+    rm ~/.ssh/known_hosts
     ./setup-guest.sh
     rm setup-guest.sh
     rm setup-box.sh

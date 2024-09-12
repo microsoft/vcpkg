@@ -2,20 +2,17 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index ea4b2d2..f622d45 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -32,7 +32,10 @@ install(FILES
+@@ -32,7 +32,11 @@ install(FILES
  )
  
  install(TARGETS lunasvg
--    LIBRARY     DESTINATION    ${LUNASVG_LIBDIR}
--    ARCHIVE     DESTINATION    ${LUNASVG_LIBDIR}
--    INCLUDES    DESTINATION    ${LUNASVG_INCDIR}
--)
 +    EXPORT unofficial-lunasvg-config
-+    RUNTIME DESTINATION bin
-+    LIBRARY DESTINATION lib
-+    ARCHIVE DESTINATION lib
-+    PUBLIC_HEADER DESTINATION include)
-+
++    PUBLIC_HEADER DESTINATION  include
++    RUNTIME     DESTINATION    bin
+     LIBRARY     DESTINATION    ${LUNASVG_LIBDIR}
+     ARCHIVE     DESTINATION    ${LUNASVG_LIBDIR}
+     INCLUDES    DESTINATION    ${LUNASVG_INCDIR}
+ )
 +install(EXPORT unofficial-lunasvg-config NAMESPACE unofficial::lunasvg:: DESTINATION share/unofficial-lunasvg)
 \ No newline at end of file
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt

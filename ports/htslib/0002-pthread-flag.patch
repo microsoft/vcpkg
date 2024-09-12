@@ -1,0 +1,78 @@
+diff --git a/Makefile b/Makefile
+index f6e154f..fb4f527 100644
+--- a/Makefile
++++ b/Makefile
+@@ -137,6 +137,8 @@ HTS_BUILD_AVX2 =
+ HTS_BUILD_AVX512 =
+ HTS_BUILD_SSE4 =
+ 
++PTHREAD = -pthread
++
+ include htslib_vars.mk
+ include htscodecs.mk
+ 
+@@ -183,10 +185,10 @@ config_vars.h:
+ .SUFFIXES: .bundle .c .cygdll .dll .o .pico .so
+ 
+ .c.o:
+-	$(CC) $(CFLAGS) $(TARGET_CFLAGS) $(ALL_CPPFLAGS) -c -o $@ $<
++	$(CC) $(CFLAGS) $(TARGET_CFLAGS) $(ALL_CPPFLAGS) $(PTHREAD) -c -o $@ $<
+ 
+ .c.pico:
+-	$(CC) $(CFLAGS) $(TARGET_CFLAGS) $(ALL_CPPFLAGS) $(EXTRA_CFLAGS_PIC) -c -o $@ $<
++	$(CC) $(CFLAGS) $(TARGET_CFLAGS) $(ALL_CPPFLAGS) $(PTHREAD) $(EXTRA_CFLAGS_PIC) -c -o $@ $<
+ 
+ 
+ LIBHTS_OBJS = \
+@@ -358,7 +360,7 @@ print-config:
+ # file used at runtime (when $LD_LIBRARY_PATH includes the build directory).
+ 
+ libhts.so: $(LIBHTS_OBJS:.o=.pico)
+-	$(CC) -shared -Wl,-soname,libhts.so.$(LIBHTS_SOVERSION) $(VERSION_SCRIPT_LDFLAGS) $(LDFLAGS) -o $@ $(LIBHTS_OBJS:.o=.pico) $(LIBS) -lpthread
++	$(CC) -shared -Wl,-soname,libhts.so.$(LIBHTS_SOVERSION) $(VERSION_SCRIPT_LDFLAGS) $(LDFLAGS) -o $@ $(LIBHTS_OBJS:.o=.pico) $(LIBS) $(PTHREAD)
+ 	ln -sf $@ libhts.so.$(LIBHTS_SOVERSION)
+ 
+ # Similarly this also creates libhts.NN.dylib as a byproduct, so that programs
+@@ -370,10 +372,10 @@ libhts.dylib: $(LIBHTS_OBJS)
+ 	ln -sf $@ libhts.$(LIBHTS_SOVERSION).dylib
+ 
+ cyghts-$(LIBHTS_SOVERSION).dll libhts.dll.a: $(LIBHTS_OBJS)
+-	$(CC) -shared -Wl,--out-implib=libhts.dll.a -Wl,--enable-auto-import $(LDFLAGS) -o $@ -Wl,--whole-archive $(LIBHTS_OBJS) -Wl,--no-whole-archive $(LIBS) -lpthread
++	$(CC) -shared -Wl,--out-implib=libhts.dll.a -Wl,--enable-auto-import $(LDFLAGS) -o $@ -Wl,--whole-archive $(LIBHTS_OBJS) -Wl,--no-whole-archive $(LIBS) $(PTHREAD)
+ 
+ hts-$(LIBHTS_SOVERSION).dll hts.dll.a: $(LIBHTS_OBJS)
+-	$(CC) -shared -Wl,--out-implib=hts.dll.a -Wl,--enable-auto-import -Wl,--exclude-all-symbols $(LDFLAGS) -o $@ -Wl,--whole-archive $(LIBHTS_OBJS) -Wl,--no-whole-archive $(LIBS) -lpthread
++	$(CC) -shared -Wl,--out-implib=hts.dll.a -Wl,--enable-auto-import -Wl,--exclude-all-symbols $(LDFLAGS) -o $@ -Wl,--whole-archive $(LIBHTS_OBJS) -Wl,--no-whole-archive $(LIBS) $(PTHREAD)
+ 
+ hts-$(LIBHTS_SOVERSION).def: hts-$(LIBHTS_SOVERSION).dll
+ 	gendef hts-$(LIBHTS_SOVERSION).dll
+@@ -420,7 +422,7 @@ hts-object-files: $(LIBHTS_OBJS)
+ # may not be able to access libhts symbols via the main program's libhts
+ # if that was dynamically loaded without an explicit RTLD_GLOBAL.
+ %.so: %.pico libhts.so
+-	$(CC) -shared -Wl,-E $(LDFLAGS) -o $@ $< libhts.so $(LIBS) -lpthread
++	$(CC) -shared -Wl,-E $(LDFLAGS) -o $@ $< libhts.so $(LIBS) $(PTHREAD)
+ 
+ # For programs *statically* linked to libhts.a, on macOS loading a plugin
+ # linked to a shared libhts.NN.dylib would lead to conflicting duplicate
+@@ -501,16 +503,16 @@ htscodecs/htscodecs/rANS_static32x16pr_avx512.o htscodecs/htscodecs/rANS_static3
+ htscodecs/htscodecs/rANS_static32x16pr_sse4.o htscodecs/htscodecs/rANS_static32x16pr_sse4.pico: TARGET_CFLAGS = $(HTS_CFLAGS_SSE4)
+ 
+ annot-tsv: annot-tsv.o libhts.a
+-	$(CC) $(LDFLAGS) -o $@ annot-tsv.o libhts.a $(LIBS) -lpthread
++	$(CC) $(LDFLAGS) -o $@ annot-tsv.o libhts.a $(LIBS) $(PTHREAD)
+ 
+ bgzip: bgzip.o libhts.a
+-	$(CC) $(LDFLAGS) -o $@ bgzip.o libhts.a $(LIBS) -lpthread
++	$(CC) $(LDFLAGS) -o $@ bgzip.o libhts.a $(LIBS) $(PTHREAD)
+ 
+ htsfile: htsfile.o libhts.a
+-	$(CC) $(LDFLAGS) -o $@ htsfile.o libhts.a $(LIBS) -lpthread
++	$(CC) $(LDFLAGS) -o $@ htsfile.o libhts.a $(LIBS) $(PTHREAD)
+ 
+ tabix: tabix.o libhts.a
+-	$(CC) $(LDFLAGS) -o $@ tabix.o libhts.a $(LIBS) -lpthread
++	$(CC) $(LDFLAGS) -o $@ tabix.o libhts.a $(LIBS) $(PTHREAD)
+ 
+ annot-tsv.o: annot-tsv.c config.h $(htslib_hts_h) $(htslib_hts_defs_h) $(htslib_khash_str2int_h) $(htslib_kstring_h) $(htslib_kseq_h) $(htslib_bgzf_h) $(htslib_regidx_h)
+ bgzip.o: bgzip.c config.h $(htslib_bgzf_h) $(htslib_hts_h) $(htslib_hfile_h)
