@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/steam-audio
-    REF "v${VERSION}"
-    SHA512 1f181b831da5e300de1fe2bd70670f6acb8812d8ee7e09645f0c962a3e851b18a20c5e0aeebb5c3e99ef3f29acf3fda0462e6a6d38dc43bca2a10273536a8f41
-    HEAD_REF master
+    REF "3a030b0ec02311a9778563313f2db1ba4a490a67"
+    SHA512 c0f0fe678f7b82b95b1736dbc308e041621873a57fdb5b1ba9ec5acf8bf6f06718566ade05b2193e24ae7295c4ea2383e45cf95c70ccd36308ed4cdfbfb045a9
+    HEAD_REF "v${VERSION}"
     PATCHES
       use-vcpkg-deps.patch
 )
