@@ -1,3 +1,9 @@
+vcpkg_download_distfile(
+        STRING_PATCHES
+        URLS "https://github.com/mongodb/mongo-cxx-driver/commit/55ad3447dbd46560eca6e99adfcf195ecd7c1c7a.diff?full_index=1"
+        FILENAME "mongo-cxx-driver-add-string-55ad3447dbd46560eca6e99adfcf195ecd7c1c7a.patch"
+        SHA512 a617f3657a065ddc1963007b164f7e96a1e3a53a91a3fefd97ae0be8b42036b1ed572f60f1d7074f6194640bfe37c5c2d5713c7b0853b252fe340c83eb6c852a
+    )
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
@@ -6,7 +12,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
+        ${STRING_PATCHES}
 )
+
 file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
 # This port offered C++17 ABI alternative via features.

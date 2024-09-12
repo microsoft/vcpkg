@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.28.0",
-  "port-version": 1,
+  "version": "2.29.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -763,6 +762,18 @@
     },
     "gkebackup": {
       "description": "Backup for GKE API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkeconnect": {
+      "description": "GKE Connect Gateway API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
