@@ -14,3 +14,4 @@ index 6e64623..9fc1fd4 100644
 +#        DESTINATION ${CMAKE_INSTALL_DATADIR}/libmysofa)
  
  if(BUILD_TESTS)
+ 
