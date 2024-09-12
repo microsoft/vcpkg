@@ -6309,7 +6309,7 @@
       "port-version": 1
     },
     "nng": {
-      "baseline": "1.7.3",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "nngpp": {
