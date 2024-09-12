@@ -7,8 +7,8 @@ vcpkg_from_github(
 )
 
 # Copy the header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/src/include/*)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/jigson)
+file(GLOB HEADER_FILES "${SOURCE_PATH}/src/include/*")
+file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/jigson")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
@@ -17,5 +17,3 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/jigson-config.cmake.in" "${CURRENT_PAC
 # Copy usage examples
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
