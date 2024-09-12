@@ -2,9 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
     REF "v${VERSION}"
-    SHA512 e3a7c10ffd909f9b128fb2316e09b8456e87278107178b49368f31ba30e7f62d64e7eba650cc59ef2d7eb178199c7a2c5b5c99b333849200492235116d7aee7a
+    SHA512 81a9580bc51c22385de4dab748968477b5e552aa25f901c376e3ffac624e0e05362b48239222e826cad900329f9a7cbdb080794fb4ada9ca14196efc2969cc57
     HEAD_REF v1.x
-    PATCHES fix-build-type.patch
+    PATCHES 
+        fix-build-type.patch
+        ssize_t.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBUV_BUILD_SHARED)

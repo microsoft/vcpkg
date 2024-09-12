@@ -10,6 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_download_distfile(PATCH_MSVC_1940_STILL_VC143
+    URLS https://github.com/boostorg/cmake/commit/ae2e6a647187246d6009f80b56ba4c2c8f3a008c.patch?full_index=1
+    SHA512 bf36fc86981a2e0ed2a26aa56e88841b7600e39fbf32c76ef9abfc0f19edc67f23518ad84259f62f28d03b10819dd390806bd4866a38cb4a2d9e9eb7dd9f6cb4
+    FILENAME boostorg-cmake-boost-1.85.0-0009-msvc-1940-still-vc143.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_CMAKE
     REPO boostorg/cmake
@@ -23,6 +29,7 @@ vcpkg_from_github(
       "zstd.diff"
       "add-optional-deps.diff"
       "fix-missing-archs.diff"
+      "${PATCH_MSVC_1940_STILL_VC143}"
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH_CMAKE}/CMakeLists.txt" @ONLY)

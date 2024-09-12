@@ -8,4 +8,5 @@ BitSerializer provides CMake targets:
         BitSerializer::pugixml-archive
         BitSerializer::rapidyaml-archive
         BitSerializer::csv-archive
+        BitSerializer::msgpack-archive
     )

@@ -1,70 +1,66 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-if (VCPKG_TARGET_IS_WINDOWS)
-	set(SLANG_EXE_SUFFIX ".exe")
-	set(SLANG_LIB_PREFIX "")
-	set(SLANG_LIB_SUFFIX ".lib")
-	set(SLANG_DYNLIB_SUFFIX ".dll")
-	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-		vcpkg_download_distfile(
-			ARCHIVE
-			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win64.zip"
-			FILENAME "slang-${VERSION}-win64.zip"
-			SHA512 3d6153d9cd8234d68d91273b97cfd66167e55bf3c526490603c79797aea4f5af839cbfdce29532da8c0e77cb9e6451a5823d40b98162fb53fffcbc5d18b0f841
-		)
-		set(SLANG_BIN_PATH "bin/windows-x64/release")
-	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-		vcpkg_download_distfile(
-			ARCHIVE
-			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-win32.zip"
-			FILENAME "slang-${VERSION}-win32.zip"
-			SHA512 43992831be8f7fc954794482e947a20e421587cb999eebdd7ffb21c3fc477a660ae19c0e0a10df5331329ac46e7fdd6017fc416b6667127182ae6091b6431e6b
-		)
-		set(SLANG_BIN_PATH "bin/windows-x86/release")
-	else()
-		message(FATAL_ERROR "Unsupported platform. Please implement me!")
-	endif()
-elseif (VCPKG_TARGET_IS_OSX)
-	set(SLANG_EXE_SUFFIX "")
-	set(SLANG_LIB_PREFIX "lib")
-	set(SLANG_LIB_SUFFIX ".a")
-	set(SLANG_DYNLIB_SUFFIX ".dylib")
-	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-		vcpkg_download_distfile(
-			ARCHIVE
-			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x64.zip"
-			FILENAME "slang-${VERSION}-macos-x64.zip"
-			SHA512 dc3b3f18c8e80cfc12960e76978dc1acb18df6de0704c5a889713128491827e26c169a2965d598b4904647384da2eeceb63a391b62925573da5d77a060bdb890
-		)
-		set(SLANG_BIN_PATH "bin/macos-x64/release")
-	elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
-		vcpkg_download_distfile(
-			ARCHIVE
-			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
-			FILENAME "slang-${VERSION}-macos-aarch64.zip"
-			SHA512 db613040ea31fa2ff8a60fec96a16704e0241774332333a704530bee309f5037d50570fc590348f22d3bc7f018a5bd3c9a10aae800a4f30f0f5e273552690863
-		)
-		set(SLANG_BIN_PATH "bin/macos-aarch64/release")
-	else()
-		message(FATAL_ERROR "Unsupported platform. Please implement me!")
-	endif()
+set(key NOTFOUND)
+if(VCPKG_TARGET_IS_WINDOWS)
+	set(key "windows-${VCPKG_TARGET_ARCHITECTURE}")
+elseif(VCPKG_TARGET_IS_OSX)
+	set(key "macosx-${VCPKG_TARGET_ARCHITECTURE}")
 elseif(VCPKG_TARGET_IS_LINUX)
-	set(SLANG_EXE_SUFFIX "")
-	set(SLANG_LIB_PREFIX "lib")
-	set(SLANG_LIB_SUFFIX ".a")
-	set(SLANG_DYNLIB_SUFFIX ".so")
-	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-		vcpkg_download_distfile(
-			ARCHIVE
-			URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.tar.gz"
-			FILENAME "slang-${VERSION}-linux-x86_64.tar.gz"
-			SHA512 817e3c5ae9fa249c54b1f411877f4742a019aa27b63bfb06b726b721cd86973b4ebe481bf62192bb7380d092c57cbd8e2abc932a7dbacd06811b6afb856c428d
-		)
-		set(SLANG_BIN_PATH "bin/linux-x64/release")
-	else()
-		message(FATAL_ERROR "Unsupported platform. Please implement me!")
-	endif()
-else()
+	set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
+set(ARCHIVE NOTFOUND)
+# For convenient updates, use 
+# vcpkg install shader-slang --cmake-args=-DVCPKG_SHADER_SLANG_UPDATE=1
+if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
+	vcpkg_download_distfile(
+		ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
+		FILENAME "slang-${VERSION}-windows-x86_64.zip"
+		SHA512 b1af26beb786b2f47bb4dc4e94613c9dda61f6c26539917376d13252ddcbed925f5b1f82948012d2cd288a20ea9d27f3703db96bc8b6689f69ac9f3e3a673584
+	)
+endif()
+if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
+	vcpkg_download_distfile(
+		ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
+		FILENAME "slang-${VERSION}-windows-aarch64.zip"
+		SHA512 8c9f8082dd949d10d4228ce5d58cf862c9419039f7e5fdde3719f9ea446e55a87eb3e6f8367d26e0015830951c98175d1e59e95873cac9e937f98a6c8d211c16
+	)
+endif()
+if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
+	vcpkg_download_distfile(
+		ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
+		FILENAME "slang-${VERSION}-macos-x86_64.zip"
+		SHA512 88a920f44650bc99ed97b04d3d674fd256b1414c60697dee7bc234472abe9216d7a3d3e5b75537fe01f7da56fe1fe5348d2cd38dad43f4f143105e4cb2e1ec53
+	)
+endif()
+if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
+	vcpkg_download_distfile(
+		ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
+		FILENAME "slang-${VERSION}-macos-aarch64.zip"
+		SHA512 f3de6277d06a9aaadffe4e3d7d74a2352edc12001055142682eb65834cedfdea8f37daa65b7719178a4419f7e87842de6814c03a68b843c5c0085239bb895058
+	)
+endif()
+if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
+	vcpkg_download_distfile(
+		ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
+		FILENAME "slang-${VERSION}-linux-x86_64.zip"
+		SHA512 7db8c2635bd5868a6741c1e094b7b2f6a095b66f1314c811e6fd41fc198ef68c7700214d9e81db80615daadd2bb89e2a6169d8cb6da5f2185bafdcff43d581b8
+	)
+endif()
+if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
+	vcpkg_download_distfile(
+		ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
+		FILENAME "slang-${VERSION}-linux-aarch64.zip"
+		SHA512 5c7bc8a9fe3d7c3829434469833f4c1aa70160914d80ac5292ef115cb0a9c8a0907f9f49488b5d14bd2668bf5d3420ccad289aa4f02c6d673e492b548fd9f4e9
+	)
+endif()
+if(NOT ARCHIVE)
 	message(FATAL_ERROR "Unsupported platform. Please implement me!")
 endif()
 
@@ -74,32 +70,66 @@ vcpkg_extract_source_archive(
 	NO_REMOVE_ONE_LEVEL
 )
 
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang-llvm${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang-llvm${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang-glslang${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang-glslang${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/slangc${SLANG_EXE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-
-if (VCPKG_TARGET_IS_WINDOWS)
-	file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang${SLANG_LIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-	file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/${SLANG_LIB_PREFIX}slang${SLANG_LIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-	file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/gfx${SLANG_LIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-	file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/gfx${SLANG_LIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-	file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/gfx${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-	file(INSTALL "${BINDIST_PATH}/${SLANG_BIN_PATH}/gfx${SLANG_DYNLIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(VCPKG_SHADER_SLANG_UPDATE)
+	message(STATUS "All downloads are up-to-date.")
+	message(FATAL_ERROR "Stopping due to VCPKG_SHADER_SLANG_UPDATE being enabled.")
 endif()
 
-file(GLOB HEADERS "${BINDIST_PATH}/*.h")
-file(INSTALL ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(GLOB libs
+	"${BINDIST_PATH}/lib/*.lib"
+	"${BINDIST_PATH}/lib/*.dylib"
+	"${BINDIST_PATH}/lib/*.so"
+)
+file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO shader-slang/slang
-	REF "v${VERSION}"
-	SHA512 f7da1cd60418c9b0a4f302841154ac5b48f84b897f81359cbc52950dd5a2a0339a95b8cc13ad13d518a089aff3071bf52f60bcf86d29b07866c4e1c948f5ccfd
-	HEAD_REF master
+file(GLOB dyn_libs
+	"${BINDIST_PATH}/lib/*.dylib"
+	"${BINDIST_PATH}/lib/*.so"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+if(VCPKG_TARGET_IS_WINDOWS)
+  file(GLOB dlls "${BINDIST_PATH}/bin/*.dll")
+  list(APPEND dyn_libs ${dlls})
+  file(INSTALL ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
+if(NOT VCPKG_BUILD_TYPE)
+  file(INSTALL "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  if(VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+  endif()
+endif()
+
+# On macos, slang has signed their binaries
+# vcpkg wants to be helpful and update the rpath as it moves binaries around but this 
+# breaks the code signature and makes the binaries useless
+# Removing the signature is rude so instead we will disable rpath fixup
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+  set(VCPKG_FIXUP_MACHO_RPATH OFF)
+endif()
+
+# Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
+file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
+vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
+
+file(GLOB headers "${BINDIST_PATH}/include/*.h")
+file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+vcpkg_install_copyright(
+	FILE_LIST "${BINDIST_PATH}/LICENSE"
+	COMMENT #[[ from README ]] [[
+The Slang code itself is under the MIT license.
+
+Builds of the core Slang tools depend on the following projects, either automatically or optionally, which may have their own licenses:
+
+* [`glslang`](https://github.com/KhronosGroup/glslang) (BSD)
+* [`lz4`](https://github.com/lz4/lz4) (BSD)
+* [`miniz`](https://github.com/richgel999/miniz) (MIT)
+* [`spirv-headers`](https://github.com/KhronosGroup/SPIRV-Headers) (Modified MIT)
+* [`spirv-tools`](https://github.com/KhronosGroup/SPIRV-Tools) (Apache 2.0)
+* [`ankerl::unordered_dense::{map, set}`](https://github.com/martinus/unordered_dense) (MIT)
+
+Slang releases may include [slang-llvm](https://github.com/shader-slang/slang-llvm) which includes [LLVM](https://github.com/llvm/llvm-project) under the license:
+
+* [`llvm`](https://llvm.org/docs/DeveloperPolicy.html#new-llvm-project-license-framework) (Apache 2.0 License with LLVM exceptions)
+]])

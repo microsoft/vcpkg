@@ -1,14 +1,13 @@
 {
   "name": "shogun",
-  "version": "6.1.4",
-  "port-version": 10,
+  "version-date": "2023-12-19",
+  "port-version": 1,
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
   "dependencies": [
     "blas",
     "bzip2",
     "curl",
-    "dirent",
     "eigen3",
     {
       "name": "hdf5",
@@ -21,8 +20,10 @@
     "lzo",
     "nlopt",
     "protobuf",
+    "rapidjson",
     "rxcpp",
     "snappy",
+    "spdlog",
     {
       "name": "vcpkg-cmake",
       "host": true

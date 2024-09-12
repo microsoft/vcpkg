@@ -1,12 +1,9 @@
-vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(BISON)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 8d5ea34a0a8ebb79e43186a17736706f1db4cf079a14dd2217106dfa4077a00ef2b3d87728d850029ea672b3ee5e6e643a18f0acde79164982d20c4c667d2966
-    HEAD_REF master
+    SHA512 8ad405815257d670d143c83ae06591f1c97f05c0a07100d8b2e1e8a3ed4b8665659a01fc9f0eed53e57d32515d048308431151b7d00c2fc33c4be8e808ddb1bb
+    HEAD_REF main
     PATCHES 
         fix-glog.patch
         0002-fix-dependency.patch
@@ -37,8 +34,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/folly_dynamic/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/frozen/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/detail/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/runtime/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
@@ -72,7 +71,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake")
 endif()
 
 # Only used internally and removed in master
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "" IGNORE_UNCHANGED)
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

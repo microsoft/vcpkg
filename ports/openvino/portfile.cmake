@@ -2,10 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 ddada33aac43f707c36868ef12861445f08856f0df3b086e509bc294ff54ad1f55afd7e2b44c6f8444b0d74532b46cfc217f45a4635eeec4ef96bb55d12deab6
+    SHA512 25ec2bb4c087f58033681920b027d43b1778b60042e3bee358b54c83b0296ac0b754880db6bd4fce94fefe8b53d129ff3ec51f17bcb42f4b7adcdc532701f801
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
+        # https://github.com/openvinotoolkit/openvino/pull/25937
+        # onnx codegen cmake script taints source directory
+        002-fix-onnx-codegen.patch
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,15 +36,15 @@ if(ENABLE_INTEL_GPU)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND ENABLE_INTEL_CPU)
         message(WARNING
-            "OneDNN for GPU is not available for static build, which is required for dGPU."
-            "Please, consider using VCPKG_LIBRARY_LINKAGE=\"dynamic\" or disable CPU plugin,"
+            "OneDNN for GPU is not available for static build, which is required for dGPU. "
+            "Please, consider using VCPKG_LIBRARY_LINKAGE=\"dynamic\" or disable CPU plugin, "
             "which uses another flavor of oneDNN.")
     else()
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO oneapi-src/oneDNN
-            REF 4e6ff043c439652fcf6c400ac4e0c81bbac7c71c
-            SHA512 456332fdaf0d20d48bb1caaab1fa0b933c59d145f09ba4b1083d044207dd488d08a6eae84877b410cc7ba55cea251fa2652dabe92f25d75483fa723a0949df72
+            REF 7ab8ee9adda866d675edeee7a3a6a29b2d0a1572
+            SHA512 03d0adab0cbb8b2841bd5de73a21911d63314f0a6299590e2396f42ca66673743c32ef1ec72e856cdac863802632b1e9a065bfffd75659e2007db581e1052e89
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
     endif()
@@ -55,8 +58,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF 26633ae49edd4353a29b7170d9fcef6b2d7
-        SHA512 554c8050b5012248189c45bd51dbce6efa3a4b19f018a09a423b5dfa79da32a56a24c02ba24447e9a1f4d424b1e46e19322d8d02d622ef7c6a6910cdda991756
+        REF f0f8defe2dff5058391f2a66e775e20b5de33b08
+        SHA512 d52d1ea504bc3ae7cdd01f7fce80f28231827b3778acda232201ec90c119cb845c4b406ac639d63a8f05ccc91063fbf5f405ba36332c5f539531c01ce9443b5f
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -82,8 +85,8 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v24.02.1
-            SHA512 3a27458e5a0f72654aa7f7cd7145ec20678b49cd4e49846c9097855595c12d29b9753cd38b0825b5d6ffeeb40db1563defac8a0aebd71ee45a34abc26e21e285
+            REF v24.06
+            SHA512 d020e4bb710534bb5789355f7396729a9230ce3ce8e0194df7e66750efe0667e38334e1e3696fa07496cf34de38ffcecd1ff6de266fb0e8d85f4f1c60ed9f782
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
     endif()
@@ -101,8 +104,8 @@ if(ENABLE_INTEL_NPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 0e1c471356a724ef6d176ba027a68e210d90939e
-        SHA512 586c516e636afb9c1930fbc5faa0ceb130cd0507273fad10b96cd5c3450fb5c76b9bcbc9be630ac5ff3cd97f8108a96fa5d87dce7111be2ff2a59ab92053329c
+        REF 16c85231a82ee1a0b06ed7ab7da3f411a0878ed7
+        SHA512 983468c7706dc44cfc248c491cf51d2f69181c16ae1e400ca689df39c51112e03227c2f311173b1665115cdd33fa7d51d48e75adaf8353564a980b37c16aaa66
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
@@ -117,6 +120,10 @@ endif()
 
 if(ENABLE_OV_TF_LITE_FRONTEND)
     list(APPEND FEATURE_OPTIONS "-DENABLE_SYSTEM_FLATBUFFERS=ON")
+endif()
+
+if(CMAKE_HOST_WIN32)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_API_VALIDATOR=OFF")
 endif()
 
 vcpkg_cmake_configure(

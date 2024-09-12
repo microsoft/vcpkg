@@ -1,7 +1,6 @@
 {
   "name": "re2",
-  "version-date": "2024-04-01",
-  "port-version": 2,
+  "version-date": "2024-07-02",
   "description": "RE2 is a fast, safe, thread-friendly alternative to backtracking regular expression engines like those used in PCRE, Perl, and Python. It is a C++ library.",
   "homepage": "https://github.com/google/re2",
   "license": "BSD-3-Clause",

@@ -1,40 +1,27 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 351fe6c3f..64d5bb384 100644
+index e82e353e0..19d8f2a93 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -27,7 +27,8 @@ endif (POLICY CMP0077)
+@@ -26,7 +26,8 @@ endif (POLICY CMP0077)
  
  list(APPEND CMAKE_MODULE_PATH
    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
 -  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 +  # Removed project specific Module overrides
 +)
+   
+ set(eCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
  
- project(eCAL)
- set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
-@@ -212,11 +213,13 @@ foreach (dep IN LISTS possible_subprojects)
-   endif ()
- endforeach()
- 
-+if(NOT DISABLE_FIND_PACKAGE_OVERLOAD)
- macro(find_package)
-   if(NOT "${ARGV0}" IN_LIST as_subproject)
-     _find_package(${ARGV})
-   endif()
- endmacro()
-+endif()
+@@ -221,6 +222,8 @@ set(possible_subprojects
+ set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
  
  # if a package does need to be build, include the cmake file with build instructions
++# Disable all submodules, except CMakeFunctions which isn't a submodule and required
++set(possible_subprojects "CMakeFunctions")
  foreach (dep IN LISTS possible_subprojects)
-@@ -232,7 +235,6 @@ if(MSVC)
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
- endif()
- 
--find_package(CMakeFunctions REQUIRED)
- 
- git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
- set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
-@@ -330,7 +332,9 @@ add_subdirectory(ecal/core)
+   string(TOUPPER ${dep} dep_upper)
+   string(TOLOWER ${dep} dep_lower)
+@@ -336,7 +339,9 @@ add_subdirectory(ecal/core)
  # custom libs
  # --------------------------------------------------------
  add_subdirectory(lib/ThreadingUtils)
@@ -44,8 +31,8 @@ index 351fe6c3f..64d5bb384 100644
 +# add_subdirectory(lib/CustomTclap)
  add_subdirectory(lib/ecal_utils)
  
- if(HAS_QT5)
-@@ -549,7 +553,9 @@ endif()
+ if(HAS_QT)
+@@ -559,7 +564,9 @@ endif()
  # --------------------------------------------------------
  # create package
  # --------------------------------------------------------
@@ -56,11 +43,11 @@ index 351fe6c3f..64d5bb384 100644
  message(STATUS "Build Options:")
  message(STATUS "--------------------------------------------------------------------------------")
 diff --git a/contrib/ecalhdf5/CMakeLists.txt b/contrib/ecalhdf5/CMakeLists.txt
-index 080c40e28..c167bacd4 100644
+index d5285101c..3b7eb705a 100644
 --- a/contrib/ecalhdf5/CMakeLists.txt
 +++ b/contrib/ecalhdf5/CMakeLists.txt
-@@ -58,7 +58,12 @@ set(ecalhdf5_header_base
-     include/ecalhdf5/eh5_types.h   
+@@ -55,7 +55,12 @@ set(ecalhdf5_header_base
+     include/ecalhdf5/eh5_types.h
  )
  
 +if (WIN32)
@@ -90,7 +77,7 @@ index 04f1a1b9a..58df32705 100644
  target_include_directories(${PROJECT_NAME} PUBLIC 
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
-index 5c2b6e33d..3c7d57189 100644
+index f18dd6291..8655d134a 100644
 --- a/ecal/core/CMakeLists.txt
 +++ b/ecal/core/CMakeLists.txt
 @@ -20,8 +20,6 @@ project(core VERSION ${eCAL_VERSION_STRING})
@@ -102,7 +89,7 @@ index 5c2b6e33d..3c7d57189 100644
  find_package(tcp_pubsub   REQUIRED)
  if (ECAL_NPCAP_SUPPORT)
    find_package(udpcap REQUIRED)
-@@ -492,14 +490,20 @@ target_link_libraries(${PROJECT_NAME}
+@@ -549,8 +547,6 @@ target_link_libraries(${PROJECT_NAME}
      $<$<BOOL:${WIN32}>:wsock32>
      $<$<BOOL:${QNXNTO}>:socket>
      asio::asio
@@ -111,7 +98,8 @@ index 5c2b6e33d..3c7d57189 100644
      eCAL::core_pb
      Threads::Threads
      eCAL::ecal-utils
-     tcp_pubsub::tcp_pubsub
+@@ -558,6 +554,14 @@ target_link_libraries(${PROJECT_NAME}
+     ecal_service
  )
  
 +# tclap is header only and only used for implementation
@@ -125,10 +113,23 @@ index 5c2b6e33d..3c7d57189 100644
  set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
  set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
  
-diff --git a/thirdparty/cmake_functions/CMakeLists.txt b/thirdparty/cmake_functions/CMakeLists.txt
-index b3e93261a..3ba185a97 100644
---- a/thirdparty/cmake_functions/CMakeLists.txt
-+++ b/thirdparty/cmake_functions/CMakeLists.txt
+diff --git a/ecal/service/ecal_service/CMakeLists.txt b/ecal/service/ecal_service/CMakeLists.txt
+index 0ac70a214..6a565c726 100644
+--- a/ecal/service/ecal_service/CMakeLists.txt
++++ b/ecal/service/ecal_service/CMakeLists.txt
+@@ -99,6 +99,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
+     FOLDER ecal/service
+ )
+ 
++ecal_install_library(${PROJECT_NAME})
++
+ ##################################
+ 
+ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
+index 8d13b791c..6ed0d1a14 100644
+--- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
++++ b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
 @@ -40,4 +40,6 @@ foreach (f ${file_list})
    install( FILES ${f} DESTINATION "${cmake_functions_install_cmake_dir}/${dir}" )
  endforeach()
@@ -136,17 +137,16 @@ index b3e93261a..3ba185a97 100644
 +if(CPACK_PACK_WITH_INNOSETUP)
  include(cmake/cpack_variables.cmake)
 +endif()
-diff --git a/thirdparty/cmake_functions/cmake_functions.cmake b/thirdparty/cmake_functions/cmake_functions.cmake
-index 0c3659e5c..127eb14e6 100644
---- a/thirdparty/cmake_functions/cmake_functions.cmake
-+++ b/thirdparty/cmake_functions/cmake_functions.cmake
-@@ -5,23 +5,12 @@ set (file_list_include
+diff --git a/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake b/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake
+index a053b06e6..127eb14e6 100644
+--- a/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake
++++ b/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake
+@@ -5,22 +5,12 @@ set (file_list_include
    target_definitions/targets_protobuf.cmake
  )
  
 -if(WIN32)
 -  list(APPEND file_list_include
--    qt/qt_msvc_path.cmake
 -    qt/qt_windeployqt.cmake
 -  )
 -endif()

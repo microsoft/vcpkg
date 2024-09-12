@@ -6,26 +6,42 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-add_library(crashpad INTERFACE)
-add_library(crashpad::crashpad ALIAS crashpad)
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
 
-set(CRASHPAD_LIBRARIES common client util base)
+if(NOT TARGET crashpad::crashpad)
+  add_library(crashpad::crashpad INTERFACE IMPORTED)
+  target_include_directories(crashpad::crashpad INTERFACE "${_IMPORT_PREFIX}/include/crashpad")
 
-if(WIN32)
-	target_compile_definitions(crashpad INTERFACE NOMINMAX)
-elseif(APPLE)
-	list(APPEND CRASHPAD_LIBRARIES ApplicationServices
-        CoreFoundation Foundation IOKit Security bsm mig_output)
+  set(_libs crashpad_client crashpad_client_common crashpad_util crashpad_base)
+  if(APPLE)
+    list(APPEND _libs mig_output)
+  endif()
+  include(SelectLibraryConfigurations)
+  foreach(_lib IN LISTS _libs)
+    find_library(CRASHPAD_${_lib}_LIBRARY_RELEASE NAMES ${_lib} PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+    find_library(CRASHPAD_${_lib}_LIBRARY_DEBUG NAMES ${_lib} PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
+    select_library_configurations(CRASHPAD_${_lib})
+    target_link_libraries(crashpad::crashpad INTERFACE ${CRASHPAD_${_lib}_LIBRARIES})
+  endforeach()
+
+  if(WIN32)
+  	target_compile_definitions(crashpad::crashpad INTERFACE NOMINMAX)
+  elseif(APPLE)
+    foreach(_lib IN ITEMS ApplicationServices CoreFoundation Foundation IOKit Security bsm)
+      find_library(CRASHPAD_${_lib}_LIBRARY NAMES ${_lib})
+      target_link_libraries(crashpad::crashpad INTERFACE ${CRASHPAD_${_lib}_LIBRARY})
+    endforeach()
+  elseif(ANDROID)
+    target_link_libraries(crashpad::crashpad INTERFACE log)
+  endif()
+
+  target_link_libraries(crashpad::crashpad INTERFACE ZLIB::ZLIB)
+
+  if(NOT TARGET crashpad)
+    add_library(crashpad ALIAS crashpad::crashpad)
+  endif()
+
+  unset(_lib)
+  unset(_libs)
 endif()
-
-foreach(LIB_NAME ${CRASHPAD_LIBRARIES})
-  find_library(_LIB ${LIB_NAME})
-  target_link_libraries(crashpad INTERFACE ${_LIB})
-  unset(_LIB CACHE)
-endforeach()
-
-find_package(ZLIB REQUIRED)
-target_link_libraries(crashpad INTERFACE ZLIB::ZLIB)
-
-target_include_directories(crashpad 
-        INTERFACE ${_IMPORT_PREFIX}/include/crashpad)

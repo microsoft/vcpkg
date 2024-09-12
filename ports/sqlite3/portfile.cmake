@@ -4,7 +4,7 @@ string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2024/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
     FILENAME "sqlite-autoconf-${SQLITE_VERSION}.zip"
-    SHA512 ab4bb99186ccf81d288bc5150dacd5f8a32561303fbc0c607c24b5bb5ad44e0974655cea57d05122c62e957329f5260d170d2a71cbcf818501af29903c99a391
+    SHA512 a5ba5af9c8d6440d39ba67e3d5903c165df3f1d111e299efbe7c1cca4876d4d5aecd722e0133670daa6eb5cbf8a85c6a3d9852ab507a393615fb5245a3e1a743
 )
 
 vcpkg_extract_source_archive(
@@ -36,6 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
     FEATURES
         dbstat              SQLITE_ENABLE_DBSTAT_VTAB
+        dbpage-vtab         SQLITE_ENABLE_DBPAGE_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
         memsys3             SQLITE_ENABLE_MEMSYS3
