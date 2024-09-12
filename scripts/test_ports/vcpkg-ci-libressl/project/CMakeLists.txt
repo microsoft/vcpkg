@@ -5,7 +5,6 @@ project(libressl-test CXX)
 # NB: The port doesn't provide a wrapper, so there is no support
 #     for multi-config and for transitive usage requirements.
 find_package(OpenSSL MODULE REQUIRED)
-
 foreach(target IN ITEMS OpenSSL::SSL OpenSSL::Crypto)
     set(location_found FALSE)
     foreach(property IN ITEMS IMPORTED_LOCATION IMPORTED_LOCATION_DEBUG IMPORTED_LOCATION_RELEASE)
@@ -15,9 +14,9 @@ foreach(target IN ITEMS OpenSSL::SSL OpenSSL::Crypto)
         endif()
         set(location_found TRUE)
         message(STATUS "${target} ${property}: ${location}")
-        string(FIND "${location}" "${CURRENT_INSTALLED_DIR}" index)
+        string(FIND "${location}" "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" index)
         if(NOT index STREQUAL "0")
-            message(SEND_ERROR "${target} ${property} is not from CURRENT_INSTALLED_DIR.")
+            message(SEND_ERROR "${target} ${property} is not from vcpkg.")
         endif()
     endforeach()
     if(NOT location_found)
@@ -25,10 +24,10 @@ foreach(target IN ITEMS OpenSSL::SSL OpenSSL::Crypto)
     endif()
 endforeach()
 
-# libressl provides cmake targets
+# libressl provides cmake config
 find_package(LibreSSL CONFIG REQUIRED)
 message(STATUS "LibreSSL CONFIG: ${LibreSSL_DIR}")
-string(FIND "${LibreSSL_DIR}" "${CURRENT_INSTALLED_DIR}" index)
+string(FIND "${LibreSSL_DIR}" "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" index)
 if(NOT index STREQUAL "0")
-    message(SEND_ERROR "LibreSSL CONFIG is not from CURRENT_INSTALLED_DIR.")
+    message(SEND_ERROR "LibreSSL CONFIG is not from vcpkg.")
 endif()
