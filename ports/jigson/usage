@@ -1,4 +1,4 @@
-vcpkg-sample-library provides CMake targets:
+jigson provides CMake targets:
 
-find_package(jigson CONFIG REQUIRED)
-target_link_libraries(main PRIVATE jigson::jigson)
+  find_package(jigson CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE jigson::jigson)
