@@ -11,23 +11,25 @@ vcpkg_from_github(
       fix_dependency.patch
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-bit7z-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         auto-format                     BIT7Z_AUTO_FORMAT
         auto-prefix-long-paths          BIT7Z_AUTO_PREFIX_LONG_PATHS
-        disable-use-std-filesystem      BIT7Z_DISABLE_USE_STD_FILESYSTEM
         disable-zip-ascii-pwd-check     BIT7Z_DISABLE_ZIP_ASCII_PWD_CHECK
-        path-sanitization               BIT7Z_PATH_ANITIZATION
+        path-sanitization               BIT7Z_PATH_SANITIZATION
         regex-matching                  BIT7Z_REGEX_MATCHING
-        use-std-byte                    BIT7Z_USE_STD_BYTE
-        use-native-string               BIT7Z_USE_NATIVE_STRING
-        use-system-codepage             BIT7Z_USE_SYSTEM_CODEPAGE
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBIT7Z_DISABLE_USE_STD_FILESYSTEM=OFF
+        -DBIT7Z_USE_STD_BYTE=OFF
+        -DBIT7Z_USE_NATIVE_STRING=OFF
+        -DBIT7Z_USE_SYSTEM_CODEPAGE=OFF
         -DBIT7Z_BUILD_TESTS=OFF
         -DBIT7Z_BUILD_DOCS=OFF
         ${FEATURE_OPTIONS}
@@ -40,4 +42,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-bit7z CONFIG_PATH share/unoffic
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
