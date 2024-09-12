@@ -229,6 +229,19 @@ index 7c9226f..56c4c44 100644
 +
  
  include(CMakeListsInternal.txt OPTIONAL)
+diff --git a/core/src/core/float4.h b/core/src/core/float4.h
+index a221372..03428db 100644
+--- a/core/src/core/float4.h
++++ b/core/src/core/float4.h
+@@ -41,7 +41,7 @@ namespace float4
+ 
+ }
+ 
+-#if defined(IPL_OS_WINDOWS)
++#if defined(IPL_OS_WINDOWS) && !defined(__clang__)
+ 
+ namespace ipl {
+ 
 diff --git a/core/src/core/pffft_fft.cpp b/core/src/core/pffft_fft.cpp
 index 0a37114..4f5debe 100644
 --- a/core/src/core/pffft_fft.cpp
