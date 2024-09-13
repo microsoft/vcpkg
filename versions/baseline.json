@@ -6090,7 +6090,7 @@
     },
     "msquic": {
       "baseline": "2.3.6",
-      "port-version": 1
+      "port-version": 2
     },
     "mstch": {
       "baseline": "1.0.2",
