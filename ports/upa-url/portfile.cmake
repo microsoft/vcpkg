@@ -9,6 +9,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
+    -DCMAKE_CXX_STANDARD=17
     -DUPA_BUILD_TESTS=OFF
 )
 
