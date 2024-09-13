@@ -65,12 +65,14 @@ vcpkg_cmake_configure(
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
         "-DQUIC_STATIC_LINK_CRT=${STATIC_CRT}"
         "-DQUIC_STATIC_LINK_PARTIAL_CRT=${STATIC_CRT}"
         "-DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}"
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"

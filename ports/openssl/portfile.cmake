@@ -7,6 +7,12 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+vcpkg_download_distfile(PATCH_FIX_BUILD_WITH_OLD_PERL
+    URLS https://github.com/openssl/openssl/commit/210dc9a50dfd99caa1cf7c3d2fa42850124b1bbc.patch?full_index=1
+    SHA512 62f69f0e2664dc3b6a3090a3b2e142d50b14467f0e862784d9e306a503d4c34e77cd546d3a04dcf1b059e8300646b8ba5168579a0f2a33cfa9cffcbfd4f309e7
+    FILENAME openssl-openssl-210dc9a50dfd99caa1cf7c3d2fa42850124b1bbc.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
@@ -23,6 +29,7 @@ vcpkg_from_github(
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
+        "${PATCH_FIX_BUILD_WITH_OLD_PERL}"
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS
