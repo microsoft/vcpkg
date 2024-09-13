@@ -1,0 +1,17 @@
+{
+  "name": "upa-url",
+  "version": "1.0.0",
+  "description": "An implementation of the WHATWG URL Standard in C++",
+  "homepage": "https://github.com/upa-url/upa",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -9140,6 +9140,10 @@
       "baseline": "7.0.7",
       "port-version": 0
     },
+    "upa-url": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "upb": {
       "baseline": "4.25.1",
       "port-version": 1
