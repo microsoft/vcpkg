@@ -109,12 +109,12 @@
       "port-version": 1
     },
     "ampl-asl": {
-      "baseline": "2020-11-11",
-      "port-version": 3
+      "baseline": "2024-02-01",
+      "port-version": 0
     },
     "ampl-mp": {
       "baseline": "2020-11-11",
-      "port-version": 4
+      "port-version": 5
     },
     "amqpcpp": {
       "baseline": "4.3.26",
