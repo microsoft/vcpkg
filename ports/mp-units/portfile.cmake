@@ -11,15 +11,9 @@ vcpkg_from_github(
       config.patch
 )
 
-set(USE_STD_FORMAT TRUE)
-if ("use-libfmt" IN_LIST FEATURES)
-    set(USE_STD_FORMAT FALSE)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
-    OPTIONS
-    -DMP_UNITS_API_STD_FORMAT=${USE_STD_FORMAT}
 )
 
 vcpkg_cmake_install()
