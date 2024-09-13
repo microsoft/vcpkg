@@ -7,7 +7,7 @@ vcpkg_from_github(
 )
 
 # Copy the header files
-file(GLOB HEADER_FILES "${SOURCE_PATH}/src/include/*")
+file(GLOB HEADER_FILES "${SOURCE_PATH}/src/Include/*")
 file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/jigson")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
