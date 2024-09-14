@@ -9582,7 +9582,7 @@
     },
     "wolfssl": {
       "baseline": "5.7.2",
-      "port-version": 2
+      "port-version": 3
     },
     "wolftpm": {
       "baseline": "3.4.0",
