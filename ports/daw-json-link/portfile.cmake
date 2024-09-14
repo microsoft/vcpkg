@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/daw_json_link
     REF "v${VERSION}"
-    SHA512 710dcc677414d9e4e748276cd43344e403fc664ad67b7a47d032b68a7b21c7a89b0e3ef5cea650ab9a5f3b7148f482aa2fc1152b9fe31d67efaac152bd7a9cd8
+    SHA512 c8d778d753d244883c58a3073bc9adfb1583e6d52b895df9afccff947e71515627b97df043e69fd93f32d732c6abb92fd054324cd22d59d07a8810fcab33d96b
     HEAD_REF release
 )
 
