@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cxx11": {
+      "description": "Compile library with C++11 (for use in C++11 and C++14 projects)"
+    }
+  }
 }

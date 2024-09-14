@@ -6,10 +6,17 @@ vcpkg_from_github(
   HEAD_REF main
 )
 
+if("cxx11" IN_LIST FEATURES)
+  set(UPA_CXX_STANDARD 11)
+else()
+  set(UPA_CXX_STANDARD 17)
+endif()
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DCMAKE_CXX_STANDARD=17
+    -DCMAKE_CXX_STANDARD=${UPA_CXX_STANDARD}
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON
     -DUPA_BUILD_TESTS=OFF
 )
 
