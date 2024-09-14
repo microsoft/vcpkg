@@ -9208,6 +9208,10 @@
       "baseline": "2.0.1",
       "port-version": 1
     },
+    "uv": {
+      "baseline": "0.4.10",
+      "port-version": 0
+    },
     "uvatlas": {
       "baseline": "2024-09-04",
       "port-version": 0
