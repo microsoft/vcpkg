@@ -2657,7 +2657,7 @@
       "port-version": 2
     },
     "fast-double-parser": {
-      "baseline": "0.7.0",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "fast-float": {
