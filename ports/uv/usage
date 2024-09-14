@@ -1,0 +1,3 @@
+uv provides CMake targets:
+
+    find_package(uv CONFIG REQUIRED)
