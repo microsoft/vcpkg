@@ -72,10 +72,10 @@ index 6551dcb..457fcd7 100644
  @PACKAGE_INIT@
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(kubazip CONFIG)
++
 +find_dependency(pugixml CONFIG)
 +if(NOT @BUILD_SHARED_LIBS@)
-+    #find_dependency(kubazip CONFIG)
++    find_dependency(kubazip CONFIG)
 +    find_dependency(unofficial-minizip CONFIG)
 +    #find_dependency(openddlparser CONFIG)
 +    find_dependency(poly2tri CONFIG)
@@ -382,7 +382,7 @@ index 9b27086..a6db1cb 100644
 -  if(TARGET zip::zip)
 -    target_link_libraries(assimp PUBLIC zip::zip)
 +  if(1)
-+    target_link_libraries(assimp PUBLIC kubazip::kubazip)
++    target_link_libraries(assimp PRIVATE kubazip::kubazip)
    endif()
  
    if (ASSIMP_BUILD_DRACO)
