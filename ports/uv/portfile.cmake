@@ -5,7 +5,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         COMMAND_ERROR_IS_FATAL ANY
     )
 else()
-    find_dependency(CURL)
+    find_package(CURL CONFIG QUIET)
     find_program(BASH NAME bash HINTS ${MSYS_ROOT}/usr/bin REQUIRED)
     execute_process(
         COMMAND "${CURL}" --proto '=https' --tlsv1.2 -LsSf "https://github.com/astral-sh/uv/releases/download/${VERSION}/uv-installer.sh" | ${BASH}

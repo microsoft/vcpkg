@@ -3,5 +3,16 @@
   "version": "0.4.10",
   "description": "An extremely fast Python package and project manager, written in Rust.",
   "homepage": "https://github.com/astral-sh/uv",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    "curl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
