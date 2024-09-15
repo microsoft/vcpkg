@@ -1,3 +1,4 @@
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 if(VCPKG_TARGET_IS_WINDOWS)
     find_program(PWSH_PATH pwsh)
     execute_process(
