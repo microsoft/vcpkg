@@ -2,13 +2,15 @@ diff --git a/cmake/LERCCodec.cmake b/cmake/LERCCodec.cmake
 index 54504ca..8dc8e1b 100644
 --- a/cmake/LERCCodec.cmake
 +++ b/cmake/LERCCodec.cmake
-@@ -25,7 +25,8 @@
+@@ -25,7 +25,10 @@
  
  # libLerc
  set(LERC_SUPPORT FALSE)
 -find_package(LERC)
 +find_package(LERC NAMES unofficial-lerc)
-+add_library(LERC::LERC ALIAS unofficial::Lerc::Lerc)
++if(TARGET unofficial::Lerc::Lerc)
++    add_library(LERC::LERC ALIAS unofficial::Lerc::Lerc)
++endif()
  option(lerc "use libLerc (required for LERC compression)" ${LERC_FOUND})
  if (lerc AND LERC_FOUND AND ZIP_SUPPORT)
      set(LERC_SUPPORT TRUE)
