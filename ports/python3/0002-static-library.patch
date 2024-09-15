@@ -9,23 +9,6 @@ builds the pythoncore as a static library instead of a DLL
  PCbuild/pythoncore.vcxproj | 4 ++--
  2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/Modules/getpath.c b/Modules/getpath.c
-index d7d3cf081e..34269f0b75 100644
---- a/Modules/getpath.c
-+++ b/Modules/getpath.c
-@@ -801,10 +801,12 @@ static int
- library_to_dict(PyObject *dict, const char *key)
- {
- #ifdef MS_WINDOWS
-+#ifdef Py_ENABLE_SHARED
-     extern HMODULE PyWin_DLLhModule;
-     if (PyWin_DLLhModule) {
-         return winmodule_to_dict(dict, key, PyWin_DLLhModule);
-     }
-+#endif
- #elif defined(WITH_NEXT_FRAMEWORK)
-     static char modPath[MAXPATHLEN + 1];
-     static int modPathInitialized = -1;
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
 index d7d3cf081e..34269f0b75 100644
 --- a/PC/pyconfig.h
@@ -55,7 +38,7 @@ index d7d3cf081e..34269f0b75 100644
 +#       endif /* Py_WINVER */
  #endif /* MS_COREDLL */
  
- #if defined(MS_WIN64)
+ #ifdef MS_WIN64
 diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
 index 70c336a9d3..ba797e8afd 100644
 --- a/PCbuild/pcbuild.proj
@@ -84,7 +67,7 @@ index 2625d0293d..2f8bdaa931 100644
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 @@ -102,7 +102,7 @@
        <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
-       <AdditionalIncludeDirectories>$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalIncludeDirectories>$(PySourcePath)Modules\_hacl\include;$(PySourcePath)Modules\_hacl\internal;$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 -      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
 +      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -104,36 +87,6 @@ index 2625d0293d..2f8bdaa931 100644
        <Optimization>Disabled</Optimization>
        <WholeProgramOptimization>false</WholeProgramOptimization>
      </ClCompile>
-diff --git a/Python/dynload_win.c b/Python/dynload_win.c
-index ac49f7867a..f3583345ff 100644
---- a/Python/dynload_win.c
-+++ b/Python/dynload_win.c
-@@ -163,6 +163,7 @@ static char *GetPythonImport (HINSTANCE hModule)
-     return NULL;
- }
- 
-+#ifdef Py_ENABLE_SHARED
- /* Load python3.dll before loading any extension module that might refer
-    to it. That way, we can be sure that always the python3.dll corresponding
-    to this python DLL is loaded, not a python3.dll that might be on the path
-@@ -216,6 +217,7 @@ _Py_CheckPython3(void)
-     return hPython3 != NULL;
-     #undef MAXPATHLEN
- }
-+#endif /* Py_ENABLE_SHARED */
- 
- dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
-                                               const char *shortname,
-@@ -224,7 +226,9 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
-     dl_funcptr p;
-     char funcname[258], *import_python;
- 
-+#ifdef Py_ENABLE_SHARED
-     _Py_CheckPython3();
-+#endif /* Py_ENABLE_SHARED */
- 
- #if USE_UNICODE_WCHAR_CACHE
-     const wchar_t *wpathname = _PyUnicode_AsUnicode(pathname);
 diff --git a/Python/sysmodule.c b/Python/sysmodule.c
 index ac49f7867a..f3583345ff 100644
 --- a/Python/sysmodule.c
