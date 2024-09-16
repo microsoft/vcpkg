@@ -9793,7 +9793,7 @@
       "port-version": 1
     },
     "yara": {
-      "baseline": "4.5.1",
+      "baseline": "4.5.2",
       "port-version": 1
     },
     "yas": {
