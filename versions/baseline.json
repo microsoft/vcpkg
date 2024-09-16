@@ -4909,7 +4909,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "8.13.31",
+      "baseline": "8.13.45",
       "port-version": 0
     },
     "libplist": {
