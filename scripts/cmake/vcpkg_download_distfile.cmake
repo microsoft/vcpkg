@@ -196,6 +196,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             "${arg_SHA512}"
             "${arg_SKIP_SHA512}"
         )
+        message(STATUS "Using cached ${arg_FILENAME}.")
     endif()
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
