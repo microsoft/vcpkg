@@ -5,17 +5,11 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_download_distfile(FMT11_RANGE_PATCH
-    URLS https://github.com/facebook/folly/commit/21e8dcd464ee46b2144a1e4d4c0e452355ae15f0.patch?full_index=1
-    FILENAME fmt11-range.patch
-    SHA512 6a3afe361cd24b4f62b3aba625dfbbfb767c91f27fa45ed4604adc5ec3d574e571ece13eeda0d9d47b8a37166fc31b1ed7f58f120a35d35977085a08172de105
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 f129d4e530b5c8aaf4cbfb0c813e84ee911ec26e43fa01e6e1c9557501c605a8123d46d0c689b32eb5e5a57280968662a5fa370ede17af7526db59545e9a70db
+    SHA512 78797f1383fb45cdb26977f19945d84fdf5056ba2156c47e0176fa7e3d5d0e7c7b61f1efbf98b09a45cad8826d931fcfdb26641f2d0065c6b6a601e9c8cc03f7
     HEAD_REF main
     PATCHES
         disable-non-underscore-posix-names.patch
@@ -24,7 +18,6 @@ vcpkg_from_github(
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
         fix-fmt11-cmake.patch
-        ${FMT11_RANGE_PATCH}
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")

@@ -1,0 +1,18 @@
+{
+  "name": "hlslpp",
+  "version": "3.5",
+  "description": "Math library using HLSL syntax with multiplatform SIMD support.",
+  "homepage": "https://github.com/redorav/hlslpp",
+  "license": "MIT",
+  "supports": "!x86",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

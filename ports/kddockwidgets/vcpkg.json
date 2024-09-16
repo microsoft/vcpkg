@@ -1,6 +1,6 @@
 {
   "name": "kddockwidgets",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "KDAB's Dock Widget Framework for Qt",
   "homepage": "https://www.kdab.com/development-resources/qt-tools/kddockwidgets/",
   "dependencies": [

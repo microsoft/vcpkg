@@ -1,0 +1,4 @@
+The package aliyun-oss-cpp-sdk provides CMake targets:
+
+    find_package(unofficial-aliyun-oss-cpp-sdk CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::aliyun-oss-cpp-sdk::cpp-sdk)
