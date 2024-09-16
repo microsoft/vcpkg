@@ -8325,7 +8325,7 @@
       "port-version": 0
     },
     "simsimd": {
-      "baseline": "1.4.0",
+      "baseline": "5.2.1",
       "port-version": 0
     },
     "sjpeg": {
