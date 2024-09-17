@@ -5749,7 +5749,7 @@
       "port-version": 7
     },
     "mathter": {
-      "baseline": "1.1.2",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "matio": {
