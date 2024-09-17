@@ -20,11 +20,15 @@ macro(z_vcpkg_make_get_cmake_vars)
     cmake_parse_arguments(vmgcv_arg # Not just arg since macros don't define their own var scope. 
         "" "" "LANGUAGES" ${ARGN}
     )
+
     z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
 
     if(NOT has_cmake_vars_file)
         if(vmgcv_arg_LANGUAGES)
-          list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_LANGUAGES}")
+            # Escape semicolons to prevent CMake from splitting LANGUAGES list when passing as -D option.
+            string(REPLACE ";" "\;" vmgcv_arg_langs "${vmgcv_arg_LANGUAGES}")
+            list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_langs}")
+            unset(langs)
         endif()
 
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
@@ -196,7 +200,6 @@ function(z_vcpkg_make_prepare_compile_flags)
     endif()
 
     set(library_path_flag "${VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG}")
-
     set(linker_flag_escape "")
     if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND NOT arg_NO_FLAG_ESCAPING)
         # Removed by libtool
@@ -248,6 +251,7 @@ function(z_vcpkg_make_prepare_programs out_env)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
+    
     z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
 
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
@@ -459,9 +463,11 @@ function(z_vcpkg_make_prepare_flags)
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
-
     z_vcpkg_unparsed_args(FATAL_ERROR)
+
+    message(STATUS "Languages being passed: ${arg_LANGUAGES}")
     z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+    message(STATUS "After z_vcpkg_make_get_cmake_vars: VCPKG_DETECTED_CMAKE_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 
     # ==== LIBS
     # TODO: Figure out what to do with other Languages like Fortran
@@ -564,7 +570,7 @@ function(z_vcpkg_make_prepare_flags)
     foreach(flag IN LISTS release_flags_list debug_flags_list)
         set("${flag}" "${${flag}}" PARENT_SCOPE)
     endforeach()
-
+    
     cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME cname)
     set("${C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_configure_triplets
     set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
