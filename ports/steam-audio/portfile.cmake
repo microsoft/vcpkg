@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF "v${VERSION}"
     PATCHES
       use-vcpkg-deps.patch
+      fix-arm64-windows.patch
 )
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
