@@ -64,26 +64,38 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   vcpkg_execute_build_process(
       COMMAND ${SCONS}
           SOURCE_LAYOUT=no
-          PREFIX=${CURRENT_PACKAGES_DIR}
-          LIBDIR=${CURRENT_PACKAGES_DIR}/lib
+          PREFIX=${CURRENT_PACKAGES_DIR}/debug
+          LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib
           OPENSSL=${CURRENT_INSTALLED_DIR}
           ZLIB=${CURRENT_INSTALLED_DIR}
           APR=${CURRENT_INSTALLED_DIR}
           APU=${CURRENT_INSTALLED_DIR}
           ${SCONS_ARCH}
-          DEBUG=no
-          install-lib install-inc
+          DEBUG=yes
+          install-lib
       WORKING_DIRECTORY ${SOURCE_PATH}
       LOGNAME "scons"
   )
+
+  if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME
+      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
+      "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.dll"
+    )
+    file(RENAME
+      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
+      "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.pdb"
+    )
+  endif()
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   vcpkg_execute_build_process(
     COMMAND ${SCONS}
         SOURCE_LAYOUT=no
-        PREFIX=${CURRENT_PACKAGES_DIR}/debug
-        LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib
+        PREFIX=${CURRENT_PACKAGES_DIR}
+        LIBDIR=${CURRENT_PACKAGES_DIR}/lib
         OPENSSL=${CURRENT_INSTALLED_DIR}
         ZLIB=${CURRENT_INSTALLED_DIR}
         APR=${CURRENT_INSTALLED_DIR}
@@ -94,4 +106,16 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME "scons"
   )
+
+  if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME
+      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.dll"
+      "${CURRENT_PACKAGES_DIR}/bin/libserf-1.dll"
+    )
+    file(RENAME
+      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.pdb"
+      "${CURRENT_PACKAGES_DIR}/bin/libserf-1.pdb"
+    )
+  endif()
 endif()
