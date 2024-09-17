@@ -53,9 +53,10 @@ else()
   set(SCONS_ARCH "")
 endif()
 
-set(EXTRA_MODE "")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(EXTRA_MODE ${EXTRA_MODE} APR_STATIC=yes)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/bin/libapr-1.dll")
+  set(APR_STATIC no)
+else()
+  set(APR_STATIC yes)
 endif()
 
 vcpkg_find_acquire_program(SCONS)
@@ -70,6 +71,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
           ZLIB=${CURRENT_INSTALLED_DIR}
           APR=${CURRENT_INSTALLED_DIR}
           APU=${CURRENT_INSTALLED_DIR}
+          APR_STATIC=${APR_STATIC}
           ${SCONS_ARCH}
           DEBUG=yes
           install-lib
@@ -100,6 +102,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ZLIB=${CURRENT_INSTALLED_DIR}
         APR=${CURRENT_INSTALLED_DIR}
         APU=${CURRENT_INSTALLED_DIR}
+        APR_STATIC=${APR_STATIC}
         ${SCONS_ARCH}
         DEBUG=no
         install-lib install-inc
