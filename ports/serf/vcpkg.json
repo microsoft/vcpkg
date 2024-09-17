@@ -4,6 +4,7 @@
   "homepage": "https://serf.apache.org/",
   "description": "The serf library is a high performance C-based HTTP client library built upon the Apache Portable Runtime (APR) library. It is permissively licensed under the Apache License, v2.",
   "license": "Apache-2.0",
+  "supports": "!uwp & !staticcrt",
   "dependencies": [
     "apr",
     "apr-util",
