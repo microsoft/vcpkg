@@ -3813,7 +3813,7 @@
       "port-version": 0
     },
     "jigson": {
-      "baseline": "0.1.2",
+      "baseline": "0.1.3",
       "port-version": 0
     },
     "jinja2cpplight": {
