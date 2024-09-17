@@ -19,6 +19,15 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   set(VCPKG_MACOS_ARCH "-DVCPKG_MACOS_ARCH=${MACOS_ARCH}")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+  if(${BUILD_STATIC})
+    set(WINDOWS_STATIC_RUNTIME "-DSTEAMAUDIO_STATIC_RUNTIME=ON")
+  else()
+    set(WINDOWS_STATIC_RUNTIME "-DSTEAMAUDIO_STATIC_RUNTIME=OFF")
+  endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/core"
     OPTIONS
@@ -29,6 +38,7 @@ vcpkg_cmake_configure(
         -DSTEAMAUDIO_BUILD_DOCS=OFF
         -DSTEAMAUDIO_ENABLE_AVX=OFF # Windows only. Maybe expose as a feature?
         # Below features all require closed source third party dependencies
+        ${WINDOWS_STATIC_RUNTIME}
         -DSTEAMAUDIO_ENABLE_IPP=OFF
         -DSTEAMAUDIO_ENABLE_FFTS=OFF
         -DSTEAMAUDIO_ENABLE_EMBREE=OFF
