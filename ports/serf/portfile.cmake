@@ -60,11 +60,30 @@ endif()
 
 vcpkg_find_acquire_program(SCONS)
 
-vcpkg_execute_build_process(
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  vcpkg_execute_build_process(
+      COMMAND ${SCONS}
+          SOURCE_LAYOUT=no
+          PREFIX=${CURRENT_PACKAGES_DIR}
+          LIBDIR=${CURRENT_PACKAGES_DIR}/lib
+          OPENSSL=${CURRENT_INSTALLED_DIR}
+          ZLIB=${CURRENT_INSTALLED_DIR}
+          APR=${CURRENT_INSTALLED_DIR}
+          APU=${CURRENT_INSTALLED_DIR}
+          ${SCONS_ARCH}
+          DEBUG=no
+          install-lib install-inc
+      WORKING_DIRECTORY ${SOURCE_PATH}
+      LOGNAME "scons"
+  )
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  vcpkg_execute_build_process(
     COMMAND ${SCONS}
         SOURCE_LAYOUT=no
-        PREFIX=${CURRENT_PACKAGES_DIR}
-        LIBDIR=${CURRENT_PACKAGES_DIR}/lib
+        PREFIX=${CURRENT_PACKAGES_DIR}/debug
+        LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib
         OPENSSL=${CURRENT_INSTALLED_DIR}
         ZLIB=${CURRENT_INSTALLED_DIR}
         APR=${CURRENT_INSTALLED_DIR}
@@ -74,4 +93,5 @@ vcpkg_execute_build_process(
         install-lib install-inc
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME "scons"
-)
+  )
+endif()
