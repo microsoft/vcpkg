@@ -43,42 +43,35 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
-    # REF 1.0.0
-    # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/examples/patching.md
-    # PATCHES
-    #   001_port_fixes.patch
-    #   002_more_port_fixes.patch
 )
 
-# # Check if one or more features are a part of a package installation.
-# # See /docs/maintainers/vcpkg_check_features.md for more details
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#   FEATURES
-#     tbb   WITH_TBB
-#   INVERTED_FEATURES
-#     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
-# )
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+  set(SCONS_ARCH "TARGET_ARCH=x86_64")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+  set(SCONS_ARCH "TARGET_ARCH=x86")
+else()
+  set(SCONS_ARCH "")
+endif()
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+set(EXTRA_MODE "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(EXTRA_MODE ${EXTRA_MODE} APR_STATIC=yes)
+endif()
+
+vcpkg_find_acquire_program(SCONS)
+
+vcpkg_execute_build_process(
+    COMMAND ${SCONS}
+        SOURCE_LAYOUT=no
+        PREFIX=${CURRENT_PACKAGES_DIR}
+        LIBDIR=${CURRENT_PACKAGES_DIR}/lib
+        OPENSSL=${CURRENT_INSTALLED_DIR}
+        ZLIB=${CURRENT_INSTALLED_DIR}
+        APR=${CURRENT_INSTALLED_DIR}
+        APU=${CURRENT_INSTALLED_DIR}
+        ${SCONS_ARCH}
+        DEBUG=no
+        install-lib install-inc
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME "scons"
 )
-
-vcpkg_cmake_install()
-
-# # Moves all .cmake files from /debug/share/serf/ to /share/serf/
-# # See /docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md for more details
-# When you uncomment "vcpkg_cmake_config_fixup()", you need to add the following to "dependencies" vcpkg.json:
-#{
-#    "name": "vcpkg-cmake-config",
-#    "host": true
-#}
-# vcpkg_cmake_config_fixup()
-
-# Uncomment the line below if necessary to install the license file for the port
-# as a file named `copyright` to the directory `${CURRENT_PACKAGES_DIR}/share/${PORT}`
-# vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
