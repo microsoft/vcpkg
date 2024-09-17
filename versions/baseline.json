@@ -2249,8 +2249,8 @@
       "port-version": 8
     },
     "debug-assert": {
-      "baseline": "1.3.3",
-      "port-version": 2
+      "baseline": "1.3.4",
+      "port-version": 0
     },
     "decimal-for-cpp": {
       "baseline": "1.18",
