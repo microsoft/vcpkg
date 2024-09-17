@@ -1,16 +1,3 @@
-diff --git a/mysofaConfig.cmake.in b/mysofaConfig.cmake.in
-index 03a2c42..372396d 100644
---- a/mysofaConfig.cmake.in
-+++ b/mysofaConfig.cmake.in
-@@ -3,7 +3,7 @@
- include(CMakeFindDependencyMacro)
- 
- # ZLIB is a private link dependency of mysofa-static.
--find_dependency(ZLIB)
-+find_dependency(ZLIB::ZLIB)
- 
- include(${CMAKE_CURRENT_LIST_DIR}/mysofaTargets.cmake)
- 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 018f4ce..3ef752e 100644
 --- a/src/CMakeLists.txt
