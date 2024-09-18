@@ -1,0 +1,49 @@
+Index: SConstruct
+===================================================================
+--- SConstruct	(revision 1920717)
++++ SConstruct	(working copy)
+@@ -343,8 +343,12 @@
+   # zlib
+   env.Append(LIBS=['zlib.lib'])
+   if not env.get('SOURCE_LAYOUT', None):
+-    env.Append(CPPPATH=['$ZLIB/include'],
+-               LIBPATH=['$ZLIB/lib'])
++    if debug:
++      env.Append(CPPPATH=['$ZLIB/include'],
++                 LIBPATH=['$ZLIB/debug/lib'])
++    else:
++      env.Append(CPPPATH=['$ZLIB/include'],
++                 LIBPATH=['$ZLIB/lib'])
+   else:
+     env.Append(CPPPATH=['$ZLIB'],
+                LIBPATH=['$ZLIB'])
+@@ -351,8 +355,12 @@
+ 
+   # openssl
+   if not env.get('SOURCE_LAYOUT', None):
+-    env.Append(CPPPATH=['$OPENSSL/include/openssl'],
+-               LIBPATH=['$OPENSSL/lib'])
++    if debug:
++      env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++                 LIBPATH=['$OPENSSL/lib'])
++    else:
++      env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++                 LIBPATH=['$OPENSSL/debug/lib'])
+   elif 0: # opensslstatic:
+     env.Append(CPPPATH=['$OPENSSL/inc32'],
+                LIBPATH=['$OPENSSL/out32'])
+@@ -392,8 +400,12 @@
+     apr_libs = ''
+     apu_libs = ''
+ 
+-  env.Append(CPPPATH=['$OPENSSL/include'])
+-  env.Append(LIBPATH=['$OPENSSL/lib'])
++  if debug:
++    env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++               LIBPATH=['$OPENSSL/lib'])
++  else:
++    env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++               LIBPATH=['$OPENSSL/debug/lib'])
+ 
+ 
+ # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
