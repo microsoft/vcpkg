@@ -1,0 +1,58 @@
+diff --git a/sdk/CMakeLists.txt b/sdk/CMakeLists.txt
+index 28d04c2..c7b2e6c 100644
+--- a/sdk/CMakeLists.txt
++++ b/sdk/CMakeLists.txt
+@@ -146,6 +146,13 @@ set_target_properties(${PROJECT_NAME}${STATIC_LIB_SUFFIX}
+     OUTPUT_NAME ${TARGET_OUTPUT_NAME_PREFIX}${PROJECT_NAME}${STATIC_LIB_SUFFIX}
+     )
+ 
++target_include_directories(${PROJECT_NAME}${STATIC_LIB_SUFFIX}
++    PUBLIC $<INSTALL_INTERFACE:include>
++)
++
++target_link_libraries(${PROJECT_NAME}${STATIC_LIB_SUFFIX} ${CRYPTO_LIBS})
++target_link_libraries(${PROJECT_NAME}${STATIC_LIB_SUFFIX} ${CLIENT_LIBS})
++
+ target_include_directories(${PROJECT_NAME}${STATIC_LIB_SUFFIX}
+     PRIVATE include
+     PRIVATE include/alibabacloud/oss    
+@@ -172,7 +179,11 @@ if (BUILD_SHARED_LIBS)
+         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+         OUTPUT_NAME ${TARGET_OUTPUT_NAME_PREFIX}${PROJECT_NAME}
+         )
+-    
++
++    target_include_directories(${PROJECT_NAME}
++        PUBLIC $<INSTALL_INTERFACE:include>
++    )
++
+     target_include_directories(${PROJECT_NAME}
+         PRIVATE include
+         PRIVATE include/alibabacloud/oss    
+@@ -210,16 +221,22 @@ install(FILES ${sdk_encryption_header}
+ install(FILES ${sdk_public_header}
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/alibabacloud/oss)
+ 
+-install(TARGETS  ${PROJECT_NAME}${STATIC_LIB_SUFFIX}
++install(TARGETS  ${PROJECT_NAME}${STATIC_LIB_SUFFIX} EXPORT unofficial-aliyun-oss-cpp-sdk-config
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     )
+ 
+ if (BUILD_SHARED_LIBS)
+-install(TARGETS  ${PROJECT_NAME}
++install(TARGETS  ${PROJECT_NAME} EXPORT unofficial-aliyun-oss-cpp-sdk-config
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     )
+-endif()
+\ No newline at end of file
++endif()
++
++install(
++    EXPORT unofficial-aliyun-oss-cpp-sdk-config
++    NAMESPACE unofficial::aliyun-oss-cpp-sdk::
++    DESTINATION share/unofficial-aliyun-oss-cpp-sdk
++)
