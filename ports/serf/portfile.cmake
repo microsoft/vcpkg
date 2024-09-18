@@ -57,7 +57,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
           DEBUG=yes
           install-lib install-pc
       WORKING_DIRECTORY ${SOURCE_PATH}
-      LOGNAME "scons"
+      LOGNAME "scons-dbg"
   )
 
   # Fixup installed files.
@@ -111,7 +111,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         DEBUG=no
         install-lib install-inc install-pc
     WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME "scons"
+    LOGNAME "scons-rel"
   )
 
   # Fixup installed files.
