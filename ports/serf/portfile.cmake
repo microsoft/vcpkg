@@ -54,7 +54,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
           ${apr_opts}
           ${SCONS_ARCH}
           DEBUG=yes
-          install-lib
+          install-lib install-pc
       WORKING_DIRECTORY ${SOURCE_PATH}
       LOGNAME "scons"
   )
@@ -105,7 +105,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ${apr_opts}
         ${SCONS_ARCH}
         DEBUG=no
-        install-lib install-inc
+        install-lib install-inc install-pc
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME "scons"
   )
@@ -131,3 +131,4 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_fixup_pkgconfig()
