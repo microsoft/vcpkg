@@ -1,0 +1,42 @@
+diff --git a/cmake/LERCCodec.cmake b/cmake/LERCCodec.cmake
+index 54504ca..8dc8e1b 100644
+--- a/cmake/LERCCodec.cmake
++++ b/cmake/LERCCodec.cmake
+@@ -25,7 +25,10 @@
+ 
+ # libLerc
+ set(LERC_SUPPORT FALSE)
+-find_package(LERC)
++find_package(LERC NAMES unofficial-lerc)
++if(TARGET unofficial::Lerc::Lerc)
++    add_library(LERC::LERC ALIAS unofficial::Lerc::Lerc)
++endif()
+ option(lerc "use libLerc (required for LERC compression)" ${LERC_FOUND})
+ if (lerc AND LERC_FOUND AND ZIP_SUPPORT)
+     set(LERC_SUPPORT TRUE)
+diff --git a/cmake/WebPCodec.cmake b/cmake/WebPCodec.cmake
+index 1d676a7..7776917 100644
+--- a/cmake/WebPCodec.cmake
++++ b/cmake/WebPCodec.cmake
+@@ -26,7 +26,7 @@
+ # libwebp
+ set(WEBP_SUPPORT FALSE)
+ 
+-find_package(WebP)
++find_package(WebP CONFIG)
+ 
+ option(webp "use libwebp (required for WEBP compression)" ${WebP_FOUND})
+ 
+diff --git a/cmake/ZSTDCodec.cmake b/cmake/ZSTDCodec.cmake
+index 3fac861..2957aa3 100644
+--- a/cmake/ZSTDCodec.cmake
++++ b/cmake/ZSTDCodec.cmake
+@@ -28,7 +28,7 @@
+ set(ZSTD_SUPPORT FALSE)
+ set(ZSTD_USABLE FALSE)
+ 
+-find_package(ZSTD)
++find_package(ZSTD NAMES zstd)
+ 
+ if(ZSTD_FOUND)
+     if(TARGET zstd::libzstd_shared)
