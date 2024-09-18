@@ -7718,7 +7718,7 @@
     },
     "range-v3": {
       "baseline": "0.12.0",
-      "port-version": 3
+      "port-version": 4
     },
     "range-v3-vs2015": {
       "baseline": "20151130-vcpkg5",
@@ -8326,7 +8326,7 @@
     },
     "simsimd": {
       "baseline": "5.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sjpeg": {
       "baseline": "2021-10-31",
