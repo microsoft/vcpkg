@@ -59,24 +59,27 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
       LOGNAME "scons"
   )
 
-  if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME
-      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
-      "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.dll"
-    )
-    file(RENAME
-      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
-      "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.pdb"
-    )
-  else()
-    file(REMOVE
-      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
-      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
-      "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.lib"
-    )
+  # Fixup installed files.
+  if(VCPKG_TARGET_IS_WINDOWS)
+    if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+      file(RENAME
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.dll"
+      )
+      file(RENAME
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.pdb"
+      )
+    else()
+      file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.lib"
+      )
+    endif()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.exp")
   endif()
-  file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.exp")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -110,24 +113,27 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     LOGNAME "scons"
   )
 
-  if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(RENAME
-      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.dll"
-      "${CURRENT_PACKAGES_DIR}/bin/libserf-1.dll"
-    )
-    file(RENAME
-      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.pdb"
-      "${CURRENT_PACKAGES_DIR}/bin/libserf-1.pdb"
-    )
-  else()
-    file(REMOVE
-      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.dll"
-      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.pdb"
-      "${CURRENT_PACKAGES_DIR}/lib/libserf-1.lib"
-    )
+  # Fixup installed files.
+  if(VCPKG_TARGET_IS_WINDOWS)
+    if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+      file(RENAME
+        "${CURRENT_PACKAGES_DIR}/lib/libserf-1.dll"
+        "${CURRENT_PACKAGES_DIR}/bin/libserf-1.dll"
+      )
+      file(RENAME
+        "${CURRENT_PACKAGES_DIR}/lib/libserf-1.pdb"
+        "${CURRENT_PACKAGES_DIR}/bin/libserf-1.pdb"
+      )
+    else()
+      file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/lib/libserf-1.dll"
+        "${CURRENT_PACKAGES_DIR}/lib/libserf-1.pdb"
+        "${CURRENT_PACKAGES_DIR}/lib/libserf-1.lib"
+      )
+    endif()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libserf-1.exp")
   endif()
-  file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libserf-1.exp")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
