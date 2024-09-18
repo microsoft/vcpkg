@@ -28,6 +28,8 @@ endif()
 vcpkg_find_acquire_program(SCONS)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+
   vcpkg_execute_build_process(
       COMMAND ${SCONS}
           SOURCE_LAYOUT=no
@@ -66,6 +68,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  message(STATUS "Building ${TARGET_TRIPLET}-rel")
+
   vcpkg_execute_build_process(
     COMMAND ${SCONS}
         SOURCE_LAYOUT=no
