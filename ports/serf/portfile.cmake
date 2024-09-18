@@ -31,6 +31,19 @@ vcpkg_find_acquire_program(SCONS)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
+  if(VCPKG_TARGET_IS_WINDOWS)
+    SET(apr_opts
+      APR=${CURRENT_INSTALLED_DIR}
+      APU=${CURRENT_INSTALLED_DIR}
+      APR_STATIC=${APR_STATIC}
+    )
+  else()
+    SET(apr_opts
+      APR=${CURRENT_INSTALLED_DIR}/tools/apr/debug/bin/apr-1-config
+      APU=${CURRENT_INSTALLED_DIR}/tools/apr-util/debug/bin/apu-1-config
+    )
+  endif()
+
   vcpkg_execute_build_process(
       COMMAND ${SCONS}
           SOURCE_LAYOUT=no
@@ -38,9 +51,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
           LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib
           OPENSSL=${CURRENT_INSTALLED_DIR}
           ZLIB=${CURRENT_INSTALLED_DIR}
-          APR=${CURRENT_INSTALLED_DIR}
-          APU=${CURRENT_INSTALLED_DIR}
-          APR_STATIC=${APR_STATIC}
+          ${apr_opts}
           ${SCONS_ARCH}
           DEBUG=yes
           install-lib
@@ -71,6 +82,19 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
+  if(VCPKG_TARGET_IS_WINDOWS)
+    SET(apr_opts
+      APR=${CURRENT_INSTALLED_DIR}
+      APU=${CURRENT_INSTALLED_DIR}
+      APR_STATIC=${APR_STATIC}
+    )
+  else()
+    SET(apr_opts
+      APR=${CURRENT_INSTALLED_DIR}/tools/apr/bin/apr-1-config
+      APU=${CURRENT_INSTALLED_DIR}/tools/apr-util/bin/apu-1-config
+    )
+  endif()
+
   vcpkg_execute_build_process(
     COMMAND ${SCONS}
         SOURCE_LAYOUT=no
@@ -78,9 +102,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         LIBDIR=${CURRENT_PACKAGES_DIR}/lib
         OPENSSL=${CURRENT_INSTALLED_DIR}
         ZLIB=${CURRENT_INSTALLED_DIR}
-        APR=${CURRENT_INSTALLED_DIR}
-        APU=${CURRENT_INSTALLED_DIR}
-        APR_STATIC=${APR_STATIC}
+        ${apr_opts}
         ${SCONS_ARCH}
         DEBUG=no
         install-lib install-inc
