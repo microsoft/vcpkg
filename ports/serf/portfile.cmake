@@ -11,9 +11,10 @@ vcpkg_extract_source_archive_ex(
       serf-fix-expat.patch
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+# Note: custom architecture is not supported on Unix.
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   set(SCONS_ARCH "TARGET_ARCH=x86_64")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
   set(SCONS_ARCH "TARGET_ARCH=x86")
 else()
   set(SCONS_ARCH "")
