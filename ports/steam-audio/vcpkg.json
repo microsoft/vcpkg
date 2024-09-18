@@ -4,6 +4,7 @@
   "description": "Valve's steam audio library",
   "homepage": "https://github.com/ValveSoftware/steam-audio",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     "flatbuffers",
     {
