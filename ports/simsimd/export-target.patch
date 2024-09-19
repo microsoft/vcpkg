@@ -11,19 +11,19 @@ index aa0daf4..f976fb1 100644
      set_target_properties(simsimd_shared PROPERTIES OUTPUT_NAME simsimd)
 +    
 +    install(TARGETS simsimd_shared EXPORT unofficial-simsimd-config
-+    	LIBRARY DESTINATION lib
-+    	ARCHIVE DESTINATION lib
-+        RUNTIME DESTINATION bin)
++       LIBRARY DESTINATION lib
++       ARCHIVE DESTINATION lib
++       RUNTIME DESTINATION bin)
 +        
 +    install(EXPORT unofficial-simsimd-config
-+        FILE unofficial-simsimd-config.cmake
-+        NAMESPACE unofficial::simsimd::
-+        DESTINATION share/unofficial-simsimd
++       FILE unofficial-simsimd-config.cmake
++       NAMESPACE unofficial::simsimd::
++       DESTINATION share/unofficial-simsimd
 +    )
  endif ()
 +
 +install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-+    	DESTINATION include
-+        FILES_MATCHING
-+        PATTERN *.h
++   DESTINATION include
++   FILES_MATCHING
++   PATTERN *.h
 +)
