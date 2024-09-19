@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5cd876f..2cf932b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -121,6 +121,9 @@ endif()
+ 
+ if(JWT_EXTERNAL_PICOJSON)
+   target_link_libraries(jwt-cpp INTERFACE picojson::picojson>)
++else()
++  find_path(PICOJSON_INCLUDE_DIR "picojson/picojson.h" REQUIRED)
++  target_include_directories(jwt-cpp INTERFACE "${PICOJSON_INCLUDE_DIR}")
+ endif()
+ 
+ # Hunter needs relative paths so the files are placed correctly
