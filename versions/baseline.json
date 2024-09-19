@@ -8325,8 +8325,13 @@
       "port-version": 0
     },
     "simsimd": {
+<<<<<<< HEAD
       "baseline": "5.2.1",
       "port-version": 1
+=======
+      "baseline": "5.4.0",
+      "port-version": 0
+>>>>>>> 4e461ab4e89d53b681fc593a09bd1cce4dda7b58
     },
     "sjpeg": {
       "baseline": "2021-10-31",
