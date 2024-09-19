@@ -1,0 +1,32 @@
+diff --git a/include/upa/config.h b/include/upa/config.h
+index 46a5bc5..0264380 100644
+--- a/include/upa/config.h
++++ b/include/upa/config.h
+@@ -12,14 +12,16 @@
+ # endif
+ #endif
+ 
++#define UPA_CXX_STANDARD @UPA_CXX_STANDARD@  // NOLINT(*-macro-*)
++
+ // Define UPA_CPP_20 if compiler supports C++20 or later standard
+-#if defined(_MSVC_LANG) ? (_MSVC_LANG >= 202002) : (__cplusplus >= 202002)
++#if UPA_CXX_STANDARD >= 20
+ # define UPA_CPP_20
+ #endif
+ 
+ // Define UPA_CPP_17 if compiler supports C++17 or later standard
+ // https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+-#if defined(_MSVC_LANG) ? (_MSVC_LANG >= 201703) : (__cplusplus >= 201703)
++#if UPA_CXX_STANDARD >= 17
+ # define UPA_CPP_17
+ # define UPA_FALLTHROUGH [[fallthrough]];
+ # define UPA_CONSTEXPR_17 constexpr
+@@ -32,7 +34,7 @@
+ 
+ // Define UPA_CPP_14 if compiler supports C++14 or later
+ // Note: Visual Studio 2015 (14.0; _MSC_VER == 1900) lacks sufficient C++14 support
+-#if defined(_MSVC_LANG) ? (_MSVC_LANG >= 201402 && _MSC_VER > 1900) : (__cplusplus >= 201402)
++#if UPA_CXX_STANDARD >= 14
+ # define UPA_CPP_14
+ # define UPA_CONSTEXPR_14 constexpr
+ #else
