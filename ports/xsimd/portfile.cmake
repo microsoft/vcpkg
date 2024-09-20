@@ -1,4 +1,4 @@
- vcpkg_download_distfile(
+vcpkg_download_distfile(
     WIN_PATCHES
     URLS "https://github.com/xtensor-stack/xsimd/pull/1040/commits/e8cb862e434eb1e367afb83e1a3685bccff3e566.diff?full_index=1"
     FILENAME "e8cb862e434eb1e367afb83e1a3685bccff3e566.patch"
@@ -11,7 +11,7 @@ vcpkg_from_github(
     SHA512 cdc42ddad3353297cf25ea2b6b3f09967f5f388efc26241f2997979fdbbac072819ff771145bc5bfa86cb326cca84b4119e8e6e3f658407961cf203a40603a7f
     HEAD_REF master
     PATCHES
-        ${WIN_PATCHES}
+        "${WIN_PATCHES}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
