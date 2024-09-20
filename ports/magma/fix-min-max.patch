@@ -1,0 +1,56 @@
+diff --git a/magmablas/cgbtf2_kernels.cu b/magmablas/cgbtf2_kernels.cu
+index 1b44273..13cb442 100644
+--- a/magmablas/cgbtf2_kernels.cu
++++ b/magmablas/cgbtf2_kernels.cu
+@@ -12,6 +12,9 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++// the cuda cooperative_groups.h file conflicts with magma's definition of min and max
++#undef min
++#undef max
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
+diff --git a/magmablas/dgbtf2_kernels.cu b/magmablas/dgbtf2_kernels.cu
+index c2af4f4..df0384b 100644
+--- a/magmablas/dgbtf2_kernels.cu
++++ b/magmablas/dgbtf2_kernels.cu
+@@ -12,6 +12,9 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++// the cuda cooperative_groups.h file conflicts with magma's definition of min and max
++#undef min
++#undef max
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
+diff --git a/magmablas/sgbtf2_kernels.cu b/magmablas/sgbtf2_kernels.cu
+index bbc691a..8f2409c 100644
+--- a/magmablas/sgbtf2_kernels.cu
++++ b/magmablas/sgbtf2_kernels.cu
+@@ -12,6 +12,9 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++// the cuda cooperative_groups.h file conflicts with magma's definition of min and max
++#undef min
++#undef max
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
+diff --git a/magmablas/zgbtf2_kernels.cu b/magmablas/zgbtf2_kernels.cu
+index c1afa3b..bb58d93 100644
+--- a/magmablas/zgbtf2_kernels.cu
++++ b/magmablas/zgbtf2_kernels.cu
+@@ -12,6 +12,9 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++// the cuda cooperative_groups.h file conflicts with magma's definition of min and max
++#undef min
++#undef max
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
