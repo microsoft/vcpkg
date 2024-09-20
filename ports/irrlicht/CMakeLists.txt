@@ -117,7 +117,7 @@ if(IRR_BUILD_TOOLS)
 
     add_executable(GUIEditor            ${IRR_TOOL_FILES_GUI_EDITOR})
     target_link_libraries(GUIEditor     Irrlicht)
-    
+
     add_executable(FontTool             ${IRR_TOOL_FILES_FONT_TOOL})
     if(UNIX)
         find_package(Freetype REQUIRED)
