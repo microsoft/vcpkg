@@ -6853,8 +6853,8 @@
       "port-version": 9
     },
     "pcapplusplus": {
-      "baseline": "23.9",
-      "port-version": 2
+      "baseline": "24.9",
+      "port-version": 0
     },
     "pcg": {
       "baseline": "2021-04-06",
