@@ -529,10 +529,6 @@ libcaer:x64-android=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
-# needs android-24
-libconfuse:arm-neon-android=fail
-libconfuse:arm64-android=fail
-libconfuse:x64-android=fail
 libcoro:x64-osx=fail
 libcoro:arm64-osx=fail
 libcpplocate:arm-neon-android=fail
@@ -830,7 +826,6 @@ omplapp:arm64-osx=skip
 omplapp:x64-osx=skip
 omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
-onednn:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
 opencv2:arm-neon-android=fail
