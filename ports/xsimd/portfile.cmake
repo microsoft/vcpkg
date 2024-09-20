@@ -10,8 +10,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 cdc42ddad3353297cf25ea2b6b3f09967f5f388efc26241f2997979fdbbac072819ff771145bc5bfa86cb326cca84b4119e8e6e3f658407961cf203a40603a7f
     HEAD_REF master
-	PATCHES
-	    ${WIN_PATCHES}
+    PATCHES
+        ${WIN_PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
