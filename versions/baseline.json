@@ -5662,7 +5662,7 @@
     },
     "magma": {
       "baseline": "2.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "magnum": {
       "baseline": "2020.06",
