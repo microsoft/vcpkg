@@ -127,10 +127,13 @@ function(vcpkg_find_acquire_program program)
         message(FATAL_ERROR "Internal error: failed to initialize program_name for program ${program}")
     endif()
 
-    set(full_subdirectory "${DOWNLOADS}/tools/${program_name}")
+    set(full_subdirectory "${DOWNLOADS}/tools/${program_name}/${tool_subdirectory}")
     if(NOT "${tool_subdirectory}" STREQUAL "")
-        string(APPEND full_subdirectory "/${tool_subdirectory}")
-        list(APPEND paths_to_search "${full_subdirectory}")
+        list(APPEND paths_to_search ${full_subdirectory})
+    endif()
+    if("${full_subdirectory}" MATCHES [[^(.*)[/\\]+$]])
+        # remove trailing slashes, which may turn into a trailing `\` which CMake _does not like_
+        set(full_subdirectory "${CMAKE_MATCH_1}")
     endif()
 
     if("${search_names}" STREQUAL "")
