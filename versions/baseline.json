@@ -8481,7 +8481,7 @@
       "port-version": 0
     },
     "spdk": {
-      "baseline": "24.01",
+      "baseline": "24.05",
       "port-version": 0
     },
     "spdk-dpdk": {
