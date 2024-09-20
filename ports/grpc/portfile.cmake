@@ -19,8 +19,18 @@ vcpkg_from_github(
         00016-fix-plugin-targets.patch
         00017-abseil.patch
 )
+# Ensure de-vendoring
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/third_party/abseil-cpp"
+    "${SOURCE_PATH}/third_party/cares"
+    "${SOURCE_PATH}/third_party/protobuf"
+    "${SOURCE_PATH}/third_party/re2"
+    "${SOURCE_PATH}/third_party/upb"
+    "${SOURCE_PATH}/third_party/utf8_range"
+    "${SOURCE_PATH}/third_party/zlib"
+)
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 

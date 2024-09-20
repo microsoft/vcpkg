@@ -23,16 +23,11 @@ jobs:
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
-  dependsOn: mintsas
   variables:
   - name: WORKING_ROOT
     value: /mnt/vcpkg-ci
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
-  - name: X_VCPKG_ASSET_SOURCES
-    value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_ASSET_SOURCES'] ]
-  - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: $[ dependencies.mintsas.outputs['mintsasstep.X_VCPKG_BINARY_SOURCE_STUB'] ]
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -48,15 +43,22 @@ jobs:
   - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - task: PowerShell@2
+  - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
-    env:
-      X_VCPKG_ASSET_SOURCES: $(X_VCPKG_ASSET_SOURCES)
     inputs:
-      failOnStderr: true
-      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: "-Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub \"$(X_VCPKG_BINARY_SOURCE_STUB)\" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)"
-      pwsh: true
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: 'pscore'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+          $current = Get-Date -AsUtc
+          $endDate = $current.AddDays(2)
+          $end = Get-Date -Date $endDate -UFormat '+%Y-%m-%dT%H:%MZ'
+          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv | Out-String
+          $assetSas = $assetSas.Trim()
+          $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
+          $binarySas = $binarySas.Trim()
+          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite"
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
   - task: PublishBuildArtifacts@1
     displayName: "Publish Artifact: failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
     inputs:

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
     REF "v${VERSION}"
-    SHA512 df2d5f1e2664fee4d88542ab8c98788cb31cfd9c599662a99307030cebf29e2916e316c811aca33ef83bb5c0e2f9710325dacd16391731c7b331eb6fa8a01c46
+    SHA512 0d67a5086222cf787d8f6205f68b783b462b4e7baed437caac9dc3952605b6fe392829a6802e4bd3ad366915f687c7d89dae1f5b903479aad7e8c5592adbabf7
     HEAD_REF main
     PATCHES
         fix-build.patch

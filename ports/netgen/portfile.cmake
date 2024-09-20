@@ -102,4 +102,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if("python" IN_LIST FEATURES)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/netgen/config.py" "CMAKE_INSTALL_PREFIX  = \"${CURRENT_PACKAGES_DIR}" "CMAKE_INSTALL_PREFIX_NOT_USABLE = \"")
+  if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/netgen/config.py" "CMAKE_INSTALL_PREFIX  = \"${CURRENT_PACKAGES_DIR}" "CMAKE_INSTALL_PREFIX_NOT_USABLE = \"")
+  endif()
 endif()

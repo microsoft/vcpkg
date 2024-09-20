@@ -28,6 +28,7 @@
             "freetype",
             "gif",
             "libraw",
+            "opencolorio",
             "opencv",
             "openjpeg",
             {

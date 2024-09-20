@@ -1,7 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.1.2",
-  "port-version": 2,
+  "port-version": 6,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -10,6 +10,7 @@
     "blas",
     "cpuinfo",
     "eigen3",
+    "fftw3",
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -47,16 +48,15 @@
     {
       "name": "vcpkg-get-python-packages",
       "host": true
-    }
+    },
+    "xnnpack"
   ],
   "default-features": [
     {
       "name": "cuda",
       "platform": "windows & !x86"
     },
-    "fftw3",
     "opencv",
-    "xnnpack",
     "zstd"
   ],
   "features": {
@@ -65,7 +65,8 @@
       "dependencies": [
         "cuda",
         "cudnn",
-        "magma"
+        "magma",
+        "nvidia-cutlass"
       ]
     },
     "dist": {
@@ -91,12 +92,6 @@
           "name": "tensorpipe",
           "platform": "linux | osx"
         }
-      ]
-    },
-    "fftw3": {
-      "description": "Build with fftw3",
-      "dependencies": [
-        "fftw3"
       ]
     },
     "leveldb": {
@@ -137,16 +132,6 @@
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"
-      ]
-    },
-    "xnnpack": {
-      "description": "Build with XNNPack",
-      "dependencies": [
-        {
-          "name": "fxdiv",
-          "platform": "!windows"
-        },
-        "xnnpack"
       ]
     },
     "zstd": {
