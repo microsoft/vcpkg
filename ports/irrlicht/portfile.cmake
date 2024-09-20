@@ -14,7 +14,7 @@ if(VCPKG_TARGET_IS_LINUX)
 "Irrlicht currently requires the following libraries from the system package manager:
     libgl1-mesa
     xf86vmode
-	libxft
+    libxft
 
 These can be installed on Ubuntu systems via sudo apt-get install libgl1-mesa-dev libxxf86vm-dev libxft-dev")
 endif()
