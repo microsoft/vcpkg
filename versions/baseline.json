@@ -5725,7 +5725,7 @@
       "port-version": 0
     },
     "mariadb-connector-cpp": {
-      "baseline": "1.1.4",
+      "baseline": "1.1.5",
       "port-version": 0
     },
     "marisa-trie": {
