@@ -393,7 +393,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.9.21",
+      "baseline": "0.9.28",
       "port-version": 0
     },
     "aws-c-compression": {
