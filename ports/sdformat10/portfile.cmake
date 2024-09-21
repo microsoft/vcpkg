@@ -1,3 +1,4 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,7 +28,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Restore original path
-set(ENV{PATH} ${_path})
+set(ENV{PATH} "${_path}")
 
 # Fix cmake targets and pkg-config file location
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sdformat10")
@@ -39,4 +40,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

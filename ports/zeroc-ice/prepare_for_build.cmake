@@ -8,6 +8,7 @@ function(prepare_for_build ICE_SOURCE_DIR)
     message("-- Modifying hardcoded 'RuntimeLibrary' directives in .vcxproj files")
     set(CPP_SOURCE_DIR "${ICE_SOURCE_DIR}/cpp/src")
     file(GLOB_RECURSE PROJ_FILES "${CPP_SOURCE_DIR}/*.vcxproj")
+	
     foreach(PROJ_FILE ${PROJ_FILES})
         file(READ ${PROJ_FILE} PROJ_FILE_CONTENT)
         STRING(REGEX
@@ -50,15 +51,16 @@ function(prepare_for_build ICE_SOURCE_DIR)
         )
     endforeach()
 
+    set(ICE_BUILDER_VERSION "5.0.9")
     set(ICE_CPP_MSBUILD_PACKAGES_DIR "${ICE_SOURCE_DIR}/cpp/msbuild/packages")
-    set(ICE_BUILDER_DEST_DIRECTORY "${ICE_CPP_MSBUILD_PACKAGES_DIR}/zeroc.icebuilder.msbuild.5.0.7")
+    set(ICE_BUILDER_DEST_DIRECTORY "${ICE_CPP_MSBUILD_PACKAGES_DIR}/zeroc.icebuilder.msbuild.${ICE_BUILDER_VERSION}")
     if(NOT EXISTS "${ICE_BUILDER_DEST_DIRECTORY}")
         message("-- Making Ice Builder for MSBuild available")
         vcpkg_download_distfile(
             ICE_BUILDER_MSBUILD_ARCHIVE
-            URLS https://globalcdn.nuget.org/packages/zeroc.icebuilder.msbuild.5.0.7.nupkg
-            FILENAME zeroc.icebuilder.msbuild.5.0.7.zip
-            SHA512 d4afed8a3c67daf2e1cde09e7747ec9f088fa1354069bb7c7782c1089ea0f4e50b669f45a88502ad341dbccafbc1394d74fe764479f25bf4be1d3f70e66cb174
+            URLS https://globalcdn.nuget.org/packages/zeroc.icebuilder.msbuild.5.0.9.nupkg
+            FILENAME "zeroc.icebuilder.msbuild.${ICE_BUILDER_VERSION}.zip"
+            SHA512 E65620F3B667A48B28EC770443296BB0B8058168197DB3AE877A36531FFC6CE7E9289C7FE37DFAD751877FBDBA03C55E37122931BBF001EA6F1906DFEEBACFCB
         )
 
         vcpkg_extract_source_archive(

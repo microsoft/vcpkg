@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
-    REF 5c94ec3205c30171ffd01056f5b4622b7c0ab54c
-    SHA512 2423b1fc86d5b46c32d8e3bde5fc2b410a5c25c001995ce234a94a3a6c7a8b1446fdf19eafe9d6a8a7356fe0857697053db5eb8380d18f8111818aa770b4c4ea
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 4ffefd9c035671024f9720c5129bfe395dea04f0d6b730041c2804e89b1db6e4d19633ad1ae58855afc355034233537361e707f26dc53adac916554830038fab
+    HEAD_REF main
     PATCHES fix-pkgconfig-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        avx AVX_SUPPORTED
+        avx2 AVX2_SUPPORTED
 )
 
 set(ADDITIONAL_OPUS_OPTIONS "")
@@ -21,6 +21,10 @@ if(VCPKG_TARGET_IS_MINGW)
         list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_USE_NEON=OFF") # for version 1.3.1 (remove for future Opus release)
         list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_DISABLE_INTRINSICS=ON") # for HEAD (and future Opus release)
     endif()
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_STATIC_RUNTIME=ON")
+    endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(STACK_PROTECTOR OFF)
 else()
@@ -30,7 +34,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DPACKAGE_VERSION=1.3.1
+        -DPACKAGE_VERSION=${VERSION}
         -DOPUS_STACK_PROTECTOR=${STACK_PROTECTOR}
         -DOPUS_INSTALL_PKG_CONFIG_MODULE=ON
         -DOPUS_INSTALL_CMAKE_CONFIG_MODULE=ON
@@ -52,4 +56,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

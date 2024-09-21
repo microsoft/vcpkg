@@ -1,0 +1,13 @@
+diff --git a/fineftp-server/CMakeLists.txt b/fineftp-server/CMakeLists.txt
+index e4e3152..9e609d9 100644
+--- a/fineftp-server/CMakeLists.txt
++++ b/fineftp-server/CMakeLists.txt
+@@ -10,7 +10,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+ 
+ find_package(Threads REQUIRED)
+-find_package(asio REQUIRED)
++find_package(asio CONFIG REQUIRED)
+ 
+ # Include GenerateExportHeader that will create export macros for us
+ include(GenerateExportHeader)

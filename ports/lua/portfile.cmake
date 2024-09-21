@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.lua.org/ftp/lua-5.4.4.tar.gz"
-    FILENAME "lua-5.4.4.tar.gz"
-    SHA512 af0c35d5ba00fecbb2dd617bd7b825edf7418a16a73076e04f2a0df58cdbf098dc3ff4402e974afd789eb5d86d2e12ec6df9c84b99b23656ea694a85f83bcd21
+    URLS "https://www.lua.org/ftp/lua-${VERSION}.tar.gz"
+    FILENAME "lua-${VERSION}.tar.gz"
+    SHA512 98c5c8978dfdf867e37e9eb3b3ec83dee92d199243b5119505da83895e33f10d43c841be6a7d3b106daba8a0b2bd25fe099ebff8f87831dcc55c79c78b97d8b8
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

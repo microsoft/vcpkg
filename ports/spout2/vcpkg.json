@@ -1,6 +1,6 @@
 {
   "name": "spout2",
-  "version-string": "2.007.009",
+  "version-string": "2.007.010",
   "description": "Spout is a video frame sharing system for Microsoft Windows, which allows applications to share OpenGL textures in a similar way to Syphon for the Mac.",
   "homepage": "https://github.com/leadedge/Spout2",
   "supports": "windows & !uwp & !arm64",

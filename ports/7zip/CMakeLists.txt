@@ -10,6 +10,7 @@ endif()
 
 add_library(7zip)
 
+# Check makefile in srcdir/CPP/7zip/Archive/7z/makefile
 target_sources(7zip PRIVATE
     CPP/7zip/Compress/Bcj2Coder.cpp
     CPP/7zip/Compress/Bcj2Register.cpp
@@ -23,6 +24,7 @@ target_sources(7zip PRIVATE
     CPP/7zip/Compress/BZip2Decoder.cpp
     CPP/7zip/Compress/BZip2Encoder.cpp
     CPP/7zip/Compress/BZip2Register.cpp
+    CPP/7zip/Compress/CodecExports.cpp
     CPP/7zip/Compress/CopyCoder.cpp
     CPP/7zip/Compress/CopyRegister.cpp
     CPP/7zip/Compress/Deflate64Register.cpp
@@ -30,7 +32,10 @@ target_sources(7zip PRIVATE
     CPP/7zip/Compress/DeflateEncoder.cpp
     CPP/7zip/Compress/DeflateRegister.cpp
     CPP/7zip/Compress/DeltaFilter.cpp
+    #CPP/7zip/Compress/DllExports2Compress.cpp
+    #CPP/7zip/Compress/DllExportsCompress.cpp
     CPP/7zip/Compress/ImplodeDecoder.cpp
+    CPP/7zip/Compress/ImplodeHuffmanDecoder.cpp
     CPP/7zip/Compress/LzfseDecoder.cpp
     CPP/7zip/Compress/LzhDecoder.cpp
     CPP/7zip/Compress/Lzma2Decoder.cpp
@@ -57,10 +62,10 @@ target_sources(7zip PRIVATE
     CPP/7zip/Compress/XpressDecoder.cpp
     CPP/7zip/Compress/XzDecoder.cpp
     CPP/7zip/Compress/XzEncoder.cpp
+    CPP/7zip/Compress/ZDecoder.cpp
     CPP/7zip/Compress/ZlibDecoder.cpp
     CPP/7zip/Compress/ZlibEncoder.cpp
-    CPP/7zip/Compress/ZDecoder.cpp
-    CPP/7zip/Compress/CodecExports.cpp
+    CPP/7zip/Compress/ZstdDecoder.cpp
 
     CPP/7zip/Crypto/7zAes.cpp
     CPP/7zip/Crypto/7zAesRegister.cpp
@@ -109,6 +114,7 @@ target_sources(7zip PRIVATE
     C/Sha1.c
     C/Sha256.c
     C/Sort.c
+    C/SwapBytes.c
     C/Threads.c
     C/Xz.c
     C/XzDec.c
@@ -117,6 +123,8 @@ target_sources(7zip PRIVATE
     C/Aes.c
     C/7zCrc.c
     C/XzCrc64.c
+    C/Xxh64.c
+    C/ZstdDec.c
 
     CPP/Common/CRC.cpp
     CPP/Common/CrcReg.cpp
@@ -139,6 +147,7 @@ target_sources(7zip PRIVATE
     CPP/Common/Wildcard.cpp
     CPP/Common/XzCrc64Init.cpp
     CPP/Common/XzCrc64Reg.cpp
+    CPP/Common/Xxh64Reg.cpp
 
     CPP/Windows/FileDir.cpp
     CPP/Windows/FileFind.cpp
@@ -214,6 +223,7 @@ target_sources(7zip PRIVATE
     CPP/7zip/Archive/ZHandler.cpp
     CPP/7zip/Archive/ArchiveExports.cpp
     CPP/7zip/Archive/DllExports2.cpp
+    CPP/7zip/Archive/ZstdHandler.cpp
 
     CPP/7zip/Archive/Common/CoderMixer2.cpp
     CPP/7zip/Archive/Common/DummyOutStream.cpp
@@ -396,6 +406,7 @@ target_compile_definitions(7zip
 target_include_directories(7zip
     INTERFACE
         $<INSTALL_INTERFACE:include>/7zip/CPP
+        $<INSTALL_INTERFACE:include>/7zip/C
 )
 
 install(

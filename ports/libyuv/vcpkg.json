@@ -1,6 +1,7 @@
 {
   "name": "libyuv",
-  "version": "1857",
+  "version": "1895",
+  "port-version": 1,
   "description": "libyuv is an open source project that includes YUV scaling and conversion functionality",
   "homepage": "https://chromium.googlesource.com/libyuv/libyuv",
   "license": null,
@@ -18,5 +19,11 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "build command line tool",
+      "supports": "!android & !ios & !xbox & !wasm32"
+    }
+  }
 }

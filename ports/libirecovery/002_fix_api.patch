@@ -1,0 +1,24 @@
+diff --git a/include/libirecovery.h b/include/libirecovery.h
+index 33879a4..41fc8bb 100644
+--- a/include/libirecovery.h
++++ b/include/libirecovery.h
+@@ -30,17 +30,13 @@ extern "C" {
+ #ifdef IRECV_STATIC
+   #define IRECV_API
+ #elif defined(_WIN32)
+-  #ifdef DLL_EXPORT
++  #ifdef IRECV_EXPORT
+     #define IRECV_API __declspec(dllexport)
+   #else
+     #define IRECV_API __declspec(dllimport)
+   #endif
+ #else
+-  #if __GNUC__ >= 4
+-    #define IRECV_API __attribute__((visibility("default")))
+-  #else
+-    #define IRECV_API
+-  #endif
++  #define IRECV_API __attribute__((visibility("default")))
+ #endif
+ 
+ enum irecv_mode {

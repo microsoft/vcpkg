@@ -1,7 +1,6 @@
 {
   "name": "adios2",
-  "version": "2.8.3",
-  "port-version": 1,
+  "version": "2.9.2",
   "description": "Next generation of ADIOS developed in the Exascale Computing Program",
   "homepage": "https://github.com/ornladios/ADIOS2",
   "license": "Apache-2.0",

@@ -24,6 +24,6 @@ index 2a9d68556..cffe9014c 100644
  
  # python headers
 -cc.check_header('Python.h', dependencies: [python.dependency()], required: true)
-+libpython_dep = dependency('python-3.10', method : 'pkg-config')
++libpython_dep = dependency('python-@0@'.format(python_version), method : 'pkg-config')
 +cc.check_header('Python.h', dependencies: [libpython_dep], required: true)
  

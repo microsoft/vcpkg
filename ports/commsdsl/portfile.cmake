@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/commsdsl
-    REF v4.0
-    SHA512 420fd0dd30aa5530692f40e15e3a640d1ef766c642e91edc07ed182e2125043c6ade1d245ef4d549a606c372c8c5f53fea7faa14b230ff485cf24d4f13ecfbee
+    REF "v${VERSION}"
+    SHA512 21a1fd4a3a66f2c9389c19ab8ad0aadf09bc97db39492921385534de6d819b1cd5a1e65798abc71de8f8f6c436191fd199e8e77dc8b5c979b07d313a2b825fde
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCOMMSDSL_BUILD_APPS=ON
         -DCOMMSDSL_INSTALL_APPS=ON
         -DCOMMSDSL_INSTALL_LIBRARY=ON
         -DCOMMSDSL_INSTALL_LIBRARY_HEADERS=ON
@@ -21,11 +20,18 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_tools(
-    TOOL_NAMES commsdsl2comms commsdsl2test commsdsl2tools_qt
+    TOOL_NAMES commsdsl2comms
     AUTO_CLEAN
 )
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibCommsdsl CONFIG_PATH lib/LibCommsdsl/cmake)
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LibCommsdsl/LibCommsdslConfig.cmake"
+"if (TARGET cc::commsdsl)"
+[[include(CMakeFindDependencyMacro)
+find_dependency(LibXml2)
+if (TARGET cc::commsdsl)]])
+
 # after fixing the following dirs are empty
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/LibCommsdsl")
@@ -35,4 +41,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

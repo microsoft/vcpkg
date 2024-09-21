@@ -1,25 +1,27 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO charles-lunarg/vk-bootstrap
-    REF 142986cdb767037118b687387b097ff6b3e7fe7d
-    SHA512 1dc32f09f4548ffaf71d39d5200d60a9bd58971327039f2adb4327fdb885f984bbd91409d28dbfc24e5fdac8c241824e141a2558cddc1b86b84cf2376e7d7567
+    REF "v${VERSION}"
+    SHA512 f925665b1d7a1c5069ca2cb6786f537bcc4b3060757db50d931091dc37ff4ef3b73b1b3adf0da84c256979fd780a2f6203de3299f634292600dcee925b9a5091
     HEAD_REF master
+    PATCHES
+        fix-targets.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # This option will disable build tests and example, and next release this option need to change as -DVK_BOOTSTRAP_TEST=OFF. The related upstream commit: https://github.com/charles-lunarg/vk-bootstrap/commit/4ae9513ff9182b9c519504a73435ed575a821300.
-        -DCMAKE_PROJECT_NAME=
+        -DVK_BOOTSTRAP_TEST=OFF
+        -DVK_BOOTSTRAP_INSTALL=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/${PORT}-config.cmake" "${CMAKE_CURRENT_LIST_DIR}/${PORT}-targets-release.cmake" "${CMAKE_CURRENT_LIST_DIR}/${PORT}-targets-debug.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF ${OATPP_VERSION}
     SHA512 4fe8587efe1b4ecae14554ec8edb209e5558a3e4a4e6ff49bbfaaf06d2cc12f2cc306c5edc43b8dafc465aff53098ad4bebb9971694761b91a553730d5acb59a
     HEAD_REF master
+    PATCHES
+        fix-target.patch
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL "static")

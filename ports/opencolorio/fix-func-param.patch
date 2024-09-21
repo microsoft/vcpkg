@@ -1,0 +1,93 @@
+diff --git a/src/OpenColorIO/OCIOZArchive.cpp b/src/OpenColorIO/OCIOZArchive.cpp
+index 85fc7bb..aa90943 100644
+--- a/src/OpenColorIO/OCIOZArchive.cpp
++++ b/src/OpenColorIO/OCIOZArchive.cpp
+@@ -24,9 +24,11 @@
+ #include "mz_strm_mem.h"
+ #include "mz_strm_os.h"
+ #include "mz_strm_split.h"
+-#include "mz_strm_zlib.h"
+ #include "mz_zip.h"
+ #include "mz_zip_rw.h"
++#ifndef __APPLE__
++#include "mz_strm_zlib.h"
++#endif
+ 
+ namespace OCIO_NAMESPACE
+ {
+@@ -225,7 +227,11 @@ void archiveConfig(std::ostream & ostream, const Config & config, const char * c
+     std::string configStr = ss.str();
+ 
+     // Write zip to memory stream.
++#if MZ_VERSION_BUILD >= 040000
++    write_mem_stream = mz_stream_mem_create();
++#else
+     mz_stream_mem_create(&write_mem_stream);
++#endif
+     mz_stream_mem_set_grow_size(write_mem_stream, 128 * 1024);
+     mz_stream_open(write_mem_stream, NULL, MZ_OPEN_MODE_CREATE);
+ 
+@@ -237,7 +243,11 @@ void archiveConfig(std::ostream & ostream, const Config & config, const char * c
+     options.compress_level  = ArchiveCompressionLevels::BEST;
+ 
+     // Create the writer handle.
++#if MZ_VERSION_BUILD >= 040000
++    archiver = mz_zip_writer_create();
++#else
+     mz_zip_writer_create(&archiver);
++#endif
+ 
+     // Archive options.
+     // Compression method
+@@ -332,7 +342,11 @@ void ExtractOCIOZArchive(const char * archivePath, const char * destination)
+     std::string outputDestination = pystring::os::path::normpath(destination);
+ 
+     // Create zip reader.
++#if MZ_VERSION_BUILD >= 040000
++    extracter = mz_zip_reader_create();
++#else
+     mz_zip_reader_create(&extracter);
++#endif
+ 
+     MinizipNgHandlerGuard extracterGuard(extracter, false, false);
+ 
+@@ -450,7 +464,11 @@ std::vector<uint8_t> getFileStringFromArchiveFile(const std::string & filepath,
+     std::vector<uint8_t> buffer;
+ 
+     // Create the reader object.
++#if MZ_VERSION_BUILD >= 040000
++    reader = mz_zip_reader_create();
++#else
+     mz_zip_reader_create(&reader);
++#endif
+ 
+     MinizipNgHandlerGuard extracterGuard(reader, false, true);
+ 
+@@ -510,7 +528,11 @@ void getEntriesMappingFromArchiveFile(const std::string & archivePath,
+     void *reader = NULL;
+ 
+     // Create the reader object.
++#if MZ_VERSION_BUILD >= 040000
++    reader = mz_zip_reader_create();
++#else
+     mz_zip_reader_create(&reader);
++#endif
+ 
+     MinizipNgHandlerGuard extracterGuard(reader, false, false);
+ 
+diff --git a/src/apps/ocioarchive/main.cpp b/src/apps/ocioarchive/main.cpp
+index 190cade..68054a6 100644
+--- a/src/apps/ocioarchive/main.cpp
++++ b/src/apps/ocioarchive/main.cpp
+@@ -235,7 +235,11 @@ int main(int argc, const char **argv)
+         }
+ 
+         std::string path = args[0];
++#if MZ_VERSION_BUILD >= 040000
++        reader = mz_zip_reader_create();
++#else
+         mz_zip_reader_create(&reader);
++#endif
+         struct tm tmu_date;
+         
+         err = mz_zip_reader_open_file(reader, path.c_str());

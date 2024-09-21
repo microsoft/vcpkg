@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
-    REF v1.0.12
-    SHA512 a3a63e1dde1cffb097376df0b34522700cff600da61bdafd6f4f50db6937383b9f73a82081cb1a7f2e1946ba07fea13e2880a4250b1508850bffa500046a7fa5
+    REF v${VERSION}
+    SHA512 b42830047b5014e45cd2deb29e3caa169abe6b5dd117f0c877eeb81326b2511979c7bbf49d52300e16431ed9cb2422e21b3524ffb1a22be17bad161166c3fa74
     HEAD_REF master
     PATCHES meson-crosscompile.patch
 )
@@ -30,13 +30,11 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Define static macro
-file(READ "${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h" FRIBIDI_COMMON_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 0" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
+	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h" "# elif defined(_WIN32) && ! defined(FRIBIDI_LIB_STATIC)" "# elif defined(_WIN32) && 0")
 else()
-    string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 1" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
+	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h" "# elif defined(_WIN32) && ! defined(FRIBIDI_LIB_STATIC)" "# elif defined(_WIN32) && 1")
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h" "${FRIBIDI_COMMON_H}")
 
 if(VCPKG_CROSSCOMPILING)
     file(
@@ -53,4 +51,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

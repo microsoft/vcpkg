@@ -1,7 +1,7 @@
 {
   "name": "quickfix",
   "version": "1.15.1",
-  "port-version": 8,
+  "port-version": 9,
   "description": "QuickFIX is a free and open source implementation of the FIX protocol.",
   "homepage": "https://github.com/quickfix/quickfix",
   "supports": "!uwp & !(osx & arm64)",

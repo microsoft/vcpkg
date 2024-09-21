@@ -1,7 +1,6 @@
 {
   "name": "mp-units",
-  "version-semver": "0.7.0",
-  "port-version": 1,
+  "version": "2.2.1",
   "description": "mp-units - A Units Library for C++",
   "homepage": "https://github.com/mpusz/units",
   "license": "MIT",

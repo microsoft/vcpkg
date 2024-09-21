@@ -1,10 +1,10 @@
 {
   "name": "lionkor-commandline",
-  "version-semver": "2.0.0",
+  "version-semver": "2.2.0",
   "description": "A C++ commandline for use in servers and chat software. Provides very simple asynchronous input/output.",
   "homepage": "https://github.com/lionkor/commandline/",
   "license": "MIT",
-  "supports": "!osx & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

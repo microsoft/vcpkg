@@ -1,6 +1,7 @@
 {
   "name": "geotrans",
   "version": "3.9",
+  "port-version": 1,
   "description": "GEOTRANS is an application that allows you to convert geographic coordinates among a wide variety of coordinate systems, map projections, grids, and datums. GEOTRANS runs in Microsoft Windows and LINUX environments.",
   "homepage": "https://earth-info.nga.mil/GandG/update/index.php?action=home",
   "license": null,

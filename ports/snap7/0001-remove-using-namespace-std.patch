@@ -1,0 +1,13 @@
+diff --git a/src/core/s7_partner.h b/src/core/s7_partner.h
+index 95211a2..25c1810 100644
+--- a/src/core/s7_partner.h
++++ b/src/core/s7_partner.h
+@@ -29,7 +29,7 @@
+ #include "snap_threads.h"
+ #include "s7_peer.h"
+ //---------------------------------------------------------------------------
+-using namespace std;
++//using namespace std;
+ //---------------------------------------------------------------------------
+ 
+ #define MaxPartners 256

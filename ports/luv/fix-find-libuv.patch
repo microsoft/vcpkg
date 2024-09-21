@@ -9,7 +9,7 @@ index e63a431..163bada 100644
 -  find_package(Libuv REQUIRED)
 -  include_directories(${LIBUV_INCLUDE_DIR})
 +  find_package(libuv CONFIG REQUIRED)
-+  set(LIBUV_LIBRARIES $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>)
++  set(LIBUV_LIBRARIES $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>)
  else (WITH_SHARED_LIBUV)
    include_directories(deps/libuv/include)
    add_subdirectory(deps/libuv EXCLUDE_FROM_ALL)

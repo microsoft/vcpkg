@@ -1,11 +1,16 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenSCAP/openscap
-    REF 3a4c635691380fa990a226acc8558db35d7ebabc #1.3.1
-    SHA512 12681d43b2ce067c5a5c4eb47e14d91d6e9362b1f98f1d35b05d79ad84c7ee8c29f438eaae8e8465033155e500bb0f936eb79af46fab15e4a07e03c6be8b655d
+    REF ${VERSION}
+    SHA512 10f28593a6776d28020c26fc3ad3f3aa095fdc48fa6261c0b9677c559d3c822a23eb61c02e09a3c11654dc20d8374b5fcc3154bb9d2d34da5985fc737d252a9b
     HEAD_REF dev
     PATCHES
         fix-build.patch
+        fix-buildflag-and-install.patch
+        fix-utils.patch
+        fix-dependencies.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
@@ -15,11 +20,16 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        docs    ENABLE_DOCS
-        tests   ENABLE_TESTS
         util    ENABLE_OSCAP_UTIL
         python  ENABLE_PYTHON3
 )
+
+if(VCPKG_TARGET_IS_LINUX AND ENABLE_OSCAP_UTIL)
+     message("openscap with util feature requires the following packages via the system package manager:
+  libgcrypt20-dev
+On Ubuntu derivatives:
+  sudo apt install libgcrypt20-dev")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -35,9 +45,15 @@ vcpkg_cmake_configure(
         -DENABLE_OSCAP_UTIL_PODMAN=OFF
         -DENABLE_OSCAP_UTIL_CHROOT=OFF
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        -DENABLE_TESTS=OFF
+        -DENABLE_DOCS=OFF
+        -DWANT_BASE64=OFF
 )
 
 vcpkg_cmake_install()
+if(ENABLE_OSCAP_UTIL)
+    vcpkg_copy_tools(TOOL_NAMES oscap AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -45,4 +61,4 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 #Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

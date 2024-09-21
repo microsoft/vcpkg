@@ -10,10 +10,10 @@ vcpkg_from_github(
         use_targets.patch
         fix-dependency-libmath.patch
         fix-linkage-error.patch
-        fix-pkgconfig.patch
         fix-manpage-msys.patch
         fix-dependency-libzip.patch
         fix-dependency-mpi.patch
+        fix-pkgconfig.patch
 )
 
 #Remove outdated find modules
@@ -41,6 +41,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if(NOT ENABLE_DAP AND NOT ENABLE_NCZARR)
     list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_CURL=ON")
 endif()
 
 if(ENABLE_HDF5)

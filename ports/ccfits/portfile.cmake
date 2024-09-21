@@ -14,15 +14,19 @@ vcpkg_extract_source_archive(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 removes std::binary_function
 )
 
 vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/bin/CCfits.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/CCfits.dll")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/CCfits.dll")
+    endif()
 endif()
 
 # Remove duplicate include files
@@ -31,11 +35,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Patch installed headers to look in the correct subdirectory
 file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/CCfits/*")
 foreach(HEADER IN LISTS HEADERS)
-    vcpkg_replace_string("${HEADER}" "\"fitsio.h\"" "\"cfitsio/fitsio.h\"")
+    vcpkg_replace_string("${HEADER}" "\"fitsio.h\"" "\"cfitsio/fitsio.h\"" IGNORE_UNCHANGED)
 endforeach()
 
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
     "#include \"longnam.h\"" "#include \"cfitsio/longnam.h\""
 )
 
-file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

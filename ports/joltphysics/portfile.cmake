@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
     REF "v${VERSION}"
-    SHA512 367e5b945e8f91a0c0c9eb699db6f49351aa39b0af9b8fd0be5f474d65b28a7244880eedad10cbd2db0e031daa28bbabb5f9fb8bf9af653dd1f86904bfde44a2
+    SHA512 01c8b0b1857811876e2d9f75f1cd191e09c43b131d9d7c1f24cb0e28b913a5e896fb51cbf3aaa100b237ceaa2a235b8f925b31bf5a2165faaf0f2f0b186bc103
     HEAD_REF master
 )
 
@@ -19,29 +19,21 @@ vcpkg_cmake_configure(
         -DTARGET_SAMPLES=OFF
         -DTARGET_VIEWER=OFF
         -DCROSS_PLATFORM_DETERMINISTIC=OFF
+        -DINTERPROCEDURAL_OPTIMIZATION=OFF
         -DUSE_STATIC_MSVC_RUNTIME_LIBRARY=${USE_STATIC_CRT}
         -DENABLE_ALL_WARNINGS=OFF
+        -DOVERRIDE_CXX_FLAGS=OFF
+        -DDEBUG_RENDERER_IN_DEBUG_AND_RELEASE=OFF
+        -DPROFILER_IN_DEBUG_AND_RELEASE=OFF
     OPTIONS_RELEASE
-        -DCMAKE_BUILD_TYPE=Distribution
+        -DGENERATE_DEBUG_SYMBOLS=OFF
 )
 
-vcpkg_cmake_build()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(
-    INSTALL "${SOURCE_PATH}/Jolt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-    FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "*.inl"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(PACKAGE_NAME Jolt CONFIG_PATH "lib/cmake/Jolt")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Jolt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Jolt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-else()
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libJolt.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libJolt.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-endif()
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

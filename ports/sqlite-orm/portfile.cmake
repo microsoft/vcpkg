@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-dependency.patch
+        fix-uwp.patch #https://github.com/fnc12/sqlite_orm/pull/1295
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

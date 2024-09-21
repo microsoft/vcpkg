@@ -1,17 +1,11 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/BehaviorTree/BehaviorTree.CPP/archive/3.5.6.tar.gz"
-    FILENAME "BehaviorTree.CPP.3.5.6.tar.gz"
-    SHA512 cd3b15eb7c5bab68239b697da166220b4df8dd7e6cf5e831f316d411e24be56c9ed74e54a3e3dd332164d740159eaf9ce62d005601fd65133809dab29430c9b7
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO BehaviorTree/BehaviorTree.CPP
+    REF ${VERSION}
+    SHA512 f2ee647c734e39e50f92405c5dc9fd2876602ff074a86416959fbf6548e37130d35f312cafb084ca4a40da7ee81386502a75ad839ce99a2859c30ff187820fdf
+    HEAD_REF master
     PATCHES
-        001_port_fixes.patch
-        002_fix_dependencies.patch
+        fix-x86_build.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,19 +13,23 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_ament_cmake=1
         -DCMAKE_DISABLE_FIND_PACKAGE_Curses=1
-        -DBUILD_EXAMPLES=OFF
-        -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_TOOLS=OFF
+        -DBTCPP_EXAMPLES=OFF
+        -DBTCPP_UNIT_TESTS=OFF
+        -DBTCPP_BUILD_TOOLS=OFF
+        -DBTCPP_GROOT_INTERFACE=OFF
+        -DBTCPP_SQLITE_LOGGING=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_Curses
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/BehaviorTreeV3/cmake PACKAGE_NAME behaviortreev3)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/behaviortree_cpp PACKAGE_NAME behaviortree_cpp)
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/lib/BehaviorTreeV3"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/BehaviorTreeV3"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()

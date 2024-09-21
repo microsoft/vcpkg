@@ -1,6 +1,6 @@
 {
   "name": "guile",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "port-version": 1,
   "description": "GNU's programming and extension language",
   "homepage": "https://www.gnu.org/software/guile/",
@@ -17,6 +17,10 @@
       ]
     },
     "gmp",
+    {
+      "name": "gperf",
+      "host": true
+    },
     "libffi",
     "libunistring"
   ]

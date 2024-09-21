@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4262a9852..a46b51f1a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -167,14 +167,14 @@ if(("${CMAKE_SOURCE_DIR}" STREQUAL "${JUCE_SOURCE_DIR}") AND (NOT JUCE_BUILD_HEL
+     _juce_add_lv2_manifest_helper_target()
+
+     if(TARGET juce_lv2_helper)
+-        install(TARGETS juce_lv2_helper EXPORT LV2_HELPER DESTINATION "bin/JUCE-${JUCE_VERSION}")
++        install(TARGETS juce_lv2_helper EXPORT LV2_HELPER DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
+         install(EXPORT LV2_HELPER NAMESPACE juce:: DESTINATION "${JUCE_INSTALL_DESTINATION}")
+     endif()
+
+     _juce_add_vst3_manifest_helper_target()
+
+     if(TARGET juce_vst3_helper)
+-        install(TARGETS juce_vst3_helper EXPORT VST3_HELPER DESTINATION "bin/JUCE-${JUCE_VERSION}")
++        install(TARGETS juce_vst3_helper EXPORT VST3_HELPER DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
+         install(EXPORT VST3_HELPER NAMESPACE juce:: DESTINATION "${JUCE_INSTALL_DESTINATION}")
+     endif()
+ endif()
+diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
+index f4cdba7f7..fab57fdb4 100644
+--- a/extras/Build/juceaide/CMakeLists.txt
++++ b/extras/Build/juceaide/CMakeLists.txt
+@@ -164,7 +164,7 @@ else()
+
+     add_executable(juce::juceaide ALIAS juceaide)
+
+-    set(JUCE_TOOL_INSTALL_DIR "bin/JUCE-${JUCE_VERSION}" CACHE STRING
++    set(JUCE_TOOL_INSTALL_DIR "tools/juce" CACHE STRING
+         "The location, relative to the install prefix, where juceaide will be installed")
+
+     install(PROGRAMS "${imported_location}" DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a46b51f1a..38f863a3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,7 +123,7 @@ write_basic_package_version_file("${JUCE_BINARY_DIR}/JUCEConfigVersion.cmake"
+     COMPATIBILITY ExactVersion
+     ${extra_version_arg})
+
+-set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
++set(JUCE_INSTALL_DESTINATION "share/juce" CACHE STRING
+     "The location, relative to the install prefix, where the JUCE config file will be installed")
+
+ set(JUCE_MODULE_PATH "include/JUCE-${JUCE_VERSION}/modules")
+--
+2.34.1

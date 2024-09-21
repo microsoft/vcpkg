@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libproxy/libproxy
-    REF 8fec01ed4b95afc71bf7710bf5b736a5de03b343 #0.4.18
-    SHA512 6367d21b8816d7e5e3c75ee124c230ec89abbffa09538b6700c9ae61be33629f864617f51a2317e18d2fb960b09e26cae0e3503d747112f23921d1910856b109
+    REF "${VERSION}"
+    SHA512 1148d688a9f070273a1a2b110a788561789799089660292bbba59fbf0a9caf7d28cb039a9ccdcb935f752e1e34739b2d2f4c784b1bb3bbaa03d108e7b38a4754
     HEAD_REF master
     PATCHES
-        fix-tools-path.patch
         support-windows.patch
         fix-install-py.patch
         fix-module-lib-name.patch
@@ -38,6 +37,8 @@ vcpkg_cmake_configure(
         WITH_PYTHON3
         WITH_VALA
         MSVC_STATIC
+        BUILD_TOOLS
+        WITH_GNOME3
 )
 
 vcpkg_cmake_install()
@@ -45,9 +46,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Modules)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+vcpkg_copy_tools(TOOL_NAMES proxy AUTO_CLEAN)
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
           "${CMAKE_CURRENT_LIST_DIR}/usage"
           DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

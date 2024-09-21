@@ -1,0 +1,37 @@
+{
+  "name": "aws-sdk-cpp",
+  "version": "1.11.352",
+  "description": "AWS SDK for C++",
+  "homepage": "https://github.com/aws/aws-sdk-cpp",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "aws-crt-cpp",
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "ssl"
+      ],
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "openssl",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "dynamodb",
+    "kinesis",
+    "s3"
+  ]
+}

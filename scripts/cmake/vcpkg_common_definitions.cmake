@@ -2,6 +2,10 @@ string(COMPARE NOTEQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" VCPKG_CROSSCOMPILI
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
 if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "")
     set(VCPKG_TARGET_IS_WINDOWS ON)
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET AND NOT "${VCPKG_XBOX_CONSOLE_TARGET}" STREQUAL "")
+        set(VCPKG_TARGET_IS_XBOX ON)
+    endif()
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(VCPKG_TARGET_IS_WINDOWS ON)
     set(VCPKG_TARGET_IS_UWP ON)
@@ -91,7 +95,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_IMPORT_LIBRARY_PREFIX "")
     set(VCPKG_FIND_LIBRARY_SUFFIXES ".lib" ".dll") #This is a slight modification to CMakes value which does not include ".dll".
     set(VCPKG_FIND_LIBRARY_PREFIXES "" "lib") #This is a slight modification to CMakes value which does not include "lib".
-elseif(VCPKG_TARGET_IS_OSX)
+elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
     set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX "")
     set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dylib")

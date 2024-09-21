@@ -1,0 +1,4 @@
+The package nanojsonc provides CMake targets:
+
+    find_package(nanojsonc CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nanojsonc::nanojsonc)

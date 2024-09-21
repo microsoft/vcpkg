@@ -1,8 +1,16 @@
+if("pulseaudio" IN_LIST FEATURES)
+    message(
+    "${PORT} with pulseaudio feature currently requires the following from the system package manager:
+        libpulse-dev pulseaudio
+    These can be installed on Ubuntu systems via sudo apt install libpulse-dev pulseaudio"
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 21798b5a80a7edd8ef02b983d9b230af45cc66b98b32d593228e12dbec15b12c6cf6c0f3692c12af66de1ba2049fa9d6ad2b68c7d1579347eec14d24870b0025
+    SHA512 521e103e49c281ab7a44a2a275f614894062c1be6eb4df776b11e3756803c6b4b73d1e9596d364959c81b37dff4798d56798f9262c486e098f072ae1e7bef1c1
     HEAD_REF master
     PATCHES
         gentables.patch
@@ -13,6 +21,7 @@ vcpkg_check_features(
     FEATURES
         buildtools  VCPKG_BUILD_MAKE_TABLES
         sndfile     enable-libsndfile
+        pulseaudio  enable-pulseaudio
 )
 
 # enable platform-specific features, force the build to fail if the required libraries are not found,
@@ -23,7 +32,7 @@ set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack enable-lash
     enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
-    enable-profiling enable-pulseaudio enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
+    enable-profiling enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})

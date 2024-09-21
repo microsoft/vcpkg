@@ -1,0 +1,3 @@
+libaes-siv provides CMake targets:
+    find_package(unofficial-libaes-siv CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libaes-siv::libaes-siv)

@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.36.0.zip"
-    FILENAME "angelscript_2.36.0.zip"
-    SHA512 afd2b9096d0b62bc3d182d684fe34ddc8e9520af7734eea1f1a5c7d3439a28a1be7502faf692080cb0c4591799b7fea09fc8c4ccf25b8ec63a3d306e678682ff
+    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_${VERSION}.zip"
+    FILENAME "angelscript_${VERSION}.zip"
+    SHA512 ba7d88a42e1443fd12196da723538b24d999bc7ade92c0231237e4c5b8b0cb586931262c941898c62f454fd453d653724c74b6857e8a43eea6e34669795fc9cd
 )
 
 vcpkg_extract_source_archive(
@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         mark-threads-private.patch
+        fix-dependency.patch
 )
 
 vcpkg_cmake_configure(
@@ -26,4 +27,4 @@ if("addons" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/add_on/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/angelscript" FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/docs/manual/doc_license.html" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/manual/doc_license.html")

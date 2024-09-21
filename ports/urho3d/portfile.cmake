@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DURHO3D_LIB_TYPE=${URHO3D_LIB_TYPE}
         -DURHO3D_PCH=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON
 )
 
 vcpkg_cmake_install()
@@ -116,4 +117,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

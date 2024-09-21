@@ -13,6 +13,8 @@ vcpkg_from_github(
         fix-version-search.patch
         fix-build-type.patch
         fix-dependencies.patch
+        fix-feature-cuda.patch
+        fix-notfind-header.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -135,4 +137,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

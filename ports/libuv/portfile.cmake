@@ -1,16 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
-    REF 0c1fa696aa502eb749c2c4735005f41ba00a27b8 #v1.44.2
-    SHA512 4b63745d48c5318d75ef3580fc6d6288b1ca26a25f69fbef2af4b6fe1d1fe1255986cbb1fb5124e1ba6cd324868ebccdc6f6965e08e3e0fbde29f22e7e20ce89
+    REF "v${VERSION}"
+    SHA512 81a9580bc51c22385de4dab748968477b5e552aa25f901c376e3ffac624e0e05362b48239222e826cad900329f9a7cbdb080794fb4ada9ca14196efc2969cc57
     HEAD_REF v1.x
-    PATCHES fix-build-type.patch
+    PATCHES 
+        fix-build-type.patch
+        ssize_t.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBUV_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBUV_BUILD_TESTS=OFF
+        -DLIBUV_BUILD_BENCH=OFF
+        -DLIBUV_BUILD_SHARED=${LIBUV_BUILD_SHARED}
         -DQEMU=OFF
         -DASAN=OFF
         -DTSAN=OFF

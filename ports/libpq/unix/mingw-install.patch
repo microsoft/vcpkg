@@ -1,0 +1,36 @@
+diff --git a/src/Makefile.shlib b/src/Makefile.shlib
+index 16255d7..51e9ed2 100644
+--- a/src/Makefile.shlib
++++ b/src/Makefile.shlib
+@@ -85,7 +85,11 @@ else
+ # Naming convention for dynamically loadable modules
+ shlib		= $(NAME)$(DLSUFFIX)
+ endif
++ifeq ($(PORTNAME)-$(LIBPQ_LIBRARY_TYPE), win32-shared)
++stlib		= lib$(NAME).dll.a
++else
+ stlib		= lib$(NAME).a
++endif
+ 
+ ifndef soname
+ # additional flags for backend modules
+@@ -468,6 +472,9 @@ endif
+ else # no soname
+ 	$(INSTALL_SHLIB) $< '$(DESTDIR)$(pkglibdir)/$(shlib)'
+ endif
++ifeq ($(PORTNAME)-$(LIBPQ_LIBRARY_TYPE), win32-shared)
++	mv '$(DESTDIR)$(libdir)/$(shlib)' '$(DESTDIR)$(libdir)/../bin/$(shlib)'
++endif
+ 
+ 
+ installdirs-lib:
+@@ -476,6 +483,9 @@ ifdef soname
+ else
+ 	$(MKDIR_P) '$(DESTDIR)$(pkglibdir)'
+ endif
++ifeq ($(PORTNAME)-$(LIBPQ_LIBRARY_TYPE), win32-shared)
++	$(MKDIR_P) '$(DESTDIR)$(libdir)/../bin'
++endif
+ 
+ 
+ ##

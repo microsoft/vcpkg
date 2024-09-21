@@ -1,6 +1,6 @@
 {
   "name": "hazelcast-cpp-client",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "C++ client library for Hazelcast in-memory database.",
   "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
   "documentation": "http://hazelcast.github.io/hazelcast-cpp-client/index.html",
@@ -31,7 +31,7 @@
       "description": "Build examples for Hazelcast C++ client"
     },
     "openssl": {
-      "description": "Build hazelcast C++ client with SSL support",
+      "description": "Build Hazelcast C++ client with SSL support",
       "dependencies": [
         "openssl"
       ]

@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c53fda5..a6dabe6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -186,7 +186,7 @@ endif()
+ if (ENABLE_DECOMPRESSION)
+   # Zlib and ZSTD need to be found otherwise disable it
+   if(NOT TARGET ZLIB::ZLIB)
+-    find_package(ZLIB)
++    find_package(ZLIB REQUIRED)
+   else()
+     # Presumably in this case, the target has been found externally but set this flag just in case
+     set(ZLIB_FOUND TRUE)
+@@ -201,7 +201,7 @@ if (ENABLE_DECOMPRESSION)
+       TARGET ZSTD::ZSTD
+     )
+   )
+-    find_package(zstd)
++    find_package(zstd CONFIG REQUIRED)
+   else()
+     # Presumably in this case, the target has been found externally but set this flag just in case
+     set(zstd_FOUND TRUE)
+diff --git a/src/lib/libdwarf/cmake/libdwarfConfig.cmake.in b/src/lib/libdwarf/cmake/libdwarfConfig.cmake.in
+index 567bcf3..888b801 100644
+--- a/src/lib/libdwarf/cmake/libdwarfConfig.cmake.in
++++ b/src/lib/libdwarf/cmake/libdwarfConfig.cmake.in
+@@ -7,7 +7,7 @@ if(LIBDWARF_BUILT_WITH_ZLIB_AND_ZSTD)
+   find_dependency(ZLIB)
+   set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}")
+   set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_LIST_DIR}")
+-  find_dependency(zstd)
++  find_dependency(zstd CONFIG)
+   set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+   unset(CMAKE_MODULE_PATH_OLD)
+ endif()
+diff --git a/src/lib/libdwarf/libdwarf.pc.in b/src/lib/libdwarf/libdwarf.pc.in
+index 1d78dbb..3bb9178 100644
+--- a/src/lib/libdwarf/libdwarf.pc.in
++++ b/src/lib/libdwarf/libdwarf.pc.in
+@@ -9,4 +9,5 @@ Description: DWARF debug symbols library
+ Version: @PROJECT_VERSION@
+ Libs: -L${libdir} -ldwarf
+ Cflags: -I${includedir}
++Requires.private: zlib libzstd
+ 

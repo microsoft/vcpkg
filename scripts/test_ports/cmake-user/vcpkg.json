@@ -39,6 +39,11 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "Boost",
+          "name": "boost",
+          "platform": "!uwp"
+        },
+        {
           "$package": "BZip2",
           "name": "bzip2"
         },
@@ -79,7 +84,7 @@
         },
         {
           "$package": "Intl",
-          "name": "gettext"
+          "name": "gettext-libintl"
         },
         {
           "$package": "GIF",
@@ -94,6 +99,11 @@
           "$package": "LAPACK",
           "name": "lapack",
           "platform": "!(uwp & arm)"
+        },
+        {
+          "$package": "GnuTLS",
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
         },
         {
           "$package": "Iconv",
@@ -143,6 +153,11 @@
           "name": "physfs"
         },
         {
+          "$package": "GnuTLS",
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !arm & !mingw & !xbox"
+        },
+        {
           "$package": "SQLite3",
           "$since": "3.14",
           "name": "sqlite3",
@@ -153,6 +168,8 @@
           "name": "tiff",
           "default-features": false,
           "features": [
+            "lerc",
+            "libdeflate",
             "zstd"
           ]
         },

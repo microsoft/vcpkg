@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aklomp/base64
-    REF e77bd70bdd860c52c561568cffb251d88bba064c
-    SHA512 bc0cf64f6a24226a64c51983e8b73b4d4e893b8242bc6ac39361d977996de453d9f95ed0ab68a7544f21b0be1d76ae53af96521207a651c95673b02954cc5bbe
+    REF "v${VERSION}"
+    SHA512 d63c6b36c99abcdfadf3730096c3a7cd36593526dd3dae815035ce196d3354ece7da1d92ecec800a81e1ab5e1d878b24f0b1de62b7aca516170d06a07c1b42a2
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
 )
 
 vcpkg_cmake_install()
@@ -19,4 +19,4 @@ vcpkg_cmake_config_fixup(
 	CONFIG_PATH "lib/cmake/base64"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -18,7 +18,7 @@ endif()
 set(ANGLE_USE_D3D11_COMPOSITOR_NATIVE_WINDOW "OFF")
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(ANGLE_BUILDSYSTEM_PORT "Win")
-  if (NOT MINGW)
+  if (NOT VCPKG_TARGET_IS_MINGW)
     set(ANGLE_USE_D3D11_COMPOSITOR_NATIVE_WINDOW "ON")
   endif()
 elseif (VCPKG_TARGET_IS_OSX)
@@ -117,6 +117,13 @@ vcpkg_download_distfile(WK_ANGLE_CMAKE_WEBKITCOMPILERFLAGS
 )
 file(COPY "${WK_ANGLE_CMAKE_WEBKITCOMPILERFLAGS}" DESTINATION "${SOURCE_PATH}/cmake")
 
+vcpkg_download_distfile(WK_ANGLE_CMAKE_DETECTSSE2
+    URLS "https://github.com/WebKit/WebKit/raw/${ANGLE_WEBKIT_BUILDSYSTEM_COMMIT}/Source/cmake/DetectSSE2.cmake"
+    FILENAME "DetectSSE2.cmake"
+    SHA512 219a4c8591ee31d11eb3d1e4803cc3c9d4573984bb25ecac6f2c76e6a3dab598c00b0157d0f94b18016de6786e49d8b29a161693a5ce23d761c8fe6a798c1bca
+)
+file(COPY "${WK_ANGLE_CMAKE_DETECTSSE2}" DESTINATION "${SOURCE_PATH}/cmake")
+
 vcpkg_download_distfile(WK_ANGLE_CMAKE_WEBKITMACROS
     URLS "https://github.com/WebKit/WebKit/raw/${ANGLE_WEBKIT_BUILDSYSTEM_COMMIT}/Source/cmake/WebKitMacros.cmake"
     FILENAME "WebKitMacros.cmake"
@@ -168,31 +175,19 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# File conflict with opengl-registry! Make sure headers are similar on Update!
-# angle defines some additional entrypoints.
-# opengl-registry probably needs an upstream update to account for those
-# Due to that all angle headers get moved to include/angle.
-# If you want to use those instead of the onces provided by opengl-registry make sure
-# VCPKG_INSTALLED_DIR/include/angle is before VCPKG_INSTALLED_DIR/include
-file(GLOB_RECURSE angle_includes "${CURRENT_PACKAGES_DIR}/include")
-file(COPY ${angle_includes} DESTINATION "${CURRENT_PACKAGES_DIR}/include/angle")
-
-set(_double_files
-    "include/GLES/egl.h"
-    "include/GLES/gl.h"
-    "include/GLES/glext.h"
-    "include/GLES/glplatform.h"
-    "include/GLES2/gl2.h"
-    "include/GLES2/gl2ext.h"
-    "include/GLES2/gl2platform.h"
-    "include/GLES3/gl3.h"
-    "include/GLES3/gl31.h"
-    "include/GLES3/gl32.h"
-    "include/GLES3/gl3platform.h")
-foreach(_file ${_double_files})
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/${_file}")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# Remove empty directories inside include directory
+file(GLOB directory_children RELATIVE "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include/*")
+foreach(directory_child ${directory_children})
+    if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/${directory_child}")
+        file(GLOB_RECURSE subdirectory_children "${CURRENT_PACKAGES_DIR}/include/${directory_child}/*")
+        if("${subdirectory_children}" STREQUAL "")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${directory_child}")
+        endif()
     endif()
 endforeach()
+unset(subdirectory_children)
+unset(directory_child)
+unset(directory_children)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

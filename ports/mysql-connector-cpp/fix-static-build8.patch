@@ -34,32 +34,6 @@ index 4c3aab0..a1596af 100644
  add_library(lz4 STATIC
      lz4.c
      lz4frame.c
-diff --git a/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt b/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt
-index efe6b97..377a817 100644
---- a/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt
-+++ b/cdk/extra/protobuf/protobuf-3.19.4/cmake/CMakeLists.txt
-@@ -186,9 +186,9 @@ else (protobuf_BUILD_SHARED_LIBS)
-   # Prior to CMake 3.15, the MSVC runtime library was pushed into the same flags
-   # making programmatic control difficult.  Prefer the functionality in newer
-   # CMake versions when available.
--  if(CMAKE_VERSION VERSION_GREATER 3.15 OR CMAKE_VERSION VERSION_EQUAL 3.15)
--    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
--  else()
-+  #if(CMAKE_VERSION VERSION_GREATER 3.15 OR CMAKE_VERSION VERSION_EQUAL 3.15)
-+  #  set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
-+  #else()
-     # In case we are building static libraries, link also the runtime library statically
-     # so that MSVCR*.DLL is not required at runtime.
-     # https://msdn.microsoft.com/en-us/library/2kzt1wy3.aspx
-@@ -203,7 +203,7 @@ else (protobuf_BUILD_SHARED_LIBS)
-         endif(${flag_var} MATCHES "/MD")
-       endforeach(flag_var)
-     endif (MSVC AND protobuf_MSVC_STATIC_RUNTIME)
--  endif()
-+  #endif()
- endif (protobuf_BUILD_SHARED_LIBS)
- 
- if (MSVC)
 diff --git a/cdk/extra/zlib/CMakeLists.txt b/cdk/extra/zlib/CMakeLists.txt
 index 237c2c3..7746bd0 100644
 --- a/cdk/extra/zlib/CMakeLists.txt

@@ -24,12 +24,11 @@ if(VCPKG_TARGET_IS_LINUX)
   endif()
 endif()
 
-set(PORT_VERSION 22.07)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
-  REF v${PORT_VERSION}
-  SHA512 86892f5f61ee8f7ccd61c47767515603683d0e7a217389490a9a5d4ac87b42557572113f4cd56425fef212eff5715095a34ed3c03a3ce6351ffdcacb850b0851
+  REF "v${VERSION}"
+  SHA512 1599ae78228307f612776e43160e8002c71024940813bc655b3e2631bfe3de9a93b09f2d5caae48d3d83e07c48e953838ba45f4965d2eb21d1e7955edbaa7d0d
   HEAD_REF main
   PATCHES
       enable-either-static-or-shared-build.patch
@@ -72,9 +71,6 @@ vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
 vcpkg_install_meson()
 
 set(tools dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py dpdk-hugepages.py)
-if("tests" IN_LIST FEATURES)
-  list(APPEND tools dpdk-test)
-endif()
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
@@ -87,4 +83,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/doc")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/license/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license/README")

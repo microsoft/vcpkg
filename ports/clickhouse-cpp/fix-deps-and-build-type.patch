@@ -1,88 +1,42 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 31cd8a5..d8ee404 100644
+index aed0d85..b5f36e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -29,11 +29,12 @@ PROJECT (CLICKHOUSE-CLIENT)
-     INCLUDE_DIRECTORIES (.)
-     INCLUDE_DIRECTORIES (contrib)
+@@ -63,21 +63,21 @@ PROJECT (CLICKHOUSE-CLIENT)
+     ENDIF ()
  
-+    find_package(absl CONFIG REQUIRED)
-+    find_package(cityhash CONFIG REQUIRED)
-+    find_package(lz4 CONFIG REQUIRED)
-+
-     SUBDIRS (
-         clickhouse
--        contrib/absl
--        contrib/cityhash
--        contrib/lz4
-     )
+     IF (WITH_SYSTEM_ABSEIL)
+-        FIND_PACKAGE(absl REQUIRED)
++        FIND_PACKAGE(absl CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/absl)
+         SUBDIRS (contrib/absl/absl)
+     ENDIF ()
  
-     IF (BUILD_BENCHMARK)
+     IF (WITH_SYSTEM_LZ4)
+-        FIND_PACKAGE(lz4 REQUIRED)
++        FIND_PACKAGE(lz4 CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/lz4/lz4)
+         SUBDIRS (contrib/lz4/lz4)
+     ENDIF ()
+ 
+     IF (WITH_SYSTEM_CITYHASH)
+-        FIND_PACKAGE(cityhash REQUIRED)
++        FIND_PACKAGE(cityhash CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/cityhash/cityhash)
+         SUBDIRS (contrib/cityhash/cityhash)
 diff --git a/clickhouse/CMakeLists.txt b/clickhouse/CMakeLists.txt
-index d96ff88..ad1cb0d 100644
+index 67663ec..e67ba81 100644
 --- a/clickhouse/CMakeLists.txt
 +++ b/clickhouse/CMakeLists.txt
-@@ -36,19 +36,21 @@ IF (WITH_OPENSSL)
-     LIST(APPEND clickhouse-cpp-lib-src base/sslsocket.cpp)
- ENDIF ()
- 
--ADD_LIBRARY (clickhouse-cpp-lib SHARED ${clickhouse-cpp-lib-src})
--SET_TARGET_PROPERTIES(clickhouse-cpp-lib PROPERTIES LINKER_LANGUAGE CXX)
--TARGET_LINK_LIBRARIES (clickhouse-cpp-lib
--    absl-lib
--    cityhash-lib
--    lz4-lib
--)
--
--ADD_LIBRARY (clickhouse-cpp-lib-static STATIC ${clickhouse-cpp-lib-src})
--TARGET_LINK_LIBRARIES (clickhouse-cpp-lib-static
--    absl-lib
--    cityhash-lib
--    lz4-lib
-+set(LIB_NAME "")
-+
-+if(BUILD_SHARED_LIBS)
-+    ADD_LIBRARY (clickhouse-cpp-lib SHARED ${clickhouse-cpp-lib-src})
-+    SET_TARGET_PROPERTIES(clickhouse-cpp-lib PROPERTIES LINKER_LANGUAGE CXX)
-+    set(LIB_NAME "clickhouse-cpp-lib")
-+else()
-+    ADD_LIBRARY (clickhouse-cpp-lib-static STATIC ${clickhouse-cpp-lib-src})
-+    set(LIB_NAME "clickhouse-cpp-lib-static")
-+endif()
-+
-+TARGET_LINK_LIBRARIES ("${LIB_NAME}"
-+    absl::base absl::numeric
+@@ -42,7 +42,7 @@ ADD_LIBRARY (clickhouse-cpp-lib ${clickhouse-cpp-lib-src})
+ SET_TARGET_PROPERTIES (clickhouse-cpp-lib PROPERTIES LINKER_LANGUAGE CXX)
+ TARGET_LINK_LIBRARIES (clickhouse-cpp-lib
+     absl::int128
+-    cityhash::cityhash
 +    cityhash
-+    lz4::lz4
+     lz4::lz4
  )
- 
- IF (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-@@ -68,12 +70,11 @@ IF (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-         # /usr/bin/ld: CMakeFiles/simple-test.dir/main.cpp.o: undefined reference to symbol '_Unwind_Resume@@GCC_3.0'
-         # /usr/bin/ld: /lib/x86_64-linux-gnu/libgcc_s.so.1: error adding symbols: DSO missing from command line
-         # FIXME: that workaround breaks clang build on mingw
--        TARGET_LINK_LIBRARIES (clickhouse-cpp-lib gcc_s)
--        TARGET_LINK_LIBRARIES (clickhouse-cpp-lib-static gcc_s)
-+        TARGET_LINK_LIBRARIES (${LIB_NAME} gcc_s)
-     ENDIF ()
- ENDIF ()
- 
--INSTALL (TARGETS clickhouse-cpp-lib clickhouse-cpp-lib-static
-+INSTALL (TARGETS ${LIB_NAME}
-     ARCHIVE DESTINATION lib
-     LIBRARY DESTINATION lib
- )
-@@ -123,11 +124,9 @@ INSTALL(FILES types/type_parser.h DESTINATION include/clickhouse/types/)
- INSTALL(FILES types/types.h DESTINATION include/clickhouse/types/)
- 
- IF (WITH_OPENSSL)
--    TARGET_LINK_LIBRARIES (clickhouse-cpp-lib OpenSSL::SSL)
--    TARGET_LINK_LIBRARIES (clickhouse-cpp-lib-static OpenSSL::SSL)
-+    TARGET_LINK_LIBRARIES (${LIB_NAME} OpenSSL::SSL)
- ENDIF ()
- 
- IF (WIN32 OR MINGW)
--    TARGET_LINK_LIBRARIES (clickhouse-cpp-lib wsock32 ws2_32)
--    TARGET_LINK_LIBRARIES (clickhouse-cpp-lib-static wsock32 ws2_32)
-+    TARGET_LINK_LIBRARIES (${LIB_NAME} wsock32 ws2_32)
- ENDIF ()
+ TARGET_INCLUDE_DIRECTORIES (clickhouse-cpp-lib

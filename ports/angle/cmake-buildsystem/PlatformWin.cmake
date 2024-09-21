@@ -61,6 +61,7 @@ if(USE_OPENGL)
 
         list(APPEND ANGLE_DEFINITIONS
             ANGLE_ENABLE_OPENGL
+            ANGLE_ENABLE_GL_DESKTOP_BACKEND
         )
     endif()
 endif()

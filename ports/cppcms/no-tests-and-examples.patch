@@ -1,58 +1,33 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ce0d53..5b432c8 100644
+index d2b91f5..c91ec97 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -685,9 +685,10 @@ if(NOT DISABLE_SHARED)
- endif(NOT DISABLE_SHARED)
+@@ -647,7 +647,7 @@ add_custom_command(
  
  
--
-+if(FALSE)
- add_executable(hello_world src/hello_world.cpp skin1.cpp skin2.cpp)
- target_link_libraries(hello_world ${CPPCMS_LIB})
-+endif()
  
- if(NOT DISABLE_TCPCACHE)
- 	add_executable(cppcms_scale src/cache_server_main.cpp)
-@@ -710,7 +711,7 @@ endif(DISABLE_SHARED)
- #########################################
- # Tests
- #########################################
--
-+if(FALSE)
- set(ALL_TESTS 
- 	form_test
- 	proto_test
-@@ -775,14 +776,14 @@ set(ALL_TESTS ${ALL_TESTS} external_session_test)
- if(NOT DISABLE_GZIP)
- 	target_link_libraries(response_test ${ZLIB})
- endif()
--
-+endif()
+-if(NOT DISABLE_SHARED)
++if(installing-plugins)
+ 	add_custom_command(
+ 		OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/skin3.cpp
+ 		COMMAND ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcms_tmpl_cc 
+@@ -779,6 +779,7 @@ endif()
  #####################################
  # End of tests
  #####################################
++set_target_properties(${ALL_TESTS} hello_world PROPERTIES EXCLUDE_FROM_ALL 1)
  
  # These are use export
  if(IS_WINDOWS AND NOT DISABLE_SHARED)
--	set_target_properties(${ALL_TESTS} hello_world cppcms PROPERTIES
-+	set_target_properties(${ALL_TESTS} cppcms PROPERTIES
- 				COMPILE_DEFINITIONS DLL_EXPORT)
- endif()
- 
-@@ -830,7 +831,7 @@ install(DIRECTORY cppcms DESTINATION include
- #############
- 		
- 
--
-+if(FALSE)
- set(CNF "${CMAKE_CURRENT_SOURCE_DIR}/tests")
- 
- add_test(base64_test base64_test)
-@@ -1103,5 +1104,5 @@ if(NOT IS_WINDOWS)
- 		PROPERTIES TIMEOUT 120)
- 
- endif()
--
-+endif()
- 
+diff --git a/booster/CMakeLists.txt b/booster/CMakeLists.txt
+index 822c470..0a95248 100644
+--- a/booster/CMakeLists.txt
++++ b/booster/CMakeLists.txt
+@@ -674,6 +674,7 @@ macro(add_booster_param_test MODULE TEST PARAMETER)
+ 	add_executable(${TEST_NAME} ${TEST_SRC})
+ 	target_link_libraries(${TEST_NAME} ${BOOSTER_LIB})
+ 	set_target_properties(${TEST_NAME} PROPERTIES COMPILE_DEFINITIONS "${EXE_COM_DEFS}")
++	set_target_properties(${TEST_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
+ 	add_test(${TEST_NAME} ${TEST_NAME} ${PARAMETER})
+ 	set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 20)
+ endmacro()

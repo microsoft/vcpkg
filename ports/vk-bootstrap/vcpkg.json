@@ -1,6 +1,6 @@
 {
   "name": "vk-bootstrap",
-  "version": "0.5",
+  "version": "1.3.279",
   "port-version": 1,
   "description": "Vulkan bootstraping library",
   "homepage": "https://github.com/charles-lunarg/vk-bootstrap",
@@ -10,6 +10,10 @@
       "name": "vcpkg-cmake",
       "host": true
     },
-    "vulkan"
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vulkan-headers"
   ]
 }

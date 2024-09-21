@@ -1,6 +1,6 @@
 {
   "name": "gcem",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "A C++ compile-time math library using generalized constant expressions",
   "homepage": "https://www.kthohr.com/gcem.html",
   "license": "Apache-2.0",

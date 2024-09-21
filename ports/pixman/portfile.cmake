@@ -4,8 +4,12 @@ if(VCPKG_TARGET_IS_UWP)
             -Dsse2=disabled
             -Dssse3=disabled)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}") # TODO: /arch: flag requires compiler check. needs to be MSVC
-    set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
+    if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
+    endif()
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}")
+    endif()
     list(APPEND OPTIONS
             -Dmmx=enabled
             -Dsse2=enabled
@@ -46,8 +50,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org
     REPO pixman/pixman
-    REF  37216a32839f59e8dcaa4c3951b3fcfc3f07852c # 0.42.2
-    SHA512 b010b2c698ebc95f8a8566c915ccfb81a82c08f0ccda8b11ddff4818eae4b51b103021d5bae9f3d3bd20bf494433f5fcc6b76188226fe336919b0b347cdcb828
+    REF "pixman-${VERSION}"
+    SHA512 daeb25d91e9cb8d450a6f050cbec1d91e239a03188e993ceb6286605c5ed33d97e08d6f57efaf1d5c6a8a1eedb1ebe6c113849a80d9028d5ea189c54601be424
     PATCHES
         no-host-cpu-checks.patch
         fix_clang-cl.patch
@@ -58,6 +62,8 @@ vcpkg_from_gitlab(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
+        -Ddemos=disabled
+        -Dgtk=disabled
         -Dlibpng=enabled
         -Dtests=disabled
 )
@@ -69,3 +75,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)

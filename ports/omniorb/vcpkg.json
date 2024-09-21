@@ -1,0 +1,23 @@
+{
+  "name": "omniorb",
+  "version": "4.3.0",
+  "port-version": 3,
+  "description": "omniORB is a robust high performance CORBA ORB for C++",
+  "homepage": "https://omniorb.sourceforge.io/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp & !xbox & !((arm | x86) & windows) & !osx",
+  "dependencies": [
+    "openssl",
+    "python3",
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ]
+}

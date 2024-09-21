@@ -1,12 +1,15 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libjpeg-turbo/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if libjpeg-turbo is installed. Please remove libjpeg-turbo:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/ijg-libjpeg/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if ijg-libjpeg is installed. Please remove ijg-libjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mozilla/mozjpeg
-    REF a2d2907ff023227e80c1e4efa809812410275a12    #v4.1.1
-    SHA512 77c003406a0b86859c461d92bd216168d6c4f5d55735e4a9ab473d3dbcad03fd4e398204f884dfd03f0fa883da296ac05a8c5242aa40792a3e179627e51db154
+    REF "v${VERSION}"
+    SHA512 90e1b0067740b161398d908e90b976eccc2ee7174496ce9693ba3cdf4727559ecff39744611657d847dd83164b80993152739692a5233aca577ebd052efaf501
     HEAD_REF master
     PATCHES
         fix-install-error.patch
@@ -57,4 +60,4 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

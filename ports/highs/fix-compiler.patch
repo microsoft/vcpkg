@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aa5930287..42fa1fde7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,6 +7,7 @@
+ cmake_minimum_required(VERSION 3.15...3.27)
+ 
+ # set preference for clang compiler and intel compiler over gcc and other compilers
++if(0)
+ include(Platform/${CMAKE_SYSTEM_NAME}-Determine-C OPTIONAL)
+ include(Platform/${CMAKE_SYSTEM_NAME}-C OPTIONAL)
+ set(CMAKE_C_COMPILER_NAMES clang icc cc ${CMAKE_C_COMPILER_NAMES})
+@@ -14,6 +15,7 @@ set(CMAKE_C_COMPILER_NAMES clang icc cc ${CMAKE_C_COMPILER_NAMES})
+ include(Platform/${CMAKE_SYSTEM_NAME}-Determine-CXX OPTIONAL)
+ include(Platform/${CMAKE_SYSTEM_NAME}-CXX OPTIONAL)
+ set(CMAKE_CXX_COMPILER_NAMES clang++ icpc c++ ${CMAKE_CXX_COMPILER_NAMES})
++endif()
+ 
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+@@ -246,6 +248,7 @@ if(MSVC)
+             unsigned long y;
+             _BitScanReverse(&y, x);
+             _BitScanReverse64(&x, y);
++            __popcnt64(x);
+             return 0;
+         }"
+     HIGHS_HAVE_BITSCAN_REVERSE)

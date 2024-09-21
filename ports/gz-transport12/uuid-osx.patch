@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,8 +72,10 @@
+ #--------------------------------------
+ # Find uuid
+ if (MSVC)
+   message (STATUS "UUID: Using Windows RPC UuidCreate function\n")
++elseif (APPLE)
++  message (STATUS "Use system uuid header")
+ else()
+   gz_find_package(UUID REQUIRED)
+ endif()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -20,9 +20,9 @@
+     $<TARGET_PROPERTY:protobuf::libprotobuf,INTERFACE_INCLUDE_DIRECTORIES>
+     $<TARGET_PROPERTY:CPPZMQ::CPPZMQ,INTERFACE_INCLUDE_DIRECTORIES>)
+ 
+ # Windows system library provides UUID
+-if (NOT MSVC)
++if (NOT MSVC AND NOT APPLE)
+   target_link_libraries(${PROJECT_LIBRARY_TARGET_NAME}
+     PUBLIC
+       UUID::UUID
+   )

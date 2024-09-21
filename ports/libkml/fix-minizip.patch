@@ -7,10 +7,10 @@ index 9728ead..028f50a 100644
  endif()
  
 -find_package(MiniZip)
-+find_package(MINIZIP NAMES minizip REQUIRED)
++find_package(MINIZIP NAMES unofficial-minizip REQUIRED)
  if(MINIZIP_FOUND)
 -  include_directories(${MINIZIP_INCLUDE_DIR})
-+  set(MINIZIP_LIBRARY minizip::minizip)
++  set(MINIZIP_LIBRARY unofficial::minizip::minizip)
  else()
    include(External_minizip)
    list(APPEND KMLBASE_DEPENDS MINIZIP)
@@ -20,7 +20,7 @@ index 3e295f4..97826df 100644
 +++ b/cmake/LibKMLConfig.cmake.in
 @@ -1,3 +1,6 @@
 +include(CMakeFindDependencyMacro)
-+find_dependency(minizip CONFIG)
++find_dependency(unofficial-minizip CONFIG)
 +
  # Compute paths
  get_filename_component(LIBKML_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)

@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/microsoft/onnxruntime/releases/download/v${VERSION}/onnxruntime-win-x64-gpu-${VERSION}.zip"
     FILENAME "onnxruntime-win-x64-gpu-${VERSION}.zip"
-    SHA512 f927302daa7b778eaf15693e446303060c0a38dfd18b8026c28ac65f545dd463ee7cd3f0aa6bfe59301c5c85ccf4512584ed968ac42ce8d78c12a79d8af2de1e
+    SHA512 9576eafca59fc7f2af9f62d7ee8aa31208ef965d17f3ad71747d5a9a46cdffd6b3958dc945109d82937555df8bb35319ce92925e66ab707f1ca8e7564ecb3ced
 )
 
 vcpkg_extract_source_archive(
@@ -17,7 +17,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH REPO_PATH
     REPO microsoft/onnxruntime
     REF v${VERSION}
-    SHA512 d8f7ea161e850a738b9a22187662218871f88ad711282c58631196a74f4a4567184047bab0001b973f841a3b63c7dc7e350f92306cc5fa9a7adc4db2ce09766f
+    SHA512 3bf25e431d175c61953d28b1bf8f6871376684263992451a5b2a66e670768fc66e7027f141c6e3f4d1eddeebeda51f31ea0adf4749e50d99ee89d0a26bec77ce
 )
 
 file(COPY

@@ -1,14 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lunarmodules/luasocket
-    REF v3.0.0
-    SHA512 4f93d6c0b602333df50ee4f939cd0419243f6de333472ffebf99334e301143e8cdee3bc1655c29f81608622d6e7850a9bcf6929a6d4748210a70cdb8218a1ec6
+    REF "v${VERSION}"
+    SHA512 1e9e98484740ec6538fe3d2b0dab74d31f052956ecf9ee3b60e229f2d0b13fcc6d4aaf74cd2a3e2ee330333dabb316fe6a43c60baaea26f0cc01069b6aa4519b
     HEAD_REF master)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_TYPE SHARED)
+else()
+    set(BUILD_TYPE STATIC)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TYPE=${BUILD_TYPE}
 )
 
 vcpkg_cmake_install()
@@ -18,29 +26,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/luasocket")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/luasocket/LICENSE" "${CURRENT_PACKAGES_DIR}/share/luasocket/copyright")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-# Handle socket dll name
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.dll" "${CURRENT_PACKAGES_DIR}/bin/socket/core.dll")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.pdb")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/socket/core.pdb")
-    endif()
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.dll")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.pdb")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.pdb")
-    endif()
-
-# Handle mime dll name
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.dll" "${CURRENT_PACKAGES_DIR}/bin/mime/core.dll")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.pdb")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/mime/core.pdb")
-    endif()
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.dll")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.pdb")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.pdb")
-    endif()
-endif()
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE)
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -119,9 +119,9 @@
+ if(ENABLE_GNUTLS)
+   find_package(GnuTLS 3.7.2)
+ endif()
+ if(ENABLE_OPENSSL)
+-  find_package(OpenSSL 1.1.1)
++  find_package(OpenSSL REQUIRED)
+ endif()
+ if(ENABLE_WOLFSSL)
+   find_package(wolfssl 5.5.0)
+ endif()

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
     REF "v${VERSION}"
-    SHA512 27dcc83c8088ea32a2bbc3d5493d070e29976dc54ccf91d849df67be19cb553761a32b3613e293a07f50128aeb808d54f363ad12a58a47f06a61a1cc4e1eb0cd
+    SHA512 1316b6df0400bc0b67c88b3e7fbf9ca689f248a57c7b6a5564a96552313c68df9e4aaeedcd8f71254b8acf34cf830ce8e8a1b198cd1bea32967a4adb0fd73493
     HEAD_REF master
 )
 
@@ -58,7 +58,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS} -DSQLCIPHER_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
 )
@@ -78,7 +78,8 @@ configure_file(
     @ONLY
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_fixup_pkgconfig()

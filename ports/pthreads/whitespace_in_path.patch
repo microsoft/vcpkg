@@ -1,0 +1,27 @@
+--- a/Makefile	Sat Apr 29 09:21:07 2023
++++ b/Makefile	Sat Apr 29 09:19:07 2023
+@@ -223,15 +223,15 @@
+ 
+ # Very basic install. It assumes "realclean" was done just prior to build target.
+ install:
+-	if not exist $(DLLDEST) mkdir $(DLLDEST)
+-	if not exist $(LIBDEST) mkdir $(LIBDEST)
+-	if not exist $(HDRDEST) mkdir $(HDRDEST)
+-	if exist pthreadV*.dll copy pthreadV*.dll $(DLLDEST)
+-	if exist pthreadV*.lib copy pthreadV*.lib $(LIBDEST)
+-	copy _ptw32.h $(HDRDEST)
+-	copy pthread.h $(HDRDEST)
+-	copy sched.h $(HDRDEST)
+-	copy semaphore.h $(HDRDEST)
++	if not exist "$(DLLDEST)" mkdir "$(DLLDEST)"
++	if not exist "$(LIBDEST)" mkdir "$(LIBDEST)"
++	if not exist "$(HDRDEST)" mkdir "$(HDRDEST)"
++	if exist pthreadV*.dll copy pthreadV*.dll "$(DLLDEST)"
++	if exist pthreadV*.lib copy pthreadV*.lib "$(LIBDEST)"
++	copy _ptw32.h "$(HDRDEST)"
++	copy pthread.h "$(HDRDEST)"
++	copy sched.h "$(HDRDEST)"
++	copy semaphore.h "$(HDRDEST)"
+ 
+ $(DLLS): $(DLL_OBJS)
+ 	$(CC) /LDd /Zi $(DLL_OBJS) /link /implib:$*.lib $(XLIBS) /out:$@

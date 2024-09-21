@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF 84a99422a3faf1ab417fe71c0903a48debb9376a # 5.0.0
     SHA512 388e280b7966281e22b0048d6fb2541921df1113d84e49bbc444fff591d2025588edd8d61dbe5ff017afd76c26fd05edc8f9f15d0cce16315ccc15e6aac1d57f
     HEAD_REF master
-    PATCHES fix-cmake-usage.patch # Remove this patch in the next update
+    PATCHES
+        fix-cmake-usage.patch # Remove this patch in the next update
+        fix-cmake-install.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

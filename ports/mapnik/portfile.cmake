@@ -3,9 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF 4e064b8b8e324c4df7f2ae21dd72ccb85e1d4140
-    SHA512 4db329cad90058abc1a3430fded6fac5a49334f8feffb8510bd965a28dee630adf150174c933e61c76e93f6f107397e97929c863c97603d8dcef28f1a25f4628
+    REF 283e2762d4c2175aa30f4f18ca383d1f69dcfaf6
+    SHA512 8ce914249c54d7d30e53fcccb7400fd98696390e53d18d97848b46ff99945bb76772dc8d3e7d37aad87db3ea67c6b00fd6bea04d5bc6ea09449d429caccea339
     HEAD_REF master
+    PATCHES fix-compatibility-with-boost-1.85.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

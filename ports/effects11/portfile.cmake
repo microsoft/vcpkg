@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/FX11
-    REF dec2022b
-    SHA512 5dc209c830d940aba9378d1442b0fb236d5e1f63bb4e073ce8db5a832da22cb2e575c171aff0b641201b34b4362b9274b106f93518b09d57d231386d0b4bdf58
+    REF jun2023
+    SHA512 93a90b42efbc8e1e9cb76de80c959bc24406536af9d943d21e324a82be677d695c201deb995490e331ecfcda301d8b42285b90577fbed9acd5bb61c753efd66c
     HEAD_REF main
 )
 
@@ -23,4 +23,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/effects11)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

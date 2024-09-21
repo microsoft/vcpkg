@@ -7,4 +7,4 @@ index f25c280..d9a450b 100644
  Libs: -L${libdir} -l@PROJECT_NAME@
  Cflags: -I${includedir}
 +Libs.private: -lpystring
-+Requires.private: expat Imath yaml-cpp
++Requires.private: expat Imath yaml-cpp minizip-ng

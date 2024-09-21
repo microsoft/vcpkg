@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1c931e2..4987f2d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -485,25 +485,13 @@ endif(enable-openmp)
+ 
+ if(enable-gsl)
+ 	set(MGL_HAVE_GSL 1)
+-	find_library(GSL_LIB gsl)
+-	find_library(GSL_CBLAS_LIB gslcblas)
+-	find_path(GSL_INCLUDE_DIR gsl/gsl_fft_complex.h)
+-	if(NOT GSL_LIB OR NOT GSL_CBLAS_LIB OR NOT GSL_INCLUDE_DIR)
+-		message(SEND_ERROR "${GSL_LIB}")
+-		message(SEND_ERROR "${GSL_CBLAS_LIB}")
+-		message(SEND_ERROR "${GSL_INCLUDE_DIR}")
+-		message(SEND_ERROR "Couldn't find GSL libraries.")
+-	else(NOT GSL_LIB OR NOT GSL_CBLAS_LIB OR NOT GSL_INCLUDE_DIR)
+-		set(CMAKE_REQUIRED_INCLUDES ${GSL_INCLUDE_DIR})
+-		set(CMAKE_REQUIRED_LIBRARIES ${GSL_LIB} ${GSL_CBLAS_LIB})
+-		CHECK_CXX_SOURCE_COMPILES("#include <gsl/gsl_multifit_nlin.h>
+-		int main(){gsl_multifit_fdfsolver *s=0;gsl_matrix *J = 0;
+-		gsl_multifit_fdfsolver_jac(s, J);}" MGL_HAVE_GSL2)
+-		unset(CMAKE_REQUIRED_INCLUDES)
+-		unset(CMAKE_REQUIRED_LIBRARIES)
+-	endif(NOT GSL_LIB OR NOT GSL_CBLAS_LIB OR NOT GSL_INCLUDE_DIR)
+-	set(MGL_DEP_LIBS ${GSL_LIB} ${GSL_CBLAS_LIB} ${MGL_DEP_LIBS})
+-	include_directories(${GSL_INCLUDE_DIR})
++    find_package(GSL REQUIRED)
++    set(MGL_DEP_LIBS GSL::gsl GSL::gslcblas ${MGL_DEP_LIBS})
++    set(CMAKE_REQUIRED_LIBRARIES GSL::gsl GSL::gslcblas)
++    CHECK_CXX_SOURCE_COMPILES("#include <gsl/gsl_multifit_nlin.h>
++    int main(){gsl_multifit_fdfsolver *s=0;gsl_matrix *J = 0;
++    gsl_multifit_fdfsolver_jac(s, J);}" MGL_HAVE_GSL2)
++    unset(CMAKE_REQUIRED_LIBRARIES)
+ else(enable-gsl)
+ 	set(MGL_HAVE_GSL 0)
+ endif(enable-gsl)

@@ -3,15 +3,18 @@ vcpkg_from_sourceforge(
     REPO mpg123/mpg123
     REF "${VERSION}"
     FILENAME "mpg123-${VERSION}.tar.bz2"
-    SHA512 5dd550e06f5d0d432cac1b7e546215e56378b44588c1a98031498473211e08bc4228de45be41f7ba764f7f6c0eb752a6501235bcc3712c9a8d8852ae3c607d98
+    SHA512 71f7cf6035c489934400528d0eaf0c1104417867990dd0abcc99c682818ef1f3e99dbee9dcdd888d88ed172a8950d5df515b755a5c1c1b54fc56a28584ceef8c
     PATCHES
-        fix-modulejack.patch
-        fix-m1-build.patch
+        have-fpu.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
     yasm_tool_helper(APPEND_TO_PATH)
+endif()
+
+vcpkg_list(SET options)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "-DLIBMPG123_LIBS=-lshlwapi")
 endif()
 
 vcpkg_cmake_configure(
@@ -19,6 +22,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DUSE_MODULES=OFF
         -DBUILD_PROGRAMS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
+        ${options}
     MAYBE_UNUSED_VARIABLES
         BUILD_PROGRAMS
 )

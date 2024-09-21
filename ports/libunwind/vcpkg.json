@@ -1,0 +1,8 @@
+{
+  "name": "libunwind",
+  "version": "1.8.1",
+  "description": "Unix libray for portable stack unwinding",
+  "homepage": "https://www.nongnu.org/libunwind",
+  "license": "MIT",
+  "supports": "linux"
+}

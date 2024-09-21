@@ -1,7 +1,7 @@
 {
   "name": "rtmidi",
   "version": "5.0.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A set of C++ classes that provide a common API for realtime MIDI input/output across Linux (ALSA & JACK), Macintosh OS X (CoreMidi & JACK) and Windows (Multimedia)",
   "homepage": "https://github.com/thestk/rtmidi",
   "license": "MIT",

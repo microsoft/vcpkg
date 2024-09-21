@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6af930..f3eadf2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -191,7 +191,7 @@ set_target_properties(rtmidi PROPERTIES
+ target_include_directories(rtmidi PRIVATE ${INCDIRS}
+                                   PUBLIC
+                                     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-                                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++                                    $<INSTALL_INTERFACE:include>)
+ 
+ # Set compile-time definitions
+ target_compile_definitions(rtmidi PRIVATE ${API_DEFS})

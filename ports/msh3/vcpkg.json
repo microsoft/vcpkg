@@ -1,0 +1,20 @@
+{
+  "name": "msh3",
+  "version": "0.6.0",
+  "description": "Minimal HTTP/3 library",
+  "homepage": "https://github.com/nibanks/msh3",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "ls-qpack",
+    "msquic",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

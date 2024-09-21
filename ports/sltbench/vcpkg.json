@@ -1,7 +1,7 @@
 {
   "name": "sltbench",
   "version": "2.4.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C++ benchmark tool. Practical, stable and fast performance testing framework.",
   "homepage": "https://github.com/ivafanas/sltbench",
   "dependencies": [

@@ -1,4 +1,0 @@
-The package joltphysics can be used from CMake via:
-
-    find_path(JOLTPHYSICS_INCLUDE_DIRS "Jolt/Jolt.h")
-    target_include_directories(main PRIVATE ${JOLTPHYSICS_INCLUDE_DIRS})

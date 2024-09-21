@@ -1,0 +1,12 @@
+diff --git a/include/crossguid/guid.hpp b/include/crossguid/guid.hpp
+index 61e0f17..70966f2 100644
+--- a/include/crossguid/guid.hpp
++++ b/include/crossguid/guid.hpp
+@@ -29,6 +29,7 @@ THE SOFTWARE.
+ #include <jni.h>
+ #endif
+ 
++#include <cstdint>
+ #include <functional>
+ #include <iostream>
+ #include <array>

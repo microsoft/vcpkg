@@ -1,19 +1,14 @@
 {
   "name": "libssh",
-  "version": "0.10.4+20221123",
-  "port-version": 3,
+  "version": "0.10.6",
   "description": "libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side",
   "homepage": "https://www.libssh.org/",
   "license": "LGPL-2.1-only",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     {
-      "name": "libssh",
-      "default-features": false,
-      "features": [
-        "mbedtls"
-      ],
-      "platform": "android"
+      "name": "openssl",
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
@@ -25,44 +20,24 @@
     }
   ],
   "default-features": [
-    "crypto"
+    {
+      "name": "pcap",
+      "platform": "!android"
+    },
+    {
+      "name": "server",
+      "platform": "!android"
+    }
   ],
   "features": {
-    "crypto": {
-      "description": "Default crypto backend",
-      "dependencies": [
-        {
-          "name": "libssh",
-          "features": [
-            "mbedtls"
-          ]
-        }
-      ]
+    "pcap": {
+      "description": "SSH server support"
     },
-    "mbedtls": {
-      "description": "Crypto support (mbedTLS)",
-      "dependencies": [
-        {
-          "name": "mbedtls",
-          "default-features": false
-        },
-        {
-          "name": "mbedtls",
-          "features": [
-            "pthreads"
-          ],
-          "platform": "!android"
-        }
-      ]
-    },
-    "openssl": {
-      "description": "Crypto support (OpenSSL)",
-      "dependencies": [
-        "openssl"
-      ]
+    "server": {
+      "description": "Pcap generation support"
     },
     "zlib": {
-      "description": "libssh with zlib",
+      "description": "zlib compression support",
       "dependencies": [
         "zlib"
       ]

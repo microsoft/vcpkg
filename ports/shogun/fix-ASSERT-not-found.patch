@@ -1,12 +1,12 @@
 diff --git a/src/shogun/base/Parallel.cpp b/src/shogun/base/Parallel.cpp
-index 78ba319..53ac6c0 100644
+index ad12280fa..a34a24706 100644
 --- a/src/shogun/base/Parallel.cpp
 +++ b/src/shogun/base/Parallel.cpp
-@@ -12,6 +12,7 @@
+@@ -9,6 +9,7 @@
  #include <shogun/lib/RefCount.h>
  #include <shogun/lib/config.h>
  #include <shogun/lib/memory.h>
 +#include <shogun/io/SGIO.h>
  
- #ifdef HAVE_CXX11
  #include <thread>
+ 

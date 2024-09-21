@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alpaka-group/alpaka
-    REF 0.9.0
-    SHA512 c079c0101a1e1c0d244c074e19fcefa6c15751fbb6be072c6f245e515dece8700a40fd101b2b0ba5f9760f4545bf23e1917ea9804accbe16a45039f8b0ed8a01
+    REF ${VERSION}
+    SHA512 ee5354c498c9be12f4885d08c1ab9c11e67e3c305ea90c82605e061bd1a3b4efcc1ae17fb92d0cc9c2b402e8ba44431149409d4df903a2c355c382ae07ec9bcd
     HEAD_REF develop
 )
 set(VCPKG_BUILD_TYPE release)

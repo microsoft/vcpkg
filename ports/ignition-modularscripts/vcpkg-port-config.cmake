@@ -5,15 +5,20 @@ function(ignition_modular_build_library)
     set(options DISABLE_PKGCONFIG_INSTALL)
     set(oneValueArgs NAME MAJOR_VERSION SOURCE_PATH CMAKE_PACKAGE_NAME DEFAULT_CMAKE_PACKAGE_NAME)
     set(multiValueArgs OPTIONS)
-    cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(PARSE_ARGV 0 IML "${options}" "${oneValueArgs}" "${multiValueArgs}")
     vcpkg_find_acquire_program(PKGCONFIG)
     vcpkg_cmake_configure(
         SOURCE_PATH "${IML_SOURCE_PATH}"
         DISABLE_PARALLEL_CONFIGURE
         OPTIONS
             "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+            -DBUILD_DOCS=OFF
             -DBUILD_TESTING=OFF
             ${IML_OPTIONS}
+        MAYBE_UNUSED_VARIABLES
+            BUILD_DOCS
+            BUILD_TESTING
+            PKG_CONFIG_EXECUTABLE
     )
 
     vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -29,7 +34,7 @@ function(ignition_modular_build_library)
 
         foreach(COMPONENT_CMAKE_PACKAGE_NAME IN LISTS COMPONENTS_CMAKE_PACKAGE_NAMES)
             vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
-                                      PACKAGE_NAME ${COMPONENT_CMAKE_PACKAGE_NAME}
+                                      PACKAGE_NAME "${COMPONENT_CMAKE_PACKAGE_NAME}"
                                       DO_NOT_DELETE_PARENT_CONFIG_PATH)
         endforeach()
 
@@ -48,10 +53,7 @@ function(ignition_modular_build_library)
 
     # Make pkg-config files relocatable
     if(NOT IML_DISABLE_PKGCONFIG_INSTALL)
-        if(VCPKG_TARGET_IS_LINUX)
-            set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
-        endif()
-        vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
+        vcpkg_fixup_pkgconfig()
     else()
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
@@ -121,9 +123,9 @@ function(ignition_modular_library)
     set(options DISABLE_PKGCONFIG_INSTALL)
     set(oneValueArgs NAME VERSION SHA512 REF HEAD_REF CMAKE_PACKAGE_NAME)
     set(multiValueArgs PATCHES OPTIONS)
-    cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(PARSE_ARGV 0 IML "${options}" "${oneValueArgs}" "${multiValueArgs}")
 
-    string(REPLACE "." ";" IML_VERSION_LIST ${IML_VERSION})
+    string(REPLACE "." ";" IML_VERSION_LIST "${IML_VERSION}")
     list(GET IML_VERSION_LIST 0 IML_MAJOR_VERSION)
 
     # If the REF option is omitted, use the canonical one
@@ -139,32 +141,33 @@ function(ignition_modular_library)
     # If the CMAKE_PACKAGE_NAME option is omitted, use the canonical one
     set(DEFAULT_CMAKE_PACKAGE_NAME "ignition-${IML_NAME}${IML_MAJOR_VERSION}")
     if(NOT DEFINED IML_CMAKE_PACKAGE_NAME)
-        set(IML_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME})
+        set(IML_CMAKE_PACKAGE_NAME "${DEFAULT_CMAKE_PACKAGE_NAME}")
     endif()
 
     # Download library from github, to support also the --head option
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
-        REPO ignitionrobotics/ign-${IML_NAME}
-        REF ${IML_REF}
-        SHA512 ${IML_SHA512}
-        HEAD_REF ${IML_HEAD_REF}
+        REPO "ignitionrobotics/ign-${IML_NAME}"
+        REF "${IML_REF}"
+        SHA512 "${IML_SHA512}"
+        HEAD_REF "${IML_HEAD_REF}"
         PATCHES ${IML_PATCHES}
         FILE_DISAMBIGUATOR 1
     )
 
+    set(extra_arguments "")
     if (IML_DISABLE_PKGCONFIG_INSTALL)
-        set(EXTRA_OPTIONS DISABLE_PKGCONFIG_INSTALL)
+        list(APPEND extra_arguments DISABLE_PKGCONFIG_INSTALL)
     endif()
 
     # Build library
     ignition_modular_build_library(
-        NAME ${IML_NAME}
-        MAJOR_VERSION ${IML_MAJOR_VERSION}
-        SOURCE_PATH ${SOURCE_PATH}
-        CMAKE_PACKAGE_NAME ${IML_CMAKE_PACKAGE_NAME}
-        DEFAULT_CMAKE_PACKAGE_NAME ${DEFAULT_CMAKE_PACKAGE_NAME}
-        ${EXTRA_OPTIONS}
+        NAME "${IML_NAME}"
+        MAJOR_VERSION "${IML_MAJOR_VERSION}"
+        SOURCE_PATH "${SOURCE_PATH}"
+        CMAKE_PACKAGE_NAME "${IML_CMAKE_PACKAGE_NAME}"
+        DEFAULT_CMAKE_PACKAGE_NAME "${DEFAULT_CMAKE_PACKAGE_NAME}"
+        ${extra_arguments}
         OPTIONS ${IML_OPTIONS}
     )
 endfunction()

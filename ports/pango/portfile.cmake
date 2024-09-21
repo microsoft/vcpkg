@@ -8,10 +8,13 @@ vcpkg_from_gitlab(
     HEAD_REF master
 ) 
 
+# Fix for https://github.com/microsoft/vcpkg/issues/31573
+# Mimics patch for Gentoo https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=f688df5100ef2b88c975ecd40fd343c62e2ab276
+# Silence false positive with GCC 13 and -O3 at least
+# https://gitlab.gnome.org/GNOME/pango/-/issues/740	
+vcpkg_replace_string("${SOURCE_PATH}/meson.build" "-Werror=array-bounds" "")
+
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
 else()
@@ -52,4 +55,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES pango-view pango-list pango-segmentation AUTO_CLEAN)
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
