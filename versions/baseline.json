@@ -421,7 +421,7 @@
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.1.16",
+      "baseline": "0.1.19",
       "port-version": 0
     },
     "aws-checksums": {
