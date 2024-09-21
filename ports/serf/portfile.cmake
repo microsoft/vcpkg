@@ -46,13 +46,13 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   endif()
 
   vcpkg_execute_build_process(
-      COMMAND "${SCONS}"
+      COMMAND ${SCONS}
           "SOURCE_LAYOUT=no"
           "PREFIX=${CURRENT_PACKAGES_DIR}/debug"
           "LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib"
           "OPENSSL=${CURRENT_INSTALLED_DIR}"
           "ZLIB=${CURRENT_INSTALLED_DIR}"
-          "${apr_opts}"
+          ${apr_opts}
           "${SCONS_ARCH}"
           "DEBUG=yes"
           "install-lib" "install-pc"
@@ -100,13 +100,13 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   endif()
 
   vcpkg_execute_build_process(
-    COMMAND "${SCONS}"
+    COMMAND ${SCONS}
         "SOURCE_LAYOUT=no"
         "PREFIX=${CURRENT_PACKAGES_DIR}"
         "LIBDIR=${CURRENT_PACKAGES_DIR}/lib"
         "OPENSSL=${CURRENT_INSTALLED_DIR}"
         "ZLIB=${CURRENT_INSTALLED_DIR}"
-        "${apr_opts}"
+        ${apr_opts}
         "${SCONS_ARCH}"
         "DEBUG=no"
         "install-lib" "install-inc" "install-pc"
