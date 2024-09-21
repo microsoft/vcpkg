@@ -5,7 +5,6 @@
   "homepage": "https://github.com/CNugteren/CLBlast",
   "license": "Apache-2.0",
   "dependencies": [
-    "opencl",
     {
       "name": "vcpkg-cmake",
       "host": true
