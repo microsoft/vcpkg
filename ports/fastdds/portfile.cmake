@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         fix-find-package-asio.patch
         disable-symlink.patch
+        pdb-file.patch
 )
 
 set(extra_opts "")
