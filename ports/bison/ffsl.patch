@@ -1,0 +1,30 @@
+diff --git a/m4/ffsl.m4 b/m4/ffsl.m4
+index 45d8f14..06bd881 100644
+--- a/m4/ffsl.m4
++++ b/m4/ffsl.m4
+@@ -8,11 +8,20 @@ AC_DEFUN([gl_FUNC_FFSL],
+ [
+   AC_REQUIRE([gl_STRING_H_DEFAULTS])
+ 
+-  dnl Persuade glibc <string.h> to declare ffsl().
+-  AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
+-
+-  AC_CHECK_FUNCS_ONCE([ffsl])
+-  if test $ac_cv_func_ffsl = no; then
++  AC_CACHE_CHECK([for ffsl], [gl_cv_func_ffsl],
++    [AC_LINK_IFELSE(
++      [AC_LANG_PROGRAM(
++        [[#include <strings.h>
++          long x;
++        ]],
++        [[int (*func) (long) = ffsl;
++          return func(x);
++        ]])
++      ],
++      [gl_cv_func_ffsl=yes],
++      [gl_cv_func_ffsl=no])
++    ])
++  if test $gl_cv_func_ffsl = no; then
+     HAVE_FFSL=0
+   fi
+ ])
