@@ -2696,10 +2696,6 @@
       "baseline": "2021-11-22",
       "port-version": 1
     },
-    "fastrtps": {
-      "baseline": "2.14.0",
-      "port-version": 0
-    },
     "faudio": {
       "baseline": "24.06",
       "port-version": 0
