@@ -78,7 +78,7 @@ index d7ffb9d..6152756 100644
 -include(imguizmo)
 -include(libigl_imgui_fonts)
 +find_package(imgui CONFIG REQUIRED)
-+find_package(unofficial-imguizmo CONFIG REQUIRED)
++find_package(imguizmo CONFIG REQUIRED)
  igl_include(glfw)
  target_link_libraries(igl_imgui ${IGL_SCOPE}
      igl::core
@@ -86,7 +86,7 @@ index d7ffb9d..6152756 100644
      imgui::imgui
 -    imguizmo::imguizmo
 -    igl::imgui_fonts
-+    unofficial::imguizmo::imguizmo
++    imguizmo::imguizmo
  )
 diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
 index 4580c03..dfadb38 100644

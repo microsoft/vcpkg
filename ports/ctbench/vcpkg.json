@@ -1,6 +1,6 @@
 {
   "name": "ctbench",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Compiler-assisted variable size benchmarking for the study of C++ metaprogram compile times.",
   "homepage": "https://github.com/JPenuchot/ctbench",
   "documentation": "https://jpenuchot.github.io/ctbench-docs/",

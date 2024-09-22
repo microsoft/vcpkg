@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 9ed71cc4ec6ffd364dadf43c0f5b076731ba86c10c642e991e3021baab1cb96b990ab0356c6416d85e951daf074df26acb46ce85f399879af2978bbc0627ac5e
+    SHA512 8377a28763c5b049135714d45e352850aa6db807cd4c367003fb0a917714a4dddeb857e8b3bfc07aac15b6bb385495e5f8d1d6eb04d04a57d1ff71801f0cb097
     HEAD_REF main
     PATCHES
         fix-build.patch
