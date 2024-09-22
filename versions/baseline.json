@@ -340,6 +340,10 @@
       "baseline": "2.5.2",
       "port-version": 0
     },
+    "au": {
+      "baseline": "0.3.5",
+      "port-version": 0
+    },
     "aubio": {
       "baseline": "2024-01-03",
       "port-version": 0
