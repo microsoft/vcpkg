@@ -1,7 +1,7 @@
 set(program_name 7z)
 if(CMAKE_HOST_WIN32)
     set(tool_subdirectory "24.08")
-    list(APPEND paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}/7-Zip")
+    set(paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}")
     set(download_urls "https://github.com/ip7z/7zip/releases/download/24.08/7z2408-extra.7z")
     set(download_filename "7z2408.7z")
     set(download_sha512 "35f55236fccfb576ca014e29d0c35f4a213e53f06683bd2e82f869ed02506e230c8dd623c01d0207244d6a997031f737903456b7ad4a44db1717f0a17a78602e")
