@@ -5501,7 +5501,7 @@
       "port-version": 0
     },
     "llhttp": {
-      "baseline": "9.2.0",
+      "baseline": "9.2.1",
       "port-version": 0
     },
     "llnl-units": {
