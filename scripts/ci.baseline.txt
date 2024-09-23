@@ -572,6 +572,7 @@ liblo:arm64-uwp=fail
 liblo:arm64-android=fail
 liblo:x64-android=fail
 liblo:x64-uwp=fail
+# libmariadb conflicts with libmysql
 libmariadb:arm-neon-android=fail
 libmariadb:arm64-android=fail
 libmariadb:arm64-windows      = skip
@@ -1091,19 +1092,7 @@ spdk-isal:x64-linux=skip
 spscqueue:arm-neon-android=fail
 spscqueue:arm64-android=fail
 spscqueue:x64-android=fail
-# Depends on libmariadb which conflicts with libmysql; empty port
-sqlpp11-connector-mysql:arm-android        = skip
-sqlpp11-connector-mysql:arm64-android      = skip
-sqlpp11-connector-mysql:arm64-windows      = skip
-sqlpp11-connector-mysql:arm64-uwp          = skip
-sqlpp11-connector-mysql:x64-android        = skip
-sqlpp11-connector-mysql:x64-linux          = skip
-sqlpp11-connector-mysql:x64-osx            = skip
-sqlpp11-connector-mysql:arm64-osx          = skip
-sqlpp11-connector-mysql:x64-uwp            = skip
-sqlpp11-connector-mysql:x64-windows        = skip
-sqlpp11-connector-mysql:x64-windows-static = skip
-sqlpp11-connector-mysql:x64-windows-static-md=skip
+# sqlpp11-connector-mysql: CI issues resolved by overlay port
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
