@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 8ad484f8a18ed1853c094e7d3a4e023b2a92df28 # v3.9.1
+    REF c2fe6bf370f7c14fbaf12884b76244a3cfd7c5fc    #3.10.0
     HEAD_REF main
     PATCHES
         aom-rename-static.diff
@@ -32,7 +32,6 @@ vcpkg_cmake_configure(
         -DENABLE_TESTDATA=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_TOOLS=OFF
-        -DTHREADS_PREFER_PTHREAD_FLAGS=ON
         "-DCMAKE_ASM_NASM_COMPILER=${NASM}"
         "-DPERL_EXECUTABLE=${PERL}"
 )
@@ -41,13 +40,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VPCKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/aom.pc" " -lm" "")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/aom.pc" " -lm" "")
-    endif()
-endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
