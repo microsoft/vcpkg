@@ -17,20 +17,6 @@
     }
   ],
   "features": {
-    "auto-format": {
-      "description": "Enables the automatic format detection of input archives"
-    },
-    "auto-prefix-long-paths": {
-      "description": "Enables or disables automatically prepending paths with the Windows long path prefix, allowing to handle archives and files with long paths",
-      "supports": "windows"
-    },
-    "disable-zip-ascii-pwd-check": {
-      "description": "Disables checking if passwords are ASCII when compressing using the Zip format"
-    },
-    "path-sanitization": {
-      "description": "Enables or disables path sanitization when extracting archives containing files with invalid Windows filenames",
-      "supports": "windows"
-    },
     "regex-matching": {
       "description": "Enables the support for extracting files matching regular expressions"
     }

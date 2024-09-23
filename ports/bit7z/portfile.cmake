@@ -16,16 +16,16 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-bit7z-config.cmake.in" DESTINATI
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        auto-format                     BIT7Z_AUTO_FORMAT
-        auto-prefix-long-paths          BIT7Z_AUTO_PREFIX_LONG_PATHS
-        disable-zip-ascii-pwd-check     BIT7Z_DISABLE_ZIP_ASCII_PWD_CHECK
-        path-sanitization               BIT7Z_PATH_SANITIZATION
         regex-matching                  BIT7Z_REGEX_MATCHING
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBIT7Z_AUTO_FORMAT=ON
+        -DBIT7Z_AUTO_PREFIX_LONG_PATHS=ON
+        -DBIT7Z_DISABLE_ZIP_ASCII_PWD_CHECK=OFF
+        -DBIT7Z_PATH_SANITIZATION=ON
         -DBIT7Z_DISABLE_USE_STD_FILESYSTEM=OFF
         -DBIT7Z_USE_STD_BYTE=OFF
         -DBIT7Z_USE_NATIVE_STRING=OFF
