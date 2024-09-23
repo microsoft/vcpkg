@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
-  "version": "6.1.1",
-  "port-version": 7,
+  "version": "7.0.2",
+  "port-version": 4,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -30,6 +30,13 @@
     "all": {
       "description": "Build with all allowed dependencies selected that are compatible with the lgpl license",
       "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "sdl2"
+          ]
+        },
         {
           "name": "ffmpeg",
           "default-features": false,
@@ -72,14 +79,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "sdl2"
-          ],
-          "platform": "!osx"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "ass"
           ],
           "platform": "!uwp"
@@ -105,14 +104,6 @@
           "default-features": false,
           "features": [
             "modplug"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "opencl"
           ],
           "platform": "!uwp"
         },
@@ -155,6 +146,14 @@
             "amf"
           ],
           "platform": "!osx & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "opencl"
+          ],
+          "platform": "!uwp & !osx"
         },
         {
           "name": "ffmpeg",
@@ -341,6 +340,19 @@
       "description": "AV1 decoding via libdav1d",
       "dependencies": [
         "dav1d"
+      ]
+    },
+    "drawtext": {
+      "description": "Enable the drawtext filter",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
+        "harfbuzz"
       ]
     },
     "fdk-aac": {

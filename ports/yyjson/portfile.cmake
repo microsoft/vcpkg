@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ibireme/yyjson
     REF "${VERSION}"
-    SHA512 4b9ca85096ccfe2f513a5869eb63b175f44c67785940e02414f6a586d7dd7b772fed77a1775d9416a5f1bf17f20e18a31f0dc4e65be263019d9b95bf95366219
+    SHA512 d0274bfdae6291cc54d7c306f7f9064333d3e0fd8d235428148fa5695e151e0fdd0982247a5e82fe60b27e9182ba27d5704aca4546a8dc9545117bd3a017bfb5
     HEAD_REF master
 )
 
@@ -30,4 +30,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

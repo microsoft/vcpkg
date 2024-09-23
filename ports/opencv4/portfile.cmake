@@ -7,6 +7,12 @@ vcpkg_download_distfile(ARM64_WINDOWS_FIX
   FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
 )
 
+vcpkg_download_distfile(CUDA_12_4_FIX
+  URLS https://github.com/opencv/opencv/commit/3e3ee106fb8ccd003aa2c9a943a2340b066537bc.patch?full_index=1
+  SHA512 d50fd2e11563fc80467303a98d480f80f5587b1c1cb5a425c3a360dc14be937173ffb665d34167e27c67202bcce7b95d47ab68e2d5effb1ae8f7130610dac3e0
+  FILENAME opencv4-3e3ee106fb8ccd003aa2c9a943a2340b066537bc.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -32,6 +38,7 @@ vcpkg_from_github(
       0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
       "${ARM64_WINDOWS_FIX}"
       0022-fix-supportqnx.patch
+      "${CUDA_12_4_FIX}"
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -185,6 +192,24 @@ if("contrib" IN_LIST FEATURES)
     set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
   endif()
 
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX
+    URLS https://github.com/opencv/opencv_contrib/commit/1ed3dd2c53888e3289afdb22ec4e9ebbff3dba87.patch?full_index=1
+    SHA512 f4996cf8368b61dce9d434b608bbd5d49d8e0cd51d0f1b2f1536bfa8ce79823715e082ab5db70dcdd50603baf107c129fc4a804f04ee55cd974973e10716dd43
+    FILENAME opencv-contrib-1ed3dd2c53888e3289afdb22ec4e9ebbff3dba87.patch
+  )
+
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX_2
+    URLS https://github.com/opencv/opencv_contrib/commit/9358ad2e56f6d0b99860856fc1b53b783d186e73.patch?full_index=1
+    SHA512 9d2fef86693e723af4c63417178f3082bf1e1cea2fd0164ecf9bd0ec02d348c374d9c3a707c8e0f224560c9671879ef6f8a6c54cdf38820fe5877faba3545732
+    FILENAME opencv-contrib-9358ad2e56f6d0b99860856fc1b53b783d186e73.patch
+  )
+
+  vcpkg_download_distfile(CUDA_12_4_CONTRIB_FIX_3
+    URLS https://github.com/opencv/opencv_contrib/commit/baaeb68b3d6b557536f95b527c0dd87c8f1ce80d.patch?full_index=1
+    SHA512 1d5dc4fbcff57044f03b0620385d8b23eb99e3a39f211901b68c7622f2f00e4ccaa3a1e1999a6712285e1812ada72acb70280d62eb089d6bdd015b5545d2d4ae
+    FILENAME opencv-contrib-baaeb68b3d6b557536f95b527c0dd87c8f1ce80d.patch
+  )
+
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
@@ -196,7 +221,11 @@ if("contrib" IN_LIST FEATURES)
       0016-fix-freetype-contrib.patch
       0018-fix-depend-tesseract.patch
       0019-fix-ogre-dependency.patch
+      "${CUDA_12_4_CONTRIB_FIX}"
+      "${CUDA_12_4_CONTRIB_FIX_2}"
+      "${CUDA_12_4_CONTRIB_FIX_3}"
   )
+
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
   vcpkg_download_distfile(OCV_DOWNLOAD
@@ -485,6 +514,7 @@ if (NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
       "\${_IMPORT_PREFIX}/sdk"
       "\${_IMPORT_PREFIX}/debug/sdk"
+      IGNORE_UNCHANGED
   )
 endif()
 

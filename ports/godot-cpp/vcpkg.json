@@ -1,0 +1,17 @@
+{
+  "name": "godot-cpp",
+  "version": "4.2.1",
+  "description": "C++ bindings for the Godot script API",
+  "homepage": "https://github.com/godotengine/godot-cpp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -8,6 +8,13 @@
     {
       "name": "curl",
       "features": [
+        "idn"
+      ]
+    },
+    {
+      "name": "curl",
+      "features": [
+        "c-ares",
         "http2",
         "zstd"
       ]
@@ -23,8 +30,19 @@
     {
       "name": "curl",
       "features": [
-        "idn"
-      ]
+        "gsasl",
+        "mbedtls",
+        "openssl",
+        "psl"
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "gssapi"
+      ],
+      "platform": "linux | osx"
     },
     {
       "name": "curl",
@@ -37,9 +55,9 @@
     {
       "name": "curl",
       "features": [
-        "gssapi"
+        "gnutls"
       ],
-      "platform": "linux | osx"
+      "platform": "!arm & !xbox"
     }
   ]
 }

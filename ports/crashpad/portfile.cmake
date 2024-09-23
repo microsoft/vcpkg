@@ -4,39 +4,35 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
     REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
+    PATCHES
+        fix-linux.patch
+        fix-lib-name-conflict.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
-function(checkout_in_path PATH URL REF)
-    if(EXISTS "${PATH}")
-        return()
-    endif()
-
-    vcpkg_from_git(
-        OUT_SOURCE_PATH DEP_SOURCE_PATH
-        URL "${URL}"
-        REF "${REF}"
-    )
-    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
-    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
-endfunction()
-
 # mini_chromium contains the toolchains and build configuration
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
-    "https://chromium.googlesource.com/chromium/mini_chromium"
-    "dce72d97d1c2e9beb5e206c6a05a702269794ca3"
-)
-
-if(VCPKG_TARGET_IS_LINUX)
-    # fetch lss
-    checkout_in_path(
-        "${SOURCE_PATH}/third_party/lss/lss"
-        https://chromium.googlesource.com/linux-syscall-support
-        9719c1e1e676814c456b55f5f070eabad6709d31
+if(NOT EXISTS "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/BUILD.gn")
+    vcpkg_from_git(OUT_SOURCE_PATH mini_chromium
+        URL "https://chromium.googlesource.com/chromium/mini_chromium"
+        REF dce72d97d1c2e9beb5e206c6a05a702269794ca3
+        PATCHES
+            fix-std-20.patch
+            ndk-toolchain.diff
+            fix-lib-name-conflict-1.patch
     )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
+    file(RENAME "${mini_chromium}" "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
+endif()
+
+if(NOT EXISTS "${SOURCE_PATH}/third_party/lss/lss/BUILD.gn" AND (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_LINUX))
+    vcpkg_from_git(OUT_SOURCE_PATH lss
+        URL https://chromium.googlesource.com/linux-syscall-support
+        REF 9719c1e1e676814c456b55f5f070eabad6709d31
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/lss/lss")
+    file(RENAME "${lss}" "${SOURCE_PATH}/third_party/lss/lss")
 endif()
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
@@ -70,10 +66,24 @@ replace_gn_dependency(
     "z;zlib;zlibd"
 )
 
+set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "")
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    string(APPEND OPTIONS " target_os=\"android\" android_ndk_root=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\"")
+
+elseif(VCPKG_TARGET_IS_LINUX)
+    string(APPEND OPTIONS " target_os=\"linux\"")
+
+elseif(VCPKG_TARGET_IS_OSX)
+    string(APPEND OPTIONS " target_os=\"mac\"")
+
+elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(APPEND OPTIONS " target_os=\"win\"")
+
     # Load toolchains
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
@@ -101,7 +111,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
+    OPTIONS "${OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )

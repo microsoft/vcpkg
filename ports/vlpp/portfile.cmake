@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vczh-libraries/Release
-    REF 039b6fcb5325af186060d2e6efb466f3d81afcb5 # 1.1.0.0
-    SHA512 7c4da7f5686dd3ef8ddd211e440a9b70000fb5558a67fe75d73a3662ff6bd441fb0d2a125d77d9353abf0b5d273546d9fced9fba205a8aa4347a72e15064caf2
+    REF "${VERSION}"
+    SHA512 5ea442a506fc71d79f5061adaf0eda70776c6bad66d2871399a29c15a58899fd32aeeb32cfb492ca34bc759e328682aecaf595101a066cda53c7a36ae45f5fd7
     HEAD_REF master
-    PATCHES fix-tool-build.patch
+    PATCHES 
+        fix-tool-build.patch
 )
 
 vcpkg_from_github(
@@ -32,9 +33,11 @@ if (BUILD_TOOLS)
     vcpkg_from_github(
         OUT_SOURCE_PATH GACGEN_SOURCE_PATH
         REPO vczh-libraries/GacUI
-        REF 1de25738b534f78f7dce721798ff367099526488
-        SHA512 adc104d22f9ce61e82f40875e217ec2cfcc32d3088cf8f32bca16ea99084bb62aaae1601ddea328ce2eb9ddb321db9779352cbccd9437e21e3210e32286feb85
+        REF 6547518c5bd775d336e53c583b39095a88e9723c
+        SHA512 114957408012ed1a03381f9caf6aafb463e8d94a4978b66f694698b5ff1bb86bcaa01c28c0aa75203e15d04126ed003b1fa370cc54f62ae87309c4bb798ede77
         HEAD_REF master
+        PATCHES
+            fix_miss_file.patch
     )
     vcpkg_from_github(
         OUT_SOURCE_PATH CPPMERGE_SOURCE_PATH

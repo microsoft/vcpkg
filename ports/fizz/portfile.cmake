@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 984f3786ae6e17bb5a553759d16e45cdf0b93dbcf6471a2f98e8b23e3c1ecb778bd341aefdc7e408da0d1c341015787d017c410af85becaaf831977d5053ae9e
+    SHA512 8377a28763c5b049135714d45e352850aa6db807cd4c367003fb0a917714a4dddeb857e8b3bfc07aac15b6bb385495e5f8d1d6eb04d04a57d1ff71801f0cb097
     HEAD_REF main
     PATCHES
         fix-build.patch
-        OpenSSLKeyExchange.patch
 )
 
 # Prefer installed config files

@@ -1,0 +1,58 @@
+diff --git a/cmake/findcoredeps.cmake b/cmake/findcoredeps.cmake
+index b7d00d4..e180dc1 100644
+--- a/cmake/findcoredeps.cmake
++++ b/cmake/findcoredeps.cmake
+@@ -29,8 +29,10 @@ endif ()
+ 
+ function(add_ssl_library target)
+     if (${USE_MBEDTLS})
++        # Works with mbedtls 2.x and 3.x
++        set(CMAKE_FIND_PACKAGE_PREFER_CONFIG OFF)
+         find_package(mbedTLS REQUIRED)
+-        set(SSL_LIBRARY mbedTLS::mbedTLS)
++        set(SSL_LIBRARY "${MBEDTLS_LIBRARIES}")
+         target_compile_definitions(${target} PRIVATE -DUSE_MBEDTLS)
+     else ()
+         find_package(OpenSSL REQUIRED)
+@@ -38,7 +40,7 @@ function(add_ssl_library target)
+         target_compile_definitions(${target} PRIVATE -DUSE_OPENSSL)
+     endif ()
+ 
+-    target_link_libraries(${target} ${SSL_LIBRARY})
++    target_link_libraries(${target} PUBLIC ${SSL_LIBRARY})
+ endfunction()
+ 
+ 
+@@ -93,10 +95,10 @@ function(add_core_dependencies target)
+     # a patched version. So we want to prefer its include
+     # directories.
+     find_package(asio REQUIRED)
+-    target_link_libraries(${target} asio::asio)
++    target_link_libraries(${target} PUBLIC asio::asio)
+ 
+     find_package(lz4 REQUIRED)
+-    target_link_libraries(${target} lz4::lz4)
++    target_link_libraries(${target} PUBLIC lz4::lz4)
+ 
+     add_ssl_library(${target})
+ 
+@@ -105,14 +107,16 @@ function(add_core_dependencies target)
+         find_library(iokit IOKit)
+         find_library(coreServices CoreServices)
+         find_library(systemConfiguration SystemConfiguration)
+-        target_link_libraries(${target} ${coreFoundation} ${iokit} ${coreServices} ${systemConfiguration} ${lz4})
++        target_link_libraries(${target} PUBLIC ${coreFoundation} ${iokit} ${coreServices} ${systemConfiguration} ${lz4})
+     endif()
+ 
+     if(UNIX)
+-        target_link_libraries(${target} pthread)
++        set(THREADS_PREFER_PTHREAD_FLAG 1)
++        find_package(Threads REQUIRED)
++        target_link_libraries(${target} PUBLIC Threads::Threads)
+     endif()
+ 
+-    target_link_libraries(${target} ${EXTRA_LIBS})
++    target_link_libraries(${target} PUBLIC ${EXTRA_LIBS})
+ 
+     if (USE_WERROR)
+         if (MSVC)

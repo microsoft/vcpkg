@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1a1f8e9..56c3e23 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,9 +20,13 @@ add_library(ls-qpack "")
+ target_include_directories(ls-qpack PUBLIC .)
+ target_sources(ls-qpack PRIVATE lsqpack.c)
+ 
+-target_include_directories(ls-qpack PRIVATE deps/xxhash/)
+ if(LSQPACK_XXH)
+     target_sources(ls-qpack PRIVATE deps/xxhash/xxhash.c)
++else()
++	find_package(PkgConfig REQUIRED)
++	pkg_check_modules(XXH REQUIRED IMPORTED_TARGET libxxhash)
++	target_link_libraries(ls-qpack PUBLIC PkgConfig::XXH)
++	set(LSQPACK_DEPENDS "libxxhash")
+ endif()
+ 
+ if(WIN32)

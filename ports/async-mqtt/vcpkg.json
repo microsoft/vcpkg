@@ -1,21 +1,74 @@
 {
   "name": "async-mqtt",
-  "version": "5.1.1",
+  "version": "9.0.0",
   "description": "Header-only Asynchronous MQTT communication library for C++17 based on Boost.Asio.",
   "homepage": "https://github.com/redboltz/async_mqtt",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-any",
-    "boost-asio",
-    "boost-assert",
-    "boost-beast",
-    "boost-container",
-    "boost-container-hash",
-    "boost-endian",
-    "boost-log",
-    "boost-multi-index",
-    "boost-numeric-conversion",
-    "boost-system",
+    {
+      "name": "boost-any",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-asio",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-assert",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-beast",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-container",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-container-hash",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-date-time",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-endian",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-filesystem",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-hana",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-lexical-cast",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-log",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-multi-index",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-numeric-conversion",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-system",
+      "version>=": "1.84.0"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

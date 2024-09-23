@@ -1,6 +1,6 @@
 {
   "name": "arrow",
-  "version": "16.1.0",
+  "version": "17.0.0",
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",

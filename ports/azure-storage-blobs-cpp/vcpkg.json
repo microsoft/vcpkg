@@ -4,7 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-storage-blobs-cpp",
-  "version-semver": "12.11.0",
+  "version-semver": "12.12.0",
   "description": [
     "Microsoft Azure Storage Blobs SDK for C++",
     "This library provides Azure Storage Blobs SDK."
@@ -15,7 +15,7 @@
     {
       "name": "azure-storage-common-cpp",
       "default-features": false,
-      "version>=": "12.6.0"
+      "version>=": "12.7.0"
     },
     {
       "name": "vcpkg-cmake",

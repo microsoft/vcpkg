@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
       "clang-cl.patch"
       "fix-error2275-2672.patch"
+      "add-include-string.patch"
 )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
@@ -70,7 +71,7 @@ x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES html5lib OUT_PYTHON_VAR 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
-if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+if(CMAKE_HOST_WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()

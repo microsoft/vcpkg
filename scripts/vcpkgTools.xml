@@ -131,19 +131,25 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>23.01</version>
+        <version>24.08</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-x64.msi</url>
-        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
-        <archiveName>7z2301-x64.msi</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.08/7z2408-x64.msi</url>
+        <sha512>3259bf5e251382333c9d18a3fc01d83491fb41bc4ac4ddb25a02918494594c1074482b6608189a8a89e343d78e34d57420cdeff1d7ace5acfdcaacc8776f1be8</sha512>
+        <archiveName>7z2408-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>23.01</version>
+        <version>24.08</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-extra.7z</url>
-        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
-        <archiveName>7z2301-extra.7z</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.08/7z2408-extra.7z</url>
+        <sha512>35f55236fccfb576ca014e29d0c35f4a213e53f06683bd2e82f869ed02506e230c8dd623c01d0207244d6a997031f737903456b7ad4a44db1717f0a17a78602e</sha512>
+        <archiveName>7z2408-extra.7z</archiveName>
      </tool>
+    <tool name="7zr" os="windows">
+        <version>24.08</version>
+        <exeRelativePath>7zr.exe</exeRelativePath>
+        <url>https://github.com/ip7z/7zip/releases/download/24.08/7zr.exe</url>
+        <sha512>424196f2acf5b89807f4038683acc50e7604223fc630245af6bab0e0df923f8b1c49cb09ac709086568c214c3f53dcb7d6c32e8a54af222a3ff78cfab9c51670</sha512>
+    </tool>
     <tool name="aria2" os="windows">
         <version>1.37.0</version>
         <exeRelativePath>aria2-1.37.0-win-64bit-build1\aria2c.exe</exeRelativePath>
@@ -180,11 +186,11 @@
         <archiveName>ninja-mac-1.11.1.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.16</version>
+        <version>7.2.23</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.16/PowerShell-7.2.16-win-x64.zip</url>
-        <sha512>de246b7719337ff0c16ef46cf1df2e0fb5e39f7d2754cb28422cf455df276be6e35e9efa9d2bac81c383df1d2d97c9281a24e86ec84af7c395b7671149111ca9</sha512>
-        <archiveName>PowerShell-7.2.16-win-x64.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.23/PowerShell-7.2.23-win-x64.zip</url>
+        <sha512>b374a878df02980d54e17ad7cfc9021e331748c3770f586be61356c257494d1b33899c1167d09a35c210bc084474aefdff972f672d16afb43be0562b3589285a</sha512>
+        <archiveName>PowerShell-7.2.23-win-x64.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.15.1</version>

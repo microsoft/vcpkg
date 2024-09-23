@@ -1,11 +1,11 @@
 {
   "name": "directxtk12",
-  "version-date": "2024-02-21",
+  "version-date": "2024-09-04",
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
   "license": "MIT",
-  "supports": "windows",
+  "supports": "windows & !arm32",
   "dependencies": [
     {
       "name": "directx-dxc",
@@ -39,7 +39,7 @@
     },
     "tools": {
       "description": "MakeSpriteFont and xwbtool command-line tools",
-      "supports": "windows & !uwp & !xbox & (x64 | arm64)"
+      "supports": "windows & !uwp & !xbox & (x64 | arm64 | arm64ec)"
     },
     "xaudio2-9": {
       "description": "Build with XAudio 2.9 support for Windows 10/11"

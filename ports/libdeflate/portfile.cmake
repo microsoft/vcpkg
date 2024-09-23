@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ebiggers/libdeflate
     REF "v${VERSION}"
-    SHA512 5ebe6af9ce81872cba508d1f0aa087ddeb0e0f0c8e6360da66b8a9db2a76203dafbf3d3f6b3b791618ea9c6d0231fab5b4a55badb31a4480fb4174b9445c658b
+    SHA512 7cd9bc91992ef824a0fdf175b0da081b8381decc325013477a3fbfcfe6cf240f66cedbeec830a51343fedb8c27c76fba8782c1aed3fc538e3afd6c9f8cdc90fb
     HEAD_REF master
     PATCHES
         remove_wrong_c_flags_modification.diff
