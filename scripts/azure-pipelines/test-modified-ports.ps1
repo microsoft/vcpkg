@@ -122,8 +122,8 @@ if ($IsWindows) {
 
 if ($IsLinux -and $Triplet -match 'android' -and $true)
 {
-    $override_ndk = 'r27'
-    $override_ndk_sha512 = 'f80dc06d93c399ed768d6dfcae16ac713b996e314ed06c9aabd4e69facbd7db9b52dd090eacbc1ab4b6efdb5e04be3f0c49ca281f76f7cc0d6c6aaa83f69ce42'
+    $override_ndk = 'r27b'
+    $override_ndk_sha512 = 'abaf642f0a09ac083514d65b4d081011610576efa4971a20ad00d9e3120a14ccd0920c7fa898862da06193f4ded1b25f30ef92f186a750a77b07427248a17db6'
     Write-Host "Downloading Android NDK $override_ndk"
     & "./vcpkg" x-download android-ndk-$override_ndk-linux.zip "--sha512=$override_ndk_sha512" "--url=https://dl.google.com/android/repository/android-ndk-$override_ndk-linux.zip" @cachingArgs
     Write-Host "Unpacking"
