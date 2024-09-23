@@ -20,7 +20,7 @@
       "features": [
         "mysql"
       ],
-      "platform": "(x86 & windows)"
+      "platform": "!(x86 & windows)"
     }
   ]
 }
