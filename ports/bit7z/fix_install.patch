@@ -11,7 +11,7 @@ index 2eb8634..f8ff6f0 100644
                  PRIVATE ${HEADERS} ${SOURCES} )
  
  # additional target without the architecture suffix in the name
-@@ -246,3 +246,32 @@ endif()
+@@ -246,3 +246,29 @@ endif()
  if( BIT7Z_BUILD_DOCS )
      add_subdirectory( docs )
  endif()
