@@ -3126,7 +3126,7 @@
     },
     "glib": {
       "baseline": "2.78.4",
-      "port-version": 3
+      "port-version": 4
     },
     "glib-networking": {
       "baseline": "2.78.0",
