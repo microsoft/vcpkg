@@ -1,6 +1,7 @@
 {
   "name": "curlcpp",
   "version": "3.1",
+  "port-version": 1,
   "description": "An object oriented C++ wrapper for CURL (libcurl)",
   "homepage": "https://josephp91.github.io/curlcpp/",
   "license": "MIT",
