@@ -1,0 +1,23 @@
+{
+  "name": "wcdb-sqlcipher",
+  "version-string": "1.4.6",
+  "builtin-baseline": "509f71e53f45e46c13fa7935d2f6a45803580c07",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "openssl",
+      "version>=": "3.3.2#1"
+    }
+  ]
+}
