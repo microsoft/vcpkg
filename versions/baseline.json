@@ -2838,11 +2838,11 @@
     },
     "fmt": {
       "baseline": "11.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "folly": {
       "baseline": "2024.09.16.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
