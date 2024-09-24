@@ -15,9 +15,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenXLSX)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# file(INSTALL "${SOURCE_PATH}/include/boost/sml.hpp"
-#     DESTINATION "${CURRENT_PACKAGES_DIR}/include/boost"
-# )
+
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
