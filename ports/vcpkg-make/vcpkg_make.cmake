@@ -17,9 +17,29 @@ function(vcpkg_run_shell)
         set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
     endif()
 
-    list(JOIN arg_COMMAND " " cmd)
+    # In the construction of the shell command, we need to handle environment variable assignments and configure options differently:
+    #
+    # 1. Environment variable assignments (e.g., CC, CXX, etc.):
+    #    - These must not be quoted. 
+    #    - If the environment variable names (e.g., CC, CXX, CC_FOR_BUILD) are quoted, the shell will treat them as part of the value, breaking the declaration.
+    #    - For example, CC='/usr/bin/gcc' is valid, but "CC='/usr/bin/gcc'" would cause an error because the shell would try to use the entire quoted string as the variable name.
+    #
+    # 2. Options passed to the configure script:
+    #    - The options should be quoted to ensure that any option containing spaces or special characters is treated as a single argument.
+    #    - For instance, --prefix=/some path/with spaces would break if not quoted, as the shell would interpret each word as a separate argument.
+    #    - By quoting the options like "--prefix=/some path/with spaces", we ensure they are passed correctly to the configure script as a single argument.
+    #
+    # The resulting command should look something like this:
+    # V=1 CC='/Library/Developer/CommandLineTools/usr/bin/cc -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
+    #     CXX='/Library/Developer/CommandLineTools/usr/bin/c++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
+    #     CC_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/cc -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64'
+    #     CPP_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/cc -E -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
+    #     CXX_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/c++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
+    #     ....
+    #     ./../src/8bc98c3a0d-84009aba94.clean/configure "--enable-pic" "--disable-lavf" "--disable-swscale" "--disable-avs" ...
+    vcpkg_list(JOIN arg_COMMAND " " arg_COMMAND)
     vcpkg_execute_required_process(
-        COMMAND ${arg_SHELL} -c "${cmd}"
+        COMMAND ${arg_SHELL} -c "${arg_COMMAND}"
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "${arg_LOGNAME}"
         ${extra_opts}
@@ -43,7 +63,7 @@ function(vcpkg_run_shell_as_build)
     list(JOIN arg_COMMAND " " cmd)
     list(JOIN arg_NO_PARALLEL_COMMAND " " no_par_cmd)
     vcpkg_execute_build_process(
-        COMMAND ${arg_SHELL} -c "${cmd}"
+        COMMAND ${arg_SHELL} -c ${cmd}
         NO_PARALLEL_COMMAND ${arg_SHELL} -c "${no_par_cmd}"
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "${arg_LOGNAME}"
@@ -217,22 +237,22 @@ function(vcpkg_make_run_configure)
 
     z_vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
 
-    vcpkg_list(SET tmp)
-    foreach(element IN LISTS arg_OPTIONS)
-        string(REPLACE [["]] [[\"]] element "${element}")
-        vcpkg_list(APPEND tmp "\"${element}\"")
+    list(APPEND command  ${arg_CONFIGURE_ENV})
+    list(APPEND command  ${arg_CONFIGURE_PATH})
+
+    # Quote each option (to handle spaces in options)
+    set(quoted_options "")
+    foreach(option IN LISTS arg_OPTIONS)
+        string(APPEND quoted_options "\"${option}\" ")
     endforeach()
-    vcpkg_list(JOIN tmp " " "arg_OPTIONS")
-
-    set(command ${arg_CONFIGURE_ENV} ${arg_CONFIGURE_PATH} ${arg_OPTIONS})
-
+   
     message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
     vcpkg_run_shell(
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "config-${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}"
         SAVE_LOG_FILES config.log
         SHELL ${arg_SHELL}
-        COMMAND V=1 ${command}
+        COMMAND V=1 ${command} ${quoted_options}
     )
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(GLOB_RECURSE libtool_files "${arg_WORKING_DIRECTORY}*/libtool")
