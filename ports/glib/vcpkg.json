@@ -8,7 +8,15 @@
   "supports": "!uwp & !xbox",
   "dependencies": [
     "dirent",
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "libffi",
     "libiconv",
     "pcre2",
