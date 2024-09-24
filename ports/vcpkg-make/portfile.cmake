@@ -1,17 +1,14 @@
 set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz
+    URLS https://ftp.gnu.org/gnu/automake/automake-1.17.tar.gz
     FILENAME automake.tar.gz
-    SHA512 640a008fee3099f5afbb1fb12d0d3e3d802fda43d44f7ef7985d5dd952b9fe384c03dc4a9693d782531bd851d4fe1bf4e3718beabc29ca061212bad70f8af6ee
+    SHA512 11357dfab8cbf4b5d94d9d06e475732ca01df82bef1284888a34bd558afc37b1a239bed1b5eb18a9dbcc326344fb7b1b301f77bb8385131eb8e1e118b677883a
 )
 
 vcpkg_extract_source_archive(
     automake_source
     ARCHIVE ${ARCHIVE}
-    PATCHES
-       "consider_clang_cl.patch"
-       "consider_clang_cl_ar_lib.patch"
 )
 
 file(COPY 
