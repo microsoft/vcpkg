@@ -139,7 +139,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
 
             if(rpath_list STREQUAL "")
                 continue()
-            endif
+            endif()
 
             foreach(rpath IN LISTS rpath_list)
                 list(APPEND rpath_args "-delete_rpath" "${rpath}")
@@ -158,8 +158,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 endif()
 
                 message(STATUS "Adjusted RPATH of '${macho_file}' to '${new_rpath}'")
-            endif
-
+            endif()
         endforeach()
     endforeach()
 endfunction()
