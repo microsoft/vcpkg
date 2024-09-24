@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_FLAG_ESCAPING"
+        "AUTORECONF;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_FLAG_ESCAPING"
         "SOURCE_PATH"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
@@ -59,7 +59,7 @@ function(vcpkg_make_configure)
     vcpkg_make_get_shell(shell_var)
     set(shell_cmd "${shell_var}")
 
-    if(arg_AUTOCONFIG)
+    if(arg_AUTORECONF)
       vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
     endif()
 

@@ -30,7 +30,7 @@ endif()
 set(ENV{GTKDOCIZE} true)
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     COPY_SOURCE # include dir order problem
     OPTIONS
         ${options}

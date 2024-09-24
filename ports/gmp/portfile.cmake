@@ -60,7 +60,7 @@ if(VCPKG_CROSSCOMPILING)
 endif()
 
 vcpkg_make_configure(
-    AUTOCONFIG
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     LANGUAGES ${languages}
     OPTIONS
