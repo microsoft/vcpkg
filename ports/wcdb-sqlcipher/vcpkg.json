@@ -2,6 +2,9 @@
   "name": "wcdb-sqlcipher",
   "version": "1.4.6",
   "builtin-baseline": "509f71e53f45e46c13fa7935d2f6a45803580c07",
+  "description": "The sqlcipher whitch is maintained by WeChat team. The repo in homepage is just a wrap for vcpkg",
+  "homepage": "https://github.com/RightFS/sqlcipher",
+  "license": "BSD 3-Clause License",
   "dependencies": [
     {
       "name": "openssl",

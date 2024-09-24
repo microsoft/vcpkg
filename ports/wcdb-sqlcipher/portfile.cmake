@@ -6,9 +6,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RightFS/sqlcipher
-    REF 85adde3392c8474dcbb32ce628834886c9a1efcf
+    REF 5f7ef74d1b0134ec505e8341eabcf62170347b68
     HEAD_REF wcdb
-    SHA512 bcfc8a1d1abe2e71384a165ac35236b83edcb8dcbc11da081cc7eabd1a07b46b857b15d5e13ae63b46416aade5efb97689cafce0bf5d8ebd644e989fbb16554e
+    SHA512 ddd883c48a65873f8160518c932ee21e71c8876972aa708e234bb951b4687d5f96b6cd9b2daf565676af0db91dae3d379269780880d89e52008f81026c077e5a
 )
 
 vcpkg_cmake_configure(
