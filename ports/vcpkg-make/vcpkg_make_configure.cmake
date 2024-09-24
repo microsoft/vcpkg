@@ -89,7 +89,7 @@ function(vcpkg_make_configure)
             set(relative_build_path ".")
         endif()
 
-        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
+        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}" BUILD_TRIPLET "${BUILD_TRIPLET}")
 
         set(opts "")
         if(NOT arg_DISABLE_DEFAULT_OPTIONS)

@@ -248,7 +248,7 @@ endfunction()
 function(z_vcpkg_make_prepare_programs out_env)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "DISABLE_CPPFLAGS;DISABLE_MSVC_WRAPPERS"
-        "CONFIG"
+        "CONFIG;BUILD_TRIPLET"
         "LANGUAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -284,7 +284,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-            if(NOT BUILD_TRIPLET MATCHES "--host") # TODO: Check if this generates problems with the new triplet approach
+            if(NOT arg_BUILD_TRIPLET MATCHES "--host") # TODO: Check if this generates problems with the new triplet approach
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -306,7 +306,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-            if(NOT BUILD_TRIPLET MATCHES "--host")
+            if(NOT arg_BUILD_TRIPLET MATCHES "--host")
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -397,7 +397,7 @@ function(z_vcpkg_make_prepare_programs out_env)
 
         z_vcpkg_make_set_env(CC C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         z_vcpkg_make_set_env(CXX CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
-        if(NOT BUILD_TRIPLET MATCHES "--host")
+        if(NOT arg_BUILD_TRIPLET MATCHES "--host")
             z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E" ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(CXX_FOR_BUILD CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
