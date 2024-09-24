@@ -16,11 +16,7 @@ index 2eb8634..f8ff6f0 100644
      add_subdirectory( docs )
  endif()
 +
-+set(_includes)
-+foreach(_include_dir ${PUBLIC_HEADERS})
-+    list(APPEND _includes "${CMAKE_CURRENT_SOURCE_DIR}/${_include_dir}")
-+endforeach()
-+set_target_properties( ${LIB_TARGET} PROPERTIES PUBLIC_HEADER "${_includes}")
++set_target_properties(${LIB_TARGET} PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 +
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
