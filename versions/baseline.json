@@ -3862,7 +3862,7 @@
     },
     "json5-parser": {
       "baseline": "1.0.0",
-      "port-version": 6
+      "port-version": 7
     },
     "jsoncons": {
       "baseline": "0.177.0",
