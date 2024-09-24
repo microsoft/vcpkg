@@ -1,6 +1,7 @@
 {
   "name": "libressl",
   "version": "3.9.2",
+  "port-version": 1,
   "description": "LibreSSL is a version of the TLS/crypto stack forked from OpenSSL in 2014, with goals of modernizing the codebase, improving security, and applying best practice development processes.",
   "license": "ISC",
   "dependencies": [
