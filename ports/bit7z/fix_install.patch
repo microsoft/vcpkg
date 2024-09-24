@@ -11,10 +11,16 @@ index 2eb8634..f8ff6f0 100644
                  PRIVATE ${HEADERS} ${SOURCES} )
  
  # additional target without the architecture suffix in the name
-@@ -246,3 +246,29 @@ endif()
+@@ -246,3 +246,32 @@ endif()
  if( BIT7Z_BUILD_DOCS )
      add_subdirectory( docs )
  endif()
++
++set(_includes)
++foreach(_include_dir ${PUBLIC_HEADERS})
++    list(APPEND _includes "${CMAKE_CURRENT_SOURCE_DIR}/${_include_dir}")
++endforeach()
++set_target_properties( ${LIB_TARGET} PROPERTIES PUBLIC_HEADER "${_includes}")
 +
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
@@ -34,10 +40,8 @@ index 2eb8634..f8ff6f0 100644
 +    COMPONENT bit7z
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 +    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+
-+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/bit7z
-+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bit7z COMPONENT bit7z_development)
 +
 +install(EXPORT unofficial-bit7z-targets FILE unofficial-bit7z-targets.cmake NAMESPACE unofficial::bit7z:: DESTINATION share/unofficial-bit7z)
 +
