@@ -53,12 +53,29 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_${vcxproj}" "${vcxproj_con}")
     endforeach()
 
-     vcpkg_msbuild_install(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
-        TARGET "lame"
-        PLATFORM "${platform}"
-    )
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_msbuild_install(
+            SOURCE_PATH "${SOURCE_PATH}"
+            PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
+            TARGET "libmp3lame-static"
+            PLATFORM "${platform}"
+        )
+    else()
+        vcpkg_msbuild_install(
+            SOURCE_PATH "${SOURCE_PATH}"
+            PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
+            TARGET "libmp3lame"
+            PLATFORM "${platform}"
+        )
+    endif()
+    if("frontend" IN_LIST FEATURES)
+        vcpkg_msbuild_install(
+            SOURCE_PATH "${SOURCE_PATH}"
+            PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
+            TARGET "lame"
+            PLATFORM "${platform}"
+        )
+    endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -94,6 +111,12 @@ else()
         else()
             set(MP3LAME_LIB "libmp3lame${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
         endif()
+    endif()
+
+    if("frontend" IN_LIST FEATURES)
+        list(APPEND OPTIONS --enable-frontend)
+    else()
+        list(APPEND OPTIONS --disable-frontend)
     endif()
 
     if(NOT VCPKG_TARGET_IS_MINGW)

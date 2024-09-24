@@ -1,0 +1,26 @@
+diff --git a/Makefile b/Makefile
+index 99142c8..97cd369 100644
+--- a/Makefile
++++ b/Makefile
+@@ -857,15 +857,19 @@ $(srcprefix)htslib.map: libhts.so
+ 	    rm -f $@.tmp ; \
+ 	fi
+ 
+-install: libhts.a $(BUILT_PROGRAMS) $(BUILT_PLUGINS) installdirs install-$(SHLIB_FLAVOUR) install-pkgconfig
++install: $(BUILT_PROGRAMS) $(BUILT_PLUGINS) installdirs install-pkgconfig
+ 	$(INSTALL_PROGRAM) $(BUILT_PROGRAMS) $(DESTDIR)$(bindir)
+ 	if test -n "$(BUILT_PLUGINS)"; then $(INSTALL_PROGRAM) $(BUILT_PLUGINS) $(DESTDIR)$(plugindir); fi
+ 	$(INSTALL_DATA) $(SRC)htslib/*.h $(DESTDIR)$(includedir)/htslib
+-	$(INSTALL_DATA) libhts.a $(DESTDIR)$(libdir)/libhts.a
+ 	$(INSTALL_MAN) $(SRC)annot-tsv.1 $(SRC)bgzip.1 $(SRC)htsfile.1 $(SRC)tabix.1 $(DESTDIR)$(man1dir)
+ 	$(INSTALL_MAN) $(SRC)faidx.5 $(SRC)sam.5 $(SRC)vcf.5 $(DESTDIR)$(man5dir)
+ 	$(INSTALL_MAN) $(SRC)htslib-s3-plugin.7 $(DESTDIR)$(man7dir)
+ 
++install-static: install
++	$(INSTALL_DATA) libhts.a $(DESTDIR)$(libdir)/libhts.a
++
++install-dynamic: install install-$(SHLIB_FLAVOUR)
++
+ installdirs:
+ 	$(INSTALL_DIR) $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)$(includedir)/htslib $(DESTDIR)$(libdir) $(DESTDIR)$(man1dir) $(DESTDIR)$(man5dir) $(DESTDIR)$(man7dir) $(DESTDIR)$(pkgconfigdir)
+ 	if test -n "$(plugindir)"; then $(INSTALL_DIR) $(DESTDIR)$(plugindir); fi

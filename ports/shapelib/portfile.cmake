@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/shapelib/shapelib-${VERSION}.zip"
     FILENAME "shapelib-${VERSION}.zip"
-    SHA512 f3f43f2028fe442e020558de2559b24eae9c7a1d0c84cc242f23ea985cf1fb5ff39fbfef7738f9b8ef5df9a5d0b9f3e891a61b3d5fbbe5b224f41a46589723a3
+    SHA512 50859bbd1ea8808aa06cd112cc16cc77c1bd29d93129180818a5ea3a753b63de4039f232d1d9f13ebd7d076e427d10036e5f00775e633eb637da511625fa29bb
 )
 
 vcpkg_extract_source_archive(
@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
         contrib     BUILD_SHAPELIB_CONTRIB
+        tools       BUILD_APPS
 )
 
 vcpkg_cmake_configure(
@@ -19,27 +20,31 @@ vcpkg_cmake_configure(
     OPTIONS
         ${options}
         -DBUILD_TESTING=OFF
+        -DUSE_RPATH=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_copy_tools(
-    TOOL_NAMES
-        dbfadd
-        dbfcreate
-        dbfdump
-        shpadd
-        shpcreate
-        shpdump
-        shprewind
-        shptreedump
-    AUTO_CLEAN
-)
+if(BUILD_APPS)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            dbfadd
+            dbfcreate
+            dbfdump
+            shpadd
+            shpcreate
+            shpdump
+            shprewind
+            shptreedump
+        AUTO_CLEAN
+    )
+endif()
 if(BUILD_SHAPELIB_CONTRIB)
     vcpkg_copy_tools(
         TOOL_NAMES

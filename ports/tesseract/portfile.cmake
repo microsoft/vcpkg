@@ -1,16 +1,13 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(tesseract_patch fix-depend-libarchive.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 a81c98c3754a71093df7b51390ccd43d05f661352b4cb564e403b96d81909664c2ecbf2eb6f37614c4639e6dadbf2329b926d09271dbbdaa302f2d7b6b0d628a
+    SHA512 a97a31d1b735930a3e8b17bc2eae24210d8242d31399822f8bc2e9f18903d513cf6d02b2274e2f3ce431183467570b3327e01cbc49dca80e38acb90327cc235e
     PATCHES
-        ${tesseract_patch}
         fix_static_link_icu.patch
         fix-link-include-path.patch
+        fix-share-build.patch
+        target-curl.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -55,7 +52,7 @@ if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS
         ambiguous_words classifier_tester combine_tessdata
         cntraining dawg2wordlist mftraining shapeclustering
-        wordlist2dawg combine_lang_model lstmeval lstmtraining
+        wordlist2dawg combine_lang_model lstmeval lstmtraining text2image
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)

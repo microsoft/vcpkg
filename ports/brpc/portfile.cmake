@@ -2,11 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/brpc
     REF "${VERSION}"
-    SHA512 a908c3cf63224d6fb98f1855aca75c3adf528c40da5180c6e298cc52ee9ccbef08809a81078333bdd6ac1a4af54448edac8dd4e0333e72e9dec2790454355e7a
+    SHA512 cc1a373d94752c43376a731b4f08dc559bffcd67bdad7e22268a2a20a1034b40d658d591d946d4c1aa94287060146eb041626e0354188ee7dc41554512d72490
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-glog.patch
+        fix-warnings.patch
+        protobuf.patch
+        fix-compilation-error.patch
 )
 
 vcpkg_cmake_configure(
