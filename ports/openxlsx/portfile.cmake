@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenXLSX)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_copy_pdbs()
 
 
 # Handle copyright
