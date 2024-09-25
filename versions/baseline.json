@@ -1741,7 +1741,7 @@
       "port-version": 0
     },
     "cmark": {
-      "baseline": "0.30.3",
+      "baseline": "0.31.1",
       "port-version": 0
     },
     "cminpack": {
