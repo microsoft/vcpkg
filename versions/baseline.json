@@ -648,6 +648,10 @@
       "baseline": "3.0",
       "port-version": 3
     },
+    "bit7z": {
+      "baseline": "4.0.8",
+      "port-version": 0
+    },
     "bitmagic": {
       "baseline": "7.13.4",
       "port-version": 0
@@ -2838,11 +2842,11 @@
     },
     "fmt": {
       "baseline": "11.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "folly": {
       "baseline": "2024.09.16.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3862,7 +3866,7 @@
     },
     "json5-parser": {
       "baseline": "1.0.0",
-      "port-version": 6
+      "port-version": 7
     },
     "jsoncons": {
       "baseline": "0.177.0",
@@ -5106,7 +5110,7 @@
     },
     "libsrt": {
       "baseline": "1.5.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libsrtp": {
       "baseline": "2.5.0",
@@ -5662,7 +5666,7 @@
     },
     "magma": {
       "baseline": "2.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "magnum": {
       "baseline": "2020.06",

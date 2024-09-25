@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2eb8634..f8ff6f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,7 +179,7 @@ message( STATUS "Language Standard for bit7z: C++${CMAKE_CXX_STANDARD}" )
+ set( LIB_TARGET bit7z${ARCH_POSTFIX} )
+ add_library( ${LIB_TARGET} STATIC )
+ target_sources( ${LIB_TARGET}
+-                PUBLIC ${PUBLIC_HEADERS}
++                # PUBLIC ${PUBLIC_HEADERS}
+                 PRIVATE ${HEADERS} ${SOURCES} )
+ 
+ # additional target without the architecture suffix in the name
+@@ -246,3 +246,29 @@ endif()
+ if( BIT7Z_BUILD_DOCS )
+     add_subdirectory( docs )
+ endif()
++
++set_target_properties(${LIB_TARGET} PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-bit7z-config.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/unofficial-bit7z-config.cmake"
++  INSTALL_DESTINATION "share/unofficial-bit7z"
++)
++install(
++  FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-bit7z-config.cmake"
++  DESTINATION "share/unofficial-bit7z"
++)
++
++include(GNUInstallDirs)
++install(
++    TARGETS ${LIB_TARGET}
++    EXPORT unofficial-bit7z-targets
++    COMPONENT bit7z
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bit7z COMPONENT bit7z_development)
++
++install(EXPORT unofficial-bit7z-targets FILE unofficial-bit7z-targets.cmake NAMESPACE unofficial::bit7z:: DESTINATION share/unofficial-bit7z)
++
