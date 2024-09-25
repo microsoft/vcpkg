@@ -513,7 +513,7 @@
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.7.0",
+      "baseline": "12.8.0",
       "port-version": 0
     },
     "azure-storage-cpp": {
