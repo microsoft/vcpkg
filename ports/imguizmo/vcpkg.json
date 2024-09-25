@@ -1,6 +1,7 @@
 {
   "name": "imguizmo",
   "version-date": "2024-05-29",
+  "port-version": 1,
   "description": "Immediate mode 3D gizmo for scene editing and other controls based on Dear ImGui",
   "homepage": "https://github.com/CedricGuillemet/ImGuizmo",
   "license": "MIT",

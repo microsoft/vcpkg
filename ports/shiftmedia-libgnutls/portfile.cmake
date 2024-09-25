@@ -11,6 +11,7 @@ vcpkg_from_github(
         pkgconfig.patch
         ssize_t_already_define.patch
         fix-warnings.patch
+        mkdir.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
@@ -173,3 +174,4 @@ configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gnutls")

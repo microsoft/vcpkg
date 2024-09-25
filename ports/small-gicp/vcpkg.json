@@ -1,6 +1,6 @@
 {
   "name": "small-gicp",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Efficient and parallelized algorithms for point cloud registration",
   "homepage": "https://github.com/koide3/small_gicp",
   "license": "MIT",
@@ -17,6 +17,9 @@
     }
   ],
   "features": {
+    "openmp": {
+      "description": "Enable OpenMP based parallelism."
+    },
     "pcl": {
       "description": "Enable interfacing with PointCloud Library.",
       "dependencies": [

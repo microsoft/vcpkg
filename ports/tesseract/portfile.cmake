@@ -7,6 +7,7 @@ vcpkg_from_github(
         fix_static_link_icu.patch
         fix-link-include-path.patch
         fix-share-build.patch
+        target-curl.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
