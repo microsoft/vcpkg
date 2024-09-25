@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-tools.patch
+        android-off_t.patch
 )
 
 vcpkg_find_acquire_program(NASM)
