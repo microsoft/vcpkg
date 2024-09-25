@@ -13,7 +13,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
     REF "v${VERSION}"
-    SHA512 5e4ee9870b30fe5ba484d39781c435716f7f3903793dc8aae96594ca813b1a5a73363b84719038ca8fa3ab8ef0a419a28410d936ff7b3bbadf36fc085a6883ae
+    SHA512 39566b7ecae7ae159822ee1c2c03a7af9ba6e228c3bbecea4079bdbd2332b42f03f79af08303a2685d04723f996d230cf95e5afc4d2a3880158a80429e21c190
     HEAD_REF master
     PATCHES
       "correct-paths.patch"
