@@ -3005,7 +3005,7 @@
       "port-version": 5
     },
     "gcem": {
-      "baseline": "1.17.0",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "gdal": {
