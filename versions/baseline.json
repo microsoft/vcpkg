@@ -5264,6 +5264,10 @@
       "baseline": "20231127",
       "port-version": 0
     },
+    "libvmaf": {
+      "baseline": "3.0.0",
+      "port-version": 0
+    },
     "libvmdk": {
       "baseline": "20221124",
       "port-version": 1
