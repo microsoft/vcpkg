@@ -83,6 +83,7 @@ if(ENABLE_INTEL_CPU)
 endif()
 
 if(ENABLE_INTEL_NPU)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_INTEL_NPU_INTERNAL=OFF")
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/level-zero
