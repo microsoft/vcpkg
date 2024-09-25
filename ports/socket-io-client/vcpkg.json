@@ -2,7 +2,7 @@
   "name": "socket-io-client",
   "version-date": "2023-11-11",
   "description": "C++11 implementation of Socket.IO client",
-  "homepage": "https://github.com/socketio/socket.io-client-cpp",
+  "homepage": "https://github.com/Hatoribocchi/socket.io-client-cpp",
   "license": "MIT",
   "dependencies": [
     "asio",
