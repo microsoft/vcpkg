@@ -1,7 +1,6 @@
 {
   "name": "libmariadb",
-  "version-semver": "3.3.1",
-  "port-version": 4,
+  "version-semver": "3.4.1",
   "description": "MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases",
   "homepage": "https://github.com/MariaDB/mariadb-connector-c",
   "license": "LGPL-2.1-or-later",
@@ -23,12 +22,10 @@
   "features": {
     "iconv": {
       "description": "Enables character set conversion",
+      "supports": "!windows",
       "dependencies": [
         "libiconv"
       ]
-    },
-    "mariadbclient": {
-      "description": "Build the static mariadbclient library"
     },
     "openssl": {
       "description": "SSL support (OpenSSL)",
@@ -60,9 +57,6 @@
           "platform": "!windows & !mingw"
         }
       ]
-    },
-    "zlib": {
-      "description": "Obsolete. zlib is always used. This feature is left for compatibility."
     },
     "zstd": {
       "description": "Build zstd compression plugin.",
