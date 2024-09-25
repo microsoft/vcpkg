@@ -1,7 +1,6 @@
 {
   "name": "libvmaf",
   "version": "3.0.0",
-  "port-version": 1,
   "description": "libvmaf is a library developed by Netflix to compute the VMAF (Video Multi-Method Assessment Fusion) metric.",
   "homepage": "https://github.com/Netflix/vmaf",
   "license": "BSD-2-Clause-Patent",
