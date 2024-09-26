@@ -1,7 +1,7 @@
 {
   "name": "enkits",
   "version": "1.11",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A permissively licensed C and C++ Task Scheduler for creating parallel programs.",
   "homepage": "https://github.com/dougbinks/enkiTS",
   "license": "Zlib",

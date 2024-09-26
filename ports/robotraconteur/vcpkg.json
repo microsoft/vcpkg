@@ -1,6 +1,6 @@
 {
   "name": "robotraconteur",
-  "version-semver": "1.2.1",
+  "version-semver": "1.2.2",
   "description": "The Robot Raconteur communication framework core library",
   "homepage": "https://www.robotraconteur.com",
   "license": "Apache-2.0",

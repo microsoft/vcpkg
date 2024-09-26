@@ -1,6 +1,6 @@
 {
   "name": "sciter-js",
-  "version": "5.0.3.0",
+  "version": "5.0.3.14",
   "description": "Sciter.JS - Sciter but with QuickJS on board instead of TIScript. Sciter is an embeddable HTML/CSS/scripting engine.",
   "homepage": "https://gitlab.com/sciter-engine/sciter-js-sdk",
   "supports": "!uwp & !arm & !static",

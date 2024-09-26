@@ -1,10 +1,12 @@
 set(FFMPEG_PREV_MODULE_PATH ${CMAKE_MODULE_PATH})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-include(SelectLibraryConfigurations)
-
 cmake_policy(SET CMP0012 NEW)
 
+# Detect if we use "our" find module or a vendored one
+set(z_vcpkg_using_vcpkg_find_ffmpeg OFF)
+
+# Detect targets created e.g. by VTK/CMake/FindFFMPEG.cmake
 set(vcpkg_no_avcodec_target ON)
 set(vcpkg_no_avformat_target ON)
 set(vcpkg_no_avutil_target ON)
@@ -23,6 +25,11 @@ if(TARGET FFmpeg::swresample)
 endif()
 
 _find_package(${ARGS})
+
+# Fixup of variables and targets for (some) vendored find modules
+if(NOT z_vcpkg_using_vcpkg_find_ffmpeg)
+
+include(SelectLibraryConfigurations)
 
 if(WIN32)
   set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)
@@ -282,10 +289,14 @@ if(@WITH_OPENCL@)
   endif()
 endif()
 
+endif(NOT z_vcpkg_using_vcpkg_find_ffmpeg)
+unset(z_vcpkg_using_vcpkg_find_ffmpeg)
+
 set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
 
 set(CMAKE_MODULE_PATH ${FFMPEG_PREV_MODULE_PATH})
 
-unset(vcpkg_no_avformat_target)
 unset(vcpkg_no_avcodec_target)
+unset(vcpkg_no_avformat_target)
 unset(vcpkg_no_avutil_target)
+unset(vcpkg_no_swresample_target)

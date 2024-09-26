@@ -1,6 +1,7 @@
 {
   "name": "qtconnectivity",
   "version": "6.7.2",
+  "port-version": 1,
   "description": "The Qt Connectivity module provides access to Bluetooth and NFC hardware.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -19,7 +20,7 @@
       "features": [
         "dbus"
       ],
-      "platform": "!(windows & static)"
+      "platform": "!(windows & static) & !android & !ios"
     }
   ]
 }

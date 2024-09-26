@@ -7,6 +7,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         FindCMath.patch
+        prefer-config.diff
         requires-lerc.patch
 )
 
@@ -34,7 +35,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF

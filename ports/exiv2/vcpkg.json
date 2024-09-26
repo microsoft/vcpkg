@@ -1,11 +1,11 @@
 {
   "name": "exiv2",
-  "version": "0.28.1",
+  "version": "0.28.3",
   "port-version": 1,
   "description": "Image metadata library and tools",
   "homepage": "https://exiv2.org",
   "license": "GPL-2.0-or-later",
-  "supports": "!uwp & !xbox",
+  "supports": "!xbox",
   "dependencies": [
     "inih",
     {
@@ -31,20 +31,19 @@
     "nls": {
       "description": "Build native language support",
       "dependencies": [
-        "gettext",
         {
           "name": "gettext",
           "host": true,
           "features": [
             "tools"
           ]
-        }
+        },
+        "gettext-libintl"
       ]
     },
     "png": {
       "description": "Build with png support",
       "dependencies": [
-        "libpng",
         "zlib"
       ]
     },

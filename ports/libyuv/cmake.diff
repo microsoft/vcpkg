@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9a20941d..d161326c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,8 +4,9 @@
+ 
+ include(CheckCSourceCompiles)
+ 
++cmake_minimum_required(VERSION 3.12)
+ project ( YUV C CXX )	# "C" is required even for C++ projects
+-cmake_minimum_required( VERSION 2.8.12 )
++option( BUILD_TOOLS "Build tools" OFF )
+ option( UNIT_TEST "Built unit tests" OFF )
+ 
+ set ( ly_base_dir	${PROJECT_SOURCE_DIR} )
+@@ -149,6 +150,8 @@ if(WIN32)
+   set_target_properties( ${ly_lib_shared} PROPERTIES IMPORT_PREFIX "lib" )
+ endif()
+ 
++if (BUILD_TOOLS)
++
+ # this creates the cpuid tool
+ add_executable      ( cpuid ${ly_base_dir}/util/cpuid.c )
+ target_link_libraries  ( cpuid ${ly_lib_static} )
+@@ -161,10 +164,13 @@ target_link_libraries	( yuvconvert ${ly_lib_static} )
+ add_executable      ( yuvconstants ${ly_base_dir}/util/yuvconstants.c )
+ target_link_libraries  ( yuvconstants ${ly_lib_static} )
+ 
++endif()
++
+ find_package ( JPEG )
+ if (JPEG_FOUND)
+   include_directories( ${JPEG_INCLUDE_DIR} )
+-  target_link_libraries( ${ly_lib_shared} ${JPEG_LIBRARY} )
++  target_link_libraries( ${ly_lib_static} PRIVATE JPEG::JPEG )
++  target_link_libraries( ${ly_lib_shared} PRIVATE JPEG::JPEG )
+   add_definitions( -DHAVE_JPEG )
+ endif()
+ 
+@@ -211,9 +217,20 @@ endif()
+ 
+ 
+ # install the conversion tool, .so, .a, and all the header files
+-install ( PROGRAMS ${CMAKE_BINARY_DIR}/yuvconvert			DESTINATION bin )
+-install ( TARGETS ${ly_lib_static}						DESTINATION lib )
+-install ( TARGETS ${ly_lib_shared} LIBRARY				DESTINATION lib RUNTIME DESTINATION bin )
++if (BUILD_TOOLS)
++  install(TARGETS yuvconvert yuvconstants)
++endif()
++if(BUILD_SHARED_LIBS)
++  target_include_directories(${ly_lib_shared} PUBLIC $<INSTALL_INTERFACE:include>)
++  install(TARGETS ${ly_lib_shared} EXPORT libyuv-targets)
++  set_target_properties(${ly_lib_shared} PROPERTIES EXPORT_NAME "${ly_lib_static}") # vcpkg legacy
++  add_definitions(-DLIBYUV_BUILDING_SHARED_LIBRARY)
++else()
++  target_include_directories(${ly_lib_static} PUBLIC $<INSTALL_INTERFACE:include>)
++  install(TARGETS ${ly_lib_static} EXPORT libyuv-targets)
++  set_target_properties(${ly_lib_shared} PROPERTIES EXCLUDE_FROM_ALL 1)
++endif()
++install(EXPORT libyuv-targets DESTINATION share/libyuv)
+ install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/		DESTINATION include )
+ 
+ # create the .deb and .rpm packages using cpack
