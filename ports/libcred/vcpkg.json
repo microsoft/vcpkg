@@ -4,8 +4,13 @@
   "description": "a cross-platform credentials helper library",
   "homepage": "https://github.com/mamba-org/libcred",
   "license": "MIT",
-  "supports": "(windows & x64) | (windows & x86)",
+  "supports": "(windows & x64) | (windows & x86) | (linux & x86) | (linux & x64)",
   "dependencies": [
+    {
+      "name": "libsecret",
+      "host": true,
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
