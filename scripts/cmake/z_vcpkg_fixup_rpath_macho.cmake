@@ -135,30 +135,30 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             list(FIND rpath_list "${new_rpath}" has_new_rpath)
             if(NOT has_new_rpath EQUAL -1)
                 list(REMOVE_AT rpath_list ${has_new_rpath})
+                set(rpath_args)
+            else()
+                set(rpath_args -add_rpath "${new_rpath}")
             endif()
-
-            if(rpath_list STREQUAL "")
-                continue()
-            endif()
-
             foreach(rpath IN LISTS rpath_list)
                 list(APPEND rpath_args "-delete_rpath" "${rpath}")
             endforeach()
-
-            if(NOT rpath_args STREQUAL "")
-                execute_process(
-                    COMMAND "${install_name_tool_cmd}" ${rpath_args} "${macho_file}"
-                    OUTPUT_QUIET
-                    ERROR_VARIABLE set_rpath_error
-                )
-
-                if(NOT "${set_rpath_error}" STREQUAL "")
-                    message(WARNING "Couldn't adjust RPATH of '${macho_file}': ${set_rpath_error}")
-                    continue()
-                endif()
-
-                message(STATUS "Adjusted RPATH of '${macho_file}' to '${new_rpath}'")
+            if(rpath_args STREQUAL "")
+                continue()
             endif()
+
+            # Set the new rpath
+            execute_process(
+                COMMAND "${install_name_tool_cmd}" ${rpath_args} "${macho_file}"
+                OUTPUT_QUIET
+                ERROR_VARIABLE set_rpath_error
+            )
+
+            if(NOT "${set_rpath_error}" STREQUAL "")
+                message(WARNING "Couldn't adjust RPATH of '${macho_file}': ${set_rpath_error}")
+                continue()
+            endif()
+
+            message(STATUS "Adjusted RPATH of '${macho_file}' to '${new_rpath}'")
         endforeach()
     endforeach()
 endfunction()
