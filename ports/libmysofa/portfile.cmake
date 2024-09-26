@@ -8,6 +8,14 @@ vcpkg_from_github(
       use-vcpkg-zlib.patch
 )
 
+# default.sofa is a symlink to MIT_KEMAR_normal_pinna.sofa, which can cause problems when downstream tries to copy these files around.
+# Delete that symlink and just make a copy of the file instead
+# We do this before we even configure so that the port otherwise remains unaltered
+if(EXISTS "${SOURCE_PATH}/share/default.sofa")
+    file(REMOVE "${SOURCE_PATH}/share/default.sofa")
+endif()
+file(COPY_FILE "${SOURCE_PATH}/share/MIT_KEMAR_normal_pinna.sofa" "${SOURCE_PATH}/share/default.sofa")
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_cmake_configure(
@@ -24,13 +32,6 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-# default.sofa is a symlink to MIT_KEMAR_normal_pinna.sofa, which can cause problems when downstream tries to copy these files around.
-# Delete that symlink and just make a copy of the file instead
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/default.sofa")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/share/default.sofa")
-endif()
-file(COPY_FILE "${CURRENT_PACKAGES_DIR}/share/${PORT}/MIT_KEMAR_normal_pinna.sofa" "${CURRENT_PACKAGES_DIR}/share/${PORT}/default.sofa")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
