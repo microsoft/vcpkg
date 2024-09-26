@@ -1,5 +1,0 @@
-import os
-
-@PYTHON_DLL_SEARCH_DIRS@
-
-@PYTHON_IMPORTS@
