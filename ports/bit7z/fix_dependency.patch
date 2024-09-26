@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f8ff6f0..855b78d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -194,15 +194,22 @@ include( cmake/BuildOptions.cmake )
+ include( cmake/CompilerOptions.cmake )
+ 
+ # dependencies
+-include( cmake/Dependencies.cmake )
++# include( cmake/Dependencies.cmake )
++find_package(7zip CONFIG REQUIRED)
++add_library(7-zip ALIAS 7zip::7zip)
+ 
+ # 7-zip source code
+ target_link_libraries( ${LIB_TARGET} PRIVATE 7-zip )
+ 
+ # filesystem library (needed if std::filesystem is not available)
++if(0)
+ if( ghc_filesystem_ADDED )
+     target_link_libraries( ${LIB_TARGET} PRIVATE ghc_filesystem )
+ endif()
++else()
++    find_package(ghc_filesystem CONFIG REQUIRED)
++    target_link_libraries(${LIB_TARGET} PRIVATE ghcFilesystem::ghc_filesystem )
++endif()
+ 
+ # public includes
+ target_include_directories( ${LIB_TARGET} PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
