@@ -4372,6 +4372,10 @@
       "baseline": "1.0",
       "port-version": 2
     },
+    "libcred": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "libcroco": {
       "baseline": "0.6.13",
       "port-version": 7

@@ -1,6 +1,6 @@
 {
-    "name": "libcred",
-    "version-string": "0.1.0",
-    "homepage": "https://github.com/mamba-org/libcred",
-    "description": "a cross-platform credentials helper library"
-  }
+  "name": "libcred",
+  "version": "0.1.0",
+  "description": "a cross-platform credentials helper library",
+  "homepage": "https://github.com/mamba-org/libcred"
+}
