@@ -9308,10 +9308,6 @@
       "baseline": "2024-04-03",
       "port-version": 0
     },
-    "vcpkg-python-test-import": {
-      "baseline": "2024-06-22",
-      "port-version": 0
-    },
     "vcpkg-qmake": {
       "baseline": "2023-03-22",
       "port-version": 3
