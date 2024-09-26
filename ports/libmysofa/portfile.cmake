@@ -24,5 +24,11 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# default.sofa is a symlink to MIT_KEMAR_normal_pinna.sofa, which can cause problems when downstream tries to copy these files around.
+# Delete that symlink and just make a copy of the file instead
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/default.sofa")
+file(COPY_FILE "${CURRENT_PACKAGES_DIR}/share/MIT_KEMAR_normal_pinna.sofa" "${CURRENT_PACKAGES_DIR}/share/default.sofa")
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
