@@ -138,14 +138,15 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             endif()
 
             if(rpath_list STREQUAL "")
-                continue()
+                list(APPEND rpath_args "-add_rpath" "${new_rpath}")
+            else()
+                foreach(rpath IN LISTS rpath_list)
+                    list(APPEND rpath_args "-delete_rpath" "${rpath}")
+                endforeach()
+                list(APPEND rpath_args "-add_rpath" "${new_rpath}")
             endif()
 
-            foreach(rpath IN LISTS rpath_list)
-                list(APPEND rpath_args "-delete_rpath" "${rpath}")
-            endforeach()
-
-            if(NOT rpath_args STREQUAL "")
+            if(NOT "${rpath_args}" STREQUAL "")
                 execute_process(
                     COMMAND "${install_name_tool_cmd}" ${rpath_args} "${macho_file}"
                     OUTPUT_QUIET
