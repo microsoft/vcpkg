@@ -1,0 +1,14 @@
+{
+  "name": "jigson",
+  "version": "0.1.3",
+  "description": "A simple C++ library designed to facilitate easy mapping from json content to a class model.",
+  "homepage": "https://github.com/JoshuaSledden/Jigson",
+  "license": "MIT",
+  "dependencies": [
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

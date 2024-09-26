@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 8ad405815257d670d143c83ae06591f1c97f05c0a07100d8b2e1e8a3ed4b8665659a01fc9f0eed53e57d32515d048308431151b7d00c2fc33c4be8e808ddb1bb
+    SHA512 4b472bb66020ddea715a4c3d19613b4ec9e389a32c8b6b9089d1a160ab23d3ffc6a2e77e43d7d4b1a1546aa5ea0ac04fdeee7a5496739d51f3ab0d1fe6961f62
     HEAD_REF main
     PATCHES 
         fix-glog.patch
@@ -34,8 +34,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/folly_dynamic/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/frozen/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/patch/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/detail/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/tool"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/runtime/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
@@ -49,6 +51,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/payload/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/gtest/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test"
