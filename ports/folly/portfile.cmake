@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 4e73e6f1acbd4f04ca4e97c5b7b562c33fdbf320a57af672a3ce777688aaedcaba9102e93822855d8053b323c3074da4a2e279d710b3c706825ca37d3c99462e
+    SHA512 3575ffb109c84c6070679ef7654e37f600ad19ca7e4e90840e0a4ea16f6ffdb29ecaba1fe05c2a2224d914258688b5bdf77f10f5ffa0f0e097a4e05e21f001b6
     HEAD_REF main
     PATCHES
         disable-non-underscore-posix-names.patch
@@ -17,7 +17,7 @@ vcpkg_from_github(
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
-        fix-fmt11-cmake.patch
+        fix-fmt-patch-for-old-cmake.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")

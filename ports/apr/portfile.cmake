@@ -44,6 +44,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     vcpkg_copy_pdbs()
+
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage-cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
 else()
     # To cross-compile you will need a triplet file that locates the tool chain and sets --host and --cache parameters of "./configure".
     # The ${VCPKG_PLATFORM_TOOLSET}.cache file must have been generated on the targeted host using "./configure -C".
