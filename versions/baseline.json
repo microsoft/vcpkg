@@ -109,12 +109,12 @@
       "port-version": 1
     },
     "ampl-asl": {
-      "baseline": "2020-11-11",
-      "port-version": 3
+      "baseline": "2024-02-01",
+      "port-version": 0
     },
     "ampl-mp": {
       "baseline": "2020-11-11",
-      "port-version": 4
+      "port-version": 5
     },
     "amqpcpp": {
       "baseline": "4.3.26",
@@ -509,11 +509,11 @@
       "port-version": 1
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.12.0",
+      "baseline": "12.13.0",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.7.0",
+      "baseline": "12.8.0",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -521,15 +521,15 @@
       "port-version": 6
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.11.0",
+      "baseline": "12.12.0",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.10.0",
+      "baseline": "12.11.0",
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.3.0",
+      "baseline": "12.4.0",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -1741,7 +1741,7 @@
       "port-version": 0
     },
     "cmark": {
-      "baseline": "0.30.3",
+      "baseline": "0.31.1",
       "port-version": 0
     },
     "cminpack": {
@@ -2333,7 +2333,7 @@
       "port-version": 0
     },
     "discount": {
-      "baseline": "3.0.0a",
+      "baseline": "3.0.0d",
       "port-version": 0
     },
     "discreture": {
@@ -2441,8 +2441,8 @@
       "port-version": 7
     },
     "dxut": {
-      "baseline": "11.31",
-      "port-version": 3
+      "baseline": "11.32",
+      "port-version": 0
     },
     "dylib": {
       "baseline": "2.2.1",
@@ -2589,8 +2589,8 @@
       "port-version": 0
     },
     "etl": {
-      "baseline": "20.38.10",
-      "port-version": 1
+      "baseline": "20.39.4",
+      "port-version": 0
     },
     "eve": {
       "baseline": "2023.2.15",
@@ -2713,7 +2713,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.09.16.00",
+      "baseline": "2024.09.23.00",
       "port-version": 0
     },
     "fcl": {
@@ -2761,7 +2761,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.09.16.00",
+      "baseline": "2024.09.23.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2845,8 +2845,8 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2024.09.16.00",
-      "port-version": 1
+      "baseline": "2024.09.23.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3005,7 +3005,7 @@
       "port-version": 5
     },
     "gcem": {
-      "baseline": "1.17.0",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "gdal": {
@@ -3130,7 +3130,7 @@
     },
     "glib": {
       "baseline": "2.78.4",
-      "port-version": 3
+      "port-version": 4
     },
     "glib-networking": {
       "baseline": "2.78.0",
@@ -3649,7 +3649,7 @@
       "port-version": 0
     },
     "iir1": {
-      "baseline": "1.9.4",
+      "baseline": "1.9.5",
       "port-version": 0
     },
     "ijg-libjpeg": {
@@ -4765,7 +4765,7 @@
       "port-version": 1
     },
     "libmidi2": {
-      "baseline": "0.11",
+      "baseline": "0.12",
       "port-version": 0
     },
     "libmikmod": {
@@ -4806,6 +4806,10 @@
     },
     "libmupdf": {
       "baseline": "1.23.11",
+      "port-version": 0
+    },
+    "libmysofa": {
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "libmysql": {
@@ -5266,6 +5270,10 @@
     },
     "libvhdi": {
       "baseline": "20231127",
+      "port-version": 0
+    },
+    "libvmaf": {
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "libvmdk": {
@@ -6137,7 +6145,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.09.16.00",
+      "baseline": "2024.09.23.00",
       "port-version": 0
     },
     "mygui": {
@@ -7185,7 +7193,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.09.16.00",
+      "baseline": "2024.09.23.00",
       "port-version": 0
     },
     "psimd": {
@@ -8582,7 +8590,7 @@
     },
     "sqlpp11": {
       "baseline": "0.64",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlpp11-connector-mysql": {
       "baseline": "0.61",
@@ -9329,7 +9337,7 @@
       "port-version": 1
     },
     "vcpkg-tool-meson": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "vcpkg-tool-mozbuild": {
@@ -9497,7 +9505,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.09.16.00",
+      "baseline": "2024.09.23.00",
       "port-version": 0
     },
     "wasmedge": {
