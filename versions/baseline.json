@@ -6086,7 +6086,7 @@
     },
     "msh3": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "msinttypes": {
       "baseline": "2018-02-25",
