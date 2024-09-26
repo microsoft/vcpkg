@@ -8,9 +8,8 @@ vcpkg_from_github(
       use-vcpkg-zlib.patch
 )
 
-# default.sofa is a symlink to MIT_KEMAR_normal_pinna.sofa, which can cause problems when downstream tries to copy these files around.
-# Delete that symlink and just make a copy of the file instead
-# We do this before we even configure so that the port otherwise remains unaltered
+# default.sofa is a symlink to MIT_KEMAR_normal_pinna.sofa, 
+# which can cause problems e.g. on Windows file systems.
 if(EXISTS "${SOURCE_PATH}/share/default.sofa")
     file(REMOVE "${SOURCE_PATH}/share/default.sofa")
 endif()
