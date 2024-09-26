@@ -2,5 +2,16 @@
   "name": "libcred",
   "version": "0.1.0",
   "description": "a cross-platform credentials helper library",
-  "homepage": "https://github.com/mamba-org/libcred"
+  "homepage": "https://github.com/mamba-org/libcred",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
