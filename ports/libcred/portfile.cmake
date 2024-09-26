@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Shadowrom2020/libcred
-    REF baca5ae1f19d644ccb3b994f0a6530290cbb2fb2 #v0.1.0
-    SHA512 d63a51a790e3888f01efa9185e52f02ac0b49a14b15a75815b571216f1f7e825ae0e175dff41f0997595f7cbe6c6e76dc6ed357ddd58f58dc07531aba0404b05
-    HEAD_REF master
+    REPO mamba-org/libcred
+    REF 1adb08315a91045c5e820c224864a9b4aeedee42 #v0.1.0
+    SHA512 2b86cf0017c8e43f6d6eba378c00b56781b5d70b73d6251d8acde49f7fc698b41aaf2f0bb293211836ec9c3779828ae95cdc4041f3d0147c37352df007ad82bf
+    HEAD_REF main
 )
 
-vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
-vcpkg_cmake_install()
-
+vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_install_meson()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libcred" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/libcred" RENAME copyright)
-vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
