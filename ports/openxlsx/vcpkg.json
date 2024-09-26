@@ -1,6 +1,6 @@
 {
   "name": "openxlsx",
-  "version": "1.4.0",
+  "version": "0.4.1",
   "description": "OpenXLSX is a C++ library for reading, writing, creating and modifying Microsoft Excel® files, with the .xlsx format.",
   "homepage": "https://github.com/troldal/OpenXLSX",
   "license": "BSD-3-Clause",
