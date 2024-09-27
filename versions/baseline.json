@@ -6733,7 +6733,7 @@
       "port-version": 0
     },
     "openxlsx": {
-      "baseline": "0.4.1",
+      "baseline": "0.3.2",
       "port-version": 0
     },
     "openxr-loader": {
