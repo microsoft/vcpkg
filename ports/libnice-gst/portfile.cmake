@@ -6,7 +6,7 @@ vcpkg_from_gitlab(
     SHA512 545c759a827e039d0aed262a4ec31b17610f7e67d93389c939763ed3d99530a4a6c3d13864ff05a2011fb3c3847ce3380a988e554de0f92b1348ebb76f5e3da4
     HEAD_REF master
     PATCHES
-      skip_dep.patch
+       skip_dep.patch
 )
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
