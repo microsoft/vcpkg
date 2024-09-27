@@ -687,7 +687,7 @@ foreach(item IN LISTS standard_libraries)
 endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
-set(OPTIONS "${OPTIONS} --pkg-config=${PKGCONFIG}")
+set(OPTIONS "${OPTIONS} --pkg-config=\"${PKGCONFIG}\"")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()

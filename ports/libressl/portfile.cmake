@@ -1,7 +1,5 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(WARNING "Can't build libressl if openssl is installed. Please remove openssl, and try install libressl again if you need it. Build will continue since libressl is a subset of openssl")
-  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-  return()
+    message(FATAL_ERROR "Can't build libressl if openssl is installed. Please remove openssl, and try install libressl again if you need it.")
 endif()
 
 vcpkg_download_distfile(

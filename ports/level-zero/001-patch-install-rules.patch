@@ -1,0 +1,116 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 5ef252c..c9d05dd 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -49,21 +49,10 @@ endif()
+ target_link_libraries(${TARGET_LOADER_NAME} utils)
+ 
+ install(TARGETS ze_loader
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero
+-        NAMELINK_SKIP
+-)
+-
+-install(TARGETS ze_loader
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero-devel
+-        NAMELINK_ONLY
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero-devel
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT level-zero
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero
++    NAMELINK_COMPONENT level-zero-devel
+ )
+ 
+ if(UNIX)
+diff --git a/source/drivers/null/CMakeLists.txt b/source/drivers/null/CMakeLists.txt
+index b384434..0cb8801 100644
+--- a/source/drivers/null/CMakeLists.txt
++++ b/source/drivers/null/CMakeLists.txt
+@@ -21,18 +21,10 @@ target_include_directories(${TARGET_NAME}
+ 
+ if(INSTALL_NULL_DRIVER)
+     install(TARGETS ze_null
+-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        LIBRARY
+-            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-            COMPONENT level-zero
+-            NAMELINK_SKIP
+-    )
+-    install(TARGETS ze_null
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero-devel
+-        NAMELINK_ONLY
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero-devel
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT level-zero
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero
++        NAMELINK_COMPONENT level-zero-devel
+     )
+ endif()
+ 
+diff --git a/source/layers/tracing/CMakeLists.txt b/source/layers/tracing/CMakeLists.txt
+index 1dde028..63e0b20 100644
+--- a/source/layers/tracing/CMakeLists.txt
++++ b/source/layers/tracing/CMakeLists.txt
+@@ -49,20 +49,8 @@ set_target_properties(${TARGET_NAME} PROPERTIES
+ )
+ 
+ install(TARGETS ze_tracing_layer
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero
+-        NAMELINK_SKIP
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero-devel
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT level-zero
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero
++    NAMELINK_COMPONENT level-zero-devel
+ )
+-
+-install(TARGETS ze_tracing_layer
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero-devel
+-        NAMELINK_ONLY
+-)
+-
+diff --git a/source/layers/validation/CMakeLists.txt b/source/layers/validation/CMakeLists.txt
+index 3a4162c..ced5f21 100644
+--- a/source/layers/validation/CMakeLists.txt
++++ b/source/layers/validation/CMakeLists.txt
+@@ -37,21 +37,10 @@ set_target_properties(${TARGET_NAME} PROPERTIES
+ )
+ 
+ install(TARGETS ze_validation_layer
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero
+-        NAMELINK_SKIP
+-)
+-
+-install(TARGETS ze_validation_layer
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT level-zero-devel
+-        NAMELINK_ONLY
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero-devel
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT level-zero
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero
++    NAMELINK_COMPONENT level-zero-devel
+ )
+ 
+ add_subdirectory(handle_lifetime_tracking)

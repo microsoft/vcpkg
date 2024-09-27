@@ -9,6 +9,7 @@
 - [ ] The "supports" clause reflects platforms that may be fixed by this new version.
 - [ ] Any fixed [CI baseline](https://github.com/microsoft/vcpkg/blob/master/scripts/ci.baseline.txt) entries are removed from that file.
 - [ ] Any patches that are no longer applied are deleted from the port's directory.
+- [ ] When updating the upstream version, the `"port-version"` is reset (removed from `vcpkg.json`).
 - [ ] The version database is fixed by rerunning `./vcpkg x-add-version --all` and committing the result.
 - [ ] Only one version is added to each modified port's versions file.
 
