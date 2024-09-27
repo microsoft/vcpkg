@@ -4,7 +4,7 @@
   "port-version": 3,
   "description": "Libxlsxwriter is a C library that can be used to write text, numbers, formulas and hyperlinks to multiple worksheets in an Excel 2007+ XLSX file.",
   "homepage": "https://github.com/jmcnamara/libxlsxwriter",
-  "license": "FreeBSD",
+  "license": "BSD-2-Clause",
   "dependencies": [
     "minizip",
     {
