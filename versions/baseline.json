@@ -4809,8 +4809,8 @@
       "port-version": 0
     },
     "libnice-gst": {
-      "baseline": "0.1.21",
-      "port-version": 4
+      "baseline": "0.1.22",
+      "port-version": 0
     },
     "libnick": {
       "baseline": "2024.9.2",
