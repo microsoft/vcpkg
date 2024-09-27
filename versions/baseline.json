@@ -5606,7 +5606,7 @@
     },
     "luafilesystem": {
       "baseline": "1.8.0",
-      "port-version": 6
+      "port-version": 7
     },
     "luajit": {
       "baseline": "2023-01-04",
