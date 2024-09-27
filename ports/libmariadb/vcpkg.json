@@ -2,7 +2,7 @@
   "name": "libmariadb",
   "version-semver": "3.4.1",
   "description": "MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases",
-  "homepage": "https://github.com/MariaDB/mariadb-connector-c",
+  "homepage": "https://github.com/mariadb-corporation/mariadb-connector-c",
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
