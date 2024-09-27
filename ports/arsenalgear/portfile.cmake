@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 fd7a9029b74483dce4bac331b61fc76b3b7d2d9cf2cc43e45b3c7f1c3f458ccb3ca9cae779896a16cadf7fe6730db96ec3fa8a49972f8822b86b3f085d19fc71
     HEAD_REF main
+    PATCHES
+        disable-cppcheck.patch
 )
 
 # Main commands
