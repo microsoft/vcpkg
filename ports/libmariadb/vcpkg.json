@@ -7,6 +7,14 @@
   "supports": "!uwp & !xbox",
   "dependencies": [
     {
+      "name": "libmariadb",
+      "default-features": false,
+      "features": [
+        "iconv"
+      ],
+      "platform": "windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -22,9 +30,11 @@
   "features": {
     "iconv": {
       "description": "Enables character set conversion",
-      "supports": "!windows",
       "dependencies": [
-        "libiconv"
+        {
+          "name": "libiconv",
+          "platform": "!windows"
+        }
       ]
     },
     "openssl": {
