@@ -82,3 +82,17 @@ index 6cca9f3..9d79f1a 100644
  # Poor man's FetchContent
  function(add_subdirectory_if_no_target dir target)
    if (NOT TARGET ${target})
+diff --git a/cmake/ONNXOptimizerConfig.cmake.in b/cmake/ONNXOptimizerConfig.cmake.in
+index 72dcc88..c5639c8 100644
+--- a/cmake/ONNXOptimizerConfig.cmake.in
++++ b/cmake/ONNXOptimizerConfig.cmake.in
+@@ -3,6 +3,9 @@
+ #   ONNX_OPTIMIZER_INCLUDE_DIRS     - include directories for onnx optimizer
+ # as well as ONNX Optimizer targets for other cmake libraries to use.
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(onnx CONFIG)
++
+ # library version information
+ set(ONNX_OPTIMIZER_VERSION "@ONNX_OPTIMIZER_VERSION@")
+ 
