@@ -9,8 +9,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA-Omniverse/PhysX
-    REF 105.1-physx-5.3.0 # newest tag
-    SHA512 fa3897738aed583f0498587365aafc77107351d72888058d0b725bd39de1c33b37c99294b6346be165eaf3aa3c6228ca7ddb0a3b18e522c1fb79e2559d70b551
+    REF 106.1-physx-5.4.2 # newest tag
+    SHA512 2963895dc949544bc3d39df03898719fe089dd45ce9c0d642ddb3f5f2aa7c93ad0ba7a27fddc2143490f94ad3d80757acd7fb147883b71c5449c32d2d9aa4c71
     HEAD_REF main
 )
 
