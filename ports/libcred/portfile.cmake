@@ -10,6 +10,6 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_install_meson()
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libcred" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
