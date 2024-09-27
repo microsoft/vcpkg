@@ -1,3 +1,7 @@
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mamba-org/libcred
@@ -6,10 +10,10 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_install_meson()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
