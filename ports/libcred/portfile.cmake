@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_install_meson()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libcred" RENAME copyright)
