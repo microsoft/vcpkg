@@ -237,22 +237,21 @@ function(vcpkg_make_run_configure)
 
     z_vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
 
-    list(APPEND command  ${arg_CONFIGURE_ENV})
-    list(APPEND command  ${arg_CONFIGURE_PATH})
-
-    # Quote each option (to handle spaces in options)
-    set(quoted_options "")
-    foreach(option IN LISTS arg_OPTIONS)
-        string(APPEND quoted_options "\"${option}\" ")
+    vcpkg_list(SET tmp)
+    foreach(element IN LISTS arg_OPTIONS)
+        string(REPLACE [["]] [[\"]] element "${element}")
+        vcpkg_list(APPEND tmp "\"${element}\"")
     endforeach()
-   
+    vcpkg_list(JOIN tmp " " "arg_OPTIONS")
+    set(command ${arg_CONFIGURE_ENV} ${arg_CONFIGURE_PATH} ${arg_OPTIONS})
+
     message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
     vcpkg_run_shell(
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "config-${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}"
         SAVE_LOG_FILES config.log
         SHELL ${arg_SHELL}
-        COMMAND V=1 ${command} ${quoted_options}
+        COMMAND V=1 ${command}
     )
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(GLOB_RECURSE libtool_files "${arg_WORKING_DIRECTORY}*/libtool")
