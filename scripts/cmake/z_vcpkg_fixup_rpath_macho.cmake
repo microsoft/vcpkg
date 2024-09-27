@@ -160,7 +160,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 endif()
 
                 message(STATUS "Adjusted RPATH of '${macho_file}' to '${new_rpath}'")
-endif()
+            endif()
         endforeach()
     endforeach()
 endfunction()
