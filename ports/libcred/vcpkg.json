@@ -4,7 +4,7 @@
   "description": "a cross-platform credentials helper library",
   "homepage": "https://github.com/mamba-org/libcred",
   "license": "MIT",
-  "supports": "((windows & x64) | (windows & x86) | (linux & x86) | (linux & x64)) & !(static)",
+  "supports": "((windows & x64) | (windows & x86) | (linux & x86) | (linux & x64)) & !static",
   "dependencies": [
     {
       "name": "libsecret",
