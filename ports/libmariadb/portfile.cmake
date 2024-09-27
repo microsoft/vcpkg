@@ -21,7 +21,10 @@ vcpkg_from_github(
         no-abs-path.diff
         ushort-check.diff
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindIconv.cmake")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/cmake/FindIconv.cmake"
+    "${SOURCE_PATH}/external/zlib"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

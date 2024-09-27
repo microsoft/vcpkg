@@ -45,7 +45,7 @@
     },
     "schannel": {
       "description": "SSL support (Secure Channel)",
-      "supports": "windows | mingw"
+      "supports": "windows"
     },
     "ssl": {
       "description": "Default SSL backend",
@@ -56,7 +56,7 @@
           "features": [
             "schannel"
           ],
-          "platform": "windows | mingw"
+          "platform": "windows"
         },
         {
           "name": "libmariadb",
@@ -64,7 +64,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "!windows & !mingw"
+          "platform": "!windows"
         }
       ]
     },
