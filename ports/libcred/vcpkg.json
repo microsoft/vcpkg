@@ -10,6 +10,10 @@
       "name": "libsecret",
       "host": true,
       "platform": "linux"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
     }
   ]
 }
