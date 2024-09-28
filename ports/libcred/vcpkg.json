@@ -8,7 +8,10 @@
   "dependencies": [
     {
       "name": "libsecret",
-      "host": true,
+      "platform": "linux"
+    },
+    {
+      "name": "glib",
       "platform": "linux"
     },
     {
