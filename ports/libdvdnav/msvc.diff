@@ -9,3 +9,15 @@ index 4e1cbe1..5b7f18f 100644
 +#include <stdint.h>
  
  #endif
+diff --git a/src/dvdnav_internal.h b/src/dvdnav_internal.h
+index 495f032..7970596 100644
+--- a/src/dvdnav_internal.h
++++ b/src/dvdnav_internal.h
+@@ -39,6 +39,7 @@ typedef CRITICAL_SECTION pthread_mutex_t;
+ #ifndef HAVE_GETTIMEOFDAY
+ /* replacement gettimeofday implementation */
+ #include <sys/timeb.h>
++#include <winsock2.h>
+ static inline int _private_gettimeofday( struct timeval *tv, void *tz )
+ {
+   struct timeb t;
