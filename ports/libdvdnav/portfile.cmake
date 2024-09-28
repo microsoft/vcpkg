@@ -6,6 +6,7 @@ vcpkg_from_gitlab(
     SHA512 080814c30f193176393bf6d4496a1e815b3b288cd102201ba177a13a46f733e1e0b5e05d6ca169e902c669d6f3567926c97e5a20a6712ed5620dcb10c3c3a022
     HEAD_REF master
     PATCHES
+        msvc.diff
         no-undefined.diff
 )
 

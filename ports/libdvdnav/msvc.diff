@@ -1,0 +1,11 @@
+diff --git a/msvc/include/inttypes.h b/msvc/include/inttypes.h
+index 4e1cbe1..5b7f18f 100644
+--- a/msvc/include/inttypes.h
++++ b/msvc/include/inttypes.h
+@@ -28,5 +28,6 @@
+ #define _SYS_INTTYPES_H_
+ 
+ #include <config.h>
++#include <stdint.h>
+ 
+ #endif
