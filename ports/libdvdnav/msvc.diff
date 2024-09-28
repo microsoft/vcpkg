@@ -9,6 +9,15 @@ index 4e1cbe1..5b7f18f 100644
 +#include <stdint.h>
  
  #endif
+diff --git a/msvc/include/sys/time.h b/msvc/include/sys/time.h
+index 843e252..8014739 100644
+--- a/msvc/include/sys/time.h
++++ b/msvc/include/sys/time.h
+@@ -26,3 +26,4 @@
+  */
+ 
+ #include <time.h>
++#include <winsock2.h>
 diff --git a/src/dvdnav_internal.h b/src/dvdnav_internal.h
 index 495f032..7970596 100644
 --- a/src/dvdnav_internal.h
