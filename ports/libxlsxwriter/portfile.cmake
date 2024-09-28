@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 4d1df3b66e694629025ba4154a746d896f9fa32c727267cfbeacf72a3fc70d1b34c7bc767a03bca81395bbe2ff366fc4f4184c2c40126bc6b2d58b33a758cc8f
     HEAD_REF main
+    PATCHES
+        dependencies.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/minizip")
 
