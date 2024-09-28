@@ -19,7 +19,7 @@ index 843e252..8014739 100644
  #include <time.h>
 +#include <winsock2.h>
 diff --git a/src/dvdnav_internal.h b/src/dvdnav_internal.h
-index 495f032..7970596 100644
+index 495f032..a0aaeaf 100644
 --- a/src/dvdnav_internal.h
 +++ b/src/dvdnav_internal.h
 @@ -39,6 +39,7 @@ typedef CRITICAL_SECTION pthread_mutex_t;
@@ -30,3 +30,39 @@ index 495f032..7970596 100644
  static inline int _private_gettimeofday( struct timeval *tv, void *tz )
  {
    struct timeb t;
+@@ -232,7 +233,7 @@ int64_t dvdnav_convert_time(dvd_time_t *time);
+ #define printerrf(format, args...) \
+     do { if (this) snprintf(this->err_str, MAX_ERR_LEN, format, ## args); } while (0)
+ #else
+-#ifdef _MSC_VER
++#if 0
+ #define printerrf(str) \
+     do { if (this) snprintf(this->err_str, MAX_ERR_LEN, str); } while (0)
+ #else
+diff --git a/src/read_cache.c b/src/read_cache.c
+index 1b2862d..abc786a 100644
+--- a/src/read_cache.c
++++ b/src/read_cache.c
+@@ -87,7 +87,7 @@ struct read_cache_s {
+ # if READ_CACHE_TRACE
+ #  define dprintf(fmt, ...) fprintf(MSG_OUT, "libdvdnav: %s: "fmt,  __func__ , __VA_ARGS__)
+ # else
+-#ifdef _MSC_VER
++#if 0
+ #  define dprintf(fmt, str) /* Nowt */
+ #else
+ #  define dprintf(fmt, ...) /* Nowt */
+diff --git a/src/searching.c b/src/searching.c
+index 263f8df..8d12296 100644
+--- a/src/searching.c
++++ b/src/searching.c
+@@ -1048,6 +1048,9 @@ static int32_t dvdnav_cell_find(dvdnav_t *this, dvd_state_t *state,
+     cell_data->idx = cell_idx;
+   }
+   else
++#ifndef PRId64
++#  define PRId64 "I64"
++#endif
+     Log1(this, "cell not found; find=%"PRId64, find_val);
+   return found;
+ }
