@@ -7,11 +7,11 @@
   "supports": "!osx & !uwp & !arm & !(windows & staticcrt) & !android",
   "dependencies": [
     {
-      "name": "libsecret",
+      "name": "glib",
       "platform": "linux"
     },
     {
-      "name": "glib",
+      "name": "libsecret",
       "platform": "linux"
     },
     {
