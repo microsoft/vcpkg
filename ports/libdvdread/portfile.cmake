@@ -7,6 +7,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         msvc.diff
+        no-undefined.diff
 )
 file(TOUCH "${SOURCE_PATH}/msvc/include/strings.h")
 file(WRITE "${SOURCE_PATH}/ChangeLog" "Cf. https://code.videolan.org/videolan/libdvdread/-/commits/${VERSION}/") # not in git
