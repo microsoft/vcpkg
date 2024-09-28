@@ -1,10 +1,10 @@
 {
   "name": "msquic",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "Cross-platform, C implementation of the IETF QUIC protocol",
   "homepage": "https://github.com/microsoft/msquic",
   "license": "MIT",
-  "supports": "!(static & staticcrt)",
+  "supports": "!((static & staticcrt) | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
