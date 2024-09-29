@@ -19,10 +19,10 @@ vcpkg_download_distfile(PATCH_MSVC_1940_STILL_VC143
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_CMAKE
     REPO boostorg/cmake
-    REF ${boost_cmake_ref}
-    SHA512 ${boost_cmake_sha512}
+    REF boost-1.86.0
+    SHA512 3b0650baa5384df71f4a9be4f54d1b9b34c2ab4f828dbcdf1cc2f5623b5ca2cde6762c72c6f708ef728c9cbbeded12ba632a2b953bf178a3a6b44b4b677cb621
     HEAD_REF master
-    PATCHES 
+    PATCHES
       "vcpkg-build.diff"
       "fix-mpi.diff"
       "no-prefix.diff"
