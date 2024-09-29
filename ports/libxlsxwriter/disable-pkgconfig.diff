@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0e855c77..3f291fad 100644
+index 0e855c77..b08ae8e6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -132,7 +132,7 @@ SET(ZLIB_ROOT "" CACHE STRING "Optional root for the ZLIB installation")
@@ -20,6 +20,17 @@ index 0e855c77..3f291fad 100644
  
  # INCLUDES
  # --------
+@@ -230,8 +230,8 @@ message("zlib version: " ${ZLIB_VERSION})
+ 
+ # MINIZIP
+ if (USE_SYSTEM_MINIZIP)
+-    find_package(MINIZIP "1.0" REQUIRED)
+-    list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS})
++    find_package(MINIZIP NAMES unofficial-minizip REQUIRED)
++    set(MINIZIP_LIBRARIES unofficial::minizip::minizip)
+ endif()
+ 
+ # LIBRARY
 @@ -447,4 +447,4 @@ install(DIRECTORY include/xlsxwriter
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
      FILES_MATCHING PATTERN "*.h"
