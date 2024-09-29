@@ -3,6 +3,7 @@ vcpkg_from_github(
     REPO dbry/WavPack
     REF 5.7.0
     SHA512 7a0b00ee19a784b5a2ae40c1d86ddf47d989b0302ee32e6b2f4db828d632b877566f9bb8c1998d129b022f988966f29db05b7a2b59cefdd5b603292ea20464ec
+    PATCHES CMakeLists-patch.diff config-patch.diff
 )
 
 vcpkg_cmake_configure(
