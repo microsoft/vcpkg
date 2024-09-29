@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO troldal/OpenXLSX
     REF master
-    SHA512 e3d27b6e21dcb727398ec1c78cdde4adfb9d5d354380e22217f63c46dc63a1dcdfde54733b70ac9b7e5fa7f6bc47028b311f03fdccc980ed9132ac0a23a23ed4
+    SHA512 429215a961cfcfe8fcb49ee48970dd10dccad09a5c80db2eea2413120a51a2529c9a650584a079756c3b463d53f1fcdec46fdc158ffbc680592896867f60d3ea
     HEAD_REF master
 )
 vcpkg_cmake_configure(
@@ -15,6 +15,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenXLSX)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(COPY "${SOURCE_PATH}/OpenXLSX/external" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/OpenXLSX/headers/XLException.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+
 vcpkg_copy_pdbs()
 
 
