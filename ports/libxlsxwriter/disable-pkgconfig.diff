@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0e855c77..3f291fad 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -132,7 +132,7 @@ SET(ZLIB_ROOT "" CACHE STRING "Optional root for the ZLIB installation")
+ option(BUILD_TESTS "Build libxlsxwriter tests" OFF)
+ option(BUILD_EXAMPLES "Build libxlsxwriter examples" OFF)
+ option(BUILD_FUZZERS "Build harness(es) for fuzzing" OFF)
+-option(USE_SYSTEM_MINIZIP "Use system minizip installation" OFF)
++option(USE_SYSTEM_MINIZIP "Use system minizip installation" ON)
+ option(USE_STANDARD_TMPFILE "Use the C standard library's tmpfile()" OFF)
+ option(USE_NO_MD5 "Build libxlsxwriter without third party MD5 lib" OFF)
+ option(USE_OPENSSL_MD5 "Build libxlsxwriter with the OpenSSL MD5 lib" OFF)
+@@ -216,7 +216,7 @@ string(REGEX MATCH "LXW_SOVERSION \"([^\"]+)\"" _ ${ver})
+ set(SOVERSION ${CMAKE_MATCH_1})
+ set(PREFIX ${CMAKE_INSTALL_PREFIX})
+ 
+-configure_file(dev/release/pkg-config.txt xlsxwriter.pc @ONLY)
++#configure_file(dev/release/pkg-config.txt xlsxwriter.pc @ONLY)
+ 
+ # INCLUDES
+ # --------
+@@ -447,4 +447,4 @@ install(DIRECTORY include/xlsxwriter
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+     FILES_MATCHING PATTERN "*.h"
+ )
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xlsxwriter.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xlsxwriter.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
