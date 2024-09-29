@@ -1,14 +1,23 @@
-diff --git a/msvc/include/inttypes.h b/msvc/include/inttypes.h
-index 4e1cbe1..5b7f18f 100644
---- a/msvc/include/inttypes.h
-+++ b/msvc/include/inttypes.h
-@@ -28,5 +28,6 @@
- #define _SYS_INTTYPES_H_
+diff --git a/msvc/config.h b/msvc/config.h
+index 25f68fb..15f828a 100644
+--- a/msvc/config.h
++++ b/msvc/config.h
+@@ -43,14 +43,6 @@
+ #define S_ISCHR(m) 0
  
- #include <config.h>
+ /* Fallback types (very x86-centric, sorry) */
+-typedef unsigned char       uint8_t;
+-typedef signed char         int8_t;
+-typedef unsigned short      uint16_t;
+-typedef signed short        int16_t;
+-typedef unsigned int        uint32_t;
+-typedef signed int          int32_t;
+-typedef unsigned __int64    uint64_t;
+-typedef signed __int64      int64_t;
+-typedef unsigned int        uintptr_t;
 +#include <stdint.h>
  
- #endif
+ #endif /* LIBDVNAV_CONFIG_H */
 diff --git a/msvc/include/sys/time.h b/msvc/include/sys/time.h
 index 843e252..8014739 100644
 --- a/msvc/include/sys/time.h
@@ -52,17 +61,3 @@ index 1b2862d..abc786a 100644
  #  define dprintf(fmt, str) /* Nowt */
  #else
  #  define dprintf(fmt, ...) /* Nowt */
-diff --git a/src/searching.c b/src/searching.c
-index 263f8df..8d12296 100644
---- a/src/searching.c
-+++ b/src/searching.c
-@@ -1048,6 +1048,9 @@ static int32_t dvdnav_cell_find(dvdnav_t *this, dvd_state_t *state,
-     cell_data->idx = cell_idx;
-   }
-   else
-+#ifndef PRId64
-+#  define PRId64 "I64"
-+#endif
-     Log1(this, "cell not found; find=%"PRId64, find_val);
-   return found;
- }

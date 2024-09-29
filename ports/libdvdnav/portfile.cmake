@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         msvc.diff
         no-undefined.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/msvc/include/inttypes.h")
 
 vcpkg_find_acquire_program(PKGCONFIG)
 cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_dir)
