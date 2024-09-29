@@ -1,5 +1,5 @@
 diff --git a/src/libANGLE/Display.cpp b/src/libANGLE/Display.cpp
-index f677745..fb691e5 100644
+index f677745..5005916 100644
 --- a/src/libANGLE/Display.cpp
 +++ b/src/libANGLE/Display.cpp
 @@ -419,6 +419,9 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
@@ -8,7 +8,7 @@ index f677745..fb691e5 100644
              impl = new rx::DisplayAndroid(state);
 +#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_IOS)
 +            #include "libANGLE/renderer/gl/apple/DisplayApple_api.h"
-+            impl = rx::CreateDisplayCGLOrEAGL(state)
++            impl = rx::CreateDisplayCGLOrEAGL(state);
  #    else
              // No GLES support on this platform, fail display creation.
              impl = nullptr;
