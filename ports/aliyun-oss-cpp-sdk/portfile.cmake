@@ -12,6 +12,7 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/0002-unofficial-export.cmake" DESTINATIO
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_SAMPLE=OFF
 )
