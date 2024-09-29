@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         msvc.diff
         no-undefined.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/msvc/include/inttypes.h")
 file(TOUCH "${SOURCE_PATH}/msvc/include/strings.h")
 file(WRITE "${SOURCE_PATH}/ChangeLog" "Cf. https://code.videolan.org/videolan/libdvdread/-/commits/${VERSION}/") # not in git
 
@@ -30,7 +31,7 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        --disable-doc
+        --disable-apidoc
         --with-libdvdcss
         ${cppflags}
 )

@@ -1,14 +1,31 @@
-diff --git a/msvc/include/inttypes.h b/msvc/include/inttypes.h
-index 4e1cbe1..5b7f18f 100644
---- a/msvc/include/inttypes.h
-+++ b/msvc/include/inttypes.h
-@@ -28,5 +28,6 @@
- #define _SYS_INTTYPES_H_
+diff --git a/msvc/config.h b/msvc/config.h
+index 4e9b60e..2f1e615 100644
+--- a/msvc/config.h
++++ b/msvc/config.h
+@@ -28,7 +28,6 @@
+ #define inline __inline
+ /* #undef size_t */
  
- #include <config.h>
+-#define ssize_t __int64
+ 
+ #ifndef PATH_MAX
+ #define PATH_MAX MAX_PATH
+@@ -43,14 +42,6 @@
+ #define S_ISCHR(m) 0
+ 
+ /* Fallback types (very x86-centric, sorry) */
+-typedef unsigned char       uint8_t;
+-typedef signed char         int8_t;
+-typedef unsigned short      uint16_t;
+-typedef signed short        int16_t;
+-typedef unsigned int        uint32_t;
+-typedef signed int          int32_t;
+-typedef unsigned __int64    uint64_t;
+-typedef signed __int64      int64_t;
+-typedef unsigned int        uintptr_t;
 +#include <stdint.h>
  
- #endif
+ #endif /* LIBDVDREAD_CONFIG_H */
 diff --git a/src/dvd_reader.c b/src/dvd_reader.c
 index c4d9641..b3b0158 100644
 --- a/src/dvd_reader.c
@@ -22,15 +39,17 @@ index c4d9641..b3b0158 100644
  #endif
  
 diff --git a/src/dvdread/dvd_reader.h b/src/dvdread/dvd_reader.h
-index 5681e0e..d1495c2 100644
+index 5681e0e..6c1cee6 100644
 --- a/src/dvdread/dvd_reader.h
 +++ b/src/dvdread/dvd_reader.h
-@@ -25,6 +25,8 @@
+@@ -24,7 +24,9 @@
+ #define LIBDVDREAD_DVD_READER_H
  
  #ifdef _MSC_VER
- #include <config.h>
+-#include <config.h>
 +#include <windows.h>
 +typedef SSIZE_T ssize_t;
++#include <stdint.h>
  
  #include <stdio.h>
  #include <stdlib.h>
