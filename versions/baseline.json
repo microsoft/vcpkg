@@ -2273,7 +2273,7 @@
       "port-version": 13
     },
     "dimcli": {
-      "baseline": "7.2.0",
+      "baseline": "7.3.0",
       "port-version": 0
     },
     "dingo": {
