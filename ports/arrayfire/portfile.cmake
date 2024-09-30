@@ -100,7 +100,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH share/ArrayFire/cmake)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
