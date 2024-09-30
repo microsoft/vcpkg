@@ -1,7 +1,7 @@
 set(program_name scons)
 set(program_version 4.8.1)
 set(interpreter PYTHON3)
-set(search_names "scons.py" "scons")
+set(search_names "scons.py")
 
 set(download_urls "https://sourceforge.net/projects/scons/files/scons-local-${program_version}.zip/download")
 set(download_filename "scons-local-${program_version}.zip")
