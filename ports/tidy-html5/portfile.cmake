@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/unofficial-tidy-html5)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-tidy-html5 CONFIG_PATH lib/cmake/unofficial-tidy-html5)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
