@@ -11,16 +11,3 @@ index a82dbb7..e9005fa 100644
  
  /* mysqld compile time options */
  #ifndef MYSQL_CHARSET
-diff --git a/mariadb_config/mariadb_config.c.in b/mariadb_config/mariadb_config.c.in
-index 36c0117..4184e4b 100644
---- a/mariadb_config/mariadb_config.c.in
-+++ b/mariadb_config/mariadb_config.c.in
-@@ -225,7 +225,7 @@ end:
-   }
-   if (!p || !p[0])
-   {
--    strncpy(installation_dir, "@CMAKE_SYSROOT@@CMAKE_INSTALL_PREFIX@", PATH_MAX - 1);
-+    strncpy(installation_dir, "../@CMAKE_INSTALL_PREFIX@", PATH_MAX - 1);
-     return;
-   }
- }
