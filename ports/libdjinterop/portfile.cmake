@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xsco/libdjinterop
     REF "${VERSION}"
-    SHA512 c2784ffc6b0ddc9ad92a227621bb00cd1c88aa8f8abe82401774102f9be16dfbe9f0745523d517594faecba60b650a53613c7867afe57e6bcd8a2cc6288dd9ff
+    SHA512 1c35d8609342f133cf002d1908d5746c411a9d5e74b42a7ec045545f07a3f4b8a89ce9a95d2fc17edd8970facafbee1b6d8a9283fcd8c74c9cb96ff61f15d47d
     HEAD_REF master
 )
 
