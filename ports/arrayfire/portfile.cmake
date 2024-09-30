@@ -15,8 +15,8 @@ vcpkg_from_github(
     build.patch
     Fix-constexpr-error-with-vs2019-with-half.patch
     fix-dependency-clfft.patch
-	fix-miss-header-file.patch
-	"${CUDA_PATCHES}"
+    fix-miss-header-file.patch
+    "${CUDA_PATCHES}"
 )
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
@@ -100,7 +100,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     vcpkg_cmake_config_fixup(CONFIG_PATH share/ArrayFire/cmake)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
