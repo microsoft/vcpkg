@@ -1,3 +1,10 @@
+vcpkg_download_distfile(
+    CUDA_PATCHES
+    URLS "https://github.com/arrayfire/arrayfire/pull/3552/commits/674e7bec90b90467139d32bf633467fe60824617.diff?full_index=1"
+    FILENAME "fix-cuda-674e7bec90b90467139d32bf633467fe60824617.patch"
+    SHA512 e584033fb79c602a19222c177d5db28f9887dd17e741844d57f2236a5749ac4c02cc0740f8011ca990602887a6ee3dd21ae0b695455c447686b1a6c8bda2e092
+)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO arrayfire/arrayfire
@@ -9,6 +16,7 @@ vcpkg_from_github(
     Fix-constexpr-error-with-vs2019-with-half.patch
     fix-dependency-clfft.patch
 	fix-miss-header-file.patch
+	"${CUDA_PATCHES}"
 )
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
