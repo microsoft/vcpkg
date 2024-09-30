@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Ipotrick/Daxa
-    REF f1cfcd9e5455515564019c26b7061e52c9df22b7
+    REF cef8314e89f090cbe0267953d8bd081fdea4a203
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,9 +32,6 @@ if(WITH_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION)
 endif()
 if(WITH_UTILS_TASK_GRAPH)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_TASK_GRAPH=true")
-endif()
-if(WITH_UTILS_FSR2)
-    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_FSR2=true")
 endif()
 
 vcpkg_cmake_configure(
