@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 9025520d5a4cf1f2046959942fa83f73e49e836dcd20a0dde34bd34cbe071c9ffd5b195a13ab77a6a85d71ae91baa839b12a7f1fc27fcb79660561a2a07b6013
+    SHA512 87bb96bc77c30a39e419be2592199de8f9fa74179852637d2902c50d555bad24d2a664b888434fbc1df461ece69a52097634a47f0edbb78b0b0eed6e5a94033f
     HEAD_REF master
     PATCHES
         fix-install.patch # Adjust install path of build outputs
