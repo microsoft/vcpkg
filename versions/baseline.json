@@ -6109,7 +6109,7 @@
       "port-version": 4
     },
     "msquic": {
-      "baseline": "2.4.4",
+      "baseline": "2.4.5",
       "port-version": 0
     },
     "mstch": {
