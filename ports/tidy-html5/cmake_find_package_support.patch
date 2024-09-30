@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8efec25..13a36ef 100644
+index 8efec25..02173ea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -407,10 +407,11 @@ else ()
@@ -11,7 +11,7 @@ index 8efec25..13a36ef 100644
      list ( APPEND add_LIBS ${name} )
  endif ()    
 -install(TARGETS ${name}
-+install(TARGETS ${name} EXPORT tidy-html5Config
++install(TARGETS ${name} EXPORT unofficial-tidy-html5Config
          RUNTIME DESTINATION ${BIN_INSTALL_DIR}
          ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
          LIBRARY DESTINATION ${LIB_INSTALL_DIR}
@@ -21,7 +21,7 @@ index 8efec25..13a36ef 100644
                                     COMPILE_FLAGS "-DBUILD_SHARED_LIB -DBUILDING_SHARED_LIB")
 -    install(TARGETS ${name}
 +    target_include_directories( ${name} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
-+    install(TARGETS ${name} EXPORT tidy-html5Config
++    install(TARGETS ${name} EXPORT unofficial-tidy-html5Config
          RUNTIME DESTINATION ${BIN_INSTALL_DIR}
          ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
          LIBRARY DESTINATION ${LIB_INSTALL_DIR}
@@ -32,9 +32,9 @@ index 8efec25..13a36ef 100644
 +#------------------------------------------------------------------------
 +# CMake FIND_PACKAGE() Support
 +#------------------------------------------------------------------------
-+install(EXPORT tidy-html5Config
-+	DESTINATION ${LIB_INSTALL_DIR}/cmake/tidy-html5
-+	NAMESPACE tidy-html5::)
++install(EXPORT unofficial-tidy-html5Config
++	DESTINATION ${LIB_INSTALL_DIR}/cmake/unofficial-tidy-html5
++	NAMESPACE unofficial::tidy-html5::)
 +
  
  #------------------------------------------------------------------------

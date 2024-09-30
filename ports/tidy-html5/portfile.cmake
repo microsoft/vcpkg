@@ -9,7 +9,7 @@ vcpkg_from_github(
         static-vs-shared.patch
         debug-postfix.patch
         fix_unsupport_func_uwp.patch
-		cmake_find_package_support.patch
+        cmake_find_package_support.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIB)
@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tidy-html5)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/unofficial-tidy-html5)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
