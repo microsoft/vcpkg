@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     CUDA_PATCHES
     URLS "https://github.com/arrayfire/arrayfire/pull/3552/commits/674e7bec90b90467139d32bf633467fe60824617.diff?full_index=1"
     FILENAME "fix-cuda-674e7bec90b90467139d32bf633467fe60824617.patch"
-    SHA512 e584033fb79c602a19222c177d5db28f9887dd17e741844d57f2236a5749ac4c02cc0740f8011ca990602887a6ee3dd21ae0b695455c447686b1a6c8bda2e092
+    SHA512 201ba8c46f5eafd5d8dbc78ddc1fb4c24b8d820f034e081b8ff30712705fe059c2850bbb7394d81931620619071559fed0e98b13cc4f985103e354c44a322e78
 )
 
 vcpkg_from_github(
