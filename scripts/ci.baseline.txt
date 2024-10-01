@@ -570,10 +570,7 @@ liblo:arm64-android=fail
 liblo:x64-android=fail
 liblo:x64-uwp=fail
 # libmariadb conflicts with libmysql
-libmariadb:arm-neon-android=fail
-libmariadb:arm64-android=fail
 libmariadb:arm64-windows      = skip
-libmariadb:x64-android=fail
 libmariadb:x64-linux          = skip
 libmariadb:x64-osx            = skip
 libmariadb:arm64-osx          = skip
