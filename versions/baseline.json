@@ -289,7 +289,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "9.0.0",
+      "baseline": "9.0.1",
       "port-version": 0
     },
     "async-simple": {
@@ -7238,7 +7238,7 @@
     },
     "pulseaudio": {
       "baseline": "17.0",
-      "port-version": 1
+      "port-version": 2
     },
     "pulzed-mini": {
       "baseline": "0.9.14",
@@ -8395,10 +8395,6 @@
     "snappy": {
       "baseline": "1.2.1",
       "port-version": 0
-    },
-    "sndfile": {
-      "baseline": "0",
-      "port-version": 2
     },
     "snitch": {
       "baseline": "1.2.5",
