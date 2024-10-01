@@ -1,119 +1,22 @@
 diff --git a/OpenXLSX/headers/XLSheet.hpp b/OpenXLSX/headers/XLSheet.hpp
-index 2f33dd4..0024408 100644
+index 2f33dd4..23c11c9 100644
 --- a/OpenXLSX/headers/XLSheet.hpp
 +++ b/OpenXLSX/headers/XLSheet.hpp
-@@ -137,8 +137,8 @@ namespace OpenXLSX
+@@ -137,7 +137,7 @@ namespace OpenXLSX
          XLSheetState visibility() const
          {
              XLQuery query(XLQueryType::QuerySheetVisibility);
 -            query.template setParam("sheetID", relationshipID());
--            auto state  = parentDoc().execQuery(query).template result<std::string>();
 +            query.setParam("sheetID", relationshipID());
-+            auto state  = parentDoc().execQuery(query).result<std::string>();
+             auto state  = parentDoc().execQuery(query).template result<std::string>();
              auto result = XLSheetState::Visible;
  
-             if (state == "visible" || state.empty()) {
-@@ -185,19 +185,13 @@ namespace OpenXLSX
-          * @return
-          * @todo To be implemented.
-          */
--        XLColor color() const
--        {
--            return XLColor();
--        }
-+        XLColor color() const { return XLColor(); }
- 
-         /**
-          * @brief
-          * @param color
-          */
--        void setColor(const XLColor& color)
--        {
--            static_cast<T&>(*this).setColor_impl(color);
--        }
-+        void setColor(const XLColor& color) { static_cast<T&>(*this).setColor_impl(color); }
- 
-         /**
-          * @brief
-@@ -205,11 +199,12 @@ namespace OpenXLSX
-          */
-         uint16_t index() const
-         {
--//            return uint16_t(std::stoi(parentDoc().execQuery(R"({ "query": "QuerySheetIndex", "sheetID": ")" + relationshipID() + "\"}")));
-+            //            return uint16_t(std::stoi(parentDoc().execQuery(R"({ "query": "QuerySheetIndex", "sheetID": ")" + relationshipID()
-+            //            + "\"}")));
+@@ -208,7 +208,7 @@ namespace OpenXLSX
+ //            return uint16_t(std::stoi(parentDoc().execQuery(R"({ "query": "QuerySheetIndex", "sheetID": ")" + relationshipID() + "\"}")));
  
              XLQuery query(XLQueryType::QuerySheetIndex);
 -            query.template setParam("sheetID", relationshipID());
--            return uint16_t(std::stoi(parentDoc().execQuery(query).template result<std::string>()));
 +            query.setParam("sheetID", relationshipID());
-+            return uint16_t(std::stoi(parentDoc().execQuery(query).result<std::string>()));
+             return uint16_t(std::stoi(parentDoc().execQuery(query).template result<std::string>()));
          }
- 
-         /**
-@@ -218,9 +213,8 @@ namespace OpenXLSX
-          */
-         void setIndex(uint16_t index)
-         {
--            parentDoc().execCommand(XLCommand(XLCommandType::SetSheetIndex)
--                                        .setParam("sheetID", relationshipID())
--                                        .setParam("sheetIndex", index));
-+            parentDoc().execCommand(
-+                XLCommand(XLCommandType::SetSheetIndex).setParam("sheetID", relationshipID()).setParam("sheetIndex", index));
-         }
- 
-         /**
-@@ -250,37 +244,25 @@ namespace OpenXLSX
-          * @brief
-          * @return
-          */
--        bool isSelected() const
--        {
--            return static_cast<const T&>(*this).isSelected_impl();
--        }
-+        bool isSelected() const { return static_cast<const T&>(*this).isSelected_impl(); }
- 
-         /**
-          * @brief
-          * @param selected
-          */
--        void setSelected(bool selected)
--        {
--            static_cast<T&>(*this).setSelected_impl(selected);
--        }
-+        void setSelected(bool selected) { static_cast<T&>(*this).setSelected_impl(selected); }
- 
-         /**
-          * @brief
-          * @return
-          */
--        bool isActive() const
--        {
--            return static_cast<const T&>(*this).isActive_impl();
--        }
-+        bool isActive() const { return static_cast<const T&>(*this).isActive_impl(); }
- 
-         /**
-          * @brief
-          * @param active
-          */
--        void setActive()
--        {
--            static_cast<T&>(*this).setActive_impl();
--        }
-+        void setActive() { static_cast<T&>(*this).setActive_impl(); }
- 
-         /**
-          * @brief Method for cloning the sheet.
-@@ -290,9 +272,8 @@ namespace OpenXLSX
-          */
-         void clone(const std::string& newName)
-         {
--            parentDoc().execCommand(XLCommand(XLCommandType::CloneSheet)
--                                        .setParam("sheetID", relationshipID())
--                                        .setParam("cloneName", newName));
-+            parentDoc().execCommand(
-+                XLCommand(XLCommandType::CloneSheet).setParam("sheetID", relationshipID()).setParam("cloneName", newName));
-         }
-     };
  

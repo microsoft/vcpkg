@@ -6,17 +6,16 @@ vcpkg_from_github(
     SHA512 52205b394383d45c0fb16599ab96453d8a5b9b5cd596096848cc888f47565b2713d9edded06b2ecd7b67736622badf136e4b1becc57bfa5bbdcb1e063a347084
     HEAD_REF master
     PATCHES
-    compilation_fix.patch
+        compilation_fix.patch
 )
-set(CMAKE_CXX_STANDARD 17)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
+        -DCMAKE_CXX_STANDARD=17
         -DOPENXLSX_BUILD_TESTS=OFF
 )
-vcpkg_cmake_install(DISABLE_PARALLEL)
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenXLSX)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(COPY "${SOURCE_PATH}/OpenXLSX/external" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
