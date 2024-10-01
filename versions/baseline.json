@@ -241,8 +241,8 @@
       "port-version": 0
     },
     "arrayfire": {
-      "baseline": "3.8.0",
-      "port-version": 7
+      "baseline": "3.9.0",
+      "port-version": 0
     },
     "arrow": {
       "baseline": "17.0.0",
