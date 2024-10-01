@@ -5809,8 +5809,8 @@
       "port-version": 0
     },
     "mdl-sdk": {
-      "baseline": "2021.1.2",
-      "port-version": 5
+      "baseline": "2024.0.4",
+      "port-version": 0
     },
     "mdns": {
       "baseline": "1.4.3",
