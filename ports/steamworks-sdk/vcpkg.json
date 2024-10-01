@@ -1,0 +1,22 @@
+{
+  "name": "steamworks-sdk",
+  "version": "1.60",
+  "description": "Steamworks is a free collection of tools available to all developers for use in their games or software on Steam.",
+  "homepage": "https://partner.steamgames.com/doc/sdk",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "appticket": {
+      "description": "Support for SteamEncryptedAppTicket"
+    }
+  }
+}
