@@ -82,7 +82,7 @@
       "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
     },
     {
-      "name": "opencv4",
+      "name": "opencv",
       "default-features": false,
       "features": [
         "ade",
@@ -103,7 +103,7 @@
       ]
     },
     {
-      "name": "opencv4",
+      "name": "opencv",
       "default-features": false,
       "features": [
         "openmp"
@@ -111,7 +111,7 @@
       "platform": "!osx"
     },
     {
-      "name": "opencv4",
+      "name": "opencv",
       "default-features": false,
       "features": [
         "dnn"
@@ -119,7 +119,7 @@
       "platform": "!android"
     },
     {
-      "name": "opencv4",
+      "name": "opencv",
       "default-features": false,
       "features": [
         "gapi",
@@ -128,7 +128,7 @@
       "platform": "!uwp & !(windows & static) & !android"
     },
     {
-      "name": "opencv4",
+      "name": "opencv",
       "default-features": false,
       "features": [
         "cuda",
@@ -144,7 +144,7 @@
       "platform": "windows & x64 & !static & !uwp"
     },
     {
-      "name": "opencv4",
+      "name": "opencv",
       "default-features": false,
       "features": [
         "freetype",

@@ -30,6 +30,7 @@
             "gif",
             "libraw",
             "opencolorio",
+            "opencv",
             "openjpeg",
             {
               "name": "pybind11",
