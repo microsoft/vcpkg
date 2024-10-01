@@ -430,7 +430,7 @@ vcpkg_cmake_configure(
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
-        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
+        -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
@@ -470,8 +470,8 @@ if (NOT VCPKG_BUILD_TYPE)
   )
 endif()
 
-  file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
-  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
+set(DEPS_STRING "include(CMakeFindDependencyMacro)")
 if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
@@ -545,11 +545,13 @@ find_dependency(Tesseract)")
     string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT})")
+set(CMAKE_AUTOUIC ON)")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL OpenGLWidgets)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT} OpenGL OpenGLWidgets)")
+    else()
+      string(APPEND DEPS_STRING "
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT})")
     endif()
   endif()
   if("ade" IN_LIST FEATURES)
@@ -562,7 +564,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL OpenGLWidgets)")
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  if("omp" IN_LIST FEATURES)
+  if("openmp" IN_LIST FEATURES)
     string(REPLACE "set_target_properties(opencv_core PROPERTIES
   INTERFACE_LINK_LIBRARIES \""
                    "set_target_properties(opencv_core PROPERTIES
@@ -574,7 +576,7 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL OpenGLWidgets)")
                    "OgreGLSupport" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()
 
-  file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" "${OPENCV_MODULES}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -613,6 +615,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+    "-lTesseract::libtesseract"
+    "-ltesseract"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
     "\${prefix}"
     IGNORE_UNCHANGED
@@ -638,6 +645,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
     "-lgflags::gflags_static"
     "-lgflags"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+    "-lTesseract::libtesseract"
+    "-ltesseract"
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"

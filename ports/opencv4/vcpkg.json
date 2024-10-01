@@ -108,8 +108,7 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
-            "gapi",
-            "opencl"
+            "gapi"
           ],
           "platform": "!uwp"
         },

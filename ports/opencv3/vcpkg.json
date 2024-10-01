@@ -101,6 +101,10 @@
         "harfbuzz"
       ]
     },
+    "gapi": {
+      "description": "Enable gapi module",
+      "supports": "!uwp"
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [

@@ -1,5 +1,5 @@
 set(USE_QT_VERSION "5")
-set(ENABLE_CXX11 ON)
+
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -26,6 +26,7 @@ vcpkg_from_github(
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
+file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -37,7 +38,9 @@ else()
   set(TARGET_IS_X86 1)
 endif()
 
-file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
+if (USE_QT_VERSION STREQUAL "6")
+  set(QT_CORE5COMPAT "Core5Compat")
+endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
@@ -198,10 +201,8 @@ if("ipp" IN_LIST FEATURES)
 endif()
 
 if("halide" IN_LIST FEATURES)
-  set(ENABLE_CXX11 OFF)
   list(APPEND ADDITIONAL_BUILD_FLAGS
     # Halide 13 requires C++17
-    "-DCMAKE_CXX_STANDARD=17"
     "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
     "-DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON"
     "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
@@ -215,7 +216,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ###### Verify that required components are enabled: NEVER TURN IT OFF!
+        ###### Verify that required components and only those are enabled
         -DENABLE_CONFIG_VERIFICATION=ON
         ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
         -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
@@ -223,9 +224,10 @@ vcpkg_cmake_configure(
         -DX86_64=${TARGET_IS_X86_64}
         -DX86=${TARGET_IS_X86}
         -DARM=${TARGET_IS_ARM}
+        ###### use c++17 to enable features that fail with c++11 (halide, protobuf, etc.)
+        -DCMAKE_CXX_STANDARD=17
         ###### ocv_options
         -DINSTALL_TO_MANGLED_PATHS=OFF
-        -DBUILD_WITH_DEBUG_INFO=ON
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
         -DOPENCV_INCLUDE_INSTALL_PATH=include/opencv3
@@ -239,22 +241,24 @@ vcpkg_cmake_configure(
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
         -DOPENCV_GENERATE_PKGCONFIG=ON
-        -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
-        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
+        -DBUILD_PERF_TESTS=OFF
+        -DBUILD_TESTS=OFF
         ###### Disable build 3rd party libs
+        -DBUILD_IPP_IW=OFF
+        -DBUILD_ITT=OFF
         -DBUILD_JASPER=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
+        -DBUILD_OPENJPEG=OFF
         -DBUILD_PNG=OFF
+        -DBUILD_PROTOBUF=OFF
+        -DBUILD_TBB=OFF
         -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
-        -DBUILD_TBB=OFF
-        -DBUILD_ITT=OFF
-        -DBUILD_PROTOBUF=OFF
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
@@ -264,8 +268,10 @@ vcpkg_cmake_configure(
         -DBUILD_ANDROID_PROJECT=OFF
         -DBUILD_ANDROID_EXAMPLES=OFF
         -DBUILD_PACKAGE=OFF
-        -DBUILD_PERF_TESTS=OFF
-        -DBUILD_TESTS=OFF
+        -DBUILD_WITH_DEBUG_INFO=ON
+        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
+        -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
+        ###### PROTOBUF
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
@@ -273,11 +279,11 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
-        -DENABLE_CXX11=${ENABLE_CXX11}
+        -DENABLE_CXX11=ON
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
-        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
+        -DOPENCV_OTHER_INSTALL_PATH=share/opencv3
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
@@ -285,9 +291,15 @@ vcpkg_cmake_configure(
         -DWITH_MATLAB=OFF
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
+        -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_ITT=OFF
+        -DWITH_NVCUVID=OFF
+        -DWITH_NVCUVENC=OFF
+        -DWITH_AVIF=OFF
+        -DWITH_VA=OFF
+        -DWITH_VA_INTEL=OFF
         -DWITH_FFMPEG=OFF
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
@@ -308,9 +320,8 @@ if (NOT VCPKG_BUILD_TYPE)
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(READ "${CURRENT_PACKAGES_DIR}/share/opencv3/OpenCVModules.cmake" OPENCV_MODULES)
-  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+file(READ "${CURRENT_PACKAGES_DIR}/share/opencv3/OpenCVModules.cmake" OPENCV_MODULES)
+set(DEPS_STRING "include(CMakeFindDependencyMacro)")
 if(${BUILD_opencv_flann} AND NOT TARGET libprotobuf) #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
@@ -331,12 +342,21 @@ find_dependency(Threads)")
   if("tiff" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
   endif()
+  if("cuda" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("ffmpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
+  endif()
   if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_IOS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
     string(APPEND DEPS_STRING "
 # C language is required for try_compile tests in FindHDF5
 enable_language(C)
 find_dependency(HDF5)
 find_dependency(Tesseract)")
+  endif()
+  if("freetype" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
   endif()
   if("tbb" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
@@ -353,14 +373,20 @@ find_dependency(Tesseract)")
   if("lapack" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
   endif()
+  if("openvino" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
+  endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
   endif()
-  if("openmp" IN_LIST FEATURES)
+  if("openjpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
+  endif()
+  if("omp" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if("ovis" IN_LIST FEATURES)
-    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(freetype)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OGRE)")
   endif()
   if("quirc" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
@@ -369,11 +395,13 @@ find_dependency(Tesseract)")
     string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
+set(CMAKE_AUTOUIC ON)")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL OpenGLWidgets)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT} OpenGL OpenGLWidgets)")
+    else()
+      string(APPEND DEPS_STRING "
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT})")
     endif()
   endif()
   if("ade" IN_LIST FEATURES)
@@ -398,7 +426,9 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL OpenGLWidgets)")
                    "OgreGLSupport" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()
 
-  file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv3/OpenCVModules.cmake" "${OPENCV_MODULES}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv3/OpenCVModules.cmake" "${OPENCV_MODULES}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
@@ -407,7 +437,18 @@ if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
 endif()
 
+if("python" IN_LIST FEATURES)
+  file(GLOB python_dir LIST_DIRECTORIES true RELATIVE "${CURRENT_PACKAGES_DIR}/lib/" "${CURRENT_PACKAGES_DIR}/lib/python*")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/${python_dir}/site-packages/cv2/typing")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${python_dir}/site-packages/cv2/typing")
+endif()
+
 if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc"
+    "-lQt6::Core5Compat"
+    "-lQt6Core5Compat"
+    IGNORE_UNCHANGED
+  )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc"
     "-lhdf5::hdf5-static"
     "-lhdf5"
@@ -436,6 +477,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc")
 endif()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv3.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv3.pc"
+    "-lQt6::Core5Compat"
+    "-lQt6Core5Compat"
+    IGNORE_UNCHANGED
+  )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv3.pc"
     "-lhdf5::hdf5-static"
     "-lhdf5"
