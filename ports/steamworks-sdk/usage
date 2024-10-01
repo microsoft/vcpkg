@@ -1,0 +1,6 @@
+
+The package steamworks-sdk is compatible with CMake as following
+
+  find_package(Steamworks-SDK REQUIRED)
+  target_include_directories(target PUBLIC ${STEAMWORKS_SDK_INCLUDE_DIR})
+  target_link_libraries(target PUBLIC ${STEAMWORKS_SDK_LIBRARY})
