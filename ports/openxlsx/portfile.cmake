@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO troldal/OpenXLSX
     REF "v${VERSION}"
-    SHA512 52205b394383d45c0fb16599ab96453d8a5b9b5cd596096848cc888f47565b2713d9edded06b2ecd7b67736622badf136e4b1becc57bfa5bbdcb1e063a347084
+    SHA512 76cc344af0c6d7547391c360743fa306b1b971bd
     HEAD_REF master
     PATCHES
         compilation_fix.patch
