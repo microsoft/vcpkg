@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 0fa71544d70080ed9b0373383aaf985c7ed162913a480371affb3131cb3bb55e9a9653896da3801f5b1d121fc654232f5e463298f8070413f309bb4a514898f8
     HEAD_REF main
+    PATCHES
+        boringssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -11,9 +13,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wolfssl  ENABLE_WOLFSSL
-        gnutls   ENABLE_GNUTLS
-        libressl ENABLE_OPENSSL
+        wolfssl     ENABLE_WOLFSSL
+        gnutls      ENABLE_GNUTLS
+        libressl    ENABLE_OPENSSL
+        boringssl   ENABLE_BORINGSSL
 )
 
 vcpkg_cmake_configure(

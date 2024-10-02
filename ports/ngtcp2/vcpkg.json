@@ -1,6 +1,7 @@
 {
   "name": "ngtcp2",
   "version": "1.9.1",
+  "port-version": 1,
   "description": "ngtcp2 project is an effort to implement RFC9000 QUIC protocol.",
   "homepage": "https://github.com/ngtcp2/ngtcp2",
   "license": "MIT",
@@ -15,6 +16,12 @@
     }
   ],
   "features": {
+    "boringssl": {
+      "description": "Compile with boringssl",
+      "dependencies": [
+        "boringssl"
+      ]
+    },
     "gnutls": {
       "description": "Compile with gnutls",
       "dependencies": [
