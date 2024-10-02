@@ -1,5 +1,3 @@
-diff --git a/common/include/pcl/impl/instantiate.hpp b/common/include/pcl/impl/instantiate.hpp
-index ea73a0c..4cfc92b 100644
 --- a/common/include/pcl/impl/instantiate.hpp
 +++ b/common/include/pcl/impl/instantiate.hpp
 @@ -95,7 +95,7 @@
@@ -11,8 +9,6 @@ index ea73a0c..4cfc92b 100644
  #define PCL_INSTANTIATE_PRODUCT_IMPL(r, product) \
    BOOST_PP_CAT(PCL_INSTANTIATE_, BOOST_PP_SEQ_HEAD(product)) \
            BOOST_PP_EXPAND(BOOST_PP_SEQ_TO_TUPLE(BOOST_PP_SEQ_TAIL(product))) 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fad95c9..b4ca305 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -51,7 +51,7 @@ set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING

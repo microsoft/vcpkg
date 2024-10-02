@@ -1,5 +1,3 @@
-diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index cf21c44..4076775 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
 @@ -460,6 +460,11 @@ list(LENGTH pcl_all_components PCL_NB_COMPONENTS)
@@ -36,8 +34,6 @@ index cf21c44..4076775 100644
      DOC "path to ${component} headers"
      NO_DEFAULT_PATH)
    mark_as_advanced(PCL_${COMPONENT}_INCLUDE_DIR)
-diff --git a/io/CMakeLists.txt b/io/CMakeLists.txt
-index 7fc86b2..7a39033 100644
 --- a/io/CMakeLists.txt
 +++ b/io/CMakeLists.txt
 @@ -213,6 +213,8 @@ PCL_ADD_INCLUDES("${SUBSYS_NAME}" "${SUBSYS_NAME}/ply" ${PLY_INCLUDES})

@@ -1,5 +1,3 @@
-diff --git a/cmake/pcl_targets.cmake b/cmake/pcl_targets.cmake
-index 91f2404..18f5a24 100644
 --- a/cmake/pcl_targets.cmake
 +++ b/cmake/pcl_targets.cmake
 @@ -473,6 +473,8 @@ macro(PCL_ADD_EXAMPLE _name)
