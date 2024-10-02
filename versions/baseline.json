@@ -8862,7 +8862,7 @@
     },
     "tidy-html5": {
       "baseline": "5.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tiff": {
       "baseline": "4.6.0",
