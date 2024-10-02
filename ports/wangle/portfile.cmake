@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
     REF "v${VERSION}"
-    SHA512 45c9c1aaa92fc68b833f17d539bfb7234be68f638858a8ac87dd49338fef95938fe2503ae9b410827abad9b3669801c41354bee65152b03ff3f152a3c8ac7935
+    SHA512 1c6daf763ab8bcefec2c3798743e4979f812ec630bcb252afa333f8df90a96c7c6f8f05c30b2f970ade45e8419bc09633f355ce66114a8a337b3ddbf7b4b6443
     HEAD_REF main
     PATCHES
         fix-config-cmake.patch
