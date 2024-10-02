@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 11848ecb..27bca1bc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -170,6 +170,11 @@ endif()
+ include(CheckCXXSymbolExists)
+ if(ENABLE_BORINGSSL)
+   cmake_push_check_state()
++  find_package(OpenSSL REQUIRED)
++  set(BORINGSSL_INCLUDE_DIR     "${OPENSSL_INCLUDE_DIR}")
++  set(BORINGSSL_LIBRARIES       "${OPENSSL_LIBRARIES}")
++  set(OPENSSL_INCLUDE_DIRS  "")
++  set(OPENSSL_LIBRARIES     "")
+   set(CMAKE_REQUIRED_INCLUDES   "${BORINGSSL_INCLUDE_DIR}")
+   set(CMAKE_REQUIRED_LIBRARIES  "${BORINGSSL_LIBRARIES}")
+   check_cxx_symbol_exists(SSL_set_quic_early_data_context "openssl/ssl.h" HAVE_SSL_SET_QUIC_EARLY_DATA_CONTEXT)

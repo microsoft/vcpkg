@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         openssl_required.patch
         popcnt_intrinsic.patch # https://github.com/ngtcp2/ngtcp2/pull/1351
+        boringssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -14,9 +15,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wolfssl  ENABLE_WOLFSSL
-        gnutls   ENABLE_GNUTLS
-        libressl ENABLE_OPENSSL
+        wolfssl     ENABLE_WOLFSSL
+        gnutls      ENABLE_GNUTLS
+        libressl    ENABLE_OPENSSL
+        boringssl   ENABLE_BORINGSSL
 )
 
 vcpkg_cmake_configure(
