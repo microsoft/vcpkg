@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         dependencies.diff
-        disable-pkgconfig.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/minizip")
 
