@@ -23,9 +23,9 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Update or install parallels
 - [ ] Download the macOS installer from the app store. See https://support.apple.com/en-us/102662  
       Note: This portion of the instructions is that which breaks most often depending on what Parallels and macOS are doing.
-      You might need to use `softwareupdate --fetch-full-installer --full-installer-version 14.5` and point Parallels
+      You might need to use `softwareupdate --fetch-full-installer --full-installer-version 15.0` and point Parallels
       at that resulting installer in 'Applications' instead.
-- [ ] Run parallels, and select that installer you just downloaded. Name the VM "vcpkg-osx-<DATE>-amd64", for example "vcpkg-osx-2024-07-12-amd64".
+- [ ] Run parallels, and select that installer you just downloaded. Name the VM "vcpkg-osx-<DATE>-amd64", for example "vcpkg-osx-2024-10-02-amd64".
 - [ ] When creating the VM, customize the hardware to the following:
     * 12 processors
     * 24000 MB of memory
@@ -35,13 +35,14 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     * Apple ID: 'Set Up Later' / Skip
     * Account name: vcpkg
     * A very similar password :)
+    * Don't enable Location Services
+    * Share crashes with app developers
     * Don't enable Ask Siri
 - [ ] Install Parallels Tools
 - [ ] Restart the VM
 - [ ] Change the desktop background to a solid color
 - [ ] Enable remote login in System Settings -> General -> Sharing -> Remote Login
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.241.0/vsts-agent-osx-x64-3.241.0.tar.gz
-- [ ] Start the VM. Change the screen resolution to not be teeny weeny eyestrain o vision.
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.245.0/vsts-agent-osx-x64-3.245.0.tar.gz
 - [ ] In the guest, set the vcpkg user to be able to use sudo without a password:
     ```sh
     printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
@@ -60,11 +61,6 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm setup-box.sh
     rm clt.dmg
     ```
-- [ ] In the guest, check that 'm4' works in the terminal. If it tries to reinstall the command line tools, let it do that. You might need to manually run this workaround from https://developer.apple.com/documentation/xcode-release-notes/xcode-15-release-notes#Known-Issues
-    ```sh
-    sudo mkdir -p /Library/Developer/CommandLineTools
-    sudo touch /Library/Developer/CommandLineTools/.beta
-    ```
 - [ ] Shut down the VM cleanly
 - [ ] Set the VM 'Isolated'
 - [ ] In Parallels control center, right click the VM and select "Prepare for Transfer"
@@ -73,10 +69,10 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ```sh
     ssh vcpkg@MACHINE
     brew install azcopy
-    azcopy copy ~/Parallels/vcpkg-osx-2024-07-12-amd64.pvmp "https://vcpkgimageminting...../pvms?<SAS>"
-    azcopy copy ~/Parallels/vcpkg-osx-2024-07-12-amd64.sha256.txt "https://vcpkgimageminting...../pvms?<SAS>"
+    azcopy copy ~/Parallels/vcpkg-osx-2024-10-02-amd64.pvmp "https://vcpkgimageminting...../pvms?<SAS>"
+    azcopy copy ~/Parallels/vcpkg-osx-2024-10-02-amd64.sha256.txt "https://vcpkgimageminting...../pvms?<SAS>"
     ```
-- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD` based on the current date. Check 'Grant access permission to all pipelines.'
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD` based on the current date. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
 - [ ] Remove the macOS installer from Applications
 - [ ] Follow the "Deploying images" steps below for each machine in the fleet.
 
@@ -92,13 +88,13 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     tar xvf macosvm-0.2-1-arm64-darwin21.tar.gz
     rm macosvm-0.2-1-arm64-darwin21.tar.gz
     ```
-- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: https://updates.cdn-apple.com/2024SpringFCS/fullrestores/062-01897/C874907B-9F82-4109-87EB-6B3C9BF1507D/UniversalMac_14.5_23F79_Restore.ipsw
-- [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2024-07-12-arm64".
-- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2024-07-12-arm64 and UniversalMac_14.5_23F79_Restore.ipsw replaced as appropriate.
+- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: https://updates.cdn-apple.com/2024FallFCS/fullrestores/062-78489/BDA44327-C79E-4608-A7E0-455A7E91911F/UniversalMac_15.0_24A335_Restore.ipsw
+- [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2024-10-02-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2024-10-02-arm64 and UniversalMac_15.0_24A335_Restore.ipsw replaced as appropriate.
     ```sh
-    mkdir -p ~/Parallels/vcpkg-osx-2024-07-12-arm64
-    cd ~/Parallels/vcpkg-osx-2024-07-12-arm64
-    ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_14.5_23F79_Restore.ipsw ./vm.json
+    mkdir -p ~/Parallels/vcpkg-osx-2024-10-02-arm64
+    cd ~/Parallels/vcpkg-osx-2024-10-02-arm64
+    ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_15.0_24A335_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
 - [ ] Follow prompts as you would on real hardware.
@@ -116,7 +112,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     sudo chmod 0440 '/etc/sudoers.d/vcpkg'
     exit
     ```
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.241.0/vsts-agent-osx-arm64-3.241.0.tar.gz
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.245.0/vsts-agent-osx-arm64-3.245.0.tar.gz
 - [ ] Copy setup-box.sh and the xcode installer renamed to 'clt.dmg' to the host. For example from a dev workstation:
     ```sh
     scp ./setup-guest.sh vcpkg@MACHINE:/Users/vcpkg
@@ -130,11 +126,6 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm setup-box.sh
     rm clt.dmg
     ```
-- [ ] In the guest, check that 'm4' works in the terminal. If it tries to reinstall the command line tools, let it do that. You might need to manually run this workaround from https://developer.apple.com/documentation/xcode-release-notes/xcode-15-release-notes#Known-Issues
-    ```sh
-    sudo mkdir -p /Library/Developer/CommandLineTools
-    sudo touch /Library/Developer/CommandLineTools/.beta
-    ```
 - [ ] Shut down the VM cleanly.
 - [ ] Mint a SAS token to vcpkgimageminting/pvms with read, add, create, write, and list permissions.
 - [ ] Open a terminal on the host and package the VM into a tarball:
@@ -143,9 +134,8 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     aa archive -d vcpkg-osx-<date>-arm64 -o vcpkg-osx-<date>-arm64.aar -enable-holes
     brew install azcopy
     azcopy copy vcpkg-osx-<date>-arm64.aar "https://vcpkgimageminting.blob.core.windows.net/pvms?<SAS>"
-    rm *.aar
     ```
-- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD-arm64` based on the current date. Check 'Grant access permission to all pipelines.'
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD-arm64` based on the current date. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
 - [ ] Follow the "Deploying images" steps below for each machine in the fleet.
 
 ## Deploying images
