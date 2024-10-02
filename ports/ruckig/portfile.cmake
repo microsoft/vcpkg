@@ -12,13 +12,10 @@ vcpkg_cmake_configure(
         -DBUILD_CLOUD_CLIENT=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_SHARED_LIBS=${VCPKG_LIBRARY_LINKAGE}
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(
-    CONFIG_PATH "lib/cmake/ruckig"
-    )
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ruckig")
 vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
