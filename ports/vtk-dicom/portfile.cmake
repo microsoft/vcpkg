@@ -34,6 +34,8 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         ${ADDITIONAL_OPTIONS}
+        -DCMAKE_POLICY_DEFAULT_CMP0012=NEW
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
 )
 
 vcpkg_cmake_install()
