@@ -442,6 +442,7 @@ vcpkg_cmake_configure(
         -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
         -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_OPENCL_D3D11_NV=OFF
         -DWITH_ITT=OFF
         -DWITH_NVCUVID=OFF
         -DWITH_NVCUVENC=OFF
