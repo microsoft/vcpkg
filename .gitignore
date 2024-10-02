@@ -295,6 +295,7 @@ __pycache__/
 !/triplets/arm-uwp.cmake
 !/triplets/arm64-windows.cmake
 !/triplets/x64-linux.cmake
+!/triplets/arm64e-osx.cmake
 !/triplets/x64-osx.cmake
 !/triplets/x64-uwp.cmake
 !/triplets/x64-windows-static.cmake
