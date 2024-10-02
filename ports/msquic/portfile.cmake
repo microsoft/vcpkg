@@ -31,8 +31,8 @@ file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
 vcpkg_from_github(
     OUT_SOURCE_PATH XDP_WINDOWS
     REPO microsoft/xdp-for-windows
-    REF ce228a986fd30049ed58f569d2bf20efffc250f3
-    SHA512 4a26c5defe422ef42308d72cf8d1cab1c172ce5a10d8d830c446cb7dd93f0c41f35f3cbbfeceb687d5135272006dd1b1bc4c2089ace4866cede81d5c76206af7
+    REF  v1.0.2
+    SHA512 1b26487fa79c8796d4b0d5e09f4fc9acb003d8e079189ec57a36ff03c9c2620829106fdbc4780e298872826f3a97f034d40e04d00a77ded97122874d13bfb145
     HEAD_REF main
 )
 
