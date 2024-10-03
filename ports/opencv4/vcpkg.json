@@ -282,7 +282,7 @@
       "description": "allow nonfree and unredistributable libraries"
     },
     "opencl": {
-      "description": "enable opencl support",
+      "description": "Enable opencl support",
       "dependencies": [
         "opencl"
       ]
