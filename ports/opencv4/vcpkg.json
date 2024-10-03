@@ -488,7 +488,8 @@
       ]
     },
     "win32ui": {
-      "description": "Enable win32ui"
+      "description": "Enable win32ui",
+      "supports": "windows & !uwp"
     },
     "world": {
       "description": "Compile to a single package support for opencv"
