@@ -79,7 +79,7 @@ function(vcpkg_run_autoreconf shell_cmd work_dir)
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_shell(
         SHELL ${shell_cmd}
-        COMMAND ${AUTORECONF} -vfi
+        COMMAND "${AUTORECONF}" -vfi
         WORKING_DIRECTORY "${work_dir}"
         LOGNAME "autoconf-${TARGET_TRIPLET}"
     )

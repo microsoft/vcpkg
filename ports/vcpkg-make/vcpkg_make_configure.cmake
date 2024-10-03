@@ -48,7 +48,7 @@ function(vcpkg_make_configure)
         set(BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
     endif()
     if(NOT DEFINED BUILD_TRIPLET)
-        z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME ccname)
+        z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}")
     endif()
 
     if(NOT arg_DISABLE_MSVC_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
