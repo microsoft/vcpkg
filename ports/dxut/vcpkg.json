@@ -1,7 +1,6 @@
 {
   "name": "dxut",
-  "version": "11.31",
-  "port-version": 3,
+  "version": "11.32",
   "description": "A \"GLUT\"-like framework for Direct3D 11.x Win32 desktop applications",
   "homepage": "https://github.com/Microsoft/DXUT",
   "documentation": "https://github.com/microsoft/DXUT/wiki",

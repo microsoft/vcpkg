@@ -1,33 +1,37 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} doesn't currently support UWP.")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
-    REF 2bbbfa918df01b7f364d176610e9785bceb4d5de
-    SHA512 3744aa9e50150261cc3a52272a4cdeafdb4f678a6f6a986a9549c2efead6b4c69bc3d9a6f9f302140ce363d6da965e47b63c0310364307e9caa82c86f75a509f
+    REF "v${VERSION}"
+    SHA512 cb150562b09c5a79df1e2c730481ceda340f235e1efb7824564d1f95a9981eada087af06bc3907a777a55d315a1521fb8a09249f2aeefd9e40e6c783b9c7a11c
     HEAD_REF master
     PATCHES 
-        "fix_install_paths_lastools.patch"
-        "fix_include_directories_lastools.patch"
+        fix_install_paths_lastools.patch
+        fix_include_directories_lastools.patch
+        build-tools.diff
+        insecure-fprintf.diff
+        signed-char.diff
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        tools   BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${options}
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
-
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LASlib PACKAGE_NAME laslib)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME LASlib CONFIG_PATH share/lastools/LASlib)
+if(BUILD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64  AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/COPYING.txt")

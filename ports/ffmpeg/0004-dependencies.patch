@@ -1,6 +1,8 @@
 diff --git a/configure b/configure
-index 3243e23021..6d3f31fc95 100755
-@@ -6630,7 +6630,7 @@ fi
+index a8b74e0..c99f41c 100755
+--- a/configure
++++ b/configure
+@@ -6633,7 +6633,7 @@ fi
  
  enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
                     check_lib zlib   zlib.h      zlibVersion    -lz; }
@@ -19,7 +21,16 @@ index 3243e23021..6d3f31fc95 100755
  enabled libmysofa         && { check_pkg_config libmysofa libmysofa mysofa.h mysofa_neighborhood_init_withstepdefine ||
                                 require libmysofa mysofa.h mysofa_neighborhood_init_withstepdefine -lmysofa $zlib_extralibs; }
  enabled libnpp            && { check_lib libnpp npp.h nppGetLibVersion -lnppig -lnppicc -lnppc -lnppidei -lnppif ||
-@@ -6793,8 +6794,8 @@ enabled libshaderc        && require_pkg_config spirv_compiler "shaderc >= 2019.
+@@ -6772,7 +6773,7 @@                                require_pkg_config libopencv opencv opencv/cxcore.h cvCreateImageHeader; }
+ enabled libopenh264       && require_pkg_config libopenh264 "openh264 >= 1.3.0" wels/codec_api.h WelsGetCodecVersion
+ enabled libopenjpeg       && { check_pkg_config libopenjpeg "libopenjp2 >= 2.1.0" openjpeg.h opj_version ||
+                               { require_pkg_config libopenjpeg "libopenjp2 >= 2.1.0" openjpeg.h opj_version -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } }
+-enabled libopenmpt        && require_pkg_config libopenmpt "libopenmpt >= 0.2.6557" libopenmpt/libopenmpt.h openmpt_module_create -lstdc++ && append libopenmpt_extralibs "-lstdc++"
++enabled libopenmpt        && require_pkg_config libopenmpt "libopenmpt >= 0.2.6557" libopenmpt/libopenmpt.h openmpt_module_create
+ enabled libopenvino       && { { check_pkg_config libopenvino openvino openvino/c/openvino.h ov_core_create && enable openvino2; } ||
+                                 { check_pkg_config libopenvino openvino c_api/ie_c_api.h ie_c_api_version ||
+                                   require libopenvino c_api/ie_c_api.h ie_c_api_version -linference_engine_c_api; } }
+@@ -6796,8 +6797,8 @@ enabled libshaderc        && require_pkg_config spirv_compiler "shaderc >= 2019.
  enabled libshine          && require_pkg_config libshine shine shine/layer3.h shine_encode_buffer
  enabled libsmbclient      && { check_pkg_config libsmbclient smbclient libsmbclient.h smbc_init ||
                                 require libsmbclient libsmbclient.h smbc_init -lsmbclient; }
@@ -30,7 +41,7 @@ index 3243e23021..6d3f31fc95 100755
  enabled libssh            && require_pkg_config libssh "libssh >= 0.6.0" libssh/sftp.h sftp_init
  enabled libspeex          && require_pkg_config libspeex speex speex/speex.h speex_decoder_init
  enabled libsrt            && require_pkg_config libsrt "srt >= 1.3.0" srt/srt.h srt_socket
-@@ -6884,6 +6885,8 @@ enabled openal            && { check_pkg_config openal "openal >= 1.1" "AL/al.h"
+@@ -6880,6 +6881,8 @@ enabled openal            && { check_pkg_config openal "openal >= 1.1" "AL/al.h"
  enabled opencl            && { check_pkg_config opencl OpenCL CL/cl.h clEnqueueNDRangeKernel ||
                                 check_lib opencl OpenCL/cl.h clEnqueueNDRangeKernel -Wl,-framework,OpenCL ||
                                 check_lib opencl CL/cl.h clEnqueueNDRangeKernel -lOpenCL ||
@@ -39,7 +50,7 @@ index 3243e23021..6d3f31fc95 100755
                                 die "ERROR: opencl not found"; } &&
                               { test_cpp_condition "OpenCL/cl.h" "defined(CL_VERSION_1_2)" ||
                                 test_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
-@@ -7208,10 +7211,10 @@ enabled amf &&
+@@ -7204,10 +7207,10 @@ enabled amf &&
          "(AMF_VERSION_MAJOR << 48 | AMF_VERSION_MINOR << 32 | AMF_VERSION_RELEASE << 16 | AMF_VERSION_BUILD_NUM) >= 0x00010004001d0000"
  
  # Funny iconv installations are not unusual, so check it after all flags have been set

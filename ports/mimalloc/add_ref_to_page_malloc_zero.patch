@@ -1,0 +1,12 @@
+diff --git a/src/alloc.c b/src/alloc.c
+index 86aaae75..b543e859 100644
+--- a/src/alloc.c
++++ b/src/alloc.c
+@@ -584,6 +584,7 @@ mi_decl_nodiscard void* mi_new_reallocn(void* p, size_t newcount, size_t size) {
+ #ifdef __cplusplus
+ void* _mi_externs[] = {
+   (void*)&_mi_page_malloc,
++  (void*)&_mi_page_malloc_zero,
+   (void*)&_mi_heap_malloc_zero,
+   (void*)&_mi_heap_malloc_zero_ex,
+   (void*)&mi_malloc,

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 86a4e325879cde826df068d1154ccf031bbca7a0afa3f2afc57fa41322af245ec477db9fb38fff298c9e269261de1a2ece7849ae1a3512e0ebeb8414167372c0
+    SHA512 7d77e70a3ceaa69f25edaf82d371899340a4713db0101d2058273cff675d57867242f23983c71a9482fae922734807ae06387381e76eae963b7c8af6a26fa66b
     HEAD_REF master
     PATCHES
         disable-warnings.patch

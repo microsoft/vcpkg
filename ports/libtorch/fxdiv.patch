@@ -1,5 +1,5 @@
 diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-index d18523352..1f53945cf 100644
+index d185233..11f285b 100644
 --- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 +++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 @@ -389,12 +389,12 @@ if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
@@ -19,10 +19,10 @@ index d18523352..1f53945cf 100644
  target_link_libraries(pytorch_qnnpack PRIVATE fxdiv)
  
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index f7a595e1b..fb315c435 100644
+index f7a595e..47faec5 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -108,11 +108,18 @@ endif()
+@@ -108,12 +108,19 @@ endif()
  # addressed yet.
  
  if(NOT MSVC AND USE_XNNPACK)
@@ -42,3 +42,4 @@ index f7a595e1b..fb315c435 100644
 +    target_include_directories(fxdiv INTERFACE "${FXDIV_HDR}")
    endif()
  endif()
+ 

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ea1fb066..351fe6c3f 100644
+index 4f2fc25d2..e82e353e0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -351,8 +351,10 @@ endif(HAS_QT5)
+@@ -357,8 +357,10 @@ endif()
  # --------------------------------------------------------
  # ecal rec addon sdk
  # --------------------------------------------------------

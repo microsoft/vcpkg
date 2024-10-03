@@ -1,102 +1,54 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b001bb7..b9fb566 100644
+index 2eba16d..a46cb3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,6 +44,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
- 
- option(USE_PKCS11_HELPER_LIBRARY "Build Mbed TLS with the pkcs11-helper library." OFF)
- option(ENABLE_ZLIB_SUPPORT "Build Mbed TLS with zlib library." OFF)
-+option(ENABLE_PTHREAD "Build Mbed TLS with pthread" OFF)
- 
- option(ENABLE_PROGRAMS "Build Mbed TLS programs." ON)
- 
-@@ -263,6 +264,8 @@ else()
-     set(LIB_INSTALL_DIR lib)
- endif()
- 
-+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
-+
- if(ENABLE_ZLIB_SUPPORT)
-     find_package(ZLIB)
- 
-@@ -271,6 +274,17 @@ if(ENABLE_ZLIB_SUPPORT)
-     endif(ZLIB_FOUND)
- endif(ENABLE_ZLIB_SUPPORT)
- 
-+if(ENABLE_PTHREAD)
-+    if(WIN32)
-+        find_package(pthreads_windows REQUIRED)
-+        include_directories(${PThreads4W_INCLUDE_DIR})
-+    else()
-+        set(CMAKE_THREAD_PREFER_PTHREAD ON)
-+        find_package(Threads REQUIRED)
-+    endif()
-+    set(LINK_WITH_PTHREAD ON)
+@@ -123,7 +123,17 @@ endif()
+ # We now potentially need to link all executables against PThreads, if available
+ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+-find_package(Threads)
++if(NOT LINK_WITH_PTHREAD)
++    set(CMAKE_DISABLE_FIND_PACKAGE_Threads ON)
++elseif(WIN32 AND NOT MINGW)
++    find_package(PThreads4W REQUIRED)
++    set(CMAKE_THREAD_LIBS_INIT PThreads4W::PThreads4W)
++    add_definitions(-DLINK_WITH_PTHREAD)
++else()
++    find_package(Threads REQUIRED)
++    set(CMAKE_THREAD_LIBS_INIT Threads::Threads)
++    add_definitions(-DLINK_WITH_PTHREAD)
 +endif()
-+
- add_subdirectory(include)
  
- add_subdirectory(3rdparty)
-diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index 11b417b..5ca44c3 100644
---- a/include/CMakeLists.txt
-+++ b/include/CMakeLists.txt
-@@ -1,10 +1,14 @@
- option(INSTALL_MBEDTLS_HEADERS "Install Mbed TLS headers." ON)
+ # If this is the root project add longer list of available CMAKE_BUILD_TYPE values
+ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+diff --git a/cmake/MbedTLSConfig.cmake.in b/cmake/MbedTLSConfig.cmake.in
+index b65bbab..5919c37 100644
+--- a/cmake/MbedTLSConfig.cmake.in
++++ b/cmake/MbedTLSConfig.cmake.in
+@@ -1,3 +1,11 @@
+ @PACKAGE_INIT@
  
-+configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
-+
- if(INSTALL_MBEDTLS_HEADERS)
- 
-     file(GLOB headers "mbedtls/*.h")
-     file(GLOB psa_headers "psa/*.h")
--
-+    
-+    set(headers ${headers} ${CMAKE_CURRENT_BINARY_DIR}/mbedtls/config_threading.h)
-+    
-     install(FILES ${headers}
-         DESTINATION include/mbedtls
-         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
-diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
-index ac2146e..4cd831a 100644
---- a/include/mbedtls/config.h
-+++ b/include/mbedtls/config.h
-@@ -12,6 +12,8 @@
-  *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
++if("@LINK_WITH_PTHREAD@")
++  include(CMakeFindDependencyMacro)
++  if(WIN32 AND NOT MINGW)
++    find_dependency(PThreads4W)
++  else()
++    find_dependency(Threads)
++  endif()
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/MbedTLSTargets.cmake")
+diff --git a/include/mbedtls/mbedtls_config.h b/include/mbedtls/mbedtls_config.h
+index 3592141..174cabc 100644
+--- a/include/mbedtls/mbedtls_config.h
++++ b/include/mbedtls/mbedtls_config.h
+@@ -2091,6 +2091,10 @@
+  * Uncomment this to enable pthread mutexes.
   */
- 
-+#include "mbedtls/config_threading.h"
-+
- #ifndef MBEDTLS_CONFIG_H
- #define MBEDTLS_CONFIG_H
- 
-diff --git a/include/mbedtls/config_threading.h.in b/include/mbedtls/config_threading.h.in
-new file mode 100644
-index 0000000..9d5d42e
---- /dev/null
-+++ b/include/mbedtls/config_threading.h.in
-@@ -0,0 +1,6 @@
-+#cmakedefine ENABLE_PTHREAD
-+
-+#ifdef ENABLE_PTHREAD
+ //#define MBEDTLS_THREADING_PTHREAD
++#ifdef LINK_WITH_PTHREAD
 +#define MBEDTLS_THREADING_C
 +#define MBEDTLS_THREADING_PTHREAD
 +#endif
-\ No newline at end of file
-diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 1b2980d..8c495fe 100644
---- a/library/CMakeLists.txt
-+++ b/library/CMakeLists.txt
-@@ -149,7 +149,11 @@ if(ENABLE_ZLIB_SUPPORT)
- endif(ENABLE_ZLIB_SUPPORT)
  
- if(LINK_WITH_PTHREAD)
--    set(libs ${libs} pthread)
-+    if(WIN32)
-+        set(libs ${libs} ${PThreads4W_LIBRARY})
-+    else()
-+        set(libs ${libs} pthread)
-+    endif()
- endif()
- 
- if(LINK_WITH_TRUSTED_STORAGE)
+ /**
+  * \def MBEDTLS_USE_PSA_CRYPTO
