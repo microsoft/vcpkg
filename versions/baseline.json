@@ -725,8 +725,8 @@
       "port-version": 0
     },
     "bond": {
-      "baseline": "11.0.1",
-      "port-version": 4
+      "baseline": "13.0.1",
+      "port-version": 0
     },
     "boolinq": {
       "baseline": "3.0.4",
@@ -1238,7 +1238,7 @@
     },
     "boost-stacktrace": {
       "baseline": "1.85.0",
-      "port-version": 3
+      "port-version": 4
     },
     "boost-statechart": {
       "baseline": "1.85.0",
@@ -1365,7 +1365,7 @@
       "port-version": 1
     },
     "boringssl": {
-      "baseline": "2023-10-13",
+      "baseline": "2024-09-13",
       "port-version": 0
     },
     "botan": {
@@ -5373,8 +5373,8 @@
       "port-version": 0
     },
     "libxlsxwriter": {
-      "baseline": "1.1.5",
-      "port-version": 2
+      "baseline": "1.1.8",
+      "port-version": 1
     },
     "libxml2": {
       "baseline": "2.11.9",
@@ -5397,8 +5397,8 @@
       "port-version": 1
     },
     "libxpm": {
-      "baseline": "3.5.16",
-      "port-version": 1
+      "baseline": "3.5.17",
+      "port-version": 0
     },
     "libxpresent": {
       "baseline": "1.0.0",
