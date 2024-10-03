@@ -579,7 +579,7 @@
       ]
     },
     "win32ui": {
-      "description": "enable win32ui",
+      "description": "Enable win32ui",
       "dependencies": [
         {
           "name": "opencv4",
