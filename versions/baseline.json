@@ -9273,7 +9273,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2024-01-30",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "vcpkg-get-python": {
