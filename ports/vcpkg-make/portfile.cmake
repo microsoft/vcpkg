@@ -11,22 +11,22 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE}
 )
 
-file(COPY 
-        "${CMAKE_CURRENT_LIST_DIR}/" 
+file(INSTALL 
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_configure.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_install.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_common.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_scripts.cmake" 
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
     DESTINATION 
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-file(COPY 
+file(INSTALL 
         "${automake_source}/lib/ar-lib"
         "${automake_source}/lib/compile"
     DESTINATION 
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/wrappers"
-)
-
-file(REMOVE 
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}/portfile.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg.json"
 )
 
 vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
