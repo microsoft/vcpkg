@@ -1,0 +1,13 @@
+diff --git a/config/cmake/Modules/FindGEOTIFF.cmake b/config/cmake/Modules/FindGEOTIFF.cmake
+index bcc8fc5..ed9420e 100644
+--- a/config/cmake/Modules/FindGEOTIFF.cmake
++++ b/config/cmake/Modules/FindGEOTIFF.cmake
+@@ -18,7 +18,7 @@ if (${VXL_USE_GEOTIFF})
+ 
+     # If this FORCE variable is unset or is FALSE, try to find a native library.
+     if( NOT VXL_FORCE_V3P_GEOTIFF )
+-      include( ${MODULE_PATH}/NewCMake/FindGEOTIFF.cmake )
++      find_package(GeoTIFF CONFIG REQUIRED)
+       if( GEOTIFF_FOUND )
+         set(VXL_USING_NATIVE_GEOTIFF "YES")
+       endif()

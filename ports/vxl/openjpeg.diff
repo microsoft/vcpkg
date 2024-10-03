@@ -1,0 +1,13 @@
+diff --git a/v3p/openjpeg2/CMakeLists.txt b/v3p/openjpeg2/CMakeLists.txt
+index 67b184e..cdd7c0d 100644
+--- a/v3p/openjpeg2/CMakeLists.txt
++++ b/v3p/openjpeg2/CMakeLists.txt
+@@ -1,3 +1,8 @@
++if(NOT VXL_FORCE_V3P_OPENJPEG2)
++  set(OPENJPEG2_FOUND FALSE)
++  return()
++endif()
++
+ project(OpenJPEG C)
+ 
+ include(${VXL_CMAKE_DIR}/FindOpenJPEG2.cmake)
