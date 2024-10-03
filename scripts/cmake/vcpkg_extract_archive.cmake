@@ -34,7 +34,6 @@ function(vcpkg_extract_archive)
             WORKING_DIRECTORY "${archive_directory}"
         )
     elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
-        vcpkg_find_acquire_program(7Z)
         vcpkg_execute_in_download_mode(
             COMMAND "z-extract"
                 "${arg_ARCHIVE}"
