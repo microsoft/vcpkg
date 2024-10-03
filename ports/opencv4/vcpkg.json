@@ -306,7 +306,7 @@
       ]
     },
     "openmp": {
-      "description": "Enable openmp support for opencv",
+      "description": "Enable OpenMP support",
       "supports": "!osx"
     },
     "openvino": {
