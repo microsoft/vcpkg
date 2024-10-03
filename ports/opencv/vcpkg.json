@@ -339,7 +339,7 @@
       ]
     },
     "opencl": {
-      "description": "enable opencl support",
+      "description": "Enable OpenCL support",
       "dependencies": [
         {
           "name": "opencv4",
