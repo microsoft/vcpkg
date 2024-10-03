@@ -1,0 +1,43 @@
+diff --git a/srclib/canonicalize-lgpl.c b/srclib/canonicalize-lgpl.c
+index a7fa7fe..8199b35 100644
+--- a/srclib/canonicalize-lgpl.c
++++ b/srclib/canonicalize-lgpl.c
+@@ -71,6 +71,10 @@
+ #  define __getcwd(buf, max) getwd (buf)
+ # endif
+ # define __mempcpy mempcpy
++#if defined(__ANDROID_API__) && __ANDROID_API__ < 23
++# undef __mempcpy
++# define __mempcpy rpl_mempcpy
++#endif
+ # define __pathconf pathconf
+ # define __rawmemchr rawmemchr
+ # define __readlink readlink
+diff --git a/srclib/mempcpy.c b/srclib/mempcpy.c
+index 9aae418..c24f58e 100644
+--- a/srclib/mempcpy.c
++++ b/srclib/mempcpy.c
+@@ -21,6 +21,9 @@
+ 
+ /* A function definition is only needed if HAVE_MEMPCPY is not defined.  */
+ #if !HAVE_MEMPCPY
++#if defined(__ANDROID_API__) && __ANDROID_API__ < 23
++# define mempcpy rpl_mempcpy
++#endif
+ 
+ /* Copy N bytes of SRC to DEST, return pointer to bytes after the
+    last written byte.  */
+diff --git a/srclib/stdlib.in.h b/srclib/stdlib.in.h
+index a86643c..92dff31 100644
+--- a/srclib/stdlib.in.h
++++ b/srclib/stdlib.in.h
+@@ -1553,6 +1553,9 @@ _GL_CXXALIASWARN (wctomb);
+ # endif
+ #endif
+ 
++#if defined(__ANDROID_API__) && __ANDROID_API__ < 23
++_GL_FUNCDECL_RPL (mempcpy, void *, (void *, const void *, size_t));
++#endif
+ 
+ #endif /* _@GUARD_PREFIX@_STDLIB_H */
+ #endif /* _@GUARD_PREFIX@_STDLIB_H */
