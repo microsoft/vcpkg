@@ -13,9 +13,7 @@ z_vcpkg_make_prepare_link_flags(
     VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
     VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
 
-if(NOT all_libs_list STREQUAL "${expected}")
-    message(FATAL_ERROR "Test 1: z_vcpkg_make_prepare_link_flags failed: expected ${expected} ${all_libs_list}")
-endif()
+unit_test_check_variable_equal([[]] all_libs_list "${expected}")
 
 # Test 2: Remove uuid on Windows
 set(all_libs_list "libexample.dll;uuid.lib")
@@ -32,9 +30,7 @@ z_vcpkg_make_prepare_link_flags(
     VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
     VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
 
-if(NOT all_libs_list STREQUAL "${expected}")
-    message(FATAL_ERROR "Test 2: z_vcpkg_make_prepare_link_flags failed: expected ${expected} vs ${all_libs_list}")
-endif()
+unit_test_check_variable_equal([[]] all_libs_list "${expected}")
 
 # Test 3: MinGW Dynamic Linkage Handling
 set(all_libs_list "libexample.so;uuid.a")
@@ -51,9 +47,7 @@ z_vcpkg_make_prepare_link_flags(
     VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
     VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
 
-if (NOT all_libs_list STREQUAL "${expected}")
-    message(FATAL_ERROR "Test 3: z_vcpkg_make_prepare_link_flags failed: expected ${expected} vs ${all_libs_list}")
-endif()
+unit_test_check_variable_equal([[]] all_libs_list "${expected}")
 
 # Test 4: No Transformation Flag
 set(all_libs_list "libexample.dll;uuid.lib")
@@ -70,9 +64,4 @@ z_vcpkg_make_prepare_link_flags(
     VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
     VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
 
-if (NOT all_libs_list STREQUAL "${expected}")
-    message(FATAL_ERROR "Test 4: z_vcpkg_make_prepare_link_flags failed: expected ${expected} vs ${all_libs_list}")
-endif()
-
-message(STATUS "z_vcpkg_make_prepare_link_flags tests passed.")
-
+unit_test_check_variable_equal([[]] all_libs_list "${expected}")

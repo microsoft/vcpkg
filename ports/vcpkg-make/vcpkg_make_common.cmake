@@ -433,29 +433,29 @@ function(z_vcpkg_make_prepare_programs out_env)
 endfunction()
 
 function(z_vcpkg_make_prepare_link_flags)
-    cmake_parse_arguments(PARSE_ARGV 0
+    cmake_parse_arguments(PARSE_ARGV 0 arg
         ""
         "IN_OUT_VAR;X_VCPKG_TRANSFORM_LIBS;VCPKG_TARGET_IS_WINDOWS;VCPKG_TARGET_IS_MINGW;VCPKG_LIBRARY_LINKAGE"
         "")
 
-    set(link_flags ${${IN_OUT_VAR}})
+    set(link_flags ${${arg_IN_OUT_VAR}})
     
-    if(X_VCPKG_TRANSFORM_LIBS STREQUAL "ON")
+    if(arg_X_VCPKG_TRANSFORM_LIBS STREQUAL "ON")
         list(TRANSFORM link_flags REPLACE "[.](dll[.]lib|lib|a|so)$" "")
 
-        if(VCPKG_TARGET_IS_WINDOWS STREQUAL "TRUE")
+        if(arg_VCPKG_TARGET_IS_WINDOWS STREQUAL "TRUE")
             list(REMOVE_ITEM link_flags "uuid")
         endif()
 
         list(TRANSFORM link_flags REPLACE "^([^-].*)" "-l\\1")
-        if(VCPKG_TARGET_IS_MINGW STREQUAL "TRUE" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(arg_VCPKG_TARGET_IS_MINGW STREQUAL "TRUE" AND arg_VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             # libtool must be told explicitly that there is no dynamic linkage for uuid.
             # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
             list(TRANSFORM link_flags REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
         endif()
     endif()
 
-    set(${IN_OUT_VAR} ${link_flags} PARENT_SCOPE)
+    set(${arg_IN_OUT_VAR} ${link_flags} PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_make_prepare_flags)
