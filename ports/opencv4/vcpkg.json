@@ -158,7 +158,7 @@
       ]
     },
     "dshow": {
-      "description": "enable DirectShow"
+      "description": "Enable DirectShow"
     },
     "eigen": {
       "description": "Eigen support for opencv",
