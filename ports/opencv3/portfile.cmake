@@ -304,6 +304,8 @@ vcpkg_cmake_configure(
         -DWITH_FFMPEG=OFF
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
+        ###### Python install path
+        -D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
 )
