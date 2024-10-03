@@ -327,7 +327,7 @@
       ]
     },
     "nonfree": {
-      "description": "allow nonfree and unredistributable libraries",
+      "description": "Allow nonfree and unredistributable libraries",
       "dependencies": [
         {
           "name": "opencv4",
