@@ -249,7 +249,7 @@
       "description": "highgui module"
     },
     "intrinsics": {
-      "description": "enable intrinsics"
+      "description": "Enable intrinsics"
     },
     "ipp": {
       "description": "Enable Intel Integrated Performance Primitives",
