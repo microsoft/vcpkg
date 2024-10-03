@@ -487,6 +487,8 @@ intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
 irrlicht:x64-android=fail
+# Needs arrayfire[cuda], but arrayfire can't use CUDA 12
+irrlicht-cuda:x64-linux=skip
 isal:x64-android=fail
 itk:arm-neon-android=fail
 itk:arm64-android=fail
