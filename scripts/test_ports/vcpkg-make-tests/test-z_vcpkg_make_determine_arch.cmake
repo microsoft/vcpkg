@@ -22,7 +22,7 @@ foreach(idx RANGE 0 ${num_tests})
     math(EXPR output_idx "${idx} * 2 + 1")
     list(GET test_cases ${input_idx} input)
     list(GET test_cases ${output_idx} expected)
-    
+
     set(result_arch)
     z_vcpkg_make_determine_arch(result_arch ${input})
     unit_test_check_variable_equal([[]] result_arch "${expected}")
