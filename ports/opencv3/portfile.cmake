@@ -306,6 +306,7 @@ vcpkg_cmake_configure(
         -DWITH_CUBLAS=OFF
         ###### Python install path
         -D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2
+        -DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
 )
