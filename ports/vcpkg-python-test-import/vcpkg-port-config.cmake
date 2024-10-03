@@ -45,26 +45,14 @@ function(vcpkg_python_test_import)
     string(APPEND PYTHON_IMPORTS "from ${module} import *\n")
   endforeach()
 
-  unset(pythonpath_bak)
-  if(DEFINED ENV{PYTHONPATH})
-    set(pythonpath_bak "$ENV{PYTHONPATH}")
-  endif()
-
-  set(ENV{PYTHONPATH} "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}")
-
   message(STATUS "Testing import of python module '${arg_MODULES}' ...")
 
   configure_file("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/import_test.py.in" "${CURRENT_BUILDTREES_DIR}/import_test.py" @ONLY)
 
-  vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${CURRENT_BUILDTREES_DIR}/import_test.py"
+  vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "-I" "${CURRENT_BUILDTREES_DIR}/import_test.py"
     LOGNAME "python-import-${arg_MODULE}-${TARGET_TRIPLET}"
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
   )
   message(STATUS "Import of '${arg_MODULES}' successful")
 
-  if(DEFINED pythonpath_bak)
-    set(ENV{PYTHONPATH} "${pythonpath_bak}")
-  else()
-    unset(ENV{PYTHONPATH})
-  endif()
 endfunction()
