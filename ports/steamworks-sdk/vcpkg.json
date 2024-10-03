@@ -4,7 +4,7 @@
   "description": "Steamworks is a free collection of tools available to all developers for use in their games or software on Steam.",
   "homepage": "https://partner.steamgames.com/doc/sdk",
   "license": null,
-  "supports": "(windows & x64) | (windows & x86) | (osx & x64) | (linux & x64) | (linux & x86)",
+  "supports": "((windows & x64) | (windows & x86) | (osx & x64) | (linux & x64) | (linux & x86)) & !static",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
