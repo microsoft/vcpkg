@@ -82,6 +82,7 @@ include("${SCRIPTS}/cmake/vcpkg_list.cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
 include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
 include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
+include("${SCRIPTS}/cmake/vcpkg_write_sourcelink_file.cmake")
 
 include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
@@ -123,6 +124,7 @@ set(CURRENT_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}" CACHE PATH
 if(PORT)
     set(CURRENT_BUILDTREES_DIR "${BUILDTREES_DIR}/${PORT}")
     set(CURRENT_PACKAGES_DIR "${PACKAGES_DIR}/${PORT}_${TARGET_TRIPLET}")
+    set(_CURRENT_SOURCELINK_FILE ${BUILDTREES_DIR}/${PORT}/sourcelink/${PORT}.json)
 endif()
 
 if(CMD STREQUAL "BUILD")

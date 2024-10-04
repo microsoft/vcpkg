@@ -118,5 +118,11 @@ Error was: ${head_version_err}
         ${working_directory_param}
         ${skip_patch_check_param}
     )
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}/*"
+        SERVER_PATH "https://raw.githubusercontent.com/${ORG_NAME}/${REPO_NAME}/${_version}/*"
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

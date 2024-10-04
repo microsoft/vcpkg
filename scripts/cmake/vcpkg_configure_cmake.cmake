@@ -216,6 +216,10 @@ function(vcpkg_configure_cmake)
         z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
+    if(EXISTS ${_CURRENT_SOURCELINK_FILE})
+        list(APPEND _csc_OPTIONS "-DVCPKG_SOURCELINK_FILE=${_CURRENT_SOURCELINK_FILE}")
+    endif()
+
     vcpkg_list(APPEND arg_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
