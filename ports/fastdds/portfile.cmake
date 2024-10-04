@@ -2,12 +2,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
-    REF v2.14.0
-    SHA512 cf3628ac7598c83f09e3975de9fb59e868797adc331d7b4a226c38c0bbd1f7ce15deeb7cedee938a86a68426585e0b5646a84f40705c9a04553b7e37f20b2a4d
+    REF "v${VERSION}"
+    SHA512 84333bef4b5264b72129e515c2208048c25794d7d653073298cbf5f43ba95c85f2aa64f30e6911a69daf9affc4dc1e10cea4064da43fdd709bbe04ef1cf1f4d7
     HEAD_REF master
     PATCHES
         fix-find-package-asio.patch
         disable-symlink.patch
+        pdb-file.patch
 )
 
 set(extra_opts "")
@@ -28,7 +29,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/fastrtps/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/fastdds/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # copy tools from "bin" to "tools" folder
