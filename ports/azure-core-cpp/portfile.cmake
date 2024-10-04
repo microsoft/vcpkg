@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "azure-core_${VERSION}"
     SHA512 5d6c93fb5914c3ed1f9e31b37244e6a9e210467ed6887cb35ec31e8ca88119d734cbb80a6c48aef17e823062f5aa202ac7c2cf0139de5bda7b86668b13908150
     HEAD_REF main
+    PATCHES
+      useragent.patch
 )
 
 vcpkg_check_features(
