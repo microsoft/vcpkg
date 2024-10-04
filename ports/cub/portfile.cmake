@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVlabs/cub
     REF "${VERSION}"
-    SHA512 f88fdf80c81b8b5d3d09797bf5e9a9e82e1365950b358e0ffc2141b465646c2054ce7e6a30ae07735fbaa69d07c9a8e9bab57c8ddb8a0db8426b27eadd045197
+    SHA512 0
     HEAD_REF master
     PATCHES fix-usage.patch
 )
