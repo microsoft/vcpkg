@@ -570,7 +570,7 @@ function(vcpkg_add_sourcelink_link_options target)
             else()
                 # Due to cmd.exe command line length limitations (encountered by e.g. Ninja), /sourcelink
                 # parameters are passed indirectly through a response file.
-                set(PASS_SOURCE_LINK_DIRECTLY 0)
+                set(PASS_SOURCELINK_DIRECTLY 0)
 
                 set(SOURCELINK_RSP_TMP "${_VCPKG_SOURCELINK_RSP}.tmp")
 
