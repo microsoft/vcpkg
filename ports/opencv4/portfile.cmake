@@ -593,13 +593,13 @@ if(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 if("python" IN_LIST FEATURES)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/python3/Lib/site-packages/cv2/typing")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/python3/Lib/site-packages/cv2/config.py"
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/typing")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/config.py"
     "path = os.path.join('${CURRENT_PACKAGES_DIR}', 'bin')"
     "path = os.path.join('.', 'bin')"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/python3/Lib/site-packages/cv2/config-3.11.py"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/config-3.11.py"
     "path = os.path.join('${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2', 'python-3.11')"
     "path = os.path.join('.', 'python-3.11')"
     IGNORE_UNCHANGED
