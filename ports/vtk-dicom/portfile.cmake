@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dgobbi/vtk-dicom
     REF cfeceadfa68d2cc3172632bd1fd3ea8a38b6c609 # v0.8.16
-    SHA512 0
+    SHA512 0715ef91a1c585c9c819efd2bd6e2b73d3bff73a626b89f4877812fa6587e8379fb55ad99a376fb4d8dfa46c438e7a7052ba02ae61feb950cafb00c95df09b3f
     HEAD_REF master
 )
 
