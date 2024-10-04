@@ -21,15 +21,15 @@ Specified the permanent location of the corresponding sources.
 
 
 function(vcpkg_write_sourcelink_file)
-    cmake_parse_arguments(_vwsf "" "SOURCE_PATH;SERVER_PATH" "" ${ARGN})
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;SERVER_PATH" "")
 
-    if(NOT DEFINED _vwsf_SOURCE_PATH OR NOT DEFINED _vwsf_SERVER_PATH)
+    if(NOT DEFINED arg_SOURCE_PATH OR NOT DEFINED arg_SERVER_PATH)
         message(FATAL_ERROR "SOURCE_PATH and SERVER_PATH must be specified.")
     endif()
 
     # Normalize and escape (for JSON) the source path.
-    file(TO_NATIVE_PATH "${_vwsf_SOURCE_PATH}" SOURCELINK_SOURCE_PATH)
-    string(REGEX REPLACE "\\\\" "\\\\\\\\" SOURCELINK_SOURCE_PATH "${SOURCELINK_SOURCE_PATH}")
+    file(TO_NATIVE_PATH "${arg_SOURCE_PATH}" sourcelink_source_path)
+    string(REGEX REPLACE "\\\\" "\\\\\\\\" sourcelink_source_path "${sourcelink_source_path}")
 
-    file(WRITE "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "{\"documents\":{ \"${SOURCELINK_SOURCE_PATH}\": \"${_vwsf_SERVER_PATH}\" }}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\" }}")
 endfunction()

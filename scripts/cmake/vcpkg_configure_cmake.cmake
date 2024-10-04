@@ -216,8 +216,8 @@ function(vcpkg_configure_cmake)
         z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
-    if(EXISTS ${_CURRENT_SOURCELINK_FILE})
-        list(APPEND _csc_OPTIONS "-DVCPKG_SOURCELINK_FILE=${_CURRENT_SOURCELINK_FILE}")
+    if(EXISTS ${Z_CURRENT_SOURCELINK_FILE})
+        vcpkg_list(APPEND arg_OPTIONS "-DVCPKG_SOURCELINK_FILE=${Z_CURRENT_SOURCELINK_FILE}")
     endif()
 
     vcpkg_list(APPEND arg_OPTIONS

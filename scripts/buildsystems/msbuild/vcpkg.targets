@@ -95,7 +95,7 @@
     <_ZVcpkgExecutable>$(_ZVcpkgRoot)vcpkg.exe</_ZVcpkgExecutable>
     <ExternalIncludePath Condition="'$(_ZVcpkgClassicOrManifest)' == 'true'">$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
     <!-- Enable Source Link only when using toolset greater or equal to Visual Studio 2017 Version 15.8. -->
-    <VcpkgSourceLink Condition="'$(UseLldLink)' != 'true' and '$(VCToolsVersion)' != '' and '$(VCToolsVersion)' &gt;= '14.15.26726.0'">true</VcpkgSourceLink>
+    <_ZVcpkgSourceLink Condition="'$(UseLldLink)' != 'true' and '$(VCToolsVersion)' != '' and '$(VCToolsVersion)' &gt;= '14.15.26726.0'">true</_ZVcpkgSourceLink>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -109,11 +109,11 @@
     </PropertyPageSchema>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(VcpkgSourceLink)' == 'true'">
-    <VcpkgSourceLinkFiles Include="$(VcpkgRoot)sourcelink\*.json"/>
+  <ItemGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
+    <_ZVcpkgSourceLinkFiles Include="$(_ZVcpkgRoot)sourcelink\*.json"/>
   </ItemGroup>
-  <PropertyGroup Condition="'$(VcpkgSourceLink)' == 'true'">
-    <VcpkgSourceLinkOpts>@(VcpkgSourceLinkFiles->'/SOURCELINK:&quot;%(Identity)&quot;', ' ')</VcpkgSourceLinkOpts>
+  <PropertyGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
+    <_ZVcpkgSourceLinkOpts>@(_ZVcpkgSourceLinkFiles->'/SOURCELINK:&quot;%(Identity)&quot;', ' ')</_ZVcpkgSourceLinkOpts>
   </PropertyGroup>
 
   <!-- Install settings to get headers and import libs for the currently selected _ZVcpkgCurrentInstalledDir -->
@@ -124,7 +124,7 @@
     <Link>
       <AdditionalDependencies Condition="'$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\*.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib;$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
-      <AdditionalOptions>%(AdditionalOptions) $(VcpkgSourceLinkOpts)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) $(_ZVcpkgSourceLinkOpts)</AdditionalOptions>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(_ZVcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>

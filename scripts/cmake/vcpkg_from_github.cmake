@@ -25,9 +25,12 @@ function(vcpkg_from_github)
     if(NOT DEFINED arg_GITHUB_HOST)
         set(github_host "https://github.com")
         set(github_api_url "https://api.github.com")
+        set(github_raw_url "https://raw.githubusercontent.com")
     else()
         set(github_host "${arg_GITHUB_HOST}")
         set(github_api_url "${arg_GITHUB_HOST}/api/v3")
+        message(WARNING "vcpkg_from_github does not know the RAW content URL for: ${arg_GITHUB_HOST}")
+        set(github_raw_url "https://raw.githubusercontent.com")
     endif()
 
     set(headers_param "")
@@ -121,7 +124,7 @@ Error was: ${head_version_err}
 
     vcpkg_write_sourcelink_file(
         SOURCE_PATH "${SOURCE_PATH}/*"
-        SERVER_PATH "https://raw.githubusercontent.com/${ORG_NAME}/${REPO_NAME}/${_version}/*"
+        SERVER_PATH "${github_raw_url}/${org_name}/${repo_name}/${ref_to_use}/*"
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
