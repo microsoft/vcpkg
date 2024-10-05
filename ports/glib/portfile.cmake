@@ -12,8 +12,9 @@ vcpkg_extract_source_archive(SOURCE_PATH
         libintl.patch
 )
 
+set(LANGUAGES C CXX)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_ENABLE_OBJC=1")
+    list(APPEND LANGUAGES OBJC OBJCXX)
 endif()
 
 vcpkg_list(SET OPTIONS)
@@ -41,7 +42,7 @@ endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    LANGUAGES C CXX OBJC OBJCXX
+    LANGUAGES ${LANGUAGES}
     ADDITIONAL_BINARIES
         ${ADDITIONAL_BINARIES}
     OPTIONS

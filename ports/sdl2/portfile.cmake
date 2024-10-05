@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 3c9486cc42baae1b97f3fcc38fb2ee54071236c588bf33d1140502b1b5b05cec18bb5d11c4bbf66ca055b561cd28dfb294ccca55d44e1561df9d6c6cfc530194
+    SHA512 94ec7dba63b275545a6c3ab10cfe9feeb0a752ee46ff5e0083e0faa37097e1225a4efa060ca2acebf8d67ff192f06f18afc782891b190f6c0a561932575e8e50
     HEAD_REF main
     PATCHES
         deps.patch
         alsa-dep-fix.patch
         cxx-linkage-pkgconfig.diff
-        poll-fix.patch # Remove with next version (2.30.7).
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
