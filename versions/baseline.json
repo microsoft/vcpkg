@@ -105,8 +105,8 @@
       "port-version": 0
     },
     "amd-amf": {
-      "baseline": "1.4.33",
-      "port-version": 1
+      "baseline": "1.4.35",
+      "port-version": 0
     },
     "ampl-asl": {
       "baseline": "2024-02-01",
@@ -145,7 +145,7 @@
       "port-version": 0
     },
     "antlr4": {
-      "baseline": "4.13.1",
+      "baseline": "4.13.2",
       "port-version": 0
     },
     "any-lite": {
@@ -333,7 +333,7 @@
       "port-version": 3
     },
     "atomic-queue": {
-      "baseline": "1.6.4",
+      "baseline": "1.6.5",
       "port-version": 0
     },
     "attr": {
@@ -453,12 +453,12 @@
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.13.0",
+      "baseline": "1.14.0",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
-      "port-version": 3
+      "port-version": 4
     },
     "azure-data-tables-cpp": {
       "baseline": "1.0.0-beta.4",
@@ -482,15 +482,15 @@
     },
     "azure-messaging-eventhubs-checkpointstore-blob-cpp": {
       "baseline": "1.0.0-beta.1",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-messaging-eventhubs-cpp": {
       "baseline": "1.0.0-beta.9",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "azure-security-keyvault-administration-cpp": {
       "baseline": "4.0.0-beta.5",
@@ -498,15 +498,15 @@
     },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-security-keyvault-secrets-cpp": {
       "baseline": "4.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.13.0",
@@ -569,8 +569,8 @@
       "port-version": 0
     },
     "bde": {
-      "baseline": "4.8.0.0",
-      "port-version": 1
+      "baseline": "4.14.0.0",
+      "port-version": 0
     },
     "bdwgc": {
       "baseline": "8.2.8",
@@ -1485,7 +1485,7 @@
       "port-version": 0
     },
     "calceph": {
-      "baseline": "4.0.0",
+      "baseline": "4.0.1",
       "port-version": 0
     },
     "camport3": {
@@ -1669,7 +1669,7 @@
       "port-version": 0
     },
     "clap-cleveraudio": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "clapack": {
@@ -1925,7 +1925,7 @@
       "port-version": 0
     },
     "cppad": {
-      "baseline": "20240000.6",
+      "baseline": "20240000.7",
       "port-version": 0
     },
     "cppcms": {
@@ -2157,11 +2157,11 @@
       "port-version": 0
     },
     "cyclonedds": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.5",
       "port-version": 0
     },
     "cyclonedds-cxx": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.5",
       "port-version": 0
     },
     "cyrus-sasl": {
@@ -2557,7 +2557,7 @@
       "port-version": 3
     },
     "ensmallen": {
-      "baseline": "2.19.1",
+      "baseline": "2.21.1",
       "port-version": 0
     },
     "entityx": {
@@ -2665,7 +2665,7 @@
       "port-version": 0
     },
     "fastcdr": {
-      "baseline": "2.2.1",
+      "baseline": "2.2.4",
       "port-version": 0
     },
     "fastcgi": {
@@ -3189,7 +3189,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "2.29.0",
+      "baseline": "2.30.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -8149,7 +8149,7 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.30.7",
+      "baseline": "2.30.8",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -8341,7 +8341,7 @@
       "port-version": 0
     },
     "simsimd": {
-      "baseline": "5.4.1",
+      "baseline": "5.4.4",
       "port-version": 0
     },
     "sjpeg": {
