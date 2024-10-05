@@ -356,6 +356,10 @@
       "baseline": "2017-06-21-c75699d2a8caa726260c29b6d7a0fd35f8f28933",
       "port-version": 2
     },
+    "aurora-au": {
+      "baseline": "0.3.5",
+      "port-version": 0
+    },
     "autobahn": {
       "baseline": "20.8.1",
       "port-version": 2
