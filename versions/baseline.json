@@ -2805,7 +2805,7 @@
       "port-version": 0
     },
     "flint": {
-      "baseline": "2.9.0",
+      "baseline": "3.1.3",
       "port-version": 0
     },
     "fltk": {
