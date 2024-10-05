@@ -1,0 +1,47 @@
+diff --git a/src/core/mtu_discovery.c b/src/core/mtu_discovery.c
+index a40c05c..8891efc 100644
+--- a/src/core/mtu_discovery.c
++++ b/src/core/mtu_discovery.c
+@@ -34,8 +34,8 @@ Abstract:
+ #include "mtu_discovery.c.clog.h"
+ #endif
+ 
+-CXPLAT_STATIC_ASSERT(CXPLAT_MAX_MTU >= QUIC_DPLPMTUD_DEFAULT_MAX_MTU, L"Default max must not be more than max");
+-CXPLAT_STATIC_ASSERT(QUIC_DPLPMTUD_MIN_MTU <= QUIC_DPLPMTUD_DEFAULT_MIN_MTU, L"Default min must not be less than min");
++CXPLAT_STATIC_ASSERT(CXPLAT_MAX_MTU >= QUIC_DPLPMTUD_DEFAULT_MAX_MTU, "Default max must not be more than max");
++CXPLAT_STATIC_ASSERT(QUIC_DPLPMTUD_MIN_MTU <= QUIC_DPLPMTUD_DEFAULT_MIN_MTU, "Default min must not be less than min");
+ 
+ _IRQL_requires_max_(PASSIVE_LEVEL)
+ static
+diff --git a/src/core/quicdef.h b/src/core/quicdef.h
+index 219ef33..5ed5753 100644
+--- a/src/core/quicdef.h
++++ b/src/core/quicdef.h
+@@ -240,10 +240,10 @@ typedef struct QUIC_RX_PACKET QUIC_RX_PACKET;
+ #define QUIC_MAX_RANGE_ACK_PACKETS              0x800       // 2048
+ #define QUIC_MAX_RANGE_DECODE_ACKS              0x1000      // 4096
+ 
+-CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_ALLOC_SIZE), L"Must be power of two");
+-CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_DUPLICATE_PACKETS), L"Must be power of two");
+-CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_ACK_PACKETS), L"Must be power of two");
+-CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_DECODE_ACKS), L"Must be power of two");
++CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_ALLOC_SIZE), "Must be power of two");
++CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_DUPLICATE_PACKETS), "Must be power of two");
++CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_ACK_PACKETS), "Must be power of two");
++CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(QUIC_MAX_RANGE_DECODE_ACKS), "Must be power of two");
+ 
+ //
+ // Minimum MTU allowed to be configured. Must be able to fit a
+diff --git a/src/core/range.h b/src/core/range.h
+index b6d2cc0..ca6d3cd 100644
+--- a/src/core/range.h
++++ b/src/core/range.h
+@@ -21,7 +21,7 @@ typedef struct QUIC_SUBRANGE {
+ 
+ } QUIC_SUBRANGE;
+ 
+-CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(sizeof(QUIC_SUBRANGE)), L"Must be power of two");
++CXPLAT_STATIC_ASSERT(IS_POWER_OF_TWO(sizeof(QUIC_SUBRANGE)), "Must be power of two");
+ 
+ typedef struct QUIC_RANGE_SEARCH_KEY {
+ 
