@@ -96,6 +96,11 @@ endif()
 if("python" IN_LIST FEATURES)
   x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
   set(ENV{PYTHON} "${PYTHON3}")
+  file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
+  string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
+  set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
+  set(python_ver "3.${PYTHON_VERSION_MINOR}")
+  set(PYTHON_EXTRA_DEFINES "-D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2 -DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}")
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -305,8 +310,7 @@ vcpkg_cmake_configure(
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
         ###### Python install path
-        -D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2
-        -DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}
+        ${PYTHON_EXTRA_DEFINES}
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
 )
@@ -441,16 +445,18 @@ if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
 endif()
 
-if("python" IN_LIST FEATURES)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/typing")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/config.py"
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/typing")  
+if (EXISTS "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config.py")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config.py"
     "os.path.join('${CURRENT_PACKAGES_DIR}', 'bin')"
     "os.path.join('.', 'bin')"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/config-3.11.py"
-    "os.path.join('${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2', 'python-3.11')"
-    "os.path.join('.', 'python-3.11')"
+endif()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config-${python_ver}.py")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config-${python_ver}.py"
+    "os.path.join('${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2', 'python-${python_ver}')"
+    "os.path.join('.', 'python-${python_ver}')"
     IGNORE_UNCHANGED
   )
 endif()
