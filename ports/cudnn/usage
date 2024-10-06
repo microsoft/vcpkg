@@ -1,10 +1,24 @@
-The package cudnn provides CMake variables:
-
-    find_package(CUDNN REQUIRED)
-    target_link_libraries(main PRIVATE ${CUDNN_LIBRARIES})
-    target_include_directories(main PRIVATE ${CUDNN_INCLUDE_DIRS})
-
-Or the following CMake target:
+cudnn provides CMake targets for version 7:
 
     find_package(CUDNN REQUIRED)
     target_link_libraries(main PRIVATE CuDNN::CuDNN)
+
+cudnn provides CMake targets for version 8:
+
+    find_package(CUDNN REQUIRED)
+    target_link_libraries(main PRIVATE CuDNN::CuDNN 
+        CuDNN::CuDNN_adv_infer CuDNN::CuDNN_adv_train
+        CuDNN::CuDNN_cnn_infer CuDNN::CuDNN_cnn_train
+        CuDNN::CuDNN_ops_infer CuDNN::CuDNN_ops_train
+    )
+
+cudnn provides CMake targets for version 9:
+
+    find_package(CUDNN REQUIRED)
+    target_link_libraries(main PRIVATE CuDNN::CuDNN 
+        CuDNN::CuDNN_cnn CuDNN::CuDNN_ops 
+        CuDNN::CuDNN_adv CuDNN::CuDNN_graph
+        CuDNN::CuDNN_engines_precompiled
+        CuDNN::CuDNN_engines_runtime_compiled
+        CuDNN::CuDNN_heuristic
+    )
