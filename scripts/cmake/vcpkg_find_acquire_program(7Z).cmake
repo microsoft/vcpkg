@@ -1,25 +1,9 @@
-set(program_name 7z2408)
+set(program_name 7z)
 if(CMAKE_HOST_WIN32)
     set(tool_subdirectory "24.08")
-    set(paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}/Files/7-Zip")
-    list(APPEND paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}/")
-    set(download_urls "https://github.com/ip7z/7zip/releases/download/24.08/7z2408.exe")
-    set(download_filename "7z2408.exe")
-    set(download_sha512 "7f6c46c780fcb5fc10cc5405221179ddecbbb871c578ca3d9e3a74141271b383bd83e8f9d75c98d7e9d406e9b935d52a6b04913d654169e0b30f0719225e7dd9")
-
-    foreach(path IN LISTS paths_to_search)
-    if(EXISTS "${path}")
-        message(STATUS "Directory exists: ${path}")
-
-        # Use file(GLOB ...) to get all files and directories in the current path
-        file(GLOB contents "${path}/*")
-
-        # Print each file or directory in the path
-        foreach(file IN LISTS contents)
-            message(STATUS "Found: ${file}")
-        endforeach()
-    else()
-        message(STATUS "Directory does not exist: ${path}")
-    endif()
-    endforeach()
+    set(paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}/7z2408/SourceDir/Files/7-Zip")
+    set(download_urls "https://github.com/ip7z/7zip/releases/download/24.08/7z2408.msi" "https://7-zip.org/a/7z2408.msi")
+    set(download_filename "7z2408.msi")
+    set(search_names "7z.exe")
+    set(download_sha512 0bc88c99ad921a6f828d9ed9b8391510d1d0c2f8ecb7ad2921838c97c20f215e2ab03198009d159e2d1859bb20f157010f492288ce61c86544df06742cebbc34)
 endif()

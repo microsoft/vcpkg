@@ -19,6 +19,7 @@ vcpkg_execute_required_process(
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src/KinectSDK-${KINECTSDK20_VERSION}-x64")
 set(KINECTSDK20_MSI_INSTALLER "installer\\wix\\AttachedContainer\\KinectSDK-${KINECTSDK20_VERSION}-x64.msi")
+vcpkg_find_acquire_program(LESSMSI)
 vcpkg_execute_required_process(
     COMMAND
         "${LESSMSI}"
