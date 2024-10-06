@@ -5,6 +5,7 @@
   "description": "A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.",
   "homepage": "https://vxl.github.io/",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "bzip2",
     "expat",
