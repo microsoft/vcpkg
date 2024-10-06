@@ -100,10 +100,17 @@ if("python" IN_LIST FEATURES)
   string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
   set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
   set(python_ver "3.${PYTHON_VERSION_MINOR}")
-  list(APPEND PYTHON_EXTRA_DEFINES
+  list(APPEND PYTHON_EXTRA_DEFINES_RELEASE
     "-D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2"
     "-DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}"
   )
+  list(APPEND PYTHON_EXTRA_DEFINES_DEBUG
+    "-D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/cv2"
+    "-DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}"
+  )
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/cv2")
+    message(FATAL_ERROR "You cannot install opencv3[python] if opencv4[python] is already present.")
+  endif()
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -312,10 +319,14 @@ vcpkg_cmake_configure(
         -DWITH_FFMPEG=OFF
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
-        ###### Python install path
-        ${PYTHON_EXTRA_DEFINES}
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
+    OPTIONS_RELEASE
+        ###### Python install path
+        ${PYTHON_EXTRA_DEFINES_RELEASE}
+    OPTIONS_DEBUG
+        ###### Python install path
+        ${PYTHON_EXTRA_DEFINES_DEBUG}
 )
 
 vcpkg_cmake_install()
@@ -448,21 +459,34 @@ if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/typing")  
-if (EXISTS "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config.py")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config.py"
-    "os.path.join('${CURRENT_PACKAGES_DIR}', 'bin')"
-    "os.path.join('.', 'bin')"
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/typing")
+file(GLOB PYTHON3_SITE_FILES "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/*.py")
+foreach(PYTHON3_SITE_FILE ${PYTHON3_SITE_FILES})
+  vcpkg_replace_string("${PYTHON3_SITE_FILE}"
+    "os.path.join('${CURRENT_PACKAGES_DIR}'"
+    "os.path.join('.'"
     IGNORE_UNCHANGED
   )
-endif()
-if (EXISTS "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config-${python_ver}.py")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2/config-${python_ver}.py"
-    "os.path.join('${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2', 'python-${python_ver}')"
-    "os.path.join('.', 'python-${python_ver}')"
+  vcpkg_replace_string("${PYTHON3_SITE_FILE}"
+    "os.path.join('${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/cv2'"
+    "os.path.join('.'"
     IGNORE_UNCHANGED
   )
-endif()
+endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/cv2/typing")
+file(GLOB PYTHON3_SITE_FILES_DEBUG "${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/cv2/*.py")
+foreach(PYTHON3_SITE_FILE_DEBUG ${PYTHON3_SITE_FILES_DEBUG})
+  vcpkg_replace_string("${PYTHON3_SITE_FILE_DEBUG}"
+    "os.path.join('${CURRENT_PACKAGES_DIR}/debug'"
+    "os.path.join('.'"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${PYTHON3_SITE_FILE_DEBUG}"
+    "os.path.join('${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/cv2'"
+    "os.path.join('.'"
+    IGNORE_UNCHANGED
+  )
+endforeach()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv3.pc"
