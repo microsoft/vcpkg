@@ -1,4 +1,3 @@
-llvm:x64-windows=skip
 ###########################################################################
 ## This file defines the current expected build state of ports in CI.
 ##
@@ -1352,11 +1351,9 @@ vcpkg-ci-sqlpp11:x86-windows=pass
 vcpkg-ci-vxl:arm-neon-android=pass
 vcpkg-ci-vxl:arm64-android=pass
 vcpkg-ci-vxl:arm64-windows=pass
-vcpkg-ci-vxl:arm64-uwp=pass
 vcpkg-ci-vxl:x64-android=fail
 vcpkg-ci-vxl:x64-linux=pass
 vcpkg-ci-vxl:x64-osx=pass
-vcpkg-ci-vxl:x64-uwp=pass
 vcpkg-ci-vxl:x64-windows=pass
 vcpkg-ci-vxl:x64-windows-static=pass
 vcpkg-ci-vxl:x64-windows-static-md=pass
