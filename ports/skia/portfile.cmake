@@ -37,7 +37,7 @@ declare_external_from_git(dawn
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
-    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+    REF "42db4d19acb658d6dcd059a319a378c89c3df75a"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(jinja2
