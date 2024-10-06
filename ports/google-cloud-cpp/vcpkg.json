@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.29.0",
+  "version": "2.30.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -718,20 +718,6 @@
           "default-features": false,
           "features": [
             "grpc-common"
-          ]
-        }
-      ]
-    },
-    "experimental-storage-grpc": {
-      "description": "The GCS+gRPC plugin",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common",
-            "opentelemetry",
-            "storage"
           ]
         }
       ]
@@ -1508,6 +1494,20 @@
           "default-features": false,
           "features": [
             "rest-common"
+          ]
+        }
+      ]
+    },
+    "storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "opentelemetry",
+            "storage"
           ]
         }
       ]

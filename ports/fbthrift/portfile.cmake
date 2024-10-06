@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 3b0459013e9e3cb1396fbbb83763a5adcda57255f1831d0117ce8db66532594ce0f1499a7c305c667bcbf4fd42d4ebb0d7877fe8989ab6269ea4c822bd6a029f
+    SHA512 5d6206b72a9579ab3207dae55dab753b13747e8f964fa5d95c1691046a4d151d2043b0e6b341954dffd01082107ee7ce849a81baaf8d569ea388a193b2860469
     HEAD_REF main
     PATCHES 
         fix-glog.patch
@@ -51,6 +51,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/payload/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/gtest/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test"
