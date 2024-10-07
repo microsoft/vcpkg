@@ -6533,8 +6533,8 @@
       "port-version": 1
     },
     "onnx": {
-      "baseline": "1.15.0",
-      "port-version": 1
+      "baseline": "1.17.0",
+      "port-version": 0
     },
     "onnx-optimizer": {
       "baseline": "0.3.19",
