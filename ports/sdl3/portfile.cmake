@@ -56,19 +56,7 @@ endif()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/SDL3.framework"
-    "${CURRENT_PACKAGES_DIR}/debug/SDL3.framework"
-    "${CURRENT_PACKAGES_DIR}/share/licenses"
-    "${CURRENT_PACKAGES_DIR}/share/aclocal"
 )
-
-file(GLOB BINS "${CURRENT_PACKAGES_DIR}/debug/bin/*" "${CURRENT_PACKAGES_DIR}/bin/*")
-if(NOT BINS)
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
-    )
-endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
