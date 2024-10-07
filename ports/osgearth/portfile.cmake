@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF 1a4344609c0e58aa3e6b1a9cf7a6f82984337e6c
-    SHA512 9c653c3b44f655ecc001b9aa861b2f00e99d7c8eb66988e7025318ba6650f696c0c72bd49a628ddf54521e340ddf5583a6d8235714fbc8880fde387d248001ce
+    REF "osgearth-${VERSION}"
+    SHA512 fe80e8ce40669a896e046a829ba2a9a7dc3d79e9508362e71149c51078eb44486532c850ec00df88808540c090336a99275fd4496be125131b0774371792aed0
     HEAD_REF master
     PATCHES
 		remove-lerc-gltf.patch
@@ -59,7 +59,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME osgEarth)
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
