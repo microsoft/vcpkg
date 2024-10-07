@@ -18,6 +18,8 @@ vcpkg_from_github(
         REPO libsese/sese
         REF "${VERSION}"
         SHA512 a1008c351ea3e8745d629bdcceb4a6d089ae5a84137bbd49b8abbbb271032ddf279e9b20f155181b6a7d3d8cb17c2ec2f1b7a12464fb0cac8402628e473966cb
+        PATCHES
+            001-msvc-pdbs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,13 +40,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_copy_pdbs()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sese")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 remove_empty_directories_recursive("${CURRENT_PACKAGES_DIR}/include/sese")
-
-vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/NOTICE")
 
