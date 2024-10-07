@@ -54,7 +54,6 @@ endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 vcpkg_copy_pdbs()
