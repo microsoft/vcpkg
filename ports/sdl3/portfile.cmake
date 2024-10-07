@@ -39,11 +39,10 @@ vcpkg_cmake_configure(
         -DSDL_LIBC=ON
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        # Speficying the revision skips the need to use git to determine a version
+        -DSDL_REVISION=SDL-${VERSION}
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
-        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()
