@@ -7,14 +7,14 @@ set(meson_short_hash @MESON_SHORT_HASH@)
 
 # Setup meson:
 set(program MESON)
-set(program_version @VERSION@)
+set(program_version @VERSION@rc1)
 set(program_name meson)
 set(search_names meson meson.py)
 set(ref "${program_version}")
 set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}-${meson_short_hash}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 54c6611dd95caaffa216f03d0b96b44c86d5452f54e1282234a4646f8e50f75ea0185a1611a4c078c888154bd4e2d917c4d075de3e7577440a925f72f6152a4f)
+set(download_sha512 5043388c9ce95c000d8b06322277688a6ce68b94dbefae1a577dcbb41fb8f0b22acbfdf08d136aa869c425112d5b4a90dcd3fb9708d4959d7991b7cd5c596188)
 
 find_program(SCRIPT_MESON NAMES ${search_names} PATHS "${path_to_search}" NO_DEFAULT_PATH) # NO_DEFAULT_PATH due top patching
 
