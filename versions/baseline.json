@@ -9437,8 +9437,8 @@
       "port-version": 5
     },
     "vtk-dicom": {
-      "baseline": "0.8.14",
-      "port-version": 2
+      "baseline": "0.8.16",
+      "port-version": 0
     },
     "vtk-m": {
       "baseline": "2.1.0",
