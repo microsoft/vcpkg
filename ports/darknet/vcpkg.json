@@ -80,24 +80,6 @@
           ]
         }
       ]
-    },
-    "opencv2": {
-      "description": "Build darknet with support for OpenCV2",
-      "dependencies": [
-        "opencv2"
-      ]
-    },
-    "opencv3": {
-      "description": "Build darknet with support for OpenCV3",
-      "dependencies": [
-        {
-          "name": "opencv3",
-          "features": [
-            "contrib",
-            "dnn"
-          ]
-        }
-      ]
     }
   }
 }
