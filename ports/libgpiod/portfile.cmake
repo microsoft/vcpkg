@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-${VERSION}.tar.gz
     FILENAME libgpiod-${VERSION}.tar.gz
-    SHA512 e3401d9d5b48e4da29494a5fa7738df80b1db7cb7e75e24067d44cc4bae5661cf7364e9722b5f588d4e813da8b2abd18dde29d5a118049b4a36d2a1df0c432a0
+    SHA512 57ddb73faa1852c86886ec6b9b0e07c48200a8c01347bf9bc31ce5611de907140d20cabba63f33230bbfac558acae23676935ecf12b3c69ed9230a04cf252eb4
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
