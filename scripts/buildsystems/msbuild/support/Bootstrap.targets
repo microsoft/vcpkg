@@ -1,0 +1,25 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)\GetGlobalProperties.task" />
+
+  <!-- The VcpkgBootstrap target runs before VcpkgInstallManifestDependencies target and - if $(_ZVcpkgExecutable) is
+  out-of-date with respect to $(_ZVcpkgRoot)\scripts\vcpkg-tool-metadata.txt - it invokes the
+  VcpkgBootstrapImplementation target.
+
+  MSBuild will ensure that MSBuild tasks with a given target and set of global properties will run only once.
+  -->
+  <Target Name="VcpkgBootstrap"
+          BeforeTargets="VcpkgInstallManifestDependencies"
+          Inputs="$(_ZVcpkgRoot)\scripts\vcpkg-tool-metadata.txt"
+          Outputs="$(_ZVcpkgExecutable)"
+          >
+    <GetGlobalProperties>
+      <Output TaskParameter="GlobalPropertyNames" PropertyName="GlobalPropertyNames" />
+    </GetGlobalProperties>
+    <MSBuild BuildInParallel="true"
+             Projects="$(MSBuildThisFileDirectory)\BootstrapImplementation.targets"
+             Targets="VcpkgBootstrapImplementation"
+             RemoveProperties="$(GlobalPropertyNames)"
+             Properties="_ZVcpkgRoot=$(_ZVcpkgRoot)"
+             />
+  </Target>
+</Project>
