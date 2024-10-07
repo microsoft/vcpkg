@@ -3793,7 +3793,7 @@
       "port-version": 1
     },
     "jasper": {
-      "baseline": "4.2.1",
+      "baseline": "4.2.4",
       "port-version": 0
     },
     "jbig2dec": {
