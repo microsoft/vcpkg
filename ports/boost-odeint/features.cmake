@@ -3,4 +3,6 @@ vcpkg_check_features(
     FEATURE_OPTIONS
   FEATURES
     "mpi" BOOST_ENABLE_MPI
+  INVERTED_FEATURES
+    "adapters" BOOST_NUMERIC_ODEINT_NO_ADAPTORS
 )
