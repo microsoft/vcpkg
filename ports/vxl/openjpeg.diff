@@ -11,3 +11,11 @@ index 67b184e..cdd7c0d 100644
  project(OpenJPEG C)
  
  include(${VXL_CMAKE_DIR}/FindOpenJPEG2.cmake)
+@@ -54,6 +54,7 @@ if(VXL_MATH_LIBRARY_FOUND)
+ endif()
+ mark_as_advanced(VXL_MATH_LIBRARY_FOUND)
+ set_target_properties(openjpeg2 PROPERTIES
++  OUTPUT_NAME   vxl_openjpeg
+   VERSION       2.0.0
+   DEFINE_SYMBOL OPJ_EXPORTS)
+ endif()

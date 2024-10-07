@@ -38,6 +38,7 @@
         "OpenJPEG support",
         "This feature uses vendored copy of openjpeg 1.2.0 and cannot be used together with port 'openjpeg'."
       ],
+      "license": "BSD-2-Clause",
       "dependencies": [
         {
           "name": "vxl",

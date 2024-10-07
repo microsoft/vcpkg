@@ -22,7 +22,7 @@ vcpkg_from_github(
         rply.diff
 )
 file(GLOB_RECURSE vendored_sources "${SOURCE_PATH}/v3p/*.c" "${SOURCE_PATH}/v3p/*.cpp" "${SOURCE_PATH}/v3p/*.cxx")
-list(FILTER vendored_sources EXCLUDE REGEX "/netlib/")
+list(FILTER vendored_sources EXCLUDE REGEX "/(netlib|openjpeg2)/")
 file(REMOVE_RECURSE ${vendored_sources})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
@@ -82,4 +82,13 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/include/vxl/vcl/vcl_where_root_dir.h")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vxl/VXLConfig.cmake" "# ${CURRENT_BUILDTREES_DIR}" "")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/core/vxl_copyright.h")
+set(file_list "${SOURCE_PATH}/core/vxl_copyright.h")
+if("openjpeg" IN_LIST FEATURES)
+    file(COPY_FILE "${SOURCE_PATH}/v3p/openjpeg2/license.txt" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openjpeg2 license.txt")
+    vcpkg_list(APPEND file_list "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openjpeg2 license.txt")
+endif()
+vcpkg_install_copyright(FILE_LIST ${file_list} COMMENT [[
+vcl includes Netlib software from https://www.netlib.org/. Most netlib software
+packages have no restrictions on their use but it is recommended to check with
+the authors to be sure. (https://www.netlib.org/misc/faq.html#2.3)
+]])
