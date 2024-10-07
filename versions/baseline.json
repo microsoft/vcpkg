@@ -6401,7 +6401,7 @@
       "port-version": 2
     },
     "nuspell": {
-      "baseline": "5.1.4",
+      "baseline": "5.1.6",
       "port-version": 0
     },
     "nvidia-cutlass": {
