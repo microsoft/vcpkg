@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 f61e608898d798b90ce07260928b682161f00e964b43b9876ef6604d10c30787a0814e13afde90f7d703efd6b83c61dd4a9d9f50d21068bd50c5c15f94b5755b
     HEAD_REF master
+    PATCHES
+        PR-8523__CGAL_CGAL-protect_against_macro_free-GF.patch
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

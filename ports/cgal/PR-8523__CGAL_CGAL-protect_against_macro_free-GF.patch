@@ -1,0 +1,88 @@
+From cab1117b50a322f8d99f10b11b9654d36e889548 Mon Sep 17 00:00:00 2001
+From: Laurent Rineau <laurent.rineau@cgal.org>
+Date: Mon, 7 Oct 2024 10:52:17 +0200
+Subject: [PATCH] CGAL_Core: protect against macro `free` https://github.com/CGAL/cgal/pull/8523
+
+From vcpkg CI, there is this error:
+
+```
+123456789101112131415161718192021222324252627C:\PROGRA~1\MICROS~1\2022\ENTERP~1\VC\Tools\MSVC\1441~1.341\bin\Hostx64\x64\cl.exe   /TP -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_DYN_LINK -DBOOST_CHRONO_NO_LIB -DBOOST_CONTAINER_DYN_LINK -DBOOST_CONTAINER_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB -DBOOST_RANDOM_DYN_LINK -DBOOST_RANDOM_NO_LIB -DBOOST_SERIALIZATION_DYN_LINK -DBOOST_SERIALIZATION_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DBOOST_THREAD_USE_DLL -DCGAL_USE_GMPXX=1 -DGFLAGS_IS_A_DLL=1 -DGLOG_NO_ABBREVIATED_SEVERITIES -DGLOG_USE_GFLAGS -DGLOG_USE_GLOG_EXPORT -DH5_BUILT_AS_DYNAMIC_LIB -D_LIB -D_USE_BOOST -D_USE_EIGEN -D_USE_FAST_CBRT -D_USE_FAST_FLOAT2INT -D_USE_NONFREE -D_USE_OPENGL -D_USE_SSE -ID:\b\openmvs\x64-windows-dbg\libs\MVS\MVS_autogen\include -ID:\b\openmvs\src\v2.1.0-1e694de437.clean -ID:\b\openmvs\x64-windows-dbg -external:ID:\installed\x64-windows\include -external:ID:\installed\x64-windows\include\eigen3 -external:W0 /nologo /DWIN32 /D_WINDOWS /utf-8 /GR /EHsc /MP   /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi /Zm170 /Zc:__cplusplus  /wd4231 /wd4251 /wd4308 /wd4396 /wd4503 /wd4661 /wd4996 /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1   -std:c++17 -D_SCL_SECURE_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS /fp:strict /fp:except- /bigobj /Zc:__cplusplus /YuD:/b/openmvs/x64-windows-dbg/libs/MVS/CMakeFiles/MVS.dir/cmake_pch.hxx /FpD:/b/openmvs/x64-windows-dbg/libs/MVS/CMakeFiles/MVS.dir/./cmake_pch.cxx.pch /FID:/b/openmvs/x64-windows-dbg/libs/MVS/CMakeFiles/MVS.dir/cmake_pch.hxx /showIncludes /Folibs\MVS\CMakeFiles\MVS.dir\SceneReconstruct.cpp.obj /Fdlibs\MVS\CMakeFiles\MVS.dir\MVS.pdb /FS -c D:\b\openmvs\src\v2.1.0-1e694de437.clean\libs\MVS\SceneReconstruct.cpp
+D:\installed\x64-windows\include\CGAL/CORE/MemoryPool.h(76): error C2059: syntax error: 'constant'
+D:\installed\x64-windows\include\CGAL/CORE/MemoryPool.h(76): note: the template instantiation context (the oldest one first) is
+D:\installed\x64-windows\include\CGAL/CORE/MemoryPool.h(39): note: while compiling class template 'CORE::MemoryPool'
+D:\installed\x64-windows\include\CGAL/CORE/MemoryPool.h(119): error C2988: unrecognizable template declaration/definition
+D:\installed\x64-windows\include\CGAL/CORE/MemoryPool.h(119): error C2059: syntax error: 'constant'
+D:\installed\x64-windows\include\CGAL/CORE/Expr_impl.h(1217): error C2660: 'CORE::MemoryPool<CORE::ConstDoubleRep,1024>::_free_dbg': function does not take 2 arguments
+D:\installed\x64-windows\include\CGAL/CORE/MemoryPool.h(76): note: see declaration of 'CORE::MemoryPool<CORE::ConstDoubleRep,1024>::_free_dbg'
+D:\installed\x64-windows\include\CGAL/CORE/Expr_impl.h(1217): note: while trying to match the argument list '(void *, int)'
+```
+
+There is probably a macro named `free` somewhere.
+---
+ CGAL_Core/include/CGAL/CORE/ExprRep.h    | 4 ++--
+ CGAL_Core/include/CGAL/CORE/Impl.h       | 2 +-
+ CGAL_Core/include/CGAL/CORE/MemoryPool.h | 2 +-
+ CGAL_Core/include/CGAL/CORE/RealRep.h    | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CGAL_Core/include/CGAL/CORE/ExprRep.h b/CGAL_Core/include/CGAL/CORE/ExprRep.h
+index 0e721dda16a8..a325930a2ab4 100644
+--- a/CGAL_Core/include/CGAL/CORE/ExprRep.h
++++ b/CGAL_Core/include/CGAL/CORE/ExprRep.h
+@@ -595,7 +595,7 @@ class CGAL_CORE_EXPORT ConstPolyRep : public ConstRep {
+   }
+ 
+   void operator delete( void *p, size_t ){
+-    MemoryPool<ConstPolyRep>::global_allocator().free(p);
++    (MemoryPool<ConstPolyRep>::global_allocator().free)(p);
+   }
+ 
+ private:
+@@ -1248,7 +1248,7 @@ void * AddSubRep<O>::operator new( size_t size)
+ 
+ template <typename O>
+ void AddSubRep<O>::operator delete( void *p, size_t )
+-{ MemoryPool<AddSubRep<O> >::global_allocator().free(p); }
++{ (MemoryPool<AddSubRep<O> >::global_allocator().free)(p); }
+ 
+ 
+ /// \typedef AddRep
+diff --git a/CGAL_Core/include/CGAL/CORE/Impl.h b/CGAL_Core/include/CGAL/CORE/Impl.h
+index 4ff8b4fa3d48..8ae4c53fe7d1 100644
+--- a/CGAL_Core/include/CGAL/CORE/Impl.h
++++ b/CGAL_Core/include/CGAL/CORE/Impl.h
+@@ -58,7 +58,7 @@
+   { return MemoryPool<C<T> >::global_allocator().allocate(size); }        \
+   template <typename T>                                                   \
+   CGAL_INLINE_FUNCTION void C<T>::operator delete( void *p, size_t )      \
+-  { MemoryPool<C<T> >::global_allocator().free(p); }
++  { (MemoryPool<C<T> >::global_allocator().free)(p); }
+ #endif
+ 
+ // include some common header files
+diff --git a/CGAL_Core/include/CGAL/CORE/MemoryPool.h b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+index 2db3de8736e1..d218a871bec5 100644
+--- a/CGAL_Core/include/CGAL/CORE/MemoryPool.h
++++ b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+@@ -73,7 +73,7 @@ class MemoryPool {
+ 
+ 
+    void* allocate(std::size_t size);
+-   void free(void* p);
++   void free BOOST_PREVENT_MACRO_SUBSTITUTION (void* p);
+ 
+   // Access the corresponding static global allocator.
+   static MemoryPool<T,nObjects>& global_allocator() {
+diff --git a/CGAL_Core/include/CGAL/CORE/RealRep.h b/CGAL_Core/include/CGAL/CORE/RealRep.h
+index 1c5d0f13a405..f2ec1e90cb3b 100644
+--- a/CGAL_Core/include/CGAL/CORE/RealRep.h
++++ b/CGAL_Core/include/CGAL/CORE/RealRep.h
+@@ -154,7 +154,7 @@ void * Realbase_for<T>::operator new( size_t size)
+ 
+ template <class T>
+ void Realbase_for<T>::operator delete( void *p, size_t )
+-{ MemoryPool<Realbase_for<T> >::global_allocator().free(p); }
++{ (MemoryPool<Realbase_for<T> >::global_allocator().free)(p); }
+ 
+ typedef Realbase_for<long> RealLong;
+ typedef Realbase_for<double> RealDouble;
