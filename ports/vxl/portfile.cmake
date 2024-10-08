@@ -85,6 +85,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Don't provide source dir; test lib not installed.
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/vxl/vcl/vcl_where_root_dir.h")
 
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 set(file_list "${SOURCE_PATH}/core/vxl_copyright.h")
 if("openjpeg" IN_LIST FEATURES)
     file(COPY_FILE "${SOURCE_PATH}/v3p/openjpeg2/license.txt" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openjpeg2 license.txt")

@@ -20,4 +20,10 @@ if(BUILD_TYPE STREQUAL "debug" AND NOT vcpkg_ci_vnl_library_dir MATCHES "/debug/
 endif()
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE $<TARGET_NAME:vil>)
+target_link_libraries(main PRIVATE
+    $<TARGET_NAME:vil>       # required. Needs image format deps
+    $<TARGET_NAME:vnl_algo>  # test only: wants netlib
+    $<TARGET_NAME:vgl>       # test only: wants polyclipping
+    $<TARGET_NAME:vgl_algo>  # test only: wants image formats
+)
+
