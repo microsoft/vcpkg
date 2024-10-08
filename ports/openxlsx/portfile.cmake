@@ -13,6 +13,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DOPENXLSX_BUILD_TESTS=OFF
+        -OPENXLSX_CREATE_DOCS=OFF
+        -OPENXLSX_BUILD_SAMPLES=OFF
+        -DOPENXLSX_BUILD_BENCHMARKS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenXLSX)
