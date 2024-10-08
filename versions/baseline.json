@@ -1581,8 +1581,8 @@
       "port-version": 6
     },
     "cgal": {
-      "baseline": "5.6.1",
-      "port-version": 1
+      "baseline": "6.0",
+      "port-version": 0
     },
     "cgicc": {
       "baseline": "3.2.20",
