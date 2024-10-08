@@ -6,44 +6,74 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     SOURCE_BASE 1.5
     PATCHES
-        libusb-fix.patch
-        libconfuse-fix.patch
-        win32.patch
+        cmake-version.diff
+        disable-config-script.diff
+        linkage.diff
+        libdir.diff
+        libftdipp1.diff
+        libusb.diff
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/exports.def" DESTINATION "${SOURCE_PATH}/src")
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIBS)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        cpp     FTDIPP
+)
+
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -DBUILD_TESTS=OFF
+        -DCMAKE_CXX_STANDARD=11
         -DDOCUMENTATION=OFF
         -DEXAMPLES=OFF
-        -DPYTHON_BINDINGS=OFF
-        -DLINK_PYTHON_LIBRARY=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Libintl=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
         -DFTDI_EEPROM=OFF
+        -DLIB_SUFFIX=
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DPYTHON_BINDINGS=OFF
+        -DSTATICLIBS=${STATICLIBS}
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libftdi1)
-
+vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/libftdi1/LibFTDI1Config.cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/libftdi1/LibFTDI1Config-debug.cmake")
+endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libftdi1)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/LibFTDI1Config.cmake" "/lib/cmake/${PORT}/" "/share/${PORT}/")
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/LibFTDI1Config-debug.cmake" "/debug/lib/cmake/${PORT}/" "/share/${PORT}/")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/LibFTDI1Config-debug.cmake" "{_IMPORT_PREFIX}" "{VCPKG_IMPORT_PREFIX}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/LibFTDI1Config-debug.cmake" "{VCPKG_IMPORT_PREFIX}/debug/include/" "{VCPKG_IMPORT_PREFIX}/include/")
+    file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/LibFTDI1Config.cmake" release_config)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/LibFTDI1Config.cmake" "
+if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES \"^[Dd][Ee][Bb][Uu][Gg]\$\")
+    include(\"\${CMAKE_CURRENT_LIST_DIR}/LibFTDI1Config-debug.cmake\")
+    return()
+endif()
+${release_config}"
+    )
 endif()
 
-vcpkg_copy_pdbs()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+if(NOT "cpp" IN_LIST FEATURES)
+    file(REMOVE  "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libftdipp1.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libftdipp1.pc")
+endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+set(file_list "${SOURCE_PATH}/COPYING.LIB")
+if("cpp" IN_LIST FEATURES)
+    set(file_list "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/COPYING.LIB" "${SOURCE_PATH}/COPYING.GPL")
+endif()
+
+vcpkg_install_copyright(FILE_LIST ${file_list})
