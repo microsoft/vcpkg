@@ -413,7 +413,7 @@
       "port-version": 0
     },
     "aws-c-mqtt": {
-      "baseline": "0.10.6",
+      "baseline": "0.10.7",
       "port-version": 0
     },
     "aws-c-s3": {
@@ -437,7 +437,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.415",
+      "baseline": "1.11.420",
       "port-version": 0
     },
     "azmq": {
