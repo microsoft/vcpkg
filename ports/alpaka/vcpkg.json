@@ -7,11 +7,11 @@
   "dependencies": [
     {
       "name": "boost-core",
-      "version>=": "1.2.0"
+      "version>=": "1.74.0"
     },
     {
       "name": "boost-predef",
-      "version>=": "1.2.0"
+      "version>=": "1.74.0"
     },
     {
       "name": "vcpkg-cmake",
