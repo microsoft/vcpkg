@@ -1,4 +1,3 @@
-
 diff --git a/CGAL_Core/include/CGAL/CORE/ExprRep.h b/CGAL_Core/include/CGAL/CORE/ExprRep.h
 index 0e721dda16a8..a325930a2ab4 100644
 --- a/CGAL_Core/include/CGAL/CORE/ExprRep.h
@@ -60,3 +59,17 @@ index 1c5d0f13a405..f2ec1e90cb3b 100644
  
  typedef Realbase_for<long> RealLong;
  typedef Realbase_for<double> RealDouble;
+
+diff --git a/CGAL_Core/include/CGAL/CORE/MemoryPool.h b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+index d218a871bec5..1cfa96fa93d1 100644
+--- a/CGAL_Core/include/CGAL/CORE/MemoryPool.h
++++ b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+@@ -116,7 +116,7 @@ void* MemoryPool< T, nObjects >::allocate(std::size_t) {
+ }
+ 
+ template< class T, int nObjects >
+-void MemoryPool< T, nObjects >::free(void* t) {
++void MemoryPool< T, nObjects >::free BOOST_PREVENT_MACRO_SUBSTITUTION (void* t) {
+    CGAL_assertion(t != 0);
+    if (t == 0) return; // for safety
+    if(blocks.empty()){
