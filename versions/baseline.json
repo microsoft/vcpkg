@@ -89,7 +89,7 @@
       "port-version": 0
     },
     "alpaca": {
-      "baseline": "0.2.1",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "alpaka": {
