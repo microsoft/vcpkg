@@ -8757,7 +8757,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "3.7.0",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "tbb": {
