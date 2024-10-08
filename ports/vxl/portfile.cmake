@@ -29,7 +29,7 @@ file(REMOVE_RECURSE ${vendored_sources})
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
         core-imaging  VXL_BUILD_CORE_IMAGING
-        openjpeg      VXL_FORCE_V3P_OPENJPEG2  # vendored legacy 1.2 lib
+        openjpeg      ENABLE_OPENJPEG
 )
 
 if(VCPKG_TARGET_IS_MINGW)
@@ -65,6 +65,7 @@ vcpkg_cmake_configure(
         -DVXL_FORCE_V3P_GEOTIFF=OFF
         -DVXL_FORCE_V3P_J2K=OFF
         -DVXL_FORCE_V3P_JPEG=OFF
+        -DVXL_FORCE_V3P_OPENJPEG2=ON  # vendored 1.2; vxl needs old API.
         -DVXL_FORCE_V3P_PNG=OFF
         -DVXL_FORCE_V3P_TIFF=OFF
         -DVXL_FORCE_V3P_ZLIB=OFF
@@ -79,6 +80,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/vxl/cmake)
 vcpkg_copy_pdbs()
+
+file(COPY "${SOURCE_PATH}/vcl/vcl_msvc_warnings.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vxl/vcl")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
