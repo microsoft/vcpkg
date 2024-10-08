@@ -15,6 +15,10 @@
       "version>=": "1.86.0"
     },
     {
+      "name": "boost-compute",
+      "version>=": "1.86.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.86.0"
     },
@@ -79,31 +83,12 @@
       "version>=": "1.86.0"
     }
   ],
-  "default-features": [
-    "adapters"
-  ],
   "features": {
-    "adapters": {
-      "description": "Build with adapters",
-      "dependencies": [
-        {
-          "name": "boost-compute",
-          "version>=": "1.86.0"
-        }
-      ]
-    },
     "mpi": {
       "description": "Support parallelization with MPI",
       "dependencies": [
         {
           "name": "boost-mpi",
-          "version>=": "1.86.0"
-        },
-        {
-          "name": "boost-odeint",
-          "features": [
-            "adapters"
-          ],
           "version>=": "1.86.0"
         }
       ]

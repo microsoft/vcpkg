@@ -127,15 +127,10 @@ $portData = @{
     };
     "boost-mysql"           = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
-        "default-features" = @("adapters");
         "features" = @{
-            "adapters" = @{
-                "description"  = "Build with adapters";
-                "dependencies" = @("boost-compute");
-            }
             "mpi" = @{
                 "description"  = "Support parallelization with MPI";
-                "dependencies" = @("boost-mpi", @{ "name" = "boost-odeint"; "features" = @("adapters") });
+                "dependencies" = @("boost-mpi");
             }
         }
     };
