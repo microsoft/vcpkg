@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         clipper.diff
+        cmake-package.diff
         disable-tests.diff
         file_formats.diff
         geotiff.diff
@@ -30,6 +31,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         core-imaging  VXL_BUILD_CORE_IMAGING
         openjpeg      VXL_FORCE_V3P_OPENJPEG2  # vendored legacy 1.2 lib
 )
+
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND options -DVXL_HAS_DBGHELP_H=FALSE)  # needs patches
+endif()
 
 set(USE_WIN_WCHAR_T OFF)
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -79,8 +84,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Don't provide source dir; test lib not installed.
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/vxl/vcl/vcl_where_root_dir.h")
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vxl/VXLConfig.cmake" "# ${CURRENT_BUILDTREES_DIR}" "")
 
 set(file_list "${SOURCE_PATH}/core/vxl_copyright.h")
 if("openjpeg" IN_LIST FEATURES)

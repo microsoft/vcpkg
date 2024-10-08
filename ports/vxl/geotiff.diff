@@ -11,3 +11,18 @@ index bcc8fc5..ed9420e 100644
        if( GEOTIFF_FOUND )
          set(VXL_USING_NATIVE_GEOTIFF "YES")
        endif()
+diff --git a/config/cmake/Modules/VXLConfig_export.cmake.in b/config/cmake/Modules/VXLConfig_export.cmake.in
+index 0314b09..78eaf51 100644
+--- a/config/cmake/Modules/VXLConfig_export.cmake.in
++++ b/config/cmake/Modules/VXLConfig_export.cmake.in
+@@ -154,6 +154,10 @@ set(VXL_TIFF_INCLUDE_DIR "@TIFF_INCLUDE_DIR@")
+ set(VXL_TIFF_LIBRARIES "@TIFF_LIBRARIES@")
+ 
+ set(VXL_GEOTIFF_FOUND "@GEOTIFF_FOUND@")
++if(VXL_GEOTIFF_FOUND)
++    include(CMakeFindDependencyMacro)
++    find_dependency(GeoTIFF CONFIG)
++endif()
+ set(VXL_GEOTIFF_INCLUDE_DIR "@GEOTIFF_INCLUDE_DIR@")
+ set(VXL_GEOTIFF_LIBRARIES "@GEOTIFF_LIBRARIES@")
+ 

@@ -1,16 +1,3 @@
-diff --git a/config/cmake/config/vxl_platform_tests.cxx b/config/cmake/config/vxl_platform_tests.cxx
-index 3eeb9f1..99aac4a 100644
---- a/config/cmake/config/vxl_platform_tests.cxx
-+++ b/config/cmake/config/vxl_platform_tests.cxx
-@@ -84,7 +84,7 @@ int main(int argc, char * argv[])
- #ifdef VXL_HAS_DBGHELP_H
- 
- // This is a Windows header, and needs windows.h included first to make it compile properly.
--#include <Windows.h>
-+#include <windows.h>
- #include <DbgHelp.h>
- 
- int main() { MINIDUMP_EXCEPTION_INFORMATION dummy; return 0; }
 diff --git a/core/vul/vul_temp_filename.cxx b/core/vul/vul_temp_filename.cxx
 index 87649e8..1fb263a 100644
 --- a/core/vul/vul_temp_filename.cxx
