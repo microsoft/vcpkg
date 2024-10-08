@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/alpaca
     REF v${VERSION}
-    SHA512 3c61bd177f4118d8e270df24285d59e294d9eeb25daddac2d39d867188699955422fee92c875961c0fd1a77b46fe8d866310e578fd201e566e57c00539f85cfd
+    SHA512 0
     HEAD_REF master
 )
 
