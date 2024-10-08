@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 510cc85346b685833091cd616ad6d8a3ba602e716747ab8dea6573abbaa1a2d49eed80b2d566b68293df78f3f3b9cf412ff4e3515f0d37951d63b9634b207a08
     HEAD_REF master
-    PATCHES
-        fix-runtime-destination.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ALEMBIC_SHARED_LIBS)
