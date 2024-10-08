@@ -1,6 +1,6 @@
 {
   "name": "toml11",
-  "version": "3.8.1",
+  "version": "4.2.0",
   "description": "A C++11 header-only toml parser/encoder depending only on C++ standard library.",
   "homepage": "https://github.com/ToruNiina/toml11",
   "license": "MIT",

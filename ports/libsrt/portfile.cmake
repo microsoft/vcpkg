@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-static.patch
         pkgconfig.diff
+        fix-tool.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
@@ -34,7 +35,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(ENABLE_APPS)
-    if(NOT MINGW)
+    if(NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_copy_tools(TOOL_NAMES srt-tunnel AUTO_CLEAN)
     endif()
     vcpkg_copy_tools(TOOL_NAMES srt-file-transmit srt-live-transmit AUTO_CLEAN)

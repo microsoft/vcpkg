@@ -24,7 +24,7 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+if(CMAKE_HOST_WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         if(FLEX_DIR MATCHES "${DOWNLOADS}")
             file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")

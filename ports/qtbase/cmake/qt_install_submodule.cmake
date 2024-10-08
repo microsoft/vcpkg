@@ -26,7 +26,7 @@ function(qt_download_submodule_impl)
         if(PORT STREQUAL "qttools") # Keep this for beta & rc's
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
-                URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
+                URL https://code.qt.io/playground/qlitehtml.git
                 REF "${${PORT}_qlitehtml_REF}"
                 FETCH_REF master
                 HEAD_REF master
@@ -44,7 +44,7 @@ function(qt_download_submodule_impl)
         elseif(PORT STREQUAL "qtwebengine")
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
-                URL git://code.qt.io/qt/qtwebengine-chromium.git
+                URL https://code.qt.io/qt/qtwebengine-chromium.git
                 REF "${${PORT}_chromium_REF}"
             )
             if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
@@ -258,8 +258,8 @@ function(qt_fixup_and_cleanup)
     file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
     debug_message("DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
     foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
-        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_plugindir}" "{_IMPORT_PREFIX}/debug/${qt_plugindir}")
-        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_qmldir}" "{_IMPORT_PREFIX}/debug/${qt_qmldir}")
+        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_plugindir}" "{_IMPORT_PREFIX}/debug/${qt_plugindir}" IGNORE_UNCHANGED)
+        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_qmldir}" "{_IMPORT_PREFIX}/debug/${qt_qmldir}" IGNORE_UNCHANGED)
     endforeach()
 
     file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
@@ -267,7 +267,8 @@ function(qt_fixup_and_cleanup)
         # restore a single get_filename_component which was remove by vcpkg_cmake_config_fixup
         vcpkg_replace_string("${_plugin_target}"
                              [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
-                             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
+                             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+                             IGNORE_UNCHANGED)
     endforeach()
 
     set(qt_tooldest "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")

@@ -101,6 +101,11 @@
           "platform": "!(uwp & arm)"
         },
         {
+          "$package": "GnuTLS",
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
           "$package": "Iconv",
           "$since": "3.11",
           "name": "libiconv"
@@ -146,6 +151,11 @@
         {
           "$package": "PhysFS",
           "name": "physfs"
+        },
+        {
+          "$package": "GnuTLS",
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !arm & !mingw & !xbox"
         },
         {
           "$package": "SQLite3",

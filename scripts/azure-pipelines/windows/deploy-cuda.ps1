@@ -1,81 +1,65 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1
+param([string]$SasToken)
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
-# If you are running this script outside of our Azure VMs, you will need to download cudnn from NVIDIA and place
-# it next to this script.
-
-$CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.1.0/network_installers/cuda_12.1.0_windows_network.exe'
+[string]$CudaUrl
+if ([string]::IsNullOrEmpty($SasToken)) {
+  $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.5.0/local_installers/cuda_12.5.0_555.85_windows.exe'
+} else {
+  $SasToken = $SasToken.Replace('"', '')
+  $CudaUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cuda_12.5.0_555.85_windows.exe?$SasToken"
+}
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 # Intentionally omitted:
-#  demo_suite_12.1
-#  documentation_12.1
-#  nvvm_samples_12.1
+#  demo_suite_12.5
+#  documentation_12.5
+#  nvvm_samples_12.5
+#  visual_studio_integration_12.5
 #  Display.Driver
-
-$CudaInstallerArgs = @(
+DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
   '-s',
-  'cublas_12.1',
-  'cublas_dev_12.1',
-  'cuda_profiler_api_12.1',
-  'cudart_12.1',
-  'cufft_12.1',
-  'cufft_dev_12.1',
-  'cuobjdump_12.1',
-  'cupti_12.1',
-  'curand_12.1',
-  'curand_dev_12.1',
-  'cusolver_12.1',
-  'cusolver_dev_12.1',
-  'cusparse_12.1',
-  'cusparse_dev_12.1',
-  'cuxxfilt_12.1',
-  'npp_12.1',
-  'npp_dev_12.1',
-  'nsight_compute_12.1',
-  'nsight_systems_12.1',
-  'nsight_vse_12.1',
-  'nvcc_12.1',
-  'nvdisasm_12.1',
-  'nvjitlink_12.1',
-  'nvjpeg_12.1',
-  'nvjpeg_dev_12.1',
-  'nvml_dev_12.1',
-  'nvprof_12.1',
-  'nvprune_12.1',
-  'nvrtc_12.1',
-  'nvrtc_dev_12.1',
-  'nvtx_12.1',
-  'occupancy_calculator_12.1',
-  'opencl_12.1',
-  'sanitizer_12.1',
-  'thrust_12.1',
-  'visual_profiler_12.1',
-  'visual_studio_integration_12.1'
+  'cublas_12.5',
+  'cublas_dev_12.5',
+  'cuda_profiler_api_12.5',
+  'cudart_12.5',
+  'cufft_12.5',
+  'cufft_dev_12.5',
+  'cuobjdump_12.5',
+  'cupti_12.5',
+  'curand_12.5',
+  'curand_dev_12.5',
+  'cusolver_12.5',
+  'cusolver_dev_12.5',
+  'cusparse_12.5',
+  'cusparse_dev_12.5',
+  'cuxxfilt_12.5',
+  'npp_12.5',
+  'npp_dev_12.5',
+  'nsight_compute_12.5',
+  'nsight_systems_12.5',
+  'nsight_vse_12.5',
+  'nvcc_12.5',
+  'nvdisasm_12.5',
+  'nvfatbin_12.5',
+  'nvjitlink_12.5',
+  'nvjpeg_12.5',
+  'nvjpeg_dev_12.5',
+  'nvml_dev_12.5',
+  'nvprof_12.5',
+  'nvprune_12.5',
+  'nvrtc_12.5',
+  'nvrtc_dev_12.5',
+  'nvtx_12.5',
+  'occupancy_calculator_12.5',
+  'opencl_12.5',
+  'sanitizer_12.5',
+  'thrust_12.5',
+  'visual_profiler_12.5',
+  '-n'
 )
-
-$destination = "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
-
-try {
-  Write-Host 'Downloading CUDA...'
-  [string]$installerPath = Get-TempFilePath -Extension 'exe'
-  curl.exe -L -o $installerPath -s -S $CudaUrl
-  Write-Host 'Installing CUDA...'
-  $proc = Start-Process -FilePath $installerPath -ArgumentList $CudaInstallerArgs -Wait -PassThru
-  $exitCode = $proc.ExitCode
-  if ($exitCode -eq 0) {
-    Write-Host 'Installation successful!'
-  }
-  else {
-    Write-Error "Installation failed! Exited with $exitCode."
-    throw
-  }
-}
-catch {
-  Write-Error "Failed to install CUDA! $($_.Exception.Message)"
-  throw
-}

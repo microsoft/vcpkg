@@ -1,11 +1,10 @@
 {
   "name": "configcat",
-  "version": "4.0.1",
+  "version": "4.0.3",
   "description": "ConfigCat SDK for C++ provides easy integration for your application to ConfigCat. ConfigCat is a feature flag and configuration management service that lets you separate feature releases from deployments. Alternative to LaunchDarkly.",
   "homepage": "https://configcat.com/",
   "license": "MIT",
   "dependencies": [
-    "hash-library",
     "nlohmann-json",
     {
       "name": "vcpkg-cmake",
@@ -18,11 +17,12 @@
     "z4kn4fein-semver"
   ],
   "default-features": [
-    "network"
+    "network",
+    "sha"
   ],
   "features": {
     "network": {
-      "description": "Use built-in curl network adapter",
+      "description": "Use curl for network",
       "dependencies": [
         {
           "name": "curl",
@@ -35,6 +35,12 @@
           "name": "openssl",
           "platform": "linux"
         }
+      ]
+    },
+    "sha": {
+      "description": "Use hash-library for SHA calculations",
+      "dependencies": [
+        "hash-library"
       ]
     }
   }

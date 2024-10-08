@@ -1,6 +1,6 @@
 {
   "name": "perfetto",
-  "version": "45.0",
+  "version": "47.0",
   "description": "System profiling, app tracing and trace analysis",
   "homepage": "https://perfetto.dev",
   "license": "Apache-2.0",

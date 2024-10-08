@@ -1,6 +1,6 @@
 {
   "name": "libgpiod",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "C library and tools for interacting with the linux GPIO character device",
   "homepage": "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
   "license": "LGPL-2.1-or-later",

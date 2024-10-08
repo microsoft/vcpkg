@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:focal-20240427
+FROM ubuntu:focal-20240530
 
 ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
-ADD https://dl.google.com/android/repository/android-ndk-r25c-linux.zip /android-ndk-r25c-linux.zip
+ADD https://dl.google.com/android/repository/android-ndk-r26d-linux.zip /android-ndk-r26d-linux.zip
 
 # Add apt packages
 
@@ -60,10 +60,10 @@ apt-get -y dist-upgrade
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # Android NDK
-unzip /android-ndk-r25c-linux.zip
-rm -f android-ndk-r25c-linux.zip
+unzip /android-ndk-r26d-linux.zip
+rm -f android-ndk-r26d-linux.zip
 END_OF_SCRIPT
 
-ENV ANDROID_NDK_HOME /android-ndk-r25c
+ENV ANDROID_NDK_HOME /android-ndk-r26d
 
 WORKDIR /vcpkg

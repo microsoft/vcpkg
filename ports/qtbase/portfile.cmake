@@ -137,11 +137,13 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
     "securetransport"     FEATURE_securetransport
+    "dnslookup"           FEATURE_dnslookup
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
+    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolve
     )
 
 if("openssl" IN_LIST FEATURES)
@@ -150,9 +152,12 @@ else()
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=no)
 endif()
 
+if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_NET_OPTIONS -DFEATURE_libresolv:BOOL=ON)
+endif()
+
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
-list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapResolv:BOOL=ON)
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
@@ -195,7 +200,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
-    "png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG
+    #"png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG # Unable to disable if Freetype requires it
     "xlib"                CMAKE_DISABLE_FIND_PACKAGE_X11
     "xkb"                 CMAKE_DISABLE_FIND_PACKAGE_XKB
     "xcb"                 CMAKE_DISABLE_FIND_PACKAGE_XCB
@@ -343,6 +348,12 @@ set(other_files qt-cmake
                 qt-configure-module
                 qt-internal-configure-tests
                 qt-cmake-create
+                qt-internal-configure-examples
+                qt-internal-configure-tests
+                qmake
+                qmake6
+                qtpaths
+                qtpaths6
                  )
 if(CMAKE_HOST_WIN32)
     set(script_suffix ".bat")
@@ -360,6 +371,7 @@ list(APPEND other_files
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
                 sanitizer-testrunner.py
+                qt-wasmtestrunner.py
                 )
 
 foreach(_config debug release)
@@ -449,6 +461,30 @@ set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
 set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY) # For vcpkg-qmake
 
+set(target_qt_conf "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/target_qt.conf")
+if(EXISTS "${target_qt_conf}")
+    file(READ "${target_qt_conf}" qt_conf_contents)
+    string(REGEX REPLACE "Prefix=[^\n]+" "Prefix=./../../../" qt_conf_contents ${qt_conf_contents})
+    string(REGEX REPLACE "HostData=[^\n]+" "HostData=./../${TARGET_TRIPLET}/share/Qt6" qt_conf_contents ${qt_conf_contents})
+    string(REGEX REPLACE "HostPrefix=[^\n]+" "HostPrefix=./../../../../${_HOST_TRIPLET}" qt_conf_contents ${qt_conf_contents})
+    file(WRITE "${target_qt_conf}" "${qt_conf_contents}")
+    if(NOT VCPKG_BUILD_TYPE)
+      set(target_qt_conf_debug "${CURRENT_PACKAGES_DIR}/tools/Qt6/target_qt_debug.conf")
+      configure_file("${target_qt_conf}" "${target_qt_conf_debug}" COPYONLY)
+      file(READ "${target_qt_conf_debug}" qt_conf_contents)
+      string(REGEX REPLACE "=(bin|lib|Qt6/plugins|Qt6/qml)" "=debug/\\1" qt_conf_contents ${qt_conf_contents})
+      file(WRITE "${target_qt_conf_debug}" "${qt_conf_contents}")
+
+      configure_file("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake${script_suffix}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake.debug${script_suffix}" COPYONLY)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake.debug${script_suffix}" "target_qt.conf" "target_qt_debug.conf")
+    endif()
+endif()
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
+endif()
+
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
     set(DLLS_TO_COPY "")
@@ -469,7 +505,8 @@ file(WRITE "${hostinfofile}" "${_contents}")
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
                          "PACKAGE_PREFIX_DIR}/bin/syncqt"
-                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt")
+                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt"
+                         IGNORE_UNCHANGED)
 endif()
 
 set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
@@ -500,8 +537,8 @@ function(remove_original_cmake_path file)
     file(WRITE "${file}" "${_contents}")
 endfunction()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    foreach(file "qt-cmake" "qt-cmake-private")
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT CMAKE_HOST_WIN32)
+    foreach(file "qt-cmake${script_suffix}" "qt-cmake-private${script_suffix}")
         remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${file}")
         if(NOT VCPKG_BUILD_TYPE)
             remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
@@ -523,6 +560,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         zlib1.dll
         zstd.dll
   )
+  if("dbus" IN_LIST FEATURES)
+    list(APPEND qtbase_owned_dlls dbus-1-3.dll)
+  endif()
   list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
   foreach(dll IN LISTS qtbase_owned_dlls)
     if(NOT EXISTS "${dll}") # Need to remove non-existant dlls since dependencies could have been build statically

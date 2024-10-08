@@ -8,8 +8,10 @@ vcpkg_from_github(
         link-libraries.patch
         find-package.patch
         remove-tool-debug-suffix.patch
-		remove-lerc-gltf.patch
-		export-plugins.patch
+        remove-lerc-gltf.patch
+        export-plugins.patch
+        protobuf.patch
+        blend2d.patch
 )
 
 if("tools" IN_LIST FEATURES)
@@ -54,7 +56,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIB_POSTFIX=
-        -DCMAKE_CXX_STANDARD=11
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DOSGEARTH_BUILD_EXAMPLES=OFF
         -DOSGEARTH_BUILD_TESTS=OFF
@@ -66,6 +67,8 @@ vcpkg_cmake_configure(
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
+    MAYBE_UNUSED_VARIABLES
+        LIB_POSTFIX
 )
 
 vcpkg_cmake_install()
@@ -95,5 +98,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -1,6 +1,6 @@
 {
   "name": "baresip-libre",
-  "version": "3.12.0",
+  "version": "3.15.0",
   "description": "Generic library for real-time communications with async IO support",
   "homepage": "https://github.com/baresip/re",
   "license": "BSD-3-Clause",

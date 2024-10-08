@@ -1,0 +1,22 @@
+diff --git a/src/osgEarth/FeatureRasterizer.cpp b/src/osgEarth/FeatureRasterizer.cpp
+index 2b823a58f..ecf1cd13f 100644
+--- a/src/osgEarth/FeatureRasterizer.cpp
++++ b/src/osgEarth/FeatureRasterizer.cpp
+@@ -487,7 +487,7 @@ namespace osgEarth {
+                     ctx.scale(scale);
+                     ctx.blitImage(BLPoint((double)g->left - GLYPH_PADDING, (double)(-g->top) - GLYPH_PADDING), sprite, glyphRect);
+                     //ctx.blitImage(BLPoint(0, 0), sprite, glyphRect);
+-                    ctx.resetMatrix();
++                    ctx.resetTransform();
+ 
+ #if 0
+                     // Draw the text bounding box
+@@ -572,7 +572,7 @@ namespace osgEarth {
+                                             ctx.translate(x, y);
+                                             ctx.scale(scale);
+                                             ctx.blitImage(BLPoint(-iconRect.w / 2.0, -iconRect.h / 2.0), sprite, iconRect);
+-                                            ctx.resetMatrix();
++                                            ctx.resetTransform();
+                                         }
+                                     });
+                             }

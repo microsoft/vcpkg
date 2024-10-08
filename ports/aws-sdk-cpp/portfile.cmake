@@ -4,13 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
     REF "${VERSION}"
-    SHA512 826be806ddd87eb452f97df70b19df4194e984775408d8f99246244b6949abcab583e4cbe1ae3bc5d61f3c78267d0e75ea9e69956188ab12e0318344a4314591
+    SHA512 a131a45b9775e480f763069f1b6e94b7dc71ded77aa9f016f21b02215cb3ef50259c2e1189e07e3f6740cb0d8780c158d6315da6c318f764293914713ded121e
     PATCHES
-        patch-relocatable-rpath.patch
         fix-aws-root.patch
         lock-curl-http-and-tls-settings.patch
         fix_find_curl.patch
-        fix-mingw-compatibility.patch
+        find-dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -73,15 +72,6 @@ foreach(AWS_CONFIG IN LISTS AWS_CONFIGS)
     file(READ "${AWS_CONFIG}" _contents)
     file(WRITE "${AWS_CONFIG}" "include(CMakeFindDependencyMacro)\nfind_dependency(aws-cpp-sdk-core)\n${_contents}")
 endforeach()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/awssdk/AWSSDKConfig.cmake" "include(${CMAKE_CURRENT_LIST_DIR}/compiler_settings.cmake)" 
-[[include(${CMAKE_CURRENT_LIST_DIR}/compiler_settings.cmake)
-include(CMakeFindDependencyMacro)
-find_dependency(ZLIB)
-find_dependency(CURL)]])
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/aws-cpp-sdk-core/aws-cpp-sdk-core-config.cmake" "find_dependency(aws-crt-cpp)" 
-[[find_dependency(aws-crt-cpp)
-find_dependency(ZLIB)
-find_dependency(CURL)]])
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

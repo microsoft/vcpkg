@@ -1,0 +1,22 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 94672b5..aa46631 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -96,6 +96,8 @@ if(ENABLE_SHARED_LIB)
+     C_VISIBILITY_PRESET hidden
+   )
+ 
++  target_include_directories(nghttp3 INTERFACE $<INSTALL_INTERFACE:include>)
++
+   install(TARGETS nghttp3
+     EXPORT ${NGHTTP3_TARGETS_EXPORT_NAME} 
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+@@ -113,6 +115,8 @@ if(ENABLE_STATIC_LIB)
+     )
+   target_compile_definitions(nghttp3_static PUBLIC "-DNGHTTP3_STATICLIB")
+ 
++  target_include_directories(nghttp3_static INTERFACE $<INSTALL_INTERFACE:include>)
++
+   install(TARGETS nghttp3_static
+     EXPORT ${NGHTTP3_TARGETS_EXPORT_NAME} 
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}")

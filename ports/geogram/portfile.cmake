@@ -129,7 +129,8 @@ vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake"
     [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
     [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]]
-    )
+    IGNORE_UNCHANGED
+)
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/devkit/license.dox")

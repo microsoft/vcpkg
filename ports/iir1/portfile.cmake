@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO berndporr/iir1
     REF "${VERSION}"
-    SHA512 e69b79ba48aa5d5ec2ddb0a31461ac4c15b0489df80fddc1f1f8adc143726fa189dc0dd94a0ed2bb7aa73712f953e27b345a762120ab2d10f54f57a868f0ea42
+    SHA512 2b0658a621cdfb57796cf2fea5411975b442af4af267bce2f613ae53f43572f208fdea59d7ea0178e9984e311c406f289166789aa423505ac8ed2b889ddc9f64
     HEAD_REF master
     PATCHES
         fix-shared-lib.patch

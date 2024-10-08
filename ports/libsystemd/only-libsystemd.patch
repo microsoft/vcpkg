@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index 7419e2b..687450e 100644
+index b1a110c..6a7d930 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -1909,12 +1909,11 @@ libsystemd_includes = [basic_includes, include_directories(
+@@ -2074,12 +2074,11 @@ libsystemd_includes = [basic_includes, include_directories(
  includes = [libsystemd_includes, include_directories('src/shared')]
  
  subdir('po')
@@ -17,7 +17,7 @@ index 7419e2b..687450e 100644
  
  libsystemd = shared_library(
          'systemd',
-@@ -1930,7 +1929,8 @@ libsystemd = shared_library(
+@@ -2095,7 +2094,8 @@ libsystemd = shared_library(
                          threads,
                          userspace],
          link_depends : libsystemd_sym,
@@ -27,16 +27,16 @@ index 7419e2b..687450e 100644
          install_tag: 'libsystemd',
          install_dir : libdir)
  
-@@ -1963,6 +1963,8 @@ install_libsystemd_static = static_library(
-                         userspace],
-         c_args : libsystemd_c_args + (static_libsystemd_pic ? [] : ['-fno-PIC']))
+@@ -2130,6 +2130,8 @@ else
+         alias_target('libsystemd', libsystemd)
+ endif
  
 +if false
 +
  libudev = shared_library(
          'udev',
          version : libudev_version,
-@@ -1974,7 +1976,8 @@ libudev = shared_library(
+@@ -2141,7 +2143,8 @@ libudev = shared_library(
          dependencies : [threads,
                          userspace],
          link_depends : libudev_sym,
@@ -46,9 +46,9 @@ index 7419e2b..687450e 100644
          install_tag: 'libudev',
          install_dir : libdir)
  
-@@ -2661,6 +2664,13 @@ if not meson.is_cross_build()
-                 command : [export_dbus_interfaces_py, '@OUTPUT@', dbus_programs])
- endif
+@@ -2905,6 +2908,13 @@ custom_target('installed-unit-files.txt',
+               install_dir : testdata_dir,
+               command : [meson_extract_unit_files, project_build_root])
  
 +endif # false
 +static_libudev='unused'
@@ -57,6 +57,6 @@ index 7419e2b..687450e 100644
 +want_html=false
 +want_man=false
 +
- ############################################################
+ #####################################################################
  
  alt_time_epoch = run_command('date', '-Is', '-u', '-d', '@@0@'.format(time_epoch),
