@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 243d04e..d5bfe96 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -244,7 +244,7 @@ if (NOT X86)
+     endif ()
+ endif ()
+ 
+-if (KFR_ARCH IN_LIST DETECT_NAMES AND NOT CMAKE_CROSSCOMPILING)
++if (0)
+     message(STATUS "Detecting ${KFR_ARCH} architecture")
+     try_run(
+         RUN_RESULT COMPILE_RESULT "${CMAKE_CURRENT_BINARY_DIR}/tmpdir"
