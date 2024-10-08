@@ -39,6 +39,7 @@ vcpkg_from_github(
       "${ARM64_WINDOWS_FIX}"
       0022-fix-supportqnx.patch
       "${CUDA_12_4_FIX}"
+      0023-fix-regex-OpenCVUtils.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
