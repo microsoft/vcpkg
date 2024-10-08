@@ -435,12 +435,12 @@ endfunction()
 function(z_vcpkg_make_prepare_link_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         ""
-        "IN_OUT_VAR;X_VCPKG_TRANSFORM_LIBS;VCPKG_TARGET_IS_WINDOWS;VCPKG_TARGET_IS_MINGW;VCPKG_LIBRARY_LINKAGE"
+        "IN_OUT_VAR;VCPKG_TRANSFORM_LIBS;VCPKG_TARGET_IS_WINDOWS;VCPKG_TARGET_IS_MINGW;VCPKG_LIBRARY_LINKAGE"
         "")
 
     set(link_flags ${${arg_IN_OUT_VAR}})
     
-    if(arg_X_VCPKG_TRANSFORM_LIBS STREQUAL "ON")
+    if(arg_VCPKG_TRANSFORM_LIBS STREQUAL "ON")
         list(TRANSFORM link_flags REPLACE "[.](dll[.]lib|lib|a|so)$" "")
 
         if(arg_VCPKG_TARGET_IS_WINDOWS STREQUAL "TRUE")
@@ -478,13 +478,13 @@ function(z_vcpkg_make_prepare_flags)
     set(all_libs_list ${cxx_libs_list} ${c_libs_list})
 
     # Do lib list transformation from name.lib to -lname if necessary
-    set(x_vcpkg_transform_libs ON)
+    set(vcpkg_transform_libs ON)
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" AND (arg_NO_FLAG_ESCAPING))
-      set(x_vcpkg_transform_libs OFF)
+      set(vcpkg_transform_libs OFF)
     endif()
 
     if(VCPKG_TARGET_IS_UWP)
-        set(x_vcpkg_transform_libs OFF)
+        set(vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
         # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested.
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows.
@@ -493,7 +493,7 @@ function(z_vcpkg_make_prepare_flags)
 
     z_vcpkg_make_prepare_link_flags(
         IN_OUT_VAR all_libs_list 
-        X_VCPKG_TRANSFORM_LIBS ${x_vcpkg_transform_libs} 
+        VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs} 
         VCPKG_TARGET_IS_WINDOWS ${VCPKG_TARGET_IS_WINDOWS} 
         VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
         VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
