@@ -2,12 +2,14 @@ if(VCPKG_TARGET_IS_LINUX)
     message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libxi-dev\n    libxtst-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libxtst-dev")
 endif()
 
+string(REPLACE "." "_" UNDERSCORES_VERSION "${VERSION}")
+
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.gnome.org
     REPO GNOME/at-spi2-core
-    REF AT_SPI2_CORE_2_44_1
-    SHA512 4e98b76e019f33af698a5e2b7ae7ce17ce0ff57784b4d505fe4bad58b097080899c1ca82b443502068c5504b60886e2d4a341bba833e0279ebef352211bf3813
+    REF "AT_SPI2_CORE_${UNDERSCORES_VERSION}"
+    SHA512 7b2b6abe5e90b1cdaa2c752da224657e09cb178ed174542815d1a528254727278fdd2b8218a1a0a68632966f851f65b5774d973a3e1f8c1f9e96c802ec40d76f
 )
 
 vcpkg_configure_meson(
