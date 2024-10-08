@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://partner.steamgames.com/downloads/steamworks_sdk_160.zip"
     FILENAME "steamworks_sdk_160.zip"
-    SKIP_SHA512 # Not sure why, but the SHA512 hash is changing with each download
+    SHA512 3fa8d579de1ddfc80cfab0e5cf3817a27be253251415cc2d5f97d675b6f27d53aebb69672fd7ffb76c0adff803228830a54848c394cebe2557240cf6a2ea08c1
 )
 
 vcpkg_extract_source_archive(

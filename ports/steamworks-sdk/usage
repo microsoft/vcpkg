@@ -1,5 +1,5 @@
 
 The package steamworks-sdk is compatible with CMake as following
 
-  find_package(Unoffical-Steamworks-SDK REQUIRED)
-  target_link_libraries(target PRIVATE unofficial::steamworks-sdk)
+  find_package(unofficial-steamworks-sdk REQUIRED)
+  target_link_libraries(target PRIVATE unofficial::steamworks-sdk::api)

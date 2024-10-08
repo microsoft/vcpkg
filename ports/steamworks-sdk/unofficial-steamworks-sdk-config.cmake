@@ -1,8 +1,8 @@
-if (NOT TARGET unofficial::steamworks-sdk)
+if (NOT TARGET unofficial::steamworks-sdk::api)
     get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}" PATH)
     get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 
-    add_library(unofficial::steamworks-sdk UNKNOWN IMPORTED)
+    add_library(unofficial::steamworks-sdk::api UNKNOWN IMPORTED)
 
     find_path(STEAMWORKS_SDK_INCLUDE_DIR
         NAMES steam/steam_api.h
@@ -23,7 +23,7 @@ if (NOT TARGET unofficial::steamworks-sdk)
         REQUIRED
     )
 
-    set_target_properties(unofficial::steamworks-sdk PROPERTIES
+    set_target_properties(unofficial::steamworks-sdk::api PROPERTIES
         IMPORTED_CONFIGURATIONS "Release;Debug"
         INTERFACE_INCLUDE_DIRECTORIES "${STEAMWORKS_SDK_INCLUDE_DIR}"
         IMPORTED_LOCATION_RELEASE "${VCPKG_STEAMWORKS_SDK_LIBRARY_RELEASE}"
