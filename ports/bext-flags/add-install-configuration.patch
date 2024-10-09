@@ -1,62 +1,49 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 78d96ff..9cf5fbe 100644
+index 78d96ff..3215aca 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.12...3.30)
- project(boost_flags)
- list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
- 
-+include(CMakePackageConfigHelpers)
+@@ -65,7 +65,39 @@ endif()
  ##################################################
- # C++ standard version selection
- ##################################################
-@@ -63,9 +64,42 @@ endif()
- ##################################################
- # flags sub-library
- ##################################################
--add_library(boost_flags INTERFACE)
--#target_include_directories(boost_flags PUBLIC ${Boost_INCLUDE_DIRS}) 
+ add_library(boost_flags INTERFACE)
+ #target_include_directories(boost_flags PUBLIC ${Boost_INCLUDE_DIRS}) 
 -target_include_directories(boost_flags INTERFACE ${CMAKE_SOURCE_DIR}/include)
-+add_library(flags INTERFACE)
-+target_include_directories(flags
++target_include_directories(boost_flags
 +                           INTERFACE
 +                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
 +                            $<INSTALL_INTERFACE:include>
 +                           )
++set_target_properties(boost_flags PROPERTIES
++  EXPORT_NAME flags
++)
++include(CMakePackageConfigHelpers)
 +
 +configure_package_config_file(
 +  cmake/unofficial-bext-flags-config.cmake.in
 +  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-bext-flags-config.cmake"
-+  INSTALL_DESTINATION lib/cmake/unofficial-bext-flags/
++  INSTALL_DESTINATION share/unofficial-bext-flags/
 +  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 +
-+
-+# Export.
-+export(
-+  TARGETS flags
-+  FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-bext-flags-targets.cmake")
-+
 +# Install.
-+install(TARGETS flags EXPORT unofficial-bext-flags)
++install(TARGETS boost_flags EXPORT unofficial-bext-flags)
 +
 +install(
 +  EXPORT unofficial-bext-flags
-+  NAMESPACE unofficial-bext::
++  NAMESPACE unofficial::bext-flags::
 +  FILE unofficial-bext-flags-targets.cmake
-+  DESTINATION lib/cmake/unofficial-bext-flags)
++  DESTINATION share/unofficial-bext-flags/)
 +
 +install(DIRECTORY include/boost DESTINATION include)
 +
 +install(
 +  FILES
 +  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-bext-flags-config.cmake"
-+  DESTINATION lib/cmake/unofficial-bext-flags)
++  DESTINATION share/unofficial-bext-flags)
 +
 +if(0)
  if (Boost_FOUND)
     target_include_directories(boost_flags INTERFACE ${Boost_INCLUDE_DIRS})
  endif()
-@@ -79,4 +113,5 @@ endif()
+@@ -79,4 +111,5 @@ endif()
  # Subdirectories
  ##################################################
  add_subdirectory(test)
