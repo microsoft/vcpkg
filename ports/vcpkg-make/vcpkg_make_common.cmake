@@ -435,7 +435,7 @@ endfunction()
 function(z_vcpkg_make_prepare_link_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         ""
-        "IN_OUT_VAR;VCPKG_TRANSFORM_LIBS;VCPKG_TARGET_IS_WINDOWS;VCPKG_TARGET_IS_MINGW;VCPKG_LIBRARY_LINKAGE"
+        "IN_OUT_VAR;VCPKG_TRANSFORM_LIBS"
         "")
 
     set(link_flags ${${arg_IN_OUT_VAR}})
@@ -443,12 +443,12 @@ function(z_vcpkg_make_prepare_link_flags)
     if(arg_VCPKG_TRANSFORM_LIBS STREQUAL "ON")
         list(TRANSFORM link_flags REPLACE "[.](dll[.]lib|lib|a|so)$" "")
 
-        if(arg_VCPKG_TARGET_IS_WINDOWS STREQUAL "TRUE")
+        if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM link_flags "uuid")
         endif()
 
         list(TRANSFORM link_flags REPLACE "^([^-].*)" "-l\\1")
-        if(arg_VCPKG_TARGET_IS_MINGW STREQUAL "TRUE" AND arg_VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             # libtool must be told explicitly that there is no dynamic linkage for uuid.
             # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
             list(TRANSFORM link_flags REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
@@ -493,10 +493,7 @@ function(z_vcpkg_make_prepare_flags)
 
     z_vcpkg_make_prepare_link_flags(
         IN_OUT_VAR all_libs_list 
-        VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs} 
-        VCPKG_TARGET_IS_WINDOWS ${VCPKG_TARGET_IS_WINDOWS} 
-        VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
-        VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
+        VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs})
 
     if(all_libs_list)
         list(JOIN all_libs_list " " all_libs_string)
@@ -515,7 +512,7 @@ function(z_vcpkg_make_prepare_flags)
         vcpkg_backup_env_variables(VARS _CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         if(VCPKG_TARGET_IS_UWP)
-            # Be aware that configure thinks it is crosscompiling due to: 
+            # Be aware that configure thinks it is crosscompiling due to:   
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
             # cannot open shared object file: No such file or directory
             # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 

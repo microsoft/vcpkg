@@ -8,10 +8,7 @@ set(VCPKG_LIBRARY_LINKAGE "static")
 
 z_vcpkg_make_prepare_link_flags(
     IN_OUT_VAR all_libs_list 
-    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs} 
-    VCPKG_TARGET_IS_WINDOWS ${VCPKG_TARGET_IS_WINDOWS} 
-    VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
-    VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
+    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs})
 
 unit_test_check_variable_equal([[]] all_libs_list "${expected}")
 
@@ -25,10 +22,7 @@ set(VCPKG_LIBRARY_LINKAGE "static")
 
 z_vcpkg_make_prepare_link_flags(
     IN_OUT_VAR all_libs_list 
-    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs} 
-    VCPKG_TARGET_IS_WINDOWS ${VCPKG_TARGET_IS_WINDOWS} 
-    VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
-    VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
+    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs})
 
 unit_test_check_variable_equal([[]] all_libs_list "${expected}")
 
@@ -42,10 +36,7 @@ set(VCPKG_LIBRARY_LINKAGE "dynamic")
 
 z_vcpkg_make_prepare_link_flags(
     IN_OUT_VAR all_libs_list 
-    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs} 
-    VCPKG_TARGET_IS_WINDOWS ${VCPKG_TARGET_IS_WINDOWS} 
-    VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
-    VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
+    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs})
 
 unit_test_check_variable_equal([[]] all_libs_list "${expected}")
 
@@ -59,9 +50,6 @@ set(VCPKG_LIBRARY_LINKAGE "static")
 
 z_vcpkg_make_prepare_link_flags(
     IN_OUT_VAR all_libs_list 
-    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs} 
-    VCPKG_TARGET_IS_WINDOWS ${VCPKG_TARGET_IS_WINDOWS} 
-    VCPKG_TARGET_IS_MINGW ${VCPKG_TARGET_IS_MINGW} 
-    VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
+    VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs})
 
 unit_test_check_variable_equal([[]] all_libs_list "${expected}")
