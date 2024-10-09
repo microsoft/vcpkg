@@ -53,12 +53,11 @@ vcpkg_cmake_configure(
         ${options}
         -DBUILD_TESTING=OFF
         -DCMAKE_POLICY_DEFAULT_CMP0120=OLD  # vxl needs WriteCompilerDetectionHeader
+        -DVCL_HAS_LFS=${VCL_HAS_LFS}
         -DVXL_BUILD_CONTRIB=OFF
         -DVXL_BUILD_EXAMPLES=OFF
         -DVXL_HAS_SSE2_HARDWARE_SUPPORT=${VXL_HAS_SSE2_HARDWARE_SUPPORT}
-        -DVCL_HAS_LFS=${VCL_HAS_LFS}
         -DVXL_FORCE_V3P_BZLIB2=OFF
-        -DVXL_USING_NATIVE_BZLIB2=ON
         -DVXL_FORCE_V3P_CLIPPER=OFF
         -DVXL_FORCE_V3P_DCMTK=OFF
         -DVXL_FORCE_V3P_GEOTIFF=OFF
@@ -68,12 +67,12 @@ vcpkg_cmake_configure(
         -DVXL_FORCE_V3P_PNG=OFF
         -DVXL_FORCE_V3P_TIFF=OFF
         -DVXL_FORCE_V3P_ZLIB=OFF
-        -DVXL_USE_DCMTK=OFF # TODO : need fix dcmtk support to turn on
+        -DVXL_USE_DCMTK=OFF
         -DVXL_USE_GEOTIFF=ON
         -DVXL_USE_WIN_WCHAR_T=${USE_WIN_WCHAR_T}
     MAYBE_UNUSED_VARIABLES
+        ENABLE_OPENJPEG
         VXL_USE_DCMTK
-        VXL_USING_NATIVE_BZLIB2
 )
 
 vcpkg_cmake_install()
