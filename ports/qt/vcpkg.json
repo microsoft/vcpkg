@@ -86,7 +86,10 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "platform": "linux"
+        }
       ],
       "platform": "!windows"
     },
