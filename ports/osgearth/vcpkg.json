@@ -13,7 +13,6 @@
     "geos",
     "glew",
     "libwebp",
-    "libzip",
     "opengl",
     {
       "name": "osg",
