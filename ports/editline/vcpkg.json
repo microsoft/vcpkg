@@ -4,15 +4,5 @@
   "description": "A command line editor library that provides generic line editing, history, and tokenization functions, similar to those found in GNU Readline.",
   "homepage": "https://thrysoee.dk/editline/",
   "license": "BSD-4-Clause-UC",
-  "supports": "linux",
-  "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  "supports": "linux"
 }
