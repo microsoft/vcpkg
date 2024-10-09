@@ -10,17 +10,15 @@ vcpkg_from_github(
     SHA512 4c6f6dcd793a50cbbc9c7f61c561ed4a747ded67e3dceb09792998c0f0d4294445a441fed668d59297560f196274b1c25593ce67b0aa7597cbb773328e8612c0
     HEAD_REF master
     PATCHES
-        clipper.diff
         cmake-package.diff
+        devendor.diff
         disable-tests.diff
         file_formats.diff
-        geotiff.diff
         int_64.diff
         limits.diff
         mingw.diff
         omit-broken-install.diff
         openjpeg.diff
-        rply.diff
 )
 file(GLOB_RECURSE vendored_sources "${SOURCE_PATH}/v3p/*.c" "${SOURCE_PATH}/v3p/*.cpp" "${SOURCE_PATH}/v3p/*.cxx")
 list(FILTER vendored_sources EXCLUDE REGEX "/(netlib|openjpeg2)/")
@@ -55,6 +53,7 @@ vcpkg_cmake_configure(
         ${options}
         -DBUILD_TESTING=OFF
         -DCMAKE_POLICY_DEFAULT_CMP0120=OLD  # vxl needs WriteCompilerDetectionHeader
+        -DVXL_BUILD_CONTRIB=OFF
         -DVXL_BUILD_EXAMPLES=OFF
         -DVXL_HAS_SSE2_HARDWARE_SUPPORT=${VXL_HAS_SSE2_HARDWARE_SUPPORT}
         -DVCL_HAS_LFS=${VCL_HAS_LFS}

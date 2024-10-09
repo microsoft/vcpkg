@@ -7,14 +7,10 @@
   "license": null,
   "supports": "!uwp",
   "dependencies": [
-    "bzip2",
-    "expat",
     "libgeotiff",
     "libjpeg-turbo",
     "libpng",
     "polyclipping",
-    "rply",
-    "shapelib",
     {
       "name": "tiff",
       "default-features": false
@@ -26,8 +22,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
+    }
   ],
   "features": {
     "core-imaging": {
