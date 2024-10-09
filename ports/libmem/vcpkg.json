@@ -7,6 +7,14 @@
     "homepage": "https://github.com/rdbo/libmem",
     "dependencies": [
       {
+        "name": "capstone",
+        "default-features": true
+      },
+      {
+        "name": "keystone",
+        "default-features": true
+      },
+      {
         "name": "vcpkg-cmake",
         "host": true
       },
