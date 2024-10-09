@@ -30,25 +30,3 @@ index fcc3f41..18859e1 100644
  	include_directories ("${PROJECT_SOURCE_DIR}/platform/posix")
  endif ()
  
-@@ -398,7 +401,8 @@ if (NSYNC_ENABLE_TESTS)
- 	endforeach (t)
- endif ()
- 
--set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
-+# By default, install nsync always
-+# set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
- 
- install (TARGETS nsync EXPORT nsync
- 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries
-@@ -431,9 +435,9 @@ foreach (NSYNC_INCLUDE ${NSYNC_INCLUDES})
- endforeach ()
- 
- install(EXPORT nsync
--        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nsync
-+        DESTINATION share/nsync
-         FILE        nsyncConfig.cmake)
- 
- install(EXPORT nsync_cpp
--        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nsync_cpp
-+        DESTINATION share/nsync_cpp
-         FILE        nsync_cppConfig.cmake)
