@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 6e98a53ee1ec5cc3b5e0e964ef69acbf70df2d0532ca888d2ac149e8c5200e4a5fb25120a45d012fdb5526644b0aad0eddf8dd1e85bbc5aa2ea48b86ef19902c
+    SHA512 9ad53ab9756ef614113c816773d73312da01533b26037a6fa071226a955751c8f30f18c40c876884f50b7d9899260dfa50a9ea035a89c04471e313392d6b8957
     HEAD_REF main
     PATCHES
         fix-build.patch
-        fix-build-error-with-fmt11.patch
 )
 
 # Prefer installed config files

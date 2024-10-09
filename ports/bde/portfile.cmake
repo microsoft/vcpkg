@@ -5,11 +5,12 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
+set (BDE_TOOLS_VER 4.13.0.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
-    REF "${VERSION}"
-    SHA512 e5c5a0639e06a554f0f3ba7d18db8947f84a3645494b6dd5642be4bb9457d65e5d1ad1f047bb2f5fd61553fa10ae93a6a9573e5c799e9baab1b943be1000b7e2
+    REF "${BDE_TOOLS_VER}"
+    SHA512 6a0eec25889a33fb0302af735ed2fcce38afa5ad2be9202d2589d76509f9fd85f9ddc0a73147df1b6471543f51df3b5b40e8c08d378ab1335d2703d89b5921e6
     HEAD_REF main
 )
 
@@ -22,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 f35fdfbae64d8405264420f0e7c983e628adbba1219b3f75ae99c6a58d91bf8bc7f8690b56a891798d3e32620cb9e98ac6234e55d6227caf52d622b0ce05456c
+    SHA512 d25a17e213c6f50901c6a0e27366d6331c3b0506ef88fb34fd0496bfb214e04308f8adb6b1dd2f9a3821d230c444b04d8158cee730f540a6cb4984bc16d022d5
     HEAD_REF main
 )
 
