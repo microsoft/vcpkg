@@ -5,6 +5,7 @@
   ],
   "name": "azure-identity-cpp",
   "version-semver": "1.10.0",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Identity SDK for C++",
     "This library provides common authentication-related abstractions for Azure SDK."
@@ -15,7 +16,7 @@
     {
       "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.9.0"
+      "version>=": "1.14.0"
     },
     {
       "name": "openssl",
