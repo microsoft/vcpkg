@@ -63,6 +63,7 @@ vcpkg_from_github(
       0014-fix-supportqnx.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
+      0019-fix-cmake-in-list.patch
       ${CUDA_124_DNN_PATCH}
       ${CUDA_124_TUPLE_PATCH}
       ${ARM64_WINDOWS_PATCH}
