@@ -1,3 +1,9 @@
+vcpkg_download_distfile(ARM64_WINDOWS_UWP_PATCH
+    URLS "https://patch-diff.githubusercontent.com/raw/OpenMathLib/OpenBLAS/pull/4926.diff?full_index=1"
+    FILENAME "openblas-fix-arm64-windows-uwp.patch"
+    SHA512 808d375628499641f1134b4751c9861384b719dae14cf6bd4d9d4b09c9bfd9f8b13b2663e9fa9d09867b5b40817c26387ac659d2f6459d40a46455b2f540d018
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
@@ -9,6 +15,7 @@ vcpkg_from_github(
         fix-redefinition-function.patch
         install-tools.patch
         gcc14.patch
+        ${ARM64_WINDOWS_UWP_PATCH}
 )
 
 find_program(GIT NAMES git git.cmd)
