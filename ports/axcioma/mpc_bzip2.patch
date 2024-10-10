@@ -1,0 +1,11 @@
+--- a/config/bzip2.mpb	Thu May  4 08:14:20 2023
++++ b/config/bzip2.mpb	Thu May  4 08:14:41 2023
+@@ -5,7 +5,7 @@
+   macros   += USE_BZIP2
+ 
+   specific(prop:windows) {
+-    lit_libs += bzip2
++    lit_libs += bz2
+   } else {
+     lit_libs += bz2
+   }
