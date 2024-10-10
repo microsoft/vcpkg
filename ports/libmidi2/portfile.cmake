@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO midi2-dev/AM_MIDI2.0Lib
     REF "v${VERSION}"
-    SHA512 bcff7e1360d18f1e5cf5c89eda3cd8c3ff33605063bd12def1ddd6ecede950e8653ff8279f05f4f29a8a8f13c24cf31d3199c09b14db5cf37febb49c4b14ea67
+    SHA512 fb00fb1a00f0ce7f74ee807f8a5590f8628ee7cf6ecfc51a8a01c2be5aa2b1a0affc20e2360c3d07cf59c79875fd0d5af3dd7b52dac082a5d8f1d97a9436c0e0
     HEAD_REF main
 )
 
