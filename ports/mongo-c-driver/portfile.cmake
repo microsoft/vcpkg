@@ -10,7 +10,6 @@ vcpkg_from_github(
         fix-dependencies.patch
         fix-include-directory.patch
         fix-mingw.patch
-		fix-bson.patch
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 file(TOUCH "${SOURCE_PATH}/src/utf8proc-editable")
