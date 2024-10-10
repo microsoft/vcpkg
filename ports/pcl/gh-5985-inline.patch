@@ -1,5 +1,3 @@
-diff --git a/segmentation/include/pcl/segmentation/impl/grabcut_segmentation.hpp b/segmentation/include/pcl/segmentation/impl/grabcut_segmentation.hpp
-index 2ef5fc27b16..5143080b6de 100644
 --- a/segmentation/include/pcl/segmentation/impl/grabcut_segmentation.hpp
 +++ b/segmentation/include/pcl/segmentation/impl/grabcut_segmentation.hpp
 @@ -48,8 +48,8 @@ namespace pcl

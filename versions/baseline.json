@@ -2182,7 +2182,7 @@
     },
     "darknet": {
       "baseline": "2022-03-06",
-      "port-version": 4
+      "port-version": 5
     },
     "darts-clone": {
       "baseline": "1767ab87cffe",
@@ -6597,20 +6597,20 @@
       "port-version": 0
     },
     "opencv": {
-      "baseline": "4.8.0",
-      "port-version": 1
+      "baseline": "4.9.0",
+      "port-version": 0
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 20
+      "port-version": 21
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 16
+      "port-version": 17
     },
     "opencv4": {
-      "baseline": "4.8.0",
-      "port-version": 22
+      "baseline": "4.9.0",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6646,7 +6646,7 @@
     },
     "openimageio": {
       "baseline": "2.5.14.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.2",
@@ -6878,7 +6878,7 @@
     },
     "pcl": {
       "baseline": "1.14.1",
-      "port-version": 1
+      "port-version": 2
     },
     "pcre": {
       "baseline": "8.45",
@@ -7978,7 +7978,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
