@@ -68,6 +68,13 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
 endif()
 
+# For emscripten only the riscv64 kernel with riscv64_generic target is supported
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND OPENBLAS_EXTRA_OPTIONS
+                -DEMSCRIPTEN_SYSTEM_PROCESSOR=riscv64
+                -DTARGET=RISCV64_GENERIC)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     ${conf_opts}
