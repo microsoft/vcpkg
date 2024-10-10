@@ -7116,6 +7116,10 @@
       "baseline": "239",
       "port-version": 0
     },
+    "poselib": {
+      "baseline": "2.0.4",
+      "port-version": 0
+    },
     "ppconsul": {
       "baseline": "0.5",
       "port-version": 5
