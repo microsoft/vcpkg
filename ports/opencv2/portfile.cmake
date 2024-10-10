@@ -17,6 +17,7 @@ vcpkg_from_github(
       0007-fix-config.patch
       0019-fix-openexr.patch
       0020-missing-include.patch
+      0021-fix-linux.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")

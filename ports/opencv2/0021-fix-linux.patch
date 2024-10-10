@@ -1,0 +1,25 @@
+diff --git a/cmake/OpenCVGenPkgconfig.cmake b/cmake/OpenCVGenPkgconfig.cmake
+index b89e360..06d444e 100644
+--- a/cmake/OpenCVGenPkgconfig.cmake
++++ b/cmake/OpenCVGenPkgconfig.cmake
+@@ -66,7 +66,7 @@ if(OpenCV_EXTRA_COMPONENTS)
+     if(TARGET "${extra_component}")
+       get_target_property(extra_component_is_imported "${extra_component}" IMPORTED)
+       if(extra_component_is_imported)
+-        get_target_property(extra_component "${extra_component}" IMPORTED_LOCATION)
++        get_target_property(extra_component "${extra_component}" LOCATION)
+       endif()
+     endif()
+ 
+diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
+index 56f8879..8ddab13 100644
+--- a/cmake/OpenCVModule.cmake
++++ b/cmake/OpenCVModule.cmake
+@@ -582,7 +582,6 @@ macro(ocv_create_module)
+     target_link_libraries(${the_module} LINK_PUBLIC ${OPENCV_MODULE_${the_module}_DEPS})
+     set(extra_deps ${OPENCV_MODULE_${the_module}_DEPS_EXT} ${OPENCV_LINKER_LIBS} ${IPP_LIBS} ${ARGN})
+     ocv_extract_simple_libs(extra_deps _simple_deps _other_deps)
+-    target_link_libraries(${the_module} LINK_PRIVATE ${_simple_deps}) # this list goes to "export"
+     target_link_libraries(${the_module} LINK_PRIVATE ${extra_deps})
+   endif()
+
