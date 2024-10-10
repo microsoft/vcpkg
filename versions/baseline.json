@@ -9524,6 +9524,10 @@
       "baseline": "1.31",
       "port-version": 1
     },
+    "wcdb-sqlcipher": {
+      "baseline": "1.4.6",
+      "port-version": 0
+    },
     "wcslib": {
       "baseline": "8.2.1",
       "port-version": 0
