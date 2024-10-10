@@ -2602,7 +2602,7 @@
     },
     "exiv2": {
       "baseline": "0.28.3",
-      "port-version": 1
+      "port-version": 2
     },
     "expat": {
       "baseline": "2.6.3",
