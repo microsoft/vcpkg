@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cisco/libsrtp
     REF "v${VERSION}"
-    SHA512 bd679ab65ccf22ca30fe867b9649a0b84cfa6fad6e22eb10f081141632f6dd56479a04d525b865f11fd46007303ca211065d9c170e4820d6ea7055403702340a
+    SHA512 96f6e2b7300a416a10e5cc45cf67dadf2f4f81119267689cac4296e2dc6d73398457d1a56b651ab4be6da9e701564d3f256bf6d5f42add5eb2b9b9fe8e438a74
     PATCHES
         fix-runtime-destination.patch
 )
