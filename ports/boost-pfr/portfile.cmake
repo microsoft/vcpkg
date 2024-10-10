@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 246ccff9ecd278c938b791f3e9b9cabe92dee7f5ba033aa12c1c6a7b56f89948e2f1e839724aae7336a5c4b23cb9ab82d370fc09f2c44852c08381054e2be740
     HEAD_REF master
+    PATCHES
+        tuple_size_fix_compiler_oom.patch
 )
 
 set(FEATURE_OPTIONS "")
