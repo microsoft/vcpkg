@@ -14,3 +14,14 @@ index d027a19..aac7f3d 100644
  
     if (NOT bson-1.0_FOUND)
        message (FATAL_ERROR "System libbson not found")
+diff --git a/src/libmongoc/src/mongoc-config.cmake b/src/libmongoc/src/mongoc-config.cmake
+index cdbb756..a873af0 100644
+--- a/src/libmongoc/src/mongoc-config.cmake
++++ b/src/libmongoc/src/mongoc-config.cmake
+@@ -1,5 +1,5 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(bson-1.0 @libmongoc_VERSION@)
++find_dependency(bson-1.0)
+ if("@ENABLE_SNAPPY@")
+     find_dependency(Snappy CONFIG)
+ endif()
