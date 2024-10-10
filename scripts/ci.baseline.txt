@@ -55,8 +55,6 @@ apr:x64-android=fail
 apr:arm64-windows=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
-# Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
-arrayfire:x64-linux=fail
 avro-c:arm-neon-android=fail
 avro-c:arm64-android=fail
 avro-c:x64-android=fail
@@ -488,6 +486,8 @@ intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
 irrlicht:x64-android=fail
+# Needs arrayfire[cuda], but arrayfire can't use CUDA 12
+irrlicht-cuda:x64-linux=skip
 isal:x64-android=fail
 itk:arm-neon-android=fail
 itk:arm64-android=fail
@@ -1213,6 +1213,7 @@ zeroc-ice:x64-android=fail
 zyre:x64-windows-static-md=fail
 
 # Ports which needs to pass in CI
+arrayfire:x64-linux=pass
 cmake:x64-windows=pass
 cmake:x64-windows-static=pass
 cmake:x64-windows-static-md=pass
