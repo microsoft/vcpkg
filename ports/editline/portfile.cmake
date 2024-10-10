@@ -11,9 +11,10 @@ On Alpine:
     apk add autoconf automake libtool"
 )
 
+string(REPLACE "-" "" REF_SHORT_VERSION_DATE ${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://thrysoee.dk/editline/libedit-20240808-3.1.tar.gz"
-    FILENAME "libedit-20240808-3.1.tar.gz"
+    URLS "https://thrysoee.dk/editline/libedit-${REF_SHORT_VERSION_DATE}-3.1.tar.gz"
+    FILENAME "libedit-${REF_SHORT_VERSION_DATE}-3.1.tar.gz"
     SHA512 b11d64947f9484bb2320b0fbcfdc94466993af1dfa0d853853b73c222e95d6c1e78d88d0c305929b95bf7a85009129475c9fef0ac8595b43d75543d85052a4ff
 )
 
