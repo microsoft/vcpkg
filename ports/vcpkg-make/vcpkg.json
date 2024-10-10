@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-make",
+  "version-date": "2023-05-15",
+  "documentation": "https://vcpkg.io/en/docs/maintainers/ports/vcpkg-make.html",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true,
+      "platform": "windows"
+    },
+    "vcpkg-cmake-get-vars"
+  ]
+}
