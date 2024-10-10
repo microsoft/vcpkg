@@ -40,7 +40,7 @@ index feebad7..ad407e1 100644
  
  if(ANDROID)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index c3abce5..971c651 100644
+index c3abce5..63f665f 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -285,7 +285,7 @@ endif()
@@ -53,7 +53,7 @@ index c3abce5..971c651 100644
      find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h ONLY_CMAKE_FIND_ROOT_PATH)
      if(FFTW3_INCLUDE_DIR)
 @@ -415,8 +415,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
-
+ 
    if(NOT TARGET pthreadpool)
      if(USE_SYSTEM_PTHREADPOOL)
 -      add_library(pthreadpool SHARED IMPORTED)
@@ -64,7 +64,7 @@ index c3abce5..971c651 100644
        if(NOT PTHREADPOOL_LIBRARY)
          message(FATAL_ERROR "Cannot find pthreadpool")
 @@ -450,13 +450,15 @@ endif()
-
+ 
  # ---[ Caffe2 uses cpuinfo library in the thread pool
  if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
 -  add_library(cpuinfo SHARED IMPORTED)
@@ -93,7 +93,7 @@ index c3abce5..971c651 100644
    if(NOT XNNPACK_LIBRARY)
      message(FATAL_ERROR "Cannot find XNNPACK")
 @@ -858,7 +860,7 @@ endif()
-
+ 
  # ---[ LMDB
  if(USE_LMDB)
 -  find_package(LMDB)
@@ -112,7 +112,7 @@ index c3abce5..971c651 100644
 +  target_include_directories(fp16 INTERFACE "${FP16_INCLUDE_DIR}")
  endif()
  list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
-
+ 
 @@ -1127,7 +1130,7 @@ if(BUILD_PYTHON)
      # Observers are required in the python build
      caffe2_update_option(USE_OBSERVERS ON)
@@ -128,11 +128,11 @@ index c3abce5..971c651 100644
    message(STATUS "Looking for LLVM in ${USE_LLVM}")
 -  find_package(LLVM PATHS ${USE_LLVM} NO_DEFAULT_PATH)
 +  find_package(LLVM)
-
+ 
    if(LLVM_FOUND)
      message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 @@ -1244,8 +1247,10 @@ endif(USE_LLVM)
-
+ 
  # ---[ cuDNN
  if(USE_CUDNN)
 +  find_package(CUDNN REQUIRED)
@@ -140,7 +140,7 @@ index c3abce5..971c651 100644
    target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
 +  target_include_directories(torch::cudnn INTERFACE "${CUDNN_INCLUDE_DIR}")
  endif()
-
+ 
  # ---[ HIP
 @@ -1555,7 +1560,10 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        set_target_properties(onnx_proto PROPERTIES CXX_STANDARD 17)
@@ -151,10 +151,10 @@ index c3abce5..971c651 100644
 +  # setup foxi
 +  find_library(FOXI_LOADER_LIBPATH NAMES foxi_loader REQUIRED)
 +  list(APPEND Caffe2_DEPENDENCY_LIBS "${FOXI_LOADER_LIBPATH}")
-
+ 
    add_definitions(-DONNX_NAMESPACE=${ONNX_NAMESPACE})
    if(NOT USE_SYSTEM_ONNX)
-@@ -1573,23 +1581,14 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1573,23 +1581,13 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        target_compile_options(onnx PRIVATE -Wno-deprecated-declarations)
      endif()
    else()
@@ -175,7 +175,6 @@ index c3abce5..971c651 100644
 +    find_package(ONNX CONFIG REQUIRED)
 +    set(ONNX_LIBRARY ONNX::onnx)
 +    set(ONNX_PROTO_LIBRARY ONNX::onnx_proto)
-+    message("-- Found onnx")
 +    list(APPEND Caffe2_DEPENDENCY_LIBS ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY})
    endif()
    include_directories(${FOXI_INCLUDE_DIRS})
@@ -184,7 +183,7 @@ index c3abce5..971c651 100644
    # Recover the build shared libs option.
    set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
  endif()
-@@ -1834,8 +1833,8 @@ endif()
+@@ -1834,8 +1832,8 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -195,12 +194,12 @@ index c3abce5..971c651 100644
  # Disable compiler feature checks for `fmt`.
  #
  # CMake compiles a little program to check compiler features. Some of our build
-@@ -1843,7 +1842,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+@@ -1843,7 +1841,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
  # shouldn't be too bad to just disable the checks.
 -set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
-
+ 
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 diff --git a/cmake/Modules/FindLMDB.cmake b/cmake/Modules/FindLMDB.cmake
