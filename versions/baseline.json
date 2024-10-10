@@ -6322,7 +6322,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 11
+      "port-version": 12
     },
     "nmslib": {
       "baseline": "2.1.1",
