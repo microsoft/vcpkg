@@ -43,16 +43,6 @@ if(VCPKG_TARGET_IS_LINUX)
     "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
 
-# Qt6 does not yet support macOS 15.0, but building Qt6 for MacOS 14 does, so hotfixing the build to macOS 14.
-if (VCPKG_TARGET_IS_OSX AND NOT VCPKG_OSX_DEPLOYMENT_TARGET)
-    cmake_host_system_information(RESULT _osx_version QUERY OS_RELEASE)
-    set(VCPKG_OSX_DEPLOYMENT_TARGET "${_osx_version}")
-endif()
-
-if(VCPKG_TARGET_IS_OSX AND (VCPKG_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "15.0") )
-    message(WARNING "Qt6 does not yet support macOS 15.0, building Qt6 for MacOS 14.")
-    set(VCPKG_OSX_DEPLOYMENT_TARGET "14.0")
-endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
