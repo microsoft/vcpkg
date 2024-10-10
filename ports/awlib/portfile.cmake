@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 bfb4668abc3db176744bb674a20bf770c6406db522a14191069b8d833414285ca784f042c3ad50404f7f8bc76afe69627dfcf540080e12316abbbfe420955526
     HEAD_REF master
     PATCHES
-        avoid-w-switch.patch
+        fix-macos-15-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
