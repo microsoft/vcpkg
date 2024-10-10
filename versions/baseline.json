@@ -1429,8 +1429,8 @@
       "port-version": 2
     },
     "bustache": {
-      "baseline": "1.1.0",
-      "port-version": 2
+      "baseline": "2024-09-04.0.1.0",
+      "port-version": 0
     },
     "butteraugli": {
       "baseline": "2019-05-08",
