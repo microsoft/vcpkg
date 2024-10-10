@@ -1,5 +1,5 @@
 diff --git a/upb/cmake/CMakeLists.txt b/upb/cmake/CMakeLists.txt
-index 3ebe25780..67a70cf81 100644
+index 513d34041..6c70526ed 100644
 --- a/upb/cmake/CMakeLists.txt
 +++ b/upb/cmake/CMakeLists.txt
 @@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.10...3.24)
@@ -10,17 +10,15 @@ index 3ebe25780..67a70cf81 100644
  
  # Prevent CMake from setting -rdynamic on Linux (!!).
  SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
-@@ -39,7 +40,8 @@ if(UPB_ENABLE_UBSAN)
+@@ -39,6 +40,7 @@ if(UPB_ENABLE_UBSAN)
    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
  endif()
  
--if(NOT TARGET utf8_range)
 +find_package(utf8_range REQUIRED CONFIG)
-+if(0)
-   if(EXISTS ../../external/utf8_range)
+ if(NOT TARGET utf8_range)
+   if(EXISTS ../../third_party/utf8_range)
      # utf8_range is already installed
-     include_directories(../external/utf8_range)
-@@ -60,6 +62,11 @@ if(NOT TARGET utf8_range)
+@@ -58,6 +60,11 @@ if(NOT TARGET utf8_range)
    endif()
  endif()
  
@@ -32,39 +30,18 @@ index 3ebe25780..67a70cf81 100644
  if(APPLE)
    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -undefined dynamic_lookup -flat_namespace")
  elseif(UNIX)
-@@ -69,17 +76,14 @@ endif()
- enable_testing()
- 
- 
--add_library(upb INTERFACE
-+add_library(upb
-     
+@@ -94,3 +101,136 @@ target_include_directories(generated_cpp_support__only_for_generated_code_do_not
  )
--target_include_directories(upb INTERFACE
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../cmake>
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINRARY_DIR}>
-+target_include_directories(upb PUBLIC
-+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
- )
- target_link_libraries(upb INTERFACE
--  base
--  mem)
-+  )
  
- add_library(generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me INTERFACE
-     
-@@ -123,4 +127,94 @@ target_link_libraries(generated_reflection_support__only_for_generated_code_do_n
-   mini_descriptor
-   reflection_internal)
  
 +file(GLOB_RECURSE source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../" "${CMAKE_CURRENT_SOURCE_DIR}/../*.c")
-+list(FILTER source_files EXCLUDE REGEX ".*(_test|upb_so|util|cmake|conformance).*")
++list(FILTER source_files EXCLUDE REGEX ".*(_test|upb_so|util|cmake|conformance|stage0).*")
 +list(TRANSFORM source_files PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/../")
-+target_sources(upb PRIVATE ${source_files})
 +
-+target_include_directories(upb PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../reflection/stage0>)
-+target_link_libraries(upb PRIVATE utf8_range::utf8_range)
++add_library(upb_stage0 OBJECT ${source_files} "${CMAKE_CURRENT_SOURCE_DIR}/../reflection/stage0/google/protobuf/descriptor.upb.c")
++target_include_directories(upb_stage0 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../reflection/stage0>)
++target_link_libraries(upb_stage0 PRIVATE utf8_range::utf8_range)
++target_compile_definitions(upb_stage0 PUBLIC UPB_BOOTSTRAP_STAGE0)
 +
 +if (VCPKG_UPB_BUILD_CODEGEN)
 +  add_library(common OBJECT
@@ -75,8 +52,9 @@ index 3ebe25780..67a70cf81 100644
 +    ../../upb_generator/stage0/google/protobuf/compiler/plugin.upb.c
 +  )
 +  target_link_libraries(common PUBLIC 
-+    upb
++    upb_stage0
 +    absl::flat_hash_map
++    absl::flat_hash_set
 +  )
 +  target_include_directories(common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../upb_generator/stage0>)
 +
@@ -85,6 +63,7 @@ index 3ebe25780..67a70cf81 100644
 +  )
 +  target_link_libraries(protoc-gen-upbdefs PRIVATE
 +    common
++    upb_stage0
 +    absl::absl_log
 +    absl::strings
 +    protobuf::libprotobuf
@@ -96,6 +75,8 @@ index 3ebe25780..67a70cf81 100644
 +  )
 +  target_link_libraries(protoc-gen-upb PRIVATE
 +    common
++    upb_stage0
++    absl::absl_check
 +    absl::absl_log
 +    absl::strings
 +    protobuf::libprotobuf
@@ -104,9 +85,12 @@ index 3ebe25780..67a70cf81 100644
 +
 +  add_executable(protoc-gen-upb_minitable
 +    ../../upb_generator/protoc-gen-upb_minitable.cc
++    ../../upb_generator/protoc-gen-upb_minitable-main.cc
 +  )
 +  target_link_libraries(protoc-gen-upb_minitable PRIVATE
 +    common
++    upb_stage0
++    absl::absl_check
 +    absl::absl_log
 +    absl::strings
 +    protobuf::libprotobuf
@@ -114,8 +98,43 @@ index 3ebe25780..67a70cf81 100644
 +  )
 +
 +  list(APPEND _upb_codegen_targets protoc-gen-upbdefs protoc-gen-upb protoc-gen-upb_minitable)
++  set(protoc_program "\$<TARGET_FILE:protobuf::protoc>")
++  set(protoc_gen_upb_program "\$<TARGET_FILE:protoc-gen-upb>")
++  set(protoc_gen_upbdefs_program "\$<TARGET_FILE:protoc-gen-upbdefs>")
++  set(protoc_gen_upb_minitable_program "\$<TARGET_FILE:protoc-gen-upb_minitable>")
++else()
++  find_program(protoc_program protoc)
++  find_program(protoc_gen_upb_program protoc-gen-upb)
++  find_program(protoc_gen_upbdefs_program protoc-gen-upbdefs)
++  find_program(protoc_gen_upb_minitable_program protoc-gen-upb_minitable)
 +endif()
- 
++
++set(descriptor_sources
++    "${CMAKE_CURRENT_BINARY_DIR}/generated/google/protobuf/descriptor.upb.c"
++    "${CMAKE_CURRENT_BINARY_DIR}/generated/google/protobuf/descriptor.upbdefs.c"
++    "${CMAKE_CURRENT_BINARY_DIR}/generated/google/protobuf/descriptor.upb_minitable.c")
++
++set(descriptor_proto "${CMAKE_CURRENT_SOURCE_DIR}/../../src/google/protobuf/descriptor.proto")
++set(descriptor_binary_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
++file(MAKE_DIRECTORY "${descriptor_binary_dir}")
++add_custom_command(
++    OUTPUT ${descriptor_sources}
++    DEPENDS "${descriptor_proto}"
++    COMMAND
++        "${protoc_program}"
++        "-I${CMAKE_CURRENT_SOURCE_DIR}/../../src/"
++        "--plugin=protoc-gen-upb=${protoc_gen_upb_program}"
++        "--plugin=protoc-gen-upbdefs=${protoc_gen_upbdefs_program}"
++        "--plugin=protoc-gen-upb_minitable=${protoc_gen_upb_minitable_program}"
++        "--upb_out=${descriptor_binary_dir}"
++        "--upbdefs_out=${descriptor_binary_dir}"
++        "--upb_minitable_out=${descriptor_binary_dir}"
++        "${descriptor_proto}")
++
++add_library(upb ${source_files} ${descriptor_sources})
++target_include_directories(upb PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..> $<BUILD_INTERFACE:${descriptor_binary_dir}>)
++target_link_libraries(upb PRIVATE utf8_range::utf8_range)
++
 +include(GNUInstallDirs)
 +
 +target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/reflection/stage0>)
@@ -136,7 +155,6 @@ index 3ebe25780..67a70cf81 100644
 +)
 +
 +install(FILES 
-+  ../upb.hpp
 +  ../generated_code_support.h
 +  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
 +)
