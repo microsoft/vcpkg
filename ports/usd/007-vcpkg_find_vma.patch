@@ -1,0 +1,108 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index ec4ab0c43..ab42bc276 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -261,6 +261,7 @@ if (PXR_BUILD_IMAGING)
+         endif()
+         find_package(unofficial-shaderc CONFIG REQUIRED)
+         find_package(unofficial-spirv-reflect CONFIG REQUIRED)
++        find_package(unofficial-vulkanmemoryallocator CONFIG REQUIRED)
+     endif()
+     # --Opensubdiv
+     find_package(OpenSubdiv 3 CONFIG REQUIRED)
+diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeLists.txt
+index 7dadea311..a50ac1517 100644
+--- a/pxr/imaging/hgiVulkan/CMakeLists.txt
++++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
+@@ -16,6 +16,7 @@ pxr_library(hgiVulkan
+         ${VULKAN_LIBS}
+         unofficial::shaderc::shaderc
+         unofficial::SPIRV-Reflect::SPIRV-Reflect
++        unofficial::VulkanMemoryAllocator::VulkanMemoryAllocator
+ 
+     PUBLIC_CLASSES
+         blitCmds
+@@ -42,7 +43,6 @@ pxr_library(hgiVulkan
+         shaderProgram
+         shaderSection
+         texture
+-        vk_mem_alloc
+ 
+     PUBLIC_HEADERS
+         api.h
+diff --git a/pxr/imaging/hgiVulkan/device.cpp b/pxr/imaging/hgiVulkan/device.cpp
+index 4990769b6..fce4dd00e 100644
+--- a/pxr/imaging/hgiVulkan/device.cpp
++++ b/pxr/imaging/hgiVulkan/device.cpp
+@@ -11,7 +11,8 @@
+ #include "pxr/imaging/hgiVulkan/hgi.h"
+ #include "pxr/imaging/hgiVulkan/instance.h"
+ #include "pxr/imaging/hgiVulkan/pipelineCache.h"
+-#include "pxr/imaging/hgiVulkan/vk_mem_alloc.h"
++
++#include <vk_mem_alloc.h>
+ 
+ #include "pxr/base/tf/diagnostic.h"
+ 
+diff --git a/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp b/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp
+deleted file mode 100644
+index 8f47ddc85..000000000
+--- a/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp
++++ /dev/null
+@@ -1,10 +0,0 @@
+-//
+-// Copyright 2023 Pixar
+-//
+-// Licensed under the terms set forth in the LICENSE.txt file available at
+-// https://openusd.org/license.
+-//
+-#include "pxr/imaging/hgiVulkan/vk_mem_alloc.h"
+-
+-#define VMA_IMPLEMENTATION
+-#include <vma/vk_mem_alloc.h>
+diff --git a/pxr/imaging/hgiVulkan/vk_mem_alloc.h b/pxr/imaging/hgiVulkan/vk_mem_alloc.h
+deleted file mode 100644
+index 48f5fceff..000000000
+--- a/pxr/imaging/hgiVulkan/vk_mem_alloc.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-//
+-// Copyright 2023 Pixar
+-//
+-// Licensed under the terms set forth in the LICENSE.txt file available at
+-// https://openusd.org/license.
+-//
+-#ifndef PXR_IMAGING_HGIVULKAN_VK_MEM_ALLOC_H
+-#define PXR_IMAGING_HGIVULKAN_VK_MEM_ALLOC_H
+-
+-// This is an implementation of VMA (Vulkan Memory Allocator) included
+-// from the Vulkan SDK.
+-
+-#include <vma/vk_mem_alloc.h>
+-
+-#endif
+diff --git a/pxr/imaging/hgiVulkan/vulkan.h b/pxr/imaging/hgiVulkan/vulkan.h
+index 72233238f..4891b062e 100644
+--- a/pxr/imaging/hgiVulkan/vulkan.h
++++ b/pxr/imaging/hgiVulkan/vulkan.h
+@@ -22,7 +22,7 @@
+ 
+ #include <vulkan/vulkan.h>
+ 
+-#include "pxr/imaging/hgiVulkan/vk_mem_alloc.h"
++#include <vk_mem_alloc.h>
+ 
+ // Use the default allocator (nullptr)
+ inline VkAllocationCallbacks*
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 8facdffbd..4068ff738 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -28,6 +28,7 @@ if(@PXR_BUILD_IMAGING@)
+     if(@PXR_ENABLE_VULKAN_SUPPORT@)
+         find_dependency(unofficial-shaderc)
+         find_dependency(unofficial-spirv-reflect)
++        find_dependency(unofficial-vulkanmemoryallocator)
+     endif()
+ endif()
+ 

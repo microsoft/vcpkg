@@ -1,0 +1,81 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index fe60570b3..ef8cfdaba 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -137,7 +137,7 @@ endif()
+ 
+ 
+ # --TBB
+-find_package(TBB REQUIRED COMPONENTS tbb)
++find_package(TBB CONFIG REQUIRED)
+ add_definitions(${TBB_DEFINITIONS})
+ 
+ # --math
+diff --git a/pxr/base/tf/CMakeLists.txt b/pxr/base/tf/CMakeLists.txt
+index b236184c4..342296512 100644
+--- a/pxr/base/tf/CMakeLists.txt
++++ b/pxr/base/tf/CMakeLists.txt
+@@ -116,12 +116,11 @@ pxr_library(tf
+         ${WINLIBS}
+         ${PYTHON_LIBRARIES}
+         ${Boost_PYTHON_LIBRARY}
+-        ${TBB_tbb_LIBRARY}
++        TBB::tbb
+ 
+     INCLUDE_DIRS
+         ${PYTHON_INCLUDE_DIRS}
+         ${Boost_INCLUDE_DIRS}
+-        ${TBB_INCLUDE_DIRS}
+ 
+     PUBLIC_CLASSES
+         anyUniquePtr
+diff --git a/pxr/imaging/plugin/hdEmbree/CMakeLists.txt b/pxr/imaging/plugin/hdEmbree/CMakeLists.txt
+index 43aa0826e..a1f443b9c 100644
+--- a/pxr/imaging/plugin/hdEmbree/CMakeLists.txt
++++ b/pxr/imaging/plugin/hdEmbree/CMakeLists.txt
+@@ -21,11 +21,10 @@ pxr_plugin(hdEmbree
+         hf
+         hd
+         hdx
+-        ${TBB_tbb_LIBRARY}
++        TBB::tbb
+         ${EMBREE_LIBRARY}
+ 
+     INCLUDE_DIRS
+-        ${TBB_INCLUDE_DIRS}
+         ${EMBREE_INCLUDE_DIR}
+ 
+     PUBLIC_CLASSES
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index a7dd9603d..cdd5d07f3 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -16,6 +16,10 @@ set(PXR_MINOR_VERSION "@PXR_MINOR_VERSION@")
+ set(PXR_PATCH_VERSION "@PXR_PATCH_VERSION@")
+ set(PXR_VERSION "@PXR_VERSION@")
+ 
++include(CMakeFindDependencyMacro)
++
++find_dependency(TBB)
++
+ # If Python support was enabled for this USD build, find the import
+ # targets by invoking the appropriate FindPython module. Use the same
+ # LIBRARY and INCLUDE_DIR settings from the original build if they
+diff --git a/pxr/usd/usd/CMakeLists.txt b/pxr/usd/usd/CMakeLists.txt
+index fd86e9085..de087ea5f 100644
+--- a/pxr/usd/usd/CMakeLists.txt
++++ b/pxr/usd/usd/CMakeLists.txt
+@@ -13,12 +13,11 @@ pxr_library(usd
+         trace
+         vt
+         work
++        TBB::tbb
+         ${Boost_PYTHON_LIBRARY}
+-        ${TBB_tbb_LIBRARY}
+ 
+     INCLUDE_DIRS
+         ${Boost_INCLUDE_DIRS}
+-        ${TBB_INCLUDE_DIRS}
+ 
+     PUBLIC_CLASSES
+         apiSchemaBase

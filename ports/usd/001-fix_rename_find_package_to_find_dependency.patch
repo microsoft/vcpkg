@@ -1,0 +1,34 @@
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index b26f1ea31..a7dd9603d 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -41,9 +41,9 @@ if(@PXR_ENABLE_PYTHON_SUPPORT@)
+     endif()
+ 
+     if (NOT DEFINED Python3_VERSION)
+-        find_package(Python3 "@Python3_VERSION@" EXACT COMPONENTS Development REQUIRED)
++        find_dependency(Python3 "@Python3_VERSION@" EXACT COMPONENTS Development)
+     else()
+-        find_package(Python3 COMPONENTS Development REQUIRED)
++        find_dependency(Python3 COMPONENTS Development)
+     endif()
+ endif()
+ 
+@@ -57,7 +57,7 @@ if(@PXR_ENABLE_MATERIALX_SUPPORT@)
+             set(MaterialX_DIR [[@MaterialX_DIR@]])
+         endif()
+     endif()
+-    find_package(MaterialX REQUIRED)
++    find_dependency(MaterialX)
+ endif()
+ 
+ # Similar to MaterialX above, we are using Imath's cmake package config, so set
+@@ -71,7 +71,7 @@ if(@Imath_FOUND@)
+             set(Imath_DIR [[@Imath_DIR@]])
+         endif()
+     endif()
+-    find_package(Imath REQUIRED)
++    find_dependency(Imath)
+ endif()
+ 
+ include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")

@@ -1,0 +1,54 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 88212a2fa..953dfbeaa 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -232,6 +232,7 @@ if (PXR_BUILD_IMAGING)
+             find_package(Vulkan REQUIRED)
+             list(APPEND VULKAN_LIBS Vulkan::Vulkan)
+ 
++            if(0)
+             # Find the extra vulkan libraries we need
+             set(EXTRA_VULKAN_LIBS shaderc_combined)
+             if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+@@ -241,6 +242,7 @@ if (PXR_BUILD_IMAGING)
+                 find_library("${EXTRA_LIBRARY}_PATH" NAMES "${EXTRA_LIBRARY}" PATHS $ENV{VULKAN_SDK}/lib)
+                 list(APPEND VULKAN_LIBS "${${EXTRA_LIBRARY}_PATH}")
+             endforeach()
++            endif()
+ 
+             # Find the OS specific libs we need
+             if (APPLE)
+@@ -257,6 +259,7 @@ if (PXR_BUILD_IMAGING)
+         else()
+             message(FATAL_ERROR "VULKAN_SDK not valid")
+         endif()
++        find_package(unofficial-shaderc CONFIG REQUIRED)
+     endif()
+     # --Opensubdiv
+     find_package(OpenSubdiv 3 CONFIG REQUIRED)
+diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeLists.txt
+index 97e422894..aaac93ee6 100644
+--- a/pxr/imaging/hgiVulkan/CMakeLists.txt
++++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
+@@ -14,6 +14,7 @@ pxr_library(hgiVulkan
+         tf
+         trace
+         ${VULKAN_LIBS}
++        unofficial::shaderc::shaderc
+ 
+     PUBLIC_CLASSES
+         blitCmds
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index ab4df71b6..5da5543c4 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -25,6 +25,9 @@ if(@PXR_BUILD_IMAGING@)
+     if(@PXR_BUILD_OPENIMAGEIO_PLUGIN@)
+         find_dependency(OpenImageIO)
+     endif()
++    if(@PXR_ENABLE_VULKAN_SUPPORT@)
++        find_dependency(unofficial-shaderc)
++    endif()
+ endif()
+ 
+ # If Python support was enabled for this USD build, find the import
