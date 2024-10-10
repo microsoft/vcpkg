@@ -4,10 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 b46a4ab70af88053318eba45251c1f71528f15e45a33042877570e8d857febd3ec66e2e811fcda2105a4f17b84c9a1c6a0aaa22756c3287321b3ea29e83127fd
+    SHA512 ef641447d8d6c4ed9f083793fe14a8568d6aa7b9b7e7b859a4082e9b892acd801230da2027d097ceaa0d68bbd37b2422b89bb7d1d55d5c3b5955c0f9c7c657c5
     PATCHES
         fix-cmakelists.patch
-        fix-dependency-protobuf.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
@@ -64,10 +63,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ONNXConfig.cmake" "# import targets" 
-[[# import targets
-include(CMakeFindDependencyMacro)
-find_dependency(protobuf CONFIG)]])
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -50,13 +50,15 @@ index b46a444..255d7f4 100644
 -    endif()
 -    set_property(TARGET onnx_proto PROPERTY IMPORTED_LOCATION ${ONNX_PROTO_LIBRARY})
 -    message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")
+-    list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
 +    find_package(ONNX REQUIRED)
-+    set(ONNX_LIBRARY onnx)
-+    set(ONNX_PROTO_LIBRARY onnx_proto)
++    set(ONNX_LIBRARY ONNX::onnx)
++    set(ONNX_PROTO_LIBRARY ONNX::onnx_proto)
 +    message("-- Found onnx")
-     list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
++    list(APPEND Caffe2_DEPENDENCY_LIBS ONNX::onnx_proto ONNX::onnx)
    endif()
    include_directories(${FOXI_INCLUDE_DIRS})
+   list(APPEND Caffe2_DEPENDENCY_LIBS "${FOXI_LOADER_LIBPATH}")
 diff --git a/pyproject.toml b/pyproject.toml
 index eb764cb..c70f317 100644
 --- a/pyproject.toml

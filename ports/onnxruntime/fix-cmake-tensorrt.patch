@@ -1,0 +1,31 @@
+diff --git a/cmake/onnxruntime_providers_tensorrt.cmake b/cmake/onnxruntime_providers_tensorrt.cmake
+index 1e8f388..bd2e664 100644
+--- a/cmake/onnxruntime_providers_tensorrt.cmake
++++ b/cmake/onnxruntime_providers_tensorrt.cmake
+@@ -8,8 +8,13 @@
+   set(BUILD_LIBRARY_ONLY 1)
+   add_definitions("-DONNX_ML=1")
+   add_definitions("-DONNX_NAMESPACE=onnx")
+-  set(CUDA_INCLUDE_DIRS ${CUDAToolkit_INCLUDE_DIRS})
+-  set(TENSORRT_ROOT ${onnxruntime_TENSORRT_HOME})
++  if(DEFINED onnxruntime_TENSORRT_HOME)
++    set(TENSORRT_ROOT ${onnxruntime_TENSORRT_HOME})
++  else()
++    find_package(CUDAToolkit REQUIRED)
++    get_filename_component(TENSORRT_ROOT "${CUDAToolkit_LIBRARY_ROOT}" ABSOLUTE)
++    message(STATUS "Guessing TensorRT with CUDAToolkit_LIBRARY_ROOT: ${TENSORRT_ROOT}")
++  endif()
+   set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+   set(PROTOBUF_LIBRARY ${PROTOBUF_LIB})
+   if (WIN32)
+@@ -30,8 +35,8 @@
+   # There is an issue when running "Debug build" TRT EP with "Release build" TRT builtin parser on Windows.
+   # We enforce following workaround for now until the real fix.
+   if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+-    set(onnxruntime_USE_TENSORRT_BUILTIN_PARSER OFF)
+-    MESSAGE(STATUS "[Note] There is an issue when running \"Debug build\" TRT EP with \"Release build\" TRT built-in parser on Windows. This build will use tensorrt oss parser instead.")
++    # set(onnxruntime_USE_TENSORRT_BUILTIN_PARSER OFF)
++    # MESSAGE(STATUS "[Note] There is an issue when running \"Debug build\" TRT EP with \"Release build\" TRT built-in parser on Windows. This build will use tensorrt oss parser instead.")
+   endif()
+ 
+   find_path(TENSORRT_INCLUDE_DIR NvInfer.h

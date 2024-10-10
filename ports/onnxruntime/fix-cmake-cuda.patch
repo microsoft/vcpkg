@@ -1,0 +1,40 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 02455b2..2223a65 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -717,6 +717,9 @@ if (onnxruntime_USE_CUDA)
+   if (onnxruntime_USE_CUDA_NHWC_OPS)
+     add_compile_definitions(ENABLE_CUDA_NHWC_OPS)
+   endif()
++  # Give more hints for the generator, with FindCUDAToolkit.cmake
++  find_package(CUDAToolkit REQUIRED)
++  get_filename_component(CMAKE_CUDA_COMPILER "${CUDAToolkit_NVCC_EXECUTABLE}" ABSOLUTE)
+   enable_language(CUDA)
+   message( STATUS "CMAKE_CUDA_COMPILER_VERSION: ${CMAKE_CUDA_COMPILER_VERSION}")
+ 
+diff --git a/cmake/onnxruntime_providers_cuda.cmake b/cmake/onnxruntime_providers_cuda.cmake
+index 1346a9c..9c5b5db 100644
+--- a/cmake/onnxruntime_providers_cuda.cmake
++++ b/cmake/onnxruntime_providers_cuda.cmake
+@@ -172,6 +172,10 @@
+         # be used due to `&& not_a_const`. This affects too many places for it to be reasonable to disable at a finer
+         # granularity.
+         target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:/wd4127>")
++        # CUTLASS_CONSTEXPR_IF_CXX17 must be constexpr. Correct the __cplusplus value with MSVC
++        target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:CUDA>:SHELL:-Xcompiler /Zc:__cplusplus>")
++        # Suppress Microsoft.GSL attribute warnings to simplify build log
++        target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:CUDA>:SHELL:-diag-suppress 2803>")
+       endif()
+     endif()
+ 
+@@ -211,8 +215,8 @@
+       target_link_libraries(${target} PRIVATE CUDA::cuda_driver)
+     endif()
+ 
+-    include(cutlass)
+-    target_include_directories(${target} PRIVATE ${cutlass_SOURCE_DIR}/include ${cutlass_SOURCE_DIR}/examples ${cutlass_SOURCE_DIR}/tools/util/include)
++    find_package(NvidiaCutlass REQUIRED) # vcpkg port 'nvidia-cutlass'
++    target_link_libraries(${target} PRIVATE nvidia::cutlass::cutlass)
+ 
+     target_include_directories(${target} PRIVATE ${ONNXRUNTIME_ROOT} ${CMAKE_CURRENT_BINARY_DIR}  ${eigen_INCLUDE_DIRS} ${TVM_INCLUDES}
+      PUBLIC ${CUDAToolkit_INCLUDE_DIRS})

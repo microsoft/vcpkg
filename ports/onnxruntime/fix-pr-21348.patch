@@ -1,0 +1,120 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 2e9a50e52217154a9bf27355f211a8db0013befd..e9c7c307eb2aaacb36f7335f55a55cf8287446a0 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -38,6 +38,7 @@ include(CheckLanguage)
+ include(CMakeDependentOption)
+ include(FetchContent)
+ include(CheckFunctionExists)
++include(GNUInstallDirs) # onnxruntime_providers_* require CMAKE_INSTALL_* variables
+ 
+ # TODO: update this once all system adapt c++20
+ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+@@ -69,6 +70,7 @@ if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_
+ endif()
+ 
+ # Options
++option(onnxruntime_USE_VCPKG "Build with the vcpkg package manager" OFF)
+ option(onnxruntime_RUN_ONNX_TESTS "Enable ONNX Compatibility Testing" OFF)
+ option(onnxruntime_GENERATE_TEST_REPORTS "Enable test report generation" OFF)
+ option(onnxruntime_ENABLE_STATIC_ANALYSIS "Enable static analysis" OFF)
+@@ -595,6 +597,7 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
+ get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
+ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+ 
++list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
+ include(external/onnxruntime_external_deps.cmake)
+ 
+ set(ORT_WARNING_FLAGS)
+diff --git a/cmake/external/abseil-cpp.cmake b/cmake/external/abseil-cpp.cmake
+index 3223724693a495067d8d8afe761865674b5018d8..dda7c5ff19ba42d1c0249d18bb448482711761bd 100644
+--- a/cmake/external/abseil-cpp.cmake
++++ b/cmake/external/abseil-cpp.cmake
+@@ -27,7 +27,7 @@ FetchContent_Declare(
+     URL ${DEP_URL_abseil_cpp}
+     URL_HASH SHA1=${DEP_SHA1_abseil_cpp}
+     PATCH_COMMAND ${ABSL_PATCH_COMMAND}
+-    FIND_PACKAGE_ARGS 20240116 NAMES absl
++    FIND_PACKAGE_ARGS NAMES absl
+ )
+ 
+ onnxruntime_fetchcontent_makeavailable(abseil_cpp)
+diff --git a/cmake/onnxruntime.cmake b/cmake/onnxruntime.cmake
+index 927b4ac84b03784149e37e8dff30c4a51ee51160..7e992fb33077c7d8e5224dd40d2d9937867397dc 100644
+--- a/cmake/onnxruntime.cmake
++++ b/cmake/onnxruntime.cmake
+@@ -332,6 +332,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
+   # If it's an onnxruntime library, extract .o files from the original cmake build path to a separate directory for
+   # each library to avoid any clashes with filenames (e.g. utils.o)
+   foreach(_LIB ${onnxruntime_INTERNAL_LIBRARIES} )
++    if(NOT TARGET ${_LIB}) # if we didn't build from source. it may not a target
++      continue()
++    endif()
+     GET_TARGET_PROPERTY(_LIB_TYPE ${_LIB} TYPE)
+     if(_LIB_TYPE STREQUAL "STATIC_LIBRARY")
+       set(CUR_STATIC_LIB_OBJ_DIR ${STATIC_LIB_TEMP_DIR}/$<TARGET_LINKER_FILE_BASE_NAME:${_LIB}>)
+@@ -362,6 +365,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
+ 
+   # for external libraries we create a symlink to the .a file
+   foreach(_LIB ${onnxruntime_EXTERNAL_LIBRARIES})
++    if(NOT TARGET ${_LIB}) # if we didn't build from source. it may not a target
++      continue()
++    endif()
+     GET_TARGET_PROPERTY(_LIB_TYPE ${_LIB} TYPE)
+     if(_LIB_TYPE STREQUAL "STATIC_LIBRARY")
+       add_custom_command(TARGET onnxruntime POST_BUILD
+diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
+index d5c3af748e528b3340e04e0cf5ce0ade62e0b78b..f0eaaa811741deb9dc5c6d6a21a2fd9148bc3935 100644
+--- a/cmake/onnxruntime_unittests.cmake
++++ b/cmake/onnxruntime_unittests.cmake
+@@ -877,6 +877,7 @@ AddTest(
+   DEPENDS ${all_dependencies}
+   TEST_ARGS ${test_all_args}
+ )
++target_include_directories(onnxruntime_test_all PRIVATE ${ONNXRUNTIME_ROOT}/core/flatbuffers/schema) # ort.fbs.h
+ 
+ if (MSVC)
+   # The warning means the type of two integral values around a binary operator is narrow than their result.
+@@ -970,6 +971,9 @@ target_compile_definitions(onnx_test_data_proto PRIVATE "-DONNX_API=")
+ onnxruntime_add_include_to_target(onnx_test_data_proto onnx_proto)
+ target_include_directories(onnx_test_data_proto PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+ set_target_properties(onnx_test_data_proto PROPERTIES FOLDER "ONNXRuntimeTest")
++if(NOT DEFINED onnx_SOURCE_DIR)
++  find_path(onnx_SOURCE_DIR NAMES "onnx/onnx-ml.proto3" "onnx/onnx-ml.proto" REQUIRED)
++endif()
+ onnxruntime_protobuf_generate(APPEND_PATH IMPORT_DIRS ${onnx_SOURCE_DIR} TARGET onnx_test_data_proto)
+ 
+ #
+diff --git a/onnxruntime/core/framework/kernel_type_str_resolver.cc b/onnxruntime/core/framework/kernel_type_str_resolver.cc
+index d05e02eb3ab32d86d79ea733045ec62bcfb8b0c9..3142f94f289b3fb7b8354d037afb1286c8f72802 100644
+--- a/onnxruntime/core/framework/kernel_type_str_resolver.cc
++++ b/onnxruntime/core/framework/kernel_type_str_resolver.cc
+@@ -46,12 +46,8 @@ Status KernelTypeStrResolver::ResolveKernelTypeStr(const Node& node, std::string
+   ORT_RETURN_IF(op_it == op_kernel_type_str_map_.end(), "Failed to find op_id: ", op_id);
+   const auto& type_str_map = op_it->second;
+ 
+-#ifdef DISABLE_ABSEIL
+   // TODO(edgchen1) maybe we can use transparent hash/eq to enable lookup with string_view
+   const auto type_str_it = type_str_map.find(std::string(kernel_type_str));
+-#else
+-  const auto type_str_it = type_str_map.find(kernel_type_str);
+-#endif
+ 
+   ORT_RETURN_IF(type_str_it == type_str_map.end(),
+                 "Failed to find args for kernel type string '", kernel_type_str,
+diff --git a/onnxruntime/core/framework/ort_value_name_idx_map.h b/onnxruntime/core/framework/ort_value_name_idx_map.h
+index 1b5f6bcee9bd0dc582f29ff1c2d94f69ffdef815..76e7e369514d4768e2088aff70054df51fd4e498 100644
+--- a/onnxruntime/core/framework/ort_value_name_idx_map.h
++++ b/onnxruntime/core/framework/ort_value_name_idx_map.h
+@@ -33,11 +33,7 @@ class OrtValueNameIdxMap {
+   common::Status GetIdx(std::string_view name, int& idx) const {
+     idx = -1;
+ 
+-#ifdef DISABLE_ABSEIL
+     auto it = map_.find(std::string(name));
+-#else
+-    auto it = map_.find(name);
+-#endif
+     if (it == map_.end()) {
+       return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, "Could not find OrtValue with name '", name, "'");
+     }

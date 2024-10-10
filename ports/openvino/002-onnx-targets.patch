@@ -1,0 +1,17 @@
+diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
+index 075fc664..9d347c57 100644
+--- a/thirdparty/dependencies.cmake
++++ b/thirdparty/dependencies.cmake
+@@ -496,6 +496,12 @@ if(ENABLE_OV_ONNX_FRONTEND)
+ 
+     if(ONNX_FOUND)
+         # conan and vcpkg create imported targets 'onnx' and 'onnx_proto'
++        if(TARGET ONNX::onnx)
++            add_library(onnx ALIAS ONNX::onnx)
++        endif()
++        if(TARGET ONNX::onnx_proto)
++            add_library(onnx_proto ALIAS ONNX::onnx_proto)
++        endif()
+     else()
+         add_subdirectory(thirdparty/onnx)
+     endif()
