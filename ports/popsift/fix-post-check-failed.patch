@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9735bc2..e83f5bb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,7 +35,7 @@ else()
+ endif()
+ 
+ # ensure the proper linker flags when building the static version on MSVC
+-if(MSVC AND NOT BUILD_SHARED_LIBS)
++if(0)
+   foreach(config "DEBUG" "RELEASE" "MINSIZEREL" "RELWITHDEBINFO")
+     string(REPLACE /MD /MT CMAKE_C_FLAGS_${config} "${CMAKE_C_FLAGS_${config}}")
+     string(REPLACE /MD /MT CMAKE_CXX_FLAGS_${config} "${CMAKE_CXX_FLAGS_${config}}")
