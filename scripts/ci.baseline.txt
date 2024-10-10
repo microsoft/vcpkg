@@ -503,8 +503,7 @@ jemalloc:x64-uwp=fail
 jinja2cpplight:arm-neon-android=fail
 jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
-kfr:x64-android=fail
-kfr:x64-uwp=fail
+kfr:arm64-windows=fail  # No `_M_ARM64` detected in https://github.com/kfrlib/kfr/blob/v3.0.8/include/kfr/cident.h#L12
 # needs android-24
 kubazip:arm-neon-android=fail
 lcm:x64-windows-static=fail
