@@ -17,8 +17,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DNSYNC_ENABLE_TESTS=OFF
 )
-vcpkg_cmake_build(TARGET nsync)
-vcpkg_cmake_build(TARGET nsync_cpp)
+vcpkg_cmake_build()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nsync_cpp PACKAGE_NAME nsync_cpp DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nsync)
