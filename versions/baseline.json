@@ -2504,6 +2504,10 @@
       "baseline": "1.26",
       "port-version": 0
     },
+    "editline": {
+      "baseline": "2024-08-08",
+      "port-version": 0
+    },
     "edlib": {
       "baseline": "1.2.7",
       "port-version": 1
