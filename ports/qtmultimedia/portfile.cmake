@@ -34,7 +34,6 @@ else()
     list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
 endif()
 
-
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")

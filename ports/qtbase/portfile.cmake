@@ -43,7 +43,6 @@ if(VCPKG_TARGET_IS_LINUX)
     "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
 
-
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
 # Always use FEATURE_<feature> in vcpkg_cmake_configure
