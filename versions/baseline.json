@@ -5625,7 +5625,7 @@
       "port-version": 1
     },
     "lunarg-vulkantools": {
-      "baseline": "1.3.290.0",
+      "baseline": "1.3.295",
       "port-version": 0
     },
     "lunasvg": {
