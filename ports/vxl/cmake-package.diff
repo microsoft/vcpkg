@@ -1,0 +1,33 @@
+diff --git a/config/cmake/Modules/UseVXL.cmake b/config/cmake/Modules/UseVXL.cmake
+index fba90e4..e7b3b62 100644
+--- a/config/cmake/Modules/UseVXL.cmake
++++ b/config/cmake/Modules/UseVXL.cmake
+@@ -77,7 +77,7 @@ if(VXL_CONFIG_CMAKE)
+   include_directories(SYSTEM ${VXL_VCL_INCLUDE_DIRS} ${VXL_CORE_INCLUDE_DIRS})
+ 
+   # Add link directories needed to use VXL.
+-  link_directories(${VXL_LIBRARY_DIR})
++  # [vcpkg skip] link_directories(${VXL_LIBRARY_DIR})
+ 
+   if(VXL_CMAKE_DOXYGEN_DIR)
+     # Allow use of VXL's cmake/doxygen framework
+diff --git a/config/cmake/Modules/VXLConfig_export.cmake.in b/config/cmake/Modules/VXLConfig_export.cmake.in
+index 78eaf51..c69b7d8 100644
+--- a/config/cmake/Modules/VXLConfig_export.cmake.in
++++ b/config/cmake/Modules/VXLConfig_export.cmake.in
+@@ -1,6 +1,4 @@
+ # vxl/config/cmake/VXLConfig_export.cmake.in
+-#   also configured by CMake to
+-# @PROJECT_BINARY_DIR@/config/cmake/export/VXLConfig.cmake
+ #
+ # This CMake module is configured by VXL's build process to export the
+ # project settings for use by client projects.  A client project may
+@@ -33,7 +31,7 @@ set(VXL_LIBRARY_DIR "@CMAKE_INSTALL_PREFIX@/lib")
+ 
+ # The VXL CMake support directory.
+ # Clients projects should not use the Find*.cmake files in this directory.
+-set(VXL_CMAKE_DIR "@CMAKE_INSTALL_PREFIX@/share/vxl/cmake")
++set(VXL_CMAKE_DIR "@CMAKE_INSTALL_PREFIX@/share/vxl")
+ 
+ # VXL Configuration options. You don't have to build with the same options as VXL, but it often helps.
+ set(BUILD_SHARED_LIBS "@BUILD_SHARED_LIBS@")
