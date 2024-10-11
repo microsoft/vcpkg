@@ -17,7 +17,7 @@ vcpkg_from_github(
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0041-add-const-for-opengl-definition.patch
-        0042-fix-arm64-linux.patch #https://github.com/FFmpeg/FFmpeg/commit/fcfd17dbb4a6cf270cdd82e91c21a5efdc878d12
+        0043-fix-miss-head.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -31,15 +31,6 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
 endif()
 
 set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
-
-if(VCPKG_HOST_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
-    set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
-    vcpkg_add_to_path("${MSYS_ROOT}/usr/share/automake-1.16")
-    string(APPEND OPTIONS " --pkg-config=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-else()
-    find_program(SHELL bash)
-endif()
 
 if(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -157,6 +148,14 @@ if(VCPKG_DETECTED_CMAKE_STRIP)
     set(ENV{STRIP} "${STRIP_filename}")
     string(APPEND OPTIONS " --strip=${STRIP_filename}")
     list(APPEND prog_env "${STRIP_path}")
+endif()
+
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
+    set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
+    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}/usr/share/automake-1.16")
+else()
+    find_program(SHELL bash)
 endif()
 
 list(REMOVE_DUPLICATES prog_env)
@@ -321,6 +320,12 @@ if("fontconfig" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfontconfig")
 else()
     set(OPTIONS "${OPTIONS} --disable-libfontconfig")
+endif()
+
+if("drawtext" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libharfbuzz")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libharfbuzz")
 endif()
 
 if("freetype" IN_LIST FEATURES)
@@ -682,7 +687,7 @@ foreach(item IN LISTS standard_libraries)
 endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
-set(OPTIONS "${OPTIONS} --pkg-config=${PKGCONFIG}")
+set(OPTIONS "${OPTIONS} --pkg-config=\"${PKGCONFIG}\"")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
@@ -697,7 +702,6 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-ldflags=-L\"${CURRENT_INSTALLED_DIR}/lib\"")
     endif()
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
-    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     message(STATUS "Building ${PORT} for Release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     # We use response files here as the only known way to handle spaces in paths
@@ -742,8 +746,6 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-L\"${CURRENT_INSTALLED_DIR}/debug/lib\"")
     endif()
     message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
-    set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
-    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
     message(STATUS "Building ${PORT} for Debug")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cflags.rsp")
@@ -845,31 +847,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
     foreach(_debug IN LISTS _dirs)
         foreach(PKGCONFIG_MODULE IN LISTS FFMPEG_PKGCONFIG_MODULES)
             set(PKGCONFIG_FILE "${CURRENT_PACKAGES_DIR}${_debug}lib/pkgconfig/${PKGCONFIG_MODULE}.pc")
-            # remove redundant cygwin style -libpath entries
-            execute_process(
-                COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -u "${CURRENT_INSTALLED_DIR}"
-                OUTPUT_VARIABLE CYG_INSTALLED_DIR
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-            )
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}lib/pkgconfig/../../lib " "" IGNORE_UNCHANGED)
-            # transform libdir, includedir, and prefix paths from cygwin style to windows style
             file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
-            foreach(PATH_NAME prefix libdir includedir)
-                string(REGEX MATCH "${PATH_NAME}=[^\n]*" PATH_VALUE "${PKGCONFIG_CONTENT}")
-                string(REPLACE "${PATH_NAME}=" "" PATH_VALUE "${PATH_VALUE}")
-                if(NOT PATH_VALUE)
-                    message(FATAL_ERROR "failed to find pkgconfig variable ${PATH_NAME}")
-                endif()
-                execute_process(
-                    COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -w "${PATH_VALUE}"
-                    OUTPUT_VARIABLE FIXED_PATH
-                    OUTPUT_STRIP_TRAILING_WHITESPACE
-                )
-                file(TO_CMAKE_PATH "${FIXED_PATH}" FIXED_PATH)
-                vcpkg_replace_string("${PKGCONFIG_FILE}" "${PATH_NAME}=${PATH_VALUE}" "${PATH_NAME}=${FIXED_PATH}")
-            endforeach()
             # list libraries with -l flag (so pkgconf knows they are libraries and not just linker flags)
-            foreach(LIBS_ENTRY Libs Libs.private)
+            foreach(LIBS_ENTRY IN ITEMS Libs Libs.private)
                 string(REGEX MATCH "${LIBS_ENTRY}: [^\n]*" LIBS_VALUE "${PKGCONFIG_CONTENT}")
                 if(NOT LIBS_VALUE)
                     message(FATAL_ERROR "failed to find pkgconfig entry ${LIBS_ENTRY}")
@@ -877,11 +857,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 string(REPLACE "${LIBS_ENTRY}: " "" LIBS_VALUE "${LIBS_VALUE}")
                 if(LIBS_VALUE)
                     set(LIBS_VALUE_OLD "${LIBS_VALUE}")
-                    string(REGEX REPLACE "([^ ]+)[.]lib" "-l\\1" LIBS_VALUE "${LIBS_VALUE}")
+                    string(REGEX REPLACE " ([^ ]+)[.]lib" " -l\\1" LIBS_VALUE "${LIBS_VALUE}")
                     set(LIBS_VALUE_NEW "${LIBS_VALUE}")
-                    vcpkg_replace_string("${PKGCONFIG_FILE}" "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}" IGNORE_UNCHANGED)
+                    string(REPLACE "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}" PKGCONFIG_CONTENT "${PKGCONFIG_CONTENT}")
                 endif()
             endforeach()
+            file(WRITE "${PKGCONFIG_FILE}" "${PKGCONFIG_CONTENT}")
         endforeach()
     endforeach()
 endif()

@@ -1,7 +1,7 @@
 {
   "name": "luafilesystem",
   "version": "1.8.0",
-  "port-version": 6,
+  "port-version": 7,
   "description": "LuaFileSystem is a Lua library developed to complement the set of functions related to file systems offered by the standard Lua distribution.",
   "homepage": "https://github.com/keplerproject/luafilesystem",
   "supports": "!uwp",
