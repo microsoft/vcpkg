@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simbody/simbody
@@ -28,7 +27,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")

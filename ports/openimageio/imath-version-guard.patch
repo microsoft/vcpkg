@@ -1,9 +1,8 @@
-diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 4d7e11c..0f15ba9 100644
+diff -u -r a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -184,6 +184,11 @@ set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
- if (NOT OpenColorIO_FOUND)
+@@ -193,6 +193,11 @@
+ else ()
      set (OpenColorIO_FOUND 0)
  endif ()
 +if(USE_OPENCOLORIO AND TARGET Imath::Imath AND OIIO_USING_IMATH STREQUAL "2")
@@ -11,6 +10,6 @@ index 4d7e11c..0f15ba9 100644
 +        "OpenColorIO and OpenEXR use incompatible versions of Imath. "
 +        "You cannot use openimageio[opencolorio] for this configuration.")
 +endif()
+ 
  set(OPENCV_INCLUDES "")
  set(OPENCV_LIBRARIES opencv_core)
- checked_find_package (OpenCV CONFIG

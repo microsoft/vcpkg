@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/polygon
-    REF boost-1.83.0
-    SHA512 b18926f2580da0cf8f975fb86738822fe38784e432ce5f803bda298c21a4c67612607bc8336aece0ba2471f2c98a57ed5171841a239b0a5e04147cac967cf330
+    REF boost-${VERSION}
+    SHA512 8c90c1dc84478bebdfb01c36e108ea9d07e14e76f358f83abb3bc9bec2c33541dd231604356be52ea4a11fb5bd756ce726faf7bc59650620189e71f6d80e10ed
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

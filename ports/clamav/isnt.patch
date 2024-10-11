@@ -1,0 +1,12 @@
+diff --git a/libclamunrar/CMakeLists.txt b/libclamunrar/CMakeLists.txt
+index f7ce3848e..5bae50aca 100644
+--- a/libclamunrar/CMakeLists.txt
++++ b/libclamunrar/CMakeLists.txt
+@@ -85,6 +85,7 @@ target_sources( clamunrar
+         "dll.hpp" )
+ if(WIN32)
+     set_target_properties(clamunrar PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
++    target_sources( clamunrar PRIVATE "isnt.cpp")
+ endif()
+ 
+ # Public (forwarded) dependencies.

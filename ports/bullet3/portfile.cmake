@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
         -DBUILD_GIMPACTUTILS_EXTRA=OFF        
         -DBUILD_UNIT_TESTS=OFF        
         -DINSTALL_LIBS=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
         ${FEATURE_OPTIONS}
 )
 

@@ -1,0 +1,152 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index c60177c..f9432ec 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -50,7 +50,7 @@ find_package(folly CONFIG REQUIRED)
+ find_package(fmt CONFIG REQUIRED)
+ 
+ find_package(OpenSSL REQUIRED)
+-find_package(Glog REQUIRED)
++find_package(glog CONFIG REQUIRED)
+ find_package(Threads REQUIRED)
+ find_package(Zstd REQUIRED)
+ if (UNIX AND NOT APPLE)
+@@ -59,43 +59,23 @@ endif()
+ 
+ include(CheckAtomic)
+ 
+-find_package(Sodium REQUIRED)
++find_package(unofficial-sodium CONFIG REQUIRED)
+ 
+ SET(FIZZ_SHINY_DEPENDENCIES "")
+ SET(FIZZ_LINK_LIBRARIES "")
+ SET(FIZZ_INCLUDE_DIRECTORIES "")
+ 
+-find_package(gflags CONFIG QUIET)
+-if (gflags_FOUND)
+-  message(STATUS "Found gflags from package config")
+-  if (TARGET gflags-shared)
+-    list(APPEND FIZZ_SHINY_DEPENDENCIES gflags-shared)
+-  elseif (TARGET gflags)
+-    list(APPEND FIZZ_SHINY_DEPENDENCIES gflags)
+-  else()
+-    message(FATAL_ERROR "Unable to determine the target name for the GFlags package.")
+-  endif()
+-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${GFLAGS_LIBRARIES})
+-  list(APPEND CMAKE_REQUIRED_INCLUDES ${GFLAGS_INCLUDE_DIR})
+-else()
+-  find_package(Gflags REQUIRED MODULE)
+-  list(APPEND FIZZ_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
+-  list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBGFLAGS_INCLUDE_DIR})
+-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${LIBGFLAGS_LIBRARY})
+-  list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
++find_package(zstd CONFIG REQUIRED)
++if(TARGET zstd::libzstd_shared)
++  list(APPEND FIZZ_LINK_LIBRARIES zstd::libzstd_shared)
++elseif(TARGET zstd::libzstd_static)
++  list(APPEND FIZZ_LINK_LIBRARIES zstd::libzstd_static)
+ endif()
+ 
++find_package(gflags CONFIG REQUIRED)
+ find_package(ZLIB REQUIRED)
+ 
+-find_package(Libevent CONFIG QUIET)
+-if(TARGET event)
+-  message(STATUS "Found libevent from package config")
+-  list(APPEND FIZZ_SHINY_DEPENDENCIES event)
+-else()
+-  find_package(Libevent MODULE REQUIRED)
+-  list(APPEND FIZZ_LINK_LIBRARIES ${LIBEVENT_LIB})
+-  list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
+-endif()
++find_package(Libevent CONFIG REQUIRED)
+ 
+ find_package(liboqs CONFIG)
+ if (liboqs_FOUND)
+@@ -193,28 +173,24 @@ target_include_directories(
+     $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
+     $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
+-    ${FOLLY_INCLUDE_DIR}
+-    ${OPENSSL_INCLUDE_DIR}
+-    ${sodium_INCLUDE_DIR}
+-    ${ZSTD_INCLUDE_DIR}
+   PRIVATE
+-    ${GLOG_INCLUDE_DIRS}
+     ${FIZZ_INCLUDE_DIRECTORIES}
+ )
+ 
+ 
+ target_link_libraries(fizz
+   PUBLIC
+-    ${FOLLY_LIBRARIES}
+-    ${OPENSSL_LIBRARIES}
+-    sodium
++    Folly::folly
++    OpenSSL::SSL
++    OpenSSL::Crypto
++    unofficial-sodium::sodium
+     Threads::Threads
+     ZLIB::ZLIB
+-    ${ZSTD_LIBRARY}
+   PRIVATE
+-    ${GLOG_LIBRARIES}
+-    ${GFLAGS_LIBRARIES}
++    glog::glog
++    gflags::gflags
+     ${FIZZ_LINK_LIBRARIES}
++    libevent::core
+     ${CMAKE_DL_LIBS}
+     ${LIBRT_LIBRARIES})
+ 
+@@ -279,8 +255,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
+ SET(FIZZ_TEST_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+ 
+ if(BUILD_TESTS)
+-  find_package(GMock 1.8.0 MODULE REQUIRED)
+-  find_package(GTest 1.8.0 MODULE REQUIRED)
++  find_package(GTest CONFIG REQUIRED)
+ endif()
+ 
+ add_library(fizz_test_support
+@@ -317,14 +292,12 @@ macro(add_gtest test_source test_name)
+   add_executable(${test_name} ${test_source} test/CMakeTestMain.cpp)
+ 
+   set_property(TARGET ${test_name} PROPERTY ENABLE_EXPORTS true)
+-  target_include_directories(
+-    ${test_name} PUBLIC ${LIBGMOCK_INCLUDE_DIR} ${LIBGTEST_INCLUDE_DIR})
+-  target_compile_definitions(${test_name} PUBLIC ${LIBGMOCK_DEFINES})
+   target_link_libraries(
+     ${test_name}
+     fizz
+     fizz_test_support
+-    ${LIBGMOCK_LIBRARIES})
++    GTest::gtest
++    GTest::gmock)
+ 
+   if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+     # GMOCK_MOCK_METHOD() will complain otherwise
+diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
+index 9d07110..a47bb99 100644
+--- a/fizz/cmake/fizz-config.cmake.in
++++ b/fizz/cmake/fizz-config.cmake.in
+@@ -31,9 +31,18 @@ set(FIZZ_LIBRARIES fizz::fizz)
+ 
+ include(CMakeFindDependencyMacro)
+ 
+-find_dependency(Sodium)
++find_dependency(unofficial-sodium CONFIG)
+ find_dependency(folly CONFIG)
+ find_dependency(ZLIB)
++find_dependency(Libevent CONFIG)
++find_dependency(fmt CONFIG)
++find_dependency(OpenSSL)
++find_dependency(glog CONFIG)
++find_dependency(double-conversion CONFIG)
++find_dependency(Threads)
++find_dependency(gflags CONFIG)
++find_dependency(zstd CONFIG)
++find_dependency(GTest CONFIG)
+ if(FIZZ_HAVE_OQS)
+     find_dependency(liboqs CONFIG)
+ endif()

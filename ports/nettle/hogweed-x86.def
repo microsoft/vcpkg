@@ -51,8 +51,6 @@ EXPORTS
      nettle_ecc_point_get
      nettle_ecc_scalar_random
      _nettle_ecc_mod_random
-     _nettle_ecc_hash
-     _nettle_gost_hash
      _nettle_ecc_mul_a
      _nettle_ecc_mul_g
      _nettle_ecc_mul_m
@@ -65,6 +63,7 @@ EXPORTS
      _nettle_ecc_add_eh
      _nettle_ecc_dup_eh
      _nettle_ecc_eh_to_a
+     _nettle_ecc_nonsec_add_jjj
      _nettle_ecc_add_jjj
      _nettle_ecc_add_jja
      _nettle_ecc_dup_jj
@@ -119,7 +118,6 @@ EXPORTS
      _nettle_gmp_free_limbs
      _nettle_gmp_alloc
      _nettle_gmp_free
-     _nettle_sec_tabselect
      _nettle_sec_sub_1
      _nettle_sec_add_1
      nettle_dsa_params_from_der_iterator
@@ -280,3 +278,13 @@ EXPORTS
      nettle_sexp_iterator_check_type
      nettle_sexp_iterator_check_types
      nettle_sexp_iterator_assoc
+     _nettle_rsa_oaep_decrypt
+     _nettle_rsa_oaep_encrypt
+     nettle_rsa_oaep_sha256_decrypt
+     nettle_rsa_oaep_sha384_decrypt
+     nettle_rsa_oaep_sha512_decrypt     
+     nettle_rsa_oaep_sha256_encrypt
+     nettle_rsa_oaep_sha384_encrypt
+     nettle_rsa_oaep_sha512_encrypt
+     _nettle_oaep_decode_mgf1
+     _nettle_oaep_encode_mgf1

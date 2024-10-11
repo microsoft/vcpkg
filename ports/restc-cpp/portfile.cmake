@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jgaa/restc-cpp
-    REF v0.10.0
+    REF "v${VERSION}"
     SHA512 0f74d825d3958810c270748c2810953fe394d0bf1f147d81b9177803e29a86c702715d5995c5966c4fe671b7689f26d9a0fad4e82d111277bbd3ddce1a68f73a
     HEAD_REF master
     PATCHES
@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         -DRESTC_CPP_WITH_EXAMPLES=OFF
         -DRESTC_CPP_WITH_UNIT_TESTS=OFF
         -DRESTC_CPP_WITH_FUNCTIONALT_TESTS=OFF
+        -DRESTC_CPP_USE_CPP17=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -37,4 +38,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

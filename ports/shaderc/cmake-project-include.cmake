@@ -1,10 +1,8 @@
 set(SHADERC_GLSLANG_DIR "" CACHE STRING "unused")
 find_package(glslang CONFIG REQUIRED)
 add_library(glslang ALIAS glslang::glslang)
-add_library(HLSL ALIAS glslang::HLSL)
 add_library(MachineIndependent ALIAS glslang::MachineIndependent)
 add_library(OSDependent ALIAS glslang::OSDependent)
-add_library(OGLCompiler ALIAS glslang::OGLCompiler)
 add_library(SPIRV ALIAS glslang::SPIRV)
 
 find_path(glslang_SOURCE_DIR glslang/Public/ShaderLang.h REQUIRED)

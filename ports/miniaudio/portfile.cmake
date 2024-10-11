@@ -3,7 +3,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO mackron/miniaudio
   REF "${VERSION}"
-  SHA512 b16fd9af65af050ddb0597498fc10aec1d277c9e6ebac968c0c2a0d8688181eb2a221f50b9d8101d454ede305ce50ab4c0729beaa1a6ffef71ab2402a7013994
+  SHA512 0c67ff7d9112409fea5af7756c1bc14bca4acfa45a97896ea339cdab228ac3dcc843c492e6da9dc75d4cd6f6b795ee80fe3ad9c4c746d7db691b1216f86e456d
   HEAD_REF master
 )
 

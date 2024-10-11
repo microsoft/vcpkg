@@ -1,16 +1,15 @@
 
-set(VERSION 1.7.4)
+set(VERSION 1.7.5)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 2342c997765ea2ca96eac158e5fd260232dba68fc41b90a79a7ba9b25c539fc217981867362090e0ebebe632289257c342275e3c5baedb698c474ef8f49a9dcd
+    SHA512 d8a7553642da0c81261ac3992536efd9d43ecb9154934ef1a10ae808d6a3ce8198b40433091d3a6d04f61e67c59426fb5276193a37e810ae4bc74a8a10fb651b
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-configcmake.patch
         unglue.patch
 )
 
@@ -20,9 +19,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
             private-headers APR_INSTALL_PRIVATE_H
     )
 
+    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" APR_BUILD_STATIC)
+    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" APR_BUILD_SHARED)
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
+            -DAPR_BUILD_STATIC=${APR_BUILD_STATIC}
+            -DAPR_BUILD_SHARED=${APR_BUILD_SHARED}
+            -DAPR_BUILD_TESTAPR=OFF
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
@@ -30,11 +35,17 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
 
     vcpkg_cmake_install()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-apr CONFIG_PATH share/unofficial-apr)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/apr")
+    file(
+        INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-config.cmake"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-apr"
+    )
     # There is no way to suppress installation of the headers in debug builds.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     vcpkg_copy_pdbs()
+
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage-cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
 else()
     # To cross-compile you will need a triplet file that locates the tool chain and sets --host and --cache parameters of "./configure".
     # The ${VCPKG_PLATFORM_TOOLSET}.cache file must have been generated on the targeted host using "./configure -C".
@@ -75,8 +86,8 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\"" "")
     
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "" IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "" IGNORE_UNCHANGED)
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/build-1/apr_rules.mk" "${CURRENT_INSTALLED_DIR}" "$(INCLUDE)/..")
     if(NOT VCPKG_BUILD_TYPE)
@@ -84,8 +95,8 @@ else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\"" "")
 
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/lib" "" IGNORE_UNCHANGED)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/libtool" "${CURRENT_INSTALLED_DIR}/debug/lib" "" IGNORE_UNCHANGED)
 
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/apr_rules.mk" "${CURRENT_INSTALLED_DIR}/debug" "$(INCLUDE)/..")
     endif()

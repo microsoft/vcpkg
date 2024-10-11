@@ -1,0 +1,38 @@
+diff --git a/vtkm/filter/flow/internal/Messenger.cxx b/vtkm/filter/flow/internal/Messenger.cxx
+index 52c582f201..dff804cc8a 100644
+--- a/vtkm/filter/flow/internal/Messenger.cxx
++++ b/vtkm/filter/flow/internal/Messenger.cxx
+@@ -277,7 +277,7 @@ void Messenger::SendDataSync(int dst, int tag, vtkmdiy::MemoryBuffer& buff)
+   if (it == this->SyncSendBuffers.end())
+   {
+     std::vector<std::pair<int, vtkmdiy::MemoryBuffer>> vec;
+-    vec.push_back(std::move(entry));
++    vec.emplace_back(std::move(entry));
+     this->SyncSendBuffers.insert(std::make_pair(tag, std::move(vec)));
+   }
+   else
+diff --git a/vtkm/filter/flow/internal/Messenger.h b/vtkm/filter/flow/internal/Messenger.h
+index 42d554ae51..b6a0acb40b 100644
+--- a/vtkm/filter/flow/internal/Messenger.h
++++ b/vtkm/filter/flow/internal/Messenger.h
+@@ -44,6 +44,11 @@ public:
+ #endif
+   }
+ 
++  Messenger(const Messenger&)            =delete;
++  Messenger(Messenger&&)                 =default;
++  Messenger& operator=(Messenger&&)      =default;
++  Messenger& operator=(const Messenger&) =delete;
++
+   int GetRank() const { return this->Rank; }
+   int GetNumRanks() const { return this->NumRanks; }
+ 
+@@ -108,7 +113,7 @@ private:
+ 
+   //Member data
+   // <tag, {dst, buffer}>
+-  std::map<int, std::vector<std::pair<int, vtkmdiy::MemoryBuffer>>> SyncSendBuffers;
++  std::map<int, std::vector<std::pair<int, vtkmdiy::MemoryBuffer>>> SyncSendBuffers = {};
+   std::map<int, std::pair<std::size_t, std::size_t>> MessageTagInfo;
+   MPI_Comm MPIComm;
+   std::size_t MsgID;

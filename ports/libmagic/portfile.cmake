@@ -14,6 +14,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
         "0016-Fix-file_famagic-function.patch"
+        "0017-Change-bzlib-name-to-match-CMake-output.patch"
     )
 endif()
 
@@ -31,9 +32,30 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
 endif()
 
+set(FEATURE_OPTIONS)
+
+macro(enable_feature feature switch)
+    if("${feature}" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "--enable-${switch}")
+        set(has_${feature} 1)
+    else()
+        list(APPEND FEATURE_OPTIONS "--disable-${switch}")
+        set(has_${feature} 0)
+    endif()
+endmacro()
+
+enable_feature("bzip2" "bzlib")
+enable_feature("zlib" "zlib")
+enable_feature("lzma" "xzlib")
+enable_feature("zstd" "zstdlib")
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "--disable-lzlib"
+        "--disable-libseccomp"
 )
 
 if(VCPKG_CROSSCOMPILING)

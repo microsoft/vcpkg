@@ -1,0 +1,36 @@
+{
+  "name": "lightgbm",
+  "version": "4.4.0",
+  "port-version": 1,
+  "description": [
+    "A fast, distributed, high performance gradient boosting (GBT, GBDT, GBRT, GBM or MART) framework based on decision tree algorithms.",
+    "Designed to be distributed and efficient and comes with faster training speeds, higher efficiency, lower memory usage and support of parallel, distributed, and GPU learning."
+  ],
+  "homepage": "https://github.com/microsoft/LightGBM",
+  "license": "Apache-2.0",
+  "supports": "!android & !osx & !uwp",
+  "dependencies": [
+    "eigen3",
+    "fast-double-parser",
+    "fmt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "openmp"
+  ],
+  "features": {
+    "gpu": {
+      "description": "GPU support using Boost.Compute",
+      "dependencies": [
+        "boost-compute",
+        "opencl"
+      ]
+    },
+    "openmp": {
+      "description": "Support for multi-threading using OpenMP"
+    }
+  }
+}
