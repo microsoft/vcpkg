@@ -4249,8 +4249,8 @@
       "port-version": 1
     },
     "libadwaita": {
-      "baseline": "1.3.2",
-      "port-version": 2
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "libaes-siv": {
       "baseline": "2020-10-15",
