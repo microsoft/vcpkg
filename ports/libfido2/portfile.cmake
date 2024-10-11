@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO Yubico/libfido2
     REF ${VERSION}
     SHA512 97932ca1a9f8d1bb3cb4b4a8d56ef70085d19ad2bd27c67944fa17ed033bfa45d28d7ad3fa318723e79b17ef5a882ac4f999ad8a6b9965c58665d99c4da7b5ee
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         "fix_cmakelists.patch"
 )
