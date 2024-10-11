@@ -35,15 +35,18 @@ file(COPY ${KEYSTONE_PATH}/ DESTINATION ${EXTERNAL_DIR}/keystone)
 file(COPY ${VCVARS_PATH}/ DESTINATION ${EXTERNAL_DIR}/vcvars-bash)
 
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-    OPTIONS
-        -DCMAKE_C_FLAGS_RELEASE="/MD ${VCPKG_CMAKE_FLAGS}"
-        -DCMAKE_CXX_FLAGS_RELEASE="/MD ${VCPKG_CMAKE_FLAGS}"
-        -DCMAKE_C_FLAGS_DEBUG="/MDd ${VCPKG_CMAKE_FLAGS}"
-        -DCMAKE_CXX_FLAGS_DEBUG="/MDd ${VCPKG_CMAKE_FLAGS}"
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        GENERATOR "NMake Makefiles"
+        DISABLE_PARALLEL_CONFIGURE
+    )
+else()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        DISABLE_PARALLEL_CONFIGURE
 )
+endif()
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
