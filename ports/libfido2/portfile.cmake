@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC_LIBS=${LIBFIDO2_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${LIBFIDO2_BUILD_SHARED}
         -DBUILD_TOOLS=OFF
+        -DBUILD_TESTS=OFF
  )
 
 vcpkg_cmake_install()
