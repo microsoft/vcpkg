@@ -2504,10 +2504,6 @@
       "baseline": "1.26",
       "port-version": 0
     },
-    "editline": {
-      "baseline": "2024-08-08",
-      "port-version": 0
-    },
     "edlib": {
       "baseline": "1.2.7",
       "port-version": 1
@@ -4451,6 +4447,10 @@
     "libebur128": {
       "baseline": "1.2.6",
       "port-version": 2
+    },
+    "libedit": {
+      "baseline": "2024-08-08",
+      "port-version": 0
     },
     "libenvpp": {
       "baseline": "1.4.1",
