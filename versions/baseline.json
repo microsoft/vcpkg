@@ -5733,7 +5733,7 @@
       "port-version": 0
     },
     "marble": {
-      "baseline": "24.07.90",
+      "baseline": "24.08.2",
       "port-version": 0
     },
     "mariadb-connector-cpp": {
