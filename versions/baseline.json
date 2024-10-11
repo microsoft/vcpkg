@@ -1424,10 +1424,6 @@
       "baseline": "1.0.1",
       "port-version": 0
     },
-    "bufbuild": {
-      "baseline": "1.45.0",
-      "port-version": 0
-    },
     "bufbuild-protovalidate": {
       "baseline": "0.8.2",
       "port-version": 0
@@ -9326,6 +9322,10 @@
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
+      "port-version": 0
+    },
+    "vcpkg-tool-buf": {
+      "baseline": "1.45.0",
       "port-version": 0
     },
     "vcpkg-tool-gn": {
