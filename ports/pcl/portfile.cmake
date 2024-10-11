@@ -39,6 +39,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         #apps            BUILD_apps_3d_rec_framework
 )
 
+set(EXTRA_ANDROID_OPTIONS "")
+if(VCPKG_TARGET_IS_ANDROID)
+	message(STATUS "Skip configure-time checks for Android")
+	set(EXTRA_ANDROID_OPTIONS 
+        -DHAVE_MM_MALLOC_EXITCODE=OFF
+        -DHAVE_POSIX_MEMALIGN_EXITCODE=OFF
+	)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -61,6 +70,7 @@ vcpkg_cmake_configure(
         -DWITH_RSSDK2=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
+        ${EXTRA_ANDROID_OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_apps=OFF
         -DBUILD_examples=OFF
@@ -68,6 +78,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
         PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32
+        
 )
 
 if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/vtk.pc")
