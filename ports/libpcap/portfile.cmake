@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         install.diff
+        mingw-dynamic-libname.diff
 )
 
 vcpkg_find_acquire_program(BISON)
@@ -20,7 +21,8 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RT)
 SET(options "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_CONFIGURE_OPTIONS MATCHES "Packet_ROOT")
         list(APPEND options "-DPCAP_TYPE=null")
-        message(STATUS [[
+        message(STATUS [[Attention:
+
 This build does not include packet capture capabilities.
 In order to enable such capabilities, install the Npcap SDK or the WinPcap SDK,
 and pass '-DPacket_ROOT=<path of SDK>' via VCPKG_CMAKE_CONFIGURE_OPTIONS
@@ -57,5 +59,8 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
