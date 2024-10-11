@@ -1,5 +1,5 @@
 {
-  "name": "bufbuild",
+  "name": "vcpkg-tool-buf",
   "version": "1.45.0",
   "description": "The Buf CLI is a developer tool that enables building and management of Protobuf APIs through the command line",
   "homepage": "https://github.com/bufbuild/buf",

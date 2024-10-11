@@ -5,10 +5,6 @@
   "homepage": "https://github.com/bufbuild/protovalidate",
   "license": "Apache-2.0",
   "dependencies": [
-    {
-      "name": "bufbuild",
-      "host": true
-    },
     "protobuf",
     {
       "name": "protobuf",
@@ -20,6 +16,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-buf",
       "host": true
     }
   ]

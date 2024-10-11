@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/proto/protovalidate")
 
-find_program(BUF_EXECUTABLE NAMES buf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/bufbuild" NO_DEFAULT_PATH REQUIRED)
+find_program(BUF_EXECUTABLE NAMES buf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/buf" NO_DEFAULT_PATH REQUIRED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/proto/protovalidate"
