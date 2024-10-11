@@ -5469,8 +5469,8 @@
       "port-version": 0
     },
     "lightgbm": {
-      "baseline": "4.4.0",
-      "port-version": 1
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "lightningscanner": {
       "baseline": "1.0.1",
