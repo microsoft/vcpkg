@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
     REF "v${VERSION}"
-    SHA512 36df942129ac00893056ca1db662a5fa655d2c8af24012df5001bed1675e9552b7b2dbec37841c21f4be60de932dc6453ea0e669a309377f8bc4cbf733da7821
+    SHA512 548f15fcd345a56b6e7a0a568fa7c694beeeda3b863492f59bdaa0b0e6d48b21d6705e2ac56a06f349aa26b0e9b79aa0a437870940170772b5b30cf35841cbb4
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
