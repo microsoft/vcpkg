@@ -2957,7 +2957,7 @@
       "port-version": 2
     },
     "g2o": {
-      "baseline": "20230223_git",
+      "baseline": "20230806_git",
       "port-version": 0
     },
     "g3log": {
