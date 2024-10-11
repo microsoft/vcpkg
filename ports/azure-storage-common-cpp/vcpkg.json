@@ -5,6 +5,7 @@
   ],
   "name": "azure-storage-common-cpp",
   "version-semver": "12.8.0",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Common Storage SDK for C++",
     "This library provides common Azure Storage-related abstractions for Azure SDK."

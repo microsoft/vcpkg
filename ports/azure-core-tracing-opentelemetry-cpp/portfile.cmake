@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       useragent.patch
+      set_version.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core-tracing-opentelemetry")
