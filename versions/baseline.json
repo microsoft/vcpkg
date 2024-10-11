@@ -5769,7 +5769,7 @@
       "port-version": 0
     },
     "matio": {
-      "baseline": "1.5.26",
+      "baseline": "1.5.27",
       "port-version": 0
     },
     "matplotlib-cpp": {
