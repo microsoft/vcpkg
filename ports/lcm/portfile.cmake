@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lcm-proj/lcm
-    REF v1.4.0
-    SHA512 ca036aa2c31911e0bfaeab9665188c97726201267314693a1c333c4efe13ea598b39a55a19bc1d48e65462ac9d1716adfda5af86c645d59c3247192631247cc6
+    REF "v${VERSION}"
+    SHA512 a19800c1ac79b7725f26fd1e2e5abedcfcbe1b197a8a48860dd50a7b3e3af658286fe7dd3a1e3c69920eccf2a73185c90bf1cd6cf0f05a405abfa9d8f33eae4c
     HEAD_REF master
     PATCHES 
         only-install-one-flavor.patch
