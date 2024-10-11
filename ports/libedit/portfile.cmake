@@ -1,5 +1,5 @@
 message(
-"editline currently requires the following programs from the system package manager:
+"libedit currently requires the following programs from the system package manager:
     autoconf autoheader aclocal automake libtoolize
 On Debian and Ubuntu derivatives:
     sudo apt install autoconf libtool
