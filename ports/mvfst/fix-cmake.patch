@@ -45,4 +45,3 @@ index 0916546fe..14297bb30 100644
  )
  
  set_property(TARGET mvfst_state_ack_handler PROPERTY VERSION ${PACKAGE_VERSION})
-
