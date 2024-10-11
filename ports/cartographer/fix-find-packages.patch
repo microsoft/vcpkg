@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2e3a686..f36f15a 100644
+index 2e3a686..ed161e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -25,27 +25,33 @@ option(BUILD_GRPC "build Cartographer gRPC support" false)
@@ -15,8 +15,9 @@ index 2e3a686..f36f15a 100644
  find_package(Ceres REQUIRED COMPONENTS SuiteSparse)
  find_package(Eigen3 REQUIRED)
 -find_package(LuaGoogle REQUIRED)
+-find_package(Protobuf 3.0.0 REQUIRED)
 +find_package(Lua REQUIRED)
- find_package(Protobuf 3.0.0 REQUIRED)
++find_package(Protobuf REQUIRED)
 +find_package(glog REQUIRED)
 +find_package(gflags REQUIRED)
  
@@ -80,7 +81,7 @@ index 2e3a686..f36f15a 100644
  
  if(${BUILD_GRPC})
    google_binary(cartographer_grpc_server
-@@ -213,8 +219,9 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+@@ -213,18 +219,16 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
  target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
  
  # We expect find_package(Ceres) to have located these for us.
@@ -90,45 +91,38 @@ index 2e3a686..f36f15a 100644
 +#target_link_libraries(${PROJECT_NAME} PUBLIC gflags)
 +#target_link_libraries(${PROJECT_NAME} PUBLIC ${CAIRO_LIBRARY})
  
- target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
-   "${CAIRO_INCLUDE_DIRS}")
-@@ -224,7 +231,8 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
-   ${PROTOBUF_INCLUDE_DIR})
+-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+-  "${CAIRO_INCLUDE_DIRS}")
+ target_link_libraries(${PROJECT_NAME} PUBLIC ${CAIRO_LIBRARIES})
+ 
+-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+-  ${PROTOBUF_INCLUDE_DIR})
  # TODO(hrapp): This should not explicitly list pthread and use
  # PROTOBUF_LIBRARIES, but that failed on first try.
 -target_link_libraries(${PROJECT_NAME} PUBLIC ${PROTOBUF_LIBRARY} pthread)
 +#target_link_libraries(${PROJECT_NAME} PUBLIC ${PROTOBUF_LIBRARY} pthread)
-+target_link_libraries(${PROJECT_NAME} PUBLIC ${PROTOBUF_LIBRARY})
++target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
  if(${BUILD_GRPC})
    target_link_libraries(${PROJECT_NAME} PUBLIC grpc++)
    target_link_libraries(${PROJECT_NAME} PUBLIC async_grpc)
-@@ -234,7 +242,7 @@ if(${BUILD_PROMETHEUS})
-   target_compile_definitions(${PROJECT_NAME} PUBLIC USE_PROMETHEUS=1)
- endif()
- 
--set(TARGET_COMPILE_FLAGS "${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
-+set(TARGET_COMPILE_FLAGS "-D_DISABLE_EXTENDED_ALIGNED_STORAGE ${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
+@@ -237,7 +241,7 @@ endif()
+ set(TARGET_COMPILE_FLAGS "${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
  set_target_properties(${PROJECT_NAME} PROPERTIES
    COMPILE_FLAGS ${TARGET_COMPILE_FLAGS})
- 
-@@ -255,7 +263,7 @@ foreach(ABS_FIL ${ALL_TESTS})
-   get_filename_component(FIL_WE ${REL_FIL} NAME_WE)
-   # Replace slashes as required for CMP0037.
-   string(REPLACE "/" "." TEST_TARGET_NAME "${DIR}/${FIL_WE}")
--  google_test("${TEST_TARGET_NAME}" ${ABS_FIL})
-+  #google_test("${TEST_TARGET_NAME}" ${ABS_FIL})
-   if(${BUILD_GRPC})
-     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC grpc++)
-     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC async_grpc)
-@@ -263,7 +271,7 @@ foreach(ABS_FIL ${ALL_TESTS})
-   if(${BUILD_PROMETHEUS})
-     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC prometheus-cpp)
+-
++if(0)
+ set(TEST_LIB
+   cartographer_test_library
+ )
+@@ -265,7 +269,7 @@ foreach(ABS_FIL ${ALL_TESTS})
    endif()
--  target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
-+  #target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
+   target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
  endforeach()
- 
+-
++endif()
  # Add the binary directory first, so that port.h is included after it has
+ # been generated.
+ target_include_directories(${PROJECT_NAME} PUBLIC
 diff --git a/cartographer/common/math.h b/cartographer/common/math.h
 index c4a77ef..0248f66 100644
 --- a/cartographer/common/math.h

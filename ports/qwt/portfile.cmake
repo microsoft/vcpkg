@@ -1,8 +1,9 @@
-vcpkg_from_git(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL "https://git.code.sf.net/p/qwt/git"
-    REF "907846e0e981b216349156ee83b13208faae2934"
-    FETCH_REF qwt-6.2
+    REPO qwt/qwt
+    REF ${VERSION}
+    FILENAME "qwt-${VERSION}.zip"
+    SHA512 4008c3e4dace0f18e572b473a51a293bb896abbd62b9c5f0a92734b2121923d2e2cbf67c997b84570a13bf4fdd7669b56497c82fbae35049ed856b2f0a65e475
     PATCHES
         config.patch
         fix_dll_install.patch
@@ -23,6 +24,10 @@ vcpkg_qmake_configure(
 )
 vcpkg_qmake_install()
 vcpkg_copy_pdbs()
+
+# Qt6 pkg-config files not installed https://github.com/microsoft/vcpkg/issues/25988
+# vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

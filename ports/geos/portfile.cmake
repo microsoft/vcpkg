@@ -1,13 +1,12 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.osgeo.org/geos/geos-${VERSION}.tar.bz2"
     FILENAME "geos-${VERSION}.tar.bz2"
-    SHA512 bbca43c1eb9c4001d2e3c29d054b597bfb2c1d4860784246dd20fec21882b54bc2a8a8f0f09b8816aec7a85b621d3d1645adca15318838d2b4f4b5c4c4a58a94
+    SHA512 8ffaa3f49a8365db693ac948e9d66cf55321eb12151734c7da2775070b7804ffa607de2474b7019d6ea2a99d5e037fb1e8561bf9025e65ddd4bd1ba049382b28
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
-        win32.patch
         fix-exported-config.patch
 )
 
@@ -51,4 +50,4 @@ endif()
 vcpkg_copy_pdbs()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

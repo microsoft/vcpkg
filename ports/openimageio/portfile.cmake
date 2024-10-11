@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 6b87c805907a2f7c98f40e987fb6ebf769f8519f5d8a8b7393bed62a41cee1118bb32d2bc4d23fd464973e237077d08771ff85f72073caa57799d71bd098038f
+    SHA512 2d9423e16613a9daa6faa53e2f52ad6af749f07f73251f44720eba468635b70aec97b5aeaac2f67a8b260158808458e5408ced75908b00379eb6640b1413f463
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
+        fix-dependency-libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -56,6 +57,7 @@ vcpkg_cmake_configure(
         -DUSE_TBB=OFF
         -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
+        -DINTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
@@ -67,6 +69,7 @@ vcpkg_cmake_configure(
         "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
+        ENABLE_IV
 )
 
 vcpkg_cmake_install()
@@ -87,12 +90,16 @@ if("viewer" IN_LIST FEATURES)
     )
 endif()
 
-# Clean
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/OpenImageIO/export.h" "ifdef OIIO_STATIC_DEFINE" "if 1")
+endif()
+
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

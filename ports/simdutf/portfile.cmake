@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdutf/simdutf
     REF "v${VERSION}"
-    SHA512 f9d307bc769450cc0ff967ad5d764db15a7c38011c17096fcb824e4a89c0ae29ae66137c9063b8c54a42937600d058a8bd31439cf12c68d31a0053b1b8dd619f
+    SHA512 6a248214208602739975b7b6e50ffff3acc11ba37b9f0493a6b498a64520bd4f6cb4cfa51076a9d5b07cb749d073ba0d16df246308b196e1fea672f30c40a3e5
     HEAD_REF master
 )
 
@@ -21,8 +21,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES sutf AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES fastbase64 sutf AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

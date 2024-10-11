@@ -8,13 +8,12 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF "v${VERSION}"
-  SHA512 6bdc7cba821d66e17a559250cc0ce0095808e9db81cec9e16eaa4c31abdfa705299c67b72016d9b06b302bc306d063e83a374eb00728071b83a5ad650d59034f
+  REF 1ead6715dec030d340a316c927c877a3c4e5a00c
+  SHA512 a0b5dd2d94788929a2ba98bd629d64d188ff0ae40affd9338d3d7a94c848ae4d6addc72613964e7fad7f62e4ee20b7170b2133cb39d4e018c604ba35c68d1cff
   HEAD_REF master
   PATCHES
     0001-fix-uwp.patch
     0002-fix-cmake-install.patch
-    fix-uninitialized-values.patch  #Update the new version please remove this patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

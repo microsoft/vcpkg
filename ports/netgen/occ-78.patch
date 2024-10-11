@@ -144,8 +144,8 @@ diff --git a/libsrc/occ/occgeom.cpp b/libsrc/occ/occgeom.cpp
 index bc0383f99..826134ba0 100644
 --- a/libsrc/occ/occgeom.cpp
 +++ b/libsrc/occ/occgeom.cpp
-@@ -1716,8 +1716,12 @@ namespace netgen
- 
+@@ -1716,9 +1716,13 @@ namespace netgen
+     /*
      // enumerate shapes and archive only integers
      auto my_hash = [](const TopoDS_Shape & key) {
 +#if OCC_VERSION_HEX < 0x070800
@@ -155,5 +155,6 @@ index bc0383f99..826134ba0 100644
 +        return std::hash<TopoDS_Shape>{}(key);
 +#endif
      };
+     */
      TopTools_IndexedMapOfShape shape_map;
      Array<TopoDS_Shape> shape_list;

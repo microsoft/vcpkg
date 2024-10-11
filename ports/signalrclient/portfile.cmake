@@ -1,3 +1,6 @@
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/microsoft-signalr/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'microsoft-signalr'. Please remove microsoft-signalr:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SignalR/SignalR-Client-Cpp
@@ -25,4 +28,4 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # copy license
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

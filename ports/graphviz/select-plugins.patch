@@ -1,16 +1,15 @@
 diff --git a/plugin/CMakeLists.txt b/plugin/CMakeLists.txt
-index 3956102..d14bf9c 100644
+index c8cac8e..d14bf9c 100644
 --- a/plugin/CMakeLists.txt
 +++ b/plugin/CMakeLists.txt
-@@ -1,16 +1,10 @@
+@@ -1,15 +1,11 @@
  add_subdirectory(core)
 -add_subdirectory(devil)
  add_subdirectory(dot_layout)
  add_subdirectory(gd)
  add_subdirectory(gdiplus)
--add_subdirectory(gdk)
+ add_subdirectory(gdk)
 -add_subdirectory(gs)
--add_subdirectory(gtk)
  add_subdirectory(kitty)
 -add_subdirectory(lasi)
  add_subdirectory(neato_layout)

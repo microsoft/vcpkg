@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mysql
-    REF boost-1.83.0
-    SHA512 5d1cc43bb1b6fd62caedc3276d3b2d8734cf7fbc8fe402bc2a89bfa854a9c907089d65f32c8ec9c66a252e3204ea0098beb29443d5a14856473b9ce4fe2915fc
+    REF boost-${VERSION}
+    SHA512 28089b2fb3a6f5dfb538f2363f7292138732b4e4ef1d45ba26b0a92124d2222d6217d4dc9532195d087fcb3f98e86528f666d3281ce806806e0a5eb8f1d41e60
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

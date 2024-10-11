@@ -101,6 +101,11 @@
           "platform": "!(uwp & arm)"
         },
         {
+          "$package": "GnuTLS",
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
           "$package": "Iconv",
           "$since": "3.11",
           "name": "libiconv"
@@ -148,6 +153,11 @@
           "name": "physfs"
         },
         {
+          "$package": "GnuTLS",
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !arm & !mingw & !xbox"
+        },
+        {
           "$package": "SQLite3",
           "$since": "3.14",
           "name": "sqlite3",
@@ -158,6 +168,7 @@
           "name": "tiff",
           "default-features": false,
           "features": [
+            "lerc",
             "libdeflate",
             "zstd"
           ]

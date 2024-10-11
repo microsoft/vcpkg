@@ -1,7 +1,6 @@
 {
   "name": "libffi",
-  "version": "3.4.4",
-  "port-version": 6,
+  "version": "3.4.6",
   "description": "Portable, high level programming interface to various calling conventions",
   "homepage": "https://github.com/libffi/libffi",
   "license": "MIT",

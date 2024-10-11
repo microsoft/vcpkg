@@ -1,0 +1,17 @@
+{
+  "name": "libid3tag",
+  "version": "0.16.3",
+  "description": "ID3 tag manipulation library",
+  "homepage": "https://codeberg.org/tenacityteam/libid3tag",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

@@ -1,8 +1,9 @@
-vcpkg_from_github(
+vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO LMDB/lmdb
+    GITLAB_URL https://git.openldap.org
+    REPO openldap/openldap
     REF "LMDB_${VERSION}"
-    SHA512 a5763ff94af0b5bbc2406c52890797e6232e77593bacdb240441ed30c8634e4e6de6eba206880475544e21561ccd0be2dee16733d6ec35483eb1dbbb81913a8d
+    SHA512 57404b35adb5136fcdf60552c2dd2626b9753868f2707d3279725e08145cee3be0d311189b2c6ef6879f25cf09962e6b423c70c8a2e09ef1b368948e873d92b5
     HEAD_REF master
     PATCHES
         getopt-win32.diff
