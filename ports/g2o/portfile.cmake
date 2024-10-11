@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RainerKuemmerle/g2o
     REF "${VERSION}"
-    SHA512 6439f118fb8627c8ce2221f10f93273db3d94fb2cc5b74145b23df295e81761ee4f70843df4d61969762eae9bca2959ad3f4a46e48cb552288b54293addd277e
+    SHA512 626b4d286b564ca6714957d0caf41cf5387ecbc7100299c1a1134fa4a11a340f6e6e0796fa5ff16229032a1e1e384bc03e7d2c118be39d6d51a20d9f2774a98d
     HEAD_REF master
     PATCHES
         csparse.diff
         fix-LNK2019.patch
+        fix-post-check.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
@@ -42,11 +43,5 @@ if(EXE OR DEBUG_EXE)
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-# Handling absolute paths in config.h
-file(READ "${CURRENT_PACKAGES_DIR}/include/${PORT}/config.h" _contents)
-string(REGEX REPLACE "#define G2O_CXX_COMPILER \"[^\"]+\"" "#define G2O_CXX_COMPILER \"\${CMAKE_CXX_COMPILER_ID} \${CMAKE_CXX_COMPILER}\"" _contents "${_contents}")
-string(REGEX REPLACE "#define G2O_SRC_DIR \"[^\"]+\"" "#define G2O_SRC_DIR \"\${PROJECT_SOURCE_DIR}\"" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/${PORT}/config.h" "${_contents}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/license-bsd.txt")
