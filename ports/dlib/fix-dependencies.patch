@@ -50,7 +50,6 @@ index cfe6ad9..75cfd54 100644
     # Give the output library files names that are unique functions of the
     # visual studio mode that compiled them.  We do this so that people who
     # compile dlib and then copy the .lib files around (which they shouldn't be
-
 diff --git a/dlib/cmake_utils/dlib.pc.in b/dlib/cmake_utils/dlib.pc.in
 index 9060110..2ec27e8 100644
 --- a/dlib/cmake_utils/dlib.pc.in
