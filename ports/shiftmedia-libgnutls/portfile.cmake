@@ -1,19 +1,17 @@
-set(PACKAGE_VERSION_MAJOR 3)
-set(PACKAGE_VERSION_MINOR 7)
-set(PACKAGE_VERSION_PATCH 6)
-set(PACKAGE_VERSION ${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_VERSION_PATCH})
-
-set(GNULIB_REF "fb64a781")
+set(GNULIB_REF "3639c57")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/gnutls
-    REF ${PACKAGE_VERSION}
-    SHA512 8a3ff480e065cf517468fac9d8d4474cfa6ed354fa83ae60de224580f359f8dcfbfed6cf640d33783779174ade0bca0fbe1c529097ee103af2b02546fc2acaec
+    REF ${VERSION}
+    SHA512 5bd515da85f9e87b98f09a29472f788e869ccc3355f9583fbb4215d954cc5f97239e017120a0b358d259e58d0bd8e538fd00ea102fdbc1b29363cd92f06d0299
     HEAD_REF master
     PATCHES
         external-libtasn1.patch
         pkgconfig.patch
+        ssize_t_already_define.patch
+        fix-warnings.patch
+        mkdir.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
@@ -22,7 +20,7 @@ vcpkg_download_distfile(
     GNULIB_SNAPSHOT
     URLS "https://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=snapshot;h=${GNULIB_REF};sf=tgz"
     FILENAME "gnulib-${GNULIB_REF}.tar.gz"
-    SHA512 6e534b3a623efa5f473977deeed4d24669ef0e0e3ac5fcadc88c5cf2d6ad0852a07c68cd70ac748d7f9a3793704ce1a54a7d17114458a8c1f2e42d410681c340
+    SHA512 bc99be736d2907049d498f44d8f24db4beb2b3645459451b595087b9406ac1eebe4cbb4f2ef65df9e65823e01db4b4800b75eb9537236797fe1edcc65418c520
 )
 
 vcpkg_extract_source_archive(
@@ -76,6 +74,7 @@ vcpkg_replace_string(
     "${PROPS}"
     [=[_winrt</TargetName>]=]
     [=[</TargetName>]=]
+    IGNORE_UNCHANGED
 )
 vcpkg_replace_string(
     "${PROPS}"
@@ -92,6 +91,7 @@ vcpkg_replace_string(
     "${VCXPROJ}"
     "_winrt.lib"
     ".lib"
+    IGNORE_UNCHANGED
 )
 vcpkg_replace_string(
     "${VCXPROJ}"
@@ -155,7 +155,6 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/${WINRT_SUBFOLDER}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
-set(VERSION ${PACKAGE_VERSION})
 set(GNUTLS_REQUIRES_PRIVATE "Requires.private: gmp, nettle, hogweed, libtasn1")
 set(GNUTLS_LIBS_PRIVATE "-lcrypt32 -lws2_32 -lkernel32 -lncrypt")
 
@@ -175,3 +174,4 @@ configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gnutls")

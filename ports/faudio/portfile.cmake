@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FNA-XNA/faudio
-    REF cfdc4db21a9c7d21a9132da5b213248a823fbe05 # This is 24.03 with 3 patches to fix minor build failures by @rkitover and @dg0yt
-    SHA512 9f7ee882e9aa7cf80d976e2c016aa085222d21da2b0fac0e59f5a713e3a3dd41deb2dfc1a4698a3eff0b46bb122eca874fbd5b2747c243c53118bae3c5af9ef9
+    REF "${VERSION}"
+    SHA512 f74282a7df749f50026bb07309ca20fb12b098cc24b003f8b93f4f6868a3d6f4343d4bd06b947b17d9ec6c1d08f88e477da259397d745f9cc41321f7c5722448
     HEAD_REF master
-    PATCHES
 )
 
 set(options "")

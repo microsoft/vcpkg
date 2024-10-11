@@ -1,4 +1,0 @@
-The package open62541pp provides CMake targets:
-
-    find_package(open62541pp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE open62541pp::open62541pp)

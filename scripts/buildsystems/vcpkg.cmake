@@ -364,6 +364,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
     endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD"))
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT openbsd)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Android" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Android"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT android)
 endif()
@@ -590,8 +592,6 @@ if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
 endif()
 
 cmake_policy(POP)
-
-# Any policies applied to the below macros and functions appear to leak into consumers
 
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
@@ -889,10 +889,15 @@ if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
         VCPKG_TARGET_TRIPLET
         VCPKG_TARGET_ARCHITECTURE
-        VCPKG_APPLOCAL_DEPS
+        VCPKG_HOST_TRIPLET
+        VCPKG_INSTALLED_DIR
+        VCPKG_PREFER_SYSTEM_LIBS
+        # VCPKG_APPLOCAL_DEPS # This should be off within try_compile!
         VCPKG_CHAINLOAD_TOOLCHAIN_FILE
         Z_VCPKG_ROOT_DIR
     )
+else()
+    set(VCPKG_APPLOCAL_DEPS OFF)
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)

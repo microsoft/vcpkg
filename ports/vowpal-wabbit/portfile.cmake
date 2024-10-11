@@ -4,9 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
     REF "${VERSION}"
-    SHA512 37c4401e5304c20a7a4c2ffa6102bfa82085c4bbc787c796da295e789996f09472ac4b3e732b0a44016eab6579c2648085b1e67b1df2658257d52f7e46a1b683
+    SHA512 f87229caf65c6c32fb863fa426a39592d41990a43ce4d79f0a076323e47cd3d1a8bd02884afceb662527c87d290e68c51df6263d6a97f3a044f3f7254a38f86a
     HEAD_REF master
-    PATCHES cmake_remove_bin_targets.patch
+    PATCHES 
+        cmake_remove_bin_targets.patch
+        fix-build-error-with-fmt11.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,7 +1,6 @@
 {
   "name": "sqlite3",
-  "version": "3.45.3",
-  "port-version": 1,
+  "version": "3.46.1",
   "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
   "homepage": "https://sqlite.org/",
   "license": "blessing",
@@ -19,6 +18,9 @@
     "json1"
   ],
   "features": {
+    "dbpage-vtab": {
+      "description": "Enable the recovery extension"
+    },
     "dbstat": {
       "description": "Enable the DBSTAT virtual table"
     },

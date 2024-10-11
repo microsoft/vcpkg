@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.24.0",
+  "version": "2.30.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -256,6 +256,19 @@
           "default-features": false,
           "features": [
             "grpc-common"
+          ]
+        }
+      ]
+    },
+    "bigquerycontrol": {
+      "description": "Cloud BigQuery Control API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
@@ -577,6 +590,18 @@
         }
       ]
     },
+    "developerconnect": {
+      "description": "Developer Connect API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dialogflow-cx": {
       "description": "Cloud Dialogflow CX API C++ Client Library",
       "dependencies": [
@@ -697,19 +722,6 @@
         }
       ]
     },
-    "experimental-storage-grpc": {
-      "description": "The GCS+gRPC plugin",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common",
-            "storage"
-          ]
-        }
-      ]
-    },
     "filestore": {
       "description": "Cloud Filestore API C++ Client Library",
       "dependencies": [
@@ -736,6 +748,18 @@
     },
     "gkebackup": {
       "description": "Backup for GKE API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkeconnect": {
+      "description": "GKE Connect Gateway API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -871,6 +895,18 @@
     },
     "managedidentities": {
       "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "managedkafka": {
+      "description": "Manage Apache Kafka clusters and resources.",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1020,6 +1056,7 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
+            "monitoring",
             "rest-common",
             "trace"
           ]
@@ -1111,8 +1148,32 @@
         }
       ]
     },
+    "privilegedaccessmanager": {
+      "description": "Privileged Access Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "profiler": {
       "description": "Cloud Profiler API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "publicca": {
+      "description": "Public Certificate Authority API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1433,6 +1494,20 @@
           "default-features": false,
           "features": [
             "rest-common"
+          ]
+        }
+      ]
+    },
+    "storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "opentelemetry",
+            "storage"
           ]
         }
       ]

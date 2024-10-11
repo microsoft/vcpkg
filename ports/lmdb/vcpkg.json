@@ -1,6 +1,6 @@
 {
   "name": "lmdb",
-  "version": "0.9.31",
+  "version": "0.9.33",
   "description": "LMDB is an extraordinarily fast, memory-efficient database",
   "homepage": "https://github.com/LMDB/lmdb",
   "license": "OLDAP-2.8",

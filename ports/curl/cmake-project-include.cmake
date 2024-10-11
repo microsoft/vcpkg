@@ -3,12 +3,20 @@ if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS 24)
     set(HAVE_FILE_OFFSET_BITS FALSE CACHE INTERNAL "")
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    add_compile_definitions(_WINSOCK_DEPRECATED_NO_WARNINGS)
+endif()
+
 # Process the libs and targets in the variable named by `input`
 # into a flat list of libs in the variable named by `output`.
 # Simplify -framework elements.
 # Use -l where possible.
 # Avoid duplicates.
 function(vcpkg_curl_flatten input output)
+    foreach(var IN ITEMS IMPORT_LIBRARY_SUFFIX STATIC_LIBRARY_SUFFIX SHARED_LIBRARY_SUFFIX)
+        string(REPLACE "." "[.]" "${var}" "${CMAKE_${var}}")
+    endforeach()
+
     set(output_libs "${${output}}")
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         string(REGEX REPLACE ";optimized;[^;]*|;debug" "" input_libs "VCPKG;${${input}}")
@@ -63,11 +71,11 @@ function(vcpkg_curl_flatten input output)
             else()
                 set(lib "-framework ${lib}")
             endif()
-        elseif(WIN32 AND lib MATCHES ".*/${CMAKE_IMPORT_LIBRARY_PREFIX}([^/]*)${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+        elseif(WIN32 AND lib MATCHES ".*/${CMAKE_IMPORT_LIBRARY_PREFIX}([^/]*)${IMPORT_LIBRARY_SUFFIX}\$")
             set(lib -l${CMAKE_MATCH_1})
-        elseif(lib MATCHES ".*/${CMAKE_STATIC_LIBRARY_PREFIX}([^/]*)${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        elseif(lib MATCHES ".*/${CMAKE_STATIC_LIBRARY_PREFIX}([^/]*)${STATIC_LIBRARY_SUFFIX}\$")
             set(lib -l${CMAKE_MATCH_1})
-        elseif(lib MATCHES ".*/${CMAKE_SHARED_LIBRARY_PREFIX}([^/]*)${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        elseif(lib MATCHES ".*/${CMAKE_SHARED_LIBRARY_PREFIX}([^/]*)${SHARED_LIBRARY_SUFFIX}\$")
             set(lib -l${CMAKE_MATCH_1})
         endif()
         if(NOT "${lib}" IN_LIST output_libs)

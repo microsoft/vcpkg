@@ -1,7 +1,7 @@
 {
   "name": "magnum-plugins",
   "version-string": "2020.06",
-  "port-version": 12,
+  "port-version": 13,
   "description": "Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "license": null,

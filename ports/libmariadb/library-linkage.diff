@@ -1,0 +1,61 @@
+diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
+index 61ad0a6..bbad89a 100644
+--- a/libmariadb/CMakeLists.txt
++++ b/libmariadb/CMakeLists.txt
+@@ -494,7 +494,9 @@ IF(WITH_MYSQLCOMPAT)
+   ENDIF()
+ ENDIF()
+ 
++if(NOT BUILD_SHARED_LIBS)
+ create_symlink(libmariadb${CMAKE_STATIC_LIBRARY_SUFFIX} mariadbclient ${INSTALL_LIBDIR})
++endif()
+ 
+ SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
+  ${CPACK_PACKAGE_VERSION_MAJOR}
+@@ -502,27 +504,44 @@ SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
+ 
+ IF(NOT WIN32)
+   SET_TARGET_PROPERTIES(mariadbclient PROPERTIES OUTPUT_NAME "${LIBMARIADB_STATIC_NAME}")
++elseif(MINGW)
++  set_target_properties(libmariadb PROPERTIES IMPORT_PREFIX "")
+ ENDIF()
+ 
++if(NOT BUILD_SHARED_LIBS)
++set_target_properties(libmariadb PROPERTIES EXCLUDE_FROM_ALL 1)
++target_include_directories(mariadbclient PUBLIC $<INSTALL_INTERFACE:include/mysql>)
+ INSTALL(TARGETS mariadbclient
++          EXPORT unofficial-libmariadb-targets
+           COMPONENT Development
++          ARCHIVE
+           DESTINATION ${INSTALL_LIBDIR})
++else()
++set_target_properties(mariadbclient PROPERTIES EXCLUDE_FROM_ALL 1)
++target_include_directories(libmariadb PUBLIC $<INSTALL_INTERFACE:include/mysql>)
+ IF(WIN32)
+ INSTALL(TARGETS libmariadb
++        EXPORT unofficial-libmariadb-targets
+         COMPONENT SharedLibraries
++        RUNTIME DESTINATION ${INSTALL_BINDIR}
++        LIBRARY DESTINATION ${INSTALL_LIBDIR}
++        ARCHIVE
+         DESTINATION ${INSTALL_LIBDIR})
+ ELSE()
+ # in cmake 3.12+ we can use
+ #INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
+ #        COMPONENT SharedLibraries NAMELINK_COMPONENT Development)
+ # but as long as we build on CentOS 7 with its cmake 2.8.12.2 we have to use
+-INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
++INSTALL(TARGETS libmariadb
++        EXPORT unofficial-libmariadb-targets
++        LIBRARY DESTINATION ${INSTALL_LIBDIR}
+         COMPONENT SharedLibraries NAMELINK_SKIP)
+ INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
+         COMPONENT Development NAMELINK_ONLY)
+ ENDIF()
++endif()
+ 
+-IF(MSVC)
++IF(0)
+    # On Windows, install PDB
+    INSTALL(FILES $<TARGET_PDB_FILE:libmariadb> DESTINATION "${INSTALL_LIBDIR}"
+            CONFIGURATIONS Debug RelWithDebInfo

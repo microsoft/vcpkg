@@ -17,8 +17,17 @@
       "name": "paraview",
       "default-features": false,
       "features": [
-        "python",
-        "mpi"
+        "tools",
+        "vtkm"
+      ],
+      "platform": "!(x86 & windows)"
+    },
+    {
+      "name": "paraview",
+      "default-features": false,
+      "features": [
+        "mpi",
+        "python"
       ],
       "platform": "!(windows & static) & !x86"
     },
@@ -38,15 +47,6 @@
         "openvr"
       ],
       "platform": "!osx & !(windows & staticcrt)"
-    },
-    {
-      "name": "paraview",
-      "default-features": false,
-      "features": [
-        "tools",
-        "vtkm"
-      ],
-      "platform": "!(x86 & windows)"
     }
   ]
 }

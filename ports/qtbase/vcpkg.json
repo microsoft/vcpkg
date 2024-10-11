@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.7.0",
+  "version": "6.7.3",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -22,6 +22,14 @@
       "features": [
         "doubleconversion"
       ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "cups"
+      ],
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -52,8 +60,12 @@
   "default-features": [
     "brotli",
     "concurrent",
-    "dbus",
+    {
+      "name": "dbus",
+      "platform": "!(static & windows)"
+    },
     "default-features",
+    "dnslookup",
     "doubleconversion",
     "freetype",
     "gui",
@@ -112,9 +124,25 @@
         }
       ]
     },
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System.",
+      "supports": "linux | osx"
+    },
     "dbus": {
       "description": "Qt D-Bus",
       "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
+        },
         {
           "name": "qtbase",
           "default-features": false,
@@ -155,6 +183,18 @@
             "gles2"
           ],
           "platform": "android"
+        }
+      ]
+    },
+    "dnslookup": {
+      "description": "Enable DNS lookup support",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
         }
       ]
     },

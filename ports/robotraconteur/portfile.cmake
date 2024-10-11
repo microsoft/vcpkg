@@ -6,9 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
 	REPO robotraconteur/robotraconteur
 	REF "v${VERSION}"
-	SHA512 39926abd6f4b66c528abade88c06e62a5d9e1c2d12fc1f235d6491b7b6e36eec18923a222a60420e98d3a57b86611483d62319227d91915a747aa7dc731dc5be
+	SHA512 6c4cf2306f632ec87d84a6e93277f907063de642d02e358c6a5384ae157cfc6e9f45d90b0a77fd1c741304c5a93d6e60c97e41d2ca64967c75075b7f760720fc
 	HEAD_REF master
-	PATCHES fix-compatibility-with-boost-1.85.patch
 )
 
 vcpkg_cmake_configure(

@@ -33,6 +33,7 @@ foreach(PROPS IN ITEMS
         "${PROPS}"
         [=[_winrt</TargetName>]=]
         [=[</TargetName>]=]
+        IGNORE_UNCHANGED
     )
     vcpkg_replace_string(
         "${PROPS}"
@@ -55,6 +56,7 @@ foreach(VCXPROJ IN ITEMS
         "${VCXPROJ}"
         "_winrt.lib"
         ".lib"
+        IGNORE_UNCHANGED
     )
     vcpkg_replace_string(
         "${VCXPROJ}"
