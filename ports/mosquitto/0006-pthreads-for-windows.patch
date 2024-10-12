@@ -1,15 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4c55e05..adece3e 100644
+index 509e12e..9a39e29 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -68,8 +68,8 @@ option(WITH_THREADING "Include client library threading support?" ON)
+@@ -74,7 +74,7 @@ option(WITH_THREADING "Include client library threading support?" ON)
  if (WITH_THREADING)
  	add_definitions("-DWITH_THREADING")
- 	if (WIN32)
--		find_package(Threads REQUIRED)
--		set (PTHREAD_LIBRARIES Threads::Threads)
-+		find_package(pthread CONFIG REQUIRED)
-+		set (PTHREAD_LIBRARIES PThreads4W::PThreads4W)
- 		set (PTHREAD_INCLUDE_DIR "")
- 	elseif (ANDROID)
- 		set (PTHREAD_LIBRARIES "")
+ 	if(WIN32)
+-		find_package(Pthreads4W REQUIRED)
++		find_package(Pthreads4W CONFIG REQUIRED)
+ 	endif()
+ endif (WITH_THREADING)
+ 
