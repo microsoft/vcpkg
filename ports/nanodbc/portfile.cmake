@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanodbc/nanodbc
-    REF 7404a4dd7697e188df5724ab95a7553d2fc404eb # v2.13.0
-    SHA512 35ca098e783d771f3df611bce84e9b8207a6a5b72c492d2f3909977bc91a7c22bb262c34768b0d97ebfbdf12eeda0214064a8ea171e7bdda7b759f93ff346f45
+    REF "v${VERSION}"
+    SHA512 4ac6b4034548369e452bb73589be0245493edc139e6e305e35428be5eacbbaa64483797825c075ea0079ddbbdf1acb735dbb7c0168a385450e28fcd46a41f6fd
     HEAD_REF master
     PATCHES
         rename-version.patch
