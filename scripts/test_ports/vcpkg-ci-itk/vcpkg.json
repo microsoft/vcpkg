@@ -1,14 +1,16 @@
 {
   "name": "vcpkg-ci-itk",
   "version-string": "ci",
-  "description": "Port to force features of itk within CI",
+  "description": "Validates itk",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
     {
       "name": "itk",
       "features": [
-        "opencl"
+        "opencl",
+        "rtk",
+        "tools"
       ]
     },
     {
