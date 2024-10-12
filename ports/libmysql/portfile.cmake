@@ -6,16 +6,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
     REF mysql-${VERSION}
-    SHA512 5df45c1ce1e2c620856b9274666cf56738d6a0308c33c9c96583b494c987fb0e862e676301109b9e4732070d54e6086596a62ad342f35adc59ca9f749e37b561
+    SHA512 80341fe6bf6738b30721933a31c8c3f033ce8342a3a2defeb83e29219375bff274620f6f21a02ee6f4e77f0d3a858a20487436a5afd0a95ea35b0523812c52ab
     HEAD_REF master
     PATCHES
         dependencies.patch
         install-exports.patch
         fix_dup_symbols.patch
         cross-build.patch
+        fix-pdb-install-path.patch
 )
 
-file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_70_0")
+file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_*")
 list(REMOVE_ITEM third_party "${SOURCE_PATH}/extra/libedit")
 if (third_party)
     file(REMOVE_RECURSE ${third_party})
@@ -72,6 +73,8 @@ vcpkg_cmake_configure(
         -DMYSQL_MAINTAINER_MODE=OFF
         -DBUNDLE_RUNTIME_LIBRARIES=OFF
         -DDOWNLOAD_BOOST=OFF
+        -DWITH_AUTHENTICATION_KERBEROS=OFF
+        -DWITH_AUTHENTICATION_LDAP_DEFAULT=OFF
         -DWITH_CURL=none
         -DWITH_EDITLINE=bundled # not in vcpkg
         -DWITH_LZ4=system
@@ -91,6 +94,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql)
 vcpkg_fixup_pkgconfig()
 
@@ -146,5 +150,6 @@ file(INSTALL "${CURRENT_PORT_DIR}/libmysql-config.cmake" DESTINATION "${CURRENT_
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(libedit_copying "${SOURCE_PATH}/COPYING for libedit")
-file(COPY_FILE "${SOURCE_PATH}/extra/libedit/libedit-20210910-3.1/COPYING" "${libedit_copying}")
+file(GLOB libedit_copying_infile "${SOURCE_PATH}/extra/libedit/libedit-*/COPYING")
+file(COPY_FILE "${libedit_copying_infile}" "${libedit_copying}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${libedit_copying}")

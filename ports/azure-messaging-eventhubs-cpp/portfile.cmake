@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "azure-messaging-eventhubs_${VERSION}"
     SHA512 e479d1a60be139d56ba8ecf7896d94dd90bf0b6fa668fbc74abe228733c9c6709693c42c2a05c0c39a17a46596dba2fe8fe606a805217df830f8ccf30769932c
     HEAD_REF main
+    PATCHES
+      useragent.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs")

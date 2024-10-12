@@ -1,7 +1,3 @@
-# WINDOWS_EXPORT_ALL_SYMBOLS doesn't work.
-# unresolved external symbol "public: static unsigned int const foonathan::memory::detail::memory_block_stack::implementation_offset
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_download_distfile(
     REMOVE_TOOL_STATIC_LINKING_CROSS_COMPILATION_PATCH
     URLS https://github.com/foonathan/memory/commit/abb0bff7a232572b1fce304dd2e2a2d5c0a6806c.patch?full_index=1
@@ -115,4 +111,4 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/nodesize_dbg${EXECUTABLE_SUFFIX}")
 endif()
 
 # Handle copyright
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,7 +1,6 @@
 {
   "name": "libsystemd",
-  "version": "255",
-  "port-version": 2,
+  "version": "256.4",
   "description": "Libsystemd",
   "homepage": "https://github.com/systemd/systemd",
   "license": null,

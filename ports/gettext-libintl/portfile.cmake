@@ -1,11 +1,22 @@
-if(VCPKG_TARGET_IS_LINUX)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    if(NOT EXISTS "/usr/include/libintl.h")
+if(VCPKG_TARGET_IS_LINUX AND NOT X_VCPKG_FORCE_VCPKG_GETTEXT_LIBINTL)
+    set(detection_results "${CURRENT_BUILDTREES_DIR}/detected-intl-${TARGET_TRIPLET}.cmake.log")
+    file(REMOVE "${detection_results}")
+    block(SCOPE_FOR VARIABLES)
+        set(VCPKG_BUILD_TYPE release)
+        vcpkg_cmake_configure(SOURCE_PATH "${CURRENT_PORT_DIR}/detect" OPTIONS "-DOUTFILE=${detection_results}")
+    endblock()
+    include("${detection_results}")
+    message(STATUS "libintl header: ${VCPKG_DETECTED_LIBINTL_H}")
+    if(NOT VCPKG_DETECTED_LIBINTL_H)
         message(FATAL_ERROR
-            "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
-            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+            "When targeting Linux, `libintl.h` is expected to come from a system package. "
+            "Please use the following commands or the equivalent to install development files.\n"
+            "On Debian and Ubuntu derivatives: \"sudo apt-get install libc-dev\"\n"
+            "On Alpine: \"apk add gettext-dev\"\n"
         )
     endif()
+
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
 endif()

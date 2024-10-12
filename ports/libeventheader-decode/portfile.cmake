@@ -4,18 +4,30 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "microsoft/LinuxTracepoints"
     REF "v${VERSION}"
-    SHA512 b296ad3ee102d45cd8bccb2e3ed478f3d7adff8b3650251926189fd6efbca38728db61208af1627c08c16641b349e31e9366c6bc1965795063f39a167181f067
+    SHA512 baf27c967b2fa1fb8e8684951fd8e12e40fe9c23f5052a2d77c63eceab6ddfc112537422b97c37cfb0e479361fa8aedea6d8d7edfae91810f1ed696060fcb822
     HEAD_REF main)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools  BUILD_TOOLS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/libeventheader-decode-cpp"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_SAMPLES=OFF
-        -DBUILD_TOOLS=OFF)
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+if (BUILD_TOOLS)
+    vcpkg_copy_tools(
+        TOOL_NAMES perf-decode
+        AUTO_CLEAN)
+endif()
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME eventheader-decode

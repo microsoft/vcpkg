@@ -1,7 +1,7 @@
 {
   "name": "unittest-cpp",
   "version-semver": "2.0.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "A lightweight unit testing framework for C++",
   "homepage": "https://github.com/unittest-cpp/unittest-cpp",
   "dependencies": [

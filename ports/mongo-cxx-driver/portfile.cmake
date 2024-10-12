@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 cc09ccbb926b1f00ebd9ead5afda150d0d8a8619c2439f8a9bc01a1f49ebfc0cee91ca2019d97a883a469a8594961b5b74fcc06525dce38461e2003a9f1894c4
+    SHA512 620112ab91ad5fc0eb900b4b271cf40bac92ec728f0da2053dd42a80cc444910c3784f83c638b5aa1323cfa57308622b034b5c9275c4d2c92cbbbd7bb3eb1b08
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
 )
+
 file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
 # This port offered C++17 ABI alternative via features.
@@ -28,6 +29,7 @@ vcpkg_cmake_configure(
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DMONGOCXX_HEADER_INSTALL_DIR=include
+        -DNEED_DOWNLOAD_C_DRIVER=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Boost
         BSONCXX_HEADER_INSTALL_DIR

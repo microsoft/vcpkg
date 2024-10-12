@@ -1,9 +1,18 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1
+param([string]$SasToken)
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
-$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.2/PowerShell-7.4.2-win-x64.msi'
-InstallMSI -Url $PwshUrl -Name 'PowerShell Core'
+[string]$PwshUrl
+if ([string]::IsNullOrEmpty($SasToken)) {
+  $PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.5/PowerShell-7.4.5-win-x64.msi'
+} else {
+  $SasToken = $SasToken.Replace('"', '')
+  $PwshUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/PowerShell-7.4.5-win-x64.msi?$SasToken"
+}
+
+DownloadAndInstall -Url $PwshUrl -Name 'PowerShell Core' -Args @('/quiet', '/norestart')
