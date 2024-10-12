@@ -6081,7 +6081,7 @@
       "port-version": 0
     },
     "msgpack-c": {
-      "baseline": "6.0.0",
+      "baseline": "6.1.0",
       "port-version": 0
     },
     "msgpack11": {
