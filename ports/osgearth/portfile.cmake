@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 2f764eb1fff21cff57a04eceb73643b372c8b70899114c88cdf9928d525517214959745cb70b99ad3d1def946bfb3f58f16b4969ee4117b7563398f2410ee3e2
     HEAD_REF master
     PATCHES
-		remove-lerc-gltf.patch
-		install-plugins.patch
+        remove-lerc-gltf.patch
+        install-plugins.patch
 )
 
 if("tools" IN_LIST FEATURES)
