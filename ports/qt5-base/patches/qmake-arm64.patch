@@ -1,0 +1,31 @@
+From b66ecb295ecc3981b1c21f01d62c9066f5d6e6ca Mon Sep 17 00:00:00 2001
+From: Oliver Wolff <oliver.wolff@qt.io>
+Date: Mon, 15 Jul 2024 09:31:30 +0200
+Subject: [PATCH 1/1] qmake: Add support for arm64 hosts on Windows
+
+Pick-to: 6.8
+Change-Id: I0096300fce870ef4411b071f074588a6420188e0
+Reviewed-by:  Alexey Edelev <alexey.edelev@qt.io>
+Reviewed-by: Joerg Bornemann <joerg.bornemann@qt.io>
+---
+ qmake/library/qmakeevaluator.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/qmake/library/qmakeevaluator.cpp b/qmake/library/qmakeevaluator.cpp
+index df3f92d7d5df..0ee8cdbf11e1 100644
+--- a/qmake/library/qmakeevaluator.cpp
++++ b/qmake/library/qmakeevaluator.cpp
+@@ -1046,6 +1046,11 @@ void QMakeEvaluator::loadDefaults()
+     case PROCESSOR_ARCHITECTURE_AMD64:
+         archStr = ProString("x86_64");
+         break;
++# endif
++# ifdef PROCESSOR_ARCHITECTURE_ARM64
++    case PROCESSOR_ARCHITECTURE_ARM64:
++        archStr = ProString("arm64");
++        break;
+ # endif
+     case PROCESSOR_ARCHITECTURE_INTEL:
+         archStr = ProString("x86");
+-- 
+2.16.3
