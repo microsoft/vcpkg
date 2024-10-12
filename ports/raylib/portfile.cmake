@@ -18,6 +18,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         android.diff
+        fix-link-path.patch
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"

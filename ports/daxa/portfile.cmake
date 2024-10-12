@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 53e31bd89170ee18f404ae778c6fd0d5a1cefa2faf9f28e98d793c79dddeb03acda5525c98b875e45024de5db9c5e9cd9216042978c3a107587fefb6343db1e0
     HEAD_REF master
+    PATCHES
+        fix-std-sort.patch #https://github.com/Ipotrick/Daxa/pull/96
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -50,7 +52,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,60 @@
+diff --git a/core/vsl/Templates/vsl_vector_io+uint_64-.cxx b/core/vsl/Templates/vsl_vector_io+uint_64-.cxx
+index 8807c44..a8090ca 100644
+--- a/core/vsl/Templates/vsl_vector_io+uint_64-.cxx
++++ b/core/vsl/Templates/vsl_vector_io+uint_64-.cxx
+@@ -1,6 +1,6 @@
+ #include <vxl_config.h>
+ 
+-#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG || VXL_INT_IS_LONG_LONG )
++#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG )
+ #include <vsl/vsl_vector_io.hxx>
+ VSL_VECTOR_IO_INSTANTIATE(vxl_uint_64);
+ 
+diff --git a/core/vsl/vsl_binary_explicit_io.h b/core/vsl/vsl_binary_explicit_io.h
+index 9ff669f..87fff4f 100644
+--- a/core/vsl/vsl_binary_explicit_io.h
++++ b/core/vsl/vsl_binary_explicit_io.h
+@@ -141,7 +141,7 @@ macro (int);
+ macro (unsigned int);
+ macro (long);
+ macro (unsigned long);
+-#if VXL_HAS_INT_64 && ! ( VXL_INT_64_IS_LONG || VXL_INT_64_IS_LONGLONG )
++#if VXL_HAS_INT_64 && ! ( VXL_INT_64_IS_LONG )
+ macro (vxl_int_64);
+ macro (vxl_uint_64);
+ #endif
+@@ -486,7 +486,7 @@ inline std::size_t vsl_convert_from_arbitrary_length(const unsigned char* buffer
+ 
+ /////////////////////////////////////////////////////////////////////////
+ 
+-#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG || VXL_INT_64_IS_LONGLONG )
++#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG )
+ 
+ //: Decode a buffer of arbitrary length integers
+ // Converts from the integers from the arbitrary length format into
+diff --git a/core/vsl/vsl_binary_io.cxx b/core/vsl/vsl_binary_io.cxx
+index c36142b..af76327 100644
+--- a/core/vsl/vsl_binary_io.cxx
++++ b/core/vsl/vsl_binary_io.cxx
+@@ -65,7 +65,7 @@ MACRO_MAKE_INTEGER_READ_WRITE(short);
+ MACRO_MAKE_INTEGER_READ_WRITE(unsigned short);
+ MACRO_MAKE_INTEGER_READ_WRITE(long);
+ MACRO_MAKE_INTEGER_READ_WRITE(unsigned long);
+-#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG || VXL_INT_64_IS_LONGLONG)
++#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG )
+ MACRO_MAKE_INTEGER_READ_WRITE(vxl_int_64);
+ MACRO_MAKE_INTEGER_READ_WRITE(vxl_uint_64);
+ #endif
+diff --git a/core/vsl/vsl_binary_io.h b/core/vsl/vsl_binary_io.h
+index d38478a..1a68137 100644
+--- a/core/vsl/vsl_binary_io.h
++++ b/core/vsl/vsl_binary_io.h
+@@ -376,7 +376,7 @@ void vsl_b_read(vsl_b_istream& is,unsigned long& n );
+ inline void vsl_print_summary(std::ostream& os, unsigned long n )
+ {  os << n; }
+ 
+-#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG || VXL_INT_64_IS_LONGLONG )
++#if VXL_HAS_INT_64 && !( VXL_INT_64_IS_LONG )
+ 
+ //: Write  to vsl_b_ostream
+ void vsl_b_write(vsl_b_ostream& os,vxl_int_64 n );

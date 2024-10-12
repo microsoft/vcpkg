@@ -60,6 +60,8 @@ else()
     vcpkg_extract_source_archive(source_path_release
         ARCHIVE "${ARCHIVE}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        PATCHES
+            pcap_socket.diff
     )
 
     vcpkg_execute_required_process(
@@ -84,6 +86,8 @@ else()
         vcpkg_extract_source_archive(source_path_debug
             ARCHIVE "${ARCHIVE}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            PATCHES
+                pcap_socket.diff
         )
 
         vcpkg_execute_required_process(
