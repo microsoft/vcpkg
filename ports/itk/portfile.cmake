@@ -139,7 +139,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_PKGCONFIG_FILES=OFF
         -DITK_DOXYGEN_HTML=OFF
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
@@ -160,14 +159,10 @@ vcpkg_cmake_configure(
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past and still is. ITK still has not figured out how to do it correctly!
         -DITK_USE_SYSTEM_GDCM=ON
         -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG
-        -DITK_USE_SYSTEM_DCMTK=ON
-        -DDCMTK_USE_ICU=ON
-        -DITK_USE_SYSTEM_ICU=ON
         #-DITK_USE_SYSTEM_VXL=ON
         #-DITK_USE_SYSTEM_CASTXML=ON # needs to be added to vcpkg_find_acquire_program https://data.kitware.com/api/v1/file/hashsum/sha512/b8b6f0aff11fe89ab2fcd1949cc75f2c2378a7bc408827a004396deb5ff5a9976bffe8a597f8db1b74c886ea39eb905e610dce8f5bd7586a4d6c196d7349da8d/download
         -DITK_USE_SYSTEM_MINC=ON
         -DITK_FORBID_DOWNLOADS=OFF # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break. Remote Modules would probably break with this!
-        -DINSTALL_GTEST=OFF
         -DITK_USE_SYSTEM_GOOGLETEST=ON
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
 
@@ -192,9 +187,8 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
     MAYBE_UNUSED_VARIABLES
-        DCMTK_USE_ICU # Used by DCMTK
         ITK_USE_SYSTEM_GOOGLETEST
-        ITK_USE_SYSTEM_ICU # Used by DCMTK
+        RTK_BUILD_APPLICATIONS
 )
 if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
