@@ -1,7 +1,6 @@
 {
   "name": "vxl",
-  "version": "2.0.2",
-  "port-version": 7,
+  "version": "3.5.0",
   "description": "A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.",
   "homepage": "https://vxl.github.io/",
   "license": null,

@@ -6,18 +6,16 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vxl/vxl
-    REF dac1c7ed8e183e9c6de8b928c8b0294a7bd1d8ee # v2.0.2
-    SHA512 4c6f6dcd793a50cbbc9c7f61c561ed4a747ded67e3dceb09792998c0f0d4294445a441fed668d59297560f196274b1c25593ce67b0aa7597cbb773328e8612c0
+    REF v${VERSION}
+    SHA512 0b33e12557315058e7786c2049af3b01f1208e50660ccbc45f4d9a4dba4eeadfa5e3125380d8781eed2a9abf1d153ffb71c416ed2d196ab4194f5b3722fe6f2b
     HEAD_REF master
     PATCHES
         cmake-package.diff
         devendor.diff
         disable-tests.diff
         file_formats.diff
-        int_64.diff
         limits.diff
         mingw.diff
-        omit-broken-install.diff
         openjpeg.diff
 )
 file(GLOB_RECURSE vendored_sources "${SOURCE_PATH}/v3p/*.c" "${SOURCE_PATH}/v3p/*.cpp" "${SOURCE_PATH}/v3p/*.cxx")

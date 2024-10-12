@@ -9485,8 +9485,8 @@
       "port-version": 0
     },
     "vxl": {
-      "baseline": "2.0.2",
-      "port-version": 7
+      "baseline": "3.5.0",
+      "port-version": 0
     },
     "wabt": {
       "baseline": "1.0.36",
