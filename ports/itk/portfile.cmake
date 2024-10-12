@@ -119,19 +119,42 @@ endif()
 if("python" IN_LIST FEATURES)
     message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
     vcpkg_get_vcpkg_installed_python(PYTHON3)
-    vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
-    get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
         -DITK_USE_SYSTEM_CASTXML=ON
         "-DCASTXML_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/castxml/bin/castxml${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
-        "-DSWIG_EXECUTABLE=${SWIG}"
-        "-DSWIG_DIR=${SWIG_DIR}"
-        )
+    )
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
+
+    vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
+    vcpkg_execute_required_process(
+        COMMAND "${SWIG}" -version
+        OUTPUT_VARIABLE swig_version
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "swig-version-${TARGET_TRIPLET}"
+    )
+    string(REGEX REPLACE ".*Version ([0-9.]*).*" "\\1" swig_version "${swig_version}")
+    set(swig_expected "4.2.0")
+    if(swig_version VERSION_GREATER_EQUAL swig_expected)
+        vcpkg_execute_required_process(
+            COMMAND "${SWIG}" -swiglib
+            OUTPUT_VARIABLE swiglib
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "swiglib-${TARGET_TRIPLET}"
+        )
+        list(APPEND ADDITIONAL_OPTIONS
+            -DITK_USE_SYSTEM_SWIG=ON
+            "-DSWIG_EXECUTABLE=${SWIG}"
+            "-DSWIG_DIR=${swiglib}"
+        )
+    else()
+        message(WARNING "Found swig ${swig_version}, but TK needs ${swig_expected}. A binary will be downloaded.")
+    endif()
 endif()
+
 if("opencv" IN_LIST FEATURES)
     message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
     list(APPEND ADDITIONAL_OPTIONS
