@@ -6121,7 +6121,7 @@
       "port-version": 1
     },
     "mujs": {
-      "baseline": "1.3.4",
+      "baseline": "1.3.5",
       "port-version": 0
     },
     "munit": {
