@@ -67,23 +67,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 if("cufftw" IN_LIST FEATURES)
     # Alternativly set CUFFT_LIB and CUFFTW_LIB
     if(VCPKG_TARGET_IS_WINDOWS)
-        file(TO_CMAKE_PATH "$ENV{CUDA_PATH}" CUDA_PATH)
-        set(CUDA_LIB_PATH "${CUDA_PATH}")
-
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            string(APPEND CUDA_LIB_PATH "/lib/x64")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            string(APPEND CUDA_LIB_PATH "/lib/Win32")
-            message(FATAL_ERROR "CUFFTW is not supported on architecture ${VCPKG_TARGET_ARCHITECTURE}")
-        else()
-            message(FATAL_ERROR "Architecture ${VCPKG_TARGET_ARCHITECTURE} not supported !")
-        endif()
-
+        vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
         list(APPEND ADDITIONAL_OPTIONS
-             "-DFFTW_LIB_SEARCHPATH=${CUDA_LIB_PATH}"
-             "-DFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
-             "-DCUFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
-             )
+            "-DFFTW_LIB_SEARCHPATH=${cuda_toolkit_root}/lib/x64"
+            "-DFFTW_INCLUDE_PATH=${cuda_toolkit_root}/include"
+            "-DCUFFTW_INCLUDE_PATH=${cuda_toolkit_root}/include"
+        )
     endif()
 endif()
 
