@@ -4,7 +4,7 @@
   "description": "D++ Extremely Lightweight C++ Discord Library.",
   "homepage": "https://dpp.dev/",
   "license": "Apache-2.0",
-  "supports": "(windows & !static & !uwp) | linux | osx",
+  "supports": "(windows & !static & !uwp & !arm64) | linux | osx",
   "dependencies": [
     "nlohmann-json",
     "openssl",
