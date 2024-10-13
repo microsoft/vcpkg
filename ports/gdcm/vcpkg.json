@@ -3,13 +3,14 @@
   "version": "3.0.24",
   "description": "Grassroots DICOM library",
   "homepage": "https://github.com/malaterre/GDCM",
-  "license": "BSD-3-Clause",
-  "supports": "!uwp & !(windows & arm)",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "expat",
+    "getopt",
     {
-      "name": "getopt",
-      "platform": "windows & !mingw"
+      "name": "libiconv",
+      "platform": "!windows"
     },
     "openjpeg",
     {
