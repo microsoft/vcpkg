@@ -12,8 +12,8 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
      DESTINATION "${SOURCE_PATH}"
 )
 
-# Define the LM_EXPORT macro for static builds Windows OS
-if(VCPKG_TARGET_IS_WINDOWS AND NOT vcpkg_is_feature_enabled(, shared)) 
+# Define the LM_EXPORT macro for static builds on Windows OS
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
 endif()
 
