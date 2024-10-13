@@ -1,5 +1,5 @@
 diff --git a/library-vcpkg/CMakeLists.txt b/library-vcpkg/CMakeLists.txt
-index 3148b616..82bed881 100644
+index 3148b616..9574b161 100644
 --- a/library-vcpkg/CMakeLists.txt
 +++ b/library-vcpkg/CMakeLists.txt
 @@ -15,15 +15,13 @@
@@ -45,45 +45,70 @@ index 3148b616..82bed881 100644
  set_target_properties(
  	"${LIB_NAME}" PROPERTIES
  	OUTPUT_NAME "dpp"
-@@ -110,6 +99,11 @@ find_package(OpenSSL REQUIRED)
- find_package(Opus CONFIG REQUIRED)
+@@ -107,28 +96,44 @@ target_link_options(
+ 
+ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(OpenSSL REQUIRED)
+-find_package(Opus CONFIG REQUIRED)
++include("${CMAKE_CURRENT_SOURCE_DIR}/../cmake/FindOpus.cmake")
++find_package(Opus REQUIRED)
  find_package(ZLIB REQUIRED)
  
+-target_link_libraries(
+-	"${LIB_NAME}" PUBLIC
+-	$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
+-	$<$<TARGET_EXISTS:OpenSSL::SSL>:OpenSSL::SSL>
+-	$<$<TARGET_EXISTS:OpenSSL::Crypto>:OpenSSL::Crypto>
+-	$<$<TARGET_EXISTS:Opus::opus>:Opus::opus>
+-	$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
+-	$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
+-)
 +add_subdirectory("${DPP_ROOT_PATH}/mlspp" "mlspp")
 +include_directories("${DPP_ROOT_PATH}/mlspp/include")
 +include_directories("${DPP_ROOT_PATH}/mlspp/lib/bytes/include")
 +include_directories("${DPP_ROOT_PATH}/mlspp/lib/hpke/include")
-+
- target_link_libraries(
- 	"${LIB_NAME}" PUBLIC
- 	$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
-@@ -118,20 +112,13 @@ target_link_libraries(
- 	$<$<TARGET_EXISTS:Opus::opus>:Opus::opus>
- 	$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
- 	$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
-+	$<$<PLATFORM_ID:Windows>:mlspp.lib:mlspp.a>
-+	$<$<PLATFORM_ID:Windows>:mls_vectors.lib:mls_vectors.a>
-+	$<$<PLATFORM_ID:Windows>:bytes.lib:bytes.a>
-+	$<$<PLATFORM_ID:Windows>:tls_syntax.lib:tls_syntax.a>
-+	$<$<PLATFORM_ID:Windows>:hpke.lib:hpke.a>
- )
  
 -if (HAVE_VOICE)
 -	# Private statically linked dependencies
--	target_link_libraries(
++if (_WIN32)
++	target_link_libraries(
++			"${LIB_NAME}" PUBLIC
++			$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
++			$<$<TARGET_EXISTS:OpenSSL::SSL>:OpenSSL::SSL>
++			$<$<TARGET_EXISTS:OpenSSL::Crypto>:OpenSSL::Crypto>
++			$<$<TARGET_EXISTS:Opus::opus>:Opus::opus>
++			$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
++			$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
++			mlspp.lib
++			mls_vectors.lib
++			bytes.lib
++			tls_syntax.lib
++			hpke.lib
++	)
++else()
+ 	target_link_libraries(
 -		${LIB_NAME} PRIVATE
 -		mlspp
 -		mls_vectors
 -		bytes
 -		tls_syntax
 -		hpke
--	)
--endif()
--
- set(CONFIG_FILE_NAME "${PROJECT_NAME}Config.cmake")
- set(EXPORTED_TARGETS_NAME "${PROJECT_NAME}Targets")
- set(EXPORTED_TARGETS_FILE_NAME "${EXPORTED_TARGETS_NAME}.cmake")
-@@ -158,6 +145,7 @@ write_basic_package_version_file(
++			"${LIB_NAME}" PUBLIC
++			$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
++			$<$<TARGET_EXISTS:OpenSSL::SSL>:OpenSSL::SSL>
++			$<$<TARGET_EXISTS:OpenSSL::Crypto>:OpenSSL::Crypto>
++			$<$<TARGET_EXISTS:Opus::opus>:Opus::opus>
++			$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
++			$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
++			mlspp.a
++			mls_vectors.a
++			bytes.a
++			tls_syntax.a
++			hpke.a
+ 	)
+ endif()
+ 
+@@ -158,6 +163,7 @@ write_basic_package_version_file(
  	COMPATIBILITY AnyNewerVersion
  )
  
