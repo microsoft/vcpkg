@@ -44,6 +44,7 @@ if("rtk" IN_LIST FEATURES)
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
     file(RENAME "${RTK_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/RTK")
+    file(COPY_FILE "${SOURCE_PATH}/Modules/Remote/RTK/COPYRIGHT.TXT" "${SOURCE_PATH}/RTK COPYRIGHT.TXT")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -233,4 +234,13 @@ if("rtk" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_DATA_ROOT \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ExternalData/Modules/Remote/RTK/test\"" "")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_list(SET file_list
+    "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/LICENSE"
+)
+if("rtk" IN_LIST FEATURES)
+    vcpkg_list(APPEND file_list
+        "${SOURCE_PATH}/RTK COPYRIGHT.TXT"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${file_list})

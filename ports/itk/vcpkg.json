@@ -92,7 +92,8 @@
     },
     "rtk": {
       "description": "Build RTK Module",
-      "supports": "!x86"
+      "supports": "!x86",
+      "license": null
     },
     "tbb": {
       "description": "Build TBB Module",
