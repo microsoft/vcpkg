@@ -79,11 +79,11 @@ index 3148b616..6ffac39d 100644
 +			$<$<TARGET_EXISTS:Opus::opus>:Opus::opus>
 +			$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
 +			$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
-+			mlspp
-+			mls_vectors
-+			bytes
-+			tls_syntax
-+			hpke
++			mlspp.lib
++			mls_vectors.lib
++			bytes.lib
++			tls_syntax.lib
++			hpke.lib
 +	)
 +else()
  	target_link_libraries(
