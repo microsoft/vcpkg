@@ -1,15 +1,64 @@
 diff --git a/library-vcpkg/CMakeLists.txt b/library-vcpkg/CMakeLists.txt
-index 16df61f4..0c3ee8ca 100644
+index 16df61f4..e2e5b5f0 100644
 --- a/library-vcpkg/CMakeLists.txt
 +++ b/library-vcpkg/CMakeLists.txt
-@@ -15,6 +15,10 @@
+@@ -15,6 +15,9 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  #
 +set(HAVE_VOICE 1)
 +# Fake ssl version number for broken third party build scripts. Does not matter what
 +# value is set here so long as it is >= 1.1.1
-+set(OPENSSL_VERSION "1.1.1f")
  
  add_compile_definitions(HAVE_VOICE)
  
+@@ -51,8 +54,6 @@ if(WIN32)
+ 	add_compile_definitions(WIN32_LEAN_AND_MEAN)
+ 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+ 	add_compile_definitions(_CRT_NONSTDC_NO_DEPRECATE)
+-	# Fake an ssl version number to satisfy MLSPP
+-	set(OPENSSL_VERSION "1.1.1f")
+ endif()
+ 
+ target_compile_options(
+@@ -82,11 +83,6 @@ target_include_directories(
+ 	"$<INSTALL_INTERFACE:include>"
+ )
+ 
+-add_subdirectory("${DPP_ROOT_PATH}/mlspp" "mlspp")
+-include_directories("${DPP_ROOT_PATH}/mlspp/include")
+-include_directories("${DPP_ROOT_PATH}/mlspp/lib/bytes/include")
+-include_directories("${DPP_ROOT_PATH}/mlspp/lib/hpke/include")
+-
+ set_target_properties(
+ 	"${LIB_NAME}" PROPERTIES
+ 	OUTPUT_NAME "dpp"
+@@ -103,6 +99,11 @@ find_package(OpenSSL REQUIRED)
+ find_package(Opus CONFIG REQUIRED)
+ find_package(ZLIB REQUIRED)
+ 
++add_subdirectory("${DPP_ROOT_PATH}/mlspp" "mlspp")
++include_directories("${DPP_ROOT_PATH}/mlspp/include")
++include_directories("${DPP_ROOT_PATH}/mlspp/lib/bytes/include")
++include_directories("${DPP_ROOT_PATH}/mlspp/lib/hpke/include")
++
+ target_link_libraries(
+ 	"${LIB_NAME}" PUBLIC
+ 	$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
+@@ -113,16 +114,6 @@ target_link_libraries(
+ 	$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
+ )
+ 
+-# Private statically linked dependencies
+-target_link_libraries(
+-	${LIB_NAME} PRIVATE
+-	mlspp
+-	mls_vectors
+-	bytes
+-	tls_syntax
+-	hpke
+-)
+-
+ set(CONFIG_FILE_NAME "${PROJECT_NAME}Config.cmake")
+ set(EXPORTED_TARGETS_NAME "${PROJECT_NAME}Targets")
+ set(EXPORTED_TARGETS_FILE_NAME "${EXPORTED_TARGETS_NAME}.cmake")
