@@ -17,6 +17,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         double-conversion.patch
+        fftw.diff
         openjpeg.patch
         openjpeg2.patch
         var_libraries.patch
@@ -54,8 +55,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "cuda"         RTK_USE_CUDA
         #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
         "cufftw"       ITK_USE_CUFFTW
-        "fftw"         ITK_USE_FFTWD
-        "fftw"         ITK_USE_FFTWF
         "opencl"       ITK_USE_GPU
         "tbb"          Module_ITKTBB
         "rtk"          Module_RTK
@@ -86,6 +85,14 @@ if("cufftw" IN_LIST FEATURES)
              "-DCUFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
              )
     endif()
+endif()
+
+if("fftw" IN_LIST FEATURES)
+    # Never set these options to OFF: dual use with feature 'cufftw'
+    list(APPEND ADDITIONAL_OPTIONS
+        -DITK_USE_FFTWD=ON
+        -DITK_USE_FFTWF=ON
+    )
 endif()
 
 if("opencl" IN_LIST FEATURES)
@@ -212,6 +219,7 @@ vcpkg_cmake_configure(
         -DRTK_BUILD_APPLICATIONS=OFF
 
     MAYBE_UNUSED_VARIABLES
+        ITK_USE_SYSTEM_FFTW
         ITK_USE_SYSTEM_GOOGLETEST
         RTK_BUILD_APPLICATIONS
         RTK_USE_CUDA

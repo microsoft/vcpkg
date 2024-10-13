@@ -1,0 +1,46 @@
+diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
+index 709c0cd..1f08467 100644
+--- a/CMake/FindFFTW.cmake
++++ b/CMake/FindFFTW.cmake
+@@ -30,7 +30,17 @@
+ ## to set the initial value of the CMake variable `MKLROOT` (see
+ ## https://software.intel.com/en-us/mkl-linux-developer-guide-scripts-to-set-environment-variables).
+ 
+-if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
++if((ITK_USE_FFTWD OR ITK_USE_FFTWF) AND NOT ITK_USE_CUFFTW)
++  find_path(FFTW_INCLUDE_PATH fftw3.h)
++  if(ITK_USE_FFTWD)
++    find_package(FFTWD NAMES FFTW3 CONFIG)
++    set(FFTWD_LIBRARIES FFTW3::fftw3)
++  endif()
++  if(ITK_USE_FFTWF)
++    find_package(FFTWF NAMES FFTW3f CONFIG)
++    set(FFTWF_LIBRARIES FFTW3::fftw3f)
++  endif()
++elseif(ITK_USE_FFTWD OR ITK_USE_FFTWF)
+ 
+   if(ITK_USE_MKL)
+     # If the user has provided the MKL include path then search nearby for library files
+diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
+index 7a77ae3..c4ffd3a 100644
+--- a/CMake/ITKConfig.cmake.in
++++ b/CMake/ITKConfig.cmake.in
+@@ -1,3 +1,10 @@
++include(CMakeFindDependencyMacro)
++if("@ITK_USE_FFTWD@")
++  find_dependency(FFTW3 CONFIG)
++endif()
++if("@ITK_USE_FFTWF@")
++  find_dependency(FFTW3f CONFIG)
++endif()
+ #-----------------------------------------------------------------------------
+ #
+ # ITKConfig.cmake - ITK CMake configuration file for external projects.
+@@ -108,7 +115,6 @@ set(ITK_FFTW_LIBDIR "@FFTW_LIBDIR@")
+ # Add FFTW include and library directories
+ if (ITK_USE_FFTWF OR ITK_USE_FFTWD)
+   set(ITK_INCLUDE_DIRS ${ITK_INCLUDE_DIRS} "${ITK_FFTW_INCLUDE_PATH}")
+-  set(ITK_LIBRARY_DIRS ${ITK_LIBRARY_DIRS} "${ITK_FFTW_LIBDIR}")
+ endif()
+ 
+ # Add configuration with GPU

@@ -61,7 +61,12 @@
     "fftw": {
       "description": "Enable the FFTW backend",
       "dependencies": [
-        "fftw3"
+        {
+          "name": "fftw3",
+          "features": [
+            "threads"
+          ]
+        }
       ]
     },
     "opencl": {
