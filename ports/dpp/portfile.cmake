@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 664f669ecb2d8cafdfa6dd776fb429cde7d5692157d34f300ffe42cb7711dec69ce194ece5d372c8b070f979e2a341ecb7c018f8825a8acc148d17b3d4043c9b
     PATCHES
-        make-pkgconfig-required.patch
+        explicit-set-have-voice.patch
 )
 
 vcpkg_cmake_configure(
