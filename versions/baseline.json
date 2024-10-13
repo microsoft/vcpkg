@@ -9316,6 +9316,10 @@
       "baseline": "5.2.0",
       "port-version": 0
     },
+    "vcpkg-tool-castxml": {
+      "baseline": "0.6.5",
+      "port-version": 0
+    },
     "vcpkg-tool-gn": {
       "baseline": "2024-02-22",
       "port-version": 0
