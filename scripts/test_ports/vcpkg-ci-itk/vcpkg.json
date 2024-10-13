@@ -9,9 +9,17 @@
       "name": "itk",
       "features": [
         "opencl",
+        "opencv",
         "rtk",
         "tools"
       ]
+    },
+    {
+      "name": "itk",
+      "features": [
+        "vtk"
+      ],
+      "platform": "!android"
     },
     {
       "name": "vcpkg-cmake",
