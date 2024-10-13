@@ -1,5 +1,11 @@
 vcpkg_buildpath_length_warning(37)
 
+vcpkg_download_distfile(PYTHON_GPU_WRAPPING_PATCH
+    URLS https://github.com/InsightSoftwareConsortium/ITK/commit/e9b3d24f782a42f5586169e048b8d289f869d78a.diff?full_index=1
+    FILENAME InsightSoftwareConsortium-ITK-python-gpu-wrapping.patch
+    SHA512 71526320547b0eb5d0c0e0088e92ff60ba06462b82c531c79784d766361805970d9cad550660c7c85b953ec546b32c181aeab5d9f6d4142764d6f765106982a0
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
@@ -18,6 +24,7 @@ vcpkg_from_github(
         opencl.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
+        "${PYTHON_GPU_WRAPPING_PATCH}"
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
 
