@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ee08591..c8c6b61 100644
+index 1d8c8e6..5547d3e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -185,12 +185,14 @@ if(NOT USE_SYSTEM_MARISA)
+@@ -210,12 +210,14 @@ if(NOT USE_SYSTEM_MARISA)
    message(STATUS "Use bundled marisa library.")
    add_subdirectory(deps/marisa-0.2.6)
  else()
@@ -24,19 +24,19 @@ index ee08591..c8c6b61 100644
  
  ######## Subdirectories
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index c0a0b10..91b4037 100644
+index 7768c89..deb826b 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -114,7 +114,7 @@ configure_file(
- add_library(libopencc ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+@@ -115,7 +115,7 @@ add_library(libopencc ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+ add_library(OpenCC::OpenCC ALIAS libopencc)
  set_target_properties(libopencc PROPERTIES POSITION_INDEPENDENT_CODE ON)
  source_group(libopencc FILES ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
 -target_link_libraries(libopencc marisa)
 +target_link_libraries(libopencc PkgConfig::marisa)
- 
- GENERATE_EXPORT_HEADER(
-   libopencc
-@@ -137,6 +137,21 @@ set_target_properties(
+ target_include_directories(libopencc PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+     $<INSTALL_INTERFACE:${DIR_INCLUDE}/opencc>
+@@ -144,6 +144,21 @@ set_target_properties(
        ${OPENCC_VERSION_MAJOR}.${OPENCC_VERSION_MINOR}
  )
  
@@ -57,4 +57,4 @@ index c0a0b10..91b4037 100644
 +
  # Installation
  
- install(
+ if (USE_SYSTEM_MARISA)
