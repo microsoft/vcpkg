@@ -1,5 +1,5 @@
 diff --git a/library-vcpkg/CMakeLists.txt b/library-vcpkg/CMakeLists.txt
-index 3148b616..e2e5b5f0 100644
+index 3148b616..82bed881 100644
 --- a/library-vcpkg/CMakeLists.txt
 +++ b/library-vcpkg/CMakeLists.txt
 @@ -15,15 +15,13 @@
@@ -18,7 +18,7 @@ index 3148b616..e2e5b5f0 100644
 -	file(GLOB THE_SOURCES "${DPP_ROOT_PATH}/src/dpp/events/*.cpp" "${modules_dir}/dpp/voice/stub/*.cpp" "${DPP_ROOT_PATH}/src/dpp/cluster/*.cpp" "${DPP_ROOT_PATH}/src/dpp/*.cpp" "${DPP_ROOT_PATH}/src/dpp/*.rc")
 -endif()
 -
-+file(GLOB THE_SOURCES "${DPP_ROOT_PATH}/src/dpp/events/*.cpp" "${modules_dir}/dpp/voice/enabled/*.cpp" "${DPP_ROOT_PATH}/dpp/dave/*.cpp" "${DPP_ROOT_PATH}/src/dpp/cluster/*.cpp" "${DPP_ROOT_PATH}/src/dpp/*.cpp" "${DPP_ROOT_PATH}/src/dpp/*.rc")
++file(GLOB THE_SOURCES "${DPP_ROOT_PATH}/src/dpp/events/*.cpp" "${DPP_ROOT_PATH}/src/dpp/voice/enabled/*.cpp" "${DPP_ROOT_PATH}/src/dpp/dave/*.cpp" "${DPP_ROOT_PATH}/src/dpp/cluster/*.cpp" "${DPP_ROOT_PATH}/src/dpp/*.cpp" "${DPP_ROOT_PATH}/src/dpp/*.rc")
  
  set(LIB_NAME "${PROJECT_NAME}")
  
@@ -57,8 +57,15 @@ index 3148b616..e2e5b5f0 100644
  target_link_libraries(
  	"${LIB_NAME}" PUBLIC
  	$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
-@@ -120,18 +114,6 @@ target_link_libraries(
+@@ -118,20 +112,13 @@ target_link_libraries(
+ 	$<$<TARGET_EXISTS:Opus::opus>:Opus::opus>
+ 	$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
  	$<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
++	$<$<PLATFORM_ID:Windows>:mlspp.lib:mlspp.a>
++	$<$<PLATFORM_ID:Windows>:mls_vectors.lib:mls_vectors.a>
++	$<$<PLATFORM_ID:Windows>:bytes.lib:bytes.a>
++	$<$<PLATFORM_ID:Windows>:tls_syntax.lib:tls_syntax.a>
++	$<$<PLATFORM_ID:Windows>:hpke.lib:hpke.a>
  )
  
 -if (HAVE_VOICE)
@@ -76,6 +83,14 @@ index 3148b616..e2e5b5f0 100644
  set(CONFIG_FILE_NAME "${PROJECT_NAME}Config.cmake")
  set(EXPORTED_TARGETS_NAME "${PROJECT_NAME}Targets")
  set(EXPORTED_TARGETS_FILE_NAME "${EXPORTED_TARGETS_NAME}.cmake")
+@@ -158,6 +145,7 @@ write_basic_package_version_file(
+ 	COMPATIBILITY AnyNewerVersion
+ )
+ 
++# Private statically linked dependencies
+ install(
+ 	DIRECTORY "${DPP_ROOT_PATH}/include/"
+ 	DESTINATION "include"
 diff --git a/src/dpp/discordvoiceclient.cpp b/src/dpp/discordvoiceclient.cpp
 index 64e15982..ddc11430 100644
 --- a/src/dpp/discordvoiceclient.cpp
