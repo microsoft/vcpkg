@@ -111,6 +111,8 @@ if("python" IN_LIST FEATURES)
     get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
+        -DITK_USE_SYSTEM_CASTXML=ON
+        "-DCASTXML_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/castxml/bin/castxml${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
         "-DSWIG_EXECUTABLE=${SWIG}"

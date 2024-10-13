@@ -83,7 +83,11 @@
     "python": {
       "description": "Python functionality for ITK",
       "dependencies": [
-        "python3"
+        "python3",
+        {
+          "name": "vcpkg-tool-castxml",
+          "host": true
+        }
       ]
     },
     "rtk": {
