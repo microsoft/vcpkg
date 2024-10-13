@@ -1,0 +1,12 @@
+diff --git a/library-vcpkg/CMakeLists.txt b/library-vcpkg/CMakeLists.txt
+index 16df61f4..6441c48b 100644
+--- a/library-vcpkg/CMakeLists.txt
++++ b/library-vcpkg/CMakeLists.txt
+@@ -15,6 +15,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ #
++set(HAVE_VOICE 1)
+ 
+ add_compile_definitions(HAVE_VOICE)
+ 
