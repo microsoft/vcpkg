@@ -9,10 +9,6 @@
     "double-conversion",
     "eigen3",
     "expat",
-    {
-      "name": "fftw3",
-      "default-features": false
-    },
     "gdcm",
     {
       "name": "hdf5",
@@ -60,6 +56,12 @@
       "description": "Use CUDA FFTW",
       "dependencies": [
         "cuda"
+      ]
+    },
+    "fftw": {
+      "description": "Enable the FFTW backend",
+      "dependencies": [
+        "fftw3"
       ]
     },
     "opencl": {

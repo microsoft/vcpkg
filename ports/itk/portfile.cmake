@@ -54,6 +54,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "cuda"         RTK_USE_CUDA
         #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
         "cufftw"       ITK_USE_CUFFTW
+        "fftw"         ITK_USE_FFTWD
+        "fftw"         ITK_USE_FFTWF
         "opencl"       ITK_USE_GPU
         "tbb"          Module_ITKTBB
         "rtk"          Module_RTK

@@ -8,6 +8,7 @@
     {
       "name": "itk",
       "features": [
+        "fftw",
         "opencl",
         "opencv",
         "rtk",
