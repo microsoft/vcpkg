@@ -78,7 +78,6 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
         PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32
-        
 )
 
 if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/vtk.pc")
