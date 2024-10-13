@@ -12,6 +12,11 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
      DESTINATION "${SOURCE_PATH}"
 )
 
+# Define the LM_EXPORT macro for static builds Windows OS
+if(VCPKG_TARGET_IS_WINDOWS AND NOT vcpkg_is_feature_enabled(, shared)) 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
@@ -21,12 +26,13 @@ else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         DISABLE_PARALLEL_CONFIGURE
-)
+    )
 endif()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-#vcpkg_fixup_cmake_targets(CONFIG_PATH lib)
+# Uncomment if needed for CMake target fixup
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
