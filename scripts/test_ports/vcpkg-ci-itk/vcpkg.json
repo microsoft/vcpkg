@@ -1,26 +1,47 @@
 {
   "name": "vcpkg-ci-itk",
   "version-string": "ci",
-  "description": "Validates itk",
+  "description": "Validates itk; intentional permutation of features",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
     {
       "name": "itk",
       "features": [
-        "fftw",
-        "opencl",
-        "opencv",
-        "rtk",
-        "tools"
-      ]
+        "opencv"
+      ],
+      "platform": "arm64"
     },
     {
       "name": "itk",
       "features": [
         "vtk"
       ],
-      "platform": "!android"
+      "platform": "osx | windows"
+    },
+    {
+      "name": "itk",
+      "features": [
+        "cufftw",
+        "opencl"
+      ],
+      "platform": "x64 & (linux | windows)"
+    },
+    {
+      "name": "itk",
+      "features": [
+        "fftw",
+        "opencl"
+      ],
+      "platform": "android | osx"
+    },
+    {
+      "name": "itk",
+      "features": [
+        "rtk",
+        "tools"
+      ],
+      "platform": "arm64 | x64"
     },
     {
       "name": "vcpkg-cmake",
