@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openslide/openslide
     REF "v${VERSION}" 
-    SHA512 5b0315215f9cada56c85e0068c9493a66c70bae1230cc01dd00ce364414f53bf285728dc860d7de0ac30a10bdc3c1a76f728446b96ca337a62d588f5cc2a971c
+    SHA512 98822994dd437f5a7d40e0a769fc9c63eda46823ede0547f530390b78b256631a50f66ac0d63d32a8875fc38283f96bc2f624f1023fe98772e9a89a8d6afb514
     HEAD_REF master
     PATCHES remove-w-flags.patch
             ${PATCHES}
