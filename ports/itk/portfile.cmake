@@ -105,15 +105,21 @@ if("tools" IN_LIST FEATURES)
                                rtkwangdisplaceddetectorweighting rtkwarpedbackprojectsequence rtkwarpedforwardprojectsequence rtkwaveletsdenoising rtkxradgeometry)
     endif()
 endif()
-if("vtk" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+
+if("vtk" IN_LIST FEATURES AND EXISTS "${CURRENT_INSTALLED_DIR}/share/vtk/VTKPython-targets.cmake")
+    # 'vtk[python]' is built using the installed 'python3'.
+    # For 'find_package(vtk)', itk needs to provide the same version of python.
+    # Here, it is a purely *transitive* dependency via 'vtk[python]'.
+    include("${CURRENT_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by mvtk if vtk[python] was build
-         )
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}" 
+    )
 endif()
+
 if("python" IN_LIST FEATURES)
     message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
     get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
     list(APPEND ADDITIONAL_OPTIONS
