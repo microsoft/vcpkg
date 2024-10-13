@@ -70,7 +70,7 @@ index 3148b616..6ffac39d 100644
  
 -if (HAVE_VOICE)
 -	# Private statically linked dependencies
-+if (_WIN32)
++if (WIN32)
 +	target_link_libraries(
 +			"${LIB_NAME}" PUBLIC
 +			$<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:nlohmann_json::nlohmann_json>
