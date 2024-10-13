@@ -1,11 +1,11 @@
 diff --git a/library-vcpkg/CMakeLists.txt b/library-vcpkg/CMakeLists.txt
-index 16df61f4..6441c48b 100644
+index 16df61f4..0c3ee8ca 100644
 --- a/library-vcpkg/CMakeLists.txt
 +++ b/library-vcpkg/CMakeLists.txt
 @@ -15,6 +15,10 @@
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ #
 +set(HAVE_VOICE 1)
 +# Fake ssl version number for broken third party build scripts. Does not matter what
 +# value is set here so long as it is >= 1.1.1
