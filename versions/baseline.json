@@ -2733,7 +2733,7 @@
       "port-version": 4
     },
     "ffnvcodec": {
-      "baseline": "12.1.14.0",
+      "baseline": "12.2.72.0",
       "port-version": 0
     },
     "fftw3": {
