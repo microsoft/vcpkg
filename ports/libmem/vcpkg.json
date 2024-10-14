@@ -53,15 +53,7 @@
       "features": [
         "target-x86"
       ],
-      "platform": "x64 | x86"
-    },
-    {
-      "name": "llvm",
-      "default-features": false,
-      "features": [
-        "target-x86"
-      ],
-      "platform": "osx | ios"
+      "platform": "osx | ios | x64 | x86"
     },
     {
       "name": "vcpkg-cmake",
