@@ -2,15 +2,14 @@ diff --git a/src/corelib/time/qtimezonelocale_p.h b/src/corelib/time/qtimezonelo
 index 50e9fc37ef0..18c147c9b50 100644
 --- a/src/corelib/time/qtimezonelocale_p.h
 +++ b/src/corelib/time/qtimezonelocale_p.h
-@@ -35,7 +35,7 @@ namespace QtTimeZoneLocale {
+@@ -35,6 +35,6 @@ namespace QtTimeZoneLocale {
  #if QT_CONFIG(icu)
  QString ucalTimeZoneDisplayName(UCalendar *ucal, QTimeZone::TimeType timeType,
                                  QTimeZone::NameType nameType,
 -                                const QString &localeCode);
 +                                const QByteArray &localeCode);
  #else
- 
- QList<QByteArrayView> ianaIdsForTerritory(QLocale::Territory territory);
+ // Define data types for QTZL_data_p.h
 diff --git a/src/corelib/time/qtimezoneprivate_icu.cpp b/src/corelib/time/qtimezoneprivate_icu.cpp
 index d992ebfc3aa..f42ffe07678 100644
 --- a/src/corelib/time/qtimezoneprivate_icu.cpp
