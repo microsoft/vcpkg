@@ -28,6 +28,10 @@ file(REMOVE
     "${SOURCE_PATH}/src/cmake/modules/FindTBB.cmake"
 )
 
+if("viewer" IN_LIST FEATURES)
+    message(WARNING "iv.exe requires tool windeployqt.exe provided by qtbase ")  
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libraw      USE_LIBRAW
