@@ -1,14 +1,3 @@
-From 89f26d75a28668689fa7ab00d6058d086f33807c Mon Sep 17 00:00:00 2001
-From: Carlo Cabrera <30379873+carlocab@users.noreply.github.com>
-Date: Tue, 8 Oct 2024 04:09:34 +0800
-Subject: [PATCH 1/2] Add `QuicTransportBaseLite` to CMake build
-
-This is the analogue of 0b2743fdae9b746659815afdf00611fe7999282e for
-CMake.
----
- quic/api/CMakeLists.txt | 1 +
- 1 file changed, 1 insertion(+)
-
 diff --git a/quic/api/CMakeLists.txt b/quic/api/CMakeLists.txt
 index 5522347c5..a0a34761e 100644
 --- a/quic/api/CMakeLists.txt
@@ -21,17 +10,6 @@ index 5522347c5..a0a34761e 100644
    QuicTransportFunctions.cpp
  )
  
-
-From f4286b2775e0bb0a7dcf00290e76469dfe25f22c Mon Sep 17 00:00:00 2001
-From: Carlo Cabrera <30379873+carlocab@users.noreply.github.com>
-Date: Tue, 8 Oct 2024 04:24:34 +0800
-Subject: [PATCH 2/2] Add `AckedPacketIterator` to CMake build
-
-This is the analogue of 654c5b90d2e9431e71f0dd3d5be990200306acc4 for
-CMake.
----
- quic/state/CMakeLists.txt | 1 +
- 1 file changed, 1 insertion(+)
 
 diff --git a/quic/state/CMakeLists.txt b/quic/state/CMakeLists.txt
 index 0916546fe..14297bb30 100644
