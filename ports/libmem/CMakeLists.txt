@@ -11,6 +11,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /INCREMENTAL:NO")
 
+set(LIBMEM_ARCH ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "Force a specific architecture")
+
 project(libmem LANGUAGES C CXX ASM)
 
 # External dependencies: Capstone, Keystone, LLVM
@@ -19,7 +21,7 @@ pkg_check_modules(KEYSTONE REQUIRED keystone)
 pkg_check_modules(CAPSTONE REQUIRED capstone)
 
 # Find ZSTD
-find_package(zstd REQUIRED CONFIG)
+find_package(ZSTD NAMES zstd REQUIRED)
 
 # Find LLVM
 find_package(LLVM REQUIRED CONFIG)
@@ -27,7 +29,7 @@ find_package(LLVM REQUIRED CONFIG)
 # Include directories from Keystone, Capstone, Zstd, and LLVM
 include_directories(${KEYSTONE_INCLUDE_DIRS})
 include_directories(${CAPSTONE_INCLUDE_DIRS})
-include_directories(${zstd_INCLUDE_DIRS})
+include_directories(${ZSTD_INCLUDE_DIRS})
 include_directories(${LLVM_INCLUDE_DIRS})
 
 # Ensure that all dependencies are found
@@ -43,8 +45,8 @@ if(NOT LLVM_FOUND)
     message(FATAL_ERROR "LLVM not found! Please ensure LLVM is installed.")
 endif()
 
-if(NOT zstd_FOUND)
-    message(FATAL_ERROR "zstd not found! Please ensure zstd is installed.")
+if(NOT ZSTD_FOUND)
+    message(FATAL_ERROR "ZSTD not found! Please ensure ZSTD is installed.")
 endif()
 
 # Collect source files
@@ -57,9 +59,19 @@ set(COMMON_DIR "${LIBMEM_DIR}/src/common")
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     file(GLOB_RECURSE LIBMEM_SRC "${LIBMEM_DIR}/src/win/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/winutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    # Add Linux specific file patterns
+    if(${LIBMEM_ARCH} STREQUAL x86_64)
+        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/linux/ptrace/x64/*.c")
+    elseif(${LIBMEM_ARCH} STREQUAL i686 OR ${LIBMEM_ARCH} STREQUAL i386)
+        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/linux/ptrace/x86/*.c")
+    endif()
+    file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/linux/*.c" "${LIBMEM_DIR}/src/linux/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
-    # Add FreeBSD specific file patterns
+    if(${LIBMEM_ARCH} STREQUAL x86_64 OR ${LIBMEM_ARCH} STREQUAL amd64)
+        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/freebsd/ptrace/x64/*.c")
+    elseif(${LIBMEM_ARCH} STREQUAL i686 OR ${LIBMEM_ARCH} STREQUAL i386)
+        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/freebsd/ptrace/x86/*.c")
+    endif()
+    file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/freebsd/*.c" "${LIBMEM_DIR}/src/freebsd/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
@@ -81,9 +93,9 @@ target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES}
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     target_link_libraries(libmem PRIVATE zstd::libzstd)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-    target_link_libraries(libmem PRIVATE zstd dl stdc++ m)
+    target_link_libraries(libmem PRIVATE zstd::libzstd dl stdc++ m)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
-    target_link_libraries(libmem PRIVATE zstd dl kvm procstat elf stdc++ m)
+    target_link_libraries(libmem PRIVATE zstd::libzstd dl kvm procstat elf stdc++ m)
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
