@@ -21,7 +21,7 @@ pkg_check_modules(KEYSTONE REQUIRED keystone)
 pkg_check_modules(CAPSTONE REQUIRED capstone)
 
 # Find ZSTD
-find_package(ZSTD NAMES zstd REQUIRED)
+find_package(zstd CONFIG REQUIRED)
 
 # Find LLVM
 find_package(LLVM REQUIRED CONFIG)

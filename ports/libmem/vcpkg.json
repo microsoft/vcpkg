@@ -1,27 +1,13 @@
 {
   "name": "libmem",
   "version": "5.0.2",
-  "license": "AGPL-3.0-only",
-  "supports": "!uwp & !xbox",
   "description": "Advanced Game Hacking Library for C, Modern C++, Rust and Python (Windows/Linux/FreeBSD) (Process/Memory Hacking) (Hooking/Detouring) (Cross Platform) (x86/x64/ARM/ARM64) (DLL/SO Injection) (Internal/External) (Assembler/Disassembler)",
   "homepage": "https://github.com/rdbo/libmem",
+  "license": "AGPL-3.0-only",
+  "supports": "!uwp & !xbox",
   "dependencies": [
-    {
-      "name": "capstone",
-      "default-features": true
-    },
-    {
-      "name": "keystone",
-      "default-features": true
-    },
-    {
-      "name": "zstd",
-      "default-features": true
-    },
-    {
-      "name": "pkgconf",
-      "default-features": true
-    },
+    "capstone",
+    "keystone",
     {
       "name": "llvm",
       "default-features": false,
@@ -55,6 +41,7 @@
       ],
       "platform": "osx | ios | x64 | x86"
     },
+    "pkgconf",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -70,6 +57,7 @@
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
-    }
+    },
+    "zstd"
   ]
 }

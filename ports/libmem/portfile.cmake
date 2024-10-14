@@ -8,6 +8,11 @@ vcpkg_from_github(
         fix_DLL.patch
 )
 
+# Define the LM_EXPORT macro for static builds on Windows OS
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
 
@@ -59,11 +64,6 @@ endif()
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
      DESTINATION "${SOURCE_PATH}"
 )
-
-# Define the LM_EXPORT macro for static builds on Windows OS
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
-endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
