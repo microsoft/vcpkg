@@ -120,8 +120,8 @@
           ]
         },
         {
-            "name": "qtbase"
-            "default-features": false   
+          "name": "qtbase",
+          "default-features": false
         },
         {
           "name": "qtbase",
