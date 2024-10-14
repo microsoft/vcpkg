@@ -15,6 +15,10 @@
       "default-features": true
     },
     {
+      "name": "zstd",
+      "default-features": true
+    },
+    {
       "name": "pkgconf",
       "default-features": true
     },
@@ -24,8 +28,7 @@
       "features": [
         "clang",
         "libcxx",
-        "libcxxabi",
-        "enable-rtti"
+        "libcxxabi"
       ]
     },
     {
@@ -51,6 +54,14 @@
         "target-x86"
       ],
       "platform": "x64 | x86"
+    },
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "target-x86"
+      ],
+      "platform": "x64-osx"
     },
     {
       "name": "vcpkg-cmake",
