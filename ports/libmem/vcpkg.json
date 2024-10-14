@@ -61,7 +61,7 @@
       "features": [
         "target-x86"
       ],
-      "platform": "x64-osx"
+      "platform": "osx | ios"
     },
     {
       "name": "vcpkg-cmake",
