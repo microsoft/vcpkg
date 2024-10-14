@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_OPENJPEG=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
-        -DVCPKG_TRACE_FIND_PACKAGE=1
 )
 
 vcpkg_cmake_install()

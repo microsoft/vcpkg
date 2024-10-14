@@ -7,7 +7,6 @@
   "supports": "!uwp",
   "dependencies": [
     "expat",
-    "getopt",
     {
       "name": "libiconv",
       "platform": "!windows"
