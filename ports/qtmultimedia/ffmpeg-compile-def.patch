@@ -1,0 +1,13 @@
+diff --git a/src/plugins/multimedia/ffmpeg/CMakeLists.txt b/src/plugins/multimedia/ffmpeg/CMakeLists.txt
+index 77c459a..af5229e 100644
+--- a/src/plugins/multimedia/ffmpeg/CMakeLists.txt
++++ b/src/plugins/multimedia/ffmpeg/CMakeLists.txt
+@@ -273,7 +273,7 @@ if(BUILD_SHARED_LIBS)
+ else()
+     foreach(ffmpeg_lib IN LISTS ffmpeg_libs)
+         qt_internal_add_target_include_dirs(QFFmpegMediaPlugin ${ffmpeg_lib})
+-        target_include_directories(QFFmpegMediaPlugin PRIVATE
++        target_compile_definitions(QFFmpegMediaPlugin PRIVATE
+             "$<TARGET_PROPERTY:${ffmpeg_lib},INTERFACE_COMPILE_DEFINITIONS>")
+     endforeach()
+ endif()
