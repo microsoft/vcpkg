@@ -69,7 +69,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         SOURCE_PATH ${SOURCE_PATH}
         GENERATOR "NMake Makefiles"
     )
-elseif(VCPKG_TARGET_IS_OSX)
+elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         GENERATOR "Unix Makefiles"
