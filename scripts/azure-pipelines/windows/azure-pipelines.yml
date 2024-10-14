@@ -70,8 +70,8 @@ jobs:
           $assetSas = $assetSas.Trim()
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus3 --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
-          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite"
-          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.privatelink.blob.core.windows.net/cache,$assetSas,readwrite"
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.privatelink.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
   - task: PowerShell@2
     displayName: 'Validate version files'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')

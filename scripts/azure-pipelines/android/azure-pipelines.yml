@@ -70,14 +70,14 @@ jobs:
         --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
-        --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite" \
+        --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus3.privatelink.blob.core.windows.net/cache,$assetSas,readwrite" \
         --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
         ${{ parameters.dockerImage }} \
         pwsh \
          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
          -Triplet ${{ replace(parameters.jobName, '_', '-') }} \
          -BuildReason $(Build.Reason) \
-         -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.blob.core.windows.net/cache,$binarySas" \
+         -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus3.privatelink.blob.core.windows.net/cache,$binarySas" \
          -WorkingRoot ${{ variables.WORKING_ROOT }}
   - bash: |
       CONTAINERS=$(docker ps -a -q)
