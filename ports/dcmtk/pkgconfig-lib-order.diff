@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 284d40e..9cea343 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -200,6 +200,31 @@ endif()
+ 
+ get_property(DCMTK_LIBRARY_TARGETS GLOBAL PROPERTY DCMTK_LIBRARY_TARGETS)
+ 
++foreach(lib IN ITEMS
++    dcmfg       # for dcmseg, dcmpmap, dcmect
++    dcmiod      # for dcmpstat, dcmfg, dcmseg
++    dcmdsig     # for dcmpstat
++    dcmtls      # for dcmpstat
++    dcmqrdb     # for dcmpstat
++    dcmsr       # for cmr
++    dcmnet      # for dcmtls, dcmwlm, dcmqrdb
++    dcmtkcharls # for dcmjpls
++    ijg8     # for dcmjpeg
++    ijg12    # fpr dcmjpeg
++    ijg16    # for dcmjpeg
++    dcmimage # for dcmjpeg etc.
++    dcmimgle # for dcmimage etc.
++    dcmxml   # for i2d
++    dcmdata # fpr dcmxml, dcmimgle, etc.
++    oflog   # for most libs
++    ofstd   # for oflog
++    oficonv # for ofstd
++  )
++  if(lib IN_LIST DCMTK_LIBRARY_TARGETS)
++    list(REMOVE_ITEM DCMTK_LIBRARY_TARGETS ${lib})
++    list(APPEND DCMTK_LIBRARY_TARGETS ${lib})
++  endif()
++endforeach()
+ foreach(T ${DCMTK_LIBRARY_TARGETS})
+   set(PKGCONF_LIBS "${PKGCONF_LIBS} -l${T}")
+ endforeach()
