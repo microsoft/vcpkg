@@ -47,7 +47,7 @@
       "host": true
     },
     {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg_cmake_configure",
       "host": true
     },
     {
