@@ -47,10 +47,6 @@
       "host": true
     },
     {
-      "name": "vcpkg_cmake_configure",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake-get-vars",
       "host": true
     },
