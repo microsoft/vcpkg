@@ -12,14 +12,13 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS_DEBUG
-            -DLIB_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/debug/lib"
-        OPTIONS_RELEASE
-            -DLIB_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/lib"
+        OPTIONS
+            -DLIB_INSTALL_DIR=lib
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/rlottie")
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
