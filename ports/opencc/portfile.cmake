@@ -30,7 +30,7 @@ vcpkg_cmake_install(
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME OpenCC CONFIG_PATH lib/cmake/opencc)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencc)
 
 vcpkg_fixup_pkgconfig()
 
