@@ -1,0 +1,13 @@
+diff --git a/oniguruma.pc.cmake.in b/oniguruma.pc.cmake.in
+index cb5b959..e720e86 100644
+--- a/oniguruma.pc.cmake.in
++++ b/oniguruma.pc.cmake.in
+@@ -1,6 +1,6 @@
+-prefix=@CMAKE_INSTALL_PREFIX@
++prefix=${pcfiledir}/../..
+ exec_prefix=${prefix}
+-libdir=@onig_pkgconfig_libdir@
++libdir=${prefix}/lib
+ includedir=${prefix}/include
+ datarootdir=${prefix}/share
+ datadir=${prefix}/share
