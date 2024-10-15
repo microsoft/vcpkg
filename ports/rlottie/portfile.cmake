@@ -1,4 +1,5 @@
 set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
 set(SOURCE_PATH ${CURRENT_BUILDTRESS_DIR})
 
 vcpkg_from_github(
@@ -14,6 +15,7 @@ vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             -DLIB_INSTALL_DIR=lib
+            -DLOTTIE_MODULE=OFF
 )
 
 vcpkg_cmake_install()
