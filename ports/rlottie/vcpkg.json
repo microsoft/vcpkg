@@ -1,6 +1,6 @@
 {
   "name": "rlottie",
-  "version-string": "v0.2",
+  "version-date": "2024-08-26",
   "description": "A platform independent standalone library that plays Lottie Animation.",
   "homepage": "https://github.com/Samsung/rlottie",
   "dependencies": [
