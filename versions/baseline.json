@@ -5941,7 +5941,7 @@
       "port-version": 0
     },
     "mlpack": {
-      "baseline": "4.4.0",
+      "baseline": "4.5.0",
       "port-version": 0
     },
     "mman": {
