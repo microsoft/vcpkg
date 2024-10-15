@@ -4,11 +4,11 @@ vcpkg_from_github(
     REF 5.0.2
     SHA512 d7c5a1a42d65a00ed3aa8ba8f6974650801d3436ae90e072fea29d4dcb32a3963e2610c89a16b87d94a9613c8f2f0e8deb83b673a1771a9cd1eb716a56106a16
     HEAD_REF master
-    PATCHES
-        fix_DLL.patch
 )
+#    PATCHES
+#        fix_DLL.patch
 
-# Define the LM_EXPORT macro for static builds on Windows OS
+# Define the LM_EXPORT macro for Windows OS or shared builds
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE EQUAL "shared") 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
 endif()
@@ -27,18 +27,6 @@ vcpkg_cmake_configure(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CAPSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CAPSTONE_BUILD_SHARED)
-
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DKEYSTONE_BUILD_STATIC=${LLVM_BUILD_STATIC}
-        -DKEYSTONE_BUILD_SHARED=${LLVM_BUILD_SHARED}
-        -DITK_MSVC_STATIC_RUNTIME_LIBRARY=OFF
-        -DITK_MSVC_STATIC_CRT=OFF
-)
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZSTD_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -78,14 +66,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         SOURCE_PATH ${SOURCE_PATH}
         GENERATOR "NMake Makefiles"
     )
-elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
-        GENERATOR "Unix Makefiles"
-    )
 else()
     vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
         DISABLE_PARALLEL_CONFIGURE
     )
 endif()

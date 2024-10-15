@@ -7,6 +7,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# If we're on Windows and building a shared library
+if (MSVC AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    add_compile_definitions(EXPORT_CLASSES=1)
+endif()
+
 # Disable incremental linking to resolve /Brepro incompatibility warning
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /INCREMENTAL:NO")
@@ -20,16 +26,13 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(KEYSTONE REQUIRED keystone)
 pkg_check_modules(CAPSTONE REQUIRED capstone)
 
-# Find ZSTD
-find_package(zstd CONFIG REQUIRED)
-
 # Find LLVM
 find_package(LLVM REQUIRED CONFIG)
 
-# Include directories from Keystone, Capstone, Zstd, and LLVM
+# Include directories from Keystone, Capstone, LLVM
 include_directories(${KEYSTONE_INCLUDE_DIRS})
 include_directories(${CAPSTONE_INCLUDE_DIRS})
-include_directories(${ZSTD_INCLUDE_DIRS})
+
 include_directories(${LLVM_INCLUDE_DIRS})
 
 # Ensure that all dependencies are found
@@ -43,10 +46,6 @@ endif()
 
 if(NOT LLVM_FOUND)
     message(FATAL_ERROR "LLVM not found! Please ensure LLVM is installed.")
-endif()
-
-if(NOT ZSTD_FOUND)
-    message(FATAL_ERROR "ZSTD not found! Please ensure ZSTD is installed.")
 endif()
 
 # Collect source files
@@ -86,19 +85,8 @@ endif()
 # Include LLVM in the project
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
 
-# Link dependencies (Keystone, Capstone, LLVM, Zstd)
+# Link dependencies (Keystone, Capstone, LLVM)
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${LLVM_LIBRARIES})
-
-# Link Zstd based on platform
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    target_link_libraries(libmem PRIVATE zstd::libzstd)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-    target_link_libraries(libmem PRIVATE zstd::libzstd dl stdc++ m)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
-    target_link_libraries(libmem PRIVATE zstd::libzstd dl kvm procstat elf stdc++ m)
-else()
-    message(FATAL_ERROR "Unsupported platform")
-endif()
 
 # Optionally build tests
 if(LIBMEM_BUILD_TESTS)
@@ -109,8 +97,3 @@ endif()
 # Install rules
 install(TARGETS libmem LIBRARY DESTINATION lib)
 install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
-
-# Handle runtime library selection for MSVC to avoid CRT linkage issues
-#if(MSVC)
-    #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-#endif()
