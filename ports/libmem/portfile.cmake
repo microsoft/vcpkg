@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 # Define the LM_EXPORT macro for static builds on Windows OS
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE EQUAL "shared") 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
 endif()
 
