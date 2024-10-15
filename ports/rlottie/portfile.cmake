@@ -1,6 +1,3 @@
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
-set(SOURCE_PATH ${CURRENT_BUILDTRESS_DIR})
-
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Samsung/rlottie
