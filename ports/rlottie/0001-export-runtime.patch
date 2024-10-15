@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 38a9862..7ebef73 100644
+index 38a9862..8a463a3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -165,6 +165,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
+@@ -75,8 +75,6 @@ endif()
+ 
+ if (WIN32 AND NOT BUILD_SHARED_LIBS)
+     target_compile_definitions(rlottie PUBLIC -DRLOTTIE_BUILD=0)
+-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+ endif()
+ 
+ #declare dependancy
+@@ -165,6 +163,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
           LIBRARY     DESTINATION    ${LIB_INSTALL_DIR}
           ARCHIVE     DESTINATION    ${LIB_INSTALL_DIR}
           INCLUDES    DESTINATION    include
