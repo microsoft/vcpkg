@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 7c89247d8504c635687dc61b39b39b5afefa4851b24409a8eab31273f1cbc88f3db89095ae4b135bd034147d2616c2e18fc74887300b89532eedeab75677f437
     HEAD_REF master
-    PATCHES fix-uwp.patch
+    PATCHES 
+        fix-uwp.patch
+        fix-install-prefix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
