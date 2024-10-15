@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38a9862..7ebef73 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -165,6 +165,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
+          LIBRARY     DESTINATION    ${LIB_INSTALL_DIR}
+          ARCHIVE     DESTINATION    ${LIB_INSTALL_DIR}
+          INCLUDES    DESTINATION    include
++         RUNTIME     DESTINATION    bin
+        )
+ 
+ #install config file.

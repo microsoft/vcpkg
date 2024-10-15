@@ -7912,6 +7912,10 @@
       "baseline": "1.10.0",
       "port-version": 0
     },
+    "rlottie": {
+      "baseline": "v0.2",
+      "port-version": 0
+    },
     "rmlui": {
       "baseline": "6.0",
       "port-version": 1
