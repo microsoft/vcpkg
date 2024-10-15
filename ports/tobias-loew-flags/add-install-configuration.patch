@@ -18,26 +18,26 @@ index 78d96ff..3215aca 100644
 +include(CMakePackageConfigHelpers)
 +
 +configure_package_config_file(
-+  cmake/unofficial-bext-flags-config.cmake.in
-+  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-bext-flags-config.cmake"
-+  INSTALL_DESTINATION share/unofficial-bext-flags/
++  cmake/unofficial-tobias-loew-flags-config.cmake.in
++  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-tobias-loew-flags-config.cmake"
++  INSTALL_DESTINATION share/unofficial-tobias-loew-flags/
 +  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 +
 +# Install.
-+install(TARGETS boost_flags EXPORT unofficial-bext-flags)
++install(TARGETS boost_flags EXPORT unofficial-tobias-loew-flags)
 +
 +install(
-+  EXPORT unofficial-bext-flags
-+  NAMESPACE unofficial::bext-flags::
-+  FILE unofficial-bext-flags-targets.cmake
-+  DESTINATION share/unofficial-bext-flags/)
++  EXPORT unofficial-tobias-loew-flags
++  NAMESPACE unofficial::tobias-loew-flags::
++  FILE unofficial-tobias-loew-flags-targets.cmake
++  DESTINATION share/unofficial-tobias-loew-flags/)
 +
 +install(DIRECTORY include/boost DESTINATION include)
 +
 +install(
 +  FILES
-+  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-bext-flags-config.cmake"
-+  DESTINATION share/unofficial-bext-flags)
++  "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-tobias-loew-flags-config.cmake"
++  DESTINATION share/unofficial-tobias-loew-flags)
 +
 +if(0)
  if (Boost_FOUND)
@@ -49,14 +49,14 @@ index 78d96ff..3215aca 100644
  add_subdirectory(test)
 +endif()
  # add_subdirectory(example)
-diff --git a/cmake/unofficial-bext-flags-config.cmake.in b/cmake/unofficial-bext-flags-config.cmake.in
+diff --git a/cmake/unofficial-tobias-loew-flags-config.cmake.in b/cmake/unofficial-tobias-loew-flags-config.cmake.in
 new file mode 100644
 index 0000000..9a784e1
 --- /dev/null
-+++ b/cmake/unofficial-bext-flags-config.cmake.in
++++ b/cmake/unofficial-tobias-loew-flags-config.cmake.in
 @@ -0,0 +1,5 @@
 +
 +@PACKAGE_INIT@
 +
-+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-bext-flags-targets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-tobias-loew-flags-targets.cmake")
 +
