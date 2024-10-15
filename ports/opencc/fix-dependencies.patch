@@ -1,30 +1,5 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1d8c8e6..5547d3e 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -210,12 +210,14 @@ if(NOT USE_SYSTEM_MARISA)
-   message(STATUS "Use bundled marisa library.")
-   add_subdirectory(deps/marisa-0.2.6)
- else()
--  find_library(LIBMARISA NAMES marisa)
--  if (LIBMARISA)
--    message(STATUS "libmarisa found: ${LIBMARISA}")
--  else()
--    message(FATAL_ERROR "libmarisa not found.")
--  endif()
-+  find_package(PkgConfig REQUIRED)
-+  pkg_check_modules(marisa REQUIRED IMPORTED_TARGET marisa)
-+  # find_library(LIBMARISA NAMES marisa)
-+  # if (LIBMARISA)
-+    # message(STATUS "libmarisa found: ${LIBMARISA}")
-+  # else()
-+    # message(FATAL_ERROR "libmarisa not found.")
-+  # endif()
- endif()
- 
- ######## Subdirectories
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7768c89..deb826b 100644
+index 7768c89..70292d6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -115,7 +115,7 @@ add_library(libopencc ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
@@ -32,7 +7,7 @@ index 7768c89..deb826b 100644
  set_target_properties(libopencc PROPERTIES POSITION_INDEPENDENT_CODE ON)
  source_group(libopencc FILES ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
 -target_link_libraries(libopencc marisa)
-+target_link_libraries(libopencc PkgConfig::marisa)
++target_link_libraries(libopencc ${LIBMARISA})
  target_include_directories(libopencc PUBLIC
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:${DIR_INCLUDE}/opencc>
