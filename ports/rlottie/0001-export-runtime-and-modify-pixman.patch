@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38a9862..7ebef73 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -165,6 +165,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
+          LIBRARY     DESTINATION    ${LIB_INSTALL_DIR}
+          ARCHIVE     DESTINATION    ${LIB_INSTALL_DIR}
+          INCLUDES    DESTINATION    include
++         RUNTIME     DESTINATION    bin
+        )
+ 
+ #install config file.
+diff --git a/src/vector/vdrawhelper_neon.cpp b/src/vector/vdrawhelper_neon.cpp
+index 681eabb..e178012 100644
+--- a/src/vector/vdrawhelper_neon.cpp
++++ b/src/vector/vdrawhelper_neon.cpp
+@@ -2,28 +2,20 @@
+ 
+ #include "vdrawhelper.h"
+ 
+-extern "C" void pixman_composite_src_n_8888_asm_neon(int32_t w, int32_t h,
+-                                                     uint32_t *dst,
+-                                                     int32_t   dst_stride,
+-                                                     uint32_t  src);
+-
+-extern "C" void pixman_composite_over_n_8888_asm_neon(int32_t w, int32_t h,
+-                                                      uint32_t *dst,
+-                                                      int32_t   dst_stride,
+-                                                      uint32_t  src);
+-
+ void memfill32(uint32_t *dest, uint32_t value, int length)
+ {
+-    pixman_composite_src_n_8888_asm_neon(length, 1, dest, length, value);
++    memset(dest, value, length);
+ }
+ 
+ static void color_SourceOver(uint32_t *dest, int length,
+                                       uint32_t color,
+                                      uint32_t const_alpha)
+ {
++    int ialpha, i;
+     if (const_alpha != 255) color = BYTE_MUL(color, const_alpha);
+ 
+-    pixman_composite_over_n_8888_asm_neon(length, 1, dest, length, color);
++    ialpha = 255 - vAlpha(color);
++    for (i = 0; i < length; ++i) dest[i] = color + BYTE_MUL(dest[i], ialpha);
+ }
+ 
+ void RenderFuncTable::neon()

@@ -6,7 +6,7 @@ vcpkg_from_github(
         REF e3026b1e1a516fff3c22d2b1b9f26ec864f89a82
         SHA512 3b9985606d9c475e77ecb018cfe65cde1170f10e9d2c3e18b60178d3954a4870e5141aa06bb79e803fcdbcf98742bcf72a359625a3b1409125ec3a4a1b0126c4
         PATCHES
-            0001-export-runtime.patch
+            0001-export-runtime-and-modify-pixman.patch
 )
 
 vcpkg_cmake_configure(
