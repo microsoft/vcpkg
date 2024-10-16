@@ -85,11 +85,11 @@ else()
 endif()
 
 # Add library target
-if(LIBMEM_BUILD_STATIC)
-    add_library(libmem STATIC ${LIBMEM_SRC})
-else()
-    add_library(libmem SHARED ${LIBMEM_SRC})
-endif()
+#if(LIBMEM_BUILD_STATIC)
+#    add_library(libmem STATIC ${LIBMEM_SRC})
+#else()
+#    add_library(libmem SHARED ${LIBMEM_SRC})
+#endif()
 
 # Include LLVM in the project
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
