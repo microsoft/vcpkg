@@ -1,0 +1,35 @@
+diff --git a/src/include/duckdb/common/limits.hpp b/src/include/duckdb/common/limits.hpp
+index bdf44d0c0a..42fc2056d9 100644
+--- a/src/include/duckdb/common/limits.hpp
++++ b/src/include/duckdb/common/limits.hpp
+@@ -10,6 +10,7 @@
+
+ #include "duckdb/common/hugeint.hpp"
+ #include "duckdb/common/types.hpp"
++#include "duckdb/common/types/datetime.hpp"
+
+ #include <type_traits>
+
+@@ -51,6 +52,22 @@ struct NumericLimits<hugeint_t> {
+ 	}
+ };
+
++template <>
++struct NumericLimits<dtime_tz_t> {
++	static constexpr dtime_tz_t Minimum() {
++		return std::numeric_limits<dtime_tz_t>::lowest();
++	};
++	static constexpr dtime_tz_t Maximum() {
++	    return std::numeric_limits<dtime_tz_t>::max();
++	};
++	static constexpr bool IsSigned() {
++		return std::is_signed<dtime_tz_t>::value;
++	}
++	static constexpr idx_t Digits() {
++		return 19;
++	}
++};
++
+ template <>
+ constexpr idx_t NumericLimits<int8_t>::Digits() {
+ 	return 3;
