@@ -1,4 +1,4 @@
-set(DIRECTXTEX_TAG jun2024)
+set(DIRECTXTEX_TAG sep2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF ${DIRECTXTEX_TAG}
-    SHA512 5ad160d4279c4b74c5ad29c7d830972ad8b9f8b42c3c0d3d889cc6c98f97c9285cd4c753ffcb88ed23cb40786071ea50917fd273b653f55f497e6ea10181c560
+    SHA512 c76c6d33f6a06e28e27c36be0f56b2c880cdd221b12680cc390f6f05a2c80169266cce9f0ac1803e7160d098f02f25a358ea73a116fd4186f4e0de17aba81ab7
     HEAD_REF main
     )
 
@@ -67,21 +67,21 @@ if("tools" IN_LIST FEATURES)
       TEXASSEMBLE_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble.exe"
       FILENAME "texassemble-${DIRECTXTEX_TAG}.exe"
-      SHA512 1226bbb29ebe750d4371bf07dfab3511a22c371964cc4b977917466af5619517a6d4ac02a5da2d69676524d17a5c1efabc11328db41515cd7ae911efcb919397
+      SHA512 17ae3ce91135e6c442c6127b77a4407ee5e029f1239cdc9066f34ddae9a3982de67d5314b5f03fde77802525e770be49f719fb6ddeb4d5316f440fb4ab24113a
     )
 
     vcpkg_download_distfile(
       TEXCONV_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv.exe"
       FILENAME "texconv-${DIRECTXTEX_TAG}.exe"
-      SHA512 e28e29af20f3703bf88dc43f9dbbad4844c8746a8b22aa74dbe7f0ea8668b263a7798ab99373c61b7ed89efbc31946b0d75dde6acadcc649ad8fde4d78887c2f
+      SHA512 856648b04c9d9eab5a63b1abf226eac8509b400a2087dae32fddcc61ea6d7d8426b07d710f765a01ab1bacbd8a9731684c42a72e2bd4f7f3477f379cec39c409
     )
 
     vcpkg_download_distfile(
       TEXDIAG_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag.exe"
       FILENAME "texdiag-${DIRECTXTEX_TAG}.exe"
-      SHA512 b535c9a9f36e35821a300f32dc193493e8e27a262e221d60719bf47e5da8927da50faad6a37995f520c4411af083ed36c2248c60be28e9bd8bdb482f71e8fb50
+      SHA512 38f083bbcf80b30b7d36312e824e03e25396f8801d8c13f6d4029731226415a3596e61863c7f8fd54f71afd6770e6e08bfc4118d65b48a977613b81f221e08d8
     )
 
     file(INSTALL
@@ -94,27 +94,27 @@ if("tools" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-${DIRECTXTEX_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
-  elseif((VCPKG_TARGET_ARCHITECTURE STREQUAL arm64) AND (NOT ("openexr" IN_LIST FEATURES)))
+  elseif(((VCPKG_TARGET_ARCHITECTURE STREQUAL arm64) OR (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64ec)) AND (NOT ("openexr" IN_LIST FEATURES)))
 
     vcpkg_download_distfile(
       TEXASSEMBLE_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble_arm64.exe"
       FILENAME "texassemble-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 18a9022d550a8c9d0a74f1a86749c3c2766f71c23ad93efeab2240f35bfe5dcce575d0f13a1e5bfc4fe1a2abd2903c1b71dc0dcab9c30821710e4f3a2595d674
+      SHA512 4026647c8e18fc54a28fdec31e9b5c26dba4d6141e2fee53dc94c84bc1bdfb446b40c31a0f4babbaf1eda2a25589486ae5898210f2a5644bc29959ddbe88a475
     )
 
     vcpkg_download_distfile(
       TEXCONV_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv_arm64.exe"
       FILENAME "texconv-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 27d92c44cd34421ba2c79da83a817c16ad67091286be3d64ad90dd0a3ceaf59c92c8268fe12293adbd6e84a22647eb50e74ec933365d5bf04a7bf391a9e13150
+      SHA512 2556604381e5c45aa137bf868db27013bee4bec1860df25f991f104a4c606bfde90e0eba8a347e5a5fc145c6a6a0b28529c6c7edd9cec0a5310dcec50d295b50
     )
 
     vcpkg_download_distfile(
       TEXDIAG_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag_arm64.exe"
       FILENAME "texdiag-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 c179b7729bce61a20268fe69814fc3764104902748f98567e00c8d50860d515b94b1806caed4b07c76da1ddbb43390fa2d6c9cb33ad404456e05fde2b48a52a1
+      SHA512 dfa8d2046cc18541998b719ace66b6807e59ea480febf41852b5973eb60aea20cb66702cab578d6e4474ecd782c03c061f363deb8e1bcb6a4c8f5002a521fe88
     )
 
     file(INSTALL
