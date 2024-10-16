@@ -6921,7 +6921,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "47.0",
+      "baseline": "48.1",
       "port-version": 0
     },
     "pffft": {
