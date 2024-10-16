@@ -29,60 +29,6 @@ endif()
 
 vcpkg_find_acquire_program(SCONS)
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-
-  if(VCPKG_TARGET_IS_WINDOWS)
-    SET(apr_opts
-      "APR=${CURRENT_INSTALLED_DIR}/debug"
-      "APU=${CURRENT_INSTALLED_DIR}/debug"
-      "APR_STATIC=${APR_STATIC}"
-    )
-  else()
-    SET(apr_opts
-      "APR=${CURRENT_INSTALLED_DIR}/tools/apr/debug/bin/apr-1-config"
-      "APU=${CURRENT_INSTALLED_DIR}/tools/apr-util/debug/bin/apu-1-config"
-    )
-  endif()
-
-  vcpkg_execute_build_process(
-      COMMAND ${SCONS}
-          "SOURCE_LAYOUT=no"
-          "PREFIX=${CURRENT_PACKAGES_DIR}/debug"
-          "LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib"
-          "OPENSSL=${CURRENT_INSTALLED_DIR}"
-          "ZLIB=${CURRENT_INSTALLED_DIR}"
-          ${apr_opts}
-          "${SCONS_ARCH}"
-          "DEBUG=yes"
-          "install-lib" "install-pc"
-      WORKING_DIRECTORY "${SOURCE_PATH}"
-      LOGNAME "scons-dbg"
-  )
-
-  # Fixup installed files.
-  if(VCPKG_TARGET_IS_WINDOWS)
-    if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
-      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-      file(RENAME
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
-        "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.dll"
-      )
-      file(RENAME
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
-        "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.pdb"
-      )
-    else()
-      file(REMOVE
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.lib"
-      )
-    endif()
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.exp")
-  endif()
-endif()
-
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
@@ -134,6 +80,60 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
       )
     endif()
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libserf-1.exp")
+  endif()
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+
+  if(VCPKG_TARGET_IS_WINDOWS)
+    SET(apr_opts
+      "APR=${CURRENT_INSTALLED_DIR}/debug"
+      "APU=${CURRENT_INSTALLED_DIR}/debug"
+      "APR_STATIC=${APR_STATIC}"
+    )
+  else()
+    SET(apr_opts
+      "APR=${CURRENT_INSTALLED_DIR}/tools/apr/debug/bin/apr-1-config"
+      "APU=${CURRENT_INSTALLED_DIR}/tools/apr-util/debug/bin/apu-1-config"
+    )
+  endif()
+
+  vcpkg_execute_build_process(
+      COMMAND ${SCONS}
+          "SOURCE_LAYOUT=no"
+          "PREFIX=${CURRENT_PACKAGES_DIR}/debug"
+          "LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib"
+          "OPENSSL=${CURRENT_INSTALLED_DIR}"
+          "ZLIB=${CURRENT_INSTALLED_DIR}"
+          ${apr_opts}
+          "${SCONS_ARCH}"
+          "DEBUG=yes"
+          "install-lib" "install-pc"
+      WORKING_DIRECTORY "${SOURCE_PATH}"
+      LOGNAME "scons-dbg"
+  )
+
+  # Fixup installed files.
+  if(VCPKG_TARGET_IS_WINDOWS)
+    if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+      file(RENAME
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.dll"
+      )
+      file(RENAME
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/libserf-1.pdb"
+      )
+    else()
+      file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.pdb"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.lib"
+      )
+    endif()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libserf-1.exp")
   endif()
 endif()
 
