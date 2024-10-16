@@ -489,8 +489,10 @@ intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
 irrlicht:x64-android=fail
 isal:x64-android=fail
+# Failing on try_run() in cross builds
 itk:arm-neon-android=fail
 itk:arm64-android=fail
+itk:arm64-windows=fail
 itk:x64-android=fail
 jaeger-client-cpp:arm-neon-android=fail
 jaeger-client-cpp:x64-android=fail
