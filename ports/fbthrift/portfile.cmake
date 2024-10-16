@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 5d6206b72a9579ab3207dae55dab753b13747e8f964fa5d95c1691046a4d151d2043b0e6b341954dffd01082107ee7ce849a81baaf8d569ea388a193b2860469
+    SHA512 b1a880a922e5823ec6c87d1540651978d895a2d0389158865011198ca80034342f39f7b2c1a104745ccb1cb3cb8d355cb0afb5b08c38fb8187a285ea37071f26
     HEAD_REF main
     PATCHES 
         fix-glog.patch
@@ -19,7 +19,11 @@ file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-Dthriftpy=OFF"
+)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fbthrift)
 
