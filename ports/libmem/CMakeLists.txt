@@ -89,7 +89,7 @@ endif()
 #else()
 #    add_library(libmem SHARED ${LIBMEM_SRC})
 #endif()
-
+add_library(libmem ${LIBMEM_SRC})
 # Include LLVM in the project
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
 
