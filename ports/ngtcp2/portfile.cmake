@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 891a7339122f60b1796bb24d29ab75d0316717c2a64a45bade805242b70cb8713abc7642cdf0ec646ab9e80085d65117f0ea9b1e671d76bcd54038b0ea9bc868
+    SHA512 b7bcb5e57a473142511d4edd7f6318eaa3e12a8db98b018ec8feb97382bd5ab3b634f258df082742d9c82b17d73ec2c388a62a9f848234e6e9609c7222671e07
     HEAD_REF main
     PATCHES
         openssl_required.patch
-        popcnt_intrinsic.patch # https://github.com/ngtcp2/ngtcp2/pull/1351
+        boringssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -14,9 +14,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wolfssl  ENABLE_WOLFSSL
-        gnutls   ENABLE_GNUTLS
-        libressl ENABLE_OPENSSL
+        wolfssl     ENABLE_WOLFSSL
+        gnutls      ENABLE_GNUTLS
+        libressl    ENABLE_OPENSSL
+        boringssl   ENABLE_BORINGSSL
 )
 
 vcpkg_cmake_configure(
