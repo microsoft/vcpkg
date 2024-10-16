@@ -64,4 +64,11 @@ qt_install_copyright("${SOURCE_PATH}")
 #                     CONFIGURE_OPTIONS_DEBUG
 #                    )
 
+
+file(GLOB_RECURSE qttools "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/*")
+if(NOT qttools AND VCPKG_CROSSCOMPILING)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/")
+ endif()
+
+
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) #Debug tracing libraries are only build if CMAKE_BUILD_TYPE is equal to Debug
