@@ -3849,7 +3849,7 @@
       "port-version": 0
     },
     "json-rpc-cxx": {
-      "baseline": "0.3.1",
+      "baseline": "0.3.2",
       "port-version": 0
     },
     "json-schema-validator": {
