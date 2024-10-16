@@ -1,0 +1,164 @@
+From b6a995d41975d36d232b787305a401e831502b50 Mon Sep 17 00:00:00 2001
+From: Charles Giessen <charles@lunarg.com>
+Date: Wed, 16 Oct 2024 14:16:55 -0500
+Subject: [PATCH 1/2] Use correct comment character in marmasm.asm
+
+---
+ loader/unknown_ext_chain_marmasm.asm | 78 ++++++++++++++--------------
+ 1 file changed, 39 insertions(+), 39 deletions(-)
+
+diff --git a/loader/unknown_ext_chain_marmasm.asm b/loader/unknown_ext_chain_marmasm.asm
+index 1bc82451b..f2f352a17 100644
+--- a/loader/unknown_ext_chain_marmasm.asm
++++ b/loader/unknown_ext_chain_marmasm.asm
+@@ -49,22 +49,22 @@ $label    PhysDevExtTermin $num
+     ALIGN
+     EXPORT vkPhysDevExtTermin$num [FUNC]
+ vkPhysDevExtTermin$num FUNCTION
+-    ldr     x9, [x0, ICD_TERM_OFFSET_PHYS_DEV_TERM]             // Load the loader_icd_term* in x9
+-    mov     x11, (DISPATCH_OFFSET_ICD_TERM + (PTR_SIZE * $num)) // Put the offset into the dispatch table in x11
+-    ldr     x10, [x9, x11]                                      // Load the address of the next function in the dispatch chain
+-    cbz     x10, terminError$num                                // Go to the error section if the next function in the chain is NULL
+-    ldr     x0, [x0, PHYS_DEV_OFFSET_PHYS_DEV_TERM]             // Unwrap the VkPhysicalDevice in x0
+-    br      x10                                                 // Jump to the next function in the chain
++    ldr     x9, [x0, ICD_TERM_OFFSET_PHYS_DEV_TERM]             ; Load the loader_icd_term* in x9
++    mov     x11, (DISPATCH_OFFSET_ICD_TERM + (PTR_SIZE * $num)) ; Put the offset into the dispatch table in x11
++    ldr     x10, [x9, x11]                                      ; Load the address of the next function in the dispatch chain
++    cbz     x10, terminError$num                                ; Go to the error section if the next function in the chain is NULL
++    ldr     x0, [x0, PHYS_DEV_OFFSET_PHYS_DEV_TERM]             ; Unwrap the VkPhysicalDevice in x0
++    br      x10                                                 ; Jump to the next function in the chain
+ terminError$num
+-    mov     x10, (FUNCTION_OFFSET_INSTANCE + (CHAR_PTR_SIZE * $num)) // Offset of the function name string in the instance
+-    ldr     x11, [x9, INSTANCE_OFFSET_ICD_TERM]   // Load the instance pointer
+-    mov     x0, x11                               // Vulkan instance pointer (first arg)
+-    mov     x1, VULKAN_LOADER_ERROR_BIT           // The error logging bit (second arg)
+-    mov     x2, #0                                // Zero (third arg)
+-    ldr     x3, [x11, x10]                        // The function name (fourth arg)
+-    bl      loader_log_asm_function_not_supported // Log the error message before we crash
++    mov     x10, (FUNCTION_OFFSET_INSTANCE + (CHAR_PTR_SIZE * $num)) ; Offset of the function name string in the instance
++    ldr     x11, [x9, INSTANCE_OFFSET_ICD_TERM]   ; Load the instance pointer
++    mov     x0, x11                               ; Vulkan instance pointer (first arg)
++    mov     x1, VULKAN_LOADER_ERROR_BIT           ; The error logging bit (second arg)
++    mov     x2, #0                                ; Zero (third arg)
++    ldr     x3, [x11, x10]                        ; The function name (fourth arg)
++    bl      loader_log_asm_function_not_supported ; Log the error message before we crash
+     mov     x0, #0
+-    br      x0                                    // Crash intentionally by jumping to address zero
++    br      x0                                    ; Crash intentionally by jumping to address zero
+     ENDFUNC
+     MEND
+ 
+@@ -73,9 +73,9 @@ terminError$num
+     ALIGN
+     EXPORT vkdev_ext$num [FUNC]
+ vkdev_ext$num FUNCTION
+-    ldr     x9, [x0]                                              // Load the loader_instance_dispatch_table* into x9
+-    mov     x10, (EXT_OFFSET_DEVICE_DISPATCH + (PTR_SIZE * $num)) // Offset of the desired function in the dispatch table
+-    ldr     x11, [x9, x10]                                        // Load the function address
++    ldr     x9, [x0]                                              ; Load the loader_instance_dispatch_table* into x9
++    mov     x10, (EXT_OFFSET_DEVICE_DISPATCH + (PTR_SIZE * $num)) ; Offset of the desired function in the dispatch table
++    ldr     x11, [x9, x10]                                        ; Load the function address
+     br      x11
+     ENDFUNC
+     MEND
+@@ -88,11 +88,11 @@ vkdev_ext$num FUNCTION
+     ALIGN
+     EXPORT vkPhysDevExtTramp$num [FUNC]
+ vkPhysDevExtTramp$num FUNCTION
+-    ldr     r4, [r0]                                                 // Load the loader_instance_dispatch_table* into r4
+-    ldr     r0, [r0, #PHYS_DEV_OFFSET_PHYS_DEV_TRAMP]                // Load the unwrapped VkPhysicalDevice into r0
+-    mov     r5, #(PHYS_DEV_OFFSET_INST_DISPATCH + (PTR_SIZE * $num)) // Put the offset of the entry in the dispatch table for the function
+-    ldr     r6, [r4, r5]                                             // Load the address to branch to out of the dispatch table
+-    bx      r6                                                       // Branch to the next member of the dispatch chain
++    ldr     r4, [r0]                                                 ; Load the loader_instance_dispatch_table* into r4
++    ldr     r0, [r0, #PHYS_DEV_OFFSET_PHYS_DEV_TRAMP]                ; Load the unwrapped VkPhysicalDevice into r0
++    mov     r5, #(PHYS_DEV_OFFSET_INST_DISPATCH + (PTR_SIZE * $num)) ; Put the offset of the entry in the dispatch table for the function
++    ldr     r6, [r4, r5]                                             ; Load the address to branch to out of the dispatch table
++    bx      r6                                                       ; Branch to the next member of the dispatch chain
+     ENDFUNC
+     MEND
+ 
+@@ -101,22 +101,22 @@ $label    PhysDevExtTermin $num
+     ALIGN
+     EXPORT vkPhysDevExtTermin$num [FUNC]
+ vkPhysDevExtTermin$num FUNCTION
+-    ldr     r4, [r0, #ICD_TERM_OFFSET_PHYS_DEV_TERM]            // Load the loader_icd_term* in r4
+-    mov     r6, #(DISPATCH_OFFSET_ICD_TERM + (PTR_SIZE * $num)) // Put the offset into the dispatch table in r6
+-    ldr     r5, [r4, r6]                                        // Load the address of the next function in the dispatch chain
+-    cbz     r5, terminError$num                                 // Go to the error section if the next function in the chain is NULL
+-    ldr     r0, [r0, #PHYS_DEV_OFFSET_PHYS_DEV_TERM]            // Unwrap the VkPhysicalDevice in r0
+-    bx      r5                                                  // Jump to the next function in the chain
++    ldr     r4, [r0, #ICD_TERM_OFFSET_PHYS_DEV_TERM]            ; Load the loader_icd_term* in r4
++    mov     r6, #(DISPATCH_OFFSET_ICD_TERM + (PTR_SIZE * $num)) ; Put the offset into the dispatch table in r6
++    ldr     r5, [r4, r6]                                        ; Load the address of the next function in the dispatch chain
++    cbz     r5, terminError$num                                 ; Go to the error section if the next function in the chain is NULL
++    ldr     r0, [r0, #PHYS_DEV_OFFSET_PHYS_DEV_TERM]            ; Unwrap the VkPhysicalDevice in r0
++    bx      r5                                                  ; Jump to the next function in the chain
+ terminError$num
+-    mov     r5, #(FUNCTION_OFFSET_INSTANCE + (CHAR_PTR_SIZE * $num)) // Offset of the function name string in the instance
+-    ldr     r6, [r4, #INSTANCE_OFFSET_ICD_TERM]                      // Load the instance pointer
+-    mov     r0, r6                                                   // Vulkan instance pointer (first arg)
+-    mov     r1, #VULKAN_LOADER_ERROR_BIT                             // The error logging bit (second arg)
+-    mov     r2, #0                                                   // Zero (third arg)
+-    ldr     r3, [r6, r5]                                             // The function name (fourth arg)
+-    bl      loader_log_asm_function_not_supported                    // Log the error message before we crash
++    mov     r5, #(FUNCTION_OFFSET_INSTANCE + (CHAR_PTR_SIZE * $num)) ; Offset of the function name string in the instance
++    ldr     r6, [r4, #INSTANCE_OFFSET_ICD_TERM]                      ; Load the instance pointer
++    mov     r0, r6                                                   ; Vulkan instance pointer (first arg)
++    mov     r1, #VULKAN_LOADER_ERROR_BIT                             ; The error logging bit (second arg)
++    mov     r2, #0                                                   ; Zero (third arg)
++    ldr     r3, [r6, r5]                                             ; The function name (fourth arg)
++    bl      loader_log_asm_function_not_supported                    ; Log the error message before we crash
+     mov     r0, #0
+-    bx      r0                                                       // Crash intentionally by jumping to address zero
++    bx      r0                                                       ; Crash intentionally by jumping to address zero
+     ENDFUNC
+     MEND
+ 
+@@ -125,9 +125,9 @@ terminError$num
+     ALIGN
+     EXPORT vkdev_ext$num [FUNC]
+ vkdev_ext$num FUNCTION
+-    ldr     r4, [r0]                                              // Load the loader_instance_dispatch_table* into r4
+-    mov     r5, #(EXT_OFFSET_DEVICE_DISPATCH + (PTR_SIZE * $num)) // Offset of the desired function in the dispatch table
+-    ldr     r6, [r4, r5]                                          // Load the function address
++    ldr     r4, [r0]                                              ; Load the loader_instance_dispatch_table* into r4
++    mov     r5, #(EXT_OFFSET_DEVICE_DISPATCH + (PTR_SIZE * $num)) ; Offset of the desired function in the dispatch table
++    ldr     r6, [r4, r5]                                          ; Load the function address
+     bx      r6
+     ENDFUNC
+     MEND
+
+From 9c0f025abfac98ddf6f6ec4bc8d8663c2ee54cf2 Mon Sep 17 00:00:00 2001
+From: Charles Giessen <charles@lunarg.com>
+Date: Wed, 16 Oct 2024 14:53:21 -0500
+Subject: [PATCH 2/2] Add Ninja + MSVC/clang-cl workaround for MARMASM
+
+The workaround that enables ninja + MSVC/clang-cl support in the loader
+only applied to MASM, which isn't helpful for MARMASM builds.
+
+This workaround did not get added to the build as ninja support was not
+considered required for release of the ARM SDK. However, other parties
+have started using the ARM build of the loader and reported the issue,
+necessitating this fix.
+---
+ loader/CMakeLists.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/loader/CMakeLists.txt b/loader/CMakeLists.txt
+index 6296ebff1..a9781f846 100644
+--- a/loader/CMakeLists.txt
++++ b/loader/CMakeLists.txt
+@@ -246,7 +246,11 @@ end
+ 
+         # Work around bug in CMake Ninja + MSVC/clang-cl, see https://discourse.cmake.org/t/building-lib-file-from-asm-cmake-bug/1959
+         if (CMAKE_C_COMPILER_ID STREQUAL "MSVC" OR (CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "MSVC"))
+-            set(CMAKE_ASM_MASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /OUT:<TARGET> <LINK_FLAGS> <OBJECTS>")
++            if(SYSTEM_PROCESSOR MATCHES "arm")
++                set(CMAKE_ASM_MARMASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /OUT:<TARGET> <LINK_FLAGS> <OBJECTS>")
++            else()
++                set(CMAKE_ASM_MASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /OUT:<TARGET> <LINK_FLAGS> <OBJECTS>")
++            endif()
+         endif()
+     else()
+         message(WARNING "Could not find working ${} assembler\n${ASM_FAILURE_MSG}")
