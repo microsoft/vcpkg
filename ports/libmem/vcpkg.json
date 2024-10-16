@@ -10,12 +10,7 @@
     "keystone",
     {
       "name": "llvm",
-      "default-features": false,
-      "features": [
-        "clang",
-        "libcxx",
-        "libcxxabi"
-      ]
+      "default-features": false
     },
     {
       "name": "llvm",
