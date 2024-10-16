@@ -29,6 +29,15 @@ pkg_check_modules(CAPSTONE REQUIRED capstone)
 # Find LLVM
 find_package(LLVM REQUIRED CONFIG)
 
+# Set the CMake module path for LLVM
+list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
+
+# Include LLVM's CMake helper functions
+include(HandleLLVMOptions)
+
+# Add LLVM definitions (optional)
+add_definitions(${LLVM_DEFINITIONS})
+
 # Include directories from Keystone, Capstone, LLVM
 include_directories(${KEYSTONE_INCLUDE_DIRS})
 include_directories(${CAPSTONE_INCLUDE_DIRS})
@@ -85,8 +94,10 @@ endif()
 # Include LLVM in the project
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
 
+llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
+
 # Link dependencies (Keystone, Capstone, LLVM)
-target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${LLVM_LIBRARIES})
+target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
 
 # Optionally build tests
 if(LIBMEM_BUILD_TESTS)
