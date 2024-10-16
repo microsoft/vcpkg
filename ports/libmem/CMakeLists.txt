@@ -10,7 +10,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # If we're on Windows and building a shared library
 if (MSVC AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    add_compile_definitions(EXPORT_CLASSES=1)
 endif()
 
 # Disable incremental linking to resolve /Brepro incompatibility warning
