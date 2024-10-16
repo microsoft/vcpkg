@@ -2,7 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 b9c40e912c386192538ebe91b8aefca0ef00c9536b83604826ec9d3f1b963837e3330edd25ab6e11b8d8e3a475b2ea0938753a6ea8f657c8fcc93c3288b600c5
+    SHA512 a176d00d2e2be0fb65b7084b2689fddb29cdfa8391ae4e5272b3205fbd4bc05f010b6dc81dff59581eb57cee28920b5f5147e2812725496c5abb5c7bf0937b12
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -10,7 +10,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        0005-pr-4133-4143-avoid-package-packaging.patch # Backport from 2.81.1
 )
 
 set(LANGUAGES C CXX)
