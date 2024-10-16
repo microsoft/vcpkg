@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
         ${PATCHES}
         fix-alloca-undefine.patch # Upstream PR: https://gitlab.freedesktop.org/cairo/cairo/-/merge_requests/520
         cairo_add_lzo_feature_option.patch
+        skip_run_check_on_cross_build.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -29,11 +30,15 @@ else()
     list(APPEND OPTIONS -Dfreetype=disabled)
 endif()
 
-if ("x11" IN_LIST FEATURES)
-    message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
-    list(APPEND OPTIONS -Dxlib=enabled)
-else()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND OPTIONS -Dxlib=disabled)
+else()
+    if ("x11" IN_LIST FEATURES)
+        message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
+        list(APPEND OPTIONS -Dxlib=enabled)
+    else()
+        list(APPEND OPTIONS -Dxlib=disabled)
+    endif()
 endif()
 list(APPEND OPTIONS -Dxcb=disabled)
 list(APPEND OPTIONS -Dxlib-xcb=disabled)
