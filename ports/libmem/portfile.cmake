@@ -65,6 +65,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         GENERATOR "NMake Makefiles"
+        DISABLE_PARALLEL_CONFIGURE
     )
 else()
     vcpkg_cmake_configure(
