@@ -3016,10 +3016,6 @@
       "baseline": "3.0.24",
       "port-version": 0
     },
-    "gdcm2": {
-      "baseline": "deprecated",
-      "port-version": 1
-    },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
       "port-version": 1
