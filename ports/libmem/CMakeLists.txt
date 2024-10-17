@@ -91,7 +91,7 @@ endif()
 #endif()
 add_library(libmem ${LIBMEM_SRC})
 # Include LLVM in the project
-target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
+target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
 
 llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
