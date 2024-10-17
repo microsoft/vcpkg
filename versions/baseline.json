@@ -5190,7 +5190,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 6
+      "port-version": 7
     },
     "libtorrent": {
       "baseline": "2.0.10",
@@ -6545,11 +6545,11 @@
       "port-version": 1
     },
     "onnx": {
-      "baseline": "1.15.0",
-      "port-version": 1
+      "baseline": "1.16.2",
+      "port-version": 0
     },
     "onnx-optimizer": {
-      "baseline": "0.3.18",
+      "baseline": "0.3.19",
       "port-version": 0
     },
     "onnxruntime-gpu": {
@@ -6742,7 +6742,7 @@
     },
     "openvino": {
       "baseline": "2024.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.10",
