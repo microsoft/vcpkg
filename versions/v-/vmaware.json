@@ -1,1 +1,8 @@
-vmaware.json
+{
+  "versions": [
+    {
+      "git-tree": "ddd8afd941c98fbb82e09ddb8bca8eb721e87cae",
+      "port-version": 0
+    }
+  ]
+}
