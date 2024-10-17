@@ -1,42 +1,56 @@
 diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
-index 709c0cd..1f08467 100644
+index 709c0cd..50fea5c 100644
 --- a/CMake/FindFFTW.cmake
 +++ b/CMake/FindFFTW.cmake
-@@ -30,7 +30,17 @@
+@@ -30,7 +30,27 @@
  ## to set the initial value of the CMake variable `MKLROOT` (see
  ## https://software.intel.com/en-us/mkl-linux-developer-guide-scripts-to-set-environment-variables).
  
 -if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
-+if((ITK_USE_FFTWD OR ITK_USE_FFTWF) AND NOT ITK_USE_CUFFTW)
-+  find_path(FFTW_INCLUDE_PATH fftw3.h)
++set(FFTW_INCLUDE "")
++if(ITK_USE_CUFFTW)
++  find_path(CUFFTW_INCLUDE_PATH cufftw.h PATHS ${CUDAToolkit_INCLUDE_DIRS} NO_DEFAULT_PATH REQUIRED)
++  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
++  find_package(CUDAToolkit REQUIRED)
++  set(FFTWD_LIBRARIES CUDA::cufft CUDA::cufftw)
++  set(FFTWD_FOUND 1)
++  set(FFTWF_LIBRARIES CUDA::cufft CUDA::cufftw)
++  set(FFTWF_FOUND 1)
++elseif(ITK_USE_FFTWD OR ITK_USE_FFTWF)
++  find_path(FFTW_INCLUDE_PATH fftw3.h REQUIRED)
++  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
 +  if(ITK_USE_FFTWD)
-+    find_package(FFTWD NAMES FFTW3 CONFIG)
++    find_package(FFTWD NAMES FFTW3 CONFIG REQUIRED)
 +    set(FFTWD_LIBRARIES FFTW3::fftw3)
 +  endif()
 +  if(ITK_USE_FFTWF)
-+    find_package(FFTWF NAMES FFTW3f CONFIG)
++    find_package(FFTWF NAMES FFTW3f CONFIG REQUIRED)
 +    set(FFTWF_LIBRARIES FFTW3::fftw3f)
 +  endif()
-+elseif(ITK_USE_FFTWD OR ITK_USE_FFTWF)
++elseif(0)
  
    if(ITK_USE_MKL)
      # If the user has provided the MKL include path then search nearby for library files
 diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
-index 7a77ae3..c4ffd3a 100644
+index 7a77ae3..3e41f37 100644
 --- a/CMake/ITKConfig.cmake.in
 +++ b/CMake/ITKConfig.cmake.in
-@@ -1,3 +1,10 @@
+@@ -1,3 +1,14 @@
 +include(CMakeFindDependencyMacro)
-+if("@ITK_USE_FFTWD@")
-+  find_dependency(FFTW3 CONFIG)
-+endif()
-+if("@ITK_USE_FFTWF@")
-+  find_dependency(FFTW3f CONFIG)
++if("@ITK_USE_CUFFTW@")
++  find_dependency(CUDAToolkit)
++else()
++  if("@ITK_USE_FFTWD@")
++    find_dependency(FFTW3 CONFIG)
++  endif()
++  if("@ITK_USE_FFTWF@")
++    find_dependency(FFTW3f CONFIG)
++  endif()
 +endif()
  #-----------------------------------------------------------------------------
  #
  # ITKConfig.cmake - ITK CMake configuration file for external projects.
-@@ -108,7 +115,6 @@ set(ITK_FFTW_LIBDIR "@FFTW_LIBDIR@")
+@@ -108,7 +119,6 @@ set(ITK_FFTW_LIBDIR "@FFTW_LIBDIR@")
  # Add FFTW include and library directories
  if (ITK_USE_FFTWF OR ITK_USE_FFTWD)
    set(ITK_INCLUDE_DIRS ${ITK_INCLUDE_DIRS} "${ITK_FFTW_INCLUDE_PATH}")
