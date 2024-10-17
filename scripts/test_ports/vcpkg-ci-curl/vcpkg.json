@@ -31,6 +31,8 @@
       "name": "curl",
       "features": [
         "gsasl",
+        "mbedtls",
+        "openssl",
         "psl"
       ],
       "platform": "!uwp"

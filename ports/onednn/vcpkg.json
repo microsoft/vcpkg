@@ -1,6 +1,7 @@
 {
   "name": "onednn",
-  "version": "3.4",
+  "version": "3.5.3",
+  "port-version": 1,
   "description": "oneAPI Deep Neural Network Library (oneDNN)",
   "homepage": "https://github.com/oneapi-src/oneDNN",
   "license": "Apache-2.0",

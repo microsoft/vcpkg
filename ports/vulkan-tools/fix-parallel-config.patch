@@ -9,5 +9,5 @@ index d770ca57..00c49887 100644
 -add_subdirectory(windows-runtime-installer)
 +#add_subdirectory(windows-runtime-installer)
  
- option(BUILD_TESTS "Build the tests")
  if(BUILD_TESTS)
+     enable_testing()

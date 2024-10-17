@@ -1,0 +1,22 @@
+Index: src/Rtcp/RtcpFCI.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Rtcp/RtcpFCI.h b/src/Rtcp/RtcpFCI.h
+--- a/src/Rtcp/RtcpFCI.h	(revision 6b2fcf79435656be7797d396203adcc6c11ecc52)
++++ b/src/Rtcp/RtcpFCI.h	(date 1727606590493)
+@@ -247,8 +247,13 @@
+ //    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ class FCI_NACK {
+ public:
++#if defined(ANDROID)
++    inline static constexpr size_t kSize = 4;
++    inline static constexpr size_t kBitSize = 16;
++#else
+     static constexpr size_t kSize = 4;
+     static constexpr size_t kBitSize = 16;
++#endif
+ 
+     FCI_NACK(uint16_t pid_h, const std::vector<bool> &type);
+ 

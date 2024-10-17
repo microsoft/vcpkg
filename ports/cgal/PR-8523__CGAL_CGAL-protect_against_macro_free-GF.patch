@@ -1,0 +1,212 @@
+diff --git a/CGAL_Core/include/CGAL/CORE/ExprRep.h b/CGAL_Core/include/CGAL/CORE/ExprRep.h
+index 0e721dda16a8..a325930a2ab4 100644
+--- a/CGAL_Core/include/CGAL/CORE/ExprRep.h
++++ b/CGAL_Core/include/CGAL/CORE/ExprRep.h
+@@ -595,7 +595,7 @@ class CGAL_CORE_EXPORT ConstPolyRep : public ConstRep {
+   }
+ 
+   void operator delete( void *p, size_t ){
+-    MemoryPool<ConstPolyRep>::global_allocator().free(p);
++    (MemoryPool<ConstPolyRep>::global_allocator().free)(p);
+   }
+ 
+ private:
+@@ -1248,7 +1248,7 @@ void * AddSubRep<O>::operator new( size_t size)
+ 
+ template <typename O>
+ void AddSubRep<O>::operator delete( void *p, size_t )
+-{ MemoryPool<AddSubRep<O> >::global_allocator().free(p); }
++{ (MemoryPool<AddSubRep<O> >::global_allocator().free)(p); }
+ 
+ 
+ /// \typedef AddRep
+diff --git a/CGAL_Core/include/CGAL/CORE/Impl.h b/CGAL_Core/include/CGAL/CORE/Impl.h
+index 4ff8b4fa3d48..8ae4c53fe7d1 100644
+--- a/CGAL_Core/include/CGAL/CORE/Impl.h
++++ b/CGAL_Core/include/CGAL/CORE/Impl.h
+@@ -58,7 +58,7 @@
+   { return MemoryPool<C<T> >::global_allocator().allocate(size); }        \
+   template <typename T>                                                   \
+   CGAL_INLINE_FUNCTION void C<T>::operator delete( void *p, size_t )      \
+-  { MemoryPool<C<T> >::global_allocator().free(p); }
++  { (MemoryPool<C<T> >::global_allocator().free)(p); }
+ #endif
+ 
+ // include some common header files
+diff --git a/CGAL_Core/include/CGAL/CORE/MemoryPool.h b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+index 2db3de8736e1..d218a871bec5 100644
+--- a/CGAL_Core/include/CGAL/CORE/MemoryPool.h
++++ b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+@@ -73,7 +73,7 @@ class MemoryPool {
+ 
+ 
+    void* allocate(std::size_t size);
+-   void free(void* p);
++   void free BOOST_PREVENT_MACRO_SUBSTITUTION (void* p);
+ 
+   // Access the corresponding static global allocator.
+   static MemoryPool<T,nObjects>& global_allocator() {
+diff --git a/CGAL_Core/include/CGAL/CORE/RealRep.h b/CGAL_Core/include/CGAL/CORE/RealRep.h
+index 1c5d0f13a405..f2ec1e90cb3b 100644
+--- a/CGAL_Core/include/CGAL/CORE/RealRep.h
++++ b/CGAL_Core/include/CGAL/CORE/RealRep.h
+@@ -154,7 +154,7 @@ void * Realbase_for<T>::operator new( size_t size)
+ 
+ template <class T>
+ void Realbase_for<T>::operator delete( void *p, size_t )
+-{ MemoryPool<Realbase_for<T> >::global_allocator().free(p); }
++{ (MemoryPool<Realbase_for<T> >::global_allocator().free)(p); }
+ 
+ typedef Realbase_for<long> RealLong;
+ typedef Realbase_for<double> RealDouble;
+
+diff --git a/CGAL_Core/include/CGAL/CORE/MemoryPool.h b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+index d218a871bec5..1cfa96fa93d1 100644
+--- a/CGAL_Core/include/CGAL/CORE/MemoryPool.h
++++ b/CGAL_Core/include/CGAL/CORE/MemoryPool.h
+@@ -116,7 +116,7 @@ void* MemoryPool< T, nObjects >::allocate(std::size_t) {
+ }
+ 
+ template< class T, int nObjects >
+-void MemoryPool< T, nObjects >::free(void* t) {
++void MemoryPool< T, nObjects >::free BOOST_PREVENT_MACRO_SUBSTITUTION (void* t) {
+    CGAL_assertion(t != 0);
+    if (t == 0) return; // for safety
+    if(blocks.empty()){
+
+diff --git a/BGL/include/CGAL/boost/graph/METIS/partition_dual_graph.h b/BGL/include/CGAL/boost/graph/METIS/partition_dual_graph.h
+index 53f8968f86f4..9a217389d82e 100644
+--- a/BGL/include/CGAL/boost/graph/METIS/partition_dual_graph.h
++++ b/BGL/include/CGAL/boost/graph/METIS/partition_dual_graph.h
+@@ -116,8 +116,8 @@ void partition_dual_graph(const TriangleMesh& tm,
+   delete[] eptr;
+   delete[] eind;
+ 
+-  std::free(npart);
+-  std::free(epart);
++  (std::free)(npart);
++  (std::free)(epart);
+ }
+ 
+ template<typename TriangleMesh, typename NamedParameters>
+diff --git a/BGL/include/CGAL/boost/graph/METIS/partition_graph.h b/BGL/include/CGAL/boost/graph/METIS/partition_graph.h
+index 08926a641169..42f8c240f011 100644
+--- a/BGL/include/CGAL/boost/graph/METIS/partition_graph.h
++++ b/BGL/include/CGAL/boost/graph/METIS/partition_graph.h
+@@ -151,8 +151,8 @@ void partition_graph(const TriangleMesh& tm,
+   delete[] eptr;
+   delete[] eind;
+ 
+-  std::free(npart);
+-  std::free(epart);
++  (std::free)(npart);
++  (std::free)(epart);
+ }
+ 
+ template<typename TriangleMesh, typename NamedParameters>
+diff --git a/CGAL_Core/include/CGAL/CORE/Impl.h b/CGAL_Core/include/CGAL/CORE/Impl.h
+index 8ae4c53fe7d1..2e21aab5ac0a 100644
+--- a/CGAL_Core/include/CGAL/CORE/Impl.h
++++ b/CGAL_Core/include/CGAL/CORE/Impl.h
+@@ -51,7 +51,7 @@
+     CGAL_INLINE_FUNCTION void *T::operator new( size_t size)             \
+     { return MemoryPool<T>::global_allocator().allocate(size); }         \
+     CGAL_INLINE_FUNCTION void T::operator delete( void *p, size_t )      \
+-    { MemoryPool<T>::global_allocator().free(p); }
++    { (MemoryPool<T>::global_allocator().free)(p); }
+   #define CORE_MEMORY_IMPL_TEMPLATE_WITH_ONE_ARG(C)                       \
+   template <typename T>                                                   \
+   CGAL_INLINE_FUNCTION void *C<T>::operator new( size_t size)             \
+diff --git a/Classification/include/CGAL/Classification/Feature/Elevation.h b/Classification/include/CGAL/Classification/Feature/Elevation.h
+index 175b20b6a44e..9ea9f267cc46 100644
+--- a/Classification/include/CGAL/Classification/Feature/Elevation.h
++++ b/Classification/include/CGAL/Classification/Feature/Elevation.h
+@@ -130,7 +130,7 @@ class Elevation : public Feature_base
+           std::nth_element (z.begin(), z.begin() + (z.size() / 10), z.end());
+           dtm_x(i,j) = z[z.size() / 10];
+         }
+-    dem.free();
++    (dem.free)();
+ 
+     if (grid.width() * grid.height() > input.size())
+       values.resize (input.size(), compressed_float(0));
+@@ -162,7 +162,7 @@ class Elevation : public Feature_base
+               values[*it] = v;
+           }
+         }
+-    dtm_x.free();
++    (dtm_x.free)();
+ 
+   }
+ 
+diff --git a/Classification/include/CGAL/Classification/Feature/Height_above.h b/Classification/include/CGAL/Classification/Feature/Height_above.h
+index b59b108c1aca..3c85d27f91e2 100644
+--- a/Classification/include/CGAL/Classification/Feature/Height_above.h
++++ b/Classification/include/CGAL/Classification/Feature/Height_above.h
+@@ -100,7 +100,7 @@ class Height_above : public Feature_base
+         std::size_t J = grid.y(i);
+         values[i] = float(dtm(I,J) - get (point_map, *(input.begin() + i)).z());
+       }
+-      dtm.free();
++      (dtm.free)();
+     }
+ 
+   }
+diff --git a/Classification/include/CGAL/Classification/Feature/Height_below.h b/Classification/include/CGAL/Classification/Feature/Height_below.h
+index 223719341555..f71195dd3489 100644
+--- a/Classification/include/CGAL/Classification/Feature/Height_below.h
++++ b/Classification/include/CGAL/Classification/Feature/Height_below.h
+@@ -100,7 +100,7 @@ class Height_below : public Feature_base
+         std::size_t J = grid.y(i);
+         values[i] = float(get (point_map, *(input.begin() + i)).z() - dtm(I,J));
+       }
+-      dtm.free();
++      (dtm.free)();
+     }
+ 
+   }
+diff --git a/Classification/include/CGAL/Classification/Feature/Vertical_range.h b/Classification/include/CGAL/Classification/Feature/Vertical_range.h
+index 45b9c98d3ee7..a4df1591c13f 100644
+--- a/Classification/include/CGAL/Classification/Feature/Vertical_range.h
++++ b/Classification/include/CGAL/Classification/Feature/Vertical_range.h
+@@ -102,7 +102,7 @@ class Vertical_range : public Feature_base
+         std::size_t J = grid.y(i);
+         values[i] = dtm(I,J);
+       }
+-      dtm.free();
++      (dtm.free)();
+     }
+ 
+   }
+diff --git a/Classification/include/CGAL/Classification/Image.h b/Classification/include/CGAL/Classification/Image.h
+index 084e9572764a..3bd915f0b5d7 100644
+--- a/Classification/include/CGAL/Classification/Image.h
++++ b/Classification/include/CGAL/Classification/Image.h
+@@ -71,7 +71,7 @@ class Image
+   {
+   }
+ 
+-  void free()
++  void free BOOST_PREVENT_MACRO_SUBSTITUTION ()
+   {
+     m_raw.reset();
+     m_sparse.reset();
+
+diff --git a/Installation/include/CGAL/config.h b/Installation/include/CGAL/config.h
+index bd5dafbf0171..92a4ac768f58 100644
+--- a/Installation/include/CGAL/config.h
++++ b/Installation/include/CGAL/config.h
+@@ -37,6 +37,13 @@
+ #endif
+ 
+ #ifdef CGAL_INCLUDE_WINDOWS_DOT_H
++
++#if defined(_MSC_VER) && defined(_DEBUG)
++// Include support for memory leak detection
++// This is only available in debug mode and when _CRTDBG_MAP_ALLOC is defined.
++// It will include <crtdbg.h> which will redefine `malloc` and `free`.
++#  define _CRTDBG_MAP_ALLOC 1
++#endif
+ // Mimic users including this file which defines min max macros
+ // and other names leading to name clashes
+ #include <windows.h>
