@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 38a9862..8a463a3 100644
+index 38a9862..3bb9d39 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -75,8 +75,6 @@ endif()
@@ -11,7 +11,21 @@ index 38a9862..8a463a3 100644
  endif()
  
  #declare dependancy
-@@ -165,6 +163,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
+@@ -88,13 +86,6 @@ target_link_libraries(rlottie
+                         "${CMAKE_THREAD_LIBS_INIT}"
+                      )
+ 
+-if (NOT APPLE AND NOT WIN32)
+-    target_link_libraries(rlottie
+-                        PRIVATE
+-                            "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/rlottie.expmap"
+-                          )
+-endif()
+-
+ if (LOTTIE_MODULE)
+     # for dlopen, dlsym and dlclose dependancy
+     target_link_libraries(rlottie PRIVATE ${CMAKE_DL_LIBS})
+@@ -165,6 +156,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
           LIBRARY     DESTINATION    ${LIB_INSTALL_DIR}
           ARCHIVE     DESTINATION    ${LIB_INSTALL_DIR}
           INCLUDES    DESTINATION    include
