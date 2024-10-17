@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-clang-cl.patch
         gh-5985-inline.patch
         io_ply.patch
+        0010-msvc-optimizer-workaround.patch # backport pcl #6143 and #6154
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
