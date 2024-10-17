@@ -1,11 +1,35 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 284d40e..9cea343 100644
+index 284d40e..8f8acfd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -200,6 +200,31 @@ endif()
+@@ -158,7 +158,12 @@ endif()
+ 
+ if(DCMTK_WITH_ICONV)
+   # libiconv does not provide a .pc file
+-  set(PKGCONF_LIBS_PRIV "${PKGCONF_LIBS_PRIV} ${Iconv_LIBRARY} ${LIBCHARSET_LIBRARY}")
++  if(Iconv_LIBRARIES)
++    string(APPEND PKGCONF_LIBS_PRIV " -liconv")
++  endif()
++  if(CHARSET_LIBRARIES)
++    string(APPEND PKGCONF_LIBS_PRIV " -lcharset")
++  endif()
+ endif()
+ 
+ if(DCMTK_WITH_ICU)
+@@ -200,6 +205,41 @@ endif()
  
  get_property(DCMTK_LIBRARY_TARGETS GLOBAL PROPERTY DCMTK_LIBRARY_TARGETS)
  
++foreach(lib IN LISTS WIN32_STD_LIBRARIES)
++  string(APPEND PKGCONF_LIBS_PRIV " -l${lib}")
++endforeach()
++configure_file("${DCMTK_SOURCE_DIR}/CMake/dcmtk.pc.in" "${DCMTK_BINARY_DIR}/dcmtk-deps.pc" @ONLY)
++install(FILES "${DCMTK_BINARY_DIR}/dcmtk-deps.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++set(PKGCONF_LIBS "")
++set(PKGCONF_LIBS_PRIV "")
++set(PKGCONF_REQ_PUB dcmtk-deps)
++set(PKGCONF_REQ_PRIV "")
++
 +foreach(lib IN ITEMS
 +    dcmfg       # for dcmseg, dcmpmap, dcmect
 +    dcmiod      # for dcmpstat, dcmfg, dcmseg
