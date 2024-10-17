@@ -21,7 +21,7 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "widget"
+        "widgets"
       ]
     },
     {
