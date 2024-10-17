@@ -2,7 +2,7 @@ diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
 index 709c0cd..c35c55d 100644
 --- a/CMake/FindFFTW.cmake
 +++ b/CMake/FindFFTW.cmake
-@@ -30,7 +30,32 @@
+@@ -30,7 +30,29 @@
  ## to set the initial value of the CMake variable `MKLROOT` (see
  ## https://software.intel.com/en-us/mkl-linux-developer-guide-scripts-to-set-environment-variables).
  
@@ -14,9 +14,6 @@ index 709c0cd..c35c55d 100644
 +  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
 +  set(FFTWD_LIBRARIES CUDA::cufft CUDA::cufftw)
 +  set(FFTWD_FOUND 1)
-+  if(NOT BUILD_SHARED_LIBS)
-+    set(FFTWD_LIBRARIES CUDA::cufft_static CUDA::cufftw_static)
-+  endif()
 +  set(FFTWF_LIBRARIES ${FFTWD_LIBRARIES})
 +  set(FFTWF_FOUND 1)
 +elseif(ITK_USE_FFTWD OR ITK_USE_FFTWF)
