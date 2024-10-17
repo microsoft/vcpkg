@@ -5,6 +5,8 @@ vcpkg_from_gitlab(
     REF "${VERSION}"
     SHA512 fb0cdd14f3c94f610fc153154ea09d5cfd7d3def16bdaabf8c2b4e0a8b7fa8ddec4cde6ae0b8726d58ee4a773df5c4f13002e565fb06ad3c8e9731a45122704f
     HEAD_REF main
+    PATCHES
+        condition_variable-fix-wait_until-predicate-evaluation.patch
 )
 
 vcpkg_configure_make(
