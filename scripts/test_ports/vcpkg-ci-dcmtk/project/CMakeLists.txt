@@ -13,3 +13,4 @@ pkg_check_modules(DCMTK dcmtk REQUIRED IMPORTED_TARGET)
 
 add_executable(main-pkgconfig main.cpp)
 target_link_libraries(main-pkgconfig PRIVATE PkgConfig::DCMTK)
+target_compile_options(main-pkgconfig PRIVATE "\$<\$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
