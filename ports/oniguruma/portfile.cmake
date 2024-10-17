@@ -32,28 +32,13 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/onig-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/onig-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/onig-config" "\nprefix=\${prefix}" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/onig-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/onig-config")
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/onig-config")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/onig-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/onig-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/onig-config" "\nprefix=\${prefix}/debug" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/onig-config")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config"")
 endif()
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/oniguruma.h"
         "#if defined(ONIGURUMA_EXPORT)"
@@ -69,4 +54,10 @@ endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include/")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
