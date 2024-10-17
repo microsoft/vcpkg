@@ -7314,7 +7314,7 @@
     },
     "qt": {
       "baseline": "6.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "4.3.1",
@@ -7510,7 +7510,7 @@
     },
     "qtbase": {
       "baseline": "6.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.7.3",
@@ -7586,7 +7586,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.7.3",
