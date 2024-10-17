@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-proj4-targets-cmake.patch
         remove_toolset_restriction.patch
+        sqlite.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
