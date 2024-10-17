@@ -6,6 +6,11 @@
   "license": null,
   "dependencies": [
     "libarchive",
+    {
+      "name": "libsystemd",
+      "default-features": false,
+      "platform": "linux"
+    },
     "libyaml",
     {
       "name": "qtapplicationmanager",
@@ -14,7 +19,8 @@
     },
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features" : "widget"
     },
     {
       "name": "qtdeclarative",
@@ -24,6 +30,7 @@
       "name": "qtwayland",
       "default-features": false,
       "platform": "!windows"
-    }
+    },
+    "qthttpserver"
   ]
 }

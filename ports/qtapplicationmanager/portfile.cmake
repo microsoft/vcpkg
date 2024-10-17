@@ -20,6 +20,13 @@ if(QT_UPDATE_VERSION)
     return()
 endif()
 
+set(opts "")
+if(VCPKG_TARGET_IS_LINUX)
+  set(opts -DINPUT_systemd_watchdog=ON)
+else()
+  set(opts -DINPUT_systemd_watchdog=OFF)
+endif()
+
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
@@ -28,11 +35,11 @@ qt_cmake_configure(${_opt}
                         -DINPUT_libarchive='system'
                         -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libyaml=ON
-                        -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libarchive=ON
-                        -DINPUT_libarchive='system'
                         -DINPUT_libdbus='no'
                         -DINPUT_libbacktrace='no'
+                        -DINPUT_widgets_support=ON
+                        ${opts}
                    OPTIONS_DEBUG
                    OPTIONS_RELEASE)
 
