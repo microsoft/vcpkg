@@ -9128,6 +9128,10 @@
       "baseline": "0.2.4",
       "port-version": 0
     },
+    "tzlaine-parser": {
+      "baseline": "2024-10-04",
+      "port-version": 0
+    },
     "uchardet": {
       "baseline": "0.0.8",
       "port-version": 0
