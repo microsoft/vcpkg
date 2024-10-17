@@ -397,7 +397,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.9.28",
+      "baseline": "0.9.30",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -441,7 +441,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.420",
+      "baseline": "1.11.428",
       "port-version": 0
     },
     "azmq": {
