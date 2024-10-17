@@ -6,7 +6,5 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_PORT_DIR}/project"
     OPTIONS
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        --trace-expand
-
 )
 vcpkg_cmake_build()
