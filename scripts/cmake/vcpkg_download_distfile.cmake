@@ -196,13 +196,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             "${arg_SHA512}"
             "${arg_SKIP_SHA512}"
         )
-
-        if(NOT vcpkg_download_distfile_QUIET)
-            message(STATUS "Using cached ${arg_FILENAME}.")
-        endif()
-        
-        # Suppress the "Downloading ${arg_URLS} -> ${arg_FILENAME}..." message
-        set(vcpkg_download_distfile_QUIET TRUE)
+        message(STATUS "Using cached ${arg_FILENAME}.")
     endif()
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
@@ -235,9 +229,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     foreach(url IN LISTS arg_URLS)
         vcpkg_list(APPEND urls_param "--url=${url}")
     endforeach()
-    if(NOT vcpkg_download_distfile_QUIET)
-        message(STATUS "Downloading ${arg_URLS} -> ${arg_FILENAME}...")
-    endif()
 
     vcpkg_list(SET headers_param)
     foreach(header IN LISTS arg_HEADERS)
@@ -257,16 +248,12 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
                 ${sha512_param}
                 ${urls_param}
                 ${headers_param}
-                --debug
                 --feature-flags=-manifests # there's a bug in vcpkg x-download when it finds a manifest-root
-            OUTPUT_VARIABLE output
-            ERROR_VARIABLE output
             RESULT_VARIABLE error_code
             WORKING_DIRECTORY "${DOWNLOADS}"
         )
 
         if(NOT "${error_code}" EQUAL "0")
-            message("${output}")
             z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
         endif()
     endif()
