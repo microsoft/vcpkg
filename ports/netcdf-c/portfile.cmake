@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-deps.patch
-        fix-dependency-zlib.patch
         use_targets.patch
         fix-dependency-libmath.patch
         fix-linkage-error.patch
@@ -14,6 +13,7 @@ vcpkg_from_github(
         fix-dependency-libzip.patch
         fix-dependency-mpi.patch
         fix-pkgconfig.patch
+        fix-dependency-szip.patch
 )
 
 #Remove outdated find modules

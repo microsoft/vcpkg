@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 039f907..00dbf5d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1146,7 +1146,9 @@ ENDIF()
+ endmacro(set_std_filter)
+ 
+ # Locate some compressors
+-FIND_PACKAGE(Szip)
++FIND_PACKAGE(Szip NAMES szip CONFIG)
++set(Szip_INCLUDE_DIRS ${SZIP_PACKAGE_NAME}_INCLUDE_DIR)
++set(Szip_LIBRARIES ${${SZIP_PACKAGE_NAME}_EXPORT_LIBRARIES})
+ FIND_PACKAGE(Bz2)
+ FIND_PACKAGE(Blosc)
+ FIND_PACKAGE(Zstd)

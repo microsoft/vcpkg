@@ -16,5 +16,5 @@ index 701ecc3..ffe15a9 100644
 +    endif()
 +  endblock()
    FIND_LIBRARY(HAVE_LIBM NAMES math m libm)
-   MESSAGE(STATUS "Found Math library: ${HAVE_LIBM}")
    IF(NOT HAVE_LIBM)
+     CHECK_FUNCTION_EXISTS(exp HAVE_LIBM_FUNC)
