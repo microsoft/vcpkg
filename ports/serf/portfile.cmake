@@ -1,5 +1,5 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.apache.org/dist/serf/serf-1.3.10.tar.bz2"
+    URLS "https://dlcdn.apache.org/serf/serf-1.3.10.tar.bz2"
     FILENAME "serf-1.3.10.tar.bz2"
     SHA512 19165274d35c694935cda33f99ef92a7663a5d9c540fb7fd6792aa0efe39941b2fa87ff8b61afd060c6676baec634fd33dc2e9d34ecbee45ed99dfaed077802c
 )
