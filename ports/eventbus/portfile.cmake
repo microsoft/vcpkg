@@ -23,8 +23,5 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/eventbus)
-endif()
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/eventbus)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
