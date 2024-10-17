@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 78f6531..30ac42e 100644
+index 78f6531..b7ea30b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -28,7 +28,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -16,7 +16,7 @@ index 78f6531..30ac42e 100644
  include_directories(src/ptex)
  
  add_subdirectory(src/ptex)
-++if(0)
++if(0)
  add_subdirectory(src/utils)
  add_subdirectory(src/tests)
  if (PTEX_BUILD_DOCS)
