@@ -1,7 +1,7 @@
 {
   "name": "nmap",
   "version": "7.70",
-  "port-version": 11,
+  "port-version": 12,
   "description": "A library for scanning network ports.",
   "dependencies": [
     {

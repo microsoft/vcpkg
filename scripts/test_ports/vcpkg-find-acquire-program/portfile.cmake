@@ -27,6 +27,11 @@ if(VCPKG_HOST_IS_LINUX)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
+    # The version-agnostic tool dir may already exist.
+    # Simulate/test with NASM.
+    file(REMOVE_RECURSE "${DOWNLOADS}/tools/nasm")
+    file(MAKE_DIRECTORY "${DOWNLOADS}/tools/nasm")
+
     list(APPEND variables 7Z ARIA2 CLANG DARK DOXYGEN GASPREPROCESSOR GO GPERF JOM NASM NUGET PYTHON2 RUBY SCONS SWIG)
     vcpkg_find_acquire_program(7Z)
     vcpkg_find_acquire_program(ARIA2)
