@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Amanieu/asyncplusplus
-    REF 4159da79e20ad6d0eb1f13baa0f10e989edd9fba
+    REF 4159da79e20ad6d0eb1f13baa0f10e989edd9fba # v1.2
     SHA512 a7b099ce24184aa56e843d4858228196f8220374585a375a9c0d944832bd68c8aabd6b2efde5aacbb9c73f9dd8e942e97262be04550205b3fbea44d8b972d78e
     HEAD_REF master
 )
