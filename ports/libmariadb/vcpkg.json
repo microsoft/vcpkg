@@ -1,12 +1,19 @@
 {
   "name": "libmariadb",
-  "version-semver": "3.3.1",
-  "port-version": 4,
+  "version-semver": "3.4.1",
   "description": "MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases",
-  "homepage": "https://github.com/MariaDB/mariadb-connector-c",
+  "homepage": "https://github.com/mariadb-corporation/mariadb-connector-c",
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
+    {
+      "name": "libmariadb",
+      "default-features": false,
+      "features": [
+        "iconv"
+      ],
+      "platform": "windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,11 +31,11 @@
     "iconv": {
       "description": "Enables character set conversion",
       "dependencies": [
-        "libiconv"
+        {
+          "name": "libiconv",
+          "platform": "!windows"
+        }
       ]
-    },
-    "mariadbclient": {
-      "description": "Build the static mariadbclient library"
     },
     "openssl": {
       "description": "SSL support (OpenSSL)",
@@ -38,7 +45,7 @@
     },
     "schannel": {
       "description": "SSL support (Secure Channel)",
-      "supports": "windows | mingw"
+      "supports": "windows"
     },
     "ssl": {
       "description": "Default SSL backend",
@@ -49,7 +56,7 @@
           "features": [
             "schannel"
           ],
-          "platform": "windows | mingw"
+          "platform": "windows"
         },
         {
           "name": "libmariadb",
@@ -57,12 +64,9 @@
           "features": [
             "openssl"
           ],
-          "platform": "!windows & !mingw"
+          "platform": "!windows"
         }
       ]
-    },
-    "zlib": {
-      "description": "Obsolete. zlib is always used. This feature is left for compatibility."
     },
     "zstd": {
       "description": "Build zstd compression plugin.",

@@ -142,7 +142,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             foreach(rpath IN LISTS rpath_list)
                 list(APPEND rpath_args "-delete_rpath" "${rpath}")
             endforeach()
-            if(rpath_args STREQUAL "")
+            if(NOT rpath_args)
                 continue()
             endif()
 
