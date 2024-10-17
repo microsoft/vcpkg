@@ -256,6 +256,15 @@
  
      set(OPENCV_MODULE_${m}_DEPS ${OPENCV_MODULE_${m}_DEPS} CACHE INTERNAL "Flattened dependencies of ${m} module")
      set(OPENCV_MODULE_${m}_DEPS_EXT ${OPENCV_MODULE_${m}_DEPS_EXT} CACHE INTERNAL "Extra dependencies of ${m} module")
+@@ -581,8 +581,6 @@ macro(ocv_create_module)
+     target_link_libraries(${the_module} LINK_PUBLIC ${OPENCV_MODULE_${the_module}_DEPS})
+     target_link_libraries(${the_module} LINK_PUBLIC ${OPENCV_MODULE_${the_module}_DEPS})
+     set(extra_deps ${OPENCV_MODULE_${the_module}_DEPS_EXT} ${OPENCV_LINKER_LIBS} ${IPP_LIBS} ${ARGN})
+-    ocv_extract_simple_libs(extra_deps _simple_deps _other_deps)
+-    target_link_libraries(${the_module} LINK_PRIVATE ${_simple_deps}) # this list goes to "export"
+     target_link_libraries(${the_module} LINK_PRIVATE ${extra_deps})
+   endif()
+
 --- a/data/CMakeLists.txt
 +++ b/data/CMakeLists.txt
 @@ -5,8 +5,6 @@ if(ANDROID)
