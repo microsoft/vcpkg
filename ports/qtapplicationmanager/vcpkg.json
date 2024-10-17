@@ -20,17 +20,19 @@
     {
       "name": "qtbase",
       "default-features": false,
-      "features" : ["widget"]
+      "features": [
+        "widget"
+      ]
     },
     {
       "name": "qtdeclarative",
       "default-features": false
     },
+    "qthttpserver",
     {
       "name": "qtwayland",
       "default-features": false,
       "platform": "!windows"
-    },
-    "qthttpserver"
+    }
   ]
 }
