@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9dc2d0d..e3d9209 100644
+index 9dc2d0d..8488172 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -74,8 +74,9 @@ endif()
@@ -9,11 +9,11 @@ index 9dc2d0d..e3d9209 100644
 -include(dependencies)
 +#include(dependencies)
  
-+find_package(Boost REQUIRED )
++find_package(Boost REQUIRED COMPONENTS type_index hana assert charconv)
  
  ##################################################
  # Sanitizers
-@@ -97,16 +98,41 @@ endif()
+@@ -97,16 +98,42 @@ endif()
  # Parser
  ##################################################
  add_library(parser INTERFACE)
@@ -25,6 +25,7 @@ index 9dc2d0d..e3d9209 100644
 +  $<INSTALL_INTERFACE:include>
 +  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>)
  
++target_link_libraries(parser INTERFACE Boost::type_index Boost::hana Boost::assert Boost::charconv)
  
  ##################################################
  # Subdirectories
@@ -61,7 +62,7 @@ index 9dc2d0d..e3d9209 100644
  endif()
 diff --git a/cmake/unofficial-tzlaine-parser-config.cmake.in b/cmake/unofficial-tzlaine-parser-config.cmake.in
 new file mode 100644
-index 0000000..90487b6
+index 0000000..ab99c15
 --- /dev/null
 +++ b/cmake/unofficial-tzlaine-parser-config.cmake.in
 @@ -0,0 +1,9 @@
@@ -70,7 +71,7 @@ index 0000000..90487b6
 +
 +include(CMakeFindDependencyMacro)
 +
-+find_dependency(Boost)
++find_dependency(Boost COMPONENTS type_index hana assert charconv)
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-tzlaine-parser-targets.cmake")
 +
