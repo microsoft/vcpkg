@@ -1,0 +1,17 @@
+{
+  "name": "sonyflakepp",
+  "version": "1.0.1",
+  "description": "Sonyflake is a distributed unique ID generator inspired by Twitter's Snowflake.",
+  "homepage": "https://github.com/Shadowrom2020/sonyflakepp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
