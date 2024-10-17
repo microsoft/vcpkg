@@ -3734,7 +3734,7 @@
     },
     "intel-mkl": {
       "baseline": "2023.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
@@ -4102,11 +4102,11 @@
     },
     "kinectsdk1": {
       "baseline": "1.8",
-      "port-version": 8
+      "port-version": 9
     },
     "kinectsdk2": {
       "baseline": "2.0",
-      "port-version": 7
+      "port-version": 8
     },
     "kissfft": {
       "baseline": "131.1.0",
@@ -9366,7 +9366,7 @@
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
-      "port-version": 1
+      "port-version": 2
     },
     "vectorclass": {
       "baseline": "2.02.00",

@@ -24,15 +24,16 @@ function(vcpkg_extract_archive)
     cmake_path(GET arg_ARCHIVE EXTENSION archive_extension)
     string(TOLOWER "${archive_extension}" archive_extension)
     if("${archive_extension}" MATCHES [[\.msi$]])
+        vcpkg_find_acquire_program(LESSMSI)
+        # Adjusting the extraction command to ensure proper file placement
         cmake_path(NATIVE_PATH arg_ARCHIVE archive_native_path)
         cmake_path(NATIVE_PATH arg_DESTINATION destination_native_path)
         cmake_path(GET arg_ARCHIVE PARENT_PATH archive_directory)
         vcpkg_execute_in_download_mode(
-            COMMAND msiexec
-                /a "${archive_native_path}"
-                /qn "TARGETDIR=${destination_native_path}"
-            WORKING_DIRECTORY "${archive_directory}"
+            COMMAND ${LESSMSI} x "${archive_native_path}" "${destination_native_path}"
+            WORKING_DIRECTORY "${destination_native_path}"
         )
+    
     elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
         vcpkg_find_acquire_program(7Z)
         vcpkg_execute_in_download_mode(
