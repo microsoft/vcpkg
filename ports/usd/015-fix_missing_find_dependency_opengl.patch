@@ -1,0 +1,14 @@
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index edd9d6e49..e9a789734 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -25,6 +25,9 @@ if(@PXR_BUILD_IMAGING@)
+     if(@PXR_BUILD_OPENIMAGEIO_PLUGIN@)
+         find_dependency(OpenImageIO)
+     endif()
++    if(@PXR_ENABLE_GL_SUPPORT@)
++        find_dependency(OpenGL)
++    endif()
+     if(@PXR_ENABLE_VULKAN_SUPPORT@)
+         if (NOT DEFINED Vulkan_DIR)
+             if (NOT [[@Vulkan_DIR@]] STREQUAL "")
