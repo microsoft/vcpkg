@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 507eb4c..1516d0c 100644
+index dac5992..09910b1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -433,7 +433,6 @@ IF(NC_EXTRA_DEPS)
+@@ -484,7 +484,6 @@ IF(NC_EXTRA_DEPS)
+     ENDIF()
      SET(EXTRA_DEPS ${EXTRA_DEPS} "${${_LIB}_DEP}")
    ENDFOREACH()
-   MESSAGE("Extra deps: ${EXTRA_DEPS}")
--  LIST(REMOVE_DUPLICATES EXTRA_DEPS)
+-  MESSAGE("Extra deps: ${EXTRA_DEPS}")
+   LIST(REMOVE_DUPLICATES EXTRA_DEPS)
    SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${EXTRA_DEPS})
  ENDIF()
- ###
-@@ -628,15 +627,6 @@ IF(USE_HDF5)
+@@ -721,15 +720,6 @@ IF(USE_HDF5)
      # we will use a static library.  This can be toggled
      # by explicitly modifying NC_FIND_SHARED_LIBS.
      ##
@@ -26,7 +26,7 @@ index 507eb4c..1516d0c 100644
  
      #####
      # First, find the C and HL libraries.
-@@ -649,7 +639,7 @@ IF(USE_HDF5)
+@@ -742,7 +732,7 @@ IF(USE_HDF5)
        SET(SEARCH_PACKAGE_NAME ${HDF5_PACKAGE_NAME})
        FIND_PACKAGE(HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS C HL CONFIG REQUIRED ${NC_HDF5_LINK_TYPE})
      ELSE(MSVC)
@@ -35,8 +35,8 @@ index 507eb4c..1516d0c 100644
      ENDIF(MSVC)
  
      ##
-@@ -727,6 +717,19 @@ IF(USE_HDF5)
-     ENDIF()
+@@ -857,6 +847,19 @@ IF(USE_HDF5)
+ 
    ENDIF(HDF5_C_LIBRARY AND HDF5_HL_LIBRARY AND HDF5_INCLUDE_DIR)
  
 +  if(TARGET hdf5::hdf5-shared)
@@ -55,16 +55,7 @@ index 507eb4c..1516d0c 100644
    FIND_PACKAGE(Threads)
  
    # There is a missing case in the above code so default it
-@@ -745,6 +748,8 @@ IF(USE_HDF5)
-   IF(USE_SZIP)
-     # If user has specified the `SZIP_LIBRARY`, use it; otherwise try to find...
-     IF(NOT SZIP_LIBRARY)
-+      set(SZIP_LIBRARY "")
-+    ELSEIF(0)
-       FIND_LIBRARY(SZIP PATH NAMES szip sz)
-       SET(SZIP_LIBRARY ${SZIP})
-       IF(NOT SZIP)
-@@ -848,11 +853,14 @@ ENDIF(USE_HDF5)
+@@ -985,11 +988,14 @@ ENDIF(USE_HDF5)
  
  # See if we have libcurl
  FIND_PACKAGE(CURL)
@@ -81,7 +72,7 @@ index 507eb4c..1516d0c 100644
    SET(FOUND_CURL TRUE)
  ELSE()
    SET(FOUND_CURL FALSE)
-@@ -2089,10 +2097,9 @@ IF(NC_LIBS)
+@@ -2464,10 +2470,9 @@ IF(NC_LIBS)
    STRING(REPLACE "-lhdf5::hdf5_hl-static" "-lhdf5_hl" NC_LIBS ${NC_LIBS})
  ENDIF()
  
