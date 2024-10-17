@@ -3,7 +3,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 # For each vcpkg_find_acquire_program(NAME).cmake script,
 # there must be a literal call to vcpkg_find_acquire_program(NAME).cmake
 
-set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON3 YASM)
+set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON3 SCONS YASM)
 vcpkg_find_acquire_program(BAZEL)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
@@ -28,7 +28,7 @@ if(VCPKG_HOST_IS_LINUX)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-    list(APPEND variables 7Z ARIA2 CLANG DARK DOXYGEN GASPREPROCESSOR GO GPERF JOM NASM NUGET PYTHON2 RUBY SCONS SWIG)
+    list(APPEND variables 7Z ARIA2 CLANG DARK DOXYGEN GASPREPROCESSOR GO GPERF JOM NASM NUGET PYTHON2 RUBY SWIG)
     vcpkg_find_acquire_program(7Z)
     vcpkg_find_acquire_program(ARIA2)
     vcpkg_find_acquire_program(CLANG)
