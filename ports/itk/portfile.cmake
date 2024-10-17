@@ -65,15 +65,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("cufftw" IN_LIST FEATURES)
-    # Alternativly set CUFFT_LIB and CUFFTW_LIB
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-        list(APPEND ADDITIONAL_OPTIONS
-            "-DFFTW_LIB_SEARCHPATH=${cuda_toolkit_root}/lib/x64"
-            "-DFFTW_INCLUDE_PATH=${cuda_toolkit_root}/include"
-            "-DCUFFTW_INCLUDE_PATH=${cuda_toolkit_root}/include"
-        )
-    endif()
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND ADDITIONAL_OPTIONS
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
 
 if("fftw" IN_LIST FEATURES)
@@ -90,8 +85,8 @@ if("opencl" IN_LIST FEATURES)
          -DITK_WRAP_signed_long_long=ON
          )
 endif()
-if("tools" IN_LIST FEATURES)
 
+if("tools" IN_LIST FEATURES)
     if("rtk" IN_LIST FEATURES)
         list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient
                                rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal
@@ -156,10 +151,9 @@ if("python" IN_LIST FEATURES)
 endif()
 
 if("opencv" IN_LIST FEATURES)
-    message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
     list(APPEND ADDITIONAL_OPTIONS
         -DModule_ITKVideoBridgeOpenCV:BOOL=ON
-        )
+    )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
