@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-pthread-flag.patch
         0003-no-tests.patch
         0004-fix-find-htscodecs.patch
+        0005-remove-duplicate-lhts.patch # https://github.com/samtools/htslib/pull/1852
 )
 
 set(FEATURE_OPTIONS "")
