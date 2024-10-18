@@ -5,6 +5,10 @@
   "homepage": "https://github.com/Samsung/rlottie",
   "dependencies": [
     {
+      "name": "freetype",
+      "default-features": false
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

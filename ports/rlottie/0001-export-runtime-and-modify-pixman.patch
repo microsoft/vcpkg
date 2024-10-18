@@ -33,6 +33,24 @@ index 38a9862..3bb9d39 100644
         )
  
  #install config file.
+diff --git a/src/vector/freetype/CMakeLists.txt b/src/vector/freetype/CMakeLists.txt
+index add0d42..d7d487d 100644
+--- a/src/vector/freetype/CMakeLists.txt
++++ b/src/vector/freetype/CMakeLists.txt
+@@ -1,11 +1,2 @@
+-target_sources(rlottie
+-    PRIVATE
+-        "${CMAKE_CURRENT_LIST_DIR}/v_ft_math.cpp"
+-        "${CMAKE_CURRENT_LIST_DIR}/v_ft_raster.cpp"
+-        "${CMAKE_CURRENT_LIST_DIR}/v_ft_stroker.cpp"
+-    )
+-
+-target_include_directories(rlottie
+-    PRIVATE
+-        "${CMAKE_CURRENT_LIST_DIR}"
+-    )
++find_package(Freetype REQUIRED)
++target_link_libraries(rlottie PRIVATE Freetype::Freetype)
 diff --git a/src/vector/vdrawhelper_neon.cpp b/src/vector/vdrawhelper_neon.cpp
 index 681eabb..e178012 100644
 --- a/src/vector/vdrawhelper_neon.cpp
