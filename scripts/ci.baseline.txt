@@ -121,7 +121,6 @@ clapack:x64-windows-static-md=skip
 clapack:x64-windows-static=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
-ctbench:x64-linux=fail # Fails to build with boost 1.86
 lapack-reference:arm64-android=fail
 lapack-reference:arm64-osx=skip
 lapack-reference:arm64-uwp=skip
