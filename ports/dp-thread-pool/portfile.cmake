@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
         -DTP_BUILD_TESTS=OFF
         -DTP_BUILD_EXAMPLES=OFF
         -DTP_BUILD_BENCHMARKS=OFF
+        -DTP_CXX_STANDARD=20
 )
 
 vcpkg_cmake_install()

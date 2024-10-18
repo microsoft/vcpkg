@@ -6,8 +6,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libdmx
-    REF  6056db9a2fa8ad1ea55f8b8e2cbf5972408d612f
-    SHA512 f7b0a3fb26bc68e5dd27a0afa98ed29fed31956fd07f89b57171d7f9d9a0a87185876551dbf312b8d90a66fa50de06992cf9eb386fa98dd8133946de3c37e274
+    REF "libdmx-${VERSION}"
+    SHA512 2c634f57a7229e2d10b3ce700fe20d53a1578b9eb6d575eab9f0a9f228410dd6a17aa2a3d60503c0c0a14029d8a4ca8db6061b966108272ac8e8052bd3750300
     HEAD_REF master
 ) 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

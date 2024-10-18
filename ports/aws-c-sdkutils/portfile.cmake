@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-sdkutils
     REF "v${VERSION}"
-    SHA512 e364613363c6dd50a97209bd4fa7b926fec2ca5eb4bac07fb0c44eecbf847d2d1a671ffa7edda613bbbab4eaf27973945be61d66b32b851ae31c8f3508e7137a
+    SHA512 a92576c7a4188a2cfa0cacac06ca363bc34dd86c8e8eed20d61aeeee08ed700f4c90d2cbc49a50214bb95fdc1de2fc4c344bcfb12aaeaa12bfe855fe3c585999
     HEAD_REF master
 )
 

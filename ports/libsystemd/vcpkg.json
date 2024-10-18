@@ -1,10 +1,9 @@
 {
   "name": "libsystemd",
-  "version": "254",
-  "port-version": 2,
+  "version": "256.4",
   "description": "Libsystemd",
   "homepage": "https://github.com/systemd/systemd",
-  "license": "LGPL-2.1+",
+  "license": null,
   "supports": "linux",
   "dependencies": [
     {

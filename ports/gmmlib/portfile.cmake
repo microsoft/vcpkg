@@ -8,13 +8,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/gmmlib
     REF "intel-gmmlib-${VERSION}"
-    SHA512 073cb2e9ec025ae32e2f33f51547083cd8425b0c7297e361b037c71b55a8d2322cd36ac7cabbf8c7a325f80f1cc97947c0aa8aa833dc5fbae5abe28e9c04451a
+    SHA512 516e2cc0d678d8fd44d8d2b1bfdf61c05670c01c906bd7f55a807846cd6399d4b616f86e6a1d85e2a6a0480c4616a40e9d5b29a3f45fbf588cc4d725ada71d49
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DARCH=64
 )
 
 vcpkg_cmake_install()

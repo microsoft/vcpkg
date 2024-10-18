@@ -2,11 +2,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/marble
-    REF 7def3b68fd5de9b7f0734410a9f955bd1082097b #v22.04.0
-    SHA512 2977a051a7f91603dea5960ddf0fed2fd5a991d554bce899ce4d8a0d3648546ff2c4c75bebcd3704d07d875b656ab7dc64c567b1bc9f6975745be327375faa90
+    REF "v${VERSION}"
+    SHA512 06d2c9f4c85a5ab66825701fa949f35756ff2f09acc65c2ac5c367bd245ee1b674214070a01f828124d8add3f9cdd06e68e0e93091e47501210c5686ae68f29f
     HEAD_REF master
     PATCHES 
         qtfix.patch
+        protobuf.patch
+        cpack.patch
 )
 
 vcpkg_cmake_configure(

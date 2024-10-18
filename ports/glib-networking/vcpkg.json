@@ -1,0 +1,54 @@
+{
+  "name": "glib-networking",
+  "version": "2.78.0",
+  "description": "Network extensions for GLib",
+  "homepage": "https://gitlab.gnome.org/GNOME/glib-networking",
+  "license": "LGPL-2.1-only",
+  "supports": "!uwp",
+  "dependencies": [
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "gnutls",
+      "platform": "linux | mingw"
+    },
+    {
+      "name": "openssl",
+      "platform": "!linux & !mingw"
+    }
+  ],
+  "features": {
+    "environment-proxy": {
+      "description": "support for environment variable proxy configuration"
+    },
+    "gnutls": {
+      "description": "support for GnuTLS networking configuration",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "libgnutls"
+      ]
+    },
+    "libproxy": {
+      "description": "support for libproxy proxy configuration",
+      "supports": "!(uwp | xbox | android)",
+      "dependencies": [
+        "libproxy"
+      ]
+    },
+    "openssl": {
+      "description": "support for OpenSSL networking configuration",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

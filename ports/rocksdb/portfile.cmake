@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 524e3e70ed2b1d2e6c61a7b401946e50473cc95684ce4efc6250062f5bc945e443e96f7907fcc3ee1ab98c71179a8b56a654383cf2c0bbe1bb20907ab1ac7523
+  SHA512 4e211fb6f2534ef8ccf71648c5a0fa8a16647d868ac3b62f68c6bd0b26abb6aae7e80c26bb9501faea6c9ac6dfc31e20d11a093695aa5ced3c9e8c2c04fcdb3d
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch

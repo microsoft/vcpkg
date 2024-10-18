@@ -1,3 +1,18 @@
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "${PORT} currently requires the following programs from the system package manager:
+    autoconf automake autoconf-archive
+On Debian and Ubuntu derivatives:
+    sudo apt-get install autoconf automake autoconf-archive
+On recent Red Hat and Fedora derivatives:
+    sudo dnf install autoconf automake autoconf-archive
+On Arch Linux and derivatives:
+    sudo pacman -S autoconf automake autoconf-archive
+On Alpine:
+    apk add autoconf automake autoconf-archive
+On macOS:
+    brew install autoconf automake autoconf-archive\n")
+endif()
+
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
 string(REPLACE "." "_" VERSION2 "${VERSION}")
 string(REPLACE "." "-" VERSION3 "${VERSION}")
@@ -6,7 +21,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 32c28270aa5d94c58d2b1ef46d4ab73149b5eaa2e0621d4a4c11597b71d146812f5e66db95f044e8aaa11b94e99edd4a48ab1aa8efbe3d72a73870cd56b564c2
+    SHA512 e6c7876c0f3d756f3a6969cad9a8909e535eeaac352f3a721338b9cbd56864bf7414469d29ec843462997815d2ca9d0dab06d38c37cdd4d8feb28ad04d8781b0
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -21,6 +36,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-win-build.patch
         vcpkg-cross-data.patch
         darwin-rpath.patch
+        mingw-strict-ansi.diff # backport of https://github.com/unicode-org/icu/pull/3003
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -141,7 +157,7 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../" IGNORE_UNCHANGED)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

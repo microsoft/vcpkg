@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 4bb6d6c086bac7a9c0ec78062dce58987555785abe6375f462ee249f65210a964a28fb10ba7ee8a42d7fafb00eb8d196eb403d65d255f02f88467369c187228b
     HEAD_REF master
-    PATCHES 
+    PATCHES
+        android.patch
+        gles.patch # amends https://github.com/freeglut/freeglut/commit/093a5a46
         x11-dependencies-export.patch
         fix-debug-macro.patch
         no_x64_enforcement.patch
@@ -36,14 +38,14 @@ vcpkg_fixup_pkgconfig()
 
 file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"  "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
 foreach(file IN LISTS pc_files)
-    vcpkg_replace_string("${file}" ";-D" " -D")
+    vcpkg_replace_string("${file}" ";-D" " -D" IGNORE_UNCHANGED)
 endforeach()
 
 if(NOT VCPKG_TARGET_IS_ANDROID)
     file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freeglut.pc")
     if(NOT VCPKG_BUILD_TYPE)
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd" IGNORE_UNCHANGED)
         endif()
         file(COPY_FILE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freeglut.pc")
     endif()

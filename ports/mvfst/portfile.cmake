@@ -2,27 +2,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/mvfst
     REF "v${VERSION}"
-    SHA512 6bcc4df79b42bafb06ee69f253733dd5136ef329b8009fc5677f62c3476d205f5f0cdcca242d0bde15914bf487a37aeeab1adb4ad555d2edd5e6b3935e84dd37
+    SHA512 8ec9e7daf1c259f31e90eaa32cfa29d377e279f93c2072528447455f4f8ea897ab17f2759222a2ea9a73fdafe96b7d8223cf1efbadad2e8ea180b23832090aa7
     HEAD_REF main
+    PATCHES fix-cmake.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
-)
-
-# Prefer installed config files
-file(REMOVE
-    "${SOURCE_PATH}/fizz/cmake/FindGMock.cmake"
-    "${SOURCE_PATH}/fizz/cmake/FindGflags.cmake"
-    "${SOURCE_PATH}/fizz/cmake/FindGlog.cmake"
-    "${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake"
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mvfst)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
