@@ -1,0 +1,11 @@
+diff --git a/htslib.pc.in b/htslib.pc.in
+index d969d6b..fdeeba9 100644
+--- a/htslib.pc.in
++++ b/htslib.pc.in
+@@ -11,5 +11,5 @@ Description: C library for high-throughput sequencing data formats
+ Version: @-PACKAGE_VERSION@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lhts
+-Libs.private: -L${libdir} @private_LIBS@ -lhts -lm -lpthread
++Libs.private: -L${libdir} @private_LIBS@ -lm -lpthread
+ Requires.private: zlib @pc_requires@
