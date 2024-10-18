@@ -221,6 +221,7 @@ vcpkg_cmake_configure(
 
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
+        --trace-expand
 
     OPTIONS_DEBUG
         -DRTK_BUILD_APPLICATIONS=OFF
@@ -261,3 +262,4 @@ if("rtk" IN_LIST FEATURES)
     )
 endif()
 vcpkg_install_copyright(FILE_LIST ${file_list})
+message(FATAL_ERROR STOP)
