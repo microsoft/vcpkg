@@ -257,7 +257,10 @@ cppslippi:arm-neon-android=fail
 cppslippi:arm64-android=fail
 cppslippi:x64-android=fail
 cppslippi:x64-linux=fail
+cppcoro:arm-neon-android=fail
+cppcoro:arm64-android=fail
 cppcoro:arm64-osx=fail
+cppcoro:x64-android=fail
 cppcoro:x64-linux=fail
 cppcoro:x64-osx=fail
 cpputest:arm-neon-android=fail
@@ -323,6 +326,10 @@ evpp:x64-android=fail
 fastdds:arm-neon-android=fail
 fastdds:arm64-android=fail
 fastdds:x64-android=fail
+# variable length arrays in C++ are a Clang extension
+fbbgemmerror:arm-neon-android=fail
+fbbgemmerror:arm64-android=fail
+fbbgemmerror:x64-android=fail
 flashlight-cpu:x64-linux=fail
 flashlight-cuda:x64-linux=fail
 flint:arm-neon-android=fail
@@ -350,6 +357,10 @@ fmi4cpp:arm64-uwp=fail
 fmi4cpp:x64-uwp=fail
 folly:arm64-android=fail
 folly:x64-android=fail
+# ALooper_pollAll no longer available
+freeglut:arm-neon-android=fail
+freeglut:arm64-android=fail
+freeglut:x64-android=fail
 # Needs XQuartz
 freeglut:x64-osx=fail
 freeglut:arm64-osx=fail
@@ -533,6 +544,10 @@ libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
+# error: call to undeclared function 'mktime_z'
+libgnutls:arm-neon-android=fail
+libgnutls:arm64-android=fail
+libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
@@ -961,6 +976,10 @@ rapidstring:x64-windows=fail
 rapidstring:x64-windows-static=fail
 rapidstring:x64-windows-static-md=fail
 rapidstring:x86-windows=fail
+# ALooper_pollAll no longer available
+raylib:arm-neon-android=fail
+raylib:arm64-android=fail
+raylib:x64-android=fail
 # file conflicts with rbdl
 rbdl-orb:x86-windows=skip
 rbdl-orb:x64-windows=skip
@@ -1157,6 +1176,10 @@ vtk-m:x64-android=fail
 vulkan:arm-neon-android=fail
 vulkan:arm64-android=fail
 vulkan:x64-android=fail
+# ALooper_pollAll no longer available
+vulkan-tools:arm-neon-android=fail
+vulkan-tools:arm64-android=fail
+vulkan-tools:x64-android=fail
 # Needs android-26
 vulkan-utility-libraries:arm-neon-android=fail
 vulkan-utility-libraries:arm64-android=fail
@@ -1188,6 +1211,9 @@ xbitmaps:arm64-android=fail
 xbitmaps:x64-android=fail
 xbitmaps:x64-osx=skip
 xbitmaps:arm64-osx=skip
+yajl:arm-neon-android=fail
+yajl:arm64-android=fail
+yajl:x64-android=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
