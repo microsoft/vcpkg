@@ -1,5 +1,3 @@
-diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index cf21c44..1463514 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
 @@ -403,7 +403,7 @@ endif()
@@ -22,8 +20,6 @@ index cf21c44..1463514 100644
  elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
    # Found PCLConfig.cmake in a build tree of PCL
    # pcl_message("PCL found into a build tree.")
-diff --git a/cmake/Modules/FindFLANN.cmake b/cmake/Modules/FindFLANN.cmake
-index f42bca3..faca969 100644
 --- a/cmake/Modules/FindFLANN.cmake
 +++ b/cmake/Modules/FindFLANN.cmake
 @@ -85,7 +85,7 @@ if(flann_FOUND)
@@ -35,8 +31,6 @@ index f42bca3..faca969 100644
    unset(_config_dir)
    message(STATUS "Found flann version ${flann_VERSION}")
    return()
-diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
-index d87d02d..9c0ede1 100644
 --- a/cmake/pcl_utils.cmake
 +++ b/cmake/pcl_utils.cmake
 @@ -100,6 +100,7 @@ macro(SET_INSTALL_DIRS)
@@ -55,8 +49,6 @@ index d87d02d..9c0ede1 100644
  endmacro()
  
  
-diff --git a/cmake/pkgconfig.cmake.in b/cmake/pkgconfig.cmake.in
-index c351e44..b10577a 100644
 --- a/cmake/pkgconfig.cmake.in
 +++ b/cmake/pkgconfig.cmake.in
 @@ -3,7 +3,7 @@ prefix=@CMAKE_INSTALL_PREFIX@
