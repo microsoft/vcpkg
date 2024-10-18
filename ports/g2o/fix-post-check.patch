@@ -1,0 +1,12 @@
+diff --git a/config.h.in b/config.h.in
+index d94e6c0..cc46c5e 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -23,6 +23,6 @@
+ #endif
+ 
+ #cmakedefine G2O_CXX_COMPILER "@G2O_CXX_COMPILER@"
+-#cmakedefine G2O_SRC_DIR "@G2O_SRC_DIR@"
++#cmakedefine G2O_SRC_DIR ""
+ 
+ #endif
