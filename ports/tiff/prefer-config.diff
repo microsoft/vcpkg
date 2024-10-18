@@ -1,5 +1,5 @@
 diff --git a/cmake/LERCCodec.cmake b/cmake/LERCCodec.cmake
-index 54504ca..8dc8e1b 100644
+index 54504ca..3e04997 100644
 --- a/cmake/LERCCodec.cmake
 +++ b/cmake/LERCCodec.cmake
 @@ -25,7 +25,10 @@
@@ -40,3 +40,16 @@ index 3fac861..2957aa3 100644
  
  if(ZSTD_FOUND)
      if(TARGET zstd::libzstd_shared)
+diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
+index a8aa0c3..d5b9b25 100755
+--- a/libtiff/CMakeLists.txt
++++ b/libtiff/CMakeLists.txt
+@@ -163,7 +163,7 @@ if(JBIG_SUPPORT)
+ endif()
+ if(LERC_SUPPORT)
+   target_link_libraries(tiff PRIVATE LERC::LERC)
+-  if(LERC_VERSION_STRING VERSION_GREATER_EQUAL "4.0")
++  if(1)
+     if(NOT BUILD_SHARED_LIBS)
+       set_target_properties(tiff PROPERTIES COMPILE_DEFINITIONS LERC_STATIC)
+     endif()
