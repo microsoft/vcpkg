@@ -1,0 +1,68 @@
+Index: SConstruct
+===================================================================
+--- SConstruct	(revision 1920717)
++++ SConstruct	(working copy)
+@@ -331,8 +331,12 @@
+ 
+   env.Append(LIBS=[apr_libs, apu_libs])
+   if not env.get('SOURCE_LAYOUT', None):
+-    env.Append(LIBPATH=['$APR/lib', '$APU/lib'],
+-               CPPPATH=['$APR/include/apr-1', '$APU/include/apr-1'])
++    if debug:
++      env.Append(LIBPATH=['$APR/debug/lib', '$APU/lib'],
++                 CPPPATH=['$APR/include/apr-1', '$APU/include/apr-1'])
++    else:
++      env.Append(LIBPATH=['$APR/lib', '$APU/debug/lib'],
++                 CPPPATH=['$APR/include/apr-1', '$APU/include/apr-1'])
+   elif aprstatic:
+     env.Append(LIBPATH=['$APR/LibR','$APU/LibR'],
+                CPPPATH=['$APR/include', '$APU/include'])
+@@ -341,10 +345,15 @@
+                CPPPATH=['$APR/include', '$APU/include'])
+ 
+   # zlib
+-  env.Append(LIBS=['zlib.lib'])
+   if not env.get('SOURCE_LAYOUT', None):
+-    env.Append(CPPPATH=['$ZLIB/include'],
+-               LIBPATH=['$ZLIB/lib'])
++    if debug:
++      env.Append(CPPPATH=['$ZLIB/include'],
++                 LIBPATH=['$ZLIB/debug/lib'])
++      env.Append(LIBS=['zlibd.lib'])
++    else:
++      env.Append(CPPPATH=['$ZLIB/include'],
++                 LIBPATH=['$ZLIB/lib'])
++      env.Append(LIBS=['zlib.lib'])
+   else:
+     env.Append(CPPPATH=['$ZLIB'],
+                LIBPATH=['$ZLIB'])
+@@ -351,8 +360,12 @@
+ 
+   # openssl
+   if not env.get('SOURCE_LAYOUT', None):
+-    env.Append(CPPPATH=['$OPENSSL/include/openssl'],
+-               LIBPATH=['$OPENSSL/lib'])
++    if debug:
++      env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++                 LIBPATH=['$OPENSSL/debug/lib'])
++    else:
++      env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++                 LIBPATH=['$OPENSSL/lib'])
+   elif 0: # opensslstatic:
+     env.Append(CPPPATH=['$OPENSSL/inc32'],
+                LIBPATH=['$OPENSSL/out32'])
+@@ -392,8 +405,12 @@
+     apr_libs = ''
+     apu_libs = ''
+ 
+-  env.Append(CPPPATH=['$OPENSSL/include'])
+-  env.Append(LIBPATH=['$OPENSSL/lib'])
++  if debug:
++    env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++               LIBPATH=['$OPENSSL/debug/lib'])
++  else:
++    env.Append(CPPPATH=['$OPENSSL/include/openssl'],
++               LIBPATH=['$OPENSSL/debug'])
+ 
+ 
+ # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
