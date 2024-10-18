@@ -326,6 +326,8 @@ evpp:x64-android=fail
 fastdds:arm-neon-android=fail
 fastdds:arm64-android=fail
 fastdds:x64-android=fail
+# clang rejects variable length arrays
+fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
 fbbgemmerror:arm-neon-android=fail
 fbbgemmerror:arm64-android=fail
@@ -357,6 +359,8 @@ fmi4cpp:arm64-uwp=fail
 fmi4cpp:x64-uwp=fail
 folly:arm64-android=fail
 folly:x64-android=fail
+# unsupported option '-mfloat-abi='
+freerdp:arm64-android=fail
 # ALooper_pollAll no longer available
 freeglut:arm-neon-android=fail
 freeglut:arm64-android=fail
@@ -977,7 +981,6 @@ rapidstring:x64-windows-static=fail
 rapidstring:x64-windows-static-md=fail
 rapidstring:x86-windows=fail
 # ALooper_pollAll no longer available
-raylib:arm-neon-android=fail
 raylib:arm64-android=fail
 raylib:x64-android=fail
 # file conflicts with rbdl
