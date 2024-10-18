@@ -1,0 +1,13 @@
+diff --git a/plugins/CMakeLists.txt b/plugins/CMakeLists.txt
+index 65891d8..00dcbfc 100644
+--- a/plugins/CMakeLists.txt
++++ b/plugins/CMakeLists.txt
+@@ -99,7 +99,7 @@ SET(h5bzip2_SOURCES H5Zbzip2.c blocksort.c huffman.c crctable.c randtable.c comp
+ buildplugin(h5bzip2 "h5bzip2")
+ ELSE()
+ SET(h5bzip2_SOURCES H5Zbzip2.c)
+-buildplugin(h5bzip2 "h5bzip2" ${Bzip2_LIBRARIES})
++buildplugin(h5bzip2 "h5bzip2" ${Bz2_LIBRARIES})
+ ENDIF()
+ 
+ 
