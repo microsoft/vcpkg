@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bef673f..284d40e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,6 +21,7 @@ target_include_directories(config INTERFACE
+   $<BUILD_INTERFACE:${DCMTK_BINARY_DIR}/config/include>
+   $<INSTALL_INTERFACE:include>
+ )
++target_compile_options(config INTERFACE "\$<\$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
+ install(TARGETS config EXPORT DCMTKTargets)
+ 
+ # Include directories
