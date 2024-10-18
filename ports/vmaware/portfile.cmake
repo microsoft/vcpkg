@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 
 # Header only
+set(VCPKG_BUILD_TYPE release)
 if("gpl3" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/src/vmaware.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vmaware")
 else()
