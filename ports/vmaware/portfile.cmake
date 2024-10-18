@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-
 # Header only
 set(VCPKG_BUILD_TYPE release)
 if("gpl3" IN_LIST FEATURES)
