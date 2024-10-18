@@ -26,6 +26,7 @@ vcpkg_from_github(
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
         "${PYTHON_GPU_WRAPPING_PATCH}"
+        --trace-expand
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
 
@@ -261,3 +262,4 @@ if("rtk" IN_LIST FEATURES)
     )
 endif()
 vcpkg_install_copyright(FILE_LIST ${file_list})
+message(FATAL_ERROR STOP)
