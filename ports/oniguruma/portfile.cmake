@@ -34,9 +34,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 vcpkg_fixup_pkgconfig()
 
+# Note that onig-config is a shell script, not CMake configs, so
+# vcpkg_cmake_config_fixup would be inappropriate
 file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/onig-config")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config"")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
