@@ -6696,18 +6696,6 @@
       "baseline": "3.3.2",
       "port-version": 1
     },
-    "openssl-unix": {
-      "baseline": "deprecated",
-      "port-version": 0
-    },
-    "openssl-uwp": {
-      "baseline": "deprecated",
-      "port-version": 0
-    },
-    "openssl-windows": {
-      "baseline": "deprecated",
-      "port-version": 0
-    },
     "opensubdiv": {
       "baseline": "3.5.0",
       "port-version": 2
