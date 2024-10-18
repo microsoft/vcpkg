@@ -560,6 +560,10 @@
       "baseline": "3.15.0",
       "port-version": 0
     },
+    "bark": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "basisu": {
       "baseline": "1.16.4",
       "port-version": 0
