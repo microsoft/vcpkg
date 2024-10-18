@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES add-install-configuration.patch
 )
-message (FATAL "not finished")
 
 set(VCPKG_BUILD_TYPE release) # header-only
 
