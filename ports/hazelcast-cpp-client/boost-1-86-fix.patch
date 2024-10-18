@@ -1,74 +1,38 @@
 diff --git a/hazelcast/include/hazelcast/client/protocol/ClientMessage.h b/hazelcast/include/hazelcast/client/protocol/ClientMessage.h
-index ed6aff9..807004f 100644
+index 4df3620dc..bf0340f47 100644
 --- a/hazelcast/include/hazelcast/client/protocol/ClientMessage.h
 +++ b/hazelcast/include/hazelcast/client/protocol/ClientMessage.h
-@@ -619,6 +619,36 @@ public:
-         return result;
-     }
+@@ -56,6 +56,11 @@
+ namespace hazelcast {
+ namespace util {
+ class ByteBuffer;
++
++template<class T>
++struct is_trivial_or_uuid : std::is_trivial<T> {};
++template<>
++struct is_trivial_or_uuid<boost::uuids::uuid> : std::true_type {};
+ }
  
-+    template<typename T>
-+    typename std::enable_if<
-+      std::is_same<T, std::vector<typename T::value_type>>::value &&
-+        std::is_same<std::pair<boost::uuids::uuid,
-+                               typename T::value_type::second_type>,
-+                     typename T::value_type>::value &&
-+        std::is_trivial<typename T::value_type::second_type>::value,
-+      T>::type
-+    get()
-+    {
-+        T result;
-+
-+        auto f = reinterpret_cast<frame_header_type*>(
-+          rd_ptr(SIZE_OF_FRAME_LENGTH_AND_FLAGS));
-+        auto content_length =
-+          static_cast<int32_t>(f->frame_len) - SIZE_OF_FRAME_LENGTH_AND_FLAGS;
-+        size_t item_count =
-+          content_length /
-+          (ClientMessage::get_sizeof<boost::uuids::uuid>() +
-+           ClientMessage::get_sizeof<typename T::value_type::second_type>());
-+        for (size_t i = 0; i < item_count; ++i) {
-+            auto key = get<boost::uuids::uuid>();
-+            auto value = get<typename T::value_type::second_type>();
-+            result.emplace_back(
-+              std::make_pair(std::move(key), std::move(value)));
-+        }
-+
-+        return result;
-+    }
-+
-     template<typename T>
-     typename std::enable_if<
-       std::is_same<T, std::vector<typename T::value_type>>::value &&
-@@ -642,6 +672,28 @@ public:
-         return result;
-     }
- 
-+    template<typename T>
-+    typename std::enable_if<
-+      std::is_same<T, std::vector<typename T::value_type>>::value &&
-+        std::is_same<std::pair<boost::uuids::uuid,
-+                               typename T::value_type::second_type>,
-+                     typename T::value_type>::value &&
-+        !std::is_trivial<typename T::value_type::second_type>::value,
-+      T>::type
-+    get()
-+    {
-+        T result;
-+
-+        auto values = get<std::vector<typename T::value_type::second_type>>();
-+        auto keys = get<std::vector<boost::uuids::uuid>>();
-+
-+        for (size_t i = 0; i < keys.size(); ++i) {
-+            result.emplace_back(std::make_pair(keys[i], std::move(values[i])));
-+        }
-+
-+        return result;
-+    }
-+
-     template<typename T>
-     typename std::enable_if<
-       std::is_same<T,
-@@ -1246,12 +1298,11 @@ public:
+ namespace cp {
+@@ -594,7 +599,7 @@ public:
+         std::is_same<std::pair<typename T::value_type::first_type,
+                                typename T::value_type::second_type>,
+                      typename T::value_type>::value &&
+-        std::is_trivial<typename T::value_type::first_type>::value &&
++        hazelcast::util::is_trivial_or_uuid<typename T::value_type::first_type>::value &&
+         std::is_trivial<typename T::value_type::second_type>::value,
+       T>::type
+     get()
+@@ -625,7 +630,7 @@ public:
+         std::is_same<std::pair<typename T::value_type::first_type,
+                                typename T::value_type::second_type>,
+                      typename T::value_type>::value &&
+-        std::is_trivial<typename T::value_type::first_type>::value &&
++        hazelcast::util::is_trivial_or_uuid<typename T::value_type::first_type>::value &&
+         !std::is_trivial<typename T::value_type::second_type>::value,
+       T>::type
+     get()
+@@ -1246,12 +1251,11 @@ public:
          set(nil);
          if (!nil) {
              boost::endian::endian_reverse_inplace<int64_t>(
@@ -84,7 +48,7 @@ index ed6aff9..807004f 100644
                          sizeof(boost::uuids::uuid));
          } else {
              wr_ptr(sizeof(boost::uuids::uuid));
-@@ -1525,13 +1576,13 @@ private:
+@@ -1525,13 +1529,13 @@ private:
      boost::uuids::uuid get_uuid()
      {
          boost::uuids::uuid u;
@@ -102,7 +66,7 @@ index ed6aff9..807004f 100644
      }
  
 diff --git a/hazelcast/include/hazelcast/client/serialization/pimpl/data_input.h b/hazelcast/include/hazelcast/client/serialization/pimpl/data_input.h
-index 9e678f5..88a2f14 100644
+index 9e678f54d..88a2f14c0 100644
 --- a/hazelcast/include/hazelcast/client/serialization/pimpl/data_input.h
 +++ b/hazelcast/include/hazelcast/client/serialization/pimpl/data_input.h
 @@ -182,11 +182,11 @@ public:
@@ -120,7 +84,7 @@ index 9e678f5..88a2f14 100644
                *reinterpret_cast<int64_t*>(
                  &u.data[util::Bits::LONG_SIZE_IN_BYTES]));
 diff --git a/hazelcast/include/hazelcast/client/spi/impl/ClientInvocation.h b/hazelcast/include/hazelcast/client/spi/impl/ClientInvocation.h
-index 5b31863..625c642 100644
+index 5b3186347..625c642b2 100644
 --- a/hazelcast/include/hazelcast/client/spi/impl/ClientInvocation.h
 +++ b/hazelcast/include/hazelcast/client/spi/impl/ClientInvocation.h
 @@ -210,22 +210,7 @@ private:
@@ -148,7 +112,7 @@ index 5b31863..625c642 100644
      void invoke_on_selection();
  
 diff --git a/hazelcast/src/hazelcast/client/protocol.cpp b/hazelcast/src/hazelcast/client/protocol.cpp
-index cfc67f2..934d9da 100644
+index cfc67f26f..934d9da4b 100644
 --- a/hazelcast/src/hazelcast/client/protocol.cpp
 +++ b/hazelcast/src/hazelcast/client/protocol.cpp
 @@ -376,7 +376,7 @@ operator<<(std::ostream& os, const ClientMessage& msg)
@@ -161,7 +125,7 @@ index cfc67f2..934d9da 100644
  
  void
 diff --git a/hazelcast/src/hazelcast/client/serialization.cpp b/hazelcast/src/hazelcast/client/serialization.cpp
-index 0e7f03b..1e0b5e6 100644
+index 071772fec..8dcb6ccf0 100644
 --- a/hazelcast/src/hazelcast/client/serialization.cpp
 +++ b/hazelcast/src/hazelcast/client/serialization.cpp
 @@ -731,12 +731,12 @@ data_output::write(boost::uuids::uuid v)
