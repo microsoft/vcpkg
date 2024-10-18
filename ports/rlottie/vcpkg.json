@@ -1,0 +1,31 @@
+{
+  "name": "rlottie",
+  "version": "0.2",
+  "maintainers": [
+    "Subhransu Mohanty <sub.mohanty@samsung.com>",
+    "Hermet Park <hermetpark@gmail.com>",
+    "Youngbok Shin <youngb.shin@samsung.com>",
+    "Jaeun Choi <jaeun12.choi@samsung.com>",
+    "Bryce Harrington <bryce@bryceharrington.org>",
+    "Junsu Choi <jsuya.choi@samsung.com>",
+    "Yuangu <lifulinghan@aol.com>",
+    "Mihai Serban <mihai.serban@gmail.com>",
+    "Shinwoo Kim <cinoo.kim@samsung.com>",
+    "Vincent Torri <vincent.torri@gmail.com>",
+    "Nicholas Guriev <guriev-ns@ya.ru>",
+    "John Preston <johnprestonmail@gmail.com>"
+  ],
+  "description": "rlottie is a platform independent standalone c++ library for rendering vector based animations and art in realtime.",
+  "homepage": "https://github.com/Samsung/rlottie",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
