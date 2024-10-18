@@ -4,10 +4,7 @@
   "description": "A platform independent standalone library that plays Lottie Animation.",
   "homepage": "https://github.com/Samsung/rlottie",
   "dependencies": [
-    {
-      "name": "freetype",
-      "default-features": false
-    },
+    "rapidjson",
     {
       "name": "vcpkg-cmake",
       "host": true
