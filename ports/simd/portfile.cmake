@@ -76,6 +76,8 @@ else()
       -DSIMD_TEST=OFF
       -DSIMD_SHARED=${SIMD_SHARED}
       -DSIMD_PYTHON=OFF
+      -DSIMD_TOOLCHAIN=""
+      -DSIMD_TARGET=""
   )
   vcpkg_cmake_install()
   vcpkg_cmake_config_fixup()
