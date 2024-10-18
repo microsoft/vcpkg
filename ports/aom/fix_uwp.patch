@@ -1,0 +1,13 @@
+diff --git a/aom_util/aom_pthread.h b/aom_util/aom_pthread.h
+index 89c0c96..eace2c1 100644
+--- a/aom_util/aom_pthread.h
++++ b/aom_util/aom_pthread.h
+@@ -94,7 +94,7 @@ static inline int pthread_create(pthread_t *const thread,
+ #ifdef USE_CREATE_THREAD
+   *thread = CreateThread(NULL,          /* lpThreadAttributes */
+                          0,             /* dwStackSize */
+-                         start, arg, 0, /* dwStackSize */
++                         (LPTHREAD_START_ROUTINE)start, arg, 0, /* dwStackSize */
+                          NULL);         /* lpThreadId */
+ #else
+   *thread = (pthread_t)_beginthreadex(NULL,          /* void *security */
