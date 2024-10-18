@@ -1,13 +1,8 @@
-string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _c_ares_version "${VERSION}")
-set(_c_ares_version_major "${CMAKE_MATCH_1}")
-set(_c_ares_version_minor "${CMAKE_MATCH_2}")
-set(_c_ares_version_patch "${CMAKE_MATCH_3}")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
-    SHA512 6060897a4b26afe135e9676002e6de22834aabe3c7d0aaceb64f178591329d6a30394884e8e3971b30992cf3624986aef7e6e4c941d93b0288a21483963827af
+    REF "v${VERSION}"
+    SHA512 55494967123fc6be82ab89d08f28c5e9cdf5937751599076ce459dab61685b6a1b9bd7a74e882ee0f92634f81f8d80f10d4fe481dd5a79159e38525f83488403
     HEAD_REF main
     PATCHES
         avoid-docs.patch
@@ -46,4 +41,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

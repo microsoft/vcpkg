@@ -1,6 +1,7 @@
 {
   "name": "dp-thread-pool",
   "version": "0.6.2",
+  "port-version": 1,
   "maintainers": "Paul Tsouchlos <developer.paul.123@gmail.com>",
   "description": "dp::thread_pool - fast, lightweight C++20 thread pool.",
   "homepage": "https://github.com/DeveloperPaul123/thread-pool",

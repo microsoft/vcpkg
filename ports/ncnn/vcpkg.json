@@ -1,6 +1,7 @@
 {
   "name": "ncnn",
   "version": "20240102",
+  "port-version": 1,
   "description": "ncnn is a high-performance neural network inference computing framework.",
   "homepage": "https://github.com/Tencent/ncnn",
   "license": "BSD-3-Clause",
@@ -14,5 +15,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "vulkan": {
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "glslang",
+        "vulkan"
+      ]
+    }
+  }
 }

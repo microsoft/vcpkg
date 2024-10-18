@@ -137,13 +137,14 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/certs"
     "${CURRENT_PACKAGES_DIR}/misc"
-	"${CURRENT_PACKAGES_DIR}/private"
-	"${CURRENT_PACKAGES_DIR}/lib/engines-3"
-	"${CURRENT_PACKAGES_DIR}/debug/certs"
+    "${CURRENT_PACKAGES_DIR}/private"
+    "${CURRENT_PACKAGES_DIR}/lib/engines-3"
+    "${CURRENT_PACKAGES_DIR}/debug/certs"
     "${CURRENT_PACKAGES_DIR}/debug/misc"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/engines-3"
-	"${CURRENT_PACKAGES_DIR}/debug/private"
-	"${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3"
+    "${CURRENT_PACKAGES_DIR}/debug/private"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"

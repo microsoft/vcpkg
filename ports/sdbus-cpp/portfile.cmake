@@ -4,21 +4,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kistler-Group/sdbus-cpp
     REF "v${VERSION}"
-    SHA512 8f4cb9ae88b1ec0db0bcc27e131fcb9ad8a8bc88e39721b3b73f63e057bae4cd36619894e25114ccddb1a8e6c21db2f80adcabb3263ff5d8b34b72af7563afe2
-    PATCHES
-        pic.patch # can be dropped once https://github.com/Kistler-Group/sdbus-cpp/pull/361 is merged+released
+    SHA512 638453d2ea0d5ba556eacda59ca114896bf275d227b33b525259bf69dac3d766df6586046e6ea83a8c1afe9fb0701f4d358819ed9300bab598e775a0a2880917
 )
 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tool   BUILD_CODE_GEN
+        tool   SDBUSCPP_BUILD_CODEGEN
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DBUILD_LIBSYSTEMD=OFF
+        -DSDBUSCPP_BUILD_LIBSYSTEMD=OFF
 )
 
 vcpkg_cmake_install()

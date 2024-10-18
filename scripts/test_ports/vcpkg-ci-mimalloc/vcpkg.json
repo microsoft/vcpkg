@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-mimalloc",
-  "version": "2.1.2",
+  "version": "2.1.7",
   "description": "Validates mimalloc",
   "dependencies": [
     "mimalloc",

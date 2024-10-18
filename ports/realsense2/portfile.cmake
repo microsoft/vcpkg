@@ -1,3 +1,9 @@
+vcpkg_download_distfile(ARM64_DETECTION_FIX
+    URLS https://github.com/IntelRealSense/librealsense/commit/5a244052e2df7842940dfb5a9011973a09626300.patch?full_desc=1
+    FILENAME realsense2-arm64-detection-fix-5a244052e2df7842940dfb5a9011973a09626300.patch
+    SHA512 2897a55a58ec549914378213a5decd0092a527268651e7cb140ce2dad3ee99ddde2735113a448d8a191552fc32fa40a45422b274f617c98cda3d1b3ce948204b
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
@@ -7,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         fix_openni2.patch
         fix-osx.patch # from https://github.com/IntelRealSense/librealsense/pull/11997
+        "${ARM64_DETECTION_FIX}"
 )
 
 file(COPY "${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf" DESTINATION "${SOURCE_PATH}")

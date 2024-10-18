@@ -1,16 +1,16 @@
 diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
-index 9f3001d..962cfc4 100644
+index cfe6ad9..75cfd54 100644
 --- a/dlib/CMakeLists.txt
 +++ b/dlib/CMakeLists.txt
-@@ -287,6 +287,7 @@ if (NOT TARGET dlib)
- 
-    set(dlib_needed_libraries)
-    set(dlib_needed_includes)
+@@ -293,6 +293,7 @@ if (NOT TARGET dlib)
+    set(dlib_needed_public_ldflags)
+    set(dlib_needed_private_libraries)
+    set(dlib_needed_private_includes)
 +   set(pkg_config_dlib_requires_private "")
  
     if (DLIB_ISO_CPP_ONLY)
        add_library(dlib ${source_files} )
-@@ -814,6 +815,10 @@ if (NOT TARGET dlib)
+@@ -833,6 +834,10 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_LINK_WITH_SQLITE3)
@@ -21,7 +21,7 @@ index 9f3001d..962cfc4 100644
           find_library(sqlite sqlite3)
           # make sure sqlite3.h is in the include path
           find_path(sqlite_path sqlite3.h)
-@@ -829,6 +834,10 @@ if (NOT TARGET dlib)
+@@ -848,6 +853,10 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_USE_FFTW)
@@ -32,7 +32,7 @@ index 9f3001d..962cfc4 100644
           find_library(fftw fftw3)
           # make sure fftw3.h is in the include path
           find_path(fftw_path fftw3.h)
-@@ -964,6 +973,8 @@ if (NOT TARGET dlib)
+@@ -998,6 +1007,8 @@ if (NOT TARGET dlib)
  
        ## dlib-1.pc generation and installation
  
@@ -41,7 +41,7 @@ index 9f3001d..962cfc4 100644
        configure_file("cmake_utils/dlib.pc.in" "dlib-1.pc" @ONLY)
        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dlib-1.pc"
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-@@ -977,7 +988,7 @@ if (NOT TARGET dlib)
+@@ -1011,7 +1022,7 @@ if (NOT TARGET dlib)
  
  endif()
  

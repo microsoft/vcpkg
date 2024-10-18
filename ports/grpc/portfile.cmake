@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.51.1
-    SHA512 1bc8e7a5a15b2dca88527d111cde398b0dc1921bbc945c6df8225b4225b8ac0b43155bcf743230ce7b5962d1ab948e9363229c98a879b1befc7a939a290fb888
+    REF "v${VERSION}"
+    SHA512 91c2406ed4198509ac0d5360b3da6898fa4f40f459eb6fff541faa44cc238eed98fd7489e7ef7a80a6f4a318bc5b9130eaa0ba1beaa358d1c074fc82825648ff
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -15,14 +15,22 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
-        snprintf.patch
-        00012-fix-use-cxx17.patch
-        00014-pkgconfig-upbdefs.patch
         00015-disable-download-archive.patch
-        00016_add_header.patch
+        00016-fix-plugin-targets.patch
+        00017-abseil.patch
+)
+# Ensure de-vendoring
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/third_party/abseil-cpp"
+    "${SOURCE_PATH}/third_party/cares"
+    "${SOURCE_PATH}/third_party/protobuf"
+    "${SOURCE_PATH}/third_party/re2"
+    "${SOURCE_PATH}/third_party/upb"
+    "${SOURCE_PATH}/third_party/utf8_range"
+    "${SOURCE_PATH}/third_party/zlib"
 )
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
@@ -52,9 +60,7 @@ vcpkg_cmake_configure(
         -DgRPC_SSL_PROVIDER=package
         -DgRPC_PROTOBUF_PROVIDER=package
         -DgRPC_ABSL_PROVIDER=package
-        -DgRPC_UPB_PROVIDER=package
         -DgRPC_RE2_PROVIDER=package
-        -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
         -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_BINDIR:STRING=bin
@@ -96,4 +102,4 @@ else()
     vcpkg_fixup_pkgconfig()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

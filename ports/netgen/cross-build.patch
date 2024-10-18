@@ -1,0 +1,64 @@
+diff --git a/libsrc/core/exception.cpp b/libsrc/core/exception.cpp
+index 9c99a138..2d5a1ede 100644
+--- a/libsrc/core/exception.cpp
++++ b/libsrc/core/exception.cpp
+@@ -36,7 +36,7 @@ namespace ngcore
+ 
+ 
+ // ********* STUFF FOR GETBACKTRACE ***************************
+-#if defined __GNUC__ && !defined __EMSCRIPTEN__
++#if defined __GNUC__ && !defined __EMSCRIPTEN__ && !defined __ANDROID__
+ 
+ #include <execinfo.h>
+ #include <string.h>
+diff --git a/libsrc/core/simd.hpp b/libsrc/core/simd.hpp
+index d5a6341f..5f07a6d3 100644
+--- a/libsrc/core/simd.hpp
++++ b/libsrc/core/simd.hpp
+@@ -28,7 +28,7 @@
+ #include "simd_avx512.hpp"
+ #endif
+ 
+-#ifdef __aarch64__
++#if defined __aarch64__ && !defined __ANDROID__
+ #include "simd_arm64.hpp"
+ #endif
+ 
+diff --git a/libsrc/core/utils.hpp b/libsrc/core/utils.hpp
+index 79d919c0..1318debf 100644
+--- a/libsrc/core/utils.hpp
++++ b/libsrc/core/utils.hpp
+@@ -74,7 +74,7 @@ namespace ngcore
+ #elif defined(__EMSCRIPTEN__)
+     return std::chrono::high_resolution_clock::now().time_since_epoch().count();
+ #else
+-#warning "Unsupported CPU architecture"
++#pragma message ( "Unsupported CPU architecture" )
+     return 0;
+ #endif
+   }
+diff --git a/rules/CMakeLists.txt b/rules/CMakeLists.txt
+index 2c281ca3..e2982f28 100644
+--- a/rules/CMakeLists.txt
++++ b/rules/CMakeLists.txt
+@@ -1,14 +1,14 @@
+ # this file is included from the parent directory (otherwise generated source files are not recognized properly by cmake)
+ 
+ # generate .cpp files containing the string of the .rls meshing rule files
+-if(EMSCRIPTEN)
+-  add_custom_command(OUTPUT makerls
+-    COMMAND g++ ${CMAKE_CURRENT_SOURCE_DIR}/rules/makerlsfile.cpp -o ${CMAKE_CURRENT_BINARY_DIR}/makerls
+-    )
+-  set(rules_command ${CMAKE_BINARY_DIR}/makerls)
+-else(EMSCRIPTEN)
++if(MAKERLS_EXECUTABLE)
++  add_executable(makerls IMPORTED)
++  set_target_properties(makerls PROPERTIES IMPORTED_LOCATION "${MAKERLS_EXECUTABLE}")
++  set(rules_command makerls)
++else()
+   add_executable(makerls rules/makerlsfile.cpp)
+   set(rules_command makerls)
++  install(TARGETS makerls DESTINATION ${NG_INSTALL_DIR} COMPONENT netgen)
+ endif()
+ 
+ set(rules

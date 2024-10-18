@@ -1,4 +1,4 @@
-﻿diff --git a/cdk/cmake/DepFindCompression.cmake b/cdk/cmake/DepFindCompression.cmake
+diff --git a/cdk/cmake/DepFindCompression.cmake b/cdk/cmake/DepFindCompression.cmake
 index f9fe519f..0f893da8 100644
 --- a/cdk/cmake/DepFindCompression.cmake
 +++ b/cdk/cmake/DepFindCompression.cmake

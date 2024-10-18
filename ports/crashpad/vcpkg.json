@@ -1,6 +1,6 @@
 {
   "name": "crashpad",
-  "version-date": "2022-09-05",
+  "version-date": "2024-04-11",
   "port-version": 4,
   "description": [
     "Crashpad is a crash-reporting system.",
@@ -8,8 +8,13 @@
   ],
   "homepage": "https://chromium.googlesource.com/crashpad/crashpad/+/master/README.md",
   "license": "Apache-2.0",
-  "supports": "linux | osx | (windows & !uwp)",
+  "supports": "android | linux | osx | (windows & !uwp)",
   "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false,
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true

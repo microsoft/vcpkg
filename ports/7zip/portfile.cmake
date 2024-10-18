@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ip7z/7zip
     REF "${VERSION}"
-    SHA512 7c2fb18261ce9185d29b690ccb7694d7926abe3af0619dbe42b7ab43b400ee71c1eb79c31f892aea2fbdb55036225f31ee393287cce91afd17f20cff8f6cb949
+    SHA512 5aa2a32a1d2ea81b0ee487e07efc444fda69967a67fb3a7d6e8fd06d32ebf9be76948ea23d258feade89877be698d09e1ef2ba79bbeda83752fdbb50a007af6c
     HEAD_REF main
 )
 

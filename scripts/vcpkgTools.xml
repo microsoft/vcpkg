@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.11.8</version>
+        <version>3.12.7</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.11.8/python-3.11.8-embed-win32.zip</url>
-        <sha512>c88ef02f0860000dbc59361cfe051e3e8dc7d208ed39bb5bc20a3e8b8711b578926e281a11941787ea61b2ef05b945ab3133322dcb85b916f79ac4ada57f6309</sha512>
-        <archiveName>python-3.11.8-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-win32.zip</url>
+        <sha512>15542080e0cc25c574391218107fe843006e8c5a7161d1cd48cf14a3c47155c0244587273d9c747f35b15ea17676869ecce079214824214c1a62abfc86ad9f9b</sha512>
+        <archiveName>python-3.12.7-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.11.8</version>
+        <version>3.12.7</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.11.8</url>
-        <sha512>8c1abd622fb2795fb87ab5208764fe13f7f4d69f2283b4237ea47b7c14b0989b5b4169f1ac1d3b1f417c6c2cc3d85ce151370dae8efc807c93e57cd67fa3c8cf</sha512>
-        <archiveName>python-3.11.8.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.12.7</url>
+        <sha512>6d5cac329808e31d4d8d593da6eeaa9ea4ec0296679335e7b7811f6c6fa6cbb96948d2f7845071798c6f73f83852dd731dc2b0fda48c520b9bec8a86cc56134e</sha512>
+        <archiveName>python-3.12.7.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.29.0</version>
-        <exeRelativePath>cmake-3.29.0-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-windows-i386.zip</url>
-        <sha512>70cdd5e13ac40cd1a1e2faf0cb0c3e937734c70751bf804af999bcf01b562e34b9f4fbe7da160604278d7cea7cf8676190013ae9b50f198275da2b78d0e3da64</sha512>
-        <archiveName>cmake-3.29.0-windows-i386.zip</archiveName>
+        <version>3.30.1</version>
+        <exeRelativePath>cmake-3.30.1-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-windows-i386.zip</url>
+        <sha512>0b74bd4222064cfb6e42838987704eb21d57ad5f7bbd87714ab570f1d107fa19bd2f14316475338518292bc377bf38b581a07c73267a775cd385bbd1800879b4</sha512>
+        <archiveName>cmake-3.30.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.29.0</version>
-        <exeRelativePath>cmake-3.29.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-macos-universal.tar.gz</url>
-        <sha512>0d4c6958ce88bd2ebbb3f3a1e6c9cf4f67017c195009b43bb2418a1b4f1068ab750c781a6eb6f43531a8423c8518957312dbf9234e1a8a5e32a350e775c884eb</sha512>
-        <archiveName>cmake-3.29.0-macos-universal.tar.gz</archiveName>
+        <version>3.30.1</version>
+        <exeRelativePath>cmake-3.30.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-macos-universal.tar.gz</url>
+        <sha512>71290d3b5e51724711e8784f5b21100cb0cffdbb889da7572a26dd171d9052601496de8d39c42d76ef3a9245af2ab35a590bf53ad68d7bb8a2047b64272d2647</sha512>
+        <archiveName>cmake-3.30.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.29.0</version>
-        <exeRelativePath>cmake-3.29.0-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-linux-x86_64.tar.gz</url>
-        <sha512>8bbcb45315f95e678fb559f11578c632028b1c69730db840db888d5e254f79b614b134b1b414a6f85d9d1e735965cb69fbfe1b692ccd6f1b9f3cee296b5d56b1</sha512>
-        <archiveName>cmake-3.29.0-linux-x86_64.tar.gz</archiveName>
+        <version>3.30.1</version>
+        <exeRelativePath>cmake-3.30.1-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-x86_64.tar.gz</url>
+        <sha512>84ce1333ed696a1736986fba2853c5d8db0e4c9addaf4a4723911248c6d49ecf545adf8bd46091d198fc7bd1e6c896798661463aa1ce3a726a093883aaa19adf</sha512>
+        <archiveName>cmake-3.30.1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
@@ -88,22 +88,22 @@
         <sha512>40c534eb27f079c15c9782f53f82c12dabfede4d3d85f0edf8a855c2b0d5e12921a96506b37c210beab3c33220f8ff098447ad054e82d8c2603964975fc12076</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>6.2.1</version>
+        <version>6.10.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v6.2.1/nuget.exe</url>
-        <sha512>dbb8c13d93a8c0071f45b1fe733ee7a888078dcec5bbcb4dfb49ab8c3970c7513f608bd3bc80b0bfb4764a505ea017cac2ead3656e1a5aa7f3a770c8e3e35825</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe</url>
+        <sha512>71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf</sha512>
     </tool>
     <tool name="coscli" os="windows">
         <version>0.11.0</version>
@@ -131,19 +131,25 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>23.01</version>
+        <version>24.08</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-x64.msi</url>
-        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
-        <archiveName>7z2301-x64.msi</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.08/7z2408-x64.msi</url>
+        <sha512>3259bf5e251382333c9d18a3fc01d83491fb41bc4ac4ddb25a02918494594c1074482b6608189a8a89e343d78e34d57420cdeff1d7ace5acfdcaacc8776f1be8</sha512>
+        <archiveName>7z2408-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>23.01</version>
+        <version>24.08</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-extra.7z</url>
-        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
-        <archiveName>7z2301-extra.7z</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.08/7z2408-extra.7z</url>
+        <sha512>35f55236fccfb576ca014e29d0c35f4a213e53f06683bd2e82f869ed02506e230c8dd623c01d0207244d6a997031f737903456b7ad4a44db1717f0a17a78602e</sha512>
+        <archiveName>7z2408-extra.7z</archiveName>
      </tool>
+    <tool name="7zr" os="windows">
+        <version>24.08</version>
+        <exeRelativePath>7zr.exe</exeRelativePath>
+        <url>https://github.com/ip7z/7zip/releases/download/24.08/7zr.exe</url>
+        <sha512>424196f2acf5b89807f4038683acc50e7604223fc630245af6bab0e0df923f8b1c49cb09ac709086568c214c3f53dcb7d6c32e8a54af222a3ff78cfab9c51670</sha512>
+    </tool>
     <tool name="aria2" os="windows">
         <version>1.37.0</version>
         <exeRelativePath>aria2-1.37.0-win-64bit-build1\aria2c.exe</exeRelativePath>
@@ -180,11 +186,11 @@
         <archiveName>ninja-mac-1.11.1.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.16</version>
+        <version>7.2.23</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.16/PowerShell-7.2.16-win-x64.zip</url>
-        <sha512>de246b7719337ff0c16ef46cf1df2e0fb5e39f7d2754cb28422cf455df276be6e35e9efa9d2bac81c383df1d2d97c9281a24e86ec84af7c395b7671149111ca9</sha512>
-        <archiveName>PowerShell-7.2.16-win-x64.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.23/PowerShell-7.2.23-win-x64.zip</url>
+        <sha512>b374a878df02980d54e17ad7cfc9021e331748c3770f586be61356c257494d1b33899c1167d09a35c210bc084474aefdff972f672d16afb43be0562b3589285a</sha512>
+        <archiveName>PowerShell-7.2.23-win-x64.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.15.1</version>

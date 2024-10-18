@@ -5,13 +5,15 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 74eddba01ce4c2ffdca781c85db3bb52c85f1db3c09813ee2b8ceea0608f92ca3912fd9266f55deb36a8ba4d01802895ca5d5d219e7d9caec45e1a8534e45a84
+    SHA512 429cea78e227d838105791b28a18270c3d2418bfb951c322771e6323d5f712204d63d66a6606ce9604a92d236a8dd07d651232c717264472d27eb6de26ddc733
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
+        ccasflags.patch
         use-gmp-pkgconfig.patch
+        compression-libs.diff
 )
 
 vcpkg_list(SET options)
@@ -30,14 +32,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
 endif()
 
-if(VCPKG_CROSSCOMPILING)
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-    cmake_path(GET ccas PARENT_PATH ccas_dir)
-    vcpkg_add_to_path("${ccas_dir}")
-    cmake_path(GET ccas FILENAME ccas_command)
-    vcpkg_list(APPEND options "CCAS=${ccas_command}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_list(APPEND options "ac_cv_dlopen_soname_works=no") # ensure vcpkg libs
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
@@ -57,6 +53,7 @@ vcpkg_configure_make(
         --with-tpm=no
         --with-tpm2=no
         --with-zstd=no
+        --with-zlib=yes
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG

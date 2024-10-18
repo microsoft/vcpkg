@@ -2,23 +2,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO protocolbuffers/upb
-    REF e4635f223e7d36dfbea3b722a4ca4807a7e882e2 # 2022-06-21
-    SHA512 c5d48b1d87be7db65ad1f04f5ab43d694958d0e6892fd79c29993e564a402891fcd24ee9d34a9ca642ad20b80c02d3157675885edb6bd3bbc8cf5f29cc3be32c
-    HEAD_REF master
+    REPO protocolbuffers/protobuf
+    REF "v${VERSION}"
+    SHA512 ce81add9d978a6b63d4205715eac5084e81a6753da1f6c6bad6493e60253215901bffc4a60d704a873333f2b9f94fd86cb7eb5b293035f2268c12692bd808bac
+    HEAD_REF main
     PATCHES
-        0001-make-cmakelists-py.patch
-        0002-fix-uwp.patch
+        fix-cmake.patch
+        fix-NAN-on-Win11.patch
 )
-
-vcpkg_find_acquire_program(PYTHON3)
-
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${SOURCE_PATH}/cmake/make_cmakelists.py" "cmake/CMakeLists.txt"
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME make_cmakelists)
-
-vcpkg_replace_string("${SOURCE_PATH}/cmake/CMakeLists.txt" "/third_party/utf8_range)" "utf8_range)")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,9 +22,8 @@ if(NOT VCPKG_UPB_BUILD_CODEGEN)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/cmake"
+    SOURCE_PATH "${SOURCE_PATH}/upb/cmake"
     OPTIONS ${FEATURE_OPTIONS}
-        "-DVCPKG_UPB_HOST_INCLUDE_DIR=${CURRENT_HOST_INSTALLED_DIR}/include"
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -45,13 +35,14 @@ if (VCPKG_UPB_BUILD_CODEGEN)
         TOOL_NAMES
             protoc-gen-upbdefs
             protoc-gen-upb
+            protoc-gen-upb_minitable
     )
 else()
     configure_file("${CMAKE_CURRENT_LIST_DIR}/upb-config-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/upb/upb-config-vcpkg-tools.cmake" @ONLY)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/upb/fuzz" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

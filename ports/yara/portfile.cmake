@@ -4,7 +4,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO VirusTotal/yara
   REF "v${VERSION}"
-  SHA512 dc77ec46a30ca2fff33b639166fc554c9c6d9e955642774e23da3ea7dbb25fe154cfd4ef83c9808920193028b9099258a63b3f1b9a66864a1f3905f0a8e8053f
+  SHA512 761f3930117c35d87b0e3be1a5d61a6887006470fdf578164feb1bd56a96b2d85770ab7c3a21258a2781ff3327cb705942f4f0eb959cff4b210f0c7fbec1fc30
   HEAD_REF master
   PATCHES
     # Module elf request new library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.

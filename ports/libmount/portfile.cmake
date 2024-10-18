@@ -1,13 +1,15 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION}/util-linux-${VERSION}.tar.xz"
     FILENAME "util-linux-${VERSION}.tar.xz"
-    SHA512 3d59a0f114c06be19ef7f86fca37ba5b9073823d011b3fc37997ddb00124b4505ea32903b78798a64dffbccf0ba645a692678ee845cc65a5b321824448a82a94
+    SHA512 f06e61d4ee0e196223f7341ec75a16a6671f82d6e353823490ecff17e947bb169a6b65177e3ab0da6e733e079b24d6a77905a0e8bbfed82ca9aa22a3facb6180
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE ${VERSION}
+    PATCHES
+        hide-private-symbols.diff
 )
 
 set(ENV{GTKDOCIZE} true)

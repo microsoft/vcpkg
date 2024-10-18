@@ -6,7 +6,7 @@ set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.D3D12/${VERSION}"
     FILENAME "Microsoft.Direct3D.D3D12.${VERSION}.zip"
-    SHA512 9703445beb09808f1edf1320605d870fdfbd74b728227df2c9c99a560400c653f38960b6f54f45dc36fcb2609acb412d30307391ee02df53bc636e2c4c89f22c
+    SHA512 05baa55231684ab10a3e905c9b85ce78f04ade9360f7de84a06bbae3bfc3123bcccaa563647a25e151cc759106bc19e37740ef78563592d28e3a723fd744b42f
 )
 
 vcpkg_extract_source_archive(
@@ -15,10 +15,12 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(REDIST_ARCH arm64)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(REDIST_ARCH win32)
 else()
-    set(REDIST_ARCH ${VCPKG_TARGET_ARCHITECTURE})
+    set(REDIST_ARCH x64)
 endif()
 
 file(COPY "${PACKAGE_PATH}/build/native/bin/${REDIST_ARCH}/D3D12Core.dll" "${PACKAGE_PATH}/build/native/bin/${REDIST_ARCH}/D3D12Core.pdb"
