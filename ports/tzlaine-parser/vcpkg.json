@@ -1,0 +1,17 @@
+{
+  "name": "tzlaine-parser",
+  "version-date": "2024-10-04",
+  "description": "A C++ parser combinator library.",
+  "homepage": "https://tzlaine.github.io/parser/doc/html/index.html",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "boost-assert",
+    "boost-charconv",
+    "boost-hana",
+    "boost-type-index",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
