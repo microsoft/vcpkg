@@ -26,6 +26,7 @@ vcpkg_execute_required_process(
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src/KinectSDK-${KINECTSDK10_VERSION}-${VCPKG_TARGET_ARCHITECTURE}")
 set(KINECTSDK10_MSI_INSTALLER "installer\\wix\\AttachedContainer\\KinectSDK-${KINECTSDK10_VERSION}-${VCPKG_TARGET_ARCHITECTURE}.msi")
+vcpkg_find_acquire_program(LESSMSI)
 vcpkg_execute_required_process(
     COMMAND
         "${LESSMSI}"

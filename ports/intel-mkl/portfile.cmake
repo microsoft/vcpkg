@@ -91,6 +91,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(package_path "${extract_0_dir}/packages/${pack}")
         cmake_path(GET pack STEM LAST_ONLY packstem)
         cmake_path(NATIVE_PATH package_path package_path_native)
+        vcpkg_find_acquire_program(LESSMSI)
         vcpkg_execute_required_process(
             COMMAND "${LESSMSI}" x "${package_path_native}"
             WORKING_DIRECTORY "${extract_1_dir}" 
