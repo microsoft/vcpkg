@@ -1,0 +1,4 @@
+openxlsx provides CMake targets:
+
+  find_package(OpenXLSX CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE OpenXLSX::OpenXLSX)
