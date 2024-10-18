@@ -28,11 +28,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 set(ENV{GTKDOCIZE} true)
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     COPY_SOURCE # include dir order problem
-    USE_WRAPPERS
     OPTIONS
         ${options}
         --disable-gtk-doc
@@ -47,7 +46,7 @@ vcpkg_configure_make(
         "CFLAGS=\$CFLAGS -I${CURRENT_INSTALLED_DIR}/include"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
