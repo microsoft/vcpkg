@@ -15,4 +15,4 @@ else()
     file(INSTALL "${SOURCE_PATH}/src/vmaware_MIT.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vmaware" RENAME "vmaware.hpp")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
