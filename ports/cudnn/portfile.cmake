@@ -11,10 +11,10 @@ find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
   HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} ${CUDNN_VERSION_DIRS} /usr/include /usr/include/x86_64-linux-gnu/ /usr/include/aarch64-linux-gnu/
   PATH_SUFFIXES cuda/include include include/11.8 include/12.0 include/12.1 include/12.2 include/12.3 include/12.4 include/12.5 include/12.6)
 message(STATUS "CUDNN_INCLUDE_DIR: ${CUDNN_INCLUDE_DIR}")
-find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
+find_library(_CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} ${CUDNN_VERSION_DIRS} /usr/lib/x86_64-linux-gnu/ /usr/include/aarch64-linux-gnu/ /usr/
   PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64 cuda/lib/x64 lib/11.8/x64 lib/12.0/x64 lib/12.1/x64 lib/12.2/x64 lib/12.3/x64 lib/12.4/x64 lib/12.5/x64 lib/12.6/x64)
-message(STATUS "CUDNN_LIBRARY: ${CUDNN_LIBRARY}")
+message(STATUS "CUDNN_LIBRARY: ${_CUDNN_LIBRARY}")
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
 elseif(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_v8.h")
@@ -55,8 +55,8 @@ if(CUDNN_HEADER_CONTENTS)
   endif()
 endif()
 
-if (CUDNN_INCLUDE_DIR AND CUDNN_LIBRARY AND _CUDNN_VERSION VERSION_GREATER_EQUAL MINIMUM_CUDNN_VERSION)
-  message(STATUS "Found CUDNN ${_CUDNN_VERSION} located on system: (include ${CUDNN_INCLUDE_DIR} lib: ${CUDNN_LIBRARY})")
+if (CUDNN_INCLUDE_DIR AND _CUDNN_LIBRARY AND _CUDNN_VERSION VERSION_GREATER_EQUAL MINIMUM_CUDNN_VERSION)
+  message(STATUS "Found CUDNN ${_CUDNN_VERSION} located on system: (include ${CUDNN_INCLUDE_DIR})")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 elseif(VCPKG_TARGET_IS_WINDOWS)
   message(FATAL_ERROR "Please download CUDNN from official sources (https://developer.nvidia.com/cudnn) and install it")
