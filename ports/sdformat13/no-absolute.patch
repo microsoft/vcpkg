@@ -1,38 +1,49 @@
 diff --git a/include/sdf/config.hh.in b/include/sdf/config.hh.in
-index d1b3db53..9a9ce91d 100644
+index 6a32cb8..5aa7e2a 100644
 --- a/include/sdf/config.hh.in
 +++ b/include/sdf/config.hh.in
-@@ -48,5 +48,3 @@ 
+@@ -48,11 +48,11 @@
  #cmakedefine SDFORMAT_DISABLE_CONSOLE_LOGFILE 1
  
+ #ifndef SDF_SHARE_PATH
 -#define SDF_SHARE_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/"
--#define SDF_VERSION_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${SDF_MAJOR_VERSION}/${SDF_PKG_VERSION}"
++//#define SDF_SHARE_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/"
+ #endif
  
+ #ifndef SDF_VERSION_PATH
+-#define SDF_VERSION_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${PROJECT_VERSION_MAJOR}/${PROJECT_VERSION}"
++//#define SDF_VERSION_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${PROJECT_VERSION_MAJOR}/${PROJECT_VERSION}"
+ #endif
+ 
+ #endif  // #ifndef SDF_CONFIG_HH_
 diff --git a/src/SDF.cc b/src/SDF.cc
-index 20dcd4c6..802cbde3 100644
+index 7a43d0f..0e44c63 100644
 --- a/src/SDF.cc
 +++ b/src/SDF.cc
-@@ -97,22 +97,6 @@ std::string findFile(const std::string &_filename, bool _searchLocalPath,
-     filename = filename.substr(idx + sep.length());
+@@ -117,25 +117,8 @@ std::string findFile(const std::string &_filename, bool _searchLocalPath,
+     }
    }
  
 -  // Next check the install path.
--  std::string path = sdf::filesystem::append(SDF_SHARE_PATH, filename);
+-  std::string path = sdf::filesystem::append(sdfSharePath(), filename);
 -  if (sdf::filesystem::exists(path))
 -  {
 -    return path;
 -  }
 -
 -  // Next check the versioned install path.
--  path = sdf::filesystem::append(SDF_SHARE_PATH,
--                                 "sdformat" SDF_MAJOR_VERSION_STR,
--                                 sdf::SDF::Version(), filename);
+-  path = sdf::filesystem::append(sdfSharePath(),
+-    "sdformat" + std::string(SDF_MAJOR_VERSION_STR),
+-    sdf::SDF::Version(), filename);
+-
 -  if (sdf::filesystem::exists(path))
 -  {
 -    return path;
 -  }
 -
-   // Next check to see if the given file exists.
--   path = filename;
-+   std::string path = filename;
+   // Finally check to see if the given file exists.
+-  path = filename;
++  std::string path = filename;
    if (sdf::filesystem::exists(path))
+   {
+     return path;

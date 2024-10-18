@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e797e8a..0f652d7 100644
+index 2560d2c..5209630 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -56,7 +56,18 @@ if (BUILD_SDF)
