@@ -37,7 +37,7 @@ declare_external_from_git(dawn
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
-    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+    REF "679499cc9b92cfb0ae1dccbfd7e97ce719d23576"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(jinja2
@@ -262,7 +262,9 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
+    string(REGEX REPLACE "[\\]\$" "" WIN_SDK "$ENV{WindowsSdkDir}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS " win_sdk=\"${WIN_SDK}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " ndk=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\" ndk_api=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 else()

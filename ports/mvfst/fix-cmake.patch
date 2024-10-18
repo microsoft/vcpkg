@@ -1,0 +1,25 @@
+diff --git a/quic/api/CMakeLists.txt b/quic/api/CMakeLists.txt
+index 5522347c5..a0a34761e 100644
+--- a/quic/api/CMakeLists.txt
++++ b/quic/api/CMakeLists.txt
+@@ -47,6 +47,7 @@ add_library(
+   QuicPacketScheduler.cpp
+   QuicStreamAsyncTransport.cpp
+   QuicTransportBase.cpp
++  QuicTransportBaseLite.cpp
+   QuicTransportFunctions.cpp
+ )
+ 
+
+diff --git a/quic/state/CMakeLists.txt b/quic/state/CMakeLists.txt
+index 0916546fe..14297bb30 100644
+--- a/quic/state/CMakeLists.txt
++++ b/quic/state/CMakeLists.txt
+@@ -55,6 +55,7 @@ add_library(
+   mvfst_state_ack_handler
+   AckEvent.cpp
+   AckHandlers.cpp
++  AckedPacketIterator.cpp
+ )
+ 
+ set_property(TARGET mvfst_state_ack_handler PROPERTY VERSION ${PACKAGE_VERSION})

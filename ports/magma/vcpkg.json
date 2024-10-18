@@ -1,6 +1,7 @@
 {
   "name": "magma",
   "version": "2.8.0",
+  "port-version": 1,
   "description": "Matrix Algebra on GPU and Multi-core Architectures (MAGMA) is a collection of next-generation linear algebra libraries for heterogeneous computing",
   "homepage": "https://icl.utk.edu/magma/",
   "license": null,
