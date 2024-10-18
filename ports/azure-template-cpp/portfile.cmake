@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 74fa925dea0f2779f0f37ec2b6329b8e5678063e
-    SHA512 d739337cfeec1e3bd86c60da5d1b110de61c03ff172fe1e9335c45bf18c5f3d414e7ca6f2952156e0a00236bc69591f816743d1aa3f58ed3541bb23b77bd4d5d
+    REF 2c6734e5f3354e0fde0c7089150d43aa1b6456b7
+    SHA512 048cd38a8a720422bdbdc87f9cbf258a689118d80a217662f3e2f25fa58c7ba0893e3821dde08bc9ea0ff8e4fec167a6c4fdf71e1bfeddf4322b38e7f14a2510
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/tables/azure-data-tables")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/tables/_")
+if(EXISTS "${SOURCE_PATH}/sdk/template/azure-template")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/template/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/tables/azure-data-tables" "${SOURCE_PATH}/sdk/tables/_")
-  file(RENAME "${SOURCE_PATH}/sdk/tables" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template/azure-template" "${SOURCE_PATH}/sdk/template/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
