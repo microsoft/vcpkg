@@ -35,17 +35,6 @@ diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
 index 7c9226f..56c4c44 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
-@@ -26,6 +26,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
- # FLATBUFFERS
- #
- 
-+find_program(FlatBuffers_EXECUTABLE flatc
-+  PATHS ${_VCPKG_ROOT_DIR}/packages/flatbuffers_${VCPKG_HOST_TRIPLET}/tools/flatbuffers
-+  REQUIRED)
-+
- function (compile_fbs FBS_SOURCE)
-     set(FBS_OUTPUT ${FBS_SOURCE}.h)
- 
 @@ -176,7 +180,8 @@ endif()
  #
  
