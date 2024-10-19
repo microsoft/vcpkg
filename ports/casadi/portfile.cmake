@@ -8,7 +8,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-
+# Pending upstream fix https://github.com/casadi/casadi/issues/3896
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -19,15 +20,18 @@ vcpkg_cmake_configure(
 	 -DWITH_QPOASES=OFF
 	 -DWITH_SUNDIALS=OFF
 	 -DWITH_CSPARSE=OFF
+	 -DLIB_PREFIX="${CURRENT_PACKAGES_DIR}/lib"
+	 -DBIN_PREFIX="${CURRENT_PACKAGES_DIR}/bin"
+	 -DINCLUDE_PREFIX="${CURRENT_PACKAGES_DIR}/include"
+	 -DCMAKE_PREFIX="${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 vcpkg_cmake_install()
 
-set(VCPKG_POLICY_ALLOW_DEBUG_SHARE )
-vcpkg_cmake_config_fixup(PACKAGE_NAME "casadi"
-	CONFIG_PATH "casadi/cmake"
-)
+vcpkg_cmake_config_fixup()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+
+vcpkg_fixup_pkgconfig()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
