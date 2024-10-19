@@ -130,6 +130,7 @@ if ($IsLinux -and $Triplet -match 'android' -and $true)
     & unzip -q android-ndk-$override_ndk-linux.zip
     $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-$override_ndk"
     $NoParentHashes = $true
+    $skipFailuresArg = @()
 }
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
