@@ -57,6 +57,16 @@ index b33effa..c7bb421 100644
  #include "zip/zip.h"
  
  RAPIDJSON_DIAG_PUSH
+diff --git a/src/vector/CMakeLists.txt b/src/vector/CMakeLists.txt
+index 3ae96e6..15b86df 100644
+--- a/src/vector/CMakeLists.txt
++++ b/src/vector/CMakeLists.txt
+@@ -1,5 +1,4 @@
+ add_subdirectory(freetype)
+-add_subdirectory(pixman)
+ add_subdirectory(stb)
+ 
+ 
 diff --git a/src/vector/vdrawhelper_neon.cpp b/src/vector/vdrawhelper_neon.cpp
 index 681eabb..e178012 100644
 --- a/src/vector/vdrawhelper_neon.cpp
