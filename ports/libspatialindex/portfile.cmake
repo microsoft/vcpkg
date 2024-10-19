@@ -4,9 +4,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 a508a9ed4019641bdaaa53533505531f3db440b046a9c7d9f78ed480293200c51796c2d826a6bb9b4f9543d60bb0fef9e4c885ec3f09326cfa4d2fb81c1593aa
     HEAD_REF master
-    PATCHES
-        static.patch
-        mingw.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +15,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})  
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 #Debug
