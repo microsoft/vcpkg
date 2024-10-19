@@ -1,3 +1,4 @@
+# Currently no upstream support for static libraries
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -13,17 +14,17 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-	OPTIONS
-	 -DWITH_SELFCONTAINED=OFF
-	 -DWITH_TINYXML=OFF
-	 -DWITH_BUILD_TINYXML=OFF
-	 -DWITH_QPOASES=OFF
-	 -DWITH_SUNDIALS=OFF
-	 -DWITH_CSPARSE=OFF
-	 -DLIB_PREFIX:PATH="lib"
-	 -DBIN_PREFIX:PATH="bin"
-	 -DINCLUDE_PREFIX:PATH="include"
-	 -DCMAKE_PREFIX:PATH="share/${PORT}"
+    OPTIONS
+     -DWITH_SELFCONTAINED=OFF
+     -DWITH_TINYXML=OFF
+     -DWITH_BUILD_TINYXML=OFF
+     -DWITH_QPOASES=OFF
+     -DWITH_SUNDIALS=OFF
+     -DWITH_CSPARSE=OFF
+     -DLIB_PREFIX:PATH=lib
+     -DBIN_PREFIX:PATH=bin
+     -DINCLUDE_PREFIX:PATH=include
+     -DCMAKE_PREFIX:PATH=share/${PORT}
 )
 
 vcpkg_cmake_install()

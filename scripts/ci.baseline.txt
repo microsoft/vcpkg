@@ -181,6 +181,8 @@ c-dbg-macro:x64-linux=skip
 casadi:arm64-android=skip
 casadi:x64-android=skip
 casadi:arm-neon-android=skip
+casadi:x64-windows-static=skip
+casadi:x64-windows-static-md=skip
 
 casclib:arm64-uwp=fail
 casclib:x64-uwp=fail
