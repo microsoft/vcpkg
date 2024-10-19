@@ -399,8 +399,11 @@ function(vcpkg_configure_make)
             # This is used via --host as a prefix for all other bin tools as well. 
             # Setting the compiler directly via CC=arm-linux-gnueabihf-gcc does not work acording to: 
             # https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/Specifying-Target-Triplets.html
-            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
-                set(arg_BUILD_TRIPLET "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            # (--host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            if (VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET)
+                set(arg_BUILD_TRIPLET "--host=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}")
+            elseif(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
+                set(arg_BUILD_TRIPLET "--host=${CMAKE_MATCH_1}")
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
