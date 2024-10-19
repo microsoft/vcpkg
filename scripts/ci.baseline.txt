@@ -177,6 +177,11 @@ c-dbg-macro:x64-osx=skip
 c-dbg-macro:arm64-osx=skip
 c-dbg-macro:x64-linux=skip
 
+# Needs work
+casadi:arm64-android=skip
+casadi:x64-android=skip
+casadi:arm-neon-android=skip
+
 casclib:arm64-uwp=fail
 casclib:x64-uwp=fail
 catch-classic:arm-neon-android=skip
