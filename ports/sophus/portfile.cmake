@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strasdat/Sophus
-    REF 1.24.6-rc1
-    SHA512 c1ba40b823cabce3fe83f528837ac111f4d746d6679fb920abd7be32de149c0937bb9a5049da156aec28a9b9fedbebae76a056de12707c01c5cb40dc9197c3e4
+    REF "${VERSION}"
+    SHA512 0
     HEAD_REF main
 )
 
