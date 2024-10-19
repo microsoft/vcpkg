@@ -248,6 +248,15 @@ This can be resolved by explicitly passing URL/SHA pairs to DIRECT_PACKAGES.")
         # This fstab entry removes the cygdrive prefix from paths.
         file(WRITE "${path_to_root}/etc/fstab" "none  /  cygdrive  binary,posix=0,noacl,user  0  0")
     endif()
+    # No pkgconfig hints from msys2 installation
+    file(REMOVE_RECURSE
+        "${path_to_root}/clangarm64/lib/pkgconfig"
+        "${path_to_root}/clang64/lib/pkgconfig"
+        "${path_to_root}/mingw32/lib/pkgconfig"
+        "${path_to_root}/mingw64/lib/pkgconfig"
+        "${path_to_root}/ucrt64/lib/pkgconfig"
+        "${path_to_root}/usr/lib/pkgconfig"
+    )
     message(STATUS "Using msys root at ${path_to_root}")
     set("${out_msys_root}" "${path_to_root}" PARENT_SCOPE)
 endfunction()
