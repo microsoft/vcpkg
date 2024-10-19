@@ -1,5 +1,5 @@
 diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
-index 709c0cd..50fea5c 100644
+index 709c0cd..0b2237c 100644
 --- a/CMake/FindFFTW.cmake
 +++ b/CMake/FindFFTW.cmake
 @@ -30,7 +30,27 @@
@@ -9,12 +9,12 @@ index 709c0cd..50fea5c 100644
 -if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
 +set(FFTW_INCLUDE "")
 +if(ITK_USE_CUFFTW)
-+  find_package(CUDAToolkit REQUIRED)
 +  find_path(CUFFTW_INCLUDE_PATH cufftw.h PATHS ${CUDAToolkit_INCLUDE_DIRS} NO_DEFAULT_PATH REQUIRED)
 +  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
-+  set(FFTWD_LIBRARIES CUDA::cufft CUDA::cufftw)
++  find_package(CUDAToolkit REQUIRED)
++  set(FFTWD_LIBRARIES CUDA::cufftw)
 +  set(FFTWD_FOUND 1)
-+  set(FFTWF_LIBRARIES CUDA::cufft CUDA::cufftw)
++  set(FFTWF_LIBRARIES CUDA::cufftw)
 +  set(FFTWF_FOUND 1)
 +elseif(ITK_USE_FFTWD OR ITK_USE_FFTWF)
 +  find_path(FFTW_INCLUDE_PATH fftw3.h REQUIRED)
@@ -58,3 +58,16 @@ index 7a77ae3..3e41f37 100644
  endif()
  
  # Add configuration with GPU
+diff --git a/Modules/Filtering/FFT/CMakeLists.txt b/Modules/Filtering/FFT/CMakeLists.txt
+index 3f87969..aa4db40 100644
+--- a/Modules/Filtering/FFT/CMakeLists.txt
++++ b/Modules/Filtering/FFT/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ project(ITKFFT)
+ 
+ if(ITK_USE_CUFFTW)
+-  set(ITKFFT_LIBRARIES ITKFFT ${FFTWF_LIBRARIES})
++  set(ITKFFT_PUBLIC_DEPENDS ITKFFT ${FFTWF_LIBRARIES})
+ else()
+   set(ITKFFT_LIBRARIES ITKFFT)
+ endif()
