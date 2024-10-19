@@ -6,14 +6,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 af414f626b93da284e5e42177ec5afe9794cfde3ae2188a606aadd6280666db584f9bcc5ee2d1ed26fd4d7806b576637ceb33a9c4d6eb50af6c0acd3d21b7cd8
+    SHA512 a930bd9d8d0308f62fdda7ca215321b69a0cca8d8e0ce654b6938cd71dfd568fe63b5dd6ab0ee537e67751211e240b19cc23e07f5927dac318cf9be778d9fec2
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
         00002-static-linking-in-linux.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
-        00009-use-system-upb.patch
+        00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
 )
@@ -23,7 +23,6 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/third_party/cares"
     "${SOURCE_PATH}/third_party/protobuf"
     "${SOURCE_PATH}/third_party/re2"
-    "${SOURCE_PATH}/third_party/upb"
     "${SOURCE_PATH}/third_party/utf8_range"
     "${SOURCE_PATH}/third_party/zlib"
 )

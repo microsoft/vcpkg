@@ -1,26 +1,267 @@
+From af1411e9daf2cacd25a4e334200b5a49e7dfdf0b Mon Sep 17 00:00:00 2001
+From: holmes1412 <liyingxin1412@gmail.com>
+Date: Thu, 5 Sep 2024 23:47:30 +0800
+Subject: [PATCH] Update always_print_fields_with_no_presence to ensure
+ compatibility with protobuf v26.x
+
+---
+ docs/docs-07-srpc-http.md       |  2 +-
+ docs/en/docs-07-srpc-http.md    |  2 +-
+ docs/en/rpc.md                  |  4 ++--
+ docs/rpc.md                     | 12 ++++++------
+ src/message/rpc_message.h       | 14 +++++++-------
+ src/message/rpc_message_srpc.cc |  7 ++++++-
+ src/message/rpc_message_trpc.cc |  7 ++++++-
+ src/rpc_basic.h                 |  2 +-
+ src/rpc_context.h               | 10 ++++++++--
+ src/rpc_context.inl             |  4 ++--
+ src/rpc_task.inl                | 10 +++++++++-
+ 11 files changed, 49 insertions(+), 25 deletions(-)
+
+diff --git a/docs/docs-07-srpc-http.md b/docs/docs-07-srpc-http.md
+index 7bdaabaa..27bc7c40 100644
+--- a/docs/docs-07-srpc-http.md
++++ b/docs/docs-07-srpc-http.md
+@@ -183,7 +183,7 @@ public:
+     {
+         resp->set_message("Hi back");
+         resp->set_error(0); // 0是error类型int32在proto3中的默认值
+-        ctx->set_json_always_print_primitive_fields(true); // 带上所有原始域
++        ctx->set_json_always_print_fields_with_no_presence(true); // 带上所有原始域
+         ctx->set_json_add_whitespace(true); // 增加json格式的空格
+     }
+ };
+diff --git a/docs/en/docs-07-srpc-http.md b/docs/en/docs-07-srpc-http.md
+index 074f9e9c..c6511ad8 100644
+--- a/docs/en/docs-07-srpc-http.md
++++ b/docs/en/docs-07-srpc-http.md
+@@ -185,7 +185,7 @@ public:
+     {
+         resp->set_message("Hi back");
+         resp->set_error(0); // the type of error is int32 and 0 is the default value of int32
+-        ctx->set_json_always_print_primitive_fields(true); // with all primitive fields
++        ctx->set_json_always_print_fields_with_no_presence(true); // all fields with no precense
+         ctx->set_json_add_whitespace(true); // add spaces, line breaks and indentation 
+     }
+ };
+diff --git a/docs/en/rpc.md b/docs/en/rpc.md
+index ebe765fa..2fa48ed2 100644
+--- a/docs/en/rpc.md
++++ b/docs/en/rpc.md
+@@ -360,9 +360,9 @@ For Server only. For JsonPrintOptions, whether to always print enums as ints.
+ 
+ For Server only. For JsonPrintOptions, whether to preserve proto field names.
+ 
+-#### `void set_json_always_print_primitive_fields(bool flag);`
++#### `void set_json_always_print_fields_with_no_presence(bool flag);`
+ 
+-For Server only. For JsonPrintOptions, whether to always print primitive fields.
++For Server only. For JsonPrintOptions, whether to always print fields with no presence.
+ 
+ ## RPC Options
+ 
+diff --git a/docs/rpc.md b/docs/rpc.md
+index f9ffd525..d0cf1401 100644
+--- a/docs/rpc.md
++++ b/docs/rpc.md
+@@ -297,22 +297,22 @@ Server专用。如果通讯使用HTTP协议，可以在回复中设置HTTP heade
+ #### ``bool add_http_header(const std::string& name, const std::string& value);``    
+ Server专用。如果通讯使用HTTP协议，可以在回复中添加HTTP header，如果有重复name，会保留多个value。
+ 
+-#### ``void log(const RPCLogVector& fields);``    
++#### ``void log(const RPCLogVector& fields);``
+ Server专用。透传数据相关，请参考OpenTelemetry数据协议中的log语义。
+ 
+-#### ``void baggage(const std::string& key, const std::string& value);``    
++#### ``void baggage(const std::string& key, const std::string& value);``
+ Server专用。透传数据相关，参考OpenTelemetry数据协议中的baggage语义。
+ 
+-#### ``void set_json_add_whitespace(bool on);``    
++#### ``void set_json_add_whitespace(bool on);``
+ Server专用。JsonPrintOptions相关，可设置增加json空格等。
+ 
+-#### ``void set_json_always_print_enums_as_ints(bool flag);``    
++#### ``void set_json_always_print_enums_as_ints(bool flag);``
+ Server专用。JsonPrintOptions相关，可设置用int打印enum名。
+ 
+-#### ``void set_json_preserve_proto_field_names(bool flag);``    
++#### ``void set_json_preserve_proto_field_names(bool flag);``
+ Server专用。JsonPrintOptions相关，可设置保留原始字段名字。
+ 
+-#### ``void set_json_always_print_primitive_fields(bool flag);``    
++#### ``void set_json_always_print_fields_with_no_presence(bool flag);``
+ Server专用。JsonPrintOptions相关，可设置带上所有默认的proto数据中的域。
+ 
+ ## RPC Options
+diff --git a/src/message/rpc_message.h b/src/message/rpc_message.h
+index e5bd74d2..9f7e11b0 100644
+--- a/src/message/rpc_message.h
++++ b/src/message/rpc_message.h
+@@ -106,8 +106,8 @@ class RPCMessage
+ 	virtual bool get_json_enums_as_ints() const;
+ 	virtual void set_json_preserve_names(bool on);
+ 	virtual bool get_json_preserve_names() const;
+-	virtual void set_json_print_primitive(bool on);
+-	virtual bool get_json_print_primitive() const;
++	virtual void set_json_fields_no_presence(bool on);
++	virtual bool get_json_fields_no_presence() const;
+ 
+ public:
+ 	//pb
+@@ -182,17 +182,17 @@ inline bool RPCMessage::get_json_preserve_names() const
+ 	return this->flags & SRPC_JSON_OPTION_PRESERVE_NAMES;
+ }
+ 
+-inline void RPCMessage::set_json_print_primitive(bool on)
++inline void RPCMessage::set_json_fields_no_presence(bool on)
+ {
+ 	if (on)
+-		this->flags |= SRPC_JSON_OPTION_PRINT_PRIMITIVE;
++		this->flags |= SRPC_JSON_OPTION_FIELDS_NO_PRECENCE;
+ 	else
+-		this->flags &= ~SRPC_JSON_OPTION_PRINT_PRIMITIVE;
++		this->flags &= ~SRPC_JSON_OPTION_FIELDS_NO_PRECENCE;
+ }
+ 
+-inline bool RPCMessage::get_json_print_primitive() const
++inline bool RPCMessage::get_json_fields_no_presence() const
+ {
+-	return this->flags & SRPC_JSON_OPTION_PRINT_PRIMITIVE;
++	return this->flags & SRPC_JSON_OPTION_FIELDS_NO_PRECENCE;
+ }
+ 
+ } // namespace srpc
 diff --git a/src/message/rpc_message_srpc.cc b/src/message/rpc_message_srpc.cc
-index 032bb6a..1ef8091 100644
+index 30cc2b86..ac7e7ebd 100644
 --- a/src/message/rpc_message_srpc.cc
 +++ b/src/message/rpc_message_srpc.cc
-@@ -465,7 +465,7 @@ int SRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
+@@ -17,6 +17,7 @@
+ #include <errno.h>
+ #include <vector>
+ #include <string>
++#include <google/protobuf/stubs/common.h>
+ #include <google/protobuf/util/json_util.h>
+ #include <google/protobuf/util/type_resolver_util.h>
+ #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+@@ -467,7 +468,11 @@ int SRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
  		options.add_whitespace = this->get_json_add_whitespace();
  		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
  		options.preserve_proto_field_names = this->get_json_preserve_names();
 -		options.always_print_primitive_fields = this->get_json_print_primitive();
-+		options.always_print_fields_with_no_presence = this->get_json_print_primitive();
++#if GOOGLE_PROTOBUF_VERSION >= 5026000
++		options.always_print_fields_with_no_presence = this->get_json_fields_no_presence();
++#else
++		options.always_print_primitive_fields = this->get_json_fields_no_presence();
++#endif
  
  		ret = BinaryToJsonStream(resolver, GetTypeUrl(pb_msg), &input_stream,
  								 &output_stream, options).ok() ? 0 : -1;
 diff --git a/src/message/rpc_message_trpc.cc b/src/message/rpc_message_trpc.cc
-index eb98218..a9d9d50 100644
+index 27ae2cab..1dd48f39 100644
 --- a/src/message/rpc_message_trpc.cc
 +++ b/src/message/rpc_message_trpc.cc
-@@ -910,7 +910,7 @@ int TRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
+@@ -17,6 +17,7 @@
+ #include <errno.h>
+ #include <vector>
+ #include <string>
++#include <google/protobuf/stubs/common.h>
+ #include <google/protobuf/util/json_util.h>
+ #include <google/protobuf/util/type_resolver_util.h>
+ #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+@@ -912,7 +913,11 @@ int TRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
  		options.add_whitespace = this->get_json_add_whitespace();
  		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
  		options.preserve_proto_field_names = this->get_json_preserve_names();
 -		options.always_print_primitive_fields = this->get_json_print_primitive();
-+		options.always_print_fields_with_no_presence = this->get_json_print_primitive();
++#if GOOGLE_PROTOBUF_VERSION >= 5026000
++		options.always_print_fields_with_no_presence = this->get_json_fields_no_presence();
++#else
++		options.always_print_primitive_fields = this->get_json_fields_no_presence();
++#endif
  
  		ret = BinaryToJsonStream(resolver, GetTypeUrl(pb_msg), &input_stream,
  								 &output_stream, options).ok() ? 0 : -1;
+diff --git a/src/rpc_basic.h b/src/rpc_basic.h
+index 58ab3986..0bdda7df 100644
+--- a/src/rpc_basic.h
++++ b/src/rpc_basic.h
+@@ -79,7 +79,7 @@ static inline uint64_t ntohll(uint64_t x)
+ #define SRPC_JSON_OPTION_ADD_WHITESPACE		(1<<3)
+ #define SRPC_JSON_OPTION_ENUM_AS_INITS		(1<<4)
+ #define SRPC_JSON_OPTION_PRESERVE_NAMES		(1<<5)
+-#define SRPC_JSON_OPTION_PRINT_PRIMITIVE	(1<<6)
++#define SRPC_JSON_OPTION_FIELDS_NO_PRECENCE	(1<<6)
+ 
+ using ProtobufIDLMessage = google::protobuf::Message;
+ using RPCLogVector = std::vector<std::pair<std::string, std::string>>;
+diff --git a/src/rpc_context.h b/src/rpc_context.h
+index 23d330ca..2e452310 100644
+--- a/src/rpc_context.h
++++ b/src/rpc_context.h
+@@ -96,12 +96,18 @@ class RPCContext
+ 	// Whether to preserve proto field names.
+ 	virtual void set_json_preserve_proto_field_names(bool flag) = 0;
+ 
+-	// Whether to always print primitive fields.
++	// Whether to always print primitive fields / with no presence.
+ 	// By default proto3 primitive fields with default values will be omitted
+ 	// in JSON output. For example, an int32 field set to 0 will be omitted.
+ 	// Set this flag to true will override the default behavior and print
+ 	// primitive fields regardless of their values.
+-	virtual void set_json_always_print_primitive_fields(bool flag) = 0;
++	virtual void set_json_always_print_fields_with_no_presence(bool flag) = 0;
++
++	// deprecated : Please use set_json_always_print_fields_with_no_presence()
++	void set_json_always_print_primitive_fields(bool flag)
++	{
++		this->set_json_always_print_fields_with_no_presence(flag);
++	}
+ 
+ public:
+ 	virtual ~RPCContext() { }
+diff --git a/src/rpc_context.inl b/src/rpc_context.inl
+index 43746eff..60c9ddd9 100644
+--- a/src/rpc_context.inl
++++ b/src/rpc_context.inl
+@@ -261,10 +261,10 @@ public:
+ 			task_->get_resp()->set_json_preserve_names(on);
+ 	}
+ 
+-	void set_json_always_print_primitive_fields(bool on) override
++	void set_json_always_print_fields_with_no_presence(bool on) override
+ 	{
+ 		if (this->is_server_task())
+-			task_->get_resp()->set_json_print_primitive(on);
++			task_->get_resp()->set_json_fields_no_presence(on);
+ 	}
+ 
+ 	//void noreply() override;
+diff --git a/src/rpc_task.inl b/src/rpc_task.inl
+index c4812550..acec9438 100644
+--- a/src/rpc_task.inl
++++ b/src/rpc_task.inl
+@@ -130,7 +130,9 @@ public:
+ 	void set_json_add_whitespace(bool on);
+ 	void set_json_always_print_enums_as_ints(bool on);
+ 	void set_json_preserve_proto_field_names(bool on);
++	// deprecated : Please use set_json_always_print_fields_with_no_presence()
+ 	void set_json_always_print_primitive_fields(bool on);
++	void set_json_always_print_fields_with_no_presence(bool on);
+ 
+ protected:
+ 	using user_done_t = std::function<int (int, RPCWorker&)>;
+@@ -694,7 +696,13 @@ inline void RPCClientTask<RPCREQ, RPCRESP>::set_json_preserve_proto_field_names(
+ template<class RPCREQ, class RPCRESP>
+ inline void RPCClientTask<RPCREQ, RPCRESP>::set_json_always_print_primitive_fields(bool on)
+ {
+-	this->req.set_json_print_primitive(on);
++	this->req.set_json_fields_no_presence(on);
++}
++
++template<class RPCREQ, class RPCRESP>
++inline void RPCClientTask<RPCREQ, RPCRESP>::set_json_always_print_fields_with_no_presence(bool on)
++{
++	this->req.set_json_fields_no_presence(on);
+ }
+ 
+ template<class RPCREQ, class RPCRESP>
