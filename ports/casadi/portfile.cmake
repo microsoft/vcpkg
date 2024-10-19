@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 # Pending upstream fix https://github.com/casadi/casadi/issues/3896
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,10 +20,10 @@ vcpkg_cmake_configure(
 	 -DWITH_QPOASES=OFF
 	 -DWITH_SUNDIALS=OFF
 	 -DWITH_CSPARSE=OFF
-	 -DLIB_PREFIX="${CURRENT_PACKAGES_DIR}/lib"
-	 -DBIN_PREFIX="${CURRENT_PACKAGES_DIR}/bin"
-	 -DINCLUDE_PREFIX="${CURRENT_PACKAGES_DIR}/include"
-	 -DCMAKE_PREFIX="${CURRENT_PACKAGES_DIR}/share/${PORT}"
+	 -DLIB_PREFIX:PATH="lib"
+	 -DBIN_PREFIX:PATH="bin"
+	 -DINCLUDE_PREFIX:PATH="include"
+	 -DCMAKE_PREFIX:PATH="share/${PORT}"
 )
 
 vcpkg_cmake_install()
