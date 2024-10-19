@@ -205,7 +205,7 @@ index 7c9226f..56c4c44 100644
 +]]#
 +
 +export(EXPORT steam-audio_exports
-+  NAMESPACE steam-audio::
++  NAMESPACE unofficial::steam-audio::
 +  FILE ${CMAKE_CURRENT_BINARY_DIR}/steam-audioTargets.cmake
 +)
 +
@@ -213,7 +213,7 @@ index 7c9226f..56c4c44 100644
 +install(TARGETS core hrtf EXPORT steam-audio_exports)
 +
 +install(EXPORT steam-audio_exports
-+  NAMESPACE steam-audio::
++  NAMESPACE unofficial::steam-audio::
 +  FILE steam-audioTargets.cmake
 +  DESTINATION share/steam-audio
 +)
