@@ -35,3 +35,5 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 vcpkg_fixup_pkgconfig()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
