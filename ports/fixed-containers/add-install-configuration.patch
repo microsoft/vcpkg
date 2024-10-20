@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2738060..76e2314 100644
+index 2738060..4f3aedd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -236,6 +236,13 @@ if (FIXED_CONTAINERS_OPT_INSTALL)
@@ -25,13 +25,13 @@ index 2738060..76e2314 100644
  
      install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
              DESTINATION .)
-+install(
-+  FILES
-+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-+  DESTINATION lib/cmake/${PROJECT_NAME})
  
 -    export(EXPORT ${PROJECT_NAME}Config
 -            NAMESPACE ${PROJECT_NAME}::)
++    install(
++      FILES
++      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++      DESTINATION lib/cmake/${PROJECT_NAME})
  endif()
 diff --git a/fixed_containersConfig.cmake.in b/fixed_containersConfig.cmake.in
 new file mode 100644
