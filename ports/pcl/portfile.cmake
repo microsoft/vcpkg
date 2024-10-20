@@ -13,6 +13,8 @@ vcpkg_from_github(
         fix-clang-cl.patch
         gh-5985-inline.patch
         io_ply.patch
+        6053.diff # https://github.com/PointCloudLibrary/pcl/pull/6053
+        6990a3b0d7dd3c1ca04a1a473cc172a937418060.diff # https://github.com/PointCloudLibrary/pcl/pull/6105
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
