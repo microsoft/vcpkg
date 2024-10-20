@@ -1,14 +1,21 @@
+vcpkg_download_distfile(ARM64_WINDOWS_UWP_PATCH
+    URLS "https://patch-diff.githubusercontent.com/raw/OpenMathLib/OpenBLAS/pull/4926.diff?full_index=1"
+    FILENAME "openblas-fix-arm64-windows-uwp.patch"
+    SHA512 808d375628499641f1134b4751c9861384b719dae14cf6bd4d9d4b09c9bfd9f8b13b2663e9fa9d09867b5b40817c26387ac659d2f6459d40a46455b2f540d018
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 4accc5282244946157b7940211181e011940154ff47855702c68f57a0af2fa5a306f49e47b8c22c02eeff61760c6c220465f05a316a33ee3265bfce65ca4cb84
+    SHA512 358301c8a60bedf920c07a110c772feb639e52412bd783789741fd2fd0686aac97e6b17ebcdf01ce48a2a15841058f82df0fee551af952f6e70b58140c055133
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-redefinition-function.patch
         install-tools.patch
         gcc14.patch
+        ${ARM64_WINDOWS_UWP_PATCH}
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -59,6 +66,13 @@ endif()
 
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
+endif()
+
+# For emscripten only the riscv64 kernel with riscv64_generic target is supported
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND OPENBLAS_EXTRA_OPTIONS
+                -DEMSCRIPTEN_SYSTEM_PROCESSOR=riscv64
+                -DTARGET=RISCV64_GENERIC)
 endif()
 
 vcpkg_cmake_configure(

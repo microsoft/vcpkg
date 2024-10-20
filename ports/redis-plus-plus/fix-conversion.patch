@@ -1,13 +1,13 @@
 diff --git a/src/sw/redis++/shards.cpp b/src/sw/redis++/shards.cpp
-index c5baf5a..08e96cd 100644
+index fc58eea..ea57266 100644
 --- a/src/sw/redis++/shards.cpp
 +++ b/src/sw/redis++/shards.cpp
-@@ -41,7 +41,7 @@ std::pair<Slot, Node> RedirectionError::_parse_error(const std::string &msg) con
+@@ -42,7 +42,7 @@ std::pair<Slot, Node> RedirectionError::_parse_error(const std::string &msg) con
          auto host = msg.substr(space_pos + 1, colon_pos - space_pos - 1);
          auto port = std::stoi(msg.substr(colon_pos + 1));
  
 -        return {slot, {host, port}};
 +        return {static_cast<std::size_t>(slot), {host, port}};
-     } catch (const std::exception &e) {
-         throw ProtoError("Invalid ASK error message: " + msg);
+     } catch (const std::exception &) {
+         throw ProtoError("invalid redirection error message: " + msg);
      }
