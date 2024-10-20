@@ -10,28 +10,41 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
     REF "v${VERSION}"
-    SHA512 3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db
     #[[
         When updating the ITK version and SHA512, remember to update the remote module versions below.
     #]]
+    SHA512 3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db
     HEAD_REF master
     PATCHES
-        cufftw.diff
-        double-conversion.patch
-        find-fftw.diff
+        dependencies.diff
+        fftw.diff
         openjpeg.patch
-        openjpeg2.patch
         var_libraries.patch
         wrapping.patch
-        opencl.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
         "${PYTHON_GPU_WRAPPING_PATCH}"
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/CMake/FindOpenCL.cmake"
+    "${SOURCE_PATH}/Modules/ThirdParty/GDCM/src"
+    "${SOURCE_PATH}/Modules/ThirdParty/OpenJPEG/src/openjpeg"
     "${SOURCE_PATH}/Modules/ThirdParty/VNL/src"
 )
+
+if("cuda" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH RTK_SOURCE_PATH
+        REPO RTKConsortium/ITKCudaCommon
+        # Cf. Modules/Remote/CudaCommon.remote.cmake
+        REF 0c20c4ef10d81910c8b2ac4e8446a1544fce3b60
+        SHA512 0eb1a6fe85e695345a49887cdd65103bedab72e01ae85ed03e16a8a296c6cb69a8d889a57b22dde7fcc69df4f604c274b04234c8ece306d08361fac5db029069
+        HEAD_REF master
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/CudaCommon")
+    file(RENAME "${RTK_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/CudaCommon")
+    file(COPY_FILE "${SOURCE_PATH}/Modules/Remote/CudaCommon/LICENSE" "${SOURCE_PATH}/CudaCommon LICENSE")
+endif()
 
 if("rtk" IN_LIST FEATURES)
     # (old hint, not verified) RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
@@ -244,9 +257,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.4/vcl_where_root_dir.h")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
-
 if("rtk" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_BINARY_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Modules/Remote/RTK\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_DATA_ROOT \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ExternalData/Modules/Remote/RTK/test\"" "")
@@ -256,6 +266,11 @@ vcpkg_list(SET file_list
     "${SOURCE_PATH}/NOTICE"
     "${SOURCE_PATH}/LICENSE"
 )
+if("cuda" IN_LIST FEATURES)
+    vcpkg_list(APPEND file_list
+        "${SOURCE_PATH}/CudaCommon LICENSE"
+    )
+endif()
 if("rtk" IN_LIST FEATURES)
     vcpkg_list(APPEND file_list
         "${SOURCE_PATH}/RTK COPYRIGHT.TXT"

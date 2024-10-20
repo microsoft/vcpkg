@@ -1,7 +1,9 @@
-#include <vnl/vnl_fwd.h>
+#include <itkImage.h>
+#include <itkVnlForwardFFTImageFilter.h>
 
 int main()
 {
-  /* TBD: Use ITK */
-  return 0;
+    using FilterType = itk::VnlForwardFFTImageFilter<itk::Image<float, 2>>;
+    auto fftFilter = FilterType::New();
+    return 0;
 }

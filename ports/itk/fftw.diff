@@ -32,11 +32,13 @@ index 709c0cd..64baa8e 100644
    if(ITK_USE_MKL)
      # If the user has provided the MKL include path then search nearby for library files
 diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
-index 7a77ae3..3e41f37 100644
+index 9066d4f..4ec0266 100644
 --- a/CMake/ITKConfig.cmake.in
 +++ b/CMake/ITKConfig.cmake.in
-@@ -1,3 +1,14 @@
-+include(CMakeFindDependencyMacro)
+@@ -2,6 +2,16 @@ include(CMakeFindDependencyMacro)
+ find_dependency(double-conversion CONFIG)
+ find_dependency(OpenJPEG CONFIG)
+ find_dependency(VXL CONFIG)
 +if("@ITK_USE_CUFFTW@")
 +  find_dependency(CUDAToolkit)
 +else()
@@ -50,11 +52,17 @@ index 7a77ae3..3e41f37 100644
  #-----------------------------------------------------------------------------
  #
  # ITKConfig.cmake - ITK CMake configuration file for external projects.
-@@ -108,7 +119,6 @@ set(ITK_FFTW_LIBDIR "@FFTW_LIBDIR@")
- # Add FFTW include and library directories
- if (ITK_USE_FFTWF OR ITK_USE_FFTWD)
-   set(ITK_INCLUDE_DIRS ${ITK_INCLUDE_DIRS} "${ITK_FFTW_INCLUDE_PATH}")
--  set(ITK_LIBRARY_DIRS ${ITK_LIBRARY_DIRS} "${ITK_FFTW_LIBDIR}")
- endif()
+diff --git a/Modules/Filtering/FFT/src/CMakeLists.txt b/Modules/Filtering/FFT/src/CMakeLists.txt
+index 83b176c..b51bc48 100644
+--- a/Modules/Filtering/FFT/src/CMakeLists.txt
++++ b/Modules/Filtering/FFT/src/CMakeLists.txt
+@@ -10,6 +10,9 @@ endif()
+ itk_module_add_library(ITKFFT ${ITKFFT_SRCS})
  
- # Add configuration with GPU
+ # this library is only needed if FFTW is used
++if(ITK_USE_CUFFTW)
++  target_link_libraries(ITKFFT LINK_PUBLIC CUDA::cufftw)
++endif()
+ if(ITK_USE_FFTWF
+    OR ITK_USE_FFTWD
+    AND NOT ITK_USE_CUFFTW)
