@@ -1,15 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c6b2b2a8..ac10e92a 100644
+index c6b2b2a810..787a83bb1c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -105,24 +105,25 @@ endif ()
+@@ -105,24 +105,26 @@ endif ()
  
  # Find required dependencies for thrift/lib
  if (THRIFT_LIB_ONLY OR build_all)
 -  find_package(Gflags REQUIRED)
+-  find_package(Glog REQUIRED)
 +  find_package(gflags CONFIG REQUIRED)
 +  set(LIBGFLAGS_LIBRARY gflags::gflags)
-   find_package(Glog REQUIRED)
++  find_package(glog CONFIG REQUIRED)
++  set(GLOG_LIBRARIES glog::glog)
    find_package(folly CONFIG REQUIRED)
    find_package(fizz CONFIG REQUIRED)
    find_package(wangle CONFIG REQUIRED)
@@ -36,7 +38,7 @@ index c6b2b2a8..ac10e92a 100644
    add_definitions("-DTHRIFT_HAVE_LIBSNAPPY=0")
    if (THRIFT_LIB_ONLY)
 diff --git a/thrift/cmake/FBThriftConfig.cmake.in b/thrift/cmake/FBThriftConfig.cmake.in
-index 05701525..f0c66922 100644
+index 057015258c..f0c6692246 100644
 --- a/thrift/cmake/FBThriftConfig.cmake.in
 +++ b/thrift/cmake/FBThriftConfig.cmake.in
 @@ -29,8 +29,15 @@ else()

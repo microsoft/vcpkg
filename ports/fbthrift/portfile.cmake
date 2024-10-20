@@ -4,8 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 5018dd3e062489633c6e6fdef867656bc8ae6717dd74808a29ce5066fd5d0d69d3038a1a0326ed4df2139590dce6b99381cdaaecae0af5ef37d26a5903be1e7e
     HEAD_REF main
-    PATCHES 
-        fix-glog.patch
+    PATCHES
         fix-deps.patch
 )
 
