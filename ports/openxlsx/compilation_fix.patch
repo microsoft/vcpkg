@@ -1,0 +1,22 @@
+diff --git a/OpenXLSX/headers/XLSheet.hpp b/OpenXLSX/headers/XLSheet.hpp
+index 2f33dd4..23c11c9 100644
+--- a/OpenXLSX/headers/XLSheet.hpp
++++ b/OpenXLSX/headers/XLSheet.hpp
+@@ -137,7 +137,7 @@ namespace OpenXLSX
+         XLSheetState visibility() const
+         {
+             XLQuery query(XLQueryType::QuerySheetVisibility);
+-            query.template setParam("sheetID", relationshipID());
++            query.setParam("sheetID", relationshipID());
+             auto state  = parentDoc().execQuery(query).template result<std::string>();
+             auto result = XLSheetState::Visible;
+ 
+@@ -208,7 +208,7 @@ namespace OpenXLSX
+ //            return uint16_t(std::stoi(parentDoc().execQuery(R"({ "query": "QuerySheetIndex", "sheetID": ")" + relationshipID() + "\"}")));
+ 
+             XLQuery query(XLQueryType::QuerySheetIndex);
+-            query.template setParam("sheetID", relationshipID());
++            query.setParam("sheetID", relationshipID());
+             return uint16_t(std::stoi(parentDoc().execQuery(query).template result<std::string>()));
+         }
+ 
