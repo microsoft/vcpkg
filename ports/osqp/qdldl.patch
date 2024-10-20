@@ -1,0 +1,115 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 06c3d9c..5aeb9a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,26 +126,26 @@ install(TARGETS qdldlstatic
+ install(FILES ${qdldl_headers} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/qdldl")
+ 
+ 
+-# Install Shared Library
+-# ----------------------------------------------
+-# Create qdldl shared library
+-add_library (qdldl SHARED ${qdldl_src} ${qdldl_headers})
++## Install Shared Library
++## ----------------------------------------------
++## Create qdldl shared library
++#add_library (qdldl SHARED ${qdldl_src} ${qdldl_headers})
+ 
+-# Declare include directories for the cmake exported target
+-target_include_directories(qdldl
+-	PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+-	"$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}/qdldl>")
++## Declare include directories for the cmake exported target
++#target_include_directories(qdldl
++	#PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
++	#"$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}/qdldl>")
+ 
+-# Install qdldl shared library
+-install(TARGETS qdldl
+-	EXPORT  ${PROJECT_NAME}
+-	LIBRARY       DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-	ARCHIVE       DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-	RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}")
++## Install qdldl shared library
++#install(TARGETS qdldl
++	#EXPORT  ${PROJECT_NAME}
++	#LIBRARY       DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++	#ARCHIVE       DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++	#RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}")
+ 
+-# Create demo executable (linked to static library)
+-add_executable (qdldl_example ${PROJECT_SOURCE_DIR}/examples/example.c)
+-target_link_libraries (qdldl_example qdldlstatic)
++## Create demo executable (linked to static library)
++#add_executable (qdldl_example ${PROJECT_SOURCE_DIR}/examples/example.c)
++#target_link_libraries (qdldl_example qdldlstatic)
+ 
+ 
+ # Create CMake packages for the build directory
+@@ -176,36 +176,36 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qdldl-config.cmake
+ 
+ 
+ 
+-# Add uninstall command
+-# ----------------------------------------------
+-if(NOT TARGET uninstall)
+-    configure_file(
+-        "${CMAKE_CURRENT_SOURCE_DIR}/configure/cmake/cmake_uninstall.cmake.in"
+-        "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+-        IMMEDIATE @ONLY)
+-
+-    add_custom_target(uninstall
+-        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+-endif()
++## Add uninstall command
++## ----------------------------------------------
++#if(NOT TARGET uninstall)
++    #configure_file(
++        #"${CMAKE_CURRENT_SOURCE_DIR}/configure/cmake/cmake_uninstall.cmake.in"
++        #"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
++        #IMMEDIATE @ONLY)
+ 
++    #add_custom_target(uninstall
++        #COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
++#endif()
+ 
+ 
+-# Add testing
+-# ----------------------------------------------
+-# Add custom command to generate tests
+-if (UNITTESTS)
+-
+-    # Add test_headers and codegen_test_headers
+-    add_subdirectory(tests)
+-
+-    # Direct qdldl solver testing
+-    add_executable(qdldl_tester
+-                ${PROJECT_SOURCE_DIR}/tests/qdldl_tester.c ${PROJECT_SOURCE_DIR}/tests/minunit.h
+-                ${test_headers})
+-    target_link_libraries (qdldl_tester qdldlstatic)
+-
+-    # Add testing
+-    include(CTest)
+-    enable_testing()
+-    add_test(NAME tester COMMAND $<TARGET_FILE:qdldl_tester>)
+-endif()
++
++## Add testing
++## ----------------------------------------------
++## Add custom command to generate tests
++#if (UNITTESTS)
++
++    ## Add test_headers and codegen_test_headers
++    #add_subdirectory(tests)
++
++    ## Direct qdldl solver testing
++    #add_executable(qdldl_tester
++                #${PROJECT_SOURCE_DIR}/tests/qdldl_tester.c ${PROJECT_SOURCE_DIR}/tests/minunit.h
++                #${test_headers})
++    #target_link_libraries (qdldl_tester qdldlstatic)
++
++    ## Add testing
++    #include(CTest)
++    #enable_testing()
++    #add_test(NAME tester COMMAND $<TARGET_FILE:qdldl_tester>)
++#endif()
