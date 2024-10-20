@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2738060..76e2314 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -236,6 +236,13 @@ if (FIXED_CONTAINERS_OPT_INSTALL)
+     target_include_directories(fixed_containers INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+     include(CMakePackageConfigHelpers)
++
++    configure_package_config_file(
++      ${PROJECT_NAME}Config.cmake.in
++      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++      INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}/
++      NO_CHECK_REQUIRED_COMPONENTS_MACRO)
++
+     write_basic_package_version_file(${PROJECT_NAME}ConfigVersion.cmake
+             VERSION "0.0.0"
+             COMPATIBILITY AnyNewerVersion
+@@ -249,11 +256,14 @@ if (FIXED_CONTAINERS_OPT_INSTALL)
+ 
+     install(EXPORT ${PROJECT_NAME}Config
+             NAMESPACE ${PROJECT_NAME}::
++            FILE ${PROJECT_NAME}-targets.cmake
+             DESTINATION lib/cmake/${PROJECT_NAME})
+ 
+     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+             DESTINATION .)
++install(
++  FILES
++  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++  DESTINATION lib/cmake/${PROJECT_NAME})
+ 
+-    export(EXPORT ${PROJECT_NAME}Config
+-            NAMESPACE ${PROJECT_NAME}::)
+ endif()
+diff --git a/fixed_containersConfig.cmake.in b/fixed_containersConfig.cmake.in
+new file mode 100644
+index 0000000..a8e659e
+--- /dev/null
++++ b/fixed_containersConfig.cmake.in
+@@ -0,0 +1,9 @@
++
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++
++find_dependency(magic_enum CONFIG)
++
++include("${CMAKE_CURRENT_LIST_DIR}/fixed_containers-targets.cmake")
++
