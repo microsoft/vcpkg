@@ -1,5 +1,5 @@
 diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
-index 709c0cd..0b2237c 100644
+index 709c0cd..64baa8e 100644
 --- a/CMake/FindFFTW.cmake
 +++ b/CMake/FindFFTW.cmake
 @@ -30,7 +30,27 @@
@@ -9,9 +9,9 @@ index 709c0cd..0b2237c 100644
 -if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
 +set(FFTW_INCLUDE "")
 +if(ITK_USE_CUFFTW)
++  find_package(CUDAToolkit REQUIRED)
 +  find_path(CUFFTW_INCLUDE_PATH cufftw.h PATHS ${CUDAToolkit_INCLUDE_DIRS} NO_DEFAULT_PATH REQUIRED)
 +  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
-+  find_package(CUDAToolkit REQUIRED)
 +  set(FFTWD_LIBRARIES CUDA::cufftw)
 +  set(FFTWD_FOUND 1)
 +  set(FFTWF_LIBRARIES CUDA::cufftw)
