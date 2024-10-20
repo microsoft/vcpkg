@@ -261,6 +261,9 @@ This can be resolved by explicitly passing URL/SHA pairs to DIRECT_PACKAGES.")
     set("${out_msys_root}" "${path_to_root}" PARENT_SCOPE)
 endfunction()
 
+# Expand this while CMAKE_CURRENT_LIST_DIR is for this file.
+set(Z_VCPKG_AUTOMAKE_CLANG_CL_PATCH "${CMAKE_CURRENT_LIST_DIR}/compile_wrapper_consider_clang-cl.patch")
+
 macro(z_vcpkg_acquire_msys_declare_all_packages)
     set(Z_VCPKG_MSYS_PACKAGES_AVAILABLE "" CACHE INTERNAL "")
 
@@ -289,6 +292,12 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         SHA512 59c219019a776d36cf37a755fdb1c60b0bfd4ef8ec4dc55d2ba5de00e85686cc480d05689d8fa23532615000f3371702c2b2fe31a0f18f92df9f4353202a6e23
         PROVIDES automake
         DEPS automake1.17 bash gawk
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/msys/x86_64/automake1.16-1.16.5-1-any.pkg.tar.zst"
+        SHA512 62c9dfe28d6f1d60310f49319723862d29fc1a49f7be82513a4bf1e2187ecd4023086faf9914ddb6701c7c1e066ac852c0209db2c058f3865910035372a4840a
+        DEPS bash perl
+        PATCHES "${Z_VCPKG_AUTOMAKE_CLANG_CL_PATCH}"
     )
     z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/msys/x86_64/automake1.17-1.17-1-any.pkg.tar.zst"
