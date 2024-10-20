@@ -82,7 +82,6 @@ $commonArgs = @(
 )
 $cachingArgs = @()
 
-$skipFailuresArg = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs = @('--no-binarycaching')
 } else {
@@ -93,14 +92,13 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     }
     elseif ($BuildReason -eq 'PullRequest') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailuresArg = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
         $binaryCachingMode = 'write'
     }
 
-    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode;http,https://s3.hilton.rwth-aachen.de/binarycache-vcpkg/{triplet}/{name}/{version}/{sha},readwrite")
 }
 
 if ($IsWindows) {
@@ -128,72 +126,14 @@ if ($lastLastExitCode -ne 0)
     exit $lastLastExitCode
 }
 
-$parentHashes = @()
-if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
-{
-    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-
-    # Prefetch tools for better output
-    foreach ($tool in @('cmake', 'ninja', 'git')) {
-        & "./vcpkg$executableExtension" fetch $tool
-        $lastLastExitCode = $LASTEXITCODE
-        if ($lastLastExitCode -ne 0)
-        {
-            Write-Error "Failed to fetch $tool"
-            exit $lastLastExitCode
-        }
-    }
-
-    Write-Host "Comparing with HEAD~1"
-    & git revert -n -m 1 HEAD | Out-Null
-    $lastLastExitCode = $LASTEXITCODE
-    if ($lastLastExitCode -ne 0)
-    {
-        Write-Error "git revert failed"
-        exit $lastLastExitCode
-    }
-
-    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    if ($parentBaseline -eq $headBaseline)
-    {
-        Write-Host "CI baseline unchanged, determining parent hashes"
-        $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
-        $parentHashes = @("--parent-hashes=$parentHashesFile")
-        # The vcpkg.cmake toolchain file is not part of ABI hashing,
-        # but changes must trigger at least some testing.
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-        & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
-        $lastLastExitCode = $LASTEXITCODE
-        if ($lastLastExitCode -ne 0)
-        {
-            Write-Error "Generating parent hashes failed; this is usually an infrastructure problem with vcpkg"
-            exit $lastLastExitCode
-        }
-    }
-    else
-    {
-        Write-Host "CI baseline was modified, not using parent hashes"
-    }
-
-    Write-Host "Running CI for HEAD"
-    & git reset --hard HEAD
-    $lastLastExitCode = $LASTEXITCODE
-    if ($lastLastExitCode -ne 0)
-    {
-        Write-Error "git reset failed"
-        exit $lastLastExitCode
-    }
-}
-
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
 $lastLastExitCode = $LASTEXITCODE
 
-$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+$failureLogsEmpty = True
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"

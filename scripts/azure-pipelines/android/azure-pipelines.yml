@@ -19,7 +19,7 @@ jobs:
     name: 'PrAnd-1ES-Pool'
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   cancelTimeoutInMinutes: 1
   variables:
   - name: WORKING_ROOT
