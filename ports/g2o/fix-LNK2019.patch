@@ -1,0 +1,12 @@
+diff --git a/g2o/solvers/csparse/csparse_wrapper.cpp b/g2o/solvers/csparse/csparse_wrapper.cpp
+index c419d49..c209bf5 100644
+--- a/g2o/solvers/csparse/csparse_wrapper.cpp
++++ b/g2o/solvers/csparse/csparse_wrapper.cpp
+@@ -25,6 +25,7 @@
+ // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include "csparse_wrapper.h"
++#include "linear_solver_csparse.h"
+ 
+ #include <cassert>
+ #include <cstddef>
