@@ -6888,6 +6888,10 @@
       "baseline": "2.2.0",
       "port-version": 0
     },
+    "pdal-dimbuilder": {
+      "baseline": "2.8.0",
+      "port-version": 0
+    },
     "pdcurses": {
       "baseline": "3.9",
       "port-version": 6
