@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 082bb28cdf..b891ce553f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -291,6 +291,14 @@ else()
+   set(DUCKDB_VERSION "v${DUCKDB_MAJOR_VERSION}.${DUCKDB_MINOR_VERSION}.${DUCKDB_PATCH_VERSION}-dev${DUCKDB_DEV_ITERATION}")
+ endif()
+ 
++if (DEFINED DUCKDB_OVERWRITE_VERSION)
++  set(DUCKDB_VERSION ${DUCKDB_OVERWRITE_VERSION})
++endif()
++
++if (DEFINED DUCKDB_OVERWRITE_COMMIT_ID)
++  set(GIT_COMMIT_HASH ${DUCKDB_OVERWRITE_COMMIT_ID})
++endif()
++
+ message(STATUS "git hash ${GIT_COMMIT_HASH}, version ${DUCKDB_VERSION}")
+ 
+ option(AMALGAMATION_BUILD
