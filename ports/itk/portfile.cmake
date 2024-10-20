@@ -28,7 +28,10 @@ vcpkg_from_github(
         dont-build-gtest.patch
         "${PYTHON_GPU_WRAPPING_PATCH}"
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/CMake/FindOpenCL.cmake"
+    "${SOURCE_PATH}/Modules/ThirdParty/VNL/src"
+)
 
 if("rtk" IN_LIST FEATURES)
     # (old hint, not verified) RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
@@ -199,15 +202,11 @@ vcpkg_cmake_configure(
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past and still is. ITK still has not figured out how to do it correctly!
         -DITK_USE_SYSTEM_GDCM=ON
         -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG
-        #-DITK_USE_SYSTEM_VXL=ON
+        -DITK_USE_SYSTEM_VXL=ON
         #-DITK_USE_SYSTEM_CASTXML=ON # needs to be added to vcpkg_find_acquire_program https://data.kitware.com/api/v1/file/hashsum/sha512/b8b6f0aff11fe89ab2fcd1949cc75f2c2378a7bc408827a004396deb5ff5a9976bffe8a597f8db1b74c886ea39eb905e610dce8f5bd7586a4d6c196d7349da8d/download
         -DITK_USE_SYSTEM_MINC=ON
         -DITK_USE_SYSTEM_GOOGLETEST=ON
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
-
-        # TODO
-        #-DVXL_USE_GEOTIFF=ON
-        -DVXL_USE_LFS=ON
 
         -DITK_MINIMUM_COMPLIANCE_LEVEL:STRING=1 # To Display all remote modules within cmake-gui
         #-DModule_IOSTL=ON # example how to turn on a non-default module

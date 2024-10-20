@@ -36,6 +36,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    "vxl",
     "zlib"
   ],
   "features": {
