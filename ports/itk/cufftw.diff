@@ -1,0 +1,26 @@
+diff --git a/Modules/Filtering/FFT/CMakeLists.txt b/Modules/Filtering/FFT/CMakeLists.txt
+index 3f87969..1b296ed 100644
+--- a/Modules/Filtering/FFT/CMakeLists.txt
++++ b/Modules/Filtering/FFT/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ project(ITKFFT)
+ 
+-if(ITK_USE_CUFFTW)
++if(0)
+   set(ITKFFT_LIBRARIES ITKFFT ${FFTWF_LIBRARIES})
+ else()
+   set(ITKFFT_LIBRARIES ITKFFT)
+diff --git a/Modules/Filtering/FFT/src/CMakeLists.txt b/Modules/Filtering/FFT/src/CMakeLists.txt
+index 83b176c..b51bc48 100644
+--- a/Modules/Filtering/FFT/src/CMakeLists.txt
++++ b/Modules/Filtering/FFT/src/CMakeLists.txt
+@@ -10,6 +10,9 @@ endif()
+ itk_module_add_library(ITKFFT ${ITKFFT_SRCS})
+ 
+ # this library is only needed if FFTW is used
++if(ITK_USE_CUFFTW)
++  target_link_libraries(ITKFFT LINK_PUBLIC CUDA::cufftw)
++endif()
+ if(ITK_USE_FFTWF
+    OR ITK_USE_FFTWD
+    AND NOT ITK_USE_CUFFTW)

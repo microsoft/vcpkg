@@ -16,8 +16,9 @@ vcpkg_from_github(
     #]]
     HEAD_REF master
     PATCHES
+        cufftw.diff
         double-conversion.patch
-        fftw.diff
+        find-fftw.diff
         openjpeg.patch
         openjpeg2.patch
         var_libraries.patch
@@ -262,4 +263,3 @@ if("rtk" IN_LIST FEATURES)
     )
 endif()
 vcpkg_install_copyright(FILE_LIST ${file_list})
-message(FATAL_ERROR STOP)

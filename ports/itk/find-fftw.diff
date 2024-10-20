@@ -58,16 +58,3 @@ index 7a77ae3..3e41f37 100644
  endif()
  
  # Add configuration with GPU
-diff --git a/Modules/Filtering/FFT/CMakeLists.txt b/Modules/Filtering/FFT/CMakeLists.txt
-index 3f87969..aa4db40 100644
---- a/Modules/Filtering/FFT/CMakeLists.txt
-+++ b/Modules/Filtering/FFT/CMakeLists.txt
-@@ -1,7 +1,7 @@
- project(ITKFFT)
- 
- if(ITK_USE_CUFFTW)
--  set(ITKFFT_LIBRARIES ITKFFT ${FFTWF_LIBRARIES})
-+  set(ITKFFT_PUBLIC_DEPENDS ITKFFT ${FFTWF_LIBRARIES})
- else()
-   set(ITKFFT_LIBRARIES ITKFFT)
- endif()
