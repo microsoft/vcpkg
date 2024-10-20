@@ -74,11 +74,11 @@ else()
         DISABLE_PARALLEL_CONFIGURE
     )
 endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib)
+
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-# Uncomment if needed for CMake target fixup
-vcpkg_cmake_config_fixup(CONFIG_PATH lib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
