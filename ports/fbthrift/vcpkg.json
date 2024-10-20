@@ -28,6 +28,7 @@
       "host": true
     },
     "wangle",
+    "xxhash",
     "zlib",
     "zstd"
   ]
