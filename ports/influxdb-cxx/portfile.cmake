@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 ac16178a17ac9b43a23d64f56d0012aeda896d3065246166abdef1441cf466453a6972c5820411936dcfa10a21505b654dfe981449c1d4cc169807f1db5d099f
     HEAD_REF master
-    PATCHES fix-dllexports.patch
+    PATCHES
+        fix-dllexports.patch
+        268.patch # https://github.com/offa/influxdb-cxx/pull/268
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
