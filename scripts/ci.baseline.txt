@@ -1155,9 +1155,6 @@ vulkan:arm-neon-android=fail
 vulkan:arm64-android=fail
 vulkan:x64-android=fail
 # Needs android-26
-vulkan-utility-libraries:arm-neon-android=fail
-vulkan-utility-libraries:arm64-android=fail
-vulkan-utility-libraries:x64-android=fail
 wasmedge:arm-neon-android=fail
 wasmedge:arm64-android=fail
 wasmedge:x64-android=fail
