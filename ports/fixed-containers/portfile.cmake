@@ -9,6 +9,8 @@ vcpkg_from_github(
 
 set(VCPKG_BUILD_TYPE release) # header-only
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/fixed_containersConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
