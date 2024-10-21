@@ -75,7 +75,7 @@ else()
     )
 endif()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "libmem")
+#vcpkg_cmake_config_fixup(PACKAGE_NAME "libmem")
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
