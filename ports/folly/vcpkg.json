@@ -1,6 +1,7 @@
 {
   "name": "folly",
   "version-string": "2024.10.07.00",
+  "port-version": 1,
   "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
   "homepage": "https://github.com/facebook/folly",
   "license": "Apache-2.0",
@@ -25,6 +26,7 @@
     "gflags",
     "glog",
     "libevent",
+    "libunwind",
     "openssl",
     {
       "name": "vcpkg-cmake",

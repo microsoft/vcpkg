@@ -23,6 +23,7 @@ vcpkg_configure_make(
     AUTOCONFIG
     OPTIONS
         --disable-tests
+        --enable-minidebuginfo
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
