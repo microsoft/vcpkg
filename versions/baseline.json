@@ -2381,7 +2381,7 @@
       "port-version": 0
     },
     "dpp": {
-      "baseline": "10.0.31",
+      "baseline": "10.0.33",
       "port-version": 0
     },
     "draco": {
@@ -8605,7 +8605,7 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.10.1",
+      "baseline": "0.10.3",
       "port-version": 0
     },
     "sse2neon": {
