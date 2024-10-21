@@ -26,7 +26,10 @@
     "gflags",
     "glog",
     "libevent",
-    "libunwind",
+    {
+      "name": "libunwind",
+      "platform": "linux"
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",
