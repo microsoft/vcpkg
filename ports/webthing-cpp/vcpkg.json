@@ -5,17 +5,12 @@
   "homepage": "https://github.com/bw-hro/webthing-cpp",
   "license": "MIT",
   "dependencies": [
-    "catch2",
     "json-schema-validator",
     "mdns",
     "nlohmann-json",
     "uwebsockets",
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
