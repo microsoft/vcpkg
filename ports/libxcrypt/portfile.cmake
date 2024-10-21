@@ -20,6 +20,8 @@ vcpkg_from_github(
     REPO besser82/libxcrypt
     REF "v${VERSION}"
     SHA512 61e5e393654f37775457474d4170098314879ee79963d423c1c461e80dc5dc74f0c161dd8754f016ce96109167be6c580ad23994fa1d2c38c54b96e602f3aece
+    PATCHES
+        fix-base64-bad-length.patch
 )
 
 vcpkg_configure_make(
