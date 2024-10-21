@@ -1841,7 +1841,7 @@
       "port-version": 0
     },
     "conjure-enum": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "console-bridge": {
@@ -2381,7 +2381,7 @@
       "port-version": 0
     },
     "dpp": {
-      "baseline": "10.0.31",
+      "baseline": "10.0.33",
       "port-version": 0
     },
     "draco": {
@@ -5261,7 +5261,7 @@
       "port-version": 14
     },
     "libuv": {
-      "baseline": "1.49.1",
+      "baseline": "1.49.2",
       "port-version": 0
     },
     "libuvc": {
@@ -8605,7 +8605,7 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.10.1",
+      "baseline": "0.10.3",
       "port-version": 0
     },
     "sse2neon": {
@@ -8673,7 +8673,7 @@
       "port-version": 1
     },
     "stringzilla": {
-      "baseline": "3.7.0",
+      "baseline": "3.10.5",
       "port-version": 0
     },
     "strong-type": {
