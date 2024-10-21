@@ -414,8 +414,8 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-egl-1.0.pc)
-  configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-egl-1.0.pc" "${CURRENT_BUIDLTREES_DIR}/gstreamer-gl-egl-1.0.debug.log" COPYONLY)
-  configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-egl-1.0.pc" "${CURRENT_BUIDLTREES_DIR}/gstreamer-gl-egl-1.0.log" COPYONLY)
-endif()
+
+configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-egl-1.0.pc" "${CURRENT_BUILDTREES_DIR}/gstreamer-gl-egl-1.0.debug.log" COPYONLY)
+configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-egl-1.0.pc" "${CURRENT_BUILDTREES_DIR}/gstreamer-gl-egl-1.0.log" COPYONLY)
+
 message(FATAL_ERROR)
