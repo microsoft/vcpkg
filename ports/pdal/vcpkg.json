@@ -9,6 +9,7 @@
       "name": "curl",
       "default-features": false
     },
+    "eigen3",
     {
       "name": "gdal",
       "default-features": false
