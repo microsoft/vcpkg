@@ -50,6 +50,7 @@ vcpkg_configure_meson(
         ${OPTIONS}
         -Ddocumentation=false
         -Dinstalled_tests=false
+        -Dintrospection=disabled
         -Dlibelf=disabled
         -Dman-pages=disabled
         -Dtests=false

@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "azure-storage-common_${VERSION}"
     SHA512 2b82ff3e8d4e76c1c7205d363e2e9ff042cf4034c41a0bc7d47591a42c144b09ad6f732ea322ce0c918bcf5de548c88c58a577571182d988b85a4418c51d9f59
     HEAD_REF main
+    PATCHES
+      set_version.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-common")
