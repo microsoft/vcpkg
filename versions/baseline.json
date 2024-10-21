@@ -3702,7 +3702,7 @@
     },
     "influxdb-cxx": {
       "baseline": "0.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "infoware": {
       "baseline": "2023-04-12",
