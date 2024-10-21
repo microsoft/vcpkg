@@ -1841,7 +1841,7 @@
       "port-version": 0
     },
     "conjure-enum": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "console-bridge": {
