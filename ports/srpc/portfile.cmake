@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sogou/srpc
     REF v${VERSION}
-    SHA512 12816755ba94d1d006d5bbbbba14b0589258f6a79b3fef16b722e7a9f5375a6f69a513f203b27eef305358ec28d07a0553a40b1aaebf467326f14e4b6bfc4a01
+    SHA512 55c0ebbf30c24fdb40885792d5d3f1e183f27fcf13df6217053bec13cf9ed6359888351b20a792607b1f49df674b88bd148cf4c8addb1f610b1c59dd4eeba0f2
     HEAD_REF master
     PATCHES
         protobuf.patch
