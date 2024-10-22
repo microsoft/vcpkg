@@ -440,7 +440,7 @@ function(z_vcpkg_make_prepare_link_flags)
 
     set(link_flags ${${arg_IN_OUT_VAR}})
     
-    if(arg_VCPKG_TRANSFORM_LIBS STREQUAL "ON")
+    if(arg_VCPKG_TRANSFORM_LIBS)
         list(TRANSFORM link_flags REPLACE "[.](dll[.]lib|lib|a|so)$" "")
 
         if(VCPKG_TARGET_IS_WINDOWS)
