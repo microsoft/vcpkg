@@ -1,5 +1,6 @@
+set(PATCHES "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(PATCHES fix_clang-cl_build.patch)
+    list(APPEND PATCHES fix_clang-cl_build.patch)
 endif()
 
 vcpkg_from_gitlab(
@@ -7,13 +8,13 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     REPO cairo/cairo
     REF "${VERSION}"
-    SHA512 2ef3b948b354a9be5c3afe2bbf47f559a00a6114c67ef50ce19d54a1d4232218311f2277e271faad4df598e19e03492ba97af934ede9411494618ebe46f9eee9
+    SHA512 5731eaa48857561aad023214ebb7be70344579a4bc75d00c46f8c622b4d34be7f79ab02e2cd54a419086490a3bf31aafa2418d873833b475b9824e3f2f5b17b6
     PATCHES
-        cairo_static_fix.patch
-        disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
-        fix-static-missing-lib-msimg32.patch
+        #cairo_static_fix.patch
+        #disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
+        #fix-static-missing-lib-msimg32.patch
         ${PATCHES}
-        fix-alloca-undefine.patch # Upstream PR: https://gitlab.freedesktop.org/cairo/cairo/-/merge_requests/520
+        #fix-alloca-undefine.patch # Upstream PR: https://gitlab.freedesktop.org/cairo/cairo/-/merge_requests/520
         cairo_add_lzo_feature_option.patch
 )
 
@@ -92,6 +93,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-# Handle copyright
+#file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING-LGPL-2.1" "${SOURCE_PATH}/COPYING-MPL-1.1")

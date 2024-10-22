@@ -167,7 +167,6 @@ caf:arm64-uwp=fail
 caf:arm64-android=fail
 caf:x64-android=fail
 caf:x64-uwp=fail
-cairo:x64-android=fail
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
 c-dbg-macro:x64-windows=skip
@@ -195,7 +194,6 @@ catch-classic:x64-windows        = skip
 catch-classic:x64-windows-static = skip
 catch-classic:x64-windows-static-md=skip
 catch-classic:x86-windows        = skip
-cairo:arm64-android=fail
 cctag:x64-windows-static-md=fail
 cello:arm64-uwp=fail
 cello:x64-uwp=fail
