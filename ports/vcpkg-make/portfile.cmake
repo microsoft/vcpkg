@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     automake_source
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
 )
 
 file(INSTALL 

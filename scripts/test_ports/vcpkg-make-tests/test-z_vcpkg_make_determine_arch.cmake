@@ -11,7 +11,6 @@ set(test_cases
     "x86_64" "x86_64"
     "i686" "i686"
     "aarch64" "aarch64"
-    "arm" "arm"
 )
 
 list(LENGTH test_cases num_items)

@@ -74,7 +74,18 @@ endfunction()
 function(vcpkg_run_autoreconf shell_cmd work_dir)
     find_program(AUTORECONF NAMES autoreconf)
     if(NOT AUTORECONF)
-        message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
+        message(FATAL_ERROR "${PORT} currently requires the following programs from the system package manager:
+        autoconf automake autoconf-archive
+    On Debian and Ubuntu derivatives:
+        sudo apt-get install autoconf automake autoconf-archive
+    On recent Red Hat and Fedora derivatives:
+        sudo dnf install autoconf automake autoconf-archive
+    On Arch Linux and derivatives:
+        sudo pacman -S autoconf automake autoconf-archive
+    On Alpine:
+        apk add autoconf automake autoconf-archive
+    On macOS:
+        brew install autoconf automake autoconf-archive\n")
     endif()
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_shell(
