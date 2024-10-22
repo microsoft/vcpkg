@@ -1,11 +1,9 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 8a0bf84c19e38214219dbd3345f04ce778426c57
-  SHA512 6253d5b498f4f6eba7fc539d5a4b4e163139f4841623f11d84760bcf1ffabe6519f85e98e3d4aeac6846313fea3b98451407134b6b6f5b91137c62d1647109d9
+  REF d17ec15a06a9bde6e12de9354e1fde9888dd6de0
+  SHA512 66f5cbb82ceafc5d11e000409fc14334b28e7c11a258be3584eddd3c9d3d13898910619e8c7d0686e9bca37d746c456f4a2a81b2f755cb4f324efa2e243a55b4
   HEAD_REF master
-  PATCHES 
-    fix-dependence-getopt.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 #do not move following features to vcpkg_check_features because they break themselves: one off will turn off the others even if true
 set(ENABLE_OPENCV FALSE)
-if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES OR "opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
+if ("opencv-base" IN_LIST FEATURES OR "opencv-cuda" IN_LIST FEATURES IN_LIST FEATURES)
   set(ENABLE_OPENCV TRUE)
 endif()
 
@@ -34,7 +32,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
-  OPTIONS 
+  OPTIONS
     ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
@@ -42,8 +40,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
-if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
+vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib kmeansiou)
+if ("opencv-cuda" IN_LIST FEATURES)
   vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
 endif()
 
