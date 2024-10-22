@@ -1,4 +1,6 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
+set(${PORT}_PATCHES 0001-devendor-meshoptimizer.patch)
+
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 # General features:
