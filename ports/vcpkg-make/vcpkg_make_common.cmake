@@ -512,7 +512,7 @@ function(z_vcpkg_make_prepare_flags)
         vcpkg_backup_env_variables(VARS _CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         if(VCPKG_TARGET_IS_UWP)
-            # Be aware that configure thinks it is crosscompiling due to:   
+            # Be aware that configure thinks it is crosscompiling due to:
             # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
             # cannot open shared object file: No such file or directory
             # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
