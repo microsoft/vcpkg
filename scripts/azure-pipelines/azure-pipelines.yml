@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-10-15'
+  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-10-21'
 
 parameters:
   - name: vcpkgToolSha
@@ -12,7 +12,7 @@ parameters:
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
-    default: 'android'
+    default: '-'
 
 jobs:
 - template: windows/azure-pipelines.yml
