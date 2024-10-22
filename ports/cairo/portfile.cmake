@@ -1,6 +1,6 @@
-set(PATCHES "")
+set(EXTRA_PATCHES "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    list(APPEND PATCHES fix_clang-cl_build.patch)
+    list(APPEND EXTRA_PATCHES fix_clang-cl_build.patch)
 endif()
 
 vcpkg_from_gitlab(
@@ -10,12 +10,8 @@ vcpkg_from_gitlab(
     REF "${VERSION}"
     SHA512 5731eaa48857561aad023214ebb7be70344579a4bc75d00c46f8c622b4d34be7f79ab02e2cd54a419086490a3bf31aafa2418d873833b475b9824e3f2f5b17b6
     PATCHES
-        #cairo_static_fix.patch
-        #disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
-        #fix-static-missing-lib-msimg32.patch
-        ${PATCHES}
-        #fix-alloca-undefine.patch # Upstream PR: https://gitlab.freedesktop.org/cairo/cairo/-/merge_requests/520
         cairo_add_lzo_feature_option.patch
+        ${EXTRA_PATCHES}
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -70,29 +66,15 @@ vcpkg_install_meson()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-set(_file "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
-file(READ ${_file} CAIRO_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
-else()
-    string(REPLACE "!defined(CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h" "defined(CAIRO_WIN32_STATIC_BUILD)" "1")
 endif()
-file(WRITE ${_file} "${CAIRO_H}")
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-#TODO: Fix script
-#set(TOOLS)
-#if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cairo-trace${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-#    list(APPEND TOOLS cairo-trace) # sh script which needs to be fixed due to absolute paths in it.
-#endif()
-#vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
-#file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING-LGPL-2.1" "${SOURCE_PATH}/COPYING-MPL-1.1")
