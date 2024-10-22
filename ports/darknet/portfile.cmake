@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 #do not move following features to vcpkg_check_features because they break themselves: one off will turn off the others even if true
 set(ENABLE_OPENCV FALSE)
-if ("opencv-base" IN_LIST FEATURES OR "opencv-cuda" IN_LIST FEATURES IN_LIST FEATURES)
+if ("opencv-base" IN_LIST FEATURES OR "opencv-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV TRUE)
 endif()
 
