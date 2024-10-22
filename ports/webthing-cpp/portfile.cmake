@@ -15,9 +15,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
-    OPTIONS -DWT_BUILD_EXAMPLES=OFF
-    OPTIONS -DWT_BUILD_TESTS=OFF
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DWT_BUILD_EXAMPLES=OFF
+        -DWT_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
