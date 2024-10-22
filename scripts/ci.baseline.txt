@@ -36,6 +36,9 @@
 ##    x86-windows
 ##
 
+# Temporary
+vcpkg-ci-msys2:x64-windows=fail
+
 # Add new items alphabetically
 
 7zip:arm-neon-android=fail
