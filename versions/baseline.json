@@ -5892,6 +5892,10 @@
       "baseline": "2.1.7",
       "port-version": 0
     },
+    "mimicpp": {
+      "baseline": "3",
+      "port-version": 0
+    },
     "minc": {
       "baseline": "2.4.03",
       "port-version": 3
