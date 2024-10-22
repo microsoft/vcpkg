@@ -1,16 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5eea37c..145e5b6 100644
+index c6b2b2a810..787a83bb1c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -96,23 +96,25 @@ endif ()
+@@ -105,24 +105,26 @@ endif ()
  
  # Find required dependencies for thrift/lib
  if (THRIFT_LIB_ONLY OR build_all)
 -  find_package(Gflags REQUIRED)
+-  find_package(Glog REQUIRED)
 +  find_package(gflags CONFIG REQUIRED)
 +  set(LIBGFLAGS_LIBRARY gflags::gflags)
-   find_package(glog CONFIG REQUIRED)
-   set (GLOG_LIBRARIES glog::glog)
++  find_package(glog CONFIG REQUIRED)
++  set(GLOG_LIBRARIES glog::glog)
    find_package(folly CONFIG REQUIRED)
    find_package(fizz CONFIG REQUIRED)
    find_package(wangle CONFIG REQUIRED)
@@ -22,6 +23,7 @@ index 5eea37c..145e5b6 100644
 +  elseif(TARGET zstd::libzstd_static)
 +    set(ZSTD_LIBRARIES zstd::libzstd_static)
 +  endif()
+   find_package(Xxhash REQUIRED)
    find_package(mvfst CONFIG REQUIRED)
    # https://cmake.org/cmake/help/v3.9/module/FindThreads.html
    set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -31,14 +33,15 @@ index 5eea37c..145e5b6 100644
 -    ${GLOG_INCLUDE_DIRS}
 -    ${OPENSSL_INCLUDE_DIR}
 -    ${ZSTD_INCLUDE_DIRS}
+-    ${Xxhash_INCLUDE_DIR}
    )
    add_definitions("-DTHRIFT_HAVE_LIBSNAPPY=0")
    if (THRIFT_LIB_ONLY)
 diff --git a/thrift/cmake/FBThriftConfig.cmake.in b/thrift/cmake/FBThriftConfig.cmake.in
-index 1d38221..ab96215 100644
+index 057015258c..f0c6692246 100644
 --- a/thrift/cmake/FBThriftConfig.cmake.in
 +++ b/thrift/cmake/FBThriftConfig.cmake.in
-@@ -28,8 +28,15 @@ else()
+@@ -29,8 +29,15 @@ else()
    set_and_check(FBTHRIFT_COMPILER "@PACKAGE_BIN_INSTALL_DIR@/thrift1")
  endif()
  
@@ -46,12 +49,12 @@ index 1d38221..ab96215 100644
 -find_package(mvfst CONFIG REQUIRED)
 +find_dependency(ZLIB)
 +find_dependency(mvfst CONFIG)
-+find_dependency(fizz CONFIG )
-+find_dependency(fmt CONFIG )
-+find_dependency(folly CONFIG )
++find_dependency(fizz CONFIG)
++find_dependency(fmt CONFIG)
++find_dependency(folly CONFIG)
 +find_dependency(gflags CONFIG)
-+find_dependency(glog CONFIG )
-+find_dependency(wangle CONFIG )
++find_dependency(glog CONFIG)
++find_dependency(wangle CONFIG)
 +find_dependency(zstd CONFIG)
  
  if (NOT TARGET FBThrift::thriftcpp2)
