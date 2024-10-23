@@ -18,7 +18,7 @@ index d18407c..db19e0b 100644
          ryml.natvis
      SOURCE_ROOT ${RYML_SRC_DIR}
      INC_DIRS
-+    	 $<BUILD_INTERFACE:${C4CORE_INCLUDE_DIR}>
++        $<BUILD_INTERFACE:${C4CORE_INCLUDE_DIR}>
          $<BUILD_INTERFACE:${RYML_SRC_DIR}>
          $<INSTALL_INTERFACE:include>
 -    LIBS c4core
