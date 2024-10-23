@@ -35,7 +35,7 @@ target_include_directories(groupsock PUBLIC $<INSTALL_INTERFACE:include>)
 file(GLOB LIVEMEDIA_SRCS liveMedia/*.c liveMedia/*.cpp)
 add_library(liveMedia ${LIVEMEDIA_SRCS})
 find_package(OpenSSL REQUIRED)
-target_include_directories(liveMedia PUBLIC $<BUILD_INTERFACE:${OPENSSL_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>)
+target_include_directories(liveMedia PRIVATE "${OPENSSL_INCLUDE_DIR}" PUBLIC $<INSTALL_INTERFACE:include>)
 
 file(GLOB USAGE_ENVIRONMENT_SRCS UsageEnvironment/*.c UsageEnvironment/*.cpp)
 add_library(UsageEnvironment ${USAGE_ENVIRONMENT_SRCS})
