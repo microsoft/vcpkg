@@ -2493,7 +2493,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "6.7.0",
+      "baseline": "6.4.0",
       "port-version": 0
     },
     "ecos": {
