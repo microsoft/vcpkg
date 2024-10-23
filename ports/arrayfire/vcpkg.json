@@ -1,15 +1,21 @@
 {
   "name": "arrayfire",
-  "version-semver": "3.8.0",
-  "port-version": 7,
+  "version-semver": "3.9.0",
   "description": "ArrayFire is a general-purpose library that simplifies the process of developing software that targets parallel and massively-parallel architectures including CPUs, GPUs, and other hardware acceleration devices.",
   "homepage": "https://github.com/arrayfire/arrayfire",
   "license": "BSD-3-Clause",
-  "supports": "x64",
   "dependencies": [
+    {
+      "name": "arrayfire",
+      "host": true,
+      "default-features": false
+    },
     "boost-compute",
     "boost-stacktrace",
+    "fmt",
     "glad",
+    "half",
+    "span-lite",
     "spdlog",
     {
       "name": "vcpkg-cmake",
@@ -28,7 +34,22 @@
     "cpu": {
       "description": "ArrayFire CPU backend",
       "dependencies": [
-        "intel-mkl"
+        {
+          "name": "cblas",
+          "platform": "!x64"
+        },
+        {
+          "name": "fftw3",
+          "platform": "!x64"
+        },
+        {
+          "name": "intel-mkl",
+          "platform": "x64"
+        },
+        {
+          "name": "lapack",
+          "platform": "!x64"
+        }
       ]
     },
     "cuda": {
@@ -50,7 +71,22 @@
     "unified": {
       "description": "ArrayFire unified backend",
       "dependencies": [
-        "intel-mkl"
+        {
+          "name": "cblas",
+          "platform": "!x64"
+        },
+        {
+          "name": "fftw3",
+          "platform": "!x64"
+        },
+        {
+          "name": "intel-mkl",
+          "platform": "x64"
+        },
+        {
+          "name": "lapack",
+          "platform": "!x64"
+        }
       ]
     }
   }
