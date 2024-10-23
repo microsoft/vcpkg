@@ -81,13 +81,11 @@ add_compile_definitions(_REENTRANT)
 
 set_target_properties(xmlsec1 xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 
+set(XMLSEC_CORE_CFLAGS "")
 if(NOT BUILD_SHARED_LIBS)
-    set(XMLSEC_CORE_CFLAGS "-DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING")
-    set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
-else()
-    set(XMLSEC_CORE_CFLAGS "")
-    set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
+    set(XMLSEC_CORE_CFLAGS "-DLIBXML_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING")
 endif()
+set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
 
 target_compile_definitions(xmlsec1
     PRIVATE ${XMLSEC_CORE_CFLAGS} $<$<PLATFORM_ID:Windows>:XMLSEC_DL_WIN32>
@@ -141,7 +139,7 @@ if(INSTALL_HEADERS_TOOLS)
 		target_compile_definitions(xmlsec PRIVATE -DXMLSEC_CRYPTO_DYNAMIC_LOADING)
 	else()
 		find_package(Threads REQUIRED)
-		target_compile_definitions(xmlsec PRIVATE -DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC)
+		target_compile_definitions(xmlsec PRIVATE -DLIBXML_STATIC -DXMLSEC_STATIC)
 		target_link_libraries(xmlsec PUBLIC Threads::Threads)
 	endif()
 	install(TARGETS xmlsec DESTINATION tools/xmlsec)
