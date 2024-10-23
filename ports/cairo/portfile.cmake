@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
     SHA512 5731eaa48857561aad023214ebb7be70344579a4bc75d00c46f8c622b4d34be7f79ab02e2cd54a419086490a3bf31aafa2418d873833b475b9824e3f2f5b17b6
     PATCHES
         cairo_add_lzo_feature_option.patch
+        msvc-convenience.diff
         ${EXTRA_PATCHES}
 )
 
