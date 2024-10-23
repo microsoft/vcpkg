@@ -1,7 +1,6 @@
 {
   "name": "ryml",
-  "version": "0.5.0",
-  "port-version": 1,
+  "version": "0.7.2",
   "description": "Rapid YAML library",
   "homepage": "https://github.com/biojppm/rapidyaml",
   "license": "MIT",
@@ -20,14 +19,15 @@
     }
   ],
   "default-features": [
-    "def-callbacks"
+    "def-callbacks",
+	"standalone"
   ],
   "features": {
-    "dbg": {
-      "description": "Enable (very verbose) ryml debug prints."
-    },
     "def-callbacks": {
       "description": "Enable ryml's default implementation of callbacks: allocate(), free(), error()"
-    }
+    },
+	"standalone" : {
+		"description": "Enable compilation of opting-in targets from ryml in standalone."
+	}
   }
 }

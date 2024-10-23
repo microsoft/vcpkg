@@ -5,19 +5,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/rapidyaml
     REF "v${VERSION}"
-    SHA512 861f1d2c39c5c8d455e8d40e3ecadd828b948c5dea2bcb88ba92686ca77b9a7d69ab2d94407732eab574e4e3c7b319d0f1b31250b18fb513310847192623a2f7
+    SHA512 2ff14776498dc8a55cb257c38fbea5b1a1fc5c4c09ade5b10c45cb4afcaf0cc587674723bedf38fd04b3179a18ba7357a929484b154474d658d597d0f9ee8d2e
     HEAD_REF master
     PATCHES cmake-fix.patch
 )
 
-set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
+set(CM_COMMIT_HASH 08b1e26dbe7346ce3c7aeafe350d0962ae86a278)
 
 # Get cmake scripts for rapidyaml
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
+    SHA512 587e50f766e7702acbdbccdad1549ced83cdf340803a6a20995aaba8e6a9b375e928c068fbc3c4fd0611ee1ef908a082417e365e8e61e46e67e5ff802a648572
 )
 
 vcpkg_extract_source_archive(
@@ -33,6 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         def-callbacks RYML_DEFAULT_CALLBACKS
         dbg           RYML_DBG
+		git  		  GIT
 )
 
 vcpkg_cmake_configure(
