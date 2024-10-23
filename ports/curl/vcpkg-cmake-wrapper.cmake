@@ -28,7 +28,7 @@ if(CURL_FOUND)
     if(_curl_link_libraries MATCHES "OpenSSL::")
         string(REGEX REPLACE "([\$]<[^;]*)?OpenSSL::(SSL|Crypto)([^;]*>)?" "${OPENSSL_LIBRARIES}" _curl_link_libraries "${_curl_link_libraries}")
     endif()
-    if(_curl_link_libraries MATCHES "Libssh2::libssh2_(shared|static)")
+    if(_curl_link_libraries MATCHES "libssh2::libssh2")
         # TODO: move find_dependency(Libssh2 CONFIG) into CURL config
         set(_libssh2_target "${CMAKE_MATCH_0}")
         find_package(Libssh2 CONFIG QUIET)
