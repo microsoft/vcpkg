@@ -60,12 +60,10 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 add_library(xmlsec1 ${SOURCESXMLSEC})
 add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBXML2_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include)
 
-target_link_libraries(xmlsec1 PRIVATE ${LIBXML2_LIBRARIES})
-target_link_libraries(xmlsec1-openssl PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::Crypto xmlsec1
-)
+target_link_libraries(xmlsec1 PUBLIC LibXml2::LibXml2)
+target_link_libraries(xmlsec1-openssl PUBLIC xmlsec1 OpenSSL::Crypto)
 
 add_compile_definitions(inline=__inline)
 add_compile_definitions(PACKAGE="xmlsec1")
@@ -101,14 +99,13 @@ target_compile_definitions(xmlsec1-openssl
 )
 
 install(TARGETS xmlsec1 xmlsec1-openssl
-    EXPORT xmlsecExport
+    EXPORT unofficial-xmlsec-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
-install(EXPORT xmlsecExport
-    FILE unofficial-xmlsec-config.cmake
+install(EXPORT unofficial-xmlsec-targets
     NAMESPACE unofficial::xmlsec::
     DESTINATION share/unofficial-xmlsec
 )
@@ -117,7 +114,7 @@ if(INSTALL_HEADERS_TOOLS)
 	file(GLOB PUBLIC_HEADERS
 		include/xmlsec/*.h
 		include/xmlsec/openssl/*.h)
-    list(FILTER PUBLIC_HEADERS EXCLUDE REGEX "exports\\.h$")
+	list(FILTER PUBLIC_HEADERS EXCLUDE REGEX "exports\\.h$")
 
 	foreach(file IN LISTS PUBLIC_HEADERS)
 		get_filename_component(dir ${file} DIRECTORY)
@@ -138,16 +135,14 @@ if(INSTALL_HEADERS_TOOLS)
 		target_link_libraries(xmlsec PRIVATE crypt32.lib)
 	endif()
 
-	target_link_libraries(xmlsec PRIVATE
-		${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1 xmlsec1-openssl
-	)
+	target_link_libraries(xmlsec PRIVATE xmlsec1-openssl)
 
 	if(BUILD_SHARED_LIBS)
 		target_compile_definitions(xmlsec PRIVATE -DXMLSEC_CRYPTO_DYNAMIC_LOADING)
 	else()
-        find_package(Threads REQUIRED)
+		find_package(Threads REQUIRED)
 		target_compile_definitions(xmlsec PRIVATE -DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC)
-        target_link_libraries(xmlsec PUBLIC Threads::Threads)
+		target_link_libraries(xmlsec PUBLIC Threads::Threads)
 	endif()
 	install(TARGETS xmlsec DESTINATION tools/xmlsec)
 endif()
@@ -160,7 +155,7 @@ set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
 set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
 set(VERSION ${XMLSEC_VERSION})
 set(LIBXML_MIN_VERSION ${LIBXML2_VERSION_STRING})
-set(OPENSSL_LIBS "-lssl -lcrypto")
+set(OPENSSL_LIBS "-lcrypto")
 set(XMLSEC_CORE_CFLAGS "${XMLSEC_CORE_CFLAGS} -DXMLSEC_DL_LIBLTDL=1 -I\${includedir}/xmlsec1 -DXMLSEC_CRYPTO_OPENSSL=1")
 set(XMLSEC_CORE_LIBS "-lxmlsec1 -lltdl")
 set(XMLSEC_OPENSSL_CFLAGS "${XMLSEC_OPENSSL_CFLAGS} -I\${includedir}/xmlsec1")
