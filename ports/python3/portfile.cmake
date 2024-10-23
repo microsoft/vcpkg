@@ -40,7 +40,6 @@ set(PATCHES
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
     0012-force-disable-modules.patch
-    0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
@@ -49,20 +48,6 @@ set(PATCHES
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES 0002-static-library.patch)
-endif()
-
-# Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
-endif()
-
-# Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
-# required to build this port on Windows 7 itself due to Python using itself in its own build system.
-if("deprecated-win7-support" IN_LIST FEATURES)
-    list(APPEND PATCHES 0006-restore-support-for-windows-7.patch)
-    message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
-elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
-    message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -87,7 +72,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 411f43495943b8aeec287d4339bac6beb6a7224b0844cc4d48188b208fbbbc6404ad031b6e7a3bed0900baf972c4536a54f4da1ab39202f4f405a188ca04ae07
+    SHA512 77831f6c581e38064acf89d5b8c1f0fcd5244b57366f385e112a9e56d135ff86eb8cf5dad494980f362c71955f99627664920b5f0f369313a8f7d738e282c4c0
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -396,10 +381,7 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/distutils/command/build_ext.py" "'libs'" "'../../lib'")
-else()
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
   file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
 endif()
 
