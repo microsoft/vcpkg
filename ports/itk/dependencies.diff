@@ -1,12 +1,13 @@
 diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
-index 7a77ae3..655736f 100644
+index 7a77ae3..6a565e8 100644
 --- a/CMake/ITKConfig.cmake.in
 +++ b/CMake/ITKConfig.cmake.in
-@@ -1,3 +1,7 @@
+@@ -1,3 +1,8 @@
 +include(CMakeFindDependencyMacro)
 +find_dependency(double-conversion CONFIG)
 +find_dependency(OpenJPEG CONFIG)
 +find_dependency(VXL CONFIG)
++include("${VXL_CMAKE_DIR}/UseVXL.cmake")
  #-----------------------------------------------------------------------------
  #
  # ITKConfig.cmake - ITK CMake configuration file for external projects.
@@ -74,4 +75,27 @@ index 103eaa9..b59eb81 100644
 +endif()
  
  itk_module_impl()
+ 
+diff --git a/Modules/ThirdParty/VNL/CMakeLists.txt b/Modules/ThirdParty/VNL/CMakeLists.txt
+index c379a24..6a15432 100644
+--- a/Modules/ThirdParty/VNL/CMakeLists.txt
++++ b/Modules/ThirdParty/VNL/CMakeLists.txt
+@@ -5,7 +5,7 @@ option(ITK_USE_SYSTEM_VXL "Use an outside build of VXL." OFF)
+ mark_as_advanced(ITK_USE_SYSTEM_VXL)
+ 
+ if(ITK_USE_SYSTEM_VXL)
+-  find_package(VXL 3.0.0 REQUIRED)
++  find_package(VXL 3.0.0 REQUIRED GLOBAL)
+   # 3.0.0 is the first version of VXL that supports
+   # the requirement of front() and back() members
+   # in the vnl_vector and vnl_vector_fixed.
+@@ -17,7 +17,8 @@ if(ITK_USE_SYSTEM_VXL)
+     ${VXL_CORE_INCLUDE_DIR}
+     )
+   set(ITKVNL_LIBRARIES vnl_algo vnl v3p_netlib netlib vcl)
+-  set(ITKVNL_SYSTEM_LIBRARY_DIRS "${VXL_LIBRARY_DIR}")
++  list(TRANSFORM ITKVNL_LIBRARIES REPLACE "^(.+)\$" "\$<TARGET_NAME:\\1>")
++  set(ITKVNL_SYSTEM_LIBRARY_DIRS "")
+   set(ITKVNL_NO_SRC 1)
+ else()
  

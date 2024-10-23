@@ -35,10 +35,10 @@ diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
 index 9066d4f..4ec0266 100644
 --- a/CMake/ITKConfig.cmake.in
 +++ b/CMake/ITKConfig.cmake.in
-@@ -2,6 +2,16 @@ include(CMakeFindDependencyMacro)
- find_dependency(double-conversion CONFIG)
+@@ -3,6 +3,16 @@ include(CMakeFindDependencyMacro)
  find_dependency(OpenJPEG CONFIG)
  find_dependency(VXL CONFIG)
+ include("${VXL_CMAKE_DIR}/UseVXL.cmake")
 +if("@ITK_USE_CUFFTW@")
 +  find_dependency(CUDAToolkit)
 +else()
