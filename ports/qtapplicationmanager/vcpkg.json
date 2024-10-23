@@ -6,11 +6,6 @@
   "license": null,
   "dependencies": [
     "libarchive",
-    {
-      "name": "libsystemd",
-      "default-features": false,
-      "platform": "linux"
-    },
     "libyaml",
     {
       "name": "qtapplicationmanager",
