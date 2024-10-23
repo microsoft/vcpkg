@@ -413,15 +413,3 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-
-configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-egl-1.0.pc" "${CURRENT_BUILDTREES_DIR}/gstreamer-gl-egl-1.0.debug.log" COPYONLY)
-configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-egl-1.0.pc" "${CURRENT_BUILDTREES_DIR}/gstreamer-gl-egl-1.0.log" COPYONLY)
-
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc" [[${libinc}]] "")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc" [[${libinc}]] "")
-endif()
