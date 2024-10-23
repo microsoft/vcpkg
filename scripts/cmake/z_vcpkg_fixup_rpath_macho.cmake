@@ -127,9 +127,17 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                     continue()
                 endif()
 
-                # Escape regex special characters
-                string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" regex "${macho_file}")
-                string(REGEX REPLACE "${regex}:\n" "" get_id_ov "${get_id_ov}")
+                # otool -D <macho_file> typically returns lines like:
+
+                # <macho_file>:
+                # <id>
+
+                # But also with ARM64 binaries, it can return:
+                # <macho_file> (architecture arm64):
+                # <id>
+
+                # Either way we need to remove the first line and trim the trailing newline char.
+                string(REGEX REPLACE "[^\n]+:\n" "" get_id_ov "${get_id_ov}")
                 string(REGEX REPLACE "\n.*" "" get_id_ov "${get_id_ov}")
                 list(APPEND adjusted_shared_lib_old_ids "${get_id_ov}")
                 list(APPEND adjusted_shared_lib_new_ids "${macho_new_id}")
