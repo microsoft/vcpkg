@@ -1,7 +1,7 @@
 {
   "name": "exiv2",
   "version": "0.28.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Image metadata library and tools",
   "homepage": "https://exiv2.org",
   "license": "GPL-2.0-or-later",

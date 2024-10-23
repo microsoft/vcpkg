@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch
         fix-findzliberror.patch
+        obsolete-curlopt.diff
 )
 
 vcpkg_cmake_configure(

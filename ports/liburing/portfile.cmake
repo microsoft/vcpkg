@@ -9,6 +9,9 @@ vcpkg_from_github(
         disable-tests-and-examples.patch
 )
 
+# https://github.com/axboe/liburing/blob/liburing-2.7/src/Makefile#L13
+set(ENV{CFLAGS} "$ENV{CFLAGS} -O3 -Wall -Wextra -fno-stack-protector")
+
 # note: check ${SOURCE_PATH}/liburing.spec before updating configure options
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"

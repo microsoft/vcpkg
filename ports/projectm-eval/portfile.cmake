@@ -17,8 +17,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-  PACKAGE_NAME "projectm-eval"
-  CONFIG_PATH "lib/cmake/projectM-Eval"
+    PACKAGE_NAME "projectm-eval"
+    CONFIG_PATH "lib/cmake/projectM-Eval"
+    DO_NOT_DELETE_PARENT_CONFIG_PATH
+)
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME "projectM-EvalMilkdrop"
+    CONFIG_PATH "lib/cmake/projectM-EvalMilkdrop"
 )
 
 vcpkg_fixup_pkgconfig()

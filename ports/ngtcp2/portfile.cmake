@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 891a7339122f60b1796bb24d29ab75d0316717c2a64a45bade805242b70cb8713abc7642cdf0ec646ab9e80085d65117f0ea9b1e671d76bcd54038b0ea9bc868
     HEAD_REF main
     PATCHES
-      openssl_required.patch
+        openssl_required.patch
+        popcnt_intrinsic.patch # https://github.com/ngtcp2/ngtcp2/pull/1351
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -13,9 +14,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wolfssl     ENABLE_WOLFSSL
-        gnutls      ENABLE_GNUTLS
-        libressl    ENABLE_OPENSSL
+        wolfssl  ENABLE_WOLFSSL
+        gnutls   ENABLE_GNUTLS
+        libressl ENABLE_OPENSSL
 )
 
 vcpkg_cmake_configure(

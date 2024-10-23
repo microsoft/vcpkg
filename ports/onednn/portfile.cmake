@@ -13,6 +13,9 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${DNNL_OPTIONS}
+        -DDNNL_BUILD_DOC=OFF
+        -DDNNL_BUILD_EXAMPLES=OFF
+        -DDNNL_BUILD_TESTS=OFF
 )
 vcpkg_cmake_install()
 
@@ -21,6 +24,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME dnnl CONFIG_PATH lib/cmake/dnnl)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc/dnnl/reference/html")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

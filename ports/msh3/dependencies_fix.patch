@@ -7,7 +7,7 @@ index 4bd7155..b7adecc 100644
  option(LSQPACK_TESTS "Build tests" OFF)
  option(LSQPACK_BIN "Build binaries" OFF)
 -add_subdirectory(ls-qpack)
-+find_package(unofficial-ls-qpack CONFIG REQUIRED)
++find_package(ls-qpack CONFIG REQUIRED)
  
  # Configure and build msquic dependency.
  if (WIN32)
@@ -35,7 +35,7 @@ index ab7fc24..c488486 100644
 -if (NOT BUILD_SHARED_LIBS)
 -    target_link_libraries(msh3 PRIVATE base_link)
 -endif()
-+target_link_libraries(msh3 PRIVATE msquic unofficial::ls-qpack::ls-qpack msh3_headers)
++target_link_libraries(msh3 PRIVATE msquic ls-qpack::ls-qpack msh3_headers)
  if (MSH3_SERVER_SUPPORT)
      target_link_libraries(msh3 PRIVATE platform) # For selfsign APIs
  endif()

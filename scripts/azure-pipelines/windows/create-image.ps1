@@ -262,7 +262,7 @@ New-AzGalleryImageVersion `
   -GalleryImageDefinitionName 'PrWinWus3-TrustedLaunch' `
   -Name $GalleryImageVersion `
   -Location $Location `
-  -SourceImageId $VMCreated.ID `
+  -SourceImageVMId $VMCreated.ID `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
   -PublishingProfileExcludeFromLatest `

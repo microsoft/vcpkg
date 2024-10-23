@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-static.patch
         pkgconfig.diff
+        fix-tool.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)

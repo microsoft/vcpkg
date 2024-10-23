@@ -1,6 +1,6 @@
 {
   "name": "libdjinterop",
-  "version": "0.21.0",
+  "version": "0.22.1",
   "description": "C++ library for access to DJ record libraries. Currently only supports Denon Engine Prime databases",
   "homepage": "https://github.com/xsco/libdjinterop",
   "license": "LGPL-3.0-or-later",

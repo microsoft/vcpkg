@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BYVoid/OpenCC
     REF "ver.${VERSION}"
-    SHA512 bfc40bdf1348e6a265b3304ab1e8acee2f4b6ac9c377ff3d8c996435a92dee98c3758503186b4fd424653faf44db339f8a90300e3290c59942ccf04b1bbb2a30
+    SHA512 713cf00931d7616994eb455eef3bc893096b5cd6d42b346aa1130591752d9612891ea3ed035bd7bd4ec7df1c90425e86375f5b3337fac11663c656c79a8f33e9
     HEAD_REF master
     PATCHES 
         fix-dependencies.patch
@@ -29,6 +29,8 @@ vcpkg_cmake_install(
 )
 
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencc)
 
 vcpkg_fixup_pkgconfig()
 

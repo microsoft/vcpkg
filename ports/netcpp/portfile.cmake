@@ -1,29 +1,30 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO index1207/netcpp
     REF "v${VERSION}"
-    SHA512 18b322ec599dc2ece84d31bf723e8d1c8bf107e93a39a58dee27e7e59de7e0387c72a638d5a59eda43706f39a054b3325e3f40f093edf8d673061c526d30b06b
+    SHA512 5f0c7a9ad414b868c23cde4c16a605c2029631935b252b3faa4e485ec1efa3dbfe64fd0b068db8e018481b6ac83f819facc1db371470be42c6919fcf69005e17
     HEAD_REF release
-    PATCHES
-        pkgconfig.patch
 )
 
-if (VCPKG_TARGET_IS_LINUX)
-    vcpkg_find_acquire_program(PKGCONFIG)
-endif ()
+set(options -DNETCPP_TEST=OFF)
+
+vcpkg_find_acquire_program(PKGCONFIG)
+list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+
+if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
+    list(APPEND options -DNETCPP_BUILD_SHARED=ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DINCLUDE_TEST=OFF
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        ${options}
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
 )
-vcpkg_fixup_pkgconfig()
+
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netcpp PACKAGE_NAME netcpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

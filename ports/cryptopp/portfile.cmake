@@ -15,7 +15,9 @@ vcpkg_from_github(
   REF "CRYPTOPP_${CRYPTOPP_VERSION}"
   SHA512 28a67141155c9c15e3e6a2173b3a8487cc38a2a2ade73bf4a09814ca541be6b06e9a501be26f7e2f42a2f80df21b076aa5d8ad4224dc0a1f8d7f3b24deae465e
   HEAD_REF master
-  PATCHES patch.patch
+  PATCHES
+      patch.patch
+      cryptopp.patch
 )
 
 file(COPY "${CMAKE_SOURCE_PATH}/cryptopp" DESTINATION "${SOURCE_PATH}")

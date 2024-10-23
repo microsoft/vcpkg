@@ -1,9 +1,9 @@
 {
   "name": "pcapplusplus",
-  "version": "23.9",
-  "port-version": 2,
+  "version": "24.9",
   "description": "PcapPlusPlus is a multi-platform C++ library for capturing, parsing and crafting of network packets",
   "homepage": "https://github.com/seladb/PcapPlusPlus",
+  "documentation": "https://pcapplusplus.github.io",
   "license": null,
   "dependencies": [
     {

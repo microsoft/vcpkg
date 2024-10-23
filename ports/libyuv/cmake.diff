@@ -41,9 +41,9 @@ index 9a20941d..d161326c 100644
  
  
  # install the conversion tool, .so, .a, and all the header files
--install ( PROGRAMS ${CMAKE_BINARY_DIR}/yuvconvert			DESTINATION bin )
+-install ( TARGETS yuvconvert	DESTINATION bin )
 -install ( TARGETS ${ly_lib_static}						DESTINATION lib )
--install ( TARGETS ${ly_lib_shared} LIBRARY				DESTINATION lib RUNTIME DESTINATION bin )
+-install ( TARGETS ${ly_lib_shared} LIBRARY	DESTINATION lib RUNTIME DESTINATION bin ARCHIVE DESTINATION lib )
 +if (BUILD_TOOLS)
 +  install(TARGETS yuvconvert yuvconstants)
 +endif()

@@ -1,6 +1,6 @@
 {
   "name": "mathter",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "description": "A flexible and fast matrix, transform, and geometry library.",
   "homepage": "https://github.com/petiaccja/Mathter",
   "license": "MIT",
@@ -15,7 +15,7 @@
     },
     {
       "name": "xsimd",
-      "version>=": "11.1.0"
+      "version>=": "13.0.0"
     }
   ]
 }

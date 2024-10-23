@@ -36,6 +36,9 @@
 ##    x86-windows
 ##
 
+# Temporary
+vcpkg-ci-msys2:x64-windows=fail
+
 # Add new items alphabetically
 
 7zip:arm-neon-android=fail
@@ -48,12 +51,9 @@ ace:x64-android=fail
 allegro5:arm-neon-android=fail
 allegro5:arm64-android=fail
 allegro5:x64-android=fail
-ampl-asl:x64-android=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
-# Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
-apr:arm64-windows=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
@@ -167,7 +167,6 @@ caf:arm64-uwp=fail
 caf:arm64-android=fail
 caf:x64-android=fail
 caf:x64-uwp=fail
-caffe2:x86-windows=fail
 cairo:x64-android=fail
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
@@ -180,6 +179,15 @@ c-dbg-macro:arm64-uwp=skip
 c-dbg-macro:x64-osx=skip
 c-dbg-macro:arm64-osx=skip
 c-dbg-macro:x64-linux=skip
+
+# Needs work
+casadi:arm64-android=skip
+casadi:x64-android=skip
+casadi:arm-neon-android=skip
+casadi:x64-windows-static=skip
+casadi:x64-windows-static-md=skip
+casadi:x64-uwp=skip
+casadi:arm64-uwp=skip
 
 casclib:arm64-uwp=fail
 casclib:x64-uwp=fail
@@ -305,11 +313,6 @@ discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
 discordcoreapi:x64-linux=skip   # cause linux CI to hang https://github.com/microsoft/vcpkg/pull/40229
 discordcoreapi:x64-osx=fail
-# failed with dependency https://github.com/RealTimeChris/DiscordCoreAPI/issues/45
-discordcoreapi:x64-uwp=fail
-discordcoreapi:x64-windows=fail
-discordcoreapi:x64-windows-static=fail
-discordcoreapi:x64-windows-static-md=fail
 discount:x64-android=fail
 eathread:x64-android=fail
 ecal:arm-neon-android=fail
@@ -329,12 +332,9 @@ epsilon:x64-uwp=fail
 evpp:arm-neon-android=fail
 evpp:arm64-android=fail
 evpp:x64-android=fail
-faiss:arm64-windows=fail
-fastrtps:arm-neon-android=fail
-fastrtps:arm64-android=fail
-fastrtps:x64-android=fail
-fastrtps:x64-windows-static-md=fail
-fastrtps:x64-windows-static=fail
+fastdds:arm-neon-android=fail
+fastdds:arm64-android=fail
+fastdds:x64-android=fail
 flashlight-cpu:x64-linux=fail
 flashlight-cuda:x64-linux=fail
 flint:arm-neon-android=fail
@@ -418,9 +418,6 @@ gherkin-c:x86-windows           = skip
 gl3w:arm-neon-android=fail
 gl3w:arm64-android=fail
 gl3w:x64-android=fail
-glew:arm-neon-android=fail
-glew:arm64-android=fail
-glew:x64-android=fail
 glfw3:arm-neon-android=fail
 glfw3:arm64-uwp=fail
 glfw3:arm64-android=fail
@@ -494,8 +491,10 @@ intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
 irrlicht:x64-android=fail
 isal:x64-android=fail
+# Failing on try_run() in cross builds
 itk:arm-neon-android=fail
 itk:arm64-android=fail
+itk:arm64-windows=fail
 itk:x64-android=fail
 jaeger-client-cpp:arm-neon-android=fail
 jaeger-client-cpp:x64-android=fail
@@ -530,10 +529,6 @@ libcaer:x64-android=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
-# needs android-24
-libconfuse:arm-neon-android=fail
-libconfuse:arm64-android=fail
-libconfuse:x64-android=fail
 libcoro:x64-osx=fail
 libcoro:arm64-osx=fail
 libcpplocate:arm-neon-android=fail
@@ -577,15 +572,11 @@ liblo:arm64-uwp=fail
 liblo:arm64-android=fail
 liblo:x64-android=fail
 liblo:x64-uwp=fail
-libmariadb:arm-neon-android=fail
-libmariadb:arm64-android=fail
+# libmariadb conflicts with libmysql
 libmariadb:arm64-windows      = skip
-libmariadb:arm64-uwp            = skip
-libmariadb:x64-android=fail
 libmariadb:x64-linux          = skip
 libmariadb:x64-osx            = skip
 libmariadb:arm64-osx          = skip
-libmariadb:x64-uwp            = skip
 libmariadb:x64-windows        = skip
 libmariadb:x64-windows-static = skip
 libmariadb:x64-windows-static-md=skip
@@ -723,17 +714,6 @@ minifb:arm-neon-android=fail
 minifb:arm64-android=fail
 minifb:x64-android=fail
 miniply:arm-neon-android=fail
-# Conflicts with signalrclient
-microsoft-signalr:arm64-windows=skip
-microsoft-signalr:arm64-uwp=skip
-microsoft-signalr:x64-linux=skip
-microsoft-signalr:x64-osx=skip
-microsoft-signalr:arm64-osx=skip
-microsoft-signalr:x64-uwp=skip
-microsoft-signalr:x64-windows=skip
-microsoft-signalr:x64-windows-static=skip
-microsoft-signalr:x64-windows-static-md=skip
-microsoft-signalr:x86-windows=skip
 monkeys-audio:arm-neon-android=fail
 monkeys-audio:arm64-android=fail
 monkeys-audio:x64-android=fail
@@ -796,9 +776,6 @@ netcdf-c:x64-android=fail
 netcdf-cxx4:x64-windows-static-md=fail
 ngspice:x64-android=fail
 ngspice:x64-windows-static=fail
-nmap:arm-neon-android=fail
-nmap:arm64-android=fail
-nmap:x64-android=fail
 nrf-ble-driver:arm-neon-android=fail
 nrf-ble-driver:arm64-android=fail
 nrf-ble-driver:x64-android=fail
@@ -831,7 +808,6 @@ omplapp:arm64-osx=skip
 omplapp:x64-osx=skip
 omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
-onednn:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
 opencv2:arm-neon-android=fail
@@ -1017,6 +993,9 @@ rest-rpc:arm64-osx=skip
 rpclib:arm64-windows=fail
 rpclib:arm64-uwp=fail
 rpclib:x64-uwp=fail
+rtmidi:arm-neon-android=fail
+rtmidi:arm64-android=fail
+rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
@@ -1056,9 +1035,20 @@ shogun:x64-windows-static = skip
 shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 shogun:arm64-android      = skip
-signalrclient:arm-neon-android=fail
-signalrclient:arm64-android=fail
-signalrclient:x64-android=fail
+# "Obsolete" and conflicts with microsoft-signalr
+signalrclient:arm-neon-android=skip
+signalrclient:arm64-android=skip
+signalrclient:arm64-osx=skip
+signalrclient:arm64-uwp=skip
+signalrclient:arm64-windows=skip
+signalrclient:x64-android=skip
+signalrclient:x64-linux=skip
+signalrclient:x64-osx=skip
+signalrclient:x64-uwp=skip
+signalrclient:x64-windows=skip
+signalrclient:x64-windows-static-md=skip
+signalrclient:x64-windows-static=skip
+signalrclient:x86-windows=skip
 simbody:arm64-windows=fail
 simd:arm-neon-android=fail
 simd:arm64-android=fail
@@ -1099,6 +1089,7 @@ spdk-isal:x64-linux=skip
 spscqueue:arm-neon-android=fail
 spscqueue:arm64-android=fail
 spscqueue:x64-android=fail
+# sqlpp11-connector-mysql: CI issues resolved by overlay port
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
@@ -1176,23 +1167,9 @@ vulkan:arm-neon-android=fail
 vulkan:arm64-android=fail
 vulkan:x64-android=fail
 # Needs android-26
-vulkan-utility-libraries:arm-neon-android=fail
-vulkan-utility-libraries:arm64-android=fail
-vulkan-utility-libraries:x64-android=fail
-# Conflicts with latest openjpeg port (vxl ships with an old version of openjpeg)
-# conflicts with qt5-location
-vxl:arm-neon-android=skip
-vxl:arm64-android=skip
-vxl:arm64-windows      = skip
-vxl:arm64-uwp            = skip
-vxl:x64-android=fail
-vxl:x64-linux          = skip
-vxl:x64-osx            = skip
-vxl:x64-uwp            = skip
-vxl:x64-windows        = skip
-vxl:x64-windows-static = skip
-vxl:x64-windows-static-md=skip
-vxl:x86-windows        = skip
+vulkan-validationlayers:arm64-android=fail
+vulkan-validationlayers:x64-android=fail
+vulkan-validationlayers:arm-neon-android=fail
 wasmedge:arm-neon-android=fail
 wasmedge:arm64-android=fail
 wasmedge:x64-android=fail
@@ -1361,6 +1338,29 @@ vcpkg-ci-soci:x64-osx=pass
 vcpkg-ci-soci:x64-windows=pass
 vcpkg-ci-soci:x64-windows-static=pass
 vcpkg-ci-soci:x64-windows-static-md=pass
+vcpkg-ci-sqlpp11:arm-neon-android=pass
+vcpkg-ci-sqlpp11:arm64-android=pass
+vcpkg-ci-sqlpp11:arm64-osx=pass
+vcpkg-ci-sqlpp11:arm64-uwp=pass
+vcpkg-ci-sqlpp11:arm64-windows=pass
+vcpkg-ci-sqlpp11:x64-android=pass
+vcpkg-ci-sqlpp11:x64-linux=pass
+vcpkg-ci-sqlpp11:x64-osx=pass
+vcpkg-ci-sqlpp11:x64-uwp=pass
+vcpkg-ci-sqlpp11:x64-windows-static-md=pass
+vcpkg-ci-sqlpp11:x64-windows-static=pass
+vcpkg-ci-sqlpp11:x64-windows=pass
+vcpkg-ci-sqlpp11:x86-windows=pass
+vcpkg-ci-vxl:arm-neon-android=pass
+vcpkg-ci-vxl:arm64-android=pass
+vcpkg-ci-vxl:arm64-windows=pass
+vcpkg-ci-vxl:x64-android=pass
+vcpkg-ci-vxl:x64-linux=pass
+vcpkg-ci-vxl:x64-osx=pass
+vcpkg-ci-vxl:x64-windows=pass
+vcpkg-ci-vxl:x64-windows-static=pass
+vcpkg-ci-vxl:x64-windows-static-md=pass
+vcpkg-ci-vxl:x86-windows=pass
 vcpkg-ci-wxwidgets:arm64-windows=pass
 vcpkg-ci-wxwidgets:x64-linux=pass
 vcpkg-ci-wxwidgets:x64-osx=pass

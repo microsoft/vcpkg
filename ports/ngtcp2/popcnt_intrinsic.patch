@@ -1,0 +1,13 @@
+diff --git a/lib/ngtcp2_ringbuf.c b/lib/ngtcp2_ringbuf.c
+index c381c23..73d9230 100644
+--- a/lib/ngtcp2_ringbuf.c
++++ b/lib/ngtcp2_ringbuf.c
+@@ -32,7 +32,7 @@
+ #include "ngtcp2_macro.h"
+ 
+ #if defined(_MSC_VER) && !defined(__clang__) &&                                \
+-    (defined(_M_ARM) || defined(_M_ARM64))
++    (defined(_M_ARM) || (defined(_M_ARM64) && _MSC_VER < 1941))
+ static unsigned int __popcnt(unsigned int x) {
+   unsigned int c = 0;
+   for (; x; ++c) {

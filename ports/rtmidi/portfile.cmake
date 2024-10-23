@@ -5,12 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtmidi
-    REF 84a99422a3faf1ab417fe71c0903a48debb9376a # 5.0.0
-    SHA512 388e280b7966281e22b0048d6fb2541921df1113d84e49bbc444fff591d2025588edd8d61dbe5ff017afd76c26fd05edc8f9f15d0cce16315ccc15e6aac1d57f
+    REF "${VERSION}"
+    SHA512 7ff7f85ff86fc019ab7906a46efc986b2a340b2f9a9d504bda85d0afc75921b905b32cb37f87e30ab9d1f13e62587c4ade736dad1609a0880eeab3fe5a936acb
     HEAD_REF master
-    PATCHES
-        fix-cmake-usage.patch # Remove this patch in the next update
-        fix-cmake-install.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

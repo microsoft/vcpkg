@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openstack/liberasurecode
     REF "${VERSION}"
-    SHA512 d5daa962324ef19fd195cfa842ec375d9dd5e62e3391b4a1cbf49a850b852b18cfc9be929ab18786d6b839139f6260d5cb4c88a0ba440c06b0e54e04ffb1bee1
+    SHA512 9815e159e6b9aa44e47fb0ec1eec04321c48e160ec617511720569e445d8085848124e7385ab2be54615e0c2f4a37a44ae5d2de460a7d6ea36782dfe08c2e53a
     HEAD_REF master
     PATCHES
         fix-build.patch

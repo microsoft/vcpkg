@@ -21,7 +21,8 @@ set(${PORT}_PATCHES
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
         fix_deploy_windows.patch
-        )
+        fix-link-lib-discovery.patch
+)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
@@ -310,7 +311,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        #--trace-expand
+                        ##--trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}

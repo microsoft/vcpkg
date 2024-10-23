@@ -2,19 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibRaw/LibRaw
     REF "${VERSION}"
-    SHA512 a8b0ec275cc0055d6eb2069008c3312ae007cd86e481111f68d5d60544afcd76b728f8418bf63a80d35d7d00283536da63e03f5eecb4cc28f4cc8d92070e8b39
+    SHA512 c88d02685ac8854ca4f718206ceb95b17abffceee6501390d8447f9e8c78864d1dd0aedbdcf97e600244f97e1a50cbfea21d15a2557710c7d175f61915f9fe37
     HEAD_REF master
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH LIBRAW_CMAKE_SOURCE_PATH
     REPO LibRaw/LibRaw-cmake
-    REF 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
-    SHA512 8ce13d37c2ace2fbc57f571052a5a5a847b707b3de1b3b9e0c1a46afaca86cabd42ee275600eeadc3127bc2a0d0a4f224caed0b07feffdafea32ad0f42e50379
+    REF eb98e4325aef2ce85d2eb031c2ff18640ca616d3
+    SHA512 63e68a4d30286ec3aa97168d46b7a1199268099ae27b61abcc92e93ec30e48d364086227983a1d724415e5f4da44d905422f30192453b95f31040e5f8469c3f9
     HEAD_REF master
     PATCHES
         dependencies.patch
-        install-interface.patch
         # Move the non-thread-safe library to manual-link. This is unfortunately needed
         # because otherwise libraries that build on top of libraw have to choose.
         fix-install.patch

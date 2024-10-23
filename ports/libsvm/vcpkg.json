@@ -1,7 +1,6 @@
 {
   "name": "libsvm",
-  "version": "3.32",
-  "port-version": 1,
+  "version": "3.35",
   "description": "A library for Support Vector Machines.",
   "homepage": "https://www.csie.ntu.edu.tw/~cjlin/libsvm/",
   "dependencies": [

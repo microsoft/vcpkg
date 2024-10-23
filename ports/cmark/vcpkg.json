@@ -1,8 +1,9 @@
 {
   "name": "cmark",
-  "version-semver": "0.30.3",
+  "version-semver": "0.31.1",
   "description": "CommonMark parsing and rendering library",
   "homepage": "https://github.com/commonmark/cmark",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

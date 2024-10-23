@@ -1,5 +1,5 @@
 diff --git a/cmake/PangolinConfig.cmake.in b/cmake/PangolinConfig.cmake.in
-index f891e34..6fbfc7d 100644
+index 3ceea9d..e5bf9f0 100644
 --- a/cmake/PangolinConfig.cmake.in
 +++ b/cmake/PangolinConfig.cmake.in
 @@ -12,6 +12,7 @@ SET( Pangolin_LIBRARY      "${Pangolin_LIBRARIES}" )
@@ -11,10 +11,10 @@ index f891e34..6fbfc7d 100644
  if (UNIX)
    find_dependency(Threads)
 diff --git a/components/pango_core/CMakeLists.txt b/components/pango_core/CMakeLists.txt
-index 315913d..1d1a1d0 100644
+index e1d931b..6c6ad4d 100644
 --- a/components/pango_core/CMakeLists.txt
 +++ b/components/pango_core/CMakeLists.txt
-@@ -44,6 +44,9 @@ install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/include"
+@@ -49,6 +49,9 @@ install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/include"
    DESTINATION ${CMAKE_INSTALL_PREFIX}
  )
  

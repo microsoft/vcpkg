@@ -7,6 +7,9 @@ vcpkg_from_github(
     REF "azure-messaging-eventhubs-checkpointstore-blob_${VERSION}"
     SHA512 7c55eda0c04bbc57729a7b479d8d5874b0e06927aff1916833520a3a944e63b6fceabd3565fd91549ec00157f2c4af5a87a6a2db55a5c24df611cd96572f9a08
     HEAD_REF main
+    PATCHES
+      useragent.patch
+      set_version.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs-checkpointstore-blob")

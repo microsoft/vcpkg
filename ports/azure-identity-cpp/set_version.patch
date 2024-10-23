@@ -1,0 +1,12 @@
+diff --git a/sdk/identity/azure-identity/CMakeLists.txt b/sdk/identity/azure-identity/CMakeLists.txt
+index 57fe6bbc2..2cd8243ac 100644
+--- a/sdk/identity/azure-identity/CMakeLists.txt
++++ b/sdk/identity/azure-identity/CMakeLists.txt
+@@ -117,6 +117,7 @@ else()
+ endif()
+ 
+ get_az_version("${CMAKE_CURRENT_SOURCE_DIR}/src/private/package_version.hpp")
++set_target_properties(azure-identity PROPERTIES VERSION ${AZ_LIBRARY_VERSION})
+ generate_documentation(azure-identity ${AZ_LIBRARY_VERSION})
+ 
+ az_vcpkg_export(

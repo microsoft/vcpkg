@@ -7,6 +7,12 @@ vcpkg_from_github(
     PATCHES
     )
 
+if ("asio" IN_LIST FEATURES)
+    set(ENABLE_ASIO yes)
+else()
+    set(ENABLE_ASIO no)
+endif()
+
 if ("dtls" IN_LIST FEATURES)
     set(ENABLE_DTLS yes)
 else()
@@ -43,6 +49,7 @@ vcpkg_cmake_configure(
       -DWOLFSSL_OCSPSTAPLING_V2=yes
       -DWOLFSSL_CRL=yes
       -DWOLFSSL_DES3=yes
+      -DWOLFSSL_ASIO=${ENABLE_ASIO}
       -DWOLFSSL_DTLS=${ENABLE_DTLS}
       -DWOLFSSL_DTLS13=${ENABLE_DTLS}
       -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}

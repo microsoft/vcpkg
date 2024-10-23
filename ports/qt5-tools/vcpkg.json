@@ -1,6 +1,6 @@
 {
   "name": "qt5-tools",
-  "version": "5.15.14",
+  "version": "5.15.15",
   "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "license": null,
   "dependencies": [

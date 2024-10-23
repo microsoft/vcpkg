@@ -28,6 +28,8 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DTHEIA_USE_EXTERNAL_CEREAL=ON
         -DTHEIA_USE_EXTERNAL_FLANN=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0012=NEW
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
 )
 
 vcpkg_cmake_install()

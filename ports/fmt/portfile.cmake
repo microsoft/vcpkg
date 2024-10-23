@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-write-batch.patch
+        fix-pass-utf-8-only-if-the-compiler-is-MSVC-at-build.patch # remove in next release
 )
 
 vcpkg_cmake_configure(
@@ -28,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )

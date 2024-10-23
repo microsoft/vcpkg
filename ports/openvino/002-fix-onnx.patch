@@ -1,0 +1,26 @@
+diff --git a/src/frontends/onnx/onnx_common/CMakeLists.txt b/src/frontends/onnx/onnx_common/CMakeLists.txt
+index d63bce4..116a6e3 100644
+--- a/src/frontends/onnx/onnx_common/CMakeLists.txt
++++ b/src/frontends/onnx/onnx_common/CMakeLists.txt
+@@ -30,7 +30,7 @@ target_include_directories(${TARGET_NAME}
+ 
+ target_link_libraries(${TARGET_NAME} PRIVATE openvino::runtime openvino::util)
+ 
+-ov_link_system_libraries(${TARGET_NAME} PUBLIC onnx_proto onnx)
++ov_link_system_libraries(${TARGET_NAME} PUBLIC ONNX::onnx ONNX::onnx_proto)
+ 
+ ov_add_clang_format_target(${TARGET_NAME}_clang FOR_TARGETS ${TARGET_NAME})
+ 
+diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
+index 24c4940..8ea7d12 100644
+--- a/thirdparty/dependencies.cmake
++++ b/thirdparty/dependencies.cmake
+@@ -479,7 +479,7 @@ endif()
+ #
+ 
+ if(ENABLE_OV_ONNX_FRONTEND)
+-    find_package(ONNX 1.15.0 QUIET COMPONENTS onnx onnx_proto NO_MODULE)
++    find_package(ONNX CONFIG REQUIRED)
+ 
+     if(ONNX_FOUND)
+         # conan and vcpkg create imported targets 'onnx' and 'onnx_proto'

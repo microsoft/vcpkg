@@ -3,14 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ampl/asl
-    REF 934d34719c8a620fcf16ae5a3c00c326eb22e748
-    SHA512 b6fcb3dcb53a53d975666db1643d7ea518246e8fb6745621ce4b63de4393f7767844e9241baa6fdf1a45c241a9aa0866844c47deec0020313278128cccff6869
+    REF 2f5d9de248c53a3063bba23af2013cd3db768bf8
+    SHA512 a551420f60b2419285195063fc42b208e59f076d1d00e4b90847c15613997ba35d319d57275687df37e74a7486420fec2cde7da71a6126802ed19a12dcb8ffdc
     HEAD_REF master
     PATCHES
         workaround-msvc-optimizer-ice.patch
-        fix-crt-linkage.patch # CRT linkage uses C/CXX FLAGS in vcpkg
-        install-extra-headers.patch
-        install-targets.patch
+        0006-disable-generate-arith-h.diff
 )
 
 vcpkg_cmake_configure(
@@ -26,9 +24,8 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-asl)
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# from ampl-mp license
-file(INSTALL "${CURRENT_PORT_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

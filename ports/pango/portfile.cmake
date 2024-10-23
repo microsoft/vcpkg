@@ -4,15 +4,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
     REF "${VERSION}"
-    SHA512 5de67e711a1f25bd2c741162bb8306ae380d134f95b9103db6e96864d3a1100321ce106d8238dca54e746cd8f1cfdbe50cc407878611d3d09694404f3f128c73
+    SHA512 1c5f5f2de778b2ca157a4f3eb8bbbba1a79f5f9d60aac678e9c213005f1d8bedfc027ee5c1cebb07dc0eb8c308c38c37beb05293ef2cbe4ac9a0b481176934bb
     HEAD_REF master
 ) 
 
-# Fix for https://github.com/microsoft/vcpkg/issues/31573
-# Mimics patch for Gentoo https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=f688df5100ef2b88c975ecd40fd343c62e2ab276
-# Silence false positive with GCC 13 and -O3 at least
-# https://gitlab.gnome.org/GNOME/pango/-/issues/740	
-vcpkg_replace_string("${SOURCE_PATH}/meson.build" "-Werror=array-bounds" "")
 
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
