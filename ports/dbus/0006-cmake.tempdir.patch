@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6d23230..9572c7d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -567,8 +567,8 @@ if(MSVC_IDE)
+ endif()
+
+ #### Find socket directories
+-set(DBUS_SESSION_SOCKET_DIR "" CACHE STRING "Default directory for session socket")
+-if(UNIX)
++set(DBUS_SESSION_SOCKET_DIR "${DBUS_SESSION_SOCKET_DIR}" CACHE STRING "Default directory for session socket")
++if(0)
+     if (CMAKE_CROSSCOMPILING)
+         if (NOT DBUS_SESSION_SOCKET_DIR)
+             message(FATAL_ERROR "cannot autodetect session socket directory "
