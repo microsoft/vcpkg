@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-11-12",
+  "version-string": "ci",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -23,14 +23,14 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
-            "cmake-3-7"
+            "cmake-3-16"
           ],
           "platform": "x64 & (windows | linux | osx) & !uwp"
         }
       ]
     },
-    "cmake-3-7": {
-      "description": "Run the tests with CMake 3.7"
+    "cmake-3-16": {
+      "description": "Run the tests with CMake 3.16"
     },
     "cmake-current": {
       "description": "Run the tests with vcpkg's current version of CMake"
