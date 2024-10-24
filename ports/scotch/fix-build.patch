@@ -12,7 +12,7 @@ index ce3c5ba..b05667f 100644
  # Add module directory
  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1c05a82..4258140 100644
+index 1c05a82..fe7c106 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -105,9 +105,12 @@ endif()
@@ -26,7 +26,7 @@ index 1c05a82..4258140 100644
 +  find_package(Threads REQUIRED)
 +  if(CMAKE_USE_PTHREADS_INIT)
      add_definitions(-DCOMMON_PTHREAD -DSCOTCH_PTHREAD)
-+	set(USE_PTHREAD ON)
++    set(USE_PTHREAD ON)
    endif()
    if(CMAKE_USE_WIN32_THREADS_INIT)
      add_definitions(-DCOMMON_THREAD_WIN32)
@@ -44,7 +44,7 @@ index 1c05a82..4258140 100644
  
  # decompression libs
 diff --git a/src/libscotch/CMakeLists.txt b/src/libscotch/CMakeLists.txt
-index f314d3a..755dc23 100644
+index f314d3a..27e466f 100644
 --- a/src/libscotch/CMakeLists.txt
 +++ b/src/libscotch/CMakeLists.txt
 @@ -509,6 +509,22 @@ set(SCOTCH_C_SOURCES
@@ -116,7 +116,7 @@ index f314d3a..755dc23 100644
  
  #################
  #  libPTScotch  #
-@@ -786,32 +788,30 @@ if(BUILD_PTSCOTCH)
+@@ -786,10 +788,14 @@ if(BUILD_PTSCOTCH)
      set_target_properties(ptscotch PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
    endif(APPLE)
  
@@ -133,47 +133,13 @@ index f314d3a..755dc23 100644
 +    endif()
 +endif(USE_PTHREAD)
  
--  add_library(ptscotcherr library_error.c)
--  set_target_properties(ptscotcherr PROPERTIES VERSION ${SCOTCH_VERSION_LONG}
--    SOVERSION ${SCOTCH_VERSION}.${SCOTCH_RELEASE})
--  target_include_directories(ptscotcherr PUBLIC
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
--    $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
--    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-+add_library(scotcherr library_error.c)
-+target_include_directories(scotcherr PUBLIC
-+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-+  $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
-+  $<INSTALL_INTERFACE:include>)
- 
--  add_dependencies(ptscotcherr ptscotch_h scotch_h)
-+add_dependencies(scotcherr scotch_h)
- 
--  add_library(ptscotcherrexit library_error_exit.c)
--  set_target_properties(ptscotcherrexit PROPERTIES VERSION ${SCOTCH_VERSION_LONG}
--    SOVERSION ${SCOTCH_VERSION}.${SCOTCH_RELEASE})
--  target_include_directories(ptscotcherrexit PUBLIC
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
--    $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
--    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
--    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-+add_library(scotcherrexit library_error_exit.c)
-+target_include_directories(scotcherrexit PUBLIC
-+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-+  $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
-+  $<INSTALL_INTERFACE:include>)
- 
--  add_dependencies(ptscotcherrexit ptscotch_h scotch_h)
-+add_dependencies(scotcherrexit scotch_h)
- endif(BUILD_PTSCOTCH)
- 
- set_target_properties(scotch PROPERTIES PUBLIC_HEADER "${GENERATED_INCLUDE_DIR}/scotch.h;${GENERATED_INCLUDE_DIR}/scotchf.h")
+   add_library(ptscotcherr library_error.c)
+   set_target_properties(ptscotcherr PROPERTIES VERSION ${SCOTCH_VERSION_LONG}
 diff --git a/src/libscotch/common_file_compress.c b/src/libscotch/common_file_compress.c
-index 5255cdc..f74aa52 100644
+index 5255cdc..5f60dc8 100644
 --- a/src/libscotch/common_file_compress.c
 +++ b/src/libscotch/common_file_compress.c
-@@ -378,7 +378,11 @@ FileCompress * const        compptr)
+@@ -378,8 +378,11 @@ FileCompress * const        compptr)
    encodat.avail_out = FILECOMPRESSDATASIZE;
    do {
      if ((encodat.avail_in == 0) && (enacval == LZMA_RUN)) {
@@ -181,10 +147,27 @@ index 5255cdc..f74aa52 100644
 +      int                 bytenbr; //According to MSDN _read only returns int
 +#else
        ssize_t             bytenbr;
+-
 +#endif
- 
        bytenbr = read (compptr->infdnum, compptr->bufftab, FILECOMPRESSDATASIZE); /* Read from pipe */
        if (bytenbr < 0) {
+         errorPrint ("fileCompressLzma: cannot read");
+diff --git a/src/libscotch/common_file_decompress.c b/src/libscotch/common_file_decompress.c
+index 6e80222..3048d90 100644
+--- a/src/libscotch/common_file_decompress.c
++++ b/src/libscotch/common_file_decompress.c
+@@ -373,7 +373,11 @@ FileCompress * const        compptr)
+   decodat.avail_out = FILECOMPRESSDATASIZE;
+   do {
+     if ((decodat.avail_in == 0) && (deacval == LZMA_RUN)) {
++#ifdef _MSC_VER
++      size_t              bytenbr; //According to MSDN fread returns size_t
++#else
+       ssize_t             bytenbr;
++#endif
+ 
+       bytenbr = fread (compptr->bufftab, 1, FILECOMPRESSDATASIZE, compptr->oustptr); /* Read from pipe */
+       if (ferror (compptr->oustptr)) {
 diff --git a/src/libscotch/common_thread.h b/src/libscotch/common_thread.h
 index a8d3284..2e9ae28 100644
 --- a/src/libscotch/common_thread.h
@@ -199,23 +182,24 @@ index a8d3284..2e9ae28 100644
    }                             savedat;          /*+ Save area for affinity mask         +*/
  #endif /* COMMON_PTHREAD */
 diff --git a/src/libscotch/context.c b/src/libscotch/context.c
-index fbd8cbc..7bb7a01 100644
+index fbd8cbc..95e050a 100644
 --- a/src/libscotch/context.c
 +++ b/src/libscotch/context.c
-@@ -70,7 +70,11 @@ static struct ContextValuesData_ {
+@@ -70,8 +70,11 @@ static struct ContextValuesData_ {
  #else /* ((defined SCOTCH_DETERMINISTIC) || (defined COMMON_RANDOM_FIXED_SEED)) */
                                0
  #endif /* ((defined SCOTCH_DETERMINISTIC) || (defined COMMON_RANDOM_FIXED_SEED)) */
 -  }, { -1.0 } };                                  /* Temporary hack: dummy value since ISO C does not accept zero-sized arrays */
+-
 +  }
 +#ifndef _MSC_VER
 +  , { }
 +#endif
 +  };
- 
  /***********************************/
  /*                                 */
-@@ -89,6 +93,6 @@ contextOptionsInit (
+ /* These routines handle contexts. */
+@@ -89,6 +92,6 @@ contextOptionsInit (
  Context * const             contptr)
  {
    return (contextValuesInit (contptr, &contextvaluesdat, sizeof (contextvaluesdat),
@@ -253,3 +237,46 @@ index 2350980..77faadd 100644
  #include "parser.h"
  #include "parser_yy.h"
  #include "parser_ly.h"
+diff --git a/src/scotch/CMakeLists.txt b/src/scotch/CMakeLists.txt
+index d706637..79e2be1 100644
+--- a/src/scotch/CMakeLists.txt
++++ b/src/scotch/CMakeLists.txt
+@@ -67,10 +67,15 @@ function(add_scotch_exe)
+   add_dependencies(${file_we} scotch_h)
+   target_include_directories(${file_we} PRIVATE ${GENERATED_INCLUDE_DIR})
+   target_compile_definitions(${file_we} PUBLIC "SCOTCH_CODENAME=\"${SCOTCH_CODENAME}\"")
+-  if(Threads_FOUND)
+-    target_compile_definitions(${file_we} PUBLIC SCOTCH_PTHREAD COMMON_PTHREAD)
+-    target_link_libraries(${file_we} PUBLIC Threads::Threads ${THREADS_PTHREADS_WIN32_LIBRARY})
+-  endif(Threads_FOUND)
++
++  if(USE_PTHREAD)
++      target_compile_definitions(${file_we} PUBLIC COMMON_PTHREAD SCOTCH_PTHREAD)
++      if(NOT WIN32)
++        target_link_libraries(${file_we} PUBLIC Threads::Threads)
++      else()
++        target_link_libraries(${file_we} PUBLIC PThreads4W::PThreads4W)
++      endif()
++  endif(USE_PTHREAD)
+   target_link_libraries(${file_we} PUBLIC scotch scotcherrexit)
+ endfunction(add_scotch_exe)
+ 
+@@ -144,10 +149,14 @@ if(BUILD_PTSCOTCH)
+       ${GENERATED_INCLUDE_DIR}/ptscotch.h)
+     add_dependencies(${file_we} ptscotch_h)
+     target_compile_definitions(${file_we} PUBLIC "SCOTCH_CODENAME=\"${SCOTCH_CODENAME}\"")
+-    if(Threads_FOUND)
+-      target_compile_definitions(${file_we} PUBLIC SCOTCH_PTHREAD COMMON_PTHREAD)
+-      target_link_libraries(${file_we} PUBLIC Threads::Threads ${THREADS_PTHREADS_WIN32_LIBRARY})
+-    endif(Threads_FOUND)
++    if(USE_PTHREAD)
++      target_compile_definitions(${file_we} PUBLIC COMMON_PTHREAD SCOTCH_PTHREAD)
++      if(NOT WIN32)
++        target_link_libraries(${file_we} PUBLIC Threads::Threads)
++      else()
++        target_link_libraries(${file_we} PUBLIC PThreads4W::PThreads4W)
++      endif()
++    endif(USE_PTHREAD)
+     target_include_directories(${file_we} PRIVATE ${GENERATED_INCLUDE_DIR})
+     target_link_libraries(${file_we} PUBLIC scotch ptscotch ptscotcherrexit)
+   endfunction(add_ptscotch_exe)
