@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 76f3196d6bd01a349c69bf1863cc0dc521a95b84ef25b841198acbef99e295b53c1c82c745a7498b9a86a6fd4cc0c395abcb02fdf18b1d7c9152321ab195945b
     HEAD_REF master
+    PATCHES fix-SCN_HAS_STD_REGEX_MULTILINE-marco.patch
 )
 
 vcpkg_cmake_configure(
