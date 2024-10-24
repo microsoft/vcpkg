@@ -14,8 +14,13 @@ vcpkg_extract_source_archive(
 
 file(INSTALL "${PACKAGE_PATH}/native/include/gameinput.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${PACKAGE_PATH}/native/lib/${VCPKG_TARGET_ARCHITECTURE}/gameinput.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${PACKAGE_PATH}/native/lib/${VCPKG_TARGET_ARCHITECTURE}/gameinput.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+file(INSTALL "${PACKAGE_PATH}/redist/GameInputRedist.msi" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/gameinput-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
+    @ONLY)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE.txt")
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/gameinput-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)
