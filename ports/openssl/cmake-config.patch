@@ -1,5 +1,5 @@
 diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
-index 4c24cae..2792083 100644
+index 09303c4..487ff68 100644
 --- a/Configurations/unix-Makefile.tmpl
 +++ b/Configurations/unix-Makefile.tmpl
 @@ -338,7 +338,7 @@ bindir={- file_name_is_absolute($bindir)
@@ -25,10 +25,20 @@ index 894834c..d6d3c41 100644
  ##### User defined commands and flags ################################
  
 diff --git a/exporters/cmake/OpenSSLConfig.cmake.in b/exporters/cmake/OpenSSLConfig.cmake.in
-index 2d23219..3477e20 100644
+index 766aebe..026680a 100644
 --- a/exporters/cmake/OpenSSLConfig.cmake.in
 +++ b/exporters/cmake/OpenSSLConfig.cmake.in
-@@ -136,6 +136,14 @@ set(OPENSSL_APPLINK_SOURCE "${_ossl_prefix}/{- unixify($OpenSSL::safe::installda
+@@ -91,8 +91,7 @@ get_filename_component(_ossl_prefix "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ {-
+   # For each component in $OpenSSL::safe::installdata::CMAKECONFIGDIR[0] relative to
+   # $OpenSSL::safe::installdata::PREFIX[0], have CMake figure out the parent directory.
+-  my $d = join('/', unixify(catdir($OpenSSL::safe::installdata::LIBDIR_REL_PREFIX[0],
+-                                   $OpenSSL::safe::installdata::CMAKECONFIGDIR_REL_LIBDIR[0]), 1));
++  my $d = 'share/openssl';
+   $OUT = '';
+   if ($d ne '.') {
+       $OUT .= 'get_filename_component(_ossl_prefix "${_ossl_prefix}" PATH)' . "\n"
+@@ -141,6 +140,14 @@ set(OPENSSL_APPLINK_SOURCE "${_ossl_prefix}/{- unixify($OpenSSL::safe::installda
  {- output_on() if $disabled{uplink}; "" -}
  set(OPENSSL_PROGRAM "${OPENSSL_RUNTIME_DIR}/{- platform->bin('openssl') -}")
  
@@ -43,7 +53,7 @@ index 2d23219..3477e20 100644
  # Set up the imported targets
  if(_ossl_use_static_libs)
  {- output_off() unless $no_static; "" -}
-@@ -235,5 +243,6 @@ set_property(TARGET OpenSSL::applink PROPERTY
+@@ -240,5 +247,6 @@ set_property(TARGET OpenSSL::applink PROPERTY
    INTERFACE_SOURCES "${OPENSSL_APPLINK_SOURCE}")
  {- output_on() if $disabled{uplink}; "" -}
  
