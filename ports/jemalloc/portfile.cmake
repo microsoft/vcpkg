@@ -12,14 +12,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(opts "ac_cv_search_log=none required" "--without-private-namespace")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    NO_WRAPPERS
+    DISABLE_MSVC_WRAPPERS
+    DISABLE_MSVC_TRANSFORMATIONS
     OPTIONS ${opts}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY "${SOURCE_PATH}/include/msvc_compat/strings.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/jemalloc/msvc_compat")
