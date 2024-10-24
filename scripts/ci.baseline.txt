@@ -1170,6 +1170,7 @@ vtk-m:x64-android=fail
 vulkan:arm-neon-android=fail
 vulkan:arm64-android=fail
 vulkan:x64-android=fail
+vulkan-extensionlayer:x64-windows-static=fail
 # Needs android-26
 vulkan-validationlayers:arm-neon-android=fail
 vulkan-validationlayers:arm64-android=fail
