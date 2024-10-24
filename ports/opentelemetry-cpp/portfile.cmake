@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 c89c4f7a73c11c020f8ea1cb836ccd222456f899ede8e81a1fd0024e0a88f17c44a66bada8ed3010b0d03ac052475edb34b855aeafcff50975d24c8859463d68
     HEAD_REF main
     PATCHES
+        cmake-quirks.diff
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
 )
