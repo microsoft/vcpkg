@@ -4,6 +4,12 @@ vcpkg_download_distfile(ARM64_WINDOWS_UWP_PATCH
     SHA512 808d375628499641f1134b4751c9861384b719dae14cf6bd4d9d4b09c9bfd9f8b13b2663e9fa9d09867b5b40817c26387ac659d2f6459d40a46455b2f540d018
 )
 
+vcpkg_download_distfile(LAPACK_C_SIGNATURES_PATCH
+    URLS "https://patch-diff.githubusercontent.com/raw/OpenMathLib/OpenBLAS/pull/4953.diff?full_index=1"
+    FILENAME "openblas-fix-lapack-c-ignatures.patch"
+    SHA512 542b4fdda88d861fc5bdfadadf96541f245179cb5faa9f80f045257c809718382b099258c5e93fdbb41b870f1253821589899889595219d8f8f393de1bb7d970
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
@@ -16,6 +22,7 @@ vcpkg_from_github(
         install-tools.patch
         gcc14.patch
         ${ARM64_WINDOWS_UWP_PATCH}
+        ${LAPACK_C_SIGNATURES_PATCH}
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -33,12 +40,15 @@ vcpkg_add_to_path("${SED_EXE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        threads        USE_THREAD
-        simplethread   USE_SIMPLE_THREADED_LEVEL3
-        "dynamic-arch" DYNAMIC_ARCH
+        threads           USE_THREAD
+        simplethread      USE_SIMPLE_THREADED_LEVEL3
+        "dynamic-arch"    DYNAMIC_ARCH
+        "without-lapack"  BUILD_WITHOUT_LAPACK
+        "build-single"    BUILD_SINGLE
+        "build-double"    BUILD_DOUBLE
+        "build-complex"   BUILD_COMPLEX
+        "build-complex16" BUILD_COMPLEX16
 )
-
-set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)

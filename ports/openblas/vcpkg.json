@@ -1,6 +1,7 @@
 {
   "name": "openblas",
   "version": "0.3.28",
+  "port-version": 1,
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/OpenMathLib/OpenBLAS",
   "license": "BSD-3-Clause",
@@ -23,7 +24,22 @@
       "host": true
     }
   ],
+  "default-features": [
+    "without-lapack"
+  ],
   "features": {
+    "build-complex": {
+      "description": "Build single precision complex"
+    },
+    "build-complex16": {
+      "description": "Build double precision complex"
+    },
+    "build-double": {
+      "description": "Build double precision real"
+    },
+    "build-single": {
+      "description": "Build single precision real"
+    },
     "dynamic-arch": {
       "description": "Support for multiple targets in a single library",
       "supports": "!windows | mingw"
@@ -47,6 +63,9 @@
           "platform": "!windows & !uwp"
         }
       ]
+    },
+    "without-lapack": {
+      "description": "Do not build LAPACK and LAPACKE"
     }
   }
 }
