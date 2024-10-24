@@ -13,6 +13,7 @@ vcpkg_from_github(
     SHA512 396ce2a36937d49ec96eb239312118c736f46383d2906b7142d9695e795f310af28255d8827cc98ad76ae4e6d5a22faf1188b7dd286791e3c85f22c96d0114b3
     HEAD_REF 3.4
     PATCHES
+        cmake-ambiguous-keyword.diff
         compiler-flags.diff
         dependencies.diff
         disable-mariadb_config.diff

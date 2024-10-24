@@ -1,0 +1,19 @@
+diff --git a/cmake/plugins.cmake b/cmake/plugins.cmake
+index de5c12c..f433859 100644
+--- a/cmake/plugins.cmake
++++ b/cmake/plugins.cmake
+@@ -15,11 +15,14 @@ FUNCTION(REGISTER_PLUGIN)
+   SET(one_value_keywords TARGET DISABLED TYPE DEFAULT)
+   SET(multi_value_keywords CONFIGURATIONS SOURCES LIBRARIES INCLUDES COMPILE_OPTIONS)
+ 
++  # https://github.com/microsoft/vcpkg/issues/41719
++  string(REPLACE ";DEFAULT;DEFAULT;" ";vcpkg_value_DEFAULT;DEFAULT;" ARGN "${ARGN}")
+   cmake_parse_arguments(CC_PLUGIN
+                         "${options}"
+                         "${one_value_keywords}"
+                         "${multi_value_keywords}"
+                         ${ARGN})
++  string(REPLACE "vcpkg_value_DEFAULT" "DEFAULT" CC_PLUGIN_CONFIGURATIONS "${CC_PLUGIN_CONFIGURATIONS}")
+ 
+   # overwrite default if it was specified with cmake option
+   string(TOUPPER ${CC_PLUGIN_TARGET} cc_plugin)
