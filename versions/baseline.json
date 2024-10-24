@@ -6,7 +6,7 @@
     },
     "7zip": {
       "baseline": "24.08",
-      "port-version": 0
+      "port-version": 1
     },
     "ableton": {
       "baseline": "3.0.6",
@@ -2497,7 +2497,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "6.4.0",
+      "baseline": "6.7.0",
       "port-version": 0
     },
     "ecos": {
@@ -3046,7 +3046,7 @@
     },
     "geos": {
       "baseline": "3.13.0",
-      "port-version": 0
+      "port-version": 1
     },
     "geotrans": {
       "baseline": "3.9",
@@ -4829,7 +4829,7 @@
       "port-version": 0
     },
     "libmysql": {
-      "baseline": "8.0.39",
+      "baseline": "8.0.40",
       "port-version": 0
     },
     "libnice": {
@@ -7342,7 +7342,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.15",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7510,7 +7510,7 @@
     },
     "qtbase": {
       "baseline": "6.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.7.3",
@@ -9349,7 +9349,7 @@
       "port-version": 1
     },
     "vcpkg-tool-meson": {
-      "baseline": "1.5.2",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "vcpkg-tool-mozbuild": {
@@ -9394,7 +9394,7 @@
     },
     "vincentlaucsb-csv-parser": {
       "baseline": "2.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "visit-struct": {
       "baseline": "1.1.0",
@@ -9462,6 +9462,10 @@
     },
     "vulkan": {
       "baseline": "2023-12-17",
+      "port-version": 0
+    },
+    "vulkan-extensionlayer": {
+      "baseline": "1.3.296.0",
       "port-version": 0
     },
     "vulkan-headers": {
