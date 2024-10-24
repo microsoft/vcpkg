@@ -1,7 +1,7 @@
 {
   "name": "curl",
   "version": "8.10.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -70,6 +70,44 @@
           ]
         },
         "nghttp2"
+      ]
+    },
+    "http3-gnutls": {
+      "description": "Enable http3 with gnutls backend",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "gnutls"
+          ]
+        },
+        "nghttp3",
+        {
+          "name": "ngtcp2",
+          "features": [
+            "gnutls"
+          ]
+        }
+      ]
+    },
+    "http3-wolfssl": {
+      "description": "Enable http3 with wolfssl backend",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "wolfssl"
+          ]
+        },
+        "nghttp3",
+        {
+          "name": "ngtcp2",
+          "features": [
+            "wolfssl"
+          ]
+        }
       ]
     },
     "idn": {
