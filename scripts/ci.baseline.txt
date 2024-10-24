@@ -83,6 +83,7 @@ berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
+bit7z:arm-neon-android=fail
 ################################################################
 # <BLAS+LAPACK>
 # These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
