@@ -15,6 +15,7 @@ vcpkg_from_github(
         io_ply.patch
         6053.diff # https://github.com/PointCloudLibrary/pcl/pull/6053
         6990a3b0d7dd3c1ca04a1a473cc172a937418060.diff # https://github.com/PointCloudLibrary/pcl/pull/6105
+        0012-msvc-optimizer-workaround.patch # backport pcl #6143 and #6154
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
