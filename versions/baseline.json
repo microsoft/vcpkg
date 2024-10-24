@@ -1481,8 +1481,8 @@
       "port-version": 0
     },
     "cairo": {
-      "baseline": "1.18.0",
-      "port-version": 1
+      "baseline": "1.18.2",
+      "port-version": 0
     },
     "cairomm": {
       "baseline": "1.18.0",
@@ -2542,7 +2542,7 @@
     },
     "elements": {
       "baseline": "2022-12-07",
-      "port-version": 0
+      "port-version": 1
     },
     "elfio": {
       "baseline": "3.12",
