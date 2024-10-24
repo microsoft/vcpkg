@@ -1,0 +1,12 @@
+{
+  "name": "vmaware",
+  "version": "1.9",
+  "description": "VM detection library",
+  "homepage": "https://github.com/kernelwernel/VMAware",
+  "license": "GPL-3.0-only OR MIT",
+  "features": {
+    "gpl3": {
+      "description": "Enable GPL-3.0 compatible code"
+    }
+  }
+}
