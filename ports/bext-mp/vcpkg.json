@@ -3,7 +3,7 @@
   "version": "2.0.11",
   "description": "C++20 ~~Template~~ Meta-Programming",
   "homepage": "https://github.com/qlibs/mp",
-  "license": null,
+  "license": "MIT",
   "supports": "!windows | mingw",
   "dependencies": [
     {
