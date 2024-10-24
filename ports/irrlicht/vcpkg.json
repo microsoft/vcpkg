@@ -9,7 +9,10 @@
     "bzip2",
     "libjpeg-turbo",
     "libpng",
-    "pkgconf",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     "vcpkg-cmake",
     "vcpkg-cmake-config",
     "zlib"
@@ -21,9 +24,18 @@
     "tools": {
       "description": "Build the Tools FileToHeader, FontTool, GUIEditor and MeshConverter",
       "dependencies": [
-        "fontconfig",
-        "freetype",
-        "libxft"
+        {
+          "name": "fontconfig",
+          "platform": "linux"
+        },
+        {
+          "name": "freetype",
+          "platform": "linux"
+        },
+        {
+          "name": "libxft",
+          "platform": "linux"
+        }
       ]
     },
     "unicode": {

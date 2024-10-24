@@ -119,7 +119,7 @@ if(IRR_BUILD_TOOLS)
     target_link_libraries(GUIEditor     Irrlicht)
 
     add_executable(FontTool             ${IRR_TOOL_FILES_FONT_TOOL})
-    if(UNIX)
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         find_package(Freetype REQUIRED)
         find_package(Fontconfig REQUIRED)
         find_package(PkgConfig REQUIRED)
