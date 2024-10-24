@@ -1,5 +1,3 @@
-diff --git a/modules/dnn/src/op_halide.cpp b/modules/dnn/src/op_halide.cpp
-index c96971bc6aac..d107e01887d0 100644
 --- a/modules/dnn/src/op_halide.cpp
 +++ b/modules/dnn/src/op_halide.cpp
 @@ -11,6 +11,7 @@
