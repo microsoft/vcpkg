@@ -2,11 +2,29 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/SimSIMD
     REF "v${VERSION}"
-    SHA512 8263aada695ce68a1eb671c46a294fd317f9bb5d3a3ec5b4a8ab27b8b8ea5801c639b6bac3ba889bd6153444c76b7fa6d2982c25003af4cdfd0d8bc007b783f8
+    SHA512 ab78d4415ed0f2964470ccd36d3d737a2715b1a5a4222613d2f0f4be6a516da0e339329cbd421c6b7f6a1bc701da6ec2f3937cba5a8ea1f632beea8000d90c8f
     HEAD_REF main
+    PATCHES
+        export-target.patch
 )
 
-file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/module.modulemap")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DSIMSIMD_BUILD_TESTS=OFF
+        -DSIMSIMD_BUILD_BENCHMARKS=OFF
+        "-DSIMSIMD_BUILD_SHARED=${BUILD_SHARED}"
+)
+
+vcpkg_cmake_install()
+
+if(BUILD_SHARED)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-simsimd)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

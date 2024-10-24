@@ -5,6 +5,7 @@
   ],
   "name": "azure-core-amqp-cpp",
   "version-semver": "1.0.0-beta.11",
+  "port-version": 1,
   "description": [
     "Microsoft Azure AMQP SDK for C++",
     "This library provides AMQP functionality to Azure SDK services."

@@ -15,6 +15,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
     PATCHES
         0002-suppress-msvc-warnings.patch
+        pkgconfig.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,35 +27,30 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DLIBRESSL_INSTALL_CMAKEDIR=share/${PORT}
         -DLIBRESSL_TESTS=OFF
     OPTIONS_DEBUG
         -DLIBRESSL_APPS=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup()
+
+# libressl as openssl replacement
+configure_file("${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/openssl/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ocspcheck openssl DESTINATION "${CURRENT_PACKAGES_DIR}/tools/openssl" AUTO_CLEAN)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
-    )
-endif()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/etc/ssl/certs"
     "${CURRENT_PACKAGES_DIR}/debug/etc/ssl/certs"
-    "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-vcpkg_copy_pdbs()
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-
-vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LibreSSL")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

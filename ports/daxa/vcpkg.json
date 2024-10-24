@@ -1,6 +1,7 @@
 {
   "name": "daxa",
-  "version": "2.0.0",
+  "version": "3.0.2",
+  "port-version": 1,
   "description": "Daxa C++ Vulkan Abstraction",
   "homepage": "https://github.com/Ipotrick/Daxa",
   "license": "MIT",
@@ -38,6 +39,12 @@
       "description": "Build with glslang",
       "dependencies": [
         "glslang"
+      ]
+    },
+    "utils-pipeline-manager-slang": {
+      "description": "Build with Slang",
+      "dependencies": [
+        "shader-slang"
       ]
     },
     "utils-pipeline-manager-spirv-validation": {

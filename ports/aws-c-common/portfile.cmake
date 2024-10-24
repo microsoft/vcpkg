@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
     REF "v${VERSION}"
-    SHA512 c91ea5c703657fe427175018c20024848e9783157286133c58cbf20e3467acfb9d7251e0d2a63ea925b8252930b2326707fb699249e93ed75497d999fb4f73fa
+    SHA512 482bfeb5c7dac16486236417af0f5c0a20bc36c271aaf32088d188186861d61bf0b96c5da13a1c88853fdc6a1fb8b8db254a547c3648a659ec6e91177978dc9b
     HEAD_REF master
     PATCHES
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
