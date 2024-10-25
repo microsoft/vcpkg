@@ -14,6 +14,7 @@ vcpkg_from_github(
   PATCHES
     cross-bin2cpp.diff
     fix-miss-header-file.patch # cstdint
+    fmt-11.diff                # due to https://github.com/fmtlib/fmt/issues/3447
     "${CUDA_PATCHES}"
 )
 file(WRITE "${SOURCE_PATH}/CMakeModules/AF_vcpkg_options.cmake" "# Building vcpkg port, not top-level project")

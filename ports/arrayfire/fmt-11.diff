@@ -1,0 +1,27 @@
+diff --git a/src/backend/common/ArrayFireTypesIO.hpp b/src/backend/common/ArrayFireTypesIO.hpp
+index e7a2e08..4a4cd5d 100644
+--- a/src/backend/common/ArrayFireTypesIO.hpp
++++ b/src/backend/common/ArrayFireTypesIO.hpp
+@@ -21,7 +21,7 @@ struct fmt::formatter<af_seq> {
+     }
+ 
+     template<typename FormatContext>
+-    auto format(const af_seq& p, FormatContext& ctx) -> decltype(ctx.out()) {
++    auto format(const af_seq& p, FormatContext& ctx) -> decltype(ctx.out()) const {
+         // ctx.out() is an output iterator to write to.
+         if (p.begin == af_span.begin && p.end == af_span.end &&
+             p.step == af_span.step) {
+@@ -73,10 +73,12 @@ struct fmt::formatter<arrayfire::common::Version> {
+     }
+ 
+     template<typename FormatContext>
+-    auto format(const arrayfire::common::Version& ver, FormatContext& ctx)
++    auto format(const arrayfire::common::Version& ver, FormatContext& ctx) const
+         -> decltype(ctx.out()) {
+         if (ver.major() == -1) return format_to(ctx.out(), "N/A");
++        auto show_minor = this->show_minor;
+         if (ver.minor() == -1) show_minor = false;
++        auto show_patch = this->show_patch;
+         if (ver.patch() == -1) show_patch = false;
+         if (show_major && !show_minor && !show_patch) {
+             return format_to(ctx.out(), "{}", ver.major());
