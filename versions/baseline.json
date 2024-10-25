@@ -7878,7 +7878,7 @@
     },
     "rest-rpc": {
       "baseline": "0.12",
-      "port-version": 0
+      "port-version": 1
     },
     "restbed": {
       "baseline": "4.8",
