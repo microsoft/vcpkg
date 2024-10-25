@@ -36,9 +36,8 @@ do
     fi
 done
 
-# Enable using this entry point on windows from git bash by redirecting to the .bat file.
-unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
-if [ "$unixName" = "MINGW_NT" ]; then
+# Enable using this entry point on Windows from an msys2 bash env. (e.g., git bash) by redirecting to the .bat file.
+if [[ "$(uname -s)" =~ (MINGW|MSYS).*_NT ]]; then
     if [ "$vcpkgDisableMetrics" = "ON" ]; then
         args="-disableMetrics"
     else
