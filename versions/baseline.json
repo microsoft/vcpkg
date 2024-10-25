@@ -2985,7 +2985,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "2024-04-29",
+      "baseline": "0.2303.22621.3038",
       "port-version": 0
     },
     "gamenetworkingsockets": {
