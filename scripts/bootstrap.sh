@@ -36,7 +36,7 @@ do
     fi
 done
 
-# Enable using this entry point on Windows from an msys2 bash env. (e.g., git bash) by redirecting to the .bat file.
+# Enable using this entry point on Windows from an msys2 or cygwin bash env. (e.g., git bash) by redirecting to the .bat file.
 unixKernelName=$(uname -s | sed -E 's/(CYGWIN|MINGW|MSYS).*_NT.*/\1_NT/')
 if [ "$unixKernelName" = CYGWIN_NT ] || [ "$unixKernelName" = MINGW_NT ] || [ "$unixKernelName" = MSYS_NT ]; then
     if [ "$vcpkgDisableMetrics" = "ON" ]; then
