@@ -26,7 +26,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
-        GENERATOR "Ninja"
+        GENERATOR "Unix Makefiles"
         DISABLE_PARALLEL_CONFIGURE
     )
 endif()
