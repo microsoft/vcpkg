@@ -6,7 +6,11 @@
   "license": "BSD-3-Clause",
   "supports": "!x86 & !staticcrt & !(arm & osx)",
   "dependencies": [
-    "boost-headers",
+    "boost-algorithm",
+    "boost-core",
+    "boost-dynamic-bitset",
+    "boost-intrusive",
+    "boost-tokenizer",
     {
       "name": "vcpkg-cmake",
       "host": true
