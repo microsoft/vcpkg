@@ -1,0 +1,8 @@
+{
+  "name": "gameinput",
+  "version-date": "2024-04-29",
+  "description": "GameInput",
+  "homepage": "https://aka.ms/gameinput",
+  "license": null,
+  "supports": "windows & x64 & !uwp & !xbox"
+}
