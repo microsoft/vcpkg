@@ -301,7 +301,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
 
-if(NOT VCPKG_TARGET_IS_LINUX AND "plugins-base" IN_LIST FEATURES)
+if("plugins-base" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
                 "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
     )
@@ -408,6 +408,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endif()
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc" [[${libinc}]] "")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc" [[${libinc}]] "")
 endif()
 
 vcpkg_fixup_pkgconfig()
