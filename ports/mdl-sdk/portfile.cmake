@@ -22,7 +22,7 @@ endif()
 set(LLVM_BASE_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}")
 
 if(VCPKG_HOST_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
-    set(LLVM_FILENAME  "LLVM-${LLVM_VERSION}-win64.exe") 
+    set(LLVM_FILENAME  "LLVM-${LLVM_VERSION}-win64.exe")
     set(LLVM_HASH      733bfb425af2e7e4f187fca6d9cfdf7ecc9aa846ef2c227d57fad7cc67d114bde27e49385df362cb399c4aa0e2d481890e2148756a18925b0229ad516a9f8bb4)
 elseif(VCPKG_HOST_IS_LINUX AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
     set(LLVM_FILENAME  "clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-16.04.tar.xz")
@@ -82,6 +82,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         008-build-static-llvm.patch
+        012-remove-wrong-llvm-cxx-standard.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
