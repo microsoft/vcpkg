@@ -1,11 +1,10 @@
 {
   "name": "ampl-asl",
-  "version-date": "2020-11-11",
-  "port-version": 3,
+  "version-date": "2024-02-01",
   "description": "AMPL Solver Library",
   "homepage": "https://github.com/ampl/asl",
-  "license": null,
-  "supports": "!uwp & !(osx & arm64)",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

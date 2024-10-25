@@ -1,0 +1,4 @@
+lfreist-hwinfo provides CMake targets :
+
+    find_package(lfreist-hwinfo CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE lfreist-hwinfo::hwinfo)

@@ -1,14 +1,22 @@
 {
   "name": "glib",
-  "version": "2.78.4",
-  "port-version": 3,
+  "version": "2.80.0",
+  "port-version": 1,
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
     "dirent",
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "libffi",
     "libiconv",
     "pcre2",
