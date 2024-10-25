@@ -60,8 +60,11 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 add_library(xmlsec1 ${SOURCESXMLSEC})
 add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include)
-
+target_include_directories(xmlsec1 PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 target_link_libraries(xmlsec1 PUBLIC LibXml2::LibXml2)
 target_link_libraries(xmlsec1-openssl PUBLIC xmlsec1 OpenSSL::Crypto)
 
