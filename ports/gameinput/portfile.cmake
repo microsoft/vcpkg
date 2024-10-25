@@ -1,8 +1,6 @@
-set(NUGET_VERSION 0.2303.22621.3038)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.GameInput/${NUGET_VERSION}"
-    FILENAME "gameinput.${NUGET_VERSION}.zip"
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.GameInput/${VERSION}"
+    FILENAME "gameinput.${VERSION}.zip"
     SHA512 4ad0e8a2ff14e498632557c64cdcd967c6b166b405b2c60427578a5f8b32b925184a1c74bce95a7a73a129e61edddbec030c4abe4ada287a2ce9ae50178cdcea
 )
 
