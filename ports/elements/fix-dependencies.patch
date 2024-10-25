@@ -32,7 +32,7 @@ index e84ca98..7a06ed2 100644
 -
 -target_include_directories(elements PUBLIC ${asio_SOURCE_DIR}/asio/include)
 +find_package(asio CONFIG REQUIRED)
-+target_include_directories(elements PUBLIC ASIO_INCLUDE_DIR)
++target_include_directories(elements PUBLIC ${ASIO_INCLUDE_DIR})
  
  ###############################################################################
  # Global options
