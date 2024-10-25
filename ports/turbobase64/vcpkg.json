@@ -1,6 +1,6 @@
 {
   "name": "turbobase64",
-  "version-string": "2023.08",
+  "version": "2023.8",
   "description": "Fastest Base64 SIMD/Neon library",
   "homepage": "https://github.com/powturbo/Turbo-Base64",
   "license": "GPL-3.0-only",
