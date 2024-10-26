@@ -2130,7 +2130,7 @@
     },
     "curl": {
       "baseline": "8.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "curlcpp": {
       "baseline": "3.1",
