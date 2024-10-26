@@ -52,6 +52,7 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES FontEditor ImageEditor LayoutEditor SkinEditor AUTO_CLEAN)
