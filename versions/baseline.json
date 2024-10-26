@@ -5909,7 +5909,7 @@
       "port-version": 0
     },
     "mimicpp": {
-      "baseline": "3",
+      "baseline": "4",
       "port-version": 0
     },
     "minc": {
