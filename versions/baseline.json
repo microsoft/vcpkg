@@ -2130,7 +2130,7 @@
     },
     "curl": {
       "baseline": "8.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "curlcpp": {
       "baseline": "3.1",
@@ -4289,7 +4289,7 @@
       "port-version": 0
     },
     "libassert": {
-      "baseline": "2.1.1",
+      "baseline": "2.1.2",
       "port-version": 0
     },
     "libassuan": {
@@ -5406,7 +5406,7 @@
     },
     "libxmlmm": {
       "baseline": "0.6.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libxmlpp": {
       "baseline": "5.4.0",
@@ -5522,7 +5522,7 @@
     },
     "live555": {
       "baseline": "2024-10-24",
-      "port-version": 0
+      "port-version": 1
     },
     "llfio": {
       "baseline": "2024-09-05",
@@ -7826,7 +7826,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 8
+      "port-version": 9
     },
     "readosm": {
       "baseline": "1.1.0a",
@@ -8286,7 +8286,7 @@
     },
     "shiftmedia-libgnutls": {
       "baseline": "3.8.7",
-      "port-version": 0
+      "port-version": 1
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
@@ -8593,7 +8593,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.46.1",
+      "baseline": "3.47.0",
       "port-version": 0
     },
     "sqlitecpp": {
