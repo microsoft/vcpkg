@@ -82,7 +82,7 @@
     },
     "aliyun-oss-cpp-sdk": {
       "baseline": "1.10.0",
-      "port-version": 2
+      "port-version": 3
     },
     "allegro5": {
       "baseline": "5.2.9.1",
@@ -358,7 +358,7 @@
     },
     "aurora-au": {
       "baseline": "0.3.5",
-      "port-version": 0
+      "port-version": 1
     },
     "autobahn": {
       "baseline": "20.8.1",
@@ -1481,8 +1481,8 @@
       "port-version": 0
     },
     "cairo": {
-      "baseline": "1.18.0",
-      "port-version": 1
+      "baseline": "1.18.2",
+      "port-version": 0
     },
     "cairomm": {
       "baseline": "1.18.0",
@@ -2509,7 +2509,7 @@
       "port-version": 1
     },
     "edflib": {
-      "baseline": "1.26",
+      "baseline": "1.27",
       "port-version": 0
     },
     "edlib": {
@@ -2542,7 +2542,7 @@
     },
     "elements": {
       "baseline": "2022-12-07",
-      "port-version": 0
+      "port-version": 1
     },
     "elfio": {
       "baseline": "3.12",
@@ -2738,7 +2738,7 @@
     },
     "ffmpeg": {
       "baseline": "7.0.2",
-      "port-version": 6
+      "port-version": 7
     },
     "ffnvcodec": {
       "baseline": "12.2.72.0",
@@ -5521,7 +5521,7 @@
       "port-version": 0
     },
     "live555": {
-      "baseline": "2024-09-29",
+      "baseline": "2024-10-24",
       "port-version": 0
     },
     "llfio": {
@@ -6722,7 +6722,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.17.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentelemetry-cpp-contrib-version": {
       "baseline": "2024-06-17",
@@ -8121,7 +8121,7 @@
       "port-version": 0
     },
     "scotch": {
-      "baseline": "7.0.3",
+      "baseline": "7.0.5",
       "port-version": 0
     },
     "scottt-debugbreak": {
@@ -9454,7 +9454,7 @@
     },
     "vtk-dicom": {
       "baseline": "0.8.16",
-      "port-version": 0
+      "port-version": 1
     },
     "vtk-m": {
       "baseline": "2.1.0",

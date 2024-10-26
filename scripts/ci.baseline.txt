@@ -36,14 +36,8 @@
 ##    x86-windows
 ##
 
-# Temporary
-vcpkg-ci-msys2:x64-windows=fail
-
 # Add new items alphabetically
 
-7zip:arm-neon-android=fail
-7zip:arm64-android=fail
-7zip:x64-android=fail
 ace:arm-neon-android=fail
 ace:arm64-android=fail
 ace:x64-android=fail
@@ -86,6 +80,7 @@ berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
+bit7z:arm-neon-android=fail
 ################################################################
 # <BLAS+LAPACK>
 # These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
@@ -164,7 +159,6 @@ caf:arm64-uwp=fail
 caf:arm64-android=fail
 caf:x64-android=fail
 caf:x64-uwp=fail
-cairo:x64-android=fail
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
 c-dbg-macro:x64-windows=skip
@@ -201,7 +195,6 @@ catch-classic:x64-windows        = skip
 catch-classic:x64-windows-static = skip
 catch-classic:x64-windows-static-md=skip
 catch-classic:x86-windows        = skip
-cairo:arm64-android=fail
 cctag:x64-windows-static-md=fail
 cello:arm64-uwp=fail
 cello:x64-uwp=fail
@@ -489,6 +482,9 @@ ijg-libjpeg:x86-windows        = skip
 intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
+io2d:arm-neon-android=fail
+io2d:arm64-android=fail
+io2d:x64-android=fail
 irrlicht:x64-android=fail
 isal:x64-android=fail
 # Failing on try_run() in cross builds
@@ -558,6 +554,9 @@ libfreenect2:arm64-windows=fail
 libgpod:arm-neon-android=fail
 libgpod:arm64-android=fail
 libgpod:x64-android=fail
+libgxps:arm-neon-android=fail
+libgxps:arm64-android=fail
+libgxps:x64-android=fail
 libgxps:x64-windows-static=fail
 libhdfs3:arm-neon-android=fail
 libhdfs3:arm64-android=fail
@@ -878,6 +877,9 @@ orc:arm64-android=fail
 orc:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
+pango:arm-neon-android=fail
+pango:arm64-android=fail
+pango:x64-android=fail
 pcl:arm-neon-android=fail
 pcl:arm64-android=fail
 pcl:x64-android=fail
@@ -1170,6 +1172,9 @@ vtk-m:x64-android=fail
 vulkan:arm-neon-android=fail
 vulkan:arm64-android=fail
 vulkan:x64-android=fail
+vulkan-extensionlayer:arm-neon-android=fail
+vulkan-extensionlayer:arm64-android=fail
+vulkan-extensionlayer:x64-android=fail
 vulkan-extensionlayer:x64-windows-static=fail
 # Needs android-26
 vulkan-validationlayers:arm-neon-android=fail
