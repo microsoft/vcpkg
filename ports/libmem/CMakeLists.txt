@@ -5,6 +5,12 @@ cmake_policy(SET CMP0116 NEW)
 # Enforce C++17 standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+project(libmem LANGUAGES C CXX ASM)
+
+target_compile_definitions(libmem PUBLIC LM_EXPORT)
+
+
 # If we're on Windows and building a shared library
 if (MSVC AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -15,7 +21,7 @@ if (MSVC)
 endif()
 set(LIBMEM_ARCH ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "Force a specific architecture")
 
-project(libmem LANGUAGES C CXX ASM)
+
 
 # External dependencies: Capstone, Keystone, LLVM
 find_package(PkgConfig REQUIRED)
