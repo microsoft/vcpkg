@@ -37,7 +37,7 @@ function(vcpkg_build_nmake)
     endif()
 
     if(NOT DEFINED arg_CL_LANGUAGE)
-        vcpkg_list(SET arg_CL_LANGUAGE CXX)
+        set(arg_CL_LANGUAGE CXX)
     endif()
 
     find_program(NMAKE nmake REQUIRED)
