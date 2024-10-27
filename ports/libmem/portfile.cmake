@@ -9,8 +9,8 @@ vcpkg_from_github(
 #        fix_DLL.patch
 
 # Define the LM_EXPORT macro for Windows OS or shared builds
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE EQUAL "shared") 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DLM_EXPORT")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
