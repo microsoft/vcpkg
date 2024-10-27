@@ -1,18 +1,10 @@
-vcpkg_download_distfile(MSVC_ARM64_INTRINSICS_FIX
-    URLS https://github.com/ngtcp2/nghttp3/commit/2c4a3816bbeab45e7c9092aecc915b54a3c88ccb.patch?full_index=1
-    SHA512 ccdd14a71bfa51f3480252faf2a4664544e1e11f3c5b6be9bfe577d46f0fc6c22e22f86b721987d6d1ca17d96ba2e55e32b0d01a6c291ab9ba2fc2279275aeae
-    FILENAME nghttp3-msvc-arm64-intrinsicis-2c4a3816bbeab45e7c9092aecc915b54a3c88ccb.patch.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/nghttp3
     REF v${VERSION}
-    SHA512 d8b6db7a1323e036cd2d1aab1ded299e83024ce451cddbfe0ea102d968bdcb57221dbcc231b73880e0987cf3ed7ecd2c2b5f53b10947d9accb7603d7c3fcbb95
+    SHA512 c5f8188b7c74a8162b4526d0d317f94db934eb75335c6ccc4f289d3e3592edb099b7cdc72d966db68140be99c3b6ebf34f5814d62a52b0dc4040d79fab2351cf
     HEAD_REF main
     PATCHES
-        fix-include-usage.patch
-        "${MSVC_ARM64_INTRINSICS_FIX}"
 )
 
 vcpkg_from_github(
