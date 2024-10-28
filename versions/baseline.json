@@ -6197,7 +6197,7 @@
       "port-version": 0
     },
     "nanobind": {
-      "baseline": "1.9.2",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "nanodbc": {
