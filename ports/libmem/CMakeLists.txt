@@ -8,9 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(libmem LANGUAGES C CXX ASM)
 
-target_compile_definitions(libmem PUBLIC LM_EXPORT)
-
-
 # If we're on Windows and building a shared library
 if (MSVC AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -93,6 +90,9 @@ endif()
 #    add_library(libmem SHARED ${LIBMEM_SRC})
 #endif()
 add_library(libmem ${LIBMEM_SRC})
+
+target_compile_definitions(libmem PUBLIC LM_EXPORT)
+
 # Include LLVM in the project
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
 
