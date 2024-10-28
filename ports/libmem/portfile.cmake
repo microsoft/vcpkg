@@ -8,14 +8,6 @@ vcpkg_from_github(
 #    PATCHES
 #        fix_DLL.patch
 
-if(PORT MATCHES "keystone") 
-    set(VCPKG_LIBRARY_LINKAGE static) 
-endif()
-
-if(PORT MATCHES "capstone") 
-    set(VCPKG_LIBRARY_LINKAGE static) 
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DLM_EXPORT")
 endif()
