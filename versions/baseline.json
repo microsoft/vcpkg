@@ -9253,7 +9253,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.67.0",
+      "baseline": "20.70.0",
       "port-version": 0
     },
     "v-hacd": {
