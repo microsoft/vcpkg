@@ -1,10 +1,13 @@
 diff --git a/meson.build b/meson.build
-index 85d8da7..7f97dbc 100644
+index f3e7a27..d946c49 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -3,7 +3,7 @@ project('libzim', ['c', 'cpp'],
+@@ -1,9 +1,9 @@
+ project('libzim', ['c', 'cpp'],
+   version : '9.0.0',
    license : 'GPL2',
-   default_options : ['c_std=c11', 'cpp_std=c++11'])
+-  default_options : ['c_std=c11', 'cpp_std=c++17', 'werror=true'])
++  default_options : ['c_std=c11', 'cpp_std=c++17'])
  
 -if build_machine.system() != 'windows'
 +if host_machine.system() != 'windows' or meson.get_compiler('cpp').get_id() == 'gcc'

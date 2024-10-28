@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ph3at/libenvpp
     REF v${VERSION}
-    SHA512 d8d2e6405311be1cba47cdf1c8b29018c84716a0d34a18bf3b6fa8c05f5eddf447ddee407a407d765e92296c5d7e7b5f2fe4561fb66f5165826825158ef82fc8
+    SHA512 1c5d0575d9f1668c68d23aa4163eba18a90173ac7601d8b8f142d9826e3971ad9d0a1d880d6d3f8a80ed964b4fca2e28590d130fdce542d85e04413687b3b0ae
     HEAD_REF main
     PATCHES
         fix-dependencies.patch

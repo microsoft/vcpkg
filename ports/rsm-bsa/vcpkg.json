@@ -1,16 +1,13 @@
 {
   "name": "rsm-bsa",
-  "version-semver": "4.0.3",
+  "version-semver": "4.1.0",
   "description": "A C++ library for working with the Bethesda archive file format",
   "homepage": "https://github.com/Ryan-rsm-McKenzie/bsa",
   "documentation": "https://ryan-rsm-mckenzie.github.io/bsa/",
   "license": "MIT",
   "supports": "!x86 & !osx & !uwp",
   "dependencies": [
-    {
-      "name": "directxtex",
-      "platform": "windows"
-    },
+    "directxtex",
     "lz4",
     "rsm-binary-io",
     "rsm-mmio",

@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9ae90b1..71a50b0 100644
+index fcbfc58..7781131 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -21,16 +21,14 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
  
  FIND_PACKAGE(OpenSSL)
  
--FIND_PACKAGE(expat)
+-FIND_PACKAGE(EXPAT)
 -
  OPTION(APU_HAVE_CRYPTO      "Crypto support"                            OFF)
  OPTION(APU_HAVE_ODBC        "Build ODBC DBD driver"                     ON)
@@ -48,55 +48,45 @@ index 9ae90b1..71a50b0 100644
  SET(install_targets ${install_targets} libaprutil-1)
  SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libaprutil-1.pdb)
  TARGET_LINK_LIBRARIES(libaprutil-1 ${APR_LIBRARIES} ${XMLLIB_LIBRARIES})
--SET_TARGET_PROPERTIES(libaprutil-1 PROPERTIES COMPILE_DEFINITIONS "APU_DECLARE_EXPORT;APR_DECLARE_EXPORT;XML_STATIC;WINNT")
-+SET_TARGET_PROPERTIES(libaprutil-1 PROPERTIES COMPILE_DEFINITIONS "APU_DECLARE_EXPORT;APR_DECLARE_IMPORT;XML_STATIC;WINNT")
+ SET_TARGET_PROPERTIES(libaprutil-1 PROPERTIES COMPILE_DEFINITIONS "APU_DECLARE_EXPORT;APR_DECLARE_IMPORT;XML_STATIC;WINNT")
  
 +else(BUILD_SHARED_LIBS)
  ADD_LIBRARY(aprutil-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
  SET(install_targets ${install_targets} aprutil-1)
  TARGET_LINK_LIBRARIES(aprutil-1 ${APR_LIBRARIES} ${XMLLIB_LIBRARIES})
  SET_TARGET_PROPERTIES(aprutil-1 PROPERTIES COMPILE_DEFINITIONS "APU_DECLARE_STATIC;APR_DECLARE_STATIC;APU_DSO_MODULE_BUILD;XML_STATIC")
-+endif(BUILD_SHARED_LIBS)
++endif()
  
 +if(BUILD_SHARED_LIBS)
  IF(APU_HAVE_CRYPTO)
    IF(NOT OPENSSL_FOUND)
      MESSAGE(FATAL_ERROR "Only OpenSSL-based crypto is currently implemented in the cmake build")
-@@ -249,7 +251,7 @@ IF(APU_HAVE_CRYPTO)
-   SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/apr_crypto_openssl-1.pdb)
-   SET_TARGET_PROPERTIES(apr_crypto_openssl-1 PROPERTIES INCLUDE_DIRECTORIES "${APR_INCLUDE_DIRECTORIES};${OPENSSL_INCLUDE_DIR}")
-   SET_TARGET_PROPERTIES(apr_crypto_openssl-1 PROPERTIES COMPILE_DEFINITIONS "WINNT")
--  SET_TARGET_PROPERTIES(apr_crypto_openssl-1 PROPERTIES COMPILE_FLAGS "-DAPR_DECLARE_EXPORT=1 -DAPU_DECLARE_EXPORT=1 -DDLL_NAME=apr_crypto_openssl")
-+  SET_TARGET_PROPERTIES(apr_crypto_openssl-1 PROPERTIES COMPILE_FLAGS "-DAPR_DECLARE_IMPORT -DAPU_DECLARE_IMPORT -DDLL_NAME=apr_crypto_openssl")
-   TARGET_LINK_LIBRARIES(apr_crypto_openssl-1 libaprutil-1 ${APR_LIBRARIES} ${OPENSSL_LIBRARIES})
- ENDIF()
- 
-@@ -260,8 +262,8 @@ IF(APU_HAVE_ODBC)
-   SET(dbd_drivers ${dbd_drivers} odbc)
-   TARGET_LINK_LIBRARIES(apr_dbd_odbc-1 libaprutil-1 ${APR_LIBRARIES} odbc32 odbccp32)
-   SET_PROPERTY(TARGET apr_dbd_odbc-1 APPEND PROPERTY LINK_FLAGS /export:apr_dbd_odbc_driver)
--  SET_TARGET_PROPERTIES(apr_dbd_odbc-1 PROPERTIES COMPILE_DEFINITIONS "APU_HAVE_ODBC;HAVE_SQL_H;APU_DECLARE_EXPORT;APR_DECLARE_EXPORT;APU_DSO_MODULE_BUILD;WINNT")
--  SET_TARGET_PROPERTIES(apr_dbd_odbc-1 PROPERTIES COMPILE_FLAGS "-DAPR_DECLARE_EXPORT=1 -DAPU_DECLARE_EXPORT=1 -DDLL_NAME=apr_dbd_odbc")
-+  SET_TARGET_PROPERTIES(apr_dbd_odbc-1 PROPERTIES COMPILE_DEFINITIONS "APU_HAVE_ODBC;HAVE_SQL_H;APU_DECLARE_IMPORT;APR_DECLARE_IMPORT;APU_DSO_MODULE_BUILD;WINNT")
-+  SET_TARGET_PROPERTIES(apr_dbd_odbc-1 PROPERTIES COMPILE_FLAGS "-DAPR_DECLARE_IMPORT  -DAPU_DECLARE_IMPORT -DDLL_NAME=apr_dbd_odbc")
+@@ -265,7 +267,7 @@ IF(APU_HAVE_ODBC)
  ENDIF()
  
  IF(APR_HAS_LDAP)
-@@ -271,11 +273,12 @@ IF(APR_HAS_LDAP)
+-  ADD_LIBRARY(apr_ldap-1 SHARED ldap/apr_ldap_init.c ldap/apr_ldap_option.c 
++  ADD_LIBRARY(apr_ldap-1 SHARED ldap/apr_ldap_init.c ldap/apr_ldap_option.c
+               ldap/apr_ldap_rebind.c libaprutil.rc)
+   SET(install_targets ${install_targets} apr_ldap-1)
    SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/apr_ldap-1.pdb)
-   TARGET_LINK_LIBRARIES(apr_ldap-1 libaprutil-1 ${APR_LIBRARIES} ${LDAP_LIBRARIES})
-   SET_TARGET_PROPERTIES(apr_ldap-1 PROPERTIES COMPILE_DEFINITIONS "WINNT")
--  SET_TARGET_PROPERTIES(apr_ldap-1 PROPERTIES COMPILE_FLAGS "-DAPR_DECLARE_EXPORT=1 -DAPU_DECLARE_EXPORT=1 -DDLL_NAME=apr_ldap")
-+  SET_TARGET_PROPERTIES(apr_ldap-1 PROPERTIES COMPILE_FLAGS "-DAPR_DECLARE_IMPORT -DAPU_DECLARE_IMPORT -DDLL_NAME=apr_ldap")
-   SET(apr_ldap_libraries apr_ldap-1)
+@@ -276,6 +278,7 @@ IF(APR_HAS_LDAP)
  ELSE()
    SET(apr_ldap_libraries)
  ENDIF()
-+endif(BUILD_SHARED_LIBS)
++endif()
  
  IF(APR_BUILD_TESTAPR)
    ENABLE_TESTING()
-@@ -289,7 +292,7 @@ IF(APR_BUILD_TESTAPR)
+@@ -283,13 +286,13 @@ IF(APR_BUILD_TESTAPR)
+   ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
+ 
+   # copy data files to build directory so that we can run programs from there
+-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E make_directory 
++  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E make_directory
+                   ${PROJECT_BINARY_DIR}/data)
+-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different 
++  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different
                    ${PROJECT_SOURCE_DIR}/test/data/billion-laughs.xml
                    ${PROJECT_BINARY_DIR}/data/billion-laughs.xml)
  

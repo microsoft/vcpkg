@@ -3,10 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-28-0
-    SHA512 0d635c40a28b6427e2cb6b9c89ab53dba7d3a237df2279148ca05fa899d6f8039a131929230e5ca1dbc7477be784e3da9a6cb68456cbf194178510621556e467
+    REF asio-1-31-0
+    SHA512 505c3f4e4043cd73be1a28ab611d7f61046d6b60f80c08aaceea892a76ce7f51056d39516d7b4e836611a9974c227de52c0434122af0ea8539ceb57363a82b62
     HEAD_REF master
-    PATCHES fix_coro_compile_error_msvc.patch #upstream PR: https://github.com/chriskohlhoff/asio/pull/1313
 )
 
 # Always use "ASIO_STANDALONE" to avoid boost dependency
@@ -27,4 +26,4 @@ file(INSTALL
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/asio/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/asio/LICENSE_1_0.txt")

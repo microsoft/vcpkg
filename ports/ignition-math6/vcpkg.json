@@ -1,7 +1,6 @@
 {
   "name": "ignition-math6",
-  "version": "6.9.2",
-  "port-version": 1,
+  "version": "6.14.0",
   "description": "Math API for robotic applications",
   "homepage": "https://ignitionrobotics.org/libs/math",
   "license": null,

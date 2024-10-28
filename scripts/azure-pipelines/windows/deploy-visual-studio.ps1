@@ -1,25 +1,28 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1
+param([string]$SasToken)
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
-$VisualStudioBootstrapperUrl = 'https://aka.ms/vs/17/release/vs_enterprise.exe'
+# See https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history
+# 17.11.5
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/69e24482-3b48-44d3-af65-51f866a08313/2e8384dde0c87bc49830e325c7565c25278340c83f6da46b8c14101dd75d8f15/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
+  'Microsoft.VisualStudio.Component.UWP.VC.ARM64',
   'Microsoft.VisualStudio.Component.VC.Tools.x86.x64',
-  'Microsoft.VisualStudio.Component.VC.Tools.ARM',
   'Microsoft.VisualStudio.Component.VC.Tools.ARM64',
+  'Microsoft.VisualStudio.Component.VC.ASAN',
   'Microsoft.VisualStudio.Component.VC.ATL',
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
-  'Microsoft.VisualStudio.Component.VC.ATL.ARM',
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
-  'Microsoft.VisualStudio.Component.VC.MFC.ARM',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
-  "Microsoft.VisualStudio.Component.Windows11SDK.22621",
-  "Microsoft.VisualStudio.Component.Windows10SDK.20348",
+  'Microsoft.VisualStudio.Component.Windows11SDK.22621',
+  'Microsoft.VisualStudio.Component.Windows10SDK.20348',
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Net.Component.4.7.2.TargetingPack',
   'Microsoft.Component.NetFX.Native',
@@ -29,62 +32,10 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.CMake.Project'
 )
 
-<#
-.SYNOPSIS
-Install Visual Studio.
-
-.DESCRIPTION
-InstallVisualStudio takes the $Workloads array, and installs it with the
-installer that's pointed at by $BootstrapperUrl.
-
-.PARAMETER Workloads
-The set of VS workloads to install.
-
-.PARAMETER BootstrapperUrl
-The URL of the Visual Studio installer, i.e. one of vs_*.exe.
-
-.PARAMETER InstallPath
-The path to install Visual Studio at.
-
-.PARAMETER Nickname
-The nickname to give the installation.
-#>
-Function InstallVisualStudio {
-  Param(
-    [String[]]$Workloads,
-    [String]$BootstrapperUrl,
-    [String]$InstallPath = $null,
-    [String]$Nickname = $null
-  )
-
-  try {
-    Write-Host 'Downloading Visual Studio...'
-    [string]$bootstrapperExe = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $bootstrapperExe -s -S $BootstrapperUrl
-    Write-Host 'Installing Visual Studio...'
-    $vsArgs = @('/c', $bootstrapperExe, '--quiet', '--norestart', '--wait', '--nocache')
-    foreach ($workload in $Workloads) {
-      $vsArgs += '--add'
-      $vsArgs += $workload
-    }
-
-    if (-not ([String]::IsNullOrWhiteSpace($InstallPath))) {
-      $vsArgs += '--installpath'
-      $vsArgs += $InstallPath
-    }
-
-    if (-not ([String]::IsNullOrWhiteSpace($Nickname))) {
-      $vsArgs += '--nickname'
-      $vsArgs += $Nickname
-    }
-
-    $proc = Start-Process -FilePath cmd.exe -ArgumentList $vsArgs -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install Visual Studio! $($_.Exception.Message)"
-    throw
-  }
+$vsArgs = @('--quiet', '--norestart', '--wait', '--nocache')
+foreach ($workload in $Workloads) {
+  $vsArgs += '--add'
+  $vsArgs += $workload
 }
 
-InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
+DownloadAndInstall -Name 'Visual Studio' -Url $VisualStudioBootstrapperUrl -Args $vsArgs

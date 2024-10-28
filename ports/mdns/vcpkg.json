@@ -1,6 +1,6 @@
 {
   "name": "mdns",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Public domain mDNS/DNS-SD library in C",
   "homepage": "https://github.com/mjansson/mdns",
   "license": "Unlicense",

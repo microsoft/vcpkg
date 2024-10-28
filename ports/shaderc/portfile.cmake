@@ -4,15 +4,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/shaderc
-    REF adca18dcadd460eb517fe44f6cd2460fa0650ebe
-    SHA512 3a27d4c51be9e9396b9a854cb96d88e78ff2ca6dcb8400bd3288f6984d25876af0eae649aa1c72ad613edbbcfa4324a12809f13ceb7a0134eef41cb1a698dfdf
+    REF "v${VERSION}"
+    SHA512 2a5e59a2bb6c4b5462758d824747fee0edaf177dc64f30fe698fd2d2cc21cddab1a19ec2b2d63bd3d2e209330a13519f399395398379370b15daa39e6ee6b2bf
     HEAD_REF master
     PATCHES 
         disable-update-version.patch
         fix-build-type.patch
         cmake-config-export.patch
-        # NOTE: This should be removed when shaderc gets updated to use glslang 11.12.0
-        fix-tbuiltinresource-for-glslang-11-12.patch
+        fix-python.patch # Upstream PRs #1389 and #1401.
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")

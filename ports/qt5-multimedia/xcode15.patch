@@ -1,0 +1,12 @@
+diff -ur a/src/plugins/avfoundation/camera/avfcamerautility.mm b/src/plugins/avfoundation/camera/avfcamerautility.mm
+--- a/src/plugins/avfoundation/camera/avfcamerautility.mm	2023-04-01 11:51:14.736887185 -0400
++++ b/src/plugins/avfoundation/camera/avfcamerautility.mm	2023-04-01 11:54:19.979498301 -0400
+@@ -101,7 +101,7 @@
+     }
+ };
+ 
+-struct FormatHasNoFPSRange : std::unary_function<AVCaptureDeviceFormat *, bool>
++struct FormatHasNoFPSRange
+ {
+     bool operator() (AVCaptureDeviceFormat *format)
+     {

@@ -5,12 +5,15 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/system
-    REF boost-1.82.0
-    SHA512 96e2ef5cdc4886be3a8bd113ba542d5c633723761792758b510c6f99c751da1686fb099c32a1c684eace84c75a575bfa43859197e511cb8d3f678ff31c27dd66
+    REF boost-${VERSION}
+    SHA512 d51ecdaa3e5ab82b725f608516ce973224c383bdee90a681d099599bfc0dd5774f50f421075a691d52bf5209c1d0d85762217ec1425e39000eb7fb366f69757a
     HEAD_REF master
+    PATCHES
+        compat.diff
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

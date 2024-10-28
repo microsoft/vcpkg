@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF "v${VERSION}"
-    SHA512 210f3135c7af3ec774ef9a5c77254ce172a44e2fa720bf590e1c9214782bf5c8140ff683403a85b585868bc308286fbdeb1c988e4ed1eb3c75975254ffe75412
+    SHA512 d8f36a3d65a43d8c64900e46137827aadb05559948b2f5a389bea16ed1bfac07d113ee11cf47970913298d6c37400355fe6895cda8fa6dcf6abd9da0d8f199e9
     HEAD_REF v1.x
-    PATCHES
-        fmt-header.patch # https://github.com/gabime/spdlog/pull/2545
-        fmt-10-support.patch # Upstream patch: https://github.com/gabime/spdlog/commit/0ca574ae168820da0268b3ec7607ca7b33024d05
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

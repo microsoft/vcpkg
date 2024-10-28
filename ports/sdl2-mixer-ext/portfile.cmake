@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO WohlSoft/SDL-Mixer-X
-    REF 1bd1111949036645e92cf0f7aa635e904c590318
-    SHA512 b3c87580ff639b015d0e3f00d584878f141896ac812ec036945025416019f7849e952a76135095358f427eb2d04ed8f68fd9721e1869dade78517f7372ad2f9c
+    REF "${VERSION}"
+    SHA512 bdb39122ecf8492723615421c37c0d2a8d5958110d7bf2f0a01f5c54cc1f3f6e9a54887df7d348e9dc7e34906cff67794b0f5d61ca6fe5e4019f84ed88cf07e5
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -24,6 +24,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libxmp      USE_XMP
         libgme      USE_GME
         ffmpeg      USE_FFMPEG
+        pxtone      USE_PXTONE
         cmd         USE_CMD
         libadlmidi  USE_MIDI_ADLMIDI
         libopnmidi  USE_MIDI_OPNMIDI
@@ -59,12 +60,14 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_AUDIO_LIBRARIES=ON
         -DUSE_OGG_VORBIS_STB=OFF
         -DUSE_DRFLAC=OFF
+        -USE_WAVPACK_DSD=ON
         -DUSE_MP3_DRMP3=OFF
         -DUSE_FFMPEG_DYNAMIC=OFF
         -DUSE_MIDI=${USE_MIDI}
         -DUSE_MIDI_EDMIDI=OFF
         -DUSE_MIDI_FLUIDLITE=OFF
     MAYBE_UNUSED_VARIABLES
+        USE_WAVPACK_DSD
         USE_FFMPEG_DYNAMIC
         USE_CMD
         USE_MIDI_NATIVE

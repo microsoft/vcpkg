@@ -1,6 +1,6 @@
 {
   "name": "tracy",
-  "version-semver": "0.9.1",
+  "version": "0.11.1",
   "port-version": 1,
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
@@ -25,7 +25,7 @@
   ],
   "features": {
     "cli-tools": {
-      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome` and `update`",
+      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome`, `import-fuchsia` and `update`",
       "supports": "!(windows & x86)",
       "dependencies": [
         {
@@ -35,11 +35,25 @@
             "arm64",
             "x86"
           ]
+        },
+        {
+          "name": "dbus",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        "freetype",
+        "glfw3",
+        {
+          "name": "tbb",
+          "platform": "!windows"
         }
       ]
     },
     "crash-handler": {
       "description": "Enable crash handler"
+    },
+    "fibers": {
+      "description": "Enable fibers support"
     },
     "gui-tools": {
       "description": "Build Tracy GUI tool: `profiler` (aka `Tracy` executable)",
@@ -53,12 +67,24 @@
             "x86"
           ]
         },
+        {
+          "name": "dbus",
+          "default-features": false,
+          "platform": "!windows"
+        },
         "freetype",
-        "glfw3"
+        "glfw3",
+        {
+          "name": "tbb",
+          "platform": "!windows"
+        }
       ]
     },
     "on-demand": {
       "description": "Enable on-demand profiling"
+    },
+    "verbose": {
+      "description": "Enables verbose logging"
     }
   }
 }

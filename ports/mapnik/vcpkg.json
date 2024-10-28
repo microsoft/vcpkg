@@ -1,7 +1,6 @@
 {
   "name": "mapnik",
-  "version-date": "2023-06-12",
-  "port-version": 1,
+  "version-date": "2024-04-18",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -10,6 +9,7 @@
     "boost-assign",
     "boost-bimap",
     "boost-filesystem",
+    "boost-format",
     "boost-geometry",
     "boost-gil",
     "boost-interprocess",
@@ -85,7 +85,10 @@
       "description": "Grid renderer"
     },
     "input-csv": {
-      "description": "CSV input plugin"
+      "description": "CSV input plugin",
+      "dependencies": [
+        "boost-algorithm"
+      ]
     },
     "input-gdal": {
       "description": "GDAL input plugin",
@@ -121,7 +124,10 @@
       ]
     },
     "input-raster": {
-      "description": "RASTER input plugin"
+      "description": "RASTER input plugin",
+      "dependencies": [
+        "boost-format"
+      ]
     },
     "input-shape": {
       "description": "SHAPE input plugin"

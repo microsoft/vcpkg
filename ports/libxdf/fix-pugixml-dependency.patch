@@ -1,0 +1,65 @@
+From ca070dfdd96db5c9eb9a5a88d1193f25b13e01f3 Mon Sep 17 00:00:00 2001
+From: myd7349 <myd7349@gmail.com>
+Date: Mon, 31 Jul 2023 23:50:40 +0800
+Subject: [PATCH] Fix missing pugixml dependency in generated CMake package
+ file
+
+---
+ CMakeLists.txt        | 14 ++++++++++++--
+ libxdfConfig.cmake.in |  9 +++++++++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
+ create mode 100644 libxdfConfig.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98cc03f..42f9a91 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,18 +43,28 @@ target_include_directories(xdf PUBLIC
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+ 	$<INSTALL_INTERFACE:include>
+ )
++include(CMakePackageConfigHelpers)
+ include(GNUInstallDirs)
++configure_package_config_file(
++    ${CMAKE_CURRENT_LIST_DIR}/libxdfConfig.cmake.in
++    ${CMAKE_CURRENT_BINARY_DIR}/libxdfConfig.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++)
+ install(TARGETS xdf
+-	EXPORT "${PROJECT_NAME}Config"
++	EXPORT "${PROJECT_NAME}Targets"
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+-install(EXPORT "${PROJECT_NAME}Config"
++install(EXPORT "${PROJECT_NAME}Targets"
+ 	COMPONENT ${PROJECT_NAME}
+ 	NAMESPACE "XDF::"
+ 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+ )
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxdfConfig.cmake
++    COMPONENT ${PROJECT_NAME}
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++)
+ 
+ # set(CPACK_STRIP_FILES ON)
+ # set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+diff --git a/libxdfConfig.cmake.in b/libxdfConfig.cmake.in
+new file mode 100644
+index 0000000..84331f0
+--- /dev/null
++++ b/libxdfConfig.cmake.in
+@@ -0,0 +1,9 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++
++find_dependency(pugixml)
++
++if(NOT TARGET XDF::xdf)
++    include("${CMAKE_CURRENT_LIST_DIR}/libxdfTargets.cmake")
++endif()
+-- 
+2.30.1.windows.1
+

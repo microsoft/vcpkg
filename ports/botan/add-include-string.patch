@@ -1,0 +1,12 @@
+diff --git a/src/lib/math/pcurves/pcurves_id.h b/src/lib/math/pcurves/pcurves_id.h
+index 915dd95..3d39666 100644
+--- a/src/lib/math/pcurves/pcurves_id.h
++++ b/src/lib/math/pcurves/pcurves_id.h
+@@ -10,6 +10,7 @@
+ #include <botan/secmem.h>
+ #include <botan/types.h>
+ #include <optional>
++#include <string>
+ #include <string_view>
+ #include <vector>
+ 

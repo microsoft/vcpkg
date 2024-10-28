@@ -1,0 +1,4 @@
+cpu-features provides CMake targets:
+
+    find_package(CpuFeatures CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE CpuFeatures::cpu_features)

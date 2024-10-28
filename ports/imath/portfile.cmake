@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/Imath
-    REF v3.1.5
-    SHA512 8344e42c75d8e4bb21facb837535f0c9e4a9489d9edebcc25d5d3c6063535f2bf54e4517d8fca3fedada248457aa07c9bd77d6e843a9d115278fc154de2cdc9d
+    REF "v${VERSION}"
+    SHA512 32628dfcacb610310b81ffe017a66215cf5fb84c2e0a6ac8c94a68c048be3d2b97eb57965dd253770184d5824cce1e5440b8eefb2834666b273b3193ff108343
     HEAD_REF master
 )
 
@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DIMATH_INSTALL_SYM_LINK=OFF
         -DBUILD_TESTING=OFF
+        -DIMATH_INSTALL_PKG_CONFIG=ON
 )
 
 vcpkg_cmake_install()

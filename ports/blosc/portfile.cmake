@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc
     REF "v${VERSION}"
-    SHA512 e9542aa2d1ebae9f6dcc12916d7ac3b920d771281ab96e2b2d59c2951e5f51d02d2684859b8823643d43d320613fb9dd8a3ea411ade34e66e323fcefa8165a91
+    SHA512 f32ac9ca7dd473f32201cdf4b7bb61a89e8bc3e3d16e027d2c6dc1aa838cb47c42dfed6942c9108532b3920ed22a8c662e7451890177c9bbe6ec5b8ab65362b3
     HEAD_REF master
     PATCHES
       0001-fix-CMake-config.patch
@@ -45,6 +45,6 @@ find_dependency(Threads)]]
 # cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/BLOSC.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 vcpkg_fixup_pkgconfig()

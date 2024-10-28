@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 81b935a0b909885d842b870d05d96d46ccb85ac4f91456e07a92b85547a96ba8c3ed620bc7034823fd4639d1f3698b5c40fc1ed4a93e1c997ce757dfb7a4d529
+    SHA512 f6fffb751bf64ae87c011d2f4046573a82e21f4163c157f65b54920cd5ba8cc7dc80a3ad03442bf6fcdc3a0e0098a05da6b27daadaedfaede85d6a914e8393f0
 )
 
 vcpkg_extract_source_archive(
@@ -9,8 +9,8 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
     PATCHES
-        fix-warningC5105.patch
-        fix-config-cmake.patch
+        fix-crashpad-wer.patch
+        fix-usage-runtime.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 
@@ -18,6 +18,8 @@ vcpkg_list(SET options)
 
 if(NOT "backend" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_BACKEND=none")
+elseif("wer" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DSENTRY_BACKEND=crashpad")
 elseif(DEFINED SENTRY_BACKEND)
     # Legacy, possible override from triplet, but cannot handle dependencies
     vcpkg_list(APPEND options "-DSENTRY_BACKEND=${SENTRY_BACKEND}")
@@ -25,6 +27,14 @@ endif()
 
 if(NOT "transport" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT=none")
+endif()
+
+if("wer" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_CRASHPAD_USE_WER=ON")
+endif()
+
+if("compression" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_COMPRESSION=ON")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -56,3 +66,4 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/crashpad_handler${VCPKG_TARGET_EXECUTABLE
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6c7c421..1b8b2bc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,9 +14,8 @@ add_library(dyno INTERFACE)
+ add_library(Dyno::dyno ALIAS dyno)
+ target_compile_features(dyno INTERFACE cxx_std_17)
+ target_include_directories(dyno INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
+-find_package(Hana REQUIRED)
+-find_package(CallableTraits REQUIRED)
+-target_link_libraries(dyno INTERFACE hana callable_traits)
++find_package(Boost REQUIRED)
++target_link_libraries(dyno INTERFACE Boost::boost)
+ 
+ include(CheckCXXCompilerFlag)
+ check_cxx_compiler_flag("-Wno-gnu-string-literal-operator-template" DYNO_HAS_WNO_GNU_STRING_UDL)
+diff --git a/cmake/dyno-config.cmake b/cmake/dyno-config.cmake
+index 8a1845b..57aa7a1 100644
+--- a/cmake/dyno-config.cmake
++++ b/cmake/dyno-config.cmake
+@@ -3,8 +3,7 @@
+ # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(Hana REQUIRED)
+-find_dependency(CallableTraits REQUIRED)
++find_dependency(Boost)
+ 
+ if(NOT TARGET Dyno::dyno)
+   include("${CMAKE_CURRENT_LIST_DIR}/dyno-targets.cmake")

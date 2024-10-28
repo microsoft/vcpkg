@@ -34,6 +34,7 @@
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' OR '$(PlatformToolset.ToLower())' == 'clangcl'">false</VcpkgAutoLink>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+    <VcpkgXUseBuiltInApplocalDeps Condition="'$(VcpkgXUseBuiltInApplocalDeps)' == ''">false</VcpkgXUseBuiltInApplocalDeps>
 
     <!-- Classic Mode: The following line is edited by the mint standalone bundle script to be false for standlone copies -->
     <VcpkgEnableClassic Condition="'$(VcpkgEnableClassic)' == ''">true</VcpkgEnableClassic>

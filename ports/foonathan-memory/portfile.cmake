@@ -1,6 +1,9 @@
-# WINDOWS_EXPORT_ALL_SYMBOLS doesn't work.
-# unresolved external symbol "public: static unsigned int const foonathan::memory::detail::memory_block_stack::implementation_offset
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_download_distfile(
+    REMOVE_TOOL_STATIC_LINKING_CROSS_COMPILATION_PATCH
+    URLS https://github.com/foonathan/memory/commit/abb0bff7a232572b1fce304dd2e2a2d5c0a6806c.patch?full_index=1
+    FILENAME foonathan-memory-abb0bff7a232572b1fce304dd2e2a2d5c0a6806c.patch
+    SHA512 9f16c9465a6475771241470925f34ead2281c5e2f7d9c4ddaceab77fa3775b8a63ccb6dde00061d74924f838a6d204ab70427f9ae5369245b5e9e971472e862f
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,6 +13,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-foonathan-memory-include-install-dir.patch
+        "${REMOVE_TOOL_STATIC_LINKING_CROSS_COMPILATION_PATCH}"
 )
 
 vcpkg_from_github(
@@ -107,4 +111,4 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/nodesize_dbg${EXECUTABLE_SUFFIX}")
 endif()
 
 # Handle copyright
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

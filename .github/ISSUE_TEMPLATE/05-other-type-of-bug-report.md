@@ -1,6 +1,6 @@
 ---
 name: Other type of bug report
-about: Let us know about an issues that does not fit into any of the other issues
+about: Let us know about an issues that does not fit into any of the other issues.
   types
 title: ''
 labels: ''

@@ -5,15 +5,15 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "microsoft/LinuxTracepoints"
-    REF 3173fa8180eb5bb7167a686c8c18baf8ef0bf31b
-    SHA512 9bd2e16da96e37df58e4281d1341051eb90574cb29d380f04f90bba7507dc9b3037ded91206d5e1808b53734fc0fc1fd06c4a220b0f34d0078ac168e6c639462
+    REF "v${VERSION}"
+    SHA512 baf27c967b2fa1fb8e8684951fd8e12e40fe9c23f5052a2d77c63eceab6ddfc112537422b97c37cfb0e479361fa8aedea6d8d7edfae91810f1ed696060fcb822
     HEAD_REF main)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/libeventheader-tracepoint"
     OPTIONS
         -DBUILD_SAMPLES=OFF
-        -DBUILD_TOOLS=OFF)
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

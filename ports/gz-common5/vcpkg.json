@@ -1,0 +1,35 @@
+{
+  "name": "gz-common5",
+  "version": "5.4.1",
+  "port-version": 2,
+  "description": "Common libraries for robotics applications",
+  "homepage": "https://ignitionrobotics.org/libs/common",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "assimp",
+    {
+      "name": "dlfcn-win32",
+      "platform": "windows | uwp"
+    },
+    "ffmpeg",
+    "freeimage",
+    "gdal",
+    "gts",
+    "gz-cmake3",
+    "gz-math7",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    {
+      "name": "libuuid",
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    },
+    "tinyxml2"
+  ]
+}

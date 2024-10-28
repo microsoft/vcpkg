@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF "v${VERSION}"
-    SHA512 e73f62a87d20b676cac66ce82ac93308b688ed2ac18ebdb6884bae1ae66868e1033e33908e797f86a1906f91b975e8607a02e8932db8550a677f6b41373b7934
+    REF 450a0277e1116ab8c52582df9c77d42f9db3092a # unreleased version with LLVM 18 support
+    SHA512 fb9bfe3cf6d48051b86f28c749cfdc19a2d5c1fc750f3c45c422559e9b8b9736d1cb542af5023a876640d917ad2198b24385fd085d8e20ff97e7ee660e056605
     HEAD_REF master
 )
 
@@ -16,13 +16,7 @@ vcpkg_check_features(
         llvm WITH_LLVM
 )
 
-if(integer-class-boostmp IN_LIST FEATURES)
-    set(INTEGER_CLASS boostmp)
-
-    if(integer-class-flint IN_LIST FEATURES)
-        message(WARNING "Both boostmp and flint are given for integer class, will use boostmp only.")
-    endif()
-elseif(integer-class-flint IN_LIST FEATURES)
+if(integer-class-flint IN_LIST FEATURES)
     set(INTEGER_CLASS flint)
 endif()
 
@@ -31,8 +25,6 @@ if(VCPKG_TARGET_IS_UWP)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -40,10 +32,10 @@ vcpkg_cmake_configure(
         -DBUILD_BENCHMARKS=no
         -DBUILD_TESTS=no
         -DMSVC_WARNING_LEVEL=3
-        -DMSVC_USE_MT=${MSVC_USE_MT}
+        -DMSVC_USE_MT=no
         -DWITH_SYMENGINE_RCP=yes
         -DWITH_SYMENGINE_TEUCHOS=no
-        -DINTEGER_CLASS=${INTEGER_CLASS}
+        -DWITH_SYMENGINE_THREAD_SAFE=yes
         ${FEATURE_OPTIONS}
 )
 
@@ -64,6 +56,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cm
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cmake"
     [[${SYMENGINE_CMAKE_DIR}/../../../include]]
     [[${SYMENGINE_CMAKE_DIR}/../../include]]
+    IGNORE_UNCHANGED
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,18 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
-    REF v2.1.2
-    SHA512 594e808fb1c175d5b14eb540be0dfb6f41cd37b5bf7df8c2d24d44dfe4986643ea68e52d0282eb3b25283489789001a57a201de1eecc1560fc9461780c7da353
+    REF "v${VERSION}"
+    SHA512 d5f3a4b5bd661af7336c015d07e0feccb286464a08239a3c259a97217001161e7571f5137475fc2f4d1b9af6381bbfa03c0b60f41de282f114307961b8d84fc9
     HEAD_REF master
     PATCHES
         fix-dependency.patch
+        fix-del-install-file.patch
+        fix-func-param.patch #https://github.com/AcademySoftwareFoundation/OpenColorIO/pull/1806
         fix-pkgconfig.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findexpat.cmake")
-file(REMOVE "${SOURCE_PATH}/share/cmake/modules/FindImath.cmake")
-file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findpystring.cmake")
-file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findyaml-cpp.cmake")
 file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findlcms2.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,6 +34,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenImageIO
+        OCIO_USE_OPENEXR_HALF
 )
 
 vcpkg_cmake_install()
@@ -61,11 +60,11 @@ file(REMOVE_RECURSE
 )
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
-        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut
+        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut ocioarchive ocioconvert ociolutimage ocioperf
         AUTO_CLEAN
     )
 endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

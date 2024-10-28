@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4f002b5..d48f3f2 100644
+index 4f002b5..dd9b1df 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -27,8 +27,6 @@ option(K4A_BUILD_DOCS "Build K4A doxygen documentation" OFF)
@@ -11,7 +11,7 @@ index 4f002b5..d48f3f2 100644
  # Set the project version
  include(K4AProjectVersion)
  
-@@ -100,6 +98,43 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+@@ -100,6 +98,42 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
      set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
  endif()
  
@@ -34,14 +34,13 @@ index 4f002b5..d48f3f2 100644
 +add_definitions(-DMATROSKA_VERSION=2)
 +find_package(libsoundio CONFIG REQUIRED)
 +if (NOT WIN32)
-+   find_package(libusb CONFIG REQUIRED)
 +   find_package(libuvc CONFIG REQUIRED)
 +   add_library(libuvc::libuvc ALIAS LibUVC::UVCStatic)
 +   find_package(OpenSSL REQUIRED)
 +   find_package(ZLIB REQUIRED)
-+else()
-+   find_library(LibUSB libusb-1.0 REQUIRED)
 +endif()
++FIND_PACKAGE(PkgConfig REQUIRED)
++pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
 +find_package(libyuv CONFIG REQUIRED)
 +find_package(spdlog CONFIG REQUIRED)
 +if (BUILD_TOOLS)
@@ -295,7 +294,7 @@ index e4a696e..6ee6696 100644
      k4ainternal::deloader)
  
 diff --git a/src/usbcommand/CMakeLists.txt b/src/usbcommand/CMakeLists.txt
-index f75bd55..5403216 100644
+index f75bd55..7130728 100644
 --- a/src/usbcommand/CMakeLists.txt
 +++ b/src/usbcommand/CMakeLists.txt
 @@ -12,8 +12,8 @@ target_include_directories(k4a_usb_cmd PUBLIC
@@ -305,7 +304,7 @@ index f75bd55..5403216 100644
 -    azure::aziotsharedutil
 -    LibUSB::LibUSB
 +    aziotsharedutil
-+    ${LibUSB}
++    PkgConfig::libusb
      k4ainternal::allocator
      k4ainternal::image
      k4ainternal::logging)
@@ -585,7 +584,7 @@ index c544e1e..9489bf8 100644
      k4ainternal::logging
      k4ainternal::utcommon)
 diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
-index 98578c0..6ab38d9 100644
+index 98578c0..244c867 100644
 --- a/tools/k4aviewer/CMakeLists.txt
 +++ b/tools/k4aviewer/CMakeLists.txt
 @@ -60,10 +60,11 @@ set(EXTERNAL_LIBRARIES
@@ -595,7 +594,7 @@ index 98578c0..6ab38d9 100644
 -    LibUSB::LibUSB
 -    libyuv::libyuv
 -    glfw::glfw
-+    ${LibUSB}
++    PkgConfig::libusb
 +    yuv
 +    glfw
      ${OPENGL_LIBRARIES}

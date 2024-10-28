@@ -4,9 +4,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GoogleCloudPlatform/functions-framework-cpp
-    REF v1.1.0
-    SHA512 2dcedbded84fdd604724b4f2482ee531aaa640ebdbb69f77978e1af8943d9d7746152953953ebd89d8304ed3efbc334c620890142b0ba2e1239862e43a158364
+    REF "v${VERSION}"
+    SHA512 3832e205a2505152ed6955d7cf5630b2045133221ddd96e2bef62e66cad58cea326f32428e2f494bbe1a10f5d66453d09ae46e6b972a7ed13f211efbb79527a8
     HEAD_REF main
+    PATCHES fix-integral-include.patch
 )
 
 vcpkg_cmake_configure(

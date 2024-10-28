@@ -8,13 +8,12 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF v3.0.1
-  SHA512 6bdc7cba821d66e17a559250cc0ce0095808e9db81cec9e16eaa4c31abdfa705299c67b72016d9b06b302bc306d063e83a374eb00728071b83a5ad650d59034f
+  REF 1ead6715dec030d340a316c927c877a3c4e5a00c
+  SHA512 a0b5dd2d94788929a2ba98bd629d64d188ff0ae40affd9338d3d7a94c848ae4d6addc72613964e7fad7f62e4ee20b7170b2133cb39d4e018c604ba35c68d1cff
   HEAD_REF master
   PATCHES
     0001-fix-uwp.patch
-    0002-fix-cmake-3.14.patch
-    fix-uninitialized-values.patch  #Update the new version please remove this patch
+    0002-fix-cmake-install.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,15 +29,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-else()
-  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/date)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/date)
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

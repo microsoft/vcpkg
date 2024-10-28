@@ -8,6 +8,8 @@ vcpkg_from_github(
         fix-static-build8.patch
         export-targets.patch
         dependencies.patch
+        protobuf-cmake.patch
+        protobuf-source.patch
 )
 
 vcpkg_check_features(
@@ -27,19 +29,25 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     WINDOWS_USE_MSBUILD
     OPTIONS
-        -DWITH_SSL=${CURRENT_INSTALLED_DIR}
-        -DWITH_LZ4=${CURRENT_INSTALLED_DIR}
-        -DWITH_ZLIB=${CURRENT_INSTALLED_DIR}
-        -DWITH_ZSTD=${CURRENT_INSTALLED_DIR}
-        -DWITH_PROTOBUF=${CURRENT_INSTALLED_DIR}
+        "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
+        "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
+        "-DWITH_ZSTD=${CURRENT_INSTALLED_DIR}"
+        "-DWITH_ZLIB=${CURRENT_INSTALLED_DIR}"
+        "-DProtobuf_DIR=${CURRENT_INSTALLED_DIR}/share/protobuf" # Without these Windows is unable to find protobuf
+        "-Dabsl_DIR=${CURRENT_INSTALLED_DIR}/share/absl"
+        "-Dutf8_range_DIR=${CURRENT_INSTALLED_DIR}/share/utf8_range"
+        "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc"
         -DBUILD_STATIC=${BUILD_STATIC}
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DWITH_JDBC=${WITH_JDBC}  # the following variables are only used by jdbc
+        "-DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql"
+        "-DMYSQL_LIB_DIR=${CURRENT_INSTALLED_DIR}"
+        "-DWITH_BOOST=${CURRENT_INSTALLED_DIR}"
     MAYBE_UNUSED_VARIABLES  # and they are windows only
-        -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql"
-        -DMYSQL_LIB_DIR=${CURRENT_INSTALLED_DIR}
-        -DWITH_BOOST=${CURRENT_INSTALLED_DIR}
+        MYSQL_INCLUDE_DIR
+        MYSQL_LIB_DIR
+        WITH_BOOST
 )
 
 vcpkg_cmake_install()
@@ -54,5 +62,4 @@ file(REMOVE
 )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

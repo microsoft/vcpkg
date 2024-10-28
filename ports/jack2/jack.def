@@ -94,3 +94,11 @@ jack_get_time
 jack_set_error_function
 jack_set_info_function
 jack_free
+jack_midi_get_event_count
+jack_midi_event_get
+jack_midi_clear_buffer
+jack_midi_max_event_size
+jack_midi_event_reserve
+jack_midi_event_write
+jack_midi_get_lost_event_count
+

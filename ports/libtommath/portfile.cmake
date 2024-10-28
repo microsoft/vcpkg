@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtom/libtommath
-    REF v1.2.0
-    SHA512 500bce4467d6cdb0b014e6c66d3b994a8d63b51475db6c3cd77c15c8368fbab4e3b5c458fcd5b35838b74c457a33c15b42d2356964f5ef2a0bd31fd544735c9a
+    REF "v${VERSION}"
+    SHA512 3dbd7053a670afa563a069a9785f1aa4cab14a210bcd05d8fc7db25bd3dcce36b10a3f4f54ca92d75a694f891226f01bdf6ac15bacafeb93a8be6b04c579beb3
     HEAD_REF develop
 )
 

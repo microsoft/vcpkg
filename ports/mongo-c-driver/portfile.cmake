@@ -1,21 +1,20 @@
 # This port needs to be updated at the same time as libbson
-
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 36cd8844b1cc9a935c50afc240523f9aaac7cffa58a5d0f9850848f22ab0f1f5a7202ec9b56b0a7d15f075f665bcecbec63b28d2074d35a7cf25065f9075c15e
+    SHA512 08ebc8a4ebe3249fe74ebe564b6e0ce965b8601eb6d76d4b667e80e135a5cc390a03d198e2c18cfb9816c09be53ac769dccd6aea35c4ab317f4d2b964d0176fd
     HEAD_REF master
     PATCHES
         disable-dynamic-when-static.patch
-        fix-include-directory.patch # vcpkg legacy decision
         fix-dependencies.patch
+        fix-include-directory.patch
         fix-mingw.patch
-        pkgconfig.patch
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
+file(TOUCH "${SOURCE_PATH}/src/utf8proc-editable")
+file(GLOB vendored_libs "${SOURCE_PATH}/src/utf8proc-*" "${SOURCE_PATH}/src/zlib-*/*.h")
+file(REMOVE_RECURSE ${vendored_libs})
 
 # Cannot use string(COMPARE EQUAL ...)
 set(ENABLE_STATIC OFF)
@@ -25,7 +24,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
-        icu         ENABLE_ICU
         snappy      ENABLE_SNAPPY
         zstd        ENABLE_ZSTD
 )
@@ -44,33 +42,51 @@ if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND OPTIONS -DENABLE_SRV=OFF)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${OPTIONS}
-        -DENABLE_BSON=SYSTEM
+        "-DBUILD_VERSION=${VERSION}"
+        -DUSE_BUNDLED_UTF8PROC=OFF
+        -DUSE_SYSTEM_LIBBSON=ON
+        -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF
         -DENABLE_EXAMPLES=OFF
+        -DENABLE_SASL=OFF
         -DENABLE_SHM_COUNTERS=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
-        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+if("snappy" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmongoc-static-1.0.pc" " -lSnappy::snappy" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmongoc-static-1.0.pc" "Requires: " "Requires: snappy ")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libmongoc-static-1.0.pc" " -lSnappy::snappy" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libmongoc-static-1.0.pc" "Requires: " "Requires: snappy ")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME mongoc-1.0 CONFIG_PATH "lib/cmake/mongoc-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+# deprecated
+vcpkg_cmake_config_fixup(PACKAGE_NAME libmongoc-1.0 CONFIG_PATH "lib/cmake/libmongoc-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME libmongoc-static-1.0 CONFIG_PATH "lib/cmake/libmongoc-static-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mongoc/mongoc-macros.h"
         "#define MONGOC_MACROS_H" "#define MONGOC_MACROS_H\n#ifndef MONGOC_STATIC\n#define MONGOC_STATIC\n#endif")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME libmongoc-static-1.0 CONFIG_PATH "lib/cmake/libmongoc-static-1.0")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/libmongoc-1.0")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libmongoc-1.0-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libmongoc-1.0")
-else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME libmongoc-1.0 CONFIG_PATH "lib/cmake/libmongoc-1.0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libmongoc-1.0/libmongoc-1.0-config.cmake" "mongoc_shared" "mongoc_static")
 endif()
+# recommended
+vcpkg_cmake_config_fixup(PACKAGE_NAME mongoc-1.0 CONFIG_PATH "lib/cmake/mongoc-1.0")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

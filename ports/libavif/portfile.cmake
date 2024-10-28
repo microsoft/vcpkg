@@ -2,20 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/libavif
     REF "v${VERSION}"
-    SHA512 4a9e2711fccddf35c477db6e2fa2f76c0648aafaa98b4e3f34df62c0fbd02ddcd57762f1f8149822da4f1bc3757ee75ec1d9ced5e56a54dbe9d0b43265aacd4c
+    SHA512 ba72b8d02b098f361643a073361fccafd22eaac14e46dd06378d5e7acd9853538c5d166473e1de0b020de62dac25be83e42bd57ba51f675d11e2ddf155fbfa21
     HEAD_REF master
     PATCHES
         disable-source-utf8.patch
-        fix-compiler-warnings.patch
-        find-dependency.patch # from https://github.com/AOMediaCodec/libavif/pull/1339
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        aom AVIF_CODEC_AOM
+        dav1d AVIF_CODEC_DAV1D
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DAVIF_CODEC_AOM=ON
         -DAVIF_BUILD_APPS=OFF
-        -DCMAKE_REQUIRE_FIND_PACKAGE_libyuv=ON
+        -DAVIF_BUILD_TESTS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_libsharpyuv=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

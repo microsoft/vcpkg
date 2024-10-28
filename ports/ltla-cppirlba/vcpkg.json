@@ -1,6 +1,6 @@
 {
   "name": "ltla-cppirlba",
-  "version-date": "2023-04-07",
+  "version-date": "2023-09-20",
   "description": "A C++ port of the IRLBA algorithm, based on the C code in the R package.",
   "homepage": "https://github.com/LTLA/CppIrlba",
   "license": "MIT",

@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsndfile/libsndfile
-    REF 1.2.0
-    SHA512 58d2567a4eb67f9af7a472ae02f62ce64bb6f54687bf670c84335a4d1c194d3e8d6933089ae9e2603137a035155447df4b0f59c054731d74d9814c1b757c833a
+    REF 1.2.2
+    SHA512 fb8b4d367240a8ac9d55be6f053cb19419890691c56a8552d1600d666257992b6e8e41a413a444c9f2d6c5d71406013222c92a3bfa67228944a26475444240a1
     HEAD_REF master
+    PATCHES
+        001-avoid-installing-find-modules.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -39,7 +41,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(WIN32 AND (NOT MINGW) AND (NOT CYGWIN))
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     set(CONFIG_PATH cmake)
 else()
     set(CONFIG_PATH lib/cmake/SndFile)

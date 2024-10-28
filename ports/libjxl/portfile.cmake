@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 8011f2181cb627c2b516c7e1b8ecec78a201f357f3be6e568f7814a6a9c42d5979f4bb4ed040a67d68f6649d1f5c564f3cb2fac7e52702f755749084d903a737
+    SHA512 a3648a5f046cae36b3272c46525d002d490f781f44647d4d8318f0b773dd9b7902582ced5636af3489f1d6a44e3baf8ad2e5ab47d26869d16b01607d90e14053
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        trim-shared-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,6 +27,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DJPEGXL_VERSION=${JPEGXL_VERSION}"
+        -DJPEGXL_FORCE_SYSTEM_HWY=ON
         -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
         -DJPEGXL_FORCE_SYSTEM_HWY=ON
         -DJPEGXL_FORCE_SYSTEM_LCMS2=ON
@@ -45,6 +45,7 @@ vcpkg_cmake_configure(
         -DJPEGXL_ENABLE_TCMALLOC=OFF
         -DBUILD_TESTING=OFF
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
+        -DJPEGXL_BUNDLE_LIBPNG=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_GIF
         CMAKE_DISABLE_FIND_PACKAGE_JPEG
@@ -57,7 +58,11 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES cjxl djxl cjpeg_hdr jxlinfo AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cjxl djxl jxlinfo AUTO_CLEAN)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_export.h" "ifdef JXL_STATIC_DEFINE" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

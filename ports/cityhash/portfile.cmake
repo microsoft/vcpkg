@@ -22,10 +22,6 @@ else()
 	file(COPY "${SOURCE_PATH}/out/config.h" DESTINATION "${SOURCE_PATH}/src")
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND "sse" IN_LIST FEATURES)
-    message(FATAL_ERROR "Feature 'sse' does not support Windows x86 triplet.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "sse"   ENABLE_SSE

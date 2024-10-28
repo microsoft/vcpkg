@@ -1,0 +1,12 @@
+diff --git a/src/common/module.cc b/src/common/module.cc
+index 0eb5aad..b6f5da7 100644
+--- a/src/common/module.cc
++++ b/src/common/module.cc
+@@ -42,6 +42,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
++#include <algorithm>
+ #include <functional>
+ #include <iostream>
+ #include <memory>

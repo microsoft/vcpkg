@@ -1,19 +1,24 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libimobiledevice-win32/ideviceinstaller
-    REF ${VERSION}
-    SHA512 d0801b3a38eb02206a6f06e05cc19b794c69a87c06895165f64522c61e07030046499c5f0e436981682f9e17f91eae87913cca091e2e039a74ee35a5136100d4
-    HEAD_REF msvc-master
-    PATCHES Add-missing-lib.patch
+    REPO libimobiledevice/ideviceinstaller
+    REF b9cfe0b264f66eab9ad88e11eb6b0523cb1de911 # commits on 2023-07-21
+    SHA512 a78418001109593f2d704d91aff8df009e15c504c2139ca606c9719b70868466ef73778d52670468a4b7bf758ec65435c1b981c27809a2e22737f7587ad51c7d
+    HEAD_REF master
+    PATCHES
+        001_fix_windows.patch
 )
 
-vcpkg_install_msbuild(
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH ideviceinstaller.vcxproj
-    LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
 )
+
+vcpkg_cmake_install()
+vcpkg_copy_tools(TOOL_NAMES ideviceinstaller AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

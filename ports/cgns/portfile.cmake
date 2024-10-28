@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGNS/CGNS
-    REF ec538ac11dbaff510464a831ef094b0d6bf7216c # v4.3.0
-    SHA512 3c04829ff99c0f4f1cd705f0807fda0a65f970c7eecd23ec624cf09fb6fa2a566c63fc94d46c1d0754910bbff8f98c3723e4f32ef66c3e7e41930313454fa10b
+    REF "v${VERSION}"
+    SHA512 86c16d40b524519362645c553c91bade9bb7e4bffde7bf4de96a7f471ae3779a15781efa91efa059b2af0b127f08a560d2e903df6b45e1c79eaec6061db226e9
     HEAD_REF develop
     PATCHES
         hdf5.patch
@@ -57,13 +57,12 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+set(TOOLS "cgnsupdate")
+if("hdf5" IN_LIST FEATURES)
+    list(APPEND TOOLS "adf2hdf" "hdf2adf")
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(TOOLS "adf2hdf.bat" "hdf2adf.bat" "cgnsupdate.bat")
-elseif(VCPKG_TARGET_IS_LINUX)
-    set(TOOLS "cgnsupdate")
-    if("hdf5" IN_LIST FEATURES)
-        list(APPEND TOOLS "adf2hdf" "hdf2adf")
-    endif()
+    list(TRANSFORM TOOLS APPEND ".bat")
 endif()
 
 foreach(TOOL ${TOOLS})

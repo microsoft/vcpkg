@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0ad4ba4..a249d42 100644
+index e355e4d..b5b9172 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -932,12 +932,15 @@ endif()
+@@ -960,12 +960,15 @@ endif()
  # We use the same files like ./configure, so we have to set its vars.
  # Only do this on Windows for Cygwin - the files don't make much sense
  # outside of a UNIX look-alike.
@@ -18,13 +18,13 @@ index 0ad4ba4..a249d42 100644
 +    string(APPEND LIBS "-lm")
 +  endif()
    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng.pc.in
-                  ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
+                  ${CMAKE_CURRENT_BINARY_DIR}/libpng${PNGLIB_ABI_VERSION}.pc
                   @ONLY)
-@@ -1010,6 +1013,9 @@ if(NOT SKIP_INSTALL_PROGRAMS AND NOT SKIP_INSTALL_ALL)
+@@ -1030,6 +1033,9 @@ if(NOT SKIP_INSTALL_PROGRAMS AND NOT SKIP_INSTALL_ALL)
  endif()
  
  if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
-+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng${PNGLIB_ABI_VERSION}.pc
 +            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 +elseif(0)
    # Install the man pages.

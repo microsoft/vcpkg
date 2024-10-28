@@ -23,11 +23,8 @@ if(VCPKG_DETECTED_MSVC)
     # minilua tool with the target toolchain. This will work for native builds and
     # for targeting x86 from x64 hosts. (UWP and ARM64 is unsupported.)
     vcpkg_list(SET options)
-    set(PKGCONFIG_CFLAGS "")
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND options "MSVCBUILD_OPTIONS=static")
-    else()
-        set(PKGCONFIG_CFLAGS "/DLUA_BUILD_AS_DLL=1")
     endif()
 
     vcpkg_install_nmake(SOURCE_PATH "${SOURCE_PATH}"
@@ -36,9 +33,13 @@ if(VCPKG_DETECTED_MSVC)
             ${options}
     )
 
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/luajit.pc.win.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/luajit.pc" @ONLY)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/luajit/luaconf.h" "defined(LUA_BUILD_AS_DLL)" "1")
+    endif()
+
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/luajit.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     if(NOT VCPKG_BUILD_TYPE)
-        configure_file("${CMAKE_CURRENT_LIST_DIR}/luajit.pc.win.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/luajit.pc" @ONLY)
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/luajit.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     endif()
 
     vcpkg_copy_pdbs()

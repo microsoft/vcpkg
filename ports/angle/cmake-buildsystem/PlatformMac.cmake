@@ -1,8 +1,3 @@
-find_library(COREGRAPHICS_LIBRARY CoreGraphics)
-find_library(FOUNDATION_LIBRARY Foundation)
-find_library(IOKIT_LIBRARY IOKit)
-find_library(IOSURFACE_LIBRARY IOSurface)
-find_library(QUARTZ_LIBRARY Quartz)
 find_package(ZLIB REQUIRED)
 
 list(APPEND ANGLE_SOURCES
@@ -12,16 +7,15 @@ list(APPEND ANGLE_SOURCES
 )
 
 list(APPEND ANGLEGLESv2_LIBRARIES
-    ${COREGRAPHICS_LIBRARY}
-    ${FOUNDATION_LIBRARY}
-    ${IOKIT_LIBRARY}
-    ${IOSURFACE_LIBRARY}
-    ${QUARTZ_LIBRARY}
+    "-framework CoreGraphics"
+    "-framework Foundation"
+    "-framework IOKit"
+    "-framework IOSurface"
+    "-framework Quartz"
 )
 
 # Metal backend
 if(USE_METAL)
-    find_library(METAL_LIBRARY Metal)
     list(APPEND ANGLE_SOURCES
         ${_metal_backend_sources}
 
@@ -35,7 +29,7 @@ if(USE_METAL)
     )
 
     list(APPEND ANGLEGLESv2_LIBRARIES
-        ${METAL_LIBRARY}
+        "-framework Metal"
     )
 endif()
 

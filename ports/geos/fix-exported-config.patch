@@ -66,11 +66,11 @@ index 6eff1eb14..8827f6ac6 100644
        ;;
      --static-clibs)
 -      echo -L${libdir} -lgeos_c -lgeos -lstdc++ -lm
-+      echo -L${libdir} -lgeos_c -lgeos -lstdc++ @EXTRA_LIBS@
++      echo -L${libdir} -lgeos_c -lgeos @EXTRA_LIBS@
        ;;
      --static-cclibs)
 -      echo -L${libdir} -lgeos -lstdc++ -lm
-+      echo -L${libdir} -lgeos -lstdc++ @EXTRA_LIBS@
++      echo -L${libdir} -lgeos @EXTRA_LIBS@
        ;;
      --cflags)
        echo -I${includedir}

@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: bzip2
 Description: bzip2
-Version: 1.0.6
+Version: @VERSION@
 Requires: 
 Libs: -L${libdir} -l@bzname@
 Cflags: -I${includedir}

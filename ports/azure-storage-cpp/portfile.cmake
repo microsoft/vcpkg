@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/Microsoft.WindowsAzure.Storage/CMakeLists.txt" [[file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)]] "")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Microsoft.WindowsAzure.Storage"
     OPTIONS

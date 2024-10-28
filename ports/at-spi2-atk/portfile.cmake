@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libdbus-1\n\nThese can be installed on Ubuntu systems via apt-get install libdbus-1-dev")
-endif()
-
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.gnome.org
@@ -22,7 +18,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

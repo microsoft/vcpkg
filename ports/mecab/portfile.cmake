@@ -10,6 +10,7 @@ vcpkg_from_github(
 	HEAD_REF master
 	PATCHES
 		fix_wpath_unsigned.patch
+		fix-missing-functional.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/mecab/src")
@@ -19,10 +20,12 @@ file(COPY "${SOURCE_PATH}/mecab/COPYING" DESTINATION "${SOURCE_PATH}/mecab/src")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/mecab/src"
 	WINDOWS_USE_MSBUILD
+	OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 does not allow 'register'
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/mecab/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/mecab/COPYING")

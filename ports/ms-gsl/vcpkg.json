@@ -1,8 +1,9 @@
 {
   "name": "ms-gsl",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Microsoft implementation of the Guidelines Support Library",
   "homepage": "https://github.com/Microsoft/GSL",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

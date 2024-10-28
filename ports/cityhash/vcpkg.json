@@ -1,7 +1,7 @@
 {
   "name": "cityhash",
   "version-date": "2013-01-08",
-  "port-version": 2,
+  "port-version": 3,
   "description": "CityHash, a family of hash functions for strings.",
   "homepage": "https://github.com/google/cityhash",
   "dependencies": [
@@ -16,7 +16,8 @@
   ],
   "features": {
     "sse": {
-      "description": "Build CityHash variants that depend on the _mm_crc32_u64 intrinsic."
+      "description": "Build CityHash variants that depend on the _mm_crc32_u64 intrinsic.",
+      "supports": "x64 | (x86 & !windows)"
     }
   }
 }

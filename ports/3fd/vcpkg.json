@@ -1,7 +1,7 @@
 {
   "name": "3fd",
   "version": "2.6.3",
-  "port-version": 3,
+  "port-version": 4,
   "description": "C++ Framework For Fast Development",
   "supports": "windows & !static & !arm64",
   "dependencies": [
@@ -18,6 +18,11 @@
       "platform": "windows"
     },
     "rapidxml",
-    "sqlite3"
+    "sqlite3",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
   ]
 }

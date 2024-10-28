@@ -1,6 +1,26 @@
+diff --git a/src/tools/msvc/pgbison.pl b/src/tools/msvc/pgbison.pl
+index 25df669..373bedd 100644
+--- a/src/tools/msvc/pgbison.pl
++++ b/src/tools/msvc/pgbison.pl
+@@ -13,7 +13,7 @@ use File::Basename;
+ 
+ do './src/tools/msvc/buildenv.pl' if -e 'src/tools/msvc/buildenv.pl';
+ 
+-my ($bisonver) = `bison -V`;                 # grab first line
++my ($bisonver) = `win_bison -V`;    # grab first line
+ $bisonver = (split(/\s+/, $bisonver))[3];    # grab version number
+ 
+ unless ($bisonver ge '2.3')
+@@ -51,5 +51,5 @@ my $headerflag = ($make =~ /^$basetarg:\s+BISONFLAGS\b.*-d/m ? '-d' : '');
+ 
+ my $nodep = $bisonver ge '3.0' ? "-Wno-deprecated" : "";
+ 
+-system("bison $nodep $headerflag $input -o $output");
++system("win_bison $nodep $headerflag $input -o $output");
+ exit $? >> 8;
 diff --git a/src/tools/msvc/pgflex.pl b/src/tools/msvc/pgflex.pl
-index aceed5ffd..f6ed215e8 100644
---- a/src/tools/msvc/pgflex.pl	
+index c308a08..0807ce7 100644
+--- a/src/tools/msvc/pgflex.pl
 +++ b/src/tools/msvc/pgflex.pl
 @@ -16,7 +16,7 @@ $ENV{CYGWIN} = 'nodosfilewarning';
  
@@ -20,24 +40,3 @@ index aceed5ffd..f6ed215e8 100644
  if ($? == 0)
  {
  
-diff --git a/src/tools/msvc/pgbison.pl b/src/tools/msvc/pgbison.pl
-index 895e398c0..f5b524a5d 100644
---- a/src/tools/msvc/pgbison.pl	
-+++ b/src/tools/msvc/pgbison.pl
-@@ -13,7 +13,7 @@ use File::Basename;
- 
- do './src/tools/msvc/buildenv.pl' if -e 'src/tools/msvc/buildenv.pl';
- 
--my ($bisonver) = `bison -V`;    # grab first line
-+my ($bisonver) = `win_bison -V`;    # grab first line
- $bisonver = (split(/\s+/, $bisonver))[3];    # grab version number
- 
- unless ($bisonver eq '1.875' || $bisonver ge '2.2')
-@@ -51,5 +51,5 @@ close($mf);
- 
- my $nodep = $bisonver ge '3.0' ? "-Wno-deprecated" : "";
- 
--system("bison $nodep $headerflag $input -o $output");
-+system("win_bison $nodep $headerflag $input -o $output");
- exit $? >> 8;
-

@@ -3,12 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/type_erasure
-    REF boost-1.82.0
-    SHA512 1a14112b95a6b071c3e8b0ed2b18120c1e567e6a545e6cc72309e1970def982a4d9c6da295dff219dda82bb52b5ecad8acd2b9017daaa08e10420934ea477bd7
+    REF boost-${VERSION}
+    SHA512 48c24dafdd631057b09c11fc790cee8674211ee21296e1880bd6211f094f409c15a25b453b5914fd89456730d6e42bd7e123376fab6f6c3093b4b788c5141e18
     HEAD_REF master
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

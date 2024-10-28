@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF sdk-1.3.231.1
-    SHA512 d2c47127fd81430383e8656917f76933b713ca6cb93b2a9c16c9e0b125e2f62f8c497cab3a4fcc2a711decd911ec5d15f1eb0270add05442aff6672e08c890d7
+    REF "vulkan-sdk-${VERSION}"
+    SHA512 b4f975d3051eda41ef5c3a6efc832607a165adfd6f43d7af171d2c0446b227bdcb5de0017a081fa9e7a3d2710ba8583fadbc06c0a364043b2778b02818d01040
     HEAD_REF master
 )
 
@@ -17,5 +17,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

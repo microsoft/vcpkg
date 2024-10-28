@@ -11,9 +11,9 @@ endif()
 # Download files to enable CMake support for minhook - Adds CMakeLists.txt and minhook-config.cmake.in
 vcpkg_download_distfile(
     CMAKE_SUPPORT_PATCH
-    URLS https://github.com/TsudaKageyu/minhook/commit/3f2e34976c1685ee372a09f54c0c8c8f4240ef90.patch
+    URLS https://github.com/TsudaKageyu/minhook/commit/3f2e34976c1685ee372a09f54c0c8c8f4240ef90.patch?full_index=1
     FILENAME minhook-cmake-support.patch
-    SHA512 5f353b167e2c31e5e06258420c78fbae0095368cf687ff06a350d6b69b30476824785dde5dbcea3e30ff827e7cdb293727a73e6b1e6875f00aa891b2980c3877
+    SHA512 7863c51a4563fbc3694149595a7ef301500a1b3b324cc5571b0843386c2fdb5ae10b7e830c9b9fcc973dd17f77f386fd1dedcd493ce8475d2dcf2c44bb7306d0
 )
 
 vcpkg_from_github(

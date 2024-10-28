@@ -1,0 +1,17 @@
+{
+  "name": "gz-msgs9",
+  "version": "9.5.0",
+  "description": "Middleware protobuf messages for robotics",
+  "license": "Apache-2.0",
+  "supports": "!(android | arm | uwp)",
+  "dependencies": [
+    "gz-cmake3",
+    "gz-math7",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    "protobuf",
+    "tinyxml2"
+  ]
+}

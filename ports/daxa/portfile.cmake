@@ -1,7 +1,11 @@
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/Ipotrick/Daxa
-    REF 14d5378a6157b3530c3ff826182706126be135bd
+    REPO Ipotrick/Daxa
+    REF ${VERSION}
+    SHA512 53e31bd89170ee18f404ae778c6fd0d5a1cefa2faf9f28e98d793c79dddeb03acda5525c98b875e45024de5db9c5e9cd9216042978c3a107587fefb6343db1e0
+    HEAD_REF master
+    PATCHES
+        fix-std-sort.patch #https://github.com/Ipotrick/Daxa/pull/96
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -9,9 +13,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     utils-imgui WITH_UTILS_IMGUI
     utils-mem WITH_UTILS_MEM
     utils-pipeline-manager-glslang WITH_UTILS_PIPELINE_MANAGER_GLSLANG
-    utils-task-list WITH_UTILS_TASK_LIST
+    utils-pipeline-manager-slang WITH_UTILS_PIPELINE_MANAGER_SLANG
+    utils-pipeline-manager-spirv-validation WITH_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION
+    utils-task-graph WITH_UTILS_TASK_GRAPH
 )
-set(DAXA_DEFINES)
+set(DAXA_DEFINES "-DDAXA_INSTALL=true")
 
 if(WITH_UTILS_IMGUI)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_IMGUI=true")
@@ -22,8 +28,14 @@ endif()
 if(WITH_UTILS_PIPELINE_MANAGER_GLSLANG)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_PIPELINE_MANAGER_GLSLANG=true")
 endif()
-if(WITH_UTILS_TASK_LIST)
-    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_TASK_LIST=true")
+if(WITH_UTILS_PIPELINE_MANAGER_SLANG)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_PIPELINE_MANAGER_SLANG=true")
+endif()
+if(WITH_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION=true")
+endif()
+if(WITH_UTILS_TASK_GRAPH)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_TASK_GRAPH=true")
 endif()
 
 vcpkg_cmake_configure(
@@ -32,12 +44,12 @@ vcpkg_cmake_configure(
         ${DAXA_DEFINES}
         -DCMAKE_REQUIRE_FIND_PACKAGE_X11=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_WAYLAND=ON
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_X11
+        CMAKE_REQUIRE_FIND_PACKAGE_WAYLAND
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

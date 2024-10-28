@@ -1,17 +1,13 @@
 {
   "name": "ignition-utils1",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "description": "Ignition Utils, a component of Ignition Robotics, provides general purpose classes and functions designed for robotic applications.",
   "homepage": "https://gazebosim.org",
   "license": "Apache-2.0",
   "dependencies": [
     "ignition-cmake2",
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
+      "name": "ignition-modularscripts",
       "host": true
     }
   ]

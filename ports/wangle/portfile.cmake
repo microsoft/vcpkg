@@ -4,8 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
     REF "v${VERSION}"
-    SHA512 aa87614f9630fd325e848bef38c520b85a57eaf0e3dd5cb3421a0bb55322fbdf9c22b153436d703eb30ac9f8c4d02bfb71b9313acd16c412609216eb0ca16109
-    HEAD_REF master
+    SHA512 b84419d7035b4599959cc7be9a9253a386ecab7e78c1d9d620afcb537ac178c1172a8f5465cf8769f45ed083d2aa9ba4324c08775fcc83c5ee017b1abec6b3dc
+    HEAD_REF main
     PATCHES
         fix-config-cmake.patch
         fix_dependency.patch
@@ -49,4 +49,4 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

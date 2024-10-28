@@ -1,0 +1,25 @@
+diff --git a/meson.build b/meson.build
+index 687450e..ee4460b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1011,6 +1011,9 @@ threads = dependency('threads')
+ librt = cc.find_library('rt')
+ libm = cc.find_library('m')
+ libdl = cc.find_library('dl')
++conf.set_quoted('PC_RT', librt.found() ? '-lrt' : '')
++conf.set_quoted('PC_M',  libm.found()  ? '-lm'  : '')
++conf.set_quoted('PC_DL', libdl.found() ? '-ldl' : '')
+ libcrypt = dependency('libcrypt', 'libxcrypt', required : false)
+ if not libcrypt.found()
+         # fallback to use find_library() if libcrypt is provided by glibc, e.g. for LibreELEC.
+diff --git a/src/libsystemd/libsystemd.pc.in b/src/libsystemd/libsystemd.pc.in
+index 3a43ef6..930f16a 100644
+--- a/src/libsystemd/libsystemd.pc.in
++++ b/src/libsystemd/libsystemd.pc.in
+@@ -17,4 +17,6 @@ Description: systemd Library
+ URL: {{PROJECT_URL}}
+ Version: {{PROJECT_VERSION}}
+ Libs: -L${libdir} -lsystemd
++Libs.private: {{PC_DL}} {{PC_M}} {{PC_RT}}
++Requires.private: libcap libcrypt liblz4 liblzma libzstd mount
+ Cflags: -I${includedir}

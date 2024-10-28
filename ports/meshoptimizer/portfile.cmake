@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
-    REF v0.18
-    SHA512 b9fd6ce61c7d7b673892ace74feb300628d4bbbba4e912dba4a756d9709b952dde45b706c581df3fd0aef1e7065ff730d1827b0d6c724d716ccf41efb1953d3e
+    REF v${VERSION}
+    SHA512 801cdc911da6ece7afe2ae4f5d002f27e8a0b5072ec4332968183941671024b3cda2a45266c0899cc9fb134d3b931d70b3bd9629dc7765f77e102146b2f6bfd0
     HEAD_REF master
-    PATCHES
-      no-werror.patch
 )
 
 # If we want basisu support in gltfpack we need a particular fork of basisu

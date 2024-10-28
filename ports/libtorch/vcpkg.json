@@ -1,14 +1,16 @@
 {
   "name": "libtorch",
-  "version": "1.12.1",
-  "port-version": 3,
+  "version": "2.1.2",
+  "port-version": 7,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
+    "blas",
     "cpuinfo",
     "eigen3",
+    "fftw3",
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -16,25 +18,24 @@
     },
     "fmt",
     "foxi",
+    "foxi",
+    "fp16",
     "gemmlowp",
     "gflags",
     "glog",
+    "lapack",
     "lmdb",
-    {
-      "name": "mpi",
-      "platform": "linux"
-    },
+    "mimalloc",
     "onnx",
     "onnx-optimizer",
-    {
-      "name": "openblas",
-      "platform": "windows"
-    },
+    "opencl",
+    "pocketfft",
     "protobuf",
     {
       "name": "protobuf",
       "host": true
     },
+    "pthreadpool",
     "sleef",
     {
       "name": "vcpkg-cmake",
@@ -47,12 +48,27 @@
     {
       "name": "vcpkg-get-python-packages",
       "host": true
-    }
-  ],
-  "default-features": [
+    },
     "xnnpack"
   ],
+  "default-features": [
+    {
+      "name": "cuda",
+      "platform": "windows & !x86"
+    },
+    "opencv",
+    "zstd"
+  ],
   "features": {
+    "cuda": {
+      "description": "Build with CUDA GPU backend",
+      "dependencies": [
+        "cuda",
+        "cudnn",
+        "magma",
+        "nvidia-cutlass"
+      ]
+    },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
       "dependencies": [
@@ -61,12 +77,16 @@
           "platform": "linux"
         },
         {
-          "name": "libuv",
-          "platform": "windows | osx"
+          "name": "libtorch",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ],
+          "platform": "linux"
         },
         {
-          "name": "openmpi",
-          "platform": "linux | osx"
+          "name": "libuv",
+          "platform": "windows | osx"
         },
         {
           "name": "tensorpipe",
@@ -79,6 +99,18 @@
       "dependencies": [
         "leveldb",
         "snappy"
+      ]
+    },
+    "llvm": {
+      "description": "Build with LLVM",
+      "dependencies": [
+        "llvm"
+      ]
+    },
+    "mpi": {
+      "description": "Build with MPI",
+      "dependencies": [
+        "mpi"
       ]
     },
     "nnpack": {
@@ -94,23 +126,12 @@
         "opencv"
       ]
     },
-    "tbb": {
-      "description": "Build with Intel TBB",
-      "dependencies": [
-        "tbb"
-      ]
-    },
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
-      "supports": "!windows",
       "dependencies": [
-        "vulkan"
-      ]
-    },
-    "xnnpack": {
-      "description": "Build with XNNPack",
-      "dependencies": [
-        "xnnpack"
+        "vulkan",
+        "vulkan-loader",
+        "vulkan-memory-allocator"
       ]
     },
     "zstd": {

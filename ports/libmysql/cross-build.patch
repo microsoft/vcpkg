@@ -1,0 +1,162 @@
+diff --git a/cmake/os/Darwin.cmake b/cmake/os/Darwin.cmake
+index 725b9bd..289bb3d 100644
+--- a/cmake/os/Darwin.cmake
++++ b/cmake/os/Darwin.cmake
+@@ -31,13 +31,9 @@ ENDIF()
+ # We require at least XCode 10.0
+ IF(NOT FORCE_UNSUPPORTED_COMPILER)
+   IF(MY_COMPILER_IS_CLANG)
+-    CHECK_C_SOURCE_RUNS("
+-      int main()
+-      {
+-        return (__clang_major__ < 10);
+-      }" HAVE_SUPPORTED_CLANG_VERSION)
+-    IF(NOT HAVE_SUPPORTED_CLANG_VERSION)
+-      MESSAGE(FATAL_ERROR "XCode 10.0 or newer is required!")
++    IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10)
++      MESSAGE(FATAL_ERROR
++        "XCode 10.0 or newer is required! Compiler version was ${CMAKE_CXX_COMPILER_VERSION}")
+     ENDIF()
+   ELSE()
+     MESSAGE(FATAL_ERROR "Unsupported compiler!")
+diff --git a/libmysql/CMakeLists.txt b/libmysql/CMakeLists.txt
+index 8e22453..2b63413 100644
+--- a/libmysql/CMakeLists.txt
++++ b/libmysql/CMakeLists.txt
+@@ -259,6 +259,7 @@ ELSEIF(FREEBSD)
+   MESSAGE(STATUS "BSD built in DNS SRV APIs")
+ ELSE()
+   FIND_LIBRARY(RESOLV_LIBRARY NAMES resolv)
++  FIND_LIBRARY(RESOLV_LIBRARY NAMES resolv PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} NO_DEFAULT_PATH)
+   IF (RESOLV_LIBRARY)
+     LIST(APPEND LIBS_TO_LINK ${RESOLV_LIBRARY})
+     SET(HAVE_UNIX_DNS_SRV 1 PARENT_SCOPE)
+@@ -413,6 +414,7 @@ MYSQL_ADD_EXECUTABLE(libmysql_api_test
+   ${CMAKE_CURRENT_BINARY_DIR}/api_test.c
+   LINK_LIBRARIES libmysql ${LIBRT}
+   SKIP_INSTALL
++  EXCLUDE_FROM_ALL
+   )
+ # Clang/UBSAN needs this on some platforms.
+ SET_TARGET_PROPERTIES(libmysql_api_test PROPERTIES LINKER_LANGUAGE CXX)
+@@ -439,6 +441,6 @@ ADD_CUSTOM_COMMAND(
+   COMMAND libmysql_api_test
+   > ${CMAKE_CURRENT_BINARY_DIR}/libmysql_api_test.out
+   )
+-MY_ADD_CUSTOM_TARGET(run_libmysql_api_test ALL
++MY_ADD_CUSTOM_TARGET(run_libmysql_api_test
+   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/libmysql_api_test.out
+   )
+diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
+index 8e93387..d971acb 100644
+--- a/scripts/CMakeLists.txt
++++ b/scripts/CMakeLists.txt
+@@ -69,7 +69,6 @@ ADD_CUSTOM_COMMAND(
+ 
+ # Add target for the above to be built
+ MY_ADD_CUSTOM_TARGET(GenFixPrivs
+-  ALL
+   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/mysql_fix_privilege_tables_sql.h
+ )
+ 
+diff --git a/scripts/sys_schema/CMakeLists.txt b/scripts/sys_schema/CMakeLists.txt
+index aaba357..a0e5265 100644
+--- a/scripts/sys_schema/CMakeLists.txt
++++ b/scripts/sys_schema/CMakeLists.txt
+@@ -221,7 +221,6 @@ MY_ADD_CUSTOM_TARGET(sql_commands
+   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/sql_commands.h)
+ 
+ MY_ADD_CUSTOM_TARGET(GenSysSchemaC
+-  ALL
+   DEPENDS comp_sql sql_commands
+   COMMENT "Generating Sys Schema C code"
+ )
+diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
+index 28cde40..be916cb 100644
+--- a/share/CMakeLists.txt
++++ b/share/CMakeLists.txt
+@@ -47,8 +47,12 @@ SET(dirs
+   ukrainian
+   )
+ 
+-FOREACH (dir ${dirs})
+-  INSTALL(DIRECTORY ${CMAKE_BINARY_DIR}/${INSTALL_MYSQLSHAREDIR}/${dir}
++  set(src_dir ${CMAKE_BINARY_DIR}/share/libmysql)
++  if(CMAKE_CROSSCOMPILING)
++    set(src_dir ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql)
++  endif()
++  FOREACH (dir ${dirs})
++  INSTALL(DIRECTORY ${src_dir}/${dir}
+     DESTINATION ${INSTALL_MYSQLSHAREDIR}
+     COMPONENT Server
+     )
+diff --git a/strings/CMakeLists.txt b/strings/CMakeLists.txt
+index 665b35d..88f0743 100644
+--- a/strings/CMakeLists.txt
++++ b/strings/CMakeLists.txt
+@@ -69,6 +69,13 @@ SET(ZH_HANS_SRC_FILE ${CMAKE_SOURCE_DIR}/strings/lang_data/zh_hans.txt)
+ SET(ZH_HANS_DST_FILE ${CMAKE_BINARY_DIR}/strings/uca900_zh_tbls.cc)
+ SET(JA_HANS_SRC_FILE ${CMAKE_SOURCE_DIR}/strings/lang_data/ja_hans.txt)
+ SET(JA_HANS_DST_FILE ${CMAKE_BINARY_DIR}/strings/uca900_ja_tbls.cc)
++if(CMAKE_CROSSCOMPILING)
++  file(COPY
++    "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/uca900_zh_tbls.cc"
++    "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/uca900_ja_tbls.cc"
++    DESTINATION "${CMAKE_BINARY_DIR}/strings"
++  )
++else()
+ ADD_CUSTOM_COMMAND(OUTPUT ${ZH_HANS_DST_FILE}
+                           ${JA_HANS_DST_FILE}
+                    COMMAND uca9dump zh
+@@ -79,6 +86,8 @@ ADD_CUSTOM_COMMAND(OUTPUT ${ZH_HANS_DST_FILE}
+                      --out_file=${JA_HANS_DST_FILE}
+                    DEPENDS uca9dump ${ZH_HANS_SRC_FILE} ${JA_HANS_SRC_FILE}
+                   )
++install(FILES "${ZH_HANS_DST_FILE}" "${JA_HANS_DST_FILE}" DESTINATION "share/libmysql/${PROJECT_VERSION}")
++endif()
+ 
+ SET_SOURCE_FILES_PROPERTIES(
+   ${JA_HANS_DST_FILE} ${ZH_HANS_DST_FILE}
+diff --git a/utilities/CMakeLists.txt b/utilities/CMakeLists.txt
+index da34524..dc397da 100644
+--- a/utilities/CMakeLists.txt
++++ b/utilities/CMakeLists.txt
+@@ -39,6 +39,21 @@ MYSQL_ADD_EXECUTABLE(comp_client_err
+   SKIP_INSTALL
+   )
+ 
++if(CMAKE_CROSSCOMPILING)
++  file(COPY
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/include/mysql/mysqld_error.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/mysqlclient_ername.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/mysqld_ername.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/mysqld_errmsg.h
++    DESTINATION ${PROJECT_BINARY_DIR}/include
++  )
++  file(COPY
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/errmsg.sys
++    DESTINATION ${PROJECT_BINARY_DIR}/share/libmysql/english
++  )
++  add_custom_target(GenClientError)
++  add_custom_target(GenError)
++else()
+ ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_BINARY_DIR}/include/mysqlclient_ername.h
+   COMMAND comp_client_err
+   --in_file=${PROJECT_SOURCE_DIR}/include/errmsg.h
+@@ -97,6 +112,16 @@ MYSQL_ADD_EXECUTABLE(range_check_err
+   SKIP_INSTALL
+   )
+ 
++  install(
++    FILES
++      ${PROJECT_BINARY_DIR}/include/mysqlclient_ername.h
++      ${PROJECT_BINARY_DIR}/include/mysqld_ername.h
++      ${PROJECT_BINARY_DIR}/include/mysqld_errmsg.h
++      ${PROJECT_BINARY_DIR}/share/libmysql/english/errmsg.sys
++    DESTINATION share/libmysql/${PROJECT_VERSION}
++  )
++endif()
++
+ # Set InnoDB mutex type
+ ADD_DEFINITIONS(-DMUTEX_EVENT)
+ 

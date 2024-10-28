@@ -2,7 +2,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO "SRombauts/SQLiteCpp"
     REF ${VERSION}
     HEAD_REF master
-    SHA512 9702b17c55b1b3bc46a72d5c204b560249e9c1f02647c864fd4ca54011e4b0238638800ee870baa5106512a9568338d3faa9c9f9799d42fbd558d10376e3b73a
+    SHA512 e65695765756570d3b2df9151c968f76d434b9ec1dbcffa71e6b58a0cad005dc60c03ac826269d0292ecda2ad2abfbf2acd1cb71fb11967f53ff58140ea133fd
     PATCHES
         fix_dependency.patch
         add_runtime_destination.patch

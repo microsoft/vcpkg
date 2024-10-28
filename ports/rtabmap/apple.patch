@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 024c729..ddb1cae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -119,8 +119,6 @@ endif()
+ #Other paths...
+ IF(APPLE)
+    # For Mac ports
+-   SET(CMAKE_INCLUDE_PATH "/opt/local/include;${CMAKE_INCLUDE_PATH}")
+-   SET(CMAKE_LIBRARY_PATH "/opt/local/lib;${CMAKE_LIBRARY_PATH}")
+ ENDIF()
+ 
+ ####### Build libraries as shared or static #######

@@ -1,14 +1,21 @@
 {
   "name": "physx",
-  "version": "4.1.2",
-  "port-version": 6,
-  "description": "The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs",
-  "homepage": "https://github.com/NVIDIAGameWorks/PhysX",
-  "license": null,
-  "supports": "!mingw & !(windows & arm)",
+  "version": "5.3.0",
+  "description": "The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs. This is the latest NVIDIA official version of the PhysX engine which also directly integrates into Omniverse. This port is NOT officially supported by NVIDIA.",
+  "homepage": "https://github.com/NVIDIA-Omniverse/PhysX",
+  "license": "BSD-3-Clause",
+  "supports": "(windows & x64 & !mingw & !uwp) | (linux & x64) | (linux & arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     }
   ]

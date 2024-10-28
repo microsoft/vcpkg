@@ -1,0 +1,20 @@
+{
+  "name": "manif",
+  "version-date": "2023-07-17",
+  "description": "A small C++11 header-only library for Lie theory.",
+  "homepage": "https://github.com/artivis/manif",
+  "documentation": "https://artivis.github.io/manif/",
+  "license": "MIT",
+  "dependencies": [
+    "eigen3",
+    "tl-optional",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

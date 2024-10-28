@@ -1,0 +1,47 @@
+diff --git a/configure.ac b/configure.ac
+index d79099f..a820b17 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -66,10 +66,12 @@ AC_CONFIG_FILES([Makefile \
+ AC_CHECK_HEADERS(iconv.h,, [AC_MSG_ERROR([cannot find iconv.h, bailing out])])
+ # on some systems "iconv()" lives in libc. On others it lives in libiconv
+ #  on older systems "libiconv()" lives in libiconv
++SAVED_LIBS="${LIBS}"
+ AC_SEARCH_LIBS(iconv,iconv,,
+ 	AC_SEARCH_LIBS(libiconv,iconv,,AC_MSG_ERROR(['libiconv' is required but it doesn't seem to be installed on this system.]),))
+ AC_SEARCH_LIBS(locale_charset,charset,,
+ 	AC_SEARCH_LIBS(nl_langinfo,c,,AC_MSG_ERROR(['libcharset' is required but it doesn't seem to be installed on this system.]),))
++AC_SUBST(ICONV_LIBS, "${LIBS%${SAVED_LIBS}}")
+ 
+ #-----------------------------------------------------------------------
+ #   --enable-xmldocs
+@@ -77,14 +79,14 @@ AC_SEARCH_LIBS(locale_charset,charset,,
+ AC_ARG_ENABLE(xmldocs, [AS_HELP_STRING(
+   [--enable-xmldocs], [enables XML documents support [default=yes]])],
+   [], [enable_xmldocs=yes])
++PKG_PROG_PKG_CONFIG
+ if test x"$enable_xmldocs" != "xyes"; then
+   AC_DEFINE(OMIT_XMLDOC)
+ else
+-AC_CHECK_HEADERS(minizip/unzip.h,, [AC_MSG_ERROR([cannot find minizip/unzip.h, bailing out])])
+-AC_SEARCH_LIBS(unzLocateFile, minizip,,AC_MSG_ERROR(['libminizip' is required but it doesn't seem to be installed on this system.]))
+-
+-AC_CHECK_HEADERS(expat.h,, [AC_MSG_ERROR([cannot find expat.h, bailing out])])
+-AC_CHECK_LIB(expat,XML_ParserCreate,,AC_MSG_ERROR(['expat' is required but it doesn't seem to be installed on this system.]))
++  PKG_CHECK_MODULES(MINIZIP, [minizip], [], [AC_MSG_ERROR([[minizip is required]])])
++  PKG_CHECK_MODULES(EXPAT, [expat], [], [AC_MSG_ERROR([[expat is required]])])
++  CFLAGS="${EXPAT_CFLAGS} ${MINIZIP_CFLAGS} ${CFLAGS}"
++  LIBS="${EXPAT_LIBS} ${MINIZIP_LIBS} ${LIBS}"
+ fi
+ #-----------------------------------------------------------------------
+ 
+diff --git a/freexl.pc.in b/freexl.pc.in
+index 5813e68..4393590 100644
+--- a/freexl.pc.in
++++ b/freexl.pc.in
+@@ -10,3 +10,5 @@ Description: a simple library extracting data from .xls (Excel BIFF) files
+ Version: @VERSION@
+ Libs: -L${libdir} -lfreexl -lm
+ Cflags: -I${includedir} 
++Libs.private: @ICONV_LIBS@
++Requires.private: expat minizip

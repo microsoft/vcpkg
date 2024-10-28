@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gulrak/filesystem
-    REF v1.5.12
+    REF "v${VERSION}"
     HEAD_REF master
-    SHA512 2cba74921104fa84547288ff983260ce1e81967df6a7d2a334074826c355c72945ad64e6979cd302a23c5e3a398990706b01fc573c046512e9f508edca9da12c
+    SHA512 6eae921485ecdaf4b8329a568b1f4f612ee491fc5fdeafce9c8000b9bf1a73b6fa4e07d0d4ddf05be49efe79e9bddfbcc0aba85529cb016668797a8d89eb9b82
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

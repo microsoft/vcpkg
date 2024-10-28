@@ -1,3 +1,12 @@
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/signalrclient/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'signalrclient'. Please remove signalrclient:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+vcpkg_download_distfile(PATCH_FIX_GCC_13_COMPILATION
+    URLS https://github.com/aspnet/SignalR-Client-Cpp/commit/66458704cf588eae28b490b73bbc8261bf04f31a.diff?full_index=1
+    SHA512 e8b6edbc84f9f6fd1fe5f0f63a1b66004d562c3926ab9130a2ce4fa7137e6b1d4d5c407b95f2867e452863578ffd03ca3be3326dac19d14baf77416c71e237c9
+    FILENAME aspnet-SignalR-Client-Cpp-pr-96.diff
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aspnet/SignalR-Client-Cpp
@@ -6,6 +15,8 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         find-msgpack.patch
+        "${PATCH_FIX_GCC_13_COMPILATION}"
+        fix-miss-header.patch
 )
 
 vcpkg_check_features(
@@ -15,16 +26,13 @@ vcpkg_check_features(
         messagepack USE_MSGPACK
 )
 
-if("cpprestsdk" IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "microsoft-signalr[cpprestsdk] is not supported on UWP, use microsoft-signalr[core] instead")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
         -DWALL=OFF
+        -DWERROR=OFF
         "-DJSONCPP_LIB=JsonCpp::JsonCpp"
 )
 

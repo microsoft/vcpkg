@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Naios/continuable
-    REF 4.2.0
-    SHA512 c6b6aef0299d8dd548c3a283fdc436065da13446f965b45210dd998bbe1494776f2c005e7cb7eadc5e23a1f339e6c9124eda18e550bed646df5a0fd2aa92a24d
+    REF "${VERSION}"
+    SHA512 069b1fe37d5dd3495639942af40b9d5fe90408ee0f92f61e85c8aab3e1132300eb75df216a84595cb05c35e0fcb1b789fda4dae3fd2b263ac70910f5374536cc
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch

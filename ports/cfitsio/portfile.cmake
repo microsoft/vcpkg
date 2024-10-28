@@ -12,6 +12,8 @@ vcpkg_extract_source_archive(
         0002-export-cmake-targets.patch
         0003-add-Wno-error-implicit-funciton-declaration-to-cmake.patch
         0004-pkg-config.patch
+        0005-fix-link2019-error.patch
+        0006-fix-uwp.patch
 )
 
 vcpkg_check_features(
@@ -63,10 +65,11 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficia
     "cmake_policy(VERSION 2.6)\r\n\
 # Required for the evaluation of \"if(@BUILD_SHARED_LIBS@)\" below to function\r\n\
 cmake_policy(SET CMP0012 NEW)\r\n"
+    IGNORE_UNCHANGED
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include/unistd.h" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/FindPthreads.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio")
 
-file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")
