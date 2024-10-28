@@ -4,13 +4,15 @@
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",
-  "supports": "!x86 & !staticcrt & !(arm & osx)",
+  "supports": "!x86 & !(windows & (staticcrt | arm | uwp)) & !(osx & arm)",
   "dependencies": [
     "boost-algorithm",
     "boost-core",
     "boost-dynamic-bitset",
+    "boost-functional",
     "boost-intrusive",
     "boost-tokenizer",
+    "boost-unordered",
     {
       "name": "vcpkg-cmake",
       "host": true

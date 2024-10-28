@@ -34,7 +34,7 @@ elseif(VCPKG_HOST_IS_OSX AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
     set(LLVM_FILENAME  "clang+llvm-${LLVM_VERSION}-x86_64-apple-darwin.tar.xz")
     set(LLVM_HASH      2e74791425c12dacc201c5cfc38be7abe0ac670ddb079e75d477bf3f78d1dad442d1b4c819d67e0ba51c4474d8b7a726d4c50b7ad69d536e30edc38d1dce78b8)
 else()
-    message(FATAL_ERROR "Pre-built binaries for Clang ${LLVM_VERSION} not available, aborting install (platform: ${VCPKG_CMAKE_SYSTEM_NAME}).")
+    message(FATAL_ERROR "Pre-built binaries for Clang ${LLVM_VERSION} not available, aborting install.")
 endif()
 
 vcpkg_download_distfile(LLVM_ARCHIVE_PATH
@@ -71,8 +71,8 @@ endif()
 # MDL-SDK
 #
 # Note about "supports:" in vcpkg.json:
-# !x86, !staticcrt: not supported by the MDL SDK
-# !(arm & osx): no precompiled clang 12 binaries available
+# !x86, !(windows & (staticcrt | arm | uwp)): not supported by the MDL SDK
+# !(osx & arm): no precompiled clang 12 binaries available
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
