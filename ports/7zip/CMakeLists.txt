@@ -149,16 +149,6 @@ target_sources(7zip PRIVATE
     CPP/Common/XzCrc64Reg.cpp
     CPP/Common/Xxh64Reg.cpp
 
-    CPP/Windows/FileDir.cpp
-    CPP/Windows/FileFind.cpp
-    CPP/Windows/FileIO.cpp
-    CPP/Windows/FileName.cpp
-    CPP/Windows/PropVariant.cpp
-    CPP/Windows/PropVariantUtils.cpp
-    CPP/Windows/Synchronization.cpp
-    CPP/Windows/System.cpp
-    CPP/Windows/TimeUtils.cpp
-
     CPP/7zip/Common/CreateCoder.cpp
     CPP/7zip/Common/CWrappers.cpp
     CPP/7zip/Common/InBuffer.cpp
@@ -301,6 +291,20 @@ target_sources(7zip PRIVATE
     CPP/7zip/Archive/Archive2.def
     C/Util/LzmaLib/LzmaLib.def
 )
+
+if(WIN32)
+    target_sources(7zip PRIVATE
+        CPP/Windows/FileDir.cpp
+        CPP/Windows/FileFind.cpp
+        CPP/Windows/FileIO.cpp
+        CPP/Windows/FileName.cpp
+        CPP/Windows/PropVariant.cpp
+        CPP/Windows/PropVariantUtils.cpp
+        CPP/Windows/Synchronization.cpp
+        CPP/Windows/System.cpp
+        CPP/Windows/TimeUtils.cpp
+    )
+endif()
 
 # 7zCrcOpt
 if(VCPKG_TARGET_IS_WINDOWS)
