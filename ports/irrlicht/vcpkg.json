@@ -9,10 +9,6 @@
     "bzip2",
     "libjpeg-turbo",
     "libpng",
-    {
-      "name": "pkgconf",
-      "host": true
-    },
     "vcpkg-cmake",
     "vcpkg-cmake-config",
     "zlib"
