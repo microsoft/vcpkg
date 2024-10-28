@@ -71,7 +71,7 @@ endif()
 # MDL-SDK
 #
 # Note about "supports:" in vcpkg.json:
-# !x86, !(windows & (staticcrt | arm | uwp)): not supported by the MDL SDK
+# !x86, !(windows & (staticcrt | arm | uwp)), !android: not supported by the MDL SDK
 # !(osx & arm): no precompiled clang 12 binaries available
 
 vcpkg_from_github(
