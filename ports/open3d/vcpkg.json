@@ -48,10 +48,9 @@
       ]
     },
     "blas": {
-      "description": "Use BLAS/LAPACK/LAPACKE instead of MKL",
+      "description": "Use BLAS, LAPACK, and LAPACKE",
       "dependencies": [
         "blas",
-        "lapack",
         {
           "name": "lapack-reference",
           "features": [

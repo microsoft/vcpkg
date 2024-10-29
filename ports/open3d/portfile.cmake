@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-uvatlas.patch
+        0002-blas.patch
         0003-liblzf.patch
         0004-tiny_gltf.patch
         0005-jsoncpp.patch
