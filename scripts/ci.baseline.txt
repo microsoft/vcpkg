@@ -350,7 +350,6 @@ fmi4cpp:x64-uwp=fail
 folly:arm64-android=fail
 folly:x64-android=fail
 # unsupported option '-mfloat-abi='
-freerdp:arm64-android=fail
 # ALooper_pollAll no longer available
 freeglut:arm-neon-android=fail
 freeglut:arm64-android=fail
@@ -985,17 +984,6 @@ restbed:arm-neon-android=fail
 restbed:arm64-uwp=fail
 restbed:arm64-android=fail
 restbed:x64-uwp=fail
-# file conflicts with msgpack
-rest-rpc:x86-windows=skip
-rest-rpc:x64-windows=skip
-rest-rpc:x64-windows-static=skip
-rest-rpc:x64-windows-static-md=skip
-rest-rpc:x64-uwp=skip
-rest-rpc:arm64-uwp=skip
-rest-rpc:arm64-windows=skip
-rest-rpc:x64-linux=skip
-rest-rpc:x64-osx=skip
-rest-rpc:arm64-osx=skip
 rpclib:arm64-windows=fail
 rpclib:arm64-uwp=fail
 rpclib:x64-uwp=fail
