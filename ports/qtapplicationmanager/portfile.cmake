@@ -12,6 +12,7 @@ set(TOOL_NAMES appman
                appman-packager
                appman-qmltestrunner
                appman-launcher-qml
+               appman-package-server
                package-uploader
     )
 
