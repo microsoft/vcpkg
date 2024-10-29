@@ -25,6 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "blas"           USE_BLAS
         "intel-oneapi"   OPEN3D_USE_ONEAPI_PACKAGES
         "sycl"           BUILD_SYCL_MODULE
+        "python"         BUILD_PYTHON_MODULE
 )
 
 vcpkg_cmake_configure(
@@ -41,7 +42,7 @@ vcpkg_cmake_configure(
         -DBUILD_ISPC_MODULE=OFF
         -DBUILD_CUDA_MODULE=OFF
         -DBUILD_TENSORFLOW_OPS=OFF
-        -DBUILD_PYTHON_MODULE=OFF
+        -DBUILD_PYTHON_MODULE=${BUILD_PYTHON_MODULE}
         -DBUILD_LIBREALSENSE=OFF
         -DBUILD_AZURE_KINECT=OFF
         -DBUILD_FILAMENT_FROM_SOURCE=OFF

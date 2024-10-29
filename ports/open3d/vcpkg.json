@@ -19,7 +19,6 @@
     "opengl",
     "parallelstl",
     "poissonrecon",
-    "pybind11",
     "qhull",
     "tbb",
     "tinygltf",
@@ -64,6 +63,12 @@
       "description": "Use Intel OneAPI MKL",
       "dependencies": [
         "intel-mkl"
+      ]
+    },
+    "python": {
+      "description": "Build the python module",
+      "dependencies": [
+        "pybind11"
       ]
     },
     "sycl": {
