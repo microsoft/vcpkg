@@ -81,6 +81,7 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_ZEROMQ=ON
 )
 
+vcpkg_cmake_build(TARGET Open3D)
 vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
