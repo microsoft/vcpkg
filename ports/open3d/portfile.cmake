@@ -3,12 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel-isl/Open3D
-    REF v0.13.0
-    SHA512 10134eee86e364738c60bddebad3cf2a82dc7fe8e9f38e35c410b1be6055089b8ebe93b689c254d897cda2d0b10b509af4c44018553d595ee90b8e022af43cd0
+    REF v0.18.0
+    SHA512 2fe67c0c5447177425fd641a92a0b504d234f38f3f3f3957fc3f58a5681282ef59a57e7f212f20485bbf9c3012455b9e1af2a5861c696c329b4241baf477052f
     HEAD_REF master
-    PATCHES
-        0001-use-external-libraries.patch
-        0002-fix-eigen-3-3.patch # taken from https://github.com/intel-isl/Open3D/pull/2885
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)
@@ -53,8 +50,6 @@ vcpkg_cmake_configure(
         -DDEVELOPER_BUILD=OFF
 )
 
-# we have to build this first otherwise install fails
-#vcpkg_cmake_build(TARGET Open3D)
 vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)

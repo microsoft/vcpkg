@@ -6577,7 +6577,7 @@
       "port-version": 0
     },
     "open3d": {
-      "baseline": "0.13.0",
+      "baseline": "0.18.0",
       "port-version": 0
     },
     "open62541": {
