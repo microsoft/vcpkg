@@ -1,0 +1,17 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index 13a538461..859edbab5 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -792,8 +792,8 @@ endif()
+ # liblzf
+ if(USE_SYSTEM_LIBLZF)
+     open3d_find_package_3rdparty_library(3rdparty_liblzf
+-        PACKAGE liblzf
+-        TARGETS liblzf::liblzf
++        PACKAGE unofficial-liblzf
++        TARGETS unofficial::liblzf::liblzf
+     )
+     if(NOT 3rdparty_liblzf_FOUND)
+         set(USE_SYSTEM_LIBLZF OFF)
+--
+2.45.2

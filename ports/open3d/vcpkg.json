@@ -12,6 +12,7 @@
     "glfw3",
     "imgui",
     "libjpeg-turbo",
+    "liblzf",
     "nanoflann",
     "opengl",
     "parallelstl",
