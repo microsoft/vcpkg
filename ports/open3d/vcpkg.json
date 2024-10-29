@@ -18,7 +18,6 @@
     "msgpack",
     "nanoflann",
     "opengl",
-    "parallelstl",
     "poissonrecon",
     "qhull",
     "tbb",
@@ -57,7 +56,8 @@
           "features": [
             "lapacke"
           ]
-        }
+        },
+        "parallelstl"
       ]
     },
     "gui": {

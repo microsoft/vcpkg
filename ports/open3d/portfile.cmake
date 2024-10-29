@@ -13,6 +13,7 @@ vcpkg_from_github(
         0004-tiny_gltf.patch
         0005-jsoncpp.patch
         0006-fmt.patch # remove in the next release https://github.com/isl-org/Open3D/pull/6783
+        0007-parallelstl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)
@@ -81,6 +82,7 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_UVATLAS=ON
         -DUSE_SYSTEM_VTK=ON
         -DUSE_SYSTEM_ZEROMQ=ON
+        -DUSE_SYSTEM_PARALLELSTL=ON
 )
 
 vcpkg_cmake_build(TARGET Open3D)
