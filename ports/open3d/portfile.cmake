@@ -10,6 +10,7 @@ vcpkg_from_github(
         0001-uvatlas.patch
         0003-liblzf.patch
         0004-tiny_gltf.patch
+        0005-jsoncpp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)

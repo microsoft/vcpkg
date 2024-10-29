@@ -1,0 +1,15 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index 7c44d738f..45b1dcfdb 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -770,7 +770,7 @@ endif()
+ if(USE_SYSTEM_JSONCPP)
+     open3d_find_package_3rdparty_library(3rdparty_jsoncpp
+         PACKAGE jsoncpp
+-        TARGETS jsoncpp_lib
++        TARGETS JsonCpp::JsonCpp
+     )
+     if(NOT 3rdparty_jsoncpp_FOUND)
+         set(USE_SYSTEM_JSONCPP OFF)
+--
+2.45.2
