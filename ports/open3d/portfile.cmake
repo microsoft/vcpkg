@@ -19,6 +19,13 @@ get_filename_component(GIT_PATH ${GIT} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${GIT_PATH}")
 
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "sycl"           BUILD_SYCL_MODULE
+        "intel-oneapi"   OPEN3D_USE_ONEAPI_PACKAGES
+        "blas"           USE_BLAS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -37,6 +44,10 @@ vcpkg_cmake_configure(
         -DBUILD_LIBREALSENSE=OFF
         -DBUILD_AZURE_KINECT=OFF
         -DBUILD_FILAMENT_FROM_SOURCE=OFF
+        -DBUILD_SYCL_MODULE=${BUILD_SYCL_MODULE}
+        -DOPEN3D_USE_ONEAPI_PACKAGES=${OPEN3D_USE_ONEAPI_PACKAGES}
+        -DUSE_BLAS=${USE_BLAS}
+        -DUSE_SYSTEM_BLAS=ON
         -DWITH_OPENMP=OFF
         -DUSE_SYSTEM_ASSIMP=ON
         -DUSE_SYSTEM_CURL=ON

@@ -1,8 +1,9 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "open3d",
   "version-semver": "0.18.0",
   "description": "Open3D is an open-source library that supports rapid development of software that deals with 3D data",
-  "homepage": "www.open3d.org",
+  "homepage": "https://www.open3d.org",
   "dependencies": [
     "assimp",
     "curl",
@@ -35,4 +36,31 @@
     },
     "vtk"
   ]
+  "default-features": [
+    "blas"
+  ],
+  "features": {
+    "blas": {
+      "description": "Use BLAS/LAPACK/LAPACKE instead of MKL",
+      "dependencies": [
+        "blas",
+        "lapack",
+        {
+          "name": "lapack-reference",
+          "features": [
+            "lapacke"
+          ]
+        }
+      ]
+    },
+    "intel-oneapi": {
+      "description": "Use Intel OneAPI MKL",
+      "dependencies": [
+        "intel-mkl"
+      ]
+    },
+    "sycl": {
+      "description": "Enable SYCL module"
+    }
+  }
 }
