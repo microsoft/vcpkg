@@ -86,6 +86,7 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_VTK=ON
         -DUSE_SYSTEM_ZEROMQ=ON
         -DUSE_SYSTEM_PARALLELSTL=ON
+        -DWITH_MINIZIP=ON
 )
 
 vcpkg_cmake_build(TARGET Open3D)
