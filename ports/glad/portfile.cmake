@@ -124,7 +124,7 @@ file(COPY
 )
 
 get_filename_component(PYTHON_DIR "${PYTHON3}" DIRECTORY)
-if(WIN32 AND PYTHON_DIR MATCHES "vcpkg")
+if(PYTHON_DIR MATCHES "vcpkg")
 execute_process(
     COMMAND "${PYTHON3}" -c "import sys; print(f'python{sys.version_info.major}{sys.version_info.minor}')"
     OUTPUT_VARIABLE PYTHON_VERSION_NAME
