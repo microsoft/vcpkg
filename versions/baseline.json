@@ -4186,7 +4186,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.9.3",
-      "port-version": 0 
+      "port-version": 0
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
@@ -4333,7 +4333,7 @@
       "port-version": 4
     },
     "libcap": {
-      "baseline": "2.70",
+      "baseline": "2.71",
       "port-version": 0
     },
     "libcbor": {

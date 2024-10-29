@@ -9,6 +9,10 @@
     {
       "name": "libcap",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
   ]
 }
