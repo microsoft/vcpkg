@@ -13,6 +13,7 @@
     "imgui",
     "libjpeg-turbo",
     "liblzf",
+    "msgpack",
     "nanoflann",
     "opengl",
     "parallelstl",
