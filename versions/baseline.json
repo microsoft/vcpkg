@@ -257,7 +257,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.31.0",
+      "baseline": "1.32.0",
       "port-version": 0
     },
     "asio-grpc": {
@@ -7878,7 +7878,7 @@
     },
     "rest-rpc": {
       "baseline": "0.12",
-      "port-version": 0
+      "port-version": 1
     },
     "restbed": {
       "baseline": "4.8",
