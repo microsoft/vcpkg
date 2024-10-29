@@ -1,0 +1,17 @@
+diff --git a/cpp/open3d/utility/Download.cpp b/cpp/open3d/utility/Download.cpp
+index 025dbc664..0193d1fa3 100644
+--- a/cpp/open3d/utility/Download.cpp
++++ b/cpp/open3d/utility/Download.cpp
+@@ -22,7 +22,9 @@
+ #define USE_OPENSSL
+ #endif
+ 
++#ifndef CURL_STATICLIB
+ #define CURL_STATICLIB
++#endif
+ 
+ #include <curl/curl.h>
+ #include <curl/easy.h>
+-- 
+2.45.2
+

@@ -13,6 +13,7 @@ vcpkg_from_github(
         0004-tiny_gltf.patch
         0005-jsoncpp.patch
         0007-parallelstl.patch
+        0008-curl.patch
         # remove in the next release
         6783.patch
         6969.patch
