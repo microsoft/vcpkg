@@ -4478,7 +4478,7 @@
     },
     "libepoxy": {
       "baseline": "1.5.10",
-      "port-version": 2
+      "port-version": 3
     },
     "liberasurecode": {
       "baseline": "1.6.4",
