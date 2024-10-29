@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO daniele77/cli
-    REF v2.2.0
+    REF "v${VERSION}"
     SHA512 c6d7421ca9c2c483f2c8adc4b44ab65da9eb78132784c53ff77ca63734c39619e590ec61814b100dfca6520af803cd0616ce8a54d4b4aa2312bf324f7d6a0ffc 
     HEAD_REF master
 )
