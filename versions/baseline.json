@@ -3182,7 +3182,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gmsh": {
       "baseline": "4.12.2",
