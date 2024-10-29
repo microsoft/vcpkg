@@ -6,6 +6,7 @@
   "homepage": "https://www.open3d.org",
   "dependencies": [
     "assimp",
+    "cppzmq",
     "curl",
     "eigen3",
     "embree3",
@@ -32,8 +33,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "vtk",
-    "zeromq"
+    "vtk"
   ],
   "default-features": [
     "blas",
