@@ -1,8 +1,6 @@
 #TODO: Features to add:
 # USE_XBLAS??? extended precision blas. needs xblas
-# LAPACKE should be its own PORT
 # USE_OPTIMIZED_LAPACK (Probably not what we want. Does a find_package(LAPACK): probably for LAPACKE only builds _> own port?)
-# LAPACKE Builds LAPACKE
 # LAPACKE_WITH_TMG Build LAPACKE with tmglib routines
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/clapack/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
@@ -56,6 +54,11 @@ if(VCPKG_USE_INTERNAL_Fortran)
     endif()
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        lapacke    LAPACKE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -63,6 +66,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
         "-DTEST_FORTRAN_COMPILER=OFF"
+        "-DLAPACKE=${LAPACKE}"
         ${FORTRAN_CMAKE}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
