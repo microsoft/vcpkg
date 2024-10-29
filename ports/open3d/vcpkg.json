@@ -8,6 +8,7 @@
     "assimp",
     "curl",
     "eigen3",
+    "embree3",
     "fmt",
     "glew",
     "glfw3",
