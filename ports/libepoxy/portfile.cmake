@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 endif()
 
 if (VCPKG_TARGET_IS_LINUX)
