@@ -14,6 +14,7 @@ vcpkg_from_github(
         0005-jsoncpp.patch
         0007-parallelstl.patch
         0008-curl.patch
+        0009-std-includes.patch
         # remove in the next release
         6783.patch
         6969.patch
