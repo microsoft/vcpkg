@@ -1,6 +1,6 @@
 {
   "name": "libpq",
-  "version": "16.4",
+  "version": "17.0",
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
@@ -22,6 +22,10 @@
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true,
       "platform": "windows & !mingw"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
     }
   ],
   "default-features": [
@@ -36,7 +40,6 @@
         {
           "name": "libpq",
           "features": [
-            "client",
             "icu",
             "xml",
             "xslt",
@@ -84,9 +87,6 @@
       "description": "Build with Bonjour support",
       "supports": "osx"
     },
-    "client": {
-      "description": "Build all client tools and libraries"
-    },
     "icu": {
       "description": "Build with support for the ICU library",
       "dependencies": [
@@ -124,13 +124,6 @@
       "$supports": "!(windows & (static | mingw))",
       "description": "build the PL/Python server programming language",
       "dependencies": [
-        {
-          "name": "libpq",
-          "default-features": false,
-          "features": [
-            "client"
-          ]
-        },
         "python3"
       ]
     },
@@ -146,13 +139,6 @@
       "description": "build the PL/Tcl procedural language",
       "supports": "windows & !mingw",
       "dependencies": [
-        {
-          "name": "libpq",
-          "default-features": false,
-          "features": [
-            "client"
-          ]
-        },
         "tcl"
       ]
     },
