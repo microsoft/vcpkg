@@ -1,0 +1,837 @@
+Remove in the next release
+Modified from https://github.com/isl-org/Open3D/pull/6783
+
+From 34c138a68c9aca703cac83a743ea25e31d2dbbdf Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Thu, 2 May 2024 16:59:10 -0700
+Subject: [PATCH 01/11] add support to fmt-v10
+
+---
+ cpp/open3d/core/DLPack.h                      | 45 +++++++++++++++++++
+ cpp/open3d/t/geometry/RaycastingScene.cpp     | 36 ++++++++++++++-
+ .../webrtc_server/PeerConnectionManager.h     | 38 ++++++++++++++++
+ 3 files changed, 118 insertions(+), 1 deletion(-)
+
+diff --git a/cpp/open3d/core/DLPack.h b/cpp/open3d/core/DLPack.h
+index 9a0c3e57affc7a4ab8165ae4e95013f224bd90e0..bf935b1aba5bf5151ff7138b3f23b0d3c2f52032 100644
+--- a/cpp/open3d/core/DLPack.h
++++ b/cpp/open3d/core/DLPack.h
+@@ -188,4 +188,49 @@ typedef struct DLManagedTensor {
+ #ifdef __cplusplus
+ }  // DLPACK_EXTERN_C
+ #endif
++
++#include <fmt/core.h>
++#include <fmt/format.h>
++
++namespace fmt {
++
++template <>
++struct formatter<DLDeviceType> : formatter<string_view> {
++    auto format(const DLDeviceType& c, format_context& ctx) const {
++        string_view text;
++        switch (c) {
++            case kDLCPU:
++                text = "kDLCPU";
++                break;
++            case kDLGPU:
++                text = "kDLGPU";
++                break;
++            case kDLCPUPinned:
++                text = "kDLCPUPinned";
++                break;
++            case kDLOpenCL:
++                text = "kDLOpenCL";
++                break;
++            case kDLVulkan:
++                text = "kDLVulkan";
++                break;
++            case kDLMetal:
++                text = "kDLMetal";
++                break;
++            case kDLVPI:
++                text = "kDLVPI";
++                break;
++            case kDLROCM:
++                text = "kDLROCM";
++                break;
++            case kDLExtDev:
++                text = "kDLExtDev";
++                break;
++        }
++        return formatter<string_view>::format(text, ctx);
++    }
++};
++
++}  // namespace fmt
++
+ #endif  // DLPACK_DLPACK_H_
+diff --git a/cpp/open3d/t/geometry/RaycastingScene.cpp b/cpp/open3d/t/geometry/RaycastingScene.cpp
+index af7dd3f1480c381835a0e9e51610ced4a53afb78..7a0cf5b59a3a0393fc242e2abc2d4c2b7631b49b 100644
+--- a/cpp/open3d/t/geometry/RaycastingScene.cpp
++++ b/cpp/open3d/t/geometry/RaycastingScene.cpp
+@@ -1165,4 +1165,38 @@ uint32_t RaycastingScene::INVALID_ID() { return RTC_INVALID_GEOMETRY_ID; }
+
+ }  // namespace geometry
+ }  // namespace t
+-}  // namespace open3d
+\ No newline at end of file
++}  // namespace open3d
++
++namespace fmt {
++template <>
++struct formatter<RTCError> : formatter<string_view> {
++    template <typename FormatContext>
++    auto format(const RTCError& c, FormatContext& ctx) const {
++        string_view name;
++        switch (c) {
++            case RTC_ERROR_NONE:
++                name = "RTC_ERROR_NONE";
++                break;
++            case RTC_ERROR_UNKNOWN:
++                name = "RTC_ERROR_UNKNOWN";
++                break;
++            case RTC_ERROR_INVALID_ARGUMENT:
++                name = "RTC_ERROR_INVALID_ARGUMENT";
++                break;
++            case RTC_ERROR_INVALID_OPERATION:
++                name = "RTC_ERROR_INVALID_OPERATION";
++                break;
++            case RTC_ERROR_OUT_OF_MEMORY:
++                name = "RTC_ERROR_OUT_OF_MEMORY";
++                break;
++            case RTC_ERROR_UNSUPPORTED_CPU:
++                name = "RTC_ERROR_UNSUPPORTED_CPU";
++                break;
++            case RTC_ERROR_CANCELLED:
++                name = "RTC_ERROR_CANCELLED";
++                break;
++        }
++        return formatter<string_view>::format(name, ctx);
++    }
++};
++}  // namespace fmt
+diff --git a/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h b/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h
+index ceb0fc9df74ab74722a956c208fecc0551147c0f..b28e77e37ac2357ede2c234c71a54844a7e7be93 100644
+--- a/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h
++++ b/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h
+@@ -456,3 +456,41 @@ class PeerConnectionManager {
+ }  // namespace webrtc_server
+ }  // namespace visualization
+ }  // namespace open3d
++
++namespace fmt {
++
++template <>
++struct formatter<webrtc::PeerConnectionInterface::SignalingState>
++    : formatter<string_view> {
++    auto format(const webrtc::PeerConnectionInterface::SignalingState& state,
++                format_context& ctx) const {
++        using namespace webrtc;
++        const char* text = nullptr;
++        switch (state) {
++            case PeerConnectionInterface::SignalingState::kStable:
++                text = "kStable";
++                break;
++            case PeerConnectionInterface::SignalingState::kHaveLocalOffer:
++                text = "kHaveLocalOffer";
++                break;
++            case PeerConnectionInterface::SignalingState::kHaveLocalPrAnswer:
++                text = "kHaveLocalPrAnswer";
++                break;
++            case PeerConnectionInterface::SignalingState::kHaveRemoteOffer:
++                text = "kHaveRemoteOffer";
++                break;
++            case webrtc::PeerConnectionInterface::SignalingState::
++                    kHaveRemotePrAnswer:
++                text = "kHaveRemotePrAnswer";
++                break;
++            case webrtc::PeerConnectionInterface::SignalingState::kClosed:
++                text = "kClosed";
++                break;
++            default:
++                text = "unknown";
++        }
++        return formatter<string_view>::format(text, ctx);
++    }
++};
++
++}  // namespace fmt
+diff --git a/examples/cpp/OnlineSLAMUtil.h b/examples/cpp/OnlineSLAMUtil.h
+index 585f18a8fbea89c3842e4015c43ffa5b3b3f2b30..d1ea43e44c04c3186f18f1ee71a4d5b6baa5a23f 100644
+--- a/examples/cpp/OnlineSLAMUtil.h
++++ b/examples/cpp/OnlineSLAMUtil.h
+@@ -8,6 +8,7 @@
+ #include <atomic>
+ #include <sstream>
+ #include <thread>
++#include <fmt/std.h>
+
+ #include "open3d/Open3D.h"
+
+
+From c2d80f06aa6f24cb9e1edcb4d9db202ce297ca03 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Thu, 2 May 2024 18:38:23 -0700
+Subject: [PATCH 04/11] fix style check error
+
+---
+ examples/cpp/OnlineSLAMUtil.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/examples/cpp/OnlineSLAMUtil.h b/examples/cpp/OnlineSLAMUtil.h
+index d1ea43e44c04c3186f18f1ee71a4d5b6baa5a23f..ecb2d0b52ae9def57ee6a8c890d4cdcf7b2356ef 100644
+--- a/examples/cpp/OnlineSLAMUtil.h
++++ b/examples/cpp/OnlineSLAMUtil.h
+@@ -5,10 +5,11 @@
+ // SPDX-License-Identifier: MIT
+ // ----------------------------------------------------------------------------
+
++#include <fmt/std.h>
++
+ #include <atomic>
+ #include <sstream>
+ #include <thread>
+-#include <fmt/std.h>
+
+ #include "open3d/Open3D.h"
+
+
+From 5854e548dc7bc007dcd5e6c35bfddef7c93980cb Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Sun, 5 May 2024 16:05:34 -0700
+Subject: [PATCH 05/11] fix build with Intel-LLVM toolchains
+
+---
+ cpp/open3d/core/DLPack.h                       | 15 +++++++++++----
+ cpp/open3d/t/geometry/RaycastingScene.cpp      | 12 +++++++++---
+ .../webrtc_server/PeerConnectionManager.h      | 18 +++++++++++-------
+ 3 files changed, 31 insertions(+), 14 deletions(-)
+
+diff --git a/cpp/open3d/core/DLPack.h b/cpp/open3d/core/DLPack.h
+index bf935b1aba5bf5151ff7138b3f23b0d3c2f52032..1cec10a712f35e8feef83e14f5f620c4255932dd 100644
+--- a/cpp/open3d/core/DLPack.h
++++ b/cpp/open3d/core/DLPack.h
+@@ -195,9 +195,11 @@ typedef struct DLManagedTensor {
+ namespace fmt {
+
+ template <>
+-struct formatter<DLDeviceType> : formatter<string_view> {
+-    auto format(const DLDeviceType& c, format_context& ctx) const {
+-        string_view text;
++struct formatter<DLDeviceType> {
++    template <typename FormatContext>
++    auto format(const DLDeviceType& c, FormatContext& ctx) const
++            -> decltype(ctx.out()) {
++        const char* text = nullptr;
+         switch (c) {
+             case kDLCPU:
+                 text = "kDLCPU";
+@@ -227,7 +229,12 @@ struct formatter<DLDeviceType> : formatter<string_view> {
+                 text = "kDLExtDev";
+                 break;
+         }
+-        return formatter<string_view>::format(text, ctx);
++        return format_to(ctx.out(), text);
++    }
++
++    template <typename ParseContext>
++    constexpr auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
++        return ctx.begin();
+     }
+ };
+
+diff --git a/cpp/open3d/t/geometry/RaycastingScene.cpp b/cpp/open3d/t/geometry/RaycastingScene.cpp
+index 0251c7922913e4fe6b3faa7b60bfde62324c43c6..8906f6373e504a4bdc23c79cf75c8fdfe5f99fed 100644
+--- a/cpp/open3d/t/geometry/RaycastingScene.cpp
++++ b/cpp/open3d/t/geometry/RaycastingScene.cpp
+@@ -1177,10 +1177,10 @@ uint32_t RaycastingScene::INVALID_ID() { return RTC_INVALID_GEOMETRY_ID; }
+
+ namespace fmt {
+ template <>
+-struct formatter<RTCError> : formatter<string_view> {
++struct formatter<RTCError> {
+     template <typename FormatContext>
+     auto format(const RTCError& c, FormatContext& ctx) const {
+-        string_view name;
++        const char* name = nullptr;
+         switch (c) {
+             case RTC_ERROR_NONE:
+                 name = "RTC_ERROR_NONE";
+@@ -1204,7 +1204,13 @@ struct formatter<RTCError> : formatter<string_view> {
+                 name = "RTC_ERROR_CANCELLED";
+                 break;
+         }
+-        return formatter<string_view>::format(name, ctx);
++        // return formatter<string_view>::format(name, ctx);
++        return format_to(ctx.out(), name);
++    }
++
++    template <typename ParseContext>
++    constexpr auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
++        return ctx.begin();
+     }
+ };
+ }  // namespace fmt
+diff --git a/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h b/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h
+index b28e77e37ac2357ede2c234c71a54844a7e7be93..8ef27e79a5446c439db54232a46bc4b0c8ae33a4 100644
+--- a/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h
++++ b/cpp/open3d/visualization/webrtc_server/PeerConnectionManager.h
+@@ -460,10 +460,10 @@ class PeerConnectionManager {
+ namespace fmt {
+
+ template <>
+-struct formatter<webrtc::PeerConnectionInterface::SignalingState>
+-    : formatter<string_view> {
++struct formatter<webrtc::PeerConnectionInterface::SignalingState> {
++    template <typename FormatContext>
+     auto format(const webrtc::PeerConnectionInterface::SignalingState& state,
+-                format_context& ctx) const {
++                FormatContext& ctx) const -> decltype(ctx.out()) {
+         using namespace webrtc;
+         const char* text = nullptr;
+         switch (state) {
+@@ -479,17 +479,21 @@ struct formatter<webrtc::PeerConnectionInterface::SignalingState>
+             case PeerConnectionInterface::SignalingState::kHaveRemoteOffer:
+                 text = "kHaveRemoteOffer";
+                 break;
+-            case webrtc::PeerConnectionInterface::SignalingState::
+-                    kHaveRemotePrAnswer:
++            case PeerConnectionInterface::SignalingState::kHaveRemotePrAnswer:
+                 text = "kHaveRemotePrAnswer";
+                 break;
+-            case webrtc::PeerConnectionInterface::SignalingState::kClosed:
++            case PeerConnectionInterface::SignalingState::kClosed:
+                 text = "kClosed";
+                 break;
+             default:
+                 text = "unknown";
+         }
+-        return formatter<string_view>::format(text, ctx);
++        return format_to(ctx.out(), "{}", text);
++    }
++
++    template <typename ParseContext>
++    constexpr auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
++        return ctx.begin();
+     }
+ };
+
+
+From 87e48972064127b1eb73e53a3affb1485c6a0d36 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Sun, 5 May 2024 18:09:23 -0700
+Subject: [PATCH 06/11] change dependencies of fmt from 9.0.0 to 10.2.0 except
+ Windows
+
+---
+ 3rdparty/fmt/fmt.cmake                           | 6 +++---
+ cpp/open3d/io/IJsonConvertibleIO.h               | 2 +-
+ cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp | 1 +
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/3rdparty/fmt/fmt.cmake b/3rdparty/fmt/fmt.cmake
+index 88cd8e2fcefb21eaad1b4cae4df307d3cb08cef2..24dae557c5f1b2a4eaacab164cf8bea3ce77a2d7 100644
+--- a/3rdparty/fmt/fmt.cmake
++++ b/3rdparty/fmt/fmt.cmake
+@@ -2,16 +2,16 @@ include(ExternalProject)
+
+ set(FMT_LIB_NAME fmt)
+
+-if (MSVC OR CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
++if (MSVC)
+     # MSVC has errors when building fmt >6, up till 9.1
+     # SYCL / DPC++ needs fmt ver <=6 or >= 9.2: https://github.com/fmtlib/fmt/issues/3005
+     set(FMT_VER "6.0.0")
+     set(FMT_SHA256
+         "f1907a58d5e86e6c382e51441d92ad9e23aea63827ba47fd647eacc0d3a16c78")
+ else()
+-    set(FMT_VER "9.0.0")
++    set(FMT_VER "10.2.1")
+     set(FMT_SHA256
+-        "9a1e0e9e843a356d65c7604e2c8bf9402b50fe294c355de0095ebd42fb9bd2c5")
++        "1250e4cc58bf06ee631567523f48848dc4596133e163f02615c97f78bab6c811")
+ endif()
+
+ ExternalProject_Add(
+diff --git a/cpp/open3d/io/IJsonConvertibleIO.h b/cpp/open3d/io/IJsonConvertibleIO.h
+index 8bc9f03b13b73bb06ec8292655f8d36f8cb93429..a366b4f5ef86c000d229cde6185a52b39adc0b11 100644
+--- a/cpp/open3d/io/IJsonConvertibleIO.h
++++ b/cpp/open3d/io/IJsonConvertibleIO.h
+@@ -82,7 +82,7 @@ bool WriteIJsonConvertibleToJSONString(std::string &json_string,
+                 [&str](const std::pair<ENUM_TYPE, std::string> &es_pair)  \
+                         -> bool { return es_pair.second == str; });       \
+         e = ((it != std::end(m)) ? it : std::begin(m))->first;            \
+-        utility::LogDebug("{} -> {}", str, e);                            \
++        utility::LogDebug("{} -> {}", str, enum_to_string(e));            \
+     }
+
+ }  // namespace io
+diff --git a/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp b/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp
+index 356fdbed6bcf7749e7c754ad8e040661439d3095..990b948ee33e71a1fb53fc43d39e56c4cf10eaf5 100644
+--- a/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp
++++ b/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp
+@@ -7,6 +7,7 @@
+
+ #include "open3d/t/io/sensor/realsense/RSBagReader.h"
+
++#include <fmt/std.h>
+ #include <json/json.h>
+
+ #include <chrono>
+
+From 5a4be2ffcad88f87a62944574eebd27248db7412 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Sun, 5 May 2024 23:13:39 -0700
+Subject: [PATCH 07/11] change fmt from 6.0.0 to 10.2.0 for windows
+
+---
+ 3rdparty/fmt/fmt.cmake | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
+
+diff --git a/3rdparty/fmt/fmt.cmake b/3rdparty/fmt/fmt.cmake
+index 24dae557c5f1b2a4eaacab164cf8bea3ce77a2d7..0ccbec293ff31f4aab20f9fe090e68574ab0c9d1 100644
+--- a/3rdparty/fmt/fmt.cmake
++++ b/3rdparty/fmt/fmt.cmake
+@@ -1,18 +1,9 @@
+ include(ExternalProject)
+
+ set(FMT_LIB_NAME fmt)
+-
+-if (MSVC)
+-    # MSVC has errors when building fmt >6, up till 9.1
+-    # SYCL / DPC++ needs fmt ver <=6 or >= 9.2: https://github.com/fmtlib/fmt/issues/3005
+-    set(FMT_VER "6.0.0")
+-    set(FMT_SHA256
+-        "f1907a58d5e86e6c382e51441d92ad9e23aea63827ba47fd647eacc0d3a16c78")
+-else()
+-    set(FMT_VER "10.2.1")
+-    set(FMT_SHA256
+-        "1250e4cc58bf06ee631567523f48848dc4596133e163f02615c97f78bab6c811")
+-endif()
++set(FMT_VER "10.2.1")
++set(FMT_SHA256
++    "1250e4cc58bf06ee631567523f48848dc4596133e163f02615c97f78bab6c811")
+
+ ExternalProject_Add(
+     ext_fmt
+
+From 70f7e618e1d3c14295404abba451c071ff0cac01 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Mon, 20 May 2024 03:22:28 -0700
+Subject: [PATCH 08/11] fix build on Windows with CUDA enabled
+
+---
+ 3rdparty/fmt/fmt.cmake                     |  16 +++-
+ cpp/open3d/core/linalg/LinalgHeadersCUDA.h | 103 +++++++++++++++++++++
+ cpp/open3d/utility/Logging.h               |   1 +
+ 3 files changed, 117 insertions(+), 3 deletions(-)
+
+diff --git a/3rdparty/fmt/fmt.cmake b/3rdparty/fmt/fmt.cmake
+index 0ccbec293ff31f4aab20f9fe090e68574ab0c9d1..767f44c0c4798a66c83cf39944b28c8a8122c2f6 100644
+--- a/3rdparty/fmt/fmt.cmake
++++ b/3rdparty/fmt/fmt.cmake
+@@ -1,9 +1,19 @@
+ include(ExternalProject)
+
+ set(FMT_LIB_NAME fmt)
+-set(FMT_VER "10.2.1")
+-set(FMT_SHA256
+-    "1250e4cc58bf06ee631567523f48848dc4596133e163f02615c97f78bab6c811")
++
++if (MSVC AND BUILD_CUDA_MODULE)
++    # set(FMT_VER "9.1.0")
++    set(FMT_VER "10.1.1")
++    set(FMT_SHA256
++        "78b8c0a72b1c35e4443a7e308df52498252d1cefc2b08c9a97bc9ee6cfe61f8b"
++        # "5dea48d1fcddc3ec571ce2058e13910a0d4a6bab4cc09a809d8b1dd1c88ae6f2"
++        )
++else()
++    set(FMT_VER "10.2.1")
++    set(FMT_SHA256
++        "1250e4cc58bf06ee631567523f48848dc4596133e163f02615c97f78bab6c811")
++endif()
+
+ ExternalProject_Add(
+     ext_fmt
+diff --git a/cpp/open3d/core/linalg/LinalgHeadersCUDA.h b/cpp/open3d/core/linalg/LinalgHeadersCUDA.h
+index d34394dc813bf43bd91455476efb369881ecf99c..765ef348df7e1b67e72234234ca851d0954844c3 100644
+--- a/cpp/open3d/core/linalg/LinalgHeadersCUDA.h
++++ b/cpp/open3d/core/linalg/LinalgHeadersCUDA.h
+@@ -16,4 +16,107 @@
+ #include <cublas_v2.h>
+ #include <cusolverDn.h>
+ #include <cusolver_common.h>
++
++#include <fmt/core.h>
++#include <fmt/format.h>
++
++namespace fmt {
++
++template <>
++struct formatter<cusolverStatus_t> {
++    template <typename FormatContext>
++    auto format(const cusolverStatus_t& c, FormatContext& ctx) const
++            -> decltype(ctx.out()) {
++        const char* text = nullptr;
++        switch (c) {
++            case CUSOLVER_STATUS_SUCCESS:
++                text = "CUSOLVER_STATUS_SUCCESS";
++                break;
++            case CUSOLVER_STATUS_NOT_INITIALIZED:
++                text = "CUSOLVER_STATUS_NOT_INITIALIZED";
++                break;
++            case CUSOLVER_STATUS_ALLOC_FAILED:
++                text = "CUSOLVER_STATUS_ALLOC_FAILED";
++                break;
++            case CUSOLVER_STATUS_INVALID_VALUE:
++                text = "CUSOLVER_STATUS_INVALID_VALUE";
++                break;
++            case CUSOLVER_STATUS_ARCH_MISMATCH:
++                text = "CUSOLVER_STATUS_ARCH_MISMATCH";
++                break;
++            case CUSOLVER_STATUS_MAPPING_ERROR:
++                text = "CUSOLVER_STATUS_MAPPING_ERROR";
++                break;
++            case CUSOLVER_STATUS_EXECUTION_FAILED:
++                text = "CUSOLVER_STATUS_EXECUTION_FAILED";
++                break;
++            case CUSOLVER_STATUS_INTERNAL_ERROR:
++                text = "CUSOLVER_STATUS_INTERNAL_ERROR";
++                break;
++            case CUSOLVER_STATUS_MATRIX_TYPE_NOT_SUPPORTED:
++                text = "CUSOLVER_STATUS_MATRIX_TYPE_NOT_SUPPORTED";
++                break;
++            case CUSOLVER_STATUS_NOT_SUPPORTED:
++                text = "CUSOLVER_STATUS_NOT_SUPPORTED";
++                break;
++            case CUSOLVER_STATUS_ZERO_PIVOT:
++                text = "CUSOLVER_STATUS_ZERO_PIVOT";
++                break;
++            case CUSOLVER_STATUS_INVALID_LICENSE:
++                text = "CUSOLVER_STATUS_INVALID_LICENSE";
++                break;
++            case CUSOLVER_STATUS_IRS_PARAMS_NOT_INITIALIZED:
++                text = "CUSOLVER_STATUS_IRS_PARAMS_NOT_INITIALIZED";
++                break;
++            case CUSOLVER_STATUS_IRS_PARAMS_INVALID:
++                text = "CUSOLVER_STATUS_IRS_PARAMS_INVALID";
++                break;
++            case CUSOLVER_STATUS_IRS_PARAMS_INVALID_PREC:
++                text = "CUSOLVER_STATUS_IRS_PARAMS_INVALID_PREC";
++                break;
++            case CUSOLVER_STATUS_IRS_PARAMS_INVALID_REFINE:
++                text = "CUSOLVER_STATUS_IRS_PARAMS_INVALID_REFINE";
++                break;
++            case CUSOLVER_STATUS_IRS_PARAMS_INVALID_MAXITER:
++                text = "CUSOLVER_STATUS_IRS_PARAMS_INVALID_MAXITER";
++                break;
++            case CUSOLVER_STATUS_IRS_INTERNAL_ERROR:
++                text = "CUSOLVER_STATUS_IRS_INTERNAL_ERROR";
++                break;
++            case CUSOLVER_STATUS_IRS_NOT_SUPPORTED:
++                text = "CUSOLVER_STATUS_IRS_NOT_SUPPORTED";
++                break;
++            case CUSOLVER_STATUS_IRS_OUT_OF_RANGE:
++                text = "CUSOLVER_STATUS_IRS_OUT_OF_RANGE";
++                break;
++            case CUSOLVER_STATUS_IRS_NRHS_NOT_SUPPORTED_FOR_REFINE_GMRES:
++                text = "CUSOLVER_STATUS_IRS_NRHS_NOT_SUPPORTED_FOR_REFINE_GMRES";
++                break;
++            case CUSOLVER_STATUS_IRS_INFOS_NOT_INITIALIZED:
++                text = "CUSOLVER_STATUS_IRS_INFOS_NOT_INITIALIZED";
++                break;
++            case CUSOLVER_STATUS_IRS_INFOS_NOT_DESTROYED:
++                text = "CUSOLVER_STATUS_IRS_INFOS_NOT_DESTROYED";
++                break;
++            case CUSOLVER_STATUS_IRS_MATRIX_SINGULAR:
++                text = "CUSOLVER_STATUS_IRS_MATRIX_SINGULAR";
++                break;
++            case CUSOLVER_STATUS_INVALID_WORKSPACE:
++                text = "CUSOLVER_STATUS_INVALID_WORKSPACE";
++                break;
++            default:
++                text = "CUSOLVER_STATUS_UNKNOWN";
++                break;
++        }
++        return format_to(ctx.out(), text);
++    }
++
++    template <typename ParseContext>
++    constexpr auto parse(ParseContext& ctx) -> decltype(ctx.begin()) {
++        return ctx.begin();
++    }
++};
++
++}  // namespace fmt
++
+ #endif
+diff --git a/cpp/open3d/utility/Logging.h b/cpp/open3d/utility/Logging.h
+index 15fe28fa5392d272cbad78af666364e465445dbf..04c70365db60353554bb57768721cd4b3c5404d1 100644
+--- a/cpp/open3d/utility/Logging.h
++++ b/cpp/open3d/utility/Logging.h
+@@ -21,6 +21,7 @@
+ #include <fmt/core.h>
+ #include <fmt/printf.h>
+ #include <fmt/ranges.h>
++#include <fmt/std.h>
+
+ #define DEFAULT_IO_BUFFER_SIZE 1024
+
+
+From ace94eb860706ff1d5080d391b134d6c20326d08 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Mon, 20 May 2024 04:08:08 -0700
+Subject: [PATCH 09/11] format code
+
+---
+ cpp/open3d/core/linalg/LinalgHeadersCUDA.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cpp/open3d/core/linalg/LinalgHeadersCUDA.h b/cpp/open3d/core/linalg/LinalgHeadersCUDA.h
+index 765ef348df7e1b67e72234234ca851d0954844c3..cf1b8d635ba9bf28ebb7484b5441a39040935500 100644
+--- a/cpp/open3d/core/linalg/LinalgHeadersCUDA.h
++++ b/cpp/open3d/core/linalg/LinalgHeadersCUDA.h
+@@ -16,7 +16,6 @@
+ #include <cublas_v2.h>
+ #include <cusolverDn.h>
+ #include <cusolver_common.h>
+-
+ #include <fmt/core.h>
+ #include <fmt/format.h>
+
+@@ -90,7 +89,8 @@ struct formatter<cusolverStatus_t> {
+                 text = "CUSOLVER_STATUS_IRS_OUT_OF_RANGE";
+                 break;
+             case CUSOLVER_STATUS_IRS_NRHS_NOT_SUPPORTED_FOR_REFINE_GMRES:
+-                text = "CUSOLVER_STATUS_IRS_NRHS_NOT_SUPPORTED_FOR_REFINE_GMRES";
++                text = "CUSOLVER_STATUS_IRS_NRHS_NOT_SUPPORTED_FOR_REFINE_"
++                       "GMRES";
+                 break;
+             case CUSOLVER_STATUS_IRS_INFOS_NOT_INITIALIZED:
+                 text = "CUSOLVER_STATUS_IRS_INFOS_NOT_INITIALIZED";
+
+From c7c28ecbc3ab503d06d8c4633b72112f80f19fcc Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Mon, 20 May 2024 15:46:12 -0700
+Subject: [PATCH 10/11] fix build when BUILD_AZURE_KINECT is ON
+
+---
+ 3rdparty/find_dependencies.cmake              |  4 ++-
+ cpp/open3d/io/sensor/azure_kinect/K4aPlugin.h | 35 +++++++++++++++++++
+ cpp/open3d/ml/pytorch/CMakeLists.txt          | 11 +++++-
+ cpp/open3d/utility/ParallelScan.h             |  8 +++++
+ .../visualization/rendering/RendererHandle.h  |  2 +-
+ .../filament/FilamentResourceManager.cpp      |  4 +--
+ 6 files changed, 59 insertions(+), 5 deletions(-)
+
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index d929b27728ab900e30254b97ad9a1af6abe36983..45555b83a84591d4cb273bbc56b72f40af15ed55 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -1554,7 +1554,9 @@ if(OPEN3D_USE_ONEAPI_PACKAGES)
+         TARGETS TBB::tbb
+     )
+     list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM Open3D::3rdparty_tbb)
+-
++    target_compile_definitions(3rdparty_tbb INTERFACE OPEN3D_USE_ONEAPI_PACKAGES=1)
++    target_compile_definitions(3rdparty_tbb INTERFACE _PSTL_UDR_PRESENT=0)
++    target_compile_definitions(3rdparty_tbb INTERFACE _PSTL_UDS_PRESENT=0)
+     # 2. oneDPL
+     # /opt/intel/oneapi/dpl/latest/lib/cmake/oneDPL
+     open3d_find_package_3rdparty_library(3rdparty_onedpl
+diff --git a/cpp/open3d/io/sensor/azure_kinect/K4aPlugin.h b/cpp/open3d/io/sensor/azure_kinect/K4aPlugin.h
+index cd9a6eb1db1d17fd6efc305d5c815487a9b7acec..15e461d4285b82456d1c699877f9b76023e12f3a 100644
+--- a/cpp/open3d/io/sensor/azure_kinect/K4aPlugin.h
++++ b/cpp/open3d/io/sensor/azure_kinect/K4aPlugin.h
+@@ -295,3 +295,38 @@ k4a_result_t k4a_transformation_depth_image_to_point_cloud(
+ }  // namespace k4a_plugin
+ }  // namespace io
+ }  // namespace open3d
++
++#include <fmt/format.h>
++
++namespace fmt {
++
++template <>
++struct formatter<k4a_wait_result_t> {
++    template <typename FormatContext>
++    auto format(const k4a_wait_result_t &c, FormatContext &ctx) const
++            -> decltype(ctx.out()) {
++        const char *text = nullptr;
++        switch (c) {
++            case K4A_WAIT_RESULT_SUCCEEDED:
++                text = "K4A_WAIT_RESULT_SUCCEEDED";
++                break;
++            case K4A_WAIT_RESULT_FAILED:
++                text = "K4A_WAIT_RESULT_FAILED";
++                break;
++            case K4A_WAIT_RESULT_TIMEOUT:
++                text = "K4A_WAIT_RESULT_TIMEOUT";
++                break;
++            default:
++                text = "Unknown k4a_wait_result_t";
++                break;
++        }
++        return format_to(ctx.out(), text);
++    }
++
++    template <typename ParseContext>
++    constexpr auto parse(ParseContext &ctx) -> decltype(ctx.begin()) {
++        return ctx.begin();
++    }
++};
++
++}  // namespace fmt
+diff --git a/cpp/open3d/ml/pytorch/CMakeLists.txt b/cpp/open3d/ml/pytorch/CMakeLists.txt
+index adc9ac48e3d57f0937fc160269540455390855f4..3cb75e531de07421821d87e585be18cea1cbf253 100644
+--- a/cpp/open3d/ml/pytorch/CMakeLists.txt
++++ b/cpp/open3d/ml/pytorch/CMakeLists.txt
+@@ -140,9 +140,18 @@ target_link_libraries(open3d_torch_ops PRIVATE
+     Open3D::3rdparty_eigen3
+     Open3D::3rdparty_fmt
+     Open3D::3rdparty_nanoflann
+-    Open3D::3rdparty_parallelstl
+     Open3D::3rdparty_tbb
+ )
++if (TARGET Open3D::3rdparty_parallelstl)
++    target_link_libraries(open3d_torch_ops PRIVATE
++        Open3D::3rdparty_parallelstl
++    )
++endif()
++if (TARGET Open3D::3rdparty_onedpl)
++    target_link_libraries(open3d_torch_ops PRIVATE
++        Open3D::3rdparty_onedpl
++    )
++endif()
+
+ if (BUILD_CUDA_MODULE)
+     target_link_libraries(open3d_torch_ops PRIVATE
+diff --git a/cpp/open3d/utility/ParallelScan.h b/cpp/open3d/utility/ParallelScan.h
+index a98015053f8b816e7dbe862a784da15f09d9bc83..0479d611eb5c3992dc5c55a453d67d85395c1101 100644
+--- a/cpp/open3d/utility/ParallelScan.h
++++ b/cpp/open3d/utility/ParallelScan.h
+@@ -13,6 +13,14 @@
+ // clang-format off
+ #if TBB_INTERFACE_VERSION >= 10000
+     #ifdef OPEN3D_USE_ONEAPI_PACKAGES
++        #ifdef _PSTL_UDR_PRESENT
++            #undef _PSTL_UDR_PRESENT
++        #endif
++        #define _PSTL_UDR_PRESENT 0
++        #ifdef _PSTL_UDS_PRESENT
++            #undef _PSTL_UDS_PRESENT
++        #endif
++        #define _PSTL_UDS_PRESENT 0
+         #include <oneapi/dpl/execution>
+         #include <oneapi/dpl/numeric>
+     #else
+diff --git a/cpp/open3d/visualization/rendering/RendererHandle.h b/cpp/open3d/visualization/rendering/RendererHandle.h
+index 45b59a70c60355103ba52f1ad20f839b1e9c31e2..dc8b06382e784e72602d44f729a2a9d3118fb7f8 100644
+--- a/cpp/open3d/visualization/rendering/RendererHandle.h
++++ b/cpp/open3d/visualization/rendering/RendererHandle.h
+@@ -98,7 +98,7 @@ struct REHandle : public REHandle_abstract {
+             id = REHandle_abstract::kBadId + 1;
+         }
+
+-        return std::move(REHandle(id));
++        return REHandle(id);
+     }
+
+     static REHandle Concretize(const REHandle_abstract& abstract) {
+diff --git a/cpp/open3d/visualization/rendering/filament/FilamentResourceManager.cpp b/cpp/open3d/visualization/rendering/filament/FilamentResourceManager.cpp
+index 0c831e9d2d0213eeee70cf797b118f35c5920a83..1dcf171536895da2a1efd08c50f8ab3fc15c30be 100644
+--- a/cpp/open3d/visualization/rendering/filament/FilamentResourceManager.cpp
++++ b/cpp/open3d/visualization/rendering/filament/FilamentResourceManager.cpp
+@@ -77,8 +77,8 @@ using ResourcesContainer =
+ template <class ResourceType>
+ std::shared_ptr<ResourceType> MakeShared(ResourceType* pointer,
+                                          filament::Engine& engine) {
+-    return std::move(std::shared_ptr<ResourceType>(
+-            pointer, [&engine](ResourceType* p) { engine.destroy(p); }));
++    return std::shared_ptr<ResourceType>(
++            pointer, [&engine](ResourceType* p) { engine.destroy(p); });
+ }
+
+ template <class ResourceType>
+
+From 38afc66580f0b7e3373c3f9fc78b07fd1d79f238 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Tue, 21 May 2024 01:39:52 -0700
+Subject: [PATCH 11/11] fix build on Windows with MSVC v142 and CUDA enabled
+
+---
+ 3rdparty/fmt/fmt.cmake                           | 15 +++++++++------
+ cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp |  2 ++
+ cpp/open3d/utility/Logging.h                     |  2 ++
+ examples/cpp/OnlineSLAMUtil.h                    |  2 ++
+ 4 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/3rdparty/fmt/fmt.cmake b/3rdparty/fmt/fmt.cmake
+index 767f44c0c4798a66c83cf39944b28c8a8122c2f6..d7698e1a645be30e6960bba564dc6747c1ffdcbc 100644
+--- a/3rdparty/fmt/fmt.cmake
++++ b/3rdparty/fmt/fmt.cmake
+@@ -3,12 +3,15 @@ include(ExternalProject)
+ set(FMT_LIB_NAME fmt)
+
+ if (MSVC AND BUILD_CUDA_MODULE)
+-    # set(FMT_VER "9.1.0")
+-    set(FMT_VER "10.1.1")
+-    set(FMT_SHA256
+-        "78b8c0a72b1c35e4443a7e308df52498252d1cefc2b08c9a97bc9ee6cfe61f8b"
+-        # "5dea48d1fcddc3ec571ce2058e13910a0d4a6bab4cc09a809d8b1dd1c88ae6f2"
+-        )
++    if (MSVC_VERSION GREATER_EQUAL 1930)  # v143
++        set(FMT_VER "10.1.1")
++        set(FMT_SHA256
++            "78b8c0a72b1c35e4443a7e308df52498252d1cefc2b08c9a97bc9ee6cfe61f8b")
++    else()
++        set(FMT_VER "6.0.0")
++        set(FMT_SHA256
++            "f1907a58d5e86e6c382e51441d92ad9e23aea63827ba47fd647eacc0d3a16c78")
++    endif()
+ else()
+     set(FMT_VER "10.2.1")
+     set(FMT_SHA256
+diff --git a/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp b/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp
+index 990b948ee33e71a1fb53fc43d39e56c4cf10eaf5..1bb6dd7608165122a991ef4b5737b2d0b9336435 100644
+--- a/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp
++++ b/cpp/open3d/t/io/sensor/realsense/RSBagReader.cpp
+@@ -7,7 +7,9 @@
+
+ #include "open3d/t/io/sensor/realsense/RSBagReader.h"
+
++#if FMT_VERSION >= 100000
+ #include <fmt/std.h>
++#endif
+ #include <json/json.h>
+
+ #include <chrono>
+diff --git a/cpp/open3d/utility/Logging.h b/cpp/open3d/utility/Logging.h
+index 04c70365db60353554bb57768721cd4b3c5404d1..fdb132f9b06656c3416c2c64b7fa30e404d11b8f 100644
+--- a/cpp/open3d/utility/Logging.h
++++ b/cpp/open3d/utility/Logging.h
+@@ -21,7 +21,9 @@
+ #include <fmt/core.h>
+ #include <fmt/printf.h>
+ #include <fmt/ranges.h>
++#if FMT_VERSION >= 100000
+ #include <fmt/std.h>
++#endif
+
+ #define DEFAULT_IO_BUFFER_SIZE 1024
+
+diff --git a/examples/cpp/OnlineSLAMUtil.h b/examples/cpp/OnlineSLAMUtil.h
+index ecb2d0b52ae9def57ee6a8c890d4cdcf7b2356ef..358256de3df97e6bc8ff776168edc23eb6522ec8 100644
+--- a/examples/cpp/OnlineSLAMUtil.h
++++ b/examples/cpp/OnlineSLAMUtil.h
+@@ -5,7 +5,9 @@
+ // SPDX-License-Identifier: MIT
+ // ----------------------------------------------------------------------------
+
++#if FMT_VERSION >= 100000
+ #include <fmt/std.h>
++#endif
+
+ #include <atomic>
+ #include <sstream>

@@ -1,0 +1,65 @@
+Remove in the next release
+Modified from https://github.com/isl-org/Open3D/pull/6969
+
+From 3773d816260c5912581397a0dadf08da4c943d68 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Sat, 14 Sep 2024 20:41:27 -0700
+Subject: [PATCH 1/2] fix build with fmt-v11
+
+---
+ cpp/open3d/t/geometry/RaycastingScene.cpp           | 2 +-
+ cpp/open3d/utility/IJsonConvertible.h               | 3 +--
+ cpp/open3d/visualization/rendering/RendererHandle.h | 2 +-
+ 3 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/cpp/open3d/utility/IJsonConvertible.h b/cpp/open3d/utility/IJsonConvertible.h
+index 8febffa566f..3811359147d 100644
+--- a/cpp/open3d/utility/IJsonConvertible.h
++++ b/cpp/open3d/utility/IJsonConvertible.h
+@@ -86,8 +86,7 @@ namespace fmt {
+ template <>
+ struct formatter<Json::Value> {
+     template <typename FormatContext>
+-    auto format(const Json::Value &value, FormatContext &ctx)
+-            -> decltype(ctx.out()) {
++    auto format(const Json::Value &value, FormatContext &ctx) const -> decltype(ctx.out())  {
+         return format_to(ctx.out(), "{}", open3d::utility::JsonToString(value));
+     }
+ 
+diff --git a/cpp/open3d/visualization/rendering/RendererHandle.h b/cpp/open3d/visualization/rendering/RendererHandle.h
+index dc8b06382e7..be69a3d99a8 100644
+--- a/cpp/open3d/visualization/rendering/RendererHandle.h
++++ b/cpp/open3d/visualization/rendering/RendererHandle.h
+@@ -164,7 +164,7 @@ struct formatter<
+                          char>> {
+     template <typename FormatContext>
+     auto format(const open3d::visualization::rendering::REHandle_abstract& uid,
+-                FormatContext& ctx) -> decltype(ctx.out()) {
++                FormatContext& ctx) const -> decltype(ctx.out()) {
+         return format_to(ctx.out(), "[{}, {}, hash: {}]",
+                          open3d::visualization::rendering::REHandle_abstract::
+                                  TypeToString(uid.type),
+
+From 8f8a41169f38e740c3b89b0cbd3861ed644efb57 Mon Sep 17 00:00:00 2001
+From: Zhirui Dai <daizhirui@hotmail.com>
+Date: Sat, 14 Sep 2024 20:46:14 -0700
+Subject: [PATCH 2/2] fix code style
+
+---
+ cpp/open3d/utility/IJsonConvertible.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/cpp/open3d/utility/IJsonConvertible.h b/cpp/open3d/utility/IJsonConvertible.h
+index 3811359147d..e18e2948a23 100644
+--- a/cpp/open3d/utility/IJsonConvertible.h
++++ b/cpp/open3d/utility/IJsonConvertible.h
+@@ -86,7 +86,8 @@ namespace fmt {
+ template <>
+ struct formatter<Json::Value> {
+     template <typename FormatContext>
+-    auto format(const Json::Value &value, FormatContext &ctx) const -> decltype(ctx.out())  {
++    auto format(const Json::Value &value, FormatContext &ctx) const
++            -> decltype(ctx.out()) {
+         return format_to(ctx.out(), "{}", open3d::utility::JsonToString(value));
+     }
+ 
