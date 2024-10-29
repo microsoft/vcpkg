@@ -4186,7 +4186,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.9.3",
-      "port-version": 0 
+      "port-version": 0
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
@@ -4961,7 +4961,7 @@
       "port-version": 17
     },
     "libpq": {
-      "baseline": "16.4",
+      "baseline": "17.0",
       "port-version": 0
     },
     "libpqxx": {
