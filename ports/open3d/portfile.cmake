@@ -21,9 +21,10 @@ vcpkg_add_to_path(PREPEND "${GIT_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "sycl"           BUILD_SYCL_MODULE
-        "intel-oneapi"   OPEN3D_USE_ONEAPI_PACKAGES
+        "gui"            BUILD_GUI
         "blas"           USE_BLAS
+        "intel-oneapi"   OPEN3D_USE_ONEAPI_PACKAGES
+        "sycl"           BUILD_SYCL_MODULE
 )
 
 vcpkg_cmake_configure(
@@ -36,7 +37,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_BENCHMARKS=OFF
-        -DBUILD_GUI=OFF
+        -DBUILD_GUI=${BUILD_GUI}
         -DBUILD_ISPC_MODULE=OFF
         -DBUILD_CUDA_MODULE=OFF
         -DBUILD_TENSORFLOW_OPS=OFF
