@@ -25,6 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "blas"           USE_BLAS
         "intel-oneapi"   OPEN3D_USE_ONEAPI_PACKAGES
         "sycl"           BUILD_SYCL_MODULE
+        "openmp"         WITH_OPENMP
         "python"         BUILD_PYTHON_MODULE
 )
 
@@ -50,7 +51,7 @@ vcpkg_cmake_configure(
         -DOPEN3D_USE_ONEAPI_PACKAGES=${OPEN3D_USE_ONEAPI_PACKAGES}
         -DUSE_BLAS=${USE_BLAS}
         -DUSE_SYSTEM_BLAS=ON
-        -DWITH_OPENMP=OFF
+        -DWITH_OPENMP=${WITH_OPENMP}
         -DUSE_SYSTEM_ASSIMP=ON
         -DUSE_SYSTEM_CURL=ON
         -DUSE_SYSTEM_CUTLASS=ON

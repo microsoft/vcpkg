@@ -37,7 +37,8 @@
   ],
   "default-features": [
     "blas",
-    "gui"
+    "gui",
+    "openmp"
   ],
   "features": {
     "blas": {
@@ -64,6 +65,9 @@
       "dependencies": [
         "intel-mkl"
       ]
+    },
+    "openmp": {
+      "description": "Use OpenMP multi-threading"
     },
     "python": {
       "description": "Build the python module",
