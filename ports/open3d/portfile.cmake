@@ -12,6 +12,7 @@ vcpkg_from_github(
         0003-liblzf.patch
         0004-tiny_gltf.patch
         0005-jsoncpp.patch
+        0006-fmt.patch # remove in the next release https://github.com/isl-org/Open3D/pull/6783
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_WINDOWS_RUNTIME)
