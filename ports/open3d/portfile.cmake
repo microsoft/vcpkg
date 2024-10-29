@@ -15,6 +15,7 @@ vcpkg_from_github(
         0007-parallelstl.patch
         0008-curl.patch
         0009-std-includes.patch
+        0010-imgui.patch
         # remove in the next release
         6783.patch
         6969.patch

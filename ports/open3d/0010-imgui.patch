@@ -1,0 +1,42 @@
+diff --git a/cpp/open3d/visualization/gui/ListView.cpp b/cpp/open3d/visualization/gui/ListView.cpp
+index 6ee1ddc98..9d3f8a967 100644
+--- a/cpp/open3d/visualization/gui/ListView.cpp
++++ b/cpp/open3d/visualization/gui/ListView.cpp
+@@ -8,6 +8,7 @@
+ #include "open3d/visualization/gui/ListView.h"
+ 
+ #include <imgui.h>
++#include <imgui_internal.h> // ImMin
+ 
+ #include <algorithm>
+ #include <cmath>
+diff --git a/cpp/open3d/visualization/gui/ListView.cpp b/cpp/open3d/visualization/gui/ListView.cpp
+index 4d77f0bd1..6ee1ddc98 100644
+--- a/cpp/open3d/visualization/gui/ListView.cpp
++++ b/cpp/open3d/visualization/gui/ListView.cpp
+@@ -15,6 +15,22 @@
+ #include "open3d/visualization/gui/Theme.h"
+ #include "open3d/visualization/gui/Util.h"
+ 
++#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
++namespace ImGui {
++static inline bool ListBoxHeader(const char *label,
++                                 int items_count,
++                                 int height_in_items = -1) {
++    float height = GetTextLineHeightWithSpacing() *
++                           ((height_in_items < 0 ? ImMin(items_count, 7)
++                                                 : height_in_items) +
++                            0.25f) +
++                   GetStyle().FramePadding.y * 2.0f;
++    return BeginListBox(label, ImVec2(0.0f, height));
++}  // Helper to calculate size from items_count and height_in_items
++static inline void ListBoxFooter() { EndListBox(); }
++}  // namespace ImGui
++#endif
++
+ namespace open3d {
+ namespace visualization {
+ namespace gui {
+-- 
+2.45.2
+
