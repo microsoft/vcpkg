@@ -34,8 +34,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "vtk"
-  ]
+    "vtk",
+    "zeromq"
+  ],
   "default-features": [
     "blas"
   ],
