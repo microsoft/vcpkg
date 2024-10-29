@@ -6,7 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
     REF "${VERSION}"
-    SHA512 25a5baaafa4949844daa2b423185d19d0a7a6fcd125738212bd62339c824988c6a8d2e3bd68ca1b8aee8facffa2ec0e15c3698c0831573b85c1c7532d8ae5b89
+    #[[
+        Attention: pdal must be updated together with pdal-dimbuilder
+    #]]
+    SHA512 1f9c4383fdbd4e10ef0b30b7148386692f8bd5f19b57a0323d92f2dc55a14fbc6a0d4d60c16c9604cbd3837c0ae8e3c88baebdefd534273952f92f01c5703554
     HEAD_REF master
     PATCHES
         namespace-nl.diff
