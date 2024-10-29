@@ -27,6 +27,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "sycl"           BUILD_SYCL_MODULE
         "openmp"         WITH_OPENMP
         "python"         BUILD_PYTHON_MODULE
+        "azure-kinect"   BUILD_AZURE_KINECT
+        "realsense2"     BUILD_LIBREALSENSE
 )
 
 vcpkg_cmake_configure(
@@ -43,8 +45,8 @@ vcpkg_cmake_configure(
         -DBUILD_CUDA_MODULE=OFF
         -DBUILD_TENSORFLOW_OPS=OFF
         -DBUILD_PYTHON_MODULE=${BUILD_PYTHON_MODULE}
-        -DBUILD_LIBREALSENSE=OFF
-        -DBUILD_AZURE_KINECT=OFF
+        -DBUILD_LIBREALSENSE=${BUILD_LIBREALSENSE}
+        -DBUILD_AZURE_KINECT=${BUILD_AZURE_KINECT}
         -DBUILD_SYCL_MODULE=${BUILD_SYCL_MODULE}
         -DOPEN3D_USE_ONEAPI_PACKAGES=${OPEN3D_USE_ONEAPI_PACKAGES}
         -DUSE_BLAS=${USE_BLAS}

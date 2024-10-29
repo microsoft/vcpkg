@@ -41,6 +41,12 @@
     "openmp"
   ],
   "features": {
+    "azure-kinect": {
+      "description": "Build support for Azure Kinect sensor",
+      "dependencies": [
+        "azure-kinect-sensor-sdk"
+      ]
+    },
     "blas": {
       "description": "Use BLAS/LAPACK/LAPACKE instead of MKL",
       "dependencies": [
@@ -73,6 +79,12 @@
       "description": "Build the python module",
       "dependencies": [
         "pybind11"
+      ]
+    },
+    "realsense": {
+      "description": "Build support for Intel RealSense camera",
+      "dependencies": [
+        "realsense2"
       ]
     },
     "sycl": {
