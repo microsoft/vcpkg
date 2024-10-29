@@ -7277,8 +7277,8 @@
       "port-version": 2
     },
     "qcoro": {
-      "baseline": "0.10.0",
-      "port-version": 1
+      "baseline": "0.11.0",
+      "port-version": 0
     },
     "qcustomplot": {
       "baseline": "2.1.1",
