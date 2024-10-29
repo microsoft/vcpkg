@@ -15,15 +15,15 @@ index dc65543..5bccbce 100644
  add_subdirectory(tools)
  add_subdirectory(apps)
  
-@@ -217,12 +214,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
- # Interface include directories allow downstream project to get the directory
- # without specification.
- #
+@@ -220,12 +217,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
+ 
+ 
+ 
 +find_package(Eigen3 CONFIG REQUIRED)
 +target_link_libraries(${PDAL_LIB_NAME} PRIVATE Eigen3::Eigen)
  target_include_directories(${PDAL_LIB_NAME}
      SYSTEM BEFORE PRIVATE
--        ${PDAL_VENDOR_DIR}/eigen
+-        ${PDAL_VENDOR_EIGEN_DIR}
          ${PDAL_VENDOR_DIR}/kazhdan
 -        ${PDAL_VENDOR_DIR}/h3/include
  )
