@@ -34,8 +34,7 @@ qt_cmake_configure(OPTIONS
                         -DINPUT_systemd_watchdog='no'
                         -DINPUT_widgets_support=ON
                    TOOL_NAMES ${TOOL_NAMES}
-                   OPTIONS_DEBUG
-                   OPTIONS_RELEASE)
+)
 
 ### Need to fix one post-build.bat; Couldn't find the place where it gets generated!
 if(VCPKG_TARGET_IS_WINDOWS)
