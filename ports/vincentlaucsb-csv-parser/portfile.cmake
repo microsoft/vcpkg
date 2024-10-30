@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         001-fix-cmake.patch
         002-fix-include.patch
+		003-disable-coverage.patch
 )
 
 vcpkg_cmake_configure(

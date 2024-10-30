@@ -1,0 +1,11 @@
+{
+  "name": "libdvdnav",
+  "version-semver": "6.1.1",
+  "description": "Library to navigate DVD disks",
+  "homepage": "https://www.videolan.org/developers/libdvdnav.html",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "libdvdread"
+  ]
+}
