@@ -16,10 +16,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 e510f6421caba5e74c6efe5b56b17e9c9741ece0cfd5020148ca89b3ac32bd8781ab00dfc7a134163c85af3f4f01f2529a9baa5a9df9b0c80cbca003e6d199e2
+    SHA512 77c9601f4a689248448049660ef0083fc99e2a4c2e7a260814831bdfee8e9844f64b5b2aed88a9f907fe4ebcf6a532bb7dce80bb11c1f54c31066b07aa96b851
     HEAD_REF master
     PATCHES
         fix_build-location.patch
+        fix-msvc.patch #https://github.com/PixarAnimationStudios/OpenUSD/pull/3204
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

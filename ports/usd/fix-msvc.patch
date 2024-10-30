@@ -1,0 +1,51 @@
+diff --git a/cmake/defaults/msvcdefaults.cmake b/cmake/defaults/msvcdefaults.cmake
+index 13d77d0..c0e5edd 100644
+--- a/cmake/defaults/msvcdefaults.cmake
++++ b/cmake/defaults/msvcdefaults.cmake
+@@ -130,3 +130,9 @@ set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Gm-")
+ # with no symbols in it.  We do this a lot because of a pattern of having
+ # a C++ source file for many header-only facilities, e.g. tf/bitUtils.cpp.
+ set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /IGNORE:4221")
++
++# Enforce synchronous PDB writes when using Ninja
++# (this prevents "permission denied" compile errors on program databases)
++if("${CMAKE_GENERATOR}" STREQUAL "Ninja")
++    set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /FS")
++endif()
+\ No newline at end of file
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index b86b489..f800561 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -551,7 +551,8 @@ function(_pxr_enable_precompiled_header TARGET_NAME)
+     # Headers live in subdirectories.
+     set(rel_output_header_path "${PXR_PREFIX}/${TARGET_NAME}/${output_header_name}")
+     set(abs_output_header_path "${PROJECT_BINARY_DIR}/include/${rel_output_header_path}")
+-    set(abs_precompiled_path ${PROJECT_BINARY_DIR}/include/${PXR_PREFIX}/${TARGET_NAME}/${CMAKE_BUILD_TYPE}/${precompiled_name})
++    set(abs_precompiled_container_path "${PROJECT_BINARY_DIR}/include/${PXR_PREFIX}/${TARGET_NAME}/${CMAKE_BUILD_TYPE}")
++    set(abs_precompiled_path "${abs_precompiled_container_path}/${precompiled_name}")
+ 
+     # Additional compile flags to use precompiled header.  This will be
+     set(compile_flags "")
+@@ -583,6 +584,7 @@ function(_pxr_enable_precompiled_header TARGET_NAME)
+             set(abs_output_source_path ${CMAKE_CURRENT_BINARY_DIR}/${output_header_name_we}.cpp)
+             add_custom_command(
+                 OUTPUT "${abs_output_source_path}"
++                COMMAND ${CMAKE_COMMAND} -E make_directory "${abs_precompiled_container_path}"
+                 COMMAND ${CMAKE_COMMAND} -E touch ${abs_output_source_path}
+             )
+ 
+@@ -598,6 +600,13 @@ function(_pxr_enable_precompiled_header TARGET_NAME)
+ 
+             # Add the trigger file to the target.
+             target_sources(${TARGET_NAME} PRIVATE "${abs_output_source_path}")
++            
++            # The trigger file gets a special compile flag (/Yc).
++            set_source_files_properties(${abs_output_source_path} PROPERTIES
++                    COMPILE_FLAGS "/Yc\"${rel_output_header_path}\" /FI\"${rel_output_header_path}\" /Fp\"${abs_precompiled_path}\""
++                    OBJECT_OUTPUTS "${abs_precompiled_path}"
++                    OBJECT_DEPENDS "${abs_output_header_path}"
++            )
+ 
+             # Exclude the trigger.
+             list(APPEND pch_EXCLUDE ${abs_output_source_path})
