@@ -77,3 +77,10 @@ jobs:
               let body = "Please install `autoconf-archive` via `brew install autoconf-archive` (macos) or `sudo apt-get install autoconf-archive` (linux)"
               return await commentLabelClose(body, "category:question");
             }
+
+            // Wrong formatted issues like #36086
+            const containsCopyHint = issue_body.indexOf("Copy issue body from") !== -1 || issue_body.indexOf("%2Fissue_body.md") !== -1;
+            if (containsCopyHint && issue_body.indexOf("```") === -1){
+              let body = "Please see #30604 for how to properly report a build failure."
+              return await github.rest.issues.createComment({...issue_query, body: body});
+            }
