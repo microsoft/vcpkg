@@ -4,7 +4,9 @@ cmake_policy(SET CMP0116 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(targets_export_name libmem-targets)
+
+set(targets_export_name libmem-target)
+
 project(libmem LANGUAGES C CXX ASM)
 
 if (MSVC AND BUILD_SHARED_LIBS)
@@ -80,14 +82,47 @@ llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
 
-install(TARGETS libmem EXPORT ${targets_export_name}               # Export set name
+install(TARGETS libmem EXPORT ${targets_export_name}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION "${LIBMEM_INC}/libmem"
 )
 
 export(TARGETS libmem NAMESPACE libmem::
-FILE ${PROJECT_BINARY_DIR}/${targets_export_name}.cmake)
+FILE ${PROJECT_BINARY_DIR}/${targets_export_name}.cmake
+)
+
+install(EXPORT ${targets_export_name}
+        FILE ${targets_export_name}.cmake
+        DESTINATION share/libmem)
+
+include(CMakePackageConfigHelpers)
+
+set(CONFIG_PACKAGE_LOCATION ${PROJECT_BINARY_DIR}/libmem-config.cmake)
+set(CONFIG_VERSION_LOCATION ${PROJECT_BINARY_DIR}/libmem-config-version.cmake)
+
+file(WRITE ${PROJECT_BINARY_DIR}/libmem-config.cmake.in
+    "@PACKAGE_INIT@\n"
+    "include("${CMAKE_CURRENT_LIST_DIR}/libmem-target.cmake")\n"
+)
+
+configure_package_config_file(
+    ${PROJECT_BINARY_DIR}/libmem-config.cmake.in
+    ${PROJECT_BINARY_DIR}/libmem-config.cmake
+    INSTALL_DESTINATION share/libmem
+)
+
+write_basic_package_version_file(
+    ${PROJECT_BINARY_DIR}/libmem-config-version.cmake
+    VERSION 5.0.2
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+    ${PROJECT_BINARY_DIR}/libmem-config.cmake
+    ${PROJECT_BINARY_DIR}/libmem-config-version.cmake
+    DESTINATION share/libmem
+)
 
 install(DIRECTORY ${LIBMEM_INC}/libmem
     DESTINATION include
