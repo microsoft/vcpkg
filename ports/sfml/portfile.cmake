@@ -14,6 +14,15 @@ if(VCPKG_TARGET_IS_LINUX)
     message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
 endif()
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "network" SFML_BUILD_NETWORK
+        "graphics" SFML_BUILD_GRAPHICS
+        "window" SFML_BUILD_WINDOW
+        "audio" SFML_BUILD_AUDIO
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -22,6 +31,7 @@ vcpkg_cmake_configure(
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
         -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

@@ -5,12 +5,6 @@
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
   "dependencies": [
-    "freetype",
-    "libflac",
-    "libogg",
-    "libvorbis",
-    "openal-soft",
-    "opengl",
     "stb",
     {
       "name": "vcpkg-cmake",
@@ -20,5 +14,38 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "network",
+    "graphics",
+    "window",
+    "audio"
+  ],
+  "features": {
+    "network": {
+      "description": "Use sfml-network library"
+    },
+    "graphics": {
+      "description": "Use sfml-graphics library",
+      "dependencies": [
+        "freetype",
+        "opengl"
+      ]
+    },
+    "window": {
+      "description": "Use sfml-window library",
+      "dependencies": [
+
+      ]
+    },
+    "audio": {
+      "description": "Use sfml-audio library",
+      "dependencies": [
+        "libflac",
+        "libogg",
+        "libvorbis",
+        "openal-soft"
+      ]
+    }
+  }
 }
