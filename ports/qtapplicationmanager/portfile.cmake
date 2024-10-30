@@ -33,7 +33,7 @@ qt_cmake_configure(OPTIONS
                         -DINPUT_libbacktrace='no'
                         -DINPUT_systemd_watchdog='no'
                         -DINPUT_widgets_support=ON
-                        TOOL_NAMES ${TOOL_NAMES}
+                    TOOL_NAMES ${TOOL_NAMES}
                    OPTIONS_DEBUG
                    OPTIONS_RELEASE)
 
