@@ -70,5 +70,12 @@ if(NOT qttools AND VCPKG_CROSSCOMPILING)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/")
  endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin/"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/"
+        "${CURRENT_PACKAGES_DIR}/tools/"
+  )
+endif()
 
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) #Debug tracing libraries are only build if CMAKE_BUILD_TYPE is equal to Debug
