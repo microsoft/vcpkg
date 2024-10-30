@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
+        0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
