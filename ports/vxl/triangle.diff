@@ -1,0 +1,33 @@
+diff --git a/config/cmake/Modules/VXLConfig_export.cmake.in b/config/cmake/Modules/VXLConfig_export.cmake.in
+index c69b7d8..25e7168 100644
+--- a/config/cmake/Modules/VXLConfig_export.cmake.in
++++ b/config/cmake/Modules/VXLConfig_export.cmake.in
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(unofficial-triangle CONFIG)
++
+ # vxl/config/cmake/VXLConfig_export.cmake.in
+ #
+ # This CMake module is configured by VXL's build process to export the
+diff --git a/v3p/netlib/CMakeLists.txt b/v3p/netlib/CMakeLists.txt
+index 1c3df5d..3f44adf 100644
+--- a/v3p/netlib/CMakeLists.txt
++++ b/v3p/netlib/CMakeLists.txt
+@@ -7,15 +7,8 @@ set(netlib_sources
+      triangle.c triangle.h
+    )
+ 
+-vxl_add_library(
+-    LIBRARY_NAME ${VXL_LIB_PREFIX}netlib
+-    LIBRARY_SOURCES ${netlib_sources}
+-    DISABLE_MSVC_MP
+-)
+-
+-if(UNIX)
+-  target_link_libraries( ${VXL_LIB_PREFIX}netlib m )
+-endif()
++find_package(unofficial-triangle CONFIG REQUIRED GLOBAL)
++add_library(${VXL_LIB_PREFIX}netlib ALIAS unofficial::triangle::triangle)
+ 
+ # Allow sources in subdirectories to see the include files.
+ include_directories(${netlib_SOURCE_DIR})
