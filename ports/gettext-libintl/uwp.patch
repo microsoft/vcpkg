@@ -1,20 +1,3 @@
-diff --git a/gettext-runtime/gnulib-lib/fcntl.c b/gettext-runtime/gnulib-lib/fcntl.c
-index f9753c4..3a3caee 100644
---- a/gettext-runtime/gnulib-lib/fcntl.c
-+++ b/gettext-runtime/gnulib-lib/fcntl.c
-@@ -38,6 +38,12 @@
- # define WIN32_LEAN_AND_MEAN
- # include <windows.h>
- 
-+# if defined(WINAPI_FAMILY_PARTITION)
-+#  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-+#   define HANDLE_FLAG_INHERIT 0
-+#  endif
-+# endif
-+
- /* Get _get_osfhandle.  */
- # if GNULIB_MSVC_NOTHROW
- #  include "msvc-nothrow.h"
 diff --git a/gettext-runtime/intl/langprefs.c b/gettext-runtime/intl/langprefs.c
 index f774ba2..f488b7f 100644
 --- a/gettext-runtime/intl/langprefs.c
@@ -31,10 +14,10 @@ index f774ba2..f488b7f 100644
  #endif
  
  #ifdef WIN32_NATIVE
-diff --git a/gettext-runtime/intl/localcharset.c b/gettext-runtime/intl/localcharset.c
+diff --git a/gettext-runtime/intl/gnulib-lib/localcharset.c b/gettext-runtime/intl/gnulib-lib/localcharset.c
 index ec75427..9e063e4 100644
---- a/gettext-runtime/intl/localcharset.c
-+++ b/gettext-runtime/intl/localcharset.c
+--- a/gettext-runtime/intl/gnulib-lib/localcharset.c
++++ b/gettext-runtime/intl/gnulib-lib/localcharset.c
 @@ -34,6 +34,9 @@
  #if defined _WIN32 && !defined __CYGWIN__
  # define WINDOWS_NATIVE
@@ -54,19 +37,3 @@ index ec75427..9e063e4 100644
  # elif defined WINDOWS_NATIVE
  
    char buf[2 + 10 + 1];
-diff --git a/gettext-runtime/intl/localename.c b/gettext-runtime/intl/localename.c
-index d77bb81..3c6e055 100644
---- a/gettext-runtime/intl/localename.c
-+++ b/gettext-runtime/intl/localename.c
-@@ -69,6 +69,11 @@ extern char * getlocalename_l(int, locale_t);
- 
- #if defined _WIN32 && !defined __CYGWIN__
- # define WINDOWS_NATIVE
-+# if defined(WINAPI_FAMILY_PARTITION)
-+#  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-+#   undef WIN32_NATIVE
-+#  endif
-+# endif
- # if !defined IN_LIBINTL
- #  include "glthread/lock.h"
- # endif

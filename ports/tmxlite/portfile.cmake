@@ -1,21 +1,38 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fallahn/tmxlite
-    REF v1.3.0
+    REF "v${VERSION}"
     HEAD_REF master
-    SHA512 3D432152080F7FDDD14A150FF87C34932695C96D7F676399C7610FF373972223CE54C9483BD9A872FD53668C113E334FCBF8596AE21CFDAF83B6159C7287A4A3
+    SHA512 0ffe0505329f00ef9872998673a7c220a9a5352f830688ef17952c0c4f001e0c2994a3a28f0e7de60cc82fff2701561cccbc2143fd51984bf4870e7d1fd0a2ba
+    PATCHES
+        dependencies.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TMXLITE_STATIC_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/tmxlite"
+    OPTIONS
+        -DTMXLITE_STATIC_LIB=${TMXLITE_STATIC_LIB}
+        -DUSE_EXTLIBS=ON
+        -DPKGCONF_REQ_PUB=pugixml
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+set(STATIC_POSTFIX "")
+if(TMXLITE_STATIC_LIB)
+    set(STATIC_POSTFIX "-s")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/tmxlite.pc" "-ltmxlite" "-ltmxlite${STATIC_POSTFIX}")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tmxlite.pc" "-ltmxlite" "-ltmxlite${STATIC_POSTFIX}-d")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/s2n-tls
     REF "v${VERSION}"
-    SHA512 deead85f2ab22441e1110d442fc93273d96d8dd6a203940cca7ef166fc1c9e7ab75ffe2d550e013e1e1e3266b208904cff94cc2482d6fd00e0546293b0ba11d4
+    SHA512 10a6dcf6669ca97d65f009a692075c858b9b344c535487f64b4b2046f0cda0241c884fdc3d8f054a3bf85d080582a1000b6edca2b3bf98f7aa62857ac97443b2
     PATCHES
         fix-cmake-target-path.patch
 )

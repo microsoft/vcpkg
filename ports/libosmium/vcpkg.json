@@ -1,6 +1,7 @@
 {
   "name": "libosmium",
   "version-semver": "2.20.0",
+  "port-version": 1,
   "description": "A fast and flexible C++ library for working with OpenStreetMap data",
   "homepage": "https://osmcode.org/libosmium/",
   "license": "BSL-1.0",

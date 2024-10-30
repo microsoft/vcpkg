@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-vxl",
+  "version-string": "ci",
+  "description": "Port to force features of vxl within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vxl",
+      "features": [
+        "core-imaging"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

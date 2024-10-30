@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realtimechris/jsonifier
     REF "v${VERSION}"    
-    SHA512 da9a67e6987970462c22ac2174231c4c2d5531bd0ebd329cdaf8147f8777e03fb9a7c9ac2b23297dbe51fdf894720ac101ca11277f8a610a089fe9d06d0dbd38
+    SHA512 6168378a117850297fcda78853a0babd0ce7e0ca21b3e8c276acb7e75e04d85ed8909061a62e3324c309fe9e31bc59d89ea06e47853b50481843273e95172ab8
     HEAD_REF main
-    PATCHES
-        uninstall-head.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only

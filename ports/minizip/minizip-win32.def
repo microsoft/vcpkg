@@ -3,18 +3,18 @@ EXPORTS
      fill_win32_filefunc64
      fill_win32_filefunc64A
      fill_win32_filefunc64W
-     win32_open_file_func
-     win32_read_file_func
-     win32_write_file_func
-     win32_tell64_file_func
-     win32_seek64_file_func
-     win32_close_file_func
-     win32_error_file_func
      win32_open64_file_func
      win32_open64_file_funcA
      win32_open64_file_funcW
+     win32_open_file_func
+     win32_read_file_func
+     win32_write_file_func
      win32_tell_file_func
+     win32_tell64_file_func
      win32_seek_file_func
+     win32_seek64_file_func
+     win32_close_file_func
+     win32_error_file_func
      unzRepair
      zip_copyright
      zipOpen

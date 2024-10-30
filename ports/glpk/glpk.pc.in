@@ -7,5 +7,6 @@ Name: glpk
 Description: The GNU Linear Programming Kit (GLPK) solves large-scale linear programming (LP), mixed integer programming (MIP), and related problems.
 Version: @VERSION@
 Libs: -L${libdir} -l@libname@
+Libs.private: @libs@
 Cflags: -I${includedir}
-Requires: @requires@
+Requires.private: @requires@

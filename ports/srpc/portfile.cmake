@@ -1,14 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sogou/srpc
-    REF v0.9.3
-    SHA512  e64cfec279f833ad24b1942ef2b572fc4bd3bfc5f9d623cd5d25b3c869d2ff9b35250cc814e8aaeb919ebed0929c44407eb9abb2e6793cfdc967708210f5f7e3
+    REF v${VERSION}
+    SHA512 55c0ebbf30c24fdb40885792d5d3f1e183f27fcf13df6217053bec13cf9ed6359888351b20a792607b1f49df674b88bd148cf4c8addb1f610b1c59dd4eeba0f2
     HEAD_REF master
+    PATCHES
+        protobuf.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" SRPC_BUILD_STATIC_RUNTIME)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DSRPC_BUILD_STATIC_RUNTIME=${SRPC_BUILD_STATIC_RUNTIME}
+        -DCMAKE_CXX_STANDARD=11
+    MAYBE_UNUSED_VARIABLES
+        SRPC_BUILD_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install()
@@ -19,6 +28,5 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

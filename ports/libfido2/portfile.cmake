@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Yubico/libfido2
     REF ${VERSION}
-    SHA512 90f8452cee4c9cc72241478e697c5c692ccff5ab27752f2f296c3623ee297d1f80a85a359b4d0656c67790084c116aac921894e762eb52d3a79056e5014c03e7
-    HEAD_REF master
+    SHA512 97932ca1a9f8d1bb3cb4b4a8d56ef70085d19ad2bd27c67944fa17ed033bfa45d28d7ad3fa318723e79b17ef5a882ac4f999ad8a6b9965c58665d99c4da7b5ee
+    HEAD_REF main
     PATCHES
         "fix_cmakelists.patch"
 )
@@ -19,10 +19,12 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC_LIBS=${LIBFIDO2_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${LIBFIDO2_BUILD_SHARED}
         -DBUILD_TOOLS=OFF
+        -DBUILD_TESTS=OFF
  )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

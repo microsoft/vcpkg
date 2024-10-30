@@ -1,10 +1,11 @@
 {
   "name": "folly",
-  "version-string": "2023.10.02.00",
+  "version-string": "2024.10.14.00",
+  "port-version": 1,
   "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
   "homepage": "https://github.com/facebook/folly",
   "license": "Apache-2.0",
-  "supports": "(windows & x64 & !uwp) | (!windows & (x64 | arm64))",
+  "supports": "(windows & x64 & !uwp & !mingw) | (!windows & (x64 | arm64))",
   "dependencies": [
     "boost-chrono",
     "boost-context",
@@ -20,10 +21,16 @@
     "boost-thread",
     "boost-variant",
     "double-conversion",
+    "fast-float",
     "fmt",
     "gflags",
     "glog",
     "libevent",
+    "liblzma",
+    {
+      "name": "libunwind",
+      "platform": "linux"
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -44,6 +51,13 @@
         "bzip2"
       ]
     },
+    "libaio": {
+      "description": "Support compile with libaio",
+      "supports": "linux",
+      "dependencies": [
+        "libaio"
+      ]
+    },
     "libsodium": {
       "description": "Support libsodium for cryto",
       "dependencies": [
@@ -52,6 +66,7 @@
     },
     "liburing": {
       "description": "Support compile with liburing",
+      "supports": "linux",
       "dependencies": [
         "liburing"
       ]

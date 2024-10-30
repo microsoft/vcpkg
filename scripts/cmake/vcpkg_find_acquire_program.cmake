@@ -84,7 +84,11 @@ function(z_vcpkg_find_acquire_program_find_internal program)
             PATHS ${arg_PATHS}
             NO_DEFAULT_PATH)
         if(SCRIPT_${program})
-            set("${program}" ${${arg_INTERPRETER}} ${SCRIPT_${program}} CACHE INTERNAL "")
+            if(arg_INTERPRETER MATCHES "PYTHON")
+              set("${program}" ${${arg_INTERPRETER}} -I ${SCRIPT_${program}} CACHE INTERNAL "")
+            else()
+              set("${program}" ${${arg_INTERPRETER}} ${SCRIPT_${program}} CACHE INTERNAL "")
+            endif()
         endif()
         unset(SCRIPT_${program} CACHE)
     endif()
@@ -195,6 +199,15 @@ function(vcpkg_find_acquire_program program)
                         WORLD_READ WORLD_EXECUTE
                 )
             endif()
+        elseif(tool_subdirectory STREQUAL "")
+            # The effective tool subdir is owned by the extracted paths of the archive.
+            # *** This behavior is provided for convenience and short paths. ***
+            # There must be no overlap between different providers of subdirs.
+            # Otherwise tool_subdirectory must be used in order to separate extracted trees.
+            file(REMOVE_RECURSE "${full_subdirectory}.temp")
+            vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}.temp")
+            file(COPY "${full_subdirectory}.temp/" DESTINATION "${full_subdirectory}")
+            file(REMOVE_RECURSE "${full_subdirectory}.temp")
         else()
             vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}")
         endif()

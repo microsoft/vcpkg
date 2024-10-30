@@ -9,15 +9,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 406dbbd5a61a5b0713e7e6c7677be76392c21a5d702b051e72158513436ea9605afe616c5bc1405cb9455be1d1993990c9f2608284204210f41ffc2055e7831b
+    SHA512 d402a2ebdff0c56e23e020823a040ef409b5c7834f598a75248126ca554f622806154d7aabc11ae65c9c2f16907a8a3589ad50e833c359714c4c5b1525cd1ba5
     HEAD_REF main
     PATCHES
-        reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
-        boost-1.70.patch
         fix-windows-minmax.patch
         fix-deps.patch
-        openssl.patch # from https://github.com/facebook/folly/pull/2016
+        disable-uninitialized-resize-on-new-stl.patch
+        fix-unistd-include.patch
+        fix-libunwind.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
@@ -43,9 +43,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         "liburing"   WITH_liburing
+        "libaio"     WITH_libaio
     INVERTED_FEATURES
         "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
-        "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
         "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
         "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
         "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
@@ -58,12 +58,9 @@ vcpkg_cmake_configure(
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
-        -DLIBAIO_FOUND=OFF
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        LIBAIO_FOUND
         MSVC_USE_STATIC_RUNTIME
 )
 

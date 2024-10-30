@@ -1,7 +1,7 @@
 {
   "name": "microsoft-signalr",
   "version": "0.1.0-alpha4",
-  "port-version": 8,
+  "port-version": 12,
   "description": "C++ Client for ASP.NET Core SignalR.",
   "homepage": "https://github.com/aspnet/SignalR-Client-Cpp",
   "dependencies": [

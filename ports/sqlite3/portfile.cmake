@@ -2,9 +2,9 @@ string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+)" "\\1,0\\2,0\\3
 string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "\\1\\2\\3\\4" SQLITE_VERSION "${SQLITE_VERSION}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2023/sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 5ef0e65ee92a088187376fa82ccb182dffa35391dd4dbcb3fafeb0a6f1602ced1e212753837079a9cad007d73d3f5b8a67ca1a6596eba6cf0c695052fa307392
+    URLS "https://sqlite.org/2024/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
+    FILENAME "sqlite-autoconf-${SQLITE_VERSION}.zip"
+    SHA512 698e28a3f1c3da5b45b86a0b50f84c696658d4e56ab45f5cc65dce995601c3bcf1c0050386a1fc08b4b0e0f508e8a046e5c8317b09fe805154b76437e73f8f0e
 )
 
 vcpkg_extract_source_archive(
@@ -36,6 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
     FEATURES
         dbstat              SQLITE_ENABLE_DBSTAT_VTAB
+        dbpage-vtab         SQLITE_ENABLE_DBPAGE_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
         memsys3             SQLITE_ENABLE_MEMSYS3
@@ -44,8 +45,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
         rtree               SQLITE_ENABLE_RTREE
         session             SQLITE_ENABLE_SESSION
         session             SQLITE_ENABLE_PREUPDATE_HOOK
+        snapshot            SQLITE_ENABLE_SNAPSHOT
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
+        soundex             SQLITE_SOUNDEX
     INVERTED_FEATURES
         json1               SQLITE_OMIT_JSON
 )

@@ -1,7 +1,6 @@
 {
   "name": "debug-assert",
-  "version": "1.3.3",
-  "port-version": 2,
+  "version": "1.3.4",
   "description": "Provides flexible DEBUG_ASSERT() macro.",
   "homepage": "https://github.com/foonathan/debug_assert",
   "dependencies": [
