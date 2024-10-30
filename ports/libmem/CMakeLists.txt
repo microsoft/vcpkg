@@ -4,7 +4,7 @@ cmake_policy(SET CMP0116 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(targets_export_name libmem-targets)
 project(libmem LANGUAGES C CXX ASM)
 
 if (MSVC AND BUILD_SHARED_LIBS)
@@ -80,5 +80,20 @@ llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
 
-install(TARGETS libmem LIBRARY DESTINATION lib)
-install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
+install(TARGETS libmem EXPORT ${targets_export_name}               # Export set name
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    PUBLIC_HEADER DESTINATION "${LIBMEM_INC}/libmem"
+)
+
+export(TARGETS libmem NAMESPACE libmem::
+FILE ${PROJECT_BINARY_DIR}/${targets_export_name}.cmake)
+
+install(DIRECTORY ${LIBMEM_INC}/libmem
+    DESTINATION include
+)
+
+install(EXPORT ${targets_export_name}
+    NAMESPACE libmem::
+    DESTINATION lib
+)
