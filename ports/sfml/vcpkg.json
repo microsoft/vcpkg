@@ -16,28 +16,12 @@
     }
   ],
   "default-features": [
-    "network",
+    "audio",
     "graphics",
-    "window",
-    "audio"
+    "network",
+    "window"
   ],
   "features": {
-    "network": {
-      "description": "Use sfml-network library"
-    },
-    "graphics": {
-      "description": "Use sfml-graphics library",
-      "dependencies": [
-        "freetype",
-        "opengl"
-      ]
-    },
-    "window": {
-      "description": "Use sfml-window library",
-      "dependencies": [
-
-      ]
-    },
     "audio": {
       "description": "Use sfml-audio library",
       "dependencies": [
@@ -46,6 +30,19 @@
         "libvorbis",
         "openal-soft"
       ]
+    },
+    "graphics": {
+      "description": "Use sfml-graphics library",
+      "dependencies": [
+        "freetype",
+        "opengl"
+      ]
+    },
+    "network": {
+      "description": "Use sfml-network library"
+    },
+    "window": {
+      "description": "Use sfml-window library"
     }
   }
 }
