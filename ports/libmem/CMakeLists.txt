@@ -72,8 +72,10 @@ else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
+# Create the target without a namespace
 add_library(libmem ${LIBMEM_SRC})
 
+# Apply compile definitions, include directories, and link libraries to the target
 target_compile_definitions(libmem PUBLIC LM_EXPORT)
 
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
@@ -82,21 +84,28 @@ llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
 
-install(TARGETS libmem 
+# Install the libmem library with proper namespacing
+install(TARGETS libmem
     EXPORT ${targets_export_name}
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
-export(TARGETS libmem NAMESPACE unofficial::libmem::
-    FILE ${PROJECT_BINARY_DIR}/${targets_export_name}.cmake
+# Install the export file, which allows users to find the target
+install(EXPORT ${targets_export_name}
+    NAMESPACE unofficial::libmem::
+    FILE ${targets_export_name}.cmake
+    DESTINATION share/unofficial-libmem
 )
 
-install(EXPORT ${targets_export_name}
-        FILE ${targets_export_name}.cmake
-        DESTINATION share/unofficial-libmem)
+# Install headers
+install(
+    DIRECTORY ${LIBMEM_INC}/libmem
+    DESTINATION include
+)
 
+# Config and version files for the package
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
@@ -105,27 +114,16 @@ configure_package_config_file(
     INSTALL_DESTINATION share/unofficial-libmem
 )
 
-set(VERSION_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config-version.cmake")
 write_basic_package_version_file(
-    "${VERSION_FILE_PATH}"
-    VERSION       5.0.2
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config-version.cmake"
+    VERSION 5.0.2
     COMPATIBILITY SameMajorVersion
 )
 
+# Install the config and version files
 install(
     FILES
-    ${PROJECT_BINARY_DIR}/unofficial-libmem-config.cmake
-    ${PROJECT_BINARY_DIR}/unofficial-libmem-config-version.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config-version.cmake
     DESTINATION share/unofficial-libmem
-)
-
-install(
-    DIRECTORY ${LIBMEM_INC}/libmem
-    DESTINATION include
-)
-
-install(
-    EXPORT ${targets_export_name}
-    NAMESPACE unofficial::libmem::
-    DESTINATION lib
 )

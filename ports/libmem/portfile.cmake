@@ -20,23 +20,23 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmem-config.cmake.in" 
     DESTINATION "${SOURCE_PATH}")
 
-#if(VCPKG_TARGET_IS_WINDOWS)
-#    vcpkg_cmake_configure(
-#        SOURCE_PATH ${SOURCE_PATH}
-#        GENERATOR "NMake Makefiles"
-#        DISABLE_PARALLEL_CONFIGURE
-#    )
-#else()
-#    vcpkg_cmake_configure(
-#        SOURCE_PATH ${SOURCE_PATH}
-#        GENERATOR "Unix Makefiles"
-#        DISABLE_PARALLEL_CONFIGURE
-#    )
-#endif()
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${SOURCE_PATH}
+        GENERATOR "NMake Makefiles"
+        DISABLE_PARALLEL_CONFIGURE
+    )
+else()
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${SOURCE_PATH}
+        GENERATOR "Unix Makefiles"
+        DISABLE_PARALLEL_CONFIGURE
+    )
+endif()
+#vcpkg_cmake_configure(
+#    SOURCE_PATH ${SOURCE_PATH}
+#    DISABLE_PARALLEL_CONFIGURE
+#)
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
