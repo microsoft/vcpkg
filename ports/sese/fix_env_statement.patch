@@ -1,0 +1,22 @@
+diff --git a/sese/CMakeLists.txt b/sese/CMakeLists.txt
+index e7185a4b8..a2d16c5a1 100644
+--- a/sese/CMakeLists.txt
++++ b/sese/CMakeLists.txt
+@@ -130,7 +130,7 @@ if (SESE_USE_ASYNC_LOGGER)
+ endif ()
+ 
+ set(SESE_RECORD_TIME_PATTERN $ENV{SESE_RECORD_TIME_PATTERN})
+-if (NOT SESE_RECORD_TIME_PATTERN STREQUAL "")
++if (SESE_RECORD_TIME_PATTERN)
+     target_compile_definitions(
+             Core PRIVATE
+             "SESE_RECORD_TIME_PATTERN=\"${SESE_RECORD_TIME_PATTERN}\""
+@@ -138,7 +138,7 @@ if (NOT SESE_RECORD_TIME_PATTERN STREQUAL "")
+ endif ()
+ 
+ set(SESE_RECORD_TEXT_PATTERN $ENV{SESE_RECORD_TEXT_PATTERN})
+-if (NOT SESE_RECORD_TEXT_PATTERN STREQUAL "")
++if (SESE_RECORD_TEXT_PATTERN)
+     target_compile_definitions(
+             Core PRIVATE
+             "SESE_RECORD_TEXT_PATTERN=\"${SESE_RECORD_TEXT_PATTERN}\""
