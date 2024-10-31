@@ -31,11 +31,14 @@ else()
     set(ELEMENTS_HOST_UI_LIBRARY "gtk")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DELEMENTS_BUILD_EXAMPLES=OFF
         -DELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_build()
