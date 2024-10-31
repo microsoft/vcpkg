@@ -5,7 +5,7 @@ cmake_policy(SET CMP0116 NEW)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(targets_export_name libmem-target)
+set(targets_export_name unofficial-libmem-target)
 
 project(libmem LANGUAGES C CXX ASM)
 
@@ -82,53 +82,50 @@ llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
 
-install(TARGETS libmem EXPORT ${targets_export_name}
+install(TARGETS libmem 
+    EXPORT ${targets_export_name}
+    RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
-    PUBLIC_HEADER DESTINATION "${LIBMEM_INC}/libmem"
 )
 
-export(TARGETS libmem NAMESPACE libmem::
-FILE ${PROJECT_BINARY_DIR}/${targets_export_name}.cmake
+export(TARGETS libmem NAMESPACE unofficial::libmem::
+    FILE ${PROJECT_BINARY_DIR}/${targets_export_name}.cmake
 )
 
 install(EXPORT ${targets_export_name}
         FILE ${targets_export_name}.cmake
-        DESTINATION share/libmem)
+        DESTINATION share/unofficial-libmem)
 
 include(CMakePackageConfigHelpers)
 
-set(CONFIG_PACKAGE_LOCATION ${PROJECT_BINARY_DIR}/libmem-config.cmake)
-set(CONFIG_VERSION_LOCATION ${PROJECT_BINARY_DIR}/libmem-config-version.cmake)
-
-file(WRITE ${PROJECT_BINARY_DIR}/libmem-config.cmake.in
-    "@PACKAGE_INIT@\n"
-    "include("${CMAKE_CURRENT_LIST_DIR}/libmem-target.cmake")\n"
-)
-
 configure_package_config_file(
-    ${PROJECT_BINARY_DIR}/libmem-config.cmake.in
-    ${PROJECT_BINARY_DIR}/libmem-config.cmake
-    INSTALL_DESTINATION share/libmem
+    ${CMAKE_CURRENT_SOURCE_DIR}/unofficial-libmem-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config.cmake
+    INSTALL_DESTINATION share/unofficial-libmem
 )
 
+set(VERSION_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config-version.cmake")
 write_basic_package_version_file(
-    ${PROJECT_BINARY_DIR}/libmem-config-version.cmake
-    VERSION 5.0.2
-    COMPATIBILITY AnyNewerVersion
+    "${VERSION_FILE_PATH}"
+    VERSION       5.0.2
+    COMPATIBILITY SameMajorVersion
 )
 
-install(FILES
-    ${PROJECT_BINARY_DIR}/libmem-config.cmake
-    ${PROJECT_BINARY_DIR}/libmem-config-version.cmake
-    DESTINATION share/libmem
+install(
+    FILES
+    ${PROJECT_BINARY_DIR}/unofficial-libmem-config.cmake
+    ${PROJECT_BINARY_DIR}/unofficial-libmem-config-version.cmake
+    DESTINATION share/unofficial-libmem
 )
 
-install(DIRECTORY ${LIBMEM_INC}/libmem
+install(
+    DIRECTORY ${LIBMEM_INC}/libmem
     DESTINATION include
 )
 
-install(EXPORT ${targets_export_name}
-    NAMESPACE libmem::
+install(
+    EXPORT ${targets_export_name}
+    NAMESPACE unofficial::libmem::
     DESTINATION lib
 )
