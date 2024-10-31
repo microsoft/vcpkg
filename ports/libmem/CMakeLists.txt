@@ -80,6 +80,9 @@ target_compile_definitions(libmem PUBLIC LM_EXPORT)
 
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
 
+# Overwrite PreLoad.cmake with an empty string
+file(WRITE "${LIBMEM_DIR}/PreLoad.cmake" "")
+
 llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
