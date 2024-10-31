@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 c314fc576fb8be36bf43326a8a2d8b22d6b2fbb3b494695b84dd8077fc0401981e49890172fc2229d1c68292be2820cd4231d58bcb64326cbe4b73933c092d76
     HEAD_REF master
+    PATCHES
+        disable_werror.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
