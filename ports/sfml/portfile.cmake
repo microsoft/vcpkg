@@ -17,10 +17,10 @@ endif()
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "network" SFML_BUILD_NETWORK
+        "network"  SFML_BUILD_NETWORK
         "graphics" SFML_BUILD_GRAPHICS
-        "window" SFML_BUILD_WINDOW
-        "audio" SFML_BUILD_AUDIO
+        "window"   SFML_BUILD_WINDOW
+        "audio"    SFML_BUILD_AUDIO
 )
 
 vcpkg_cmake_configure(
