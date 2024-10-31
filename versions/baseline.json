@@ -3297,8 +3297,8 @@
       "port-version": 0
     },
     "gtk": {
-      "baseline": "4.14.0",
-      "port-version": 1
+      "baseline": "4.16.3",
+      "port-version": 0
     },
     "gtk3": {
       "baseline": "3.24.38",
@@ -4186,7 +4186,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.9.3",
-      "port-version": 0 
+      "port-version": 0
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
