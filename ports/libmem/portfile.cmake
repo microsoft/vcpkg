@@ -13,8 +13,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-     DESTINATION "${SOURCE_PATH}"
+    DESTINATION "${SOURCE_PATH}"
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmem-config.cmake.in" 
+    DESTINATION "${SOURCE_PATH}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_configure(
@@ -31,7 +34,7 @@ else()
 endif()
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
