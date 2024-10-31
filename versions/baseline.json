@@ -2625,7 +2625,7 @@
       "port-version": 2
     },
     "ezc3d": {
-      "baseline": "1.5.7",
+      "baseline": "1.5.11",
       "port-version": 0
     },
     "ezfoundation": {
@@ -4186,7 +4186,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.9.3",
-      "port-version": 0 
+      "port-version": 0
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
