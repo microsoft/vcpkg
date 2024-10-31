@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(targets_export_name unofficial-libmem-target)
 
+# Overwrite PreLoad.cmake with an empty string
+file(WRITE "${PROJECT_SOURCE_DIR}/PreLoad.cmake" "")
+
 project(libmem LANGUAGES C CXX ASM)
 
 if (MSVC AND BUILD_SHARED_LIBS)
@@ -79,9 +82,6 @@ add_library(libmem ${LIBMEM_SRC})
 target_compile_definitions(libmem PUBLIC LM_EXPORT)
 
 target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
-
-# Overwrite PreLoad.cmake with an empty string
-file(WRITE "${LIBMEM_DIR}/PreLoad.cmake" "")
 
 llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
