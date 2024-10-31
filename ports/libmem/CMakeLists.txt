@@ -78,8 +78,8 @@ add_library(libmem ${LIBMEM_SRC})
 # Apply compile definitions, include directories, and link libraries to the target
 target_compile_definitions(libmem PUBLIC LM_EXPORT)
 
-target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
-
+target_include_directories(libmem PRIVATE "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}")
+#"${LIBMEM_DIR}/src"
 llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
 target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
