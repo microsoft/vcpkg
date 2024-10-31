@@ -14,6 +14,7 @@ endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
     DESTINATION "${SOURCE_PATH}"
+    DESTINATION "${SOURCE_PATH}"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmem-config.cmake.in" 
@@ -38,6 +39,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
 vcpkg_copy_pdbs()
 
