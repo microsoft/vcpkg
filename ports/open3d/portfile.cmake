@@ -17,6 +17,7 @@ vcpkg_from_github(
         0009-std-includes.patch
         0010-imgui.patch
         0011-llvm.patch
+        0012-webrtc.patch
         # remove in the next release
         6783.patch
         6969.patch
