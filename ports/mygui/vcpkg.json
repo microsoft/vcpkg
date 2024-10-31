@@ -19,20 +19,20 @@
     }
   ],
   "features": {
+    "obsolete": {
+      "description": "Keep obsolete functions."
+    },
     "opengl": {
       "description": "Use OpenGL render system.",
       "dependencies": [
         "opengl"
       ]
     },
-    "tools": {
-      "description": "Install MyGUI tools."
-    },
     "plugins": {
       "description": "Build MyGUI plugins."
     },
-    "obsolete": {
-      "description": "Keep obsolete functions."
+    "tools": {
+      "description": "Install MyGUI tools."
     }
   }
 }
