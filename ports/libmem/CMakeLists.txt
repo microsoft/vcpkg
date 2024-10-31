@@ -9,9 +9,6 @@ set(targets_export_name unofficial-libmem-target)
 
 project(libmem LANGUAGES C CXX ASM)
 
-# Overwrite PreLoad.cmake with an empty string
-file(WRITE "${PROJECT_SOURCE_DIR}/PreLoad.cmake" "")
-
 if (MSVC AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
