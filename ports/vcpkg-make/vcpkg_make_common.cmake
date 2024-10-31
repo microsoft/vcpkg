@@ -434,9 +434,10 @@ endfunction()
 
 function(z_vcpkg_make_prepare_link_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
+        "VCPKG_TRANSFORM_LIBS"
+        "IN_OUT_VAR"
         ""
-        "IN_OUT_VAR;VCPKG_TRANSFORM_LIBS"
-        "")
+    )
 
     set(link_flags ${${arg_IN_OUT_VAR}})
     
@@ -478,22 +479,23 @@ function(z_vcpkg_make_prepare_flags)
     set(all_libs_list ${cxx_libs_list} ${c_libs_list})
 
     # Do lib list transformation from name.lib to -lname if necessary
-    set(vcpkg_transform_libs ON)
+    set(vcpkg_transform_libs VCPKG_TRANSFORM_LIBS)
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" AND (arg_NO_FLAG_ESCAPING))
-      set(vcpkg_transform_libs OFF)
+      set(vcpkg_transform_libs "")
     endif()
 
     if(VCPKG_TARGET_IS_UWP)
-        set(vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
         # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested.
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows.
         # It even does unix/dos-short/unix transformation with the path to get rid of spaces.
+        set(vcpkg_transform_libs "")
     endif()
 
     z_vcpkg_make_prepare_link_flags(
         IN_OUT_VAR all_libs_list 
-        VCPKG_TRANSFORM_LIBS ${vcpkg_transform_libs})
+        ${vcpkg_transform_libs}
+    )
 
     if(all_libs_list)
         list(JOIN all_libs_list " " all_libs_string)
