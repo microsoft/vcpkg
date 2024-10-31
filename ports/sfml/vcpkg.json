@@ -34,7 +34,10 @@
     "graphics": {
       "description": "Use sfml-graphics library",
       "dependencies": [
-        "freetype",
+        {
+          "name": "freetype",
+          "default-features": false
+        },
         {
           "name": "sfml",
           "default-features": false,
