@@ -1,0 +1,47 @@
+From a46adfa669d22a778ff59ae8a8f5660642ebbf86 Mon Sep 17 00:00:00 2001
+From: Chuck Walbourn <walbourn@users.noreply.github.com>
+Date: Thu, 31 Oct 2024 16:15:46 -0700
+Subject: [PATCH] CMake code review feedback (#193)
+
+---
+ CMakeLists.txt          | 6 +++---
+ UVAtlasTool/UVAtlas.cpp | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9be54f3..ae19481 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -147,13 +147,13 @@ endif()
+ 
+ if(directxmath_FOUND)
+     message(STATUS "Using DirectXMath package")
+-    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectXMath)
++    target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectXMath)
+ endif()
+ 
+ if(directx-headers_FOUND)
+     message(STATUS "Using DirectX-Headers package")
+-    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectX-Headers)
+-    target_compile_definitions(${PROJECT_NAME} PUBLIC USING_DIRECTX_HEADERS)
++    target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectX-Headers)
++    target_compile_definitions(${PROJECT_NAME} PRIVATE USING_DIRECTX_HEADERS)
+ endif()
+ 
+ if(ENABLE_USE_EIGEN)
+diff --git a/UVAtlasTool/UVAtlas.cpp b/UVAtlasTool/UVAtlas.cpp
+index b5b0239..a692baa 100644
+--- a/UVAtlasTool/UVAtlas.cpp
++++ b/UVAtlasTool/UVAtlas.cpp
+@@ -1072,7 +1072,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
+             hr = inMesh->ComputeNormals(flags);
+             if (FAILED(hr))
+             {
+-                wprintf(L"\nERROR: Failed computing normals (flags:%lX, %08X%ls)\n", flags,
++                wprintf(L"\nERROR: Failed computing normals (flags:%X, %08X%ls)\n", static_cast<unsigned int>(flags),
+                     static_cast<unsigned int>(hr), GetErrorDesc(hr));
+                 return 1;
+             }
+-- 
+2.47.0.windows.1
+
