@@ -6,8 +6,6 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     PATCHES fix-export.patch
 )
 
-# file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
@@ -16,7 +14,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-# vcpkg_cmake_config_fixup()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-enet CONFIG_PATH share/unofficial-enet)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
