@@ -14,7 +14,6 @@ endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
     DESTINATION "${SOURCE_PATH}"
-    DESTINATION "${SOURCE_PATH}"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmem-config.cmake.in" 
