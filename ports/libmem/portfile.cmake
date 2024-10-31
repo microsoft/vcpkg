@@ -33,13 +33,8 @@ else()
         DISABLE_PARALLEL_CONFIGURE
     )
 endif()
-#vcpkg_cmake_configure(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    DISABLE_PARALLEL_CONFIGURE
-#)
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
 vcpkg_copy_pdbs()
 
