@@ -6582,7 +6582,7 @@
     },
     "open62541": {
       "baseline": "1.3.12",
-      "port-version": 0
+      "port-version": 1
     },
     "open62541pp": {
       "baseline": "0.15.0",
