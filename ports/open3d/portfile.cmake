@@ -16,6 +16,7 @@ vcpkg_from_github(
         0008-curl.patch
         0009-std-includes.patch
         0010-imgui.patch
+        0011-llvm.patch
         # remove in the next release
         6783.patch
         6969.patch
@@ -38,6 +39,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "azure-kinect"   BUILD_AZURE_KINECT
         "realsense2"     BUILD_LIBREALSENSE
 )
+
+if(BUILD_GUI)
+    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
+        message(WARNING "open3d with gui feature requires the following packages via the system package manager:
+  libc++ libc++abi
+On Debian/Ubuntu derivatives:
+  sudo apt-get install libc++-dev libc++abi-dev")
+    endif()
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
