@@ -31,7 +31,6 @@ vcpkg_cmake_configure(
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
         -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
-        -DSFML_INSTALL_PKGCONFIG_FILES=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -54,6 +53,19 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(NOT "network" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-network.pc")
+endif()
+if(NOT "graphics" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-graphics.pc")
+endif()
+if(NOT "window" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-window.pc")
+endif()
+if(NOT "audio" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-audio.pc")
+endif()
 
 vcpkg_fixup_pkgconfig()
 
