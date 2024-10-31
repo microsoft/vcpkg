@@ -8,10 +8,13 @@
   "dependencies": [
     "asio",
     "cairo",
+    "fontconfig",
+    "freetype",
     {
       "name": "gtk3",
       "platform": "!osx & !windows"
     },
+    "libwebp",
     {
       "name": "vcpkg-cmake",
       "host": true
