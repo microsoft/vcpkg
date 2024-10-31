@@ -6,7 +6,6 @@
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
   "dependencies": [
-    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -36,14 +35,24 @@
       "description": "Use sfml-graphics library",
       "dependencies": [
         "freetype",
-        "opengl"
+        {
+          "name": "sfml",
+          "default-features": false,
+          "features": [
+            "window"
+          ]
+        },
+        "stb"
       ]
     },
     "network": {
       "description": "Use sfml-network library"
     },
     "window": {
-      "description": "Use sfml-window library"
+      "description": "Use sfml-window library",
+      "dependencies": [
+        "opengl"
+      ]
     }
   }
 }
