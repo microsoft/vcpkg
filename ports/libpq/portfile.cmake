@@ -9,12 +9,6 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        unix/installdirs.patch
-        unix/fix-configure.patch
-        unix/single-linkage.patch
-        unix/no-server-tools.patch
-        unix/mingw-install.patch
-        unix/python.patch
         windows/macro-def.patch
         windows/spin_delay.patch
 )
@@ -22,8 +16,6 @@ vcpkg_extract_source_archive(
 set(required_programs BISON FLEX PERL PYTHON3)
 foreach(program_name IN LISTS required_programs)
     vcpkg_find_acquire_program(${program_name})
-    get_filename_component(program_dir ${${program_name}} DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${program_dir}")
 endforeach()
 
 if("nls" IN_LIST FEATURES)
@@ -91,14 +83,15 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
        -Ddocs=disabled
-       ${OPTIONS} 
+       ${OPTIONS}
+    ADDITIONAL_BINARIES
+        flex='${FLEX}'
+        bison='${BISON}'
+        perl='${PERL}'
+        python='${PYTHON3}'
 )
 
 vcpkg_install_meson()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 set(tools clusterdb createdb createuser dropdb dropuser ecpg initdb oid2name pgbench pg_amcheck pg_archivecleanup pg_basebackup pg_checksums pg_combinebackup pg_config pg_controldata pg_createsubscriber pg_ctl pg_dump pg_dumpall pg_isready pg_receivewal pg_recvlogical pg_resetwal pg_restore pg_rewind pg_test_fsync pg_test_timing pg_upgrade pg_verifybackup pg_waldump pg_walsummary postgres psql reindexdb vacuumdb vacuumlo)
 
@@ -107,7 +100,7 @@ vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(GLOB LIBAS "${CURRENT_PACKAGES_DIR}/lib/*.a")
     if(NOT DEFINED VCPKG_BUILD_TYPE)
         file(GLOB DEBUG_LIBAS "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
@@ -122,6 +115,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/lib/postgresql"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
