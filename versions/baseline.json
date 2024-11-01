@@ -4337,7 +4337,7 @@
       "port-version": 4
     },
     "libcap": {
-      "baseline": "2.70",
+      "baseline": "2.71",
       "port-version": 0
     },
     "libcbor": {
