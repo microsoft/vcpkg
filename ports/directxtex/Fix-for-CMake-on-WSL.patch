@@ -1,20 +1,12 @@
-From f82fde430a9fdeb6a534a8f8ada0c2bfadaf2979 Mon Sep 17 00:00:00 2001
-From: Chuck Walbourn <chuckw@microsoft.com>
-Date: Thu, 31 Oct 2024 18:04:36 -0700
-Subject: [PATCH] Fix for CMake on WSL
-
----
- CMakeLists.txt | 1 +
- 1 file changed, 1 insertion(+)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ec26d0b..f2c279c 100644
+index ec26d0b..e7fe41d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -312,6 +312,7 @@ endif()
+@@ -312,6 +312,8 @@ endif()
  if(MINGW OR (NOT WIN32))
      find_package(directxmath CONFIG REQUIRED)
      find_package(directx-headers CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectX-Headers)
 +    target_compile_definitions(${PROJECT_NAME} PUBLIC USING_DIRECTX_HEADERS)
  else()
      find_package(directxmath CONFIG QUIET)
