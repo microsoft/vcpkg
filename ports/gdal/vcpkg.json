@@ -45,7 +45,10 @@
     "archive": {
       "description": "Enable libarchive support",
       "dependencies": [
-        "libarchive"
+        {
+          "name": "libarchive",
+          "default-features": false
+        }
       ]
     },
     "aws-ec2-windows": {
