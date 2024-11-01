@@ -2693,7 +2693,7 @@
       "port-version": 4
     },
     "fastgltf": {
-      "baseline": "0.7.2",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "fastio": {
