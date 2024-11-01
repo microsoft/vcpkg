@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         CMakeHeadersPrivate.patch
+        Fix-for-CMake-on-WSL.patch
 )
 
 vcpkg_check_features(
