@@ -24,7 +24,7 @@ set(${PORT}_PATCHES
         fix-link-lib-discovery.patch
         fix-missing-symbol.patch
 )
-
+ 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
