@@ -19,10 +19,6 @@
     "libxml2",
     "lz4",
     "lzma",
-    {
-      "name": "tools",
-      "platform": "!ios"
-    },
     "zstd"
   ],
   "features": {
@@ -68,9 +64,6 @@
       "dependencies": [
         "lzo"
       ]
-    },
-    "tools": {
-      "description": "Tools support"
     },
     "zstd": {
       "description": "Zstd support",
