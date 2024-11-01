@@ -2557,8 +2557,8 @@
       "port-version": 4
     },
     "enet": {
-      "baseline": "1.3.17",
-      "port-version": 2
+      "baseline": "1.3.18",
+      "port-version": 0
     },
     "enkits": {
       "baseline": "1.11",
