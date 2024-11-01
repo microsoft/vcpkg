@@ -19,6 +19,8 @@ vcpkg_from_github(
         "${CURRENT_BUILDTREES_DIR}/src/libunwind.diff"
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
