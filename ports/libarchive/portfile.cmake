@@ -22,6 +22,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lzma    ENABLE_LZMA
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
+        tools   ENABLE_TAR
+        tools   ENABLE_CPIO
+        tools   ENABLE_CAT
+        tools   ENABLE_UNZIP
         zstd    ENABLE_ZSTD
 )
 # Default crypto backend is OpenSSL, but it is ignored for DARWIN
