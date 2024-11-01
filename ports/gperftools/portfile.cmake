@@ -56,6 +56,10 @@ else()
         set(BUILD_OPTS --enable-static --disable-shared)
     endif()
 
+    if(VCPKG_TARGET_IS_LINUX)
+        vcpkg_find_acquire_program(PKGCONFIG)
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
