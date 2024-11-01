@@ -8270,7 +8270,7 @@
     },
     "sfml": {
       "baseline": "2.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sfsexp": {
       "baseline": "1.4.1",
