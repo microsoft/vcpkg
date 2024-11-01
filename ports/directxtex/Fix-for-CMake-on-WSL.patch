@@ -1,10 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ec26d0b..e7fe41d 100644
+index ec26d0b..e26b5a1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -312,6 +312,8 @@ endif()
+@@ -311,7 +311,11 @@ endif()
+ 
  if(MINGW OR (NOT WIN32))
      find_package(directxmath CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectXMath)
++
      find_package(directx-headers CONFIG REQUIRED)
 +    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectX-Headers)
 +    target_compile_definitions(${PROJECT_NAME} PUBLIC USING_DIRECTX_HEADERS)
