@@ -3297,8 +3297,8 @@
       "port-version": 0
     },
     "gtk": {
-      "baseline": "4.14.0",
-      "port-version": 1
+      "baseline": "4.16.3",
+      "port-version": 0
     },
     "gtk3": {
       "baseline": "3.24.38",
