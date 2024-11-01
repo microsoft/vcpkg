@@ -1,7 +1,6 @@
 {
   "name": "dlib",
-  "version": "19.24",
-  "port-version": 4,
+  "version": "19.24.6",
   "description": "Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++",
   "homepage": "https://github.com/davisking/dlib",
   "license": "BSL-1.0",

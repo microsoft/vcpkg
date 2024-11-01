@@ -1,18 +1,11 @@
-vcpkg_download_distfile(
-        STRING_PATCHES
-        URLS "https://github.com/mongodb/mongo-cxx-driver/commit/55ad3447dbd46560eca6e99adfcf195ecd7c1c7a.diff?full_index=1"
-        FILENAME "mongo-cxx-driver-add-string-55ad3447dbd46560eca6e99adfcf195ecd7c1c7a.patch"
-        SHA512 a617f3657a065ddc1963007b164f7e96a1e3a53a91a3fefd97ae0be8b42036b1ed572f60f1d7074f6194640bfe37c5c2d5713c7b0853b252fe340c83eb6c852a
-    )
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 a2e303c503b3e79b30c994888a4a9a31178352a1bb4a9ae73a2e41787c113fdd28e3a0e806abbb9e14419fe1b9aea512bcfe3a54edc126b66f0b732f3df09595
+    SHA512 620112ab91ad5fc0eb900b4b271cf40bac92ec728f0da2053dd42a80cc444910c3784f83c638b5aa1323cfa57308622b034b5c9275c4d2c92cbbbd7bb3eb1b08
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        ${STRING_PATCHES}
 )
 
 file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")

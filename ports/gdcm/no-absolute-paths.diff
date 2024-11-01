@@ -1,0 +1,39 @@
+diff --git a/CMake/ExportConfiguration/GDCMConfig.cmake.in b/CMake/ExportConfiguration/GDCMConfig.cmake.in
+index d43d565..dd2023d 100644
+--- a/CMake/ExportConfiguration/GDCMConfig.cmake.in
++++ b/CMake/ExportConfiguration/GDCMConfig.cmake.in
+@@ -46,8 +46,6 @@ if(EXISTS ${SELF_DIR}/GDCMTargets.cmake)
+ else()
+   if(EXISTS ${SELF_DIR}/GDCMExports.cmake)
+     # This is a build tree
+-    set( GDCM_INCLUDE_DIRS "@GDCM_INCLUDE_PATH@")
+-    set(GDCM_LIBRARY_DIRS "@GDCM_LIBRARY_DIR@")
+ 
+     include(${SELF_DIR}/GDCMExports.cmake)
+ 
+diff --git a/Source/Common/gdcmConfigure.h.in b/Source/Common/gdcmConfigure.h.in
+index 4a5d68f..276c0f4 100644
+--- a/Source/Common/gdcmConfigure.h.in
++++ b/Source/Common/gdcmConfigure.h.in
+@@ -37,9 +37,9 @@
+ 
+ /* Useful in particular for loadshared where the full path
+  * to the lib is needed */
+-#define GDCM_SOURCE_DIR "@GDCM_SOURCE_DIR@"
+-#define GDCM_EXECUTABLE_OUTPUT_PATH "@EXECUTABLE_OUTPUT_PATH@"
+-#define GDCM_LIBRARY_OUTPUT_PATH    "@LIBRARY_OUTPUT_PATH@"
++#define GDCM_SOURCE_DIR ""
++#define GDCM_EXECUTABLE_OUTPUT_PATH ""
++#define GDCM_LIBRARY_OUTPUT_PATH    ""
+ 
+ #cmakedefine GDCM_BUILD_TESTING
+ 
+@@ -81,7 +81,7 @@
+ /* only cerr, for instance 'invalid file' will be allowed */
+ #cmakedefine GDCM_DEBUG
+ 
+-#define GDCM_CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
++#define GDCM_CMAKE_INSTALL_PREFIX ""
+ #define GDCM_INSTALL_INCLUDE_DIR "@GDCM_INSTALL_INCLUDE_DIR@"
+ #define GDCM_INSTALL_DATA_DIR "@GDCM_INSTALL_DATA_DIR@"
+ 

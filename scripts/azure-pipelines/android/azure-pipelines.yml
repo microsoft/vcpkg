@@ -27,7 +27,7 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
   - name: ANDROID_NDK_HOME
-    value: /android-ndk-r26d
+    value: /android-ndk-r27c
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |

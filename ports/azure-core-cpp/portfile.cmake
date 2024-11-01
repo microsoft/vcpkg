@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       useragent.patch
+      set_version.patch
 )
 
 vcpkg_check_features(

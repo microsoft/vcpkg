@@ -1,7 +1,7 @@
 vcpkg_download_distfile(GUILE_ARCHIVE 
       URLS https://ftp.gnu.org/gnu/guile/guile-${VERSION}.tar.gz
       FILENAME guile-${VERSION}.tar.gz
-      SHA512 6fd14f0860c7f5b7a9b53c43a60c6a7ca53072684ddc818cd10c720af2c5761ef110b29af466b89ded884fb66d66060894b14e615eaebee8844c397932d05fa2
+      SHA512 8b0e6354fdfccd009fd92a5618828f8a8343faf20d1d3698be77a6ef7a8fe56ce633fd1239520e6a6be511ba4ca75eb90c8a81c45888b8b73d938cd2908d7a1f
   )
 
 vcpkg_extract_source_archive(GUILE_SOURCES ARCHIVE ${GUILE_ARCHIVE})
