@@ -4,7 +4,7 @@
   "description": "Elements is a lightweight, fine-grained, resolution independent, modular GUI library.",
   "homepage": "https://cycfi.github.io/elements",
   "license": "MIT",
-  "supports": "windows & staticcrt",
+  "supports": "(windows & staticcrt) | osx | linux",
   "dependencies": [
     "asio",
     "cairo",
