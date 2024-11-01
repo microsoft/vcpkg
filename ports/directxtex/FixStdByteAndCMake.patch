@@ -64,10 +64,22 @@ index 0829c8f..9f75866 100644
 +
  } // namespace
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cffe5ca..ec26d0b 100644
+index cffe5ca..e26b5a1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -319,13 +319,13 @@ endif()
+@@ -311,7 +311,11 @@ endif()
+ 
+ if(MINGW OR (NOT WIN32))
+     find_package(directxmath CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectXMath)
++
+     find_package(directx-headers CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectX-Headers)
++    target_compile_definitions(${PROJECT_NAME} PUBLIC USING_DIRECTX_HEADERS)
+ else()
+     find_package(directxmath CONFIG QUIET)
+     find_package(directx-headers CONFIG QUIET)
+@@ -319,13 +323,13 @@ endif()
  
  if(directxmath_FOUND)
      message(STATUS "Using DirectXMath package")
@@ -267,34 +279,6 @@ index 49745ae..d20f41e 100644
 +#endif // _WIN32
 +
 +#endif // __cpp_lib_byte
-diff --git a/ScreenGrab/ScreenGrab12.cpp b/ScreenGrab/ScreenGrab12.cpp
-index 7c19630..b8cd697 100644
---- a/ScreenGrab/ScreenGrab12.cpp
-+++ b/ScreenGrab/ScreenGrab12.cpp
-@@ -853,7 +853,11 @@ namespace
- 
-         hr = commandList->Close();
-         if (FAILED(hr))
-+        {
-+            (*pStaging)->Release();
-+            *pStaging = nullptr;
-             return hr;
-+        }
- 
-         // Execute the command list
-         pCommandQ->ExecuteCommandLists(1, CommandListCast(commandList.GetAddressOf()));
-@@ -861,7 +865,11 @@ namespace
-         // Signal the fence
-         hr = pCommandQ->Signal(fence.Get(), 1);
-         if (FAILED(hr))
-+        {
-+            (*pStaging)->Release();
-+            *pStaging = nullptr;
-             return hr;
-+        }
- 
-         // Block until the copy is complete
-         while (fence->GetCompletedValue() < 1)
 -- 
-2.47.0.windows.1
+2.47.0.vfs.0.3
 

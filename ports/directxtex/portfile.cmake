@@ -9,8 +9,7 @@ vcpkg_from_github(
     SHA512 4ac9307ab6e36aa727afa5bd5bb945fb431c89fa01c9c8283eebf512707acfb15a0d7cd84f72349d4271b0eef2e13bca38a38226c1afafd8f1e36b38c1c4b07f
     HEAD_REF main
     PATCHES
-        Support-using-C-17-std-byte.patch
-        Fix-for-CMake-on-WSL.patch
+      FixStdByteAndCMake.patch
     )
 
 vcpkg_check_features(

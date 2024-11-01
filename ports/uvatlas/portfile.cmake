@@ -9,8 +9,7 @@ vcpkg_from_github(
     SHA512 0ff09914445344eac748e7e6cfddebb062a0c7f36dc79d1591f5337b6600e69430aafc6f8a4cf5e3c343aea990feac4afa4cf4cf5f1e2d0865746008583bcf3d
     HEAD_REF main
     PATCHES
-        CMakeHeadersPrivate.patch
-        Fix-for-CMake-on-WSL.patch
+        FixCMake.patch
 )
 
 vcpkg_check_features(
