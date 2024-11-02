@@ -1,0 +1,15 @@
+diff --git a/tools/glslminifier/src/GlslMinify.h b/tools/glslminifier/src/GlslMinify.h
+index c04e2fa42..51fb95170 100644
+--- a/tools/glslminifier/src/GlslMinify.h
++++ b/tools/glslminifier/src/GlslMinify.h
+@@ -15,6 +15,7 @@
+  */
+ 
+ #include <string>
++#include <cstdint>
+ 
+ #ifndef TNT_GLSLMINIFY_H
+ #define TNT_GLSLMINIFY_H
+-- 
+2.45.2
+

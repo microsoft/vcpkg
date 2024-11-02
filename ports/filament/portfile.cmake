@@ -13,6 +13,7 @@ vcpkg_from_github(
         0004-glslang.patch
         0005-miktspace.patch
         0006-list-licenses.patch
+        0007-std-includes.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -43,8 +44,10 @@ vcpkg_cmake_configure(
         -DFILAMENT_USE_SWIFTSHADER=OFF
         -DFILAMENT_USE_EXTERNAL_GLES3=OFF
         -DFILAMENT_PREFER_EXTERNAL=ON
+        -DUSE_STATIC_LIBCXX=OFF
     MAYBE_UNUSED_VARIABLES
         USE_STATIC_CRT
+        USE_STATIC_LIBCXX
 )
 
 vcpkg_cmake_install()
