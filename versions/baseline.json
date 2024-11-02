@@ -8433,7 +8433,7 @@
       "port-version": 2
     },
     "so5extra": {
-      "baseline": "1.6.1",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "soapysdr": {
@@ -8441,7 +8441,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.8.2",
+      "baseline": "5.8.3",
       "port-version": 0
     },
     "soci": {
