@@ -1,0 +1,19 @@
+diff --git a/glslang/CMakeLists.txt b/glslang/CMakeLists.txt
+index 47925d8d..d68b9395 100644
+--- a/glslang/CMakeLists.txt
++++ b/glslang/CMakeLists.txt
+@@ -266,6 +266,11 @@ if(GLSLANG_ENABLE_INSTALL)
+         Include/visibility.h
+         MachineIndependent/Versions.h)
+ 
++    option(INSTALL_PRIVATE_HEADERS "Install private headers" OFF)
++    if(INSTALL_PRIVATE_HEADERS)
++        list(APPEND PUBLIC_HEADERS ${GLSLANG_HEADERS})
++    endif()
++
+     foreach(file ${PUBLIC_HEADERS})
+         get_filename_component(dir ${file} DIRECTORY)
+         install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glslang/${dir})
+-- 
+2.45.2
+

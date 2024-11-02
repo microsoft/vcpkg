@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 8ba7e5f73746b221ff39387282e2d929d1142c60d1c79019f4c21c84b105fb59253e88f2f649a25e9bb7ab01094e455f002c7412aeea882548fac4a426eee809
     HEAD_REF master
+    PATCHES
+        0001-private-headers.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opt ALLOW_EXTERNAL_SPIRV_TOOLS
         tools ENABLE_GLSLANG_BINARIES
         rtti ENABLE_RTTI
+        "private-headers" INSTALL_PRIVATE_HEADERS
 )
 
 if(ENABLE_GLSLANG_BINARIES)
