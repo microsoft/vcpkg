@@ -11,7 +11,12 @@
     "civetweb",
     "draco",
     "getopt",
-    "glslang",
+    {
+      "name": "glslang",
+      "features": [
+        "private-headers"
+      ]
+    },
     "imgui",
     "jsmn",
     "libpng",
