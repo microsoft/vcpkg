@@ -109,6 +109,7 @@ Install the dependencies listed in your manifest:
 
 if(VCPKG_MANIFEST_INSTALL)
     set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
+    set(VCPKG_OVERLAY_PORT_DIRS "${VCPKG_OVERLAY_PORT_DIRS}" CACHE STRING "Overlay port directories to use for vcpkg install in manifest mode" FORCE)
     set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
     set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
     set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
@@ -491,6 +492,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--host-triplet=${VCPKG_HOST_TRIPLET}")
         endif()
 
+        if(VCPKG_OVERLAY_PORT_DIRS)
+            foreach(Z_VCPKG_OVERLAY_PORT_DIR IN LISTS VCPKG_OVERLAY_PORT_DIRS)
+                list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-port-dir=${Z_VCPKG_OVERLAY_PORT_DIR}")
+            endforeach()
+        endif()
         if(VCPKG_OVERLAY_PORTS)
             foreach(Z_VCPKG_OVERLAY_PORT IN LISTS VCPKG_OVERLAY_PORTS)
                 list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${Z_VCPKG_OVERLAY_PORT}")
