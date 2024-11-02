@@ -1,0 +1,55 @@
+diff --git a/libs/filamat/src/GLSLPostProcessor.h b/libs/filamat/src/GLSLPostProcessor.h
+index 8616d0e4d..81209f6db 100644
+--- a/libs/filamat/src/GLSLPostProcessor.h
++++ b/libs/filamat/src/GLSLPostProcessor.h
+@@ -26,7 +26,7 @@
+ 
+ #include <spirv-tools/optimizer.hpp>
+ 
+-#include <ShaderLang.h>
++#include <glslang/Public/ShaderLang.h>
+ 
+ #include <backend/DriverEnums.h>
+ 
+diff --git a/libs/filamat/src/sca/ASTHelpers.cpp b/libs/filamat/src/sca/ASTHelpers.cpp
+index d82831aa1..5a54e0dfa 100644
+--- a/libs/filamat/src/sca/ASTHelpers.cpp
++++ b/libs/filamat/src/sca/ASTHelpers.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include "GLSLTools.h"
+ 
+-#include <intermediate.h>
++#include <glslang/Include/intermediate.h>
+ #include <localintermediate.h>
+ 
+ #include <utils/Log.h>
+diff --git a/libs/filamat/src/sca/ASTHelpers.h b/libs/filamat/src/sca/ASTHelpers.h
+index 19ec1ce01..680466f94 100644
+--- a/libs/filamat/src/sca/ASTHelpers.h
++++ b/libs/filamat/src/sca/ASTHelpers.h
+@@ -19,7 +19,7 @@
+ 
+ #include <string>
+ #include <vector>
+-#include <intermediate.h>
++#include <glslang/Include/intermediate.h>
+ 
+ class TIntermNode;
+ 
+diff --git a/libs/filamat/src/sca/GLSLTools.h b/libs/filamat/src/sca/GLSLTools.h
+index 1c7cf169d..fb2a61061 100644
+--- a/libs/filamat/src/sca/GLSLTools.h
++++ b/libs/filamat/src/sca/GLSLTools.h
+@@ -25,7 +25,7 @@
+ 
+ #include <filamat/MaterialBuilder.h>
+ 
+-#include <ShaderLang.h>
++#include <glslang/Public/ShaderLang.h>
+ 
+ class TIntermNode;
+ 
+-- 
+2.45.2
+
