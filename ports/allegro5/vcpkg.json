@@ -36,7 +36,8 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
+    "zlib",
+    "minimp3"
   ],
   "default-features": [
     {
