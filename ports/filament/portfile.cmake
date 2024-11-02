@@ -10,6 +10,7 @@ vcpkg_from_github(
         0001-tests-benchmarks.patch # remove once https://github.com/google/filament/pull/8245 merged
         0002-external.patch
         0003-basisu.patch
+        0005-miktspace.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
