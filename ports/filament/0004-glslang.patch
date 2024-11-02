@@ -1,3 +1,33 @@
+diff --git a/filament/backend/test/ShaderGenerator.cpp b/filament/backend/test/ShaderGenerator.cpp
+index 545a6f970..c33a58e2d 100644
+--- a/filament/backend/test/ShaderGenerator.cpp
++++ b/filament/backend/test/ShaderGenerator.cpp
+@@ -16,8 +16,8 @@
+ 
+ #include "ShaderGenerator.h"
+ 
+-#include <GlslangToSpv.h>
+-#include <SPVRemapper.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
++#include <glslang/SPIRV/SPVRemapper.h>
+ 
+ #include <spirv_glsl.hpp>
+ #include <spirv_msl.hpp>
+diff --git a/libs/filamat/src/GLSLPostProcessor.cpp b/libs/filamat/src/GLSLPostProcessor.cpp
+index 9dc98b00d..753f4b944 100644
+--- a/libs/filamat/src/GLSLPostProcessor.cpp
++++ b/libs/filamat/src/GLSLPostProcessor.cpp
+@@ -16,8 +16,8 @@
+ 
+ #include "GLSLPostProcessor.h"
+ 
+-#include <GlslangToSpv.h>
+-#include <SPVRemapper.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
++#include <glslang/SPIRV/SPVRemapper.h>
+ #include <spirv-tools/libspirv.hpp>
+ 
+ #include <spirv_glsl.hpp>
 diff --git a/libs/filamat/src/GLSLPostProcessor.h b/libs/filamat/src/GLSLPostProcessor.h
 index 8616d0e4d..81209f6db 100644
 --- a/libs/filamat/src/GLSLPostProcessor.h
@@ -12,18 +42,20 @@ index 8616d0e4d..81209f6db 100644
  #include <backend/DriverEnums.h>
  
 diff --git a/libs/filamat/src/sca/ASTHelpers.cpp b/libs/filamat/src/sca/ASTHelpers.cpp
-index d82831aa1..5a54e0dfa 100644
+index d82831aa1..aaed08b83 100644
 --- a/libs/filamat/src/sca/ASTHelpers.cpp
 +++ b/libs/filamat/src/sca/ASTHelpers.cpp
-@@ -18,7 +18,7 @@
+@@ -18,8 +18,8 @@
  
  #include "GLSLTools.h"
  
 -#include <intermediate.h>
+-#include <localintermediate.h>
 +#include <glslang/Include/intermediate.h>
- #include <localintermediate.h>
++#include <glslang/MachineIndependent/localintermediate.h>
  
  #include <utils/Log.h>
+ 
 diff --git a/libs/filamat/src/sca/ASTHelpers.h b/libs/filamat/src/sca/ASTHelpers.h
 index 19ec1ce01..680466f94 100644
 --- a/libs/filamat/src/sca/ASTHelpers.h
@@ -36,6 +68,21 @@ index 19ec1ce01..680466f94 100644
 +#include <glslang/Include/intermediate.h>
  
  class TIntermNode;
+ 
+diff --git a/libs/filamat/src/sca/GLSLTools.cpp b/libs/filamat/src/sca/GLSLTools.cpp
+index eeecf89ef..96ea469f6 100644
+--- a/libs/filamat/src/sca/GLSLTools.cpp
++++ b/libs/filamat/src/sca/GLSLTools.cpp
+@@ -25,8 +25,8 @@
+ #include "ASTHelpers.h"
+ 
+ // GLSLANG headers
+-#include <InfoSink.h>
+-#include <localintermediate.h>
++#include <glslang/Include/InfoSink.h>
++#include <glslang/MachineIndependent/localintermediate.h>
+ 
+ #include "builtinResource.h"
  
 diff --git a/libs/filamat/src/sca/GLSLTools.h b/libs/filamat/src/sca/GLSLTools.h
 index 1c7cf169d..fb2a61061 100644
@@ -50,6 +97,32 @@ index 1c7cf169d..fb2a61061 100644
  
  class TIntermNode;
  
+diff --git a/libs/matdbg/src/ShaderReplacer.cpp b/libs/matdbg/src/ShaderReplacer.cpp
+index 9cd8ba4de..df93a7a99 100644
+--- a/libs/matdbg/src/ShaderReplacer.cpp
++++ b/libs/matdbg/src/ShaderReplacer.cpp
+@@ -27,7 +27,7 @@
+ 
+ #include <sstream>
+ 
+-#include <GlslangToSpv.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
+ 
+ #include "sca/builtinResource.h"
+ #include "sca/GLSLTools.h"
+diff --git a/tools/matc/src/matc/MaterialCompiler.cpp b/tools/matc/src/matc/MaterialCompiler.cpp
+index 93d0fedc0..523f3e4fe 100644
+--- a/tools/matc/src/matc/MaterialCompiler.cpp
++++ b/tools/matc/src/matc/MaterialCompiler.cpp
+@@ -34,7 +34,7 @@
+ #include "JsonishParser.h"
+ #include "ParametersProcessor.h"
+ 
+-#include <GlslangToSpv.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
+ #include "glslang/Include/intermediate.h"
+ 
+ #include "sca/builtinResource.h"
 -- 
 2.45.2
 
