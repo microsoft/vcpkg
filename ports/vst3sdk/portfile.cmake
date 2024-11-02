@@ -61,22 +61,21 @@ file(RENAME "${PUBLIC_SDK_SOURCE_PATH}" "${SOURCE_PATH}/public.sdk")
 # Therefore these are not part of this port
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-FEATURES
-    "plugin-examples"            SMTG_ENABLE_VST3_PLUGIN_EXAMPLES
-    "hosting-examples"           SMTG_ENABLE_VST3_HOSTING_EXAMPLES
-    "audiounit-wrapper"          SMTG_ENABLE_AUV2_BUILDS
+    FEATURES
+        "plugin-examples"            SMTG_ENABLE_VST3_PLUGIN_EXAMPLES
+        "hosting-examples"           SMTG_ENABLE_VST3_HOSTING_EXAMPLES
+        "audiounit-wrapper"          SMTG_ENABLE_AUV2_BUILDS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DSMTG_ENABLE_VSTGUI_SUPPORT=OFF
-	        -DSMTG_CREATE_PLUGIN_LINK=OFF
-	${FEATURE_OPTIONS}
+    OPTIONS 
+        -DSMTG_ENABLE_VSTGUI_SUPPORT=OFF
+        -DSMTG_CREATE_PLUGIN_LINK=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_build_cmake(
-    SOURCE_PATH "${SOURCE_PATH}"
-)
+vcpkg_build_cmake()
 
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/vst3sdk")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/vst3sdk")
@@ -117,12 +116,12 @@ if (VCPKG_TARGET_IS_APPLE AND NOT "audiounit-wrapper" IN_LIST FEATURES)
         "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auwrapper/config"
     )
 else()
-	file(REMOVE_RECURSE
+    file(REMOVE_RECURSE
          # Remove macOS AudioUnit wrapper
-		"${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/aaxwrapper/"
-		"${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auv3wrapper/"
-		"${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auwrapper/"
-	)
+        "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/aaxwrapper/"
+        "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auv3wrapper/"
+        "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auwrapper/"
+    )
 endif()
 
 # Remove other empty directories
