@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-tests-benchmarks.patch # remove once https://github.com/google/filament/pull/8245 merged
+        0002-external.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -37,6 +38,7 @@ vcpkg_cmake_configure(
         -DFILAMENT_ENABLE_LTO=OFF
         -DFILAMENT_USE_SWIFTSHADER=OFF
         -DFILAMENT_USE_EXTERNAL_GLES3=OFF
+        -DFILAMENT_PREFER_EXTERNAL=ON
     MAYBE_UNUSED_VARIABLES
         USE_STATIC_CRT
 )
