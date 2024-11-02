@@ -19,6 +19,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "private-headers" INSTALL_PRIVATE_HEADERS
 )
 
+if(INSTALL_PRIVATE_HEADERS)
+    message(WARNING "Avoid relying on the installed private glslang headers.")
+endif()
+
 if(ENABLE_GLSLANG_BINARIES)
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
