@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dgobbi/vtk-dicom
-    REF 6c781948c2df3e3a7f7163731d4f65a23e19288f # v0.8.14
-    SHA512 9032194ab72b1aa3b4c6a05a7f4de0575dc73b3eb713e9b88b3e3ce332dd9bb906fd456bcb96672b3a4450faa890194afa9ea6bd4c5f9685c9c2610e861b13a6
+    REF cfeceadfa68d2cc3172632bd1fd3ea8a38b6c609 # v0.8.16
+    SHA512 0715ef91a1c585c9c819efd2bd6e2b73d3bff73a626b89f4877812fa6587e8379fb55ad99a376fb4d8dfa46c438e7a7052ba02ae61feb950cafb00c95df09b3f
     HEAD_REF master
 )
 
@@ -37,7 +37,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/dicom-0.8 PACKAGE_NAME dicom)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

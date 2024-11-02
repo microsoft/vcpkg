@@ -17,7 +17,7 @@ if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 6f19e8a59462a70d6615bb27768090df4da837c79e67ed130d15fb684ceb4341e3fe31411b814acc1b1540305fdfad22004ad4c3b697e8236e77cacba27816f5
+		SHA512 4cfbca81df3342bc1e329929102f020cd3771e3877e4cde89e499da41b0903602f92de7d69c3adee4e56240d9fe887e0748b2a57d94dd468fcee5bf059090ff0
 	)
 endif()
 if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -25,27 +25,23 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 07f48beb5ec676de71bb0d8774fae6984e720ce4fcc47cbb684c87bc9763a8e4a6440175e801425a1a17aa2fd9292aa6dc18da6a085b0524cfe2e80d701389df
+		SHA512 f56246c054ae3a87726b71a19307f09efa1cd6355a0d44802eead247bb9b837e4073476b3cebb31ff2dda244623344c0741e262cf258f6ca89179e340859196c
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
-	set(unavailable_for_x64 "${VERSION}")
-	string(REPLACE "2024.1.33" "2024.1.32" VERSION "${VERSION}")
-	message(WARNING "${unavailable} is not available. Using ${VERSION} instead.")
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 50a710f4432ab1b9cf08e3b490b9e663e7f7a20ed8b8f19fd0d9650cef53e637f66f53a87c1df11b521faaf85fd2e61434f457487cc646debdb240607eaf952f
+		SHA512 2e491a075cf6a20cd5589470955448cd9efa17566a493ceb96e6fd4192d1261f312535f07e0cb1bf195b4b9f12e46ac635839f509c140d780d6a49138d255075
 	)
-	set(VERSION "${unavailable_for_x64}")
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 166950d26df51818eb2206a1d3659d7061b1853b562dce43fa436971ff8fe946cd4d7a96afa7aa20016b3ae2a2617759220eb424b7caa2494d10ff53222da057
+		SHA512 1fdd1a580b6b96af381445a5aab2666f05cd57e9435c7df7e6ba520e9d5ef3a9ca77c2df0acebd0035532e9a2a729c3364fb886fcb8dc4f0577bf71de4616f12
 	)
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -53,7 +49,7 @@ if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 2679732c9b27b97e347f6609414ad6953ffe1e165544d16aca48cffaaee6bfb63a2e4726fbe5ef533716788e98a1d47b0e20ecdd23158f9311f92161fcc25631
+		SHA512 5d1c658a4bd3315def327561802e65ad89e52bb5c95cd21c0e7941737e59f0f11ad86b30b81bdafd756e8a04d4af2f830a0f7559277bc779f2ddaada1d7d1c16
 	)
 endif()
 if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -61,7 +57,7 @@ if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 3ce15de5a7a770460108bee42706a3fa83ed2cfce24297b65cfd7e61b3568e37aaf4f38b8e4b2ea7352abfb932bdc43065b361858900fc02aca136730f22d4bb
+		SHA512 997a51dfe3f45e2f6e0630f64dcdedb26e2a3d92756ddb2156612ae59ec3ad3998edc9638062a097a1eed044bd1f2a3d48767558f5dcf331fb4034f7b1837160
 	)
 endif()
 if(NOT ARCHIVE)
@@ -86,18 +82,34 @@ file(GLOB libs
 )
 file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
+file(GLOB dyn_libs
+	"${BINDIST_PATH}/lib/*.dylib"
+	"${BINDIST_PATH}/lib/*.so"
+)
+
 if(VCPKG_TARGET_IS_WINDOWS)
-	file(GLOB dlls "${BINDIST_PATH}/bin/*.dll")
-	file(INSTALL ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+  file(GLOB dlls "${BINDIST_PATH}/bin/*.dll")
+  list(APPEND dyn_libs ${dlls})
+  file(INSTALL ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
 if(NOT VCPKG_BUILD_TYPE)
-	file(INSTALL "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-	if(VCPKG_TARGET_IS_WINDOWS)
-		file(INSTALL "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-	endif()
+  file(INSTALL "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+  if(VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+  endif()
 endif()
 
+# On macos, slang has signed their binaries
+# vcpkg wants to be helpful and update the rpath as it moves binaries around but this 
+# breaks the code signature and makes the binaries useless
+# Removing the signature is rude so instead we will disable rpath fixup
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+  set(VCPKG_FIXUP_MACHO_RPATH OFF)
+endif()
+
+# Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
+file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
 vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")

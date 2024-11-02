@@ -1,7 +1,6 @@
 {
   "name": "libsoup",
-  "version": "3.4.4",
-  "port-version": 1,
+  "version": "3.6.0",
   "description": "HTTP Library for GLib",
   "homepage": "https://libsoup.org",
   "license": "LGPL-2.0-or-later",

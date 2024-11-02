@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmake.patch
+        obsolete-curlopt.diff
 )
 
 vcpkg_cmake_configure(

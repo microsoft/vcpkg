@@ -5,7 +5,7 @@
   ],
   "name": "azure-messaging-eventhubs-checkpointstore-blob-cpp",
   "version-semver": "1.0.0-beta.1",
-  "port-version": 2,
+  "port-version": 4,
   "description": [
     "Microsoft Azure Messaging Event Hubs Blob Checkpoint Store SDK for C++",
     "This library provides an Azure-Storage-Blobs based implementation of an Azure Messaging Event Hubs SDK Checkpoint Store."

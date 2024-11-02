@@ -3,11 +3,11 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "1c8089adffdabe3790cc4ca4fb36e24c2f6ab792"
-    SHA512 ef7c278802145215408646d564fd6b398c68a9c0ae7fb937e1517ac152fdf25a262896c78025b96a19ad965904ade37bc3de2de6f8255573301ca86e1271a022
+    REF "501e9efaa2fc929ec67c44da6dbaf9335264b559"
+    SHA512 978af9894d23d7b97d95d402bbf6c0c1401d63990361aae80166b620b0aa06d9dc2c75537850ff4c2df539735b4a12713cb29840613a15cbbff68590c48c4fac
     PATCHES
         disable-msvc-env-setup.patch
-        disable-dev-test.patch
+        # disable-dev-test.patch
         skia-include-string.patch
         bentleyottmann-build.patch
         graphite.patch
@@ -32,12 +32,12 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "51d873f3e0d0e0dcc5c3a6b56019983a5a4cd155"
+    REF "db1fa936ad0a58846f179c81cdf60f55267099b9"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
-    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+    REF "679499cc9b92cfb0ae1dccbfd7e97ce719d23576"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(jinja2
@@ -62,12 +62,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "eb49bb7b1136298b77945c52b4bbbc433f7885de"
+    REF "1b75a4ae0b4289014b4c369301dc925c366f78a6"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "ce46482db7ab3ea9c52fce832d27ca40b14f8e87"
+    REF "87fcbaf1bc8346469e178711eff27cfd20aa1960"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -262,7 +262,9 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
+    string(REGEX REPLACE "[\\]\$" "" WIN_SDK "$ENV{WindowsSdkDir}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS " win_sdk=\"${WIN_SDK}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " ndk=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\" ndk_api=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 else()

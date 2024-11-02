@@ -128,7 +128,7 @@ index 6152756..34359c6 100644
 +++ b/cmake/igl/modules/imgui.cmake
 @@ -23,3 +23,6 @@ target_link_libraries(igl_imgui ${IGL_SCOPE}
      imgui::imgui
-     unofficial::imguizmo::imguizmo
+     imguizmo::imguizmo
  )
 +
 +igl_install(igl_imgui ${INC_FILES} ${SRC_FILES})

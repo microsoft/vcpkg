@@ -20,9 +20,9 @@ vcpkg_from_github(
       "vcpkg-build.diff"
       "fix-mpi.diff"
       "no-prefix.diff"
-      "zstd.diff"
+      "no-config-suffix.diff"
+      "no-honor-static.diff"
       "add-optional-deps.diff"
-      "fix-missing-archs.diff"
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH_CMAKE}/CMakeLists.txt" @ONLY)
