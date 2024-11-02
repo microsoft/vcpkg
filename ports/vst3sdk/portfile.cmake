@@ -75,7 +75,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_build_cmake()
+vcpkg_cmake_build()
 
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/vst3sdk")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/vst3sdk")
