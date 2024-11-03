@@ -85,10 +85,9 @@ def update_port(pkg_name, new_version, suitesparse_hash):
     port_dir = ports_root / pkg_name
     if not port_dir.exists():
         raise Exception(f"'{pkg_name}' does not exist!")
-    needs_updating = update_manifest(pkg_name, new_version)
-    if not needs_updating:
-        print(f"{pkg_name}: up to date")
-        return
+    update_manifest(pkg_name, new_version)
+    # Always update the tag in vcpkg_from_github() even if version has not changed
+    # to avoid having to download multiple versions of the source archive.
     print(f"{pkg_name}: updating...")
     if pkg_name == "suitesparse-graphblas":
         url = f"https://github.com/DrTimothyAldenDavis/GraphBLAS/archive/refs/tags/v{new_version}.tar.gz"

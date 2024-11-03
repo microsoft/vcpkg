@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/GraphBLAS
-    REF v${VERSION}
+    REF v9.3.1
     SHA512 94ebb0c4fb8ed93c5fe71610a730a32f8e6b84389bd75ddc8d997fa82a60401608f75783f60c59209b13e50f922995a9ad745a2bb499e99c3cb32d05db73aea5
     HEAD_REF stable
 )
