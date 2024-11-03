@@ -23,7 +23,11 @@ list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(HandleLLVMOptions)
 add_definitions(${LLVM_DEFINITIONS})
 
-include_directories(${KEYSTONE_INCLUDE_DIRS} ${CAPSTONE_INCLUDE_DIRS} ${LLVM_INCLUDE_DIRS})
+include_directories(
+    PkgConfig::KEYSTONE
+    PkgConfig::CAPSTONE
+    ${LLVM_INCLUDE_DIRS}
+)
 
 foreach(dep CAPSTONE KEYSTONE LLVM)
     if(NOT ${dep}_FOUND)
