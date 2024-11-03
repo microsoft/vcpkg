@@ -10,9 +10,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    openmp      GRAPHBLAS_USE_OPENMP
+        openmp      GRAPHBLAS_USE_OPENMP
     INVERTED_FEATURES
-    precompiled GRAPHBLAS_COMPACT
+        precompiled GRAPHBLAS_COMPACT
 )
 
 # Prevent JIT cache from being created at ~/.SuiteSparse by default. Only used during build.

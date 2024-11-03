@@ -16,11 +16,11 @@ configure_file(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    matrixops  CHOLMOD_MATRIXOPS
-    modify     CHOLMOD_MODIFY
-    partition  CHOLMOD_PARTITION
-    supernodal CHOLMOD_SUPERNODAL
-    openmp     CHOLMOD_USE_OPENMP
+        matrixops  CHOLMOD_MATRIXOPS
+        modify     CHOLMOD_MODIFY
+        partition  CHOLMOD_PARTITION
+        supernodal CHOLMOD_SUPERNODAL
+        openmp     CHOLMOD_USE_OPENMP
 )
 
 set(CUDA_ENABLED OFF)

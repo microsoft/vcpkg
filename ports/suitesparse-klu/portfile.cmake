@@ -16,7 +16,7 @@ configure_file(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    cholmod KLU_USE_CHOLMOD
+        cholmod KLU_USE_CHOLMOD
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)

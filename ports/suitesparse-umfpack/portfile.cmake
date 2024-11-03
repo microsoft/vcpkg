@@ -16,7 +16,7 @@ configure_file(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    cholmod UMFPACK_USE_CHOLMOD
+        cholmod UMFPACK_USE_CHOLMOD
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)

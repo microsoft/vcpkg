@@ -12,7 +12,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    openmp  LAGRAPH_USE_OPENMP
+        openmp  LAGRAPH_USE_OPENMP
 )
 
 vcpkg_cmake_configure(
