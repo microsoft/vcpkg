@@ -1,41 +1,14 @@
-Detect whether the complex data type is supported by the compiler instead of guessing.
-
-The LIBM detection logic is from CHOLMOD/CMakelists.txt.
+Android API level 22 and earlier don't provide any complex-valued math functions in complex.h,
+which are required for complex data type support in CXSparse.
 
 --- a/CXSparse/CMakeLists.txt
 +++ b/CXSparse/CMakeLists.txt
-@@ -45,15 +45,28 @@
+@@ -45,7 +45,7 @@
  # MS Visual Studio does not support the complex type for ANSI C11.
  # FIXME: see GraphBLAS for how to use complex types in MS Visual Studio.
  
 -if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
--    option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF (default): complex data type disabled." OFF )
--else ( )
--    option ( CXSPARSE_USE_COMPLEX "ON (default): complex data type enabled.  OFF: complex data type disabled." ON )
--endif ( )
-+include ( CheckSymbolExists )
-+include ( CheckCSourceCompiles )
-+check_symbol_exists ( fmax "math.h" NO_LIBM )
-+if ( NOT NO_LIBM )
-+    set ( CMAKE_REQUIRED_LIBRARIES m )
-+endif ( )
-+check_c_source_compiles( "
-+    #include <complex.h>
-+    int main() {
-+        double _Complex z = 1.0 + 2.0 * I;
-+        double x = creal(z);
-+    }
-+" CXSPARSE_HAS_COMPLEX )
-+unset ( CMAKE_REQUIRED_LIBRARIES )
-+
-+option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF: complex data type disabled." ${CXSPARSE_HAS_COMPLEX} )
- 
- if ( CXSPARSE_USE_COMPLEX )
-+    if ( NOT CXSPARSE_HAS_COMPLEX )
-+        message ( FATAL_ERROR "complex data type support was requested but is not supported by the compiler" )
-+    endif ( )
-     message ( STATUS "complex data type: enabled" )
--    set ( CXSPARSE_HAS_COMPLEX 1 )
++if ( MSVC OR CMAKE_C_SIMULATE_ID STREQUAL "MSVC" OR (CMAKE_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_VERSION VERSION_LESS 23) )
+     option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF (default): complex data type disabled." OFF )
  else ( )
-     message ( STATUS "complex data type: disabled" )
-     add_compile_definitions ( NCOMPLEX )
+     option ( CXSPARSE_USE_COMPLEX "ON (default): complex data type enabled.  OFF: complex data type disabled." ON )
