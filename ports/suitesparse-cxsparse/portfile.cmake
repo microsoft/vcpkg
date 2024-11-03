@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v7.8.1
     SHA512 d07709ad8567e5fe954f04d0c38a95a5610394aaa5ff5c809518c378b937d20556114b95c9dc052b316c8e8fcbb2eca294b425b21e8bbfa5c04f72c6f15a5eb6
     HEAD_REF dev
+    PATCHES
+        001-detect-complex-support.patch
 )
 
 set(PACKAGE_NAME CXSparse)

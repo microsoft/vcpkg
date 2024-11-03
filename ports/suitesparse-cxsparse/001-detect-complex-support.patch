@@ -1,0 +1,32 @@
+Detect whether the complex data type is supported by the compiler instead of guessing.
+
+--- a/CXSparse/CMakeLists.txt
++++ b/CXSparse/CMakeLists.txt
+@@ -45,15 +45,21 @@
+ # MS Visual Studio does not support the complex type for ANSI C11.
+ # FIXME: see GraphBLAS for how to use complex types in MS Visual Studio.
+ 
+-if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
+-    option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF (default): complex data type disabled." OFF )
+-else ( )
+-    option ( CXSPARSE_USE_COMPLEX "ON (default): complex data type enabled.  OFF: complex data type disabled." ON )
+-endif ( )
++include(CheckCSourceCompiles)
++check_c_source_compiles("
++    #include <complex.h>
++    int main() {
++        double _Complex z;
++    }
++" CXSPARSE_HAS_COMPLEX)
++
++option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF: complex data type disabled." ${CXSPARSE_HAS_COMPLEX} )
+ 
+ if ( CXSPARSE_USE_COMPLEX )
++    if ( NOT CXSPARSE_HAS_COMPLEX )
++        message ( FATAL_ERROR "complex data type support was requested but is not supported by the compiler" )
++    endif ( )
+     message ( STATUS "complex data type: enabled" )
+-    set ( CXSPARSE_HAS_COMPLEX 1 )
+ else ( )
+     message ( STATUS "complex data type: disabled" )
+     add_compile_definitions ( NCOMPLEX )
