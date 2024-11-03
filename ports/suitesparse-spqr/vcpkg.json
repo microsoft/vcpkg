@@ -29,17 +29,6 @@
       "dependencies": [
         "cuda"
       ]
-    },
-    "cuda-redist": {
-      "description": "Enable CUDA support for all major compute architectures",
-      "dependencies": [
-        {
-          "name": "suitesparse-spqr",
-          "features": [
-            "cuda"
-          ]
-        }
-      ]
     }
   }
 }

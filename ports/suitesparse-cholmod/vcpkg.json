@@ -37,18 +37,6 @@
         }
       ]
     },
-    "cuda-redist": {
-      "description": "Enable CUDA support for all major compute architectures",
-      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
-      "dependencies": [
-        {
-          "name": "suitesparse-cholmod",
-          "features": [
-            "cuda"
-          ]
-        }
-      ]
-    },
     "matrixops": {
       "description": "Build MatrixOps module",
       "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0"
