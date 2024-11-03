@@ -10,11 +10,11 @@ index 4745483..b55462d 100644
 -@SuiteSparse_DEPENDENCY@
 +include (CMakeFindDependencyMacro)
 +if (@CXSPARSE@)
-+    find_dependency(CXSparse REQUIRED)
++    find_dependency(CXSparse)
 +endif()
 +if (@SUITESPARSE@)
-+    find_dependency(CHOLMOD REQUIRED)
-+    find_dependency(SPQR REQUIRED)
++    find_dependency(CHOLMOD)
++    find_dependency(SPQR)
 +endif()
  
  # As imported CMake targets are not re-exported when a dependent target is

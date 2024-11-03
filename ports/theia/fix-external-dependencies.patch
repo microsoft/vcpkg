@@ -211,7 +211,7 @@ index a3ea187..7e9d912 100644
  # Search quietly s/t we control the timing of the error message if not found.
 -find_package(Eigen ${THEIA_EIGEN_VERSION} EXACT QUIET)
 -if (EIGEN_FOUND)
-+find_dependency(Eigen3 ${THEIA_EIGEN_VERSION} REQUIRED)
++find_dependency(Eigen3 ${THEIA_EIGEN_VERSION})
 +if (EIGEN3_FOUND)
    message(STATUS "Found required Theia dependency: "
 -    "Eigen version ${THEIA_EIGEN_VERSION} in ${EIGEN_INCLUDE_DIRS}")
@@ -263,7 +263,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia "
 -    "dependency: Glog, please set GLOG_INCLUDE_DIR.")
 -endif (GLOG_FOUND)
-+find_dependency(Glog REQUIRED)
++find_dependency(Glog)
  list(APPEND THEIA_INCLUDE_DIRS ${GLOG_INCLUDE_DIRS})
  
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
@@ -277,7 +277,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia dependency: Google Flags, please set "
 -    "GFLAGS_INCLUDE_DIR.")
 -endif (GFLAGS_FOUND)
-+find_dependency(Gflags REQUIRED)
++find_dependency(Gflags)
  list(APPEND THEIA_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIRS})
  
  # OpenImageIO
@@ -288,7 +288,7 @@ index a3ea187..7e9d912 100644
 -  theia_report_not_found("Missing required Theia dependency: OpenImageIO. Please set "
 -    "OPENIMAGEIO_INCLUDE_DIR & OPENIMAGEIO_LIBRARY")
 -endif (OPENIMAGEIO_FOUND)
-+find_dependency(OpenImageIO REQUIRED)
++find_dependency(OpenImageIO)
  list(APPEND THEIA_INCLUDE_DIRS ${OPENIMAGEIO_INCLUDE_DIRS})
  
 -find_package(SuiteSparse QUIET)
@@ -318,14 +318,14 @@ index a3ea187..7e9d912 100644
 -endif (SUITESPARSE_FOUND)
 -list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
 +# SuiteSparse
-+find_dependency(CHOLMOD REQUIRED)
-+find_dependency(UMFPACK REQUIRED)
++find_dependency(CHOLMOD)
++find_dependency(UMFPACK)
 +list(APPEND THEIA_INCLUDE_DIRS ${CHOLMOD_INCLUDE_DIR} ${UMFPACK_INCLUDE_DIR})
 +
-+find_dependency(cereal REQUIRED)
++find_dependency(cereal)
 +list(APPEND THEIA_LIBRARIES cereal)
 +
-+find_dependency(Flann REQUIRED)
++find_dependency(Flann)
 +list(APPEND THEIA_INCLUDE_DIRS ${FLANN_INCLUDE_DIR})
 +list(APPEND THEIA_LIBRARIES ${FLANN_LIBRARY})
  
