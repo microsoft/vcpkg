@@ -23,9 +23,6 @@
     "suitesparse-ldl",
     "suitesparse-spex"
   ],
-  "default-features": [
-    "gpl"
-  ],
   "features": {
     "cuda": {
       "description": "Enable CUDA support for the current compute architecture of this machine",
