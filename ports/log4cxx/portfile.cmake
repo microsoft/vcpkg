@@ -22,9 +22,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/log4cxx)
 
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    vcpkg_fixup_pkgconfig()
-endif()
+vcpkg_fixup_pkgconfig()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cxxConfig.cmake" _contents)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cxxConfig.cmake"
