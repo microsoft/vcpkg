@@ -4882,7 +4882,7 @@
     },
     "libodb-sqlite": {
       "baseline": "2.4.0",
-      "port-version": 12
+      "port-version": 13
     },
     "libofx": {
       "baseline": "0.10.9",
