@@ -13,13 +13,9 @@ endif()
 set(LIBMEM_ARCH ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "Force a specific architecture")
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(KEYSTONE REQUIRED keystone)
-pkg_check_modules(CAPSTONE REQUIRED capstone)
 
-set(LIBMEM_DEPS
-    ${CAPSTONE_LIBRARIES}
-    ${KEYSTONE_LIBRARIES}
-)
+pkg_check_modules(KEYSTONE REQUIRED IMPORTED_TARGET keystone)
+pkg_check_modules(CAPSTONE REQUIRED IMPORTED_TARGET capstone)
 
 find_package(LLVM REQUIRED CONFIG)
 
@@ -130,7 +126,7 @@ else()
 endif()
 
 target_link_libraries(libmem
-    PUBLIC ${LIBMEM_DEPS} ${llvm_libs}
+    PUBLIC ${LIBMEM_DEPS} ${llvm_libs} PkgConfig::KEYSTONE PkgConfig::CAPSTONE
 )
 
 # Install the libmem library and public headers
