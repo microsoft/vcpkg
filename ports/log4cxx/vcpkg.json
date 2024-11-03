@@ -28,7 +28,10 @@
     "qt": {
       "description": "Allow QString values in the LOG4CXX_WARN, LOG4CXX_INFO, LOG4CXX_DEBUG etc. macros",
       "dependencies": [
-        "qt5-base"
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
       ]
     }
   }
