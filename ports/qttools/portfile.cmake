@@ -83,6 +83,11 @@ elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND TOOL_NAMES macdeployqt)
 endif()
 
+set(unused "")
+if(NOT "assistant" IN_LIST FEATURES)
+  list(APPEND unused QLITEHTML_USE_SYSTEM_LITEHTML CMAKE_REQUIRE_FIND_PACKAGE_litehtml)
+endif()
+
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS 
@@ -90,8 +95,8 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                            -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
                            -DQLITEHTML_USE_SYSTEM_LITEHTML:BOOL=ON
                            -DCMAKE_REQUIRE_FIND_PACKAGE_litehtml:BOOL=ON
-                     CONFIGURE_OPTIONS_RELEASE
-                     CONFIGURE_OPTIONS_DEBUG
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED
+                            ${unused}
                     )
 
 if(VCPKG_TARGET_IS_OSX)
