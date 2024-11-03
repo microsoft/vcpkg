@@ -17,6 +17,7 @@ configure_file(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cuda       CHOLMOD_USE_CUDA
+        cuda       SUITESPARSE_USE_CUDA
         matrixops  CHOLMOD_MATRIXOPS
         modify     CHOLMOD_MODIFY
         partition  CHOLMOD_PARTITION

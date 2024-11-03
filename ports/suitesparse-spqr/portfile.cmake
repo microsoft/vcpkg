@@ -19,6 +19,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cuda  SPQR_USE_CUDA
+        cuda  SUITESPARSE_USE_CUDA
 )
 
 vcpkg_cmake_configure(
