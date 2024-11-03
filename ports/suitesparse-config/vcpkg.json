@@ -1,7 +1,7 @@
 {
   "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-config",
-  "version-semver": "7.8.2",
+  "version-semver": "7.8.3",
   "description": "Configuration for SuiteSparse libraries",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "BSD-3-Clause",
