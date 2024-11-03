@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-lagraph",
   "version-semver": "1.1.4",
   "description": "LAGraph: Library plus test harness for collecting algorithms that use GraphBLAS",

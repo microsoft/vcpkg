@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-amd",
   "version-semver": "3.3.3",
   "description": "AMD: Routines for permuting sparse matrices prior to factorization in SuiteSparse",

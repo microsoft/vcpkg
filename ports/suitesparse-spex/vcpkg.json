@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-spex",
   "version-semver": "3.2.1",
   "description": "SPEX: Software package for SParse EXact algebra in SuiteSparse",

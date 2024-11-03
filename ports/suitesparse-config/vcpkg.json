@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-config",
   "version-semver": "7.8.2",
   "description": "Configuration for SuiteSparse libraries",

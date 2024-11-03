@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-umfpack",
   "version-semver": "6.3.4",
   "description": "UMFPACK: Routines solving sparse linear systems via LU factorization in SuiteSparse",

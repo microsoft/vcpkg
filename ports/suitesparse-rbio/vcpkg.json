@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-rbio",
   "version-semver": "4.3.3",
   "description": "RBio: routines for reading/writing sparse matrices in Rutherford/Boeing format in SuiteSparse",

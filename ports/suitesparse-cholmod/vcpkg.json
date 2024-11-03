@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-cholmod",
   "version-semver": "5.3.0",
   "description": "CHOLMOD: Routines for factorizing sparse symmetric positive definite matrices in SuiteSparse",

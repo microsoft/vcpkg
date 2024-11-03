@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-cxsparse",
   "version-semver": "4.4.1",
   "description": "CXSparse: Software package for permuting a matrix into block upper triangular form in SuiteSparse",

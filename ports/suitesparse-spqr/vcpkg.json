@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-spqr",
   "version-semver": "4.3.4",
   "description": "SPQR: Multithreaded, multifrontal, rank-revealing sparse QR factorization method in SuiteSparse",

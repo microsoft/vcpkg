@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-paru",
   "version-semver": "0.3.0",
   "description": "ParU: Routines for solving sparse linear system via parallel multifrontal LU factorization algorithms in SuiteSparse",

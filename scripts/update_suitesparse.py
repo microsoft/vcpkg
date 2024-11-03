@@ -15,7 +15,7 @@ from pathlib import Path
 
 import requests
 
-ports_root = Path(__file__).resolve().parent.parent
+ports_root = Path(__file__).resolve().parent.parent / "ports"
 
 
 def download(url):
@@ -110,6 +110,7 @@ def main(suitesparse_version):
         pkg_name = "suitesparse-config" if lib == "SuiteSparse_config" else "suitesparse-" + lib.lower()
         update_port(pkg_name, new_version, suitesparse_hash)
     update_manifest("suitesparse", suitesparse_version)
+    print("Done!")
 
 
 if __name__ == "__main__":

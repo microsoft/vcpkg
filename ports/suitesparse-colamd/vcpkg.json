@@ -1,5 +1,5 @@
 {
-  "$comment": "Use the suitesparse/update_suitesparse.py script to update all SuiteSparse ports",
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-colamd",
   "version-semver": "3.3.4",
   "description": "COLAMD: Routines for column approximate minimum degree ordering algorithm in SuiteSparse",
