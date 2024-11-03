@@ -1,8 +1,10 @@
 Detect whether the complex data type is supported by the compiler instead of guessing.
 
+The LIBM detection logic is from CHOLMOD/CMakelists.txt.
+
 --- a/CXSparse/CMakeLists.txt
 +++ b/CXSparse/CMakeLists.txt
-@@ -45,15 +45,21 @@
+@@ -45,15 +45,28 @@
  # MS Visual Studio does not support the complex type for ANSI C11.
  # FIXME: see GraphBLAS for how to use complex types in MS Visual Studio.
  
@@ -11,13 +13,20 @@ Detect whether the complex data type is supported by the compiler instead of gue
 -else ( )
 -    option ( CXSPARSE_USE_COMPLEX "ON (default): complex data type enabled.  OFF: complex data type disabled." ON )
 -endif ( )
-+include(CheckCSourceCompiles)
-+check_c_source_compiles("
++include ( CheckSymbolExists )
++include ( CheckCSourceCompiles )
++check_symbol_exists ( fmax "math.h" NO_LIBM )
++if ( NOT NO_LIBM )
++    set ( CMAKE_REQUIRED_LIBRARIES m )
++endif ( )
++check_c_source_compiles( "
 +    #include <complex.h>
 +    int main() {
-+        double _Complex z;
++        double _Complex z = 1.0 + 2.0 * I;
++        double x = creal(z);
 +    }
-+" CXSPARSE_HAS_COMPLEX)
++" CXSPARSE_HAS_COMPLEX )
++unset ( CMAKE_REQUIRED_LIBRARIES )
 +
 +option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF: complex data type disabled." ${CXSPARSE_HAS_COMPLEX} )
  
