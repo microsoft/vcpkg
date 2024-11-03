@@ -7300,6 +7300,10 @@
       "baseline": "8.0.2",
       "port-version": 5
     },
+    "qmex": {
+      "baseline": "2024-10-31",
+      "port-version": 0
+    },
     "qnnpack": {
       "baseline": "2021-02-26",
       "port-version": 3
