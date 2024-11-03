@@ -17,7 +17,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # Prevent JIT cache from being created at ~/.SuiteSparse by default. Only used during build.
 # see https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/v7.8.1/GraphBLAS/cmake_modules/GraphBLAS_JIT_paths.cmake
-vcpkg_backup_env_variables(VARS GRAPHBLAS_CACHE_PATH)
 set(ENV{GRAPHBLAS_CACHE_PATH} "${CURRENT_BUILDTREES_DIR}/cache")
 
 vcpkg_cmake_configure(
@@ -34,8 +33,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-vcpkg_restore_env_variables(VARS GRAPHBLAS_CACHE_PATH)
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME GraphBLAS
