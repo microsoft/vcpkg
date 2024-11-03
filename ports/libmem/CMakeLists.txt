@@ -1,13 +1,10 @@
 cmake_minimum_required(VERSION 3.22.1)
-cmake_policy(SET CMP0114 NEW)
-cmake_policy(SET CMP0116 NEW)
 
+project(libmem LANGUAGES C CXX ASM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(targets_export_name unofficial-libmem-target)
-
-project(libmem LANGUAGES C CXX ASM)
 
 if (MSVC)
     add_definitions(/DLM_EXPORT)
@@ -19,29 +16,24 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(KEYSTONE REQUIRED keystone)
 pkg_check_modules(CAPSTONE REQUIRED capstone)
 
+set(LIBMEM_DEPS
+    ${CAPSTONE_LIBRARIES}
+    ${KEYSTONE_LIBRARIES}
+)
+
 find_package(LLVM REQUIRED CONFIG)
 
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
-
 include(HandleLLVMOptions)
-
 add_definitions(${LLVM_DEFINITIONS})
 
-include_directories(${KEYSTONE_INCLUDE_DIRS})
-include_directories(${CAPSTONE_INCLUDE_DIRS})
-include_directories(${LLVM_INCLUDE_DIRS})
+include_directories(${KEYSTONE_INCLUDE_DIRS} ${CAPSTONE_INCLUDE_DIRS} ${LLVM_INCLUDE_DIRS})
 
-if(NOT CAPSTONE_FOUND)
-    message(FATAL_ERROR "Capstone not found! Please install Capstone.")
-endif()
-
-if(NOT KEYSTONE_FOUND)
-    message(FATAL_ERROR "Keystone not found! Please install Keystone.")
-endif()
-
-if(NOT LLVM_FOUND)
-    message(FATAL_ERROR "LLVM not found! Please ensure LLVM is installed.")
-endif()
+foreach(dep CAPSTONE KEYSTONE LLVM)
+    if(NOT ${dep}_FOUND)
+        message(FATAL_ERROR "${dep} not found! Please install ${dep}.")
+    endif()
+endforeach()
 
 set(LIBMEM_DIR "${PROJECT_SOURCE_DIR}")
 set(LIBMEM_INC "${LIBMEM_DIR}/include")
@@ -49,56 +41,113 @@ set(INTERNAL_DIR "${LIBMEM_DIR}/internal")
 set(COMMON_DIR "${LIBMEM_DIR}/src/common")
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-    file(GLOB_RECURSE LIBMEM_SRC "${LIBMEM_DIR}/src/win/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/winutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-    if("${LIBMEM_ARCH}" STREQUAL "x86_64")
-        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/linux/ptrace/x64/*.c")
-    elseif("${LIBMEM_ARCH}" STREQUAL "i686" OR "${LIBMEM_ARCH}" STREQUAL "i386")
-        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/linux/ptrace/x86/*.c")
+    file(GLOB_RECURSE LIBMEM_SRC
+        "${LIBMEM_DIR}/src/win/*.c"
+        "${LIBMEM_DIR}/src/common/*.c"
+        "${LIBMEM_DIR}/src/common/*.cpp"
+        "${INTERNAL_DIR}/winutils/*.c"
+        "${INTERNAL_DIR}/demangler/*.cpp"
+    )
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
+    set(ARCH_DIR "")
+    if("${LIBMEM_ARCH}" MATCHES "x86_64|amd64")
+        set(ARCH_DIR "x64")
+    elseif("${LIBMEM_ARCH}" MATCHES "i686|i386")
+        set(ARCH_DIR "x86")
     endif()
-    file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/linux/*.c" "${LIBMEM_DIR}/src/linux/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
-    if("${LIBMEM_ARCH}" STREQUAL "x86_64" OR "${LIBMEM_ARCH}" STREQUAL "amd64")
-        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/freebsd/ptrace/x64/*.c")
-    elseif("${LIBMEM_ARCH}" STREQUAL "i686" OR "${LIBMEM_ARCH}" STREQUAL "i386")
-        set(LIBMEM_ARCH_SRC "${LIBMEM_DIR}/src/common/arch/x86.c" "${LIBMEM_DIR}/src/freebsd/ptrace/x86/*.c")
+
+    if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+        file(GLOB LIBMEM_SRC
+            "${LIBMEM_DIR}/src/linux/*.c"
+            "${LIBMEM_DIR}/src/linux/ptrace/${ARCH_DIR}/*.c"
+            "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp"
+            "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c"
+            "${INTERNAL_DIR}/demangler/*.cpp"
+        )
+    elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
+        file(GLOB LIBMEM_SRC
+            "${LIBMEM_DIR}/src/freebsd/*.c"
+            "${LIBMEM_DIR}/src/freebsd/ptrace/${ARCH_DIR}/*.c"
+            "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp"
+            "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c"
+            "${INTERNAL_DIR}/demangler/*.cpp"
+        )
     endif()
-    file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/freebsd/*.c" "${LIBMEM_DIR}/src/freebsd/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
-# Create the target without a namespace
+file(GLOB_RECURSE LIBMEM_PUBLIC_HEADERS "${LIBMEM_INC}/libmem/*.h" "${LIBMEM_INC}/libmem/*.hpp")
+
 add_library(libmem ${LIBMEM_SRC})
 
-# Apply compile definitions, include directories, and link libraries to the target
+set_target_properties(libmem PROPERTIES PUBLIC_HEADER "${LIBMEM_PUBLIC_HEADERS}")
+
 target_compile_definitions(libmem PUBLIC LM_EXPORT)
 
-target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}" $<INSTALL_INTERFACE:include>)
+target_include_directories(libmem
+    PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}"
+    INTERFACE $<INSTALL_INTERFACE:include>
+)
 
 llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
 
-target_link_libraries(libmem PRIVATE ${KEYSTONE_LIBRARIES} ${CAPSTONE_LIBRARIES} ${llvm_libs})
+if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
+    set(LIBMEM_DEPS
+        ${LIBMEM_DEPS}
+        user32
+        psapi
+        ntdll
+        shell32
+        ole32
+    )
+    target_compile_definitions(libmem PUBLIC alloca=_alloca)
+    if (${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
+        set(LIBMEM_DEPS
+            ${LIBMEM_DEPS}
+            uuid
+        )
+    endif()
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL Linux OR ${CMAKE_SYSTEM_NAME} STREQUAL Android)
+    set(LIBMEM_DEPS 
+        ${LIBMEM_DEPS}
+        dl
+        stdc++
+        m
+    )
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+    set(LIBMEM_DEPS
+        ${LIBMEM_DEPS}
+        dl
+        kvm
+        procstat
+        elf
+        stdc++
+        m
+    )
+else()
+    message(FATAL_ERROR "[!] Unsupported platform")
+endif()
 
-# Install the libmem library with proper namespacing
+target_link_libraries(libmem
+    PUBLIC ${LIBMEM_DEPS} ${llvm_libs}
+)
+
+# Install the libmem library and public headers
 install(TARGETS libmem
     EXPORT ${targets_export_name}
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+    PUBLIC_HEADER DESTINATION include/libmem
 )
 
 # Install the export file, which allows users to find the target
-install(EXPORT ${targets_export_name}
-    NAMESPACE unofficial::libmem::
+install(
+    EXPORT ${targets_export_name} 
+    NAMESPACE unofficial::libmem:: 
     FILE ${targets_export_name}.cmake
     DESTINATION share/unofficial-libmem
-)
-
-# Install headers
-install(
-    DIRECTORY ${LIBMEM_INC}/libmem
-    DESTINATION include
 )
 
 # Config and version files for the package
@@ -120,6 +169,6 @@ write_basic_package_version_file(
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config-version.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmem-config-version.cmake 
     DESTINATION share/unofficial-libmem
 )
