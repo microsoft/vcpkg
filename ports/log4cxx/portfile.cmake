@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/logging/log4cxx/${VERSION}/apache-log4cxx-${VERSION}.tar.gz"
     FILENAME "apache-log4cxx-${VERSION}.tar.gz"
-    SHA512 377234407c5f1128fbff6e5d2fcda3f53aae275962cd9207257674fa016095f4bc4ac0c318c1ba2a75f3252402cce0776c1211ffa917a60f8a89a12f01d45efb
+    SHA512 bd481d69e29b3c8908bbc91489bf4e752e6edb147404454c0e88fd8f107d68ae5a98e220ab912692e555ca071d1cff7fb99ffa51194cfa7d070593ce6285d2b0
 )
 
 vcpkg_extract_source_archive(
