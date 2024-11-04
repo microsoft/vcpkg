@@ -1,14 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF "v${VERSION}"
-    SHA512 7fd5f9a4df38dbe973995f410fe51ee9228e3a06554e9c02168a9851b7480f90fc1e2f522962be73d1e4b9ede5fe889e9131de57f8d12f334f5db74a96fb8061
+    REF 43afb0471a81c71dfb1d1e33589308762d5a6d18
+    SHA512 4c602160baa7ffa464a48f53edcaaaa95bac6933ed40d5113915a04941c0006d0f65267f5ec2462decb0307db5995b8facd3c1d7c4e0e3c3cb9b6f8adb18eb6f
     HEAD_REF master
 )
 
 # disable docs
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
+
+vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find_dependency(PythonInterp REQUIRED)" "")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS

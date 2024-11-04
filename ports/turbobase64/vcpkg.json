@@ -1,11 +1,10 @@
 {
   "name": "turbobase64",
-  "version-date": "2020-01-12",
-  "port-version": 3,
+  "version": "2023.8",
   "description": "Fastest Base64 SIMD/Neon library",
   "homepage": "https://github.com/powturbo/Turbo-Base64",
   "license": "GPL-3.0-only",
-  "supports": "!windows",
+  "supports": "!android & !(windows & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

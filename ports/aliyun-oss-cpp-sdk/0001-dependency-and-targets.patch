@@ -9,7 +9,7 @@ index ea0d8d6..2a853a0 100644
 -	include(FindCURL)
 -	include(FindOpenSSL)
 +	find_package(CURL CONFIG REQUIRED)
-+	find_package(OpenSSL CONFIG REQUIRED)
++	find_package(OpenSSL REQUIRED)
  
  	if(NOT CURL_FOUND)
  		message(FATAL_ERROR "Could not find curl")
