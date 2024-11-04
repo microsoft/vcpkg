@@ -1,0 +1,8 @@
+{
+  "name": "gameinput",
+  "version": "0.2303.22621.3038",
+  "description": "GameInput",
+  "homepage": "https://aka.ms/gameinput",
+  "license": null,
+  "supports": "windows & x64 & !uwp"
+}
