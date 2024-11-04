@@ -23,8 +23,15 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
     DESTINATION "${SOURCE_PATH}"
 )
 
+file(MAKE_DIRECTORY "${SOURCE_PATH}/cmake")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findkeystone.cmake"
+    DESTINATION "${SOURCE_PATH}/cmake"
+)
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmem-config.cmake.in" 
-    DESTINATION "${SOURCE_PATH}")
+    DESTINATION "${SOURCE_PATH}"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}

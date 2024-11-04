@@ -12,10 +12,10 @@ endif()
 
 set(LIBMEM_ARCH ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "Force a specific architecture")
 
-find_package(PkgConfig REQUIRED)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-pkg_check_modules(KEYSTONE REQUIRED IMPORTED_TARGET keystone)
-pkg_check_modules(CAPSTONE REQUIRED IMPORTED_TARGET capstone)
+find_package(keystone REQUIRED)
+find_package(capstone CONFIG REQUIRED)
 
 find_package(LLVM REQUIRED CONFIG)
 
@@ -24,12 +24,10 @@ include(HandleLLVMOptions)
 add_definitions(${LLVM_DEFINITIONS})
 
 include_directories(
-    PkgConfig::KEYSTONE
-    PkgConfig::CAPSTONE
     ${LLVM_INCLUDE_DIRS}
 )
 
-foreach(dep CAPSTONE KEYSTONE LLVM)
+foreach(dep keystone capstone LLVM)
     if(NOT ${dep}_FOUND)
         message(FATAL_ERROR "${dep} not found! Please install ${dep}.")
     endif()
@@ -90,7 +88,35 @@ target_include_directories(libmem
     INTERFACE $<INSTALL_INTERFACE:include>
 )
 
-llvm_map_components_to_libnames(llvm_libs Support Core Demangle)
+set_target_properties(LLVMSupport PROPERTIES
+    INTERFACE_LINK_LIBRARIES "LLVMDemangle"
+)
+
+if(MSVC)
+    FILE(GLOB LLVM_LIBS
+        "${LLVM_DIR}/../../lib/LLVMSupport.lib"
+        "${LLVM_DIR}/../../lib/LLVMDemangle.lib"
+    )
+else()
+    execute_process(
+        COMMAND ${LLVM_DIR}/../../bin/llvm-config --libs support demangle
+        OUTPUT_VARIABLE LLVM_LIBS
+    )
+endif()
+
+string(STRIP "${LLVM_LIBS}" LLVM_LIBS)
+
+if(NOT MSVC)
+    execute_process(
+        COMMAND ${LLVM_DIR}/../../bin/llvm-config --system-libs
+        OUTPUT_VARIABLE LLVM_SYSLIBS
+    )
+    string(STRIP "${LLVM_SYSLIBS}" LLVM_SYSLIBS)
+    message(STATUS "LLVM_SYSLIBS: ${LLVM_SYSLIBS}")
+    set(LLVM_LIBS ${LLVM_LIBS} ${LLVM_SYSLIBS})
+endif()
+
+message(STATUS "LLVM_LIBS: ${LLVM_LIBS}")
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
     set(LIBMEM_DEPS
@@ -130,7 +156,7 @@ else()
 endif()
 
 target_link_libraries(libmem
-    PUBLIC ${LIBMEM_DEPS} ${llvm_libs} PkgConfig::KEYSTONE PkgConfig::CAPSTONE
+    PRIVATE ${LIBMEM_DEPS} ${LLVM_LIBS} ${KEYSTONE_LIBRARIES} capstone::capstone
 )
 
 # Install the libmem library and public headers
