@@ -117,7 +117,7 @@ index 614061ad4..20ac1a2f4 100644
 -add_subdirectory(${EXTERNAL}/imgui/tnt)
 -add_subdirectory(${EXTERNAL}/robin-map/tnt)
 -add_subdirectory(${EXTERNAL}/smol-v/tnt)
-+add_external_library("basisu" "basisu/tnt" "basisu::basisu;basisu::basisu_encoder" "basisu;basisu_encoder")
++add_external_library("basisu" "basisu/tnt" "basisu::basisu;basisu::basisu_encoder;basisu::basisu_encoder" "basisu;basis_encoder;basis_transcoder")
 +add_external_library("civetweb" "civetweb/tnt" "civetweb::civetweb" "civetweb")
 +add_external_library("imgui" "imgui/tnt" "imgui::imgui" "imgui")
 +add_external_library("smol-v" "smol-v/tnt" "smol-v::smol-v" "smol-v")
