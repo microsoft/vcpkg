@@ -1,6 +1,6 @@
 {
   "name": "dimcli",
-  "version-semver": "7.2.0",
+  "version-semver": "7.3.0",
   "description": "C++ command line parser toolkit",
   "homepage": "https://github.com/gknowles/dimcli",
   "documentation": "https://gknowles.github.io/dimcli",

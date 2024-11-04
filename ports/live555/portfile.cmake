@@ -1,9 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+string(REPLACE "-" "." format_version ${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://live555.com/liveMedia/public/live.2024.06.26.tar.gz"
-    FILENAME "live.2024.06.26.tar.gz"
-    SHA512 ece875ed82bb122bb2fb237a5d83b4ae16a2fed0cd3e6c5477a16558545d59898a2acf75293f11c0adf1f57453443e969e22c482ec241e45a61f9048e53c7b44
+    URLS "http://live555.com/liveMedia/public/live.${format_version}.tar.gz"
+    FILENAME "live.${format_version}.tar.gz"
+    SHA512 59c36211317dd99d459f454a007a180ad33fdd568974c107caddcbb436f9b9c63fc05858d76bedb7f71b5f43e6850d484a973fd5f9d4acc68fb2b4d0e0de3835
 )
 
 vcpkg_extract_source_archive(

@@ -6,6 +6,7 @@ vcpkg_from_git(
     REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
     PATCHES
         fix-linux.patch
+        fix-lib-name-conflict.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -19,6 +20,7 @@ if(NOT EXISTS "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/BUILD.gn")
         PATCHES
             fix-std-20.patch
             ndk-toolchain.diff
+            fix-lib-name-conflict-1.patch
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
     file(RENAME "${mini_chromium}" "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")

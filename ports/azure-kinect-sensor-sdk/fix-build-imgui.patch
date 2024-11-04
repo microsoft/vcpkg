@@ -11,3 +11,47 @@ index 4289f71..407e912 100644
      }
  
      ImGui::EndChild();
+diff --git a/tools/k4aviewer/k4asourceselectiondockcontrol.cpp b/tools/k4aviewer/k4asourceselectiondockcontrol.cpp
+index 812608b..31e961d 100644
+--- a/tools/k4aviewer/k4asourceselectiondockcontrol.cpp
++++ b/tools/k4aviewer/k4asourceselectiondockcontrol.cpp
+@@ -34,7 +34,7 @@ K4ASourceSelectionDockControl::K4ASourceSelectionDockControl()
+ 
+ K4ADockControlStatus K4ASourceSelectionDockControl::Show()
+ {
+-    ImGui::SetNextTreeNodeOpen(true, ImGuiCond_FirstUseEver);
++    ImGui::SetNextItemOpen(true, ImGuiCond_FirstUseEver);
+     if (ImGui::TreeNode("Open Device"))
+     {
+         ImGuiExtensions::K4AComboBox("Device S/N",
+diff --git a/tools/k4aviewer/k4adevicedockcontrol.cpp b/tools/k4aviewer/k4adevicedockcontrol.cpp
+index 8fe5687..6d1e95a 100644
+--- a/tools/k4aviewer/k4adevicedockcontrol.cpp
++++ b/tools/k4aviewer/k4adevicedockcontrol.cpp
+@@ -333,7 +333,7 @@ K4ADockControlStatus K4ADeviceDockControl::Show()
+ 
+     if (m_firstRun || depthEnabledStateChanged)
+     {
+-        ImGui::SetNextTreeNodeOpen(m_config.EnableDepthCamera);
++        ImGui::SetNextItemOpen(m_config.EnableDepthCamera);
+     }
+ 
+     ImGui::Indent();
+@@ -376,7 +376,7 @@ K4ADockControlStatus K4ADeviceDockControl::Show()
+ 
+     if (m_firstRun || colorEnableStateChanged)
+     {
+-        ImGui::SetNextTreeNodeOpen(m_config.EnableColorCamera);
++        ImGui::SetNextItemOpen(m_config.EnableColorCamera);
+     }
+ 
+     ImGui::Indent();
+@@ -710,7 +710,7 @@ K4ADockControlStatus K4ADeviceDockControl::Show()
+ 
+     if (m_firstRun && (m_syncInConnected || m_syncOutConnected))
+     {
+-        ImGui::SetNextTreeNodeOpen(true);
++        ImGui::SetNextItemOpen(true);
+     }
+     if (ImGui::TreeNode("External Sync"))
+     {

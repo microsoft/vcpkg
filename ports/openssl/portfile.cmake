@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 5282e078eb205ef691647e07d65186d81f9328329a06cca209a138adf10b95f12c16742ac61b4ab86e5098c153645ea413088d8263ff7054fdd40decd85b271f
+    SHA512 d5f78b2e9d7b7b4787c976c4f832b1448bbadf5f9d398a50ef98053f92501768d000aa73673af200568aef4c8a491442ebbee8c43556838f465d4f91dfc2b5ad
     PATCHES
         cmake-config.patch
         command-line-length.patch

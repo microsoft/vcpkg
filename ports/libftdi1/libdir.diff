@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fa5b3bf..5963df0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -166,6 +166,7 @@ endif(${UNIX})
+ if(${WIN32})
+    set(libdir      ${CMAKE_INSTALL_PREFIX}/bin)
+ endif(${WIN32})
++set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+ 
+ configure_file(${CMAKE_SOURCE_DIR}/libftdi1.pc.in ${CMAKE_BINARY_DIR}/libftdi1.pc @ONLY)
+ configure_file(${CMAKE_SOURCE_DIR}/libftdipp1.pc.in ${CMAKE_BINARY_DIR}/libftdipp1.pc @ONLY)

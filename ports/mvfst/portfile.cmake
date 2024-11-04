@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/mvfst
     REF "v${VERSION}"
-    SHA512 5bae7b25e7b3454a1f1d8be28f201dc5865f452257198ccd0ddd6ec642c1b6ba6e6c8010db470ef13acef51cbf11574cd53e7b7d34ac44690b12bfba8c38e3a0
+    SHA512 6625ffeb3edfbf1e3a9078c74a75ce60296e89a845ab15b31f7e22daf51be0a7fd49a6965c73cef1d3d634caee3f99d4765ea998001cddf00204c10a030cf90f
     HEAD_REF main
 )
 
