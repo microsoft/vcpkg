@@ -138,7 +138,7 @@ index 614061ad4..20ac1a2f4 100644
 +add_external_library("draco" "draco/tnt" "draco::draco" "draco")
 +add_external_header_library("jsmn" "jsmn/tnt" "jsmn.h" "jsmn")
 +add_external_library("Stb" "stb/tnt" "stb_include.h" "stb")
-+add_external_header_library("getopt" "getopt" "unistd.h" "getopt")
++add_external_header_library("getopt" "getopt" "getopt/getopt.h" "getopt")
  
  # Note that this has to be placed after mikktspace in order for combine_static_libs to work.
  add_subdirectory(${LIBRARIES}/geometry)
