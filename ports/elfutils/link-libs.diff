@@ -10,14 +10,14 @@ index 2e83a43..bdfc808 100644
 -Libs.private: @BZ2_LIB@
 +Requires.private: zlib @LIBLZMA@ @LIBZSTD@ bzip2
 diff --git a/configure.ac b/configure.ac
-index f191488..90c0169 100644
+index f191488..fe617ac 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -429,6 +429,8 @@ AM_CONDITIONAL(TESTS_RPATH, test "$tests_use_rpath" = yes)
  dnl zlib is mandatory.
  save_LIBS="$LIBS"
  LIBS=
-+KG_PROG_PKG_CONFIG
++PKG_PROG_PKG_CONFIG
 +PKG_CHECK_MODULES([ZLIB], [zlib], [LIBS="$ZLIB_LIBS $LIBS"], AC_MSG_ERROR([zlib not found]))
  eu_ZIPLIB(zlib,ZLIB,z,gzdirect,gzip)
  AS_IF([test "x$with_zlib" = xno], [AC_MSG_ERROR([zlib not found but is required])])
