@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 614061ad4..b4b0c8210 100644
+index 614061ad4..20ac1a2f4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,8 @@ option(FILAMENT_TESTS "Build tests" ON)
@@ -11,18 +11,38 @@ index 614061ad4..b4b0c8210 100644
  option(FILAMENT_USE_EXTERNAL_GLES3 "Experimental: Compile Filament against OpenGL ES 3" OFF)
  
  option(FILAMENT_ENABLE_LTO "Enable link-time optimizations if supported by the compiler" OFF)
-@@ -718,10 +720,71 @@ endfunction()
+@@ -619,6 +621,10 @@ endif()
+ # ==================================================================================================
+ # Functions
+ # ==================================================================================================
++
++# List of external subdirectories that are added/used
++set(external_subdirectories)
++
+ ## The MSVC compiler has a limitation on literal string length which is reached when all the
+ ## licenses are concatenated together into a large string... so split them into multiple strings.
+ function(list_licenses OUTPUT MODULES)
+@@ -627,6 +633,10 @@ function(list_licenses OUTPUT MODULES)
+     set(CONTENT)
+     set(_MODULES ${MODULES} ${ARGN})
+     foreach(module ${_MODULES})
++        if(NOT "${external_subdirectories}" MATCHES "${module}")
++            continue()
++        endif()
++
+         set(license_path "../../third_party/${module}/LICENSE")
+         get_filename_component(fullname "${license_path}" ABSOLUTE)
+         if(EXISTS ${fullname})
+@@ -718,10 +728,73 @@ endfunction()
  # Sub-projects
  # ==================================================================================================
  
-+set(added_subdirectories)
-+
 +# Add an external library suth that
 +# - prefer find_package if FILAMENT_PREFER_EXTERNAL defined
 +# - otherwise add the external subdirectory
 +macro(add_external_library package_name subdirectory targets target_aliases)
 +    if(FILAMENT_PREFER_EXTERNAL)
-+        find_package(${package_name})
++        find_package(${package_name} GLOBAL)
 +
 +        # add aliases for targets
 +        if(${${package_name}_FOUND})
@@ -48,10 +68,10 @@ index 614061ad4..b4b0c8210 100644
 +        endif()
 +    endif()
 +
-+    list(FIND added_subdirectories "${subdirectory}" has_subdirectory)
++    list(FIND external_subdirectories "${subdirectory}" has_subdirectory)
 +    if(NOT ${${package_name}_FOUND} AND ${has_subdirectory} EQUAL -1)
 +        add_subdirectory(${EXTERNAL}/${subdirectory})
-+        list(APPEND ${subdirectory})
++        list(APPEND external_subdirectories ${subdirectory})
 +    endif()
 +endmacro()
 +
@@ -59,19 +79,23 @@ index 614061ad4..b4b0c8210 100644
 +# - prefer find_path if FILAMENT_PREFER_EXTERNAL defined
 +# - otherwise add the external subdirectory
 +macro(add_external_header_library package_name subdirectory header target)
++    set(found FALSE)
 +    if(FILAMENT_PREFER_EXTERNAL)
 +        find_path(${package_name}_INCLUDE_DIRS ${header})
 +
-+        if(${${package_name}_INCLUDE_DIRS})
++        if(NOT "${${package_name}_INCLUDE_DIRS}" MATCHES ".*-NOTFOUND")
++            set(found TRUE)
 +            add_library(${target} INTERFACE)
 +            target_include_directories(${target} INTERFACE ${${package_name}_INCLUDE_DIRS})
++        else()
++            message(WARNING "Could not find the external header library ${package_name}")
 +        endif()
 +    endif()
 +
-+    list(FIND added_subdirectories "${subdirectory}" has_subdirectory)
-+    if(NOT ${${package_name}_INCLUDE_DIRS} AND ${has_subdirectory} EQUAL -1)
++    list(FIND external_subdirectories "${subdirectory}" has_subdirectory)
++    if(NOT ${found} AND ${has_subdirectory} EQUAL -1)
 +        add_subdirectory(${EXTERNAL}/${subdirectory})
-+        list(APPEND ${subdirectory})
++        list(APPEND external_subdirectories ${subdirectory})
 +    endif()
 +endmacro()
 +
@@ -84,7 +108,7 @@ index 614061ad4..b4b0c8210 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -739,21 +802,20 @@ add_subdirectory(${LIBRARIES}/utils)
+@@ -739,21 +812,20 @@ add_subdirectory(${LIBRARIES}/utils)
  add_subdirectory(${LIBRARIES}/viewer)
  add_subdirectory(${FILAMENT}/filament)
  add_subdirectory(${FILAMENT}/shaders)
@@ -114,11 +138,11 @@ index 614061ad4..b4b0c8210 100644
 +add_external_library("draco" "draco/tnt" "draco::draco" "draco")
 +add_external_header_library("jsmn" "jsmn/tnt" "jsmn.h" "jsmn")
 +add_external_library("Stb" "stb/tnt" "stb_include.h" "stb")
-+add_external_header_library("getopt" "getopt" "stdint.h" "getopt")
++add_external_header_library("getopt" "getopt" "unistd.h" "getopt")
  
  # Note that this has to be placed after mikktspace in order for combine_static_libs to work.
  add_subdirectory(${LIBRARIES}/geometry)
-@@ -761,9 +823,16 @@ add_subdirectory(${LIBRARIES}/geometry)
+@@ -761,9 +833,16 @@ add_subdirectory(${LIBRARIES}/geometry)
  if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
      # spirv-tools must come before filamat, as filamat relies on the presence of the
      # spirv-tools_SOURCE_DIR variable.
@@ -138,7 +162,7 @@ index 614061ad4..b4b0c8210 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -774,9 +843,9 @@ endif()
+@@ -774,9 +853,9 @@ endif()
  
  if (FILAMENT_SUPPORTS_VULKAN)
      add_subdirectory(${LIBRARIES}/bluevk)
@@ -146,11 +170,11 @@ index 614061ad4..b4b0c8210 100644
 +    add_external_library("vkmemalloc" "vkmemalloc/tnt" "vkmemalloc::vkmemalloc" "vkmemalloc")
      set(SPIRV_HEADERS_SKIP_EXAMPLES ON)
 -    add_subdirectory(${EXTERNAL}/spirv-headers)
-+    add_external_header_library("SPIRV_HEADERS" "spirv-headers" "spirv/1.0/GLSL.std.450.h" "SPIRV-Headers")
++    add_external_header_library("SPIRV_HEADERS" "spirv-headers" "spirv/unified1/spirv.hpp" "SPIRV-Headers")
  endif()
  
  set(FILAMENT_SAMPLES_BINARY_DIR ${PROJECT_BINARY_DIR}/samples)
-@@ -797,11 +866,11 @@ if (IS_HOST_PLATFORM)
+@@ -797,11 +876,11 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${FILAMENT}/samples)
  
