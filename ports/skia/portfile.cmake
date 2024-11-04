@@ -3,15 +3,15 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "501e9efaa2fc929ec67c44da6dbaf9335264b559"
-    SHA512 978af9894d23d7b97d95d402bbf6c0c1401d63990361aae80166b620b0aa06d9dc2c75537850ff4c2df539735b4a12713cb29840613a15cbbff68590c48c4fac
+    REF "94631d9b9a10697325589e1642af63a0137cac94"
+    SHA512 c866b79229851e20af97d314ffefbaa921e00a815b9be7e67946490879a4ac9c0d32e18e5a441414df1bea18547c621c845b356ce759fcf7047d36aebf253b64
     PATCHES
         disable-msvc-env-setup.patch
         # disable-dev-test.patch
-        skia-include-string.patch
+        # skia-include-string.patch
         bentleyottmann-build.patch
         graphite.patch
-        vulkan-headers.patch
+        # vulkan-headers.patch
         pdfsubsetfont-uwp.diff
 )
 
@@ -32,12 +32,12 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "db1fa936ad0a58846f179c81cdf60f55267099b9"
+    REF "f3c7cc5c580eb743829c78bb77df0c1e8f6a6ce3"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
-    REF "679499cc9b92cfb0ae1dccbfd7e97ce719d23576"
+    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(jinja2
@@ -62,12 +62,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "1b75a4ae0b4289014b4c369301dc925c366f78a6"
+    REF "50bc4debdc3eec5045edbeb8ce164090e29b91f3"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "87fcbaf1bc8346469e178711eff27cfd20aa1960"
+    REF "42b315c15b1ff941b46bb3949c105e5386be8717"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
