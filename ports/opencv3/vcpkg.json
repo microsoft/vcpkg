@@ -212,7 +212,6 @@
     },
     "python": {
       "description": "Python wrapper support for opencv",
-      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "opencv3",
@@ -221,7 +220,13 @@
             "flann"
           ]
         },
-        "python3"
+        {
+          "name": "python3",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        }
       ]
     },
     "qt": {

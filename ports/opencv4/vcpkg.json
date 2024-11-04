@@ -361,9 +361,14 @@
     },
     "python": {
       "description": "Python wrapper support for opencv",
-      "supports": "!(windows & static)",
       "dependencies": [
-        "python3"
+        {
+          "name": "python3",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        }
       ]
     },
     "qt": {
