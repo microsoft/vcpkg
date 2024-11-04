@@ -142,7 +142,7 @@ index 614061ad4..20ac1a2f4 100644
  
  # Note that this has to be placed after mikktspace in order for combine_static_libs to work.
  add_subdirectory(${LIBRARIES}/geometry)
-@@ -761,9 +833,16 @@ add_subdirectory(${LIBRARIES}/geometry)
+@@ -761,9 +833,19 @@ add_subdirectory(${LIBRARIES}/geometry)
  if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
      # spirv-tools must come before filamat, as filamat relies on the presence of the
      # spirv-tools_SOURCE_DIR variable.
@@ -155,14 +155,17 @@ index 614061ad4..20ac1a2f4 100644
 +        add_external_library("SPIRV-Tools" "spirv-tools" "SPIRV-Tools-static" "SPIRV-Tools")
 +    endif()
 +    add_external_library("SPIRV-Tools-opt" "spirv-tools" "SPIRV-Tools-opt" "SPIRV-Tools-opt")
-+    add_external_library("glslang" "glslang/tnt" "glslang::glslang;glslang::SPIRV;glslang::OGLCompiler" "glslang;SPIRV;OGLCompiler")
++    add_external_library("glslang" "glslang/tnt" "glslang::glslang;glslang::SPIRV;glslang::OGLCompiler;glslang::MachineIndependent;glslang::OSDependent" "glslang;SPIRV;OGLCompiler;MachineIndependent;OSDependent")
++    if(TARGET glslang::glslang AND TARGET glslang::MachineIndependent)
++        target_link_libraries(glslang::glslang INTERFACE glslang::MachineIndependent)
++    endif()
 +    add_external_library("spirv_cross_core" "spirv-cross/tnt" "spirv-cross-core" "spirv-cross-core")
 +    add_external_library("spirv_cross_glsl" "spirv-cross/tnt" "spirv-cross-glsl" "spirv-cross-glsl")
 +    add_external_library("spirv_cross_msl" "spirv-cross/tnt" "spirv-cross-msl" "spirv-cross-msl")
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -774,9 +853,9 @@ endif()
+@@ -774,9 +856,9 @@ endif()
  
  if (FILAMENT_SUPPORTS_VULKAN)
      add_subdirectory(${LIBRARIES}/bluevk)
@@ -174,7 +177,7 @@ index 614061ad4..20ac1a2f4 100644
  endif()
  
  set(FILAMENT_SAMPLES_BINARY_DIR ${PROJECT_BINARY_DIR}/samples)
-@@ -797,11 +876,11 @@ if (IS_HOST_PLATFORM)
+@@ -797,11 +879,11 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${FILAMENT}/samples)
  
