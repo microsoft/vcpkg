@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO baylej/tmx
     REF "tmx_${VERSION}"
     HEAD_REF master
-    SHA512 λ 215a05c31ed52a1701fdc8014661f744f43095aa7756e3034a33f4e0d4b27d405b1283fa143fe1d73703aedf0ecdca1a55db34f8dafe186bebcf673fe007e2e6
+    SHA512 215a05c31ed52a1701fdc8014661f744f43095aa7756e3034a33f4e0d4b27d405b1283fa143fe1d73703aedf0ecdca1a55db34f8dafe186bebcf673fe007e2e6
     PATCHES
         libxml2.patch
 )
