@@ -15,7 +15,8 @@
       "name": "glslang",
       "features": [
         "opt",
-        "private-headers"
+        "private-headers",
+        "rtti"
       ]
     },
     "imgui",
