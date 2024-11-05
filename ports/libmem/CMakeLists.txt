@@ -39,7 +39,7 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
         "${INTERNAL_DIR}/winutils/*.c"
         "${INTERNAL_DIR}/demangler/*.cpp"
     )
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD" OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
     set(ARCH_DIR "")
     if("${LIBMEM_ARCH}" MATCHES "x86_64|amd64")
         set(ARCH_DIR "x64")
@@ -47,7 +47,7 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQUA
         set(ARCH_DIR "x86")
     endif()
 
-    if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
         file(GLOB LIBMEM_SRC
             "${LIBMEM_DIR}/src/linux/*.c"
             "${LIBMEM_DIR}/src/linux/ptrace/${ARCH_DIR}/*.c"
