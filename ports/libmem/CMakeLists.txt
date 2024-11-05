@@ -6,8 +6,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(targets_export_name unofficial-libmem-target)
 
-if (MSVC)
+if (MSVC AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
+if (MSVC AND NOT(BUILD_SHARED_LIBS))
     add_definitions(/DLM_EXPORT)
+elseif(NOT(MSVC) AND BUILD_SHARED_LIBS)
+    add_definitions(-DLM_EXPORT)
 endif()
 
 set(LIBMEM_ARCH ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "Force a specific architecture")

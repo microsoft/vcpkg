@@ -6,10 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(VCPKG_LIBRARY_LINKAGE static)
-
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DLM_EXPORT")
+endif()
+
+if(NOT(VCPKG_TARGET_IS_WINDOWS) AND VCPKG_LIBRARY_LINKAGE EQUAL "shared") 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
 endif()
 
 if(EXISTS "${SOURCE_PATH}/PreLoad.cmake")
@@ -26,6 +28,10 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
 file(MAKE_DIRECTORY "${SOURCE_PATH}/cmake")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findkeystone.cmake"
+    DESTINATION "${SOURCE_PATH}/cmake"
+)
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findcapstone.cmake"
     DESTINATION "${SOURCE_PATH}/cmake"
 )
 
