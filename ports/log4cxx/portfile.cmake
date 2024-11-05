@@ -8,6 +8,8 @@ vcpkg_extract_source_archive(
     SOURCE_PATH ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-find-package.patch
+        # Make pkg_config support opt-in when building with Microsoft Visual Studio
+        https://github.com/apache/logging-log4cxx/commit/4642a50c70b6cbd9b68d7e8dace9c049c8198b07.patch?full_index=1
 )
 
 vcpkg_cmake_configure(
@@ -22,7 +24,9 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/log4cxx)
 
-vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_fixup_pkgconfig()
+endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cxxConfig.cmake" _contents)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cxxConfig.cmake"
