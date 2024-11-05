@@ -1,0 +1,30 @@
+diff --git a/configure.ac b/configure.ac
+index 65a4e24..fc0d7d6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -278,9 +278,24 @@ AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = yes)
+ # We want to link in libunwind if it is enabled and exists.
+ UNWIND_LIBS=
+ if test "$enable_libunwind" = yes; then
++  save_CFLAGS="$CFLAGS"
++  save_LIBS="$LIBS"
++  PKG_PROG_PKG_CONFIG
++  PKG_CHECK_MODULES([PC_UNWIND],[libunwind],[
++    CFLAGS="$PC_UNWIND_CFLAGS"
++    LIBS="$PC_UNWIND_LIBS"
++  ],[
++    PC_UNWIND_CFLAGS=""
++    LIBS="-lunwind"
++  ])
+   AC_CHECK_HEADERS([libunwind.h],
+-                   [AC_CHECK_LIB(unwind, backtrace, UNWIND_LIBS=-lunwind)
++                   [AC_SEARCH_LIBS(backtrace, [], [
++                    save_CFLAGS="$CFLAGS $PC_UNWIND_CFLAGS"
++                    UNWIND_LIBS="$LIBS"
++                   ])
+                     will_use_libunwind=yes])
++  CFLAGS="$save_CFLAGS"
++  LIBS="$save_LIBS"
+ fi
+ AC_SUBST(UNWIND_LIBS)
+ 
