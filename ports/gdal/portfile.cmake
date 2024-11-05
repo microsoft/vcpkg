@@ -22,6 +22,7 @@ vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base
 # "core" is used for a dependency which must be enabled to avoid vendored lib.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        archive          GDAL_USE_ARCHIVE
         cfitsio          GDAL_USE_CFITSIO
         curl             GDAL_USE_CURL
         expat            GDAL_USE_EXPAT
