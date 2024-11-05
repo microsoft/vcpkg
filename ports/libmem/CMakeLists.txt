@@ -17,17 +17,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(keystone REQUIRED)
 find_package(capstone CONFIG REQUIRED)
 
-find_package(LLVM REQUIRED CONFIG)
-
-list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
-include(HandleLLVMOptions)
-add_definitions(${LLVM_DEFINITIONS})
-
-include_directories(
-    ${LLVM_INCLUDE_DIRS}
-)
-
-foreach(dep keystone capstone LLVM)
+foreach(dep keystone capstone)
     if(NOT ${dep}_FOUND)
         message(FATAL_ERROR "${dep} not found! Please install ${dep}.")
     endif()
@@ -37,6 +27,9 @@ set(LIBMEM_DIR "${PROJECT_SOURCE_DIR}")
 set(LIBMEM_INC "${LIBMEM_DIR}/include")
 set(INTERNAL_DIR "${LIBMEM_DIR}/internal")
 set(COMMON_DIR "${LIBMEM_DIR}/src/common")
+
+set(LLVM_DEM_DIR "${LIBMEM_DIR}/external/llvm")
+file(GLOB_RECURSE LLVM_DEM_SRC "${LLVM_DEM_DIR}/lib/*.cpp")
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     file(GLOB_RECURSE LIBMEM_SRC
@@ -77,46 +70,18 @@ endif()
 
 file(GLOB_RECURSE LIBMEM_PUBLIC_HEADERS "${LIBMEM_INC}/libmem/*.h" "${LIBMEM_INC}/libmem/*.hpp")
 
-add_library(libmem ${LIBMEM_SRC})
+add_library(libmem ${LIBMEM_SRC} ${LLVM_DEM_SRC})
 
-set_target_properties(libmem PROPERTIES PUBLIC_HEADER "${LIBMEM_PUBLIC_HEADERS}")
-
+set_target_properties(libmem PROPERTIES 
+    PUBLIC_HEADER "${LIBMEM_PUBLIC_HEADERS}"
+    POSITION_INDEPENDENT_CODE True)
+target_compile_features(libmem PUBLIC cxx_std_17)
 target_compile_definitions(libmem PUBLIC LM_EXPORT)
 
 target_include_directories(libmem
-    PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}"
+    PRIVATE "${LLVM_DEM_DIR}/include" "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}"
     INTERFACE $<INSTALL_INTERFACE:include>
 )
-
-set_target_properties(LLVMSupport PROPERTIES
-    INTERFACE_LINK_LIBRARIES "LLVMDemangle"
-)
-
-if(MSVC)
-    FILE(GLOB LLVM_LIBS
-        "${LLVM_DIR}/../../lib/LLVMSupport.lib"
-        "${LLVM_DIR}/../../lib/LLVMDemangle.lib"
-    )
-else()
-    execute_process(
-        COMMAND ${LLVM_DIR}/../../bin/llvm-config --libs support demangle
-        OUTPUT_VARIABLE LLVM_LIBS
-    )
-endif()
-
-string(STRIP "${LLVM_LIBS}" LLVM_LIBS)
-
-if(NOT MSVC)
-    execute_process(
-        COMMAND ${LLVM_DIR}/../../bin/llvm-config --system-libs
-        OUTPUT_VARIABLE LLVM_SYSLIBS
-    )
-    string(STRIP "${LLVM_SYSLIBS}" LLVM_SYSLIBS)
-    message(STATUS "LLVM_SYSLIBS: ${LLVM_SYSLIBS}")
-    set(LLVM_LIBS ${LLVM_LIBS} ${LLVM_SYSLIBS})
-endif()
-
-message(STATUS "LLVM_LIBS: ${LLVM_LIBS}")
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
     set(LIBMEM_DEPS
@@ -156,7 +121,7 @@ else()
 endif()
 
 target_link_libraries(libmem
-    PRIVATE ${LIBMEM_DEPS} ${LLVM_LIBS} ${KEYSTONE_LIBRARIES} capstone::capstone
+    PRIVATE ${LIBMEM_DEPS} ${KEYSTONE_LIBRARIES} capstone::capstone
 )
 
 # Install the libmem library and public headers

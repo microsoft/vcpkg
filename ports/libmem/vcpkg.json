@@ -8,34 +8,6 @@
   "dependencies": [
     "capstone",
     "keystone",
-    {
-      "name": "llvm",
-      "default-features": false
-    },
-    {
-      "name": "llvm",
-      "default-features": false,
-      "features": [
-        "target-arm"
-      ],
-      "platform": "arm32"
-    },
-    {
-      "name": "llvm",
-      "default-features": false,
-      "features": [
-        "target-aarch64"
-      ],
-      "platform": "arm64"
-    },
-    {
-      "name": "llvm",
-      "default-features": false,
-      "features": [
-        "target-x86"
-      ],
-      "platform": "osx | ios | x64 | x86"
-    },
     "pkgconf",
     {
       "name": "vcpkg-cmake",
