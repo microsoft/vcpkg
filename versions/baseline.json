@@ -6089,7 +6089,7 @@
       "port-version": 0
     },
     "msgpack": {
-      "baseline": "6.1.1",
+      "baseline": "7.0.0",
       "port-version": 0
     },
     "msgpack-c": {
