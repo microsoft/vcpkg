@@ -1094,11 +1094,13 @@ stxxl:x64-windows-static=skip
 stxxl:x64-windows-static-md=skip
 # _Interlocked* intrinsic functions are not available on x86
 suitesparse-graphblas:x86-windows=fail
-# "ninja: error: failed recompaction: Permission denied"
-suitesparse-graphblas:arm64-windows=fail
 # uwp: "unresolved external symbol __imp_RoInitialize referenced in function __scrt_initialize_winrt"
 suitesparse-graphblas:x64-uwp=fail
 suitesparse-graphblas:arm64-uwp=fail
+# Android API level 23 or newer is required for complex math support
+suitesparse-graphblas:arm-neon-android=fail
+suitesparse-graphblas:arm64-android=fail
+suitesparse-graphblas:x64-android=fail
 systemc:arm64-windows=fail
 systemc:arm64-uwp=fail
 systemc:x64-uwp=fail

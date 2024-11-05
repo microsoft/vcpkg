@@ -14,10 +14,7 @@
     "suitesparse-colamd",
     "suitesparse-config",
     "suitesparse-cxsparse",
-    {
-      "name": "suitesparse-graphblas",
-      "platform": "!android"
-    },
+    "suitesparse-graphblas",
     "suitesparse-klu",
     "suitesparse-lagraph",
     "suitesparse-ldl",
