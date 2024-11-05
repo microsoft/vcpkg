@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "tmx_${VERSION}"
     HEAD_REF master
     SHA512 302e55c6d78947dbac1470855331fb238e2ac681f10414aef1e3dad5c1128b66aeb2fef0c4cb2d03360b5e5b327e46c9e5d7dc5bf15d411c9fa3cf7dd4351b4f
-    PATCHES
-        libxml2.patch
 )
 
 vcpkg_cmake_configure(
