@@ -41,29 +41,6 @@
         }
       ]
     },
-    "cuda-redist": {
-      "description": "Enable CUDA support for all major compute architectures",
-      "dependencies": [
-        {
-          "name": "suitesparse",
-          "features": [
-            "cuda"
-          ]
-        },
-        {
-          "name": "suitesparse-cholmod",
-          "features": [
-            "cuda-redist"
-          ]
-        },
-        {
-          "name": "suitesparse-spqr",
-          "features": [
-            "cuda-redist"
-          ]
-        }
-      ]
-    },
     "gpl": {
       "description": "Enable GPL-licensed packages",
       "dependencies": [
