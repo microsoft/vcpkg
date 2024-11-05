@@ -2553,7 +2553,7 @@
       "port-version": 0
     },
     "elfutils": {
-      "baseline": "0.191",
+      "baseline": "0.192",
       "port-version": 0
     },
     "embree3": {
