@@ -6333,8 +6333,8 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.7.0",
-      "port-version": 1
+      "baseline": "1.8.1",
+      "port-version": 0
     },
     "nifly": {
       "baseline": "1.0.0",
