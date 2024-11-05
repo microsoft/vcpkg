@@ -4,7 +4,7 @@ set(KEYSTONE_LIBRARY_EXTENSIONS .lib .a .so)
 if (MSVC)
     set(INSTALLED_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
     set(keystone_LIBRARY_DIRS "${INSTALLED_ROOT}/lib")
-    set(keystone_INCLUDE_DIRS "${INSTALLED_ROOT}/include/keystone")
+    set(keystone_INCLUDE_DIRS "${INSTALLED_ROOT}/include")
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(keystone REQUIRED keystone)
@@ -19,7 +19,7 @@ find_library(KEYSTONE_LIBRARIES
 find_path(KEYSTONE_INCLUDE_DIR
     NAMES keystone.h
     PATHS ${keystone_INCLUDE_DIRS}
-    PATH_SUFFIXES include
+    PATH_SUFFIXES include keystone
     REQUIRED)
 
 include(FindPackageHandleStandardArgs)
