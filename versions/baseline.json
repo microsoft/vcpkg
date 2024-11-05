@@ -8041,8 +8041,8 @@
       "port-version": 1
     },
     "rubberband": {
-      "baseline": "3.3.0",
-      "port-version": 1
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "ruckig": {
       "baseline": "0.14.0",
