@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf4ad371b..5c40326a2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -264,6 +264,9 @@ set(TOOLS ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+ # ==================================================================================================
+ # Compiler check
+ # ==================================================================================================
++option(FILAMENT_ALLOW_ANY_COMPILER "Allow building with any compiler" TRUE)
++
++if(NOT FILAMENT_ALLOW_ANY_COMPILER)
+ set(MIN_CLANG_VERSION "6.0")
+ 
+ if (CMAKE_C_COMPILER_ID MATCHES "Clang")
+@@ -288,6 +291,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+         message(FATAL_ERROR "Building with Clang on Windows is no longer supported. Use MSVC 2019 instead.")
+     endif()
+ endif()
++endif()
+ 
+ # ==================================================================================================
+ # Link time optimizations (LTO)
+@@ -361,10 +365,18 @@ if (MSVC)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
+ endif()
+ 
+-# Add colors to ninja builds
+-if (UNIX AND CMAKE_GENERATOR STREQUAL "Ninja")
+-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
++# Enhance error reporting and compiler messages
++if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
++    add_compile_options(
++        $<$<COMPILE_LANGUAGE:C>:-fcolor-diagnostics> $<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>
++    )
++elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    add_compile_options(
++        $<$<COMPILE_LANGUAGE:C>:-fdiagnostics-color=always>
++        $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>
++    )
++elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND MSVC_VERSION GREATER 1900)
++    add_compile_options(/diagnostics:column)
+ endif()
+ 
+ # Use hidden by default and expose what we need.
+diff --git a/tools/cso-lut/src/main.cpp b/tools/cso-lut/src/main.cpp
+index b45a60702..e8a7c2bb7 100644
+--- a/tools/cso-lut/src/main.cpp
++++ b/tools/cso-lut/src/main.cpp
+@@ -164,7 +164,7 @@ static float sq(float x) { return x * x; }
+ 
+ constexpr float PI_F = 3.141592653589793238f;
+ 
+-static UTILS_UNUSED float sphericalCapsIntersection(float cosCap1, float cosCap2, float cosDistance) {
++UTILS_UNUSED static float sphericalCapsIntersection(float cosCap1, float cosCap2, float cosDistance) {
+     // Oat and Sander 2007, "Ambient Aperture Lighting"
+     float r1 = std::acos(cosCap1);
+     float r2 = std::acos(cosCap2);
+-- 
+2.45.2
+

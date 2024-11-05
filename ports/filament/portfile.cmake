@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 5c1873e83706135163c7113b715de233c9b17c5028232bdc8dc9e2b83436ad2f422b77bb08d9637523ce04b205a836f511fce51c3932e49715d94ee22077c573
     HEAD_REF master
     PATCHES
+        0000-compiler.patch
         0001-tests-benchmarks.patch # remove once https://github.com/google/filament/pull/8245 merged
         0002-external.patch
         0003-basisu.patch
@@ -26,15 +27,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    vcpkg_find_acquire_program(CLANG)
-    set(COMPILER -DCMAKE_CXX_COMPILER=${CLANG}++ -DCMAKE_C_COMPILER=${CLANG})
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        ${COMPILER}
+        -DFILAMENT_ALLOW_ANY_COMPILER=ON
         -DUSE_STATIC_CRT=${USE_STATIC_CRT}
         -DFILAMENT_SKIP_SAMPLES=ON
         -DFILAMENT_TESTS=OFF
