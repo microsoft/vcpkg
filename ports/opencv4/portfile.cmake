@@ -1,52 +1,10 @@
 set(USE_QT_VERSION "6")
 
-vcpkg_download_distfile(CUDA_124_DNN_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25412.patch"
-  FILENAME "opencv-opencv4-25412.patch"
-  SHA512 0b8fcb19d81feeb506cdf596d317b137cc1d71d29c16ff1657c7744b389e9184e20e197a7f7398964c7c71e9950659814d9fbd2387f8d4a5875c2db252dd3f76
-)
-
-vcpkg_download_distfile(CUDA_124_TUPLE_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25658.patch"
-  FILENAME "opencv-opencv4-25658.patch"
-  SHA512 ca5661ff2e3761b7f7ba9314539fffb7f1a3e9e6ff07ce0942ef4b88a342110a873d1c14081fbf57f3413af5542643089ee88b92ff3430cdd9e7d82dea2c40fd
-)
-
-vcpkg_download_distfile(CONTRIB_CUDA_124_NPP_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3726.patch"
-  FILENAME "opencv-opencv4-contrib-3726.patch"
-  SHA512 948811a6121e00009812c44c1fbd859cca10f80b447c2d0a69dec2e453eafddd15ece0b96a7f238f6e92f77d249f8f750f020d7913728ed21aba55ecaf07c2d3
-)
-
-vcpkg_download_distfile(CONTRIB_CUDA_124_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3742.patch"
-  FILENAME "opencv-opencv4-contrib-3742.patch"
-  SHA512 de3b428fe342cd2607bb53cf8c77e066925fd9d59d5b8600a60117f7a0f536424cadcbca7e60c1161a64794e785cceb806dc6d4e244c2c05a59678d2b61d8610
-)
-
-vcpkg_download_distfile(CONTRIB_CUDA_124_TUPLE_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3744.patch"
-  FILENAME "opencv-opencv4-contrib-3744.patch"
-  SHA512 4b40aa81d708b184afcbd92da29b886139dead5d9b964a3906715864a393ce56737f2bfc3fc67aec18792f2d55932c32d3c18b1b238078949721247bbe985d5f
-)
-
-vcpkg_download_distfile(CONTRIB_CUDA_124_INCLUDE_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv_contrib/pull/3751.patch"
-  FILENAME "opencv-opencv4-contrib-3751.patch"
-  SHA512 3ba5d6e0a1f13c6513f5967d49f5941204eb39a064a402d54fe3a4fa5dbb2cfd8a8bebec99e06da9991098c95acfc816e367d27757f4a4f4d9fed1452debfd8a
-)
-
-vcpkg_download_distfile(ARM64_WINDOWS_PATCH
-  URLS "https://patch-diff.githubusercontent.com/raw/opencv/opencv/pull/25069.patch"
-  FILENAME "opencv-opencv4-25069.patch"
-  SHA512 2842f32ced73beb89850f7dc0c55d501e32b616276557489ccba90959f63d8955dae3395a882e690fdd7db7b38569c06f0141c8a5b9debdeb3670d2d43a4e34b
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 1598ae59849e7805b3cbec5260bb501006f26edff452343b366b9262a0f48a6e09f4b2e760209cb677f2a64a7b22f4e70bc6195c104bcea74cc9fe04031d0292
+    SHA512 b4f7248f89f1cd146dbbae7860a17131cd29bd3cb81db1e678abfcfbf2d8fa4a7633bfd0edbf50afae7b838c8700e8c0d0bb05828139d5cb5662df6bbf3eb92c
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -60,13 +18,9 @@ vcpkg_from_github(
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
       0012-fix-zlib.patch
-      0014-fix-supportqnx.patch
+      0014-fix-cmake-in-list.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0019-fix-cmake-in-list.patch
-      ${CUDA_124_DNN_PATCH}
-      ${CUDA_124_TUPLE_PATCH}
-      ${ARM64_WINDOWS_PATCH}
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -214,17 +168,13 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 ebaee3b88bd7ae246727e65a98d9fbc1d9772a4181a1926f3af742410b78dc87d2386bcd96ac67d7fb1a3020c3717a2cdebdcf9304d6dfd9ea494004791cf043
+    SHA512 480df862250692a97ce6431cba00dbecb70332307a19c1c04aa9d7444e6e74ab4f8c798548dce76d2319a9877624b82e361fb22a71df14b996087ade448be501
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
-      ${CONTRIB_CUDA_124_NPP_PATCH}
-      ${CONTRIB_CUDA_124_PATCH}
-      ${CONTRIB_CUDA_124_TUPLE_PATCH}
-      ${CONTRIB_CUDA_124_INCLUDE_PATCH}
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
