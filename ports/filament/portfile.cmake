@@ -16,6 +16,7 @@ vcpkg_from_github(
         0007-std-includes.patch
         0008-const.patch
         0009-public-includes.patch
+        0010-FindFilament.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -66,7 +67,9 @@ vcpkg_copy_tools(TOOL_NAMES
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/README.md)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE ${CURRENT_PACKAGES_DIR}/debug/README.md)
 
+file(INSTALL ${SOURCE_PATH}/usage DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
