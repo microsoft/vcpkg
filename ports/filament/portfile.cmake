@@ -14,7 +14,6 @@ vcpkg_from_github(
         0004-glslang.patch
         0005-miktspace.patch
         0007-std-includes.patch
-        0008-civetweb.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

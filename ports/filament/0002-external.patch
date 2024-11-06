@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 614061ad4..20ac1a2f4 100644
+index 06f044b8f..52ac6df9d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,8 @@ option(FILAMENT_TESTS "Build tests" ON)
@@ -11,7 +11,7 @@ index 614061ad4..20ac1a2f4 100644
  option(FILAMENT_USE_EXTERNAL_GLES3 "Experimental: Compile Filament against OpenGL ES 3" OFF)
  
  option(FILAMENT_ENABLE_LTO "Enable link-time optimizations if supported by the compiler" OFF)
-@@ -619,6 +621,10 @@ endif()
+@@ -631,6 +633,10 @@ endif()
  # ==================================================================================================
  # Functions
  # ==================================================================================================
@@ -22,7 +22,7 @@ index 614061ad4..20ac1a2f4 100644
  ## The MSVC compiler has a limitation on literal string length which is reached when all the
  ## licenses are concatenated together into a large string... so split them into multiple strings.
  function(list_licenses OUTPUT MODULES)
-@@ -627,6 +633,10 @@ function(list_licenses OUTPUT MODULES)
+@@ -639,6 +645,10 @@ function(list_licenses OUTPUT MODULES)
      set(CONTENT)
      set(_MODULES ${MODULES} ${ARGN})
      foreach(module ${_MODULES})
@@ -33,7 +33,7 @@ index 614061ad4..20ac1a2f4 100644
          set(license_path "../../third_party/${module}/LICENSE")
          get_filename_component(fullname "${license_path}" ABSOLUTE)
          if(EXISTS ${fullname})
-@@ -718,10 +728,73 @@ endfunction()
+@@ -730,10 +740,73 @@ endfunction()
  # Sub-projects
  # ==================================================================================================
  
@@ -108,7 +108,7 @@ index 614061ad4..20ac1a2f4 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -739,21 +812,20 @@ add_subdirectory(${LIBRARIES}/utils)
+@@ -751,21 +824,24 @@ add_subdirectory(${LIBRARIES}/utils)
  add_subdirectory(${LIBRARIES}/viewer)
  add_subdirectory(${FILAMENT}/filament)
  add_subdirectory(${FILAMENT}/shaders)
@@ -118,7 +118,11 @@ index 614061ad4..20ac1a2f4 100644
 -add_subdirectory(${EXTERNAL}/robin-map/tnt)
 -add_subdirectory(${EXTERNAL}/smol-v/tnt)
 +add_external_library("basisu" "basisu/tnt" "basisu::basisu;basisu::basisu_encoder;basisu::basisu_encoder" "basisu;basis_encoder;basis_transcoder")
-+add_external_library("civetweb" "civetweb/tnt" "civetweb::civetweb" "civetweb")
++add_external_library("civetweb" "civetweb/tnt" "civetweb::civetweb;civetweb::civetweb-cpp" "civetweb;civetweb-cpp")
++if(TARGET civetweb::civetweb AND TARGET civetweb::civetweb-cpp)
++    target_link_libraries(civetweb::civetweb INTERFACE civetweb::civetweb-cpp)
++endif()
++
 +add_external_library("imgui" "imgui/tnt" "imgui::imgui" "imgui")
 +add_external_library("smol-v" "smol-v/tnt" "smol-v::smol-v" "smol-v")
  if(FILAMENT_BENCHMARKS)
@@ -142,7 +146,7 @@ index 614061ad4..20ac1a2f4 100644
  
  # Note that this has to be placed after mikktspace in order for combine_static_libs to work.
  add_subdirectory(${LIBRARIES}/geometry)
-@@ -761,9 +833,19 @@ add_subdirectory(${LIBRARIES}/geometry)
+@@ -773,9 +849,22 @@ add_subdirectory(${LIBRARIES}/geometry)
  if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
      # spirv-tools must come before filamat, as filamat relies on the presence of the
      # spirv-tools_SOURCE_DIR variable.
@@ -155,9 +159,12 @@ index 614061ad4..20ac1a2f4 100644
 +        add_external_library("SPIRV-Tools" "spirv-tools" "SPIRV-Tools-static" "SPIRV-Tools")
 +    endif()
 +    add_external_library("SPIRV-Tools-opt" "spirv-tools" "SPIRV-Tools-opt" "SPIRV-Tools-opt")
-+    add_external_library("glslang" "glslang/tnt" "glslang::glslang;glslang::SPIRV;glslang::OGLCompiler;glslang::MachineIndependent;glslang::OSDependent" "glslang;SPIRV;OGLCompiler;MachineIndependent;OSDependent")
++    add_external_library("glslang" "glslang/tnt" "glslang::glslang;glslang::SPIRV;glslang::OGLCompiler;glslang::MachineIndependent;glslang::OSDependent;glslang::SPVRemapper" "glslang;SPIRV;OGLCompiler;MachineIndependent;OSDependent;SPVRemapper")
 +    if(TARGET glslang::glslang AND TARGET glslang::MachineIndependent)
 +        target_link_libraries(glslang::glslang INTERFACE glslang::MachineIndependent)
++    endif()
++    if(TARGET glslang::SPIRV AND TARGET glslang::SPVRemapper)
++        target_link_libraries(glslang::SPIRV INTERFACE glslang::SPVRemapper)
 +    endif()
 +    add_external_library("spirv_cross_core" "spirv-cross/tnt" "spirv-cross-core" "spirv-cross-core")
 +    add_external_library("spirv_cross_glsl" "spirv-cross/tnt" "spirv-cross-glsl" "spirv-cross-glsl")
@@ -165,7 +172,7 @@ index 614061ad4..20ac1a2f4 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -774,9 +856,9 @@ endif()
+@@ -786,9 +875,9 @@ endif()
  
  if (FILAMENT_SUPPORTS_VULKAN)
      add_subdirectory(${LIBRARIES}/bluevk)
@@ -177,7 +184,7 @@ index 614061ad4..20ac1a2f4 100644
  endif()
  
  set(FILAMENT_SAMPLES_BINARY_DIR ${PROJECT_BINARY_DIR}/samples)
-@@ -797,11 +879,11 @@ if (IS_HOST_PLATFORM)
+@@ -809,11 +898,11 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${FILAMENT}/samples)
  
