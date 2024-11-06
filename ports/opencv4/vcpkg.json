@@ -40,6 +40,13 @@
           "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         },
         {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "calib3d"
+          ]
+        },
+        {
           "name": "tesseract",
           "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         }
