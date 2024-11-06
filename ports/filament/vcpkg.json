@@ -40,6 +40,7 @@
       "name": "vcpkg-cmake",
       "host": true
     },
-    "zlib"
+    "zlib",
+    "zstd"
   ]
 }

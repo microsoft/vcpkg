@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 06f044b8f..cd14a12cc 100644
+index 06f044b8f..b4fb8ce52 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,8 @@ option(FILAMENT_TESTS "Build tests" ON)
@@ -69,7 +69,7 @@ index 06f044b8f..cd14a12cc 100644
 +    endif()
 +
 +    list(FIND external_subdirectories "${subdirectory}" has_subdirectory)
-+    if(NOT ${${package_name}_FOUND} AND ${has_subdirectory} EQUAL -1)
++    if(NOT ${${package_name}_FOUND} AND ${has_subdirectory} EQUAL -1 AND EXISTS "${EXTERNAL}/${subdirectory}")
 +        add_subdirectory(${EXTERNAL}/${subdirectory})
 +        list(APPEND external_subdirectories ${subdirectory})
 +    endif()
@@ -93,7 +93,7 @@ index 06f044b8f..cd14a12cc 100644
 +    endif()
 +
 +    list(FIND external_subdirectories "${subdirectory}" has_subdirectory)
-+    if(NOT ${found} AND ${has_subdirectory} EQUAL -1)
++    if(NOT ${found} AND ${has_subdirectory} EQUAL -1 AND EXISTS "${EXTERNAL}/${subdirectory}")
 +        add_subdirectory(${EXTERNAL}/${subdirectory})
 +        list(APPEND external_subdirectories ${subdirectory})
 +    endif()
@@ -108,7 +108,7 @@ index 06f044b8f..cd14a12cc 100644
  add_subdirectory(${LIBRARIES}/camutils)
  add_subdirectory(${LIBRARIES}/filabridge)
  add_subdirectory(${LIBRARIES}/filaflat)
-@@ -751,21 +824,24 @@ add_subdirectory(${LIBRARIES}/utils)
+@@ -751,21 +824,25 @@ add_subdirectory(${LIBRARIES}/utils)
  add_subdirectory(${LIBRARIES}/viewer)
  add_subdirectory(${FILAMENT}/filament)
  add_subdirectory(${FILAMENT}/shaders)
@@ -117,6 +117,7 @@ index 06f044b8f..cd14a12cc 100644
 -add_subdirectory(${EXTERNAL}/imgui/tnt)
 -add_subdirectory(${EXTERNAL}/robin-map/tnt)
 -add_subdirectory(${EXTERNAL}/smol-v/tnt)
++add_external_library("zstd" "zstd/tnt" "zstd::libzstd" "zstd")
 +add_external_library("basisu" "basisu/tnt" "basisu::basisu;basisu::basisu_encoder;basisu::basisu_encoder" "basisu;basis_encoder;basis_transcoder")
 +add_external_library("civetweb" "civetweb/tnt" "civetweb::civetweb;civetweb::civetweb-cpp" "civetweb;civetweb-cpp")
 +if(TARGET civetweb::civetweb AND TARGET civetweb::civetweb-cpp)
@@ -146,7 +147,7 @@ index 06f044b8f..cd14a12cc 100644
  
  # Note that this has to be placed after mikktspace in order for combine_static_libs to work.
  add_subdirectory(${LIBRARIES}/geometry)
-@@ -773,9 +849,25 @@ add_subdirectory(${LIBRARIES}/geometry)
+@@ -773,9 +850,25 @@ add_subdirectory(${LIBRARIES}/geometry)
  if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
      # spirv-tools must come before filamat, as filamat relies on the presence of the
      # spirv-tools_SOURCE_DIR variable.
@@ -175,7 +176,7 @@ index 06f044b8f..cd14a12cc 100644
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -786,9 +878,9 @@ endif()
+@@ -786,9 +879,9 @@ endif()
  
  if (FILAMENT_SUPPORTS_VULKAN)
      add_subdirectory(${LIBRARIES}/bluevk)
@@ -187,7 +188,7 @@ index 06f044b8f..cd14a12cc 100644
  endif()
  
  set(FILAMENT_SAMPLES_BINARY_DIR ${PROJECT_BINARY_DIR}/samples)
-@@ -809,11 +901,11 @@ if (IS_HOST_PLATFORM)
+@@ -809,11 +902,11 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${FILAMENT}/samples)
  
