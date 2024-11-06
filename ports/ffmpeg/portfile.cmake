@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 3ba02e8b979c80bf61d55f414bdac2c756578bb36498ed7486151755c6ccf8bd8ff2b8c7afa3c5d1acd862ce48314886a86a105613c05e36601984c334f8f6bf
+    SHA512 3b273769ef1a1b63aed0691eef317a760f8c83b1d0e1c232b67bbee26db60b4864aafbc88df0e86d6bebf07185bbd057f33e2d5258fde6d97763b9994cd48b6f
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -11,7 +11,6 @@ vcpkg_from_github(
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
-        0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
