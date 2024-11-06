@@ -4186,7 +4186,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.9.3",
-      "port-version": 0 
+      "port-version": 0
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
@@ -9354,7 +9354,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
