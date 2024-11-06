@@ -1401,8 +1401,8 @@
       "port-version": 1
     },
     "brpc": {
-      "baseline": "1.10.0",
-      "port-version": 1
+      "baseline": "1.11.0",
+      "port-version": 0
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -8646,7 +8646,7 @@
     },
     "srpc": {
       "baseline": "0.10.3",
-      "port-version": 0
+      "port-version": 1
     },
     "sse2neon": {
       "baseline": "1.7.0",
