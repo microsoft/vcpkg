@@ -9,7 +9,7 @@
       "C++ VCPKG Validation" about vulnerable software we are installing in the VMs and update that.
       (Most often PowerShell needs to be updated)
 * [ ] Check for any other software for the Windows images we wish to update and make the edits to do
-      so in `scripts/azure-pipelines/windows`
+      so in `.github/windows`
 * [ ] Check for any updates possible to `vcpkgTools.xml`. Note that PowerShell currently uses the
     7.2.x series due to customer reported problems on older Windows with 7.3.x and later.
 * [ ] Update the first line of android/Dockerfile with the current 'focal' image according to
@@ -22,4 +22,4 @@
 * [ ] In the Azure portal, mark the newly created image as the 'latest' one.
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
 * [ ] Deploy the new base box to all hosts.
-* [ ] Update the software on the CTI's machine #12 to match.
+* [ ] Update the software on the CTI's machine #1 to match.

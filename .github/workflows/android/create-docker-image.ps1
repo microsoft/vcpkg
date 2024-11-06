@@ -2,7 +2,7 @@
 
 $Date = (Get-Date -Format 'yyyy-MM-dd')
 $ResourceGroupName = "PrAnd-1ES"
-$ContainerRegistryName = "vcpkgandroidwus3"
+$ContainerRegistryName = "vcpkgandroidwus"
 $ErrorActionPreference = 'Stop'
 
 $registry = Get-AzContainerRegistry -ResourceGroupName $ResourceGroupName -Name $ContainerRegistryName

@@ -3,21 +3,206 @@ on:
   push:
     branches:
       - onboard-actions
+  pull_request_target:
+    branches:
+      - onboard-actions
+  schedule:
+    - cron: "0 4 * * 1,3,5"
+permissions:
+  # IMPORTANT
+  # https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
+  # This workflow is configured to run on `pull_request_target`, which is necessary to have access
+  # to id-token: write, which we need to authenticate to the Azure Storage account needed for
+  # vcpkg's binary caching practical.
+  # However, this means that build scripts of ports, which consist of 3rd party build scripts,
+  # effectively have permssions granted here.
+  # contents: read *must* be kept to prevent those untrusted build scripts writing to
+  # github.com/microsoft/vcpkg.
+  # On the Azure side, we assume that untrusted code has control of the 'VcpkgPrFleet' identity
+  # we use to authenticate with Storage, firewall the accounts to be accessible only to the
+  # hardware and VMs that run our PRs, and forbid interacting with any of those components using
+  # corporate credentials. (For instance, the VMs where PRs are built cannot be logged into at all)
+  id-token: write
+  contents: read # Do *NOT* change to write
 jobs:
-  Windows:
+  test:
+    strategy:
+      matrix:
+        conf:
+          - triplet: 'arm64-windows'
+            pool: windows
+          - triplet: 'arm64-windows-static-md'
+            pool: windows
+          - triplet: 'arm64-uwp'
+            pool: windows
+          - triplet: 'x86-windows'
+            pool: windows
+            extra-checks: true
+          - triplet: 'x64-windows'
+            pool: windows
+          - triplet: 'x64-windows-static'
+            pool: windows
+          - triplet: 'x64-windows-static-md'
+            pool: windows
+          - triplet: 'x64-uwp'
+            pool: windows
+          - triplet: 'x64-linux'
+            pool: linux
+          - triplet: 'arm-neon-android'
+            pool: android
+          - triplet: 'x64-android'
+            pool: android
+          - triplet: 'arm64-android'
+            pool: android
     runs-on:
       - self-hosted
-      - "1ES.Pool=vcpkg-windows-wus"
+      - "1ES.Pool=${{ matrix.conf.pool == 'windows' && 'vcpkg-windows-ephemeral-wus' || matrix.conf.pool == 'linux' && 'vcpkg-linux-ephemeral-wus' || matrix.conf.pool == 'android' && 'vcpkg-android-ephemeral-wus' }}"
+    continue-on-error: true
+    timeout-minutes: 2880 # 2 days
+    env:
+      VCPKG_DOWNLOADS: ${{ matrix.conf.pool == 'windows' && 'D:\downloads' || '/mnt/vcpkg-ci/downloads' }}
+      WORKING_ROOT: ${{ matrix.conf.pool == 'windows' && 'D:\' || '/mnt/vcpkg-ci' }}
+      ARTIFACT_STAGING: ${{ matrix.conf.pool == 'windows' && 'D:\artifactstaging' || '/mnt/vcpkg-ci/artifactstaging' }}
     steps:
-      - name: Checkout
+      - name: Make Working Directories (Windows)
+        if: ${{ success() && matrix.conf.pool == 'windows' }}
+        run: |
+          mkdir D:\downloads
+          mkdir D:\artifactstaging
+      - name: Make Working Directories (non-Windows)
+        if: ${{ success() && matrix.conf.pool != 'windows' }}
+        run: |
+          sudo mkdir ${{ env.WORKING_ROOT }} -m=777
+          sudo mkdir ${{ env.WORKING_ROOT }}/failure-logs -m=777
+          sudo mkdir ${{ env.VCPKG_DOWNLOADS }} -m=777
+          sudo mkdir ${{ env.ARTIFACT_STAGING }} -m=777
+      - name: Checkout (Windows)
         uses: actions/checkout@v4
+        if: ${{ success() && matrix.conf.pool == 'windows' }}
+        env:
+          PATH: c:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\cmd;$PATH
         with:
           # fetch-depth 50 tries to ensure we capture the whole history of the branch
           fetch-depth: 50
-
-      - name: Bootstrap
-        run: ./bootstrap-vcpkg.sh
-      
-      - name: Example
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Checkout (Non-Windows)
+        uses: actions/checkout@v4
+        if: ${{ success() && matrix.conf.pool != 'windows' }}
+        with:
+          # fetch-depth 50 tries to ensure we capture the whole history of the branch
+          fetch-depth: 50
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: a81b4cd3-9d8d-4cb9-9a74-f2038f24f224
+          subscription-id: 7fcb00fa-a761-49de-8a2f-d67190e62882
+          tenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+      - name: Bootstrap (Windows)
+        if: ${{ success() && matrix.conf.pool == 'windows' }}
+        run: ./scripts/bootstrap.ps1
+      - name: Bootstrap (Non-Windows)
+        if: ${{ success() && matrix.conf.pool != 'windows' && matrix.conf.pool != 'android' }}
+        run: ./scripts/bootstrap.sh
+      - name: Format Manifests
+        if: ${{ success() && matrix.conf.extra-checks }}
+        run: ./vcpkg.exe format-manifest --all
+      - name: Create Format Manifest Diff
+        if: ${{ success() && matrix.conf.extra-checks }}
+        env:
+          PATH: c:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\cmd;$PATH
+        run: ./scripts/azure-pipelines/Create-PRDiff.ps1 -DiffFile "${{ env.ARTIFACT_STAGING }}/format.diff"
+      - name: 'Publish Artifact: Format Diff'
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() && !cancelled() && matrix.conf.extra-checks }}
+        with:
+          name: 'format.diff'
+          path: "${{ env.ARTIFACT_STAGING }}/format.diff"
+          retention-days: 7
+          if-no-files-found: error
+      - name: "*** Test Modified Ports (non-Android)"
+        if: ${{ success() && matrix.conf.pool != 'android' }}
         shell: pwsh
-        run: Write-Host 'Running on 1ES Hosted GitHub Runners'
+        run: |
+          $current = Get-Date -AsUtc
+          $endDate = $current.AddDays(2)
+          $end = Get-Date -Date $endDate -UFormat '+%Y-%m-%dT%H:%MZ'
+          Write-Host "Getting Asset Cache SAS"
+          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv | Out-String
+          if ($LastExitCode -ne 0) {
+            Write-Error "Failed to get Asset Cache SAS"
+            return 1
+          }
+
+          $assetSas = $assetSas.Trim()
+          Write-Host "Getting Binary Cache SAS"
+          $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
+          if ($LastExitCode -ne 0) {
+            Write-Error "Failed to get Binary Cache SAS"
+            return 1
+          }
+
+          $binarySas = $binarySas.Trim()
+          $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite"
+          if ($IsWindows) { # FIXME: Git in the images
+            $env:PATH += ";c:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\cmd"
+          }
+
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ matrix.conf.triplet }} -BuildReason ${{ github.event_name }} -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $env:ARTIFACT_STAGING
+      - name: "*** Test Modified Ports (Android)"
+        if: ${{ success() && matrix.conf.pool == 'android' }}
+        run: |
+          az acr login --name vcpkgandroidwus
+          docker pull vcpkgandroidwus.azurecr.io/vcpkg-android:2024-10-21
+          docker run --rm \
+            --mount type=bind,source=${{ github.workspace }},target=/vcpkg \
+            vcpkgandroidwus.azurecr.io/vcpkg-android:2024-10-21 \
+            ./bootstrap-vcpkg.sh
+          end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
+          assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus3 --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
+          binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
+          echo Minting SAS tokens valid through $end
+          USER=$(id --user)
+          docker run --init -i \
+          -a stderr \
+          -a stdout \
+          --user $USER \
+          --mount type=bind,source=${{ github.workspace }},target=/vcpkg \
+          --mount type=bind,source=/mnt/vcpkg-ci/failure-logs,target=/vcpkg/failure-logs \
+          --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
+          --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus3.blob.core.windows.net/cache,$assetSas,readwrite" \
+          vcpkgandroidwus.azurecr.io/vcpkg-android:2024-10-21 \
+          pwsh \
+          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
+          -Triplet ${{ matrix.conf.triplet }} \
+          -BuildReason ${{ github.event_name }} \
+          -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" \
+          -WorkingRoot /mnt/vcpkg-ci \
+          -ArtifactStagingDirectory /mnt/vcpkg-ci/artifactstaging
+      - name: 'Validate version files'
+        if: ${{ success() && matrix.conf.extra-checks }}
+        env:
+          PATH: c:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\cmd;$PATH
+        run: 'scripts/azure-pipelines/windows/validate-version-files.ps1'
+      - name: 'Publish Artifact: failure logs for ${{ matrix.conf.triplet }}'
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'failure logs for ${{ matrix.conf.triplet }}'
+          path: '${{ env.ARTIFACT_STAGING }}/failure-logs'
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: 'Build a file list for all packages'
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: |
+            ./vcpkg fetch python3
+            & $(./vcpkg fetch python3) ./scripts/file_script.py "$env:WORKING_ROOT/installed/vcpkg/info/"
+      - name: 'Publish Artifact: file lists for ${{ matrix.conf.triplet }}'
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: 'file lists for ${{ matrix.conf.triplet }}'
+          path: scripts/list_files
+          retention-days: 7
+          if-no-files-found: ignore

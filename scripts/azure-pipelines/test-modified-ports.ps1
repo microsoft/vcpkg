@@ -91,7 +91,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     if ([string]::IsNullOrWhiteSpace($BuildReason)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
     }
-    elseif ($BuildReason -eq 'PullRequest') {
+    elseif ($BuildReason -eq 'PullRequest' -or $BuildReason -eq 'pull_request' -or $BuildReason -eq 'push') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
         $skipFailuresArg = @('--skip-failures')
     }
@@ -110,7 +110,6 @@ if ($IsWindows) {
 }
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
-$xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
 if ($IsWindows) {
     mkdir empty
@@ -190,14 +189,11 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 $lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
-
-Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
-
 if ($lastLastExitCode -ne 0)
 {
     Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
