@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 d18f453b6ee683a13828ef746cb8d3639f96c759a082736602d7cadaea9dc51bd9b095e5f663aeb9429c2063be3783a24f642ccdb9495b0e0942c501b186322e
     HEAD_REF master
     PATCHES
+        redact-input-vars.diff
         0005_remove_imp_suffix.patch
         0020-fix-pc-file.patch
         0022-deduplicate-libs.patch
@@ -31,7 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
         psl         CURL_USE_LIBPSL
         gssapi      CURL_USE_GSSAPI
@@ -41,6 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
+        websockets  CURL_DISABLE_WEBSOCKETS
 )
 
 # Add warning on build failuer when using wolfssl and openssl features togther.

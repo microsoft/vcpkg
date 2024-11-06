@@ -211,7 +211,7 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support (experimental)"
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",
