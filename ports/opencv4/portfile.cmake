@@ -273,29 +273,29 @@ if("ipp" IN_LIST FEATURES)
   elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
-        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
-        SHA512 ce4a2fbcf77d435cabecd9b414950db4bd34f88dde385e4a9139586a9c6d31f09e32d13d7ae36ca64418d5511777b5ba212c06422fe5ae1508342846613ca26d
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
+        FILENAME "opencv-cache/ippicv/0f2745ff705ecae31176dad437608f6f-ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
+        SHA512 74cba99a1d2c40a125b23d42de555548fecd22c8fea5ed68ab7f887b1f208bd7f2906a64d40bac71ea82190e5389fb92d3c72b6d47c8c05a2e9b9b909a82ce47
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_ia32_20230919_general.tgz"
-        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_ia32_20230919_general.tgz"
-        SHA512 534fdd08b6f669665cf6a3f719f54505cf53e800f90ba93d96e77b1e149b260738cb59c685c424788c06d924a88756c3038d27bd0e33acdb51e0051f9aac421c
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
+        FILENAME "opencv-cache/ippicv/63e381bf08076ca34fd5264203043a45-ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
+        SHA512 37484704754f9553b04c8da23864af3217919a11a9dbc92427e6326d6104bab7f1983c98c78ec52cda2d3eb93dc1fd98d0b780e3b7a98e703010c5ee1b421426
       )
     endif()
   elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_intel64_20230919_general.zip"
-        FILENAME "opencv-cache/ippicv/538a819ec84193a9c9f3c0f8df0be8b7-ippicv_2021.10.0_win_intel64_20230919_general.zip"
-        SHA512 5aff6d9c8474e9f13e54d849a3e9b03de1e82590437d90cbde8e6c1d3be3a2b0f4263b5171796e8dab41181f8d7f8fd7c6d46e6f4aedacc98213aa5270bd1720
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_intel64_20240201_general.zip"
+        FILENAME "opencv-cache/ippicv/59d154bf54a1e3eea20d7248f81a2a8e-ippicv_2021.11.0_win_intel64_20240201_general.zip"
+        SHA512 686ddbafa3f24c598d94589fca6937f90a4fb25e3dabea3b276709e55cbc2636aba8d73fadd336775f8514ff8e2e1b20e749264a7f11243190d54467f9a3f895
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_ia32_20230919_general.zip"
-        FILENAME "opencv-cache/ippicv/8ff93c69415ab0835cc1e94dc5660f5d-ippicv_2021.10.0_win_ia32_20230919_general.zip"
-        SHA512 bd63e8edf52e561154953217d26ca64cc500b529e55b8e3abb927d69766fff979fed2b16d51e453f75e61679d3569abbc5c1bbb2652a93f3f178fbf27354d624
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_ia32_20240201_general.zip"
+        FILENAME "opencv-cache/ippicv/7a6d8ac5825c02fea6cbfc1201b521b5-ippicv_2021.11.0_win_ia32_20240201_general.zip"
+        SHA512 0e151e34cee01a3684d3be3c2c75b0fac5f303bfd8c08685981a3d4a25a19a9bb454da26d2965aab915adc209accca17b6a4b6d7726c004cd7841daf180bbd3a
       )
     endif()
   endif()
