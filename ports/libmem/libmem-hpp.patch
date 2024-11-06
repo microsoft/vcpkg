@@ -1,0 +1,299 @@
+--- a/include/libmem/libmem.hpp
++++ b/include/libmem/libmem.hpp
+@@ -28,6 +28,7 @@
+ #include <string>
+ #include <optional>
+ #include <vector>
++#include "api.h"
+ 
+ struct lm_process_t;
+ struct lm_thread_t;
+@@ -195,104 +196,104 @@
+ 	// Process API
+ 
+ 	/// Searches for a process by its name
+-	std::optional<std::vector<Process>> EnumProcesses();
++	LM_API std::optional<std::vector<Process>> LM_CALL EnumProcesses();
+ 
+ 	/// Gets the current process
+-	std::optional<Process> GetProcess();
++	LM_API std::optional<Process> LM_CALL GetProcess();
+ 
+ 	/// Gets a process by its process ID
+-	std::optional<Process> GetProcess(Pid pid);
++	LM_API std::optional<Process> LM_CALL GetProcess(Pid pid);
+ 
+ 	/// Finds a process by its name
+-	std::optional<Process> FindProcess(const char *process_name);
++	LM_API std::optional<Process> LM_CALL FindProcess(const char *process_name);
+ 
+ 	/// Checks if a process is alive or not
+-	bool IsProcessAlive(const Process *process);
++	LM_API bool LM_CALL IsProcessAlive(const Process *process);
+ 
+ 	/// Gets the process architecture bits
+-	size_t GetBits();
++	LM_API size_t LM_CALL GetBits();
+ 
+ 	/// Gets the system architecture bits
+-	size_t GetSystemBits();
++	LM_API size_t LM_CALL GetSystemBits();
+ 
+ 	// Thread API
+ 
+ 	/// Enumerates the thread of the current process
+-	std::optional<std::vector<Thread>> EnumThreads();
++	LM_API std::optional<std::vector<Thread>> LM_CALL EnumThreads();
+ 
+ 	/// Enumerates the thread of a remote process
+-	std::optional<std::vector<Thread>> EnumThreads(const Process *process);
++	LM_API std::optional<std::vector<Thread>> LM_CALL EnumThreads(const Process *process);
+ 
+ 	/// Gets the current thread
+-	std::optional<Thread> GetThread();
++	LM_API std::optional<Thread> LM_CALL GetThread();
+ 
+ 	/// Gets a thread in a remote process
+-	std::optional<Thread> GetThread(const Process *process);
++	LM_API std::optional<Thread> LM_CALL GetThread(const Process *process);
+ 
+ 	/// Gets the process that owns a thread
+-	std::optional<Process> GetThreadProcess(const Thread *thread);
++	LM_API std::optional<Process> LM_CALL GetThreadProcess(const Thread *thread);
+ 
+ 	// Module API
+ 
+ 	/// Enumerates modules in the current process
+-	std::optional<std::vector<Module>> EnumModules();
++	LM_API std::optional<std::vector<Module>> LM_CALL EnumModules();
+ 
+ 	/// Enumerates modules in a remote process
+-	std::optional<std::vector<Module>> EnumModules(const Process *process);
++	LM_API std::optional<std::vector<Module>> LM_CALL EnumModules(const Process *process);
+ 
+ 	/// Searches for a module in the current process
+-	std::optional<Module> FindModule(const char *name);
++	LM_API std::optional<Module> LM_CALL FindModule(const char *name);
+ 
+ 	/// Searches for a module in a remote process
+-	std::optional<Module> FindModule(const Process *process, const char *name);
++	LM_API std::optional<Module> LM_CALL FindModule(const Process *process, const char *name);
+ 
+ 	/// Loads a module into the current process
+-	std::optional<Module> LoadModule(const char *path);
++	LM_API std::optional<Module> LM_CALL LoadModule(const char *path);
+ 
+ 	/// Loads a module into a remote process
+-	std::optional<Module> LoadModule(const Process *process, const char *path);
++	LM_API std::optional<Module> LM_CALL LoadModule(const Process *process, const char *path);
+ 
+ 	/// Unloads a module from the current process
+-	bool UnloadModule(const Module *module);
++	LM_API bool LM_CALL UnloadModule(const Module *module);
+ 
+ 	/// Unloads a module from a remote process
+-	bool UnloadModule(const Process *process, const Module *module);
++	LM_API bool LM_CALL UnloadModule(const Process *process, const Module *module);
+ 
+ 	// Symbol API
+ 
+ 	/// Enumerates the symbols from a module
+-	std::optional<std::vector<Symbol>> EnumSymbols(const Module *module);
++	LM_API std::optional<std::vector<Symbol>> LM_CALL EnumSymbols(const Module *module);
+ 
+ 	/// Finds the address of a symbol within a module
+-	std::optional<Address> FindSymbolAddress(const Module *module, const char *symbol_name);
++	LM_API std::optional<Address> LM_CALL FindSymbolAddress(const Module *module, const char *symbol_name);
+ 
+ 	/// Demangles a mangled symbol name
+-	std::optional<std::string> DemangleSymbol(const char *symbol_name);
++	LM_API std::optional<std::string> LM_CALL DemangleSymbol(const char *symbol_name);
+ 
+ 	/// Enumerates the symbols from a module and demangles them
+-	std::optional<std::vector<Symbol>> EnumSymbolsDemangled(const Module *module);
++	LM_API std::optional<std::vector<Symbol>> LM_CALL EnumSymbolsDemangled(const Module *module);
+ 
+ 	/// Finds the address of a demangled symbol within a module
+-	std::optional<Address> FindSymbolAddressDemangled(const Module *module, const char *symbol_name);
++	LM_API std::optional<Address> LM_CALL FindSymbolAddressDemangled(const Module *module, const char *symbol_name);
+ 
+ 	// Segment API
+ 
+ 	/// Enumerates the memory segments in the current process
+-	std::optional<std::vector<Segment>> EnumSegments();
++	LM_API std::optional<std::vector<Segment>> LM_CALL EnumSegments();
+ 
+ 	/// Enumerates the memory segments in a remote process
+-	std::optional<std::vector<Segment>> EnumSegments(const Process *process);
++	LM_API std::optional<std::vector<Segment>> LM_CALL EnumSegments(const Process *process);
+ 
+ 	/// Searches for a memory segment that a given address is within in the current process
+-	std::optional<Segment> FindSegment(Address address);
++	LM_API std::optional<Segment> LM_CALL FindSegment(Address address);
+ 
+ 	/// Searches for a memory segment that a given address is within in a remote process
+-	std::optional<Segment> FindSegment(const Process *process, Address address);
++	LM_API std::optional<Segment> LM_CALL FindSegment(const Process *process, Address address);
+ 
+ 	// Memory API
+ 
+ 	/// Reads memory from a source address in the current process
+-	size_t ReadMemory(Address source, uint8_t *dest, size_t size);
++	LM_API size_t LM_CALL ReadMemory(Address source, uint8_t *dest, size_t size);
+ 
+ 	/// Reads memory from a source address in the current process
+ 	template <typename T>
+@@ -304,7 +305,7 @@
+ 	}
+ 
+ 	/// Reads memory from a source address in a remote process
+-	size_t ReadMemory(const Process *process, Address source, uint8_t *dest, size_t size);
++	LM_API size_t LM_CALL ReadMemory(const Process *process, Address source, uint8_t *dest, size_t size);
+ 
+ 	/// Reads memory from a source address in a remote process
+ 	template <typename T>
+@@ -317,7 +318,7 @@
+ 	}
+ 
+ 	/// Writes memory into a destination address in the current process
+-	size_t WriteMemory(Address dest, uint8_t *source, size_t size);
++	LM_API size_t LM_CALL WriteMemory(Address dest, uint8_t *source, size_t size);
+ 
+ 	/// Writes memory into a destination address in the current process
+ 	template <typename T>
+@@ -327,7 +328,7 @@
+ 	}
+ 
+ 	/// Writes memory into a destination address in a remote  process
+-	size_t WriteMemory(const Process *process, Address dest, uint8_t *source, size_t size);
++	LM_API size_t LM_CALL WriteMemory(const Process *process, Address dest, uint8_t *source, size_t size);
+ 
+ 	/// Writes memory into a destination address in a remote  process
+ 	template <typename T>
+@@ -337,31 +338,31 @@
+ 	}
+ 
+ 	/// Sets a memory region to a specific byte in the current process
+-	size_t SetMemory(Address dest, uint8_t byte, size_t size);
++	LM_API size_t LM_CALL SetMemory(Address dest, uint8_t byte, size_t size);
+ 
+ 	/// Sets a memory region to a specific byte in a remote process
+-	size_t SetMemory(const Process *process, Address dest, uint8_t byte, size_t size);
++	LM_API size_t LM_CALL SetMemory(const Process *process, Address dest, uint8_t byte, size_t size);
+ 
+ 	/// Changes the memory protection flags of a memory region in the current process
+-	std::optional<Prot> ProtMemory(Address address, size_t size, Prot prot);
++	LM_API std::optional<Prot> LM_CALL ProtMemory(Address address, size_t size, Prot prot);
+ 
+ 	/// Changes the memory protection flags of a memory region in a remote process
+-	std::optional<Prot> ProtMemory(const Process *process, Address address, size_t size, Prot prot);
++	LM_API std::optional<Prot> LM_CALL ProtMemory(const Process *process, Address address, size_t size, Prot prot);
+ 
+ 	/// Allocates memory in the current process (page-aligned)
+-	std::optional<Address> AllocMemory(size_t size, Prot prot);
++	LM_API std::optional<Address> LM_CALL AllocMemory(size_t size, Prot prot);
+ 
+ 	/// Allocates memory in a remote process (page-aligned)
+-	std::optional<Address> AllocMemory(const Process *process, size_t size, Prot prot);
++	LM_API std::optional<Address> LM_CALL AllocMemory(const Process *process, size_t size, Prot prot);
+ 
+ 	/// Frees memory allocated in the current process (page-aligned)
+-	bool FreeMemory(Address address, size_t size);
++	LM_API bool LM_CALL FreeMemory(Address address, size_t size);
+ 
+ 	/// Frees memory allocated in a remote process (page-aligned)
+-	bool FreeMemory(const Process *process, Address address, size_t size);
++	LM_API bool LM_CALL FreeMemory(const Process *process, Address address, size_t size);
+ 
+ 	/// Resolves a deep pointer (also known as pointer scan or pointer map) in the current process
+-	Address DeepPointer(Address base, const std::vector<Address> &offsets);
++	LM_API Address LM_CALL DeepPointer(Address base, const std::vector<Address> &offsets);
+ 
+ 	/// Resolves a deep pointer (also known as pointer scan or pointer map) in the current process
+ 	template <typename T>
+@@ -371,67 +372,67 @@
+ 	}
+ 
+ 	/// Resolves a deep pointer (also known as pointer scan or pointer map) in a remote process
+-	std::optional<Address> DeepPointer(const Process *process, Address base, const std::vector<Address> &offsets);
++	LM_API std::optional<Address> LM_CALL DeepPointer(const Process *process, Address base, const std::vector<Address> &offsets);
+ 
+ 	// Scan API
+ 
+ 	/// Scans for some data in the current process
+-	std::optional<Address> DataScan(std::vector<uint8_t> data, Address address, size_t scansize);
++	LM_API std::optional<Address> LM_CALL DataScan(std::vector<uint8_t> data, Address address, size_t scansize);
+ 
+ 	/// Scans for some data in a remote process
+-	std::optional<Address> DataScan(const Process *process, std::vector<uint8_t> data, Address address, size_t scansize);
++	LM_API std::optional<Address> LM_CALL DataScan(const Process *process, std::vector<uint8_t> data, Address address, size_t scansize);
+ 
+ 	/// Scans for a byte pattern with a mask in the current process
+-	std::optional<Address> PatternScan(std::vector<uint8_t> pattern, const char *mask, Address address, size_t scansize);
++	LM_API std::optional<Address> LM_CALL PatternScan(std::vector<uint8_t> pattern, const char *mask, Address address, size_t scansize);
+ 
+ 	/// Scans for a byte pattern with a mask in a remote process
+-	std::optional<Address> PatternScan(const Process *process, std::vector<uint8_t> pattern, const char *mask, Address address, size_t scansize);
++	LM_API std::optional<Address> LM_CALL PatternScan(const Process *process, std::vector<uint8_t> pattern, const char *mask, Address address, size_t scansize);
+ 
+ 	/// Scans for a byte signature in the current process (e.g "DE AD ?? BE EF")
+-	std::optional<Address> SigScan(const char *signature, Address address, size_t scansize);
++	LM_API std::optional<Address> LM_CALL SigScan(const char *signature, Address address, size_t scansize);
+ 
+ 	/// Scans for a byte signature in a remote process (e.g "DE AD ?? BE EF")
+-	std::optional<Address> SigScan(const Process *process, const char *signature, Address address, size_t scansize);
++	LM_API std::optional<Address> LM_CALL SigScan(const Process *process, const char *signature, Address address, size_t scansize);
+ 
+ 	// Assemble/Disassemble API
+ 
+ 	/// Gets the current process architecture
+-	Arch GetArchitecture();
++	LM_API Arch LM_CALL GetArchitecture();
+ 
+ 	/// Assembles an instruction in the current architecture into machine code
+-	std::optional<Inst> Assemble(const char *code);
++	LM_API std::optional<Inst> LM_CALL Assemble(const char *code);
+ 
+ 	/// Assembles one or more instructions into machine code
+-	std::optional<std::vector<uint8_t>> Assemble(const char *code, Arch arch, Address runtime_address);
++	LM_API std::optional<std::vector<uint8_t>> LM_CALL Assemble(const char *code, Arch arch, Address runtime_address);
+ 
+ 	/// Disassembles a single instruction from machine code in the current architecture
+-	std::optional<Inst> Disassemble(Address machine_code);
++	LM_API std::optional<Inst> LM_CALL Disassemble(Address machine_code);
+ 
+ 	/// Disassembles one or more instructions from machine code
+ 	/// NOTE: 'max_size' and 'instruction_count' can't both be 0, choose one if you want to
+-	std::optional<std::vector<Inst>> Disassemble(Address machine_code, Arch arch, size_t max_size, size_t instruction_count, Address runtime_address);
++	LM_API std::optional<std::vector<Inst>> LM_CALL Disassemble(Address machine_code, Arch arch, size_t max_size, size_t instruction_count, Address runtime_address);
+ 
+ 	/// Calculates the instruction aligned length based on a minimum size in the current process
+-	size_t CodeLength(Address machine_code, size_t min_length);
++	LM_API size_t LM_CALL CodeLength(Address machine_code, size_t min_length);
+ 
+ 	/// Calculates the instruction aligned length based on a minimum size in a remote process
+-	size_t CodeLength(const Process *process, Address machine_code, size_t min_length);
++	LM_API size_t LM_CALL CodeLength(const Process *process, Address machine_code, size_t min_length);
+ 
+ 	// Hook API
+ 
+ 	/// Places a hook in the address 'from', jumping to the address 'to' in the current process
+-	std::optional<Trampoline> HookCode(Address from, Address to);
++	LM_API std::optional<Trampoline> LM_CALL HookCode(Address from, Address to);
+ 
+ 	/// Places a hook in the address 'from', jumping to the address 'to' in a remote process
+-	std::optional<RemoteTrampoline> HookCode(const Process *process, Address from, Address to);
++	LM_API std::optional<RemoteTrampoline> LM_CALL HookCode(const Process *process, Address from, Address to);
+ 
+ 	/// Removes the hook/detour placed in the address 'from', restoring the original code in the current process
+ 	/// NOTE: the trampoline will become unusable after this operation
+-	bool UnhookCode(Address from, Trampoline &trampoline);
++	LM_API bool LM_CALL UnhookCode(Address from, Trampoline &trampoline);
+ 
+ 	/// Removes the hook/detour placed in the address 'from', restoring the original code in a remote process
+ 	/// NOTE: the trampoline will become unusable after this operation
+-	bool UnhookCode(const Process *process, Address from, RemoteTrampoline &trampoline);
++	LM_API bool LM_CALL UnhookCode(const Process *process, Address from, RemoteTrampoline &trampoline);
+ }
+ 
+ #endif
