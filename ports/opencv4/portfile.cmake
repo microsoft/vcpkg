@@ -415,6 +415,7 @@ vcpkg_cmake_configure(
         -DWITH_AVIF=OFF
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
+        -DWITH_OBSENSOR=OFF
         ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
