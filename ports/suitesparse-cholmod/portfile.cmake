@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v7.8.3
     SHA512 fc0fd0aaf55a6712a3b8ca23bf7536a31d52033e090370ebbf291f05d0e073c7dcfd991a80b037f54663f524804582b87af86522c2e4435091527f0d3c189244
     HEAD_REF dev
+    PATCHES
+        001-dont-override-cuda-architectures.patch
 )
 
 set(PACKAGE_NAME CHOLMOD)
