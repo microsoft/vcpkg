@@ -8,7 +8,12 @@
     "assimp",
     "basisu",
     "cgltf",
-    "civetweb",
+    {
+      "name": "civetweb",
+      "features": [
+        "ssl"
+      ]
+    },
     "draco",
     "getopt",
     {
