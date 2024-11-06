@@ -1,3 +1,15 @@
+diff --git a/libs/gltfio/src/extended/TangentsJobExtended.cpp b/libs/gltfio/src/extended/TangentsJobExtended.cpp
+index 83b9a6ede..c28c777df 100644
+--- a/libs/gltfio/src/extended/TangentsJobExtended.cpp
++++ b/libs/gltfio/src/extended/TangentsJobExtended.cpp
+@@ -28,6 +28,7 @@
+
+ #include <memory>
+ #include <unordered_map>
++#include <cstring>
+
+ using namespace filament;
+ using namespace filament::gltfio;
 diff --git a/tools/glslminifier/src/GlslMinify.h b/tools/glslminifier/src/GlslMinify.h
 index c04e2fa42..51fb95170 100644
 --- a/tools/glslminifier/src/GlslMinify.h
