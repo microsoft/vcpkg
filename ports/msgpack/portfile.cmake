@@ -5,7 +5,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO msgpack/msgpack-c
-    REF cpp-7.0.0
+    REF cpp-${VERSION}
     SHA512 3b64605974b64384619c07a4895f8ceb56243046b5c941345594d70baf3ad7749573b83c5b20e83505204fc1905ddb0a7dde1c5109ef8a34b5c848d1bb073946
     HEAD_REF cpp_master
 )
