@@ -10,9 +10,15 @@ vcpkg_extract_source_archive(
         fix-find-package.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        qt        LOG4CXX_QT_SUPPORT
+        fmt       ENABLE_FMT_LAYOUT
+)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DLOG4CXX_INSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
         -DBUILD_TESTING=OFF
 )
