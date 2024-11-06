@@ -1,5 +1,5 @@
 sqlite3 provides pkgconfig bindings.
 sqlite3 provides CMake targets:
 
-    find_package(SQLite3 CONFIG REQUIRED)
+    find_package(SQLite3 REQUIRED)
     target_link_libraries(main PRIVATE SQLite::SQLite3)
