@@ -294,5 +294,25 @@ index 8199edc82..e93a3526f 100644
 
  set_target_properties(test_matc PROPERTIES FOLDER Tests)
 +endif()
+diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
+index d12703c95..28fc07941 100644
+--- a/filament/backend/CMakeLists.txt
++++ b/filament/backend/CMakeLists.txt
+@@ -415,6 +415,8 @@ install(DIRECTORY ${PUBLIC_HDR_DIR}/backend DESTINATION include)
+ # ==================================================================================================
+ # Test
+ # ==================================================================================================
++if(FILAMENT_TESTS)
++
+ option(INSTALL_BACKEND_TEST "Install the backend test library so it can be consumed on iOS" OFF)
+
+ if (APPLE OR LINUX)
+@@ -543,3 +545,5 @@ target_link_libraries(metal_utils_test PRIVATE
+ set_target_properties(metal_utils_test PROPERTIES FOLDER Tests)
+
+ endif()
++
++endif(FILAMENT_TESTS)
+
 --
 2.45.2
