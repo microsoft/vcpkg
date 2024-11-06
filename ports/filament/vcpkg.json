@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "filament",
+  "version-semver": "1.55.0",
+  "description": "Filament is a real-time physically based rendering engine for Android, iOS, Windows, Linux, macOS and WASM/WebGL",
+  "homepage": "https://google.github.io/filament/",
+  "dependencies": [
+    "assimp",
+    "basisu",
+    "cgltf",
+    "civetweb",
+    "draco",
+    "getopt",
+    "glslang",
+    "imgui",
+    "jsmn",
+    "libpng",
+    "meshoptimizer",
+    "mikktspace",
+    "robin-map",
+    "sdl2",
+    "spirv-cross",
+    "spirv-headers",
+    "spirv-tools",
+    "stb",
+    "tinyexr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}
