@@ -3,13 +3,28 @@ index 83b9a6ede..c28c777df 100644
 --- a/libs/gltfio/src/extended/TangentsJobExtended.cpp
 +++ b/libs/gltfio/src/extended/TangentsJobExtended.cpp
 @@ -28,6 +28,7 @@
-
+ 
  #include <memory>
  #include <unordered_map>
 +#include <cstring>
-
+ 
  using namespace filament;
  using namespace filament::gltfio;
+diff --git a/third_party/vkmemalloc/include/vk_mem_alloc.h b/third_party/vkmemalloc/include/vk_mem_alloc.h
+index 60f572038..b47389d19 100644
+--- a/third_party/vkmemalloc/include/vk_mem_alloc.h
++++ b/third_party/vkmemalloc/include/vk_mem_alloc.h
+@@ -294,6 +294,10 @@ extern "C" {
+     #define VMA_STATS_STRING_ENABLED 1
+ #endif
+ 
++#if VMA_STATS_STRING_ENABLED
++    #include "stdio.h"
++#endif
++
+ ////////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
+ // 
 diff --git a/tools/glslminifier/src/GlslMinify.h b/tools/glslminifier/src/GlslMinify.h
 index c04e2fa42..51fb95170 100644
 --- a/tools/glslminifier/src/GlslMinify.h
