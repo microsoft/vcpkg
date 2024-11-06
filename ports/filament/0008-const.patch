@@ -1,0 +1,18 @@
+diff --git a/libs/viewer/src/RemoteServer.cpp b/libs/viewer/src/RemoteServer.cpp
+index 441c730f7..fb95d1ae8 100644
+--- a/libs/viewer/src/RemoteServer.cpp
++++ b/libs/viewer/src/RemoteServer.cpp
+@@ -208,8 +208,8 @@ bool MessageReceiver::handleData(CivetServer* server, struct mg_connection* conn
+ 
+ void MessageSender::sendMessage(const char* label, const char* buffer, size_t bufsize) {
+     for (auto iter : connections) {
+-        mg_websocket_write(iter.first, 0x80, label, strlen(label) + 1);
+-        mg_websocket_write(iter.first, 0x80, buffer, bufsize);
++        mg_websocket_write(const_cast<mg_connection *>(iter.first), 0x80, label, strlen(label) + 1);
++        mg_websocket_write(const_cast<mg_connection *>(iter.first), 0x80, buffer, bufsize);
+     }
+ }
+ 
+-- 
+2.45.2
+
