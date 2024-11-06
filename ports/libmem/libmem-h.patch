@@ -1,0 +1,35 @@
+--- a/include/libmem/libmem.h
++++ b/include/libmem/libmem.h
+@@ -23,31 +23,7 @@
+ #ifndef LIBMEM_H
+ #define LIBMEM_H
+ 
+-/* Export prefix for functions */
+-#ifdef _MSC_VER
+-	/* MSVC */
+-#	define LM_API_EXPORT __declspec(dllexport)
+-#else
+-	/* GCC/Clang */
+-#	define LM_API_EXPORT __attribute__((visibility("default")))
+-#endif
+-
+-/* Import prefix for functions */
+-#ifdef _MSC_VER
+-#	define LM_API_IMPORT __declspec(dllimport)
+-#else
+-#	define LM_API_IMPORT extern
+-#endif
+-
+-/* Resolve import/export */
+-#ifdef LM_EXPORT
+-#	define LM_API LM_API_EXPORT
+-#else
+-#	define LM_API LM_API_IMPORT
+-#endif
+-
+-/* Calling convention */
+-#define LM_CALL
++#include "api.h"
+ 
+ /* Constants */
+ #define LM_NULL    (0)

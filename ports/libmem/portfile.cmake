@@ -4,6 +4,10 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 d7c5a1a42d65a00ed3aa8ba8f6974650801d3436ae90e072fea29d4dcb32a3963e2610c89a16b87d94a9613c8f2f0e8deb83b673a1771a9cd1eb716a56106a16
     HEAD_REF master
+    PATCHES
+        libmem-h.patch
+        libmem-hpp.patch
+        api-h.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
