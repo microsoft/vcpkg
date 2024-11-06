@@ -123,9 +123,10 @@ if ($IsWindows) {
 if ($IsLinux -and $Triplet -match 'android' -and $true)
 {
     $override_ndk = 'r29-canary'
+    $override_ndk_url = 'https://androidbuildinternal.googleapis.com/android/internal/build/v3/builds/12591196/linux/attempts/latest/artifacts/android-ndk-12591196-linux-x86_64.zip/url'
     $override_ndk_sha512 = '911e1e4522535e7ef7125966830ef5cfdf323384900424966855f5c75587823eb167862484ea5b6ac426b23423dc796ad533ae1f93e65540f3415225641b5b7a'
     Write-Host "Downloading Android NDK $override_ndk"
-    & "./vcpkg" x-download android-ndk-$override_ndk-linux.zip "--sha512=$override_ndk_sha512" "--url=https://storage.googleapis.com/android-build/builds/aosp-master-ndk-linux-linux/12591196/dbc88c586169c387853d25d5211542057b9174a568ef500640f5147fffac0871/android-ndk-12591196-linux-x86_64.zip?GoogleAccessId=gcs-sign%40android-builds-project.google.com.iam.gserviceaccount.com&Expires=1730528306&Signature=S6ms6JUpSo9q3rl%2FhSHHgW19FKWBwJd9LbDtbAC5HPQ52rYEXp4m%2FXt7xuk5cgOf3CGRCdQGqn9hyE7T3rPhyVqsWzATodEu%2BxTJ7WrAYq7o9o3DSjvFkwwbd4Zq2ShePkokzthnQkaYl5uC9T8Pz8jHvOg6lfaaMknROqgs4SdqNSQS7IZZq30tfrSZaMrLTe75SOpOEaIxXVglanjAdzK3SD6n7pcPAN5dJ7ZL11GbXk4t7Pv9%2BjwvKi52oq2xjl17Yv7KN4UsuC8ydbnSXHIh4AX%2FST4V8HOaFM2mmwkRHDP3XSHrOk5R0S7wCY%2BI%2BgLyMnuLWxFEDoPse7YmMg%3D%3D&response-content-disposition=attachment" @cachingArgs
+    & "./vcpkg" x-download android-ndk-$override_ndk-linux.zip "--sha512=$override_ndk_sha512" "--url=$override_ndk_url" @cachingArgs
     Write-Host "Unpacking"
     & unzip -q android-ndk-$override_ndk-linux.zip
     $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-$override_ndk"
