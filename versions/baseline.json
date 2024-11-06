@@ -8606,7 +8606,7 @@
     },
     "sqlite3": {
       "baseline": "3.47.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sqlitecpp": {
       "baseline": "3.3.2",
