@@ -80,7 +80,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -90,7 +90,7 @@ endif()
 
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-sqlite3-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
     @ONLY
 )
 
