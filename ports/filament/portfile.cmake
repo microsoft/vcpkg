@@ -15,6 +15,7 @@ vcpkg_from_github(
         0005-miktspace.patch
         0007-std-includes.patch
         0008-const.patch
+        0009-public-includes.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

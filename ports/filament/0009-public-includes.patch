@@ -1,0 +1,523 @@
+diff --git a/filament/CMakeLists.txt b/filament/CMakeLists.txt
+index 1850de32f..a68d1f915 100644
+--- a/filament/CMakeLists.txt
++++ b/filament/CMakeLists.txt
+@@ -540,7 +540,10 @@ include_directories(src)
+ add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS} ${DATA_BINS})
+ 
+ # specify where the public headers of this library are
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ 
+ # add this subproject to the Filament folder
+ set_target_properties(${TARGET} PROPERTIES FOLDER Filament)
+diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
+index 9283f20f7..6f8bbdae1 100644
+--- a/filament/backend/CMakeLists.txt
++++ b/filament/backend/CMakeLists.txt
+@@ -245,7 +245,10 @@ include_directories(${GENERATION_ROOT})
+ add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
+ 
+ # specify where the public headers of this library are
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ 
+ # add this subproject to the Filament folder
+ set_target_properties(${TARGET} PROPERTIES FOLDER Filament)
+@@ -255,7 +258,10 @@ set_target_properties(${TARGET} PROPERTIES FOLDER Filament)
+ # ==================================================================================================
+ 
+ add_library(${TARGET}_headers INTERFACE)
+-target_include_directories(${TARGET}_headers INTERFACE ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET}_headers INTERFACE
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ 
+ # ==================================================================================================
+ # Build SPIRV snippets used by the Vulkan backend.
+diff --git a/libs/bluegl/CMakeLists.txt b/libs/bluegl/CMakeLists.txt
+index 4e258b642..be66fcbbf 100644
+--- a/libs/bluegl/CMakeLists.txt
++++ b/libs/bluegl/CMakeLists.txt
+@@ -51,7 +51,10 @@ include_directories(${PUBLIC_HDR_DIR})
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ # specify where the public headers of this library are
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ if (WIN32)
+diff --git a/libs/bluevk/CMakeLists.txt b/libs/bluevk/CMakeLists.txt
+index 68c3296fb..5a5adfdcf 100644
+--- a/libs/bluevk/CMakeLists.txt
++++ b/libs/bluevk/CMakeLists.txt
+@@ -25,7 +25,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_link_libraries(${TARGET} utils math)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # test_bluevk is not supported on mobile or Windows
+diff --git a/libs/camutils/CMakeLists.txt b/libs/camutils/CMakeLists.txt
+index f236bf961..a0bb3023a 100644
+--- a/libs/camutils/CMakeLists.txt
++++ b/libs/camutils/CMakeLists.txt
+@@ -30,7 +30,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_link_libraries(${TARGET} PUBLIC math)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/filabridge/CMakeLists.txt b/libs/filabridge/CMakeLists.txt
+index 6840ce536..e4f002e0a 100644
+--- a/libs/filabridge/CMakeLists.txt
++++ b/libs/filabridge/CMakeLists.txt
+@@ -22,7 +22,10 @@ set(SRCS
+ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++        $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ target_link_libraries(${TARGET} utils)
+diff --git a/libs/filaflat/CMakeLists.txt b/libs/filaflat/CMakeLists.txt
+index 0ebf53e06..fec9529e0 100644
+--- a/libs/filaflat/CMakeLists.txt
++++ b/libs/filaflat/CMakeLists.txt
+@@ -21,7 +21,10 @@ set(SRCS
+ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} ${HDRS} ${SRCS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ target_link_libraries(${TARGET} filabridge utils)
+diff --git a/libs/filagui/CMakeLists.txt b/libs/filagui/CMakeLists.txt
+index dac013ce7..dd155cd77 100644
+--- a/libs/filagui/CMakeLists.txt
++++ b/libs/filagui/CMakeLists.txt
+@@ -94,7 +94,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS} ${RESGEN_SOURCE})
+ 
+ target_link_libraries(${TARGET} PUBLIC imgui filament)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/filamat/CMakeLists.txt b/libs/filamat/CMakeLists.txt
+index 807b25312..bed3b2e1f 100644
+--- a/libs/filamat/CMakeLists.txt
++++ b/libs/filamat/CMakeLists.txt
+@@ -81,7 +81,10 @@ include_directories(${CMAKE_BINARY_DIR})
+ 
+ # Filamat
+ add_library(${TARGET} STATIC ${HDRS} ${PRIVATE_HDRS} ${SRCS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ target_link_libraries(${TARGET} backend_headers shaders filabridge utils smol-v)
+ 
+diff --git a/libs/filamentapp/CMakeLists.txt b/libs/filamentapp/CMakeLists.txt
+index 4a8a6c4ca..9f541708b 100644
+--- a/libs/filamentapp/CMakeLists.txt
++++ b/libs/filamentapp/CMakeLists.txt
+@@ -143,7 +143,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_link_libraries(${TARGET} PUBLIC ${LIBS} filamentapp-resources)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ target_include_directories(${TARGET} PRIVATE ${GENERATION_ROOT})
+ 
+diff --git a/libs/filameshio/CMakeLists.txt b/libs/filameshio/CMakeLists.txt
+index 17d4db0c0..2a55bf9da 100644
+--- a/libs/filameshio/CMakeLists.txt
++++ b/libs/filameshio/CMakeLists.txt
+@@ -20,7 +20,10 @@ set(SRCS src/MeshReader.cpp)
+ # ==================================================================================================
+ include_directories(${PUBLIC_HDR_DIR})
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ target_link_libraries(${TARGET}
+     PRIVATE meshoptimizer
+diff --git a/libs/geometry/CMakeLists.txt b/libs/geometry/CMakeLists.txt
+index 142889c4d..c8df0da9c 100644
+--- a/libs/geometry/CMakeLists.txt
++++ b/libs/geometry/CMakeLists.txt
+@@ -35,7 +35,10 @@ set(GEOMETRY_DEPS
+ target_link_libraries(${TARGET} PUBLIC math utils)
+ target_link_libraries(${TARGET} PRIVATE ${GEOMETRY_DEPS})
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/gltfio/CMakeLists.txt b/libs/gltfio/CMakeLists.txt
+index 4cfb6c57d..3e6e8833e 100644
+--- a/libs/gltfio/CMakeLists.txt
++++ b/libs/gltfio/CMakeLists.txt
+@@ -174,7 +174,10 @@ set(DUMMY_SRC "${RESOURCE_DIR}/dummy.c")
+ add_custom_command(OUTPUT ${DUMMY_SRC} COMMAND echo "//" > ${DUMMY_SRC})
+ 
+ add_library(uberarchive ${DUMMY_SRC} ${RESGEN_SOURCE})
+-target_include_directories(uberarchive PUBLIC ${RESOURCE_DIR})
++target_include_directories(uberarchive PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(uberarchive PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+@@ -186,7 +189,10 @@ link_libraries(math utils filament cgltf stb ktxreader geometry tsl uberzlib)
+ 
+ add_library(gltfio_core STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+-target_include_directories(gltfio_core PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(gltfio_core PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(gltfio_core PROPERTIES FOLDER Libs)
+ 
+ target_compile_definitions(gltfio_core PUBLIC -DGLTFIO_DRACO_SUPPORTED=1)
+@@ -208,7 +214,10 @@ if (NOT WEBGL AND NOT ANDROID AND NOT IOS)
+     # ==================================================================================================
+     add_library(${TARGET} STATIC ${PUBLIC_HDRS} src/JitShaderProvider.cpp)
+     target_link_libraries(${TARGET} PUBLIC filamat gltfio_core)
+-    target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++    target_include_directories(${TARGET} PUBLIC
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++        $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++    )
+     set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+     if (NOT MSVC)
+         target_compile_options(${TARGET} PRIVATE -Wno-deprecated-register)
+diff --git a/libs/ibl/CMakeLists.txt b/libs/ibl/CMakeLists.txt
+index aae32fbaa..7265f4614 100644
+--- a/libs/ibl/CMakeLists.txt
++++ b/libs/ibl/CMakeLists.txt
+@@ -34,13 +34,19 @@ set(SRCS
+ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} ${PUBLIC_HDRS} ${PRIVATE_HDRS} ${SRCS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ target_link_libraries(${TARGET} math utils)
+ 
+ add_library(${TARGET}-lite ${PUBLIC_HDRS} ${PRIVATE_HDRS} ${SRCS})
+ target_compile_definitions(${TARGET}-lite PUBLIC -DFILAMENT_IBL_LITE=1)
+-target_include_directories(${TARGET}-lite PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET}-lite PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET}-lite PROPERTIES FOLDER Libs)
+ target_link_libraries(${TARGET}-lite math utils)
+ 
+diff --git a/libs/iblprefilter/CMakeLists.txt b/libs/iblprefilter/CMakeLists.txt
+index c001de6bf..e23b9b475 100644
+--- a/libs/iblprefilter/CMakeLists.txt
++++ b/libs/iblprefilter/CMakeLists.txt
+@@ -87,7 +87,10 @@ include_directories(src)
+ add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
+ 
+ # specify where the public headers of this library are
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/image/CMakeLists.txt b/libs/image/CMakeLists.txt
+index 26fadb5f9..c13f751bb 100644
+--- a/libs/image/CMakeLists.txt
++++ b/libs/image/CMakeLists.txt
+@@ -31,7 +31,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_link_libraries(${TARGET} PUBLIC math utils)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/imageio/CMakeLists.txt b/libs/imageio/CMakeLists.txt
+index 47544655b..d6b20f9be 100644
+--- a/libs/imageio/CMakeLists.txt
++++ b/libs/imageio/CMakeLists.txt
+@@ -30,7 +30,10 @@ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ target_link_libraries(${TARGET} PUBLIC image math png tinyexr utils z basis_encoder)
+diff --git a/libs/ktxreader/CMakeLists.txt b/libs/ktxreader/CMakeLists.txt
+index a531fe286..8fbb8b729 100644
+--- a/libs/ktxreader/CMakeLists.txt
++++ b/libs/ktxreader/CMakeLists.txt
+@@ -26,7 +26,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_link_libraries(${TARGET} PUBLIC utils image filament basis_transcoder)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/matdbg/CMakeLists.txt b/libs/matdbg/CMakeLists.txt
+index e58058548..5d4ac47a0 100644
+--- a/libs/matdbg/CMakeLists.txt
++++ b/libs/matdbg/CMakeLists.txt
+@@ -88,7 +88,10 @@ target_link_libraries(${TARGET} PUBLIC
+ 
+ target_include_directories(${TARGET} PRIVATE ${filamat_SOURCE_DIR}/src)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/math/CMakeLists.txt b/libs/math/CMakeLists.txt
+index ed565e93f..4f737900e 100644
+--- a/libs/math/CMakeLists.txt
++++ b/libs/math/CMakeLists.txt
+@@ -41,7 +41,10 @@ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ target_compile_options(${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/mathio/CMakeLists.txt b/libs/mathio/CMakeLists.txt
+index 4ad5126fc..61b3fcee1 100644
+--- a/libs/mathio/CMakeLists.txt
++++ b/libs/mathio/CMakeLists.txt
+@@ -20,7 +20,10 @@ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ target_compile_options(${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ target_link_libraries(${TARGET} PRIVATE math)
+ 
+@@ -28,4 +31,3 @@ target_link_libraries(${TARGET} PRIVATE math)
+ # Installation
+ # ==================================================================================================
+ install(DIRECTORY ${PUBLIC_HDR_DIR}/mathio DESTINATION include)
+-
+diff --git a/libs/uberz/CMakeLists.txt b/libs/uberz/CMakeLists.txt
+index 47744e225..4771b545d 100644
+--- a/libs/uberz/CMakeLists.txt
++++ b/libs/uberz/CMakeLists.txt
+@@ -27,7 +27,10 @@ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ 
+ target_link_libraries(${TARGET} PUBLIC math utils filabridge zstd)
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ # ==================================================================================================
+diff --git a/libs/utils/CMakeLists.txt b/libs/utils/CMakeLists.txt
+index 75f56be0f..25a94d9ff 100644
+--- a/libs/utils/CMakeLists.txt
++++ b/libs/utils/CMakeLists.txt
+@@ -103,7 +103,10 @@ endif()
+ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ target_link_libraries(${TARGET} PUBLIC tsl)
+ 
+diff --git a/libs/viewer/CMakeLists.txt b/libs/viewer/CMakeLists.txt
+index cfa9334f9..c20108176 100644
+--- a/libs/viewer/CMakeLists.txt
++++ b/libs/viewer/CMakeLists.txt
+@@ -31,7 +31,10 @@ set(SRCS
+ # ==================================================================================================
+ add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+ target_link_libraries(${TARGET} PUBLIC imgui filament gltfio_core filagui jsmn civetweb)
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Libs)
+ 
+ if (FILAMENT_SAMPLES_STEREO_TYPE STREQUAL "instanced")
+diff --git a/shaders/CMakeLists.txt b/shaders/CMakeLists.txt
+index dbabd77ab..b312214b3 100644
+--- a/shaders/CMakeLists.txt
++++ b/shaders/CMakeLists.txt
+@@ -110,7 +110,10 @@ endif()
+ # Include and target definitions
+ # ==================================================================================================
+ add_library(${TARGET} STATIC ${RESGEN_SOURCE})
+-target_include_directories(${TARGET} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++    $<INSTALL_INTERFACE:include>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER Filament/Shaders)
+ 
+ # ==================================================================================================
+diff --git a/third_party/getopt/CMakeLists.txt b/third_party/getopt/CMakeLists.txt
+index 49ab1e1ac..5118f851e 100755
+--- a/third_party/getopt/CMakeLists.txt
++++ b/third_party/getopt/CMakeLists.txt
+@@ -20,5 +20,8 @@ set(SRCS
+ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
+-target_include_directories (${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
+-set_target_properties(${TARGET} PROPERTIES FOLDER ThirdParty)
+\ No newline at end of file
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:${PUBLIC_HDR_DIR}>
++)
++set_target_properties(${TARGET} PROPERTIES FOLDER ThirdParty)
+diff --git a/third_party/smol-v/tnt/CMakeLists.txt b/third_party/smol-v/tnt/CMakeLists.txt
+index 4b245d450..de1982c83 100644
+--- a/third_party/smol-v/tnt/CMakeLists.txt
++++ b/third_party/smol-v/tnt/CMakeLists.txt
+@@ -20,7 +20,10 @@ if (NOT MSVC)
+     target_compile_options(${TARGET} PRIVATE -Wno-tautological-unsigned-enum-zero-compare)
+ endif()
+ 
+-target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
++target_include_directories(${TARGET} PUBLIC
++    $<BUILD_INTERFACE:${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:source>
++)
+ set_target_properties(${TARGET} PROPERTIES FOLDER ThirdParty)
+ 
+ install(TARGETS ${TARGET} ARCHIVE DESTINATION lib/${DIST_DIR})
+diff --git a/third_party/vkmemalloc/tnt/CMakeLists.txt b/third_party/vkmemalloc/tnt/CMakeLists.txt
+index 11479471e..6b686efb2 100644
+--- a/third_party/vkmemalloc/tnt/CMakeLists.txt
++++ b/third_party/vkmemalloc/tnt/CMakeLists.txt
+@@ -10,6 +10,12 @@ set(PUBLIC_HDRS ${PUBLIC_HDR_DIR}/vk_mem_alloc.h)
+ include_directories(${PUBLIC_HDR_DIR})
+ 
+ add_library(${TARGET} INTERFACE)
+-target_sources(${TARGET} INTERFACE ${PUBLIC_HDRS})
+-target_include_directories(${TARGET} INTERFACE ${PUBLIC_HDR_DIR})
+-set_target_properties(${TARGET} PROPERTIES FOLDER ThirdParty)
+\ No newline at end of file
++target_sources(${TARGET} INTERFACE
++    $<BUILD_INTERFACE:${PUBLIC_HDRS}>
++    $<INSTALL_INTERFACE:include/vk_mem_alloc.h>
++)
++target_include_directories(${TARGET} INTERFACE
++    $<BUILD_INTERFACE:${PUBLIC_HDR_DIR}>
++    $<INSTALL_INTERFACE:include>
++)
++set_target_properties(${TARGET} PROPERTIES FOLDER ThirdParty)
+diff --git a/tools/matc/CMakeLists.txt b/tools/matc/CMakeLists.txt
+index e93a3526f..70687cd4d 100644
+--- a/tools/matc/CMakeLists.txt
++++ b/tools/matc/CMakeLists.txt
+@@ -41,7 +41,10 @@ set(SRCS
+ # ==================================================================================================
+ add_library(${TARGET} STATIC ${SRCS} ${HDRS})
+ 
+-target_include_directories(${TARGET} PUBLIC src)
++target_include_directories(${TARGET} PUBLIC
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
++        $<INSTALL_INTERFACE:src>
++)
+ target_include_directories(${TARGET} PRIVATE ${filamat_SOURCE_DIR}/src)
+ 
+ target_link_libraries(${TARGET} getopt filamat filabridge utils)
+-- 
+2.45.2
+
