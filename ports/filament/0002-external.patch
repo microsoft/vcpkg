@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 06f044b8f..52ac6df9d 100644
+index 06f044b8f..cd14a12cc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,8 @@ option(FILAMENT_TESTS "Build tests" ON)
@@ -146,7 +146,7 @@ index 06f044b8f..52ac6df9d 100644
  
  # Note that this has to be placed after mikktspace in order for combine_static_libs to work.
  add_subdirectory(${LIBRARIES}/geometry)
-@@ -773,9 +849,22 @@ add_subdirectory(${LIBRARIES}/geometry)
+@@ -773,9 +849,25 @@ add_subdirectory(${LIBRARIES}/geometry)
  if (FILAMENT_BUILD_FILAMAT OR IS_HOST_PLATFORM)
      # spirv-tools must come before filamat, as filamat relies on the presence of the
      # spirv-tools_SOURCE_DIR variable.
@@ -169,10 +169,13 @@ index 06f044b8f..52ac6df9d 100644
 +    add_external_library("spirv_cross_core" "spirv-cross/tnt" "spirv-cross-core" "spirv-cross-core")
 +    add_external_library("spirv_cross_glsl" "spirv-cross/tnt" "spirv-cross-glsl" "spirv-cross-glsl")
 +    add_external_library("spirv_cross_msl" "spirv-cross/tnt" "spirv-cross-msl" "spirv-cross-msl")
++    if(TARGET spirv-cross-glsl AND TARGET spirv-cross-core AND TARGET spirv-cross-msl)
++        target_link_libraries(spirv-cross-glsl INTERFACE spirv-cross-core spirv-cross-msl)
++    endif()
      add_subdirectory(${LIBRARIES}/filamat)
  
      # the material debugger requires filamat
-@@ -786,9 +875,9 @@ endif()
+@@ -786,9 +878,9 @@ endif()
  
  if (FILAMENT_SUPPORTS_VULKAN)
      add_subdirectory(${LIBRARIES}/bluevk)
@@ -184,7 +187,7 @@ index 06f044b8f..52ac6df9d 100644
  endif()
  
  set(FILAMENT_SAMPLES_BINARY_DIR ${PROJECT_BINARY_DIR}/samples)
-@@ -809,11 +898,11 @@ if (IS_HOST_PLATFORM)
+@@ -809,11 +901,11 @@ if (IS_HOST_PLATFORM)
  
      add_subdirectory(${FILAMENT}/samples)
  
