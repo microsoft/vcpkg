@@ -1706,7 +1706,7 @@
     },
     "civetweb": {
       "baseline": "1.16",
-      "port-version": 2
+      "port-version": 3
     },
     "cjson": {
       "baseline": "1.7.18",
