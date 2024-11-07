@@ -1,19 +1,36 @@
 {
   "name": "vcpkg-ci-opencv",
   "version-string": "1",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Port to force features of certain ports within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "dependencies": [
     {
-      "name": "opencv",
+      "name": "opencv2",
       "default-features": false,
       "features": [
-        "ade",
-        "contrib",
-        "dnn",
         "eigen",
-        "ffmpeg",
+        "jpeg",
+        "png",
+        "tiff"
+      ],
+      "platform": "!uwp & !(arm & windows) & !android"
+    },
+    {
+      "name": "opencv2",
+      "default-features": false,
+      "features": [
+        "jasper",
+        "opengl",
+        "qt"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "eigen",
         "jpeg",
         "nonfree",
         "png",
@@ -23,21 +40,92 @@
       ]
     },
     {
-      "name": "opencv",
+      "name": "opencv3",
       "default-features": false,
       "features": [
-        "dc1394",
-        "gtk"
+        "openmp"
       ],
-      "platform": "linux"
+      "platform": "!osx"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "dnn"
+      ],
+      "platform": "!android"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "gstreamer",
+        "ovis",
+        "tbb"
+      ],
+      "platform": "windows & x64 & !static & !uwp"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "contrib",
+        "freetype",
+        "gdcm",
+        "ipp",
+        "jasper",
+        "opengl",
+        "qt",
+        "sfm",
+        "vtk"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
     },
     {
       "name": "opencv",
       "default-features": false,
       "features": [
+        "ade",
+        "calib3d",
+        "contrib",
+        "eigen",
+        "ffmpeg",
+        "fs",
+        "highgui",
+        "intrinsics",
+        "jpeg",
+        "nonfree",
+        "png",
+        "quirc",
+        "thread",
+        "tiff",
+        "webp"
+      ]
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "openmp"
+      ],
+      "platform": "!osx"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "dnn"
+      ],
+      "platform": "!android"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "gapi",
         "python"
       ],
-      "platform": "!uwp & !(windows & static)"
+      "platform": "!uwp & !(windows & static) & !android"
     },
     {
       "name": "opencv",
@@ -45,9 +133,13 @@
       "features": [
         "cuda",
         "cudnn",
+        "dnn-cuda",
+        "dshow",
         "gstreamer",
+        "opencl",
         "ovis",
-        "tbb"
+        "tbb",
+        "win32ui"
       ],
       "platform": "windows & x64 & !static & !uwp"
     },
@@ -59,15 +151,14 @@
         "gdcm",
         "ipp",
         "jasper",
-        "lapack",
-        "openexr",
         "opengl",
-        "openmp",
+        "openjpeg",
         "qt",
         "sfm",
-        "vtk"
+        "vtk",
+        "vulkan"
       ],
-      "platform": "!uwp & !(windows & (arm | arm64))"
+      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
     }
   ]
 }
