@@ -17,7 +17,7 @@
   ],
   "features": {
     "unicode": {
-      "description": "Enable Unicode support, default value is ON"
+      "description": "Disable Unicode support."
     }
   }
 }
