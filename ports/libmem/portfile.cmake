@@ -8,6 +8,7 @@ vcpkg_from_github(
         libmem-h.patch
         libmem-hpp.patch
         api-h.patch
+        0001-CMakeLists.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
@@ -25,21 +26,13 @@ else()
     message(WARNING "PreLoad.cmake not found.")
 endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-    DESTINATION "${SOURCE_PATH}"
-)
-
 file(MAKE_DIRECTORY "${SOURCE_PATH}/cmake")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findkeystone.cmake"
     DESTINATION "${SOURCE_PATH}/cmake"
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findcapstone.cmake"
-    DESTINATION "${SOURCE_PATH}/cmake"
-)
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmem-config.cmake.in" 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmem-config.cmake.in" 
     DESTINATION "${SOURCE_PATH}"
 )
 
@@ -49,7 +42,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmem")
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
