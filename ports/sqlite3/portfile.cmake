@@ -94,6 +94,8 @@ configure_file(
     @ONLY
 )
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-sqlite3-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
