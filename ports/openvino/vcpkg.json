@@ -17,10 +17,6 @@
   "license": "Apache-2.0",
   "supports": "!uwp & !x86 & !(android & arm32)",
   "dependencies": [
-    {
-      "name": "pkgconf",
-      "host": true
-    },
     "pugixml",
     {
       "name": "tbb",
