@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
     REF "v${VERSION}"
-    SHA512 202a4f8b950ddf38db0d9f645d27c257aa4d65f9c170b9a32f7ee935a60d0cbcb2987561769c04bb42628184c22515df5b992b3ae1146f45632d51782b959a62
+    SHA512 e90680128bfaac215e5eebd9c8e5ce08e5fe68a7258f65bfcf56377756e9dbf527a232dfaf9d217c7374e713660ec99eeaae05d6fee2b8c5c9b71ad1b0b4dd72
     HEAD_REF v1.x
     PATCHES 
         fix-build-type.patch
