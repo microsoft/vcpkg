@@ -122,6 +122,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DCMAKE_DISABLE_FIND_PACKAGE_OpenCV=ON"
         "-DENABLE_SYSTEM_TBB=ON"
         "-DENABLE_SYSTEM_PUGIXML=ON"
         "-DENABLE_TBBBIND_2_5=OFF"
