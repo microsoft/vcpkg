@@ -6745,7 +6745,7 @@
       "port-version": 2
     },
     "openvdb": {
-      "baseline": "11.0.0",
+      "baseline": "12.0.0",
       "port-version": 0
     },
     "openvino": {
