@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5180bdfb6..08a065c07 100644
+index 5180bdfb6..471ce49ed 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -264,6 +264,9 @@ set(TOOLS ${CMAKE_CURRENT_SOURCE_DIR}/tools)
@@ -20,19 +20,29 @@ index 5180bdfb6..08a065c07 100644
  
  # ==================================================================================================
  # Link time optimizations (LTO)
-@@ -315,7 +319,10 @@ if (MSVC)
+@@ -306,16 +310,16 @@ endif()
+ # ==================================================================================================
+ # General compiler flags
+ # ==================================================================================================
+-set(CXX_STANDARD "-std=c++17")
+-if (WIN32)
+-    set(CXX_STANDARD "/std:c++17")
+-endif()
++set(CMAKE_CXX_STANDARD 17)
+ 
+ if (MSVC)
      set(CXX_STANDARD "/std:c++latest")
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /W0 /Zc:__cplusplus")
  else()
 -    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function -Wno-deprecated-declarations")
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -Wno-unknown-pragmas -Wno-unused-function -Wno-deprecated-declarations")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas -Wno-unused-function -Wno-deprecated-declarations")
 +    if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
 +        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstrict-aliasing")
 +    endif()
  endif()
  
  if (FILAMENT_USE_EXTERNAL_GLES3)
-@@ -361,10 +368,18 @@ if (MSVC)
+@@ -361,10 +365,18 @@ if (MSVC)
      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
  endif()
  
