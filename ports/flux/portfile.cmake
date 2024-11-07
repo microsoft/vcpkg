@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcbrindle/flux
-    REF 1c128b50af95fc39b6683d437f9210239e219836
-    SHA512 c07d3053227d6a62f5a7b0aba8535c0ed42195249d131a77989b3ee79a697f8d540b68639dcd9e89b5cdd76ee5d7f07db9b3be23bc325761c85af625f507e393
+    REF 43c09af5cc2e89e32b98ddc3507247f593ec2642
+    SHA512 542f4a24b9aa5fe631ba17dcd4f4f6743b81a51b21fd36f08dcefbb224bfc3ec9f178bcd9763beb911c3fbbba3be7dbfc3527ca1e89a82851f306d612c5ca1f0
     HEAD_REF master
-    PATCHES
-        targets-fixup.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
