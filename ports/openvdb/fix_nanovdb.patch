@@ -1,17 +1,17 @@
 diff --git a/nanovdb/nanovdb/CMakeLists.txt b/nanovdb/nanovdb/CMakeLists.txt
-index 7bb3ab86..9311ed17 100644
+index 4e0284e..62fc68b 100644
 --- a/nanovdb/nanovdb/CMakeLists.txt
 +++ b/nanovdb/nanovdb/CMakeLists.txt
-@@ -127,7 +127,7 @@ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
+@@ -126,7 +126,7 @@ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
  endif()
  
  if(NANOVDB_USE_BLOSC AND NOT TARGET Blosc::blosc)
--  find_package(Blosc REQUIRED)
-+  find_package(Blosc REQUIRED NAMES blosc)
+-  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
++  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED NAMES blosc)
  endif()
  
  if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
-@@ -236,7 +236,7 @@ if(NANOVDB_USE_TBB)
+@@ -290,7 +290,7 @@ if(NANOVDB_USE_TBB)
  endif()
  
  if(NANOVDB_USE_BLOSC)
