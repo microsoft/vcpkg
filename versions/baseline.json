@@ -6642,7 +6642,7 @@
     },
     "opencv4": {
       "baseline": "4.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.1",
