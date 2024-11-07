@@ -1,5 +1,5 @@
 libmem provides CMake targets:
 
   # this is heuristically generated, and may not be correct
-  find_package(unofficial-libmem CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE unofficial::libmem::libmem)
+  find_package(libmem CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE libmem::libmem)
