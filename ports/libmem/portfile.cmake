@@ -11,20 +11,8 @@ vcpkg_from_github(
         0001-CMakeLists.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE EQUAL "static") 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DLM_EXPORT")
-endif()
-
-if(NOT(VCPKG_TARGET_IS_WINDOWS) AND VCPKG_LIBRARY_LINKAGE EQUAL "shared") 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLM_EXPORT")
-endif()
-
-if(EXISTS "${SOURCE_PATH}/PreLoad.cmake")
-    message(WARNING "Removing PreLoad.cmake")
-    file(REMOVE "${SOURCE_PATH}/PreLoad.cmake")
-else()
-    message(WARNING "PreLoad.cmake not found.")
-endif()
+message(WARNING "Removing PreLoad.cmake")
+file(REMOVE "${SOURCE_PATH}/PreLoad.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/cmake")
 
@@ -36,9 +24,12 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmem-config.cmake.in"
     DESTINATION "${SOURCE_PATH}"
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
