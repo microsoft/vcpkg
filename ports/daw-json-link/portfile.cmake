@@ -1,7 +1,4 @@
 # Header-only library
-#if (EXISTS ${CURRENT_INSTALLED_DIR}/share/daw-header-libraries/copyright)
-#    message(FATAL_ERROR "${PORT} conflict with daw-header-libraries, please remove daw-header-libraries before install ${PORT}.")
-#endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/daw_json_link
