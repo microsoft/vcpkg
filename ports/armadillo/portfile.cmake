@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-${VERSION}.tar.xz"
-    SHA512 567ed608098258749cf133022810c9296985ddd9d4dcce4eb00a938cbe8e767774d96cd030ba8c719e62895913e294b17299e4e8c064103b1f6f051021ee9e57
+    SHA512 55ee45be41ca240783edfd61f647401b0a32826850be82f5e957873c18de0dce87fc39d35e5f6363475ed912c3b1d08ff31151f25378d262d840aa6f15163ac8
     PATCHES
         cmake-config.patch
         dependencies.patch
