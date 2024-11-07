@@ -5997,7 +5997,7 @@
       "port-version": 6
     },
     "modern-cpp-kafka": {
-      "baseline": "2023.03.07",
+      "baseline": "2024.07.03",
       "port-version": 0
     },
     "modp-base64": {
