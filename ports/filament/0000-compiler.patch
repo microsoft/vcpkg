@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bf4ad371b..5c40326a2 100644
+index 5180bdfb6..08a065c07 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -264,6 +264,9 @@ set(TOOLS ${CMAKE_CURRENT_SOURCE_DIR}/tools)
@@ -20,7 +20,19 @@ index bf4ad371b..5c40326a2 100644
  
  # ==================================================================================================
  # Link time optimizations (LTO)
-@@ -361,10 +365,18 @@ if (MSVC)
+@@ -315,7 +319,10 @@ if (MSVC)
+     set(CXX_STANDARD "/std:c++latest")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /W0 /Zc:__cplusplus")
+ else()
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function -Wno-deprecated-declarations")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -Wno-unknown-pragmas -Wno-unused-function -Wno-deprecated-declarations")
++    if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
++        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstrict-aliasing")
++    endif()
+ endif()
+ 
+ if (FILAMENT_USE_EXTERNAL_GLES3)
+@@ -361,10 +368,18 @@ if (MSVC)
      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
  endif()
  
@@ -43,6 +55,84 @@ index bf4ad371b..5c40326a2 100644
  endif()
  
  # Use hidden by default and expose what we need.
+diff --git a/filament/CMakeLists.txt b/filament/CMakeLists.txt
+index a68d1f915..b2a398c8f 100644
+--- a/filament/CMakeLists.txt
++++ b/filament/CMakeLists.txt
+@@ -604,12 +604,16 @@ if (MSVC)
+ else()
+     set(FILAMENT_WARNINGS
+             -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+-            -Wextra-semi -Wnewline-eof -Wdeprecated -Wundef
++            -Wextra-semi -Wdeprecated -Wundef
++            -Wnon-virtual-dtor -Wimplicit-fallthrough
++    )
++    if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
++        list(APPEND FILAMENT_WARNINGS
++            -Wnewline-eof -Wweak-vtables -Wclass-varargs -Wover-aligned
+             -Wgnu-conditional-omitted-operand
+-            -Wweak-vtables -Wnon-virtual-dtor -Wclass-varargs -Wimplicit-fallthrough
+-            -Wover-aligned
+             -Werror
+-    )
++        )
++    endif()
+ endif()
+ 
+ target_compile_options(${TARGET} PRIVATE
+diff --git a/filament/backend/CMakeLists.txt b/filament/backend/CMakeLists.txt
+index 28fc07941..3a2d827ff 100644
+--- a/filament/backend/CMakeLists.txt
++++ b/filament/backend/CMakeLists.txt
+@@ -377,12 +377,16 @@ if (MSVC)
+ else()
+     set(FILAMENT_WARNINGS
+             -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+-            -Wextra-semi -Wnewline-eof -Wdeprecated -Wundef
++            -Wextra-semi -Wdeprecated -Wundef
++            -Wnon-virtual-dtor -Wimplicit-fallthrough
++    )
++    if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
++        list(APPEND FILAMENT_WARNINGS
++            -Wnewline-eof -Wweak-vtables -Wclass-varargs -Wover-aligned
+             -Wgnu-conditional-omitted-operand
+-            -Wweak-vtables -Wnon-virtual-dtor -Wclass-varargs -Wimplicit-fallthrough
+-            -Wover-aligned
+             -Werror
+-    )
++        )
++    endif()
+ endif()
+ 
+ if (APPLE)
+diff --git a/filament/backend/src/vulkan/VulkanPipelineCache.cpp b/filament/backend/src/vulkan/VulkanPipelineCache.cpp
+index 4c440a008..b8e3bf5c7 100644
+--- a/filament/backend/src/vulkan/VulkanPipelineCache.cpp
++++ b/filament/backend/src/vulkan/VulkanPipelineCache.cpp
+@@ -280,8 +280,8 @@ void VulkanPipelineCache::bindVertexArray(VkVertexInputAttributeDescription cons
+             mPipelineRequirements.vertexAttributes[i] = attribDesc[i];
+             mPipelineRequirements.vertexBuffers[i] = bufferDesc[i];
+         } else {
+-            mPipelineRequirements.vertexAttributes[i] = {};
+-            mPipelineRequirements.vertexBuffers[i] = {};
++            mPipelineRequirements.vertexAttributes[i] = VertexInputAttributeDescription{};
++            mPipelineRequirements.vertexBuffers[i] = VertexInputBindingDescription{};
+         }
+     }
+ }
+diff --git a/filament/backend/src/vulkan/VulkanStagePool.cpp b/filament/backend/src/vulkan/VulkanStagePool.cpp
+index 067b16afd..f74ea2cb3 100644
+--- a/filament/backend/src/vulkan/VulkanStagePool.cpp
++++ b/filament/backend/src/vulkan/VulkanStagePool.cpp
+@@ -105,7 +105,7 @@ VulkanStageImage const* VulkanStagePool::acquireImage(PixelDataFormat format, Pi
+         .usage = VMA_MEMORY_USAGE_CPU_TO_GPU
+     };
+ 
+-    const UTILS_UNUSED VkResult result = vmaCreateImage(mAllocator, &imageInfo, &allocInfo,
++    UTILS_UNUSED const VkResult result = vmaCreateImage(mAllocator, &imageInfo, &allocInfo,
+             &image->image, &image->memory, nullptr);
+ 
+     assert_invariant(result == VK_SUCCESS);
 diff --git a/tools/cso-lut/src/main.cpp b/tools/cso-lut/src/main.cpp
 index b45a60702..e8a7c2bb7 100644
 --- a/tools/cso-lut/src/main.cpp
