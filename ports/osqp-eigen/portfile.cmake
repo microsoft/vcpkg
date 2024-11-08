@@ -1,8 +1,3 @@
-if ((VCPKG_LIBRARY_LINKAGE STREQUAL dynamic) AND (CMAKE_HOST_SYSTEM_NAME STREQUAL Windows) )
-    message(STATUS "[INFO] ${PORT} doesn't support building as dynamic library on Windows, overriding to static")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "robotology/osqp-eigen"
