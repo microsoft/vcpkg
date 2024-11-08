@@ -21,6 +21,7 @@ vcpkg_from_github(
       0014-fix-cmake-in-list.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
+      0019-opencl-kernel.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
