@@ -23,7 +23,7 @@
   "default-features": [
     {
       "name": "tools",
-      "platform": "!android & !ios"
+      "platform": "!android & !ios & !static"
     }
   ],
   "features": {
@@ -32,7 +32,7 @@
     },
     "tools": {
       "description": "Build the libpng tools",
-      "supports": "!android & !ios"
+      "supports": "!android & !ios & !static"
     }
   }
 }
