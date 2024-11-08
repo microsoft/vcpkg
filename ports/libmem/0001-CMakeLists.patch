@@ -1,7 +1,5 @@
-diff --git a/fix1.txt b/fix2.txt
-index 534057a..33856ce 100644
---- a/fix1.txt
-+++ b/fix2.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
  cmake_minimum_required(VERSION 3.22.1)
  
