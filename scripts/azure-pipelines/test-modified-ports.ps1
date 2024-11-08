@@ -131,6 +131,12 @@ if ($IsLinux -and $Triplet -match 'android' -and $true)
     & unzip -q android-ndk-$override_ndk-linux.zip
     $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-$override_ndk"
     $NoParentHashes = $true
+
+    # https://android-review.googlesource.com/c/platform/bionic/+/3343442/1/libc/include/ctype.h
+    $ndk_ctype_path = "$env:ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/ctype.h"
+    $ndk_ctype = Get-Content $ndk_ctype_path -Raw
+    $ndk_ctype = $ndk_ctype.Replace('static inline int __bionic_ctype_in_range', '__BIONIC_CTYPE_INLINE int __bionic_ctype_in_range')
+    Set-Content -Path $ndk_ctype_path -Value $ndk_ctype
 }
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
