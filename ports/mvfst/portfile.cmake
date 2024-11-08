@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/mvfst
     REF "v${VERSION}"
-    SHA512 8ec9e7daf1c259f31e90eaa32cfa29d377e279f93c2072528447455f4f8ea897ab17f2759222a2ea9a73fdafe96b7d8223cf1efbadad2e8ea180b23832090aa7
+    SHA512 4a000583884777fa876f3bfc52a3420c9cf8818f943c07898ac3b313837092fc173d8db497fd59027ef405d8fa5e3114a53b3bc5cf3fef398ca712c06a1da3e0
     HEAD_REF main
-    PATCHES fix-cmake.patch
 )
 
 vcpkg_cmake_configure(

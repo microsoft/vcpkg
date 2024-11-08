@@ -1,8 +1,8 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 847e073..5338bea 100644
+index be0bfb2..6e295d6 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -189,7 +189,7 @@ endfunction()
+@@ -206,7 +206,7 @@ endfunction()
  # Per-backend link libs/options:
  set(SecureTransport/LINK_LIBRARIES "-framework CoreFoundation" "-framework Security")
  set(SecureTransport/pkg_config_LIBS -framework Corefoundation -framework Security)
@@ -11,7 +11,7 @@ index 847e073..5338bea 100644
  set(SecureChannel/pkg_config_LIBS ${SecureChannel/LINK_LIBRARIES})
  set(LibreSSL/LINK_LIBRARIES LibreSSL::TLS LibreSSL::Crypto)
  set(LibreSSL/pkg_config_LIBS -ltls -lcrypto)
-@@ -340,7 +340,7 @@ function(_use_sasl libname)
+@@ -357,7 +357,7 @@ function(_use_sasl libname)
     target_link_libraries(_mongoc-dependencies INTERFACE _mongoc-sasl_backend)
     install(TARGETS _mongoc-sasl_backend EXPORT mongoc-targets)
     if(libname STREQUAL "SSPI")
@@ -21,7 +21,7 @@ index 847e073..5338bea 100644
     elseif(libname STREQUAL "CYRUS")
        find_package(SASL2 2.0 REQUIRED)
 diff --git a/src/libmongoc/src/mongoc/mongoc-client.c b/src/libmongoc/src/mongoc/mongoc-client.c
-index 15517e6..00cd017 100644
+index 80f15f8..28a0742 100644
 --- a/src/libmongoc/src/mongoc/mongoc-client.c
 +++ b/src/libmongoc/src/mongoc/mongoc-client.c
 @@ -18,8 +18,8 @@
@@ -36,7 +36,7 @@ index 15517e6..00cd017 100644
  #else
  #if defined(MONGOC_HAVE_RES_NSEARCH) || defined(MONGOC_HAVE_RES_SEARCH)
 diff --git a/src/libmongoc/src/mongoc/mongoc-socket.c b/src/libmongoc/src/mongoc/mongoc-socket.c
-index a77d805..15d39b4 100644
+index e417d7d..cccabf5 100644
 --- a/src/libmongoc/src/mongoc/mongoc-socket.c
 +++ b/src/libmongoc/src/mongoc/mongoc-socket.c
 @@ -25,7 +25,7 @@
@@ -47,9 +47,9 @@ index a77d805..15d39b4 100644
 +#include <mstcpip.h>
  #include <process.h>
  #endif
- 
+ #include <common-cmp-private.h>
 diff --git a/src/libmongoc/src/mongoc/mongoc-sspi-private.h b/src/libmongoc/src/mongoc/mongoc-sspi-private.h
-index 60996fc..3745eff 100644
+index a2df035..a1ade8a 100644
 --- a/src/libmongoc/src/mongoc/mongoc-sspi-private.h
 +++ b/src/libmongoc/src/mongoc/mongoc-sspi-private.h
 @@ -28,7 +28,7 @@ BSON_BEGIN_DECLS
