@@ -7,7 +7,7 @@ index 4e0284e..62fc68b 100644
  
  if(NANOVDB_USE_BLOSC AND NOT TARGET Blosc::blosc)
 -  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
-+  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED NAMES blosc)
++  find_package(blosc CONFIG REQUIRED)
  endif()
  
  if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
