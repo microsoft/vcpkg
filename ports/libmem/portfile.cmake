@@ -20,10 +20,11 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmem-config.cmake.in"
     DESTINATION "${SOURCE_PATH}"
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findkeystone.cmake"
+    DESTINATION "${SOURCE_PATH}/cmake"
+)
+
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findkeystone.cmake"
-        DESTINATION "${SOURCE_PATH}/cmake"
-    )
     vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
     )
