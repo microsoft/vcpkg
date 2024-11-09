@@ -1,16 +1,16 @@
 cpp-pinyin provides CMake targets:
 
-find_package(cpp-pinyin CONFIG REQUIRED)
-target_link_libraries(main PRIVATE cpp-pinyin::cpp-pinyin)
+    find_package(cpp-pinyin CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cpp-pinyin::cpp-pinyin)
 
-To use the library, you need to copy the dictionary files to the binary directory.
+    To use the library, you need to copy the dictionary files to the binary directory.
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/cpp-pinyin/dict
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/dict
-)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/cpp-pinyin/dict
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/dict
+    )
 
-To generate your own dictionary files, you can use the pinyin-makedict tool provided by cpp-pinyin.
+    To generate your own dictionary files, you can use the pinyin-makedict tool provided by cpp-pinyin.
 
-https://github.com/wolfgitpr/pinyin-makedict
+    https://github.com/wolfgitpr/pinyin-makedict
