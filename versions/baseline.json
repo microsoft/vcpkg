@@ -1912,6 +1912,10 @@
       "baseline": "2022-08-27",
       "port-version": 1
     },
+    "cpp-kana": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "cpp-netlib": {
       "baseline": "0.13.0",
       "port-version": 9
