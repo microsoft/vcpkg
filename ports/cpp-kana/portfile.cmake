@@ -19,5 +19,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif ()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
