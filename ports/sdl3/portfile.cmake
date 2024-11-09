@@ -39,18 +39,16 @@ vcpkg_cmake_configure(
         -DSDL_LIBC=ON
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
-        # Speficying the revision skips the need to use git to determine a version
-        -DSDL_REVISION=SDL-${VERSION}
+        -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
+        # Specifying the revision skips the need to use git to determine a version
+        -DSDL_REVISION=vcpkg
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibUSB=1
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
 
 vcpkg_cmake_install()
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SDL3)
-endif()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -61,4 +59,6 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt"
+    COMMENT "Some configurations may use code licensed under the MIT and Apache-2.0 licenses."
+)
