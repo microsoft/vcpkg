@@ -9080,6 +9080,10 @@
       "baseline": "3.4.0",
       "port-version": 0
     },
+    "tomsolver": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "torch-th": {
       "baseline": "2019-04-19",
       "port-version": 4
