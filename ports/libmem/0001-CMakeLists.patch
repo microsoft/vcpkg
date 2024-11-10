@@ -8,7 +8,7 @@
  
  project(libmem
  	LANGUAGES
-@@ -13,23 +13,25 @@ message(STATUS
+@@ -13,23 +13,23 @@ message(STATUS
  	"[*] Platform: ${CMAKE_SYSTEM_NAME}"
  )
  
@@ -35,16 +35,15 @@
  	"Build a static library"
  	OFF
  )
+-
 +endif()
- 
-+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
  set(LIBMEM_ARCH ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "Force a specific architecture")
 -
 +if(0)
  message(STATUS
  	"[*] Architecture: ${LIBMEM_ARCH}"
  )
-@@ -65,13 +67,17 @@ add_library(capstone STATIC IMPORTED)
+@@ -65,13 +65,17 @@ add_library(capstone STATIC IMPORTED)
  set_target_properties(capstone PROPERTIES IMPORTED_LOCATION ${CAPSTONE_IMPORT_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}capstone${CMAKE_STATIC_LIBRARY_SUFFIX})
  add_library(keystone STATIC IMPORTED)
  set_target_properties(keystone PROPERTIES IMPORTED_LOCATION ${KEYSTONE_IMPORT_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}keystone${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -64,7 +63,7 @@
  if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  	file(GLOB_RECURSE LIBMEM_SRC "${LIBMEM_DIR}/src/win/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/winutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
  elseif(${CMAKE_SYSTEM_NAME} STREQUAL Linux)
-@@ -89,17 +95,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+@@ -89,17 +93,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
  	endif()
  	file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/freebsd/*.c" "${LIBMEM_DIR}/src/freebsd/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
  endif()
@@ -87,7 +86,7 @@
  target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
  
  include_directories(${PROJECT_SOURCE_DIR}
-@@ -108,18 +111,21 @@ include_directories(${PROJECT_SOURCE_DIR}
+@@ -108,18 +109,21 @@ include_directories(${PROJECT_SOURCE_DIR}
  	${KEYSTONE_INC}
  	${LLVM_INC}
  )
@@ -116,7 +115,7 @@
  
  if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  	set(LIBMEM_DEPS
-@@ -151,8 +157,8 @@ else()
+@@ -151,8 +155,8 @@ else()
  	message(FATAL_ERROR "[!] Unsupported platform")
  endif()
  
@@ -127,7 +126,7 @@
  	# Create a bundled static library containing all dependencies (to mimic the shared library behavior)
  	set_target_properties(libmem PROPERTIES OUTPUT_NAME "libmem_partial")
  	set(libmem_bundle_files "$<TARGET_FILE:libmem>")
-@@ -193,7 +199,7 @@ if(LIBMEM_BUILD_STATIC)
+@@ -193,7 +197,7 @@ if(LIBMEM_BUILD_STATIC)
  	endif()
  endif()
  
@@ -136,7 +135,7 @@
  	if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  		cmake_path(SET CMAKE_INSTALL_PREFIX "$ENV{ProgramFiles}")
  	else()
-@@ -202,14 +208,44 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
+@@ -202,14 +206,44 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
  	endif()
  	set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/libmem")
  	execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}")
