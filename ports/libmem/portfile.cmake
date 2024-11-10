@@ -20,22 +20,12 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmem-config.cmake.in"
     DESTINATION "${SOURCE_PATH}"
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findkeystone.cmake"
-    DESTINATION "${SOURCE_PATH}/cmake"
+vcpkg_find_acquire_program(PKGCONFIG)
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
-
-if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
-    )
-else()
-    vcpkg_find_acquire_program(PKGCONFIG)
-    vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-    )
-endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
