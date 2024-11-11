@@ -1,0 +1,51 @@
+From 2a1216b603b5eb592c5f313df9e79a81997ad13c Mon Sep 17 00:00:00 2001
+From: Cosmin Mihai <ionut.cosmin.mihai@gmail.com>
+Date: Mon, 11 Nov 2024 22:43:30 +0200
+Subject: [PATCH] iOS missing symbol fix
+
+---
+ build-aux/install-reloc | 1 +
+ srclib/relocwrapper.c   | 1 +
+ srcm4/gnulib-comp.m4    | 2 ++
+ 3 files changed, 4 insertions(+)
+
+diff --git a/build-aux/install-reloc b/build-aux/install-reloc
+index 63aeb9a..570b211 100755
+--- a/build-aux/install-reloc
++++ b/build-aux/install-reloc
+@@ -236,6 +236,7 @@ func_create_wrapper ()
+                "$srcdir"/allocator.c \
+                "$srcdir"/readlink.c \
+                "$srcdir"/stat.c \
++               "$srcdir"/stat-time.c \
+                "$srcdir"/canonicalize-lgpl.c \
+                "$srcdir"/malloc/scratch_buffer_dupfree.c \
+                "$srcdir"/malloc/scratch_buffer_grow.c \
+diff --git a/srclib/relocwrapper.c b/srclib/relocwrapper.c
+index ff0ad41..0304e12 100644
+--- a/srclib/relocwrapper.c
++++ b/srclib/relocwrapper.c
+@@ -44,6 +44,7 @@
+              -> realloc-posix
+              -> free-posix
+           -> pathmax
++          -> stat-time
+           -> mempcpy
+           -> rawmemchr
+           -> readlink
+diff --git a/srcm4/gnulib-comp.m4 b/srcm4/gnulib-comp.m4
+index b511e8a..832a8e7 100644
+--- a/srcm4/gnulib-comp.m4
++++ b/srcm4/gnulib-comp.m4
+@@ -730,6 +730,8 @@ AC_DEFUN([gl_FILE_LIST], [
+   lib/stat-w32.c
+   lib/stat-w32.h
+   lib/stat.c
++  lib/stat-time.h
++  lib/stat-time.c
+   lib/stdalign.in.h
+   lib/stdbool.in.h
+   lib/stddef.in.h
+-- 
+2.39.5 (Apple Git-154)
+
