@@ -6,21 +6,14 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_cmake_configure(
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CPP_KANA_BUILD_STATIC)
+
+vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
-            -DCPP_KANA_BUILD_STATIC=TRUE
-            -DCPP_KANA_BUILD_TESTS=FALSE
-    )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            -DCPP_KANA_BUILD_STATIC=FALSE
-            -DCPP_KANA_BUILD_TESTS=FALSE
-    )
-endif()
+        -DCPP_KANA_BUILD_STATIC=${CPP_KANA_BUILD_STATIC}
+        -DCPP_KANA_BUILD_TESTS=FALSE
+)
 
 vcpkg_cmake_install()
 
