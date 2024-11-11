@@ -11,10 +11,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        hdf5            MATIO_WITH_HDF5
+        mat73           MATIO_WITH_HDF5
+        mat73           MATIO_MAT73
         zlib            MATIO_WITH_ZLIB
         extended-sparse MATIO_EXTENDED_SPARSE
-        mat73           MATIO_MAT73
         pic             MATIO_PIC
 )
 
