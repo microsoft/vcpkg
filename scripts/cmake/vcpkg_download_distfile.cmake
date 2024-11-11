@@ -28,30 +28,6 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
     endif()
 endfunction()
 
-function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
-    message(FATAL_ERROR
-        "    \n"
-        "    Failed to download file with error: ${error_code}\n"  
-        "    If you are using a proxy, please check your proxy setting. Possible causes are:\n"
-        "    \n"
-        "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
-        "       to `https://address:port`. This is not correct, because `https://` prefix\n"
-        "       claims the proxy is an HTTPS proxy, while your proxy (v2ray, shadowsocksr\n"
-        "       , etc..) is an HTTP proxy. Try setting `http://address:port` to both\n"
-        "       HTTP_PROXY and HTTPS_PROXY instead.\n"
-        "    \n"
-        "    2. If you are using Windows, vcpkg will automatically use your Windows IE Proxy Settings\n"
-        "       set by your proxy software. See https://github.com/microsoft/vcpkg-tool/pull/77\n"
-        "       The value set by your proxy might be wrong, or have same `https://` prefix issue.\n"
-        "    \n"
-        "    3. Your proxy's remote server is out of service.\n"
-        "    \n"
-        "    If you've tried directly download the link, and believe this is not a temporary\n"
-        "    download server failure, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n"
-        "    to report this upstream download server failure.\n"
-        "    \n")
-endfunction()
-
 function(z_vcpkg_download_distfile_via_aria)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512"
@@ -252,10 +228,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             RESULT_VARIABLE error_code
             WORKING_DIRECTORY "${DOWNLOADS}"
         )
-
-        if(NOT "${error_code}" EQUAL "0")
-            z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
-        endif()
     endif()
 
     set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
