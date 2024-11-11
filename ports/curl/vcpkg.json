@@ -1,7 +1,6 @@
 {
   "name": "curl",
-  "version": "8.10.1",
-  "port-version": 2,
+  "version": "8.11.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -212,7 +211,7 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support (experimental)"
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",
