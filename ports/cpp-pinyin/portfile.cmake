@@ -6,23 +6,15 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            -DCPP_PINYIN_BUILD_STATIC=TRUE
-            -DCPP_PINYIN_BUILD_TESTS=FALSE
-            -DVCPKG_DICT_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}
-    )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            -DCPP_PINYIN_BUILD_STATIC=FALSE
-            -DCPP_PINYIN_BUILD_TESTS=FALSE
-            -DVCPKG_DICT_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}
-    )
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CPP_PINYIN_BUILD_STATIC)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCPP_PINYIN_BUILD_STATIC=${CPP_PINYIN_BUILD_STATIC}
+        -DCPP_PINYIN_BUILD_TESTS=FALSE
+        "-DVCPKG_DICT_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
 
 vcpkg_cmake_install()
 
