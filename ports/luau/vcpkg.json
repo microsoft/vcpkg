@@ -1,0 +1,22 @@
+{
+    "name": "luau",
+    "version": "0.651",
+    "homepage": "https://github.com/luau-lang/luau",
+    "description": "A fast, small, safe, gradually typed embeddable scripting language derived from Lua",
+    "license": "MIT",
+    "dependencies": [
+      {
+        "name" : "vcpkg-cmake",
+        "host" : true
+      },
+      {
+        "name" : "vcpkg-cmake-config",
+        "host" : true
+      }
+    ],
+    "features": {
+        "tool": {
+          "description": "Builds luau executable"
+        }
+      }
+  }
