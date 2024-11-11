@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF gperftools-2.10
     SHA512 4400711723be9401f519d85b3b69c026e4715473cbed48ab0573df17abdf895fb971ee969875fe5127a2e8b9aba90d858285e50c8e012384c2c36d5a76b1f0c4
     HEAD_REF master
+    PATCHES
+        libunwind.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -52,6 +54,10 @@ else()
         set(BUILD_OPTS --enable-shared --disable-static)
     else()
         set(BUILD_OPTS --enable-static --disable-shared)
+    endif()
+
+    if(VCPKG_TARGET_IS_LINUX)
+        vcpkg_find_acquire_program(PKGCONFIG)
     endif()
 
     vcpkg_configure_make(

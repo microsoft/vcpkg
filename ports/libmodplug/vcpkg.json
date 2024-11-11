@@ -1,7 +1,7 @@
 {
   "name": "libmodplug",
   "version": "0.8.9.0",
-  "port-version": 13,
+  "port-version": 14,
   "description": "The ModPlug mod file playing library.",
   "homepage": "https://github.com/Konstanty/libmodplug",
   "license": null,

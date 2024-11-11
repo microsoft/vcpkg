@@ -24,7 +24,7 @@ index a8b74e0..c99f41c 100755
 @@ -6772,7 +6773,7 @@                                require_pkg_config libopencv opencv opencv/cxcore.h cvCreateImageHeader; }
  enabled libopenh264       && require_pkg_config libopenh264 "openh264 >= 1.3.0" wels/codec_api.h WelsGetCodecVersion
  enabled libopenjpeg       && { check_pkg_config libopenjpeg "libopenjp2 >= 2.1.0" openjpeg.h opj_version ||
-                               { require_pkg_config libopenjpeg "libopenjp2 >= 2.1.0" openjpeg.h opj_version -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } }
+                                { require_pkg_config libopenjpeg "libopenjp2 >= 2.1.0" openjpeg.h opj_version -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } }
 -enabled libopenmpt        && require_pkg_config libopenmpt "libopenmpt >= 0.2.6557" libopenmpt/libopenmpt.h openmpt_module_create -lstdc++ && append libopenmpt_extralibs "-lstdc++"
 +enabled libopenmpt        && require_pkg_config libopenmpt "libopenmpt >= 0.2.6557" libopenmpt/libopenmpt.h openmpt_module_create
  enabled libopenvino       && { { check_pkg_config libopenvino openvino openvino/c/openvino.h ov_core_create && enable openvino2; } ||
@@ -43,7 +43,7 @@ index a8b74e0..c99f41c 100755
  enabled libsrt            && require_pkg_config libsrt "srt >= 1.3.0" srt/srt.h srt_socket
 @@ -6880,6 +6881,8 @@ enabled openal            && { check_pkg_config openal "openal >= 1.1" "AL/al.h"
  enabled opencl            && { check_pkg_config opencl OpenCL CL/cl.h clEnqueueNDRangeKernel ||
-                                check_lib opencl OpenCL/cl.h clEnqueueNDRangeKernel -Wl,-framework,OpenCL ||
+                                check_lib opencl OpenCL/cl.h clEnqueueNDRangeKernel "-framework OpenCL" ||
                                 check_lib opencl CL/cl.h clEnqueueNDRangeKernel -lOpenCL ||
 +                               check_lib opencl CL/cl.h clEnqueueNDRangeKernel -lOpenCL -lAdvapi32 -lOle32 -lCfgmgr32||
 +                               check_lib opencl CL/cl.h clEnqueueNDRangeKernel -lOpenCL -pthread -ldl ||
@@ -51,7 +51,7 @@ index a8b74e0..c99f41c 100755
                               { test_cpp_condition "OpenCL/cl.h" "defined(CL_VERSION_1_2)" ||
                                 test_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
 @@ -7204,10 +7207,10 @@ enabled amf &&
-         "(AMF_VERSION_MAJOR << 48 | AMF_VERSION_MINOR << 32 | AMF_VERSION_RELEASE << 16 | AMF_VERSION_BUILD_NUM) >= 0x00010004001d0000"
+         "(AMF_VERSION_MAJOR << 48 | AMF_VERSION_MINOR << 32 | AMF_VERSION_RELEASE << 16 | AMF_VERSION_BUILD_NUM) >= 0x0001000400210000"
  
  # Funny iconv installations are not unusual, so check it after all flags have been set
 -if enabled libc_iconv; then

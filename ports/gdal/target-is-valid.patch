@@ -1,7 +1,7 @@
-diff --git a/cmake/helpers/CheckDependentLibraries.cmake b/cmake/helpers/CheckDependentLibraries.cmake
-index f5c920a..53494c9 100644
---- a/cmake/helpers/CheckDependentLibraries.cmake
-+++ b/cmake/helpers/CheckDependentLibraries.cmake
+diff --git a/cmake/helpers/CheckDependentLibrariesCommon.cmake b/cmake/helpers/CheckDependentLibrariesCommon.cmake
+index ebb3538..a4a6d69 100644
+--- a/cmake/helpers/CheckDependentLibrariesCommon.cmake
++++ b/cmake/helpers/CheckDependentLibrariesCommon.cmake
 @@ -41,6 +41,7 @@ endif()
  # https://github.com/OSGeo/gdal/issues/5324
  function (gdal_check_target_is_valid target res_var)
