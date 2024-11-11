@@ -8,23 +8,14 @@
  
  project(libmem
  	LANGUAGES
-@@ -13,23 +13,23 @@ message(STATUS
- 	"[*] Platform: ${CMAKE_SYSTEM_NAME}"
+@@ -23,13 +23,23 @@ option(LIBMEM_DEEP_TESTS
+ 	OFF
  )
  
--option(LIBMEM_BUILD_TESTS
--	"Build tests"
--	OFF
--)
--
--option(LIBMEM_DEEP_TESTS
--	"Enable extra testing features for deep testing"
--	OFF
--)
 +set(CMAKE_CXX_STANDARD 17)
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
 +set(targets_export_name libmem-target)
- 
++
 +if (MSVC AND NOT(BUILD_SHARED_LIBS))
 +    add_definitions(/DLM_EXPORT)
 +elseif(NOT(MSVC) AND BUILD_SHARED_LIBS)
@@ -43,7 +34,7 @@
  message(STATUS
  	"[*] Architecture: ${LIBMEM_ARCH}"
  )
-@@ -65,13 +65,17 @@ add_library(capstone STATIC IMPORTED)
+@@ -65,13 +75,17 @@ add_library(capstone STATIC IMPORTED)
  set_target_properties(capstone PROPERTIES IMPORTED_LOCATION ${CAPSTONE_IMPORT_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}capstone${CMAKE_STATIC_LIBRARY_SUFFIX})
  add_library(keystone STATIC IMPORTED)
  set_target_properties(keystone PROPERTIES IMPORTED_LOCATION ${KEYSTONE_IMPORT_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}keystone${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -63,7 +54,7 @@
  if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  	file(GLOB_RECURSE LIBMEM_SRC "${LIBMEM_DIR}/src/win/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/winutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
  elseif(${CMAKE_SYSTEM_NAME} STREQUAL Linux)
-@@ -89,17 +93,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+@@ -89,17 +103,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
  	endif()
  	file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/freebsd/*.c" "${LIBMEM_DIR}/src/freebsd/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
  endif()
@@ -86,7 +77,7 @@
  target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
  
  include_directories(${PROJECT_SOURCE_DIR}
-@@ -108,18 +109,21 @@ include_directories(${PROJECT_SOURCE_DIR}
+@@ -108,18 +119,21 @@ include_directories(${PROJECT_SOURCE_DIR}
  	${KEYSTONE_INC}
  	${LLVM_INC}
  )
@@ -101,13 +92,13 @@
 -set_target_properties(libmem PROPERTIES POSITION_INDEPENDENT_CODE True INCLUDES ${LIBMEM_INC})
 +set_target_properties(libmem PROPERTIES POSITION_INDEPENDENT_CODE True PUBLIC_HEADER "${LIBMEM_PUBLIC_HEADERS}")
 +target_compile_features(libmem PUBLIC cxx_std_17)
++target_compile_definitions(libmem PUBLIC LM_EXPORT)
++target_include_directories(libmem PRIVATE "${LLVM_DEM_DIR}/include" "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}" INTERFACE $<INSTALL_INTERFACE:include>)
  target_compile_definitions(libmem PUBLIC LM_EXPORT)
 -add_dependencies(libmem
 -	capstone-engine
 -	keystone-engine
 -)
-+target_include_directories(libmem PRIVATE "${LLVM_DEM_DIR}/include" "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "${LIBMEM_INC}" INTERFACE $<INSTALL_INTERFACE:include>)
-+target_compile_definitions(libmem PUBLIC LM_EXPORT)
 +
 +
 +
@@ -115,7 +106,7 @@
  
  if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  	set(LIBMEM_DEPS
-@@ -151,8 +155,8 @@ else()
+@@ -151,8 +165,8 @@ else()
  	message(FATAL_ERROR "[!] Unsupported platform")
  endif()
  
@@ -126,7 +117,7 @@
  	# Create a bundled static library containing all dependencies (to mimic the shared library behavior)
  	set_target_properties(libmem PROPERTIES OUTPUT_NAME "libmem_partial")
  	set(libmem_bundle_files "$<TARGET_FILE:libmem>")
-@@ -193,7 +197,7 @@ if(LIBMEM_BUILD_STATIC)
+@@ -193,7 +207,7 @@ if(LIBMEM_BUILD_STATIC)
  	endif()
  endif()
  
@@ -135,7 +126,7 @@
  	if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  		cmake_path(SET CMAKE_INSTALL_PREFIX "$ENV{ProgramFiles}")
  	else()
-@@ -202,14 +206,44 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
+@@ -202,14 +216,44 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
  	endif()
  	set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/libmem")
  	execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}")
@@ -162,8 +153,7 @@
 +    FILE ${targets_export_name}.cmake
 +    DESTINATION share/libmem
 +)
- 
--install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
++
 +# Config and version files for the package
 +include(CMakePackageConfigHelpers)
 +
@@ -178,7 +168,8 @@
 +    VERSION 5.0.2
 +    COMPATIBILITY SameMajorVersion
 +)
-+
+ 
+-install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
 +# Install the config and version files
 +install(
 +    FILES
