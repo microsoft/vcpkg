@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 51fa919e..8231c1e3 100644
+index 51fa919e..d25cca2d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -65,30 +65,30 @@ add_library(Luau.VM.Internals INTERFACE)
@@ -48,7 +48,30 @@ index 51fa919e..8231c1e3 100644
  target_link_libraries(Luau.VM PUBLIC Luau.Common)
  
  target_include_directories(isocline PUBLIC extern/isocline/include)
-@@ -287,3 +287,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
+@@ -182,22 +182,6 @@ if(MSVC AND LUAU_BUILD_CLI)
+     set_target_properties(Luau.Repl.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
+ endif()
+ 
+-# embed .natvis inside the library debug information
+-if(MSVC)
+-    target_link_options(Luau.Ast INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Ast.natvis)
+-    target_link_options(Luau.Analysis INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Analysis.natvis)
+-    target_link_options(Luau.CodeGen INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/CodeGen.natvis)
+-    target_link_options(Luau.VM INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/VM.natvis)
+-endif()
+-
+-# make .natvis visible inside the solution
+-if(MSVC_IDE)
+-    target_sources(Luau.Ast PRIVATE tools/natvis/Ast.natvis)
+-    target_sources(Luau.Analysis PRIVATE tools/natvis/Analysis.natvis)
+-    target_sources(Luau.CodeGen PRIVATE tools/natvis/CodeGen.natvis)
+-    target_sources(Luau.VM PRIVATE tools/natvis/VM.natvis)
+-endif()
+-
+ # On Windows and Android threads are provided, on Linux/Mac/iOS we use pthreads
+ add_library(osthreads INTERFACE)
+ if(CMAKE_SYSTEM_NAME MATCHES "Linux|Darwin|iOS")
+@@ -287,3 +271,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
          endif()
      endif()
  endforeach()
