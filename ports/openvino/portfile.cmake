@@ -3,11 +3,12 @@ vcpkg_from_github(
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
     SHA512 2bf3f00589d825b7f4ca40d43129d81af4ba62382f98b283a3a206e7661a7a69f178c6afafdde646db8d68cb7fc54ec5280d2f4ff4fbbffe24082cf6649dda29
+    HEAD_REF master
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
         002-fix-onnx.patch
-    HEAD_REF master)
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -30,7 +31,7 @@ if(ENABLE_INTEL_GPU)
     vcpkg_find_acquire_program(PYTHON3)
 
     # remove 'rapidjson' directory and use vcpkg's one to comply with ODR
-    file(REMOVE_RECURSE ${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/rapidjson)
+    file(REMOVE_RECURSE "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/rapidjson")
 
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
@@ -118,21 +119,25 @@ if(CMAKE_HOST_WIN32)
     list(APPEND FEATURE_OPTIONS "-DENABLE_API_VALIDATOR=OFF")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        "-DENABLE_SYSTEM_TBB=ON"
-        "-DENABLE_SYSTEM_PUGIXML=ON"
-        "-DENABLE_TBBBIND_2_5=OFF"
-        "-DENABLE_CLANG_FORMAT=OFF"
-        "-DENABLE_NCC_STYLE=OFF"
-        "-DENABLE_CPPLINT=OFF"
-        "-DENABLE_SAMPLES=OFF"
-        "-DENABLE_TEMPLATE=OFF"
-        "-DENABLE_PYTHON=OFF"
+        "-DCMAKE_DISABLE_FIND_PACKAGE_OpenCV=ON"
         "-DCPACK_GENERATOR=VCPKG"
+        "-DENABLE_CLANG_FORMAT=OFF"
+        "-DENABLE_CPPLINT=OFF"
         "-DENABLE_JS=OFF"
+        "-DENABLE_NCC_STYLE=OFF"
+        "-DENABLE_PYTHON=OFF"
+        "-DENABLE_SAMPLES=OFF"
+        "-DENABLE_SYSTEM_PUGIXML=ON"
+        "-DENABLE_SYSTEM_TBB=ON"
+        "-DENABLE_TBBBIND_2_5=OFF"
+        "-DENABLE_TEMPLATE=OFF"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
@@ -143,7 +148,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 
 vcpkg_install_copyright(
     FILE_LIST

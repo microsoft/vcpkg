@@ -1,6 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.9.0",
+  "port-version": 1,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -38,6 +39,13 @@
         {
           "name": "hdf5",
           "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "calib3d"
+          ]
         },
         {
           "name": "tesseract",
