@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "luau")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-luau")
 
 if("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES luau AUTO_CLEAN)
