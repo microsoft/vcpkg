@@ -1,0 +1,16 @@
+diff --git a/src/bsa/fo4.cpp b/src/bsa/fo4.cpp
+index 5484f13..2d9bbf3 100644
+--- a/src/bsa/fo4.cpp
++++ b/src/bsa/fo4.cpp
+@@ -677,7 +677,7 @@ namespace bsa::fo4
+ 		}
+ 
+ 		a_out.write_bytes({ //
+-			static_cast<const std::byte*>(blob.GetBufferPointer()),
++			reinterpret_cast<const std::byte*>(blob.GetBufferPointer()),
+ 			blob.GetBufferSize() });
+ 		std::vector<std::byte> buffer;
+ 		for (const auto& chunk : *this) {
+-- 
+2.47.0.windows.1
+

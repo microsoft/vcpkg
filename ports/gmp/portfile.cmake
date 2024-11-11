@@ -79,9 +79,17 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
+if(VCPKG_HOST_IS_WINDOWS)
+    # dumpbin detection fails with autoconf 2.72
+    set(ENV{WANT_AUTOCONF} 2.71)
+endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    ADDITIONAL_MSYS_PACKAGES
+        DIRECT_PACKAGES
+            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
+            dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
     OPTIONS
         ${OPTIONS}
         --enable-cxx

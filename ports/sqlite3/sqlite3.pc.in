@@ -8,4 +8,5 @@ Description: SQL database engine
 Version: @PKGCONFIG_VERSION@
 Libs: -L${libdir} -lsqlite3
 Libs.private: @PKGCONFIG_LIBS_PRIVATE@
+Requires.private: @PKGCONFIG_REQUIRES_PRIVATE@
 Cflags: -I${includedir}
