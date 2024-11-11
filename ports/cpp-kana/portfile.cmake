@@ -9,8 +9,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CPP_KANA_BUILD_STATIC)
 
 vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
         -DCPP_KANA_BUILD_STATIC=${CPP_KANA_BUILD_STATIC}
         -DCPP_KANA_BUILD_TESTS=FALSE
 )
