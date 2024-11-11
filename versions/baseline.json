@@ -2705,8 +2705,8 @@
       "port-version": 0
     },
     "fastlz": {
-      "baseline": "2021-05-10",
-      "port-version": 2
+      "baseline": "2024-08-02",
+      "port-version": 0
     },
     "fastor": {
       "baseline": "2021-11-22",
