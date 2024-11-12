@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -656,7 +656,7 @@ endif()
+@@ -674,7 +674,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
@@ -11,7 +11,7 @@
  
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -307,7 +307,6 @@ if(MSVC)
+@@ -300,7 +300,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)
