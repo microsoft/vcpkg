@@ -1,0 +1,13 @@
+diff --git a/libcpuid/CMakeLists.txt b/libcpuid/CMakeLists.txt
+index 09189ef..e1a43c2 100644
+--- a/libcpuid/CMakeLists.txt
++++ b/libcpuid/CMakeLists.txt
+@@ -21,7 +21,7 @@ if(UNIX)
+   add_compile_definitions(_GNU_SOURCE)
+ endif(UNIX)
+ 
+-if("${MSVC_CXX_ARCHITECTURE_ID}" MATCHES "x64")
++if(MSVC AND CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
+   list(APPEND cpuid_sources masm-x64.asm)
+ endif()
+ 
