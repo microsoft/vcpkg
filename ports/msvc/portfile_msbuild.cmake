@@ -16,8 +16,6 @@ block()
 
   set(counter 0)
   foreach(item IN LISTS vsix_installers)
-      math(EXPR counter "${counter} + 1")
-      message(STATUS "Extracting '${item}'")
       vcpkg_execute_required_process(
         COMMAND "${pwsh_exe}" -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_LIST_DIR}/extract-vsix.ps1" "-VsixFile" "${item}" "-ExtractTo" "${CURRENT_PACKAGES_DIR}/VS"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"

@@ -70,7 +70,7 @@ block()
   
     message(STATUS "Extracting '${componentName}'")
     string(REPLACE " " "" componentName "${componentName}")
-    set(installLocation "${CURRENT_BUILDTREES_DIR}/sdk/${counter}")
+    set(installLocation "${CURRENT_BUILDTREES_DIR}/sdk")
     
     # Create the install location directory
     file(MAKE_DIRECTORY "${installLocation}")
@@ -78,25 +78,34 @@ block()
     cmake_path(NATIVE_PATH msi NORMALIZE msi)
     
     # Extract the MSI file
+    cmake_path(NATIVE_PATH msi msi_native)
     vcpkg_execute_required_process(
-        COMMAND msiexec /a "${msi}" /lvoicewarmupx "msiexec_${componentName}.log" /quiet /qn "TARGETDIR=${installLocation}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-        LOGNAME "msiexec_${componentName}_cmake.log"
+        COMMAND "${LESSMSI}" x "${msi_native}"
+        WORKING_DIRECTORY "${installLocation}"
+        LOGNAME "lessmsi-${componentName}_cmake.log"
     )
+    cmake_path(GET msi FILENAME packstem)
+    string(REPLACE ".msi" "" packstem "${packstem}")
+    #vcpkg_execute_required_process(
+    #    COMMAND msiexec /a "${msi}" /lvoicewarmupx "msiexec_${componentName}.log" /quiet /qn "TARGETDIR=${installLocation}"
+    #    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+    #    LOGNAME "msiexec_${componentName}_cmake.log"
+    #)
     
     # Remove the MSI file from the install location
-    file(REMOVE "${installLocation}/${filename}")
+    #file(REMOVE "${installLocation}/${filename}")
     
     # Check if the install location has files or directories
-    file(GLOB filesAndDirs "${installLocation}/*")
-    if(NOT filesAndDirs)
-        message(STATUS "Installer had no files or dirs to extract")
-    endif()
+    #file(GLOB filesAndDirs "${installLocation}/${packstem}/*")
+    #if(NOT filesAndDirs)
+    #    message(STATUS "Installer had no files or dirs to extract")
+    #endif()
     
     # Copy the extracted files to the SDK install folder
-    if(EXISTS "${installLocation}")
-        file(COPY "${installLocation}/" DESTINATION "${installFolderSdk}/")
+    if(EXISTS "${installLocation}/${packstem}/SourceDir/")
+        file(COPY "${installLocation}/${packstem}/SourceDir/" DESTINATION "${installFolderSdk}/")
     else()
+        message(STATUS "Installer had no files or dirs to extract")
         message(STATUS "Skipping '${componentName}'")
     endif()
     
@@ -114,28 +123,14 @@ block()
     
     # Handle specific component
     if(componentName MATCHES "WindowsAppCertificationKitNativeComponents-x64_en-us")
-        set(kitsPath "${installFolderSdk}/Program Files/Windows Kits")
+        set(kitsPath "${installFolderSdk}/Windows Kits")
         file(MAKE_DIRECTORY "${kitsPath}")
         file(COPY "${installLocation}/Windows Kits" DESTINATION "${kitsPath}")
     endif()
   endforeach()
 
+  # Remove unknown stuff
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Windows App Certification Kit/")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Microsoft/")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Microsoft SDKs/")
 endblock()
-
-# copy(self, "winsdk-config.cmake", Path(self.source_folder), Path(f"{self.package_folder}/share/winsdk"))
-
-# #Cleanup unused stuff
-# rmdir(self, path.join(self.package_folder, "single_components"))
-# rmdir(self, path.join(self.package_folder, "Windows App Certification Kit"))
-# rmdir(self, path.join(self.package_folder, "Microsoft"))
-
-# subfolder = "Program Files/Windows Kits/10/Licenses"
-# rtf_file = path.join(self.package_folder,subfolder,self.json_data["sdk-folder"],"sdk_license.rtf")
-# txt_file = Path(rtf_file).with_suffix('.txt')
-# self.run(f'pandoc \"{rtf_file}\" -t plain -o \"{txt_file}\"')
-# with open(txt_file) as file:
-#     license_text = file.read()
-
-# with open(path.join(self.package_folder, "share/winsdk/winsdk-version-info.cmake" ),'w') as file:
-#     cmake_info = f'set(WinSDK_VERSION \"{self.json_data["sdk-folder"]}\")'
-#     file.write(cmake_info)

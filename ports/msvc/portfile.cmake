@@ -19,7 +19,7 @@ if(NOT VCPKG_CRT_LINKAGE STREQUAL "static")
 
     if(NOT VCPKG_BUILD_TYPE)
         file(COPY "${CURRENT_PACKAGES_DIR}/VS/VC/Redist/MSVC/${VCToolkit_REDIST_VERSION}/debug_nonredist/x64/Microsoft.VC143.DebugCRT/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(COPY "${CURRENT_PACKAGES_DIR}/VS/VC/Redist/MSVC/${VCToolkit_REDIST_VERSION}/debug_nonredist/x64/Microsoft.VC143.DebugMFC/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")  
+        file(COPY "${CURRENT_PACKAGES_DIR}/VS/VC/Redist/MSVC/${VCToolkit_REDIST_VERSION}/debug_nonredist/x64/Microsoft.VC143.DebugMFC/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(COPY "${CURRENT_PACKAGES_DIR}/WinSDK/Windows Kits/10/bin/${WinSDK_VERSION}/x64/ucrt" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(COPY "${CURRENT_PACKAGES_DIR}/WinSDK/Windows Kits/10/Redist/${WinSDK_VERSION}/ucrt/DLLs/x64/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin" PATTERN "ucrtbase.dll" EXCLUDE)
     endif()
