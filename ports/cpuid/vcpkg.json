@@ -4,7 +4,7 @@
   "description": "Provides CPU identification for the x86 (and x86_64)",
   "homepage": "https://github.com/anrieff/libcpuid",
   "license": "MIT",
-  "supports": "(x86 | x64 | arm | linux) & !uwp",
+  "supports": "(x86 | x64 | arm) & linux & !uwp"
   "dependencies": [
     {
       "name": "vcpkg-cmake",
