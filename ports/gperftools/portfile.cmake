@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -Dgperftools_build_benchmark=OFF
         ${OPTIONS}
     OPTIONS_DEBUG
