@@ -1,8 +1,16 @@
 diff --git a/libcpuid/CMakeLists.txt b/libcpuid/CMakeLists.txt
-index 09189ef..e1a43c2 100644
+index 09189ef..f82de28 100644
 --- a/libcpuid/CMakeLists.txt
 +++ b/libcpuid/CMakeLists.txt
-@@ -21,7 +21,7 @@ if(UNIX)
+@@ -14,14 +14,14 @@ set(cpuid_sources
+     asm-bits.c
+     rdcpuid.c)
+ 
+-if(WIN32)
++if(MSVC)
+   list(APPEND cpuid_sources msrdriver.c)
+ endif()
+ if(UNIX)
    add_compile_definitions(_GNU_SOURCE)
  endif(UNIX)
  
