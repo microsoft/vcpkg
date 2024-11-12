@@ -20,12 +20,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    {
-      "name": "tools",
-      "platform": "!android & !ios"
-    }
-  ],
   "features": {
     "apng": {
       "description": "This is backward compatible with the regular libpng, both in library usage and format"
