@@ -15,8 +15,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME  "osqpeigen" CONFIG_PATH "lib/cmake/OsqpEi
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(
-  INSTALL "${SOURCE_PATH}/LICENSE"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
