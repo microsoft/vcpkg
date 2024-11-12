@@ -131,6 +131,3 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/hosting/test"
     "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/utility/test"
 )
-
-# Suppress CRT linkage check
-set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
