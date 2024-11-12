@@ -5,6 +5,7 @@
   "description": "A cross-platform FTP/FTPS client library based on Boost.Asio.",
   "homepage": "https://github.com/deniskovalchuk/libftp",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "boost-asio",
     "boost-format",
