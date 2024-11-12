@@ -1,0 +1,17 @@
+Index: SConstruct
+===================================================================
+--- SConstruct	(revision 1920717)
++++ SConstruct	(working copy)
+@@ -324,7 +324,11 @@
+   if aprstatic:
+     apr_libs='apr-1.lib'
+     apu_libs='aprutil-1.lib'
+-    env.Append(LIBS=['shell32.lib', 'xml.lib'])
++    env.Append(LIBS=['shell32.lib'])
++    if debug:
++      env.Append(LIBS=['libexpatdMD.lib'])
++    else:
++      env.Append(LIBS=['libexpatMD.lib'])
+   else:
+     apr_libs='libapr-1.lib'
+     apu_libs='libaprutil-1.lib'
