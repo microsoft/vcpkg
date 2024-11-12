@@ -290,7 +290,7 @@ __pycache__/
 /packages/
 /scripts/buildsystems/tmp/
 #ignore custom triplets
-/triplets/*
+
 #add vcpkg-designed triplets back in
 !/triplets/arm-uwp.cmake
 !/triplets/arm64-windows.cmake

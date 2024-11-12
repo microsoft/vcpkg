@@ -1,0 +1,14 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(VCToolKit)
+find_dependency(WinSDK)
+
+set(${CMAKE_FIND_PACKAGE_NAME}_PACKAGE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+list(APPEND CMAKE_PROGRAM_PATH "${${CMAKE_FIND_PACKAGE_NAME}_PACKAGE_ROOT}/MSBuild/Current/Bin")
+
+find_program(MSBUILD_EXECUTABLE NAMES MSBuild PATHS "${${CMAKE_FIND_PACKAGE_NAME}_PACKAGE_ROOT}/MSBuild/Current/Bin" REQUIRED NO_DEFAULT_PATH NO_CACHE)
+
+set(msbuild_FOUND TRUE)
+set(MSBUILD_FOUND TRUE)
+set(MSBuild_FOUND TRUE)
