@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vczh-libraries/Release
-    REF "1.12.10.1"
-    SHA512 8884709c919e7536b89da2cc9905a2d71260668f9ce63fa3d4f13c5cc58dd2fade481e738d756fde4c0bc3c5eb9c79db5609b03953838dfb3b964d3463b75432
+    REF "${VERSION}"
+    SHA512 327f62a03e45f90cdf84a973b097b0e7643848fe771919044c1b83635e74b26439fe96fb413d100b33ce030a013a0cb84b34597ca69de2478a4c773ba9b2ccf2
     HEAD_REF master
     PATCHES 
         fix-tool-build.patch
