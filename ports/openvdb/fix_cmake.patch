@@ -47,7 +47,7 @@ index 33b0838..c1e9d00 100644
    if(OpenVDB_USES_ZLIB)
      list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
 diff --git a/nanovdb/nanovdb/CMakeLists.txt b/nanovdb/nanovdb/CMakeLists.txt
-index 4e0284e..1fd1dfa 100644
+index 4e0284e..ca3449b 100644
 --- a/nanovdb/nanovdb/CMakeLists.txt
 +++ b/nanovdb/nanovdb/CMakeLists.txt
 @@ -122,15 +122,15 @@ if(NANOVDB_USE_OPENVDB)
@@ -79,7 +79,7 @@ index 4e0284e..1fd1dfa 100644
  endif()
  
 diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
-index 3db0e4e..733dcbf 100644
+index 3db0e4e..9475709 100644
 --- a/openvdb/openvdb/CMakeLists.txt
 +++ b/openvdb/openvdb/CMakeLists.txt
 @@ -121,7 +121,7 @@ if(OPENVDB_USE_DELAYED_LOADING)
@@ -91,51 +91,28 @@ index 3db0e4e..733dcbf 100644
  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
    if(${TBB_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
      message(DEPRECATION "Support for TBB versions < ${FUTURE_MINIMUM_TBB_VERSION} "
-@@ -139,37 +139,7 @@ endif()
+@@ -150,6 +150,7 @@ endif()
  
- if(USE_LOG4CPLUS)
-   # Find Log4CPlus libraries
--  find_package(Log4cplus ${MINIMUM_LOG4CPLUS_VERSION} REQUIRED)
--  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_LOG4CPLUS_VERSION)
--    if(${Log4cplus_VERSION} VERSION_LESS FUTURE_MINIMUM_LOG4CPLUS_VERSION)
--      message(DEPRECATION "Support for Log4cplus versions < ${FUTURE_MINIMUM_LOG4CPLUS_VERSION} "
--        "is deprecated and will be removed.")
--    endif()
--  endif()
--endif()
--
--if(USE_BLOSC)
--  # Find Blosc libraries
--  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
--  if(Blosc_VERSION)
--    if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BLOSC_VERSION)
--      if(${Blosc_VERSION} VERSION_LESS FUTURE_MINIMUM_BLOSC_VERSION)
--        message(DEPRECATION "Support for Blosc versions < ${FUTURE_MINIMUM_BLOSC_VERSION} "
--          "is deprecated and will be removed.")
--      endif()
--    endif()
--    # Print a warning if using of the blosc versions with regression issues
--    # with Blosc 1.5.0 caches.
--    if((Blosc_VERSION VERSION_GREATER_EQUAL 1.11.0 AND
--        Blosc_VERSION VERSION_LESS 1.14.0) OR
--       (Blosc_VERSION VERSION_GREATER_EQUAL 1.16.0 AND
--        Blosc_VERSION VERSION_LESS 1.16.2))
--      message(WARNING "The following Blosc versions are incompatible with the "
--        "recommended builds of OpenVDB: [1.11.0 -> 1.14.0) [1.16.0, 1.16.1]. "
--        "Found Blosc version '${Blosc_VERSION}' which falls in this range. We "
--        "strongly recommend using the new future minimum version '${FUTURE_MINIMUM_BLOSC_VERSION}'")
--    endif()
--  endif()
+ if(USE_BLOSC)
+   # Find Blosc libraries
++  if(0)
+   find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
+   if(Blosc_VERSION)
+     if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BLOSC_VERSION)
+@@ -170,6 +171,8 @@ if(USE_BLOSC)
+         "strongly recommend using the new future minimum version '${FUTURE_MINIMUM_BLOSC_VERSION}'")
+     endif()
+   endif()
++  endif()
 +  find_package(blosc CONFIG REQUIRED)
  else()
    message(WARNING "Blosc support is disabled. It is strongly recommended to "
      "enable blosc for optimal builds of OpenVDB and to support compatible "
-@@ -226,7 +196,12 @@ endif()
+@@ -226,7 +229,11 @@ endif()
  # /usr/local
  
  if(USE_BLOSC)
 -  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS Blosc::blosc)
-+  find_package(blosc CONFIG REQUIRED)
 +  if(BUILD_SHARED_LIBS)
 +    list(APPEND OPENVDB_CORE_DEPENDENT_LIBS blosc_shared)
 +  else()
