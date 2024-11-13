@@ -5665,8 +5665,8 @@
       "port-version": 1
     },
     "luau": {
-        "baseline": "0.651",
-        "port-version": 0
+      "baseline": "0.651",
+      "port-version": 0
     },
     "luminoengine": {
       "baseline": "0.10.1",
@@ -9465,7 +9465,7 @@
       "port-version": 4
     },
     "vlpp": {
-      "baseline": "1.2.10.1",
+      "baseline": "1.2.10.2",
       "port-version": 0
     },
     "volk": {
