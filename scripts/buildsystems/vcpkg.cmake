@@ -875,7 +875,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
 endmacro()
 
 cmake_policy(PUSH)
-cmake_policy(VERSION 3.7.2...3.10)
+cmake_policy(VERSION 3.16)
 
 set(VCPKG_TOOLCHAIN ON)
 set(Z_VCPKG_UNUSED "${CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION}")
