@@ -37,7 +37,7 @@ if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 3.7.2...3.10)
+cmake_policy(VERSION 3.16)
 
 include(CMakeDependentOption)
 
