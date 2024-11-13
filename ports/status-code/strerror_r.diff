@@ -1,0 +1,13 @@
+diff --git a/include/status-code/posix_code.hpp b/include/status-code/posix_code.hpp
+index 73f671c..a57c849 100644
+--- a/include/status-code/posix_code.hpp
++++ b/include/status-code/posix_code.hpp
+@@ -41,7 +41,7 @@ namespace detail
+ {
+   namespace avoid_string_include
+   {
+-#if defined(__GLIBC__) && !defined(__UCLIBC__)
++#if (defined(__GLIBC__) && !defined(__UCLIBC__)) || !((_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600) && ! _GNU_SOURCE)
+     // This returns int for non-glibc strerror_r, but glibc's is particularly weird so we retain it
+     extern "C" char *strerror_r(int errnum, char *buf, size_t buflen);
+ #else
