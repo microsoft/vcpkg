@@ -1,12 +1,8 @@
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-#set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
+set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
 
 find_program(pwsh_exe NAMES pwsh powershell)
-
-set(WinSDK_VERSION "10.0.26100.0")
-set(VCToolkit_VERSION "14.41.34120")
-set(VCToolkit_REDIST_VERSION "14.40.33807")
 
 include("${CMAKE_CURRENT_LIST_DIR}/portfile_winsdk.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/portfile_toolkit.cmake")

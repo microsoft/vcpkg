@@ -1,4 +1,4 @@
-block()
+block(PROPAGATE WinSDK_VERSION)
   set(WinSDK_FILES "")
   include("${CMAKE_CURRENT_LIST_DIR}/download_sdk.cmake")
 
@@ -86,20 +86,6 @@ block()
     )
     cmake_path(GET msi FILENAME packstem)
     string(REPLACE ".msi" "" packstem "${packstem}")
-    #vcpkg_execute_required_process(
-    #    COMMAND msiexec /a "${msi}" /lvoicewarmupx "msiexec_${componentName}.log" /quiet /qn "TARGETDIR=${installLocation}"
-    #    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-    #    LOGNAME "msiexec_${componentName}_cmake.log"
-    #)
-    
-    # Remove the MSI file from the install location
-    #file(REMOVE "${installLocation}/${filename}")
-    
-    # Check if the install location has files or directories
-    #file(GLOB filesAndDirs "${installLocation}/${packstem}/*")
-    #if(NOT filesAndDirs)
-    #    message(STATUS "Installer had no files or dirs to extract")
-    #endif()
     
     # Copy the extracted files to the SDK install folder
     if(EXISTS "${installLocation}/${packstem}/SourceDir/")

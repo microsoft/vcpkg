@@ -1,31 +1,31 @@
 
 
-set(MSBuild_Microsoft.Build_URL "https://download.visualstudio.microsoft.com/download/pr/2b1c8a10-949f-4896-b45d-55c4da403ed5/5b67a1666e378cc436fc695b33872ea2b84aac05a17e862d184351c2899f14da/Microsoft.Build.vsix")
-set(MSBuild_Microsoft.Build_SHA512 "2a7ece36f4eb5f847550340220e9b7f64d47422fd2e75c5d3c39edf4d8de35a0b3002abfd603adaa49c83c535020be7ed6139edcfe2a3a3d542da59f7e554789")
+set(MSBuild_Microsoft.Build_URL "https://download.visualstudio.microsoft.com/download/pr/8e0dd956-057c-4217-8f84-98bb95e71eac/efcb5aebe9d535a89ed05d8b727f08ce2e06074895b27698e4149d5b30a9488b/Microsoft.Build.vsix")
+set(MSBuild_Microsoft.Build_SHA512 "1f19e05c3c8b9c9d704c9331dfb1995a2d5deb22cfbec7bbfe624cfd0f590bdd523e8a5c93b03c2c8bb529ef85159fcf8af3e254ad052b4b3d86710ba7cb2125")
 set(MSBuild_Microsoft.Build_FILENAME "Microsoft.Build.vsix")
 list(APPEND MSBuild_FILES Microsoft.Build)
 
 
-set(MSBuild_Microsoft.Build.Arm64_URL "https://download.visualstudio.microsoft.com/download/pr/2b1c8a10-949f-4896-b45d-55c4da403ed5/76058ef269d7b076a46aeb29ce3c541b00a67a540f9a74955f1ad2678821436f/Microsoft.Build.Arm64.vsix")
-set(MSBuild_Microsoft.Build.Arm64_SHA512 "d910dc3680d484521aa42bb401959e0fbb27a67d941fbec75ceeee24dcb5bf8616a0f53795a9fc6b2dbbf9c0efa12451dd953573a0d456c88bc1caf6866a234a")
+set(MSBuild_Microsoft.Build.Arm64_URL "https://download.visualstudio.microsoft.com/download/pr/8e0dd956-057c-4217-8f84-98bb95e71eac/608743fe8481af447e5abaee9e964ea0a98fbb9efa7596623a8e57d2538ad91a/Microsoft.Build.Arm64.vsix")
+set(MSBuild_Microsoft.Build.Arm64_SHA512 "0fe1edd952299ff6455cd74827daa6f9c867596e65b394dfd2193d7c51a33215896fa337872e22e2dad34bdf5d409e5fffdc32773a3c065cd53d793739973d6d")
 set(MSBuild_Microsoft.Build.Arm64_FILENAME "Microsoft.Build.Arm64.vsix")
 list(APPEND MSBuild_FILES Microsoft.Build.Arm64)
 
 
-set(MSBuild_Microsoft.Build.Dependencies_URL "https://download.visualstudio.microsoft.com/download/pr/79bf57fb-c9a4-46fd-b7a1-6e4496fe317c/22342166a6a559d730fdc5c63a51d1e2ca4b30af6dd173313213f169d7be4ee2/payload.vsix")
-set(MSBuild_Microsoft.Build.Dependencies_SHA512 "db771a8965fb1fe33a229adddb881c7aeaa775d595ee447eafeba28bfb42fcc6549f3fec04af641234f6591ef23df078afdac57e8c661a19a1ea7b6be6b13b8d")
+set(MSBuild_Microsoft.Build.Dependencies_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/5b7fba43f6d2baa933b3ebc61a6b3bb9da2408aac52b9afc62563dffd12ce911/payload.vsix")
+set(MSBuild_Microsoft.Build.Dependencies_SHA512 "b154dfc3be242c843ca1213b2dead088d28785e9ca2981f01faddda3f07b0226a030eacceb8069e235353423402fe612a2d73f9e485b468782f5d331ea739f2e")
 set(MSBuild_Microsoft.Build.Dependencies_FILENAME "Microsoft.Build.Dependencies_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.Build.Dependencies)
 
 
-set(MSBuild_Microsoft.CodeAnalysis.Compilers_URL "https://download.visualstudio.microsoft.com/download/pr/b7b1b518-acee-4d6a-ad54-41ff11d0a6af/570eecddab4dc99108ab6827e95690fe2ae94d5f922d41a28fe603cf19827802/Microsoft.CodeAnalysis.Compilers.x64.vsix")
-set(MSBuild_Microsoft.CodeAnalysis.Compilers_SHA512 "09c812bb8ab1cfd7396c2db196293b302d88a5b6e56d20e6258f9126cfacff0222f33bb0c721261768e4a0dfeb43cce8f592b51119166fa2b6c789df40458b7f")
+set(MSBuild_Microsoft.CodeAnalysis.Compilers_URL "https://download.visualstudio.microsoft.com/download/pr/79dc36ba-d83f-4645-bbf2-31fa5e2511ef/226979873629fe2e236aa14f12d54b50a7e6a7a2b90ba7f86718b45c7baf189b/Microsoft.CodeAnalysis.Compilers.x64.vsix")
+set(MSBuild_Microsoft.CodeAnalysis.Compilers_SHA512 "86e66fa680522bab8a34a1dd7f491007063fc72bc13cb4cf4d142e6c7a0d6653093b011d677fff218d59975aa0f3b343f8da3479337cca1ea5cf4654759fdb06")
 set(MSBuild_Microsoft.CodeAnalysis.Compilers_FILENAME "Microsoft.CodeAnalysis.Compilers.x64.vsix")
 list(APPEND MSBuild_FILES Microsoft.CodeAnalysis.Compilers)
 
 
-set(MSBuild_Microsoft.Net.Core.SDK.MSBuildExtensions_URL "https://download.visualstudio.microsoft.com/download/pr/5c44da30-597d-4163-aff5-9e5ad3096e27/bdea69e469f520484fcf89d1b45ff35a4c7f6b26840102d49ff7a12e674a57ad/payload.vsix")
-set(MSBuild_Microsoft.Net.Core.SDK.MSBuildExtensions_SHA512 "321ad4fcacff7250fe9aeaafdc5d9832bfc03d9d56c1709f4b3b42807b2fb503253807b874286abca12c9bfeb8c537ce2e66b16121ef6d5115eda57c6b129b20")
+set(MSBuild_Microsoft.Net.Core.SDK.MSBuildExtensions_URL "https://download.visualstudio.microsoft.com/download/pr/340d36cc-c493-414e-8abe-8742dfbad027/6921d35fc35e8dcf1152396450abe79087bff23647fca76343a126bd8062640c/payload.vsix")
+set(MSBuild_Microsoft.Net.Core.SDK.MSBuildExtensions_SHA512 "b76118f21710acdd400de2bc00403386d1fd6faf601bc26be0d14bee7f0f284f407af766374553e73167ab76ca24ffeb36ffeb37dc960f88324a57096d9125f2")
 set(MSBuild_Microsoft.Net.Core.SDK.MSBuildExtensions_FILENAME "Microsoft.Net.Core.SDK.MSBuildExtensions_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.Net.Core.SDK.MSBuildExtensions)
 
@@ -36,44 +36,44 @@ set(MSBuild_Microsoft.NuGet.Build.Tasks.Setup_FILENAME "Microsoft.NuGet.Build.Ta
 list(APPEND MSBuild_FILES Microsoft.NuGet.Build.Tasks.Setup)
 
 
-set(MSBuild_Microsoft.PythonTools.BuildCore.Vsix_URL "https://download.visualstudio.microsoft.com/download/pr/e5093730-1388-4868-b34b-9e4fe52bfec9/53a32b9b62c99732f2a30ed80ec5edb787effbd9a915894715f89f7c4e799d99/Microsoft.PythonTools.BuildCore.Vsix.vsix")
-set(MSBuild_Microsoft.PythonTools.BuildCore.Vsix_SHA512 "a3e56d8839ba4a2325d97c8a322dff5ff8e033e2b89aae097d4040c9f119e028003f133c0e425f08a82aa76e93d7a88ef6264b194205fc87840b57fc838bdcc6")
+set(MSBuild_Microsoft.PythonTools.BuildCore.Vsix_URL "https://download.visualstudio.microsoft.com/download/pr/42786999-d45b-4428-b946-248bb9676505/9239cf6a3a6583efd2b93c611e339fd8295939ccfe1607ad78f180f3c6d95fdd/Microsoft.PythonTools.BuildCore.Vsix.vsix")
+set(MSBuild_Microsoft.PythonTools.BuildCore.Vsix_SHA512 "2174277ee2f69ff10890030e6a62e220cadc118c6863955ad8659aca07c0207d5130a76f880261a5317d376c7c62caeab62e5f38489fa7d012f6bda045f4c7ff")
 set(MSBuild_Microsoft.PythonTools.BuildCore.Vsix_FILENAME "Microsoft.PythonTools.BuildCore.Vsix.vsix")
 list(APPEND MSBuild_FILES Microsoft.PythonTools.BuildCore.Vsix)
 
 
-set(MSBuild_Microsoft.VisualStudio.BuildTools.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/e2e1af0b15e506c75fcfeb64d69b562c81040fd8e7c2093d86fbccb513c4a8cc/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.BuildTools.Resources_SHA512 "9f8f19b375bed3fc44e200fbfe41a855e8851728c2c8c33ca02464f42198268b58e0b27f5eb945ccbe2c4cfe53bffa92218b42b34de65ae61b0d853e4548bb76")
+set(MSBuild_Microsoft.VisualStudio.BuildTools.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/359a8e2e4fcadf4ba156224484677a7e4c0982a54d2216fdf1ef1120acd8193c/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.BuildTools.Resources_SHA512 "3b68a9e3008b5612fa5af5d48aba31e6166bf1db9d5a7c29e90e1ff1e8c49b4c3e6c704a3acf72490936197bdddea0618d81baf7218a76b908ae0d9684a16c79")
 set(MSBuild_Microsoft.VisualStudio.BuildTools.Resources_FILENAME "Microsoft.VisualStudio.BuildTools.Resources_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.BuildTools.Resources)
 
 
-set(MSBuild_Microsoft.VisualStudio.NuGet.BuildTools_URL "https://download.visualstudio.microsoft.com/download/pr/cdadf465-ef07-413a-baaf-ac5cb2e04c66/51e2df72fa15384bfcc0513e9e5130988453b6667f502362b25ebe7e83dab27e/Microsoft.VisualStudio.NuGet.BuildTools.vsix")
-set(MSBuild_Microsoft.VisualStudio.NuGet.BuildTools_SHA512 "1ab9c67a7c1183de24e25fccb97e146e798fe174f5bc13ef716c8089bd302a3d1826147cc84f175efed63c9e02bd45d5fbcb455067f2c7277532f1da30a38697")
+set(MSBuild_Microsoft.VisualStudio.NuGet.BuildTools_URL "https://download.visualstudio.microsoft.com/download/pr/b656722a-75d7-4f98-b230-a4a8e8db4cbf/2902a9a1ad1e1962998a5dda0e0370dfef017445dccccc24dcc7f5e4fbdbaaf7/Microsoft.VisualStudio.NuGet.BuildTools.vsix")
+set(MSBuild_Microsoft.VisualStudio.NuGet.BuildTools_SHA512 "69375e12ed09ca50e042f6b995ec4f8325fbdedf9327760a9438d64bbd8351f4318b227ede079e37cff8a9aad025147c3ecc68e70503f418c71ab0382b31cee0")
 set(MSBuild_Microsoft.VisualStudio.NuGet.BuildTools_FILENAME "Microsoft.VisualStudio.NuGet.BuildTools.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.NuGet.BuildTools)
 
 
-set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools_URL "https://download.visualstudio.microsoft.com/download/pr/322bfa6c-4a2f-401d-83dd-8abf0a47bbe4/f31c54a6dcea65bcda71695072a73df902b759cc917064c2c5d1b0a1e48b9823/Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.vsix")
-set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools_SHA512 "664afd3fc710bc0a98a8324ca825aa5fa76f7019f7d887a346c5aee0d81ee51e70d84c8dc400fcf22d9ef6e6f19149a348b0bc17470981bf46f177de61ece678")
+set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools_URL "https://download.visualstudio.microsoft.com/download/pr/96ce9177-3a22-49cd-b278-6dbbccb1580d/919dcd4f03b94a4f60348556fa243d803c711adea012c7ce5ed438b5815f390b/Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.vsix")
+set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools_SHA512 "60dc1fc926e1f1117c6ccc453a0569b2fb5eb94ac93a33a756fd9124d27b85ea95b4d96cc4d147163f09470dd2dca4f87078edc2fabc78938b18a86e8e52ec0a")
 set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools_FILENAME "Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools)
 
 
-set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/322bfa6c-4a2f-401d-83dd-8abf0a47bbe4/d1305757863df8b98311edd5d73068febe80ae83d93d53896fd55d5d3a8ff23b/Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources.vsix")
-set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources_SHA512 "cf1091c453feab1b8a5b2047dc328074e34ccc41d096e0bfb9a0ff8177eb1fd48ca5efa8bd108049899548f56b4a5c646118daa3ced25bdd004eef91595c1429")
+set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/96ce9177-3a22-49cd-b278-6dbbccb1580d/d47a4232e3b4db291239cddef07ddf0e1560805e3504fec4633edc1fdb107e6b/Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources.vsix")
+set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources_SHA512 "d20c6e432a98d73bcb01e3251a4f0de168359128557d95066b7a6291b52915a19059bd6f36f0e31563f378f6465da3d635d7e3a60ef936821492611abcc4c984")
 set(MSBuild_Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources_FILENAME "Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.OfficeDeveloperTools.BuildTools.Resources)
 
 
-set(MSBuild_Microsoft.VisualStudio.SDK.Build_URL "https://download.visualstudio.microsoft.com/download/pr/03208c0f-ea60-4142-a6cd-f028a96da57d/eff772ecee098ad225c3778ac2f552bdb69a79eb52842afbde2ad53f64e12917/Microsoft.VisualStudio.SDK.Build.vsix")
-set(MSBuild_Microsoft.VisualStudio.SDK.Build_SHA512 "ee623ed17b01ac9c317aca4d08dc74f3b34d73e96122adc4f590c43025159e3d02828e89ae6d7136c5e1f477b88042296c9cb7de81fdde10425a4205f49684ba")
+set(MSBuild_Microsoft.VisualStudio.SDK.Build_URL "https://download.visualstudio.microsoft.com/download/pr/42786999-d45b-4428-b946-248bb9676505/711c57303c5a9dcee231c3f9387bc5378b9c44dbe73404d805b9de583f6ed5cc/Microsoft.VisualStudio.SDK.Build.vsix")
+set(MSBuild_Microsoft.VisualStudio.SDK.Build_SHA512 "cc240d21338cd1953266683ff9a5077302c39b754deabe9a9d0ea32444775f3122273942d9b9e013db89e2086baec6659e6f780bb63e1c4a79c0ca50b7bc5f16")
 set(MSBuild_Microsoft.VisualStudio.SDK.Build_FILENAME "Microsoft.VisualStudio.SDK.Build.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.SDK.Build)
 
 
-set(MSBuild_Microsoft.VisualStudio.TextTemplating.MSBuild_URL "https://download.visualstudio.microsoft.com/download/pr/69e24482-3b48-44d3-af65-51f866a08313/03abfebbefd643e0fee6e2064ca2f2229470550fb2adbd90b07e80b941a031ca/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.TextTemplating.MSBuild_SHA512 "afa540fca846e7f355eb0f9368d9ecddd90383c3cd49ac7f2b776b78e2f581cc99a8c098379f3319feaf3042f58ae778dcd8532c78701e20d86dc6e11a5cc6cf")
+set(MSBuild_Microsoft.VisualStudio.TextTemplating.MSBuild_URL "https://download.visualstudio.microsoft.com/download/pr/5536698c-711c-4834-876f-2817d31a2ef2/a512ade23ed6a64127d51954eb87aebdb3d701eb55454d54f2080340b338ea27/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.TextTemplating.MSBuild_SHA512 "a270465065c59bb9ed02cba6d0cccd5eef4df13cb677656e74cfda30998b50326d2cbc2991981019be206e6eb0250eb41bab1e3787bb094a6e306b8cb65dcf7d")
 set(MSBuild_Microsoft.VisualStudio.TextTemplating.MSBuild_FILENAME "Microsoft.VisualStudio.TextTemplating.MSBuild_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.TextTemplating.MSBuild)
 
@@ -120,14 +120,14 @@ set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Base.UWP_FILENAME "Microsoft.Visua
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.Base.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm_URL "https://download.visualstudio.microsoft.com/download/pr/03208c0f-ea60-4142-a6cd-f028a96da57d/b8a074abddaadcd535aa2aa13b1d0d54fb16dbaf277a9c0073a4871016abe8c7/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm_SHA512 "4f4ba2a9939bcc5a1347d37b30c99bf4cf7e64618e9aeab98013b280e2c6f2bdac40a71a6913a57fe90efb946e13013b299d4c4824ebd9c930ce1e1589e3bef9")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/7f981d8abb73e2fd9bda7ec34223b1d939f636297b98edccd695ba23023d9ec1/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm_SHA512 "7eedbf887cff41287fc325dc0dbe2cb1fbaaaeea7c0569fc3bb7f46acbd85d4d9df8e717e8ec8d31afe54bb6b6770c75bba7aa08c6e8346fe5bfe2a165972356")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm_FILENAME "Microsoft.VisualStudio.VC.MSBuild.Llvm_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.Llvm)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/03208c0f-ea60-4142-a6cd-f028a96da57d/d944777d2856c0fbd63258d3adac7ba3d60f2d80f833f5e7c5a6b81b3d355cb4/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources_SHA512 "87a0044552c18b18dbe1d7aaf37479aa401eed91640a8f26f53b4dacefcfcfb4115a223a4e4ac7375c22462897c2847feef14dec6f75824c52220cd2334b9b94")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/781d9d5040aa5f2305668645178806639e188de813de0251a66335c20ff6ddcf/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources_SHA512 "7d959f4e49def6d240672e280f66f622579c8dd2981eebf68f3e378a6ef7f024ac16cec34a1b84624aebd5b528503128a24a23739f27791e5979206a43786b05")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources_FILENAME "Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.Llvm.Resources)
 
@@ -174,110 +174,110 @@ set(MSBuild_Microsoft.VisualStudio.VC.Msbuild.v150.x86_FILENAME "Microsoft.Visua
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.Msbuild.v150.x86)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/af32e4266e46e54e45e63f6145a1a4ef2e4c3f7a1ffb525de1624c9cbd3ee8aa/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM_SHA512 "227be21e4f792c73a937bfdda8ee48ef61ecc3fe691265d323f5b36567166b0791c054313c946ef287c0ed11f5592e6a3cfcde81b988c85dc0d550ba02014ec5")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/8053009b0108ea6555b50e389fdc64cbe3687748f7a9e96a8b62b24f9fa4c091/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM_SHA512 "2f20f166a9f6d517ad8c6ea9ed966dd57ea87c1caba703686f91fbf06af5dd93a5e645b16d9b53a7b21b0f07237304246105017f951167474be59daed0f75232")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.ARM_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.ARM)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/5b74ad79c36f72a1a0e24687272b5d5bad0046892f168b0e2ca5ad53504c5e85/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP_SHA512 "f7c2e0876067ff5ca1457cd8468cc5b4f1eb96f36f2a0e54587031ef4df571f5c85509535daca88050594d2f8095aa86ec41ecb6233aa5163c024ba8230ea841")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/43faafbb72d29db7002fbee06c950e76909c377a20e2b92869051af724dedda4/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP_SHA512 "a1f1e530a4859a548957030bce9a6b445a2d3a9f08da7463c5f36a9ea2347845a248b69894593b8dc30330528538b1df3383002cb07942dd015b83fdf74688a9")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.Arm.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/927e815b1a8494a0ec6c9bc4ce8998c7aec5a21c441dc2e27d8dd085555d5956/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143_SHA512 "4d804d702e335c8767d1871564884c64dad063a731ad3f53a624fc6eee797497b25825ccb321d536c9fe249b622b81c6644dd4f5e6335148e2d76a6508de1635")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/52f197c1ae94d7c717ae7f0a1eee3718af6e0f9a23e47a5cd6a84f19c19d6da8/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143_SHA512 "932e3e653fded85af8ec288501e0e5c09abb5f6b0b8b5a21e5df8f4b13e3592d7bea9ccb14c44c92593ac12d62069f0e398f00bb2e3afa6a0987028ef86ebf7b")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.ARM.v143)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/dc6ad5d952278842a57323c8d57d3585861482059683968e74ae493e64bf8222/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64_SHA512 "016630e360d1edf297c49fdfea810a00f390ff812228092f225d7db823b81c59050470b039515ca9aceed69bea197c69b94ca0a1d9e7b413300460a3f45f0317")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/50c6c9b90d1c4d3e551afe217f19d1d74810bb49c5d8df4e98083b784ac9339d/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64_SHA512 "4373726953aeb7cd07569e0b53283f72cdcc12b44a09ea0bc18b34e1669b6621c420fa4d5f4fcf1373ba469ca7ee0afe286b941057e472065de4f1acbeba8f80")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.ARM64_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.ARM64)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/4110b9b4e2f5ec4f55fad2b343726875390b23e43bcb3b96efca5c49785c35c9/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP_SHA512 "992b205b76fac8d6caa571d7d5456d1c0832c54bf5b5f1a2cb02fddef6107da3fb0d729f50daf1b146cda8afefbd3368dfc13baadba255f6317a82bd7b77954d")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/c3eaec008a44fbdeec74186b02e1827e81e742b18b6a8a66c21e44c5f6f6e854/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP_SHA512 "c682cb7ddfc360f6cd161f16378d249d253df6c508b7174c62c26d128ce62117079c8d49f466a647ba46f4d21fa3c0833cb54967d3adde5e72ce24b5203d1374")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.Arm64.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/a59a3af0c9b7b6262371d8f8aeee6c3b52ee1b8048434d5a9126ed1a6e22ddb4/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143_SHA512 "9fec780ed6fa5312de2d7245f900ba67bb4d4cd9088c0adbf61402592bdd1934bf8996ec14b797e0ad7746ab5c56e8c46adda8a590b0e29af00bc1b2829d340e")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/fd56be660bbb6dd8ede9415d8797e052796671d893866ca03ee31f2e48d30688/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143_SHA512 "3cb36a340c441ba96e39f044e9e68b6061ac8fb787484e63c4695078b8050cadcb3856f08fdb96bab85268e033c70deab54be38f3a7eefda5676700934158086")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.ARM64.v143)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/2b1e25719ba6bd93f7a16801132f3147e268be69f575e9e030c2065c7360a35b/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC_SHA512 "67accf0c8069654924e9321615a1f823cbc76d74b8ab30fee6af8dfc2a4c51e02073874a43da3225b1cb39f10f80aa591ceac38ef5232c001f75df84795bb9f7")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/49ef0ec8de1e79a046088745602d962e8ded37efac1a8da024e0c9479ff11f87/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC_SHA512 "a894c72790f0dd6852766068a7fe7f705c42ffb70d54b75eae14bae72f52aeea579f93ed68de1144d94157ff864a88a4ab7a67227e78c52829753ec12856b1af")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/a402493351a49df41bcf6e4068c5ce924287b44487c0fa016c314e60ee06dfdd/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP_SHA512 "0d1268e131b1c99a24d0c549485d0ff6a33401416f0db68c7464b5b4173705132084f4aa2f3986b5db8833ea868df5ad081f9f81ee56ce71dbdbe70a7ecc77fb")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/dfaeae0103e943eca3e6a59017fbf103f83f0f96ee4f549bf81722118ee6d684/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP_SHA512 "0c394b599f569da9fc878c770db406217b93ea84d4fdb38e500f4833b70f797f84df0a1d1d3bde53468e30b1f9f31f10daec4c99e7ccb18654fcb2f6abe274c1")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.Arm64EC.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/7fffa5e311094b1883f8726b83d71024a31ea4a55238448d8ac2dacc0b16922f/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143_SHA512 "dd0158a61ad3055be9c77217c6007812c69f91a91a6347a59efdc3e424c241904a5957c771e0b61f8164d1e1ef4610cd9485b4f0dd7e0602488f0d3398a8ff67")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/1b01e8b42936d5bc4b557dbf3269d7de487687bf56249effb848cfa0b025e3b8/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143_SHA512 "45cfbfac3edcc060a6860c720f675b0897013eac7be4ea586724f934bc6a3d7ef3073bdd78a45d0fcd5564620efb986a2e466d9b01966cbb0711a64cff5575cb")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.ARM64EC.v143)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base_URL "https://download.visualstudio.microsoft.com/download/pr/69e24482-3b48-44d3-af65-51f866a08313/5aff24175df533aaf4460d52ebdd03fbc67c185146f5079da05908b32f65c4b2/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base_SHA512 "06786526ae4a344fcfa93758c940b3766f73ccab00574caea1f453aeff5f31811ba632d4b36d2c0d920c99d754f5f8221727786c7d717b0f59e88502c9077be7")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/0e5d5025f8d7a30f2ae3160b283da2592febce093fa2ad192b33fb7ae264a170/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base_SHA512 "9710b62bb8192c5fcfc136a0c1c4165dd530700aa6c059f61e26ecd5fe66c3170a54aaf7d8f7ce43090bf31b65b64f9016dd9ae926872e978c6d39cb5275fda1")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.Base_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.Base)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/79bf57fb-c9a4-46fd-b7a1-6e4496fe317c/69262f282974f86493a514f0a7f804820448233672f85fb9e93f0d0984f7fa27/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources_SHA512 "8350055937af3363b4099828c9f8ba07e1038a68f80a130d827e17500dc74757b5113e2669c7a3be064850695054e1df5029b6d0d90c3ac31b2d1491a6b7d1d4")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/76214ebc3f49d657dce7ba202db2cc8149f14c230e3e0858b0d578c00d6fcab0/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources_SHA512 "d0ccacd8e4d1308893d304ba80131117169eaf2271bfdc5d338f11ffa948ab1e3f1e69954ce7c9cd51d82ea1d6ee57d6bd928212c948e22198d3d7d7e0fcc27a")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.Base.Resources)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/69e24482-3b48-44d3-af65-51f866a08313/2074c9eef20430387754f94cc43d0145b1ccc085b70476db20809acbe3e9ce84/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP_SHA512 "ff018fdbe78749890f4766469dff7cad611f9b1afbda0f3af8d3342246eefdc5a6a554e2db3b1bdd9eb588dc11c4ebeffe6b39c756502a070629471a7652648a")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/6fae6d577693ae0cf3cb0e69922212580cf09a43b52086d1d8adbc50c409356f/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP_SHA512 "cf619d66ec8e4dc02626889c954c62b887ddc75a27d8903a445a6a31434c2940468d5dad5ef842a0dc2894e4d6ea597aaf575707d43481906874050e3877c3e5")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.Base.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/24ebd54fd133fbfc04855ebc4aa0fa50bc74b7ca3901e957d04e7a5abf6d312d/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64_SHA512 "5c3c93376015490cbe5cfc601b293726dda3782492c234c0838292ef2f210f8396ca29637fb26edae7b3e45e1940cfbbe423113e97c92e487c3bc73e1f940b2f")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/78002b7bc4284c31da232bef2de41129c26c03115c65bec9082cdd237f698a15/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64_SHA512 "b86894bf72b48833811d62361c470783fb579beba913720ca22860220c8529d3ee66efeec1dfa21c657339f46f1476c1e704fa33d26d2e9b25edc9231c0483f8")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.X64_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.X64)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/ad388f1317c9571d8a7c5f0ff5530ed180b60eed5310170b978406853be9bca7/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP_SHA512 "177917449a88e2a7e9ea7b5f73347c27c4a4e61d17f50e5b2cc5fca87b1f03924e406c2bba0a6987e75d5b2b6fe7ddc378324f8a98456c081cad80f1d7c1365d")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/435d11363fb83e00ec6bd44f1d2998eaf06ae5cda1806285cca330408974e151/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP_SHA512 "d803fb82eb43048a8e4391875b1f67d28d76dfe5d8b60e3f7d98d9e362d7f5e4de378929b0af1289875c0c3cad4e8acd900112a109b733bd884344d5d3e45488")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.X64.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/10a1b07cb1491bde6e1a8cd0b9adf27494b1bbce95e2821f43ce64a70df21306/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143_SHA512 "3c5733c42e0bd90b51c3845b6fc790bd141f50ce3eafcc48a7548545da544c97579e2de5824efba380a6482ae646dd20f04d1d1f262d64f8a69d38113427f3fb")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/45e6296e755cc5361c8691acef8034f832d3846e2dd361bb5be237bff5ec9925/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143_SHA512 "e71a2a1b026c1dd8dbc7e7ceb9da851c2d81db12bca5dc683d71a25656a9ce2c969af708cf995f4c79587e5347c6dee80311aee0c07cba99f4e38eaea9db5ecb")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.X64.v143)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/3d04e585f33b41056e4f4dadb05acf9457cb105575d49cd4b779de9d1f49529f/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86_SHA512 "d213a93cd0b7c77b2d093a5f5488a9229392dafce1a42058bb7fc7ce44a5fb38b3a6f782a5da74a10a2cd2a7ca44785473e8e7410e5c1f734873014df2fe3016")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/d2f969cfa07bf62c791763887652b4af4192c0d4fc5b3a9863ca024fc388b2f6/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86_SHA512 "732ceb410155b4014517d19930182adedffe548652fa8a7f50dce8be0842e2ab84c68cb3c7ae9b3ec6279838755792960ca48179433ff8af6f59e1321b9d2be6")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.X86_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.X86)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/88ce31e581965e34957e7ad8c9641e645b947569b17e8010a9f5a8a48049f787/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP_SHA512 "d47c038824d342347d0c9c076f638dd74c9d71acd439e78d5fc60d5f00b267356696cabe269a08d8d610149095f5d6242985588fc515c2af9640ec1292825612")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/eb44fce1ca2411699a13035588a23ad087ad30f2ff5da5692aa93c2491a62f77/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP_SHA512 "1d46a4d35db56b40beee76de94576367b7fbccdd40f697bef785f8b661114d93dda0397af4f63cdd6bd9d6ed55341ae77248556ce31512987108be716e92c98e")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.X86.UWP)
 
 
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143_URL "https://download.visualstudio.microsoft.com/download/pr/32e449ce-9028-43fd-a236-28186aebffc1/8ee3e6b2cb6d223e414abef04f092b42ba464123cce4035f034987717ae31566/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143_SHA512 "9937d9053cc7cf581a2d14be2fbcb890659bc4e9258f53c5563be57f409a77fbde6c873f43ee50ab1033ceb82554d55687ef5dc662eaa6800db596598adc21d6")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/187e0105485f7ec725c6c697590f240e14bc249ce9c65daaf7f2170f29b3a062/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143_SHA512 "e2778e0f6ce5db5068d91133264fc426a2eefca13141834412f3a9fd69fb84d8a0ea608fc638087fb722e350f281cc34d308e6a13c39e01aa47aea7bd7aacb00")
 set(MSBuild_Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143_FILENAME "Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.VC.MSBuild.v170.x86.v143)
 
@@ -312,31 +312,37 @@ set(MSBuild_Microsoft.VisualStudio.Vsto.BuildTools_FILENAME "Microsoft.VisualStu
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.Vsto.BuildTools)
 
 
-set(MSBuild_Microsoft.VisualStudio.Wcf.MSBuild_URL "https://download.visualstudio.microsoft.com/download/pr/79bf57fb-c9a4-46fd-b7a1-6e4496fe317c/c0336ff804ccdde605fa0c7ea04384569d5316717851af1751f9fd0cad398ba0/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.Wcf.MSBuild_SHA512 "5d0bcba914646a2b6c1924d39e0a2f3d59f7e2beac795f45e9c16e700adf1a2e95f76fe2f63bba3668d71cc67a3a07920f9a97b154dcb76e3f06116877c2b4be")
+set(MSBuild_Microsoft.VisualStudio.Wcf.MSBuild_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/59d6baca7fb0a10e189ddd714d77b245c713e5995a710d63e30f6f4be3739b4c/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.Wcf.MSBuild_SHA512 "ccc459e3127b1563f2f3aeb82b3b2981ca525cc3d130c54592c62d81b16c4823027a341c8d01bd936c46c1977454bf011d4d60ee44d1d8c8d61eea7ba39ac026")
 set(MSBuild_Microsoft.VisualStudio.Wcf.MSBuild_FILENAME "Microsoft.VisualStudio.Wcf.MSBuild_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.Wcf.MSBuild)
 
 
-set(MSBuild_Microsoft.VisualStudio.WebToolsExtensions.MSBuild_URL "https://download.visualstudio.microsoft.com/download/pr/7a4d5373-650c-4854-8788-953d357bb26f/b1530e68d5737d6520e6783a9b8e9ba820a021ed0df99ee51af9fefa00427bdb/Microsoft.VisualStudio.WebToolsExtensions.MSBuild.vsix")
-set(MSBuild_Microsoft.VisualStudio.WebToolsExtensions.MSBuild_SHA512 "14746b0ed96ef5e42e8bdac219c9215e11c9b231614841e43f30bc8616f1bc18cc2402a438a4ed19636523cad6a50f9076219e1173540fdffe173bbd7c49c793")
+set(MSBuild_Microsoft.VisualStudio.WebToolsExtensions.MSBuild_URL "https://download.visualstudio.microsoft.com/download/pr/0faf03da-d570-44a8-9214-8029ebb4488d/d1f7ae72f53f86452d0c0c0cec77640aba3c6f335e769a86c97b25a2f40f0fc3/Microsoft.VisualStudio.WebToolsExtensions.MSBuild.vsix")
+set(MSBuild_Microsoft.VisualStudio.WebToolsExtensions.MSBuild_SHA512 "3738ca3572621d8d60d1cc5e26fda06f51d42007b3d03cb4a0a7cf0605e164082ac453f6e796c5b001699267a4d8c54f99f019accb6af07ddd8ef0c8e30301ab")
 set(MSBuild_Microsoft.VisualStudio.WebToolsExtensions.MSBuild_FILENAME "Microsoft.VisualStudio.WebToolsExtensions.MSBuild.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.WebToolsExtensions.MSBuild)
 
 
-set(MSBuild_Microsoft.VisualStudio.Windows.Build_URL "https://download.visualstudio.microsoft.com/download/pr/69e24482-3b48-44d3-af65-51f866a08313/e9eb735c2f9d8c33feb984fbf2a554b5c01d5759d56eef380f75a8bfba3d7809/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.Windows.Build_SHA512 "8d8455bc15fd2b6cb40a81e93c7decba703c808712c6941065ca7470083847e2154e0e801931a1a659b71119c35af79e04c1c7f39c3f69bdba8f3284e645b67b")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build_URL "https://download.visualstudio.microsoft.com/download/pr/5536698c-711c-4834-876f-2817d31a2ef2/dd268f6d7083d0350e8888e2240821f6f42cff1e356ebf57d7126ec71ac035aa/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build_SHA512 "3f42e643e65f771f5937df55dc742f44876b6048f6b2e49649011d457e4e2f727403cc85c7c009b96fab8b4e5689a8f2d2c9337432ad17e9c4a555a5849bf709")
 set(MSBuild_Microsoft.VisualStudio.Windows.Build_FILENAME "Microsoft.VisualStudio.Windows.Build_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.Windows.Build)
 
 
-set(MSBuild_Microsoft.VisualStudio.Windows.Build.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/79bf57fb-c9a4-46fd-b7a1-6e4496fe317c/24dc1cd7c69cc206f0dd1bf7fa9bccfcbce7212bd667c56d7118432a6d74db9d/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.Windows.Build.Resources_SHA512 "2f15561a4ce3655532a63e7161c34c016b0ba133b7bfceabddc5133bcc9c19e9c49ba5157c42d2b7e1d102e4f851b8a6bbc60626bc350712ec3e31a7b3b184c3")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build.Resources_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/01e9407752b93359ccba26f67d0d72770d48d1e7b56dfe01936a1d30192f6f0d/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build.Resources_SHA512 "c0b2994b60d591ecc46c85ad33186963a5a5c69fcc315c5aadf6e0ddacab096dda18eefe1168ef7c399e39425dd78119913e12690c55b8f2dc4a8645ed7f9aa1")
 set(MSBuild_Microsoft.VisualStudio.Windows.Build.Resources_FILENAME "Microsoft.VisualStudio.Windows.Build.Resources_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.Windows.Build.Resources)
 
 
-set(MSBuild_Microsoft.VisualStudio.Windows.BuildToolsContracts_URL "https://download.visualstudio.microsoft.com/download/pr/79bf57fb-c9a4-46fd-b7a1-6e4496fe317c/d7da15e4b4df06319e2f3775b323aeeb592690234bc1ec907a0fd3c707a25b45/payload.vsix")
-set(MSBuild_Microsoft.VisualStudio.Windows.BuildToolsContracts_SHA512 "1b2848d267e5c7317fb7d3d5302312b18edf2c954912b67303d7f9c938d26826e85687df0579af8fc54dacd6dff739db55dc1b0ccbb81645918c37362232bf2e")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build.VcMeta_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/652bedb493c307871bbb57d2f1bf1256ec1443b47bcb0111d3faa08377c42dfb/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build.VcMeta_SHA512 "983df099e50ffdb891b1a5d4a765f0c917e080b10c2ed402ef50ae21d380d7e23cfa64c3622dac5f6a3e14111df602fa9f0b2bdc09c1023863f8f0eb3dea3208")
+set(MSBuild_Microsoft.VisualStudio.Windows.Build.VcMeta_FILENAME "Microsoft.VisualStudio.Windows.Build.VcMeta_payload.vsix")
+list(APPEND MSBuild_FILES Microsoft.VisualStudio.Windows.Build.VcMeta)
+
+
+set(MSBuild_Microsoft.VisualStudio.Windows.BuildToolsContracts_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/03af1c16d38600a1905c9b468eca148fd901dfa8a39ab67cf7f988e979c09ac0/payload.vsix")
+set(MSBuild_Microsoft.VisualStudio.Windows.BuildToolsContracts_SHA512 "bb4a19bb6e9668f9fe07e9811db3fc77131bda01b3d113b141ebbfb27d3e3f6f46b37e3a20dea7b2529f9d3d0370c54775650c31cd6624b672423f5d6954adf2")
 set(MSBuild_Microsoft.VisualStudio.Windows.BuildToolsContracts_FILENAME "Microsoft.VisualStudio.Windows.BuildToolsContracts_payload.vsix")
 list(APPEND MSBuild_FILES Microsoft.VisualStudio.Windows.BuildToolsContracts)

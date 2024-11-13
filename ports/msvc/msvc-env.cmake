@@ -5,9 +5,9 @@ if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
   set(VS_DIR "${CMAKE_CURRENT_LIST_DIR}/../../VS")
   set(SDK_DIR "${CMAKE_CURRENT_LIST_DIR}/../../WinSDK")
 
-  set(WinSDK_VERSION "10.0.26100.0")
-  set(VCToolkit_VERSION "14.41.34120")
-  set(VCToolkit_REDIST_VERSION "14.40.33807")
+  set(WinSDK_VERSION "@WinSDK_VERSION@")
+  set(VCToolkit_VERSION "@VCToolkit_VERSION@")
+  set(VCToolkit_REDIST_VERSION "@VCToolkit_REDIST_VERSION@")
 
   set(LIB 
         "${VS_DIR}/VC/Tools/MSVC/${VCToolkit_VERSION}/ATLMFC/lib/x64"
@@ -65,9 +65,9 @@ if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
   set(ENV{WindowsLibPath} "${WindowsLibPath}")
   set(ENV{WindowsSdkBinPath} "${SDK_DIR}/Windows Kits/10/bin/")
   set(ENV{WindowsSdkDir} "${SDK_DIR}/Windows Kits/10/")
-  set(ENV{WindowsSDKLibVersion} "${WinSDK_VERSION}/")
+  set(ENV{WindowsSDKLibVersion} "${WinSDK_VERSION}\\")
   set(ENV{WindowsSdkVerBinPath} "${SDK_DIR}/Windows Kits/10/bin/${WinSDK_VERSION}/")
-  set(ENV{WindowsSDKVersion} "${WinSDK_VERSION}/")
+  set(ENV{WindowsSDKVersion} "${WinSDK_VERSION}\\")
   #set(WindowsSDK_ExecutablePath_x64 "${SDK_DIR}/Windows/v10.0A/bin/NETFX 4.8 Tools/x64/")
   #set(WindowsSDK_ExecutablePath_x86 "${SDK_DIR}/Windows/v10.0A/bin/NETFX 4.8 Tools/")
 
