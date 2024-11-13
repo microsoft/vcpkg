@@ -5,6 +5,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     SHA512 d8a8bee3aa9acda4609104c2a9d4a2512e4be6d6e85fd4b24c287c03f60cfb888e669e61bfac4113dae35f0c3492559b65b3453baf38766d8c0223d9ab77aada
     PATCHES
         fix-dependencies.patch
+        fix-dep-openal.patch
 )
 
 # The embedded FindFreetype doesn't properly handle debug libraries
