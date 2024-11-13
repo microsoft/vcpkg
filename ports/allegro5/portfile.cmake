@@ -8,6 +8,7 @@ vcpkg_from_github(
         do-not-copy-pdbs-to-lib.patch
         msvc-arm64-atomic.patch
         minimp3-fix.patch
+        android-glext-prototypes.diff
 )
 
 if(VCPKG_TARGET_IS_ANDROID AND "$ENV{ANDROID_HOME}" STREQUAL "")
@@ -49,6 +50,8 @@ vcpkg_cmake_configure(
         -DWANT_POPUP_EXAMPLES=OFF
         -DWANT_TESTS=OFF
         -DWANT_TREMOR=OFF # Not yet available on vcpkg
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()
