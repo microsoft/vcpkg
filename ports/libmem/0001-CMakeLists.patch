@@ -40,7 +40,7 @@
  set_target_properties(keystone PROPERTIES IMPORTED_LOCATION ${KEYSTONE_IMPORT_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}keystone${CMAKE_STATIC_LIBRARY_SUFFIX})
 +endif()
 +find_package(PkgConfig)
-+pkg_check_modules(keystone REQUIRED IMPORTED_TARGET keystone)
++pkg_check_modules(keystone REQUIRED)
 +find_package(capstone CONFIG REQUIRED)
  # End of external dependencies
 -
