@@ -10,8 +10,10 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 
 [string]$oneAPIBaseUrl
 if ([string]::IsNullOrEmpty($SasToken)) {
+  Write-Host 'Downloading from the Internet'
   $oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/c95a3b26-fc45-496c-833b-df08b10297b9/w_HPCKit_p_2024.1.0.561_offline.exe'
 } else {
+  Write-Host 'Downloading from vcpkgimageminting using SAS token'
   $SasToken = $SasToken.Replace('"', '')
   $oneAPIBaseUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/w_HPCKit_p_2024.1.0.561_offline.exe?$SasToken"
 }

@@ -9,8 +9,10 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 
 [string]$CudnnUrl
 if ([string]::IsNullOrEmpty($SasToken)) {
+  Write-Host 'Downloading from the Internet'
   $CudnnUrl = 'https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-9.2.0.82_cuda12-archive.zip'
 } else {
+  Write-Host 'Downloading from vcpkgimageminting using SAS token'
   $SasToken = $SasToken.Replace('"', '')
   $CudnnUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-9.2.0.82_cuda12-archive.zip?$SasToken"
 }
