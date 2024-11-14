@@ -12,6 +12,7 @@ string(REPLACE "\\" "/" systemroot "${systemroot}")
 
 set(PATH_VAR 
     ${pwsh_path}
+    "${systemroot}/Microsoft.NET/Framework64/v4.0.30319"
     "${systemroot}/system32"
     "${systemroot}"
     "${systemroot}/System32/Wbem"

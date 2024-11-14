@@ -14,3 +14,44 @@ if(NOT LESSMSI)
     )
     set(LESSMSI "${DOWNLOADS}/lessmsi-${version}/lessmsi@VCPKG_TARGET_EXECUTABLE_SUFFIX@")
 endif()
+
+
+function(vcpkg_extract_with_lessmsi)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "MSI;DESTINATION" "")
+    if(NOT arg_MSI)
+        message(FATAL_ERROR "vcpkg_extract_with_lessmsi: MSI argument is required")
+    endif()
+    if(NOT arg_DESTINATION)
+        message(FATAL_ERROR "vcpkg_extract_with_lessmsi: DESTINATION argument is required")
+    endif()
+
+    set(msi "${arg_MSI}")
+    cmake_path(GET msi STEM LAST_ONLY componentName)
+    cmake_path(GET msi FILENAME filename)
+  
+    message(STATUS "Extracting '${componentName}'")
+    string(REPLACE " " "" componentName "${componentName}")
+    set(installLocation "${CURRENT_BUILDTREES_DIR}/lessmsi/${componentName}")
+    
+    # Create the install location directory
+    file(MAKE_DIRECTORY "${installLocation}")
+    cmake_path(NATIVE_PATH installLocation NORMALIZE installLocation)
+    cmake_path(NATIVE_PATH msi NORMALIZE msi)
+    
+    # Extract the MSI file
+    cmake_path(NATIVE_PATH msi msi_native)
+    vcpkg_execute_required_process(
+        COMMAND "${LESSMSI}" x "${msi_native}"
+        WORKING_DIRECTORY "${installLocation}"
+        LOGNAME "lessmsi-${componentName}_cmake.log"
+    )
+    cmake_path(GET msi FILENAME packstem)
+    string(REPLACE ".msi" "" packstem "${packstem}")
+    
+    # Copy the extracted files to the SDK install folder
+    if(EXISTS "${installLocation}/${packstem}/SourceDir/")
+        file(COPY "${installLocation}/${packstem}/SourceDir/" DESTINATION "${arg_DESTINATION}/")
+    else()
+        message(STATUS "Installer '${msi}' had no files! Skipping.")
+    endif()
+endfunction()

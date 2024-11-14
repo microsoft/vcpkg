@@ -9,10 +9,13 @@ if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
   set(VCToolkit_VERSION "@VCToolkit_VERSION@")
   set(VCToolkit_REDIST_VERSION "@VCToolkit_REDIST_VERSION@")
 
+  set(systemroot "$ENV{SystemRoot}")
+  string(REPLACE "\\" "/" systemroot "${systemroot}")
+
   set(LIB 
         "${VS_DIR}/VC/Tools/MSVC/${VCToolkit_VERSION}/ATLMFC/lib/x64"
         "${VS_DIR}/VC/Tools/MSVC/${VCToolkit_VERSION}/lib/x64"
-        #"${SDK_DIR}/Windows Kits/NETFXSDK/4.8/lib/um/x64"
+        "${SDK_DIR}/Windows Kits/NETFXSDK/4.8.1/lib/um/x64" #
         "${SDK_DIR}/Windows Kits/10/lib/${WinSDK_VERSION}/ucrt/x64"
         "${SDK_DIR}/Windows Kits/10/lib/${WinSDK_VERSION}/um/x64"
   )
@@ -24,7 +27,7 @@ if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
         "${VS_DIR}/VC/Tools/MSVC/${VCToolkit_VERSION}/lib/x86/store/references"
         "${SDK_DIR}/Windows Kits/10/UnionMetadata/${WinSDK_VERSION}"
         "${SDK_DIR}/Windows Kits/10/References/${WinSDK_VERSION}"
-        #C:/Windows/Microsoft.NET/Framework64/v4.0.30319
+        "${systemroot}/Microsoft.NET/Framework64/v4.0.30319"
   )
   cmake_path(CONVERT "${LIBPATH}" TO_NATIVE_PATH_LIST LIBPATH NORMALIZE)
   set(ENV{LIBPATH} "${LIBPATH}")
@@ -37,7 +40,7 @@ if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
         "${SDK_DIR}/Windows Kits/10/include/${WinSDK_VERSION}/shared"
         "${SDK_DIR}/Windows Kits/10/include/${WinSDK_VERSION}/winrt"
         "${SDK_DIR}/Windows Kits/10/include/${WinSDK_VERSION}/cppwinrt"
-        #"${SDK_DIR}/Windows Kits/NETFXSDK/4.8/include/um"
+        "${SDK_DIR}/Windows Kits/NETFXSDK/4.8.1/include/um" #
   )
   cmake_path(CONVERT "${INCLUDE}" TO_NATIVE_PATH_LIST INCLUDE NORMALIZE)
   set(ENV{INCLUDE} "${INCLUDE}")
@@ -68,23 +71,21 @@ if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
   set(ENV{WindowsSDKLibVersion} "${WinSDK_VERSION}\\")
   set(ENV{WindowsSdkVerBinPath} "${SDK_DIR}/Windows Kits/10/bin/${WinSDK_VERSION}/")
   set(ENV{WindowsSDKVersion} "${WinSDK_VERSION}\\")
-  #set(WindowsSDK_ExecutablePath_x64 "${SDK_DIR}/Windows/v10.0A/bin/NETFX 4.8 Tools/x64/")
-  #set(WindowsSDK_ExecutablePath_x86 "${SDK_DIR}/Windows/v10.0A/bin/NETFX 4.8 Tools/")
-
+  set(WindowsSDK_ExecutablePath_x64 "${SDK_DIR}/Microsoft SDKs/Windows/v10.0A/bin/NETFX 4.8.1 Tools/x64/") #
+  set(WindowsSDK_ExecutablePath_x86 "${SDK_DIR}/Microsoft SDKs/Windows/v10.0A/bin/NETFX 4.8.1 Tools/") #
   set(ADD_TO_PATH 
         "${VS_DIR}/VC/Tools/MSVC/${VCToolkit_VERSION}/bin/HostX64/x64"
         #${VS_DIR}/Common7/IDE/VC/VCPackages
         #${VS_DIR}/Common7/IDE/CommonExtensions/Microsoft/TestWindow
         #${VS_DIR}/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer
         "${VS_DIR}/MSBuild/Current/bin/Roslyn"
-        #C:/Program Files (x86)/Microsoft SDKs/Windows/v10.0A/bin/NETFX 4.8 Tools/x64/
+        "${SDK_DIR}/Microsoft SDKs/Windows/v10.0A/bin/NETFX 4.8.1 Tools/x64/" #
         #C:/Program Files (x86)/HTML Help Workshop
         #${VS_DIR}/Common7/IDE/CommonExtensions/Microsoft/FSharp/Tools
         #${VS_DIR}/Team Tools/DiagnosticsHub/Collector
         "${SDK_DIR}/Windows Kits/10/bin/${WinSDK_VERSION}/x64"
         "${SDK_DIR}/Windows Kits/10/bin/x64"
         "${VS_DIR}/MSBuild/Current/Bin/"
-        #C:/Windows/Microsoft.NET/Framework64/v4.0.30319
         #${VS_DIR}/Common7/IDE/
         #${VS_DIR}/Common7/Tools/
   )

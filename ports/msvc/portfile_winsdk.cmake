@@ -64,36 +64,12 @@ block(PROPAGATE WinSDK_VERSION)
 
   set(counter 0)
   foreach(msi IN LISTS msi_installers)
-    cmake_path(GET msi STEM LAST_ONLY componentName)
-    cmake_path(GET msi FILENAME filename)
     math(EXPR counter "${counter} + 1")
-  
-    message(STATUS "Extracting '${componentName}'")
-    string(REPLACE " " "" componentName "${componentName}")
-    set(installLocation "${CURRENT_BUILDTREES_DIR}/sdk")
-    
-    # Create the install location directory
-    file(MAKE_DIRECTORY "${installLocation}")
-    cmake_path(NATIVE_PATH installLocation NORMALIZE installLocation)
-    cmake_path(NATIVE_PATH msi NORMALIZE msi)
-    
-    # Extract the MSI file
-    cmake_path(NATIVE_PATH msi msi_native)
-    vcpkg_execute_required_process(
-        COMMAND "${LESSMSI}" x "${msi_native}"
-        WORKING_DIRECTORY "${installLocation}"
-        LOGNAME "lessmsi-${componentName}_cmake.log"
+
+    vcpkg_extract_with_lessmsi(
+        MSI "${msi}"
+        DESTINATION "${installFolderSdk}"
     )
-    cmake_path(GET msi FILENAME packstem)
-    string(REPLACE ".msi" "" packstem "${packstem}")
-    
-    # Copy the extracted files to the SDK install folder
-    if(EXISTS "${installLocation}/${packstem}/SourceDir/")
-        file(COPY "${installLocation}/${packstem}/SourceDir/" DESTINATION "${installFolderSdk}/")
-    else()
-        message(STATUS "Installer had no files or dirs to extract")
-        message(STATUS "Skipping '${componentName}'")
-    endif()
     
     # Handle extra categories
     foreach(pattern IN LISTS exclude_from_skip)
@@ -118,5 +94,4 @@ block(PROPAGATE WinSDK_VERSION)
   # Remove unknown stuff
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Windows App Certification Kit/")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Microsoft/")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Microsoft SDKs/")
 endblock()
