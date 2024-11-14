@@ -8,6 +8,7 @@ vcpkg_from_github(
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
         002-fix-onnx.patch
+        003-protobuf.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
