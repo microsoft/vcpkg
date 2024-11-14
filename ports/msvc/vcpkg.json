@@ -1,6 +1,6 @@
 {
   "name": "msvc",
-  "version": "17.11.5",
+  "version": "17.12.0",
   "license": "MIT",
   "dependencies": [
     "vcpkg-tool-lessmsi"

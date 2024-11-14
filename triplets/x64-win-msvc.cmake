@@ -5,7 +5,8 @@ set(VCPKG_LIBRARY_LINKAGE dynamic)
 # Compiler tracking won't have the necessary info to detect the compiler yet, since it is not yet installed
 # However, since the compiler is a port the abi hash of it will be included any way without detection.
 set(VCPKG_DISABLE_COMPILER_TRACKING ON) 
-set(TRIPLET_NAME x64-win-msvc)
+set(TRIPLET_NAME "x64-win-msvc")
+set(VCPKG_PLATFORM_TOOLSET "v143")
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/${TRIPLET_NAME}/${TRIPLET_NAME}-toolchain.cmake")
 
 if(DEFINED CURRENT_PORT_DIR AND 
