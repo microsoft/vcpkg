@@ -1,0 +1,17 @@
+{
+  "name": "yalantinglibs",
+  "version": "0.3.9",
+  "homepage": "https://github.com/alibaba/yalantinglibs",
+  "description": "A Collection of C++20 libraries, include struct_pack, struct_json, struct_xml, struct_yaml, struct_pb, easylog, coro_rpc, coro_http and async_simple",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
