@@ -9,6 +9,7 @@ vcpkg_from_github(
         msvc-arm64-atomic.patch
         minimp3-fix.patch
         android-glext-prototypes.diff
+        skip-android-subdir.diff      # installs nothing, fails in CI, outdated gradle
 )
 
 if(VCPKG_TARGET_IS_ANDROID AND "$ENV{ANDROID_HOME}" STREQUAL "")
