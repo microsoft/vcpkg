@@ -33,9 +33,9 @@ vcpkg_cmake_configure(
         -DSFML_GENERATE_PDB=OFF
         -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
         ${FEATURE_OPTIONS}
-	MAYBE_UNUSED_VARIABLES
-	    SFML_MISC_INSTALL_PREFIX
-            SFML_WARNINGS_AS_ERRORS   
+    MAYBE_UNUSED_VARIABLES
+        SFML_MISC_INSTALL_PREFIX
+        SFML_WARNINGS_AS_ERRORS
 )
 
 vcpkg_cmake_install()
