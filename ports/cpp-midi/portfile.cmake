@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfgitpr/cpp-midi
     REF "${VERSION}"
-    SHA512 7948f4cfcd57897f957daad96832131eadea25f6ebfca89dbde174299a99b9d129b40d064d3f1725a5e98bc6174896ff0a3490a910f4346762349fd4c6a32f67
+    SHA512 436adcc2051caab761a2d3e5e6553bd1c2a07cd5c6bbae2dc246b2afb9db94b44c03bb19bc3f47e3d406e48eed5df9a80b80422ae38933e1c891eb4b8fcbe3bb
     HEAD_REF main
 )
 
