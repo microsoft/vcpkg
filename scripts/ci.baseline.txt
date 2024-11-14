@@ -1109,16 +1109,8 @@ tvision:arm-neon-android=fail
 tvision:arm64-android=fail
 tvision:x64-android=fail
 unicorn:x64-windows-static-md=fail
-# USD has set official policy that they will not update to be compatible with TBB in the near term (https://github.com/PixarAnimationStudios/USD/issues/1600)
-usd:arm64-windows=skip
-usd:arm64-uwp=skip
-usd:x64-uwp=skip
-usd:x64-windows=skip
+# Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
-usd:x64-windows-static-md=skip
-usd:x64-linux=skip
-usd:x64-osx=skip
-usd:x86-windows=skip
 # needs android-24
 usrsctp:arm-neon-android=fail
 usrsctp:arm64-android=fail
