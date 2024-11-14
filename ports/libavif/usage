@@ -1,0 +1,4 @@
+libavif provides pkg-config modules:
+
+    # Library for encoding and decoding .avif files
+    libavif
