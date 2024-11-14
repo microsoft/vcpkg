@@ -112,7 +112,7 @@
  
 -target_link_libraries(libmem ${LIBMEM_DEPS})
 -if(LIBMEM_BUILD_STATIC)
-+target_link_libraries(libmem PRIVATE ${LIBMEM_DEPS} PkgConfig::keystone capstone::capstone)
++target_link_libraries(libmem PRIVATE ${LIBMEM_DEPS} ${keystone_LINK_LIBRARIES} capstone::capstone)
 +if(0)
  	# Create a bundled static library containing all dependencies (to mimic the shared library behavior)
  	set_target_properties(libmem PROPERTIES OUTPUT_NAME "libmem_partial")
