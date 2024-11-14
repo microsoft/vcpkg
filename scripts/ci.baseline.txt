@@ -257,7 +257,6 @@ ctbench:x64-osx=fail
 ctbench:arm64-osx=fail
 # Needs android-28 (hidden before NDK r26)
 cyclonedds:arm-neon-android=fail
-cyclonedds:arm64-android=fail
 cyclonedds:x64-android=fail
 czmq:arm-neon-android=fail
 czmq:arm64-android=fail
@@ -515,7 +514,6 @@ libbson:arm64-android=fail
 libbson:x64-android=fail
 # needs android-28
 libcaer:arm-neon-android=fail
-libcaer:arm64-android=fail
 libcaer:x64-android=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
@@ -561,7 +559,6 @@ libhdfs3:x64-osx=fail
 libhdfs3:arm64-osx=fail
 # needs android-24
 libimobiledevice-glue:arm-neon-android=fail
-libimobiledevice-glue:arm64-android=fail
 libimobiledevice-glue:x64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
