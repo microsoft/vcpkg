@@ -3237,8 +3237,8 @@
       "port-version": 6
     },
     "gperftools": {
-      "baseline": "2.10",
-      "port-version": 2
+      "baseline": "2.16",
+      "port-version": 0
     },
     "gpgme": {
       "baseline": "1.23.2",

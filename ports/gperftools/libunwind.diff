@@ -1,30 +1,24 @@
-diff --git a/configure.ac b/configure.ac
-index 65a4e24..fc0d7d6 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -278,9 +278,24 @@ AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = yes)
- # We want to link in libunwind if it is enabled and exists.
- UNWIND_LIBS=
- if test "$enable_libunwind" = yes; then
-+  save_CFLAGS="$CFLAGS"
-+  save_LIBS="$LIBS"
-+  PKG_PROG_PKG_CONFIG
-+  PKG_CHECK_MODULES([PC_UNWIND],[libunwind],[
-+    CFLAGS="$PC_UNWIND_CFLAGS"
-+    LIBS="$PC_UNWIND_LIBS"
-+  ],[
-+    PC_UNWIND_CFLAGS=""
-+    LIBS="-lunwind"
-+  ])
-   AC_CHECK_HEADERS([libunwind.h],
--                   [AC_CHECK_LIB(unwind, backtrace, UNWIND_LIBS=-lunwind)
-+                   [AC_SEARCH_LIBS(backtrace, [], [
-+                    save_CFLAGS="$CFLAGS $PC_UNWIND_CFLAGS"
-+                    UNWIND_LIBS="$LIBS"
-+                   ])
-                     will_use_libunwind=yes])
-+  CFLAGS="$save_CFLAGS"
-+  LIBS="$save_LIBS"
- fi
- AC_SUBST(UNWIND_LIBS)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52629d3..a93c7e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -241,13 +241,13 @@ if(NOT WIN32)
+ endif()
  
+ if(gperftools_enable_libunwind)
+-  check_include_file("libunwind.h" HAVE_LIBUNWIND_H)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(PC_LIBUNWIND libunwind REQUIRED)
++  find_file(HAVE_LIBUNWIND_H "libunwind.h" PATHS ${PC_LIBUNWIND_INCLUDE_DIRS} NO_DEFAULT_PATH REQUIRED)
+   if(HAVE_LIBUNWIND_H)
+-    find_library(libunwind_location NAMES unwind)
+-    if(libunwind_location)
+-      check_library_exists(
+-        unwind backtrace ${libunwind_location} have_libunwind)
+-    endif()
++    include_directories(${PC_LIBUNWIND_INCLUDE_DIRS})
++    set(libunwind_location "${PC_LIBUNWIND_LINK_LIBRARIES}" CACHE INTERNAL "")
++    set(have_libunwind 1)
+     if(have_libunwind)
+       set(unwind_libs ${libunwind_location})
+       set(will_use_libunwind ON)
