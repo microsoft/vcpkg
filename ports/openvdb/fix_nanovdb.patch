@@ -1,5 +1,5 @@
 diff --git a/nanovdb/nanovdb/CMakeLists.txt b/nanovdb/nanovdb/CMakeLists.txt
-index 7bb3ab86..9311ed17 100644
+index 7bb3ab86..76da9071 100644
 --- a/nanovdb/nanovdb/CMakeLists.txt
 +++ b/nanovdb/nanovdb/CMakeLists.txt
 @@ -127,7 +127,7 @@ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
@@ -11,7 +11,58 @@ index 7bb3ab86..9311ed17 100644
  endif()
  
  if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
-@@ -236,7 +236,7 @@ if(NANOVDB_USE_TBB)
+@@ -169,17 +169,6 @@ set(NANOVDB_INCLUDE_UTILFILES
+   util/CpuTimer.h
+   util/CreateNanoGrid.h
+   util/CSampleFromVoxels.h
+-  util/cuda/CudaAddBlindData.cuh
+-  util/cuda/CudaDeviceBuffer.h
+-  util/cuda/CudaGridChecksum.cuh
+-  util/cuda/CudaGridHandle.cuh
+-  util/cuda/CudaGridStats.cuh
+-  util/cuda/CudaIndexToGrid.cuh
+-  util/cuda/CudaNodeManager.cuh
+-  util/cuda/CudaPointsToGrid.cuh
+-  util/cuda/CudaSignedFloodFill.cuh
+-  util/cuda/CudaUtils.h
+-  util/cuda/GpuTimer.h
+   util/DitherLUT.h
+   util/ForEach.h
+   util/GridBuilder.h
+@@ -203,6 +192,20 @@ set(NANOVDB_INCLUDE_UTILFILES
+   util/Stencils.h
+ )
+ 
++set(NANOVDB_INCLUDE_UTILCUDAFILES
++  util/cuda/CudaAddBlindData.cuh
++  util/cuda/CudaDeviceBuffer.h
++  util/cuda/CudaGridChecksum.cuh
++  util/cuda/CudaGridHandle.cuh
++  util/cuda/CudaGridStats.cuh
++  util/cuda/CudaIndexToGrid.cuh
++  util/cuda/CudaNodeManager.cuh
++  util/cuda/CudaPointsToGrid.cuh
++  util/cuda/CudaSignedFloodFill.cuh
++  util/cuda/CudaUtils.h
++  util/cuda/GpuTimer.h
++)
++
+ add_library(nanovdb INTERFACE)
+ target_include_directories(nanovdb INTERFACE ../)
+ target_compile_options(nanovdb INTERFACE
+@@ -268,9 +271,11 @@ endif()
+ 
+ set(NANOVDB_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR}/nanovdb)
+ set(NANOVDB_INSTALL_UTILDIR ${NANOVDB_INSTALL_INCLUDEDIR}/util)
++set(NANOVDB_INSTALL_UTILCUDADIR ${NANOVDB_INSTALL_UTILDIR}/cuda)
+ 
+ install(FILES ${NANOVDB_INCLUDE_FILES} DESTINATION ${NANOVDB_INSTALL_INCLUDEDIR})
+ install(FILES ${NANOVDB_INCLUDE_UTILFILES} DESTINATION ${NANOVDB_INSTALL_UTILDIR})
++install(FILES ${NANOVDB_INCLUDE_UTILCUDAFILES} DESTINATION ${NANOVDB_INSTALL_UTILCUDADIR})
+ 
+ ###############################################################################
+ # Options
+@@ -236,7 +239,7 @@ if(NANOVDB_USE_TBB)
  endif()
  
  if(NANOVDB_USE_BLOSC)
