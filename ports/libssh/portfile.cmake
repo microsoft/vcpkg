@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0001-export-pkgconfig-file.patch
         0003-no-source-write.patch
         0004-file-permissions-constants.patch
+        android-glob-tilde.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
