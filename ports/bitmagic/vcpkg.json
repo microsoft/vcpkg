@@ -1,6 +1,8 @@
 {
   "name": "bitmagic",
   "version": "7.13.4",
+  "port-version": 1,
   "description": "Algorithms and tools for Algebra of Sets for information retrieval, indexing of databases, scientific algorithms, ranking, clustering, unsupervised machine learning and signal processing.",
-  "homepage": "http://bitmagic.io"
+  "homepage": "http://bitmagic.io",
+  "license": "Apache-2.0"
 }

@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 0702380..984c749 100644
+index 701bb55..e41c128 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
-@@ -99,6 +99,13 @@ if (BZIP2_FOUND)
+@@ -100,6 +100,13 @@ if (BZIP2_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${BZIP2_LIBRARIES})
  endif()
  
@@ -16,7 +16,7 @@ index 0702380..984c749 100644
  find_package(LibLZMA MODULE)
  set(FOLLY_HAVE_LIBLZMA ${LIBLZMA_FOUND})
  if (LIBLZMA_FOUND)
-@@ -166,12 +173,6 @@ if (PYTHON_EXTENSIONS)
+@@ -167,12 +174,6 @@ if (PYTHON_EXTENSIONS)
    find_package(Cython 0.26 REQUIRED)
  endif ()
  

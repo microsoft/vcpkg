@@ -1,7 +1,6 @@
 {
   "name": "fastor",
-  "version-date": "2021-11-22",
-  "port-version": 1,
+  "version": "0.6.4",
   "description": "a high performance tensor library for modern C++",
   "homepage": "https://github.com/romeric/Fastor",
   "dependencies": [
