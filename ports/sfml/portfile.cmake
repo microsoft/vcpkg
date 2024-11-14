@@ -35,7 +35,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 	MAYBE_UNUSED_VARIABLES
 	    SFML_MISC_INSTALL_PREFIX
-        SFML_WARNINGS_AS_ERRORS   
+            SFML_WARNINGS_AS_ERRORS   
 )
 
 vcpkg_cmake_install()
