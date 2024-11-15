@@ -23,7 +23,6 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
-            "cmake-3-7"
           ],
           "platform": "x64 & (windows | linux | osx) & !uwp"
         }
