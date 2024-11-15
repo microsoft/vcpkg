@@ -1,0 +1,17 @@
+{
+  "name": "beman-project-execution26",
+  "version-date": "2024-11-16",
+  "description": "Implementation of the std::execution (P2300, sender/receiver) proposal",
+  "homepage": "https://github.com/beman-project/execution26",
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

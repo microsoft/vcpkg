@@ -592,6 +592,10 @@
       "baseline": "4.3.7",
       "port-version": 0
     },
+    "beman-project-execution26": {
+      "baseline": "2024-11-16",
+      "port-version": 0
+    },
     "benchmark": {
       "baseline": "1.9.0",
       "port-version": 0
