@@ -34,33 +34,37 @@ block()
     "${winsdk_props_content}"
   )
   string(REPLACE 
-    [[<WindowsSdkDir_10 Condition=\"'$(WindowsSdkDir_10)' == ''\">$(Registry:HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v10.0@InstallationFolder)</WindowsSdkDir_10>]]
+    [[<WindowsSdkDir_10 Condition="'$(WindowsSdkDir_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0@InstallationFolder)</WindowsSdkDir_10>]]
     "" 
     winsdk_props_content 
     "${winsdk_props_content}"
   )
   string(REPLACE 
-    [[<WindowsSdkDir_10 Condition=\"'$(WindowsSdkDir_10)' == ''\">$(Registry:HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft SDKs\\Windows\\v10.0@InstallationFolder)</WindowsSdkDir_10>]]
+    [[<WindowsSdkDir_10 Condition="'$(WindowsSdkDir_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0@InstallationFolder)</WindowsSdkDir_10>]]
     "<WindowsSdkDir_10 Condition=\"'$(WindowsSdkDir_10)' == ''\">$(MSBuildThisFileDirectory)\\..\\..\\..\\..\\..\\WinSDK\\Windows Kits\\10\\</WindowsSdkDir_10>" 
     winsdk_props_content 
     "${winsdk_props_content}"
   )
   string(REPLACE 
-    [[<UniversalCRTSdkDir_10 Condition=\"'$(UniversalCRTSdkDir_10)' == ''\">$(Registry:HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows Kits\\Installed Roots@KitsRoot10)</UniversalCRTSdkDir_10>]]
+    [[<UniversalCRTSdkDir_10 Condition="'$(UniversalCRTSdkDir_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows Kits\Installed Roots@KitsRoot10)</UniversalCRTSdkDir_10>]]
     "" 
     winsdk_props_content 
     "${winsdk_props_content}"
   )
   string(REPLACE 
-    [[<UniversalCRTSdkDir_10 Condition=\"'$(UniversalCRTSdkDir_10)' == ''\">$(Registry:HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots@KitsRoot10)</UniversalCRTSdkDir_10>]]
+    [[<UniversalCRTSdkDir_10 Condition="'$(UniversalCRTSdkDir_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots@KitsRoot10)</UniversalCRTSdkDir_10>]]
     "<UniversalCRTSdkDir_10 Condition=\"'$(UniversalCRTSdkDir_10)' == ''\">$(MSBuildThisFileDirectory)\\..\\..\\..\\..\\..\\WinSDK\\Windows Kits\\10\\</UniversalCRTSdkDir_10>" 
     winsdk_props_content 
     "${winsdk_props_content}"
   )
   file(WRITE "${winsdk_props}" "${winsdk_props_content}")
-
-  vcpkg_replace_string("${vc_common_props}"
+  
+  file(READ "${vc_common_props}" vc_common_props_contents)
+  string(REPLACE 
     [[<VSInstallDir>$(VsInstallRoot)\</VSInstallDir>]]
-    "<VSInstallDir>$(MSBuildThisFileDirectory)\\..\\..\\..\\..\\</VSInstallDir>"
+    "<VSInstallDir>$(MSBuildThisFileDirectory)\\..\\..\\..\\..\\</VSInstallDir>" 
+    winsdk_props_content 
+    "${winsdk_props_content}"
   )
+  file(WRITE "${vc_common_props}" "${vc_common_props_contents}")
 endblock()

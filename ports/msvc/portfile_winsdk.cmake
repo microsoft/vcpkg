@@ -91,7 +91,23 @@ block(PROPAGATE WinSDK_VERSION)
     endif()
   endforeach()
 
+  set(ucrtsdkprops "${installFolderSdk}/Windows Kits/10/DesignTime/CommonConfiguration/Neutral/uCRT.props")
+  file(READ "${ucrtsdkprops}" ucrt_props_content)
+  string(REPLACE 
+	[[<UCRTContentRoot Condition="'$(UCRTContentRoot)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows Kits\Installed Roots@KitsRoot10)</UCRTContentRoot>]]
+	""
+	ucrt_props_content
+	"${ucrt_props_content}"
+  )
+  string(REPLACE 
+	[[<UCRTContentRoot Condition="'$(UCRTContentRoot)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots@KitsRoot10)</UCRTContentRoot>]]
+	[[<UCRTContentRoot Condition="'$(UCRTContentRoot)' == ''">$([MSBUILD]::GetDirectoryNameOfFileAbove('$(MSBUILDTHISFILEDIRECTORY)', 'sdkmanifest.xml'))/</UCRTContentRoot>]]
+	ucrt_props_content
+	"${ucrt_props_content}"
+  )
+  file(WRITE "${ucrtsdkprops}" "${ucrt_props_content}")
+
   # Remove unknown stuff
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Windows App Certification Kit/")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/WinSDK/Microsoft/")
+  file(REMOVE_RECURSE "${installFolderSdk}/Windows App Certification Kit/")
+  file(REMOVE_RECURSE "${installFolderSdk}/Microsoft/")
 endblock()
