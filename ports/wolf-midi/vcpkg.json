@@ -1,8 +1,8 @@
 {
-  "name": "cpp-midi",
-  "version": "1.0.0",
+  "name": "wolf-midi",
+  "version": "1.0.1",
   "description": "A lightweight MIDI file read-write library.",
-  "homepage": "https://github.com/wolfgitpr/cpp-midi",
+  "homepage": "https://github.com/wolfgitpr/wolf-midi",
   "license": "Apache-2.0",
   "dependencies": [
     {
