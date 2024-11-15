@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-libyal-vstools",
+  "version-date": "2023-12-18",
+  "description": "Maintainer functions for libyal ports",
+  "license": "MIT",
+  "supports": "windows & native"
+}
