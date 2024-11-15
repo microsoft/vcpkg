@@ -6,13 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmakelists_fixes.patch
-        improve_compatibility_with_recent_boost.patch
         use_another_implementation_of_has_begin_end.patch
-        uri_facade_win.patch
         serverObj.patch
-        include_asio_first.patch
-        boost-1.70.patch
         fix-std-headers.patch
+        uri_facade_win.patch
+        boost-compatibility.patch
 )
 
 vcpkg_cmake_configure(
@@ -28,8 +26,5 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-#Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/freeopcua" RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
