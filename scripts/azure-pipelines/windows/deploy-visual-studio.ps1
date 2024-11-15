@@ -21,7 +21,8 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
-  'Microsoft.VisualStudio.Component.Windows11SDK.22621',
+  'Microsoft.VisualStudio.Component.Windows11SDK.26100',
+  'Microsoft.VisualStudio.Component.Windows10SDK.20348', # As of 2024-11-15, CMake explicitly needs a Windows 10 SDK for Store
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
