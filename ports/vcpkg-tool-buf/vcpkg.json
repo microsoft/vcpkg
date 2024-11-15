@@ -1,0 +1,8 @@
+{
+  "name": "vcpkg-tool-buf",
+  "version": "1.45.0",
+  "description": "The Buf CLI is a developer tool that enables building and management of Protobuf APIs through the command line",
+  "homepage": "https://github.com/bufbuild/buf",
+  "license": "Apache-2.0",
+  "supports": "(x64 | arm64) & !android"
+}
