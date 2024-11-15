@@ -19,7 +19,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-plugin-dir.patch
-        ${ALSA_VERSION_SCRIPT_PATCH}
+        libdl.diff
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
