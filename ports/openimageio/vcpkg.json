@@ -21,8 +21,8 @@
     "fmt",
     "libjpeg-turbo",
     "libpng",
-    "openexr",
     "opencolorio",
+    "openexr",
     "robin-map",
     {
       "name": "tiff",
