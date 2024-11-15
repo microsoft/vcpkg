@@ -54,7 +54,7 @@
 
   <PropertyGroup Condition="'$(VcpkgPlatformTarget)' == ''">
     <VcpkgPlatformTarget>$(Platform.ToLower())</VcpkgPlatformTarget>
-    <VcpkgPlatformTarget Condition="'$(Platform)' == 'win32'">x86</VcpkgPlatformTarget>
+    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == 'win32'">x86</VcpkgPlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup>
