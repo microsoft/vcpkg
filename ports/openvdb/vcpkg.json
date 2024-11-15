@@ -1,6 +1,6 @@
 {
   "name": "openvdb",
-  "version": "11.0.0",
+  "version": "12.0.0",
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
   "license": "MPL-2.0",
