@@ -3458,7 +3458,7 @@
     },
     "hdf5": {
       "baseline": "1.14.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "hdr-histogram": {
       "baseline": "0.11.8",
@@ -4279,6 +4279,10 @@
     "libadwaita": {
       "baseline": "1.3.2",
       "port-version": 2
+    },
+    "libaec": {
+      "baseline": "1.1.3",
+      "port-version": 0
     },
     "libaes-siv": {
       "baseline": "2020-10-15",
@@ -8783,10 +8787,6 @@
     "systemc": {
       "baseline": "2.3.3",
       "port-version": 8
-    },
-    "szip": {
-      "baseline": "2.1.1",
-      "port-version": 12
     },
     "tabulate": {
       "baseline": "1.5",
