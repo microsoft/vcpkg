@@ -4861,7 +4861,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2024.10.0",
+      "baseline": "2024.11.0",
       "port-version": 0
     },
     "libnoise": {
