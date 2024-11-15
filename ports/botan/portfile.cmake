@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 5b5766d279d92659fd8e6d5d5aac8be7328a8eae7412085c96e7059ecc560f596bf55ff0a8df6d671de5169d2a80694a6bdd6561dbe9bbb4c3df56b687c50039
+    SHA512 dcd9ac8e748422d55854c38e565704e4a239418b6855836bdea85bd4dc3ab45e218d320471b98b6a451fc63d8518895f3813a50c94dee90227c09d12d96ca1dc
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
@@ -12,7 +12,7 @@ vcpkg_from_github(
         fix_android.patch
         libcxx-winpthread-fixes.patch
         fix-cmake-usage.patch
-        add-include-string.patch
+        0009-fix-regression-f2bf049-85491b3.patch # extract from PR 4255
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 

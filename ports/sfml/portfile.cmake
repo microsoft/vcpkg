@@ -2,9 +2,10 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 b376d3b00277ed60d107fe1268c210749b3aafcee618a8f924b181a9b476e92b9cb9baddecf70a8913b5910c471d53ea0260a876ad7b2db2b98b944d9f508714
+    SHA512 d8a8bee3aa9acda4609104c2a9d4a2512e4be6d6e85fd4b24c287c03f60cfb888e669e61bfac4113dae35f0c3492559b65b3453baf38766d8c0223d9ab77aada
     PATCHES
         fix-dependencies.patch
+        fix-dep-openal.patch
 )
 
 # The embedded FindFreetype doesn't properly handle debug libraries
@@ -32,6 +33,9 @@ vcpkg_cmake_configure(
         -DSFML_GENERATE_PDB=OFF
         -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        SFML_MISC_INSTALL_PREFIX
+        SFML_WARNINGS_AS_ERRORS
 )
 
 vcpkg_cmake_install()
