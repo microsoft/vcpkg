@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-LNK2019.patch
+        fix-MSVC-warning.patch
 )
 
 vcpkg_cmake_configure(
