@@ -31,7 +31,7 @@ index ceaea62..2a2a359 100644
 +endif()
 +if(@USE_LIBRAW@)
 +    find_dependency(LibRaw)
-+endif(
++endif()
 +
  # add here all the find_dependency() whenever switching to config based dependencies
  if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
