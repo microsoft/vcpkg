@@ -5709,8 +5709,8 @@
       "port-version": 9
     },
     "lzokay": {
-      "baseline": "2020-07-30",
-      "port-version": 2
+      "baseline": "2023-10-22",
+      "port-version": 0
     },
     "maddy": {
       "baseline": "1.3.0",
