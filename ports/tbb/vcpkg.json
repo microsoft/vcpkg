@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "tbb",
-  "version": "2021.13.0",
+  "version": "2022.0.0",
   "description": "Intel's Threading Building Blocks.",
   "homepage": "https://github.com/oneapi-src/oneTBB",
   "license": "Apache-2.0",

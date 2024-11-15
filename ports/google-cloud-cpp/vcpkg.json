@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.30.0",
+  "version": "2.31.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -1102,6 +1102,18 @@
     },
     "oslogin": {
       "description": "Cloud OS Login API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "parallelstore": {
+      "description": "Cloud Parallel Store API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
