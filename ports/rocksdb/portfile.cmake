@@ -6,6 +6,7 @@ vcpkg_from_github(
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
+    android-statfs.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
