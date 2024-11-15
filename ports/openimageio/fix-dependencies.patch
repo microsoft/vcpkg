@@ -1,8 +1,8 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index ceaea62..7da96f3 100644
+index ceaea62..2a2a359 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -6,6 +6,30 @@
+@@ -6,6 +6,33 @@
 
  include(CMakeFindDependencyMacro)
 
@@ -12,6 +12,9 @@ index ceaea62..7da96f3 100644
 +endif()
 +if(@USE_LIBHEIF@)
 +    find_dependency(libheif CONFIG)
++endif()
++if(@USE_FREETYPE@)
++    find_dependency(freetype CONFIG)
 +endif()
 +find_dependency(PNG)
 +if(@USE_OPENCV@)
@@ -28,7 +31,7 @@ index ceaea62..7da96f3 100644
 +endif()
 +if(@USE_LIBRAW@)
 +    find_dependency(LibRaw)
-+endif()
++endif(
 +
  # add here all the find_dependency() whenever switching to config based dependencies
  if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
