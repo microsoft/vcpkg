@@ -701,9 +701,10 @@ memorymodule:arm-neon-android=fail
 memorymodule:arm64-android=fail
 memorymodule:x64-android=fail
 # Missing dependent libraries.
+mesa:arm64-android=fail
+mesa:arm64-osx=fail
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-mesa:arm64-osx=fail
 milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-neon-android=fail
 minifb:arm64-android=fail
