@@ -1,0 +1,16 @@
+diff --git a/cmake/spatial_hashConfig.cmake.in b/cmake/spatial_hashConfig.cmake.in
+index ffb1450..6e64407 100644
+--- a/cmake/spatial_hashConfig.cmake.in
++++ b/cmake/spatial_hashConfig.cmake.in
+@@ -1,9 +1,7 @@
+ get_filename_component(spatial_hash_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ 
+-find_dependency(Eigen3 REQUIRED)
+-find_package(PkgConfig REQUIRED)
+-pkg_check_modules(glog REQUIRED IMPORTED_TARGET libglog)
+-
++find_package(Eigen3 REQUIRED)
++find_package(glog REQUIRED)
+ if(NOT TARGET spatial_hash::spatial_hash)
+   include("${spatial_hash_CMAKE_DIR}/spatial_hashTargets.cmake")
+ endif()

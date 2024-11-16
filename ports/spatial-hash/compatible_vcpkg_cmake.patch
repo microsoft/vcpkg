@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f21fb2c..f626c68 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,13 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+-add_compile_options(-Wall -Wextra)
+-
+ option(SPATIAL_HASH_BUILD_TESTS "Build tests" ON)
+ 
+ find_package(Eigen3 REQUIRED)
+-find_package(PkgConfig REQUIRED)
+-pkg_check_modules(glog REQUIRED IMPORTED_TARGET libglog)
++find_package(glog REQUIRED)
+ 
+ add_library(
+   ${PROJECT_NAME}
+@@ -24,7 +21,7 @@ target_include_directories(
+   ${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>
+                          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ )
+-target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen PkgConfig::glog)
++target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen glog::glog)
+ 
+ if(SPATIAL_HASH_BUILD_TESTS)
+   find_package(GTest REQUIRED)
+@@ -42,6 +39,7 @@ add_library(
+ install(TARGETS ${PROJECT_NAME} EXPORT spatial_hash-targets
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+ )
+ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(EXPORT spatial_hash-targets FILE spatial_hashTargets.cmake NAMESPACE spatial_hash::
