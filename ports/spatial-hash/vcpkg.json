@@ -4,6 +4,7 @@
   "description": "A minimal C++ library for spatial data structures based on voxel hashing.",
   "homepage": "https://github.com/MIT-SPARK/Spatial-Hash",
   "license": "BSD-3-Clause",
+  "supports": "static",
   "dependencies": [
     "eigen3",
     "glog",
