@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 ce3eeb6d12c42157787bf97d265f34ac8e8af31070a2717b4c783e9158b6d7fbb5f239585fc38128a658315842cf7b6802cb9a80f4f391505bf806952e009da5
+    SHA512 a188d109f317c0cff1d57c3d81b307ff46db816774af2eb4edc39b136725bb3ed70fafbcffcdf9465f6f948a1e7dfc0175f75b17acd414e5ae543939a510688a
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
         fix-arm64-msvc.patch
+        fix-install-dirs.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -55,6 +56,7 @@ vcpkg_cmake_configure(
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
         -Dprotobuf_ABSL_PROVIDER=package
+        -Dprotobuf_BUILD_LIBUPB=OFF
         ${FEATURE_OPTIONS}
 )
 
