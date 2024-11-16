@@ -2,13 +2,24 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     set(_VCPKG_WINDOWS_TOOLCHAIN 1)
 
     # Load ENV if not loaded!
-    if(NOT DEFINED ENV{VCPKG_TOOLCHAIN_ENV_ALREADY_SET})
+    if(NOT DEFINED ENV{MSVC_TOOLCHAIN_ENV_ALREADY_SET})
         block()
-            include("${VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
+            include("${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
             include_directories(${INCLUDE})
             link_directories(${LIB})
         endblock()
     endif()
+
+    if(NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET} AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/intel-hpc/intel-msvc-env.cmake")
+        block()
+            include("${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/intel-hpc/intel-msvc-env.cmake")
+            #include_directories(${INCLUDE})
+            #link_directories(${LIB})
+        endblock()
+    endif()
+    string(APPEND CMAKE_Fortran_FLAGS " -assume:underscore -assume:protect_parens -fp:strict -names:lowercase -Qopenmp-")
+
+
 
     if(NOT DEFINED VCPKG_CRT_LINKAGE)
         block(PROPAGATE VCPKG_CRT_LINKAGE)
