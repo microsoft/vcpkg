@@ -1,3 +1,16 @@
+diff --git a/src/MessageTypeStore.cpp b/src/MessageTypeStore.cpp
+index 382a138..5f09122 100644
+--- a/src/MessageTypeStore.cpp
++++ b/src/MessageTypeStore.cpp
+@@ -52,7 +52,7 @@ class ErrorCollector : public google::protobuf::compiler::MultiFileErrorCollecto
+ public:
+     ErrorCollector() : _error_count(0) { }
+ 
+-    void AddError(const std::string& filename, int line, int column, const std::string& message) override
++    void RecordError(absl::string_view filename, int line, int column, absl::string_view message) override
+     {
+         _stream << "[" << filename << " (" << line << "," << column << ")] " << message << std::endl;
+         _error_count++;
 diff --git a/src/Socket_p.h b/src/Socket_p.h
 index 9c3c084..9ccabda 100644
 --- a/src/Socket_p.h
