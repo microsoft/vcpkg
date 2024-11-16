@@ -32,7 +32,7 @@ try {
     $tempPath = Get-TempFilePath
     New-Item -ItemType Directory -Path $tempPath -Force
     $LocalPath = Join-Path $tempPath $LocalName
-    Invoke-WebRequest -Uri $oneAPIBaseUrl -Outfile $LocalPath
+    curl.exe -L -o $LocalPath $oneAPIBaseUrl
     $doRemove = $true
   }
 
