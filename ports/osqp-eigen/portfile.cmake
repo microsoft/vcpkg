@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME  "osqpeigen" CONFIG_PATH "lib/cmake/OsqpEigen")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "osqpeigen" CONFIG_PATH "lib/cmake/OsqpEigen")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
