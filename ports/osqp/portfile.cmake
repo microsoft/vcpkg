@@ -1,6 +1,5 @@
-if ((VCPKG_LIBRARY_LINKAGE STREQUAL dynamic) AND (CMAKE_HOST_SYSTEM_NAME STREQUAL Windows))
-    message(STATUS "${PORT} doesn't support building as dynamic library on Windows, overriding to static")
-    set(VCPKG_LIBRARY_LINKAGE static)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
