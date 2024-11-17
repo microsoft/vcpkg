@@ -32,6 +32,11 @@ vcpkg_execute_required_process(
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DPYTHON=OFF
+    -DMATLAB=OFF
+    -DR_LANG=OFF
+    -DUNITTESTS=OFF
 )
 
 vcpkg_cmake_install()
