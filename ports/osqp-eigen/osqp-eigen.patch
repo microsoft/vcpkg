@@ -1,22 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8406ab9..62193ee 100644
+index 8406ab9..24c6328 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -144,11 +144,11 @@ install_basic_package_files(${PROJECT_NAME}
+@@ -144,6 +144,7 @@ install_basic_package_files(${PROJECT_NAME}
    NO_CHECK_REQUIRED_COMPONENTS_MACRO
    DEPENDENCIES ${OSQP_EIGEN_EXPORTED_DEPENDENCIES})
  
--# Install package.xml to share
--install(FILES package.xml DESTINATION share/cmake/osqp-eigen)
-+## Install package.xml to share
-+#install(FILES package.xml DESTINATION share/cmake/osqp-eigen)
++if(0)
+ # Install package.xml to share
+ install(FILES package.xml DESTINATION share/cmake/osqp-eigen)
  
--## Testing
--include(AddOsqpEigenUnitTest)
--add_subdirectory(tests)
-+### Testing
-+#include(AddOsqpEigenUnitTest)
-+#add_subdirectory(tests)
+@@ -152,3 +153,4 @@ include(AddOsqpEigenUnitTest)
+ add_subdirectory(tests)
  
--include(AddUninstallTarget)
-+#include(AddUninstallTarget)
+ include(AddUninstallTarget)
++endif()
