@@ -1,6 +1,5 @@
 include_guard(GLOBAL)
 
-block()
 if(NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET})
   set(ONEAPIROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../intel-compiler/")
   file(GLOB CMPLR_ROOT LIST_DIRECTORIES true "${ONEAPIROOT_DIR}/compiler/*")
@@ -30,7 +29,6 @@ if(NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET})
 
   set(ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET} "1")
 endif()
-endblock()
 
 # rem OpenCL FPGA runtime
 # if exist "%CMPLR_ROOT%\opt\oclfpga\fpgavars.bat" (

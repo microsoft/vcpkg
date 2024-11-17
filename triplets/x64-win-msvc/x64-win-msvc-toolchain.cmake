@@ -5,21 +5,19 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     if(NOT DEFINED ENV{MSVC_TOOLCHAIN_ENV_ALREADY_SET})
         block()
             include("${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
-            include_directories(${INCLUDE})
-            link_directories(${LIB})
         endblock()
     endif()
 
-    if(NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET} AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/intel-hpc/intel-msvc-env.cmake")
+    if(TOOLCHAIN_ENABLE_Fortran AND
+       NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET})
         block()
             include("${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/intel-hpc/intel-msvc-env.cmake")
-            #include_directories(${INCLUDE})
-            #link_directories(${LIB})
         endblock()
     endif()
     string(APPEND CMAKE_Fortran_FLAGS " -assume:underscore -assume:protect_parens -fp:strict -names:lowercase -Qopenmp-")
 
-
+    include_directories($ENV{INCLUDE})
+    link_directories($ENV{LIB})
 
     if(NOT DEFINED VCPKG_CRT_LINKAGE)
         block(PROPAGATE VCPKG_CRT_LINKAGE)

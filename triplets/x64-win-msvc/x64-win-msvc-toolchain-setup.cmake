@@ -26,7 +26,3 @@ if(EXISTS "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
     include("${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
 endif()
 
-if(EXISTS "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/intel-hpc/intel-msvc-env.cmake")
-    message("Loading Intel environment ....")
-    include("${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/intel-hpc/intel-msvc-env.cmake")
-endif()
