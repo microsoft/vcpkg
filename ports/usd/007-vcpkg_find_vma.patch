@@ -1,0 +1,27 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index d1a8169a2..0fb6776a9 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -262,8 +262,10 @@ if (PXR_BUILD_IMAGING)
+         endif()
+         find_package(unofficial-shaderc CONFIG REQUIRED)
+         find_package(unofficial-spirv-reflect CONFIG REQUIRED)
++        find_package(VulkanMemoryAllocator CONFIG REQUIRED)
+         list(APPEND VULKAN_LIBS unofficial::shaderc::shaderc)
+         list(APPEND VULKAN_LIBS unofficial::spirv-reflect)
++        list(APPEND VULKAN_LIBS GPUOpen::VulkanMemoryAllocator)
+     endif()
+     # --Opensubdiv
+     find_package(OpenSubdiv 3 CONFIG REQUIRED)
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index d5b0d2f77..c8039c310 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -28,6 +28,7 @@ if(@PXR_BUILD_IMAGING@)
+     if(@PXR_ENABLE_VULKAN_SUPPORT@)
+         find_dependency(unofficial-shaderc CONFIG)
+         find_dependency(unofficial-spirv-reflect CONFIG)
++        find_dependency(VulkanMemoryAllocator CONFIG)
+     endif()
+ endif()
+ 
