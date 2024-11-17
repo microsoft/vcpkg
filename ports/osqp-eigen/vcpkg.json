@@ -5,10 +5,7 @@
   "description": "Simple C++ wrapper for the osqp library",
   "homepage": "https://robotology.github.io/osqp-eigen/",
   "dependencies": [
-    {
-      "name": "eigen3",
-      "version>=": "3.4.0"
-    },
+    "eigen3",
     {
       "name": "osqp",
       "version>=": "0.6.2"
