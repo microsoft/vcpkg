@@ -724,6 +724,7 @@ ms-gdkx:x64-windows-static-md=fail
 ms-gltf:arm-neon-android=fail
 ms-gltf:arm64-android=fail
 ms-gltf:x64-android=fail
+msquic:arm64-android=fail
 monkeys-audio:arm64-windows=fail
 monkeys-audio:x64-windows-static=fail
 moos-core:x64-windows-static=fail
@@ -981,6 +982,9 @@ sciter:x64-windows=skip
 sciter:x64-windows-static=skip
 sciter:x64-windows-static-md=skip
 sciter:x86-windows=skip
+# needs host ruby
+sdformat10:arm64-android=fail
+sdformat9:arm64-android=fail
 sdl1:arm-neon-android=fail
 sdl1:arm64-android=fail
 sdl1:x64-android=fail
