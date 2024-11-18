@@ -7829,7 +7829,7 @@
       "port-version": 0
     },
     "raylib": {
-      "baseline": "5.0",
+      "baseline": "5.5",
       "port-version": 2
     },
     "rbdl": {
