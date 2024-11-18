@@ -193,6 +193,11 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 }
 
+if ($Triplet -match "-android")
+{
+    $skipFailuresArg += @('--exclude=qtwayland') # host deps missing
+}
+
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
