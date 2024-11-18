@@ -2,4 +2,3 @@ yalantinglibs provides CMake targets:
 
 find_package(yalantinglibs CONFIG REQUIRED)
 target_link_libraries(main yalantinglibs::yalantinglibs)
-target_compile_features(main PRIVATE cxx_std_20)
