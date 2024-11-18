@@ -890,6 +890,7 @@ qpid-proton:arm64-android=fail
 qpid-proton:x64-android=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
+qt-advanced-docking-system:arm64-android=fail
 qt5-base:arm-neon-android=fail
 qt5-base:arm64-android=fail
 qt5-base:arm64-windows=fail
@@ -904,8 +905,9 @@ qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
 # Missing system libraries
-qtwayland:x64-osx=skip
+qtwayland:arm64-android=skip
 qtwayland:arm64-osx=skip
+qtwayland:x64-osx=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=skip
 qt5-x11extras:arm64-osx=skip
