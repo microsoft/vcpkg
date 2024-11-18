@@ -17,7 +17,7 @@ index ebb3333..8fd53ef 100644
    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/webm)
 
 +install(EXPORT unofficial-libwebm-targets
-+        FILE unofficial-libwebm-targets.cmake
++        FILE unofficial-libwebm-config.cmake
 +        NAMESPACE unofficial::libwebm::
 +        DESTINATION share/unofficial-libwebm)
  # Install common headers into a subdirectory to avoid breaking nested includes.

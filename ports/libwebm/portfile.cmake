@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         Fix-cmake.patch
-		fix-export-config.patch
+        fix-export-config.patch
 )
 
 vcpkg_cmake_configure(
@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libwebm-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libwebm")
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libwebm)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
