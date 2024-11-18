@@ -206,8 +206,6 @@ cctag:x64-windows-static-md=fail
 cello:arm64-uwp=fail
 cello:x64-uwp=fail
 chakracore:x64-linux=skip
-chartdir:arm-neon-android=fail
-chartdir:arm64-android=fail
 # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
 #  broken on Windows because it does not yet support VS2022
 chromium-base:x64-windows=skip
@@ -238,6 +236,7 @@ cpp-ipc:x64-android=fail
 cppmicroservices:arm-neon-android=fail
 cppmicroservices:arm64-android=fail
 cppmicroservices:arm64-windows=fail
+cppmicroservices:arm64-windows-static-md=fail
 cppmicroservices:arm64-uwp=fail
 cppmicroservices:x64-android=fail
 cppmicroservices:x64-uwp=fail
