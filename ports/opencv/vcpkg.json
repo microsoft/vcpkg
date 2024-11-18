@@ -1,8 +1,7 @@
 {
   "name": "opencv",
-  "version": "4.8.0",
-  "port-version": 1,
-  "description": "Computer vision library",
+  "version": "4.10.0",
+  "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
   "dependencies": [
@@ -23,6 +22,18 @@
           "default-features": false,
           "features": [
             "ade"
+          ]
+        }
+      ]
+    },
+    "calib3d": {
+      "description": "calib3d module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "calib3d"
           ]
         }
       ]
@@ -82,21 +93,8 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
-            "dnn",
-            "jpeg",
-            "png",
-            "quirc",
-            "tiff",
-            "webp"
+            "default-features"
           ]
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
         }
       ]
     },
@@ -120,6 +118,18 @@
           "default-features": false,
           "features": [
             "dnn-cuda"
+          ]
+        }
+      ]
+    },
+    "dshow": {
+      "description": "enable DirectShow",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dshow"
           ]
         }
       ]
@@ -149,13 +159,37 @@
       ]
     },
     "freetype": {
-      "description": "freetype support for opencv",
+      "description": "Freetype support for opencv",
       "dependencies": [
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
             "freetype"
+          ]
+        }
+      ]
+    },
+    "fs": {
+      "description": "Enable filesystem support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "fs"
+          ]
+        }
+      ]
+    },
+    "gapi": {
+      "description": "Enable gapi module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "gapi"
           ]
         }
       ]
@@ -208,6 +242,30 @@
         }
       ]
     },
+    "highgui": {
+      "description": "highgui module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "highgui"
+          ]
+        }
+      ]
+    },
+    "intrinsics": {
+      "description": "enable intrinsics",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "intrinsics"
+          ]
+        }
+      ]
+    },
     "ipp": {
       "description": "Enable Intel Integrated Performance Primitives",
       "dependencies": [
@@ -221,7 +279,7 @@
       ]
     },
     "jasper": {
-      "description": "JPEG 2000 support for opencv",
+      "description": "JPEG 2000 support for opencv (deprecated)",
       "dependencies": [
         {
           "name": "opencv4",
@@ -256,14 +314,38 @@
         }
       ]
     },
+    "msmf": {
+      "description": "Microsoft Media Foundation support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "msmf"
+          ]
+        }
+      ]
+    },
     "nonfree": {
-      "description": "opencv nonfree module",
+      "description": "Allow nonfree and unredistributable libraries",
       "dependencies": [
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
             "nonfree"
+          ]
+        }
+      ]
+    },
+    "opencl": {
+      "description": "Enable OpenCL support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "opencl"
           ]
         }
       ]
@@ -292,6 +374,18 @@
         }
       ]
     },
+    "openjpeg": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "openjpeg"
+          ]
+        }
+      ]
+    },
     "openmp": {
       "description": "Enable openmp support for opencv",
       "dependencies": [
@@ -300,6 +394,18 @@
           "default-features": false,
           "features": [
             "openmp"
+          ]
+        }
+      ]
+    },
+    "openvino": {
+      "description": "OpenVINO support for OpenCV DNN",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "openvino"
           ]
         }
       ]
@@ -352,6 +458,18 @@
         }
       ]
     },
+    "quality": {
+      "description": "Build opencv_quality module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "quality"
+          ]
+        }
+      ]
+    },
     "quirc": {
       "description": "Enable QR code module",
       "dependencies": [
@@ -360,6 +478,18 @@
           "default-features": false,
           "features": [
             "quirc"
+          ]
+        }
+      ]
+    },
+    "rgbd": {
+      "description": "Build opencv_rgbd module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "rgbd"
           ]
         }
       ]
@@ -384,6 +514,18 @@
           "default-features": false,
           "features": [
             "tbb"
+          ]
+        }
+      ]
+    },
+    "thread": {
+      "description": "Enable thread support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "thread"
           ]
         }
       ]
@@ -432,6 +574,18 @@
           "default-features": false,
           "features": [
             "webp"
+          ]
+        }
+      ]
+    },
+    "win32ui": {
+      "description": "Enable win32ui",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "win32ui"
           ]
         }
       ]

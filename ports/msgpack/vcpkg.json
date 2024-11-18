@@ -1,6 +1,6 @@
 {
   "name": "msgpack",
-  "version": "6.1.1",
+  "version": "7.0.0",
   "description": "MessagePack is an efficient binary serialization format, which lets you exchange data among multiple languages like JSON, except that it's faster and smaller.",
   "homepage": "https://github.com/msgpack/msgpack-c",
   "license": "BSL-1.0",
