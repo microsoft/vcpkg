@@ -14,8 +14,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSPM_ENABLE_SHARED=OFF
+        -DSPM_ENABLE_TCMALLOC=OFF
         -DSPM_USE_BUILTIN_PROTOBUF=ON
-        -DSPM_USE_EXTERNAL_ABSL=OFF
 )
 
 vcpkg_cmake_install()
