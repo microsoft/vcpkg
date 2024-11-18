@@ -1124,6 +1124,9 @@ v8:x86-windows=fail
 vowpal-wabbit:arm-neon-android=fail
 vowpal-wabbit:arm64-android=fail
 vowpal-wabbit:x64-android=fail
+# vst3sdk CMake files work only with the GUI version of Xcode
+vst3sdk:arm64-osx=fail
+vst3sdk:x64-osx=fail
 vtk-m:arm-neon-android=fail
 vtk-m:arm64-android=fail
 vtk-m:x64-android=fail
