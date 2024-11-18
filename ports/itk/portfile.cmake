@@ -1,26 +1,75 @@
 vcpkg_buildpath_length_warning(37)
 
+vcpkg_download_distfile(PYTHON_GPU_WRAPPING_PATCH
+    URLS https://github.com/InsightSoftwareConsortium/ITK/commit/e9b3d24f782a42f5586169e048b8d289f869d78a.diff?full_index=1
+    FILENAME InsightSoftwareConsortium-ITK-python-gpu-wrapping.patch
+    SHA512 71526320547b0eb5d0c0e0088e92ff60ba06462b82c531c79784d766361805970d9cad550660c7c85b953ec546b32c181aeab5d9f6d4142764d6f765106982a0
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
     REF "v${VERSION}"
+    #[[
+        When updating the ITK version and SHA512, remember to update the remote module versions below.
+    #]]
     SHA512 3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db
     HEAD_REF master
     PATCHES
-        double-conversion.patch
+        dependencies.diff
+        fftw.diff
         openjpeg.patch
-        openjpeg2.patch
         var_libraries.patch
         wrapping.patch
-        opencl.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
+        "${PYTHON_GPU_WRAPPING_PATCH}"
 )
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/CMake/FindOpenCL.cmake"
+    "${SOURCE_PATH}/Modules/ThirdParty/GDCM/src"
+    "${SOURCE_PATH}/Modules/ThirdParty/OpenJPEG/src/openjpeg"
+    "${SOURCE_PATH}/Modules/ThirdParty/VNL/src"
+)
+
+if("cuda" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH RTK_SOURCE_PATH
+        REPO RTKConsortium/ITKCudaCommon
+        # Cf. Modules/Remote/CudaCommon.remote.cmake
+        REF 0c20c4ef10d81910c8b2ac4e8446a1544fce3b60
+        SHA512 0eb1a6fe85e695345a49887cdd65103bedab72e01ae85ed03e16a8a296c6cb69a8d889a57b22dde7fcc69df4f604c274b04234c8ece306d08361fac5db029069
+        HEAD_REF master
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/CudaCommon")
+    file(RENAME "${RTK_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/CudaCommon")
+    file(COPY_FILE "${SOURCE_PATH}/Modules/Remote/CudaCommon/LICENSE" "${SOURCE_PATH}/CudaCommon LICENSE")
+endif()
+
+if("rtk" IN_LIST FEATURES)
+    # (old hint, not verified) RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
+    # RTK's ITK module must be built with ITK.
+    vcpkg_from_github(
+        OUT_SOURCE_PATH RTK_SOURCE_PATH
+        REPO RTKConsortium/RTK
+        # Cf. Modules/Remote/RTK.remote.cmake
+        REF bfdca5b6b666b4f08f2f7d8039af11a15cc3f831
+        SHA512 10a21fb4b82aa820e507e81a6b6a3c1aaee2ea1edf39364dc1c8d54e6b11b91f22d9993c0b56c0e8e20b6d549fcd6104de4e1c5e664f9ff59f5f93935fb5225a
+        HEAD_REF master
+        PATCHES
+            rtk/cmp0153.diff
+            rtk/getopt-win32.diff
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
+    file(RENAME "${RTK_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/RTK")
+    file(COPY_FILE "${SOURCE_PATH}/Modules/Remote/RTK/COPYRIGHT.TXT" "${SOURCE_PATH}/RTK COPYRIGHT.TXT")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "vtk"          Module_ITKVtkGlue
         "cuda"         Module_CudaCommon # Requires RTK?
+        "cuda"         RTK_USE_CUDA
         #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
         "cufftw"       ITK_USE_CUFFTW
         "opencl"       ITK_USE_GPU
@@ -33,42 +82,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("cufftw" IN_LIST FEATURES)
-    # Alternativly set CUFFT_LIB and CUFFTW_LIB
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(TO_CMAKE_PATH "$ENV{CUDA_PATH}" CUDA_PATH)
-        set(CUDA_LIB_PATH "${CUDA_PATH}")
-
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            string(APPEND CUDA_LIB_PATH "/lib/x64")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            string(APPEND CUDA_LIB_PATH "/lib/Win32")
-            message(FATAL_ERROR "CUFFTW is not supported on architecture ${VCPKG_TARGET_ARCHITECTURE}")
-        else()
-            message(FATAL_ERROR "Architecture ${VCPKG_TARGET_ARCHITECTURE} not supported !")
-        endif()
-
-        list(APPEND ADDITIONAL_OPTIONS
-             "-DFFTW_LIB_SEARCHPATH=${CUDA_LIB_PATH}"
-             "-DFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
-             "-DCUFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
-             )
-    endif()
-endif()
-
-if("rtk" IN_LIST FEATURES)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-        message(FATAL_ERROR "RTK is not supported on architecture ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()
-    SET(BUILD_RTK ON)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND ADDITIONAL_OPTIONS
-         "-DModule_RTK_GIT_TAG=8099212f715231d093f7d6a1114daecf45d871ed" # RTK latest versions (11.05.2020)
-         )
-    if("cuda" IN_LIST FEATURES)
-        list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
-        #RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
-    endif()
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
-file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
+
+if("fftw" IN_LIST FEATURES)
+    # Never set these options to OFF: dual use with feature 'cufftw'
+    list(APPEND ADDITIONAL_OPTIONS
+        -DITK_USE_FFTWD=ON
+        -DITK_USE_FFTWF=ON
+    )
+endif()
 
 if("opencl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS # Wrapping options required by OpenCL if build with Python Wrappers
@@ -76,8 +102,8 @@ if("opencl" IN_LIST FEATURES)
          -DITK_WRAP_signed_long_long=ON
          )
 endif()
-if("tools" IN_LIST FEATURES)
 
+if("tools" IN_LIST FEATURES)
     if("rtk" IN_LIST FEATURES)
         list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient
                                rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal
@@ -90,41 +116,69 @@ if("tools" IN_LIST FEATURES)
                                rtkwangdisplaceddetectorweighting rtkwarpedbackprojectsequence rtkwarpedforwardprojectsequence rtkwaveletsdenoising rtkxradgeometry)
     endif()
 endif()
-if("vtk" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+
+if("vtk" IN_LIST FEATURES AND EXISTS "${CURRENT_INSTALLED_DIR}/share/vtk/VTKPython-targets.cmake")
+    # 'vtk[python]' is built using the installed 'python3'.
+    # For 'find_package(vtk)', itk needs to provide the same version of python.
+    # Here, it is a purely *transitive* dependency via 'vtk[python]'.
+    include("${CURRENT_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by mvtk if vtk[python] was build
-         )
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}" 
+    )
 endif()
+
 if("python" IN_LIST FEATURES)
     message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
-    vcpkg_find_acquire_program(PYTHON3)
-    vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
-    get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_WRAP_PYTHON=ON
+        -DITK_USE_SYSTEM_CASTXML=ON
+        "-DCASTXML_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/castxml/bin/castxml${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by more than one feature
-        "-DSWIG_EXECUTABLE=${SWIG}"
-        "-DSWIG_DIR=${SWIG_DIR}"
-        )
+    )
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
+
+    vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
+    vcpkg_execute_required_process(
+        COMMAND "${SWIG}" -version
+        OUTPUT_VARIABLE swig_version
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "swig-version-${TARGET_TRIPLET}"
+    )
+    string(REGEX REPLACE ".*Version ([0-9.]*).*" "\\1" swig_version "${swig_version}")
+    set(swig_expected "4.2.0")
+    if(swig_version VERSION_GREATER_EQUAL swig_expected)
+        vcpkg_execute_required_process(
+            COMMAND "${SWIG}" -swiglib
+            OUTPUT_VARIABLE swiglib
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "swiglib-${TARGET_TRIPLET}"
+        )
+        list(APPEND ADDITIONAL_OPTIONS
+            -DITK_USE_SYSTEM_SWIG=ON
+            "-DSWIG_EXECUTABLE=${SWIG}"
+            "-DSWIG_DIR=${swiglib}"
+        )
+    else()
+        message(WARNING "Found swig ${swig_version}, but TK needs ${swig_expected}. A binary will be downloaded.")
+    endif()
 endif()
+
 if("opencv" IN_LIST FEATURES)
     message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
     list(APPEND ADDITIONAL_OPTIONS
         -DModule_ITKVideoBridgeOpenCV:BOOL=ON
         )
 endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    if (VCPKG_CRT_LINKAGE STREQUAL static)
-        set(STATIC_CRT_LNK ON)
-    else()
-        set(STATIC_CRT_LNK OFF)
-    endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND ADDITIONAL_OPTIONS
-        -DITK_MSVC_STATIC_RUNTIME_LIBRARY=${STATIC_CRT_LNK}
-        )
+        -DITK_MSVC_STATIC_RUNTIME_LIBRARY=ON
+        -DITK_MSVC_STATIC_CRT=ON
+    )
 endif()
 
 set(USE_64BITS_IDS OFF)
@@ -132,15 +186,16 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL
     set(USE_64BITS_IDS ON)
 endif()
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_PKGCONFIG_FILES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DITK_DOXYGEN_HTML=OFF
+        -DITK_FORBID_DOWNLOADS=ON
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
         -DITK_INSTALL_DATA_DIR=share/itk/data
@@ -160,20 +215,11 @@ vcpkg_cmake_configure(
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past and still is. ITK still has not figured out how to do it correctly!
         -DITK_USE_SYSTEM_GDCM=ON
         -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG
-        -DITK_USE_SYSTEM_DCMTK=ON
-        -DDCMTK_USE_ICU=ON
-        -DITK_USE_SYSTEM_ICU=ON
-        #-DITK_USE_SYSTEM_VXL=ON
+        -DITK_USE_SYSTEM_VXL=ON
         #-DITK_USE_SYSTEM_CASTXML=ON # needs to be added to vcpkg_find_acquire_program https://data.kitware.com/api/v1/file/hashsum/sha512/b8b6f0aff11fe89ab2fcd1949cc75f2c2378a7bc408827a004396deb5ff5a9976bffe8a597f8db1b74c886ea39eb905e610dce8f5bd7586a4d6c196d7349da8d/download
         -DITK_USE_SYSTEM_MINC=ON
-        -DITK_FORBID_DOWNLOADS=OFF # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break. Remote Modules would probably break with this!
-        -DINSTALL_GTEST=OFF
         -DITK_USE_SYSTEM_GOOGLETEST=ON
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
-
-        # TODO
-        #-DVXL_USE_GEOTIFF=ON
-        -DVXL_USE_LFS=ON
 
         -DITK_MINIMUM_COMPLIANCE_LEVEL:STRING=1 # To Display all remote modules within cmake-gui
         #-DModule_IOSTL=ON # example how to turn on a non-default module
@@ -189,17 +235,16 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
 
-    OPTIONS_DEBUG   ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -DRTK_BUILD_APPLICATIONS=OFF
+
     MAYBE_UNUSED_VARIABLES
-        DCMTK_USE_ICU # Used by DCMTK
+        EXECUTABLE_OUTPUT_PATH
+        ITK_USE_SYSTEM_FFTW
         ITK_USE_SYSTEM_GOOGLETEST
-        ITK_USE_SYSTEM_ICU # Used by DCMTK
+        RTK_BUILD_APPLICATIONS
+        RTK_USE_CUDA
 )
-if(BUILD_RTK) # Remote Modules are only downloaded on configure.
-    # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
-    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch rtk/Add-missing-include-for-Cuda.patch)
-endif()
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
@@ -208,21 +253,27 @@ if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.4/vcl_where_root_dir.h")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
-
 if("rtk" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_BINARY_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Modules/Remote/RTK\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.4/rtkConfiguration.h" "#define RTK_DATA_ROOT \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ExternalData/Modules/Remote/RTK/test\"" "")
-
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "\${ITK_INSTALL_PREFIX}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${SOURCE_PATH}/Modules/Remote/RTK/utilities/lp_solve" "\${ITK_INSTALL_PREFIX}/include/RTK/lpsolve")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_list(SET file_list
+    "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/LICENSE"
+)
+if("cuda" IN_LIST FEATURES)
+    vcpkg_list(APPEND file_list
+        "${SOURCE_PATH}/CudaCommon LICENSE"
+    )
+endif()
+if("rtk" IN_LIST FEATURES)
+    vcpkg_list(APPEND file_list
+        "${SOURCE_PATH}/RTK COPYRIGHT.TXT"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${file_list})
