@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MIT-SPARK/Spatial-Hash
@@ -10,12 +14,13 @@ vcpkg_from_github(
 
 set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled) # Since there is a '-' character in the port name it copies  to wrong directory (shared/spatial-hash), so we do it manually.
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DSPATIAL_HASH_BUILD_TESTS=OFF
+    OPTIONS
+        -DSPATIAL_HASH_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME spatial_hash
     CONFIG_PATH lib/cmake/spatial_hash
