@@ -49,6 +49,9 @@ vcpkg_cmake_configure(
       -DWOLFSSL_OCSPSTAPLING_V2=yes
       -DWOLFSSL_CRL=yes
       -DWOLFSSL_DES3=yes
+      -DWOLFSSL_ECH=yes
+      -DWOLFSSL_HPKE=yes
+      -DWOLFSSL_SNI=yes
       -DWOLFSSL_ASIO=${ENABLE_ASIO}
       -DWOLFSSL_DTLS=${ENABLE_DTLS}
       -DWOLFSSL_DTLS13=${ENABLE_DTLS}

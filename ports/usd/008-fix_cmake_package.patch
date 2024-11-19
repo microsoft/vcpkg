@@ -1,0 +1,63 @@
+diff --git a/pxr/CMakeLists.txt b/pxr/CMakeLists.txt
+index 00cafd3d9..c9faeabf0 100644
+--- a/pxr/CMakeLists.txt
++++ b/pxr/CMakeLists.txt
+@@ -12,13 +12,31 @@ endif()
+ 
+ pxr_core_epilogue()
+ 
+-export(PACKAGE pxr)
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
+ 
+-configure_file(pxrConfig.cmake.in
+-  "${PROJECT_BINARY_DIR}/pxrConfig.cmake" @ONLY)
+-install(FILES
++configure_file(
++  "pxrConfig.cmake.in"
+   "${PROJECT_BINARY_DIR}/pxrConfig.cmake"
+-  DESTINATION "${CMAKE_INSTALL_PREFIX}"
++  @ONLY
+ )
+ 
+-install(EXPORT pxrTargets DESTINATION "cmake")
++write_basic_package_version_file("${PROJECT_BINARY_DIR}/pxrConfigVersion.cmake"
++  VERSION "${PXR_MAJOR_VERSION}.${PXR_MINOR_VERSION}.${PXR_PATCH_VERSION}"
++  COMPATIBILITY AnyNewerVersion
++)
++
++install(
++    FILES
++      "${PROJECT_BINARY_DIR}/pxrConfig.cmake"
++      "${PROJECT_BINARY_DIR}/pxrConfigVersion.cmake"
++
++    DESTINATION
++      "${CMAKE_INSTALL_DATADIR}/pxr"
++)
++
++install(
++    EXPORT      pxrTargets
++    # NAMESPACE   "pxr::"
++    DESTINATION "${CMAKE_INSTALL_DATADIR}/pxr"
++)
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index c8039c310..9e104abb7 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -90,14 +90,14 @@ if(@Imath_FOUND@)
+     find_dependency(Imath CONFIG)
+ endif()
+ 
+-include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")
++include("${PXR_CMAKE_DIR}/pxrTargets.cmake")
+ if (TARGET usd_ms)
+     set(libs "usd_ms")
+ else()
+     set(libs "@PXR_ALL_LIBS@")
+ endif()
+ set(PXR_LIBRARIES "")
+-set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/include")
++set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/../../include")
+ string(REPLACE " " ";" libs "${libs}")
+ foreach(lib ${libs})
+     get_target_property(location ${lib} LOCATION)
