@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-gdal-target-interfaces.patch
         libkml.patch
         target-is-valid.patch
+        remove-machine-flag.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
