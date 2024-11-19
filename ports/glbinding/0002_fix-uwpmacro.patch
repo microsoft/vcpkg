@@ -25,7 +25,7 @@ index 3ad2c25..3e98a9a 100644
 +#ifdef WINDOWS_STORE
 +	static auto module = ::LoadPackagedLibrary(_T("OPENGL32.DLL"), 0);
 +#else
-+   static auto module = ::LoadLibrary(_T("OPENGL32.DLL"));
++	static auto module = ::LoadLibrary(_T("OPENGL32.DLL"));
 +#endif
  
  	// Prevent static linking of opengl32
