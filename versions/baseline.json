@@ -1626,7 +1626,7 @@
     },
     "chartdir": {
       "baseline": "7.0.0",
-      "port-version": 7
+      "port-version": 8
     },
     "check": {
       "baseline": "0.15.2",
