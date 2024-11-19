@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 5018dd3e062489633c6e6fdef867656bc8ae6717dd74808a29ce5066fd5d0d69d3038a1a0326ed4df2139590dce6b99381cdaaecae0af5ef37d26a5903be1e7e
+    SHA512 4d97e58534e29b9a9cd9c4331d1d1a4a47a58ccd6de75514a010ac7b01696d37dc09c022b10d7d939312cca9c87f1d3586b58355e5ae41812e7f147240594303
     HEAD_REF main
     PATCHES
         fix-deps.patch
+        fix-annotation.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -55,6 +56,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/compression/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/payload/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"

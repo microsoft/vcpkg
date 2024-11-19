@@ -53,8 +53,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VcpkgPlatformTarget)' == ''">
-    <VcpkgPlatformTarget>$(Platform)</VcpkgPlatformTarget>
-    <VcpkgPlatformTarget Condition="'$(Platform)' == 'Win32'">x86</VcpkgPlatformTarget>
+    <VcpkgPlatformTarget>$(Platform.ToLower())</VcpkgPlatformTarget>
+    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == 'win32'">x86</VcpkgPlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup>
