@@ -4869,7 +4869,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2024.11.0",
+      "baseline": "2024.11.1",
       "port-version": 0
     },
     "libnoise": {
@@ -5721,8 +5721,8 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.9.6",
-      "port-version": 1
+      "baseline": "0.9.7",
+      "port-version": 0
     },
     "magic-get": {
       "baseline": "2019-09-02",
@@ -7801,7 +7801,7 @@
       "port-version": 0
     },
     "rapidfuzz": {
-      "baseline": "3.0.5",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "rapidhash": {
@@ -8266,10 +8266,10 @@
     },
     "sentencepiece": {
       "baseline": "0.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.7.12",
+      "baseline": "0.7.13",
       "port-version": 0
     },
     "septag-dmon": {
