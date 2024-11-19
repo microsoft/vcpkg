@@ -281,7 +281,7 @@ dbghelp:x86-windows=skip
 dcmtk:arm-neon-android=fail
 dcmtk:arm64-android=fail
 dcmtk:arm64-windows=fail
-dcmtk:arm64-windows-windows-static-md=fail
+dcmtk:arm64-windows-static-md=fail
 dcmtk:x64-android=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
 directxsdk:x86-windows=skip
