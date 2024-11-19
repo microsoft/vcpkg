@@ -23,6 +23,9 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
   'Microsoft.VisualStudio.Component.Windows11SDK.26100',
   'Microsoft.VisualStudio.Component.Windows10SDK.20348', # As of 2024-11-15, CMake explicitly needs a Windows 10 SDK for Store
+  # These .NET parts are needed for easyhook, openni2
+  'Microsoft.Net.Component.4.8.SDK',
+  'Microsoft.Net.Component.4.7.2.TargetingPack',
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
