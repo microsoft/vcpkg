@@ -8242,7 +8242,7 @@
     },
     "sdl3": {
       "baseline": "3.1.6-preview",
-      "port-version": 1
+      "port-version": 2
     },
     "seacas": {
       "baseline": "2022-11-22",
