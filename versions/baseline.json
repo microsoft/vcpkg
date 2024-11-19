@@ -97,8 +97,8 @@
       "port-version": 0
     },
     "alsa": {
-      "baseline": "1.2.11",
-      "port-version": 2
+      "baseline": "1.2.13",
+      "port-version": 0
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
@@ -2005,7 +2005,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.7.2",
+      "baseline": "0.7.3",
       "port-version": 0
     },
     "cppunit": {
@@ -2737,7 +2737,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.11.04.00",
+      "baseline": "2024.11.11.00",
       "port-version": 0
     },
     "fcl": {
@@ -2789,7 +2789,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.11.04.00",
+      "baseline": "2024.11.11.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2873,8 +2873,8 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2024.11.04.00",
-      "port-version": 1
+      "baseline": "2024.11.11.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3941,12 +3941,12 @@
       "port-version": 0
     },
     "kdbindings": {
-      "baseline": "1.0.5",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "kddockwidgets": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kdsoap": {
       "baseline": "2.2.0",
@@ -4869,7 +4869,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2024.11.0",
+      "baseline": "2024.11.1",
       "port-version": 0
     },
     "libnoise": {
@@ -5046,7 +5046,7 @@
     },
     "libressl": {
       "baseline": "4.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "librsvg": {
       "baseline": "2.40.20",
@@ -5721,8 +5721,8 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.9.6",
-      "port-version": 1
+      "baseline": "0.9.7",
+      "port-version": 0
     },
     "magic-get": {
       "baseline": "2019-09-02",
@@ -5749,7 +5749,7 @@
       "port-version": 13
     },
     "mailio": {
-      "baseline": "0.23.0",
+      "baseline": "0.24.0",
       "port-version": 0
     },
     "makeid": {
@@ -6201,7 +6201,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.11.04.00",
+      "baseline": "2024.11.11.00",
       "port-version": 0
     },
     "mygui": {
@@ -6613,7 +6613,7 @@
       "port-version": 1
     },
     "open62541pp": {
-      "baseline": "0.15.0",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "openal-soft": {
@@ -7241,7 +7241,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.11.04.00",
+      "baseline": "2024.11.11.00",
       "port-version": 0
     },
     "psimd": {
@@ -7801,7 +7801,7 @@
       "port-version": 0
     },
     "rapidfuzz": {
-      "baseline": "3.0.5",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "rapidhash": {
@@ -8242,7 +8242,7 @@
     },
     "sdl3": {
       "baseline": "3.1.6-preview",
-      "port-version": 1
+      "port-version": 2
     },
     "seacas": {
       "baseline": "2022-11-22",
@@ -8266,10 +8266,10 @@
     },
     "sentencepiece": {
       "baseline": "0.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.7.12",
+      "baseline": "0.7.13",
       "port-version": 0
     },
     "septag-dmon": {
@@ -8578,7 +8578,7 @@
     },
     "spdlog": {
       "baseline": "1.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "spectra": {
       "baseline": "1.0.1",
@@ -9577,7 +9577,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2024.11.04.00",
+      "baseline": "2024.11.11.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9682,7 +9682,7 @@
     },
     "wolfssl": {
       "baseline": "5.7.4",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "3.4.0",
