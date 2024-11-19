@@ -1,20 +1,13 @@
 diff --git a/thrift/compiler/compiler.cc b/thrift/compiler/compiler.cc
-index 55d8fcaff7..97b0db790b 100644
+index 5e24fd6853f..8c7985e3c11 100644
 --- a/thrift/compiler/compiler.cc
 +++ b/thrift/compiler/compiler.cc
-@@ -735,6 +735,7 @@ std::unique_ptr<t_program_bundle> parse_and_mutate(
+@@ -734,7 +734,7 @@ std::unique_ptr<t_program_bundle> parse_and_mutate(
      const parsing_params& pparams,
      const gen_params& gparams) {
    auto found_or_error = source_manager::path_or_error();
-+#ifndef THRIFT_OSS
-   if (bundle_annotations()) {
+-  if (bundle_annotations()) {
++  if constexpr (bundle_annotations()) {
      const std::string scope_path = "thrift/annotation/scope.thrift";
-     found_or_error =
-@@ -747,6 +748,7 @@ std::unique_ptr<t_program_bundle> parse_and_mutate(
-           scope_path, std::string(content.data(), content.size()));
-     }
-   }
-+#endif
- 
-   // Parse it!
-   std::unique_ptr<t_program_bundle> program_bundle = parse_ast(
+     found_or_error = source_mgr.find_include_file(
+         scope_path, input_filename, pparams.incl_searchpath);
