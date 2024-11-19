@@ -1,0 +1,27 @@
+diff --git a/cmake/protobuf-module.cmake.in b/cmake/protobuf-module.cmake.in
+index 0bb05e3..694eafe 100644
+--- a/cmake/protobuf-module.cmake.in
++++ b/cmake/protobuf-module.cmake.in
+@@ -95,14 +95,18 @@ function(_protobuf_find_libraries name filename)
+     # Honor cache entry used by CMake 3.5 and lower.
+     set(${name}_LIBRARIES "${${name}_LIBRARY}" PARENT_SCOPE)
+   elseif(TARGET protobuf::lib${filename})
++    set(location "LOCATION")
++    if(WIN32 AND "@protobuf_BUILD_SHARED_LIBS@")
++      set(location "IMPORTED_IMPLIB")
++    endif()
+     get_target_property(${name}_LIBRARY_RELEASE protobuf::lib${filename}
+-      LOCATION_RELEASE)
++      ${location}_RELEASE)
+     get_target_property(${name}_LIBRARY_RELWITHDEBINFO protobuf::lib${filename}
+-      LOCATION_RELWITHDEBINFO)
++      ${location}_RELWITHDEBINFO)
+     get_target_property(${name}_LIBRARY_MINSIZEREL protobuf::lib${filename}
+-      LOCATION_MINSIZEREL)
++      ${location}_MINSIZEREL)
+     get_target_property(${name}_LIBRARY_DEBUG protobuf::lib${filename}
+-      LOCATION_DEBUG)
++      ${location}_DEBUG)
+ 
+     select_library_configurations(${name})
+     set(${name}_LIBRARY ${${name}_LIBRARY} PARENT_SCOPE)
