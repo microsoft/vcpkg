@@ -5,17 +5,23 @@ endif()
 vcpkg_download_distfile(
     LIBRESSL_SOURCE_ARCHIVE
     URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${VERSION}.tar.gz"
-         "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${VERSION}.tar.gz"
+         "https://github.com/libressl/portable/releases/download/v{VERSION}/${PORT}-${VERSION}.tar.gz"
     FILENAME "${PORT}-${VERSION}.tar.gz"
-    SHA512 b7b9f47c77fd27787b7c7ae7e78cd831fe9f7f32e280f54952994569bfe69ff03022e349aea9ea734c50b079693c6e15a3c1115ef0093e523437904074da5784
+    SHA512 b5ec6d1f4e3842ecb487f9a67d86db658d05cbe8cd3fcba61172affa8c65c5d0823aa244065a7233f06c669d04a5a36517c02a2d99d2f2da3c4df729ac243b37
+)
+
+vcpkg_download_distfile(WARNINGS_REMOVAL_PATCH
+    URLS https://github.com/libressl/portable/commit/1996dbc07d129cf2b1d32be384a131b9e6fa5373.diff?full_index=1
+    FILENAME Disable-additional-MSVC-warnings.patch
+    SHA512 8e32bd2b14c84a9e7106d5bc0ffc9f6bea712db2087c7b944e9b41a3a6cca0b09adcee2cff9bfd136060d539a34f7dc7d9283ec1c058028cc15410475790f4b6
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
     PATCHES
-        0002-suppress-msvc-warnings.patch
         pkgconfig.diff
+        ${WARNINGS_REMOVAL_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

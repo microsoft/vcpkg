@@ -1,14 +1,8 @@
-# Don't file if the bin folder exists. We need exe and custom files.
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+# USD plugins do not produce .lib
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-message(STATUS [=[
-The usd port does not work with the version of Threading Building Blocks (tbb) currently chosen by vcpkg's baselines,
-and does not expect to be updated to work with current versions soon. See
-https://github.com/PixarAnimationStudios/USD/issues/1600
-
-If you must use this port in your project, pin a version of tbb of 2020_U3 or older via a manifest file.
-See https://vcpkg.io/en/docs/examples/versioning.getting-started.html for instructions.
-]=])
+# Proper support for a true static usd build is left as a future port improvement.
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
 
@@ -17,50 +11,103 @@ vcpkg_from_github(
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
     SHA512 77c9601f4a689248448049660ef0083fc99e2a4c2e7a260814831bdfee8e9844f64b5b2aed88a9f907fe4ebcf6a532bb7dce80bb11c1f54c31066b07aa96b851
-    HEAD_REF master
+    HEAD_REF release
     PATCHES
-        fix_build-location.patch
-        fix-msvc.patch #https://github.com/PixarAnimationStudios/OpenUSD/pull/3204
+        001-fix_rename_find_package_to_find_dependency.patch # See PixarAnimationStudios/OpenUSD#3205
+        002-vcpkg_find_tbb.patch # See PixarAnimationStudios/OpenUSD#3207
+        003-fix-dep.patch
+        004-fix_cmake_package.patch
+        005-MaterialX_v1.38-39.patch
+        006-fix-msvc.patch
+        007-fix_cmake_hgi_interop.patch
+        008-fix_clang8_compiler_error.patch
+        009-vcpkg_install_folder_conventions.patch
+        010-cmake_export_plugin_as_modules.patch
+        011-TBB-2022.patch
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
+# Changes accompanying 006-vcpkg_find_spirv-reflect.patch
+vcpkg_replace_string("${SOURCE_PATH}/pxr/imaging/hgiVulkan/shaderCompiler.cpp"
+    [[#include "pxr/imaging/hgiVulkan/spirv_reflect.h"]]
+    [[#include <spirv_reflect.h>]]
+)
+file(REMOVE
+    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.cpp"
+    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.h"
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        materialx      PXR_ENABLE_MATERIALX_SUPPORT
+        metal          PXR_ENABLE_METAL_SUPPORT
+        openimageio    PXR_BUILD_OPENIMAGEIO_PLUGIN
+        vulkan         PXR_ENABLE_VULKAN_SUPPORT
+)
+
+if (PXR_ENABLE_MATERIALX_SUPPORT)
+    list(APPEND FEATURE_OPTIONS "-DMaterialX_DIR=${CURRENT_INSTALLED_DIR}/share/materialx")
+endif()
+
+# hgiInterop Metal and Vulkan backend requires garch which is only enabled if PXR_ENABLE_GL_SUPPORT is ON
+if(PXR_ENABLE_VULKAN_SUPPORT OR PXR_ENABLE_METAL_SUPPORT)
+    list(APPEND FEATURE_OPTIONS "-DPXR_ENABLE_GL_SUPPORT:BOOL=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DPXR_ENABLE_GL_SUPPORT:BOOL=OFF")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
-        -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
-        -DPXR_BUILD_IMAGING:BOOL=OFF
-        -DPXR_BUILD_MONOLITHIC:BOOL=OFF
-        -DPXR_BUILD_TESTS:BOOL=OFF
-        -DPXR_BUILD_USD_IMAGING:BOOL=OFF
-        -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
+    OPTIONS ${FEATURE_OPTIONS}
+        -DPXR_BUILD_DOCUMENTATION:BOOL=OFF
         -DPXR_BUILD_EXAMPLES:BOOL=OFF
+        -DPXR_BUILD_TESTS:BOOL=OFF
         -DPXR_BUILD_TUTORIALS:BOOL=OFF
         -DPXR_BUILD_USD_TOOLS:BOOL=OFF
+
+        -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
+        -DPXR_BUILD_DRACO_PLUGIN:BOOL=OFF
+        -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
+        -DPXR_BUILD_PRMAN_PLUGIN:BOOL=OFF
+
+        -DPXR_BUILD_IMAGING:BOOL=ON 
+        -DPXR_BUILD_USD_IMAGING:BOOL=ON 
+
+        -DPXR_ENABLE_OPENVDB_SUPPORT:BOOL=OFF
+        -DPXR_ENABLE_PTEX_SUPPORT:BOOL=OFF
+
+        -DPXR_PREFER_SAFETY_OVER_SPEED:BOOL=ON 
+
+        -DPXR_ENABLE_PRECOMPILED_HEADERS:BOOL=OFF
+
+        -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
+        -DPXR_USE_DEBUG_PYTHON:BOOL=OFF
+    MAYBE_UNUSED_VARIABLES
+        PXR_USE_PYTHON_3
+        PYTHON_EXECUTABLE
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-# The CMake files installation is not standard in USD and will install pxrConfig.cmake in the prefix root and
-# pxrTargets.cmake in "cmake" so we are moving pxrConfig.cmake in the same folder and patch the path to pxrTargets.cmake
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/pxrConfig.cmake "/cmake/pxrTargets.cmake" "/pxrTargets.cmake")
+# Handle debug path for USD plugins
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB_RECURSE debug_targets
+        "${CURRENT_PACKAGES_DIR}/debug/share/pxr/*-debug.cmake"
+        )
+    foreach(debug_target IN LISTS debug_targets)
+        file(READ "${debug_target}" contents)
+        string(REPLACE "\${_IMPORT_PREFIX}/usd" "\${_IMPORT_PREFIX}/debug/usd" contents "${contents}")
+        string(REPLACE "\${_IMPORT_PREFIX}/plugin" "\${_IMPORT_PREFIX}/debug/plugin" contents "${contents}")
+        file(WRITE "${debug_target}" "${contents}")
+    endforeach()
+endif()
 
-file(
-    RENAME
-        "${CURRENT_PACKAGES_DIR}/pxrConfig.cmake"
-        "${CURRENT_PACKAGES_DIR}/cmake/pxrConfig.cmake")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "pxr")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME pxr)
-
-# Remove duplicates in debug folder
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/pxrConfig.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE.txt)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # Move all dlls to bin
@@ -72,8 +119,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
         file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
     endforeach()
-
-    vcpkg_copy_pdbs()
 
     function(file_replace_regex filename match_string replace_string)
         file(READ ${filename} _contents)
@@ -92,3 +137,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file_replace_regex(${PLUGINFO} [=["LibraryPath": "../../([a-zA-Z0-9_]+).dll"]=] [=["LibraryPath": "../../../bin/\1.dll"]=])
     endforeach()
 endif()
+
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE.txt)

@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
+if(POLICY CMP0174)
+    # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
+    cmake_policy(SET CMP0174 NEW)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
