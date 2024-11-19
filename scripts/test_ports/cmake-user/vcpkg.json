@@ -23,13 +23,14 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
+            "cmake-old"
           ],
           "platform": "x64 & (windows | linux | osx) & !uwp"
         }
       ]
     },
-    "cmake-3-7": {
-      "description": "Run the tests with CMake 3.7"
+    "cmake-old": {
+      "description": "Run the tests with the oldest supported version of CMake"
     },
     "cmake-current": {
       "description": "Run the tests with vcpkg's current version of CMake"

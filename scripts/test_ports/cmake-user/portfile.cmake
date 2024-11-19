@@ -4,8 +4,8 @@ set(cmake_commands "")
 if("cmake-current" IN_LIST FEATURES)
     list(APPEND cmake_commands "${CMAKE_COMMAND}")
 endif()
-if("cmake-3-7" IN_LIST FEATURES)
-    set(cmake_version 3.7.2)
+if("cmake-old" IN_LIST FEATURES)
+    set(cmake_version 3.16.3)
     string(REGEX REPLACE "([^.]*[.][^.]*).*" "\\1" cmake_major_minor "${cmake_version}")
     if(VCPKG_HOST_IS_WINDOWS)
         set(name "cmake-${cmake_version}-win32-x86")
@@ -13,7 +13,7 @@ if("cmake-3-7" IN_LIST FEATURES)
             FILENAME "${name}.zip"
             URLS "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${name}.zip"
                  "https://cmake.org/files/v${cmake_major_minor}/${name}.zip"
-            SHA512 c359a22e2e688da1513db195280d6e8987bc8d570a0c543f1b1dfc8572fe4fd6c23d951ec5d5eae640fcca3bef3ae469083511474796ade8c6319d8bc4e4b38d
+            SHA512 4c955f075ea164a118cd813070f9b4548f0e41547ca933812ce383396e94f119d4acba5f925ab3611fc68acb58c03b50353c26a0bf6f44fc343e71689a0d477e
         )
         set(cmake_bin_dir "/bin")
     elseif(VCPKG_HOST_IS_OSX)
@@ -22,7 +22,7 @@ if("cmake-3-7" IN_LIST FEATURES)
             FILENAME "${name}.tar.gz"
             URLS "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${name}.tar.gz"
                  "https://cmake.org/files/v${cmake_major_minor}/${name}.tar.gz"
-            SHA512 8e41608f4dd998020acf2bd1b0dab4aec37b3ea9e228f2c4a457cd1c0339d94db38a0548b4b07a9e3605f9beb11a3f6737a72813586c4ad5f730d74038a14c2b
+            SHA512 3e59e2406f4e088b60922fbf23e92e1be3bb34c00f919625210fd93c059b5e6785afa40d3a501f36b281cde29de592f2ccffade6fa3980d0cf31dc845483184f
         )
         set(cmake_bin_dir "/CMake.app/Contents/bin")
     elseif(VCPKG_HOST_IS_LINUX)
@@ -31,11 +31,11 @@ if("cmake-3-7" IN_LIST FEATURES)
             FILENAME "${name}.tar.gz"
             URLS "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${name}.tar.gz"
                  "https://cmake.org/files/v${cmake_major_minor}/${name}.tar.gz"
-            SHA512 459909fcfb9c74993c3d4ab9db4e31ea940515b670db44d039de611d813099895e695467cc8da24824315486e38e2f3e246aa92d6236c51103822ec8a39e3168
+            SHA512 03be16ad06fcabe40a36d0a510fdb58f5612108aed70cef7f68879d82b9e04ad62a9d0c30f3406df618ec219c74fc27b4be533d970bc60ac22333951d6cabe1a
         )
         set(cmake_bin_dir "/bin")
     else()
-        message(FATAL_ERROR "Unable to test feature 'cmake-3-7' for '${HOST_TRIPLET}' host.")
+        message(FATAL_ERROR "Unable to test feature 'cmake-old' for '${HOST_TRIPLET}' host.")
     endif()
 
     vcpkg_extract_source_archive(legacy_cmake
