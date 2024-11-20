@@ -6697,8 +6697,8 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.5.16.0",
-      "port-version": 1
+      "baseline": "3.0.0.3",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.5.2",
@@ -8894,7 +8894,7 @@
     },
     "theia": {
       "baseline": "0.8",
-      "port-version": 11
+      "port-version": 12
     },
     "think-cell-range": {
       "baseline": "2023.1",
