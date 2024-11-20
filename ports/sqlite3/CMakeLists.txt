@@ -74,16 +74,18 @@ if(NOT SQLITE3_SKIP_TOOLS)
     )
 endif()
 
+set_target_properties(sqlite3 PROPERTIES EXPORT_NAME SQLite3)
+
 install(
     TARGETS sqlite3
-    EXPORT unofficial-sqlite3-targets
+    EXPORT sqlite3-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
 install(FILES sqlite3.h sqlite3ext.h sqlite3-vcpkg-config.h DESTINATION include CONFIGURATIONS Release)
-install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
+install(EXPORT sqlite3-targets NAMESPACE SQLite:: DESTINATION share/sqlite3)
 
 configure_file(sqlite3.pc.in sqlite3.pc @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlite3.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
