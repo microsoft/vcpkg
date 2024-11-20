@@ -1,6 +1,9 @@
 # USD plugins do not produce .lib
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
+# Proper support for a true static usd build is left as a future port improvement.
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
 
 vcpkg_from_github(
