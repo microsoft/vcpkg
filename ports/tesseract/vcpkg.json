@@ -36,11 +36,7 @@
         "cairo",
         "fontconfig",
         "icu",
-        "pango",
-        {
-          "name": "pkgconf",
-          "host": true
-        }
+        "pango"
       ]
     }
   }
