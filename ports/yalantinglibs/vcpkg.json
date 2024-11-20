@@ -4,6 +4,7 @@
   "description": "A Collection of C++20 libraries, include struct_pack, struct_json, struct_xml, struct_yaml, struct_pb, easylog, coro_rpc, coro_http and async_simple",
   "homepage": "https://github.com/171930433/yalantinglibs",
   "license": "Apache-2.0",
+  "supports": "!android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
