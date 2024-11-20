@@ -158,7 +158,6 @@ boringssl:x86-windows=skip
 brpc:x64-android=fail
 buck-yeh-bux:x64-uwp=skip
 buck-yeh-bux:x86-windows=skip
-buck-yeh-bux-mariadb-client:x86-windows=skip
 caf:arm-neon-android=fail
 caf:arm64-uwp=fail
 caf:arm64-android=fail
