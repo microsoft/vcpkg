@@ -1,0 +1,52 @@
+diff --git a/docs/snippets/CMakeLists.txt b/docs/snippets/CMakeLists.txt
+index ec1cf14bd0e60b..18d176212a0212 100644
+--- a/docs/snippets/CMakeLists.txt
++++ b/docs/snippets/CMakeLists.txt
+@@ -122,12 +122,15 @@ set(TARGET_NAME_PY "ov_integration_snippet_py")
+ cmake_minimum_required(VERSION 3.10)
+ set(CMAKE_CXX_STANDARD 11)
+ 
+-find_package(Python3 REQUIRED)
+-    execute_process(
+-        COMMAND ${Python3_EXECUTABLE} -c "from openvino.utils import get_cmake_path; print(get_cmake_path(), end='')"
+-        OUTPUT_VARIABLE OpenVINO_DIR_PY
+-        ERROR_QUIET
+-    )
++if(NOT CMAKE_CROSSCOMPILING)
++    find_package(Python3 QUIET COMPONENTS Interpreter)
++    if(Python3_Interpreter_FOUND)
++        execute_process(
++            COMMAND ${Python3_EXECUTABLE} -c "from openvino.utils import get_cmake_path; print(get_cmake_path(), end='')"
++            OUTPUT_VARIABLE OpenVINO_DIR_PY
++            ERROR_QUIET)
++    endif()
++endif()
+ 
+ find_package(OpenVINO REQUIRED PATHS "${OpenVINO_DIR_PY}")
+ 
+diff --git a/src/core/template_extension/CMakeLists.txt b/src/core/template_extension/CMakeLists.txt
+index aa8030e78d7171..3cfcfcd058ff94 100644
+--- a/src/core/template_extension/CMakeLists.txt
++++ b/src/core/template_extension/CMakeLists.txt
+@@ -8,12 +8,15 @@ set(CMAKE_CXX_STANDARD 11)
+ set(TARGET_NAME "openvino_template_extension")
+ 
+ # The OpenVINO installed from PyPI can be used to find OpenVINO_DIR
+-find_package(Python3 REQUIRED)
+-execute_process(
+-    COMMAND ${Python3_EXECUTABLE} -c "from openvino.utils import get_cmake_path; print(get_cmake_path(), end='')"
+-    OUTPUT_VARIABLE OpenVINO_DIR_PY
+-    ERROR_QUIET
+-)
++if(NOT CMAKE_CROSSCOMPILING)
++    find_package(Python3 QUIET COMPONENTS Interpreter)
++    if(Python3_Interpreter_FOUND)
++        execute_process(
++            COMMAND ${Python3_EXECUTABLE} -c "from openvino.utils import get_cmake_path; print(get_cmake_path(), end='')"
++            OUTPUT_VARIABLE OpenVINO_DIR_PY
++            ERROR_QUIET)
++    endif()
++endif()
+ 
+ find_package(OpenVINO REQUIRED PATHS "${OpenVINO_DIR_PY}")
+ 
