@@ -9,6 +9,11 @@ vcpkg_from_github(
         fix_strnicmp.patch
         remove-wx.patch
 )
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/third_party/googletest"
+)
+# no absolute paths
+vcpkg_replace_string("${SOURCE_PATH}/framework/include/FrameworkConfig.h.in" "@PROJECT_SOURCE_DIR@" "")
 
 #nowide download
 vcpkg_from_github(
@@ -18,30 +23,24 @@ vcpkg_from_github(
     SHA512 e68e0704896726c7a94b8ace0e03c5206b4c7acd23a6b05f6fb2660abe30611ac6913cf5fab7b57eaff1990a7c28aeee8c9f526b60f7094c0c201f90b715d6c6
     HEAD_REF develop
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/boost/nowide")
 file(RENAME "${NOWIDE_SOURCE_PATH}" "${SOURCE_PATH}/third_party/boost/nowide")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DTOOLS_INSTALL_DIR:STRING=tools/cppmicroservices
-        -DAUXILIARY_INSTALL_DIR:STRING=share/cppmicroservices
-        -DUS_USE_SYSTEM_GTEST=TRUE
+        "-DAUXILIARY_INSTALL_DIR:STRING=share/cppmicroservices"
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cppmicroservices/cmake")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cppmicroservices/CppMicroServicesConfig.cmake" "cppmicroservices/cmake" "cppmicroservices")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_cmake_config_fixup()
-
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-# CppMicroServices uses a custom resource compiler to compile resources
-# the zipped resources are then appended to the target which cause the linker to crash
-# when compiling a static library
-if(NOT BUILD_SHARED_LIBS)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_copy_tools(TOOL_NAMES SCRCodeGen3 AUTO_CLEAN)
 endif()
+vcpkg_copy_tools(TOOL_NAMES jsonschemavalidator usResourceCompiler3 usShell3 AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
