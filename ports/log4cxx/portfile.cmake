@@ -1,13 +1,20 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/logging/log4cxx/${VERSION}/apache-log4cxx-${VERSION}.tar.gz"
     FILENAME "apache-log4cxx-${VERSION}.tar.gz"
-    SHA512 377234407c5f1128fbff6e5d2fcda3f53aae275962cd9207257674fa016095f4bc4ac0c318c1ba2a75f3252402cce0776c1211ffa917a60f8a89a12f01d45efb
+    SHA512 bd481d69e29b3c8908bbc91489bf4e752e6edb147404454c0e88fd8f107d68ae5a98e220ab912692e555ca071d1cff7fb99ffa51194cfa7d070593ce6285d2b0
+)
+
+vcpkg_download_distfile(MAKE_PKG_CONFIG_SUPPORT_OPT_IN
+  URLS https://github.com/apache/logging-log4cxx/commit/4642a50c70b6cbd9b68d7e8dace9c049c8198b07.patch?full_index=1
+  SHA512 4b3628d98d233a2e68d1183a8bb2156c2f1e6f80ab50cfe75a6df799d14bc3c7ba028fbb7ff524c56530a2260be37fd9f3d089422027987b5c8c36e9978c254c
+  FILENAME Make_pkg_config_support_opt_in-4642a50c70b6cbd9b68d7e8dace9c049c8198b07.patch
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-find-package.patch
+        ${MAKE_PKG_CONFIG_SUPPORT_OPT_IN}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
