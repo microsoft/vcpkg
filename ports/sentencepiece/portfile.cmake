@@ -12,7 +12,6 @@ vcpkg_from_github(
         abseil.diff
         cxxflags.diff
         linkage.diff
-        protobuf.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPM_ENABLE_SHARED)
