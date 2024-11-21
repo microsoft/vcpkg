@@ -2,9 +2,9 @@ set(VCPKG_BUILD_TYPE release)  # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO 171930433/yalantinglibs
+    REPO alibaba/yalantinglibs
     REF "${VERSION}"
-    SHA512 acde5540f309b7cef2df9b1fc253b9d6b0abedec3a646332599fa83b32284b34a3a970546605e0e6b5e375e4b52e799a990ad962d8f4f271ffee3d4c5b1b1b65
+    SHA512 2454d18d398e358f099518a12b704ebe32160f760afdbe9cb2c34bb9d3e98eccff6489b6bedf3382423c24d642010f998528fc9739741b62d60383351ce6f3a7
     HEAD_REF main
 )
 
@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
       -DBUILD_BENCHMARK=OFF
       -DBUILD_EXAMPLES=OFF
       -DBUILD_UNIT_TESTS=OFF
+      -DINSTALL_THIRDPARTY=OFF
 )
 
 vcpkg_cmake_install()
