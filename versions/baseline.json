@@ -1825,7 +1825,7 @@
       "port-version": 0
     },
     "commsdsl": {
-      "baseline": "6.3.3",
+      "baseline": "6.3.4",
       "port-version": 0
     },
     "compoundfilereader": {
