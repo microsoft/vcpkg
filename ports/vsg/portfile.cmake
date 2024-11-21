@@ -7,7 +7,11 @@ vcpkg_from_github(
 )
 
 # added -DGLSLANG_MIN_VERSION=15 to sync with vcpkg version of glslang
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -DGLSLANG_MIN_VERSION=15)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DGLSLANG_MIN_VERSION=15
+)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "vsg" CONFIG_PATH "lib/cmake/vsg")
 vcpkg_copy_pdbs()
