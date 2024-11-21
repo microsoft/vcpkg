@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ornladios/ADIOS2
     REF "v${VERSION}"
-    SHA512 05decc3ff14e7458df9ec16ca6230a9770ca992e7d0ce3a18b3c9295a19dad94d8a9367102e50347a9487c6a3f35a8d52fbaa6a6fd98807aaec9636e607541ee
+    SHA512 1a81ddb4d862b27a0ae9e17eaee7a16e6456f87a1740a857907b5766016bfcbf2abe4a599024d794d3f0637196c280641fe73e0d0de525b27510364dd9cffd20
     HEAD_REF master
 )
 
@@ -15,13 +15,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(disabled_options "")
-list(APPEND disabled_options SZ LIBPRESSIO MGARD DAOS DataMan DataSpaces MHS SST BP5 IME Fortran SysVShMem Profiling)
+list(APPEND disabled_options SZ LIBPRESSIO MGARD DAOS DataMan DataSpaces MHS SST IME Fortran SysVShMem Profiling)
 list(TRANSFORM disabled_options PREPEND "-DADIOS2_USE_")
 list(TRANSFORM disabled_options APPEND  ":BOOL=OFF")
 set(enabled_options "")
 list(APPEND enabled_options BZip2 Blosc2 PNG ZeroMQ HDF5 Endian_Reverse Sodium)
 list(TRANSFORM enabled_options PREPEND "-DADIOS2_USE_")
 list(TRANSFORM enabled_options APPEND  ":BOOL=OFF")
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+set(PATH_BACKUP "$ENV{PATH}")
+vcpkg_add_to_path("${PERL_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -32,6 +37,9 @@ vcpkg_cmake_configure(
       -DBUILD_TESTING=OFF
       -DADIOS2_BUILD_EXAMPLES=OFF
       -DADIOS2_INSTALL_GENERATE_CONFIG=OFF
+      -DEVPATH_USE_ENET=OFF
+      -DEVPATH_TRANSPORT_MODULES=OFF
+      "-DPERL_EXECUTABLE=${PERL}"
     MAYBE_UNUSED_VARIABLES
       ADIOS2_USE_DAOS
       ADIOS2_USE_DataMan
@@ -42,6 +50,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+
+set(ENV{PATH} "${PATH_BACKUP}")
 
 set(tools "adios2_reorganize" "bpls")
 if(ADIOS2_USE_MPI)
