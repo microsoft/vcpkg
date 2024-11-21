@@ -9490,7 +9490,7 @@
     },
     "vsg": {
       "baseline": "1.1.7",
-      "port-version": 1
+      "port-version": 0
     },
     "vsgimgui": {
       "baseline": "0.3.0",
