@@ -9,3 +9,4 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  if(LIBCPUID_TESTS)
    add_subdirectory(tests)
  endif()
+ 
