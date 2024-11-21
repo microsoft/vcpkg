@@ -5665,8 +5665,8 @@
       "port-version": 1
     },
     "luau": {
-        "baseline": "0.651",
-        "port-version": 0
+      "baseline": "0.651",
+      "port-version": 0
     },
     "luminoengine": {
       "baseline": "0.10.1",
@@ -7502,7 +7502,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.15",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-webglplugin": {
       "baseline": "5.15.15",
