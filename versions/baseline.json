@@ -2029,7 +2029,7 @@
       "port-version": 0
     },
     "cpuid": {
-      "baseline": "0.7.0",
+      "baseline": "0.6.4",
       "port-version": 0
     },
     "cpuinfo": {
