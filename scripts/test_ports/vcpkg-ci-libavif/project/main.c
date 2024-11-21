@@ -1,4 +1,4 @@
-#include <cstdio>
+#include <stdio.h>
 #include <avif/avif.h>
 
 int main()
