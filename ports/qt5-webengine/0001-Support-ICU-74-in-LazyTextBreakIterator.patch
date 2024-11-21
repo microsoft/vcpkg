@@ -33,11 +33,13 @@ diff --git a/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text
 index 703dc23990754..38ab94a0a460b 100644
 --- a/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc
 +++ b/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc
-@@ -161,11 +161,7 @@ static const unsigned char kAsciiLineBreakTable[][(kAsciiLineBreakTableLastChar
+@@ -161,13 +161,7 @@ static const unsigned char kAsciiLineBreakTable[][(kAsciiLineBreakTableLastChar
  };
  // clang-format on
 
--#if U_ICU_VERSION_MAJOR_NUM >= 58
+-#if U_ICU_VERSION_MAJOR_NUM >= 74
+-#define BA_LB_COUNT (U_LB_COUNT - 8)
+-#elif U_ICU_VERSION_MAJOR_NUM >= 58
 -#define BA_LB_COUNT (U_LB_COUNT - 3)
 -#else
  #define BA_LB_COUNT U_LB_COUNT
