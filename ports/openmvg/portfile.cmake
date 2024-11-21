@@ -18,6 +18,7 @@ vcpkg_from_github(
         0002-eigen-3.4.patch
         no-absolute-paths.patch
         fix-coinutils.patch
+        fix_depend.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
@@ -176,4 +177,4 @@ if("software" IN_LIST FEATURES)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
