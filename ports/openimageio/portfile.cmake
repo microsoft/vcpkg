@@ -2,16 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 1e24d7ffc3ad65a1fe1f53ae59006de912c0a8d85827d64671fab95350977e22e2d147cf26ffe362646c768747ec11e6f9aeae04ea66030f82ad597adf3135a5
+    SHA512 16d357fc6f75d39b1c9265edb45fe78dd2ea67a094885174a0a2bdd39ad19f8f69c16a7aaacac82a106a295e08e311d0315daafcb5641c24f644a52e66aaf667
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
-        fix-openexr-dll.patch
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        fix-dependency-libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -70,6 +68,11 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
         ENABLE_IV
+        BUILD_MISSING_DEPS
+        BUILD_MISSING_FMT
+        BUILD_MISSING_ROBINMAP
+        INTERNALIZE_FMT
+        REQUIRED_DEPS
 )
 
 vcpkg_cmake_install()
