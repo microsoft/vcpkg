@@ -87,6 +87,17 @@ index c3abce5..63f665f 100644
  endif()
  list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
  
+@@ -723,7 +723,9 @@ if(USE_FBGEMM)
+       "Turn this warning off by USE_FBGEMM=OFF.")
+     set(USE_FBGEMM OFF)
+   endif()
+-  if(USE_FBGEMM AND NOT TARGET fbgemm)
++  find_package(asmjit CONFIG REQUIRED)
++  find_package(fbgemmLibrary CONFIG REQUIRED)
++  if(FALSE)
+     set(FBGEMM_BUILD_TESTS OFF CACHE BOOL "")
+     set(FBGEMM_BUILD_BENCHMARKS OFF CACHE BOOL "")
+     if(MSVC AND BUILD_SHARED_LIBS)
 @@ -889,7 +882,7 @@
      # Observers are required in the python build
      caffe2_update_option(USE_OBSERVERS ON)
