@@ -11,7 +11,10 @@
       "name": "libb2",
       "platform": "!windows"
     },
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qtbase",
       "host": true,
@@ -380,7 +383,10 @@
     "pcre2": {
       "description": "Enable PCRE2 support",
       "dependencies": [
-        "pcre2"
+        {
+          "name": "pcre2",
+          "default-features": false
+        }
       ]
     },
     "png": {
