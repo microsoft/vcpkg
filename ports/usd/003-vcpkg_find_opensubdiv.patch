@@ -1,0 +1,34 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index ccaabe765..d4eea2988 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -260,8 +260,12 @@ if (PXR_BUILD_IMAGING)
+         endif()
+     endif()
+     # --Opensubdiv
+-    set(OPENSUBDIV_USE_GPU ${PXR_ENABLE_GL_SUPPORT})
+-    find_package(OpenSubdiv 3 REQUIRED)
++    find_package(OpenSubdiv 3 CONFIG REQUIRED)
++    set(OPENSUBDIV_LIBRARIES OpenSubdiv::osdCPU_static)
++    set(OPENSUBDIV_OSDCPU_LIBRARY OpenSubdiv::osdCPU_static) # For compatibility
++    if(PXR_ENABLE_GL_SUPPORT)
++        list(APPEND OPENSUBDIV_LIBRARIES OpenSubdiv::osdGPU_static)
++    endif()
+     # --Ptex
+     if (PXR_ENABLE_PTEX_SUPPORT)
+         find_package(PTex REQUIRED)
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 041cd8cba..692d045b9 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -20,6 +20,10 @@ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(TBB CONFIG)
+ 
++if(@PXR_BUILD_IMAGING@)
++    find_dependency(OpenSubdiv 3 CONFIG)
++endif()
++
+ # If Python support was enabled for this USD build, find the import
+ # targets by invoking the appropriate FindPython module. Use the same
+ # LIBRARY and INCLUDE_DIR settings from the original build if they
