@@ -1,12 +1,11 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index ceaea62..2a2a359 100644
+index 2620994..6e5f0a1 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -6,6 +6,33 @@
-
+@@ -6,6 +6,32 @@
+ 
  include(CMakeFindDependencyMacro)
-
-+find_dependency(Boost COMPONENTS @Boost_COMPONENTS@)
+ 
 +if(@USE_GIF@)
 +    find_dependency(GIF)
 +endif()
