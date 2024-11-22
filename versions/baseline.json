@@ -1841,7 +1841,7 @@
       "port-version": 0
     },
     "configcat": {
-      "baseline": "4.0.3",
+      "baseline": "4.0.4",
       "port-version": 0
     },
     "conjure-enum": {
