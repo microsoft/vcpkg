@@ -4796,6 +4796,10 @@
       "baseline": "24.11",
       "port-version": 0
     },
+    "libmem": {
+      "baseline": "5.0.2",
+      "port-version": 0
+    },
     "libmesh": {
       "baseline": "1.5.0",
       "port-version": 6
