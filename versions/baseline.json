@@ -8874,7 +8874,7 @@
     },
     "tesseract": {
       "baseline": "5.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tevclient": {
       "baseline": "2023-12-04",
