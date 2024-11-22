@@ -720,7 +720,6 @@ memorymodule:x64-android=fail
 mesa:x64-linux=fail
 mesa:x64-osx=fail
 mesa:arm64-osx=fail
-milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-neon-android=fail
 minifb:arm64-android=fail
 minifb:x64-android=fail
