@@ -37,8 +37,8 @@ file(COPY "${src_kineto}/" DESTINATION "${SOURCE_PATH}/third_party/kineto")
 vcpkg_from_github(
     OUT_SOURCE_PATH src_cudnn
     REPO NVIDIA/cudnn-frontend # new port ?
-    REF 12f35fa2be5994c1106367cac2fba21457b064f4
-    SHA512 a7e4bf58f82ca0b767df35da1b3588e2639ea2ef22ed0c47e989fb4cde5a28b0605b228b42fcaefbdf721bfbb91f2a9e7d41352ff522bd80b63db6d27e44ec20
+    REF 2533f5e5c1877fd76266133c1479ef1643ce3a8b #  1.6.1 
+    SHA512 8caacdf9f7dbd6ce55507f5f7165db8640b681e2a7dfd6a841de8eaa3489cff5ba41d11758cc464320b2ff9a491f8234e1749580cf43cac702f07cf82611e084
     HEAD_REF main
 )
 file(COPY "${src_cudnn}/" DESTINATION "${SOURCE_PATH}/third_party/cudnn_frontend")
