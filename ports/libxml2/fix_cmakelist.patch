@@ -75,7 +75,7 @@ index 9701bdc..39e96ee 100644
  	${CMAKE_CURRENT_BINARY_DIR}/libxml2-config-version.cmake
  	VERSION ${PROJECT_VERSION}
 -	COMPATIBILITY ExactVersion
-+	COMPATIBILITY SameMinorVersion
++	COMPATIBILITY SameMajorVersion
  )
  
  install(
