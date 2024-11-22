@@ -22,6 +22,13 @@ if (third_party)
     file(REMOVE_RECURSE ${third_party})
 endif()
 
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+  message("libmysql currently requires the following programs from the system package manager:
+  libtirpc-dev
+On Ubuntu derivatives:
+    sudo apt install libtirpc-dev
+")
+
 #Skip the version check for Visual Studio
 set(FORCE_UNSUPPORTED_COMPILER "")
 if(VCPKG_TARGET_IS_WINDOWS)
