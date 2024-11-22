@@ -11,12 +11,12 @@ index f3281d3cb..c8b6ed30e 100644
      find_library(SLEEF_LIBRARY sleef)
      if(NOT SLEEF_LIBRARY)
        message(FATAL_ERROR "Cannot find sleef")
-@@ -426,7 +426,7 @@ if(NOT MSVC AND NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+@@ -426,7 +426,7 @@
      message("Found sleef: ${SLEEF_LIBRARY}")
      set_target_properties(sleef PROPERTIES IMPORTED_LOCATION "${SLEEF_LIBRARY}")
    endif()
 -  list(APPEND ATen_CPU_DEPENDENCY_LIBS sleef)
 +  list(APPEND ATen_CPU_DEPENDENCY_LIBS ${SLEEF_LIBRARY})
  
-   set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
-   set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
+   if(NOT MSVC)
+     set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})

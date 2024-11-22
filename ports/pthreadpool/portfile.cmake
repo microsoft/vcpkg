@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Maratyszcza/pthreadpool
-    REF 052e441b70091656199e2283fb1c16a7db6f0f85 # there is a too much gap from the last release...
-    SHA512 33be676e65719ae8510ec4e8254809033528802681870f8c91b083ce4006e5f630b80207a7e675464b406a785cb45bc74628996ea4817c02816b7b58ddf3a2bc
+    REF 560c60d342a76076f0557a3946924c6478470044 #2024-11-04
+    SHA512 d23e764e9a02f34210b3b9c5a66dae3b9e8211de6f78ec9b2672c19c48f364f4edb268ab77b1adf2802a3c35c6857deba81e48a658caa1a587fe8f3493a07f59
     PATCHES
         fix-cmakelists.patch
         fix-uwp.patch

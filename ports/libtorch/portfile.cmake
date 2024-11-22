@@ -1,28 +1,11 @@
-vcpkg_download_distfile(
-    CUDNN_9_FIX
-    URLS https://github.com/pytorch/pytorch/commit/e14026bc2a6cd80bedffead77a5d7b75a37f8e67.patch?full_index=1
-    SHA512 9569547b44b61f9559f0e7ab91f2be51657ece4f5462b6860cb5eae8d23d01187d6af046b369a77a228fe4d7153f5c683b686e84c1296a662f83e5f1f281bc7e
-    FILENAME libtorch-cudnn-9-fix-e14026bc2a6cd80bedffead77a5d7b75a37f8e67.patch
-)
-
-vcpkg_download_distfile(
-    CUDA_THRUST_MISSING_HEADER_FIX
-    URLS https://github.com/pytorch/pytorch/commit/2a440348958b3f0a2b09458bd76fe5959b371c0c.patch?full_index=1
-    SHA512 eff10d81b1c635108ad1b95a430865a76ab3f2079be74e61e06876942ac1fd43a274fc1c73e43c2c01b9ce5aca648213ef75c13c28b8ffa40497e4e26d5e3b16
-    FILENAME libtorch-cuda-thrust-missing-header-2a440348958b3f0a2b09458bd76fe5959b371c0c.patch
-)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
     REF "v${VERSION}"
-    SHA512 a8961d78ad785b13c959a0612563a60e0de17a7c8bb9822ddea9a24072796354d07e81c47b6cc8761b21a6448845b088cf80e1661d9e889b0ed5474d3dc76756
+    SHA512 a913a466324a65fa3d79c5e9ad4d605fc7976f0134fda2f81aaa3cea29d56926604999b8a238759646d211e63b47bbb446cdffa86ca8defd8159f11e30301289
     HEAD_REF master
     PATCHES
-        "${CUDNN_9_FIX}"
-        "${CUDA_THRUST_MISSING_HEADER_FIX}"
         cmake-fixes.patch
         more-fixes.patch
         fix-build.patch
@@ -33,11 +16,9 @@ vcpkg_from_github(
         protoc.patch
         fix-sleef.patch
         fix-glog.patch
-        fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
         force-cuda-include.patch
         fix-aten-cutlass.patch
-        fix-build-error-with-fmt11.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -45,8 +26,8 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generat
 vcpkg_from_github(
     OUT_SOURCE_PATH src_kineto
     REPO pytorch/kineto
-    REF 49e854d805d916b2031e337763928d2f8d2e1fbf
-    SHA512 ae63d48dc5b8ac30c38c2ace60f16834c7e9275fa342dc9f109d4fbc87b7bd674664f6413c36d0c1ab5a7da786030a4108d83daa4502b2f30239283ea3acdb16
+    REF d9753139d181b9ff42872465aac0e5d3018be415
+    SHA512 f037fac78e566c40108acf9eace55a8f67a2c5b71f298fd3cd17bf22cf05240c260fd89f017fa411656a7505ec9073a06a3048e191251d5cfc4b52c237b37d0b
     HEAD_REF main
     PATCHES
       kineto.patch
@@ -85,7 +66,8 @@ message(STATUS "Using protoc: ${PROTOC}")
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
-    PACKAGES typing-extensions pyyaml numpy
+    PACKAGES typing-extensions pyyaml 
+    # numpy
     OUT_PYTHON_VAR PYTHON3
 )
 #set(PYTHON3 "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -120,7 +102,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
     nnpack  AT_NNPACK_ENABLED
-    qnnpack USE_QNNPACK # todo: check use of `USE_PYTORCH_QNNPACK`
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
     python  USE_NUMPY
@@ -142,8 +123,15 @@ else()
     list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=OFF)
 endif()
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # torch_cpu is too large to link statically (exceeds 4GB limit)
+    # INTERN_USE_EIGEN_BLAS=OFF is to make sure it uses system eigen blas
+    list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=ON -DINTERN_USE_EIGEN_BLAS=OFF -DUSE_BLAS=OFF)
+    list(APPEND FEATURE_OPTIONS -DMSVC_Z7_OVERRIDE=OFF) # Reduce the size
 
+endif()
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -151,11 +139,14 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DProtobuf_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}
         -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}
-        -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON3}
-        #-DPython3_EXECUTABLE:FILEPATH=${PYTHON3}
+        -DPython_EXECUTABLE:FILEPATH=${PYTHON3}
+        -DPython3_EXECUTABLE:FILEPATH=${PYTHON3}
+        -DBUILD_PYTHON=OFF
+        -DUSE_NUMPY=OFF
         -DCAFFE2_STATIC_LINK_CUDA=ON
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF
+        -DBUILD_PYTHON=OFF
         -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF
         -DATEN_NO_TEST=ON
@@ -163,13 +154,13 @@ vcpkg_cmake_configure(
         -DUSE_METAL=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
+        -DUSE_FBGEMM=ON
+        -DUSE_PYTORCH_QNNPACK:BOOL=OFF
         -DUSE_GFLAGS=ON
         -DUSE_GLOG=ON
-        -DUSE_LMDB=ON
         -DUSE_ITT=OFF
         -DUSE_ROCKSDB=ON
         -DUSE_OBSERVERS=OFF
-        -DUSE_PYTORCH_QNNPACK=OFF
         -DUSE_KINETO=OFF
         -DUSE_ROCM=OFF
         -DUSE_NUMA=OFF
@@ -195,12 +186,12 @@ vcpkg_cmake_configure(
         #-DAT_MKL_ENABLED=ON
         -DAT_MKLDNN_ENABLED=OFF
         -DUSE_OPENCL=ON
-        -DUSE_NUMPY=ON
         -DUSE_KINETO=OFF #
-    OPTIONS_RELEASE
-      -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
-    OPTIONS_DEBUG
-      -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python311_d.lib
+    # Should be enabled in-future along with the "python" feature (currently disabled)
+    # OPTIONS_RELEASE
+    #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
+    # OPTIONS_DEBUG
+    #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python311_d.lib
     MAYBE_UNUSED_VARIABLES
         USE_NUMA
         USE_SYSTEM_BIND11
@@ -211,15 +202,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME caffe2 CONFIG_PATH "share/cmake/Caffe2" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME torch CONFIG_PATH "share/cmake/Torch")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/torch/TorchConfig.cmake" "/../../../" "/../../")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/caffe2/Caffe2Config.cmake" "/../../../" "/../../")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/caffe2/Caffe2Config.cmake"
-  "set(Caffe2_MAIN_LIBS torch_library)"
-  "set(Caffe2_MAIN_LIBS torch_library)\nfind_dependency(Eigen3)")
-
-
 
 # Traverse the folder and remove "some" empty folders
 function(cleanup_once folder)

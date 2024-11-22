@@ -2,7 +2,7 @@ diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
 index c0628d0..5dfb7f2 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
-@@ -74,7 +74,11 @@ add_subdirectory(test)
+@@ -82,7 +82,11 @@
  # Note: for now, we will put all export path into one single Caffe2Targets group
  # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
  # individual libraries like libc10.so and libcaffe2.so are still self-contained.
@@ -12,9 +12,9 @@ index c0628d0..5dfb7f2 100644
 +  ARCHIVE DESTINATION lib
 +  LIBRARY DESTINATION lib
 +  )
- foreach(file ${C10_CUDA_HEADERS})
-   get_filename_component( dir ${file} DIRECTORY )
-   install( FILES ${file} DESTINATION include/c10/cuda/${dir} )
+ 
+ endif()
+ 
 diff --git a/c10/util/Exception.h b/c10/util/Exception.h
 index ecbc7c1..2dd1001 100644
 --- a/c10/util/Exception.h
@@ -80,19 +80,6 @@ index 7016441..a6416c7 100644
          cmake_files = glob.glob("torch/lib/build/*/compile_commands.json")
          all_commands = [entry for f in ninja_files + cmake_files for entry in load(f)]
  
-diff --git a/third_party/nvfuser/csrc/instrumentation.h b/third_party/nvfuser/csrc/instrumentation.h
-index cd57825..75e81e9 100644
---- a/third_party/nvfuser/csrc/instrumentation.h
-+++ b/third_party/nvfuser/csrc/instrumentation.h
-@@ -2,7 +2,7 @@
- 
- #include <utils.h>
- 
--#include <nvToolsExt.h>
-+#include <nvtx3/nvToolsExt.h>
- 
- // NOLINTNEXTLINE(modernize-deprecated-headers)
- #include <stdio.h>
 diff --git a/tools/setup_helpers/env.py b/tools/setup_helpers/env.py
 index d87e97a..6c52f39 100644
 --- a/tools/setup_helpers/env.py

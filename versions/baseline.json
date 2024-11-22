@@ -2037,8 +2037,8 @@
       "port-version": 0
     },
     "cpuinfo": {
-      "baseline": "2022-07-19",
-      "port-version": 3
+      "baseline": "2024-11-04",
+      "port-version": 0
     },
     "cr": {
       "baseline": "2020-04-26",
@@ -5229,8 +5229,8 @@
       "port-version": 0
     },
     "libtorch": {
-      "baseline": "2.1.2",
-      "port-version": 7
+      "baseline": "2.5.1",
+      "port-version": 0
     },
     "libtorrent": {
       "baseline": "2.0.10",
@@ -7265,8 +7265,8 @@
       "port-version": 1
     },
     "pthreadpool": {
-      "baseline": "2020-04-10",
-      "port-version": 3
+      "baseline": "2024-11-04",
+      "port-version": 0
     },
     "pthreads": {
       "baseline": "3.0.0",
@@ -7331,10 +7331,6 @@
     "qmex": {
       "baseline": "2024-10-31",
       "port-version": 0
-    },
-    "qnnpack": {
-      "baseline": "2021-02-26",
-      "port-version": 3
     },
     "qoi": {
       "baseline": "2023-08-10",

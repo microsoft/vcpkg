@@ -18,6 +18,17 @@ index d185233..11f285b 100644
  endif()
  target_link_libraries(pytorch_qnnpack PRIVATE fxdiv)
  
+@@ -425,8 +425,8 @@
+   if(NOT FP16_HDR)
+     message(FATAL_ERROR "Cannot find fp16")
+   endif()
+-  add_library(fp16 STATIC "${FP16_HDR}")
+-  set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
++  add_library(fp16 INTERFACE)
++  target_include_directories(fp16 INTERFACE "${FP16_INCLUDE_DIR}")
+ endif()
+ target_link_libraries(pytorch_qnnpack PRIVATE fp16)
+ 
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index f7a595e..47faec5 100644
 --- a/caffe2/CMakeLists.txt
