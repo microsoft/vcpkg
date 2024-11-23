@@ -18,8 +18,8 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     endif()
     string(APPEND CMAKE_Fortran_FLAGS " -assume:underscore -assume:protect_parens -fp:strict -names:lowercase -Qopenmp-")
 
-    include_directories($ENV{INCLUDE})
-    link_directories($ENV{LIB})
+    include_directories(AFTER SYSTEM $ENV{INCLUDE})
+    link_directories(AFTER SYSTEM $ENV{LIB})
 
     if(NOT DEFINED VCPKG_CRT_LINKAGE)
         block(PROPAGATE VCPKG_CRT_LINKAGE)
