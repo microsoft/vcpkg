@@ -1,0 +1,3 @@
+Source: immuds
+Version: 1.0.0
+Description: A simple C++ header-only library for immutable data structures.
