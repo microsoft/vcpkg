@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 3dd98409f4625ae4d46ef5f59a2fc22a6e151a13dba9d37433363e5d84eab7cca73b379eeb637d8f9b1f0f5a42221c0cc9a2a70414dc2b6af6a162e19fba0647
     HEAD_REF v1.x
+    PATCHES
+        fix-msvc-utf8.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,0 +1,17 @@
+diff --git a/CMake/android_config.cmake b/CMake/android_config.cmake
+index 203003e..4eac6dd 100644
+--- a/CMake/android_config.cmake
++++ b/CMake/android_config.cmake
+@@ -16,7 +16,11 @@ macro(os_set_flags)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch -Wno-multichar")
+     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIE -pie")
+     set(HWM_OVER_XU ON)
+-	
++
++    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
++    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
++    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
++
+     if(FORCE_RSUSB_BACKEND)
+         set(BACKEND RS2_USE_ANDROID_BACKEND)
+         set(IMPORT_DEPTH_CAM_FW OFF)

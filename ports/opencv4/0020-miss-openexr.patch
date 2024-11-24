@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d6bc6de..61b7a02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -831,6 +831,9 @@ include(cmake/OpenCVFindLibsPerf.cmake)
+ include(cmake/OpenCVFindLAPACK.cmake)
+ include(cmake/OpenCVFindProtobuf.cmake)
+ include(cmake/OpenCVDetectFlatbuffers.cmake)
++if(WITH_OPENEXR)
++  include(cmake/OpenCVFindOpenEXR.cmake)
++endif()
+ if(WITH_TIMVX)
+   include(cmake/OpenCVFindTIMVX.cmake)
+ endif()

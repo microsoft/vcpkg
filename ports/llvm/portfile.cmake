@@ -33,6 +33,7 @@ vcpkg_check_features(
         enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
+        export-symbols LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)

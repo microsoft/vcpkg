@@ -5,7 +5,7 @@ index 3857b82..4c68989 100644
 @@ -221,8 +221,8 @@ endif()
  
  # Set definitions and sources for MIPS.
- if(TARGET_ARCH MATCHES "^(mipsel|mips64el)")
+ if(PNG_TARGET_ARCHITECTURE MATCHES "^(mipsel|mips64el)")
 -  set(PNG_MIPS_MSA_POSSIBLE_VALUES on off)
 -  set(PNG_MIPS_MSA "on"
 +  set(PNG_MIPS_MSA_POSSIBLE_VALUES on off check)

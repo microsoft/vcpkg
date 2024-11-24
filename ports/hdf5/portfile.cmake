@@ -9,8 +9,8 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
-        szip.patch
-	add-_Float16-type-on-aarch64.patch
+        add-_Float16-type-on-aarch64.patch
+        pkgconfig-requires.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
@@ -51,7 +51,10 @@ if("tools" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
-if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND FEATURE_OPTIONS
+                    -DUSE_LIBAEC_STATIC=ON)
+else()
     list(APPEND FEATURE_OPTIONS
                     -DBUILD_STATIC_LIBS=OFF
                     -DONLY_SHARED_LIBS=ON)
@@ -69,7 +72,6 @@ vcpkg_cmake_configure(
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
         -DALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
-        -DCMAKE_DISABLE_FIND_PACKAGE_libaec=ON
     OPTIONS_RELEASE
         -DCMAKE_DEBUG_POSTFIX= # For lib name in pkgconfig files
 )

@@ -2,9 +2,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO jackoalan/lzokay
-    REF 546a9695271e8a8b4711383f828172754fd825f2
-    SHA512 b4e96183ea52dc5ba0d88b4b9b27baa2c3e2c540b1bfd50cf7a3c2569337fbe9d73dd9939cb456d5f7459df8e10d84677d40ee33f7d524f0f5f8a723d7a70583
+    REPO AxioDL/lzokay
+    REF db2df1fcbebc2ed06c10f727f72567d40f06a2be
+    SHA512 0e0c597cb74985ef2fc3329392dadf87c0ffc84287cdb2f04e6a70d2e74dcc79732de18872ff05d0906fac2d53749c3db6f2ccd32b906f5a8b81310810eae8eb
     HEAD_REF master
 )
 

@@ -1,11 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2172a48..e7458fd 100644
+index 9c3d0d4..cc0e904 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -529,7 +529,7 @@ if(ENABLE_LIBRESSL_INSTALL)
- endif()
+@@ -512,7 +512,7 @@ if(ENABLE_LIBRESSL_INSTALL)
+ 		DESTINATION "${LIBRESSL_INSTALL_CMAKEDIR}"
+ 	)
  
- if(ENABLE_LIBRESSL_INSTALL)
 -	if(NOT MSVC)
 +	if(1)
  		# Create pkgconfig files.

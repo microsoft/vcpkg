@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-external-dependencies2.patch
         eigen-3.4.patch
         266.diff
+        fix-last-openimageio.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
@@ -30,6 +31,10 @@ vcpkg_cmake_configure(
         -DTHEIA_USE_EXTERNAL_FLANN=ON
         -DCMAKE_POLICY_DEFAULT_CMP0012=NEW
         -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_POLICY_DEFAULT_CMP0012
+        THEIA_USE_EXTERNAL_CEREAL
+        THEIA_USE_EXTERNAL_FLANN
 )
 
 vcpkg_cmake_install()
@@ -47,5 +52,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/datas
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/theia/libraries/spectra/doxygen")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
 file(COPY "${SOURCE_PATH}/data/camera_sensor_database_license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

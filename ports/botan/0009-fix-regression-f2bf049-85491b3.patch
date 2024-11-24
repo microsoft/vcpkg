@@ -1,0 +1,39 @@
+diff --git a/configure.py b/configure.py
+index be0dc23..27f48b8 100644
+--- a/configure.py
++++ b/configure.py
+@@ -2322,6 +2322,8 @@ def create_template_vars(source_paths, build_paths, options, modules, disabled_m
+         # just transfer them over to just the compiler invocations
+         variables['cc_compile_flags'] = '%s %s' % (variables['cxx_abi_flags'], variables['cc_compile_flags'])
+         variables['cxx_abi_flags'] = ''
++    else:
++        variables['ldflags'] = '%s %s' % (variables['ldflags'], variables['cc_compile_flags'])
+ 
+     variables['lib_flags'] = cc.gen_lib_flags(options, variables)
+ 
+diff --git a/src/build-data/makefile.in b/src/build-data/makefile.in
+index 7696aa7..4dbf192 100644
+--- a/src/build-data/makefile.in
++++ b/src/build-data/makefile.in
+@@ -16,7 +16,7 @@ LANG_EXE_FLAGS = %{cc_lang_binary_linker_flags}
+ CXXFLAGS       = %{cc_compile_flags}
+ WARN_FLAGS     = %{cc_warning_flags}
+ LIB_FLAGS      = %{lib_flags}
+-LDFLAGS        = %{ldflags} %{cc_compile_flags}
++LDFLAGS        = %{ldflags}
+ 
+ EXE_LINK_CMD   = %{exe_link_cmd}
+ 
+diff --git a/src/build-data/ninja.in b/src/build-data/ninja.in
+index a6279d3..414663a 100644
+--- a/src/build-data/ninja.in
++++ b/src/build-data/ninja.in
+@@ -10,7 +10,7 @@ LANG_EXE_FLAGS = %{cc_lang_binary_linker_flags}
+ CXXFLAGS       = %{cc_compile_flags}
+ WARN_FLAGS     = %{cc_warning_flags}
+ 
+-LDFLAGS        = %{ldflags} %{cc_compile_flags}
++LDFLAGS        = %{ldflags}
+ 
+ EXE_LINK_CMD   = %{exe_link_cmd}
+ 

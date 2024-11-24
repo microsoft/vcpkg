@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index de03564..df3fcf6 100644
+index de03564..fe9f536 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,11 +1,8 @@
@@ -45,7 +45,7 @@ index de03564..df3fcf6 100644
  # Helper function to generate a pkg-config file for a single library
  # Takes the filename of the .pc file as a parameter and replaces all
  # placeholders in the .pc.in file with the actual values
-@@ -60,23 +35,9 @@ function(generate_pkgconfig BASENAME)
+@@ -60,23 +35,10 @@ function(generate_pkgconfig BASENAME)
      endif()
  endfunction(generate_pkgconfig)
  if(MSVC)
@@ -68,11 +68,12 @@ index de03564..df3fcf6 100644
 -    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 +    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 +    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++    add_compile_options(/bigobj)
 +    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
  endif()
  
  if(WIN32)
-@@ -105,7 +66,7 @@ else(WIN32)
+@@ -105,7 +67,7 @@ else(WIN32)
  
  endif(WIN32)
  
@@ -81,7 +82,7 @@ index de03564..df3fcf6 100644
  include_directories( ${Boost_INCLUDE_DIRS} )
  link_directories( ${Boost_LIBRARY_DIRS} )
  message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIRS})
-@@ -185,14 +146,12 @@ add_library(opcuaprotocol
+@@ -185,14 +147,12 @@ add_library(opcuaprotocol
      src/protocol/subscriptions.cpp
  )
  
@@ -98,7 +99,7 @@ index de03564..df3fcf6 100644
  
  generate_pkgconfig("libopcuaprotocol.pc")
  
-@@ -227,10 +186,6 @@ if (BUILD_TESTING)
+@@ -227,10 +187,6 @@ if (BUILD_TESTING)
          gtest_main
      )
  
@@ -109,7 +110,7 @@ index de03564..df3fcf6 100644
      add_test(NAME opcuaprotocol COMMAND test_opcuaprotocol)
  endif()
  
-@@ -266,15 +221,12 @@ SET(opcuacore_SOURCES
+@@ -266,15 +222,12 @@ SET(opcuacore_SOURCES
  
  add_library(opcuacore ${opcuacore_SOURCES})
  
@@ -128,7 +129,7 @@ index de03564..df3fcf6 100644
  
  generate_pkgconfig("libopcuacore.pc")
  
-@@ -306,7 +258,7 @@ if (BUILD_TESTING)
+@@ -306,7 +259,7 @@ if (BUILD_TESTING)
      )
  
      if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
@@ -137,7 +138,7 @@ index de03564..df3fcf6 100644
      endif ()
  
      add_test(NAME opcuacore COMMAND test_opcuacore)
-@@ -327,9 +279,6 @@ if (BUILD_CLIENT)
+@@ -327,9 +280,6 @@ if (BUILD_CLIENT)
      src/client/client.cpp
      )
  
@@ -147,7 +148,7 @@ index de03564..df3fcf6 100644
      target_link_libraries(opcuaclient
          opcuacore
          ${ADDITIONAL_LINK_LIBRARIES}
-@@ -338,8 +287,9 @@ if (BUILD_CLIENT)
+@@ -338,8 +288,9 @@ if (BUILD_CLIENT)
  
      target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
      install(TARGETS opcuaclient EXPORT FreeOpcUa
@@ -158,7 +159,7 @@ index de03564..df3fcf6 100644
  
      generate_pkgconfig("libopcuaclient.pc")
  
-@@ -371,9 +321,6 @@ if (BUILD_CLIENT)
+@@ -371,9 +322,6 @@ if (BUILD_CLIENT)
          opcuacore
      )
  
@@ -168,7 +169,7 @@ index de03564..df3fcf6 100644
  endif(BUILD_CLIENT)
  
  
-@@ -423,14 +370,12 @@ if(BUILD_SERVER)
+@@ -423,14 +371,12 @@ if(BUILD_SERVER)
          src/server/subscription_service_internal.cpp
          )
  
@@ -186,7 +187,7 @@ index de03564..df3fcf6 100644
  
      generate_pkgconfig("libopcuaserver.pc")
  
-@@ -481,7 +426,7 @@ if(BUILD_SERVER)
+@@ -481,7 +427,7 @@ if(BUILD_SERVER)
  
          target_include_directories(test_opcuaserver PUBLIC .)
          if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
@@ -195,7 +196,7 @@ index de03564..df3fcf6 100644
          endif ()
  
          add_test(NAME opcuaserverapp COMMAND test_opcuaserver)
-@@ -510,9 +455,6 @@ if(BUILD_SERVER)
+@@ -510,9 +456,6 @@ if(BUILD_SERVER)
          opcuaserver
          ${Boost_PROGRAM_OPTIONS_LIBRARY}
          )
@@ -205,7 +206,7 @@ index de03564..df3fcf6 100644
  
  endif(BUILD_SERVER)
  
-@@ -533,9 +475,6 @@ if (BUILD_CLIENT)
+@@ -533,9 +476,6 @@ if (BUILD_CLIENT)
          ${SSL_SUPPORT_LINK_LIBRARIES}
      )
  
@@ -215,7 +216,7 @@ index de03564..df3fcf6 100644
  
  endif (BUILD_CLIENT)
  
-@@ -555,9 +494,6 @@ if(BUILD_SERVER)
+@@ -555,9 +495,6 @@ if(BUILD_SERVER)
      opcuaserver
      )
  
@@ -225,7 +226,7 @@ index de03564..df3fcf6 100644
      if(MSVC)
          set_target_properties(example_server PROPERTIES LINK_FLAGS /STACK:3000000)
      endif(MSVC)
-@@ -572,8 +508,8 @@ if (BUILD_PYTHON)
+@@ -572,8 +509,8 @@ if (BUILD_PYTHON)
      add_subdirectory(python)
  endif (BUILD_PYTHON)
  

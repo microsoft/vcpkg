@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-upw.patch
+        use-new-imguiimagebutton.patch # Upstream commit: https://github.com/pthom/hello_imgui/commit/3ba369ad5b9bc281f01a2b2ee78d64ecef7d632a
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -44,14 +44,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         websockets  CURL_DISABLE_WEBSOCKETS
 )
 
-# Add warning on build failuer when using wolfssl and openssl features togther.
-if("openssl" IN_LIST FEATURES AND "wolfssl" IN_LIST FEATURES)
-    message(WARNING "Adding OpenSSL and WolfSSL simultaneously will result in a build failure. \
-                     Please remove one of these features from your build process.\
-                     If you are using OpenSSL version 1.1, you may disregard this warning."
-    )
-endif()
-
 set(OPTIONS "")
 
 if("sectransp" IN_LIST FEATURES)

@@ -1,6 +1,7 @@
 {
   "name": "libwebm",
   "version": "1.0.0.31",
+  "port-version": 1,
   "description": "WebM File Parser",
   "homepage": "https://github.com/webmproject/libwebm",
   "license": "BSD-3-Clause",

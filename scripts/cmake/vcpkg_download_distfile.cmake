@@ -28,30 +28,6 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
     endif()
 endfunction()
 
-function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
-    message(FATAL_ERROR
-        "    \n"
-        "    Failed to download file with error: ${error_code}\n"  
-        "    If you are using a proxy, please check your proxy setting. Possible causes are:\n"
-        "    \n"
-        "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
-        "       to `https://address:port`. This is not correct, because `https://` prefix\n"
-        "       claims the proxy is an HTTPS proxy, while your proxy (v2ray, shadowsocksr\n"
-        "       , etc..) is an HTTP proxy. Try setting `http://address:port` to both\n"
-        "       HTTP_PROXY and HTTPS_PROXY instead.\n"
-        "    \n"
-        "    2. If you are using Windows, vcpkg will automatically use your Windows IE Proxy Settings\n"
-        "       set by your proxy software. See https://github.com/microsoft/vcpkg-tool/pull/77\n"
-        "       The value set by your proxy might be wrong, or have same `https://` prefix issue.\n"
-        "    \n"
-        "    3. Your proxy's remote server is out of service.\n"
-        "    \n"
-        "    If you've tried directly download the link, and believe this is not a temporary\n"
-        "    download server failure, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n"
-        "    to report this upstream download server failure.\n"
-        "    \n")
-endfunction()
-
 function(z_vcpkg_download_distfile_via_aria)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512"
@@ -196,13 +172,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             "${arg_SHA512}"
             "${arg_SKIP_SHA512}"
         )
-
-        if(NOT vcpkg_download_distfile_QUIET)
-            message(STATUS "Using cached ${arg_FILENAME}.")
-        endif()
-        
-        # Suppress the "Downloading ${arg_URLS} -> ${arg_FILENAME}..." message
-        set(vcpkg_download_distfile_QUIET TRUE)
+        message(STATUS "Using cached ${arg_FILENAME}.")
     endif()
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
@@ -235,9 +205,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     foreach(url IN LISTS arg_URLS)
         vcpkg_list(APPEND urls_param "--url=${url}")
     endforeach()
-    if(NOT vcpkg_download_distfile_QUIET)
-        message(STATUS "Downloading ${arg_URLS} -> ${arg_FILENAME}...")
-    endif()
 
     vcpkg_list(SET headers_param)
     foreach(header IN LISTS arg_HEADERS)
@@ -257,17 +224,11 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
                 ${sha512_param}
                 ${urls_param}
                 ${headers_param}
-                --debug
-                --feature-flags=-manifests # there's a bug in vcpkg x-download when it finds a manifest-root
-            OUTPUT_VARIABLE output
-            ERROR_VARIABLE output
             RESULT_VARIABLE error_code
             WORKING_DIRECTORY "${DOWNLOADS}"
         )
-
         if(NOT "${error_code}" EQUAL "0")
-            message("${output}")
-            z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
+            message(FATAL_ERROR "Download failed, halting portfile.")
         endif()
     endif()
 
