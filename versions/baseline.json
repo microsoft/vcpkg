@@ -4818,7 +4818,7 @@
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
-      "port-version": 12
+      "port-version": 13
     },
     "libmodbus": {
       "baseline": "3.1.10",
