@@ -122,6 +122,14 @@
       "name": "opencv",
       "default-features": false,
       "features": [
+        "aravis"
+      ],
+      "platform": "!android & !uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
         "gapi",
         "python"
       ],
