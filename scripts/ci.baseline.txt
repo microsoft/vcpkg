@@ -55,6 +55,10 @@ apr:arm64-android=fail
 apr:x64-android=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
+# needs NDK w/ API level >=24, CI currently has API level 21
+aravis:arm-neon-android=fail
+aravis:arm64-android=fail
+aravis:x64-android=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
 avro-c:arm-neon-android=fail
