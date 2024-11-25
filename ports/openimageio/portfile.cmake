@@ -53,6 +53,7 @@ vcpkg_cmake_configure(
         -DUSE_OpenVDB=OFF
         -DUSE_PTEX=OFF
         -DUSE_TBB=OFF
+        -DUSE_JXL=OFF
         -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
         -DINTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
