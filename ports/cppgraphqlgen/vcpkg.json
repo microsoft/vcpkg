@@ -17,9 +17,7 @@
     }
   ],
   "default-features": [
-    "clientgen",
-    "rapidjson",
-    "schemagen"
+    "rapidjson"
   ],
   "features": {
     "clientgen": {
