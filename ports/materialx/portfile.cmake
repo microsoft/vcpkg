@@ -33,7 +33,6 @@ vcpkg_cmake_configure(
         "-DMATERIALX_INSTALL_PYTHON:BOOL=NO"
         "-DMATERIALX_TEST_RENDER:BOOL=NO"
         "-DMATERIALX_WARNINGS_AS_ERRORS:BOOL=NO"
-		"-DMATERIALX_BUILD_RENDER=OFF "
     MAYBE_UNUSED_VARIABLES
         MATERIALX_PYTHON_LTO # Used when MATERIALX_BUILD_PYTHON=ON
 )
@@ -55,8 +54,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
 
     # MaterialXGenShader explicitely install resources
-    "${CURRENT_PACKAGES_DIR}/resources"
-    "${CURRENT_PACKAGES_DIR}/debug/resources"
     "${CURRENT_PACKAGES_DIR}/include/MaterialXRender/External/OpenImageIO" 
 
     # Based on how OSL does it, it could be that those `.mdl` source would be better located inside `libraries/pbrlib/genmdl/**`
