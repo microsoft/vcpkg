@@ -4362,7 +4362,7 @@
     },
     "libcbor": {
       "baseline": "0.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libcds": {
       "baseline": "2.3.3",
@@ -4542,7 +4542,7 @@
     },
     "libfido2": {
       "baseline": "1.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libflac": {
       "baseline": "1.4.3",
