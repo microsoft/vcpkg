@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 99bb7fb..f0a4688 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -383,6 +383,8 @@ if(BUILD_TESTING OR LAPACKE_WITH_TMG)
+       # Build and install TMG as part of LAPACKE targets (as opposed to LAPACK
+       # targets)
+       set(LAPACK_INSTALL_EXPORT_NAME ${LAPACKELIB}-targets)
++    else()
++      set(TMGLIB "")
+     endif()
+   endif()
+   add_subdirectory(TESTING/MATGEN)

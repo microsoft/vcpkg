@@ -4196,6 +4196,10 @@
       "baseline": "3.11.0",
       "port-version": 6
     },
+    "lapacke": {
+      "baseline": "3.12.0",
+      "port-version": 0
+    },
     "lastools": {
       "baseline": "2.0.3",
       "port-version": 0

@@ -1,0 +1,29 @@
+{
+  "name": "lapacke",
+  "version": "3.12.0",
+  "description": "Standard C language APIs for LAPACK",
+  "homepage": "https://netlib.org/lapack/lapacke.html",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tmg": {
+      "description": "Build LAPACKE with tmglib routines.",
+      "dependencies": [
+        {
+          "name": "vcpkg-gfortran",
+          "platform": "windows"
+        }
+      ]
+    }
+  }
+}
