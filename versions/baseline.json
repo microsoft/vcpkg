@@ -6513,7 +6513,7 @@
       "port-version": 1
     },
     "oatpp-swagger": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.0-latest",
       "port-version": 1
     },
     "oatpp-websocket": {
