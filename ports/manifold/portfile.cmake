@@ -1,3 +1,7 @@
+add set(VCPKG_POLICY_ALLOW_DEBUG_INCLUDE enabled)
+set(VCPKG_POLICY_SKIP_MISPLACED_CMAKE_FILES_CHECK enabled)
+add set(VCPKG_POLICY_SKIP_LIB_CMAKE_MERGE_CHECK enabled)
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
