@@ -9,7 +9,6 @@ vcpkg_from_github(
         dirent.diff
         no-docs.diff
         test-shared.diff
-        fix-libxml2.patch #https://github.com/sbmlteam/libsbml/pull/358
 )
 file(REMOVE
     "${SOURCE_PATH}/CMakeModules/FindBZ2.cmake"
