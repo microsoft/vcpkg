@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -136,6 +136,14 @@
             "win32ui"
           ],
           "platform": "windows & !uwp"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "msmf"
+          ],
+          "platform": "windows & !uwp & !mingw"
         }
       ]
     },
