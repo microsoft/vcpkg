@@ -24,6 +24,7 @@ vcpkg_from_github(
         009-vcpkg_install_folder_conventions.patch
         010-cmake_export_plugin_as_modules.patch
         011-TBB-2022.patch
+        012-fix-find-vulkan.patch
 )
 
 # Changes accompanying 006-vcpkg_find_spirv-reflect.patch
