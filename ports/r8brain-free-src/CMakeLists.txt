@@ -35,7 +35,7 @@ endif()
 
 if(R8B_INSTALL)
     install(TARGETS r8bsrc
-        EXPORT ${PROJECT_NAME}Targets
+        EXPORT unofficial-${PROJECT_NAME}Targets
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
@@ -44,7 +44,7 @@ if(R8B_INSTALL)
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>"
     )
 
-    install(EXPORT ${PROJECT_NAME}Targets
+    install(EXPORT unofficial-${PROJECT_NAME}Targets
         FILE "unofficial-${PROJECT_NAME}Config.cmake"
         NAMESPACE unofficial::r8brain::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-${PROJECT_NAME}
