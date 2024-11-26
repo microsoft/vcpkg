@@ -6,9 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-config.diff
-        win32-library-prefix.diff
+        linker-flags.diff
         tmglib.diff
+        win32-library-prefix.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/SRC") # lapack-reference
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
@@ -29,6 +31,7 @@ vcpkg_cmake_configure(
         -DUSE_OPTIMIZED_BLAS=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=ON
         -DUSE_OPTIMIZED_LAPACK=ON
+        -DLATESTLAPACK_FOUND=TRUE # Force, don't check
         -DCMAKE_REQUIRE_FIND_PACKAGE_LAPACK=ON
         -DTEST_FORTRAN_COMPILER=OFF
 )
