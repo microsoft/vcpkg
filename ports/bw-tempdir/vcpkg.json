@@ -1,5 +1,5 @@
 {
-  "name": "tempdir",
+  "name": "bw-tempdir",
   "version": "1.0.0",
   "description": "TempDir: Simplified Temporary Directory for C++",
   "homepage": "https://github.com/bw-hro/TempDir",
