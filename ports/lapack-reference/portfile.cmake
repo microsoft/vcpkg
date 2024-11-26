@@ -24,6 +24,7 @@ vcpkg_from_github(
         cmake-config.patch
         lapacke.patch
         fix_prefix.patch
+        fortran-linkage-pkgconfig.diff
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -63,6 +64,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
         "-DTEST_FORTRAN_COMPILER=OFF"
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
         ${FORTRAN_CMAKE}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS

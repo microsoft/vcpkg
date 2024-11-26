@@ -4194,7 +4194,7 @@
     },
     "lapack-reference": {
       "baseline": "3.11.0",
-      "port-version": 6
+      "port-version": 7
     },
     "lapacke": {
       "baseline": "3.12.0",
