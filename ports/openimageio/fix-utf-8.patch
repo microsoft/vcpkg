@@ -1,0 +1,15 @@
+diff --git a/src/libOpenImageIO/CMakeLists.txt b/src/libOpenImageIO/CMakeLists.txt
+index 1dd6092..4483067 100644
+--- a/src/libOpenImageIO/CMakeLists.txt
++++ b/src/libOpenImageIO/CMakeLists.txt
+@@ -106,6 +106,10 @@ if (EMBEDPLUGINS)
+     endforeach ()
+ endif ()
+ 
++if(MSVC)
++	target_compile_options(OpenImageIO PUBLIC "/utf-8")
++endif()
++
+ # Enable default use of OpenEXR core library for versions of the library
+ # new enough to support DWA compression in exrcore.
+ if (OPENEXR_VERSION VERSION_GREATER_EQUAL 3.1.10)
