@@ -1,0 +1,22 @@
+{
+  "name": "dawn",
+  "version-string": "chromium_7371",
+  "description": "Dawn is an open-source and cross-platform implementation of the WebGPU standard.",
+  "homepage": "https://dawn.googlesource.com/dawn",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & !android",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    }
+  ]
+}

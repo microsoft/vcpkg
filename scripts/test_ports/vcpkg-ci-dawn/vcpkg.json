@@ -1,0 +1,16 @@
+{
+  "name": "vcpkg-ci-dawn",
+  "version-date": "2025-08-23",
+  "description": "Validates dawn",
+  "license": null,
+  "dependencies": [
+    "dawn",
+    "fmt",
+    "glfw3",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
