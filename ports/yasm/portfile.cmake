@@ -48,12 +48,11 @@ if (BUILD_TOOLS)
     if (NOT VCPKG_CROSSCOMPILING)
         list(APPEND EXTRA_BUILD_TOOLS re2c genmacro genperf genversion)
     endif()
-    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm-tool ytasm ${EXTRA_BUILD_TOOLS} AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm ${EXTRA_BUILD_TOOLS} AUTO_CLEAN)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY "${CURRENT_PACKAGES_DIR}/bin/yasmstd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
-    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/yasm-tool${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

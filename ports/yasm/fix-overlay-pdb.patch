@@ -1,32 +1,12 @@
 diff --git a/frontends/yasm/CMakeLists.txt b/frontends/yasm/CMakeLists.txt
-index b11d7f8..ef423f5 100644
+index b11d7f8..b8306b1 100644
 --- a/frontends/yasm/CMakeLists.txt
 +++ b/frontends/yasm/CMakeLists.txt
-@@ -13,22 +13,22 @@ ADD_CUSTOM_COMMAND(
- SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
- 
- IF(BUILD_SHARED_LIBS)
--    ADD_EXECUTABLE(yasm
-+    ADD_EXECUTABLE(yasm-tool
-         yasm.c
-         yasm-options.c
+@@ -19,6 +19,7 @@ IF(BUILD_SHARED_LIBS)
          yasm-plugin.c
          )
--    TARGET_LINK_LIBRARIES(yasm libyasm ${LIBDL})
-+    TARGET_LINK_LIBRARIES(yasm-tool libyasm ${LIBDL})
+     TARGET_LINK_LIBRARIES(yasm libyasm ${LIBDL})
++    set_target_properties(yasm PROPERTIES PDB_NAME "yasm-tool")
  ELSE(BUILD_SHARED_LIBS)
--    ADD_EXECUTABLE(yasm
-+    ADD_EXECUTABLE(yasm-tool
+     ADD_EXECUTABLE(yasm
          yasm.c
-         yasm-options.c
-         )
--    TARGET_LINK_LIBRARIES(yasm yasmstd libyasm)
-+    TARGET_LINK_LIBRARIES(yasm-tool yasmstd libyasm)
- ENDIF(BUILD_SHARED_LIBS)
- 
- SET_SOURCE_FILES_PROPERTIES(yasm.c PROPERTIES
-     OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/license.c
-     )
- 
--INSTALL(TARGETS yasm RUNTIME DESTINATION bin)
-+INSTALL(TARGETS yasm-tool RUNTIME DESTINATION bin)
