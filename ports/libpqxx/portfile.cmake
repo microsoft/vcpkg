@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
     REF "${VERSION}"
-    SHA512 134e28177f6a205c8a45462fa6b3cb4c407ab8f03a45708400fdc9f567d2ba1fae9cce9d541bdccd46694bf5d1b8dfd72bc6de5f6c915181909623357f86ce47
+    SHA512 f4035b1d976580f0ca101d484940f18a5af8299e249b754098c6c4bbe8198a855013112965300f7d978ca127b75547f2e2f4fb567b77114f010392952f0ed642
     HEAD_REF master
     PATCHES
         fix_build_with_vs2017.patch
-        fix_build_cmake_3.30.patch      # remove with > 7.9.1, upstream fix: https://github.com/jtv/libpqxx/commit/d5bf7cf83d0c86c502b6b30d5f0c8dc3b3049a38
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config-public-compiler.h.in" DESTINATION "${SOURCE_PATH}")

@@ -2,10 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
     REF "v${VERSION}-stable"
-    SHA512 daec6427cbee6628da0dcaad2f721efb0591532fcb3bd688e7212aaca8a442ac10176e5b9eb6b14fea6c49a613d6b086ff777eafc5c27b25d51f758ad0aa13bd
+    SHA512 ad6a8c8635d7d3355cb4fb70dac31d405976312864f383e83597b3653fb6cde614a4f6427ebe76015fc0eade9741cb9ac4a9bc9d8fa55d97939052c0f7246114
     HEAD_REF master
     PATCHES
     )
+
+if ("asio" IN_LIST FEATURES)
+    set(ENABLE_ASIO yes)
+else()
+    set(ENABLE_ASIO no)
+endif()
 
 if ("dtls" IN_LIST FEATURES)
     set(ENABLE_DTLS yes)
@@ -43,6 +49,10 @@ vcpkg_cmake_configure(
       -DWOLFSSL_OCSPSTAPLING_V2=yes
       -DWOLFSSL_CRL=yes
       -DWOLFSSL_DES3=yes
+      -DWOLFSSL_ECH=yes
+      -DWOLFSSL_HPKE=yes
+      -DWOLFSSL_SNI=yes
+      -DWOLFSSL_ASIO=${ENABLE_ASIO}
       -DWOLFSSL_DTLS=${ENABLE_DTLS}
       -DWOLFSSL_DTLS13=${ENABLE_DTLS}
       -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}

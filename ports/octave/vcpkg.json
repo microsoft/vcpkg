@@ -1,0 +1,30 @@
+{
+  "name": "octave",
+  "version": "9.2.0",
+  "port-version": 1,
+  "description": "High-level interpreted language, primarily intended for numerical computations.",
+  "homepage": "https://octave.org/",
+  "license": "GPL-3.0-or-later",
+  "supports": "!arm",
+  "dependencies": [
+    "blas",
+    "fftw3",
+    "glpk",
+    "lapack",
+    "libsndfile",
+    "opengl",
+    "pcre2",
+    "portaudio",
+    "readline",
+    "sundials",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

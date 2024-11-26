@@ -37,6 +37,7 @@ vcpkg_from_github(
         fix-calculate-minloglevel.patch
         force-cuda-include.patch
         fix-aten-cutlass.patch
+        fix-build-error-with-fmt11.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -94,8 +95,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
     zstd    USE_ZSTD
-    fftw3   USE_FFTW
-    fftw3   AT_FFTW_ENABLED
     fbgemm  USE_FBGEMM
     opencv  USE_OPENCV
     # These are alternatives !
@@ -121,7 +120,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
     nnpack  AT_NNPACK_ENABLED
-    xnnpack USE_XNNPACK
     qnnpack USE_QNNPACK # todo: check use of `USE_PYTORCH_QNNPACK`
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
@@ -182,7 +180,6 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_PTHREADPOOL=ON
         -DUSE_SYSTEM_PYBIND11=ON
         -DUSE_SYSTEM_ZSTD=ON
-        -DUSE_SYSTEM_XNNPACK=ON
         -DUSE_SYSTEM_GLOO=ON
         -DUSE_SYSTEM_NCCL=ON
         -DUSE_SYSTEM_LIBS=ON

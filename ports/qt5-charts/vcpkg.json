@@ -1,6 +1,6 @@
 {
   "name": "qt5-charts",
-  "version": "5.15.14",
+  "version": "5.15.15",
   "description": "The Qt Charts module provides a set of easy to use chart components.",
   "license": null,
   "dependencies": [

@@ -2,8 +2,8 @@ string(REPLACE "." "_" MINIUPNPC_VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO miniupnp/miniupnp
-    REF "miniupnpc_${MINIUPNPC_VERSION}"
-    SHA512 2f1fcd2d2820f649b832e1e0d6b826a812ee84f634460acb3b4af15338488fe3889bb8929c38a91a4f9786a5232177df479d874a388230723d27ae708d3b2592
+    REF "miniupnpd_${MINIUPNPC_VERSION}"
+    SHA512 f461b57446d9086e8fc2caf6ef202a78d204b2580d6096aca63234fda53302cad03840b14cc0d8b68e9033049b749be46e35c3737cc6cbcd2ad30c59b737a390
     HEAD_REF master
 )
 
@@ -30,13 +30,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 else()
-    file(GLOB DEBUG_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
     file(GLOB RELEASE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-    file(
-        INSTALL ${RELEASE_TOOLS}
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-    )
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(REMOVE ${DEBUG_TOOLS} ${RELEASE_TOOLS})
+    if(${RELEASE_TOOLS})
+        vcpkg_copy_tools(TOOL_NAMES ${RELEASE_TOOLS} AUTO_CLEAN)
+    endif()
 endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

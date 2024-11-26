@@ -1,8 +1,8 @@
 {
   "name": "open62541pp",
-  "version": "0.14.0",
+  "version": "0.16.0",
   "description": "C++ wrapper of the open62541 OPC UA library",
-  "homepage": "https://open62541pp.github.io/open62541pp/",
+  "homepage": "https://open62541pp.github.io",
   "license": "MPL-2.0",
   "dependencies": [
     "open62541",

@@ -1,6 +1,6 @@
 {
   "name": "lightgbm",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": [
     "A fast, distributed, high performance gradient boosting (GBT, GBDT, GBRT, GBM or MART) framework based on decision tree algorithms.",
     "Designed to be distributed and efficient and comes with faster training speeds, higher efficiency, lower memory usage and support of parallel, distributed, and GPU learning."
@@ -17,6 +17,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "openmp"
+  ],
   "features": {
     "gpu": {
       "description": "GPU support using Boost.Compute",
@@ -24,6 +27,9 @@
         "boost-compute",
         "opencl"
       ]
+    },
+    "openmp": {
+      "description": "Support for multi-threading using OpenMP"
     }
   }
 }

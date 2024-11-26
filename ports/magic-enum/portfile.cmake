@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/magic_enum
     REF "v${VERSION}"
-    SHA512 6154c816446e115f3b164df79ab8d8088eb76b632ee3fdc82ea17cc7ae8d04652c83e5cc587c2c4b334889904b101ba08a04c5837103af260768e93df17cc263
+    SHA512 8b61c621ff2a6981b4ff89f7df577091ffc9382d443c061db612fb61822dbf6ef8aba69ea35d1c435dcffbd7434cb4ccc5d12bbe2deba1cf0a5316c979ee6a4b
     HEAD_REF master
 )
 
@@ -17,8 +17,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/magic_enum PACKAGE_NAME magic_enum)
+vcpkg_fixup_pkgconfig()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 

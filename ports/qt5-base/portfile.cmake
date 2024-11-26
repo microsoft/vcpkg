@@ -47,10 +47,6 @@ endif()
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
                             # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
-                            patches/CVE-2023-32763-qtbase-5.15.diff
-                            patches/CVE-2023-34410-qtbase-5.15.diff
-                            patches/CVE-2023-37369-qtbase-5.15.diff
-                            patches/CVE-2023-38197-qtbase-5.15.diff
                             patches/CVE-2023-43114-5.15.patch
                             patches/0001-CVE-2023-51714-qtbase-5.15.diff
                             patches/0002-CVE-2023-51714-qtbase-5.15.diff
@@ -80,6 +76,8 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
                             patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
                             patches/XKB_KEY_dead_lowline.patch # https://bugreports.qt.io/browse/QTBUG-117950
+							
+                            patches/qmake-arm64.patch          # Fix by Oliver Wolff to support ARM64 hosts on Windows
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -101,7 +99,8 @@ set(CORE_OPTIONS
     #-combined-angle-lib
     # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
     #-optimized-tools
-    #-force-debug-info
+    -force-debug-info
+    -no-separate-debug-info
     -verbose
 )
 

@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.85.0",
+    $version = "1.86.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
@@ -26,10 +26,9 @@ if ($null -eq $vcpkg) {
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 0
 $portVersions = @{
-    'boost-container' = 1;
-    'boost-math' = 2;
+    'boost-build'           = 1
 }
 
 function Get-PortVersion {
@@ -136,7 +135,7 @@ $portData = @{
             }
         }
     };
-    "boost-process"          = @{ "supports" = "!emscripten" };
+    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !android" };
     "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
@@ -147,7 +146,21 @@ $portData = @{
             }
         }
     }
-    "boost-stacktrace"       = @{ "supports" = "!uwp" };
+    "boost-stacktrace"       = @{
+        "default-features" = @(@{ "name" = "backtrace"; "platform" = "!windows" }; @{ "name" = "windbg"; "platform" = "windows" });
+        "supports"         = "!uwp";
+        "features"         = @{
+            "backtrace" = @{
+                "description"  = "Use boost_stacktrace_backtrace";
+                "supports"     = "!windows";
+                "dependencies" = @(@{ "name" = "libbacktrace"; "platform" = "!windows" });
+            };
+            "windbg" = @{
+                "description"  = "Use boost_stacktrace_windbg";
+                "supports"     = "windows";
+            };
+        }
+    };
     "boost-test"             = @{ "supports" = "!uwp" };
     "boost-wave"             = @{ "supports" = "!uwp" };
 }
@@ -169,13 +182,34 @@ function GeneratePortName() {
     "boost-" + ($Library -replace "_", "-")
 }
 
+function GetPortHomepage() {
+    param (
+        [string]$Library
+    )
+
+    $specicalHomepagePaths = @{
+        "interval"           = "numeric/interval";
+        "numeric_conversion" = "numeric/conversion";
+        "odeint"             = "numeric/odeint";
+        "ublas"              = "numeric/ublas";
+    }
+
+    if ($specicalHomepagePaths.ContainsKey($Library)) {
+        $homepagePath = $specicalHomepagePaths[$Library]
+    } else {
+        $homepagePath = $Library
+    }
+
+    "https://www.boost.org/libs/" + $homepagePath
+}
+
 function GeneratePortDependency() {
     param (
         [string]$Library = '',
         [string]$PortName = '',
         [string]$ForLibrary = ''
     )
-    if ($PortName -eq '') { 
+    if ($PortName -eq '') {
         $PortName = GeneratePortName $Library
     }
     $forPortName = GeneratePortName $ForLibrary
@@ -189,9 +223,9 @@ function GeneratePortDependency() {
         # For 'boost'.
         $platform = `
             $suppressPlatformForDependency[$PortName] `
-            | ForEach-Object { (GeneratePortDependency -PortName $_).platform } `
-            | Group-Object -NoElement `
-            | Join-String -Property Name -Separator ' & '
+        | ForEach-Object { (GeneratePortDependency -PortName $_).platform } `
+        | Group-Object -NoElement `
+        | Join-String -Property Name -Separator ' & '
         if ($platform -ne '') {
             @{name = $PortName; platform = $platform }
         }
@@ -277,7 +311,8 @@ function GeneratePortManifest() {
                 | Where-Object {
                     if ($_.Contains("name")) {
                         $_.name -notmatch "$dep_name"
-                    } else {
+                    }
+                    else {
                         $_ -notmatch "$dep_name"
                     }
                 }
@@ -304,13 +339,14 @@ function GeneratePort() {
     )
 
     $portName = GeneratePortName $Library
+    $homepage = GetPortHomepage  $Library
 
     New-Item -ItemType "Directory" "$portsDir/$portName" -erroraction SilentlyContinue | out-null
 
     # Generate vcpkg.json
     GeneratePortManifest `
         -PortName $portName `
-        -Homepage "https://www.boost.org/libs/$Library" `
+        -Homepage $homepage `
         -Description "Boost $Library module" `
         -License "BSL-1.0" `
         -Dependencies $Dependencies
@@ -586,10 +622,17 @@ foreach ($library in $libraries) {
 
         # Remove optional dependencies that are only used for tests or examples
         $deps = @($deps | Where-Object {
-            -not (
+                -not (
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
-            )
-        })
+                )
+            }
+        )
+        $deps = @($deps | Where-Object {
+                -not (
+                ($library -eq 'mysql' -and $_ -eq 'pfr')
+                )
+            }
+        )
 
         # Add dependency to the config for all libraries except the config library itself
         if ($library -ne 'config' -and $library -ne 'headers') {
@@ -600,13 +643,13 @@ foreach ($library in $libraries) {
             $deps = $deps | Select-Object -Unique
         }
 
-        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library})
+        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library })
 
         if ($library -ne 'cmake') {
-          $deps += @("boost-cmake")
-          if ($library -ne 'headers') {
-            $deps += @("boost-headers")
-          }
+            $deps += @("boost-cmake")
+            if ($library -ne 'headers') {
+                $deps += @("boost-headers")
+            }
         }
 
         GeneratePort `

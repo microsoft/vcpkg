@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO magiblot/tvision
-    REF d1fa783e0fa8685c199563a466cdc221e8d9b85c
+    REF 966226d643cd638fb516b621ac90a31f3ec8d1f6
     HEAD_REF master
-    SHA512 84c7c4f47274fa4976004b2d542e47446f4bb3eca54b4426f19a2de5e381eb78e42d87f12ab00d7d6ceb05d3d32462da2c02dc3e4a7ef06e3f6fcbbe87c30ac1
+    SHA512 b18a466cad2edebff62f6db6d5ab6b6b4d000fbc0fcc682f169efd9c0cc7efe5f0535ffa019f9dcb3d6e7931f77c476ec5d11aa7b39ed7ce0417ceec270f2d36
 )
 
 vcpkg_cmake_configure(

@@ -1,0 +1,44 @@
+diff --git a/src/theia/image/image.cc b/src/theia/image/image.cc
+index 6175a1f..18cb59b 100644
+--- a/src/theia/image/image.cc
++++ b/src/theia/image/image.cc
+@@ -296,7 +296,7 @@ FloatImage FloatImage::ComputeGradient() const {
+ 
+ void FloatImage::ApproximateGaussianBlur(const int kernel_size) {
+   oiio::ImageBuf kernel;
+-  oiio::ImageBufAlgo::make_kernel(kernel, "gaussian",
++  oiio::ImageBufAlgo::make_kernel("gaussian",
+                                   static_cast<float>(kernel_size),
+                                   static_cast<float>(kernel_size));
+   oiio::ImageBufAlgo::convolve(image_, image_, kernel);
+diff --git a/src/theia/sfm/exif_reader.cc b/src/theia/sfm/exif_reader.cc
+index c63465a..6b0e702 100644
+--- a/src/theia/sfm/exif_reader.cc
++++ b/src/theia/sfm/exif_reader.cc
+@@ -150,7 +150,7 @@ bool ExifReader::ExtractEXIFMetadata(
+   camera_intrinsics_prior->focal_length.is_set = true;
+ 
+   // Set GPS latitude.
+-  const oiio::ImageIOParameter* latitude =
++  const OIIO::ParamValue* latitude =
+       image_spec.find_attribute("GPS:Latitude");
+   if (latitude != nullptr) {
+     camera_intrinsics_prior->latitude.is_set = true;
+@@ -169,7 +169,7 @@ bool ExifReader::ExtractEXIFMetadata(
+   }
+ 
+   // Set GPS longitude.
+-  const oiio::ImageIOParameter* longitude =
++  const OIIO::ParamValue* longitude =
+       image_spec.find_attribute("GPS:Longitude");
+   if (longitude != nullptr) {
+     camera_intrinsics_prior->longitude.is_set = true;
+@@ -189,7 +189,7 @@ bool ExifReader::ExtractEXIFMetadata(
+ 
+ 
+   // Set GSP altitude.
+-  const oiio::ImageIOParameter* altitude =
++  const OIIO::ParamValue* altitude =
+       image_spec.find_attribute("GPS:Altitude");
+   if (altitude != nullptr) {
+     camera_intrinsics_prior->altitude.is_set = true;
