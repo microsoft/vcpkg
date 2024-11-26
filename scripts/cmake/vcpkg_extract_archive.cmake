@@ -35,7 +35,7 @@ function(vcpkg_extract_archive)
         )
     elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
         vcpkg_execute_in_download_mode(
-            COMMAND "$ENV{VCPKG_COMMAND}" z-extract "${arg_ARCHIVE}" "${arg_DESTINATION}"
+            COMMAND "$ENV{VCPKG_COMMAND}" z-extract "${arg_ARCHIVE}" "${arg_DESTINATION}")
     else()
         vcpkg_execute_in_download_mode(
             COMMAND "${CMAKE_COMMAND}" -E tar xzf "${arg_ARCHIVE}"
