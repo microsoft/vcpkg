@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         add-feature-tools.patch
         fix-arm-cross-build.patch
+        fix-overlay-pdb.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -47,11 +48,12 @@ if (BUILD_TOOLS)
     if (NOT VCPKG_CROSSCOMPILING)
         list(APPEND EXTRA_BUILD_TOOLS re2c genmacro genperf genversion)
     endif()
-    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm ${EXTRA_BUILD_TOOLS} AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm-tool ytasm ${EXTRA_BUILD_TOOLS} AUTO_CLEAN)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY "${CURRENT_PACKAGES_DIR}/bin/yasmstd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/yasm-tool${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
