@@ -69,7 +69,7 @@
           ]
         },
         {
-          "name": "opencv4",
+          "name": "opencv3",
           "default-features": false,
           "features": [
             "gtk"
