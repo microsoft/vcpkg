@@ -30,6 +30,15 @@ function(z_vcpkg_calculate_corrected_macho_rpath)
     set("${arg_OUT_NEW_RPATH_VAR}" "${new_rpath}" PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_regex_escape)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+      ""
+      "STRING;OUT_REGEX_ESCAPED_STRING_VAR"
+      "")
+  string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" regex_escaped "${arg_STRING}")
+  set("${arg_OUT_REGEX_ESCAPED_STRING_VAR}" "${regex_escaped}" PARENT_SCOPE)
+endfunction()
+
 function(z_vcpkg_fixup_macho_rpath_in_dir)
     # We need to iterate through everything because we
     # can't predict where a Mach-O file will be located
@@ -199,7 +208,10 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             endif()
             foreach(i RANGE ${last_adjusted_index})
                 list(GET adjusted_shared_lib_old_ids ${i} adjusted_old_id)
-                string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" regex "${adjusted_old_id}")
+                z_vcpkg_regex_escape(
+                    STRING "${adjusted_old_id}"
+                    OUT_REGEX_ESCAPED_STRING_VAR regex
+                )
                 if(NOT get_deps_ov MATCHES "[ \t]${regex} ")
                     continue()
                 endif()
