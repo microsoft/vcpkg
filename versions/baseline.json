@@ -9981,8 +9981,8 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.1.5",
-      "port-version": 1
+      "baseline": "2.2.2",
+      "port-version": 0
     },
     "zlmediakit": {
       "baseline": "2024-09-29",
