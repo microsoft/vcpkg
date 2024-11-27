@@ -20,8 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DR8B_PFFFT=${R8B_PFFFT}
-        -DR8B_PFFFT_DOUBLE=${R8B_PFFFT_DOUBLE}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
