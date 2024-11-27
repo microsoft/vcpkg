@@ -96,7 +96,6 @@
         "intrinsics",
         "jpeg",
         "nonfree",
-        "openexr",
         "png",
         "quirc",
         "thread",
@@ -137,14 +136,22 @@
         "cudnn",
         "dnn-cuda",
         "dshow",
-        "gstreamer",
         "msmf",
-        "opencl",
-        "ovis",
-        "tbb",
         "win32ui"
       ],
       "platform": "windows & x64 & !static & !uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "gstreamer",
+        "openexr",
+        "opencl",
+        "ovis",
+        "tbb"
+      ],
+      "platform": "!uwp"
     },
     {
       "name": "opencv",
