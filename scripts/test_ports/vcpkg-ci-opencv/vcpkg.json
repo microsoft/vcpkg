@@ -132,14 +132,21 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "cuda",
-        "cudnn",
-        "dnn-cuda",
         "dshow",
         "msmf",
         "win32ui"
       ],
-      "platform": "windows & x64 & !static & !uwp"
+      "platform": "windows & !uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "cuda",
+        "cudnn",
+        "dnn-cuda"
+      ],
+      "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
     },
     {
       "name": "opencv",
