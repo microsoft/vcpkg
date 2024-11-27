@@ -77,7 +77,7 @@
           "platform": "linux"
         },
         {
-          "name": "opencv4",
+          "name": "opencv3",
           "default-features": false,
           "features": [
             "gapi"
@@ -85,7 +85,7 @@
           "platform": "!uwp"
         },
         {
-          "name": "opencv4",
+          "name": "opencv3",
           "default-features": false,
           "features": [
             "dnn"
@@ -93,7 +93,7 @@
           "platform": "!android"
         },
         {
-          "name": "opencv4",
+          "name": "opencv3",
           "default-features": false,
           "features": [
             "msmf"
