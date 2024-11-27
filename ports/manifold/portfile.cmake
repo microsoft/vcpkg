@@ -14,8 +14,6 @@ vcpkg_cmake_configure(
         -DMANIFOLD_CBIND=ON
         -DMANIFOLD_PYBIND=OFF
         -DMANIFOLD_JSBIND=OFF
-    OPTIONS_DEBUG
-        -DMANIFOLD_DEBUG=ON
 )
 
 vcpkg_cmake_install()
