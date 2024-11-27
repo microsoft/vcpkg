@@ -5,6 +5,7 @@ set(${PORT}_PATCHES
       "clang-cl.patch"
       "fix-error2275-2672.patch"
       "blink-include-fixes.patch"
+      "msvc_17_12_compilation_fix.patch"
 )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)

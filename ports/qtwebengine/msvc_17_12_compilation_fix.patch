@@ -1,0 +1,50 @@
+diff --git a/src/3rdparty/chromium/v8/src/snapshot/embedded/embedded-data.cc b/src/3rdparty/chromium/v8/src/snapshot/embedded/embedded-data.cc
+index fb3642c95..f1ba90978 100644
+--- a/src/3rdparty/chromium/v8/src/snapshot/embedded/embedded-data.cc
++++ b/src/3rdparty/chromium/v8/src/snapshot/embedded/embedded-data.cc
+@@ -22,12 +22,12 @@ Builtin EmbeddedData::TryLookupCode(Address address) const {
+   uint32_t offset =
+       static_cast<uint32_t>(address - reinterpret_cast<Address>(RawCode()));
+ 
+-  const struct BuiltinLookupEntry* start =
++  const struct EmbeddedData::BuiltinLookupEntry* start =
+       BuiltinLookupEntry(static_cast<ReorderedBuiltinIndex>(0));
+-  const struct BuiltinLookupEntry* end = start + kTableSize;
+-  const struct BuiltinLookupEntry* desc =
++  const struct EmbeddedData::BuiltinLookupEntry* end = start + kTableSize;
++  const struct EmbeddedData::BuiltinLookupEntry* desc =
+       std::upper_bound(start, end, offset,
+-                       [](uint32_t o, const struct BuiltinLookupEntry& desc) {
++                       [](uint32_t o, const struct EmbeddedData::BuiltinLookupEntry& desc) {
+                          return o < desc.end_offset;
+                        });
+   Builtin builtin = static_cast<Builtin>(desc->builtin_id);
+@@ -237,8 +237,8 @@ EmbeddedData EmbeddedData::NewFromIsolate(Isolate* isolate) {
+   Builtins* builtins = isolate->builtins();
+ 
+   // Store instruction stream lengths and offsets.
+-  std::vector<struct LayoutDescription> layout_descriptions(kTableSize);
+-  std::vector<struct BuiltinLookupEntry> offset_descriptions(kTableSize);
++  std::vector<struct EmbeddedData::LayoutDescription> layout_descriptions(kTableSize);
++  std::vector<struct EmbeddedData::BuiltinLookupEntry> offset_descriptions(kTableSize);
+ 
+   bool saw_unsafe_builtin = false;
+   uint32_t raw_code_size = 0;
+@@ -287,7 +287,7 @@ EmbeddedData EmbeddedData::NewFromIsolate(Isolate* isolate) {
+     {
+       // We use builtin id as index in layout_descriptions.
+       const int builtin_id = static_cast<int>(builtin);
+-      struct LayoutDescription& layout_desc = layout_descriptions[builtin_id];
++      struct EmbeddedData::LayoutDescription& layout_desc = layout_descriptions[builtin_id];
+       layout_desc.instruction_offset = raw_code_size;
+       layout_desc.instruction_length = instruction_size;
+       layout_desc.metadata_offset = raw_data_size;
+@@ -298,7 +298,7 @@ EmbeddedData EmbeddedData::NewFromIsolate(Isolate* isolate) {
+ 
+     {
+       // We use embedded index as index in offset_descriptions.
+-      struct BuiltinLookupEntry& offset_desc =
++      struct EmbeddedData::BuiltinLookupEntry& offset_desc =
+           offset_descriptions[embedded_index];
+       offset_desc.end_offset = raw_code_size;
+       offset_desc.builtin_id = static_cast<uint32_t>(builtin);
