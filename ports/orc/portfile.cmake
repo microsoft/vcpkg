@@ -6,6 +6,8 @@ vcpkg_from_git(
   HEAD_REF deshan/vcpkg
 )
 
+file(REMOVE "${SOURCE_PATH}/cmake_modules/FindZLIB.cmake")
+
 if(VCPKG_TARGET_IS_WINDOWS)
   set(BUILD_TOOLS OFF)
   # when cross compiling, we can't run their test. however:
