@@ -8,7 +8,6 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DMANIFOLD_DEBUG=OFF
         -DMANIFOLD_TEST=OFF
         -DMANIFOLD_CROSS_SECTION=ON
         -DMANIFOLD_CBIND=ON
