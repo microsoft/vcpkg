@@ -118,6 +118,11 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/src/OAT/utils.cpp"
+    [[#include "frozen.hpp"]]
+    "#include <frozen.hpp>\n#include <algorithm>"
+)
+
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "enable_language(CXX)"
     "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
