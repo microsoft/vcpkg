@@ -6,12 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 c89c4f7a73c11c020f8ea1cb836ccd222456f899ede8e81a1fd0024e0a88f17c44a66bada8ed3010b0d03ac052475edb34b855aeafcff50975d24c8859463d68
+    SHA512 67c7644d95d1aa3c217a414148ed90d19ce03bc5ed5b9e700866d66b9eda411d8261355e56a5e3888a993a9a2c15aab77edb8b0a45fc28fde923169ad4d41852
     HEAD_REF main
     PATCHES
         cmake-quirks.diff
-        # Missing find_dependency for Abseil
-        add-missing-find-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
