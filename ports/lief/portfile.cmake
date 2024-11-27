@@ -118,6 +118,11 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+    "enable_language(CXX)"
+    "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
+)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "tests"          LIEF_TESTS             # Enable tests
