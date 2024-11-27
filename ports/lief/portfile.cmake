@@ -120,12 +120,12 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
 
 vcpkg_replace_string("${SOURCE_PATH}/src/OAT/utils.cpp"
     [[#include "frozen.hpp"]]
-    "#include <frozen.hpp>\n#include <algorithm>"
+    "#include <frozen.hpp>\n#include <map>"
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "enable_language(CXX)"
-    "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 11)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
+    "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 14)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
