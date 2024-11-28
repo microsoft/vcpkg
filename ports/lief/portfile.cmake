@@ -170,6 +170,7 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_UTFCPP_EXTERNAL=ON
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
         -DLIEF_DISABLE_FROZEN=OFF
+        -DLIEF_DISABLE_EXCEPTIONS=OFF
 )
 
 vcpkg_cmake_install()
