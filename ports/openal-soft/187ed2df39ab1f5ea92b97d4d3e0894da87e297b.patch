@@ -1,0 +1,40 @@
+From 187ed2df39ab1f5ea92b97d4d3e0894da87e297b Mon Sep 17 00:00:00 2001
+From: Darryl Pogue <darryl@dpogue.ca>
+Date: Mon, 25 Nov 2024 19:01:03 -0800
+Subject: [PATCH] vcpkg fixup for finding CppWinRT
+
+---
+ CMakeLists.txt | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 412e8ae7..95b5d758 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1414,21 +1414,8 @@ else()
+         ${MATH_LIB})
+ 
+     if(ALSOFT_UWP)
+-        set(ALSOFT_CPPWINRT_VERSION "2.0.230706.1" CACHE STRING "The soft-oal default cppwinrt version")
+-        
+-        find_program(NUGET_EXE NAMES nuget)
+-        if(NOT NUGET_EXE)
+-            message("NUGET.EXE not found.")
+-            message(FATAL_ERROR "Please install this executable, and run CMake again.")
+-        endif()
+-
+-        exec_program(${NUGET_EXE}
+-            ARGS install "Microsoft.Windows.CppWinRT" -Version ${ALSOFT_CPPWINRT_VERSION} -ExcludeVersion -OutputDirectory "\"${CMAKE_BINARY_DIR}/packages\"")
+-
+-        set_target_properties(${IMPL_TARGET} PROPERTIES
+-            VS_PROJECT_IMPORT ${CMAKE_BINARY_DIR}/packages/Microsoft.Windows.CppWinRT/build/native/Microsoft.Windows.CppWinRT.props
+-        )
+-        target_link_libraries(${IMPL_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/packages/Microsoft.Windows.CppWinRT/build/native/Microsoft.Windows.CppWinRT.targets)
++        find_package(cppwinrt CONFIG REQUIRED)
++        target_link_libraries(${IMPL_TARGET} PRIVATE Microsoft::CppWinRT)
+     endif()
+ 
+     if(NOT WIN32 AND NOT APPLE)
+-- 
+2.47.1
+
