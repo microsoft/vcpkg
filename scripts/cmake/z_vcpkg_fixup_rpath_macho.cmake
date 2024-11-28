@@ -206,6 +206,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             if(NOT get_deps_rv EQUAL 0)
                 message(FATAL_ERROR "Could not obtain dependencies list from '${macho_file}'")
             endif()
+            # change adjusted_shared_lib_old_ids[i] -> adjusted_shared_lib_new_ids[i]
             foreach(i RANGE ${last_adjusted_index})
                 list(GET adjusted_shared_lib_old_ids ${i} adjusted_old_id)
                 z_vcpkg_regex_escape(
