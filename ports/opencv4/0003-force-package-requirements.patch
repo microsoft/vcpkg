@@ -1,6 +1,6 @@
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
-@@ -11,7 +11,7 @@ else()
+@@ -24,7 +24,7 @@ else()
      set(_zlib_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
      set(CMAKE_FIND_LIBRARY_SUFFIXES .so)
    endif()
@@ -9,7 +9,16 @@
    if(ANDROID)
      set(CMAKE_FIND_LIBRARY_SUFFIXES ${_zlib_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
      unset(_zlib_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES)
-@@ -41,7 +41,7 @@ if(WITH_JPEG)
+@@ -55,7 +55,7 @@ endif()
+ 
+ if(WITH_AVIF)
+   ocv_clear_internal_cache_vars(AVIF_LIBRARY AVIF_INCLUDE_DIR)
+-  include(cmake/OpenCVFindAVIF.cmake)
++  find_package(libavif REQUIRED)
+   if(AVIF_FOUND)
+     set(HAVE_AVIF 1)
+   endif()
+@@ -67,7 +67,7 @@ if(WITH_JPEG)
      ocv_clear_vars(JPEG_FOUND)
    else()
      ocv_clear_internal_cache_vars(JPEG_LIBRARY JPEG_INCLUDE_DIR)
@@ -18,7 +27,7 @@
    endif()
  
    if(NOT JPEG_FOUND)
-@@ -87,7 +87,7 @@ if(WITH_TIFF)
+@@ -113,7 +113,7 @@ if(WITH_TIFF)
      ocv_clear_vars(TIFF_FOUND)
    else()
      ocv_clear_internal_cache_vars(TIFF_LIBRARY TIFF_INCLUDE_DIR)
@@ -27,7 +36,7 @@
      if(TIFF_FOUND)
        ocv_parse_header("${TIFF_INCLUDE_DIR}/tiff.h" TIFF_VERSION_LINES TIFF_VERSION_CLASSIC TIFF_VERSION_BIG TIFF_VERSION TIFF_BIGTIFF_VERSION)
      endif()
-@@ -131,7 +131,7 @@ if(WITH_WEBP)
+@@ -157,7 +157,7 @@ if(WITH_WEBP)
      ocv_clear_vars(WEBP_FOUND WEBP_LIBRARY WEBP_LIBRARIES WEBP_INCLUDE_DIR)
    else()
      ocv_clear_internal_cache_vars(WEBP_LIBRARY WEBP_INCLUDE_DIR)
@@ -36,7 +45,7 @@
      if(WEBP_FOUND)
        set(HAVE_WEBP 1)
      endif()
-@@ -172,7 +172,7 @@ if(WITH_OPENJPEG)
+@@ -198,7 +198,7 @@ if(WITH_OPENJPEG)
    if(BUILD_OPENJPEG)
      ocv_clear_vars(OpenJPEG_FOUND)
    else()
@@ -45,7 +54,7 @@
    endif()
  
    if(NOT OpenJPEG_FOUND OR OPENJPEG_MAJOR_VERSION LESS 2)
-@@ -200,7 +200,7 @@ if(WITH_JASPER AND NOT HAVE_OPENJPEG)
+@@ -227,7 +227,7 @@ if(WITH_JASPER AND NOT HAVE_OPENJPEG)
    if(BUILD_JASPER)
      ocv_clear_vars(JASPER_FOUND)
    else()
@@ -54,16 +63,35 @@
    endif()
  
    if(NOT JASPER_FOUND)
-@@ -225,7 +225,7 @@ if(WITH_PNG)
+@@ -253,7 +253,7 @@ if(WITH_SPNG)
+     # CMakeConfig bug in SPNG, include is missing there in version 0.7.4 and older
+     # See https://github.com/randy408/libspng/pull/264
+     include(CMakeFindDependencyMacro)
+-    find_package(SPNG QUIET)
++    find_package(SPNG REQUIRED)
+     if(SPNG_FOUND)
+       set(SPNG_LIBRARY "spng::spng" CACHE INTERNAL "")
+       set(SPNG_LIBRARIES ${SPNG_LIBRARY})
+@@ -287,7 +287,7 @@ if(NOT HAVE_SPNG AND WITH_PNG)
      ocv_clear_vars(PNG_FOUND)
    else()
      ocv_clear_internal_cache_vars(PNG_LIBRARY PNG_INCLUDE_DIR)
--    include(FindPNG)
+-    find_package(PNG QUIET)
 +    find_package(PNG REQUIRED)
-     if(PNG_FOUND)
-       include(CheckIncludeFile)
-       check_include_file("${PNG_PNG_INCLUDE_DIR}/libpng/png.h" HAVE_LIBPNG_PNG_H)
-@@ -275,7 +275,7 @@ endif()
+   endif()
+ 
+   if(NOT PNG_FOUND)
+@@ -310,7 +310,8 @@ if(WITH_OPENEXR)
+   ocv_clear_vars(HAVE_OPENEXR)
+   if(NOT BUILD_OPENEXR)
+     ocv_clear_internal_cache_vars(OPENEXR_INCLUDE_PATHS OPENEXR_LIBRARIES OPENEXR_ILMIMF_LIBRARY OPENEXR_VERSION)
+-    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
++    find_package(OpenEXR CONFIG REQUIRED)
++    set(OPENEXR_FOUND TRUE)
+   endif()
+ 
+   if(OPENEXR_FOUND)
+@@ -330,7 +331,7 @@ endif()
  
  # --- GDAL (optional) ---
  if(WITH_GDAL)
@@ -72,7 +100,7 @@
  
      if(NOT GDAL_FOUND)
          set(HAVE_GDAL NO)
-@@ -287,7 +287,7 @@ if(WITH_GDAL)
+@@ -342,7 +343,7 @@ if(WITH_GDAL)
  endif()
  
  if(WITH_GDCM)
@@ -81,11 +109,9 @@
    if(NOT GDCM_FOUND)
      set(HAVE_GDCM NO)
      ocv_clear_vars(GDCM_VERSION GDCM_LIBRARIES)
-diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
-index 213667a..4052387 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
-@@ -24,7 +24,7 @@ endif()
+@@ -25,7 +25,7 @@ endif()
  
  if(HAVE_WEBP)
    add_definitions(-DHAVE_WEBP)

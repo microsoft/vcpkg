@@ -1,9 +1,9 @@
 {
   "name": "asio",
-  "version": "1.31.0",
+  "version": "1.32.0",
   "description": "Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.",
-  "homepage": "https://github.com/chriskohlhoff/asio",
-  "documentation": "https://think-async.com/Asio/asio-1.28.0/doc/",
+  "homepage": "https://think-async.com/Asio/",
+  "documentation": "https://think-async.com/Asio/Documentation.html",
   "license": "BSL-1.0",
   "dependencies": [
     {

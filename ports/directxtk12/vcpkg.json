@@ -1,6 +1,6 @@
 {
   "name": "directxtk12",
-  "version-date": "2024-09-04",
+  "version-date": "2024-10-28",
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
@@ -34,6 +34,13 @@
     "xaudio2-9"
   ],
   "features": {
+    "gameinput": {
+      "description": "Build using GameInput API for input processing",
+      "supports": "windows & x64 & !uwp",
+      "dependencies": [
+        "gameinput"
+      ]
+    },
     "spectre": {
       "description": "Build Spectre-mitigated library"
     },

@@ -1,0 +1,5 @@
+
+webthing-cpp is header-only and can be used from CMake via:
+
+  find_path(WEBTHING_CPP_INCLUDE_DIRS "bw/webthing/webthing.hpp")
+  target_include_directories(main PRIVATE ${WEBTHING_CPP_INCLUDE_DIRS})
