@@ -118,15 +118,15 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/src/OAT/utils.cpp"
-    [[#include "frozen.hpp"]]
-    "#include <frozen.hpp>\n#include <map>"
-)
+#vcpkg_replace_string("${SOURCE_PATH}/src/OAT/utils.cpp"
+#    [[#include "frozen.hpp"]]
+#    "#include <frozen/map.h>"
+#)
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "enable_language(CXX)"
-    "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 14)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
-)
+#vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+#    "enable_language(CXX)"
+#    "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 14)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
+#)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -162,8 +162,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         # Profiling
         "profiling"      LIEF_PROFILING          # Enable performance profiling
 
-    INVERTED_FEATURES
-        "disable-frozen" LIEF_DISABLE_FROZEN     # Disable Frozen even if it is supported
 )
 
 
@@ -182,6 +180,7 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_EXTERNAL_SPAN=ON
         -DLIEF_OPT_UTFCPP_EXTERNAL=ON
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
+        -DLIEF_DISABLE_FROZEN=OFF
 )
 
 vcpkg_cmake_install()
