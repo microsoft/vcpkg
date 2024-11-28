@@ -14,6 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         training-tools  BUILD_TRAINING_TOOLS
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -26,6 +28,7 @@ vcpkg_cmake_configure(
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
         -DLEPT_TIFF_RESULT=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
