@@ -1,11 +1,3 @@
-#vcpkg_from_github(
-#    OUT_SOURCE_PATH SOURCE_PATH
-#    REPO lief-project/LIEF
-#    REF ${VERSION}
-#    SHA512 30f248ce5c77993ccc08a360bfd74562ff1e661233abf7e6017cd11351ee359c67848a1ac4159b82a38e971f41704a6008b8778c817e06ef558efe21b76e04ae
-#    HEAD_REF master
-#)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
@@ -118,16 +110,6 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
-#vcpkg_replace_string("${SOURCE_PATH}/src/OAT/utils.cpp"
-#    [[#include "frozen.hpp"]]
-#    "#include <frozen/map.h>"
-#)
-
-#vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-#    "enable_language(CXX)"
-#    "enable_language(CXX)\nset(CMAKE_CXX_STANDARD 14)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)"
-#)
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "tests"          LIEF_TESTS             # Enable tests
@@ -184,11 +166,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if (VCPKG_TARGET_IS_ANDROID)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
-endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
