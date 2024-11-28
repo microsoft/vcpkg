@@ -155,10 +155,17 @@
         "gstreamer",
         "openexr",
         "opencl",
-        "ovis",
-        "tbb"
+        "ovis"
       ],
       "platform": "!uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "tbb"
+      ],
+      "platform": "!uwp & !android"
     },
     {
       "name": "opencv",
