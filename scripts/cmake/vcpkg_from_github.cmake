@@ -8,10 +8,23 @@ function(vcpkg_from_github)
         message(WARNING "vcpkg_from_github was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    if(DEFINED arg_REF AND NOT DEFINED arg_SHA512)
+    unset(explicit_commit_tag)
+    if(DEFINED arg_REF)
+        set(_hex_char "[0-9a-fA-F]")
+        string(REPEAT "${_hex_char}" 40 _hex40)
+        if(arg_REF MATCHES "^${_hex40}\$")
+            set(explicit_commit_tag "${arg_REF}")
+        elseif(arg_REF MATCHES "^refs/")
+            message(FATAL_ERROR "Ambiguous git refs, the REF argument should not start with 'refs/'.")
+        else()
+            set(explicit_commit_tag "refs/tags/${arg_REF}")
+        endif()
+    endif()
+
+    if(DEFINED explicit_commit_tag AND NOT DEFINED arg_SHA512)
         message(FATAL_ERROR "SHA512 must be specified if REF is specified.")
     endif()
-    if(NOT DEFINED arg_REF AND DEFINED arg_SHA512)
+    if(NOT DEFINED explicit_commit_tag AND DEFINED arg_SHA512)
         message(FATAL_ERROR "REF must be specified if SHA512 is specified.")
     endif()
 
@@ -36,7 +49,7 @@ function(vcpkg_from_github)
     endif()
 
 
-    if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
+    if(NOT DEFINED explicit_commit_tag AND NOT DEFINED arg_HEAD_REF)
         message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
     endif()
 
@@ -50,7 +63,7 @@ function(vcpkg_from_github)
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED arg_HEAD_REF)
         message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         set(VCPKG_USE_HEAD_VERSION OFF)
-    elseif(NOT VCPKG_USE_HEAD_VERSION AND NOT DEFINED arg_REF)
+    elseif(NOT VCPKG_USE_HEAD_VERSION AND NOT DEFINED explicit_commit_tag)
         message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
     endif()
 
@@ -88,7 +101,7 @@ Error was: ${head_version_err}
         vcpkg_list(SET working_directory_param WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head")
         vcpkg_list(SET skip_patch_check_param SKIP_PATCH_CHECK)
     else()
-        set(ref_to_use "${arg_REF}")
+        set(ref_to_use "${explicit_commit_tag}")
 
         vcpkg_list(SET redownload_param)
         vcpkg_list(SET working_directory_param)
@@ -98,13 +111,14 @@ Error was: ${head_version_err}
 
     string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
     if(DEFINED arg_FILE_DISAMBIGUATOR AND NOT VCPKG_USE_HEAD_REF)
-        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
+        set(downloaded_file_name "_temp-check-${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
     else()
-        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
+        set(downloaded_file_name "_temp-check-${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
     endif()
     # Try to download the file information from github
     vcpkg_download_distfile(archive
-        URLS "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+        URLS "https://codeload.github.com/${org_name}/${repo_name}/tar.gz/${ref_to_use}"
+        # URLS "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
         FILENAME "${downloaded_file_name}"
         ${headers_param}
         ${sha512_param}
