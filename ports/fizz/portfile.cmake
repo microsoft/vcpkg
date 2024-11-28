@@ -10,6 +10,8 @@ vcpkg_from_github(
         fix-build.patch
 )
 
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+
 # Prefer installed config files
 file(REMOVE
     "${SOURCE_PATH}/fizz/cmake/FindGMock.cmake"

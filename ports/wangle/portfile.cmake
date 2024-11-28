@@ -11,6 +11,8 @@ vcpkg_from_github(
         fix_dependency.patch
 )
 
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+
 file(REMOVE
   "${SOURCE_PATH}/wangle/cmake/FindDoubleConversion.cmake"
   "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake"

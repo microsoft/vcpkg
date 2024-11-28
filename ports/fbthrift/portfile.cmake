@@ -8,6 +8,8 @@ vcpkg_from_github(
         fix-deps.patch
 )
 
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindOpenSSL.cmake")
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindZstd.cmake")
