@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realtimechris/jsonifier
-    REF "v${VERSION}"    
-    SHA512 50f8c244c87bc038251ef13574ae86ce20ca1df9ef1c8fc8de5ebade038a60bb8b98528ce6c978ffe4e0f24b12959a650e8ef5d3c53bcdbd1f187b6cae18493a
+    REF "v${VERSION}"
+    SHA512 6168378a117850297fcda78853a0babd0ce7e0ca21b3e8c276acb7e75e04d85ed8909061a62e3324c309fe9e31bc59d89ea06e47853b50481843273e95172ab8
     HEAD_REF main
 )
 
@@ -10,6 +10,8 @@ set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    # Due to CMake/JsonifierDetectArchitecture.cmake invoking a sub-CMake and using the source tree as the target
+    DISABLE_PARALLEL_CONFIGURE
 )
 
 vcpkg_cmake_install()

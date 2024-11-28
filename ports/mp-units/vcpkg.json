@@ -1,10 +1,12 @@
 {
   "name": "mp-units",
-  "version": "2.2.0",
-  "description": "mp-units - A Units Library for C++",
-  "homepage": "https://github.com/mpusz/units",
+  "version": "2.4.0",
+  "port-version": 1,
+  "description": "The quantities and units library for C++",
+  "homepage": "https://mpusz.github.io/mp-units",
   "license": "MIT",
   "dependencies": [
+    "fmt",
     "gsl-lite",
     {
       "name": "vcpkg-cmake",
@@ -14,28 +16,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform specific default features",
-      "dependencies": [
-        {
-          "name": "mp-units",
-          "features": [
-            "use-libfmt"
-          ],
-          "platform": "osx"
-        }
-      ]
-    },
-    "use-libfmt": {
-      "description": "Use libfmt instead of std::format",
-      "dependencies": [
-        "fmt"
-      ]
-    }
-  }
+  ]
 }

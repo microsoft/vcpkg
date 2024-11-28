@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-pdb-find.patch
         fix-install-prefix-path.patch
         install-include-dir.patch
+        fix-freetype.diff # https://github.com/Open-Cascade-SAS/OCCT/pull/49
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

@@ -1,0 +1,43 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 3763c9997..79679ca13 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -233,6 +233,7 @@ if (PXR_BUILD_IMAGING)
+             find_package(Vulkan REQUIRED)
+             list(APPEND VULKAN_LIBS Vulkan::Vulkan)
+ 
++            if(0)
+             # Find the extra vulkan libraries we need
+             set(EXTRA_VULKAN_LIBS shaderc_combined)
+             if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+@@ -242,6 +243,7 @@ if (PXR_BUILD_IMAGING)
+                 find_library("${EXTRA_LIBRARY}_PATH" NAMES "${EXTRA_LIBRARY}" PATHS $ENV{VULKAN_SDK}/lib)
+                 list(APPEND VULKAN_LIBS "${${EXTRA_LIBRARY}_PATH}")
+             endforeach()
++            endif()
+ 
+             # Find the OS specific libs we need
+             if (APPLE)
+@@ -258,6 +260,8 @@ if (PXR_BUILD_IMAGING)
+         else()
+             message(FATAL_ERROR "VULKAN_SDK not valid")
+         endif()
++        find_package(unofficial-shaderc CONFIG REQUIRED)
++        list(APPEND VULKAN_LIBS unofficial::shaderc::shaderc)
+     endif()
+     # --Opensubdiv
+     find_package(OpenSubdiv 3 CONFIG REQUIRED)
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index a934c336b..62bb13a1b 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -25,6 +25,9 @@ if(@PXR_BUILD_IMAGING@)
+     if(@PXR_BUILD_OPENIMAGEIO_PLUGIN@)
+         find_dependency(OpenImageIO CONFIG)
+     endif()
++    if(@PXR_ENABLE_VULKAN_SUPPORT@)
++        find_dependency(unofficial-shaderc CONFIG)
++    endif()
+ endif()
+ 
+ # If Python support was enabled for this USD build, find the import

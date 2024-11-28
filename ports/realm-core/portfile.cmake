@@ -1,20 +1,12 @@
-vcpkg_download_distfile(
-    android-alooper-patch
-    URLS https://github.com/realm/realm-core/commit/50a9895544a195afab0450d0c87730e8a31cf667.diff?full_index=1
-    FILENAME realm-core-android-alooper-50a989.diff
-    SHA512 7c10f166ab61f4ea7a46473aa04eb1b5f440edd81c2997cc10b84b9890eb6dfe7b77d51364fe2d4c537c7809ce03dd8b269309d7da2eede72be8dec3b71c2485
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realm/realm-core
-    REF "${VERSION}"
-    SHA512 474f5c6d62e42b221f7b934ca2d8070f83e92eeeeb1271594b7d750fc6f4d186889e04722e0f26ca725cf4f3130c5e1851e82e4ab944a05e25465f3115ffe8ce
+    REF "v${VERSION}"
+    SHA512 41ccf3e53bb1ff6e16a2baf90203984424d3b754973374af4d3767f67227f1223b314921954826ab62d45965a78540b93fc92a0ababd464f19dbaec368175022
     HEAD_REF master
     PATCHES 
         UWP_index_set.patch
         fix-zlib.patch
-        ${android-alooper-patch}
 )
 
 vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)

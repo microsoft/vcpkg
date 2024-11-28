@@ -1,6 +1,6 @@
 {
   "name": "liberasurecode",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Erasure Code API library written in C with pluggable Erasure Code backends. Mirror of code maintained at opendev.org.",
   "homepage": "https://github.com/openstack/liberasurecode",
   "license": "BSD-2-Clause",

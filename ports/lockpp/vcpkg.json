@@ -1,6 +1,6 @@
 {
   "name": "lockpp",
-  "version": "2.6",
+  "version": "3.0",
   "description": "A C++17 Library that provides mutex protected objects",
   "homepage": "https://github.com/Soundux/lockpp",
   "license": "MIT",

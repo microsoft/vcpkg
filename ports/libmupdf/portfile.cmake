@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
     REF "${VERSION}"
-    SHA512 248340d2cde5d97b4ccfabbdf5e8f2080dba6233031fa384dcfdb98022ecfd7d7feebe38b19f9b94c2768bfef41c361417c73240ea7f8a458c6b9ea9cfedf665
+    SHA512 d8b6d643b12c9cdf91bf292c8d43a0086eb614a87344d12bbac04e74fc5a333dc699cd37c7715e73f2bee00a233e9b80a1942b879a51275aa865aa12c6fa6b0d
     HEAD_REF master
     PATCHES
         dont-generate-extract-3rd-party-things.patch
@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-	${FEATURE_OPTIONS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -32,4 +32,4 @@ file(COPY "${SOURCE_PATH}/include/mupdf" DESTINATION "${CURRENT_PACKAGES_DIR}/in
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

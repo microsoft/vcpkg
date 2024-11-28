@@ -4,12 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 5937fbc2f287567d590fc0afc947459359e5413fa25f2f193434ad6d7016f7cb0dede4e2ef5e1e4e8b21b556c5ad8ce4cb612514403bb593a49af0fb42d1cb15
+    SHA512 51afee7e28a7d6ae1b5491edd635e0c88a92a00bacedeaac632a0f19762e9940c9b819a9d33072d3553c004acd4ec0cdf645301f712b408498053de065b2b1cf
     HEAD_REF master
     PATCHES
         fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
+        all_headers.patch
 )
 
 # This avoids a link error on x86-windows:
@@ -19,19 +20,19 @@ file(REMOVE "${QUIC_SOURCE_PATH}/src/bin/winuser/pgo_x86/msquic.pgd")
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
     REPO quictls/openssl
-    REF 612d8e44d687e4b71c4724319d7aa27a733bcbca
-    SHA512 ff487d882c2b70ed8915a88ecf0a64724435a96187a7bb3bf401f4a2c4dc572a93f7e788040ccbd29da8bc6ac49ee11550c9d56153262c05fae173ac1d242baa
-    HEAD_REF openssl-3.1.5+quic
+    REF openssl-3.1.7-quic1
+    SHA512 230f48a4ef20bfd492b512bd53816a7129d70849afc1426e9ce813273c01884d5474552ecaede05231ca354403f25e2325c972c9c7950ae66dae310800bd19e7
+    HEAD_REF openssl-3.1.7+quic
 )
 
-file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl")
-file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl")
+file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl3")
+file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH XDP_WINDOWS
     REPO microsoft/xdp-for-windows
-    REF ce228a986fd30049ed58f569d2bf20efffc250f3
-    SHA512 4a26c5defe422ef42308d72cf8d1cab1c172ce5a10d8d830c446cb7dd93f0c41f35f3cbbfeceb687d5135272006dd1b1bc4c2089ace4866cede81d5c76206af7
+    REF  v1.0.2
+    SHA512 1b26487fa79c8796d4b0d5e09f4fc9acb003d8e079189ec57a36ff03c9c2620829106fdbc4780e298872826f3a97f034d40e04d00a77ded97122874d13bfb145
     HEAD_REF main
 )
 
@@ -60,15 +61,17 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${QUIC_SOURCE_PATH}"
     OPTIONS
         -DQUIC_SOURCE_LINK=OFF
-        -DQUIC_TLS=openssl
+        -DQUIC_TLS=openssl3
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
         "-DQUIC_STATIC_LINK_CRT=${STATIC_CRT}"
+        "-DQUIC_STATIC_LINK_PARTIAL_CRT=${STATIC_CRT}"
         "-DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}"
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"

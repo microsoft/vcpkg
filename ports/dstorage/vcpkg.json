@@ -1,6 +1,7 @@
 {
   "name": "dstorage",
-  "version": "1.2.2",
+  "version": "1.2.3",
+  "port-version": 1,
   "description": "DirectStorage for Windows",
   "homepage": "https://aka.ms/directstorage/",
   "documentation": "https://github.com/microsoft/DirectStorage",

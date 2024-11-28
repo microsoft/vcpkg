@@ -1,24 +1,23 @@
 {
   "name": "seacas",
   "version-date": "2022-11-22",
-  "port-version": 5,
+  "port-version": 7,
   "description": "The Sandia Engineering Analysis Code Access System (SEACAS) is a suite of preprocessing, postprocessing, translation, and utility applications supporting finite element analysis software using the Exodus database file format.",
   "homepage": "https://github.com/sandialabs/seacas",
   "license": null,
   "dependencies": [
     "cereal",
-    "cgns",
-    "fmt",
     {
-      "name": "hdf5",
-      "default-features": false
-    },
-    {
-      "name": "matio",
+      "name": "cgns",
       "default-features": false,
       "features": [
         "hdf5"
       ]
+    },
+    "fmt",
+    {
+      "name": "hdf5",
+      "default-features": false
     },
     "metis",
     {
@@ -39,6 +38,18 @@
     "zlib"
   ],
   "features": {
+    "matio": {
+      "description": "Enable Matio support",
+      "dependencies": [
+        {
+          "name": "matio",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ]
+        }
+      ]
+    },
     "mpi": {
       "description": "Enable MPI support",
       "dependencies": [

@@ -2,16 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 c6e53b5484702c66f01490d23f272e597e016b984d54f81e400605bf2a2e1dd7843ce25a7ef51ffbc7ee7089b42e8d73a91699b93cb655b5ca9ef869c9a950f4
+    SHA512 16d357fc6f75d39b1c9265edb45fe78dd2ea67a094885174a0a2bdd39ad19f8f69c16a7aaacac82a106a295e08e311d0315daafcb5641c24f644a52e66aaf667
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         fix-static-ffmpeg.patch
-        fix-openexr-dll.patch
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        fix-dependency-libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -55,8 +53,10 @@ vcpkg_cmake_configure(
         -DUSE_OpenVDB=OFF
         -DUSE_PTEX=OFF
         -DUSE_TBB=OFF
+        -DUSE_JXL=OFF
         -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
+        -DINTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
@@ -69,6 +69,11 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
         ENABLE_IV
+        BUILD_MISSING_DEPS
+        BUILD_MISSING_FMT
+        BUILD_MISSING_ROBINMAP
+        INTERNALIZE_FMT
+        REQUIRED_DEPS
 )
 
 vcpkg_cmake_install()

@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.26.0",
-  "port-version": 1,
+  "version": "2.31.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -257,6 +256,19 @@
           "default-features": false,
           "features": [
             "grpc-common"
+          ]
+        }
+      ]
+    },
+    "bigquerycontrol": {
+      "description": "Cloud BigQuery Control API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
@@ -578,6 +590,18 @@
         }
       ]
     },
+    "developerconnect": {
+      "description": "Developer Connect API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dialogflow-cx": {
       "description": "Cloud Dialogflow CX API C++ Client Library",
       "dependencies": [
@@ -698,20 +722,6 @@
         }
       ]
     },
-    "experimental-storage-grpc": {
-      "description": "The GCS+gRPC plugin",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common",
-            "opentelemetry",
-            "storage"
-          ]
-        }
-      ]
-    },
     "filestore": {
       "description": "Cloud Filestore API C++ Client Library",
       "dependencies": [
@@ -738,6 +748,18 @@
     },
     "gkebackup": {
       "description": "Backup for GKE API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkeconnect": {
+      "description": "GKE Connect Gateway API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1090,6 +1112,18 @@
         }
       ]
     },
+    "parallelstore": {
+      "description": "Cloud Parallel Store API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "policysimulator": {
       "description": "Policy Simulator API C++ Client Library",
       "dependencies": [
@@ -1116,6 +1150,18 @@
     },
     "privateca": {
       "description": "Certificate Authority API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "privilegedaccessmanager": {
+      "description": "Privileged Access Manager API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1460,6 +1506,20 @@
           "default-features": false,
           "features": [
             "rest-common"
+          ]
+        }
+      ]
+    },
+    "storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "opentelemetry",
+            "storage"
           ]
         }
       ]

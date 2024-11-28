@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
+if(POLICY CMP0174)
+    # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
+    cmake_policy(SET CMP0174 NEW)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
@@ -190,6 +194,12 @@ target system or to the host system. Use a prefixed variable instead.
     file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
+
+    foreach(z_post_portfile_include IN LISTS Z_VCPKG_POST_PORTFILE_INCLUDES)
+        include("${z_post_portfile_include}")
+    endforeach()
+    unset(z_post_portfile_include)
+
     if(DEFINED PORT)
         # Always fixup RPATH on linux and osx unless explicitly disabled.
         if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
@@ -228,7 +238,7 @@ elseif(CMD STREQUAL "CREATE")
         message(STATUS "Downloading ${URL} -> ${FILENAME}...")
         file(DOWNLOAD "${URL}" "${DOWNLOAD_PATH}" STATUS download_status)
         list(GET download_status 0 status_code)
-        if(NOT "${download_status}" EQUAL "0")
+        if(NOT "${status_code}" EQUAL "0")
             message(FATAL_ERROR "Downloading ${URL}... Failed. Status: ${download_status}")
         endif()
     endif()

@@ -36,6 +36,8 @@ vcpkg_from_github(
         fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
         force-cuda-include.patch
+        fix-aten-cutlass.patch
+        fix-build-error-with-fmt11.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -60,15 +62,6 @@ vcpkg_from_github(
 )
 file(COPY "${src_cudnn}/" DESTINATION "${SOURCE_PATH}/third_party/cudnn_frontend")
 
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH src_cutlass
-    REPO NVIDIA/cutlass # new port ?
-    REF 6f47420213f757831fae65c686aa471749fa8d60
-    SHA512 f3b3c43fbd7942f96407669405385c9a99274290e99f86cab5bb8657664bf1951e4da27f3069500a4825c427adeec883e05e81302b58390df3a3adb8c08e31ed
-    HEAD_REF main
-)
-file(COPY "${src_cutlass}/" DESTINATION "${SOURCE_PATH}/third_party/cutlass")
 
 file(REMOVE
   "${SOURCE_PATH}/cmake/Modules/FindBLAS.cmake"
@@ -102,8 +95,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
     zstd    USE_ZSTD
-    fftw3   USE_FFTW
-    fftw3   AT_FFTW_ENABLED
     fbgemm  USE_FBGEMM
     opencv  USE_OPENCV
     # These are alternatives !
@@ -129,7 +120,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
     nnpack  AT_NNPACK_ENABLED
-    xnnpack USE_XNNPACK
     qnnpack USE_QNNPACK # todo: check use of `USE_PYTORCH_QNNPACK`
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
@@ -190,7 +180,6 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_PTHREADPOOL=ON
         -DUSE_SYSTEM_PYBIND11=ON
         -DUSE_SYSTEM_ZSTD=ON
-        -DUSE_SYSTEM_XNNPACK=ON
         -DUSE_SYSTEM_GLOO=ON
         -DUSE_SYSTEM_NCCL=ON
         -DUSE_SYSTEM_LIBS=ON

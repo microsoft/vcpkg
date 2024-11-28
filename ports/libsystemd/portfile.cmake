@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO systemd/systemd
   REF "v${VERSION}"
-  SHA512 10da82ee58d3608c41cb0204fdf0227af965b13b8f3716e4f5dea994c236c08a5e31f09ba0d3774cea20a365e1d959c8c865fdeacc82400da55e94ad800e75ba
+  SHA512 0357f1b61a07e594aff118dec54bd7233f37b69ccdfa393b91f46f32f08238fa7dd44df70d1df858464c866e114868ae1bec66dc685703d425cbd4c86baddfb8
   PATCHES
     disable-warning-nonnull.patch
     only-libsystemd.patch

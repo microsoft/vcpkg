@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 a2e303c503b3e79b30c994888a4a9a31178352a1bb4a9ae73a2e41787c113fdd28e3a0e806abbb9e14419fe1b9aea512bcfe3a54edc126b66f0b732f3df09595
+    SHA512 620112ab91ad5fc0eb900b4b271cf40bac92ec728f0da2053dd42a80cc444910c3784f83c638b5aa1323cfa57308622b034b5c9275c4d2c92cbbbd7bb3eb1b08
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
 )
+
 file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
 # This port offered C++17 ABI alternative via features.

@@ -11,7 +11,7 @@ index e93f90712..063032e8a 100644
  
    # --with-<library>
    set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING
-@@ -188,6 +188,7 @@ endfunction()
+@@ -200,6 +200,7 @@ endfunction()
  function(__boost_scan_dependencies lib var)
  
    set(result "")
@@ -19,7 +19,7 @@ index e93f90712..063032e8a 100644
  
    if(EXISTS "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${lib}/CMakeLists.txt")
  
-@@ -196,7 +197,8 @@ function(__boost_scan_dependencies lib var)
+@@ -209,7 +209,8 @@ function(__boost_scan_dependencies lib var)
      foreach(line IN LISTS data)
  
        if(line MATCHES "^[ ]*Boost::([A-Za-z0-9_]+)[ ]*$")
@@ -28,7 +28,7 @@ index e93f90712..063032e8a 100644
          string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
          list(APPEND result ${dep})
  
-@@ -206,13 +207,18 @@ function(__boost_scan_dependencies lib var)
+@@ -218,13 +218,18 @@ function(__boost_scan_dependencies lib var)
  
    endif()
  
@@ -41,11 +41,11 @@ index e93f90712..063032e8a 100644
  
  endfunction()
  
- #
+ macro(__boost_add_header_only lib)
  
- file(GLOB __boost_libraries RELATIVE "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/*/CMakeLists.txt" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/numeric/*/CMakeLists.txt")
+   if(TARGET "boost_${lib}" AND TARGET "Boost::${lib}")
  
- # Check for mistakes in BOOST_INCLUDE_LIBRARIES
+     get_target_property(__boost_lib_type "boost_${lib}" TYPE)
  
 @@ -251,13 +256,13 @@ while(__boost_libs_to_scan)
  

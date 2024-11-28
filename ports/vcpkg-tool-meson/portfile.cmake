@@ -9,7 +9,6 @@ set(patches
   adjust-python-dep.patch
   adjust-args.patch
   remove-freebsd-pcfile-specialization.patch
-  meson-1.4-llvm-18.diff
 )
 set(scripts
   vcpkg-port-config.cmake

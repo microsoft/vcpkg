@@ -130,7 +130,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                     OUTPUT_QUIET
                     ERROR_VARIABLE set_id_error
                 )
-                message(STATUS "Set install name id of '${macho_file}' (To '@rpath/${macho_file_name}')")
+                message(STATUS "Set install name id of '${macho_file}' to '@rpath/${macho_file_name}'")
                 if(NOT "${set_id_error}" STREQUAL "")
                     message(WARNING "Couldn't adjust install name of '${macho_file}': ${set_id_error}")
                     continue()
@@ -152,7 +152,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 list(APPEND adjusted_shared_lib_new_ids "${macho_new_id}")
             endif()
 
-            # Clear all existing rpaths
+            # List all existing rpaths
             execute_process(
                 COMMAND "${otool_cmd}" -l "${macho_file}"
                 OUTPUT_VARIABLE get_rpath_ov
@@ -167,18 +167,23 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             string(REGEX MATCHALL "rpath [^\n]+" get_rpath_ov "${get_rpath_ov}")
             string(REGEX REPLACE "rpath " "" rpath_list "${get_rpath_ov}")
 
+            list(FIND rpath_list "${new_rpath}" has_new_rpath)
+            if(NOT has_new_rpath EQUAL -1)
+                list(REMOVE_AT rpath_list ${has_new_rpath})
+                set(rpath_args)
+            else()
+                set(rpath_args -add_rpath "${new_rpath}")
+            endif()
             foreach(rpath IN LISTS rpath_list)
-                execute_process(
-                    COMMAND "${install_name_tool_cmd}" -delete_rpath "${rpath}" "${macho_file}"
-                    OUTPUT_QUIET
-                    ERROR_VARIABLE delete_rpath_error
-                )
-                message(STATUS "Remove RPATH from '${macho_file}' ('${rpath}')")
+                list(APPEND rpath_args "-delete_rpath" "${rpath}")
             endforeach()
+            if(NOT rpath_args)
+                continue()
+            endif()
 
             # Set the new rpath
             execute_process(
-                COMMAND "${install_name_tool_cmd}" -add_rpath "${new_rpath}" "${macho_file}"
+                COMMAND "${install_name_tool_cmd}" ${rpath_args} "${macho_file}"
                 OUTPUT_QUIET
                 ERROR_VARIABLE set_rpath_error
             )
@@ -188,7 +193,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 continue()
             endif()
 
-            message(STATUS "Adjusted RPATH of '${macho_file}' (To '${new_rpath}')")
+            message(STATUS "Adjusted RPATH of '${macho_file}' to '${new_rpath}'")
         endforeach()
     endforeach()
 

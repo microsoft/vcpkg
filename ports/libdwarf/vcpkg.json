@@ -1,10 +1,9 @@
 {
   "name": "libdwarf",
-  "version": "0.9.1",
-  "port-version": 1,
+  "version": "0.11.0",
   "description": "A library for reading DWARF2 and later DWARF.",
   "homepage": "https://github.com/davea42/libdwarf-code",
-  "license": "LGPL-2.1-only",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,23 +1,14 @@
+diff --git a/src/tests/tests.h b/src/tests/tests.h
+index d198376..12f001a 100644
 --- a/src/tests/tests.h
 +++ b/src/tests/tests.h
-@@ -17,6 +17,9 @@
+@@ -17,7 +17,9 @@
  #include <map>
  #include <memory>
  #include <optional>
 +#ifndef __ANDROID__
-+#include <ranges>
+ #include <ranges>
 +#endif
  #include <set>
  #include <sstream>
  #include <string>
---- a/src/lib/utils/os_utils.cpp
-+++ b/src/lib/utils/os_utils.cpp
-@@ -627,6 +627,8 @@
-    static_cast<void>(pthread_set_name_np(thread.native_handle(), name.c_str()));
-    #elif defined(BOTAN_TARGET_OS_IS_NETBSD)
-    static_cast<void>(pthread_setname_np(thread.native_handle(), "%s", const_cast<char*>(name.c_str())));
-+   #elif defined(BOTAN_TARGET_OS_HAS_WIN32) && defined(_LIBCPP_HAS_THREAD_API_PTHREAD)
-+   static_cast<void>(pthread_setname_np(thread.native_handle(), name.c_str()));
-    #elif defined(BOTAN_TARGET_OS_HAS_WIN32) && defined(BOTAN_BUILD_COMPILER_IS_MSVC)
-    typedef HRESULT(WINAPI * std_proc)(HANDLE, PCWSTR);
-    HMODULE kern = GetModuleHandleA("KernelBase.dll");

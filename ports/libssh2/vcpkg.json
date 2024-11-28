@@ -1,7 +1,6 @@
 {
   "name": "libssh2",
-  "version": "1.11.0",
-  "port-version": 2,
+  "version": "1.11.1",
   "description": "libssh2 is a client-side C library implementing the SSH2 protocol.",
   "homepage": "https://www.libssh2.org",
   "license": "BSD-3-Clause",

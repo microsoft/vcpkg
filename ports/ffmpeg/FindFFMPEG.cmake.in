@@ -50,19 +50,22 @@ function(append_dependencies out)
         set(config RELEASE)
         set(path "${CURRENT_INSTALLED_DIR}/lib/")
     endif()
-    foreach(lib_name ${arg_NAMES})
-        if("${lib_name}" STREQUAL "-pthread")
-            list(APPEND ${out} "-pthread")
-        elseif("${lib_name}" STREQUAL "-pthreads")
-            list(APPEND ${out} "-pthreads")
-        elseif("${lib_name}" STREQUAL "gcc")
-            list(APPEND ${out} "-lgcc")
-        elseif("${lib_name}" STREQUAL "gcc_s")
-            list(APPEND ${out} "-lgcc_s")
-        elseif("${lib_name}" STREQUAL "stdc++")
-            list(APPEND ${out} "-lstdc++")
-        elseif("${lib_name}" STREQUAL "atomic")
-            list(APPEND ${out} "-latomic")
+    if("${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES}" STREQUAL "")
+        enable_language(CXX)
+    endif()
+    set(pass_through
+        ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES}
+        bcrypt gdi32 mfuuid ole32 oleaut32 psapi secur32 shlwapi strmiids user32 uuid vfw32 ws2_32
+        -pthread -pthreads pthread atomic m
+    )
+    cmake_policy(SET CMP0057 NEW)
+    foreach(lib_name IN LISTS arg_NAMES)
+        if(lib_name IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
+            continue() # implicit even for C
+        elseif(lib_name IN_LIST pass_through)
+            list(APPEND ${out} "${lib_name}")
+        elseif(EXISTS "${lib_name}")
+            list(APPEND ${out} "${lib_name}")
         else()
             # first look in ${path} specifically to ensure we find the right release/debug variant
             find_library(FFMPEG_DEPENDENCY_${lib_name}_${config} NAMES "${lib_name}" PATHS "${path}" NO_DEFAULT_PATH)
@@ -157,5 +160,7 @@ if (FFMPEG_libavutil_FOUND)
 endif()
 
 find_package_handle_standard_args(FFMPEG REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_LIBRARY_DIRS FFMPEG_INCLUDE_DIRS)
+
+set(z_vcpkg_using_vcpkg_find_ffmpeg ${FFMPEG_FOUND})
 
 endif()

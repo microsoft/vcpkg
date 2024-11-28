@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arximboldi/zug
-    REF 033dadbed463ff3430b7ebc36df8a46f4f0f5078
-    SHA512 a8067a90f7a427775872f8198419aa791b647e273ed148b93c189d3b81a4564a19b9321b4bb8cd5681627d8ab13e40be09ed1d75c7b65d74078f21daddaef929
+    REF 7c22cc138e2a9a61620986d1a7e1e9730123f22b
+    SHA512 ecf88ca56ae70ca87391ed34d6d6561e7da9810bba71e6abce2cd150b07cbb7180a7b90db96d0dc5f761fdeb43d75f5f0b47cbf45d78694c3177155d2005fe89
     HEAD_REF master
 )
 
@@ -24,4 +24,4 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Zug)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

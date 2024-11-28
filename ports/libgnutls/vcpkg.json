@@ -1,7 +1,6 @@
 {
   "name": "libgnutls",
-  "version": "3.8.5",
-  "port-version": 1,
+  "version": "3.8.7.1",
   "description": "A secure communications library implementing the SSL, TLS and DTLS protocols.",
   "homepage": "https://www.gnutls.org/",
   "license": null,

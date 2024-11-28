@@ -1,6 +1,6 @@
 {
   "name": "cuda-api-wrappers",
-  "version": "0.6.9",
+  "version": "0.7.1",
   "description": "Header-only library of integrated wrappers around the core parts of NVIDIA's CUDA execution ecosystem",
   "homepage": "https://github.com/eyalroz/cuda-api-wrappers",
   "license": "BSD-3-Clause",

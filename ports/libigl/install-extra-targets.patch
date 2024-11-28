@@ -123,7 +123,7 @@ index 6d06775..7126a23 100644
  if(LIBIGL_GLFW_TESTS)
    file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/opengl/glfw/*.cpp")
 diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
-index f331854..6e0de4c 100644
+index 6152756..34359c6 100644
 --- a/cmake/igl/modules/imgui.cmake
 +++ b/cmake/igl/modules/imgui.cmake
 @@ -23,3 +23,6 @@ target_link_libraries(igl_imgui ${IGL_SCOPE}

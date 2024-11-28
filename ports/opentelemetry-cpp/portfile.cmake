@@ -6,9 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 b0e035b2b15322ba75d22d775fb77e49d5e084099924cded32ea0b1cb1ad93f22157b01a90993a8af76db07136ec72724b3d7a583ef33ff9ce3f0658005e6394
+    SHA512 c89c4f7a73c11c020f8ea1cb836ccd222456f899ede8e81a1fd0024e0a88f17c44a66bada8ed3010b0d03ac052475edb34b855aeafcff50975d24c8859463d68
     HEAD_REF main
     PATCHES
+        cmake-quirks.diff
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
 )
@@ -29,11 +30,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.3.1")
+    set(OTEL_PROTO_VERSION "1.3.2")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 8c75e4ff79c4b5b251e0ec8ece92ec901d70ec601644505ffdd137fb728daac91fd9203e1f448500124906737d91d80f10b694977688c655418b94f61c828d06
+        SHA512 ac95bb70c5566bab5c9ec7b9c469414b013f2bcf1c5ea82e7b7466311c767de091be819ddbbb01de8ce6e49f163035fec2a9d691c19ae47645b3c4a27c227f2b
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -50,13 +51,7 @@ set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 if(WITH_GENEVA OR WITH_USER_EVENTS)
     # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
     # so they should be ported as a feature under opentelemetry-cpp.
-    vcpkg_from_github(
-        OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
-        REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 4f3059390ad09d12d93255a10f7be8ff948d26fc
-        HEAD_REF main
-        SHA512 392e3a414ea0ee016768dd75a286d2a7a3a7a011cc0fce4ee2f796ad7e0cd70d534eb38cb1d22f91300f4670dfa212a4239ba8e008c2444d47e13c5fe3fb75c0
-    )
+    clone_opentelemetry_cpp_contrib(CONTRIB_SOURCE_PATH)
     
     if(WITH_GENEVA)
         set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")

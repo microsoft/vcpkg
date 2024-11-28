@@ -44,30 +44,14 @@ The length of the returned password.
 #>
 function New-Password {
   Param ([int] $Length = 32)
-
-  # This 64-character alphabet generates 6 bits of entropy per character.
-  # The power-of-2 alphabet size allows us to select a character by masking a random Byte with bitwise-AND.
   $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
-  $mask = 63
   if ($alphabet.Length -ne 64) {
     throw 'Bad alphabet length'
   }
 
-  [Byte[]]$randomData = [Byte[]]::new($Length)
-  $rng = $null
-  try {
-    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
-    $rng.GetBytes($randomData)
-  }
-  finally {
-    if ($null -ne $rng) {
-      $rng.Dispose()
-    }
-  }
-
-  $result = ''
+  $result = New-Object SecureString
   for ($idx = 0; $idx -lt $Length; $idx++) {
-    $result += $alphabet[$randomData[$idx] -band $mask]
+    $result.AppendChar($alphabet[(Get-SecureRandom -Maximum $alphabet.Length)])
   }
 
   return $result
@@ -109,8 +93,7 @@ function Wait-Shutdown {
 
 
 $AdminPW = New-Password
-$AdminPWSecure = ConvertTo-SecureString $AdminPW -AsPlainText -Force
-$Credential = New-Object System.Management.Automation.PSCredential ("AdminUser", $AdminPWSecure)
+$Credential = New-Object System.Management.Automation.PSCredential ("AdminUser", $AdminPW)
 
 $VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-mintingNetwork'
 
@@ -216,9 +199,6 @@ Write-Host 'Waiting 1 minute for VM to reboot...'
 Start-Sleep -Seconds 60
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-sdks.ps1'
-
-####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
 
 ####################################################################################################
@@ -235,6 +215,9 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-azure-cli.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas
@@ -267,16 +250,20 @@ Set-AzVM `
   -Name $ProtoVMName `
   -Generalized
 
+$westus3Location = @{Name = 'West US 3';}
+$westusLocation = @{Name = 'West US';}
+
 New-AzGalleryImageVersion `
   -ResourceGroupName 'vcpkg-image-minting' `
   -GalleryName 'vcpkg_gallery_wus3' `
   -GalleryImageDefinitionName 'PrWinWus3-TrustedLaunch' `
   -Name $GalleryImageVersion `
   -Location $Location `
-  -SourceImageId $VMCreated.ID `
+  -SourceImageVMId $VMCreated.ID `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
-  -PublishingProfileExcludeFromLatest
+  -PublishingProfileExcludeFromLatest `
+  -TargetRegion @($westus3Location, $westusLocation)
 
 ####################################################################################################
 Write-Progress `
@@ -292,3 +279,5 @@ Remove-AzNetworkInterface -ResourceGroupName 'vcpkg-image-minting' -Name $NicNam
 Write-Progress -Activity $ProgressActivity -Completed
 Write-Host "Generated Image:  $GalleryImageVersion"
 Write-Host 'Finished!'
+
+$AdminPW.Dispose()

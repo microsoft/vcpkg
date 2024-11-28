@@ -1,6 +1,6 @@
 {
   "name": "minio-cpp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "The MinIO C++ Client SDK provides simple APIs to access any Amazon S3 compatible object storage",
   "homepage": "https://github.com/minio/minio-cpp",
   "license": "Apache-2.0",

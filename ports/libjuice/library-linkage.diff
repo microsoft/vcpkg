@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dd6c669..18e4166 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -148,11 +148,20 @@ add_library(LibJuice::LibJuice ALIAS juice)
+ set_target_properties(juice-static PROPERTIES EXPORT_NAME LibJuiceStatic)
+ add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
+ 
++if(BUILD_SHARED_LIBS)
+ install(TARGETS juice EXPORT LibJuiceTargets
+ 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++else()
++	set_target_properties(juice PROPERTIES EXCLUDE_FROM_ALL 1)
++	set_target_properties(juice PROPERTIES OUTPUT_NAME juice-shared)
++	set_target_properties(juice-static PROPERTIES EXCLUDE_FROM_ALL 0)
++	set_target_properties(juice-static PROPERTIES OUTPUT_NAME juice)
++	set_target_properties(juice-static PROPERTIES EXPORT_NAME LibJuice)
++	install(TARGETS juice-static EXPORT LibJuiceTargets)
++endif()
+ 
+ install(FILES ${LIBJUICE_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/juice)
+ 

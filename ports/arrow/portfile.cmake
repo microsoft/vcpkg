@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 28975f59e1fdde2dba4afaf4a5ba934b63db3a7f27656e2aa0af0f0d2a046c9dbfa9a6082de94629c36d03809b296566a37ea65ec5a2fc17fedac7d21e272d31
+    SHA512 4df30ab5561da695eaa864422626b9898555d86ca56835c3b8a8ca93a1dbaf081582bb36e2440d1daf7e1dd48c76941f1152a4f25ce0dbcc1c2abe244a00c05e
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -12,8 +12,6 @@ vcpkg_extract_source_archive(
         msvc-static-name.patch
         utf8proc.patch
         thrift.patch
-        remove-dll-suffix.patch #Upstream PR: https://github.com/apache/arrow/pull/41341
-        add-include-string.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -7,7 +7,6 @@ vcpkg_from_github(
     SHA512 56551ecad52cf06e5dd52401e6d848eae41126c6ba2bb31a9ec1c82e1b47e0e6171d69db923c118c614aec0d396ddf35724081cccef3a605c39d0b5379a2c03e
     HEAD_REF master
     PATCHES
-        disable-C-20-co-routines.patch
         undef-KJ_USE_EPOLL-for-ANDROID_PLATFORM-23.patch
 )
 
