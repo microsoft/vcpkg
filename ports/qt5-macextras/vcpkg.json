@@ -1,6 +1,6 @@
 {
   "name": "qt5-macextras",
-  "version": "5.15.15",
+  "version": "5.15.16",
   "description": "Qt Mac Extras provide classes and functions that enable you to use miscellaneous functionality specific to the macOS and iOS operating systems.",
   "license": null,
   "supports": "osx",

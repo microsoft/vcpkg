@@ -10,8 +10,21 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+# discordcoreapi consumes extreme amounts of memory (>9GB per .cpp file). With our default
+# concurrency values this causes hanging and/or OOM killing on Linux build machines and
+# warnings on the Windows machines like:
+# #[warning]Free memory is lower than 5%; Currently used: 99.99%
+# #[warning]Free memory is lower than 5%; Currently used: 99.99%
+# #[warning]Free memory is lower than 5%; Currently used: 99.99%
+# Cut the requested concurrency in quarter to avoid this.
+if(VCPKG_CONCURRENCY GREATER 4)
+    math(EXPR VCPKG_CONCURRENCY "${VCPKG_CONCURRENCY} / 4")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    # Due to CMake/DCADetectArchitecture.cmake invoking a sub-CMake and using the source tree as the target
+    DISABLE_PARALLEL_CONFIGURE
 )
 
 vcpkg_cmake_install()

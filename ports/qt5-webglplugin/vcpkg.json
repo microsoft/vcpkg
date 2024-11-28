@@ -1,6 +1,6 @@
 {
   "name": "qt5-webglplugin",
-  "version": "5.15.15",
+  "version": "5.15.16",
   "description": "The Qt WebGL Plugin module enables Qt applications to be run in web browsers through WebGL streaming.",
   "license": null,
   "dependencies": [

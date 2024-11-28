@@ -289,7 +289,9 @@ directxsdk:x64-windows-static=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
-discordcoreapi:x64-linux=skip   # cause linux CI to hang https://github.com/microsoft/vcpkg/pull/40229
+# Needs newer GCC than we have
+discordcoreapi:x64-linux=fail
+# Needs newer standard library than we have
 discordcoreapi:x64-osx=fail
 discount:x64-android=fail
 eathread:x64-android=fail

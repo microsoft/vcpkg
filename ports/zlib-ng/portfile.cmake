@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/zlib-ng
     REF "${VERSION}"
-    SHA512 9212d87c63a2da4e5355a7a1c75380aeba40fbd0ea3d71d3784cb3eac94237f9bea2a1b7993a08f39d4197725c4c133087d3a9d213d3944aa48a7559de2be920
+    SHA512 3cb3e97ee1d20e1f3cdf0efcdf55aee0e3a192f9a2ae781cd209b1d37620c48f2ada345fb1f4357315b1cb5e09b7ea5fcdfa2fd54f7b4ac5dcb6e73860000aad
     HEAD_REF develop
 )
 
@@ -46,6 +46,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND (NOT (VCPKG_LIBRARY_LINKAGE STREQUAL static AND V
 endif()
 
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zlib-ng)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"

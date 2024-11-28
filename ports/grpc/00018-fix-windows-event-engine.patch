@@ -1,5 +1,5 @@
 diff --git a/src/core/lib/event_engine/windows/grpc_polled_fd_windows.cc b/src/core/lib/event_engine/windows/grpc_polled_fd_windows.cc
-index 37a8f85cc5..b319f17aaf 100644
+index 3bfd15537e..0d4dcd5579 100644
 --- a/src/core/lib/event_engine/windows/grpc_polled_fd_windows.cc
 +++ b/src/core/lib/event_engine/windows/grpc_polled_fd_windows.cc
 @@ -224,7 +224,7 @@ class GrpcPolledFdWindows : public GrpcPolledFd {
