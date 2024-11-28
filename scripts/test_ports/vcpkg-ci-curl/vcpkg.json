@@ -33,7 +33,8 @@
         "gsasl",
         "mbedtls",
         "openssl",
-        "psl"
+        "psl",
+        "wolfssl"
       ],
       "platform": "!uwp"
     },
@@ -57,7 +58,7 @@
       "features": [
         "gnutls"
       ],
-      "platform": "!arm & !xbox"
+      "platform": "!arm & !android & !xbox"
     }
   ]
 }

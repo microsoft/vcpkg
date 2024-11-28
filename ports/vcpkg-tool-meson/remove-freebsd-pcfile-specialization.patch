@@ -1,14 +1,14 @@
 diff --git a/mesonbuild/modules/pkgconfig.py b/mesonbuild/modules/pkgconfig.py
-index ebe0d92..904090b 100644
+index 1bdf829..5f1bfd9 100644
 --- a/mesonbuild/modules/pkgconfig.py
 +++ b/mesonbuild/modules/pkgconfig.py
-@@ -693,6 +693,9 @@ class PkgConfigModule(NewExtensionModule):
+@@ -701,6 +701,9 @@ class PkgConfigModule(NewExtensionModule):
          pcfile = filebase + '.pc'
          pkgroot = pkgroot_name = kwargs['install_dir'] or default_install_dir
          if pkgroot is None:
-+            pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(mesonlib.OptionKey('libdir'))), 'pkgconfig')
++            pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(OptionKey('libdir'))), 'pkgconfig')
 +            pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
 +        elif False:
              if mesonlib.is_freebsd():
-                 pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(mesonlib.OptionKey('prefix'))), 'libdata', 'pkgconfig')
+                 pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(OptionKey('prefix'))), 'libdata', 'pkgconfig')
                  pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')

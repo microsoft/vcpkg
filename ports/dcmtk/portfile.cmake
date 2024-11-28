@@ -6,9 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dcmtk.patch
-        fix_link_xml2.patch
+        dependencies.diff
         dictionary_paths.patch
-        fix_link_tiff.patch
+        disable-test-setup.diff
+        pkgconfig-lib-order.diff
+        msvc.diff
+)
+file(REMOVE
+    "${SOURCE_PATH}/CMake/FindICONV.cmake"
+    "${SOURCE_PATH}/CMake/FindICU.cmake"
+    "${SOURCE_PATH}/CMake/FindJPEG.cmake"
 )
 
 # Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
@@ -18,6 +25,18 @@ foreach(file_path ${src_files})
     string(REGEX REPLACE "(#define[ \t\r\n]+[A-Za-z0-9_]*[ \t\r\n]+)(j[a-z]+[0-9]+_)" "\\1dcmtk_\\2" file_string "${file_string}")
     file(WRITE "${file_path}" "${file_string}")
 endforeach()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_CROSSCOMPILING)
+    message(STATUS [[
+Cross-compiling DCMTK needs input from executing test programs in the target
+environment. You may need to provide a suitable emulator setup, and you can set
+values directly with `VCPKG_CMAKE_CONFIGURE_OPTIONS` in a custom triplet file.
+For more information see
+https://support.dcmtk.org/redmine/projects/dcmtk/wiki/Cross_Compiling
+]])
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -33,37 +52,40 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("external-dict" IN_LIST FEATURES)
     set(DCMTK_DEFAULT_DICT "external")
-	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA OFF)
+    set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA OFF)
 else()
     set(DCMTK_DEFAULT_DICT "builtin")
-	set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA ON)
+    set(DCMTK_ENABLE_BUILTIN_OFICONV_DATA ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        "-DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}" 
-		-DDCMTK_ENABLE_BUILTIN_OFICONV_DATA=${DCMTK_ENABLE_BUILTIN_OFICONV_DATA}
-        -DDCMTK_WITH_DOXYGEN=OFF
-        -DDCMTK_FORCE_FPIC_ON_UNIX=ON
-        -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF
-        -DDCMTK_ENABLE_PRIVATE_TAGS=ON
         -DCMAKE_CXX_STANDARD=17
+        -DCMAKE_INSTALL_DOCDIR=share/${PORT}/doc
+        -DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}
+        -DCMAKE_DISABLE_FIND_PACKAGE_BISON=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_FLEX=ON
+        -DDCMTK_ENABLE_BUILTIN_OFICONV_DATA=${DCMTK_ENABLE_BUILTIN_OFICONV_DATA}
+        -DDCMTK_ENABLE_PRIVATE_TAGS=ON
+        -DDCMTK_ENABLE_STL=ON
+        -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF
+        -DDCMTK_USE_FIND_PACKAGE=ON
         -DDCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS=ON
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
-        -DDCMTK_ENABLE_STL=ON
-        -DCMAKE_DEBUG_POSTFIX=d
-        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
-        -DBUILD_TESTING=OFF
+        -DDCMTK_WITH_OPENJPEG=OFF
+        -DDCMTK_WITH_DOXYGEN=OFF
+        -DDCMTK_WITH_SNDFILE=OFF
+        -DDCMTK_WITH_WRAP=OFF
     OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
-        -DINSTALL_OTHER=OFF
         -DBUILD_APPS=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
     set(_tools
@@ -147,18 +169,15 @@ if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
 endif()
 
-vcpkg_cmake_config_fixup()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCMTK_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCM_DICT_DEFAULT_PATH \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/dicom.dic:${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/private.dic\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_CONFIGURATION_DIR \"${CURRENT_PACKAGES_DIR}/etc/dcmtk-${VERSION}/\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_SUPPORT_DATA_DIR \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/\"" "" IGNORE_UNCHANGED)
+# no absolute paths
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h"
+    "#define (DCMTK_PREFIX|DCM_DICT_DEFAULT_PATH|DEFAULT_CONFIGURATION_DIR|DEFAULT_SUPPORT_DATA_DIR) \"[^\"]*\""
+    "#define \\1 \"\" /* redacted by vcpkg */"
+    REGEX
+)
 
-vcpkg_fixup_pkgconfig()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc-${VERSION}/COPYRIGHT" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

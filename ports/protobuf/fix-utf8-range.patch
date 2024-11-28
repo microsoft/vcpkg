@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4137ce2e9..f1289e08a 100644
+index 15065d874..540c12253 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -294,6 +294,7 @@ endif (protobuf_BUILD_TESTS)
+@@ -302,6 +302,7 @@ endif (protobuf_BUILD_TESTS)
  include(${protobuf_SOURCE_DIR}/cmake/abseil-cpp.cmake)
  
  if (protobuf_BUILD_PROTOBUF_BINARIES)
@@ -11,20 +11,20 @@ index 4137ce2e9..f1289e08a 100644
    include(${protobuf_SOURCE_DIR}/cmake/libprotobuf-lite.cmake)
    if (NOT DEFINED protobuf_LIB_PROTOBUF_LITE)
 diff --git a/cmake/libprotobuf-lite.cmake b/cmake/libprotobuf-lite.cmake
-index f343458cf..f4b1e0faa 100644
+index 9aa81fb88..699c92ddd 100644
 --- a/cmake/libprotobuf-lite.cmake
 +++ b/cmake/libprotobuf-lite.cmake
-@@ -42,4 +42,4 @@ set_target_properties(libprotobuf-lite PROPERTIES
+@@ -46,4 +46,4 @@ set_target_properties(libprotobuf-lite PROPERTIES
  )
  add_library(protobuf::libprotobuf-lite ALIAS libprotobuf-lite)
  
 -target_link_libraries(libprotobuf-lite PRIVATE utf8_validity)
 +target_link_libraries(libprotobuf-lite PRIVATE utf8_range::utf8_validity)
 diff --git a/cmake/libprotobuf.cmake b/cmake/libprotobuf.cmake
-index 422754a1a..fa9956685 100644
+index 11c09b1bc..33ebac7cc 100644
 --- a/cmake/libprotobuf.cmake
 +++ b/cmake/libprotobuf.cmake
-@@ -45,4 +45,4 @@ set_target_properties(libprotobuf PROPERTIES
+@@ -48,4 +48,4 @@ set_target_properties(libprotobuf PROPERTIES
  )
  add_library(protobuf::libprotobuf ALIAS libprotobuf)
  
