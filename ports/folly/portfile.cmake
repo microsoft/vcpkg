@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 e81e9862682e75703d7a5bf55e423386879503e4bed96d332a0844b87147e55976c980a602366b4aeade8911eba1f1db243293666ef005832e89d7f37a494b1e
+    SHA512 3331320e0e82eb19329eddcf5cd15ab54470352d8ec45087bd4e32d568f77a2ef68161f98bf8ad5b16253380313f82591e73987f8060017ee45b2457ac2f8b44
     HEAD_REF main
     PATCHES
         disable-non-underscore-posix-names.patch
@@ -20,6 +20,7 @@ vcpkg_from_github(
         fix-libunwind.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")

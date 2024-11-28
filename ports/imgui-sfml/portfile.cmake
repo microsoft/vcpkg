@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix_find_package.patch
+        0002-clean-deprecated-api.patch # see https://github.com/SFML/imgui-sfml/pull/305
+        0003-use-explicit-id.patch # see https://github.com/SFML/imgui-sfml/pull/266
 )
 
 vcpkg_cmake_configure(
