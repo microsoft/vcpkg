@@ -5578,7 +5578,7 @@
     },
     "llhttp": {
       "baseline": "9.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "llnl-units": {
       "baseline": "0.9.1",
@@ -8350,7 +8350,7 @@
     },
     "sese": {
       "baseline": "2.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "sf2cute": {
       "baseline": "0.2.0",
