@@ -19,7 +19,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix_dependency.patch
         ${STATIC_PATCH}
-		add-include-chrono.patch #https://github.com/ompl/ompl/pull/1201
+        add-include-chrono.patch #https://github.com/ompl/ompl/pull/1201
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
