@@ -72,7 +72,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
 
-if(NOT VCPKG_CROSSCOMPILING)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES getarch getarch_2nd AUTO_CLEAN)
 endif()
 
