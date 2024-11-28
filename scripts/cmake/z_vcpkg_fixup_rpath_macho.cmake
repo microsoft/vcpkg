@@ -125,13 +125,14 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                     message(FATAL_ERROR "Could not obtain install name id from '${macho_file}'")
                 endif()
                 set(macho_new_id "@rpath/${macho_file_name}")
+                message(STATUS "Setting install name id of '${macho_file}' to '@rpath/${macho_file_name}'")
                 execute_process(
                     COMMAND "${install_name_tool_cmd}" -id "${macho_new_id}" "${macho_file}"
                     OUTPUT_QUIET
                     ERROR_VARIABLE set_id_error
+                    RESULT_VARIABLE set_id_exit_code
                 )
-                message(STATUS "Set install name id of '${macho_file}' to '@rpath/${macho_file_name}'")
-                if(NOT "${set_id_error}" STREQUAL "")
+                if(NOT "${set_id_error}" STREQUAL "" AND NOT set_id_exit_code EQUAL 0)
                     message(WARNING "Couldn't adjust install name of '${macho_file}': ${set_id_error}")
                     continue()
                 endif()
@@ -186,9 +187,10 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 COMMAND "${install_name_tool_cmd}" ${rpath_args} "${macho_file}"
                 OUTPUT_QUIET
                 ERROR_VARIABLE set_rpath_error
+                RESULT_VARIABLE set_rpath_exit_code
             )
 
-            if(NOT "${set_rpath_error}" STREQUAL "")
+            if(NOT "${set_rpath_error}" STREQUAL "" AND NOT set_rpath_exit_code EQUAL 0)
                 message(WARNING "Couldn't adjust RPATH of '${macho_file}': ${set_rpath_error}")
                 continue()
             endif()
@@ -228,8 +230,9 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                     COMMAND "${install_name_tool_cmd}" -change "${adjusted_old_id}" "${adjusted_new_id}" "${macho_file}"
                     OUTPUT_QUIET
                     ERROR_VARIABLE change_id_error
+                    RESULT_VARIABLE change_id_exit_code
                 )
-                if(NOT "${change_id_error}" STREQUAL "")
+                if(NOT "${change_id_error}" STREQUAL "" AND NOT change_id_exit_code EQUAL 0)
                     message(WARNING "Couldn't adjust dependent shared library install name in '${macho_file}': ${change_id_error}")
                     continue()
                 endif()
