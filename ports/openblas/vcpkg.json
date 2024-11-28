@@ -11,10 +11,6 @@
       "host": true
     },
     {
-      "name": "pthread",
-      "platform": "!windows & !uwp"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -40,11 +36,11 @@
       ]
     },
     "threads": {
-      "description": "Use a threading backend",
+      "description": "Enable multi-threading",
       "dependencies": [
         {
-          "name": "pthread",
-          "platform": "!windows & !uwp"
+          "name": "pthreads",
+          "platform": "!windows"
         }
       ]
     }
