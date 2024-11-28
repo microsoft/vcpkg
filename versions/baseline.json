@@ -6582,7 +6582,7 @@
     },
     "omplapp": {
       "baseline": "1.5.1",
-      "port-version": 5
+      "port-version": 6
     },
     "onednn": {
       "baseline": "3.5.3",
@@ -6778,7 +6778,7 @@
     },
     "openvino": {
       "baseline": "2024.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -7882,7 +7882,7 @@
     },
     "realsense2": {
       "baseline": "2.56.2",
-      "port-version": 0
+      "port-version": 1
     },
     "recast": {
       "baseline": "deprecated",
@@ -9582,7 +9582,7 @@
     },
     "wampcc": {
       "baseline": "2019-09-04",
-      "port-version": 5
+      "port-version": 6
     },
     "wangle": {
       "baseline": "2024.11.18.00",
@@ -9986,7 +9986,7 @@
     },
     "zlmediakit": {
       "baseline": "2024-09-29",
-      "port-version": 0
+      "port-version": 1
     },
     "zoe": {
       "baseline": "3.5",
