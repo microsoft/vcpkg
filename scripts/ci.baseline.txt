@@ -124,11 +124,11 @@ lapack-reference:arm64-windows=skip
 lapack-reference:arm64-windows-static-md=skip
 lapack-reference:x64-osx=skip
 lapack-reference:x64-uwp=skip
-openblas:arm64-osx=skip
-openblas:x64-android=fail
-openblas:x64-osx=skip
-openblas:x64-windows-static-md=skip
-openblas:x64-windows-static=skip
+#openblas:arm64-osx=skip
+#openblas:x64-android=fail
+#openblas:x64-osx=skip
+#openblas:x64-windows-static-md=skip
+#openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
