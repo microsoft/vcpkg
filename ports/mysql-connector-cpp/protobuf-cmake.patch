@@ -1,5 +1,5 @@
 diff --git a/cdk/cmake/DepFindProtobuf.cmake b/cdk/cmake/DepFindProtobuf.cmake
-index 1fc785e..ca993de 100644
+index 730389de..7c3fd78b 100644
 --- a/cdk/cmake/DepFindProtobuf.cmake
 +++ b/cdk/cmake/DepFindProtobuf.cmake
 @@ -44,6 +44,7 @@
@@ -29,10 +29,10 @@ index 1fc785e..ca993de 100644
        -I ${ABS_PATH} ${ABS_FIL}
  
 diff --git a/cdk/core/CMakeLists.txt b/cdk/core/CMakeLists.txt
-index ba7ee3e..3e1f3d0 100644
+index 30f7baf1..2a4a9434 100644
 --- a/cdk/core/CMakeLists.txt
 +++ b/cdk/core/CMakeLists.txt
-@@ -33,6 +33,7 @@ cmake_minimum_required(VERSION 3.8)
+@@ -33,6 +33,7 @@ cmake_minimum_required(VERSION 2.8)
  
  #ADD_SUBDIRECTORY(tests)
  
@@ -50,12 +50,12 @@ index ba7ee3e..3e1f3d0 100644
  
  add_coverage(cdk)
 diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
-index 666b3a2..1e0a166 100644
+index cfc81daf..6c484575 100644
 --- a/cdk/protocol/mysqlx/CMakeLists.txt
 +++ b/cdk/protocol/mysqlx/CMakeLists.txt
 @@ -26,8 +26,9 @@
  # along with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  
 -find_dependency(Protobuf)
 -find_dependency(Compression)
