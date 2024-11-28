@@ -85,7 +85,7 @@ index 0a055b7..de4b73a 100644
  pxr_plugin(hioOiio
      LIBRARIES
 diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
-index 041cd8c..5befd7d 100644
+index 041cd8c..2f89d69 100644
 --- a/pxr/pxrConfig.cmake.in
 +++ b/pxr/pxrConfig.cmake.in
 @@ -20,6 +20,27 @@ include(CMakeFindDependencyMacro)
@@ -116,3 +116,24 @@ index 041cd8c..5befd7d 100644
  # If Python support was enabled for this USD build, find the import
  # targets by invoking the appropriate FindPython module. Use the same
  # LIBRARY and INCLUDE_DIR settings from the original build if they
+@@ -75,17 +96,17 @@ if(@Imath_FOUND@)
+             set(Imath_DIR [[@Imath_DIR@]])
+         endif()
+     endif()
+-    find_dependency(Imath)
++    find_dependency(Imath CONFIG)
+ endif()
+ 
+-include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")
++include("${PXR_CMAKE_DIR}/pxrTargets.cmake")
+ if (TARGET usd_ms)
+     set(libs "usd_ms")
+ else()
+     set(libs "@PXR_ALL_LIBS@")
+ endif()
+ set(PXR_LIBRARIES "")
+-set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/include")
++set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/../../include")
+ string(REPLACE " " ";" libs "${libs}")
+ foreach(lib ${libs})
+     get_target_property(location ${lib} LOCATION)

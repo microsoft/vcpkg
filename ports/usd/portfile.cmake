@@ -6,6 +6,11 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
 
+vcpkg_download_distfile(MSVC_PATCH
+    URLS https://github.com/PixarAnimationStudios/OpenUSD/commit/b677b238ba596f31f252d38dd5172d3e869d193e.patch?full_index=1
+    FILENAME fix-msvc.patch
+    SHA512 1dc8e6559d322f861fd0f0673679358cbc259ddf0ac4cf3a1306557ee8a4a9fdd362d57101b30bb9367abf889e13bbcba6b40fbb571c07899c5b5a8431adcb74
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
@@ -18,7 +23,7 @@ vcpkg_from_github(
         003-fix-dep.patch
         004-fix_cmake_package.patch
         005-MaterialX_v1.38-39.patch
-        006-fix-msvc.patch
+        "${MSVC_PATCH}"
         007-fix_cmake_hgi_interop.patch
         008-fix_clang8_compiler_error.patch
         009-vcpkg_install_folder_conventions.patch
