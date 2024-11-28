@@ -110,6 +110,12 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
+if (VCPKG_TARGET_IS_LINUX)
+    vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
+    [[#include "LIEF/iterators.hpp"]]
+    "#include <LIEF/iterators.hpp>\n#include <memory>"
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "tests"          LIEF_TESTS             # Enable tests
