@@ -184,7 +184,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if (VCPKG_TARGET_TRIPLET STREQUAL "arm64_android" OR VCPKG_TARGET_TRIPLET STREQUAL "x64_android" OR VCPKG_TARGET_TRIPLET STREQUAL "arm_neon_android")
+if (VCPKG_TARGET_IS_ANDROID)
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
