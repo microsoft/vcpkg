@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 341ed2d..405fce2 100644
+index 341ed2d..6afa198 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -416,12 +416,7 @@ add_version_info(connector
@@ -36,7 +36,7 @@ index 341ed2d..405fce2 100644
 +install(TARGETS connector EXPORT unofficial-mysql-connector-cpp-targets
 +  ARCHIVE DESTINATION lib COMPONENT XDevAPIDev
 +  RUNTIME DESTINATION bin COMPONENT XDevAPIDll
-+  LIBRARY DESTINATION lib COMPONENT XDevAPIDll)
++  LIBRARY DESTINATION lib COMPONENT XDevAPIDll
  
  if(MSVC AND NOT BUILD_STATIC)
  
@@ -54,15 +54,7 @@ index 341ed2d..405fce2 100644
      COMPONENT Debuginfo
    )
  
-@@ -648,7 +634,6 @@ include(testing/tests.cmake)
- # =========================
- #
- 
--include(buildinfo.cmake)
- 
- 
- #
-@@ -667,3 +652,15 @@ endif()
+@@ -667,3 +653,15 @@ endif()
  
  
  show_config_options()
