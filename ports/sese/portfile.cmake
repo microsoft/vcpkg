@@ -19,13 +19,16 @@ vcpkg_download_distfile(PATCH_FIX_ENV_STATEMENT
     FILENAME libsese-sese-2.3.0-59fa66d24996eceddc2c406b043687cd13a741dd.patch  
 )
 
-vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO libsese/sese
-        REF "refs/tags/${VERSION}"
-        SHA512 a1008c351ea3e8745d629bdcceb4a6d089ae5a84137bbd49b8abbbb271032ddf279e9b20f155181b6a7d3d8cb17c2ec2f1b7a12464fb0cac8402628e473966cb
-        PATCHES
-            ${PATCH_FIX_ENV_STATEMENT}
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://codeload.github.com/libsese/sese/tar.gz/refs/tags/${VERSION}"
+    FILENAME "libsese-sese-${VERSION}.tar.gz"
+    SHA512 a1008c351ea3e8745d629bdcceb4a6d089ae5a84137bbd49b8abbbb271032ddf279e9b20f155181b6a7d3d8cb17c2ec2f1b7a12464fb0cac8402628e473966cb
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        ${PATCH_FIX_ENV_STATEMENT}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
