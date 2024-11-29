@@ -7,12 +7,12 @@
   "dependencies": [
     "boost-leaf",
     "fmt",
+    "frozen",
     "mbedtls",
     "spdlog",
     "tcb-span",
     "tl-expected",
     "utfcpp",
-    "frozen",
     {
       "name": "vcpkg-cmake",
       "host": true
