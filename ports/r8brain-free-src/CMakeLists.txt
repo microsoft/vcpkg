@@ -41,7 +41,7 @@ if(R8B_INSTALL)
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
     )
     target_include_directories(r8bsrc PUBLIC
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
 
     install(EXPORT unofficial-${PROJECT_NAME}Targets
