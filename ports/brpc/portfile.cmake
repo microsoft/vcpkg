@@ -21,7 +21,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-warnings.patch
         ${PROTOBUF_V5_PATCH}
-		${PROTOBUF_29_PATCH}
+        ${PROTOBUF_29_PATCH}
 )
 
 vcpkg_cmake_configure(
