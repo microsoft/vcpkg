@@ -1,0 +1,12 @@
+{
+  "name": "rpath-macho-test-binaries",
+  "version-string": "ci",
+  "description": "Provides installed binaries for rpath macho fixup test",
+  "supports": "native & osx",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

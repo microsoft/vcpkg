@@ -1,0 +1,12 @@
+diff --git a/include/concurrencpp/results/impl/shared_result_state.h b/include/concurrencpp/results/impl/shared_result_state.h
+index 6c96f4b..1433e74 100644
+--- a/include/concurrencpp/results/impl/shared_result_state.h
++++ b/include/concurrencpp/results/impl/shared_result_state.h
+@@ -5,6 +5,7 @@
+ #include "concurrencpp/results/impl/result_state.h"
+ 
+ #include <atomic>
++#include <chrono>
+ #include <semaphore>
+ 
+ #include <cassert>

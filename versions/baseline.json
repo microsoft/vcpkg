@@ -1838,7 +1838,7 @@
     },
     "concurrencpp": {
       "baseline": "0.1.7",
-      "port-version": 1
+      "port-version": 2
     },
     "concurrentqueue": {
       "baseline": "1.0.4",
@@ -2229,7 +2229,7 @@
       "port-version": 0
     },
     "dav1d": {
-      "baseline": "1.4.3",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "daw-header-libraries": {
@@ -3578,7 +3578,7 @@
     },
     "iceoryx": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "icu": {
       "baseline": "74.2",
@@ -6422,7 +6422,7 @@
     },
     "nrf-ble-driver": {
       "baseline": "4.1.4",
-      "port-version": 1
+      "port-version": 2
     },
     "nspr": {
       "baseline": "4.35",
@@ -6434,7 +6434,7 @@
     },
     "nsync": {
       "baseline": "1.29.2",
-      "port-version": 0
+      "port-version": 1
     },
     "nt-wrapper": {
       "baseline": "2019-08-10",
@@ -6558,7 +6558,7 @@
     },
     "ogdf": {
       "baseline": "2022-06-30",
-      "port-version": 0
+      "port-version": 1
     },
     "ogre": {
       "baseline": "14.3.1",
@@ -6621,7 +6621,7 @@
       "port-version": 0
     },
     "openal-soft": {
-      "baseline": "1.24.0",
+      "baseline": "1.24.1",
       "port-version": 0
     },
     "openblas": {
@@ -6761,7 +6761,7 @@
       "port-version": 1
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2024-06-17",
+      "baseline": "2024-11-14",
       "port-version": 0
     },
     "opentracing": {
@@ -7904,6 +7904,10 @@
       "baseline": "0.12.4",
       "port-version": 0
     },
+    "reflectcpp": {
+      "baseline": "0.13.0",
+      "port-version": 0
+    },
     "refprop-headers": {
       "baseline": "2022-12-07",
       "port-version": 0
@@ -7933,7 +7937,7 @@
       "port-version": 4
     },
     "restclient-cpp": {
-      "baseline": "2022-02-09",
+      "baseline": "2024-01-09",
       "port-version": 0
     },
     "restinio": {

@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
     REF ${VERSION}
-    SHA512 6fdb5e02f4d4e2d483bccf69121dda9b691170e88d301f53b5e3b3ab196541d7b0b23a868acdf85f6dacac9d8508079f67cb7d733e186a13a66ee70ecdd813f0
+    SHA512 a60e1969bb5678219d8a7ae036d7081d61faa176689ac444802a45f4081aff07a6315575c02784bfce2ec6149c160270082ae076be668f32d79a6fac06513be0
     HEAD_REF master
-    PATCHES
-      96f62e37e9ae015ee104e568cb57ea0d8964a84b.patch # Merged upstream, remove in next version
-      187ed2df39ab1f5ea92b97d4d3e0894da87e297b.patch # Fix CppWinRT for UWP
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
