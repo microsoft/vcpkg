@@ -129,3 +129,6 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/COPYINGv3"
         "${SOURCE_PATH}/COPYINGv2"
 )
+
+file(COPY_FILE "${SOURCE_PATH}/configure" "${CURRENT_BUILDTREES_DIR}/source-configure.log") 
+message(FATAL_ERROR STOP)
