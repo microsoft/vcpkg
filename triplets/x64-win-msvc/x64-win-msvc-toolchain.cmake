@@ -29,7 +29,10 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     endif()
 
     if(CMAKE_GENERATOR MATCHES "Visual Studio")
-        set(CMAKE_GENERATOR_INSTANCE "$ENV{VSINSTALLDIR}")
+        set(CMAKE_GENERATOR_INSTANCE "$ENV{VSINSTALLDIR},version=17.0.0.0" CACHE INTERNAL "")
+        find_program(MSBUILD_EXE NAMES msbuild REQUIRED)
+        set(CMAKE_MAKE_PROGRAM "${MSBUILD_EXE}")
+        unset(MSBUILD_EXE CACHE)
     endif()
 
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
