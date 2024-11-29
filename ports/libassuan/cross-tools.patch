@@ -1,5 +1,5 @@
 diff --git a/src/Makefile.am b/src/Makefile.am
-index 6b9a46d..5156865 100644
+index 61e1958..22bf8fe 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
 @@ -19,6 +19,13 @@
@@ -16,7 +16,23 @@ index 6b9a46d..5156865 100644
  pkgconfigdir = $(libdir)/pkgconfig
  pkgconfig_DATA = libassuan.pc
  
-@@ -152,6 +159,6 @@ mkheader: mkheader.c Makefile
+@@ -27,11 +34,11 @@ EXTRA_DIST = libassuan-config.in libassuan.m4 libassuan.vers \
+              libassuan.pc.in
+ AM_CPPFLAGS = -I..
+ 
+-if USE_GPGRT_CONFIG
+-noinst_SCRIPTS = libassuan-config
+-else
++# if USE_GPGRT_CONFIG
++# noinst_SCRIPTS = libassuan-config
++# else
+ bin_SCRIPTS = libassuan-config
+-endif
++# endif
+ m4datadir = $(datadir)/aclocal
+ m4data_DATA = libassuan.m4
+ lib_LTLIBRARIES = libassuan.la
+@@ -134,6 +141,6 @@ mkheader$(EXEEXT_FOR_BUILD): mkheader.c Makefile
  	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) \
            $(LDFLAGS_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkheader.c
  
