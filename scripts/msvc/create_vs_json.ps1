@@ -497,6 +497,7 @@ $vcToolkits = $manifestJson.packages | Where-Object {
     $_.id.ToLower().StartsWith("microsoft.vc.$vcVersion") -or
     ($_.id.ToLower().StartsWith("microsoft.vc.$redistVersion") -and $_.id.ToLower().contains("redist") )  -or
     $_.id.ToLower().Contains("microsoft.visualcpp.servicing.redist") -or
+    $_.id.ToLower().Contains("microsoft.visualcpp.dia.sdk") -or
     $_.id.ToLower().Contains("microsoft.net.$netVersion")
 } | Where-Object {
     -not $_.language -or $_.language.ToLower() -eq "en-us" -or $_.language.ToLower() -eq "neutral"
@@ -540,7 +541,8 @@ $msvcJson | ConvertTo-Json -Depth 6 | Set-Content -Path $msvcJsonFile
 $msBuild = $manifestJson.packages | Where-Object {
     $_.id.ToLower().Contains("msbuild") -or
     $_.id.ToLower().Contains(".build") -or
-    $_.id.ToLower().Contains("microsoft.codeanalysis.compilers")
+    $_.id.ToLower().Contains("microsoft.codeanalysis.compilers") -or
+    $_.id.ToLower().Contains(".build.tasks.setup")
 } | Where-Object {
     -not $_.language -or $_.language.ToLower() -eq "en-us" -or $_.language.ToLower() -eq "neutral"
 } | Where-Object {
