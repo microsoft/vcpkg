@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5c40129..ac79361 100644
+index 937908d..1676757 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -370,9 +370,9 @@ endif()
@@ -58,53 +58,25 @@ index 5c40129..ac79361 100644
  endif()
  
  install(FILES ${LIBXML2_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libxml2/libxml COMPONENT development)
-@@ -589,30 +575,30 @@ endif()
- 
- configure_package_config_file(
-     libxml2-config.cmake.cmake.in libxml2-config.cmake
--    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
-+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
- )
- 
- install(
-     FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config.cmake
--    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
-+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
-     COMPONENT development
- )
- 
+@@ -601,7 +587,7 @@ install(
  write_basic_package_version_file(
      ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config-version.cmake
      VERSION ${PROJECT_VERSION}
 -    COMPATIBILITY ExactVersion
-+    COMPATIBILITY SameMinorVersion
++    COMPATIBILITY SameMajorVersion
  )
  
  install(
-     FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config-version.cmake
--    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
-+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
-     COMPONENT development
- )
- 
- install(
-     EXPORT LibXml2
--    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
-+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
-     NAMESPACE LibXml2::
-     FILE libxml2-export.cmake
-     COMPONENT development
-@@ -669,9 +655,7 @@ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+@@ -669,7 +655,7 @@ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
  configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml-2.0.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT development)
  
 -if(WIN32)
--    set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
--endif()
-+set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
++if(1)
+     set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
+ endif()
  configure_file(xml2-config.in xml2-config @ONLY)
- install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/xml2-config DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT development)
- 
+
 diff --git a/libxml-2.0.pc.in b/libxml-2.0.pc.in
 index 6d7b62f..35eb1c4 100644
 --- a/libxml-2.0.pc.in
