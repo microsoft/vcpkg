@@ -63,6 +63,8 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/INFO_BIN"
     "${CURRENT_PACKAGES_DIR}/mysql-concpp-config.cmake"
     "${CURRENT_PACKAGES_DIR}/mysql-concpp-config-version.cmake"
+    "${CURRENT_PACKAGES_DIR}/debug/mysql-concpp-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/debug/mysql-concpp-config-version.cmake"
 )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
