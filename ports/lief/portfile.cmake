@@ -19,7 +19,7 @@ vcpkg_replace_string("${SOURCE_PATH}/cmake/LIEFConfig.cmake.in"
 
 vcpkg_replace_string("${SOURCE_PATH}/cmake/LIEFConfig.cmake.in"
     "include(CMakeFindDependencyMacro)"
-    "include(CMakeFindDependencyMacro)\nfind_dependency(tl-expected)\nfind_dependency(fmt)\nif(@LIEF_EXTERNAL_MBEDTLS@)\nfind_dependency(MbedTLS)\nendif()"
+    "include(CMakeFindDependencyMacro)\nfind_dependency(tl-expected)\nfind_dependency(fmt)"
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/cmake/LIEFConfig.cmake.in"
@@ -119,7 +119,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "tests"          LIEF_TESTS             # Enable tests
         "c-api"          LIEF_C_API             # C API
         "enable-json"    LIEF_ENABLE_JSON       # Enable JSON-related APIs
         "examples"       LIEF_EXAMPLES          # Build LIEF C++ examples
@@ -147,10 +146,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
         # Fuzzer
         "fuzzing"        LIEF_FUZZING            # Fuzz LIEF
-
-        # Profiling
-        "profiling"      LIEF_PROFILING          # Enable performance profiling
-
 )
 
 
