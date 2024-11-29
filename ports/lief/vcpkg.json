@@ -1,108 +1,104 @@
 {
-  "name": "lief",
-  "version-semver": "0.15.1",
-  "description": "LIEF - Library to Instrument Executable Formats",
-  "homepage": "https://lief.quarkslab.com",
-  "license": "Apache-2.0",
-  "dependencies": [
-    "boost-leaf",
-    "fmt",
-    "frozen",
-    "mbedtls",
-    "spdlog",
-    "tcb-span",
-    "tl-expected",
-    "utfcpp",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ],
-  "default-features": [
-    "art",
-    "c-api",
-    "dex",
-    "elf",
-    "enable-json",
-    "logging",
-    "macho",
-    "oat",
-    "pe",
-    "vdex"
-  ],
-  "features": {
-    "art": {
-      "description": "Build LIEF with ART module"
-    },
-    "asan": {
-      "description": "Enable Address sanitizer",
-      "supports": "!windows"
-    },
-    "c-api": {
-      "description": "C API"
-    },
-    "dex": {
-      "description": "Build LIEF with DEX module"
-    },
-    "elf": {
-      "description": "Build LIEF with ELF module"
-    },
-    "enable-json": {
-      "description": "Enable JSON-related APIs",
-      "dependencies": [
-        "nlohmann-json"
-      ]
-    },
-    "examples": {
-      "description": "Build LIEF C++ examples"
-    },
-    "extra-warnings": {
-      "description": "Enable extra warning from the compiler"
-    },
-    "force32": {
-      "description": "Force build LIEF 32 bits version",
-      "supports": "!windows"
-    },
-    "fuzzing": {
-      "description": "Fuzz LIEF",
-      "supports": "!windows"
-    },
-    "logging": {
-      "description": "Enable logging"
-    },
-    "logging-debug": {
-      "description": "Enable debug logging"
-    },
-    "lsan": {
-      "description": "Enable Leak sanitizer",
-      "supports": "!windows"
-    },
-    "macho": {
-      "description": "Build LIEF with MachO module"
-    },
-    "oat": {
-      "description": "Build LIEF with OAT module"
-    },
-    "pe": {
-      "description": "Build LIEF with PE module"
-    },
-    "tsan": {
-      "description": "Enable Thread sanitizer",
-      "supports": "!windows"
-    },
-    "usan": {
-      "description": "Enable undefined sanitizer",
-      "supports": "!windows"
-    },
-    "use-ccache": {
-      "description": "Use ccache to speed up compilation"
-    },
-    "vdex": {
-      "description": "Build LIEF with VDEX module"
+    "name": "lief",
+    "version-semver": "0.15.1",
+    "description": "LIEF - Library to Instrument Executable Formats",
+    "homepage": "https://lief.quarkslab.com",
+    "license": "Apache-2.0",
+    "dependencies": [
+      "boost-leaf",
+      "fmt",
+      "frozen",
+      "mbedtls",
+      "spdlog",
+      "tcb-span",
+      "tl-expected",
+      "utfcpp",
+      {
+        "name": "vcpkg-cmake",
+        "host": true
+      },
+      {
+        "name": "vcpkg-cmake-config",
+        "host": true
+      }
+    ],
+    "default-features": [
+      "art",
+      "c-api",
+      "dex",
+      "elf",
+      "enable-json",
+      "logging",
+      "macho",
+      "oat",
+      "pe",
+      "vdex"
+    ],
+    "features": {
+      "art": {
+        "description": "Build LIEF with ART module"
+      },
+      "asan": {
+        "description": "Enable Address sanitizer",
+        "supports": "!windows & !uwp"
+      },
+      "c-api": {
+        "description": "C API"
+      },
+      "dex": {
+        "description": "Build LIEF with DEX module"
+      },
+      "elf": {
+        "description": "Build LIEF with ELF module"
+      },
+      "enable-json": {
+        "description": "Enable JSON-related APIs",
+        "dependencies": [
+          "nlohmann-json"
+        ]
+      },
+      "examples": {
+        "description": "Build LIEF C++ examples"
+      },
+      "extra-warnings": {
+        "description": "Enable extra warning from the compiler"
+      },
+      "fuzzing": {
+        "description": "Fuzz LIEF",
+        "supports": "!windows & !uwp"
+      },
+      "logging": {
+        "description": "Enable logging"
+      },
+      "logging-debug": {
+        "description": "Enable debug logging"
+      },
+      "lsan": {
+        "description": "Enable Leak sanitizer",
+        "supports": "!windows & !uwp"
+      },
+      "macho": {
+        "description": "Build LIEF with MachO module"
+      },
+      "oat": {
+        "description": "Build LIEF with OAT module"
+      },
+      "pe": {
+        "description": "Build LIEF with PE module"
+      },
+      "tsan": {
+        "description": "Enable Thread sanitizer",
+        "supports": "!windows & !uwp"
+      },
+      "usan": {
+        "description": "Enable undefined sanitizer",
+        "supports": "!windows & !uwp"
+      },
+      "use-ccache": {
+        "description": "Use ccache to speed up compilation"
+      },
+      "vdex": {
+        "description": "Build LIEF with VDEX module"
+      }
     }
   }
-}

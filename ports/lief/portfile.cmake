@@ -123,7 +123,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "enable-json"    LIEF_ENABLE_JSON       # Enable JSON-related APIs
         "examples"       LIEF_EXAMPLES          # Build LIEF C++ examples
         "extra-warnings" LIEF_EXTRA_WARNINGS    # Enable extra warning from the compiler
-        "force32"        LIEF_FORCE32           # Force build LIEF 32 bits version
         "logging"        LIEF_LOGGING           # Enable logging
         "logging-debug"  LIEF_LOGGING_DEBUG     # Enable debug logging
 
