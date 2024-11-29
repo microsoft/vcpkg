@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmake.patch
+        fix-windows-static.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Findopenssl.cmake")
