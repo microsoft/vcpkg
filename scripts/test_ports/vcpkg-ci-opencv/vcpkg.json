@@ -165,7 +165,7 @@
       "features": [
         "tbb"
       ],
-      "platform": "!uwp & !android"
+      "platform": "!uwp & !static"
     },
     {
       "name": "opencv",
