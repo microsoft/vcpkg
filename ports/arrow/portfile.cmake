@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
         0002_thrift.patch
         0003_utf8proc.patch
         0004_android.patch
+        0005_android.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
