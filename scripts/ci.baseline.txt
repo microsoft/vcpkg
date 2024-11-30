@@ -537,6 +537,7 @@ libcrafter:x64-android=fail
 libdc1394:arm-neon-android=fail
 libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
+libfabric:x64-windows-static=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
 # error: call to undeclared function 'mktime_z'
