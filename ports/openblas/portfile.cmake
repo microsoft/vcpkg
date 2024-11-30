@@ -11,6 +11,7 @@ vcpkg_from_github(
     SHA512 358301c8a60bedf920c07a110c772feb639e52412bd783789741fd2fd0686aac97e6b17ebcdf01ce48a2a15841058f82df0fee551af952f6e70b58140c055133
     HEAD_REF develop
     PATCHES
+        arm32-asm-function.diff
         uwp.patch
         install-tools.patch
         gcc14.patch
