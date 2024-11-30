@@ -1,0 +1,34 @@
+{
+  "name": "vcpkg-ci-libavif",
+  "version-string": "ci",
+  "description": "Port to force features of libavif within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "libavif",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "features": [
+            "aom",
+            "dav1d"
+          ]
+        }
+      ]
+    }
+  }
+}
