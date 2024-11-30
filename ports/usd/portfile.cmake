@@ -132,7 +132,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endfunction()
 
     # fix dll path for cmake
-    if(NOT VCPKG_BUILD_TYPE))
+    if(NOT VCPKG_BUILD_TYPE)
       file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
     endif()
     file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
