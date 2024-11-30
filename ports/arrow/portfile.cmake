@@ -8,10 +8,10 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
-        android.patch
-        msvc-static-name.patch
-        utf8proc.patch
-        thrift.patch
+        0001_msvc-static-name.patch
+        0002_thrift.patch
+        0003_utf8proc.patch
+        0004_android.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
