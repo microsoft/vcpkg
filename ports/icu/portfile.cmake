@@ -79,6 +79,13 @@ elseif(VCPKG_CROSSCOMPILING)
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
 endif()
 
+# The package osg can be configured to use different data packaging options via a custom triplet file:
+# Possible values are library, static, auto, files and archive
+# https://unicode-org.github.io/icu/userguide/icu_data/#building-and-linking-against-icu-data
+if(NOT DEFINED icu_data_packaging)
+    set(icu_data_packaging "auto")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH source
@@ -87,6 +94,7 @@ vcpkg_configure_make(
     ADDITIONAL_MSYS_PACKAGES autoconf-archive
     OPTIONS
         ${CONFIGURE_OPTIONS}
+        --with-data-packaging=${icu_data_packaging}
         --disable-samples
         --disable-tests
         --disable-layoutex
