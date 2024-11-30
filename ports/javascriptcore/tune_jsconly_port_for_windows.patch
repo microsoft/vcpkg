@@ -1,0 +1,27 @@
+diff --git a/Source/cmake/OptionsJSCOnly.cmake b/Source/cmake/OptionsJSCOnly.cmake
+index 31e353ded188..218c34c24338 100644
+--- a/Source/cmake/OptionsJSCOnly.cmake
++++ b/Source/cmake/OptionsJSCOnly.cmake
+@@ -41,12 +41,7 @@ set(ENABLE_WEBKIT_LEGACY OFF)
+ set(ENABLE_WEBKIT OFF)
+ set(ENABLE_WEBINSPECTORUI OFF)
+ set(ENABLE_WEBGL OFF)
+-
+-if (WIN32)
+-    set(ENABLE_API_TESTS OFF)
+-else ()
+-    set(ENABLE_API_TESTS ON)
+-endif ()
++set(ENABLE_API_TESTS OFF)
+ 
+ if (WTF_CPU_ARM OR WTF_CPU_MIPS)
+     SET_AND_EXPOSE_TO_BUILD(USE_CAPSTONE TRUE)
+@@ -71,7 +66,7 @@ if (WIN32)
+         endif ()
+     endif ()
+ 
+-    set(CMAKE_PREFIX_PATH ${WEBKIT_LIBRARIES_DIR})
++    list(APPEND CMAKE_PREFIX_PATH ${WEBKIT_LIBRARIES_DIR})
+ 
+     if (WTF_CPU_X86_64)
+         set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS OFF)
