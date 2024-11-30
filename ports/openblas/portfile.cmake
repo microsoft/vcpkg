@@ -12,85 +12,68 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         arm32-asm-function.diff
-        uwp.patch
-        install-tools.patch
+        disable-testing.diff
+        getarch.diff
         gcc14.patch
+        win32-uwp.diff
         ${ARM64_WINDOWS_UWP_PATCH}
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
         threads        USE_THREAD
         simplethread   USE_SIMPLE_THREADED_LEVEL3
         dynamic-arch   DYNAMIC_ARCH
 )
 
-set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
-
-if(VCPKG_TARGET_IS_ANDROID)
-    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        list(APPEND COMMON_OPTIONS -DTARGET=HASWELL)
-    endif()
+# If not explicitly configured for a cross build, OpenBLAS wants to run 
+# getarch executables in order to optimize for the target.
+# Adapting this to vcpkg triplets:
+# - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
+# - architecture and system name are required to match for GETARCH_BINARY_DIR, but
+# - uwp (aka WindowsStore) may run windows getarch.
+string(REPLACE "WindowsStore" "Windows" SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
+set(GETARCH_BINARY_DIR "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/${VCPKG_TARGET_ARCHITECTURE}-${SYSTEM_NAME}")
+if(VCPKG_CROSSCOMPILING AND EXISTS "${GETARCH_BINARY_DIR}")
+    list(APPEND OPTIONS "-DGETARCH_BINARY_DIR=${GETARCH_BINARY_DIR}")
 endif()
 
-set(OPENBLAS_EXTRA_OPTIONS)
-# For UWP version, must build non-UWP first for helper binaries
-if(VCPKG_TARGET_IS_UWP)
-    list(APPEND OPENBLAS_EXTRA_OPTIONS "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
-elseif(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-    string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
-    string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
-    list(APPEND OPENBLAS_EXTRA_OPTIONS
-                -DNOFORTRAN=ON
-                -DBU=_  # Required for all BLAS functions to append extra _ using NAME
-    )
-endif()
-
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    list(APPEND OPENBLAS_EXTRA_OPTIONS -DTARGET=GENERIC)
-endif()
-
-# For emscripten only the riscv64 kernel with riscv64_generic target is supported
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    list(APPEND OPENBLAS_EXTRA_OPTIONS
-                -DEMSCRIPTEN_SYSTEM_PROCESSOR=riscv64
-                -DTARGET=RISCV64_GENERIC)
+    # Only the riscv64 kernel with riscv64_generic target is supported.
+    # Cf. https://github.com/OpenMathLib/OpenBLAS/issues/3640#issuecomment-1144029630 et al.
+    list(APPEND OPTIONS
+        -DEMSCRIPTEN_SYSTEM_PROCESSOR=riscv64
+        -DTARGET=RISCV64_GENERIC
+    )
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${conf_opts}
     OPTIONS
-        ${FEATURE_OPTIONS}
-        ${COMMON_OPTIONS}
-        ${OPENBLAS_EXTRA_OPTIONS}
-        --trace-expand
+        ${OPTIONS}
+        -DCMAKE_POLICY_DEFAULT_CMP0054=NEW
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        -DBUILD_TESTING=OFF
+        -DBUILD_WITHOUT_LAPACK=ON
+        -DNOFORTRAN=ON
+        -DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}
+    MAYBE_UNUSED_VARIABLES
+        GETARCH_BINARY_DIR
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tools(TOOL_NAMES getarch getarch_2nd AUTO_CLEAN)
-endif()
-
 vcpkg_fixup_pkgconfig()
-# Maybe we need also to write a wrapper inside share/blas to search implicitly for openblas,
-# whenever we feel it's ready for its own -config.cmake file.
 
-# openblas does not have a config file, so I manually made this.
-# But I think in most cases, libraries will not include these files, they define their own used function prototypes.
-# This is only to quite vcpkg.
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/openblas_common.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-
-vcpkg_replace_string(
-    "${SOURCE_PATH}/cblas.h"
-    "#include \"common.h\""
-    "#include \"openblas_common.h\""
-)
+# Required from native builds, optional from cross builds.
+if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    vcpkg_copy_tools(
+        TOOL_NAMES getarch getarch_2nd 
+        DESTINATION "${GETARCH_BINARY_DIR}"
+        AUTO_CLEAN
+    )
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

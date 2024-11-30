@@ -8,8 +8,7 @@
   "dependencies": [
     {
       "name": "openblas",
-      "host": true,
-      "platform": "uwp"
+      "host": true
     },
     {
       "name": "vcpkg-cmake",
@@ -28,7 +27,7 @@
     "simplethread": {
       "description": [
         "Use simple thread safety for level3 functions",
-        "Alternative to serialization of concurrent accesses to parallelized level3 functions."
+        "Alternative to serialization of concurrent access to parallelized level3 functions."
       ],
       "dependencies": [
         {

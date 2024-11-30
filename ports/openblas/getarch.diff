@@ -1,0 +1,64 @@
+diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
+index 609fbe2..fb2cdd5 100644
+--- a/cmake/prebuild.cmake
++++ b/cmake/prebuild.cmake
+@@ -95,7 +95,11 @@ else ()
+ endif ()
+ 
+ # Cannot run getarch on target if we are cross-compiling
+-if (DEFINED CORE AND CMAKE_CROSSCOMPILING AND NOT (${HOST_OS} STREQUAL "WINDOWSSTORE"))
++if(CMAKE_CROSSCOMPILING AND NOT DEFINED GETARCH_BINARY_DIR)
++  if(NOT DEFINED CORE)
++    message(FATAL_ERROR "TARGET must be defined for this cross build.")
++  endif()
++
+   # Write to config as getarch would
+   if (DEFINED TARGET_CORE)
+   set(TCORE ${TARGET_CORE})
+@@ -1373,7 +1377,11 @@ endif ()
+   file(MAKE_DIRECTORY ${TARGET_CONF_DIR})
+   file(RENAME ${TARGET_CONF_TEMP} "${TARGET_CONF_DIR}/${TARGET_CONF}")
+ 
+-else(NOT CMAKE_CROSSCOMPILING)
++else()
++  if(NOT CMAKE_CROSSCOMPILING)
++    set(GETARCH_BINARY_DIR "${PROJECT_BINARY_DIR}")
++  endif()
++
+   # compile getarch
+   set(GETARCH_SRC
+     ${PROJECT_SOURCE_DIR}/getarch.c
+@@ -1420,6 +1428,7 @@ else(NOT CMAKE_CROSSCOMPILING)
+     if (NOT ${GETARCH_RESULT})
+       MESSAGE(FATAL_ERROR "Compiling getarch failed ${GETARCH_LOG}")
+     endif ()
++    install(PROGRAMS "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" DESTINATION bin)
+   endif ()
+   unset (HAVE_AVX2)
+   unset (HAVE_AVX)
+@@ -1439,8 +1448,8 @@ else(NOT CMAKE_CROSSCOMPILING)
+   message(STATUS "Running getarch")
+ 
+   # use the cmake binary w/ the -E param to run a shell command in a cross-platform way
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" 0 OUTPUT_VARIABLE GETARCH_MAKE_OUT)
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIABLE GETARCH_CONF_OUT)
++execute_process(COMMAND "${GETARCH_BINARY_DIR}/${GETARCH_BIN}" 0 OUTPUT_VARIABLE GETARCH_MAKE_OUT)
++execute_process(COMMAND "${GETARCH_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIABLE GETARCH_CONF_OUT)
+ 
+   message(STATUS "GETARCH results:\n${GETARCH_MAKE_OUT}")
+ 
+@@ -1463,11 +1472,12 @@ execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIABLE
+     if (NOT ${GETARCH2_RESULT})
+       MESSAGE(FATAL_ERROR "Compiling getarch_2nd failed ${GETARCH2_LOG}")
+     endif ()
++    install(PROGRAMS "${PROJECT_BINARY_DIR}/${GETARCH2_BIN}" DESTINATION bin)
+   endif ()
+ 
+   # use the cmake binary w/ the -E param to run a shell command in a cross-platform way
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH2_BIN}" 0 OUTPUT_VARIABLE GETARCH2_MAKE_OUT)
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH2_BIN}" 1 OUTPUT_VARIABLE GETARCH2_CONF_OUT)
++execute_process(COMMAND "${GETARCH_BINARY_DIR}/${GETARCH2_BIN}" 0 OUTPUT_VARIABLE GETARCH2_MAKE_OUT)
++execute_process(COMMAND "${GETARCH_BINARY_DIR}/${GETARCH2_BIN}" 1 OUTPUT_VARIABLE GETARCH2_CONF_OUT)
+ 
+   # append config data from getarch_2nd to the TARGET file and read in CMake vars
+   file(APPEND "${TARGET_CONF_TEMP}" ${GETARCH2_CONF_OUT})
