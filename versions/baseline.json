@@ -9862,7 +9862,7 @@
     },
     "xqilla": {
       "baseline": "2.3.4",
-      "port-version": 3
+      "port-version": 4
     },
     "xsimd": {
       "baseline": "13.0.0",
