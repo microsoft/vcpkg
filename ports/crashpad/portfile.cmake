@@ -41,7 +41,7 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
         PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
         NO_DEFAULT_PATH)
 
-    if(_LIBRARY_DEB MATCHES "-NOTFOUND")
+    if(_LIBRARY_DEB MATCHES "-NOTFOUND" AND NOT VCPKG_BUILD_TYPE)
         message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
     endif()
 

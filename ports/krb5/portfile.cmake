@@ -112,4 +112,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
+if(NOT VCPKG_BUILD_TYPE)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE")
