@@ -33,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
 # - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
 # - architecture and system name are required to match for GETARCH_BINARY_DIR, but
 # - uwp (aka WindowsStore) may run windows getarch.
-string(REPLACE "_WindowsStore" "_Windows" SYSTEM_KEY "${VCPKG_TARGET_ARCHITECTURE}_${VCPKG_CMAKE_SYSTEM_NAME}")
+string(REPLACE "WindowsStore_" "_" SYSTEM_KEY "${VCPKG_CMAKE_SYSTEM_NAME}_${VCPKG_TARGET_ARCHITECTURE}")
 set(GETARCH_BINARY_DIR "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}")
 if(EXISTS "${GETARCH_BINARY_DIR}")
     message(STATUS "OpenBLAS cross build, but may use ${PORT}:${HOST_TRIPLET} getarch")
