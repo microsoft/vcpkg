@@ -51,7 +51,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     vcpkg_copy_tools(
         TOOL_NAMES ${tools}
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"        
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         AUTO_CLEAN
     )
     foreach(tool_name ${tools})
@@ -112,7 +112,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-if(NOT VCPKG_BUILD_TYPE)
+if(VCPKG_BUILD_TYPE)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
