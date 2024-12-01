@@ -44,6 +44,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     endif()
     endmacro()
     # Setup policies
+    toolchain_set_cmake_policy_new(CMP0149)
     toolchain_set_cmake_policy_new(CMP0137)
     toolchain_set_cmake_policy_new(CMP0128)
     toolchain_set_cmake_policy_new(CMP0126)
@@ -54,7 +55,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     toolchain_set_cmake_policy_new(CMP0066)
     toolchain_set_cmake_policy_new(CMP0056)
     toolchain_set_cmake_policy_new(CMP0012)
-    unset(toolchain_set_cmake_policy_new)  
+    unset(toolchain_set_cmake_policy_new)
 
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
        VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE VCPKG_SET_CHARSET_FLAG
@@ -75,10 +76,6 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         set(CMAKE_SYSTEM_PROCESSOR ARM CACHE STRING "")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(CMAKE_SYSTEM_PROCESSOR ARM64 CACHE STRING "")
-    endif()
-
-    if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-        set(CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}" CACHE STRING "" FORCE)
     endif()
 
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
