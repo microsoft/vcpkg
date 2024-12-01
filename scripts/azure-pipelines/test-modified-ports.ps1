@@ -195,7 +195,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 
 if ($Triplet -match "-android")
 {
-    $skipFailuresArg += @('--exclude=qtwayland') # host deps missing
+    & 'apt-get' 'install' 'libwayland-dev' 'wayland-protocol'
 }
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
