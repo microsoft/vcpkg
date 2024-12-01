@@ -15,6 +15,7 @@ vcpkg_from_github(
         disable-testing.diff
         getarch.diff
         gcc14.patch
+        system-check-msvc.diff
         win32-uwp.diff
         ${ARM64_WINDOWS_UWP_PATCH}
 )
@@ -32,10 +33,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
 # - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
 # - architecture and system name are required to match for GETARCH_BINARY_DIR, but
 # - uwp (aka WindowsStore) may run windows getarch.
-string(REPLACE "WindowsStore" "Windows" SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
-set(GETARCH_BINARY_DIR "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/${VCPKG_TARGET_ARCHITECTURE}-${SYSTEM_NAME}")
-if(VCPKG_CROSSCOMPILING AND EXISTS "${GETARCH_BINARY_DIR}")
+string(REPLACE "_WindowsStore" "_Windows" SYSTEM_KEY "${VCPKG_TARGET_ARCHITECTURE}_${VCPKG_CMAKE_SYSTEM_NAME}")
+set(GETARCH_BINARY_DIR "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}")
+if(EXISTS "${GETARCH_BINARY_DIR}")
+    message(STATUS "OpenBLAS cross build, but may use ${PORT}:${HOST_TRIPLET} getarch")
     list(APPEND OPTIONS "-DGETARCH_BINARY_DIR=${GETARCH_BINARY_DIR}")
+elseif(VCPKG_CROSSCOMPILING)
+    message(STATUS "OpenBLAS cross build, may not be able to use getarch")
+else()
+    message(STATUS "OpenBLAS native build")
 endif()
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
@@ -70,7 +76,7 @@ vcpkg_fixup_pkgconfig()
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(
         TOOL_NAMES getarch getarch_2nd 
-        DESTINATION "${GETARCH_BINARY_DIR}"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}"
         AUTO_CLEAN
     )
 endif()
