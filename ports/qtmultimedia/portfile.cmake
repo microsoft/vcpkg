@@ -58,11 +58,14 @@ else()
   list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
                         --trace-expand
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
+                        "-DPKGCONFIG=${PKGCONFIG}"
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                      CONFIGURE_OPTIONS_MAYBE_UNUSED ${unused}
