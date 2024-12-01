@@ -195,7 +195,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 
 if ($Triplet -match "-android")
 {
-    & 'apt-get' 'install' 'libwayland-dev' 'wayland-protocol'
+    & 'sudo' 'apt-get' 'install' 'libwayland-dev' 'wayland-protocol'
 }
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,

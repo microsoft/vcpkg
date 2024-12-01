@@ -65,7 +65,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         --trace-expand
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
-                        "-DPKGCONFIG=${PKGCONFIG}"
+                        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                      CONFIGURE_OPTIONS_MAYBE_UNUSED ${unused}
