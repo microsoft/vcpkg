@@ -10,7 +10,6 @@
     {
       "name": "ceres",
       "features": [
-        "cxsparse",
         "suitesparse"
       ]
     },
