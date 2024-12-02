@@ -12,7 +12,7 @@
       "host": true
     },
     {
-      "name": "vcpkg-cmake-get-vars",
+      "name": "vcpkg-make",
       "host": true
     }
   ],
