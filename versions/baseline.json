@@ -146,7 +146,7 @@
     },
     "antlr4": {
       "baseline": "4.13.2",
-      "port-version": 0
+      "port-version": 1
     },
     "any-lite": {
       "baseline": "0.4.0",
@@ -374,7 +374,7 @@
     },
     "avisynthplus": {
       "baseline": "3.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "avro-c": {
       "baseline": "1.11.3",
@@ -1402,7 +1402,7 @@
     },
     "brpc": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -1838,7 +1838,7 @@
     },
     "concurrencpp": {
       "baseline": "0.1.7",
-      "port-version": 1
+      "port-version": 2
     },
     "concurrentqueue": {
       "baseline": "1.0.4",
@@ -2229,7 +2229,7 @@
       "port-version": 0
     },
     "dav1d": {
-      "baseline": "1.4.3",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "daw-header-libraries": {
@@ -3285,7 +3285,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.68.0",
+      "baseline": "1.68.1",
       "port-version": 0
     },
     "grppi": {
@@ -3578,7 +3578,7 @@
     },
     "iceoryx": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "icu": {
       "baseline": "74.2",
@@ -3614,7 +3614,7 @@
     },
     "ignition-common1": {
       "baseline": "1.1.1",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-common3": {
       "baseline": "3.16.0",
@@ -4678,7 +4678,7 @@
     },
     "libiconv": {
       "baseline": "1.17",
-      "port-version": 4
+      "port-version": 5
     },
     "libics": {
       "baseline": "1.6.8",
@@ -5582,7 +5582,7 @@
     },
     "llvm": {
       "baseline": "18.1.6",
-      "port-version": 2
+      "port-version": 3
     },
     "lmdb": {
       "baseline": "0.9.33",
@@ -6422,7 +6422,7 @@
     },
     "nrf-ble-driver": {
       "baseline": "4.1.4",
-      "port-version": 1
+      "port-version": 2
     },
     "nspr": {
       "baseline": "4.35",
@@ -6434,7 +6434,7 @@
     },
     "nsync": {
       "baseline": "1.29.2",
-      "port-version": 0
+      "port-version": 1
     },
     "nt-wrapper": {
       "baseline": "2019-08-10",
@@ -6558,7 +6558,7 @@
     },
     "ogdf": {
       "baseline": "2022-06-30",
-      "port-version": 0
+      "port-version": 1
     },
     "ogre": {
       "baseline": "14.3.1",
@@ -6578,11 +6578,11 @@
     },
     "ompl": {
       "baseline": "1.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "omplapp": {
       "baseline": "1.5.1",
-      "port-version": 5
+      "port-version": 6
     },
     "onednn": {
       "baseline": "3.5.3",
@@ -6621,7 +6621,7 @@
       "port-version": 0
     },
     "openal-soft": {
-      "baseline": "1.24.0",
+      "baseline": "1.24.1",
       "port-version": 0
     },
     "openblas": {
@@ -6757,11 +6757,11 @@
       "port-version": 2
     },
     "opentelemetry-cpp": {
-      "baseline": "1.17.0",
-      "port-version": 1
+      "baseline": "1.18.0",
+      "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2024-06-17",
+      "baseline": "2024-11-14",
       "port-version": 0
     },
     "opentracing": {
@@ -6778,7 +6778,7 @@
     },
     "openvino": {
       "baseline": "2024.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -7205,7 +7205,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.5.0",
+      "baseline": "9.5.1",
       "port-version": 0
     },
     "projectm-eval": {
@@ -7221,7 +7221,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "5.28.3",
+      "baseline": "5.29.0",
       "port-version": 0
     },
     "protobuf-c": {
@@ -7241,7 +7241,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "proxygen": {
@@ -7358,7 +7358,7 @@
     },
     "qt": {
       "baseline": "6.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "4.3.1",
@@ -7554,7 +7554,7 @@
     },
     "qtbase": {
       "baseline": "6.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.8.0",
@@ -7630,7 +7630,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.8.0",
@@ -7766,7 +7766,7 @@
     },
     "qwtw": {
       "baseline": "3.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "rabit": {
       "baseline": "0.1",
@@ -7882,7 +7882,7 @@
     },
     "realsense2": {
       "baseline": "2.56.2",
-      "port-version": 0
+      "port-version": 1
     },
     "recast": {
       "baseline": "deprecated",
@@ -7902,6 +7902,10 @@
     },
     "refl-cpp": {
       "baseline": "0.12.4",
+      "port-version": 0
+    },
+    "reflectcpp": {
+      "baseline": "0.13.0",
       "port-version": 0
     },
     "refprop-headers": {
@@ -7933,7 +7937,7 @@
       "port-version": 4
     },
     "restclient-cpp": {
-      "baseline": "2022-02-09",
+      "baseline": "2024-01-09",
       "port-version": 0
     },
     "restinio": {
@@ -9582,7 +9586,7 @@
     },
     "wampcc": {
       "baseline": "2019-09-04",
-      "port-version": 5
+      "port-version": 6
     },
     "wangle": {
       "baseline": "2024.11.18.00",
@@ -9986,7 +9990,7 @@
     },
     "zlmediakit": {
       "baseline": "2024-09-29",
-      "port-version": 0
+      "port-version": 1
     },
     "zoe": {
       "baseline": "3.5",
