@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 15e39ce9..18fb8a41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -218,8 +218,8 @@ include(GenerateVersionDefinitions)
+ include_directories(src)
+ link_directories(${COLMAP_LINK_DIRS})
+ 
+-add_subdirectory(src/colmap)
+ add_subdirectory(src/thirdparty)
++add_subdirectory(src/colmap)
+ 
+ ################################################################################
+ # Generate source groups for Visual Studio, XCode, etc.
+@@ -339,7 +339,6 @@ set(COLMAP_EXPORT_LIBS
+     # Third-party.
+     colmap_poisson_recon
+     colmap_vlfeat
+-    PoseLib
+ )
+ if(LSD_ENABLED)
+     list(APPEND COLMAP_EXPORT_LIBS
+diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
+index 2c9af311..9e33c7ed 100644
+--- a/cmake/FindDependencies.cmake
++++ b/cmake/FindDependencies.cmake
+@@ -87,6 +87,10 @@ if(CGAL_FOUND)
+     list(APPEND COLMAP_LINK_DIRS ${CGAL_LIBRARIES_DIR})
+ endif()
+ 
++if(NOT FETCH_POSELIB)
++    find_package(PoseLib ${COLMAP_FIND_TYPE})
++endif()
++
+ set(COLMAP_LINK_DIRS ${Boost_LIBRARY_DIRS})
+ 
+ set(CUDA_MIN_VERSION "7.0")
+diff --git a/cmake/colmap-config.cmake.in b/cmake/colmap-config.cmake.in
+index 5452bb08..7289dca8 100644
+--- a/cmake/colmap-config.cmake.in
++++ b/cmake/colmap-config.cmake.in
+@@ -78,6 +78,10 @@ set(GUI_ENABLED @GUI_ENABLED@)
+ 
+ set(CGAL_ENABLED @CGAL_ENABLED@)
+ 
++set(LSD_ENABLED @LSD_ENABLED@)
++
++set(FETCH_POSELIB @FETCH_POSELIB@)
++
+ include(${PACKAGE_PREFIX_DIR}/share/colmap/colmap-targets.cmake)
+ include(${PACKAGE_PREFIX_DIR}/share/colmap/cmake/FindDependencies.cmake)
+ check_required_components(colmap)
+diff --git a/src/colmap/estimators/CMakeLists.txt b/src/colmap/estimators/CMakeLists.txt
+index 1b553786..24658a7d 100644
+--- a/src/colmap/estimators/CMakeLists.txt
++++ b/src/colmap/estimators/CMakeLists.txt
+@@ -66,7 +66,6 @@ COLMAP_ADD_LIBRARY(
+         colmap_optim
+         Eigen3::Eigen
+         Ceres::ceres
+-    PRIVATE_LINK_LIBS
+         PoseLib::PoseLib
+ )
+ 
+diff --git a/src/thirdparty/CMakeLists.txt b/src/thirdparty/CMakeLists.txt
+index 16fa9507..81284151 100644
+--- a/src/thirdparty/CMakeLists.txt
++++ b/src/thirdparty/CMakeLists.txt
+@@ -64,8 +64,6 @@ if(FETCH_POSELIB)
+     set(MARCH_NATIVE OFF CACHE BOOL "")
+     FetchContent_MakeAvailable(poselib)
+     message(STATUS "Configuring PoseLib... done")
+-else()
+-    find_package(PoseLib REQUIRED)
+ endif()
+ 
+ set(CLANG_TIDY_EXE ${CLANG_TIDY_EXE_TEMP})

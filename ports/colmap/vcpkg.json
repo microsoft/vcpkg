@@ -1,16 +1,17 @@
 {
   "name": "colmap",
-  "version": "3.10",
+  "version": "3.11.0",
   "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface. It offers a wide range of features for reconstruction of ordered and unordered image collections. The software is licensed under the new BSD license.",
   "homepage": "https://colmap.github.io/",
   "license": "BSD-3-Clause",
-  "supports": "(linux | (windows & !static) | osx) & (x86 | x64)",
+  "supports": "(linux | (windows & !static) | osx) & (x86 | x64 | arm64)",
   "dependencies": [
-    "boost-filesystem",
+    "boost-algorithm",
     "boost-graph",
+    "boost-heap",
     "boost-program-options",
-    "boost-system",
-    "boost-test",
+    "boost-property-map",
+    "boost-property-tree",
     {
       "name": "ceres",
       "features": [
@@ -18,14 +19,17 @@
         "suitesparse"
       ]
     },
-    "cgal",
     "eigen3",
     "flann",
     "freeimage",
     "gflags",
-    "glew",
     "glog",
-    "qt5-base",
+    {
+      "name": "jasper",
+      "default-features": false
+    },
+    "metis",
+    "poselib",
     "sqlite3",
     {
       "name": "vcpkg-cmake",
@@ -37,9 +41,16 @@
     }
   ],
   "features": {
+    "tests": {
+      "description": "Build all tests.",
+      "dependencies": [
+        "gtest"
+      ]
+    },
     "cuda": {
       "description": "CUDA support for current compute architecture of this machine.",
       "dependencies": [
+        "glew",
         "cuda"
       ]
     },
@@ -49,10 +60,17 @@
         "cuda"
       ]
     },
-    "tests": {
-      "description": "Build all tests.",
+    "gui": {
+      "description": "Build the GUI.",
       "dependencies": [
-        "gtest"
+        "glew",
+        "qt5-base"
+      ]
+    },
+    "cgal": {
+      "description": "Build with CGAL.",
+      "dependencies": [
+        "cgal"
       ]
     }
   }
