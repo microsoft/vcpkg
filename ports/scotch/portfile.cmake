@@ -27,7 +27,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ptscotch    BUILD_PTSCOTCH # Requires MPI
+        ptscotch    BUILD_PTSCOTCH
 )
 
 vcpkg_cmake_configure(

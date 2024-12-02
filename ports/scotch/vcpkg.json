@@ -22,7 +22,10 @@
   ],
   "features": {
     "ptscotch": {
-      "description": "Build PT-Scotch"
+      "description": "Build PT-Scotch",
+      "dependencies": [
+        "mpi"
+      ]
     }
   }
 }
