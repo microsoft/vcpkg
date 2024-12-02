@@ -40,6 +40,8 @@ endif()
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
+    # vcpkg ffmpeg wrapper may need pkg-config
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_pkg_config=ON")
     if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
         list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
     else()
