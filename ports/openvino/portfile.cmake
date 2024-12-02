@@ -9,6 +9,7 @@ vcpkg_from_github(
         001-disable-tools.patch
         002-fix-onnx.patch
         003-protobuf.patch
+        add-include-chrono.patch #https://github.com/openvinotoolkit/openvino/pull/27782
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

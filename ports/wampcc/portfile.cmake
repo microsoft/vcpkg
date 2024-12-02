@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gcc-11.patch # https://github.com/darrenjs/wampcc/commit/d1a8c6dcabcc32e9d9774f306555e9080d871c2f
+        add-include-chrono.patch #https://github.com/darrenjs/wampcc/pull/85
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,7 +34,7 @@ if("utils" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES admin AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()

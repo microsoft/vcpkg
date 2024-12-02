@@ -15,6 +15,8 @@ vcpkg_from_github(
     REF 46231014e2a7ec1903d4a37e96222481ecc779d8
     SHA512 2a0b834f072fbc64edc84f408050e2c992f8d59f2480c67a372cace17d49f21eb2f40587288481acc42118e94a5b7863043982680c3f56bdde3863f97ca69356
     HEAD_REF master
+    PATCHES
+        add-include-chrono.patch #https://github.com/ZLMediaKit/ZLToolKit/pull/258
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdpart/ZLToolKit")

@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix_openni2.patch
         fix-nlohmann_json.patch
         fix-android-prefix-path.patch
+        add-include-chrono.patch #https://github.com/IntelRealSense/librealsense/pull/13537
 )
 
 file(COPY "${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf" DESTINATION "${SOURCE_PATH}")
