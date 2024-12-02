@@ -1,0 +1,13 @@
+diff --git a/cmake/cpp.cmake b/cmake/cpp.cmake
+index 6313c9c273..8ff2424183 100644
+--- a/cmake/cpp.cmake
++++ b/cmake/cpp.cmake
+@@ -520,7 +520,7 @@ configure_file(
+ ${PROJECT_SOURCE_DIR}/cmake/bundle-install.cmake.in
+ ${PROJECT_BINARY_DIR}/bundle-install.cmake
+ @ONLY)
+-install(SCRIPT ${PROJECT_BINARY_DIR}/bundle-install.cmake)
++#install(SCRIPT ${PROJECT_BINARY_DIR}/bundle-install.cmake)
+ endif()
+ 
+ install(FILES "${PROJECT_SOURCE_DIR}/LICENSE"

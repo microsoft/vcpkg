@@ -1,0 +1,33 @@
+{
+  "name": "or-tools",
+  "version": "9.11",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
+    "eigen3",
+    "protobuf",
+    "re2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "highs": {
+      "description": "Enable support for HiGHS solver",
+      "dependencies": [
+        "highs"
+      ]
+    }
+  }
+}
