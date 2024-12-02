@@ -41,17 +41,17 @@
     }
   ],
   "features": {
-    "tests": {
-      "description": "Build all tests.",
+    "cgal": {
+      "description": "Build with CGAL.",
       "dependencies": [
-        "gtest"
+        "cgal"
       ]
     },
     "cuda": {
       "description": "CUDA support for current compute architecture of this machine.",
       "dependencies": [
-        "glew",
-        "cuda"
+        "cuda",
+        "glew"
       ]
     },
     "cuda-redist": {
@@ -67,10 +67,10 @@
         "qt5-base"
       ]
     },
-    "cgal": {
-      "description": "Build with CGAL.",
+    "tests": {
+      "description": "Build all tests.",
       "dependencies": [
-        "cgal"
+        "gtest"
       ]
     }
   }
