@@ -8346,7 +8346,7 @@
     },
     "shiftmedia-libgnutls": {
       "baseline": "3.8.7",
-      "port-version": 1
+      "port-version": 2
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
