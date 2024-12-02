@@ -25,10 +25,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND VCPKG_CXX_FLAGS   " -DGRAPHMATCHNOTHREAD")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ptscotch    BUILD_PTSCOTCH # Requires MPI
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_PTSCOTCH=OFF # Requires MPI
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_LIBESMUMPS=OFF
         -DBUILD_LIBSCOTCHMETIS=OFF
         -DTHREADS=ON
@@ -44,6 +48,10 @@ vcpkg_copy_tools(TOOL_NAMES
     mord mtst
     AUTO_CLEAN
     )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/CeCILL-C_V1-en.txt")
