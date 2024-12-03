@@ -117,6 +117,13 @@ if (VCPKG_TARGET_IS_LINUX)
     )
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/CMakeLists.txt",
+        "enable_language(C)"
+        "enable_language(C)\nadd_definitions(-DLIEF_IMPORT)")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "c-api"          LIEF_C_API             # C API
@@ -147,14 +154,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "fuzzing"        LIEF_FUZZING            # Fuzz LIEF
 )
 
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-
-        -DLIEF_PYTHON_API=OFF
-
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
         -DLIEF_EXTERNAL_SPDLOG=ON
@@ -169,20 +172,21 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+    file(REMOVE
         "${CURRENT_PACKAGES_DIR}/lib/cmake/LIEF/LIEFExport-static.cmake"
         "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/LIEF/LIEFExport-static.cmake"
     )
-    file(MAKE_DIRECTORY 
+    file(MAKE_DIRECTORY
         "${CURRENT_PACKAGES_DIR}/debug/bin" 
         "${CURRENT_PACKAGES_DIR}/bin"
     )
-    file(RENAME 
+    file(RENAME
         "${CURRENT_PACKAGES_DIR}/lib/LIEF.dll"
         "${CURRENT_PACKAGES_DIR}/bin/LIEF.dll"
     )
-    file(RENAME 
+    file(RENAME
         "${CURRENT_PACKAGES_DIR}/debug/lib/LIEF.dll"
         "${CURRENT_PACKAGES_DIR}/debug/bin/LIEF.dll"
     )
