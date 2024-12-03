@@ -245,7 +245,7 @@
       "port-version": 7
     },
     "arrow": {
-      "baseline": "18.0.0",
+      "baseline": "18.1.0",
       "port-version": 0
     },
     "arsenalgear": {
@@ -1402,7 +1402,7 @@
     },
     "brpc": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -2321,7 +2321,7 @@
       "port-version": 0
     },
     "directxmath": {
-      "baseline": "2024-10-15",
+      "baseline": "2024-12-02",
       "port-version": 0
     },
     "directxmesh": {
@@ -2442,7 +2442,7 @@
     },
     "duilib": {
       "baseline": "2019-04-28",
-      "port-version": 5
+      "port-version": 6
     },
     "dukglue": {
       "baseline": "2022-11-08",
@@ -2502,7 +2502,7 @@
     },
     "easyhook": {
       "baseline": "2.7.7097.0",
-      "port-version": 8
+      "port-version": 9
     },
     "easyloggingpp": {
       "baseline": "9.97.1",
@@ -2853,7 +2853,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.4.0",
+      "baseline": "2.4.1",
       "port-version": 0
     },
     "flux": {
@@ -3046,7 +3046,7 @@
     },
     "gdal": {
       "baseline": "3.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gdcm": {
       "baseline": "3.0.24",
@@ -3210,7 +3210,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gmsh": {
       "baseline": "4.13.1",
@@ -3957,7 +3957,7 @@
       "port-version": 0
     },
     "kealib": {
-      "baseline": "1.5.3",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "keccak-tiny": {
@@ -5798,7 +5798,7 @@
     },
     "marble": {
       "baseline": "24.08.2",
-      "port-version": 0
+      "port-version": 1
     },
     "mariadb-connector-cpp": {
       "baseline": "1.1.5",
@@ -6213,8 +6213,8 @@
       "port-version": 3
     },
     "mysql-connector-cpp": {
-      "baseline": "8.0.32",
-      "port-version": 2
+      "baseline": "9.1.0",
+      "port-version": 0
     },
     "nameof": {
       "baseline": "0.10.4",
@@ -6838,7 +6838,7 @@
     },
     "otl": {
       "baseline": "4.0.478",
-      "port-version": 0
+      "port-version": 1
     },
     "outcome": {
       "baseline": "2.2.9",
@@ -7221,7 +7221,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "5.28.3",
+      "baseline": "5.29.0",
       "port-version": 0
     },
     "protobuf-c": {
@@ -7310,7 +7310,7 @@
     },
     "python3": {
       "baseline": "3.11.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.7",
@@ -7941,7 +7941,7 @@
       "port-version": 0
     },
     "restinio": {
-      "baseline": "0.7.2",
+      "baseline": "0.7.3",
       "port-version": 0
     },
     "rexo": {
@@ -8346,7 +8346,7 @@
     },
     "shiftmedia-libgnutls": {
       "baseline": "3.8.7",
-      "port-version": 1
+      "port-version": 2
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
@@ -9862,7 +9862,7 @@
     },
     "xqilla": {
       "baseline": "2.3.4",
-      "port-version": 3
+      "port-version": 4
     },
     "xsimd": {
       "baseline": "13.0.0",

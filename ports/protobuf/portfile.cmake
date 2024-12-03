@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 a188d109f317c0cff1d57c3d81b307ff46db816774af2eb4edc39b136725bb3ed70fafbcffcdf9465f6f948a1e7dfc0175f75b17acd414e5ae543939a510688a
+    SHA512  6cb70c9a93cfc784632b78836d685d78260680a81559df11d94d32d1c62f0794747a16bba215ad09a4e40396deebe964dbe0b21605b1f4eb026c7f0e8f9f7ed8
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
-        fix-arm64-msvc.patch
         fix-install-dirs.patch
 )
 

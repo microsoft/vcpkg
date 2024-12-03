@@ -1,5 +1,5 @@
 diff --git a/cdk/cmake/DepFindCompression.cmake b/cdk/cmake/DepFindCompression.cmake
-index f9fe519f..0f893da8 100644
+index 68f8e10..ebe7e31 100644
 --- a/cdk/cmake/DepFindCompression.cmake
 +++ b/cdk/cmake/DepFindCompression.cmake
 @@ -48,7 +48,12 @@ message(STATUS "Setting up compression libraries.")
@@ -17,10 +17,10 @@ index f9fe519f..0f893da8 100644
    message(FATAL_ERROR "Can't build without zlib support")
  endif()
 diff --git a/cdk/cmake/dependency.cmake b/cdk/cmake/dependency.cmake
-index e928e711..30d34fef 100644
+index 8370d81..a111219 100644
 --- a/cdk/cmake/dependency.cmake
 +++ b/cdk/cmake/dependency.cmake
-@@ -286,10 +286,18 @@ endif()
+@@ -497,10 +497,18 @@ endfunction(add_ext_targets)
  function(add_ext_lib EXT target name)
    # Search for the library
    if(DEFINED ${EXT}_ROOT_DIR)
@@ -43,8 +43,8 @@ index e928e711..30d34fef 100644
    elseif(DEFINED ${EXT}_LIB_DIR)
      set(suffix
        PATHS ${${EXT}_LIB_DIR}
-@@ -326,9 +334,10 @@ endfunction(add_ext_lib)
- #
+@@ -542,9 +550,10 @@ endfunction(add_ext_lib)
+ 
  function(add_ext_exec EXT target name)
    # Search for the library
 +  string(TOLOWER ${EXT} EXT_LOWER)
@@ -56,7 +56,7 @@ index e928e711..30d34fef 100644
      )
  
 diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
-index 97a4b005..cfc81daf 100644
+index a987312..666b3a2 100644
 --- a/cdk/protocol/mysqlx/CMakeLists.txt
 +++ b/cdk/protocol/mysqlx/CMakeLists.txt
 @@ -135,8 +135,13 @@ else()
@@ -75,7 +75,7 @@ index 97a4b005..cfc81daf 100644
  
  ADD_COVERAGE(cdk_proto_mysqlx)
 diff --git a/jdbc/cmake/DepFindMySQL.cmake b/jdbc/cmake/DepFindMySQL.cmake
-index 7977381a..d7f4e58b 100644
+index 971bfd5..0639b79 100644
 --- a/jdbc/cmake/DepFindMySQL.cmake
 +++ b/jdbc/cmake/DepFindMySQL.cmake
 @@ -167,13 +167,13 @@ function(main)
@@ -115,7 +115,7 @@ index 7977381a..d7f4e58b 100644
 -    find_library(MYSQL_DLL
 -      NAMES libmysql
 -      PATHS ${MYSQL_LIB_DIR}
-+  find_file(MYSQL_DLL
++    find_file(MYSQL_DLL
 +      NAMES libmysql.dll
 +      PATHS "${MYSQL_LIB_DIR}/bin"
        NO_DEFAULT_PATH
