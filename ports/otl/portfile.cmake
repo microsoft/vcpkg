@@ -1,9 +1,13 @@
-set(OTL_VERSION 40478)
+string(REPLACE "." "" OTL_VERSION "${VERSION}")
+
+# Attention: Content of release url may change without changing the version
+set(current_sha dcc2289a31150ae59568a04156ad2e260fb925708404c34e05f0e5ba7b955792ab947566b19e4996ee0a1e19b2f6c18674344c73e908f8f5e71fe3e65817908e)
+string(SUBSTRING "${current_sha}" 0 6 short_hash)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://otl.sourceforge.net/otlv4_${OTL_VERSION}.zip"
-    FILENAME "otlv4_${OTL_VERSION}.zip"
-    SHA512 dcc2289a31150ae59568a04156ad2e260fb925708404c34e05f0e5ba7b955792ab947566b19e4996ee0a1e19b2f6c18674344c73e908f8f5e71fe3e65817908e
+    FILENAME "otlv4_${OTL_VERSION}-${short_hash}.zip"
+    SHA512 "${current_sha}"
 )
 
 vcpkg_extract_source_archive(
