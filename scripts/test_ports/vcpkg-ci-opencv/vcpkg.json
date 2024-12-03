@@ -154,8 +154,7 @@
       "features": [
         "gstreamer",
         "openexr",
-        "opencl",
-        "ovis"
+        "opencl"
       ],
       "platform": "!uwp"
     },
@@ -166,6 +165,14 @@
         "tbb"
       ],
       "platform": "!uwp & !static"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "ovis"
+      ],
+      "platform": "!uwp & !(windows & static)"
     },
     {
       "name": "opencv",
