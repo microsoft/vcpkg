@@ -5,7 +5,6 @@
   "homepage": "https://lief.quarkslab.com",
   "license": "Apache-2.0",
   "dependencies": [
-    "boost-leaf",
     "fmt",
     "frozen",
     "mbedtls",
