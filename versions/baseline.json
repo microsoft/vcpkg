@@ -5053,8 +5053,8 @@
       "port-version": 1
     },
     "librsvg": {
-      "baseline": "2.40.20",
-      "port-version": 11
+      "baseline": "2.40.21",
+      "port-version": 0
     },
     "librsync": {
       "baseline": "2.3.4",
