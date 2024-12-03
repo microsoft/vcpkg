@@ -14,7 +14,6 @@ vcpkg_from_github(
         arm32-asm-function.diff
         disable-testing.diff
         getarch.diff
-        gcc14.patch
         system-check-msvc.diff
         win32-uwp.diff
         ${ARM64_WINDOWS_UWP_PATCH}
