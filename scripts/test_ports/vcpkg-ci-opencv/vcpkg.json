@@ -133,6 +133,7 @@
       "default-features": false,
       "features": [
         "dshow",
+        "directml",
         "msmf",
         "win32ui"
       ],

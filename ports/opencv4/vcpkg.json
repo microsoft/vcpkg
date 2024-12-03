@@ -141,11 +141,16 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
+            "directml",
             "msmf"
           ],
           "platform": "windows & !uwp & !mingw"
         }
       ]
+    },
+    "directml": {
+      "description": "Build with DirectML support",
+      "supports": "windows & !uwp & !mingw"
     },
     "dnn": {
       "description": "Enable dnn module",
