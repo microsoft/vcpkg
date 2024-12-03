@@ -1,5 +1,5 @@
 diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
-index ceb7e269..de302f59 100644
+index ceb7e269..5dee7e3c 100644
 --- a/cmake/CeresConfig.cmake.in
 +++ b/cmake/CeresConfig.cmake.in
 @@ -195,7 +195,7 @@ set(CERES_EIGEN_VERSION @Eigen3_VERSION@)
@@ -11,7 +11,7 @@ index ceb7e269..de302f59 100644
  if (Eigen3_FOUND)
    if (NOT Eigen3_VERSION VERSION_EQUAL CERES_EIGEN_VERSION)
      # CMake's VERSION check in FIND_PACKAGE() will accept any version >= the
-@@ -217,55 +217,13 @@ else (Eigen3_FOUND)
+@@ -217,55 +217,8 @@ else (Eigen3_FOUND)
  endif (Eigen3_FOUND)
  
  # glog (and maybe gflags).
@@ -50,9 +50,7 @@ index ceb7e269..de302f59 100644
 -  else()
 -    ceres_report_not_found("Missing required Ceres dependency: glog.")
 -  endif()
-+include(CMakeFindDependencyMacro)
-+find_dependency(glog NO_MODULE)
- 
+-
 -  # gflags is only a public dependency of Ceres via glog, thus is not required
 -  # if Ceres was built with MINIGLOG.
 -  if (CERES_USES_GFLAGS)
@@ -66,10 +64,8 @@ index ceb7e269..de302f59 100644
 -    endif()
 -  endif()
 -endif(CERES_USES_MINIGLOG)
-+# SuiteSparse
-+if (@SUITESPARSE@)
-+    find_dependency(SuiteSparse CONFIG)
-+endif()
++include(CMakeFindDependencyMacro)
++find_dependency(glog NO_MODULE)
  
  # Import exported Ceres targets, if they have not already been imported.
  if (NOT TARGET ceres AND NOT Ceres_BINARY_DIR)
