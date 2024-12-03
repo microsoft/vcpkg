@@ -169,7 +169,37 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(REMOVE 
+        "${CURRENT_PACKAGES_DIR}/lib/cmake/LIEF/LIEFExport-static.cmake"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/LIEF/LIEFExport-static.cmake"
+    )
+    file(RENAME 
+        "${CURRENT_PACKAGES_DIR}/lib"
+        "${CURRENT_PACKAGES_DIR}/bin"
+    )
+    file(RENAME 
+        "${CURRENT_PACKAGES_DIR}/debug/lib"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+
+    file(MAKE_DIRECTORY 
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" 
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+    )
+    file(RENAME 
+        "${CURRENT_PACKAGES_DIR}/bin/pkgconfig/LIEF.pc"
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/LIEF.pc"
+    )
+    file(RENAME 
+        "${CURRENT_PACKAGES_DIR}/debug/bin/pkgconfig/LIEF.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/LIEF.pc"
+    )
+
+    vcpkg_cmake_config_fixup(CONFIG_PATH "bin/cmake/LIEF")
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
+endif()
 
 vcpkg_fixup_pkgconfig()
 
