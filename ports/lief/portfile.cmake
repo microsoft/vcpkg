@@ -32,7 +32,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "TARGETS LIB_LIEF"
 )
 
-
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}"
     "ARCHIVE DESTINATION lib"
@@ -160,61 +159,92 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    # Remove the static export cmake files
     file(REMOVE
         "${CURRENT_PACKAGES_DIR}/lib/cmake/LIEF/LIEFExport-static.cmake"
         "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/LIEF/LIEFExport-static.cmake"
     )
 
-    # Create necessary directories for debug/bin and bin
     file(MAKE_DIRECTORY
         "${CURRENT_PACKAGES_DIR}/debug/bin" 
         "${CURRENT_PACKAGES_DIR}/bin"
     )
 
-    # Move all files (excluding folders) from lib to bin
-    file(GLOB all_files_in_lib "${CURRENT_PACKAGES_DIR}/lib/*")  # Get all contents of the lib directory
+    file(GLOB all_files_in_lib "${CURRENT_PACKAGES_DIR}/lib/*")
     foreach(item IN LISTS all_files_in_lib)
-        if(NOT IS_DIRECTORY "${item}")  # Check if the item is NOT a directory
-            get_filename_component(filename "${item}" NAME)  # Extract the filename
-            file(RENAME "${item}" "${CURRENT_PACKAGES_DIR}/bin/${filename}")  # Move the file
+        if(NOT IS_DIRECTORY "${item}")
+            get_filename_component(filename "${item}" NAME)
+            file(RENAME "${item}" "${CURRENT_PACKAGES_DIR}/bin/${filename}")
         endif()
     endforeach()
 
-    # Move all files (excluding folders) from debug/lib to debug/bin
-    file(GLOB all_files_in_debug_lib "${CURRENT_PACKAGES_DIR}/debug/lib/*")  # Get all contents of the debug/lib directory
+    file(GLOB all_files_in_debug_lib "${CURRENT_PACKAGES_DIR}/debug/lib/*")
     foreach(item IN LISTS all_files_in_debug_lib)
-        if(NOT IS_DIRECTORY "${item}")  # Check if the item is NOT a directory
-            get_filename_component(filename "${item}" NAME)  # Extract the filename
-            file(RENAME "${item}" "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")  # Move the file
+        if(NOT IS_DIRECTORY "${item}")
+            get_filename_component(filename "${item}" NAME)
+            file(RENAME "${item}" "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")
         endif()
     endforeach()
 
-    # Move all files from liblib to lib
-    file(GLOB liblib_files "${CURRENT_PACKAGES_DIR}/liblib/*")  # Get all files in liblib
+    file(GLOB liblib_files "${CURRENT_PACKAGES_DIR}/liblib/*")
     foreach(file_path IN LISTS liblib_files)
-        get_filename_component(filename "${file_path}" NAME)  # Extract the filename
-        file(RENAME "${file_path}" "${CURRENT_PACKAGES_DIR}/lib/${filename}")  # Move file to lib
+        get_filename_component(filename "${file_path}" NAME)
+        file(RENAME "${file_path}" "${CURRENT_PACKAGES_DIR}/lib/${filename}")
     endforeach()
 
-    # Remove the liblib directory
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/liblib")
 
-    # Move all files from liblib to lib
-    file(GLOB liblib_files "${CURRENT_PACKAGES_DIR}/debug/liblib/*")  # Get all files in liblib
+    file(GLOB liblib_files "${CURRENT_PACKAGES_DIR}/debug/liblib/*")
     foreach(file_path IN LISTS liblib_files)
-        get_filename_component(filename "${file_path}" NAME)  # Extract the filename
-        file(RENAME "${file_path}" "${CURRENT_PACKAGES_DIR}/debug/lib/${filename}")  # Move file to lib
+        get_filename_component(filename "${file_path}" NAME)
+        file(RENAME "${file_path}" "${CURRENT_PACKAGES_DIR}/debug/lib/${filename}")
     endforeach()
 
-    # Remove the liblib directory
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/liblib")
-
-
 endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-release.cmake"
+        [[IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/liblib]]
+        [[IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib]]
+    )
 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-release.cmake"
+        [[IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib]]
+        [[IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin]]
+    )
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-release.cmake"
+        [[APPEND _cmake_import_check_files_for_LIEF::LIEF "${_IMPORT_PREFIX}/liblib]]
+        [[APPEND _cmake_import_check_files_for_LIEF::LIEF "${_IMPORT_PREFIX}/lib]]
+    )
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-release.cmake"
+        [[" "${_IMPORT_PREFIX}/lib]]
+        [[" "${_IMPORT_PREFIX}/bin]]
+    )
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-debug.cmake"
+        [[IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/liblib]]
+        [[IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib]]
+    )
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-debug.cmake"
+        [[IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib]]
+        [[IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin]]
+    )
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-debug.cmake"
+        [[APPEND _cmake_import_check_files_for_LIEF::LIEF "${_IMPORT_PREFIX}/debug/liblib]]
+        [[APPEND _cmake_import_check_files_for_LIEF::LIEF "${_IMPORT_PREFIX}/debug/lib]]
+    )
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFExport-shared-debug.cmake"
+        [[" "${_IMPORT_PREFIX}/debug/lib]]
+        [[" "${_IMPORT_PREFIX}/debug/bin]]
+    )
+
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
