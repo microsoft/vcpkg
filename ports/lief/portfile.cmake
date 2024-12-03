@@ -169,41 +169,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-    file(REMOVE 
-        "${CURRENT_PACKAGES_DIR}/lib/cmake/LIEF/LIEFExport-static.cmake"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/LIEF/LIEFExport-static.cmake"
-    )
-    file(RENAME 
-        "${CURRENT_PACKAGES_DIR}/lib"
-        "${CURRENT_PACKAGES_DIR}/bin"
-    )
-    file(RENAME 
-        "${CURRENT_PACKAGES_DIR}/debug/lib"
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
-    )
-
-    file(MAKE_DIRECTORY 
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" 
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-    )
-    file(RENAME 
-        "${CURRENT_PACKAGES_DIR}/bin/pkgconfig/LIEF.pc"
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/LIEF.pc"
-    )
-    file(RENAME 
-        "${CURRENT_PACKAGES_DIR}/debug/bin/pkgconfig/LIEF.pc"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/LIEF.pc"
-    )
-    file(REMOVE_RECURSE 
-        "${CURRENT_PACKAGES_DIR}/bin/pkgconfig" 
-        "${CURRENT_PACKAGES_DIR}/debug/bin/pkgconfig"
-    )
-    vcpkg_cmake_config_fixup(CONFIG_PATH "bin/cmake/LIEF")
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
 
 vcpkg_fixup_pkgconfig()
 
@@ -214,3 +180,18 @@ file(REMOVE_RECURSE
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+    file(MAKE_DIRECTORY 
+        "${CURRENT_PACKAGES_DIR}/debug/bin" 
+        "${CURRENT_PACKAGES_DIR}/bin"
+    )
+    file(RENAME 
+        "${CURRENT_PACKAGES_DIR}/lib/LIEF.dll"
+        "${CURRENT_PACKAGES_DIR}/bin/LIEF.dll"
+    )
+    file(RENAME 
+        "${CURRENT_PACKAGES_DIR}/debug/lib/LIEF.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/LIEF.dll"
+    )
+endif()
