@@ -32,17 +32,10 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "TARGETS LIB_LIEF"
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries"
-    "RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT libraries"
-)
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}"
-    "LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries"
-)
+
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}"
-    "ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries"
+    "ARCHIVE DESTINATION lib"
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/src/BinaryStream/BinaryStream.cpp"
@@ -117,13 +110,6 @@ if (VCPKG_TARGET_IS_LINUX)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string(
-        "${SOURCE_PATH}/CMakeLists.txt",
-        "enable_language(C)"
-        "enable_language(C)\nadd_definitions(-DLIEF_IMPORT)")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "c-api"          LIEF_C_API             # C API
@@ -158,6 +144,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DBUILD_SHARED_LIBS=ON
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
         -DLIEF_EXTERNAL_SPDLOG=ON
@@ -173,23 +160,57 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+    # Remove the static export cmake files
     file(REMOVE
         "${CURRENT_PACKAGES_DIR}/lib/cmake/LIEF/LIEFExport-static.cmake"
         "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/LIEF/LIEFExport-static.cmake"
     )
+
+    # Create necessary directories for debug/bin and bin
     file(MAKE_DIRECTORY
         "${CURRENT_PACKAGES_DIR}/debug/bin" 
         "${CURRENT_PACKAGES_DIR}/bin"
     )
-    file(RENAME
-        "${CURRENT_PACKAGES_DIR}/lib/LIEF.dll"
-        "${CURRENT_PACKAGES_DIR}/bin/LIEF.dll"
-    )
-    file(RENAME
-        "${CURRENT_PACKAGES_DIR}/debug/lib/LIEF.dll"
-        "${CURRENT_PACKAGES_DIR}/debug/bin/LIEF.dll"
-    )
+
+    # Move all files (excluding folders) from lib to bin
+    file(GLOB all_files_in_lib "${CURRENT_PACKAGES_DIR}/lib/*")  # Get all contents of the lib directory
+    foreach(item IN LISTS all_files_in_lib)
+        if(NOT IS_DIRECTORY "${item}")  # Check if the item is NOT a directory
+            get_filename_component(filename "${item}" NAME)  # Extract the filename
+            file(RENAME "${item}" "${CURRENT_PACKAGES_DIR}/bin/${filename}")  # Move the file
+        endif()
+    endforeach()
+
+    # Move all files (excluding folders) from debug/lib to debug/bin
+    file(GLOB all_files_in_debug_lib "${CURRENT_PACKAGES_DIR}/debug/lib/*")  # Get all contents of the debug/lib directory
+    foreach(item IN LISTS all_files_in_debug_lib)
+        if(NOT IS_DIRECTORY "${item}")  # Check if the item is NOT a directory
+            get_filename_component(filename "${item}" NAME)  # Extract the filename
+            file(RENAME "${item}" "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")  # Move the file
+        endif()
+    endforeach()
+
+    # Move all files from liblib to lib
+    file(GLOB liblib_files "${CURRENT_PACKAGES_DIR}/liblib/*")  # Get all files in liblib
+    foreach(file_path IN LISTS liblib_files)
+        get_filename_component(filename "${file_path}" NAME)  # Extract the filename
+        file(RENAME "${file_path}" "${CURRENT_PACKAGES_DIR}/lib/${filename}")  # Move file to lib
+    endforeach()
+
+    # Remove the liblib directory
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/liblib")
+
+    # Move all files from liblib to lib
+    file(GLOB liblib_files "${CURRENT_PACKAGES_DIR}/debug/liblib/*")  # Get all files in liblib
+    foreach(file_path IN LISTS liblib_files)
+        get_filename_component(filename "${file_path}" NAME)  # Extract the filename
+        file(RENAME "${file_path}" "${CURRENT_PACKAGES_DIR}/debug/lib/${filename}")  # Move file to lib
+    endforeach()
+
+    # Remove the liblib directory
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/liblib")
+
+
 endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
