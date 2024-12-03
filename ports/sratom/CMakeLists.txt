@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 project(sratom C)
 
-find_package(lv2 CONFIG REQUIRED)
 find_package(serd CONFIG REQUIRED)
 find_package(sord CONFIG REQUIRED)
 
@@ -11,7 +10,7 @@ add_library(sratom
 
 target_include_directories(sratom PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(sratom PUBLIC lv2::lv2 serd::serd sord::sord)
+target_link_libraries(sratom PUBLIC serd::serd sord::sord)
 
 set_target_properties(sratom PROPERTIES
     C_STANDARD 99
@@ -42,7 +41,6 @@ install(
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sratom-config.cmake" [[
 include(CMakeFindDependencyMacro)
-find_dependency(lv2 CONFIG)
 find_dependency(serd CONFIG)
 find_dependency(sord CONFIG)
 include("${CMAKE_CURRENT_LIST_DIR}/sratom-targets.cmake")
