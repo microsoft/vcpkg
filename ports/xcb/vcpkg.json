@@ -1,7 +1,7 @@
 {
   "name": "xcb",
   "version": "1.14",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": "X11-distribute-modifications-variant",
@@ -11,7 +11,11 @@
     "libxdmcp",
     {
       "name": "libxslt",
-      "host": true
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
     },
     "pthread",
     "pthread-stubs",
