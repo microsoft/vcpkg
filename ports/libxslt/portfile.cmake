@@ -17,7 +17,6 @@ vcpkg_from_github(
         fix-gcrypt-deps.patch
         skip-install-docs.patch
         ${FIX_PACKAGE_VERSION_PATCH}
-        fix-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
