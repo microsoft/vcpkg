@@ -20,7 +20,7 @@
     }
   ],
   "default-features": [
-    "default-features"
+    "thread"
   ],
   "features": {
     "crypto": {
@@ -30,16 +30,22 @@
         "libgcrypt"
       ]
     },
-    "default-features": {
-      "description": "default features for the current platform"
-    },
     "plugins": {
       "description": "(deprecated)",
       "supports": "!static"
     },
+    "profiler": {
+      "description": "Build with profiling support"
+    },
     "python": {
       "description": "Builds with python support",
       "supports": "!windows"
+    },
+    "thread": {
+      "description": "Enable multi-threading support"
+    },
+    "tools": {
+      "description": "Build the utilities"
     }
   }
 }

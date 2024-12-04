@@ -72,6 +72,7 @@ jobs:
           $binarySas = $binarySas.Trim()
           $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite"
           & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+          ./vcpkg.exe fetch python3
   - task: PowerShell@2
     displayName: 'Validate version files'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
@@ -90,7 +91,6 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        ./vcpkg.exe fetch python3
         & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
       pwsh: true
   - task: PublishPipelineArtifact@1

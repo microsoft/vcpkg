@@ -5,6 +5,12 @@ vcpkg_download_distfile(
     FILENAME 282776acaf2c894791d2b5d4c294a28cfa2d4138.patch
 )
 
+vcpkg_download_distfile(
+    PROTOBUF_29_PATCH
+    URLS https://github.com/apache/brpc/commit/8d1ee6d06ffdf84a33bd083463663ece5fb9e7a9.patch?full_index=1
+    SHA512 d271aadc636c97bc3b2ad514558e7ae0f41af076b98346169f13f4e79be6165a69a9aa0da83c7db8ddfca5689e3d67afc8dd14ecd893f54441bde1135eafaf8e
+    FILENAME 8d1ee6d06ffdf84a33bd083463663ece5fb9e7a9.patch
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/brpc
@@ -15,6 +21,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-warnings.patch
         ${PROTOBUF_V5_PATCH}
+        ${PROTOBUF_29_PATCH}
 )
 
 vcpkg_cmake_configure(
