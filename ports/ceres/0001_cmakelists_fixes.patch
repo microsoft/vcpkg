@@ -1,17 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8e49c19e..c880e788 100644
+index 8e49c19e..330bb8cf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -80,7 +80,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
- # Make CMake aware of the cmake folder for local FindXXX scripts,
- # append rather than set in case the user has passed their own
- # additional paths via -D.
--list(APPEND CMAKE_MODULE_PATH "${Ceres_SOURCE_DIR}/cmake")
-+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
- include(AddCompileFlagsIfSupported)
- include(CheckCXXCompilerFlag)
- include(CheckLibraryExists)
-@@ -292,20 +292,21 @@ if (SUITESPARSE)
+@@ -292,27 +292,28 @@ if (SUITESPARSE)
    # built with SuiteSparse support.
  
    # Check for SuiteSparse and dependencies.
@@ -32,6 +23,7 @@ index 8e49c19e..c880e788 100644
 -                    ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
 -              DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
+-  else (SuiteSparse_FOUND)
 +    add_library(SuiteSparse::CONFIG ALIAS SuiteSparse::suitesparseconfig)
 +    add_library(SuiteSparse::AMD ALIAS SuiteSparse::amd)
 +    add_library(SuiteSparse::CAMD ALIAS SuiteSparse::camd)
@@ -40,9 +32,17 @@ index 8e49c19e..c880e788 100644
 +    add_library(SuiteSparse::CHOLMOD ALIAS SuiteSparse::cholmod)
 +    add_library(SuiteSparse::SPQR ALIAS SuiteSparse::spqr)
 +    add_library(METIS::METIS ALIAS metis)
-   else (SuiteSparse_FOUND)
++  else (SUITESPARSE_FOUND)
      # Disable use of SuiteSparse if it cannot be found and continue.
      message("-- Did not find all SuiteSparse dependencies, disabling "
+       "SuiteSparse support.")
+     update_cache_variable(SUITESPARSE OFF)
+     list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
+-  endif (SuiteSparse_FOUND)
++  endif (SUITESPARSE_FOUND)
+ else (SUITESPARSE)
+   message("-- Building without SuiteSparse.")
+   list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
 @@ -395,9 +396,10 @@ endif()
  # GFlags.
  if (GFLAGS)
