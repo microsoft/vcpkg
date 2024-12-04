@@ -7,7 +7,6 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" E57_BUILD_SHARED)
-string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" E57_USING_STATIC_XERCES)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
