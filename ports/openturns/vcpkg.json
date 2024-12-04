@@ -6,6 +6,8 @@
   "license": null,
   "dependencies": [
     "blas",
+    "boost-geometry",
+    "boost-math",
     "boost-multiprecision",
     "boost-random",
     "ceres",
