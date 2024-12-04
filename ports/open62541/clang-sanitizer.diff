@@ -6,7 +6,7 @@ index 2c1e4b1..21182cf 100644
  
      # Debug
      if(BUILD_TYPE_LOWER_CASE STREQUAL "debug" AND UNIX AND NOT UA_BUILD_OSS_FUZZ AND
-+       UA_ENABLE_SANTITIZER AND
++       UA_ENABLE_DEBUG_SANITIZER AND
         "x${CMAKE_C_COMPILER_ID}" STREQUAL "xClang" AND NOT UA_ENABLE_UNIT_TESTS_MEMCHECK)
          # Add default sanitizer settings when using clang and Debug build.
          # This allows e.g. CLion to find memory locations for SegFaults
