@@ -497,7 +497,11 @@ $vcToolkits = $manifestJson.packages | Where-Object {
     $_.id.ToLower().StartsWith("microsoft.vc.$vcVersion") -or
     ($_.id.ToLower().StartsWith("microsoft.vc.$redistVersion") -and $_.id.ToLower().contains("redist") )  -or
     $_.id.ToLower().Contains("microsoft.visualcpp.servicing.redist") -or
+    $_.id.ToLower().Contains("vsdevcmd") -or
+    $_.id.ToLower().Contains(".visualcpp.tools.core") -or    
+    $_.id.ToLower().Contains("microsoft.visualstudio.vc.vcvars") -or
     $_.id.ToLower().Contains("microsoft.visualcpp.dia.sdk") -or
+    $_.id.ToLower().Contains("microsoft.visualcpp.servicing.diasdk") -or
     $_.id.ToLower().Contains("microsoft.net.$netVersion")
 } | Where-Object {
     -not $_.language -or $_.language.ToLower() -eq "en-us" -or $_.language.ToLower() -eq "neutral"
@@ -550,6 +554,8 @@ $msBuild = $manifestJson.packages | Where-Object {
 } | Where-Object {
     -not $_.id.ToLower().Contains(".v141") -and
     -not $_.id.ToLower().Contains(".v142") -and
+    -not $_.id.ToLower().Contains(".v150") -and
+    -not $_.id.ToLower().Contains(".v160") -and
     -not $_.id.ToLower().Contains("maui") -and
     -not $_.id.ToLower().Contains("typescript") -and
     -not $_.id.ToLower().Contains(".azure") -and

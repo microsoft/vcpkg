@@ -1,6 +1,6 @@
 {
     "installer_comment" : "The download URL is from https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#release-dates-and-build-numbers",
-    "installer_url" : "https://download.visualstudio.microsoft.com/download/pr/5536698c-711c-4834-876f-2817d31a2ef2/58894fc272e86d3c3a6d85bf3a1df1e5a0685be8b9ab65d9f3cc5c2a8c6921cc/vs_BuildTools.exe",
+    "installer_url" : "https://download.visualstudio.microsoft.com/download/pr/f2819554-a618-400d-bced-774bb5379965/cc7231dc668ec1fb92f694c66b5d67cba1a9e21127a6e0b31c190f772bd442f2/vs_BuildTools.exe",
     "installer_sha256_comment" : "SHA256 of the installer is within the URL itself",
     "seven_zip_url" : "https://github.com/ip7z/7zip/releases/download/24.08/7zr.exe" ,
     "seven_zip_sha256" : "1b16c41ae39b679384b06f1492b587b650716430ff9c2e079dca2ad1f62c952d",

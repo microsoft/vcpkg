@@ -10,7 +10,8 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     Where-Object { $_.FullName -like 'Contents/*' } |
     ForEach-Object { 
         $relativePath = $_.FullName.Substring(9)  # Remove 'Contents/'
-        $outputPath = Join-Path -Path ${ExtractTo} -ChildPath $relativePath
+        $relativePath = [System.Uri]::UnescapeDataString($relativePath)  # Decode URL-encoded characters
+        $outputPath = Join-Path -Path $ExtractTo -ChildPath $relativePath
         $parentPath = [System.IO.Path]::GetDirectoryName($outputPath)
         if(-not (Test-Path -Path $parentPath)) {
             New-Item -Path $parentPath -ItemType Directory -Force
