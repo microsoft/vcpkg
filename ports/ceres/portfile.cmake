@@ -16,6 +16,7 @@ vcpkg_from_github(
         0001_cmakelists_fixes.patch
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
+        0004_remove_broken_fake_ba_jac.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
@@ -66,7 +67,6 @@ vcpkg_cmake_configure(
         -DUSE_CUDA=${USE_CUDA}
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
-        -DLIB_SUFFIX=${LIB_SUFFIX}
 )
 
 vcpkg_cmake_install()
