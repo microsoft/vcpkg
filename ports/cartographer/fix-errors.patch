@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ef2fcb3..fdbe96e 100644
+index ef2fcb3..eff0c68 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -16,7 +16,7 @@ cmake_minimum_required(VERSION 3.2)
@@ -11,7 +11,7 @@ index ef2fcb3..fdbe96e 100644
  set(CARTOGRAPHER_MINOR_VERSION 0)
  set(CARTOGRAPHER_PATCH_VERSION 0)
  set(CARTOGRAPHER_VERSION ${CARTOGRAPHER_MAJOR_VERSION}.${CARTOGRAPHER_MINOR_VERSION}.${CARTOGRAPHER_PATCH_VERSION})
-@@ -26,8 +26,6 @@ set(CARTOGRAPHER_HAS_GRPC ${BUILD_GRPC})
+@@ -26,26 +26,19 @@ set(CARTOGRAPHER_HAS_GRPC ${BUILD_GRPC})
  option(BUILD_PROMETHEUS "build Prometheus monitoring support" false)
  
  include("${PROJECT_SOURCE_DIR}/cmake/functions.cmake")
@@ -20,7 +20,10 @@ index ef2fcb3..fdbe96e 100644
  
  find_package(absl REQUIRED)
  set(BOOST_COMPONENTS iostreams)
-@@ -38,14 +36,10 @@ endif()
+ if(WIN32)
+-  list(APPEND BOOST_COMPONENTS zlib)
+   set(Boost_USE_STATIC_LIBS FALSE)
+ endif()
  find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
  find_package(Ceres REQUIRED COMPONENTS SuiteSparse)
  find_package(Eigen3 REQUIRED)
@@ -39,7 +42,7 @@ index ef2fcb3..fdbe96e 100644
  
  if (${BUILD_GRPC})
    find_package(async_grpc REQUIRED)
-@@ -55,18 +49,7 @@ if(${BUILD_PROMETHEUS})
+@@ -55,18 +48,7 @@ if(${BUILD_PROMETHEUS})
    find_package( ZLIB REQUIRED )
  endif()
  
@@ -59,7 +62,7 @@ index ef2fcb3..fdbe96e 100644
  
  # Install catkin package.xml
  install(FILES package.xml DESTINATION share/cartographer)
-@@ -190,26 +173,6 @@ configure_file(
+@@ -190,26 +172,6 @@ configure_file(
    ${PROJECT_SOURCE_DIR}/cartographer/common/config.h.cmake
    ${PROJECT_BINARY_DIR}/cartographer/common/config.h)
  
@@ -86,7 +89,7 @@ index ef2fcb3..fdbe96e 100644
  if(${BUILD_GRPC})
    google_binary(cartographer_grpc_server
      SRCS
-@@ -247,8 +210,6 @@ else()
+@@ -247,8 +209,6 @@ else()
    set(GLOG_LIBRARY glog)
  endif()
  
@@ -95,7 +98,7 @@ index ef2fcb3..fdbe96e 100644
  if(WIN32)
    # Needed to fix conflict with MSVC's error macro.
    target_compile_definitions(${PROJECT_NAME} PUBLIC -DGLOG_NO_ABBREVIATED_SEVERITIES)
-@@ -258,17 +219,11 @@ if(MSVC)
+@@ -258,17 +218,11 @@ if(MSVC)
    target_compile_definitions(${PROJECT_NAME} PUBLIC -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_USE_MATH_DEFINES)
  endif()
  
@@ -114,7 +117,7 @@ index ef2fcb3..fdbe96e 100644
    absl::algorithm
    absl::base
    absl::debugging
-@@ -300,6 +255,7 @@ set(TARGET_COMPILE_FLAGS "${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
+@@ -300,6 +254,7 @@ set(TARGET_COMPILE_FLAGS "${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
  set_target_properties(${PROJECT_NAME} PROPERTIES
    COMPILE_FLAGS ${TARGET_COMPILE_FLAGS})
  
@@ -122,7 +125,7 @@ index ef2fcb3..fdbe96e 100644
  set(TEST_LIB
    cartographer_test_library
  )
-@@ -333,6 +289,7 @@ foreach(ABS_FIL ${ALL_TESTS})
+@@ -333,6 +288,7 @@ foreach(ABS_FIL ${ALL_TESTS})
    endif()
    target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
  endforeach()
@@ -130,7 +133,7 @@ index ef2fcb3..fdbe96e 100644
  
  # Add the binary directory first, so that port.h is included after it has
  # been generated.
-@@ -368,7 +325,7 @@ foreach(HDR ${INSTALL_GENERATED_HDRS})
+@@ -368,7 +324,7 @@ foreach(HDR ${INSTALL_GENERATED_HDRS})
    )
  endforeach()
  
@@ -139,7 +142,7 @@ index ef2fcb3..fdbe96e 100644
  include(CMakePackageConfigHelpers)
  configure_package_config_file(
    cartographer-config.cmake.in
-@@ -379,7 +336,7 @@ configure_package_config_file(
+@@ -379,7 +335,7 @@ configure_package_config_file(
  
  install(
    EXPORT CartographerExport
