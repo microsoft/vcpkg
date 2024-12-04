@@ -1,0 +1,9 @@
+lief provides CMake targets:
+
+  find_package(LIEF CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE LIEF::LIEF)
+
+lief provides pkg-config modules:
+
+  # Library to Instrument Executable Formats
+  LIEF
