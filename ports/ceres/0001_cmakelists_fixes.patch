@@ -32,7 +32,7 @@ index 8e49c19e..c880e788 100644
 -                    ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
 -              DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
-+    add_library(SuiteSparse::ONFIG ALIAS SuiteSparse::suitesparseconfig)
++    add_library(SuiteSparse::CONFIG ALIAS SuiteSparse::suitesparseconfig)
 +    add_library(SuiteSparse::AMD ALIAS SuiteSparse::amd)
 +    add_library(SuiteSparse::CAMD ALIAS SuiteSparse::camd)
 +    add_library(SuiteSparse::CCOLAMD ALIAS SuiteSparse::ccolamd)
