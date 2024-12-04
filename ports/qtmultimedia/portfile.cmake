@@ -40,6 +40,8 @@ endif()
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
+    # vcpkg ffmpeg wrapper may need pkg-config
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_pkg_config=ON")
     if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
         list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
     else()
@@ -58,11 +60,14 @@ else()
   list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
                         --trace-expand
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
+                        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                      CONFIGURE_OPTIONS_MAYBE_UNUSED ${unused}

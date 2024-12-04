@@ -12,7 +12,7 @@ parameters:
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
-    default: '-'
+    default: 'arm64-android'
 
 jobs:
 - template: windows/azure-pipelines.yml

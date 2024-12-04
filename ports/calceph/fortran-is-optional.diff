@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf267a4..a1cb297 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,7 +75,7 @@ set(CALCEPH_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+ #  set the options
+ #####################################################################
+ include(CheckLanguage)
+-check_language(Fortran)
++check_language(Fortran OPTIONAL)
+ if(CMAKE_Fortran_COMPILER)
+     option(ENABLE_FORTRAN "enable fortran API" ON)
+ else()

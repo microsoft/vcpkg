@@ -154,7 +154,7 @@ else()
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=no)
 endif()
 
-if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_NET_OPTIONS -DFEATURE_libresolv:BOOL=ON)
 endif()
 
@@ -328,11 +328,13 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DINPUT_bundled_xcb_xinput:STRING=no
                         -DFEATURE_force_debug_info:BOOL=ON
                         -DFEATURE_relocatable:BOOL=ON
+                        -DQT_AUTODETECT_ANDROID:BOOL=ON # Use vcpkg toolchain as is
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                         FEATURE_appstore_compliant # only used for android/ios
+                        QT_AUTODETECT_ANDROID
                     )
 
 # Install CMake helper scripts
@@ -470,6 +472,9 @@ if(EXISTS "${target_qt_conf}")
     string(REGEX REPLACE "HostData=[^\n]+" "HostData=./../${TARGET_TRIPLET}/share/Qt6" qt_conf_contents ${qt_conf_contents})
     string(REGEX REPLACE "HostPrefix=[^\n]+" "HostPrefix=./../../../../${_HOST_TRIPLET}" qt_conf_contents ${qt_conf_contents})
     file(WRITE "${target_qt_conf}" "${qt_conf_contents}")
+    foreach(script IN ITEMS qmake qmake6 qtpaths qtpaths6)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${script}" "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/${script}" "\"\${script_dir_path}/../../../${installed_to_host}tools/Qt6/bin/${script}\"")
+    endforeach()
     if(NOT VCPKG_BUILD_TYPE)
       set(target_qt_conf_debug "${CURRENT_PACKAGES_DIR}/tools/Qt6/target_qt_debug.conf")
       configure_file("${target_qt_conf}" "${target_qt_conf_debug}" COPYONLY)
@@ -482,10 +487,16 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6AndroidMacros.cmake"
+        [[ set(cmake_dir "${prefix_path}/${${export_namespace_upper}_INSTALL_LIBS}/cmake")]]
+        [[ set(cmake_dir "${prefix_path}/share")]]
+    )
+endif()
+
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 endif()
-
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
