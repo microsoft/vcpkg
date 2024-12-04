@@ -32,15 +32,6 @@
         }
       ]
     },
-    "cbor": {
-      "description": "Support for the CBOR format",
-      "dependencies": [
-        {
-          "name": "tinycbor",
-          "version>=": "0.6.0"
-        }
-      ]
-    },
     "flexbuffers": {
       "description": "Support for the flexbuffers format (part of flatbuffers)",
       "dependencies": [
@@ -56,15 +47,6 @@
         {
           "name": "msgpack-c",
           "version>=": "6.0.0"
-        }
-      ]
-    },
-    "toml": {
-      "description": "Support for the TOML format",
-      "dependencies": [
-        {
-          "name": "tomlplusplus",
-          "version>=": "3.4.0"
         }
       ]
     },
