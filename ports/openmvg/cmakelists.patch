@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 6879c4c6..d00bce4f 100644
+index 6879c4c6..fed74a70 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -24,6 +24,7 @@ endif()
@@ -48,7 +48,26 @@ index 6879c4c6..d00bce4f 100644
  
  # Folders
  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-@@ -281,6 +286,7 @@ endif()
+@@ -257,6 +262,7 @@ ENDMACRO(UNIT_TEST)
+ # - internal if cereal not found
+ # - as of cereal:1.3.1 target requires component
+ # ==============================================================================
++if(0)
+ find_package(cereal QUIET CONFIG)
+ if (NOT cereal_FOUND)
+   add_library(cereal INTERFACE)
+@@ -273,6 +279,10 @@ if (TARGET cereal::cereal)
+ else()
+   set(cereal_TARGET "cereal")
+ endif()
++endif()
++
++find_package(cereal REQUIRED CONFIG)
++get_target_property(CEREAL_INCLUDE_DIRS cereal::cereal INTERFACE_INCLUDE_DIRECTORIES)
+ 
+ # ==============================================================================
+ # Eigen
+@@ -281,6 +291,7 @@ endif()
  # - external if EIGEN_INCLUDE_DIR_HINTS is defined
  # - internal if Eigen not found
  # ==============================================================================
@@ -56,7 +75,7 @@ index 6879c4c6..d00bce4f 100644
  find_package(Eigen3 QUIET)
  if (NOT Eigen3_FOUND)
    set(EIGEN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eigen)
-@@ -289,7 +295,11 @@ if (NOT Eigen3_FOUND)
+@@ -289,7 +300,11 @@ if (NOT Eigen3_FOUND)
  else()
    set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
  endif()
@@ -68,7 +87,7 @@ index 6879c4c6..d00bce4f 100644
  
  # ==============================================================================
  # Ceres
-@@ -297,6 +307,7 @@ add_definitions(-DEIGEN_MPL2_ONLY)
+@@ -297,6 +312,7 @@ add_definitions(-DEIGEN_MPL2_ONLY)
  # - external by default if CERES_DIR_HINTS or find_package found a valid Ceres
  # - internal if ceres not found (ceres-solver+cxsparse+miniglog)
  # ==============================================================================
@@ -76,7 +95,7 @@ index 6879c4c6..d00bce4f 100644
  find_package(Ceres QUIET HINTS ${CERES_DIR_HINTS})
  if (NOT Ceres_FOUND)
    set(OpenMVG_USE_INTERNAL_CERES ON)
-@@ -308,6 +319,9 @@ if (NOT Ceres_FOUND)
+@@ -308,6 +324,9 @@ if (NOT Ceres_FOUND)
      STRING(REGEX REPLACE "version ([0-9.]+).*" "\\1" CERES_VERSION ${CERES_CONFIG})
    set(CERES_LIBRARIES openMVG_ceres)
  endif()
@@ -86,7 +105,7 @@ index 6879c4c6..d00bce4f 100644
  
  # ==============================================================================
  # Flann
-@@ -315,6 +329,7 @@ endif()
+@@ -315,6 +334,7 @@ endif()
  # - internal by default (flann),
  # - external if FLANN_INCLUDE_DIR_HINTS and a valid Flann setup is found
  # ==============================================================================
@@ -94,7 +113,7 @@ index 6879c4c6..d00bce4f 100644
  if (NOT DEFINED FLANN_INCLUDE_DIR_HINTS)
    set(FLANN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
    set(OpenMVG_USE_INTERNAL_FLANN ON)
-@@ -330,6 +345,9 @@ endif()
+@@ -330,6 +350,9 @@ endif()
  if (NOT FLANN_FOUND OR OpenMVG_USE_INTERNAL_FLANN)
    set(FLANN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
  endif()
@@ -104,23 +123,7 @@ index 6879c4c6..d00bce4f 100644
  
  # ==============================================================================
  # CoinUtils
-@@ -356,13 +374,13 @@ endif()
- if (NOT DEFINED CLP_INCLUDE_DIR_HINTS)
-   set(CLP_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Clp/src/)
-   set(OpenMVG_USE_INTERNAL_CLP ON)
--  find_package(Clp QUIET)
-+  find_package(Clp REQUIRED)
-   set(CLP_INCLUDE_DIRS
-      ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Clp/src/
-      ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Clp/src/OsiClp/)
-   set(CLP_LIBRARIES lib_clp lib_OsiClpSolver)
- else()
--  find_package(Clp QUIET)
-+  find_package(Clp REQUIRED)
- endif()
- 
- # ==============================================================================
-@@ -398,6 +416,7 @@ endif()
+@@ -398,6 +421,7 @@ endif()
  # - internal by default (Lemon),
  # - external if LEMON_INCLUDE_DIR_HINTS and a valid Lemon setup is found
  # ==============================================================================
@@ -128,7 +131,7 @@ index 6879c4c6..d00bce4f 100644
  if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
    set(LEMON_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon)
    set(OpenMVG_USE_INTERNAL_LEMON ON)
-@@ -408,13 +427,16 @@ if (NOT LEMON_FOUND OR OpenMVG_USE_INTERNAL_LEMON)
+@@ -408,13 +432,16 @@ if (NOT LEMON_FOUND OR OpenMVG_USE_INTERNAL_LEMON)
      ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon
      ${PROJECT_BINARY_DIR}/third_party/lemon)
  endif()
@@ -146,7 +149,7 @@ index 6879c4c6..d00bce4f 100644
    find_package( OpenCV QUIET )
    if (NOT OpenCV_FOUND OR OpenCV_VERSION VERSION_LESS "3.0.0")
      message(STATUS "OpenCV was not found (note that OpenCV version >= 3.0.0 is required). -> Disabling OpenCV support.")
-@@ -429,7 +451,7 @@ endif()
+@@ -429,7 +456,7 @@ endif()
  # ==============================================================================
  # - enabled only if OpenMVG_USE_LIGT is set to ON
  # ==============================================================================
@@ -155,7 +158,7 @@ index 6879c4c6..d00bce4f 100644
      add_definitions(-DUSE_PATENTED_LIGT)
  endif()
  
-@@ -438,7 +460,6 @@ endif()
+@@ -438,7 +465,6 @@ endif()
  # Third-party libraries:
  # ==============================================================================
  add_subdirectory(third_party)
@@ -163,26 +166,22 @@ index 6879c4c6..d00bce4f 100644
  
  # ==============================================================================
  # openMVG modules
-@@ -447,14 +468,14 @@ add_subdirectory(testing)
+@@ -447,12 +473,12 @@ add_subdirectory(testing)
  add_subdirectory(openMVG)
  
  # openMVG tutorial examples
 -if (OpenMVG_BUILD_EXAMPLES)
 +if (0)
    add_subdirectory(openMVG_Samples)
--endif (OpenMVG_BUILD_EXAMPLES)
-+endif ()
+ endif (OpenMVG_BUILD_EXAMPLES)
  
  # Complete software(s) build on openMVG libraries
 -if (OpenMVG_BUILD_SOFTWARES)
 +if (0)
    add_subdirectory(software)
--endif (OpenMVG_BUILD_SOFTWARES)
-+endif ()
+ endif (OpenMVG_BUILD_SOFTWARES)
  
- # Included for research purpose only
- add_subdirectory(nonFree)
-@@ -464,7 +485,7 @@ add_subdirectory(nonFree)
+@@ -464,7 +490,7 @@ add_subdirectory(nonFree)
  # --------------------------
  # Sphinx detection
  # ==============================================================================
@@ -191,7 +190,7 @@ index 6879c4c6..d00bce4f 100644
    find_package(Sphinx)
    if (EXISTS ${SPHINX_EXECUTABLE})
      set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/htmlDoc")
-@@ -526,67 +547,67 @@ message("** Use LiGT for global translation estimation: " ${OpenMVG_USE_LIGT})
+@@ -526,67 +552,67 @@ message("** Use LiGT for global translation estimation: " ${OpenMVG_USE_LIGT})
  
  message("\n")
  
@@ -270,19 +269,6 @@ index 6879c4c6..d00bce4f 100644
    message(STATUS "LEMON: " ${LEMON_VERSION} " (internal)")
  else()
    message(STATUS "LEMON: " ${LEMON_VERSION} " (external)")
-diff --git a/src/cmakeFindModules/FindClp.cmake b/src/cmakeFindModules/FindClp.cmake
-index 8a69c234..1ed9a21f 100644
---- a/src/cmakeFindModules/FindClp.cmake
-+++ b/src/cmakeFindModules/FindClp.cmake
-@@ -51,7 +51,7 @@ IF(EXISTS "${CLP_DIR}" AND NOT "${CLP_DIR}" STREQUAL "")
-         SET(CLP_INCLUDE_DIR ${CLP_DIR})
- 
-         FIND_LIBRARY(CLP_LIBRARY NAMES Clp)
--        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver)
-+        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver Clp)
-         FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
- 
-         # locate Clp libraries
 diff --git a/src/cmakeFindModules/OpenMVGConfig.cmake.in b/src/cmakeFindModules/OpenMVGConfig.cmake.in
 index 5a788b56..02431ce2 100644
 --- a/src/cmakeFindModules/OpenMVGConfig.cmake.in
@@ -311,53 +297,3 @@ index 5a788b56..02431ce2 100644
  if (NOT EXISTS ${CURRENT_ROOT_INSTALL_DIR})
    OPENMVG_REPORT_NOT_FOUND(
      "OpenMVG install root: ${CURRENT_ROOT_INSTALL_DIR}, "
-diff --git a/src/openMVG/matching/CMakeLists.txt b/src/openMVG/matching/CMakeLists.txt
-index b92a49b7..60394c12 100644
---- a/src/openMVG/matching/CMakeLists.txt
-+++ b/src/openMVG/matching/CMakeLists.txt
-@@ -16,6 +16,7 @@ list(REMOVE_ITEM matching_files_cpp ${REMOVEFILESUNITTEST})
- 
- set(THREADS_PREFER_PTHREAD_FLAG ON)
- find_package(Threads REQUIRED)
-+find_package(flann CONFIG REQUIRED)
- 
- set_source_files_properties(${matching_files_cpp} PROPERTIES LANGUAGE CXX)
- add_library(openMVG_matching
-diff --git a/src/third_party/CMakeLists.txt b/src/third_party/CMakeLists.txt
-index 1e025dc6..4a06dfcc 100644
---- a/src/third_party/CMakeLists.txt
-+++ b/src/third_party/CMakeLists.txt
-@@ -18,7 +18,7 @@ add_subdirectory(stlplus3)
- set(STLPLUS_LIBRARY openMVG_stlplus PARENT_SCOPE)
- 
- # Add graph library
--if(DEFINED OpenMVG_USE_INTERNAL_LEMON)
-+if(0)
-   add_subdirectory(lemon)
-   set(LEMON_LIBRARY openMVG_lemon PARENT_SCOPE)
- endif()
-@@ -64,13 +64,13 @@ endif (NOT TIFF_FOUND)
- ##
- 
- # Add ceres-solver (A Nonlinear Least Squares Minimizer)
--if (DEFINED OpenMVG_USE_INTERNAL_CERES)
-+if (0)
-   add_subdirectory(ceres-solver)
-   set_property(TARGET openMVG_ceres PROPERTY FOLDER OpenMVG/3rdParty/ceres)
- endif()
- 
- # Add an Approximate Nearest Neighbor library
--if (DEFINED OpenMVG_USE_INTERNAL_FLANN)
-+if (0)
-   set(FLANN_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/openMVG/third_party/flann/src/cpp)
-   add_subdirectory(flann)
- endif()
-@@ -84,7 +84,7 @@ add_subdirectory(fast)
- ##
- # Install Header only libraries if necessary
- ##
--if (DEFINED OpenMVG_USE_INTERNAL_EIGEN)
-+if (0)
-   #Configure Eigen install
-   set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/openMVG/third_party/eigen)
-   add_subdirectory(eigen)
