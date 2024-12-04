@@ -24,7 +24,7 @@ function(vcpkg_check_linkage)
         message(FATAL_ERROR "This port can only build as a dynamic library, but the triplet \
 selects a static library and a static CRT. Building a dynamic library with a static CRT creates \
 conditions many developers find surprising, and for which most ports are unprepared, so vcpkg will \
-not change VCPKG_LIBRARY_LINKAGE to for you in this case.
+not change VCPKG_LIBRARY_LINKAGE to dynamic for you in this case.
 For example, on Windows, each DLL will get its own copy of the CRT, meaning such DLLs cannot share \
 standard library components over the DLL boundary. On non-Windows, different .sos or .dylibs may \
 cause mutually incompatible symbols from different CRT versions to be concurrently loaded.
