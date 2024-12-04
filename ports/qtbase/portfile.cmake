@@ -22,7 +22,6 @@ set(${PORT}_PATCHES
         fix-host-aliasing.patch
         fix_deploy_windows.patch
         fix-link-lib-discovery.patch
-        fix-missing-symbol.patch
 )
  
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
