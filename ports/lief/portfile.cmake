@@ -246,7 +246,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/LIEF/LIEFConfig.cmake"
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lief/LIEFConfig.cmake"
     [[include("${LIEF_${lib_type}_export}")]]
     [[include("${CMAKE_CURRENT_LIST_DIR}/LIEFExport-${lib_type}.cmake")]]
 )
