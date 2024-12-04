@@ -1517,8 +1517,8 @@
       "port-version": 0
     },
     "cartographer": {
-      "baseline": "1.0.0",
-      "port-version": 6
+      "baseline": "2.0.0",
+      "port-version": 0
     },
     "casadi": {
       "baseline": "3.6.7",
