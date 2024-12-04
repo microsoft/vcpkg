@@ -1,8 +1,8 @@
 diff --git a/lib/OpenTURNSConfig.cmake.in b/lib/OpenTURNSConfig.cmake.in
-index 74f17eafd..f57607b68 100644
+index 74f17eafd..e08d121dc 100644
 --- a/lib/OpenTURNSConfig.cmake.in
 +++ b/lib/OpenTURNSConfig.cmake.in
-@@ -107,6 +107,17 @@ if (NOT @BUILD_SHARED_LIBS@)
+@@ -107,6 +107,18 @@ if (NOT @BUILD_SHARED_LIBS@)
    endif ()
  endif ()
  
@@ -16,6 +16,7 @@ index 74f17eafd..f57607b68 100644
 +find_dependency(Ceres CONFIG)
 +find_dependency(Pagmo CONFIG)
 +find_dependency(CMinpack CONFIG)
++find_dependency(nanoflann CONFIG)
 +
  # Our library dependencies (contains definitions for IMPORTED targets)
  include("${CMAKE_CURRENT_LIST_DIR}/OpenTURNS-Targets.cmake")
