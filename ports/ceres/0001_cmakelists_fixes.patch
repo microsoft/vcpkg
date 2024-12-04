@@ -1,31 +1,49 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8e49c19e..707dfb9c 100644
+index 8e49c19e..c880e788 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -292,7 +292,7 @@ if (SUITESPARSE)
+@@ -80,7 +80,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+ # Make CMake aware of the cmake folder for local FindXXX scripts,
+ # append rather than set in case the user has passed their own
+ # additional paths via -D.
+-list(APPEND CMAKE_MODULE_PATH "${Ceres_SOURCE_DIR}/cmake")
++list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+ include(AddCompileFlagsIfSupported)
+ include(CheckCXXCompilerFlag)
+ include(CheckLibraryExists)
+@@ -292,20 +292,21 @@ if (SUITESPARSE)
    # built with SuiteSparse support.
  
    # Check for SuiteSparse and dependencies.
 -  find_package(SuiteSparse 4.5.6 COMPONENTS CHOLMOD SPQR
-+  find_package(SuiteSparse 4.5.6 CONFIG COMPONENTS CHOLMOD SPQR
-     OPTIONAL_COMPONENTS Partition)
-   if (SuiteSparse_FOUND)
-     set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
-@@ -301,11 +301,11 @@ if (SUITESPARSE)
+-    OPTIONAL_COMPONENTS Partition)
+-  if (SuiteSparse_FOUND)
+-    set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
++  find_package(SuiteSparse REQUIRED CONFIG)
++  if (SUITESPARSE_FOUND)
++    set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION} CONFIG)")
+     # By default, if all of SuiteSparse's dependencies are found, Ceres is
+     # built with SuiteSparse support.
      message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
              "building with SuiteSparse.")
- 
+-
 -    if (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
-+            if (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
-       install(FILES ${Ceres_SOURCE_DIR}/cmake/FindSuiteSparse.cmake
-                     ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
-               DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
+-      install(FILES ${Ceres_SOURCE_DIR}/cmake/FindSuiteSparse.cmake
+-                    ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
+-              DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
-+    endif (0)
++    add_library(SuiteSparse::ONFIG ALIAS SuiteSparse::suitesparseconfig)
++    add_library(SuiteSparse::AMD ALIAS SuiteSparse::amd)
++    add_library(SuiteSparse::CAMD ALIAS SuiteSparse::camd)
++    add_library(SuiteSparse::CCOLAMD ALIAS SuiteSparse::ccolamd)
++    add_library(SuiteSparse::COLAMD ALIAS SuiteSparse::colamd)
++    add_library(SuiteSparse::CHOLMOD ALIAS SuiteSparse::cholmod)
++    add_library(SuiteSparse::SPQR ALIAS SuiteSparse::spqr)
++    add_library(METIS::METIS ALIAS metis)
    else (SuiteSparse_FOUND)
      # Disable use of SuiteSparse if it cannot be found and continue.
      message("-- Did not find all SuiteSparse dependencies, disabling "
-@@ -395,9 +395,10 @@ endif()
+@@ -395,9 +396,10 @@ endif()
  # GFlags.
  if (GFLAGS)
    # Don't search with REQUIRED as we can continue without gflags.
@@ -38,7 +56,7 @@ index 8e49c19e..707dfb9c 100644
        message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
      else()
        message("-- Detected version of gflags: ${gflags_VERSION} does not define "
-@@ -430,28 +431,7 @@ if (MINIGLOG)
+@@ -430,28 +432,7 @@ if (MINIGLOG)
    mark_as_advanced(FORCE GLOG_INCLUDE_DIR
                           GLOG_LIBRARY)
  else (MINIGLOG)
@@ -68,7 +86,7 @@ index 8e49c19e..707dfb9c 100644
  endif (MINIGLOG)
  
  if (NOT SCHUR_SPECIALIZATIONS)
-@@ -466,7 +446,7 @@ endif (NOT CUSTOM_BLAS)
+@@ -466,7 +447,7 @@ endif (NOT CUSTOM_BLAS)
  
  if (BUILD_BENCHMARKS)
    # Version 1.3 was first to provide import targets
@@ -77,7 +95,7 @@ index 8e49c19e..707dfb9c 100644
    if (benchmark_FOUND)
       message("-- Found Google benchmark library. Building Ceres benchmarks.")
    else()
-@@ -722,12 +702,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
+@@ -722,12 +703,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
  install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
