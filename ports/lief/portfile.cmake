@@ -128,15 +128,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "dex"            LIEF_DEX               # Build LIEF with DEX module
         "vdex"           LIEF_VDEX              # Build LIEF with VDEX module
         "art"            LIEF_ART               # Build LIEF with ART module
-
-        # Sanitizer
-        "asan"           LIEF_ASAN               # Enable Address sanitizer
-        "lsan"           LIEF_LSAN               # Enable Leak sanitizer
-        "tsan"           LIEF_TSAN               # Enable Thread sanitizer
-        "usan"           LIEF_USAN               # Enable undefined sanitizer
-
-        # Fuzzer
-        "fuzzing"        LIEF_FUZZING            # Fuzz LIEF
 )
 
 vcpkg_cmake_configure(
