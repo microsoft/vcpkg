@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4bd7155..b7adecc 100644
+index d8a81ab..892460d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -72,7 +72,7 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -66,7 +66,7 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
  option(LSQPACK_TESTS "Build tests" OFF)
  option(LSQPACK_BIN "Build binaries" OFF)
@@ -11,35 +11,38 @@ index 4bd7155..b7adecc 100644
  
  # Configure and build msquic dependency.
  if (WIN32)
-@@ -83,8 +83,9 @@ endif()
+@@ -77,8 +77,11 @@ endif()
  set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
  set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
  set(CMAKE_BUILD_TYPE "Release")
 -add_subdirectory(msquic)
 -target_compile_features(inc INTERFACE cxx_std_20)
 +find_package(msquic CONFIG REQUIRED)
++FIND_LIBRARY(MSPLATFORM_LIBRARIES
++             NAMES msquic_platform)
 +
 +target_compile_features(msh3_headers INTERFACE cxx_std_20)
  
  # Build msh3 library (and cmd line tool).
  add_subdirectory(lib)
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index ab7fc24..c488486 100644
+index 4d7aeb7..a10c37a 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -7,10 +7,7 @@ else()
+@@ -7,11 +7,10 @@ else()
      set(SOURCES msh3.cpp)
  endif()
  add_library(msh3 SHARED ${SOURCES})
 -target_link_libraries(msh3 PRIVATE inc warnings msquic ls-qpack msh3_headers)
--if (NOT BUILD_SHARED_LIBS)
--    target_link_libraries(msh3 PRIVATE base_link)
--endif()
-+target_link_libraries(msh3 PRIVATE msquic ls-qpack::ls-qpack msh3_headers)
- if (MSH3_SERVER_SUPPORT)
-     target_link_libraries(msh3 PRIVATE platform) # For selfsign APIs
++target_link_libraries(msh3 PRIVATE msquic ls-qpack::ls-qpack msh3_headers ${MSPLATFORM_LIBRARIES} ncrypt crypt32)
+ if (NOT BUILD_SHARED_LIBS)
+     target_link_libraries(msh3 PRIVATE base_link)
  endif()
-@@ -26,7 +23,11 @@ elseif (CX_PLATFORM STREQUAL "darwin")
+-target_link_libraries(msh3 PRIVATE platform) # For selfsign APIs
+ 
+ if(WIN32)
+     SET_TARGET_PROPERTIES(msh3
+@@ -24,7 +23,11 @@ elseif (CX_PLATFORM STREQUAL "darwin")
          PROPERTIES LINK_FLAGS "-exported_symbols_list \"${CMAKE_CURRENT_SOURCE_DIR}/darwin/exports.txt\"")
  endif()
  
