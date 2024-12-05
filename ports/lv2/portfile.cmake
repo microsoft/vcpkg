@@ -12,6 +12,10 @@ vcpkg_from_github(
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -Ddocs=disabled
+        -Dplugins=disabled
+        -Dtests=disabled
 )
 
 vcpkg_install_meson()
