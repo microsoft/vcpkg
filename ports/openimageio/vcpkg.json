@@ -1,7 +1,6 @@
 {
   "name": "openimageio",
-  "version": "3.0.0.3",
-  "port-version": 2,
+  "version": "3.0.1.0",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "license": "BSD-3-Clause",
@@ -49,6 +48,12 @@
       "description": "Enable giflib support for openimageio",
       "dependencies": [
         "giflib"
+      ]
+    },
+    "jpegxl": {
+      "description": "Enable JPEG XL codec",
+      "dependencies": [
+        "libjxl"
       ]
     },
     "libheif": {
