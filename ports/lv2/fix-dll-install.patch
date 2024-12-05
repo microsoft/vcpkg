@@ -1,0 +1,91 @@
+diff --git a/plugins/eg-amp.lv2/meson.build b/plugins/eg-amp.lv2/meson.build
+index bc222d2..1951317 100644
+--- a/plugins/eg-amp.lv2/meson.build
++++ b/plugins/eg-amp.lv2/meson.build
+@@ -12,7 +12,7 @@ module = shared_library(
+   dependencies: [lv2_dep, m_dep],
+   gnu_symbol_visibility: 'hidden',
+   install: true,
+-  install_dir: lv2dir / bundle_name,
++  install_dir: get_option('bindir'),
+   name_prefix: '',
+ )
+ 
+diff --git a/plugins/eg-fifths.lv2/meson.build b/plugins/eg-fifths.lv2/meson.build
+index 0fa8525..226f73f 100644
+--- a/plugins/eg-fifths.lv2/meson.build
++++ b/plugins/eg-fifths.lv2/meson.build
+@@ -12,7 +12,7 @@ module = shared_library(
+   dependencies: [lv2_dep, m_dep],
+   gnu_symbol_visibility: 'hidden',
+   install: true,
+-  install_dir: lv2dir / bundle_name,
++  install_dir: get_option('bindir'),
+   name_prefix: '',
+ )
+ 
+diff --git a/plugins/eg-metro.lv2/meson.build b/plugins/eg-metro.lv2/meson.build
+index def9e0b..34157fc 100644
+--- a/plugins/eg-metro.lv2/meson.build
++++ b/plugins/eg-metro.lv2/meson.build
+@@ -12,7 +12,7 @@ module = shared_library(
+   dependencies: [lv2_dep, m_dep],
+   gnu_symbol_visibility: 'hidden',
+   install: true,
+-  install_dir: lv2dir / bundle_name,
++  install_dir: get_option('bindir'),
+   name_prefix: '',
+ )
+ 
+diff --git a/plugins/eg-midigate.lv2/meson.build b/plugins/eg-midigate.lv2/meson.build
+index 609ee3a..d6b4749 100644
+--- a/plugins/eg-midigate.lv2/meson.build
++++ b/plugins/eg-midigate.lv2/meson.build
+@@ -12,7 +12,7 @@ module = shared_library(
+   dependencies: [lv2_dep, m_dep],
+   gnu_symbol_visibility: 'hidden',
+   install: true,
+-  install_dir: lv2dir / bundle_name,
++  install_dir: get_option('bindir'),
+   name_prefix: '',
+ )
+ 
+diff --git a/plugins/eg-params.lv2/meson.build b/plugins/eg-params.lv2/meson.build
+index 5b06709..63f59f9 100644
+--- a/plugins/eg-params.lv2/meson.build
++++ b/plugins/eg-params.lv2/meson.build
+@@ -12,7 +12,7 @@ module = shared_library(
+   dependencies: [lv2_dep, m_dep],
+   gnu_symbol_visibility: 'hidden',
+   install: true,
+-  install_dir: lv2dir / bundle_name,
++  install_dir: get_option('bindir'),
+   name_prefix: '',
+ )
+ 
+diff --git a/plugins/eg-sampler.lv2/meson.build b/plugins/eg-sampler.lv2/meson.build
+index 0916ff6..bffb04a 100644
+--- a/plugins/eg-sampler.lv2/meson.build
++++ b/plugins/eg-sampler.lv2/meson.build
+@@ -27,7 +27,7 @@ if samplerate_dep.found() and sndfile_dep.found()
+     dependencies: [lv2_dep, m_dep, samplerate_dep, sndfile_dep],
+     gnu_symbol_visibility: 'hidden',
+     install: true,
+-    install_dir: lv2dir / bundle_name,
++    install_dir: get_option('bindir'),
+     name_prefix: '',
+   )
+ 
+diff --git a/plugins/eg-scope.lv2/meson.build b/plugins/eg-scope.lv2/meson.build
+index 773a3d0..6cfa7c9 100644
+--- a/plugins/eg-scope.lv2/meson.build
++++ b/plugins/eg-scope.lv2/meson.build
+@@ -18,7 +18,7 @@ module = shared_library(
+   dependencies: [lv2_dep, m_dep],
+   gnu_symbol_visibility: 'hidden',
+   install: true,
+-  install_dir: lv2dir / bundle_name,
++  install_dir: get_option('bindir'),
+   name_prefix: '',
+ )
+ 
