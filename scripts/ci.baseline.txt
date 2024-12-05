@@ -289,7 +289,9 @@ directxsdk:x64-windows-static=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
-discordcoreapi:x64-linux=skip   # cause linux CI to hang https://github.com/microsoft/vcpkg/pull/40229
+# Needs newer GCC than we have
+discordcoreapi:x64-linux=fail
+# Needs newer standard library than we have
 discordcoreapi:x64-osx=fail
 discount:x64-android=fail
 eathread:x64-android=fail
@@ -930,11 +932,14 @@ qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
 # Missing system libraries
-qtwayland:x64-osx=skip
-qtwayland:arm64-osx=skip
-# Missing system libraries
 qt5-x11extras:x64-osx=skip
 qt5-x11extras:arm64-osx=skip
+# Skipped to avoid exceeding the 48 hour time limit in CI
+qt5-webengine:x86-windows=skip
+qt5-webengine:x64-windows=skip
+# Missing system libraries
+qtwayland:x64-osx=skip
+qtwayland:arm64-osx=skip
 quickfix:arm-neon-android=fail
 quickfix:arm64-android=fail
 qwt-qt6:x64-osx=fail
