@@ -1,0 +1,13 @@
+diff --git a/src/inc/CMakeLists.txt b/src/inc/CMakeLists.txt
+index 48edebd1e..55711f558 100644
+--- a/src/inc/CMakeLists.txt
++++ b/src/inc/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_compile_options(inc INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${QUIC_CXX_FLAGS}
+ target_compile_definitions(inc INTERFACE ${QUIC_COMMON_DEFINES})
+ target_include_directories(inc INTERFACE 
+     $<BUILD_INTERFACE:${QUIC_INCLUDE_DIR}>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++    $<INSTALL_INTERFACE:include>)
+ 
+ target_compile_features(inc INTERFACE cxx_std_17)
+ target_compile_features(inc INTERFACE c_std_11)
