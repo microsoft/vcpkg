@@ -12,6 +12,7 @@ vcpkg_from_github(
         eigen-3.4.patch
         266.diff
         fix-last-openimageio.patch
+        ceres-manfild.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")

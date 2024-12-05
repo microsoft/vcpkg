@@ -1,0 +1,82 @@
+diff --git a/src/theia/sfm/bundle_adjustment/bundle_adjust_two_views.cc b/src/theia/sfm/bundle_adjustment/bundle_adjust_two_views.cc
+index aab0cfb..6f4ed86 100644
+--- a/src/theia/sfm/bundle_adjustment/bundle_adjust_two_views.cc
++++ b/src/theia/sfm/bundle_adjustment/bundle_adjust_two_views.cc
+@@ -35,6 +35,7 @@
+ #include "theia/sfm/bundle_adjustment/bundle_adjust_two_views.h"
+ 
+ #include <ceres/ceres.h>
++#include <ceres/autodiff_manifold.h>
+ #include <Eigen/Core>
+ #include <vector>
+ 
+@@ -96,8 +97,8 @@ void AddCameraParametersToProblem(const bool constant_extrinsic_parameters,
+               constant_intrinsics.end(),
+               1);
+ 
+-    ceres::SubsetParameterization* subset_parameterization =
+-        new ceres::SubsetParameterization(num_intrinsics,
++    ceres::SubsetManifold* subset_parameterization =
++        new ceres::SubsetManifold(num_intrinsics,
+                                           constant_intrinsics);
+     problem->AddParameterBlock(camera_intrinsics,
+                                num_intrinsics,
+@@ -217,7 +218,7 @@ BundleAdjustmentSummary BundleAdjustTwoViewsAngular(
+   problem.AddParameterBlock(info->rotation_2.data(), kParameterBlockSize);
+   // Add the position as a parameter block, ensuring that the norm is 1.
+   ceres::LocalParameterization* position_parameterization =
+-      new ceres::AutoDiffLocalParameterization<
++      new ceres::AutoDiffManifold<
+           UnitNormThreeVectorParameterization, 3, 3>;
+   problem.AddParameterBlock(info->position_2.data(),
+                             kParameterBlockSize,
+diff --git a/src/theia/sfm/bundle_adjustment/bundle_adjuster.cc b/src/theia/sfm/bundle_adjustment/bundle_adjuster.cc
+index 27a2efd..9f92a19 100644
+--- a/src/theia/sfm/bundle_adjustment/bundle_adjuster.cc
++++ b/src/theia/sfm/bundle_adjustment/bundle_adjuster.cc
+@@ -258,10 +258,10 @@ void BundleAdjuster::SetCameraIntrinsicsParameterization() {
+       problem_->SetParameterBlockConstant(
+           camera_intrinsics->mutable_parameters());
+     } else if (constant_intrinsics.size() > 0) {
+-      ceres::SubsetParameterization* subset_parameterization =
+-          new ceres::SubsetParameterization(camera_intrinsics->NumParameters(),
++      ceres::SubsetManifold* subset_parameterization =
++          new ceres::SubsetManifold(camera_intrinsics->NumParameters(),
+                                             constant_intrinsics);
+-      problem_->SetParameterization(camera_intrinsics->mutable_parameters(),
++      problem_->SetManifold(camera_intrinsics->mutable_parameters(),
+                                     subset_parameterization);
+     }
+   }
+@@ -310,12 +310,12 @@ void BundleAdjuster::SetCameraExtrinsicsConstant(const ViewId view_id) {
+ void BundleAdjuster::SetCameraPositionConstant(const ViewId view_id) {
+   static const std::vector<int> position_parameters = {
+       Camera::POSITION + 0, Camera::POSITION + 1, Camera::POSITION + 2};
+-  ceres::SubsetParameterization* subset_parameterization =
+-      new ceres::SubsetParameterization(Camera::kExtrinsicsSize,
++  ceres::SubsetManifold* subset_parameterization =
++      new ceres::SubsetManifold(Camera::kExtrinsicsSize,
+                                         position_parameters);
+   View* view = reconstruction_->MutableView(view_id);
+   Camera* camera = view->MutableCamera();
+-  problem_->SetParameterization(camera->mutable_extrinsics(),
++  problem_->SetManifold(camera->mutable_extrinsics(),
+                                 subset_parameterization);
+ }
+ 
+@@ -324,12 +324,12 @@ void BundleAdjuster::SetCameraOrientationConstant(const ViewId view_id) {
+       Camera::ORIENTATION + 0,
+       Camera::ORIENTATION + 1,
+       Camera::ORIENTATION + 2};
+-  ceres::SubsetParameterization* subset_parameterization =
+-      new ceres::SubsetParameterization(Camera::kExtrinsicsSize,
++  ceres::SubsetManifold* subset_parameterization =
++      new ceres::SubsetManifold(Camera::kExtrinsicsSize,
+                                         orientation_parameters);
+   View* view = reconstruction_->MutableView(view_id);
+   Camera* camera = view->MutableCamera();
+-  problem_->SetParameterization(camera->mutable_extrinsics(),
++  problem_->SetManifold(camera->mutable_extrinsics(),
+                                 subset_parameterization);
+ }
+ 
