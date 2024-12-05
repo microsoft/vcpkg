@@ -132,6 +132,7 @@ if("software" IN_LIST FEATURES)
         openMVG_main_ComputeMatches
         openMVG_main_ComputeSfM_DataColor
         openMVG_main_ComputeStructureFromKnownPoses
+        openMVG_main_ComputeVLAD
         openMVG_main_ConvertList
         openMVG_main_ConvertSfM_DataFormat
         openMVG_main_evalQuality
