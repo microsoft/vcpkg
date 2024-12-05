@@ -9229,7 +9229,7 @@
       "port-version": 2
     },
     "unordered-dense": {
-      "baseline": "4.4.0",
+      "baseline": "4.5.0",
       "port-version": 0
     },
     "unqlite": {
