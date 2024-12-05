@@ -42,13 +42,15 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-"set(CMAKE_INSTALL_DATAROOTDIR \"share\")"
-"set(CMAKE_INSTALL_DATAROOTDIR \"share\")]]\nset(CMAKE_INSTALL_INCLUDEDIR  \"include\")"
+    "set(CMAKE_INSTALL_DATAROOTDIR \"share\")"
+    "set(CMAKE_INSTALL_DATAROOTDIR \"share\")]]\nset(CMAKE_INSTALL_INCLUDEDIR  \"include\")"
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "COMPONENT libraries"
     " "
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     [[ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}]]
     " "
@@ -63,10 +65,12 @@ vcpkg_replace_string("${SOURCE_PATH}/src/BinaryStream/BinaryStream.cpp"
     [[#include "third-party/utfcpp.hpp"]]
     [[#include <utf8cpp/utf8.h>]]
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/src/utils.cpp"
     [[#include "third-party/utfcpp.hpp"]]
     [[#include <utf8cpp/utf8.h>]]
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/src/PE/Builder.cpp"
     [[#include "third-party/utfcpp.hpp"]]
     [[#include <utf8cpp/utf8.h>]]
@@ -81,14 +85,17 @@ vcpkg_replace_string("${SOURCE_PATH}/src/logging.hpp"
     "#include <spdlog/fmt/fmt.h>"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/src/utils.cpp"
     "#include <spdlog/fmt/fmt.h>"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
     [[#include "spdlog/fmt/fmt.h"]]
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
+
 vcpkg_replace_string("${SOURCE_PATH}/src/PE/Header.cpp"
     "#include <spdlog/fmt/fmt.h>"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
@@ -126,8 +133,8 @@ vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
 
 if (VCPKG_TARGET_IS_LINUX)
     vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
-    [[#include "LIEF/iterators.hpp"]]
-    "#include <LIEF/iterators.hpp>\n#include <memory>"
+        [[#include "LIEF/iterators.hpp"]]
+        "#include <LIEF/iterators.hpp>\n#include <memory>"
     )
 endif()
 
