@@ -1,12 +1,8 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO deniskovalchuk/libftp
         REF "v${VERSION}"
-        SHA512 7765c35884e1e4560e39018b15f441abac687afcb06942b0350ef21df8bf27d40283011397ce4a9e9125772bb9752180c225429b274fd6374e1a521ac2744b2e
+        SHA512 017c809c19e32b0ddb3b4d7f5cc4cb5cc0f27a4c2be0640ddf115d869f9dbfa4b7cc77845193fed9058885bb38d33f0cff436c18c35e9611ca4f299afefe3b9d
         HEAD_REF master
 )
 
