@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lv2/lv2
@@ -16,8 +18,7 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
-vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/lv2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-
