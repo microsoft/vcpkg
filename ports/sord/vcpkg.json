@@ -5,6 +5,7 @@
   "homepage": "https://drobilla.net/software/sord",
   "license": "ISC",
   "dependencies": [
+    "pcre2",
     "serd",
     {
       "name": "vcpkg-tool-meson",
