@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 81f0f30d1..c846b403a 100644
+index 81f0f30d1..db08c345c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -272,15 +272,6 @@ if (USE_BOOST)
@@ -24,10 +24,6 @@ index 81f0f30d1..c846b403a 100644
      endif ()
 -    list (APPEND OPENTURNS_PRIVATE_LIBRARIES Boost::boost)
 -    list (APPEND OPENTURNS_ENABLED_FEATURES "boost")
-+    if((USE_MPC OR USE_MPFR) AND NOT BUILD_SHARED_LIBS)
-+        find_library(GMP_LIBRARY NAMES gmp)
-+        list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${GMP_LIBRARY})
-+    endif()
 +    if (USE_MPFR)
 +      find_package (MPFR)
 +      if (MPFR_FOUND)
@@ -37,6 +33,10 @@ index 81f0f30d1..c846b403a 100644
 +        list (APPEND OPENTURNS_ENABLED_FEATURES "mpfr")
 +      endif ()
 +    endif ()
++    if((USE_MPC OR USE_MPFR) AND NOT BUILD_SHARED_LIBS)
++        find_library(GMP_LIBRARY NAMES gmp)
++        list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${GMP_LIBRARY})
++    endif()
    endif ()
  endif ()
  
