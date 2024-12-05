@@ -8293,8 +8293,8 @@
       "port-version": 3
     },
     "serd": {
-      "baseline": "0.30.4",
-      "port-version": 2
+      "baseline": "0.32.2",
+      "port-version": 0
     },
     "serdepp": {
       "baseline": "0.1.4.1",
