@@ -8293,8 +8293,8 @@
       "port-version": 3
     },
     "serd": {
-      "baseline": "0.30.4",
-      "port-version": 2
+      "baseline": "0.32.2",
+      "port-version": 0
     },
     "serdepp": {
       "baseline": "0.1.4.1",
@@ -8537,8 +8537,8 @@
       "port-version": 4
     },
     "sord": {
-      "baseline": "0.16.4",
-      "port-version": 2
+      "baseline": "0.16.16",
+      "port-version": 0
     },
     "soundtouch": {
       "baseline": "2.3.3",
@@ -8682,7 +8682,7 @@
     },
     "sratom": {
       "baseline": "0.6.16",
-      "port-version": 0
+      "port-version": 1
     },
     "srell": {
       "baseline": "3.010",
@@ -9975,6 +9975,10 @@
     "zint": {
       "baseline": "2.12.0",
       "port-version": 1
+    },
+    "zix": {
+      "baseline": "0.4.2",
+      "port-version": 0
     },
     "zkpp": {
       "baseline": "0.2.3",
