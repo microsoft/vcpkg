@@ -26,7 +26,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
  "eigen"    WITH_EIGEN
- "gtk"      WITH_GTK
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
  "msmf"     WITH_MSMF
@@ -80,6 +79,7 @@ vcpkg_cmake_configure(
         -DWITH_ZLIB=ON
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=OFF
+        -DWITH_GTK=OFF
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
