@@ -27,7 +27,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_MSVCRT)
 # Use mysql-connector-cpp's own build process.
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
     OPTIONS
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
