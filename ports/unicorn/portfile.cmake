@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-build.patch
 )
 
-if (VCPKG_TRGET_OS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
         "#define UNICORN_EXPORT __declspec(dllexport)"
         "#define UNICORN_EXPORT __declspec(dllimport)"
