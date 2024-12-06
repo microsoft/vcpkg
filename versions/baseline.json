@@ -8046,7 +8046,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
@@ -8910,7 +8910,7 @@
     },
     "theia": {
       "baseline": "0.8",
-      "port-version": 12
+      "port-version": 13
     },
     "think-cell-range": {
       "baseline": "2023.1",
