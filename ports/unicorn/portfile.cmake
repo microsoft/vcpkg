@@ -13,16 +13,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
         "#define UNICORN_EXPORT __declspec(dllexport)"
         "#define UNICORN_EXPORT __declspec(dllimport)"
     )
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
-        "#ifdef UNICORN_SHARED" "#if 1"
-    )
-else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
-        "#ifdef UNICORN_SHARED" "#if 0"
-    )
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
+            "#ifdef UNICORN_SHARED" "#if 1"
+        )
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
+            "#ifdef UNICORN_SHARED" "#if 0"
+        )
+    endif()
 endif()
 
 vcpkg_cmake_configure(
