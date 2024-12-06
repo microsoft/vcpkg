@@ -24,6 +24,10 @@ vcpkg_from_github(
       0019-opencl-kernel.patch
       0020-miss-openexr.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")

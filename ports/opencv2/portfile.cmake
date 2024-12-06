@@ -14,6 +14,10 @@ vcpkg_from_github(
       0020-missing-include.patch
       0021-pkgconfig-suffix.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")

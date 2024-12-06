@@ -23,6 +23,10 @@ vcpkg_from_github(
       0017-missing-include.patch
       0019-fix-tbb.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
