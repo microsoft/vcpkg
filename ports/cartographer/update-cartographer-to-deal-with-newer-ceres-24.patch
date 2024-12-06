@@ -1,0 +1,604 @@
+From 07a159192e9ea653a27f5d2dd88da983107eb8c8 Mon Sep 17 00:00:00 2001
+From: Chris Lalancette <clalancette@gmail.com>
+Date: Fri, 15 Mar 2024 10:23:38 -0400
+Subject: [PATCH] Update cartographer to deal with newer ceres (#24)
+
+* Use Manifold instead of LocalParameterization.
+
+* Changes to deal with old and new ceres.
+
+* Make sure to fully initialize test articles.
+
+Otherwise modern gcc complains that these are
+possibly used uninitialized.
+
+Signed-off-by: zjwoody <zhengj@google.com>
+Signed-off-by: Chris Lalancette <clalancette@gmail.com>
+---
+ CMakeLists.txt                                |  2 +-
+ .../internal/3d/rotation_parameterization.h   | 67 +++++++++++++++++++
+ .../3d/rotation_parameterization_test.cc      | 50 ++++++++++++++
+ .../3d/scan_matching/ceres_scan_matcher_3d.cc | 14 ++++
+ .../eigen_quaterniond_from_two_vectors.h      | 11 +++
+ .../internal/imu_based_pose_extrapolator.cc   | 34 ++++++++++
+ .../internal/optimization/ceres_pose.cc       | 14 ++++
+ .../internal/optimization/ceres_pose.h        | 11 +++
+ .../optimization/optimization_problem_2d.cc   |  8 +++
+ .../optimization/optimization_problem_3d.cc   | 61 +++++++++++++++++
+ .../internal/range_data_collator_test.cc      |  2 +-
+ cartographer/sensor/internal/test_helpers.h   |  2 +-
+ 12 files changed, 273 insertions(+), 3 deletions(-)
+ create mode 100644 cartographer/mapping/internal/3d/rotation_parameterization_test.cc
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f93b343..7a80f16 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-cmake_minimum_required(VERSION 3.2)
++cmake_minimum_required(VERSION 3.5)
+ 
+ project(cartographer)
+ 
+diff --git a/cartographer/mapping/internal/3d/rotation_parameterization.h b/cartographer/mapping/internal/3d/rotation_parameterization.h
+index 4ce0055..10e46c8 100644
+--- a/cartographer/mapping/internal/3d/rotation_parameterization.h
++++ b/cartographer/mapping/internal/3d/rotation_parameterization.h
+@@ -24,6 +24,72 @@
+ namespace cartographer {
+ namespace mapping {
+ 
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++// Provides operations used to create a Ceres Manifold with a 4-D ambient
++// space and a 1-D tangent space that represents a yaw rotation only.
++struct YawOnlyQuaternionOperations {
++  template <typename T>
++  bool Plus(const T* x, const T* delta, T* x_plus_delta) const {
++    const T clamped_delta = common::Clamp(delta[0], T(-0.5), T(0.5));
++    T q_delta[4];
++    q_delta[0] = ceres::sqrt(1. - clamped_delta * clamped_delta);
++    q_delta[1] = T(0.);
++    q_delta[2] = T(0.);
++    q_delta[3] = clamped_delta;
++    ceres::QuaternionProduct(q_delta, x, x_plus_delta);
++    return true;
++  }
++  template <typename T>
++  bool Minus(const T* y, const T* x, T* y_minus_x) const {
++    T minus_x[4] = {x[0], -x[1], -x[2], -x[3]};
++    T q_delta[4];
++    ceres::QuaternionProduct(y, minus_x, q_delta);
++    y_minus_x[0] = q_delta[3];
++    return true;
++  }
++};
++
++// Provides operations used to create a Ceres Manifold with a 4-D ambient
++// space and a 2-D tangent space that represents a rotation only in pitch and
++// roll, but no yaw.
++struct ConstantYawQuaternionOperations {
++  template <typename T>
++  bool Plus(const T* x, const T* delta, T* x_plus_delta) const {
++    const T delta_norm =
++        ceres::sqrt(common::Pow2(delta[0]) + common::Pow2(delta[1]));
++    const T sin_delta_over_delta =
++        delta_norm < 1e-6 ? T(1.) : ceres::sin(delta_norm) / delta_norm;
++    T q_delta[4];
++    q_delta[0] = delta_norm < 1e-6 ? T(1.) : ceres::cos(delta_norm);
++    q_delta[1] = sin_delta_over_delta * delta[0];
++    q_delta[2] = sin_delta_over_delta * delta[1];
++    q_delta[3] = T(0.);
++    // We apply the 'delta' which is interpreted as an angle-axis rotation
++    // vector in the xy-plane of the submap frame. This way we can align to
++    // gravity because rotations around the z-axis in the submap frame do not
++    // change gravity alignment, while disallowing random rotations of the map
++    // that have nothing to do with gravity alignment (i.e. we disallow steps
++    // just changing "yaw" of the complete map).
++    ceres::QuaternionProduct(x, q_delta, x_plus_delta);
++    return true;
++  }
++  template <typename T>
++  bool Minus(const T* y, const T* x, T* y_minus_x) const {
++    T minus_x[4] = {x[0], -x[1], -x[2], -x[3]};
++    T q_delta[4];
++    ceres::QuaternionProduct(minus_x, y, q_delta);
++    const T& cos_delta_norm = q_delta[0];
++    const T sin_delta_norm =
++        ceres::sqrt(common::Pow2(q_delta[1]) + common::Pow2(q_delta[2]));
++    const T delta_norm = atan2(sin_delta_norm, cos_delta_norm);
++    const T delta_over_sin_delta =
++        delta_norm < 1e-6 ? T(1.) : delta_norm / sin_delta_norm;
++    y_minus_x[0] = q_delta[1] * delta_over_sin_delta;
++    y_minus_x[1] = q_delta[2] * delta_over_sin_delta;
++    return true;
++  }
++};
++#else
+ struct YawOnlyQuaternionPlus {
+   template <typename T>
+   bool operator()(const T* x, const T* delta, T* x_plus_delta) const {
+@@ -60,6 +126,7 @@ struct ConstantYawQuaternionPlus {
+     return true;
+   }
+ };
++#endif
+ 
+ }  // namespace mapping
+ }  // namespace cartographer
+diff --git a/cartographer/mapping/internal/3d/rotation_parameterization_test.cc b/cartographer/mapping/internal/3d/rotation_parameterization_test.cc
+new file mode 100644
+index 0000000..977d277
+--- /dev/null
++++ b/cartographer/mapping/internal/3d/rotation_parameterization_test.cc
+@@ -0,0 +1,50 @@
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++#include "cartographer/mapping/internal/3d/rotation_parameterization.h"
++
++#include "ceres/manifold_test_utils.h"
++#include "gtest/gtest.h"
++
++namespace cartographer::mapping {
++
++template <typename T>
++class RotationParameterizationTests : public ::testing::Test {};
++
++using TestTypes =
++    ::testing::Types<ceres::AutoDiffManifold<YawOnlyQuaternionOperations, 4, 1>, ceres::AutoDiffManifold<ConstantYawQuaternionOperations, 4, 2>>;
++TYPED_TEST_SUITE(RotationParameterizationTests, TestTypes);
++
++TYPED_TEST(RotationParameterizationTests, ManifoldInvariantsHold) {
++  const TypeParam manifold;
++
++  constexpr static int kNumTrials = 10;
++  constexpr static double kTolerance = 1.e-5;
++  const std::vector<double> delta_magnitutes = {0.0, 1.e-9, 1.e-3, 0.5};
++  for (int trial = 0; trial < kNumTrials; ++trial) {
++    const Eigen::VectorXd x =
++        Eigen::VectorXd::Random(manifold.AmbientSize()).normalized();
++
++    for (const double delta_magnitude : delta_magnitutes) {
++      const Eigen::VectorXd delta =
++          Eigen::VectorXd::Random(manifold.TangentSize()) * delta_magnitude;
++      EXPECT_THAT(manifold, ceres::XPlusZeroIsXAt(x, kTolerance));
++      EXPECT_THAT(manifold, ceres::XMinusXIsZeroAt(x, kTolerance));
++      EXPECT_THAT(manifold, ceres::MinusPlusIsIdentityAt(x, delta, kTolerance));
++      const Eigen::VectorXd zero_tangent =
++          Eigen::VectorXd::Zero(manifold.TangentSize());
++      EXPECT_THAT(manifold,
++                  ceres::MinusPlusIsIdentityAt(x, zero_tangent, kTolerance));
++
++      Eigen::VectorXd y(manifold.AmbientSize());
++      ASSERT_TRUE(manifold.Plus(x.data(), delta.data(), y.data()));
++      EXPECT_THAT(manifold, ceres::PlusMinusIsIdentityAt(x, x, kTolerance));
++      EXPECT_THAT(manifold, ceres::PlusMinusIsIdentityAt(x, y, kTolerance));
++      EXPECT_THAT(manifold, ceres::HasCorrectPlusJacobianAt(x, kTolerance));
++      EXPECT_THAT(manifold, ceres::HasCorrectMinusJacobianAt(x, kTolerance));
++      EXPECT_THAT(manifold,
++                  ceres::MinusPlusJacobianIsIdentityAt(x, kTolerance));
++    }
++  }
++}
++
++}  // namespace cartographer::mapping
++#endif
+diff --git a/cartographer/mapping/internal/3d/scan_matching/ceres_scan_matcher_3d.cc b/cartographer/mapping/internal/3d/scan_matching/ceres_scan_matcher_3d.cc
+index 5aab1fd..0c287b6 100644
+--- a/cartographer/mapping/internal/3d/scan_matching/ceres_scan_matcher_3d.cc
++++ b/cartographer/mapping/internal/3d/scan_matching/ceres_scan_matcher_3d.cc
+@@ -31,6 +31,9 @@
+ #include "cartographer/transform/rigid_transform.h"
+ #include "cartographer/transform/transform.h"
+ #include "ceres/ceres.h"
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++#include "ceres/manifold.h"
++#endif
+ #include "glog/logging.h"
+ 
+ namespace cartographer {
+@@ -95,6 +98,16 @@ void CeresScanMatcher3D::Match(
+     transform::Rigid3d* const pose_estimate,
+     ceres::Solver::Summary* const summary) const {
+   ceres::Problem problem;
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++  optimization::CeresPose ceres_pose(
++      initial_pose_estimate, nullptr /* translation_parameterization */,
++      options_.only_optimize_yaw()
++          ? std::unique_ptr<ceres::Manifold>(
++                absl::make_unique<ceres::AutoDiffManifold<YawOnlyQuaternionOperations, 4, 1>>())
++          : std::unique_ptr<ceres::Manifold>(
++                absl::make_unique<ceres::QuaternionManifold>()),
++      &problem);
++#else
+   optimization::CeresPose ceres_pose(
+       initial_pose_estimate, nullptr /* translation_parameterization */,
+       options_.only_optimize_yaw()
+@@ -104,6 +117,7 @@ void CeresScanMatcher3D::Match(
+           : std::unique_ptr<ceres::LocalParameterization>(
+                 absl::make_unique<ceres::QuaternionParameterization>()),
+       &problem);
++#endif
+ 
+   CHECK_EQ(options_.occupied_space_weight_size(),
+            point_clouds_and_hybrid_grids.size());
+diff --git a/cartographer/mapping/internal/eigen_quaterniond_from_two_vectors.h b/cartographer/mapping/internal/eigen_quaterniond_from_two_vectors.h
+index e8d04b3..294f45e 100644
+--- a/cartographer/mapping/internal/eigen_quaterniond_from_two_vectors.h
++++ b/cartographer/mapping/internal/eigen_quaterniond_from_two_vectors.h
+@@ -17,7 +17,18 @@
+ #ifndef CARTOGRAPHER_MAPPING_EIGEN_QUATERNIOND_FROM_TWO_VECTORS_H_
+ #define CARTOGRAPHER_MAPPING_EIGEN_QUATERNIOND_FROM_TWO_VECTORS_H_
+ 
++// When using Eigen 3.4.0 on Ubuntu 24.04 on an x86_64 machine and
++// compiling with -O3 -NDEBUG, we get a warning that an SSE function
++// deep within Eigen might be used uninitialized.  This seems like
++// a spurious warning, so just ignore it for now.
++#ifdef __linux__
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++#endif
+ #include "Eigen/Geometry"
++#ifdef __linux__
++#pragma GCC diagnostic pop
++#endif
+ 
+ namespace cartographer {
+ namespace mapping {
+diff --git a/cartographer/mapping/internal/imu_based_pose_extrapolator.cc b/cartographer/mapping/internal/imu_based_pose_extrapolator.cc
+index ddb88ea..4e0a950 100644
+--- a/cartographer/mapping/internal/imu_based_pose_extrapolator.cc
++++ b/cartographer/mapping/internal/imu_based_pose_extrapolator.cc
+@@ -28,6 +28,9 @@
+ #include "cartographer/mapping/internal/optimization/cost_functions/spa_cost_function_3d.h"
+ #include "cartographer/mapping/pose_graph_interface.h"
+ #include "cartographer/transform/transform.h"
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++#include "ceres/manifold.h"
++#endif
+ #include "glog/logging.h"
+ 
+ namespace cartographer {
+@@ -135,9 +138,16 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
+ 
+   // Track gravity alignment over time and use this as a frame here so that
+   // we can estimate the gravity alignment of the current pose.
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++  optimization::CeresPose gravity_from_local(
++      gravity_from_local_, nullptr,
++      absl::make_unique<ceres::QuaternionManifold>(), &problem);
++#else
+   optimization::CeresPose gravity_from_local(
+       gravity_from_local_, nullptr,
+       absl::make_unique<ceres::QuaternionParameterization>(), &problem);
++#endif
++
+   // Use deque so addresses stay constant during problem formulation.
+   std::deque<optimization::CeresPose> nodes;
+   std::vector<common::Time> node_times;
+@@ -160,6 +170,18 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
+       gravity_from_node = gravity_from_local_ * timed_pose.transform;
+     }
+ 
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++    if (is_last) {
++      nodes.emplace_back(gravity_from_node, nullptr,
++                         absl::make_unique<ceres::AutoDiffManifold<ConstantYawQuaternionOperations, 4, 2>>(),
++                         &problem);
++      problem.SetParameterBlockConstant(nodes.back().translation());
++    } else {
++      nodes.emplace_back(gravity_from_node, nullptr,
++                         absl::make_unique<ceres::QuaternionManifold>(),
++                         &problem);
++    }
++#else
+     if (is_last) {
+       nodes.emplace_back(gravity_from_node, nullptr,
+                          absl::make_unique<ceres::AutoDiffLocalParameterization<
+@@ -171,6 +193,7 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
+                          absl::make_unique<ceres::QuaternionParameterization>(),
+                          &problem);
+     }
++#endif
+   }
+ 
+   double gravity_constant = 9.8;
+@@ -199,9 +222,15 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
+           gravity_constant * Eigen::Vector3d::UnitZ(), time, imu_data_,
+           &imu_it_prev_prev)
+           .pose;
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++  nodes.emplace_back(initial_estimate, nullptr,
++                     absl::make_unique<ceres::QuaternionManifold>(),
++                     &problem);
++#else
+   nodes.emplace_back(initial_estimate, nullptr,
+                      absl::make_unique<ceres::QuaternionParameterization>(),
+                      &problem);
++#endif
+   node_times.push_back(time);
+ 
+   // Add cost functions for node constraints.
+@@ -222,8 +251,13 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
+ 
+   std::array<double, 4> imu_calibration{{1., 0., 0., 0.}};
+ 
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++  problem.AddParameterBlock(imu_calibration.data(), 4,
++                            new ceres::QuaternionManifold());
++#else
+   problem.AddParameterBlock(imu_calibration.data(), 4,
+                             new ceres::QuaternionParameterization());
++#endif
+   problem.SetParameterBlockConstant(imu_calibration.data());
+ 
+   auto imu_it = imu_data_.begin();
+diff --git a/cartographer/mapping/internal/optimization/ceres_pose.cc b/cartographer/mapping/internal/optimization/ceres_pose.cc
+index 807a67d..f15b427 100644
+--- a/cartographer/mapping/internal/optimization/ceres_pose.cc
++++ b/cartographer/mapping/internal/optimization/ceres_pose.cc
+@@ -27,6 +27,19 @@ CeresPose::Data FromPose(const transform::Rigid3d& pose) {
+                            pose.rotation().y(), pose.rotation().z()}}};
+ }
+ 
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++CeresPose::CeresPose(
++    const transform::Rigid3d& pose,
++    std::unique_ptr<ceres::Manifold> translation_manifold,
++    std::unique_ptr<ceres::Manifold> rotation_manifold,
++    ceres::Problem* problem)
++    : data_(std::make_shared<CeresPose::Data>(FromPose(pose))) {
++  problem->AddParameterBlock(data_->translation.data(), 3,
++                             translation_manifold.release());
++  problem->AddParameterBlock(data_->rotation.data(), 4,
++                             rotation_manifold.release());
++}
++#else
+ CeresPose::CeresPose(
+     const transform::Rigid3d& pose,
+     std::unique_ptr<ceres::LocalParameterization> translation_parametrization,
+@@ -38,6 +51,7 @@ CeresPose::CeresPose(
+   problem->AddParameterBlock(data_->rotation.data(), 4,
+                              rotation_parametrization.release());
+ }
++#endif
+ 
+ const transform::Rigid3d CeresPose::ToRigid() const {
+   return transform::Rigid3d::FromArrays(data_->rotation, data_->translation);
+diff --git a/cartographer/mapping/internal/optimization/ceres_pose.h b/cartographer/mapping/internal/optimization/ceres_pose.h
+index d852d80..e4c7b05 100644
+--- a/cartographer/mapping/internal/optimization/ceres_pose.h
++++ b/cartographer/mapping/internal/optimization/ceres_pose.h
+@@ -23,6 +23,9 @@
+ #include "Eigen/Core"
+ #include "cartographer/transform/rigid_transform.h"
+ #include "ceres/ceres.h"
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++#include "ceres/manifold.h"
++#endif
+ 
+ namespace cartographer {
+ namespace mapping {
+@@ -30,11 +33,19 @@ namespace optimization {
+ 
+ class CeresPose {
+  public:
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++  CeresPose(
++      const transform::Rigid3d& pose,
++      std::unique_ptr<ceres::Manifold> translation_manifold,
++      std::unique_ptr<ceres::Manifold> rotation_manifold,
++      ceres::Problem* problem);
++#else
+   CeresPose(
+       const transform::Rigid3d& rigid,
+       std::unique_ptr<ceres::LocalParameterization> translation_parametrization,
+       std::unique_ptr<ceres::LocalParameterization> rotation_parametrization,
+       ceres::Problem* problem);
++#endif
+ 
+   const transform::Rigid3d ToRigid() const;
+ 
+diff --git a/cartographer/mapping/internal/optimization/optimization_problem_2d.cc b/cartographer/mapping/internal/optimization/optimization_problem_2d.cc
+index 3faf255..64b3c2c 100644
+--- a/cartographer/mapping/internal/optimization/optimization_problem_2d.cc
++++ b/cartographer/mapping/internal/optimization/optimization_problem_2d.cc
+@@ -142,11 +142,19 @@ void AddLandmarkCostFunctions(
+                 ? landmark_node.second.global_landmark_pose.value()
+                 : GetInitialLandmarkPose(observation, prev->data, next->data,
+                                          *prev_node_pose, *next_node_pose);
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++        C_landmarks->emplace(
++            landmark_id,
++            CeresPose(starting_point, nullptr /* translation_manifold */,
++                      absl::make_unique<ceres::QuaternionManifold>(),
++                      problem));
++#else
+         C_landmarks->emplace(
+             landmark_id,
+             CeresPose(starting_point, nullptr /* translation_parametrization */,
+                       absl::make_unique<ceres::QuaternionParameterization>(),
+                       problem));
++#endif
+         // Set landmark constant if it is frozen.
+         if (landmark_node.second.frozen) {
+           problem->SetParameterBlockConstant(
+diff --git a/cartographer/mapping/internal/optimization/optimization_problem_3d.cc b/cartographer/mapping/internal/optimization/optimization_problem_3d.cc
+index fca36d1..e1d6bd3 100644
+--- a/cartographer/mapping/internal/optimization/optimization_problem_3d.cc
++++ b/cartographer/mapping/internal/optimization/optimization_problem_3d.cc
+@@ -158,11 +158,19 @@ void AddLandmarkCostFunctions(
+                 ? landmark_node.second.global_landmark_pose.value()
+                 : GetInitialLandmarkPose(observation, prev->data, next->data,
+                                          *prev_node_pose, *next_node_pose);
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++        C_landmarks->emplace(
++            landmark_id,
++            CeresPose(starting_point, nullptr /* translation_manifold */,
++                      absl::make_unique<ceres::QuaternionManifold>(),
++                      problem));
++#else
+         C_landmarks->emplace(
+             landmark_id,
+             CeresPose(starting_point, nullptr /* translation_parametrization */,
+                       absl::make_unique<ceres::QuaternionParameterization>(),
+                       problem));
++#endif
+         // Set landmark constant if it is frozen.
+         if (landmark_node.second.frozen) {
+           problem->SetParameterBlockConstant(
+@@ -274,6 +282,14 @@ void OptimizationProblem3D::Solve(
+   ceres::Problem::Options problem_options;
+   ceres::Problem problem(problem_options);
+ 
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++  const auto translation_manifold =
++      [this]() -> std::unique_ptr<ceres::Manifold> {
++    return options_.fix_z_in_3d() ? absl::make_unique<ceres::SubsetManifold>(
++                                        3, std::vector<int>{2})
++                                  : nullptr;
++  };
++#else
+   const auto translation_parameterization =
+       [this]() -> std::unique_ptr<ceres::LocalParameterization> {
+     return options_.fix_z_in_3d()
+@@ -281,6 +297,7 @@ void OptimizationProblem3D::Solve(
+                      3, std::vector<int>{2})
+                : nullptr;
+   };
++#endif
+ 
+   // Set the starting point.
+   CHECK(!submap_data_.empty());
+@@ -295,6 +312,14 @@ void OptimizationProblem3D::Solve(
+       first_submap = false;
+       // Fix the first submap of the first trajectory except for allowing
+       // gravity alignment.
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++      C_submaps.Insert(
++          submap_id_data.id,
++          CeresPose(submap_id_data.data.global_pose,
++                    translation_manifold(),
++                    absl::make_unique<ceres::AutoDiffManifold<ConstantYawQuaternionOperations, 4, 2>>(),
++                    &problem));
++#else
+       C_submaps.Insert(
+           submap_id_data.id,
+           CeresPose(submap_id_data.data.global_pose,
+@@ -302,15 +327,25 @@ void OptimizationProblem3D::Solve(
+                     absl::make_unique<ceres::AutoDiffLocalParameterization<
+                         ConstantYawQuaternionPlus, 4, 2>>(),
+                     &problem));
++#endif
+       problem.SetParameterBlockConstant(
+           C_submaps.at(submap_id_data.id).translation());
+     } else {
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++      C_submaps.Insert(
++          submap_id_data.id,
++          CeresPose(submap_id_data.data.global_pose,
++                    translation_manifold(),
++                    absl::make_unique<ceres::QuaternionManifold>(),
++                    &problem));
++#else
+       C_submaps.Insert(
+           submap_id_data.id,
+           CeresPose(submap_id_data.data.global_pose,
+                     translation_parameterization(),
+                     absl::make_unique<ceres::QuaternionParameterization>(),
+                     &problem));
++#endif
+     }
+     if (frozen) {
+       problem.SetParameterBlockConstant(
+@@ -322,11 +357,19 @@ void OptimizationProblem3D::Solve(
+   for (const auto& node_id_data : node_data_) {
+     const bool frozen =
+         frozen_trajectories.count(node_id_data.id.trajectory_id) != 0;
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++    C_nodes.Insert(
++        node_id_data.id,
++        CeresPose(node_id_data.data.global_pose, translation_manifold(),
++                  absl::make_unique<ceres::QuaternionManifold>(),
++                  &problem));
++#else
+     C_nodes.Insert(
+         node_id_data.id,
+         CeresPose(node_id_data.data.global_pose, translation_parameterization(),
+                   absl::make_unique<ceres::QuaternionParameterization>(),
+                   &problem));
++#endif
+     if (frozen) {
+       problem.SetParameterBlockConstant(C_nodes.at(node_id_data.id).rotation());
+       problem.SetParameterBlockConstant(
+@@ -362,8 +405,13 @@ void OptimizationProblem3D::Solve(
+       }
+       TrajectoryData& trajectory_data = trajectory_data_.at(trajectory_id);
+ 
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++      problem.AddParameterBlock(trajectory_data.imu_calibration.data(), 4,
++                                new ceres::QuaternionManifold());
++#else
+       problem.AddParameterBlock(trajectory_data.imu_calibration.data(), 4,
+                                 new ceres::QuaternionParameterization());
++#endif
+       if (!options_.use_online_imu_extrinsics_in_3d()) {
+         problem.SetParameterBlockConstant(
+             trajectory_data.imu_calibration.data());
+@@ -536,6 +584,18 @@ void OptimizationProblem3D::Solve(
+           fixed_frame_pose_in_map =
+               node_data.global_pose * constraint_pose.zbar_ij.inverse();
+         }
++#if CERES_VERSION_MAJOR > 2 || CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 1
++        C_fixed_frames.emplace(
++            std::piecewise_construct, std::forward_as_tuple(trajectory_id),
++            std::forward_as_tuple(
++                transform::Rigid3d(
++                    fixed_frame_pose_in_map.translation(),
++                    Eigen::AngleAxisd(
++                        transform::GetYaw(fixed_frame_pose_in_map.rotation()),
++                        Eigen::Vector3d::UnitZ())),
++                nullptr, absl::make_unique<ceres::AutoDiffManifold<YawOnlyQuaternionOperations, 4, 1>>(),
++                &problem));
++#else
+         C_fixed_frames.emplace(
+             std::piecewise_construct, std::forward_as_tuple(trajectory_id),
+             std::forward_as_tuple(
+@@ -548,6 +608,7 @@ void OptimizationProblem3D::Solve(
+                 absl::make_unique<ceres::AutoDiffLocalParameterization<
+                     YawOnlyQuaternionPlus, 4, 1>>(),
+                 &problem));
++#endif
+         fixed_frame_pose_initialized = true;
+       }
+ 
+diff --git a/cartographer/mapping/internal/range_data_collator_test.cc b/cartographer/mapping/internal/range_data_collator_test.cc
+index 43ceb00..dce7717 100644
+--- a/cartographer/mapping/internal/range_data_collator_test.cc
++++ b/cartographer/mapping/internal/range_data_collator_test.cc
+@@ -92,7 +92,7 @@ TEST(RangeDataCollatorTest, SingleSensorEmptyData) {
+   const std::string sensor_id = "single_sensor";
+   RangeDataCollator collator({sensor_id});
+   sensor::TimedPointCloudData empty_data{
+-      common::FromUniversal(300), {}, {}, {}};
++      common::FromUniversal(300), Eigen::Vector3f::Zero(), {}, {}};
+   auto output_0 = collator.AddRangeData(sensor_id, empty_data);
+   EXPECT_EQ(output_0.time, empty_data.time);
+   EXPECT_EQ(output_0.ranges.size(), empty_data.ranges.size());
+diff --git a/cartographer/sensor/internal/test_helpers.h b/cartographer/sensor/internal/test_helpers.h
+index 0b32d89..431758f 100644
+--- a/cartographer/sensor/internal/test_helpers.h
++++ b/cartographer/sensor/internal/test_helpers.h
+@@ -47,7 +47,7 @@ struct CollatorInput {
+                                      const std::string& sensor_id, int time) {
+     return CollatorInput{
+         trajectory_id,
+-        MakeDispatchable(sensor_id, ImuData{common::FromUniversal(time)}),
++        MakeDispatchable(sensor_id, ImuData{common::FromUniversal(time), Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()}),
+         CollatorOutput{trajectory_id, sensor_id, common::FromUniversal(time)}};
+   }
+   static CollatorInput CreateTimedPointCloudData(int trajectory_id,
+-- 
+2.47.1
+
