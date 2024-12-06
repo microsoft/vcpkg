@@ -3,7 +3,7 @@
   "version": "6.5",
   "description": "High-quality pro audio resampler / sample rate conversion C++ library. Very fast, for both audio resampling and time-series interpolation.",
   "homepage": "https://github.com/avaneev/r8brain-free-src",
-  "license": "MIT",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",

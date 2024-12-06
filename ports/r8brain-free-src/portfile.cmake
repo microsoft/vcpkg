@@ -17,6 +17,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pffft-double    R8B_PFFFT_DOUBLE
 )
 
+set(license_files "${SOURCE_PATH}/LICENSE")
+
+if(R8B_PFFFT)
+    set(R8B_PFFFT_DEF 1)
+    list(APPEND license_files "${CMAKE_CURRENT_LIST_DIR}/pffft-license")
+else()
+    set(R8B_PFFFT_DEF 0)
+endif()
+
+if(R8B_PFFFT_DOUBLE)
+    set(R8B_PFFFT_DOUBLE_DEF 1)
+    list(APPEND license_files "${CMAKE_CURRENT_LIST_DIR}/pffft-double-license")
+else()
+    set(R8B_PFFFT_DOUBLE_DEF 0)
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/r8bconf.h.in" "${SOURCE_PATH}/r8bconf.h" @ONLY)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -24,8 +42,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-r8brain CONFIG_PATH lib/cmake/unofficial-r8brain)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-r8brain-free-src CONFIG_PATH lib/cmake/unofficial-r8brain-free-src)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+vcpkg_install_copyright(FILE_LIST ${license_files})

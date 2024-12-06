@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-project(r8brain VERSION 6.5 LANGUAGES CXX C)
+project(r8brain-free-src VERSION 6.5 LANGUAGES CXX C)
 
 option(R8B_INSTALL "Install library" ON)
 option(R8B_PFFFT "Use PFFFT" OFF)
@@ -46,23 +46,23 @@ if(R8B_INSTALL)
 
     install(EXPORT unofficial-${PROJECT_NAME}Targets
         FILE "unofficial-${PROJECT_NAME}Config.cmake"
-        NAMESPACE unofficial::r8brain::
+        NAMESPACE unofficial::r8brain-free-src::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-${PROJECT_NAME}
     )
 
     file(GLOB _headers *.h *.inc)
-    list(FILTER _headers EXCLUDE REGEX r8butil.h)
+    list(FILTER _headers EXCLUDE REGEX r8butil.h) # This header is only included by utility programs and not used by the library code
     if(NOT R8B_PFFFT)
         list(FILTER _headers EXCLUDE REGEX pffft.h)
     endif()
     install(
         FILES ${_headers}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/r8brain
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/r8brain-free-src
     )
     if(R8B_PFFFT_DOUBLE)
         install(
             FILES pffft_double/pffft_double.h
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/r8brain/pffft_double
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/r8brain-free-src/pffft_double
         )
     endif()
 endif()
