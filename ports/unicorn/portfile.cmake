@@ -6,8 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-shared-msvc.patch
 )
+
+if (VCPKG_TRGET_OS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
+        "#define UNICORN_EXPORT __declspec(dllexport)"
+        "#define UNICORN_EXPORT __declspec(dllimport)"
+    )
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
