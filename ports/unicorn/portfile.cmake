@@ -6,7 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-shared-msvc.patch
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
+        "#ifdef UNICORN_SHARED" "#if 1"
+    )
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
+        "#ifdef UNICORN_SHARED" "#if 0"
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

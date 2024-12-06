@@ -4,7 +4,7 @@
   "description": "Unicorn is a lightweight multi-platform, multi-architecture CPU emulator framework",
   "homepage": "https://github.com/unicorn-engine/unicorn",
   "license": "GPL-2.0-only",
-  "supports": "!(arm & (windows | uwp))",
+  "supports": "!(arm & windows)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
