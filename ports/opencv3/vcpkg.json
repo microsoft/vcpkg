@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.18",
-  "port-version": 17,
+  "port-version": 18,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -67,6 +67,38 @@
             "tiff",
             "webp"
           ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "gapi"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "dnn"
+          ],
+          "platform": "!android"
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "msmf"
+          ],
+          "platform": "windows & !uwp & !mingw"
         }
       ]
     },
