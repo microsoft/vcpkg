@@ -8,27 +8,11 @@ vcpkg_from_github(
         fix-build.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
-        "#define UNICORN_EXPORT __declspec(dllexport)"
-        "#define UNICORN_EXPORT __declspec(dllimport)"
-    )
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
-            "#ifdef UNICORN_SHARED" "#if 1"
-        )
-    else()
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unicorn/unicorn.h"
-            "#ifdef UNICORN_SHARED" "#if 0"
-        )
-    endif()
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUNICORN_BUILD_TESTS=OFF
-    )
+)
 
 vcpkg_cmake_install()
 
@@ -37,5 +21,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
