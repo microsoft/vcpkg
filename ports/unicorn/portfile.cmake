@@ -24,15 +24,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
     file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
-
-    foreach(file ${LIB_FILES} ${DEBUG_LIB_FILES})
-        if(file MATCHES "unicorn.lib")
-            file(REMOVE ${file})
+    
+    set(ALL_LIB_FILES ${LIB_FILES} ${DEBUG_LIB_FILES})
+    
+    foreach(file ${ALL_LIB_FILES})
+        if(file MATCHES "unicorn-import.lib")
+            get_filename_component(PARENT_DIR "${file}" DIRECTORY)
+            set(NEW_FILE "${PARENT_DIR}/unicorn.lib")
+            file(RENAME ${file} ${NEW_FILE})
         endif()
     endforeach()
 endif()
 
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
