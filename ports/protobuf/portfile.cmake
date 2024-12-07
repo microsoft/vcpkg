@@ -59,7 +59,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_install(DISABLE_PARALLEL)
 
 if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
