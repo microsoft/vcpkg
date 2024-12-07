@@ -402,13 +402,43 @@ function(vcpkg_generate_meson_cmd_args)
     set("${arg_OUTPUT}" ${arg_OPTIONS} PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_extract_python binary_path_list out_var)
+    foreach(binary_path ${binary_path_list})
+        if(binary_path MATCHES "^python[ \t]*=[ \t]*.*")
+            string(REGEX REPLACE "^python[ \t]*=[ \t]*" "" python_path ${binary_path})
+            if(python_path MATCHES "^\".*\"[ \t\r\n]*$")
+                string(REGEX REPLACE "^\"" "" python_path ${python_path})
+                string(REGEX REPLACE "\"[ \t\r\n]*$" "" python_path ${python_path})
+            elseif(python_path MATCHES "^'.*'[ \t\r\n]*$")
+                string(REGEX REPLACE "^'" "" python_path ${python_path})
+                string(REGEX REPLACE "'[ \t\r\n]*$" "" python_path ${python_path})
+            endif()
+            set(${out_var} ${python_path} PARENT_SCOPE)
+            return()
+        endif()
+    endforeach()
+    set(${out_var} "" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_is_vcpkg_python python_path out_var)
+    if(python_path MATCHES "^${DOWNLOADS}/tools/python/.*" OR python_path MATCHES "^${CURRENT_HOST_INSTALLED_DIR}/tools/python3/.*")
+        set(${out_var} true PARENT_SCOPE)
+    else()
+        set(${out_var} false PARENT_SCOPE)
+    endif()
+endfunction()
+
+
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_PKG_CONFIG"
-        "SOURCE_PATH"
+        "SOURCE_PATH;EXPORT_PYTHON_HOME"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;LANGUAGES;ADDITIONAL_BINARIES;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES;ADDITIONAL_PROPERTIES"
     )
+    if(NOT DEFINED arg_EXPORT_PYTHON_HOME)
+        set(arg_EXPORT_PYTHON_HOME "VCPKG_PYTHON3_DIR")
+    endif()
 
     if(DEFINED arg_ADDITIONAL_NATIVE_BINARIES OR DEFINED arg_ADDITIONAL_CROSS_BINARIES)
         message(WARNING "Options ADDITIONAL_(NATIVE|CROSS)_BINARIES have been deprecated. Only use ADDITIONAL_BINARIES!")
@@ -418,8 +448,6 @@ function(vcpkg_configure_meson)
 
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-
-    vcpkg_find_acquire_program(MESON)
 
     get_filename_component(CMAKE_PATH "${CMAKE_COMMAND}" DIRECTORY)
     vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
@@ -431,9 +459,28 @@ function(vcpkg_configure_meson)
       set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     endif()
 
-    vcpkg_find_acquire_program(PYTHON3)
+    z_vcpkg_extract_python("${arg_ADDITIONAL_BINARIES}" PYTHON3)
+    if("${PYTHON3}" STREQUAL "")
+        unset(PYTHON3)
+        vcpkg_find_acquire_program(PYTHON3)
+    endif()
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
+    z_vcpkg_is_vcpkg_python("${PYTHON3}" t_is_vcpkg_python)
+    if(t_is_vcpkg_python)
+        file(REAL_PATH "${PYTHON3}" PYTHON3_REAL)
+        get_filename_component(PYTHON3_DIR_REAL "${PYTHON3_REAL}" DIRECTORY)
+        # fix python sys.path issue when using the python installed by vcpkg
+        set(ENV{PYTHONHOME} ${PYTHON3_DIR_REAL})
+        if(NOT arg_EXPORT_PYTHON_HOME STREQUAL "")
+            # set this variable to make vcpkg_install_meson could known the correct ptyhon home
+            set(${arg_EXPORT_PYTHON_HOME} ${PYTHON3_DIR_REAL} PARENT_SCOPE)
+        endif()
+    endif()
+    unset(t_is_vcpkg_python)
+
+    # note vcpkg_find_acquire_program(MESON) use ${PYTHON3} as its interpreter, so it should be invoked after PYTHON3 defined
+    vcpkg_find_acquire_program(MESON)
 
     set(buildtypes "")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
