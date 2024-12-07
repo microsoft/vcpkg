@@ -16,6 +16,22 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB del_files "${CURRENT_PACKAGES_DIR}/lib/*.a" "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
+    if(del_files)
+        file(REMOVE ${del_files})
+    endif()
+
+    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+
+    foreach(file ${LIB_FILES} ${DEBUG_LIB_FILES})
+        if(file MATCHES "unicorn.lib")
+            file(REMOVE ${file})
+        endif()
+    endforeach()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
