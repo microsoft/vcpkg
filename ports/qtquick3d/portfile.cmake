@@ -25,6 +25,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
+                        -DFEATURE_quick3dxr_openxr=OFF
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
