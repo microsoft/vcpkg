@@ -1,15 +1,8 @@
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "unicorn can currently only be built with /MT or /MTd (static CRT linkage)")
-endif()
-
-# Note: this is safe because unicorn is a C library and takes steps to avoid memory allocate/free across the DLL boundary.
-set(VCPKG_CRT_LINKAGE "static")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unicorn-engine/unicorn
-    REF "${VERSION}.post1"
-    SHA512 8694d6bc92e3424a8ad050316413d53e56e0f55e7cad7517fb3e98e670a0f1768b060ead8f195da13607cec89a964364f05a8b9d0dc074f4ac5e51026f8343ad
+    REF "${VERSION}"
+    SHA512 d6184b87a0fb729397ec2ac2cb8bfd9d10c9d4276e49efa681c66c7c54d1a325305a920332a708e68989cc299d0d1a543a1ceeaf552a9b44ec93084f7bf85ef2
     HEAD_REF master
     PATCHES
         fix-build.patch
@@ -19,14 +12,34 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUNICORN_BUILD_TESTS=OFF
-    )
+)
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB del_files "${CURRENT_PACKAGES_DIR}/lib/*.a" "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
+    if(del_files)
+        file(REMOVE ${del_files})
+    endif()
+
+    file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+    
+    set(ALL_LIB_FILES ${LIB_FILES} ${DEBUG_LIB_FILES})
+    
+    foreach(file ${ALL_LIB_FILES})
+        if(file MATCHES "unicorn-import.lib")
+            get_filename_component(PARENT_DIR "${file}" DIRECTORY)
+            set(NEW_FILE "${PARENT_DIR}/unicorn.lib")
+            file(RENAME ${file} ${NEW_FILE})
+        endif()
+    endforeach()
+endif()
+
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
