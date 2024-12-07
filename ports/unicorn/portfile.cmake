@@ -22,7 +22,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(REMOVE ${del_files})
     endif()
 
-    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+    file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
 
     foreach(file ${LIB_FILES} ${DEBUG_LIB_FILES})
