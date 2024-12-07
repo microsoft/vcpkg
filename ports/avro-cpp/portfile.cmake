@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch
         fix-fmt.patch
+        fix-std32_t.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

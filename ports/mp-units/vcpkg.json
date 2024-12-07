@@ -1,8 +1,9 @@
 {
   "name": "mp-units",
   "version": "2.4.0",
-  "description": "mp-units - A Units Library for C++",
-  "homepage": "https://github.com/mpusz/units",
+  "port-version": 1,
+  "description": "The quantities and units library for C++",
+  "homepage": "https://mpusz.github.io/mp-units",
   "license": "MIT",
   "dependencies": [
     "fmt",

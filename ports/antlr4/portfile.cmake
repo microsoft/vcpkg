@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 afd8ecab637a0e70cddf98f63c918eab2b907f87207624e20e80a79f885d6502d4ab734a602b1707969d61944410828b689ec2f8b09c15314fe991024cde1613
     PATCHES
         set-export-macro-define-as-private.patch
+        add-include-chrono.patch # https://github.com/antlr/antlr4/pull/4738
 )
 
 set(RUNTIME_PATH "${SOURCE_PATH}/runtime/Cpp")

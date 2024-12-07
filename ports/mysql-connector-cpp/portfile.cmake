@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-connector-cpp
     REF "${VERSION}"
-    SHA512 b65c44ef05e3f6ec8613f7d09f6662fc1b4cce5fdf515dec43a20398605acc2555572b788a89b61d6ce835dab3f68183be6610750ae42a6be7d9c24c99ecaacf
+    SHA512 aa432822d4c9d7f1328bf59e261c362570f6b2237a5a9f730f96f079aba14bdc689f400ab2857c4cdd1dca025eb09eaaf2b26328f3b42d117f24b9182dc2cc0a
     HEAD_REF master
     PATCHES
         fix-static-build8.patch
@@ -24,10 +24,20 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_MSVCRT)
 
-# Use mysql-connector-cpp's own build process.
+# Preparing to merge STATIC library: connector (xapi;devapi)
+# CMake Error at cmake/libutils.cmake:297 (message):
+#   Sorry but building static connector on Windows using MSVC toolset works
+#   only with msbuild at the moment.
+# Call Stack (most recent call first):
+#   CMakeLists.txt:413 (merge_libraries)
+set(USE_MSBUILD_ARG)
+if(BUILD_STATIC)
+    set(USE_MSBUILD_ARG WINDOWS_USE_MSBUILD)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
+    ${USE_MSBUILD_ARG}
     OPTIONS
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
@@ -44,6 +54,7 @@ vcpkg_cmake_configure(
         "-DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql"
         "-DMYSQL_LIB_DIR=${CURRENT_INSTALLED_DIR}"
         "-DWITH_BOOST=${CURRENT_INSTALLED_DIR}"
+        "-DWITH_TESTS=OFF"
     MAYBE_UNUSED_VARIABLES  # and they are windows only
         MYSQL_INCLUDE_DIR
         MYSQL_LIB_DIR
@@ -59,6 +70,11 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/INFO_SRC"
     "${CURRENT_PACKAGES_DIR}/debug/INFO_BIN"
     "${CURRENT_PACKAGES_DIR}/debug/INFO_SRC"
+    "${CURRENT_PACKAGES_DIR}/INFO_BIN"
+    "${CURRENT_PACKAGES_DIR}/mysql-concpp-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/mysql-concpp-config-version.cmake"
+    "${CURRENT_PACKAGES_DIR}/debug/mysql-concpp-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/debug/mysql-concpp-config-version.cmake"
 )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

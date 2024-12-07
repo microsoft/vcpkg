@@ -54,7 +54,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2-${VERSION}")
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

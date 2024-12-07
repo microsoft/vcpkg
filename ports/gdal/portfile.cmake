@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-gdal-target-interfaces.patch
         libkml.patch
         target-is-valid.patch
+        remove-machine-flag.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -66,7 +67,7 @@ if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 # Compatibility with older Android versions https://github.com/OSGeo/gdal/pull/5941
-if(VCPKG_TARGET_IS_ANDROID AND ANRDOID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
+if(VCPKG_TARGET_IS_ANDROID AND ANDROID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
     list(APPEND FEATURE_OPTIONS -DBUILD_WITHOUT_64BIT_OFFSET=ON)
 endif()
 
