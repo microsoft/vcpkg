@@ -47,7 +47,9 @@ else()
     # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()

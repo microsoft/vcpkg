@@ -2766,7 +2766,7 @@
     },
     "ffnvcodec": {
       "baseline": "12.2.72.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fftw3": {
       "baseline": "3.3.10",
