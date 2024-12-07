@@ -38,10 +38,11 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+# "openxr-loader" matches "<name>*" for "OpenXR", so use the default.
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME openxr CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME openxr CONFIG_PATH lib/cmake/openxr)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
 endif()
 
 # Generate the OpenXR C++ bindings
