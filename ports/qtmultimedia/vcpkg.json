@@ -62,6 +62,14 @@
           "features": [
             "plugins-base"
           ]
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "play"
+          ],
+          "platform": "!windows"
         }
       ]
     },
