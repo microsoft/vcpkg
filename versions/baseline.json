@@ -8982,7 +8982,7 @@
     },
     "theia": {
       "baseline": "0.8",
-      "port-version": 12
+      "port-version": 13
     },
     "think-cell-range": {
       "baseline": "2023.1",
