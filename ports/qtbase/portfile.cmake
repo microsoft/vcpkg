@@ -344,6 +344,7 @@ file(COPY
 file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
 set(other_files qt-cmake
+                qt-cmake-create
                 qt-cmake-private
                 qt-cmake-standalone-test
                 qt-configure-module
@@ -355,7 +356,8 @@ set(other_files qt-cmake
                 qmake6
                 qtpaths
                 qtpaths6
-                 )
+)
+
 if(CMAKE_HOST_WIN32)
     set(script_suffix ".bat")
 else()
@@ -363,17 +365,18 @@ else()
 endif()
 list(TRANSFORM other_files APPEND "${script_suffix}")
 
-list(APPEND other_files 
+list(APPEND other_files
                 android_cmakelist_patcher.sh
                 android_emulator_launcher.sh
                 ensure_pro_file.cmake
-                syncqt.pl
-                target_qt.conf
+                qt-android-runner.py
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
-                sanitizer-testrunner.py
                 qt-wasmtestrunner.py
-                )
+                sanitizer-testrunner.py
+                syncqt.pl
+                target_qt.conf
+)
 
 foreach(_config debug release)
     if(_config MATCHES "debug")
