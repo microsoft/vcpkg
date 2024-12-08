@@ -1,0 +1,33 @@
+diff --git a/cpp/open3d/utility/Download.cpp b/cpp/open3d/utility/Download.cpp
+index 025dbc664..0193d1fa3 100644
+--- a/cpp/open3d/utility/Download.cpp
++++ b/cpp/open3d/utility/Download.cpp
+@@ -22,7 +22,9 @@
+ #define USE_OPENSSL
+ #endif
+ 
++#ifndef CURL_STATICLIB
+ #define CURL_STATICLIB
++#endif
+ 
+ #include <curl/curl.h>
+ #include <curl/easy.h>
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index cdb0f30ee..755895f66 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -847,8 +847,9 @@ endif()
+ # - openssl.cmake needs to be included before curl.cmake, for the
+ #   BORINGSSL_ROOT_DIR variable.
+ if(USE_SYSTEM_CURL)
+-    open3d_pkg_config_3rdparty_library(3rdparty_curl
+-        SEARCH_ARGS libcurl
++    open3d_find_package_3rdparty_library(3rdparty_curl
++        PACKAGE CURL
++        TARGETS CURL::libcurl
+     )
+     if(NOT 3rdparty_curl_FOUND)
+         set(USE_SYSTEM_CURL OFF)
+-- 
+2.45.2
+
