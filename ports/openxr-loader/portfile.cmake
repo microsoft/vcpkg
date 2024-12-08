@@ -1,25 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KhronosGroup/OpenXR-SDK
-    REF "release-${VERSION}"
-    SHA512 cfcabbd130f89d1d46899f3a9a34e9b5d9b21903b6d0fc48c62e233401cf200107a9fa8da926fc0036937a9ed647a2376bee58db925654c41acc7580f8f3a053
-    HEAD_REF master
-    PATCHES
-        fix-openxr-sdk-jsoncpp.patch
-        msvc-crt.diff
-)
-file(GLOB gl_headers "${SOURCE_PATH}/external/include/GL/*")
-list(REMOVE_ITEM gl_headers "${SOURCE_PATH}/external/include/gl_format.h")
-file(REMOVE ${gl_headers})
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SDK_SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
     REF "release-${VERSION}"
     SHA512 c2cfab927e6ff8a5a7b90360c99192ae9cd598614965fbd4816361b19c5bf25e5524f0e73ce56774e32903addbce8a8dbcb9520203f845421d33cb33f832977b
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
+        msvc-crt.diff
 )
 
 vcpkg_from_github(
@@ -51,21 +38,25 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+# "openxr-loader" matches "<name>*" for "OpenXR", so use the default.
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME openxr CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME openxr CONFIG_PATH lib/cmake/openxr)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
 endif()
 
 # Generate the OpenXR C++ bindings
-set(ENV{OPENXR_REPO} "${SDK_SOURCE_PATH}")
+set(ENV{OPENXR_REPO} "${SOURCE_PATH}")
 vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -quiet  -registry "${SDK_SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr"
+    COMMAND "${PYTHON3}" "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -quiet  -registry "${SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr"
     WORKING_DIRECTORY "${HPP_SOURCE_PATH}"
     LOGNAME "openxr-hpp"
 )
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

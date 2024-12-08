@@ -8,6 +8,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "assimp"  FEATURE_quick3d_assimp
     #"assimp"  CMAKE_REQUIRE_FIND_PACKAGE_WrapQuick3DAssimp
+    "openxr"  FEATURE_quick3dxr_openxr
 INVERTED_FEATURES
     "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapQuick3DAssimp
     )
