@@ -210,7 +210,7 @@
           "features": [
             "openxr"
           ],
-          "platform": "!osx & !uwp"
+          "platform": "!uwp"
         },
         {
           "name": "qtwayland",
