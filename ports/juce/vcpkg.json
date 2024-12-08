@@ -47,6 +47,10 @@
     "freetype": {
       "description": "Enable FreeType support",
       "dependencies": [
+        {
+          "name": "fontconfig",
+          "platform": "linux"
+        },
         "freetype"
       ]
     },
