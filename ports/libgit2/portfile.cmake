@@ -10,6 +10,7 @@ vcpkg_from_github(
         dependencies.diff
         mingw-winhttp.diff
         unofficial-config-export.diff
+        fix-arm64-windows.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"

@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2897655..7e93511 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -460,6 +460,11 @@ target_sources(common PRIVATE
+ set(SYSTEM_ALLOC_CC src/windows/system-alloc.cc)
+ set(TCMALLOC_CC src/windows/patch_functions.cc)
+ 
++if(GPERFTOOLS_WIN32_OVERRIDE)
++  set(TCMALLOC_CC src/windows/override_functions.cc)
++  add_definitions(-DWIN32_OVERRIDE_ALLOCATORS)
++endif()
++
+ # patch_function uses -lpsapi and spinlock bits use -synchronization
+ # and -lshlwapi
+ link_libraries(psapi synchronization shlwapi)

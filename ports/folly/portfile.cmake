@@ -9,17 +9,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 fb37eeb47466d596b5b4479e2113de1b91a83749771cb90dcd5fa68d9c9f2dfa6cae6b4bdb70f64c0c0bf1a7c2f35c4228751a6d3fa98ca5d3cfd8737bc5d425
+    SHA512 afa430ed4a1d4b617614d5c6893af5fb893b3bbb696c833234842b05fc40c1ef942883029777893b4cf4b44eda189889adb555367740dbba2032912f4d518622
     HEAD_REF main
     PATCHES
-        disable-non-underscore-posix-names.patch
         fix-windows-minmax.patch
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
         fix-libunwind.patch
+        fix-absolute-dir.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")

@@ -1,17 +1,17 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -616,7 +616,7 @@ endif()
+@@ -674,7 +674,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
--if(NOT IOS)
+-if(NOT IOS AND NOT XROS)
 +if(WITH_PYTHON)
    include(cmake/OpenCVDetectPython.cmake)
  endif()
  
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -286,7 +286,6 @@ if(MSVC)
+@@ -300,7 +300,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)
@@ -21,7 +21,7 @@
      set(OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE} /debug")
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
-@@ -114,11 +114,11 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+@@ -118,18 +118,18 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
    endif()
  endfunction()
  
@@ -33,14 +33,13 @@
 -if(ANDROID)
 +if(FALSE)
    ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "abi-${ANDROID_NDK_ABI_NAME}" "OpenCVConfig.root-ANDROID.cmake.in")
-   install(FILES "${OpenCV_SOURCE_DIR}/platforms/android/android.toolchain.cmake" DESTINATION "${OPENCV_CONFIG_INSTALL_PATH}" COMPONENT dev)
  endif()
-@@ -126,7 +126,7 @@ endif()
+ 
  # --------------------------------------------------------------------------------------------
  #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
  # --------------------------------------------------------------------------------------------
 -if(WIN32)
-+if(0)
++if(FALSE)
    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows AND NOT OPENCV_SKIP_CMAKE_ROOT_CONFIG)
      ocv_gen_config("${CMAKE_BINARY_DIR}/win-install"
                     "${OPENCV_INSTALL_BINARIES_PREFIX}${OPENCV_INSTALL_BINARIES_SUFFIX}"

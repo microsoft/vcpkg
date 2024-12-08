@@ -1,6 +1,6 @@
 {
   "name": "scnlib",
-  "version": "3.0.1",
+  "version": "4.0.1",
   "description": "scnlib is a modern C++ library for replacing scanf and std::istream",
   "homepage": "https://scnlib.dev/",
   "license": "Apache-2.0",
