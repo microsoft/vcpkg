@@ -1,8 +1,17 @@
 diff --git a/pxr/imaging/hdSt/materialXFilter.cpp b/pxr/imaging/hdSt/materialXFilter.cpp
-index 8897c5e72..975017525 100644
+index 4a3977e..0dc43a3 100644
 --- a/pxr/imaging/hdSt/materialXFilter.cpp
 +++ b/pxr/imaging/hdSt/materialXFilter.cpp
-@@ -634,26 +634,48 @@ _GetGlTFSurfaceMaterialTag(HdMaterialNode2 const& terminal)
+@@ -510,7 +510,7 @@ _UpdatePrimvarNodes(
+                 texCoordName = metadata[SdrNodeMetadata->Primvars];
+             }
+ 
+-            (*mxHdPrimvarMap)[texCoordName] = mx::Type::VECTOR2->getName();
++            (*mxHdPrimvarMap)[texCoordName] = mx::Type::VECTOR2.getName();
+         }
+     }
+ }
+@@ -628,26 +628,47 @@ _GetGlTFSurfaceMaterialTag(HdMaterialNode2 const& terminal)
      return materialToken.GetString();
  }
  
@@ -10,7 +19,7 @@ index 8897c5e72..975017525 100644
 +static const mx::TypeDesc
  _GetMxTypeDescription(std::string const& typeName)
  {
-+#if MATERIALX_MAJOR_VERSION == 1 && MATERIALX_MINOR_VERSION==38
++    #if MATERIALX_MAJOR_VERSION == 1 && MATERIALX_MINOR_VERSION==38
 +  // Add whatever is necessary for current codebase:
 +  static const auto _typeLibrary =
 +      std::map<std::string, const mx::TypeDesc*>{
@@ -56,13 +65,12 @@ index 8897c5e72..975017525 100644
          return typeDescIt->second;
      }
 -    return nullptr;
-+
 +    return mx::Type::NONE;
 +#endif
  }
  
  // This function adds a stripped down version of the surfaceshader node to the
-@@ -678,32 +700,30 @@ _AddStrippedSurfaceNode(
+@@ -672,32 +693,30 @@ _AddStrippedSurfaceNode(
          if (!mxInputDef) {
              continue;
          }
@@ -83,7 +91,7 @@ index 8897c5e72..975017525 100644
                  _AddStrippedSurfaceNode(mxDocument, hdConnectedPath.GetName(),
                                          hdConnectedNode, hdNetwork);
 -            mx::InputPtr mxInput =
--                mxNode->addInput(mxInput->getName(), mxInput->getType());
+-                mxNode->addInput(mxInputDef->getName(), mxInputDef->getType());
 +            mx::InputPtr mxInput = mxNode->addInputFromNodeDef(mxInputDef->getName());
              mxInput->setConnectedNode(mxConnectedNode);
          }
@@ -103,7 +111,7 @@ index 8897c5e72..975017525 100644
              mxInput->setValueString(valueStr);
          }
      }
-@@ -715,16 +735,15 @@ _AddStrippedSurfaceNode(
+@@ -709,16 +728,15 @@ _AddStrippedSurfaceNode(
          if (!mxInputDef) {
              continue;
          }
@@ -125,19 +133,19 @@ index 8897c5e72..975017525 100644
              mxInput->setValueString(HdMtlxConvertToString(paramIt.second));
          }
      }
-@@ -787,9 +806,9 @@ _GetMaterialTag(
+@@ -781,9 +799,9 @@ _GetMaterialTag(
          // Outputting anything that is not a surfaceshader will be
          // considered opaque, unless outputting a color4 or vector4.
          // XXX This is not fully per USD specs, but is supported by MaterialX.
 -        auto const* typeDesc = 
-+        auto const typeDesc =
++        auto const typeDesc = 
              _GetMxTypeDescription(activeOutputs.back()->getType());
 -        if (typeDesc == mx::Type::COLOR4 || typeDesc == mx::Type::VECTOR4) {
-+        if (typeDesc.isFloat4()) {
++        if (typeDesc.isFloat4())  {
              return HdStMaterialTagTokens->translucent.GetString();
          }
          return HdStMaterialTagTokens->defaultMaterialTag.GetString();
-@@ -1100,7 +1119,7 @@ _AddMaterialXParams(
+@@ -1094,7 +1112,7 @@ _AddMaterialXParams(
  
          // MaterialX parameter Information
          const auto* variable = paramsBlock[i];
@@ -146,7 +154,7 @@ index 8897c5e72..975017525 100644
  
          // Create a corresponding HdSt_MaterialParam
          HdSt_MaterialParam param;
-@@ -1111,9 +1130,9 @@ _AddMaterialXParams(
+@@ -1105,9 +1123,9 @@ _AddMaterialXParams(
          const auto paramValueIt =
              mxParamNameToValue.find(variable->getVariable());
          if (paramValueIt != mxParamNameToValue.end()) {
@@ -159,7 +167,7 @@ index 8897c5e72..975017525 100644
                  param.fallbackValue = paramValueIt->second;
              }
          }
-@@ -1124,52 +1143,52 @@ _AddMaterialXParams(
+@@ -1118,52 +1136,52 @@ _AddMaterialXParams(
              const auto varValue = variable->getValue();
              std::istringstream valueStream(varValue
                  ? varValue->getValueString() : std::string());
@@ -223,7 +231,7 @@ index 8897c5e72..975017525 100644
                      GfVec4i val;
                      valueStream >> val[0] >> separator >> val[1] >> separator
                          >> val[2] >> separator >> val[3];
-@@ -1183,7 +1202,7 @@ _AddMaterialXParams(
+@@ -1177,7 +1195,7 @@ _AddMaterialXParams(
          }
  
          // For filename inputs, manage the associated texture node
@@ -233,17 +241,17 @@ index 8897c5e72..975017525 100644
              // annonNodeName_paramName -> annonNodeName
              std::string mxNodeName = variable->getVariable();
 diff --git a/pxr/imaging/hdSt/materialXShaderGen.cpp b/pxr/imaging/hdSt/materialXShaderGen.cpp
-index 30674b521..78517b39d 100644
+index 136b096..8ba27b2 100644
 --- a/pxr/imaging/hdSt/materialXShaderGen.cpp
 +++ b/pxr/imaging/hdSt/materialXShaderGen.cpp
-@@ -156,13 +156,17 @@ HdStMaterialXShaderGen<Base>::_EmitGlslfxHeader(mx::ShaderStage& mxStage) const
+@@ -158,13 +158,17 @@ HdStMaterialXShaderGen<Base>::_EmitGlslfxHeader(mx::ShaderStage& mxStage) const
          Base::emitString(R"(    "attributes": {)" "\n", mxStage);
          std::string line = ""; unsigned int i = 0;
          for (mx::StringMap::const_reference primvarPair : _mxHdPrimvarMap) {
 -            const mx::TypeDesc *mxType = mx::TypeDesc::get(primvarPair.second);
 -            if (mxType == nullptr) {
 +            const mx::TypeDesc mxType = getMxTypeDesc(primvarPair.second);
-+            if (mxTypeIsNone(mxType)) {
++            if (mxTypeIsNone(mxType))  {
                  TF_WARN("MaterialX geomprop '%s' has unknown type '%s'",
                          primvarPair.first.c_str(), primvarPair.second.c_str());
              }
@@ -258,7 +266,7 @@ index 30674b521..78517b39d 100644
  
              line += "        \"" + primvarPair.first + "\": {\n";
              line += "            \"type\": \"" + type + "\"\n";
-@@ -285,12 +289,15 @@ HdStMaterialXShaderGen<Base>::_EmitMxSurfaceShader(
+@@ -287,12 +291,15 @@ HdStMaterialXShaderGen<Base>::_EmitMxSurfaceShader(
          if (outputConnection) {
  
              std::string finalOutput = outputConnection->getVariable();
@@ -274,7 +282,7 @@ index 30674b521..78517b39d 100644
  
              if (mxGraph.hasClassification(
                      mx::ShaderNode::Classification::SURFACE)) {
-@@ -311,7 +318,7 @@ HdStMaterialXShaderGen<Base>::_EmitMxSurfaceShader(
+@@ -313,7 +320,7 @@ HdStMaterialXShaderGen<Base>::_EmitMxSurfaceShader(
                  }
              }
              else {
@@ -283,7 +291,7 @@ index 30674b521..78517b39d 100644
                      Base::toVec4(outputSocket->getType(), finalOutput);
                  }
                  emitLine(finalOutputReturn + 
-@@ -323,7 +330,7 @@ HdStMaterialXShaderGen<Base>::_EmitMxSurfaceShader(
+@@ -325,7 +332,7 @@ HdStMaterialXShaderGen<Base>::_EmitMxSurfaceShader(
                  ? Base::_syntax->getValue(
                      outputSocket->getType(), *outputSocket->getValue()) 
                  : Base::_syntax->getDefaultValue(outputSocket->getType());
@@ -292,7 +300,7 @@ index 30674b521..78517b39d 100644
                  std::string finalOutput = outputSocket->getVariable() + "_tmp";
                  emitLine(Base::_syntax->getTypeName(outputSocket->getType()) 
                          + " " + finalOutput + " = " + outputValue, mxStage);
-@@ -415,8 +422,8 @@ HdStMaterialXShaderGen<Base>::_EmitMxInitFunction(
+@@ -417,8 +424,8 @@ HdStMaterialXShaderGen<Base>::_EmitMxInitFunction(
          mxStage.getUniformBlock(mx::HW::PUBLIC_UNIFORMS);
      for (size_t i = 0; i < paramsBlock.size(); ++i) {
          const mx::ShaderPort* variable = paramsBlock[i];
@@ -303,7 +311,7 @@ index 30674b521..78517b39d 100644
              emitLine(variable->getVariable() + " = HdGet_" +
                  variable->getVariable() + "()", mxStage);
          }
-@@ -622,16 +629,16 @@ HdStMaterialXShaderGen<Base>::emitVariableDeclarations(
+@@ -624,16 +631,16 @@ HdStMaterialXShaderGen<Base>::emitVariableDeclarations(
      {
          Base::emitLineBegin(stage);
          const mx::ShaderPort* variable = block[i];
@@ -323,10 +331,10 @@ index 30674b521..78517b39d 100644
              || MxHdVariables.count(variable->getName()) ) {
              Base::emitVariableDeclaration(variable, mx::EMPTY_STRING,
                                      context, stage, false /* assignValue */);
-@@ -1349,4 +1356,53 @@ HdStMaterialXShaderGenMsl::_EmitMxFunctions(
+@@ -1351,6 +1358,53 @@ HdStMaterialXShaderGenMsl::_EmitMxFunctions(
+     _EmitDataStructsAndFunctionDefinitions(
+         mxGraph, mxContext, mxStage, &_tokenSubstitutions);
  }
- 
- 
 +bool mxTypeIsNone(mx::TypeDesc typeDesc)
 +{
 +#if MATERIALX_MAJOR_VERSION == 1 && MATERIALX_MINOR_VERSION==38
@@ -374,11 +382,11 @@ index 30674b521..78517b39d 100644
 +  return port->getType();
 +#endif
 +}
-+
-+
+ 
+ 
  PXR_NAMESPACE_CLOSE_SCOPE
 diff --git a/pxr/imaging/hdSt/materialXShaderGen.h b/pxr/imaging/hdSt/materialXShaderGen.h
-index e61bd13a4..a7f93fdd0 100644
+index e61bd13..a7f93fd 100644
 --- a/pxr/imaging/hdSt/materialXShaderGen.h
 +++ b/pxr/imaging/hdSt/materialXShaderGen.h
 @@ -192,6 +192,13 @@ private:
