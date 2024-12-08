@@ -85,6 +85,10 @@ if(NOT VCPKG_CROSSCOMPILING AND EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPL
     )
 endif()
 
+if(BUILD_STATIC)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mysqlx/common/api.h" "defined STATIC_CONCPP" "(1)")
+endif()
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/INFO_BIN"
