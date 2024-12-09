@@ -1,7 +1,7 @@
 {
   "name": "ceres",
   "version": "2.1.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",
@@ -36,7 +36,8 @@
           "features": [
             "suitesparse"
           ]
-        }
+        },
+        "suitesparse-cxsparse"
       ]
     },
     "eigensparse": {
@@ -61,9 +62,12 @@
           ]
         },
         {
-          "name": "suitesparse",
-          "default-features": false
-        }
+          "name": "suitesparse-cholmod",
+          "features": [
+            "matrixops"
+          ]
+        },
+        "suitesparse-spqr"
       ]
     },
     "tools": {
