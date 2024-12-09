@@ -5,7 +5,9 @@ vcpkg_from_sourceforge(
     FILENAME "mpg123-${VERSION}.tar.bz2"
     SHA512 dccb640b0845061811cb41bf145587e7093556d686d49a748232b079659b46284b6cc40db42d14febceac11277c58edf2b69d1b4c46c223829a3d15478e2e26c
     PATCHES
+        fix-dllexport.diff
         have-fpu.diff
+        pkgconfig.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -27,6 +29,8 @@ vcpkg_cmake_configure(
         ${options}
     MAYBE_UNUSED_VARIABLES
         BUILD_PROGRAMS
+        CMAKE_DISABLE_FIND_PACKAGE_ALSA
+        CMAKE_DISABLE_FIND_PACKAGE_PkgConfig
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
