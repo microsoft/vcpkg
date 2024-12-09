@@ -1194,43 +1194,85 @@ set(VCToolkit_Microsoft.VisualCpp.Servicing.Redist_199_FILENAME "Microsoft.Visua
 list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Servicing.Redist_199)
 
 
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core_200_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/0de8169d8a2296efeab0eccb72e5b2c5f9646c152c9ceaca0a4ccb03ff4903bd/Microsoft.VisualCpp.Tools.Core.vsix")
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core_200_SHA512 "626ff44e86670fb1a6c32a99ca9436291f2f0c19dbe80b0e821404c29566ef3a5abaa03bdcbb9c81239118b13f7a792fd9f24c4701ec4823b5a60c4fa3ae5073")
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core_200_FILENAME "Microsoft.VisualCpp.Tools.Core.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Core_200)
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.Utils_200_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/a35e6958324d6d33a573d77452715f470db4885a74503f92d409a383f6e1a0bc/Microsoft.VisualCpp.Tools.Common.Utils.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.Utils_200_SHA512 "8ec3665381a847767f4f5c768a5d19c446f3ecc5c7c6a6d3857631726141dd51689661ee345d47b3fcbd70434ad59228b08f5981e7eb48716af9cb198ee292a6")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.Utils_200_FILENAME "Microsoft.VisualCpp.Tools.Common.Utils.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Common.Utils_200)
 
 
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core.Resources_201_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/0cc0877a0a1b74ffa3eb4d899786519f00f2e550f4b61712e70943d32639e071/Microsoft.VisualCpp.Tools.Core.Resources.enu.vsix")
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core.Resources_201_SHA512 "c9c7f161225f694389fd4611c24ab85ce72db320f1bfdec9b47a0441b62d39c72b8b50f42760bcda8c7ec37405efce1c89955eadcc939f44d501b6862ff6ab64")
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core.Resources_201_FILENAME "Microsoft.VisualCpp.Tools.Core.Resources.enu.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Core.Resources_201)
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.Utils.Resources_201_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/88c7daaf7277b8d9f5aaec46a6412a630010582a7aacbf58d3a000f27cc85f8f/Microsoft.VisualCpp.Tools.Common.Utils.Resources.enu.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.Utils.Resources_201_SHA512 "a6b7c469af3bb70738b98e7a7a9111c724dcfb6f12d443c194e3642aa86d35e0f53b9326ab37a1d0bc12b55c2be8655c5aa29d201c1ab810875280b86d21345d")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.Utils.Resources_201_FILENAME "Microsoft.VisualCpp.Tools.Common.Utils.Resources.enu.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Common.Utils.Resources_201)
 
 
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core.x86_202_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/83ec55eb7d03493d4e299e61cf34589ac0aa42584ef911d28292f1c41e9da55e/Microsoft.VisualCpp.Tools.Core.x86.vsix")
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core.x86_202_SHA512 "86773be3dee5d7b2aeef212e7265e88d4c526b6f6e9b62a4d4ac58f90dd15488c3609f305ffd16b1faa666e67da2a553a764ff3226f78887e351393a9499b98c")
-set(VCToolkit_Microsoft.VisualCpp.Tools.Core.x86_202_FILENAME "Microsoft.VisualCpp.Tools.Core.x86.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Core.x86_202)
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.UtilsPrereq_202_URL "https://download.visualstudio.microsoft.com/download/pr/340d36cc-c493-414e-8abe-8742dfbad027/e79a51b2b5a82f8c50389fad14d61d44137c8ab0334c2d307c931aab35795a56/payload.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.UtilsPrereq_202_SHA512 "bff237e63d19f4805ddbf606ef8b9e6e6f3806e83a91d451e391a7abd1c521fd234d0f91b1f43781e4541432be89520c2ee50e72f8a85db7189a7bc58e0ad495")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Common.UtilsPrereq_202_FILENAME "Microsoft.VisualCpp.Tools.Common.UtilsPrereq_202_payload.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Common.UtilsPrereq_202)
 
 
-set(VCToolkit_Microsoft.VisualStudio.VC.vcvars_203_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/64ab82fb925636529b271edf4166b8b1935eb22aa8d94c829f65701af3bea514/payload.vsix")
-set(VCToolkit_Microsoft.VisualStudio.VC.vcvars_203_SHA512 "073d4cec4a74d470ef8b140f4df2c862c726dde3273d8ad9815588e28b9f69d77111057ce6b7afff120787b03d375f29e104920b5aa2ed10ef2e94107d4c196b")
-set(VCToolkit_Microsoft.VisualStudio.VC.vcvars_203_FILENAME "Microsoft.VisualStudio.VC.vcvars_203_payload.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VC.vcvars_203)
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core_203_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/0de8169d8a2296efeab0eccb72e5b2c5f9646c152c9ceaca0a4ccb03ff4903bd/Microsoft.VisualCpp.Tools.Core.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core_203_SHA512 "626ff44e86670fb1a6c32a99ca9436291f2f0c19dbe80b0e821404c29566ef3a5abaa03bdcbb9c81239118b13f7a792fd9f24c4701ec4823b5a60c4fa3ae5073")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core_203_FILENAME "Microsoft.VisualCpp.Tools.Core.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Core_203)
 
 
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.DotNet_204_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/49db132128e4f1b360d277674ecc2dbca49a4d26a01c82c226eb733c8da5c414/payload.vsix")
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.DotNet_204_SHA512 "8a9bc4a7eb98c029de530a0bcadccfbc10e7f7f468527a7c9123016b997df4092f8f551de6343fc34acf1da3aab69f846133677198fe142b485f5455ae7bbc03")
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.DotNet_204_FILENAME "Microsoft.VisualStudio.VsDevCmd.Core.DotNet_204_payload.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VsDevCmd.Core.DotNet_204)
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core.Resources_204_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/0cc0877a0a1b74ffa3eb4d899786519f00f2e550f4b61712e70943d32639e071/Microsoft.VisualCpp.Tools.Core.Resources.enu.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core.Resources_204_SHA512 "c9c7f161225f694389fd4611c24ab85ce72db320f1bfdec9b47a0441b62d39c72b8b50f42760bcda8c7ec37405efce1c89955eadcc939f44d501b6862ff6ab64")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core.Resources_204_FILENAME "Microsoft.VisualCpp.Tools.Core.Resources.enu.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Core.Resources_204)
 
 
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_205_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/c79505c7de10a291dc8e9e47825aef6f2ead135455098a794423de4162a8058f/payload.vsix")
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_205_SHA512 "68c2dd764ad6d2fbd84dc9981ba12bd749ed77cf72f756520865e5b337c22093bae8be2fa643ce9787de8a0d684734f50866c3b2f80d16dcae3a13390abb653d")
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_205_FILENAME "Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_205_payload.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_205)
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core.x86_205_URL "https://download.visualstudio.microsoft.com/download/pr/27d644ce-f00b-40cc-b93c-7be5ae10995a/83ec55eb7d03493d4e299e61cf34589ac0aa42584ef911d28292f1c41e9da55e/Microsoft.VisualCpp.Tools.Core.x86.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core.x86_205_SHA512 "86773be3dee5d7b2aeef212e7265e88d4c526b6f6e9b62a4d4ac58f90dd15488c3609f305ffd16b1faa666e67da2a553a764ff3226f78887e351393a9499b98c")
+set(VCToolkit_Microsoft.VisualCpp.Tools.Core.x86_205_FILENAME "Microsoft.VisualCpp.Tools.Core.x86.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.Core.x86_205)
 
 
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_206_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/84f2846748913ee18d95ba6bd31e6de9b7bcd74948c3ae797f8a218cd74f1034/payload.vsix")
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_206_SHA512 "6f5c8415edc844e5f7b491628fa87d61e583602665e389ddec40b7fc1baae4cd83b3ecc1773c7d390ed829b45d092ce54034f168bc888fbe5e53c19add42ae73")
-set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_206_FILENAME "Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_206_payload.vsix")
-list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_206)
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetARM_206_URL "https://download.visualstudio.microsoft.com/download/pr/d18f3866-d75b-46b1-9bd7-74ee1913f4b9/96dd166ba13a2f027fda8ea334bc2066ae091b889949a2efe442fbd1499beb13/Microsoft.VisualCpp.Tools.HostX64.TargetARM.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetARM_206_SHA512 "c4f432a7ccd06ed18614e373ef942ca59372a280ea027679fec4c612b147b790263ba1e648f99b99a7467d85f050929274ee7dd8e48f24dbfb1c66976a172070")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetARM_206_FILENAME "Microsoft.VisualCpp.Tools.HostX64.TargetARM.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.HostX64.TargetARM_206)
+
+
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetARM64_207_URL "https://download.visualstudio.microsoft.com/download/pr/d18f3866-d75b-46b1-9bd7-74ee1913f4b9/0def5dbcf09ce205479d1b289a3dc61f081940ebf00d0fb7d1eb8de01e232d15/Microsoft.VisualCpp.Tools.HostX64.TargetARM64.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetARM64_207_SHA512 "d9955ee1e94254fb79f0b4817d19013ad85b323d69462389b2806c68f5e75730b9da4d2e28015b058b4f53d5774fb82dd37e979058b1b5376a75911edba141e3")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetARM64_207_FILENAME "Microsoft.VisualCpp.Tools.HostX64.TargetARM64.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.HostX64.TargetARM64_207)
+
+
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetX64_208_URL "https://download.visualstudio.microsoft.com/download/pr/d18f3866-d75b-46b1-9bd7-74ee1913f4b9/d76f3769d9e8515cb4e029ee40124b8b325ad269ecabbbacbf71c3c1f1c91a1c/Microsoft.VisualCpp.Tools.HostX64.TargetX64.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetX64_208_SHA512 "eb6fd6ce5ce51792a296a8d125a8260e156e390e953179ae61c3698b87b3f149365da5e7cc9d625bca194215210abbab5a6475ad9c582723ae5e6085c03cd292")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetX64_208_FILENAME "Microsoft.VisualCpp.Tools.HostX64.TargetX64.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.HostX64.TargetX64_208)
+
+
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetX86_209_URL "https://download.visualstudio.microsoft.com/download/pr/d18f3866-d75b-46b1-9bd7-74ee1913f4b9/deaa49e2397ccb3318d0e6485bbcdc9b14ccf270357dbab17674b9d76e46b72a/Microsoft.VisualCpp.Tools.HostX64.TargetX86.vsix")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetX86_209_SHA512 "0177c05631f01e92b2b3f5a5ba1593f6201300b88074b97de0ed70cda7a81b9f87171149fb073af50c870bf62bd2166c8189d9adc1b6d964c37686984d631c7b")
+set(VCToolkit_Microsoft.VisualCpp.Tools.HostX64.TargetX86_209_FILENAME "Microsoft.VisualCpp.Tools.HostX64.TargetX86.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualCpp.Tools.HostX64.TargetX86_209)
+
+
+set(VCToolkit_Microsoft.VisualStudio.VC.vcvars_210_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/64ab82fb925636529b271edf4166b8b1935eb22aa8d94c829f65701af3bea514/payload.vsix")
+set(VCToolkit_Microsoft.VisualStudio.VC.vcvars_210_SHA512 "073d4cec4a74d470ef8b140f4df2c862c726dde3273d8ad9815588e28b9f69d77111057ce6b7afff120787b03d375f29e104920b5aa2ed10ef2e94107d4c196b")
+set(VCToolkit_Microsoft.VisualStudio.VC.vcvars_210_FILENAME "Microsoft.VisualStudio.VC.vcvars_210_payload.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VC.vcvars_210)
+
+
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.DotNet_211_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/49db132128e4f1b360d277674ecc2dbca49a4d26a01c82c226eb733c8da5c414/payload.vsix")
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.DotNet_211_SHA512 "8a9bc4a7eb98c029de530a0bcadccfbc10e7f7f468527a7c9123016b997df4092f8f551de6343fc34acf1da3aab69f846133677198fe142b485f5455ae7bbc03")
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.DotNet_211_FILENAME "Microsoft.VisualStudio.VsDevCmd.Core.DotNet_211_payload.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VsDevCmd.Core.DotNet_211)
+
+
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_212_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/c79505c7de10a291dc8e9e47825aef6f2ead135455098a794423de4162a8058f/payload.vsix")
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_212_SHA512 "68c2dd764ad6d2fbd84dc9981ba12bd749ed77cf72f756520865e5b337c22093bae8be2fa643ce9787de8a0d684734f50866c3b2f80d16dcae3a13390abb653d")
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_212_FILENAME "Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_212_payload.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VsDevCmd.Core.WinSdk_212)
+
+
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_213_URL "https://download.visualstudio.microsoft.com/download/pr/d864252b-3039-4f0d-8a5d-43753ed4ddb9/84f2846748913ee18d95ba6bd31e6de9b7bcd74948c3ae797f8a218cd74f1034/payload.vsix")
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_213_SHA512 "6f5c8415edc844e5f7b491628fa87d61e583602665e389ddec40b7fc1baae4cd83b3ecc1773c7d390ed829b45d092ce54034f168bc888fbe5e53c19add42ae73")
+set(VCToolkit_Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_213_FILENAME "Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_213_payload.vsix")
+list(APPEND VCToolkit_FILES Microsoft.VisualStudio.VsDevCmd.Ext.NetFxSdk_213)

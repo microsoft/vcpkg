@@ -498,7 +498,8 @@ $vcToolkits = $manifestJson.packages | Where-Object {
     ($_.id.ToLower().StartsWith("microsoft.vc.$redistVersion") -and $_.id.ToLower().contains("redist") )  -or
     $_.id.ToLower().Contains("microsoft.visualcpp.servicing.redist") -or
     $_.id.ToLower().Contains("vsdevcmd") -or
-    $_.id.ToLower().Contains(".visualcpp.tools.core") -or    
+    $_.id.ToLower().Contains(".visualcpp.tools.core") -or
+    $_.id.ToLower().Contains("microsoft.visualcpp.tools.") -or    
     $_.id.ToLower().Contains("microsoft.visualstudio.vc.vcvars") -or
     $_.id.ToLower().Contains("microsoft.visualcpp.dia.sdk") -or
     $_.id.ToLower().Contains("microsoft.visualcpp.servicing.diasdk") -or
