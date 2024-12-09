@@ -24,10 +24,20 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_MSVCRT)
 
-# Use mysql-connector-cpp's own build process.
+# Preparing to merge STATIC library: connector (xapi;devapi)
+# CMake Error at cmake/libutils.cmake:297 (message):
+#   Sorry but building static connector on Windows using MSVC toolset works
+#   only with msbuild at the moment.
+# Call Stack (most recent call first):
+#   CMakeLists.txt:413 (merge_libraries)
+set(USE_MSBUILD_ARG)
+if(BUILD_STATIC)
+    set(USE_MSBUILD_ARG WINDOWS_USE_MSBUILD)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
+    ${USE_MSBUILD_ARG}
     OPTIONS
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"

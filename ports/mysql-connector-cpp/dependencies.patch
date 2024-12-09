@@ -1,3 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f24eb57..ec7c53d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -469,7 +469,7 @@ endif()
+ # system-wide). Here we arrange for the OpenSSL DLLs to be copied to the build
+ # location of the connector library after building it.
+ 
+-if(WIN32 AND OPENSSL_LIB_DIR)
++if(WIN32 AND OPENSSL_LIB_DIR AND 0)
+ 
+   # Note: For simplicity we just copy any DLLs we can find at the given
+   # OpenSSL location.
 diff --git a/cdk/cmake/DepFindCompression.cmake b/cdk/cmake/DepFindCompression.cmake
 index 68f8e10..ebe7e31 100644
 --- a/cdk/cmake/DepFindCompression.cmake
