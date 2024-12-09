@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-msvc-bundle-install.patch
         disable-build-of-executables.patch
+        fix-find-protobuf-crosscompiling.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

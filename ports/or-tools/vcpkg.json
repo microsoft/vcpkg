@@ -2,7 +2,7 @@
   "name": "or-tools",
   "version": "9.11",
   "license": "Apache-2.0",
-  "supports": "(windows & static & !uwp & !arm) | linux | osx",
+  "supports": "!(windows & static)",
   "dependencies": [
     {
       "name": "abseil",
