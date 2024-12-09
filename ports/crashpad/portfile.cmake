@@ -41,7 +41,7 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
         PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
         NO_DEFAULT_PATH)
 
-    if(_LIBRARY_DEB MATCHES "-NOTFOUND")
+    if(_LIBRARY_DEB MATCHES "-NOTFOUND" AND NOT VCPKG_BUILD_TYPE)
         message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
     endif()
 
@@ -131,10 +131,14 @@ install_headers("${SOURCE_PATH}/util")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+if(NOT VCPKG_BUILD_TYPE)
+  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+endif()
 if(VCPKG_TARGET_IS_OSX)
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
