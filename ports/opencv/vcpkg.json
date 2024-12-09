@@ -98,6 +98,18 @@
         }
       ]
     },
+    "directml": {
+      "description": "Build with DirectML support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "directml"
+          ]
+        }
+      ]
+    },
     "dnn": {
       "description": "Enable dnn module",
       "dependencies": [

@@ -24,6 +24,10 @@ vcpkg_from_github(
       0019-opencl-kernel.patch
       0020-miss-openexr.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
@@ -59,6 +63,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"       ENABLE_CUDA_FIRST_CLASS_LANGUAGE
  "cudnn"      WITH_CUDNN
  "dc1394"     WITH_1394
+ "directml"   WITH_DIRECTML
  "dnn"        BUILD_opencv_dnn
  "dnn"        PROTOBUF_UPDATE_FILES
  "dnn"        UPDATE_PROTO_FILES
@@ -404,6 +409,7 @@ vcpkg_cmake_configure(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
+        -DWITH_DIRECTML=${WITH_DIRECTML}
         -DWITH_MATLAB=OFF
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF

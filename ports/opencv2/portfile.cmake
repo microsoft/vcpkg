@@ -14,6 +14,10 @@ vcpkg_from_github(
       0020-missing-include.patch
       0021-pkgconfig-suffix.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
@@ -22,7 +26,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
  "eigen"    WITH_EIGEN
- "gtk"      WITH_GTK
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
  "msmf"     WITH_MSMF
@@ -76,6 +79,7 @@ vcpkg_cmake_configure(
         -DWITH_ZLIB=ON
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=OFF
+        -DWITH_GTK=OFF
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
