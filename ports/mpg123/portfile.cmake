@@ -29,6 +29,8 @@ vcpkg_cmake_configure(
         ${options}
     MAYBE_UNUSED_VARIABLES
         BUILD_PROGRAMS
+        CMAKE_DISABLE_FIND_PACKAGE_ALSA
+        CMAKE_DISABLE_FIND_PACKAGE_PkgConfig
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
