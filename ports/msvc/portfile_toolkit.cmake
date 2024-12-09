@@ -53,4 +53,11 @@ block(PROPAGATE VCToolkit_VERSION VCToolkit_REDIST_VERSION)
 
   file(STRINGS "${vs_base_dir}/VC/Auxiliary/Build/Microsoft.VCRedistVersion.default.txt" VCToolkit_REDIST_VERSION)
   file(STRINGS "${vs_base_dir}/VC/Auxiliary/Build/Microsoft.VCToolsVersion.default.txt" VCToolkit_VERSION)
+
+  vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_PACKAGES_DIR}
+    PATCHES
+      patches/adjust_vcvars_1.patch
+      patches/adjust_vcvars_2.patch
+  )
 endblock()
