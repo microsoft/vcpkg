@@ -1,10 +1,12 @@
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO google/or-tools
-        REF v${VERSION}
-        SHA512 38dbdb910c32cb07fc861ffae3976db80ea3f209d3e883ebb1193860f4095448b74c947b98c200a7d3fadac9480b7e94ff13825392b17d6c2576f0c2569d9d27
-        HEAD_REF stable
-        PATCHES disable-msvc-bundle-install.patch disable-build-of-executables.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/or-tools
+    REF "v${VERSION}"
+    SHA512 38dbdb910c32cb07fc861ffae3976db80ea3f209d3e883ebb1193860f4095448b74c947b98c200a7d3fadac9480b7e94ff13825392b17d6c2576f0c2569d9d27
+    HEAD_REF stable
+    PATCHES
+        disable-msvc-bundle-install.patch
+        disable-build-of-executables.patch
 )
 
 vcpkg_check_features(
