@@ -46,6 +46,7 @@ vcpkg_from_github(
         001-fix-uwp.patch
         002-fix-builder-error.patch
         003-fix-mingw.patch
+        004-fix-display-selection-macos-ios.patch
 )
 
 # Generate angle_commit.h
