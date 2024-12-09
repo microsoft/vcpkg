@@ -22,7 +22,6 @@ vcpkg_from_gitlab(
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         no-downloads.patch
-        plugin-base-build-static-tools.patch
         ${PATCHES}
 )
 
@@ -63,7 +62,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vorbis          gst-plugins-base:vorbis
         x11-base        gst-plugins-base:x11
         x11-base        gst-plugins-base:xshm
-        play            gst-plugins-base:tools
 
         plugins-good    good
         bzip2-good      gst-plugins-good:bz2

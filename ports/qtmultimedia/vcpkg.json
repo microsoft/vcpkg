@@ -60,16 +60,9 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "plugins-base"
-          ]
-        },
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
+            "plugins-base",
             "plugins-bad"
-          ],
-          "platform": "!windows"
+          ]
         }
       ]
     },
