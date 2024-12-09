@@ -67,7 +67,7 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "play"
+            "plugins-bad"
           ],
           "platform": "!windows"
         }
