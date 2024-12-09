@@ -9,9 +9,8 @@ vcpkg_from_github(
         disable-build-of-executables.patch
 )
 
-vcpkg_check_features(
-        OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        FEATURES
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
         highs USE_HIGHS
 )
 
