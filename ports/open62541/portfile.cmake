@@ -1,9 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF 43afb0471a81c71dfb1d1e33589308762d5a6d18
-    SHA512 4c602160baa7ffa464a48f53edcaaaa95bac6933ed40d5113915a04941c0006d0f65267f5ec2462decb0307db5995b8facd3c1d7c4e0e3c3cb9b6f8adb18eb6f
+    REF v${VERSION}
+    SHA512 a6493a96e911e4b67dd017125eedf6f3d794a8c931d897e3fdd050a8e65c20dcb84e9dfad207d1fcec6d2f019ad406954d1711827a74c1665fe24cc32f3b019f
     HEAD_REF master
+    PATCHES
+        android-librt.diff
+        clang-sanitizer.diff
 )
 
 # disable docs
@@ -48,6 +51,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${OPEN62541_ENCRYPTION_OPTIONS}
         "-DOPEN62541_VERSION=v${VERSION}"
+        -DUA_ENABLE_DEBUG_SANITIZER=OFF
         -DUA_MSVC_FORCE_STATIC_CRT=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
