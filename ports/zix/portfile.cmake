@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-win32.patch
+        fix-uwp.patch
 )
 
 vcpkg_configure_meson(
