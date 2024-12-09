@@ -22,6 +22,7 @@ vcpkg_from_gitlab(
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         no-downloads.patch
+        plugin-base-build-static-tools.patch
         ${PATCHES}
 )
 

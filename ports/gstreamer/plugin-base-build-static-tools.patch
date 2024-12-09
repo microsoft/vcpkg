@@ -1,0 +1,13 @@
+diff --git a/subprojects/gst-plugins-base/tools/meson.build b/subprojects/gst-plugins-base/tools/meson.build
+index 32d2a01..f2fdf0b 100644
+--- a/subprojects/gst-plugins-base/tools/meson.build
++++ b/subprojects/gst-plugins-base/tools/meson.build
+@@ -44,7 +44,7 @@ endif
+     },
+   }
+ 
+-if not get_option('tools').disabled() and not static_build
++if not get_option('tools').disabled()
+   foreach tool, data: gst_tools
+     exe_name = '@0@-@1@'.format(tool, api_version)
+     executable(exe_name,
