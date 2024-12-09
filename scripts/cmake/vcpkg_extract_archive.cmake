@@ -40,8 +40,8 @@ function(vcpkg_extract_archive)
                 "${arg_ARCHIVE}"
                 "-o${arg_DESTINATION}"
                 -y -bso0 -bsp0
-            WORKING_DIRECTORY "${arg_DESTINATION}"
-        )
+                WORKING_DIRECTORY "${arg_DESTINATION}"
+            )
     else()
         vcpkg_execute_in_download_mode(
             COMMAND "${CMAKE_COMMAND}" -E tar xzf "${arg_ARCHIVE}"

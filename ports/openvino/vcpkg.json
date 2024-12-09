@@ -1,7 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version": "2024.3.0",
+  "version": "2024.4.0",
+  "port-version": 5,
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -14,12 +15,8 @@
   "homepage": "https://github.com/openvinotoolkit/openvino",
   "documentation": "https://docs.openvino.ai/latest/index.html",
   "license": "Apache-2.0",
-  "supports": "!uwp & !x86",
+  "supports": "!uwp & !x86 & !(android & arm32)",
   "dependencies": [
-    {
-      "name": "pkgconf",
-      "host": true
-    },
     "pugixml",
     {
       "name": "tbb",

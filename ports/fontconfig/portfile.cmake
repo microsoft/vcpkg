@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     PATCHES
         no-etc-symlinks.patch
         libgetopt.patch
+        fix-wasm-shared-memory-atomics.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")

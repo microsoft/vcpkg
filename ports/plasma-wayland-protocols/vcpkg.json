@@ -1,6 +1,6 @@
 {
   "name": "plasma-wayland-protocols",
-  "version": "1.8.0",
+  "version": "1.14.0",
   "description": "The non-standard Wayland protocols use by KDE Plasma",
   "homepage": "https://invent.kde.org/libraries/plasma-wayland-protocols/-/tree/master/",
   "supports": "linux",

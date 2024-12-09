@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         do-not-copy-pdbs-to-lib.patch
         msvc-arm64-atomic.patch
+        minimp3-fix.patch
 )
 
 if(VCPKG_TARGET_IS_ANDROID AND NOT ENV{ANDROID_HOME})
@@ -43,7 +44,7 @@ vcpkg_cmake_configure(
         -DWANT_GLES3=ON
         -DWANT_IMAGE_FREEIMAGE=OFF
         -DWANT_MODAUDIO=OFF # Not available on vcpkg right now
-        -DWANT_MP3=OFF
+        -DWANT_MP3=ON
         -DWANT_OPENSL=OFF # Not yet available on vcpkg
         -DWANT_POPUP_EXAMPLES=OFF
         -DWANT_TESTS=OFF

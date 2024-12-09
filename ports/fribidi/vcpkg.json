@@ -1,6 +1,6 @@
 {
   "name": "fribidi",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)",
   "homepage": "https://www.gnu.org/software/fribidi",
   "license": "LGPL-2.1-or-later",

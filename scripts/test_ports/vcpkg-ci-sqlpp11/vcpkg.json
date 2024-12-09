@@ -23,7 +23,7 @@
       "features": [
         "mariadb"
       ],
-      "platform": "x86 & windows"
+      "platform": "android | (x86 & windows)"
     },
     {
       "name": "sqlpp11",

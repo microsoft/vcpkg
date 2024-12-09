@@ -1,6 +1,6 @@
 {
   "name": "rapidcsv",
-  "version": "8.83",
+  "version": "8.84",
   "description": "Rapidcsv is a C++ header-only library for CSV parsing.",
   "homepage": "https://github.com/d99kris/rapidcsv/",
   "license": "BSD-3-Clause",
