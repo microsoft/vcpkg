@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DUSE_SCIP=OFF
         -DUSE_COINOR=OFF
-
         -DBUILD_TESTING=OFF
         -DBUILD_DEPS=OFF
         -DBUILD_SAMPLES=OFF
