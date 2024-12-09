@@ -5,6 +5,8 @@ vcpkg_from_gitlab(
     REF "v${VERSION}"
     SHA512 73011eba2beea1620f6ca2a911ac331e7a5b31835361893158ac04345504d7d071525fcae6126c2bd87e087c0a407afbd7dbcd37020a3e43cdf5679cb4b27a8b
     HEAD_REF master
+    PATCHES
+        fix-uwp.patch
 )
 
 vcpkg_configure_meson(
