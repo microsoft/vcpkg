@@ -87,6 +87,9 @@ endif()
 
 if(BUILD_STATIC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mysqlx/common/api.h" "defined STATIC_CONCPP" "(1)")
+    if(WITH_JDBC)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jdbc/cppconn/build_config.h" "ifdef STATIC_CONCPP" "if 1")
+    endif()
 endif()
 
 file(REMOVE_RECURSE
