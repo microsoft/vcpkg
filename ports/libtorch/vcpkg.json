@@ -1,15 +1,15 @@
 {
   "name": "libtorch",
-  "version": "2.1.2",
-  "port-version": 7,
+  "version": "2.5.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
-  "supports": "(windows & !static) | osx | linux",
+  "supports": "windows | osx | linux",
   "dependencies": [
     "blas",
     "cpuinfo",
     "eigen3",
+    "fbgemm",
     "fftw3",
     "flatbuffers",
     {
@@ -26,6 +26,7 @@
     "lapack",
     "lmdb",
     "mimalloc",
+    "nlohmann-json",
     "onnx",
     "onnx-optimizer",
     "opencl",
@@ -54,7 +55,7 @@
   "default-features": [
     {
       "name": "cuda",
-      "platform": "windows & !x86"
+      "platform": "windows & !x86 & !static"
     },
     "opencv",
     "zstd"
