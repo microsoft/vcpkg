@@ -4,7 +4,7 @@
   "description": "Google Optimization Tools (a.k.a., OR-Tools) is an open-source, fast and portable software suite for solving combinatorial optimization problems",
   "homepage": "https://developers.google.com/optimization",
   "license": "Apache-2.0",
-  "supports": "!(windows & !static) & !android",
+  "supports": "!android",
   "dependencies": [
     {
       "name": "abseil",
