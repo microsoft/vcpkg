@@ -1,7 +1,7 @@
 {
   "name": "qt",
   "version": "6.8.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -204,6 +204,13 @@
             "qml"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "qtquick3d",
+          "features": [
+            "openxr"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "qtwayland",

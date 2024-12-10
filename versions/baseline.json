@@ -2549,7 +2549,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "1.4.0",
+      "baseline": "1.4.1",
       "port-version": 0
     },
     "egl": {
@@ -3917,7 +3917,7 @@
       "port-version": 0
     },
     "juce": {
-      "baseline": "7.0.12",
+      "baseline": "8.0.4",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -4221,7 +4221,7 @@
       "port-version": 6
     },
     "lcms": {
-      "baseline": "2.14",
+      "baseline": "2.16",
       "port-version": 0
     },
     "leaf": {
@@ -6214,7 +6214,7 @@
     },
     "mysql-connector-cpp": {
       "baseline": "9.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "nameof": {
       "baseline": "0.10.4",
@@ -6790,7 +6790,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.34",
-      "port-version": 0
+      "port-version": 1
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -6837,8 +6837,8 @@
       "port-version": 0
     },
     "otl": {
-      "baseline": "4.0.478",
-      "port-version": 1
+      "baseline": "4.0.480",
+      "port-version": 0
     },
     "outcome": {
       "baseline": "2.2.9",
@@ -7358,7 +7358,7 @@
     },
     "qt": {
       "baseline": "6.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qt-advanced-docking-system": {
       "baseline": "4.3.1",
@@ -7646,7 +7646,7 @@
     },
     "qtquick3d": {
       "baseline": "6.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qtquick3dphysics": {
       "baseline": "6.8.0",
@@ -8217,7 +8217,7 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.30.9",
+      "baseline": "2.30.10",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -8657,7 +8657,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.47.1",
+      "baseline": "3.47.2",
       "port-version": 0
     },
     "sqlitecpp": {
