@@ -1,0 +1,28 @@
+diff --git a/src/frontends/onnx/frontend/src/frontend.cpp b/src/frontends/onnx/frontend/src/frontend.cpp
+index 5ad28be3654422..5296e5b1b7a506 100644
+--- a/src/frontends/onnx/frontend/src/frontend.cpp
++++ b/src/frontends/onnx/frontend/src/frontend.cpp
+@@ -3,6 +3,9 @@
+ //
+ 
+ #include <google/protobuf/port_def.inc>
++#ifndef PROTOBUF_VERSION
++#    include <google/protobuf/runtime_version.h>
++#endif
+ #if PROTOBUF_VERSION >= 4022000  // protobuf 4.22
+ #    define OV_PROTOBUF_ABSL_IS_USED
+ #endif
+diff --git a/src/frontends/paddle/src/frontend.cpp b/src/frontends/paddle/src/frontend.cpp
+index 163b4d894cb766..2f2ca72418e5dd 100644
+--- a/src/frontends/paddle/src/frontend.cpp
++++ b/src/frontends/paddle/src/frontend.cpp
+@@ -5,6 +5,9 @@
+ #include "openvino/frontend/paddle/frontend.hpp"
+ 
+ #include <google/protobuf/port_def.inc>
++#ifndef PROTOBUF_VERSION
++#    include <google/protobuf/runtime_version.h>
++#endif
+ #if PROTOBUF_VERSION >= 4022000  // protobuf 4.22
+ #    define OV_PROTOBUF_ABSL_IS_USED
+ #endif
