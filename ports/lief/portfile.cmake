@@ -175,7 +175,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
 
-        -DLIEF_DEBUG_INFO=ON
+        -DLIEF_DEBUG_INFO=OFF
         -DLIEF_OBJC=OFF
         -DLIEF_DYLD_SHARED_CACHE=ON
         -DLIEF_ASM=OFF
