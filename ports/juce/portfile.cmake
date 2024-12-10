@@ -26,7 +26,7 @@ FEATURES
   "opengl"      JUCE_OPENGL
 )
 # Based on https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
   message("juce currently requires the following programs from the system package manager:
   libx11-dev libxcomposite-dev libxext-dev
 On Ubuntu derivatives:
@@ -92,8 +92,9 @@ endif()
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-  -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
-  ${FEATURE_OPTIONS}
+    -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
+    -DJUCE_INSTALL_DESTINATION=share/juce
+    ${FEATURE_OPTIONS}
   MAYBE_UNUSED_VARIABLES
     JUCE_PLUGINHOST_LADSPA
     JUCE_JACK
@@ -147,9 +148,5 @@ file(REMOVE_RECURSE
 "${CURRENT_PACKAGES_DIR}/debug/"
 )
 
-# Copy license
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
-# Copy usage examples
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

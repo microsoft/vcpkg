@@ -32,18 +32,5 @@ index f4cdba7f7..fab57fdb4 100644
          "The location, relative to the install prefix, where juceaide will be installed")
 
      install(PROGRAMS "${imported_location}" DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a46b51f1a..38f863a3e 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -137,7 +137,7 @@
-     VERSION ${JUCE_VERSION}
-     COMPATIBILITY ExactVersion)
-
--set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
-+set(JUCE_INSTALL_DESTINATION "share/juce" CACHE STRING
-     "The location, relative to the install prefix, where the JUCE config file will be installed")
-
- set(JUCE_MODULE_PATH "include/JUCE-${JUCE_VERSION}/modules")
 --
 2.34.1
