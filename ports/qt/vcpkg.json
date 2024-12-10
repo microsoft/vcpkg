@@ -205,6 +205,13 @@
           "platform": "windows"
         },
         {
+          "name": "qtquick3d",
+          "features": [
+            "openxr"
+          ],
+          "platform": "!uwp"
+        },
+        {
           "name": "qtwayland",
           "features": [
             "qml"

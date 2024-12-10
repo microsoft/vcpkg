@@ -22,9 +22,6 @@
     "qtquicktimeline",
     "qtshadertools"
   ],
-  "default-features": [
-    "default-features"
-  ],
   "features": {
     "assimp": {
       "description": "assimp",
@@ -32,8 +29,11 @@
         "assimp"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "openxr": {
+      "description": "OpenXR support",
+      "dependencies": [
+        "openxr-loader"
+      ]
     }
   }
 }
