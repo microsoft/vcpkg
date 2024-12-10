@@ -1,5 +1,5 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index f2dae77..3a532c9 100644
+index f2dae77..1a69a10 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
 @@ -70,7 +70,7 @@ option (HDF5_ENABLE_Z_LIB_SUPPORT "Enable Zlib Filters" ON)
@@ -20,7 +20,7 @@ index f2dae77..3a532c9 100644
          set (zlib_PC_LIBS_PRIVATE "${ZLIB_LIBRARIES}")
        endif ()
      else ()
-@@ -118,12 +118,13 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+@@ -118,13 +118,17 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
    if (NOT SZIP_USE_EXTERNAL)
      set(SZIP_FOUND FALSE)
      set(libaec_USE_STATIC_LIBS ${USE_LIBAEC_STATIC})
@@ -31,8 +31,13 @@ index f2dae77..3a532c9 100644
      endif ()
      if (NOT SZIP_FOUND)
 -      find_package (SZIP NAMES ${LIBAEC_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
-+      find_package(libaec CONFIG REQUIRED)
-+      set (LINK_COMP_LIBS ${LINK_COMP_LIBS} libaec::sz libaec::aec libaec::sz_shared libaec::aec_shared)
-       if (NOT SZIP_FOUND)
+-      if (NOT SZIP_FOUND)
++	  if(BUILD_SHARED_LIBS)
++        set (LINK_COMP_LIBS ${LINK_COMP_LIBS} libaec::sz_shared libaec::aec_shared)
++	  else()
++	    set (LINK_COMP_LIBS ${LINK_COMP_LIBS} libaec::sz libaec::aec)
++	  endif()
++      if (NOT libaec_FOUND)
          find_package (SZIP) # Legacy find
        endif ()
+     endif ()
