@@ -1,0 +1,24 @@
+diff --git a/cmake/libutils/merge_archives.cmake.in b/cmake/libutils/merge_archives.cmake.in
+index 5b256c6..b4d5ff5 100644
+--- a/cmake/libutils/merge_archives.cmake.in
++++ b/cmake/libutils/merge_archives.cmake.in
+@@ -741,7 +741,7 @@ function(parse_build_log_msbuild BUILD_LOG)
+     # Remove surrounding quotes, if any
+     string(REGEX REPLACE " *\"?([^\"]+)\"? *$" "\\1" opt ${opt})
+ 
+-    #message("-- looking at: ${opt}")
++    message("-- looking at: ${opt}")
+ 
+     if(opt MATCHES "^/")
+       list(APPEND LINK_OPTIONS ${opt})
+@@ -751,8 +751,8 @@ function(parse_build_log_msbuild BUILD_LOG)
+ 
+   endforeach()
+ 
+-  #message("-- extracted deps: ${DEPS}")
+-  #message("-- extracted options: ${LINK_OPTIONS}")
++  message("-- extracted deps: ${DEPS}")
++  message("-- extracted options: ${LINK_OPTIONS}")
+ 
+   set(DEPS "${DEPS}" PARENT_SCOPE)
+   set(LINK_OPTIONS "${LINK_OPTIONS}" PARENT_SCOPE)

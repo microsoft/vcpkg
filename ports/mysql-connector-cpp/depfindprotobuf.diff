@@ -1,13 +1,15 @@
 diff --git a/cdk/cmake/DepFindProtobuf.cmake b/cdk/cmake/DepFindProtobuf.cmake
-index 1fc785e..d9eaecc 100644
+index 1fc785e..1507edb 100644
 --- a/cdk/cmake/DepFindProtobuf.cmake
 +++ b/cdk/cmake/DepFindProtobuf.cmake
-@@ -45,8 +45,6 @@
+@@ -44,9 +44,7 @@
+ #
  #
  
- if(TARGET ext::protobuf)
+-if(TARGET ext::protobuf)
 -  return()
 -endif()
++if(0)
  
  message(STATUS "Setting up Protobuf.")
  

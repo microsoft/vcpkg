@@ -12,6 +12,7 @@ vcpkg_from_github(
         save-linker-opts.diff
         export-targets.patch
         protobuf-source.patch  # Disables upstream log event handling!
+        trace.diff
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/mysql-connector-cpp-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 file(REMOVE_RECURSE
@@ -105,3 +106,4 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+message(FATAL_ERROR STOP)
