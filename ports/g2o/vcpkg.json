@@ -1,6 +1,6 @@
 {
   "name": "g2o",
-  "version-string": "20230806_git",
+  "version-date": "2023-08-06",
   "description": "g2o: A General Framework for Graph Optimization",
   "homepage": "https://openslam.org/g2o.html",
   "dependencies": [
