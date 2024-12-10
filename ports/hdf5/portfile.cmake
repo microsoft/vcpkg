@@ -5,12 +5,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 77849b644f5312eae5a3f2fe45666d9df95cc21b092207dae01ca7d019e428255d75fe0c27538e4101eabf2030927a73ceaec8e1471c72b51fed5370810f9a35
+    SHA512 cf5e681e549c1e60546c7a6539a4f92f2e56468360e2ee697f92b171d168d3e6bd7746f77207c2c7676bf1ade5ccdaab6e35ca93144e3e5c14fdd20567a663ab
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
         add-_Float16-type-on-aarch64.patch
         pkgconfig-requires.patch
+        fix-zlib-szilb.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
@@ -72,6 +73,7 @@ vcpkg_cmake_configure(
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
         -DALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
+        -DHDF5_ENABLE_SZIP_SUPPORT=OFF
     OPTIONS_RELEASE
         -DCMAKE_DEBUG_POSTFIX= # For lib name in pkgconfig files
 )

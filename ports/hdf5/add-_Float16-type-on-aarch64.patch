@@ -1,10 +1,10 @@
 diff --git a/src/H5private.h b/src/H5private.h
-index 904aa9f..e745c03 100644
+index 5a201cb..9d61a5b 100644
 --- a/src/H5private.h
 +++ b/src/H5private.h
-@@ -602,7 +602,11 @@
+@@ -595,7 +595,11 @@
   */
- #ifdef H5_HAVE__FLOAT16
+ #if defined(H5_HAVE__FLOAT16) && !defined(__cplusplus)
  #if defined(__GNUC__)
 +#if defined(__aarch64__)
 +typedef __fp16 H5__Float16;

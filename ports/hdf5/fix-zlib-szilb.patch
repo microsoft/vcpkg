@@ -1,0 +1,32 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index a73dc34..594b161 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -106,9 +106,9 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
+         set (H5_ZLIB_INCLUDE_DIRS ${H5_ZLIB_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
+         # The FindZLIB.cmake module does not set an OUTPUT_NAME
+         # on the target. The target returned is: ZLIB::ZLIB
+-        get_filename_component (libname ${ZLIB_LIBRARIES} NAME_WLE)
+-        string (REGEX REPLACE "^lib" "" libname ${libname})
+-        set_target_properties (ZLIB::ZLIB PROPERTIES OUTPUT_NAME zlib-static)
++        # get_filename_component (libname ${ZLIB_LIBRARIES} NAME_WLE)
++        # string (REGEX REPLACE "^lib" "" libname ${libname})
++        set_target_properties (ZLIB::ZLIB PROPERTIES OUTPUT_NAME z)
+         set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ZLIB::ZLIB)
+         set (zlib_PC_LIBS_PRIVATE "${ZLIB_LIBRARIES}")
+       endif ()
+@@ -153,7 +153,13 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+     endif ()
+     set(libaec_USE_STATIC_LIBS ${HDF5_USE_LIBAEC_STATIC})
+     set(SZIP_FOUND FALSE)
+-    find_package (SZIP NAMES ${LIBAEC_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS ${LIBAEC_SEACH_TYPE})
++    # find_package (SZIP NAMES ${LIBAEC_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS ${LIBAEC_SEACH_TYPE})
++    find_package(SZIP NAMES szip REQUIRED)
++    set(SZIP_INCLUDE_DIR "")
++    set(SZIP_LIBRARIES szip-static)
++    if (TARGET szip-shared)
++      set(SZIP_LIBRARIES szip-shared)
++    endif()  
+     if (NOT SZIP_FOUND)
+       find_package (SZIP) # Legacy find
+     endif ()
