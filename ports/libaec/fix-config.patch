@@ -1,0 +1,23 @@
+diff --git a/cmake/libaec-config.cmake.in b/cmake/libaec-config.cmake.in
+index 2fffad9..35ce668 100644
+--- a/cmake/libaec-config.cmake.in
++++ b/cmake/libaec-config.cmake.in
+@@ -24,17 +24,4 @@
+ #   libaec::aec    - The AEC library.
+ #   libaec::sz     - The SZIP compatible version of the AEC library.
+ 
+-find_path(libaec_INCLUDE_DIR NAMES libaec.h DOC "AEC include directory")
+-find_path(SZIP_INCLUDE_DIR NAMES szlib.h DOC "SZIP include directory")
+-if (libaec_USE_STATIC_LIBS)
+-  if (MSVC)
+-    find_library(libaec_LIBRARY NAMES aec-static.lib DOC "AEC library")
+-    find_library(SZIP_LIBRARY NAMES szip-static.lib DOC "SZIP compatible version of the AEC library")
+-  else ()
+-    find_library(libaec_LIBRARY NAMES libaec.a DOC "AEC library")
+-    find_library(SZIP_LIBRARY NAMES libsz.a DOC "SZIP compatible version of the AEC library")
+-  endif ()
+-else ()
+-  find_library(libaec_LIBRARY NAMES aec DOC "AEC library")
+-  find_library(SZIP_LIBRARY NAMES sz szip DOC "SZIP compatible version of the AEC library")
+-endif ()
++include("${CMAKE_CURRENT_LIST_DIR}/libaec-targets.cmake")
