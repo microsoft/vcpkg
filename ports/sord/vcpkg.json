@@ -4,6 +4,7 @@
   "description": "Sord is a lightweight C library for storing RDF statements in memory.",
   "homepage": "https://drobilla.net/software/sord",
   "license": "ISC",
+  "supports": "!uwp",
   "dependencies": [
     "pcre2",
     "serd",
