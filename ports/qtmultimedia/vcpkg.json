@@ -60,8 +60,8 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "plugins-base",
-            "plugins-bad"
+            "plugins-bad",
+            "plugins-base"
           ]
         }
       ]
