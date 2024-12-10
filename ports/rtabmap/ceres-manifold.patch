@@ -1,0 +1,114 @@
+diff --git a/corelib/src/optimizer/OptimizerCeres.cpp b/corelib/src/optimizer/OptimizerCeres.cpp
+index 5a62283a..7d216b47 100644
+--- a/corelib/src/optimizer/OptimizerCeres.cpp
++++ b/corelib/src/optimizer/OptimizerCeres.cpp
+@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #ifdef RTABMAP_CERES
+ #include <ceres/ceres.h>
+-#include <ceres/local_parameterization.h>
++#include <ceres/manifold.h>
+ #include "ceres/pose_graph_2d/types.h"
+ #include "ceres/pose_graph_2d/pose_graph_2d_error_term.h"
+ #include "ceres/pose_graph_2d/angle_local_parameterization.h"
+@@ -118,8 +118,8 @@ std::map<int, Transform> OptimizerCeres::optimize(
+ 		}
+ 
+ 		ceres::LossFunction* loss_function = NULL;
+-		ceres::LocalParameterization* angle_local_parameterization = NULL;
+-		ceres::LocalParameterization* quaternion_local_parameterization = NULL;
++		ceres::Manifold* angle_local_parameterization = NULL;
++		ceres::Manifold* quaternion_local_parameterization = NULL;
+ 
+ 		for(std::multimap<int, Link>::const_iterator iter=edgeConstraints.begin(); iter!=edgeConstraints.end(); ++iter)
+ 		{
+@@ -168,8 +168,8 @@ std::map<int, Transform> OptimizerCeres::optimize(
+ 					{
+ 						angle_local_parameterization = ceres::examples::AngleLocalParameterization::Create();
+ 					}
+-					problem.SetParameterization(&pose_begin_iter->second.yaw_radians, angle_local_parameterization);
+-					problem.SetParameterization(&pose_end_iter->second.yaw_radians, angle_local_parameterization);
++					problem.SetManifold(&pose_begin_iter->second.yaw_radians, angle_local_parameterization);
++					problem.SetManifold(&pose_end_iter->second.yaw_radians, angle_local_parameterization);
+ 				}
+ 				else
+ 				{
+@@ -196,10 +196,10 @@ std::map<int, Transform> OptimizerCeres::optimize(
+ 											  pose_end_iter->second.p.data(), pose_end_iter->second.q.coeffs().data());
+ 					if(quaternion_local_parameterization == NULL)
+ 					{
+-						quaternion_local_parameterization = new ceres::EigenQuaternionParameterization;
++						quaternion_local_parameterization = new ceres::EigenQuaternionManifold;
+ 					}
+-					problem.SetParameterization(pose_begin_iter->second.q.coeffs().data(), quaternion_local_parameterization);
+-					problem.SetParameterization(pose_end_iter->second.q.coeffs().data(), quaternion_local_parameterization);
++					problem.SetManifold(pose_begin_iter->second.q.coeffs().data(), quaternion_local_parameterization);
++					problem.SetManifold(pose_end_iter->second.q.coeffs().data(), quaternion_local_parameterization);
+ 				}
+ 			}
+ 			//else // not supporting pose prior and landmarks
+diff --git a/corelib/src/optimizer/ceres/pose_graph_2d/angle_local_parameterization.h b/corelib/src/optimizer/ceres/pose_graph_2d/angle_local_parameterization.h
+index 428ccccd..d5bf1dcd 100644
+--- a/corelib/src/optimizer/ceres/pose_graph_2d/angle_local_parameterization.h
++++ b/corelib/src/optimizer/ceres/pose_graph_2d/angle_local_parameterization.h
+@@ -31,7 +31,8 @@
+ #ifndef CERES_EXAMPLES_POSE_GRAPH_2D_ANGLE_LOCAL_PARAMETERIZATION_H_
+ #define CERES_EXAMPLES_POSE_GRAPH_2D_ANGLE_LOCAL_PARAMETERIZATION_H_
+ 
+-#include "ceres/local_parameterization.h"
++#include "ceres/autodiff_manifold.h"
++#include "ceres/manifold.h"
+ #include "normalize_angle.h"
+ 
+ namespace ceres {
+@@ -41,19 +42,20 @@ namespace examples {
+ // [-pi to pi).
+ class AngleLocalParameterization {
+  public:
+-
+   template <typename T>
+-  bool operator()(const T* theta_radians, const T* delta_theta_radians,
+-                  T* theta_radians_plus_delta) const {
+-    *theta_radians_plus_delta =
+-        NormalizeAngle(*theta_radians + *delta_theta_radians);
++  bool Plus(const T* x, const T* delta, T* x_plus_delta) const {
++    *x_plus_delta = NormalizeAngle(*x + *delta);
++    return true;
++  }
+ 
++  template <typename T>
++  bool Minus(const T* y, const T* x, T* y_minus_x) const {
++    *y_minus_x = NormalizeAngle(*y - *x);
+     return true;
+   }
+ 
+-  static ceres::LocalParameterization* Create() {
+-    return (new ceres::AutoDiffLocalParameterization<AngleLocalParameterization,
+-                                                     1, 1>);
++  static ceres::Manifold* Create() {
++    return (new ceres::AutoDiffManifold<AngleLocalParameterization, 1, 1>);
+   }
+ };
+ 
+diff --git a/corelib/src/optimizer/ceres/pose_graph_3d/eigen_quaternion_parameterization.h b/corelib/src/optimizer/ceres/pose_graph_3d/eigen_quaternion_parameterization.h
+index ae03ebda..ffab3042 100644
+--- a/corelib/src/optimizer/ceres/pose_graph_3d/eigen_quaternion_parameterization.h
++++ b/corelib/src/optimizer/ceres/pose_graph_3d/eigen_quaternion_parameterization.h
+@@ -31,7 +31,7 @@
+ #ifndef CERES_EXAMPLES_POSE_GRAPH_3D_EIGEN_QUATERNION_PARAMETERIZATION_H_
+ #define CERES_EXAMPLES_POSE_GRAPH_3D_EIGEN_QUATERNION_PARAMETERIZATION_H_
+ 
+-#include "ceres/local_parameterization.h"
++#include "ceres/manifold.h"
+ 
+ namespace ceres {
+ 
+@@ -46,7 +46,7 @@ namespace ceres {
+ //
+ // Plus(x, delta) = [sin(|delta|) delta / |delta|, cos(|delta|)] * x
+ // with * being the quaternion multiplication operator.
+-class EigenQuaternionParameterization : public ceres::LocalParameterization {
++class EigenQuaternionParameterization : public ceres::Manifold {
+  public:
+   virtual ~EigenQuaternionParameterization() {}
+   virtual bool Plus(const double* x_ptr,
