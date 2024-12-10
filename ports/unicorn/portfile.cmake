@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-msvc-shared.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,27 +16,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB del_files "${CURRENT_PACKAGES_DIR}/lib/*.a" "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
-    if(del_files)
-        file(REMOVE ${del_files})
-    endif()
-
-    file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
-    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
-    
-    set(ALL_LIB_FILES ${LIB_FILES} ${DEBUG_LIB_FILES})
-    
-    foreach(file ${ALL_LIB_FILES})
-        if(file MATCHES "unicorn-import.lib")
-            get_filename_component(PARENT_DIR "${file}" DIRECTORY)
-            set(NEW_FILE "${PARENT_DIR}/unicorn.lib")
-            file(RENAME ${file} ${NEW_FILE})
-        endif()
-    endforeach()
-endif()
-
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
