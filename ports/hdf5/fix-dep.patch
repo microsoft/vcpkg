@@ -41,3 +41,15 @@ index f2dae77..1a69a10 100644
          find_package (SZIP) # Legacy find
        endif ()
      endif ()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9d04c21..db2417a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1191,7 +1191,6 @@ endforeach ()
+ # Assuming they don't
+ foreach (libs ${LINK_COMP_LIBS})
+ #  set (_PKG_CONFIG_REQUIRES_PRIVATE "${_PKG_CONFIG_REQUIRES_PRIVATE} -l${libs}")
+-  #set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libs}")
+ endforeach ()
+ 
+ if (BUILD_STATIC_LIBS)
