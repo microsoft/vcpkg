@@ -168,17 +168,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "dex"            LIEF_DEX               # Build LIEF with DEX module
         "vdex"           LIEF_VDEX              # Build LIEF with VDEX module
         "art"            LIEF_ART               # Build LIEF with ART module
+
+        "debug"                 LIEF_DEBUG_INFO        # Build LIEF with DWARF/PDB support
+        "objc"                  LIEF_OBJC              # Build LIEF with inspect Objective-C metadata support
+        "dyld-shared-cache"     LIEF_DYLD_SHARED_CACHE # Build LIEF with dyld shared cache support
+        "asm"                   LIEF_ASM               # Build LIEF with assembler/disassembler support
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-
-        -DLIEF_DEBUG_INFO=ON
-        -DLIEF_OBJC=OFF
-        -DLIEF_DYLD_SHARED_CACHE=OFF
-        -DLIEF_ASM=OFF
 
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
@@ -202,6 +202,10 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lief/LIEFConfig.cmake"
 )
 
 vcpkg_fixup_pkgconfig()
+
+if("debug" IN_LIST FEATURES)
+    vcpkg_copy_pdbs()
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

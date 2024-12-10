@@ -37,11 +37,23 @@
     "art": {
       "description": "Build LIEF with ART module"
     },
+    "asm": {
+      "description": "Build LIEF with assembler/disassembler support",
+      "support": "!(windows & static)"
+    },
     "c-api": {
       "description": "C API"
     },
+    "debug": {
+      "description": "Build LIEF with DWARF/PDB support",
+      "support": "!(windows & static)"
+    },
     "dex": {
       "description": "Build LIEF with DEX module"
+    },
+    "dyld-shared-cache": {
+      "description": "Build LIEF with Dyld shared cache support",
+      "support": "!(windows & static)"
     },
     "elf": {
       "description": "Build LIEF with ELF module"
@@ -69,6 +81,10 @@
     },
     "oat": {
       "description": "Build LIEF with OAT module"
+    },
+    "objc": {
+      "description": "Build LIEF with ObjC metadata support",
+      "support": "!(windows & static)"
     },
     "pe": {
       "description": "Build LIEF with PE module"
