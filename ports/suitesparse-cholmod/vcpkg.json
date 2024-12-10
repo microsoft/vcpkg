@@ -26,6 +26,7 @@
   "features": {
     "cuda": {
       "description": "Enable CUDA support for the current compute architecture of this machine",
+      "supports": "!(windows & static)",
       "license": "GPL-2.0-or-later AND LGPL-2.1-or-later AND Apache-2.0",
       "dependencies": [
         "cuda",
