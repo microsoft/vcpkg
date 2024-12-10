@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8e49c19e..330bb8cf 100644
+index 8e49c19e..f8c61d92 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -292,27 +292,28 @@ if (SUITESPARSE)
@@ -43,7 +43,7 @@ index 8e49c19e..330bb8cf 100644
  else (SUITESPARSE)
    message("-- Building without SuiteSparse.")
    list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
-@@ -395,9 +396,10 @@ endif()
+@@ -395,9 +396,12 @@ endif()
  # GFlags.
  if (GFLAGS)
    # Don't search with REQUIRED as we can continue without gflags.
@@ -52,11 +52,13 @@ index 8e49c19e..330bb8cf 100644
    if (gflags_FOUND)
 -    if (TARGET gflags)
 +    if (TARGET gflags::gflags)
-+      add_library(gflags ALIAS gflags::gflags)
++      if(NOT TARGET gflags)
++        add_library(gflags ALIAS gflags::gflags)
++      endif()
        message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
      else()
        message("-- Detected version of gflags: ${gflags_VERSION} does not define "
-@@ -430,28 +432,7 @@ if (MINIGLOG)
+@@ -430,28 +434,7 @@ if (MINIGLOG)
    mark_as_advanced(FORCE GLOG_INCLUDE_DIR
                           GLOG_LIBRARY)
  else (MINIGLOG)
@@ -86,7 +88,7 @@ index 8e49c19e..330bb8cf 100644
  endif (MINIGLOG)
  
  if (NOT SCHUR_SPECIALIZATIONS)
-@@ -466,7 +447,7 @@ endif (NOT CUSTOM_BLAS)
+@@ -466,7 +449,7 @@ endif (NOT CUSTOM_BLAS)
  
  if (BUILD_BENCHMARKS)
    # Version 1.3 was first to provide import targets
@@ -95,7 +97,7 @@ index 8e49c19e..330bb8cf 100644
    if (benchmark_FOUND)
       message("-- Found Google benchmark library. Building Ceres benchmarks.")
    else()
-@@ -722,12 +703,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
+@@ -722,12 +705,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
  install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})

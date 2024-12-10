@@ -55,7 +55,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    MAYBE_UNUSED_VARIABLES
     OPTIONS
         ${FEATURE_OPTIONS}
         ${TARGET_OPTIONS}
@@ -67,6 +66,9 @@ vcpkg_cmake_configure(
         -DUSE_CUDA=${USE_CUDA}
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
+    MAYBE_UNUSED_VARIABLES
+        CUDA
+        MSVC_USE_STATIC_CRT
 )
 
 vcpkg_cmake_install()
