@@ -151,6 +151,24 @@ index ef2fcb3..eff0c68 100644
    FILE CartographerTargets.cmake
  )
  
+diff --git a/cartographer-config.cmake.in b/cartographer-config.cmake.in
+index 98193da..3e36ad9 100644
+--- a/cartographer-config.cmake.in
++++ b/cartographer-config.cmake.in
+@@ -44,6 +44,13 @@ if(CARTOGRAPHER_HAS_GRPC)
+    find_package(async_grpc ${QUIET_OR_REQUIRED_OPTION})
+ endif()
+ 
++if(WIN32)
++  set(Boost_USE_STATIC_LIBS FALSE)
++endif()
++find_package(Boost ${QUIET_OR_REQUIRED_OPTION} COMPONENTS iostreams)
++find_package(Lua ${QUIET_OR_REQUIRED_OPTION})
++find_package(Protobuf ${QUIET_OR_REQUIRED_OPTION})
++
+ include("${CARTOGRAPHER_CMAKE_DIR}/CartographerTargets.cmake")
+ 
+ unset(QUIET_OR_REQUIRED_OPTION)
 diff --git a/cartographer/cloud/internal/map_builder_server.h b/cartographer/cloud/internal/map_builder_server.h
 index 03a70aa..3687f3d 100644
 --- a/cartographer/cloud/internal/map_builder_server.h
@@ -1576,10 +1594,10 @@ index 68551f1..9619735 100644
  #include <vector>
  
 diff --git a/cmake/functions.cmake b/cmake/functions.cmake
-index 8cfc05f..9ff4de0 100644
+index 1bbce43..ed320b1 100644
 --- a/cmake/functions.cmake
 +++ b/cmake/functions.cmake
-@@ -126,12 +126,7 @@ macro(google_initialize_cartographer_project)
+@@ -130,12 +130,7 @@ macro(google_initialize_cartographer_project)
      set(LIST_FILES_CMD "find ${PROJECT_SOURCE_DIR}/ -not -iwholename '*.git*' | sort | sed 's/^/#/'")
      set(FILES_LIST_PATH "${PROJECT_BINARY_DIR}/AllFiles.cmake")
      set(DETECT_CHANGES_CMD "bash" "-c" "${LIST_FILES_CMD} | diff -N -q ${FILES_LIST_PATH} - || ${LIST_FILES_CMD} > ${FILES_LIST_PATH}")
