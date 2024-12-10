@@ -5525,7 +5525,7 @@
       "port-version": 0
     },
     "lief": {
-      "baseline": "0.15.1",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "lightgbm": {
