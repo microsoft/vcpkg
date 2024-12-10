@@ -1,8 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 0d087c03936977cb7019d7ca52f761a347b80778
-    SHA512 b1c59a504cef4a300e6e5e788b87252ab4ff5f2c373170fcb4b91aaf4ac122733ab677684fa2e1a7ffcaacf9fc9ae061157aec4ff821e1f5306bdff1dcb7c630
+    REF ${VERSION}
+    SHA512 7df75fab6c7023e37a6a4d27fac8dcb4200e0235625fc5952bb23cedb2e582a37fb67ee471c1ae953c0b205fd9cca5538a835f65ef80a771f72dc7ff68000ed9
+    HEAD_REF master
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
@@ -163,7 +164,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_SHARED_LIBS=ON
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
         -DLIEF_EXTERNAL_SPDLOG=ON
