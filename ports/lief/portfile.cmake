@@ -139,6 +139,16 @@ if (VCPKG_TARGET_IS_LINUX)
     )
 endif()
 
+vcpkg_replace_string("${SOURCE_PATH}/include/LIEF/errors.hpp"
+    [[#include <LIEF/third-party/expected.hpp>]]    
+    "#include <tl/expected.hpp>"
+)
+
+vcpkg_replace_string("${SOURCE_PATH}/include/LIEF/span.hpp"
+    [[#include <LIEF/third-party/span.hpp>]]
+    "#include <tcb/span.hpp>"
+)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "c-api"          LIEF_C_API             # C API
@@ -164,6 +174,12 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+
+        -DLIEF_DEBUG_INFO=ON
+        -DLIEF_OBJC=ON
+        -DLIEF_DYLD_SHARED_CACHE=ON
+        -DLIEF_ASM=ON
+
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
         -DLIEF_EXTERNAL_SPDLOG=ON
