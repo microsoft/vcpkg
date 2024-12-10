@@ -1670,7 +1670,7 @@
     },
     "civetweb": {
       "baseline": "1.16",
-      "port-version": 2
+      "port-version": 3
     },
     "cjson": {
       "baseline": "1.7.18",
@@ -2776,6 +2776,10 @@
       "baseline": "2019-12-19",
       "port-version": 2
     },
+    "filament": {
+      "baseline": "1.55.0",
+      "port-version": 0
+    },
     "fineftp": {
       "baseline": "1.3.4",
       "port-version": 0
@@ -3194,7 +3198,7 @@
     },
     "glslang": {
       "baseline": "15.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
