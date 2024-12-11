@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49d85c6..d3e5975 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -140,7 +140,7 @@ write_basic_package_version_file("${JUCE_BINARY_DIR}/JUCEConfigVersion.cmake"
+ set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
+     "The location, relative to the install prefix, where the JUCE config file will be installed")
+ 
+-set(JUCE_MODULE_PATH "include/JUCE-${JUCE_VERSION}/modules")
++set(JUCE_MODULE_PATH "include")
+ set(UTILS_INSTALL_DIR "${JUCE_INSTALL_DESTINATION}")
+ set(JUCEAIDE_PATH "${JUCE_TOOL_INSTALL_DIR}/${JUCE_JUCEAIDE_NAME}")
+ configure_package_config_file("${JUCE_CMAKE_UTILS_DIR}/JUCEConfig.cmake.in"
+diff --git a/modules/CMakeLists.txt b/modules/CMakeLists.txt
+index 27c987a..1ff4e10 100644
+--- a/modules/CMakeLists.txt
++++ b/modules/CMakeLists.txt
+@@ -31,7 +31,7 @@
+ # ==============================================================================
+ 
+ juce_add_modules(
+-    INSTALL_PATH "include/JUCE-${JUCE_VERSION}/modules"
++    INSTALL_PATH "include"
+     ALIAS_NAMESPACE juce
+     juce_analytics
+     juce_animation

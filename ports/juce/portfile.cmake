@@ -10,6 +10,7 @@ vcpkg_from_github(
   "0003-build-forward-vcpkg-toolchain.patch"
   "0004-install-paths.patch"
     gcc-has-builtin.diff
+    header-install-path.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -131,12 +132,6 @@ if(JUCE_BUILD_EXTRAS)
     vcpkg_copy_tools(TOOL_NAMES ${JUCE_EXTRA_TOOL} SEARCH_DIR "${JUCE_EXTRA_TOOL_DIR}")
   endforeach()
 endif()
-
-# Copy JUCE modules including the cpp/cmake files
-file(GLOB JUCE_MODULES_FOLDERS "${CURRENT_PACKAGES_DIR}/include/JUCE-${VERSION}/modules/*")
-foreach(JUCE_MODULE_FOLDER IN LISTS JUCE_MODULES_FOLDERS)
-  file(COPY "${JUCE_MODULE_FOLDER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-endforeach()
 
 # Remove duplicate tools directories
 file(REMOVE_RECURSE
