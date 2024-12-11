@@ -9,6 +9,7 @@ vcpkg_from_github(
   "0002-build-linux-find_packages.patch"
   "0003-build-forward-vcpkg-toolchain.patch"
   "0004-install-paths.patch"
+    gcc-has-builtin.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
