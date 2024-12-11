@@ -1516,10 +1516,6 @@
       "baseline": "1.2.0",
       "port-version": 0
     },
-    "cartographer": {
-      "baseline": "2.0.0",
-      "port-version": 0
-    },
     "casadi": {
       "baseline": "3.6.7",
       "port-version": 0
@@ -8907,10 +8903,6 @@
     "tgui": {
       "baseline": "1.1.0",
       "port-version": 1
-    },
-    "theia": {
-      "baseline": "0.8",
-      "port-version": 13
     },
     "think-cell-range": {
       "baseline": "2023.1",
