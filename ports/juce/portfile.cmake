@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release)  # no libraries
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO juce-framework/JUCE
@@ -133,10 +135,19 @@ if(tool_names)
   vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
-# Remove duplicate debug files
-file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/debug/"
-)
+# Catch file ownership conflicts.
+# TODO: De-vendor oboe et al.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/include/oboe")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib")
+  message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "juce must not install files to ${CURRENT_PACKAGES_DIR}/lib.")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+endif()
+file(GLOB modules RELATIVE "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include/*")
+list(FILTER modules EXCLUDE REGEX "^juce_*")
+if(modules)
+  message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "juce must only install juce_* modules to ${CURRENT_PACKAGES_DIR}/include.")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
