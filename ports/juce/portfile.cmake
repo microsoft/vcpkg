@@ -5,13 +5,13 @@ vcpkg_from_github(
   SHA512 c1cb2f315c2b3b9c534d21b16d31e641661fbb9ad55b29a0949c038cb69cce65d35c8c669a400e33fdcedd7fc5ef578a1eba787826d525402330551c4d240fe6
   HEAD_REF master
   PATCHES
-  "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
-  "0002-build-linux-find_packages.patch"
-  "0003-build-forward-vcpkg-toolchain.patch"
-  "0004-install-paths.patch"
+    0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch
+    0002-build-linux-find_packages.patch
+    0004-install-paths.patch
     gcc-has-builtin.diff
     header-install-path.diff
     install-extras.diff
+    juceaide.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -90,6 +90,11 @@ On Ubuntu derivatives:
   sudo apt install libwebkit2gtk-4.0-dev
 ")
   endif()
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+  # Constructed with CURRENT_INSTALLED_DIR, for vcpkg_cmake_config_fixup.
+  list(APPEND FEATURE_OPTIONS "-DWITH_JUCEAIDE=${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/${PORT}/juceaide${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 vcpkg_cmake_configure(
