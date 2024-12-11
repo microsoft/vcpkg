@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c1e4b1..21182cf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -759,6 +759,7 @@ if(NOT UA_FORCE_CPP AND (CMAKE_COMPILER_IS_GNUCC OR "x${CMAKE_C_COMPILER_ID}" ST
+ 
+     # Debug
+     if(BUILD_TYPE_LOWER_CASE STREQUAL "debug" AND UNIX AND NOT UA_BUILD_OSS_FUZZ AND
++       UA_ENABLE_DEBUG_SANITIZER AND
+        "x${CMAKE_C_COMPILER_ID}" STREQUAL "xClang" AND NOT UA_ENABLE_UNIT_TESTS_MEMCHECK)
+         # Add default sanitizer settings when using clang and Debug build.
+         # This allows e.g. CLion to find memory locations for SegFaults
