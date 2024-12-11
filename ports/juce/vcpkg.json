@@ -30,10 +30,22 @@
     "freetype",
     "jack",
     "opengl",
-    "xcursor",
-    "xinerama",
-    "xrandr",
-    "xrender"
+    {
+      "name": "xcursor",
+      "platform": "linux"
+    },
+    {
+      "name": "xinerama",
+      "platform": "linux"
+    },
+    {
+      "name": "xrandr",
+      "platform": "linux"
+    },
+    {
+      "name": "xrender",
+      "platform": "linux"
+    }
   ],
   "features": {
     "curl": {
