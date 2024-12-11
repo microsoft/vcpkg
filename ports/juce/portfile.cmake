@@ -11,6 +11,7 @@ vcpkg_from_github(
   "0004-install-paths.patch"
     gcc-has-builtin.diff
     header-install-path.diff
+    install-extras.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -122,16 +123,6 @@ foreach(JUCE_TOOL_PATH IN LISTS JUCE_TOOLS)
   get_filename_component(JUCE_TOOL_DIR "${JUCE_TOOL_PATH}" DIRECTORY)
   vcpkg_copy_tools(TOOL_NAMES ${JUCE_TOOL} SEARCH_DIR "${JUCE_TOOL_DIR}")
 endforeach()
-
-# Copy extras tools
-if(JUCE_BUILD_EXTRAS)
-  file(GLOB JUCE_EXTRA_TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/extras/*/*_artefacts/Release/*")
-  foreach(JUCE_EXTRA_TOOL_PATH IN LISTS JUCE_EXTRA_TOOLS)
-    get_filename_component(JUCE_EXTRA_TOOL "${JUCE_EXTRA_TOOL_PATH}" NAME_WLE)
-    get_filename_component(JUCE_EXTRA_TOOL_DIR "${JUCE_EXTRA_TOOL_PATH}" DIRECTORY)
-    vcpkg_copy_tools(TOOL_NAMES ${JUCE_EXTRA_TOOL} SEARCH_DIR "${JUCE_EXTRA_TOOL_DIR}")
-  endforeach()
-endif()
 
 # Remove duplicate tools directories
 file(REMOVE_RECURSE

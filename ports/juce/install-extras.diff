@@ -1,0 +1,15 @@
+diff --git a/extras/CMakeLists.txt b/extras/CMakeLists.txt
+index 7f5555e..f55677f 100644
+--- a/extras/CMakeLists.txt
++++ b/extras/CMakeLists.txt
+@@ -37,3 +37,10 @@ add_subdirectory(BinaryBuilder)
+ add_subdirectory(NetworkGraphicsDemo)
+ add_subdirectory(Projucer)
+ add_subdirectory(UnitTestRunner)
++
++file(GLOB tools RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/*")
++foreach(tool IN LISTS tools)
++    if(TARGET "${tool}")
++        install(TARGETS "${tool}" DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
++    endif()
++endforeach()
