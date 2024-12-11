@@ -1,5 +1,11 @@
 set(USE_QT_VERSION "6")
 
+vcpkg_download_distfile(PATCH_ADD_INCLUDE_CHRONO
+    URLS https://github.com/opencv/opencv/commit/fb422a62d28faeed5b97ee7da7e8272f8fab250a.patch?full_index=1
+    SHA512 5b750b912eec2a3b7d66836bac585cdf2d1d2c7444ab9650da5da9dcca444655b8cfab6c4cbecbd50538ecf1fd330cf2fbf6b3b9f14e50c445655794ae1ef147
+    FILENAME opencv4-4.11.0-include-chrono.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -23,6 +29,7 @@ vcpkg_from_github(
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
       0020-miss-openexr.patch
+      "${PATCH_ADD_INCLUDE_CHRONO}"
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
