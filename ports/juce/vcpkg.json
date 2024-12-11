@@ -58,10 +58,7 @@
     "jack": {
       "description": "Enable JACK audio support",
       "dependencies": [
-        {
-          "name": "jack2",
-          "platform": "linux"
-        }
+        "jack2"
       ]
     },
     "ladspa": {
@@ -82,28 +79,19 @@
     "xinerama": {
       "description": "Enable Xinerama support",
       "dependencies": [
-        {
-          "name": "libxinerama",
-          "platform": "linux"
-        }
+        "libxinerama"
       ]
     },
     "xrandr": {
       "description": "Enable XRandR support",
       "dependencies": [
-        {
-          "name": "libxrandr",
-          "platform": "linux"
-        }
+        "libxrandr"
       ]
     },
     "xrender": {
       "description": "Enable XRender support",
       "dependencies": [
-        {
-          "name": "libxrender",
-          "platform": "linux"
-        }
+        "libxrender"
       ]
     }
   }
