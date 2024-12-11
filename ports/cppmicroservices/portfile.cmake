@@ -25,6 +25,7 @@ file(RENAME "${NOWIDE_SOURCE_PATH}" "${SOURCE_PATH}/third_party/boost/nowide")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         -DTOOLS_INSTALL_DIR:STRING=tools/cppmicroservices
         -DAUXILIARY_INSTALL_DIR:STRING=share/cppmicroservices
         -DUS_USE_SYSTEM_GTEST=TRUE

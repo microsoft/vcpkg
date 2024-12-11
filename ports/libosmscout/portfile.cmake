@@ -15,6 +15,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     qt5      OSMSCOUT_BUILD_MAP_QT
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "cmake_minimum_required (VERSION 3.1)" "cmake_minimum_required (VERSION 3.5)")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     WINDOWS_USE_MSBUILD

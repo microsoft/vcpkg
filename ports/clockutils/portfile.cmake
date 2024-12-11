@@ -16,6 +16,8 @@ if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
     set(USE_MSBUILD WINDOWS_USE_MSBUILD) # MS Build only required for dynamic builds
 endif()
 
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "cmake_minimum_required (VERSION 2.8)" "cmake_minimum_required (VERSION 3.5)")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     ${USE_MSBUILD}
