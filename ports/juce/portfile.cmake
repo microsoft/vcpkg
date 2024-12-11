@@ -11,7 +11,6 @@ vcpkg_from_github(
     0002-build-linux-find_packages.patch
     0004-install-paths.patch
     gcc-has-builtin.diff
-    header-install-path.diff
     install-extras.diff
     juceaide.diff
 )
