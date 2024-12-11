@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/WinPixEventRuntime/${VERSION}"
     FILENAME "winpixevent.${VERSION}.zip"
