@@ -3285,7 +3285,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.68.1",
+      "baseline": "1.68.2",
       "port-version": 0
     },
     "grppi": {
@@ -3425,7 +3425,7 @@
       "port-version": 0
     },
     "h5py-lzf": {
-      "baseline": "2022-05-24",
+      "baseline": "3.12.1",
       "port-version": 0
     },
     "half": {
@@ -3682,7 +3682,7 @@
     },
     "iir1": {
       "baseline": "1.9.5",
-      "port-version": 0
+      "port-version": 1
     },
     "ijg-libjpeg": {
       "baseline": "9e",
@@ -6098,7 +6098,7 @@
     },
     "mpg123": {
       "baseline": "1.32.9",
-      "port-version": 0
+      "port-version": 1
     },
     "mpi": {
       "baseline": "1",
