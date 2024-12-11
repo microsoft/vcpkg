@@ -8,11 +8,11 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch
-    0002-build-linux-find_packages.patch
     0004-install-paths.patch
     gcc-has-builtin.diff
     install-extras.diff
     juceaide.diff
+    prefer-cmake.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
