@@ -3,8 +3,13 @@ project(juce-test VERSION 1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
+option(WITH_CURL "Link curl")
+
 find_package(JUCE CONFIG REQUIRED)
 
-juce_add_console_app(main PRODUCT_NAME "vcpkg-ci-juce")
+juce_add_console_app(main
+    PRODUCT_NAME "vcpkg-ci-juce"
+    NEEDS_CURL   "${WITH_CURL}"
+)
 target_sources(main PRIVATE main.cpp)
 target_link_libraries(main PRIVATE juce::juce_core)
