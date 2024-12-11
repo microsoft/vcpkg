@@ -557,7 +557,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.17.0",
+      "baseline": "3.18.0",
       "port-version": 0
     },
     "bark": {
