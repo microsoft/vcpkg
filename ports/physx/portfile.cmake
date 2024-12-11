@@ -173,7 +173,6 @@ endif()
 
 set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
 
-vcpkg_replace_string("${SOURCE_PATH}/physx/compiler/public/CMakeLists.txt" "cmake_minimum_required (VERSION 3.7)" "cmake_minimum_required (VERSION 3.20)")
 
 # Finally invoke cmake to configure the PhysX project
 vcpkg_cmake_configure(

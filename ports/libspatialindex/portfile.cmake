@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "cmake_minimum_required (VERSION 3.13)" "cmake_minimum_required (VERSION 3.30)")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     WINDOWS_USE_MSBUILD

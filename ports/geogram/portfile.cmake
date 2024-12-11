@@ -85,7 +85,6 @@ else()
     endif()
 endif()
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "cmake_minimum_required (VERSION 3.0)" "cmake_minimum_required (VERSION 3.5)")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
