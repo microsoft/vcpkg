@@ -97,8 +97,10 @@ vcpkg_cmake_configure(
   OPTIONS
     -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
     -DJUCE_INSTALL_DESTINATION=share/juce
+    -DJUCE_TOOL_INSTALL_DIR=bin
     ${FEATURE_OPTIONS}
   MAYBE_UNUSED_VARIABLES
+    JUCE_TOOL_INSTALL_DIR
     JUCE_PLUGINHOST_LADSPA
     JUCE_JACK
     JUCE_OPENGL
@@ -116,19 +118,15 @@ vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-# Copy tools
-file(GLOB JUCE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}/*")
-foreach(JUCE_TOOL_PATH IN LISTS JUCE_TOOLS)
-  get_filename_component(JUCE_TOOL "${JUCE_TOOL_PATH}" NAME_WLE)
-  get_filename_component(JUCE_TOOL_DIR "${JUCE_TOOL_PATH}" DIRECTORY)
-  vcpkg_copy_tools(TOOL_NAMES ${JUCE_TOOL} SEARCH_DIR "${JUCE_TOOL_DIR}")
+set(tool_names "")
+file(GLOB tools "${CURRENT_PACKAGES_DIR}/bin/*")
+foreach(tool IN LISTS tools)
+  get_filename_component(name "${tool}" NAME_WE)
+  list(APPEND tool_names "${name}")
 endforeach()
-
-# Remove duplicate tools directories
-file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/bin"
-"${CURRENT_PACKAGES_DIR}/debug/bin"
-)
+if(tool_names)
+  vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
+endif()
 
 # Remove duplicate debug files
 file(REMOVE_RECURSE
