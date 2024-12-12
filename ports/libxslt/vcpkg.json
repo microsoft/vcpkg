@@ -1,6 +1,7 @@
 {
   "name": "libxslt",
   "version": "1.1.42",
+  "port-version": 1,
   "description": "Libxslt is a XSLT library implemented in C for XSLT 1.0 and most of EXSLT",
   "homepage": "https://github.com/GNOME/libxslt",
   "license": null,
@@ -8,7 +9,12 @@
   "dependencies": [
     {
       "name": "libxml2",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "html",
+        "output",
+        "xpath"
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -32,7 +38,16 @@
     },
     "plugins": {
       "description": "(deprecated)",
-      "supports": "!static"
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "libxml2",
+          "default-features": false,
+          "features": [
+            "plugins"
+          ]
+        }
+      ]
     },
     "profiler": {
       "description": "Build with profiling support"
@@ -42,7 +57,16 @@
       "supports": "!windows"
     },
     "thread": {
-      "description": "Enable multi-threading support"
+      "description": "Enable multi-threading support",
+      "dependencies": [
+        {
+          "name": "libxml2",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "tools": {
       "description": "Build the utilities"
