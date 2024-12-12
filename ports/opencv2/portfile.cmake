@@ -82,7 +82,6 @@ vcpkg_cmake_configure(
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=OFF
         -DWITH_GTK=OFF
-        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
 vcpkg_cmake_install()

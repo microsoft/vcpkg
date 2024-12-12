@@ -51,8 +51,7 @@
       "name": "opencv3",
       "default-features": false,
       "features": [
-        "dnn",
-        "lapack"
+        "dnn"
       ],
       "platform": "!android"
     },
@@ -116,8 +115,7 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "dnn",
-        "lapack"
+        "dnn"
       ],
       "platform": "!android"
     },

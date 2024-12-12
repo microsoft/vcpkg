@@ -288,14 +288,6 @@
         "libjpeg-turbo"
       ]
     },
-    "lapack": {
-      "description": "LAPACK support for opencv",
-      "supports": "!android",
-      "dependencies": [
-        "blas",
-        "lapack"
-      ]
-    },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",
       "supports": "windows & !uwp & !mingw"

@@ -71,7 +71,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ipp"             BUILD_IPP_IW
  "jasper"          WITH_JASPER
  "jpeg"            WITH_JPEG
- "lapack"          WITH_LAPACK
  "line-descriptor" BUILD_opencv_line_descriptor
  "msmf"            WITH_MSMF
  "nonfree"         OPENCV_ENABLE_NONFREE
@@ -280,7 +279,6 @@ vcpkg_cmake_configure(
         -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
-        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_java=OFF
@@ -325,6 +323,7 @@ vcpkg_cmake_configure(
         -DWITH_FFMPEG=OFF
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
+        -DWITH_LAPACK=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
@@ -397,9 +396,6 @@ if("sfm" IN_LIST FEATURES)
 endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
-endif()
-if("lapack" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
 endif()
 if("openvino" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
