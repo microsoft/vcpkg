@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 project(sord C)
 
-find_package(serd CONFIG REQUIRED)
+find_package(PkgConfig)
+pkg_check_modules(serd REQUIRED IMPORTED_TARGET serd-0)
 
 add_library(sord
     src/sord.c
@@ -14,7 +15,7 @@ target_include_directories(sord
     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}"
 )
 
-target_link_libraries(sord PUBLIC serd::serd)
+target_link_libraries(sord PUBLIC PkgConfig::serd)
 
 set_target_properties(sord PROPERTIES
     C_STANDARD 99
@@ -45,7 +46,8 @@ install(
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sord-config.cmake" [[
 include(CMakeFindDependencyMacro)
-find_dependency(serd CONFIG)
+find_dependency(PkgConfig REQUIRED)
+pkg_check_modules(serd REQUIRED IMPORTED_TARGET serd-0)
 include("${CMAKE_CURRENT_LIST_DIR}/sord-targets.cmake")
 ]])
 
