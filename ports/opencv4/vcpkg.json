@@ -290,11 +290,11 @@
     },
     "lapack": {
       "description": "LAPACK support for opencv",
+      "supports": "!android",
       "dependencies": [
         "blas",
         "lapack"
-      ],
-      "supports": "!(android)"
+      ]
     },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",

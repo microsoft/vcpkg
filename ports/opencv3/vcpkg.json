@@ -190,11 +190,11 @@
     },
     "lapack": {
       "description": "LAPACK support for opencv",
+      "supports": "!android",
       "dependencies": [
         "blas",
         "lapack"
-      ],
-      "supports": "!(android)"
+      ]
     },
     "line-descriptor": {
       "description": "opencv_line_descriptor module",
