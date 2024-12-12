@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.17)
 project(lilv C)
 
 find_package(lv2 CONFIG REQUIRED)
-find_package(serd CONFIG REQUIRED)
+find_package(PkgConfig)
+pkg_check_modules(serd REQUIRED IMPORTED_TARGET serd-0)
 find_package(sord CONFIG REQUIRED)
 find_package(sratom CONFIG REQUIRED)
 
@@ -51,7 +52,7 @@ target_include_directories(lilv
 
 target_link_libraries(lilv
     PUBLIC lv2::lv2
-    PRIVATE serd::serd sord::sord sratom::sratom
+    PRIVATE PkgConfig::serd sord::sord sratom::sratom
 )
 
 set_target_properties(lilv PROPERTIES
@@ -84,7 +85,8 @@ install(
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/lilv-config.cmake" [[
 include(CMakeFindDependencyMacro)
 find_dependency(lv2 CONFIG)
-find_dependency(serd CONFIG)
+find_dependency(PkgConfig REQUIRED)
+pkg_check_modules(serd REQUIRED IMPORTED_TARGET serd-0)
 find_dependency(sord CONFIG)
 find_dependency(sratom CONFIG)
 include("${CMAKE_CURRENT_LIST_DIR}/lilv-targets.cmake")
