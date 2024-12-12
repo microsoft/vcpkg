@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release)  # no libraries
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO juce-framework/JUCE
@@ -5,11 +7,15 @@ vcpkg_from_github(
   SHA512 c1cb2f315c2b3b9c534d21b16d31e641661fbb9ad55b29a0949c038cb69cce65d35c8c669a400e33fdcedd7fc5ef578a1eba787826d525402330551c4d240fe6
   HEAD_REF master
   PATCHES
-  "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
-  "0002-build-linux-find_packages.patch"
-  "0003-build-forward-vcpkg-toolchain.patch"
-  "0004-install-paths.patch"
+    0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch
+    0004-install-paths.patch
+    gcc-has-builtin.diff
+    devendor-oboe.diff
+    install-extras.diff
+    juceaide.diff
+    prefer-cmake.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/modules/juce_audio_devices/native/oboe")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -26,7 +32,7 @@ FEATURES
   "opengl"      JUCE_OPENGL
 )
 # Based on https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
   message("juce currently requires the following programs from the system package manager:
   libx11-dev libxcomposite-dev libxext-dev
 On Ubuntu derivatives:
@@ -89,12 +95,20 @@ On Ubuntu derivatives:
   endif()
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+  # Constructed with CURRENT_INSTALLED_DIR, for vcpkg_cmake_config_fixup.
+  list(APPEND FEATURE_OPTIONS "-DWITH_JUCEAIDE=${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/${PORT}/juceaide${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-  -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
-  ${FEATURE_OPTIONS}
+    -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
+    -DJUCE_INSTALL_DESTINATION=share/juce
+    -DJUCE_TOOL_INSTALL_DIR=bin
+    ${FEATURE_OPTIONS}
   MAYBE_UNUSED_VARIABLES
+    JUCE_TOOL_INSTALL_DIR
     JUCE_PLUGINHOST_LADSPA
     JUCE_JACK
     JUCE_OPENGL
@@ -112,44 +126,31 @@ vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-# Copy tools
-file(GLOB JUCE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}/*")
-foreach(JUCE_TOOL_PATH IN LISTS JUCE_TOOLS)
-  get_filename_component(JUCE_TOOL "${JUCE_TOOL_PATH}" NAME_WLE)
-  get_filename_component(JUCE_TOOL_DIR "${JUCE_TOOL_PATH}" DIRECTORY)
-  vcpkg_copy_tools(TOOL_NAMES ${JUCE_TOOL} SEARCH_DIR "${JUCE_TOOL_DIR}")
+set(tool_names "")
+file(GLOB tools "${CURRENT_PACKAGES_DIR}/bin/*")
+set(name_component NAME_WE)
+if(VCPKG_TARGET_EXECUTABLE_SUFFIX STREQUAL "")
+  set(name_component NAME)
+endif()
+foreach(tool IN LISTS tools)
+  get_filename_component(name "${tool}" ${name_component})
+  list(APPEND tool_names "${name}")
 endforeach()
-
-# Copy extras tools
-if(JUCE_BUILD_EXTRAS)
-  file(GLOB JUCE_EXTRA_TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/extras/*/*_artefacts/Release/*")
-  foreach(JUCE_EXTRA_TOOL_PATH IN LISTS JUCE_EXTRA_TOOLS)
-    get_filename_component(JUCE_EXTRA_TOOL "${JUCE_EXTRA_TOOL_PATH}" NAME_WLE)
-    get_filename_component(JUCE_EXTRA_TOOL_DIR "${JUCE_EXTRA_TOOL_PATH}" DIRECTORY)
-    vcpkg_copy_tools(TOOL_NAMES ${JUCE_EXTRA_TOOL} SEARCH_DIR "${JUCE_EXTRA_TOOL_DIR}")
-  endforeach()
+if(tool_names)
+  vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
-# Copy JUCE modules including the cpp/cmake files
-file(GLOB JUCE_MODULES_FOLDERS "${CURRENT_PACKAGES_DIR}/include/JUCE-${VERSION}/modules/*")
-foreach(JUCE_MODULE_FOLDER IN LISTS JUCE_MODULES_FOLDERS)
-  file(COPY "${JUCE_MODULE_FOLDER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-endforeach()
+# Files not generated for Android or iOS
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/juce/LV2_HELPER.cmake")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/juce/VST3_HELPER.cmake")
 
-# Remove duplicate tools directories
-file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/bin"
-"${CURRENT_PACKAGES_DIR}/debug/bin"
-)
+# Catch libs which must be de-vendored, e.g. oboe.
+# This is to avoid ownership conflicts.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/include/oboe")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib")
+  message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "juce must not install files to ${CURRENT_PACKAGES_DIR}/lib.")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+endif()
 
-# Remove duplicate debug files
-file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/debug/"
-)
-
-# Copy license
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
-# Copy usage examples
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -2,10 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "juce",
   "version": "8.0.4",
+  "port-version": 1,
   "description": "Open-source cross-platform C++ application framework for desktop and mobile applications, including VST, VST3, AU, AUv3, AAX and LV2 audio plug-ins and plug-in hosts",
   "homepage": "https://juce.com",
   "license": null,
-  "supports": "!android & !uwp & !(windows & arm)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "alsa",
@@ -14,6 +15,10 @@
     {
       "name": "juce",
       "host": true
+    },
+    {
+      "name": "oboe",
+      "platform": "android"
     },
     {
       "name": "vcpkg-cmake",
@@ -29,10 +34,22 @@
     "freetype",
     "jack",
     "opengl",
-    "xcursor",
-    "xinerama",
-    "xrandr",
-    "xrender"
+    {
+      "name": "xcursor",
+      "platform": "linux"
+    },
+    {
+      "name": "xinerama",
+      "platform": "linux"
+    },
+    {
+      "name": "xrandr",
+      "platform": "linux"
+    },
+    {
+      "name": "xrender",
+      "platform": "linux"
+    }
   ],
   "features": {
     "curl": {
@@ -57,10 +74,7 @@
     "jack": {
       "description": "Enable JACK audio support",
       "dependencies": [
-        {
-          "name": "jack2",
-          "platform": "linux"
-        }
+        "jack2"
       ]
     },
     "ladspa": {
@@ -81,28 +95,19 @@
     "xinerama": {
       "description": "Enable Xinerama support",
       "dependencies": [
-        {
-          "name": "libxinerama",
-          "platform": "linux"
-        }
+        "libxinerama"
       ]
     },
     "xrandr": {
       "description": "Enable XRandR support",
       "dependencies": [
-        {
-          "name": "libxrandr",
-          "platform": "linux"
-        }
+        "libxrandr"
       ]
     },
     "xrender": {
       "description": "Enable XRender support",
       "dependencies": [
-        {
-          "name": "libxrender",
-          "platform": "linux"
-        }
+        "libxrender"
       ]
     }
   }

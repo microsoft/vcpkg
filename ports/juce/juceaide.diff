@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49d85c6..4045a7e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -142,7 +142,11 @@ set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
+ 
+ set(JUCE_MODULE_PATH "include/JUCE-${JUCE_VERSION}/modules")
+ set(UTILS_INSTALL_DIR "${JUCE_INSTALL_DESTINATION}")
+-set(JUCEAIDE_PATH "${JUCE_TOOL_INSTALL_DIR}/${JUCE_JUCEAIDE_NAME}")
++if(WITH_JUCEAIDE)
++    set(JUCEAIDE_PATH "${WITH_JUCEAIDE}")
++else()
++    set(JUCEAIDE_PATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/juce/juceaide${CMAKE_EXECUTABLE_SUFFIX}")
++endif()
+ configure_package_config_file("${JUCE_CMAKE_UTILS_DIR}/JUCEConfig.cmake.in"
+     "${JUCE_BINARY_DIR}/JUCEConfig.cmake"
+     PATH_VARS UTILS_INSTALL_DIR JUCEAIDE_PATH JUCE_MODULE_PATH
+diff --git a/extras/Build/CMake/JUCEUtils.cmake b/extras/Build/CMake/JUCEUtils.cmake
+index 757193f..5a948b8 100644
+--- a/extras/Build/CMake/JUCEUtils.cmake
++++ b/extras/Build/CMake/JUCEUtils.cmake
+@@ -575,11 +575,7 @@ function(_juce_execute_juceaide)
+         message(FATAL_ERROR "The juceaide target does not exist")
+     endif()
+ 
+-    get_target_property(juceaide_location juce::juceaide IMPORTED_LOCATION)
+-
+-    if(NOT EXISTS "${juceaide_location}")
+-        message(FATAL_ERROR "juceaide was imported, but it doesn't exist!")
+-    endif()
++    set(juceaide_location juce::juceaide)
+ 
+     execute_process(COMMAND "${juceaide_location}" ${ARGN}
+         RESULT_VARIABLE result_variable
+diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
+index 651aa53..839c500 100644
+--- a/extras/Build/juceaide/CMakeLists.txt
++++ b/extras/Build/juceaide/CMakeLists.txt
+@@ -35,9 +35,15 @@
+ # simulator if we're targeting iOS or Android, we reinvoke cmake here and build juceaide during the
+ # configuration stage of the outer project.
+ 
+-if(JUCE_BUILD_HELPER_TOOLS)
++if(WITH_JUCEAIDE)
++    add_executable(juceaide IMPORTED GLOBAL)
++    set_target_properties(juceaide PROPERTIES IMPORTED_LOCATION "${WITH_JUCEAIDE}")
++    add_executable(juce::juceaide ALIAS juceaide)
++elseif(1)
+     # Build the tool for the current system
+     juce_add_console_app(juceaide _NO_RESOURCERC)
++    install(TARGETS juceaide DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
++    add_executable(juce::juceaide ALIAS juceaide)
+ 
+     target_sources(juceaide PRIVATE Main.cpp)
+ 
+@@ -55,8 +61,6 @@ if(JUCE_BUILD_HELPER_TOOLS)
+         juce::juce_recommended_lto_flags
+         juce::juce_recommended_warning_flags)
+ 
+-    set_target_properties(juceaide PROPERTIES
+-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 
+     export(TARGETS juceaide
+            NAMESPACE juce_tools::
