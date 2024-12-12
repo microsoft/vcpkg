@@ -1,0 +1,21 @@
+Subject: [PATCH] don't export compiler options
+---
+Index: cmake/cpp.cmake
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/cmake/cpp.cmake b/cmake/cpp.cmake
+--- a/cmake/cpp.cmake	(revision a5295e034c02df2aa43a12dd7268a57da953b688)
++++ b/cmake/cpp.cmake	(date 1733934737168)
+@@ -288,8 +288,8 @@
+ target_compile_features(${PROJECT_NAME} PUBLIC
+   $<IF:$<CXX_COMPILER_ID:MSVC>,cxx_std_20,cxx_std_17>)
+ target_compile_definitions(${PROJECT_NAME} PUBLIC ${OR_TOOLS_COMPILE_DEFINITIONS})
+-target_compile_options(${PROJECT_NAME} PUBLIC ${OR_TOOLS_COMPILE_OPTIONS})
+-target_link_options(${PROJECT_NAME} INTERFACE ${OR_TOOLS_LINK_OPTIONS})
++target_compile_options(${PROJECT_NAME} PRIVATE ${OR_TOOLS_COMPILE_OPTIONS})
++#target_link_options(${PROJECT_NAME} INTERFACE ${OR_TOOLS_LINK_OPTIONS})
+ # Properties
+ if(NOT APPLE)
+   set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -3,25 +3,27 @@ if (VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO google/or-tools
-    REF "v${VERSION}"
-    SHA512 38dbdb910c32cb07fc861ffae3976db80ea3f209d3e883ebb1193860f4095448b74c947b98c200a7d3fadac9480b7e94ff13825392b17d6c2576f0c2569d9d27
-    HEAD_REF stable
-    PATCHES
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO google/or-tools
+        REF "v${VERSION}"
+        SHA512 38dbdb910c32cb07fc861ffae3976db80ea3f209d3e883ebb1193860f4095448b74c947b98c200a7d3fadac9480b7e94ff13825392b17d6c2576f0c2569d9d27
+        HEAD_REF stable
+        PATCHES
         disable-msvc-bundle-install.patch
         disable-build-of-executables.patch
         fix-find-protobuf-crosscompiling.patch
+        don't-export-compiler-options.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
+        FEATURES
         highs USE_HIGHS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS ${FEATURE_OPTIONS}
+        -DUSE_GUROBI=OFF
         -DUSE_SCIP=OFF
         -DUSE_COINOR=OFF
         -DBUILD_TESTING=OFF
@@ -29,7 +31,8 @@ vcpkg_cmake_configure(
         -DBUILD_SAMPLES=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_FLATZINC=OFF
-        -DINSTALL_DOC=OFF
+        -DBUILD_LP_PARSER=OFF
+        -DBUILD_MATH_OPT=OFF
 )
 
 vcpkg_cmake_install()
