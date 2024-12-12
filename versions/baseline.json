@@ -6816,6 +6816,10 @@
       "baseline": "0.12+20221121",
       "port-version": 1
     },
+    "or-tools": {
+      "baseline": "9.11",
+      "port-version": 0
+    },
     "orc": {
       "baseline": "2.0.0",
       "port-version": 0

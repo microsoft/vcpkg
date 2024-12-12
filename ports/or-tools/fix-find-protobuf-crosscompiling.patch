@@ -1,0 +1,23 @@
+Subject: [PATCH] fix find protobuf crosscompiling
+---
+Index: cmake/host.cmake
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/cmake/host.cmake b/cmake/host.cmake
+--- a/cmake/host.cmake	(revision 998f3e467260a939cd9f7b54a36b01e4235bc625)
++++ b/cmake/host.cmake	(date 1733732824407)
+@@ -11,10 +11,10 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-if(NOT CMAKE_CROSSCOMPILING)
++#if(NOT CMAKE_CROSSCOMPILING)
+   set(PROTOC_PRG protobuf::protoc)
+   return()
+-endif()
++#endif()
+ 
+ message(STATUS "Subproject: HostTools...")
+ 
