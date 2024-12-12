@@ -1,0 +1,8 @@
+include(CMakeFindDependencyMacro)
+if(WIN32)
+    find_dependency(libuv CONFIG)
+endif()
+if("@WITH_OPENSSL@")
+    find_dependency(OpenSSL)
+endif()
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-usockets-targets.cmake")
