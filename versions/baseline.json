@@ -8009,7 +8009,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "9.7.2",
+      "baseline": "9.8.4",
       "port-version": 0
     },
     "rpclib": {
