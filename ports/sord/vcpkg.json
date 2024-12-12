@@ -6,6 +6,10 @@
   "homepage": "https://drobilla.net/software/sord",
   "license": "ISC",
   "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     "serd",
     {
       "name": "vcpkg-cmake",
