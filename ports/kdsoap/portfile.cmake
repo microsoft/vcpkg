@@ -33,3 +33,18 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(
+    COPY
+        "${SOURCE_PATH}/LICENSES/BSD-3-Clause.txt"
+        "${SOURCE_PATH}/LICENSES/GPL-2.0-only.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-Microsoft.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-Novell.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-OASIS.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-SportingExchange.txt"
+        "${SOURCE_PATH}/LICENSES/MIT.txt"
+        "${SOURCE_PATH}/LICENSES/W3C.txt"
+    DESTINATION
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSES/"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
