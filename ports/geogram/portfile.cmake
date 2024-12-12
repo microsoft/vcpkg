@@ -85,6 +85,7 @@ else()
     endif()
 endif()
 
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     # Geogram cannot be built with ninja because it embeds $(Configuration) in some of the generated paths. These require MSBuild in order to be evaluated.
