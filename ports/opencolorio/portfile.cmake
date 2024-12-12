@@ -5,10 +5,7 @@ vcpkg_from_github(
     SHA512 11ad89b3ac30700be58181a0bdd4154a3ae2bf59651edb48629c51c7f1fadf221394abb285efd9b6c259195821a4e531043b266eea36d8fa4382f23c3b54ab6d
     HEAD_REF master
     PATCHES
-        # fix-dependency.patch
-        fix-del-install-file.patch
-        # fix-func-param.patch #https://github.com/AcademySoftwareFoundation/OpenColorIO/pull/1806
-        fix-pkgconfig.patch
+        fix-dependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findlcms2.cmake")
@@ -60,7 +57,7 @@ file(REMOVE_RECURSE
 )
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
-        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut ocioarchive ocioconvert ociolutimage ocioperf
+        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut ocioarchive ocioconvert ociolutimage ocioperf ociocpuinfo ociodisplay
         AUTO_CLEAN
     )
 endif()
@@ -68,3 +65,4 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -24,6 +24,7 @@
     "tools": {
       "description": "Installs tools",
       "dependencies": [
+        "freeglut",
         "glew",
         "lcms",
         "openexr"
