@@ -6,7 +6,12 @@
   "license": "Apache-2.0",
   "supports": "!android",
   "dependencies": [
-    "abseil",
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
     "eigen3",
     "protobuf",
     {
