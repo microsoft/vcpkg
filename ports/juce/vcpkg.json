@@ -17,6 +17,10 @@
       "host": true
     },
     {
+      "name": "oboe",
+      "platform": "android"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

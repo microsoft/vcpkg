@@ -8,5 +8,21 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "extras"
+  ],
+  "features": {
+    "extras": {
+      "description": "Install juce[extras]",
+      "dependencies": [
+        {
+          "name": "juce",
+          "features": [
+            "extras"
+          ]
+        }
+      ]
+    }
+  }
 }

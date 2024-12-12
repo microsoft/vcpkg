@@ -10,10 +10,12 @@ vcpkg_from_github(
     0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch
     0004-install-paths.patch
     gcc-has-builtin.diff
+    devendor-oboe.diff
     install-extras.diff
     juceaide.diff
     prefer-cmake.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/modules/juce_audio_devices/native/oboe")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -126,16 +128,24 @@ vcpkg_copy_pdbs()
 
 set(tool_names "")
 file(GLOB tools "${CURRENT_PACKAGES_DIR}/bin/*")
+set(name_component NAME_WE)
+if(VCPKG_TARGET_EXECUTABLE_SUFFIX STREQUAL "")
+  set(name_component NAME)
+endif()
 foreach(tool IN LISTS tools)
-  get_filename_component(name "${tool}" NAME_WE)
+  get_filename_component(name "${tool}" ${name_component})
   list(APPEND tool_names "${name}")
 endforeach()
 if(tool_names)
   vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
-# Catch file ownership conflicts.
-# TODO: De-vendor oboe et al.
+# Files not generated for Android or iOS
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/juce/LV2_HELPER.cmake")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/juce/VST3_HELPER.cmake")
+
+# Catch libs which must be de-vendored, e.g. oboe.
+# This is to avoid ownership conflicts.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/include/oboe")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib")
   message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "juce must not install files to ${CURRENT_PACKAGES_DIR}/lib.")

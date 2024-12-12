@@ -1,10 +1,14 @@
 diff --git a/extras/CMakeLists.txt b/extras/CMakeLists.txt
-index 7f5555e..f55677f 100644
+index 7f5555e..539f1cb 100644
 --- a/extras/CMakeLists.txt
 +++ b/extras/CMakeLists.txt
-@@ -37,3 +37,10 @@ add_subdirectory(BinaryBuilder)
+@@ -35,5 +35,14 @@ add_subdirectory(AudioPerformanceTest)
+ add_subdirectory(AudioPluginHost)
+ add_subdirectory(BinaryBuilder)
  add_subdirectory(NetworkGraphicsDemo)
++if(NOT ANDROID AND NOT IOS)
  add_subdirectory(Projucer)
++endif()
  add_subdirectory(UnitTestRunner)
 +
 +file(GLOB tools RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/*")
