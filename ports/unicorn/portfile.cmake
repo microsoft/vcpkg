@@ -9,6 +9,13 @@ vcpkg_from_github(
         fix-msvc-shared.patch
 )
 
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_ANDROID)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+        "-lpthread"
+        " "
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
