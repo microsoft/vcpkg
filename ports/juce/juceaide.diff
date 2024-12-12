@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d3e5975..1f97def 100644
+index 49d85c6..4045a7e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -142,7 +142,11 @@ set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
@@ -15,6 +15,23 @@ index d3e5975..1f97def 100644
  configure_package_config_file("${JUCE_CMAKE_UTILS_DIR}/JUCEConfig.cmake.in"
      "${JUCE_BINARY_DIR}/JUCEConfig.cmake"
      PATH_VARS UTILS_INSTALL_DIR JUCEAIDE_PATH JUCE_MODULE_PATH
+diff --git a/extras/Build/CMake/JUCEUtils.cmake b/extras/Build/CMake/JUCEUtils.cmake
+index 757193f..5a948b8 100644
+--- a/extras/Build/CMake/JUCEUtils.cmake
++++ b/extras/Build/CMake/JUCEUtils.cmake
+@@ -575,11 +575,7 @@ function(_juce_execute_juceaide)
+         message(FATAL_ERROR "The juceaide target does not exist")
+     endif()
+ 
+-    get_target_property(juceaide_location juce::juceaide IMPORTED_LOCATION)
+-
+-    if(NOT EXISTS "${juceaide_location}")
+-        message(FATAL_ERROR "juceaide was imported, but it doesn't exist!")
+-    endif()
++    set(juceaide_location juce::juceaide)
+ 
+     execute_process(COMMAND "${juceaide_location}" ${ARGN}
+         RESULT_VARIABLE result_variable
 diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
 index 651aa53..839c500 100644
 --- a/extras/Build/juceaide/CMakeLists.txt
