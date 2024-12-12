@@ -22,10 +22,12 @@ vcpkg_from_github(
       0015-fix-supportqnx.patch
       0017-missing-include.patch
       0019-fix-tbb.patch
+      0020-enable-pkgconf.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
