@@ -4,6 +4,6 @@
   "description": "Allows applications to be instrumented with marker events, for use with Microsoft PIX.",
   "homepage": "https://devblogs.microsoft.com/pix/",
   "documentation": "https://devblogs.microsoft.com/pix/documentation/",
-  "license": null,
+  "license": "MIT",
   "supports": "windows & (x64 | arm64) & !xbox"
 }
