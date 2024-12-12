@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
-    REF 59f75a8b50e50ae1bb1ff12098040c6327500740 # DCMTK-3.6.8
-    SHA512 2719e2163d57339a81f079c8c28d4e9e3ee6b1b85bc3db5b94a2279e3dd9881ab619d432d64984e6371569866d7aa4f01bf8b41841b773bcd60bbb8ad2118cac
+    REF "DCMTK-${VERSION}"
+    SHA512 fcb222182ea653304a1c49db31899a8b08d881916f90d3d35bfab2896aa11473232ac0c0f2195e4d478a6188d3b2c5f54d5172f29c42688c5d05f9bf738ca775
     HEAD_REF master
     PATCHES
         dcmtk.patch
@@ -89,33 +89,30 @@ vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
     set(_tools
+	    dcm2cda
         cda2dcm
+		dcm2img
         dcm2json
         dcm2pdf
         dcm2pnm
-        dcm2xml
+        dcm2xml		
         dcmcjpeg
         dcmcjpls
         dcmconv
         dcmcrle
-        dcmdata_tests
         dcmdjpeg
         dcmdjpls
         dcmdrle
         dcmdspfn
         dcmdump
-        dcmect_tests
-        dcmfg_tests
         dcmftest
         dcmgpdir
         dcmicmp
-        dcmiod_tests
         dcmj2pnm
         dcml2pnm
         dcmmkcrv
         dcmmkdir
         dcmmklut
-        dcmnet_tests
         dcmodify
         dcmp2pgm
         dcmprscp
@@ -130,17 +127,12 @@ if ("tools" IN_LIST FEATURES)
         dcmqrti
         dcmquant
         dcmrecv
-        dcmrt_tests
         dcmscale
-        dcmseg_tests
         dcmsend
         dcmsign
-        dcmsr_tests
-        dcmtls_tests
         dcod2lum
         dconvlum
         drtdump
-        drttest
         dsr2html
         dsr2xml
         dsrdump
@@ -151,18 +143,13 @@ if ("tools" IN_LIST FEATURES)
         img2dcm
         mkcsmapper
         mkesdb
-        mkreport
         movescu
-        msgserv
-        oficonv_tests
-        ofstd_tests
         pdf2dcm
         stl2dcm
         storescp
         storescu
         termscu
         wlmscpfs
-        wltest
         xml2dcm
         xml2dsr
     )
@@ -180,4 +167,5 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc-${VERSION}/COPYRIGHT" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
+
