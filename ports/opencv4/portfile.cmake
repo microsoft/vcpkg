@@ -24,6 +24,11 @@ vcpkg_from_github(
       0019-opencl-kernel.patch
       0020-miss-openexr.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
@@ -59,6 +64,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"       ENABLE_CUDA_FIRST_CLASS_LANGUAGE
  "cudnn"      WITH_CUDNN
  "dc1394"     WITH_1394
+ "directml"   WITH_DIRECTML
  "dnn"        BUILD_opencv_dnn
  "dnn"        PROTOBUF_UPDATE_FILES
  "dnn"        UPDATE_PROTO_FILES
@@ -81,8 +87,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
- "lapack"     WITH_LAPACK
- "lapack"     DOPENCV_LAPACK_FIND_PACKAGE_ONLY
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
  "fs"         OPENCV_ENABLE_FILESYSTEM_SUPPORT
@@ -116,12 +120,6 @@ if("dnn" IN_LIST FEATURES)
     WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
     LOGNAME flatc-${TARGET_TRIPLET}
   )
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(OPENCV_LAPACK_SHARED_LIBS OFF)
-else()
-  set(OPENCV_LAPACK_SHARED_LIBS ON)
 endif()
 
 set(WITH_QT OFF)
@@ -404,6 +402,7 @@ vcpkg_cmake_configure(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
+        -DWITH_DIRECTML=${WITH_DIRECTML}
         -DWITH_MATLAB=OFF
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
@@ -418,11 +417,11 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_OBSENSOR=OFF
+        -DWITH_LAPACK=OFF
         ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
         ###### Additional build flags
-        -DOPENCV_LAPACK_SHARED_LIBS=${OPENCV_LAPACK_SHARED_LIBS}
         -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
         -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
         ###### Additional build flags
@@ -494,9 +493,6 @@ if("sfm" IN_LIST FEATURES)
 endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
-endif()
-if("lapack" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
 endif()
 if("openvino" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
