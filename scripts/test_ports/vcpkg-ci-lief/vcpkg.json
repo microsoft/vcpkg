@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-ci-lief",
+    "version-string": "ci",
+    "description": "Testing packages which provide lief",
+    "license": null,
+    "dependencies": [
+    "lief",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
