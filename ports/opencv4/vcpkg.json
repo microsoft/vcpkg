@@ -293,7 +293,8 @@
       "dependencies": [
         "blas",
         "lapack"
-      ]
+      ],
+      "supports": "!(android)"
     },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",

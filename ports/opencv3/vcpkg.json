@@ -193,7 +193,8 @@
       "dependencies": [
         "blas",
         "lapack"
-      ]
+      ],
+      "supports": "!(android)"
     },
     "line-descriptor": {
       "description": "opencv_line_descriptor module",
