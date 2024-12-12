@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CppMicroServices/CppMicroservices
     REF "v${VERSION}"
-    SHA512 4743846a8ba45e6bd320c93bb3bd443b5dac16ea0bbf55bda6212e9200a40ee29031fd74c6141de4c6b5ef9ad3e70789d13fda25b40638547782d386a12dd7e2
+    SHA512 0
     HEAD_REF development
     PATCHES
         werror.patch
@@ -25,7 +25,6 @@ file(RENAME "${NOWIDE_SOURCE_PATH}" "${SOURCE_PATH}/third_party/boost/nowide")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         -DTOOLS_INSTALL_DIR:STRING=tools/cppmicroservices
         -DAUXILIARY_INSTALL_DIR:STRING=share/cppmicroservices
         -DUS_USE_SYSTEM_GTEST=TRUE
