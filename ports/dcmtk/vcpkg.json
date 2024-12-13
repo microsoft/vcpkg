@@ -29,12 +29,6 @@
         "libiconv"
       ]
     },
-    "icu": {
-      "description": "Enable ICU support",
-      "dependencies": [
-        "icu"
-      ]
-    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [

@@ -41,7 +41,6 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "iconv"   DCMTK_WITH_ICONV
-        "icu"     DCMTK_WITH_ICU
         "openssl" DCMTK_WITH_OPENSSL
         "png"     DCMTK_WITH_PNG
         "tiff"    DCMTK_WITH_TIFF
