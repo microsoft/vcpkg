@@ -1809,7 +1809,7 @@
       "port-version": 11
     },
     "colmap": {
-      "baseline": "3.11.0",
+      "baseline": "3.11.1",
       "port-version": 0
     },
     "color-console": {
