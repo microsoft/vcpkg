@@ -1582,7 +1582,7 @@
     },
     "ceres": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cfitsio": {
       "baseline": "3.49",
