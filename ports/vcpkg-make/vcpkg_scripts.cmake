@@ -56,17 +56,7 @@ function(vcpkg_insert_msys_into_path msys_out)
         "PACKAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-
-    # Add autoconf2.71 to the list of packages
-    # https://github.com/microsoft/vcpkg/issues/41804
-    list(APPEND arg_PACKAGES autoconf2.71)
-    vcpkg_acquire_msys(MSYS_ROOT 
-        PACKAGES ${arg_PACKAGES}
-        DIRECT_PACKAGES
-            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
-            "dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306"
-    )
-
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_PACKAGES})
     cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
     cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
     file(REAL_PATH "${system_root}" system_root)
