@@ -8050,7 +8050,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 4
+      "port-version": 5
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
