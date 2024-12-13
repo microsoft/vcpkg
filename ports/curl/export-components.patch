@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a9b844..cd7263d 100644
+index fbb33a1..db3a5ee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2044,7 +2044,17 @@ if(NOT CURL_DISABLE_INSTALL)
-       DESTINATION ${CURL_INSTALL_CMAKE_DIR})
+@@ -2254,7 +2254,17 @@ if(NOT CURL_DISABLE_INSTALL)
+       DESTINATION ${_install_cmake_dir})
    endif()
  
 +  set(components_file "${CMAKE_CURRENT_BINARY_DIR}/CURLConfigComponents.cmake")
@@ -17,6 +17,6 @@ index 3a9b844..cd7263d 100644
 +
    install(FILES ${_version_config} ${_project_config}
 +                ${components_file}
-     DESTINATION ${CURL_INSTALL_CMAKE_DIR})
+     DESTINATION ${_install_cmake_dir})
  
    # Workaround for MSVS10 to avoid the Dialog Hell

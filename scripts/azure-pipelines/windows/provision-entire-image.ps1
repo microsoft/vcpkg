@@ -5,7 +5,6 @@
 # and assumes it is being run as an admin user.
 
 . "$PSScriptRoot\deploy-tlssettings.ps1" -RebootIfRequired 0
-. "$PSScriptRoot\deploy-windows-sdks.ps1"
 . "$PSScriptRoot\deploy-visual-studio.ps1"
 . "$PSScriptRoot\deploy-mpi.ps1"
 . "$PSScriptRoot\deploy-cuda.ps1"

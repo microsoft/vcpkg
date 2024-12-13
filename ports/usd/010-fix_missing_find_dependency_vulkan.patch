@@ -1,0 +1,17 @@
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 9e104abb7..2aa4a3bd3 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -26,6 +26,12 @@ if(@PXR_BUILD_IMAGING@)
+         find_dependency(OpenImageIO CONFIG)
+     endif()
+     if(@PXR_ENABLE_VULKAN_SUPPORT@)
++        if (NOT DEFINED Vulkan_DIR)
++            if (NOT [[@Vulkan_DIR@]] STREQUAL "")
++                set(Vulkan_DIR [[@Vulkan_DIR@]])
++            endif()
++        endif()
++        find_dependency(Vulkan REQUIRED)
+         find_dependency(unofficial-shaderc CONFIG)
+         find_dependency(unofficial-spirv-reflect CONFIG)
+         find_dependency(VulkanMemoryAllocator CONFIG)
