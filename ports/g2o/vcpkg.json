@@ -1,7 +1,6 @@
 {
   "name": "g2o",
-  "version-date": "2020-02-07",
-  "port-version": 6,
+  "version-date": "2023-08-06",
   "description": "g2o: A General Framework for Graph Optimization",
   "homepage": "https://openslam.org/g2o.html",
   "dependencies": [

@@ -8,6 +8,7 @@ vcpkg_from_github(
         depfindprotobuf.diff
         disable-telemetry.diff
         dont-preload-cache.diff
+        lib-name-static.diff
         merge-archives.diff
         save-linker-opts.diff
         export-targets.patch
