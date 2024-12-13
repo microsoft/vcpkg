@@ -1,19 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b18407f..f1be4c0 100644
+index b705a56..7219ebb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -52,9 +52,6 @@ FetchContent_Declare(
- # For Windows: Prevent overriding the parent project's compiler/linker settings
- set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+@@ -73,10 +73,6 @@ if (NOT AU_EXCLUDE_GTEST_DEPENDENCY)
+    # For Windows: Prevent overriding the parent project's compiler/linker settings
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
  
--FetchContent_MakeAvailable(googletest)
--include(GoogleTest)
+-   FetchContent_MakeAvailable(googletest)
+-   include(GoogleTest)
 -
- add_subdirectory(au)
+-   set(AU_CONFIG_FIND_GTEST_LINE "find_dependency(googletest 1.12.1)")
+ endif()
  
- # Configure how Au will be installed.
+ add_subdirectory(au)
 diff --git a/cmake/AuConfig.cmake.in b/cmake/AuConfig.cmake.in
-index b121f76..65da38a 100644
+index 4b86f68..65da38a 100644
 --- a/cmake/AuConfig.cmake.in
 +++ b/cmake/AuConfig.cmake.in
 @@ -14,9 +14,6 @@
@@ -21,21 +22,26 @@ index b121f76..65da38a 100644
  @PACKAGE_INIT@
  
 -include(CMakeFindDependencyMacro)
--find_dependency(googletest 1.12.1)
+-@AU_CONFIG_FIND_GTEST_LINE@
 -
  include(${CMAKE_CURRENT_LIST_DIR}/AuHeaders.cmake)
  
  check_required_components(Au)
 diff --git a/cmake/HeaderOnlyLibrary.cmake b/cmake/HeaderOnlyLibrary.cmake
-index 28daf00..f2bf389 100644
+index eafd4d1..d51535a 100644
 --- a/cmake/HeaderOnlyLibrary.cmake
 +++ b/cmake/HeaderOnlyLibrary.cmake
-@@ -75,7 +75,7 @@ function(header_only_library)
-   )
+@@ -103,6 +103,7 @@ function(gtest_based_test)
+   #
  
-   # Add the test, if requested.
--  if (DEFINED ARG_GTEST_SRCS)
-+  if (0)
-     add_executable("${ARG_NAME}_test")
-     target_sources("${ARG_NAME}_test" PRIVATE ${ARG_GTEST_SRCS})
-     target_link_libraries(
+   # Add the test.
++if (0)
+   add_executable(${ARG_NAME})
+   target_sources(${ARG_NAME} PRIVATE ${ARG_SRCS})
+   target_link_libraries(
+@@ -112,4 +113,5 @@ function(gtest_based_test)
+     GTest::gmock_main
+   )
+   gtest_discover_tests(${ARG_NAME})
++endif()
+ endfunction()
