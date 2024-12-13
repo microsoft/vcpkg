@@ -21,6 +21,12 @@ function(vcpkg_extract_archive)
 
     file(MAKE_DIRECTORY "${arg_DESTINATION}")
 
+ # Trying to see if this triggers a build for anyone using vcpkg_find_acquire(CLANG)
+get_filename_component(filename "${arg_ARCHIVE}" NAME)
+if("${filename}" STREQUAL "LLVM-15.0.6-win32.exe" OR "${filename}" STREQUAL "LLVM-15.0.6-win64.exe")
+    message(FATAL_ERROR "Explicit failure: vcpkg_extract_archive detected the specific file ${filename}")
+endif()
+
     cmake_path(GET arg_ARCHIVE EXTENSION archive_extension)
     string(TOLOWER "${archive_extension}" archive_extension)
     if("${archive_extension}" MATCHES [[\.msi$]])
