@@ -3948,6 +3948,10 @@
       "baseline": "2.1.0",
       "port-version": 1
     },
+    "kdsingleapplication": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "kdsoap": {
       "baseline": "2.2.0",
       "port-version": 0
