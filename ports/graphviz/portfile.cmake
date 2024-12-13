@@ -6,7 +6,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 6b0cffaf4bde7df260894b1b9d74e8a1d5aec11736511a86d99bc369e3f8db99f7050ae917cf1a066cc7d87695a57ef5b9c19521d211fee48c8a0c41ad0f4aac
+    SHA512 fb30d96878e5ea124d26c8823003473a5024f80e418919ff23653086a20ecd6c0cf9c1bbb01e711f22c851a90ae28e711bba3f3e7b0146bb84b4974f6580a600
     HEAD_REF main
     PATCHES
         disable-pragma-lib.patch
@@ -14,7 +14,6 @@ vcpkg_from_gitlab(
         no-absolute-paths.patch
         select-plugins.patch
         static-linkage.patch
-        webp-install.patch
 )
 
 vcpkg_list(SET OPTIONS)
@@ -109,6 +108,7 @@ vcpkg_copy_tools(
         diffimg
         dijkstra
         dot
+        dot_builtins
         edgepaint
         fdp
         gc
