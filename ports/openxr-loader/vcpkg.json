@@ -1,12 +1,21 @@
 {
   "name": "openxr-loader",
-  "version": "1.0.31",
+  "version": "1.0.34",
+  "port-version": 1,
   "description": "A royalty-free, open standard that provides high-performance access to Augmented Reality (AR) and Virtual Reality (VR)—collectively known as XR—platforms and devices",
   "homepage": "https://github.com/KhronosGroup/OpenXR-SDK",
   "license": "Apache-2.0",
-  "supports": "!uwp & !osx",
+  "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "egl",
+      "platform": "android"
+    },
     "jsoncpp",
+    {
+      "name": "opengl",
+      "platform": "!android & !ios & !osx & !(arm & windows) & !uwp"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -19,6 +28,7 @@
   "features": {
     "vulkan": {
       "description": "Vulkan functionality for OpenXR",
+      "supports": "!(arm & windows) & !uwp",
       "dependencies": [
         "vulkan"
       ]

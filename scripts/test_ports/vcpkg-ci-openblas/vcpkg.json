@@ -1,0 +1,37 @@
+{
+  "name": "vcpkg-ci-openblas",
+  "version-string": "ci",
+  "description": "Test openblas",
+  "license": null,
+  "dependencies": [
+    "openblas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test (mostly) everything",
+      "dependencies": [
+        {
+          "name": "openblas",
+          "features": [
+            "dynamic-arch"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "openblas",
+          "features": [
+            "threads"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    }
+  }
+}
