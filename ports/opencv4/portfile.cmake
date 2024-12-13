@@ -402,7 +402,6 @@ vcpkg_cmake_configure(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
-        -DWITH_DIRECTML=${WITH_DIRECTML}
         -DWITH_MATLAB=OFF
         -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
