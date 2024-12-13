@@ -23,6 +23,7 @@ vcpkg_from_github(
       0017-missing-include.patch
       0019-fix-tbb.patch
       0020-enable-pkgconf.patch
+      0021-enable-gtk.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
