@@ -88,13 +88,13 @@ vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
     set(_tools
-	    dcm2cda
+        dcm2cda
         cda2dcm
-		dcm2img
+        dcm2img
         dcm2json
         dcm2pdf
         dcm2pnm
-        dcm2xml		
+        dcm2xml
         dcmcjpeg
         dcmcjpls
         dcmconv
