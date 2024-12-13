@@ -384,6 +384,10 @@
       "version>=": "1.87.0"
     },
     {
+      "name": "boost-parser",
+      "version>=": "1.87.0"
+    },
+    {
       "name": "boost-pfr",
       "version>=": "1.87.0"
     },
