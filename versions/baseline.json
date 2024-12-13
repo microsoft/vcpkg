@@ -1124,6 +1124,10 @@
       "baseline": "1.87.0",
       "port-version": 0
     },
+    "boost-parser": {
+      "baseline": "1.87.0",
+      "port-version": 0
+    },
     "boost-pfr": {
       "baseline": "1.87.0",
       "port-version": 0
