@@ -30,7 +30,7 @@
     {
       "name": "opencv4",
       "default-features": false,
-      "features":[
+      "features": [
         "fs",
         "intrinsics",
         "thread"

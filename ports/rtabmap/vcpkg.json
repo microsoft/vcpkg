@@ -88,10 +88,10 @@
           "name": "opencv",
           "default-features": false,
           "features": [
+            "contrib",
             "fs",
             "intrinsics",
-            "thread",
-            "contrib"
+            "thread"
           ]
         }
       ]
@@ -103,10 +103,10 @@
           "name": "opencv",
           "default-features": false,
           "features": [
+            "cuda",
             "fs",
             "intrinsics",
-            "thread",
-            "cuda"
+            "thread"
           ]
         }
       ]
@@ -120,8 +120,8 @@
           "features": [
             "fs",
             "intrinsics",
-            "thread",
-            "nonfree"
+            "nonfree",
+            "thread"
           ]
         }
       ]
