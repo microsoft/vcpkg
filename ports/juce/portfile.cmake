@@ -126,6 +126,11 @@ vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+file(GLOB icons "${CURRENT_PACKAGES_DIR}/bin/*.ico")
+if(icons)
+  file(REMOVE_RECURSE ${icons})
+endif()
+
 set(tool_names "")
 file(GLOB tools "${CURRENT_PACKAGES_DIR}/bin/*")
 set(name_component NAME_WE)
