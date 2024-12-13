@@ -41,7 +41,6 @@
     }
   ],
   "default-features": [
-    "cgal",
     "gui"
   ],
   "features": {
