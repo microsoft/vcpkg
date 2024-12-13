@@ -73,15 +73,8 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "gstreamer"
-      ],
-      "platform": "!uwp & !android"
-    },
-    {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
         "gapi",
+        "gstreamer",
         "python"
       ],
       "platform": "!uwp & !(windows & static) & !android"
@@ -175,19 +168,19 @@
       "name": "opencv3",
       "default-features": false,
       "features": [
-        "gstreamer"
-      ],
-      "platform": "!uwp & !android"
-    },
-    {
-      "name": "opencv3",
-      "default-features": false,
-      "features": [
         "msmf",
         "ovis",
         "tbb"
       ],
       "platform": "windows & x64 & !static & !uwp"
+    },
+    {
+      "name": "opencv3",
+      "default-features": false,
+      "features": [
+        "gstreamer"
+      ],
+      "platform": "!uwp & !android & !(windows & static)"
     },
     {
       "name": "opencv3",
