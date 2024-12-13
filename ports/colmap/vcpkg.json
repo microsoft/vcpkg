@@ -30,7 +30,6 @@
     },
     "metis",
     "poselib",
-    "qt5-base",
     "sqlite3",
     {
       "name": "vcpkg-cmake",
@@ -40,6 +39,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
+  ],
+  "default-features": [
+    "cgal",
+    "gui"
   ],
   "features": {
     "cgal": {
@@ -64,7 +67,8 @@
     "gui": {
       "description": "Build the GUI.",
       "dependencies": [
-        "glew"
+        "glew",
+        "qt5-base"
       ]
     },
     "tests": {

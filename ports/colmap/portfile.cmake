@@ -26,6 +26,7 @@ foreach(FEATURE ${FEATURE_OPTIONS})
 endforeach()
 
 set(CUDA_ENABLED OFF)
+set(GUI_ENABLED OFF)
 set(TESTS_ENABLED OFF)
 set(CGAL_ENABLED OFF)
 set(OPENMP_ENABLED ON)
@@ -38,6 +39,10 @@ endif()
 if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
     set(CUDA_ARCHITECTURES "all-major")
+endif()
+
+if("gui" IN_LIST FEATURES)
+    set(GUI_ENABLED ON)
 endif()
 
 if("tests" IN_LIST FEATURES)
@@ -58,6 +63,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+        -DGUI_ENABLED=${GUI_ENABLED}
         -DTESTS_ENABLED=${TESTS_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
