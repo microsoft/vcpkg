@@ -1,20 +1,12 @@
 {
   "versions": [
     {
-<<<<<<< HEAD
-      "git-tree": "dd80bf808e5ca9ccf0cf9366bd009a73036a801b",
-=======
       "git-tree": "d9ef9fbb509e23fcb49f567f3c383ca3fd37e2c0",
->>>>>>> upstream/master
       "version": "6.3.0",
       "port-version": 2
     },
     {
-<<<<<<< HEAD
-      "git-tree": "41de05fdc0bfe960ebe7d69bff3d3ccb255928c9",
-=======
       "git-tree": "0634ea068717e4b97b9a9d767d70179b909657b6",
->>>>>>> upstream/master
       "version": "6.3.0",
       "port-version": 1
     },
