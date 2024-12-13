@@ -1,24 +1,24 @@
 diff --git a/cdk/cmake/DepFindProtobuf.cmake b/cdk/cmake/DepFindProtobuf.cmake
-index 1fc785e..d9eaecc 100644
+index 1fc785e..2ba7e99 100644
 --- a/cdk/cmake/DepFindProtobuf.cmake
 +++ b/cdk/cmake/DepFindProtobuf.cmake
-@@ -45,8 +45,6 @@
+@@ -44,9 +44,9 @@
+ #
  #
  
- if(TARGET ext::protobuf)
--  return()
+-if(TARGET ext::protobuf)
++if(COMMAND mysqlx_protobuf_generate_cpp)
+   return()
 -endif()
++elseif(0)
  
  message(STATUS "Setting up Protobuf.")
  
-@@ -65,6 +63,10 @@ add_ext_targets(protobuf
-   EXECUTABLE protoc pb_protoc
+@@ -66,6 +66,7 @@ add_ext_targets(protobuf
  )
  
-+endif()
-+if(COMMAND mysqlx_protobuf_generate_cpp)
-+  return()
-+endif()
  
++endif()
  # Standard PROTOBUF_GENERATE_CPP modified to our usage
  function(mysqlx_protobuf_generate_cpp SRCS HDRS)
+   IF(NOT ARGN)

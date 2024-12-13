@@ -1,7 +1,6 @@
 {
   "name": "qtmultimedia",
-  "version": "6.8.0",
-  "port-version": 1,
+  "version": "6.8.1",
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -61,6 +60,7 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
+            "plugins-bad",
             "plugins-base"
           ]
         }

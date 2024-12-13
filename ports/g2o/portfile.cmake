@@ -1,11 +1,12 @@
+string(REPLACE "-" "" GIT_TAG "${VERSION}_git")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RainerKuemmerle/g2o
-    REF fcba4eaca6f20d9a5792404cc8ef303aeb8ba5d2
-    SHA512 41e5a6d40db10d66182653d56f937f29264bf4f9412dfa651be949caeb055741c9d9ba75a122180892aafe7d45b334d50470284121148c0561e1d49f6ba5e20a
+    REF "${GIT_TAG}"
+    SHA512 626b4d286b564ca6714957d0caf41cf5387ecbc7100299c1a1134fa4a11a340f6e6e0796fa5ff16229032a1e1e384bc03e7d2c118be39d6d51a20d9f2774a98d
     HEAD_REF master
     PATCHES
-        csparse.diff
+        fix-absolute.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
