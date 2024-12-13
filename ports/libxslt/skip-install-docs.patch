@@ -1,15 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6dc6501..d36a049 100644
+index fb352475..23fe90f6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -432,10 +434,12 @@ if(LIBXSLT_WITH_PYTHON)
+@@ -474,12 +474,14 @@ if(LIBXSLT_WITH_PYTHON)
  	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxslt.py DESTINATION ${LIBXSLT_PYTHON_INSTALL_DIR} COMPONENT runtime)
  endif()
  
 +if(VCPKG_INSTALL_DOCS)
  install(FILES libexslt/libexslt.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 COMPONENT documentation)
  install(FILES libxslt/libxslt.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 COMPONENT documentation)
- install(FILES doc/xsltproc.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+ if(LIBXSLT_WITH_PROGRAMS)
+ 	install(FILES doc/xsltproc.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+ endif()
  install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxslt COMPONENT documentation PATTERN Makefile.* EXCLUDE)
 +endif()
  

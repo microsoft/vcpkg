@@ -1,0 +1,66 @@
+diff --git a/ports/cmake/src/CMakeLists.txt b/ports/cmake/src/CMakeLists.txt
+index 32bc03c..952141b 100644
+--- a/ports/cmake/src/CMakeLists.txt
++++ b/ports/cmake/src/CMakeLists.txt
+@@ -450,3 +450,7 @@ if(UNIX AND NOT PORTABLE_API)
+ endif()
+ 
+ configure_file(config.cmake.h.in config.h)
++
++set(LIBMPG123_LIBS "${LIBMPG123_LIBS}" PARENT_SCOPE)
++set(LIBOUT123_LIBS "${LIBOUT123_LIBS}" PARENT_SCOPE)
++set(LIBSYN123_LIBS "${LIBSYN123_LIBS}" PARENT_SCOPE)
+diff --git a/ports/cmake/src/libmpg123/CMakeLists.txt b/ports/cmake/src/libmpg123/CMakeLists.txt
+index 7cb08be..3e1c042 100644
+--- a/ports/cmake/src/libmpg123/CMakeLists.txt
++++ b/ports/cmake/src/libmpg123/CMakeLists.txt
+@@ -235,6 +235,13 @@ else()
+     target_sources(${TARGET} PRIVATE ${PLATFORM_SOURCES})
+ endif()
+ 
++if(HAVE_M)
++    string(APPEND LIBMPG123_LIBS " -lm")
++endif()
++if(WANT_WIN32_UNICODE)
++    string(APPEND LIBMPG123_LIBS " -lshlwapi")
++endif()
++set(LIBMPG123_LIBS "${LIBMPG123_LIBS}" PARENT_SCOPE)
+ target_link_libraries(${TARGET} PRIVATE
+     $<$<BOOL:${HAVE_M}>:m>
+     $<$<BOOL:${WANT_WIN32_UNICODE}>:shlwapi>)
+diff --git a/ports/cmake/src/libout123/CMakeLists.txt b/ports/cmake/src/libout123/CMakeLists.txt
+index d0fe358..cd800d8 100644
+--- a/ports/cmake/src/libout123/CMakeLists.txt
++++ b/ports/cmake/src/libout123/CMakeLists.txt
+@@ -18,6 +18,13 @@ add_library(${TARGET}
+ 
+ set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME out123)
+ 
++if(HAVE_UNIX_DL)
++    string(APPEND LIBOUT123_LIBS " -ldl")
++endif()
++if(WANT_WIN32_UNICODE)
++    string(APPEND LIBOUT123_LIBS " -lshlwapi")
++endif()
++set(LIBOUT123_LIBS "${LIBOUT123_LIBS}" PARENT_SCOPE)
+ target_link_libraries(${TARGET} PRIVATE
+     $<TARGET_NAME_IF_EXISTS:defaultmodule>
+     $<$<BOOL:${HAVE_UNIX_DL}>:dl>
+diff --git a/ports/cmake/src/libsyn123/CMakeLists.txt b/ports/cmake/src/libsyn123/CMakeLists.txt
+index 6edb5b7..0b660f5 100644
+--- a/ports/cmake/src/libsyn123/CMakeLists.txt
++++ b/ports/cmake/src/libsyn123/CMakeLists.txt
+@@ -19,6 +19,13 @@ target_include_directories(${TARGET} INTERFACE
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+ 
++if(HAVE_M)
++    string(APPEND LIBSYN123_LIBS " -lm")
++endif()
++if(WANT_WIN32_UNICODE)
++    string(APPEND LIBSYN123_LIBS " -lshlwapi")
++endif()
++set(LIBSYN123_LIBS "${LIBSYN123_LIBS}" PARENT_SCOPE)
+ target_link_libraries(${TARGET} PRIVATE
+     $<$<BOOL:${HAVE_M}>:m>
+     $<$<BOOL:${WANT_WIN32_UNICODE}>:shlwapi>)

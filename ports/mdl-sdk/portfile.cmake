@@ -83,6 +83,7 @@ vcpkg_from_github(
     PATCHES
         008-build-static-llvm.patch
         012-remove-wrong-llvm-cxx-standard.patch
+        013-openimageio-3.0.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

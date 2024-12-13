@@ -26,13 +26,14 @@ if(CMAKE_HOST_WIN32)
         set(download_sha512 15542080E0CC25C574391218107FE843006E8C5A7161D1CD48CF14A3C47155C0244587273D9C747F35B15EA17676869ECCE079214824214C1A62ABFC86AD9F9B)
     endif()
 
+    # Remove this after the next update
+    string(APPEND tool_subdirectory "-1")
+
     set(paths_to_search "${DOWNLOADS}/tools/python/${tool_subdirectory}")
 
-    # We want to be able to import stuff from outside of this embeddable package.
-    # https://docs.python.org/3/library/sys_path_init.html#pth-files
-    string(REGEX MATCH "^3\\.[0-9]+" _python_version_plain "${program_version}")
-    string(REPLACE "." "" _python_version_plain "${_python_version_plain}")
-    vcpkg_list(SET post_install_command "${CMAKE_COMMAND}" -E rm "python${_python_version_plain}._pth")
+    vcpkg_list(SET post_install_command
+        "${CMAKE_COMMAND}" "-DPYTHON_DIR=${paths_to_search}" "-DPYTHON_VERSION=${program_version}" -P "${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_make_python_less_embedded.cmake"
+    )
 else()
     set(program_name python3)
     set(brew_package_name "python")

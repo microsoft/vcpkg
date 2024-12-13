@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
+        -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
