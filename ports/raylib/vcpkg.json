@@ -1,7 +1,6 @@
 {
   "name": "raylib",
-  "version": "5.0",
-  "port-version": 1,
+  "version": "5.5",
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
   "license": "Zlib",

@@ -1,0 +1,8 @@
+{
+  "name": "librtpi",
+  "version": "1.0.1",
+  "description": "The Real-Time Priority Inheritance Library (librtpi) is intended to bridge the gap between the glibc pthread implementation and a functionally correct priority inheritance for pthread locking primitives, such as pthread_mutex and pthread_condvar.",
+  "homepage": "https://gitlab.com/linux-rt/librtpi",
+  "license": "LGPL-2.1-only",
+  "supports": "linux"
+}

@@ -5,6 +5,7 @@
   ],
   "name": "azure-storage-queues-cpp",
   "version-semver": "12.4.0",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Storage Queues SDK for C++",
     "This library provides Azure Storage Queues SDK."

@@ -1,0 +1,12 @@
+diff --git a/src/impl_instance.cpp b/src/impl_instance.cpp
+index 1c49a91..300d0db 100644
+--- a/src/impl_instance.cpp
++++ b/src/impl_instance.cpp
+@@ -3,6 +3,7 @@
+ #include "impl_device.hpp"
+ #include "impl_features.hpp"
+ 
++#include <algorithm>
+ #include <vector>
+ 
+ // --- Begin API Functions ---

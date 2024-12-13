@@ -1,7 +1,6 @@
 {
   "name": "nlopt",
-  "version": "2.7.1",
-  "port-version": 1,
+  "version": "2.8.0",
   "description": "Library for nonlinear local and global optimization, for functions with and without gradient information.",
   "homepage": "https://github.com/stevengj/nlopt",
   "dependencies": [

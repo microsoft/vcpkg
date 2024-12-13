@@ -86,8 +86,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
-    REF v${PYTHON_VERSION}
-    SHA512 c2ebe72ce53dd2d59750a7b0bdaf15ebb7ecb6f67d2913a457bf5d32bd0f640815f9496f2fa3ebeac0722264d000735d90d3ffaeac2de1f066b7aee994bf9b24
+    REF v${VERSION}
+    SHA512 411f43495943b8aeec287d4339bac6beb6a7224b0844cc4d48188b208fbbbc6404ad031b6e7a3bed0900baf972c4536a54f4da1ab39202f4f405a188ca04ae07
     HEAD_REF master
     PATCHES ${PATCHES}
 )
