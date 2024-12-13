@@ -1,0 +1,4 @@
+or-tools provides CMake targets:
+
+  find_package(ortools CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE ortools::ortools)

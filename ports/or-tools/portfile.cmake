@@ -23,7 +23,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${FEATURE_OPTIONS}
-        -DUSE_GUROBI=OFF
         -DUSE_SCIP=OFF
         -DUSE_COINOR=OFF
         -DBUILD_TESTING=OFF
@@ -32,7 +31,6 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_FLATZINC=OFF
         -DBUILD_LP_PARSER=OFF
-        -DBUILD_MATH_OPT=OFF
 )
 
 vcpkg_cmake_install()
@@ -43,6 +41,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Empty directories
 file(REMOVE_RECURSE
