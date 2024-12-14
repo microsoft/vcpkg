@@ -1,7 +1,7 @@
 {
   "name": "fontconfig",
   "version": "2.15.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Library for configuring and customizing font access.",
   "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "license": "MIT",
@@ -10,7 +10,6 @@
     "expat",
     "freetype",
     "getopt",
-    "gettext",
     {
       "name": "gperf",
       "host": true
@@ -21,12 +20,28 @@
     },
     {
       "name": "libuuid",
-      "platform": "!windows & !osx & !mingw"
+      "platform": "!osx & !windows"
     },
     "pthread",
     {
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "nls": {
+      "description": "Native languages support",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        },
+        "gettext-libintl"
+      ]
+    }
+  }
 }

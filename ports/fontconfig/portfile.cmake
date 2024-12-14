@@ -11,15 +11,23 @@ vcpkg_from_gitlab(
         fix-wasm-shared-memory-atomics.patch
 )
 
-vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+set(options "")
+if("nls" IN_LIST FEATURES)
+    list(APPEND options "-Dnls=enabled")
+else()
+    list(APPEND options "-Dnls=disabled")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -Ddoc=disabled
         -Dcache-build=disabled
         -Diconv=enabled
         -Dtests=disabled
+    ADDITIONAL_BINARIES
+        "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${HOST_EXECUTABLE_SUFFIX}']"
 )
 
 # https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
@@ -42,7 +50,7 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 #Fix missing libintl static dependency
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+if("nls" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl" IGNORE_UNCHANGED)
     endif()
