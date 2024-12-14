@@ -5,10 +5,14 @@
   "description": "Library for configuring and customizing font access.",
   "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "dirent",
     "expat",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     {
       "name": "gperf",
       "host": true
