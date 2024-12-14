@@ -5,7 +5,7 @@
   "homepage": "https://github.com/nem0/OpenFBX",
   "license": "MIT",
   "dependencies": [
-    "miniz",
+    "libdeflate",
     {
       "name": "vcpkg-cmake",
       "host": true
