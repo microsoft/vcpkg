@@ -1,0 +1,112 @@
+{
+    "$comment": "Not implemented. It may be possible to allow downloading of declared network resources ahead of building",
+    "$version": "0.0.0-alpha.202405",
+    "$not-implemented-temp-config": {
+        "github-raw": {
+            "pip-24.0.pyz": {
+                "uri": "pypa/get-pip/raw/24.0/public/pip.pyz",
+                "sha512": "116663087f4aa45a2bae3d9a5fb01a754269b4034c4d913ac0364093882827ebe15e076d109b8ffb4e4256bf557cd64cc03b8fa375aa70287731fe3f0adb6f65",
+                "tags": [
+                    "pip.pyz",
+                    "private"
+                ]
+            },
+            "virtualenv-20.26.2.pyz": {
+                "uri": "pypa/get-virtualenv/raw/20.26.2/public/virtualenv.pyz",
+                "sha512": "2bfa9c0561eed6b87746b0719b15cce9caac392a59a661a4383b5eeae1fdff3370ae41c5453193100860bbbb563590b4fbf23443e2589a5363538e9cd81ab6c4",
+                "tags": [
+                    "private",
+                    "virtualenv.pyz"
+                ]
+            }
+        },
+        "pypi": {
+            "$mirrors": {
+                "https://files.pythonhosted.org/": [
+                    "https://pypi.tuna.tsinghua.edu.cn/"
+                ]
+            },
+            "pip-24.0-py3-none-any.whl": {
+                "blake2b-256": "8a6a19e9fe04fca059ccf770861c7d5721ab4c2aebc539889e97c7977528a53b",
+                "sha512": "d212edd21ab99f50c2daf6080c68a3cc0eeed566f10e91f857e7eeb86513f33e9cde25b975db1030110c3b1714cfbfd4d3c9e2937b4a5ff2bb8971e605ecee85",
+                "tags": [
+                    "constraints",
+                    "private"
+                ]
+            },
+            "setuptools-69.5.1-py3-none-any.whl": {
+                "blake2b-256": "f72913965af254e3373bceae8fb9a0e6ea0d0e571171b80d6646932131d6439b",
+                "sha512": "d212edd21ab99f50c2daf6080c68a3cc0eeed566f10e91f857e7eeb86513f33e9cde25b975db1030110c3b1714cfbfd4d3c9e2937b4a5ff2bb8971e605ecee85",
+                "tags": [
+                    "constraints",
+                    "private"
+                ]
+            },
+            "wheel-0.43.0-py3-none-any.whl": {
+                "blake2b-256": "7dcdd7460c9a869b16c3dd4e1e403cce337df165368c71d6af229a74699622ce",
+                "sha512": "5a637264ee0eba127aa72a372b111fe8a61f454fbd3fc02b39590fd2c6bf6f5e9ac4b0e18fd16ff5fdbb9f4b046c9237fd56b055c4cb595fb042e5aa94b336c5",
+                "tags": [
+                    "constraints",
+                    "private"
+                ]
+            },
+            "packaging-24.0-py3-none-any.whl": {
+                "blake2b-256": "49df1fceb2f8900f8639e278b056416d49134fb8d84c5942ffaa01ad34782422",
+                "sha512": "9d2c31701a4d3fef553928c00528a48f9e1854ab5333528b50e358a214eba90029d687f039bcda5760b6fdf9f2de3bcf3784ae21a6374cf2a97a845d33b636c6",
+                "tags": [
+                    "constraints"
+                ]
+            },
+            "meson-1.4.0-py3-none-any.whl": {
+                "blake2b-256": "3375b1a37fa7b2dbca8c0dbb04d5cdd7e2720c8ef6febe41b4a74866350e041c",
+                "sha512": "481760e37958fdda993a8a2541cd0515a29eb95197847359673914dc05a1b623a9871a86616a8f35831051a20bef1c9d4f979c8653c7e3905d148e03291fbd63",
+                "tags": []
+            },
+            "meson-1.3.2-py3-none-any.whl": {
+                "blake2b-256": "397cff115bec047c5127567048db40818b83b47fd0d3bfcfd0d87630d44ed66f",
+                "sha512": "1b7061fc6e36ae9c62d43d47ccccbab8a14752db4756d5ad546a1a7d0730f58b7b026a305b41b252ce1cda0cec65681a88bc61bd996fd261585e582e3304c134",
+                "tags": [
+                    "constraints"
+                ]
+            }
+        }
+    },
+    "items": {
+        "python-3.12.3-embed-win32.zip": {
+            "url": "https://www.python.org/ftp/python/3.12.3/python-3.12.3-embed-win32.zip",
+            "sha512": "c26a80c3f1e5c8c684cd9ea8f2670c0cc8333222284c5e246441ea6c33b6e1e17b381eae638fca50b9c8feaf80e60dba87cc65592e1877bdaf99ae21627e4626"
+        },
+        "pip-24.0.pyz": {
+            "url": "https://github.com/pypa/get-pip/raw/24.0/public/pip.pyz?raw=true",
+            "sha512": "116663087f4aa45a2bae3d9a5fb01a754269b4034c4d913ac0364093882827ebe15e076d109b8ffb4e4256bf557cd64cc03b8fa375aa70287731fe3f0adb6f65"
+        },
+        "virtualenv-20.26.2.pyz": {
+            "url": "https://github.com/pypa/get-virtualenv/raw/20.26.2/public/virtualenv.pyz?raw=true",
+            "sha512": "2bfa9c0561eed6b87746b0719b15cce9caac392a59a661a4383b5eeae1fdff3370ae41c5453193100860bbbb563590b4fbf23443e2589a5363538e9cd81ab6c4"
+        },
+        "pip-24.0-py3-none-any.whl": {
+            "url": "https://files.pythonhosted.org/packages/49/df/1fceb2f8900f8639e278b056416d49134fb8d84c5942ffaa01ad34782422/packaging-24.0-py3-none-any.whl",
+            "sha512": "9d2c31701a4d3fef553928c00528a48f9e1854ab5333528b50e358a214eba90029d687f039bcda5760b6fdf9f2de3bcf3784ae21a6374cf2a97a845d33b636c6"
+        },
+        "setuptools-69.5.1-py3-none-any.whl": {
+            "url": "https://files.pythonhosted.org/packages/f7/29/13965af254e3373bceae8fb9a0e6ea0d0e571171b80d6646932131d6439b/setuptools-69.5.1-py3-none-any.whl",
+            "sha512": "d212edd21ab99f50c2daf6080c68a3cc0eeed566f10e91f857e7eeb86513f33e9cde25b975db1030110c3b1714cfbfd4d3c9e2937b4a5ff2bb8971e605ecee85"
+        },
+        "wheel-0.43.0-py3-none-any.whl": {
+            "url": "https://files.pythonhosted.org/packages/7d/cd/d7460c9a869b16c3dd4e1e403cce337df165368c71d6af229a74699622ce/wheel-0.43.0-py3-none-any.whl",
+            "sha512": "5a637264ee0eba127aa72a372b111fe8a61f454fbd3fc02b39590fd2c6bf6f5e9ac4b0e18fd16ff5fdbb9f4b046c9237fd56b055c4cb595fb042e5aa94b336c5"
+        },
+        "packaging-24.0-py3-none-any.whl": {
+            "url": "https://files.pythonhosted.org/packages/49/df/1fceb2f8900f8639e278b056416d49134fb8d84c5942ffaa01ad34782422/packaging-24.0-py3-none-any.whl",
+            "sha512": "9d2c31701a4d3fef553928c00528a48f9e1854ab5333528b50e358a214eba90029d687f039bcda5760b6fdf9f2de3bcf3784ae21a6374cf2a97a845d33b636c6"
+        },
+        "meson-1.4.0-py3-none-any.whl": {
+            "url": "https://files.pythonhosted.org/packages/33/75/b1a37fa7b2dbca8c0dbb04d5cdd7e2720c8ef6febe41b4a74866350e041c/meson-1.4.0-py3-none-any.whl",
+            "sha512": "481760e37958fdda993a8a2541cd0515a29eb95197847359673914dc05a1b623a9871a86616a8f35831051a20bef1c9d4f979c8653c7e3905d148e03291fbd63"
+        },
+        "meson-1.3.2-py3-none-any.whl": {
+            "url": "https://files.pythonhosted.org/packages/33/75/b1a37fa7b2dbca8c0dbb04d5cdd7e2720c8ef6febe41b4a74866350e041c/meson-1.3.2-py3-none-any.whl",
+            "sha512": "1b7061fc6e36ae9c62d43d47ccccbab8a14752db4756d5ad546a1a7d0730f58b7b026a305b41b252ce1cda0cec65681a88bc61bd996fd261585e582e3304c134"
+        }
+    }
+}
