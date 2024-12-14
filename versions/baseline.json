@@ -1922,7 +1922,7 @@
     },
     "cpp-netlib": {
       "baseline": "0.13.0",
-      "port-version": 9
+      "port-version": 10
     },
     "cpp-peglib": {
       "baseline": "1.9.0",
@@ -2930,7 +2930,7 @@
     },
     "freeopcua": {
       "baseline": "20190125",
-      "port-version": 8
+      "port-version": 9
     },
     "freerdp": {
       "baseline": "3.8.0",
@@ -9622,7 +9622,7 @@
     },
     "websocketpp": {
       "baseline": "0.8.2",
-      "port-version": 3
+      "port-version": 4
     },
     "webthing-cpp": {
       "baseline": "1.0.5",
