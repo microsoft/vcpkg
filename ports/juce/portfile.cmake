@@ -13,6 +13,7 @@ vcpkg_from_github(
     devendor-oboe.diff
     install-extras.diff
     juceaide.diff
+    missing-modules.diff
     prefer-cmake.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/modules/juce_audio_devices/native/oboe")
