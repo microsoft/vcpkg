@@ -6,6 +6,9 @@
   "license": "Apache-2.0",
   "dependencies": [
     "gtest",
+    "boost-asio",
+    "boost-nowide",
+    "abseil",
     {
       "name": "vcpkg-cmake",
       "host": true
