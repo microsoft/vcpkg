@@ -15,22 +15,43 @@ vcpkg_from_github(
     juceaide.diff
     missing-modules.diff
     prefer-cmake.diff
+    vcpkg-compile-definitions.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/modules/juce_audio_devices/native/oboe")
+
+set(feature_compile_definitions
+    "curl"        JUCE_USE_CURL
+    "fontconfig"  JUCE_USE_FONTCONFIG
+    "freetype"    JUCE_USE_FREETYPE
+    "jack"        JUCE_JACK
+    "ladspa"      JUCE_PLUGINHOST_LADSPA
+    "web-browser" JUCE_WEB_BROWSER
+    "xcursor"     JUCE_USE_XCURSOR
+    "xinerama"    JUCE_USE_XINERAMA
+    "xrandr"      JUCE_USE_XRANDR
+    "xrender"     JUCE_USE_XRENDER
+)
+set(enforced_definitions "")
+while(feature_compile_definitions)
+  list(POP_FRONT feature_compile_definitions  feature compile_definition)
+  if(NOT feature IN_LIST FEATURES)
+    # Enforce controlled absence of dependency
+    list(APPEND enforced_definitions "${compile_definition}=0")
+  endif()
+endwhile()
+list(JOIN enforced_definitions "\n    " enforced_definitions)
+file(WRITE "${SOURCE_PATH}/extras/Build/CMake/vcpkg-compile-definitions.cmake" "
+function(vcpkg_juce_add_compile_definitions target)
+  target_compile_definitions(\${target} INTERFACE
+    ${enforced_definitions}
+  )
+endfunction()
+")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
   "extras"      JUCE_BUILD_EXTRAS
   "ladspa"      JUCE_PLUGINHOST_LADSPA
-  "jack"        JUCE_JACK
-  "curl"        JUCE_USE_CURL
-  "freetype"    JUCE_USE_FREETYPE
-  "xcursor"     JUCE_USE_XCURSOR
-  "xinerama"    JUCE_USE_XINERAMA
-  "xrandr"      JUCE_USE_XRANDR
-  "xrender"     JUCE_USE_XRENDER
-  "web-browser" JUCE_WEB_BROWSER
-  "opengl"      JUCE_OPENGL
 )
 # Based on https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md
 if(VCPKG_TARGET_IS_LINUX)
@@ -111,15 +132,6 @@ vcpkg_cmake_configure(
   MAYBE_UNUSED_VARIABLES
     JUCE_TOOL_INSTALL_DIR
     JUCE_PLUGINHOST_LADSPA
-    JUCE_JACK
-    JUCE_OPENGL
-    JUCE_USE_CURL
-    JUCE_USE_FREETYPE
-    JUCE_USE_XCURSOR
-    JUCE_USE_XINERAMA
-    JUCE_USE_XRANDR
-    JUCE_USE_XRENDER
-    JUCE_WEB_BROWSER
 )
 
 vcpkg_cmake_install()
