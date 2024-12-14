@@ -9,7 +9,6 @@
     "dirent",
     "expat",
     "freetype",
-    "getopt",
     {
       "name": "gperf",
       "host": true
@@ -48,7 +47,10 @@
     },
     "tools": {
       "description": "Build tools",
-      "supports": "!emscripten"
+      "supports": "!emscripten",
+      "dependencies": [
+        "getopt"
+      ]
     }
   }
 }
