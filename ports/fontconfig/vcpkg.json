@@ -42,6 +42,10 @@
         },
         "gettext-libintl"
       ]
+    },
+    "tools": {
+      "description": "Build tools",
+      "supports": "!emscripten"
     }
   }
 }

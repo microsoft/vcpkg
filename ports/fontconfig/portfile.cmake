@@ -17,6 +17,11 @@ if("nls" IN_LIST FEATURES)
 else()
     list(APPEND options "-Dnls=disabled")
 endif()
+if("tools" IN_LIST FEATURES)
+    list(APPEND options "-Dtools=enabled")
+else()
+    list(APPEND options "-Dtools=disabled")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -91,10 +96,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endforeach()
 endif()
 
-vcpkg_copy_tools(
-    TOOL_NAMES fc-match fc-cat fc-list fc-pattern fc-query fc-scan fc-cache fc-validate fc-conflist
-    AUTO_CLEAN
-)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES fc-match fc-cat fc-list fc-pattern fc-query fc-scan fc-cache fc-validate fc-conflist
+        AUTO_CLEAN
+    )
+endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
