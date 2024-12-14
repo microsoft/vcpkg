@@ -22,7 +22,10 @@
       "name": "libuuid",
       "platform": "!osx & !windows"
     },
-    "pthread",
+    {
+      "name": "pthread",
+      "platform": "!emscripten & !windows"
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
