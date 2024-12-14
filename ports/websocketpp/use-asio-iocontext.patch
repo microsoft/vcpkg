@@ -1,0 +1,42 @@
+diff --git a/websocketpp/common/asio.hpp b/websocketpp/common/asio.hpp
+index 3c8fa13..f0e8ed2 100644
+--- a/websocketpp/common/asio.hpp
++++ b/websocketpp/common/asio.hpp
+@@ -69,9 +69,18 @@
+ namespace websocketpp {
+ namespace lib {
+ 
++#if BOOST_VERSION >= 108700
++    namespace asio {
++        using io_service = boost::asio::io_service;
++    }
++#endif
++
+ #ifdef ASIO_STANDALONE
+     namespace asio {
+         using namespace ::asio;
++        #if ASIO_VERSION >= 103300
++            using io_service = io_context;
++        #endif
+         // Here we assume that we will be using std::error_code with standalone
+         // Asio. This is probably a good assumption, but it is possible in rare
+         // cases that local Asio versions would be used.
+@@ -93,7 +102,9 @@ namespace lib {
+ #else
+     namespace asio {
+         using namespace boost::asio;
+-        
++        #if BOOST_VERSION >= 108700
++            using io_service = io_context;
++        #endif
+         // See note above about boost <1.49 compatibility
+         #if (BOOST_VERSION/100000) == 1 && ((BOOST_VERSION/100)%1000) > 48
+             // Using boost::asio >=1.49 so we use chrono and steady_timer
+@@ -134,7 +145,6 @@ namespace lib {
+     } // namespace asio
+ #endif
+ 
+-
+ } // namespace lib
+ } // namespace websocketpp
+ 
