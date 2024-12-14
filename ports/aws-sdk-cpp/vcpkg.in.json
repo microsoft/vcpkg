@@ -4,7 +4,6 @@
   "description": "AWS SDK for C++",
   "homepage": "https://github.com/aws/aws-sdk-cpp",
   "license": "Apache-2.0",
-  "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-crt-cpp",
     {
