@@ -172,21 +172,19 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
+    # This sections relies on target package python3.
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
-        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
-        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
-        set(python_ver "3.${PYTHON_VERSION_MINOR}")
+        set(python_ver "3")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
-        -DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
+        "-DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
