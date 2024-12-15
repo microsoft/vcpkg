@@ -1,8 +1,21 @@
+diff --git a/Makefile.in b/Makefile.in
+index e8295a8..ecb03a1 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -318,7 +318,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ AUTOMAKE_OPTIONS = 1.5 gnu
+ ACLOCAL_AMFLAGS = -I m4
+-SUBDIRS = gnulib-local gettext-runtime libtextstyle gettext-tools
++SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS)
+ changelog_etc = \
+   gettext-runtime/ChangeLog.0 \
+   gettext-runtime/doc/ChangeLog.0 \
 diff --git a/configure b/configure
-index 904bdf5..e751ffc 100755
+index 5f89f07..c395227 100755
 --- a/configure
 +++ b/configure
-@@ -2797,7 +2797,7 @@ am__tar='${AMTAR} chf - --format=ustar --owner=root --group=root "$$tardir"'
+@@ -2965,7 +2965,7 @@ am__tar='${AMTAR} chf - --format=ustar --owner=root --group=root "$$tardir"'
  
  
  
@@ -11,24 +24,11 @@ index 904bdf5..e751ffc 100755
  
  
  
-diff --git a/Makefile.in b/Makefile.in
-index a287d38..075ddc5 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -311,7 +311,7 @@ top_builddir = @top_builddir@
- top_srcdir = @top_srcdir@
- AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
- ACLOCAL_AMFLAGS = -I m4
--SUBDIRS = gnulib-local gettext-runtime libtextstyle gettext-tools
-+SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS)
- changelog_etc = \
-   gettext-runtime/ChangeLog.0 \
-   gettext-runtime/doc/ChangeLog.0 \
 diff --git a/gettext-runtime/Makefile.in b/gettext-runtime/Makefile.in
-index 8b8b5bc..bb75447 100644
+index 62ba61f..2f0dd3d 100644
 --- a/gettext-runtime/Makefile.in
 +++ b/gettext-runtime/Makefile.in
-@@ -1487,7 +1487,7 @@ ACLOCAL_AMFLAGS = -I m4 -I ../m4 -I gnulib-m4
+@@ -2277,7 +2277,7 @@ ACLOCAL_AMFLAGS = -I m4 -I ../m4 -I gnulib-m4
  # The list of subdirectories depends on whether --disable-libasprintf was
  # specified.
  @ENABLE_LIBASPRINTF_TRUE@SUBDIR_libasprintf = libasprintf
@@ -38,10 +38,10 @@ index 8b8b5bc..bb75447 100644
  # Allow users to use "gnulib-tool --update".
  
 diff --git a/gettext-runtime/configure b/gettext-runtime/configure
-index a7594ed..296f3b7 100644
+index 87ed762..ae36159 100755
 --- a/gettext-runtime/configure
 +++ b/gettext-runtime/configure
-@@ -26906,7 +26906,7 @@ printf "%s\n" "$ac_res" >&6; }
+@@ -25410,7 +25410,7 @@ printf "%s\n" "$ac_res" >&6; }
  
                                          if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" = "yes"; } \
             || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
@@ -51,10 +51,10 @@ index a7594ed..296f3b7 100644
                  && test "$PACKAGE" != libintl; }; then
            gt_use_preinstalled_gnugettext=yes
 diff --git a/gettext-runtime/libasprintf/configure b/gettext-runtime/libasprintf/configure
+index cb3b71b..287e662 100755
 --- a/gettext-runtime/libasprintf/configure
 +++ b/gettext-runtime/libasprintf/configure
-index ff1c212..0c0dbcd 100644
-@@ -11,6 +11,7 @@
+@@ -9,6 +9,7 @@
  #
  # This configure script is free software; the Free Software Foundation
  # gives unlimited permission to copy, distribute and modify it.
@@ -63,23 +63,23 @@ index ff1c212..0c0dbcd 100644
  ## M4sh Initialization. ##
  ## -------------------- ##
 diff --git a/gettext-tools/Makefile.in b/gettext-tools/Makefile.in
-index 59e81a8..107856d 100644
+index e3e29d4..6a80745 100644
 --- a/gettext-tools/Makefile.in
 +++ b/gettext-tools/Makefile.in
-@@ -2872,7 +2872,7 @@ top_builddir = @top_builddir@
+@@ -3673,7 +3673,7 @@ top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
- AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
- ACLOCAL_AMFLAGS = -I m4 -I ../gettext-runtime/m4 -I ../m4 -I gnulib-m4 -I libgrep/gnulib-m4 -I libgettextpo/gnulib-m4
+ AUTOMAKE_OPTIONS = 1.5 gnu
+ ACLOCAL_AMFLAGS = -I m4 -I ../gettext-runtime/m4 -I ../m4 -I gnulib-m4 -I libgrep/gnulib-m4 -I libgettextpo/gnulib-m4 -I tests/gnulib-m4
 -SUBDIRS = gnulib-lib libgrep src libgettextpo po its projects styles emacs misc man m4 tests system-tests gnulib-tests examples doc
 +SUBDIRS = gnulib-lib libgrep src              po its projects styles       misc
  
  # Allow users to use "gnulib-tool --update".
  
 diff --git a/gettext-tools/configure b/gettext-tools/configure
-index 056a830..9abca7e 100644
+index 339f02a..b036ad3 100755
 --- a/gettext-tools/configure
 +++ b/gettext-tools/configure
-@@ -29661,7 +29661,7 @@ printf "%s\n" "$ac_res" >&6; }
+@@ -28995,7 +28995,7 @@ printf "%s\n" "$ac_res" >&6; }
                                          if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" = "yes"; } \
             || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
                  && test "$PACKAGE" != gettext-runtime \
@@ -89,9 +89,9 @@ index 056a830..9abca7e 100644
            gt_use_preinstalled_gnugettext=yes
          else
 diff --git a/gettext-tools/examples/configure b/gettext-tools/examples/configure
+index 297d784..64a7d8f 100755
 --- a/gettext-tools/examples/configure
 +++ b/gettext-tools/examples/configure
-index ff1c212..0c0dbcd 100644
 @@ -11,6 +11,7 @@
  #
  # This configure script is free software; the Free Software Foundation
@@ -101,22 +101,22 @@ index ff1c212..0c0dbcd 100644
  ## M4sh Initialization. ##
  ## -------------------- ##
 diff --git a/gettext-tools/src/Makefile.in b/gettext-tools/src/Makefile.in
+index 7b7042a..d07c364 100644
 --- a/gettext-tools/src/Makefile.in
 +++ b/gettext-tools/src/Makefile.in
-index ff1c212..0c0dbcd 100644
-@@ -4381,6 +4381,7 @@
+@@ -4847,6 +4847,7 @@ msgfilter$(EXEEXT): $(msgfilter_OBJECTS) $(msgfilter_DEPENDENCIES) $(EXTRA_msgfi
  	$(AM_V_GEN)$(msgfilter_LINK) $(msgfilter_OBJECTS) $(msgfilter_LDADD) $(LIBS)
  ../../gettext-runtime/intl/$(am__dirstamp):
  	@$(MKDIR_P) ../../gettext-runtime/intl
 +	@$(MAKE) -C ../../gettext-runtime/intl libgnuintl.h
- 	@: > ../../gettext-runtime/intl/$(am__dirstamp)
- ../../gettext-runtime/intl/msgfmt-hash-string.$(OBJEXT):  \
- 	../../gettext-runtime/intl/$(am__dirstamp)
+ 	@: >>../../gettext-runtime/intl/$(am__dirstamp)
+ ../../gettext-runtime/intl/$(DEPDIR)/$(am__dirstamp):
+ 	@$(MKDIR_P) ../../gettext-runtime/intl/$(DEPDIR)
 diff --git a/libtextstyle/Makefile.in b/libtextstyle/Makefile.in
-index ff1c212..0c0dbcd 100644
+index 163fdf4..ddcd6cf 100644
 --- a/libtextstyle/Makefile.in
 +++ b/libtextstyle/Makefile.in
-@@ -1667,7 +1667,7 @@ AUTOMAKE_OPTIONS = 1.13 gnu no-dependencies
+@@ -1960,7 +1960,7 @@ AUTOMAKE_OPTIONS = 1.13 gnu
  ACLOCAL_AMFLAGS = -I m4 -I gnulib-m4
  
  # The list of subdirectories containing Makefiles.
