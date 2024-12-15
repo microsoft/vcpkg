@@ -2,6 +2,16 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c3b6ab5..f050970 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -485,7 +485,8 @@ set(G2O_HAVE_CHOLMOD ${CHOLMOD_FOUND})
+ set(G2O_HAVE_CSPARSE ${G2O_USE_CSPARSE})
+ set(G2O_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(G2O_LGPL_SHARED_LIBS ${BUILD_LGPL_SHARED_LIBS})
+-set(G2O_CXX_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER}")
++cmake_path(GET CMAKE_CXX_COMPILER FILENAME cxx_compiler)
++set(G2O_CXX_COMPILER "${CMAKE_CXX_COMPILER_ID} ${cxx_compiler}")
+
+ # Generate cmake configuration scripts
+ set(G2O_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
 @@ -496,7 +496,6 @@ set(G2O_PROJECT_CONFIG "${G2O_GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
  set(G2O_TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
  set(G2O_CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
