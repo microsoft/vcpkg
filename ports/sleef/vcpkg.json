@@ -1,7 +1,6 @@
 {
   "name": "sleef",
-  "version": "3.5.1",
-  "port-version": 4,
+  "version": "3.7",
   "description": "SIMD Library for Evaluating Elementary Functions, vectorized libm and DFT",
   "homepage": "https://sleef.org/",
   "license": "BSL-1.0",
@@ -9,6 +8,10 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
