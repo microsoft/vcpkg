@@ -1,0 +1,26 @@
+diff --git a/cmake/LIEFConfig.cmake.in b/cmake/LIEFConfig.cmake.in
+index dba7363..210b64b 100644
+--- a/cmake/LIEFConfig.cmake.in
++++ b/cmake/LIEFConfig.cmake.in
+@@ -69,11 +69,14 @@ macro(LIEF_load_targets lib_type)
+     return()
+   endif ()
+
+-  if("${lib_type}" STREQUAL "static")
++  if(1)
+     # Need to find all dependencies even if they're private when LIEF is
+     # compiled statically
+     include(CMakeFindDependencyMacro)
+
++    find_dependency(tl-expected)
++    find_dependency(fmt)
++
+     if(@LIEF_EXTERNAL_MBEDTLS@)
+       find_dependency(MbedTLS)
+     endif()
+@@ -183,3 +186,5 @@ if(DEFINED LIEF_INCLUDE_DIR)
+     set(LIEF_PATCH_VERSION "${LIEF_VERSION_PATCH}")
+   endif()
+ endif()
++
++check_required_components(lief)

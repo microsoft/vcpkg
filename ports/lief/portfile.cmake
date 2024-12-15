@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 7df75fab6c7023e37a6a4d27fac8dcb4200e0235625fc5952bb23cedb2e582a37fb67ee471c1ae953c0b205fd9cca5538a835f65ef80a771f72dc7ff68000ed9
     HEAD_REF master
+    PATCHES
+        fix-liefconfig-cmake-in.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
@@ -11,21 +13,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "target_link_libraries(LIB_LIEF PRIVATE lief_spdlog)"
     "find_package(fmt CONFIG REQUIRED)\nfind_package(spdlog CONFIG REQUIRED)\ntarget_link_libraries(LIB_LIEF PRIVATE fmt::fmt spdlog::spdlog)"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/cmake/LIEFConfig.cmake.in"
-    [[if("${lib_type}" STREQUAL "static")]]
-    [[if(1)]]
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/cmake/LIEFConfig.cmake.in"
-    "include(CMakeFindDependencyMacro)"
-    "include(CMakeFindDependencyMacro)\nfind_dependency(tl-expected)\nfind_dependency(fmt)"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/cmake/LIEFConfig.cmake.in"
-    "if(DEFINED LIEF_INCLUDE_DIR)"
-    "check_required_components(lief)\nif(DEFINED LIEF_INCLUDE_DIR)"
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
