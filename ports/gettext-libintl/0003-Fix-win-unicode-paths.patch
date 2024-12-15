@@ -1,8 +1,8 @@
 diff --git a/gettext-runtime/intl/loadmsgcat.c b/gettext-runtime/intl/loadmsgcat.c
-index d5a5fe1..5c47f48 100644
+index 56fb38c..d4d0992 100644
 --- a/gettext-runtime/intl/loadmsgcat.c
 +++ b/gettext-runtime/intl/loadmsgcat.c
-@@ -390,9 +390,56 @@ char *alloca ();
+@@ -367,9 +367,56 @@
  # define munmap(addr, len)	__munmap (addr, len)
  #elif defined _WIN32 && !defined __CYGWIN__
  /* On native Windows, don't require linking with '-loldnames'.  */
@@ -59,4 +59,4 @@ index d5a5fe1..5c47f48 100644
 +}
  #endif
  
- /* For those losing systems which don't have `alloca' we have to add
+ /* For systems that distinguish between text and binary I/O.

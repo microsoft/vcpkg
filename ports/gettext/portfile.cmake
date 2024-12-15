@@ -16,7 +16,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
+    SHA512 bdccfdf9441e704862745098014aa02a27c6a4cbcefbbf430496169d30be6b72d91081754666ceb4f1a79daceb26de1da149627f205121ee1a83efe33e354525
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -178,7 +178,8 @@ if(subdirs)
 endif()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/libexec/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/libexec/gettext")
 else()
     # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
@@ -191,8 +192,7 @@ endif()
 file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/build-to-host.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/glibc2.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/nls.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
