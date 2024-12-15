@@ -1,0 +1,539 @@
+diff --git a/src/Wt/AsioWrapper/asio.hpp b/src/Wt/AsioWrapper/asio.hpp
+index 46a9ac5..b0e5877 100644
+--- a/src/Wt/AsioWrapper/asio.hpp
++++ b/src/Wt/AsioWrapper/asio.hpp
+@@ -19,6 +19,7 @@
+ 
+ #endif // WT_ASIO_IS_BOOST_ASIO
+ 
++#include "io_service.hpp"
+ #include "namespace.hpp"
+ 
+ #endif // WT_ASIO_ASIO_H_
+diff --git a/src/Wt/AsioWrapper/io_service.hpp b/src/Wt/AsioWrapper/io_service.hpp
+index 1e23510..05d7df7 100644
+--- a/src/Wt/AsioWrapper/io_service.hpp
++++ b/src/Wt/AsioWrapper/io_service.hpp
+@@ -11,7 +11,14 @@
+ 
+ #ifdef WT_ASIO_IS_BOOST_ASIO
+ 
+-#include <boost/asio/io_service.hpp>
++#include <boost/asio/io_context.hpp>
++#if BOOST_VERSION >= 108700
++    namespace boost {
++        namespace asio {
++            using io_service = io_context;
++        }
++    }
++#endif
+ 
+ #else // WT_ASIO_IS_STANDALONE_ASIO
+ 
+diff --git a/src/Wt/Http/Client.C b/src/Wt/Http/Client.C
+index 6ee979e..b58d5b0 100644
+--- a/src/Wt/Http/Client.C
++++ b/src/Wt/Http/Client.C
+@@ -143,21 +143,17 @@ public:
+     if (method == Http::Method::Post || method == Http::Method::Put || method == Http::Method::Delete || method == Http::Method::Patch)
+       request_stream << message.body();
+ 
+-    tcp::resolver::query query(server, std::to_string(port));
+-
+     startTimer();
+-    resolver_.async_resolve
+-      (query,
+-       strand_.wrap(std::bind(&Impl::handleResolve,
+-                              shared_from_this(),
+-                              std::placeholders::_1,
+-                              std::placeholders::_2)));
++    resolver_.async_resolve(server, std::to_string(port), 
++      strand_.wrap([self = shared_from_this()](const boost::system::error_code& error, tcp::resolver::results_type results){
++        self->handleResolve(error, results.begin());
++      })
++    );
+   }
+ 
+   void asyncStop()
+   {
+-    ioService_.post
+-      (strand_.wrap(std::bind(&Impl::stop, shared_from_this())));
++    asio::post(ioService_, strand_.wrap(std::bind(&Impl::stop, shared_from_this())));
+   }
+ 
+ protected:
+@@ -195,7 +191,7 @@ private:
+ 
+   void startTimer()
+   {
+-    timer_.expires_from_now(timeout_);
++    timer_.expires_after(timeout_);
+     timer_.async_wait
+       (strand_.wrap(std::bind(&Impl::timeout, shared_from_this(),
+                               std::placeholders::_1)));
+@@ -222,7 +218,7 @@ private:
+   }
+ 
+   void handleResolve(const AsioWrapper::error_code& err,
+-                     tcp::resolver::iterator endpoint_iterator)
++                     tcp::resolver::results_type::iterator endpoint_iterator)
+   {
+     /* Within strand */
+ 
+@@ -250,7 +246,7 @@ private:
+   }
+ 
+   void handleConnect(const AsioWrapper::error_code& err,
+-                     tcp::resolver::iterator endpoint_iterator)
++                     tcp::resolver::results_type::iterator endpoint_iterator)
+   {
+     /* Within strand */
+ 
+@@ -263,7 +259,7 @@ private:
+         (strand_.wrap(std::bind(&Impl::handleHandshake,
+                                 shared_from_this(),
+                                 std::placeholders::_1)));
+-    } else if (endpoint_iterator != tcp::resolver::iterator()) {
++    } else if (endpoint_iterator != tcp::resolver::results_type::iterator()) {
+       // The connection failed. Try the next endpoint in the list.
+       socket().close();
+ 
+@@ -820,7 +816,7 @@ protected:
+       socket_.set_verify_mode(asio::ssl::verify_peer);
+       LOG_DEBUG("verifying that peer is " << hostName_);
+       socket_.set_verify_callback
+-        (asio::ssl::rfc2818_verification(hostName_));
++        (asio::ssl::host_name_verification(hostName_));
+     }
+     socket_.async_handshake(asio::ssl::stream_base::client, handler);
+   }
+diff --git a/src/Wt/Http/WtClient.C b/src/Wt/Http/WtClient.C
+index 987bedd..ba3b4ae 100644
+--- a/src/Wt/Http/WtClient.C
++++ b/src/Wt/Http/WtClient.C
+@@ -42,9 +42,9 @@ namespace {
+     // Get a list of endpoints corresponding to the server name.
+     tcp::resolver resolver(io_service);
+ 
+-    tcp::resolver::query query(host, port);
+-    tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+-    tcp::resolver::iterator end;
++    auto resolver_result = resolver.resolve(host, port);
++    auto endpoint_iterator = resolver_result.begin();
++    auto end = resolver_result.end();
+ 
+     // Try each endpoint until we successfully establish a connection.
+     tcp::socket socket(io_service);
+diff --git a/src/Wt/Mail/Client.C b/src/Wt/Mail/Client.C
+index 6c464b6..99ab992 100644
+--- a/src/Wt/Mail/Client.C
++++ b/src/Wt/Mail/Client.C
+@@ -107,12 +107,14 @@ public:
+     tcp::resolver resolver(io_service_);
+ 
+     AsioWrapper::error_code error = asio::error::host_not_found;
+-    tcp::resolver::iterator endpoint_iterator = resolver.resolve(host, std::to_string(port), error);
++    auto resolver_result = resolver.resolve(host, std::to_string(port), error);
+     if (error) {
+       LOG_ERROR("could not resolve: '" << host << ":" << port << "': " << error.message());
+       return;
+     }
+-    tcp::resolver::iterator end;
++
++    auto endpoint_iterator = resolver_result.begin();
++    auto end = resolver_result.end();
+ 
+     // Try each endpoint until we successfully establish a connection.
+     error = asio::error::host_not_found;
+@@ -418,7 +420,7 @@ void Client::Impl<true>::handshake(const Client::Configuration &config,
+     data_.stream_.set_verify_mode(ssl::verify_peer);
+     LOG_DEBUG("verifying that peer is " << hostName);
+     data_.stream_.set_verify_callback
+-        (ssl::rfc2818_verification(hostName));
++        (ssl::host_name_verification(hostName));
+   }
+   data_.stream_.handshake(ssl::stream_base::client);
+ }
+diff --git a/src/Wt/WIOService.C b/src/Wt/WIOService.C
+index 8034f0c..2d2ed37 100644
+--- a/src/Wt/WIOService.C
++++ b/src/Wt/WIOService.C
+@@ -35,7 +35,7 @@ public:
+   {
+   }
+   int threadCount_;
+-  asio::io_service::work *work_;
++  asio::executor_work_guard<asio::io_context::executor_type> *work_;
+ 
+ #ifdef WT_THREADED
+   std::mutex blockedThreadMutex_;
+@@ -70,7 +70,7 @@ int WIOService::threadCount() const
+ void WIOService::start()
+ {
+   if (!impl_->work_) {
+-    impl_->work_ = new asio::io_service::work(*this);
++    impl_->work_ = new asio::executor_work_guard<asio::io_context::executor_type>(this->get_executor());
+ 
+ #ifdef WT_THREADED
+ 
+@@ -119,7 +119,7 @@ void WIOService::stop()
+   impl_->threads_.clear();
+ #endif // WT_THREADED
+ 
+-  reset();
++  restart();
+ }
+ 
+ void WIOService::post(const std::function<void ()>& function)
+@@ -130,10 +130,11 @@ void WIOService::post(const std::function<void ()>& function)
+ void WIOService::schedule(std::chrono::steady_clock::duration millis, const std::function<void()>& function)
+ {
+   if (millis.count() == 0)
+-    strand_.post(function); // guarantees execution order
++    asio::post(strand_, function); // guarantees execution order
++    
+   else {
+     std::shared_ptr<asio::steady_timer> timer = std::make_shared<asio::steady_timer>(*this);
+-    timer->expires_from_now(millis);
++    timer->expires_after(millis);
+     timer->async_wait
+       (std::bind(&WIOService::handleTimeout, this, timer, function,
+                  std::placeholders::_1));
+diff --git a/src/http/Connection.C b/src/http/Connection.C
+index 7eafee1..9543395 100644
+--- a/src/http/Connection.C
++++ b/src/http/Connection.C
+@@ -84,8 +84,7 @@ void Connection::finishReply()
+ 
+ void Connection::scheduleStop()
+ {
+-  server_->service()
+-    .post(strand_.wrap(std::bind(&Connection::stop, shared_from_this())));
++  boost::asio::post(server_->service(), strand_.wrap(std::bind(&Connection::stop, shared_from_this())));
+ }
+ 
+ void Connection::start()
+@@ -122,7 +121,7 @@ void Connection::setReadTimeout(int seconds)
+               << request_.webSocketVersion << ")");
+     state_ |= Reading;
+ 
+-    readTimer_.expires_from_now(asio_timer_seconds(seconds));
++    readTimer_.expires_after(asio_timer_seconds(seconds));
+     readTimer_.async_wait(std::bind(&Connection::timeout, shared_from_this(),
+                                     std::placeholders::_1));
+   }
+@@ -134,7 +133,7 @@ void Connection::setWriteTimeout(int seconds)
+             << request_.webSocketVersion << ")");
+   state_ |= Writing;
+ 
+-  writeTimer_.expires_from_now(asio_timer_seconds(seconds));
++  writeTimer_.expires_after(asio_timer_seconds(seconds));
+   writeTimer_.async_wait(std::bind(&Connection::timeout, shared_from_this(),
+                                    std::placeholders::_1));
+ }
+@@ -158,7 +157,7 @@ void Connection::cancelWriteTimer()
+ void Connection::timeout(const Wt::AsioWrapper::error_code& e)
+ {
+   if (e != asio::error::operation_aborted)
+-    strand_.post(std::bind(&Connection::doTimeout, shared_from_this()));
++    boost::asio::post(strand_, std::bind(&Connection::doTimeout, shared_from_this()));
+ }
+ 
+ void Connection::doTimeout()
+@@ -338,8 +337,7 @@ bool Connection::readAvailable()
+ void Connection::detectDisconnect(ReplyPtr reply,
+                                   const std::function<void()>& callback)
+ {
+-  server_->service()
+-    .post(strand_.wrap(std::bind(&Connection::asyncDetectDisconnect, this, reply, callback)));
++  boost::asio::post(server_->service(), strand_.wrap(std::bind(&Connection::asyncDetectDisconnect, this, reply, callback)));
+ }
+ 
+ void Connection::asyncDetectDisconnect(ReplyPtr reply,
+@@ -401,8 +399,7 @@ void Connection::startWriteResponse(ReplyPtr reply)
+   if (state_ & Writing) {
+     LOG_ERROR("Connection::startWriteResponse(): connection already writing");
+     close();
+-    server_->service()
+-      .post(strand_.wrap(std::bind(&Reply::writeDone, reply, false)));
++    boost::asio::post(server_->service(), strand_.wrap(std::bind(&Reply::writeDone, reply, false)));
+     return;
+   }
+ 
+diff --git a/src/http/Reply.C b/src/http/Reply.C
+index 435b810..0f52ec7 100644
+--- a/src/http/Reply.C
++++ b/src/http/Reply.C
+@@ -440,9 +440,7 @@ void Reply::setConnection(ConnectionPtr connection)
+ 
+ void Reply::receive()
+ {
+-  connection_->strand().post
+-    (std::bind(&Connection::readMore, connection_,
+-               shared_from_this(), 120));
++  boost::asio::post(connection_->strand(), std::bind(&Connection::readMore, connection_, shared_from_this(), 120));
+ }
+ 
+ void Reply::send()
+@@ -453,8 +451,7 @@ void Reply::send()
+     LOG_DEBUG("Reply: send(): scheduling write response.");
+ 
+     // We post this since we want to avoid growing the stack indefinitely
+-    connection_->server()->service().post
+-      (connection_->strand().wrap
++    boost::asio::post(connection_->server()->service(), connection_->strand().wrap
+        (std::bind(&Connection::startWriteResponse, connection_,
+                   shared_from_this())));
+   }
+@@ -539,8 +536,7 @@ bool Reply::encodeNextContentBuffer(
+       originalSize += bs;
+ 
+       gzipStrm_.avail_in = bs;
+-      gzipStrm_.next_in = const_cast<unsigned char*>(
+-            asio::buffer_cast<const unsigned char*>(b));
++      gzipStrm_.next_in = (unsigned char*)(b.data());
+ 
+       unsigned char out[16*1024];
+       do {
+diff --git a/src/http/Server.C b/src/http/Server.C
+index fe8686d..f989e47 100644
+--- a/src/http/Server.C
++++ b/src/http/Server.C
+@@ -175,7 +175,7 @@ void Server::start()
+       config_.parentPort() != -1) {
+     // If we have one shared process, or this is the only session process,
+     // run expireSessions() every SESSION_EXPIRE_INTERVAL seconds
+-    expireSessionsTimer_.expires_from_now
++    expireSessionsTimer_.expires_after
+       (std::chrono::seconds(SESSION_EXPIRE_INTERVAL));
+     expireSessionsTimer_.async_wait
+       (std::bind(&Server::expireSessions, this, std::placeholders::_1));
+@@ -312,7 +312,7 @@ std::vector<asio::ip::address> Server::resolveAddress(asio::ip::tcp::resolver &r
+ {
+   std::vector<asio::ip::address> result;
+   Wt::AsioWrapper::error_code errc;
+-  asio::ip::address fromStr = asio::ip::address::from_string(address, errc);
++  asio::ip::address fromStr = asio::ip::make_address(address, errc);
+   if (!errc) {
+     // The address is not a hostname, because it can be parsed as an
+     // IP address, so we don't need to resolve it
+@@ -321,20 +321,15 @@ std::vector<asio::ip::address> Server::resolveAddress(asio::ip::tcp::resolver &r
+   } else {
+ #ifndef NO_RESOLVE_ACCEPT_ADDRESS
+     // Resolve IPv4
+-    asio::ip::tcp::resolver::query query(asio::ip::tcp::v4(), address, "http");
+-    asio::ip::tcp::resolver::iterator end;
+-    for (asio::ip::tcp::resolver::iterator it = resolver.resolve(query, errc);
+-         !errc && it != end; ++it) {
+-      result.push_back(it->endpoint().address());
++    for (auto it : resolver.resolve(asio::ip::tcp::v4(), address, "http", errc)) {
++      result.push_back(it.endpoint().address());
+     }
+     if (errc)
+       LOG_DEBUG_S(&wt_, "Failed to resolve hostname \"" << address << "\" as IPv4: " <<
+                   Wt::AsioWrapper::system_error(errc).what());
+     // Resolve IPv6
+-    asio::ip::tcp::resolver::query query_v6(asio::ip::tcp::v6(), address, "http");
+-    for (asio::ip::tcp::resolver::iterator it = resolver.resolve(query_v6, errc);
+-         !errc && it != end; ++it) {
+-      result.push_back(it->endpoint().address());
++    for (auto it : resolver.resolve(asio::ip::tcp::v6(), address, "http", errc)) {
++      result.push_back(it.endpoint().address());
+     }
+     if (errc)
+       LOG_DEBUG_S(&wt_, "Failed to resolve hostname \"" << address << "\" as IPv6: " <<
+@@ -692,7 +687,7 @@ void Server::expireSessions(Wt::AsioWrapper::error_code ec)
+         config_.parentPort() != -1)
+       wt_.scheduleStop();
+     else {
+-      expireSessionsTimer_.expires_from_now
++      expireSessionsTimer_.expires_after
+         (std::chrono::seconds(SESSION_EXPIRE_INTERVAL));
+       expireSessionsTimer_.async_wait
+         (std::bind(&Server::expireSessions, this, std::placeholders::_1));
+diff --git a/src/http/SessionProcess.C b/src/http/SessionProcess.C
+index 9352125..bd3eaeb 100644
+--- a/src/http/SessionProcess.C
++++ b/src/http/SessionProcess.C
+@@ -46,8 +46,7 @@ SessionProcess::SessionProcess(SessionProcessManager *manager) noexcept
+ 
+ void SessionProcess::requestStop() noexcept
+ {
+-  io_service_.post(strand_.wrap(
+-          std::bind(&SessionProcess::stop, shared_from_this())));
++  boost::asio::post(io_service_, strand_.wrap(std::bind(&SessionProcess::stop, shared_from_this())));
+ }
+ 
+ void SessionProcess::closeClientSocket() noexcept
+diff --git a/src/http/SessionProcessManager.C b/src/http/SessionProcessManager.C
+index f663846..603b2a1 100644
+--- a/src/http/SessionProcessManager.C
++++ b/src/http/SessionProcessManager.C
+@@ -50,7 +50,7 @@ SessionProcessManager::SessionProcessManager(asio::io_service &ioService,
+     (std::bind(&SessionProcessManager::processDeadChildren, this,
+                std::placeholders::_1));
+ #else // !SIGNAL_SET
+-  timer_.expires_from_now(std::chrono::seconds(CHECK_CHILDREN_INTERVAL));
++  timer_.expires_after(std::chrono::seconds(CHECK_CHILDREN_INTERVAL));
+   timer_.async_wait
+     (std::bind(&SessionProcessManager::processDeadChildren, this,
+                std::placeholders::_1));
+@@ -231,7 +231,7 @@ void SessionProcessManager::processDeadChildren(Wt::AsioWrapper::error_code ec)
+     (std::bind(&SessionProcessManager::processDeadChildren, this,
+                std::placeholders::_1));
+ #else // !SIGNAL_SET
+-  timer_.expires_from_now(std::chrono::seconds(CHECK_CHILDREN_INTERVAL));
++  timer_.expires_after(std::chrono::seconds(CHECK_CHILDREN_INTERVAL));
+   timer_.async_wait
+     (std::bind(&SessionProcessManager::processDeadChildren, this,
+                std::placeholders::_1));
+diff --git a/src/http/SslConnection.C b/src/http/SslConnection.C
+index a02f4b0..1b0e958 100644
+--- a/src/http/SslConnection.C
++++ b/src/http/SslConnection.C
+@@ -90,7 +90,7 @@ void SslConnection::stop()
+   std::shared_ptr<SslConnection> sft
+     = std::static_pointer_cast<SslConnection>(shared_from_this());
+ 
+-  sslShutdownTimer_.expires_from_now(std::chrono::seconds(1));
++  sslShutdownTimer_.expires_after(std::chrono::seconds(1));
+   sslShutdownTimer_.async_wait
+     (strand_.wrap(std::bind(&SslConnection::stopNextLayer,
+                             sft, std::placeholders::_1)));
+@@ -152,7 +152,7 @@ void SslConnection::handleReadRequestSsl(const Wt::AsioWrapper::error_code& e,
+   // return in case of a recursive event loop, so the SSL write
+   // deadlocks a session. Hence, post the processing of the data
+   // read, so that the read handler can return here immediately.
+-  strand_.post(std::bind(&SslConnection::handleReadRequest,
++  boost::asio::post(strand_, std::bind(&SslConnection::handleReadRequest,
+                          shared_from_this(),
+                          e, bytes_transferred));
+ }
+@@ -188,7 +188,7 @@ void SslConnection::handleReadBodySsl(ReplyPtr reply,
+   // See handleReadRequestSsl for explanation
+   std::shared_ptr<SslConnection> sft
+     = std::static_pointer_cast<SslConnection>(shared_from_this());
+-  strand_.post(std::bind(&SslConnection::handleReadBody0,
++  boost::asio::post(strand_, std::bind(&SslConnection::handleReadBody0,
+                          sft, reply, e, bytes_transferred));
+ }
+ 
+diff --git a/src/http/WtReply.C b/src/http/WtReply.C
+index a55a6fb..d3e1733 100644
+--- a/src/http/WtReply.C
++++ b/src/http/WtReply.C
+@@ -242,8 +242,7 @@ void WtReply::consumeRequestBody(const char *begin,
+         if (entryPoint_->resource())
+           connection()->server()->controller()->handleRequest(httpRequest_);
+         else
+-          connection()->server()->service().post
+-            (std::bind(&Wt::WebController::handleRequest,
++          boost::asio::post(connection()->server()->service(), std::bind(&Wt::WebController::handleRequest,
+                        connection()->server()->controller(),
+                        httpRequest_));
+       }
+@@ -344,8 +343,7 @@ bool WtReply::consumeWebSocketMessage(ws_opcode opcode,
+ 
+       // We need to post since in Wt we may be entering a recursive event
+       // loop and we need to release the strand
+-      connection()->server()->service().post
+-        (std::bind(cb, Wt::WebReadEvent::Error));
++      boost::asio::post(connection()->server()->service(), std::bind(cb, Wt::WebReadEvent::Error));
+ 
+       return false;
+     } else
+@@ -380,8 +378,7 @@ bool WtReply::consumeWebSocketMessage(ws_opcode opcode,
+ 
+         // We need to post since in Wt we may be entering a recursive event
+         // loop and we need to release the strand
+-        connection()->server()->service().post
+-          (std::bind(cb, Wt::WebReadEvent::Message));
++        boost::asio::post(connection()->server()->service(), std::bind(cb, Wt::WebReadEvent::Message));
+ 
+         break;
+       }
+@@ -394,8 +391,7 @@ bool WtReply::consumeWebSocketMessage(ws_opcode opcode,
+ 
+         // We need to post since in Wt we may be entering a recursive event
+         // loop and we need to release the strand
+-        connection()->server()->service().post
+-          (std::bind(cb, Wt::WebReadEvent::Ping));
++        boost::asio::post(connection()->server()->service(), std::bind(cb, Wt::WebReadEvent::Ping));
+ 
+         break;
+       }
+@@ -516,7 +512,7 @@ void WtReply::readWebSocketMessage(const Wt::WebRequest::ReadCallback& callBack)
+   in_mem_.str("");
+   in_mem_.clear();
+ 
+-  connection()->strand().post(std::bind(&Connection::handleReadBody,
++  boost::asio::post(connection()->strand(), std::bind(&Connection::handleReadBody,
+                                         connection(),
+                                         shared_from_this()));
+ }
+@@ -572,7 +568,7 @@ void WtReply::formatResponse(std::vector<asio::const_buffer>& result)
+ #ifdef WTHTTP_WITH_ZLIB
+         } else  {
+           result.push_back(asio::buffer(&misc_strings::char0xC1, 1)); // RSV1 = 1
+-          const unsigned char* data = asio::buffer_cast<const unsigned char*>(out_buf_.data());
++          const unsigned char* data = (const unsigned char*)(out_buf_.data().data());
+           int size = asio::buffer_size(out_buf_.data());
+           bool hasMore = false;
+           payloadLength = 0;
+diff --git a/src/web/Configuration.C b/src/web/Configuration.C
+index 5787ee2..e0e19d3 100644
+--- a/src/web/Configuration.C
++++ b/src/web/Configuration.C
+@@ -197,7 +197,7 @@ Configuration::Network Configuration::Network::fromString(const std::string &s)
+   const auto slashPos = s.find('/');
+   if (slashPos == std::string::npos) {
+     AsioWrapper::error_code ec;
+-    const auto address = AsioWrapper::asio::ip::address::from_string(s, ec);
++    const auto address = AsioWrapper::asio::ip::make_address(s, ec);
+     if (ec) {
+       throw std::invalid_argument("'" + s + "' is not a valid IP address");
+     }
+@@ -205,7 +205,7 @@ Configuration::Network Configuration::Network::fromString(const std::string &s)
+     return Network { address, prefixLength };
+   } else {
+     AsioWrapper::error_code ec;
+-    const auto address = AsioWrapper::asio::ip::address::from_string(s.substr(0, slashPos), ec);
++    const auto address = AsioWrapper::asio::ip::make_address(s.substr(0, slashPos), ec);
+     if (ec) {
+       throw std::invalid_argument("'" + s + "' is not a valid IP address");
+     }
+@@ -481,7 +481,7 @@ std::vector<Configuration::Network> Configuration::trustedProxies() const {
+ bool Configuration::isTrustedProxy(const std::string &ipAddress) const {
+   READ_LOCK;
+   AsioWrapper::error_code ec;
+-  const auto address = AsioWrapper::asio::ip::address::from_string(ipAddress, ec);
++  const auto address = AsioWrapper::asio::ip::make_address(ipAddress, ec);
+   if (ec) {
+     return false;
+   }
+diff --git a/src/web/SslUtils.h b/src/web/SslUtils.h
+index 1d30361..161a462 100644
+--- a/src/web/SslUtils.h
++++ b/src/web/SslUtils.h
+@@ -19,6 +19,7 @@
+ #include <openssl/ssl.h>
+ 
+ #include <Wt/AsioWrapper/asio.hpp>
++#include <Wt/AsioWrapper/io_service.hpp>
+ #include <Wt/AsioWrapper/ssl.hpp>
+ 
+ #ifdef WT_ASIO_IS_BOOST_ASIO
+diff --git a/src/web/WebMain.C b/src/web/WebMain.C
+index d2b87c9..45123b9 100644
+--- a/src/web/WebMain.C
++++ b/src/web/WebMain.C
+@@ -66,8 +66,7 @@ void WebMain::run()
+       // simultaneously. Additionally, this breaks recursive event loops.
+       // Asio's io_service::post does no such thing, so calling the function
+       // of the superclass if fine.
+-      static_cast<Wt::AsioWrapper::asio::io_service&>(server_->ioService())
+-        .post(std::bind(&WebController::handleRequest,
++      boost::asio::post(static_cast<Wt::AsioWrapper::asio::io_service&>(server_->ioService()), std::bind(&WebController::handleRequest,
+               &controller(), request));
+     }
+   }
