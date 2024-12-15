@@ -9522,7 +9522,7 @@
     },
     "vtk-dicom": {
       "baseline": "0.8.16",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk-m": {
       "baseline": "2.1.0",
