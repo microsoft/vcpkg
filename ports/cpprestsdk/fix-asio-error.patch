@@ -1,0 +1,83 @@
+diff --git a/Release/include/pplx/threadpool.h b/Release/include/pplx/threadpool.h
+index b297ff6..7c71b34 100644
+--- a/Release/include/pplx/threadpool.h
++++ b/Release/include/pplx/threadpool.h
+@@ -72,12 +72,12 @@ public:
+         service().post(task);
+     }
+ 
+-    boost::asio::io_service& service() { return m_service; }
++    boost::asio::io_context& service() { return m_service; }
+ 
+ protected:
+     threadpool(size_t num_threads) : m_service(static_cast<int>(num_threads)) {}
+ 
+-    boost::asio::io_service m_service;
++    boost::asio::io_context m_service;
+ };
+ 
+ } // namespace crossplat
+diff --git a/Release/src/http/client/http_client_asio.cpp b/Release/src/http/client/http_client_asio.cpp
+index 07bb488..ee1bac4 100644
+--- a/Release/src/http/client/http_client_asio.cpp
++++ b/Release/src/http/client/http_client_asio.cpp
+@@ -146,9 +146,9 @@ class asio_connection
+     friend class asio_client;
+ 
+ public:
+-    asio_connection(boost::asio::io_service& io_service)
++    asio_connection(boost::asio::io_context& io_context)
+         : m_socket_lock()
+-        , m_socket(io_service)
++        , m_socket(io_context)
+         , m_ssl_stream()
+         , m_cn_hostname()
+         , m_is_reused(false)
+@@ -1134,7 +1134,7 @@ private:
+         }
+ #endif // CPPREST_PLATFORM_ASIO_CERT_VERIFICATION_AVAILABLE
+ 
+-        boost::asio::ssl::rfc2818_verification rfc2818(m_connection->cn_hostname());
++        boost::asio::ssl::host_name_verification rfc2818(m_connection->cn_hostname());
+         return rfc2818(preverified, verifyCtx);
+     }
+ 
+diff --git a/Release/src/http/client/x509_cert_utilities.cpp b/Release/src/http/client/x509_cert_utilities.cpp
+index 67fc5ac..7239f97 100644
+--- a/Release/src/http/client/x509_cert_utilities.cpp
++++ b/Release/src/http/client/x509_cert_utilities.cpp
+@@ -95,7 +95,7 @@ bool verify_cert_chain_platform_specific(boost::asio::ssl::verify_context& verif
+ #if defined(_WIN32)
+     if (verify_result)
+     {
+-        boost::asio::ssl::rfc2818_verification rfc2818(hostName);
++        boost::asio::ssl::host_name_verification rfc2818(hostName);
+         verify_result = rfc2818(verify_result, verifyCtx);
+     }
+ #endif
+diff --git a/Release/src/pplx/threadpool.cpp b/Release/src/pplx/threadpool.cpp
+index ba38a1a..46b7f3b 100644
+--- a/Release/src/pplx/threadpool.cpp
++++ b/Release/src/pplx/threadpool.cpp
+@@ -84,7 +84,7 @@ private:
+     }
+ 
+     std::vector<std::unique_ptr<boost::asio::detail::thread>> m_threads;
+-    boost::asio::io_service::work m_work;
++    boost::asio::io_context::work m_work;
+ };
+ 
+ #if defined(_WIN32)
+diff --git a/Release/src/websockets/client/ws_client_wspp.cpp b/Release/src/websockets/client/ws_client_wspp.cpp
+index d7c31c4..8dfa815 100644
+--- a/Release/src/websockets/client/ws_client_wspp.cpp
++++ b/Release/src/websockets/client/ws_client_wspp.cpp
+@@ -225,7 +225,7 @@ public:
+                             verifyCtx, utility::conversions::to_utf8string(m_uri.host()));
+                     }
+ #endif
+-                    boost::asio::ssl::rfc2818_verification rfc2818(utility::conversions::to_utf8string(m_uri.host()));
++                    boost::asio::ssl::host_name_verification rfc2818(utility::conversions::to_utf8string(m_uri.host()));
+                     return rfc2818(preverified, verifyCtx);
+                 });
+ 
