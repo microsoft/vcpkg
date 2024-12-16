@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 b246c6f280891b7c9b6cd0b5e85e03ccf1fe173cdfc40e566339a5698176cbcfe23eb7aeaba277f071222d76b9f2a00376d790d4d604aedad82e6196fab7fc70
     HEAD_REF master
+    PATCHES
+        0001-private-headers.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,7 +16,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opt ALLOW_EXTERNAL_SPIRV_TOOLS
         tools ENABLE_GLSLANG_BINARIES
         rtti ENABLE_RTTI
+        "private-headers" INSTALL_PRIVATE_HEADERS
 )
+
+if(INSTALL_PRIVATE_HEADERS)
+    message(WARNING "Avoid relying on the installed private glslang headers.")
+endif()
 
 if(ENABLE_GLSLANG_BINARIES)
     vcpkg_find_acquire_program(PYTHON3)
