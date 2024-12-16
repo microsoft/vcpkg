@@ -42,13 +42,6 @@ vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VPCKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/aom.pc" " -lm" "")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/aom.pc" " -lm" "")
-    endif()
-endif()
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
