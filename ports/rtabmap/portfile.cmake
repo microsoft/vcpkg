@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF
         -DBUILD_APP=OFF
     OPTIONS
+        -DCMAKE_POLICY_DEFAULT_CMP0156=NEW
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
@@ -128,5 +129,5 @@ vcpkg_install_copyright(
 The RTAB-Map main license is BSD-3-Clause, but some parts of the
 source code are under other licenses possibly including GPL-3.0-only.
 ]]
-    FILE_LIST "${SOURCE_PATH}/LICENSE" 
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
 )
