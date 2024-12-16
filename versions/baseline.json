@@ -818,7 +818,7 @@
     },
     "boost-cobalt": {
       "baseline": "1.86.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-compat": {
       "baseline": "1.86.0",
