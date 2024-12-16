@@ -8817,8 +8817,8 @@
       "port-version": 6
     },
     "taglib": {
-      "baseline": "2.0",
-      "port-version": 2
+      "baseline": "2.0.2",
+      "port-version": 0
     },
     "talib": {
       "baseline": "0.4.0",
