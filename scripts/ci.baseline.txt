@@ -829,7 +829,6 @@ omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
-openfbx:arm-neon-android=fail
 openimageio:arm-neon-android=fail
 openimageio:arm64-android=fail
 openimageio:x64-android=fail
