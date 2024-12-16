@@ -1,0 +1,19 @@
+diff --git a/cmake/CheckRequirements.cmake b/cmake/CheckRequirements.cmake
+index d3446c3f60..ba39469b7a 100644
+--- a/cmake/CheckRequirements.cmake
++++ b/cmake/CheckRequirements.cmake
+@@ -5,12 +5,12 @@
+ 
+ 
+ if(NOT cxx_std_20 IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+-    message(STATUS "Boost.Cobalt: not building, compiler doesn't support C++20.")
++    message(FATAL_ERROR "Boost.Cobalt: not building, compiler doesn't support C++20.")
+     return()
+ endif()
+ 
+ if(MSVC_VERSION AND MSVC_VERSION LESS 1930)
+-    message(STATUS "Boost.Cobalt: not building, the lowest supported MSVC version is 1930.  ${MSVC_VERSION} is not supported")
++    message(FATAL_ERROR "Boost.Cobalt: not building, the lowest supported MSVC version is 1930.  ${MSVC_VERSION} is not supported")
+     return()
+ endif()
+ 
