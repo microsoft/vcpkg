@@ -2990,7 +2990,7 @@
     },
     "g2o": {
       "baseline": "2023-08-06",
-      "port-version": 0
+      "port-version": 1
     },
     "g3log": {
       "baseline": "2.4",
