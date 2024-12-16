@@ -1,16 +1,3 @@
-diff --git a/boost/network/compat.hpp b/boost/network/compat.hpp
-index a22b4a2..498e767 100644
---- a/boost/network/compat.hpp
-+++ b/boost/network/compat.hpp
-@@ -13,7 +13,7 @@
- #define CPP_NETLIB_ASIO_IO_SERVICE_CONTEXT	boost::asio::io_context
- #else
- #define CPP_NETLIB_ASIO_GET_IO_SERVICE(s) ((s).get_io_service())
--#define CPP_NETLIB_ASIO_IO_SERVICE_CONTEXT	boost::asio::io_service
-+#define CPP_NETLIB_ASIO_IO_SERVICE_CONTEXT	boost::asio::io_context
- #endif
- 
- #endif  // BOOST_NETWORK_COMPAT_HPP__
 diff --git a/boost/network/protocol/http/client/async_impl.hpp b/boost/network/protocol/http/client/async_impl.hpp
 index 8e6dda6..70c08bb 100644
 --- a/boost/network/protocol/http/client/async_impl.hpp
