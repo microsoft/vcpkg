@@ -42,7 +42,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Avoid deleting debug/lib/cmake when fixing the first cmake
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/share")
+if(NOT VCPKG_BUILD_TYPE)
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/share")
+endif()
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/share")
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME k4a CONFIG_PATH share/k4a)
@@ -83,12 +85,16 @@ endif ()
 
 if (VCPKG_TARGET_IS_LINUX)
     file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
 else()
     file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk")
-    file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk")
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/azure-kinect-sensor-sdk")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk")
+      file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/azure-kinect-sensor-sdk")
+    endif()
 endif()
 
 # Handle copyright
