@@ -12,7 +12,7 @@ vcpkg_from_github(
     PATCHES
         fix-compatibility-with-boost-1.83.patch
         stream-handler-executor.patch
-        use-asio-iocontext.patch
+        fix-asio-error.patch
 )
 
 vcpkg_cmake_configure(

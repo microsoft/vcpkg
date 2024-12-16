@@ -1,3 +1,16 @@
+diff --git a/boost/network/compat.hpp b/boost/network/compat.hpp
+index a22b4a2..498e767 100644
+--- a/boost/network/compat.hpp
++++ b/boost/network/compat.hpp
+@@ -13,7 +13,7 @@
+ #define CPP_NETLIB_ASIO_IO_SERVICE_CONTEXT	boost::asio::io_context
+ #else
+ #define CPP_NETLIB_ASIO_GET_IO_SERVICE(s) ((s).get_io_service())
+-#define CPP_NETLIB_ASIO_IO_SERVICE_CONTEXT	boost::asio::io_service
++#define CPP_NETLIB_ASIO_IO_SERVICE_CONTEXT	boost::asio::io_context
+ #endif
+ 
+ #endif  // BOOST_NETWORK_COMPAT_HPP__
 diff --git a/boost/network/protocol/http/client/async_impl.hpp b/boost/network/protocol/http/client/async_impl.hpp
 index 8e6dda6..70c08bb 100644
 --- a/boost/network/protocol/http/client/async_impl.hpp
@@ -259,7 +272,7 @@ index 6ad298d..1e9b22f 100644
    optional<std::string> verify_path_;
    optional<std::string> certificate_file_;
 diff --git a/boost/network/protocol/http/client/connection/ssl_delegate.ipp b/boost/network/protocol/http/client/connection/ssl_delegate.ipp
-index 7575b12..69dd5a3 100644
+index 7575b12..150a26e 100644
 --- a/boost/network/protocol/http/client/connection/ssl_delegate.ipp
 +++ b/boost/network/protocol/http/client/connection/ssl_delegate.ipp
 @@ -13,7 +13,7 @@
@@ -271,6 +284,15 @@ index 7575b12..69dd5a3 100644
      optional<std::string> certificate_filename,
      optional<std::string> verify_path, optional<std::string> certificate_file,
      optional<std::string> private_key_file, optional<std::string> ciphers,
+@@ -80,7 +80,7 @@ void boost::network::http::impl::ssl_delegate::connect(
+ 
+ 
+   if (always_verify_peer_)
+-    socket_->set_verify_callback(boost::asio::ssl::rfc2818_verification(host));
++    socket_->set_verify_callback(boost::asio::ssl::host_name_verification(host));
+   auto self = this->shared_from_this();
+   socket_->lowest_layer().async_connect(
+       endpoint,
 @@ -104,7 +104,7 @@ void boost::network::http::impl::ssl_delegate::write(
  }
  
@@ -280,8 +302,21 @@ index 7575b12..69dd5a3 100644
      std::function<void(boost::system::error_code const &, size_t)> handler) {
    socket_->async_read_some(read_buffer, handler);
  }
+diff --git a/boost/network/protocol/http/client/facade.hpp b/boost/network/protocol/http/client/facade.hpp
+index 8952b4e..ad97861 100644
+--- a/boost/network/protocol/http/client/facade.hpp
++++ b/boost/network/protocol/http/client/facade.hpp
+@@ -390,7 +390,7 @@ class basic_client_facade {
+         options.openssl_verify_path(), options.openssl_certificate_file(),
+         options.openssl_private_key_file(), options.openssl_ciphers(),
+         options.openssl_sni_hostname(), options.openssl_options(),
+-        options.io_service(), options.timeout(),
++        options.io_context(), options.timeout(),
+         options.remove_chunk_markers()));
+   }
+ };
 diff --git a/boost/network/protocol/http/client/options.hpp b/boost/network/protocol/http/client/options.hpp
-index 124ca27..6fcf3b1 100644
+index 124ca27..6d9b7e5 100644
 --- a/boost/network/protocol/http/client/options.hpp
 +++ b/boost/network/protocol/http/client/options.hpp
 @@ -8,7 +8,7 @@
@@ -300,7 +335,7 @@ index 124ca27..6fcf3b1 100644
 -  /// Provide an `boost::asio::io_service` hosted in a shared pointer.
 -  client_options& io_service(std::shared_ptr<boost::asio::io_service> v) {
 +  /// Provide an `boost::asio::io_context` hosted in a shared pointer.
-+  client_options& io_service(std::shared_ptr<boost::asio::io_context> v) {
++  client_options& io_context(std::shared_ptr<boost::asio::io_context> v) {
      io_service_ = v;
      return *this;
    }
@@ -309,7 +344,7 @@ index 124ca27..6fcf3b1 100644
    long openssl_options() const { return openssl_options_; }
  
 -  std::shared_ptr<boost::asio::io_service> io_service() const { return io_service_; }
-+  std::shared_ptr<boost::asio::io_context> io_service() const { return io_service_; }
++  std::shared_ptr<boost::asio::io_context> io_context() const { return io_service_; }
  
    bool always_verify_peer() const { return always_verify_peer_; }
  
@@ -393,18 +428,32 @@ index c03cd5a..ced329b 100644
    explicit async_resolver(bool cache_resolved)
        : cache_resolved_(cache_resolved), endpoint_cache_() {}
 diff --git a/boost/network/protocol/http/server/async_connection.hpp b/boost/network/protocol/http/server/async_connection.hpp
-index 58a1df1..2fb7854 100644
+index 58a1df1..25059e6 100644
 --- a/boost/network/protocol/http/server/async_connection.hpp
 +++ b/boost/network/protocol/http/server/async_connection.hpp
-@@ -183,7 +183,7 @@ struct async_connection
+@@ -183,18 +183,18 @@ struct async_connection
  
   public:
    async_connection(
 -      boost::asio::io_service& io_service, Handler& handler,
-+      boost::asio::io_context& io_service, Handler& handler,
++      boost::asio::io_context& io_context, Handler& handler,
        utils::thread_pool& thread_pool,
        std::shared_ptr<ssl_context> ctx = std::shared_ptr<ssl_context>())
-       : strand(io_service),
+-      : strand(io_service),
++      : strand(io_context),
+         handler(handler),
+         thread_pool_(thread_pool),
+         headers_buffer(
+             BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE),
+ #ifdef BOOST_NETWORK_ENABLE_HTTPS
+-        socket_(io_service, ctx),
++        socket_(io_context, ctx),
+ #else
+-        socket_(io_service),
++        socket_(io_context),
+ #endif
+         handshake_done(false),
+         headers_already_sent(false),
 @@ -438,7 +438,7 @@ struct async_connection
    typedef std::lock_guard<std::recursive_mutex> lock_guard;
    typedef std::list<std::function<void()> > pending_actions_list;
@@ -414,8 +463,20 @@ index 58a1df1..2fb7854 100644
    Handler& handler;
    utils::thread_pool& thread_pool_;
    boost::asio::streambuf headers_buffer;
+@@ -673,9 +673,9 @@ struct async_connection
+     // part of the completion handler.
+     //
+     // once the range has been linearized and sent, schedule
+-    // a wrapper to be called in the io_service's thread, that
++    // a wrapper to be called in the io_context's thread, that
+     // will re-schedule the given callback into the thread pool
+-    // referred to here so that the io_service's thread can concentrate
++    // referred to here so that the io_context's thread can concentrate
+     // on doing I/O.
+     //
+ 
 diff --git a/boost/network/protocol/http/server/options.hpp b/boost/network/protocol/http/server/options.hpp
-index e84188b..6a66384 100644
+index e84188b..4f664b4 100644
 --- a/boost/network/protocol/http/server/options.hpp
 +++ b/boost/network/protocol/http/server/options.hpp
 @@ -9,7 +9,7 @@
@@ -427,21 +488,25 @@ index e84188b..6a66384 100644
  #include <boost/asio/socket_base.hpp>
  #include <boost/network/protocol/stream_handler.hpp>
  #include <boost/network/traits/string.hpp>
-@@ -72,7 +72,7 @@ struct server_options {
+@@ -71,8 +71,8 @@ struct server_options {
+     return *this;
    }
  
-   /// Provides an Asio io_service for the server. Default is nullptr.
+-  /// Provides an Asio io_service for the server. Default is nullptr.
 -  server_options &io_service(std::shared_ptr<boost::asio::io_service> v) {
-+  server_options &io_service(std::shared_ptr<boost::asio::io_context> v) {
++  /// Provides an Asio io_context for the server. Default is nullptr.
++  server_options &io_context(std::shared_ptr<boost::asio::io_context> v) {
      io_service_ = v;
      return *this;
    }
-@@ -160,7 +160,7 @@ struct server_options {
+@@ -159,8 +159,8 @@ struct server_options {
+     return *this;
    }
  
-   /// Returns the provided Asio io_service.
+-  /// Returns the provided Asio io_service.
 -  std::shared_ptr<boost::asio::io_service> io_service() const { return io_service_; }
-+  std::shared_ptr<boost::asio::io_context> io_service() const { return io_service_; }
++  /// Returns the provided Asio io_context.
++  std::shared_ptr<boost::asio::io_context> io_context() const { return io_service_; }
  
    /// Returns the address to listen on.
    string_type address() const { return address_; }
@@ -455,14 +520,18 @@ index e84188b..6a66384 100644
    string_type address_;
    string_type port_;
 diff --git a/boost/network/protocol/http/server/storage_base.hpp b/boost/network/protocol/http/server/storage_base.hpp
-index ec134a9..cfef6b3 100644
+index ec134a9..db49e88 100644
 --- a/boost/network/protocol/http/server/storage_base.hpp
 +++ b/boost/network/protocol/http/server/storage_base.hpp
-@@ -22,11 +22,11 @@ struct server_storage_base {
+@@ -20,13 +20,13 @@ struct server_storage_base {
+  protected:
+   template <class Tag, class Handler>
    explicit server_storage_base(server_options<Tag, Handler> const& options)
-       : self_service_(options.io_service()
-                           ? options.io_service()
+-      : self_service_(options.io_service()
+-                          ? options.io_service()
 -                          : std::make_shared<boost::asio::io_service>()),
++      : self_service_(options.io_context()
++                          ? options.io_context()
 +                          : std::make_shared<boost::asio::io_context>()),
          service_(*self_service_) {}
  
@@ -474,7 +543,7 @@ index ec134a9..cfef6b3 100644
  
  } /* http */
 diff --git a/boost/network/protocol/stream_handler.hpp b/boost/network/protocol/stream_handler.hpp
-index f3b3e99..08e8106 100644
+index 2b632ab..08e8106 100644
 --- a/boost/network/protocol/stream_handler.hpp
 +++ b/boost/network/protocol/stream_handler.hpp
 @@ -18,7 +18,7 @@
@@ -496,7 +565,7 @@ index f3b3e99..08e8106 100644
                       std::shared_ptr<ssl_context>()) {
      tcp_sock_ = std::make_shared<tcp_socket>(io.get_executor());
 diff --git a/boost/network/utils/thread_pool.hpp b/boost/network/utils/thread_pool.hpp
-index 515ac58..3988fee 100644
+index 515ac58..74bc4c4 100644
 --- a/boost/network/utils/thread_pool.hpp
 +++ b/boost/network/utils/thread_pool.hpp
 @@ -9,7 +9,7 @@
@@ -520,6 +589,19 @@ index 515ac58..3988fee 100644
  
  template <class Tag>
  struct basic_thread_pool {
+@@ -32,10 +32,10 @@ struct basic_thread_pool {
+   basic_thread_pool() : basic_thread_pool(1) {}
+ 
+   explicit basic_thread_pool(std::size_t threads,
+-                    io_service_ptr io_service = io_service_ptr(),
++                    io_service_ptr io_context = io_service_ptr(),
+                     worker_threads_ptr worker_threads = worker_threads_ptr())
+       : threads_(threads),
+-        io_service_(std::move(io_service)),
++        io_service_(std::move(io_context)),
+         worker_threads_(std::move(worker_threads)),
+         sentinel_() {
+     bool commit = false;
 @@ -54,7 +54,7 @@ struct basic_thread_pool {
      BOOST_SCOPE_EXIT_END
  
@@ -539,10 +621,10 @@ index 515ac58..3988fee 100644
  
      for (std::size_t counter = 0; counter < threads_; ++counter) {
 diff --git a/libs/network/example/http/hello_world_async_server_with_work_queue.cpp b/libs/network/example/http/hello_world_async_server_with_work_queue.cpp
-index e758134..a89834b 100644
+index e758134..8dfae12 100644
 --- a/libs/network/example/http/hello_world_async_server_with_work_queue.cpp
 +++ b/libs/network/example/http/hello_world_async_server_with_work_queue.cpp
-@@ -146,9 +146,9 @@ int main() {
+@@ -146,15 +146,15 @@ int main() {
      // the thread group
      auto threads(std::make_shared<boost::network::utils::thread_group>());
  
@@ -550,13 +632,47 @@ index e758134..a89834b 100644
 -    auto io_service(std::make_shared<boost::asio::io_service>());
 -    auto work(std::make_shared<boost::asio::io_service::work>(std::ref(*io_service)));
 +    // setup asio::io_context
-+    auto io_service(std::make_shared<boost::asio::io_context>());
-+    auto work(std::make_shared<boost::asio::io_context::work>(std::ref(*io_service)));
++    auto io_context(std::make_shared<boost::asio::io_context>());
++    auto work(std::make_shared<boost::asio::io_context::work>(std::ref(*io_context)));
  
-     // io_service threads
+-    // io_service threads
++    // io_context threads
      {
+       int n_threads = 5;
+       while (0 < n_threads--) {
+-        threads->create_thread([=] () { io_service->run(); });
++        threads->create_thread([=] () { io_context->run(); });
+       }
+     }
+ 
+@@ -175,13 +175,13 @@ int main() {
+         server::options(request_handler)
+         .address("0.0.0.0")
+         .port("8000")
+-        .io_service(io_service)
++        .io_context(io_context)
+         .reuse_address(true)
+         .thread_pool(std::make_shared<boost::network::utils::thread_pool>(
+-             2, io_service, threads))));
++             2, io_context, threads))));
+ 
+     // setup clean shutdown
+-    boost::asio::signal_set signals(*io_service, SIGINT, SIGTERM);
++    boost::asio::signal_set signals(*io_context, SIGINT, SIGTERM);
+     signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
+         shut_me_down(ec, signal, server);
+       });
+@@ -190,7 +190,7 @@ int main() {
+     server->run();
+ 
+     work.reset();
+-    io_service->stop();
++    io_context->stop();
+ 
+     threads->join_all();
+ 
 diff --git a/libs/network/example/http/ssl/ssl_server.cpp b/libs/network/example/http/ssl/ssl_server.cpp
-index bc416a3..8b3ef19 100644
+index bc416a3..dabfead 100644
 --- a/libs/network/example/http/ssl/ssl_server.cpp
 +++ b/libs/network/example/http/ssl/ssl_server.cpp
 @@ -62,9 +62,9 @@ void shut_me_down(const boost::system::error_code& error, int signal,
@@ -572,8 +688,17 @@ index bc416a3..8b3ef19 100644
  
    // Initialize SSL context
    std::shared_ptr<boost::asio::ssl::context> ctx =
+@@ -86,7 +86,7 @@ int main(void) try {
+       server::options(request_handler)
+           .address("0.0.0.0")
+           .port("8442")
+-          .io_service(p_io_service)
++          .io_context(p_io_service)
+           .reuse_address(true)
+           .thread_pool(
+                std::make_shared<boost::network::utils::thread_pool>(2))
 diff --git a/libs/network/test/http/client_constructor_test.cpp b/libs/network/test/http/client_constructor_test.cpp
-index 650cfa0..588eec3 100644
+index 650cfa0..a216a7b 100644
 --- a/libs/network/test/http/client_constructor_test.cpp
 +++ b/libs/network/test/http/client_constructor_test.cpp
 @@ -19,7 +19,7 @@ TYPED_TEST(HTTPClientTest, Constructors) {
@@ -581,7 +706,7 @@ index 650cfa0..588eec3 100644
    TypeParam instance;
    TypeParam instance2(
 -      options.io_service(std::make_shared<boost::asio::io_service>()));
-+      options.io_service(std::make_shared<boost::asio::io_context>()));
++      options.io_context(std::make_shared<boost::asio::io_context>()));
  }
  
  TYPED_TEST(HTTPClientTest, ConstructorsWithOptions) {
@@ -590,28 +715,38 @@ index 650cfa0..588eec3 100644
    TypeParam instance4(
        options.follow_redirects(true)
 -          .io_service(std::make_shared<boost::asio::io_service>())
-+          .io_service(std::make_shared<boost::asio::io_context>())
++          .io_context(std::make_shared<boost::asio::io_context>())
            .cache_resolved(true));
  }
 diff --git a/libs/network/test/http/server_constructor_test.cpp b/libs/network/test/http/server_constructor_test.cpp
-index 20041aa..1573ac7 100644
+index 20041aa..98febff 100644
 --- a/libs/network/test/http/server_constructor_test.cpp
 +++ b/libs/network/test/http/server_constructor_test.cpp
-@@ -31,7 +31,7 @@ TEST(HTTPServerTest, MinimalConstructor) {
+@@ -31,23 +31,23 @@ TEST(HTTPServerTest, MinimalConstructor) {
  TEST(HTTPServerTest, WithIOServiceParameter) {
    dummy_async_handler async_handler;
    std::shared_ptr<util::thread_pool> thread_pool;
 -  std::shared_ptr<boost::asio::io_service> io_service;
-+  std::shared_ptr<boost::asio::io_context> io_service;
++  std::shared_ptr<boost::asio::io_context> io_context;
    async_server::options async_options(async_handler);
  
    ASSERT_NO_THROW(async_server async_instance(async_options.address("127.0.0.1")
-@@ -43,7 +43,7 @@ TEST(HTTPServerTest, WithIOServiceParameter) {
+                                                   .port("80")
+-                                                  .io_service(io_service)
++                                                  .io_context(io_context)
+                                                   .thread_pool(thread_pool)));
+ }
+ 
  TEST(HTTPServerTes, ThrowsOnFailure) {
    dummy_async_handler async_handler;
    std::shared_ptr<util::thread_pool> thread_pool;
 -  std::shared_ptr<boost::asio::io_service> io_service;
-+  std::shared_ptr<boost::asio::io_context> io_service;
++  std::shared_ptr<boost::asio::io_context> io_context;
    async_server::options async_options(async_handler);
    async_server async_instance(async_options.address("127.0.0.1")
                                    .port("80")
+-                                  .io_service(io_service)
++                                  .io_context(io_context)
+                                   .thread_pool(thread_pool));
+   EXPECT_THROW(async_instance.run(), std::runtime_error);
+ }
