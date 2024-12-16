@@ -1,6 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/vslavik/winsparkle/releases/download/v0.8.3/WinSparkle-0.8.3.zip"
-    FILENAME "winsparkle-083.zip"
+    URLS "https://github.com/vslavik/winsparkle/releases/download/v${VERSION}/WinSparkle-${VERSION}.zip"
+    FILENAME "winsparkle-v${VERSION}.zip"
     SHA512 5ed99a73541f5a590f20ff1e7953284ca00da15df388319b3a96e87c69bb99aaeb5d5eb5e814a6245cf2e4389e0eb5a53ff8657d3eb0717e35f8fe526be911dc
 )
 
