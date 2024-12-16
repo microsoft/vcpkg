@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index c8fea14..eb0a097 100644
+index f0f9723..9e79db9 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -55,7 +55,7 @@ AC_DEFINE_UNQUOTED([LIB_VERSION_REVISION],
@@ -11,45 +11,17 @@ index c8fea14..eb0a097 100644
  AM_CXXFLAGS="$AM_CFLAGS"
  AC_SUBST([AM_CPPFLAGS])
  AC_SUBST([AM_CFLAGS])
-diff --git a/zbar/libzbar.rc b/zbar/libzbar.rc
-index 413635b..c241f82 100644
---- a/zbar/libzbar.rc
-+++ b/zbar/libzbar.rc
-@@ -17,8 +17,7 @@ VS_VERSION_INFO VERSIONINFO
-             VALUE "InternalName", "libzbar"
-             VALUE "OriginalFilename", "libzbar-" XSTR(LIB_VERSION_MAJOR) ".dll"
- 
--            VALUE "FileVersion", XSTR(LIB_VERSION_MAJOR) "." \
--                XSTR(LIB_VERSION_MINOR) "." XSTR(LIB_VERSION_REVISION)
-+            VALUE "FileVersion", XSTR(LIB_VERSION_MAJOR) "." XSTR(LIB_VERSION_MINOR) "." XSTR(LIB_VERSION_REVISION)
-             VALUE "ProductVersion", PACKAGE_VERSION
- 
-             VALUE "FileDescription", "Bar code reader library"
 diff --git a/zbar/processor.h b/zbar/processor.h
-index d5e9fef..54d6584 100644
+index a8289e0..8a7e33c 100644
 --- a/zbar/processor.h
 +++ b/zbar/processor.h
-@@ -27,7 +27,9 @@
- #ifdef HAVE_INTTYPES_H
- # include <inttypes.h>
+@@ -29,7 +29,9 @@
  #endif
--#include <unistd.h>
-+#ifndef WIN32
-+# include <unistd.h>
-+#endif
  #include <stdlib.h>
  #include <string.h>
++#ifndef WIN32
+ #include <unistd.h>
++#endif
  
-diff --git a/zbar/thread.h b/zbar/thread.h
-index 96d6415..252d3f2 100644
---- a/zbar/thread.h
-+++ b/zbar/thread.h
-@@ -35,7 +35,7 @@
- # define HAVE_THREADS
- # define ZTHREAD DWORD WINAPI
- 
--typedef ZTHREAD (zbar_thread_proc_t)(void*);
-+typedef ZTHREAD zbar_thread_proc_t(void*);
- 
- typedef DWORD zbar_thread_id_t;
- 
+ #include <zbar.h>
+ #include "error.h"
