@@ -29,6 +29,10 @@ vcpkg_extract_source_archive(SOURCE_PATH
         parallel-gettext-tools.patch
         config-step-order.patch
         iconv-ostream-flush.diff
+        # Pristine gettext/gnulib no longer accepts iconv in macOS 14.4,
+        # https://lists.gnu.org/archive/html/bug-gnulib/2024-05/msg00375.html
+        # Until vcpkg builds GNU libiconv for macOS, keep the existing behavior.
+        accept-broken-macos-iconv.diff
 )
 
 set(subdirs "")
@@ -113,6 +117,8 @@ if(subdirs)
         )
         if(NOT VCPKG_TARGET_IS_MINGW)
             list(APPEND OPTIONS
+                # Misdetected (?) with gettext-0.23/gnulib
+                ac_cv_have_decl_unsetenv=no
                 # Don't take from port dirent
                 ac_cv_header_dirent_h=no
                 # Don't take from port getopt-win32
@@ -198,6 +204,8 @@ file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/host-cpu-c-abi.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/iconv.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/intlmacosx.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
