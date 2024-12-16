@@ -3357,8 +3357,8 @@
       "port-version": 0
     },
     "gumbo": {
-      "baseline": "0.10.1",
-      "port-version": 6
+      "baseline": "0.12.2",
+      "port-version": 0
     },
     "gz-cmake3": {
       "baseline": "3.4.1",
