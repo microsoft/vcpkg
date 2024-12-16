@@ -5410,7 +5410,7 @@
     },
     "libxfont": {
       "baseline": "2.0.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libxft": {
       "baseline": "2.3.4",
