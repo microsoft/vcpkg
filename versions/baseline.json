@@ -6734,7 +6734,7 @@
     },
     "openmvg": {
       "baseline": "2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openmvs": {
       "baseline": "2.1.0",
