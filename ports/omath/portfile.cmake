@@ -8,6 +8,66 @@ vcpkg_from_github(
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/extlibs" "${SOURCE_PATH}/tests")
 
+vcpkg_replace_string(
+    "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
+    [[# Load the targets for the omath library]]
+    "find_dependency(tl-expected)"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
+    [[include("${CMAKE_CURRENT_LIST_DIR}/omathTargets.cmake")]]
+    "include(\"${CMAKE_CURRENT_LIST_DIR}/omathTargets.cmake\")\ncheck_required_components(omath)"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/include/omath/projection/Camera.hpp"
+    [[#include <expected>]]
+    [[#include <tl/expected.hpp>]]
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/include/omath/pathfinding/NavigationMesh.hpp"
+    [[#include <expected>]]
+    [[#include <tl/expected.hpp>]]
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/CMakeLists.txt"
+    [[# Installation rules]]
+    "find_package(tl-expected CONFIG REQUIRED)\ntarget_link_libraries(omath PRIVATE tl::expected)"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/include/omath/pathfinding/NavigationMesh.hpp"
+    "std::expected"
+    "tl::expected"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/include/omath/projection/Camera.hpp"
+    "std::expected"
+    "tl::expected"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/source/pathfinding/NavigationMesh.cpp"
+    "std::expected"
+    "tl::expected"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/include/omath/projection/Camera.hpp"
+    "std::unexpected"
+    "tl::unexpected"
+)
+
+vcpkg_replace_string(
+    "${SOURCE_PATH}/source/pathfinding/NavigationMesh.cpp"
+    "std::unexpected"
+    "tl::unexpected"
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
 vcpkg_cmake_configure(

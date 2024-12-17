@@ -5,6 +5,7 @@
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "MIT",
   "dependencies": [
+    "tl-expected",
     {
       "name": "vcpkg-cmake",
       "host": true
