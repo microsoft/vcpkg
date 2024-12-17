@@ -29,10 +29,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         parallel-gettext-tools.patch
         config-step-order.patch
         iconv-ostream-flush.diff
-        # Pristine gettext/gnulib no longer accepts iconv in macOS 14.4,
-        # https://lists.gnu.org/archive/html/bug-gnulib/2024-05/msg00375.html
-        # Until vcpkg builds GNU libiconv for macOS, keep the existing behavior.
-        accept-broken-macos-iconv.diff
         # Doesn't do the same detection as other configure scripts
         libtextstyle-unsetenv.diff
 )
@@ -102,6 +98,15 @@ if(subdirs)
         # Relying on gettext-libintl
         list(APPEND OPTIONS --with-included-gettext=no)
     endif()
+    if(VCPKG_TARGET_IS_OSX)
+        # Pristine gnulib no longer accepts iconv in macOS 14.4,
+        # https://lists.gnu.org/archive/html/bug-gnulib/2024-05/msg00375.html
+        # Until vcpkg builds GNU libiconv for macOS, this port keeps the previous behavior.
+        list(APPEND OPTIONS
+            am_cv_func_iconv=yes
+            am_cv_lib_iconv=yes
+        )
+    endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND OPTIONS
             # Faster, but not for export
@@ -158,6 +163,12 @@ if(subdirs)
         OPTIONS_RELEASE
             "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
+    foreach(subdir IN ITEMS gettext-runtime libtextstyle gettext-tools)
+        file(COPY_FILE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}/config.log"
+            "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-${subdir}-config.log"
+        )
+    endforeach()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
