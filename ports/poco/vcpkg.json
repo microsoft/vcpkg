@@ -8,8 +8,8 @@
   "dependencies": [
     "expat",
     "pcre2",
-    "utf8proc",
     "sqlite3",
+    "utf8proc",
     {
       "name": "vcpkg-cmake",
       "host": true
