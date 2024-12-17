@@ -45,17 +45,17 @@ function(append_dependencies out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "DEBUG" "NAMES" "")
     if(${arg_DEBUG})
         set(config DEBUG)
-        set(path "${CURRENT_INSTALLED_DIR}/debug/lib/")
+        set(path "${SEARCH_PATH}/debug/lib/")
     else()
         set(config RELEASE)
-        set(path "${CURRENT_INSTALLED_DIR}/lib/")
+        set(path "${SEARCH_PATH}/lib/")
     endif()
     if("${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES}" STREQUAL "")
         enable_language(CXX)
     endif()
     set(pass_through
         ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES}
-        bcrypt gdi32 mfuuid ole32 oleaut32 psapi secur32 shlwapi strmiids user32 uuid vfw32 ws2_32
+        advapi32 bcrypt crypt32 gdi32 mfuuid ole32 oleaut32 psapi secur32 shlwapi strmiids user32 uuid vfw32 ws2_32
         -pthread -pthreads pthread atomic m
     )
     cmake_policy(SET CMP0057 NEW)
