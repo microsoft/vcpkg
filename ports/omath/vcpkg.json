@@ -1,6 +1,6 @@
 {
   "name": "omath",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "MIT",
