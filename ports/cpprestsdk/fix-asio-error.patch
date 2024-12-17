@@ -18,7 +18,7 @@ index b297ff6..7c71b34 100644
  
  } // namespace crossplat
 diff --git a/Release/src/http/client/http_client_asio.cpp b/Release/src/http/client/http_client_asio.cpp
-index 07bb488..ee1bac4 100644
+index 07bb488..c3c9153 100644
 --- a/Release/src/http/client/http_client_asio.cpp
 +++ b/Release/src/http/client/http_client_asio.cpp
 @@ -146,9 +146,9 @@ class asio_connection
@@ -33,6 +33,15 @@ index 07bb488..ee1bac4 100644
          , m_ssl_stream()
          , m_cn_hostname()
          , m_is_reused(false)
+@@ -429,7 +429,7 @@ private:
+         auto& self = *pool;
+         std::weak_ptr<asio_connection_pool> weak_pool = pool;
+ 
+-        self.m_pool_epoch_timer.expires_from_now(boost::posix_time::seconds(30));
++        self.m_pool_epoch_timer.expires_after(boost::posix_time::seconds(30));
+         self.m_pool_epoch_timer.async_wait([weak_pool](const boost::system::error_code& ec) {
+             if (ec)
+             {
 @@ -1134,7 +1134,7 @@ private:
          }
  #endif // CPPREST_PLATFORM_ASIO_CERT_VERIFICATION_AVAILABLE
@@ -42,6 +51,24 @@ index 07bb488..ee1bac4 100644
          return rfc2818(preverified, verifyCtx);
      }
  
+@@ -1870,7 +1870,7 @@ private:
+             assert(!m_ctx.expired());
+             m_state = started;
+ 
+-            m_timer.expires_from_now(m_duration);
++            m_timer.expires_after(m_duration);
+             auto ctx = m_ctx;
+             m_timer.async_wait([ctx AND_CAPTURE_MEMBER_FUNCTION_POINTERS](const boost::system::error_code& ec) {
+                 handle_timeout(ec, ctx);
+@@ -1881,7 +1881,7 @@ private:
+         {
+             assert(m_state == started || m_state == timedout);
+             assert(!m_ctx.expired());
+-            if (m_timer.expires_from_now(m_duration) > 0)
++            if (m_timer.expires_after(m_duration) > 0)
+             {
+                 // The existing handler was canceled so schedule a new one.
+                 assert(m_state == started);
 diff --git a/Release/src/http/client/x509_cert_utilities.cpp b/Release/src/http/client/x509_cert_utilities.cpp
 index 67fc5ac..7239f97 100644
 --- a/Release/src/http/client/x509_cert_utilities.cpp
@@ -56,15 +83,24 @@ index 67fc5ac..7239f97 100644
      }
  #endif
 diff --git a/Release/src/pplx/threadpool.cpp b/Release/src/pplx/threadpool.cpp
-index ba38a1a..46b7f3b 100644
+index ba38a1a..e12e48d 100644
 --- a/Release/src/pplx/threadpool.cpp
 +++ b/Release/src/pplx/threadpool.cpp
+@@ -37,7 +37,7 @@ static void abort_if_no_jvm()
+ 
+ struct threadpool_impl final : crossplat::threadpool
+ {
+-    threadpool_impl(size_t n) : crossplat::threadpool(n), m_work(m_service)
++    threadpool_impl(size_t n) : crossplat::threadpool(n), m_work(m_service.get_executor())
+     {
+         for (size_t i = 0; i < n; i++)
+             add_thread();
 @@ -84,7 +84,7 @@ private:
      }
  
      std::vector<std::unique_ptr<boost::asio::detail::thread>> m_threads;
 -    boost::asio::io_service::work m_work;
-+    boost::asio::io_context::work m_work;
++    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> m_work;
  };
  
  #if defined(_WIN32)
