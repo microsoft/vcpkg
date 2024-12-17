@@ -8,12 +8,12 @@ vcpkg_from_github(
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/extlibs" "${SOURCE_PATH}/tests")
 
-vcpkg_replace_string(
-    "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
-    [[include("${CMAKE_CURRENT_LIST_DIR}/omathTargets.cmake")]]
-    "include(\"${CMAKE_CURRENT_LIST_DIR}/omathTargets.cmake\")\ncheck_required_components(omath)"
-)
+file(READ "${SOURCE_PATH}/cmake/omathConfig.cmake.in" cmake_config)
 
+file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
+"${cmake_config}
+check_required_components(omath)
+")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
