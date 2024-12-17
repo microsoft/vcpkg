@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f79bac9..a337e9d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.26)
+ 
+ project(omath VERSION 1.0.0)
+ 
+-
++include(CMakePackageConfigHelpers)
+ 
+ set(CMAKE_CXX_STANDARD 26)
+ 
+@@ -20,11 +20,6 @@ else()
+ endif()
+ 
+ add_subdirectory(source)
+-add_subdirectory(extlibs)
+ 
+ if(OMATH_BUILD_TESTS)
+     add_subdirectory(tests)
+ endif()
