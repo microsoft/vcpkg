@@ -3948,6 +3948,10 @@
       "baseline": "2.1.0",
       "port-version": 1
     },
+    "kdreports": {
+      "baseline": "2.3.0",
+      "port-version": 0
+    },
     "kdsingleapplication": {
       "baseline": "1.1.0",
       "port-version": 1
