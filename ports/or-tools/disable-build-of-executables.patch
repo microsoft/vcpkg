@@ -1,0 +1,54 @@
+diff --git a/ortools/linear_solver/CMakeLists.txt b/ortools/linear_solver/CMakeLists.txt
+index 74d20df48b..e03a83120c 100644
+--- a/ortools/linear_solver/CMakeLists.txt
++++ b/ortools/linear_solver/CMakeLists.txt
+@@ -49,6 +49,7 @@ target_link_libraries(${NAME} PRIVATE
+ #add_library(${PROJECT_NAMESPACE}::linear_solver ALIAS ${NAME})
+ 
+ # solve
++#[[
+ add_executable(solve)
+ target_sources(solve PRIVATE "solve.cc")
+ target_include_directories(solve PRIVATE
+@@ -73,6 +74,7 @@ endif()
+ install(TARGETS solve
+   EXPORT ${PROJECT_NAME}Targets
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++]]
+ 
+ if(BUILD_TESTING)
+   if (APPLE)
+diff --git a/ortools/packing/CMakeLists.txt b/ortools/packing/CMakeLists.txt
+index 857750dff3..24f1ab8427 100644
+--- a/ortools/packing/CMakeLists.txt
++++ b/ortools/packing/CMakeLists.txt
+@@ -32,6 +32,7 @@ target_link_libraries(${NAME} PRIVATE
+ #add_library(${PROJECT_NAMESPACE}::packing ALIAS ${NAME})
+ 
+ # Vector Bin Packing
++#[[
+ add_executable(vector_bin_packing)
+ target_sources(vector_bin_packing PRIVATE "vector_bin_packing_main.cc")
+ target_include_directories(vector_bin_packing PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -57,3 +58,4 @@ if(BUILD_TESTING)
+ endif()
+ 
+ install(TARGETS vector_bin_packing)
++]]
+diff --git a/ortools/sat/CMakeLists.txt b/ortools/sat/CMakeLists.txt
+index 027aa46c6f..b700aa0414 100644
+--- a/ortools/sat/CMakeLists.txt
++++ b/ortools/sat/CMakeLists.txt
+@@ -40,6 +40,7 @@ target_link_libraries(${NAME} PRIVATE
+ #add_library(${PROJECT_NAMESPACE}::sat ALIAS ${NAME})
+ 
+ # Sat Runner
++#[[
+ add_executable(sat_runner)
+ target_sources(sat_runner PRIVATE "sat_runner.cc")
+ target_include_directories(sat_runner PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -59,3 +60,4 @@ elseif(UNIX)
+ endif()
+ 
+ install(TARGETS sat_runner)
++]]
