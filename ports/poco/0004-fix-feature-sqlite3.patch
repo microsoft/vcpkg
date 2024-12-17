@@ -1,25 +1,3 @@
-diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
-index 0c73beb..a4030bb 100644
---- a/Data/SQLite/CMakeLists.txt
-+++ b/Data/SQLite/CMakeLists.txt
-@@ -6,7 +6,7 @@ POCO_SOURCES_AUTO(SQLITE_SRCS ${SRCS_G})
- file(GLOB_RECURSE HDRS_G "include/*.h")
- POCO_HEADERS_AUTO(SQLITE_SRCS ${HDRS_G})
- 
--if(POCO_UNBUNDLED)
-+if(ENABLE_DATA_SQLITE)
- 	find_package(unofficial-sqlite3 CONFIG REQUIRED)
- else()
- 	# sqlite3
-@@ -38,7 +38,7 @@ target_include_directories(DataSQLite
- 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
- )
- 
--if(POCO_UNBUNDLED)
-+if(ENABLE_DATA_SQLITE)
- 	target_link_libraries(DataSQLite PUBLIC unofficial::sqlite3::sqlite3)
- 	target_compile_definitions(DataSQLite PUBLIC
- 		POCO_UNBUNDLED
 diff --git a/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake b/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
 index 5478bab..c5d6d6d 100644
 --- a/Data/SQLite/cmake/PocoDataSQLiteConfig.cmake
