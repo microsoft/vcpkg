@@ -26,3 +26,55 @@ index d8df9dc..fe2b000 100644
  	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
  	add_definitions(
  		-D_pcre2_utf8_table1=_poco_pcre2_utf8_table1
+diff --git a/cmake/FindPCRE2.cmake b/cmake/FindPCRE2.cmake
+index e730f32..6e10df2 100644
+--- a/cmake/FindPCRE2.cmake
++++ b/cmake/FindPCRE2.cmake
+@@ -54,7 +54,7 @@ Hints
+ include(FindPackageHandleStandardArgs)
+ 
+ find_package(PkgConfig QUIET)
+-pkg_check_modules(PC_PCRE2 QUIET pcre2)
++pkg_check_modules(PC_PCRE2 QUIET libpcre2-8)
+ 
+ find_path(PCRE2_INCLUDE_DIR
+   NAMES pcre2.h
+@@ -66,8 +66,8 @@ find_path(PCRE2_INCLUDE_DIR
+   DOC "Specify the include directory containing pcre2.h"
+ )
+ 
+-find_library(PCRE2_LIBRARY
+-  NAMES pcre2-8
++find_library(PCRE2_LIBRARY_DEBUG
++  NAMES pcre2-8d pcre2-8-staticd
+   HINTS
+         ${PCRE2_ROOT_DIR}/lib
+         ${PCRE2_ROOT_LIBRARY_DIRS}
+@@ -76,6 +76,19 @@ find_library(PCRE2_LIBRARY
+   DOC "Specify the lib directory containing pcre2"
+ )
+ 
++find_library(PCRE2_LIBRARY_RELEASE
++  NAMES pcre2-8 pcre2-8-static
++  HINTS
++        ${PCRE2_ROOT_DIR}/lib
++        ${PCRE2_ROOT_LIBRARY_DIRS}
++  PATHS
++        ${PC_PCRE2_LIBRARY_DIRS}
++  DOC "Specify the lib directory containing pcre2"
++)
++
++include(SelectLibraryConfigurations)
++select_library_configurations(PCRE2)
++
+ set(PCRE2_VERSION ${PC_PCRE2_VERSION})
+ 
+ find_package_handle_standard_args(PCRE2
+@@ -87,7 +100,6 @@ find_package_handle_standard_args(PCRE2
+ )
+ 
+ if(PCRE2_FOUND)
+-  set(PCRE2_LIBRARIES ${PCRE2_LIBRARY})
+   set(PCRE2_INCLUDE_DIRS ${PCRE2_INCLUDE_DIR})
+   set(PCRE2_DEFINITIONS ${PC_PCRE2_CFLAGS_OTHER})
+ endif()
