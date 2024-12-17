@@ -4,6 +4,7 @@
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "MIT",
+  "supports": "windows",
   "dependencies": [
     "tl-expected",
     {
