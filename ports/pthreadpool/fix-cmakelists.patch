@@ -3,7 +3,7 @@ index 09d57b2..57d3a2c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,8 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
- PROJECT(pthreadpool C CXX)
+ PROJECT(pthreadpool C)
  
  # ---[ Options.
 -SET(PTHREADPOOL_LIBRARY_TYPE "default" CACHE STRING "Type of library (shared, static, or default) to build")
