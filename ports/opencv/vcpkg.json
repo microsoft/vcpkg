@@ -1,6 +1,7 @@
 {
   "name": "opencv",
   "version": "4.10.0",
+  "port-version": 1,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -22,6 +23,18 @@
           "default-features": false,
           "features": [
             "ade"
+          ]
+        }
+      ]
+    },
+    "aravis": {
+      "description": "aravis",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "aravis"
           ]
         }
       ]
