@@ -12,6 +12,7 @@ vcpkg_from_github(
         cmake-config.diff
         pkgconfig.diff
         mingw.diff
+        emscripten.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
 
