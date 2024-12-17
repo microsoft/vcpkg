@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20241011
+FROM ubuntu:noble-20241118.1
 
-ADD https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
+ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://dl.google.com/android/repository/android-ndk-r27c-linux.zip /android-ndk-r27c-linux.zip
 
 # Add apt packages
@@ -43,8 +43,8 @@ RUN <<END_OF_SCRIPT bash
 export DEBIAN_FRONTEND=noninteractive
 
 # Apt prereqs itself
-apt-get -y update
-apt-get -y --no-install-recommends install ca-certificates
+apt -y update
+apt -y --no-install-recommends install ca-certificates
 
 # Add apt repos
 
@@ -54,10 +54,10 @@ rm -f packages-microsoft-prod.deb
 add-apt-repository universe
 
 # Run apt things
-apt-get -y update
-apt-get -y dist-upgrade
+apt -y update
+apt -y dist-upgrade
 
-apt-get -y --no-install-recommends install $APT_PACKAGES
+apt -y --no-install-recommends install $APT_PACKAGES
 
 # Android NDK
 unzip /android-ndk-r27c-linux.zip
