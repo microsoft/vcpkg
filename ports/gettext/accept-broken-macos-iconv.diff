@@ -10,3 +10,27 @@ index dc57b45..ff57298 100644
    {
      iconv_t cd_utf8_to_88591 = iconv_open ("ISO-8859-1", "UTF-8");
      if (cd_utf8_to_88591 != (iconv_t)(-1))
+diff --git a/gettext-tools/configure b/gettext-tools/configure
+index b036ad3..6a6a97a 100755
+--- a/gettext-tools/configure
++++ b/gettext-tools/configure
+@@ -42358,6 +42358,7 @@ int result = 0;
+      But here, the conversion always does transliteration (the suffixes
+      "//TRANSLIT" and "//IGNORE" have no effect, nor does iconvctl()) and
+      does not report when it does a non-identical conversion.  */
++  if(0)
+   {
+     iconv_t cd_utf8_to_88591 = iconv_open ("ISO-8859-1", "UTF-8");
+     if (cd_utf8_to_88591 != (iconv_t)(-1))
+diff --git a/libtextstyle/configure b/libtextstyle/configure
+index 1dc289a..dd1fda1 100755
+--- a/libtextstyle/configure
++++ b/libtextstyle/configure
+@@ -23589,6 +23589,7 @@ int result = 0;
+      But here, the conversion always does transliteration (the suffixes
+      "//TRANSLIT" and "//IGNORE" have no effect, nor does iconvctl()) and
+      does not report when it does a non-identical conversion.  */
++  if(0)
+   {
+     iconv_t cd_utf8_to_88591 = iconv_open ("ISO-8859-1", "UTF-8");
+     if (cd_utf8_to_88591 != (iconv_t)(-1))
