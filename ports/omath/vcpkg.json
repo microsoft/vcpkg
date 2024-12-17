@@ -6,7 +6,6 @@
   "license": "MIT",
   "supports": "windows",
   "dependencies": [
-    "tl-expected",
     {
       "name": "vcpkg-cmake",
       "host": true
