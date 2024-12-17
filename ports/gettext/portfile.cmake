@@ -33,6 +33,8 @@ vcpkg_extract_source_archive(SOURCE_PATH
         # https://lists.gnu.org/archive/html/bug-gnulib/2024-05/msg00375.html
         # Until vcpkg builds GNU libiconv for macOS, keep the existing behavior.
         accept-broken-macos-iconv.diff
+        # Doesn't do the same detection as other configure scripts
+        libtextstyle-unsetenv.diff
 )
 
 set(subdirs "")
@@ -117,7 +119,8 @@ if(subdirs)
         )
         if(NOT VCPKG_TARGET_IS_MINGW)
             list(APPEND OPTIONS
-                # Misdetected (?) with gettext-0.23/gnulib
+                # Misdetected (?) with gettext-0.23 gnulib (libtextstyle?)
+                ac_cv_func_unsetenv=no
                 ac_cv_have_decl_unsetenv=no
                 # Don't take from port dirent
                 ac_cv_header_dirent_h=no
