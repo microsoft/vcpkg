@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-fortran",
+  "version-string": "ci",
+  "description": "Validates fortran scripts.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-gfortran",
+      "platform": "windows & !arm & !uwp"
+    }
+  ]
+}
