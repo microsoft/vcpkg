@@ -78,8 +78,10 @@ vcpkg_cmake_install()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/openMVG/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/share/openMVG/cmake")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/cmake")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/cmake")
+endif()
 
 vcpkg_cmake_config_fixup()
 

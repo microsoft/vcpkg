@@ -1095,11 +1095,6 @@ spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
-# upstream issue https://github.com/stxxl/stxxl/issues/99
-stxxl:x86-windows=skip
-stxxl:x64-windows=skip
-stxxl:x64-windows-static=skip
-stxxl:x64-windows-static-md=skip
 systemc:arm64-windows=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail
