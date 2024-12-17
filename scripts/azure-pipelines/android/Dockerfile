@@ -13,7 +13,7 @@ ENV APT_PACKAGES="git curl zip unzip tar"
 ## Common build prereqs
 ENV APT_PACKAGES="$APT_PACKAGES g++ vim pkg-config cmake ca-certificates"
 
-ENV APT_PACKAGES="$APT_PACKAGES autoconf nasm bison python2 flex build-essential libtool libtool-bin libltdl-dev gettext automake autoconf-archive"
+ENV APT_PACKAGES="$APT_PACKAGES autoconf nasm bison flex build-essential libtool libtool-bin libltdl-dev gettext automake autoconf-archive"
 
 ## Python related
 ENV APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-pip python3-venv python3-mako python3-jinja2"
@@ -43,8 +43,8 @@ RUN <<END_OF_SCRIPT bash
 export DEBIAN_FRONTEND=noninteractive
 
 # Apt prereqs itself
-apt -y update
-apt -y --no-install-recommends install ca-certificates
+apt-get -y update
+apt-get -y --no-install-recommends install ca-certificates
 
 # Add apt repos
 
@@ -54,10 +54,10 @@ rm -f packages-microsoft-prod.deb
 add-apt-repository universe
 
 # Run apt things
-apt -y update
-apt -y dist-upgrade
+apt-get -y update
+apt-get -y dist-upgrade
 
-apt -y --no-install-recommends install $APT_PACKAGES
+apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # Android NDK
 unzip /android-ndk-r27c-linux.zip
