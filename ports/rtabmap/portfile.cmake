@@ -11,6 +11,8 @@ vcpkg_from_github(
         multi-definition.patch
         rtabmap-res-tool.patch
         gklib.patch
+        ceres-manifold.patch
+        fix-find-g2o.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

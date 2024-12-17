@@ -9,15 +9,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 3331320e0e82eb19329eddcf5cd15ab54470352d8ec45087bd4e32d568f77a2ef68161f98bf8ad5b16253380313f82591e73987f8060017ee45b2457ac2f8b44
+    SHA512 c3bfbf6a1691d6a8a4a5d224b58d9ca70b8a2c274c69bc0c0700025f512ce26ede31cd2ab8fc290c6697b49e1cb3dcfaf9a4fda1e1427d102c32f29632b445fd
     HEAD_REF main
     PATCHES
-        disable-non-underscore-posix-names.patch
         fix-windows-minmax.patch
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
         fix-libunwind.patch
+        fix-absolute-dir.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")

@@ -10,6 +10,12 @@ vcpkg_from_github(
         undef-KJ_USE_EPOLL-for-ANDROID_PLATFORM-23.patch
 )
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # In ARM64 it fails without /bigobj
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /bigobj")
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /bigobj")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "openssl" OPENSSL_FEATURE

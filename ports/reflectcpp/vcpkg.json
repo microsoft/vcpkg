@@ -1,0 +1,81 @@
+{
+  "name": "reflectcpp",
+  "version": "0.16.0",
+  "description": "A C++ library for serialization and deserialization using reflection.",
+  "homepage": "https://github.com/getml/reflect-cpp/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "ctre",
+      "version>=": "3.9.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "yyjson",
+      "version>=": "0.10.0"
+    }
+  ],
+  "features": {
+    "bson": {
+      "description": "Support for the BSON format",
+      "dependencies": [
+        {
+          "name": "libbson",
+          "version>=": "1.25.1"
+        }
+      ]
+    },
+    "flexbuffers": {
+      "description": "Support for the flexbuffers format (part of flatbuffers)",
+      "dependencies": [
+        {
+          "name": "flatbuffers",
+          "version>=": "23.5.26#1"
+        }
+      ]
+    },
+    "msgpack": {
+      "description": "Support for the msgpack format",
+      "dependencies": [
+        {
+          "name": "msgpack-c",
+          "version>=": "6.0.0"
+        }
+      ]
+    },
+    "ubjson": {
+      "description": "Support for the UBJSON format",
+      "dependencies": [
+        {
+          "name": "jsoncons",
+          "version>=": "0.176.0"
+        }
+      ]
+    },
+    "xml": {
+      "description": "Support for the XML format",
+      "dependencies": [
+        {
+          "name": "pugixml",
+          "version>=": "1.14"
+        }
+      ]
+    },
+    "yaml": {
+      "description": "Support for the YAML format",
+      "dependencies": [
+        {
+          "name": "yaml-cpp",
+          "version>=": "0.8.0#1"
+        }
+      ]
+    }
+  }
+}

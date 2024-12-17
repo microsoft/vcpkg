@@ -9,17 +9,16 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
-    REF f68321e7de8929fbcdb95dd42877531e64f72f66 #2.1.0
-    SHA512 67bbd8a9385a40fe69d118fbc84da0fcc9aa1fbe14dd52f5403ed09686504213a1d931e95a1a0148d293b27ab5ce7c1d618fbf2e8fed95f2bbafab851a1ef449
+    REF 85331393dc0dff09f6fb9903ab0c4bfa3e134b01 #2.2.0
+    SHA512 16d3f4f3524b7532f666c0a626f1c678170698119eff3d914ade2e7cc65f25e644c2eabb618cd5805cba0fd4e08d3f64658a9f480934d8aace4089ec42b3d691
     HEAD_REF master
     PATCHES
         0001_cmakelists_fixes.patch
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
-        find-package-required.patch
+        0004_remove_broken_fake_ba_jac.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake/FindCXSparse.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
@@ -30,7 +29,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "schur"             SCHUR_SPECIALIZATIONS
         "suitesparse"       SUITESPARSE
-        "cxsparse"          CXSPARSE
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE
         "tools"             GFLAGS
@@ -43,6 +41,11 @@ endif()
 foreach (FEATURE ${FEATURE_OPTIONS})
     message(STATUS "${FEATURE}")
 endforeach()
+
+set(USE_CUDA OFF)
+if("cuda" IN_LIST FEATURES)
+    set(USE_CUDA ON)
+endif()
 
 set(TARGET_OPTIONS )
 if(VCPKG_TARGET_IS_IOS)
@@ -60,9 +63,12 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
+        -DUSE_CUDA=${USE_CUDA}
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
-        -DLIB_SUFFIX=${LIB_SUFFIX}
+    MAYBE_UNUSED_VARIABLES
+        CUDA
+        MSVC_USE_STATIC_CRT
 )
 
 vcpkg_cmake_install()

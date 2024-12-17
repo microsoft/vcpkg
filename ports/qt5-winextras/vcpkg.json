@@ -1,6 +1,6 @@
 {
   "name": "qt5-winextras",
-  "version": "5.15.15",
+  "version": "5.15.16",
   "description": "Qt Windows Extras provide classes and functions that enable you to use miscellaneous Windows-specific functions. For example, you can convert Qt objects to Windows object handles and manipulate DWM glass frames.",
   "license": null,
   "supports": "windows",
