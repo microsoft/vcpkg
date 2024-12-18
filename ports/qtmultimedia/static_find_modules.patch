@@ -12,29 +12,29 @@ index 47d8769..46a5c9b 100644
      list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIR})
      list(APPEND FFMPEG_LIBRARY_DIRS ${${_component}_LIBRARY_DIR})
 @@ -306,18 +306,19 @@ endfunction()
-       string(TOLOWER ${_component} _lowerComponent)
-       if (NOT TARGET FFmpeg::${_lowerComponent})
--        add_library(FFmpeg::${_lowerComponent} INTERFACE IMPORTED)
-+        add_library(FFmpeg::${_lowerComponent} UNKNOWN IMPORTED)
-         set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
-             INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
-             INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIR}
--            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARY_NAME}"
--            INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIR}"
-+            IMPORTED_LOCATION "${${_component}_LIBRARY}"
-         )
+         string(TOLOWER ${_component} _lowerComponent)
+         if (NOT TARGET FFmpeg::${_lowerComponent})
+-            add_library(FFmpeg::${_lowerComponent} INTERFACE IMPORTED)
++            add_library(FFmpeg::${_lowerComponent} UNKNOWN IMPORTED)
+             set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
+                 INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
+                 INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIR}
+-                INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARY_NAME}"
+-                INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIR}"
++                IMPORTED_LOCATION "${${_component}_LIBRARY}"
+             )
  
-         __ffmpeg_internal_set_dependencies(${_component})
--        target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY_NAME}")
-+        if(WIN32 AND _lowerComponent STREQUAL "avutil")
-+          target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "Bcrypt.lib")
-+        endif()
-         if (UNIX AND NOT APPLE)
-           target_link_options(FFmpeg::${_lowerComponent} INTERFACE  "-Wl,--exclude-libs=lib${_lowerComponent}")
-         endif ()
-       endif()
+              __ffmpeg_internal_set_dependencies(${_component})
+-             target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY_NAME}")
++             if(WIN32 AND _lowerComponent STREQUAL "avutil")
++               target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "Bcrypt.lib")
++            endif()
+             if (UNIX AND NOT APPLE)
+                 target_link_options(FFmpeg::${_lowerComponent} INTERFACE  "-Wl,--exclude-libs=lib${_lowerComponent}")
+             endif ()
+         endif()
      endif()
-   endforeach ()
+ endforeach ()
 @@ -361,14 +364,18 @@ if (shared_libs_desired AND NOT FFMPEG_SHARED_COMPONENTS)
  endif()
  

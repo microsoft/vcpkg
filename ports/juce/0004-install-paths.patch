@@ -36,9 +36,9 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index a46b51f1a..38f863a3e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -123,7 +123,7 @@ write_basic_package_version_file("${JUCE_BINARY_DIR}/JUCEConfigVersion.cmake"
-     COMPATIBILITY ExactVersion
-     ${extra_version_arg})
+@@ -137,7 +137,7 @@
+     VERSION ${JUCE_VERSION}
+     COMPATIBILITY ExactVersion)
 
 -set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
 +set(JUCE_INSTALL_DESTINATION "share/juce" CACHE STRING
