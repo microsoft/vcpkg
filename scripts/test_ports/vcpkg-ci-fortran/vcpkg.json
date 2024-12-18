@@ -2,6 +2,7 @@
   "name": "vcpkg-ci-fortran",
   "version-string": "ci",
   "description": "Validates fortran scripts.",
+  "supports": "!android & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
