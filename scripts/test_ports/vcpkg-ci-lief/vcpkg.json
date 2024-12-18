@@ -9,7 +9,6 @@
       "features": [
         "c-api",
         "enable-json",
-        "examples",
         "extra-warnings",
         "logging",
         "logging-debug",
@@ -20,7 +19,11 @@
         "oat",
         "dex",
         "vdex",
-        "art"
+        "art",
+        "asm",
+        "debug",
+        "dyld",
+        "objc"
       ]
     },
     {

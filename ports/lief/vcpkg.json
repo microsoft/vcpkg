@@ -37,11 +37,20 @@
     "art": {
       "description": "Build LIEF with ART module"
     },
+    "asm": {
+      "description": "Build LIEF with assembler/disassembler support"
+    },
     "c-api": {
       "description": "C API"
     },
+    "debug": {
+      "description": "Build LIEF with DWARF/PDB support"
+    },
     "dex": {
       "description": "Build LIEF with DEX module"
+    },
+    "dyld": {
+      "description": "Build LIEF with Dyld shared cache support"
     },
     "elf": {
       "description": "Build LIEF with ELF module"
@@ -51,9 +60,6 @@
       "dependencies": [
         "nlohmann-json"
       ]
-    },
-    "examples": {
-      "description": "Build LIEF C++ examples"
     },
     "extra-warnings": {
       "description": "Enable extra warning from the compiler"
@@ -69,6 +75,9 @@
     },
     "oat": {
       "description": "Build LIEF with OAT module"
+    },
+    "objc": {
+      "description": "Build LIEF with ObjC metadata support"
     },
     "pe": {
       "description": "Build LIEF with PE module"
