@@ -5133,7 +5133,7 @@
       "port-version": 0
     },
     "libsmb2": {
-      "baseline": "2023-08-11",
+      "baseline": "2024-12-16",
       "port-version": 0
     },
     "libsndfile": {
