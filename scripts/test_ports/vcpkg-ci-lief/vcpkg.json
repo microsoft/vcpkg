@@ -19,12 +19,18 @@
         "oat",
         "dex",
         "vdex",
-        "art",
-        "asm",
-        "debug",
-        "dyld",
-        "objc"
+        "art"
       ]
+    },
+    {
+      "name": "lief",
+      "features": [
+        "debug",
+        "objc",
+        "dyld-shared-cache",
+        "asm"
+      ],
+      "platform": "!(windows & !static)"
     },
     {
       "name": "vcpkg-cmake",
