@@ -5546,7 +5546,7 @@
     },
     "lilv": {
       "baseline": "0.24.24",
-      "port-version": 0
+      "port-version": 1
     },
     "linalg": {
       "baseline": "2.2",
