@@ -23,16 +23,6 @@
       ]
     },
     {
-      "name": "lief",
-      "features": [
-        "debug",
-        "objc",
-        "dyld-shared-cache",
-        "asm"
-      ],
-      "platform": "!(windows & !static)"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
