@@ -33,7 +33,7 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF
         -DBUILD_APP=OFF
     OPTIONS
-        -DCMAKE_POLICY_DEFAULT_CMP0156=NEW
+        --trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
