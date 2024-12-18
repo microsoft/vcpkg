@@ -1,18 +1,25 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sahlberg/libsmb2
-    REF 99125c96750e192e2c50176548bf461e4a28f135
-    SHA512 30cdc9bbcdcd384868e5865706b41f683b977ece4056040a29bb3b81ffdf83788ba8a39426132810b8cbbb778ae7db8e5e1be0b7c0a82d8beed75040de708240
+    REF libsmb2-6.1
+    SHA512 7f481b22f90b82d19c6bb29537ef10229b3ff4aff3d46dff5b11ee22c9c0410f1d58f466cf0774507d1d6f03c06dd82b223b1f4be75da239402e57749382fe5f
     HEAD_REF master
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	FEATURES
+        gssapi ENABLE_GSSAPI
+        krb5   ENABLE_LIBKRB5
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # TODO: Add a feature to enable gssapi/krb5 support
-        -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI=ON
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_GSSAPI
+        ENABLE_LIBKRB5
 )
 
 vcpkg_cmake_install()
