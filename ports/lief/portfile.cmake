@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-liefconfig-cmake-in.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third-party" "${SOURCE_PATH}/examples")
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "target_link_libraries(LIB_LIEF PRIVATE lief_spdlog)"
