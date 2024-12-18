@@ -185,10 +185,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lief/LIEFConfig.cmake"
 
 vcpkg_fixup_pkgconfig()
 
-if("debug" IN_LIST FEATURES)
-    vcpkg_copy_pdbs()
-endif()
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
