@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/extlibs" "${SOURCE_PATH}/tests")
-
 file(READ "${SOURCE_PATH}/cmake/omathConfig.cmake.in" cmake_config)
 
 file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
