@@ -1,0 +1,23 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index 859edbab5..7c44d738f 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -968,13 +968,10 @@ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_CUSTOM Open3D::3rdparty_tinyfil
+
+ # tinygltf
+ if(USE_SYSTEM_TINYGLTF)
+-    open3d_find_package_3rdparty_library(3rdparty_tinygltf
+-        PACKAGE TinyGLTF
+-        TARGETS TinyGLTF::TinyGLTF
++    find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h" REQUIRED)
++    open3d_import_3rdparty_library(3rdparty_tinygltf
++        INCLUDE_DIRS ${TINYGLTF_INCLUDE_DIRS}
+     )
+-    if(NOT 3rdparty_tinygltf_FOUND)
+-        set(USE_SYSTEM_TINYGLTF OFF)
+-    endif()
+ endif()
+ if(NOT USE_SYSTEM_TINYGLTF)
+     include(${Open3D_3RDPARTY_DIR}/tinygltf/tinygltf.cmake)
+--
+2.45.2
