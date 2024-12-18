@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-liefconfig-cmake-in.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/third-party" "${SOURCE_PATH}/examples")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "target_link_libraries(LIB_LIEF PRIVATE lief_spdlog)"
@@ -165,6 +165,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DLIEF_EXAMPLES=OFF
 
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
