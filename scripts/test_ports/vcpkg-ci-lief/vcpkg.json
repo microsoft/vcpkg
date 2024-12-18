@@ -4,7 +4,25 @@
     "description": "Testing packages which provide lief",
     "license": null,
     "dependencies": [
-    "lief",
+    {
+      "name": "lief",
+      "features": [
+        "c-api",
+        "enable-json",
+        "examples",
+        "extra-warnings",
+        "logging",
+        "logging-debug",
+        "use-ccache",
+        "elf",
+        "pe",
+        "macho",
+        "oat",
+        "dex",
+        "vdex",
+        "art"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
