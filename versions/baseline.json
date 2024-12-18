@@ -3778,7 +3778,7 @@
     },
     "irrlicht": {
       "baseline": "1.8.5",
-      "port-version": 0
+      "port-version": 1
     },
     "irrxml": {
       "baseline": "0",
