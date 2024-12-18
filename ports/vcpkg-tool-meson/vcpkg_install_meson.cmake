@@ -1,5 +1,10 @@
 function(vcpkg_install_meson)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "ADD_BIN_TO_PATH" "" "")
+    # EXPORTED_PYTHON_HOME is the name of variable which hold the PYTHONHOME configured by vcpkg_configu_meson.
+    # if not set, default to "VCPKG_PYTHON3_DIR", if set as empty string, means not set PYTHONHOME env variable.
+    cmake_parse_arguments(PARSE_ARGV 0 arg "ADD_BIN_TO_PATH" "EXPORTED_PYTHON_HOME" "")
+    if(NOT DEFINED arg_EXPORTED_PYTHON_HOME)
+        set(arg_EXPORTED_PYTHON_HOME "VCPKG_PYTHON3_DIR")
+    endif()
 
     vcpkg_find_acquire_program(NINJA)
     unset(ENV{DESTDIR}) # installation directory was already specified with '--prefix' option
@@ -29,6 +34,10 @@ function(vcpkg_install_meson)
             else()
                 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
             endif()
+        endif()
+        if(NOT arg_EXPORTED_PYTHON_HOME STREQUAL "" AND DEFINED ${arg_EXPORTED_PYTHON_HOME})
+            # arg_EXPORTED_PYTHON_HOME is defined by vcpkg_configure_meson to hold the python home.
+            set(ENV{PYTHONHOME} "${${arg_EXPORTED_PYTHON_HOME}}")
         endif()
         vcpkg_execute_required_process(
             COMMAND "${NINJA}" install -v
