@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-ci-omath",
+    "version-string": "ci",
+    "description": "Testing packages which provide omath",
+    "license": null,
+    "dependencies": [
+    "omath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
