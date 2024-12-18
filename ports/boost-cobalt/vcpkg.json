@@ -5,7 +5,6 @@
   "description": "Boost cobalt module",
   "homepage": "https://www.boost.org/libs/cobalt",
   "license": "BSL-1.0",
-  "supports": "!osx & !ios & !android & !uwp",
   "dependencies": [
     {
       "name": "boost-asio",
