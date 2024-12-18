@@ -7938,7 +7938,7 @@
     },
     "restc-cpp": {
       "baseline": "0.10.0",
-      "port-version": 4
+      "port-version": 5
     },
     "restclient-cpp": {
       "baseline": "2024-01-09",
