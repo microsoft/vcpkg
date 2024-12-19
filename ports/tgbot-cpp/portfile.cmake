@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF v1.7.3
   SHA512 845a051a4c7d753680759a09c1d2e1384d81f399b84d553e6785c65a6249a6a770f17eaf57ca28efd420dda78dc6c78096f045ddd87ac98a56c2c54d0b3a110b
   HEAD_REF master
+  PATCHES
+    fix-asio-error.patch
 )
 
 vcpkg_cmake_configure(
