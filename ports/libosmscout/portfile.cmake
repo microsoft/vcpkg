@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Framstag/libosmscout
-    REF c81e1d9a0f69cc5b93588dbe330b2af587162c5f
-    SHA512 d6ddbc49dd40b1f938ae2cd1ea9342cab0a52db46bf7ed6716111a91d0a38acba12ff2e273d457db51fc240d578a5b849af77b53e600482cf52c3b22306f8c45
+    REF c0b9c29d88ffd374dc5da66e4e77a01858edc0d1
+    SHA512 3b0020527f2f213c16f524e1d7c52b068234145c77045d673af3d2fdb33df83d37f2ef916d8ed90d1b6519884c8e9ff703489b18ecdd20586e1368502b876c43
     HEAD_REF master
     PATCHES protobuf-linkage.patch
 )
@@ -33,7 +33,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libosmscout)
+vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
