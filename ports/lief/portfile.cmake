@@ -55,10 +55,7 @@ vcpkg_replace_string("${SOURCE_PATH}/src/logging.hpp"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/src/utils.cpp"
-    "#include <spdlog/fmt/fmt.h>"
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
+
 
 vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
     [[#include "spdlog/fmt/fmt.h"]]
