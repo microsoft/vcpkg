@@ -1,10 +1,10 @@
 {
-    "name": "vcpkg-ci-omath",
+    "name": "vcpkg-ci-orange-math",
     "version-string": "ci",
-    "description": "Testing packages which provide omath",
+    "description": "Testing packages which provide orange-math",
     "license": null,
     "dependencies": [
-    "omath",
+    "orange-math",
     {
       "name": "vcpkg-cmake",
       "host": true
