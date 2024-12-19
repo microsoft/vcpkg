@@ -90,7 +90,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "jpeg"       WITH_JPEG
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
- "fs"         OPENCV_ENABLE_FILESYSTEM_SUPPORT
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
  "opencl"     WITH_OPENCL
  "openvino"   WITH_OPENVINO
@@ -112,6 +111,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"       WITH_WEBP
  "win32ui"    WITH_WIN32UI
  "world"      BUILD_opencv_world
+ INVERTED_FEATURES
+ "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
 )
 
 if("dnn" IN_LIST FEATURES)
@@ -386,15 +387,12 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
-        ###### PROTOBUF
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        # ENABLE
-        -DENABLE_CXX11=ON
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
@@ -422,15 +420,10 @@ vcpkg_cmake_configure(
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
         ###### Additional build flags
-        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
-        -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
-        ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
-        ###### Python install path
         ${PYTHON_EXTRA_DEFINES_RELEASE}
     OPTIONS_DEBUG
-        ###### Python install path
         ${PYTHON_EXTRA_DEFINES_DEBUG}
 )
 
