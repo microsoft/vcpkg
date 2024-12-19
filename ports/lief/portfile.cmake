@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-liefconfig-cmake-in.patch
+        fix-vcpkg-includes.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
@@ -47,21 +48,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     [[RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}]]
     " "
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/BinaryStream/BinaryStream.cpp"
-    [[#include "third-party/utfcpp.hpp"]]
-    [[#include <utf8cpp/utf8.h>]]
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/utils.cpp"
-    [[#include "third-party/utfcpp.hpp"]]
-    [[#include <utf8cpp/utf8.h>]]
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/PE/Builder.cpp"
-    [[#include "third-party/utfcpp.hpp"]]
-    [[#include <utf8cpp/utf8.h>]]
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/src/logging.cpp"
@@ -125,16 +111,6 @@ if (VCPKG_TARGET_IS_LINUX)
         "#include <LIEF/iterators.hpp>\n#include <memory>"
     )
 endif()
-
-vcpkg_replace_string("${SOURCE_PATH}/include/LIEF/errors.hpp"
-    [[#include <LIEF/third-party/expected.hpp>]]    
-    "#include <tl/expected.hpp>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/include/LIEF/span.hpp"
-    [[#include <LIEF/third-party/span.hpp>]]
-    "#include <tcb/span.hpp>"
-)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
