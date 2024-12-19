@@ -1243,6 +1243,7 @@ vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
 vcpkg-ci-arrow:x64-osx=pass
 vcpkg-ci-arrow:x64-linux=pass
+vcpkg-ci-aurora-au:x64-linux=pass
 vcpkg-ci-boost:arm-neon-android=pass
 vcpkg-ci-boost:arm64-android=pass
 vcpkg-ci-boost:arm64-uwp=pass
