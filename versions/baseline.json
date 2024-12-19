@@ -4961,8 +4961,8 @@
       "port-version": 1
     },
     "libosmscout": {
-      "baseline": "1.1.1",
-      "port-version": 5
+      "baseline": "2024-12-08",
+      "port-version": 0
     },
     "libp7-baical": {
       "baseline": "replaced",
