@@ -11,6 +11,11 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     "orange-math"
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/cmake/omathConfig.cmake.in"
+    "omath"
+    "orange-math"
+)
+
 vcpkg_replace_string("${SOURCE_PATH}/source/CMakeLists.txt"
     "omath"
     "orange-math"
