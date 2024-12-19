@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(vcpkg-ci-fortran C CXX Fortran)
+project(vcpkg-ci-fortran C CXX)
 
 if(NOT EXPECTED_C_COMPILER STREQUAL CMAKE_C_COMPILER)
     message(SEND_ERROR "Unexpect C compiler\n   actual:   ${CMAKE_C_COMPILER}\n   expected: ${EXPECTED_C_COMPILER}")
