@@ -1,4 +1,5 @@
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nibanks/msh3
@@ -14,7 +15,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}" # https://github.com/microsoft/vcpkg/pull/42767
 )
 
 vcpkg_cmake_install()
