@@ -1,0 +1,77 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO lief-project/LIEF
+    REF ${VERSION}
+    SHA512 7df75fab6c7023e37a6a4d27fac8dcb4200e0235625fc5952bb23cedb2e582a37fb67ee471c1ae953c0b205fd9cca5538a835f65ef80a771f72dc7ff68000ed9
+    HEAD_REF master
+    PATCHES
+        fix-cmakelists.patch
+        fix-liefconfig-cmake-in.patch
+        fix-vcpkg-includes.patch
+        fix-fmt-v11-join.patch
+)
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
+
+if (VCPKG_TARGET_IS_LINUX)
+    vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
+        [[#include "LIEF/iterators.hpp"]]
+        "#include <LIEF/iterators.hpp>\n#include <memory>"
+    )
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "c-api"          LIEF_C_API             # C API
+        "enable-json"    LIEF_ENABLE_JSON       # Enable JSON-related APIs
+        "extra-warnings" LIEF_EXTRA_WARNINGS    # Enable extra warning from the compiler
+        "logging"        LIEF_LOGGING           # Enable logging
+        "logging-debug"  LIEF_LOGGING_DEBUG     # Enable debug logging
+
+        "use-ccache"     LIEF_USE_CCACHE        # Use ccache to speed up compilation
+
+        "elf"            LIEF_ELF               # Build LIEF with ELF module
+        "pe"             LIEF_PE                # Build LIEF with PE  module
+        "macho"          LIEF_MACHO             # Build LIEF with MachO module
+
+        "oat"            LIEF_OAT               # Build LIEF with OAT module
+        "dex"            LIEF_DEX               # Build LIEF with DEX module
+        "vdex"           LIEF_VDEX              # Build LIEF with VDEX module
+        "art"            LIEF_ART               # Build LIEF with ART module
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DLIEF_EXAMPLES=OFF
+
+        # Build with external vcpkg dependencies
+        -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
+        -DLIEF_EXTERNAL_SPDLOG=ON
+        -DLIEF_OPT_NLOHMANN_JSON_EXTERNAL=ON
+        -DLIEF_OPT_FROZEN_EXTERNAL=ON
+        -DLIEF_OPT_EXTERNAL_SPAN=ON
+        -DLIEF_OPT_UTFCPP_EXTERNAL=ON
+        -DLIEF_OPT_EXTERNAL_EXPECTED=ON
+        -DLIEF_DISABLE_FROZEN=OFF
+        -DLIEF_DISABLE_EXCEPTIONS=OFF
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lief/LIEFConfig.cmake"
+    [[include("${LIEF_${lib_type}_export}")]]
+    [[include("${CMAKE_CURRENT_LIST_DIR}/LIEFExport-${lib_type}.cmake")]]
+)
+
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
