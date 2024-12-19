@@ -6,11 +6,48 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/cmake/omathConfig.cmake.in" cmake_config)
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
 
-file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
+vcpkg_replace_string("${SOURCE_PATH}/source/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
+
+vcpkg_replace_string("${SOURCE_PATH}/source/prediction/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
+
+vcpkg_replace_string("${SOURCE_PATH}/source/pathfinding/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
+
+vcpkg_replace_string("${SOURCE_PATH}/source/projection/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
+
+vcpkg_replace_string("${SOURCE_PATH}/source/collision/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
+
+vcpkg_replace_string("${SOURCE_PATH}/source/engines/Source/CMakeLists.txt"
+    "omath"
+    "orange-math"
+)
+
+file(RENAME "${SOURCE_PATH}/cmake/omathConfig.cmake.in" "${SOURCE_PATH}/cmake/orange-mathConfig.cmake.in")
+
+file(READ "${SOURCE_PATH}/cmake/orange-mathConfig.cmake.in" cmake_config)
+
+file(WRITE "${SOURCE_PATH}/cmake/orange-mathConfig.cmake.in"
 "${cmake_config}
-check_required_components(omath)
+check_required_components(orange-math)
 ")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
@@ -24,7 +61,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "orange-math" CONFIG_PATH "lib/cmake/omath")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/orange-math")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
