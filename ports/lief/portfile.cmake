@@ -50,11 +50,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     " "
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/src/logging.cpp"
-    [[#include "spdlog/fmt/bundled/args.h"]]
-    "#include <fmt/args.h>"
-)
-
 vcpkg_replace_string("${SOURCE_PATH}/src/logging.hpp"
     "#include <spdlog/fmt/fmt.h>"
     "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
