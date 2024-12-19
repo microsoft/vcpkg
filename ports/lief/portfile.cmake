@@ -37,18 +37,8 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "COMPONENT libraries"
-    " "
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    [[ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}]]
-    " "
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     [[RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}]]
-    " "
+    [[RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}]]
 )
 
 if (VCPKG_TARGET_IS_LINUX)
