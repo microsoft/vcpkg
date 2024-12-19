@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
+        fix-fmt-v11-join.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
@@ -48,53 +49,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
     [[RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}]]
     " "
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/logging.hpp"
-    "#include <spdlog/fmt/fmt.h>"
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-
-
-vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
-    [[#include "spdlog/fmt/fmt.h"]]
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/PE/Header.cpp"
-    "#include <spdlog/fmt/fmt.h>"
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/PE/OptionalHeader.cpp"
-    "#include <spdlog/fmt/fmt.h>"
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/PE/TLS.cpp"
-    [[#include "spdlog/fmt/fmt.h"]]
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/MachO/BuildVersion.cpp"
-    "#include <spdlog/fmt/fmt.h>"
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/MachO/SourceVersion.cpp"
-    [[#include "spdlog/fmt/fmt.h"]]
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/MachO/DylibCommand.cpp"
-    [[#include "spdlog/fmt/fmt.h"]]
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/src/MachO/VersionMin.cpp"
-    [[#include "spdlog/fmt/fmt.h"]]
-    "#include <spdlog/fmt/fmt.h>\n#include <spdlog/fmt/ranges.h>"
 )
 
 if (VCPKG_TARGET_IS_LINUX)
