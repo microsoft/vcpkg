@@ -5,41 +5,13 @@ vcpkg_from_github(
     SHA512 7df75fab6c7023e37a6a4d27fac8dcb4200e0235625fc5952bb23cedb2e582a37fb67ee471c1ae953c0b205fd9cca5538a835f65ef80a771f72dc7ff68000ed9
     HEAD_REF master
     PATCHES
+        fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
         fix-fmt-v11-join.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "target_link_libraries(LIB_LIEF PRIVATE lief_spdlog)"
-    "find_package(fmt CONFIG REQUIRED)\nfind_package(spdlog CONFIG REQUIRED)\ntarget_link_libraries(LIB_LIEF PRIVATE fmt::fmt spdlog::spdlog)"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "TARGETS LIB_LIEF lief_spdlog"
-    "TARGETS LIB_LIEF"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    [[set(CMAKE_INSTALL_LIBDIR "lib")]]
-    [[#set(CMAKE_INSTALL_LIBDIR "lib")]]
-)
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "set(CMAKE_INSTALL_LIBDIR      \"lib\")"
-    "#[[set(CMAKE_INSTALL_LIBDIR      \"lib\")"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "set(CMAKE_INSTALL_DATAROOTDIR \"share\")"
-    "set(CMAKE_INSTALL_DATAROOTDIR \"share\")]]\nset(CMAKE_INSTALL_INCLUDEDIR  \"include\")"
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    [[RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}]]
-    [[RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}]]
-)
 
 if (VCPKG_TARGET_IS_LINUX)
     vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
