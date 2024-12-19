@@ -8446,7 +8446,7 @@
     },
     "sleepy-discord": {
       "baseline": "2022-02-05",
-      "port-version": 2
+      "port-version": 3
     },
     "slikenet": {
       "baseline": "2021-06-07",
@@ -8902,7 +8902,7 @@
     },
     "tgbot-cpp": {
       "baseline": "1.7.3",
-      "port-version": 0
+      "port-version": 1
     },
     "tgc": {
       "baseline": "2019-08-11",
