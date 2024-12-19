@@ -14,7 +14,6 @@ vcpkg_from_github(
 )
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"
-    "${SOURCE_PATH}/CMake/FindICU.cmake"
     "${SOURCE_PATH}/CMake/FindJPEG.cmake"
 )
 

@@ -118,8 +118,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Move all dlls to bin
     file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if(NOT VCPKG_BUILD_TYPE)
+      file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+      file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
     foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
         string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
         file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
@@ -132,7 +134,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endfunction()
 
     # fix dll path for cmake
-    file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+    if(NOT VCPKG_BUILD_TYPE)
+      file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+    endif()
     file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
 
     # fix plugInfo.json for runtime

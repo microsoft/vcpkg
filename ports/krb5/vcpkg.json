@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "krb5",
   "version": "1.21.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Kerberos is a network authentication protocol.",
     "It is designed to provide strong authentication for client/server applications by using secret-key cryptography.",
@@ -11,5 +11,11 @@
   ],
   "homepage": "https://web.mit.edu/kerberos/",
   "license": "MIT",
-  "supports": "linux | osx | (x64 & windows & !static & !uwp)"
+  "supports": "linux | osx | (x64 & windows & !static & !uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

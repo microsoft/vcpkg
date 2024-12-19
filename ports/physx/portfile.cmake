@@ -173,6 +173,7 @@ endif()
 
 set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
 
+
 # Finally invoke cmake to configure the PhysX project
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
@@ -218,16 +219,22 @@ function(copy_in_vcpkg_destination_folder_physx_artifacts)
 
     cmake_parse_arguments(_fpa "" "DIRECTORY" "SUFFIXES" ${ARGN})
     _copy_up("bin/*/release" "${_fpa_DIRECTORY}") # could be physx/bin/linux.clang/release or physx/bin/win.x86_64.vc142.mt/release
-    _copy_up("bin/*/debug" "debug/${_fpa_DIRECTORY}")
+    if(NOT VCPKG_BUILD_TYPE)
+      _copy_up("bin/*/debug" "debug/${_fpa_DIRECTORY}")
+    endif()
 endfunction()
 
 # Create output directories
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Packman also downloads the Gpu driver shared library, so we'll place it in bin and debug/bin
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
 endif()
 
 copy_in_vcpkg_destination_folder_physx_artifacts(
@@ -288,8 +295,10 @@ file(REMOVE_RECURSE
 # Install the cmake config that users will use, replace -if any- only @variables@
 configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk/unofficial-omniverse-physx-sdk-config.cmake" @ONLY)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
+  file(COPY "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
+endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-omniverse-physx-sdk
                          CONFIG_PATH share/omniverse-physx-sdk)
 

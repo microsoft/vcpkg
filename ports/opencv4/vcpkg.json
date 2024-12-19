@@ -33,6 +33,9 @@
     "calib3d": {
       "description": "calib3d module"
     },
+    "carotene": {
+      "description": "carotene module"
+    },
     "contrib": {
       "description": "opencv_contrib module",
       "dependencies": [
