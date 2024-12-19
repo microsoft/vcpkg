@@ -34,6 +34,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
 vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
