@@ -7220,6 +7220,10 @@
       "baseline": "1.0.0",
       "port-version": 1
     },
+    "projectm4": {
+      "baseline": "2024-05-03",
+      "port-version": 0
+    },
     "prometheus-cpp": {
       "baseline": "1.3.0",
       "port-version": 0
