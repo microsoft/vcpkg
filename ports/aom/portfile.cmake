@@ -7,7 +7,6 @@ vcpkg_from_git(
         aom-rename-static.diff
         aom-uninitialized-pointer.diff
         export-config.diff
-        fix-uwp.patch
 )
 
 vcpkg_find_acquire_program(NASM)
