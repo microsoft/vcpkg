@@ -1,21 +1,21 @@
+# Current port limitation. More patches needed.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 51afee7e28a7d6ae1b5491edd635e0c88a92a00bacedeaac632a0f19762e9940c9b819a9d33072d3553c004acd4ec0cdf645301f712b408498053de065b2b1cf
+    SHA512 c6e4b5f5d9b7e92469a6733a99eaf677909a5b2287869f0bbcc61fbcda6db4a6e920b327ede43fc9b1b0a3d09518c568dc1f38ad5fbb3ace14c1c031012b9968
     HEAD_REF master
     PATCHES
         fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
-        all_headers.patch
 )
 
 # This avoids a link error on x86-windows:
 # LINK : fatal error LNK1268: inconsistent option 'NODEFAULTLIB:libucrt.lib' specified with /USEPROFILE but not with /GENPROFILE
-file(REMOVE "${QUIC_SOURCE_PATH}/src/bin/winuser/pgo_x86/msquic.pgd")
+#file(REMOVE "${QUIC_SOURCE_PATH}/src/bin/winuser/pgo_x86/msquic.pgd")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
@@ -43,18 +43,23 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
-if(NOT VCPKG_HOST_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_find_acquire_program(JOM)
+    cmake_path(GET JOM PARENT_PATH jom_dir)
+    vcpkg_add_to_path("${jom_dir}")
+else()
     find_program(MAKE make)
-    get_filename_component(MAKE_EXE_PATH "${MAKE}" DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${MAKE_EXE_PATH}")
+    cmake_path(GET MAKE PARENT_PATH make_dir)
+    vcpkg_add_to_path("${make_dir}")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
+    cmake_path(GET NASM PARENT_PATH nasm_dir)
+    vcpkg_add_to_path("${nasm_dir}")
 endif()
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" QUIC_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 vcpkg_cmake_configure(
@@ -65,6 +70,7 @@ vcpkg_cmake_configure(
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
+        "-DQUIC_BUILD_SHARED=${QUIC_BUILD_SHARED}"
         "-DQUIC_STATIC_LINK_CRT=${STATIC_CRT}"
         "-DQUIC_STATIC_LINK_PARTIAL_CRT=${STATIC_CRT}"
         "-DQUIC_UWP_BUILD=${VCPKG_TARGET_IS_UWP}"
@@ -73,7 +79,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
-vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
-                    "${CURRENT_PACKAGES_DIR}/debug/include"
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
