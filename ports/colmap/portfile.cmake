@@ -1,10 +1,10 @@
-set(COLMAP_REF "0bd66d901c7549051e21e8f648777f802eb20a73") # v3.10
+set(COLMAP_REF "aa087848a8bd09cebf3e3cc8a5732552f30c51ad") # v3.11.1
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${VERSION}"
-    SHA512 1bcb6b1a740d07666e9f1dcc813bd4464113d0054238c0f86a0ed94099918947d1a58d83661f8ff3fc699727627436b2b555c5d51d37c8ebad7f590155dcb43d
+    SHA512 1260db4346cc33c6c35efdee0157450fccef67dbc9de876fdc997c7cb90daec716e5ccec97df0a77e3e8686f43ec79f2c0a1523ea12eca2ee158347cb52dea48
     HEAD_REF main
 )
 
@@ -21,8 +21,15 @@ endif()
 
 string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")
 
+foreach(FEATURE ${FEATURE_OPTIONS})
+    message(STATUS "${FEATURE}")
+endforeach()
+
 set(CUDA_ENABLED OFF)
+set(GUI_ENABLED OFF)
 set(TESTS_ENABLED OFF)
+set(CGAL_ENABLED OFF)
+set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
@@ -34,13 +41,20 @@ if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ARCHITECTURES "all-major")
 endif()
 
+if("gui" IN_LIST FEATURES)
+    set(GUI_ENABLED ON)
+endif()
+
 if("tests" IN_LIST FEATURES)
     set(TESTS_ENABLED ON)
 endif()
 
-set(OPENMP_ENABLED ON)
+if("cgal" IN_LIST FEATURES)
+    set(CGAL_ENABLED ON)
+endif()
+
 if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    set(OPENMP_ENABLED Off)
+    set(OPENMP_ENABLED OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -49,10 +63,13 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+        -DGUI_ENABLED=${GUI_ENABLED}
         -DTESTS_ENABLED=${TESTS_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
         -DOPENMP_ENABLED=${OPENMP_ENABLED}
+        -DCGAL_ENABLED=${CGAL_ENABLED}
+        -DFETCH_POSELIB=OFF
 )
 
 vcpkg_cmake_install()

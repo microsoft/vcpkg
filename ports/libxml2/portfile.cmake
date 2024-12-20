@@ -19,6 +19,7 @@ vcpkg_from_github(
     PATCHES
         disable-docs.patch
         fix_cmakelist.patch
+        fix_ios_compilation.patch
         ${FIX_COMPATIBILITY_PATCH}
         ${ADD_MISSING_BCRYPT_PATCH}
 )

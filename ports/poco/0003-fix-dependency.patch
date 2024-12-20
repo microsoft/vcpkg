@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c552091..8842c76 100644
+index 861c27c..d2701ce 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -90,8 +90,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
+@@ -80,8 +80,6 @@ option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" OFF)
  
  if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
  	find_package(OpenSSL REQUIRED)
@@ -11,7 +11,7 @@ index c552091..8842c76 100644
  endif()
  
  if(OPENSSL_FOUND)
-@@ -121,24 +119,19 @@ else()
+@@ -111,24 +109,19 @@ else()
  	option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
  endif()
  
@@ -44,7 +44,7 @@ index c552091..8842c76 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -223,6 +216,9 @@ include(DefinePlatformSpecifc)
+@@ -260,6 +253,9 @@ include(DefinePlatformSpecific)
  # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
  set(Poco_COMPONENTS "")
  
@@ -54,7 +54,7 @@ index c552091..8842c76 100644
  if(ENABLE_TESTS)
  	add_subdirectory(CppUnit)
  	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
-@@ -351,8 +347,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
+@@ -392,8 +388,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
  	list(APPEND Poco_COMPONENTS "Prometheus")
  endif()
  
@@ -68,27 +68,11 @@ index c552091..8842c76 100644
  	list(APPEND Poco_COMPONENTS "PDF")
  endif()
  
-@@ -492,15 +491,6 @@ install(
- 		Devel
- )
- 
--if(POCO_UNBUNDLED)
--	install(FILES cmake/FindPCRE2.cmake
--			DESTINATION "${PocoConfigPackageLocation}")
--	install(FILES cmake/V39/FindEXPAT.cmake
--			DESTINATION "${PocoConfigPackageLocation}/V39")
--	install(FILES cmake/V313/FindSQLite3.cmake
--			DESTINATION "${PocoConfigPackageLocation}/V313")
--endif()
--
- message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
- message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
- if(BUILD_SHARED_LIBS)
 diff --git a/Data/CMakeLists.txt b/Data/CMakeLists.txt
-index 0772af6..ec82d76 100644
+index 95e5019..d7bd537 100644
 --- a/Data/CMakeLists.txt
 +++ b/Data/CMakeLists.txt
-@@ -45,7 +45,7 @@ else(ENABLE_DATA_SQLITE)
+@@ -73,7 +73,7 @@ else(ENABLE_DATA_SQLITE)
  	message(STATUS "SQLite Support Disabled")
  endif()
  
@@ -98,7 +82,7 @@ index 0772af6..ec82d76 100644
  	add_subdirectory(MySQL)
  else()
 diff --git a/Data/MySQL/CMakeLists.txt b/Data/MySQL/CMakeLists.txt
-index ce411cf..5a30b7c 100644
+index 0ea8701..3c8a426 100644
 --- a/Data/MySQL/CMakeLists.txt
 +++ b/Data/MySQL/CMakeLists.txt
 @@ -21,7 +21,7 @@ set_target_properties(DataMySQL
@@ -124,7 +108,7 @@ index 2386590..81b2c8e 100644
  #endif
  
 diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
-index 3a176d7..d8055cb 100644
+index 7141112..0c73beb 100644
 --- a/Data/SQLite/CMakeLists.txt
 +++ b/Data/SQLite/CMakeLists.txt
 @@ -7,7 +7,7 @@ file(GLOB_RECURSE HDRS_G "include/*.h")
@@ -136,7 +120,7 @@ index 3a176d7..d8055cb 100644
  else()
  	# sqlite3
  	POCO_SOURCES(SQLITE_SRCS sqlite3
-@@ -43,7 +43,7 @@ target_include_directories(DataSQLite
+@@ -39,7 +39,7 @@ target_include_directories(DataSQLite
  )
  
  if(POCO_UNBUNDLED)
@@ -146,7 +130,7 @@ index 3a176d7..d8055cb 100644
  		POCO_UNBUNDLED
  		SQLITE_THREADSAFE=1
 diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
-index 123657a..9856c55 100644
+index cf66250..89e6c8f 100644
 --- a/XML/CMakeLists.txt
 +++ b/XML/CMakeLists.txt
 @@ -20,7 +20,7 @@ endif()

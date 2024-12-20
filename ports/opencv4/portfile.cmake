@@ -53,6 +53,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"        WITH_ADE
  "calib3d"    BUILD_opencv_calib3d
+ "carotene"   WITH_CAROTENE
  "contrib"    WITH_CONTRIB
  "cuda"       WITH_CUBLAS
  "cuda"       WITH_CUDA

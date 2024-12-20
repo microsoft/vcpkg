@@ -23,6 +23,7 @@ vcpkg_from_gitlab(
         fix-bz2-windows-debug-dependency.patch
         no-downloads.patch
         ${PATCHES}
+		fix-multiple-def.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
