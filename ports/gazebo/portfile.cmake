@@ -22,9 +22,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         graphviz  NO_GRAPHVIZ_FEATURE
 )
 
-vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,8 +34,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
 vcpkg_copy_pdbs()
-
-vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/gazebo-11/gazebo/test")
 
