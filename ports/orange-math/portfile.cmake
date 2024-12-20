@@ -6,7 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(READ "${SOURCE_PATH}/cmake/orange-mathConfig.cmake.in" cmake_config)
 
+file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
+"${cmake_config}
+check_required_components(omath)
+")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
@@ -19,7 +24,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/omath" PACKAGE_NAME "orange-math")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/omath" PACKAGE_NAME "omath")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
