@@ -1,7 +1,6 @@
 {
   "name": "usd",
-  "version": "24.8",
-  "port-version": 1,
+  "version": "24.11",
   "description": "Universal Scene Description (USD) is an efficient, scalable system for authoring, reading, and streaming time-sampled scene description for interchange between graphics applications.",
   "homepage": "https://github.com/PixarAnimationStudios/USD",
   "license": null,

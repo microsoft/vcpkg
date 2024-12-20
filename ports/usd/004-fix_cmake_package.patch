@@ -1,8 +1,8 @@
 diff --git a/pxr/CMakeLists.txt b/pxr/CMakeLists.txt
-index 00cafd3d9..c9faeabf0 100644
+index 4c7301b..94d2f2a 100644
 --- a/pxr/CMakeLists.txt
 +++ b/pxr/CMakeLists.txt
-@@ -12,13 +12,31 @@ endif()
+@@ -17,13 +17,31 @@ endif()
  
  pxr_core_epilogue()
  
@@ -40,24 +40,3 @@ index 00cafd3d9..c9faeabf0 100644
 +    # NAMESPACE   "pxr::"
 +    DESTINATION "${CMAKE_INSTALL_DATADIR}/pxr"
 +)
-diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
-index c8039c310..9e104abb7 100644
---- a/pxr/pxrConfig.cmake.in
-+++ b/pxr/pxrConfig.cmake.in
-@@ -90,14 +90,14 @@ if(@Imath_FOUND@)
-     find_dependency(Imath CONFIG)
- endif()
- 
--include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")
-+include("${PXR_CMAKE_DIR}/pxrTargets.cmake")
- if (TARGET usd_ms)
-     set(libs "usd_ms")
- else()
-     set(libs "@PXR_ALL_LIBS@")
- endif()
- set(PXR_LIBRARIES "")
--set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/include")
-+set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/../../include")
- string(REPLACE " " ";" libs "${libs}")
- foreach(lib ${libs})
-     get_target_property(location ${lib} LOCATION)
