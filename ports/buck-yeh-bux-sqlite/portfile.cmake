@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO buck-yeh/bux-sqlite
-    REF e8ab90da9586f61024b59aa1a4900efb94f1d3f4 # v1.0.1
-    SHA512 27acefdb32dd00dbbef91479b5e682cf6a9281e13a596128d5050fe44ed4b8669d5e7279b4db30efbd4d016d268c6f2ce893f91bbdddff17f2a227ba3a292d01
+    REF "${VERSION}"
+    SHA512 e15ba3220ae1c293a3a0d3fea848e53108e9338c7c781f33cde2c7850bc99bb35c6f1eb28aaad6f29e182ea5516797d6c81fbee27c2c814c62c274f013d8d17a
     HEAD_REF main
 )
 
