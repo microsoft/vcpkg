@@ -1,0 +1,18 @@
+diff --git a/cpp/open3d/visualization/rendering/Renderer.h b/cpp/open3d/visualization/rendering/Renderer.h
+index b642e4b6d..c2ec38f94 100644
+--- a/cpp/open3d/visualization/rendering/Renderer.h
++++ b/cpp/open3d/visualization/rendering/Renderer.h
+@@ -7,6 +7,10 @@
+ 
+ #pragma once
+ 
++#include <functional>
++#include <memory>
++#include <string>
++
+ #include "open3d/visualization/rendering/MaterialModifier.h"
+ #include "open3d/visualization/rendering/RendererHandle.h"
+ 
+-- 
+2.45.2
+
