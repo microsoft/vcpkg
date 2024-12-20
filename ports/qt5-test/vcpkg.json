@@ -1,0 +1,13 @@
+{
+  "name": "qt5-test",
+  "version-date": "2024-12-20",
+  "description": "A test port for qt5",
+  "license": null,
+  "dependencies": [
+    "qt5",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
