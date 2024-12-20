@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/cmake/orange-mathConfig.cmake.in" cmake_config)
+file(READ "${SOURCE_PATH}/cmake/omathConfig.cmake.in" cmake_config)
 
 file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
 "${cmake_config}
