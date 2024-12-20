@@ -1,0 +1,4 @@
+The package OpenH264 provides CMake targets:
+
+    find_package(OpenH264 REQUIRED)
+    target_link_libraries(main PRIVATE OpenH264::OpenH264)
