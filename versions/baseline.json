@@ -7500,6 +7500,10 @@
       "baseline": "5.15.16",
       "port-version": 0
     },
+    "qt5-test": {
+      "baseline": "2024-12-20",
+      "port-version": 0
+    },
     "qt5-tools": {
       "baseline": "5.15.16",
       "port-version": 0
