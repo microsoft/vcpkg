@@ -32,9 +32,9 @@ vcpkg_cmake_configure(
         -DENABLE_TESTDATA=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_TOOLS=OFF
+        -DTHREADS_PREFER_PTHREAD_FLAG=ON
         "-DCMAKE_ASM_NASM_COMPILER=${NASM}"
         "-DPERL_EXECUTABLE=${PERL}"
-        -DTHREADS_PREFER_PTHREAD_FLAG=ON
 )
 
 vcpkg_cmake_install()
