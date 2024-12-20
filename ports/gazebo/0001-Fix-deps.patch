@@ -1,19 +1,32 @@
 ﻿diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
-index 732cbb4..cc800d2 100644
+index 732cbb4..d9d4c0c 100644
 --- a/cmake/SearchForStuff.cmake
 +++ b/cmake/SearchForStuff.cmake
-@@ -3,7 +3,9 @@ include (CheckCXXSourceCompiles)
+@@ -3,11 +3,9 @@ include (CheckCXXSourceCompiles)
  
  include (${gazebo_cmake_dir}/FindOS.cmake)
  find_package(PkgConfig)
 -include (${gazebo_cmake_dir}/FindFreeimage.cmake)
+-
+-execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --modversion protobuf
+-  OUTPUT_VARIABLE PROTOBUF_VERSION
+-  RESULT_VARIABLE protobuf_modversion_failed)
 +find_package(freeimage CONFIG REQUIRED)
 +set(freeimage_LIBRARIES freeimage::FreeImage)
 +get_target_property(freeimage_INCLUDE_DIRS freeimage::FreeImage INTERFACE_INCLUDE_DIRECTORIES)
  
- execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --modversion protobuf
-   OUTPUT_VARIABLE PROTOBUF_VERSION
-@@ -35,6 +37,7 @@ endif()
+ ########################################
+ # 1. can not use GAZEBO_BUILD_TYPE_PROFILE is defined after include this module
+@@ -25,6 +23,8 @@ if (CMAKE_BUILD_TYPE)
+ endif()
+ 
+ ########################################
++find_package(Protobuf CONFIG REQUIRED)
++
+ if (PROTOBUF_VERSION LESS 2.3.0)
+   BUILD_ERROR("Incorrect version: Gazebo requires protobuf version 2.3.0 or greater")
+ endif()
+@@ -35,6 +35,7 @@ endif()
  # Protobuf >= 22 requires to link abseil, so we are constrained to use
  # find_package(Protobuf) and link to protobuf::libprotobuf,
  # see https://github.com/conda-forge/conda-forge-pinning-feedstock/issues/4075#issuecomment-1569242816
@@ -21,7 +34,15 @@ index 732cbb4..cc800d2 100644
  if (DEFINED PROTOBUF_VERSION AND PROTOBUF_VERSION GREATER_EQUAL 22.0)
    set(GZ_PROTOBUF_USE_CMAKE_CONFIG_DEFAULT ON)
  else()
-@@ -203,7 +206,7 @@ if (PKG_CONFIG_FOUND)
+@@ -62,7 +63,6 @@ if(NOT GZ_PROTOBUF_USE_CMAKE_CONFIG)
+     set (GZ_PROTOBUF_PROTOC_LIBRARY ${PROTOBUF_PROTOC_LIBRARY})
+   endif()
+ else()
+-  find_package(Protobuf CONFIG REQUIRED)
+   set (GZ_PROTOBUF_LIBRARY protobuf::libprotobuf)
+   set (GZ_PROTOBUF_PROTOC_LIBRARY protobuf::libprotoc)
+   if(NOT DEFINED PROTOBUF_PROTOC_EXECUTABLE)
+@@ -203,7 +203,7 @@ if (PKG_CONFIG_FOUND)
    # (needed, at least, for MacOS)
  
    # Use system installation on UNIX and Apple, and internal copy on Windows
@@ -30,7 +51,7 @@ index 732cbb4..cc800d2 100644
      set (USE_EXTERNAL_TINYXML_DEFAULT_VALUE ON)
    elseif(WIN32)
      set (USE_EXTERNAL_TINYXML_DEFAULT_VALUE OFF)
-@@ -252,7 +255,7 @@ if (PKG_CONFIG_FOUND)
+@@ -252,7 +252,7 @@ if (PKG_CONFIG_FOUND)
    # (needed, at least, for MacOS)
  
    # Use system installation on UNIX and Apple, and internal copy on Windows
@@ -39,7 +60,7 @@ index 732cbb4..cc800d2 100644
      set (USE_EXTERNAL_TINYXML2_DEFAULT_VALUE ON)
    elseif(WIN32)
      set (USE_EXTERNAL_TINYXML2_DEFAULT_VALUE OFF)
-@@ -331,8 +334,7 @@ if (PKG_CONFIG_FOUND)
+@@ -331,8 +331,7 @@ if (PKG_CONFIG_FOUND)
  
    #################################################
    # Find TBB
@@ -49,7 +70,7 @@ index 732cbb4..cc800d2 100644
    if (NOT TBB_FOUND)
      message(STATUS "TBB not found, attempting to detect manually")
      set (TBB_PKG_CONFIG "")
-@@ -365,23 +367,20 @@ if (PKG_CONFIG_FOUND)
+@@ -365,23 +364,20 @@ if (PKG_CONFIG_FOUND)
    #################################################
    # Find OGRE
  
@@ -80,7 +101,7 @@ index 732cbb4..cc800d2 100644
    if (PKG_CONFIG_EXECUTABLE AND OGRE_FOUND AND NOT DEFINED OGRE_VERSION)
      execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --modversion OGRE
                      OUTPUT_VARIABLE OGRE_VERSION)
-@@ -451,25 +450,22 @@ if (PKG_CONFIG_FOUND)
+@@ -451,25 +447,22 @@ if (PKG_CONFIG_FOUND)
      set(ogre_cflags ${ogre_cflags} ${OGRE_CFLAGS})
    endif ()
  
@@ -118,7 +139,7 @@ index 732cbb4..cc800d2 100644
    set (OGRE_INCLUDE_DIRS ${ogre_include_dirs}
         CACHE INTERNAL "Ogre include path")
  
-@@ -549,7 +545,7 @@ if (PKG_CONFIG_FOUND)
+@@ -549,7 +542,7 @@ if (PKG_CONFIG_FOUND)
    endif ()
  
    if (libavutil_FOUND AND libavformat_FOUND AND libavcodec_FOUND AND
@@ -127,7 +148,7 @@ index 732cbb4..cc800d2 100644
      set (HAVE_FFMPEG TRUE)
    else ()
      set (HAVE_FFMPEG FALSE)
-@@ -574,7 +570,7 @@ if (PKG_CONFIG_FOUND)
+@@ -574,7 +567,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find GNU Triangulation Surface Library
    pkg_check_modules(gts gts)
@@ -136,7 +157,7 @@ index 732cbb4..cc800d2 100644
      message (STATUS "Looking for GTS - found")
      set (HAVE_GTS TRUE)
    else ()
-@@ -587,7 +583,7 @@ if (PKG_CONFIG_FOUND)
+@@ -587,7 +580,7 @@ if (PKG_CONFIG_FOUND)
    # First and preferred option is to look for bullet standard pkgconfig,
    # so check it first. if it is not present, check for the OSRF
    # custom bullet2.82.pc file
@@ -145,7 +166,7 @@ index 732cbb4..cc800d2 100644
    if (NOT BULLET_FOUND)
       pkg_check_modules(BULLET bullet2.82>=2.82)
    endif()
-@@ -596,6 +592,7 @@ if (PKG_CONFIG_FOUND)
+@@ -596,6 +589,7 @@ if (PKG_CONFIG_FOUND)
    endif()
    if (BULLET_FOUND)
      set (HAVE_BULLET TRUE)
@@ -153,7 +174,7 @@ index 732cbb4..cc800d2 100644
      if (${BULLET_VERSION} STREQUAL "")
        set (BULLET_VERSION ${BULLET_VERSION_STRING})
      endif()
-@@ -614,7 +611,7 @@ if (PKG_CONFIG_FOUND)
+@@ -614,7 +608,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find libusb
    pkg_check_modules(libusb-1.0 libusb-1.0)
@@ -162,7 +183,7 @@ index 732cbb4..cc800d2 100644
      BUILD_WARNING ("libusb-1.0 not found. USB peripherals support will be disabled.")
      set (HAVE_USB OFF CACHE BOOL "HAVE USB" FORCE)
    else()
-@@ -690,7 +687,7 @@ endif ()
+@@ -690,7 +684,7 @@ endif ()
  ########################################
  # Find gdal
  include (FindGDAL)
@@ -171,7 +192,7 @@ index 732cbb4..cc800d2 100644
    message (STATUS "Looking for libgdal - not found")
    BUILD_WARNING ("GDAL not found, Digital elevation terrains support will be disabled.")
    set (HAVE_GDAL OFF CACHE BOOL "HAVE GDAL" FORCE)
-@@ -774,7 +771,7 @@ endif()
+@@ -774,7 +768,7 @@ endif()
  ########################################
  # Find graphviz
  include (${gazebo_cmake_dir}/FindGraphviz.cmake)
@@ -181,10 +202,17 @@ index 732cbb4..cc800d2 100644
    BUILD_WARNING ("Graphviz not found, Model editor's schematic view will be disabled.")
    set (HAVE_GRAPHVIZ OFF CACHE BOOL "HAVE GRAPHVIZ" FORCE)
 diff --git a/cmake/gazebo-config.cmake.in b/cmake/gazebo-config.cmake.in
-index ac1de2c..738bb23 100644
+index ac1de2c..05cdc02 100644
 --- a/cmake/gazebo-config.cmake.in
 +++ b/cmake/gazebo-config.cmake.in
-@@ -99,12 +99,13 @@ list(APPEND @PKG_NAME@_CFLAGS -I${GAZEBO_INSTALL_INCLUDE_DIR}/gazebo-@GAZEBO_MAJ
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(freeimage CONFIG)
++
+ if (@PKG_NAME@_CONFIG_INCLUDED)
+   return()
+ endif()
+@@ -99,12 +102,13 @@ list(APPEND @PKG_NAME@_CFLAGS -I${GAZEBO_INSTALL_INCLUDE_DIR}/gazebo-@GAZEBO_MAJ
  
  if (GAZEBO_HAS_BULLET)
    if (PKG_CONFIG_FOUND)
