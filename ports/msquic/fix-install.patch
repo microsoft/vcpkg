@@ -15,7 +15,7 @@ index 18048e3..4fcd161 100644
  
  if(BUILD_SHARED_LIBS)
 -  install(TARGETS msquic msquic_platform inc logging_inc warnings main_binary_link_args ${OTHER_TARGETS} EXPORT msquic DESTINATION lib)
-+  install(TARGETS msquic msquic_platform inc logging_inc warnings main_binary_link_args ${OTHER_TARGETS} EXPORT msquic
++  install(TARGETS msquic EXPORT msquic
 +    RUNTIME DESTINATION bin
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib)
