@@ -8,7 +8,7 @@ vcpkg_from_github(
 
 file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
 "${cmake_config}
-check_required_components(omath)
+check_required_components(orange-math)
 ")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
