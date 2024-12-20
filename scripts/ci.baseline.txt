@@ -496,6 +496,10 @@ jemalloc:x64-uwp=fail
 jinja2cpplight:arm-neon-android=fail
 jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
+# needs android-29
+juce:arm-neon-android=fail
+juce:arm64-android=fail
+juce:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
 # needs android-24
