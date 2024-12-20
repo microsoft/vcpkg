@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4bd7155..6b9c3da 100644
+index 4bd7155..b9f1cc0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,10 +1,10 @@
@@ -14,7 +14,16 @@ index 4bd7155..6b9c3da 100644
  
  option(MSH3_SERVER_SUPPORT "Enable server support" OFF)
  option(MSH3_TOOL "Build tool" OFF)
-@@ -72,7 +72,8 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -30,8 +30,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+ if (WIN32)
+     # Statically link the OS included part of the runtime.
+-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libucrt.lib /DEFAULTLIB:ucrt.lib")
+     set(QUIC_COMMON_DEFINES WIN32_LEAN_AND_MEAN SECURITY_WIN32)
+     # TODO - Get these to work on Linux
+     list(APPEND MSH3_COMMON_DEFINES VER_BUILD_ID=${MSH3_VER_BUILD_ID})
+@@ -72,7 +70,8 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
  option(LSQPACK_TESTS "Build tests" OFF)
  option(LSQPACK_BIN "Build binaries" OFF)
@@ -24,7 +33,7 @@ index 4bd7155..6b9c3da 100644
  
  # Configure and build msquic dependency.
  if (WIN32)
-@@ -82,9 +83,10 @@ else()
+@@ -82,9 +81,10 @@ else()
  endif()
  set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
  set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
