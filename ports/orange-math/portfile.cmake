@@ -6,11 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/cmake/omathConfig.cmake.in"
-    "omath"
-    "orange-math"
-)
-
 file(WRITE "${SOURCE_PATH}/cmake/omathConfig.cmake.in"
 "${cmake_config}
 check_required_components(omath)
