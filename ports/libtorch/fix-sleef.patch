@@ -1,6 +1,6 @@
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
 index f3281d3cb..c8b6ed30e 100644
---- a/aten/src/ATen/CMakeLists.txt	
+--- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
 @@ -418,7 +418,7 @@ if(NOT MSVC AND NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
      list(APPEND ATen_THIRD_PARTY_INCLUDE ${CMAKE_BINARY_DIR}/include)
@@ -20,3 +20,16 @@ index f3281d3cb..c8b6ed30e 100644
  
    set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
    set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
+diff --git a/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h b/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
+index f3281d3cb..c8b6ed30e 100644
+--- a/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
++++ b/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
+@@ -266,7 +266,7 @@ public:
+     }
+     return b;
+   }
+-  Vectorized<T> map(const __m256 (*const vop)(__m256)) const {
++  Vectorized<T> map(__m256 (*const vop)(__m256)) const {
+     __m256 lo, hi;
+     cvt_to_fp32<T>(values, lo, hi);
+     const auto o1 = vop(lo);
