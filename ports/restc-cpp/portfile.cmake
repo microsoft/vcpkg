@@ -8,6 +8,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-exclude-cmake-external-projects.patch
+
+        # This patch is a combination of these two commits:
+        # https://github.com/jgaa/restc-cpp/commit/f6144b1a93a00e11335e2cfa724da91925b08adb
+        # https://github.com/jgaa/restc-cpp/commit/5470ee36b973fac960b3566e47efe873c21b43fa
+        boost-1.86-fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

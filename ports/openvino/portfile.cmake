@@ -2,14 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 25ec2bb4c087f58033681920b027d43b1778b60042e3bee358b54c83b0296ac0b754880db6bd4fce94fefe8b53d129ff3ec51f17bcb42f4b7adcdc532701f801
+    SHA512 2bf3f00589d825b7f4ca40d43129d81af4ba62382f98b283a3a206e7661a7a69f178c6afafdde646db8d68cb7fc54ec5280d2f4ff4fbbffe24082cf6649dda29
+    HEAD_REF master
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
-        # https://github.com/openvinotoolkit/openvino/pull/25937
-        # onnx codegen cmake script taints source directory
-        002-fix-onnx-codegen.patch
-    HEAD_REF master)
+        002-fix-onnx.patch
+        003-protobuf.patch
+        add-include-chrono.patch #https://github.com/openvinotoolkit/openvino/pull/27782
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -32,22 +33,15 @@ if(ENABLE_INTEL_GPU)
     vcpkg_find_acquire_program(PYTHON3)
 
     # remove 'rapidjson' directory and use vcpkg's one to comply with ODR
-    file(REMOVE_RECURSE ${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/rapidjson)
+    file(REMOVE_RECURSE "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/rapidjson")
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND ENABLE_INTEL_CPU)
-        message(WARNING
-            "OneDNN for GPU is not available for static build, which is required for dGPU. "
-            "Please, consider using VCPKG_LIBRARY_LINKAGE=\"dynamic\" or disable CPU plugin, "
-            "which uses another flavor of oneDNN.")
-    else()
-        vcpkg_from_github(
-            OUT_SOURCE_PATH DEP_SOURCE_PATH
-            REPO oneapi-src/oneDNN
-            REF 7ab8ee9adda866d675edeee7a3a6a29b2d0a1572
-            SHA512 03d0adab0cbb8b2841bd5de73a21911d63314f0a6299590e2396f42ca66673743c32ef1ec72e856cdac863802632b1e9a065bfffd75659e2007db581e1052e89
-        )
-        file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
-    endif()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        REPO oneapi-src/oneDNN
+        REF 4ccd07e3a10e1c08075cf824ac14708245fbc334
+        SHA512 c9a28f8427b5cd9c057a546b0b62303026f848045b26e0c9705e2f64d5bc84424ee15935d3bf5ee120d3c430a9dd41b7a6e26ef4fc0c53a2154ce83fcaee8b5a
+    )
+    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
     list(APPEND FEATURE_OPTIONS
         "-DENABLE_SYSTEM_OPENCL=ON"
@@ -58,8 +52,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF f0f8defe2dff5058391f2a66e775e20b5de33b08
-        SHA512 d52d1ea504bc3ae7cdd01f7fce80f28231827b3778acda232201ec90c119cb845c4b406ac639d63a8f05ccc91063fbf5f405ba36332c5f539531c01ce9443b5f
+        REF c8ae8d96e963bd04214858319fa334968e5e73c9
+        SHA512 6877ca37c3678e738fa94767b70432d3fff73305342164d0902875d9bcce3fe12abaf52bfc6ae0ef288532324e746b01e604ab7e47f198e7776352b8f5b6f009
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -85,19 +79,20 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v24.06
-            SHA512 d020e4bb710534bb5789355f7396729a9230ce3ce8e0194df7e66750efe0667e38334e1e3696fa07496cf34de38ffcecd1ff6de266fb0e8d85f4f1c60ed9f782
+            REF v24.08
+            SHA512 82debaf8d8345b79b112afdabf6019c7ad8a9b30161d3061320a3da3040b2ad49153cc508caafe9fb1182c2669c958785acf2c361382080af273465d1727a71c
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
     endif()
 endif()
 
 if(ENABLE_INTEL_NPU)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_INTEL_NPU_INTERNAL=OFF")
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/level-zero
-        REF 4ed13f327d3389285592edcf7598ec3cb2bc712e
-        SHA512 1159b2dc59ffe201821aa6c4c65c1803f8be26654a5f7e09d4e2cea70afdaf6a49508acbc74279d2d5c8fc7b632ad29b70ea506c442cd599d7db47323de9e62d
+        REF v1.17.6
+        SHA512 bb412e875d97d1c80a0e67087e6dac1a6ffb91fa50e22deb7649ee3250c0937679d225419b52bfd7938f71a66ac15742a6a215cee7714c27e0f935e04df5b88e
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero")
 
@@ -126,21 +121,25 @@ if(CMAKE_HOST_WIN32)
     list(APPEND FEATURE_OPTIONS "-DENABLE_API_VALIDATOR=OFF")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        "-DENABLE_SYSTEM_TBB=ON"
-        "-DENABLE_SYSTEM_PUGIXML=ON"
-        "-DENABLE_TBBBIND_2_5=OFF"
-        "-DENABLE_CLANG_FORMAT=OFF"
-        "-DENABLE_NCC_STYLE=OFF"
-        "-DENABLE_CPPLINT=OFF"
-        "-DENABLE_SAMPLES=OFF"
-        "-DENABLE_TEMPLATE=OFF"
-        "-DENABLE_PYTHON=OFF"
+        "-DCMAKE_DISABLE_FIND_PACKAGE_OpenCV=ON"
         "-DCPACK_GENERATOR=VCPKG"
+        "-DENABLE_CLANG_FORMAT=OFF"
+        "-DENABLE_CPPLINT=OFF"
         "-DENABLE_JS=OFF"
+        "-DENABLE_NCC_STYLE=OFF"
+        "-DENABLE_PYTHON=OFF"
+        "-DENABLE_SAMPLES=OFF"
+        "-DENABLE_SYSTEM_PUGIXML=ON"
+        "-DENABLE_SYSTEM_TBB=ON"
+        "-DENABLE_TBBBIND_2_5=OFF"
+        "-DENABLE_TEMPLATE=OFF"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
@@ -151,7 +150,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 
 vcpkg_install_copyright(
     FILE_LIST

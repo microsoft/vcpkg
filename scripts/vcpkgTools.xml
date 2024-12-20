@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.11.8</version>
+        <version>3.12.7</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.11.8/python-3.11.8-embed-win32.zip</url>
-        <sha512>c88ef02f0860000dbc59361cfe051e3e8dc7d208ed39bb5bc20a3e8b8711b578926e281a11941787ea61b2ef05b945ab3133322dcb85b916f79ac4ada57f6309</sha512>
-        <archiveName>python-3.11.8-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-win32.zip</url>
+        <sha512>15542080e0cc25c574391218107fe843006e8c5a7161d1cd48cf14a3c47155c0244587273d9c747f35b15ea17676869ecce079214824214c1a62abfc86ad9f9b</sha512>
+        <archiveName>python-3.12.7-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.11.8</version>
+        <version>3.12.7</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.11.8</url>
-        <sha512>8c1abd622fb2795fb87ab5208764fe13f7f4d69f2283b4237ea47b7c14b0989b5b4169f1ac1d3b1f417c6c2cc3d85ce151370dae8efc807c93e57cd67fa3c8cf</sha512>
-        <archiveName>python-3.11.8.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.12.7</url>
+        <sha512>6d5cac329808e31d4d8d593da6eeaa9ea4ec0296679335e7b7811f6c6fa6cbb96948d2f7845071798c6f73f83852dd731dc2b0fda48c520b9bec8a86cc56134e</sha512>
+        <archiveName>python-3.12.7.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.29.2</version>
-        <exeRelativePath>cmake-3.29.2-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-windows-i386.zip</url>
-        <sha512>562de7b577c99fe347b00437d14ce375a8e5a60504909cb67d2f73c372d39a2f76d2b42b69e4aeb31a4879e1bcf6f7c2d41f2ace12180ea83ba7af48879d40ab</sha512>
-        <archiveName>cmake-3.29.2-windows-i386.zip</archiveName>
+        <version>3.30.1</version>
+        <exeRelativePath>cmake-3.30.1-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-windows-i386.zip</url>
+        <sha512>0b74bd4222064cfb6e42838987704eb21d57ad5f7bbd87714ab570f1d107fa19bd2f14316475338518292bc377bf38b581a07c73267a775cd385bbd1800879b4</sha512>
+        <archiveName>cmake-3.30.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.29.2</version>
-        <exeRelativePath>cmake-3.29.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-macos-universal.tar.gz</url>
-        <sha512>26aab0163965f3d560dfd6b1f72c5e77192338237ebe286099fd62f243f1bbd4857b9193118386b801c00dc5cfbc5bc8af84814692fcfadcf56c7d2faab52533</sha512>
-        <archiveName>cmake-3.29.2-macos-universal.tar.gz</archiveName>
+        <version>3.30.1</version>
+        <exeRelativePath>cmake-3.30.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-macos-universal.tar.gz</url>
+        <sha512>71290d3b5e51724711e8784f5b21100cb0cffdbb889da7572a26dd171d9052601496de8d39c42d76ef3a9245af2ab35a590bf53ad68d7bb8a2047b64272d2647</sha512>
+        <archiveName>cmake-3.30.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.29.2</version>
-        <exeRelativePath>cmake-3.29.2-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.29.2/cmake-3.29.2-linux-x86_64.tar.gz</url>
-        <sha512>d88082d582f1774a3d89efbf3f31a03b08a663c359d603d87ee7c4afd862d4164d2b0b9f0b32cece8efee3acfa86b44214cd4f7606b99b8334183a05d5f06edc</sha512>
-        <archiveName>cmake-3.29.2-linux-x86_64.tar.gz</archiveName>
+        <version>3.30.1</version>
+        <exeRelativePath>cmake-3.30.1-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-x86_64.tar.gz</url>
+        <sha512>84ce1333ed696a1736986fba2853c5d8db0e4c9addaf4a4723911248c6d49ecf545adf8bd46091d198fc7bd1e6c896798661463aa1ce3a726a093883aaa19adf</sha512>
+        <archiveName>cmake-3.30.1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
@@ -131,24 +131,24 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>24.08</version>
+        <version>24.09</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/24.08/7z2408-x64.msi</url>
-        <sha512>3259bf5e251382333c9d18a3fc01d83491fb41bc4ac4ddb25a02918494594c1074482b6608189a8a89e343d78e34d57420cdeff1d7ace5acfdcaacc8776f1be8</sha512>
-        <archiveName>7z2408-x64.msi</archiveName>
+        <url>https://github.com/ip7z/7zip/releases/download/24.09/7z2409-x64.msi</url>
+        <sha512>A3396A70B739F3A80B25FE64103D1E98EA584DCDBDBA740884EA10E00EDFB37966CEB85F5CCA995865FE90371EADFF9DF8132124D3DC2598A2D78BF86F6DDD6E</sha512>
+        <archiveName>7z2409-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>24.08</version>
-        <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/24.08/7z2408-extra.7z</url>
-        <sha512>35f55236fccfb576ca014e29d0c35f4a213e53f06683bd2e82f869ed02506e230c8dd623c01d0207244d6a997031f737903456b7ad4a44db1717f0a17a78602e</sha512>
-        <archiveName>7z2408-extra.7z</archiveName>
+        <version>24.09</version>
+        <exeRelativePath>7z.exe</exeRelativePath>
+        <url>https://github.com/ip7z/7zip/releases/download/24.09/7z2409.exe</url>
+        <sha512>a39a84b13b383ac5fca20eb6d92ec6b8bc85f1b6a545c441efdbe054d8d12c9ebe97d366235bdf1383bbdb2a9666d18d0145b10b6e589180502c0c2dfa26ef14</sha512>
+        <archiveName>7z2409.7z.exe</archiveName>
      </tool>
     <tool name="7zr" os="windows">
-        <version>24.08</version>
+        <version>24.09</version>
         <exeRelativePath>7zr.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/24.08/7zr.exe</url>
-        <sha512>424196f2acf5b89807f4038683acc50e7604223fc630245af6bab0e0df923f8b1c49cb09ac709086568c214c3f53dcb7d6c32e8a54af222a3ff78cfab9c51670</sha512>
+        <url>https://github.com/ip7z/7zip/releases/download/24.09/7zr.exe</url>
+        <sha512>44D8504A693AD4D6B79631B653FC19B572DE6BBE38713B53C45D9C9D5D3710AA8DF93EE867A2A24419EBE883B8255FD18F30F8CF374B2242145FD6ACB2189659</sha512>
     </tool>
     <tool name="aria2" os="windows">
         <version>1.37.0</version>
@@ -186,11 +186,11 @@
         <archiveName>ninja-mac-1.11.1.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.23</version>
+        <version>7.2.24</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.23/PowerShell-7.2.23-win-x64.zip</url>
-        <sha512>b374a878df02980d54e17ad7cfc9021e331748c3770f586be61356c257494d1b33899c1167d09a35c210bc084474aefdff972f672d16afb43be0562b3589285a</sha512>
-        <archiveName>PowerShell-7.2.23-win-x64.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.24/PowerShell-7.2.24-win-x64.zip</url>
+        <sha512>a08b72958f5a552240d3f68c581d8c8cb580468a71f5e55ca54a1dd0c0fcd81da9df11036653e2300fc4a5778a77c0147832ca06f7837f03417e9795e577a76f</sha512>
+        <archiveName>PowerShell-7.2.24-win-x64.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.15.1</version>

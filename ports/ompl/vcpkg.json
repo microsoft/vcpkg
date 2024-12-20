@@ -1,7 +1,7 @@
 {
   "name": "ompl",
   "version": "1.6.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The Open Motion Planning Library, consists of many state-of-the-art sampling-based motion planning algorithms",
   "homepage": "https://ompl.kavrakilab.org/",
   "dependencies": [

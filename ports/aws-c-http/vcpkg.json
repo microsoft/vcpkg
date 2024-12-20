@@ -1,10 +1,9 @@
 {
   "name": "aws-c-http",
-  "version": "0.8.2",
+  "version": "0.9.2",
   "description": "C99 implementation of the HTTP/1.1 and HTTP/2 specifications",
   "homepage": "https://github.com/awslabs/aws-c-http",
   "license": "Apache-2.0",
-  "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-c-cal",
     "aws-c-common",

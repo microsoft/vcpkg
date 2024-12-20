@@ -1,0 +1,89 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e9647d5..092f40d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -424,7 +424,7 @@ if(MSVC)
+ endif()
+ 
+ add_library(common
+-  STATIC
++  OBJECT
+   src/base/logging.cc
+   src/base/generic_writer.cc
+   src/base/sysinfo.cc
+@@ -497,7 +497,7 @@ endif()
+ 
+ if(WITH_STACK_TRACE)
+   ### Making the library
+-  add_library(stacktrace STATIC
++  add_library(stacktrace OBJECT
+     src/stacktrace.cc
+     src/base/elf_mem_image.cc
+     src/base/vdso_support.cc)
+@@ -926,4 +926,66 @@ if(MSVC)
+     add_subdirectory(src/windows)
+ endif()
+ 
++foreach(lib IN ITEMS
++  common stacktrace
++  tcmalloc_minimal tcmalloc tcmalloc_minimal_debug tcmalloc_debug
++  profiler
++)
++  if(TARGET "${lib}")
++    install(TARGETS "${lib}")
++    if(lib MATCHES "tcmalloc|profiler")
++      set(pc_file "${CMAKE_CURRENT_BINARY_DIR}/lib${lib}.pc")
++      set(pc_libs_private "${CMAKE_THREAD_LIBS_INIT}")
++      if("execinfo" IN_LIST unwind_libs AND lib MATCHES "tcmalloc")
++        string(APPEND pc_libs_private " -lexecinfo")
++      endif()
++      set(pc_requires_private "")
++      if(gperftools_enable_libunwind AND lib MATCHES "tcmalloc")
++        string(APPEND pc_requires_private " libunwind")
++      endif()
++      file(CONFIGURE OUTPUT "${pc_file}" CONTENT [[
++prefix=
++exec_prefix=${prefix}
++libdir=${prefix}/lib
++includedir=${prefix}/include
++
++Name: @PROJECT_NAME@
++Version: @PROJECT_VERSION@
++Description: Performance tools for C++
++URL: https://github.com/gperftools/gperftools
++Cflags: -I${includedir}
++Libs: -L${libdir} -l@lib@
++Libs.private: @pc_libs_private@
++Requires.private: @pc_requires_private@
++]] @ONLY)
++      install(FILES "${pc_file}" DESTINATION "lib/pkgconfig")
++    endif()
++  endif()
++endforeach()
++
++foreach(exe IN ITEMS addr2line-pdb nm-pdb)
++  if(NOT TARGET "${exe}")
++    continue()
++  elseif(GPERFTOOLS_BUILD_TOOLS)
++    install(TARGETS "${exe}")
++  else()
++    set_target_properties("${exe}" PROPERTIES EXCLUDE_FROM_ALL 1)
++  endif()
++endforeach()
++
++install(
++  FILES
++    src/gperftools/heap-checker.h
++    src/gperftools/heap-profiler.h
++    src/gperftools/malloc_extension.h
++    src/gperftools/malloc_extension_c.h
++    src/gperftools/malloc_hook.h
++    src/gperftools/malloc_hook_c.h
++    src/gperftools/nallocx.h
++    src/gperftools/profiler.h
++    src/gperftools/stacktrace.h
++    "${CMAKE_CURRENT_BINARY_DIR}/gperftools/tcmalloc.h"
++  DESTINATION include/gperftools
++)
++
+ message(WARNING "note: gperftools' cmake support is incomplete and is best-effort only")

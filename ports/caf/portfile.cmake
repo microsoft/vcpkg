@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
     REF "${VERSION}"
-    SHA512 0849a0b17a2c011142dd56ff88b01d764dc57b40de5d8467bcf1aa2ddd7540415228dc05f8652b9534e18fb8c2e28465bf881fe1e1bf5c7f9919cfb3edd573d3
+    SHA512 496bca714b3d84dafe155f775229e1b6190aae092ab82f8c098af4b0268cd565b980624e93436f5ccba34bac350c62a03ff46b9bddaa1c9bc646d78a2338c53a
     HEAD_REF main
     PATCHES
         fix_dependency.patch
