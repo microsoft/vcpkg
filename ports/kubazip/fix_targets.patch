@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cf86d70..c2bc2f9 100644
+index 804df5e..5498bb9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -8,7 +8,7 @@ index cf86d70..c2bc2f9 100644
 -project(zip
 +project(kubazip
    LANGUAGES C
-   VERSION "0.2.3")
+   VERSION "0.3.0")
  set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 @@ -46,11 +46,11 @@ endif()
  
@@ -24,13 +24,7 @@ index cf86d70..c2bc2f9 100644
    enable_testing()
    add_subdirectory(test)
  endif()
-@@ -69,12 +69,12 @@ if (MSVC)
- elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
-         "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" OR
-         "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
--  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic")
-+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
- endif (MSVC)
+@@ -74,7 +74,7 @@ endif (MSVC)
  
  ####
  set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
