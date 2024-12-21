@@ -1,11 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e7790271c..cd08a77e4a 100644
---- a/CMakeLists.txt	
+index 4e6c492..a910097 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,6 +41,108 @@ else()
+@@ -59,3 +59,106 @@ elseif(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+   install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  
  endif()
- 
++
 +option(BOOST_MATH_BUILD_WITH_LEGACY_FUNCTIONS "" OFF)
 +if(BOOST_MATH_BUILD_WITH_LEGACY_FUNCTIONS)
 +include(CheckCXXSourceCompiles)
@@ -108,6 +109,3 @@ index 7e7790271c..cd08a77e4a 100644
 +endforeach()
 +endif()
 +
- # Only enable tests when we're the root project
- if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
- 
