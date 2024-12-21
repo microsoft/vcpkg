@@ -85,5 +85,13 @@ install(
 install(FILES sqlite3.h sqlite3ext.h sqlite3-vcpkg-config.h DESTINATION include CONFIGURATIONS Release)
 install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
 
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    unofficial-sqlite3-config-version.cmake
+    VERSION ${PKGCONFIG_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-sqlite3-config-version.cmake DESTINATION share/unofficial-sqlite3)
+
 configure_file(sqlite3.pc.in sqlite3.pc @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlite3.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
