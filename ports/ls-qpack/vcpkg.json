@@ -4,7 +4,6 @@
   "description": "QPACK compression library for use with HTTP/3",
   "homepage": "https://github.com/litespeedtech/ls-qpack",
   "license": "MIT",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
