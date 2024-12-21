@@ -5625,7 +5625,7 @@
       "port-version": 1
     },
     "ls-qpack": {
-      "baseline": "2.5.5",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "ltla-aarand": {
