@@ -2756,10 +2756,6 @@
       "baseline": "2024-08-19",
       "port-version": 0
     },
-    "fff": {
-      "baseline": "1.1",
-      "port-version": 0
-    },
     "ffmpeg": {
       "baseline": "7.1",
       "port-version": 1
@@ -5899,6 +5895,10 @@
     "mecab": {
       "baseline": "2019-09-25",
       "port-version": 6
+    },
+    "meekrosoft-fff": {
+      "baseline": "1.1",
+      "port-version": 0
     },
     "memorymodule": {
       "baseline": "2019-12-31",
