@@ -1,46 +1,38 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4bd7155..b9f1cc0 100644
+index d8a81ab..edf5651 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,10 +1,10 @@
- # Copyright (c) Microsoft Corporation.
- # Licensed under the MIT License.
- 
-+cmake_minimum_required(VERSION 3.16)
- message(STATUS "msh3: Configuration start...")
- project(msh3)
- 
--cmake_minimum_required(VERSION 3.16)
- 
- option(MSH3_SERVER_SUPPORT "Enable server support" OFF)
- option(MSH3_TOOL "Build tool" OFF)
-@@ -30,8 +30,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+@@ -28,9 +28,6 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
  if (WIN32)
-     # Statically link the OS included part of the runtime.
+-    # Statically link the OS included part of the runtime.
 -    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 -    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libucrt.lib /DEFAULTLIB:ucrt.lib")
      set(QUIC_COMMON_DEFINES WIN32_LEAN_AND_MEAN SECURITY_WIN32)
      # TODO - Get these to work on Linux
      list(APPEND MSH3_COMMON_DEFINES VER_BUILD_ID=${MSH3_VER_BUILD_ID})
-@@ -72,7 +70,8 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -66,7 +63,12 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
  option(LSQPACK_TESTS "Build tests" OFF)
  option(LSQPACK_BIN "Build binaries" OFF)
 -add_subdirectory(ls-qpack)
 +find_package(ls-qpack CONFIG REQUIRED)
 +add_library(ls-qpack ALIAS ls-qpack::ls-qpack)
++# polyfill
++add_library(inc ALIAS ls-qpack::ls-qpack)
++add_library(platform ALIAS ls-qpack::ls-qpack)
++add_library(warnings ALIAS ls-qpack::ls-qpack)
  
  # Configure and build msquic dependency.
  if (WIN32)
-@@ -82,9 +81,10 @@ else()
+@@ -76,9 +78,9 @@ else()
  endif()
  set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
  set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
 -set(CMAKE_BUILD_TYPE "Release")
 -add_subdirectory(msquic)
 -target_compile_features(inc INTERFACE cxx_std_20)
-+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type on single-configuration generators")
 +find_package(msquic CONFIG REQUIRED)
 +
 +target_compile_features(msh3_headers INTERFACE cxx_std_20)
@@ -48,23 +40,18 @@ index 4bd7155..b9f1cc0 100644
  # Build msh3 library (and cmd line tool).
  add_subdirectory(lib)
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index ab7fc24..7b7f5c9 100644
+index 4d7aeb7..6da8e1a 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -7,10 +7,8 @@ else()
+@@ -7,6 +7,7 @@ else()
      set(SOURCES msh3.cpp)
  endif()
  add_library(msh3 SHARED ${SOURCES})
--target_link_libraries(msh3 PRIVATE inc warnings msquic ls-qpack msh3_headers)
--if (NOT BUILD_SHARED_LIBS)
--    target_link_libraries(msh3 PRIVATE base_link)
--endif()
 +target_include_directories(msh3 PUBLIC $<INSTALL_INTERFACE:include>)
-+target_link_libraries(msh3 PRIVATE msquic ls-qpack msh3_headers)
- if (MSH3_SERVER_SUPPORT)
-     target_link_libraries(msh3 PRIVATE platform) # For selfsign APIs
- endif()
-@@ -26,12 +24,16 @@ elseif (CX_PLATFORM STREQUAL "darwin")
+ target_link_libraries(msh3 PRIVATE inc warnings msquic ls-qpack msh3_headers)
+ if (NOT BUILD_SHARED_LIBS)
+     target_link_libraries(msh3 PRIVATE base_link)
+@@ -24,12 +25,16 @@ elseif (CX_PLATFORM STREQUAL "darwin")
          PROPERTIES LINK_FLAGS "-exported_symbols_list \"${CMAKE_CURRENT_SOURCE_DIR}/darwin/exports.txt\"")
  endif()
  
