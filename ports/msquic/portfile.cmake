@@ -1,4 +1,6 @@
-# Current port limitation. More patches needed.
+# Upstream supports static linkage, but the port doesn't:
+# - There is a vendored fork of OpenSSL, needed for QUIC.
+# - Exported config needs fixes.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -11,12 +13,8 @@ vcpkg_from_github(
         fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
-        uwp-winmm.diff
+        uwp-link-libs.diff
 )
-
-# This avoids a link error on x86-windows:
-# LINK : fatal error LNK1268: inconsistent option 'NODEFAULTLIB:libucrt.lib' specified with /USEPROFILE but not with /GENPROFILE
-#file(REMOVE "${QUIC_SOURCE_PATH}/src/bin/winuser/pgo_x86/msquic.pgd")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
@@ -25,9 +23,10 @@ vcpkg_from_github(
     SHA512 230f48a4ef20bfd492b512bd53816a7129d70849afc1426e9ce813273c01884d5474552ecaede05231ca354403f25e2325c972c9c7950ae66dae310800bd19e7
     HEAD_REF openssl-3.1.7+quic
 )
-
-file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl3")
-file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
+if(NOT EXISTS "${QUIC_SOURCE_PATH}/submodules/openssl3/Configure")
+    file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl3")
+    file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH XDP_WINDOWS
@@ -36,9 +35,11 @@ vcpkg_from_github(
     SHA512 1b26487fa79c8796d4b0d5e09f4fc9acb003d8e079189ec57a36ff03c9c2620829106fdbc4780e298872826f3a97f034d40e04d00a77ded97122874d13bfb145
     HEAD_REF main
 )
-
-file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/xdp-for-windows")
-file(RENAME "${XDP_WINDOWS}" "${QUIC_SOURCE_PATH}/submodules/xdp-for-windows")
+if(NOT EXISTS "${QUIC_SOURCE_PATH}/submodules/xdp-for-windows/published/external")
+    # headers only
+    file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/xdp-for-windows")
+    file(COPY "${XDP_WINDOWS}/published/external" DESTINATION "${QUIC_SOURCE_PATH}/submodules/xdp-for-windows/published")
+endif()
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
