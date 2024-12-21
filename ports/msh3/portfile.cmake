@@ -10,12 +10,8 @@ vcpkg_from_github(
         dependencies_fix.patch
 )
 
-vcpkg_find_acquire_program(PKGCONFIG)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}" # https://github.com/microsoft/vcpkg/pull/42767
 )
 
 vcpkg_cmake_install()
