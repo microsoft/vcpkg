@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
     REF "poco-${VERSION}-release"
-    SHA512 084064fb462c9e7993d069ebdf395802af900ed92c5b294465a2c246162bb86caa3505985de329e8110d3e9fb3bc39ae9536d523843729d4ed5ce00c35289d92
+    SHA512 4475a0ede5d06e4ce9537295fec92fa39b8fd5635d1cfb38498be4f707bc62b4a8b57672d2a15b557114e4115cc45480d27d0c856b7bd982eeec7adad9ff2582
     HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -13,6 +13,8 @@ vcpkg_from_github(
         0004-fix-feature-sqlite3.patch
         0005-fix-error-c3861.patch
         0007-find-pcre2.patch
+        # MSYS2 repo was used as a source. Thanks MSYS2 team: https://github.com/msys2/MINGW-packages/blob/6e7fba42b7f50e1111b7c0ef50048832243b0ac4/mingw-w64-poco/001-fix-build-on-mingw.patch
+        0008-fix-mingw-compilation.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
@@ -31,7 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         crypto      ENABLE_CRYPTO
         netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
-        sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 

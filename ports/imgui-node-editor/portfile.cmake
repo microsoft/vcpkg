@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-vec2-math-operators.patch
+        remove-getkeyindex.patch # GetKeyIndex() is a no-op since 1.87; see https://github.com/ocornut/imgui/issues/5979#issuecomment-1345349492
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
