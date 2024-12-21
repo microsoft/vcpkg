@@ -67,7 +67,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${QUIC_SOURCE_PATH}"
     OPTIONS
         -DQUIC_SOURCE_LINK=OFF
-        -DQUIC_TLS=openssl3
+        #-DQUIC_TLS=openssl3
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
