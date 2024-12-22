@@ -57,7 +57,7 @@ vcpkg_cmake_configure(
         -DLIEF_DISABLE_FROZEN=OFF
         -DLIEF_DISABLE_EXCEPTIONS=OFF
 
-        -DLIEF_EXTERNAL_SPAN_DIR="${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
+        "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )
 
 vcpkg_cmake_install()
