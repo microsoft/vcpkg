@@ -38,7 +38,7 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-if(NOT VCPKG_TARGET_IS_LINUX AND NOT VCPKG_BUILD_TYPE)
+if(NOT VCPKG_TARGET_IS_LINUX AND NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL3-image.pc" "-lSDL3_image" "-lSDL3_imaged")
 endif()
 
