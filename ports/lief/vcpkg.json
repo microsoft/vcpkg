@@ -23,7 +23,6 @@
   ],
   "default-features": [
     "art",
-    "c-api",
     "dex",
     "elf",
     "enable-json",
