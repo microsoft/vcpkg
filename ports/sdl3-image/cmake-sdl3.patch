@@ -1,0 +1,13 @@
+diff --git a/cmake/SDL3_imageConfig.cmake.in b/cmake/SDL3_imageConfig.cmake.in
+index db72fd70..d942a698 100644
+--- a/cmake/SDL3_imageConfig.cmake.in
++++ b/cmake/SDL3_imageConfig.cmake.in
+@@ -43,6 +43,8 @@ set(SDLIMAGE_BACKEND_WIC       @SDLIMAGE_BACKEND_WIC@)
+ 
+ set(SDLIMAGE_SDL3_REQUIRED_VERSION  @SDL_REQUIRED_VERSION@)
+ 
++find_package(SDL3 CONFIG REQUIRED)
++
+ set(SDL3_image_SDL3_image-shared_FOUND FALSE)
+ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL3_image-shared-targets.cmake")
+     include("${CMAKE_CURRENT_LIST_DIR}/SDL3_image-shared-targets.cmake")
