@@ -100,6 +100,9 @@ elseif(VCPKG_TARGET_IS_UWP)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quic_platform.h"
         "#elif _WIN32"
         "#elif 1
+#ifndef QUIC_UWP_BUILD
+#define QUIC_UWP_BUILD
+#endif
 #ifndef QUIC_RESTRICTED_BUILD
 #define QUIC_RESTRICTED_BUILD
 #endif")
