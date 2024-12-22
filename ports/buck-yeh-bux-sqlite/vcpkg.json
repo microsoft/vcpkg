@@ -1,13 +1,16 @@
 {
   "name": "buck-yeh-bux-sqlite",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Modern C++ wrapper classes and utilities of the original sqlite3 API",
   "homepage": "https://github.com/buck-yeh/bux-sqlite",
   "license": "MIT",
   "supports": "!(android | linux | osx | uwp)",
   "dependencies": [
     "buck-yeh-bux",
-    "sqlite3",
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
