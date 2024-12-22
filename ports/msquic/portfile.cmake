@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
         uwp-link-libs.diff
+        exports-for-msh3.diff
 )
 
 vcpkg_from_github(
@@ -82,9 +83,31 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
+set(platform "")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(platform "CX_PLATFORM_DARWIN")
+elseif(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(platform "CX_PLATFORM_LINUX")
+endif()
+if(platform)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quic_platform.h"
+        "#elif ${platform}"
+        "#elif 1
+#ifndef ${platform}
+#define ${platform}
+#endif")
+elseif(VCPKG_TARGET_IS_UWP)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quic_platform.h"
+        "#elif _WIN32"
+        "#elif 1
+#ifndef QUIC_RESTRICTED_BUILD
+#define QUIC_RESTRICTED_BUILD
+#endif")
+endif()
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE" "${QUIC_SOURCE_PATH}/THIRD-PARTY-NOTICES")

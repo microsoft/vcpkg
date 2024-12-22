@@ -1,0 +1,34 @@
+diff --git a/src/bin/linux/exports.txt b/src/bin/linux/exports.txt
+index e11806a..424c443 100644
+--- a/src/bin/linux/exports.txt
++++ b/src/bin/linux/exports.txt
+@@ -1,5 +1,9 @@
+ msquic
+ {
+   global: MsQuicOpenVersion; MsQuicClose;
++          CxPlatGetSelfSignedCert;
++          CxPlatFreeSelfSignedCert;
++          CxPlatLogAssert;
++          quic_bugcheck;
+   local: *;
+ };
+diff --git a/src/bin/linux/init.c b/src/bin/linux/init.c
+index 29bfa14..04d31b8 100644
+--- a/src/bin/linux/init.c
++++ b/src/bin/linux/init.c
+@@ -9,8 +9,15 @@ Abstract:
+ 
+ --*/
+ 
++#define QUIC_TEST_APIS 1
+ #include "quic_platform.h"
+ 
++void MsQuickChainLoadPlatformSymbolsNoOp()
++{
++    QUIC_CREDENTIAL_CONFIG* SelfSignedCertParams = (QUIC_CREDENTIAL_CONFIG*)CxPlatGetSelfSignedCert(CXPLAT_SELF_SIGN_CERT_USER, FALSE, NULL);
++    CxPlatFreeSelfSignedCert(SelfSignedCertParams);
++}
++
+ void
+ MsQuicLibraryLoad(
+     void
