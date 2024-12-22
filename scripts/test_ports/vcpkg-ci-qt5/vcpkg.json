@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-qt5",
+  "version-date": "2024-12-20",
+  "description": "Validates qt5",
+  "license": null,
+  "dependencies": [
+    "qt5",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
