@@ -1,3 +1,14 @@
+diff --git a/src/bin/darwin/exports.txt b/src/bin/darwin/exports.txt
+index e90b06e..c221d2c 100644
+--- a/src/bin/darwin/exports.txt
++++ b/src/bin/darwin/exports.txt
+@@ -1,2 +1,6 @@
+ _MsQuicOpenVersion
+ _MsQuicClose
++_CxPlatGetSelfSignedCert
++_CxPlatFreeSelfSignedCert
++_CxPlatLogAssert
++_quic_bugcheck
 diff --git a/src/bin/linux/exports.txt b/src/bin/linux/exports.txt
 index e11806a..424c443 100644
 --- a/src/bin/linux/exports.txt
@@ -13,7 +24,7 @@ index e11806a..424c443 100644
    local: *;
  };
 diff --git a/src/bin/linux/init.c b/src/bin/linux/init.c
-index 29bfa14..04d31b8 100644
+index 29bfa14..61bbc48 100644
 --- a/src/bin/linux/init.c
 +++ b/src/bin/linux/init.c
 @@ -9,8 +9,15 @@ Abstract:
@@ -32,3 +43,14 @@ index 29bfa14..04d31b8 100644
  void
  MsQuicLibraryLoad(
      void
+diff --git a/src/bin/winuser/msquic.def.in b/src/bin/winuser/msquic.def.in
+index afaed5d..fa7d19a 100644
+--- a/src/bin/winuser/msquic.def.in
++++ b/src/bin/winuser/msquic.def.in
+@@ -3,3 +3,6 @@ LIBRARY @QUIC_LIBRARY_NAME@
+ EXPORTS
+     MsQuicOpenVersion
+     MsQuicClose
++    CxPlatGetSelfSignedCert
++    CxPlatFreeSelfSignedCert
++    CxPlatLogAssert
