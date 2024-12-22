@@ -1,29 +1,3 @@
-diff --git a/include/LIEF/errors.hpp b/include/LIEF/errors.hpp
-index f731729..3ce71ad 100644
---- a/include/LIEF/errors.hpp
-+++ b/include/LIEF/errors.hpp
-@@ -16,7 +16,7 @@
- #ifndef LIEF_ERROR_H
- #define LIEF_ERROR_H
- #include <cstdint>
--#include <LIEF/third-party/expected.hpp>
-+#include <tl/expected.hpp>
- #include <cstdint>
- 
- /// LIEF error codes definition
-diff --git a/include/LIEF/span.hpp b/include/LIEF/span.hpp
-index bfda2b8..d9e0e49 100644
---- a/include/LIEF/span.hpp
-+++ b/include/LIEF/span.hpp
-@@ -14,7 +14,7 @@
-  */
- #ifndef LIEF_SPAN_H
- #define LIEF_SPAN_H
--#include <LIEF/third-party/span.hpp>
-+#include <tcb/span.hpp>
- 
- namespace LIEF {
- 
 diff --git a/src/BinaryStream/BinaryStream.cpp b/src/BinaryStream/BinaryStream.cpp
 index 83e618c..6447b7b 100644
 --- a/src/BinaryStream/BinaryStream.cpp
