@@ -43,6 +43,10 @@
       "version>=": "1.87.0"
     },
     {
+      "name": "boost-crc",
+      "version>=": "1.87.0"
+    },
+    {
       "name": "boost-function-types",
       "version>=": "1.87.0"
     },
