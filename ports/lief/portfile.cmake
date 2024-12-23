@@ -1,3 +1,10 @@
+vcpkg_download_distfile(
+    FIX_FMT_V11_JOIN_LINUX_INCLUDE_MEMORY_PATCH
+    URLS https://github.com/lief-project/LIEF/commit/41166332a2435fdb7d2bdc5c73f9ff9b442c5459.patch?full_index=1
+    FILENAME fix-fmt-v11-join-linux-include-memory-41166332a2435fdb7d2bdc5c73f9ff9b442c5459.patch
+    SHA512 14d5f7380352bd340c16447905b8185dbd2d977c8ba245e01d982fe7fbbdffb71004b9d4fdd732bc13e71a11aa3f46a4822cdeb2277e2cec6b841492d0de5606
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
@@ -8,17 +15,10 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
-        fix-fmt-v11-join.patch
+        "${FIX_FMT_V11_JOIN_LINUX_INCLUDE_MEMORY_PATCH}"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
-
-if (VCPKG_TARGET_IS_LINUX)
-    vcpkg_replace_string("${SOURCE_PATH}/src/internal_utils.hpp"
-        [[#include "LIEF/iterators.hpp"]]
-        "#include <LIEF/iterators.hpp>\n#include <memory>"
-    )
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
