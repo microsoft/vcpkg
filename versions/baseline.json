@@ -6273,7 +6273,7 @@
       "port-version": 0
     },
     "nanoprintf": {
-      "baseline": "0.3.4",
+      "baseline": "0.5.3",
       "port-version": 0
     },
     "nanorange": {
