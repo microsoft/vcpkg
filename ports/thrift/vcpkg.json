@@ -10,6 +10,7 @@
     "boost-range",
     "boost-scope-exit",
     "boost-smart-ptr",
+    "boost-uuid",
     "libevent",
     "openssl",
     {
