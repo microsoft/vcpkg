@@ -496,6 +496,10 @@ jemalloc:x64-uwp=fail
 jinja2cpplight:arm-neon-android=fail
 jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
+# needs android-29
+juce:arm-neon-android=fail
+juce:arm64-android=fail
+juce:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
 # needs android-24
@@ -987,6 +991,15 @@ rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
+# Visual Studio 17.12 compiler bug, fixed in 17.13: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2242053
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows=fail
+saucer:arm64-windows=fail
+saucer:x64-windows-static-md=fail
+saucer:x64-windows-static=fail
+saucer:x64-windows=fail
+saucer:x86-windows=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
