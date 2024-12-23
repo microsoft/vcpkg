@@ -22,7 +22,7 @@ index d8a81ab..edf5651 100644
  
  # Configure and build msquic dependency.
  if (WIN32)
-@@ -76,9 +74,13 @@ else()
+@@ -76,9 +74,11 @@ else()
  endif()
  set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
  set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
@@ -34,8 +34,6 @@ index d8a81ab..edf5651 100644
 +add_library(inc ALIAS msquic)
 +add_library(platform ALIAS msquic)
 +add_library(warnings ALIAS msquic)
-+
-+target_compile_features(msh3_headers INTERFACE cxx_std_20)
  
  # Build msh3 library (and cmd line tool).
  add_subdirectory(lib)
@@ -43,15 +41,16 @@ diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index 4d7aeb7..6da8e1a 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -7,6 +7,7 @@ else()
+@@ -7,6 +7,8 @@ else()
      set(SOURCES msh3.cpp)
  endif()
  add_library(msh3 SHARED ${SOURCES})
++target_compile_features(msh3 PRIVATE cxx_std_20)
 +target_include_directories(msh3 PUBLIC $<INSTALL_INTERFACE:include>)
  target_link_libraries(msh3 PRIVATE inc warnings msquic ls-qpack msh3_headers)
  if (NOT BUILD_SHARED_LIBS)
      target_link_libraries(msh3 PRIVATE base_link)
-@@ -24,12 +25,16 @@ elseif (CX_PLATFORM STREQUAL "darwin")
+@@ -24,12 +26,16 @@ elseif (CX_PLATFORM STREQUAL "darwin")
          PROPERTIES LINK_FLAGS "-exported_symbols_list \"${CMAKE_CURRENT_SOURCE_DIR}/darwin/exports.txt\"")
  endif()
  
