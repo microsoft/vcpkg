@@ -8769,7 +8769,7 @@
       "port-version": 1
     },
     "stringzilla": {
-      "baseline": "3.10.5",
+      "baseline": "3.11.2",
       "port-version": 0
     },
     "strong-type": {
