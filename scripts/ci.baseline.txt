@@ -1135,7 +1135,6 @@ torch-th:x64-windows-static=fail
 tvision:arm-neon-android=fail
 tvision:arm64-android=fail
 tvision:x64-android=fail
-unicorn:x64-windows-static-md=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
 # needs android-24
@@ -1240,6 +1239,7 @@ vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
 vcpkg-ci-arrow:x64-osx=pass
 vcpkg-ci-arrow:x64-linux=pass
+vcpkg-ci-aurora-au:x64-linux=pass
 vcpkg-ci-boost:arm-neon-android=pass
 vcpkg-ci-boost:arm64-android=pass
 vcpkg-ci-boost:arm64-uwp=pass
