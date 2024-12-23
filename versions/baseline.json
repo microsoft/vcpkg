@@ -6481,7 +6481,7 @@
       "port-version": 8
     },
     "nyan-lang": {
-      "baseline": "0.3",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "oatpp": {
@@ -6579,10 +6579,6 @@
     "ois": {
       "baseline": "1.5.1",
       "port-version": 1
-    },
-    "orange-math": {
-      "baseline": "1.0.1",
-      "port-version": 0
     },
     "omniorb": {
       "baseline": "4.3.0",
@@ -6823,6 +6819,10 @@
     "opusfile": {
       "baseline": "0.12+20221121",
       "port-version": 1
+    },
+    "orange-math": {
+      "baseline": "1.0.1",
+      "port-version": 0
     },
     "orc": {
       "baseline": "2.0.0",
