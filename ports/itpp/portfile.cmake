@@ -11,7 +11,7 @@ vcpkg_from_sourceforge(
         fix-uwp.patch
         fix-linux.patch
         rename-version.patch
-		fix-build.patch
+        fix-build.patch
 )
 file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
