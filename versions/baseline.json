@@ -6201,7 +6201,7 @@
       "port-version": 5
     },
     "muparser": {
-      "baseline": "2.3.4",
+      "baseline": "2.3.5",
       "port-version": 0
     },
     "murmur3": {
