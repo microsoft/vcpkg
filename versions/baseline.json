@@ -1778,7 +1778,7 @@
     },
     "coin-or-cbc": {
       "baseline": "2024-06-04",
-      "port-version": 0
+      "port-version": 1
     },
     "coin-or-cgl": {
       "baseline": "2023-02-01",
@@ -3834,7 +3834,7 @@
     },
     "jemalloc": {
       "baseline": "5.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jhasse-poly2tri": {
       "baseline": "2023-12-27",
@@ -4698,7 +4698,7 @@
     },
     "libidn2": {
       "baseline": "2.3.7",
-      "port-version": 1
+      "port-version": 2
     },
     "libigl": {
       "baseline": "2.5.0",
@@ -9388,6 +9388,10 @@
       "baseline": "2024-02-22",
       "port-version": 0
     },
+    "vcpkg-make": {
+      "baseline": "2023-05-15",
+      "port-version": 0
+    },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
       "port-version": 0
@@ -9758,7 +9762,7 @@
     },
     "x264": {
       "baseline": "0.164.3108",
-      "port-version": 0
+      "port-version": 1
     },
     "x265": {
       "baseline": "3.6",

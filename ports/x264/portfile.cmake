@@ -26,36 +26,13 @@ vcpkg_from_gitlab(
         configure.patch
 )
 
-# Ensure that 'ENV{PATH}' leads to tool 'name' exactly at 'filepath'.
-function(ensure_tool_in_path name filepath)
-    unset(program_found CACHE)
-    find_program(program_found "${name}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
-    if(NOT filepath STREQUAL program_found)
-        cmake_path(GET filepath PARENT_PATH parent_path)
-        vcpkg_add_to_path(PREPEND "${parent_path}")
-    endif()
+function(add_cross_prefix)
+  if(configure_env MATCHES "CC=([^\/]*-)gcc$")
+      vcpkg_list(APPEND arg_OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
+  endif()
+  set(arg_OPTIONS "${arg_OPTIONS}" PARENT_SCOPE)
 endfunction()
 
-# Ensure that parent-scope variable 'var' doesn't contain a space,
-# updating 'ENV{PATH}' and 'var' if needed.
-function(transform_path_no_space var)
-    set(path "${${var}}")
-    if(path MATCHES " ")
-        cmake_path(GET path FILENAME program_name)
-        set("${var}" "${program_name}" PARENT_SCOPE)
-        ensure_tool_in_path("${program_name}" "${path}")
-    endif()
-endfunction()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
-transform_path_no_space(VCPKG_DETECTED_CMAKE_C_COMPILER)
-set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-
-vcpkg_list(SET OPTIONS)
-
-vcpkg_list(SET EXTRA_ARGS)
 set(nasm_archs x86 x64)
 set(gaspp_archs arm arm64)
 if(NOT "asm" IN_LIST FEATURES)
@@ -64,10 +41,8 @@ elseif(NOT "$ENV{AS}" STREQUAL "")
     # Accept setting from triplet
 elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
     vcpkg_find_acquire_program(NASM)
-    transform_path_no_space(NASM)
-    list(APPEND EXTRA_ARGS CONFIGURE_ENVIRONMENT_VARIABLES AS)
-    set(AS "${NASM}") # for CONFIGURE_ENVIRONMENT_VARIABLES
-    set(ENV{AS} "${NASM}") # for non-WIN32
+    vcpkg_insert_program_into_path("${NASM}")
+    set(ENV{AS} "${NASM}")
 elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST gaspp_archs AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
     vcpkg_find_acquire_program(GASPREPROCESSOR)
     list(FILTER GASPREPROCESSOR INCLUDE REGEX gas-preprocessor)
@@ -93,11 +68,14 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    NO_ADDITIONAL_PATHS
-    DETERMINE_BUILD_TRIPLET
-    ${EXTRA_ARGS}
+    DISABLE_CPPFLAGS # Build is not using CPP/CPPFLAGS
+    DISABLE_MSVC_WRAPPERS
+    LANGUAGES ASM C CXX # Requires NASM to compile
+    DISABLE_MSVC_TRANSFORMATIONS # disable warnings about unknown -Xcompiler/-Xlinker flags
+    PRE_CONFIGURE_CMAKE_COMMANDS
+        add_cross_prefix
     OPTIONS
         ${OPTIONS}
         --enable-pic
@@ -116,7 +94,7 @@ vcpkg_configure_make(
         --disable-cli
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 if("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
@@ -149,4 +127,4 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
