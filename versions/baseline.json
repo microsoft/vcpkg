@@ -2373,7 +2373,7 @@
       "port-version": 0
     },
     "dlpack": {
-      "baseline": "0.8",
+      "baseline": "1.0",
       "port-version": 0
     },
     "dmlc": {
