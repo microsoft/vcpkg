@@ -12,21 +12,17 @@ index d8a81ab..edf5651 100644
      set(QUIC_COMMON_DEFINES WIN32_LEAN_AND_MEAN SECURITY_WIN32)
      # TODO - Get these to work on Linux
      list(APPEND MSH3_COMMON_DEFINES VER_BUILD_ID=${MSH3_VER_BUILD_ID})
-@@ -66,7 +63,12 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -66,7 +63,8 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
  option(LSQPACK_TESTS "Build tests" OFF)
  option(LSQPACK_BIN "Build binaries" OFF)
 -add_subdirectory(ls-qpack)
 +find_package(ls-qpack CONFIG REQUIRED)
 +add_library(ls-qpack ALIAS ls-qpack::ls-qpack)
-+# polyfill
-+add_library(inc ALIAS ls-qpack::ls-qpack)
-+add_library(platform ALIAS ls-qpack::ls-qpack)
-+add_library(warnings ALIAS ls-qpack::ls-qpack)
  
  # Configure and build msquic dependency.
  if (WIN32)
-@@ -76,9 +78,9 @@ else()
+@@ -76,9 +74,13 @@ else()
  endif()
  set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
  set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
@@ -34,6 +30,10 @@ index d8a81ab..edf5651 100644
 -add_subdirectory(msquic)
 -target_compile_features(inc INTERFACE cxx_std_20)
 +find_package(msquic CONFIG REQUIRED)
++# polyfill
++add_library(inc ALIAS msquic)
++add_library(platform ALIAS msquic)
++add_library(warnings ALIAS msquic)
 +
 +target_compile_features(msh3_headers INTERFACE cxx_std_20)
  
