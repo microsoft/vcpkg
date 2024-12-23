@@ -116,7 +116,7 @@
       "features": [
         "aom"
       ],
-      "platform": "!(windows & arm & !uwp)"
+      "platform": "!(windows & arm) & !uwp"
     },
     {
       "name": "ffmpeg",

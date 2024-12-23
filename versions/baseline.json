@@ -157,7 +157,7 @@
       "port-version": 2
     },
     "aom": {
-      "baseline": "3.9.1",
+      "baseline": "3.11.0",
       "port-version": 0
     },
     "apache-datasketches": {
@@ -1413,7 +1413,7 @@
       "port-version": 0
     },
     "bshoshany-thread-pool": {
-      "baseline": "4.1.0",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "bsio": {
@@ -1514,10 +1514,6 @@
     },
     "cargs": {
       "baseline": "1.2.0",
-      "port-version": 0
-    },
-    "casadi": {
-      "baseline": "3.6.7",
       "port-version": 0
     },
     "casclib": {
@@ -1977,8 +1973,8 @@
       "port-version": 0
     },
     "cppmicroservices": {
-      "baseline": "3.7.6",
-      "port-version": 1
+      "baseline": "3.8.4",
+      "port-version": 0
     },
     "cppp-reiconv": {
       "baseline": "2.1.0",
@@ -2314,7 +2310,7 @@
     },
     "directx12-agility": {
       "baseline": "1.614.1",
-      "port-version": 0
+      "port-version": 1
     },
     "directxmath": {
       "baseline": "2024-12-02",
@@ -2758,7 +2754,7 @@
     },
     "ffmpeg": {
       "baseline": "7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "ffnvcodec": {
       "baseline": "12.2.72.0",
@@ -2989,8 +2985,8 @@
       "port-version": 2
     },
     "g2o": {
-      "baseline": "2023-08-06",
-      "port-version": 1
+      "baseline": "2024-12-14",
+      "port-version": 0
     },
     "g3log": {
       "baseline": "2.4",
@@ -3033,8 +3029,8 @@
       "port-version": 0
     },
     "gazebo": {
-      "baseline": "2022-01-20",
-      "port-version": 5
+      "baseline": "11.15.1",
+      "port-version": 0
     },
     "gcem": {
       "baseline": "1.18.0",
@@ -3137,7 +3133,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "4.0.3",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "glbinding": {
@@ -3189,7 +3185,7 @@
       "port-version": 3
     },
     "glslang": {
-      "baseline": "15.0.0",
+      "baseline": "15.1.0",
       "port-version": 0
     },
     "glui": {
@@ -3221,7 +3217,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "2.32.0",
+      "baseline": "2.33.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -3366,7 +3362,7 @@
     },
     "gz-common5": {
       "baseline": "5.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gz-fuel-tools8": {
       "baseline": "8.1.0",
@@ -3914,7 +3910,7 @@
     },
     "juce": {
       "baseline": "8.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "jwt-cpp": {
       "baseline": "0.7.0",
@@ -4885,7 +4881,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2024.11.1",
+      "baseline": "2024.12.0",
       "port-version": 0
     },
     "libnoise": {
@@ -5546,7 +5542,7 @@
     },
     "lilv": {
       "baseline": "0.24.24",
-      "port-version": 0
+      "port-version": 1
     },
     "linalg": {
       "baseline": "2.2",
@@ -6049,7 +6045,7 @@
       "port-version": 1
     },
     "mongo-cxx-driver": {
-      "baseline": "3.11.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "mongoose": {
@@ -6584,6 +6580,10 @@
       "baseline": "1.5.1",
       "port-version": 1
     },
+    "orange-math": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "omniorb": {
       "baseline": "4.3.0",
       "port-version": 3
@@ -6694,7 +6694,7 @@
     },
     "openfbx": {
       "baseline": "2024-05-08",
-      "port-version": 0
+      "port-version": 1
     },
     "openfx": {
       "baseline": "1.4",
@@ -7009,8 +7009,8 @@
       "port-version": 1
     },
     "physx": {
-      "baseline": "5.3.0",
-      "port-version": 1
+      "baseline": "5.5.0",
+      "port-version": 0
     },
     "picojson": {
       "baseline": "1.3.0",
@@ -7121,8 +7121,8 @@
       "port-version": 1
     },
     "poco": {
-      "baseline": "1.13.3",
-      "port-version": 1
+      "baseline": "1.14.0",
+      "port-version": 0
     },
     "podofo": {
       "baseline": "0.10.4",
@@ -7225,7 +7225,7 @@
       "port-version": 1
     },
     "prometheus-cpp": {
-      "baseline": "1.2.4",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "promise-cpp": {
@@ -8110,7 +8110,7 @@
     },
     "ryu": {
       "baseline": "2.0",
-      "port-version": 9
+      "port-version": 10
     },
     "s2geometry": {
       "baseline": "0.11.1",
@@ -8289,7 +8289,7 @@
       "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.7.16",
+      "baseline": "0.7.17",
       "port-version": 0
     },
     "septag-dmon": {
@@ -8363,10 +8363,6 @@
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
       "port-version": 1
-    },
-    "shiva": {
-      "baseline": "1.0",
-      "port-version": 7
     },
     "shogun": {
       "baseline": "2023-12-19",
@@ -9269,8 +9265,8 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "24.8",
-      "port-version": 1
+      "baseline": "24.11",
+      "port-version": 0
     },
     "usearch": {
       "baseline": "2.3.2",
@@ -9285,7 +9281,7 @@
       "port-version": 4
     },
     "utf8-range": {
-      "baseline": "5.28.3",
+      "baseline": "5.29.1",
       "port-version": 0
     },
     "utf8h": {
@@ -9465,8 +9461,8 @@
       "port-version": 1
     },
     "vincentlaucsb-csv-parser": {
-      "baseline": "2.2.3",
-      "port-version": 1
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "visit-struct": {
       "baseline": "1.1.0",
@@ -9873,8 +9869,8 @@
       "port-version": 4
     },
     "xsimd": {
-      "baseline": "13.0.0",
-      "port-version": 1
+      "baseline": "13.1.0",
+      "port-version": 0
     },
     "xtensor": {
       "baseline": "0.25.0",
@@ -9909,7 +9905,7 @@
       "port-version": 4
     },
     "yalantinglibs": {
-      "baseline": "0.3.10",
+      "baseline": "0.3.11",
       "port-version": 0
     },
     "yaml-cpp": {
@@ -9986,7 +9982,7 @@
     },
     "zix": {
       "baseline": "0.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "zkpp": {
       "baseline": "0.2.3",

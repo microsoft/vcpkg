@@ -2,8 +2,8 @@ string(REPLACE "-" "" GIT_TAG "${VERSION}_git")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RainerKuemmerle/g2o
-    REF "${GIT_TAG}"
-    SHA512 626b4d286b564ca6714957d0caf41cf5387ecbc7100299c1a1134fa4a11a340f6e6e0796fa5ff16229032a1e1e384bc03e7d2c118be39d6d51a20d9f2774a98d
+    REF eec325a1da1273e87bc97887d49e70570f28570c
+    SHA512 22d3d546fbc92bff4767b66dcc9a001b5ed0cac0787874dda8712140aa03004b0312f702ea7d61c5fdcfa0bb00654c873f8b99899cd9e2b89667d8d99667d5cd
     HEAD_REF master
     PATCHES
         fix-absolute.patch
