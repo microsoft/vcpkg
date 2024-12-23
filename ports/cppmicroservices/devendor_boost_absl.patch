@@ -10,7 +10,7 @@ index 55b99bb765..85b4484990 100644
 +find_package(absl CONFIG REQUIRED)
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 -add_subdirectory(third_party/boost/nowide)
-+find_package(boost COMPONENTS nowide CONFIG REQUIRED)
++find_package(Boost COMPONENTS nowide CONFIG REQUIRED)
  set(BUILD_SHARED_LIBS ${_us_build_shared} CACHE BOOL "Build shared libraries" FORCE)
  #-----------------------------------------------------------------------------
  
@@ -23,7 +23,7 @@ index c9cf743790..078c5b3fad 100644
  set(US_@PROJECT_NAME@_RUNTIME_LIBRARY_DIRS "@PACKAGE_CONFIG_RUNTIME_LIBRARY_DIR@")
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(boost COMPONENTS asio nowide CONFIG)
++find_dependency(Boost COMPONENTS asio nowide CONFIG)
 +find_dependency(absl CONFIG)
 +
  if(NOT TARGET @PROJECT_TARGET@)

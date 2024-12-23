@@ -6,29 +6,30 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
 
+vcpkg_download_distfile(MSVC_PATCH
+    URLS https://github.com/PixarAnimationStudios/OpenUSD/commit/b677b238ba596f31f252d38dd5172d3e869d193e.patch?full_index=1
+    FILENAME fix-msvc.patch
+    SHA512 1dc8e6559d322f861fd0f0673679358cbc259ddf0ac4cf3a1306557ee8a4a9fdd362d57101b30bb9367abf889e13bbcba6b40fbb571c07899c5b5a8431adcb74
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 7d4404980579c4de3c155386184ca9d2eb96756ef6e090611bae7b4c21ad942c649f73a39b74ad84d0151ce6b9236c4b6c0c555e8e36fdd86304079e1c2e5cbe
+    SHA512 77c9601f4a689248448049660ef0083fc99e2a4c2e7a260814831bdfee8e9844f64b5b2aed88a9f907fe4ebcf6a532bb7dce80bb11c1f54c31066b07aa96b851
     HEAD_REF release
     PATCHES
         001-fix_rename_find_package_to_find_dependency.patch # See PixarAnimationStudios/OpenUSD#3205
         002-vcpkg_find_tbb.patch # See PixarAnimationStudios/OpenUSD#3207
-        003-vcpkg_find_opensubdiv.patch
-        004-vcpkg_find_openimageio.patch
-        005-vcpkg_find_shaderc.patch
-        006-vcpkg_find_spirv-reflect.patch
-        007-vcpkg_find_vma.patch
-        008-fix_cmake_package.patch
-        009-fix_cmake_hgi_interop.patch
-        010-fix_missing_find_dependency_vulkan.patch
-        011-fix_clang8_compiler_error.patch
-        012-vcpkg_install_folder_conventions.patch
-        013-cmake_export_plugin_as_modules.patch
-        014-MaterialX_v1.38-39.patch # PixarAnimationStudios/OpenUSD#3159
-        015-fix_missing_find_dependency_opengl.patch
-        016-TBB-2022.patch # Accomodate oneapi-src/oneTBB#1345 changes
+        003-fix-dep.patch
+        004-fix_cmake_package.patch
+        005-MaterialX_v1.38-39.patch
+        "${MSVC_PATCH}"
+        007-fix_cmake_hgi_interop.patch
+        008-fix_clang8_compiler_error.patch
+        009-vcpkg_install_folder_conventions.patch
+        010-cmake_export_plugin_as_modules.patch
+        011-TBB-2022.patch
+        012-fix-find-vulkan.patch
 )
 
 # Changes accompanying 006-vcpkg_find_spirv-reflect.patch
