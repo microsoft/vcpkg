@@ -18,9 +18,15 @@ vcpkg_extract_source_archive(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 # We can use file supplied with original sources
-configure_file("${SOURCE_PATH}/build/vs2017/unistd.h" "${SOURCE_PATH}" COPYONLY)
-configure_file("${SOURCE_PATH}/build/vs2017/config.h" "${SOURCE_PATH}" COPYONLY)
-configure_file("${SOURCE_PATH}/build/vs2017/gmime.def" "${SOURCE_PATH}" COPYONLY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    configure_file("${SOURCE_PATH}/build/vs2017/unistd.h" "${SOURCE_PATH}" COPYONLY)
+    configure_file("${SOURCE_PATH}/build/vs2017/config.h" "${SOURCE_PATH}" COPYONLY)
+    configure_file("${SOURCE_PATH}/build/vs2017/gmime.def" "${SOURCE_PATH}" COPYONLY)
+else()
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/config-linux.h "${SOURCE_PATH}/config.h" COPYONLY)
+endif()
+
+
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
