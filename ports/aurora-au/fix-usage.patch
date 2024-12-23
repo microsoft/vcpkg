@@ -1,0 +1,27 @@
+diff --git a/au/code/au/CMakeLists.txt b/au/code/au/CMakeLists.txt
+index edb965c..7c518bf 100644
+--- a/au/code/au/CMakeLists.txt
++++ b/au/code/au/CMakeLists.txt
+@@ -39,6 +39,7 @@ header_only_library(
+     quantity.hh
+     quantity_point.hh
+     rep.hh
++    static_cast_checkers.hh
+     unit_of_measure.hh
+     unit_symbol.hh
+     wrapper_operations.hh
+@@ -465,6 +466,14 @@ gtest_based_test(
+     au
+ )
+ 
++gtest_based_test(
++  NAME static_cast_checkers_test
++  SRCS
++    static_cast_checkers_test.cc
++  DEPS
++    au
++)
++
+ gtest_based_test(
+   NAME stdx_test
+   SRCS
