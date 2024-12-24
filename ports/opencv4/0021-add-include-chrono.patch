@@ -1,0 +1,13 @@
+diff --git a/modules/gapi/src/streaming/gstreamer/gstreamersource.cpp b/modules/gapi/src/streaming/gstreamer/gstreamersource.cpp
+index 9fb15729b45a..0d6d7dd5b248 100644
+--- a/modules/gapi/src/streaming/gstreamer/gstreamersource.cpp
++++ b/modules/gapi/src/streaming/gstreamer/gstreamersource.cpp
+@@ -17,6 +17,8 @@
+ 
+ #include <opencv2/imgproc.hpp>
+ 
++#include <chrono>
++
+ #ifdef HAVE_GSTREAMER
+ #include <gst/app/gstappsink.h>
+ #include <gst/gstbuffer.h>
