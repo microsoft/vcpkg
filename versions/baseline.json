@@ -3194,7 +3194,7 @@
     },
     "gmime": {
       "baseline": "3.2.6",
-      "port-version": 6
+      "port-version": 7
     },
     "gmmlib": {
       "baseline": "22.5.2",
