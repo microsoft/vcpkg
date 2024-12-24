@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://codeberg.org/gumbo-parser/gumbo-parser/archive/${VERSION}.tar.gz"
     FILENAME "gumbo-${VERSION}.tar.gz"
-    SHA512  258d93c0404b7dc35e1088cded02a394b2cbd0d08f3e7d0a3e32d859c2032efcc831687c7bc749e9bddb60d4f910bab741007bed1117d486a0d3fd194e22f4e7
+    SHA512  15da29bc1b7d70a827870562462ca90fd57469d72d7a4804c59da96c5c46b3a0c50e99a08a80d6e08d2be87f55388c8848918bfbab58ac0c22df85fdc2bd35e7
 )
 
 vcpkg_extract_source_archive(
