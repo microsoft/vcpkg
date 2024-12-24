@@ -1,17 +1,12 @@
 diff --git a/meson.build b/meson.build
-index 5dbefa43..721ce19d 100644
+index 5dbefa43..50b48232 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -193,7 +193,7 @@ endif
- subdir ('codec')
- subdir ('test')
- 
--libopenh264 = library('openh264',
-+libopenh264_shared = library('openh264',
+@@ -197,18 +197,38 @@ libopenh264 = library('openh264',
    link_whole: [libcommon, libprocessing, libencoder, libdecoder],
    install: true,
    soversion: major_version,
-@@ -201,14 +201,35 @@ libopenh264 = library('openh264',
+-  version: meson.project_version(),
    vs_module_defs: 'openh264.def',
    dependencies: deps)
  
@@ -43,8 +38,7 @@ index 5dbefa43..721ce19d 100644
 +endforeach
 +
  openh264_dep = declare_dependency(
--  link_with: libopenh264,
-+  link_with: libopenh264_shared,
+   link_with: libopenh264,
    include_directories: include_directories('codec/api'),
    dependencies: deps)
  
