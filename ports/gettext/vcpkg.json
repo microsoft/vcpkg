@@ -6,7 +6,11 @@
   "license": "GPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
-    "gettext-libintl"
+    "gettext-libintl",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ],
   "features": {
     "nls": {
