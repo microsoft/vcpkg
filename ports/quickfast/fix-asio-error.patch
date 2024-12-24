@@ -12,7 +12,7 @@ index 3574df8..c4ef4e1 100644
  // #define BOOST_LIB_DIAGNOSTIC
  
 diff --git a/src/Communication/AsioService.h b/src/Communication/AsioService.h
-index 4f61915..632718d 100644
+index 4f61915..4e597cf 100644
 --- a/src/Communication/AsioService.h
 +++ b/src/Communication/AsioService.h
 @@ -15,6 +15,32 @@
@@ -57,7 +57,7 @@ index 4f61915..632718d 100644
          stopping_ = false;
        }
  
-@@ -100,6 +126,8 @@ namespace QuickFAST
+@@ -100,12 +126,14 @@ namespace QuickFAST
          return ioService_;
        }
  
@@ -66,6 +66,13 @@ index 4f61915..632718d 100644
        ///@brief Post a completion handler for later processing (usually in a different thread)
        /// @param handler is the handler to be posted
        template<typename CompletionHandler>
+       void post(CompletionHandler handler)
+       {
+-        ioService_.post(handler);
++        boost::asio::post(ioService_, handler);
+       }
+ 
+       /// @brief Attempt to determine how many threads are available to ASIO
 diff --git a/src/Communication/AsioService_fwd.h b/src/Communication/AsioService_fwd.h
 index dc2f235..6ad5e68 100644
 --- a/src/Communication/AsioService_fwd.h
@@ -80,6 +87,19 @@ index dc2f235..6ad5e68 100644
    }
  }
  
+diff --git a/src/Communication/AsynchReceiver.h b/src/Communication/AsynchReceiver.h
+index 00c1d9c..cc4a32f 100644
+--- a/src/Communication/AsynchReceiver.h
++++ b/src/Communication/AsynchReceiver.h
+@@ -132,7 +132,7 @@ namespace QuickFAST
+       template<typename CompletionHandler>
+       void post(CompletionHandler handler)
+       {
+-        ioService_.post(handler);
++        boost::asio::post(ioService_, handler);
+       }
+ 
+     protected:
 diff --git a/src/Communication/AsynchSender.cpp b/src/Communication/AsynchSender.cpp
 index 0261302..f843437 100644
 --- a/src/Communication/AsynchSender.cpp
