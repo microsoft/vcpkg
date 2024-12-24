@@ -9,4 +9,4 @@ vcpkg_from_github(
 )
 
 file(INSTALL "${SOURCE_PATH}/include/VHACD.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
