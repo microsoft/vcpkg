@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.32.0",
+  "version": "2.33.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -765,7 +765,8 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
-            "grpc-common"
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
