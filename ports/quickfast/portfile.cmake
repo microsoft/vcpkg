@@ -4,7 +4,8 @@ vcpkg_from_github(
     REF V1_5
     SHA512 f224ffbe0ee1b84616b46d536d27da01346103cf9ed135a87543da51e8e979ec3735e08ece8525ee1316ea323d41dcacc4d44eabe2e033d68f93432ea43d1ce9
     HEAD_REF master
-    PATCHES 00001-fix-boost-asio.patch
+    PATCHES
+      fix-asio-error.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

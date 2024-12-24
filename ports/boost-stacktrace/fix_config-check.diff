@@ -1,6 +1,6 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1cb895570d..4638618d56 100644
---- a/CMakeLists.txt	
+index 9c5bf84..46b7288 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,7 +52,7 @@ include(CheckCXXSourceCompiles)
  
@@ -18,11 +18,9 @@ index 1cb895570d..4638618d56 100644
 -stacktrace_check(BOOST_STACKTRACE_HAS_WINDBG_CACHED has_windbg_cached.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../config/include" "dbgeng;ole32" "")
 +stacktrace_check(BOOST_STACKTRACE_HAS_WINDBG_CACHED has_windbg_cached.cpp "" "dbgeng;ole32" "")
  
- option(BOOST_STACKTRACE_ENABLE_NOOP "Boost.Stacktrace: build boost_stacktrace_noop" ON)
- option(BOOST_STACKTRACE_ENABLE_BACKTRACE "Boost.Stacktrace: build boost_stacktrace_backtrace" ${BOOST_STACKTRACE_HAS_BACKTRACE})
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -90,7 +90,10 @@ message(STATUS "Boost.Stacktrace: "
+ set(_default_from_exception ON)
+ if (NOT CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64|i386|i686|x86")
+@@ -98,7 +98,10 @@ message(STATUS "Boost.Stacktrace: "
  )
  
  stacktrace_add_library(noop ${BOOST_STACKTRACE_ENABLE_NOOP} "" "")
