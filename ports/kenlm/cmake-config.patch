@@ -1,0 +1,29 @@
+diff --git a/cmake/kenlmConfig.cmake.in b/cmake/kenlmConfig.cmake.in
+index 592407d..86abd36 100644
+--- a/cmake/kenlmConfig.cmake.in
++++ b/cmake/kenlmConfig.cmake.in
+@@ -5,6 +5,12 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Boost)
+ find_dependency(Threads)
+ find_dependency(double-conversion CONFIG)
++if("@ENABLE_INTERPOLATE@")
++  find_dependency(Eigen3)
++  if("@OPENMP_CXX_FOUND@")
++    find_dependency(OpenMP)
++  endif()
++endif()
+ 
+ # Compression libs
+ if (@ZLIB_FOUND@)
+diff --git a/lm/interpolate/CMakeLists.txt b/lm/interpolate/CMakeLists.txt
+index d23e959..26b6092 100644
+--- a/lm/interpolate/CMakeLists.txt
++++ b/lm/interpolate/CMakeLists.txt
+@@ -24,6 +24,7 @@ if(ENABLE_INTERPOLATE)
+ 
+ 
+   find_package(OpenMP)
++  set(OPENMP_CXX_FOUND "${OPENMP_CXX_FOUND}" CACHE INTERNAL "For exported config")
+   if (OPENMP_CXX_FOUND)
+     target_link_libraries(kenlm_interpolate PUBLIC OpenMP::OpenMP_CXX)
+   endif()

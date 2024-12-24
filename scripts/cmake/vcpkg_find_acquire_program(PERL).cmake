@@ -1,13 +1,13 @@
 set(program_name perl)
-set(program_version 5.38.0.1)
+set(program_version 5.40.0.1)
 set(brew_package_name "perl")
 set(apt_package_name "perl")
 if(CMAKE_HOST_WIN32)
     set(download_urls
-        "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_5380_5361/strawberry-perl-5.38.0.1-64bit-portable.zip"
+        "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54001_64bit_UCRT/strawberry-perl-5.40.0.1-64bit-portable.zip"
     )
-    set(download_filename "strawberry-perl-5.38.0.1-64bit-portable.zip")
-    set(download_sha512 9b604f19e245a809bd18857bd91ebaec81ca031394ec69a3369df64d3590d2c9d557326d8aa10f91e78b1f1d56689aa57a8ec3a8cad4d2e542c96eb714a3831d)
+    set(download_filename "strawberry-perl-5.40.0.1-64bit-portable.zip")
+    set(download_sha512 374a675917a3d5c03d64633e9f80e333fd0043ec0481473027045b33dc74c43cc80836b5a369b063b8b1feee5228ffc46a6508594314d19f64b9e32e8311fbb5)
     set(tool_subdirectory ${program_version})
     set(paths_to_search ${DOWNLOADS}/tools/perl/${tool_subdirectory}/perl/bin)
 endif()

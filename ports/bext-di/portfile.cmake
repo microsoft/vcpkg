@@ -8,6 +8,11 @@ vcpkg_from_github(
 
 file(INSTALL ${SOURCE_PATH}/include/boost
     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+	
+if ("extensions" IN_LIST FEATURES)
+	file(INSTALL ${SOURCE_PATH}/extension/include/boost
+		DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+endif()
 
 vcpkg_download_distfile(LICENSE
     URLS https://www.boost.org/LICENSE_1_0.txt

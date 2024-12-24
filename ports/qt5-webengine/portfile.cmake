@@ -29,7 +29,7 @@ get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
 get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
 
-if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+if(CMAKE_HOST_WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
@@ -48,8 +48,9 @@ vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 set(PATCHES common.pri.patch
             gl.patch
             build_1.patch
-            build_2.patch
-            workaround-msvc2022-missing-include-in-chromium-ui-accessability.patch
+            0001-Support-ICU-74-in-LazyTextBreakIterator.patch
+            workaround-protobuf-issue.patch
+            0001-Fix-jumbo-build-error-due-to-ResolveColor-redefiniti.patch
             )
 
 set(OPTIONS)

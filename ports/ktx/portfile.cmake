@@ -2,13 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/KTX-Software
     REF "v${VERSION}"
-    SHA512 9ef0100a402321b00faa822eb2a50fd0d1e17fa703edacdbacf9231484d911cc254aed1fa517988537dc5b7059921a793edaeb92e8b2965d25672cd9a2589a0f
+    SHA512 0077315fe2b4e676e97e3a158c2c6e1f6ba426e14ad23342592cd69be28cfce64c40614e0a84d58a9634877ab334e713b94d4c962132c98bfea308e91bc8a98a
     HEAD_REF master
     PATCHES
         0001-Use-vcpkg-zstd.patch
         0002-Fix-versioning.patch
         0003-mkversion.patch
         0004-quirks.patch
+        0005-no-vendored-libs.patch
+        0006-fix-ios-install.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
 
@@ -21,6 +23,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
             # Required for "getopt"
             "https://repo.msys2.org/msys/x86_64/util-linux-2.35.2-3-x86_64.pkg.tar.zst"
             da26540881cd5734072717133307e5d1a27a60468d3656885507833b80f24088c5382eaa0234b30bdd9e8484a6638b4514623f5327f10b19eed36f12158e8edb
+            # Required for "dos2unix"
+            "https://mirror.msys2.org/msys/x86_64/dos2unix-7.5.1-1-x86_64.pkg.tar.zst"
+            83d85e6ccea746ef9e8153a0d605e774dbe7efc0ee952804acfee4ffd7e3b0386a353b45ff989dd99bc3ce75968209fea3d246ad2af88bbb5c4eca12fc5a8f92
     )
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     vcpkg_list(APPEND OPTIONS "-DBASH_EXECUTABLE=${MSYS_ROOT}/usr/bin/bash.exe")
@@ -43,8 +48,6 @@ vcpkg_cmake_configure(
         -DKTX_FEATURE_STATIC_LIBRARY=${ENABLE_STATIC}
         ${FEATURE_OPTIONS}
         ${OPTIONS}
-        # Do not regenerate headers (needs more dependencies)
-        -DCMAKE_DISABLE_FIND_PACKAGE_Vulkan=1
     DISABLE_PARALLEL_CONFIGURE
 )
 

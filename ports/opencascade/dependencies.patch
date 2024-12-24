@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bb6ab2db..e58b1afa 100644
+index 8690528..834ca79 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -596,7 +596,8 @@ if (CAN_USE_FREETYPE)
+@@ -605,7 +605,8 @@ if (CAN_USE_FREETYPE)
    if (USE_FREETYPE)
      message (STATUS "Info: FreeType is used by OCCT")
      add_definitions (-DHAVE_FREETYPE)
@@ -12,7 +12,7 @@ index bb6ab2db..e58b1afa 100644
    else()
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_FREETYPE")
      OCCT_CHECK_AND_UNSET ("3RDPARTY_FREETYPE_INCLUDE_DIR_freetype2")
-@@ -613,7 +614,9 @@ endif()
+@@ -622,7 +623,9 @@ endif()
  if (USE_VTK)
    add_definitions (-DHAVE_VTK)
    set (OCCT_VTK_USED_TARGETS "" CACHE INTERNAL "" FORCE)
@@ -23,7 +23,7 @@ index bb6ab2db..e58b1afa 100644
  else()
    OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_VTK")
  
-@@ -629,7 +632,8 @@ endif()
+@@ -638,7 +641,8 @@ endif()
  if (CAN_USE_FREEIMAGE)
    if (USE_FREEIMAGE)
      add_definitions (-DHAVE_FREEIMAGE)
@@ -33,7 +33,7 @@ index bb6ab2db..e58b1afa 100644
    else()
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_FREEIMAGE")
      OCCT_CHECK_AND_UNSET ("INSTALL_FREEIMAGE")
-@@ -730,7 +734,8 @@ endif()
+@@ -739,7 +743,8 @@ endif()
  if (NOT DEFINED ANDROID AND CAN_USE_TBB)
    if (USE_TBB)
      add_definitions (-DHAVE_TBB)
@@ -43,7 +43,7 @@ index bb6ab2db..e58b1afa 100644
    else()
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBB")
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBBMALLOC")
-@@ -750,7 +755,8 @@ OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
+@@ -759,7 +764,8 @@ OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
  if (CAN_USE_RAPIDJSON)
    if (USE_RAPIDJSON)
      add_definitions (-DHAVE_RAPIDJSON)
@@ -54,7 +54,7 @@ index bb6ab2db..e58b1afa 100644
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_RAPIDJSON")
      OCCT_CHECK_AND_UNSET ("INSTALL_RAPIDJSON")
 diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
-index c9399159..f707e00f 100644
+index c939915..f707e00 100644
 --- a/adm/cmake/occt_toolkit.cmake
 +++ b/adm/cmake/occt_toolkit.cmake
 @@ -475,11 +475,11 @@ else()
@@ -72,13 +72,13 @@ index c9399159..f707e00f 100644
  
  if (USE_QT)
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index c926c499..3b6db678 100644
+index e391ddf..9cc3d49 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
-@@ -4,6 +4,22 @@
- #
+@@ -5,6 +5,23 @@
  # This file is configured by OpenCASCADE.
  #
+ 
 +include(CMakeFindDependencyMacro)
 +if("@USE_FREEIMAGE@")
 +  find_dependency(freeimage CONFIG)
@@ -95,18 +95,19 @@ index c926c499..3b6db678 100644
 +if("@USE_VTK@")
 +  find_dependency(VTK REQUIRED)
 +endif()
- 
++
  if(OpenCASCADE_ALREADY_INCLUDED)
    return()
-diff --git a/src/Standard/Standard_MMgrTBBalloc.cxx b/src/Standard/Standard_MMgrTBBalloc.cxx
-index 8c7a2df1..8499e1af 100644
---- a/src/Standard/Standard_MMgrTBBalloc.cxx
-+++ b/src/Standard/Standard_MMgrTBBalloc.cxx
-@@ -18,7 +18,6 @@
- 
- // paralleling with Intel TBB
- #ifdef HAVE_TBB
--#pragma comment (lib, "tbbmalloc.lib")
- #include <tbb/scalable_allocator.h>
- using namespace tbb;
- #else
+ endif()
+diff --git a/src/Image/Image_AlienPixMap.cxx b/src/Image/Image_AlienPixMap.cxx
+index f869e8f..538d5b9 100644
+--- a/src/Image/Image_AlienPixMap.cxx
++++ b/src/Image/Image_AlienPixMap.cxx
+@@ -21,7 +21,6 @@
+   #include <FreeImage.h>
+
+   #ifdef _MSC_VER
+-    #pragma comment( lib, "FreeImage.lib" )
+   #endif
+ #elif defined(HAVE_WINCODEC)
+   #include <wincodec.h>

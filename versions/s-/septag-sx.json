@@ -29,11 +29,6 @@
       "git-tree": "b3ce911c8e33a6b93f67b77676b8b52ebafc9d8d",
       "version-string": "2019-05-07",
       "port-version": 0
-    },
-    {
-      "git-tree": "b9e21c1d4135ab98fcecc9970d8520afb9b39743",
-      "version-string": "2019-04-27",
-      "port-version": 0
     }
   ]
 }

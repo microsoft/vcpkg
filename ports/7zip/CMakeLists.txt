@@ -65,6 +65,7 @@ target_sources(7zip PRIVATE
     CPP/7zip/Compress/ZDecoder.cpp
     CPP/7zip/Compress/ZlibDecoder.cpp
     CPP/7zip/Compress/ZlibEncoder.cpp
+    CPP/7zip/Compress/ZstdDecoder.cpp
 
     CPP/7zip/Crypto/7zAes.cpp
     CPP/7zip/Crypto/7zAesRegister.cpp
@@ -122,6 +123,12 @@ target_sources(7zip PRIVATE
     C/Aes.c
     C/7zCrc.c
     C/XzCrc64.c
+    C/Xxh64.c
+    C/ZstdDec.c
+    C/Md5.c
+    C/Sha3.c
+    C/Sha512.c
+    C/Sha512Opt.c
 
     CPP/Common/CRC.cpp
     CPP/Common/CrcReg.cpp
@@ -144,16 +151,11 @@ target_sources(7zip PRIVATE
     CPP/Common/Wildcard.cpp
     CPP/Common/XzCrc64Init.cpp
     CPP/Common/XzCrc64Reg.cpp
-
-    CPP/Windows/FileDir.cpp
-    CPP/Windows/FileFind.cpp
-    CPP/Windows/FileIO.cpp
-    CPP/Windows/FileName.cpp
-    CPP/Windows/PropVariant.cpp
-    CPP/Windows/PropVariantUtils.cpp
-    CPP/Windows/Synchronization.cpp
-    CPP/Windows/System.cpp
-    CPP/Windows/TimeUtils.cpp
+    CPP/Common/Xxh64Reg.cpp
+    CPP/Common/Md5Reg.cpp
+    CPP/Common/Sha3Reg.cpp
+    CPP/Common/Sha512Prepare.cpp
+    CPP/Common/Sha512Reg.cpp
 
     CPP/7zip/Common/CreateCoder.cpp
     CPP/7zip/Common/CWrappers.cpp
@@ -219,6 +221,7 @@ target_sources(7zip PRIVATE
     CPP/7zip/Archive/ZHandler.cpp
     CPP/7zip/Archive/ArchiveExports.cpp
     CPP/7zip/Archive/DllExports2.cpp
+    CPP/7zip/Archive/ZstdHandler.cpp
 
     CPP/7zip/Archive/Common/CoderMixer2.cpp
     CPP/7zip/Archive/Common/DummyOutStream.cpp
@@ -296,6 +299,20 @@ target_sources(7zip PRIVATE
     CPP/7zip/Archive/Archive2.def
     C/Util/LzmaLib/LzmaLib.def
 )
+
+if(WIN32)
+    target_sources(7zip PRIVATE
+        CPP/Windows/FileDir.cpp
+        CPP/Windows/FileFind.cpp
+        CPP/Windows/FileIO.cpp
+        CPP/Windows/FileName.cpp
+        CPP/Windows/PropVariant.cpp
+        CPP/Windows/PropVariantUtils.cpp
+        CPP/Windows/Synchronization.cpp
+        CPP/Windows/System.cpp
+        CPP/Windows/TimeUtils.cpp
+    )
+endif()
 
 # 7zCrcOpt
 if(VCPKG_TARGET_IS_WINDOWS)

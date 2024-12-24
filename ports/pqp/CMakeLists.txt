@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(pqp)
 
+set(CMAKE_CXX_STANDARD 11)
+
 set(SOURCE_CUSTOM_DIR "PQP_v1.3")
 include_directories(${SOURCE_CUSTOM_DIR}/src)
 

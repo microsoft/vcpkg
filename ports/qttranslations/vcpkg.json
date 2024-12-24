@@ -1,7 +1,7 @@
 {
   "name": "qttranslations",
-  "version": "6.6.1",
-  "description": "Qt Translations",
+  "version": "6.8.1",
+  "description": "Qt translations.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [

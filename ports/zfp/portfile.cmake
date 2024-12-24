@@ -27,7 +27,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 # Rename problematic root include "bitstream.h"; conflicts with x265's private headers
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zfp.h "\"bitstream.h\"" "\"zfp/bitstream.h\"")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zfp.h "\"bitstream.h\"" "\"zfp/bitstream.h\"" IGNORE_UNCHANGED)
 
 if("utility" IN_LIST FEATURES)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zfp")

@@ -1,7 +1,7 @@
 vcpkg_download_distfile(archive
-    URLS "http://www.atnf.csiro.au/people/mcalabre/WCS/wcslib-8.2.1.tar.bz2"
-    FILENAME "wcslib-8.2.1.tar.bz2"
-    SHA512 0d1ab63445974c2a4f425225cde197866187a9e7ae0195a33dcb33ad299018294338bc16ab4cbe6a3a27fb40aded75c60377348eaa91713d16a934cd95532c25
+    URLS "http://www.atnf.csiro.au/people/mcalabre/WCS/wcslib-${VERSION}.tar.bz2"
+    FILENAME "wcslib-${VERSION}.tar.bz2"
+    SHA512 1989f8f5788fd6d9fa102b771ad7db188b0899f716e11360516c96742f81f50755881279f90fce388451e8857f24003c85751f06aea83377e04bb5230523469f
 )
 
 vcpkg_extract_source_archive(

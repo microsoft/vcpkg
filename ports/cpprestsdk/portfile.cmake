@@ -8,6 +8,8 @@ vcpkg_from_github(
         fix-find-openssl.patch
         fix_narrowing.patch
         fix-uwp.patch
+        fix-clang-dllimport.patch # workaround for https://github.com/microsoft/cpprestsdk/issues/1710
+        silence-stdext-checked-array-iterators-warning.patch
 )
 
 set(OPTIONS)

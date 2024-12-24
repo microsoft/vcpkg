@@ -1,9 +1,8 @@
 {
   "name": "libev",
   "version": "4.33",
-  "port-version": 2,
+  "port-version": 3,
   "description": "libev is a high-performance event loop/event model with lots of features.",
   "homepage": "http://software.schmorp.de/pkg/libev.html",
-  "license": "BSD-2-Clause OR GPL-2.0-or-later",
-  "supports": "!windows"
+  "license": "BSD-2-Clause OR GPL-2.0-or-later"
 }

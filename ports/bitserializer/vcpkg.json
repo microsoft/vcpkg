@@ -1,6 +1,6 @@
 {
   "name": "bitserializer",
-  "version": "0.65",
+  "version": "0.70",
   "description": "C++ 17 library for serialization to JSON, XML, YAML, CSV",
   "homepage": "https://github.com/PavelKisliak/BitSerializer",
   "license": "MIT",
@@ -23,6 +23,9 @@
     },
     "csv-archive": {
       "description": "Module for support CSV"
+    },
+    "msgpack-archive": {
+      "description": "Module for support MsgPack"
     },
     "pugixml-archive": {
       "description": "Module for support XML (implementation based on the PugiXml library)",

@@ -1,0 +1,14 @@
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO half/half
+    REF ${VERSION}
+    FILENAME "half-${VERSION}.zip"
+    NO_REMOVE_ONE_LEVEL
+    SHA512 299db9ab12d8135ae2eb1bb6229e11fec72c1ccc4d0db04d1c912c1e5cdadbddec738097b03c3bbf9b7993e589c32abcd509bfe0c20daf1996da65f633a94574
+)
+
+file(GLOB HEADER_FILES "${SOURCE_PATH}/include/*.hpp")
+file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

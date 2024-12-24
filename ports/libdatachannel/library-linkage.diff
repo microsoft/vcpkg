@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b35e4b1..b052d02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,7 +48,6 @@ endif()
+ 
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-set(BUILD_SHARED_LIBS OFF) # to force usrsctp to be built static
+ 
+ if(WIN32)
+ 	add_definitions(-DWIN32_LEAN_AND_MEAN)
+@@ -457,11 +456,17 @@ if(WARNINGS_AS_ERRORS)
+ 	endif()
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
+ install(TARGETS datachannel EXPORT LibDataChannelTargets
+ 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++else()
++	set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
++	set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 0)
++	install(TARGETS datachannel-static EXPORT LibDataChannelTargets)
++endif()
+ 
+ install(FILES ${LIBDATACHANNEL_HEADERS}
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rtc
