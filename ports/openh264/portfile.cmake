@@ -1,10 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cisco/openh264
-    REF f15f940425eebf24ce66984db2445733cf500b7b
-    SHA512 361003296e9cef2956aeff76ae4df7a949a585710facd84a92c1b4164c5a4522d6615fcc485ebc2e50be8a13feb942b870efdd28837307467081cb1eba1f17d2
+    REF v${VERSION}
+    SHA512 cb6d3ca8d5277325dd64dec399421c4c62bc1fd012fe1521d7195e95ce7f59527919cf698829044dca3d9b1d8288c49b49111d01c9d2896c819da806492af838
     PATCHES
-        0001-respect-default-library-option.patch  # https://github.com/cisco/openh264/pull/3351
+        revert-pkgconfig-changes.patch  # vcpkg fix following https://github.com/cisco/openh264/pull/3351, specifically https://github.com/cisco/openh264/pull/3351/commits/e614eb9cdfc02c5e01b72f6415b975d8576885e9
 )
 
 if((VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
@@ -28,15 +28,8 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openh264.pc" " -lstdc++" "")
-  if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openh264.pc" " -lstdc++" "")
-  endif()
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
