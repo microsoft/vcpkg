@@ -8088,6 +8088,10 @@
       "baseline": "0.9.6+20210811",
       "port-version": 1
     },
+    "ruapu": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "rubberband": {
       "baseline": "4.0.0",
       "port-version": 0
