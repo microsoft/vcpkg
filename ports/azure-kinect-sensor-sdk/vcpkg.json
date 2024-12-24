@@ -1,7 +1,7 @@
 {
   "name": "azure-kinect-sensor-sdk",
   "version": "1.4.1",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Azure Kinect SDK is a cross platform (Linux and Windows) user mode SDK to read data from your Azure Kinect device.",
   "homepage": "https://github.com/microsoft/Azure-Kinect-Sensor-SDK",
   "supports": "linux | windows",

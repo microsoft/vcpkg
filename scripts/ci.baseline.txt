@@ -178,16 +178,6 @@ c-dbg-macro:arm64-uwp=skip
 c-dbg-macro:x64-osx=skip
 c-dbg-macro:arm64-osx=skip
 c-dbg-macro:x64-linux=skip
-
-# Needs work
-casadi:arm64-android=skip
-casadi:x64-android=skip
-casadi:arm-neon-android=skip
-casadi:x64-windows-static=skip
-casadi:x64-windows-static-md=skip
-casadi:x64-uwp=skip
-casadi:arm64-uwp=skip
-
 casclib:arm64-uwp=fail
 casclib:x64-uwp=fail
 catch-classic:arm-neon-android=skip
@@ -506,6 +496,10 @@ jemalloc:x64-uwp=fail
 jinja2cpplight:arm-neon-android=fail
 jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
+# needs android-29
+juce:arm-neon-android=fail
+juce:arm64-android=fail
+juce:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
 # needs android-24
@@ -829,7 +823,6 @@ omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
-openfbx:arm-neon-android=fail
 openimageio:arm-neon-android=fail
 openimageio:arm64-android=fail
 openimageio:x64-android=fail
@@ -998,6 +991,15 @@ rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
+# Visual Studio 17.12 compiler bug, fixed in 17.13: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2242053
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows=fail
+saucer:arm64-windows=fail
+saucer:x64-windows-static-md=fail
+saucer:x64-windows-static=fail
+saucer:x64-windows=fail
+saucer:x86-windows=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
@@ -1095,11 +1097,6 @@ spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
-# upstream issue https://github.com/stxxl/stxxl/issues/99
-stxxl:x86-windows=skip
-stxxl:x64-windows=skip
-stxxl:x64-windows-static=skip
-stxxl:x64-windows-static-md=skip
 systemc:arm64-windows=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail
@@ -1138,7 +1135,6 @@ torch-th:x64-windows-static=fail
 tvision:arm-neon-android=fail
 tvision:arm64-android=fail
 tvision:x64-android=fail
-unicorn:x64-windows-static-md=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
 # needs android-24
@@ -1243,6 +1239,7 @@ vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
 vcpkg-ci-arrow:x64-osx=pass
 vcpkg-ci-arrow:x64-linux=pass
+vcpkg-ci-aurora-au:x64-linux=pass
 vcpkg-ci-boost:arm-neon-android=pass
 vcpkg-ci-boost:arm64-android=pass
 vcpkg-ci-boost:arm64-uwp=pass

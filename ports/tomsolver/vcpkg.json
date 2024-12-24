@@ -1,6 +1,6 @@
 {
   "name": "tomsolver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simplest, Well-tested, Non-linear equations solver library.",
   "homepage": "https://github.com/tomwillow/tomsolver",
   "license": "MIT",
