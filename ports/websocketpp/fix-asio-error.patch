@@ -86,7 +86,7 @@ index 57dda74..8a5d719 100644
              m_alog->write(log::alevel::devel,"async_shutdown cancelled");
              return;
 diff --git a/websocketpp/transport/asio/endpoint.hpp b/websocketpp/transport/asio/endpoint.hpp
-index 94509ad..c1273bb 100644
+index 94509ad..b1faef9 100644
 --- a/websocketpp/transport/asio/endpoint.hpp
 +++ b/websocketpp/transport/asio/endpoint.hpp
 @@ -86,7 +86,7 @@ public:
@@ -147,6 +147,15 @@ index 94509ad..c1273bb 100644
          if (endpoint_iterator == end) {
              m_elog->write(log::elevel::library,
                  "asio::listen could not resolve the supplied host or service");
+@@ -666,7 +666,7 @@ public:
+ 
+     /// wraps the reset method of the internal io_service object
+     void reset() {
+-        m_io_service->reset();
++        m_io_service->restart();
+     }
+ 
+     /// wraps the stopped method of the internal io_service object
 @@ -687,7 +687,7 @@ public:
       * @since 0.3.0
       */
