@@ -8353,7 +8353,7 @@
       "port-version": 6
     },
     "sfml": {
-      "baseline": "2.6.2",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "sfsexp": {
