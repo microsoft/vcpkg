@@ -1,6 +1,6 @@
 {
   "name": "libodb",
-  "version": "2.5.0-b.25",
+  "version": "2.5.0-b.27",
   "description": "ODB library, base runtime for the ODB ORM solution",
   "homepage": "https://www.codesynthesis.com/products/odb/",
   "license": "GPL-2.0-only",
