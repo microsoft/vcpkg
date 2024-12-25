@@ -1,0 +1,8 @@
+{
+  "name": "iperf3",
+  "version": "3.18",
+  "description": "About iperf3: A TCP, UDP, and SCTP network bandwidth measurement tool",
+  "homepage": "https://github.com/esnet/iperf",
+  "license": "BSD-3-Clause",
+  "supports": "linux"
+}
