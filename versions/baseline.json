@@ -5242,7 +5242,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 8
+      "port-version": 9
     },
     "libtorrent": {
       "baseline": "2.0.10",
