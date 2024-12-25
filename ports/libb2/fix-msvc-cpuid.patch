@@ -1,0 +1,31 @@
+diff --git a/m4/ax_gcc_x86_cpuid.m4 b/m4/ax_gcc_x86_cpuid.m4
+--- a/m4/ax_gcc_x86_cpuid.m4
++++ b/m4/ax_gcc_x86_cpuid.m4
+@@ -60,14 +60,26 @@
+ AC_DEFUN([AX_GCC_X86_CPUID],
+ [AC_REQUIRE([AC_PROG_CC])
+ AC_LANG_PUSH([C])
+ AC_CACHE_CHECK(for x86 cpuid $1 output, ax_cv_gcc_x86_cpuid_$1,
+- [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>], [
++ [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
++#ifdef _MSC_VER
++#include <intrin.h>
++#endif], [
+      int op = $1, eax, ebx, ecx, edx;
+      FILE *f;
++#ifdef _MSC_VER
++     int out[[4]];
++     __cpuid(out, $1);
++     eax = out[[0]];
++     ebx = out[[1]];
++     ecx = out[[2]];
++     edx = out[[3]];
++#else
+       __asm__("cpuid"
+         : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
+         : "a" (op));
++#endif
+      f = fopen("conftest_cpuid", "w"); if (!f) return 1;
+      fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
+      fclose(f);
+      return 0;
