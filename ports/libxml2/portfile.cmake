@@ -26,7 +26,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "ftp" LIBXML2_WITH_FTP
         "http" LIBXML2_WITH_HTTP
         "iconv" LIBXML2_WITH_ICONV
         "legacy" LIBXML2_WITH_LEGACY
