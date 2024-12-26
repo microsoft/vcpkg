@@ -12,7 +12,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-arm-uwp.patch
-        add-config-include.patch
+        # add-config-include.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
