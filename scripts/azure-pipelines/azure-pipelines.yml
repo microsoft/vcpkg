@@ -8,7 +8,7 @@ parameters:
   - name: vcpkgToolSha
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
-    default:  'use default'
+    default:  '5eb34c2868054b91e4efd3bd8d471ac1ea48cd32'
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
