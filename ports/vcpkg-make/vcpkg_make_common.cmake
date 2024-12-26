@@ -281,7 +281,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             endif()
         endforeach()
 
-        if (NOT arg_DISABLE_MSVC_WRAPPERS)
+        if (NOT arg_DISABLE_MSVC_WRAPPERS AND NOT VCPKG_TARGET_IS_MINGW)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
