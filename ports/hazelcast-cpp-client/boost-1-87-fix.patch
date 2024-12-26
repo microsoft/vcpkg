@@ -1,3 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85b58b2..1b2f9e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ project(hazelcast-cpp-client
+         LANGUAGES CXX)
+ 
+ # Set the C++ standard
+-set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ # Set the default build type for single-config generators if not given
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 71591f6..72ad23d 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -21,7 +21,7 @@ project (hazelcast-cpp-client-examples
+          DESCRIPTION "Hazelcast C++ Client Code Examples"
+          LANGUAGES CXX)
+ 
+-set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ if (NOT TARGET hazelcast-cpp-client)
 diff --git a/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h b/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h
 index a87fdcd..30dbefa 100644
 --- a/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h
@@ -186,18 +212,21 @@ index b41dae2..9b23210 100644
  }
  
 diff --git a/hazelcast/src/hazelcast/util/util.cpp b/hazelcast/src/hazelcast/util/util.cpp
-index e775dc2..c077b36 100644
+index e775dc2..3b6f7ad 100644
 --- a/hazelcast/src/hazelcast/util/util.cpp
 +++ b/hazelcast/src/hazelcast/util/util.cpp
-@@ -36,7 +36,7 @@
+@@ -36,9 +36,9 @@
  #include <boost/algorithm/string/classification.hpp>
  
  #ifdef HZ_BUILD_WITH_SSL
 -#include <boost/asio/io_service.hpp>
 +#include <boost/asio/io_context.hpp>
  #include <boost/asio/ip/basic_resolver.hpp>
- #include <boost/asio/ssl/rfc2818_verification.hpp>
+-#include <boost/asio/ssl/rfc2818_verification.hpp>
++#include <boost/asio/ssl/host_name_verification.hpp>
  #include <boost/asio/ip/tcp.hpp>
+ #include <boost/system/system_error.hpp>
+ #endif // HZ_BUILD_WITH_SSL
 @@ -126,12 +126,10 @@ boost::asio::ip::address
  AddressUtil::get_by_name(const std::string& host, const std::string& service)
  {
@@ -214,6 +243,15 @@ index e775dc2..c077b36 100644
      } catch (boost::system::system_error& e) {
          std::ostringstream out;
          out << "Address " << host << " ip number is not available. "
+@@ -168,7 +166,7 @@ SyncHttpsClient::SyncHttpsClient(const std::string& server_ip,
+ 
+     ssl_context_.set_verify_mode(boost::asio::ssl::verify_peer);
+     ssl_context_.set_verify_callback(
+-      boost::asio::ssl::rfc2818_verification(server_));
++      boost::asio::ssl::host_name_verification(server_));
+     socket_ =
+       std::unique_ptr<boost::asio::ssl::stream<boost::asio::ip::tcp::socket>>(
+         new boost::asio::ssl::stream<boost::asio::ip::tcp::socket>(
 @@ -544,11 +542,9 @@ SyncHttpClient::open_connection()
      try {
          // Get a list of endpoints corresponding to the server name.
