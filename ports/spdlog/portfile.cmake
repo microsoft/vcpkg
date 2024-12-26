@@ -1,3 +1,9 @@
+vcpkg_download_distfile(FMT_PATCH
+    URLS https://github.com/gabime/spdlog/pull/3301/commits/e693420a38b58d29a56b3ea921e15b175a5f2843.patch?full_index=1
+    FILENAME fix-fmt-e693420a38b58d29a56b3ea921e15b175a5f2843.patch
+    SHA512 03871e96d5d7059066f1a671381578a9430cdd26221cec9f1193d047e16b582c320511da7bce7c939301c634d1a677ff6121dffa465d32c35b3e9ee89cb3ab49
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
@@ -6,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES
         fix-msvc-utf8.patch
+		"${FMT_PATCH}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
