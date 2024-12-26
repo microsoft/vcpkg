@@ -31,4 +31,13 @@ file(INSTALL
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/wrappers"
 )
 
-vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
+vcpkg_install_copyright(
+    COMMENT [[
+The cmake scripts are under vcpkg's MIT license terms, see LICENSE.txt below.
+The port also installs shell scripts from GNU Automake.
+These scripts are under GPL-2.0-or-later, see COPYING below.
+]]
+    FILE_LIST
+        "${VCPKG_ROOT_DIR}/LICENSE.txt"
+        "${automake_source}/COPYING"
+)
