@@ -52,7 +52,7 @@ function(z_vcpkg_make_determine_arch out_var value)
     elseif(${value} MATCHES "^(ARM|arm)$")
         set(${out_var} arm PARENT_SCOPE)
     elseif(${value} MATCHES "^(x86_64|i686|aarch64)$" OR NOT VCPKG_TARGET_IS_WINDOWS)
-        # Do nothing an assume valid architectures
+        # Do nothing and assume valid architecture
         set("${out_var}" "${value}" PARENT_SCOPE)
     else()
         message(FATAL_ERROR "Unsupported architecture '${value}' in '${CMAKE_CURRENT_FUNCTION}'!" )
