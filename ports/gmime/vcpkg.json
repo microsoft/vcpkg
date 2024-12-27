@@ -8,6 +8,10 @@
   "dependencies": [
     "glib",
     {
+      "name": "gmime",
+      "host": true
+    },
+    {
       "name": "libiconv",
       "platform": "!windows"
     },
