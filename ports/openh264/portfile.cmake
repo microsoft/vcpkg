@@ -28,12 +28,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -Dtests=disabled
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -Dtests=disabled
     ADDITIONAL_BINARIES
         ${additional_binaries}
 )
-
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
