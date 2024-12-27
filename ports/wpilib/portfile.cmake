@@ -8,6 +8,7 @@ vcpkg_from_github(
     SHA512 ce62bb225132aba6f22d45fce8a1a3f55d92a61a61187efd09d47a0e0c351125949ed41cc5cee0d69b5bb5b71baacfa45a9e19a33f7e69d3ae63a11e47257da4
     PATCHES
         fix-build-error-with-fmt11.patch
+		fix-dep.patch
 )
 
 if("allwpilib" IN_LIST FEATURES)
