@@ -25,6 +25,7 @@ endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    ADD_BIN_TO_PATH  # for iconv-detect
     OPTIONS
         --disable-crypto
         --disable-glibtest
