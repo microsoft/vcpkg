@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.gnome.org/sources/gmime/3.2/gmime-${VERSION}.tar.xz"
+    URLS https://github.com/jstedfast/gmime/releases/download/${VERSION}/gmime-${VERSION}.tar.xz
     FILENAME "gmime-${VERSION}.tar.xz"
-    SHA512 a60d3f9f1aa8490865c22cd9539544e9c9f3ceb4037b9749cf9e5c279f97aa88fc4cd077bf2aff314ba0db2a1b7bbe76f9b1ca5a17fffcbd6315ecebc5414a3d
+    SHA512 cafb89854b2441508bf940fd6f991739d30fb137b8928ad33e8e4d2a0293a6460e4d1318e73c3ee9e5a964b692f36e7a4eb5f2930c6998698bd9edf866629655
 )
 
 vcpkg_extract_source_archive(
