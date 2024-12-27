@@ -17,21 +17,21 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endblock()
 endif()
 
+vcpkg_list(SET additional_binaries)
 if((VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
     vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-    vcpkg_add_to_path(${NASM_EXE_PATH})
+    vcpkg_list(APPEND additional_binaries "nasm = ['${NASM}']")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(GASPREPROCESSOR)
-    foreach(GAS_PATH ${GASPREPROCESSOR})
-        get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
-        vcpkg_add_to_path(${GAS_ITEM_PATH})
-    endforeach(GAS_PATH)
+    list(JOIN GASPREPROCESSOR "','" gaspreprocessor)
+    vcpkg_list(APPEND additional_binaries "gas-preprocessor.pl = ['${gaspreprocessor}']")
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -Dtests=disabled
+    ADDITIONAL_BINARIES
+        ${additional_binaries}
 )
 
 vcpkg_install_meson()
