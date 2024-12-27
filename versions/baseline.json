@@ -4628,10 +4628,6 @@
       "baseline": "2.1.3",
       "port-version": 0
     },
-    "libgpod": {
-      "baseline": "2019-08-29",
-      "port-version": 4
-    },
     "libgta": {
       "baseline": "1.0.8",
       "port-version": 5

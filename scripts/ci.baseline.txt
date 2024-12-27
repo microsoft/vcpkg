@@ -536,6 +536,8 @@ libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
+libfreenect2:arm64-windows=fail
+libfreenect2:arm64-windows-static-md=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -546,13 +548,6 @@ libgo:x64-android=fail
 libgpg-error:arm-neon-android=fail
 libgpg-error:arm64-android=fail
 libgpg-error:x64-android=fail
-# Missing system libraries on linux to run/prepare autoconf
-libgpod:x64-linux=fail
-libfreenect2:arm64-windows=fail
-libfreenect2:arm64-windows-static-md=fail
-libgpod:arm-neon-android=fail
-libgpod:arm64-android=fail
-libgpod:x64-android=fail
 libgxps:arm-neon-android=fail
 libgxps:arm64-android=fail
 libgxps:x64-android=fail
