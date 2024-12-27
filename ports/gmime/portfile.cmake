@@ -21,6 +21,14 @@ vcpkg_configure_make(
         --disable-introspection
         --disable-vala
 )
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(COPY "${SOURCE_PATH}/build/vs2017/unistd.h" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(COPY "${SOURCE_PATH}/build/vs2017/unistd.h" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    endif()
+endif()
+
 vcpkg_install_make()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
