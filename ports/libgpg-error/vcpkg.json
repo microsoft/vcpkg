@@ -1,8 +1,8 @@
 {
   "name": "libgpg-error",
-  "version": "1.47",
-  "description": "A common dependency of all GnuPG components",
-  "homepage": "https://gnupg.org/software/libgpg-error/index.html",
+  "version": "1.51",
+  "description": "A runtime library for GnuPG and other software which likes to use it.",
+  "homepage": "https://gnupg.org/software/libgpg-error/",
   "license": "LGPL-2.1-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
