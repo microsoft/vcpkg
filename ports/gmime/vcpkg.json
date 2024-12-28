@@ -11,10 +11,7 @@
       "name": "gmime",
       "host": true
     },
-    {
-      "name": "libiconv",
-      "platform": "!windows"
-    },
+    "libiconv",
     "libidn2",
     "zlib"
   ]

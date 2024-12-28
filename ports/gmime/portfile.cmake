@@ -27,6 +27,7 @@ vcpkg_configure_make(
     AUTOCONFIG
     ADD_BIN_TO_PATH  # for iconv-detect
     OPTIONS
+        ${options}
         --disable-crypto
         --disable-glibtest
         --disable-introspection
@@ -51,8 +52,6 @@ vcpkg_install_make()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 if(NOT VCPKG_CROSSCOMPILING)
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/iconv-detect.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
@@ -60,7 +59,6 @@ if(NOT VCPKG_CROSSCOMPILING)
     )
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/iconv-detect.h" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "iconv-detect.h-${TARGET_TRIPLET}.log")
-message(FATAL_ERROR STOP)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
