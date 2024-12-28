@@ -3,6 +3,7 @@
   "version": "1.0",
   "description": "It is a minimized C++20 coroutine library.",
   "homepage": "https://github.com/avplayer/ucoro",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 663044e..6d8e460 100644
+index 663044e..9121cb3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -15,8 +15,31 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -18,7 +18,9 @@ index 663044e..6d8e460 100644
 +    enable_testing()
 +    add_subdirectory(tests)
 +endif()
-+
+ 
+-enable_testing()
+-add_subdirectory(tests)
 +install(
 +    TARGETS ucoro
 +    EXPORT ucoroTargets
@@ -32,8 +34,6 @@ index 663044e..6d8e460 100644
 +install(
 +    EXPORT ucoroTargets
 +    FILE ucoro-config.cmake
++    NAMESPACE ucoro::
 +    DESTINATION "share/ucoro"
 +)
- 
--enable_testing()
--add_subdirectory(tests)
