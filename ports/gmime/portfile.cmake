@@ -22,6 +22,12 @@ elseif(VCPKG_CROSSCOMPILING)
     vcpkg_list(APPEND options "ac_cv_have_iconv_detect_h=no")
 endif()
 
+if("crypto" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "--enable-crypto")
+else()
+    vcpkg_list(APPEND options "--disable-crypto")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG

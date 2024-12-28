@@ -14,5 +14,16 @@
     "libiconv",
     "libidn2",
     "zlib"
-  ]
+  ],
+  "features": {
+    "crypto": {
+      "description": "PGP and S/MIME support",
+      "dependencies": [
+        {
+          "name": "gpgme",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }
