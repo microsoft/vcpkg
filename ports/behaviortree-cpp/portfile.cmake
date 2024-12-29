@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BehaviorTree/BehaviorTree.CPP
     REF ${VERSION}
-    SHA512 f2ee647c734e39e50f92405c5dc9fd2876602ff074a86416959fbf6548e37130d35f312cafb084ca4a40da7ee81386502a75ad839ce99a2859c30ff187820fdf
+    SHA512 3dbe048b276dbb3c79f85bfae0ae5da4657088d08ef9b7b0674fac1fb4daf8fb3cf7e3ab774b71d363af6cd8ac7ed315b4dd6d3318a38aa0532e6e0d43e6fa37
     HEAD_REF master
     PATCHES
         fix-x86_build.patch
