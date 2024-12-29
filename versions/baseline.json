@@ -366,7 +366,7 @@
     },
     "autodock-vina": {
       "baseline": "1.2.5",
-      "port-version": 3
+      "port-version": 4
     },
     "avcpp": {
       "baseline": "2.4.0",
@@ -522,7 +522,7 @@
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
-      "port-version": 6
+      "port-version": 7
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.12.0",
@@ -3338,7 +3338,7 @@
     },
     "gtsam": {
       "baseline": "4.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -4494,7 +4494,7 @@
     },
     "libe57": {
       "baseline": "1.1.332",
-      "port-version": 4
+      "port-version": 5
     },
     "libe57format": {
       "baseline": "3.2.0",
@@ -8022,7 +8022,7 @@
     },
     "robotraconteur": {
       "baseline": "1.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "robotraconteur-companion": {
       "baseline": "0.4.1",
@@ -9510,7 +9510,7 @@
     },
     "vowpal-wabbit": {
       "baseline": "9.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vs-yasm": {
       "baseline": "0.5.0",
