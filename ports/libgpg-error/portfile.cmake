@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
+        android.diff
         cross-tools.patch
         gpgrt-config.patch
         mingw.diff
@@ -27,6 +28,10 @@ endif()
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND options "--disable-threads")
 endif()
 
 vcpkg_configure_make(

@@ -543,9 +543,6 @@ libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
-libgpg-error:arm-neon-android=fail
-libgpg-error:arm64-android=fail
-libgpg-error:x64-android=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libfreenect2:arm64-windows=fail
