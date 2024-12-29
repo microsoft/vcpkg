@@ -12,7 +12,9 @@ vcpkg_extract_source_archive(
     PATCHES
         cross-tools.patch
         gpgrt-config.patch
+        mingw.diff
         pkgconfig-libintl.patch
+        win32-nls.diff
 )
 
 vcpkg_list(SET options)
@@ -32,8 +34,8 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${options}
-        --disable-tests
         --disable-doc
+        --disable-tests
 )
 
 vcpkg_install_make()
