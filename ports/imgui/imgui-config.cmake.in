@@ -14,8 +14,10 @@ if (@IMGUI_BUILD_GLUT_BINDING@)
     find_dependency(GLUT)
 endif()
 
-if (@IMGUI_BUILD_SDL2_BINDING@ OR @IMGUI_BUILD_SDL2_RENDERER_BINDING@)
+if ((@IMGUI_BUILD_SDL2_BINDING@ OR @IMGUI_BUILD_SDL2_RENDERER_BINDING@) AND NOT (@IMGUI_BUILD_SDL3_BINDING@ OR @IMGUI_BUILD_SDL3_RENDERER_BINDING@))
     find_dependency(SDL2 CONFIG)
+elseif(@IMGUI_BUILD_SDL2_BINDING@ OR @IMGUI_BUILD_SDL2_RENDERER_BINDING@)
+    message(WARNING "Imgui: sdl2 dependency not enforced. sdl2 features are mutually exclusive with sdl3 features with sdl3 taking priority.")
 endif()
 
 if (@IMGUI_BUILD_SDL3_BINDING@ OR @IMGUI_BUILD_SDL3_RENDERER_BINDING@)
