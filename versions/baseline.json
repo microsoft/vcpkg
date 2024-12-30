@@ -5532,6 +5532,10 @@
       "baseline": "2020-11-24",
       "port-version": 0
     },
+    "lief": {
+      "baseline": "0.16.0",
+      "port-version": 0
+    },
     "lightgbm": {
       "baseline": "4.5.0",
       "port-version": 0
