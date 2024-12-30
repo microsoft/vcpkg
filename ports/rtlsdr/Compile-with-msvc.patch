@@ -4,17 +4,18 @@ index 1ff6c9aa2c..21f743a0dd 100644
 +++ b/CMakeLists.txt
 @@ -68,6 +68,14 @@
  ########################################################################
- find_package(Threads)
- find_package(PkgConfig)
-+if(MSVC)
-+    find_package(pthreads)
-+    find_package(libusb)
+-find_package(Threads)
++find_package(Threads REQUIRED)
+-find_package(PkgConfig)
++find_package(PkgConfig REQUIRED)
++find_package(PThreads4W REQUIRED)
++pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++#if(MSVC)
++    find_package(PThreads4W REQUIRED)
 +    include_directories(${PThreads4W_INCLUDE_DIR})
-+    include_directories(${LIBUSB_INCLUDE_DIRS})
-+elseif(WIN32 AND NOT MINGW)
-+    set(THREADS_USE_PTHREADS_WIN32 true)
-+endif()
- 
++# endif
++include_directories(${LIBUSB_INCLUDE_DIRS})
+
  if(PKG_CONFIG_FOUND)
      pkg_check_modules(LIBUSB libusb-1.0 IMPORTED_TARGET)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
@@ -25,13 +26,7 @@ index a2bcb3dcbe..f98110bce5 100644
  ########################################################################
  add_library(rtlsdr SHARED librtlsdr.c
    tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
--target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES} ${THREADS_PTHREADS_LIBRARY})
-+if(MSVC)
-+  target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES})
-+else()
-+  target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES} ${THREADS_PTHREADS_LIBRARY})
-+endif()
-+
+ target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES} ${THREADS_PTHREADS_LIBRARY})
  target_include_directories(rtlsdr PUBLIC
    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
    $<INSTALL_INTERFACE:include>  # <prefix>/include
@@ -39,11 +34,17 @@ index a2bcb3dcbe..f98110bce5 100644
  ########################################################################
  add_library(rtlsdr_static STATIC librtlsdr.c
    tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
++include_directories(${Threads_INCLUDE_DIR})
++include_directories(${LIBUSB_INCLUDE_DIRS})
 +if(MSVC)
-+target_link_libraries(rtlsdr_static ${LIBUSB_LIBRARIES})
++    include_directories(${PThreads4W_INCLUDE_DIR})
++    include_directories(${Threads_INCLUDE_DIR})
++    include_directories(${LIBUSB_INCLUDE_DIRS})
++    target_link_libraries(rtlsdr_static ${LIBUSB_LIBRARIES} ${PThreads4W_LIBRARY})
 +else()
  target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES} ${THREADS_PTHREADS_LIBRARY})
 +endif()
++target_link_libraries(main PRIVATE PkgConfig::libusb)
  target_include_directories(rtlsdr_static PUBLIC
    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
    $<INSTALL_INTERFACE:include>  # <prefix>/include
@@ -52,10 +53,8 @@ index a2bcb3dcbe..f98110bce5 100644
      rtlsdr
  )
 +if(MSVC)
-+target_link_libraries(convenience_static
-+    ${PThreads4W_LIBRARY}
-+)
++    target_link_libraries(convenience_static ${PThreads4W_LIBRARY})
 +endif()
  endif()
- 
+
  ########################################################################
