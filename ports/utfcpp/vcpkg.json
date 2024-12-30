@@ -1,6 +1,6 @@
 {
   "name": "utfcpp",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "UTF-8 with C++ in a Portable Way",
   "homepage": "https://github.com/nemtrif/utfcpp",
   "license": "BSL-1.0",
