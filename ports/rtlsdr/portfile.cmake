@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osmocom/rtl-sdr
-    REF d794155ba65796a76cd0a436f9709f4601509320
-    SHA512 21fe10f1dbecca651650f03d1008560930fac439d220c33b4a23acce98d78d8476ff200765eed8cfa6cddde761d45f7ba36c8b5bc3662aa85819172830ea4938
+    REF v2.0.2
+    SHA512 20a1630df7d4da5d263c5ffd4d83a7c2a6fc674e3838bf02b2b59c1da8d946dafc48790d410ab2fcbc0362c2ac70e5cdcae9391c5f04803bf2cdddafd6f58483
     HEAD_REF master
     PATCHES
         Compile-with-msvc.patch
