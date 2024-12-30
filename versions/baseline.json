@@ -4621,7 +4621,7 @@
       "port-version": 5
     },
     "libgpg-error": {
-      "baseline": "1.47",
+      "baseline": "1.51",
       "port-version": 0
     },
     "libgpiod": {
@@ -5098,7 +5098,7 @@
     },
     "libsecret": {
       "baseline": "0.21.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libsercomm": {
       "baseline": "1.3.2",

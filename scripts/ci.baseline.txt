@@ -536,6 +536,8 @@ libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
+# inline assembly requires more registers than available
+libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -543,9 +545,6 @@ libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
-libgpg-error:arm-neon-android=fail
-libgpg-error:arm64-android=fail
-libgpg-error:x64-android=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libfreenect2:arm64-windows=fail
