@@ -4,13 +4,9 @@
   "port-version": 4,
   "description": "rtl-sdr is a library that turns your Realtek RTL2832 based DVB dongle into a SDR receiver",
   "homepage": "https://osmocom.org/projects/rtl-sdr",
-  "supports": "windows & (x86 | x64)",
   "dependencies": [
     "libusb",
-    {
-      "name": "pthreads",
-      "platform": "windows"
-    },
+    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true
