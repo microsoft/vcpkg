@@ -35,7 +35,6 @@ vcpkg_configure_make(
     ADD_BIN_TO_PATH  # for iconv-detect
     OPTIONS
         ${options}
-        --disable-crypto
         --disable-glibtest
         --disable-introspection
         --disable-vala
