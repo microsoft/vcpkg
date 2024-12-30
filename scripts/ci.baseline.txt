@@ -538,6 +538,8 @@ libdc1394:arm64-android=fail
 libflac:arm-neon-android=fail
 libfreenect2:arm64-windows=fail
 libfreenect2:arm64-windows-static-md=fail
+# inline assembly requires more registers than available
+libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -548,6 +550,7 @@ libgo:x64-android=fail
 libgpg-error:arm-neon-android=fail
 libgpg-error:arm64-android=fail
 libgpg-error:x64-android=fail
+# Missing system libraries on linux to run/prepare autoconf
 libgxps:arm-neon-android=fail
 libgxps:arm64-android=fail
 libgxps:x64-android=fail
