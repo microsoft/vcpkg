@@ -4,9 +4,6 @@ vcpkg_from_github(
     REF v2.0.2
     SHA512 20a1630df7d4da5d263c5ffd4d83a7c2a6fc674e3838bf02b2b59c1da8d946dafc48790d410ab2fcbc0362c2ac70e5cdcae9391c5f04803bf2cdddafd6f58483
     HEAD_REF master
-    PATCHES
-        Compile-with-msvc.patch
-        fix-version.patch
 )
 
 file(
