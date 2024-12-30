@@ -7,12 +7,19 @@ vcpkg_from_github(
     SHA512 03511ae2b8d9de9363a54f1d4bd4fa57a6d8c3a0e52ee3cc52efd93ac3dcb73bd294283abc2303026c10cbeea217a6cdfff0037d58a67d729f5f816b6fbc5335
     HEAD_REF main
     PATCHES
-        dependencies_fix.patch
+        pr250.diff
+        ls-qpack.diff
+        msquic.diff
+        pkgconfig.diff
         win32-crt.diff
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DMSH3_INSTALL_PKGCONFIG=ON
+        -DMSH3_USE_EXTERNAL_LSQPACK=ON
+        -DMSH3_USE_EXTERNAL_MSQUIC=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
