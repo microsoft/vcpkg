@@ -15,19 +15,7 @@
       "version>=": "1.87.0"
     },
     {
-      "name": "boost-concept-check",
-      "version>=": "1.87.0"
-    },
-    {
       "name": "boost-config",
-      "version>=": "1.87.0"
-    },
-    {
-      "name": "boost-container-hash",
-      "version>=": "1.87.0"
-    },
-    {
-      "name": "boost-core",
       "version>=": "1.87.0"
     },
     {
@@ -35,31 +23,11 @@
       "version>=": "1.87.0"
     },
     {
-      "name": "boost-integer",
-      "version>=": "1.87.0"
-    },
-    {
-      "name": "boost-mpl",
-      "version>=": "1.87.0"
-    },
-    {
       "name": "boost-predef",
       "version>=": "1.87.0"
     },
     {
-      "name": "boost-smart-ptr",
-      "version>=": "1.87.0"
-    },
-    {
-      "name": "boost-static-assert",
-      "version>=": "1.87.0"
-    },
-    {
       "name": "boost-throw-exception",
-      "version>=": "1.87.0"
-    },
-    {
-      "name": "boost-type-traits",
       "version>=": "1.87.0"
     }
   ],
