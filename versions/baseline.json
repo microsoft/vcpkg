@@ -3193,8 +3193,8 @@
       "port-version": 4
     },
     "gmime": {
-      "baseline": "3.2.6",
-      "port-version": 6
+      "baseline": "3.2.15",
+      "port-version": 0
     },
     "gmmlib": {
       "baseline": "22.5.2",
