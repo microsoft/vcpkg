@@ -8073,8 +8073,8 @@
       "port-version": 1
     },
     "rtlsdr": {
-      "baseline": "2020-04-16",
-      "port-version": 4
+      "baseline": "2.0.2",
+      "port-version": 0
     },
     "rtmfp-cpp": {
       "baseline": "1.5.1",
