@@ -12,7 +12,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO texus/TGUI
     REF "v${VERSION}"
-    SHA512 a117c1c23b6811370f58069b3d6a7fb73930455f7d456ffd53e2abd161d637968cecca653d42ea8a055d53f8af8c5e10f66528e2bb5091e04a28ceb3b774d7ff
+    SHA512 24aa59b5eb225987247384dfdfc8bdce1d755cc7daeda6fdff9046eea77a0f2e686d5b03d24cbbd20e7d6d90ae809eae90467a2b1d923de1e2ecf668e28bcff4
     HEAD_REF 1.x
     PATCHES
         devendor-stb.patch
