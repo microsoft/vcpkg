@@ -17,6 +17,7 @@ vcpkg_from_github(
         0001_Export_targets.patch
         0002_Fix_config.patch
         0003_fix_dep.patch
+        0004_include_chrono.patch # https://github.com/ompl/ompl/pull/1201
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.

@@ -3,10 +3,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     REPO linux-rt/librtpi
     REF "${VERSION}"
-    SHA512 fb0cdd14f3c94f610fc153154ea09d5cfd7d3def16bdaabf8c2b4e0a8b7fa8ddec4cde6ae0b8726d58ee4a773df5c4f13002e565fb06ad3c8e9731a45122704f
+    SHA512 2665c32867f498d37daaec68a66f5d226de8c2f29bd57f784fbf33245aa5fc3dc173bb80d948b1b5c2c03798dce3fbd9638a3c0ec3816430ecfc7436cea9566e
     HEAD_REF main
-    PATCHES
-        condition_variable-fix-wait_until-predicate-evaluation.patch
 )
 
 vcpkg_configure_make(

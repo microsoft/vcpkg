@@ -2,15 +2,15 @@
 # Port for Omniverse PhysX 5 - NVIDIA Corporation
 # Written by Marco Alesiani <malesiani@nvidia.com>
 # Note: this port is NOT officially supported by NVIDIA.
-# This port is also not a replacement for the 'physx' port: the newest Omniverse PhysX dropped support
-# for many platforms so the old one will continue to be community maintained to support all previous platforms.
+# This port is also not a replacement for the old 'physx' port: the newest Omniverse PhysX dropped support
+# for many platforms so older versions are still needed to support all previous platforms.
 ###############################################################################################################
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA-Omniverse/PhysX
-    REF 105.1-physx-5.3.0 # newest tag
-    SHA512 fa3897738aed583f0498587365aafc77107351d72888058d0b725bd39de1c33b37c99294b6346be165eaf3aa3c6228ca7ddb0a3b18e522c1fb79e2559d70b551
+    REF 106.4-physx-5.5.0 # newest tag
+    SHA512 93ad438db81e9dc095741c837c0e797b56b35d6b77c7d1b1367b11bcbcb4ee1b8ff2affc27624d06829ac5e979f08d506fe727851fc383724e6633b775752d82
     HEAD_REF main
 )
 
@@ -25,23 +25,20 @@ else()
     set(VCPKG_LINK_CRT_STATICALLY FALSE)
 endif()
 
-# Target platform detection for packman (the NVIDIA dependency downloader) and CMake options settings
+# Adjust CMake options settings based on the target platform
 if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PLATFORM_OPTIONS
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
     )
-    set(targetPlatform "linux")
 elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(PLATFORM_OPTIONS
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
     )
-    set(targetPlatform "linuxAarch64")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-
     set(PLATFORM_OPTIONS
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
@@ -49,17 +46,9 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DNV_USE_STATIC_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
         -DPX_FLOAT_POINT_PRECISE_MATH=OFF
     )
-
-    # Note: it would have been more correct to specify "win64" here, but we specify this so that packman can download
-    # the right dependencies on windows (see the "platforms" field in the dependencies.xml), that will also later
-    # set up the correct PM_xxx environment variables that we can pass to the cmake generation invocation to find
-    # whatever the PhysX project needs. Note that vc17(2022) is not required: the latest repo is guaranteed to work
-    # with vc15, vc16 and vc17 on x64 Windows. The binaries for these platforms downloaded by packman should be the same.
-    set(targetPlatform "vc17win64")
 else()
     message(FATAL_ERROR "Unsupported platform/architecture combination")
 endif()
-
 
 ######################## Download required deps ##############################
 
@@ -67,9 +56,9 @@ set($ENV{PM_PATHS} "")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40105.1-5.3.4207.33265367-windows-public.7z"
+        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%405.5.0.2aa3c8a3-release-106.4-windows-public.7z"
         FILENAME "PhysXGpu.7z"
-        SHA512 010b4c135026a15710b2e0d0d503197456f8f9d2eb291b32df65aa3dbeff09ba0877c52af1724f7a9384af727657d247cabf9c330e11c7ae1e1be5d1b89dce81
+        SHA512 84f2ba50ae89ebc959d8e35e99750a9fefddd51ba13d0bd96eac08d91b3de658508cb712e4ba253ed2d1be68589e0860747bf0bb324cbb2312574eb686aca06b
     )
 
     # 7z might not be preinstalled on Win machines
@@ -82,11 +71,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "extract-PhysXGpu"
     )
 else()
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40105.1-5.3.4207.33265367-linux-x86_64-public.7z"
-        FILENAME "PhysXGpu.7z"
-        SHA512 a6209a7d4218e80c3cbeec10a80ca3aaa08793469ddcf01ed8bc4582beef0b13697e1bb91f3a59cfdbdfe9652fe22d7569be4de9f0d08a9525a60951c2989acd
-    )
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        vcpkg_download_distfile(ARCHIVE
+            URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%405.5.0.2aa3c8a3-release-106.4-linux-aarch64-public.7z"
+            FILENAME "PhysXGpu.7z"
+            SHA512 92f47df4b7d6e1da21249acd4d13ce54a8ad6d5d21d9bb65e6a1af8b83494d22eb621fe77cde2fcea61ad56048894c9b73cded7193c7519ff62ee7e23c6d83e3
+        )
+    else()
+        vcpkg_download_distfile(ARCHIVE
+            URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%405.5.0.2aa3c8a3-release-106.4-linux-x86_64-public.7z"
+            FILENAME "PhysXGpu.7z"
+            SHA512 4728bd0c37f1c931e31b1aa3354d45f157ca4930199840cb98524f02fa0422f7e6f72dce860111c6494b0bde8944a758e9dd8940d7015057e528d4db98d6bd0c
+        )
+    endif()
 
     vcpkg_extract_source_archive(PHYSXGPU_SOURCE_PATH
         NO_REMOVE_ONE_LEVEL
@@ -100,9 +97,9 @@ list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXDevice%4018.12.7.4.7z"
+        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXDevice%4018.12.7.6.7z"
         FILENAME "PhysXDevice.7z"
-        SHA512 c20eb2f1e0dcb9d692cb718ca7e3a332291e72a09614f37080f101e5ebc1591033029f0f1e6fba33a17d4c9f59f13e561f3fc81cee34cd53d50b579c01dd3f3c
+        SHA512 0b75ea060a63f307a63ebfd5867cec06ab431a4b1a41e65d0a1ff7be115daf9ce080222128bdeb6d424ffa0aa9343c495455e814be424db1ce11cce8e760d5ff
     )
 
     set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/PhysXDevice_dep")
@@ -117,7 +114,7 @@ endif()
 message(STATUS "Extracted dependency to $ENV{PM_PhysXDevice_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
 
-if(targetPlatform STREQUAL "vc17win64")
+if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{PM_freeglut_PATH} "${CURRENT_BUILDTREES_DIR}/freeglut_dep")
     file(MAKE_DIRECTORY "$ENV{PM_freeglut_PATH}")
     vcpkg_download_distfile(ARCHIVE
@@ -135,45 +132,31 @@ if(targetPlatform STREQUAL "vc17win64")
     list(APPEND ENV{PM_PATHS} $ENV{PM_freeglut_PATH})
 endif()
 
-######################## Now generate ALL cmake parameters according to our distribution ##############################
+######################## Now generate ALL CMake parameters according to our distribution ##############################
 
 set(PHYSX_ROOT_DIR "${SOURCE_PATH}/physx")
 
 # Set common parameters
 set(common_params -DCMAKE_PREFIX_PATH=$ENV{PM_PATHS} -DPHYSX_ROOT_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_LIB_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_BIN_DIR=${PHYSX_ROOT_DIR})
 
-# Set platform and compiler specific parameters
-if(targetPlatform STREQUAL "linuxAarch64")
+# Set platform and compiler specific parameters (physx expects binaries to live in these locations)
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux-aarch64/PhysX)
     set(platformCMakeParams -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=arm)
-elseif(targetPlatform STREQUAL "linux")
+elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux/PhysX)
     set(platformCMakeParams -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=x86)
-elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win64
+elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") # Note: this will work for any Win64, default is vc17win64
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/vc17win64/PhysX)
     set(platformCMakeParams -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
 endif()
 
-# Also make sure the packman-downloaded GPU driver is found as a binary
+# Also make sure the downloaded GPU driver is found as a binary
 list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin)
-
-# Anyway the above only works for clang, see
-# source/compiler/cmake/linux/CMakeLists.txt:164
-# to avoid problems, we copy _immediately_ the extra binaries
-if(targetPlatform STREQUAL "linuxAarch64")
-    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.aarch64/checked/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.aarch64/debug")
-    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.aarch64/release/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.aarch64/release")
-elseif(targetPlatform STREQUAL "linux")
-    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.clang/checked/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.clang/debug")
-    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.clang/release/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.clang/release")
-elseif(targetPlatform STREQUAL "vc17win64")
-    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/win.x86_64.vc141.mt/checked/PhysXGpu_64.dll" DESTINATION "${SOURCE_PATH}/physx/bin/vc17win64/debug")
-    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/win.x86_64.vc141.mt/release/PhysXGpu_64.dll" DESTINATION "${SOURCE_PATH}/physx/bin/vc17win64/release")
-endif()
 
 set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
 
-# Finally invoke cmake to configure the PhysX project
+# Finally invoke physx's CMake to configure the PhysX project
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
     GENERATOR "${generator}"
@@ -201,7 +184,7 @@ message("[PHYSX BUILD COMPLETED] Extracting build artifacts to vcpkg installatio
 # Artifacts paths are similar to <compiler>/<configuration>/[artifact] however vcpkg expects
 # libraries, binaries and headers to be respectively in ${CURRENT_PACKAGES_DIR}/lib or ${CURRENT_PACKAGES_DIR}/debug/lib,
 # ${CURRENT_PACKAGES_DIR}/bin or ${CURRENT_PACKAGES_DIR}/debug/bin and ${CURRENT_PACKAGES_DIR}/include.
-# This function accepts a DIRECTORY named variable specifying the 'lib' or 'bin' destination directory and a SUFFIXES named
+# This function accepts a variable named DIRECTORY specifying the 'lib' or 'bin' destination directory and a SUFFIXES named
 # variable which specifies a list of suffixes to extract in that folder (e.g. all the .lib or .pdb)
 function(copy_in_vcpkg_destination_folder_physx_artifacts)
     macro(_copy_up _IN_DIRECTORY _OUT_DIRECTORY)
@@ -218,16 +201,22 @@ function(copy_in_vcpkg_destination_folder_physx_artifacts)
 
     cmake_parse_arguments(_fpa "" "DIRECTORY" "SUFFIXES" ${ARGN})
     _copy_up("bin/*/release" "${_fpa_DIRECTORY}") # could be physx/bin/linux.clang/release or physx/bin/win.x86_64.vc142.mt/release
-    _copy_up("bin/*/debug" "debug/${_fpa_DIRECTORY}")
+    if(NOT VCPKG_BUILD_TYPE)
+      _copy_up("bin/*/debug" "debug/${_fpa_DIRECTORY}")
+    endif()
 endfunction()
 
 # Create output directories
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # Packman also downloads the Gpu driver shared library, so we'll place it in bin and debug/bin
+    # We'll also place the Gpu driver shared library in bin and debug/bin
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
 endif()
 
 copy_in_vcpkg_destination_folder_physx_artifacts(
@@ -248,9 +237,9 @@ endif()
 # This is a 3rd party "optional functionality" dependency.
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 set(GPULIBNAMES "")
-if(targetPlatform STREQUAL "linuxAarch64" OR targetPlatform STREQUAL "linux")
+if(VCPKG_TARGET_IS_LINUX) # Both for arm and x64
     list(APPEND GPULIBNAMES "libPhysXGpu_64.so" "libPhysXDevice64.so")
-elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win64
+elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND GPULIBNAMES "PhysXGpu_64.dll" "PhysXDevice64.dll")
 endif()
 
@@ -288,8 +277,11 @@ file(REMOVE_RECURSE
 # Install the cmake config that users will use, replace -if any- only @variables@
 configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk/unofficial-omniverse-physx-sdk-config.cmake" @ONLY)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
+  file(COPY "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
+endif()
+# Fixup to repackage the CMake config as 'unofficial-omniverse-physx-sdk'
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-omniverse-physx-sdk
                          CONFIG_PATH share/omniverse-physx-sdk)
 
@@ -298,7 +290,7 @@ file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-if(targetPlatform STREQUAL "vc17win64")
+if(VCPKG_TARGET_IS_WINDOWS)
     # Remove freeglut (cannot be skipped in public release builds, but unnecessary)
     file(REMOVE
         "${CURRENT_PACKAGES_DIR}/bin/freeglut.dll"

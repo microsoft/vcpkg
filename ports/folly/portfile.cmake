@@ -9,16 +9,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 d402a2ebdff0c56e23e020823a040ef409b5c7834f598a75248126ca554f622806154d7aabc11ae65c9c2f16907a8a3589ad50e833c359714c4c5b1525cd1ba5
+    SHA512 476248496118ed0a27776055096a8667ca5114ca8bb4bcb7562c690ece7d3ed5c9f02cf4d5363cbfed0dab9782d8e66269afa72cc29b13df0a5fc84f3da611a4
     HEAD_REF main
     PATCHES
-        disable-non-underscore-posix-names.patch
         fix-windows-minmax.patch
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
+        fix-libunwind.patch
+        fix-absolute-dir.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
@@ -29,7 +31,6 @@ file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
-file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibUnwind.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
@@ -46,7 +47,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "libaio"     WITH_libaio
     INVERTED_FEATURES
         "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
-        "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
         "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
         "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
         "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy

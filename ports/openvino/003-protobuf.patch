@@ -1,0 +1,37 @@
+diff --git a/src/frontends/onnx/frontend/src/frontend.cpp b/src/frontends/onnx/frontend/src/frontend.cpp
+index d4b83fee20..28272a1eda 100644
+--- a/src/frontends/onnx/frontend/src/frontend.cpp
++++ b/src/frontends/onnx/frontend/src/frontend.cpp
+@@ -2,6 +2,7 @@
+ // SPDX-License-Identifier: Apache-2.0
+ //
+ 
++#include <google/protobuf/runtime_version.h>
+ #include <google/protobuf/port_def.inc>
+ #if PROTOBUF_VERSION >= 4022000  // protobuf 4.22
+ #    define OV_PROTOBUF_ABSL_IS_USED
+diff --git a/src/frontends/paddle/src/frontend.cpp b/src/frontends/paddle/src/frontend.cpp
+index c6febe0843..5d4789ccb6 100644
+--- a/src/frontends/paddle/src/frontend.cpp
++++ b/src/frontends/paddle/src/frontend.cpp
+@@ -4,6 +4,7 @@
+ 
+ #include "openvino/frontend/paddle/frontend.hpp"
+ 
++#include <google/protobuf/runtime_version.h>
+ #include <google/protobuf/port_def.inc>
+ #if PROTOBUF_VERSION >= 4022000  // protobuf 4.22
+ #    define OV_PROTOBUF_ABSL_IS_USED
+diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
+index 9d7b16aeb8..af47fb99ee 100644
+--- a/thirdparty/dependencies.cmake
++++ b/thirdparty/dependencies.cmake
+@@ -325,7 +325,7 @@ if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND
+         # try to find newer version first (major is changed)
+         # see https://protobuf.dev/support/version-support/ and
+         # https://github.com/protocolbuffers/protobuf/commit/d61f75ff6db36b4f9c0765f131f8edc2f86310fa
+-        find_package(Protobuf 4.22.0 QUIET CONFIG)
++        find_package(Protobuf REQUIRED CONFIG)
+         if(Protobuf_FOUND)
+             # protobuf was found via CONFIG mode, let's save it for later usage in OpenVINOConfig.cmake static build
+             set(protobuf_config CONFIG)
