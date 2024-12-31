@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
+        fix-gcc8.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

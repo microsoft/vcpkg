@@ -73,7 +73,7 @@
     },
     {
       "name": "boost-cobalt",
-      "platform": "!osx & !ios & !android & !uwp",
+      "platform": "!uwp",
       "version>=": "1.87.0"
     },
     {
@@ -631,6 +631,16 @@
     }
   ],
   "features": {
+    "cobalt": {
+      "description": "Build boost-cobalt",
+      "dependencies": [
+        {
+          "name": "boost-cobalt",
+          "platform": "!osx & !ios & !android & !uwp",
+          "version>=": "1.86.0"
+        }
+      ]
+    },
     "mpi": {
       "description": "Build with MPI support",
       "dependencies": [

@@ -1,22 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO shibatch/sleef
-    REF 3.5.1
-    SHA512 e8e4e5028db52998c6b82bd462622c08d670e4e85273327f1c3bdbd900827dd7793b217c2876ca1229b6f672493bb96f40140e14366390cccea0e6780689e128
+    REF ${VERSION}
+    SHA512 0f42c4132523f87c9e214bd9eb965e77b84c80e9a63588ed854796fccd2b9affb849a74e5f95f7b0161ba6281ca7ff509d510b42950dc38a6b8175cf6745ab07
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_LIBM=ON
-        -DBUILD_DFT=ON
-        -DBUILD_QUAD=ON
-        -DBUILD_GNUABI_LIBS=${VCPKG_TARGET_IS_LINUX}
-        -DBUILD_TESTS=OFF
-        -DBUILD_INLINE_HEADERS=OFF
+        -DSLEEF_BUILD_LIBM=ON
+        -DSLEEF_BUILD_DFT=ON
+        -DSLEEF_BUILD_QUAD=ON
+        -DSLEEF_BUILD_GNUABI_LIBS=${VCPKG_TARGET_IS_LINUX}
+        -DSLEEF_BUILD_TESTS=OFF
+        -DSLEEF_BUILD_INLINE_HEADERS=OFF
 )
+
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sleef)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

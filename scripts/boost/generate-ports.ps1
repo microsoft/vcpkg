@@ -49,6 +49,10 @@ $portData = @{
             "mpi" = @{
                 "description"  = "Build with MPI support";
                 "dependencies" = @("boost-mpi", "boost-graph-parallel", "boost-property-map-parallel");
+            };
+            "cobalt" = @{
+                "description"  = "Build boost-cobalt";
+                "dependencies" = @("boost-cobalt");
             }
         }
     };
