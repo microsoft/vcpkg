@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 832b24a..f6a7079 100644
+index 640da37..fd2f19f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -36,25 +36,19 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+@@ -40,20 +40,15 @@ if (WIN32)
  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
  if (WIN32)
@@ -25,12 +25,7 @@ index 832b24a..f6a7079 100644
  endif()
  
  set(MSH3_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin CACHE STRING "Output directory for build artifacts")
- message(STATUS "msh3: Output set to ${MSH3_OUTPUT_DIR}")
--set(QUIC_OUTPUT_DIR ${MSH3_OUTPUT_DIR} CACHE STRING "Output directory for build artifacts")
- set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${MSH3_OUTPUT_DIR})
- set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${MSH3_OUTPUT_DIR})
- set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${MSH3_OUTPUT_DIR})
-@@ -62,12 +56,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${MSH3_OUTPUT_DIR})
+@@ -65,12 +62,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${MSH3_OUTPUT_DIR})
  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${MSH3_OUTPUT_DIR})
  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${MSH3_OUTPUT_DIR})
  
@@ -43,16 +38,8 @@ index 832b24a..f6a7079 100644
  # ls-qpack dependency
  option(MSH3_USE_EXTERNAL_LSQPACK "Use an external ls-qpack installation")
  if(MSH3_USE_EXTERNAL_LSQPACK)
-@@ -93,6 +81,7 @@ else()
-     endif()
-     set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
-     set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
-+    set(QUIC_OUTPUT_DIR ${MSH3_OUTPUT_DIR} CACHE STRING "Output directory for build artifacts")
-     add_subdirectory(msquic)
- endif()
- 
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index ade4947..bc24702 100644
+index ade4947..dcd9060 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -7,8 +7,16 @@ else()
@@ -61,7 +48,7 @@ index ade4947..bc24702 100644
  add_library(msh3 SHARED ${SOURCES})
 -target_include_directories(msh3 PUBLIC $<INSTALL_INTERFACE:include>)
 -target_link_libraries(msh3 PRIVATE msquic msquic_platform ls-qpack::ls-qpack msh3_headers)
-+target_compile_features(msh3 PUBLIC cxx_std_20)
++target_compile_features(msh3 PRIVATE cxx_std_17)
 +target_compile_definitions(msh3 PRIVATE
 +    "VER_BUILD_ID=${MSH3_VER_BUILD_ID}"
 +    "VER_SUFFIX=${MSH3_VER_SUFFIX}"
@@ -75,24 +62,24 @@ index ade4947..bc24702 100644
      target_link_libraries(msh3 PRIVATE base_link)
  endif()
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 2407940..3e61161 100644
+index 639f4eb..9cd4d6c 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
 @@ -3,5 +3,5 @@
  
  set(SOURCES msh3test.cpp)
  add_executable(msh3test ${SOURCES})
--target_link_libraries(msh3test msh3 inc warnings msquic ls-qpack msh3_headers)
+-target_link_libraries(msh3test msh3 msh3_headers)
 +target_link_libraries(msh3test msh3)
- install(TARGETS msh3test EXPORT msh3 DESTINATION lib)
+ install(TARGETS msh3test EXPORT msh3 RUNTIME DESTINATION bin)
 diff --git a/tool/CMakeLists.txt b/tool/CMakeLists.txt
-index 306be76..b5d0b66 100644
+index 9231361..c4b0844 100644
 --- a/tool/CMakeLists.txt
 +++ b/tool/CMakeLists.txt
 @@ -3,5 +3,5 @@
  
  set(SOURCES msh3_app.cpp)
  add_executable(msh3app ${SOURCES})
--target_link_libraries(msh3app msh3 inc warnings msquic ls-qpack msh3_headers)
+-target_link_libraries(msh3app msh3 msh3_headers)
 +target_link_libraries(msh3app msh3)
- install(TARGETS msh3app EXPORT msh3 DESTINATION lib)
+ install(TARGETS msh3app EXPORT msh3 RUNTIME DESTINATION bin)
