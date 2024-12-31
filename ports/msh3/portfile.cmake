@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         msquic.diff
         win32-crt.diff
+        wip.diff
 )
 
 vcpkg_cmake_configure(
@@ -17,11 +18,18 @@ vcpkg_cmake_configure(
         -DMSH3_INSTALL_PKGCONFIG=ON
         -DMSH3_USE_EXTERNAL_LSQPACK=ON
         -DMSH3_USE_EXTERNAL_MSQUIC=ON
+        # WIP
+        -DMSH3_TEST=ON
+        -DMSH3_TOOL=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup()
+
+# WIP
+vcpkg_copy_tools(TOOL_NAMES msh3app msh3test  AUTO_CLEAN  SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/lib"  DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+vcpkg_copy_tools(TOOL_NAMES msh3app msh3test  AUTO_CLEAN  SEARCH_DIR "${CURRENT_PACKAGES_DIR}/lib")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
