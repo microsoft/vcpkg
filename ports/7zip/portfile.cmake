@@ -9,14 +9,6 @@ vcpkg_from_github(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/7zip-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-if(VCPKG_TARGET_IS_ANDROID)
-    message(STATUS "Disable TIME_UTC on android")
-    vcpkg_replace_string("${SOURCE_PATH}/CPP/Windows/TimeUtils.cpp"
-        [[if defined(TIME_UTC)]]
-        [[if defined(TIME_UTC) && !defined(__ANDROID__)]]
-    )
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
