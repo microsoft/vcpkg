@@ -6182,7 +6182,7 @@
     },
     "msquic": {
       "baseline": "2.4.7",
-      "port-version": 0
+      "port-version": 1
     },
     "mstch": {
       "baseline": "1.0.2",
