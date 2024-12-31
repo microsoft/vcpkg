@@ -502,8 +502,6 @@ juce:arm64-android=fail
 juce:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
-# needs android-24
-kubazip:arm-neon-android=fail
 lcm:arm-neon-android=fail
 lcm:arm64-android=fail
 lcm:arm64-windows-static-md=fail
