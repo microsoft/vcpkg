@@ -3,14 +3,11 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nibanks/msh3
-    REF #[[ v${VERSION} ]] 3aac7c0ca48a7286e13dbeb027687284950d7df7
-    SHA512 03511ae2b8d9de9363a54f1d4bd4fa57a6d8c3a0e52ee3cc52efd93ac3dcb73bd294283abc2303026c10cbeea217a6cdfff0037d58a67d729f5f816b6fbc5335
+    REF #[[ v${VERSION} ]] d8063e68e0d03ec63cccb20e3551420bbf7ab04f
+    SHA512 f8c0fd8fd8844be67744c83d3a191946a9264f4760c1003517b81f988b1bac51c09badb9e37d294a6a4c0bfa4b67dea38c5e43f6a71c742d2d217007225385cf
     HEAD_REF main
     PATCHES
-        pr250.diff
-        ls-qpack.diff
         msquic.diff
-        pkgconfig.diff
         win32-crt.diff
 )
 
