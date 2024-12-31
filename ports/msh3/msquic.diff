@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a427897..03690b0 100644
+index a427897..ec8f3e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -83,15 +83,25 @@ else()
+@@ -83,15 +83,23 @@ else()
      add_subdirectory(ls-qpack)
  endif()
  
@@ -13,10 +13,8 @@ index a427897..03690b0 100644
 +option(MSH3_USE_EXTERNAL_MSQUIC "Use an external msquic installation")
 +if(MSH3_USE_EXTERNAL_MSQUIC)
 +    find_package(msquic CONFIG REQUIRED)
-+    # polyfill
-+    add_library(inc ALIAS msquic)
-+    add_library(msquic_platform ALIAS msquic)
-+    add_library(warnings ALIAS msquic)
++    # vpckg polyfill
++    add_library(msquic::msquic_platform ALIAS msquic::msquic)
  else()
 -    set(QUIC_TLS "openssl" CACHE STRING "TLS Library to use")
 +    # Configure and build
@@ -35,3 +33,16 @@ index a427897..03690b0 100644
  
  # Build msh3 library (and cmd line tool).
  add_subdirectory(lib)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 6a9aec4..1046471 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -8,7 +8,7 @@ else()
+ endif()
+ add_library(msh3 SHARED ${SOURCES})
+ target_include_directories(msh3 PUBLIC $<INSTALL_INTERFACE:include>)
+-target_link_libraries(msh3 PRIVATE msquic msquic_platform ls-qpack::ls-qpack msh3_headers)
++target_link_libraries(msh3 PRIVATE msquic::msquic msquic::msquic_platform ls-qpack::ls-qpack msh3_headers)
+ if (NOT BUILD_SHARED_LIBS)
+     target_link_libraries(msh3 PRIVATE base_link)
+ endif()
