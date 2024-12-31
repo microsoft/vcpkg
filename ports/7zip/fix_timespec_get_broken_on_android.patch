@@ -7,7 +7,7 @@ index bbd79ba..8df3ea3 100644
        Cygwin 2.9, mingw, MSVC 14, Android 9.0.
  */
 -#if defined(TIME_UTC)
-+#if defined(TIME_UTC) && (!defined(__ANDROID__) || __ANDROID_API__ < 18)
++#if defined(TIME_UTC) && (!defined(__ANDROID__) || __ANDROID_API__ >= 29)
  #define ZIP7_USE_timespec_get
  // #pragma message("ZIP7_USE_timespec_get")
  #elif defined(CLOCK_REALTIME)
