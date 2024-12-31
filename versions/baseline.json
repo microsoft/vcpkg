@@ -6373,7 +6373,7 @@
       "port-version": 0
     },
     "ngspice": {
-      "baseline": "41",
+      "baseline": "43",
       "port-version": 0
     },
     "ngtcp2": {
