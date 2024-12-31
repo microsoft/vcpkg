@@ -14,7 +14,6 @@ vcpkg_from_github(
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
         uwp-link-libs.diff
-        exports-for-msh3.diff
 )
 
 vcpkg_from_github(
