@@ -23,6 +23,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rtlsdr)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librtlsdr.pc" " -lrtlsdr" " -lrtlsdr_static")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librtlsdr.pc" " -lrtlsdr" " -lrtlsdr_static")
+    endif()
+endif()
+
 vcpkg_copy_tools(TOOL_NAMES rtl_adsb rtl_biast rtl_eeprom rtl_fm rtl_power rtl_sdr rtl_tcp rtl_test  AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

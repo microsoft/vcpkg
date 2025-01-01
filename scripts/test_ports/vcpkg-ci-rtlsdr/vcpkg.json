@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-rtlsdr",
+  "version-string": "ci",
+  "description": "Validates rtlsdr",
+  "dependencies": [
+    "rtlsdr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
