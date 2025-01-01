@@ -7,6 +7,12 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
         library-linkage.diff
+        tools.diff
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        tools   BUILD_TOOLS
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -14,8 +20,11 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         "-DCMAKE_REQUIRE_FIND_PACKAGE_PkgConfig=1"
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
@@ -30,7 +39,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endif()
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES rtl_adsb rtl_biast rtl_eeprom rtl_fm rtl_power rtl_sdr rtl_tcp rtl_test  AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES rtl_adsb rtl_biast rtl_eeprom rtl_fm rtl_power rtl_sdr rtl_tcp rtl_test  AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

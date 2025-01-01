@@ -8,5 +8,24 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "tools",
+      "platform": "!android"
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Install rtlsdr tools",
+      "dependencies": [
+        {
+          "name": "rtlsdr",
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
 }

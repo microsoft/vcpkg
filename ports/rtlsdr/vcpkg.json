@@ -5,7 +5,7 @@
   "description": "rtl-sdr is a library that turns your Realtek RTL2832 based DVB dongle into a SDR receiver",
   "homepage": "https://osmocom.org/projects/rtl-sdr",
   "license": "GPL-2.0-or-later",
-  "supports": "!android & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     "libusb",
     {
@@ -20,5 +20,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "supports": "!android"
+    }
+  }
 }
