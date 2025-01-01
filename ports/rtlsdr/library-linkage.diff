@@ -1,0 +1,86 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a2bcb3d..accffc4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -66,6 +66,14 @@ IF(MSVC)
+   target_sources(rtlsdr_static PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/rtlsdr.rc)
+ ENDIF(MSVC)
+ 
++if(BUILD_SHARED_LIBS)
++  set(rtlsdr_target rtlsdr)
++  set_target_properties(rtlsdr_static PROPERTIES EXCLUDE_FROM_ALL 1)
++else()
++  set(rtlsdr_target rtlsdr_static)
++  set_target_properties(rtlsdr PROPERTIES EXCLUDE_FROM_ALL 1)
++endif()
++
+ ########################################################################
+ # Setup libraries used in executables
+ ########################################################################
+@@ -79,7 +87,7 @@ add_library(libgetopt_static STATIC
+     getopt/getopt.c
+ )
+ target_link_libraries(convenience_static
+-    rtlsdr
++    ${rtlsdr_target}
+ )
+ endif()
+ 
+@@ -96,35 +104,35 @@ add_executable(rtl_power rtl_power.c)
+ add_executable(rtl_biast rtl_biast.c)
+ set(INSTALL_TARGETS rtlsdr rtlsdr_static rtl_sdr rtl_tcp rtl_test rtl_fm rtl_eeprom rtl_adsb rtl_power rtl_biast)
+ 
+-target_link_libraries(rtl_sdr rtlsdr convenience_static
++target_link_libraries(rtl_sdr ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_tcp rtlsdr convenience_static
++target_link_libraries(rtl_tcp ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_test rtlsdr convenience_static
++target_link_libraries(rtl_test ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_fm rtlsdr convenience_static
++target_link_libraries(rtl_fm ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_eeprom rtlsdr convenience_static
++target_link_libraries(rtl_eeprom ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_adsb rtlsdr convenience_static
++target_link_libraries(rtl_adsb ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_power rtlsdr convenience_static
++target_link_libraries(rtl_power ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+-target_link_libraries(rtl_biast rtlsdr convenience_static
++target_link_libraries(rtl_biast ${rtlsdr_target} convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+@@ -160,12 +168,7 @@ endif()
+ ########################################################################
+ # Install built library files & utilities
+ ########################################################################
+-install(TARGETS rtlsdr EXPORT RTLSDR-export
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # .so/.dylib file
+-  )
+-install(TARGETS rtlsdr_static EXPORT RTLSDR-export
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # .so/.dylib file
+-  )
++install(TARGETS ${rtlsdr_target} EXPORT RTLSDR-export)
+ install(TARGETS rtl_sdr rtl_tcp rtl_test rtl_fm rtl_eeprom rtl_adsb rtl_power rtl_biast
+   DESTINATION ${CMAKE_INSTALL_BINDIR}
+   )
