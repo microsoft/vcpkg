@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index a2bcb3d..accffc4 100644
+index a2bcb3d..ecc3c90 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -66,6 +66,14 @@ IF(MSVC)
@@ -26,51 +26,26 @@ index a2bcb3d..accffc4 100644
  )
  endif()
  
-@@ -96,35 +104,35 @@ add_executable(rtl_power rtl_power.c)
+@@ -96,6 +104,10 @@ add_executable(rtl_power rtl_power.c)
  add_executable(rtl_biast rtl_biast.c)
  set(INSTALL_TARGETS rtlsdr rtlsdr_static rtl_sdr rtl_tcp rtl_test rtl_fm rtl_eeprom rtl_adsb rtl_power rtl_biast)
  
--target_link_libraries(rtl_sdr rtlsdr convenience_static
-+target_link_libraries(rtl_sdr ${rtlsdr_target} convenience_static
++foreach(executable IN ITEMS rtl_sdr rtl_tcp rtl_test rtl_fm rtl_eeprom rtl_adsb rtl_power rtl_biast)
++  target_link_libraries(${executable} convenience_static ${rtlsdr_target} ${THREADS_PTHREADS_LIBRARY})
++endforeach()
++if(0)
+ target_link_libraries(rtl_sdr rtlsdr convenience_static
+     ${LIBUSB_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+@@ -128,6 +140,7 @@ target_link_libraries(rtl_biast rtlsdr convenience_static
      ${LIBUSB_LIBRARIES}
      ${CMAKE_THREAD_LIBS_INIT}
  )
--target_link_libraries(rtl_tcp rtlsdr convenience_static
-+target_link_libraries(rtl_tcp ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
--target_link_libraries(rtl_test rtlsdr convenience_static
-+target_link_libraries(rtl_test ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
--target_link_libraries(rtl_fm rtlsdr convenience_static
-+target_link_libraries(rtl_fm ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
--target_link_libraries(rtl_eeprom rtlsdr convenience_static
-+target_link_libraries(rtl_eeprom ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
--target_link_libraries(rtl_adsb rtlsdr convenience_static
-+target_link_libraries(rtl_adsb ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
--target_link_libraries(rtl_power rtlsdr convenience_static
-+target_link_libraries(rtl_power ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
--target_link_libraries(rtl_biast rtlsdr convenience_static
-+target_link_libraries(rtl_biast ${rtlsdr_target} convenience_static
-     ${LIBUSB_LIBRARIES}
-     ${CMAKE_THREAD_LIBS_INIT}
- )
-@@ -160,12 +168,7 @@ endif()
++endif(0)
+ if(UNIX)
+ target_link_libraries(rtl_fm m)
+ target_link_libraries(rtl_adsb m)
+@@ -160,12 +173,7 @@ endif()
  ########################################################################
  # Install built library files & utilities
  ########################################################################
