@@ -27,6 +27,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_PORT_DIR}/project"
+    DISABLE_PARALLEL_CONFIGURE  # for split stdout/stderr logs
     OPTIONS
         ${FORTRAN_CMAKE}
         "-DEXPECTED_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
