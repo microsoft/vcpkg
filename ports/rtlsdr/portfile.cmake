@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         ${options}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         "-DCMAKE_REQUIRE_FIND_PACKAGE_PkgConfig=1"
+        "-DCMAKE_DISABLE_FIND_PACKAGE_Git=1"
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
 )

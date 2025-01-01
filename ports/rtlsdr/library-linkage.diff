@@ -11,10 +11,16 @@ index 92bbddf..20a2735 100644
  Libs.private:            @RTLSDR_PC_LIBS@
  Requires.private: libusb-1.0
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3c02e6c..18c3821 100644
+index 3c02e6c..e6585ee 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -50,7 +50,6 @@ if(NOT WIN32)
+@@ -45,12 +45,11 @@ target_include_directories(rtlsdr_static PUBLIC
+   ${LIBUSB_INCLUDE_DIRS}
+   ${THREADS_PTHREADS_INCLUDE_DIR}
+   )
+-set_property(TARGET rtlsdr_static APPEND PROPERTY COMPILE_DEFINITIONS "rtlsdr_STATIC" )
++target_compile_definitions(rtlsdr_static PUBLIC "rtlsdr_STATIC")
+ if(NOT WIN32)
  # Force same library filename for static and shared variants of the library
  set_target_properties(rtlsdr_static PROPERTIES OUTPUT_NAME rtlsdr)
  endif()
