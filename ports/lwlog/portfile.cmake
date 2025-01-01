@@ -1,11 +1,6 @@
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
-set(VCPKG_TARGET_ARCHITECTURE x64)
-set(VCPKG_DEFAULT_TRIPLET x64)
-set(VCPKG_DEFAULT_TRIPLET "x64-windows" CACHE STRING "Force x64-windows")
-set(VCPKG_HOST_TRIPLET "x64-windows" CACHE STRING "Force x64-windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ChristianPanov/lwlog
