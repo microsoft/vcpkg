@@ -2,16 +2,28 @@ diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
 index ceb7e269..5dee7e3c 100644
 --- a/cmake/CeresConfig.cmake.in
 +++ b/cmake/CeresConfig.cmake.in
-@@ -195,7 +195,7 @@ set(CERES_EIGEN_VERSION @Eigen3_VERSION@)
+@@ -178,7 +178,10 @@
+ include(CMakeFindDependencyMacro)
+ # Optional dependencies
+ @METIS_DEPENDENCY@
+-@SuiteSparse_DEPENDENCY@
++if (@SUITESPARSE@)
++  find_dependency(CHOLMOD)
++  find_dependency(SPQR)
++endif()
+ @CUDAToolkit_DEPENDENCY@
+ @Threads_DEPENDENCY@
+ 
+@@ -195,7 +198,7 @@
  # Search quietly to control the timing of the error message if not found. The
  # search should be for an exact match, but for usability reasons do a soft
  # match and reject with an explanation below.
 -find_package(Eigen3 ${CERES_EIGEN_VERSION} QUIET)
-+find_package(Eigen3 CONFIG ${CERES_EIGEN_VERSION} QUIET)
++find_dependency(Eigen3 CONFIG ${CERES_EIGEN_VERSION} QUIET)
  if (Eigen3_FOUND)
    if (NOT Eigen3_VERSION VERSION_EQUAL CERES_EIGEN_VERSION)
      # CMake's VERSION check in FIND_PACKAGE() will accept any version >= the
-@@ -217,55 +217,8 @@ else (Eigen3_FOUND)
+@@ -217,55 +220,7 @@
  endif (Eigen3_FOUND)
  
  # glog (and maybe gflags).
@@ -64,7 +76,6 @@ index ceb7e269..5dee7e3c 100644
 -    endif()
 -  endif()
 -endif(CERES_USES_MINIGLOG)
-+include(CMakeFindDependencyMacro)
 +find_dependency(glog NO_MODULE)
  
  # Import exported Ceres targets, if they have not already been imported.
