@@ -1,9 +1,7 @@
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
-if(VCPKG_TARGET_TRIPLET STREQUAL "x86-windows")
-    message(FATAL_ERROR "This port does not support 32-bit systems.")
-endif()
+set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "Force x64-windows")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
