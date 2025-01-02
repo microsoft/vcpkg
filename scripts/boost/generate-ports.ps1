@@ -30,7 +30,8 @@ $defaultPortVersion = 0
 $portVersions = @{
     'boost'                 = 1;
     'boost-build'           = 1;
-    'boost-cobalt'          = 1
+    'boost-cobalt'          = 1;
+    'boost-multiprecision'  = 1
 }
 
 function Get-PortVersion {
@@ -120,6 +121,9 @@ $portData = @{
                 "description"  = "Build the legacy C99 and TR1 libraries";
             }
         }
+    };
+    "boost-multiprecision"   = @{
+        "dependencies" = @("gmp", "mpfr");
     };
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
