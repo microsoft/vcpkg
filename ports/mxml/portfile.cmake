@@ -7,18 +7,10 @@ vcpkg_from_github(
 )
 
 # Build:
-if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "vcnet/mxml1.vcxproj"
         TARGET Build
     )
-else()
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
-    )
-    vcpkg_install_make()
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
