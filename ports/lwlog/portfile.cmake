@@ -15,7 +15,7 @@ vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(PACKAGE_NAME lwlog_lib CONFIG_PATH lib/cmake)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
