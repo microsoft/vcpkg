@@ -4,7 +4,7 @@
   "description": "Use any web browser or WebView as GUI, with your preferred language in the backend and modern web technologies in the frontend, all in a lightweight portable library.",
   "homepage": "https://github.com/webui-dev/webui",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!uwp & !(arm & android)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
