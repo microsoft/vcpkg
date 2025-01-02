@@ -4,9 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webui-dev/webui
     REF "${VERSION}"
-    SHA512 de4392c04d39cac1216354099e52173bb8fb0dd3724e4afa03d79ded4c73e7868c8cf55a451e576ad0665c0c647b9cfb5e7a01c75269a761afd48a23d2efa4eb
+    SHA512 b82321195d0684c11380691ec07e359b348c7a73c649f3f55c45e2748051b7fdd17925bdc96dc32824eb8fde74bf54bb7d778ac5384c1bb47c7841586fe54033
     HEAD_REF master
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -20,5 +22,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-webui)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
