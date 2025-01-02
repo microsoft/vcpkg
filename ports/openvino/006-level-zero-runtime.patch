@@ -1,0 +1,105 @@
+commit 113e4fc1934a8934c997aaef3e0b76e7da16439b
+Author: Xin Wang <xin1.wang@intel.com>
+Date:   Wed Dec 4 18:02:47 2024 +0800
+
+    [NPU] Use run-time ze_loader for npu plugin (#27659)
+
+    ### Details:
+     - *Not build or export ze_loader*
+    - *Create level-zero-headers to export ze headers that needed by extra
+    modules*
+
+    ### Tickets:
+     - *157614*
+
+    ---------
+
+    Signed-off-by: Xin Wang <xin1.wang@intel.com>
+
+diff --git a/.github/workflows/linux_conditional_compilation.yml b/.github/workflows/linux_conditional_compilation.yml
+index 27f54da6ec..ce78a9f3ae 100644
+--- a/.github/workflows/linux_conditional_compilation.yml
++++ b/.github/workflows/linux_conditional_compilation.yml
+@@ -212,7 +212,6 @@ jobs:
+             tar -cvf - \
+               tests/ov_cpu_func_tests \
+               tests/libopenvino_template_extension.so \
+-              tests/libze_loader.so* \
+               tests/libhwloc* \
+               tests/libtbb* \
+               tests/functional_test_utils/layer_tests_summary/* \
+diff --git a/.github/workflows/windows_conditional_compilation.yml b/.github/workflows/windows_conditional_compilation.yml
+index 6a5846b514..2c8ba236d8 100644
+--- a/.github/workflows/windows_conditional_compilation.yml
++++ b/.github/workflows/windows_conditional_compilation.yml
+@@ -237,7 +237,7 @@ jobs:
+           Compress-Archive @compress
+
+           $compress = @{
+-            Path = "${{ env.OPENVINO_REPO }}/bin/intel64/${{ env.CMAKE_BUILD_TYPE }}/ov_cpu_func_tests.exe", "${{ env.BUILD_DIR }}/bin/${{ env.CMAKE_BUILD_TYPE }}/ze_loader.dll", "${{ env.OPENVINO_REPO }}/bin/intel64/${{ env.CMAKE_BUILD_TYPE }}/openvino_template_extension.dll", "${{ env.OPENVINO_REPO }}/src/tests/test_utils/functional_test_utils/layer_tests_summary", "${{ env.INSTALL_DIR }}/runtime/3rdparty/tbb"
++            Path = "${{ env.OPENVINO_REPO }}/bin/intel64/${{ env.CMAKE_BUILD_TYPE }}/ov_cpu_func_tests.exe", "${{ env.OPENVINO_REPO }}/bin/intel64/${{ env.CMAKE_BUILD_TYPE }}/openvino_template_extension.dll", "${{ env.OPENVINO_REPO }}/src/tests/test_utils/functional_test_utils/layer_tests_summary", "${{ env.INSTALL_DIR }}/runtime/3rdparty/tbb"
+             CompressionLevel = "Optimal"
+             DestinationPath = "${{ env.BUILD_DIR }}/openvino_tests.zip"
+           }
+diff --git a/src/plugins/intel_npu/src/backend/CMakeLists.txt b/src/plugins/intel_npu/src/backend/CMakeLists.txt
+index 251479aa19..3576738605 100644
+--- a/src/plugins/intel_npu/src/backend/CMakeLists.txt
++++ b/src/plugins/intel_npu/src/backend/CMakeLists.txt
+@@ -25,7 +25,6 @@ target_link_libraries(${TARGET_NAME}
+     PRIVATE
+         openvino::npu_al
+         openvino::npu_common
+-        LevelZero::LevelZero
+ )
+
+ #
+diff --git a/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt b/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt
+index 830019f855..b2eb5e8ee9 100644
+--- a/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt
++++ b/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt
+@@ -25,7 +25,6 @@ target_link_libraries(${TARGET_NAME}
+     PRIVATE
+         openvino::npu_al
+         openvino::npu_common
+-        LevelZero::LevelZero
+ )
+
+ #
+diff --git a/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt b/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt
+index 8eb9cb31db..7651218954 100644
+--- a/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt
++++ b/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt
+@@ -15,9 +15,13 @@ ov_add_clang_format_target(${TARGET_NAME}_clang FOR_TARGETS ${TARGET_NAME})
+ add_library(openvino::npu_zero_utils ALIAS ${TARGET_NAME})
+ set_target_properties(${TARGET_NAME} PROPERTIES EXPORT_NAME npu_zero_utils)
+
++add_library(level-zero-headers INTERFACE)
++set_property(TARGET level-zero-headers APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES $<TARGET_PROPERTY:LevelZero::LevelZero,INTERFACE_INCLUDE_DIRECTORIES>)
++add_library(LevelZero::Headers ALIAS level-zero-headers)
++
+ target_include_directories(${TARGET_NAME}
+   PUBLIC
+-    $<TARGET_PROPERTY:LevelZero::LevelZero,INTERFACE_INCLUDE_DIRECTORIES>
++    $<TARGET_PROPERTY:LevelZero::Headers,INTERFACE_INCLUDE_DIRECTORIES>
+     $<TARGET_PROPERTY:LevelZero::NPUExt,INTERFACE_INCLUDE_DIRECTORIES>
+     $<BUILD_INTERFACE:${NPU_UTILS_SOURCE_DIR}/include>)
+
+@@ -35,16 +39,5 @@ ov_developer_package_export_targets(TARGET openvino::npu_zero_utils
+ ov_developer_package_export_targets(TARGET level-zero-ext)
+ ov_install_static_lib(level-zero-ext ${NPU_PLUGIN_COMPONENT})
+
+-if(TARGET ze_loader)
+-    ov_developer_package_export_targets(TARGET ze_loader)
+-    ov_install_static_lib(ze_loader ${NPU_PLUGIN_COMPONENT})
+-
+-    # TODO: remove once https://github.com/oneapi-src/level-zero/pull/243 is merged
+-    ov_developer_package_export_targets(TARGET utils)
+-    ov_install_static_lib(utils ${NPU_PLUGIN_COMPONENT})
+-
+-    # Support tests to run with ze_loader
+-    install(TARGETS ze_loader
+-            RUNTIME DESTINATION tests COMPONENT tests EXCLUDE_FROM_ALL
+-            LIBRARY DESTINATION tests COMPONENT tests EXCLUDE_FROM_ALL)
+-endif()
++ov_developer_package_export_targets(TARGET level-zero-headers)
++ov_install_static_lib(level-zero-headers ${NPU_PLUGIN_COMPONENT})

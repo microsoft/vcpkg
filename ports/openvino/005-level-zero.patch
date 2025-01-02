@@ -1,0 +1,191 @@
+commit e9bcbb48a1e342fefd890a3d8c4bf701f9b5842e
+Author: Ilya Lavrenov <ilya.lavrenov@intel.com>
+Date:   Wed Nov 20 20:39:25 2024 +0400
+
+    [NPU] Allow to use system level-zero (#27633)
+
+    ### Details:
+    -
+    https://github.com/conda-forge/openvino-feedstock/pull/110#discussion_r1849117753
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e9e8d3724d..65a72ef8f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -138,7 +138,7 @@ function(ov_developer_package_export_targets)
+             endforeach()
+         endif()
+     else()
+-        message(FATAL_ERROR "Internal error: ${target_name} does not represent a cmake target")
++        message(FATAL_ERROR "Internal error: '${EXPORT_TARGET}' does not represent a cmake target")
+     endif()
+
+     list(REMOVE_DUPLICATES _OPENVINO_DEVELOPER_PACKAGE_TARGETS)
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index e1201ad3a1..f12810adf8 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -200,6 +200,9 @@ ov_dependent_option (ENABLE_SYSTEM_PROTOBUF "Enables use of system Protobuf" OFF
+ # the option is turned off by default, because we don't want to have a dependency on libsnappy.so
+ ov_dependent_option (ENABLE_SYSTEM_SNAPPY "Enables use of system version of Snappy" OFF
+     "ENABLE_SNAPPY_COMPRESSION" OFF)
++# the option is turned off by default, because we are not sure that system version of ZE loader is fresh enough
++ov_dependent_option (ENABLE_SYSTEM_LEVEL_ZERO "Enables use of system version of Level Zero" OFF
++    "ENABLE_INTEL_NPU" OFF)
+
+ ov_dependent_option(ENABLE_JS "Enables JS API building" ${ENABLE_JS_DEFAULT} "NOT ANDROID;NOT EMSCRIPTEN" OFF)
+
+diff --git a/src/cmake/ov_parallel.cmake b/src/cmake/ov_parallel.cmake
+index 110e7fe185..86a4a8092b 100644
+--- a/src/cmake/ov_parallel.cmake
++++ b/src/cmake/ov_parallel.cmake
+@@ -132,7 +132,7 @@ macro(ov_find_package_tbb)
+                                   IMPORTED_TARGET
+                                   # we need to set GLOBAL in order to create ALIAS later
+                                   # ALIAS creation for non-GLOBAL targets is available since cmake 3.18
+-                                  ${OV_PkgConfig_VISILITY}
++                                  ${OV_PkgConfig_VISIBILITY}
+                                   tbb)
+                 if(tbb_FOUND)
+                     # parse version
+diff --git a/src/plugins/intel_npu/src/backend/CMakeLists.txt b/src/plugins/intel_npu/src/backend/CMakeLists.txt
+index 5a1585c0a6..251479aa19 100644
+--- a/src/plugins/intel_npu/src/backend/CMakeLists.txt
++++ b/src/plugins/intel_npu/src/backend/CMakeLists.txt
+@@ -25,7 +25,7 @@ target_link_libraries(${TARGET_NAME}
+     PRIVATE
+         openvino::npu_al
+         openvino::npu_common
+-        ze_loader
++        LevelZero::LevelZero
+ )
+
+ #
+diff --git a/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt b/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt
+index 9f265b7f6d..830019f855 100644
+--- a/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt
++++ b/src/plugins/intel_npu/src/compiler_adapter/CMakeLists.txt
+@@ -25,7 +25,7 @@ target_link_libraries(${TARGET_NAME}
+     PRIVATE
+         openvino::npu_al
+         openvino::npu_common
+-        ze_loader
++        LevelZero::LevelZero
+ )
+
+ #
+diff --git a/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt b/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt
+index f1e81267dc..8eb9cb31db 100644
+--- a/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt
++++ b/src/plugins/intel_npu/src/utils/src/zero/CMakeLists.txt
+@@ -21,10 +21,7 @@ target_include_directories(${TARGET_NAME}
+     $<TARGET_PROPERTY:LevelZero::NPUExt,INTERFACE_INCLUDE_DIRECTORIES>
+     $<BUILD_INTERFACE:${NPU_UTILS_SOURCE_DIR}/include>)
+
+-
+-target_link_libraries(
+-  ${TARGET_NAME}
+-  PUBLIC openvino::runtime openvino::runtime::dev)
++target_link_libraries(${TARGET_NAME} PUBLIC openvino::runtime::dev)
+
+ #
+ # targets install
+@@ -35,17 +32,19 @@ ov_developer_package_export_targets(TARGET openvino::npu_zero_utils
+                                     INSTALL_INCLUDE_DIRECTORIES
+                                         $<BUILD_INTERFACE:${NPU_UTILS_SOURCE_DIR}/include>)
+
++ov_developer_package_export_targets(TARGET level-zero-ext)
++ov_install_static_lib(level-zero-ext ${NPU_PLUGIN_COMPONENT})
++
+ if(TARGET ze_loader)
+     ov_developer_package_export_targets(TARGET ze_loader)
+-    ov_developer_package_export_targets(TARGET utils)
+-    ov_developer_package_export_targets(TARGET level-zero-ext)
+-
+     ov_install_static_lib(ze_loader ${NPU_PLUGIN_COMPONENT})
++
++    # TODO: remove once https://github.com/oneapi-src/level-zero/pull/243 is merged
++    ov_developer_package_export_targets(TARGET utils)
+     ov_install_static_lib(utils ${NPU_PLUGIN_COMPONENT})
+-    ov_install_static_lib(level-zero-ext ${NPU_PLUGIN_COMPONENT})
+
+     # Support tests to run with ze_loader
+     install(TARGETS ze_loader
+-        RUNTIME DESTINATION tests COMPONENT tests EXCLUDE_FROM_ALL
+-        LIBRARY DESTINATION tests COMPONENT tests EXCLUDE_FROM_ALL)
++            RUNTIME DESTINATION tests COMPONENT tests EXCLUDE_FROM_ALL
++            LIBRARY DESTINATION tests COMPONENT tests EXCLUDE_FROM_ALL)
+ endif()
+diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
+index c22b06bcf5..83f7e209bc 100644
+--- a/thirdparty/dependencies.cmake
++++ b/thirdparty/dependencies.cmake
+@@ -18,7 +18,7 @@ find_package(PkgConfig QUIET)
+ # cmake older than 3.18 cannot create an alias for imported non-GLOBAL targets
+ # so, we have to use 'IMPORTED_GLOBAL' property
+ if(CMAKE_VERSION VERSION_LESS 3.18)
+-    set(OV_PkgConfig_VISILITY GLOBAL)
++    set(OV_PkgConfig_VISIBILITY GLOBAL)
+ endif()
+
+ if(SUGGEST_OVERRIDE_SUPPORTED)
+@@ -69,9 +69,21 @@ endif()
+ #
+
+ if(ENABLE_INTEL_NPU)
+-    add_subdirectory(thirdparty/level_zero EXCLUDE_FROM_ALL)
++    if(ENABLE_SYSTEM_LEVEL_ZERO)
++        pkg_search_module(level_zero QUIET
++                          IMPORTED_TARGET
++                          ${OV_PkgConfig_VISIBILITY}
++                          level-zero)
++        if(level_zero_FOUND)
++            add_library(LevelZero::LevelZero ALIAS PkgConfig::level_zero)
++            message(STATUS "${PKG_CONFIG_EXECUTABLE}: level_zero (${level_zero_VERSION}) is found at ${level_zero_PREFIX}")
++        endif()
++    endif()
+
+-    add_library(LevelZero::LevelZero ALIAS ze_loader)
++    if(NOT level_zero_FOUND)
++        add_subdirectory(thirdparty/level_zero EXCLUDE_FROM_ALL)
++        add_library(LevelZero::LevelZero ALIAS ze_loader)
++    endif()
+ endif()
+
+ #
+@@ -190,7 +202,7 @@ if(ENABLE_SYSTEM_PUGIXML)
+         # Ubuntu 18.04 case when cmake interface is not available
+         pkg_search_module(pugixml QUIET
+                           IMPORTED_TARGET
+-                          ${OV_PkgConfig_VISILITY}
++                          ${OV_PkgConfig_VISIBILITY}
+                           pugixml)
+         if(pugixml_FOUND)
+             set(pugixml_target PkgConfig::pugixml)
+@@ -249,7 +261,7 @@ if(ENABLE_SYSTEM_PUGIXML)
+             message(FATAL_ERROR "Debian | RPM package build requires shared Pugixml library")
+         endif()
+
+-        if(OV_PkgConfig_VISILITY)
++        if(OV_PkgConfig_VISIBILITY)
+             # need to set GLOBAL visibility in order to create ALIAS for this target
+             set_target_properties(${pugixml_target} PROPERTIES IMPORTED_GLOBAL ON)
+         endif()
+@@ -299,7 +311,7 @@ if(ENABLE_TESTS)
+
+     if(GTest_FOUND)
+         foreach(gtest_target gtest gtest_main gmock gmock_main)
+-            if(OV_PkgConfig_VISILITY)
++            if(OV_PkgConfig_VISIBILITY)
+                 # need to set GLOBAL visibility in order to create ALIAS for this target
+                 set_target_properties(GTest::${gtest_target} PROPERTIES IMPORTED_GLOBAL ON)
+             endif()
+@@ -448,7 +460,7 @@ if(ENABLE_SNAPPY_COMPRESSION)
+             set(ov_snappy_lib Snappy::snappy-static)
+         endif()
+
+-        if(OV_PkgConfig_VISILITY)
++        if(OV_PkgConfig_VISIBILITY)
+             # need to set GLOBAL visibility in order to create ALIAS for this target
+             set_target_properties(${ov_snappy_lib} PROPERTIES IMPORTED_GLOBAL ON)
+         endif()
