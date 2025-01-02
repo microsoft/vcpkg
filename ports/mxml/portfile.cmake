@@ -7,10 +7,10 @@ vcpkg_from_github(
 )
 
 # Build:
-    vcpkg_msbuild_install(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "vcnet/mxml1.vcxproj"
-        TARGET Build
-    )
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "vcnet/mxml1.vcxproj"
+    TARGET Build
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
