@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "supports": "windows & !uwp",
   "dependencies": [
-    { 
+    {
       "name": "vcpkg-msbuild",
       "host": true
     }
