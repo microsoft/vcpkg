@@ -1,20 +1,18 @@
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nibanks/msh3
     REF v${VERSION}
-    SHA512 e6ba4e8f4ce5cd3f586d61739148bf75dfddbe70f399b2e498e7d416c8d730a5f8c2c38f0eabe687049bb7525df44f5f511515ec578bc3832989f73961cdda72
+    SHA512 dedd8be43e44b4bebbf601d76b1f3b0135501330ed128ca710de942ef7d9142a21f1c1eb9efecf57881e72d93d68c7c2c085bc35d402eac5eabc57e77773be6b
     HEAD_REF main
     PATCHES
         dependencies_fix.patch
+        width-exceeds-type.diff
 )
-
-vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()

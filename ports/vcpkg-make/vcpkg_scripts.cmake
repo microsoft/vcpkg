@@ -154,14 +154,14 @@ function(vcpkg_prepare_pkgconfig config)
     endforeach()
 
     vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
     vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
-                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
-                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
+                            # After installation, (merged) 'lib' is always searched before 'share'.
+                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig"
+                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig"
+                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
                         )
 endfunction()
 

@@ -1,0 +1,13 @@
+diff --git a/cmake/CompilerOptions.cmake b/cmake/CompilerOptions.cmake
+index 1cdb84f..fd9346f 100644
+--- a/cmake/CompilerOptions.cmake
++++ b/cmake/CompilerOptions.cmake
+@@ -70,7 +70,7 @@ if( MSVC )
+         endforeach()
+     endif()
+ else()
+-    target_compile_options( ${LIB_TARGET} PRIVATE -Wall -Wextra -Werror -Wconversion -Wsign-conversion )
++    target_compile_options( ${LIB_TARGET} PRIVATE -Wall -Wextra -Wconversion -Wsign-conversion )
+ endif()
+
+ # Extra warning flags for Clang
