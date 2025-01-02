@@ -15,7 +15,9 @@ block(SCOPE_FOR VARIABLES
     # DO NOT PROPAGATE:
     #   VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 )
+    set(env_path_backup "$ENV{PATH}")
     vcpkg_find_fortran(FORTRAN_CMAKE)
+    set(ENV{PATH} "${env_path_backup}")
 endblock()
 
 if(VCPKG_USE_INTERNAL_Fortran)
