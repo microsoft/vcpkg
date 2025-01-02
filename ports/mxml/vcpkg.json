@@ -1,7 +1,7 @@
 {
-    "name": "mxml",
-    "version": "3.3.1",
-    "homepage": "https://github.com/michaelrsweet/mxml",
-    "description": "A tiny xml parsing library",
-    "license": "Apache-2.0"
+  "name": "mxml",
+  "version": "3.3.1",
+  "description": "A tiny xml parsing library",
+  "homepage": "https://github.com/michaelrsweet/mxml",
+  "license": "Apache-2.0"
 }
