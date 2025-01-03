@@ -1,0 +1,117 @@
+commit 4ba397568e75d579054d565687e4e3d32872f6ab
+Author: Ilya Lavrenov <ilya.lavrenov@intel.com>
+Date:   Wed Nov 20 09:51:11 2024 +0100
+
+    Fixed pkg-config files generation
+
+diff --git a/samples/zello_world/CMakeLists.txt b/samples/zello_world/CMakeLists.txt
+index fa41036..e613358 100644
+--- a/samples/zello_world/CMakeLists.txt
++++ b/samples/zello_world/CMakeLists.txt
+@@ -12,7 +12,7 @@ if(MSVC)
+     )
+ endif()
+ 
+-target_link_libraries(${TARGET_NAME}
++target_link_libraries(${TARGET_NAME} PRIVATE
+     ${TARGET_LOADER_NAME}
+     ${CMAKE_DL_LIBS}
+ )
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index c9d05dd..87341b3 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -23,31 +23,25 @@ add_subdirectory(loader)
+ add_subdirectory(layers)
+ add_subdirectory(drivers)
+ add_subdirectory(utils)
+-target_include_directories(${TARGET_LOADER_NAME} PRIVATE utils)
+ 
+ set_target_properties(${TARGET_LOADER_NAME} PROPERTIES
+     VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
+     SOVERSION "${PROJECT_VERSION_MAJOR}"
+ )
+ 
+-target_link_libraries(${TARGET_LOADER_NAME}
+-    ${CMAKE_DL_LIBS}
+-)
++target_link_libraries(${TARGET_LOADER_NAME} PRIVATE ${CMAKE_DL_LIBS} level_zero_utils)
+ 
+ if (UNIX)
+     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+     set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+     find_package(Threads REQUIRED)
+-    target_link_libraries (${TARGET_LOADER_NAME} Threads::Threads)
++    target_link_libraries (${TARGET_LOADER_NAME} PRIVATE Threads::Threads)
+ endif()
+ 
+ if(WIN32)
+-    target_link_libraries (${TARGET_LOADER_NAME} cfgmgr32.lib)
++    target_link_libraries (${TARGET_LOADER_NAME} PRIVATE cfgmgr32.lib)
+ endif()
+ 
+-# Link against utility sublibrary
+-target_link_libraries(${TARGET_LOADER_NAME} utils)
+-
+ install(TARGETS ze_loader
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT level-zero-devel
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT level-zero
+@@ -56,6 +50,9 @@ install(TARGETS ze_loader
+ )
+ 
+ if(UNIX)
++    file(RELATIVE_PATH ze_loader_include_dir "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig" "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
++    file(RELATIVE_PATH ze_loader_lib_dir "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig" "${CMAKE_INSTALL_FULL_LIBDIR}")
++
+     configure_file(
+         ${CMAKE_CURRENT_SOURCE_DIR}/libze_loader.pc.in
+         ${CMAKE_CURRENT_BINARY_DIR}/libze_loader.pc
+diff --git a/source/level-zero.pc.in b/source/level-zero.pc.in
+index f626cdb..0cef86f 100644
+--- a/source/level-zero.pc.in
++++ b/source/level-zero.pc.in
+@@ -1,5 +1,6 @@
+-includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+-libdir=@CMAKE_INSTALL_FULL_LIBDIR@
++pc_path=${pcfiledir}
++includedir=${pc_path}/@ze_loader_include_dir@
++libdir=${pc_path}/@ze_loader_lib_dir@
+ 
+ 
+ Name: Level Zero
+diff --git a/source/libze_loader.pc.in b/source/libze_loader.pc.in
+index bd2fba6..cda18c7 100644
+--- a/source/libze_loader.pc.in
++++ b/source/libze_loader.pc.in
+@@ -1,5 +1,6 @@
+-includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+-libdir=@CMAKE_INSTALL_FULL_LIBDIR@
++pc_path=${pcfiledir}
++includedir=${pc_path}/@ze_loader_include_dir@
++libdir=${pc_path}/@ze_loader_lib_dir@
+ 
+ 
+ Name: Level Zero Loader
+diff --git a/source/utils/CMakeLists.txt b/source/utils/CMakeLists.txt
+index 7b98920..b77f264 100644
+--- a/source/utils/CMakeLists.txt
++++ b/source/utils/CMakeLists.txt
+@@ -2,11 +2,14 @@
+ # SPDX-License-Identifier: MIT
+ 
+ set(logging_files logging.h logging.cpp)
+-add_library(utils STATIC ${logging_files})
++add_library(level_zero_utils STATIC ${logging_files})
+ 
+ if(SYSTEM_SPDLOG)
+-       target_link_libraries(utils PUBLIC spdlog::spdlog)
++       target_link_libraries(level_zero_utils PUBLIC spdlog::spdlog)
+ else()
+-       target_include_directories(utils PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/spdlog_headers>)
++       target_include_directories(level_zero_utils PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/spdlog_headers>)
+ endif()
+-set_property(TARGET utils PROPERTY POSITION_INDEPENDENT_CODE ON)
++
++target_include_directories(level_zero_utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++
++set_property(TARGET level_zero_utils PROPERTY POSITION_INDEPENDENT_CODE ON)

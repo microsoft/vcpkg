@@ -4258,7 +4258,7 @@
     },
     "level-zero": {
       "baseline": "1.19.2",
-      "port-version": 0
+      "port-version": 1
     },
     "leveldb": {
       "baseline": "1.23",
