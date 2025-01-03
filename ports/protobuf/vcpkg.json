@@ -1,6 +1,6 @@
 {
   "name": "protobuf",
-  "version": "5.29.1",
+  "version": "5.29.2",
   "description": "Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",
