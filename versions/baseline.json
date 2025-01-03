@@ -98,7 +98,7 @@
     },
     "alsa": {
       "baseline": "1.2.13",
-      "port-version": 0
+      "port-version": 1
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
@@ -233,7 +233,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "14.0.3",
+      "baseline": "14.2.2",
       "port-version": 0
     },
     "arpack-ng": {
@@ -1493,7 +1493,7 @@
       "port-version": 0
     },
     "calceph": {
-      "baseline": "4.0.3",
+      "baseline": "4.0.4",
       "port-version": 0
     },
     "camport3": {
@@ -2393,8 +2393,8 @@
       "port-version": 0
     },
     "dp-thread-pool": {
-      "baseline": "0.6.2",
-      "port-version": 1
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "dpdk": {
       "baseline": "24.07",
@@ -2417,7 +2417,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.9.8",
+      "baseline": "1.9.9",
       "port-version": 0
     },
     "dstorage": {
@@ -2821,7 +2821,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "24.3.25",
+      "baseline": "24.12.23",
       "port-version": 0
     },
     "flatbush": {
@@ -2845,7 +2845,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.4.1",
+      "baseline": "2.4.2",
       "port-version": 0
     },
     "flux": {
@@ -3893,7 +3893,7 @@
       "port-version": 7
     },
     "jsoncons": {
-      "baseline": "0.177.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "jsoncpp": {
@@ -5378,7 +5378,7 @@
     },
     "libxcrypt": {
       "baseline": "4.4.36",
-      "port-version": 1
+      "port-version": 2
     },
     "libxcvt": {
       "baseline": "0.1.2",
