@@ -2865,8 +2865,8 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "11.0.2",
-      "port-version": 1
+      "baseline": "11.1.1",
+      "port-version": 0
     },
     "folly": {
       "baseline": "2024.12.30.00",
@@ -8610,7 +8610,7 @@
     },
     "spdlog": {
       "baseline": "1.15.0",
-      "port-version": 1
+      "port-version": 2
     },
     "spectra": {
       "baseline": "1.0.1",
@@ -9733,8 +9733,8 @@
       "port-version": 0
     },
     "wpilib": {
-      "baseline": "2023-08-24",
-      "port-version": 1
+      "baseline": "2024-03-02",
+      "port-version": 0
     },
     "wren": {
       "baseline": "0.4.0",
