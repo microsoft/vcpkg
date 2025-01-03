@@ -1090,7 +1090,7 @@
     },
     "boost-multiprecision": {
       "baseline": "1.86.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-mysql": {
       "baseline": "1.86.0",
