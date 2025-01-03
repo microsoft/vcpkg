@@ -1,8 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    # avcpp doesn't export any symbols
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO h4tr3d/avcpp
@@ -24,6 +19,7 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DAV_ENABLE_STATIC=${AVCPP_ENABLE_STATIC}"
         "-DAV_ENABLE_SHARED=${AVCPP_ENABLE_SHARED}"
+        "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DAV_BUILD_EXAMPLES=OFF
 )
