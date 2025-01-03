@@ -140,6 +140,7 @@ vcpkg_cmake_configure(
         "-DENABLE_TBBBIND_2_5=OFF"
         "-DENABLE_TEMPLATE=OFF"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DCMAKE_CXX_STANDARD=17"
 )
 
 vcpkg_cmake_install()
