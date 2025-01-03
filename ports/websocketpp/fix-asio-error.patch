@@ -1,0 +1,252 @@
+diff --git a/websocketpp/common/asio.hpp b/websocketpp/common/asio.hpp
+index 3c8fa13..0453af5 100644
+--- a/websocketpp/common/asio.hpp
++++ b/websocketpp/common/asio.hpp
+@@ -72,6 +72,9 @@ namespace lib {
+ #ifdef ASIO_STANDALONE
+     namespace asio {
+         using namespace ::asio;
++        #if ASIO_VERSION >= 103300
++            using io_service = io_context;
++        #endif
+         // Here we assume that we will be using std::error_code with standalone
+         // Asio. This is probably a good assumption, but it is possible in rare
+         // cases that local Asio versions would be used.
+@@ -93,6 +96,9 @@ namespace lib {
+ #else
+     namespace asio {
+         using namespace boost::asio;
++        #if BOOST_VERSION >= 108700
++            using io_service = io_context;
++        #endif
+         
+         // See note above about boost <1.49 compatibility
+         #if (BOOST_VERSION/100000) == 1 && ((BOOST_VERSION/100)%1000) > 48
+diff --git a/websocketpp/transport/asio/connection.hpp b/websocketpp/transport/asio/connection.hpp
+index 57dda74..8a5d719 100644
+--- a/websocketpp/transport/asio/connection.hpp
++++ b/websocketpp/transport/asio/connection.hpp
+@@ -573,7 +573,7 @@ protected:
+         lib::error_code const & ec)
+     {
+         if (ec == transport::error::operation_aborted ||
+-            (post_timer && lib::asio::is_neg(post_timer->expires_from_now())))
++            (post_timer && lib::asio::is_neg(post_timer->expiry() - std::chrono::steady_clock::now())))
+         {
+             m_alog->write(log::alevel::devel,"post_init cancelled");
+             return;
+@@ -679,7 +679,7 @@ protected:
+         // Whatever aborted it will be issuing the callback so we are safe to
+         // return
+         if (ec == lib::asio::error::operation_aborted ||
+-            lib::asio::is_neg(m_proxy_data->timer->expires_from_now()))
++            lib::asio::is_neg(m_proxy_data->timer->expiry() - std::chrono::steady_clock::now()))
+         {
+             m_elog->write(log::elevel::devel,"write operation aborted");
+             return;
+@@ -751,7 +751,7 @@ protected:
+         // Whatever aborted it will be issuing the callback so we are safe to
+         // return
+         if (ec == lib::asio::error::operation_aborted ||
+-            lib::asio::is_neg(m_proxy_data->timer->expires_from_now()))
++            lib::asio::is_neg(m_proxy_data->timer->expiry() - std::chrono::steady_clock::now()))
+         {
+             m_elog->write(log::elevel::devel,"read operation aborted");
+             return;
+@@ -1012,18 +1012,18 @@ protected:
+      */
+     lib::error_code interrupt(interrupt_handler handler) {
+         if (config::enable_multithreading) {
+-            m_io_service->post(m_strand->wrap(handler));
++            lib::asio::post(*m_io_service, m_strand->wrap(handler));
+         } else {
+-            m_io_service->post(handler);
++            lib::asio::post(*m_io_service, handler);
+         }
+         return lib::error_code();
+     }
+ 
+     lib::error_code dispatch(dispatch_handler handler) {
+         if (config::enable_multithreading) {
+-            m_io_service->post(m_strand->wrap(handler));
++            lib::asio::post(*m_io_service, m_strand->wrap(handler));
+         } else {
+-            m_io_service->post(handler);
++            lib::asio::post(*m_io_service, handler);
+         }
+         return lib::error_code();
+     }
+@@ -1095,7 +1095,7 @@ protected:
+         callback, lib::asio::error_code const & ec)
+     {
+         if (ec == lib::asio::error::operation_aborted ||
+-            lib::asio::is_neg(shutdown_timer->expires_from_now()))
++            lib::asio::is_neg(shutdown_timer->expiry() - std::chrono::steady_clock::now()))
+         {
+             m_alog->write(log::alevel::devel,"async_shutdown cancelled");
+             return;
+diff --git a/websocketpp/transport/asio/endpoint.hpp b/websocketpp/transport/asio/endpoint.hpp
+index 94509ad..b1faef9 100644
+--- a/websocketpp/transport/asio/endpoint.hpp
++++ b/websocketpp/transport/asio/endpoint.hpp
+@@ -86,7 +86,7 @@ public:
+     /// Type of timer handle
+     typedef lib::shared_ptr<lib::asio::steady_timer> timer_ptr;
+     /// Type of a shared pointer to an io_service work object
+-    typedef lib::shared_ptr<lib::asio::io_service::work> work_ptr;
++    typedef lib::shared_ptr<lib::asio::executor_work_guard<lib::asio::io_context::executor_type>> work_ptr;
+ 
+     /// Type of socket pre-bind handler
+     typedef lib::function<lib::error_code(acceptor_ptr)> tcp_pre_bind_handler;
+@@ -95,7 +95,7 @@ public:
+     explicit endpoint()
+       : m_io_service(NULL)
+       , m_external_io_service(false)
+-      , m_listen_backlog(lib::asio::socket_base::max_connections)
++      , m_listen_backlog(lib::asio::socket_base::max_listen_connections)
+       , m_reuse_addr(false)
+       , m_state(UNINITIALIZED)
+     {
+@@ -135,7 +135,7 @@ public:
+       , m_io_service(src.m_io_service)
+       , m_external_io_service(src.m_external_io_service)
+       , m_acceptor(src.m_acceptor)
+-      , m_listen_backlog(lib::asio::socket_base::max_connections)
++      , m_listen_backlog(lib::asio::socket_base::max_listen_connections)
+       , m_reuse_addr(src.m_reuse_addr)
+       , m_elog(src.m_elog)
+       , m_alog(src.m_alog)
+@@ -159,7 +159,7 @@ public:
+             rhs.m_io_service = NULL;
+             rhs.m_external_io_service = false;
+             rhs.m_acceptor = NULL;
+-            rhs.m_listen_backlog = lib::asio::socket_base::max_connections;
++            rhs.m_listen_backlog = lib::asio::socket_base::max_listen_connections;
+             rhs.m_state = UNINITIALIZED;
+             
+             // TODO: this needs to be updated
+@@ -330,7 +330,7 @@ public:
+      *
+      * New values affect future calls to listen only.
+      *
+-     * The default value is specified as *::asio::socket_base::max_connections
++     * The default value is specified as *::asio::socket_base::max_listen_connections
+      * which uses the operating system defined maximum queue length. Your OS
+      * may restrict or silently lower this value. A value of zero may cause
+      * all connections to be rejected.
+@@ -558,9 +558,9 @@ public:
+     {
+         using lib::asio::ip::tcp;
+         tcp::resolver r(*m_io_service);
+-        tcp::resolver::query query(host, service);
+-        tcp::resolver::iterator endpoint_iterator = r.resolve(query);
+-        tcp::resolver::iterator end;
++        auto results = r.resolve(host, service);
++        tcp::resolver::results_type::iterator endpoint_iterator = results.begin();
++        tcp::resolver::results_type::iterator end = results.end();
+         if (endpoint_iterator == end) {
+             m_elog->write(log::elevel::library,
+                 "asio::listen could not resolve the supplied host or service");
+@@ -666,7 +666,7 @@ public:
+ 
+     /// wraps the reset method of the internal io_service object
+     void reset() {
+-        m_io_service->reset();
++        m_io_service->restart();
+     }
+ 
+     /// wraps the stopped method of the internal io_service object
+@@ -687,7 +687,7 @@ public:
+      * @since 0.3.0
+      */
+     void start_perpetual() {
+-        m_work.reset(new lib::asio::io_service::work(*m_io_service));
++        m_work.reset(new lib::asio::executor_work_guard<lib::asio::io_context::executor_type>(m_io_service->get_executor()));
+     }
+ 
+     /// Clears the endpoint's perpetual flag, allowing it to exit when empty
+@@ -883,8 +883,6 @@ protected:
+             port = pu->get_port_str();
+         }
+ 
+-        tcp::resolver::query query(host,port);
+-
+         if (m_alog->static_test(log::alevel::devel)) {
+             m_alog->write(log::alevel::devel,
+                 "starting async DNS resolve for "+host+":"+port);
+@@ -905,7 +903,7 @@ protected:
+ 
+         if (config::enable_multithreading) {
+             m_resolver->async_resolve(
+-                query,
++                host, port,
+                 tcon->get_strand()->wrap(lib::bind(
+                     &type::handle_resolve,
+                     this,
+@@ -918,7 +916,7 @@ protected:
+             );
+         } else {
+             m_resolver->async_resolve(
+-                query,
++                host, port,
+                 lib::bind(
+                     &type::handle_resolve,
+                     this,
+@@ -966,10 +964,10 @@ protected:
+ 
+     void handle_resolve(transport_con_ptr tcon, timer_ptr dns_timer,
+         connect_handler callback, lib::asio::error_code const & ec,
+-        lib::asio::ip::tcp::resolver::iterator iterator)
++        lib::asio::ip::tcp::resolver::results_type results)
+     {
+         if (ec == lib::asio::error::operation_aborted ||
+-            lib::asio::is_neg(dns_timer->expires_from_now()))
++            lib::asio::is_neg(dns_timer->expiry() - std::chrono::steady_clock::now()))
+         {
+             m_alog->write(log::alevel::devel,"async_resolve cancelled");
+             return;
+@@ -987,9 +985,8 @@ protected:
+             std::stringstream s;
+             s << "Async DNS resolve successful. Results: ";
+ 
+-            lib::asio::ip::tcp::resolver::iterator it, end;
+-            for (it = iterator; it != end; ++it) {
+-                s << (*it).endpoint() << " ";
++            for (auto it : results) {
++                s << it.endpoint() << " ";
+             }
+ 
+             m_alog->write(log::alevel::devel,s.str());
+@@ -1012,9 +1009,8 @@ protected:
+         );
+ 
+         if (config::enable_multithreading) {
+-            lib::asio::async_connect(
+-                tcon->get_raw_socket(),
+-                iterator,
++            tcon->get_raw_socket().async_connect(
++                results.begin()->endpoint(),
+                 tcon->get_strand()->wrap(lib::bind(
+                     &type::handle_connect,
+                     this,
+@@ -1025,9 +1021,8 @@ protected:
+                 ))
+             );
+         } else {
+-            lib::asio::async_connect(
+-                tcon->get_raw_socket(),
+-                iterator,
++            tcon->get_raw_socket().async_connect(
++                results.begin()->endpoint(),
+                 lib::bind(
+                     &type::handle_connect,
+                     this,
+@@ -1077,7 +1072,7 @@ protected:
+         connect_handler callback, lib::asio::error_code const & ec)
+     {
+         if (ec == lib::asio::error::operation_aborted ||
+-            lib::asio::is_neg(con_timer->expires_from_now()))
++            lib::asio::is_neg(con_timer->expiry() - std::chrono::steady_clock::now()))
+         {
+             m_alog->write(log::alevel::devel,"async_connect cancelled");
+             return;

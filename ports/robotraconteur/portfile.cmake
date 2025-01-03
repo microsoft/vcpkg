@@ -8,6 +8,8 @@ vcpkg_from_github(
 	REF "v${VERSION}"
 	SHA512 d73621ff888ae8cfc9d6ac5a71b75920552948fb15ffe2fa13fb31a238fc92f6a271ea1653eed855ba04f371686dff6fdf46285f24a471a3147d7744563b4d0b
 	HEAD_REF master
+	PATCHES 
+		rr_boost_1_87_patch.diff
 )
 
 vcpkg_cmake_configure(

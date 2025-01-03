@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v7.5.0
     SHA512 83eabcaf2114c8af1cabbc96b6ef2b57c934a06f68e7a870adf336feaa19edd57aedaf8507d5c40500e46d4e77f5059f9286e319fe7cadeb9ffc8fa018fb030c
     HEAD_REF master
+    PATCHES
+        fix-asio-error.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/Microsoft.WindowsAzure.Storage/CMakeLists.txt" [[file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)]] "")
