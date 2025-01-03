@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 ad5aa45e1da6f347d9e310317b08ea7de9a8973e1f0d9d9a41a21dce8b25f87dba77ff5451e597241d2688c2ebe6dd5ae4fff6b650c326e1e9b8ff7d24f07d6f
+    SHA512 91fd9fddf8b15d82de1674c734698b20ad2c08cebb3d4d18062dcc1c250864ae8bfa03fb570ca31742d5f0ada49d5fccc9019640bcec5fa99492bed8dcb151a6
     HEAD_REF main
     PATCHES
         deps.patch
