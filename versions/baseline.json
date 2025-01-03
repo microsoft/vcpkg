@@ -5357,8 +5357,8 @@
       "port-version": 1
     },
     "libwebp": {
-      "baseline": "1.4.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "libwebsockets": {
       "baseline": "4.3.3",
