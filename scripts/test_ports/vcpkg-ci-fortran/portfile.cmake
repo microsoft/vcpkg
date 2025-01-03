@@ -1,8 +1,10 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+# Capture pristine toolchain configuration
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
+# Capture (g)fortran configuration
 include(vcpkg_find_fortran)
 # Side effects!
 block(SCOPE_FOR VARIABLES
@@ -20,12 +22,10 @@ block(SCOPE_FOR VARIABLES
     set(ENV{PATH} "${env_path_backup}")
 endblock()
 
+# Transform
 if(VCPKG_USE_INTERNAL_Fortran)
     list(FILTER FORTRAN_CMAKE EXCLUDE REGEX "-DCMAKE_C_COMPILER=")
     string(REPLACE "-DCMAKE_Fortran_COMPILER" "-DMINGW_GFORTRAN" FORTRAN_CMAKE "${FORTRAN_CMAKE}")
-    #list(APPEND FORTRAN_CMAKE "-DCMAKE_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-    #list(APPEND FORTRAN_CMAKE "-DCMAKE_CXX_COMPILER=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-    list(APPEND FORTRAN_CMAKE --trace-expand)
 endif()
 
 vcpkg_cmake_configure(
@@ -35,5 +35,6 @@ vcpkg_cmake_configure(
         ${FORTRAN_CMAKE}
         "-DEXPECTED_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
         "-DEXPECTED_CXX_COMPILER=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
+        --trace-expand
 )
 vcpkg_cmake_build()

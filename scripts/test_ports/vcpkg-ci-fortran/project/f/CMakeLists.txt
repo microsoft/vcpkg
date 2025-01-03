@@ -1,2 +1,6 @@
+# Unconditionally enable Fortran here.
 project(pure-fortran Fortran)
-add_library(flib SHARED main.f90)
+
+add_executable(fmain main.f90)
+
+add_library(flib flib.f90)
