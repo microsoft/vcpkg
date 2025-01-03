@@ -1,7 +1,6 @@
 {
   "name": "vsgxchange",
-  "version": "1.0.5",
-  "port-version": 1,
+  "version": "1.1.4",
   "description": "Utility library for converting 3rd party images, models and fonts formats to/from VulkanSceneGraph.",
   "homepage": "https://github.com/vsg-dev/vsgXchange",
   "license": "MIT",
