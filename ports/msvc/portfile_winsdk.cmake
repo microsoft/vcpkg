@@ -2,6 +2,9 @@ block(PROPAGATE WinSDK_VERSION)
   set(WinSDK_FILES "")
   include("${CMAKE_CURRENT_LIST_DIR}/download_sdk.cmake")
 
+  string(REGEX MATCH "10\\.0\\.[0-9]+" WinSDK_VERSION "${WinSDK_0_FILENAME}")
+  set(WinSDK_VERSION "${WinSDK_VERSION}.0")
+
   set(to_skip
       "MsiVal2-x86_en-us"
       "Orca-x86_en-us"
@@ -17,6 +20,8 @@ block(PROPAGATE WinSDK_VERSION)
       "Windows App Certification Kit Native Components"
       "Universal CRT Tools"
       "Application Verifier"
+      "arm64-"
+      "Intellisense"
   )
 
   list(APPEND to_skip ${match_skip})
@@ -34,29 +39,25 @@ block(PROPAGATE WinSDK_VERSION)
   set(prefix WinSDK)
 
   foreach(sdkitem IN LISTS WinSDK_FILES)
-    set(skip FALSE)
     string(TOLOWER "${${prefix}_${sdkitem}_FILENAME}" filename_lower)
 
-    if(   "${${prefix}_${sdkitem}_FILENAME}" MATCHES "${to_skip_regex}" AND 
+    if(   "${${prefix}_${sdkitem}_FILENAME}" MATCHES "${to_skip_regex}" AND
       NOT "${${prefix}_${sdkitem}_FILENAME}" MATCHES "${exclude_regex}")
       message(STATUS "Skipping '${${prefix}_${sdkitem}_FILENAME}'")
       continue()
     endif()
 
     set(filename "${${prefix}_${sdkitem}_FILENAME}")
-    if(NOT "${filename_lower}" MATCHES "winsdk(installer|setup)")
-      string(PREPEND filename "Installers/")
-    endif()
 
     vcpkg_download_distfile(
-        downloaded_file
+        ${prefix}_${sdkitem}_DOWNLOAD
         URLS "${${prefix}_${sdkitem}_URL}"
-        FILENAME "VS-${VERSION}/WinSDK/${filename}"
+        FILENAME "${filename}"
         SHA512 "${${prefix}_${sdkitem}_SHA512}"
     )
 
-    if(downloaded_file MATCHES ".msi$")
-      list(APPEND msi_installers "${downloaded_file}")
+    if(${prefix}_${sdkitem}_DOWNLOAD MATCHES ".msi$")
+      list(APPEND msi_installers "${${prefix}_${sdkitem}_DOWNLOAD}")
     endif()
   endforeach()
 
@@ -73,7 +74,7 @@ block(PROPAGATE WinSDK_VERSION)
     
     # Handle extra categories
     foreach(pattern IN LISTS exclude_from_skip)
-        if(skip AND componentName MATCHES "${pattern}")
+        if(componentName MATCHES "${pattern}")
             file(GLOB_RECURSE catFiles "${installLocation}/*.cat")
             set(catalogsPath "${installFolderSdk}/Program Files/Windows Kits/10/Catalogs")
             file(MAKE_DIRECTORY "${catalogsPath}")

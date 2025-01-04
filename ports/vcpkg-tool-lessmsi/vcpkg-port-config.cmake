@@ -32,7 +32,7 @@ function(vcpkg_extract_with_lessmsi)
     message(STATUS "Extracting '${componentName}'")
     string(REPLACE " " "" componentName "${componentName}")
     set(installLocation "${CURRENT_BUILDTREES_DIR}/lessmsi/${componentName}")
-    
+    file(REMOVE_RECURSE "${installLocation}")
     # Create the install location directory
     file(MAKE_DIRECTORY "${installLocation}")
     cmake_path(NATIVE_PATH installLocation NORMALIZE installLocation)

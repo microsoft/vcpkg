@@ -1,0 +1,7 @@
+{
+  "version": "1.0",
+  "components": [
+    "Microsoft.Component.MSBuild"
+  ],
+  "extensions": []
+}
