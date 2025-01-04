@@ -9644,6 +9644,10 @@
       "baseline": "1.0.5",
       "port-version": 1
     },
+    "webui": {
+      "baseline": "2.4.2",
+      "port-version": 0
+    },
     "webview2": {
       "baseline": "1.0.2277.86",
       "port-version": 0
