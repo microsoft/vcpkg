@@ -1,7 +1,7 @@
 {
   "name": "ignition-msgs6",
   "version": "6.0.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Middleware protobuf messages for robotics",
   "license": "Apache-2.0",
   "supports": "!(arm | uwp)",

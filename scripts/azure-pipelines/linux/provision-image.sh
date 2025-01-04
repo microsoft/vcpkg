@@ -19,6 +19,20 @@ dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
 
+## Azure CLI
+apt-get -qq update
+apt-get -qq install ca-certificates curl apt-transport-https lsb-release gnupg
+
+mkdir -p /etc/apt/keyrings
+curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
+    gpg --dearmor |
+    tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+chmod go+r /etc/apt/keyrings/microsoft.gpg
+
+AZ_DIST=$(lsb_release -cs)
+echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" |
+    tee /etc/apt/sources.list.d/azure-cli.list
+
 apt-get -y update
 apt-get -y dist-upgrade
 
@@ -99,8 +113,8 @@ APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driv
   cuda-cudart-dev-12-1 libcublas-12-1 libcurand-dev-12-1 cuda-nvml-dev-12-1 libcudnn8-dev libnccl2 \
   libnccl-dev"
 
-## PowerShell
-APT_PACKAGES="$APT_PACKAGES powershell"
+## PowerShell + Azure
+APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
 
 ## Additionally required/installed by Azure DevOps Scale Set Agents, skip on WSL
 if [[ $(grep microsoft /proc/version) ]]; then
@@ -110,3 +124,5 @@ APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
 fi
 
 apt-get -y --no-install-recommends install $APT_PACKAGES
+
+az --version

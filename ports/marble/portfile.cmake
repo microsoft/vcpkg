@@ -3,10 +3,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/marble
     REF "v${VERSION}"
-    SHA512 a5b5719e29745d518a1f16f0774263a7c650998fa373d79ab924e3ff350b55f81dc41b3f42c302726c7b20cc39ae38922625246c20ca4c5cc833bb3315085ba6
+    SHA512 06d2c9f4c85a5ab66825701fa949f35756ff2f09acc65c2ac5c367bd245ee1b674214070a01f828124d8add3f9cdd06e68e0e93091e47501210c5686ae68f29f
     HEAD_REF master
     PATCHES 
         qtfix.patch
+        protobuf.patch
+        cpack.patch
 )
 
 vcpkg_cmake_configure(
@@ -36,7 +38,7 @@ file(COPY ${MKSPECS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/mkspecs"
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/plugins" "${CURRENT_PACKAGES_DIR}/debug/plugins"
     "${CURRENT_PACKAGES_DIR}/data"    "${CURRENT_PACKAGES_DIR}/debug/data"
-	"${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/mkspecs" "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/lib/plugins"   "${CURRENT_PACKAGES_DIR}/lib/plugins"
@@ -44,15 +46,17 @@ file(REMOVE_RECURSE
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/astro.dll" "${CURRENT_PACKAGES_DIR}/bin/astro.dll")
 file(RENAME "${CURRENT_PACKAGES_DIR}/marbledeclarative.dll" "${CURRENT_PACKAGES_DIR}/bin/marbledeclarative.dll")
 file(RENAME "${CURRENT_PACKAGES_DIR}/marblewidget-qt5.dll" "${CURRENT_PACKAGES_DIR}/bin/marblewidget-qt5.dll")
 file(RENAME "${CURRENT_PACKAGES_DIR}/marble-qt.exe" "${CURRENT_PACKAGES_DIR}/tools/marble/marble-qt.exe")
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/astrod.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/astrod.dll")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/marbledeclaratived.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/marbledeclaratived.dll")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/marblewidget-qt5d.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/marblewidget-qt5d.dll")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/astrod.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/astrod.dll")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/marbledeclaratived.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/marbledeclaratived.dll")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/marblewidget-qt5d.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/marblewidget-qt5d.dll")
+endif()
 
 vcpkg_copy_pdbs()
 

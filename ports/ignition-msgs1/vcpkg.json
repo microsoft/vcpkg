@@ -1,7 +1,7 @@
 {
   "name": "ignition-msgs1",
   "version": "1.0.0",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Middleware protobuf messages for robotics",
   "license": "Apache-2.0",
   "dependencies": [

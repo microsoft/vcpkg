@@ -1,20 +1,17 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index 56adfe0a..4f81aa5a 100644
+index c60177c..f9432ec 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
-@@ -50,53 +50,32 @@ find_package(folly CONFIG REQUIRED)
+@@ -50,7 +50,7 @@ find_package(folly CONFIG REQUIRED)
  find_package(fmt CONFIG REQUIRED)
  
  find_package(OpenSSL REQUIRED)
 -find_package(Glog REQUIRED)
--find_package(DoubleConversion REQUIRED)
 +find_package(glog CONFIG REQUIRED)
-+find_package(double-conversion CONFIG REQUIRED)
  find_package(Threads REQUIRED)
--find_package(Zstd REQUIRED)
+ find_package(Zstd REQUIRED)
  if (UNIX AND NOT APPLE)
-   find_package(Librt)
- endif()
+@@ -59,43 +59,23 @@ endif()
  
  include(CheckAtomic)
  
@@ -66,7 +63,7 @@ index 56adfe0a..4f81aa5a 100644
  
  find_package(liboqs CONFIG)
  if (liboqs_FOUND)
-@@ -265,30 +244,25 @@ target_include_directories(
+@@ -193,28 +173,24 @@ target_include_directories(
      $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
      $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
@@ -77,7 +74,6 @@ index 56adfe0a..4f81aa5a 100644
    PRIVATE
 -    ${GLOG_INCLUDE_DIRS}
      ${FIZZ_INCLUDE_DIRECTORIES}
--    ${DOUBLE_CONVERSION_INCLUDE_DIR}
  )
  
  
@@ -99,13 +95,11 @@ index 56adfe0a..4f81aa5a 100644
 +    glog::glog
 +    gflags::gflags
      ${FIZZ_LINK_LIBRARIES}
--    ${DOUBLE_CONVERSION_LIBRARY}
 +    libevent::core
-+    double-conversion::double-conversion
      ${CMAKE_DL_LIBS}
      ${LIBRT_LIBRARIES})
  
-@@ -349,8 +323,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
+@@ -279,8 +255,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
  SET(FIZZ_TEST_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
  
  if(BUILD_TESTS)
@@ -115,29 +109,7 @@ index 56adfe0a..4f81aa5a 100644
  endif()
  
  add_library(fizz_test_support
-@@ -363,20 +336,7 @@ add_library(fizz_test_support
- target_link_libraries(fizz_test_support
-   PUBLIC
-     fizz
--    ${LIBGMOCK_LIBRARIES}
--    ${GLOG_LIBRARY}
--)
--
--target_compile_definitions(fizz_test_support
--  PUBLIC
--    ${LIBGMOCK_DEFINES}
--)
--
--target_include_directories(fizz_test_support
--  SYSTEM
--  PUBLIC
--    ${LIBGMOCK_INCLUDE_DIR}
--    ${LIBGTEST_INCLUDE_DIRS}
-+    glog::glog
- )
- 
- # export fizz headers and targets for unit tests utils
-@@ -401,14 +361,12 @@ macro(add_gtest test_source test_name)
+@@ -317,14 +292,12 @@ macro(add_gtest test_source test_name)
    add_executable(${test_name} ${test_source} test/CMakeTestMain.cpp)
  
    set_property(TARGET ${test_name} PROPERTY ENABLE_EXPORTS true)
@@ -155,13 +127,13 @@ index 56adfe0a..4f81aa5a 100644
    if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      # GMOCK_MOCK_METHOD() will complain otherwise
 diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
-index 679b0e61..8a4b189e 100644
+index 9d07110..a47bb99 100644
 --- a/fizz/cmake/fizz-config.cmake.in
 +++ b/fizz/cmake/fizz-config.cmake.in
-@@ -26,9 +26,18 @@ endif()
- set(FIZZ_LIBRARIES fizz::fizz)
+@@ -31,9 +31,18 @@ set(FIZZ_LIBRARIES fizz::fizz)
  
  include(CMakeFindDependencyMacro)
+ 
 -find_dependency(Sodium)
 +find_dependency(unofficial-sodium CONFIG)
  find_dependency(folly CONFIG)
@@ -175,6 +147,6 @@ index 679b0e61..8a4b189e 100644
 +find_dependency(gflags CONFIG)
 +find_dependency(zstd CONFIG)
 +find_dependency(GTest CONFIG)
- 
- if (NOT fizz_FIND_QUIETLY)
-   message(STATUS "Found fizz: ${PACKAGE_PREFIX_DIR}")
+ if(FIZZ_HAVE_OQS)
+     find_dependency(liboqs CONFIG)
+ endif()

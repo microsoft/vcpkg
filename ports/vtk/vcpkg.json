@@ -1,7 +1,7 @@
 {
   "name": "vtk",
-  "version-semver": "9.3.0-pv5.12.0",
-  "port-version": 4,
+  "version-semver": "9.3.0-pv5.12.1",
+  "port-version": 5,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -12,40 +12,36 @@
     "exprtk",
     "fast-float",
     "fmt",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    },
     "glew",
     {
       "name": "hdf5",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
     },
     "jsoncpp",
-    {
-      "name": "libharu",
-      "version>=": "2.4.3"
-    },
     "libjpeg-turbo",
     "liblzma",
-    "libogg",
     "libpng",
-    "libtheora",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    },
     "lz4",
-    "netcdf-c",
+    "nlohmann-json",
     "pegtl",
-    {
-      "name": "proj",
-      "default-features": false
-    },
     "pugixml",
-    {
-      "name": "seacas",
-      "default-features": false
-    },
-    "sqlite3",
-    {
-      "name": "sqlite3",
-      "host": true
-    },
     {
       "name": "tiff",
       "default-features": false
@@ -62,6 +58,15 @@
     "verdict",
     "zlib"
   ],
+  "default-features": [
+    "cgns",
+    "libharu",
+    "libtheora",
+    "netcdf",
+    "proj",
+    "seacas",
+    "sql"
+  ],
   "features": {
     "all": {
       "description": "Build all vtk modules",
@@ -72,11 +77,18 @@
           "name": "vtk",
           "default-features": false,
           "features": [
+            "cgns",
             "gdal",
             "geojson",
+            "libharu",
+            "libtheora",
             "mpi",
+            "netcdf",
+            "proj",
             "python",
-            "qt"
+            "qt",
+            "seacas",
+            "sql"
           ]
         },
         {
@@ -96,6 +108,15 @@
         {
           "name": "atlmfc",
           "platform": "windows"
+        }
+      ]
+    },
+    "cgns": {
+      "description": "CGNS functionality for VTK",
+      "dependencies": [
+        {
+          "name": "cgns",
+          "default-features": false
         }
       ]
     },
@@ -126,6 +147,21 @@
         }
       ]
     },
+    "libharu": {
+      "description": "PDF functionality for VTK",
+      "dependencies": [
+        {
+          "name": "libharu",
+          "version>=": "2.4.3"
+        }
+      ]
+    },
+    "libtheora": {
+      "description": "Compressed ogg functionality for VTK",
+      "dependencies": [
+        "libtheora"
+      ]
+    },
     "mpi": {
       "description": "MPI functionality for VTK",
       "dependencies": [
@@ -148,6 +184,7 @@
           "name": "vtk",
           "default-features": false,
           "features": [
+            "seacas",
             "vtkm"
           ]
         },
@@ -156,6 +193,18 @@
           "default-features": false,
           "features": [
             "mpi"
+          ]
+        }
+      ]
+    },
+    "netcdf": {
+      "description": "NetCDF functionality for VTK",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "hdf5"
           ]
         }
       ]
@@ -192,9 +241,27 @@
           "name": "vtk",
           "default-features": false,
           "features": [
-            "atlmfc"
+            "atlmfc",
+            "libtheora",
+            "seacas"
           ],
           "platform": "windows"
+        }
+      ]
+    },
+    "proj": {
+      "description": "Geographic projection functionality for VTK",
+      "dependencies": [
+        {
+          "name": "proj",
+          "default-features": false
+        },
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
         }
       ]
     },
@@ -213,15 +280,41 @@
           "features": [
             "gui",
             "opengl",
+            "sql-sqlite",
             "widgets"
           ]
         },
         "qtdeclarative",
-        "qtimageformats",
         {
-          "name": "qttools",
-          "default-features": false
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
         }
+      ]
+    },
+    "seacas": {
+      "description": "Exodus and IOSS functionality for VTK",
+      "dependencies": [
+        {
+          "name": "seacas",
+          "default-features": false
+        },
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "cgns",
+            "netcdf"
+          ]
+        }
+      ]
+    },
+    "sql": {
+      "description": "SQL functionality for VTK",
+      "dependencies": [
+        "sqlite3"
       ]
     },
     "utf8": {

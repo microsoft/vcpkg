@@ -45,19 +45,21 @@ index f1897d6f719c3b61b6d4fa317966c007dab2fc23..e88d7c89198696832e5645bfb0e758fd
  cp ./sccache shortcuts/g++
 ]]
 ""
+IGNORE_UNCHANGED
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF b701926ba2bd753eff36aec56e36ad4d5ac3168b # v5.12.0
-    SHA512  9fbebfa11b60c81deec0df7508a0433a1bced620367477e15314e232d50ba6a6196074d3d701434652cb9a2e0c946159f44e8e16682aa6326a89ebd6caa1f5d9
+    REF 8751c670e2aac949f17dd701a5a2f13849afafb2 # v5.12.1
+    SHA512  ed7b7e183c9d1350d8d2feadf7b76bef939bc657f49e5160e2e96e2329642d8ba1c0a8ab7cb58ff068ba21b7adc3f52676b38779e1ecec31b4714184c2364072
     HEAD_REF master
     PATCHES
         ${ext_vtk_patch_copy}
         add-tools-option.patch
         fix-build.patch
         fix-configure.patch
+        protobuf-version.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -72,9 +74,9 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH VISITIT_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/visitbridge
-    REF 92ad478e3d6b18b111ef45ab76d6dad5d3530381
-    SHA512 c4893929b99419a365e90450f9c6d8a72f30f88aadbfe5c7d23ec4a46e9cf301e0b9c31cd602d1ab717ffb6744ae45abe41cb0e9c1f02b83e4468c702e8d023d
-    PATCHES 
+    REF 093ea1dfddbb3266554ece823ae8d7dedc66eb3f
+    SHA512 0fd5dd3fbc8e61123dedb8e30b3150109ef855bc398d01ed0defe0c560692c91231ff72568ee6a1840edc21d6ea3c9c164dbeb29b8590315ee5c153a3d77d568
+    PATCHES
         ${VisItPatches}
 )
 #VTK_MODULE_USE_EXTERNAL_ParaView_protobuf
@@ -84,8 +86,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH QTTESTING_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/qttesting
-    REF 9d4346485cfce79ad448f7e5656b2525b255b2ca # https://gitlab.kitware.com/paraview/qttesting/-/merge_requests/53 for Qt6
-    SHA512  7561cd66e1a12053b7a81ab7a80ad2163922995317a503761521151668a905602fb1bb23c963e18d2739d17aa4187ccf1b4bd1010b0494aab6d4fc004e0e9760
+    REF 375c33053704e2d99dda4d2e1dfc9f6f85b3e73f
+    SHA512  4d42352394017f4a07ed96dea6b5c0caf3bc6b22bbe0c8f5df6d2740cb7b2946e0b04ac7b79b88bc7c4281bb8d48071878f42c41c042de8ef6979818d26490e5
 )
 
 vcpkg_from_gitlab(
@@ -236,7 +238,7 @@ endif()
 
 file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
 foreach(file IN LISTS cmake_files)
-    vcpkg_replace_string("${file}" "pv${VERSION_MAJOR_MINOR}d.exe" "pv${VERSION_MAJOR_MINOR}.exe")
+    vcpkg_replace_string("${file}" "pv${VERSION_MAJOR_MINOR}d.exe" "pv${VERSION_MAJOR_MINOR}.exe" IGNORE_UNCHANGED)
 endforeach() 
  
 # The plugins also work without these files

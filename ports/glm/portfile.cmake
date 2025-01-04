@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 c6c6fa1ea7a7e97820e36ee042a78be248ae828c99c1b1111080d9bf334a5160c9993a70312351c92a867cd49907c95f9f357c8dfe2bc29946da6e83e27ba20c
     HEAD_REF master
+    PATCHES
+        fix-clang.patch # Backport https://github.com/g-truc/glm/pull/1286. Remove with next update.
 )
 
 vcpkg_cmake_configure(

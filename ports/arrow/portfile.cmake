@@ -2,17 +2,17 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 28975f59e1fdde2dba4afaf4a5ba934b63db3a7f27656e2aa0af0f0d2a046c9dbfa9a6082de94629c36d03809b296566a37ea65ec5a2fc17fedac7d21e272d31
+    SHA512 7249c03a6097bc64fb0092143e4d4aaef3227565147e6254f026ddd504177c8dd565a184a0df39743dc989070dc3785e5b66f738c8e310ed9c982b61c2ec4914
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
-        android.patch
-        msvc-static-name.patch
-        utf8proc.patch
-        thrift.patch
-        remove-dll-suffix.patch #Upstream PR: https://github.com/apache/arrow/pull/41341
+        0001-msvc-static-name.patch
+        0002-thrift.patch
+        0003-utf8proc.patch
+        0004-android-musl.patch
+        0005-android-datetime.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,16 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alicevision/cctag
-    REF v1.0.2
-    SHA512 ccd62f6b1ca55035a08660052f38e73866260d5295490864fa9c86af779a42ce2ec727d6c88f0ea38f205903cf8f4107069b690849e432219c74d3b9666e3ae2
+    REF "v${VERSION}"
+    SHA512 65f8260213faab1965ff97e38b890d85f5599c5db5f50f09ab1ed2d73d7008d2e93693145d66a4d9af6342666817204736c3b0384885fa50402850f1dc5dceae
     HEAD_REF develop
-    PATCHES
-        0001-fix-osx.patch
-        0002-find-tbb.patch # Includes changes similar to https://github.com/alicevision/CCTag/pull/178/
-        fix-compatibility-with-boost-1.85.patch
 )
-
-file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake" "${SOURCE_PATH}/src/applications/cmake/FindTBB.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
@@ -49,4 +43,4 @@ if ("apps" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${CCTAG_TOOLS} AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.md")

@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.7.0",
+  "version": "6.8.1",
   "port-version": 1,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
@@ -11,7 +11,10 @@
       "name": "libb2",
       "platform": "!windows"
     },
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qtbase",
       "host": true,
@@ -23,6 +26,14 @@
       "features": [
         "doubleconversion"
       ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "cups"
+      ],
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -54,11 +65,11 @@
     "brotli",
     "concurrent",
     {
-      "name": "cups",
-      "platform": "osx"
+      "name": "dbus",
+      "platform": "!(static & windows)"
     },
-    "dbus",
     "default-features",
+    "dnslookup",
     "doubleconversion",
     "freetype",
     "gui",
@@ -126,8 +137,15 @@
       "dependencies": [
         {
           "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
           "default-features": false,
-          "platform": "linux"
+          "features": [
+            "dbus"
+          ]
         },
         {
           "name": "qtbase",
@@ -169,6 +187,18 @@
             "gles2"
           ],
           "platform": "android"
+        }
+      ]
+    },
+    "dnslookup": {
+      "description": "Enable DNS lookup support",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
         }
       ]
     },
@@ -353,7 +383,10 @@
     "pcre2": {
       "description": "Enable PCRE2 support",
       "dependencies": [
-        "pcre2"
+        {
+          "name": "pcre2",
+          "default-features": false
+        }
       ]
     },
     "png": {

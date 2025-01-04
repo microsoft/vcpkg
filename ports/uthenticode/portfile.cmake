@@ -8,11 +8,6 @@ vcpkg_from_github(
         openssl.patch
 )
 
-# compatibility fix for newer versions of pe-parse
-foreach(FILE IN ITEMS test/wincert-test.cpp test/signeddata-test.cpp test/uthenticode-test.cpp test/certificate-test.cpp src/include/uthenticode.h)
-    vcpkg_replace_string("${SOURCE_PATH}/${FILE}" "#include <parser-library/parse.h>" "#include <pe-parse/parse.h>")
-endforeach()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )

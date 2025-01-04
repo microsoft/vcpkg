@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GameTechDev/PresentMon
     REF "v${VERSION}"
-    SHA512 d593a4066e3087abd02df5bd049bb1cbe1a91ac07a4efb53bae7a44bcb98dc67f7e2f2688dd339292eeaf9b96f35d5790a86d355faacad5cf61dafa0fa584edc
+    SHA512 30945e61ba09e23ebc05e3f8a0e96a298349dad6a83043a37df9e1af0c892bee1704214e8f6ddc8cdaa9f527deb16f27b3653c855eab6bbc2f9ce509da4ded00
     HEAD_REF main
 )
 
@@ -29,4 +29,4 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES presentmon AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

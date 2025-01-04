@@ -1,22 +1,20 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(tesseract_patch fix-depend-libarchive.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 a81c98c3754a71093df7b51390ccd43d05f661352b4cb564e403b96d81909664c2ecbf2eb6f37614c4639e6dadbf2329b926d09271dbbdaa302f2d7b6b0d628a
+    SHA512 206e7da2d28a6271217ff384b482aa45a50beee0c53327aa4fd3da7082dce83386c8b7600194cbc30282134013b6182a1bed9d128ed6378f2957d0b8d1770b2d
     PATCHES
-        ${tesseract_patch}
         fix_static_link_icu.patch
         fix-link-include-path.patch
+        target-curl.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         training-tools  BUILD_TRAINING_TOOLS
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -30,6 +28,7 @@ vcpkg_cmake_configure(
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
         -DLEPT_TIFF_RESULT=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
@@ -55,7 +54,7 @@ if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS
         ambiguous_words classifier_tester combine_tessdata
         cntraining dawg2wordlist mftraining shapeclustering
-        wordlist2dawg combine_lang_model lstmeval lstmtraining
+        wordlist2dawg combine_lang_model lstmeval lstmtraining text2image
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)

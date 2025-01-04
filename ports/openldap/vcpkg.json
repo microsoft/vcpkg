@@ -1,7 +1,7 @@
 {
   "name": "openldap",
-  "version": "2.5.17",
-  "description": "OpenLDAP Software is an open source implementation of the Lightweight Directory Access Protocol.",
+  "version": "2.5.18",
+  "description": "OpenLDAP Software is an open source implementation of the Lightweight Directory Access Protocol. When using the cyrus-sasl feature on Linux, you need to install the libsasl2-dev development package.",
   "homepage": "https://www.openldap.org/software/",
   "license": "OLDAP-2.8",
   "supports": "!windows, (mingw & !x86)",

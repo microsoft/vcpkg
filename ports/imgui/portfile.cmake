@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 a700d6e4daa2f2d2bc0a61f96c813da03f9d0d6508bc077679d1acea08f546c913d2409008437dea5d993657f10a9e7077725d65bc55b7fb14d7ff6b52ff05d4
+        SHA512 5d1849867475c24dea51254bde945e919938b4fa2aac218e35a9371d3f48d8fc486ac4e459e9a0c3d36526f18972ac3ac292581aa831ca54efb3d640c6e156b1
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 8cdec45c8b58b3768a2216af2a1cba3d0e772ac48420b57057a4a8eda5766c121b4a8457a81b5896defe00b822c40d6aac6ee2b31f4133f2b9a02b231b1529d2
+        SHA512 eef35ba9f7e39ddeff3e2df0eef77d3cd8602115cb42a6fad274aecf4d5e6922c43ea4fab37908729df00a3d3e69c5000b21b46b23ed18891fb899e6b9807feb
         HEAD_REF master
     )
 endif()
@@ -63,7 +63,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 0c3b11f46f7ed259e0bf2b0634848aee1fe0b34609349b30f445dd774c739690df4cf12498895f0734b16084be4d32ae80e9e2ada291dd88f7d4fad8fda49a2b
+        SHA512 b18d64732629f01eb4153c7f7dbc2184d7ad1d63d0dc1b4f42120209c673f20ebc202bf7bc6ab27ae1a23a9437d40cc9f77c3e100e0e6de3ed6eb0087c41b7a4
         HEAD_REF master
     )
 
@@ -86,7 +86,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if ("freetype" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE\n" "#define IMGUI_ENABLE_FREETYPE\n")
 endif()
 if ("freetype-lunasvg" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_LUNASVG" "#define IMGUI_ENABLE_FREETYPE_LUNASVG")

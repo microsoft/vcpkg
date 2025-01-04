@@ -1,6 +1,7 @@
 {
   "name": "sqlpp11",
   "version": "0.64",
+  "port-version": 2,
   "description": "A type safe embedded domain specific language for SQL queries and results in C++.",
   "homepage": "https://github.com/rbock/sqlpp11",
   "license": "BSD-2-Clause",
