@@ -502,8 +502,6 @@ juce:arm64-android=fail
 juce:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
-# needs android-24
-kubazip:arm-neon-android=fail
 lcm:arm-neon-android=fail
 lcm:arm64-android=fail
 lcm:arm64-windows-static-md=fail
@@ -536,6 +534,10 @@ libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
+libfreenect2:arm64-windows=fail
+libfreenect2:arm64-windows-static-md=fail
+# inline assembly requires more registers than available
+libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -543,16 +545,7 @@ libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
-libgpg-error:arm-neon-android=fail
-libgpg-error:arm64-android=fail
-libgpg-error:x64-android=fail
 # Missing system libraries on linux to run/prepare autoconf
-libgpod:x64-linux=fail
-libfreenect2:arm64-windows=fail
-libfreenect2:arm64-windows-static-md=fail
-libgpod:arm-neon-android=fail
-libgpod:arm64-android=fail
-libgpod:x64-android=fail
 libgxps:arm-neon-android=fail
 libgxps:arm64-android=fail
 libgxps:x64-android=fail
@@ -991,6 +984,15 @@ rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
+# Visual Studio 17.12 compiler bug, fixed in 17.13: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2242053
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows=fail
+saucer:arm64-windows=fail
+saucer:x64-windows-static-md=fail
+saucer:x64-windows-static=fail
+saucer:x64-windows=fail
+saucer:x86-windows=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
@@ -1126,7 +1128,6 @@ torch-th:x64-windows-static=fail
 tvision:arm-neon-android=fail
 tvision:arm64-android=fail
 tvision:x64-android=fail
-unicorn:x64-windows-static-md=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
 # needs android-24
@@ -1231,6 +1232,7 @@ vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
 vcpkg-ci-arrow:x64-osx=pass
 vcpkg-ci-arrow:x64-linux=pass
+vcpkg-ci-aurora-au:x64-linux=pass
 vcpkg-ci-boost:arm-neon-android=pass
 vcpkg-ci-boost:arm64-android=pass
 vcpkg-ci-boost:arm64-uwp=pass

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/vsgXchange
     REF "v${VERSION}"
-    SHA512 b2f8c0382dee8d91a31852c29fecd946deb8c3d45dc9a80eb1fb0d7efce8ecefb099bfd2dba4b3171ddd9e7099da41dbf0b72e11ec53bf982aaf9d04afad5104
+    SHA512 a4c79092162c64f745556fa64b10fd06906526f5f7b7e22e61fc34f42d50116fe1816ff5cb0ca862f7da6a4a221818e99867e8520da4ffc2b9867ef15a01cd13
     HEAD_REF master
     PATCHES require-features.patch
 )

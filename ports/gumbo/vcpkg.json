@@ -1,6 +1,6 @@
 {
   "name": "gumbo",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "An HTML5 parsing library in pure C99",
   "homepage": "https://codeberg.org/gumbo-parser/gumbo-parser",
   "license": "Apache-2.0",

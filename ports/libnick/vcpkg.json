@@ -1,6 +1,6 @@
 {
   "name": "libnick",
-  "version": "2024.12.0",
+  "version": "2025.1.0",
   "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
   "description": "A cross-platform base for native Nickvision applications.",
   "homepage": "https://github.com/NickvisionApps/libnick",

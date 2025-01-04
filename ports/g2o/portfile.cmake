@@ -7,14 +7,21 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-absolute.patch
+        0003-dependency-spdlog.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        spdlog      G2O_USE_LOGGING
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_LGPL_SHARED_LIBS=${BUILD_LGPL_SHARED_LIBS}
         -DG2O_BUILD_EXAMPLES=OFF
         -DG2O_BUILD_APPS=OFF

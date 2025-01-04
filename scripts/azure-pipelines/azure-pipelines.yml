@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  linux-docker-image: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2024-10-21'
+  linux-docker-image: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2024-12-16'
 
 parameters:
   - name: vcpkgToolSha
