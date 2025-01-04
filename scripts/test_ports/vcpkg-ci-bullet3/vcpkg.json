@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-bullet3",
+  "version-string": "ci",
+  "description": "Port to force features of bullet3 within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "bullet3",
+      "features": [
+        "extras"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
