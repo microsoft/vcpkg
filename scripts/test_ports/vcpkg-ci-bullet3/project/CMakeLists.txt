@@ -10,6 +10,11 @@ block()
     target_link_libraries(main PRIVATE ${BULLET_LIBRARIES})
 endblock()
 
+if(WIN32)
+    set(unused "${PKG_CONFIG_EXECUTABLE}")
+    return()
+endif()
+
 block()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(bullet bullet REQUIRED IMPORTED_TARGET)
