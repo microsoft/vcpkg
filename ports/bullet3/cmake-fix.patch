@@ -10,7 +10,7 @@ index f5dc7bd..50b3d67 100644
 +@PACKAGE_INIT@
  set ( BULLET_FOUND 1 )
 -set ( BULLET_USE_FILE     "@BULLET_USE_FILE@" )
-+set_and_check ( BULLET_USE_FILE     "@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/UseBullet.cmake" )
++set_and_check ( BULLET_USE_FILE     "${CMAKE_CURRENT_LIST_DIR}/UseBullet.cmake" )
  set ( BULLET_DEFINITIONS  "@BULLET_DEFINITIONS@" )
 -set ( BULLET_INCLUDE_DIR  "@INCLUDE_INSTALL_DIR@" )
 -set ( BULLET_INCLUDE_DIRS "@INCLUDE_INSTALL_DIR@" )
@@ -27,8 +27,8 @@ index f5dc7bd..50b3d67 100644
 +# Load targets
 +if(NOT TARGET Bullet3Common)
 +  #
-+  include("@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/LinearMathTargets.cmake")
-+  file(GLOB CONFIG_FILES "@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/*Targets.cmake")
++  include("${CMAKE_CURRENT_LIST_DIR}/LinearMathTargets.cmake")
++  file(GLOB CONFIG_FILES "${CMAKE_CURRENT_LIST_DIR}/*Targets.cmake")
 +  foreach(f IN LISTS CONFIG_FILES)
 +    include(${f})
 +  endforeach()
