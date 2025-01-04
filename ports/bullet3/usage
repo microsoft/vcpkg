@@ -1,4 +1,9 @@
-Bullet3 provides CMake targets:
+bullet3 provides CMake targets:
 
-    find_package(Bullet CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ${BULLET_LIBRARIES})
+  find_package(Bullet CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE ${BULLET_LIBRARIES})
+
+bullet3 provides pkg-config modules:
+
+  # Bullet Continuous Collision Detection and Physics Library
+  bullet
