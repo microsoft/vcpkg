@@ -196,6 +196,29 @@ index 9fd125e..4e16d9e 100644
                                          RUNTIME DESTINATION bin
                                          LIBRARY DESTINATION lib${LIB_SUFFIX}
                                          ARCHIVE DESTINATION lib${LIB_SUFFIX})
+diff --git a/src/Bullet3Collision/CMakeLists.txt b/src/Bullet3Collision/CMakeLists.txt
+index 130095c..1642284 100644
+--- a/src/Bullet3Collision/CMakeLists.txt
++++ b/src/Bullet3Collision/CMakeLists.txt
+@@ -58,9 +58,7 @@ SET(Bullet3Collision_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet3Collision ${Bullet3Collision_SRCS} ${Bullet3Collision_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet3Collision Bullet3Geometry)
+-endif ()
++target_link_libraries(Bullet3Collision PUBLIC Bullet3Geometry)
+ SET_TARGET_PROPERTIES(Bullet3Collision PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3Collision PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+@@ -72,6 +70,7 @@ IF (INSTALL_LIBS)
+ 				INSTALL(TARGETS Bullet3Collision DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS Bullet3Collision
++					EXPORT BulletTargets
+ 					RUNTIME DESTINATION bin
+ 					LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 					ARCHIVE DESTINATION lib${LIB_SUFFIX})
 diff --git a/src/Bullet3Common/CMakeLists.txt b/src/Bullet3Common/CMakeLists.txt
 index 03a3b40..6f631e6 100644
 --- a/src/Bullet3Common/CMakeLists.txt
@@ -212,6 +235,101 @@ index 03a3b40..6f631e6 100644
  				INSTALL(TARGETS Bullet3Common DESTINATION .)
  			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
  				INSTALL(TARGETS Bullet3Common
++					EXPORT BulletTargets
+ 					RUNTIME DESTINATION bin
+ 					LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+diff --git a/src/Bullet3Dynamics/CMakeLists.txt b/src/Bullet3Dynamics/CMakeLists.txt
+index 94c120d..2736323 100644
+--- a/src/Bullet3Dynamics/CMakeLists.txt
++++ b/src/Bullet3Dynamics/CMakeLists.txt
+@@ -30,9 +30,7 @@ SET(Bullet3Dynamics_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet3Dynamics ${Bullet3Dynamics_SRCS} ${Bullet3Dynamics_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet3Dynamics Bullet3Collision)
+-endif ()
++target_link_libraries(Bullet3Dynamics PUBLIC Bullet3Collision)
+ SET_TARGET_PROPERTIES(Bullet3Dynamics PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3Dynamics PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+@@ -44,6 +42,7 @@ IF (INSTALL_LIBS)
+ 				INSTALL(TARGETS Bullet3Dynamics DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS Bullet3Dynamics
++					EXPORT BulletTargets
+ 					RUNTIME DESTINATION bin
+ 					LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+diff --git a/src/Bullet3Geometry/CMakeLists.txt b/src/Bullet3Geometry/CMakeLists.txt
+index 8206872..dfd622b 100644
+--- a/src/Bullet3Geometry/CMakeLists.txt
++++ b/src/Bullet3Geometry/CMakeLists.txt
+@@ -16,9 +16,7 @@ SET(Bullet3Geometry_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet3Geometry ${Bullet3Geometry_SRCS} ${Bullet3Geometry_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet3Geometry Bullet3Common)
+-endif()
++target_link_libraries(Bullet3Geometry PUBLIC Bullet3Common)
+ SET_TARGET_PROPERTIES(Bullet3Geometry PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3Geometry PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+@@ -30,6 +28,7 @@ IF (INSTALL_LIBS)
+ 				INSTALL(TARGETS Bullet3Geometry DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS Bullet3Geometry
++					EXPORT BulletTargets
+ 					RUNTIME DESTINATION bin
+ 					LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+diff --git a/src/Bullet3OpenCL/CMakeLists.txt b/src/Bullet3OpenCL/CMakeLists.txt
+index 1da58d4..b93b80b 100644
+--- a/src/Bullet3OpenCL/CMakeLists.txt
++++ b/src/Bullet3OpenCL/CMakeLists.txt
+@@ -43,9 +43,7 @@ SET(Bullet3OpenCL_clew_HDRS
+ ADD_LIBRARY(Bullet3OpenCL_clew ${Bullet3OpenCL_clew_SRCS} ${Bullet3OpenCL_clew_HDRS})
+ SET_TARGET_PROPERTIES(Bullet3OpenCL_clew PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3OpenCL_clew PROPERTIES SOVERSION ${BULLET_VERSION})
+-IF (BUILD_SHARED_LIBS)
+-  TARGET_LINK_LIBRARIES(Bullet3OpenCL_clew LinearMath Bullet3Dynamics ${CMAKE_DL_LIBS})
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(Bullet3OpenCL_clew PUBLIC LinearMath Bullet3Dynamics ${CMAKE_DL_LIBS})
+ 
+ 
+ IF (INSTALL_LIBS)
+@@ -55,7 +53,9 @@ IF (INSTALL_LIBS)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS Bullet3OpenCL_clew DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS Bullet3OpenCL_clew RUNTIME DESTINATION bin
++				INSTALL(TARGETS Bullet3OpenCL_clew
++								EXPORT BulletTargets
++								RUNTIME DESTINATION bin
+ 								LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 								ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ 				INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+diff --git a/src/Bullet3Serialize/Bullet2FileLoader/CMakeLists.txt b/src/Bullet3Serialize/Bullet2FileLoader/CMakeLists.txt
+index 1255766..e47ad6f 100644
+--- a/src/Bullet3Serialize/Bullet2FileLoader/CMakeLists.txt
++++ b/src/Bullet3Serialize/Bullet2FileLoader/CMakeLists.txt
+@@ -24,9 +24,7 @@ SET(Bullet2FileLoader_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet2FileLoader ${Bullet2FileLoader_SRCS} ${Bullet2FileLoader_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet2FileLoader Bullet3Common)
+-endif ()
++target_link_libraries(Bullet2FileLoader PUBLIC Bullet3Common)
+ SET_TARGET_PROPERTIES(Bullet2FileLoader PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet2FileLoader PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+@@ -38,6 +36,7 @@ IF (INSTALL_LIBS)
+ 				INSTALL(TARGETS Bullet2FileLoader DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS Bullet2FileLoader
 +					EXPORT BulletTargets
  					RUNTIME DESTINATION bin
  					LIBRARY DESTINATION lib${LIB_SUFFIX}
