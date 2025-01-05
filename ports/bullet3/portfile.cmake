@@ -9,6 +9,12 @@ vcpkg_from_github(
     PATCHES
         cmake-fix.patch
 )
+file(GLOB vendored "${SOURCE_PATH}/examples/ThirdPartyLibs/*")
+list(REMOVE_ITEM vendored
+    "${SOURCE_PATH}/examples/ThirdPartyLibs/Wavefront"  # for Extras/obj2sdf executable
+    "${SOURCE_PATH}/examples/ThirdPartyLibs/tinyxml2"   # for Extras/Serialize/BulletXmlWorldImporter library
+)
+file(REMOVE_RECURSE ${vendored})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
