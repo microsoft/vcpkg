@@ -20,7 +20,10 @@
       "description": "Use float64 doubles for bullet3"
     },
     "extras": {
-      "description": "Build the extras"
+      "description": "Build selected extras",
+      "dependencies": [
+        "tinyxml2"
+      ]
     },
     "multithreading": {
       "description": "Multithreading functionality for bullet3"

@@ -11,12 +11,9 @@ vcpkg_from_github(
     PATCHES
         cmake-version.diff
         cmake-config-export.diff
+        tinyxml2.diff
 )
-file(GLOB vendored "${SOURCE_PATH}/examples/ThirdPartyLibs/*")
-list(REMOVE_ITEM vendored
-    "${SOURCE_PATH}/examples/ThirdPartyLibs/tinyxml2"   # for Extras/Serialize/BulletXmlWorldImporter library
-)
-file(REMOVE_RECURSE ${vendored})
+file(REMOVE_RECURSE "${SOURCE_PATH}/examples/ThirdPartyLibs")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
