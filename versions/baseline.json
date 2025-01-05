@@ -4329,7 +4329,7 @@
       "port-version": 0
     },
     "libassert": {
-      "baseline": "2.1.2",
+      "baseline": "2.1.4",
       "port-version": 0
     },
     "libassuan": {
