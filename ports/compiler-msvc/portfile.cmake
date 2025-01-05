@@ -22,4 +22,4 @@ if(NOT VCPKG_CRT_LINKAGE STREQUAL "static")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/msvc-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" @ONLY)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/msvc-env.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/msvc-env.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/msvc-env.cmake" "${CURRENT_PACKAGES_DIR}/env-setup/msvc-env.cmake" @ONLY)

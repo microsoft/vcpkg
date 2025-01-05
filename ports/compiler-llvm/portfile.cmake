@@ -27,4 +27,4 @@ file(REMOVE_RECURSE
 
 file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/" DESTINATION "${CURRENT_PACKAGES_DIR}/compiler-llvm")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/llvm-env.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/llvm-env.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/llvm-env.cmake" "${CURRENT_PACKAGES_DIR}/env-setup/llvm-env.cmake" @ONLY)

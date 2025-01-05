@@ -1,5 +1,5 @@
 {
-  "name": "msvc",
+  "name": "compiler-msvc",
   "version": "17.12.3",
   "license": "MIT",
   "dependencies": [

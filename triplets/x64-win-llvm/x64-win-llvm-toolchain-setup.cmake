@@ -21,12 +21,12 @@ set(PATH_VAR
 
 cmake_path(CONVERT "${PATH_VAR}" TO_NATIVE_PATH_LIST ENV{PATH} NORMALIZE)
 
-if(EXISTS "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
+if(EXISTS "${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/env-setup/msvc-env.cmake")
     message("Loading MSVC environment ....")
-    include("${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/msvc/msvc-env.cmake")
+    include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/env-setup/msvc-env.cmake")
 endif()
 
-if(EXISTS "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/compiler-llvm/llvm-env.cmake")
+if(EXISTS "${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/env-setup/llvm-env.cmake")
     message("Loading LLVM environment ....")
-    include("${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/share/compiler-llvm/llvm-env.cmake")
+    include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/env-setup/llvm-env.cmake")
 endif()

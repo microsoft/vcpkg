@@ -4,7 +4,7 @@
   "documentation": "https://learn.microsoft.com/vcpkg/maintainers/functions/vcpkg_cmake_configure",
   "license": "MIT",
   "dependencies" : [
-    "msvc",
+    "compiler-msvc",
     "compiler-llvm"
   ]
 }

@@ -1,9 +1,9 @@
 include_guard(GLOBAL)
 
 if(NOT DEFINED ENV{MSVC_TOOLCHAIN_ENV_ALREADY_SET})
-  set(MSVC_DIR "${CMAKE_CURRENT_LIST_DIR}/../../")
-  set(VS_DIR "${CMAKE_CURRENT_LIST_DIR}/../../VS")
-  set(SDK_DIR "${CMAKE_CURRENT_LIST_DIR}/../../WinSDK")
+  set(MSVC_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+  set(VS_DIR "${MSVC_DIR}/VS")
+  set(SDK_DIR "${MSVC_DIR}/WinSDK")
 
   set(WinSDK_VERSION "@WinSDK_VERSION@")
   set(VCToolkit_VERSION "@VCToolkit_VERSION@")

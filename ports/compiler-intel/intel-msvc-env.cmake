@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 if(NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET})
-  set(ONEAPIROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../intel-compiler/")
+  set(ONEAPIROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../intel-compiler/")
   file(GLOB CMPLR_ROOT LIST_DIRECTORIES true "${ONEAPIROOT_DIR}/compiler/*")
 
   cmake_path(CONVERT "$ENV{INCLUDE}" TO_CMAKE_PATH_LIST include_env)
