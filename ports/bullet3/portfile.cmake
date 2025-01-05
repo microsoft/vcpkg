@@ -9,7 +9,8 @@ vcpkg_from_github(
     SHA512 7086e5fcf69635801bb311261173cb8d173b712ca1bd78be03df48fad884674e85512861190e45a1a62d5627aaad65cde08c175c44a3be9afa410d3dfd5358d4
     HEAD_REF master
     PATCHES
-        cmake-fix.patch
+        cmake-version.diff
+        cmake-config-export.diff
 )
 file(GLOB vendored "${SOURCE_PATH}/examples/ThirdPartyLibs/*")
 list(REMOVE_ITEM vendored
@@ -54,7 +55,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/bullet)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/bullet)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
