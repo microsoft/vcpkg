@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         cmake-version.diff
         cmake-config-export.diff
+        opencl.diff
         tinyxml2.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/examples/ThirdPartyLibs")
@@ -20,6 +21,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         multithreading       BULLET2_MULTITHREADING
         double-precision     USE_DOUBLE_PRECISION
         extras               BUILD_EXTRAS
+        opencl               BUILD_OPENCL
     INVERTED_FEATURES
         rtti                 USE_MSVC_DISABLE_RTTI
 )

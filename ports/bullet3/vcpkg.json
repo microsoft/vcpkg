@@ -28,6 +28,10 @@
     "multithreading": {
       "description": "Multithreading functionality for bullet3"
     },
+    "opencl": {
+      "description": "Build Bullet3OpenCL_clew library",
+      "supports": "!uwp"
+    },
     "rtti": {
       "description": "Enable RTTI on windows"
     }

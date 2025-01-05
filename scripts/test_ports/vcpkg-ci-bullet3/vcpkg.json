@@ -5,15 +5,41 @@
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "bullet3",
-      "features": [
-        "extras"
-      ]
-    },
+    "bullet3",
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "extras",
+    {
+      "name": "opencl",
+      "platform": "!uwp"
+    }
+  ],
+  "features": {
+    "extras": {
+      "description": "bullet3[extras]",
+      "dependencies": [
+        {
+          "name": "bullet3",
+          "features": [
+            "extras"
+          ]
+        }
+      ]
+    },
+    "opencl": {
+      "description": "bullet3[opencl]",
+      "dependencies": [
+        {
+          "name": "bullet3",
+          "features": [
+            "opencl"
+          ]
+        }
+      ]
+    }
+  }
 }
