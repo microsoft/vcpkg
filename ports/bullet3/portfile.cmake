@@ -14,7 +14,6 @@ vcpkg_from_github(
 )
 file(GLOB vendored "${SOURCE_PATH}/examples/ThirdPartyLibs/*")
 list(REMOVE_ITEM vendored
-    "${SOURCE_PATH}/examples/ThirdPartyLibs/Wavefront"  # for Extras/obj2sdf executable
     "${SOURCE_PATH}/examples/ThirdPartyLibs/tinyxml2"   # for Extras/Serialize/BulletXmlWorldImporter library
 )
 file(REMOVE_RECURSE ${vendored})
@@ -42,6 +41,7 @@ vcpkg_cmake_configure(
         -DBUILD_BULLET_ROBOTICS_EXTRA=OFF
         -DBUILD_GIMPACTUTILS_EXTRA=OFF
         -DBUILD_HACD_EXTRA=OFF
+        -DBUILD_OBJ2SDF_EXTRA=OFF
         -DBUILD_UNIT_TESTS=OFF        
         -DINSTALL_LIBS=ON
         ${FEATURE_OPTIONS}
@@ -50,6 +50,7 @@ vcpkg_cmake_configure(
         BUILD_BULLET_ROBOTICS_GUI_EXTRA
         BUILD_GIMPACTUTILS_EXTRA
         BUILD_HACD_EXTRA
+        BUILD_OBJ2SDF_EXTRA
         USE_MSVC_DISABLE_RTTI
 )
 
