@@ -1,0 +1,24 @@
+diff --git a/include/mujoco/mjtnum.h b/include/mujoco/mjtnum.h
+index b9d78ea1..771fc601 100644
+--- a/include/mujoco/mjtnum.h
++++ b/include/mujoco/mjtnum.h
+@@ -17,9 +17,16 @@
+ 
+ //---------------------------------- floating-point definition -------------------------------------
+ 
+-// compile-time configuration options
+-#define mjUSEDOUBLE               // single or double precision for mjtNum
+-
++#if _WIN32 || _WIN64
++  #if _WIN64
++    // compile-time configuration options
++    #define mjUSEDOUBLE               // single or double precision for mjtNum
++  #else
++  #endif
++#else
++  // compile-time configuration options
++  #define mjUSEDOUBLE               // single or double precision for mjtNum
++#endif
+ 
+ // floating point data type and minval
+ #ifdef mjUSEDOUBLE
