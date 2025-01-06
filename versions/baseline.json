@@ -9665,7 +9665,7 @@
       "port-version": 0
     },
     "wildmidi": {
-      "baseline": "0.4.5",
+      "baseline": "0.4.6",
       "port-version": 0
     },
     "wincrypt": {
