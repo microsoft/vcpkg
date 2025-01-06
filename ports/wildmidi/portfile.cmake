@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "wildmidi-${VERSION}"
     SHA512 b7259578c1b334de13b49e27aef32ad43e41bc04f569601b765ecea789b8da536d07afdb581986b7c91de552db2a625b13d061e52a2c8c51652f3cf3d1a30000
     HEAD_REF master
+    PATCHES fix-include-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
