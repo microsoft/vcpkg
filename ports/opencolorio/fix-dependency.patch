@@ -59,3 +59,20 @@ index accdece..831c771 100644
  endif()
  
  if(OCIO_BUILD_OPENFX)
+diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
+index 4e2367b..51a3140 100644
+--- a/src/cmake/Config.cmake.in
++++ b/src/cmake/Config.cmake.in
+@@ -1,6 +1,12 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
++include(CMakeFindDependencyMacro)
++find_dependency(expat CONFIG)
++find_dependency(Imath CONFIG)
++find_dependency(pystring CONFIG)
++find_dependency(yaml-cpp CONFIG)
++find_dependency(minizip-ng CONFIG)
+ 
+ if (NOT @BUILD_SHARED_LIBS@) # NOT @BUILD_SHARED_LIBS@
+     if (APPLE)
