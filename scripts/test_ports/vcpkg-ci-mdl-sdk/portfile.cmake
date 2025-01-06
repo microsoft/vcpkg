@@ -1,1 +1,3 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
