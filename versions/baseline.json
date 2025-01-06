@@ -8212,6 +8212,10 @@
       "baseline": "2.1.0",
       "port-version": 0
     },
+    "sdflib": {
+      "baseline": "2024-09-06",
+      "port-version": 0
+    },
     "sdformat10": {
       "baseline": "10.0.0",
       "port-version": 5
