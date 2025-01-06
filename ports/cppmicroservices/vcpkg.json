@@ -9,9 +9,6 @@
     "boost-asio",
     "boost-nowide",
     "gtest",
-    "boost-asio",
-    "boost-nowide",
-    "abseil",
     {
       "name": "vcpkg-cmake",
       "host": true

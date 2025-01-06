@@ -2,7 +2,7 @@
   "name": "libspatialindex",
   "version": "2.0.0",
   "description": "C++ implementation of R*-tree, an MVR-tree and a TPR-tree with C API.",
-  "homepage": "https://github.com/libspatialindex/libspatialindex",
+  "homepage": "http://libspatialindex.github.com",
   "license": "MIT",
   "dependencies": [
     {

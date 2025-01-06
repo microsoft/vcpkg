@@ -1,7 +1,6 @@
 function(vcpkg_get_windows_sdk out_var)
     if("$ENV{WindowsSDKVersion}" MATCHES [[^([0-9.]*)(\\|/)?$]])
         set("${out_var}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
-        message(STATUS "Found WindowsSDKVersion:${CMAKE_MATCH_1}")
     else()
         message(FATAL_ERROR "Unexpected format for ENV{WindowsSDKVersion} ($ENV{WindowsSDKVersion})")
     endif()
