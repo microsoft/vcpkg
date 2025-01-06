@@ -1,0 +1,208 @@
+diff --git a/Include/cpython/pytime.h b/Include/cpython/pytime.h
+index 23d4f16a8f..5913a942a5 100644
+--- a/Include/cpython/pytime.h
++++ b/Include/cpython/pytime.h
+@@ -53,6 +53,12 @@ functions and constants
+ extern "C" {
+ #endif
+ 
++#if defined(_MSC_VER)
++        /* Forward declare struct timeval so that clang-cl doesn't complain about it
++        being a local declaration later on  in _PyTime_AsTimeval.*/
++        struct timeval;
++#endif /* _MSC_VER */
++
+ /* _PyTime_t: Python timestamp with subsecond precision. It can be used to
+    store a duration, and so indirectly a date (related to another date, like
+    UNIX epoch). */
+diff --git a/Lib/distutils/_msvccompiler.py b/Lib/distutils/_msvccompiler.py
+index af8099a407..c9281d2b1b 100644
+--- a/Lib/distutils/_msvccompiler.py
++++ b/Lib/distutils/_msvccompiler.py
+@@ -167,6 +167,15 @@ def _find_exe(exe, paths=None):
+     'win-arm64' : 'x86_arm64'
+ }
+ 
++# A map keyed by get_platform() return values to value accepted by
++# clang as the triple.
++PLAT_TO_LLVM_TARGETS = {
++    'win32': 'i686-pc-windows-msvc',
++    'win-amd64': 'x86_64-pc-windows-msvc',
++    'win-arm32': 'arm-pc-windows-msvc',
++    'win-arm64': 'aarch64-pc-windows-msvc',
++}
++
+ class MSVCCompiler(CCompiler) :
+     """Concrete class that implements an interface to Microsoft Visual C++,
+        as defined by the CCompiler abstract class."""
+@@ -198,11 +207,12 @@ class MSVCCompiler(CCompiler) :
+     exe_extension = '.exe'
+ 
+ 
+-    def __init__(self, verbose=0, dry_run=0, force=0):
++    def __init__(self, verbose=0, dry_run=0, force=0, use_clang_cl=False):
+         CCompiler.__init__ (self, verbose, dry_run, force)
+         # target platform (.plat_name is consistent with 'bdist')
+         self.plat_name = None
+         self.initialized = False
++        self.use_clang_cl = use_clang_cl
+ 
+     def initialize(self, plat_name=None):
+         # multi-init means we would need to check platform same each time...
+@@ -224,8 +234,13 @@ def initialize(self, plat_name=None):
+ 
+         self._paths = vc_env.get('path', '')
+         paths = self._paths.split(os.pathsep)
+-        self.cc = _find_exe("cl.exe", paths)
+-        self.linker = _find_exe("link.exe", paths)
++        if self.use_clang_cl:
++            self.cc = _find_exe("clang-cl.exe")
++            self.linker = _find_exe("lld-link.exe", paths)
++        else:
++            self.cc = _find_exe("cl.exe", paths)
++            self.linker = _find_exe("link.exe", paths)
++
+         self.lib = _find_exe("lib.exe", paths)
+         self.rc = _find_exe("rc.exe", paths)   # resource compiler
+         self.mc = _find_exe("mc.exe", paths)   # message compiler
+@@ -259,6 +274,17 @@ def initialize(self, plat_name=None):
+             '/nologo', '/INCREMENTAL:NO', '/LTCG', '/DEBUG:FULL'
+         ]
+ 
++        if self.use_clang_cl:
++            # Add target for clang
++            target_flag = "--target=" + PLAT_TO_LLVM_TARGETS[plat_name]
++            self.compile_options.append(target_flag)
++            self.compile_options_debug.append(target_flag)
++            # Remove whole program optimization flags to avoid warnings about
++            # unrecognized options
++            self.compile_options.remove('/GL')
++            ldflags.remove('/LTCG')
++            ldflags_debug.remove('/LTCG')
++
+         self.ldflags_exe = [*ldflags, '/MANIFEST:EMBED,ID=1']
+         self.ldflags_exe_debug = [*ldflags_debug, '/MANIFEST:EMBED,ID=1']
+         self.ldflags_shared = [*ldflags, '/DLL', '/MANIFEST:EMBED,ID=2', '/MANIFESTUAC:NO']
+@@ -537,3 +563,9 @@ def find_library_file(self, dirs, lib, debug=0):
+         else:
+             # Oops, didn't find it in *any* of 'dirs'
+             return None
++
++class ClangMSVCCompiler(MSVCCompiler):
++    compiler_type = 'clang-cl'
++
++    def __init__(self, verbose=0, dry_run=0, force=0):
++        MSVCCompiler.__init__(self, verbose, dry_run, force, True)
+diff --git a/Lib/distutils/ccompiler.py b/Lib/distutils/ccompiler.py
+index 4c47f2ed24..458ddd39d5 100644
+--- a/Lib/distutils/ccompiler.py
++++ b/Lib/distutils/ccompiler.py
+@@ -968,6 +968,8 @@ def get_default_compiler(osname=None, platform=None):
+                                "Mingw32 port of GNU C Compiler for Win32"),
+                    'bcpp':    ('bcppcompiler', 'BCPPCompiler',
+                                "Borland C++ Compiler"),
++                   'clang-cl':('_msvccompiler', 'ClangMSVCCompiler',
++                               "clang-cl for Microsoft Visual C++"),
+                  }
+ 
+ def show_compilers():
+diff --git a/Modules/_decimal/libmpdec/mpdecimal.c b/Modules/_decimal/libmpdec/mpdecimal.c
+index f1626df46e..8b0fdf0f86 100644
+--- a/Modules/_decimal/libmpdec/mpdecimal.c
++++ b/Modules/_decimal/libmpdec/mpdecimal.c
+@@ -8661,7 +8661,7 @@ mpd_qimport_u32(mpd_t *result,
+ /*                                From triple                                 */
+ /******************************************************************************/
+ 
+-#if defined(CONFIG_64) && defined(__SIZEOF_INT128__)
++#if defined(CONFIG_64) && defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+ static mpd_ssize_t
+ _set_coeff(uint64_t data[3], uint64_t hi, uint64_t lo)
+ {
+@@ -8745,7 +8745,7 @@ _set_uint128_coeff_exp(mpd_t *result, uint64_t hi, uint64_t lo, mpd_ssize_t exp)
+     uint32_t status = 0;
+     mpd_ssize_t len;
+ 
+-#if defined(CONFIG_64) && defined(__SIZEOF_INT128__)
++#if defined(CONFIG_64) && defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+     len = _set_coeff(data, hi, lo);
+ #else
+     len = _set_coeff(data, 5, hi, lo);
+@@ -8869,7 +8869,7 @@ mpd_from_uint128_triple(mpd_t *result, const mpd_uint128_triple_t *triple, uint3
+ /*                                  As triple                                 */
+ /******************************************************************************/
+ 
+-#if defined(CONFIG_64) && defined(__SIZEOF_INT128__)
++#if defined(CONFIG_64) && defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+ static void
+ _get_coeff(uint64_t *hi, uint64_t *lo, const mpd_t *a)
+ {
+diff --git a/Modules/_decimal/libmpdec/typearith.h b/Modules/_decimal/libmpdec/typearith.h
+index dd3776453d..3048316dc4 100644
+--- a/Modules/_decimal/libmpdec/typearith.h
++++ b/Modules/_decimal/libmpdec/typearith.h
+@@ -47,7 +47,7 @@
+ 
+ #if defined(CONFIG_64)
+ #if defined(ANSI)
+-#if defined(HAVE_UINT128_T)
++#if defined(HAVE_UINT128_T) && !defined(_MSC_VER)
+ static inline void
+ _mpd_mul_words(mpd_uint_t *hi, mpd_uint_t *lo, mpd_uint_t a, mpd_uint_t b)
+ {
+diff --git a/Modules/_tracemalloc.c b/Modules/_tracemalloc.c
+index 44a1f7b673..acbbea6f20 100644
+--- a/Modules/_tracemalloc.c
++++ b/Modules/_tracemalloc.c
+@@ -57,13 +57,15 @@ static PyThread_type_lock tables_lock;
+ 
+ #define DEFAULT_DOMAIN 0
+ 
++#if defined(_MSC_VER)
++#pragma pack(push, 4)
++#endif
++
+ /* Pack the frame_t structure to reduce the memory footprint on 64-bit
+    architectures: 12 bytes instead of 16. */
+ typedef struct
+ #ifdef __GNUC__
+ __attribute__((packed))
+-#elif defined(_MSC_VER)
+-#pragma pack(push, 4)
+ #endif
+ {
+     /* filename cannot be NULL: "<unknown>" is used if the Python frame
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index b8615a7a8f..e07fb32a66 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -97,8 +97,7 @@ WIN32 is still required for the locale module.
+  * _Py_STRINGIZE2(1200) which then expands to
+  * "1200"
+  */
+-#define _Py_STRINGIZE(X) _Py_STRINGIZE1((X))
+-#define _Py_STRINGIZE1(X) _Py_STRINGIZE2 ## X
++#define _Py_STRINGIZE(X) _Py_STRINGIZE2(X)
+ #define _Py_STRINGIZE2(X) #X
+ 
+ /* MSVC defines _WINxx to differentiate the windows platform types
+@@ -125,6 +124,9 @@ WIN32 is still required for the locale module.
+ #if defined(__INTEL_COMPILER)
+ #define COMPILER ("[ICC v." _Py_STRINGIZE(__INTEL_COMPILER) " 64 bit (amd64) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
+ #define PY_SUPPORT_TIER 0
++#elif defined(__clang__)
++#define COMPILER ("[clang v." _Py_STRINGIZE(__clang_version__) " 64 bit (amd64) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
++#define PY_SUPPORT_TIER 0
+ #else
+ #define COMPILER _Py_PASTE_VERSION("64 bit (AMD64)")
+ #define PY_SUPPORT_TIER 1
+@@ -184,6 +186,9 @@ typedef _W64 int Py_ssize_t;
+ #if defined(__INTEL_COMPILER)
+ #define COMPILER ("[ICC v." _Py_STRINGIZE(__INTEL_COMPILER) " 32 bit (Intel) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
+ #define PY_SUPPORT_TIER 0
++#elif defined(__clang__)
++#define COMPILER ("[clang v." _Py_STRINGIZE(__clang_version__) "32 bit (Intel) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
++#define PY_SUPPORT_TIER 0
+ #else
+ #define COMPILER _Py_PASTE_VERSION("32 bit (Intel)")
+ #define PY_SUPPORT_TIER 1
