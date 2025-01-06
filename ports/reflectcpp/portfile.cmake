@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO getml/reflect-cpp
-    REF "v0.17.0"
+    REF "v${VERSION}"
     SHA512 ed2773542871c03c62e06a522e80371f6692de00598f865b82b6df408d7b0cf5e7d66bc39a66848e3682b4d22300ef3079f0ccc77e8a2364bca476a8e229c5b8 
     HEAD_REF main
 )
