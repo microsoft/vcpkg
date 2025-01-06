@@ -46,7 +46,10 @@
       "description": "build with NUMA policy support",
       "supports": "linux",
       "dependencies": [
-        "numactl"
+        {
+          "name": "numactl",
+          "platform": "linux"
+        }
       ]
     },
     "snappy": {
