@@ -5,6 +5,13 @@
   "dependencies": [
     "msh3",
     {
+      "name": "msquic",
+      "features": [
+        "0-rtt"
+      ],
+      "platform": "windows & !static"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     }

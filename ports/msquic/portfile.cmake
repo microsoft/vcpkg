@@ -17,16 +17,20 @@ vcpkg_from_github(
         exports-for-msh3.diff
 )
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
-    REPO quictls/openssl
-    REF openssl-3.1.7-quic1
-    SHA512 230f48a4ef20bfd492b512bd53816a7129d70849afc1426e9ce813273c01884d5474552ecaede05231ca354403f25e2325c972c9c7950ae66dae310800bd19e7
-    HEAD_REF openssl-3.1.7+quic
-)
-if(NOT EXISTS "${QUIC_SOURCE_PATH}/submodules/openssl3/Configure")
-    file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl3")
-    file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
+set(QUIC_TLS "schannel")
+if("0-rtt" IN_LIST FEATURES)
+    set(QUIC_TLS "openssl3")
+    vcpkg_from_github(
+        OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
+        REPO quictls/openssl
+        REF openssl-3.1.7-quic1
+        SHA512 230f48a4ef20bfd492b512bd53816a7129d70849afc1426e9ce813273c01884d5474552ecaede05231ca354403f25e2325c972c9c7950ae66dae310800bd19e7
+        HEAD_REF openssl-3.1.7+quic
+    )
+    if(NOT EXISTS "${QUIC_SOURCE_PATH}/submodules/openssl3/Configure")
+        file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl3")
+        file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
+    endif()
 endif()
 
 vcpkg_from_github(
@@ -69,7 +73,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${QUIC_SOURCE_PATH}"
     OPTIONS
         -DQUIC_SOURCE_LINK=OFF
-        -DQUIC_TLS=openssl3
+        -DQUIC_TLS=${QUIC_TLS}
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF

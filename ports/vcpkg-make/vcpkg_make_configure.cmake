@@ -36,6 +36,9 @@ function(vcpkg_make_configure)
         list(APPEND prepare_flags_opts "LANGUAGES" ${arg_LANGUAGES})
     endif()
 
+    # Create cached cmake vars for this invocation's languages
+    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+
     set(escaping "")
     if(arg_DISABLE_MSVC_TRANSFORMATIONS)
       set(escaping NO_FLAG_ESCAPING)

@@ -6,7 +6,7 @@
     },
     "7zip": {
       "baseline": "24.09",
-      "port-version": 0
+      "port-version": 1
     },
     "ableton": {
       "baseline": "3.0.6",
@@ -98,7 +98,7 @@
     },
     "alsa": {
       "baseline": "1.2.13",
-      "port-version": 0
+      "port-version": 1
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
@@ -134,7 +134,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 9
+      "port-version": 10
     },
     "ankurvdev-embedresource": {
       "baseline": "0.0.11",
@@ -233,7 +233,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "14.0.3",
+      "baseline": "14.2.2",
       "port-version": 0
     },
     "arpack-ng": {
@@ -441,7 +441,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.471",
+      "baseline": "1.11.474",
       "port-version": 0
     },
     "azmq": {
@@ -1493,7 +1493,7 @@
       "port-version": 0
     },
     "calceph": {
-      "baseline": "4.0.3",
+      "baseline": "4.0.4",
       "port-version": 0
     },
     "camport3": {
@@ -2209,7 +2209,7 @@
       "port-version": 3
     },
     "dataframe": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "date": {
@@ -2393,8 +2393,8 @@
       "port-version": 0
     },
     "dp-thread-pool": {
-      "baseline": "0.6.2",
-      "port-version": 1
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "dpdk": {
       "baseline": "24.07",
@@ -2417,7 +2417,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.9.8",
+      "baseline": "1.9.9",
       "port-version": 0
     },
     "dstorage": {
@@ -2733,7 +2733,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.12.23.00",
+      "baseline": "2024.12.30.00",
       "port-version": 0
     },
     "fcl": {
@@ -2785,7 +2785,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.12.23.00",
+      "baseline": "2024.12.30.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2821,7 +2821,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "24.3.25",
+      "baseline": "24.12.23",
       "port-version": 0
     },
     "flatbush": {
@@ -2845,7 +2845,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.4.1",
+      "baseline": "2.4.2",
       "port-version": 0
     },
     "flux": {
@@ -2869,7 +2869,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2024.12.23.00",
+      "baseline": "2024.12.30.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3133,7 +3133,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "4.2.2",
+      "baseline": "4.2.3",
       "port-version": 0
     },
     "glbinding": {
@@ -3306,7 +3306,7 @@
     },
     "gstreamer": {
       "baseline": "1.24.7",
-      "port-version": 2
+      "port-version": 3
     },
     "gtest": {
       "baseline": "1.15.2",
@@ -3893,7 +3893,7 @@
       "port-version": 7
     },
     "jsoncons": {
-      "baseline": "0.177.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "jsoncpp": {
@@ -3961,7 +3961,7 @@
       "port-version": 0
     },
     "kealib": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "keccak-tiny": {
@@ -4232,6 +4232,10 @@
       "baseline": "0.2.2",
       "port-version": 2
     },
+    "lely-core": {
+      "baseline": "2.3.5",
+      "port-version": 0
+    },
     "lemon": {
       "baseline": "0",
       "port-version": 2
@@ -4342,7 +4346,7 @@
     },
     "libb2": {
       "baseline": "0.98.1",
-      "port-version": 6
+      "port-version": 7
     },
     "libbacktrace": {
       "baseline": "2023-11-30",
@@ -4365,7 +4369,7 @@
       "port-version": 4
     },
     "libcap": {
-      "baseline": "2.71",
+      "baseline": "2.73",
       "port-version": 0
     },
     "libcbor": {
@@ -4628,10 +4632,6 @@
       "baseline": "2.1.3",
       "port-version": 0
     },
-    "libgpod": {
-      "baseline": "2019-08-29",
-      "port-version": 4
-    },
     "libgta": {
       "baseline": "1.0.8",
       "port-version": 5
@@ -4881,7 +4881,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2024.12.0",
+      "baseline": "2025.1.0",
       "port-version": 0
     },
     "libnoise": {
@@ -5357,8 +5357,8 @@
       "port-version": 1
     },
     "libwebp": {
-      "baseline": "1.4.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "libwebsockets": {
       "baseline": "4.3.3",
@@ -5382,7 +5382,7 @@
     },
     "libxcrypt": {
       "baseline": "4.4.36",
-      "port-version": 1
+      "port-version": 2
     },
     "libxcvt": {
       "baseline": "0.1.2",
@@ -6186,7 +6186,7 @@
     },
     "msquic": {
       "baseline": "2.4.7",
-      "port-version": 0
+      "port-version": 1
     },
     "mstch": {
       "baseline": "1.0.2",
@@ -6221,7 +6221,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.12.23.00",
+      "baseline": "2024.12.30.00",
       "port-version": 0
     },
     "mygui": {
@@ -6461,7 +6461,7 @@
       "port-version": 1
     },
     "nu-book-zxing-cpp": {
-      "baseline": "2.2.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "nuklear": {
@@ -6557,8 +6557,8 @@
       "port-version": 0
     },
     "octave": {
-      "baseline": "9.2.0",
-      "port-version": 1
+      "baseline": "9.3.0",
+      "port-version": 0
     },
     "octomap": {
       "baseline": "1.10.0",
@@ -6577,7 +6577,7 @@
       "port-version": 1
     },
     "ogre": {
-      "baseline": "14.3.1",
+      "baseline": "14.3.2",
       "port-version": 0
     },
     "ogre-next": {
@@ -6713,8 +6713,8 @@
       "port-version": 1
     },
     "openh264": {
-      "baseline": "2021-03-16",
-      "port-version": 4
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "openigtlink": {
       "baseline": "3.0",
@@ -7257,7 +7257,7 @@
       "port-version": 0
     },
     "proxsuite": {
-      "baseline": "0.6.4",
+      "baseline": "0.6.7",
       "port-version": 0
     },
     "proxy": {
@@ -7265,7 +7265,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.12.23.00",
+      "baseline": "2024.12.30.00",
       "port-version": 0
     },
     "psimd": {
@@ -8169,8 +8169,8 @@
       "port-version": 1
     },
     "scenepic": {
-      "baseline": "1.1.0",
-      "port-version": 1
+      "baseline": "1.1.1",
+      "port-version": 0
     },
     "scintilla": {
       "baseline": "5.5.1",
@@ -8241,7 +8241,7 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.30.10",
+      "baseline": "2.30.11",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -8925,7 +8925,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "3.8.0",
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "tbb": {
@@ -9008,10 +9008,6 @@
       "baseline": "2023-01-16",
       "port-version": 2
     },
-    "thor": {
-      "baseline": "2022-04-16",
-      "port-version": 0
-    },
     "thorvg": {
       "baseline": "0.15.6",
       "port-version": 0
@@ -9089,7 +9085,7 @@
       "port-version": 0
     },
     "tinygltf": {
-      "baseline": "2.9.3",
+      "baseline": "2.9.4",
       "port-version": 0
     },
     "tinynpy": {
@@ -9473,7 +9469,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2023-05-15",
+      "baseline": "2024-12-27",
       "port-version": 0
     },
     "vcpkg-msbuild": {
@@ -9605,8 +9601,8 @@
       "port-version": 0
     },
     "vsgxchange": {
-      "baseline": "1.0.5",
-      "port-version": 1
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "vst3sdk": {
       "baseline": "v3.7.12_build_20",
@@ -9685,7 +9681,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2024.12.23.00",
+      "baseline": "2024.12.30.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9793,8 +9789,8 @@
       "port-version": 0
     },
     "wolfssl": {
-      "baseline": "5.7.4",
-      "port-version": 1
+      "baseline": "5.7.6",
+      "port-version": 0
     },
     "wolftpm": {
       "baseline": "3.4.0",
