@@ -139,10 +139,10 @@
     </tool>
     <tool name="7zip" os="windows">
         <version>24.09</version>
-        <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://github.com/ip7z/7zip/releases/download/24.09/7z2409-extra.7z</url>
-        <sha512>d17ef51ebe5e61761fa449c0d6106950e7e8dd9ef9bb9f129aed048f3d8d81662ba82a71e8264fff7c0f6764f410f2e8a4430d27e4ce915cf339e8d639905b3b</sha512>
-        <archiveName>7z2409-extra.7z</archiveName>
+        <exeRelativePath>7z.exe</exeRelativePath>
+        <url>https://github.com/ip7z/7zip/releases/download/24.09/7z2409.exe</url>
+        <sha512>a39a84b13b383ac5fca20eb6d92ec6b8bc85f1b6a545c441efdbe054d8d12c9ebe97d366235bdf1383bbdb2a9666d18d0145b10b6e589180502c0c2dfa26ef14</sha512>
+        <archiveName>7z2409.7z.exe</archiveName>
      </tool>
     <tool name="7zr" os="windows">
         <version>24.09</version>
