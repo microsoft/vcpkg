@@ -60,14 +60,13 @@ index accdece..831c771 100644
  
  if(OCIO_BUILD_OPENFX)
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 4e2367b..51a3140 100644
+index 4e2367b..eb0c6de 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,12 @@
+@@ -1,6 +1,11 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
-+include(CMakeFindDependencyMacro)
 +find_dependency(expat CONFIG)
 +find_dependency(Imath CONFIG)
 +find_dependency(pystring CONFIG)
