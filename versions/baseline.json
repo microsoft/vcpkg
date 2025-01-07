@@ -10009,7 +10009,7 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.2.2",
+      "baseline": "2.2.3",
       "port-version": 0
     },
     "zlmediakit": {
