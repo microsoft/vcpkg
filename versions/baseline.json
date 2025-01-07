@@ -2237,8 +2237,8 @@
       "port-version": 0
     },
     "daxa": {
-      "baseline": "3.0.2",
-      "port-version": 1
+      "baseline": "3.0.3",
+      "port-version": 0
     },
     "dbg-macro": {
       "baseline": "0.5.1",
