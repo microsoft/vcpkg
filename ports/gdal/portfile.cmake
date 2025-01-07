@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF "v${VERSION}"
-    SHA512 4e0431c9bb9b7c54508afdcaa936445eee8878aa47f404e2ff00c8ce786c1dd58247c2cee76cb0e0e26cef04419d7c6c4884f2d9078e9d292c4a1c720deae3ed
+    REF "v${VERSION}RC1"
+    SHA512 b4af1ba5c0069a258c4a42be42e4473bf7b6341d01255196765f976029af08ecdb08e572f3e18aad800267ce9420175f8eb66db3194ffb6c00c5a35664b4bffe
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
         target-is-valid.patch
-        remove-machine-flag.patch
+        # remove-machine-flag.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
