@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 72d978326a3641e69706c158cd5c4b1a4138dedbe1bf8c0f1c02fbb03291c1a49ff36afdaf8cf432fee84952bbaecf8801efa3f1afb50f600490e36ec3d577ef
+    SHA512 3c98bcd930fc8953c9f5fd49454bdd41b2ff220b1ed3164cfc629c8d302a244dbdd16f00193cdbf8ae04daf1ac21a87aa4598fa34e1ba88f864437bc33b9918c
     HEAD_REF master
     PATCHES
         dependencies.patch
         install-layout.patch
         windows-linkage.patch
+        fix-absolute_paths.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
@@ -79,6 +80,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+
 vcpkg_list(SET tools)
 if(VCPKG_TARGET_IS_WINDOWS)
     if("server" IN_LIST FEATURES)
@@ -121,6 +123,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
+
 file(REMOVE_RECURSE
     ${cmakefiles}
     "${CURRENT_PACKAGES_DIR}/include/winpr3/config"
