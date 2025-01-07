@@ -2554,7 +2554,7 @@
     },
     "eigen3": {
       "baseline": "3.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "elements": {
       "baseline": "2024-09-12",

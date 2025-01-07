@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     PATCHES
         remove_configure_checks.patch # This removes unnecessary configure checks. Eigen3 just installs headers not anything more.
         fix-vectorized-reductions-half.patch # Remove this patch in the next update
+        update-warning-suppression-to-latest.patch
 )
 
 vcpkg_cmake_configure(
