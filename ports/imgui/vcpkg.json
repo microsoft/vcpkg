@@ -102,16 +102,16 @@
         "sdl2"
       ]
     },
-    "sdl3-binding": {
-      "description": "Make available SDL3 binding",
-      "dependencies": [
-        "sdl3"
-      ]
-    },
     "sdl2-renderer-binding": {
       "description": "Make available SDL2 Renderer binding",
       "dependencies": [
         "sdl2"
+      ]
+    },
+    "sdl3-binding": {
+      "description": "Make available SDL3 binding",
+      "dependencies": [
+        "sdl3"
       ]
     },
     "sdl3-renderer-binding": {
