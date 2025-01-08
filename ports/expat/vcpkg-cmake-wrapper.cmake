@@ -14,7 +14,19 @@ find_library(EXPAT_LIBRARY_RELEASE NAMES ${EXPATNAMES} NAMES_PER_DIR PATH_SUFFIX
 select_library_configurations(EXPAT)
 set(EXPAT_LIBRARY "${EXPAT_LIBRARIES}" CACHE STRING "" FORCE)
 _find_package(${ARGS})
+
+# if(TARGET EXPAT::EXPAT)
+    # message(FATAL_ERROR "1-------------${ARGS}--------${EXPAT_FOUND}----------${EXPAT_LIBRARIES}")
+# endif()
+
+# if(TARGET expat::expat)
+    # message(FATAL_ERROR "2-------------${ARGS}--------${EXPAT_FOUND}----------${EXPAT_LIBRARIES}")
+# endif()
+
+add_library(EXPAT::EXPAT UNKNOWN IMPORTED)
+
 if(EXPAT_FOUND AND TARGET EXPAT::EXPAT)
+    # message(FATAL_ERROR "2-------------${ARGS}--------${EXPAT_FOUND}----------${EXPAT_LIBRARIES}")
     if(EXPAT_LIBRARY_DEBUG)
         set_target_properties(EXPAT::EXPAT PROPERTIES IMPORTED_LOCATION_DEBUG "${EXPAT_LIBRARY_DEBUG}")
     endif()
