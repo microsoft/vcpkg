@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
     REF "${VERSION}"
-    SHA512 d8b6d643b12c9cdf91bf292c8d43a0086eb614a87344d12bbac04e74fc5a333dc699cd37c7715e73f2bee00a233e9b80a1942b879a51275aa865aa12c6fa6b0d
+    SHA512 6d053b140a34061fcf5eb30f23f87e51dd8e80be29a3e505c42312c11198491102a79c2ca290f13971d25b9a286354ad44bd825593c076373c18f58bbc7b950e
     HEAD_REF master
     PATCHES
         dont-generate-extract-3rd-party-things.patch
+        fix-NAN-on-Win11.patch # https://github.com/ArtifexSoftware/mupdf/pull/54
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
