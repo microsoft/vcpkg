@@ -6609,13 +6609,8 @@
       "port-version": 0
     },
     "onnx": {
-<<<<<<< HEAD
-      "baseline": "1.17.0",
-      "port-version": 0
-=======
       "baseline": "1.16.2",
       "port-version": 1
->>>>>>> c9e4056f04448359c677cff0f1f4d01401fa9270
     },
     "onnx-optimizer": {
       "baseline": "0.3.19",
