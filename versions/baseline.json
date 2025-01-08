@@ -6657,7 +6657,7 @@
       "port-version": 2
     },
     "opencl": {
-      "baseline": "v2024.05.08",
+      "baseline": "2024.10.24",
       "port-version": 0
     },
     "opencolorio": {
@@ -6794,7 +6794,7 @@
     },
     "openvino": {
       "baseline": "2024.4.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openvpn3": {
       "baseline": "3.10",
