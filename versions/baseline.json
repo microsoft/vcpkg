@@ -1529,7 +1529,7 @@
       "port-version": 2
     },
     "catch2": {
-      "baseline": "3.7.1",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "cblas": {
@@ -2733,7 +2733,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2024.12.30.00",
+      "baseline": "2025.01.06.00",
       "port-version": 0
     },
     "fcl": {
@@ -2785,7 +2785,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.12.30.00",
+      "baseline": "2025.01.06.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2869,7 +2869,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2024.12.30.00",
+      "baseline": "2025.01.06.00",
       "port-version": 0
     },
     "font-chef": {
@@ -4349,15 +4349,15 @@
       "port-version": 7
     },
     "libbacktrace": {
-      "baseline": "2023-11-30",
-      "port-version": 1
+      "baseline": "2024-11-30",
+      "port-version": 0
     },
     "libbf": {
       "baseline": "1.0.0",
       "port-version": 4
     },
     "libbson": {
-      "baseline": "1.29.1",
+      "baseline": "1.29.2",
       "port-version": 0
     },
     "libcaer": {
@@ -4722,7 +4722,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libjuice": {
       "baseline": "1.5.4",
@@ -5054,7 +5054,7 @@
     },
     "libremidi": {
       "baseline": "4.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "4.0.0",
@@ -6049,8 +6049,8 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "1.29.1",
-      "port-version": 1
+      "baseline": "1.29.2",
+      "port-version": 0
     },
     "mongo-cxx-driver": {
       "baseline": "4.0.0",
@@ -6221,7 +6221,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2024.12.30.00",
+      "baseline": "2025.01.06.00",
       "port-version": 0
     },
     "mygui": {
@@ -6257,7 +6257,7 @@
       "port-version": 8
     },
     "nanoflann": {
-      "baseline": "1.6.2",
+      "baseline": "1.6.3",
       "port-version": 0
     },
     "nanogui": {
@@ -6657,7 +6657,7 @@
       "port-version": 2
     },
     "opencl": {
-      "baseline": "v2024.05.08",
+      "baseline": "2024.10.24",
       "port-version": 0
     },
     "opencolorio": {
@@ -6686,7 +6686,7 @@
     },
     "opencv4": {
       "baseline": "4.10.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6766,7 +6766,7 @@
     },
     "openssl": {
       "baseline": "3.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opensubdiv": {
       "baseline": "3.5.0",
@@ -6794,7 +6794,7 @@
     },
     "openvino": {
       "baseline": "2024.4.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -6989,7 +6989,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "48.1",
+      "baseline": "49.0",
       "port-version": 0
     },
     "pffft": {
@@ -7265,7 +7265,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.12.30.00",
+      "baseline": "2025.01.06.00",
       "port-version": 0
     },
     "psimd": {
@@ -8030,7 +8030,7 @@
     },
     "rocksdb": {
       "baseline": "9.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "rpclib": {
       "baseline": "2.3.0",
@@ -8077,8 +8077,8 @@
       "port-version": 1
     },
     "rtlsdr": {
-      "baseline": "2020-04-16",
-      "port-version": 4
+      "baseline": "2.0.2",
+      "port-version": 0
     },
     "rtmfp-cpp": {
       "baseline": "1.5.1",
@@ -9530,7 +9530,7 @@
     },
     "vsgxchange": {
       "baseline": "1.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "vst3sdk": {
       "baseline": "v3.7.12_build_20",
@@ -9609,7 +9609,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2024.12.30.00",
+      "baseline": "2025.01.06.00",
       "port-version": 0
     },
     "wasmedge": {
