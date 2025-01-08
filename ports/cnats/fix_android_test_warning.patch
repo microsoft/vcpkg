@@ -1,15 +1,17 @@
-diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 72308f1..6b7fbef 100644
---- a/test/CMakeLists.txt
-+++ b/test/CMakeLists.txt
-@@ -46,6 +46,10 @@ endif()
+diff --git a/test/test.c b/test/test.c
+index 039971b..de88765 100644
+--- a/test/test.c
++++ b/test/test.c
+@@ -37014,12 +37014,8 @@ void test_StanSubTimeout(void)
  
- set(TEST_NAMES)
- 
-+if(UNIX)
-+    add_compile_options(-Wno-implicit-function-declaration)
-+endif()
-+
- foreach(LIST_FILE ${ALL_LISTS})
-   # Get all the test names
-   if(EXISTS ${LIST_FILE})
+ #ifndef _WIN32
+ static void _sigsegv_handler(int sig) {
+-  void *array[20];
+-  int size = backtrace(array, 20);
+-
+   // print out all the frames to stderr
+   fprintf(stderr, "Error: signal %d:\n", sig);
+-  backtrace_symbols_fd(array, size, STDERR_FILENO);
+   exit(1);
+ }
+ #endif // _WIN32
