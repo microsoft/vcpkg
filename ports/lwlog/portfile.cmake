@@ -1,6 +1,3 @@
-set(VCPKG_BUILD_TYPE release)
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
