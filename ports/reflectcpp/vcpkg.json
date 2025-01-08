@@ -68,15 +68,6 @@
         }
       ]
     },
-    "toml": {
-      "description": "Support for the TOML format",
-      "dependencies": [
-        {
-          "name": "tomlplusplus",
-          "version>=": "3.4.0"
-        }
-      ]
-    },
     "ubjson": {
       "description": "Support for the UBJSON format",
       "dependencies": [

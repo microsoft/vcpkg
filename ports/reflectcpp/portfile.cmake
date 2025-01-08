@@ -18,7 +18,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cbor                REFLECTCPP_CBOR
         flexbuffers         REFLECTCPP_FLEXBUFFERS
         msgpack             REFLECTCPP_MSGPACK
-        toml                REFLECTCPP_TOML
         ubjson              REFLECTCPP_UBJSON
         xml                 REFLECTCPP_XML
         yaml                REFLECTCPP_YAML
