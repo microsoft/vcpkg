@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-sodium-dep.patch
         fix_install_path.patch
+        fix_android_test_warning.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
