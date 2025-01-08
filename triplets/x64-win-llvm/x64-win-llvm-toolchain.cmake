@@ -128,19 +128,15 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
     endif()
 
-    set(CHARSET_FLAG "/utf-8")
-    if (NOT VCPKG_SET_CHARSET_FLAG OR VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        # VS 2013 does not support /utf-8
+    set(CHARSET_FLAG " /utf-8")
+    if (NOT VCPKG_SET_CHARSET_FLAG)
         set(CHARSET_FLAG "")
     endif()
 
-    set(MP_BUILD_FLAG "")
-    if(NOT (CMAKE_CXX_COMPILER MATCHES "clang-cl.exe"))
-        set(MP_BUILD_FLAG "/MP ")
-    endif()
+    set(common_flags "/nologo /DWIN32 /D_WINDOWS -Wno-implicit-function-declaration${CHARSET_FLAG}")
 
-    set(CMAKE_CXX_FLAGS " /nologo /DWIN32 /D_WINDOWS ${CHARSET_FLAG} /GR /EHsc ${MP_BUILD_FLAG}${VCPKG_CXX_FLAGS}" CACHE STRING "")
-    set(CMAKE_C_FLAGS " /nologo /DWIN32 /D_WINDOWS ${CHARSET_FLAG} ${MP_BUILD_FLAG}${VCPKG_C_FLAGS}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS "${common_flags} /GR /EHsc ${VCPKG_CXX_FLAGS}" CACHE STRING "")
+    set(CMAKE_C_FLAGS "${common_flags} ${VCPKG_C_FLAGS}" CACHE STRING "")
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64ec")
         string(APPEND CMAKE_CXX_FLAGS " /arm64EC /D_AMD64_ /DAMD64 /D_ARM64EC_ /DARM64EC")
