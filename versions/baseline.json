@@ -9530,7 +9530,7 @@
     },
     "vsgxchange": {
       "baseline": "1.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "vst3sdk": {
       "baseline": "v3.7.12_build_20",
