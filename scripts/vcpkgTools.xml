@@ -134,7 +134,7 @@
         <version>24.09</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
         <url>https://github.com/ip7z/7zip/releases/download/24.09/7z2409-x64.msi</url>
-        <sha512>A3396A70B739F3A80B25FE64103D1E98EA584DCDBDBA740884EA10E00EDFB37966CEB85F5CCA995865FE90371EADFF9DF8132124D3DC2598A2D78BF86F6DDD6E</sha512>
+        <sha512>a3396a70b739f3a80b25fe64103d1e98ea584dcdbdba740884ea10e00edfb37966ceb85f5cca995865fe90371eadff9df8132124d3dc2598a2d78bf86f6ddd6e</sha512>
         <archiveName>7z2409-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
@@ -148,7 +148,7 @@
         <version>24.09</version>
         <exeRelativePath>7zr.exe</exeRelativePath>
         <url>https://github.com/ip7z/7zip/releases/download/24.09/7zr.exe</url>
-        <sha512>44D8504A693AD4D6B79631B653FC19B572DE6BBE38713B53C45D9C9D5D3710AA8DF93EE867A2A24419EBE883B8255FD18F30F8CF374B2242145FD6ACB2189659</sha512>
+        <sha512>44d8504a693ad4d6b79631b653fc19b572de6bbe38713b53c45d9c9d5d3710aa8df93ee867a2a24419ebe883b8255fd18f30f8cf374b2242145fd6acb2189659</sha512>
     </tool>
     <tool name="aria2" os="windows">
         <version>1.37.0</version>
