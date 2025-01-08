@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-sodium-dep.patch
-        fix_install_path.patch
-        lowercase_ws2_32.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
