@@ -1,0 +1,5 @@
+project(libmem-test LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(libmem CONFIG REQUIRED)
+add_executable(main main.cpp)
+target_link_libraries(main PRIVATE libmem::libmem)
