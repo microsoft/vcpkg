@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..91f145d 100644
+index 534057a..9544bda 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -43,8 +43,9 @@ index 534057a..91f145d 100644
 -else()
 -	add_library(libmem SHARED ${LIBMEM_SRC})
 -endif()
+-target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
 +add_library(libmem ${LIBMEM_SRC} ${LLVM_DEM_SRC})
- target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
++target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>" "$<INSTALL_INTERFACE:include>")
  
  include_directories(${PROJECT_SOURCE_DIR}
  	${LIBMEM_INC}
