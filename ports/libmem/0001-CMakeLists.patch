@@ -1,20 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..dd01de4 100644
+index 534057a..ea80f2d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,6 +1,10 @@
+@@ -1,6 +1,7 @@
  cmake_minimum_required(VERSION 3.22.1)
  
 -include(ExternalProject)
 +set(CMAKE_CXX_STANDARD 17)
 +file(GLOB_RECURSE LLVM_DEM_SRC "${LIBMEM_DIR}/external/llvm/lib/*.cpp")
-+find_package(PkgConfig REQUIRED)
-+find_package(capstone CONFIG REQUIRED)
-+pkg_check_modules(keystone REQUIRED keystone)
  
  project(libmem
  	LANGUAGES
-@@ -49,6 +53,7 @@ message(STATUS
+@@ -49,6 +50,7 @@ message(STATUS
  message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
  message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
  
@@ -22,7 +19,7 @@ index 534057a..dd01de4 100644
  # External dependencies
  set(EXTERNAL_DEPENDENCIES_DIR "${PROJECT_SOURCE_DIR}/external")
  set(CAPSTONE_DIR "${EXTERNAL_DEPENDENCIES_DIR}/capstone")
-@@ -67,6 +72,7 @@ add_library(keystone STATIC IMPORTED)
+@@ -67,6 +69,7 @@ add_library(keystone STATIC IMPORTED)
  set_target_properties(keystone PROPERTIES IMPORTED_LOCATION ${KEYSTONE_IMPORT_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}keystone${CMAKE_STATIC_LIBRARY_SUFFIX})
  # End of external dependencies
  
@@ -30,7 +27,7 @@ index 534057a..dd01de4 100644
  set(LIBMEM_DIR "${PROJECT_SOURCE_DIR}")
  set(LIBMEM_INC "${LIBMEM_DIR}/include")
  set(INTERNAL_DIR "${LIBMEM_DIR}/internal")
-@@ -90,23 +96,18 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+@@ -90,23 +93,18 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
  	file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/freebsd/*.c" "${LIBMEM_DIR}/src/freebsd/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
  endif()
  set(LIBMEM_DEPS
@@ -58,7 +55,7 @@ index 534057a..dd01de4 100644
  )
  
  if (LIBMEM_BUILD_TESTS)
-@@ -116,10 +117,6 @@ endif()
+@@ -116,10 +114,6 @@ endif()
  
  set_target_properties(libmem PROPERTIES POSITION_INDEPENDENT_CODE True INCLUDES ${LIBMEM_INC})
  target_compile_definitions(libmem PUBLIC LM_EXPORT)
@@ -69,9 +66,13 @@ index 534057a..dd01de4 100644
  
  if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  	set(LIBMEM_DEPS
-@@ -152,7 +149,7 @@ else()
+@@ -151,8 +145,11 @@ else()
+ 	message(FATAL_ERROR "[!] Unsupported platform")
  endif()
  
++find_package(PkgConfig)
++pkg_check_modules(keystone REQUIRED keystone)
++find_package(capstone CONFIG REQUIRED)
  target_link_libraries(libmem ${LIBMEM_DEPS})
 -if(LIBMEM_BUILD_STATIC)
 +if(0)
