@@ -113,6 +113,6 @@ index 534057a..9544bda 100644
 +install(DIRECTORY "${LIBMEM_INC}/libmem" DESTINATION "include")
 +install(EXPORT libmem-target DESTINATION "share/libmem")
 +include(CMakePackageConfigHelpers)
-+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libmem-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake" INSTALL_DESTINATION "share/libmem" @ONLY)
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libmem-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake" "share/libmem" @ONLY)
 +write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake" VERSION 5.0.4 COMPATIBILITY SameMajorVersion)
 +install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake" DESTINATION "share/libmem")
