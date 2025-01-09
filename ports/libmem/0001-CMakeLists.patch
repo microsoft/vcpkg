@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..ea80f2d 100644
+index 534057a..91f145d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -102,15 +102,16 @@ index 534057a..ea80f2d 100644
 -install(TARGETS libmem
 -	RUNTIME DESTINATION lib)
 -
+-install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
 +install(TARGETS libmem EXPORT libmem-target
 +	LIBRARY DESTINATION lib
 +	ARCHIVE DESTINATION lib
 +	RUNTIME DESTINATION bin
-+	PUBLIC_HEADER DESTINATION include/libmem
++	PUBLIC_HEADER DESTINATION "include/libmem"
 +)
- install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
-+install(EXPORT libmem-target DESTINATION share/libmem)
++install(DIRECTORY "${LIBMEM_INC}/libmem" DESTINATION "include")
++install(EXPORT libmem-target DESTINATION "share/libmem")
 +include(CMakePackageConfigHelpers)
-+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libmem-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake" INSTALL_DESTINATION share/libmem @ONLY)
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libmem-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake" INSTALL_DESTINATION "share/libmem" @ONLY)
 +write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake" VERSION 5.0.4 COMPATIBILITY SameMajorVersion)
 +install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake" DESTINATION "share/libmem")
