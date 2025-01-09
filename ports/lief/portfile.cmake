@@ -1,21 +1,13 @@
-vcpkg_download_distfile(
-    FIX_FMT_V11_JOIN_LINUX_INCLUDE_MEMORY_PATCH
-    URLS https://github.com/lief-project/LIEF/commit/41166332a2435fdb7d2bdc5c73f9ff9b442c5459.patch?full_index=1
-    FILENAME fix-fmt-v11-join-linux-include-memory-41166332a2435fdb7d2bdc5c73f9ff9b442c5459.patch
-    SHA512 14d5f7380352bd340c16447905b8185dbd2d977c8ba245e01d982fe7fbbdffb71004b9d4fdd732bc13e71a11aa3f46a4822cdeb2277e2cec6b841492d0de5606
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
     REF ${VERSION}
-    SHA512 7df75fab6c7023e37a6a4d27fac8dcb4200e0235625fc5952bb23cedb2e582a37fb67ee471c1ae953c0b205fd9cca5538a835f65ef80a771f72dc7ff68000ed9
+    SHA512 776d26bc5d8ec7bca823d1c0fc821b0efc2411976901e1fca0ffecbc64591798e9e21a483c1637e9877bdd921dc463ffaef4eeb6a76d9dd8463c97c5f50834d4
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
-        "${FIX_FMT_V11_JOIN_LINUX_INCLUDE_MEMORY_PATCH}"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
