@@ -8,9 +8,9 @@ index 534057a..dd01de4 100644
 -include(ExternalProject)
 +set(CMAKE_CXX_STANDARD 17)
 +file(GLOB_RECURSE LLVM_DEM_SRC "${LIBMEM_DIR}/external/llvm/lib/*.cpp")
-+find_package(PkgConfig)
-+pkg_check_modules(keystone REQUIRED keystone)
++find_package(PkgConfig REQUIRED)
 +find_package(capstone CONFIG REQUIRED)
++pkg_check_modules(keystone REQUIRED keystone)
  
  project(libmem
  	LANGUAGES
