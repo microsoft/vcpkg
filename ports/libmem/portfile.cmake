@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rdbo/libmem
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 a3245fedb0447133a674dc39b3f9dc0bce86cb8ed775cb50bc3b58ee410632653cfc340d17c2ca0a914e51ade9b62f393e23feb5f3d0459b1a1a8ce690a0d025
     HEAD_REF master
     PATCHES
