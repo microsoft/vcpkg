@@ -1,7 +1,6 @@
 @PACKAGE_INIT@
-
 include(CMakeFindDependencyMacro)
 find_dependency(capstone CONFIG)
-
+find_dependency(keystone)
 include("${CMAKE_CURRENT_LIST_DIR}/libmem-target.cmake")
 check_required_components(libmem)
