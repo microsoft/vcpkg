@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..6aa1755 100644
+index 534057a..ac85e7b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -101,8 +101,8 @@ index 534057a..6aa1755 100644
 -
 -install(TARGETS libmem
 -	RUNTIME DESTINATION lib)
-+	EXPORT libmem-target
 +	LIBRARY DESTINATION lib
++	EXPORT libmem-target
 +	ARCHIVE DESTINATION lib
 +	PUBLIC_HEADER DESTINATION include/libmem
 +	RUNTIME DESTINATION bin
@@ -117,8 +117,8 @@ index 534057a..6aa1755 100644
 +)
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
-+    ${CMAKE_CURRENT_SOURCE_DIR}/libmem-config.cmake.in
-+    ${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake
++    "${CMAKE_CURRENT_SOURCE_DIR}/libmem-config.cmake.in"
++    "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake"
 +    INSTALL_DESTINATION share/libmem
 +)
 +write_basic_package_version_file(
@@ -128,7 +128,7 @@ index 534057a..6aa1755 100644
 +)
 +install(
 +    FILES
-+    ${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake
-+    ${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake 
++    "${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake"
 +    DESTINATION share/libmem
 +)
