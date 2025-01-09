@@ -8,10 +8,7 @@ vcpkg_from_github(
         0001-CMakeLists.patch
 )
 file(REMOVE "${SOURCE_PATH}/PreLoad.cmake")
-file(
-    COPY "${CMAKE_CURRENT_LIST_DIR}/libmem-config.cmake.in"
-    DESTINATION "${SOURCE_PATH}"
-)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmem-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
