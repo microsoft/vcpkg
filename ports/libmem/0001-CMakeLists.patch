@@ -45,7 +45,7 @@ index 534057a..9544bda 100644
 -endif()
 -target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}")
 +add_library(libmem ${LIBMEM_SRC} ${LLVM_DEM_SRC})
-+target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>" "$<INSTALL_INTERFACE:include>")
++target_include_directories(libmem PRIVATE "${LIBMEM_DIR}/src" "${INTERNAL_DIR}" "${COMMON_DIR}" PUBLIC "$<INSTALL_INTERFACE:include>")
  
  include_directories(${PROJECT_SOURCE_DIR}
  	${LIBMEM_INC}
