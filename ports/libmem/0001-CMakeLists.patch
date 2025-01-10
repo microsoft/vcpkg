@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..a4afa93 100644
+index 534057a..b6d6a39 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -104,7 +104,8 @@ index 534057a..a4afa93 100644
 -	RUNTIME DESTINATION lib)
 -
  install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
-+install(TARGETS libmem EXPORT libmem-target
++install(TARGETS libmem
++	EXPORT libmem-target
 +	LIBRARY DESTINATION lib
 +	ARCHIVE DESTINATION lib
 +	RUNTIME DESTINATION bin
