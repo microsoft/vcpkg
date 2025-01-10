@@ -28,17 +28,13 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO glennrp/libpng
+    REPO pnggroup/libpng
     REF v${VERSION}
     SHA512 b999c241ce5d95dfae5bb2c71e8b686a1c4af69b67262bda309a58c83967b5f3eacd7987d6990f71ebc16aa89f4f7a59c846857d56c80bca7e9ec657caff62c7
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
-        libm.patch
-        pkgconfig.patch
-        fix-msa-support-for-mips.patch
-        fix-tools-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PNG_SHARED)
