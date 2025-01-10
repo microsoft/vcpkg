@@ -2637,8 +2637,8 @@
       "port-version": 0
     },
     "exprtk": {
-      "baseline": "2022-01-01",
-      "port-version": 2
+      "baseline": "2024-01-01",
+      "port-version": 0
     },
     "ezc3d": {
       "baseline": "1.5.11",
