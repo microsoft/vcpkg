@@ -48,13 +48,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-# Subject to https://github.com/libsdl-org/SDL/pull/11492
-set(config_path "share/${PORT}/SDL3")
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(config_path "share/${PORT}")
-endif()
-vcpkg_cmake_config_fixup(CONFIG_PATH "${config_path}")
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
