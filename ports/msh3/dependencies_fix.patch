@@ -12,11 +12,3 @@ index c4c0814..f400566 100644
  
      add_compile_definitions(WIN32_LEAN_AND_MEAN)
      if(HAS_SPECTRE)
-@@ -76,6 +73,7 @@ endif()
- option(MSH3_USE_EXTERNAL_MSQUIC "Use an external msquic installation")
- if(MSH3_USE_EXTERNAL_MSQUIC)
-     find_package(msquic CONFIG REQUIRED)
-+    add_library(msquic_platform ALIAS msquic) # with ports/msquic/exports-for-msh3.diff
- else()
-     # Configure and build
-     if (WIN32)
