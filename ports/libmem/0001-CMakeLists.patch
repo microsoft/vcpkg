@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..e433396 100644
+index 534057a..c8115ea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -27,7 +27,7 @@ index 534057a..e433396 100644
  set(LIBMEM_DIR "${PROJECT_SOURCE_DIR}")
  set(LIBMEM_INC "${LIBMEM_DIR}/include")
  set(INTERNAL_DIR "${LIBMEM_DIR}/internal")
-@@ -90,23 +93,17 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+@@ -90,23 +93,16 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
  	file(GLOB LIBMEM_SRC ${LIBMEM_ARCH_SRC} "${LIBMEM_DIR}/src/freebsd/*.c" "${LIBMEM_DIR}/src/freebsd/ptrace/*.c" "${LIBMEM_DIR}/src/common/*.c" "${LIBMEM_DIR}/src/common/*.cpp" "${INTERNAL_DIR}/posixutils/*.c" "${INTERNAL_DIR}/elfutils/*.c" "${INTERNAL_DIR}/demangler/*.cpp")
  endif()
  set(LIBMEM_DEPS
@@ -35,7 +35,7 @@ index 534057a..e433396 100644
 -	keystone
 -	llvm
 +	capstone::capstone
-+	${keystone_LINK_LIBRARIES}
++	"${keystone_LINK_LIBRARIES}"
  )
  
 -if (LIBMEM_BUILD_STATIC)
@@ -49,15 +49,15 @@ index 534057a..e433396 100644
  
  include_directories(${PROJECT_SOURCE_DIR}
 -	${LIBMEM_INC}
- 	${CAPSTONE_INC}
+-	${CAPSTONE_INC}
 -	${KEYSTONE_INC}
 -	${LLVM_INC}
-+	${keystone_INCLUDE_DIRS}
++	"${keystone_INCLUDE_DIRS}"
 +	"${LIBMEM_DIR}/external/llvm/include"
  )
  
  if (LIBMEM_BUILD_TESTS)
-@@ -116,10 +113,6 @@ endif()
+@@ -116,10 +112,6 @@ endif()
  
  set_target_properties(libmem PROPERTIES POSITION_INDEPENDENT_CODE True INCLUDES ${LIBMEM_INC})
  target_compile_definitions(libmem PUBLIC LM_EXPORT)
@@ -68,7 +68,7 @@ index 534057a..e433396 100644
  
  if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  	set(LIBMEM_DEPS
-@@ -151,8 +144,11 @@ else()
+@@ -151,8 +143,11 @@ else()
  	message(FATAL_ERROR "[!] Unsupported platform")
  endif()
  
@@ -81,7 +81,7 @@ index 534057a..e433396 100644
  	# Create a bundled static library containing all dependencies (to mimic the shared library behavior)
  	set_target_properties(libmem PROPERTIES OUTPUT_NAME "libmem_partial")
  	set(libmem_bundle_files "$<TARGET_FILE:libmem>")
-@@ -193,7 +189,7 @@ if(LIBMEM_BUILD_STATIC)
+@@ -193,7 +188,7 @@ if(LIBMEM_BUILD_STATIC)
  	endif()
  endif()
  
@@ -90,7 +90,7 @@ index 534057a..e433396 100644
  	if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  		cmake_path(SET CMAKE_INSTALL_PREFIX "$ENV{ProgramFiles}")
  	else()
-@@ -202,14 +198,18 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
+@@ -202,14 +197,18 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
  	endif()
  	set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/libmem")
  	execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}")
