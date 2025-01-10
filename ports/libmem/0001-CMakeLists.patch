@@ -104,8 +104,7 @@ index 534057a..a4afa93 100644
 -	RUNTIME DESTINATION lib)
 -
  install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
-+install(TARGETS libmem 
-+	EXPORT libmem-target
++install(TARGETS libmem EXPORT libmem-target
 +	LIBRARY DESTINATION lib
 +	ARCHIVE DESTINATION lib
 +	RUNTIME DESTINATION bin
