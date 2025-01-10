@@ -1,9 +1,12 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/ANARI-SDK
   REF "v${VERSION}"
   SHA512 978522469621694022be1a5425306832344a4b64ff5cc8fbb9267a683889d4624edd8a59b6488ecc6dcc8a851c74b92b6918470ad69c4d9363596f621688973d
   HEAD_REF next_release
+  PATCHES anari-lib-maybe-static-lib.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
