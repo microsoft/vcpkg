@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 4d97e58534e29b9a9cd9c4331d1d1a4a47a58ccd6de75514a010ac7b01696d37dc09c022b10d7d939312cca9c87f1d3586b58355e5ae41812e7f147240594303
+    SHA512 a288bd91f3f0b7adb0d5dcfc6e7fef2f60a18ea56545e63e67d449a72986e710c2f58c8782d0950ef48f7a6bf331af0bc2019240638ece4cdacebec4571c920e
     HEAD_REF main
     PATCHES
         fix-deps.patch
-        fix-annotation.patch
+        fix-test.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -46,6 +46,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/demo"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/runtime/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/schema/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"

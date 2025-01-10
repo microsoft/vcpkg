@@ -1,0 +1,14 @@
+diff --git a/src/loader/CMakeLists.txt b/src/loader/CMakeLists.txt
+index 326f74e..3192e69 100644
+--- a/src/loader/CMakeLists.txt
++++ b/src/loader/CMakeLists.txt
+@@ -212,7 +212,8 @@ elseif(WIN32)
+             )
+         endif()
+ 
+-        if(DYNAMIC_LOADER AND NOT (CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
++        if(1) # CRT linkage from vcpkg
++        elseif(0)
+             # If building DLLs, force static CRT linkage
+             set_target_properties(
+                 openxr_loader

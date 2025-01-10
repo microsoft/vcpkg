@@ -19,6 +19,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0003-Add-export.patch
         0004-ModuleFileName.patch
         clang-fortify.patch # ported from https://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=522aea1093a598246346b3e1c426505c344fe19a
+        0005-iOS-missing-symbol-fix.patch
 )
 
 vcpkg_list(SET OPTIONS)

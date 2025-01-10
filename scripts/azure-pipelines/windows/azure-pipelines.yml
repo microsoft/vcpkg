@@ -20,7 +20,7 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: PrWin-WUS
-    demands: ImageVersionOverride -equals 2024.11.18
+    demands: ImageVersionOverride -equals 2024.12.16
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days
@@ -71,6 +71,7 @@ jobs:
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
           $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite"
+          ./vcpkg.exe fetch python3
           & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
   - task: PowerShell@2
     displayName: 'Validate version files'
@@ -90,7 +91,6 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        ./vcpkg.exe fetch python3
         & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
       pwsh: true
   - task: PublishPipelineArtifact@1

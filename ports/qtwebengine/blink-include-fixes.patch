@@ -1,0 +1,51 @@
+diff --git a/src/3rdparty/chromium/third_party/blink/renderer/modules/credentialmanagement/navigator_login.h b/src/3rdparty/chromium/third_party/blink/renderer/modules/credentialmanagement/navigator_login.h
+index 4629e5d..0096117 100644
+--- a/src/3rdparty/chromium/third_party/blink/renderer/modules/credentialmanagement/navigator_login.h
++++ b/src/3rdparty/chromium/third_party/blink/renderer/modules/credentialmanagement/navigator_login.h
+@@ -9,10 +9,11 @@
+ #include "third_party/blink/renderer/modules/modules_export.h"
+ #include "third_party/blink/renderer/platform/bindings/script_wrappable.h"
+ #include "third_party/blink/renderer/platform/supplementable.h"
++#include "third_party/blink/renderer/core/execution_context/navigator_base.h"
++#include "third_party/blink/renderer/core/frame/navigator.h"
+ 
+ namespace blink {
+ 
+-class Navigator;
+ class V8LoginStatus;
+ 
+ // Methods to let websites tell the browser about their login status.
+diff --git a/src/3rdparty/chromium/third_party/blink/renderer/modules/locked_mode/locked_mode.h b/src/3rdparty/chromium/third_party/blink/renderer/modules/locked_mode/locked_mode.h
+index fa227f6..9b84783 100644
+--- a/src/3rdparty/chromium/third_party/blink/renderer/modules/locked_mode/locked_mode.h
++++ b/src/3rdparty/chromium/third_party/blink/renderer/modules/locked_mode/locked_mode.h
+@@ -9,10 +9,10 @@
+ #include "third_party/blink/renderer/platform/bindings/script_wrappable.h"
+ #include "third_party/blink/renderer/platform/heap/visitor.h"
+ #include "third_party/blink/renderer/platform/supplementable.h"
++#include "third_party/blink/renderer/core/execution_context/navigator_base.h"
+ 
+-namespace blink {
+ 
+-class NavigatorBase;
++namespace blink {
+ 
+ class MODULES_EXPORT LockedMode final : public ScriptWrappable,
+                                         public Supplement<NavigatorBase> {
+diff --git a/src/3rdparty/chromium/third_party/blink/renderer/modules/printing/web_printing_manager.h b/src/3rdparty/chromium/third_party/blink/renderer/modules/printing/web_printing_manager.h
+index c316642..d58a4e8 100644
+--- a/src/3rdparty/chromium/third_party/blink/renderer/modules/printing/web_printing_manager.h
++++ b/src/3rdparty/chromium/third_party/blink/renderer/modules/printing/web_printing_manager.h
+@@ -10,11 +10,11 @@
+ #include "third_party/blink/renderer/platform/bindings/script_wrappable.h"
+ #include "third_party/blink/renderer/platform/mojo/heap_mojo_remote.h"
+ #include "third_party/blink/renderer/platform/supplementable.h"
++#include "third_party/blink/renderer/core/execution_context/navigator_base.h"
+ 
+ namespace blink {
+ 
+ class ExceptionState;
+-class NavigatorBase;
+ class ScriptPromise;
+ class ScriptPromiseResolver;
+ 

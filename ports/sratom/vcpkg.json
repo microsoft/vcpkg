@@ -1,6 +1,7 @@
 {
   "name": "sratom",
   "version": "0.6.16",
+  "port-version": 1,
   "description": "Sratom is a library for serialising LV2 atoms to and from RDF, particularly the Turtle syntax.",
   "homepage": "https://drobilla.net/software/sratom",
   "license": "ISC",
@@ -9,11 +10,7 @@
     "serd",
     "sord",
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-tool-meson",
       "host": true
     }
   ]
