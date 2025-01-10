@@ -1,4 +1,4 @@
-project(libmem-test LANGUAGES C CXX)
+project(libmem-test)
 set(CMAKE_CXX_STANDARD 17)
 find_package(libmem CONFIG REQUIRED)
 add_executable(main main.cpp)
