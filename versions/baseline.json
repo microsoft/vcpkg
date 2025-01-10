@@ -8273,8 +8273,8 @@
       "port-version": 11
     },
     "sdl3": {
-      "baseline": "3.1.6-preview",
-      "port-version": 2
+      "baseline": "3.1.8-preview",
+      "port-version": 0
     },
     "seacas": {
       "baseline": "2022-11-22",
