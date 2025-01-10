@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..c6e7b97 100644
+index 534057a..049805a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -89,7 +89,7 @@ index 534057a..c6e7b97 100644
  	if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
  		cmake_path(SET CMAKE_INSTALL_PREFIX "$ENV{ProgramFiles}")
  	else()
-@@ -202,14 +197,18 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
+@@ -202,14 +197,17 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL Windows OR ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN
  	endif()
  	set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/libmem")
  	execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}")
@@ -104,9 +104,8 @@ index 534057a..c6e7b97 100644
 -	RUNTIME DESTINATION lib)
 -
  install(DIRECTORY ${LIBMEM_INC}/libmem DESTINATION include)
-+install(TARGETS libmem
++install(TARGETS libmem EXPORT libmem-target
 +	LIBRARY DESTINATION lib
-+	EXPORT libmem-target
 +	ARCHIVE DESTINATION lib
 +	RUNTIME DESTINATION bin
 +)
