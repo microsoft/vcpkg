@@ -21,6 +21,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         msvc_symbol.patch
         arm64-coff.patch
+        remove_compiler_info.patch
 )
 
 vcpkg_list(SET OPTIONS)

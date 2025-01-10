@@ -1,6 +1,7 @@
 {
   "name": "directx12-agility",
   "version": "1.614.1",
+  "port-version": 1,
   "description": "DirectX 12 Agility SDK",
   "homepage": "https://aka.ms/directx12agility",
   "documentation": "https://devblogs.microsoft.com/directx/gettingstarted-dx12agility/",

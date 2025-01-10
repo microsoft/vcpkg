@@ -1,6 +1,6 @@
 {
   "name": "poco",
-  "version": "1.13.3",
+  "version": "1.14.0",
   "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
   "homepage": "https://github.com/pocoproject/poco",
   "license": "BSL-1.0",
@@ -8,6 +8,8 @@
   "dependencies": [
     "expat",
     "pcre2",
+    "sqlite3",
+    "utf8proc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -62,12 +64,6 @@
       "description": "PostgreSQL support for POCO",
       "dependencies": [
         "libpqxx"
-      ]
-    },
-    "sqlite3": {
-      "description": "Sqlite3 support for POCO",
-      "dependencies": [
-        "sqlite3"
       ]
     }
   }
