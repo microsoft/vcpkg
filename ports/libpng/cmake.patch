@@ -84,7 +84,7 @@ index f10f489..28ce98a 100644
  if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
 +  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng${PNGLIB_ABI_VERSION}.pc
 +          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-++elseif(0)
++elseif(0)
    # Install the man pages.
    install(FILES libpng.3 libpngpf.3
            DESTINATION ${CMAKE_INSTALL_MANDIR}/man3)
