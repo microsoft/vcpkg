@@ -31,7 +31,7 @@ vcpkg_add_to_path("${PERL_PATH}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DCMAKE_CXX_STANDARD=11
+      -DCMAKE_CXX_STANDARD=17
       ${FEATURE_OPTIONS}
       ${disabled_options}
       ${enabled_options}
