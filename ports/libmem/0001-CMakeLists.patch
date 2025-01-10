@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 534057a..e8f0f4e 100644
+index 534057a..e433396 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -50,8 +50,9 @@ index 534057a..e8f0f4e 100644
  include_directories(${PROJECT_SOURCE_DIR}
 -	${LIBMEM_INC}
  	${CAPSTONE_INC}
- 	${KEYSTONE_INC}
+-	${KEYSTONE_INC}
 -	${LLVM_INC}
++	${keystone_INCLUDE_DIRS}
 +	"${LIBMEM_DIR}/external/llvm/include"
  )
  
