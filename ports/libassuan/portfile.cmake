@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${tarball}"
     PATCHES
         cross-tools.patch
+        upstream-69069bc.diff
 )
 
 if(VCPKG_CROSSCOMPILING)
