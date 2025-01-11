@@ -15,6 +15,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
     PATCHES
+        control-openssl.diff
         static-link-order.diff
         ${osx_patch}
 )
@@ -33,9 +34,15 @@ endif()
 list(JOIN FEATURES_GUI " " GUIS)
 vcpkg_list(APPEND options "--with-guis=${GUIS}")
 
-set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/libgpg-error/aclocal/\"")
+if ("openssl" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "--with-openssl=yes")
+endif()
+
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/libgpg-error/aclocal/\" -I \"${CURRENT_INSTALLED_DIR}/share/libgcrypt/aclocal/\" -I \"${CURRENT_HOST_INSTALLED_DIR}/share/gettext/aclocal/\"")
+set(ENV{AUTOPOINT} true)
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
     OPTIONS
         --disable-binreloc
         --disable-network-checks

@@ -5,9 +5,12 @@
   "homepage": "https://www.aquamaniac.de/rdm/",
   "supports": "!windows | mingw",
   "dependencies": [
+    {
+      "name": "gettext",
+      "host": true
+    },
     "libgcrypt",
     "libgnutls",
-    "openssl",
     {
       "name": "vcpkg-cmake-config",
       "host": true
@@ -31,6 +34,15 @@
         {
           "name": "libxml2",
           "default-features": false
+        }
+      ]
+    },
+    "openssl": {
+      "description": "OpenSSL support in gct-tool",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!arm64"
         }
       ]
     },
