@@ -1,13 +1,15 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.aquamaniac.de/rdm/attachments/download/364/gwenhywfar-${VERSION}.tar.gz"
+    URLS "https://www.aquamaniac.de/rdm/attachments/download/529/gwenhywfar-5.12.0.tar.gz"
     FILENAME "gwenhywfar-${VERSION}.tar.gz"
-    SHA512 9875d677f49fc0a46f371fd1954d15d99c7d5994e90b16f1be7a5b8a1cbcd74ae9733e4541afd6d8251a2ba1a0a37c28e0f248952b7c917313fbf5b38b1d8d11
+    SHA512 0075eb626f0022ecd4ffdd59de7f0817d2def685e1d2cfbca9a32faa4b8d4d213bea631f24c5385da0b8c7743fd6d1887a46f08afa371195d911409ec7655791
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
+    PATCHES
+        static-link-order.diff
 )
 
 vcpkg_list(SET options)
@@ -24,32 +26,31 @@ endif()
 list(JOIN FEATURES_GUI " " GUIS)
 vcpkg_list(APPEND options "--with-guis=${GUIS}")
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation -framework Security")
-endif()
-
-vcpkg_configure_make(
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/libgpg-error/aclocal/\"")
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-binreloc
+        --disable-network-checks
+        --disable-nls
         ${options}
     OPTIONS_RELEASE
         "--with-qt5-qmake=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/qmake"
         "--with-qt5-moc=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/moc"
         "--with-qt5-uic=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/uic"
-        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
-        "gpg_error_config_args=gpg-error"
+        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config gpg-error"
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
         "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/bin/libgcrypt-config"
     OPTIONS_DEBUG
         "--with-qt5-qmake=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/qmake"
         "--with-qt5-moc=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/moc"
         "--with-qt5-uic=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/uic"
-        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
-        "gpg_error_config_args=gpg-error"
+        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config gpg-error"
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
         "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/debug/bin/libgcrypt-config"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
@@ -59,15 +60,9 @@ foreach(GUI IN LISTS FEATURES_GUI)
 endforeach()
 vcpkg_cmake_config_fixup(PACKAGE_NAME gwenhywfar CONFIG_PATH lib/cmake/gwenhywfar-${MAJOR_MINOR})
 
-if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" TOOL_NAMES gct-tool gsa mklistdoc typemaker typemaker2 xmlmerge AUTO_CLEAN)
-endif()
-
-# the `dir` variable is not used in the script
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgwenhywfar/bin/gwenhywfar-config" "dir=\"${CURRENT_INSTALLED_DIR}\"" "")
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgwenhywfar/debug/bin/gwenhywfar-config" "dir=\"${CURRENT_INSTALLED_DIR}/debug\"" "")
-endif()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
