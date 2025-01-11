@@ -1,5 +1,5 @@
 function(vcpkg_build_cmake)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+    cmake_parse_arguments(arg PARSE_ARGV 0
         "DISABLE_PARALLEL;ADD_BIN_TO_PATH"
         "TARGET;LOGFILE_ROOT"
         ""
