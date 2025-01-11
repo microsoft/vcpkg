@@ -1,0 +1,26 @@
+diff --git a/libtextstyle/configure b/libtextstyle/configure
+index dd1fda1..177f01a 100755
+--- a/libtextstyle/configure
++++ b/libtextstyle/configure
+@@ -2154,6 +2154,7 @@ REPLACE_ALIGNED_ALLOC
+ REPLACE_ABORT
+ REPLACE__EXIT
+ HAVE_DECL_UNSETENV
++HAVE_UNSETENV
+ HAVE_UNLOCKPT
+ HAVE_SYS_LOADAVG_H
+ HAVE_STRUCT_RANDOM_DATA
+@@ -18569,6 +18570,13 @@ printf "%s\n" "$gl_cv_source_line_length_unlimited" >&6; }
+   HAVE_SYS_LOADAVG_H=0;
+   HAVE_UNLOCKPT=1;
+   HAVE_DECL_UNSETENV=1;
++  if test "$ac_cv_have_decl_unsetenv" = no; then
++    HAVE_DECL_UNSETENV=0
++  fi
++  HAVE_UNSETENV=1
++  if test "$ac_cv_func_unsetenv" = no; then
++    HAVE_UNSETENV=0
++  fi
+   REPLACE__EXIT=0;
+   REPLACE_ABORT=0;
+   REPLACE_ALIGNED_ALLOC=0;

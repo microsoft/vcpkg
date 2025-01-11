@@ -1,8 +1,8 @@
 diff --git a/gettext-tools/src/Makefile.in b/gettext-tools/src/Makefile.in
-index 5d60b99..d86232d 100644
+index d07c364..18234ca 100644
 --- a/gettext-tools/src/Makefile.in
 +++ b/gettext-tools/src/Makefile.in
-@@ -3625,7 +3625,10 @@ USEJAVA_no = 0
+@@ -4631,7 +4631,10 @@ schema_DATA = \
  
  # Version information according to Woe32 conventions.
  @WOE32_TRUE@WOE32_LDADD = gettext.res
@@ -14,8 +14,8 @@ index 5d60b99..d86232d 100644
  	$(MAKE) $(AM_MAKEFLAGS) all-am
  
  .SUFFIXES:
-@@ -5045,7 +5048,7 @@ uninstall-tcl:
- # namely those which build textstyle.h, po-gram-gen.c, cldr-plural.c.
+@@ -7644,7 +7647,7 @@ uninstall-tcl:
+ # namely those which build textstyle.h, read-po-gram.c, cldr-plural.c.
  # See <https://lists.gnu.org/archive/html/bug-make/2019-05/msg00011.html>.
  # So, turn off parallel execution in this Makefile.
 -.NOTPARALLEL:
