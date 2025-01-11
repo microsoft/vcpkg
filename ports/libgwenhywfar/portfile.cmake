@@ -4,12 +4,19 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 0075eb626f0022ecd4ffdd59de7f0817d2def685e1d2cfbca9a32faa4b8d4d213bea631f24c5385da0b8c7743fd6d1887a46f08afa371195d911409ec7655791
 )
 
+vcpkg_download_distfile(osx_patch
+    URLS "https://www.aquamaniac.de/rdm/projects/gwenhywfar/repository/revisions/55d4b7b526df30e4003c92e2f504f480c01021f0/diff?format=diff"
+    FILENAME "gwenhywfar-5.12.0-55d4b7b.diff"
+    SHA512 87fa9ff3e9027c5a6839f800990b420a824efbd115ed67eeaef3c909b14c59c0b9bae41c539d400166862c0353ad730313ee4f9366928c333883d41429912731
+)
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
     PATCHES
         static-link-order.diff
+        ${osx_patch}
 )
 
 vcpkg_list(SET options)
