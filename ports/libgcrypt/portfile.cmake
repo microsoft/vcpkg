@@ -6,11 +6,17 @@ vcpkg_download_distfile(tarball
     FILENAME "libgcrypt-${VERSION}.tar.bz2"
     SHA512 8e093e69e3c45d30838625ca008e995556f0d5b272de1c003d44ef94633bcc0d0ef5d95e8725eb531bfafb4490ac273488633e0c801200d4666194f86c3e270e
 )
+vcpkg_download_distfile(osx_asm_patch
+    URLS "https://github.com/gpg/libgcrypt/commit/bb0895bbb7c6d2b9502cbbf03da14d4ecf27a183.patch?full_index=1"
+    FILENAME "libgcrypt-1.11.0-bb0895b.diff"
+    SHA512 dc9a0f0c13b08bdc6e28b966c61f5a8695bc58a7bf5ea5a8376f3b293bde729f485342eabbc84e78ab37afaf12ba1ac4385f0baff0f5f4b31bc1d3b764893522
+)
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
         cross-tools.patch
+        "${osx_asm_patch}"
 )
 
 if(VCPKG_CROSSCOMPILING)
