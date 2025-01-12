@@ -75,7 +75,8 @@ endforeach()
 vcpkg_cmake_config_fixup(PACKAGE_NAME gwenhywfar CONFIG_PATH lib/cmake/gwenhywfar-${MAJOR_MINOR})
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gwenhywfar-config" [[dir="[^"]*"]] [[dir=""]] REGEX) # unused abs path
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
