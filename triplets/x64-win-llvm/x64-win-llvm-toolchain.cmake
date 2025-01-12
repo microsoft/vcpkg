@@ -133,7 +133,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         set(CHARSET_FLAG "")
     endif()
 
-    set(common_flags "/nologo /DWIN32 /D_WINDOWS -Wno-implicit-function-declaration${CHARSET_FLAG}")
+    set(common_flags "/nologo /DWIN32 /D_WINDOWS -Wno-implicit-function-declaration${CHARSET_FLAG} -msse4.2 -m64")
 
     set(CMAKE_CXX_FLAGS "${common_flags} /GR /EHsc ${VCPKG_CXX_FLAGS}" CACHE STRING "")
     set(CMAKE_C_FLAGS "${common_flags} ${VCPKG_C_FLAGS}" CACHE STRING "")
@@ -160,6 +160,5 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_DEBUG} ")
 
     unset(CHARSET_FLAG)
-    unset(MP_BUILD_FLAG)
     unset(VCPKG_CRT_LINK_FLAG_PREFIX)
 endif()

@@ -1,0 +1,70 @@
+From 55c53f9b21d96cd74200a54cd2b1e5f87d643f19 Mon Sep 17 00:00:00 2001
+From: Marc Mutz <marc.mutz@qt.io>
+Date: Thu, 19 Sep 2024 14:37:58 +0200
+Subject: [PATCH] Fix compilation with clang-cl
+
+Like for VxWorks, we need to undef QT_COMPILER_SUPPORTS_INT128, not
+QT_SUPPORTS_INT128, because there is no clang-cl configuration where
+<type_traits> supports qint128, therefore no mode we can force Qt's
+own build into to make sure that the qint128 Qt ABI exists in the DLLs
+on platforms that principally support it (like libstdc++).
+
+Requires to include a stdlib header into qsystemdetection.h, which
+included nothing before, to enable checking of stdlib defines.
+
+Amends 1f9a660eb2d5c6e3cb9c80dc292f3ec355296515.
+
+Task-number: QTBUG-128675
+Pick-to: 6.8 6.8.0
+Change-Id: Ic4a63502edbec3d4ca5e16934bf83119e84b0ad6
+---
+
+diff --git a/src/corelib/global/qsystemdetection.h b/src/corelib/global/qsystemdetection.h
+index 0cbcef2..6d0a044 100644
+--- a/src/corelib/global/qsystemdetection.h
++++ b/src/corelib/global/qsystemdetection.h
+@@ -11,6 +11,10 @@
+ #ifndef QSYSTEMDETECTION_H
+ #define QSYSTEMDETECTION_H
+ 
++#ifdef __cplusplus
++#  include <utility> // to enable stdlib detection
++#endif
++
+ /*
+    The operating system, must be one of: (Q_OS_x)
+ 
+@@ -240,11 +244,16 @@
+ #endif
+ 
+ #if defined(__SIZEOF_INT128__)
++#  define QT_COMPILER_SUPPORTS_INT128 __SIZEOF_INT128__
+ // Compiler used in VxWorks SDK declares __SIZEOF_INT128__ but VxWorks doesn't support this type,
+ // so we can't rely solely on compiler here.
+-#if !defined(Q_OS_VXWORKS)
+-#  define QT_COMPILER_SUPPORTS_INT128 __SIZEOF_INT128__
+-#endif
++#  ifdef Q_OS_VXWORKS
++#    undef QT_COMPILER_SUPPORTS_INT128
++#  endif
++// Ditto clang-cl vs. MSSTL:
++#  if defined(__clang__) && defined(_MSVC_STL_VERSION) // Clang with MSVC's STL
++#    undef QT_COMPILER_SUPPORTS_INT128                 // MSVC's STL doesn't support int128
++#  endif
+ #endif // defined(__SIZEOF_INT128__)
+ 
+ #endif // QSYSTEMDETECTION_H
+diff --git a/src/corelib/global/qtypes.h b/src/corelib/global/qtypes.h
+index 28f84db..a863e99 100644
+--- a/src/corelib/global/qtypes.h
++++ b/src/corelib/global/qtypes.h
+@@ -72,9 +72,6 @@
+ #  if defined(__GLIBCXX__) && defined(__STRICT_ANSI__) // -ansi/-std=c++NN instead of gnu++NN
+ #    undef QT_SUPPORTS_INT128                          // breaks <type_traits> on libstdc++
+ #  endif
+-#  if defined(__clang__) && defined(_MSVC_STL_VERSION) // Clang with MSVC's STL
+-#    undef QT_SUPPORTS_INT128                          // MSVC's STL doesn't support int128
+-#  endif
+ #else
+ #  undef QT_SUPPORTS_INT128
+ #endif
