@@ -1,7 +1,7 @@
 {
   "name": "libxml2",
   "version": "2.13.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Libxml2 is the XML C parser and toolkit developed for the Gnome project (but usable outside of the Gnome platform).",
   "homepage": "https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home",
   "license": "MIT",
@@ -16,14 +16,39 @@
     }
   ],
   "default-features": [
+    "c14n",
+    "catalog",
+    "html",
     "iconv",
-    "lzma",
-    "zlib"
+    "iso8859x",
+    "output",
+    "pattern",
+    "push",
+    "reader",
+    "regex",
+    "sax1",
+    "schemas",
+    "schematron",
+    "thread",
+    "validation",
+    "writer",
+    "xinclude",
+    "xpath",
+    "xptr"
   ],
   "features": {
+    "c14n": {
+      "description": "Add the Canonicalization support"
+    },
+    "catalog": {
+      "description": "Add the Catalog support"
+    },
     "ftp": {
       "description": "Add the FTP support",
       "supports": "!uwp"
+    },
+    "html": {
+      "description": "Add the HTML support"
     },
     "http": {
       "description": "Add the HTTP support",
@@ -41,6 +66,9 @@
         "icu"
       ]
     },
+    "iso8859x": {
+      "description": "Add ISO8859X support if no iconv"
+    },
     "legacy": {
       "description": "Add deprecated APIs for compatibility"
     },
@@ -50,8 +78,67 @@
         "liblzma"
       ]
     },
+    "output": {
+      "description": "Add the serialization support"
+    },
+    "pattern": {
+      "description": "Add the xmlPattern selection interface"
+    },
+    "plugins": {
+      "description": "Add the dynamic modules support",
+      "supports": "!static"
+    },
+    "push": {
+      "description": "Add the PUSH parser interfaces"
+    },
+    "python": {
+      "description": "Build Python bindings",
+      "supports": "!windows"
+    },
+    "reader": {
+      "description": "Add the xmlReader parsing interface"
+    },
+    "regex": {
+      "description": "Add Regular Expressions support"
+    },
+    "sax1": {
+      "description": "Add the older SAX1 interface"
+    },
+    "schemas": {
+      "description": "Add Relax-NG and Schemas support"
+    },
+    "schematron": {
+      "description": "Add Schematron support"
+    },
+    "thread": {
+      "description": "Add multithread support"
+    },
+    "thread-alloc": {
+      "description": "Add per-thread memory"
+    },
+    "thread-local-storage": {
+      "description": "Enable thread-local storage"
+    },
     "tools": {
       "description": "Build tools"
+    },
+    "validation": {
+      "description": "Add the DTD validation support"
+    },
+    "writer": {
+      "description": "Add the xmlWriter saving interface"
+    },
+    "xinclude": {
+      "description": "Add the XInclude support"
+    },
+    "xpath": {
+      "description": "Add the XPATH support"
+    },
+    "xptr": {
+      "description": "Add the XPointer support"
+    },
+    "xptr-locs": {
+      "description": "Add support for XPointer locations"
     },
     "zlib": {
       "description": "Use ZLib",
