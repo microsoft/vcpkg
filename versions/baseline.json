@@ -3437,7 +3437,7 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "10.1.0",
+      "baseline": "10.2.0",
       "port-version": 0
     },
     "hash-library": {
