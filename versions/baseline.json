@@ -668,22 +668,6 @@
       "baseline": "0.75",
       "port-version": 0
     },
-    "bitserializer-cpprestjson": {
-      "baseline": "alias",
-      "port-version": 1
-    },
-    "bitserializer-pugixml": {
-      "baseline": "alias",
-      "port-version": 1
-    },
-    "bitserializer-rapidjson": {
-      "baseline": "alias",
-      "port-version": 1
-    },
-    "bitserializer-rapidyaml": {
-      "baseline": "alias",
-      "port-version": 3
-    },
     "bitsery": {
       "baseline": "5.2.4",
       "port-version": 0
