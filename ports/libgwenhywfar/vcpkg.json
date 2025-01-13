@@ -39,15 +39,14 @@
     },
     "openssl": {
       "description": "OpenSSL support in gct-tool",
+      "supports": "!arm64",
       "dependencies": [
-        {
-          "name": "openssl",
-          "platform": "!arm64"
-        }
+        "openssl"
       ]
     },
     "qt5": {
       "description": "Qt bindings",
+      "supports": "!(osx & static)",
       "dependencies": [
         {
           "name": "qt5-base",

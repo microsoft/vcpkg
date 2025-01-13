@@ -17,7 +17,10 @@
       "name": "openssl",
       "platform": "!arm64"
     },
-    "qt5"
+    {
+      "name": "qt5",
+      "platform": "!(osx & static)"
+    }
   ],
   "features": {
     "openssl": {
