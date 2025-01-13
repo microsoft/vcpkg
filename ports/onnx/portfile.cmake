@@ -28,10 +28,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # Like protoc, python is required for codegen.
 if("pybind11" IN_LIST FEATURES)
-    x_vcpkg_get_python_packages(PYTHON_VERSION 3
+    x_vcpkg_get_python_packages(PYTHON_VERSION 3 OUT_PYTHON_VAR PYTHON3
         REQUIREMENTS_FILE "${SOURCE_PATH}/requirements-min.txt"
         PACKAGES "pybind11"
-        OUT_PYTHON_VAR PYTHON3
     )
     execute_process(
         COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages()[0])"
