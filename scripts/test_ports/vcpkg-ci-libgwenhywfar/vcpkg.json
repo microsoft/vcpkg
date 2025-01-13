@@ -1,0 +1,46 @@
+{
+  "name": "vcpkg-ci-libgwenhywfar",
+  "version-string": "ci",
+  "description": "Validates libgwenhywfar",
+  "dependencies": [
+    {
+      "name": "libgwenhywfar",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "openssl",
+      "platform": "!arm64"
+    },
+    "qt5"
+  ],
+  "features": {
+    "openssl": {
+      "description": "Use openssl",
+      "dependencies": [
+        {
+          "name": "libgwenhywfar",
+          "features": [
+            "openssl"
+          ]
+        }
+      ]
+    },
+    "qt5": {
+      "description": "Install qt5 binding",
+      "dependencies": [
+        {
+          "name": "libgwenhywfar",
+          "features": [
+            "qt5"
+          ]
+        }
+      ]
+    }
+  }
+}

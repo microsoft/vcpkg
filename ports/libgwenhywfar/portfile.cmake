@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
     SOURCE_BASE "${VERSION}"
     PATCHES
         control-openssl.diff
+        pkgconfig.diff
         static-link-order.diff
         ${osx_patch}
 )
@@ -68,11 +69,15 @@ vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-string(REGEX MATCH "^([0-9]*[.][0-9]*)" MAJOR_MINOR "${VERSION}")
-foreach(GUI IN LISTS FEATURES_GUI)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME gwengui-${GUI} CONFIG_PATH lib/cmake/gwengui-${GUI}-${MAJOR_MINOR} DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endforeach()
-vcpkg_cmake_config_fixup(PACKAGE_NAME gwenhywfar CONFIG_PATH lib/cmake/gwenhywfar-${MAJOR_MINOR})
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    string(REGEX MATCH "^([0-9]*[.][0-9]*)" MAJOR_MINOR "${VERSION}")
+    foreach(GUI IN LISTS FEATURES_GUI)
+        vcpkg_cmake_config_fixup(PACKAGE_NAME gwengui-${GUI} CONFIG_PATH lib/cmake/gwengui-${GUI}-${MAJOR_MINOR} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    endforeach()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME gwenhywfar CONFIG_PATH lib/cmake/gwenhywfar-${MAJOR_MINOR})
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+endif()
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gwenhywfar-config" [[dir="[^"]*"]] [[dir=""]] REGEX) # unused abs path
