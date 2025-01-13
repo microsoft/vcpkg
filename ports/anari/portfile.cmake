@@ -1,9 +1,12 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/ANARI-SDK
   REF "v${VERSION}"
-  SHA512 cf2c2e044b04d695e0a6c6c1abfb3495ea0996a018742ad3a6baccc6e0e3e9b83cb91b61eda8cf07e8f67f4beba24d07d927697a27606ae008a85fee9fa64fa8
-  HEAD_REF main
+  SHA512 978522469621694022be1a5425306832344a4b64ff5cc8fbb9267a683889d4624edd8a59b6488ecc6dcc8a851c74b92b6918470ad69c4d9363596f621688973d
+  HEAD_REF next_release
+  PATCHES anari-lib-maybe-static-lib.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -15,9 +18,13 @@ vcpkg_cmake_configure(
   OPTIONS
     -DBUILD_CTS=OFF
     -DBUILD_EXAMPLES=OFF
+    -DBUILD_HDANARI=OFF
     -DBUILD_HELIDE_DEVICE=OFF
+    -DBUILD_REMOTE_DEVICE=OFF
     -DBUILD_TESTING=OFF
     -DBUILD_VIEWER=OFF
+    -DINSTALL_CODE_GEN_SCRIPTS=ON
+    -DINSTALL_VIEWER_LIBRARY=ON
 )
 
 vcpkg_cmake_install()
@@ -26,18 +33,17 @@ vcpkg_cmake_config_fixup(
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE 
-  "${CURRENT_PACKAGES_DIR}/debug/include" 
-  "${CURRENT_PACKAGES_DIR}/debug/share"
+vcpkg_replace_string(
+  "${CURRENT_PACKAGES_DIR}/share/anari/anariConfig.cmake"
+  "  \${CMAKE_CURRENT_LIST_DIR}/../../../share/anari"
+  "  \${CMAKE_CURRENT_LIST_DIR}/../../share/anari"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE 
-    "${CURRENT_PACKAGES_DIR}/bin" 
-    "${CURRENT_PACKAGES_DIR}/debug/bin"
-  )
-endif()
+file(REMOVE_RECURSE
+  "${CURRENT_PACKAGES_DIR}/debug/include"
+  "${CURRENT_PACKAGES_DIR}/debug/share"
+  "${CURRENT_PACKAGES_DIR}/share/anari/code_gen/__pycache__"
+)
 
 vcpkg_install_copyright(
   FILE_LIST "${SOURCE_PATH}/LICENSE"
