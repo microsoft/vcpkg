@@ -30,6 +30,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         schannel    CURL_USE_SCHANNEL
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
+        rtmp        USE_LIBRTMP
         winidn      USE_WIN32_IDN
         zstd        CURL_ZSTD
         psl         CURL_USE_LIBPSL
