@@ -96,7 +96,7 @@ function(vcpkg_make_install)
                     WORKING_DIRECTORY "${working_directory}"
                     LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
                     SHELL ${shell_cmd}
-                    COMMAND ${configure_env} ${no_parallel_make_cmd_line}
+                    COMMAND ${configure_env} ${make_cmd_line}
                     NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )
             endif()
