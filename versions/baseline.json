@@ -5965,7 +5965,7 @@
       "port-version": 1
     },
     "mimicpp": {
-      "baseline": "5",
+      "baseline": "6",
       "port-version": 0
     },
     "minc": {
