@@ -9725,7 +9725,7 @@
       "port-version": 0
     },
     "wpilib": {
-      "baseline": "2024-03-02",
+      "baseline": "2025-02-01",
       "port-version": 0
     },
     "wren": {
