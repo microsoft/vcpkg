@@ -9292,6 +9292,10 @@
       "baseline": "2.3.2",
       "port-version": 0
     },
+    "userver": {
+      "baseline": "2.6",
+      "port-version": 0
+    },
     "usockets": {
       "baseline": "0.8.8",
       "port-version": 2
