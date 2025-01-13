@@ -27,24 +27,31 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Like protoc, python is required for codegen.
-vcpkg_find_acquire_program(PYTHON3)
+if("pybind11" IN_LIST FEATURES)
+    x_vcpkg_get_python_packages(PYTHON_VERSION 3
+        REQUIREMENTS_FILE "${SOURCE_PATH}/requirements-min.txt"
+        PACKAGES "pybind11"
+        OUT_PYTHON_VAR PYTHON3
+    )
+    execute_process(
+        COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages()[0])"
+        OUTPUT_VARIABLE SITE_PACKAGES_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    find_path(pybind11_DIR NAMES pybind11Config.cmake PATHS "${SITE_PACKAGES_DIR}" "${SITE_PACKAGES_DIR}/Lib/site-packages" PATH_SUFFIXES "pybind11/share/cmake/pybind11" REQUIRED NO_DEFAULT_PATH)
+    list(APPEND FEATURE_OPTIONS "-Dpybind11_DIR:PATH=${pybind11_DIR}")
+else()
+    vcpkg_find_acquire_program(PYTHON3)
+endif()
 
 # PATH for .bat scripts so it can find 'python'
 get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
 vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
 
-if("pybind11" IN_LIST FEATURES)
-    # When BUILD_ONNX_PYTHON, we need Development component. Give a hint for FindPython3
-    list(APPEND FEATURE_OPTIONS
-        "-DPython3_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
-    )
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython3_EXECUTABLE=${PYTHON3}
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         -DONNX_ML=ON
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED}
@@ -55,13 +62,8 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         ONNX_USE_MSVC_STATIC_RUNTIME
 )
-
-if("pybind11" IN_LIST FEATURES)
-    # This target is not in install/export
-    vcpkg_cmake_build(TARGET onnx_cpp2py_export)
-endif()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX PACKAGE_NAME ONNX)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
