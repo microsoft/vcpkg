@@ -1,5 +1,18 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
+         "https://ftp.gnu.org/gnu/octave/octave-${VERSION}.tar.xz"
+    FILENAME "octave-${VERSION}.tar.xz"
+    SHA512 9550162681aee88b4bcb94c5081ed0470df0d3f7c5307b25878b94b19f1282002ba69f0c4c79877e81f61122bfba1b2671ed5007a28fbb2d755bda466a3c46d8
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+)
+
 include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN)
 
@@ -14,18 +27,6 @@ vcpkg_add_to_path("${FLEX_EXE_PATH}")
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_EXE_PATH "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_EXE_PATH}")
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
-    FILENAME "octave-${VERSION}.tar.xz"
-    SHA512 9550162681aee88b4bcb94c5081ed0470df0d3f7c5307b25878b94b19f1282002ba69f0c4c79877e81f61122bfba1b2671ed5007a28fbb2d755bda466a3c46d8
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-)
 
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")

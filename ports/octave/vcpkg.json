@@ -1,6 +1,7 @@
 {
   "name": "octave",
   "version": "9.3.0",
+  "port-version": 1,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "license": "GPL-3.0-or-later",
