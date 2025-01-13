@@ -1,6 +1,7 @@
 {
   "name": "vsgxchange",
   "version": "1.1.4",
+  "port-version": 1,
   "description": "Utility library for converting 3rd party images, models and fonts formats to/from VulkanSceneGraph.",
   "homepage": "https://github.com/vsg-dev/vsgXchange",
   "license": "MIT",
@@ -25,19 +26,28 @@
     "curl": {
       "description": "Enable support for reading image and model files from http:// and https://",
       "dependencies": [
-        "curl"
+        {
+          "name": "curl",
+          "default-features": false
+        }
       ]
     },
     "freetype": {
       "description": "Enable support for reading fonts as vsg::Font via Freetype",
       "dependencies": [
-        "freetype"
+        {
+          "name": "freetype",
+          "default-features": false
+        }
       ]
     },
     "gdal": {
       "description": "Enable support for reading geospatial data formats as vsg::Data via GDAL",
       "dependencies": [
-        "gdal"
+        {
+          "name": "gdal",
+          "default-features": false
+        }
       ]
     },
     "openexr": {
