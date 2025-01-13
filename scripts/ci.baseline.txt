@@ -374,7 +374,7 @@ gamenetworkingsockets:x64-android=fail
 # There is an open PR that try to fix that.
 gazebo:x64-windows=fail
 gazebo:x64-windows-static-md=fail
-gazebo:x86-windows=fail
+gazebo:x86-windows=skip
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
