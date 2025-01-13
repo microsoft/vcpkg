@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wpilibsuite/allwpilib
     REF "v${formatted_date}"
-    SHA512 ce62bb225132aba6f22d45fce8a1a3f55d92a61a61187efd09d47a0e0c351125949ed41cc5cee0d69b5bb5b71baacfa45a9e19a33f7e69d3ae63a11e47257da4
+    SHA512 729ab66a39725551e36bce26ffb6dd9f40f941f432322e9733f4652dae294dafe2544647c6f05c7f301955429b1aca8549f5b7f17bacd50524bfe1ad4ae1d2ee
     PATCHES
         fix-build-error-with-fmt11.patch
 		fix-dep.patch
