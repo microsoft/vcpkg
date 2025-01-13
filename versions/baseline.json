@@ -9286,7 +9286,7 @@
     },
     "usd": {
       "baseline": "24.11",
-      "port-version": 0
+      "port-version": 1
     },
     "usearch": {
       "baseline": "2.3.2",
