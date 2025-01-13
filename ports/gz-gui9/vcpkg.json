@@ -1,0 +1,32 @@
+{
+  "name": "gz-gui9",
+  "version": "9.0.0",
+  "description": "Gazebo GUI builds on top of Qt to provide widgets which are useful when developing robotics applications, such as a 3D view, plots, dashboard, etc, and can be used together in a convenient unified interface.",
+  "homepage": "https://gazebosim.org/libs/gui",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "gz-cmake4",
+    "gz-common6",
+    "gz-math8",
+    "gz-msgs11",
+    "gz-plugin3",
+    "gz-rendering9",
+    "gz-transport14",
+    "gz-utils3",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    "protobuf",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    {
+      "name": "qt5-quickcontrols2",
+      "default-features": false
+    },
+    "sdformat15",
+    "tinyxml2"
+  ]
+}
