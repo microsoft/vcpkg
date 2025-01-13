@@ -11,7 +11,7 @@ macro(z_vcpkg_make_set_common_vars)
     endforeach()
     set(buildtypes release)
     if(NOT VCPKG_BUILD_TYPE)
-        list(APPEND buildtypes debug)
+        list(PREPEND buildtypes debug)
     endif()
 endmacro()
 
