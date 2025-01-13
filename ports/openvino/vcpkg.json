@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version": "2024.4.0",
-  "port-version": 6,
+  "version": "2024.5.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -37,7 +36,7 @@
     {
       "name": "xbyak",
       "platform": "!(arm | uwp)",
-      "version>=": "6.69"
+      "version>=": "6.73"
     }
   ],
   "default-features": [
@@ -53,6 +52,10 @@
     },
     "hetero",
     "ir",
+    {
+      "name": "npu",
+      "platform": "x64 & !(osx | uwp)"
+    },
     "onnx",
     "paddle",
     "pytorch",
@@ -85,15 +88,18 @@
       "description": "Enables IR frontend for reading models in OpenVINO IR format"
     },
     "npu": {
-      "description": "NPU Support",
-      "supports": "x64 & !(osx | uwp) & !static"
+      "description": "Enables NPU plugin for inference",
+      "supports": "x64 & !(osx | uwp)",
+      "dependencies": [
+        "level-zero"
+      ]
     },
     "onnx": {
       "description": "Enables ONNX frontend for reading models in ONNX format",
       "dependencies": [
         {
           "name": "onnx",
-          "version>=": "1.13.1"
+          "version>=": "1.16.2"
         },
         {
           "name": "protobuf",
