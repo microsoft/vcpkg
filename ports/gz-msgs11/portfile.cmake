@@ -19,6 +19,7 @@ ignition_modular_library(
       "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} ${BIGOBJ_OPTION}"
    PATCHES
       remove_ruby.patch
+      move_bin_to_tools.patch
 )
 
 file(GLOB BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/gz-msgs11_*")
