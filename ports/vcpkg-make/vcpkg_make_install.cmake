@@ -4,8 +4,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_install)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "DISABLE_PARALLEL"
-        "LOGFILE_ROOT;MAKEFILE;TARGETS"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "LOGFILE_ROOT;MAKEFILE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;TARGETS"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
