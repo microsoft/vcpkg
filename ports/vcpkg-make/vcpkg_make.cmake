@@ -53,7 +53,7 @@ function(vcpkg_run_shell_as_build)
         "SHELL;COMMAND;NO_PARALLEL_COMMAND;SAVE_LOG_FILES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    z_vcpkg_required_args(SHELL WORKINK_DIRECTORY COMMAND LOGNAME)
+    z_vcpkg_required_args(SHELL WORKING_DIRECTORY COMMAND LOGNAME)
 
     set(extra_opts "")
     if(arg_SAVE_LOG_FILES)
