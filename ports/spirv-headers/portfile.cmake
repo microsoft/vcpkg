@@ -13,8 +13,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/SPIRV-Headers")
 vcpkg_fixup_pkgconfig()
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
