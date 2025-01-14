@@ -930,7 +930,7 @@
     },
     "boost-function": {
       "baseline": "1.86.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-function-types": {
       "baseline": "1.86.0",
