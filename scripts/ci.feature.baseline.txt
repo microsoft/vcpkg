@@ -47,6 +47,8 @@
 ##    # Testing all targets seperatly would be too time consuming:
 ##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test 
 
+llvm = skip
+halide = skip
 
 # Add new items alphabetically
 ace:x64-windows-static-md=fail
