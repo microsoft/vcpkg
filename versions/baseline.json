@@ -3253,8 +3253,8 @@
       "port-version": 0
     },
     "gobject-introspection": {
-      "baseline": "1.72.0",
-      "port-version": 9
+      "baseline": "1.82.0",
+      "port-version": 0
     },
     "godot-cpp": {
       "baseline": "4.4",
