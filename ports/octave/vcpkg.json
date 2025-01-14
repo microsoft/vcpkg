@@ -5,7 +5,7 @@
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "license": "GPL-3.0-or-later",
-  "supports": "!arm",
+  "supports": "!windows | mingw",
   "dependencies": [
     "blas",
     "fftw3",

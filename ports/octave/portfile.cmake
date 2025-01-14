@@ -29,9 +29,6 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_EXE_PATH "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_EXE_PATH}")
 
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
@@ -45,23 +42,17 @@ vcpkg_configure_make(
     --without-curl
     --without-cxsparse
     --without-hdf5
-    --without-qhull
+    --without-qhull_r
     --without-qrupdate
     --without-umfpack
 )
-
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/octave/site/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/octave/site/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/octave/site/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/octave/${VERSION}/site/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/octave/${VERSION}/site/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/libexec/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/libexec")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/octave/octave/${VERSION}/site")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/octave/octave/site")
+foreach(subdir IN ITEMS libexec lib/octave/site lib/octave/${VERSION}/site share/octave/octave/${VERSION}/site share/octave/octave/site/api-v59/m)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${subdir}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${subdir}")
+endforeach()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
