@@ -6,8 +6,6 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
    set(BIGOBJ_OPTION "/bigobj")
-else()
-   set(BIGOBJ_OPTION "-Wa,-mbig-obj")
 endif()
 
 ignition_modular_library(
@@ -22,8 +20,12 @@ ignition_modular_library(
       move_bin_to_tools.patch
 )
 
-file(GLOB BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/gz-msgs11_*")
+file(GLOB BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/${PORT}_*")
 file(INSTALL ${BIN_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-file(GLOB BIN_FILES_TO_REMOVE "${CURRENT_PACKAGES_DIR}/bin/gz-msgs11_*" "${CURRENT_PACKAGES_DIR}/debug/bin/gz-msgs11_*")
+file(GLOB BIN_FILES_TO_REMOVE "${CURRENT_PACKAGES_DIR}/bin/${PORT}_*" "${CURRENT_PACKAGES_DIR}/debug/bin/gz-msgs11_*")
 file(REMOVE ${BIN_FILES_TO_REMOVE})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()

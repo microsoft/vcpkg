@@ -9,6 +9,7 @@
     {
       "name": "ignition-modularscripts",
       "host": true
-    }
+    },
+    "spdlog"
   ]
 }

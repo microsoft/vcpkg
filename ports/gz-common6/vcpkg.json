@@ -4,6 +4,7 @@
   "description": "Common libraries for robotics applications",
   "homepage": "https://ignitionrobotics.org/libs/common",
   "license": "Apache-2.0",
+  "supports": "!linux & !osx",
   "dependencies": [
     "assimp",
     {

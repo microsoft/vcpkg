@@ -9,5 +9,5 @@ ignition_modular_library(
         dependencies.patch
 )
 
-file(COPY "${CURRENT_PORT_DIR}/vcpkg" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cmake/gz-cmake3/cmake3")
+file(COPY "${CURRENT_PORT_DIR}/vcpkg" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cmake/${PORT}/cmake4")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
