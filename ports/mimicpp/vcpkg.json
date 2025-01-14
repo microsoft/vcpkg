@@ -1,6 +1,6 @@
 {
   "name": "mimicpp",
-  "version": "5",
+  "version": "6",
   "description": "mimic++, a modern and (mostly) macro free mocking framework.",
   "homepage": "https://github.com/DNKpp/mimicpp",
   "license": "BSL-1.0",
