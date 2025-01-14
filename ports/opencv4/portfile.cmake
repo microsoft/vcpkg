@@ -1,9 +1,15 @@
 set(USE_QT_VERSION "6")
 
-vcpkg_download_distfile(PATCH_ADD_INCLUDE_CHRONO
-    URLS https://github.com/opencv/opencv/commit/96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch?full_index=1
-    SHA512 d385b5386a19e4a0b3e78d5423baac4d132d25581d9336f084db819b9f68a6bc1ac23968a901891ac5023ab2fe4fa4513d7c70e5170e72cb57710d51b50e67a1
-    FILENAME opencv4-4.11.0-include-chrono.patch
+vcpkg_download_distfile(ADD_INCLUDE_CHRONO
+    URLS https://github.com/opencv/opencv/commit/96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch
+    SHA512 d333ef445bf7ef5da76d101ba2400a3eb3bc7bd0aaf4594c92696001d254415b0f0cc31d8420e3f1afb867ccc5a5c53d8276e89e4ec5c216aa7cfc5e6ada974e
+    FILENAME 96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch
+)
+
+vcpkg_download_distfile(CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS
+    URLS https://github.com/opencv/opencv_contrib/commit/b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
+    SHA512 170a06d903d50fdcb2082b13015f6efb2bd2d8bbcc203e9c254f26575113a773304e9777b5d72a7b39c52f93fcbb5158fb8579d8da3337e1774079b345d0ea93
+    FILENAME b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
 )
 
 vcpkg_from_github(
@@ -29,7 +35,7 @@ vcpkg_from_github(
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
       0020-miss-openexr.patch
-      "${PATCH_ADD_INCLUDE_CHRONO}"
+      "${ADD_INCLUDE_CHRONO}"
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -184,6 +190,7 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      ${CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS}
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
