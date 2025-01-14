@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        run-mk-ops.diff
 )
 
 include(vcpkg_find_fortran)
