@@ -1,7 +1,7 @@
 {
   "name": "reflectcpp",
-  "version": "0.16.0",
-  "description": "A C++ library for serialization and deserialization using reflection.",
+  "version": "0.17.0",
+  "description": "A C++ library for serialization and deserialization using reflection. Supports JSON, Avro, BSON, Cap'n Proto, CBOR, flexbuffers, msgpack, TOML, UBJSON, XML, YAML.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
   "dependencies": [
@@ -29,6 +29,24 @@
         {
           "name": "libbson",
           "version>=": "1.25.1"
+        }
+      ]
+    },
+    "capnproto": {
+      "description": "Support for the Cap'n Proto format",
+      "dependencies": [
+        {
+          "name": "capnproto",
+          "version>=": "1.0.2#1"
+        }
+      ]
+    },
+    "cbor": {
+      "description": "Support for the CBOR format",
+      "dependencies": [
+        {
+          "name": "jsoncons",
+          "version>=": "0.176.0"
         }
       ]
     },

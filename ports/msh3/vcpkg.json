@@ -1,6 +1,6 @@
 {
   "name": "msh3",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Minimal HTTP/3 library",
   "homepage": "https://github.com/nibanks/msh3",
   "license": "MIT",
