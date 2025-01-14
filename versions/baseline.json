@@ -5716,6 +5716,10 @@
       "baseline": "1.18.10",
       "port-version": 1
     },
+    "lwlog": {
+      "baseline": "1.3.0",
+      "port-version": 0
+    },
     "lz4": {
       "baseline": "1.10.0",
       "port-version": 0
