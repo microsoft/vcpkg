@@ -62,7 +62,7 @@ function(vcpkg_run_shell_as_build)
 
     list(JOIN arg_COMMAND " " cmd)
     list(JOIN arg_NO_PARALLEL_COMMAND " " no_par_cmd)
-    if(no_par_cmd)
+    if(NOT no_par_cmd STREQUAL "")
         set(no_par_cmd NO_PARALLEL_COMMAND ${arg_SHELL} -c "${no_par_cmd}")
     endif()
     vcpkg_execute_build_process(
