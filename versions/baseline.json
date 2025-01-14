@@ -6325,7 +6325,7 @@
       "port-version": 0
     },
     "neon2sse": {
-      "baseline": "2021-09-16",
+      "baseline": "2024-11-24",
       "port-version": 0
     },
     "netcdf-c": {
