@@ -7834,7 +7834,7 @@
     },
     "rapidxml": {
       "baseline": "1.13",
-      "port-version": 6
+      "port-version": 7
     },
     "rapidxml-ns": {
       "baseline": "1.13.2",
