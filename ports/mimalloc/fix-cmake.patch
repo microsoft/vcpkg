@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bcfe91d8..a1e5a2b7 100644
+index 05b97fc9..8c2bc91b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -471,10 +471,10 @@ if(MI_BUILD_SHARED)
+@@ -580,10 +580,10 @@ if(MI_BUILD_SHARED)
      add_custom_command(TARGET mimalloc POST_BUILD
        COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll" $<TARGET_FILE_DIR:mimalloc>
        COMMENT "Copy mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll to output directory")
