@@ -557,7 +557,6 @@ function(z_vcpkg_make_prepare_flags)
         ${flags_opts}
     )
     if(NOT DEFINED VCPKG_BUILD_TYPE)
-        list(APPEND all_buildtypes DEBUG)
         z_vcpkg_make_prepare_compile_flags(
             CONFIG DEBUG 
             COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}"
