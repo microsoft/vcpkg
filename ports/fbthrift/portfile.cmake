@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 5948672fad493ef5d469d824cdd216932dc6043789939aa687613d94f2b56a83cff2b71aa28679d7640043f04aef888fb2915eefb147017e0b91b15ebae1791f
+    SHA512 a288bd91f3f0b7adb0d5dcfc6e7fef2f60a18ea56545e63e67d449a72986e710c2f58c8782d0950ef48f7a6bf331af0bc2019240638ece4cdacebec4571c920e
     HEAD_REF main
     PATCHES
         fix-deps.patch
@@ -46,6 +46,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/demo"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/runtime/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/schema/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"

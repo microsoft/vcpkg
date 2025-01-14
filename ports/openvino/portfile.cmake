@@ -10,6 +10,7 @@ vcpkg_from_github(
         002-fix-onnx.patch
         003-protobuf.patch
         add-include-chrono.patch #https://github.com/openvinotoolkit/openvino/pull/27782
+        004-opencl-v2024.10.24.patch # https://github.com/openvinotoolkit/openvino/pull/28275
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

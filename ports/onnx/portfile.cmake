@@ -64,10 +64,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ONNXConfig.cmake" "# import targets" 
-[[# import targets
-include(CMakeFindDependencyMacro)
-find_dependency(protobuf CONFIG)]])
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

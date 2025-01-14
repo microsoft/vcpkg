@@ -14,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         debugrenderer       DEBUG_RENDERER_IN_DEBUG_AND_RELEASE
         profiler            PROFILER_IN_DEBUG_AND_RELEASE
+        rtti                CPP_RTTI_ENABLED
 )
 
 vcpkg_cmake_configure(

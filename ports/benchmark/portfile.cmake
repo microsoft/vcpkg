@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
     REF "v${VERSION}"
-    SHA512 0e91e0e5a2222d7650fd8bd9cafb2f0e7c1689cd1b87b2cc529c738db12bfef31162aa5a4da78f7b0aa7f0101dc08b626802c58d39862458f82f9fea9316ca25
+    SHA512 fc787d3d60a55abb3edaa575bf947c72e1ad1404a35bfddf585299411bcd04d32503bba563f9a36dccf128fce6261b97d460d6c293ed2c2d0807cf0154c86aa7
     HEAD_REF main
 )
 

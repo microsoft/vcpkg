@@ -1,0 +1,64 @@
+commit 255202328d39490f2cdca0d646b2e12b17ac9b69
+Author: Ilya Lavrenov <ilya.lavrenov@intel.com>
+Date:   Mon Jan 6 09:56:08 2025 +0100
+
+    Migrate to OpenCL v2024.10.24
+
+diff --git a/src/plugins/intel_gpu/src/runtime/ocl/ocl_ext.hpp b/src/plugins/intel_gpu/src/runtime/ocl/ocl_ext.hpp
+index 759d796a5e..7246a6f6df 100644
+--- a/src/plugins/intel_gpu/src/runtime/ocl/ocl_ext.hpp
++++ b/src/plugins/intel_gpu/src/runtime/ocl/ocl_ext.hpp
+@@ -16,6 +16,10 @@
+ #include <CL/cl2.hpp>
+ #endif
+ 
++#ifndef CL_HPP_PARAM_NAME_CL_INTEL_UNIFIED_SHARED_MEMORY_
++#define OPENVINO_CLHPP_HEADERS_ARE_OLDER_THAN_V2024_10_24
++#endif
++
+ #include <CL/cl_ext.h>
+ 
+ #ifdef _WIN32
+@@ -45,12 +49,16 @@ typedef cl_va_api_device_set_intel    cl_device_set_intel;
+ 
+ #endif // cl_intel_required_subgroup_size
+ 
++#ifdef OPENVINO_CLHPP_HEADERS_ARE_OLDER_THAN_V2024_10_24
++
+ namespace cl {
+ namespace detail {
+-CL_HPP_DECLARE_PARAM_TRAITS_(cl_device_info, CL_DEVICE_SUB_GROUP_SIZES_INTEL, vector<size_type>)
++CL_HPP_DECLARE_PARAM_TRAITS_(cl_device_info, CL_DEVICE_SUB_GROUP_SIZES_INTEL, cl::vector<size_type>)
+ }  // namespace detail
+ }  // namespace cl
+ 
++#endif // OPENVINO_CLHPP_HEADERS_ARE_OLDER_THAN_V2024_10_24
++
+ /***************************************************************
+ * cl_intel_command_queue_families
+ ***************************************************************/
+@@ -260,11 +268,15 @@ typedef cl_bitfield         cl_device_feature_capabilities_intel;
+ 
+ #endif // cl_intel_device_attribute_query
+ 
++#ifndef CL_HPP_PARAM_NAME_CL_INTEL_COMMAND_QUEUE_FAMILIES_
+ #define CL_HPP_PARAM_NAME_CL_INTEL_COMMAND_QUEUE_FAMILIES_(F) \
+     F(cl_device_info, CL_DEVICE_QUEUE_FAMILY_PROPERTIES_INTEL, cl::vector<cl_queue_family_properties_intel>) \
+     \
+     F(cl_command_queue_info, CL_QUEUE_FAMILY_INTEL, cl_uint) \
+     F(cl_command_queue_info, CL_QUEUE_INDEX_INTEL, cl_uint)
++#endif // CL_HPP_PARAM_NAME_CL_INTEL_COMMAND_QUEUE_FAMILIES_
++
++#ifdef OPENVINO_CLHPP_HEADERS_ARE_OLDER_THAN_V2024_10_24
+ 
+ namespace cl {
+ namespace detail {
+@@ -279,6 +291,8 @@ CL_HPP_PARAM_NAME_CL_INTEL_COMMAND_QUEUE_FAMILIES_(CL_HPP_DECLARE_PARAM_TRAITS_)
+ }  // namespace detail
+ }  // namespace cl
+ 
++#endif // OPENVINO_CLHPP_HEADERS_ARE_OLDER_THAN_V2024_10_24
++
+ #include <memory>
+ 
+ namespace {

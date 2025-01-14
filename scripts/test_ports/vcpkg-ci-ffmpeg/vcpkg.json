@@ -20,6 +20,7 @@
         "lzma",
         "mp3lame",
         "nonfree",
+        "openh264",
         "openjpeg",
         "openmpt",
         "openssl",
@@ -73,7 +74,6 @@
         "fribidi",
         "modplug",
         "opencl",
-        "openh264",
         "srt"
       ],
       "platform": "!uwp"

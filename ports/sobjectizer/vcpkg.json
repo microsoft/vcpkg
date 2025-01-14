@@ -1,6 +1,6 @@
 {
   "name": "sobjectizer",
-  "version": "5.8.3",
+  "version": "5.8.4",
   "description": "SObjectizer is a C++ in-process message dispatching framework with implementation of Actor Model, Publish-Subscribe Model and CSP-like channels.",
   "homepage": "https://github.com/Stiffstream/sobjectizer",
   "license": "BSD-3-Clause",

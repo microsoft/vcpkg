@@ -190,3 +190,15 @@ index 173eacd..90f68fc 100644
  
  foreach(module ${Poco_FIND_COMPONENTS})
      find_package(Poco${module}
+diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/PocoFoundationConfig.cmake
+index 82c5788..739adef 100644
+--- a/Foundation/cmake/PocoFoundationConfig.cmake
++++ b/Foundation/cmake/PocoFoundationConfig.cmake
+@@ -3,6 +3,7 @@ if(@POCO_UNBUNDLED@)
+ 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 	find_dependency(ZLIB REQUIRED)
+ 	find_dependency(PCRE2 REQUIRED)
++	find_dependency(unofficial-utf8proc REQUIRED)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoFoundationTargets.cmake")

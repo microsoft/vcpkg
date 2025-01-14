@@ -1,6 +1,7 @@
 {
   "name": "zlib-ng",
-  "version": "2.2.2",
+  "version": "2.2.3",
+  "port-version": 1,
   "description": "zlib replacement with optimizations for 'next generation' systems",
   "homepage": "https://github.com/zlib-ng/zlib-ng",
   "license": "Zlib",
