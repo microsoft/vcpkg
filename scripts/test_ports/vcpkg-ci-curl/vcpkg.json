@@ -8,14 +8,9 @@
     {
       "name": "curl",
       "features": [
-        "idn"
-      ]
-    },
-    {
-      "name": "curl",
-      "features": [
         "c-ares",
         "http2",
+        "idn",
         "zstd"
       ]
     },
@@ -59,6 +54,13 @@
         "gnutls"
       ],
       "platform": "!arm & !android & !xbox"
+    },
+    {
+      "name": "curl",
+      "features": [
+        "rtmp"
+      ],
+      "platform": "!android"
     }
   ]
 }
