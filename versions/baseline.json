@@ -8142,7 +8142,7 @@
     },
     "salome-configuration": {
       "baseline": "9.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "salome-med-fichier": {
       "baseline": "4.1.1",
@@ -8150,7 +8150,7 @@
     },
     "salome-medcoupling": {
       "baseline": "9.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sassc": {
       "baseline": "3.6.2",
