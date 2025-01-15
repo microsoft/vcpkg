@@ -3,5 +3,8 @@
   "version": "3",
   "port-version": 3,
   "description": "Metaport to install gfortran dependencies from msys if VCPKG_USE_EXTERNAL_Fortran is false",
-  "supports": "windows & !arm & !uwp"
+  "supports": "windows & !arm & !uwp",
+  "dependencies": [
+    "compiler-intel"
+  ]
 }
