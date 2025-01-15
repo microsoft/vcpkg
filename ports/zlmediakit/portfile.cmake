@@ -1,21 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZLMediaKit/ZLMediaKit
-    REF af3ef996b0ae265e000344e7faf753577f9abf4e
-    SHA512 e45572a579d4644b4e48e70c999796d032947d64f074d7f143bd760238523d46ae061f079d9fe539a21542032f3c94ff7465fe2ba6c9fb39dbeac245dffd188b
+    REF 6b2fcf79435656be7797d396203adcc6c11ecc52
+    SHA512 a2efe81f7fe6267418cc1e98f74283a10481b995815131324b7587c82f451d4bd35aa0190ef59efe46a057369208d4bf0658eaba44ae1a8532c6162cfb6e34f5
     HEAD_REF master
     PATCHES 
         fix-dependency.patch
-        fix-android-build.patch
-        fix-core.patch
+        fix-android.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOL_KIT_SOURCE_PATH
     REPO ZLMediaKit/ZLToolKit
-    REF 04d1c47d2568f5ce1ff84260cefaf2754e514a5e
-    SHA512 f467168507cb99f70f1c8f3db4742ecee8cfb3d9ac982b8dfee59907a6fbaf5ca6db4e0c60d8c293843f802a0489270d7a35daf17338f30d78c6b0e854b6ac17
+    REF 46231014e2a7ec1903d4a37e96222481ecc779d8
+    SHA512 2a0b834f072fbc64edc84f408050e2c992f8d59f2480c67a372cace17d49f21eb2f40587288481acc42118e94a5b7863043982680c3f56bdde3863f97ca69356
     HEAD_REF master
+    PATCHES
+        add-include-chrono.patch #https://github.com/ZLMediaKit/ZLToolKit/pull/258
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdpart/ZLToolKit")
@@ -25,8 +26,8 @@ if ("mp4" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH MEDIA_SRV_SOURCE_PATH
         REPO ireader/media-server
-        REF 527c0f5117b489fda78fcd123d446370ddd9ec9a
-        SHA512 d90788fea5bff79e951604a6b290042e36dae9295fe967c6bc72ec2b5db8159c4465dd3568fc116b6954f90185f845671a3b3e3c2d3ccca7aaf913391e69630c
+        REF 4e1a89c3247db72076893d3fc5ad80f4b3c04ec2
+        SHA512 baa7c8b69f86117e0eb8e3bb3769f3aa7fac498a7a59a24382a703a16ec8c5997e858b01a4681795ad0f8eab0408bf69fe1907400fa941dff588b1c739ffa324
         HEAD_REF master
     )
 
@@ -53,6 +54,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
         -DENABLE_API=ON
         -DENABLE_API_STATIC_LIB=${ZLMEDIAKIT_BUILD_STATIC}
         -DENABLE_MSVC_MT=${ZLMEDIAKIT_CRT_STATIC}

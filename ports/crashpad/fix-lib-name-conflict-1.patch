@@ -6,7 +6,7 @@ index 0bcf519..c637f2b 100644
  import("../build/platform.gni")
  
  static_library("base") {
-+  output_name = "crashpad_base"
++  output_name = "vcpkg_crashpad_base"
    sources = [
      "atomicops.h",
      "atomicops_internals_atomicword_compat.h",

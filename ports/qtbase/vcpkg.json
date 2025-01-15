@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
-  "version": "6.7.2",
-  "port-version": 2,
+  "version": "6.8.1",
+  "port-version": 1,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -11,7 +11,10 @@
       "name": "libb2",
       "platform": "!windows"
     },
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qtbase",
       "host": true,
@@ -380,7 +383,10 @@
     "pcre2": {
       "description": "Enable PCRE2 support",
       "dependencies": [
-        "pcre2"
+        {
+          "name": "pcre2",
+          "default-features": false
+        }
       ]
     },
     "png": {

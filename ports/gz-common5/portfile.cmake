@@ -11,6 +11,7 @@ ignition_modular_library(
       "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
    PATCHES
       gz_remotery_vis.patch
+      003-include-chrono.patch
 )
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gz-common5-graphics/gz-common5-graphics-config.cmake" "find_package(GTS "

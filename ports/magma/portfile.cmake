@@ -17,10 +17,11 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     src_path
     ARCHIVE "${dist_file}"
-    PATCHES 
+    PATCHES
       disable-openmp-msvc.patch
       no-tests.patch
       clang-cuda.patch
+      fix-min-max.patch
 )
 
 vcpkg_cmake_configure(

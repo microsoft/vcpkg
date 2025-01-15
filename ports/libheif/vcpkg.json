@@ -1,6 +1,6 @@
 {
   "name": "libheif",
-  "version": "1.17.6",
+  "version": "1.19.5",
   "port-version": 2,
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",

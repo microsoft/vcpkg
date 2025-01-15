@@ -1,7 +1,7 @@
 {
   "name": "json5-parser",
   "version": "1.0.0",
-  "port-version": 6,
+  "port-version": 7,
   "description": "An enhancement of the JSON Spirit C++ library to understand json5.",
   "homepage": "https://github.com/Caltech-IPAC/json5_parser",
   "dependencies": [

@@ -1,8 +1,12 @@
 {
   "name": "libunwind",
   "version": "1.8.1",
+  "port-version": 3,
   "description": "Unix libray for portable stack unwinding",
   "homepage": "https://www.nongnu.org/libunwind",
   "license": "MIT",
-  "supports": "linux"
+  "supports": "linux",
+  "dependencies": [
+    "liblzma"
+  ]
 }

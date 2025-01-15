@@ -16,6 +16,7 @@ vcpkg_from_github(
     PATCHES
         find-msgpack.patch
         "${PATCH_FIX_GCC_13_COMPILATION}"
+        fix-miss-header.patch
 )
 
 vcpkg_check_features(

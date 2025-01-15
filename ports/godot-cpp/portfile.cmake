@@ -1,11 +1,10 @@
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "godotengine/godot-cpp"
     REF "godot-${VERSION}-stable"
-    SHA512 "820e07ffb0545324f01598898bb342d7e143dcc8b83818824e7e1bc22937d3e8016b435f1ec085ebaae8b26e6f6dfb5500f120089316fc0f0c4153c340226941"
+    SHA512 "4012e2c8cbdbccf5362b139a6318785af6e2cfdc99848734d5e3825afba8b8a46cdd7fff63887e2503cf3195efe79c0bd39a900b535322ab0fb51c3452dc07f5"
     HEAD_REF "master"
     PATCHES
         "packagable.patch"

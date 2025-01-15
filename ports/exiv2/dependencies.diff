@@ -7,7 +7,7 @@ index c9e2eba..ca170e1 100644
  
  if(@EXIV2_ENABLE_XMP@) # if(EXIV2_ENABLE_XMP)
 -  find_dependency(EXPAT REQUIRED)
-+  find_dependency(expat)
++  find_dependency(expat CONFIG)
 +endif()
 +
 +if(@EXIV2_ENABLE_BMFF@ AND @EXIV2_ENABLE_BROTLI@)

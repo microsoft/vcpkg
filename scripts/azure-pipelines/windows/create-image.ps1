@@ -24,7 +24,7 @@ $WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 17
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -199,9 +199,6 @@ Write-Host 'Waiting 1 minute for VM to reboot...'
 Start-Sleep -Seconds 60
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-sdks.ps1'
-
-####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
 
 ####################################################################################################
@@ -254,7 +251,7 @@ Set-AzVM `
   -Generalized
 
 $westus3Location = @{Name = 'West US 3';}
-$southEastAsiaLocation = @{Name = 'Southeast Asia';}
+$westusLocation = @{Name = 'West US';}
 
 New-AzGalleryImageVersion `
   -ResourceGroupName 'vcpkg-image-minting' `
@@ -262,11 +259,11 @@ New-AzGalleryImageVersion `
   -GalleryImageDefinitionName 'PrWinWus3-TrustedLaunch' `
   -Name $GalleryImageVersion `
   -Location $Location `
-  -SourceImageId $VMCreated.ID `
+  -SourceImageVMId $VMCreated.ID `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
   -PublishingProfileExcludeFromLatest `
-  -TargetRegion @($westus3Location, $southEastAsiaLocation)
+  -TargetRegion @($westus3Location, $westusLocation)
 
 ####################################################################################################
 Write-Progress `

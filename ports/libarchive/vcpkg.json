@@ -1,6 +1,7 @@
 {
   "name": "libarchive",
-  "version": "3.7.4",
+  "version": "3.7.7",
+  "port-version": 2,
   "description": "Library for reading and writing streaming archives",
   "homepage": "https://www.libarchive.org",
   "license": null,
@@ -62,19 +63,6 @@
       "description": "Lzo support",
       "dependencies": [
         "lzo"
-      ]
-    },
-    "openssl": {
-      "description": "Deprecated. Use feature crypto instead.",
-      "dependencies": [
-        {
-          "name": "libarchive",
-          "default-features": false,
-          "features": [
-            "crypto"
-          ],
-          "platform": "!osx"
-        }
       ]
     },
     "zstd": {

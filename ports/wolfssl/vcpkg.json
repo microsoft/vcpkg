@@ -1,7 +1,6 @@
 {
   "name": "wolfssl",
-  "version": "5.7.2",
-  "port-version": 2,
+  "version": "5.7.6",
   "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",
@@ -21,6 +20,9 @@
     }
   ],
   "features": {
+    "asio": {
+      "description": "Enable asio support"
+    },
     "dtls": {
       "description": "DTLS support"
     },

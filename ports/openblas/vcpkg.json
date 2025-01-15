@@ -1,19 +1,14 @@
 {
   "name": "openblas",
-  "version": "0.3.27",
+  "version": "0.3.28",
   "port-version": 1,
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/OpenMathLib/OpenBLAS",
   "license": "BSD-3-Clause",
-  "supports": "!arm | arm64 | !uwp",
   "dependencies": [
     {
       "name": "openblas",
       "host": true
-    },
-    {
-      "name": "pthread",
-      "platform": "!windows & !uwp"
     },
     {
       "name": "vcpkg-cmake",
@@ -30,7 +25,10 @@
       "supports": "!windows | mingw"
     },
     "simplethread": {
-      "description": "Use simple thread",
+      "description": [
+        "Use simple thread safety for level3 functions",
+        "Alternative to serialization of concurrent access to parallelized level3 functions."
+      ],
       "dependencies": [
         {
           "name": "openblas",
@@ -41,11 +39,11 @@
       ]
     },
     "threads": {
-      "description": "Use a threading backend",
+      "description": "Enable multi-threading",
       "dependencies": [
         {
-          "name": "pthread",
-          "platform": "!windows & !uwp"
+          "name": "pthreads",
+          "platform": "!windows"
         }
       ]
     }

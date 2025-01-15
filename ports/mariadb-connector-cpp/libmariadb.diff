@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 43bc4a2..5a10e1e 100644
+index db28fd9..1692f72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -545,7 +545,11 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/maconncpp.def.in
-                ${CMAKE_SOURCE_DIR}/src/maconncpp.def)
+@@ -545,7 +545,11 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/maconncpp.def.in
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/maconncpp.def)
  
  # Dynamic linking is default on non-Windows
 -IF(MARIADB_LINK_DYNAMIC)
 +IF(1)
-+  find_package(unofficial-libmariadb CONFIG REQUIRED)
-+  set(MARIADB_CLIENT_TARGET_NAME unofficial::libmariadb)
-+  add_library(mariadbclient ALIAS unofficial::libmariadb)
++  FIND_PACKAGE(unofficial-libmariadb CONFIG REQUIRED)
++  SET(MARIADB_CLIENT_TARGET_NAME unofficial::libmariadb)
++  ADD_LIBRARY(mariadbclient ALIAS unofficial::libmariadb)
 +ELSEIF(MARIADB_LINK_DYNAMIC)
    IF(USE_SYSTEM_INSTALLED_LIB)
      IF(MINGW)
@@ -19,7 +19,7 @@ index 43bc4a2..5a10e1e 100644
  
  
  ADD_LIBRARY(${LIBRARY_NAME}_obj OBJECT ${MACPP_SOURCES})
-+target_link_libraries(${LIBRARY_NAME}_obj PRIVATE unofficial::libmariadb)
++TARGET_LINK_LIBRARIES(${LIBRARY_NAME}_obj PRIVATE unofficial::libmariadb)
  IF(UNIX)
    SET_TARGET_PROPERTIES(${LIBRARY_NAME}_obj PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
  ENDIF()

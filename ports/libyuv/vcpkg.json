@@ -1,6 +1,6 @@
 {
   "name": "libyuv",
-  "version": "1895",
+  "version": "1896",
   "port-version": 1,
   "description": "libyuv is an open source project that includes YUV scaling and conversion functionality",
   "homepage": "https://chromium.googlesource.com/libyuv/libyuv",

@@ -28,7 +28,7 @@ function(vcpkg_copy_pdbs)
                 RESULT_VARIABLE error_code
             )
 
-            if(error_code EQUAL "0" AND pdb_line MATCHES "PDB file found at.*'(.*)'")
+            if(error_code EQUAL "0" AND pdb_line MATCHES "PDB[^/]*(([A-Za-z]:|/).*\\.[Pp][Dd][Bb])")
                 set(pdb_path "${CMAKE_MATCH_1}")
                 cmake_path(GET dll PARENT_PATH dll_dir)
                 file(COPY "${pdb_path}" DESTINATION "${dll_dir}")
