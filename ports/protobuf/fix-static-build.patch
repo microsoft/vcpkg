@@ -11,11 +11,12 @@ index 65765ca29..f5ad69102 100644
        set_property(TARGET ${binary}
          PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
      elseif (APPLE)
-@@ -81,7 +81,6 @@ set(protobuf_HEADERS
+@@ -81,8 +81,6 @@ set(protobuf_HEADERS
    ${cpp_features_proto_proto_srcs}
    ${descriptor_proto_proto_srcs}
    ${plugin_proto_proto_srcs}
 -  ${java_features_proto_proto_srcs}
+-  ${go_features_proto_proto_srcs}
  )
  if (protobuf_BUILD_LIBUPB)
    list(APPEND protobuf_HEADERS ${libupb_hdrs})
