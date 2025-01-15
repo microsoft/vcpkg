@@ -917,12 +917,13 @@ qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
+# Skipped to avoid exceeding the 48 hour time limit in CI
+# May also need an older ninja version
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=skip
 qt5-x11extras:arm64-osx=skip
-# Skipped to avoid exceeding the 48 hour time limit in CI
-qt5-webengine:x86-windows=skip
-qt5-webengine:x64-windows=skip
 # Missing system libraries
 qtwayland:x64-osx=skip
 qtwayland:arm64-osx=skip

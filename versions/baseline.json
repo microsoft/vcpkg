@@ -4422,7 +4422,7 @@
     },
     "libdatachannel": {
       "baseline": "0.21.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -7530,7 +7530,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.16",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-webglplugin": {
       "baseline": "5.15.16",
