@@ -1,5 +1,5 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index e76ffa6..a925a37 100644
+index 398637c8..83137334 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -8,8 +8,8 @@ index e76ffa6..a925a37 100644
  project(mimalloc-test C CXX)
  
  set(CMAKE_C_STANDARD 11)
-@@ -19,21 +19,30 @@ endif()
- find_package(mimalloc 2.0 REQUIRED NO_SYSTEM_ENVIRONMENT_PATH)
+@@ -19,26 +19,36 @@ endif()
+ find_package(mimalloc 1.7 REQUIRED NO_SYSTEM_ENVIRONMENT_PATH)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
  
 +set(THREADS_PREFER_PTHREAD_FLAG 1)
@@ -25,7 +25,7 @@ index e76ffa6..a925a37 100644
 +target_link_libraries(dynamic-override-cxx PRIVATE Threads::Threads)
 +endif()
  
- 
+-
 +if(0)
  # overriding with a static object file works reliable as the symbols in the
  # object file have priority over those in library files
@@ -34,32 +34,16 @@ index e76ffa6..a925a37 100644
  target_link_libraries(static-override-obj PUBLIC pthread)
 +endif()
  
- 
+-
 +if(NOT BUILD_SHARED_LIBS)
  # overriding with a static library works too if using the `mimalloc-override.h`
  # header to redefine malloc/free. (the library already overrides new/delete)
  add_executable(static-override-static main-override-static.c)
-@@ -47,6 +56,10 @@ target_link_libraries(static-override PUBLIC mimalloc-static)
- 
- add_executable(static-override-cxx  main-override.cpp)
- target_link_libraries(static-override-cxx PUBLIC mimalloc-static)
+ target_link_libraries(static-override-static PUBLIC mimalloc-static)
 +target_link_libraries(static-override-cxx PRIVATE Threads::Threads)
 +endif()
-+
+ 
 +include("${VCPKG_TESTS}")
  
- 
- ## test memory errors
-diff --git a/test/main-override.cpp b/test/main-override.cpp
-index c1607b6..9e9824c 100644
---- a/test/main-override.cpp
-+++ b/test/main-override.cpp
-@@ -19,7 +19,7 @@
- #endif
- 
- #ifdef _WIN32
--#include <Windows.h>
-+#include <windows.h>
- static void msleep(unsigned long msecs) { Sleep(msecs); }
- #else
- #include <unistd.h>
+ # overriding with a static library: this may not work if the library is linked too late
+ # on the command line after the C runtime library; but we cannot control that well in CMake
