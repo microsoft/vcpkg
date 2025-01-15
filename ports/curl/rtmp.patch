@@ -1,0 +1,28 @@
+diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
+index c290064daa..4122b260f2 100644
+--- a/CMake/curl-config.cmake.in
++++ b/CMake/curl-config.cmake.in
+@@ -50,6 +50,9 @@ endif()
+ if("@HAVE_ZSTD@")
+     find_dependency(zstd CONFIG)
+ endif()
++if("@USE_LIBRTMP@")
++  find_dependency(unofficial-librtmp CONFIG)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+ check_required_components("@PROJECT_NAME@")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0cba6f626b..a0004dd4e7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1309,6 +1309,9 @@ endif()
+ 
+ option(USE_LIBRTMP "Enable librtmp from rtmpdump" OFF)
+ if(USE_LIBRTMP)
++  find_package(unofficial-librtmp CONFIG REQUIRED)
++  list(APPEND CURL_LIBS unofficial::librtmp::librtmp)
++elseif(0)
+   set(_extra_libs "rtmp")
+   if(WIN32)
+     list(APPEND _extra_libs "winmm")

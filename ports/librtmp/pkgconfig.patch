@@ -10,6 +10,6 @@ diff --git a/librtmp/librtmp.pc.in b/librtmp/librtmp.pc.in
 +Requires: zlib,@CRYPTO_REQ@
  URL: http://rtmpdump.mplayerhq.hu
 -Libs: -L${libdir} -lrtmp -lz @PUBLIC_LIBS@
-+Libs: -L${libdir} -lrtmp @PUBLIC_LIBS@
++Libs: -L${libdir} -llibrtmp @PUBLIC_LIBS@
  Libs.private: @PRIVATE_LIBS@
  Cflags: -I${incdir}
