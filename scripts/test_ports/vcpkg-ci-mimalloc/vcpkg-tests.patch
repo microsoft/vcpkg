@@ -1,5 +1,5 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 398637c8..5da52637 100644
+index 398637c8..add97cea 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -8,7 +8,7 @@ index 398637c8..5da52637 100644
  project(mimalloc-test C CXX)
  
  set(CMAKE_C_STANDARD 11)
-@@ -16,29 +16,39 @@ if (NOT CMAKE_BUILD_TYPE)
+@@ -16,30 +16,36 @@ if (NOT CMAKE_BUILD_TYPE)
  endif()
  
  # Import mimalloc (if installed)
@@ -44,10 +44,19 @@ index 398637c8..5da52637 100644
  # header to redefine malloc/free. (the library already overrides new/delete)
  add_executable(static-override-static main-override-static.c)
  target_link_libraries(static-override-static PUBLIC mimalloc-static)
+ 
+-
+ # overriding with a static library: this may not work if the library is linked too late
+ # on the command line after the C runtime library; but we cannot control that well in CMake
+ add_executable(static-override main-override.c)
+@@ -47,7 +53,10 @@ target_link_libraries(static-override PUBLIC mimalloc-static)
+ 
+ add_executable(static-override-cxx  main-override.cpp)
+ target_link_libraries(static-override-cxx PUBLIC mimalloc-static)
 +target_link_libraries(static-override-cxx PRIVATE Threads::Threads)
 +endif()
  
 +include("${VCPKG_TESTS}")
  
- # overriding with a static library: this may not work if the library is linked too late
- # on the command line after the C runtime library; but we cannot control that well in CMake
+ ## test memory errors
+ add_executable(test-wrong  test-wrong.c)
