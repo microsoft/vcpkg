@@ -2,12 +2,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index d18407c..db19e0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -21,8 +21,7 @@ option(RYML_DBG "Enable (very verbose) ryml debug prints." OFF)
+@@ -21,10 +21,7 @@ option(RYML_DBG "Enable (very verbose) ryml debug prints." OFF)
  
  #-------------------------------------------------------
  
 -c4_require_subproject(c4core INCORPORATE
--    SUBDIRECTORY ${RYML_EXT_DIR}/c4core)
+-    SUBDIRECTORY ${RYML_EXT_DIR}/c4core
+-    OVERRIDE C4CORE_INSTALL ${RYML_INSTALL}
+-)
 +find_package(c4core CONFIG REQUIRED)
  
  c4_add_library(ryml
