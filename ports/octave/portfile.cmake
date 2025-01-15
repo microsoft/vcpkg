@@ -29,22 +29,51 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_EXE_PATH "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_EXE_PATH}")
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKGCONFIG} "${PKGCONFIG}")
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
     --disable-docs
-    --without-amd
-    --without-camd
-    --without-ccolamd
-    --without-cholmod
-    --without-colamd
-    --without-curl
-    --without-cxsparse
-    --without-hdf5
-    --without-qhull_r
-    --without-qrupdate
-    --without-umfpack
+    --disable-java
+    --disable-hg-id
+    --enable-lib-visibility-flags
+    --enable-relocate-all
+    --with-amd=no
+    --with-arpack=no
+    --with-bz2=no
+    --with-camd=no
+    --with-ccolamd=no
+    --with-cholmod=no
+    --with-colamd=no
+    --with-cxsparse=no
+    --with-curl=no
+    --with-cxsparse=no
+    --with-fftw3 # yes
+    --with-fftw3f # yes
+    --with-fltk=no
+    --with-fontconfig=no
+    --with-freetype=no
+    --with-glpk # yes
+    --with-hdf5=no
+    --with-klu=no
+    --with-magick=no
+    --with-opengl # yes
+    --with-portaudio=no
+    --with-pcre2 # yes
+    --with-qhull_r=no
+    --with-qrupdate=no
+    --with-qscintilla=no
+    --with-qt=no
+    --with-sndfile # yes
+    --with-spqr=no
+    --with-suitesparseconfig=no
+    --with-sundials_ida=no
+    --with-sundials_nvecserial=no
+    --with-umfpack=no
+    --with-z # yes
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()

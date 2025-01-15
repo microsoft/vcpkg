@@ -14,9 +14,7 @@
     "libsndfile",
     "opengl",
     "pcre2",
-    "portaudio",
     "readline",
-    "sundials",
     "zlib"
   ]
 }
