@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/level-zero
     REF "v${VERSION}"
-    SHA512 45ce777712ed4dad766a4de6808acaf2588345907c6dc039c5c2f56076b6ecbd0cdcddae6c14531f3e8b6b261b7d4f0302f82ff629f98fc62f5b03cfeb633d2d
+    SHA512 09743eb45f37ffb824dfe837064e5d5a94563f1c45febe54578ca5e220a83a1c07bb06b83c0ea65e688d3dcac44eebb7dd9d3920c23993c6f789329d7fb90c08
     HEAD_REF master
 )
 

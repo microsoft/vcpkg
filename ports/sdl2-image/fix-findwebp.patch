@@ -8,7 +8,7 @@ index 65a8811..1f29faa 100644
          message(STATUS "${PROJECT_NAME}: Using system libwebp")
 -        find_package(webp REQUIRED)
 +        find_package(webp NAMES WebP CONFIG REQUIRED)
-         list(APPEND PC_REQUIRES libwebp)
+         list(APPEND PC_REQUIRES libwebp libwebpdemux)
      endif()
      if(SDL2IMAGE_WEBP_SHARED)
 diff --git a/SDL2_imageConfig.cmake.in b/SDL2_imageConfig.cmake.in

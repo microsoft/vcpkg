@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config.patch
         command-line-length.patch
+        mkbuildinf.diff
         script-prefix.patch
         asm-armcap.patch
         windows/install-layout.patch

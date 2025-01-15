@@ -1,6 +1,6 @@
 {
   "name": "opencl",
-  "version-string": "v2024.05.08",
+  "version": "2024.10.24",
   "description": "OpenCL SDK",
   "homepage": "https://github.com/KhronosGroup/OpenCL-SDK",
   "license": "Apache-2.0 AND (MIT OR WTFPL)",
