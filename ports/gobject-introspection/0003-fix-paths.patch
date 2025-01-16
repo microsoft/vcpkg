@@ -11,12 +11,15 @@ index 75c35a7..499ed01 100644
  # Fallback to hard-coded paths if the relocatable paths are wrong
  if not os.path.isdir(os.path.join(datadir, 'gir-1.0')):
      datadir = "@datarootdir@"
-@@ -55,7 +55,7 @@ builtins.__dict__['DATADIR'] = datadir
+@@ -53,10 +53,7 @@ builtins.__dict__['DATADIR'] = datadir
  
- # Respect gir_dir_prefix
- girdir = ''
--girdir = os.path.abspath(os.path.join(filedir, '..', '@gir_dir_prefix@'))
-+girdir = datadir
- builtins.__dict__['GIRDIR'] = [girdir]
+ builtins.__dict__['DATADIR'] = datadir
  
- # Again, relative paths first so that the installation prefix is relocatable
+-gir_dir = os.path.abspath(os.path.join(filedir, '..', '@gir_dir_prefix@', 'gir-1.0'))
+-# Fallback to hard-coded paths if the relocatable paths are wrong
+-if not os.path.isdir(gir_dir):
+-    gir_dir = "@GIR_DIR@"
++gir_dir = datadir
+ 
+ builtins.__dict__['GIR_DIR'] = gir_dir
+ 
