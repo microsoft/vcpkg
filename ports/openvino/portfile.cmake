@@ -44,7 +44,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 b003647de3de49e605943488ca9b2e5196b20d95b3152f0c2331c283d4cb253d1bbbb9cde04fa82733d3871d7128c6db6210957660bd89f26462798f782eca47
+    SHA512 5bfe9c0b79b8f8bed7f39b78003424d4b7146d7c6afafc668752a0c8c45558fc8f37cfc26f783beb73c6919cb65313f24fd2e30c81651b34abf74c43c3bb7e32
     HEAD_REF master
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
@@ -84,8 +84,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 1722066ad4c0f15495f2d0fcbe9deb2bfd188c36
-        SHA512 0b0461bf42d67f0fe7c6c61289a28e42915f7ac2ea5cc569957b8bb601962bec6135e84a2716911394952dffe2bb557c2d59d42c7f80a8db3c3937ecc6bd8ce8
+        REF 0f269193c7466313888d3338209d0d06a22cc6fa
+        SHA512 892a32b930fbba3364e2ea9ee47bf6faba3b36cb99e836bcc5d57a30a368e5061bb7194219f30dbcede18e3ad5e671c9cfa4192799ac53cfa71706e03556e5bd
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
