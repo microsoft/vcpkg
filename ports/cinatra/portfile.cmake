@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(VCPKG_BUILD_TYPE "release") # Header-only library
-
 # Copy all header files directly into the include directory of the package
 file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/include" "${CURRENT_PACKAGES_DIR}/include/cinatra")
