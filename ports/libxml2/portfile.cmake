@@ -26,15 +26,44 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "c14n" LIBXML2_WITH_C14N
+        "catalog" LIBXML2_WITH_CATALOG
         "ftp" LIBXML2_WITH_FTP
+        "html" LIBXML2_WITH_HTML
         "http" LIBXML2_WITH_HTTP
         "iconv" LIBXML2_WITH_ICONV
+        "icu"  LIBXML2_WITH_ICU
+        "iso8859x" LIBXML2_WITH_ISO8859X
         "legacy" LIBXML2_WITH_LEGACY
         "lzma" LIBXML2_WITH_LZMA
-        "zlib" LIBXML2_WITH_ZLIB
+        "plugins" LIBXML2_WITH_MODULES
+        "output" LIBXML2_WITH_OUTPUT
+        "pattern" LIBXML2_WITH_PATTERN
         "tools" LIBXML2_WITH_PROGRAMS
-        "icu"  LIBXML2_WITH_ICU
+        "push" LIBXML2_WITH_PUSH
+        "python" LIBXML2_WITH_PYTHON
+        "reader" LIBXML2_WITH_READER
+        "regex" LIBXML2_WITH_REGEXPS
+        "sax1" LIBXML2_WITH_SAX1
+        "schemas" LIBXML2_WITH_SCHEMAS
+        "schematron" LIBXML2_WITH_SCHEMATRON
+        "thread" LIBXML2_WITH_THREADS
+        "thread-alloc" LIBXML2_WITH_THREAD_ALLOC
+        "thread-local-storage" LIBXML2_WITH_TLS
+        "validation" LIBXML2_WITH_VALID
+        "writer" LIBXML2_WITH_WRITER
+        "xinclude" LIBXML2_WITH_XINCLUDE
+        "xpath" LIBXML2_WITH_XPATH
+        "xptr" LIBXML2_WITH_XPTR
+        "xptr-locs" LIBXML2_WITH_XPTR_LOCS
+        "zlib" LIBXML2_WITH_ZLIB
 )
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPython_EXECUTABLE=${PYTHON3}")
+    list(APPEND FEATURE_OPTIONS_RELEASE "-DLIBXML2_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/site-packages")
+    list(APPEND FEATURE_OPTIONS_DEBUG "-DLIBXML2_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib/site-packages")
+endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
@@ -43,30 +72,14 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBXML2_WITH_TESTS=OFF
-        -DLIBXML2_WITH_HTML=ON
-        -DLIBXML2_WITH_C14N=ON
-        -DLIBXML2_WITH_CATALOG=ON
-        -DLIBXML2_WITH_DEBUG=ON
-        -DLIBXML2_WITH_ISO8859X=ON
-        -DLIBXML2_WITH_MODULES=ON
-        -DLIBXML2_WITH_OUTPUT=ON
-        -DLIBXML2_WITH_PATTERN=ON
-        -DLIBXML2_WITH_PUSH=ON
-        -DLIBXML2_WITH_PYTHON=OFF
-        -DLIBXML2_WITH_READER=ON
-        -DLIBXML2_WITH_REGEXPS=ON
-        -DLIBXML2_WITH_SAX1=ON
-        -DLIBXML2_WITH_SCHEMAS=ON
-        -DLIBXML2_WITH_SCHEMATRON=ON
-        -DLIBXML2_WITH_THREADS=ON
-        -DLIBXML2_WITH_THREAD_ALLOC=OFF
         -DLIBXML2_WITH_TREE=ON
-        -DLIBXML2_WITH_VALID=ON
-        -DLIBXML2_WITH_WRITER=ON
-        -DLIBXML2_WITH_XINCLUDE=ON
-        -DLIBXML2_WITH_XPATH=ON
-        -DLIBXML2_WITH_XPTR=ON
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    OPTIONS_RELEASE
+        ${FEATURE_OPTIONS_RELEASE}
+        -DLIBXML2_WITH_DEBUG:BOOL=OFF
+    OPTIONS_DEBUG
+        ${FEATURE_OPTIONS_DEBUG}
+        -DLIBXML2_WITH_DEBUG:BOOL=ON
 )
 
 vcpkg_cmake_install()
