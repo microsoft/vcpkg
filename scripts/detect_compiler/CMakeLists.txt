@@ -11,8 +11,45 @@ endif()
 enable_language(C)
 enable_language(CXX)
 
-file(SHA1 "${CMAKE_CXX_COMPILER}" CXX_HASH)
-file(SHA1 "${CMAKE_C_COMPILER}" C_HASH)
+if(VCPKG_COMPILER_CACHE_FILE)
+    if(EXISTS "${VCPKG_COMPILER_CACHE_FILE}")
+        file(READ "${VCPKG_COMPILER_CACHE_FILE}" JSON_CONTENT)
+    else()
+        set(JSON_CONTENT "{}")
+    endif()
+
+    function(get_hash compiler_path out_var)
+        file(TO_CMAKE_PATH "${compiler_path}" "compiler_path")
+        file(SIZE "${compiler_path}" SIZE)
+        file(TIMESTAMP "${compiler_path}" TIMESTAMP "%s" UTC)
+
+        string(JSON COMPILER_EXISTS ERROR_VARIABLE JSON_ERROR GET "${JSON_CONTENT}" "${compiler_path}")
+        if(NOT JSON_ERROR)
+            # Get compiler attributes using JSON API
+            string(JSON SIZE_JSON GET "${JSON_CONTENT}" "${compiler_path}" "size")
+            string(JSON TIMESTAMP_JSON GET "${JSON_CONTENT}" "${compiler_path}" "timestamp")
+            string(JSON HASH_JSON GET "${JSON_CONTENT}" "${compiler_path}" "hash")
+            if ((SIZE_JSON EQUAL SIZE) AND (TIMESTAMP_JSON EQUAL TIMESTAMP))
+                set("${out_var}" "${HASH_JSON}" PARENT_SCOPE)
+                return()
+            endif()
+        endif()
+        file(SHA1 "${compiler_path}" HASH)
+        # Add new entry to JSON
+        string(JSON JSON_CONTENT SET "${JSON_CONTENT}" "${compiler_path}" "{\"size\": ${SIZE}, \"timestamp\": ${TIMESTAMP}, \"hash\": \"${HASH}\"}")
+        set("${out_var}" "${HASH}" PARENT_SCOPE)
+        set(JSON_CONTENT "${JSON_CONTENT}" PARENT_SCOPE)
+    endfunction()
+
+    get_hash("${CMAKE_C_COMPILER}" C_HASH)
+    get_hash("${CMAKE_CXX_COMPILER}" CXX_HASH)
+
+    # Write updated JSON back to file
+    file(WRITE "${VCPKG_COMPILER_CACHE_FILE}" "${JSON_CONTENT}")
+else()
+    file(SHA1 "${CMAKE_CXX_COMPILER}" CXX_HASH)
+    file(SHA1 "${CMAKE_C_COMPILER}" C_HASH)
+endif()
 string(SHA1 COMPILER_HASH "${C_HASH}${CXX_HASH}")
 
 message("#COMPILER_HASH#${COMPILER_HASH}")
