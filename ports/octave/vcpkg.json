@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
+  "documentation": "https://docs.octave.org/latest/",
   "license": "GPL-3.0-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
@@ -15,6 +16,10 @@
     "opengl",
     "pcre2",
     "readline",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "zlib"
   ]
 }

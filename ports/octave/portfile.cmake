@@ -30,11 +30,16 @@ get_filename_component(GPERF_EXE_PATH "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_EXE_PATH}")
 
 vcpkg_find_acquire_program(PKGCONFIG)
-set(ENV{PKGCONFIG} "${PKGCONFIG}")
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-vcpkg_configure_make(
+if(VCPKG_HOST_IS_OSX)
+    message("${PORT} currently requires the following programs from the system package manager:\n    gsed\n\nIt can be installed with brew gnu-sed")
+endif()
+
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
+    LANGUAGES C CXX Fortran
     OPTIONS
     --disable-docs
     --disable-java
@@ -75,11 +80,11 @@ vcpkg_configure_make(
     --with-umfpack=no
     --with-z # yes
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-foreach(subdir IN ITEMS libexec lib/octave/site lib/octave/${VERSION}/site share/octave/octave/${VERSION}/site share/octave/octave/site/api-v59/m)
+foreach(subdir IN ITEMS libexec lib/octave/site lib/octave/${VERSION}/site share/octave/octave/${VERSION}/site share/octave/octave/site/api-v59)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${subdir}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${subdir}")
 endforeach()
