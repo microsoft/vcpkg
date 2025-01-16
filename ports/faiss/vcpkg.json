@@ -1,7 +1,6 @@
 {
   "name": "faiss",
-  "version": "1.7.4",
-  "port-version": 1,
+  "version": "1.8.0",
   "description": "Faiss is a library for efficient similarity search and clustering of dense vectors.",
   "homepage": "https://github.com/facebookresearch/faiss",
   "license": "MIT",
@@ -21,6 +20,7 @@
   "features": {
     "gpu": {
       "description": "Whether to enable GPU support",
+      "supports": "!uwp & !osx & !x86 & !windows",
       "dependencies": [
         "cuda"
       ]

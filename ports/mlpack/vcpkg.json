@@ -1,6 +1,6 @@
 {
   "name": "mlpack",
-  "version": "4.4.0",
+  "version": "4.5.1",
   "description": "mlpack is an intuitive, fast, and flexible header-only C++ machine learning library with bindings to other languages.",
   "homepage": "https://github.com/mlpack/mlpack",
   "license": "BSD-3-Clause",

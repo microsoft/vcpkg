@@ -1,6 +1,6 @@
 {
   "name": "cyclonedds",
-  "version-semver": "0.10.4",
+  "version-semver": "0.10.5",
   "description": "Eclipse Cyclone DDS is a very performant and robust open-source implementation of the OMG DDS specification",
   "homepage": "https://cyclonedds.io",
   "license": "EPL-2.0 OR BSD-3-Clause",

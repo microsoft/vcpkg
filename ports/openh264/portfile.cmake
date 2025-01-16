@@ -1,42 +1,56 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cisco/openh264
-    REF f15f940425eebf24ce66984db2445733cf500b7b
-    SHA512 361003296e9cef2956aeff76ae4df7a949a585710facd84a92c1b4164c5a4522d6615fcc485ebc2e50be8a13feb942b870efdd28837307467081cb1eba1f17d2
-    PATCHES
-        0001-respect-default-library-option.patch  # https://github.com/cisco/openh264/pull/3351
+    REF v${VERSION}
+    SHA512 cb6d3ca8d5277325dd64dec399421c4c62bc1fd012fe1521d7195e95ce7f59527919cf698829044dca3d9b1d8288c49b49111d01c9d2896c819da806492af838
 )
 
+set(cxx_link_libraries "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    block(PROPAGATE cxx_link_libraries)
+        vcpkg_list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_C_IMPLICIT_LINK_LIBRARIES;CMAKE_CXX_IMPLICIT_LINK_LIBRARIES")
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        list(REMOVE_ITEM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_LINK_LIBRARIES})
+        list(TRANSFORM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES PREPEND "-l")
+        string(JOIN " " cxx_link_libraries ${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
+    endblock()
+endif()
+
+vcpkg_list(SET additional_binaries)
 if((VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
     vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-    vcpkg_add_to_path(${NASM_EXE_PATH})
+    vcpkg_list(APPEND additional_binaries "nasm = ['${NASM}']")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(GASPREPROCESSOR)
-    foreach(GAS_PATH ${GASPREPROCESSOR})
-        get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
-        vcpkg_add_to_path(${GAS_ITEM_PATH})
-    endforeach(GAS_PATH)
+    list(JOIN GASPREPROCESSOR "','" gaspreprocessor)
+    vcpkg_list(APPEND additional_binaries "gas-preprocessor.pl = ['${gaspreprocessor}']")
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -Dtests=disabled
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -Dtests=disabled
+    ADDITIONAL_BINARIES
+        ${additional_binaries}
 )
-
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openh264.pc" " -lstdc++" "")
-  if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openh264.pc" " -lstdc++" "")
-  endif()
+if(cxx_link_libraries)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openh264.pc"
+        "(Libs:[^\r\n]*)"
+        "\\1 ${cxx_link_libraries}"
+        REGEX
+    )
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openh264.pc"
+            "(Libs:[^\r\n]*)"
+            "\\1 ${cxx_link_libraries}"
+            REGEX
+        )
+    endif()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -3,8 +3,8 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF "${curl_version}"
-    SHA512 f5c425c3fbd7bfda13137e8e9bc969ed7dc94c5bfcf0681a2358ab7d3b5d10402781a93385255a80c402c9824aeb97d70213b412f2d208dee4abdba5bbed2ca4
+    REF ${curl_version}
+    SHA512 ab54562a70209da20fa3d797029dc7022a37b7c501e50250503721251cbf209938fb37ffc1dc9d82c451b1da1b76c79f35c53953b029b5b000903db98aee5840
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
@@ -13,7 +13,6 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
-        gnutls.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,7 +31,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
         psl         CURL_USE_LIBPSL
         gssapi      CURL_USE_GSSAPI
@@ -42,15 +40,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
+        websockets  CURL_DISABLE_WEBSOCKETS
 )
-
-# Add warning on build failuer when using wolfssl and openssl features togther.
-if("openssl" IN_LIST FEATURES AND "wolfssl" IN_LIST FEATURES)
-    message(WARNING "Adding OpenSSL and WolfSSL simultaneously will result in a build failure. \
-                     Please remove one of these features from your build process.\
-                     If you are using OpenSSL version 1.1, you may disregard this warning."
-    )
-endif()
 
 set(OPTIONS "")
 
@@ -83,9 +74,8 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
+        -DCURL_USE_PKGCONFIG=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-    OPTIONS_DEBUG
-        -DENABLE_DEBUG=ON
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
 )
@@ -111,13 +101,13 @@ endif()
 #Fix install path
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix=\"\${prefix}\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix='\${prefix}'" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/curl-config")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix=\"\${prefix}/debug\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix='\${prefix}/debug'" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-l${namespec}-d")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "curl." "curl-d.")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")

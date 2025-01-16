@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/level-zero
     REF "v${VERSION}"
-    SHA512 0498ec279ab73a61ccd4a2c27a8c3837090004e0730c01e92ef6e91f32000ca9e91167b87fbec66668674d86b5dede51470ce4c77dafb58f8b4d982db8b6e490
+    SHA512 09743eb45f37ffb824dfe837064e5d5a94563f1c45febe54578ca5e220a83a1c07bb06b83c0ea65e688d3dcac44eebb7dd9d3920c23993c6f789329d7fb90c08
     HEAD_REF master
-    PATCHES
-        001-patch-install-rules.patch
 )
 
 vcpkg_cmake_configure(

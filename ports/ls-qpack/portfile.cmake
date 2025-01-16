@@ -6,19 +6,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/ls-qpack
     REF "v${VERSION}"
-    SHA512 7677f673b4b23a68ad5e899706f17536777b30d7e91c63d3ea97504a6a2885cf7f431c191ac0581631723151050f914ec31bcb84e2b6e3fcdf4140cde0a18063
+    SHA512 951056564be6f2a2562001ad1a83731df41a1c8b8d91bf44e138c962befe2af1919daf0d94b57b05b49bb83656334c00ed2c642d81075f1e0cece1a46b31006b
     HEAD_REF master
     PATCHES
-        xxhash.patch
-        cmake-export.patch
+        cmake-config.diff
+        pkgconfig.diff
+        mingw.diff
+        emscripten.diff
 )
-
-vcpkg_find_acquire_program(PKGCONFIG)
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DLSQPACK_TESTS=OFF
         -DLSQPACK_BIN=OFF
         -DLSQPACK_XXH=OFF
@@ -27,19 +27,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ls-qpack)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ls-qpack)
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-ls-qpack/unofficial-ls-qpack-config.cmake" cmake_config)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-ls-qpack/unofficial-ls-qpack-config.cmake"
-"include(CMakeFindDependencyMacro)
-find_dependency(PkgConfig)
-pkg_check_modules(XXH REQUIRED IMPORTED_TARGET libxxhash)
-${cmake_config}
-")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

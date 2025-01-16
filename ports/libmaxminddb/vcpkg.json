@@ -1,6 +1,6 @@
 {
   "name": "libmaxminddb",
-  "version": "1.9.1",
+  "version": "1.11.0",
   "description": "C library for the MaxMind DB file format",
   "homepage": "https://github.com/maxmind/libmaxminddb",
   "dependencies": [

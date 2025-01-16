@@ -2,12 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aklomp/base64
     REF "v${VERSION}"
-    SHA512 d63c6b36c99abcdfadf3730096c3a7cd36593526dd3dae815035ce196d3354ece7da1d92ecec800a81e1ab5e1d878b24f0b1de62b7aca516170d06a07c1b42a2
+    SHA512 9f8ca8a6e9feb8ad98158d675ec3331e83c77401d2633de0e43b62e794682a9d63c03e1c2599981ad3cdb249e263964f6a79084dbdf2ca19a1e1eed6195a98f4
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBASE64_BUILD_CLI=OFF
+        -DBASE64_REGENERATE_TABLES=OFF
+        -DBASE64_WERROR=OFF
+        -DBASE64_WITH_OpenMP=OFF
 )
 
 vcpkg_cmake_install()

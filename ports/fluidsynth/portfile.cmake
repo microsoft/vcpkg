@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 521e103e49c281ab7a44a2a275f614894062c1be6eb4df776b11e3756803c6b4b73d1e9596d364959c81b37dff4798d56798f9262c486e098f072ae1e7bef1c1
+    SHA512 8c43e4e86f364f42115a51311231d9926325d7e519c2ddd087a9ed421c9a94cc0dfc5cfbfdfffe9401c634cce14c6e442523550114ac887096dde22ab0c63d98
     HEAD_REF master
     PATCHES
         gentables.patch
@@ -30,7 +30,7 @@ set(WINDOWS_OPTIONS enable-dsound enable-wasapi enable-waveout enable-winmidi HA
 set(MACOS_OPTIONS enable-coreaudio enable-coremidi COREAUDIO_FOUND COREMIDI_FOUND)
 set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
-set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack enable-lash
+set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
     enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
     enable-profiling enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
 

@@ -585,3 +585,7 @@ EXPORTS
      _nettle_aes_decrypt_table
      nettle_aes_decrypt
      _nettle_aes_decrypt
+     nettle_sha3_256_shake_output
+     nettle_sha3_128_init
+     nettle_sha3_128_update
+     nettle_sha3_128_shake_output

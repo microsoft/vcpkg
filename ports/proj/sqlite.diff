@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5c9de0f..d43fe91 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -214,12 +214,12 @@ if(DEFINED SQLITE3_LIBRARY)
+   set(SQLite3_LIBRARY ${SQLITE3_LIBRARY})
+ endif()
+ 
+-find_package(SQLite3 REQUIRED)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
++add_library(SQLite::SQLite3 ALIAS unofficial::sqlite3::sqlite3)
+ 
+ # Would build and run with older versions, but with horrible performance
+ # See https://github.com/OSGeo/PROJ/issues/1718
+ if(SQLite3_VERSION VERSION_LESS "3.11")
+-  message(SEND_ERROR "SQLite3 >= 3.11 required!")
+ endif()
+ 
+ ################################################################################
+diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
+index 0ca48aa..ab4e931 100644
+--- a/cmake/project-config.cmake.in
++++ b/cmake/project-config.cmake.in
+@@ -27,7 +27,7 @@ if("@CURL_ENABLED@")
+ endif()
+ cmake_policy(POP)
+ 
+-find_dependency(SQLite3)
++find_dependency(unofficial-sqlite3)
+ 
+ if(DEFINED PROJ_CONFIG_FIND_TIFF_DEP)
+     find_dependency(TIFF)

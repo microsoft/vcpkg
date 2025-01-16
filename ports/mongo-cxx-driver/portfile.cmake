@@ -2,27 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 a2e303c503b3e79b30c994888a4a9a31178352a1bb4a9ae73a2e41787c113fdd28e3a0e806abbb9e14419fe1b9aea512bcfe3a54edc126b66f0b732f3df09595
+    SHA512 7b6564cb5087b03886f3c99aa5da9e87a898b1bd1098393a7668e39d673d6203a39f7fa95e5bef995f5e53c18654ef1806823cf643a994a8c19a1df75b9eb306
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
 )
-file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
-# This port offered C++17 ABI alternative via features.
-# This was reduced to boost only.
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        boost   BSONCXX_POLY_USE_BOOST
-    INVERTED_FEATURES
-        boost   BSONCXX_POLY_USE_STD
-        boost   CMAKE_DISABLE_FIND_PACKAGE_Boost
-)
+file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_MONGO_CXX_DRIVER_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DBSONCXX_HEADER_INSTALL_DIR=include
         -DENABLE_TESTS=OFF
@@ -30,7 +20,6 @@ vcpkg_cmake_configure(
         -DMONGOCXX_HEADER_INSTALL_DIR=include
         -DNEED_DOWNLOAD_C_DRIVER=OFF
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_Boost
         BSONCXX_HEADER_INSTALL_DIR
         MONGOCXX_HEADER_INSTALL_DIR
 )

@@ -6,7 +6,7 @@ index e715102..b000066 100644
  # Todo
  # Test build for Windows, Mac and mingw.
  
--cmake_minimum_required(VERSION 3.12)
+-cmake_minimum_required(VERSION 3.13)
 +cmake_minimum_required(VERSION 3.19)
  project(godot-cpp LANGUAGES CXX)
  

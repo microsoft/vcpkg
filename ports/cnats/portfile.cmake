@@ -2,12 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nats-io/nats.c
     REF "v${VERSION}"
-    SHA512 4cc127a461a5074d8a49d8cee633577951152cd54f57b4118ff6e4a8c0da73e2f61e9e54546a34c9e79a4557165a80bedc7e9cf6ed0fde28134019eb59a241b9
+    SHA512 4d6ddb23733ca4dd7a4a54ea72d83f5bfce5e5634b3ea91a99610886e5e5ad99a119af8dba87665cb1d6cc1af25bfca41e533d9653e862ce281bd38ed588b94b
     HEAD_REF main
     PATCHES
         fix-sodium-dep.patch
         fix_install_path.patch
-        lowercase_ws2_32.patch
+        fix_test_backtrace_warning.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
