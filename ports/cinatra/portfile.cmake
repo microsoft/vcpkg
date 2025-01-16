@@ -15,11 +15,3 @@ file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/LICENSE"
 )
-
-
-
-
-
-
-
-
