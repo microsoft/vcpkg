@@ -96,10 +96,6 @@ vcpkg_make_configure(
 
 vcpkg_make_install()
 
-if("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
