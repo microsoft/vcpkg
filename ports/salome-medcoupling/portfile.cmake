@@ -4,10 +4,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # in the EXPORTS macros.
 endif()
 
-vcpkg_from_git(
+string(REPLACE "." "_" UNDERSCORE_VERSION "${VERSION}")
+
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL "https://git.salome-platform.org/gitpub/tools/medcoupling.git"
-    REF "fe2e38d301902c626f644907e00e499552bb2fa5"
+    REPO SalomePlatform/medcoupling
+    REF "V${UNDERSCORE_VERSION}"
+    SHA512 576b10daf58830e934a3f9d06abc63a22be76b995b2c2f2d1ab0bf16a76f3ba90f583eab06be2d665874cb433f8c990b7a7fd6724f69a5a3f9a5c20c775407cd
+    HEAD_REF master
     PATCHES 
         win.patch 
         fix-missing-symbols.patch
