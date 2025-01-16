@@ -12,6 +12,7 @@ set(TOOL_NAMES appman
                appman-packager
                appman-qmltestrunner
                appman-launcher-qml
+               appman-package-server
                package-uploader
     )
 
@@ -22,19 +23,18 @@ endif()
 
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
-qt_cmake_configure(${_opt} 
-                   OPTIONS
+qt_cmake_configure(OPTIONS
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                         -DINPUT_libarchive='system'
                         -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libyaml=ON
-                        -DINPUT_libyaml='system'
                         -DFEATURE_am_system_libarchive=ON
-                        -DINPUT_libarchive='system'
                         -DINPUT_libdbus='no'
                         -DINPUT_libbacktrace='no'
-                   OPTIONS_DEBUG
-                   OPTIONS_RELEASE)
+                        -DINPUT_systemd_watchdog='no'
+                        -DINPUT_widgets_support=ON
+                   TOOL_NAMES ${TOOL_NAMES}
+)
 
 ### Need to fix one post-build.bat; Couldn't find the place where it gets generated!
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -63,5 +63,19 @@ qt_install_copyright("${SOURCE_PATH}")
 #                     CONFIGURE_OPTIONS_RELEASE
 #                     CONFIGURE_OPTIONS_DEBUG
 #                    )
+
+
+file(GLOB_RECURSE qttools "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/*")
+if(NOT qttools AND VCPKG_CROSSCOMPILING)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/")
+ endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin/"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/"
+        "${CURRENT_PACKAGES_DIR}/tools/"
+  )
+endif()
 
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) #Debug tracing libraries are only build if CMAKE_BUILD_TYPE is equal to Debug

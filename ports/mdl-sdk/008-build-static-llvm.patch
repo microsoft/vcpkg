@@ -1,17 +1,10 @@
-diff --git a/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake b/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake
-index ce2057f..7ad8dfe 100644
---- a/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake
-+++ b/src/mdl/jit/llvm/dist/cmake/modules/AddLLVM.cmake
-@@ -616,11 +616,7 @@ macro(add_llvm_library name)
-     ""
-     ""
-     ${ARGN})
--  if( BUILD_SHARED_LIBS OR ARG_SHARED )
--    llvm_add_library(${name} SHARED ${ARG_UNPARSED_ARGUMENTS})
--  else()
--    llvm_add_library(${name} ${ARG_UNPARSED_ARGUMENTS})
--  endif()
-+  llvm_add_library(${name} STATIC ${ARG_UNPARSED_ARGUMENTS})
+--- a/src/mdl/jit/llvm/CMakeLists.txt
++++ b/src/mdl/jit/llvm/CMakeLists.txt
+@@ -152,6 +152,7 @@
  
-   # Libraries that are meant to only be exposed via the build tree only are
-   # never installed and are only exported as a target in the special build tree
+ set(LLVM_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist CACHE PATH "LLVM source root.")
+ set(LLVM_NATIVE_BUILD ${CMAKE_CURRENT_BINARY_DIR}/dist/NATIVE CACHE PATH "Binary root dir for LLVM tablegen.")
++set(BUILD_SHARED_LIBS OFF)
+ 
+ # speed up build is not working properly on all platforms and configurations
+ if(WINDOWS)

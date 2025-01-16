@@ -64,7 +64,7 @@ Function DownloadAndInstall {
       $tempPath = Get-TempFilePath
       New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
       $LocalPath = Join-Path $tempPath $LocalName
-      Invoke-WebRequest -Uri $Url -OutFile $LocalPath
+      curl.exe -L -o $LocalPath $Url
       $doRemove = $true
     }
 
@@ -129,7 +129,7 @@ Function DownloadAndUnzip {
       New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
       $zipPath = Join-Path $tempPath $LocalName
       Write-Host "Downloading $Name ( $Url -> $zipPath )..."
-      Invoke-WebRequest -Uri $Url -OutFile $zipPath
+      curl.exe -L -o $zipPath $Url
       $doRemove = $true
     }
 

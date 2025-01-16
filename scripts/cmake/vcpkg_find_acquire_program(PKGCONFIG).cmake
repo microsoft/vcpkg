@@ -1,17 +1,17 @@
 macro(z_vcpkg_find_acquire_pkgconfig_msys_declare_packages)
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~2.2.0-1-any.pkg.tar.zst"
-        SHA512 c19bd55e42def33107b52816f7c49827467681d05a173a36d73789a58194bc7e4af04807e4902b62184f32012a2d75f41d8fb3bfddf8b20e2a8f14955c05e99d
+        URL "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~2.3.0-1-any.pkg.tar.zst"
+        SHA512 b93698fc282f39715804cebeb624608584a0ef0755a6a4e321c4f0571586e91a39b3af580441f4895f5f524db151831a1eb6e06eb4de83f43a0db7b0c218bab0
         PROVIDES mingw-w64-clang-aarch64-pkg-config
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.2.0-1-any.pkg.tar.zst"
-        SHA512 eb6ba49d56b0edc4f605ad896ac9deb2202c853c821f1c28a26e3c71a5083e893c8697d174b141da9dc6561620ea218166bd041664d54a0ab51b93bad246ed7a
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.3.0-1-any.pkg.tar.zst"
+        SHA512 5373f050060678166968e09a4dd8ad30324c5dc37842c3517ebc9eb7be7e09d37d2873ff9dc4831c283556b68a0776f06fa6f91d799020b04282b4a3f378a2c4
         PROVIDES mingw-w64-x86_64-pkg-config
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~2.2.0-1-any.pkg.tar.zst"
-        SHA512 388788997a09bc394019aa4c2f0181a35a9aa8605b3bcf6b39f4bd0588f4e185573b6149ca54916677834059b0ccc75bf40db3fe6e7326ab268ea37f37346e22
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~2.3.0-1-any.pkg.tar.zst"
+        SHA512 8fc9e91dcc78a05e8d836352e91d424e7466eaacbf961fd781ff6d84aab059308942dad024e19ecfe600175241ebfb81bd4813352c3f7547d8c9bfccec962dab
         PROVIDES mingw-w64-i686-pkg-config
     )
 endmacro()

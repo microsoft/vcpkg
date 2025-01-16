@@ -1,36 +1,20 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-11-12",
+  "version-string": "ci",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
-    "ci"
+    {
+      "name": "cmake-3-16",
+      "platform": "x64 & (windows | linux | osx) & !uwp"
+    },
+    "cmake-current",
+    "find-package",
+    "pkg-check-modules"
   ],
   "features": {
-    "ci": {
-      "description": "The CI set of features to test",
-      "dependencies": [
-        {
-          "name": "cmake-user",
-          "default-features": false,
-          "features": [
-            "cmake-current",
-            "find-package",
-            "pkg-check-modules"
-          ]
-        },
-        {
-          "name": "cmake-user",
-          "default-features": false,
-          "features": [
-            "cmake-3-7"
-          ],
-          "platform": "x64 & (windows | linux | osx) & !uwp"
-        }
-      ]
-    },
-    "cmake-3-7": {
-      "description": "Run the tests with CMake 3.7"
+    "cmake-3-16": {
+      "description": "Run the tests with CMake 3.16"
     },
     "cmake-current": {
       "description": "Run the tests with vcpkg's current version of CMake"
@@ -38,6 +22,11 @@
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
+        {
+          "$package": "ALSA",
+          "name": "alsa",
+          "platform": "linux"
+        },
         {
           "$package": "Boost",
           "name": "boost",
@@ -58,14 +47,11 @@
         },
         {
           "$package": "Fontconfig",
-          "$since": "3.14",
           "name": "fontconfig",
           "platform": "!mingw & !uwp"
         },
         {
-          "$comment": "CMake 3.13 for debug postfix support",
           "$package": "GLUT",
-          "$since": "3.13",
           "name": "freeglut",
           "platform": "!uwp & !osx"
         },
@@ -75,9 +61,7 @@
           "default-features": false
         },
         {
-          "$comment": "CMake 3.9 for find_dependency forwarding extra arguments",
           "$package": "GDAL",
-          "$since": "3.9",
           "name": "gdal",
           "default-features": false,
           "platform": "!uwp"
@@ -103,11 +87,10 @@
         {
           "$package": "GnuTLS",
           "name": "libgnutls",
-          "platform": "!windows | mingw"
+          "platform": "!android & (!windows | mingw)"
         },
         {
           "$package": "Iconv",
-          "$since": "3.11",
           "name": "libiconv"
         },
         {
@@ -129,16 +112,12 @@
           "platform": "!uwp & !mingw"
         },
         {
-          "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXml2",
-          "$since": "3.11",
           "name": "libxml2",
           "default-features": false
         },
         {
-          "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXslt",
-          "$since": "3.11",
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
@@ -159,7 +138,6 @@
         },
         {
           "$package": "SQLite3",
-          "$since": "3.14",
           "name": "sqlite3",
           "default-features": false
         },

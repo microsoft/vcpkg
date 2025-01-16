@@ -1,21 +1,13 @@
-vcpkg_download_distfile(PATCH_ADD_OPTION_EMBED_PROJ_DATA_PATH
-    URLS https://github.com/OSGeo/PROJ/commit/bddac146b2aa9db78cd491153aaad260eb307b11.patch?full_index=1
-    SHA512 06511fe82f85498813e1b99a419359e9877689f7c763db392a66ae0202027ee12f9a4015a5bb9c13a357d0ba22d002b021e5c0dc9c31d33293c48fc71e766a69
-    FILENAME OSGeo-PROJ-bddac146b2aa9db78cd491153aaad260eb307b11.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 4b3ceb9e3b2213b0bb2fc839f4dd70e08ee53323465c7bb473131907e4b66c836623da115c7413dfd8bafd0a992fa173003063e2233ab577139ab8462655b6cc
+    SHA512 9ddef9b11e1d38ec16eec962d539a64d781d194242173645a966c5c953bea1583dd3cc801920329b92962b2bd9ee622ab04e26d356e969081366498c8ad30161
     HEAD_REF master
     PATCHES
-        fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         remove_toolset_restriction.patch
-        fix-gcc-version-less-8.patch
-        "${PATCH_ADD_OPTION_EMBED_PROJ_DATA_PATH}"
+        sqlite.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

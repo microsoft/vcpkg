@@ -1,11 +1,11 @@
 {
   "name": "directxmath",
-  "version-date": "2024-02-14",
-  "port-version": 1,
+  "version-date": "2024-12-02",
   "description": "DirectXMath SIMD C++ math library",
   "homepage": "https://github.com/Microsoft/DirectXMath",
   "documentation": "https://docs.microsoft.com/windows/win32/dxmath/directxmath-portal",
   "license": "MIT",
+  "supports": "!arm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

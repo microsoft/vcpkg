@@ -6,6 +6,7 @@ option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
 
 set(PKGCONFIG_LIBS_PRIVATE "")
+set(PKGCONFIG_REQUIRES_PRIVATE "")
 
 add_library(sqlite3 sqlite3.c sqlite3.rc)
 
@@ -43,6 +44,13 @@ if (NOT WIN32)
             string(APPEND PKGCONFIG_LIBS_PRIVATE " -lm")
         endif()
     endif()
+endif()
+
+if(SQLITE_ENABLE_ICU)
+    find_package(ICU COMPONENTS uc i18n REQUIRED)
+    target_link_libraries(sqlite3 PRIVATE ICU::uc ICU::i18n)
+
+    string(APPEND PKGCONFIG_REQUIRES_PRIVATE " icu-uc icu-i18n")
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)

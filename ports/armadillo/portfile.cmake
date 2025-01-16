@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-${VERSION}.tar.xz"
-    SHA512 567ed608098258749cf133022810c9296985ddd9d4dcce4eb00a938cbe8e767774d96cd030ba8c719e62895913e294b17299e4e8c064103b1f6f051021ee9e57
+    SHA512 729229d28dbd199503dc15ba11a4f20d2b598993f7da448d40840255ff53ecc9f95bca3b472261d12dda15f2c4e2f8999ea39594c869a31a817be35b256efac5
     PATCHES
         cmake-config.patch
         dependencies.patch
@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DALLOW_FLEXIBLAS_LINUX=OFF
-        -DDETECT_HDF5=OFF
         "-DREQUIRES_PRIVATE=${REQUIRES_PRIVATE}"
 )
 

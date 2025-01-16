@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.7.2",
+  "version": "6.8.1",
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -86,7 +86,10 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "platform": "linux"
+        }
       ],
       "platform": "!windows"
     },
@@ -200,6 +203,13 @@
             "qml"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "qtquick3d",
+          "features": [
+            "openxr"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "qtwayland",

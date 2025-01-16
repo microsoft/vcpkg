@@ -32,4 +32,16 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
+set(usage "sqlpp11 provides CMake targets:\n")
+if(FEATURES STREQUAL "core")
+    set(usage "This build of sqlpp11 doesn't include any connector.\n(Available via features: sqlite3, mariadb, mysql, postgresql.)\n")
+endif()
+foreach(component IN ITEMS SQLite3 SQLCipher MySQL MariaDB PostgreSQL)
+    string(TOLOWER "${component}" lib)
+    if("${lib}" IN_LIST FEATURES)
+        string(APPEND usage "\n  find_package(Sqlpp11 CONFIG REQUIRED COMPONENTS ${component})\n  target_link_libraries(main PRIVATE sqlpp11::${lib})\n")
+    endif()
+endforeach()
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,10 +1,10 @@
 {
   "name": "llvm",
   "version": "18.1.6",
-  "port-version": 1,
+  "port-version": 4,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 WITH LLVM-exception",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
@@ -189,6 +189,9 @@
       "dependencies": [
         "zstd"
       ]
+    },
+    "export-symbols": {
+      "description": "Export symbols for plugins."
     },
     "flang": {
       "description": "Include Fortran front end.",

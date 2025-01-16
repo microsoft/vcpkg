@@ -1,6 +1,6 @@
 {
   "name": "qt5-activeqt",
-  "version": "5.15.15",
+  "version": "5.15.16",
   "description": "Active Qt is a helper framework that enables the developer to access and use ActiveX controls and COM objects provided by any ActiveX server. It also makes it possible to make the developer's own Qt applications available as COM servers on Windows.",
   "license": null,
   "supports": "windows",

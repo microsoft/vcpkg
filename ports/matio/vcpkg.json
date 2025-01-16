@@ -1,6 +1,7 @@
 {
   "name": "matio",
-  "version": "1.5.26",
+  "version": "1.5.27",
+  "port-version": 1,
   "description": "MATLAB MAT File I/O Library",
   "homepage": "https://github.com/tbeu/matio",
   "license": "BSD-2-Clause",
@@ -11,15 +12,15 @@
     }
   ],
   "default-features": [
-    "hdf5",
+    "mat73",
     "zlib"
   ],
   "features": {
     "extended-sparse": {
       "description": "Enable extended sparse matrix data types not supported in MATLAB"
     },
-    "hdf5": {
-      "description": "Check for HDF5 library",
+    "mat73": {
+      "description": "Enable support for version 7.3 MAT files using the HDF5 library",
       "dependencies": [
         {
           "name": "hdf5",
@@ -30,18 +31,6 @@
           "default-features": false,
           "features": [
             "zlib"
-          ]
-        }
-      ]
-    },
-    "mat73": {
-      "description": "Enable support for version 7.3 MAT files",
-      "dependencies": [
-        {
-          "name": "matio",
-          "default-features": false,
-          "features": [
-            "hdf5"
           ]
         }
       ]

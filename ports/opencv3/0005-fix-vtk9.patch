@@ -37,8 +37,6 @@
  
  # VTK 5.x components
  if(NOT VTK_FOUND)
-diff --git a/modules/viz/CMakeLists.txt b/modules/viz/CMakeLists.txt
-index 256b464..92698c3 100644
 --- a/modules/viz/CMakeLists.txt
 +++ b/modules/viz/CMakeLists.txt
 @@ -3,7 +3,6 @@ if(NOT HAVE_VTK)
@@ -65,8 +63,6 @@ index 256b464..92698c3 100644
  
  if(APPLE AND BUILD_opencv_viz)
    ocv_target_link_libraries(${the_module} PRIVATE "-framework Cocoa")
-diff --git a/modules/viz/src/precomp.hpp b/modules/viz/src/precomp.hpp
-index f92fdb6..4c4bf7c 100644
 --- a/modules/viz/src/precomp.hpp
 +++ b/modules/viz/src/precomp.hpp
 @@ -133,7 +133,8 @@
@@ -91,8 +87,6 @@ index f92fdb6..4c4bf7c 100644
  
  #include <opencv2/core.hpp>
  #include <opencv2/viz.hpp>
-diff --git a/modules/viz/src/types.cpp b/modules/viz/src/types.cpp
-index 65571a1..e9a470c 100644
 --- a/modules/viz/src/types.cpp
 +++ b/modules/viz/src/types.cpp
 @@ -97,10 +97,12 @@ cv::viz::Mesh cv::viz::Mesh::load(const String& file, int type)
@@ -131,6 +125,16 @@ index 65571a1..e9a470c 100644
      window_->AddRenderer(renderer_);
  
      // Create the interactor style
+--- a/modules/viz/src/vtk/vtkCocoaInteractorFix.mm
++++ b/modules/viz/src/vtk/vtkCocoaInteractorFix.mm
+@@ -49,6 +49,7 @@
+ #include <vtkCocoaRenderWindowInteractor.h>
+ #include <vtkObjectFactory.h>
+ #include <vtkSmartPointer.h>
++#include <vtkVersion.h>
+ 
+ namespace cv { namespace viz {
+     vtkSmartPointer<vtkRenderWindowInteractor> vtkCocoaRenderWindowInteractorNew();
 --- a/modules/viz/src/vtk/vtkOBJWriter.cpp
 +++ b/modules/viz/src/vtk/vtkOBJWriter.cpp
 @@ -72,7 +72,7 @@ void cv::viz::vtkOBJWriter::WriteData()

@@ -1,0 +1,21 @@
+diff --git a/include/BoostInstall.cmake b/include/BoostInstall.cmake
+index 49c0086fea..ad16dc5e0a 100644
+--- a/include/BoostInstall.cmake	
++++ b/include/BoostInstall.cmake
+@@ -284,14 +284,16 @@ function(__boost_install_set_output_name LIB TYPE VERSION)
+ 
+   set(CONFIG_INSTALL_DIR "${BOOST_INSTALL_CMAKEDIR}/${LIB}-${__VERSION}")
+ 
++  if(0)
+   if(TYPE STREQUAL "SHARED_LIBRARY")
+     string(APPEND CONFIG_INSTALL_DIR "-shared")
+   endif()
+ 
+   if(TYPE STREQUAL "STATIC_LIBRARY")
+     string(APPEND CONFIG_INSTALL_DIR "-static")
+   endif()
++  endif()
+ 
+   install(TARGETS ${LIB} EXPORT ${LIB}-targets
+     # explicit destination specification required for 3.13, 3.14 no longer needs it
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"

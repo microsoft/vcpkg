@@ -1,26 +1,145 @@
 ﻿diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
-index 4085b5aaeb..f89ac88333 100644
+index 732cbb4..d9d4c0c 100644
 --- a/cmake/SearchForStuff.cmake
 +++ b/cmake/SearchForStuff.cmake
-@@ -179,7 +179,7 @@ if (PKG_CONFIG_FOUND)
+@@ -3,11 +3,9 @@ include (CheckCXXSourceCompiles)
+ 
+ include (${gazebo_cmake_dir}/FindOS.cmake)
+ find_package(PkgConfig)
+-include (${gazebo_cmake_dir}/FindFreeimage.cmake)
+-
+-execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --modversion protobuf
+-  OUTPUT_VARIABLE PROTOBUF_VERSION
+-  RESULT_VARIABLE protobuf_modversion_failed)
++find_package(freeimage CONFIG REQUIRED)
++set(freeimage_LIBRARIES freeimage::FreeImage)
++get_target_property(freeimage_INCLUDE_DIRS freeimage::FreeImage INTERFACE_INCLUDE_DIRECTORIES)
+ 
+ ########################################
+ # 1. can not use GAZEBO_BUILD_TYPE_PROFILE is defined after include this module
+@@ -25,6 +23,8 @@ if (CMAKE_BUILD_TYPE)
+ endif()
+ 
+ ########################################
++find_package(Protobuf CONFIG REQUIRED)
++
+ if (PROTOBUF_VERSION LESS 2.3.0)
+   BUILD_ERROR("Incorrect version: Gazebo requires protobuf version 2.3.0 or greater")
+ endif()
+@@ -35,6 +35,7 @@ endif()
+ # Protobuf >= 22 requires to link abseil, so we are constrained to use
+ # find_package(Protobuf) and link to protobuf::libprotobuf,
+ # see https://github.com/conda-forge/conda-forge-pinning-feedstock/issues/4075#issuecomment-1569242816
++
+ if (DEFINED PROTOBUF_VERSION AND PROTOBUF_VERSION GREATER_EQUAL 22.0)
+   set(GZ_PROTOBUF_USE_CMAKE_CONFIG_DEFAULT ON)
+ else()
+@@ -62,7 +63,6 @@ if(NOT GZ_PROTOBUF_USE_CMAKE_CONFIG)
+     set (GZ_PROTOBUF_PROTOC_LIBRARY ${PROTOBUF_PROTOC_LIBRARY})
+   endif()
+ else()
+-  find_package(Protobuf CONFIG REQUIRED)
+   set (GZ_PROTOBUF_LIBRARY protobuf::libprotobuf)
+   set (GZ_PROTOBUF_PROTOC_LIBRARY protobuf::libprotoc)
+   if(NOT DEFINED PROTOBUF_PROTOC_EXECUTABLE)
+@@ -203,7 +203,7 @@ if (PKG_CONFIG_FOUND)
    # (needed, at least, for MacOS)
  
    # Use system installation on UNIX and Apple, and internal copy on Windows
 -  if (UNIX OR APPLE)
 +  if (true)
-     message (STATUS "Using system tinyxml.")
-     set (USE_EXTERNAL_TINYXML True)
+     set (USE_EXTERNAL_TINYXML_DEFAULT_VALUE ON)
    elseif(WIN32)
-@@ -225,7 +225,7 @@ if (PKG_CONFIG_FOUND)
+     set (USE_EXTERNAL_TINYXML_DEFAULT_VALUE OFF)
+@@ -252,7 +252,7 @@ if (PKG_CONFIG_FOUND)
    # (needed, at least, for MacOS)
  
    # Use system installation on UNIX and Apple, and internal copy on Windows
 -  if (UNIX OR APPLE)
 +  if (true)
-     message (STATUS "Using system tinyxml2.")
-     set (USE_EXTERNAL_TINYXML2 True)
+     set (USE_EXTERNAL_TINYXML2_DEFAULT_VALUE ON)
    elseif(WIN32)
-@@ -513,7 +513,7 @@ if (PKG_CONFIG_FOUND)
+     set (USE_EXTERNAL_TINYXML2_DEFAULT_VALUE OFF)
+@@ -331,8 +331,7 @@ if (PKG_CONFIG_FOUND)
+ 
+   #################################################
+   # Find TBB
+-  pkg_check_modules(TBB tbb)
+-  set (TBB_PKG_CONFIG "tbb")
++  find_package(TBB CONFIG REQUIRED)
+   if (NOT TBB_FOUND)
+     message(STATUS "TBB not found, attempting to detect manually")
+     set (TBB_PKG_CONFIG "")
+@@ -365,23 +364,20 @@ if (PKG_CONFIG_FOUND)
+   #################################################
+   # Find OGRE
+ 
+-  pkg_check_modules(OGRE-RTShaderSystem
+-                    OGRE-RTShaderSystem>=${MIN_OGRE_VERSION})
++  find_package(OGRE CONFIG REQUIRED)
+ 
+-  if (OGRE-RTShaderSystem_FOUND)
+-    set(ogre_ldflags ${OGRE-RTShaderSystem_LDFLAGS})
+-    set(ogre_include_dirs ${OGRE-RTShaderSystem_INCLUDE_DIRS})
+-    set(ogre_libraries ${OGRE-RTShaderSystem_LIBRARIES})
+-    set(ogre_library_dirs ${OGRE-RTShaderSystem_LIBRARY_DIRS})
+-    set(ogre_cflags ${OGRE-RTShaderSystem_CFLAGS})
++  if (OGRE_RTShaderSystem_FOUND)
++    set(ogre_ldflags ${OGRE_RTShaderSystem_LDFLAGS})
++    set(ogre_include_dirs ${OGRE_RTShaderSystem_INCLUDE_DIRS})
++    set(ogre_libraries ${OGRE_RTShaderSystem_LIBRARIES})
++    set(ogre_library_dirs ${OGRE_RTShaderSystem_LIBRARY_DIRS})
++    set(ogre_cflags ${OGRE_RTShaderSystem_CFLAGS})
+ 
+     set (INCLUDE_RTSHADER ON CACHE BOOL "Enable GPU shaders")
+   else ()
+     set (INCLUDE_RTSHADER OFF CACHE BOOL "Enable GPU shaders")
+   endif ()
+ 
+-  pkg_check_modules(OGRE OGRE>=${MIN_OGRE_VERSION})
+-  
+   if (PKG_CONFIG_EXECUTABLE AND OGRE_FOUND AND NOT DEFINED OGRE_VERSION)
+     execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --modversion OGRE
+                     OUTPUT_VARIABLE OGRE_VERSION)
+@@ -451,25 +447,22 @@ if (PKG_CONFIG_FOUND)
+     set(ogre_cflags ${ogre_cflags} ${OGRE_CFLAGS})
+   endif ()
+ 
+-  pkg_check_modules(OGRE-Terrain OGRE-Terrain)
+-  if (OGRE-Terrain_FOUND)
+-    set(ogre_ldflags ${ogre_ldflags} ${OGRE-Terrain_LDFLAGS})
+-    set(ogre_include_dirs ${ogre_include_dirs} ${OGRE-Terrain_INCLUDE_DIRS})
+-    set(ogre_libraries ${ogre_libraries};${OGRE-Terrain_LIBRARIES})
+-    set(ogre_library_dirs ${ogre_library_dirs} ${OGRE-Terrain_LIBRARY_DIRS})
+-    set(ogre_cflags ${ogre_cflags} ${OGRE-Terrain_CFLAGS})
++  if (OGRE_Terrain_FOUND)
++    set(ogre_ldflags ${ogre_ldflags} ${OGRE_Terrain_LDFLAGS})
++    set(ogre_include_dirs ${ogre_include_dirs} ${OGRE_Terrain_INCLUDE_DIRS})
++    set(ogre_libraries ${ogre_libraries};${OGRE_Terrain_LIBRARIES})
++    set(ogre_library_dirs ${ogre_library_dirs} ${OGRE_Terrain_LIBRARY_DIRS})
++    set(ogre_cflags ${ogre_cflags} ${OGRE_Terrain_CFLAGS})
+   endif()
+ 
+-  pkg_check_modules(OGRE-Overlay OGRE-Overlay)
+-  if (OGRE-Overlay_FOUND)
+-    set(ogre_ldflags ${ogre_ldflags} ${OGRE-Overlay_LDFLAGS})
+-    set(ogre_include_dirs ${ogre_include_dirs} ${OGRE-Overlay_INCLUDE_DIRS})
+-    set(ogre_libraries ${ogre_libraries};${OGRE-Overlay_LIBRARIES})
+-    set(ogre_library_dirs ${ogre_library_dirs} ${OGRE-Overlay_LIBRARY_DIRS})
+-    set(ogre_cflags ${ogre_cflags} ${OGRE-Overlay_CFLAGS})
++  if (OGRE_Overlay_FOUND)
++    set(ogre_ldflags ${ogre_ldflags} ${OGRE_Overlay_LDFLAGS})
++    set(ogre_include_dirs ${ogre_include_dirs} ${OGRE_Overlay_INCLUDE_DIRS})
++    set(ogre_libraries ${ogre_libraries};${OGRE_Overlay_LIBRARIES})
++    set(ogre_library_dirs ${ogre_library_dirs} ${OGRE_Overlay_LIBRARY_DIRS})
++    set(ogre_cflags ${ogre_cflags} ${OGRE_Overlay_CFLAGS})
+   endif()
+ 
+-
+   set (OGRE_INCLUDE_DIRS ${ogre_include_dirs}
+        CACHE INTERNAL "Ogre include path")
+ 
+@@ -549,7 +542,7 @@ if (PKG_CONFIG_FOUND)
    endif ()
  
    if (libavutil_FOUND AND libavformat_FOUND AND libavcodec_FOUND AND
@@ -29,7 +148,7 @@ index 4085b5aaeb..f89ac88333 100644
      set (HAVE_FFMPEG TRUE)
    else ()
      set (HAVE_FFMPEG FALSE)
-@@ -538,7 +538,7 @@ if (PKG_CONFIG_FOUND)
+@@ -574,7 +567,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find GNU Triangulation Surface Library
    pkg_check_modules(gts gts)
@@ -38,7 +157,7 @@ index 4085b5aaeb..f89ac88333 100644
      message (STATUS "Looking for GTS - found")
      set (HAVE_GTS TRUE)
    else ()
-@@ -551,13 +551,14 @@ if (PKG_CONFIG_FOUND)
+@@ -587,7 +580,7 @@ if (PKG_CONFIG_FOUND)
    # First and preferred option is to look for bullet standard pkgconfig,
    # so check it first. if it is not present, check for the OSRF
    # custom bullet2.82.pc file
@@ -47,14 +166,15 @@ index 4085b5aaeb..f89ac88333 100644
    if (NOT BULLET_FOUND)
       pkg_check_modules(BULLET bullet2.82>=2.82)
    endif()
- 
+@@ -596,6 +589,7 @@ if (PKG_CONFIG_FOUND)
+   endif()
    if (BULLET_FOUND)
      set (HAVE_BULLET TRUE)
 +    set(BULLET_VERSION ${BULLET_VERSION_STRING})
-     add_definitions( -DLIBBULLET_VERSION=${BULLET_VERSION} )
-   else()
-     set (HAVE_BULLET FALSE)
-@@ -572,7 +573,7 @@ if (PKG_CONFIG_FOUND)
+     if (${BULLET_VERSION} STREQUAL "")
+       set (BULLET_VERSION ${BULLET_VERSION_STRING})
+     endif()
+@@ -614,7 +608,7 @@ if (PKG_CONFIG_FOUND)
    ########################################
    # Find libusb
    pkg_check_modules(libusb-1.0 libusb-1.0)
@@ -63,7 +183,7 @@ index 4085b5aaeb..f89ac88333 100644
      BUILD_WARNING ("libusb-1.0 not found. USB peripherals support will be disabled.")
      set (HAVE_USB OFF CACHE BOOL "HAVE USB" FORCE)
    else()
-@@ -648,7 +649,7 @@ endif ()
+@@ -690,7 +684,7 @@ endif ()
  ########################################
  # Find gdal
  include (FindGDAL)
@@ -72,7 +192,7 @@ index 4085b5aaeb..f89ac88333 100644
    message (STATUS "Looking for libgdal - not found")
    BUILD_WARNING ("GDAL not found, Digital elevation terrains support will be disabled.")
    set (HAVE_GDAL OFF CACHE BOOL "HAVE GDAL" FORCE)
-@@ -718,7 +719,7 @@ endif()
+@@ -774,7 +768,7 @@ endif()
  ########################################
  # Find graphviz
  include (${gazebo_cmake_dir}/FindGraphviz.cmake)
@@ -82,10 +202,17 @@ index 4085b5aaeb..f89ac88333 100644
    BUILD_WARNING ("Graphviz not found, Model editor's schematic view will be disabled.")
    set (HAVE_GRAPHVIZ OFF CACHE BOOL "HAVE GRAPHVIZ" FORCE)
 diff --git a/cmake/gazebo-config.cmake.in b/cmake/gazebo-config.cmake.in
-index b57a90dd76..63ce97095e 100644
+index ac1de2c..05cdc02 100644
 --- a/cmake/gazebo-config.cmake.in
 +++ b/cmake/gazebo-config.cmake.in
-@@ -99,12 +99,13 @@ list(APPEND @PKG_NAME@_CFLAGS -I${GAZEBO_INSTALL_INCLUDE_DIR}/gazebo-@GAZEBO_MAJ
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(freeimage CONFIG)
++
+ if (@PKG_NAME@_CONFIG_INCLUDED)
+   return()
+ endif()
+@@ -99,12 +102,13 @@ list(APPEND @PKG_NAME@_CFLAGS -I${GAZEBO_INSTALL_INCLUDE_DIR}/gazebo-@GAZEBO_MAJ
  
  if (GAZEBO_HAS_BULLET)
    if (PKG_CONFIG_FOUND)
@@ -100,3 +227,16 @@ index b57a90dd76..63ce97095e 100644
        add_definitions(-DLIBBULLET_VERSION=${BULLET_VERSION})
      else()
        message(FATAL_ERROR "Error: Bullet > 2.82 not found, please install libbullet2.82-dev.")
+diff --git a/gazebo/rendering/ogre_gazebo.h b/gazebo/rendering/ogre_gazebo.h
+index a171782..c390d14 100644
+--- a/gazebo/rendering/ogre_gazebo.h
++++ b/gazebo/rendering/ogre_gazebo.h
+@@ -66,7 +66,7 @@
+ #if OGRE_VERSION_MAJOR > 1 || OGRE_VERSION_MINOR >= 7
+ #include <OGRE/RTShaderSystem/OgreRTShaderSystem.h>
+ #include <OGRE/RTShaderSystem/OgreShaderProgramSet.h>
+-#include <OGRE/RTShaderSystem/OgreShaderGLSLProgramWriter.h>
++#include <OGRE/RTShaderSystem/OgreShaderProgramWriter.h>
+ #include <OGRE/RTShaderSystem/OgreShaderProgramWriterManager.h>
+ #include <OGRE/RTShaderSystem/OgreShaderFunction.h>
+ #include <OGRE/RTShaderSystem/OgreShaderProgram.h>

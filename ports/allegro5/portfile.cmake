@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liballeg/allegro5
-    REF ${VERSION}
-    SHA512 5466e547a20bf22d606a385eeb9facc57b43c7f64689c724f82a572d4730dc62b2860829435b739a716ebca85fdc01c071f3e630048cdfd4799157e61fe815e9
+    REF "${VERSION}"
+    SHA512 fe9a1c28824b88d34045cf3a296a5671f5b6992f881678bbeb5290ec220138ab9bd3608fa241539d39a2c6eec32ef267d31f2694a4c5b06d13164eead6a13a5b
     HEAD_REF master
     PATCHES
         do-not-copy-pdbs-to-lib.patch
         msvc-arm64-atomic.patch
+        minimp3-fix.patch
 )
 
 if(VCPKG_TARGET_IS_ANDROID AND NOT ENV{ANDROID_HOME})
@@ -43,7 +44,7 @@ vcpkg_cmake_configure(
         -DWANT_GLES3=ON
         -DWANT_IMAGE_FREEIMAGE=OFF
         -DWANT_MODAUDIO=OFF # Not available on vcpkg right now
-        -DWANT_MP3=OFF
+        -DWANT_MP3=ON
         -DWANT_OPENSL=OFF # Not yet available on vcpkg
         -DWANT_POPUP_EXAMPLES=OFF
         -DWANT_TESTS=OFF

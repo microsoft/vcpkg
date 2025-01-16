@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF mysql-${VERSION}
-    SHA512 80341fe6bf6738b30721933a31c8c3f033ce8342a3a2defeb83e29219375bff274620f6f21a02ee6f4e77f0d3a858a20487436a5afd0a95ea35b0523812c52ab
+    REF "mysql-${VERSION}"
+    SHA512 f0591d263de557877a618b04871d332dc227e26c7e9b61994093dc9af29971ea6332761de5391bb8da955bd58b3b98da90722bafdbf86f36764995a70f94ae62
     HEAD_REF master
     PATCHES
         dependencies.patch

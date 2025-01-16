@@ -1,7 +1,6 @@
 {
   "name": "gmsh",
-  "version": "4.12.2",
-  "port-version": 1,
+  "version": "4.13.1",
   "description": "Gmsh is an open source 3D finite element mesh generator with a built-in CAD engine and post-processor.",
   "homepage": "https://gmsh.info",
   "license": "LGPL-2.0-or-later",

@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "azure-storage-blobs_${VERSION}"
     SHA512 b8d060c0e26e48c590ecacbe0491361a93f41dbd14a1f76564056b288e47e472e5525588122ba7d12653f43110a56ac88dc66c0ea77fff02dc708978a9dfcfa3
     HEAD_REF main
+    PATCHES
+      set_version.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-blobs")

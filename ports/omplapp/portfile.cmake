@@ -19,6 +19,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix_dependency.patch
         ${STATIC_PATCH}
+        add-include-chrono.patch #https://github.com/ompl/ompl/pull/1201
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -80,4 +81,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

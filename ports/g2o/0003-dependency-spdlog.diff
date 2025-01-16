@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c2b0a09b..2645ff66 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -177,7 +177,8 @@ find_package(QGLViewer)
+ option(G2O_USE_LOGGING "Try to use spdlog for logging" ON)
+ set(G2O_HAVE_LOGGING 0)
+ if (G2O_USE_LOGGING)
+-  find_package(spdlog 1.6 QUIET)
++  find_package(spdlog 1.6 REQUIRED CONFIG)
++  set(G2O_HAVE_LOGGING 1)
+   if (TARGET spdlog::spdlog OR TARGET spdlog::spdlog_header_only)
+     set(G2O_HAVE_LOGGING 1)
+     message(STATUS "Compiling with logging support")

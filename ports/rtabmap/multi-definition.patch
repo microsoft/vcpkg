@@ -1,5 +1,5 @@
 diff --git a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
-index 2fc12a2..5219a38 100644
+index 2fc12a2..a719512 100644
 --- a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 +++ b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 @@ -39,6 +39,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -13,13 +13,16 @@ index 2fc12a2..5219a38 100644
  // Opencv4 doesn't expose those functions below anymore, we should recopy all of them!
  int cvRodrigues2( const CvMat* src, CvMat* dst, CvMat* jacobian CV_DEFAULT(0))
  {
-@@ -919,13 +923,17 @@ void cvConvertPointsHomogeneous( const CvMat* _src, CvMat* _dst )
- 
- #endif // OpenCV3
+@@ -915,6 +919,8 @@ void cvConvertPointsHomogeneous( const CvMat* _src, CvMat* _dst )
+     }
+ }
  
 +} // namespace
 +
- namespace rtabmap
+ #endif // OpenCV4
+ 
+ #endif // OpenCV3
+@@ -923,9 +929,11 @@ namespace rtabmap
  {
  
  void
@@ -50,7 +53,7 @@ index 2fc12a2..5219a38 100644
  {
      double _om[3], _t[3] = {0}, _uu[3]={0,0,0}, _r_r[3][3], _pp[3][4];
      double _ww[3], _wr[3][3], _z[3] = {0,0,0}, _ri[3][3], _w3[3];
-@@ -1177,14 +1190,20 @@ void cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMa
+@@ -1177,19 +1190,25 @@ void cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMa
          cvConvert( &Q, matQ );
      }
  }
@@ -72,6 +75,12 @@ index 2fc12a2..5219a38 100644
  {
      cv::Mat cameraMatrix1 = _cameraMatrix1.getMat(), cameraMatrix2 = _cameraMatrix2.getMat();
      cv::Mat distCoeffs1 = _distCoeffs1.getMat(), distCoeffs2 = _distCoeffs2.getMat();
+     cv::Mat Rmat = _Rmat.getMat(), Tmat = _Tmat.getMat();
+-	
++
+ #if CV_MAJOR_VERSION > 3 || (CV_MAJOR_VERSION >= 3 && (CV_MINOR_VERSION>4 || (CV_MINOR_VERSION>=4 && CV_SUBMINOR_VERSION>=4)))
+     CvMat c_cameraMatrix1 = cvMat(cameraMatrix1);
+     CvMat c_cameraMatrix2 = cvMat(cameraMatrix2);
 @@ -1238,6 +1257,9 @@ void stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCo
          CvSize(newImageSize));
  #endif

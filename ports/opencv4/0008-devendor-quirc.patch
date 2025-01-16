@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -810,7 +810,7 @@ if(WITH_OPENVX)
+@@ -935,7 +935,7 @@ if(WITH_OPENVX)
  endif()
  
  if(WITH_QUIRC)
@@ -11,7 +11,7 @@
  
 --- a/modules/objdetect/CMakeLists.txt
 +++ b/modules/objdetect/CMakeLists.txt
-@@ -2,7 +2,5 @@         js
+@@ -13,7 +13,5 @@ ocv_define_module(objdetect
  )
  
  if(HAVE_QUIRC)

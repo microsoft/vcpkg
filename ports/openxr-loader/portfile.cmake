@@ -1,23 +1,12 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KhronosGroup/OpenXR-SDK
-    REF "release-${VERSION}"
-    SHA512 6efc7596e707f95366dbcdbac9bd7d0c20735a2175b4edf56a9e8a112cf0ab8b664069fe942313164a37119032ddbf5671bc88ab5f276005dd36e4a4dabba1c7
-    HEAD_REF master
-    PATCHES
-        fix-openxr-sdk-jsoncpp.patch
-)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SDK_SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
     REF "release-${VERSION}"
-    SHA512 04bdb0f16078209b5edd175a3396f70e1ceb8cfa382c65b8fda388e565480e3844daf68e0d987e72ed8c21d3148af0b41a2170911ec1660565887e0e5ae6d2bf
+    SHA512 c2cfab927e6ff8a5a7b90360c99192ae9cd598614965fbd4816361b19c5bf25e5524f0e73ce56774e32903addbce8a8dbcb9520203f845421d33cb33f832977b
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
-        fix-jinja2.patch
+        msvc-crt.diff
 )
 
 vcpkg_from_github(
@@ -30,17 +19,7 @@ vcpkg_from_github(
         python3_8_compatibility.patch
 )
 
-# Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and
-# vice-versa. Might be better in future iterations to patch the CMakeLists.txt for OpenXR
-if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        set(DYNAMIC_LOADER OFF)
-        set(VCPKG_CRT_LINKAGE dynamic)
-    else()
-        set(DYNAMIC_LOADER ON)
-        set(VCPKG_CRT_LINKAGE static)
-    endif()
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DYNAMIC_LOADER)
 
 vcpkg_find_acquire_program(PYTHON3)
 
@@ -48,32 +27,36 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_API_LAYERS=OFF
-        -DBUILD_TESTS=OFF
         -DBUILD_CONFORMANCE_TESTS=OFF
+        -DBUILD_TESTS=OFF
+        -DCMAKE_INSTALL_INCLUDEDIR=include
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
-        -DPYTHON_EXECUTABLE="${PYTHON3}"
-        -DBUILD_WITH_SYSTEM_JSONCPP=ON
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
+
+# "openxr-loader" matches "<name>*" for "OpenXR", so use the default.
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
+endif()
 
 # Generate the OpenXR C++ bindings
-set(ENV{OPENXR_REPO} "${SDK_SOURCE_PATH}")
+set(ENV{OPENXR_REPO} "${SOURCE_PATH}")
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -quiet  -registry "${SDK_SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr"
+    COMMAND "${PYTHON3}" "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -quiet  -registry "${SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr"
     WORKING_DIRECTORY "${HPP_SOURCE_PATH}"
     LOGNAME "openxr-hpp"
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH cmake)
-else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH lib/cmake/openxr)
-endif()
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

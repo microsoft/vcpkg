@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/optimizer
     REF "v${VERSION}"
-    SHA512 419aeaac60fa27f54708c864a2f907777aaa4de882725c83cade33053dec546ede6f95f7f133b50991e3b9b17e300c1a108729cad00ac99dc5ba5d2982b09737
+    SHA512 552d6fa261c3ce2db2e0938a5b5261676335bce9bd828b46a1e2631f3b362c748ae9a6cfe7d62072fc3774b3f506bc54aa5827b52241e6f48d78a08dea1d9316
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
-        remove-outdate-headers.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)

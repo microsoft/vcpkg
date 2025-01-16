@@ -1,0 +1,13 @@
+diff --git a/src/arena.c b/src/arena.c
+index 648ee84..ee55989 100644
+--- a/src/arena.c
++++ b/src/arena.c
+@@ -794,7 +794,7 @@ bool _mi_arena_segment_clear_abandoned(mi_segment_t* segment )
+ // clears the thread_id.
+ void _mi_arena_segment_mark_abandoned(mi_segment_t* segment) 
+ {
+-  mi_atomic_store_release(&segment->thread_id, 0);
++  mi_atomic_store_release(&segment->thread_id, (uintptr_t)0);
+   mi_assert_internal(segment->used == segment->abandoned);
+   if (segment->memid.memkind != MI_MEM_ARENA) {
+     // not in an arena; count it as abandoned and return

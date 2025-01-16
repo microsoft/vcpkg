@@ -1,6 +1,6 @@
 {
   "name": "volk",
-  "version": "1.3.295",
+  "version": "1.3.296",
   "description": [
     "Meta loader for Vulkan API.",
     "Note that the static library target volk::volk is built without platform-specific defines.",

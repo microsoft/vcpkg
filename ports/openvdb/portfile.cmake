@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
     REF "v${VERSION}"
-    SHA512 f2c90ca8435ecbacefda429341000ecb555385c746a3e0233220cd78540cee2a26cc17df7b560fdfe2dc03f2b2e960a2fa226a85980189c3e018164ccc037bd4
+    SHA512 7ea2997afa99ed1ed23422eb8b8420c7127c913432f94043ccf559b6720bba2f6e19376e955d8d9055ab765a821749936966f6e5925b9d36febaa724d866b90a
     PATCHES
         fix_cmake.patch
-        fix_nanovdb.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
@@ -71,4 +70,4 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT")

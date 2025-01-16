@@ -31,7 +31,7 @@ if(NOT z_vcpkg_using_vcpkg_find_ffmpeg)
 
 include(SelectLibraryConfigurations)
 
-if(WIN32)
+if(CMAKE_HOST_WIN32)
   set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)
 endif()
 

@@ -1,7 +1,6 @@
 {
   "name": "librtmp",
-  "version-date": "2019-11-11",
-  "port-version": 4,
+  "version-date": "2024-03-01",
   "description": "RTMPDump Real-Time Messaging Protocol API",
   "homepage": "https://rtmpdump.mplayerhq.hu",
   "dependencies": [

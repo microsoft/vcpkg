@@ -3,9 +3,10 @@ vcpkg_from_github(
     REPO antlr/antlr4
     HEAD_REF dev
     REF "${VERSION}"
-    SHA512 79ac3cdfc8f2368c647d06aec85d87507629a75527205ff2cbf7d9802989b0c6e6a8fac76148ad101f539c9ef922e431e22ba489f899f847ccc3d3d889bb2b70
+    SHA512 afd8ecab637a0e70cddf98f63c918eab2b907f87207624e20e80a79f885d6502d4ab734a602b1707969d61944410828b689ec2f8b09c15314fe991024cde1613
     PATCHES
         set-export-macro-define-as-private.patch
+        add-include-chrono.patch # https://github.com/antlr/antlr4/pull/4738
 )
 
 set(RUNTIME_PATH "${SOURCE_PATH}/runtime/Cpp")

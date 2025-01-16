@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
     REF "${VERSION}"
-    SHA512 248340d2cde5d97b4ccfabbdf5e8f2080dba6233031fa384dcfdb98022ecfd7d7feebe38b19f9b94c2768bfef41c361417c73240ea7f8a458c6b9ea9cfedf665
+    SHA512 6d053b140a34061fcf5eb30f23f87e51dd8e80be29a3e505c42312c11198491102a79c2ca290f13971d25b9a286354ad44bd825593c076373c18f58bbc7b950e
     HEAD_REF master
     PATCHES
         dont-generate-extract-3rd-party-things.patch
+        fix-NAN-on-Win11.patch # https://github.com/ArtifexSoftware/mupdf/pull/54
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -23,7 +24,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-	${FEATURE_OPTIONS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -32,4 +33,4 @@ file(COPY "${SOURCE_PATH}/include/mupdf" DESTINATION "${CURRENT_PACKAGES_DIR}/in
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

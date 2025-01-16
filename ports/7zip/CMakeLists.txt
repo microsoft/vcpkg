@@ -125,6 +125,10 @@ target_sources(7zip PRIVATE
     C/XzCrc64.c
     C/Xxh64.c
     C/ZstdDec.c
+    C/Md5.c
+    C/Sha3.c
+    C/Sha512.c
+    C/Sha512Opt.c
 
     CPP/Common/CRC.cpp
     CPP/Common/CrcReg.cpp
@@ -148,16 +152,10 @@ target_sources(7zip PRIVATE
     CPP/Common/XzCrc64Init.cpp
     CPP/Common/XzCrc64Reg.cpp
     CPP/Common/Xxh64Reg.cpp
-
-    CPP/Windows/FileDir.cpp
-    CPP/Windows/FileFind.cpp
-    CPP/Windows/FileIO.cpp
-    CPP/Windows/FileName.cpp
-    CPP/Windows/PropVariant.cpp
-    CPP/Windows/PropVariantUtils.cpp
-    CPP/Windows/Synchronization.cpp
-    CPP/Windows/System.cpp
-    CPP/Windows/TimeUtils.cpp
+    CPP/Common/Md5Reg.cpp
+    CPP/Common/Sha3Reg.cpp
+    CPP/Common/Sha512Prepare.cpp
+    CPP/Common/Sha512Reg.cpp
 
     CPP/7zip/Common/CreateCoder.cpp
     CPP/7zip/Common/CWrappers.cpp
@@ -180,6 +178,16 @@ target_sources(7zip PRIVATE
     CPP/7zip/Common/StreamUtils.cpp
     CPP/7zip/Common/UniqBlocks.cpp
     CPP/7zip/Common/VirtThread.cpp
+
+    CPP/Windows/FileDir.cpp
+    CPP/Windows/FileFind.cpp
+    CPP/Windows/FileIO.cpp
+    CPP/Windows/FileName.cpp
+    CPP/Windows/PropVariant.cpp
+    CPP/Windows/PropVariantUtils.cpp
+    CPP/Windows/Synchronization.cpp
+    CPP/Windows/System.cpp
+    CPP/Windows/TimeUtils.cpp
 
     CPP/7zip/Archive/ApmHandler.cpp
     CPP/7zip/Archive/ArHandler.cpp

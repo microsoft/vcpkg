@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 343e3d2..aff7929 100644
+index 12cad07..cda9f76 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -785,18 +785,18 @@ if (PLIBSYS_PLATFORM_DEFINES)
+@@ -827,10 +827,10 @@ if (PLIBSYS_PLATFORM_DEFINES)
  endif()
  
  # Add targets
@@ -14,18 +14,41 @@ index 343e3d2..aff7929 100644
 +        add_library (plibsys SHARED ${PLIBSYS_SRCS} ${PLIBSYS_PLATFORM_SRCS} ${PLIBSYS_PUBLIC_HDRS} ${PLIBSYS_PRIVATE_HDRS})
  endif()
  
+ # Prepare installation dirs
+@@ -838,6 +838,10 @@ if (NOT CMAKE_INSTALL_LIBDIR)
+         set (CMAKE_INSTALL_LIBDIR "lib")
+ endif()
+ 
++if (NOT CMAKE_INSTALL_BINDIR)
++        set (CMAKE_INSTALL_BINDIR "bin")
++endif()
++
+ if (NOT CMAKE_INSTALL_INCLUDEDIR)
+         set (CMAKE_INSTALL_INCLUDEDIR "include")
+ endif()
+@@ -846,16 +850,16 @@ set (PLIBSYS_INCL_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/plibsys)
+ 
  # Add include directories
  if (COMMAND target_include_directories)
--        target_include_directories (plibsys PUBLIC ${PLIBSYS_INCLUDE_DIRS})
+-        target_include_directories (plibsys PUBLIC
+-                "$<BUILD_INTERFACE:${PLIBSYS_INCLUDE_DIRS}>"
+-                "$<INSTALL_INTERFACE:${PLIBSYS_INCL_INSTALL_DIR}>"
+-        )
 -
          if (PLIBSYS_BUILD_STATIC)
-                 target_include_directories (plibsysstatic PUBLIC ${PLIBSYS_INCLUDE_DIRS})
+                 target_include_directories (plibsysstatic PUBLIC
+                         "$<BUILD_INTERFACE:${PLIBSYS_INCLUDE_DIRS}>"
+                         "$<INSTALL_INTERFACE:${PLIBSYS_INCL_INSTALL_DIR}>"
+                 )
 +        else()
-+                target_include_directories (plibsys PUBLIC ${PLIBSYS_INCLUDE_DIRS})
++                target_include_directories (plibsys PUBLIC
++                        "$<BUILD_INTERFACE:${PLIBSYS_INCLUDE_DIRS}>"
++                        "$<INSTALL_INTERFACE:${PLIBSYS_INCL_INSTALL_DIR}>"
++        )
          endif()
  else()
          include_directories (${PLIBSYS_INCLUDE_DIRS})
-@@ -804,15 +804,16 @@ endif()
+@@ -863,15 +867,16 @@ endif()
  
  # Add compile definitions
  if (COMMAND target_compile_definitions)
@@ -44,7 +67,7 @@ index 343e3d2..aff7929 100644
  set_target_properties (plibsys PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
  set_target_properties (plibsys PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
  set_target_properties (plibsys PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
-@@ -820,6 +821,7 @@ set_target_properties (plibsys PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}
+@@ -884,6 +889,7 @@ endif()
  if (NOT PLIBSYS_TARGET_OS STREQUAL os2 AND NOT PLIBSYS_TARGET_OS STREQUAL amigaos)
          set_target_properties (plibsys PROPERTIES SOVERSION ${PLIBSYS_SOVERSION})
  endif()
@@ -52,7 +75,7 @@ index 343e3d2..aff7929 100644
  
  if (PLIBSYS_BUILD_STATIC)
          set_target_properties (plibsysstatic PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
-@@ -834,10 +836,10 @@ if (PLIBSYS_PLATFORM_CFLAGS)
+@@ -898,10 +904,10 @@ if (PLIBSYS_PLATFORM_CFLAGS)
                  set (PLIBSYS_PLATFORM_CFLAGS_STR "${PLIBSYS_PLATFORM_CFLAGS_STR} ${PLATFORM_CFLAG}")
          endforeach()
  
@@ -65,7 +88,7 @@ index 343e3d2..aff7929 100644
          endif()
  endif()
  
-@@ -846,29 +848,30 @@ if (PLIBSYS_PLATFORM_LDFLAGS)
+@@ -910,29 +916,29 @@ if (PLIBSYS_PLATFORM_LDFLAGS)
                  set (PLIBSYS_PLATFORM_LDFLAGS_STR "${PLIBSYS_PLATFORM_LDFLAGS_STR} ${PLATFORM_LDFLAG}")
          endforeach()
  
@@ -79,12 +102,11 @@ index 343e3d2..aff7929 100644
  endif()
  
 -target_link_libraries (plibsys ${PLIBSYS_PLATFORM_LINK_LIBRARIES})
- 
+-
  if (PLIBSYS_BUILD_STATIC)
--        target_link_libraries (plibsysstatic ${PLIBSYS_PLATFORM_LINK_LIBRARIES})
-+    target_link_libraries (plibsysstatic ${PLIBSYS_PLATFORM_LINK_LIBRARIES})
+         target_link_libraries (plibsysstatic ${PLIBSYS_PLATFORM_LINK_LIBRARIES})
 +else()
-+    target_link_libraries (plibsys ${PLIBSYS_PLATFORM_LINK_LIBRARIES})
++        target_link_libraries (plibsys ${PLIBSYS_PLATFORM_LINK_LIBRARIES})
  endif()
  
  if (PLIBSYS_BUILD_STATIC)
@@ -103,7 +125,7 @@ index 343e3d2..aff7929 100644
                  COMPONENT Core
          )
  
-@@ -878,11 +881,6 @@ if (PLIBSYS_NATIVE_WINDOWS)
+@@ -942,11 +948,6 @@ if (PLIBSYS_NATIVE_WINDOWS)
  
          set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
          include (InstallRequiredSystemLibraries)
@@ -114,20 +136,11 @@ index 343e3d2..aff7929 100644
 -        )
  endif()
  
- # Prepare installation dirs
-@@ -890,18 +888,18 @@ if (NOT CMAKE_INSTALL_LIBDIR)
-         set (CMAKE_INSTALL_LIBDIR "lib")
- endif()
+ set (PLIBSYS_EXPORT_NAME plibsys-targets)
+@@ -974,13 +975,9 @@ endif()
  
-+if (NOT CMAKE_INSTALL_BINDIR)
-+        set (CMAKE_INSTALL_BINDIR "bin")
-+endif()
-+
- if (NOT CMAKE_INSTALL_INCLUDEDIR)
-         set (CMAKE_INSTALL_INCLUDEDIR "include")
- endif()
- 
- install (TARGETS ${PLIBSYS_INSTALL_TARGETS} EXPORT plibsys-targets
+ install (TARGETS ${PLIBSYS_INSTALL_TARGETS}
+         EXPORT ${PLIBSYS_EXPORT_NAME}
 -        DESTINATION ${CMAKE_INSTALL_LIBDIR}
 -        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 -        COMPONENT Core

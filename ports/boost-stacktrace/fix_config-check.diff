@@ -20,3 +20,17 @@ index 1cb895570d..4638618d56 100644
  
  option(BOOST_STACKTRACE_ENABLE_NOOP "Boost.Stacktrace: build boost_stacktrace_noop" ON)
  option(BOOST_STACKTRACE_ENABLE_BACKTRACE "Boost.Stacktrace: build boost_stacktrace_backtrace" ${BOOST_STACKTRACE_HAS_BACKTRACE})
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,7 +90,10 @@ message(STATUS "Boost.Stacktrace: "
+ )
+ 
+ stacktrace_add_library(noop ${BOOST_STACKTRACE_ENABLE_NOOP} "" "")
+-stacktrace_add_library(backtrace ${BOOST_STACKTRACE_ENABLE_BACKTRACE} "backtrace;${CMAKE_DL_LIBS}" "")
++if(BOOST_STACKTRACE_ENABLE_BACKTRACE)
++  find_library(BACKTRACE_LIBRARY_PATH NAMES backtrace REQUIRED)
++  stacktrace_add_library(backtrace ${BOOST_STACKTRACE_ENABLE_BACKTRACE} "${BACKTRACE_LIBRARY_PATH};${CMAKE_DL_LIBS}" "")
++endif()
+ stacktrace_add_library(addr2line ${BOOST_STACKTRACE_ENABLE_ADDR2LINE} "${CMAKE_DL_LIBS}" "")
+ stacktrace_add_library(basic ${BOOST_STACKTRACE_ENABLE_BASIC} "${CMAKE_DL_LIBS}" "")
+ stacktrace_add_library(windbg ${BOOST_STACKTRACE_ENABLE_WINDBG} "dbgeng;ole32" "_GNU_SOURCE=1")

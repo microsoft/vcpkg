@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e656184..776c88a 100644
+index 0e855c77..36ea4195 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -225,8 +225,8 @@ message("zlib version: " ${ZLIB_VERSION})
+@@ -230,8 +230,8 @@ message("zlib version: " ${ZLIB_VERSION})
  
  # MINIZIP
  if (USE_SYSTEM_MINIZIP)
--    find_package(MINIZIP REQUIRED "1.0")
+-    find_package(MINIZIP "1.0" REQUIRED)
 -    list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS})
 +    find_package(MINIZIP NAMES unofficial-minizip REQUIRED)
 +    set(MINIZIP_LIBRARIES unofficial::minizip::minizip)

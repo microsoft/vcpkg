@@ -1,17 +1,10 @@
 {
   "name": "sfml",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
   "dependencies": [
-    "freetype",
-    "libflac",
-    "libogg",
-    "libvorbis",
-    "openal-soft",
-    "opengl",
-    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,5 +13,48 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "audio",
+    "graphics",
+    "network",
+    "window"
+  ],
+  "features": {
+    "audio": {
+      "description": "Use sfml-audio library",
+      "dependencies": [
+        "libflac",
+        "libogg",
+        "libvorbis",
+        "openal-soft"
+      ]
+    },
+    "graphics": {
+      "description": "Use sfml-graphics library",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "sfml",
+          "default-features": false,
+          "features": [
+            "window"
+          ]
+        },
+        "stb"
+      ]
+    },
+    "network": {
+      "description": "Use sfml-network library"
+    },
+    "window": {
+      "description": "Use sfml-window library",
+      "dependencies": [
+        "opengl"
+      ]
+    }
+  }
 }

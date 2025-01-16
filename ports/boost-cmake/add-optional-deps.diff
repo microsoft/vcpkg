@@ -1,20 +1,3 @@
-diff --git a/include/BoostInstall.cmake b/include/BoostInstall.cmake
-index f9342f1715..a6bd9c349a 100644
---- a/include/BoostInstall.cmake	
-+++ b/include/BoostInstall.cmake
-@@ -315,6 +315,12 @@ function(boost_install_target)
-         string(APPEND CONFIG_FILE_CONTENTS "  find_dependency(boost_${CMAKE_MATCH_1} ${__VERSION} EXACT)\n")
-         string(APPEND CONFIG_FILE_CONTENTS "endif()\n")
- 
-+      elseif(dep MATCHES "^\\$<TARGET_NAME_IF_EXISTS:Boost::(.*)>$")
-+
-+        string(APPEND CONFIG_FILE_CONTENTS "if(NOT boost_${CMAKE_MATCH_1}_FOUND)\n")
-+        string(APPEND CONFIG_FILE_CONTENTS "  find_package(boost_${CMAKE_MATCH_1} ${__VERSION} EXACT QUIET)\n")
-+        string(APPEND CONFIG_FILE_CONTENTS "endif()\n")
-+
-       elseif(dep STREQUAL "Threads::Threads")
- 
-         string(APPEND CONFIG_FILE_CONTENTS "set(THREADS_PREFER_PTHREAD_FLAG ON)\n")
 diff --git a/include/BoostRoot.cmake b/include/BoostRoot.cmake
 index f356666739..1843f528cd 100644
 --- a/include/BoostRoot.cmake	
@@ -31,7 +14,7 @@ index f356666739..1843f528cd 100644
          string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
          list(APPEND result ${dep})
  
-+      elseif(line MATCHES "^[ ]*$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
++      elseif(line MATCHES "^[ ]*\\$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
 +
 +        list(APPEND optional_components ${CMAKE_MATCH_1})
 +        string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})

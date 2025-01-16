@@ -1,6 +1,7 @@
 {
   "name": "arpack-ng",
   "version": "3.9.1",
+  "port-version": 1,
   "description": "ARPACK-NG is a collection of Fortran77 subroutines designed to solve large scale eigenvalue problems.",
   "homepage": "https://github.com/opencollab/arpack-ng",
   "license": "BSD-3-Clause",

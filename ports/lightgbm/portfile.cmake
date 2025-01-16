@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/LightGBM
     REF v${VERSION}
-    SHA512 295ea23ec55164232f1dde6aa46bcfa616e2fe4852eb2e3492e681477a8d7757875d60379c4d463a35a6a9db56b1f4bce86b3a03bed56ea3d36aadb94a3b38eb
+    SHA512 f968f984a0881a5eadd898dded367b799b619e3cc80415dec8b623897e84d7e1e1034f20179125354b93759ea1b8a3e334cfa506427442810ef098bc93fd4634
     PATCHES
         vcpkg_lightgbm_use_vcpkg_libs.patch
 )

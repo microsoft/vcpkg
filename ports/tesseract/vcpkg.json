@@ -1,6 +1,6 @@
 {
   "name": "tesseract",
-  "version": "5.4.1",
+  "version": "5.5.0",
   "port-version": 1,
   "description": "An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.",
   "homepage": "https://github.com/tesseract-ocr/tesseract",

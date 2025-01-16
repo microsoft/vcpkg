@@ -4,18 +4,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
     REF  "${VERSION}"
-    SHA512 54316e955ce130ec8bb3795b45222fe38c6079cb29e4b5612a97bed8dd9876d378009af3ab0c554c0ded49ca5fde4544e87e3dc8a8c5f176947d439d73c662ee
+    SHA512 b00e371686bbd8aca36d70ffb079a460323e9aecef7431d78018891d27c9af9fe0cad9f489b7e98b3c9ef9786192d75e72fe6835fb6933983ccb0ecf05bb99df
     HEAD_REF master
     PATCHES
         fix-install-path.patch
-        fix-msc-ver.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
         URLS "https://github.com/microsoft/bond/releases/download/${VERSION}/gbc-${VERSION}-amd64.zip"
         FILENAME "gbc-${VERSION}-amd64.zip"
-        SHA512 fde9dc862b71c843278dcbb90137b86e23869d79036367008f01165f22b11b067bd78d21eff8385ab0e96d80fa3194380bdd661199c44a8552252bcc4c9e18c0
+        SHA512 4CD92F0665E36CB718311A237DF80B8CD93BFE33971F6460B88A1B74E9E2237D6AEA146766D6AE92674E2DDBBB3245CEBB199FF5BA82163FE69781340E0479AE
     )
 
     # Clear the generator to prevent it from updating

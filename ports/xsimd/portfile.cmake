@@ -1,17 +1,9 @@
-vcpkg_download_distfile(
-    WIN_PATCHES
-    URLS "https://github.com/xtensor-stack/xsimd/pull/1040/commits/e8cb862e434eb1e367afb83e1a3685bccff3e566.diff?full_index=1"
-    FILENAME "xsimd-e8cb862e434eb1e367afb83e1a3685bccff3e566.patch"
-    SHA512 e584033fb79c602a19222c177d5db28f9887dd17e741844d57f2236a5749ac4c02cc0740f8011ca990602887a6ee3dd21ae0b695455c447686b1a6c8bda2e092
-)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xsimd
     REF "${VERSION}"
-    SHA512 cdc42ddad3353297cf25ea2b6b3f09967f5f388efc26241f2997979fdbbac072819ff771145bc5bfa86cb326cca84b4119e8e6e3f658407961cf203a40603a7f
+    SHA512 a446aa29364c12785b9fc600341cd21b8fcf3cff6e07f6093b5cd3669a0c26397ccd75f0504c52da7f1843e2844e8b909bebbe1e64f0f2d8355f0ee0eadf1263
     HEAD_REF master
-    PATCHES
-        "${WIN_PATCHES}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,6 +23,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 

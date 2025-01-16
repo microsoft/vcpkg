@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "azure-storage-queues_${VERSION}"
     SHA512 919353a8cf8c98906bfbe6795245c81ece5a82914f01c8d7083fd6e44f13877f42aefee3ed16c2078befa89e520339b8430e8dc115064bdffdd366b8c83684da
     HEAD_REF main
+    PATCHES
+      set_version.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-queues")

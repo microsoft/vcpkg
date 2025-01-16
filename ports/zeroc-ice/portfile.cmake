@@ -1,13 +1,11 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeroc-ice/ice
     REF "v${VERSION}"
-    SHA512 07d7c439fbe1f69d808d05a11f32e09cdd8d4df2a93b6f253496304e0a521d417212ae688e316b4450dae406b59d1a460025b51ecd0614c69e48d86c0a6f81c5
+    SHA512 638ca8721db1559aae80c43663a1210ba9c8f72d58003f2d9457048c9100bee74036910917d1d10bf5b998ba49f0878177e094b436c83d3deb63613f9075483d
     PATCHES
         mcppd_fix.patch
         no-werror.patch
-        fix-missing-functional.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)

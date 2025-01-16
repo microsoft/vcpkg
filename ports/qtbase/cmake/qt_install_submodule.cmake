@@ -12,6 +12,10 @@ if(VCPKG_TARGET_IS_ANDROID AND NOT ANDROID_SDK_ROOT)
     message(FATAL_ERROR "${PORT} requires ANDROID_SDK_ROOT to be set. Consider adding it to the triplet." )
 endif()
 
+if(VCPKG_TARGET_IS_OSX AND (NOT VCPKG_OSX_DEPLOYMENT_TARGET OR VCPKG_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "15.0"))
+    message(WARNING "Qt6 does not yet cleanly support macOS 15.0, consider adding set(VCPKG_OSX_DEPLOYMENT_TARGET 14.0) or earlier to a custom triplet (https://learn.microsoft.com/en-us/vcpkg/users/examples/overlay-triplets-linux-dynamic#overriding-default-triplets).")
+endif()
+
 function(qt_download_submodule_impl)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "" "SUBMODULE" "PATCHES")
 

@@ -1,12 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 273a841..02fb40c 100644
+index 301501d..c7e8e42 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -16,11 +16,6 @@ option(nanopb_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON)
+@@ -16,12 +16,6 @@ option(nanopb_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON)
  
  set(nanopb_PYTHON_INSTDIR_OVERRIDE "" CACHE PATH "Override the default python installation directory with the given path")
  
--find_program(nanopb_PROTOC_PATH protoc HINTS generator-bin generator)
+-find_program(nanopb_PROTOC_PATH protoc PATHS generator-bin generator NO_DEFAULT_PATH)
+-find_program(nanopb_PROTOC_PATH protoc)
 -if(NOT EXISTS ${nanopb_PROTOC_PATH})
 -    message(FATAL_ERROR "protoc compiler not found")
 -endif()
@@ -14,7 +15,7 @@ index 273a841..02fb40c 100644
  if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
      set(CMAKE_DEBUG_POSTFIX "d")
  endif()
-@@ -43,7 +38,6 @@ endif()
+@@ -44,7 +38,6 @@ endif()
  
  # Determine Python module installation path
  if (NOT nanopb_PYTHON_INSTDIR_OVERRIDE)
@@ -22,7 +23,7 @@ index 273a841..02fb40c 100644
      file(TO_CMAKE_PATH "${Python_SITELIB}" PYTHON_INSTDIR)
  else()
      set(PYTHON_INSTDIR ${nanopb_PYTHON_INSTDIR_OVERRIDE})
-@@ -53,6 +47,10 @@ message(STATUS "Python install dir: ${PYTHON_INSTDIR}")
+@@ -54,6 +47,10 @@ message(STATUS "Python install dir: ${PYTHON_INSTDIR}")
  # Package nanopb generator as Python module 'nanopb'
  if(nanopb_BUILD_GENERATOR)
      # Copy Python code files related to the generator
@@ -33,7 +34,7 @@ index 273a841..02fb40c 100644
      add_custom_target(nanopb_generator ALL
          COMMAND ${CMAKE_COMMAND} -E make_directory
              ${PROJECT_BINARY_DIR}/nanopb/generator/proto
-@@ -82,24 +80,14 @@ if(nanopb_BUILD_GENERATOR)
+@@ -83,24 +80,14 @@ if(nanopb_BUILD_GENERATOR)
  
      # Install Python module files
      install(

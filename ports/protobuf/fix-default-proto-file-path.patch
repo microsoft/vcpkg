@@ -1,8 +1,8 @@
 diff --git a/src/google/protobuf/compiler/command_line_interface.cc b/src/google/protobuf/compiler/command_line_interface.cc
-index f9e9666..d453a4c 100644
+index cd95c8b41..d4825180d 100644
 --- a/src/google/protobuf/compiler/command_line_interface.cc
 +++ b/src/google/protobuf/compiler/command_line_interface.cc
-@@ -280,12 +280,15 @@ void AddDefaultProtoPaths(
+@@ -272,12 +272,15 @@ void AddDefaultProtoPaths(
      paths->emplace_back("", std::move(include_path));
      return;
    }

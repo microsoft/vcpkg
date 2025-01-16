@@ -1,0 +1,11 @@
+kdstatemachineeditor provides CMake targets:
+
+  find_package(KDSME-qt6 CONFIG REQUIRED)
+  # Core library
+  target_link_libraries(main PRIVATE KDSME::Core)
+  # View library
+  target_link_libraries(main PRIVATE KDSME::View)
+  # Debug interface client library
+  target_link_libraries(main PRIVATE KDSME::DebugInterfaceClient)
+  # Debug interface server library
+  target_link_libraries(main PRIVATE KDSME::DebugInterfaceSource)

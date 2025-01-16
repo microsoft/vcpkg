@@ -1,6 +1,6 @@
 {
   "name": "sqlite3",
-  "version": "3.46.1",
+  "version": "3.47.2",
   "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
   "homepage": "https://sqlite.org/",
   "license": "blessing",
@@ -69,6 +69,12 @@
     "tool": {
       "description": "Build sqlite3 executable",
       "supports": "!uwp"
+    },
+    "unicode": {
+      "description": "Enable unicode support",
+      "dependencies": [
+        "icu"
+      ]
     },
     "zlib": {
       "description": "Build sqlite3 command line tool with zlib support; has no effect on the library itself",

@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 4b472bb66020ddea715a4c3d19613b4ec9e389a32c8b6b9089d1a160ab23d3ffc6a2e77e43d7d4b1a1546aa5ea0ac04fdeee7a5496739d51f3ab0d1fe6961f62
+    SHA512 a288bd91f3f0b7adb0d5dcfc6e7fef2f60a18ea56545e63e67d449a72986e710c2f58c8782d0950ef48f7a6bf331af0bc2019240638ece4cdacebec4571c920e
     HEAD_REF main
-    PATCHES 
-        fix-glog.patch
-        0002-fix-dependency.patch
+    PATCHES
+        fix-deps.patch
+        fix-test.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -19,7 +19,11 @@ file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-Dthriftpy=OFF"
+)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fbthrift)
 
@@ -30,6 +34,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/transport/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/async/metadata/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/debug_thrift_data_difference/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/folly_dynamic/test"
@@ -38,8 +43,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/detail/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/tool"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/demo"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/runtime/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/schema/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
@@ -50,6 +57,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/compression/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/payload/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"

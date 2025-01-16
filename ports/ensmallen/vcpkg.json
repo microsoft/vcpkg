@@ -1,6 +1,6 @@
 {
   "name": "ensmallen",
-  "version-semver": "2.19.1",
+  "version-semver": "2.21.1",
   "description": "A header-only C++ library for mathematical optimization",
   "homepage": "http://ensmallen.org/",
   "license": "BSD-3-Clause",

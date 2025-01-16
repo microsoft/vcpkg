@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch
         add_ref_to_page_malloc_zero.patch
+        fix-param.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

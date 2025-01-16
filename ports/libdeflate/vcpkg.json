@@ -1,6 +1,6 @@
 {
   "name": "libdeflate",
-  "version": "1.21",
+  "version": "1.23",
   "description": "libdeflate is a library for fast, whole-buffer DEFLATE-based compression and decompression.",
   "homepage": "https://github.com/ebiggers/libdeflate",
   "license": "MIT",

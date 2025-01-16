@@ -2,9 +2,9 @@ diff --git a/libavfilter/textutils.c b/libavfilter/textutils.c
 index ef658d0..c61b0ad 100644
 --- a/libavfilter/textutils.c
 +++ b/libavfilter/textutils.c
-@@ -30,6 +30,7 @@
- #include "libavutil/error.h"
+@@ -31,6 +31,7 @@
  #include "libavutil/file.h"
+ #include "libavutil/mem.h"
  #include "libavutil/time.h"
 +#include "libavutil/time_internal.h"
  

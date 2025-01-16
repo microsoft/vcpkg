@@ -1,10 +1,11 @@
 {
   "name": "qtquick3d",
-  "version": "6.7.2",
+  "version": "6.8.1",
   "description": "Qt Quick 3D provides a high-level API for creating 3D content and 3D user interfaces based on Qt Quick.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    "meshoptimizer",
     {
       "name": "qtbase",
       "default-features": false,
@@ -21,9 +22,6 @@
     "qtquicktimeline",
     "qtshadertools"
   ],
-  "default-features": [
-    "default-features"
-  ],
   "features": {
     "assimp": {
       "description": "assimp",
@@ -31,8 +29,11 @@
         "assimp"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "openxr": {
+      "description": "OpenXR support",
+      "dependencies": [
+        "openxr-loader"
+      ]
     }
   }
 }

@@ -1,6 +1,7 @@
 {
   "name": "gdal",
-  "version-semver": "3.9.2",
+  "version-semver": "3.10.0",
+  "port-version": 2,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -41,6 +42,15 @@
     "default-features"
   ],
   "features": {
+    "archive": {
+      "description": "Enable libarchive support",
+      "dependencies": [
+        {
+          "name": "libarchive",
+          "default-features": false
+        }
+      ]
+    },
     "aws-ec2-windows": {
       "description": "Optimized detection of AWS EC2 Windows hosts",
       "dependencies": [

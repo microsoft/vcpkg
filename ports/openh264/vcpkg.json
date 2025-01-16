@@ -1,11 +1,14 @@
 {
   "name": "openh264",
-  "version-date": "2021-03-16",
-  "port-version": 4,
+  "version": "2.5.0",
   "description": "OpenH264 is a codec library which supports H.264 encoding and decoding. It is suitable for use in real time applications such as WebRTC.",
   "homepage": "https://www.openh264.org/",
-  "supports": "!uwp",
+  "license": "BSD-2-Clause",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

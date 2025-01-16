@@ -57,7 +57,7 @@ diff --git a/src/backends/sentry_backend_crashpad.cpp b/src/backends/sentry_back
 index 711dc57..4c1d473 100644
 --- a/src/backends/sentry_backend_crashpad.cpp
 +++ b/src/backends/sentry_backend_crashpad.cpp
-@@ -115,7 +115,7 @@ crashpad_backend_user_consent_changed(sentry_backend_t *backend)
+@@ -120,7 +120,7 @@ crashpad_backend_user_consent_changed(sentry_backend_t *backend)
      data->db->GetSettings()->SetUploadsEnabled(!sentry__should_skip_upload());
  }
 
@@ -66,9 +66,9 @@ index 711dc57..4c1d473 100644
  static void
  crashpad_register_wer_module(
      const sentry_path_t *absolute_handler_path, const crashpad_state_t *data)
-@@ -413,7 +413,7 @@ crashpad_backend_startup(
-         return 1;
-     }
+@@ -445,7 +445,7 @@ crashpad_backend_startup(
+         /* asynchronous_start */ false, attachments);
+     sentry_free(minidump_url);
 
 -#ifdef SENTRY_PLATFORM_WINDOWS
 +#if defined(SENTRY_PLATFORM_WINDOWS) && defined(SENTRY_TRANSPORT_CRASHPAD_USE_WER)

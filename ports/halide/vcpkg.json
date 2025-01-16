@@ -1,6 +1,6 @@
 {
   "name": "halide",
-  "version": "17.0.1",
+  "version": "18.0.0",
   "port-version": 1,
   "description": "Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.",
   "homepage": "https://github.com/halide/Halide",

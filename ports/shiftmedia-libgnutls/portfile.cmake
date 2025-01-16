@@ -4,14 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/gnutls
     REF ${VERSION}
-    SHA512 5bd515da85f9e87b98f09a29472f788e869ccc3355f9583fbb4215d954cc5f97239e017120a0b358d259e58d0bd8e538fd00ea102fdbc1b29363cd92f06d0299
+    SHA512 db318ee923d0810484e98342cc395624efc52b7227020fc14b9fa9ae63e4b8bf254cfd90470e051cd992fb167fb839fff340430a223bcc50d1422f1738a5b599
     HEAD_REF master
     PATCHES
         external-libtasn1.patch
         pkgconfig.patch
-        ssize_t_already_define.patch
-        fix-warnings.patch
-        mkdir.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
@@ -165,12 +162,14 @@ set(includedir "\${prefix}/include")
 set(GNUTLS_LIBS "-lgnutls")
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gnutls.pc" @ONLY)
 
-set(prefix "${CURRENT_INSTALLED_DIR}/debug")
-set(exec_prefix "\${prefix}")
-set(libdir "\${prefix}/lib")
-set(includedir "\${prefix}/../include")
-set(GNUTLS_LIBS "-lgnutlsd")
-configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gnutls.pc" @ONLY)
+if(NOT VCPKG_BUILD_TYPE)
+  set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+  set(exec_prefix "\${prefix}")
+  set(libdir "\${prefix}/lib")
+  set(includedir "\${prefix}/../include")
+  set(GNUTLS_LIBS "-lgnutlsd")
+  configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gnutls.pc" @ONLY)
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()

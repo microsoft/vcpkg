@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-07-11'
+  linux-docker-image: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2024-12-16'
 
 parameters:
   - name: vcpkgToolSha
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
-    default: 'use default'
+    default:  'use default'
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
@@ -48,6 +48,12 @@ jobs:
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: arm64_windows
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: arm64_windows_static_md
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
