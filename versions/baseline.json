@@ -5557,7 +5557,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2024-09-05",
+      "baseline": "2025-01-13",
       "port-version": 0
     },
     "llgi": {
