@@ -47,6 +47,7 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" "
 include(CMakeFindDependencyMacro)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_dependency(Threads)
+find_dependency(OpenSSL)
 ${cmake_config}"
 )
 
