@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 f57857a0853fa0980bb2c07d25d22240ce27a005a41cc99bf25ca0148fe7c9d5717eeb393519a37f05b40d4c114dde30e959e994700aece1ca2c45e68cd9bf77
+    SHA512 f19e422cf15c6242244fc487982ae2d94cd354a6159e2340bb019ed0eeb7071488a0aa0fddd37e9318a179dac51f58ec208323d31b2f23f4e4dc85ccacb5c4ac
     HEAD_REF main
 )
 
