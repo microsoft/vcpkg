@@ -16,7 +16,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
+    SHA512 bdccfdf9441e704862745098014aa02a27c6a4cbcefbbf430496169d30be6b72d91081754666ceb4f1a79daceb26de1da149627f205121ee1a83efe33e354525
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -28,6 +28,9 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         parallel-gettext-tools.patch
         config-step-order.patch
+        iconv-ostream-flush.diff
+        # Doesn't do the same detection as other configure scripts
+        libtextstyle-unsetenv.diff
 )
 
 set(subdirs "")
@@ -95,6 +98,15 @@ if(subdirs)
         # Relying on gettext-libintl
         list(APPEND OPTIONS --with-included-gettext=no)
     endif()
+    if(VCPKG_TARGET_IS_OSX)
+        # Pristine gnulib no longer accepts iconv in macOS 14.4,
+        # https://lists.gnu.org/archive/html/bug-gnulib/2024-05/msg00375.html
+        # Until vcpkg builds GNU libiconv for macOS, this port keeps the previous behavior.
+        list(APPEND OPTIONS
+            am_cv_func_iconv=yes
+            am_cv_lib_iconv=yes
+        )
+    endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND OPTIONS
             # Faster, but not for export
@@ -112,6 +124,9 @@ if(subdirs)
         )
         if(NOT VCPKG_TARGET_IS_MINGW)
             list(APPEND OPTIONS
+                # Misdetected (?) with gettext-0.23 gnulib (libtextstyle?)
+                ac_cv_func_unsetenv=no
+                ac_cv_have_decl_unsetenv=no
                 # Don't take from port dirent
                 ac_cv_header_dirent_h=no
                 # Don't take from port getopt-win32
@@ -148,6 +163,12 @@ if(subdirs)
         OPTIONS_RELEASE
             "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
+    foreach(subdir IN ITEMS gettext-runtime libtextstyle gettext-tools)
+        file(COPY_FILE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}/config.log"
+            "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-${subdir}-config.log"
+        )
+    endforeach()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
@@ -178,7 +199,8 @@ if(subdirs)
 endif()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/libexec/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/libexec/gettext")
 else()
     # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
@@ -191,12 +213,13 @@ endif()
 file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/build-to-host.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/glibc2.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/nls.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/host-cpu-c-abi.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/iconv.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/intlmacosx.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
