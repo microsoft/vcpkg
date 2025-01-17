@@ -1,0 +1,3 @@
+The package gz-cmake4 provides CMake integration:
+
+    find_package(gz-cmake4 CONFIG REQUIRED)

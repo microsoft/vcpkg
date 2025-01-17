@@ -3344,9 +3344,21 @@
       "baseline": "3.4.1",
       "port-version": 5
     },
+    "gz-cmake4": {
+      "baseline": "4.1.0",
+      "port-version": 0
+    },
     "gz-common5": {
       "baseline": "5.4.1",
       "port-version": 3
+    },
+    "gz-common6": {
+      "baseline": "6.0.1",
+      "port-version": 0
+    },
+    "gz-fuel-tools10": {
+      "baseline": "10.0.0",
+      "port-version": 0
     },
     "gz-fuel-tools8": {
       "baseline": "8.1.0",
@@ -3356,8 +3368,20 @@
       "baseline": "7.2.1",
       "port-version": 0
     },
+    "gz-gui9": {
+      "baseline": "9.0.0",
+      "port-version": 0
+    },
     "gz-math7": {
       "baseline": "7.3.0",
+      "port-version": 0
+    },
+    "gz-math8": {
+      "baseline": "8.1.0",
+      "port-version": 0
+    },
+    "gz-msgs11": {
+      "baseline": "11.0.2",
       "port-version": 0
     },
     "gz-msgs9": {
@@ -3368,28 +3392,52 @@
       "baseline": "6.5.1",
       "port-version": 1
     },
+    "gz-physics8": {
+      "baseline": "8.0.0",
+      "port-version": 0
+    },
     "gz-plugin2": {
       "baseline": "2.0.1",
+      "port-version": 0
+    },
+    "gz-plugin3": {
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "gz-rendering7": {
       "baseline": "7.4.1",
       "port-version": 1
     },
+    "gz-rendering9": {
+      "baseline": "9.0.0",
+      "port-version": 0
+    },
     "gz-sensors7": {
       "baseline": "7.3.0",
       "port-version": 0
     },
+    "gz-sensors9": {
+      "baseline": "9.0.0",
+      "port-version": 0
+    },
     "gz-tools2": {
-      "baseline": "2.0.0",
-      "port-version": 1
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "gz-transport12": {
       "baseline": "12.2.1",
       "port-version": 0
     },
+    "gz-transport14": {
+      "baseline": "14.0.0",
+      "port-version": 0
+    },
     "gz-utils2": {
       "baseline": "2.0.0",
+      "port-version": 0
+    },
+    "gz-utils3": {
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "gzip-hpp": {
@@ -8218,6 +8266,10 @@
     },
     "sdformat13": {
       "baseline": "13.6.0",
+      "port-version": 0
+    },
+    "sdformat15": {
+      "baseline": "15.1.1",
       "port-version": 0
     },
     "sdformat6": {
