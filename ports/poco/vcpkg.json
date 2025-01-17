@@ -22,10 +22,14 @@
     "zlib"
   ],
   "default-features": [
+    "cppparser",
     "mongodb",
     "pocodoc"
   ],
   "features": {
+    "cppparser": {
+      "description": "C++ parser support for POCO"
+    },
     "crypto": {
       "description": "Crypto support",
       "dependencies": [

@@ -30,6 +30,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        cppparser   ENABLE_CPPPARSER
         crypto      ENABLE_CRYPTO
         mongodb     ENABLE_MONGODB
         netssl      ENABLE_NETSSL
@@ -71,7 +72,6 @@ vcpkg_cmake_configure(
         -DENABLE_NET=ON
         -DENABLE_SEVENZIP=ON
         -DENABLE_ZIP=ON
-        -DENABLE_CPPPARSER=ON
         -DENABLE_PAGECOMPILER=ON
         -DENABLE_PAGECOMPILER_FILE2PAGE=ON
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
