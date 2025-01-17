@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 86b6169..bf7f532 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,7 +59,7 @@ add_library(${PROJECT_NAME} STATIC  ${SOURCE_FILES} ${HEADER_FILES} ${PUBLIC_HEA
+                                     ${SDF_SOURCE_FILES} ${SDF_HEADER_FILES}
+                                     ${UTILS_SOURCE_FILES} ${UTILS_HEADER_FILES})
+ 
+-target_include_directories(${PROJECT_NAME} PUBLIC include/)
++target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/> $<INSTALL_INTERFACE:include>)
+ target_include_directories(${PROJECT_NAME} PRIVATE src/)
+ 
+ # Add shaders
+@@ -236,3 +236,20 @@ if(SDFLIB_BUILD_DEBUG_APPS)
+     # target_link_libraries(ImageQueryTime PUBLIC ${PROJECT_NAME} CGAL::CGAL OpenVDB::openvdb)
+     target_link_libraries(ImageQueryTime PUBLIC ${PROJECT_NAME})
+ endif()
++
++install(TARGETS ${PROJECT_NAME} icg EXPORT unofficial-${PROJECT_NAME}Config
++    RUNTIME DESTINATION bin
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++)
++
++install(EXPORT unofficial-${PROJECT_NAME}Config
++    NAMESPACE unofficial::${PROJECT_NAME}::
++    DESTINATION share/unofficial-sdflib
++)
++install(
++    DIRECTORY "include/"    # Trailing slash is important to copy only the contents
++    DESTINATION include     # Destination folder in the install directory
++    FILES_MATCHING
++    PATTERN "*.h"           # Match header files
++)
+diff --git a/libs/CMakeLists.txt b/libs/CMakeLists.txt
+index 1fa9fe7..d1f5014 100644
+--- a/libs/CMakeLists.txt
++++ b/libs/CMakeLists.txt
+@@ -139,7 +139,7 @@ if(SDFLIB_BUILD_APPS OR SDFLIB_BUILD_DEBUG_APPS)
+ 
+ # icg
+ add_library(icg INTERFACE)
+-target_include_directories(icg INTERFACE InteractiveComputerGraphics)
++target_include_directories(icg INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/InteractiveComputerGraphics> $<INSTALL_INTERFACE:include>)
+ 
+ if(SDFLIB_BUILD_APPS OR SDFLIB_BUILD_DEBUG_APPS)
+ 	# glfw
