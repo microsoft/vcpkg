@@ -21,6 +21,9 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "pocodoc"
+  ],
   "features": {
     "crypto": {
       "description": "Crypto support",
@@ -60,6 +63,9 @@
       "dependencies": [
         "libharu"
       ]
+    },
+    "pocodoc": {
+      "description": "PocoDoc tool support"
     },
     "postgresql": {
       "description": "PostgreSQL support for POCO",

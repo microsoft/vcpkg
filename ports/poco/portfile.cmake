@@ -33,6 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         crypto      ENABLE_CRYPTO
         netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
+        pocodoc     ENABLE_POCODOC
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
@@ -71,7 +72,6 @@ vcpkg_cmake_configure(
         -DENABLE_SEVENZIP=ON
         -DENABLE_ZIP=ON
         -DENABLE_CPPPARSER=ON
-        -DENABLE_POCODOC=ON
         -DENABLE_PAGECOMPILER=ON
         -DENABLE_PAGECOMPILER_FILE2PAGE=ON
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
@@ -87,7 +87,11 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec poco-arc AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp tec poco-arc AUTO_CLEAN)
+if (ENABLE_POCODOC STREQUAL "ON")
+    vcpkg_copy_tools(TOOL_NAMES PocoDoc AUTO_CLEAN)
+endif()
+
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
