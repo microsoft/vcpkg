@@ -22,11 +22,15 @@
     "zlib"
   ],
   "default-features": [
+    "activerecord",
     "cppparser",
     "mongodb",
     "pocodoc"
   ],
   "features": {
+    "activerecord": {
+      "description": "ActiveRecord support for POCO"
+    },
     "cppparser": {
       "description": "C++ parser support for POCO"
     },
