@@ -35,14 +35,14 @@
     "opengl"
   ],
   "features": {
+    "fluid": {
+      "description": "Builds the FLUID rad tool"
+    },
     "opengl": {
       "description": "OpenGL support",
       "dependencies": [
         "opengl"
       ]
-    },
-    "fluid": {
-      "description": "Builds the FLUID rad tool"
     }
   }
 }
