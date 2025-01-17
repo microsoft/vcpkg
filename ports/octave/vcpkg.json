@@ -16,10 +16,6 @@
     "opengl",
     "pcre2",
     "readline",
-    {
-      "name": "vcpkg-make",
-      "host": true
-    },
     "zlib"
   ]
 }

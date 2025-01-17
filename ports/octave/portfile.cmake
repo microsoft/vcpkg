@@ -36,10 +36,9 @@ if(VCPKG_HOST_IS_OSX)
     message("${PORT} currently requires the following programs from the system package manager:\n    gsed\n\nIt can be installed with brew gnu-sed")
 endif()
 
-vcpkg_make_configure(
+vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTORECONF
-    LANGUAGES C CXX Fortran
+    AUTOCONFIG
     OPTIONS
     --disable-docs
     --disable-java
@@ -80,7 +79,7 @@ vcpkg_make_configure(
     --with-umfpack=no
     --with-z # yes
 )
-vcpkg_make_install()
+vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
