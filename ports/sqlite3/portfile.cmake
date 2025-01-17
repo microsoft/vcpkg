@@ -98,4 +98,11 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    "${CMAKE_CURRENT_LIST_DIR}/FindSQLite3.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+
