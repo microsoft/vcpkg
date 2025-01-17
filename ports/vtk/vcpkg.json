@@ -322,7 +322,7 @@
     },
     "tbb": {
       "description": "Use TBB multithreading parallel implementation",
-	  "dependencies": [
+      "dependencies": [
         "tbb"
       ]
     },
