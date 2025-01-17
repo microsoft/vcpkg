@@ -3849,7 +3849,7 @@
       "port-version": 2
     },
     "json-c": {
-      "baseline": "0.18",
+      "baseline": "0.18-20240915",
       "port-version": 0
     },
     "json-dto": {
