@@ -22,6 +22,7 @@
     "zlib"
   ],
   "default-features": [
+    "mongodb",
     "pocodoc"
   ],
   "features": {
@@ -36,6 +37,9 @@
       "dependencies": [
         "libmariadb"
       ]
+    },
+    "mongodb": {
+      "description": "MongoDB support for POCO"
     },
     "mysql": {
       "description": "Mysql support for POCO",

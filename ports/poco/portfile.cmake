@@ -31,6 +31,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         crypto      ENABLE_CRYPTO
+        mongodb     ENABLE_MONGODB
         netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
         pocodoc     ENABLE_POCODOC
@@ -65,7 +66,6 @@ vcpkg_cmake_configure(
         -DENABLE_ENCODINGS_COMPILER=ON
         -DENABLE_XML=ON
         -DENABLE_JSON=ON
-        -DENABLE_MONGODB=ON
         -DENABLE_REDIS=ON
         -DENABLE_UTIL=ON
         -DENABLE_NET=ON
