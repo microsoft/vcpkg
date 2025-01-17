@@ -5,7 +5,6 @@
   "description": "A thin layer of types for graphic libraries.",
   "homepage": "https://www.gtk.org/",
   "license": "MIT",
-  "supports": "!(arm & windows)",
   "dependencies": [
     "gettext",
     "glib",
