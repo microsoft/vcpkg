@@ -21,11 +21,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     vcpkg_list(APPEND options
         # avoid absolute paths
-        -DCOREAUDIO_LIBRARY=-Wl,-framework,CoreAudio
-        -DAUDIOTOOLBOX_LIBRARY=-Wl,-framework,AudioToolbox
-        -DAUDIOUNIT_LIBRARY=-Wl,-framework,AudioUnit
-        -DCOREFOUNDATION_LIBRARY=-Wl,-framework,CoreFoundation
-        -DCORESERVICES_LIBRARY=-Wl,-framework,CoreServices
+        -DCOREAUDIO_LIBRARY:STRING=-Wl,-framework,CoreAudio
+        -DAUDIOTOOLBOX_LIBRARY:STRING=-Wl,-framework,AudioToolbox
+        -DAUDIOUNIT_LIBRARY:STRING=-Wl,-framework,AudioUnit
+        -DCOREFOUNDATION_LIBRARY:STRING=-Wl,-framework,CoreFoundation
+        -DCORESERVICES_LIBRARY:STRING=-Wl,-framework,CoreServices
     )
 else()
     vcpkg_list(APPEND options
@@ -50,7 +50,10 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
