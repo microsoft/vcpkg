@@ -71,11 +71,22 @@
     {
       "name": "git",
       "os": "windows",
+      "arch": "arm64",
       "version": "2.7.4",
       "executable": "mingw64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe",
-      "sha512": "02ec40f55a6de18f305530e9415b6ce0a597359ebb9a58cf727ac84eceb0003b0f437941b76872b6568157a333c8e6e8d865a36faf874fd5f04774deb6a9387a",
-      "archive": "PortableGit-2.43.0-32-bit.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-arm64.7z.exe",
+      "sha512": "2e57cebc1f567bbb63b92825e4b9625de24bc897c4ea9aa8d88f70b5ad69c53005e062f94b60d10269855f2edd0505d5d6233c6c067d6af1bbedde66c9b856c3",
+      "archive": "PortableGit-2.47.1.2-arm64.7z.exe"
+    },
+    {
+      "name": "git",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "2.7.4",
+      "executable": "mingw64/bin/git.exe",
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-64-bit.7z.exe",
+      "sha512": "a96dd809b2dc940d871a84a2c3f2f4600552fe67f437ffeb29abb3b3da636f3534fa3118af61fca9349e97ec8dbb54210c213dee0c8beadbd9ba27a6c091dd98",
+      "archive": "PortableGit-2.47.1.2-64-bit.7z.exe"
     },
     {
       "name": "git",
