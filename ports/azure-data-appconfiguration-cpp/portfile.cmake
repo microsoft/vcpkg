@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 757e967f90c959b734f4bb520789fb7879979036
-    SHA512 fe058f021414d91991f45b69467b26f17a69bb985060d3aba7270d54e490d04ab3fa6d70825d0a5d3c380d1602b3a7c278b580bc315360a08258b525c5e81437
+    REF 604c18c58880b1a8014e3e295d423ce2934f646c
+    SHA512 f7e4a08f2d8bbf9c630e46a7864c9bf7f2aadda4d3c92642ec41da7f0fa6f1b7c8511892ea1cd573426174f96badb853375389ec6af80a4d4baceac3f10d268c
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-files-shares")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/storage/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/storage/azure-storage-files-shares" "${SOURCE_PATH}/sdk/storage/_")
-  file(RENAME "${SOURCE_PATH}/sdk/storage" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/_/_/_"
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
