@@ -1,7 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF json-c-0.18-20240915
+    REF "json-c-${VERSION}"
+
     SHA512 219d8c0da9a4016b74af238cc15dbec1f369a07de160bcc548d80279028e1b5d8d928deb13fec09c96a085fc0ecf10090e309cbe72d0081aca864433c4ae01db
     HEAD_REF master
 )
