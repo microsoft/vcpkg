@@ -42,6 +42,9 @@
     "methodcalls": {
       "description": "Enable the Method service set"
     },
+    "multithreading": {
+      "description": "Enable multi threading support"
+    },
     "openssl": {
       "description": "Enable encryption support (uses OpenSSL)",
       "dependencies": [
