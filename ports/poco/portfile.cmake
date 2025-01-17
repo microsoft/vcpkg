@@ -38,6 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pdf             ENABLE_PDF
         pocodoc         ENABLE_POCODOC
         postgresql      ENABLE_DATA_POSTGRESQL
+        sqlite3         ENABLE_DATA_SQLITE
 )
 
 # POCO_ENABLE_NETSSL_WIN: 

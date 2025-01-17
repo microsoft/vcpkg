@@ -9,7 +9,6 @@
   "dependencies": [
     "expat",
     "pcre2",
-    "sqlite3",
     "utf8proc",
     {
       "name": "vcpkg-cmake",
@@ -25,7 +24,8 @@
     "activerecord",
     "cppparser",
     "mongodb",
-    "pocodoc"
+    "pocodoc",
+    "sqlite3"
   ],
   "features": {
     "activerecord": {
@@ -83,6 +83,12 @@
       "description": "PostgreSQL support for POCO",
       "dependencies": [
         "libpqxx"
+      ]
+    },
+    "sqlite3": {
+      "description": "sqlite3 support for POCO",
+      "dependencies": [
+        "sqlite3"
       ]
     }
   }
