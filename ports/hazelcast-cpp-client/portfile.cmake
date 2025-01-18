@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         boost-1-86-fix.patch # https://github.com/hazelcast/hazelcast-cpp-client/pull/1247
+        boost-1-87-fix.patch
 )
 
 vcpkg_check_features(
