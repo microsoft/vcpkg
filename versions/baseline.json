@@ -9745,8 +9745,8 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.10.4",
-      "port-version": 1
+      "baseline": "4.11.2",
+      "port-version": 0
     },
     "wtl": {
       "baseline": "10.0.10320",
