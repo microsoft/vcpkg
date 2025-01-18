@@ -374,7 +374,7 @@ gamenetworkingsockets:x64-android=fail
 # There is an open PR that try to fix that.
 gazebo:x64-windows=fail
 gazebo:x64-windows-static-md=fail
-gazebo:x86-windows=fail
+gazebo:x86-windows=skip
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
@@ -534,6 +534,8 @@ libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
+libfreenect2:arm64-windows=fail
+libfreenect2:arm64-windows-static-md=fail
 # inline assembly requires more registers than available
 libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
@@ -544,12 +546,6 @@ libgnutls:x64-android=fail
 libgo:x64-osx=fail
 libgo:x64-android=fail
 # Missing system libraries on linux to run/prepare autoconf
-libgpod:x64-linux=fail
-libfreenect2:arm64-windows=fail
-libfreenect2:arm64-windows-static-md=fail
-libgpod:arm-neon-android=fail
-libgpod:arm64-android=fail
-libgpod:x64-android=fail
 libgxps:arm-neon-android=fail
 libgxps:arm64-android=fail
 libgxps:x64-android=fail
@@ -921,12 +917,13 @@ qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
+# Skipped to avoid exceeding the 48 hour time limit in CI
+# May also need an older ninja version
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=skip
 qt5-x11extras:arm64-osx=skip
-# Skipped to avoid exceeding the 48 hour time limit in CI
-qt5-webengine:x86-windows=skip
-qt5-webengine:x64-windows=skip
 # Missing system libraries
 qtwayland:x64-osx=skip
 qtwayland:arm64-osx=skip
