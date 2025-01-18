@@ -1,3 +1,4 @@
+
 macro(z_vcpkg_determine_autotools_host_cpu out_var)
     # TODO: the host system processor architecture can differ from the host triplet target architecture
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
@@ -234,7 +235,7 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;NO_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;NO_WRAPPERS;DETERMINE_BUILD_TRIPLET;NO_CONFIGURE_CACHE"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
@@ -812,6 +813,24 @@ function(vcpkg_configure_make)
             set(relative_build_path .)
         endif()
 
+        set(configure_cache "")
+        if(NOT arg_NO_CONFIGURE_CACHE)
+            set(cache_file "${target_dir}/${TARGET_TRIPLET}-${short_name_${current_buildtype}}.cache")
+            if(DEFINED VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype} AND NOT "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}" STREQUAL "")
+                if(NOT EXISTS "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}")
+                    message(FATAL_ERROR "VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}:'${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}' needs to be a valid and exisiting file path!")
+                endif()
+                file(COPY_FILE  "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}" "${cache_file}")
+                set(configure_cache "--cache-file='${cache_file}'")
+            elseif(DEFINED VCPKG_MAKE_CONFIGURE_CACHE AND NOT "${VCPKG_MAKE_CONFIGURE_CACHE}" STREQUAL "")
+                if(NOT EXISTS "${VCPKG_MAKE_CONFIGURE_CACHE}")
+                    message(FATAL_ERROR "VCPKG_MAKE_CONFIGURE_CACHE:'${VCPKG_MAKE_CONFIGURE_CACHE}' needs to be a valid and exisiting file path!")
+                endif()
+                file(COPY_FILE  "${VCPKG_MAKE_CONFIGURE_CACHE}" "${cache_file}")
+                set(configure_cache "--cache-file='${cache_file}'")
+            endif()
+        endif()
+
         # Setup PKG_CONFIG_PATH
         z_vcpkg_setup_pkgconfig_path(CONFIG "${current_buildtype}")
 
@@ -854,7 +873,7 @@ function(vcpkg_configure_make)
         endforeach()
         unset(lib_env_vars)
 
-        set(command "${base_cmd}" -c "${configure_env} ./${relative_build_path}/configure ${arg_BUILD_TRIPLET} ${arg_OPTIONS} ${arg_OPTIONS_${current_buildtype}}")
+        set(command "${base_cmd}" -c "${configure_env} ./${relative_build_path}/configure ${arg_BUILD_TRIPLET} ${configure_cache} ${arg_OPTIONS} ${arg_OPTIONS_${current_buildtype}}")
         
         if(arg_ADD_BIN_TO_PATH)
             set(path_backup $ENV{PATH})
