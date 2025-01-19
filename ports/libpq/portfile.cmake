@@ -20,6 +20,7 @@ vcpkg_extract_source_archive(
         windows/msbuild.patch
         windows/spin_delay.patch
         android/unversioned_so.patch
+        rename-pthread-polyfill.diff
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
