@@ -4,8 +4,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_install)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "DISABLE_PARALLEL"
-        "LOGFILE_ROOT;MAKEFILE;TARGETS"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "LOGFILE_ROOT;MAKEFILE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;TARGETS"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
@@ -81,26 +81,27 @@ function(vcpkg_make_install)
         endif()
 
         foreach(target IN LISTS arg_TARGETS)
+            string(REPLACE "/" "_" target_no_slash "${target}")
             vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             message(STATUS "Making target '${target}' for ${TARGET_TRIPLET}-${short_buildtype}")
             if (arg_DISABLE_PARALLEL)
                 vcpkg_run_shell_as_build(
                     WORKING_DIRECTORY "${working_directory}"
-                    LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
+                    LOGNAME "${arg_LOGFILE_ROOT}-${target_no_slash}-${TARGET_TRIPLET}-${short_buildtype}"
                     SHELL ${shell_cmd}
-                    NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
+                    COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )
             else()
                 vcpkg_run_shell_as_build(
                     WORKING_DIRECTORY "${working_directory}"
-                    LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
+                    LOGNAME "${arg_LOGFILE_ROOT}-${target_no_slash}-${TARGET_TRIPLET}-${short_buildtype}"
                     SHELL ${shell_cmd}
-                    COMMAND ${configure_env} ${no_parallel_make_cmd_line}
+                    COMMAND ${configure_env} ${make_cmd_line}
                     NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )
             endif()
-            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 
+            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${target_no_slash}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 
             if(logdata MATCHES "Warning: linker path does not have real file for library")
                 message(FATAL_ERROR "libtool could not find a file being linked against!")
             endif()

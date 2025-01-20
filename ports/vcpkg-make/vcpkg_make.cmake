@@ -53,7 +53,7 @@ function(vcpkg_run_shell_as_build)
         "SHELL;COMMAND;NO_PARALLEL_COMMAND;SAVE_LOG_FILES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    z_vcpkg_required_args(SHELL WORKINK_DIRECTORY COMMAND LOGNAME)
+    z_vcpkg_required_args(SHELL WORKING_DIRECTORY COMMAND LOGNAME)
 
     set(extra_opts "")
     if(arg_SAVE_LOG_FILES)
@@ -62,9 +62,12 @@ function(vcpkg_run_shell_as_build)
 
     list(JOIN arg_COMMAND " " cmd)
     list(JOIN arg_NO_PARALLEL_COMMAND " " no_par_cmd)
+    if(NOT no_par_cmd STREQUAL "")
+        set(no_par_cmd NO_PARALLEL_COMMAND ${arg_SHELL} -c "${no_par_cmd}")
+    endif()
     vcpkg_execute_build_process(
         COMMAND ${arg_SHELL} -c "${cmd}"
-        NO_PARALLEL_COMMAND ${arg_SHELL} -c "${no_par_cmd}"
+        ${no_par_cmd}
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "${arg_LOGNAME}"
         ${extra_opts}
