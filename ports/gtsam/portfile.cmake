@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO borglab/gtsam
     REF ${VERSION}
-    SHA512 0aae0b785a3f7ae25008d0938848e93519786521cca9cd0cd1a8937ec5ac46f3b1ca1bfaaff1ca5812c92f8ef55b729a06c57632da5dd8fc38afc22d3047f8e0
-    HEAD_REF master    
+    SHA512 c0e5de8d86ea8241b49449bd291999ec0d6530bc9943b213e7c650b0ab29894ab53636bd1a0ed82d9d9d148dfc399ebff28e108b060d2d2176b584823bd722cd
+    HEAD_REF develop    
     PATCHES
         build-fixes.patch
         path-fixes.patch
@@ -17,16 +17,16 @@ vcpkg_cmake_configure(
         -DGTSAM_BUILD_TIMING_ALWAYS=OFF
         -DGTSAM_BUILD_UNSTABLE=OFF
         -DGTSAM_UNSTABLE_BUILD_PYTHON=OFF
-        -DGTSAM_USE_SYSTEM_EIGEN=On
-        -DGTSAM_USE_SYSTEM_METIS=On
+        -DGTSAM_USE_SYSTEM_EIGEN=ON
+        -DGTSAM_USE_SYSTEM_METIS=ON
         -DGTSAM_INSTALL_CPPUNITLITE=OFF
         -DGTSAM_BUILD_TYPE_POSTFIXES=OFF
         -DCMAKE_CXX_STANDARD=11 # Boost v1.84.0 libraries require C++11
 )
 
 vcpkg_cmake_install()
-if (WIN32)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME GTSAM CONFIG_PATH CMAKE)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME GTSAM CONFIG_PATH CMake)
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME GTSAM CONFIG_PATH lib/cmake/GTSAM)
 endif()

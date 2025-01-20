@@ -1,11 +1,22 @@
-if(VCPKG_TARGET_IS_LINUX)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    if(NOT EXISTS "/usr/include/libintl.h")
+if(VCPKG_TARGET_IS_LINUX AND NOT X_VCPKG_FORCE_VCPKG_GETTEXT_LIBINTL)
+    set(detection_results "${CURRENT_BUILDTREES_DIR}/detected-intl-${TARGET_TRIPLET}.cmake.log")
+    file(REMOVE "${detection_results}")
+    block(SCOPE_FOR VARIABLES)
+        set(VCPKG_BUILD_TYPE release)
+        vcpkg_cmake_configure(SOURCE_PATH "${CURRENT_PORT_DIR}/detect" OPTIONS "-DOUTFILE=${detection_results}")
+    endblock()
+    include("${detection_results}")
+    message(STATUS "libintl header: ${VCPKG_DETECTED_LIBINTL_H}")
+    if(NOT VCPKG_DETECTED_LIBINTL_H)
         message(FATAL_ERROR
-            "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
-            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+            "When targeting Linux, `libintl.h` is expected to come from a system package. "
+            "Please use the following commands or the equivalent to install development files.\n"
+            "On Debian and Ubuntu derivatives: \"sudo apt-get install libc-dev\"\n"
+            "On Alpine: \"apk add gettext-dev\"\n"
         )
     endif()
+
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
 endif()
@@ -16,7 +27,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 ad2fa2f69be996a637e9b51e8941a39e10050060245dcec1fe75c15b68d0ff973043c87b77e4e2830e407e3bdd040b578f8e24fd05bba43adb94eaee34001aa5
+    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

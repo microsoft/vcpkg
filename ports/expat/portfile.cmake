@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 773703165d51170485503e54be47d56cbf19cb7383cb3daf5e5b5d7e2671ec7a9f2f9b4d26c85edd07c36eba9f7e7d02c1d7d178481695abdc35e3a69a67c07e
+    SHA512 6a6c5b0f6a1b2c70715701aeab688e476943704c492a0f2f8afd7fea84615a8d9569eb2b699912676058eff6a7bbdd78b48110ed67ab0250a3d41fe8f128f4e1
     HEAD_REF master
 )
 
@@ -21,11 +21,12 @@ vcpkg_cmake_configure(
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
         -DEXPAT_MSVC_STATIC_CRT=${EXPAT_CRT_LINKAGE}
         -DEXPAT_BUILD_PKGCONFIG=ON
-    MAYBE_UNUSED_VARIABLES EXPAT_MSVC_STATIC_CRT
+    MAYBE_UNUSED_VARIABLES
+        EXPAT_MSVC_STATIC_CRT
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION}")
 vcpkg_fixup_pkgconfig()
 
@@ -33,14 +34,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h" "defined(_MSC_EXTENSIONS)" "defined(_WIN32)")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h"
-        "! defined(XML_STATIC)"
-        "/* vcpkg static build ! defined(XML_STATIC) */ 0"
-    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h" "! defined(XML_STATIC)" "0")
 endif()
 
-vcpkg_copy_pdbs()
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/expat/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/expat/COPYING")

@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d733990..11f429a 100644
+index fb0fb46..772f56c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -230,7 +230,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/superlu.pc
- 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
- 	
+@@ -240,7 +240,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/superlu.pc
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
  configure_file(${SuperLU_SOURCE_DIR}/SRC/superlu_config.h.in ${SuperLU_BINARY_DIR}/SRC/superlu_config.h)
 -configure_file(${SuperLU_SOURCE_DIR}/SRC/superlu_config.h.in ${SuperLU_SOURCE_DIR}/SRC/superlu_config.h)
  

@@ -1,0 +1,26 @@
+diff --git a/src/FTFont/FTBufferFont.cpp b/src/FTFont/FTBufferFont.cpp
+index ce04cf5..b330a3b 100644
+--- a/src/FTFont/FTBufferFont.cpp
++++ b/src/FTFont/FTBufferFont.cpp
+@@ -232,7 +232,7 @@ inline FTPoint FTBufferFontImpl::RenderI(const T* string, const int len,
+     bool inCache = false;
+ 
+     // Protect blending functions, GL_TEXTURE_2D and optionally GL_BLEND
+-    glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_TEXTURE_ENV_MODE);
++    glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+ 
+     // Protect glPixelStorei() calls
+     glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+diff --git a/src/FTFont/FTTextureFont.cpp b/src/FTFont/FTTextureFont.cpp
+index 97e8768..a5145cf 100644
+--- a/src/FTFont/FTTextureFont.cpp
++++ b/src/FTFont/FTTextureFont.cpp
+@@ -241,7 +241,7 @@ inline FTPoint FTTextureFontImpl::RenderI(const T* string, const int len,
+                                           int renderMode)
+ {
+     // Protect GL_TEXTURE_2D and optionally GL_BLEND
+-    glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_TEXTURE_ENV_MODE);
++    glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_TEXTURE_BIT);
+ 
+     if(FTLibrary::Instance().GetLegacyOpenGLStateSet())
+       {

@@ -4,9 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/intrusive
     REF boost-${VERSION}
-    SHA512 f188d86409fe85ca1428c1ee799d26bcd0d411551938dfac4b0be6eb51dfb94aedd771148330ba690d12c5525645d28539619d6512fb7b862e021980dc25356a
+    SHA512 bce80432295b596b0bdb3682353623fb6fd2fa5ff4f732ccf8c3806b8392e386e4d101de91901abc9c3028ab8d329266e0b07f23ed41f02239025d182b5bd74d
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

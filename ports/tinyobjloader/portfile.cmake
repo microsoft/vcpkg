@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyobjloader
-    REF v2.0.0rc9
-    SHA512 e188d6077cb19f9044da9c98c2c4284cad09f4ee745f4746d0df5b22a379d3b32fe20aa998151d6dc08e7f113f50abf80a7509d63c36de46547ce43b5fe1fa54
+    REF "v${VERSION}"
+    SHA512 724f3974e03c0bbb2255da051a42bec26a91e490414c36bd4bd5dd18a511ba821148e996f9fa4eba6c4b3638d331281a248c530389e2a8bf679b7e81bb09a89b
     HEAD_REF master
 )
 

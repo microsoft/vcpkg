@@ -1,0 +1,38 @@
+diff --git a/BulletConfig.cmake.in b/BulletConfig.cmake.in
+index 2d18304..9d97c77 100644
+--- a/BulletConfig.cmake.in
++++ b/BulletConfig.cmake.in
+@@ -15,6 +15,10 @@
+ #  BULLET_VERSION_STRING     - A human-readable string containing the version
+ 
+ @PACKAGE_INIT@
++if("@BUILD_EXTRAS@" AND NOT "@BUILD_SHARED_LIBS@")
++  include(CMakeFindDependencyMacro)
++  find_dependency(tinyxml2 CONFIG)
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/BulletTargets.cmake")
+ 
+ set ( BULLET_FOUND 1 )
+diff --git a/Extras/Serialize/BulletXmlWorldImporter/CMakeLists.txt b/Extras/Serialize/BulletXmlWorldImporter/CMakeLists.txt
+index 4e16d9e..ab8eb9d 100644
+--- a/Extras/Serialize/BulletXmlWorldImporter/CMakeLists.txt
++++ b/Extras/Serialize/BulletXmlWorldImporter/CMakeLists.txt
+@@ -2,7 +2,6 @@ INCLUDE_DIRECTORIES(
+ 	${BULLET_PHYSICS_SOURCE_DIR}/src
+ 	${BULLET_PHYSICS_SOURCE_DIR}/Extras/Serialize/BulletFileLoader
+ 	${BULLET_PHYSICS_SOURCE_DIR}/Extras/Serialize/BulletWorldImporter
+-	${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs/tinyxml2
+ )
+ 
+ ADD_LIBRARY(
+@@ -11,8 +10,9 @@ ADD_LIBRARY(
+ 	btBulletXmlWorldImporter.h
+ 	string_split.cpp
+ 	string_split.h
+-	${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs/tinyxml2/tinyxml2.cpp
+ )
++find_package(tinyxml2 CONFIG REQUIRED)
++target_link_libraries(BulletXmlWorldImporter PRIVATE tinyxml2::tinyxml2)
+ 
+ SET_TARGET_PROPERTIES(BulletXmlWorldImporter  PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletXmlWorldImporter PROPERTIES SOVERSION ${BULLET_VERSION})

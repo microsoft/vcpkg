@@ -1,9 +1,9 @@
 # Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO boost-ext/sml2
-    REF df727871ec119343e68881d47a24ce69f9bbd841
-    SHA512 5a1ce9a6a6afb9504049a3e681d920c8b32394c5ffb6d635763488b8916dbcaf3390063ff0bae671729216f4eaea0f799bba7037aa922a1fc77ca9b0b1ac3a5b 
+    REPO qlibs/sml
+    REF "v${VERSION}"
+    SHA512 8c2406f1d35145b4f5896c41c8d1a616444cb151cc468f670daefc1b7dc4bd8aa6c9acc3c2c733158c0e6a21b4077cac4b519eea2b0fd3bc549dae726d0a23d7 
     HEAD_REF master
 )
 
@@ -12,4 +12,4 @@ file(INSTALL "${SOURCE_PATH}/sml2"
 )
 
 # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md")

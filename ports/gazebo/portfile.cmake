@@ -1,19 +1,11 @@
-vcpkg_download_distfile(gazebo3211
-    URLS "https://patch-diff.githubusercontent.com/raw/osrf/gazebo/pull/3211.diff?full_index=1"
-    FILENAME "gazebo3211.diff"
-    SHA512 761e254866d4705acc0b81479285f979c436b3b611739a207a575031d8a8daba48de4fc0c8de5edb9a9f89725586c5caeef9e6e1e3d63a2d961ca09df974f7de
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO osrf/gazebo
-    REF 382dcc3f36095a8d79b5bc9c8b8ad346e867c51d
-    SHA512 57638cd0b23b5f2bfd32fdc159d6cd77ca34e3bd695c225591979aef4b7271eac93d3706fa1ffa2340f90013267a4171bebe1e4c142f19ad2bf67963dfed627e
+    REPO gazebosim/gazebo-classic
+    REF "gazebo11_${VERSION}"
+    SHA512 0dede29618fc9d9a91d208a75b8ca1d3e6d3e8f4f60a80047b2d5806991f00f0bec46f6e2daca5931aed9c243f1e1d334e7a3eae9165b453cdedfb5b73b71186
     HEAD_REF gazebo11
     PATCHES
         0001-Fix-deps.patch
-        "${gazebo3211}"
-        fix-tbb.patch # Effectively https://github.com/osrf/gazebo/pull/3174 with merge conflict resolutions
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

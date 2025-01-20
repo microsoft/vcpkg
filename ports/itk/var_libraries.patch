@@ -16,12 +16,17 @@ diff --git a/CMake/ITKModuleAPI.cmake b/CMake/ITKModuleAPI.cmake
 index af64d96dc..809335e6d 100644
 --- a/CMake/ITKModuleAPI.cmake	
 +++ b/CMake/ITKModuleAPI.cmake
-@@ -133,7 +133,7 @@ macro(itk_module_config ns)
+@@ -133,11 +133,10 @@ macro(itk_module_config ns)
    endforeach()
    unset(_${ns}_USED_MODULES)
  
--  foreach(v ${ns}_LIBRARIES ${ns}_INCLUDE_DIRS ${ns}_LIBRARY_DIRS
-+  foreach(v ${ns}_INCLUDE_DIRS ${ns}_LIBRARY_DIRS
-             ${ns}_RUNTIME_LIBRARY_DIRS ${ns}_FACTORY_NAMES ${ns}_FACTORY_LIST)
-     if(${v})
-       list(REMOVE_DUPLICATES ${v})
+   foreach(
+     v
+-    ${ns}_LIBRARIES
+-    ${ns}_INCLUDE_DIRS
+-    ${ns}_LIBRARY_DIRS
++    ${ns}_INCLUDE_DIRS
++    ${ns}_LIBRARY_DIRS
+     ${ns}_RUNTIME_LIBRARY_DIRS
+     ${ns}_FACTORY_NAMES
+     ${ns}_FACTORY_LIST)

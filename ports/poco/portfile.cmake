@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF "poco-1.13.0-release"
-    SHA512 5e557b4c93dd5eacd7c43af9c89646c49e65217db9d9e0fc016b3f643aca993d70e58a85ec7e63743221eb2b29d36ce9f8a3bfbf4db489d8ff24e20127f450ea
+    REF "poco-${VERSION}-release"
+    SHA512 4475a0ede5d06e4ce9537295fec92fa39b8fd5635d1cfb38498be4f707bc62b4a8b57672d2a15b557114e4115cc45480d27d0c856b7bd982eeec7adad9ff2582
     HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -13,6 +13,8 @@ vcpkg_from_github(
         0004-fix-feature-sqlite3.patch
         0005-fix-error-c3861.patch
         0007-find-pcre2.patch
+        # MSYS2 repo was used as a source. Thanks MSYS2 team: https://github.com/msys2/MINGW-packages/blob/6e7fba42b7f50e1111b7c0ef50048832243b0ac4/mingw-w64-poco/001-fix-build-on-mingw.patch
+        0008-fix-mingw-compilation.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
@@ -31,7 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         crypto      ENABLE_CRYPTO
         netssl      ENABLE_NETSSL
         pdf         ENABLE_PDF
-        sqlite3     ENABLE_DATA_SQLITE
         postgresql  ENABLE_DATA_POSTGRESQL
 )
 
@@ -109,19 +110,6 @@ endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
-
-# Copy include files of sql-parser
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src")
-
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/parser/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/parser")
-
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/sql/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/sql")
-
-file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/util/*.h")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/util")
 
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_config_fixup(CONFIG_PATH cmake)

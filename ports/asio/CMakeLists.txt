@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(asio)
 
 add_library(asio INTERFACE)
+
+find_package(Threads)
+if(Threads_FOUND)
+    target_link_libraries(asio INTERFACE Threads::Threads)
+endif()
 
 # Export target
 install(TARGETS asio
@@ -12,6 +17,7 @@ install(TARGETS asio
 install(EXPORT asio
     DESTINATION "share/asio"
     FILE asio-targets.cmake
+    NAMESPACE asio::
 )
 
 install(DIRECTORY
@@ -26,3 +32,8 @@ install(FILES
     asio/include/asio.hpp
     DESTINATION include/
 )
+
+set(exec_prefix [[${prefix}]])
+set(package_name [[asio]])
+configure_file(asio/asio.pc.in "${PROJECT_BINARY_DIR}/asio.pc" @ONLY)
+install(FILES "${PROJECT_BINARY_DIR}/asio.pc" DESTINATION share/pkgconfig)

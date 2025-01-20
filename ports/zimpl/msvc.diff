@@ -3,7 +3,7 @@ index 7cf9d85..85d33a7 100644
 --- a/zimpl/CMakeLists.txt
 +++ b/zimpl/CMakeLists.txt
 @@ -4,7 +4,7 @@ project(ZIMPL
-     VERSION 3.5.3
+     VERSION 3.6.1
      LANGUAGES C)
  
 -if(CMAKE_BUILD_TYPE STREQUAL "Debug")

@@ -9,12 +9,12 @@ vcpkg_from_github(
   SHA512 c3650ffbf5855aaf04d03930f01c6efd76e1f2b2d47365348721f16531a14653ae5b3aff8fefa8e5fa1c769fdf1a9b441a88bc687f97f8c579b84f17c6984c9e
   HEAD_REF master
   PATCHES
+      fix-build.patch
       unofficial-export.patch
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

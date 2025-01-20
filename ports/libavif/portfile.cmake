@@ -2,39 +2,36 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/libavif
     REF "v${VERSION}"
-    SHA512 b713f35fd3e54e105e16f46012becdada86f522b4ed8ab7097a93fd437524b4f2c997c42d6f06828f93b53253b1d90302417afdb0bd8e09d176f64f19c7a0faa
+    SHA512 ba72b8d02b098f361643a073361fccafd22eaac14e46dd06378d5e7acd9853538c5d166473e1de0b020de62dac25be83e42bd57ba51f675d11e2ddf155fbfa21
     HEAD_REF master
     PATCHES
+        dependencies.diff
         disable-source-utf8.patch
-        find-dependency.patch # from https://github.com/AOMediaCodec/libavif/pull/1339
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        aom AVIF_CODEC_AOM
-)
+set(FEATURE_OPTIONS "")
+if("aom" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DAVIF_CODEC_AOM=SYSTEM")
+endif()
+if("dav1d" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DAVIF_CODEC_DAV1D=SYSTEM")
+endif()
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DAVIF_BUILD_APPS=OFF
-        -DCMAKE_REQUIRE_FIND_PACKAGE_libyuv=ON
         ${FEATURE_OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
-
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
-# Move cmake configs
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-# Fix pkg-config files
-vcpkg_fixup_pkgconfig()
-
-# Remove duplicate files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

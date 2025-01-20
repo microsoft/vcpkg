@@ -10,8 +10,10 @@ set(LUASEC_LIBRARIES
     ${LUA_LIBRARY}
     OpenSSL::SSL
     OpenSSL::Crypto
-    OpenSSL::applink
-    ws2_32)
+    OpenSSL::applink)
+if(WIN32)
+    set(PLATFORM_LIBRARIES ws2_32)
+endif()
 
 add_library(lua-ssl
     src/config.c
@@ -22,11 +24,17 @@ add_library(lua-ssl
     src/options.c
     src/luasocket/buffer.c
     src/luasocket/io.c
-    src/luasocket/timeout.c
-    src/luasocket/wsocket.c)
+    src/luasocket/timeout.c)
+if(WIN32)
+    target_sources(lua-ssl PRIVATE
+        src/luasocket/wsocket.c)
+else()
+    target_sources(lua-ssl PRIVATE
+        src/luasocket/usocket.c)
+endif()
 
 target_include_directories(lua-ssl PRIVATE ${LUASEC_INCLUDES})
-target_link_libraries(lua-ssl PRIVATE ${LUASEC_LIBRARIES})
+target_link_libraries(lua-ssl PRIVATE ${LUASEC_LIBRARIES} ${PLATFORM_LIBRARIES})
 set_target_properties(lua-ssl PROPERTIES PREFIX "")
 
 install(TARGETS lua-ssl

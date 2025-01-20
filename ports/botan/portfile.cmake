@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 13f40635fc92b00b9392aa8ed96b5825f0cc8147d51337e2c225e0f29d0428732293190aa5fb2a7d2c5e7d57db748ae0fbed4536dee8af00e8d6fd405e784e1d
+    SHA512 dcd9ac8e748422d55854c38e565704e4a239418b6855836bdea85bd4dc3ab45e218d320471b98b6a451fc63d8518895f3813a50c94dee90227c09d12d96ca1dc
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
@@ -10,6 +10,9 @@ vcpkg_from_github(
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
+        libcxx-winpthread-fixes.patch
+        fix-cmake-usage.patch
+        0009-fix-regression-f2bf049-85491b3.patch # extract from PR 4255
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -67,11 +70,27 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+# Allow disabling use of WinSock2 by setting BOTAN_USE_WINSOCK2=OFF in triplet
+# for targeting older Windows versions with missing APIs.
+if(VCPKG_TARGET_IS_WINDOWS AND DEFINED BOTAN_USE_WINSOCK2 AND NOT BOTAN_USE_WINSOCK2)
+    vcpkg_list(APPEND configure_arguments --without-os-features=winsock2)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND configure_arguments --os=windows)
 
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         vcpkg_list(APPEND configure_arguments --cc=msvc)
+    endif()
+
+    # When compiling with Clang, -mrdrand is required to enable the RDRAND intrinsics. Botan will
+    # check for RDRAND at runtime before trying to use it, so we should be safe to specify this
+    # without triggering illegal instruction faults on older CPUs.
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl(\.exe)?$")
+        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS} -mrdrnd")
+    else()
+        # ...otherwise just forward the detected CXXFLAGS.
+        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -103,6 +122,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "--msvc-runtime=${BOTAN_MSVC_RUNTIME}d"
             "--with-external-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
             --debug-mode
+        OPTIONS
+            "CXX=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\""
+            "LINKER=\"${VCPKG_DETECTED_CMAKE_LINKER}\""
+            "AR=\"${VCPKG_DETECTED_CMAKE_AR}\""
+            "EXE_LINK_CMD=\"${VCPKG_DETECTED_CMAKE_LINKER}\" ${VCPKG_LINKER_FLAGS}"
         OPTIONS_RELEASE
             "ZLIB_LIBS=${ZLIB_LIBS_RELEASE}"
         OPTIONS_DEBUG
@@ -154,6 +178,8 @@ else()
     endif()
 endif()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Botan-${VERSION}")
+
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
 if(pkgconfig_requires)
@@ -172,8 +198,8 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "" IGNORE_UNCHANGED)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

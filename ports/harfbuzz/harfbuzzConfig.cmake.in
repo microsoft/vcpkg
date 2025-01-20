@@ -72,3 +72,31 @@ if ("icu" IN_LIST HARFBUZZ_FEATURES)
     find_dependency(ICU 61 COMPONENTS uc)
     target_link_libraries(harfbuzz INTERFACE ICU::uc)
 endif()
+
+add_library(harfbuzz::harfbuzz-subset UNKNOWN IMPORTED)
+
+find_library(HARFBUZZ_SUBSET_LIBRARY_DEBUG 
+    NAMES harfbuzz-subset 
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" 
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+find_library(HARFBUZZ_SUBSET_LIBRARY_RELEASE 
+    NAMES harfbuzz-subset 
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" 
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+    
+if(NOT HARFBUZZ_LIBRARY_DEBUG)
+    set_target_properties(harfbuzz::harfbuzz-subset PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_SUBSET_LIBRARY_RELEASE}"
+    )
+else()
+    set_target_properties(harfbuzz::harfbuzz-subset PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_SUBSET_LIBRARY_RELEASE}"
+        IMPORTED_LOCATION_DEBUG "${HARFBUZZ_SUBSET_LIBRARY_DEBUG}"
+    )
+endif()
+
+target_link_libraries(harfbuzz::harfbuzz-subset INTERFACE harfbuzz)

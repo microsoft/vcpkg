@@ -1,7 +1,7 @@
 {
   "name": "lilv",
-  "version": "0.24.10",
-  "port-version": 2,
+  "version": "0.24.24",
+  "port-version": 1,
   "description": "Lilv is a C library for simple use of LV2 plugins in applications.",
   "homepage": "https://drobilla.net/software/lilv",
   "license": "ISC",
@@ -12,12 +12,18 @@
     "sord",
     "sratom",
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-tool-meson",
       "host": true
     },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
+    "zix"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "supports": "!windows",
+      "dependencies": [
+        "libsndfile"
+      ]
     }
-  ]
+  }
 }

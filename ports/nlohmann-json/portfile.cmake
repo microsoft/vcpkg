@@ -31,6 +31,7 @@ vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_jsonTargets.cmake"
     "{_IMPORT_PREFIX}/nlohmann_json.natvis"
     "{_IMPORT_PREFIX}/share/nlohmann_json/nlohmann_json.natvis"
+    IGNORE_UNCHANGED
 )
 if(EXISTS "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis")
     file(RENAME

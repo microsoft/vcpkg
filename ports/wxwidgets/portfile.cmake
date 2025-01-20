@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
     REF "v${VERSION}"
-    SHA512 f1ba875e6dfa3970e6f03741573f96ac224a8d0bace5a4c44dcf95dd4e861031fe086e2dc4429c1c6bcb22d40656fc2c6c287abe0b4678eb9af9698691eda3d9
+    SHA512 0834cb1f4f2e294b721abeef659f696156b9a7474a6a770197f2295a598cce5547671634036a96739b063bb6482f5cb0092b5f704dc5ceb1c002c4e1782df197
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
-        fix-glegl.patch
 )
 
 vcpkg_check_features(
@@ -20,6 +19,7 @@ vcpkg_check_features(
     FEATURES
         fonts   wxUSE_PRIVATE_FONTS
         media   wxUSE_MEDIACTRL
+        secretstore wxUSE_SECRETSTORE
         sound   wxUSE_SOUND
         webview wxUSE_WEBVIEW
         webview wxUSE_WEBVIEW_EDGE
@@ -70,7 +70,6 @@ vcpkg_cmake_configure(
         -DwxUSE_GLCANVAS=ON
         -DwxUSE_LIBGNOMEVFS=OFF
         -DwxUSE_LIBNOTIFY=OFF
-        -DwxUSE_SECRETSTORE=OFF
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         -DwxUSE_UIACTIONSIMULATOR=OFF
@@ -138,13 +137,13 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
     file(GLOB_RECURSE WX_SETUP_H_FILES_REL "${CURRENT_PACKAGES_DIR}/lib/*.h")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${WX_SETUP_H_FILES_REL}" "${CURRENT_PACKAGES_DIR}" "")
+        vcpkg_replace_string("${WX_SETUP_H_FILES_REL}" "${CURRENT_PACKAGES_DIR}" "" IGNORE_UNCHANGED)
 
         string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/" "" WX_SETUP_H_FILES_REL "${WX_SETUP_H_FILES_REL}")
         string(REPLACE "/setup.h" "" WX_SETUP_H_REL_RELATIVE "${WX_SETUP_H_FILES_REL}")
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${WX_SETUP_H_FILES_DBG}" "${CURRENT_PACKAGES_DIR}" "")
+        vcpkg_replace_string("${WX_SETUP_H_FILES_DBG}" "${CURRENT_PACKAGES_DIR}" "" IGNORE_UNCHANGED)
 
         string(REPLACE "${CURRENT_PACKAGES_DIR}/debug/lib/" "" WX_SETUP_H_FILES_DBG "${WX_SETUP_H_FILES_DBG}")
         string(REPLACE "/setup.h" "" WX_SETUP_H_DBG_RELATIVE "${WX_SETUP_H_FILES_DBG}")

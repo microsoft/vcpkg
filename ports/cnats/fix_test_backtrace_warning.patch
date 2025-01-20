@@ -1,0 +1,40 @@
+Subject: [PATCH] [FIXED] Build: failure with Android NDK
+
+When building against Android NDK testsuit compilation fails due to
+missing execinfo.h/backtrace implementation in platforms with id less
+than 33. Because this is only in tests just checking for Android should
+be enough to keep things simple.
+---
+ test/test.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/test/test.c b/test/test.c
+index 1919af2..9b20774 100644
+--- a/test/test.c
++++ b/test/test.c
+@@ -37025,12 +37025,22 @@ void test_StanSubTimeout(void)
+ 
+ #ifndef _WIN32
+ static void _sigsegv_handler(int sig) {
++
++// Android doesn't support backtrace before API Level 33.
++// Because this is for tests it's good enough to check
++// for Android only, until there is need for a better solution.
++#ifndef ANDROID
+   void *array[20];
+   int size = backtrace(array, 20);
++#endif // ANDROID
+ 
+   // print out all the frames to stderr
+   fprintf(stderr, "Error: signal %d:\n", sig);
++
++#ifndef ANDROID
+   backtrace_symbols_fd(array, size, STDERR_FILENO);
++#endif // ANDROID
++
+   exit(1);
+ }
+ #endif // _WIN32
+-- 
+2.45.2.windows.1
+

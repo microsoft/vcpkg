@@ -1,18 +1,33 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF "v${VERSION}"
-    SHA512 8771a70d1f38f2a02f21281200d98fdd8d41d842cc82704155793529a1768beeb2583382f7547e6aaefdab4a17c3130779af792b2a59487889a3cdea4a2fa776
+    REF v${VERSION}
+    SHA512 a6493a96e911e4b67dd017125eedf6f3d794a8c931d897e3fdd050a8e65c20dcb84e9dfad207d1fcec6d2f019ad406954d1711827a74c1665fe24cc32f3b019f
     HEAD_REF master
     PATCHES
-        disable-docs.patch
+        android-librt.diff
+        clang-sanitizer.diff
 )
+
+# disable docs
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
+
+# do not enable LTO by default
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
+
+vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find_dependency(PythonInterp REQUIRED)" "")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         amalgamation UA_ENABLE_AMALGAMATION
+        diagnostics UA_ENABLE_DIAGNOSTICS
+        discovery UA_ENABLE_DISCOVERY
         historizing UA_ENABLE_HISTORIZING
+        methodcalls UA_ENABLE_METHODCALLS
+        subscriptions UA_ENABLE_SUBSCRIPTIONS
+        subscriptions-events UA_ENABLE_SUBSCRIPTIONS_EVENTS
 )
 
 if("openssl" IN_LIST FEATURES)
@@ -36,6 +51,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${OPEN62541_ENCRYPTION_OPTIONS}
         "-DOPEN62541_VERSION=v${VERSION}"
+        -DUA_ENABLE_DEBUG_SANITIZER=OFF
         -DUA_MSVC_FORCE_STATIC_CRT=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )

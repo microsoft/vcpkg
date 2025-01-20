@@ -1,10 +1,10 @@
-set(COLMAP_REF "9c704e89ff0a80e797725e112011f9f69e5aa28f") # Oct 1, 2023
+set(COLMAP_REF "aa087848a8bd09cebf3e3cc8a5732552f30c51ad") # v3.11.1
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
-    REF "${COLMAP_REF}"
-    SHA512 6ece735c403304c14887cd9b2b13a7e36bf07155fa959748c09d74854e0da6338766c11e6a371c26f983ccdb29f93b2600d685c907a5a137fe20d798b26805d8
+    REF "${VERSION}"
+    SHA512 1260db4346cc33c6c35efdee0157450fccef67dbc9de876fdc997c7cb90daec716e5ccec97df0a77e3e8686f43ec79f2c0a1523ea12eca2ee158347cb52dea48
     HEAD_REF main
 )
 
@@ -21,8 +21,15 @@ endif()
 
 string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")
 
+foreach(FEATURE ${FEATURE_OPTIONS})
+    message(STATUS "${FEATURE}")
+endforeach()
+
 set(CUDA_ENABLED OFF)
+set(GUI_ENABLED OFF)
 set(TESTS_ENABLED OFF)
+set(CGAL_ENABLED OFF)
+set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
@@ -34,13 +41,20 @@ if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ARCHITECTURES "all-major")
 endif()
 
+if("gui" IN_LIST FEATURES)
+    set(GUI_ENABLED ON)
+endif()
+
 if("tests" IN_LIST FEATURES)
     set(TESTS_ENABLED ON)
 endif()
 
-set(OPENMP_ENABLED ON)
+if("cgal" IN_LIST FEATURES)
+    set(CGAL_ENABLED ON)
+endif()
+
 if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    set(OPENMP_ENABLED Off)
+    set(OPENMP_ENABLED OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -49,10 +63,13 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+        -DGUI_ENABLED=${GUI_ENABLED}
         -DTESTS_ENABLED=${TESTS_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
         -DOPENMP_ENABLED=${OPENMP_ENABLED}
+        -DCGAL_ENABLED=${CGAL_ENABLED}
+        -DFETCH_POSELIB=OFF
 )
 
 vcpkg_cmake_install()
@@ -84,6 +101,6 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

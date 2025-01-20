@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jasper-software/jasper
     REF "version-${VERSION}"
-    SHA512 31da8f49cec3ba2a3bb9ba40fa54fe64c97d1e564631c980619f0b3ffca36814adc6c2cb8dc1ead774a15546f308e7a33990821538d1e7b6c885b14ed4e1f711
+    SHA512 4552e4823e08f7cb444d5835f30180ae1631b1784078769f0c1d51f40dd3bb6c8a1e960147d07312164dbb3b489561d06ee8f75112e76dbba8aacfd09c7d03e4
     HEAD_REF master
     PATCHES
         no_stdc_check.patch

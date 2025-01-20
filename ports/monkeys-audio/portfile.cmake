@@ -41,11 +41,13 @@ foreach(VCXPROJ IN ITEMS
         "${VCXPROJ}"
         "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
         "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+        IGNORE_UNCHANGED
     )
     vcpkg_replace_string(
         "${VCXPROJ}"
         "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
         "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+        IGNORE_UNCHANGED
     )
 endforeach()
 

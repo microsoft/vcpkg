@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # this mirrors ImGui's portfile behavio
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthom/hello_imgui
-    REF b9bdca77cb58bd879228f34a9bcf1f1c2e6b96bd
-    SHA512 2044fb34bdd64377335e46802f8546ccc30077e84f122c895b820bef0d692f62e1c5bc175cf8003c518db2bc0f1e07ed94bf1ccdc4a4720b7c0e0812c192bf7f
+    REF "v${VERSION}"
+    SHA512 b44741e27278974f6a545a3143abd18027d98503cc912085e08528c467197fb208d2d4876e483f74e518f3dfc14d12c3579e379b9939dc364a1fff4ee98bb8f5
     HEAD_REF master
 )
 
@@ -34,7 +34,7 @@ endif()
 
 
 set(platform_options "")
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     # Standard win32 options (these are the defaults for HelloImGui)
     # we could add a vcpkg feature for this, but it would have to be platform specific
     list(APPEND platform_options
@@ -43,7 +43,7 @@ if(WIN32)
     )
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Standard macOS options (these are the defaults for HelloImGui)
     # we could add a vcpkg feature for this, but it would have to be platform specific
     list(APPEND platform_options

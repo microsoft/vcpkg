@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: MIT
 #
 
+param([string]$SasToken)
+
 <#
 .SYNOPSIS
 Prepares the virtual machine for imaging.

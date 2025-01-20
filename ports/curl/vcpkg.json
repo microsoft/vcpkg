@@ -1,6 +1,6 @@
 {
   "name": "curl",
-  "version": "8.6.0",
+  "version": "8.11.1",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -30,6 +30,32 @@
       "description": "c-ares support",
       "dependencies": [
         "c-ares"
+      ]
+    },
+    "gnutls": {
+      "description": "SSL support (gnutls)",
+      "dependencies": [
+        {
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
+    "gsasl": {
+      "description": "GSASL support (libgsasl)",
+      "dependencies": [
+        "gsasl"
+      ]
+    },
+    "gssapi": {
+      "description": "krb5 support",
+      "supports": "!windows",
+      "dependencies": [
+        "krb5"
       ]
     },
     "http2": {
@@ -72,6 +98,23 @@
         "libidn2"
       ]
     },
+    "ldap": {
+      "description": "LDAP support",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        },
+        {
+          "name": "openldap",
+          "platform": "!windows"
+        }
+      ]
+    },
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
       "dependencies": [
@@ -85,6 +128,12 @@
       "description": "SSL support (OpenSSL)",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "psl": {
+      "description": "Use psl support (libpsl)",
+      "dependencies": [
+        "libpsl"
       ]
     },
     "schannel": {
@@ -162,21 +211,20 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support (experimental)"
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",
       "supports": "windows"
     },
     "winldap": {
-      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
-      "supports": "windows & !uwp",
+      "description": "Obsolete. Use feature 'ldap' instead.",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "non-http"
+            "ldap"
           ]
         }
       ]

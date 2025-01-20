@@ -1,4 +1,4 @@
-set(DIRECTXMESH_TAG dec2023)
+set(DIRECTXMESH_TAG oct2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF ${DIRECTXMESH_TAG}
-    SHA512 25442ec60040f2f232079b4a62a4460c8de11a881e36f5bdaeadbe98678d360141e8eca8162169941c03884cc2a05c3e20cf7fd2aef6518f6a647b7382d6d271
+    SHA512 a7d6eca75315a8f24fdc7753fd0e0b26b1b170ef0ffa1954065164f5da567ba09d1605c45cae91cf73dccc04f52162c3ad62f6a83eddf33c076e6ffb4723276d
     HEAD_REF main
 )
 
@@ -18,15 +18,13 @@ vcpkg_check_features(
         tools BUILD_TOOLS
 )
 
-set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
-
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -43,7 +41,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
-      SHA512 db2d32ec44993547881e2f14ee3403aa6133758d250ffc54b7cec9c1f15be46e5a5d847eb1cff60081bdfeaaa1e6be129475f40502c0a8c5ba2d58e5baa71691
+      SHA512 6b437004ee3b8a44d475db51f01558d777bf3c65b1ea132606b9b682ab6310dbdf0c939ecdf7b621255b6130a424de6db368dd73b8d22393bd932342fd3f45e0
     )
 
     file(INSTALL
@@ -52,13 +50,13 @@ if("tools" IN_LIST FEATURES)
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe")
 
-  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+  elseif((VCPKG_TARGET_ARCHITECTURE STREQUAL arm64) OR (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64ec))
 
     vcpkg_download_distfile(
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert_arm64.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}-arm64.exe"
-      SHA512 deaa61a1f24bf1ffff817a7b72b125d2402b97ca15713411eb3a5b0af0b5f2b25407be87d2fd60fb4670744656230d221183510167a1696685d2def9fa9c1532
+      SHA512 e4f9eb983ea6cfbf18c342d5f1a52210d933ca6bbe7fe5dbca4fee516106f02ac4936804ab222c337ac42eb809c16f06132d51ffa44fb67315c2f28f282afdf3
     )
 
     file(INSTALL
@@ -71,7 +69,7 @@ if("tools" IN_LIST FEATURES)
 
     vcpkg_copy_tools(
           TOOL_NAMES meshconvert
-          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin"
       )
 
   endif()

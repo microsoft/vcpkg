@@ -1,5 +1,5 @@
 diff --git a/src/core/common/uri_facade_win.cpp b/src/core/common/uri_facade_win.cpp
-index 1a807fb..c579e2d 100644
+index 1a807fb..2839ddf 100644
 --- a/src/core/common/uri_facade_win.cpp
 +++ b/src/core/common/uri_facade_win.cpp
 @@ -19,7 +19,7 @@
@@ -20,9 +20,3 @@ index 1a807fb..c579e2d 100644
      {
        THROW_ERROR1(CannotParseUri, uriString);
      }
-@@ -50,5 +50,3 @@ void Uri::Initialize(const char * uriString, std::size_t size)
- }
- 
- } // namespace Common
--
--

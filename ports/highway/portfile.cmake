@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/highway
     REF "${VERSION}"
-    SHA512 513718873ca5d1be5c781f92ef943432da4677582e15d25a247c1d3def087fdbd3fe787608d76f32a9b4f9253df88b40bd8ea570159f8106c338ba37e8a50a8d
+    SHA512 e94b9cc51c81157ccd6bf4d6163445b1acc1a2667dc2650d1c4aea0a5021989c08dafcb92564fcbecb9445ab2f1779051260be2f5b29c3932803b8a42ed2f824
     HEAD_REF master
+    PATCHES
+        fix_dll_export.patch #https://github.com/google/highway/pull/2229
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
