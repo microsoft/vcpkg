@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 0.10.9
     SHA512 be7b77f77a012fe04121c615b88f674bba11f79b5353b3c4594de395f9f787c3a9b6910693f5ba701421387fc13c13e7977ab73893e18c6a0b6e1292b7d1cfe2
     HEAD_REF master
+    PATCHES
+        fix_link_opensp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -13,17 +15,27 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "ofx2qif"     ENABLE_OFX2QIF
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_OFXCONNECT=OFF # depends on libxml++ ABI 2.6, while vcpkg ships ABI 4.0. See https://libxmlplusplus.github.io/libxmlplusplus/#abi-versions
         ${FEATURE_OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibOFX CONFIG_PATH lib/cmake/libofx)
 vcpkg_copy_pdbs()
+
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/LibOFX/LibOFXTargets.cmake"
+    [[# Create imported target libofx::libofx]]
+    [[# Create imported target libofx::libofx 
+include(${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/libofx/FindOpenSP.cmake)]])
 
 list(REMOVE_ITEM FEATURES core iconv)
 if(FEATURES)
