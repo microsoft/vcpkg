@@ -6618,7 +6618,7 @@
     },
     "onnx-optimizer": {
       "baseline": "0.3.19",
-      "port-version": 0
+      "port-version": 1
     },
     "onnxruntime-gpu": {
       "baseline": "1.19.2",
