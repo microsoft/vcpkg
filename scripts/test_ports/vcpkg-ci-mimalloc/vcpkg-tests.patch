@@ -1,5 +1,5 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 398637c8..add97cea 100644
+index 398637c8..0703380b 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -13,7 +13,7 @@ index 398637c8..add97cea 100644
  
  # Import mimalloc (if installed)
 -find_package(mimalloc 1.7 REQUIRED NO_SYSTEM_ENVIRONMENT_PATH)
-+find_package(mimalloc 3.0 REQUIRED NO_SYSTEM_ENVIRONMENT_PATH)
++find_package(mimalloc 3.0 CONFIG REQUIRED)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
  
 +set(THREADS_PREFER_PTHREAD_FLAG 1)
@@ -33,12 +33,14 @@ index 398637c8..add97cea 100644
 +if(0)
  # overriding with a static object file works reliable as the symbols in the
  # object file have priority over those in library files
- add_executable(static-override-obj main-override.c ${MIMALLOC_OBJECT_DIR}/mimalloc.o)
+-add_executable(static-override-obj main-override.c ${MIMALLOC_OBJECT_DIR}/mimalloc.o)
++add_executable(static-override-obj main-override.c ${MIMALLOC_OBJECT_DIR}/mimalloc.${CMAKE_C_OUTPUT_EXTENSION})
  target_include_directories(static-override-obj PUBLIC ${MIMALLOC_INCLUDE_DIR})
- target_link_libraries(static-override-obj PUBLIC pthread)
+-target_link_libraries(static-override-obj PUBLIC pthread)
+-
++target_link_libraries(static-override-obj PUBLIC mimalloc-static)
 +endif()
  
--
 +if(NOT BUILD_SHARED_LIBS)
  # overriding with a static library works too if using the `mimalloc-override.h`
  # header to redefine malloc/free. (the library already overrides new/delete)
@@ -60,3 +62,27 @@ index 398637c8..add97cea 100644
  
  ## test memory errors
  add_executable(test-wrong  test-wrong.c)
+diff --git a/test/main-override.cpp b/test/main-override.cpp
+index bc1a1125..e0b19a53 100644
+--- a/test/main-override.cpp
++++ b/test/main-override.cpp
+@@ -109,8 +109,10 @@ static void various_tests() {
+   t->~Test();
+   delete[] tbuf;
+ 
++  #if _WIN32
+   const char* ptr = ::_Getdays();  // test _base overrid
+   free((void*)ptr);
++  #endif
+ }
+ 
+ class Static {
+@@ -388,7 +390,7 @@ static void test_mt_shutdown()
+ 
+ // issue #372
+ static void fail_aslr() {
+-  uint64_t sz = (4ULL << 40); // 4TiB
++  uint64_t sz = (size_t)(4ULL << 40); // 4TiB
+   void* p = malloc(sz);
+   printf("pointer p: %p: area up to %p\n", p, (uint8_t*)p + sz);
+   *(int*)0x5FFFFFFF000 = 0;  // should segfault
