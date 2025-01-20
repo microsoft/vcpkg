@@ -5,6 +5,7 @@
   "homepage": "https://github.com/F-I-D-O/Future-Config",
   "license": "LGPL-3.0-or-later",
   "dependencies": [
+    "fmt",
     "inja",
     "spdlog",
     "tclap",
