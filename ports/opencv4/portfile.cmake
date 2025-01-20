@@ -416,7 +416,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
         -DWITH_MATLAB=OFF
-        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
