@@ -1,7 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.1.2",
-  "port-version": 10,
+  "port-version": 11,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -123,7 +123,7 @@
     "opencv": {
       "description": "Build with OpenCV 3.x",
       "dependencies": [
-        "opencv"
+        "opencv3"
       ]
     },
     "vulkan": {
