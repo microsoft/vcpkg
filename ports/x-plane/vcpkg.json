@@ -1,6 +1,7 @@
 {
   "name": "x-plane",
   "version": "4.0.1",
+  "port-version": 1,
   "description": "The X-Plane Plugin SDK",
   "homepage": "https://developer.x-plane.com/sdk/",
   "license": null,
