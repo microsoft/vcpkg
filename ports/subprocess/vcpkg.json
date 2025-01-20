@@ -1,0 +1,7 @@
+{
+  "name": "subprocess",
+  "version-date": "2024-07-20",
+  "description": "A simple one header solution to launching processes and interacting with them for C/C++.",
+  "homepage": "https://github.com/sheredom/subprocess.h",
+  "license": "Unlicense"
+}

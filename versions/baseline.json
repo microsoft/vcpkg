@@ -8800,6 +8800,10 @@
       "baseline": "2018-11-15",
       "port-version": 9
     },
+    "subprocess": {
+      "baseline": "2024-07-20",
+      "port-version": 0
+    },
     "suitesparse": {
       "baseline": "5.8.0",
       "port-version": 2
