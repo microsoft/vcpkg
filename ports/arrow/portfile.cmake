@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0003-utf8proc.patch
         0004-android-musl.patch
         0005-android-datetime.patch
+        0006-cmake-msvcruntime.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
