@@ -233,31 +233,51 @@
     {
       "name": "ninja",
       "os": "windows",
-      "arch": "x64",
-      "version": "1.11.1",
+      "arch": "arm64",
+      "version": "1.12.1",
       "executable": "ninja.exe",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip",
-      "sha512": "a700e794c32eb67b9f87040db7f1ba3a8e891636696fc54d416b01661c2421ff46fa517c97fd904adacdf8e621df3e68ea380105b909ae8b6651a78ae7eb3199",
-      "archive": "ninja-win-1.11.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-winarm64.zip",
+      "sha512": "b1826c422a677f47f9f7e001672ce831791b092e4f1cd84ddf2ea067781c31aa8246f26e91dd66300c23ffa77a8ea29910c48ccf7e4235ff20bccc2d2b6e247b",
+      "archive": "ninja-winarm64-1.12.1.zip"
+    },
+    {
+      "name": "ninja",
+      "os": "windows",
+      "arch": "x64",
+      "version": "1.12.1",
+      "executable": "ninja.exe",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip",
+      "sha512": "d6715c6458d798bcb809f410c0364dabd937b5b7a3ddb4cd5aba42f9fca45139b2a8a3e7fd9fbd88fd75d298ed99123220b33c7bdc8966a9d5f2a1c9c230955f",
+      "archive": "ninja-win-1.12.1.zip"
+    },
+    {
+      "name": "ninja",
+      "os": "linux",
+      "arch": "arm64",
+      "version": "1.12.1",
+      "executable": "ninja",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-linux-aarch64.zip",
+      "sha512": "22c46abb7e6d916e11713705f78d093e9b30029cb49cadc65755908ad9f44b3f2548105174cc615a5ef86c4672b366173f18bd04c2d71710a303d952c06db334",
+      "archive": "ninja-linux-aarch64-1.12.1.zip"
     },
     {
       "name": "ninja",
       "os": "linux",
       "arch": "x64",
-      "version": "1.11.1",
+      "version": "1.12.1",
       "executable": "ninja",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip",
-      "sha512": "6403dac9196baffcff614fa73ea530752997c8db6bbfbaa0446b4b09d7327e2aa6e8615d1283c961d3bf0df497e85ba86604149f1505ee75f89d600245a45dde",
-      "archive": "ninja-linux-1.11.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-linux.zip",
+      "sha512": "9c2ad534e7e72e67c608de7784cfbae601095bfca96713731a3f1eca268d66a6302f40c138a4ad97f7e8c902cd3fb05994a175e46fe922295dcc2d1334bf9014",
+      "archive": "ninja-linux-1.12.1.zip"
     },
     {
       "name": "ninja",
       "os": "osx",
-      "version": "1.11.1",
+      "version": "1.12.1",
       "executable": "ninja",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip",
-      "sha512": "dad33b0918c60bbf5107951a936175b1610b4894a408f4ba4b47a2f5b328fc982a52a2aed6a0cb75028ee4765af5083bea66611c37516826eb0c851366bb4427",
-      "archive": "ninja-mac-1.11.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-mac.zip",
+      "sha512": "4c11f477359c9d1dcda72529a503a59948ec20b368992132e545d6d4f6e3aabfd1d6b1d0f32cf932626037959b24a7bb375ef901e2d002eabadc83a265cbc351",
+      "archive": "ninja-mac-1.12.1.zip"
     },
     {
       "name": "powershell-core",
