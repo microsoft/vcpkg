@@ -1,9 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_git(
-  URL git@github.com:deshanxiao/orc.git
+vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  HEAD_REF deshan/vcpkg
+  REPO apache/orc
+  REF "v${VERSION}"
+  SHA512 6109b27047b0688566756f9ca6833689cdf0bd7a5086c4212ef1fd6484fb73d9077fa3017137a7fd65f0ab51518c80fc43ab55bd308ad146f6f4b6d97c51b4fc
+  HEAD_REF master
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
