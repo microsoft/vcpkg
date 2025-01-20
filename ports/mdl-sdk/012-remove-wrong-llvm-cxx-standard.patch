@@ -1,0 +1,11 @@
+diff -u -r 2024.0.4-cda7c53572.clean/src/mdl/jit/llvm/CMakeLists.txt 2024.0.4-cda7c53572/src/mdl/jit/llvm/CMakeLists.txt
+--- 2024.0.4-cda7c53572.clean/src/mdl/jit/llvm/CMakeLists.txt	2024-10-25 14:15:40.000000000 +0200
++++ 2024.0.4-cda7c53572/src/mdl/jit/llvm/CMakeLists.txt	2024-10-25 14:22:28.000000000 +0200
+@@ -267,7 +267,6 @@
+                 "-fPIC"
+                 "-m64"
+                 "-stdlib=libc++"
+-                "$<$<COMPILE_LANGUAGE:CXX>:-std=c++11>"
+                 "-fvisibility-inlines-hidden"
+                 "-Wno-deprecated-declarations"
+                 "-Wno-inconsistent-missing-override"

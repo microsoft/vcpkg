@@ -18,9 +18,15 @@ function(z_vcpkg_setup_pkgconfig_path)
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
-    vcpkg_add_to_path("${pkgconfig_path}")
+    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+    cmake_path(CONVERT "${pkgconfig_path}" TO_CMAKE_PATH_LIST pkgconfig_path NORMALIZE)
+    if(NOT "${pkgconfig_path}" IN_LIST path_list)
+      vcpkg_add_to_path("${pkgconfig_path}")
+    endif()
+    unset(path_list)
+    unset(pkgconfig_path)
 
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
     foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
         vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/share/pkgconfig")

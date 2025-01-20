@@ -3,7 +3,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 # For each vcpkg_find_acquire_program(NAME).cmake script,
 # there must be a literal call to vcpkg_find_acquire_program(NAME).cmake
 
-set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON3 YASM)
+set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON3 SCONS YASM)
 vcpkg_find_acquire_program(BAZEL)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
@@ -13,6 +13,7 @@ vcpkg_find_acquire_program(NINJA)
 vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_program(SCONS)
 vcpkg_find_acquire_program(YASM)
 
 if(NOT VCPKG_TARGET_IS_OSX)
@@ -27,7 +28,12 @@ if(VCPKG_HOST_IS_LINUX)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-    list(APPEND variables 7Z ARIA2 CLANG DARK DOXYGEN GASPREPROCESSOR GO GPERF JOM NASM NUGET PYTHON2 RUBY SCONS SWIG)
+    # The version-agnostic tool dir may already exist.
+    # Simulate/test with NASM.
+    file(REMOVE_RECURSE "${DOWNLOADS}/tools/nasm")
+    file(MAKE_DIRECTORY "${DOWNLOADS}/tools/nasm")
+
+    list(APPEND variables 7Z ARIA2 CLANG DARK DOXYGEN GASPREPROCESSOR GO GPERF JOM NASM NUGET PYTHON2 RUBY SWIG)
     vcpkg_find_acquire_program(7Z)
     vcpkg_find_acquire_program(ARIA2)
     vcpkg_find_acquire_program(CLANG)
@@ -41,7 +47,6 @@ if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_find_acquire_program(NUGET)
     vcpkg_find_acquire_program(PYTHON2)
     vcpkg_find_acquire_program(RUBY)
-    vcpkg_find_acquire_program(SCONS)
     vcpkg_find_acquire_program(SWIG)
 endif()
 

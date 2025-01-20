@@ -1,6 +1,6 @@
 {
   "name": "hpx",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "port-version": 1,
   "description": [
     "The C++ Standards Library for Concurrency and Parallelism",

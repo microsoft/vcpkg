@@ -2,7 +2,7 @@ diff --git a/src/build-data/cc/msvc.txt b/src/build-data/cc/msvc.txt
 index 64b6eae..66258ca 100644
 --- a/src/build-data/cc/msvc.txt
 +++ b/src/build-data/cc/msvc.txt
-@@ -20,10 +20,10 @@ optimization_flags "/O2 /Oi"
+@@ -20,10 +20,10 @@ optimization_flags "/O2 /Oi /Zc:throwingNew"
  size_optimization_flags "/O1 /Os"
  
  # for debug info in the object file (required if using sccache):
@@ -13,5 +13,5 @@ index 64b6eae..66258ca 100644
 -debug_info_flags "/Zi /FS"
 +#debug_info_flags "/Zi /FS"
  
- preproc_flags "/nologo /EP"
+ preproc_flags "/nologo /EP /Zc:preprocessor"
  

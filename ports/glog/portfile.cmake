@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/glog
     REF "v${VERSION}"
-    SHA512 7222bb432c2b645238018233b2d18f254156617ef2921d18d17364866a7a3a05533fff1d63fd5033e1e5d3746a11806d007e7a36efaff667a0d3006dee45c278
+    SHA512 2dabac87d44e4fe58beceb31b22be732b47df84c22f1af8c0e7d0f262de939889de1f16025c1256539f2833ef3393bc92034e983aa2886752bb8705801a68630
     HEAD_REF master
     PATCHES
       fix_glog_CMAKE_MODULE_PATH.patch
@@ -16,6 +16,8 @@ vcpkg_check_features(
     FEATURES
         unwind          WITH_UNWIND
         customprefix    WITH_CUSTOM_PREFIX
+    INVERTED_FEATURES
+        unwind          CMAKE_DISABLE_FIND_PACKAGE_Unwind
 )
 file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 
@@ -40,5 +42,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/export.h" "#ifdef GLOG_STATIC_DEFINE" "#if 0")
 endif()
-    
+
+if("unwind" IN_LIST FEATURES)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

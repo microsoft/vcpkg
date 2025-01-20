@@ -1,0 +1,50 @@
+diff --git a/include/restc-cpp/restc-cpp.h b/include/restc-cpp/restc-cpp.h
+index 12fc247..ef76416 100644
+--- a/include/restc-cpp/restc-cpp.h
++++ b/include/restc-cpp/restc-cpp.h
+@@ -52,6 +52,14 @@
+ #   define RESTC_CPP_IO_BUFFER_SIZE (1024 * 16)
+ #endif
+ 
++#if BOOST_VERSION >= 108100
++// They changed the function signature. In boost 1.86 it broke the build.
++#define RESTC_CPP_SPAWN_TRAILER \
++    , boost::asio::detached
++#else
++#define RESTC_CPP_SPAWN_TRAILER
++#endif
++
+ namespace restc_cpp {
+ 
+ class RestClient;
+@@ -380,7 +388,7 @@ class RestClient {
+                 prom->set_exception(std::current_exception());
+             }
+             done_handler.reset();
+-        });
++        } RESTC_CPP_SPAWN_TRAILER);
+ 
+         return move(future);
+     }
+diff --git a/src/RestClientImpl.cpp b/src/RestClientImpl.cpp
+index 6b20efd..f8cd8e5 100644
+--- a/src/RestClientImpl.cpp
++++ b/src/RestClientImpl.cpp
+@@ -276,7 +276,7 @@ class  RestClientImpl final : public RestClient {
+     void Process(const prc_fn_t& fn) override {
+         boost::asio::spawn(*io_service_,
+                            bind(&RestClientImpl::ProcessInWorker, this,
+-                                placeholders::_1, fn, nullptr));
++                                placeholders::_1, fn, nullptr) RESTC_CPP_SPAWN_TRAILER);
+     }
+ 
+     future< void > ProcessWithPromise(const prc_fn_t& fn) override {
+@@ -285,7 +285,7 @@ class  RestClientImpl final : public RestClient {
+ 
+         boost::asio::spawn(*io_service_,
+                            bind(&RestClientImpl::ProcessInWorker, this,
+-                                placeholders::_1, fn, promise));
++                                placeholders::_1, fn, promise) RESTC_CPP_SPAWN_TRAILER);
+ 
+         return future;
+     }

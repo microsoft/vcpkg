@@ -1,6 +1,6 @@
 {
   "name": "boringssl",
-  "version-date": "2023-10-13",
+  "version-date": "2024-09-13",
   "description": "BoringSSL is a fork of OpenSSL developed by Google",
   "homepage": "https://boringssl.googlesource.com/boringssl",
   "supports": "!uwp",

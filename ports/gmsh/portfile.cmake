@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
     REF "${PORT}_${UNDERSCORES_VERSION}"
-    SHA512 65fbfd9bf30f1334c66345edb35e2a1cc9630c8d390d13f17dd0f0329066637d10fef652ff75114fa8d85046fe0871d60395612467c975bcaa10182454c2ad5e
+    SHA512 af2574ec3aadfddeedf981faced20a6736be06fe30c7670b682837612ca5a42248444f7a782ca5e75556cb957b5cf4467d5e972ba3f60559cc719690e73f3dca
     HEAD_REF master
     PATCHES fix-install.patch
 )
@@ -107,6 +107,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-gmsh")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

@@ -1,0 +1,8 @@
+prefix=${pcfiledir}/../..
+
+Name: CBLAS
+Description: Implementation of CBLAS
+Version: 
+Requires: @requires@
+Libs: @libs@
+Cflags: @cflags@

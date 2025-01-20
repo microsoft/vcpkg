@@ -1,0 +1,22 @@
+diff --git a/submodules/CMakeLists.txt b/submodules/CMakeLists.txt
+index a6c592951..0a0ddf0f8 100644
+--- a/submodules/CMakeLists.txt
++++ b/submodules/CMakeLists.txt
+@@ -62,7 +62,7 @@ if (WIN32)
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64-ARM")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "arm")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32-ARM")
+-        elseif (${SYSTEM_PROCESSOR} STREQUAL "win32")
++        elseif (${SYSTEM_PROCESSOR} STREQUAL "x86")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32-ONECORE")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "x64" OR ${SYSTEM_PROCESSOR} STREQUAL "amd64")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64A-ONECORE")
+@@ -75,7 +75,7 @@ if (WIN32)
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64-ARM")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "arm")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32-ARM")
+-        elseif (${SYSTEM_PROCESSOR} STREQUAL "win32")
++        elseif (${SYSTEM_PROCESSOR} STREQUAL "x86")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "x64" OR ${SYSTEM_PROCESSOR} STREQUAL "amd64")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64A")

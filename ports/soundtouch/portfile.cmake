@@ -3,10 +3,8 @@ vcpkg_from_github(
     GITHUB_HOST https://codeberg.org
     REPO soundtouch/soundtouch
     REF ${VERSION}
-    SHA512 93f757b2c1abe16be589e0d191e6c0416c5980843bd416cd5cb820b65a705d98081c0fc7ca0d9880af54b5343318262c77ba39a096bb240ceec084e93ceef964
+    SHA512 9cc507e15be065fe404e3f9ac71cdc596474c4a86b04a4b969c6c3ed4aff865cdf6aee24929046818a7d3791f005778aea112d74ef4d8f60b05460755a08dbe3
     HEAD_REF master
-    PATCHES
-        use-o3-emscripten.patch # Upstream PR: https://codeberg.org/soundtouch/soundtouch/pulls/29
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

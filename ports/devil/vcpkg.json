@@ -1,7 +1,7 @@
 {
   "name": "devil",
   "version": "1.8.0",
-  "port-version": 12,
+  "port-version": 13,
   "description": "A full featured cross-platform image library",
   "homepage": "https://github.com/DentonW/DevIL",
   "supports": "!uwp",
@@ -57,7 +57,10 @@
     "tiff": {
       "description": "Use Libtiff for .tif support",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     }
   }

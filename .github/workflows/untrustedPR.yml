@@ -31,7 +31,15 @@ jobs:
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-cmake; else touch .github-pr.deprecated-cmake; fi
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' > .github-pr.changed-manifest-files
           cat .github-pr.changed-manifest-files | while read filename; do grep -q -E '"license": ' "$filename" || echo "$filename" || true; done > .github-pr.missing-license
-          cat .github-pr.changed-manifest-files | while read filename; do match=$(grep -oiP '"license": ".*\K(AGPL-1\.0|AGPL-3\.0|BSD-2-Clause-FreeBSD|BSD-2-Clause-NetBSD|bzip2-1\.0\.5|eCos-2\.0|GFDL-1\.1|GFDL-1\.2|GFDL-1\.3|GPL-1\.0|GPL-1\.0\+|GPL-2\.0|GPL-2\.0\+|GPL-2\.0-with-autoconf-exception|GPL-2\.0-with-bison-exception|GPL-2\.0-with-classpath-exception|GPL-2\.0-with-font-exception|GPL-2\.0-with-GCC-exception|GPL-3\.0|GPL-3\.0\+|GPL-3\.0-with-autoconf-exception|GPL-3\.0-with-GCC-exception|LGPL-2\.0|LGPL-2\.0\+|LGPL-2\.1|LGPL-2\.1\+|LGPL-3\.0|LGPL-3\.0\+|Nunit|StandardML-NJ|wxWindows)(?=[ "])' "$filename" || true); if [ ! -z "$match" ]; then echo "$filename (has deprecated license \"$match\")" ; fi ; done > .github-pr.deprecated-license
+          cat .github-pr.changed-manifest-files | while read filename; do grep -n -H '"license": "' "$filename" || true; done > .github-pr.all-licenses
+          cat .github-pr.all-licenses | while read license; do \
+            location=$(echo $license | grep -oP '^.*?:[0-9]+:'); \
+            echo $license | \
+            grep -oiP '(AGPL-1\.0|AGPL-3\.0|BSD-2-Clause-FreeBSD|BSD-2-Clause-NetBSD|bzip2-1\.0\.5|eCos-2\.0|GFDL-1\.1|GFDL-1\.2|GFDL-1\.3|GPL-1\.0|GPL-1\.0\+|GPL-2\.0|GPL-2\.0\+|GPL-2\.0-with-autoconf-exception|GPL-2\.0-with-bison-exception|GPL-2\.0-with-classpath-exception|GPL-2\.0-with-font-exception|GPL-2\.0-with-GCC-exception|GPL-3\.0|GPL-3\.0\+|GPL-3\.0-with-autoconf-exception|GPL-3\.0-with-GCC-exception|LGPL-2\.0|LGPL-2\.0\+|LGPL-2\.1|LGPL-2\.1\+|LGPL-3\.0|LGPL-3\.0\+|Nunit|StandardML-NJ|wxWindows)(?=[ ")&|,])' | \
+            while read id; do \
+              echo "$location$id"; \
+            done || true; \
+          done > .github-pr.deprecated-license
           ./vcpkg format-manifest --all --convert-control
           git diff > .github-pr.format-manifest
           git add -u
@@ -57,7 +65,7 @@ jobs:
             const deprecated_function = (await fs.readFile('.github-pr.deprecated-function', 'utf8')).split('\n').filter(s => s.length > 0)
             const deprecated_cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
-            const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).trim()
+            const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).split('\n').filter(s => s.length > 0)
 
             let approve = true;
             if (format !== "") {
@@ -149,22 +157,30 @@ jobs:
               }
             }
 
-            if (missing_license !== "" || deprecated_license !== "") {
-              var license_output = '';
-              license_output += 'You have modified or added at least one vcpkg.json where you should check the \"license\" field.\n'
-              if (missing_license !== "") {
-                license_output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
-                license_output += missing_license
-                license_output += "\n\nValid values for the license field can be found at https://learn.microsoft.com/en-us/vcpkg/reference/vcpkg-json#license\n\n"
-              }
-              if (deprecated_license !== "") {
-                license_output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
-                license_output += deprecated_license
-                license_output += "\n\nDeprecated and non deprecated license identifiers can be found at https://spdx.org/licenses/#deprecated\n"
-              }
+            if (missing_license !== "" || deprecated_license.length > 0) {
+              core.summary.addRaw('You have modified or added at least one vcpkg.json where you should check the \"license\" field.');
+              core.summary.addEOL();
+            }
+
+            if (missing_license !== "") {
+              license_output = 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+              license_output += missing_license
+              license_output += "\n\nValid values for the license field can be found at https://learn.microsoft.com/vcpkg/reference/vcpkg-json#license\n\n"
 
               core.warning(license_output);
             }
+
+            for (let line of deprecated_license) {
+              [file, line_number, match] = line.split(':');
+              var license_output = `SPDX deprecated license identifier ${match}.`;
+              license_output += "\nIf you feel able to do so, please consider replacing it."
+              license_output += "\nUpdated license identifiers can be found at https://spdx.org/licenses/."
+
+
+              core.notice(license_output, {file, startLine: line_number});
+            }
+
+            core.summary.write();
 
             if (!approve) {
               process.exitCode = 1;

@@ -1,4 +1,4 @@
-set(CALCEPH_HASH bbb60179b36f3ea9f05daa43e7950494d058137cf5a92e6c7b9742048dc0767490b7b42d2d2db7329f5ca96ffc4f2f32443abacb1073e29af78e58935b8b3edc)
+set(CALCEPH_HASH 81cddae9fa0d06758dbbb5fae486bd64eb087dc2ebf2d7b17fa89b6689b86e0e84d1412e6852e980ebed00a4c84a3b1b4ac00b89021f6d0bb2f370a98a6dad25)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
@@ -11,39 +11,21 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE}
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-
-    vcpkg_install_nmake(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-        OPTIONS_DEBUG
-            DESTDIR="${CURRENT_INSTALLED_DIR}/calceph/debug"
-            CFLAGS="${VCPKG_C_FLAGS_DEBUG} "
-        OPTIONS_RELEASE
-            DESTDIR="${CURRENT_INSTALLED_DIR}/calceph"
-            CFLAGS="${VCPKG_C_FLAGS_RELEASE} "
-    )
-    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/include/calceph.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    endif()
-	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
-
-else() # Build in UNIX
-    vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${OPTIONS}
-      --enable-fortran=no
-      --enable-thread=yes
-    )
+)
 
-    vcpkg_install_make()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_copy_tools(TOOL_NAMES calceph_inspector calceph_queryposition calceph_queryorientation AUTO_CLEAN)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-    file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)
-    file(INSTALL "${SOURCE_PATH}/COPYING_CECILL_B.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME copyright)
-    file(INSTALL "${SOURCE_PATH}/doc/calceph_c.pdf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME calceph_c.pdf)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING_CECILL_B.LIB")

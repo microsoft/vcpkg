@@ -1,0 +1,12 @@
+diff --git a/sdk/storage/azure-storage-blobs/CMakeLists.txt b/sdk/storage/azure-storage-blobs/CMakeLists.txt
+index f87ceae40..d624433d8 100644
+--- a/sdk/storage/azure-storage-blobs/CMakeLists.txt
++++ b/sdk/storage/azure-storage-blobs/CMakeLists.txt
+@@ -96,6 +96,7 @@ target_link_libraries(azure-storage-blobs PUBLIC Azure::azure-storage-common)
+ target_compile_definitions(azure-storage-blobs PRIVATE _azure_BUILDING_SDK)
+ 
+ get_az_version("${CMAKE_CURRENT_SOURCE_DIR}/src/private/package_version.hpp")
++set_target_properties(azure-storage-blobs PROPERTIES VERSION ${AZ_LIBRARY_VERSION})
+ generate_documentation(azure-storage-blobs ${AZ_LIBRARY_VERSION})
+ 
+ az_vcpkg_export(

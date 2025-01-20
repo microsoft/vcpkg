@@ -1,38 +1,47 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 741dc61..42f0e8f 100644
+index a64b770..716bb34 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -124,8 +124,28 @@ add_subdirectory(include)
+@@ -43,8 +43,12 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+ 
+ # search for libraries
++set(PC_LIBS_PRIVATE "")
++set(PC_REQUIRES_PRIVATE "")
++
+ if (WITH_ZLIB)
+     find_package(ZLIB REQUIRED)
++    string(APPEND PC_REQUIRES_PRIVATE "zlib")
+ endif (WITH_ZLIB)
+ 
+ if (WITH_GCRYPT)
+@@ -60,6 +64,7 @@ elseif(WITH_MBEDTLS)
+ else (WITH_GCRYPT)
+   find_package(OpenSSL 1.0.1)
+   if (OPENSSL_FOUND)
++    string(APPEND PC_REQUIRES_PRIVATE " libcrypto")
+     # On CMake < 3.16, OPENSSL_CRYPTO_LIBRARIES is usually a synonym for OPENSSL_CRYPTO_LIBRARY, but is not defined
+     # when building on Windows outside of Cygwin. We provide the synonym here, if FindOpenSSL didn't define it already.
+     if (NOT DEFINED OPENSSL_CRYPTO_LIBRARIES)
+@@ -84,6 +89,9 @@ endif ()
+ set(CMAKE_THREAD_PREFER_PTHREADS ON)
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_package(Threads)
++if(Threads_FOUND)
++  string(APPEND PC_LIBS_PRIVATE " ${CMAKE_THREAD_LIBS_INIT}")
++endif()
+ 
+ if (WITH_GSSAPI)
+     find_package(GSSAPI)
+@@ -122,7 +130,6 @@ add_subdirectory(include)
  add_subdirectory(src)
  
  # pkg-config file
 -if (UNIX OR MINGW)
  configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc @ONLY)
-+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "Requires:")
-+  if (WITH_ZLIB)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " zlib")
-+  endif ()
-+  if (WITH_GCRYPT)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lgcrypt")
-+  elseif (WITH_MBEDTLS)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lmbedcrypto -lpthread")
-+  else ()
-+    if (WIN32)
-+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -llibcrypto -luser32 -lcrypt32")
-+    else ()
-+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " libcrypto\nLibs.private:")
-+    endif ()
-+  endif ()
-+  if (CMAKE_USE_PTHREADS_INIT)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lpthread")
-+  endif ()
-+  if (WIN32)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lws2_32 -lshell32 -ladvapi32")
-+  endif ()
  install(
    FILES
-     ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc
-@@ -134,7 +154,6 @@ install(
+@@ -132,7 +139,6 @@ install(
    COMPONENT
      pkgconfig
  )
@@ -40,3 +49,27 @@ index 741dc61..42f0e8f 100644
  
  # CMake config files
  include(CMakePackageConfigHelpers)
+diff --git a/libssh.pc.cmake b/libssh.pc.cmake
+index f288b94..759525c 100644
+--- a/libssh.pc.cmake
++++ b/libssh.pc.cmake
+@@ -7,4 +7,6 @@ Name: @PROJECT_NAME@
+ Description: The SSH Library
+ Version: @PROJECT_VERSION@
+ Libs: -L${libdir} -lssh
++Libs.private: @PC_LIBS_PRIVATE@
++Requires.private: @PC_REQUIRES_PRIVATE@
+ Cflags: -I${includedir}
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 807313b..72ef059 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -94,6 +94,8 @@ if (WIN32)
+     iphlpapi
+     ws2_32
+   )
++  string(APPEND PC_LIBS_PRIVATE " -liphlpapi -lws2_32 -lshell32 -ladvapi32")
++  set(PC_LIBS_PRIVATE "${PC_LIBS_PRIVATE}" PARENT_SCOPE)
+ endif (WIN32)
+ 
+ if (BUILD_STATIC_LIB)

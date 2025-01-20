@@ -4,9 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/redis
     REF boost-${VERSION}
-    SHA512 f402f177ff0611655d44288c8cad08654db8d233e0f43baaf514c3d60438e5bb4a44a2dbf2ada0914123d09d591e703d6d9f00e409ae4dd01eeaf3d92cd5df17
+    SHA512 918ad6b11a787125d344fad9b62d83e4ab7a4ba098e37be854345befb4e48bcd3b56fc6c2797fc454e3ca2ac1d26b1a5f958720e81e0bd71d1a0b308cdb215bc
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

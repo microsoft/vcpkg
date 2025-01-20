@@ -1,6 +1,6 @@
 {
   "name": "vsgimgui",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Library that integrates VulkanSceneGraph with Dear ImGui & ImPlot.",
   "homepage": "https://github.com/vsg-dev/vsgImGui",
   "license": "MIT",

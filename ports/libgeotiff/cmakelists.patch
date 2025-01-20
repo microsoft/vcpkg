@@ -15,7 +15,7 @@ index 47a2b00..3809ba3 100644
    set (PROJECT_ROOT_DIR "..")
  endif ()
 +else()
-+  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME}")
++  set (INSTALL_CMAKE_DIR "share/geotiff")
 +  set (PROJECT_ROOT_DIR "../..")
 +endif()
  

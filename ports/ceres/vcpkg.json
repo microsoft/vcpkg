@@ -1,7 +1,6 @@
 {
   "name": "ceres",
-  "version": "2.1.0",
-  "port-version": 5,
+  "version": "2.2.0",
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",
@@ -26,17 +25,6 @@
       "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "cuda"
-      ]
-    },
-    "cxsparse": {
-      "description": "CXSparse support for Ceres",
-      "dependencies": [
-        {
-          "name": "ceres",
-          "features": [
-            "suitesparse"
-          ]
-        }
       ]
     },
     "eigensparse": {

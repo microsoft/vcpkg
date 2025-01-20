@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO victimsnino/ReactivePlusPlus
     REF "v${VERSION}"
-    SHA512 b19a164bf19f787ca182f88a616317eea122b76fea9ab0b90b2fe05e30ab94a7540b33aef1156003141dd4b0bc30b41bf2dc224a8cbe31707ab111bcfd7a3c5b
+    SHA512 d48e7e0d397c9fea2eef7c7f27f48f80738e814e2418437c367bcb35830baaaef73f570adf8408153bba2736c1f74769bd37ab41e7afbcea81b280112eb5e6b3
     HEAD_REF master
 )
 

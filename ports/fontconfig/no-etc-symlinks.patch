@@ -12,7 +12,7 @@
          except FileNotFoundError:
              pass
          try:
--            os.symlink(src, dst)
+-            os.symlink(os.path.relpath(src, start=args.confpath), dst)
 +            shutil.copyfile(src, dst)
          except NotImplementedError:
              # Not supported on this version of Windows

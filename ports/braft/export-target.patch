@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a851c00..d18ecd0 100644
+index 3d75dd5..090a02e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -105,7 +105,7 @@ if(BRPC_WITH_GLOG)
+@@ -99,7 +99,7 @@ if(BRPC_WITH_GLOG)
          ${OPENSSL_LIBRARIES}
          ${OPENSSL_CRYPTO_LIBRARY}
          dl
@@ -11,7 +11,7 @@ index a851c00..d18ecd0 100644
          )
  else()
      set(DYNAMIC_LIB
-@@ -117,7 +117,7 @@ else()
+@@ -111,7 +111,7 @@ else()
          ${OPENSSL_LIBRARIES}
          ${OPENSSL_CRYPTO_LIBRARY}
          dl
@@ -21,7 +21,7 @@ index a851c00..d18ecd0 100644
  endif()
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 78adc56..0ab4dce 100644
+index 78adc56..50cffc6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -19,8 +19,10 @@ add_library(braft-static STATIC $<TARGET_OBJECTS:OBJ_LIB>)
@@ -35,7 +35,7 @@ index 78adc56..0ab4dce 100644
  target_link_libraries(braft-static PUBLIC ${DYNAMIC_LIB})
  endif()
  
-@@ -31,15 +33,31 @@ SET_TARGET_PROPERTIES(braft-shared PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUT
+@@ -31,15 +33,32 @@ SET_TARGET_PROPERTIES(braft-shared PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUT
  endif()
  
  if (NOT BUILD_SHARED_LIBS)
@@ -58,6 +58,7 @@ index 78adc56..0ab4dce 100644
 +[[include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB)
 +find_dependency(gflags CONFIG)
++find_dependency(Protobuf CONFIG)
 +file(GLOB TARGET_FILES "${CMAKE_CURRENT_LIST_DIR}/unofficial-braftTargets.cmake")
 +foreach (TARGET_FILE ${TARGET_FILES})
 +    include("${TARGET_FILE}")

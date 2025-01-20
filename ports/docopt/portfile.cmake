@@ -23,7 +23,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(READ "${CURRENT_PACKAGES_DIR}/include/docopt/docopt.h" _contents)
-    string(REPLACE "#ifdef DOCOPT_DLL" "#if 1" _contents "${_contents}")
+    string(REPLACE "#ifdef DOCOPT_DLL" "#ifdef _WIN32" _contents "${_contents}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/include/docopt/docopt.h" "${_contents}")
 endif()
 

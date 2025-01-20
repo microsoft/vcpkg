@@ -18,9 +18,9 @@ vcpkg_check_features(
         libmodplug SDL2MIXER_MOD_MODPLUG
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
+        wavpack SDL2MIXER_WAVPACK
+        wavpack SDL2MIXER_WAVPACK_DSD
         opusfile SDL2MIXER_OPUS
-    MAYBE_UNUSED_VARIABLES    
-        SDL2MIXER_MP3_DRMP3
 )
 
 if("fluidsynth" IN_LIST FEATURES)
@@ -46,6 +46,8 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_MIDI_TIMIDITY=OFF
         -DSDL2MIXER_MP3_DRMP3=OFF
         -DSDL2MIXER_MOD_XMP_SHARED=${BUILD_SHARED}
+    MAYBE_UNUSED_VARIABLES
+        SDL2MIXER_MP3_DRMP3
 )
 
 vcpkg_cmake_install()

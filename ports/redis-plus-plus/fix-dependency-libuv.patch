@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e85a158..e67681c 100644
+index ae2507e..c329f9b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -30,8 +30,8 @@ if(REDIS_PLUS_PLUS_BUILD_ASYNC)
+@@ -45,8 +45,8 @@ if(REDIS_PLUS_PLUS_BUILD_ASYNC)
          message(STATUS "redis-plus-plus build async interface with libuv")
  
          # libuv dependency
@@ -13,7 +13,7 @@ index e85a158..e67681c 100644
      else()
          message(FATAL_ERROR "invalid REDIS_PLUS_PLUS_BUILD_ASYNC")
      endif()
-@@ -150,7 +150,6 @@ if(REDIS_PLUS_PLUS_BUILD_STATIC)
+@@ -228,7 +228,6 @@ if(REDIS_PLUS_PLUS_BUILD_STATIC)
  
      if(REDIS_PLUS_PLUS_BUILD_ASYNC)
          target_include_directories(${STATIC_LIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${REDIS_PLUS_PLUS_ASYNC_FUTURE_HEADER}>)
