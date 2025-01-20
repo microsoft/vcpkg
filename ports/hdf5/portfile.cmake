@@ -97,12 +97,10 @@ foreach(file IN LISTS pc_files)
     endif()
 endforeach()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
-string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
-               [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]]
-               contents ${contents}
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake"
+    [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
+    [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]]
 )
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
 set(HDF5_TOOLS "")
 if("tools" IN_LIST FEATURES)
