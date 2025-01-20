@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b666eec..66c234d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -63,6 +63,27 @@ endif()
+@@ -63,6 +63,16 @@ endif()
  
  include(GNUInstallDirs)
  
@@ -15,22 +15,11 @@ index b666eec..66c234d 100644
 +              ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx-operators-ml.proto3
 +        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnx
 +)
-+# install python files
-+if(BUILD_ONNX_PYTHON)
-+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_data_pb.py
-+                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_data_pb2.py
-+                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_ml_pb2.py
-+                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_operators_ml_pb2.py
-+                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_operators_pb.py
-+                ${CMAKE_CURRENT_BINARY_DIR}/onnx/onnx_pb.py
-+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnx
-+  )
-+endif()
 +
  set(ONNX_ROOT ${PROJECT_SOURCE_DIR})
  
  # Read ONNX version
-@@ -104,7 +125,8 @@ endif()
+@@ -104,7 +114,8 @@ endif()
  # find_package Python has replaced PythonInterp and PythonLibs since cmake 3.12
  # Use the following command in the future; now this is only compatible with the latest pybind11
  # find_package(Python ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
@@ -40,46 +29,3 @@ index b666eec..66c234d 100644
  if(BUILD_ONNX_PYTHON)
    find_package(PythonLibs ${PY_VERSION})
  endif()
-@@ -534,6 +556,7 @@ target_link_libraries(onnx PUBLIC onnx_proto)
- add_onnx_global_defines(onnx)
- 
- if(BUILD_ONNX_PYTHON)
-+  find_package(Python3 ${PY_VERSION} COMPONENTS Development REQUIRED)
-   if("${PY_EXT_SUFFIX}" STREQUAL "")
-     if(MSVC)
-       set(PY_EXT_SUFFIX ".pyd")
-@@ -542,7 +565,9 @@ if(BUILD_ONNX_PYTHON)
-     endif()
-   endif()
- 
--  add_library(onnx_cpp2py_export MODULE "${ONNX_ROOT}/onnx/cpp2py_export.cc")
-+  find_package(pybind11 2.2 CONFIG REQUIRED)
-+  pybind11_add_module(onnx_cpp2py_export MODULE "${ONNX_ROOT}/onnx/cpp2py_export.cc")
-+  install(TARGETS onnx_cpp2py_export DESTINATION ${CMAKE_INSTALL_LIBDIR})
-   set_target_properties(onnx_cpp2py_export PROPERTIES PREFIX "")
-   set_target_properties(onnx_cpp2py_export
-                         PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
-@@ -552,19 +577,10 @@ if(BUILD_ONNX_PYTHON)
-   target_include_directories(onnx_cpp2py_export PRIVATE
-                              $<BUILD_INTERFACE:${ONNX_ROOT}>
-                              $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
--                             $<INSTALL_INTERFACE:include>)
--
--  # pybind11 is a header only lib
--  find_package(pybind11 2.2 CONFIG)
--  if(NOT pybind11_FOUND)
--    if(EXISTS "${ONNX_ROOT}/third_party/pybind11/include/pybind11/pybind11.h")
--      add_subdirectory("${ONNX_ROOT}/third_party/pybind11")
--    else()
--      message(FATAL_ERROR "cannot find pybind")
--    endif()
--  endif()
--
--  target_include_directories(onnx_cpp2py_export PUBLIC
-+                             ${Python3_INCLUDE_DIRS})
-+  target_link_directories(onnx_cpp2py_export PRIVATE ${Python3_LIBRARY_DIRS})
-+  target_link_libraries(onnx_cpp2py_export PRIVATE ${Python3_LIBRARIES})
-+  target_include_directories(onnx_cpp2py_export PRIVATE
-     "${pybind11_INCLUDE_DIRS}"
-     "${PYTHON_INCLUDE_DIRS}")
- 

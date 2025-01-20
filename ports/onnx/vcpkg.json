@@ -19,16 +19,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "pybind11": {
-      "description": "Build Python binaries",
-      "dependencies": [
-        {
-          "name": "vcpkg-get-python-packages",
-          "host": true
-        }
-      ]
-    }
-  }
+  ]
 }
