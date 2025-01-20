@@ -85,50 +85,53 @@ bit7z:arm-neon-android=fail
 ################################################################
 # <BLAS+LAPACK>
 # These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
-blas-test:x86-windows=pass # openblas
+vcpkg-ci-blas:x86-windows=pass # openblas
 lapack-test:x86-windows=pass # lapack-reference[noblas]
-blas-test:x64-windows=pass # openblas
+vcpkg-ci-blas:x64-windows=pass # openblas
 lapack-test:x64-windows=pass # lapack-reference[noblas]
-blas-test:x64-windows-static=pass # lapack-reference[blas]
+vcpkg-ci-blas:x64-windows-static=pass # lapack-reference[blas]
 lapack-test:x64-windows-static=pass # lapack-reference[blas]
-blas-test:x64-windows-static-md=pass # lapack-reference[blas]
+vcpkg-ci-blas:x64-windows-static-md=pass # lapack-reference[blas]
 lapack-test:x64-windows-static-md=pass # lapack-reference[blas]
-blas-test:x64-uwp=pass # openblas
+vcpkg-ci-blas:x64-uwp=pass # openblas
 lapack-test:x64-uwp=pass # clapack
-blas-test:arm64-windows=pass # openblas
+vcpkg-ci-blas:arm64-windows=pass # openblas
 lapack-test:arm64-windows=pass # clapack
-blas-test:arm64-windows-static-md=pass # openblas
+vcpkg-ci-blas:arm64-windows-static-md=pass # openblas
 lapack-test:arm64-windows-static-md=pass # clapack
-blas-test:arm64-uwp=pass # openblas
+vcpkg-ci-blas:arm64-uwp=pass # openblas
 lapack-test:arm64-uwp=pass # clapack
-blas-test:x64-osx=pass # accelerate framework
+vcpkg-ci-blas:x64-osx=pass # accelerate framework
 lapack-test:x64-osx=pass # accelerate framework
-blas-test:arm64-osx=pass # accelerate framework
+vcpkg-ci-blas:arm64-osx=pass # accelerate framework
 lapack-test:arm64-osx=pass # accelerate framework
-blas-test:x64-linux=pass # openblas
+vcpkg-ci-blas:x64-linux=pass # openblas
 lapack-test:x64-linux=pass # lapack-reference[noblas]
-blas-test:arm64-android=pass # openblas
+vcpkg-ci-blas:arm64-android=pass # openblas
 
+clapack:arm-neon-android=fail
 clapack:arm64-android=fail
 clapack:arm64-osx=skip
+clapack:x64-android=fail
 clapack:x64-linux=skip
 clapack:x64-osx=skip
 clapack:x64-windows-static-md=skip
 clapack:x64-windows-static=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
+lapack-reference:arm-neon-android=fail
 lapack-reference:arm64-android=fail
 lapack-reference:arm64-osx=skip
 lapack-reference:arm64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm64-windows-static-md=skip
+lapack-reference:x64-android=fail
 lapack-reference:x64-osx=skip
 lapack-reference:x64-uwp=skip
-openblas:arm64-osx=skip
-openblas:x64-android=fail
-openblas:x64-osx=skip
-openblas:x64-windows-static-md=skip
-openblas:x64-windows-static=skip
+#openblas:arm64-osx=skip
+#openblas:x64-osx=skip
+#openblas:x64-windows-static-md=skip
+#openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
@@ -175,16 +178,6 @@ c-dbg-macro:arm64-uwp=skip
 c-dbg-macro:x64-osx=skip
 c-dbg-macro:arm64-osx=skip
 c-dbg-macro:x64-linux=skip
-
-# Needs work
-casadi:arm64-android=skip
-casadi:x64-android=skip
-casadi:arm-neon-android=skip
-casadi:x64-windows-static=skip
-casadi:x64-windows-static-md=skip
-casadi:x64-uwp=skip
-casadi:arm64-uwp=skip
-
 casclib:arm64-uwp=fail
 casclib:x64-uwp=fail
 catch-classic:arm-neon-android=skip
@@ -289,7 +282,9 @@ directxsdk:x64-windows-static=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
-discordcoreapi:x64-linux=skip   # cause linux CI to hang https://github.com/microsoft/vcpkg/pull/40229
+# Needs newer GCC than we have
+discordcoreapi:x64-linux=fail
+# Needs newer standard library than we have
 discordcoreapi:x64-osx=fail
 discount:x64-android=fail
 eathread:x64-android=fail
@@ -379,7 +374,7 @@ gamenetworkingsockets:x64-android=fail
 # There is an open PR that try to fix that.
 gazebo:x64-windows=fail
 gazebo:x64-windows-static-md=fail
-gazebo:x86-windows=fail
+gazebo:x86-windows=skip
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
@@ -501,10 +496,12 @@ jemalloc:x64-uwp=fail
 jinja2cpplight:arm-neon-android=fail
 jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
+# needs android-29
+juce:arm-neon-android=fail
+juce:arm64-android=fail
+juce:x64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
-# needs android-24
-kubazip:arm-neon-android=fail
 lcm:arm-neon-android=fail
 lcm:arm64-android=fail
 lcm:arm64-windows-static-md=fail
@@ -537,6 +534,10 @@ libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
 # 32-bit needs android-24
 libflac:arm-neon-android=fail
+libfreenect2:arm64-windows=fail
+libfreenect2:arm64-windows-static-md=fail
+# inline assembly requires more registers than available
+libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -544,16 +545,7 @@ libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
-libgpg-error:arm-neon-android=fail
-libgpg-error:arm64-android=fail
-libgpg-error:x64-android=fail
 # Missing system libraries on linux to run/prepare autoconf
-libgpod:x64-linux=fail
-libfreenect2:arm64-windows=fail
-libfreenect2:arm64-windows-static-md=fail
-libgpod:arm-neon-android=fail
-libgpod:arm64-android=fail
-libgpod:x64-android=fail
 libgxps:arm-neon-android=fail
 libgxps:arm64-android=fail
 libgxps:x64-android=fail
@@ -775,9 +767,6 @@ mpir:x64-linux=skip
 msmpi:arm64-windows=fail
 msmpi:arm64-windows-static-md=fail
 munit:x64-android=fail
-mysql-connector-cpp:arm-neon-android=fail
-mysql-connector-cpp:arm64-android=fail
-mysql-connector-cpp:x64-android=fail
 nana:arm-neon-android=fail
 nana:arm64-android=fail
 nana:x64-android=fail
@@ -827,7 +816,6 @@ omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
-openfbx:arm-neon-android=fail
 openimageio:arm-neon-android=fail
 openimageio:arm64-android=fail
 openimageio:x64-android=fail
@@ -929,12 +917,13 @@ qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
+# Skipped to avoid exceeding the 48 hour time limit in CI
+# May also need an older ninja version
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=skip
 qt5-x11extras:arm64-osx=skip
-# Skipped to avoid exceeding the 48 hour time limit in CI
-qt5-webengine:x86-windows=skip
-qt5-webengine:x64-windows=skip
 # Missing system libraries
 qtwayland:x64-osx=skip
 qtwayland:arm64-osx=skip
@@ -996,6 +985,15 @@ rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
+# Visual Studio 17.12 compiler bug, fixed in 17.13: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2242053
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows-static-md=fail
+saucer:arm64-windows=fail
+saucer:arm64-windows=fail
+saucer:x64-windows-static-md=fail
+saucer:x64-windows-static=fail
+saucer:x64-windows=fail
+saucer:x86-windows=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
@@ -1093,11 +1091,6 @@ spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
-# upstream issue https://github.com/stxxl/stxxl/issues/99
-stxxl:x86-windows=skip
-stxxl:x64-windows=skip
-stxxl:x64-windows-static=skip
-stxxl:x64-windows-static-md=skip
 systemc:arm64-windows=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail
@@ -1136,7 +1129,6 @@ torch-th:x64-windows-static=fail
 tvision:arm-neon-android=fail
 tvision:arm64-android=fail
 tvision:x64-android=fail
-unicorn:x64-windows-static-md=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
 # needs android-24
@@ -1241,6 +1233,7 @@ vcpkg-ci-arrow:x64-windows-static=pass
 vcpkg-ci-arrow:x64-windows-static-md=pass
 vcpkg-ci-arrow:x64-osx=pass
 vcpkg-ci-arrow:x64-linux=pass
+vcpkg-ci-aurora-au:x64-linux=pass
 vcpkg-ci-boost:arm-neon-android=pass
 vcpkg-ci-boost:arm64-android=pass
 vcpkg-ci-boost:arm64-uwp=pass
