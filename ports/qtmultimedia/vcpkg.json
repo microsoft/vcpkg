@@ -30,6 +30,7 @@
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
+      "supports": "!(windows & static) & !linux",
       "dependencies": [
         {
           "name": "ffmpeg",
