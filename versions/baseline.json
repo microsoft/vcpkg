@@ -5765,7 +5765,7 @@
       "port-version": 0
     },
     "manif": {
-      "baseline": "2023-07-17",
+      "baseline": "0.0.5",
       "port-version": 0
     },
     "manifold": {
