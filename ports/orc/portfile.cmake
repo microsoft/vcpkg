@@ -48,7 +48,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME orc)
 vcpkg_copy_pdbs()
 
 file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
