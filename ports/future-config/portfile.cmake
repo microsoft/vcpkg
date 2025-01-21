@@ -1,7 +1,8 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO F-I-D-O/Future-Config
-	REF v0.1.0
+	REF "v${VERSION}"
+
 	SHA512 0ecaaa10c9a8c81183faa5a4722464551cdd584089fafbe01dc4d628dfb4a659363ae08e6ec6910d4adc6077f487cada2c55c6e4b37392c75a45b41886d54e1d
 	HEAD_REF master
 )
