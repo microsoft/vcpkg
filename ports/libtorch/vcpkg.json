@@ -1,7 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.1.2",
-  "port-version": 9,
+  "port-version": 10,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
