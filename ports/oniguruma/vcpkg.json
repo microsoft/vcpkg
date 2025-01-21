@@ -1,7 +1,6 @@
 {
   "name": "oniguruma",
-  "version": "6.9.7.1",
-  "port-version": 1,
+  "version": "6.9.9",
   "description": "Modern and flexible regular expressions library",
   "homepage": "https://github.com/kkos/oniguruma",
   "dependencies": [

@@ -3,6 +3,8 @@ project(yara C)
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
+else()
+  find_library(HAVE_LIBM NAMES m)
 endif()
 
 
@@ -113,7 +115,7 @@ set(
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 list(APPEND libyara_dependencies Crypt32.lib Ws2_32.lib)
 endif()
-if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+if(HAVE_LIBM)
   list(APPEND libyara_dependencies m)
 endif()
 

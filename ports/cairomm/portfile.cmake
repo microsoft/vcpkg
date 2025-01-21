@@ -2,7 +2,7 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/cairomm-${VERSION}.tar.xz"
     FILENAME "cairomm-${VERSION}.tar.xz"
-    SHA512 5484ccefc255b2e8886722c483cde011043c98b8e7ae17ce642f1b67effa236a8499c332771104fa7e547a9066c168fcfbbff6249caa73df3860823b355567d9
+    SHA512 d358a765136e244773b4a0fdcb2d9c81dd0b76f7a27c7108f94df9765f2d790f5f50b5645c09c292efce3e012528f85114d51916450c5fe6fa87d09f5a405d4c
 )
 
 vcpkg_extract_source_archive(

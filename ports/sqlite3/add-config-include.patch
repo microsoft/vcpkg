@@ -1,17 +1,17 @@
 diff --git a/sqlite3.c b/sqlite3.c
-index 1884b08..0d191be 100644
+index a1fbd60..68a4e21 100644
 --- a/sqlite3.c
 +++ b/sqlite3.c
-@@ -20,6 +20,7 @@
- ** The content in this amalgamation comes from Fossil check-in
- ** d3a40c05c49e1a49264912b1a05bc2143ac.
+@@ -22,6 +22,7 @@
  */
-+#include "sqlite3-vcpkg-config.h"
  #define SQLITE_CORE 1
  #define SQLITE_AMALGAMATION 1
++#include "sqlite3-vcpkg-config.h"
  #ifndef SQLITE_PRIVATE
+ # define SQLITE_PRIVATE static
+ #endif
 diff --git a/sqlite3.h b/sqlite3.h
-index b9d0692..698c410 100644
+index 0376113..271cf53 100644
 --- a/sqlite3.h
 +++ b/sqlite3.h
 @@ -32,6 +32,7 @@

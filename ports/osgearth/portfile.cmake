@@ -2,14 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
     REF "osgearth-${VERSION}"
-    SHA512 f65c31922bebcbf722474a047dc29c8c1ceec9c037b0704811af2627fc2d0a124b6e95888e7d3b9b0e5acc146a88ebf8669e3f864a75a91751c3a4571d05a630
+    SHA512 2f764eb1fff21cff57a04eceb73643b372c8b70899114c88cdf9928d525517214959745cb70b99ad3d1def946bfb3f58f16b4969ee4117b7563398f2410ee3e2
     HEAD_REF master
     PATCHES
-        link-libraries.patch
-        find-package.patch
-        remove-tool-debug-suffix.patch
-		remove-lerc-gltf.patch
-		export-plugins.patch
+        remove-lerc-gltf.patch
+        install-plugins.patch
 )
 
 if("tools" IN_LIST FEATURES)
@@ -20,8 +17,8 @@ if("tools" IN_LIST FEATURES)
 	vcpkg_from_github(
 		OUT_SOURCE_PATH IMGUI_SOURCE_PATH
 		REPO ocornut/imgui
-		REF 9e8e5ac36310607012e551bb04633039c2125c87 #docking branch
-		SHA512 1f1f743833c9a67b648922f56a638a11683b02765d86f14a36bc6c242cc524c4c5c5c0b7356b8053eb923fafefc53f4c116b21fb3fade7664554a1ad3b25e5ff
+		REF cab7edd135fb8a02b3552e9abe4c312d595e8777 #docking branch
+		SHA512 26dfe94793bcc7b041c723cfbf2033c32e5050d87b99856746f9f3e7f562db15b9432bf92747db7823acbc6e366dbcb023653692bb5336ce65a98483c4d8232a
 		HEAD_REF master
 	)
 
@@ -30,16 +27,6 @@ if("tools" IN_LIST FEATURES)
 	# Copy the submodules to the right place
 	file(COPY "${IMGUI_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/third_party/imgui")
 endif()
-
-file(REMOVE
-    "${SOURCE_PATH}/CMakeModules/FindBlend2D.cmake"
-    "${SOURCE_PATH}/CMakeModules/FindGEOS.cmake"
-    "${SOURCE_PATH}/CMakeModules/FindLibZip.cmake"
-    "${SOURCE_PATH}/CMakeModules/FindOSG.cmake"
-    "${SOURCE_PATH}/CMakeModules/FindSqlite3.cmake"
-    "${SOURCE_PATH}/CMakeModules/FindWEBP.cmake"
-    "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
-)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
@@ -54,7 +41,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIB_POSTFIX=
-        -DCMAKE_CXX_STANDARD=11
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DOSGEARTH_BUILD_EXAMPLES=OFF
         -DOSGEARTH_BUILD_TESTS=OFF
@@ -62,14 +48,17 @@ vcpkg_cmake_configure(
         -DOSGEARTH_BUILD_PROCEDURAL_NODEKIT=OFF
         -DOSGEARTH_BUILD_TRITON_NODEKIT=OFF
         -DOSGEARTH_BUILD_SILVERLINING_NODEKIT=OFF
+        -DOSGEARTH_BUILD_ZIP_PLUGIN=OFF		
         -DWITH_EXTERNAL_TINYXML=ON
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
+    MAYBE_UNUSED_VARIABLES
+        LIB_POSTFIX
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake/)
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
@@ -86,8 +75,7 @@ if("tools" IN_LIST FEATURES)
         endif()
     endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
-        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
-		osgearth_createtile osgearth_mvtindex
+        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
@@ -95,5 +83,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

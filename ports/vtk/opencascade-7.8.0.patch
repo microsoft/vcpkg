@@ -1,0 +1,83 @@
+diff --git a/IO/OCCT/CMakeLists.txt b/IO/OCCT/CMakeLists.txt
+index e81444eceb..4baddeb719 100644
+--- a/IO/OCCT/CMakeLists.txt
++++ b/IO/OCCT/CMakeLists.txt
+@@ -4,12 +4,25 @@ vtk_module_find_package(PRIVATE_IF_SHARED
+   VERSION_VAR "@OpenCASCADE_MAJOR_VERSION@.@OpenCASCADE_MINOR_VERSION@.@OpenCASCADE_MAINTENANCE_VERSION@"
+ )
+ 
+-set(opencascade_req_targets
+-  TKSTEP
+-  TKIGES
+-  TKMesh
+-  TKXDESTEP
+-  TKXDEIGES)
++if (OpenCASCADE_VERSION VERSION_GREATER_EQUAL "7.8.0")
++  set(opencascade_req_targets
++    TKDESTEP
++    TKDEIGES
++    TKernel
++    TKMath
++    TKMesh
++    TKBRep
++    TKXSBase
++    TKLCAF
++    TKXCAF)
++else()
++  set(opencascade_req_targets
++    TKSTEP
++    TKIGES
++    TKMesh
++    TKXDESTEP
++    TKXDEIGES)
++endif()
+ set(opencascade_missing_targets)
+ foreach (opencascade_req_target IN LISTS opencascade_req_targets)
+   if (NOT TARGET "${opencascade_req_target}")
+@@ -35,8 +48,7 @@ vtk_module_link(VTK::IOOCCT
+     ${opencascade_req_targets})
+ 
+ # OpenCASCADE started putting include directory usage requirements in 7.7.0.
+-set(OpenCASCADE_VERSION
+-  "${OpenCASCADE_MAJOR_VERSION}.${OpenCASCADE_MINOR_VERSION}.${OpenCASCADE_MAINTENANCE_VERSION}")
++
+ if (OpenCASCADE_VERSION VERSION_LESS "7.7.0")
+   vtk_module_include(VTK::IOOCCT PRIVATE "${OpenCASCADE_INCLUDE_DIR}")
+ endif ()
+diff --git a/IO/OCCT/vtkOCCTReader.cxx b/IO/OCCT/vtkOCCTReader.cxx
+index 52e76be72c..5aca5c93c8 100644
+--- a/IO/OCCT/vtkOCCTReader.cxx
++++ b/IO/OCCT/vtkOCCTReader.cxx
+@@ -345,11 +345,19 @@ public:
+   }
+ 
+   //----------------------------------------------------------------------------
++#if VTK_OCCT_VERSION(7, 8, 0) <= OCC_VERSION_HEX
++  size_t GetHash(const TDF_Label& label)
++  {
++    TopoDS_Shape aShape;
++    return this->ShapeTool->GetShape(label, aShape) ? std::hash<TopoDS_Shape>{}(aShape) : 0;
++  }
++#else
+   int GetHash(const TDF_Label& label)
+   {
+     TopoDS_Shape aShape;
+     return this->ShapeTool->GetShape(label, aShape) ? aShape.HashCode(INT_MAX) : 0;
+   }
++#endif
+ 
+   //----------------------------------------------------------------------------
+   static void GetMatrix(const TopLoc_Location& loc, vtkMatrix4x4* mat)
+@@ -381,8 +389,11 @@ public:
+       GetMatrix(hLoc->Get(), location);
+     }
+   }
+-
++#if VTK_OCCT_VERSION(7, 8, 0) <= OCC_VERSION_HEX
++  std::unordered_map<size_t, vtkSmartPointer<vtkPolyData>> ShapeMap;
++#else
+   std::unordered_map<int, vtkSmartPointer<vtkPolyData>> ShapeMap;
++#endif
+   Handle(XCAFDoc_ShapeTool) ShapeTool;
+   Handle(XCAFDoc_ColorTool) ColorTool;
+ 

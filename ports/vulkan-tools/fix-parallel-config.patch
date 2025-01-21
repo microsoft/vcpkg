@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d770ca57..00c49887 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,7 +144,7 @@ if(BUILD_ICD)
+     add_subdirectory(icd)
+ endif()
+ 
+-add_subdirectory(windows-runtime-installer)
++#add_subdirectory(windows-runtime-installer)
+ 
+ if(BUILD_TESTS)
+     enable_testing()

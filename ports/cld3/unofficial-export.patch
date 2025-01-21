@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 37e9944..fb27632 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,6 +57,19 @@ add_library(${PROJECT_NAME}
+ 
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+ target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf-lite)
++target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
++
++install(TARGETS ${PROJECT_NAME}
++    EXPORT unofficial-cld3-targets
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)
++
++install(EXPORT unofficial-cld3-targets
++	NAMESPACE unofficial::cld3::
++    DESTINATION share/unofficial-cld3
++)
+ 
+ if(BUILD_TESTS)
+ # unit tests exec:

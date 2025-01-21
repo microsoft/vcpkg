@@ -1,0 +1,13 @@
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -395,8 +395,8 @@
+     configure_file("${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.pc.cmake.in" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc" @ONLY)
+     install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+     install(PROGRAMS "${CMAKE_SOURCE_DIR}/bin/coin-config" DESTINATION ${CMAKE_INSTALL_BINDIR})
+-    configure_file("${CMAKE_SOURCE_DIR}/coin.cfg.cmake.in" "${CMAKE_BINARY_DIR}/${PROJECT_NAME_LOWER}-default.cfg" @ONLY)
+-    install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME_LOWER}-default.cfg" DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Coin/conf)
++    #configure_file("${CMAKE_SOURCE_DIR}/coin.cfg.cmake.in" "${CMAKE_BINARY_DIR}/${PROJECT_NAME_LOWER}-default.cfg" @ONLY)
++    #install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME_LOWER}-default.cfg" DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Coin/conf)
+   endif()
+ endif()
+ 

@@ -4,10 +4,11 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO poppler/poppler
     REF "poppler-${POPPLER_VERSION}"
-    SHA512 18649364dc407080941b7c4010c0f26c1ce825d9ec49ff8e9ef298c62afb8d5bb77cea6a5cd1a74615190f433c265613dba42a6b7fdd80c2b5f00d372a31d21d
+    SHA512 5997af5698a793aefcc1d0d98ea2e0732c0ce0adfa1e5be182ba2d425b1691ba84dfa89f0cdafacf19756d411b2b2de665d1a4682acf21ad5d3353dfeac0727c
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
+        private-namespace.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
@@ -27,10 +28,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qt          ENABLE_QT6
         qt          CMAKE_REQUIRE_FIND_PACKAGE_Qt6
         cms         CMAKE_REQUIRE_FIND_PACKAGE_LCMS2
+        cms         ENABLE_LCMS
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
     string(APPEND POPPLER_PC_REQUIRES " fontconfig")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=android")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=win32")
 else()
@@ -44,6 +48,10 @@ if("curl" IN_LIST FEATURES)
 endif()
 if("zlib" IN_LIST FEATURES)
     string(APPEND POPPLER_PC_REQUIRES " zlib")
+endif()
+
+if("cms" IN_LIST FEATURES)
+    string(APPEND POPPLER_PC_REQUIRES " lcms2")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -63,10 +71,10 @@ vcpkg_cmake_configure(
         -DENABLE_UTILS=OFF
         -DENABLE_GOBJECT_INTROSPECTION=OFF
         -DENABLE_QT5=OFF
-        -DENABLE_CMS=none
         -DRUN_GPERF_IF_PRESENT=OFF
         -DENABLE_RELOCATABLE=OFF # https://gitlab.freedesktop.org/poppler/poppler/-/issues/1209
-        -DWITH_NSS3=OFF
+        -DENABLE_NSS3=OFF
+        -DENABLE_GPGME=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_ECM=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
@@ -99,6 +107,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

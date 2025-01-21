@@ -1,0 +1,139 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 1b69cad..9494278 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -190,7 +190,8 @@ if (PXR_BUILD_IMAGING)
+     # --OpenImageIO
+     if (PXR_BUILD_OPENIMAGEIO_PLUGIN)
+         set(REQUIRES_Imath TRUE)
+-        find_package(OpenImageIO REQUIRED)
++        find_package(OpenImageIO CONFIG REQUIRED)
++        set(OIIO_LIBRARIES OpenImageIO::OpenImageIO)
+         add_definitions(-DPXR_OIIO_PLUGIN_ENABLED)
+         if (OIIO_idiff_BINARY)
+             set(IMAGE_DIFF_TOOL ${OIIO_idiff_BINARY} CACHE STRING "Uses idiff for image diffing")
+@@ -227,6 +228,7 @@ if (PXR_BUILD_IMAGING)
+             find_package(Vulkan REQUIRED)
+             list(APPEND VULKAN_LIBS Vulkan::Vulkan)
+ 
++            if(0)
+             # Find the extra vulkan libraries we need
+             set(EXTRA_VULKAN_LIBS shaderc_combined)
+             if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+@@ -236,6 +238,7 @@ if (PXR_BUILD_IMAGING)
+                 find_library("${EXTRA_LIBRARY}_PATH" NAMES "${EXTRA_LIBRARY}" PATHS $ENV{VULKAN_SDK}/lib)
+                 list(APPEND VULKAN_LIBS "${${EXTRA_LIBRARY}_PATH}")
+             endforeach()
++            endif()
+ 
+             # Find the OS specific libs we need
+             if (UNIX AND NOT APPLE)
+@@ -249,10 +252,20 @@ if (PXR_BUILD_IMAGING)
+         else()
+             message(FATAL_ERROR "VULKAN_SDK not valid")
+         endif()
++        find_package(unofficial-shaderc CONFIG REQUIRED)
++        find_package(unofficial-spirv-reflect CONFIG REQUIRED)
++        find_package(VulkanMemoryAllocator CONFIG REQUIRED)
++        list(APPEND VULKAN_LIBS unofficial::shaderc::shaderc)
++        list(APPEND VULKAN_LIBS unofficial::spirv-reflect)
++        list(APPEND VULKAN_LIBS GPUOpen::VulkanMemoryAllocator)
+     endif()
+     # --Opensubdiv
+-    set(OPENSUBDIV_USE_GPU ${PXR_BUILD_GPU_SUPPORT})
+-    find_package(OpenSubdiv 3 REQUIRED)
++    find_package(OpenSubdiv 3 CONFIG REQUIRED)
++    set(OPENSUBDIV_LIBRARIES OpenSubdiv::osdCPU_static)
++    set(OPENSUBDIV_OSDCPU_LIBRARY OpenSubdiv::osdCPU_static) # For compatibility
++    if(PXR_ENABLE_GL_SUPPORT)
++        list(APPEND OPENSUBDIV_LIBRARIES OpenSubdiv::osdGPU_static)
++    endif()
+     # --Ptex
+     if (PXR_ENABLE_PTEX_SUPPORT)
+         find_package(PTex REQUIRED)
+diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeLists.txt
+index 97e4228..3eb83be 100644
+--- a/pxr/imaging/hgiVulkan/CMakeLists.txt
++++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
+@@ -46,8 +46,6 @@ pxr_library(hgiVulkan
+         api.h
+         vulkan.h
+ 
+-    PRIVATE_CLASSES
+-        spirv_reflect
+ 
+     RESOURCE_FILES
+         plugInfo.json
+diff --git a/pxr/imaging/plugin/hioOiio/CMakeLists.txt b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
+index 0a055b7..de4b73a 100644
+--- a/pxr/imaging/plugin/hioOiio/CMakeLists.txt
++++ b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
+@@ -7,6 +7,7 @@ if (NOT ${PXR_BUILD_GPU_SUPPORT})
+     return()
+ endif()
+ 
++if(0) # No need because OpenImageIO::OpenImageIO already declare its transitive dependencies correctly
+ # Use the import targets set by Imath's package config
+ if (Imath_FOUND)
+     set(__OIIO_IMATH_LIBS "Imath::Imath")
+@@ -14,6 +15,7 @@ else()
+     set(__OIIO_IMATH_INCLUDE ${OPENEXR_INCLUDE_DIRS})
+     set(__OIIO_IMATH_LIBS ${OPENEXR_LIBRARIES})
+ endif()
++endif()
+ 
+ pxr_plugin(hioOiio
+     LIBRARIES
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 041cd8c..2f89d69 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -20,6 +20,27 @@ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(TBB CONFIG)
+ 
++if(@PXR_BUILD_IMAGING@)
++    find_dependency(OpenSubdiv 3 CONFIG)
++    if(@PXR_BUILD_OPENIMAGEIO_PLUGIN@)
++        find_dependency(OpenImageIO CONFIG)
++    endif()
++    if(@PXR_ENABLE_GL_SUPPORT@)
++        find_dependency(OpenGL REQUIRED)
++    endif()
++    if(@PXR_ENABLE_VULKAN_SUPPORT@)
++        if (NOT DEFINED Vulkan_DIR)
++            if (NOT [[@Vulkan_DIR@]] STREQUAL "")
++                set(Vulkan_DIR [[@Vulkan_DIR@]])
++            endif()
++        endif()
++        find_dependency(Vulkan REQUIRED)
++        find_dependency(unofficial-shaderc CONFIG)
++        find_dependency(unofficial-spirv-reflect CONFIG)
++        find_dependency(VulkanMemoryAllocator CONFIG)
++    endif()
++endif()
++
+ # If Python support was enabled for this USD build, find the import
+ # targets by invoking the appropriate FindPython module. Use the same
+ # LIBRARY and INCLUDE_DIR settings from the original build if they
+@@ -75,17 +96,17 @@ if(@Imath_FOUND@)
+             set(Imath_DIR [[@Imath_DIR@]])
+         endif()
+     endif()
+-    find_dependency(Imath)
++    find_dependency(Imath CONFIG)
+ endif()
+ 
+-include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")
++include("${PXR_CMAKE_DIR}/pxrTargets.cmake")
+ if (TARGET usd_ms)
+     set(libs "usd_ms")
+ else()
+     set(libs "@PXR_ALL_LIBS@")
+ endif()
+ set(PXR_LIBRARIES "")
+-set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/include")
++set(PXR_INCLUDE_DIRS "${PXR_CMAKE_DIR}/../../include")
+ string(REPLACE " " ";" libs "${libs}")
+ foreach(lib ${libs})
+     get_target_property(location ${lib} LOCATION)

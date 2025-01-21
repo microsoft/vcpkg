@@ -1,7 +1,7 @@
 {
   "name": "civetweb",
   "version": "1.16",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Easy to use, powerful, C/C++ embeddable web server.",
   "homepage": "https://github.com/civetweb/civetweb",
   "supports": "!uwp",
@@ -13,7 +13,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "features": {
     "ssl": {

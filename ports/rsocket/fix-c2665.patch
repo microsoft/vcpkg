@@ -1,0 +1,13 @@
+diff --git a/rsocket/RSocketServer.cpp b/rsocket/RSocketServer.cpp
+index 3a9f6b2..e749eb1 100644
+--- a/rsocket/RSocketServer.cpp
++++ b/rsocket/RSocketServer.cpp
+@@ -30,7 +30,7 @@ RSocketServer::RSocketServer(
+     std::shared_ptr<RSocketStats> stats)
+     : duplexConnectionAcceptor_(std::move(connectionAcceptor)),
+       setupResumeAcceptors_([] {
+-        return new rsocket::SetupResumeAcceptor{
++        return rsocket::SetupResumeAcceptor{
+             folly::EventBaseManager::get()->getExistingEventBase()};
+       }),
+       connectionSet_(std::make_unique<ConnectionSet>()),

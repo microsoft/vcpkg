@@ -1,11 +1,68 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 33e98b1..f275d68 100644
+index 8e49c19e..f8c61d92 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -426,27 +426,7 @@ if (MINIGLOG)
+@@ -292,27 +292,28 @@ if (SUITESPARSE)
+   # built with SuiteSparse support.
+ 
+   # Check for SuiteSparse and dependencies.
+-  find_package(SuiteSparse 4.5.6 COMPONENTS CHOLMOD SPQR
+-    OPTIONAL_COMPONENTS Partition)
+-  if (SuiteSparse_FOUND)
+-    set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
++  find_package(SuiteSparse REQUIRED CONFIG)
++  if (SUITESPARSE_FOUND)
++    set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION} CONFIG)")
+     # By default, if all of SuiteSparse's dependencies are found, Ceres is
+     # built with SuiteSparse support.
+     message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
+             "building with SuiteSparse.")
+-
+-    if (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
+-      install(FILES ${Ceres_SOURCE_DIR}/cmake/FindSuiteSparse.cmake
+-                    ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
+-              DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
+-    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
+-  else (SuiteSparse_FOUND)
++    add_library(SuiteSparse::CONFIG ALIAS SuiteSparse::suitesparseconfig)
++    add_library(SuiteSparse::AMD ALIAS SuiteSparse::amd)
++    add_library(SuiteSparse::CAMD ALIAS SuiteSparse::camd)
++    add_library(SuiteSparse::CCOLAMD ALIAS SuiteSparse::ccolamd)
++    add_library(SuiteSparse::COLAMD ALIAS SuiteSparse::colamd)
++    add_library(SuiteSparse::CHOLMOD ALIAS SuiteSparse::cholmod)
++    add_library(SuiteSparse::SPQR ALIAS SuiteSparse::spqr)
++    add_library(METIS::METIS ALIAS metis)
++  else (SUITESPARSE_FOUND)
+     # Disable use of SuiteSparse if it cannot be found and continue.
+     message("-- Did not find all SuiteSparse dependencies, disabling "
+       "SuiteSparse support.")
+     update_cache_variable(SUITESPARSE OFF)
+     list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
+-  endif (SuiteSparse_FOUND)
++  endif (SUITESPARSE_FOUND)
+ else (SUITESPARSE)
+   message("-- Building without SuiteSparse.")
+   list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
+@@ -395,9 +396,12 @@ endif()
+ # GFlags.
+ if (GFLAGS)
+   # Don't search with REQUIRED as we can continue without gflags.
+-  find_package(gflags 2.2.0)
++  find_package(gflags CONFIG REQUIRED)
+   if (gflags_FOUND)
+-    if (TARGET gflags)
++    if (TARGET gflags::gflags)
++      if(NOT TARGET gflags)
++        add_library(gflags ALIAS gflags::gflags)
++      endif()
+       message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
+     else()
+       message("-- Detected version of gflags: ${gflags_VERSION} does not define "
+@@ -430,28 +434,7 @@ if (MINIGLOG)
+   mark_as_advanced(FORCE GLOG_INCLUDE_DIR
                           GLOG_LIBRARY)
  else (MINIGLOG)
-   unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
+-  unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
 -  # Don't search with REQUIRED so that configuration continues if not found and
 -  # we can output an error messages explaining MINIGLOG option.
 -  find_package(Glog)
@@ -29,9 +86,18 @@ index 33e98b1..f275d68 100644
 -  message("-- Found Google Log (glog)." ${GLOG_GFLAGS_DEPENDENCY_MESSAGE})
 +  find_package(Glog REQUIRED)
  endif (MINIGLOG)
-
+ 
  if (NOT SCHUR_SPECIALIZATIONS)
-@@ -760,12 +740,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
+@@ -466,7 +449,7 @@ endif (NOT CUSTOM_BLAS)
+ 
+ if (BUILD_BENCHMARKS)
+   # Version 1.3 was first to provide import targets
+-  find_package(benchmark 1.3 QUIET)
++  find_package(benchmark CONFIG REQUIRED)
+   if (benchmark_FOUND)
+      message("-- Found Google benchmark library. Building Ceres benchmarks.")
+   else()
+@@ -722,12 +705,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
  install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
@@ -41,6 +107,6 @@ index 33e98b1..f275d68 100644
 -  install(FILES "${Ceres_SOURCE_DIR}/cmake/FindGlog.cmake"
 -          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -endif()
-
+ 
  if (PROVIDE_UNINSTALL_TARGET)
    # Create an uninstall target to remove all installed files.

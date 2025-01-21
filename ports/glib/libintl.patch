@@ -9,7 +9,7 @@ diff --git a/meson.build b/meson.build
  libintl_prefix = '#include <libintl.h>'
 -libintl = dependency('intl', required: false)
 -if libintl.found() and libintl.type_name() != 'internal'
-+libintl = dependency('Intl', method:'cmake', required: true)
++libintl = dependency('intl', required : true)
 +libintl_deps = [libintl]
 +if false
    # libintl supports different threading APIs, which may not

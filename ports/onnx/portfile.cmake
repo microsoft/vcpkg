@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 8a525b365fd203f0a59bcf82fa7f2e29d7e0563885ebe38269c596cd4eb949bcfc65d848b92b7abafa7ddecedcfc019f8779097ffcb5087f06037cace24462fc
+    SHA512 5a18e2b19ec9c18c8b115fb7e12ed98eddaa581c95f15c4dd420cd6c86e7caa04f9a393da589e76b89cf9b3544abd3749a8c77c2446782f37502eb74e9b1f661
     PATCHES
         fix-cmakelists.patch
         fix-dependency-protobuf.patch
+        fix-cxx_standard.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
@@ -73,6 +74,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/bin"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/controlflow"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/generator"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/image"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/logical"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/math"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/nn"
@@ -82,6 +84,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/reduction"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/rnn"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/sequence"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/text"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/traditionalml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/training"
     "${CURRENT_PACKAGES_DIR}/include/onnx/examples"

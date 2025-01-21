@@ -1,0 +1,4 @@
+nghttp3 provides CMake targets:
+
+  find_package(nghttp3 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:nghttp3::nghttp3>,nghttp3::nghttp3,nghttp3::nghttp3_static>)

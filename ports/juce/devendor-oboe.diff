@@ -1,0 +1,17 @@
+diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
+index afefe2d..2dd2ecf 100644
+--- a/extras/Build/CMake/JUCEModuleSupport.cmake
++++ b/extras/Build/CMake/JUCEModuleSupport.cmake
+@@ -603,8 +603,10 @@ function(juce_add_module module_path)
+     endif()
+ 
+     if((${module_name} STREQUAL "juce_audio_devices") AND (CMAKE_SYSTEM_NAME STREQUAL "Android"))
+-        add_subdirectory("${module_path}/native/oboe")
+-        target_link_libraries(${module_name} INTERFACE oboe)
++        find_path(JUCE_OBOE_INCLUDE_DIR NAMES oboe/Oboe.h REQUIRED)
++        target_include_directories(${module_name} INTERFACE "${JUCE_OBOE_INCLUDE_DIR}")
++        find_library(JUCE_OBOE_LIBRARY NAMES oboe REQUIRED)
++        target_link_libraries(${module_name} INTERFACE "${JUCE_OBOE_LIBRARY}" log OpenSLES)
+     endif()
+ 
+     if((${module_name} STREQUAL "juce_opengl") AND (CMAKE_SYSTEM_NAME STREQUAL "Android"))

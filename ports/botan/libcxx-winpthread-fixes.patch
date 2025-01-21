@@ -1,0 +1,14 @@
+diff --git a/src/tests/tests.h b/src/tests/tests.h
+index d198376..12f001a 100644
+--- a/src/tests/tests.h
++++ b/src/tests/tests.h
+@@ -17,7 +17,9 @@
+ #include <map>
+ #include <memory>
+ #include <optional>
++#ifndef __ANDROID__
+ #include <ranges>
++#endif
+ #include <set>
+ #include <sstream>
+ #include <string>

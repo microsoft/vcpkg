@@ -1,15 +1,18 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 fb6be83b0292bb28319061721fe10ea16776a942b381780a8d4bece9b86e3525a0f533e3572e54c6498b08c4dc421a746bff8f0302f3ea0d810e266811331a65
+    SHA512 dcd9ac8e748422d55854c38e565704e4a239418b6855836bdea85bd4dc3ab45e218d320471b98b6a451fc63d8518895f3813a50c94dee90227c09d12d96ca1dc
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
+        fix_android.patch
+        libcxx-winpthread-fixes.patch
+        fix-cmake-usage.patch
+        0009-fix-regression-f2bf049-85491b3.patch # extract from PR 4255
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -53,7 +56,9 @@ if("zlib" IN_LIST FEATURES)
     x_vcpkg_pkgconfig_get_modules(LIBS PREFIX "ZLIB" MODULES "zlib" ${pkgconfig_syntax})
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND configure_arguments --cpu=wasm)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     vcpkg_list(APPEND configure_arguments --cpu=x86)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_list(APPEND configure_arguments --cpu=x86_64)
@@ -65,11 +70,27 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+# Allow disabling use of WinSock2 by setting BOTAN_USE_WINSOCK2=OFF in triplet
+# for targeting older Windows versions with missing APIs.
+if(VCPKG_TARGET_IS_WINDOWS AND DEFINED BOTAN_USE_WINSOCK2 AND NOT BOTAN_USE_WINSOCK2)
+    vcpkg_list(APPEND configure_arguments --without-os-features=winsock2)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND configure_arguments --os=windows)
 
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         vcpkg_list(APPEND configure_arguments --cc=msvc)
+    endif()
+
+    # When compiling with Clang, -mrdrand is required to enable the RDRAND intrinsics. Botan will
+    # check for RDRAND at runtime before trying to use it, so we should be safe to specify this
+    # without triggering illegal instruction faults on older CPUs.
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl(\.exe)?$")
+        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS} -mrdrnd")
+    else()
+        # ...otherwise just forward the detected CXXFLAGS.
+        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -101,6 +122,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "--msvc-runtime=${BOTAN_MSVC_RUNTIME}d"
             "--with-external-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
             --debug-mode
+        OPTIONS
+            "CXX=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\""
+            "LINKER=\"${VCPKG_DETECTED_CMAKE_LINKER}\""
+            "AR=\"${VCPKG_DETECTED_CMAKE_AR}\""
+            "EXE_LINK_CMD=\"${VCPKG_DETECTED_CMAKE_LINKER}\" ${VCPKG_LINKER_FLAGS}"
         OPTIONS_RELEASE
             "ZLIB_LIBS=${ZLIB_LIBS_RELEASE}"
         OPTIONS_DEBUG
@@ -109,11 +135,17 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_copy_tools(TOOL_NAMES botan-cli AUTO_CLEAN)
     vcpkg_copy_pdbs()
 else()
-    if(VCPKG_TARGET_IS_MINGW)
+    if(VCPKG_TARGET_IS_ANDROID)
+        vcpkg_list(APPEND configure_arguments --os=android)
+    elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_list(APPEND configure_arguments --os=emscripten)
+    elseif(VCPKG_TARGET_IS_MINGW)
         vcpkg_list(APPEND configure_arguments --os=mingw)
     endif()
 
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_list(APPEND configure_arguments --cc=emcc)
+    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         vcpkg_list(APPEND configure_arguments --cc=gcc)
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
@@ -141,8 +173,12 @@ else()
             "ZLIB_LIBS_RELEASE=${ZLIB_LIBS_RELEASE}"
             "ZLIB_LIBS_DEBUG=${ZLIB_LIBS_DEBUG}"
     )
-    vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
+    if(NOT VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
+    endif()
 endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Botan-${VERSION}")
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
@@ -162,8 +198,8 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "" IGNORE_UNCHANGED)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
