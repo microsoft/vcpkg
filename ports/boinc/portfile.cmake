@@ -1,10 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.24/7.24.1
-    SHA512 7dad36900c13b69a89b5a173fc283130bc4cf15c781ed31ed72ce0b6ba0db4895a12314d0f302c7a91c2762333b7c162f20f32e67ed5e2e7a4099e1f2238c255
+    REF "client_release/${MAJOR_MINOR}/${VERSION}"
+    SHA512 0e0c4f7647325f8f1e8a87da0d7ff43d1a3e5d3ef0dc3daf1fb974a47c0e4fb7318b3fdde77d0ae6ec4f3d30be113a5ceff33658facc8f3c2c325c8c61942698
     HEAD_REF master
 )
 

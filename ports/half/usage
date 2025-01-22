@@ -1,0 +1,4 @@
+half is header-only and can be used from CMake via:
+
+  find_path(HALF_INCLUDE_DIRS "half.hpp")
+  target_include_directories(main PRIVATE ${HALF_INCLUDE_DIRS})

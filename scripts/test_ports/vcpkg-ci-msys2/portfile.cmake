@@ -18,7 +18,7 @@ vcpkg_list(SET known_delisted
 
 # Ignore these dependencies (e.g. interactive or effectively optional)
 vcpkg_list(SET ignored_dependencies
-    autoconf2.13 autoconf2.69
+    autoconf2.13 autoconf2.69 autoconf2.71
     automake1.11 automake1.12 automake1.13 automake1.14 automake1.15
     db
     gdbm
@@ -337,24 +337,28 @@ set(known_packages "${Z_VCPKG_MSYS_PACKAGES_RESOLVED}")
 
 set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
 vcpkg_find_acquire_program(PKGCONFIG)
-analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_acquire_program(PKGCONFIG).cmake" DIRECT_ONLY)
+vcpkg_acquire_msys(msys_root
+    NO_DEFAULT_PACKAGES
+    Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
+    PACKAGES
+        mingw-w64-clang-aarch64-pkgconf
+        mingw-w64-x86_64-pkgconf
+        mingw-w64-i686-pkgconf
+)
+analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_acquire_program(PKGCONFIG).cmake")
 
-set(PATH_BAK "$ENV{PATH}")
 set(CMAKE_Fortran_COMPILER "")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(CMAKE_Fortran_COMPILER "true")
+endif()
 set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
 include("${SCRIPTS}/cmake/vcpkg_find_fortran.cmake")
 vcpkg_find_fortran(FORTRAN)
-analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_fortran.cmake" DIRECT_ONLY)
-set(ENV{PATH} "${PATH_BAK}")
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    # Don't do this in regular ports.
-    message(STATUS "*** Simulating an x86 target triplet")
-    set(VCPKG_TARGET_ARCHITECTURE "x86")
-    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "")
-    set(CMAKE_Fortran_COMPILER "")
-    set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
-    vcpkg_find_fortran(FORTRAN_x86)
-    analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_fortran.cmake" DIRECT_ONLY)
-    set(VCPKG_TARGET_ARCHITECTURE "x64")
-    set(ENV{PATH} "${PATH_BAK}")
-endif()
+vcpkg_acquire_msys(msys_root
+    NO_DEFAULT_PACKAGES
+    Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_fortran_msys_declare_packages"
+    PACKAGES
+        mingw-w64-x86_64-gcc-fortran
+        mingw-w64-i686-gcc-fortran
+)
+analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_fortran.cmake")

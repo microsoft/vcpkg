@@ -1,0 +1,38 @@
+diff --git a/lang/c++/include/avro/Node.hh b/lang/c++/include/avro/Node.hh
+index f76078b..75619d9 100644
+--- a/lang/c++/include/avro/Node.hh
++++ b/lang/c++/include/avro/Node.hh
+@@ -219,8 +219,8 @@ inline std::ostream &operator<<(std::ostream &os, const avro::Node &n) {
+ template<>
+ struct fmt::formatter<avro::Name> : fmt::formatter<std::string> {
+     template<typename FormatContext>
+-    auto format(const avro::Name &n, FormatContext &ctx) {
+-        return fmt::formatter<std::string>::format(n.fullname(), ctx);
++    auto format(const avro::Name &n, FormatContext &ctx) const {
++        return fmt::format_to(ctx.out(), "{}", n.fullname());
+     }
+ };
+ 
+diff --git a/lang/c++/include/avro/Types.hh b/lang/c++/include/avro/Types.hh
+index 84a3397..4fe018e 100644
+--- a/lang/c++/include/avro/Types.hh
++++ b/lang/c++/include/avro/Types.hh
+@@ -19,6 +19,7 @@
+ #ifndef avro_Types_hh__
+ #define avro_Types_hh__
+ 
++#include <fmt/core.h>
+ #include <fmt/format.h>
+ #include <iostream>
+ 
+@@ -113,8 +114,8 @@ std::ostream &operator<<(std::ostream &os, const Null &null);
+ template<>
+ struct fmt::formatter<avro::Type> : fmt::formatter<std::string> {
+     template<typename FormatContext>
+-    auto format(avro::Type t, FormatContext &ctx) {
+-        return fmt::formatter<std::string>::format(avro::toString(t), ctx);
++    auto format(avro::Type t, FormatContext &ctx) const {
++        return fmt::format_to(ctx.out(), "{}", avro::toString(const_cast<avro::Type&>(t)));
+     }
+ };
+ 

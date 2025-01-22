@@ -1,0 +1,30 @@
+{
+  "name": "vst3sdk",
+  "version-string": "v3.7.12_build_20",
+  "description": "Virtual Studio Technology (VST) is an audio plug-in software interface that facilitates the integration of software synthesizers and effects in digital audio workstations (DAW)",
+  "homepage": "https://steinbergmedia.github.io/vst3_dev_portal/pages/Technical+Documentation/API+Documentation/Index.html",
+  "license": "GPL-3.0-only",
+  "supports": "!android & !uwp & !(arm64 & windows) & !staticcrt",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "audiounit-wrapper": {
+      "description": "Include AudioUnit wrappers for macOS",
+      "supports": "osx"
+    },
+    "hosting-examples": {
+      "description": "Build examples for VST3 host applications"
+    },
+    "plugin-examples": {
+      "description": "Build examples for VST3 plugins"
+    }
+  }
+}

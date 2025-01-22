@@ -1,0 +1,17 @@
+{
+  "name": "poolstl",
+  "version": "0.3.5",
+  "description": "Light and self-contained implementation of C++17 parallel algorithms.",
+  "homepage": "https://github.com/alugowski/poolSTL",
+  "license": "BSD-2-Clause OR BSL-1.0 OR MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

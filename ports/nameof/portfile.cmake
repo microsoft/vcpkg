@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/nameof
     REF "v${VERSION}"
-    SHA512 2b0bad2a3309202bcd6e361c2f2d4a61b474359a6c2df0a8b9e1a6c9e077bbf0c0d18dc5b603ecb4f82cc1f74656aae51e52ece0f7049ac3f75b593f14542b93
+    SHA512 88eff4fb9a137c388b39d67eb9e213ed93e6a553dd1295d5db04c6fbc254f6df3da8800de2e0675f574bb3f83ae05141f71efe30ccdd4601a42cf19adaea6e79
     HEAD_REF master
 )
 

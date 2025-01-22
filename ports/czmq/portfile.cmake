@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/czmq
-    REF v4.2.1
+    REF "v${VERSION}"
     SHA512 65a21f7bd5935b119e1b24ce3b2ce8462031ab7c9a4ba587bb99fe618c9f8cb672cfa202993ddd79e0fb0f154ada06560b79a1b4f762fcce8f88f2f450ecee01
     HEAD_REF master
     PATCHES
@@ -40,6 +40,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCZMQ_BUILD_SHARED=${BUILD_SHARED}
         -DCZMQ_BUILD_STATIC=${BUILD_STATIC}
+        -DCZMQ_WITH_SYSTEMD=OFF
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
 )

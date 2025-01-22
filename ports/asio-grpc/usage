@@ -13,3 +13,7 @@ The standalone Asio backend. Install "asio" and link with:
 The libunifex backend. Install "libunifex" and link with:
 
     target_link_libraries(main PRIVATE asio-grpc::asio-grpc-unifex)
+
+The stdexec backend. Install "stdexec" and link with:
+
+    target_link_libraries(main PRIVATE asio-grpc::asio-grpc-stdexec)

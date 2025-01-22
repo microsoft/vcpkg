@@ -17,13 +17,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
     elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(DATAROOT "share")
     endif()
-    file(COPY "${CURRENT_INSTALLED_DIR}/${DATAROOT}/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/data")
-    file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/${DATAROOT}/kservicetypes5/*")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(COPY "${CURRENT_INSTALLED_DIR}/${DATAROOT}/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/data")
+        file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/${DATAROOT}/kservicetypes5/*")
+    endif()
     file(COPY "${CURRENT_INSTALLED_DIR}/${DATAROOT}/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/data")
     file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/${DATAROOT}/kservicetypes5/*")
 else()
-    file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share")
-    file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/share/kservicetypes5/*")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share")
+        file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/share/kservicetypes5/*")
+    endif()
     file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/share")
     file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/share/kservicetypes5/*")
 endif()
@@ -32,7 +36,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DENABLE_KAUTH_DEFAULT=OFF
+        -DENABLE_KAUTH=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DVCPKG_HOST_TRIPLET=${VCPKG_HOST_TRIPLET}
 )

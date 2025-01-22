@@ -1,0 +1,12 @@
+diff --git a/Release/CMakeLists.txt b/Release/CMakeLists.txt
+index 3d6df65..9ff6d66 100644
+--- a/Release/CMakeLists.txt
++++ b/Release/CMakeLists.txt
+@@ -178,6 +178,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   set(WARNINGS)
+   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /ignore:4264")
+   add_compile_options(/bigobj)
++  add_compile_options(/D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP")
+   set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /MP")
+   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP")
