@@ -64,8 +64,8 @@ index feac5622bb..9dab883a6d 100644
  namespace textlayout {
  
 -class ParagraphBuilder {
-+#if !defined(SKSHAPER_IMPLEMENTATION)
-+    #define SKSHAPER_IMPLEMENTATION 0
++#if !defined(SKPARAGRAPH_IMPLEMENTATION)
++    #define SKPARAGRAPH_IMPLEMENTATION 0
 +#endif
 +
 +#if !defined(SKPARAGRAPH_API)
