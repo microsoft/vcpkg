@@ -7,7 +7,7 @@ vcpkg_from_github(
 )
 
 # This is a header only library
-file(INSTALL "${SOURCE_PATH}/subprocess.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/subprocess.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
