@@ -7,6 +7,10 @@
   "license": "MIT",
   "supports": "!android & !uwp",
   "dependencies": [
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
     "fmt",
     {
       "name": "vcpkg-cmake",
