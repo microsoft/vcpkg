@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 7249c03a6097bc64fb0092143e4d4aaef3227565147e6254f026ddd504177c8dd565a184a0df39743dc989070dc3785e5b66f738c8e310ed9c982b61c2ec4914
+    SHA512 6820de33a5d5b0922ea64dd8ff55d186ef02596ad0415578067aaf3e5cf7d3eead473bc3a5f92d6d3f19b97d153fe1c901359008d922d1ffb0fc2a65dc860c79
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0003-utf8proc.patch
         0004-android-musl.patch
         0005-android-datetime.patch
+        0006-cmake-msvcruntime.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
