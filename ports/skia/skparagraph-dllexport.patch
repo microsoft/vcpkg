@@ -28,8 +28,8 @@ index ae2f9922d0..96c0fad8a1 100644
  namespace skia {
  namespace textlayout {
  
-+#if !defined(SKSHAPER_IMPLEMENTATION)
-+    #define SKSHAPER_IMPLEMENTATION 0
++#if !defined(SKPARAGRAPH_IMPLEMENTATION)
++    #define SKPARAGRAPH_IMPLEMENTATION 0
 +#endif
 +
 +#if !defined(SKPARAGRAPH_API)
