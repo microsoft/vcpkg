@@ -9013,8 +9013,8 @@
       "port-version": 0
     },
     "tinyfiledialogs": {
-      "baseline": "3.8.8",
-      "port-version": 4
+      "baseline": "3.18.2",
+      "port-version": 0
     },
     "tinyfsm": {
       "baseline": "0.3.3",
