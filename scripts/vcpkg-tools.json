@@ -70,7 +70,7 @@
     {
       "name": "git",
       "os": "windows",
-      "version": "2.7.4",
+      "version": "2.43.0",
       "executable": "mingw64/bin/git.exe",
       "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe",
       "sha512": "02ec40f55a6de18f305530e9415b6ce0a597359ebb9a58cf727ac84eceb0003b0f437941b76872b6568157a333c8e6e8d865a36faf874fd5f04774deb6a9387a",
@@ -79,19 +79,19 @@
     {
       "name": "git",
       "os": "linux",
-      "version": "2.7.4",
+      "version": "2.43.0",
       "executable": ""
     },
     {
       "name": "git",
       "os": "osx",
-      "version": "2.7.4",
+      "version": "2.43.0",
       "executable": ""
     },
     {
       "name": "git",
       "os": "freebsd",
-      "version": "2.7.4",
+      "version": "2.43.0",
       "executable": ""
     },
     {
