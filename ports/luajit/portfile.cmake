@@ -6,12 +6,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF d0e88930ddde28ff662503f9f20facf34f7265aa  #2023-01-04
-    SHA512 e4111b2d7eeb05676c62d69da13a380a51d98f082c0be575a414c09ee27ff17d101b5b4a95e1b8a1bad14d55a4d2b305718a11878fbf36e0d3d48e62ba03407f
+    REF a4f56a459a588ae768801074b46ba0adcfb49eb1
+    SHA512 d3a16d5b543c14006d6087f2379c67950ce08bb4368a8ad82a2708c17887df86f480501e073707b37da03d6979af418374999912a44385643a0a2411ce6e50d6
     HEAD_REF master
     PATCHES
-        msvcbuild.patch
-        003-do-not-set-macosx-deployment-target.patch
         ${extra_patches}
 )
 
