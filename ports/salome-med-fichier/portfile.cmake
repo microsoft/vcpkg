@@ -4,7 +4,6 @@
 # entry point to open and read .med files.
 vcpkg_download_distfile(ARCHIVE
   URLS "https://files.salome-platform.org/Salome/medfile/med-${VERSION}.tar.gz"
-  https://files.salome-platform.org/Salome/medfile/med-4.1.1.tar.gz
   FILENAME "med-${VERSION}.tar.gz"
   SHA512 f211fa82750a7cc935baa3a50a55d16e40117a0f2254b482492ba8396d82781ca84960995da7a16b2b5be0b93ce76368bf4b311bb8af0e5f0243e7051c9c554c
   HEADERS 
