@@ -20,7 +20,7 @@ $Prefix = "Win-$DatePrefixComponent"
 $GalleryImageVersion = $DatePrefixComponent.Replace('-','.')
 $VMSize = 'Standard_D8ads_v5'
 $ProtoVMName = 'PROTOTYPE'
-$WindowsServerSku = '2022-datacenter-azure-edition'
+$WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
