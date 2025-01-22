@@ -10,10 +10,6 @@
     "boost-random",
     "boost-system",
     "boost-thread",
-    {
-      "name": "cpprestsdk",
-      "default-features": false
-    },
     "grpc",
     "openssl",
     "protobuf",
@@ -24,6 +20,21 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    }
+  ],
+  "default-features": [
+    "async"
+  ],
+  "features": [
+    {
+      "name": "async",
+      "description": "Enable async features supported by cpprestsdk.",
+      "dependencies": [
+        {
+          "name": "cpprestsdk",
+          "default-features": false
+        }
+      ]
     }
   ]
 }
