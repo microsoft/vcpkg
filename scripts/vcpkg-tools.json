@@ -79,19 +79,19 @@
     {
       "name": "git",
       "os": "linux",
-      "version": "2.43.0",
+      "version": "2.7.4",
       "executable": ""
     },
     {
       "name": "git",
       "os": "osx",
-      "version": "2.43.0",
+      "version": "2.7.4",
       "executable": ""
     },
     {
       "name": "git",
       "os": "freebsd",
-      "version": "2.43.0",
+      "version": "2.7.4",
       "executable": ""
     },
     {
