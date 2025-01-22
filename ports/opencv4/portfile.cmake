@@ -97,7 +97,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ipp"        BUILD_IPP_IW
  "highgui"    BUILD_opencv_highgui
  "intrinsics" CV_ENABLE_INTRINSICS
- "jasper"     WITH_JASPER
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
@@ -140,6 +139,14 @@ endif()
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
+endif()
+
+set(WITH_JASPER OFF)
+if(("jasper" IN_LIST FEATURES) AND NOT ("openjpeg" IN_LIST FEATURES)) # jasper is mutually exclusive with openjpeg
+  set(WITH_JASPER ON)
+  message(STATUS "Jasper is enabled, but is deprecated and will be removed in a future release.")
+elseif("jasper" IN_LIST FEATURES AND ("openjpeg" IN_LIST FEATURES))
+  message(WARNING "Both Jasper and OpenJPEG are enabled. OpenJPEG will be used and Jasper will be ignored.")
 endif()
 
 if("python" IN_LIST FEATURES)
@@ -415,6 +422,7 @@ vcpkg_cmake_configure(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
+        -DWITH_JASPER=${WITH_JASPER}
         -DWITH_MATLAB=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_SPNG=OFF
