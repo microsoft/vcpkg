@@ -13,7 +13,7 @@ vcpkg_from_github(
         graphite.patch
         vulkan-headers.patch
         pdfsubsetfont-uwp.diff
-	skparagraph-dllexport.patch
+        skparagraph-dllexport.patch
 )
 
 # De-vendor
