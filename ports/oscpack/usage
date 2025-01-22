@@ -1,0 +1,10 @@
+oscpack can be used from CMake via:
+
+    find_path(OSCPACK_INCLUDE_DIRS "osc" PATH_SUFFIXES "oscpack")
+    find_library(OSCPACK_LIBRARY oscpack REQUIRED)
+    target_include_directories(main PRIVATE ${OSCPACK_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${OSCPACK_LIBRARY})
+    
+In case of Windows static link in addition: 
+
+    target_link_libraries(main PRIVATE ws2_32 winmm)

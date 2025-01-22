@@ -536,8 +536,6 @@ libdc1394:arm64-android=fail
 libflac:arm-neon-android=fail
 libfreenect2:arm64-windows=fail
 libfreenect2:arm64-windows-static-md=fail
-# inline assembly requires more registers than available
-libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -579,6 +577,16 @@ libmariadb:x64-windows-static-md=skip
 libmaxminddb:arm64-android=fail
 libmaxminddb:arm-neon-android=fail
 libmaxminddb:x64-android=fail
+# libmem embedded lib llvm, fixing in https://github.com/microsoft/vcpkg/pull/43311
+libmem:arm64-uwp                =skip
+libmem:arm64-windows            =skip
+libmem:arm64-windows-static-md  =skip
+libmem:x64-linux                =skip
+libmem:x64-uwp                  =skip
+libmem:x64-windows              =skip
+libmem:x64-windows-static       =skip
+libmem:x64-windows-static-md    =skip
+libmem:x86-windows              =skip
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
 libmesh:x64-linux=skip
 libmikmod:arm-neon-android=fail
