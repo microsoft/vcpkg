@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO buck-yeh/bux
     REF "${VERSION}"
-    SHA512 2daa070b42d08c70358e57ab8c90e1ae942d1a9139ff63fb44550c041a4dab6e3ca2b06fcdcec10cdfb35aad136a739ce2485a3a807296a3ae22ad6474473649
+    SHA512 884c49a8a07cb2acf242bb3b7a8b6c7aeda9eebe7723887ce3a6c081aaf8f628d4f4a8dfe4adb7550977ab6e18730bc9c45ad4f326a5f4a8fc45448d736f0de2
     HEAD_REF main
 )
 
