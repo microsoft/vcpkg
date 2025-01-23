@@ -1,4 +1,4 @@
-function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 skip_sha512)
+function(z_vcpkg_download_distfile_test_hash file_path error_advice sha512 skip_sha512)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         # When using the internal hash skip, do not output an explicit message.
         return()
@@ -99,7 +99,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
 
         z_vcpkg_download_distfile_test_hash(
             "${downloaded_file_path}"
-            "cached file"
             "${advice_message}"
             "${arg_SHA512}"
             "${arg_SKIP_SHA512}"
