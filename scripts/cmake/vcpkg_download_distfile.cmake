@@ -1,7 +1,6 @@
 function(z_vcpkg_check_hash result file_path sha512)
     file(SHA512 "${file_path}" file_hash)
-    string(TOLOWER "${sha512}" sha512_lower)
-    string(COMPARE EQUAL "${file_hash}" "${sha512_lower}" hash_match)
+    string(COMPARE EQUAL "${file_hash}" "${sha512}" hash_match)
     set("${result}" "${hash_match}" PARENT_SCOPE)
 endfunction()
 
@@ -68,6 +67,8 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
                 message(FATAL_ERROR "Invalid SHA512: ${arg_SHA512}.
     If you do not know the file's SHA512, set this to \"0\".")
             endif()
+
+            string(TOLOWER "${arg_SHA512}" arg_SHA512)
         endif()
     endif()
 
