@@ -1,9 +1,3 @@
-function(z_vcpkg_check_hash result file_path sha512)
-    file(SHA512 "${file_path}" file_hash)
-    string(COMPARE EQUAL "${file_hash}" "${sha512}" hash_match)
-    set("${result}" "${hash_match}" PARENT_SCOPE)
-endfunction()
-
 function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 skip_sha512)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         # When using the internal hash skip, do not output an explicit message.
@@ -14,10 +8,8 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
         return()
     endif()
 
-    set(hash_match OFF)
-    z_vcpkg_check_hash(hash_match "${file_path}" "${sha512}")
-
-    if(NOT hash_match)
+    file(SHA512 "${file_path}" file_hash)
+    if(NOT ("${file_hash}" STREQUAL "${sha512}"))
         message(FATAL_ERROR
             "\nFile does not have expected hash:\n"
             "        File path: [ ${file_path} ]\n"
@@ -75,10 +67,16 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
 
     if(EXISTS "${downloaded_file_path}" AND NOT arg_SKIP_SHA512)
-        set(hash_match OFF)
-        z_vcpkg_check_hash(hash_match "${downloaded_file_path}" "${arg_SHA512}")
-        
-        if(NOT hash_match)
+        file(SHA512 "${downloaded_file_path}" file_hash)
+        if("${file_hash}" STREQUAL "${sha512}")
+            if (NOT arg_ALWAYS_REDOWNLOAD)
+                message(STATUS "Using cached ${arg_FILENAME}.")
+                set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+                return()
+            endif()
+        else()
+            # The existing file hash mismatches. Perhaps the expected SHA512 changed. Try adding the expected SHA512
+            # into the file name and try again to hopefully not conflict.
             get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
             get_filename_component(extension_component "${arg_FILENAME}" EXT)
             get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
