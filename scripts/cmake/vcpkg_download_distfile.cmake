@@ -28,66 +28,6 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
     endif()
 endfunction()
 
-function(z_vcpkg_download_distfile_via_aria)
-    cmake_parse_arguments(PARSE_ARGV 1 arg
-        "SKIP_SHA512"
-        "FILENAME;SHA512"
-        "URLS;HEADERS"
-    )
-
-    message(STATUS "Downloading ${arg_FILENAME}...")
-
-    vcpkg_list(SET headers_param)
-    foreach(header IN LISTS arg_HEADERS)
-        vcpkg_list(APPEND headers_param "--header=${header}")
-    endforeach()
-
-    foreach(URL IN LISTS arg_URLS)
-        debug_message("Download Command: ${ARIA2} ${URL} -o temp/${filename} -l download-${filename}-detailed.log ${headers_param}")
-        vcpkg_execute_in_download_mode(
-            COMMAND ${ARIA2} ${URL}
-            -o temp/${arg_FILENAME}
-            -l download-${arg_FILENAME}-detailed.log
-            ${headers_param}
-            OUTPUT_FILE download-${arg_FILENAME}-out.log
-            ERROR_FILE download-${arg_FILENAME}-err.log
-            RESULT_VARIABLE error_code
-            WORKING_DIRECTORY "${DOWNLOADS}"
-        )
-        
-        if ("${error_code}" STREQUAL "0")
-            break()
-        endif()
-    endforeach()
-    if (NOT "${error_code}" STREQUAL "0")
-        message(STATUS
-            "Downloading ${arg_FILENAME}... Failed.\n"
-            "    Exit Code: ${error_code}\n"
-            "    See logs for more information:\n"
-            "        ${DOWNLOADS}/download-${arg_FILENAME}-out.log\n"
-            "        ${DOWNLOADS}/download-${arg_FILENAME}-err.log\n"
-            "        ${DOWNLOADS}/download-${arg_FILENAME}-detailed.log\n"
-        )
-        z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
-    else()
-        z_vcpkg_download_distfile_test_hash(
-            "${DOWNLOADS}/temp/${arg_FILENAME}"
-            "downloaded file"
-            "The file may have been corrupted in transit."
-            "${arg_SHA512}"
-            ${arg_SKIP_SHA512}
-        )
-        file(REMOVE
-            ${DOWNLOADS}/download-${arg_FILENAME}-out.log
-            ${DOWNLOADS}/download-${arg_FILENAME}-err.log
-            ${DOWNLOADS}/download-${arg_FILENAME}-detailed.log
-        )
-        get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
-        file(MAKE_DIRECTORY "${downloaded_file_dir}")
-        file(RENAME "${DOWNLOADS}/temp/${arg_FILENAME}" "${downloaded_file_path}")
-    endif()
-endfunction()
-
 function(vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
@@ -182,21 +122,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
         endif()
 
-        set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
-        return()
-    endif()
-
-    if(NOT arg_DISABLE_ARIA2 AND _VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT EXISTS "${downloaded_file_path}")
-        if (arg_SKIP_SHA512)
-            set(OPTION_SKIP_SHA512 "SKIP_SHA512")
-        endif()
-        z_vcpkg_download_distfile_via_aria(
-            "${OPTION_SKIP_SHA512}"
-            FILENAME "${arg_FILENAME}"
-            SHA512 "${arg_SHA512}"
-            URLS "${arg_URLS}"
-            HEADERS "${arg_HEADERS}"
-        )
         set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
         return()
     endif()
