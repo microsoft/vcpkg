@@ -1,24 +1,3 @@
-function(z_vcpkg_download_distfile_test_hash file_path error_advice sha512 skip_sha512)
-    if(_VCPKG_INTERNAL_NO_HASH_CHECK)
-        # When using the internal hash skip, do not output an explicit message.
-        return()
-    endif()
-    if(skip_sha512)
-        message(STATUS "Skipping hash check for ${file_path}.")
-        return()
-    endif()
-
-    file(SHA512 "${file_path}" file_hash)
-    if(NOT ("${file_hash}" STREQUAL "${sha512}"))
-        message(FATAL_ERROR
-            "\nFile does not have expected hash:\n"
-            "        File path: [ ${file_path} ]\n"
-            "    Expected hash: [ ${sha512} ]\n"
-            "      Actual hash: [ ${file_hash} ]\n"
-            "${error_advice}\n")
-    endif()
-endfunction()
-
 function(vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
@@ -68,14 +47,25 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
 
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
 
-    if(EXISTS "${downloaded_file_path}" AND NOT arg_SKIP_SHA512)
-        file(SHA512 "${downloaded_file_path}" file_hash)
-        if("${file_hash}" STREQUAL "${sha512}")
-            # Note that NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
-            message(STATUS "Using cached ${arg_FILENAME}.")
-            set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
-            return()
+    if(EXISTS "${downloaded_file_path}")
+        if(arg_SKIP_SHA512)
+            if(NOT arg_ALWAYS_REDOWNLOAD)
+                if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK)
+                    message(STATUS "Skipping hash check and using cached ${arg_FILENAME}.")
+                endif()
+
+                set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+                return()
+            endif()
         else()
+            file(SHA512 "${downloaded_file_path}" file_hash)
+            if("${file_hash}" STREQUAL "${sha512}")
+                # Note that NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
+                message(STATUS "Using cached ${arg_FILENAME}.")
+                set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+                return()
+            endif()
+
             # The existing file hash mismatches. Perhaps the expected SHA512 changed. Try adding the expected SHA512
             # into the file name and try again to hopefully not conflict.
             get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
@@ -88,33 +78,37 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         endif()
     endif()
 
-    # check if file with same name already exists in downloads
     if(EXISTS "${downloaded_file_path}" AND NOT arg_ALWAYS_REDOWNLOAD)
-        set(advice_message "The cached file SHA512 doesn't match. The file may have been corrupted.")
         if(_VCPKG_NO_DOWNLOADS)
-            string(APPEND advice_message " Downloads are disabled please provide a valid file at path ${downloaded_file_path} and retry.")
+            set(advice_message "note: Downloads are disabled. Please ensure that the expected file is placed at ${downloaded_file_path} and retry.")
         else()
-            string(APPEND advice_message " To re-download this file please delete cached file at path ${downloaded_file_path} and retry.")
+            set(advice_message "note: To re-download this file, delete ${downloaded_file_path} and retry.")
         endif()
 
-        z_vcpkg_download_distfile_test_hash(
-            "${downloaded_file_path}"
-            "${advice_message}"
-            "${arg_SHA512}"
-            "${arg_SKIP_SHA512}"
-        )
+        if(arg_SKIP_SHA512)
+            if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK)
+                message(STATUS "Skipping hash check for ${file_path}.")
+            endif()
+        else()
+            file(SHA512 "${downloaded_file_path}" file_hash)
+            if(NOT ("${file_hash}" STREQUAL "${arg_SHA512}"))
+                message(FATAL_ERROR
+                    "\n${downloaded_file_path}: error: the existing downloaded file has a different SHA512 than expected, it may have been corrupted.\n"
+                    "Expected: ${arg_SHA512}\n"
+                    "Actual  : ${file_hash}\n"
+                    "${advice_message}\n")
+            endif()
+        endif()
+
         message(STATUS "Using cached ${arg_FILENAME}.")
+        set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+        return()
     endif()
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
     # this could be de-morgan'd out but it's more clear this way
     if(_VCPKG_NO_DOWNLOADS)
-        if(NOT EXISTS "${downloaded_file_path}")
-            message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
-        endif()
-
-        set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
-        return()
+        message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
     endif()
 
     vcpkg_list(SET urls_param)
@@ -133,19 +127,17 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         vcpkg_list(SET sha512_param "--sha512=${arg_SHA512}")
     endif()
 
-    if(NOT EXISTS "${downloaded_file_path}" OR arg_ALWAYS_REDOWNLOAD)
-        vcpkg_execute_in_download_mode(
-            COMMAND "$ENV{VCPKG_COMMAND}" x-download
-                "${downloaded_file_path}"
-                ${sha512_param}
-                ${urls_param}
-                ${headers_param}
-            RESULT_VARIABLE error_code
-            WORKING_DIRECTORY "${DOWNLOADS}"
-        )
-        if(NOT "${error_code}" EQUAL "0")
-            message(FATAL_ERROR "Download failed, halting portfile.")
-        endif()
+    vcpkg_execute_in_download_mode(
+        COMMAND "$ENV{VCPKG_COMMAND}" x-download
+            "${downloaded_file_path}"
+            ${sha512_param}
+            ${urls_param}
+            ${headers_param}
+        RESULT_VARIABLE error_code
+        WORKING_DIRECTORY "${DOWNLOADS}"
+    )
+    if(NOT "${error_code}" EQUAL "0")
+        message(FATAL_ERROR "Download failed, halting portfile.")
     endif()
 
     set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
