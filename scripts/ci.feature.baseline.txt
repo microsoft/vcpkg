@@ -47,8 +47,8 @@
 ##    # Testing all targets seperatly would be too time consuming:
 ##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test 
 
-llvm = skip
 halide = skip
+llvm = skip
 
 # Add new items alphabetically
 ace:x64-windows-static-md=fail
@@ -2228,6 +2228,7 @@ libgit2[core,openssl,winhttp,sectransp,mbedtls] = options # only one TLS backend
 libgit2[pcre,pcre2] = options # have to select pcre xor pcre2
 libgit2[winhttp](!windows) = feature-fails
 libgwenhywfar[qt5](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/31216
+libmariadb[ssl] = options # You have to select exactly one ssl backend, we use the default one
 libofx[ofx2qif,ofxdump](osx) = feature-fails # gettext link error. See https://github.com/microsoft/vcpkg/issues/33043
 libopnmidi[gens-emulator] = options # You have to select at least one emulator
 libproxy[bindings-csharp](!windows & !osx) = feature-fails # No C# compiler installed (brew install mono on osx)
