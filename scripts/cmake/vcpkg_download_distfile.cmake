@@ -88,14 +88,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         endif()
     endif()
 
-    set(download_file_path_part "${DOWNLOADS}/temp/${arg_FILENAME}")
-
-    # Works around issue #3399
-    # Delete "temp0" directory created by the old version of vcpkg
-    file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
-    file(REMOVE_RECURSE "${DOWNLOADS}/temp")
-    file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
-
     # check if file with same name already exists in downloads
     if(EXISTS "${downloaded_file_path}" AND NOT arg_ALWAYS_REDOWNLOAD)
         set(advice_message "The cached file SHA512 doesn't match. The file may have been corrupted.")
