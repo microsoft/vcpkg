@@ -30,7 +30,8 @@ $defaultPortVersion = 0
 $portVersions = @{
     'boost'                 = 1;
     'boost-build'           = 1;
-    'boost-cobalt'          = 1
+    'boost-cobalt'          = 1;
+    'boost-function'          = 1
 }
 
 function Get-PortVersion {
@@ -55,7 +56,7 @@ $portData = @{
             };
             "cobalt" = @{
                 "description"  = "Build boost-cobalt";
-                "dependencies" = @("boost-cobalt");
+                "dependencies" = @(@{ "name" = "boost-cobalt"; "platform" = "!osx & !ios & !android & !uwp" });
             }
         }
     };
@@ -80,6 +81,7 @@ $portData = @{
         }
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
+    "boost-function"         = @{ "dependencies" = @("boost-type-traits"); };
     "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
