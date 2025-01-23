@@ -3890,7 +3890,7 @@
     },
     "jsonnet": {
       "baseline": "0.20.0",
-      "port-version": 0
+      "port-version": 1
     },
     "juce": {
       "baseline": "8.0.4",
@@ -8117,8 +8117,8 @@
       "port-version": 2
     },
     "ryml": {
-      "baseline": "0.5.0",
-      "port-version": 1
+      "baseline": "0.7.2",
+      "port-version": 0
     },
     "ryu": {
       "baseline": "2.0",
