@@ -7,7 +7,7 @@
             }
         },
         {
-            "name": "linux-ubuntu2204-nvidia-cuda-cudnn"
+            "name": "linux-ubuntu2404-nvidia-cuda-cudnn"
         },
         {
             "name": "linux-install-powershell"

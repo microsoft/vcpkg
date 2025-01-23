@@ -8,13 +8,13 @@ export DEBIAN_FRONTEND=noninteractive
 # Add apt repos
 
 ## CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /"
 
 ## PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+wget -q https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
@@ -109,8 +109,8 @@ APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
 ## CUDA
-APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
-  cuda-cudart-dev-12-1 libcublas-12-1 libcurand-dev-12-1 cuda-nvml-dev-12-1 libcudnn8-dev libnccl2 \
+APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driver-dev-12-8 \
+  cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev libnccl2 \
   libnccl-dev"
 
 ## PowerShell + Azure
