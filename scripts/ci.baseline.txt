@@ -536,8 +536,6 @@ libdc1394:arm64-android=fail
 libflac:arm-neon-android=fail
 libfreenect2:arm64-windows=fail
 libfreenect2:arm64-windows-static-md=fail
-# inline assembly requires more registers than available
-libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
