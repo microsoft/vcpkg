@@ -41,6 +41,10 @@ elseif("mbedtls" IN_LIST FEATURES)
     set(OPEN62541_ENCRYPTION_OPTIONS -DUA_ENABLE_ENCRYPTION=MBEDTLS)
 endif()
 
+if("multithreading" IN_LIST FEATURES)
+    set(OPEN62541_MULTITHREADING_OPTIONS -DUA_MULTITHREADING=100)
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
@@ -50,6 +54,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${OPEN62541_ENCRYPTION_OPTIONS}
+        ${OPEN62541_MULTITHREADING_OPTIONS}
         "-DOPEN62541_VERSION=v${VERSION}"
         -DUA_ENABLE_DEBUG_SANITIZER=OFF
         -DUA_MSVC_FORCE_STATIC_CRT=OFF

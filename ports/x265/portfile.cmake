@@ -2,7 +2,7 @@ vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO multicoreware/x265_git
     REF "${VERSION}"
-    SHA512 cfc3fdd7ce10a6cadf4515707d8f338fe58329cbbbcac11a85f00376e29156baccfb19a514ac2bc816432d15a2a4eb1bb7e16e3a870b6b9f9bc28e1a44270091
+    SHA512 4b7d71f22f0a7f12ff93f9a01e361df2b80532cd8dac01b5465e63b5d8182f1a05c0289ad95f3aa972c963aa6cd90cb3d594f8b9a96f556a006cf7e1bdd9edda
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch

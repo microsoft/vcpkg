@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "8.11.1",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -134,6 +135,12 @@
       "description": "Use psl support (libpsl)",
       "dependencies": [
         "libpsl"
+      ]
+    },
+    "rtmp": {
+      "description": "RTMP support",
+      "dependencies": [
+        "librtmp"
       ]
     },
     "schannel": {

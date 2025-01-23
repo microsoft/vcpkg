@@ -62,6 +62,7 @@
       "name": "cmake",
       "os": "linux",
       "version": "3.30.1",
+      "arch": "amd64",
       "executable": "cmake-3.30.1-linux-x86_64/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-x86_64.tar.gz",
       "sha512": "84ce1333ed696a1736986fba2853c5d8db0e4c9addaf4a4723911248c6d49ecf545adf8bd46091d198fc7bd1e6c896798661463aa1ce3a726a093883aaa19adf",
@@ -70,11 +71,22 @@
     {
       "name": "git",
       "os": "windows",
+      "arch": "arm64",
       "version": "2.7.4",
       "executable": "mingw64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe",
-      "sha512": "02ec40f55a6de18f305530e9415b6ce0a597359ebb9a58cf727ac84eceb0003b0f437941b76872b6568157a333c8e6e8d865a36faf874fd5f04774deb6a9387a",
-      "archive": "PortableGit-2.43.0-32-bit.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-arm64.7z.exe",
+      "sha512": "2e57cebc1f567bbb63b92825e4b9625de24bc897c4ea9aa8d88f70b5ad69c53005e062f94b60d10269855f2edd0505d5d6233c6c067d6af1bbedde66c9b856c3",
+      "archive": "PortableGit-2.47.1.2-arm64.7z.exe"
+    },
+    {
+      "name": "git",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "2.7.4",
+      "executable": "mingw64/bin/git.exe",
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-64-bit.7z.exe",
+      "sha512": "a96dd809b2dc940d871a84a2c3f2f4600552fe67f437ffeb29abb3b3da636f3534fa3118af61fca9349e97ec8dbb54210c213dee0c8beadbd9ba27a6c091dd98",
+      "archive": "PortableGit-2.47.1.2-64-bit.7z.exe"
     },
     {
       "name": "git",
@@ -156,26 +168,56 @@
     {
       "name": "coscli",
       "os": "windows",
-      "version": "0.11.0",
-      "executable": "coscli-windows.exe",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-windows.exe",
-      "sha512": "38a521ec80cdb6944124f4233d7e71eed8cc9f9be2c0c736269915d21c3718ea8131e4516bb6eeada6df331f5fa8f47a299907e50ee9edbe0114444520974d06"
+      "version": "1.0.3",
+      "arch": "amd64",
+      "executable": "coscli-v1.0.3-windows-amd64.exe",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-windows-amd64.exe",
+      "sha512": "909b1c48e3c0dc0c3a4bd32d865db914307f65d6266c4f9025a4a6aea1e75b817581b8257633e74b3cab86b4f2e343d049a9ce65ceaf6b85dacdd55afd74d183"
     },
     {
       "name": "coscli",
       "os": "linux",
-      "version": "0.11.0",
-      "executable": "coscli-linux",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-linux",
-      "sha512": "9c930a1d308e9581a0e2fdfe3751ea7fe13d6068df90ca6465740ec3eda034202ef71ec54c99e90015ff81aa68aa1489567db5e411e222eb7258704bdac7e924"
+      "version": "1.0.3",
+      "arch": "arm",
+      "executable": "coscli-v1.0.3-linux-arm",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-arm",
+      "sha512": "28f43cc678665b87da19a26838037552638aea96b541171f0e5f71eb3098fff3b2325f96c81532fb102dcb09f8bbd707b8d269d14879a4404b2b31336ced15f7"
+    },
+    {
+      "name": "coscli",
+      "os": "linux",
+      "version": "1.0.3",
+      "arch": "arm64",
+      "executable": "coscli-v1.0.3-linux-arm64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-arm64",
+      "sha512": "c277b8b921df9459045c7a9d4faefa8a86df93d75ab58f228ca168175226d58adeb9b78af2aac0638feb2232c0fa5d5f24bf4a76f7bd2822a9f21662b23fa3d6"
+    },
+    {
+      "name": "coscli",
+      "os": "linux",
+      "version": "1.0.3",
+      "arch": "amd64",
+      "executable": "coscli-v1.0.3-linux-amd64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-amd64",
+      "sha512": "c91b2665682969e389b3c70c663eb694024b2f7ed68e059d2b9f44000259f6c6466cc33667b8557a2999b2d2ed912b405f997420c56df6dea50576368b1b8536"
     },
     {
       "name": "coscli",
       "os": "osx",
-      "version": "0.11.0",
-      "executable": "coscli-mac",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v0.11.0-beta/coscli-mac",
+      "version": "1.0.3",
+      "arch": "arm64",
+      "executable": "coscli-v1.0.3-darwin-arm64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-darwin-arm64",
       "sha512": "9556335bfc8bc14bace6dfced45fa77fb07c80f08aa975e047a54efda1d19852aae0ea68a5bc7f04fbd88e3edce5a73512a61216b1c5ff4cade224de4a9ab8db"
+    },
+    {
+      "name": "coscli",
+      "os": "osx",
+      "version": "1.0.3",
+      "arch": "amd64",
+      "executable": "coscli-v1.0.3-darwin-amd64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-darwin-amd64",
+      "sha512": "aaa7fe9e71ef46246d08a59777898ea59a4ca6261ca9139e02ed2ebdc026295fa8d24d48cda2973c05fefe82379ad007196e08973dde6ce36c816df1dcfead2e"
     },
     {
       "name": "installerbase",
