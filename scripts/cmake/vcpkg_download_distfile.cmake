@@ -12,19 +12,19 @@ function(vcpkg_download_distfile out_var)
         message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
     endif()
     if(arg_SILENT_EXIT)
-        message(WARNING "SILENT_EXIT has been deprecated as an argument to vcpkg_download_distfile -- remove the argument to resolve this warning")
+        message(WARNING "SILENT_EXIT no longer has any effect. To resolve this warning, remove SILENT_EXIT.")
     endif()
 
     # Note that arg_ALWAYS_REDOWNLOAD implies arg_SKIP_SHA512, and NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
     if(arg_ALWAYS_REDOWNLOAD AND NOT arg_SKIP_SHA512)
-        message(FATAL_ERROR "ALWAYS_REDOWNLOAD option requires SKIP_SHA512 as well")
+        message(FATAL_ERROR "ALWAYS_REDOWNLOAD requires SKIP_SHA512")
     endif()
 
     if(NOT arg_SKIP_SHA512 AND NOT DEFINED arg_SHA512)
         message(FATAL_ERROR "vcpkg_download_distfile requires a SHA512 argument.
-If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
+If you do not know the SHA512, add it as 'SHA512 0' and retry.")
     elseif(arg_SKIP_SHA512 AND DEFINED arg_SHA512)
-        message(FATAL_ERROR "vcpkg_download_distfile must not be passed both SHA512 and SKIP_SHA512.")
+        message(FATAL_ERROR "SHA512 may not be used with SKIP_SHA512.")
     endif()
 
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
@@ -93,7 +93,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             file(SHA512 "${downloaded_file_path}" file_hash)
             if(NOT ("${file_hash}" STREQUAL "${arg_SHA512}"))
                 message(FATAL_ERROR
-                    "\n${downloaded_file_path}: error: the existing downloaded file has a different SHA512 than expected, it may have been corrupted.\n"
+                    "\n${downloaded_file_path}: error: existing downloaded file had an unexpected hash\n"
                     "Expected: ${arg_SHA512}\n"
                     "Actual  : ${file_hash}\n"
                     "${advice_message}\n")
@@ -111,31 +111,22 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
     endif()
 
-    vcpkg_list(SET urls_param)
+    vcpkg_list(SET params "x-download" "${downloaded_file_path}")
     foreach(url IN LISTS arg_URLS)
-        vcpkg_list(APPEND urls_param "--url=${url}")
+        vcpkg_list(APPEND params "--url=${url}")
     endforeach()
 
-    vcpkg_list(SET headers_param)
     foreach(header IN LISTS arg_HEADERS)
-        list(APPEND headers_param "--header=${header}")
+        list(APPEND params "--header=${header}")
     endforeach()
 
     if(arg_SKIP_SHA512)
-        vcpkg_list(SET sha512_param "--skip-sha512")
+        vcpkg_list(APPEND params "--skip-sha512")
     else()
-        vcpkg_list(SET sha512_param "--sha512=${arg_SHA512}")
+        vcpkg_list(APPEND params "--sha512=${arg_SHA512}")
     endif()
 
-    vcpkg_execute_in_download_mode(
-        COMMAND "$ENV{VCPKG_COMMAND}" x-download
-            "${downloaded_file_path}"
-            ${sha512_param}
-            ${urls_param}
-            ${headers_param}
-        RESULT_VARIABLE error_code
-        WORKING_DIRECTORY "${DOWNLOADS}"
-    )
+    vcpkg_execute_in_download_mode(COMMAND "$ENV{VCPKG_COMMAND}" ${params} RESULT_VARIABLE error_code)
     if(NOT "${error_code}" EQUAL "0")
         message(FATAL_ERROR "Download failed, halting portfile.")
     endif()
