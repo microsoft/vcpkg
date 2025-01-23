@@ -35,6 +35,8 @@ function(vcpkg_download_distfile out_var)
     if(arg_SILENT_EXIT)
         message(WARNING "SILENT_EXIT has been deprecated as an argument to vcpkg_download_distfile -- remove the argument to resolve this warning")
     endif()
+
+    # Note that arg_ALWAYS_REDOWNLOAD implies arg_SKIP_SHA512, and NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
     if(arg_ALWAYS_REDOWNLOAD AND NOT arg_SKIP_SHA512)
         message(FATAL_ERROR "ALWAYS_REDOWNLOAD option requires SKIP_SHA512 as well")
     endif()
@@ -69,11 +71,10 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     if(EXISTS "${downloaded_file_path}" AND NOT arg_SKIP_SHA512)
         file(SHA512 "${downloaded_file_path}" file_hash)
         if("${file_hash}" STREQUAL "${sha512}")
-            if (NOT arg_ALWAYS_REDOWNLOAD)
-                message(STATUS "Using cached ${arg_FILENAME}.")
-                set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
-                return()
-            endif()
+            # Note that NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
+            message(STATUS "Using cached ${arg_FILENAME}.")
+            set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+            return()
         else()
             # The existing file hash mismatches. Perhaps the expected SHA512 changed. Try adding the expected SHA512
             # into the file name and try again to hopefully not conflict.
