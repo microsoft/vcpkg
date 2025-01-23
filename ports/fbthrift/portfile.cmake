@@ -66,6 +66,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/visitation/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/benchmark"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/any/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/benchmark"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/capi/benchmark"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/adapters"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/cpp_conversion"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation"
 )
 
