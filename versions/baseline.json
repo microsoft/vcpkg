@@ -77,7 +77,7 @@
       "port-version": 0
     },
     "aliyun-oss-c-sdk": {
-      "baseline": "3.10.1",
+      "baseline": "3.11.2",
       "port-version": 0
     },
     "aliyun-oss-cpp-sdk": {
