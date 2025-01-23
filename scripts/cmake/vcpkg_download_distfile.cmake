@@ -58,9 +58,9 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
                 return()
             endif()
         else()
+            # Note that NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
             file(SHA512 "${downloaded_file_path}" file_hash)
             if("${file_hash}" STREQUAL "${sha512}")
-                # Note that NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
                 message(STATUS "Using cached ${arg_FILENAME}")
                 set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
                 return()
