@@ -1,6 +1,7 @@
 {
   "name": "highway",
   "version": "1.2.0",
+  "port-version": 1,
   "description": "Performance-portable, length-agnostic SIMD with runtime dispatch",
   "homepage": "https://github.com/google/highway",
   "license": "Apache-2.0",
@@ -17,7 +18,7 @@
   "features": {
     "contrib": {
       "description": "SIMD related utility functions",
-      "supports": "!uwp"
+      "supports": "!uwp & !osx"
     }
   }
 }
