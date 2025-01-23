@@ -1,0 +1,13 @@
+diff --git a/etcd-cpp-api-config.in.cmake b/etcd-cpp-api-config.in.cmake
+index c1a9047..23bf32f 100644
+--- a/etcd-cpp-api-config.in.cmake
++++ b/etcd-cpp-api-config.in.cmake
+@@ -15,7 +15,7 @@ if(NOT gRPC_FOUND)
+     find_dependency(GRPC)
+ endif()
+ 
+-find_dependency(cpprestsdk)
++find_package(cpprestsdk QUIET)
+ if(cpprestsdk_FOUND)
+     set(CPPREST_LIB cpprestsdk::cpprest)
+ endif()
