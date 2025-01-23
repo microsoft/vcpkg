@@ -1,6 +1,6 @@
 {
   "name": "mbedtls",
-  "version": "3.6.1",
+  "version": "3.6.2",
   "description": "An open source, portable, easy to use, readable and flexible SSL library",
   "homepage": "https://www.trustedfirmware.org/projects/mbed-tls/",
   "license": "Apache-2.0 OR GPL-2.0-or-later",

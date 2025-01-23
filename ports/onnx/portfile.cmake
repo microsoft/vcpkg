@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 7a9a8493b9c007429629484156487395044506f34e72253640e626351cb623b390750b36af78a290786131e3dcac35f4eb269e8693b594b7ce7cb105bcf9318d
+    SHA512 5a18e2b19ec9c18c8b115fb7e12ed98eddaa581c95f15c4dd420cd6c86e7caa04f9a393da589e76b89cf9b3544abd3749a8c77c2446782f37502eb74e9b1f661
     PATCHES
         fix-cmakelists.patch
         fix-dependency-protobuf.patch
+        fix-cxx_standard.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
