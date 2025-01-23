@@ -5198,7 +5198,7 @@
     },
     "libtar": {
       "baseline": "1.2.20",
-      "port-version": 0
+      "port-version": 1
     },
     "libtasn1": {
       "baseline": "4.19.0",
