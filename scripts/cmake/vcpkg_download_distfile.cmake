@@ -75,35 +75,30 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
             string(SUBSTRING "${arg_SHA512}" 0 8 hash)
             set(arg_FILENAME "${directory_component}${filename_component}-${hash}${extension_component}")
             set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
-        endif()
-    endif()
+            if(EXISTS "${downloaded_file_path}")
+                if(_VCPKG_NO_DOWNLOADS)
+                    set(advice_message "note: Downloads are disabled. Please ensure that the expected file is placed at ${downloaded_file_path} and retry.")
+                else()
+                    set(advice_message "note: You may be able to resolve this failure by redownloading the file. To do so, delete ${downloaded_file_path} and retry.")
+                endif()
 
-    if(EXISTS "${downloaded_file_path}" AND NOT arg_ALWAYS_REDOWNLOAD)
-        if(_VCPKG_NO_DOWNLOADS)
-            set(advice_message "note: Downloads are disabled. Please ensure that the expected file is placed at ${downloaded_file_path} and retry.")
-        else()
-            set(advice_message "note: To re-download this file, delete ${downloaded_file_path} and retry.")
-        endif()
+                file(SHA512 "${downloaded_file_path}" file_hash)
+                if("${file_hash}" STREQUAL "${arg_SHA512}")
+                    message(STATUS "Using cached ${arg_FILENAME}.")
+                    set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+                    return()
+                endif()
 
-        if(arg_SKIP_SHA512)
-            if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK)
-                message(STATUS "Skipping hash check for ${file_path}.")
-            endif()
-        else()
-            file(SHA512 "${downloaded_file_path}" file_hash)
-            if(NOT ("${file_hash}" STREQUAL "${arg_SHA512}"))
+                # Note that the extra leading spaces are here to prevent CMake from badly attempting to wrap this
                 message(FATAL_ERROR
-                    "\n${downloaded_file_path}: error: existing downloaded file had an unexpected hash\n"
-                    "Expected: ${arg_SHA512}\n"
-                    "Actual  : ${file_hash}\n"
-                    "${advice_message}\n")
+                    "  ${downloaded_file_path}: error: existing downloaded file had an unexpected hash\n"
+                    "  Expected: ${arg_SHA512}\n"
+                    "  Actual  : ${file_hash}\n"
+                    "  ${advice_message}")
             endif()
         endif()
-
-        message(STATUS "Using cached ${arg_FILENAME}.")
-        set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
-        return()
     endif()
+
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
     # this could be de-morgan'd out but it's more clear this way
