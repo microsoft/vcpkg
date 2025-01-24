@@ -3486,7 +3486,7 @@
     },
     "highway": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hikogui": {
       "baseline": "0.8.1",
