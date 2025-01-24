@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.10.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -139,8 +139,21 @@
             "win32ui"
           ],
           "platform": "windows & !uwp"
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "directml",
+            "msmf"
+          ],
+          "platform": "windows & !uwp & !mingw"
         }
       ]
+    },
+    "directml": {
+      "description": "Build with DirectML support",
+      "supports": "windows & !uwp & !mingw"
     },
     "dnn": {
       "description": "Enable dnn module",
@@ -276,13 +289,6 @@
       "description": "JPEG support for opencv",
       "dependencies": [
         "libjpeg-turbo"
-      ]
-    },
-    "lapack": {
-      "description": "LAPACK support for opencv",
-      "dependencies": [
-        "blas",
-        "lapack"
       ]
     },
     "msmf": {
