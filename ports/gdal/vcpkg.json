@@ -285,12 +285,6 @@
         }
       ]
     },
-    "supported-default-features": {
-      "description": "This feature is an alias for default-features. It is retained for compatibility.",
-      "dependencies": [
-        "gdal"
-      ]
-    },
     "system-libraries": {
       "$supports": "!windows",
       "description": "This feature does nothing. It is retained for compatibility."
