@@ -1,9 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 #
-variables:
-  linux-docker-image: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2024-12-16'
-
 parameters:
   - name: vcpkgToolSha
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
@@ -86,17 +83,14 @@ jobs:
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm_neon_android
-    dockerImage: $(linux-docker-image)
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: x64_android
-    dockerImage: $(linux-docker-image)
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm64_android
-    dockerImage: $(linux-docker-image)
     tripletPattern: ${{ parameters.tripletPattern }}
