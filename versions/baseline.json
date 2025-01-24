@@ -7261,7 +7261,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "proxygen": {
