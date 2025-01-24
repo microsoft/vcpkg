@@ -1,6 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.10.1",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -38,7 +39,33 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "gif",
+    {
+      "name": "hdf5",
+      "platform": "!uwp"
+    },
+    "iconv",
+    "libkml",
+    {
+      "name": "libspatialite",
+      "platform": "!uwp"
+    },
+    "libxml2",
+    "lzma",
+    {
+      "name": "netcdf",
+      "platform": "!uwp & !(windows & arm64) & !android & !ios"
+    },
+    "openjpeg",
+    "openssl",
+    "pcre2",
+    {
+      "name": "postgresql",
+      "platform": "!uwp"
+    },
+    "recommended-features",
+    "webp",
+    "zstd"
   ],
   "features": {
     "archive": {
@@ -68,46 +95,6 @@
         {
           "name": "curl",
           "default-features": false
-        }
-      ]
-    },
-    "default-features": {
-      "description": "Default set of features, including recommended features",
-      "dependencies": [
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "gif",
-            "iconv",
-            "libkml",
-            "libxml2",
-            "lzma",
-            "openjpeg",
-            "openssl",
-            "pcre2",
-            "recommended-features",
-            "webp",
-            "zstd"
-          ]
-        },
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "libspatialite",
-            "postgresql"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "gdal",
-          "default-features": false,
-          "features": [
-            "hdf5",
-            "netcdf"
-          ],
-          "platform": "!uwp & !(windows & arm64) & !android & !ios"
         }
       ]
     },
@@ -193,7 +180,10 @@
     "libxml2": {
       "description": "Use LibXML2 library",
       "dependencies": [
-        "libxml2"
+        {
+          "name": "libxml2",
+          "default-features": false
+        }
       ]
     },
     "lzma": {
@@ -291,17 +281,6 @@
           "name": "sqlite3",
           "features": [
             "rtree"
-          ]
-        }
-      ]
-    },
-    "supported-default-features": {
-      "description": "This feature is an alias for default-features. It is retained for compatibility.",
-      "dependencies": [
-        {
-          "name": "gdal",
-          "features": [
-            "default-features"
           ]
         }
       ]

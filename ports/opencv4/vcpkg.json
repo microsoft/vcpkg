@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.10.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -21,7 +21,36 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "calib3d",
+    {
+      "name": "dnn",
+      "platform": "!android"
+    },
+    {
+      "name": "dshow",
+      "platform": "windows & !uwp"
+    },
+    "fs",
+    {
+      "name": "gapi",
+      "platform": "!uwp"
+    },
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
+    "highgui",
+    "intrinsics",
+    "jpeg",
+    "png",
+    "quirc",
+    "thread",
+    "tiff",
+    "webp",
+    {
+      "name": "win32ui",
+      "platform": "windows & !uwp"
+    }
   ],
   "features": {
     "ade": {
@@ -86,60 +115,6 @@
       "description": "Dc1394 support for opencv",
       "dependencies": [
         "libdc1394"
-      ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "calib3d",
-            "fs",
-            "highgui",
-            "intrinsics",
-            "jpeg",
-            "png",
-            "quirc",
-            "thread",
-            "tiff",
-            "webp"
-          ]
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gapi"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dnn"
-          ],
-          "platform": "!android"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dshow",
-            "win32ui"
-          ],
-          "platform": "windows & !uwp"
-        }
       ]
     },
     "dnn": {
