@@ -1,0 +1,49 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index 13a538461..859edbab5 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -792,8 +792,8 @@ endif()
+ # liblzf
+ if(USE_SYSTEM_LIBLZF)
+     open3d_find_package_3rdparty_library(3rdparty_liblzf
+-        PACKAGE liblzf
+-        TARGETS liblzf::liblzf
++        PACKAGE unofficial-liblzf
++        TARGETS unofficial::liblzf::liblzf
+     )
+     if(NOT 3rdparty_liblzf_FOUND)
+         set(USE_SYSTEM_LIBLZF OFF)
+diff --git a/cpp/open3d/io/file_format/FilePCD.cpp b/cpp/open3d/io/file_format/FilePCD.cpp
+index ce04f2e2d..f1a1c0cdb 100644
+--- a/cpp/open3d/io/file_format/FilePCD.cpp
++++ b/cpp/open3d/io/file_format/FilePCD.cpp
+@@ -5,7 +5,11 @@
+ // SPDX-License-Identifier: MIT
+ // ----------------------------------------------------------------------------
+
++#if __has_include(<lzf.h>)
++#include <lzf.h>
++#else
+ #include <liblzf/lzf.h>
++#endif
+
+ #include <cstdint>
+ #include <cstdio>
+diff --git a/cpp/open3d/t/io/file_format/FilePCD.cpp b/cpp/open3d/t/io/file_format/FilePCD.cpp
+index 4aa229c0d..9eb7ec285 100644
+--- a/cpp/open3d/t/io/file_format/FilePCD.cpp
++++ b/cpp/open3d/t/io/file_format/FilePCD.cpp
+@@ -5,7 +5,11 @@
+ // SPDX-License-Identifier: MIT
+ // ----------------------------------------------------------------------------
+
++#if __has_include(<lzf.h>)
++#include <lzf.h>
++#else
+ #include <liblzf/lzf.h>
++#endif
+
+ #include <cinttypes>
+ #include <cstdint>
+--
+2.45.2

@@ -1,0 +1,41 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index d694621ad..a2b45e8ff 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -1597,11 +1597,29 @@ else(OPEN3D_USE_ONEAPI_PACKAGES)
+             find_package(LAPACKE)
+             if(BLAS_FOUND AND LAPACK_FOUND AND LAPACKE_FOUND)
+                 message(STATUS "System BLAS/LAPACK/LAPACKE found.")
+-                list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM
+-                    ${BLAS_LIBRARIES}
+-                    ${LAPACK_LIBRARIES}
+-                    ${LAPACKE_LIBRARIES}
+-                )
++                if("${BLAS_LIBRARIES}" MATCHES ".*openblas.*")
++                    find_package(OpenBLAS)
++                    if(OpenBLAS_FOUND)
++                        list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM OpenBLAS::OpenBLAS)
++                    endif()
++                endif()
++                if(NOT TARGET OpenBlas::OpenBLAS)
++                    if(TARGET BLAS::BLAS)
++                        list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM BLAS::BLAS)
++                    else()
++                        list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM ${BLAS_LIBRARIES})
++                    endif()
++                endif()
++                if(TARGET LAPACK::LAPACK)
++                    list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM LAPACK::LAPACK)
++                else()
++                    list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM ${LAPACK_LIBRARIES})
++                endif()
++                if(TARGET LAPACK::LAPACKE)
++                    list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM LAPACK::LAPACKE)
++                else()
++                    list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_SYSTEM ${LAPACKE_LIBRARIES})
++                endif()
+             else()
+                 message(STATUS "System BLAS/LAPACK/LAPACKE not found, setting USE_SYSTEM_BLAS=OFF.")
+                 set(USE_SYSTEM_BLAS OFF)
+--
+2.45.2
