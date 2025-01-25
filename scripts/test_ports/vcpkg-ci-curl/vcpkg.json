@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-curl",
-  "version-date": "2024-03-05",
+  "version-string": "ci",
   "description": "Port to force features of certain ports within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
@@ -54,7 +54,7 @@
       "features": [
         "gnutls"
       ],
-      "platform": "!arm & !android & !xbox"
+      "platform": "!android & !uwp & !xbox"
     }
   ]
 }
