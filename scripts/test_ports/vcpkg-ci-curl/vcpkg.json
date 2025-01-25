@@ -8,14 +8,9 @@
     {
       "name": "curl",
       "features": [
-        "idn"
-      ]
-    },
-    {
-      "name": "curl",
-      "features": [
         "c-ares",
         "http2",
+        "idn",
         "zstd"
       ]
     },
