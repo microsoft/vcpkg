@@ -1,6 +1,6 @@
 {
   "name": "proxygen",
-  "version-string": "2025.01.13.00",
+  "version-string": "2025.01.20.00",
   "description": "It comprises the core C++ HTTP abstractions used at Facebook.",
   "homepage": "https://github.com/facebook/proxygen",
   "license": "BSD-3-Clause",
