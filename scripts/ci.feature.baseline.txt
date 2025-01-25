@@ -2193,6 +2193,7 @@ fftw3[openmp](windows) = feature-fails # Linker missing symbols. See https://git
 flashlight-cpu = fail # CMake Error: INSTALL(EXPORT) given unknown export "flashlightTargets". See https://github.com/microsoft/vcpkg/issues/32098
 flashlight-sequence[openmp](osx) = feature-fails # No openmp on osx
 freeglut(osx) = fail # fatal error: 'GL/glx.h' file not found
+freerdp[server](osx) = skip # Uses api removed with macOS 15. Don't get fixed. See https://github.com/FreeRDP/FreeRDP/issues/10558
 gdal[netcdf](windows & arm) = feature-fails # gdal_target_link_libraries(): PRIVATE is a mandatory argument. See https://github.com/microsoft/vcpkg/issues/33753
 gdk-pixbuf[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 geogram[graphics] = feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
