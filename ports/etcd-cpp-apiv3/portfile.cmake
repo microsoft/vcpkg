@@ -13,6 +13,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${GRPC_PATCH}"
+        fix-find-cpprestsdk.patch
 )
 file(WRITE "${SOURCE_PATH}/cmake/UploadPPA.cmake" "")
 
