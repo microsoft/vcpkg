@@ -11,6 +11,7 @@
         "c-ares",
         "http2",
         "idn",
+        "rtmp",
         "zstd"
       ]
     },
