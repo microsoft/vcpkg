@@ -20,6 +20,7 @@ ELSE()
     )
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
+ENDIF()
 
 file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
