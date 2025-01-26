@@ -7,8 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Build:
-IF(VCPKG_HOST_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
