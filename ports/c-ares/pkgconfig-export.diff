@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 94cac230..761de412 100644
+@@ -783,7 +783,10 @@ IF (CARES_INSTALL)
+ 
+ 	# pkgconfig support for static builds
+ 	FOREACH (LIB ${CARES_DEPENDENT_LIBS})
+-		SET (CARES_PRIVATE_LIBS "${CARES_PRIVATE_LIBS} -l${LIB}")
++		IF (NOT LIB MATCHES "^-")
++			SET (LIB "-l${LIB}")
++		ENDIF ()
++		SET (CARES_PRIVATE_LIBS "${CARES_PRIVATE_LIBS} ${LIB}")
+ 	ENDFOREACH ()
+ 
+ 	CONFIGURE_FILE("libcares.pc.cmake" "libcares.pc" @ONLY)

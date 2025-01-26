@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         avoid-docs.patch
+        pkgconfig-export.diff # https://github.com/c-ares/c-ares/pull/965
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
