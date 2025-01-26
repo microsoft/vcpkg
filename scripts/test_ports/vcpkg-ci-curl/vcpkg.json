@@ -7,59 +7,114 @@
   "dependencies": [
     {
       "name": "curl",
-      "features": [
-        "c-ares",
-        "http2",
-        "idn",
-        "rtmp",
-        "zstd"
-      ]
-    },
-    {
-      "$comment": "Known to break aws-sdk-cpp.",
-      "name": "curl",
-      "features": [
-        "brotli"
-      ],
-      "platform": "!osx"
-    },
-    {
-      "name": "curl",
-      "features": [
-        "gsasl",
-        "mbedtls",
-        "openssl",
-        "psl",
-        "wolfssl"
-      ],
-      "platform": "!uwp"
-    },
-    {
-      "name": "curl",
-      "features": [
-        "gssapi"
-      ],
-      "platform": "linux | osx"
-    },
-    {
-      "name": "curl",
-      "features": [
-        "ldap",
-        "tool"
-      ],
-      "platform": "!android & !uwp"
-    },
-    {
-      "$comment": "On arm, crypto symbols clash with openssl.",
-      "name": "curl",
-      "features": [
-        "gnutls"
-      ],
-      "platform": "!android & !uwp & !xbox & !arm"
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "compression",
+    "misc",
+    "security"
+  ],
+  "features": {
+    "compression": {
+      "description": "Compression features",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "zstd"
+          ]
+        },
+        {
+          "$comment": "Known to break aws-sdk-cpp.",
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "brotli"
+          ],
+          "platform": "!osx"
+        }
+      ]
+    },
+    "misc": {
+      "description": "Misc features",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "c-ares",
+            "http2",
+            "idn",
+            "rtmp",
+            "ssh"
+          ]
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "psl"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ldap",
+            "tool"
+          ],
+          "platform": "!android & !uwp"
+        }
+      ]
+    },
+    "security": {
+      "description": "Security features",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "gsasl",
+            "mbedtls",
+            "openssl",
+            "ssl",
+            "wolfssl"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "gssapi"
+          ],
+          "platform": "linux | osx"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "sspi"
+          ],
+          "platform": "windows & !uwp"
+        },
+        {
+          "$comment": "On arm, gnutls crypto symbols clash with openssl.",
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "gnutls"
+          ],
+          "platform": "!android & !uwp & !xbox & !arm"
+        }
+      ]
+    }
+  }
 }
