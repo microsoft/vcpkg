@@ -31,15 +31,13 @@ vcpkg_cmake_configure(
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG
         -DENABLE_DEBUG_LOGGING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh2)
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -60,4 +58,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
