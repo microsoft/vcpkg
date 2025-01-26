@@ -38,9 +38,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
-  ],
-  "default-features": [
+    },
     "zlib"
   ],
   "features": {
@@ -86,12 +84,6 @@
       "description": "Support Snappy for compression",
       "dependencies": [
         "snappy"
-      ]
-    },
-    "zlib": {
-      "description": "Support zlib for compression",
-      "dependencies": [
-        "zlib"
       ]
     },
     "zstd": {
