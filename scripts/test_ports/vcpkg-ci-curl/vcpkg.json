@@ -50,11 +50,12 @@
       "platform": "!android & !uwp"
     },
     {
+      "$comment": "On arm, crypto symbols clash with openssl.",
       "name": "curl",
       "features": [
         "gnutls"
       ],
-      "platform": "!android & !uwp & !xbox"
+      "platform": "!android & !uwp & !xbox & !arm"
     }
   ]
 }
