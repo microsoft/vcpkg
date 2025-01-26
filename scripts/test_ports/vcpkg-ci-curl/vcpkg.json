@@ -56,6 +56,10 @@
         "gnutls"
       ],
       "platform": "!android & !uwp & !xbox & !arm"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
