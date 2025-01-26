@@ -7,7 +7,7 @@ vcpkg_from_github(
 )
 
 # Build:
-IF(WIN32)
+IF(VCPKG_HOST_IS_WINDOWS)
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
