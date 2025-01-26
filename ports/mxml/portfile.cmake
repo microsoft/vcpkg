@@ -9,7 +9,7 @@ vcpkg_from_github(
 # Build:
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "vcnet/mxml1.vcxproj"
+    PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
     TARGET Build
 )
 
