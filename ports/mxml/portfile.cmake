@@ -7,10 +7,19 @@ vcpkg_from_github(
 )
 
 # Build:
-vcpkg_msbuild_install(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
-    TARGET Build
-)
+IF(WIN32)
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
+        TARGET Build
+    )
+ELSE()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+    )
+    vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
