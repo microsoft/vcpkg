@@ -1,8 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5fd2ce0..976b845 100644
+index 5fd2ce0..202bcfe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -234,8 +234,13 @@ if(BUILD_VULKAN_COMPILER OR BUILD_TOOL)
+@@ -27,10 +27,6 @@ option(SPIRVCROSS_WITHOUT_INSTALL "Compile with spirv-cross without install"
+        OFF)
+ option(USE_CREATE_COMPILER_FUNCTION "Whether LLGI::CreateCompiler is used." ON)
+ 
+-if(LINUX)
+-  set(BUILD_VULKAN TRUE)
+-endif()
+-
+ option(USE_MSVC_RUNTIME_LIBRARY_DLL "compile as multithreaded DLL" ON)
+ 
+ include(cmake/ClangFormat.cmake)
+@@ -234,8 +230,13 @@ if(BUILD_VULKAN_COMPILER OR BUILD_TOOL)
        spirv-cross-util)
  
    else()
