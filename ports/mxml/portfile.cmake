@@ -13,7 +13,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
         TARGET Build
     )
-ELSE()
+    file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+else()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
@@ -22,5 +24,4 @@ ELSE()
     vcpkg_fixup_pkgconfig()
 ENDIF()
 
-file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
