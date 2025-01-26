@@ -8,12 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
-        0020-fix-pc-file.patch
         0022-deduplicate-libs.patch
         export-components.patch
         dependencies.patch
         cmake-config.patch
-        rtmp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -75,8 +73,9 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
+        -DSHARE_LIB_OBJECT=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_PKGCONFIG=OFF
+        -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
