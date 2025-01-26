@@ -7834,7 +7834,7 @@
     },
     "rapidjson": {
       "baseline": "2023-07-17",
-      "port-version": 1
+      "port-version": 2
     },
     "rapidxml": {
       "baseline": "1.13",
