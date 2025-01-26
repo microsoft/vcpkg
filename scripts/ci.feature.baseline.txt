@@ -2234,6 +2234,7 @@ libmariadb[ssl] = options # You have to select exactly one ssl backend, we use t
 libofx[ofx2qif,ofxdump](osx) = feature-fails # gettext link error. See https://github.com/microsoft/vcpkg/issues/33043
 libopnmidi[gens-emulator] = options # You have to select at least one emulator
 libproxy[bindings-csharp](!windows & !osx) = feature-fails # No C# compiler installed (brew install mono on osx)
+libpsl[libidn2,libicu] = options # "At least one of libidn2 and libicu should be selected."
 libraw[openmp](osx) = feature-fails # requires openmp (works with right setup)
 libsbml[expat, libxml2] = options # have to select excatly one xml lib(they are features)
 libssh[core,openssl,mbedtls] = options # we have to select feature openssl or mbedtls
