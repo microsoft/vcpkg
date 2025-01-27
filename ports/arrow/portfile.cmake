@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
         0004-android-musl.patch
         0005-android-datetime.patch
         0006-cmake-msvcruntime.patch
+        0007-fix-path.patch # From https://github.com/apache/arrow/issues/39023#issuecomment-1835390089
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
