@@ -16,9 +16,16 @@ vcpkg_from_github(
 )
 file(WRITE "${SOURCE_PATH}/cmake/UploadPPA.cmake" "")
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    async BUILD_ETCD_CORE_ONLY
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_ETCD_TESTS=OFF
         -DETCD_W_STRICT=OFF
         "-DGRPC_CPP_PLUGIN=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}"
@@ -32,7 +39,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/etcd-cpp-api)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/etcd-cpp-api-config.cmake"
-    [[ETCD_CPP_HOME "${CMAKE_CURRENT_LIST_DIR}/../../.."]] 
+    [[ETCD_CPP_HOME "${CMAKE_CURRENT_LIST_DIR}/../../.."]]
     [[ETCD_CPP_HOME "${CMAKE_CURRENT_LIST_DIR}/../.."]]
 )
 

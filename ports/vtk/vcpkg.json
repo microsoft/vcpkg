@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -218,6 +218,9 @@
         }
       ]
     },
+    "openmp": {
+      "description": "Use openmp multithreading parallel implementation"
+    },
     "openvr": {
       "description": "OpenVR functionality for VTK",
       "dependencies": [
@@ -315,6 +318,12 @@
       "description": "SQL functionality for VTK",
       "dependencies": [
         "sqlite3"
+      ]
+    },
+    "tbb": {
+      "description": "Use TBB multithreading parallel implementation",
+      "dependencies": [
+        "tbb"
       ]
     },
     "utf8": {

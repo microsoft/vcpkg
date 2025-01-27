@@ -18,36 +18,20 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "eigen",
+    "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !mingw"
+    },
+    "png",
+    "tiff"
   ],
   "features": {
     "dc1394": {
       "description": "Dc1394 support for opencv",
       "dependencies": [
         "libdc1394"
-      ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv2",
-          "default-features": false,
-          "features": [
-            "eigen",
-            "jpeg",
-            "png",
-            "tiff"
-          ]
-        },
-        {
-          "name": "opencv2",
-          "default-features": false,
-          "features": [
-            "msmf"
-          ],
-          "platform": "windows & !mingw"
-        }
       ]
     },
     "eigen": {

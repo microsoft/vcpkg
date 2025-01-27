@@ -1,0 +1,9 @@
+projectm provides CMake targets:
+
+  find_package(projectM4 REQUIRED)
+  target_link_libraries(main PRIVATE libprojectM::projectM)
+
+To use and link the playlist library component:
+
+  find_package(projectM4 REQUIRED COMPONENTS Playlist)
+  target_link_libraries(main PRIVATE libprojectM::playlist)

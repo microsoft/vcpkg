@@ -21,7 +21,27 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "jpeg",
+    "png",
+    "quirc",
+    "tiff",
+    "webp",
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
+    {
+      "name": "gapi",
+      "platform": "!uwp"
+    },
+    {
+      "name": "dnn",
+      "platform": "!android"
+    },
+    {
+      "name": "msmf",
+      "platform": "windows & !uwp & !mingw"
+    }
   ],
   "features": {
     "bgsegm": {
@@ -52,54 +72,6 @@
       "description": "Dc1394 support for opencv",
       "dependencies": [
         "libdc1394"
-      ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "jpeg",
-            "png",
-            "quirc",
-            "tiff",
-            "webp"
-          ]
-        },
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "gapi"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "dnn"
-          ],
-          "platform": "!android"
-        },
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "msmf"
-          ],
-          "platform": "windows & !uwp & !mingw"
-        }
       ]
     },
     "dnn": {

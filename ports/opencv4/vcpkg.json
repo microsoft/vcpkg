@@ -21,7 +21,44 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "calib3d",
+    {
+      "name": "directml",
+      "platform": "windows & !uwp & !mingw"
+    },
+    {
+      "name": "dnn",
+      "platform": "!android"
+    },
+    {
+      "name": "dshow",
+      "platform": "windows & !uwp"
+    },
+    "fs",
+    {
+      "name": "gapi",
+      "platform": "!uwp"
+    },
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
+    "highgui",
+    "intrinsics",
+    "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !uwp & !mingw"
+    },
+    "png",
+    "quirc",
+    "thread",
+    "tiff",
+    "webp",
+    {
+      "name": "win32ui",
+      "platform": "windows & !uwp"
+    }
   ],
   "features": {
     "ade": {
@@ -86,69 +123,6 @@
       "description": "Dc1394 support for opencv",
       "dependencies": [
         "libdc1394"
-      ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "calib3d",
-            "fs",
-            "highgui",
-            "intrinsics",
-            "jpeg",
-            "png",
-            "quirc",
-            "thread",
-            "tiff",
-            "webp"
-          ]
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gapi"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dnn"
-          ],
-          "platform": "!android"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dshow",
-            "win32ui"
-          ],
-          "platform": "windows & !uwp"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "directml",
-            "msmf"
-          ],
-          "platform": "windows & !uwp & !mingw"
-        }
       ]
     },
     "directml": {

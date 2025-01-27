@@ -35,7 +35,7 @@ if("introspection" IN_LIST FEATURES)
         set(GIR_TOOL_DIR "${CURRENT_HOST_INSTALLED_DIR}")
     endif()
     vcpkg_list(APPEND ADDITIONAL_BINARIES
-        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
         "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
     )
 else()
