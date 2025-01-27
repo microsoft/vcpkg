@@ -21,27 +21,27 @@
     "zlib"
   ],
   "default-features": [
-    "jpeg",
-    "png",
-    "quirc",
-    "tiff",
-    "webp",
     {
-      "name": "gtk",
-      "platform": "linux"
+      "name": "dnn",
+      "platform": "!android"
     },
     {
       "name": "gapi",
       "platform": "!uwp"
     },
     {
-      "name": "dnn",
-      "platform": "!android"
+      "name": "gtk",
+      "platform": "linux"
     },
+    "jpeg",
     {
       "name": "msmf",
       "platform": "windows & !uwp & !mingw"
-    }
+    },
+    "png",
+    "quirc",
+    "tiff",
+    "webp"
   ],
   "features": {
     "bgsegm": {
