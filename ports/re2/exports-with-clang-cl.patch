@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a2ade77a06..1b977db35c 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -34,7 +34,7 @@ set(SONAME 11)
+ 
+ set(EXTRA_TARGET_LINK_LIBRARIES)
+ 
+-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
++if(MSVC)
+   if(MSVC_VERSION LESS 1920)
+     message(FATAL_ERROR "you need Visual Studio 2019 or later")
+   endif()

@@ -1,7 +1,25 @@
 if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     set(_VCPKG_WINDOWS_TOOLCHAIN 1)
 
+    # Load ENV if not loaded!
+    if(NOT DEFINED ENV{MSVC_TOOLCHAIN_ENV_ALREADY_SET})
+        block()
+            include("${_VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/env-setup/msvc-env.cmake")
+        endblock()
+    endif()
+
+    #set(CMAKE_GENERATOR_INSTANCE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/VS/Common7/Tools" CACHE INTERNAL "" FORCE)
+
+    if(TOOLCHAIN_ENABLE_Fortran AND
+       NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET})
+        block()
+            include("${_VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/env-setup/intel-msvc-env.cmake")
+        endblock()
+    endif()
     string(APPEND CMAKE_Fortran_FLAGS " -assume:underscore -assume:protect_parens -fp:strict -names:lowercase -Qopenmp-")
+
+    include_directories(AFTER SYSTEM $ENV{INCLUDE})
+    link_directories(AFTER SYSTEM $ENV{LIB})
 
     if(NOT DEFINED VCPKG_CRT_LINKAGE)
         block(PROPAGATE VCPKG_CRT_LINKAGE)
@@ -21,9 +39,9 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "")
 
     macro(toolchain_set_cmake_policy_new)
-    if(POLICY ${ARGN})
-        cmake_policy(SET ${ARGN} NEW)
-    endif()
+        if(POLICY ${ARGN})
+            cmake_policy(SET ${ARGN} NEW)
+        endif()
     endmacro()
     # Setup policies
     toolchain_set_cmake_policy_new(CMP0149)
@@ -47,6 +65,9 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
        VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
        VCPKG_PLATFORM_TOOLSET
     )
+
+    set(CMAKE_C_COMPILER "cl.exe" CACHE STRING "")
+    set(CMAKE_CXX_COMPILER "cl.exe" CACHE STRING "")
 
     set(CMAKE_SYSTEM_NAME Windows CACHE STRING "")
 

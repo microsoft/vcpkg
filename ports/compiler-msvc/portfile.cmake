@@ -1,6 +1,7 @@
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
 find_program(pwsh_exe NAMES pwsh powershell)
 
@@ -23,3 +24,4 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/msvc-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" @ONLY)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/msvc-env.cmake" "${CURRENT_PACKAGES_DIR}/env-setup/msvc-env.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/msvc-env.ps1" "${CURRENT_PACKAGES_DIR}/env-setup/msvc-env.ps1" @ONLY)

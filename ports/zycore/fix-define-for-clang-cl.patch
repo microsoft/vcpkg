@@ -1,0 +1,13 @@
+diff --git a/include/Zycore/Defines.h b/include/Zycore/Defines.h
+index 31d09a1613..301a066c7f 100644
+--- a/include/Zycore/Defines.h	
++++ b/include/Zycore/Defines.h
+@@ -61,7 +61,7 @@
+ /* Compiler detection                                                                             */
+ /* ============================================================================================== */
+ 
+-#if defined(__clang__)
++#if defined(__clang__) && !defined(_MSC_VER)
+ #   define ZYAN_CLANG
+ #   define ZYAN_GNUC
+ #elif defined(__ICC) || defined(__INTEL_COMPILER)

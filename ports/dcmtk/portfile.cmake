@@ -11,6 +11,7 @@ vcpkg_from_github(
         disable-test-setup.diff
         pkgconfig-lib-order.diff
         msvc.diff
+        remove_abs_compiler_path.patch
 )
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"

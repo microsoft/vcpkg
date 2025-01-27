@@ -78,4 +78,5 @@ file(REMOVE
     )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/intel-msvc-env.cmake" "${CURRENT_PACKAGES_DIR}/env-setup/intel-msvc-env.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/intel-msvc-env.ps1" "${CURRENT_PACKAGES_DIR}/env-setup/intel-msvc-env.ps1" @ONLY)
 
