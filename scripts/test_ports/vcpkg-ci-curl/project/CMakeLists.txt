@@ -25,6 +25,7 @@ if(NOT CMAKE_HOST_WIN32)
     separate_arguments(curl-config-cflags UNIX_COMMAND "${curl-config-cflags}")
     execute_process(COMMAND "${CURL_CONFIG}" --libs OUTPUT_VARIABLE curl-config-libs OUTPUT_STRIP_TRAILING_WHITESPACE)
     separate_arguments(curl-config-libs UNIX_COMMAND "${curl-config-libs}")
+    string(REGEX REPLACE "(^-|;-)framework;" "\\1framework " curl-config-libs "${curl-config-libs}")
 
     add_executable(main-curl-config main.c)
     target_compile_options(main-curl-config PRIVATE ${curl-config-cflags})
