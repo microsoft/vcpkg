@@ -9256,10 +9256,6 @@
       "baseline": "1.2.9.0",
       "port-version": 0
     },
-    "vmaware": {
-      "baseline": "1.9",
-      "port-version": 0
-    },
     "vmaware-vm-detection": {
       "baseline": "2.0",
       "port-version": 0
