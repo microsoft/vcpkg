@@ -20,16 +20,10 @@
     }
   ],
   "features": {
-    "libjpeg-turbo": {
+    "jpeg": {
       "description": "Support for JPEG image format",
       "dependencies": [
         "libjpeg-turbo"
-      ]
-    },
-    "libwebp": {
-      "description": "Support for WEBP image format.",
-      "dependencies": [
-        "libwebp"
       ]
     },
     "tiff": {
@@ -39,6 +33,12 @@
           "name": "tiff",
           "default-features": false
         }
+      ]
+    },
+    "webp": {
+      "description": "Support for WEBP image format.",
+      "dependencies": [
+        "libwebp"
       ]
     }
   }

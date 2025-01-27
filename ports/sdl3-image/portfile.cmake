@@ -11,9 +11,9 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        libjpeg-turbo SDLIMAGE_JPG
-        libwebp       SDLIMAGE_WEBP
-        tiff          SDLIMAGE_TIF
+        jpeg    SDLIMAGE_JPG
+        tiff    SDLIMAGE_TIF
+        webp    SDLIMAGE_WEBP
 )
 
 vcpkg_cmake_configure(
