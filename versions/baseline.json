@@ -4909,7 +4909,7 @@
       "port-version": 1
     },
     "libopenmpt": {
-      "baseline": "0.7.10",
+      "baseline": "0.7.13",
       "port-version": 0
     },
     "libopensp": {
