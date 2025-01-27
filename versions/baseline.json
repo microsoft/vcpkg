@@ -8606,7 +8606,7 @@
     },
     "spdk": {
       "baseline": "24.01",
-      "port-version": 0
+      "port-version": 1
     },
     "spdk-dpdk": {
       "baseline": "2018-11-24",
