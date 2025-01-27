@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
-    REF "preview-${VERSION}"
-    SHA512 e139fd9474213757f473ca96cb7df78e6b122ac1a0f8b88e66d28955b8ee0390f83ee14dfe4f188aa4ba14b812c5522ce366e61a00609a3079930d68d8233921
+    REF "prerelease-${VERSION}"
+    SHA512 d11764142798e9c3cbb2fcfb123a5d6e5192d45011118f5a76f63b9ba100119799aacf9cd64835a9c504d3040116202f44aba9df1fc851afc1fdfb3b498c56a2
     HEAD_REF main
     PATCHES
         cmake-sdl3.patch
