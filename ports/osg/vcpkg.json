@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 25,
+  "port-version": 26,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
@@ -28,8 +28,19 @@
     "zlib"
   ],
   "default-features": [
-    "default-features",
+    {
+      "name": "fontconfig",
+      "platform": "!android & !ios & !uwp"
+    },
     "freetype",
+    {
+      "name": "nvtt",
+      "platform": "!x86 & !(windows & arm64) & !uwp"
+    },
+    {
+      "name": "openexr",
+      "platform": "!uwp"
+    },
     "plugins"
   ],
   "features": {
@@ -37,35 +48,6 @@
       "description": "Support for Collada (.dae) files",
       "dependencies": [
         "collada-dom"
-      ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "openexr"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "!android & !ios & !uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "nvtt"
-          ],
-          "platform": "!x86 & !(windows & arm64) & !uwp"
-        }
       ]
     },
     "docs": {

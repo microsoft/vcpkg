@@ -1,16 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-SDK
-    REF "${VERSION}"
-    SHA512 995ed5cff95fec7ffd8470f04eb4d00325f9acb20cc1f0d78442890d0636554c2526c015351f4b19bc673dcadd531bb62d9d3c8c526dd921f236cb5035e906e0
+    REF "v${VERSION}"
+    SHA512 be396a7aad6251d9d1f1af265ecf20f3428d87610d680c14d92fb5b060a59ce8b8522135a0dd29eaf20e75683e45c1c8ea55035a7c3ec3eddc4bc7680d68b66e
     HEAD_REF main
+    PATCHES
+        # see https://github.com/KhronosGroup/OpenCL-SDK/pull/88/files#r1905072265
+        001-remove-extra-install-rules.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENCL_HEADERS
     REPO KhronosGroup/OpenCL-Headers
-    REF "${VERSION}"
-    SHA512 2f1a46d58a5a9329470bab4c3662f17e81aab9558bfd9e1aafa14d3e1ab129513ab9493eeeb3cc48f0f91f0bc6b61bd54e28d7083eed58af9f34cd973cc93de1
+    REF "v${VERSION}"
+    SHA512 9d2ed2a8346bc3f967989091d8cc36148ffe5ff13fe30e12354cc8321c09328bbe23e74817526b99002729c884438a3b1834e175a271f6d36e8341fd86fc1ad5
     HEAD_REF main
 )
 if(NOT EXISTS "${SOURCE_PATH}/external/OpenCL-Headers/CMakeLists.txt")
@@ -21,8 +24,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENCL_CLHPP
     REPO KhronosGroup/OpenCL-CLHPP
-    REF "${VERSION}"
-    SHA512 6396cd67a2edef6a76695857e3e45f7eeb8cdaa8c729197357c6374ac58b41caa37bbe8c3b7a1724d43d3805f8cd5edd53a8ed833d6415bf072745800b744572
+    REF "v${VERSION}"
+    SHA512 7cdadc8ef182d1556346bd34b5a9ffe6e239ab61ec527e5609d69e1bcaf81a88f3fc534f5bdeed037236e1b0e61f1544d2a95c06df55f9cd8e03e13baf4143ba
     HEAD_REF main
 )
 if(NOT EXISTS "${SOURCE_PATH}/external/OpenCL-CLHPP/CMakeLists.txt")
@@ -33,8 +36,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH OPENCL_ICD_LOADER
     REPO KhronosGroup/OpenCL-ICD-Loader
-    REF "${VERSION}"
-    SHA512 12d62183e49c5a1f813807291744d816008afca55b09f5acf2eef1bce50a453bf35a8dfbeb5f433022b0c5517f0a210d7123a3bac7a15ea63cc10f3bc71510f0
+    REF "v${VERSION}"
+    SHA512 29043eff21076440046314edf62bb488b7e4e17d9fbdac4c3727d8e2523c0c8fbf89ee7fcf762528af761ddbcb4be24e5f062ffa82f778401d6365faa35344a8
     HEAD_REF main
 )
 if(NOT EXISTS "${SOURCE_PATH}/external/OpenCL-ICD-Loader/CMakeLists.txt")
@@ -49,7 +52,6 @@ vcpkg_from_github(
     SHA512 d6fa8b6788cabdbb185a6ffba79c994762924a1c60595b769a7d3bb4a3ddf0f80cdeac7bd915cffa720f9123a720a1b7f0023fd7f2cf58906d15758529a99e2d
     HEAD_REF master
 )
-vcpkg_replace_string("${SOURCE_PATH}/cmake/Dependencies/whereami/whereami.cmake" [[${CMAKE_CURRENT_BINARY_DIR}/_deps/whereami-external-src]] [[${whereami-external_SOURCE_DIR}]])
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

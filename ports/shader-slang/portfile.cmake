@@ -17,7 +17,7 @@ if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 b1af26beb786b2f47bb4dc4e94613c9dda61f6c26539917376d13252ddcbed925f5b1f82948012d2cd288a20ea9d27f3703db96bc8b6689f69ac9f3e3a673584
+		SHA512 8f85b6680a31bdd0d5fefd796dfa251d33994b8482d3c51072acb5bcf2f92c1a73219d68a7ecd157bd5641765519714c1e0bc86819f78d63c81fcd4f5ae528fd
 	)
 endif()
 if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -25,7 +25,7 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 8c9f8082dd949d10d4228ce5d58cf862c9419039f7e5fdde3719f9ea446e55a87eb3e6f8367d26e0015830951c98175d1e59e95873cac9e937f98a6c8d211c16
+		SHA512 347c59fdcdc7a37626eb4d21a17e0886f9761223c67efb4089a107a3c6d4266d8b8baab8acecce9c6ab9490e80be9fdfbffd2e6394850a29a1e019927580c935
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -33,7 +33,7 @@ if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 88a920f44650bc99ed97b04d3d674fd256b1414c60697dee7bc234472abe9216d7a3d3e5b75537fe01f7da56fe1fe5348d2cd38dad43f4f143105e4cb2e1ec53
+		SHA512 2fa955681b124fe00471ac54ad8f66899253cdfc1c7bcc1aae7e1fa28001becf79b8166da8f76cac183265a4bf03682dda67aea621f249464072fb7910b60500
 	)
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -41,7 +41,7 @@ if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 f3de6277d06a9aaadffe4e3d7d74a2352edc12001055142682eb65834cedfdea8f37daa65b7719178a4419f7e87842de6814c03a68b843c5c0085239bb895058
+		SHA512 e9c68975c5cb42fee79c6c8d7f9246df0fad9a649a0544e89a9b15b51138404d2acbf3a1cde7c0102446d914eeff40c95c713d64882e444cc8c880eddc26d7dd
 	)
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -49,7 +49,7 @@ if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 7db8c2635bd5868a6741c1e094b7b2f6a095b66f1314c811e6fd41fc198ef68c7700214d9e81db80615daadd2bb89e2a6169d8cb6da5f2185bafdcff43d581b8
+		SHA512 5ec878f91e164ed3d62174b09fd8078c549f0bb4c87e365b7f97f909057aa04b62acf6b4c0dce3c4af7c20234be4040ebfa088e3c459c3e01026035db429110b
 	)
 endif()
 if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -57,7 +57,7 @@ if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 5c7bc8a9fe3d7c3829434469833f4c1aa70160914d80ac5292ef115cb0a9c8a0907f9f49488b5d14bd2668bf5d3420ccad289aa4f02c6d673e492b548fd9f4e9
+		SHA512 b47c513da026bec1ea7658c6a3b35fce695068d56bf8a5b7a37bb34860d005b666c34b172a310aa2e51a0b447f510d7c70ded0478716145a7fef182f13e7511c
 	)
 endif()
 if(NOT ARCHIVE)
@@ -94,9 +94,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(NOT VCPKG_BUILD_TYPE)
-  file(INSTALL "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  file(INSTALL "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
   if(VCPKG_TARGET_IS_WINDOWS)
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
   endif()
 endif()
 
@@ -118,7 +118,7 @@ file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(
 	FILE_LIST "${BINDIST_PATH}/LICENSE"
 	COMMENT #[[ from README ]] [[
-The Slang code itself is under the MIT license.
+The Slang code itself is under the Apache 2.0 with LLVM Exception license.
 
 Builds of the core Slang tools depend on the following projects, either automatically or optionally, which may have their own licenses:
 

@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 5018dd3e062489633c6e6fdef867656bc8ae6717dd74808a29ce5066fd5d0d69d3038a1a0326ed4df2139590dce6b99381cdaaecae0af5ef37d26a5903be1e7e
+    SHA512 73d2a296c591a7b58a1b6acf0976ee60df7dc7bee8e044342a59f74e139fdf51195e7656fb195ebbe9ac42d3910ed6f827624c2f4c2b7b7c0309e8a3791ddf61
     HEAD_REF main
     PATCHES
         fix-deps.patch
+        fix-test.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -45,6 +46,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/demo"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/runtime/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/schema/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
@@ -55,6 +57,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/compression/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/payload/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"
@@ -63,6 +66,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/visitation/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/benchmark"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/any/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/benchmark"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/capi/benchmark"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/adapters"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/cpp_conversion"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation"
 )
 

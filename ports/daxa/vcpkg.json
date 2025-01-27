@@ -1,7 +1,6 @@
 {
   "name": "daxa",
-  "version": "3.0.2",
-  "port-version": 1,
+  "version": "3.0.3",
   "description": "Daxa C++ Vulkan Abstraction",
   "homepage": "https://github.com/Ipotrick/Daxa",
   "license": "MIT",
