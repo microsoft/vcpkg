@@ -1087,6 +1087,19 @@ spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
+# _Interlocked* intrinsic functions are not available on x86
+suitesparse-graphblas:x86-windows=fail
+# "ninja: error: failed recompaction: Permission denied"
+# See https://gist.github.com/valgur/a27f15e16efe93b1ed589703c3cb22cd for the build logs
+suitesparse-graphblas:arm64-windows=fail
+suitesparse-graphblas:arm64-windows-static-md=fail
+# uwp: "unresolved external symbol __imp_RoInitialize referenced in function __scrt_initialize_winrt"
+suitesparse-graphblas:x64-uwp=fail
+suitesparse-graphblas:arm64-uwp=fail
+# Android API level 23 or newer is required for complex math support
+suitesparse-graphblas:arm-neon-android=fail
+suitesparse-graphblas:arm64-android=fail
+suitesparse-graphblas:x64-android=fail
 systemc:arm64-windows=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail

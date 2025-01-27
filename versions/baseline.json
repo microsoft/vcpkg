@@ -1562,7 +1562,7 @@
     },
     "ceres": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1790,7 +1790,7 @@
     },
     "colmap": {
       "baseline": "3.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -2970,7 +2970,7 @@
     },
     "g2o": {
       "baseline": "2024-12-14",
-      "port-version": 2
+      "port-version": 3
     },
     "g3log": {
       "baseline": "2.4",
@@ -8813,8 +8813,80 @@
       "port-version": 9
     },
     "suitesparse": {
-      "baseline": "5.8.0",
-      "port-version": 2
+      "baseline": "7.8.3",
+      "port-version": 0
+    },
+    "suitesparse-amd": {
+      "baseline": "3.3.3",
+      "port-version": 0
+    },
+    "suitesparse-btf": {
+      "baseline": "2.3.2",
+      "port-version": 0
+    },
+    "suitesparse-camd": {
+      "baseline": "3.3.3",
+      "port-version": 0
+    },
+    "suitesparse-ccolamd": {
+      "baseline": "3.3.4",
+      "port-version": 0
+    },
+    "suitesparse-cholmod": {
+      "baseline": "5.3.0",
+      "port-version": 0
+    },
+    "suitesparse-colamd": {
+      "baseline": "3.3.4",
+      "port-version": 0
+    },
+    "suitesparse-config": {
+      "baseline": "7.8.3",
+      "port-version": 0
+    },
+    "suitesparse-cxsparse": {
+      "baseline": "4.4.1",
+      "port-version": 0
+    },
+    "suitesparse-graphblas": {
+      "baseline": "9.3.1",
+      "port-version": 0
+    },
+    "suitesparse-klu": {
+      "baseline": "2.3.5",
+      "port-version": 0
+    },
+    "suitesparse-lagraph": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
+    "suitesparse-ldl": {
+      "baseline": "3.3.2",
+      "port-version": 0
+    },
+    "suitesparse-mongoose": {
+      "baseline": "3.3.4",
+      "port-version": 0
+    },
+    "suitesparse-paru": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "suitesparse-rbio": {
+      "baseline": "4.3.4",
+      "port-version": 0
+    },
+    "suitesparse-spex": {
+      "baseline": "3.2.1",
+      "port-version": 0
+    },
+    "suitesparse-spqr": {
+      "baseline": "4.3.4",
+      "port-version": 0
+    },
+    "suitesparse-umfpack": {
+      "baseline": "6.3.5",
+      "port-version": 0
     },
     "sundials": {
       "baseline": "7.1.1",
