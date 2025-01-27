@@ -9,17 +9,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 fb37eeb47466d596b5b4479e2113de1b91a83749771cb90dcd5fa68d9c9f2dfa6cae6b4bdb70f64c0c0bf1a7c2f35c4228751a6d3fa98ca5d3cfd8737bc5d425
+    SHA512 36e513eab062e7e7c2ebd1691507bac801995b8334d263fd06d6d30a88446782dae5ad66c20f549608522f302748208e67762ce12cdb6577433e323142556f25
     HEAD_REF main
     PATCHES
-        disable-non-underscore-posix-names.patch
         fix-windows-minmax.patch
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
         fix-libunwind.patch
+        fix-absolute-dir.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
@@ -41,7 +42,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         "liburing"   WITH_liburing
         "libaio"     WITH_libaio
     INVERTED_FEATURES
@@ -59,6 +59,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_INSTALL_DIR=share/folly
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_RUNTIME

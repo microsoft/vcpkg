@@ -14,7 +14,7 @@
       libxkbcommon.dev
       m4
       ninja
-      pkgconfig
+      pkg-config
       zip
       zstd.dev
     ] ++ pkgs.lib.optionals withX11 [

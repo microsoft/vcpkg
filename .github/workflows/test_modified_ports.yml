@@ -1,6 +1,8 @@
 name: Test Modified Ports
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - onboard-actions
 jobs:
   Windows:
     runs-on:

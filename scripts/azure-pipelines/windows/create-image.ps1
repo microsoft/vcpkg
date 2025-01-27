@@ -20,11 +20,11 @@ $Prefix = "Win-$DatePrefixComponent"
 $GalleryImageVersion = $DatePrefixComponent.Replace('-','.')
 $VMSize = 'Standard_D8ads_v5'
 $ProtoVMName = 'PROTOTYPE'
-$WindowsServerSku = '2022-datacenter-azure-edition'
+$WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 17
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -95,7 +95,8 @@ function Wait-Shutdown {
 $AdminPW = New-Password
 $Credential = New-Object System.Management.Automation.PSCredential ("AdminUser", $AdminPW)
 
-$VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-mintingNetwork'
+$VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-minting-wus3'
+$Subnet = $VirtualNetwork.Subnets | Where-Object -Property 'Name' -EQ -Value 'image-minting' | Select-Object -First 1
 
 ####################################################################################################
 Write-Progress `
@@ -108,7 +109,7 @@ $Nic = New-AzNetworkInterface `
   -Name $NicName `
   -ResourceGroupName 'vcpkg-image-minting' `
   -Location $Location `
-  -Subnet $VirtualNetwork.Subnets[0] `
+  -Subnet $Subnet `
   -EnableAcceleratedNetworking
 
 $VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType TrustedLaunch -IdentityType SystemAssigned
@@ -199,9 +200,6 @@ Write-Host 'Waiting 1 minute for VM to reboot...'
 Start-Sleep -Seconds 60
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-sdks.ps1'
-
-####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
 
 ####################################################################################################
@@ -254,7 +252,7 @@ Set-AzVM `
   -Generalized
 
 $westus3Location = @{Name = 'West US 3';}
-$southEastAsiaLocation = @{Name = 'Southeast Asia';}
+$westusLocation = @{Name = 'West US';}
 
 New-AzGalleryImageVersion `
   -ResourceGroupName 'vcpkg-image-minting' `
@@ -266,7 +264,7 @@ New-AzGalleryImageVersion `
   -ReplicaCount 1 `
   -StorageAccountType 'Premium_LRS' `
   -PublishingProfileExcludeFromLatest `
-  -TargetRegion @($westus3Location, $southEastAsiaLocation)
+  -TargetRegion @($westus3Location, $westusLocation)
 
 ####################################################################################################
 Write-Progress `

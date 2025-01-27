@@ -5,11 +5,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dartsim/dart
     REF v${VERSION}
-    SHA512 6d04da37d0eb40a35a3aaec583af024e2edf71d68bb38b6832760de21a349221387644ed9be0cc1e451c669bbf48eb53d8d0cd3be1b1b265a30be2aa17c7e48b
+    SHA512 3c621245c5dc1bf26932c33c940e2b09aaebd1a15f3620616c60296f18a67e1044728543b4f640f92caf8f98295e350679b70eb11aecadea9e4a28aaf370ea75
     HEAD_REF main
     PATCHES
         disable_unit_tests_examples_and_tutorials.patch
-        fix-pc-dependencies.patch
 )
 
 vcpkg_cmake_configure(
@@ -22,6 +21,7 @@ vcpkg_cmake_configure(
         -DDART_SKIP_IPOPT=ON
         -DDART_SKIP_NLOPT=ON
         -DDART_SKIP_pagmo=ON
+        -DDART_SKIP_spdlog=ON
         -Durdfdom_headers_VERSION_MAJOR=1 # urdfdom-headers does not expose a header macro for its version.
         -Durdfdom_headers_VERSION_MINOR=0 # versions of at least 1.0.0 use std:: constructs in their ABI instead of boost:: ones.
         -Durdfdom_headers_VERSION_PATCH=0
@@ -41,7 +41,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_ROOT_PATH \"${SOURCE_PATH}/\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_PATH \"${SOURCE_PATH}/data/\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_LOCAL_PATH \"${SOURCE_PATH}/data/\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_GLOBAL_PATH \"${CURRENT_PACKAGES_DIR}/share/doc/dart/data/\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_GLOBAL_PATH                                                  \\\n  \"${CURRENT_PACKAGES_DIR}/share/doc/dart/data/\"" "")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

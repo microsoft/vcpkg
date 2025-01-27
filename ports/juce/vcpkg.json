@@ -1,20 +1,26 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "juce",
-  "version": "7.0.12",
+  "version": "8.0.4",
+  "port-version": 1,
   "description": "Open-source cross-platform C++ application framework for desktop and mobile applications, including VST, VST3, AU, AUv3, AAX and LV2 audio plug-ins and plug-in hosts",
   "homepage": "https://juce.com",
   "license": null,
-  "supports": "!android & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
-      "name": "alsa",
-      "platform": "linux"
+      "name": "juce",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "juceaide"
+      ]
     },
     {
-      "name": "juce",
-      "host": true
+      "name": "oboe",
+      "platform": "android"
     },
+    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,24 +31,92 @@
     }
   ],
   "default-features": [
-    "curl",
-    "freetype",
-    "jack",
-    "opengl",
-    "xcursor",
-    "xinerama",
-    "xrandr",
-    "xrender"
+    {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
+      "name": "curl",
+      "platform": "freebsd | linux | openbsd"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "freebsd | linux | openbsd"
+    },
+    {
+      "name": "xcursor",
+      "platform": "linux"
+    },
+    {
+      "name": "xinerama",
+      "platform": "linux"
+    },
+    {
+      "name": "xrandr",
+      "platform": "linux"
+    },
+    {
+      "name": "xrender",
+      "platform": "linux"
+    }
   ],
   "features": {
-    "curl": {
-      "description": "Enable CURL support",
+    "alsa": {
+      "description": "Enable ALSA support",
       "dependencies": [
-        "curl"
+        "alsa"
+      ]
+    },
+    "curl": {
+      "description": "Use CURL for network support",
+      "supports": "freebsd | linux | openbsd",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
       ]
     },
     "extras": {
-      "description": "Enable JUCE Extras such as Projucer, AudioPluginHost, BinaryBuilder."
+      "description": "Enable JUCE extras such as Projucer, AudioPluginHost, BinaryBuilder.",
+      "dependencies": [
+        {
+          "name": "juce",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
+        {
+          "name": "juce",
+          "default-features": false,
+          "features": [
+            "alsa"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "juce",
+          "default-features": false,
+          "features": [
+            "curl"
+          ],
+          "platform": "freebsd | linux | openbsd"
+        }
+      ]
+    },
+    "fontconfig": {
+      "description": "Enable Fontconfig support",
+      "dependencies": [
+        "fontconfig",
+        {
+          "name": "juce",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
     },
     "freetype": {
       "description": "Enable FreeType support",
@@ -53,23 +127,33 @@
     "jack": {
       "description": "Enable JACK audio support",
       "dependencies": [
+        "jack2"
+      ]
+    },
+    "juceaide": {
+      "description": "Build the juceaide tool",
+      "supports": "native",
+      "dependencies": [
         {
-          "name": "jack2",
-          "platform": "linux"
+          "name": "juce",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
         }
       ]
     },
     "ladspa": {
       "description": "Enable LADSPA plugin host support."
     },
-    "opengl": {
-      "description": "Enable OpenGL support",
-      "dependencies": [
-        "opengl"
-      ]
-    },
     "web-browser": {
-      "description": "Enable WebBrowser support"
+      "description": "Enable WebBrowser support",
+      "dependencies": [
+        {
+          "name": "webview2",
+          "platform": "windows"
+        }
+      ]
     },
     "xcursor": {
       "description": "Enable XCursor support"
@@ -77,28 +161,19 @@
     "xinerama": {
       "description": "Enable Xinerama support",
       "dependencies": [
-        {
-          "name": "libxinerama",
-          "platform": "linux"
-        }
+        "libxinerama"
       ]
     },
     "xrandr": {
       "description": "Enable XRandR support",
       "dependencies": [
-        {
-          "name": "libxrandr",
-          "platform": "linux"
-        }
+        "libxrandr"
       ]
     },
     "xrender": {
       "description": "Enable XRender support",
       "dependencies": [
-        {
-          "name": "libxrender",
-          "platform": "linux"
-        }
+        "libxrender"
       ]
     }
   }
