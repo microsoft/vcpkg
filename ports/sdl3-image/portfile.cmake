@@ -12,8 +12,13 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         jpeg    SDLIMAGE_JPG
+        png     SDLIMAGE_PNG
         tiff    SDLIMAGE_TIF
         webp    SDLIMAGE_WEBP
+    INVERTED_FEATURES
+        # Disabled capabilities: Needing dependencies.
+        core    SDLIMAGE_AVIF
+        core    SDLIMAGE_JXL
 )
 
 vcpkg_cmake_configure(
@@ -24,6 +29,7 @@ vcpkg_cmake_configure(
         -DSDLIMAGE_BACKEND_STB=OFF
         -DSDLIMAGE_DEPS_SHARED=OFF
         -DSDLIMAGE_SAMPLES=OFF
+        -DSDLIMAGE_STRICT=ON
         -DSDLIMAGE_VENDORED=OFF
 )
 vcpkg_cmake_install()

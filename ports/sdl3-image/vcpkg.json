@@ -5,7 +5,6 @@
   "homepage": "https://github.com/libsdl-org/SDL_image",
   "license": "Zlib",
   "dependencies": [
-    "libpng",
     {
       "name": "sdl3",
       "default-features": false
@@ -24,6 +23,12 @@
       "description": "Support for JPEG image format",
       "dependencies": [
         "libjpeg-turbo"
+      ]
+    },
+    "png": {
+      "description": "Support for PNG image format",
+      "dependencies": [
+        "libpng"
       ]
     },
     "tiff": {
