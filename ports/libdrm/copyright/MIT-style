@@ -1,0 +1,322 @@
+Copyright 1998-1999 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc.
+All Rights Reserved.
+
+Copyright 1998-2003 VIA Technologies, Inc. All Rights Reserved.
+Copyright 2001-2003 S3 Graphics, Inc. All Rights Reserved.
+
+GLX Hardware Device Driver common code
+Copyright (C) 1999 Wittawat Yamwong
+
+Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.
+All Rights Reserved.
+Authors: Rickard E. (Rik) Faith <faith@valinux.com>
+
+Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.
+All Rights Reserved.
+
+Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.
+All Rights Reserved.
+
+Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.
+All rights reserved.
+Authors:
+  Jeff Hartmann <jhartmann@valinux.com>
+  Keith Whitwell <keith@tungstengraphics.com>
+Rewritten by:
+  Gareth Hughes <gareth@valinux.com>
+
+Copyright 2000 Gareth Hughes
+Copyright 2002 Frank C. Earl
+Copyright 2002-2003 Leif Delgass
+All Rights Reserved.
+Authors:
+  Gareth Hughes <gareth@valinux.com>
+  Frank C. Earl <fearl@airmail.net>
+  Leif Delgass <ldelgass@retinalburn.net>
+
+Copyright 2000 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.
+All rights reserved.
+Authors:
+  Gareth Hughes <gareth@valinux.com>
+  Kevin E. Martin <martin@valinux.com>
+
+Copyright 2000 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc., Fremont, California.
+Copyright 2002 Tungsten Graphics, Inc., Cedar Park, Texas.
+All rights reserved.
+Authors:
+  Kevin E. Martin <martin@valinux.com>
+  Gareth Hughes <gareth@valinux.com>
+  Keith Whitwell <keith@tungstengraphics.com>
+
+Copyright 2000 Precision Insight, Inc., Cedar Park, Texas.
+Copyright 2000 VA Linux Systems, Inc., Fremont, California.
+Copyright 2002 Tungsten Graphics, Inc., Cedar Park, Texas.
+Copyright 2014 Advanced Micro Devices, Inc.
+Authors:
+  Kevin E. Martin <martin@valinux.com>
+  Gareth Hughes <gareth@valinux.com>
+  Keith Whitwell <keith@tungstengraphics.com>
+
+Copyright 2002 Tungsten Graphics, Inc., Cedar Park, Texas.
+All Rights Reserved.
+
+Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.
+All Rights Reserved.
+
+Copyright 2004  Felix Kuehling
+All Rights Reserved.
+
+Copyright 2005 Eric Anholt
+All Rights Reserved.
+
+Copyright 2005 Stephane Marchesin.
+All Rights Reserved.
+
+Copyright 2006 Tungsten Graphics, Inc., Cedar Park, Texas.
+All Rights Reserved.
+
+Copyright (c) 2007 Dave Airlie <airlied@linux.ie>
+Copyright (c) 2007 Jakob Bornecrantz <wallbraker@gmail.com>
+Copyright (c) 2008 Red Hat Inc.
+Copyright (c) 2007-2008 Tungsten Graphics, Inc., Cedar Park, TX., USA
+Copyright (c) 2007-2008 Intel Corporation
+
+Copyright © 2007 Intel Corporation
+Authors:
+  Eric Anholt <eric@anholt.net>
+
+Copyright © 2007 Red Hat Inc.
+Copyright © 2007-2012 Intel Corporation
+Copyright 2006 Tungsten Graphics, Inc., Bismarck, ND., USA
+All Rights Reserved.
+
+Copyright 2007 Tungsten Graphics, Inc., Cedar Park, TX., USA
+All Rights Reserved.
+
+Copyright (c) 2007-2008 Tungsten Graphics, Inc., Cedar Park, Texas.
+Copyright (c) 2007-2008 Jakob Bornecrantz <wallbraker@gmail.com>
+
+Copyright (c) 2007-2008 Tungsten Graphics, Inc., Cedar Park, Texas.
+Copyright (c) 2007-2008 Dave Airlie <airlied@linux.ie>
+Copyright (c) 2007-2008 Jakob Bornecrantz <wallbraker@gmail.com>
+
+Copyright © 2008 Dave Airlie
+Copyright © 2008 Jérôme Glisse
+All Rights Reserved.
+
+Copyright © 2008 Intel Corporation
+Authors:
+  Eric Anholt <eric@anholt.net>
+
+Copyright © 2008-2012 Intel Corporation
+Authors:
+  Eric Anholt <eric@anholt.net>
+
+Copyright © 2008 Jérôme Glisse
+All Rights Reserved.
+
+Copyright © 2008 Nicolai Haehnle
+Copyright © 2008 Jérôme Glisse
+All Rights Reserved.
+
+Copyright 2008 Tungsten Graphics
+ Jakob Bornecrantz <jakob@tungstengraphics.com>
+Copyright 2008 Intel Corporation
+ Jesse Barnes <jesse.barnes@intel.com>
+
+DRM based mode setting test program
+Copyright 2008 Tungsten Graphics
+ Jakob Bornecrantz <jakob@tungstengraphics.com>
+Copyright 2008 Intel Corporation
+ Jesse Barnes <jesse.barnes@intel.com>
+
+DRM based vblank test program
+Copyright 2008 Tungsten Graphics
+ Jakob Bornecrantz <jakob@tungstengraphics.com>
+Copyright 2008 Intel Corporation
+ Jesse Barnes <jesse.barnes@intel.com>
+
+Copyright © 2009 Intel Corporation
+Authors:
+  Chris Wilson <chris@chris-wilson.co.uk>
+
+Copyright © 2009-2011 Intel Corporation
+
+Copyright © 2009 Red Hat Inc.
+All Rights Reserved.
+
+Copyright © 2009-2015 VMware, Inc., Palo Alto, CA., USA
+All Rights Reserved.
+
+Copyright (C) 2010-2011 Chia-I Wu <olvaffe@gmail.com>
+Copyright (C) 2010-2011 LunarG Inc.
+Copyright (C) 2016 Linaro, Ltd., Rob Herring <robh@kernel.org>
+Copyright (C) 2018 Collabora, Robert Foss <robert.foss@collabora.com>
+
+Copyright © 2010 Intel Corporation
+Authors:
+  Eric Anholt <eric@anholt.net>
+
+Copyright 2010 Jerome Glisse <glisse@freedesktop.org>
+Authors:
+    Jerome Glisse
+
+Copyright 2011 Intel Corporation
+
+Copyright © 2011 Intel Corporation
+Authors:
+  Ben Widawsky <ben@bwidawsk.net>
+
+Copyright © 2011 Intel Corporation
+Copyright © 2011-2012 Intel Corporation
+Copyright © 2017 Intel Corporation
+Copyright © 2017-2018 Intel Corporation
+Copyright © 2018 Intel Corporation
+
+Copyright 2011      Luc Verhaegen <libv@codethink.co.uk>
+
+Copyright © 2011 Red Hat
+All Rights Reserved.
+
+Copyright © 2011 Red Hat
+Authors:
+  Jerome Glisse <j.glisse@gmail.com>
+
+Copyright (c) 2011 Samsung Electronics Co., Ltd.
+Authors:
+*	Inki Dae <inki.dae@samsung.com>
+*	Joonyoung Shim <jy0922.shim@samsung.com>
+*	Seung-Woo Kim <sw0312.kim@samsung.com>
+
+Copyright (C) 2011 Texas Instruments, Inc
+Authors:
+  Rob Clark <rob@ti.com>
+
+Copyright © 2012 Intel Corporation
+Authors:
+  Paulo Zanoni <paulo.r.zanoni@intel.com>
+
+Copyright 2012 Red Hat Inc.
+Authors: Ben Skeggs
+
+Copyright (C) 2012 Rob Clark <robclark@freedesktop.org>
+Authors:
+  Rob Clark <robclark@freedesktop.org>
+
+Copyright (C) 2012 Samsung Electronics Co., Ltd.
+Authors:
+  Inki Dae <inki.dae@samsung.com>
+
+Copyright © 2012, 2013 Thierry Reding
+Copyright © 2013 Erik Faye-Lund
+Copyright © 2014 NVIDIA Corporation
+Copyright © 2015 NVIDIA Corporation
+Copyright © 2014-2021 NVIDIA Corporation
+
+Copyright (C) 2012-2016 by the following authors:
+- Wladimir J. van der Laan <laanwj@gmail.com>
+- Christian Gmeiner <christian.gmeiner@gmail.com>
+- Lucas Stach <l.stach@pengutronix.de>
+- Russell King <rmk@arm.linux.org.uk>
+
+Copyright 2013 Red Hat
+All Rights Reserved.
+
+DRM based mode setting test program
+Copyright (C) 2013 Red Hat
+Author: Rob Clark <robdclark@gmail.com>
+
+Copyright (C) 2013 Rob Clark <robclark@freedesktop.org>
+Authors:
+  Rob Clark <robclark@freedesktop.org>
+
+Copyright (C) 2013 Red Hat
+Author: Rob Clark <robdclark@gmail.com>
+
+Copyright (C) 2013 Samsung Electronics Co.Ltd
+Authors:
+*	Inki Dae <inki.dae@samsung.com>
+
+Copyright © 2014 Advanced Micro Devices, Inc.
+All Rights Reserved.
+Copyright © 2017 Advanced Micro Devices, Inc.
+All Rights Reserved.
+Copyright 2014 Advanced Micro Devices, Inc.
+Copyright 2015 Advanced Micro Devices, Inc.
+Copyright 2017 Advanced Micro Devices, Inc.
+Copyright 2018 Advanced Micro Devices, Inc.
+Copyright 2019 Advanced Micro Devices, Inc.
+Copyright 2021 Advanced Micro Devices, Inc.
+Copyright 2022 Advanced Micro Devices, Inc.
+
+Copyright © 2014 Broadcom
+
+Copyright © 2014-2015 Broadcom
+
+Copyright (C) 2014-2015 Etnaviv Project
+Authors:
+  Christian Gmeiner <christian.gmeiner@gmail.com>
+
+Copyright © 2014 NVIDIA Corporation
+Copyright © 2016-2018 NVIDIA Corporation
+Copyright © 2018 NVIDIA Corporation
+
+DRM based mode setting test program
+Copyright (C) 2014 Red Hat
+Author: Rob Clark <robdclark@gmail.com>
+
+Copyright © 2015 Canonical Ltd. (Maarten Lankhorst)
+
+sync abstraction
+Copyright 2015-2016 Collabora Ltd.
+Based on the implementation from the Android Open Source Project,
+Copyright 2012 Google, Inc
+
+Copyright (c) 2015 Emil Velikov <emil.l.velikov@gmail.com>
+
+Copyright (C) 2015 Etnaviv Project
+Authors:
+  Christian Gmeiner <christian.gmeiner@gmail.com>
+
+Copyright (C) 2015 - Tobias Jakobi
+
+Copyright (C) 2016 Etnaviv Project
+Authors:
+  Christian Gmeiner <christian.gmeiner@gmail.com>
+
+Copyright (C) 2016 Rob Clark <robclark@freedesktop.org>
+Authors:
+  Rob Clark <robclark@freedesktop.org>
+
+Copyright (C) 2017 Etnaviv Project
+Copyright (C) 2017 Zodiac Inflight Innovations
+Authors:
+  Christian Gmeiner <christian.gmeiner@gmail.com>
+
+Copyright 2021 Collabora, Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice (including the next
+paragraph) shall be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE COPYRIGHT HOLDERS, AUTHORS AND/OR ITS SUPPLIERS
+OR ANY OTHER CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
