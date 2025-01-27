@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 3e3c0cedf9b598983058f2c82f2f056abaa6a620
-    SHA512 879878425f8cad266ccfaed90667bfc2a872d0b6e2bfd05e8a08abe34b6840bc77f5f1e2efbe9821db1317cfafe56b556a0a71c41b68e9b58c67e13613606fa2
+    REF eaadd48acad16d4b7eb09ffb3963ed825dcc5492
+    SHA512 4744e2b45420b35f3182e0fa6c62154da372c62ec58b13c5866b9a145eca048c22864584dd28b07b6c1e44fb702be5f3bd0457751616f12e9f0816edb458c729
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/keyvault/azure-security-keyvault-administration")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/keyvault/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/keyvault/azure-security-keyvault-administration" "${SOURCE_PATH}/sdk/keyvault/_")
-  file(RENAME "${SOURCE_PATH}/sdk/keyvault" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
