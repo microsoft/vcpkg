@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0cba6f626..8e633919b 100644
+index 0cba6f626..02ead7e23 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2118,6 +2118,7 @@ if(NOT CURL_DISABLE_INSTALL)
@@ -53,7 +53,7 @@ index 0cba6f626..8e633919b 100644
      if(_lib MATCHES "^-")  # '-framework <name>'
        list(APPEND _ldflags "${_lib}")
      elseif(_lib MATCHES ".*/.*")
-@@ -2152,17 +2180,18 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2152,17 +2180,24 @@ if(NOT CURL_DISABLE_INSTALL)
        get_filename_component(_libdir ${_lib} DIRECTORY)
        get_filename_component(_libname ${_lib} NAME_WE)
        if(_libname MATCHES "^lib")
@@ -65,6 +65,12 @@ index 0cba6f626..8e633919b 100644
          string(REGEX REPLACE "^lib" "" _libname "${_libname}")
 -        list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_libname}")
 +        list(APPEND ${out_list} "-l${_libname}")
++        if(TARGET "${LIB_STATIC}" AND _libdir IN_LIST CMAKE_C_IMPLICIT_LINK_DIRECTORIES)
++          # Avoid absolute path to system lib in exported CMake config
++          get_target_property(static_link_libs "${LIB_STATIC}" INTERFACE_LINK_LIBRARIES)
++          string(REPLACE "${_lib}" "${_libname}" static_link_libs "${static_link_libs}")
++          set_target_properties("${LIB_STATIC}" PROPERTIES INTERFACE_LINK_LIBRARIES "${static_link_libs}")
++        endif()
        else()
 -        list(APPEND LIBCURL_PC_LIBS_PRIVATE "${_lib}")
 +        list(APPEND ${out_list} "${_lib}")
@@ -75,7 +81,7 @@ index 0cba6f626..8e633919b 100644
      endif()
    endforeach()
  
-@@ -2188,11 +2217,11 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2188,11 +2223,11 @@ if(NOT CURL_DISABLE_INSTALL)
      set(LIBCURL_PC_REQUIRES "")
      set(LIBCURL_PC_LIBS     "")
      set(LIBCURL_PC_CFLAGS   "")
