@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 d11764142798e9c3cbb2fcfb123a5d6e5192d45011118f5a76f63b9ba100119799aacf9cd64835a9c504d3040116202f44aba9df1fc851afc1fdfb3b498c56a2
     HEAD_REF main
     PATCHES
-        cmake-sdl3.patch
+        dependencies.diff
 )
 
 vcpkg_check_features(
@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DSDLIMAGE_BACKEND_IMAGEIO=OFF
         -DSDLIMAGE_BACKEND_STB=OFF
         -DSDLIMAGE_DEPS_SHARED=OFF
+        -DSDLIMAGE_RELOCATABLE=ON
         -DSDLIMAGE_SAMPLES=OFF
         -DSDLIMAGE_STRICT=ON
         -DSDLIMAGE_VENDORED=OFF
