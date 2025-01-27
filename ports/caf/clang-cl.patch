@@ -1,0 +1,104 @@
+diff --git a/libcaf_core/caf/config.hpp b/libcaf_core/caf/config.hpp
+index f17aa1ac56..3e06bf7520 100644
+--- a/libcaf_core/caf/config.hpp	
++++ b/libcaf_core/caf/config.hpp
+@@ -106,15 +106,18 @@
+ #  pragma warning( disable : 4624 )
+ #  pragma warning( disable : 4800 )
+ #  pragma warning( disable : 4503 )
+-#  ifndef NOMINMAX
+-#    define NOMINMAX
+-#  endif // NOMINMAX
+ #else
+ #  define CAF_PUSH_DEPRECATED_WARNING
+ #  define CAF_POP_WARNINGS
+ #endif
+ // clang-format on
+ 
++#ifdef WIN32
++#  ifndef NOMINMAX
++#    define NOMINMAX
++#  endif // NOMINMAX
++#endif
++
+ // This OS-specific block defines one of the following:
+ // - CAF_MACOS
+ // - CAF_LINUX
+diff --git a/libcaf_core/caf/detail/network_order.hpp b/libcaf_core/caf/detail/network_order.hpp
+index 35e0b153fc..b686caa6d9 100644
+--- a/libcaf_core/caf/detail/network_order.hpp	
++++ b/libcaf_core/caf/detail/network_order.hpp
+@@ -8,7 +8,7 @@
+ 
+ namespace caf::detail {
+ 
+-#ifdef CAF_MSVC // we assume Windows is always little endian
++#ifdef WIN32 // we assume Windows is always little endian
+ 
+ inline uint16_t to_network_order(uint16_t value) {
+   return _byteswap_ushort(value);
+diff --git a/libcaf_core/caf/detail/print.cpp b/libcaf_core/caf/detail/print.cpp
+index 48a7b5e812..c9f6b8f939 100644
+--- a/libcaf_core/caf/detail/print.cpp	
++++ b/libcaf_core/caf/detail/print.cpp
+@@ -11,7 +11,7 @@ namespace caf::detail {
+ 
+ size_t print_timestamp(char* buf, size_t buf_size, time_t ts, size_t ms) {
+   tm time_buf;
+-#ifdef CAF_MSVC
++#ifdef WIN32
+   localtime_s(&time_buf, &ts);
+ #else
+   localtime_r(&ts, &time_buf);
+diff --git a/libcaf_core/caf/detail/print.hpp b/libcaf_core/caf/detail/print.hpp
+index 638bbc6fa4..611f5d8d8a 100644
+--- a/libcaf_core/caf/detail/print.hpp	
++++ b/libcaf_core/caf/detail/print.hpp
+@@ -177,7 +177,7 @@ std::enable_if_t<std::is_integral_v<T>> print(Buffer& buf, T x) {
+   char* p = stack_buffer;
+   // Convert negative values into positives as necessary.
+   if constexpr (std::is_signed_v<T>) {
+-    if (x == std::numeric_limits<T>::min()) {
++    if (x == (std::numeric_limits<T>::min)()) {
+       using namespace std::literals;
+       // The code below would fail for the smallest value, because this value
+       // has no positive counterpart. For example, an int8_t ranges from -128 to
+diff --git a/libcaf_io/CMakeLists.txt b/libcaf_io/CMakeLists.txt
+index 55b4437346..26c38b8f14 100644
+--- a/libcaf_io/CMakeLists.txt	
++++ b/libcaf_io/CMakeLists.txt
+@@ -9,7 +9,7 @@ caf_add_component(
+   DEPENDENCIES
+     PUBLIC
+       CAF::core
+-      $<$<CXX_COMPILER_ID:MSVC>:ws2_32>
++      $<$<PLATFORM_ID:Windows>:ws2_32>
+     PRIVATE
+       CAF::internal
+   ENUM_TYPES
+diff --git a/libcaf_io/caf/io/basp_broker.cpp b/libcaf_io/caf/io/basp_broker.cpp
+index 087e920213..cc8867ada6 100644
+--- a/libcaf_io/caf/io/basp_broker.cpp	
++++ b/libcaf_io/caf/io/basp_broker.cpp
+@@ -31,7 +31,7 @@
+ 
+ namespace {
+ 
+-#ifdef CAF_MSVC
++#ifdef _MSC_VER
+ #  define THREAD_LOCAL thread_local
+ #else
+ #  define THREAD_LOCAL __thread
+diff --git a/libcaf_net/CMakeLists.txt b/libcaf_net/CMakeLists.txt
+index 3631c6e8c5..b4e9b7ce58 100644
+--- a/libcaf_net/CMakeLists.txt	
++++ b/libcaf_net/CMakeLists.txt
+@@ -8,7 +8,7 @@ caf_add_component(
+   net
+   DEPENDENCIES
+   PUBLIC
+-    $<$<CXX_COMPILER_ID:MSVC>:ws2_32>
++    $<$<PLATFORM_ID:Windows>:ws2_32>
+     CAF::core
+     OpenSSL::Crypto
+     OpenSSL::SSL

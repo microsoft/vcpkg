@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix_dependency.patch
         fix_cxx17.patch
+        clang-cl.patch
 )
 
 vcpkg_cmake_configure(
