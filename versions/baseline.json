@@ -8286,7 +8286,7 @@
     },
     "sdl3-image": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "seacas": {
       "baseline": "2022-11-22",
