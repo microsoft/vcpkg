@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tinyfiledialogs
     FILENAME tinyfiledialogs-current.zip
-    SHA512 6e890014646e69f0002a342d6331ec03dc41749a760dd30ac8a99919adbfc8ba646f988d1f44b0c1991a075d9cd054e481014c8cc8c5e9e8ec56ce2600d6fb03
+    SHA512 d7ddd37576d8d758a7bccc25cc19698d5c87645b72aaa1dd2cad32abc8c342911764ef3ab14037d1abcb255f2919fccc1bec07118c81977a89d1f7fda70f185f
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/dll_cs_lua_R_fortran_pascal")
