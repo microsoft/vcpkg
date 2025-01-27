@@ -3,5 +3,5 @@
   "version": "2.0",
   "description": "VM detection library",
   "homepage": "https://github.com/kernelwernel/VMAware",
-  "license": "GPL-3.0-only OR MIT"
+  "license": "MIT"
 }
