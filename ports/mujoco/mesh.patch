@@ -1,0 +1,51 @@
+diff --git a/src/user/user_mesh.cc b/src/user/user_mesh.cc
+index 4de4e2e3..e8bd6968 100644
+--- a/src/user/user_mesh.cc
++++ b/src/user/user_mesh.cc
+@@ -61,7 +61,6 @@
+ #include "user/user_objects.h"
+ #include "user/user_resource.h"
+ #include "user/user_util.h"
+-#include <tiny_obj_loader.h>
+ 
+ extern "C" {
+ #include "qhull_ra.h"
+@@ -397,7 +396,7 @@ void mjCMesh::CacheMesh(mjCCache* cache, const mjResource* resource,
+       + (sizeof(int) * vertex_index_.size())
+       + (sizeof(int) * normal_index_.size())
+       + (sizeof(int) * texcoord_index_.size())
+-      + (sizeof(unsigned char) * num_face_vertices_.size());
++      + (sizeof(face_vertices_type) * num_face_vertices_.size());
+ 
+   std::shared_ptr<const void> cached_data(mesh, +[](const void* data) {
+     const mjCMesh* mesh = static_cast<const mjCMesh*>(data);
+diff --git a/src/user/user_objects.h b/src/user/user_objects.h
+index bf11a7be..59fcdaf8 100644
+--- a/src/user/user_objects.h
++++ b/src/user/user_objects.h
+@@ -24,6 +24,7 @@
+ #include <string_view>
+ #include <utility>
+ #include <vector>
++#include <tiny_obj_loader.h>
+ 
+ #include <mujoco/mjtnum.h>
+ #include <mujoco/mjmodel.h>
+@@ -32,6 +33,8 @@
+ #include "user/user_cache.h"
+ #include "user/user_util.h"
+ 
++using face_vertices_type = decltype(tinyobj::mesh_t::num_face_vertices)::value_type;
++
+ // forward declarations of all mjC/X classes
+ class mjCError;
+ class mjCBase;
+@@ -964,7 +967,7 @@ class mjCMesh: public mjCMesh_, private mjsMesh {
+   std::vector<int> vertex_index_;
+   std::vector<int> normal_index_;
+   std::vector<int> texcoord_index_;
+-  std::vector<unsigned char> num_face_vertices_;
++  std::vector<face_vertices_type> num_face_vertices_;
+ 
+   // compute the volume and center-of-mass of the mesh given the face center
+   void ComputeVolume(double CoM[3], mjtGeomInertia gtype, const double facecen[3]);
