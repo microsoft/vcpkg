@@ -16,6 +16,7 @@ vcpkg_from_github(
         libkml.patch
         target-is-valid.patch
         ${arm_neon_diff}
+        pkgconfig.diff
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
