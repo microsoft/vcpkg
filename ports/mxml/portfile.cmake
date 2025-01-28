@@ -18,10 +18,13 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        DETERMINE_BUILD_TRIPLET
+        COPY_SOURCE
     )
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
-ENDIF()
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
