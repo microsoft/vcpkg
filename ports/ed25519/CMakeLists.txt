@@ -53,7 +53,7 @@ write_basic_package_version_file(
         COMPATIBILITY SameMajorVersion
 )
 install(FILES "${VERSION_FILE_PATH}" DESTINATION "share/unofficial-${PROJECT_NAME}")
-install(FILES "src/ed25519.h" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+install(FILES "src/ed25519.h" "src/fe.h" "src/fixedint.h" "src/ge.h" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 install(
   EXPORT      "unofficial-${PROJECT_NAME}Config"
