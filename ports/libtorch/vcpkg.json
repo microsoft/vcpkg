@@ -121,9 +121,9 @@
       ]
     },
     "opencv": {
-      "description": "Build with OpenCV 3.x",
+      "description": "Build with OpenCV",
       "dependencies": [
-        "opencv3"
+        "opencv"
       ]
     },
     "vulkan": {
