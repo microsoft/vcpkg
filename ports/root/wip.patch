@@ -1,0 +1,49 @@
+diff --git a/57b00fa7ea-f55e3fea9b.clean/cmake/modules/SetUpWindows.cmake b/57b00fa7ea-f55e3fea9b/cmake/modules/SetUpWindows.cmake
+index 49ea54d94..6ad0d8d36 100644
+--- a/57b00fa7ea-f55e3fea9b.clean/cmake/modules/SetUpWindows.cmake
++++ b/57b00fa7ea-f55e3fea9b/cmake/modules/SetUpWindows.cmake
+@@ -29,16 +29,16 @@ elseif(MSVC)
+   math(EXPR VC_MINOR "${MSVC_VERSION} % 100")
+ 
+   if(winrtdebug)
+-    set(BLDCXXFLAGS "-Zc:__cplusplus -std:c++${CMAKE_CXX_STANDARD} -MDd -GR")
++    set(BLDCXXFLAGS "-MDd")
+     set(BLDCFLAGS   "-MDd")
+   else()
+-    set(BLDCXXFLAGS "-Zc:__cplusplus -std:c++${CMAKE_CXX_STANDARD} -MD -GR")
++    set(BLDCXXFLAGS "-MD")
+     set(BLDCFLAGS   "-MD")
+   endif()
+ 
+   if(CMAKE_PROJECT_NAME STREQUAL ROOT)
+-    set(CMAKE_CXX_FLAGS "-nologo -I${CMAKE_SOURCE_DIR}/build/win -FIw32pragma.h -FIsehmap.h ${BLDCXXFLAGS} -EHsc- -W3 -wd4141 -wd4291 -wd4244 -wd4049 -wd4146 -wd4250 -wd4624 -D_WIN32 ${ARCH} -D_XKEYCHECK_H -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS")
+-    set(CMAKE_C_FLAGS   "-nologo -I${CMAKE_SOURCE_DIR}/build/win -FIw32pragma.h -FIsehmap.h ${BLDCFLAGS} -EHsc- -W3 -D_WIN32 ${ARCH} -DNOMINMAX")
++    set(CMAKE_CXX_FLAGS "${BLDCXXFLAGS} ${CMAKE_CXX_FLAGS} -I${CMAKE_SOURCE_DIR}/build/win -FIw32pragma.h -FIsehmap.h -Zc:__cplusplus -std:c++${CMAKE_CXX_STANDARD} -GR -EHsc- -W3 -wd4141 -wd4291 -wd4244 -wd4049 -wd4146 -wd4250 -wd4624 -D_WIN32 ${ARCH} -D_XKEYCHECK_H -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS")
++    set(CMAKE_C_FLAGS   "${BLDCFLAGS} ${CMAKE_C_FLAGS} -I${CMAKE_SOURCE_DIR}/build/win -FIw32pragma.h -FIsehmap.h -EHsc- -W3 -D_WIN32 ${ARCH} -DNOMINMAX")
+     if(CMAKE_CXX_STANDARD GREATER_EQUAL 17)
+       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING -D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING")
+     endif()
+@@ -49,17 +49,17 @@ elseif(MSVC)
+       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DR__ENABLE_LLVM13_BROKEN_TESTS")
+     endif()
+   else()
+-    set(CMAKE_CXX_FLAGS "-nologo -FIw32pragma.h -FIsehmap.h ${BLDCXXFLAGS} -EHsc- -W3 -wd4244 -D_WIN32 ${ARCH}")
+-    set(CMAKE_C_FLAGS   "-nologo -FIw32pragma.h -FIsehmap.h ${BLDCFLAGS} -EHsc- -W3 -D_WIN32 ${ARCH}")
++    set(CMAKE_CXX_FLAGS "${BLDCXXFLAGS} ${CMAKE_CXX_FLAGS} -nologo -FIw32pragma.h -FIsehmap.h -EHsc- -W3 -wd4244 -D_WIN32 ${ARCH}")
++    set(CMAKE_C_FLAGS   "${BLDCFLAGS} ${CMAKE_C_FLAGS} -nologo -FIw32pragma.h -FIsehmap.h -EHsc- -W3 -D_WIN32 ${ARCH}")
+   endif()
+ 
+   #---Select compiler flags----------------------------------------------------------------
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -Z7")
+-  set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -Z7")
+-  set(CMAKE_CXX_FLAGS_DEBUG          "-Od -Z7")
++  set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -O2 -Z7")
++  set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -Od -Z7")
+   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -Z7")
+-  set(CMAKE_C_FLAGS_RELEASE          "-O2 -Z7")
+-  set(CMAKE_C_FLAGS_DEBUG            "-Od -Z7")
++  set(CMAKE_C_FLAGS_RELEASE          "${CMAKE_C_FLAGS_RELEASE} -O2 -Z7")
++  set(CMAKE_C_FLAGS_DEBUG            "${CMAKE_C_FLAGS_DEBUG} -Od -Z7")
+ 
+   #---Set Linker flags----------------------------------------------------------------------
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -ignore:4049,4206,4217,4221 -incremental:no")
