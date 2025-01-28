@@ -4,15 +4,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
     REF "${VERSION}"
-    SHA512 5de67e711a1f25bd2c741162bb8306ae380d134f95b9103db6e96864d3a1100321ce106d8238dca54e746cd8f1cfdbe50cc407878611d3d09694404f3f128c73
+    SHA512 c980cfed2a4811c32ba473846d7d075e0b949a833089f4cafb436ce7442719307a60eb68956606c315dd6185cb8753df87d4bac140d752eaeaf0b67b17afbd79
     HEAD_REF master
 ) 
 
-# Fix for https://github.com/microsoft/vcpkg/issues/31573
-# Mimics patch for Gentoo https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=f688df5100ef2b88c975ecd40fd343c62e2ab276
-# Silence false positive with GCC 13 and -O3 at least
-# https://gitlab.gnome.org/GNOME/pango/-/issues/740	
-vcpkg_replace_string("${SOURCE_PATH}/meson.build" "-Werror=array-bounds" "")
 
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
@@ -45,7 +40,7 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
         "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
-        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
         "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
 )
 

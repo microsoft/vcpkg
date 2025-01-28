@@ -146,7 +146,6 @@ function(vcpkg_qmake_configure)
         vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 
         message(STATUS "Configuring ${config_triplet}")
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
         if(DEFINED arg_OPTIONS OR DEFINED arg_OPTIONS_${buildtype})
             set(options -- ${arg_OPTIONS} ${arg_OPTIONS_${buildtype}})
         endif()

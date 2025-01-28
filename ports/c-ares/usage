@@ -1,4 +1,4 @@
-The package c-ares provides CMake targets:
+c-ares provides CMake targets:
 
-    find_package(c-ares CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE c-ares::cares)
+  find_package(c-ares CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE c-ares::cares)

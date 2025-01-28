@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Cisco-Talos/clamav-devel
-  REF clamav-0.103.0
-  SHA512 e7ff4d98e0615a9fec0752bbfa2b882ae95034a8e01d0f7cc635ee520ff917c3be2a2d3273caa2fc1598e7d5ec4fd60d59b517cb439c5454d32447f8c8d7ba5a
+  REF clamav-0.103.11
+  SHA512 2d614b5006fe526d7bb43dfc691329f2de2fa2dc6cfc63fb93ba556ee26a9f87369bf072f59db0fed178c44413d68838b45ea572885c8d0a0bee81a410d5e055
   FILE_DISAMBIGUATOR 1
   HEAD_REF master
   PATCHES
@@ -12,6 +12,7 @@ vcpkg_from_github(
       "cmakefiles.patch"
       "curl.patch"
       "mspack.patch"
+      "isnt.patch"
 )
 
 vcpkg_cmake_configure(

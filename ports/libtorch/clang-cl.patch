@@ -1,0 +1,47 @@
+diff --git a/c10/util/Exception.h b/c10/util/Exception.h
+index 2dd1001..b3f3d60 100644
+--- a/c10/util/Exception.h
++++ b/c10/util/Exception.h
+@@ -233,12 +233,16 @@ struct C10_API WarnAlways {
+ // IndexError when they cross to Python.
+ class C10_API IndexError : public Error {
+   using Error::Error;
++public:
++  inline IndexError(SourceLocation source_location, std::string msg) : Error(source_location,msg) {};
+ };
+ 
+ // Used in ATen for invalid values.  These turn into
+ // ValueError when they cross to Python.
+ class C10_API ValueError : public Error {
+   using Error::Error;
++public:
++  inline ValueError(SourceLocation source_location, std::string msg) : Error(source_location,msg) {};
+ };
+ 
+ // Used in ATen for invalid types.  These turn into
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index cf349c2..f7a595e 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -830,7 +830,7 @@ if(BUILD_CAFFE2 AND NOT MSVC)
+   target_compile_options(torch_cpu PRIVATE "-Wno-sign-compare")
+ endif()
+ 
+-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND NOT USE_VULKAN AND NOT USE_IOS AND NOT USE_PYTORCH_METAL AND NOT USE_COREML_DELEGATE)
++if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND NOT USE_VULKAN AND NOT USE_IOS AND NOT USE_PYTORCH_METAL AND NOT USE_COREML_DELEGATE AND NOT MSVC)
+   target_compile_options_if_supported(torch_cpu "-Wmissing-prototypes")
+   target_compile_options_if_supported(torch_cpu "-Werror=missing-prototypes")
+   get_target_property(TORCH_CPU_SOURCES torch_cpu SOURCES)
+diff --git a/functorch/csrc/dim/arena.h b/functorch/csrc/dim/arena.h
+index 3251321..cb09b7c 100644
+--- a/functorch/csrc/dim/arena.h
++++ b/functorch/csrc/dim/arena.h
+@@ -8,7 +8,7 @@
+ #include <ATen/ATen.h>
+ #include "minpybind.h"
+ 
+-#ifdef _WIN32
++#if defined(_WIN32) && !defined(__clang__)
+ #include <intrin.h>
+ // https://stackoverflow.com/questions/355967/how-to-use-msvc-intrinsics-to-get-the-equivalent-of-this-gcc-code
+ inline unsigned int __builtin_clz(unsigned int x) {

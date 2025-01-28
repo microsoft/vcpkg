@@ -1,8 +1,8 @@
-diff --git a/cmake/QtBuild.cmake b/cmake/QtBuild.cmake
+diff --git a/cmake/QtBuildPathsHelpers.cmake b/cmake/QtBuildPathsHelpers.cmake
 index bd186c28b..edee52e8b 100644
---- a/cmake/QtBuild.cmake
-+++ b/cmake/QtBuild.cmake
-@@ -194,7 +194,7 @@ function(qt_internal_set_up_global_paths)
+--- a/cmake/QtBuildPathsHelpers.cmake
++++ b/cmake/QtBuildPathsHelpers.cmake
+@@ -100,7 +100,7 @@ function(qt_internal_set_up_global_paths)
      if(QT_CONFIG_INSTALL_DIR)
          string(APPEND QT_CONFIG_INSTALL_DIR "/")
      endif()

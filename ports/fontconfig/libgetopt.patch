@@ -126,5 +126,5 @@ index f616600..6d82a16 100644
 +endif
 +
  
- prefix = get_option('prefix')
- 
+ # Check iconv support
+ iconv_dep = []

@@ -1,10 +1,10 @@
 {
   "name": "llvm",
-  "version": "17.0.2",
-  "port-version": 2,
+  "version": "18.1.6",
+  "port-version": 4,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 WITH LLVM-exception",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
@@ -190,6 +190,9 @@
         "zstd"
       ]
     },
+    "export-symbols": {
+      "description": "Export symbols for plugins."
+    },
     "flang": {
       "description": "Include Fortran front end.",
       "dependencies": [
@@ -294,7 +297,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools"
+            "tools",
+            "utils"
           ]
         }
       ]
@@ -452,7 +456,16 @@
       "description": "Build LLVM tools."
     },
     "utils": {
-      "description": "Build LLVM utils."
+      "description": "Build LLVM utils.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     }
   }
 }

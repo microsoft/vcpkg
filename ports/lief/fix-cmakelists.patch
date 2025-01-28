@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc2b679..4ec92b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,19 +113,7 @@ message(STATUS "CMAKE_CXX_IMPLICIT_LINK_LIBRARIES: ${CMAKE_CXX_IMPLICIT_LINK_LIB
+ message(STATUS "CMAKE_SYSTEM_PROCESSOR:            ${CMAKE_SYSTEM_PROCESSOR}")
+ message(STATUS "CMAKE_MSVC_RUNTIME_LIBRARY:        ${CMAKE_MSVC_RUNTIME_LIBRARY}")
+ 
+-if(LIEF_INSTALL)
+-  if(UNIX)
+-    include(GNUInstallDirs)
+-    set(CMAKE_INSTALL_LIBDIR "lib")
+-  else()
+-    set(CMAKE_INSTALL_LIBDIR      "lib")
+-    set(CMAKE_INSTALL_DATADIR     "share")
+     set(CMAKE_INSTALL_INCLUDEDIR  "include")
+-    set(CMAKE_INSTALL_BINDIR      "bin")
+-    set(CMAKE_INSTALL_DATAROOTDIR "share")
+-    message(STATUS "Setting installation destination to: ${CMAKE_INSTALL_PREFIX}")
+-  endif()
+-endif()
+ 
+ # LIEF Source definition
+ # ======================
+@@ -318,7 +306,9 @@ else()
+     ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/span.hpp)
+ endif()
+ 
+-target_link_libraries(LIB_LIEF PRIVATE lief_spdlog)
++find_package(fmt CONFIG REQUIRED)
++find_package(spdlog CONFIG REQUIRED)
++target_link_libraries(LIB_LIEF PRIVATE fmt::fmt spdlog::spdlog)
+ 
+ if(ANDROID AND LIEF_LOGGING)
+   target_link_libraries(LIB_LIEF PUBLIC log)
+@@ -507,11 +497,11 @@ if(LIEF_INSTALL)
+   endif()
+ 
+   install(
+-    TARGETS LIB_LIEF lief_spdlog
++    TARGETS LIB_LIEF
+     EXPORT LIEFExport
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT libraries
+     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+   install(

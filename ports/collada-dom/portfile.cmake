@@ -10,10 +10,13 @@ vcpkg_from_github(
         use-vcpkg-minizip.patch
         fix-shared-keyword.patch
         fix-emscripten.patch
+        fix-compatibility-with-boost-1.85.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+      -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_cmake_install()

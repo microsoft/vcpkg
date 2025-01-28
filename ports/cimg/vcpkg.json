@@ -1,8 +1,9 @@
 {
   "name": "cimg",
-  "version": "3.3.2",
+  "version": "3.4.1",
   "description": "The CImg Library is a small, open-source, and modern C++ toolkit for image processing",
   "homepage": "https://github.com/dtschump/CImg",
+  "license": "CECILL-C AND CECILL-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

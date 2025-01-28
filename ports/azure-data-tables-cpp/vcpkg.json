@@ -1,0 +1,38 @@
+{
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
+  "name": "azure-data-tables-cpp",
+  "version-semver": "1.0.0-beta.6",
+  "description": [
+    "Microsoft Azure Data Tables SDK for C++",
+    "This library provides Azure Data Tables SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/tables/azure-data-tables",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "azure-core-cpp",
+      "default-features": false,
+      "version>=": "1.11.3"
+    },
+    {
+      "name": "libxml2",
+      "default-features": false,
+      "platform": "!windows"
+    },
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

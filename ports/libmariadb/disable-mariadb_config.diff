@@ -1,0 +1,15 @@
+diff --git a/mariadb_config/CMakeLists.txt b/mariadb_config/CMakeLists.txt
+index 0a32343..4cb0ba9 100644
+--- a/mariadb_config/CMakeLists.txt
++++ b/mariadb_config/CMakeLists.txt
+@@ -58,9 +58,7 @@ ENDIF()
+ 
+ # Installation
+ #
+-INSTALL(TARGETS mariadb_config
+-        DESTINATION "${INSTALL_BINDIR}"
+-        COMPONENT Development)
++set_target_properties(mariadb_config PROPERTIES EXCLUDE_FROM_ALL 1) # not portable
+ 
+ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmariadb.pc
+         DESTINATION "${INSTALL_PCDIR}"

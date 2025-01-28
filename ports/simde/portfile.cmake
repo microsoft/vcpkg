@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simd-everywhere/simde
     REF "v${VERSION}"
-    SHA512 de17fca563c4db6766881e1c73142ad129a57febe55fa8ea1ae780226e60a84891b13d387e75574f2722d77e4013176e3c7dfaf17bccd8682b7d3d3ec8e92a54
+    SHA512 4e42d7140c0afae507773527c6c0c07e6f0cdad59a1d42ebcf4bd223fc9f71e91a2e3db7746aca3c0c5ad2a13333c2322ce1e384c7d699ddfe33bed6f107aec5
     HEAD_REF master
 )
 

@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ebb3333..8fd53ef 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -459,13 +459,19 @@ endif()
+ # webm_parser headers are rooted at webm/.
+ set_target_properties(webm PROPERTIES PUBLIC_HEADER
+                                       "${webm_parser_public_headers}")
++set_target_properties(webm PROPERTIES EXPORT_NAME libwebm)
++target_include_directories(webm PUBLIC $<INSTALL_INTERFACE:include>)
+ install(
+-  TARGETS webm
++  TARGETS webm EXPORT unofficial-libwebm-targets
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/webm)
+
++install(EXPORT unofficial-libwebm-targets
++        FILE unofficial-libwebm-config.cmake
++        NAMESPACE unofficial::libwebm::
++        DESTINATION share/unofficial-libwebm)
+ # Install common headers into a subdirectory to avoid breaking nested includes.
+ install(FILES ${libwebm_common_public_headers}
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/webm/common)

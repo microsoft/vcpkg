@@ -165,3 +165,22 @@ unit_test_pkgconfig_check_key("debug;release" "blah_libs=" [["-L${blah}/lib64" "
 write_pkgconfig([[Libs: ${blah} "${quoted}" plain "C:/Program Files/blah.lib"]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ ${blah} "${quoted}" plain "C:/Program Files/blah.lib"]])
+
+# lib spec starting with optimized/debug/general
+write_pkgconfig([[
+Libs: -L${prefix}/lib -ldebuginfod
+]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -ldebuginfod]])
+
+write_pkgconfig([[
+Libs: -L${prefix}/lib -loptimizedinfod
+]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -loptimizedinfod]])
+
+write_pkgconfig([[
+Libs: -L${prefix}/lib -lgeneralinfod
+]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -lgeneralinfod]])

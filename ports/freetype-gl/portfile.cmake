@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rougier/freetype-gl
-    REF 85d7850744465ac1dcd00b202787d72a4a3a1f5d
-    SHA512 4505b2162610500336ab975a5a0ac2c09503f51b2fb52b433018059f628ef6f6add9618c940a80efebc311d82fe96fa813d356acbd858cc2dbac6a1829ab3031
+    REF "v${VERSION}"
+    SHA512 0bdba3cf4e1460588a41b7f8e6d5ce46ecf437f2be605297a6a9676c3c2875fbc5cd3c4c36ab8902bb5827a1c1749c0e27cda36b98d1fef32576099ab4ed7e21
     HEAD_REF master
     PATCHES
         0001-Link-to-dependencies-also-for-static-build.patch

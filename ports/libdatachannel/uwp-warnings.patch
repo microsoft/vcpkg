@@ -1,14 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2c34d7fb..1bedd212 100644
+index 1b5190b..763b49e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -446,6 +446,9 @@ if(WARNINGS_AS_ERRORS)
-        endif()
+@@ -315,6 +315,10 @@ target_link_libraries(datachannel-static PRIVATE Usrsctp::Usrsctp plog::plog)
+ if(WIN32)
+ 	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
+ 	target_link_libraries(datachannel-static PUBLIC ws2_32) # winsock2
++	if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++		target_compile_options(datachannel PRIVATE /wd4996)
++		target_compile_options(datachannel-static PRIVATE /wd4996)
++	endif()
  endif()
  
-+target_compile_options(datachannel PRIVATE /wd4996)
-+target_compile_options(datachannel-static PRIVATE /wd4996)
-+
- if(DATACHANNEL_STATIC_LINKAGE)
- set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
- set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 0)
+ if (NO_WEBSOCKET)

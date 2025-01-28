@@ -1,6 +1,6 @@
 {
   "name": "span-lite",
-  "version": "0.10.3",
+  "version": "0.11.0",
   "description": "A C++20-like span for C++98, C++11 and later in a single-file header-only library",
   "homepage": "https://github.com/martinmoene/span-lite",
   "dependencies": [

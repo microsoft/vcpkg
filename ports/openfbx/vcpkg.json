@@ -1,11 +1,12 @@
 {
   "name": "openfbx",
-  "version-date": "2022-07-18",
+  "version-date": "2024-05-08",
+  "port-version": 1,
   "description": "Lightweight open source FBX importer",
   "homepage": "https://github.com/nem0/OpenFBX",
   "license": "MIT",
   "dependencies": [
-    "miniz",
+    "libdeflate",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,0 +1,60 @@
+diff --git a/magmablas/cgbtf2_kernels.cu b/magmablas/cgbtf2_kernels.cu
+index 1b44273..e769534 100644
+--- a/magmablas/cgbtf2_kernels.cu
++++ b/magmablas/cgbtf2_kernels.cu
+@@ -12,6 +12,10 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++#if CUDA_VERSION >= 12060
++#undef max
++#undef min
++#endif
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
+diff --git a/magmablas/dgbtf2_kernels.cu b/magmablas/dgbtf2_kernels.cu
+index c2af4f4..c2e0b4d 100644
+--- a/magmablas/dgbtf2_kernels.cu
++++ b/magmablas/dgbtf2_kernels.cu
+@@ -12,6 +12,10 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++#if CUDA_VERSION >= 12060
++#undef max
++#undef min
++#endif
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
+diff --git a/magmablas/sgbtf2_kernels.cu b/magmablas/sgbtf2_kernels.cu
+index bbc691a..752c5f7 100644
+--- a/magmablas/sgbtf2_kernels.cu
++++ b/magmablas/sgbtf2_kernels.cu
+@@ -12,6 +12,10 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++#if CUDA_VERSION >= 12060
++#undef max
++#undef min
++#endif
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)
+diff --git a/magmablas/zgbtf2_kernels.cu b/magmablas/zgbtf2_kernels.cu
+index c1afa3b..3ea8136 100644
+--- a/magmablas/zgbtf2_kernels.cu
++++ b/magmablas/zgbtf2_kernels.cu
+@@ -12,6 +12,10 @@
+ 
+ #include "magma_internal.h"
+ #if   defined(MAGMA_HAVE_CUDA)
++#if CUDA_VERSION >= 12060
++#undef max
++#undef min
++#endif
+ #include <cooperative_groups.h>
+ namespace cg = cooperative_groups;
+ #elif defined(MAGMA_HAVE_HIP)

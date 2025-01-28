@@ -9,6 +9,7 @@ vcpkg_from_github(
         003-fix-FindGLFW.patch
         004-fix-FindOpenAL.patch
         005-fix-find-sdl2.patch
+        006-fix-build.patch # From https://github.com/mosra/magnum/issues/642#issuecomment-2217261862
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -118,7 +119,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${LIB_TO_MOVE_DBG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum")
 else()
-    if(WIN32)
+    if(VCPKG_TARGET_IS_WINDOWS)
         file(GLOB_RECURSE LIB_TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
         file(GLOB_RECURSE LIB_TO_KEEP "${CURRENT_PACKAGES_DIR}/lib/magnum/*Any*")
         if(LIB_TO_KEEP)

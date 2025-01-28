@@ -1,26 +1,20 @@
-set(PATCHES fix-for-vcpkg.patch)
-
-if(VCPKG_TARGET_IS_UWP)
-    list(APPEND PATCHES uwp-warnings.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 2c8da820ebf6751d696645092ea5e562f7cb303d4f5cec9a8ca8e69b65321e79cc8a645095a4ecea710f5afd54499e71f4cdf261a0a2e32e28aef96a50ace28c
+    SHA512 738bfa45b804cab178426301f97674af4d04b253f45c3caa41b9ec8f658672662e9a7e37a61ee1523b724f3888df85ece86105ae3951aac65a0f2b17fc5b4fac
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES 
+        dependencies.diff
+        uwp-warnings.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         stdcall CAPI_STDCALL
     INVERTED_FEATURES
-        ws NO_WEBSOCKET
-        srtp NO_MEDIA
+        ws      NO_WEBSOCKET
+        srtp    NO_MEDIA
 )
 
 vcpkg_cmake_configure(
@@ -30,21 +24,15 @@ vcpkg_cmake_configure(
         -DPREFER_SYSTEM_LIB=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
-        -DDATACHANNEL_STATIC_LINKAGE=${DATACHANNEL_STATIC_LINKAGE}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LibDataChannel)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME LibDataChannel CONFIG_PATH lib/cmake/LibDataChannel)
-vcpkg_fixup_pkgconfig()
-
-file(READ "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" DATACHANNEL_CONFIG)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" "
-include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-find_dependency(OpenSSL)
-find_dependency(LibJuice)
-${DATACHANNEL_CONFIG}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/common.hpp" "#ifdef RTC_STATIC" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/rtc.h" "#ifdef RTC_STATIC" "#if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

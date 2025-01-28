@@ -1,6 +1,6 @@
 {
   "name": "z4kn4fein-semver",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "description": "Semantic Versioning 2.0.0 library for modern C++",
   "homepage": "https://github.com/z4kn4fein/cpp-semver",
   "license": "MIT",

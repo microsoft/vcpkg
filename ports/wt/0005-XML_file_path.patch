@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca19b30..4765632 100644
+index 96eff0a..c31fd49 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -197,7 +197,11 @@ SET(CMAKE_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake" CACHE STRING
+@@ -111,7 +111,11 @@ SET(CMAKE_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake" CACHE STRING
  
  IF(WIN32)
  

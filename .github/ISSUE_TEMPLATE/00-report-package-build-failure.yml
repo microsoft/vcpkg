@@ -35,7 +35,7 @@ body:
     id: logs
     attributes:
       label: Failure logs
-      description: The console output and all the logs metioned in the output
+      description: The console output and all the logs mentioned in the output.
     validations:
       required: true
   - type: textarea

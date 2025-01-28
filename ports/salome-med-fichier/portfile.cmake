@@ -3,9 +3,11 @@
 # med-fichier is needed to build all libraries of the https://www.salome-platform.org/ since it is the io 
 # entry point to open and read .med files.
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://files.salome-platform.org/Salome/other/med-${VERSION}.tar.gz"
+  URLS "https://files.salome-platform.org/Salome/medfile/med-${VERSION}.tar.gz"
   FILENAME "med-${VERSION}.tar.gz"
-  SHA512 8917e7ecfe30e1259b0927c8e1c3d6efd86ed2386813f6d90217bd95589199478e587f0815031ab65cacf7901a30b77a6307414f9073caffe6e7f013e710d768
+  SHA512 f211fa82750a7cc935baa3a50a55d16e40117a0f2254b482492ba8396d82781ca84960995da7a16b2b5be0b93ce76368bf4b311bb8af0e5f0243e7051c9c554c
+  HEADERS 
+    "Referer: https://www.salome-platform.org/"
 )
 
 vcpkg_extract_source_archive(

@@ -1,9 +1,11 @@
+string(REPLACE "." "_" UNDERSCORES_VERSION "${VERSION}")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
-    REF gmsh_4_11_1
-    SHA512 4c10a41659ee4f70ba5091f9ae1c4c3ee285ccf217c3de1157a0d6d694e6f1df9a6b1329b2b24029dd52f945dd7605e477302bdb358106a8d97e903eaba425dc
+    REF "${PORT}_${UNDERSCORES_VERSION}"
+    SHA512 af2574ec3aadfddeedf981faced20a6736be06fe30c7670b682837612ca5a42248444f7a782ca5e75556cb957b5cf4467d5e972ba3f60559cc719690e73f3dca
     HEAD_REF master
     PATCHES fix-install.patch
 )
@@ -105,6 +107,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-gmsh")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

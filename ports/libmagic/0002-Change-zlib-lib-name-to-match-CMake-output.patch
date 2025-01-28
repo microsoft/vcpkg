@@ -16,7 +16,7 @@ index b05c334..dd4063c 100644
  dnl Checks for libraries
  if test "$enable_zlib" != "no"; then
 -  AC_CHECK_LIB(z, gzopen)
-+  AC_SEARCH_LIBS(gzopen, [z zlib zlibd], have_zlib = "yes", have_zlib = "no")
++  AC_SEARCH_LIBS(gzopen, [z zlib zlibd], have_zlib="yes", have_zlib="no")
  fi
  if test "$enable_bzlib" != "no"; then
    AC_CHECK_LIB(bz2, BZ2_bzCompressInit)

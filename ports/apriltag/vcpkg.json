@@ -1,0 +1,19 @@
+{
+  "name": "apriltag",
+  "version": "3.4.2",
+  "description": "AprilTag is a visual fiducial system popular for robotics research.",
+  "homepage": "https://april.eecs.umich.edu/software/apriltag",
+  "license": "BSD-2-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

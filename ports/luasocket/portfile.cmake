@@ -7,8 +7,16 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_TYPE SHARED)
+else()
+    set(BUILD_TYPE STATIC)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TYPE=${BUILD_TYPE}
 )
 
 vcpkg_cmake_install()
@@ -19,19 +27,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-# Handle socket dll name
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.dll" "${CURRENT_PACKAGES_DIR}/bin/socket/core.dll" RESULT temp)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/socket/core.pdb" RESULT temp)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.dll" RESULT temp)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/socket/socket.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/socket/core.pdb" RESULT temp)
-
-# Handle mime dll name
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.dll" "${CURRENT_PACKAGES_DIR}/bin/mime/core.dll" RESULT temp)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/bin/mime/core.pdb" RESULT temp)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.dll" RESULT temp)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/mime/mime.core.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/mime/core.pdb" RESULT temp)
-endif()
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

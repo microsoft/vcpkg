@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001_add_cmake_options.patch
         0002_fix_build_uwp.patch
+        0003_fix_pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,12 +27,17 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -Dbuild_static_lib=ON
         -Dis_uwp=${TARGET_IS_UWP}
+    OPTIONS_DEBUG
+        -DELPP_PKGCONFIG_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
+    OPTIONS_RELEASE
+        -DELPP_PKGCONFIG_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
 )
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

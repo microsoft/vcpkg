@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nodejs/llhttp
     REF refs/tags/release/v${VERSION}
-    SHA512 971ec2cb403942bc43e4b67a6dd392bca10d4233a25f453550d9f2bfbcb9572df309bde77af030e94e2af840aec1d96de164df0cbb1183bb2f5623e8fcf3162c
+    SHA512 7e6f5427b4b6d778ecefff892db78894ef4fd22a79e9c1f2c24d38d603d885755bdc8b0e8202b47c8bc209d3caf45a7293214617390a7a9c33bffbaab59fe5da
     PATCHES
         fix-usage.patch
 )

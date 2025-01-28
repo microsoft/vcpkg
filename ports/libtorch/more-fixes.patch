@@ -1,0 +1,320 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7b8bc7c..fa6da32 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -383,7 +383,7 @@ if(WIN32)
+       NAMES uv libuv
+       HINTS $ENV{CONDA_PREFIX}\\Library $ENV{PREFIX}\\Library
+       PATH_SUFFIXES lib
+-      NO_DEFAULT_PATH)
++      )
+     if(NOT libuv_tmp_LIBRARY)
+       set(USE_DISTRIBUTED OFF)
+       set(USE_GLOO OFF)
+@@ -1151,10 +1151,6 @@ if(BUILD_SHARED_LIBS)
+       ${PROJECT_SOURCE_DIR}/cmake/Modules_CUDA_fix
+       DESTINATION share/cmake/Caffe2/
+       COMPONENT dev)
+-  install(FILES
+-      ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUDAToolkit.cmake
+-      DESTINATION share/cmake/Caffe2/
+-      COMPONENT dev)
+   install(FILES
+       ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
+       DESTINATION share/cmake/Caffe2/
+diff --git a/aten/src/ATen/native/vulkan/api/Allocator.h b/aten/src/ATen/native/vulkan/api/Allocator.h
+index d0c8bdf..50df97a 100644
+--- a/aten/src/ATen/native/vulkan/api/Allocator.h
++++ b/aten/src/ATen/native/vulkan/api/Allocator.h
+@@ -47,7 +47,7 @@
+ #pragma clang diagnostic ignored "-Wunused-variable"
+ #endif /* __clang__ */
+ 
+-#include <include/vk_mem_alloc.h>
++#include <vk_mem_alloc.h>
+ 
+ #ifdef __clang__
+ #pragma clang diagnostic pop
+diff --git a/aten/src/ATen/native/vulkan/ops/Clamp.cpp b/aten/src/ATen/native/vulkan/ops/Clamp.cpp
+index dc22b98..f91fbf6 100644
+--- a/aten/src/ATen/native/vulkan/ops/Clamp.cpp
++++ b/aten/src/ATen/native/vulkan/ops/Clamp.cpp
+@@ -1,3 +1,6 @@
++#define _USE_MATH_DEFINES 
++#include <cmath>
++
+ #include <ATen/native/vulkan/ops/Common.h>
+ #include <torch/library.h>
+ 
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index ad407e1..bbca41b 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -139,7 +139,11 @@ endif()
+ # Note: for now, we will put all export path into one single Caffe2Targets group
+ # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
+ # individual libraries like libc10.so and libcaffe2.so are still self-contained.
+-install(TARGETS c10 EXPORT Caffe2Targets DESTINATION lib)
++install(TARGETS c10 EXPORT Caffe2Targets
++        RUNTIME DESTINATION bin
++        ARCHIVE DESTINATION lib
++        ARCHIVE DESTINATION lib
++        )
+ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+         DESTINATION include
+         FILES_MATCHING PATTERN "*.h")
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index 74d0d55..cf349c2 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -632,7 +632,11 @@ if(USE_CUDA)
+ 
+   target_link_libraries(caffe2_nvrtc ${CUDA_NVRTC} ${CUDA_CUDA_LIB} ${CUDA_NVRTC_LIB} ${DELAY_LOAD_FLAGS})
+   target_include_directories(caffe2_nvrtc PRIVATE ${CUDA_INCLUDE_DIRS})
+-  install(TARGETS caffe2_nvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS caffe2_nvrtc 
++    RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++    LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++    ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++  )
+   if(USE_NCCL)
+     list(APPEND Caffe2_GPU_SRCS
+       ${TORCH_SRC_DIR}/csrc/cuda/nccl.cpp)
+@@ -694,7 +698,11 @@ if(USE_ROCM)
+   add_library(caffe2_nvrtc SHARED ${ATen_NVRTC_STUB_SRCS})
+   target_link_libraries(caffe2_nvrtc ${PYTORCH_HIP_HCC_LIBRARIES} ${ROCM_HIPRTC_LIB})
+   target_compile_definitions(caffe2_nvrtc PRIVATE USE_ROCM __HIP_PLATFORM_HCC__)
+-  install(TARGETS caffe2_nvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS caffe2_nvrtc
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++    )
+ endif()
+ 
+ if(NOT NO_API AND NOT BUILD_LITE_INTERPRETER)
+@@ -1013,7 +1021,11 @@ elseif(USE_CUDA)
+           CUDA::culibos ${CMAKE_DL_LIBS})
+     endif()
+     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../aten/src/ATen/native/cuda/LinearAlgebraStubs.cpp PROPERTIES COMPILE_FLAGS "-DBUILD_LAZY_CUDA_LINALG")
+-    install(TARGETS torch_cuda_linalg DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++    install(TARGETS torch_cuda_linalg
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++    )
+   endif()
+ 
+   if(USE_PRECOMPILED_HEADERS)
+@@ -1475,14 +1487,26 @@ endif()
+ 
+ caffe2_interface_library(torch torch_library)
+ 
+-install(TARGETS torch_cpu torch_cpu_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++install(TARGETS torch_cpu torch_cpu_library EXPORT Caffe2Targets
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ 
+ if(USE_CUDA)
+-  install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ elseif(USE_ROCM)
+-  install(TARGETS torch_hip torch_hip_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_hip torch_hip_library EXPORT Caffe2Targets
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ endif()
+-install(TARGETS torch torch_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++install(TARGETS torch torch_library EXPORT Caffe2Targets
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ 
+ target_link_libraries(torch PUBLIC torch_cpu_library)
+ 
+@@ -1499,11 +1523,11 @@ endif()
+ 
+ # Install PDB files for MSVC builds
+ if(MSVC AND BUILD_SHARED_LIBS)
+-  install(FILES $<TARGET_PDB_FILE:torch_cpu> DESTINATION "${TORCH_INSTALL_LIB_DIR}" OPTIONAL)
++  install(FILES $<TARGET_PDB_FILE:torch_cpu> DESTINATION "${TORCH_INSTALL_BIN_DIR}" OPTIONAL)
+   if(USE_CUDA)
+-    install(FILES $<TARGET_PDB_FILE:torch_cuda> DESTINATION "${TORCH_INSTALL_LIB_DIR}" OPTIONAL)
++    install(FILES $<TARGET_PDB_FILE:torch_cuda> DESTINATION "${TORCH_INSTALL_BIN_DIR}" OPTIONAL)
+   elseif(USE_ROCM)
+-    install(FILES $<TARGET_PDB_FILE:torch_hip> DESTINATION "${TORCH_INSTALL_LIB_DIR}" OPTIONAL)
++    install(FILES $<TARGET_PDB_FILE:torch_hip> DESTINATION "${TORCH_INSTALL_BIN_DIR}" OPTIONAL)
+   endif()
+ endif()
+ 
+@@ -1577,7 +1601,10 @@ if(BUILD_SHARED_LIBS)
+     target_link_libraries(torch_global_deps TBB::tbb)
+   endif()
+ 
+-  install(TARGETS torch_global_deps DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_global_deps
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ endif()
+ 
+ # ---[ Caffe2 HIP sources.
+diff --git a/cmake/Modules/FindCUSPARSELT.cmake b/cmake/Modules/FindCUSPARSELT.cmake
+index 8727f44..1e41281 100644
+--- a/cmake/Modules/FindCUSPARSELT.cmake
++++ b/cmake/Modules/FindCUSPARSELT.cmake
+@@ -24,13 +24,13 @@ list(APPEND CMAKE_PREFIX_PATH ${CUSPARSELT_ROOT})
+ set(CUSPARSELT_INCLUDE_DIR $ENV{CUSPARSELT_INCLUDE_DIR} CACHE PATH "Folder containing NVIDIA cuSPARSELt header files")
+ 
+ find_path(CUSPARSELT_INCLUDE_PATH cusparseLt.h
+-  HINTS ${CUSPARSELT_INCLUDE_DIR}
++  HINTS ${CUSPARSELT_INCLUDE_DIR} ENV CUDA_PATH
+   PATH_SUFFIXES cuda/include cuda include)
+ 
+ set(CUSPARSELT_LIBRARY $ENV{CUSPARSELT_LIBRARY} CACHE PATH "Path to the cusparselt library file (e.g., libcusparseLt.so)")
+ 
+-find_library(CUSPARSELT_LIBRARY_PATH libcusparseLt.so
+-  PATHS ${CUSPARSELT_LIBRARY}
++find_library(CUSPARSELT_LIBRARY_PATH cusparseLt
++  PATHS ${CUSPARSELT_LIBRARY} ENV CUDA_PATH
+   PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64)
+ 
+ find_package_handle_standard_args(CUSPARSELT DEFAULT_MSG CUSPARSELT_LIBRARY_PATH CUSPARSELT_INCLUDE_PATH)
+diff --git a/cmake/Modules/FindMAGMA.cmake b/cmake/Modules/FindMAGMA.cmake
+index d2bff53..3af9012 100644
+--- a/cmake/Modules/FindMAGMA.cmake
++++ b/cmake/Modules/FindMAGMA.cmake
+@@ -30,18 +30,13 @@ FIND_PATH(MAGMA_INCLUDE_DIR magma.h
+   HINTS $ENV{MAGMA_HOME} /usr/local/magma
+   PATH_SUFFIXES include)
+ 
+-IF (MAGMA_LIBRARIES)
+-  SET(MAGMA_FOUND TRUE)
+-ELSE (MAGMA_LIBRARIES)
+-  SET(MAGMA_FOUND FALSE)
+-ENDIF (MAGMA_LIBRARIES)
+-
+-add_library(torch::magma INTERFACE IMPORTED)
+-set_property(TARGET torch::magma
+-             PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MAGMA_INCLUDE_DIR}")
+-set_property(TARGET torch::magma
+-             PROPERTY INTERFACE_LINK_LIBRARIES "${MAGMA_LIBRARIES}")
+-
++if(NOT TARGET torch::magma)
++  add_library(torch::magma INTERFACE IMPORTED)
++  set_property(TARGET torch::magma
++               PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MAGMA_INCLUDE_DIR}")
++  set_property(TARGET torch::magma
++               PROPERTY INTERFACE_LINK_LIBRARIES "${MAGMA_LIBRARIES}")
++endif()
+ # Check for Magma V2
+ include(CheckPrototypeDefinition)
+ check_prototype_definition(magma_get_sgeqrf_nb
+@@ -53,3 +48,5 @@ if(MAGMA_V2)
+   set_property(TARGET torch::magma
+                PROPERTY INTERFACE_COMPILE_DEFINITIONS "MAGMA_V2")
+ endif(MAGMA_V2)
++
++find_package_handle_standard_args(MAGMA REQUIRED_VARS MAGMA_INCLUDE_DIR MAGMA_LIBRARIES)
+\ No newline at end of file
+diff --git a/test/cpp/jit/CMakeLists.txt b/test/cpp/jit/CMakeLists.txt
+index 2376f1b..a8ae436 100644
+--- a/test/cpp/jit/CMakeLists.txt
++++ b/test/cpp/jit/CMakeLists.txt
+@@ -124,7 +124,7 @@ endif()
+ set(JIT_TEST_DEPENDENCIES torch gtest jitbackend_test backend_with_compiler)
+ 
+ if(MSVC)
+-  list(APPEND JIT_TEST_DEPENDENCIES onnx_library)
++  list(APPEND JIT_TEST_DEPENDENCIES onnx)
+ endif(MSVC)
+ 
+ target_link_libraries(test_jit PRIVATE ${JIT_TEST_DEPENDENCIES})
+diff --git a/third_party/nvfuser/CMakeLists.txt b/third_party/nvfuser/CMakeLists.txt
+index b148418..7b96083 100644
+--- a/third_party/nvfuser/CMakeLists.txt
++++ b/third_party/nvfuser/CMakeLists.txt
+@@ -158,7 +158,10 @@ endif()
+ target_include_directories(${NVFUSER_CODEGEN}
+                            PUBLIC $<BUILD_INTERFACE:${NVFUSER_SRCS_DIR}>)
+ set_property(TARGET ${NVFUSER_CODEGEN} PROPERTY CXX_STANDARD 17)
+-install(TARGETS ${NVFUSER_CODEGEN} EXPORT NvfuserTargets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++install(TARGETS ${NVFUSER_CODEGEN} EXPORT NvfuserTargets
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ # installing nvfuser python tests
+ install(DIRECTORY "${NVFUSER_ROOT}/python_tests/"
+         DESTINATION "${TORCH_ROOT}/test/_nvfuser"
+diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
+index 62ee4c1..f75073c 100644
+--- a/torch/CMakeLists.txt
++++ b/torch/CMakeLists.txt
+@@ -107,7 +107,7 @@ set(TORCH_PYTHON_LINK_FLAGS "")
+ 
+ if(MSVC)
+     string(APPEND TORCH_PYTHON_LINK_FLAGS " /NODEFAULTLIB:LIBCMT.LIB")
+-    list(APPEND TORCH_PYTHON_LINK_LIBRARIES ${PYTHON_LIBRARIES} onnx_library)
++    list(APPEND TORCH_PYTHON_LINK_LIBRARIES ${PYTHON_LIBRARIES} onnx)
+     if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
+       string(APPEND TORCH_PYTHON_LINK_FLAGS " /DEBUG:FULL")
+     endif()
+@@ -374,7 +374,10 @@ if(NOT TORCH_PYTHON_LINK_FLAGS STREQUAL "")
+     set_target_properties(torch_python PROPERTIES LINK_FLAGS ${TORCH_PYTHON_LINK_FLAGS})
+ endif()
+ 
+-install(TARGETS torch_python DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++install(TARGETS torch_python       
++      RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}"
++      LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}"
++      ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ 
+ # Generate torch/version.py from the appropriate CMake cache variables.
+ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+diff --git a/torch/csrc/cuda/shared/nvtx.cpp b/torch/csrc/cuda/shared/nvtx.cpp
+index 4fb72c5..1abe1b7 100644
+--- a/torch/csrc/cuda/shared/nvtx.cpp
++++ b/torch/csrc/cuda/shared/nvtx.cpp
+@@ -1,7 +1,7 @@
+ #ifdef _WIN32
+ #include <wchar.h> // _wgetenv for nvtx
+ #endif
+-#include <nvToolsExt.h>
++#include <nvtx3/nvToolsExt.h>
+ #include <torch/csrc/utils/pybind.h>
+ 
+ namespace torch::cuda::shared {
+diff --git a/torch/csrc/jit/tensorexpr/llvm_codegen.h b/torch/csrc/jit/tensorexpr/llvm_codegen.h
+index 7ab506f..2ee3b68 100644
+--- a/torch/csrc/jit/tensorexpr/llvm_codegen.h
++++ b/torch/csrc/jit/tensorexpr/llvm_codegen.h
+@@ -41,9 +41,9 @@ class TORCH_API LLVMCodeGen : public CodeGen {
+   // users can continue to call this kernel using `call` and `call_raw`.
+   void cleanup_memory();
+ 
+-  TORCH_API void call(const std::vector<CallArg>& args) override;
+-  TORCH_API void call_raw(const std::vector<void*>& args) override;
+-  TORCH_API void call_with_numel(void** args, int64_t numel) override;
++  void call(const std::vector<CallArg>& args) override;
++  void call_raw(const std::vector<void*>& args) override;
++  void call_with_numel(void** args, int64_t numel) override;
+ 
+   at::Tensor empty_strided(
+       c10::IntArrayRef size,
+diff --git a/torch/csrc/profiler/stubs/cuda.cpp b/torch/csrc/profiler/stubs/cuda.cpp
+index dec8757..3bb368a 100644
+--- a/torch/csrc/profiler/stubs/cuda.cpp
++++ b/torch/csrc/profiler/stubs/cuda.cpp
+@@ -1,6 +1,6 @@
+ #include <sstream>
+ 
+-#include <nvToolsExt.h>
++#include <nvtx3/nvToolsExt.h>
+ 
+ #include <c10/cuda/CUDAGuard.h>
+ #include <c10/util/irange.h>

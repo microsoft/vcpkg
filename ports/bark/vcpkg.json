@@ -1,0 +1,31 @@
+{
+  "name": "bark",
+  "version-semver": "0.3.0",
+  "description": "A modern, low latency datadog client for C++",
+  "homepage": "https://github.com/twig-energy/bark",
+  "license": "MIT",
+  "supports": "!(uwp | osx)",
+  "dependencies": [
+    "asio",
+    "fmt",
+    "mpmcqueue",
+    "spscqueue",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "test": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        "benchmark",
+        "doctest"
+      ]
+    }
+  }
+}

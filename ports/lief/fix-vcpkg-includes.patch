@@ -1,0 +1,52 @@
+diff --git a/src/BinaryStream/BinaryStream.cpp b/src/BinaryStream/BinaryStream.cpp
+index 83e618c..6447b7b 100644
+--- a/src/BinaryStream/BinaryStream.cpp
++++ b/src/BinaryStream/BinaryStream.cpp
+@@ -15,7 +15,7 @@
+  */
+ #include "LIEF/BinaryStream/BinaryStream.hpp"
+ #include "LIEF/DWARF/enums.hpp"
+-#include "third-party/utfcpp.hpp"
++#include <utf8cpp/utf8.h>
+ 
+ #include <mbedtls/x509.h>
+ #include <mbedtls/x509_crt.h>
+diff --git a/src/PE/Builder.cpp b/src/PE/Builder.cpp
+index 8cbe7b2..994e9bf 100644
+--- a/src/PE/Builder.cpp
++++ b/src/PE/Builder.cpp
+@@ -21,7 +21,7 @@
+ 
+ #include "logging.hpp"
+ 
+-#include "third-party/utfcpp.hpp"
++#include <utf8cpp/utf8.h>
+ 
+ 
+ #include "LIEF/PE/Builder.hpp"
+diff --git a/src/logging.cpp b/src/logging.cpp
+index 39936fe..f5e1345 100644
+--- a/src/logging.cpp
++++ b/src/logging.cpp
+@@ -20,7 +20,7 @@
+ #include "logging.hpp"
+ 
+ #include "spdlog/spdlog.h"
+-#include "spdlog/fmt/bundled/args.h"
++#include <fmt/args.h>
+ #include "spdlog/sinks/stdout_color_sinks.h"
+ #include "spdlog/sinks/basic_file_sink.h"
+ #include "spdlog/sinks/android_sink.h"
+diff --git a/src/utils.cpp b/src/utils.cpp
+index 0acbba1..b624a1d 100644
+--- a/src/utils.cpp
++++ b/src/utils.cpp
+@@ -22,7 +22,7 @@
+ #include "LIEF/utils.hpp"
+ #include "LIEF/errors.hpp"
+ 
+-#include "third-party/utfcpp.hpp"
++#include <utf8cpp/utf8.h>
+ 
+ #include "LIEF/config.h"
+ #include "logging.hpp"

@@ -1,8 +1,8 @@
 diff --git a/Makefile.in b/Makefile.in
-index c7dd33f..6d4387e 100644
+index 2bf7f1e8..3e0ba565 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -22,7 +22,7 @@ OPT_NETTLE_SOURCES = @OPT_NETTLE_SOURCES@
+@@ -19,7 +19,7 @@ OPT_NETTLE_SOURCES = @OPT_NETTLE_SOURCES@
  
  FAT_TEST_LIST = @FAT_TEST_LIST@
  
@@ -12,7 +12,7 @@ index c7dd33f..6d4387e 100644
  include config.make
  
 diff --git a/configure.ac b/configure.ac
-index b629e39..2464514 100644
+index 4f27e663..a72b732b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -24,6 +24,14 @@ AC_SUBST([MINOR_VERSION])
@@ -29,4 +29,4 @@ index b629e39..2464514 100644
 +
  # Command line options
  AC_ARG_WITH(include-path,
-   AC_HELP_STRING([--with-include-path], [A colon-separated list of directories to search for include files]),,
+   AS_HELP_STRING([--with-include-path], [A colon-separated list of directories to search for include files]),,

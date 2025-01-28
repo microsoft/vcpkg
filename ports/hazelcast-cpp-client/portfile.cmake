@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9f6668fe88b1e10e1c91fea26acb12efab464f652d9008e43b06d92413a7bc4b66cd0ef00c0643ddf12c8d29b099cd767209a096e609fa214233dcc3288d194e
     HEAD_REF master
+    PATCHES
+        boost-1-86-fix.patch # https://github.com/hazelcast/hazelcast-cpp-client/pull/1247
 )
 
 vcpkg_check_features(

@@ -1,8 +1,8 @@
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e1..a8eb87df 100644
+index 9747b3e..ed2347e 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
-@@ -15,9 +15,67 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+@@ -15,9 +15,64 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
  
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
@@ -41,7 +41,7 @@ index 9747b3e1..a8eb87df 100644
 +    add_definitions(${BREAKPAD_DEFINITIONS} -D_USE_BREAKPAD)
 +endif()
 +
-+find_dependency(Boost)
++find_dependency(Boost COMPONENTS iostreams program_options system serialization)
 +add_definitions(${Boost_DEFINITIONS} -D_USE_BOOST)
 +include_directories(${Boost_INCLUDE_DIRS})
 +find_dependency(Eigen3)
@@ -51,9 +51,6 @@ index 9747b3e1..a8eb87df 100644
 +add_definitions(${OpenCV_DEFINITIONS})
 +find_dependency(CGAL)
 +add_definitions(${CGAL_DEFINITIONS})
-+
-+find_dependency(VCG REQUIRED)
-+add_definitions(${VCG_DEFINITIONS})
 +
 +if(@OpenMVS_USE_CERES@)
 +    find_dependency(Ceres)
@@ -74,7 +71,6 @@ index 9747b3e1..a8eb87df 100644
 -include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
 -check_required_components("OpenMVS")
 +set(OpenMVS_BINARIES InterfaceCOLMAP InterfaceMetashape InterfaceMVSNet DensifyPointCloud ReconstructMesh RefineMesh TextureMesh TransformScene Viewer)
-
 diff --git a/build/Utils.cmake b/build/Utils.cmake
 index 0cb2d8e1..62e1661f 100644
 --- a/build/Utils.cmake

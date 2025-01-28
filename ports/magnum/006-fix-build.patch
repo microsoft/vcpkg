@@ -1,0 +1,70 @@
+diff --git a/src/Magnum/Vk/Enums.cpp b/src/Magnum/Vk/Enums.cpp
+index ad8b6d063..b7dffb74f 100644
+--- a/src/Magnum/Vk/Enums.cpp
++++ b/src/Magnum/Vk/Enums.cpp
+@@ -36,17 +36,17 @@ namespace Magnum { namespace Vk {
+ 
+ namespace {
+ 
+-constexpr VkPrimitiveTopology PrimitiveTopologyMapping[]{
++constexpr UnsignedInt PrimitiveTopologyMapping[]{
+     VK_PRIMITIVE_TOPOLOGY_POINT_LIST,
+     VK_PRIMITIVE_TOPOLOGY_LINE_LIST,
+-    VkPrimitiveTopology(~UnsignedInt{}),
++    ~UnsignedInt{},
+     VK_PRIMITIVE_TOPOLOGY_LINE_STRIP,
+     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
+     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN,
+-    VkPrimitiveTopology(~UnsignedInt{}), /* Instances */
+-    VkPrimitiveTopology(~UnsignedInt{}), /* Faces */
+-    VkPrimitiveTopology(~UnsignedInt{})  /* Edges */
++    ~UnsignedInt{}, /* Instances */
++    ~UnsignedInt{}, /* Faces */
++    ~UnsignedInt{}  /* Edges */
+ };
+ 
+ constexpr VkIndexType IndexTypeMapping[]{
+@@ -94,12 +94,12 @@ constexpr VkSamplerMipmapMode SamplerMipmapModeMapping[]{
+     VK_SAMPLER_MIPMAP_MODE_LINEAR
+ };
+ 
+-constexpr VkSamplerAddressMode SamplerAddressModeMapping[]{
++constexpr UnsignedInt SamplerAddressModeMapping[]{
+     VK_SAMPLER_ADDRESS_MODE_REPEAT,
+     VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+     VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+     VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+-    VkSamplerAddressMode(~UnsignedInt{}),
++    ~UnsignedInt{},
+ };
+ 
+ }
+@@ -119,10 +119,10 @@ VkPrimitiveTopology vkPrimitiveTopology(const Magnum::MeshPrimitive primitive) {
+ 
+     CORRADE_ASSERT(UnsignedInt(primitive) - 1 < Containers::arraySize(PrimitiveTopologyMapping),
+         "Vk::vkPrimitiveTopology(): invalid primitive" << primitive, {});
+-    const VkPrimitiveTopology out = PrimitiveTopologyMapping[UnsignedInt(primitive) - 1];
+-    CORRADE_ASSERT(out != VkPrimitiveTopology(~UnsignedInt{}),
++    const UnsignedInt out = PrimitiveTopologyMapping[UnsignedInt(primitive) - 1];
++    CORRADE_ASSERT(out != ~UnsignedInt{},
+         "Vk::vkPrimitiveTopology(): unsupported primitive" << primitive, {});
+-    return out;
++    return VkPrimitiveTopology(out);
+ }
+ 
+ bool hasVkIndexType(const Magnum::MeshIndexType type) {
+@@ -224,10 +224,10 @@ bool hasVkSamplerAddressMode(const Magnum::SamplerWrapping wrapping) {
+ VkSamplerAddressMode vkSamplerAddressMode(const Magnum::SamplerWrapping wrapping) {
+     CORRADE_ASSERT(UnsignedInt(wrapping) < Containers::arraySize(SamplerAddressModeMapping),
+         "Vk::vkSamplerAddressMode(): invalid wrapping" << wrapping, {});
+-    const VkSamplerAddressMode out = SamplerAddressModeMapping[UnsignedInt(wrapping)];
+-    CORRADE_ASSERT(out != VkSamplerAddressMode(~UnsignedInt{}),
++    const UnsignedInt out = SamplerAddressModeMapping[UnsignedInt(wrapping)];
++    CORRADE_ASSERT(out != ~UnsignedInt{},
+         "Vk::vkSamplerAddressMode(): unsupported wrapping" << wrapping, {});
+-    return out;
++    return VkSamplerAddressMode(out);
+ }
+ 
+ }}

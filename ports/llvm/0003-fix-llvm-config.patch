@@ -2,7 +2,7 @@
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/llvm/tools/llvm-config/llvm-config.cpp b/llvm/tools/llvm-config/llvm-config.cpp
-index e86eb2b44b10..04e00944f891 100644
+index d5b76b1bb6c1..9fedcb2ab75f 100644
 --- a/llvm/tools/llvm-config/llvm-config.cpp
 +++ b/llvm/tools/llvm-config/llvm-config.cpp
 @@ -304,7 +304,7 @@ int main(int argc, char **argv) {

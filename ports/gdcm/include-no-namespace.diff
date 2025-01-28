@@ -1,0 +1,22 @@
+diff --git a/Source/Common/gdcmFilename.cxx b/Source/Common/gdcmFilename.cxx
+index 5384510..9c99f94 100644
+--- a/Source/Common/gdcmFilename.cxx
++++ b/Source/Common/gdcmFilename.cxx
+@@ -16,6 +16,9 @@
+ #include <climits>
+ #include <cstdlib> // realpath
+ #include <cstring>
++#ifdef _WIN32
++#  include <windows.h>
++#endif
+ 
+ namespace gdcm
+ {
+@@ -97,7 +100,6 @@ const char *Filename::ToUnixSlashes()
+ }
+ 
+ #if defined(_WIN32) && (defined(_MSC_VER) || defined(__WATCOMC__) || defined(__BORLANDC__) || defined(__MINGW32__))
+-#include <windows.h>
+ 
+ inline void Realpath(const char *path, std::string & resolved_path)
+ {

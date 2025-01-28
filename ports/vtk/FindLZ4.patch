@@ -41,7 +41,7 @@ index 8c94e3bcd..ade3f9451 100644
 -      INTERFACE_INCLUDE_DIRECTORIES "${LZ4_INCLUDE_DIR}")
 -  endif ()
 -endif ()
-+find_package(LZ4 CONFIG REQUIRED)
++find_package(LZ4 NAMES lz4 REQUIRED)
 +if(NOT TARGET LZ4::LZ4)
 +    add_library(LZ4::LZ4 INTERFACE IMPORTED)
 +    target_link_libraries(LZ4::LZ4 INTERFACE lz4::lz4)

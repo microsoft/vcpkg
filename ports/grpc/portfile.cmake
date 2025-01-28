@@ -5,23 +5,32 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.51.1
-    SHA512 1bc8e7a5a15b2dca88527d111cde398b0dc1921bbc945c6df8225b4225b8ac0b43155bcf743230ce7b5962d1ab948e9363229c98a879b1befc7a939a290fb888
+    REF "v${VERSION}"
+    SHA512 8f595429afc86e8ef7e1ba7d8b9fb579e9e334f822a4a26ab2cbd0ab13bcb421afaab21febffd023fbd688cfa2b8be834f9047aa70e6561bc181ba6737892304
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
         00002-static-linking-in-linux.patch
-        00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
-        00009-use-system-upb.patch
-        snprintf.patch
-        00012-fix-use-cxx17.patch
-        00014-pkgconfig-upbdefs.patch
+        00006-utf8-range.patch
         00015-disable-download-archive.patch
+        00016-fix-plugin-targets.patch
+        00017-fix-NAN-on-Win11.patch
+        00018-fix-windows-event-engine.patch
+        00019-protobuf-generate-with-import-path-correction.patch
+)
+# Ensure de-vendoring
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/third_party/abseil-cpp"
+    "${SOURCE_PATH}/third_party/cares"
+    "${SOURCE_PATH}/third_party/protobuf"
+    "${SOURCE_PATH}/third_party/re2"
+    "${SOURCE_PATH}/third_party/utf8_range"
+    "${SOURCE_PATH}/third_party/zlib"
 )
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
@@ -51,9 +60,7 @@ vcpkg_cmake_configure(
         -DgRPC_SSL_PROVIDER=package
         -DgRPC_PROTOBUF_PROVIDER=package
         -DgRPC_ABSL_PROVIDER=package
-        -DgRPC_UPB_PROVIDER=package
         -DgRPC_RE2_PROVIDER=package
-        -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
         -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_BINDIR:STRING=bin
@@ -62,6 +69,8 @@ vcpkg_cmake_configure(
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
         "-D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        -DgRPC_BUILD_GRPCPP_OTEL_PLUGIN=OFF
+        -DgRPC_DOWNLOAD_ARCHIVES=OFF
     MAYBE_UNUSED_VARIABLES
         gRPC_MSVC_STATIC_RUNTIME
 )
@@ -95,4 +104,4 @@ else()
     vcpkg_fixup_pkgconfig()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

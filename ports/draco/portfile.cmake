@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
     REF "${VERSION}"
-    SHA512 d4bc48aeac23aba377d1770a46e6676cb01596a436493385fb0c4ef9ba3f0fae42027232131a3d438250909aff4311353e114925753d045cc585af42660be0b1
+    SHA512 8b444744cdf12fb9d276916eb2ff0735cd1a6497b65b88813ec457fe2169db987db62e3db253a7d0f3ae7d45ae6502e8a9f8c0b81abde73e07b3bec69f9dc170
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch

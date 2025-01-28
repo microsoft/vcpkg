@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-fixup-macho-rpath",
+  "version-date": "2024-06-15",
+  "description": "Test port to check the string replacement in z_vcpkg_fixup_macho_rpath",
+  "supports": "native & osx"
+}

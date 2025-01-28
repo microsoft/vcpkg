@@ -20,6 +20,7 @@ add_library (${target_name} ${target_srcs} ${target_headers} ${sources_msvc})
 
 target_include_directories (${target_name}
     PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${target_name}>
 )
 
 set_target_properties(${target_name} PROPERTIES

@@ -1,8 +1,10 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LunarG/VulkanTools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 83be64eccb2841de4ae67f3936b6dd4433cdbd2b604329914a8bc43c1f7fc6dd2dba0eaf2f9527b231c6d54d3d390d79defc6de228baff5cba1add8c5ad6d9cd
+    SHA512 3bd23ac331f6560b7a4029628617721c38017d0dc5ffda186cc32802dfe47ae238ea83218e50a4326414ec3621b06646f36f142e4dee7ab00a4b6a8014aa24a1
     HEAD_REF main
 )
 
@@ -25,13 +27,11 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 vcpkg_copy_tools(TOOL_NAMES vkvia vkconfig AUTO_CLEAN )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
-
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-

@@ -7,11 +7,19 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES "0000-event-fix-undefined-struct-timeval.patch"
 )
+
+set(LIBEV_LINK_FLAGS "")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND LIBEV_LINK_FLAGS "LDFLAGS=-no-undefined -lws2_32 \$LDFLAGS")
+endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS ${LIBEV_LINK_FLAGS}
 )
 
 vcpkg_install_make()

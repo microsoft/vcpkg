@@ -1,0 +1,284 @@
+diff --git a/Auxiliary/DirectXTexXbox.h b/Auxiliary/DirectXTexXbox.h
+index 0829c8f..9f75866 100644
+--- a/Auxiliary/DirectXTexXbox.h
++++ b/Auxiliary/DirectXTexXbox.h
+@@ -132,6 +132,39 @@ namespace Xbox
+     HRESULT __cdecl SaveToDDSMemory(_In_ const XboxImage& xbox, _Out_ DirectX::Blob& blob);
+     HRESULT __cdecl SaveToDDSFile(_In_ const XboxImage& xbox, _In_z_ const wchar_t* szFile);
+ 
++#ifdef __cpp_lib_byte
++    inline HRESULT __cdecl GetMetadataFromDDSMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _Out_ DirectX::TexMetadata& metadata, _Out_ bool& isXbox)
++    {
++        return GetMetadataFromDDSMemory(reinterpret_cast<const uint8_t*>(pSource), size, metadata, isXbox);
++    }
++
++    inline HRESULT __cdecl GetMetadataFromDDSMemoryEx(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _Out_ DirectX::TexMetadata& metadata, _Out_ bool& isXbox,
++        _Out_opt_ DirectX::DDSMetaData* ddPixelFormat)
++    {
++        return GetMetadataFromDDSMemoryEx(reinterpret_cast<const uint8_t*>(pSource), size, metadata, isXbox, ddPixelFormat);
++    }
++
++    inline HRESULT __cdecl LoadFromDDSMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _Out_opt_ DirectX::TexMetadata* metadata, _Out_ XboxImage& image)
++    {
++        return LoadFromDDSMemory(reinterpret_cast<const uint8_t*>(pSource), size, metadata, image);
++    }
++
++    inline HRESULT __cdecl LoadFromDDSMemoryEx(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _Out_opt_ DirectX::TexMetadata* metadata,
++        _Out_opt_ DirectX::DDSMetaData* ddPixelFormat,
++        _Out_ XboxImage& image)
++    {
++        return LoadFromDDSMemoryEx(reinterpret_cast<const uint8_t*>(pSource), size, metadata, ddPixelFormat, image);
++    }
++#endif // __cpp_lib_byte
++
+     //---------------------------------------------------------------------------------
+     // Xbox Texture Tiling / Detiling (requires XG DLL to be present at runtime)
+ 
+@@ -178,4 +211,20 @@ namespace Xbox
+         const XboxImage& xbox,
+         _Out_writes_bytes_(maxsize) uint8_t* pDestination, _In_ size_t maxsize) noexcept;
+ 
++#ifdef __cpp_lib_byte
++    inline HRESULT __cdecl EncodeDDSHeader(
++        const XboxImage& xbox,
++        _Out_writes_bytes_(maxsize) std::byte* pDestination, _In_ size_t maxsize) noexcept
++    {
++        return EncodeDDSHeader(xbox, reinterpret_cast<uint8_t*>(pDestination), maxsize);
++    }
++
++    inline HRESULT __cdecl EncodeDDSHeader(
++        const XboxImage& xbox,
++        _Reserved_ std::nullptr_t, _In_ size_t maxsize) noexcept
++    {
++        return EncodeDDSHeader(xbox, static_cast<uint8_t*>(nullptr), maxsize);
++    }
++#endif
++
+ } // namespace
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cffe5ca..e26b5a1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -311,7 +311,11 @@ endif()
+ 
+ if(MINGW OR (NOT WIN32))
+     find_package(directxmath CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectXMath)
++
+     find_package(directx-headers CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectX-Headers)
++    target_compile_definitions(${PROJECT_NAME} PUBLIC USING_DIRECTX_HEADERS)
+ else()
+     find_package(directxmath CONFIG QUIET)
+     find_package(directx-headers CONFIG QUIET)
+@@ -319,13 +323,13 @@ endif()
+ 
+ if(directxmath_FOUND)
+     message(STATUS "Using DirectXMath package")
+-    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectXMath)
++    target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectXMath)
+ endif()
+ 
+ if(directx-headers_FOUND)
+     message(STATUS "Using DirectX-Headers package")
+-    target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::DirectX-Headers)
+-    target_compile_definitions(${PROJECT_NAME} PUBLIC USING_DIRECTX_HEADERS)
++    target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft::DirectX-Headers)
++    target_compile_definitions(${PROJECT_NAME} PRIVATE USING_DIRECTX_HEADERS)
+     target_compile_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC,Intel>:/wd4062> $<$<CXX_COMPILER_ID:Clang,IntelLLVM>:-Wno-switch-enum>)
+ endif()
+ 
+diff --git a/DirectXTex/DirectXTex.h b/DirectXTex/DirectXTex.h
+index e24142c..4dc36c8 100644
+--- a/DirectXTex/DirectXTex.h
++++ b/DirectXTex/DirectXTex.h
+@@ -382,6 +382,34 @@ namespace DirectX
+         _In_z_ const wchar_t* szFile,
+         _Out_ TexMetadata& metadata) noexcept;
+ 
++#ifdef __cpp_lib_byte
++    HRESULT __cdecl GetMetadataFromDDSMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ DDS_FLAGS flags,
++        _Out_ TexMetadata& metadata) noexcept;
++    HRESULT __cdecl GetMetadataFromDDSMemoryEx(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ DDS_FLAGS flags,
++        _Out_ TexMetadata& metadata,
++        _Out_opt_ DDSMetaData* ddPixelFormat) noexcept;
++    HRESULT __cdecl GetMetadataFromHDRMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _Out_ TexMetadata& metadata) noexcept;
++    HRESULT __cdecl GetMetadataFromTGAMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ TGA_FLAGS flags,
++        _Out_ TexMetadata& metadata) noexcept;
++
++#ifdef _WIN32
++    HRESULT __cdecl GetMetadataFromWICMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ WIC_FLAGS flags,
++        _Out_ TexMetadata& metadata,
++        _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR = nullptr);
++#endif
++#endif // __cpp_lib_byte
++
++
+     //---------------------------------------------------------------------------------
+     // Bitmap image container
+     struct Image
+@@ -590,6 +618,34 @@ namespace DirectX
+     HRESULT __cdecl SaveToTGAMemory(_In_ const Image& image, _Out_ Blob& blob, _In_opt_ const TexMetadata* metadata = nullptr) noexcept;
+     HRESULT __cdecl SaveToTGAFile(_In_ const Image& image, _In_z_ const wchar_t* szFile, _In_opt_ const TexMetadata* metadata = nullptr) noexcept;
+ 
++#ifdef __cpp_lib_byte
++    HRESULT __cdecl LoadFromDDSMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ DDS_FLAGS flags,
++        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
++    HRESULT __cdecl LoadFromDDSMemoryEx(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ DDS_FLAGS flags,
++        _Out_opt_ TexMetadata* metadata,
++        _Out_opt_ DDSMetaData* ddPixelFormat,
++        _Out_ ScratchImage& image) noexcept;
++    HRESULT __cdecl LoadFromHDRMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
++    HRESULT __cdecl LoadFromTGAMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ TGA_FLAGS flags,
++        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
++
++#ifdef _WIN32
++    HRESULT __cdecl LoadFromWICMemory(
++        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
++        _In_ WIC_FLAGS flags,
++        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image,
++        _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR = nullptr);
++#endif
++#endif // __cpp_lib_byte
++
+     //---------------------------------------------------------------------------------
+     // Texture conversion, resizing, mipmap generation, and block compression
+ 
+@@ -959,6 +1015,18 @@ namespace DirectX
+         _Out_writes_bytes_to_opt_(maxsize, required) uint8_t* pDestination, _In_ size_t maxsize,
+         _Out_ size_t& required) noexcept;
+ 
++#ifdef __cpp_lib_byte
++    HRESULT __cdecl EncodeDDSHeader(
++        _In_ const TexMetadata& metadata, DDS_FLAGS flags,
++        _Out_writes_bytes_to_opt_(maxsize, required) std::byte* pDestination, _In_ size_t maxsize,
++        _Out_ size_t& required) noexcept;
++
++    HRESULT __cdecl EncodeDDSHeader(
++        _In_ const TexMetadata& metadata, DDS_FLAGS flags,
++        _Reserved_ std::nullptr_t, _In_ size_t maxsize,
++        _Out_ size_t& required) noexcept;
++#endif
++
+     //---------------------------------------------------------------------------------
+     // Direct3D interop
+ 
+diff --git a/DirectXTex/DirectXTex.inl b/DirectXTex/DirectXTex.inl
+index 49745ae..d20f41e 100644
+--- a/DirectXTex/DirectXTex.inl
++++ b/DirectXTex/DirectXTex.inl
+@@ -190,3 +190,85 @@ inline HRESULT __cdecl SaveToTGAFile(const Image& image, const wchar_t* szFile,
+ {
+     return SaveToTGAFile(image, TGA_FLAGS_NONE, szFile, metadata);
+ }
++
++
++//=====================================================================================
++// C++17 helpers
++//=====================================================================================
++#ifdef __cpp_lib_byte
++
++_Use_decl_annotations_
++inline HRESULT __cdecl GetMetadataFromDDSMemory(const std::byte* pSource, size_t size, DDS_FLAGS flags, TexMetadata& metadata) noexcept
++{
++    return GetMetadataFromDDSMemory(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl LoadFromDDSMemory(const std::byte* pSource, size_t size, DDS_FLAGS flags, TexMetadata* metadata, ScratchImage& image) noexcept
++{
++    return LoadFromDDSMemory(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata, image);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl GetMetadataFromDDSMemoryEx(const std::byte* pSource, size_t size, DDS_FLAGS flags, TexMetadata& metadata, DDSMetaData* ddPixelFormat) noexcept
++{
++    return GetMetadataFromDDSMemoryEx(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata, ddPixelFormat);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl LoadFromDDSMemoryEx(const std::byte* pSource, size_t size, DDS_FLAGS flags, TexMetadata* metadata, DDSMetaData* ddPixelFormat, ScratchImage& image) noexcept
++{
++    return LoadFromDDSMemoryEx(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata, ddPixelFormat, image);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl GetMetadataFromHDRMemory(const std::byte* pSource, size_t size, TexMetadata& metadata) noexcept
++{
++    return GetMetadataFromHDRMemory(reinterpret_cast<const uint8_t*>(pSource), size, metadata);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl LoadFromHDRMemory(const std::byte* pSource, size_t size, TexMetadata* metadata, ScratchImage& image) noexcept
++{
++    return LoadFromHDRMemory(reinterpret_cast<const uint8_t*>(pSource), size, metadata, image);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl GetMetadataFromTGAMemory(const std::byte* pSource, size_t size, TGA_FLAGS flags, TexMetadata& metadata) noexcept
++{
++    return GetMetadataFromTGAMemory(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl LoadFromTGAMemory(const std::byte* pSource, size_t size, TGA_FLAGS flags, TexMetadata* metadata, ScratchImage& image) noexcept
++{
++    return LoadFromTGAMemory(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata, image);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl EncodeDDSHeader(const TexMetadata& metadata, DDS_FLAGS flags, std::byte* pDestination, size_t maxsize, size_t& required) noexcept
++{
++    return EncodeDDSHeader(metadata, flags, reinterpret_cast<uint8_t*>(pDestination), maxsize, required);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl EncodeDDSHeader(const TexMetadata& metadata, DDS_FLAGS flags, std::nullptr_t, size_t maxsize, size_t& required) noexcept
++{
++    return EncodeDDSHeader(metadata, flags, static_cast<uint8_t*>(nullptr), maxsize, required);
++}
++
++#ifdef _WIN32
++_Use_decl_annotations_
++inline HRESULT __cdecl GetMetadataFromWICMemory(const std::byte* pSource, size_t size, WIC_FLAGS flags, TexMetadata& metadata, std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR)
++{
++    return GetMetadataFromWICMemory(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata, getMQR);
++}
++
++_Use_decl_annotations_
++inline HRESULT __cdecl LoadFromWICMemory(const std::byte* pSource, size_t size, WIC_FLAGS flags, TexMetadata* metadata, ScratchImage& image, std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR)
++{
++    return LoadFromWICMemory(reinterpret_cast<const uint8_t*>(pSource), size, flags, metadata, image, getMQR);
++}
++#endif // _WIN32
++
++#endif // __cpp_lib_byte
+-- 
+2.47.0.vfs.0.3
+

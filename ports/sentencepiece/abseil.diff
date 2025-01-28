@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9fa37fa..0e220e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -173,6 +173,9 @@ elseif (SPM_ABSL_PROVIDER STREQUAL "package")
+   find_package(absl REQUIRED)
+   get_target_property(ABSL_INCLUDE_DIRS absl::base INTERFACE_INCLUDE_DIRECTORIES)
+   if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/absl.org)
++    file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/absl)
++    file(COPY "${ABSL_INCLUDE_DIRS}/absl" DESTINATION "${PROJECT_BINARY_DIR}/third_party")
++  elseif(0)
+     file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/third_party/absl ${CMAKE_CURRENT_SOURCE_DIR}/third_party/absl.org)
+     execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
+         ${ABSL_INCLUDE_DIRS}/absl ${CMAKE_CURRENT_SOURCE_DIR}/third_party/absl)
+diff --git a/src/sentencepiece_processor.h b/src/sentencepiece_processor.h
+index dd3f092..c1551a7 100644
+--- a/src/sentencepiece_processor.h
++++ b/src/sentencepiece_processor.h
+@@ -23,9 +23,7 @@
+ #include <vector>
+ 
+ #ifndef SWIG
+-namespace absl {
+-using std::string_view;
+-}  // namespace absl
++#include <absl/strings/string_view.h>
+ #endif  // SWIG
+ 
+ namespace sentencepiece {

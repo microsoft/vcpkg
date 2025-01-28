@@ -6,27 +6,26 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/minizip-ng
     REF "${VERSION}"
-    SHA512 4e626a312c35e5f003e4f365261ef3e1bf33488f8698ec31b1b33d32f6a34ed0b54f0e3ffdae658e5b441532dde3cee45c3822532f52e68ea588e809e8f4081c
+    SHA512 af9c8743d34bbc8f371a018debfab5f857aadb9a1129b048dbce9085122bef209ade34837784f91424c9eba92406d2e222476d9f8038839908679f7b7dc9e3eb
     HEAD_REF master
     PATCHES
-        fix_find_zstd.patch
+        dependencies.diff
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pkcrypt MZ_PKCRYPT
-        wzaes MZ_WZAES
+        wzaes   MZ_WZAES
         openssl MZ_OPENSSL
-        bzip2 MZ_BZIP2
-        lzma MZ_LZMA
-        zlib MZ_ZLIB
-        zstd MZ_ZSTD
+        bzip2   MZ_BZIP2
+        lzma    MZ_LZMA
+        zlib    MZ_ZLIB
+        zstd    MZ_ZSTD
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         ${FEATURE_OPTIONS}
         -DMZ_FETCH_LIBS=OFF

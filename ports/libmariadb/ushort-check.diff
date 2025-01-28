@@ -1,0 +1,13 @@
+diff --git a/cmake/check_types.cmake b/cmake/check_types.cmake
+index 3ecedb1..3aaba29 100644
+--- a/cmake/check_types.cmake
++++ b/cmake/check_types.cmake
+@@ -21,7 +21,7 @@ SET(CMAKE_EXTRA_INCLUDE_FILES stdio.h)
+ CHECK_TYPE_SIZE(size_t SIZEOF_SIZE_T)
+ SET(CMAKE_EXTRA_INCLUDE_FILES sys/types.h)
+ CHECK_TYPE_SIZE(uint SIZEOF_UINT)
+-CHECK_TYPE_SIZE(uint SIZEOF_USHORT)
++CHECK_TYPE_SIZE(ushort SIZEOF_USHORT)
+ CHECK_TYPE_SIZE(ulong SIZEOF_ULONG)
+ CHECK_TYPE_SIZE(int8 SIZEOF_INT8)
+ CHECK_TYPE_SIZE(uint8 SIZEOF_UINT8)

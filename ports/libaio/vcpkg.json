@@ -1,0 +1,14 @@
+{
+  "name": "libaio",
+  "version": "0.3.113",
+  "description": "The Linux-native asynchronous I/O facility",
+  "homepage": "https://pagure.io/libaio",
+  "license": "LGPL-2.1",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

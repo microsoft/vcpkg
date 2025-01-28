@@ -28,6 +28,6 @@ function(qt_fix_makefile_install BUILD_DIR)
 
     file(GLOB_RECURSE MAKEFILES "${BUILD_DIR}/*Makefile*")
     foreach(MAKEFILE ${MAKEFILES})
-        vcpkg_replace_string("${MAKEFILE}" "${installed}" "${packages}")
+        vcpkg_replace_string("${MAKEFILE}" "${installed}" "${packages}" IGNORE_UNCHANGED)
     endforeach()
 endfunction()

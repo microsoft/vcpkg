@@ -1,0 +1,70 @@
+{
+  "name": "netgen",
+  "version": "6.2.2401",
+  "port-version": 2,
+  "description": "NETGEN is an automatic 3d tetrahedral mesh generator. It accepts input from constructive solid geometry (CSG) or boundary representation (BRep) from STL file format. The connection to a geometry kernel allows the handling of IGES and STEP files. NETGEN contains modules for mesh optimization and hierarchical mesh refinement.",
+  "homepage": "https://ngsolve.org/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "arm64 | x64",
+  "dependencies": [
+    {
+      "name": "netgen",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "cgns": {
+      "description": "CGNS file read/write support",
+      "dependencies": [
+        {
+          "name": "cgns",
+          "default-features": false
+        }
+      ]
+    },
+    "jpeg": {
+      "description": "enable snapshots using library libjpeg",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "mpeg": {
+      "description": "enable video recording with FFmpeg",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec"
+          ]
+        }
+      ]
+    },
+    "occ": {
+      "description": "build with OpenCascade geometry kernel interface",
+      "dependencies": [
+        {
+          "name": "opencascade",
+          "default-features": false
+        }
+      ]
+    },
+    "python": {
+      "description": "Build python bindings",
+      "dependencies": [
+        "pybind11",
+        "python3"
+      ]
+    }
+  }
+}

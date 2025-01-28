@@ -17,6 +17,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         asm WITH_ASM
+        stack-protector WITH_STACK_PROTECTOR
 )
 
 vcpkg_cmake_configure(

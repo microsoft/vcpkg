@@ -1,17 +1,15 @@
 diff --git a/meson.build b/meson.build
-index 0541e7f145..00f6e67550 100644
+index 8b248d4..c546c62 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -79,9 +79,9 @@ subdir('doc')
+@@ -90,10 +90,6 @@ subdir('doc')
+
  # build any examples explicitly requested - useful for developers - and
  # install any example code into the appropriate install path
- subdir('examples')
+-subdir('examples')
 -install_subdir('examples',
 -        install_dir: get_option('datadir') + '/dpdk',
 -        exclude_files: ex_file_excludes)
-+# install_subdir('examples',
-+#         install_dir: get_option('datadir') + '/dpdk',
-+#         exclude_files: ex_file_excludes)
 
- # build kernel modules if enabled
- if get_option('enable_kmods')
+ # build kernel modules
+ subdir('kernel')

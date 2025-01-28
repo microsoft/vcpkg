@@ -6,9 +6,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RealTimeChris/DiscordCoreAPI
     REF "v${VERSION}"
-    SHA512 4fcffa23be80bd7cf13ded5b8a78d7b94832d1d80996d315c5ee333b7a4006903f4d9f7ec1046f01658887349e5bf29406fe2eb5c979578b6bdad188798f4173
+    SHA512 d977ed7d8805f0b110450d3baf0256eae11ecc25947496c657a9c9b17aa9222db92435f28ebd924c166927e4714b3e9ae388f64836175cc96b78b08315031ede
     HEAD_REF main
 )
+
+# discordcoreapi consumes extreme amounts of memory (>9GB per .cpp file). With our default
+# concurrency values this causes hanging and/or OOM killing on Linux build machines and
+# warnings on the Windows machines like:
+# #[warning]Free memory is lower than 5%; Currently used: 99.99%
+# #[warning]Free memory is lower than 5%; Currently used: 99.99%
+# #[warning]Free memory is lower than 5%; Currently used: 99.99%
+# Cut the requested concurrency in quarter to avoid this.
+if(VCPKG_CONCURRENCY GREATER 4)
+    math(EXPR VCPKG_CONCURRENCY "${VCPKG_CONCURRENCY} / 4")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

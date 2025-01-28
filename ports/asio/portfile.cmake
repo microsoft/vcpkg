@@ -1,29 +1,27 @@
-#header-only library
+set(VCPKG_BUILD_TYPE release) # header-only
 
+string(REPLACE "." "-" ref "asio-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-28-2
-    SHA512 435c13f6f14a35bde042c6d86965ec104ae33be0b6a3c156518b29f851ad2b69c67bf760a20932d847e3b171f571bedc541c6a0d0541980aee8558b09e70357f
+    REF "${ref}"
+    SHA512 9374ff97bd4af7b5b41754970b2bcb468f450fee46a80c9c3344f732c64091f2ac5a73ebf4ac1831c623793c08a3c109ae90b601273c40d062bfd4f026f1d94d
     HEAD_REF master
 )
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 # Always use "ASIO_STANDALONE" to avoid boost dependency
 vcpkg_replace_string("${SOURCE_PATH}/asio/include/asio/detail/config.hpp" "defined(ASIO_STANDALONE)" "!defined(VCPKG_DISABLE_ASIO_STANDALONE)")
 
-# CMake install
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPACKAGE_VERSION=${VERSION}
 )
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
+    
 vcpkg_cmake_config_fixup()
-file(INSTALL
-    "${CMAKE_CURRENT_LIST_DIR}/asio-config.cmake"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/asio-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/asio/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/asio/LICENSE_1_0.txt")

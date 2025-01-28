@@ -1,0 +1,17 @@
+{
+  "name": "atliac-minitest",
+  "version": "1.0.0",
+  "description": "A C++ unit testing framework that helps write tests alongside the code being tested.",
+  "homepage": "https://github.com/Atliac/minitest",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

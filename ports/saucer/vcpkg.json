@@ -1,12 +1,14 @@
 {
   "name": "saucer",
-  "version": "2.1.0",
+  "version": "2.3.0",
+  "port-version": 1,
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "boost-callable-traits",
+    "boost-preprocessor",
     "ereignis",
     "flagpp",
     "fmt",

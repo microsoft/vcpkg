@@ -4,8 +4,7 @@ endif()
 
 message(WARNING "Use of ${PORT} is not recommended for new projects. See https://aka.ms/dxsdk for more information.")
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
 
 vcpkg_download_distfile(ARCHIVE
@@ -26,15 +25,18 @@ file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT
 file(GLOB RELEASE_LIB_FILES "${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/*.lib")
 file(INSTALL ${RELEASE_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
 
-file(GLOB DEBUG_LIB_FILES "${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/*.lib")
-file(INSTALL ${DEBUG_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
-
 file(GLOB RELEASE_DLL_FILES "${PACKAGE_PATH}/build/native/release/bin/${VCPKG_TARGET_ARCHITECTURE}/*.dll")
 file(INSTALL ${RELEASE_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/")
 
-file(GLOB DEBUG_DLL_FILES "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET_ARCHITECTURE}/*.dll")
-file(INSTALL ${DEBUG_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(GLOB DEBUG_LIB_FILES "${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/*.lib")
+    file(INSTALL ${DEBUG_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
 
-file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+    file(GLOB DEBUG_DLL_FILES "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET_ARCHITECTURE}/*.dll")
+    file(INSTALL ${DEBUG_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
+endif()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE.txt")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/dxsdk-d3dx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)

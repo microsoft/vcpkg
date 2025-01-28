@@ -1,0 +1,14 @@
+diff --git a/common/config.h b/common/config.h
+index 04eda99..3565329 100644
+--- a/common/config.h
++++ b/common/config.h
+@@ -128,7 +128,9 @@
+ #define HAVE_IOCTL 1
+ 
+ /* Define if nl_langinfo has CODESET support. */
++#if !(defined(__ANDROID__) && __ANDROID_API__ < 28)
+ #define HAVE_LANGINFO_CODESET 1
++#endif
+ 
+ /* Define to 1 if you have the <langinfo.h> header file. */
+ #define HAVE_LANGINFO_H 1

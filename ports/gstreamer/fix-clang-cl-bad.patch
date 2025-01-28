@@ -11,25 +11,11 @@ index c4868a4..6b34cb7 100644
    # autotools didn't use the libdca pkg-config cflags, and they
    # can point to a non-existing location (/usr/include/dca)
    no_warn_c_args = ['-Wno-missing-include-dirs']
-diff --git a/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build b/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
-index 160080a..6acf110 100644
---- a/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
-+++ b/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
-@@ -158,7 +158,7 @@ endif
- 
- # MinGW 32bits compiler seems to be complaining about redundant-decls
- # when ComPtr is in use. Let's just disable the warning
--if cc.get_id() != 'msvc'
-+if cc.get_argument_syntax() != 'msvc'
-   extra_args = cc.get_supported_arguments([
-     '-Wno-redundant-decls',
-   ])
 diff --git a/subprojects/gst-plugins-bad/meson.build b/subprojects/gst-plugins-bad/meson.build
-index 84eeb17..1743f41 100644
+index 6707dce..b8c6018 100644
 --- a/subprojects/gst-plugins-bad/meson.build
 +++ b/subprojects/gst-plugins-bad/meson.build
 @@ -54,7 +54,7 @@ endif
-
  cdata = configuration_data()
  cdata.set('ENABLE_NLS', 1)
  
@@ -52,10 +38,10 @@ index c61ad4e..b30793c 100644
      error('asio plugin can only be built with MSVC')
    else
 diff --git a/subprojects/gst-plugins-bad/sys/d3d11/meson.build b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
-index 1368b79..8dd3b30 100644
+index ff557be..d5bf0db 100644
 --- a/subprojects/gst-plugins-bad/sys/d3d11/meson.build
 +++ b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
-@@ -96,7 +96,7 @@ endif
+@@ -118,7 +118,7 @@ endif
  
  # MinGW 32bits compiler seems to be complaining about redundant-decls
  # when ComPtr is in use. Let's just disable the warning
@@ -64,19 +50,6 @@ index 1368b79..8dd3b30 100644
    extra_mingw_args = cc.get_supported_arguments([
      '-Wno-redundant-decls',
    ])
-diff --git a/subprojects/gst-plugins-bad/sys/decklink/meson.build b/subprojects/gst-plugins-bad/sys/decklink/meson.build
-index d869e79a4..c7b37a7c6 100644
---- a/subprojects/gst-plugins-bad/sys/decklink/meson.build
-+++ b/subprojects/gst-plugins-bad/sys/decklink/meson.build
-@@ -18,7 +18,7 @@ decklink_libs = []
- 
- if host_system == 'windows'
-   decklink_sources += ['win/DeckLinkAPIDispatch.cpp', 'win/DeckLinkAPI_i.c']
--  if cxx.get_id() == 'msvc'
-+  if cxx.get_argument_syntax() == 'msvc'
-     # FIXME: Use commsuppwd.lib for debug builds?
-     comutil_dep = cxx.find_library('comsuppw', required : get_option('decklink'))
-     if comutil_dep.found()
 diff --git a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
 index 6b9a059..40713ce 100644
 --- a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
@@ -91,10 +64,10 @@ index 6b9a059..40713ce 100644
      error('mediafoundation plugin can only be built with MSVC')
    endif
 diff --git a/subprojects/gst-plugins-bad/sys/msdk/meson.build b/subprojects/gst-plugins-bad/sys/msdk/meson.build
-index 659b96c..92e6bc4 100644
+index 51bf953..e30e138 100644
 --- a/subprojects/gst-plugins-bad/sys/msdk/meson.build
 +++ b/subprojects/gst-plugins-bad/sys/msdk/meson.build
-@@ -176,12 +176,12 @@ if use_onevpl and have_mfx_ver205
+@@ -175,12 +175,12 @@ if use_onevpl and have_mfx_ver205
  endif
  
  if host_machine.system() == 'windows'
@@ -108,4 +81,4 @@ index 659b96c..92e6bc4 100644
 +  msdk_deps_found = d3d11_dep.found() and legacy_stdio_dep.found() and cc.get_argument_syntax() == 'msvc'
  else
    libdl_dep = cc.find_library('dl', required: get_option('msdk'))
-   libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'))
+   libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'), allow_fallback: true)

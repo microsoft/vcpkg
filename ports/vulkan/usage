@@ -3,6 +3,3 @@ vulkan is compatible with built-in CMake targets:
     # https://cmake.org/cmake/help/latest/module/FindVulkan.html
     find_package(Vulkan REQUIRED)
     target_link_libraries(main PRIVATE Vulkan::Vulkan)
-
-The vulkan package does not provide direct Visual Studio integration.
-For manual integration, add $(VULKAN_SDK)/include to your include path.

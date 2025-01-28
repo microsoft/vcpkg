@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/sdformat
@@ -27,7 +29,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Restore original path
-set(ENV{PATH} ${_path})
+set(ENV{PATH} "${_path}")
 
 # Move location of sdformat.dll from lib to bin
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sdformat.dll")
@@ -54,6 +56,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ignition/sdformat6.yaml" "${
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sdformat-6.2/sdf/sdf_config.h" "#define SDF_SHARE_PATH \"${CURRENT_PACKAGES_DIR}/share/\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sdformat-6.2/sdf/sdf_config.h" "#define SDF_VERSION_PATH \"${CURRENT_PACKAGES_DIR}/share/sdformat/\"" "")
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

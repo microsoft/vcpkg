@@ -4,9 +4,7 @@
   "description": "Validates ankurvdev-embedresource",
   "license": "BSD-3-Clause",
   "dependencies": [
-    {
-      "name": "ankurvdev-embedresource"
-    },
+    "ankurvdev-embedresource",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,0 +1,16 @@
+diff --git a/src/Makefile.shlib b/src/Makefile.shlib
+index f94d59d1c597..8ca51ca03f75 100644
+--- a/src/Makefile.shlib
++++ b/src/Makefile.shlib
+@@ -183,6 +183,11 @@ endif
+ ifeq ($(PORTNAME), linux)
+   LINK.shared		= $(COMPILER) -shared
+   ifdef soname
++    ifneq (,$(findstring linux-android,$(host_os)))
++      # Android uses unversioned shared libraries
++      shlib		= $(shlib_bare)
++      soname		= $(shlib_bare)
++    endif
+     LINK.shared		+= -Wl,-soname,$(soname)
+   endif
+   BUILD.exports		= ( echo '{ global:'; $(AWK) '/^[^\#]/ {printf "%s;\n",$$1}' $<; echo ' local: *; };' ) >$@

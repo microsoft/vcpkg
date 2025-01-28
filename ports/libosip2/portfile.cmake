@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(
     PATCHES ${PATCHES}
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
     foreach(VCXPROJ IN ITEMS
         "${SOURCE_PATH}/platform/vsnet/osip2.vcxproj"
@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
     )
 
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+else()
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}")
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()

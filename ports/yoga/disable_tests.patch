@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e4f8535c..4e6f6914 100644
+index 55f1a6df..c8c15c30 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,7 +10,7 @@ set(CMAKE_VERBOSE_MAKEFILE on)
@@ -9,5 +9,5 @@ index e4f8535c..4e6f6914 100644
 -add_subdirectory(tests)
 +# add_subdirectory(tests)
  
- # cmake install config
- include(GNUInstallDirs)
+ option(BUILD_FUZZ_TESTS "Build fuzz tests" OFF)
+ 

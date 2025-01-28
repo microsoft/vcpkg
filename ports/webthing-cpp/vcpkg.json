@@ -1,0 +1,31 @@
+{
+  "name": "webthing-cpp",
+  "version": "1.0.5",
+  "port-version": 1,
+  "description": "Webthing-CPP is a modern CPP/C++17 implementation of the WebThings API.",
+  "homepage": "https://github.com/bw-hro/webthing-cpp",
+  "license": "MIT",
+  "dependencies": [
+    "json-schema-validator",
+    "mdns",
+    "nlohmann-json",
+    "uwebsockets",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "ssl": {
+      "description": "Support HTTPS via uwebsockets",
+      "dependencies": [
+        {
+          "name": "uwebsockets",
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    }
+  }
+}

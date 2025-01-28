@@ -1,16 +1,21 @@
 {
   "name": "qtsensors",
-  "version": "6.6.1",
-  "description": "Qt Sensors",
+  "version": "6.8.1",
+  "description": "The Qt Sensors API provides access to sensor hardware via QML and C++ interfaces. The Qt Sensors API also provides a motion gesture recognition API for devices.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
     {
       "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
       "default-features": false,
       "features": [
         "dbus"
-      ]
+      ],
+      "platform": "!(windows & static) & !android & !ios"
     },
     {
       "name": "qtconnectivity",

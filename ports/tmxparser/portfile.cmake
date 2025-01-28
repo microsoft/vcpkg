@@ -12,6 +12,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 removes `std::ptr_fun`
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
 )
 

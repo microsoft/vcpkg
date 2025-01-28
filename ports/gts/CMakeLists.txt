@@ -26,7 +26,7 @@ add_definitions(
 )
 
 file(GLOB src src/*.c src/gts.def)
-list(REMOVE_ITEM src src/predicate_init.c)
+list(FILTER src EXCLUDE REGEX ".*predicates_init\\.c$")
 add_library(gts ${src})
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/config.h" "")
 target_include_directories(gts PUBLIC

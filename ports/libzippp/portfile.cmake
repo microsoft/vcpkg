@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ctabin/libzippp
-    REF 7bc5e5d7de8808acd0a00fc2f993bf9141086c22 #v7.0-1.10.1 with CXX std version c++11
-    SHA512 f84aaab7ccf3d2f90ed1b49e9d71059c045e8aab08bc185a2d63f2ff6ba106c185e7d8938fe653fe96797e9f4f36fb04c12927a4339250ac431eed01ebf900bb
+    REF 7e65f6cd173da8f20393d331ceb697482b206edf #v7.1-1.10.1 with CXX std version c++11
+    SHA512 0076e39f6c1375d61e70dedc5132c48a8191534f2e6aeb042fe0f80c2aa068112e709446b29f84e513bf40ad532816c07155c2bc8ff86114e9c2f45b3f514fc0
     HEAD_REF master
 )
 

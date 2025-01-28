@@ -1,24 +1,24 @@
 diff --git a/zzip/CMakeLists.txt b/zzip/CMakeLists.txt
-index a9f6e3a..407827b 100644
+index 28f03aa..6f34cc8 100644
 --- a/zzip/CMakeLists.txt
 +++ b/zzip/CMakeLists.txt
-@@ -180,16 +180,16 @@ target_link_libraries(libzzipmmapped ZLIB::ZLIB )
- target_include_directories (libzzipmmapped PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+@@ -248,16 +248,16 @@ add_custom_command(OUTPUT libzzipmmapped.so.gcov
+ add_custom_target(libzzipmmapped.gcov DEPENDS libzzipmmapped.so.gcov)
  endif()
-
+ 
 -set_target_properties(libzzip PROPERTIES OUTPUT_NAME "zzip" RELEASE_POSTFIX "-${RELNUM}")
 +set_target_properties(libzzip PROPERTIES OUTPUT_NAME "zzip")
  SET_TARGET_PROPERTIES(libzzip PROPERTIES VERSION ${VERNUM}.${FIXNUM} SOVERSION ${VERNUM})
-
+ 
  if(ZZIPFSEEKO)
 -set_target_properties(libzzipfseeko PROPERTIES OUTPUT_NAME "zzipfseeko" RELEASE_POSTFIX "-${RELNUM}")
 +set_target_properties(libzzipfseeko PROPERTIES OUTPUT_NAME "zzipfseeko")
  SET_TARGET_PROPERTIES(libzzipfseeko PROPERTIES VERSION ${VERNUM}.${FIXNUM} SOVERSION ${VERNUM})
  endif()
-
+ 
  if(ZZIPMMAPPED)
 -set_target_properties(libzzipmmapped PROPERTIES OUTPUT_NAME "zzipmmapped" RELEASE_POSTFIX "-${RELNUM}")
 +set_target_properties(libzzipmmapped PROPERTIES OUTPUT_NAME "zzipmmapped")
  SET_TARGET_PROPERTIES(libzzipmmapped PROPERTIES VERSION ${VERNUM}.${FIXNUM} SOVERSION ${VERNUM})
  endif()
-
+ 

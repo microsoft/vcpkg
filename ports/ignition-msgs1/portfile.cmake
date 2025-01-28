@@ -20,4 +20,5 @@ ignition_modular_library(NAME msgs
                          # Fix linking order of protobuf libraries (backport of https://bitbucket.org/ignitionrobotics/ign-msgs/pull-requests/151)
                          PATCHES
                             fix-protobuf-static-link-order.patch
-                            fix-Add_std_string.patch)
+                            fix-Add_std_string.patch
+                            fix-protobuf-version.patch)

@@ -1,0 +1,12 @@
+diff --git a/include/saucer/serializers/glaze/glaze.inl b/include/saucer/serializers/glaze/glaze.inl
+index c0e1395..d704ed9 100644
+--- a/include/saucer/serializers/glaze/glaze.inl
++++ b/include/saucer/serializers/glaze/glaze.inl
+@@ -7,6 +7,7 @@
+ 
+ #include <fmt/args.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <source_location>
+ 
+ #include <boost/callable_traits.hpp>

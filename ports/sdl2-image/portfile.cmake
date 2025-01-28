@@ -2,9 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 ffd0f838525e17a43d03ea5d4a094b0c79b2627bdbfb4589645abfb606c594773d60184de31bda45999421da75a69f1987ed696b255991212e498161102972b1
+    SHA512 112a523b44630b4e03b100c89f794bc5bc6707965426436c914478948fec6aea9c3a5a4f4b20f6f6bf03ac9440bffddebfd31c1ecd5b99c46bc06e08e0b05f15
     HEAD_REF main
-    PATCHES fix-pkgconfig.patch fix-findwebp.patch
+    PATCHES 
+        fix-findwebp.patch
 )
 
 vcpkg_check_features(
@@ -38,6 +39,10 @@ else()
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-lSDL2_imaged")
+endif()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/share"

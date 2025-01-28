@@ -8,14 +8,14 @@ if("tao" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
         FILENAME "ACE-TAO-${VERSION}.tar.gz"
-        SHA512 afa26e0579ebbac5db82df80a4ce6c2350d4665043bb549688dce4db08b3b1a7c6b072544d651b90bd521ae477de069f280ab8d52fe957143d1f8a7cbd23eb29
+        SHA512 11707f5c4c3a67b437ed2112612640d19a5d11c3909597dae2ce60a34979578e3376871a698d43f9c4236a26d37b301f2148314535f66242444a0849c42fedbe
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 b08c8cf98b622248cfbf167ca91c8314284c84c4dcb1c48fedb9180be2bc354c1d647372eb046e75d426ac4f2ad0318a8dd9e3f233d36bc30f744d5f9e37c5ec
+        SHA512 208b6101c1415ee64f7a9a99c1fe53a3b51078408809716ea9bf744667f853c86e7656e02c49c55e6866218033336de4ed8bfbd39254bf94f8a332861ea6e97f
     )
 endif()
 
@@ -346,7 +346,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     )
   endif()
 endif()
-  
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -381,7 +381,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 endif()
-  
+
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 

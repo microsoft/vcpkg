@@ -36,8 +36,8 @@ vcpkg_configure_make(
     AUTOCONFIG
     OPTIONS
         ac_cv_path_PYTHON='${PYTHON3}'
-        am_cv_python_pyexecdir=\\\${prefix}/tools/python3/site-packages
-        am_cv_python_pythondir=\\\${prefix}/tools/python3/site-packages
+        am_cv_python_pyexecdir=\\\${prefix}/${PYTHON3_SITE}
+        am_cv_python_pythondir=\\\${prefix}/${PYTHON3_SITE}
         )
 
 vcpkg_install_make()

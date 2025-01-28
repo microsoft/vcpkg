@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO saucer/saucer
     REF "v${VERSION}"
-    SHA512 29abb465a888aa4284795e293624598c09e0ba690bb430adb7a2122d82985daa1cfcfd594120f5657fc70349f8480e63554d72bff1b23f9dca86bcdbb930d953
+    SHA512 6b5090c7754cac99d410ae59e207a44cd58db7fc9ee59412181c13449c5aed7e1cb61b1ec0703809084b406e01bbb821ecafa5caee4c2704ef72f07d2979a7e0
     HEAD_REF dev
     PATCHES
         fix_findpkg.patch
+        fix-build-error-with-fmt11.patch
 )
 
 vcpkg_cmake_configure(

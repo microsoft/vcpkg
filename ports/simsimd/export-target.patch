@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aa0daf4..f976fb1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,6 +108,23 @@ endif ()
+ if (SIMSIMD_BUILD_SHARED)
+     set(SIMSIMD_SOURCES ${SIMSIMD_SOURCES} c/lib.c)
+     add_library(simsimd_shared SHARED ${SIMSIMD_SOURCES})
+-    target_include_directories(simsimd_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
++    target_include_directories(simsimd_shared PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+     set_target_properties(simsimd_shared PROPERTIES OUTPUT_NAME simsimd)
++    
++    install(TARGETS simsimd_shared EXPORT unofficial-simsimd-config
++       LIBRARY DESTINATION lib
++       ARCHIVE DESTINATION lib
++       RUNTIME DESTINATION bin)
++        
++    install(EXPORT unofficial-simsimd-config
++       FILE unofficial-simsimd-config.cmake
++       NAMESPACE unofficial::simsimd::
++       DESTINATION share/unofficial-simsimd
++    )
+ endif ()
++
++install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
++   DESTINATION include
++   FILES_MATCHING
++   PATTERN *.h
++)

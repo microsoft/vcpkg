@@ -14,14 +14,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
         "0016-Fix-file_famagic-function.patch"
+        "0017-Change-bzlib-name-to-match-CMake-output.patch"
     )
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
-    REF FILE5_45
-    SHA512 fdd4c5d13d5ea1d25686c76d8ebc3252c54040c4871e3f0f623c4548b3841795d4e36050292a9453eedf0fbf932573890e9d6ac9fa63ccf577215598ae84b9ea
+    REF FILE5_46
+    SHA512 9165bb5bdbe7b8fccac0c8675d4eb251a286ab2ab7a79e6f8ed98d36fa0928b889cf109c1da3a5cfff64d1b1006b5d73934c2d420484adae6f4c8e26a9ede18f
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -31,9 +32,30 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
 endif()
 
+set(FEATURE_OPTIONS)
+
+macro(enable_feature feature switch)
+    if("${feature}" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "--enable-${switch}")
+        set(has_${feature} 1)
+    else()
+        list(APPEND FEATURE_OPTIONS "--disable-${switch}")
+        set(has_${feature} 0)
+    endif()
+endmacro()
+
+enable_feature("bzip2" "bzlib")
+enable_feature("zlib" "zlib")
+enable_feature("lzma" "xzlib")
+enable_feature("zstd" "zstdlib")
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "--disable-lzlib"
+        "--disable-libseccomp"
 )
 
 if(VCPKG_CROSSCOMPILING)

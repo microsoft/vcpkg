@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ybainier/Hypodermic
-    REF 0e0d85d70aa2f2391dfd84f8af4a3863d4fb1611 # v2.5.3
-    SHA512 6fc3f9eca034a4de3f7086bd51e9ba11ee31c8ec000a3e0bdfc06db1f3c12a89b66793adf5d219441e680541e26acaef72d21f9dd0acf3f5fee3aa12d3fb7b4d
+    REF ba5516d4e78230c1187debb01ebdf01e5d11f62d # 2023-03-03
+    SHA512 40a119baafc23149117e286c38c00bdc0debda1cb6fefbecfdbc6e1a779789c6c884d1e7513aaf55060d550232c3dc8777ef0ebf0cd94e998ff2d5d6d375d2ff
     HEAD_REF master
     PATCHES
         "disable_hypodermic_tests.patch"

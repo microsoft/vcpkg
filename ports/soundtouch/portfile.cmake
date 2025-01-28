@@ -3,7 +3,7 @@ vcpkg_from_github(
     GITHUB_HOST https://codeberg.org
     REPO soundtouch/soundtouch
     REF ${VERSION}
-    SHA512 3d4d6314d6fccb3cb899aee36b90799bb9bf7cf1aad9ff2fff6b18c73e68be7e0e00a3f4e31d5dd340c979236f5474b7ef95d51ddb813f353dde920bdef4cb51
+    SHA512 9cc507e15be065fe404e3f9ac71cdc596474c4a86b04a4b969c6c3ed4aff865cdf6aee24929046818a7d3791f005778aea112d74ef4d8f60b05460755a08dbe3
     HEAD_REF master
 )
 

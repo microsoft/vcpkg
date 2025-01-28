@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF v7.1.0
-    SHA512 3fad1c68e116c65df453a545fe9def6dc05941675900fd81728531d7638fc1814b82ee1f613ec451bc6c31702a3d5e31f275e605fe6bd62c61513ecd78a172cc
+    REF "v${VERSION}"
+    SHA512 fff7ac643b42c9c4464ac34c80369ef1e3d9d87677a3c7c660fd6a697b57348599b445794ac278d87a9a8d31c00adfded5932ecaa54e8ed918cb4665023fd8d5
     HEAD_REF master
 )
 
@@ -22,9 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 # Remove includes from ${CMAKE_INSTALL_PREFIX}/debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/dimcli" RENAME copyright)

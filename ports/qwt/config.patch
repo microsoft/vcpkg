@@ -41,15 +41,15 @@ index 7da1485a0..b69b5ca71 100644
  QWT_INSTALL_PREFIX = $$[QT_INSTALL_PREFIX]
  
  unix {
--    QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION-dev
-+    # QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION-dev
-     # QWT_INSTALL_PREFIX = /usr/local/qwt-$$QWT_VERSION-dev-qt-$$QT_VERSION
+-    QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
++    # QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
+     # QWT_INSTALL_PREFIX = /usr/local/qwt-$$QWT_VERSION-qt-$$QT_VERSION
  }
  
  win32 {
--    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION-dev
-+    # QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION-dev
-     # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-dev-qt-$$QT_VERSION
+-    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
++    # QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
+     # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-qt-$$QT_VERSION
  }
  
 -QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
@@ -124,16 +124,6 @@ index 7da1485a0..b69b5ca71 100644
  
  ######################################################################
  # When Qt has been built as framework qmake wants
-@@ -171,8 +172,4 @@ macx:!static:CONFIG(qt_framework, qt_framework|qt_no_framework) {
- # Create and install pc files for pkg-config
- # See http://www.freedesktop.org/wiki/Software/pkg-config/
- ######################################################################
--
--unix {
--
--    QWT_CONFIG     += QwtPkgConfig
--}
-+# QWT_CONFIG     += QwtPkgConfig # Qt6 has no pkgconfig files
 diff --git a/src/src.pro b/src/src.pro
 index 762e4c49b..d70a1b62b 100644
 --- a/src/src.pro

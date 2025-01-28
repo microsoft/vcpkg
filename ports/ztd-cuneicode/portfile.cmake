@@ -1,13 +1,15 @@
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO soasis/cuneicode
   REF 093041aa934b7b09e7ee7300abdc3f54bb57e389
   SHA512 0066fee5cf75fa07dc97934153e4206e4add69f15602526c1953b0302d5a6f8b56256e837a73acee187b0e02e676fba1350ad39b162c4901c624b12fa4e0fb03
   HEAD_REF main
-  PATCHES fix-cmake-install.patch
+  PATCHES
+    fix-cmake-install.patch # Also contains https://github.com/soasis/cuneicode/pull/12
 )
 
 vcpkg_cmake_configure(

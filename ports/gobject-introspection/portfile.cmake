@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
         0003-fix-paths.patch
-        python.patch
+        fix-pkgconfig.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -23,9 +23,15 @@ vcpkg_find_acquire_program(BISON)
 
 set(OPTIONS_DEBUG -Dbuild_introspection_data=false)
 set(OPTIONS_RELEASE -Dbuild_introspection_data=true)
-if(VCPKG_CROSSCOMPILING AND
-   NOT (CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"))
-    list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(PYTHON_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(PYTHON_DIR ${CURRENT_HOST_INSTALLED_DIR})
+
+    if(VCPKG_CROSSCOMPILING)
+        # this is work in progress
+        list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
+    endif()
 endif()
 
 vcpkg_configure_meson(
@@ -40,6 +46,7 @@ vcpkg_configure_meson(
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
         g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
         g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'
+        python='${PYTHON_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}'
 )
 
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")

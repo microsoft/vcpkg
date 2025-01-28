@@ -1,12 +1,11 @@
 {
   "name": "blend2d",
-  "version-date": "2023-06-16",
-  "port-version": 1,
-  "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
+  "version-date": "2024-07-08",
+  "description": "2D Vector Graphics Engine Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
   "license": "Zlib",
-  "supports": "!uwp & !wasm32",
+  "supports": "!wasm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -18,41 +17,17 @@
     }
   ],
   "default-features": [
-    "jit",
-    "logging",
-    "tls"
+    {
+      "name": "jit",
+      "platform": "!arm32"
+    }
   ],
   "features": {
     "jit": {
-      "description": "Default feature. Enables jit pipeline compilation.",
+      "description": "Enables JIT compiler to generate optimized pipelines.",
+      "supports": "!arm32",
       "dependencies": [
-        {
-          "name": "blend2d",
-          "default-features": false,
-          "platform": "windows"
-        }
-      ]
-    },
-    "logging": {
-      "description": "Default feature. Enables logging.",
-      "dependencies": [
-        {
-          "name": "blend2d",
-          "default-features": false,
-          "features": [
-            "jit"
-          ]
-        }
-      ]
-    },
-    "tls": {
-      "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported.",
-      "dependencies": [
-        {
-          "name": "blend2d",
-          "default-features": false,
-          "platform": "windows"
-        }
+        "asmjit"
       ]
     }
   }

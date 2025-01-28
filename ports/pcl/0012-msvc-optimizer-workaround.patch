@@ -1,0 +1,28 @@
+diff --git a/surface/src/3rdparty/opennurbs/opennurbs_lookup.cpp b/surface/src/3rdparty/opennurbs/opennurbs_lookup.cpp
+index 13584fbbdb3..e006d3a5667 100644
+--- a/surface/src/3rdparty/opennurbs/opennurbs_lookup.cpp
++++ b/surface/src/3rdparty/opennurbs/opennurbs_lookup.cpp
+@@ -666,9 +666,13 @@ std::size_t ON_SerialNumberMap::ActiveIdCount() const
+   return m_active_id_count;
+ }
+ 
+-#if (_MSC_VER >= 1930 && _MSC_VER <= 1939)
++#if (_MSC_VER >= 1930 && _MSC_VER <= 1949)
+ // Solves internal compiler error on MSVC 2022
+ // (see https://github.com/microsoft/vcpkg/issues/19561)
++#define ON_VS2022_COMPILER_CRASH
++#endif
++
++#if defined(ON_VS2022_COMPILER_CRASH)
+ #pragma optimize("", off)
+ #endif
+ struct ON_SerialNumberMap::SN_ELEMENT* ON_SerialNumberMap::FirstElement() const
+@@ -722,7 +726,7 @@ struct ON_SerialNumberMap::SN_ELEMENT* ON_SerialNumberMap::FirstElement() const
+   }
+   return e;
+ }
+-#if (_MSC_VER >= 1930 && _MSC_VER <= 1939)
++#if defined(ON_VS2022_COMPILER_CRASH)
+ #pragma optimize("", on)
+ #endif
+ 
