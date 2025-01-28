@@ -146,7 +146,7 @@ if(subdirs)
         OPTIONS
             ${OPTIONS}
         OPTIONS_RELEASE
-            "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
+            #"--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
