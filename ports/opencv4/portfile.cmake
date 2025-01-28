@@ -31,6 +31,10 @@ vcpkg_from_github(
       0020-miss-openexr.patch
       "${PATCH_ADD_INCLUDE_CHRONO}"
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
@@ -59,6 +63,7 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"        WITH_ADE
+ "aravis"     WITH_ARAVIS
  "calib3d"    BUILD_opencv_calib3d
  "carotene"   WITH_CAROTENE
  "contrib"    WITH_CONTRIB
