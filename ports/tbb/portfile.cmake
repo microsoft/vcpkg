@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 c87b84964b2c323f61895a532968dfa6413a774c177cffbf6e798a07e74e8da5d449144875771df0a1b02657eeb2a7ae4d41c6c432dbf7ea50e3d5a9ea9f8cd3
     HEAD_REF master
+    PATCHES
+        fix-lang.patch # https://github.com/uxlfoundation/oneTBB/pull/1606
 )
 
 vcpkg_check_features(

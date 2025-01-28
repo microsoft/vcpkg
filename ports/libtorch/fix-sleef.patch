@@ -20,3 +20,65 @@ index f3281d3cb..c8b6ed30e 100644
  
    set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
    set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
+diff --git a/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h b/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
+index f3281d3cb..c8b6ed30e 100644
+--- a/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
++++ b/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
+@@ -21,6 +21,17 @@ inline namespace CPU_CAPABILITY {
+ 
+ #if defined(CPU_CAPABILITY_AVX2) && !defined(_MSC_VER)
+ 
++#ifndef SLEEF_CONST
++#if (defined(__GNUC__) || defined(__CLANG__)) && !defined(__INTEL_COMPILER)
++#define SLEEF_CONST const
++#else
++#define SLEEF_CONST
++#endif
++#define SLEEF_CONST_OLD SLEEF_CONST
++#else
++#define SLEEF_CONST_OLD
++#endif
++
+ // bfloat16 conversion
+ static inline void cvtbf16_fp32(const __m128i& a, __m256& o) {
+   o = _mm256_castsi256_ps(_mm256_slli_epi32(_mm256_cvtepu16_epi32(a), 16));
+@@ -266,7 +277,7 @@ public:
+     }
+     return b;
+   }
+-  Vectorized<T> map(const __m256 (*const vop)(__m256)) const {
++  Vectorized<T> map(SLEEF_CONST __m256 (*SLEEF_CONST_OLD vop)(__m256)) const {
+     __m256 lo, hi;
+     cvt_to_fp32<T>(values, lo, hi);
+     const auto o1 = vop(lo);
+     diff --git a/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h b/aten/src/ATen/cpu/vec/vec256/vec256_bfloat16.h
+index f3281d3cb..c8b6ed30e 100644
+--- a/aten/src/ATen/cpu/vec/vec512/vec512_bfloat16.h
++++ b/aten/src/ATen/cpu/vec/vec512/vec512_bfloat16.h
+@@ -18,6 +18,17 @@ inline namespace CPU_CAPABILITY {
+ 
+ #if defined(CPU_CAPABILITY_AVX512) && !defined(_MSC_VER)
+ 
++#ifndef SLEEF_CONST
++#if (defined(__GNUC__) || defined(__CLANG__)) && !defined(__INTEL_COMPILER)
++#define SLEEF_CONST const
++#else
++#define SLEEF_CONST
++#endif
++#define SLEEF_CONST_OLD SLEEF_CONST
++#else
++#define SLEEF_CONST_OLD
++#endif
++
+ // bfloat16 conversion
+ static inline void cvtbf16_fp32(const __m256i& a, __m512& o) {
+   o = _mm512_castsi512_ps(_mm512_slli_epi32(_mm512_cvtepu16_epi32(a), 16));
+@@ -345,7 +356,7 @@ public:
+   }
+   #pragma clang diagnostic push
+   #pragma clang diagnostic ignored "-Wignored-qualifiers"
+-  Vectorized<T> map(const __m512 (*const vop)(__m512)) const {
++  Vectorized<T> map(SLEEF_CONST __m512 (*SLEEF_CONST_OLD vop)(__m512)) const {
+     __m512 lo, hi;
+     cvt_to_fp32<T>(values, lo, hi);
+     const auto o1 = vop(lo);

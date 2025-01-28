@@ -5,8 +5,6 @@
 parameters:
   - name: jobName
     type: string
-  - name: dockerImage
-    type: string
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -28,6 +26,8 @@ jobs:
     value: /mnt/vcpkg-ci/downloads
   - name: ANDROID_NDK_HOME
     value: /android-ndk-r27c
+  - name: ANDROID_DOCKER_IMAGE
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-01-20'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -47,10 +47,10 @@ jobs:
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
         az acr login --name vcpkgandroidwus
-        docker pull ${{ parameters.dockerImage }}
+        docker pull ${{ variables.ANDROID_DOCKER_IMAGE }}
         docker run --rm \
           --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-          ${{ parameters.dockerImage }} \
+          ${{ variables.ANDROID_DOCKER_IMAGE }} \
           ./bootstrap-vcpkg.sh
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
         assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
@@ -66,7 +66,7 @@ jobs:
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
         --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite" \
         --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
-        ${{ parameters.dockerImage }} \
+        ${{ variables.ANDROID_DOCKER_IMAGE }} \
         pwsh \
          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
          -Triplet ${{ replace(parameters.jobName, '_', '-') }} \

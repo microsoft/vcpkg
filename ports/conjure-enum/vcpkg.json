@@ -1,6 +1,7 @@
 {
   "name": "conjure-enum",
   "version": "1.1.0",
+  "port-version": 1,
   "description": "Lightweight header-only C++20 enum and typename reflection.",
   "homepage": "https://github.com/fix8mt/conjure_enum",
   "license": "MIT"

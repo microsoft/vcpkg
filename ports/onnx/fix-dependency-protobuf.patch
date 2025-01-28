@@ -10,3 +10,19 @@ index d81ac1d..9f97998 100644
  if((ONNX_USE_LITE_PROTO AND TARGET protobuf::libprotobuf-lite) OR ((NOT ONNX_USE_LITE_PROTO) AND TARGET protobuf::libprotobuf))
    # Sometimes we need to use protoc compiled for host architecture while linking
    # libprotobuf against target architecture. See https://github.com/caffe2/caffe
+diff --git a/cmake/ONNXConfig.cmake.in b/cmake/ONNXConfig.cmake.in
+index d588f8a..dbd4398 100644
+--- a/cmake/ONNXConfig.cmake.in
++++ b/cmake/ONNXConfig.cmake.in
+@@ -6,9 +6,8 @@
+ # library version information
+ set(ONNX_VERSION "@ONNX_VERSION@")
+ 
+-list(APPEND CMAKE_PREFIX_PATH "@PROTOBUF_DIR@")
+-set(Protobuf_INCLUDE_DIR "@PROTOBUF_INCLUDE_DIR@")
+-find_package(Protobuf REQUIRED)
++include(CMakeFindDependencyMacro)
++find_dependency(protobuf CONFIG)
+ 
+ # import targets
+ include ("${CMAKE_CURRENT_LIST_DIR}/ONNXTargets.cmake")

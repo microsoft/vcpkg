@@ -39,6 +39,7 @@ vcpkg_from_github(
         opencascade-7.8.0.patch
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
+		fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
 )
 
 # =============================================================================
@@ -172,21 +173,19 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
+    # This sections relies on target package python3.
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
-        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
-        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
-        set(python_ver "3.${PYTHON_VERSION_MINOR}")
+        set(python_ver "3")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
-        -DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
+        "-DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
@@ -243,11 +242,25 @@ else()
     )
 endif()
 
+if("tbb" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=TBB
+	)
+endif()
+
+if("openmp" IN_LIST FEATURES)
+	list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=OpenMP
+	)
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
     "mpi"          VTK_USE_MPI
     "all"          VTK_BUILD_ALL_MODULES
+	"tbb"          VTK_SMP_ENABLE_TBB
+	"openmp"       VTK_SMP_ENABLE_OPENMP      
 )
 
 # =============================================================================
@@ -418,15 +431,16 @@ endforeach()
 # Use vcpkg provided find method
 file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
-
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing" IGNORE_UNCHANGED)
 endif()
-# =============================================================================
-# Usage
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-properties.cmake" "_vtk_module_import_prefix}/lib/vtk-9.3/hierarchy" "_vtk_module_import_prefix}$<$<CONFIG:Debug>:/debug>/lib/vtk-9.3/hierarchy")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt" COMMENT [[
+This file presents the top-level Copyright.txt.
+Additional licenses and notes are located in the licenses directory.
+]])

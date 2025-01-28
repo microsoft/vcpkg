@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO getml/reflect-cpp
     REF "v${VERSION}"
-    SHA512 755f1474f3c58a950c6db010eeea388a11cf1caca66fbb75b1e03c86794fb3a9c6fa1509e0e78401d31055f43bcaddcd138da06d54e1e3507b2ea08d3a2d05b1
+    SHA512 ed2773542871c03c62e06a522e80371f6692de00598f865b82b6df408d7b0cf5e7d66bc39a66848e3682b4d22300ef3079f0ccc77e8a2364bca476a8e229c5b8 
     HEAD_REF main
 )
 
@@ -10,6 +10,18 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" REFLECTCPP_BUILD_SHARED)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        bson                REFLECTCPP_BSON
+        capnproto           REFLECTCPP_CAPNPROTO
+        cbor                REFLECTCPP_CBOR
+        flexbuffers         REFLECTCPP_FLEXBUFFERS
+        msgpack             REFLECTCPP_MSGPACK
+        ubjson              REFLECTCPP_UBJSON
+        xml                 REFLECTCPP_XML
+        yaml                REFLECTCPP_YAML
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}

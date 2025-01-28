@@ -1,0 +1,26 @@
+{
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
+  "name": "suitesparse-graphblas",
+  "version-semver": "9.3.1",
+  "description": "SuiteSparse:GraphBLAS: graph algorithms in the language of linear algebra",
+  "homepage": "https://people.engr.tamu.edu/davis/GraphBLAS.html",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP support"
+    },
+    "precompiled": {
+      "description": "Pre-compile kernels instead of using JIT compilation at runtime. Increases the library size and compile time by about 15x. Use the GRAPHBLAS_CACHE_PATH env var to set the JIT cache directory if not enabled."
+    }
+  }
+}

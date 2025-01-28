@@ -1,6 +1,6 @@
 {
   "name": "nyan-lang",
-  "version": "0.3",
+  "version": "0.3.1",
   "description": "nyan is a data description language, It is a mixture of python, json, patch, wml, yaml and some new ideas.",
   "homepage": "https://github.com/SFTtech/nyan",
   "license": "LGPL-3.0-or-later",

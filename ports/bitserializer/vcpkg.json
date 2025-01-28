@@ -1,7 +1,7 @@
 {
   "name": "bitserializer",
-  "version": "0.70",
-  "description": "C++ 17 library for serialization to JSON, XML, YAML, CSV",
+  "version": "0.75",
+  "description": "C++ 17 library for serialization to JSON, XML, YAML, CSV, MsgPack",
   "homepage": "https://github.com/PavelKisliak/BitSerializer",
   "license": "MIT",
   "dependencies": [

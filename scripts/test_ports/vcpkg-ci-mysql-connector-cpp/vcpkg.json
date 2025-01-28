@@ -1,0 +1,31 @@
+{
+  "name": "vcpkg-ci-mysql-connector-cpp",
+  "version-string": "ci",
+  "description": "Validates mysql-connector-cpp",
+  "dependencies": [
+    "mysql-connector-cpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "jdbc",
+      "platform": "x64 & static"
+    }
+  ],
+  "features": {
+    "jdbc": {
+      "description": "Test jdbc",
+      "dependencies": [
+        {
+          "name": "mysql-connector-cpp",
+          "features": [
+            "jdbc"
+          ]
+        }
+      ]
+    }
+  }
+}

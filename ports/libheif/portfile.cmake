@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
+        fix-gcc8.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,6 +19,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
+        -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()

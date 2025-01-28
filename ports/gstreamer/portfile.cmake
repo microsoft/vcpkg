@@ -23,6 +23,7 @@ vcpkg_from_gitlab(
         fix-bz2-windows-debug-dependency.patch
         no-downloads.patch
         ${PATCHES}
+		fix-multiple-def.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -177,6 +178,7 @@ vcpkg_configure_meson(
         -Dgstreamer:coretracers=disabled
         -Dgstreamer:benchmarks=disabled
         -Dgstreamer:gst_debug=true
+        -Dgstreamer:ptp-helper=disabled  # needs rustc toolchain setup
         # gst-plugins-base
         -Dgst-plugins-base:gl_winsys=${PLUGIN_BASE_WINDOW_SYSTEM}
         -Dgst-plugins-base:gl_platform=${PLUGIN_BASE_GL_PLATFORM}

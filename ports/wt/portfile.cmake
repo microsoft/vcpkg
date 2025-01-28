@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
     REF "${VERSION}"
-    SHA512 f41efec1e77bd76f6f66ffb4ff38c98cfc590debb194682e3c6eb3f7b4366c30f8e2bbc16f4c33faa45f6f49d28812215538d20f4abc6c4dc3a226ae9b10ac71
+    SHA512 e512c88616878b8fa3b992aa9d2f232d994ee6108607af4e5d511a2fecd7ae35cf33a63435a0ff356df715b386f2061731dcfb28c529bc43c901f17787686f34
     HEAD_REF master
     PATCHES
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
-        fix-compatibility-with-boost-1.85.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
