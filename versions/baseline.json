@@ -8469,7 +8469,7 @@
       "port-version": 4
     },
     "sfcgal": {
-      "baseline": "1.5.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "sfgui": {
