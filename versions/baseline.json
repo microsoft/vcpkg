@@ -386,7 +386,7 @@
     },
     "awlib": {
       "baseline": "2024-04-06",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-auth": {
       "baseline": "0.8.0",
