@@ -12,10 +12,14 @@ endblock()
 
 block(SCOPE_FOR VARIABLES)
     find_package(PkgConfig REQUIRED)
-    pkg_check_modules(sdl3-image_pc sdl3-image REQUIRED IMPORTED_TARGET)
+    pkg_check_modules(PC_SDL3_IMAGE sdl3-image REQUIRED IMPORTED_TARGET)
 
     add_executable(main-pkconfig main.c)
-    target_link_libraries(main-pkconfig PRIVATE
-        PkgConfig::sdl3-image_pc
-    )
+    if(WIN32 AND NOT MINGW)
+        target_link_libraries(main-pkconfig PRIVATE PkgConfig::PC_SDL3_IMAGE)
+    else()
+        # Use raw flags, avoid find_library
+        target_compile_options(main-pkconfig PRIVATE ${PC_SDL3_IMAGE_CFLAGS})
+        target_link_libraries(main-pkconfig PRIVATE ${PC_SDL3_IMAGE_LDFLAGS})
+    endif()
 endblock()

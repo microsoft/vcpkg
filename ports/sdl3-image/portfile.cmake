@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         dependencies.diff
+        pkgconfig-libname.diff
 )
 
 vcpkg_check_features(

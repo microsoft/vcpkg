@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 27a009d..0306afb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1122,6 +1122,7 @@ if(SDLIMAGE_INSTALL)
+       set(SDL_PKGCONFIG_PREFIX "${CMAKE_INSTALL_PREFIX}")
+     endif()
+ 
++    get_target_property(PC_LIB_NAME "${sdl3_image_target_name}" OUTPUT_NAME)
+     string(JOIN " " PC_REQUIRES ${PC_REQUIRES})
+     string(JOIN " " PC_LIBS ${PC_LIBS})
+     configure_file(cmake/sdl3-image.pc.in sdl3-image.pc @ONLY)
+diff --git a/cmake/sdl3-image.pc.in b/cmake/sdl3-image.pc.in
+index dae41df..e4ce850 100644
+--- a/cmake/sdl3-image.pc.in
++++ b/cmake/sdl3-image.pc.in
+@@ -7,7 +7,7 @@ Name: @PROJECT_NAME@
+ Description: image loading library for Simple DirectMedia Layer
+ Version: @PROJECT_VERSION@
+ Requires: sdl3 >= @SDL_REQUIRED_VERSION@
+-Libs: -L${libdir} -lSDL3_image
++Libs: -L${libdir} -l@PC_LIB_NAME@
+ Requires.private: @PC_REQUIRES@
+ Libs.private: @PC_LIBS@
+ Cflags: -I${includedir}
