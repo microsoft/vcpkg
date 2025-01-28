@@ -26,6 +26,31 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         user-events BUILD_TRACEPOINTS
 )
 
+set(STL OFF)
+
+function(set_stl VALUE)
+    if(STL)
+        message(FATAL_ERROR "Only stl version is allowed")
+    endif()
+    set(STL ${VALUE} PARENT_SCOPE)
+endfunction()
+
+foreach(STL_FEATURE ${FEATURES})
+    if(STL_FEATURE STREQUAL "stl-on")
+        set_stl("ON")
+    elseif(STL_FEATURE STREQUAL "stl-cxx11")
+        set_stl("CXX11")
+    elseif(STL_FEATURE STREQUAL "stl-cxx14")
+        set_stl("CXX14")
+    elseif(STL_FEATURE STREQUAL "stl-cxx17")
+        set_stl("CXX17")
+    elseif(STL_FEATURE STREQUAL "stl-cxx20")
+        set_stl("CXX20")
+    elseif(STL_FEATURE STREQUAL "stl-cxx23")
+        set_stl("CXX23")
+    endif()
+endforeach()
+
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
     set(OTEL_PROTO_VERSION "1.4.0")
@@ -77,6 +102,7 @@ vcpkg_cmake_configure(
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
         -DWITH_BENCHMARK=OFF
+        -DWITH_STL=${STL}
         -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
