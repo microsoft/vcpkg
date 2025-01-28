@@ -4844,6 +4844,10 @@
       "baseline": "2.7.1",
       "port-version": 0
     },
+    "libmultisense": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
     "libmupdf": {
       "baseline": "1.25.2",
       "port-version": 0
