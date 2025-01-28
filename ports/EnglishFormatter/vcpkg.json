@@ -1,0 +1,10 @@
+{
+    "name": "englishformatter",
+    "version-string": "1.0.0",
+    "description": "A C++ text formatter for English",
+    "dependencies": [
+        "fmt",
+        "curl",
+        "gtest"
+    ]
+}
