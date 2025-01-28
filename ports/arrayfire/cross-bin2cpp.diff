@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12d6e55..a682f40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -333,6 +333,9 @@ if(CMAKE_CROSSCOMPILING)
+     CACHE FILEPATH "Path to the Native build directory.")
+   if(NATIVE_BIN_DIR)
+     include(${NATIVE_BIN_DIR}/ImportExecutables.cmake)
++  elseif(CROSS_BIN2CPP)
++    add_executable(bin2cpp IMPORTED)
++    set_target_properties(bin2cpp PROPERTIES IMPORTED_LOCATION "${CROSS_BIN2CPP}")
+   else()
+     message(SEND_ERROR "Native Directory not found. Run cmake in a separate"
+                        "directory and build the bin2cpp target.")
+@@ -359,6 +362,7 @@ else()
+                              ${ArrayFire_BINARY_DIR}/include
+                              ${ArrayFire_SOURCE_DIR}/src/backend)
+   export(TARGETS bin2cpp FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
++  install(TARGETS bin2cpp)
+ endif()
+ 
+ 
