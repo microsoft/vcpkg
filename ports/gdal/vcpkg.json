@@ -174,7 +174,14 @@
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
-        "libspatialite"
+        "libspatialite",
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "sqlite3"
+          ]
+        }
       ]
     },
     "libxml2": {
