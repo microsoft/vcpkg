@@ -8,114 +8,88 @@ vcpkg_download_distfile(
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO arrayfire/arrayfire
-  REF d99887ae431fcd58168b653a1e69f027f04d5188 # v3.8.0
-  SHA512 d8ddf6ba254744e62acf5ecf680f0ae56b05f8957b5463572923977ba2ffea7fa37cc1b6179421a1188a6f9e66565ca0f8cd00807513ccbe66ba1e9bbd41a3da
+  REF v${VERSION}
+  SHA512 d4f63cbb793c64082fb985582472763c08900296c3017f273a91f00d87af38dd60227ac7417fbc98b71c229c2d74b1f261061bf080e5d75f1f38b0efc7b59425
   HEAD_REF master
   PATCHES
-    build.patch
-    Fix-constexpr-error-with-vs2019-with-half.patch
-    fix-dependency-clfft.patch
-    fix-miss-header-file.patch
+    cross-bin2cpp.diff
+    fix-miss-header-file.patch # cstdint
+    fmt-11.diff                # due to https://github.com/fmtlib/fmt/issues/3447
     "${CUDA_PATCHES}"
 )
+file(WRITE "${SOURCE_PATH}/CMakeModules/AF_vcpkg_options.cmake" "# Building vcpkg port, not top-level project")
+file(COPY_FILE "${CURRENT_INSTALLED_DIR}/include/half.hpp" "${SOURCE_PATH}/extern/half/include/half.hpp")
 
-# arrayfire cpu thread lib needed as a submodule for the CPU backend
-vcpkg_from_github(
-  OUT_SOURCE_PATH CPU_THREADS_PATH
-  REPO arrayfire/threads
-  REF b666773940269179f19ef11c8f1eb77005e85d9a
-  SHA512 b3e8b54acf3a588b1f821c2774d5da2d8f8441962c6d99808d513f7117278b9066eb050b8b501bddbd3882e68eb5cc5da0b2fca54e15ab1923fe068a3fe834f5
-  HEAD_REF master
+vcpkg_check_features(
+  OUT_FEATURE_OPTIONS options
+  FEATURES
+    unified AF_BUILD_UNIFIED
+    cpu     AF_BUILD_CPU
+    cuda    AF_BUILD_CUDA
+    opencl  AF_BUILD_OPENCL
 )
 
-# Get forge. We only need headers and aren't actually linking.
-# We don't want to use the vcpkg dependency since it is broken in many
-# environments - see https://github.com/microsoft/vcpkg/issues/14864. This
-# can be relaxed when the issue is fixed. Forge and its dependencies
-# are still runtime dependencies, so the user can use the graphics
-# library by installing forge and freeimage.
-vcpkg_from_github(
-  OUT_SOURCE_PATH FORGE_PATH
-  REPO arrayfire/forge
-  REF 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389 # v1.0.5
-  SHA512 8f8607421880a0f0013380eb5efb3a4f05331cd415d68c9cd84dd57eb727da1df6223fc6d65b106675d6aa09c3388359fab64443c31fadadf7641161be6b3b89
-  HEAD_REF master
-)
-
-################################### Build ###################################
-
-# Default flags
-set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
-  -DBUILD_TESTING=OFF
-  -DAF_BUILD_DOCS=OFF
-  -DAF_BUILD_EXAMPLES=OFF
-  -DUSE_CPU_MKL=ON
-  -DUSE_OPENCL_MKL=ON
-  -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
-  -DAF_FORGE_PATH=${FORGE_PATH} # forge headers for building the graphics lib
-  -DAF_BUILD_FORGE=OFF
-)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    list(APPEND options "-DAF_COMPUTE_LIBRARY=Intel-MKL")
+else()
+    list(APPEND options "-DAF_COMPUTE_LIBRARY=FFTW/LAPACK/BLAS")
+endif()
 
 if("cpu" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-      list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DMKL_THREAD_LAYER=Sequential")
+      list(APPEND options "-DMKL_THREAD_LAYER=Sequential")
     endif()
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DINT_SIZE=8")
+        list(APPEND options "-DINT_SIZE=8")
         # This seems scary but only selects the MKL interface. 4 = lp; 8 = ilp; Since x64 has ilp as the default use it!
     endif()
 endif()
 
-# bin/dll directory for Windows non-static builds for the unified backend dll
-if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR})
-  list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DAF_BIN_DIR=${AF_BIN_DIR}")
-endif()
-
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  message(WARNING "NOTE: Windows support with static linkeage is still experimental.")
+    message(WARNING "NOTE: Windows support with static linkage is still experimental.")
 endif()
 
-# Determine which backend to build via specified feature
-vcpkg_check_features(
-  OUT_FEATURE_OPTIONS AF_BACKEND_FEATURE_OPTIONS
-  FEATURES
-    unified AF_BUILD_UNIFIED
-    cpu AF_BUILD_CPU
-    cuda AF_BUILD_CUDA
-    opencl AF_BUILD_OPENCL
-)
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND options "-DCROSS_BIN2CPP=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin2cpp${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
 
-# Build and install
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" AF_WITH_STATIC_MKL)
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
   OPTIONS
-    ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
-    ${AF_BACKEND_FEATURE_OPTIONS}
-  MAYBE_UNUSED_VARIABLES
-    AF_CPU_THREAD_PATH
+    -DAF_BUILD_DOCS=OFF
+    -DAF_BUILD_EXAMPLES=OFF
+    -DAF_BUILD_FORGE=OFF
+    -DAF_COMPUTE_LIBRARY=Intel-MKL
+    -DAF_INSTALL_BIN_DIR=bin
+    -DAF_INSTALL_CMAKE_DIR=share/${PORT}
+    -DAF_INSTALL_EXAMPLE_DIR=share/${PORT}/examples
+    -DAF_WITH_EXTERNAL_PACKAGES_ONLY=ON
+    -DAF_WITH_IMAGEIO=OFF
+    -DAF_WITH_STATIC_MKL=${AF_WITH_STATIC_MKL}
+    -DBUILD_TESTING=OFF
+    ${options}
 )
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH share/ArrayFire/cmake)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+if(NOT VCPKG_CROSSCOMPILING)
+    vcpkg_copy_tools(TOOL_NAMES bin2cpp AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
-    "${CURRENT_PACKAGES_DIR}/debug/examples"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/examples"
-    "${CURRENT_PACKAGES_DIR}/LICENSES"
-    "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
-if(FEATURES STREQUAL "core")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
+# Keeping helloworld for scripts/test_ports/vcpkg-ci-arrayfire.
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/examples/helloworld" "${CURRENT_PACKAGES_DIR}/share/${PORT}/helloworld")
+file(REMOVE_RECURSE
+  "${CURRENT_PACKAGES_DIR}/debug/LICENSES"
+  "${CURRENT_PACKAGES_DIR}/debug/etc"
+  "${CURRENT_PACKAGES_DIR}/debug/include"
+  "${CURRENT_PACKAGES_DIR}/debug/share"
+  "${CURRENT_PACKAGES_DIR}/LICENSES"
+  "${CURRENT_PACKAGES_DIR}/etc"
+  "${CURRENT_PACKAGES_DIR}/share/${PORT}/examples"
+)
 
-# Copyright and license
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/COPYRIGHT.md")
