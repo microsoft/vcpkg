@@ -99,7 +99,6 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
         endif()
     endif()
 
-
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
     # this could be de-morgan'd out but it's more clear this way
     if(_VCPKG_NO_DOWNLOADS)
