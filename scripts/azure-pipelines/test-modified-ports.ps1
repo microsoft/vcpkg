@@ -120,6 +120,19 @@ if ($IsWindows) {
     rmdir empty
 }
 
+$override_ndk = 'r28-beta3'
+if ($IsLinux -and $Triplet -match 'android' -and $override_ndk -ne '')
+{
+    $override_ndk_url = 'https://dl.google.com/android/repository/android-ndk-r28-beta3-linux.zip'
+    $override_ndk_sha512 = '9c4a733579336583ea656baf623dcb12300e467ff0b65869cb925cd44152101e372c696776dc7689fc8f1f2e053fdf1798b4c22a9d1f005ff498cbc4161ad0b2'
+    Write-Host "Downloading Android NDK $override_ndk"
+    & "./vcpkg" x-download android-ndk-$override_ndk-linux.zip "--sha512=$override_ndk_sha512" "--url=$override_ndk_url" @cachingArgs
+    Write-Host "Unpacking"
+    & unzip -q android-ndk-$override_ndk-linux.zip
+    $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-$override_ndk"
+    $NoParentHashes = $true
+}
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)

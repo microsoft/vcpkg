@@ -1,6 +1,7 @@
 {
   "name": "cgns",
   "version-semver": "4.4.0",
+  "port-version": 1,
   "description": "The CFD General Notation System (CGNS) provides a standard for recording and recovering computer data associated with the numerical solution of fluid dynamics equations.",
   "homepage": "http://cgns.org/",
   "license": "Zlib",
@@ -27,10 +28,7 @@
       "dependencies": [
         {
           "name": "hdf5",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
+          "default-features": false
         }
       ]
     },
