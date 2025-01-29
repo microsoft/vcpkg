@@ -6710,7 +6710,7 @@
     },
     "omniorb": {
       "baseline": "4.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "ompl": {
       "baseline": "1.6.0",
