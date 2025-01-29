@@ -577,16 +577,6 @@ libmariadb:x64-windows-static-md=skip
 libmaxminddb:arm64-android=fail
 libmaxminddb:arm-neon-android=fail
 libmaxminddb:x64-android=fail
-# libmem embedded lib llvm, fixing in https://github.com/microsoft/vcpkg/pull/43311
-libmem:arm64-uwp                =skip
-libmem:arm64-windows            =skip
-libmem:arm64-windows-static-md  =skip
-libmem:x64-linux                =skip
-libmem:x64-uwp                  =skip
-libmem:x64-windows              =skip
-libmem:x64-windows-static       =skip
-libmem:x64-windows-static-md    =skip
-libmem:x86-windows              =skip
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
 libmesh:x64-linux=skip
 libmikmod:arm-neon-android=fail
@@ -794,10 +784,8 @@ nrf-ble-driver:arm64-android=fail
 nrf-ble-driver:x64-android=fail
 nvtt:x64-android=fail
 oatpp-libressl:x64-android=fail
-octave:x86-windows=fail
-octave:x64-windows=fail
-octave:x64-windows-static=fail
-octave:x64-windows-static-md=fail
+# needs gnu-sed
+octave:arm64-osx=fail
 octave:x64-osx=fail
 ode:arm64-windows=fail
 ode:arm64-windows-static-md=fail
@@ -1099,6 +1087,19 @@ spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
+# _Interlocked* intrinsic functions are not available on x86
+suitesparse-graphblas:x86-windows=fail
+# "ninja: error: failed recompaction: Permission denied"
+# See https://gist.github.com/valgur/a27f15e16efe93b1ed589703c3cb22cd for the build logs
+suitesparse-graphblas:arm64-windows=fail
+suitesparse-graphblas:arm64-windows-static-md=fail
+# uwp: "unresolved external symbol __imp_RoInitialize referenced in function __scrt_initialize_winrt"
+suitesparse-graphblas:x64-uwp=fail
+suitesparse-graphblas:arm64-uwp=fail
+# Android API level 23 or newer is required for complex math support
+suitesparse-graphblas:arm-neon-android=fail
+suitesparse-graphblas:arm64-android=fail
+suitesparse-graphblas:x64-android=fail
 systemc:arm64-windows=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail

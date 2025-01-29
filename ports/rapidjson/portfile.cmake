@@ -34,7 +34,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/RapidJSONConfig.cmake" _contents)
-string(REPLACE "VERSION 3.0" "VERSION 3.5" _contents "${_contents}")
+string(REPLACE "VERSION 3.0" "VERSION 3.5...3.30" _contents "${_contents}")
 string(REPLACE "\${RapidJSON_SOURCE_DIR}" "\${RapidJSON_CMAKE_DIR}/../.." _contents "${_contents}")
 string(REPLACE "set( RapidJSON_SOURCE_DIR \"${SOURCE_PATH}\")" "" _contents "${_contents}")
 string(REPLACE "set( RapidJSON_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\")" "" _contents "${_contents}")
