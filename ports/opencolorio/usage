@@ -1,0 +1,9 @@
+The package opencolorio provides CMake targets:
+
+  find_package(OpenColorIO CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE OpenColorIO::OpenColorIO)
+
+The package opencolorio provides pkg-config modules:
+
+  # OpenColorIO (OCIO) is a complete color management solution
+  OpenColorIO
