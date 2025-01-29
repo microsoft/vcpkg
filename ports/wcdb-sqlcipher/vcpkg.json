@@ -1,0 +1,26 @@
+{
+  "name": "wcdb-sqlcipher",
+  "version": "1.4.6",
+  "description": "The sqlcipher which is maintained by WeChat team. The repo in homepage is just a wrap for vcpkg",
+  "homepage": "https://github.com/RightFS/sqlcipher",
+  "license": "BSD-3-Clause",
+  "builtin-baseline": "509f71e53f45e46c13fa7935d2f6a45803580c07",
+  "dependencies": [
+    {
+      "name": "openssl",
+      "version>=": "3.3.2#1"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
+}
