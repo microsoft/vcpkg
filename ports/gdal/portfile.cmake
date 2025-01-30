@@ -115,6 +115,9 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
 get_filename_component(vcpkg_host_prefix \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" ABSOLUTE)
 list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 )
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc" [[-LIBPATH:${prefix}/lib gdal]] [[-LIBPATH:${prefix}/lib gdald]])
+endif()
 
 if (BUILD_APPS)
     vcpkg_copy_tools(
