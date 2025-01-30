@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 8f595429afc86e8ef7e1ba7d8b9fb579e9e334f822a4a26ab2cbd0ab13bcb421afaab21febffd023fbd688cfa2b8be834f9047aa70e6561bc181ba6737892304
+    SHA512 076610c92fc05bbf716d2ba2d031f478ea533c40342d20eda16c174a91441ca1a221c1b9d1f795cf7d3484f16de5f8339479b3a75d7a2fd72abe6f79297628ea 
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -16,8 +16,6 @@ vcpkg_from_github(
         00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00017-fix-NAN-on-Win11.patch
-        00018-fix-windows-event-engine.patch
         00019-protobuf-generate-with-import-path-correction.patch
 )
 # Ensure de-vendoring

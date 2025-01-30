@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 bfb4668abc3db176744bb674a20bf770c6406db522a14191069b8d833414285ca784f042c3ad50404f7f8bc76afe69627dfcf540080e12316abbbfe420955526
     HEAD_REF master
     PATCHES
-        fix-macos-15-build.patch
+        fix-mac-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "${PORT}" CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH lib/cmake/${PORT})
 
 vcpkg_fixup_pkgconfig()
 
