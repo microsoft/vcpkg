@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b16b4dd1..0f5e2771 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,7 +80,6 @@ gz_find_package(DART
+   CONFIG
+   VERSION 6.10
+   REQUIRED_BY dartsim
+-  PKGCONFIG dart
+   PKGCONFIG_VER_COMPARISON >=)
+ 
+ #--------------------------------------
+@@ -88,7 +87,6 @@ gz_find_package(DART
+ gz_find_package(GzBullet
+   VERSION 2.87
+   REQUIRED_BY bullet bullet-featherstone
+-  PKGCONFIG bullet
+   PKGCONFIG_VER_COMPARISON >=)
+ 
+ message(STATUS "-------------------------------------------\n")
