@@ -1,6 +1,7 @@
 {
   "name": "qtserialbus",
   "version": "6.8.1",
+  "port-version": 1,
   "description": "The Qt Serial Bus API provides classes and functions to access the various industrial serial buses and protocols, such as CAN, ModBus, and others.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -21,13 +22,5 @@
       "name": "qtserialport",
       "default-features": false
     }
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    }
-  }
+  ]
 }

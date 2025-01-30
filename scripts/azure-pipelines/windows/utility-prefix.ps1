@@ -64,7 +64,10 @@ Function DownloadAndInstall {
       $tempPath = Get-TempFilePath
       New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
       $LocalPath = Join-Path $tempPath $LocalName
-      curl.exe -L -o $LocalPath $Url
+      curl.exe --fail -L -o $LocalPath $Url
+      if (-Not $?) {
+        Write-Error 'Download failed!'
+      }
       $doRemove = $true
     }
 
@@ -129,7 +132,10 @@ Function DownloadAndUnzip {
       New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
       $zipPath = Join-Path $tempPath $LocalName
       Write-Host "Downloading $Name ( $Url -> $zipPath )..."
-      curl.exe -L -o $zipPath $Url
+      curl.exe --fail -L -o $zipPath $Url
+      if (-Not $?) {
+        Write-Error 'Download failed!'
+      }
       $doRemove = $true
     }
 
