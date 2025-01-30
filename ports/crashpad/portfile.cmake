@@ -10,6 +10,11 @@ vcpkg_from_git(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PYTHON_VERSION "3"
+    PACKAGES setuptools
+)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
 # mini_chromium contains the toolchains and build configuration
