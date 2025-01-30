@@ -161,9 +161,9 @@ boringssl:x64-android=skip
 boringssl:x64-linux=skip
 boringssl:x64-osx=skip
 boringssl:x64-uwp=skip
+boringssl:x64-windows-release=skip
 boringssl:x64-windows-static-md=skip
 boringssl:x64-windows-static=skip
-boringssl:x64-windows=release=skip
 boringssl:x64-windows=skip
 boringssl:x86-windows=skip
 brpc:x64-android=fail
@@ -417,9 +417,9 @@ graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
+gsoap:x64-windows-release=skip
 gsoap:x64-windows-static-md=skip
 gsoap:x64-windows-static=skip
-gsoap:x64-windows=release=skip
 gsoap:x64-windows=skip
 gsoap:x86-windows=skip
 gstreamer:arm-neon-android=fail
