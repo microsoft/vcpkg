@@ -11,7 +11,7 @@ set(ENV_WHITELIST
 #    "HOMEDRIVE"
 #    "HOMEPATH"
   "ALLUSERSPROFILE"
-#    "LOCALAPPDATA"
+  "LOCALAPPDATA" # Needs for CI to be allowed.
 #    "LOGONSERVER"
   "OS"
   "PATHEXT"
