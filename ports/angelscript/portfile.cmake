@@ -10,7 +10,6 @@ vcpkg_extract_source_archive(
     PATCHES
         mark-threads-private.patch
         fix-dependency.patch
-        avoid-atomic-deprecation-macos-15.diff
 )
 
 vcpkg_cmake_configure(
