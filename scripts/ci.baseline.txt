@@ -271,6 +271,12 @@ darknet:x64-android=fail
 dbg-macro:arm-neon-android=skip
 dbg-macro:arm64-android=skip
 dbg-macro:x64-android=skip
+# We aren't sure if dbghelp is available for arm64 or uwp at this time, so it isn't installed in
+# the build and test lab.
+dbghelp:arm64-uwp=fail
+dbghelp:arm64-windows-static-md=fail
+dbghelp:arm64-windows=fail
+dbghelp:x64-uwp=fail
 # Cross builds depend on try_run results
 dcmtk:arm-neon-android=fail
 dcmtk:arm64-android=fail
