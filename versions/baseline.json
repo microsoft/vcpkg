@@ -7108,6 +7108,10 @@
       "baseline": "0.4.0",
       "port-version": 4
     },
+    "plutovg": {
+      "baseline": "0.0.12",
+      "port-version": 0
+    },
     "pmdk": {
       "baseline": "1.12.0",
       "port-version": 2
