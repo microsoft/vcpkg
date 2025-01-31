@@ -3894,7 +3894,7 @@
     },
     "juce": {
       "baseline": "8.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "jwt-cpp": {
       "baseline": "0.7.0",
@@ -6186,7 +6186,7 @@
     },
     "msquic": {
       "baseline": "2.4.7",
-      "port-version": 2
+      "port-version": 3
     },
     "mstch": {
       "baseline": "1.0.2",
