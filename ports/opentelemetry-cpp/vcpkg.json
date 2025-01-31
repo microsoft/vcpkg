@@ -70,6 +70,24 @@
         "prometheus-cpp"
       ]
     },
+    "stl-cxx11": {
+      "description": "Whether to include a dependency on the c++-11 stl (rather than using opentelemetry's own STL implementation)."
+    },
+    "stl-cxx14": {
+      "description": "Whether to include a dependency on the c++-14 stl (rather than using opentelemetry's own STL implementation)."
+    },
+    "stl-cxx17": {
+      "description": "Whether to include a dependency on the c++-17 stl (rather than using opentelemetry's own STL implementation)."
+    },
+    "stl-cxx20": {
+      "description": "Whether to include a dependency on the c++-20 stl (rather than using opentelemetry's own STL implementation)."
+    },
+    "stl-cxx23": {
+      "description": "Whether to include a dependency on the c++-23 stl (rather than using opentelemetry's own STL implementation)."
+    },
+    "stl-on": {
+      "description": "Whether to include a dependency on the c++ stl (rather than using opentelemetry's own STL implementation). This option defaults to (latest)"
+    },
     "user-events": {
       "description": "Whether to include the User Events Exporter from the opentelemetry-cpp-contrib repository",
       "supports": "linux",
