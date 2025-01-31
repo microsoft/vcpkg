@@ -255,24 +255,6 @@
       "sha512": "44d8504a693ad4d6b79631b653fc19b572de6bbe38713b53c45d9c9d5d3710aa8df93ee867a2a24419ebe883b8255fd18f30f8cf374b2242145fd6acb2189659"
     },
     {
-      "name": "aria2",
-      "os": "windows",
-      "version": "1.37.0",
-      "executable": "aria2-1.37.0-win-64bit-build1/aria2c.exe",
-      "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0-win-64bit-build1.zip",
-      "sha512": "6d78405da9cf5639dbe8174787002161b8124d73880fb57cc8c0a3a63982f84e46df4e626990c58f23452965ad925f0d37cb9147e99b25c3d7ca0ea49602f34d",
-      "archive": "aria2-1.37.0-win-64bit-build1.zip"
-    },
-    {
-      "name": "aria2",
-      "os": "osx",
-      "version": "1.35.0",
-      "executable": "aria2-1.35.0/bin/aria2c",
-      "url": "https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2",
-      "sha512": "3bb32b7d55347d1af37c6f4ebf0e20b38ce51c37a1baf92f7ad1762000539a03413dd679a6d902fdb1805fa71917300c9692aceee012eb06ecdff10491137aec",
-      "archive": "aria2-1.35.0-osx-darwin.tar.bz2"
-    },
-    {
       "name": "ninja",
       "os": "windows",
       "arch": "arm64",
