@@ -1,18 +1,16 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5957a50..829a268 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -473,30 +473,7 @@ IF(WITH_DC1394)
  ENDIF(WITH_DC1394)
  
  IF(WITH_G2O)
--    FIND_PACKAGE(g2o NO_MODULE)
+-    FIND_PACKAGE(g2o REQUIRED NO_MODULE)
 -    IF(g2o_FOUND)
 -       MESSAGE(STATUS "Found g2o (targets)")
 -         SET(G2O_FOUND ${g2o_FOUND})
 -         get_target_property(G2O_INCLUDES g2o::core INTERFACE_INCLUDE_DIRECTORIES)
 -         MESSAGE(STATUS "g2o include dir: ${G2O_INCLUDES}")
--         FIND_FILE(G2O_FACTORY_FILE g2o/core/factory.h 
+-         FIND_FILE(G2O_FACTORY_FILE g2o/core/factory.h
 -         PATHS ${G2O_INCLUDES}
 -         NO_DEFAULT_PATH)
 -       FILE(READ ${G2O_FACTORY_FILE} TMPTXT)
@@ -25,7 +23,7 @@ index 5957a50..829a268 100644
 -           SET(G2O_CPP11 1)
 -       ENDIF()
 -    ELSE()
--        FIND_PACKAGE(G2O QUIET)
+-        FIND_PACKAGE(G2O REQUIRED)
 -        IF(G2O_FOUND)
 -            MESSAGE(STATUS "Found g2o: ${G2O_INCLUDE_DIRS}")
 -        ENDIF(G2O_FOUND)
@@ -34,8 +32,6 @@ index 5957a50..829a268 100644
  ENDIF(WITH_G2O)
  
  IF(WITH_GTSAM)
-diff --git a/corelib/src/CMakeLists.txt b/corelib/src/CMakeLists.txt
-index c85acc1..d071f79 100644
 --- a/corelib/src/CMakeLists.txt
 +++ b/corelib/src/CMakeLists.txt
 @@ -392,12 +392,10 @@ ENDIF(WITH_TORO)

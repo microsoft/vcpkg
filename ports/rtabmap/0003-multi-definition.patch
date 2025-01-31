@@ -1,5 +1,3 @@
-diff --git a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
-index 2fc12a2..a719512 100644
 --- a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 +++ b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 @@ -39,6 +39,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -91,8 +89,6 @@ index 2fc12a2..a719512 100644
  
  }
  
-diff --git a/corelib/src/StereoCameraModel.cpp b/corelib/src/StereoCameraModel.cpp
-index 421d3f4..e7c166c 100644
 --- a/corelib/src/StereoCameraModel.cpp
 +++ b/corelib/src/StereoCameraModel.cpp
 @@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
