@@ -1,3 +1,9 @@
+if("gpu" IN_LIST FEATURES)
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/include/oneapi/dnnl/dnnl.h")
+        message(FATAL_ERROR "Can't build feature gpu if onednn is installed. Please remove onednn, and try to install feature gpu again if you need it.")
+    endif()
+endif()
+
 vcpkg_download_distfile(PATCH_002_PROTOBUF # https://github.com/openvinotoolkit/openvino/pull/27510
     URLS https://github.com/openvinotoolkit/openvino/commit/103c3b72259648c990970afb8ce2bec489fcf583.patch?full_index=1
     SHA512 315eb2f651b55fc70a4d6faeb1ac1b5d90d53b9010fdc98f3417beb86854ed733eba105ea51de8795471c5e84340b96cf17d511ea3fe3447c5f961ded661a947
