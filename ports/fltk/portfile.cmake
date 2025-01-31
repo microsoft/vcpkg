@@ -1,19 +1,15 @@
-# FLTK has many improperly shared global variables that get duplicated into every DLL
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
     REF "release-${VERSION}"
-    SHA512 2dfeeed9fdc6db62a6620e7c846dbe0bf97dacce3077832e314a35bf16ba6a45803373188a7b3954eada5829385b9914241270b71f12aaf3e9e3df45eb2b1b95
+    SHA512 aaaffc49d8b9f05b1e57e8b34c359b437fc0a8f8b63cc33bafb2b3769c493b0f47a273d21cda494d18160f591eb13446119d77fd7c32f35ba2d93619388e408d
     PATCHES
-        dependencies.patch
-        config-path.patch
-        include.patch
-        fix-system-link.patch
         math-h-polyfill.patch
-        fix-build-executable.patch #https://github.com/fltk/fltk/commit/63d7c71e1a926f487f22aa26042a2582624b3b17
+    HEAD_REF master
 )
+
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"
     "${SOURCE_PATH}/png"
@@ -23,13 +19,9 @@ file(REMOVE_RECURSE
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opengl  OPTION_USE_GL
+        opengl  FLTK_BUILD_GL
+        fluid   FLTK_BUILD_FLUID
 )
-
-set(fluid_path_param "")
-if(VCPKG_CROSSCOMPILING)
-    set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-endif()
 
 set(runtime_dll "ON")
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -41,23 +33,23 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DFLTK_BUILD_TEST=OFF
-        -DOPTION_LARGE_FILE=ON
-        -DHAVE_ALSA_ASOUNDLIB_H=OFF # tests only
-        -DOPTION_USE_SYSTEM_ZLIB=ON
-        -DOPTION_USE_SYSTEM_LIBPNG=ON
-        -DOPTION_USE_SYSTEM_LIBJPEG=ON
-        -DOPTION_BUILD_SHARED_LIBS=OFF
+        -DFLTK_OPTION_LARGE_FILE=ON
+        -DFLTK_USE_SYSTEM_ZLIB=ON
+        -DFLTK_USE_SYSTEM_LIBPNG=ON
+        -DFLTK_USE_SYSTEM_LIBJPEG=ON
+        -DFLTK_BUILD_SHARED_LIBS=OFF
+        -DFLTK_BUILD_FLTK_OPTIONS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
-        "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
-        ${fluid_path_param}
         -DFLTK_MSVC_RUNTIME_DLL=${runtime_dll}
-    MAYBE_UNUSED_VARIABLES
-        Cocoa
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/fltk")
+endif()
 
 vcpkg_copy_pdbs()
 
@@ -89,15 +81,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-foreach(FILE IN ITEMS Fl_Export.H fl_utf8.h)
+foreach(FILE IN ITEMS Fl_Export.H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/FL/${FILE}" "defined(FL_DLL)" "0")
     else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/FL/${FILE}" "defined(FL_DLL)" "1")
     endif()
 endforeach()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fltk/UseFLTK.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel;${SOURCE_PATH}" [[${CMAKE_CURRENT_LIST_DIR}/../../include]])
 
 set(copyright_files "${SOURCE_PATH}/COPYING")
 if("opengl" IN_LIST FEATURES)
