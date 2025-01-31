@@ -63,7 +63,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 4e496075417852a57fed73b34b27a7d4983be9d5a5e95dd854c6c1d3796f96fd43a48166cb07f74e8e50de0ce28c55a4fbf08d2cb4114f1225adc931f9fbae75
+        SHA512 c6478efa8d26da7c538bc73c20ff5dfdedee98467128b1d88e5efa384fa8969ff06ff076878c1c4223646ec87ebab4b44081f1cc029fef389eb4c3cfdca57ae7
         HEAD_REF master
     )
 
