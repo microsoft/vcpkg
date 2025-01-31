@@ -2434,7 +2434,7 @@
     },
     "dv-processing": {
       "baseline": "1.7.9",
-      "port-version": 2
+      "port-version": 3
     },
     "dx": {
       "baseline": "1.0.1",
@@ -4346,7 +4346,7 @@
     },
     "libcaer": {
       "baseline": "3.3.15",
-      "port-version": 1
+      "port-version": 2
     },
     "libcanberra": {
       "baseline": "0.30",
@@ -5234,7 +5234,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 10
+      "port-version": 11
     },
     "libtorrent": {
       "baseline": "2.0.11",
@@ -6674,19 +6674,19 @@
     },
     "opencv": {
       "baseline": "4.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 23
+      "port-version": 24
     },
     "opencv3": {
-      "baseline": "3.4.18",
-      "port-version": 18
+      "baseline": "3.4.20",
+      "port-version": 0
     },
     "opencv4": {
       "baseline": "4.10.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6722,7 +6722,7 @@
     },
     "openimageio": {
       "baseline": "3.0.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openjpeg": {
       "baseline": "2.5.3",
@@ -8074,7 +8074,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 4
+      "port-version": 5
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
@@ -8310,7 +8310,7 @@
     },
     "selene": {
       "baseline": "0.3.1",
-      "port-version": 7
+      "port-version": 8
     },
     "sentencepiece": {
       "baseline": "0.2.0",
