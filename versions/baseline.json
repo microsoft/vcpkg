@@ -184,6 +184,10 @@
       "baseline": "0.11.0",
       "port-version": 0
     },
+    "aravis": {
+      "baseline": "0.8.33",
+      "port-version": 0
+    },
     "arb": {
       "baseline": "2.21.1",
       "port-version": 2
@@ -6674,7 +6678,7 @@
     },
     "opencv": {
       "baseline": "4.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opencv2": {
       "baseline": "2.4.13.7",
@@ -6686,7 +6690,7 @@
     },
     "opencv4": {
       "baseline": "4.10.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opendnp3": {
       "baseline": "3.1.1",
