@@ -1,0 +1,14 @@
+{
+  "name": "axcioma",
+  "version-date": "2023-04-26",
+  "description": "AXCIOMA - Component Framework for Smart Information Systems",
+  "homepage": "https://www.axcioma.org/",
+  "license": "MIT",
+  "supports": "!(wasm32 | uwp | osx | ios | android | (windows & (arm | static)))",
+  "dependencies": [
+    "bzip2",
+    "openssl",
+    "xerces-c",
+    "zlib"
+  ]
+}
