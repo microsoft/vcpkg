@@ -1,4 +1,4 @@
-The package glm provides CMake targets:
+The package glob provides CMake targets:
 
-    find_package(glob CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE glob::glob)
+    find_package(Glob CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Glob)
