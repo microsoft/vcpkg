@@ -1,3 +1,7 @@
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message(FATAL_ERROR "This port version is not supported on Windows.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nimbuscontrols/EIPScanner
