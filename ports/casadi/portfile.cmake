@@ -7,7 +7,7 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 2c95368281f0bda385c6c451e361c168589f13aa66af6bc6fadf01f899bcd6c785ea7da3dee0fb5835559e58982e499182a4d244af3ea208ac05f672ea99cfd1
     HEAD_REF main
-    PATCHES relocatable.patch disable_fortran.patch cmake_paths.cmake
+    PATCHES relocatable.patch disable_fortran.patch
 )
 
 # Pending upstream fix https://github.com/casadi/casadi/issues/3896
@@ -16,15 +16,16 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+     -DWITH_SELFCONTAINED=OFF
      -DWITH_TINYXML=OFF
      -DWITH_BUILD_TINYXML=OFF
      -DWITH_QPOASES=OFF
      -DWITH_SUNDIALS=OFF
      -DWITH_CSPARSE=OFF
-     -DLIB_PREFIX_RELATIVE=lib
-     -DBIN_PREFIX_RELATIVE=bin
-     -DINCLUDE_PREFIX_RELATIVE=include
-     -DCMAKE_PREFIX_RELATIVE=share/${PORT}
+     -DLIB_PREFIX:PATH=lib
+     -DBIN_PREFIX:PATH=bin
+     -DINCLUDE_PREFIX:PATH=include
+     -DCMAKE_PREFIX:PATH=share/${PORT}
 )
 
 vcpkg_cmake_install()
