@@ -1,4 +1,4 @@
-eipscanner provides CMake targets:
+The package EIPScanner provides CMake targets:
 
-    target_link_directories(main PRIVATE ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib)
-    target_link_libraries(main PRIVATE EIPScanner)
+    find_package(EIPScanner CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:EIPScanner>,EIPScanner,EIPScannerS>)

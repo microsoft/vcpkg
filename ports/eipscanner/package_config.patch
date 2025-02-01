@@ -1,0 +1,42 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index dc2bbb9..7cb7d7e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -65,6 +65,7 @@ set_target_properties(
+         SOVERSION ${EIPSCANNER_MAJOR_VERSION})
+ 
+ install(TARGETS EIPScanner EIPScannerS
++        EXPORT EIPScannerTargets
+         LIBRARY
+             DESTINATION lib
+         ARCHIVE
+@@ -73,3 +74,28 @@ install(TARGETS EIPScanner EIPScannerS
+ install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/
+         DESTINATION include/EIPScanner
+         FILES_MATCHING PATTERN "*.h*")
++
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++        ../cmake/EIPScannerConfig.cmake.in
++        ${CMAKE_CURRENT_BINARY_DIR}/EIPScannerConfig.cmake
++        INSTALL_DESTINATION lib/cmake/eipscanner
++)
++
++write_basic_package_version_file(
++        ${CMAKE_CURRENT_BINARY_DIR}/EIPScannerConfigVersion.cmake
++        VERSION ${PROJECT_VERSION}
++        COMPATIBILITY SameMajorVersion
++)
++
++install(FILES
++        ${CMAKE_CURRENT_BINARY_DIR}/EIPScannerConfig.cmake
++        ${CMAKE_CURRENT_BINARY_DIR}/EIPScannerConfigVersion.cmake
++        DESTINATION lib/cmake/eipscanner
++)
++
++install(EXPORT EIPScannerTargets
++        FILE EIPScannerTargets.cmake
++        DESTINATION lib/cmake/eipscanner
++)
+\ No newline at end of file
