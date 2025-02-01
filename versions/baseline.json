@@ -3682,7 +3682,7 @@
     },
     "imgui": {
       "baseline": "1.91.7",
-      "port-version": 0
+      "port-version": 1
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -5693,7 +5693,7 @@
       "port-version": 0
     },
     "lunasvg": {
-      "baseline": "2.4.1",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "luv": {
@@ -7107,6 +7107,10 @@
     "plustache": {
       "baseline": "0.4.0",
       "port-version": 4
+    },
+    "plutovg": {
+      "baseline": "0.0.12",
+      "port-version": 0
     },
     "pmdk": {
       "baseline": "1.12.0",
