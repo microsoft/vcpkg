@@ -1,6 +1,7 @@
 {
   "name": "blend2d",
   "version-date": "2024-11-23",
+  "port-version": 1,
   "description": "2D Vector Graphics Engine Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
@@ -16,16 +17,9 @@
       "host": true
     }
   ],
-  "default-features": [
-    {
-      "name": "jit",
-      "platform": "!arm32"
-    }
-  ],
   "features": {
     "jit": {
       "description": "Enables JIT compiler to generate optimized pipelines.",
-      "supports": "!arm32",
       "dependencies": [
         "asmjit"
       ]
