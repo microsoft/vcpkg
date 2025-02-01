@@ -1,0 +1,25 @@
+diff --git a/CMake/DCMTKConfig.cmake.in b/CMake/DCMTKConfig.cmake.in
+index 9ae5cfce4d..61235bf2c8 100644
+--- a/CMake/DCMTKConfig.cmake.in	
++++ b/CMake/DCMTKConfig.cmake.in
+@@ -72,7 +72,7 @@ set(DCMTK_ENABLE_CHARSET_CONVERSION @DCMTK_ENABLE_CHARSET_CONVERSION@)
+ 
+ # CMake builtins
+ set(DCMTK_CMAKE_BUILD_TYPE @CMAKE_BUILD_TYPE@)
+-set(DCMTK_CMAKE_CXX_COMPILER "@CMAKE_CXX_COMPILER@")
++set(DCMTK_CMAKE_CXX_COMPILER "@DCMTK_CMAKE_CXX_COMPILER@")
+ set(DCMTK_CMAKE_CXX_STANDARD "@CMAKE_CXX_STANDARD@")
+ 
+ set(DCMTK_CMAKE_CXX_FLAGS @CMAKE_CXX_FLAGS@)
+diff --git a/CMake/GenerateCMakeExports.cmake b/CMake/GenerateCMakeExports.cmake
+index b4f44e460c..0f024950f9 100644
+--- a/CMake/GenerateCMakeExports.cmake	
++++ b/CMake/GenerateCMakeExports.cmake
+@@ -58,6 +58,7 @@ endforeach()
+ set(DCMTK_CONFIG_CODE "${DCMTK_CONFIG_CODE}##################################################")
+ set(dcmtk_config "${CMAKE_BINARY_DIR}/DCMTKConfig.cmake")
+ # Actually configure file and write it to build's main directory
++cmake_path(GET CMAKE_CXX_COMPILER FILENAME DCMTK_CMAKE_CXX_COMPILER)
+ CONFIGURE_PACKAGE_CONFIG_FILE(
+     ${DCMTK_SOURCE_DIR}/CMake/DCMTKConfig.cmake.in
+     ${dcmtk_config}
