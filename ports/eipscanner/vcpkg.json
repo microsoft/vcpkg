@@ -4,6 +4,7 @@
   "description": "Free implementation of EtherNet/IP in C++ ",
   "homepage": "https://eipscanner.readthedocs.io",
   "license": "MIT",
+  "supports": "!windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
