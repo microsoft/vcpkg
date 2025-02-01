@@ -2540,6 +2540,10 @@
       "baseline": "3.4.0",
       "port-version": 5
     },
+    "eipscanner": {
+      "baseline": "1.3.0",
+      "port-version": 0
+    },
     "elements": {
       "baseline": "2024-09-12",
       "port-version": 0
