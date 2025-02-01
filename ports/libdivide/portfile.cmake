@@ -13,14 +13,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         test LIBDIVIDE_BUILD_TESTS
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "sse2"   LIBDIVIDE_SSE2
+        "avx2"   LIBDIVIDE_AVX2
+        "avx512" LIBDIVIDE_AVX512
+        "neon"   LIBDIVIDE_NEON
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DLIBDIVIDE_SSE2=OFF
-        -DLIBDIVIDE_AVX2=OFF
-        -DLIBDIVIDE_AVX512=OFF
-        -DLIBDIVIDE_NEON=OFF
 )
 
 vcpkg_cmake_install()

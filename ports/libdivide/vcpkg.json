@@ -1,6 +1,7 @@
 {
   "name": "libdivide",
   "version": "5.2.0",
+  "port-version": 1,
   "description": "libdivide.h is a header-only C/C++ library for optimizing integer division.",
   "homepage": "https://github.com/ridiculousfish/libdivide",
   "dependencies": [
@@ -14,6 +15,22 @@
     }
   ],
   "features": {
+    "avx2": {
+      "description": "use avx2 instruction",
+      "supports": "x86 | x64"
+    },
+    "avx512": {
+      "description": "use avx512 instruction",
+      "supports": "x86 | x64"
+    },
+    "neon": {
+      "description": "use avx512 instruction",
+      "supports": "arm"
+    },
+    "sse2": {
+      "description": "use sse2 instruction",
+      "supports": "x86 | x64"
+    },
     "test": {
       "description": "Build test"
     }
