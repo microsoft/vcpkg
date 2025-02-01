@@ -17,7 +17,7 @@ if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 12f95ace2acb64e25cd681db7435b76d416efb50cd243ad1a6a672282de6d01e8e7afdb37466fed0337daed8992901073a2d59ca14001a841357a585a6b292e1
+		SHA512 8f85b6680a31bdd0d5fefd796dfa251d33994b8482d3c51072acb5bcf2f92c1a73219d68a7ecd157bd5641765519714c1e0bc86819f78d63c81fcd4f5ae528fd
 	)
 endif()
 if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -25,7 +25,7 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 c5d688bd795db0556c32141d55d95163b82fdff5d7872c5a4aef292919c8ba698c24b74630e9aae3430541a2e2fe71c12f7b960d926a344a38d99a1261ad6359
+		SHA512 347c59fdcdc7a37626eb4d21a17e0886f9761223c67efb4089a107a3c6d4266d8b8baab8acecce9c6ab9490e80be9fdfbffd2e6394850a29a1e019927580c935
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -33,7 +33,7 @@ if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 cf0b637092270ea24c28f68b2ddba52c413c85f5df3e1b561a2d6978c0cd41ec616b4269ab88533736841de842742156316cade0c293cc3a6ce192f966795f33
+		SHA512 2fa955681b124fe00471ac54ad8f66899253cdfc1c7bcc1aae7e1fa28001becf79b8166da8f76cac183265a4bf03682dda67aea621f249464072fb7910b60500
 	)
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -41,7 +41,7 @@ if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 0ac1ddf78871a43fc61bc2d3211addee969f687c6cc66aa21271161d3a55c49efaa073e4d82fd55af6c7fa8b73fe5ca90ad77f4392a056cf51d5c5e8b3f6b051
+		SHA512 e9c68975c5cb42fee79c6c8d7f9246df0fad9a649a0544e89a9b15b51138404d2acbf3a1cde7c0102446d914eeff40c95c713d64882e444cc8c880eddc26d7dd
 	)
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -49,7 +49,7 @@ if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 c3e35186848ff488b650cebd48fb0c890f0fb17332a0a01a9f7452aab1a2763f7ada6b4775d54130ea125027e20dbd36a916617950a366d1069ff9cc7c503ae8
+		SHA512 5ec878f91e164ed3d62174b09fd8078c549f0bb4c87e365b7f97f909057aa04b62acf6b4c0dce3c4af7c20234be4040ebfa088e3c459c3e01026035db429110b
 	)
 endif()
 if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -57,7 +57,7 @@ if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 2e33197f1fbfd3a858b85144c83f12588fbac594d877ed3e2d9d617aee1739d3b734df3d6119c7144c27e98f25c3a6808f7cfa8119d5704983fd881104966243
+		SHA512 b47c513da026bec1ea7658c6a3b35fce695068d56bf8a5b7a37bb34860d005b666c34b172a310aa2e51a0b447f510d7c70ded0478716145a7fef182f13e7511c
 	)
 endif()
 if(NOT ARCHIVE)

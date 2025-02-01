@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.8.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -62,16 +62,35 @@
     "zlib"
   ],
   "default-features": [
+    {
+      "name": "appstore-compliant",
+      "platform": "uwp"
+    },
     "brotli",
     "concurrent",
     {
       "name": "dbus",
       "platform": "!(static & windows)"
     },
-    "default-features",
     "dnslookup",
     "doubleconversion",
+    {
+      "name": "egl",
+      "platform": "linux"
+    },
+    {
+      "name": "egl",
+      "platform": "android"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
     "freetype",
+    {
+      "name": "gles2",
+      "platform": "android"
+    },
     "gui",
     "harfbuzz",
     "icu",
@@ -97,6 +116,18 @@
     "testlib",
     "thread",
     "widgets",
+    {
+      "name": "xcb",
+      "platform": "linux"
+    },
+    {
+      "name": "xcb-xlib",
+      "platform": "linux"
+    },
+    {
+      "name": "xrender",
+      "platform": "linux"
+    },
     "zstd"
   ],
   "features": {
@@ -153,40 +184,6 @@
           "features": [
             "thread"
           ]
-        }
-      ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "appstore-compliant"
-          ],
-          "platform": "uwp"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "egl",
-            "fontconfig",
-            "xcb",
-            "xcb-xlib",
-            "xrender"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "egl",
-            "gles2"
-          ],
-          "platform": "android"
         }
       ]
     },

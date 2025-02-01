@@ -10,7 +10,7 @@
       (Most often PowerShell needs to be updated)
 * [ ] Check for any other software for the Windows images we wish to update and make the edits to do
       so in `scripts/azure-pipelines/windows`
-* [ ] Check for any updates possible to `vcpkgTools.xml`. Note that PowerShell currently uses the
+* [ ] Check for any updates possible to `vcpkg-tools.json`. Note that PowerShell currently uses the
     7.2.x series due to customer reported problems on older Windows with 7.3.x and later.
 * [ ] Update the first line of android/Dockerfile with the current 'focal' image according to
     https://hub.docker.com/_/ubuntu

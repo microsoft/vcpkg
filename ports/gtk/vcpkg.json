@@ -74,6 +74,7 @@
             "introspection"
           ]
         },
+        "gobject-introspection",
         {
           "name": "graphene",
           "default-features": false,
