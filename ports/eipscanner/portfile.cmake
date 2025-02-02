@@ -1,7 +1,3 @@
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message(FATAL_ERROR "This port version is not supported on Windows.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nimbuscontrols/EIPScanner
@@ -9,8 +5,7 @@ vcpkg_from_github(
     SHA512 24612e6eec97aa67dfd83ec90d3f1a961c69a63a17cb09679b9eb453750049628def8d488b9debbf1f322a800f9f54933dedca9b37fb1c5703e95460b89f2f43
     HEAD_REF master
     PATCHES
-        targets.patch
-        package_config.patch
+        package.patch
 )
 
 vcpkg_cmake_configure(

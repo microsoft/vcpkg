@@ -1,4 +1,4 @@
 The package EIPScanner provides CMake targets:
 
     find_package(EIPScanner CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:EIPScanner>,EIPScanner,EIPScannerS>)
+    target_link_libraries(main PRIVATE unofficial::eipscanner::eipscanner)
