@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(gdal-test CXX)
+project(gdal-test C CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
