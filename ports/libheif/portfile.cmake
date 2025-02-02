@@ -18,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openjpeg WITH_OpenJPEG_ENCODER
         jpeg     WITH_JPEG_DECODER
         jpeg     WITH_JPEG_ENCODER
+	iso23001-17 WITH_UNCOMPRESSED_CODEC
 )
 
 vcpkg_cmake_configure(

@@ -52,6 +52,10 @@
       "dependencies": [
         "libjpeg-turbo"
       ]
+    },
+    "iso23001-17": {
+      "description": "Support for ISO23001-17 (uncompressed) codec",
+      "license": "LGPL-3.0-only"
     }
   }
 }
