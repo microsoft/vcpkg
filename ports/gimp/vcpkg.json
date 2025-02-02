@@ -1,0 +1,52 @@
+{
+  "name": "gimp",
+  "version": "3.2.0",
+  "description": "GNU Image Manipulation Program which is useful for photo retouching, image composition and image authoring.",
+  "homepage": "https://www.gimp.org/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!static & (!windows | mingw)",
+  "dependencies": [
+    {
+      "name": "babl",
+      "default-features": false,
+      "features": [
+        "introspection"
+      ]
+    },
+    "cairo",
+    "exiv2",
+    "fontconfig",
+    "freetype",
+    "gdk-pixbuf",
+    "gegl",
+    "gexiv2",
+    {
+      "name": "glib-networking",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ]
+    },
+    "gtk3",
+    "harfbuzz",
+    "json-glib",
+    "lcms",
+    "libmypaint",
+    "libxml2",
+    "mypaint-brushes",
+    "pango",
+    "tiff",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    {
+      "name": "poppler",
+      "features": [
+        "glib"
+      ]
+    },
+    "poppler-data",
+    "appstream-glib"
+  ]
+}

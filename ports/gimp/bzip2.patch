@@ -1,0 +1,14 @@
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -788,9 +789,9 @@
+ MIMEtypes += 'image/x-psp'
+ 
+ # Compiler-provided headers can't be found in crossroads environment
+ if not meson.is_cross_build()
+-  bz2 = cc.find_library('bz2')
++  bz2 = dependency('bzip2')
+ else
+   bz2 = dependency('bzip2')
+ endif
+ 

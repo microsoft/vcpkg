@@ -1,0 +1,49 @@
+diff --git a/libgimp/meson.build b/libgimp/meson.build
+--- a/libgimp/meson.build
++++ b/libgimp/meson.build
+@@ -479,8 +479,9 @@
+   ])
+   warning(gobject_introspection_warning)
+   warnings += gobject_introspection_warning
+ else
++  gir_share = include_directories('../../../../../installed/x64-linux/share/gir-1.0')
+   have_gobject_introspection = true
+   libgimp_gir_includes = [
+     'Babl-0.1',
+     'cairo-1.0',
+@@ -520,15 +521,21 @@
+     export_packages: 'gimp-' + gimp_api_version,
+     header: 'libgimp/gimp.h',
+     includes: libgimp_gir_includes,
+     extra_args: gir_args,
+-    include_directories: rootInclude,
++    include_directories: [rootInclude, gir_share],
+     install: true,
+   )
+ 
+   libgimpui_gir = gnome.generate_gir(
+     libgimpui,
+     libgimpwidgets,
++    libgimp,
++    libgimpbase,
++    libgimpcolor,
++    libgimpconfig,
++    libgimpmath,
++    libgimpmodule,
+ 
+     sources: libgimpui_introspectable_files,
+     nsversion: gimp_api_version,
+     namespace: 'GimpUi',
+@@ -536,10 +543,10 @@
+     symbol_prefix: [ 'gimp_ui', 'gimp' ],
+     export_packages: 'gimp-ui-' + gimp_api_version,
+     header: 'libgimp/gimpui.h',
+     includes: [ libgimp_gir_includes, 'Gtk-3.0', libgimp_gir[0] ],
+-    extra_args: gir_args,
+-    include_directories: rootInclude,
++    extra_args: gir_args + ['--pkg=cairo', '--pkg=gdk-3.0'],
++    include_directories: [rootInclude, gir_share],
+     install: true,
+   )
+ 
+   if platform_osx
