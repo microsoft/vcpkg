@@ -11,44 +11,33 @@ index 0000000..3e16bd1
 +check_required_components(EIPScanner)
 +
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dc2bbb9..ce8e10f 100644
+index dc2bbb9..2d8671e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -50,12 +50,14 @@ if(ENABLE_VENDOR_SRC)
- 	add_subdirectory(vendor)
- endif()
- 
--add_library(EIPScanner SHARED ${SOURCE_FILES} ${VENDOR_FILES})
--add_library(EIPScannerS STATIC ${SOURCE_FILES} ${VENDOR_FILES})
-+if(BUILD_SHARED_LIBS)
-+        add_library(EIPScanner SHARED ${SOURCE_FILES} ${VENDOR_FILES})
-+else()
-+        add_library(EIPScanner STATIC ${SOURCE_FILES} ${VENDOR_FILES})
-+endif()
- 
- if(WIN32)
- 	target_link_libraries(EIPScanner ws2_32)
--	target_link_libraries(EIPScannerS ws2_32)
- endif()
- 
- set_target_properties(
-@@ -64,7 +66,10 @@ set_target_properties(
+@@ -64,7 +64,18 @@ set_target_properties(
          VERSION ${EIPSCANNER_FULL_VERSION}
          SOVERSION ${EIPSCANNER_MAJOR_VERSION})
  
 -install(TARGETS EIPScanner EIPScannerS
-+set_target_properties(EIPScanner PROPERTIES EXPORT_NAME eipscanner)
++if(BUILD_SHARED_LIBS)
++        set(install_target EIPScanner)
++        set_target_properties(EIPScanner PROPERTIES EXPORT_NAME eipscanner)
++        set_target_properties(EIPScannerS PROPERTIES EXCLUDE_FROM_ALL 1)
++else()
++        set(install_target EIPScannerS)
++        set_target_properties(EIPScannerS PROPERTIES EXPORT_NAME eipscanner)
++        set_target_properties(EIPScanner PROPERTIES EXCLUDE_FROM_ALL 1)
++endif()
 +
-+install(TARGETS EIPScanner
-+        EXPORT EIPScanner
++install(TARGETS ${install_target}
++        EXPORT ${install_target}
          LIBRARY
              DESTINATION lib
          ARCHIVE
-@@ -73,3 +78,29 @@ install(TARGETS EIPScanner EIPScannerS
+@@ -73,3 +84,28 @@ install(TARGETS EIPScanner EIPScannerS
  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/
          DESTINATION include/EIPScanner
          FILES_MATCHING PATTERN "*.h*")
-+
 +
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
@@ -69,7 +58,7 @@ index dc2bbb9..ce8e10f 100644
 +        DESTINATION lib/cmake/eipscanner
 +)
 +
-+install(EXPORT EIPScanner
++install(EXPORT ${install_target}
 +        FILE EIPScannerTargets.cmake
 +        NAMESPACE unofficial::eipscanner::
 +        DESTINATION lib/cmake/eipscanner
