@@ -45,6 +45,13 @@
       "dependencies": [
         "openjpeg"
       ]
+    },
+    "jpeg": {
+      "description": "JPEG decoding and encoding via libjpeg-turbo",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
     }
   }
 }

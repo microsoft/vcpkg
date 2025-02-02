@@ -16,6 +16,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         aom      WITH_AOM_ENCODER
         openjpeg WITH_OpenJPEG_DECODER
         openjpeg WITH_OpenJPEG_ENCODER
+        jpeg     WITH_JPEG_DECODER
+        jpeg     WITH_JPEG_ENCODER
 )
 
 vcpkg_cmake_configure(
