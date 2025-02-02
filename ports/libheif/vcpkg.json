@@ -38,6 +38,13 @@
       "dependencies": [
         "aom"
       ]
+    },
+    "openjpeg": {
+      "description": "JPEG-2000 decoding and encoding via OpenJPEG",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "openjpeg"
+      ]
     }
   }
 }
