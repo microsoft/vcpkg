@@ -12,6 +12,8 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         hevc    WITH_X265
+        aom     WITH_AOM_DECODER
+        aom     WITH_AOM_ENCODER
 )
 
 vcpkg_cmake_configure(

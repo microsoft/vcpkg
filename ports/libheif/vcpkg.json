@@ -31,6 +31,13 @@
       "dependencies": [
         "x265"
       ]
+    },
+    "aom": {
+      "description": "AVIF decoding and encoding via aom",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "aom"
+      ]
     }
   }
 }
