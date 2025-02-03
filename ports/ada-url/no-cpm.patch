@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c70094f..9c9ded7 100644
+index c70094f..4895ab8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -22,7 +22,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake)
@@ -10,6 +10,14 @@ index c70094f..9c9ded7 100644
    # CPM requires git as an implicit dependency
    # We use googletest in the tests
    if(ADA_TESTING)
+@@ -77,6 +76,7 @@ endif()
+ 
+ 
+ add_library(ada::ada ALIAS ada)
++target_compile_features(ada PUBLIC cxx_std_20)
+ 
+ if(ADA_TESTING)
+   # IMPORTANT!
 diff --git a/tools/cli/CMakeLists.txt b/tools/cli/CMakeLists.txt
 index 397b428..87e405e 100644
 --- a/tools/cli/CMakeLists.txt
