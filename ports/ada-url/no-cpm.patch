@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c70094f..4895ab8 100644
+index c70094f..b10b3c7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -22,7 +22,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake)
@@ -18,6 +18,15 @@ index c70094f..4895ab8 100644
  
  if(ADA_TESTING)
    # IMPORTANT!
+@@ -103,7 +103,7 @@ if(NOT ADA_COVERAGE AND NOT EMSCRIPTEN)
+ endif()
+ 
+ if(ADA_TOOLS)
+-  add_subdirectory(tools)
++#  add_subdirectory(tools)
+ endif()
+ 
+ install(
 diff --git a/tools/cli/CMakeLists.txt b/tools/cli/CMakeLists.txt
 index 397b428..87e405e 100644
 --- a/tools/cli/CMakeLists.txt
