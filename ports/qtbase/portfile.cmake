@@ -309,9 +309,14 @@ set(TOOL_NAMES
         tracepointgen
     )
 
+if(NOT DEFINED VCPKG_OSX_DEPLOYMENT_TARGET) 
+    set(VCPKG_OSX_DEPLOYMENT_TARGET 14) 
+endif()
+
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
+                        -DCMAKE_OSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}
                         ##--trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
