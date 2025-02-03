@@ -64,6 +64,7 @@ set(PATCHES common.pri.patch
             0001-Support-ICU-74-in-LazyTextBreakIterator.patch
             workaround-protobuf-issue.patch
             0001-Fix-jumbo-build-error-due-to-ResolveColor-redefiniti.patch
+	    fix-spellcheck-buildflags.patch
             )
 
 set(OPTIONS)

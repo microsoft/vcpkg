@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e3eb444..74b4938 100644
+index a5870f8..1553513 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -4,6 +4,9 @@
- cmake_minimum_required(VERSION 3.1)
+@@ -5,6 +5,9 @@ cmake_minimum_required(VERSION 3.11)
+ include(FetchContent)
  project(EASTL CXX)
  
 +include(GNUInstallDirs)
@@ -12,16 +12,16 @@ index e3eb444..74b4938 100644
  #-------------------------------------------------------------------------------------------
  # Options
  #-------------------------------------------------------------------------------------------
-@@ -11,6 +14,8 @@ option(EASTL_BUILD_BENCHMARK "Enable generation of build files for benchmark" OF
- option(EASTL_BUILD_TESTS "Enable generation of build files for tests" OFF)
- option(EASTL_STD_ITERATOR_CATEGORY_ENABLED "Enable compatibility with std:: iterator categories" OFF)
+@@ -17,6 +20,8 @@ option(EASTL_DISABLE_APRIL_2024_DEPRECATIONS "Enable use of API marked for remov
+ option(EASTL_DISABLE_SEPT_2024_DEPRECATIONS "Enable use of API marked for removal in September 2024." OFF)
+ option(EASTL_DISABLE_APRIL_2025_DEPRECATIONS "Enable use of API marked for removal in April 2025." OFF)
  
 +find_package(EABase CONFIG REQUIRED)
 +
  #-------------------------------------------------------------------------------------------
  # Compiler Flags
  #-------------------------------------------------------------------------------------------
-@@ -54,7 +59,10 @@ endif()
+@@ -65,21 +70,49 @@ endif()
  #-------------------------------------------------------------------------------------------
  # Include dirs
  #-------------------------------------------------------------------------------------------
@@ -33,11 +33,13 @@ index e3eb444..74b4938 100644
  
  #-------------------------------------------------------------------------------------------
  # Dependencies
-@@ -63,7 +71,41 @@ if (NOT TARGET EABase)
-     add_subdirectory(test/packages/EABase)
- endif()
- 
--target_link_libraries(EASTL EABase)
+ #-------------------------------------------------------------------------------------------
+-FetchContent_Declare(
+-  EABase
+-  GIT_REPOSITORY https://github.com/electronicarts/EABase.git
+-  GIT_TAG        123363eb82e132c0181ac53e43226d8ee76dea12
+-  GIT_SUBMODULES "" # This should be temporary until we update the cyclic submodule dependencies in EABase.
++
 +target_link_libraries(EASTL PUBLIC EABase)
 +
 +# create and install an export set for eabase target as EABase::EABase
@@ -47,14 +49,14 @@ index e3eb444..74b4938 100644
 +    EASTLConfig.cmake.in
 +    ${CMAKE_CURRENT_BINARY_DIR}/EASTLConfig.cmake
 +    INSTALL_DESTINATION ${EASTL_CMAKE_CONFIG_DESTINATION}
-+)
-+
+ )
+ 
+-FetchContent_MakeAvailable(EABase)
 +# create and install an export set for Terra target as Terra
 +install(
 +    TARGETS EASTL EXPORT EASTLTargets
 +    DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +)
-+
 +
 +install(EXPORT EASTLTargets DESTINATION ${EASTL_CMAKE_CONFIG_DESTINATION})
 +
@@ -66,7 +68,8 @@ index e3eb444..74b4938 100644
 +
 +install(TARGETS EASTL LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 +install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-+
+ 
+-target_link_libraries(EASTL EABase)
 +install(
 +    FILES
 +        "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfig.cmake"
@@ -75,4 +78,4 @@ index e3eb444..74b4938 100644
 +)
  
  #-------------------------------------------------------------------------------------------
- # Installation
+ # Deprecations

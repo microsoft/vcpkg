@@ -36,13 +36,15 @@ if(NOT EXISTS "${SOURCE_PATH}/third_party/lss/lss/BUILD.gn" AND (VCPKG_TARGET_IS
 endif()
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
-    unset(_LIBRARY_DEB CACHE)
-    find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}
-        PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
-        NO_DEFAULT_PATH)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        unset(_LIBRARY_DEB CACHE)
+        find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}
+          PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
+          NO_DEFAULT_PATH)
 
-    if(_LIBRARY_DEB MATCHES "-NOTFOUND" AND NOT VCPKG_BUILD_TYPE)
-        message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
+        if(_LIBRARY_DEB MATCHES "-NOTFOUND")
+            message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
+        endif()
     endif()
 
     unset(_LIBRARY_REL CACHE)
@@ -52,6 +54,10 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
 
     if(_LIBRARY_REL MATCHES "-NOTFOUND")
         message(FATAL_ERROR "Could not find library with names: ${LIBRARY_NAMES}")
+    endif()
+
+    if(VCPKG_BUILD_TYPE STREQUAL "release")
+        set(_LIBRARY_DEB ${_LIBRARY_REL})
     endif()
 
     set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
@@ -131,13 +137,12 @@ install_headers("${SOURCE_PATH}/util")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 
-if(NOT VCPKG_BUILD_TYPE)
-  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
-  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
-endif()
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+
 if(VCPKG_TARGET_IS_OSX)
-    if(NOT VCPKG_BUILD_TYPE)
-      file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     endif()
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 endif()
@@ -145,6 +150,14 @@ endif()
 vcpkg_copy_tools(
     TOOL_NAMES crashpad_handler
     SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
+
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    file(CHMOD "${CURRENT_PACKAGES_DIR}/tools/crashpad_handler" FILE_PERMISSIONS
+      OWNER_READ OWNER_WRITE OWNER_EXECUTE
+      GROUP_READ GROUP_EXECUTE
+      WORLD_READ WORLD_EXECUTE
+    )
+endif()
 
 # remove empty directories
 file(REMOVE_RECURSE
