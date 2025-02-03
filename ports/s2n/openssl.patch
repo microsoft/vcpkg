@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d16e5f5f0..133934580 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -266,9 +266,10 @@ if (TARGET crypto)
+     message(STATUS "S2N found target: crypto")
+     set(LINK_LIB "crypto")
+ else()
+-    find_package(crypto REQUIRED)
+-    message(STATUS "Using libcrypto from the cmake path")
+-    set(LINK_LIB "AWS::crypto")
++   find_package(OpenSSL REQUIRED)
++   find_package(Threads REQUIRED)
++   set(LINK_LIB OpenSSL::Crypto Threads::Threads)
++   message(STATUS "Using libcrypto from system: ${OPENSSL_CRYPTO_LIBRARY}")    
+ endif()
+ 
+ if (S2N_INTERN_LIBCRYPTO)
