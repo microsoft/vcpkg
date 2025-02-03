@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
-    REF  66b3ef2253e765d0ce0db74cec91bd706e5ba176 #2.4.0
-    SHA512 7014ffdaa160bfa2509fc283cb7176d7994a37f51509c7374659292efad076c8fb594f9f6990bab1aa5562d1f66e93403ea35a5bf2a924436560a2d4669ffcfd
+    REF  "v${VERSION}"
+    SHA512 39b92ec4c2479a3c0a8e99b2890643c9d76a7e5b61b485c1a3a5f5abff1da4e62b67b879dbcf6e18a43f98172fc9f87f0a6c92b99e2a1900e6f1d2e809899b11
     HEAD_REF master
     PATCHES
         dependencies.patch
-        upstream_fixes.patch
         install-extra-targets.patch
 )
 file(REMOVE
@@ -27,6 +26,7 @@ file(REMOVE
     "${SOURCE_PATH}/cmake/recipes/external/mpfr.cmake"
     "${SOURCE_PATH}/cmake/recipes/external/stb.cmake"
     "${SOURCE_PATH}/cmake/recipes/external/tinyxml2.cmake"
+    "${SOURCE_PATH}/cmake/recipes/external/spectra.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,7 +36,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         glfw            LIBIGL_GLFW
         imgui           LIBIGL_IMGUI
         opengl          LIBIGL_OPENGL
-        png             LIBIGL_PNG
         xml             LIBIGL_XML
         # Features removed: missing binary libs / separate ports
         comiso          LIBIGL_COPYLEFT_COMISO
@@ -58,6 +57,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_RESTRICTED_MOSEK=OFF
         -DLIBIGL_USE_STATIC_LIBRARY=OFF
         -DHUNTER_ENABLED=OFF
+        -DLIBIGL_SPECTRA=OFF
         ${ADDITIONAL_OPTIONS}
 )
 

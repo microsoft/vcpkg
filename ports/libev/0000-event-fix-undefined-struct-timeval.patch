@@ -1,0 +1,14 @@
+diff --git a/event.c b/event.c
+index 5586cd3..a67ca54 100644
+--- a/event.c
++++ b/event.c
+@@ -40,6 +40,9 @@
+ #include <stddef.h>
+ #include <stdlib.h>
+ #include <assert.h>
++#ifdef _WIN32
++#include <winsock2.h>
++#endif
+ 
+ #ifdef EV_EVENT_H
+ # include EV_EVENT_H

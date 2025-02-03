@@ -1,7 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES hunspell_include_path_fix.patch)
+set(${PORT}_PATCHES "hunspell_include_path_fix.patch")
 
 if("hunspell" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DINPUT_vkb_hunspell:STRING=system)
@@ -14,7 +14,13 @@ endif()
 # list(APPEND FEATURE_OPTIONS -DINPUT_vkb_handwriting=t9write)
 # and add t9write as a dependency.
 #
-list(APPEND FEATURE_OPTIONS -DINPUT_vkb_handwriting=no)
+list(APPEND FEATURE_OPTIONS 
+  -DINPUT_vkb_handwriting=no
+  -DCMAKE_DISABLE_FIND_PACKAGE_CerenceHwrAlphabetic:BOOL=ON
+  -DCMAKE_DISABLE_FIND_PACKAGE_CerenceHwrCjk:BOOL=ON
+  -DCMAKE_DISABLE_FIND_PACKAGE_CerenceXt9:BOOL=ON
+  -DCMAKE_DISABLE_FIND_PACKAGE_MyScript:BOOL=ON
+)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}

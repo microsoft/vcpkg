@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
     PATCHES
         fix-export-symbols.patch
         export-target.patch
+        cmake-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

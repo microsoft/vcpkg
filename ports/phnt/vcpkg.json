@@ -1,6 +1,6 @@
 {
   "name": "phnt",
-  "version-date": "2020-12-21",
+  "version-date": "2024-05-22",
   "description": "Windows Native API header files",
-  "homepage": "https://github.com/processhacker/phnt"
+  "homepage": "https://github.com/winsiderss/phnt"
 }

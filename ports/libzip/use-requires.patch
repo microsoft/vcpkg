@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cf85fc4b7..90615fec9 100644
+index 472a7a2..f9479be 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,12 +41,14 @@ endif()
+@@ -48,12 +48,14 @@ endif()
  if(ENABLE_GNUTLS)
    find_package(Nettle 3.0)
    find_package(GnuTLS)
@@ -17,16 +17,15 @@ index cf85fc4b7..90615fec9 100644
  endif()
  if(WIN32)
    if(ENABLE_WINDOWS_CRYPTO)
-@@ -177,7 +179,7 @@ int main(int argc, char *argv[]) { }" HAVE_NULLABLE)
+@@ -196,6 +198,7 @@ int main(int argc, char *argv[]) { unsigned long x = FICLONERANGE; }" HAVE_FICLO
  test_big_endian(WORDS_BIGENDIAN)
  
  find_package(ZLIB 1.1.2 REQUIRED)
--
 +list(APPEND REQUIRES zlib)
- if(ENABLE_BZIP2)
-   find_package(BZip2)
-   if(BZIP2_FOUND)
-@@ -185,6 +187,7 @@ if(ENABLE_BZIP2)
+ # so developers on systems where zlib is named differently (Windows, sometimes)
+ # can override the name used in the pkg-config file
+ if (NOT ZLIB_LINK_LIBRARY_NAME)
+@@ -232,6 +235,7 @@ if(ENABLE_BZIP2)
    else()
      message(WARNING "-- bzip2 library not found; bzip2 support disabled")
    endif(BZIP2_FOUND)
@@ -34,7 +33,7 @@ index cf85fc4b7..90615fec9 100644
  endif(ENABLE_BZIP2)
  
  if(ENABLE_LZMA)
-@@ -194,6 +197,7 @@ if(ENABLE_LZMA)
+@@ -241,6 +245,7 @@ if(ENABLE_LZMA)
    else()
      message(WARNING "-- lzma library not found; lzma/xz support disabled")
    endif(LIBLZMA_FOUND)
@@ -42,26 +41,28 @@ index cf85fc4b7..90615fec9 100644
  endif(ENABLE_LZMA)
  
  if(ENABLE_ZSTD)
-@@ -203,6 +207,7 @@ if(ENABLE_ZSTD)
+@@ -255,6 +260,7 @@ if(ENABLE_ZSTD)
    else()
      message(WARNING "-- zstd library not found; zstandard support disabled")
-   endif(Zstd_FOUND)
+   endif(zstd_FOUND)
 +  list(APPEND REQUIRES libzstd)
  endif(ENABLE_ZSTD)
  
  if (COMMONCRYPTO_FOUND)
-@@ -299,13 +304,14 @@ foreach(LIB ${LIBS_PRIVATE})
-   endif()
+@@ -356,15 +362,16 @@ foreach(LIB ${LIBS_PRIVATE})
    set(LIBS "${LIBS} -l${LIB}")
  endforeach()
+ STRING(CONCAT zlib_link_name "-l" ${ZLIB_LINK_LIBRARY_NAME})
 -string(REGEX REPLACE "-lBZip2::BZip2" "-lbz2" LIBS ${LIBS})
 -string(REGEX REPLACE "-lLibLZMA::LibLZMA" "-llzma" LIBS ${LIBS})
--string(REGEX REPLACE "-l$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>" "-lzstd" LIBS ${LIBS})
--string(REGEX REPLACE "-lOpenSSL::Crypto" "-lssl -lcrypto" LIBS ${LIBS})
--string(REGEX REPLACE "-lZLIB::ZLIB" "-lz" LIBS ${LIBS})
 +string(REGEX REPLACE "-lBZip2::BZip2" "" LIBS ${LIBS})
 +string(REGEX REPLACE "-lLibLZMA::LibLZMA" "" LIBS ${LIBS})
-+string(REGEX REPLACE "-l$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>" "" LIBS ${LIBS})
+ if(zstd_TARGET)
+-  string(REGEX REPLACE "-l${zstd_TARGET}" "-lzstd" LIBS ${LIBS})
++  string(REGEX REPLACE "-l${zstd_TARGET}" "" LIBS ${LIBS})
+ endif()
+-string(REGEX REPLACE "-lOpenSSL::Crypto" "-lssl -lcrypto" LIBS ${LIBS})
+-string(REGEX REPLACE "-lZLIB::ZLIB" ${zlib_link_name} LIBS ${LIBS})
 +string(REGEX REPLACE "-lOpenSSL::Crypto" "" LIBS ${LIBS})
 +string(REGEX REPLACE "-lZLIB::ZLIB" "" LIBS ${LIBS})
  string(REGEX REPLACE "-lGnuTLS::GnuTLS" "-lgnutls" LIBS ${LIBS})
@@ -71,7 +72,7 @@ index cf85fc4b7..90615fec9 100644
  if(LIBZIP_DO_INSTALL)
    install(FILES ${PROJECT_BINARY_DIR}/libzip.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 diff --git a/libzip.pc.in b/libzip.pc.in
-index d51b0ab63..755685c03 100644
+index d51b0ab..07b3b50 100644
 --- a/libzip.pc.in
 +++ b/libzip.pc.in
 @@ -9,6 +9,7 @@ zipcmp=${bindir}/zipcmp

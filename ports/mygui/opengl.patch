@@ -1,0 +1,26 @@
+diff --git a/Common/CMakeLists.txt b/Common/CMakeLists.txt
+index db7d6610c..eb9190e07 100644
+--- a/Common/CMakeLists.txt
++++ b/Common/CMakeLists.txt
+@@ -41,12 +41,9 @@ elseif(MYGUI_RENDERSYSTEM EQUAL 3)
+ elseif(MYGUI_RENDERSYSTEM EQUAL 4)
+ 	add_definitions("-DMYGUI_OPENGL_PLATFORM")
+ 	include_directories(SYSTEM
+-		${OPENGL_INCLUDE_DIR}
+ 		${SDL2_IMAGE_INCLUDE_DIRS}
+ 		${MYGUI_SOURCE_DIR}/Platforms/${MYGUI_PLATFORM_NAME}/${MYGUI_PLATFORM_NAME}Platform/include
+ 	)
+-	include_directories(SYSTEM include/GL)
+-	link_directories(${OPENGL_LIB_DIR})
+ 	link_directories(${SDL2_IMAGE_LIB_DIR})
+ elseif(MYGUI_RENDERSYSTEM EQUAL 5)
+ 	add_definitions("-DMYGUI_DIRECTX_PLATFORM")
+@@ -106,3 +103,8 @@ if (MYGUI_INSTALL_TOOLS OR MYGUI_INSTALL_DEMOS)
+ endif()
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
++
++if(MYGUI_RENDERSYSTEM EQUAL 4)
++	find_package(OpenGL REQUIRED)
++	target_link_libraries(${PROJECTNAME} OpenGL::GL)
++endif()

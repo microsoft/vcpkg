@@ -3,10 +3,11 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF "v${VERSION}"
-    SHA512 859331284cd28df56c44644a355ecdd8eece19f0d5cd3e693e37c0fe37115091e46943ffbad784e84af1b39a6fd81cd196af2d4fefe86369258f89050dafaa84
+    SHA512 924bcd0fe19c03f65ffc068719371ab582057bf95c3847efd3bd03eaff1eb409ec3f22c9d373fafd9f993dd031a161850f0db082cb7068195c7c5c564fa222fc
     HEAD_REF master
     PATCHES
         FindCMath.patch
+        prefer-config.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,6 +15,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cxx     cxx
         jpeg    jpeg
         jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
+        libdeflate libdeflate
+        libdeflate CMAKE_REQUIRE_FIND_PACKAGE_Deflate
+        lerc    lerc
+        lerc    CMAKE_REQUIRE_FIND_PACKAGE_LERC
         lzma    lzma
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_liblzma
         tools   tiff-tools
@@ -29,14 +34,11 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
-        -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
-        -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         -DZSTD_HAVE_DECOMPRESS_STREAM=ON
@@ -44,6 +46,8 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GLUT
+        CMAKE_DISABLE_FIND_PACKAGE_OpenGL
         ZSTD_HAVE_DECOMPRESS_STREAM
 )
 
@@ -92,4 +96,5 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

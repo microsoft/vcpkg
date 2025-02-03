@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1492306..69287ec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1182,7 +1182,11 @@ endif()
+ # if your build requires it, you'd probably remove -lstdc++ from the list
+ # obtained by `pkg-config --libs`.
+ if(ENABLE_CXX_DEPS)
++	cmake_policy(SET CMP0057 NEW)
+ 	foreach(LIB ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
++		if(LIB IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++			continue()
++		endif()
+ 		if((IS_ABSOLUTE ${LIB} AND EXISTS ${LIB}) OR (${LIB} MATCHES "^-l"))
+ 			set(SRT_LIBS_PRIVATE ${SRT_LIBS_PRIVATE} ${LIB})
+ 		else()

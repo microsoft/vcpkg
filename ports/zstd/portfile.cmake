@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
     REF "v${VERSION}"
-    SHA512 356994e0d8188ce97590bf86b602eb50cbcb2f951594afb9c2d6e03cc68f966862505afc4a50e76efd55e4cfb11dbc9b15c7837b7827a961a1311ef72cd23505
+    SHA512 ca12dffd86618ca008e1ecc79056c1129cb4e61668bf13a3cd5b2fa5c93bc9c92c80f64c1870c68b9c20009d9b3a834eac70db72242d5106125a1c53cccf8de8
     HEAD_REF dev
     PATCHES
         no-static-suffix.patch
         fix-emscripten-and-clang-cl.patch
+        fix-windows-rc-compile.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
@@ -24,10 +25,13 @@ vcpkg_cmake_configure(
         -DZSTD_BUILD_SHARED=${ZSTD_BUILD_SHARED}
         -DZSTD_BUILD_STATIC=${ZSTD_BUILD_STATIC}
         -DZSTD_LEGACY_SUPPORT=1
-        -DZSTD_BUILD_PROGRAMS=${ZSTD_BUILD_PROGRAMS}
         -DZSTD_BUILD_TESTS=0
         -DZSTD_BUILD_CONTRIB=0
         -DZSTD_MULTITHREAD_SUPPORT=1
+    OPTIONS_RELEASE
+        -DZSTD_BUILD_PROGRAMS=${ZSTD_BUILD_PROGRAMS}
+    OPTIONS_DEBUG
+        -DZSTD_BUILD_PROGRAMS=OFF
 )
 
 vcpkg_cmake_install()
@@ -49,6 +53,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     foreach(HEADER IN ITEMS zdict.h zstd.h zstd_errors.h)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${HEADER}" "defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)" "1" )
     endforeach()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND ZSTD_BUILD_PROGRAMS)
+    vcpkg_copy_tools(TOOL_NAMES zstd AUTO_CLEAN)
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,10 +1,10 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.humus.name/3D/MakeID.h"
     FILENAME "MakeID.h-${VERSION}"
-    SHA512 9b7cb5c1b71904f37f65fcac3d18194154029fbe04d89099d879ce8eb03e796662c78653322317ed72988d3695414aaa6e6c24cfff999bea5009ec47119c57a7
+    SHA512 fd4222d2cc0b0e16b0cfbac048cb64ac59d53ede10ab7f88f710e4b866cb67ffb0ec139821c181f1804a813cc9ab20cf33282c8b73e9ef0fdba414be474c2b64
 )
 
-file(COPY "${ARCHIVE}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${ARCHIVE}" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "MakeID.h")
 
 set(license_text 
 "Public Domain

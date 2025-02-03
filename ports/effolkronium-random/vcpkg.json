@@ -1,6 +1,6 @@
 {
   "name": "effolkronium-random",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Random with a modern C++ API",
   "homepage": "https://github.com/effolkronium/random",
   "license": "MIT",

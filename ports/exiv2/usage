@@ -1,4 +1,0 @@
-exiv2 provides CMake targets:
-
-    find_package(exiv2 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE exiv2lib)

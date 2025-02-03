@@ -1,0 +1,5 @@
+The package mpark-patterns provides CMake targets:
+
+    find_package(mpark_patterns CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mpark_patterns)
+

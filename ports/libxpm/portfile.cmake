@@ -1,19 +1,24 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    return()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxpm
-    REF libXpm-3.5.14
-    SHA512 1ae8c48b0d928265cfc6baac1286f241f20e70c88d6f9b6881ccccd7f2e290ca0afaf0f3a051ad5526449dec93c6cc41c48bb6e488e29e2baec87238f17f6bcf
+    REF "libXpm-${VERSION}"
+    SHA512 30d473b6184d56643114ab1f7719f033ac5ecfd9fd46ebefc03db171a82a809d996046a039c922c184046310fc12a088467ca73740386b3e73b1e699bde78db7
     PATCHES
         remove_strings_h.patch
         fix-dependency-gettext.patch
         strcasecmp.patch
+        subdirs.diff
         tools.patch # will look for libxt otherwise
 )
 
@@ -33,18 +38,9 @@ vcpkg_configure_make(
  )
 
 vcpkg_install_make()
-
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-#vcpkg_copy_tools(TOOL_NAMES sxpm cxpm AUTOCLEAN)
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

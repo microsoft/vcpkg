@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO argtable/argtable3
-    REF 7704006f3cbb556e11da80a5b97469075a32892e # 3.2.1 + minor patches including ARGTABLE3_ENABLE_EXAMPLES support
-    SHA512 c51aa0a33a247c3801e36ca5d9523acefa31f21a34c1e86965a39290c1b437785e4d7e0ae80a65d811803b8fcbbc3a96ba3d6aefaea9bda15abc0f38bd1f45cc
+    REF "v${VERSION}"
+    SHA512 623197142fd1749b2fd5bc3e51758ae49c58ec8699b6afa5ecb2d0199d98f9c05366f92c5169c8039b5c417f4774fb4a09c879a7b04ddbed9d5e43585692ed7f
     HEAD_REF master
     PATCHES Fix-dependence-getopt.patch
 )

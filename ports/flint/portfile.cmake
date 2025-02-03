@@ -1,10 +1,8 @@
-set(FLINT_VERSION 2.8.0)
-set(FLINT_HASH "916285d13a55d12a041236195a9d7bbc5c1c3c30c3aa2f169efee6063b800d34f96ad3235f1c77285b04305ce685e5890169c984108d50d0c9ee7a77c3f6e73d")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.flintlib.org/flint-${FLINT_VERSION}.zip"
-    FILENAME "flint-${FLINT_VERSION}.zip"
-    SHA512 ${FLINT_HASH}
+    URLS "http://www.flintlib.org/flint-${VERSION}.zip"
+    FILENAME "flint-${VERSION}.zip"
+    SHA512 3dd9a4e79e08ab6bc434a786c8d4398eba6cb04e57bcb8d01677f4912cddf20ed3a971160a3e2d533d9a07b728678b0733cc8315bcb39a3f13475b6efa240062
 )
 
 vcpkg_find_acquire_program(PYTHON3)

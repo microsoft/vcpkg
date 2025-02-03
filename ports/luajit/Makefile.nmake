@@ -3,7 +3,7 @@ all:
 	@echo _LINK_ = $(_LINK_)
 	cd src && .\msvcbuild.bat $(MSVCBUILD_OPTIONS)
 
-install: src/luajit.exe
+install: src\luajit.exe
 	-mkdir "$(INSTALLDIR)"
 	-mkdir "$(INSTALLDIR)\bin"
 	copy src\luajit.exe "$(INSTALLDIR)\bin\"
@@ -12,9 +12,9 @@ install: src/luajit.exe
 	copy src\lua51.lib "$(INSTALLDIR)\lib\"
 	-mkdir "$(INSTALLDIR)\include"
 	-mkdir "$(INSTALLDIR)\include\luajit"
-	copy src/lua.h "$(INSTALLDIR)\include\luajit\"
-	copy src/luajit.h "$(INSTALLDIR)\include\luajit\"
-	copy src/luaconf.h "$(INSTALLDIR)\include\luajit\"
-	copy src/lualib.h "$(INSTALLDIR)\include\luajit\"
-	copy src/lauxlib.h "$(INSTALLDIR)\include\luajit\"
-	copy src/lua.hpp "$(INSTALLDIR)\include\luajit\"
+	copy src\lua.h "$(INSTALLDIR)\include\luajit\"
+	copy src\luajit.h "$(INSTALLDIR)\include\luajit\"
+	copy src\luaconf.h "$(INSTALLDIR)\include\luajit\"
+	copy src\lualib.h "$(INSTALLDIR)\include\luajit\"
+	copy src\lauxlib.h "$(INSTALLDIR)\include\luajit\"
+	copy src\lua.hpp "$(INSTALLDIR)\include\luajit\"

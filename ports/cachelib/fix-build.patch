@@ -35,7 +35,7 @@ index 3e149469..0e6b6d9c 100644
   */
 
  #include <dirent.h>
--#include <folly/experimental/exception_tracer/ExceptionTracer.h>
+-#include <folly/debugging/exception_tracer/ExceptionTracer.h>
  #include <sys/mman.h>
  #include <sys/resource.h>
  #include <sys/shm.h>

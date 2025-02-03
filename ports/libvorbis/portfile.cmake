@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001-Dont-export-vorbisenc-functions.patch
         0002-Fixup-pkgconfig-libs.patch
         0003-def-mingw-compat.patch
+        0004-ogg-find-dependency.patch
 )
 
 vcpkg_cmake_configure(

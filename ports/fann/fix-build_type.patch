@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c35ea2..fafd904 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -68,7 +68,6 @@ set (FANN_VERSION_MINOR 2)
+ set (FANN_VERSION_PATCH 0)
+ set (FANN_VERSION_STRING ${FANN_VERSION_MAJOR}.${FANN_VERSION_MINOR}.${FANN_VERSION_PATCH})
+ 
+-option(BUILD_SHARED_LIBS "build shared/static libs" ON)
+ 
+ INCLUDE(DefineInstallationPaths)
+ 

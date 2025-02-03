@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version": "2023.1.0",
-  "port-version": 2,
+  "version": "2024.6.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -15,11 +14,8 @@
   "homepage": "https://github.com/openvinotoolkit/openvino",
   "documentation": "https://docs.openvino.ai/latest/index.html",
   "license": "Apache-2.0",
+  "supports": "!uwp & !x86 & !(android & arm32)",
   "dependencies": [
-    {
-      "name": "pkgconf",
-      "host": true
-    },
     "pugixml",
     {
       "name": "tbb",
@@ -40,7 +36,7 @@
     {
       "name": "xbyak",
       "platform": "!(arm | uwp)",
-      "version>=": "6.69"
+      "version>=": "6.73"
     }
   ],
   "default-features": [
@@ -52,10 +48,14 @@
     },
     {
       "name": "gpu",
-      "platform": "x64 & !(osx | uwp) & !static"
+      "platform": "x64 & !(osx | uwp)"
     },
     "hetero",
     "ir",
+    {
+      "name": "npu",
+      "platform": "x64 & !(osx | uwp)"
+    },
     "onnx",
     "paddle",
     "pytorch",
@@ -75,9 +75,10 @@
     },
     "gpu": {
       "description": "Enables GPU plugin for inference",
-      "supports": "x64 & !(osx | uwp) & !static",
+      "supports": "x64 & !(osx | uwp)",
       "dependencies": [
-        "opencl"
+        "opencl",
+        "rapidjson"
       ]
     },
     "hetero": {
@@ -86,12 +87,19 @@
     "ir": {
       "description": "Enables IR frontend for reading models in OpenVINO IR format"
     },
+    "npu": {
+      "description": "Enables NPU plugin for inference",
+      "supports": "x64 & !(osx | uwp)",
+      "dependencies": [
+        "level-zero"
+      ]
+    },
     "onnx": {
       "description": "Enables ONNX frontend for reading models in ONNX format",
       "dependencies": [
         {
           "name": "onnx",
-          "version>=": "1.13.1"
+          "version>=": "1.16.2"
         },
         {
           "name": "protobuf",

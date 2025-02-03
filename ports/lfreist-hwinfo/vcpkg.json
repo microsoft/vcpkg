@@ -1,0 +1,17 @@
+{
+  "name": "lfreist-hwinfo",
+  "version-date": "2024-09-01",
+  "description": "hwinfo provides an easy-to-use and modern C++ API for retrieving hardware information of your systems components such as CPU, RAM, GPU, Disks, Mainboard, ...",
+  "homepage": "https://github.com/lfreist/hwinfo",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

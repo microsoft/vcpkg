@@ -1,0 +1,61 @@
+diff --git a/configure b/configure
+index dda98b3..5594bf3 100755
+--- a/configure
++++ b/configure
+@@ -26,7 +26,7 @@ enable() {
+   opt=`echo "$1" | sed 's/^--[^-]*-//'`
+   case "$opt" in
+     ipv6) ;;
+-    *) echo "configure: unrecognized option \`$1'" >&2; exit 1;;
++    *) echo "configure: unrecognized option \`$1'" >&2; opt=unused;;
+   esac
+   eval enable_$opt=$2
+ }
+@@ -50,11 +50,14 @@ Optional features (all enabled by default if system supports a feature):
+ EOF
+       exit 0
+       ;;
+-    *) echo "configure: unknown option \`$1'" >&2; exit 1 ;;
++    *) echo "configure: unknown option \`$1'" >&2;;
+   esac
+   shift
+ done
+ 
++CC="$CC $CPPFLAGS"
++export CC
++
+ . ./configure.lib
+ 
+ ac_msg "configure"
+@@ -75,7 +78,8 @@ int main(int argc, char **argv) {
+ EOF
+ 
+ if ac_library_find_v 'socket and connect' "" "-lsocket -lnsl" <<EOF
+-int main() { socket(); connect(); return 0; }
++#include <sys/socket.h>
++int main() { socket(0,0,0); connect(0,0,0); return 0; }
+ EOF
+ then :
+ else
+diff --git a/configure.lib b/configure.lib
+index 541177a..672c082 100644
+--- a/configure.lib
++++ b/configure.lib
+@@ -125,7 +125,7 @@ ac_prog_c_compiler_v() {
+   echo 'int main(int argc, char **argv) { return 0; }' >conftest.c
+ 
+   if [ -n "$CC" ]; then
+-    if ac_run $CC -o conftest conftest.c && ac_run ./conftest; then
++    if ac_run $CC -o conftest conftest.c && true ac_run ./conftest; then
+       ac_result "\$CC ($CC)"
+     else
+       ac_result no
+@@ -224,7 +224,7 @@ ac_library_find_v() {
+ }
+ 
+ ac_compile_run() {
+-  ac_link "$@" && ac_run ./conftest
++  ac_link "$@" && true ac_run ./conftest
+ }
+ 
+ ac_grep_cpp() {

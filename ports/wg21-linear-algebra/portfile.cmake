@@ -1,10 +1,10 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BobSteagall/wg21
     REF "v${VERSION}"
-    SHA512 c249344d035d09760a9e5ea059ed6db5a1cb42b918735672bd7aa6dbda08f947855582f76ad61d33f59a847d8befe5caed57d25da2bcfc9fa8e6cef50a4c24e2
+    SHA512 ab1db0cff476d2f63a5d1fcc1d3b40acbceeacae61a99d7ad0b8d8abe21413da97b71c088a331b70c0d0c3dc4615953485c68af46698ec7f0013e14bea5f9452
+    PATCHES
+        use-external-mdspan.patch # https://github.com/BobSteagall/wg21/pull/80
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
         -DLA_INSTALL=ON
         -DLA_BUILD_PACKAGE=OFF
         -DLA_ENABLE_TESTS=OFF
+        -DUSE_EXTERNAL_MDSPAN=ON
 )
 
 vcpkg_cmake_install()

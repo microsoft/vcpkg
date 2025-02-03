@@ -1,7 +1,6 @@
 {
   "name": "flint",
-  "version-semver": "2.8.0",
-  "port-version": 2,
+  "version-semver": "2.9.0",
   "description": "Fast Library for Number Theory",
   "homepage": "https://www.flintlib.org/",
   "supports": "!uwp",

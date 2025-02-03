@@ -1,7 +1,6 @@
 {
   "name": "gz-math7",
-  "version": "7.0.2",
-  "port-version": 1,
+  "version": "7.3.0",
   "description": "Math API for robotic applications",
   "homepage": "https://ignitionrobotics.org/libs/math",
   "license": null,

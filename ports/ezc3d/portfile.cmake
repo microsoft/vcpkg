@@ -1,27 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pyomeca/ezc3d
-    REF Release_1.4.7
-    SHA512 ba234be76b5d95b9527952c7e1bf67d9725fc280bf991f45e7cbd68f1aeeab7e963c8c4d928e720d02ebc02ec2b0e41f1c28036cd728ccb4c5a77c6fa81a74ad
+    REF "Release_${VERSION}"
+    SHA512 343b4c6a03ff6cdf01e4443929a05eb15c14ed50d77f3a4e7783ace118f628e16873c8cd41ac58ecc2f29bf1ee6dd58851d45e5d64e2afc0d283c8c0a4eca576
     HEAD_REF dev
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-Dezc3d_BIN_FOLDER=bin"
-        "-Dezc3d_LIB_FOLDER=lib"
         -DBUILD_EXAMPLE=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ezc3d")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ezc3d")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

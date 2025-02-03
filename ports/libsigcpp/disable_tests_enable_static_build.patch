@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e1b28fe..b9a9d40 100644
+index c4b291c..2475881 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -84,13 +84,13 @@ install (FILES
+@@ -86,13 +86,13 @@ install (FILES
  		DESTINATION 
  			"${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
  
@@ -20,10 +20,10 @@ index e1b28fe..b9a9d40 100644
  
  set (PROJECT_CMAKE_NAME		"${PROJECT_NAME}-3")
 diff --git a/sigc++/CMakeLists.txt b/sigc++/CMakeLists.txt
-index fa5a91a..86f1be7 100644
+index dd2d339..8480a5e 100644
 --- a/sigc++/CMakeLists.txt
 +++ b/sigc++/CMakeLists.txt
-@@ -23,7 +23,7 @@ set (SOURCE_FILES
+@@ -24,7 +24,7 @@ set (SOURCE_FILES
  
  set (SIGCPP_LIB_NAME sigc-${SIGCXX_API_VERSION})
  

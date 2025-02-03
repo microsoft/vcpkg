@@ -1,7 +1,6 @@
 {
   "name": "tiff",
-  "version": "4.5.1",
-  "port-version": 2,
+  "version": "4.7.0",
   "description": "A library that supports the manipulation of TIFF image files",
   "homepage": "https://libtiff.gitlab.io/libtiff/",
   "license": "libtiff",
@@ -28,6 +27,32 @@
       "description": "Support JPEG compression in TIFF image files",
       "dependencies": [
         "libjpeg-turbo"
+      ]
+    },
+    "lerc": {
+      "description": "Support LERC compression",
+      "dependencies": [
+        "lerc",
+        {
+          "name": "tiff",
+          "default-features": false,
+          "features": [
+            "zip"
+          ]
+        }
+      ]
+    },
+    "libdeflate": {
+      "description": "Use libdeflate for faster ZIP support",
+      "dependencies": [
+        "libdeflate",
+        {
+          "name": "tiff",
+          "default-features": false,
+          "features": [
+            "zip"
+          ]
+        }
       ]
     },
     "lzma": {

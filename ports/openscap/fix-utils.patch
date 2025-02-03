@@ -1,5 +1,5 @@
 diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
-index f500e1d..ebddcbf 100644
+index 0e16a8d..e2af57e 100644
 --- a/utils/CMakeLists.txt
 +++ b/utils/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -9,18 +9,11 @@ index f500e1d..ebddcbf 100644
  )
  
  if(ENABLE_OSCAP_UTIL)
-@@ -24,13 +24,13 @@ if(ENABLE_OSCAP_UTIL)
+@@ -24,7 +24,7 @@ if(ENABLE_OSCAP_UTIL)
  			target_link_libraries(oscap ${GETOPT_LIBRARY})
  		endif()
  		
 -		set(OSCAP_UTIL_DESTINATION ".")
-+		set(OSCAP_UTIL_DESTINATION bin)
- 		# Install the 'oscap' utility
- 		install(TARGETS "oscap"
- 			DESTINATION ${OSCAP_UTIL_DESTINATION}
- 		)
- 	else()
--		set(OSCAP_UTIL_DESTINATION tools)
 +		set(OSCAP_UTIL_DESTINATION bin)
  		# Install the 'oscap' utility
  		install(TARGETS "oscap"

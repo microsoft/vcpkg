@@ -141,3 +141,16 @@ install(EXPORT unofficial-theora-targets
   NAMESPACE unofficial::theora::
   DESTINATION "lib/unofficial-theora"
 )
+
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(libdir "\${prefix}/lib")
+set(exec_prefix "\${prefix}")
+set(includedir "\${prefix}/include")
+configure_file(theora.pc.in theora.pc @ONLY)
+configure_file(theoradec.pc.in theoradec.pc @ONLY)
+configure_file(theoraenc.pc.in theoraenc.pc @ONLY)
+
+install(
+  FILES "${PROJECT_BINARY_DIR}/theora.pc" "${PROJECT_BINARY_DIR}/theoradec.pc" "${PROJECT_BINARY_DIR}/theoraenc.pc"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)

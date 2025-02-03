@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1cb895570d..4638618d56 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -52,7 +52,7 @@ include(CheckCXXSourceCompiles)
+ 
+ function(stacktrace_check var source incs libs defs)
+ 
+-  set(CMAKE_REQUIRED_INCLUDES "${incs}")
++  set(CMAKE_REQUIRED_INCLUDES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+   list(APPEND CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/build")
+   set(CMAKE_REQUIRED_LIBRARIES "${libs}")
+   set(CMAKE_REQUIRED_DEFINITIONS "${defs}")
+@@ -69,7 +69,7 @@ if(WIN32 AND NOT CMAKE_CXX_PLATFORM_ID MATCHES "Cygwin")
+ endif()
+ 
+ stacktrace_check(BOOST_STACKTRACE_HAS_WINDBG has_windbg.cpp "" "dbgeng;ole32" "")
+-stacktrace_check(BOOST_STACKTRACE_HAS_WINDBG_CACHED has_windbg_cached.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../config/include" "dbgeng;ole32" "")
++stacktrace_check(BOOST_STACKTRACE_HAS_WINDBG_CACHED has_windbg_cached.cpp "" "dbgeng;ole32" "")
+ 
+ option(BOOST_STACKTRACE_ENABLE_NOOP "Boost.Stacktrace: build boost_stacktrace_noop" ON)
+ option(BOOST_STACKTRACE_ENABLE_BACKTRACE "Boost.Stacktrace: build boost_stacktrace_backtrace" ${BOOST_STACKTRACE_HAS_BACKTRACE})
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,7 +90,10 @@ message(STATUS "Boost.Stacktrace: "
+ )
+ 
+ stacktrace_add_library(noop ${BOOST_STACKTRACE_ENABLE_NOOP} "" "")
+-stacktrace_add_library(backtrace ${BOOST_STACKTRACE_ENABLE_BACKTRACE} "backtrace;${CMAKE_DL_LIBS}" "")
++if(BOOST_STACKTRACE_ENABLE_BACKTRACE)
++  find_library(BACKTRACE_LIBRARY_PATH NAMES backtrace REQUIRED)
++  stacktrace_add_library(backtrace ${BOOST_STACKTRACE_ENABLE_BACKTRACE} "${BACKTRACE_LIBRARY_PATH};${CMAKE_DL_LIBS}" "")
++endif()
+ stacktrace_add_library(addr2line ${BOOST_STACKTRACE_ENABLE_ADDR2LINE} "${CMAKE_DL_LIBS}" "")
+ stacktrace_add_library(basic ${BOOST_STACKTRACE_ENABLE_BASIC} "${CMAKE_DL_LIBS}" "")
+ stacktrace_add_library(windbg ${BOOST_STACKTRACE_ENABLE_WINDBG} "dbgeng;ole32" "_GNU_SOURCE=1")

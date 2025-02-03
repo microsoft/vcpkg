@@ -1,0 +1,18 @@
+{
+  "name": "cppdap",
+  "version-semver": "1.58.0-a",
+  "description": "A C++11 library (\"SDK\") implementation of the Debug Adapter Protocol, providing an API for implementing a DAP client or server.",
+  "homepage": "https://github.com/google/cppdap",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

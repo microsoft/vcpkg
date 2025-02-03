@@ -1,0 +1,12 @@
+diff --git a/src/LercLib/fpl_Compression.cpp b/src/LercLib/fpl_Compression.cpp
+index bea9483..2e18e3e 100644
+--- a/src/LercLib/fpl_Compression.cpp
++++ b/src/LercLib/fpl_Compression.cpp
+@@ -27,6 +27,7 @@ Original coding 2021 Yuriy Yakimenko
+ #include <assert.h>
+ #include <cmath>
+ #include <cstring>
++#include <climits>
+ 
+ USING_NAMESPACE_LERC
+ 

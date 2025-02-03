@@ -1,17 +1,22 @@
-set(FT_VERSION 2.12.1)
+if("subpixel-rendering" IN_LIST FEATURES)
+    set(SUBPIXEL_RENDERING_PATCH "subpixel-rendering.patch")
+endif()
 
-vcpkg_from_sourceforge(
+string(REPLACE "." "-" VERSION_HYPHEN "${VERSION}")
+
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO freetype/freetype2
-    REF ${FT_VERSION}
-    FILENAME freetype-${FT_VERSION}.tar.xz
-    SHA512 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
+    REPO freetype/freetype
+    REF "VER-${VERSION_HYPHEN}"
+    SHA512  fccfaa15eb79a105981bf634df34ac9ddf1c53550ec0b334903a1b21f9f8bf5eb2b3f9476e554afa112a0fca58ec85ab212d674dfd853670efec876bacbe8a53
+    HEAD_REF master
     PATCHES
         0003-Fix-UWP.patch
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
-        error-strings.patch
+        ${SUBPIXEL_RENDERING_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -73,6 +78,14 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(dll_linkage 1)
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(dll_linkage 0)
+  endif()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freetype/config/public-macros.h" "#elif defined( DLL_IMPORT )" "#elif ${dll_linkage}")
+endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

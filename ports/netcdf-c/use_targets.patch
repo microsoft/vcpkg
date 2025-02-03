@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 507eb4c..c36908b 100644
+index 507eb4c..1516d0c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -433,7 +433,6 @@ IF(NC_EXTRA_DEPS)
@@ -35,11 +35,10 @@ index 507eb4c..c36908b 100644
      ENDIF(MSVC)
  
      ##
-@@ -726,6 +716,19 @@ IF(USE_HDF5)
-       SET(HDF5_C_LIBRARY hdf5)
+@@ -727,6 +717,19 @@ IF(USE_HDF5)
      ENDIF()
    ENDIF(HDF5_C_LIBRARY AND HDF5_HL_LIBRARY AND HDF5_INCLUDE_DIR)
-+  
+ 
 +  if(TARGET hdf5::hdf5-shared)
 +    set(HDF5_C_LIBRARY hdf5::hdf5-shared)
 +    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared)
@@ -52,9 +51,10 @@ index 507eb4c..c36908b 100644
 +    ADD_DEFINITIONS(-DH5_BUILT_AS_STATIC_LIB)
 +  endif()
 +  list(APPEND CMAKE_REQUIRED_LIBRARIES ${HDF5_C_LIBRARY})
- 
++
    FIND_PACKAGE(Threads)
  
+   # There is a missing case in the above code so default it
 @@ -745,6 +748,8 @@ IF(USE_HDF5)
    IF(USE_SZIP)
      # If user has specified the `SZIP_LIBRARY`, use it; otherwise try to find...
@@ -64,17 +64,24 @@ index 507eb4c..c36908b 100644
        FIND_LIBRARY(SZIP PATH NAMES szip sz)
        SET(SZIP_LIBRARY ${SZIP})
        IF(NOT SZIP)
-@@ -847,8 +852,7 @@ IF(USE_HDF5)
- ENDIF(USE_HDF5)
+@@ -848,11 +853,14 @@ ENDIF(USE_HDF5)
  
  # See if we have libcurl
--FIND_PACKAGE(CURL)
+ FIND_PACKAGE(CURL)
 -ADD_DEFINITIONS(-DCURL_STATICLIB=1)
-+FIND_PACKAGE(CURL CONFIG)
  INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
  
  # Define a test flag for have curl library
-@@ -2089,10 +2093,9 @@ IF(NC_LIBS)
+-IF(CURL_LIBRARIES OR CURL_LIBRARY)
++IF(CURL_FOUND)
++  SET(CURL_LIBRARY CURL::libcurl)
++  if(CURL_VERSION VERSION_GREATER_EQUAL "7.66")
++    set(HAVE_LIBCURL_766 TRUE CACHE INTERNAL "vcpkg")
++  endif()
+   SET(FOUND_CURL TRUE)
+ ELSE()
+   SET(FOUND_CURL FALSE)
+@@ -2089,10 +2097,9 @@ IF(NC_LIBS)
    STRING(REPLACE "-lhdf5::hdf5_hl-static" "-lhdf5_hl" NC_LIBS ${NC_LIBS})
  ENDIF()
  
@@ -88,7 +95,7 @@ index 507eb4c..c36908b 100644
  SET(LIBS ${NC_LIBS})
  SET(NC_LIBS "-lnetcdf")
 diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
-index 5e1692f..9e126ec 100644
+index 5e1692f..882f1dd 100644
 --- a/liblib/CMakeLists.txt
 +++ b/liblib/CMakeLists.txt
 @@ -77,6 +77,12 @@ IF(HAVE_LIBDL)
@@ -104,15 +111,6 @@ index 5e1692f..9e126ec 100644
    IF(NOT MSVC)
      # Some version of cmake define HDF5_hdf5_LIBRARY instead of
      # HDF5_LIBRARY. Same with HDF5_HL_LIBRARIES
-@@ -97,7 +103,7 @@ IF(USE_HDF5)
- ENDIF()
- 
- IF(FOUND_CURL)
--  SET(TLL_LIBS ${TLL_LIBS} ${CURL_LIBRARY})
-+  SET(TLL_LIBS ${TLL_LIBS} CURL::libcurl)
- ENDIF()
- 
- IF(USE_HDF4)
 @@ -118,7 +124,6 @@ IF(ENABLE_S3_SDK)
  ENDIF()
  
@@ -122,16 +120,20 @@ index 5e1692f..9e126ec 100644
  
  TARGET_LINK_LIBRARIES(netcdf ${TLL_LIBS})
 diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index 9d68eec..b3be259 100644
+index 9d68eec..715e33e 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
-@@ -12,6 +12,9 @@ set_and_check(netCDF_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+@@ -12,6 +12,13 @@ set_and_check(netCDF_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
  set(netCDF_LIBRARIES netCDF::netcdf)
  
  # include target information
 +include(CMakeFindDependencyMacro)
-+find_dependency(HDF5 CONFIG)
-+find_dependency(CURL CONFIG)
++if("@USE_HDF5@")
++  find_dependency(HDF5 CONFIG)
++endif()
++if("@FOUND_CURL@")
++  find_dependency(CURL CONFIG)
++endif()
  include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
  
  # Compiling Options

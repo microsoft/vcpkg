@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_SHARED_RUNTIME=${BUILD_SHARED_RUNTIME}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibAVUtil=TRUE
         ${FEATURE_OPTIONS}
 )
 

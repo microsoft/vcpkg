@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" GNUTLS_BRANCH "${VERSION}")
 vcpkg_download_distfile(tarball
     URLS
@@ -7,13 +5,15 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 4199bcf7c9e3aab2f52266aadceefc563dfe2d938d0ea1f3ec3be95d66f4a8c8e5494d3a800c03dd02ad386dec1738bd63e1fe0d8b394a2ccfc7d6c6a0cc9359
+    SHA512 429cea78e227d838105791b28a18270c3d2418bfb951c322771e6323d5f712204d63d66a6606ce9604a92d236a8dd07d651232c717264472d27eb6de26ddc733
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
+        ccasflags.patch
         use-gmp-pkgconfig.patch
+        compression-libs.diff
 )
 
 vcpkg_list(SET options)
@@ -28,8 +28,12 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_list(APPEND options "ac_cv_dlopen_soname_works=no") # ensure vcpkg libs
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
@@ -42,7 +46,6 @@ vcpkg_configure_make(
         --disable-guile
         --disable-libdane
         --disable-maintainer-mode
-        --disable-silent-rules
         --disable-rpath
         --disable-tests
         --with-brotli=no
@@ -50,6 +53,7 @@ vcpkg_configure_make(
         --with-tpm=no
         --with-tpm2=no
         --with-zstd=no
+        --with-zlib=yes
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG
@@ -57,6 +61,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

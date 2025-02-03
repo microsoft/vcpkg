@@ -1,11 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/avro
-    REF e44b680621328c4e6524bd2983af1ce11afeebed
-    SHA512 932f642f272997b5c0be467d3a3ccc354c6edf425c36b33aa7e61984f67312c712bb1d74cb1a5fd8066169104851e73830f0ed3fdb450e005a5c5bef33c34f20
+    REF "release-${VERSION}"
+    SHA512 8cc6ef3cf1e0a919118c8ba5817a1866dc4f891fa95873c0fe1b4b388858fbadee8ed50406fa0006882cab40807fcf00c5a2dcd500290f3868d9d06b287eacb6
     HEAD_REF master
     PATCHES
         fix-cmake.patch
+        fix-fmt.patch
+        fix-std32_t.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,14 +29,16 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-avro-cpp/unofficial-avro-cpp
 if("snappy" IN_LIST FEATURES)
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-avro-cpp/unofficial-avro-cpp-config.cmake"
 "include(CMakeFindDependencyMacro)
-find_dependency(ZLIB)
+find_dependency(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex system)
+find_dependency(fmt CONFIG)
 find_dependency(Snappy)
 ${cmake_config}
 ")
 else()
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-avro-cpp/unofficial-avro-cpp-config.cmake"
 "include(CMakeFindDependencyMacro)
-find_dependency(ZLIB)
+find_dependency(Boost REQUIRED COMPONENTS filesystem iostreams program_options regex system)
+find_dependency(fmt CONFIG)
 ${cmake_config}
 ")
 endif()

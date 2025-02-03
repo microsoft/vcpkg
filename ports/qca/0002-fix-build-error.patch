@@ -23,35 +23,4 @@ index 80af6e84..ba86310d 100644
  endmacro(install_pdb)
  
  macro(normalize_path PATH)
-diff --git a/plugins/qca-ossl/qca-ossl.cpp b/plugins/qca-ossl/qca-ossl.cpp
-index b2c5d3d3..4250ec26 100644
---- a/plugins/qca-ossl/qca-ossl.cpp
-+++ b/plugins/qca-ossl/qca-ossl.cpp
-@@ -6846,6 +6846,7 @@ public:
-         else if (type == QLatin1String("aes256-ccm"))
-             return new opensslCipherContext(EVP_aes_256_ccm(), 0, this, type);
- #endif
-+#ifndef OPENSSL_NO_BF
-         else if (type == QLatin1String("blowfish-ecb"))
-             return new opensslCipherContext(EVP_bf_ecb(), 0, this, type);
-         else if (type == QLatin1String("blowfish-cfb"))
-@@ -6856,6 +6857,8 @@ public:
-             return new opensslCipherContext(EVP_bf_cbc(), 0, this, type);
-         else if (type == QLatin1String("blowfish-cbc-pkcs7"))
-             return new opensslCipherContext(EVP_bf_cbc(), 1, this, type);
-+#endif
-+#ifndef OPENSSL_NO_DES
-         else if (type == QLatin1String("tripledes-ecb"))
-             return new opensslCipherContext(EVP_des_ede3(), 0, this, type);
-         else if (type == QLatin1String("tripledes-cbc"))
-@@ -6872,6 +6875,7 @@ public:
-             return new opensslCipherContext(EVP_des_cfb(), 0, this, type);
-         else if (type == QLatin1String("des-ofb"))
-             return new opensslCipherContext(EVP_des_ofb(), 0, this, type);
-+#endif
- #ifndef OPENSSL_NO_CAST
-         else if (type == QLatin1String("cast5-ecb"))
-             return new opensslCipherContext(EVP_cast5_ecb(), 0, this, type);
--- 
-2.31.1
 

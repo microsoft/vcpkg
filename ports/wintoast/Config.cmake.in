@@ -1,0 +1,19 @@
+if(NOT TARGET unofficial::wintoast::wintoast)
+    add_library(unofficial::wintoast::wintoast UNKNOWN IMPORTED)
+
+    set_target_properties(unofficial::wintoast::wintoast PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
+    )
+
+    find_library(WinToast_LIBRARY_RELEASE NAMES WinToast PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+    if(EXISTS "${WinToast_LIBRARY_RELEASE}")
+        set_property(TARGET unofficial::wintoast::wintoast APPEND PROPERTY IMPORTED_CONFIGURATIONS "Release")
+        set_target_properties(unofficial::wintoast::wintoast PROPERTIES IMPORTED_LOCATION_RELEASE "${WinToast_LIBRARY_RELEASE}")
+    endif()
+
+    find_library(WinToast_LIBRARY_DEBUG NAMES WinToast PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
+    if(EXISTS "${WinToast_LIBRARY_DEBUG}")
+        set_property(TARGET unofficial::wintoast::wintoast APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+        set_target_properties(unofficial::wintoast::wintoast PROPERTIES IMPORTED_LOCATION_DEBUG "${WinToast_LIBRARY_DEBUG}")
+    endif()
+endif()

@@ -7,20 +7,20 @@ diff --git a/src/compress.c b/src/compress.c
 index 33ce2bc..f172eda 100644
 --- a/src/compress.c
 +++ b/src/compress.c
-@@ -378,7 +378,7 @@
+@@ -407,7 +407,7 @@
  sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
  {
  	ssize_t rv;
--#ifdef FIONREAD
+-#if defined(FIONREAD) && !defined(__MINGW32__)
 +#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(WIN32)
  	int t = 0;
  #endif
  	size_t rn = n;
-@@ -386,7 +386,7 @@
+@@ -418,7 +418,7 @@
  	if (fd == STDIN_FILENO)
  		goto nocheck;
  
--#ifdef FIONREAD
+-#if defined(FIONREAD) && !defined(__MINGW32__)
 +#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(WIN32)
  	if (canbepipe && (ioctl(fd, FIONREAD, &t) == -1 || t == 0)) {
  #ifdef FD_ZERO

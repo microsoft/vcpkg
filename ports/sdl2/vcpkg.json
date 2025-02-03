@@ -1,6 +1,6 @@
 {
   "name": "sdl2",
-  "version": "2.28.3",
+  "version": "2.30.11",
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
   "homepage": "https://www.libsdl.org/download-2.0.php",
   "license": "Zlib",
@@ -15,20 +15,39 @@
     }
   ],
   "default-features": [
-    "base"
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
+    {
+      "name": "ibus",
+      "platform": "linux"
+    },
+    {
+      "name": "wayland",
+      "platform": "linux"
+    },
+    {
+      "name": "x11",
+      "platform": "linux"
+    }
   ],
   "features": {
-    "base": {
-      "description": "Base functionality for SDL",
+    "alsa": {
+      "description": "Support for alsa audio",
       "dependencies": [
         {
-          "name": "sdl2",
+          "name": "alsa",
+          "platform": "linux"
+        }
+      ]
+    },
+    "dbus": {
+      "description": "Build with D-Bus support",
+      "dependencies": [
+        {
+          "name": "dbus",
           "default-features": false,
-          "features": [
-            "ibus",
-            "wayland",
-            "x11"
-          ],
           "platform": "linux"
         }
       ]

@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmakelists.patch
         fix-export.patch
+        fix-mingw-build.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
