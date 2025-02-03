@@ -1,7 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.10.0",
-  "port-version": 5,
+  "version": "4.11.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -50,8 +49,10 @@
       "name": "msmf",
       "platform": "windows & !uwp & !mingw"
     },
+    "jpegxl",
     "png",
     "quirc",
+    "spng",
     "thread",
     "tiff",
     "webp",
@@ -436,6 +437,12 @@
       "supports": "!static",
       "dependencies": [
         "tbb"
+      ]
+    },
+    "spng": {
+      "description": "Enable libspng integration",
+      "dependencies": [
+        "libspng"
       ]
     },
     "thread": {

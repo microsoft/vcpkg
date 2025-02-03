@@ -1,11 +1,5 @@
 set(USE_QT_VERSION "6")
 
-vcpkg_download_distfile(ADD_INCLUDE_CHRONO
-    URLS https://github.com/opencv/opencv/commit/96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch
-    SHA512 d333ef445bf7ef5da76d101ba2400a3eb3bc7bd0aaf4594c92696001d254415b0f0cc31d8420e3f1afb867ccc5a5c53d8276e89e4ec5c216aa7cfc5e6ada974e
-    FILENAME 96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch
-)
-
 vcpkg_download_distfile(CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS
     URLS https://github.com/opencv/opencv_contrib/commit/b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
     SHA512 170a06d903d50fdcb2082b13015f6efb2bd2d8bbcc203e9c254f26575113a773304e9777b5d72a7b39c52f93fcbb5158fb8579d8da3337e1774079b345d0ea93
@@ -16,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 b4f7248f89f1cd146dbbae7860a17131cd29bd3cb81db1e678abfcfbf2d8fa4a7633bfd0edbf50afae7b838c8700e8c0d0bb05828139d5cb5662df6bbf3eb92c
+    SHA512 3b6e0da8169449944715de9e66380977791069a1d8288534ec768eaa2fb68533821fd8e06eac925a26656baf42185258b13aa80579e1e9be3ebc18fcea66f24d
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -29,13 +23,11 @@ vcpkg_from_github(
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
-      0012-fix-zlib.patch
+      0012-miss-openexr.patch
       0014-fix-cmake-in-list.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
-      0020-miss-openexr.patch
-      "${ADD_INCLUDE_CHRONO}"
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -100,6 +92,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
+ "jpegxl"     WITH_JPEGXL
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
@@ -109,13 +102,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "opengl"     WITH_OPENGL
  "ovis"       CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "ovis"       BUILD_opencv_ovis
- "png"        WITH_PNG
  "python"     BUILD_opencv_python3
  "python"     WITH_PYTHON
  "quality"    BUILD_opencv_quality
  "quirc"      WITH_QUIRC
  "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
+ "spng"       WITH_SPNG
  "tbb"        WITH_TBB
  "tiff"       WITH_TIFF
  "vtk"        WITH_VTK
@@ -147,6 +140,13 @@ if(("jasper" IN_LIST FEATURES) AND NOT ("openjpeg" IN_LIST FEATURES)) # jasper i
   message(STATUS "Jasper is enabled, but is deprecated and will be removed in a future release.")
 elseif("jasper" IN_LIST FEATURES AND ("openjpeg" IN_LIST FEATURES))
   message(WARNING "Both Jasper and OpenJPEG are enabled. OpenJPEG will be used and Jasper will be ignored.")
+endif()
+
+set(WITH_PNG OFF)
+if(("png" IN_LIST FEATURES) AND NOT ("spng" IN_LIST FEATURES)) # png is mutually exclusive with spng
+  set(WITH_PNG ON)
+elseif(("png" IN_LIST FEATURES) AND ("spng" IN_LIST FEATURES))
+  message(WARNING "Both PNG and SPNG are enabled. SPNG will be used and PNG will be ignored.")
 endif()
 
 if("python" IN_LIST FEATURES)
@@ -190,7 +190,7 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 480df862250692a97ce6431cba00dbecb70332307a19c1c04aa9d7444e6e74ab4f8c798548dce76d2319a9877624b82e361fb22a71df14b996087ade448be501
+    SHA512 a5ebb6810a3b5e40858b7fd533f9eb7b3d475dfda843a489bc5168e72c5eaad0a7a23629aace1f43e1b62d9c24e5e1923d841059c297728fac464e00759886c2
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
@@ -288,38 +288,44 @@ if("ipp" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_OSX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
-        FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
-        SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
-    )
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+          FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+          SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+      message(FATAL_ERROR "IPP is not supported on arm64 macOS")
     endif()
   elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
-        FILENAME "opencv-cache/ippicv/0f2745ff705ecae31176dad437608f6f-ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
-        SHA512 74cba99a1d2c40a125b23d42de555548fecd22c8fea5ed68ab7f887b1f208bd7f2906a64d40bac71ea82190e5389fb92d3c72b6d47c8c05a2e9b9b909a82ce47
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7f55c0c26be418d494615afca15218566775c725/ippicv/ippicv_2021.12.0_lnx_intel64_20240425_general.tgz"
+          FILENAME "opencv-cache/ippicv/d06e6d44ece88f7f17a6cd9216761186-ippicv_2021.12.0_lnx_intel64_20240425_general.tgz"
+          SHA512 b5cffc23be195990d07709057e01d4205083652a1cdf52d076a700d7086244fe91846d2afae126a197603c58b7099872c3e908dfc22b74b21dd2b97219a8bfdd
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
-        FILENAME "opencv-cache/ippicv/63e381bf08076ca34fd5264203043a45-ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
-        SHA512 37484704754f9553b04c8da23864af3217919a11a9dbc92427e6326d6104bab7f1983c98c78ec52cda2d3eb93dc1fd98d0b780e3b7a98e703010c5ee1b421426
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7f55c0c26be418d494615afca15218566775c725/ippicv/ippicv_2021.12.0_lnx_ia32_20240425_general.tgz"
+          FILENAME "opencv-cache/ippicv/85ffa2b9ed7802b93c23fa27b0097d36-ippicv_2021.12.0_lnx_ia32_20240425_general.tgz"
+          SHA512 e3391ca0e8ed2235e32816cee55293ddd7c312a8c8ba42b1301cbb8752c6b7d47139ab3fe2aa8dd3e1670221e911cc96614bbc066e2bf9a653607413126b5ff1
       )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+      message(FATAL_ERROR "IPP is not supported on arm64 linux")
     endif()
   elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_intel64_20240201_general.zip"
-        FILENAME "opencv-cache/ippicv/59d154bf54a1e3eea20d7248f81a2a8e-ippicv_2021.11.0_win_intel64_20240201_general.zip"
-        SHA512 686ddbafa3f24c598d94589fca6937f90a4fb25e3dabea3b276709e55cbc2636aba8d73fadd336775f8514ff8e2e1b20e749264a7f11243190d54467f9a3f895
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7f55c0c26be418d494615afca15218566775c725/ippicv/ippicv_2021.12.0_win_intel64_20240425_general.zip"
+          FILENAME "opencv-cache/ippicv/402ff8c6b4986738fed71c44e1ce665d-ippicv_2021.12.0_win_intel64_20240425_general.zip"
+          SHA512 455e2983a4048db68ad2c4274ee009a7e9d30270c07a7bd9d06d3ae5904326d1a98155e9bb3ea8c47f8ea840671db2e0b3d5f7603fa82a926b23a1ec4f77d2fa
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_ia32_20240201_general.zip"
-        FILENAME "opencv-cache/ippicv/7a6d8ac5825c02fea6cbfc1201b521b5-ippicv_2021.11.0_win_ia32_20240201_general.zip"
-        SHA512 0e151e34cee01a3684d3be3c2c75b0fac5f303bfd8c08685981a3d4a25a19a9bb454da26d2965aab915adc209accca17b6a4b6d7726c004cd7841daf180bbd3a
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7f55c0c26be418d494615afca15218566775c725/ippicv/ippicv_2021.12.0_win_ia32_20240425_general.zip"
+          FILENAME "opencv-cache/ippicv/8b1d2a23957d57624d0de8f2a5cae5f1-ippicv_2021.12.0_win_ia32_20240425_general.zip"
+          SHA512 494f66af4eec3030fe6d2b58b89267d566fcb31f445d15cc69818d423c41fd950dc55d10694bdf91e3204ae6b13b68cc2375a2ad396b2008596c53aa0d39f4dd
       )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+      message(FATAL_ERROR "IPP is not supported on arm64 windows")
     endif()
   endif()
 endif()
@@ -425,7 +431,6 @@ vcpkg_cmake_configure(
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_MATLAB=OFF
         -DWITH_CPUFEATURES=OFF
-        -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENCL_D3D11_NV=OFF
