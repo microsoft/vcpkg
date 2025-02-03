@@ -19,20 +19,9 @@ file(COPY "${SOURCE_PATH}/XMPFilesPlugins/PDF_Handler/${pdf_handler_mini_pdfl_di
 file(COPY "${SOURCE_PATH}/source" DESTINATION "${plugin_sdk_directory}")
 file(COPY "${SOURCE_PATH}/public" DESTINATION "${plugin_sdk_directory}")
 
-# Redirect build to use expat library from vcpkg
-configure_file(${CURRENT_PORT_DIR}/expat.h ${SOURCE_PATH}/third-party/expat/lib/expat.h)
-string(APPEND VCPKG_LINKER_FLAGS_DEBUG " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/debug/lib/libexpatd.lib ")
-string(APPEND VCPKG_LINKER_FLAGS_RELEASE " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/lib/libexpat.lib ")
-
-# Redirect build to use zlib library from vcpkg
-configure_file(${CURRENT_PORT_DIR}/zlib.h ${SOURCE_PATH}/third-party/zlib/zlib.h)
-string(APPEND VCPKG_LINKER_FLAGS_DEBUG " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/debug/lib/zlibd.lib ")
-string(APPEND VCPKG_LINKER_FLAGS_RELEASE " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/lib/zlib.lib ")
-
-
 if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
     set(arch_64_bit "ON")
-    set(lib_path "${SOURCE_PATH}/public/libraries/windows_x64")
+    set(lib_path "${SOURCE_PATH}/public/libraries/windows_x64")    
 else()
     set(arch_64_bit "OFF")
     set(lib_path "${SOURCE_PATH}/public/libraries/windows")
@@ -40,9 +29,29 @@ endif()
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
     set(build_static "On")
+    if("${VCPKG_CRT_LINKAGE}" STREQUAL "static")
+        set(expat_debug_lib "libexpatdMT.lib")
+        set(expat_release_lib "libexpatMT.lib")
+    else()
+        set(expat_debug_lib "libexpatdMD.lib")
+        set(expat_release_lib "libexpatMD.lib")
+    endif()
 else()
     set(build_static "Off")
+    set(expat_debug_lib "libexpatd.lib")
+    set(expat_release_lib "libexpat.lib")
 endif()
+
+# Redirect build to use expat library from vcpkg
+configure_file(${CURRENT_PORT_DIR}/expat.h ${SOURCE_PATH}/third-party/expat/lib/expat.h @ONLY)
+string(APPEND VCPKG_LINKER_FLAGS_DEBUG " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/debug/lib/${expat_debug_lib} ")
+string(APPEND VCPKG_LINKER_FLAGS_RELEASE " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/lib/${expat_release_lib} ")
+
+# Redirect build to use zlib library from vcpkg
+configure_file(${CURRENT_PORT_DIR}/zlib.h ${SOURCE_PATH}/third-party/zlib/zlib.h @ONLY)
+string(APPEND VCPKG_LINKER_FLAGS_DEBUG " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/debug/lib/zlibd.lib ")
+string(APPEND VCPKG_LINKER_FLAGS_RELEASE " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/lib/zlib.lib ")
+
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build"
@@ -63,16 +72,28 @@ file(COPY "${SOURCE_PATH}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/
 file(RENAME "${SOURCE_PATH}/public/include" "${SOURCE_PATH}/public/${PORT}")
 file(COPY "${SOURCE_PATH}/public/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(COPY "${lib_path}/Debug/XMPCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(COPY "${lib_path}/Debug/XMPCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(COPY "${lib_path}/Debug/XMPCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(COPY "${lib_path}/Debug/XMPFiles.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(COPY "${lib_path}/Debug/XMPFiles.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(COPY "${lib_path}/Debug/XMPFiles.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    file(COPY "${lib_path}/Debug/XMPCoreStatic.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${lib_path}/Debug/XMPCoreStatic.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${lib_path}/Debug/XMPFilesStatic.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${lib_path}/Debug/XMPFilesStatic.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-file(COPY "${lib_path}/Release/XMPCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-file(COPY "${lib_path}/Release/XMPCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(COPY "${lib_path}/Release/XMPCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(COPY "${lib_path}/Release/XMPFiles.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-file(COPY "${lib_path}/Release/XMPFiles.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(COPY "${lib_path}/Release/XMPFiles.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY "${lib_path}/Release/XMPCoreStatic.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${lib_path}/Release/XMPCoreStatic.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${lib_path}/Release/XMPFilesStatic.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${lib_path}/Release/XMPFilesStatic.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+else()
+    file(COPY "${lib_path}/Debug/XMPCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${lib_path}/Debug/XMPCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY "${lib_path}/Debug/XMPCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY "${lib_path}/Debug/XMPFiles.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${lib_path}/Debug/XMPFiles.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY "${lib_path}/Debug/XMPFiles.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+    file(COPY "${lib_path}/Release/XMPCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${lib_path}/Release/XMPCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY "${lib_path}/Release/XMPCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY "${lib_path}/Release/XMPFiles.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${lib_path}/Release/XMPFiles.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY "${lib_path}/Release/XMPFiles.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+endif()
