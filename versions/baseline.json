@@ -9509,7 +9509,7 @@
       "port-version": 0
     },
     "vcpkg-tool-gn": {
-      "baseline": "2024-02-22",
+      "baseline": "2025-01-27",
       "port-version": 0
     },
     "vcpkg-tool-gyp-next": {
