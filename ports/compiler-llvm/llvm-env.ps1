@@ -1,6 +1,6 @@
 function Setup-LLVM-Env {
     param(
-        [string]$LLVMInstallDir = (Join-Path -Path $PSScriptRoot -ChildPath "../compiler-llvm")
+        [string]$LLVMInstallDir = (Join-Path -Path $PSScriptRoot -ChildPath "../compiler/llvm")
     )
 
     if (-not $env:LLVMInstallDir) {

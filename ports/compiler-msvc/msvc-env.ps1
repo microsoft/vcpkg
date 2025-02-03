@@ -5,8 +5,8 @@ function Setup-MSVC-Env {
 
   if (-not $env:MSVC_TOOLCHAIN_ENV_ALREADY_SET) {
     # Define paths
-    $VS_DIR = Join-Path -Path $MSVC_DIR -ChildPath "VS"
-    $SDK_DIR = Join-Path -Path $MSVC_DIR -ChildPath "WinSDK"
+    $VS_DIR = Join-Path -Path $MSVC_DIR -ChildPath "@subdir@VS"
+    $SDK_DIR = Join-Path -Path $MSVC_DIR -ChildPath "@subdir@WinSDK"
 
     $WinSDK_VERSION = "@WinSDK_VERSION@"
     $VCToolkit_VERSION = "@VCToolkit_VERSION@"

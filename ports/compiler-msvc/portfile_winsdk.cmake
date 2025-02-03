@@ -61,8 +61,6 @@ block(PROPAGATE WinSDK_VERSION)
     endif()
   endforeach()
 
-  set(installFolderSdk "${CURRENT_PACKAGES_DIR}/WinSDK")
-
   set(counter 0)
   foreach(msi IN LISTS msi_installers)
     math(EXPR counter "${counter} + 1")

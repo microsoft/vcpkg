@@ -1,7 +1,7 @@
-diff --git a/VS/Common7/Tools/vsdevcmd/core/winsdk.bat b/VS/Common7/Tools/vsdevcmd/core/winsdk.bat
+diff --git a/Common7/Tools/vsdevcmd/core/winsdk.bat b/Common7/Tools/vsdevcmd/core/winsdk.bat
 index af0949477b..a758d11bfe 100644
---- a/VS/Common7/Tools/vsdevcmd/core/winsdk.bat	
-+++ b/VS/Common7/Tools/vsdevcmd/core/winsdk.bat
+--- a/Common7/Tools/vsdevcmd/core/winsdk.bat	
++++ b/Common7/Tools/vsdevcmd/core/winsdk.bat
 @@ -62,13 +62,13 @@ exit /B 0
  @REM ---------------------------------------------------------------------------
  :GetWin10SdkDir

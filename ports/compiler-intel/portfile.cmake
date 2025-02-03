@@ -71,7 +71,7 @@ foreach(package_folder IN LISTS extracted_folders)
 
 endforeach()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/_installdir" "${CURRENT_PACKAGES_DIR}/intel-compiler")
+file(RENAME "${CURRENT_PACKAGES_DIR}/_installdir" "${CURRENT_PACKAGES_DIR}/compiler/intel")
 file(REMOVE
         "${CURRENT_PACKAGES_DIR}/filelist.json"
         "${CURRENT_PACKAGES_DIR}/filelist.json.sig"

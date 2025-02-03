@@ -25,8 +25,6 @@ block(PROPAGATE VCToolkit_VERSION VCToolkit_REDIST_VERSION)
   include("${CMAKE_CURRENT_LIST_DIR}/download_toolkit.cmake")
   set(prefix VCToolkit)
   
-  set(vs_base_dir "${CURRENT_PACKAGES_DIR}/VS")
-
   set(vsix_installers "")
   set(msi_installers "")
   foreach(item IN LISTS VCToolkit_FILES)
@@ -59,8 +57,6 @@ block(PROPAGATE VCToolkit_VERSION VCToolkit_REDIST_VERSION)
       )
   endforeach()
 
-  set(installFolderSdk "${CURRENT_PACKAGES_DIR}/WinSDK")
-
   foreach(item IN LISTS msi_installers)
   message(STATUS "Extracting '${item}' to WinSDK : ${${prefix}_${item}_DOWNLOAD}")
     vcpkg_extract_with_lessmsi(
@@ -86,7 +82,7 @@ block(PROPAGATE VCToolkit_VERSION VCToolkit_REDIST_VERSION)
   file(STRINGS "${vs_base_dir}/VC/Auxiliary/Build/Microsoft.VCToolsVersion.default.txt" VCToolkit_VERSION)
 
   z_vcpkg_apply_patches(
-    SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
+    SOURCE_PATH "${vs_base_dir}"
     PATCHES
       patches/adjust_vcvars_1.patch
       patches/adjust_vcvars_2.patch

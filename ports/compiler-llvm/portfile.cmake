@@ -25,9 +25,9 @@ file(REMOVE_RECURSE
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/Uninstall.exe"
 )
 
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/" DESTINATION "${CURRENT_PACKAGES_DIR}/compiler-llvm")
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/" DESTINATION "${CURRENT_PACKAGES_DIR}/compiler/llvm")
 vcpkg_apply_patches(
-  SOURCE_PATH "${CURRENT_PACKAGES_DIR}/compiler-llvm"
+  SOURCE_PATH "${CURRENT_PACKAGES_DIR}/compiler/llvm"
   PATCHES remove-types.patch
 )
 

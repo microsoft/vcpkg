@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 function(setup_intel_msvc_env)
   if(NOT DEFINED ENV{INTEL_TOOLCHAIN_ENV_ALREADY_SET})
-    set(ONEAPIROOT_DIR "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../intel-compiler/")
+    set(ONEAPIROOT_DIR "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../compiler/intel")
     file(GLOB CMPLR_ROOT LIST_DIRECTORIES true "${ONEAPIROOT_DIR}/compiler/*")
 
     cmake_path(CONVERT "$ENV{INCLUDE}" TO_CMAKE_PATH_LIST include_env)

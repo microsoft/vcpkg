@@ -1,7 +1,7 @@
 function Setup-Intel-MSVC-Env {
   param(
       [Parameter(Mandatory = $false)]
-      [string]$OneApiRootDir = (Join-Path -Path $PSScriptRoot -ChildPath "../intel-compiler")
+      [string]$OneApiRootDir = (Join-Path -Path $PSScriptRoot -ChildPath "../compiler/intel")
   )
 
   if (-not $env:INTEL_TOOLCHAIN_ENV_ALREADY_SET) {

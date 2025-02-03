@@ -17,13 +17,13 @@ block()
   set(counter 0)
   foreach(item IN LISTS vsix_installers)
       vcpkg_execute_required_process(
-        COMMAND "${pwsh_exe}" -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_LIST_DIR}/extract-vsix.ps1" "-VsixFile" "${item}" "-ExtractTo" "${CURRENT_PACKAGES_DIR}/VS"
+        COMMAND "${pwsh_exe}" -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_LIST_DIR}/extract-vsix.ps1" "-VsixFile" "${item}" "-ExtractTo" "${CURRENT_PACKAGES_DIR}/compiler/msvc/VS"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
         LOGNAME "extract_msbuild_${counter}.log"
       )
   endforeach()
 
-  set(msbuild_base "${CURRENT_PACKAGES_DIR}/VS/MSBuild/Microsoft/VC/v170/")
+  set(msbuild_base "${CURRENT_PACKAGES_DIR}/compiler/MSVC/VS/MSBuild/Microsoft/VC/v170/")
   set(winsdk_props "${msbuild_base}/Microsoft.Cpp.WindowsSDK.props")
   set(vc_common_props "${msbuild_base}/Microsoft.Cpp.Common.props")
   file(READ "${winsdk_props}" winsdk_props_content)

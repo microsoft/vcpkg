@@ -1,7 +1,7 @@
-diff --git a/VS/Common7/Tools/vsdevcmd/ext/netfxsdk.bat b/VS/Common7/Tools/vsdevcmd/ext/netfxsdk.bat
+diff --git a/Common7/Tools/vsdevcmd/ext/netfxsdk.bat b/Common7/Tools/vsdevcmd/ext/netfxsdk.bat
 index 24213fae9c..b718bad467 100644
---- a/VS/Common7/Tools/vsdevcmd/ext/netfxsdk.bat	
-+++ b/VS/Common7/Tools/vsdevcmd/ext/netfxsdk.bat
+--- a/Common7/Tools/vsdevcmd/ext/netfxsdk.bat	
++++ b/Common7/Tools/vsdevcmd/ext/netfxsdk.bat
 @@ -77,23 +77,11 @@ exit /B 0
  
  @REM -----------------------------------------------------------------------
