@@ -31,7 +31,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-	-DCMAKE_CXX_STANDARD=23
 	-DWITH_JAVA=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_TESTS=OFF
