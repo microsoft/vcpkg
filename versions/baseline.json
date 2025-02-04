@@ -8253,7 +8253,7 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.30.11",
+      "baseline": "2.30.12",
       "port-version": 0
     },
     "sdl2-gfx": {
