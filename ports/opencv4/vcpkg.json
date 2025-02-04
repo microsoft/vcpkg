@@ -49,10 +49,8 @@
       "name": "msmf",
       "platform": "windows & !uwp & !mingw"
     },
-    "jpegxl",
     "png",
     "quirc",
-    "spng",
     "thread",
     "tiff",
     "webp",
@@ -264,6 +262,12 @@
       "description": "JPEG support for opencv",
       "dependencies": [
         "libjpeg-turbo"
+      ]
+    },
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
+      "dependencies": [
+        "libjxl"
       ]
     },
     "msmf": {

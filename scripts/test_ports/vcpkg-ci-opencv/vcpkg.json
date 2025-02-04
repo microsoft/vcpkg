@@ -36,6 +36,7 @@
       "name": "opencv",
       "default-features": false,
       "features": [
+        "jpegxl",
         "opencl",
         "openexr"
       ],
@@ -93,7 +94,8 @@
       "features": [
         "cuda",
         "cudnn",
-        "dnn-cuda"
+        "dnn-cuda",
+        "spng"
       ],
       "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
     },

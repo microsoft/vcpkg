@@ -1,11 +1,5 @@
 set(USE_QT_VERSION "6")
 
-vcpkg_download_distfile(CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS
-    URLS https://github.com/opencv/opencv_contrib/commit/b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
-    SHA512 170a06d903d50fdcb2082b13015f6efb2bd2d8bbcc203e9c254f26575113a773304e9777b5d72a7b39c52f93fcbb5158fb8579d8da3337e1774079b345d0ea93
-    FILENAME b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -197,7 +191,6 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
-      ${CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS}
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
@@ -429,6 +422,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
         -DWITH_JASPER=${WITH_JASPER}
+        -DWITH_PNG=${WITH_PNG}
         -DWITH_MATLAB=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_OPENCLAMDFFT=OFF
