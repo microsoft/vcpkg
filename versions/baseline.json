@@ -9596,6 +9596,10 @@
       "baseline": "1.2.10.2",
       "port-version": 0
     },
+    "vmaware-vm-detection": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "volk": {
       "baseline": "1.4.304",
       "port-version": 0
