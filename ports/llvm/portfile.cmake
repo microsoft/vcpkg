@@ -13,7 +13,6 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
-        82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
 )
 
 vcpkg_check_features(
