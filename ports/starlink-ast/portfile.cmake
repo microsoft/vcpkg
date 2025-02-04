@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         cminpack.diff
+        install-errors.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cminpack")
 
