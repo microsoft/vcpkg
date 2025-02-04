@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 9e9ec501336127339347c01ffd47768d501a84ef415c6a72fe56d31e867f982baeb3c4659be8e9b8475848a460357f33a6b2aa0ee9f81150e363963b98387bc0
+    SHA512 775a3f7cdcc71c7a104f25d33094d82534f4d9fe0a227adeab12c51d3d579f7fdae2b8ba78c9c30b59ee55934d542241c8d2a090215adf14678354bd83aec9c7 
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -13,10 +13,7 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
-        75711.patch # [clang] Add intrin0.h header to mimic intrin0.h used by MSVC STL for clang-cl #75711
-        79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
         82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
-        add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
 )
 
 vcpkg_check_features(
