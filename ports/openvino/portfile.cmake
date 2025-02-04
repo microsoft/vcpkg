@@ -40,6 +40,12 @@ vcpkg_download_distfile(PATCH_008_FIX_LEVEL_ZERO_SYSTEM # https://github.com/ope
     FILENAME openvinotoolkit-openvino-65f6ce8c5cd0ac5ae5f64fc1c533cc621475a105.patch
 )
 
+vcpkg_download_distfile(PATCH_009_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG # https://github.com/openvinotoolkit/openvino/pull/28816
+    URLS https://github.com/openvinotoolkit/openvino/commit/d51bcdb17ca9f010e761c1e55198743242c4e186.patch?full_index=1
+    SHA512 67c03d2e13ebeaa275dbe856a833032d478d125f5e6d19c3475f064bddf74225490960fabf159935a045bceb4f449983badd9e6fb0fc2b96f9faebea20d2f81f
+    FILENAME openvinotoolkit-openvino-d51bcdb17ca9f010e761c1e55198743242c4e186.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
@@ -56,6 +62,7 @@ vcpkg_from_github(
         "${PATCH_006_LEVEL_ZERO_AT_RUNTIME}"
         "${PATCH_007_OPENCL_V2024_10_24}"
         "${PATCH_008_FIX_LEVEL_ZERO_SYSTEM}"
+        "${PATCH_009_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
