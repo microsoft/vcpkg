@@ -6,8 +6,6 @@ vcpkg_from_github(
     REPO wpilibsuite/allwpilib
     REF "v${formatted_date}"
     SHA512 729ab66a39725551e36bce26ffb6dd9f40f941f432322e9733f4652dae294dafe2544647c6f05c7f301955429b1aca8549f5b7f17bacd50524bfe1ad4ae1d2ee
-    PATCHES
-        remove_eigen_placeholders.patch
 )
 
 if("allwpilib" IN_LIST FEATURES)
@@ -41,7 +39,7 @@ vcpkg_cmake_configure(
         -DWITH_SIMULATION_MODULES=OFF
         -DUSE_SYSTEM_FMTLIB=ON
         -DUSE_SYSTEM_LIBUV=ON
-        -DUSE_SYSTEM_EIGEN=ON
+        -DUSE_SYSTEM_EIGEN=OFF
         "-DFETCHCONTENT_SOURCE_DIR_APRILTAGLIB=${SOURCE_PATH_APRILTAG}"
     MAYBE_UNUSED_VARIABLES
         FETCHCONTENT_SOURCE_DIR_APRILTAGLIB
