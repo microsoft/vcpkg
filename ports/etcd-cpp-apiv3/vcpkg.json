@@ -1,7 +1,7 @@
 {
   "name": "etcd-cpp-apiv3",
   "version": "0.15.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The etcd-cpp-apiv3 is a C++ API for etcd's v3 client API, i.e., ETCDCTL_API=3.",
   "homepage": "https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3",
   "license": "BSD-3-Clause",
