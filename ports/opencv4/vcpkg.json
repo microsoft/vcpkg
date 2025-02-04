@@ -436,17 +436,17 @@
         }
       ]
     },
+    "spng": {
+      "description": "Enable libspng integration",
+      "dependencies": [
+        "libspng"
+      ]
+    },
     "tbb": {
       "description": "Enable Intel Threading Building Blocks",
       "supports": "!static",
       "dependencies": [
         "tbb"
-      ]
-    },
-    "spng": {
-      "description": "Enable libspng integration",
-      "dependencies": [
-        "libspng"
       ]
     },
     "thread": {
