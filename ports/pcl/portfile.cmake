@@ -13,9 +13,16 @@ vcpkg_from_github(
         fix-clang-cl.patch
         gh-5985-inline.patch
         io_ply.patch
+        6053.diff # https://github.com/PointCloudLibrary/pcl/pull/6053
+        6990a3b0d7dd3c1ca04a1a473cc172a937418060.diff # https://github.com/PointCloudLibrary/pcl/pull/6105
+        0012-msvc-optimizer-workaround.patch # backport pcl #6143 and #6154
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+	set(PCL_DONT_TRY_SSE "-DPCL_ENABLE_SSE=OFF")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -49,6 +56,7 @@ vcpkg_cmake_configure(
         -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         -DPCL_ENABLE_MARCHNATIVE=OFF
+        ${PCL_DONT_TRY_SSE}
         # WITH
         -DWITH_DAVIDSDK=OFF
         -DWITH_DOCS=OFF

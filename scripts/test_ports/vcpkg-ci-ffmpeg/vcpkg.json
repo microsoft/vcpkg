@@ -1,7 +1,6 @@
 {
   "name": "vcpkg-ci-ffmpeg",
-  "version-string": "1",
-  "port-version": 3,
+  "version-string": "ci",
   "description": "Port to force features of certain ports within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "dependencies": [
@@ -21,6 +20,7 @@
         "lzma",
         "mp3lame",
         "nonfree",
+        "openh264",
         "openjpeg",
         "openmpt",
         "openssl",
@@ -68,12 +68,12 @@
       "default-features": false,
       "features": [
         "ass",
+        "dvdvideo",
         "ffmpeg",
         "fontconfig",
         "fribidi",
         "modplug",
         "opencl",
-        "openh264",
         "srt"
       ],
       "platform": "!uwp"
@@ -116,7 +116,7 @@
       "features": [
         "aom"
       ],
-      "platform": "!(windows & arm & !uwp)"
+      "platform": "!(windows & arm) & !uwp"
     },
     {
       "name": "ffmpeg",

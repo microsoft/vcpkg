@@ -8,14 +8,9 @@
     {
       "name": "curl",
       "features": [
-        "idn"
-      ]
-    },
-    {
-      "name": "curl",
-      "features": [
         "c-ares",
         "http2",
+        "idn",
         "zstd"
       ]
     },
@@ -33,7 +28,8 @@
         "gsasl",
         "mbedtls",
         "openssl",
-        "psl"
+        "psl",
+        "wolfssl"
       ],
       "platform": "!uwp"
     },
@@ -57,7 +53,7 @@
       "features": [
         "gnutls"
       ],
-      "platform": "!arm & !xbox"
+      "platform": "!arm & !android & !xbox"
     }
   ]
 }

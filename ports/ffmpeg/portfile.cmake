@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 3ba02e8b979c80bf61d55f414bdac2c756578bb36498ed7486151755c6ccf8bd8ff2b8c7afa3c5d1acd862ce48314886a86a105613c05e36601984c334f8f6bf
+    SHA512 3b273769ef1a1b63aed0691eef317a760f8c83b1d0e1c232b67bbee26db60b4864aafbc88df0e86d6bebf07185bbd057f33e2d5258fde6d97763b9994cd48b6f
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -11,7 +11,6 @@ vcpkg_from_github(
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
-        0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
@@ -24,7 +23,7 @@ if(SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
     vcpkg_add_to_path("${NASM_EXE_PATH}")
@@ -151,9 +150,16 @@ if(VCPKG_DETECTED_CMAKE_STRIP)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
-    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}/usr/share/automake-1.16")
+    vcpkg_execute_required_process(
+        COMMAND "${SHELL}" -c "'/usr/bin/automake' --print-lib"
+        OUTPUT_VARIABLE automake_lib
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY "${MSYS_ROOT}"
+        LOGNAME automake-print-lib
+    )
+    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}${automake_lib}")
 else()
     find_program(SHELL bash)
 endif()

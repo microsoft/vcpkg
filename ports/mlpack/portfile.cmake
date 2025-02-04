@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/mlpack
     REF "${VERSION}"
-    SHA512 2ae159a4aa8340be4763944c1b1e460f4d8fe838c79325cffdcacfbac340cca4cec3031493caec7e9b4dcf6fc921cbd93c1384d7e1954492fe410c83d3e615f8
+    SHA512 2be9c3b8e2874ebbf9e39ade1d65774e1d7d08eea1427d592ef9f49f6a35a1441585749e043e058cbcb8f5e7eae4cf589b0f4931c59ae6c0fed74c32bac0f4b3
     HEAD_REF master
 )
 

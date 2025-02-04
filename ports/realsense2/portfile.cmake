@@ -2,11 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
     REF "v${VERSION}"
-    SHA512 20561294da571e0e1f5f8c9ac1039828512f3361a4241e5ad320bbb684626c1e78cd18e6a6344ec80fcd86dc699742c51069bc2b6895aec1dcbd9f394d2c9998
+    SHA512 0e8acc96bff60b6842fea03c871ff9b350c4f1c90c9493d6e1163384ebd4ba7c31fb110e9cca3547d36145628ad93cca298f36ba9d9cf8692dab5ad0d3d58a4d
     HEAD_REF master
     PATCHES
         fix_openni2.patch
-        fix-osx.patch # from https://github.com/IntelRealSense/librealsense/pull/11997
+        fix-nlohmann_json.patch
+        fix-android-prefix-path.patch
+        add-include-chrono.patch #https://github.com/IntelRealSense/librealsense/pull/13537
 )
 
 file(COPY "${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf" DESTINATION "${SOURCE_PATH}")
@@ -48,10 +50,11 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/realsense2)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "\${_IMPORT_PREFIX}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "\${_IMPORT_PREFIX}")
-	
-	file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/common/fw")
-	file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/common/fw/fw.res" DESTINATION "${CURRENT_PACKAGES_DIR}/common/fw")
+    if(NOT VCPKG_BUILD_TYPE)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "\${_IMPORT_PREFIX}")
+    endif()
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/common/fw")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/common/fw/fw.res" DESTINATION "${CURRENT_PACKAGES_DIR}/common/fw")
 endif()
 vcpkg_copy_pdbs()
 

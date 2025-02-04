@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMath
-    REF feb2024b
-    SHA512 c1d9eebebc6ad049ba8999f04a31e8b240783f597776ea3b38512ec6b272f27b233d1aea80fa0e4dac01ff3d52d33a0e800150383572d0d4def979dd74e6fbde
+    REF oct2024
+    SHA512 501a3c8b51cd6d3d4fbcc511c2c37f1d0511bd84d546d5254c2bc81238c11242b9d62c7a153ee110dc9d96a0c7d2544428d8de832c943b680b0cb09d8e3760f2
     HEAD_REF main
+    PATCHES include-path-fix.patch
 )
 
 vcpkg_cmake_configure(
@@ -27,7 +28,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     file(INSTALL
       ${DOWNLOADS}/sal.h
-      DESTINATION ${CURRENT_PACKAGES_DIR}/include/directxmath)
+      DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

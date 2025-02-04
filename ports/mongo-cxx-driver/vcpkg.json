@@ -1,7 +1,6 @@
 {
   "name": "mongo-cxx-driver",
-  "version": "3.10.2",
-  "port-version": 1,
+  "version": "4.0.0",
   "description": "MongoDB C++ Driver.",
   "homepage": "https://github.com/mongodb/mongo-cxx-driver",
   "license": "Apache-2.0",
@@ -16,18 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "boost": {
-      "description": [
-        "Enables the Boost C++17 polyfill for bsoncxx.",
-        "Warning: This feature changes the ABI."
-      ],
-      "dependencies": [
-        "boost-optional",
-        "boost-smart-ptr",
-        "boost-utility"
-      ]
-    }
-  }
+  ]
 }

@@ -2,14 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 aa96ad2bf30dbe09849ecfb64ec6e60ba4fd3bc2d144c7d576b1e59476ef45d9d744da37806b1c00e3a0413390b35c6d3d4401b89c07c5663122280eca39e501
+    SHA512 72d978326a3641e69706c158cd5c4b1a4138dedbe1bf8c0f1c02fbb03291c1a49ff36afdaf8cf432fee84952bbaecf8801efa3f1afb50f600490e36ec3d577ef
     HEAD_REF master
     PATCHES
         dependencies.patch
         install-layout.patch
-        keep-dup-libs.patch
         windows-linkage.patch
-        winpr_strerror.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
@@ -84,7 +82,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_list(SET tools)
 if(VCPKG_TARGET_IS_WINDOWS)
     if("server" IN_LIST FEATURES)
-        list(APPEND tools wfreerdp-server)
+        list(APPEND tools wfreerdp-server-cli)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
     if("server" IN_LIST FEATURES)
@@ -113,27 +111,21 @@ if(tools)
     vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "." IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}/" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/build-config.h" "\"${CURRENT_PACKAGES_DIR}" "/* vcpkg redacted */ \"" IGNORE_UNCHANGED)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # They build static with dllexport, so it must be used with dllexport. Proper fix needs invasive patching.
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
     if(WITH_SERVER)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rdtk0/rdtk/api.h" "#ifdef RDTK_EXPORTS" "#if 1")
     endif()
 endif()
 
+file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/config"
-    "${CURRENT_PACKAGES_DIR}/include/CMakeFiles"
+    ${cmakefiles}
+    "${CURRENT_PACKAGES_DIR}/include/winpr3/config"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
-if(cmakefiles)
-    file(REMOVE_RECURSE ${cmakefiles})
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

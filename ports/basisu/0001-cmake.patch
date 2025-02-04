@@ -1,0 +1,204 @@
+Remove once https://github.com/BinomialLLC/basis_universal/pull/383 merged
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8345623d..f4ed6708 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.5)
+ project(basisu)
+ option(STATIC "static linking" FALSE)
+ option(SAN "sanitize" FALSE)
++option(EXAMPLES "Build examples" TRUE)
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+ 
+@@ -174,15 +175,21 @@ add_executable(basisu basisu_tool.cpp)
+ target_link_libraries(basisu PRIVATE basisu_encoder)
+ 
+ # Create the new example executable and link against the static library
+-add_executable(examples example/example.cpp)
+-target_link_libraries(examples PRIVATE basisu_encoder)
++if(EXAMPLES)
++    add_executable(examples example/example.cpp)
++    target_link_libraries(examples PRIVATE basisu_encoder)
++endif()
+ 
+ if (ZSTD)
+     target_compile_definitions(basisu PRIVATE BASISD_SUPPORT_KTX2_ZSTD=1)
+-    target_compile_definitions(examples PRIVATE BASISD_SUPPORT_KTX2_ZSTD=1)
++    if(EXAMPLES)
++        target_compile_definitions(examples PRIVATE BASISD_SUPPORT_KTX2_ZSTD=1)
++    endif()
+ else()
+     target_compile_definitions(basisu PRIVATE BASISD_SUPPORT_KTX2_ZSTD=0)
+-    target_compile_definitions(examples PRIVATE BASISD_SUPPORT_KTX2_ZSTD=0)
++    if(EXAMPLES)
++        target_compile_definitions(examples PRIVATE BASISD_SUPPORT_KTX2_ZSTD=0)
++    endif()
+ endif()
+ 
+ if (NOT MSVC)
+@@ -192,7 +199,9 @@ if (NOT MSVC)
+         set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DBASISU_SUPPORT_OPENCL=1")    
+         
+         target_include_directories(basisu PRIVATE ${OpenCL_INCLUDE_DIRS})
+-        target_include_directories(examples PRIVATE ${OpenCL_INCLUDE_DIRS})
++        if(EXAMPLES)
++            target_include_directories(examples PRIVATE ${OpenCL_INCLUDE_DIRS})
++        endif()
+ 		target_include_directories(basisu_encoder PRIVATE ${OpenCL_INCLUDE_DIRS})
+         set(BASISU_EXTRA_LIBS ${OpenCL_LIBRARIES})
+     endif()
+@@ -203,22 +212,30 @@ else()
+         set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DBASISU_SUPPORT_OPENCL=1")    
+         
+         target_include_directories(basisu PRIVATE "OpenCL")
+-        target_include_directories(examples PRIVATE "OpenCL")
++        if(EXAMPLES)
++            target_include_directories(examples PRIVATE "OpenCL")
++        endif()
+ 		target_include_directories(basisu_encoder PRIVATE "OpenCL")
+ 
+         if (BUILD_X64)
+             target_link_libraries(basisu PRIVATE "${CMAKE_SOURCE_DIR}/OpenCL/lib/OpenCL64.lib")
+-            target_link_libraries(examples PRIVATE "${CMAKE_SOURCE_DIR}/OpenCL/lib/OpenCL64.lib")
++            if(EXAMPLES)
++                target_link_libraries(examples PRIVATE "${CMAKE_SOURCE_DIR}/OpenCL/lib/OpenCL64.lib")
++            endif()
+         else()
+             target_link_libraries(basisu PRIVATE "${CMAKE_SOURCE_DIR}/OpenCL/lib/OpenCL.lib")
+-            target_link_libraries(examples PRIVATE "${CMAKE_SOURCE_DIR}/OpenCL/lib/OpenCL.lib")
++            if(EXAMPLES)
++                target_link_libraries(examples PRIVATE "${CMAKE_SOURCE_DIR}/OpenCL/lib/OpenCL.lib")
++            endif()
+         endif()
+     endif()
+ endif()    
+ 
+ if (NOT MSVC)
+     target_link_libraries(basisu PRIVATE m pthread ${BASISU_EXTRA_LIBS})
+-    target_link_libraries(examples PRIVATE m pthread ${BASISU_EXTRA_LIBS})
++    if(EXAMPLES)
++        target_link_libraries(examples PRIVATE m pthread ${BASISU_EXTRA_LIBS})
++    endif()
+ endif()
+ 
+ if (NOT EMSCRIPTEN)
+@@ -242,13 +259,15 @@ if (MSVC)
+         RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+         RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+         RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+-    )	
+-	
+-	set_target_properties(examples PROPERTIES 
+-        RUNTIME_OUTPUT_NAME "examples"
+-        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+-        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+-        RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+-        RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+-    )	
++    )
++
++    if(EXAMPLES)
++        set_target_properties(examples PROPERTIES
++            RUNTIME_OUTPUT_NAME "examples"
++            RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
++            RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
++            RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
++            RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
++        )
++    endif()
+ endif()
+
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4ed6708..e4e7c7e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -240,15 +240,16 @@ endif()
+ 
+ if (NOT EMSCRIPTEN)
+     if (UNIX)
+-        if (CMAKE_BUILD_TYPE STREQUAL Release)
+-            if (APPLE)
+-                add_custom_command(TARGET basisu POST_BUILD COMMAND strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu)
+-				#message("strip command: strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu")
+-            else()
+-                add_custom_command(TARGET basisu POST_BUILD COMMAND strip -g -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu)
+-				#message("strip command: strip -g -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu")
+-            endif()
++        set(STRIP_ARGS -X -x)
++        if (NOT APPLE)
++            list(APPEND STRIP_ARGS -g)
+         endif()
++        add_custom_command(
++            TARGET basisu POST_BUILD
++            DEPENDS basisu
++            COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
++            ARGS ${STRIP_ARGS} $<TARGET_FILE:basisu>
++        )
+     endif()
+ endif()
+ 
+
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4e7c7e6..46818dc4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,6 +169,10 @@ endif()
+ 
+ # Create the static library
+ add_library(basisu_encoder STATIC ${ENCODER_LIB_SRC_LIST})
++target_include_directories(basisu_encoder PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/transcoder>
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/encoder>
++    $<INSTALL_INTERFACE:include>)
+ 
+ # Create the basisu executable and link against the static library
+ add_executable(basisu basisu_tool.cpp)
+@@ -272,3 +276,31 @@ if (MSVC)
+         )
+     endif()
+ endif()
++
++# Target Installation
++install(TARGETS basisu_encoder basisu EXPORT basisu-targets)
++install(DIRECTORY "./transcoder" DESTINATION "include/basisu/"
++    FILES_MATCHING PATTERN "*.h" PATTERN "*.inc"
++)
++install(DIRECTORY "./encoder" DESTINATION "include/basisu/"
++    FILES_MATCHING PATTERN "*.h"
++)
++
++# CMake Export
++include(CMakePackageConfigHelpers)
++include(GNUInstallDirs)
++configure_package_config_file(
++    ${PROJECT_SOURCE_DIR}/basisu-config.cmake.in
++    ${PROJECT_BINARY_DIR}/basisu-config.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu)
++export(
++    TARGETS basisu_encoder basisu
++    NAMESPACE basisu::
++    FILE ${PROJECT_BINARY_DIR}/basisu-targets.cmake)
++install(
++    FILES ${PROJECT_BINARY_DIR}/basisu-config.cmake
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu)
++install(
++    EXPORT basisu-targets
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu
++    NAMESPACE basisu::)
+diff --git a/basisu-config.cmake.in b/basisu-config.cmake.in
+new file mode 100644
+index 00000000..6ac330ed
+--- /dev/null
++++ b/basisu-config.cmake.in
+@@ -0,0 +1,7 @@
++@PACKAGE_INIT@
++
++if (NOT TARGET basisu::basisu_encoder)
++  include(${CMAKE_CURRENT_LIST_DIR}/basisu-targets.cmake)
++endif ()
++
++check_required_components(basisu)

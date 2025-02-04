@@ -1,6 +1,6 @@
 {
   "name": "qtnetworkauth",
-  "version": "6.7.2",
+  "version": "6.8.1",
   "description": "Qt Network Authorization provides a set of APIs that enable Qt applications to obtain limited access to online accounts and HTTP services without exposing users' passwords.",
   "homepage": "https://www.qt.io/",
   "license": null,
