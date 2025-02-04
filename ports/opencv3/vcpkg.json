@@ -1,7 +1,6 @@
 {
   "name": "opencv3",
-  "version": "3.4.18",
-  "port-version": 18,
+  "version": "3.4.20",
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -21,7 +20,23 @@
     "zlib"
   ],
   "default-features": [
+    {
+      "name": "dnn",
+      "platform": "!android"
+    },
+    {
+      "name": "gapi",
+      "platform": "!uwp"
+    },
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
     "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !uwp & !mingw"
+    },
     "png",
     "quirc",
     "tiff",
@@ -142,13 +157,6 @@
       "description": "JPEG support for opencv",
       "dependencies": [
         "libjpeg-turbo"
-      ]
-    },
-    "lapack": {
-      "description": "LAPACK support for opencv",
-      "dependencies": [
-        "blas",
-        "lapack"
       ]
     },
     "line-descriptor": {
