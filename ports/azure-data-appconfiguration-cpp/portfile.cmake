@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF e0c5f27d6bb2c56dd705c8b91c4b463bfa67d03d
-    SHA512 61ddc520f72e688f0f841a300e8bf491f73dee0c7eb2c0dbaf7c8b1002ed73f96af84f9bba59fc8af7eb6a11b174370e8394d0ed164b82d0ec8a4b46e6762b49
+    REF ca7968c1cd0a408d2894468d486e4208ec56780b
+    SHA512 34ae7e358ab7b5a8eb3f79e2136d9d868357d20fb451cb446c9d575d48781ae9e906ec5f1abe06d185bcf964874f3e1be1f9960a47252cf11c5d38f46650bd8e
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/eventhubs/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs" "${SOURCE_PATH}/sdk/eventhubs/_")
-  file(RENAME "${SOURCE_PATH}/sdk/eventhubs" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
