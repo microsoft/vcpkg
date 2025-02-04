@@ -50,8 +50,6 @@ vcpkg_cmake_configure(
         -DSTEAMAUDIO_ENABLE_EMBREE=OFF
         -DSTEAMAUDIO_ENABLE_RADEONRAYS=OFF
         -DSTEAMAUDIO_ENABLE_TRUEAUDIONEXT=OFF
-        # So the patched port can find the vcpkg host flatc compiler
-        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         ${VCPKG_MACOS_ARCH}
 )
 
@@ -70,7 +68,7 @@ file(REMOVE_RECURSE
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(COMMENT
-[[steam-audio's license and third party notices are included below. If steam-audio's third party
+[[steam-audio's license and third party notices are included below. In steam-audio's third party
 notices, PFFT and MySOFA are provided by other ports upon which this one depends. IPP, FFTS,
 Embree, RadeonRays, and TrueAudioNext are all disabled in this build. However, the CIPIC HRTF
 Database and Google Spherical Harmonics library components may be used here.]]
