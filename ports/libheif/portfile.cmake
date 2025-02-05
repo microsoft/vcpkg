@@ -11,14 +11,14 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        hevc     WITH_X265
-        aom      WITH_AOM_DECODER
-        aom      WITH_AOM_ENCODER
-        openjpeg WITH_OpenJPEG_DECODER
-        openjpeg WITH_OpenJPEG_ENCODER
-        jpeg     WITH_JPEG_DECODER
-        jpeg     WITH_JPEG_ENCODER
-	iso23001-17 WITH_UNCOMPRESSED_CODEC
+        hevc        WITH_X265
+        aom         WITH_AOM_DECODER
+        aom         WITH_AOM_ENCODER
+        openjpeg    WITH_OpenJPEG_DECODER
+        openjpeg    WITH_OpenJPEG_ENCODER
+        jpeg        WITH_JPEG_DECODER
+        jpeg        WITH_JPEG_ENCODER
+        iso23001-17 WITH_UNCOMPRESSED_CODEC
 )
 
 vcpkg_cmake_configure(
