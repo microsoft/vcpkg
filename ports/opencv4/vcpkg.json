@@ -279,6 +279,7 @@
     },
     "opencl": {
       "description": "Enable opencl support",
+      "supports": "!osx",
       "dependencies": [
         "opencl"
       ]
@@ -291,6 +292,7 @@
     },
     "opengl": {
       "description": "opengl support for opencv",
+      "supports": "!osx",
       "dependencies": [
         "opengl"
       ]

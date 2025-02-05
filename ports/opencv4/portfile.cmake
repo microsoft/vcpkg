@@ -179,6 +179,14 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/0.3.0/kleidicv-0.3.0.tar.gz"
+    FILENAME "opencv-cache/kleidicv/51a77b0185c2bac2a968a2163869b1ed-kleidicv-0.3.0.tar.gz"
+    SHA512 63e420f38d646193071bc2c7a0bb10f7560b7aa44bd74ba6ce608bdc329aacc0b45cd26178ccc6c13645d792c26ac83007b693fab35793c6ebb9d96e6b2fc74b
+  )
+endif()
+
 if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH

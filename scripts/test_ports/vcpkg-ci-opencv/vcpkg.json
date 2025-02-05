@@ -37,10 +37,17 @@
       "default-features": false,
       "features": [
         "jpegxl",
-        "opencl",
         "openexr"
       ],
       "platform": "!uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "opencl"
+      ],
+      "platform": "!uwp & !osx"
     },
     {
       "name": "opencv",
@@ -106,7 +113,6 @@
         "freetype",
         "gdcm",
         "ipp",
-        "opengl",
         "openjpeg",
         "qt",
         "sfm",
@@ -114,6 +120,14 @@
         "vulkan"
       ],
       "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "opengl"
+      ],
+      "platform": "!uwp & !android & !osx"
     },
     {
       "name": "opencv2",
