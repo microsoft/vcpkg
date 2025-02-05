@@ -8,17 +8,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
-        0020-fix-pc-file.patch
-        0022-deduplicate-libs.patch
         export-components.patch
         dependencies.patch
+        pkgconfig-curl-config.patch
         cmake-config.patch
-        rtmp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
@@ -75,8 +72,9 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
+        -DSHARE_LIB_OBJECT=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_PKGCONFIG=OFF
+        -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
@@ -110,6 +108,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix='\${prefix}/debug'" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nexec_prefix=\"\${prefix}\"" "\nexec_prefix=\"\${prefix}/debug\"")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-l${namespec}-d")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "curl." "curl-d.")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
