@@ -10,8 +10,20 @@ index 0000000..3e16bd1
 +
 +check_required_components(EIPScanner)
 +
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 68a291e..d2562a8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,6 +13,7 @@ option(TEST_ENABLED "Enable unit test" OFF)
+ option(EXAMPLE_ENABLED "Build examples" OFF)
+ 
+ add_subdirectory(src)
++
+ if (EXAMPLE_ENABLED)
+     add_subdirectory(examples)
+ endif()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dc2bbb9..2d8671e 100644
+index dc2bbb9..d8d3cfa 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -64,7 +64,18 @@ set_target_properties(
@@ -34,10 +46,15 @@ index dc2bbb9..2d8671e 100644
          LIBRARY
              DESTINATION lib
          ARCHIVE
-@@ -73,3 +84,28 @@ install(TARGETS EIPScanner EIPScannerS
+@@ -73,3 +84,33 @@ install(TARGETS EIPScanner EIPScannerS
  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/
          DESTINATION include/EIPScanner
          FILES_MATCHING PATTERN "*.h*")
++
++target_include_directories(${install_target}
++    INTERFACE
++        $<INSTALL_INTERFACE:include/EIPScanner>
++)
 +
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
