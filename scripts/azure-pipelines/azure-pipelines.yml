@@ -26,6 +26,12 @@ jobs:
 
 - template: windows/azure-pipelines.yml
   parameters:
+    jobName: x64_windows_release
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: windows/azure-pipelines.yml
+  parameters:
     jobName: x64_windows_static
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
