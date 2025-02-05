@@ -4,14 +4,12 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e68e6c186d7577bd17e5c46c3109fbeaba0bd0698599c401d195430c3375170d5d5ed45379fdc2c6f1fea817e1ae01cddaf6b3de9130f5896b8adc9f2bab105b
     HEAD_REF master
-    PATCHES
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPLUTOVG_BUILD_EXAMPLES=OFF
-        -DBUILD_SHARED_LIBS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
