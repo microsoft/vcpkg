@@ -4,6 +4,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
+vcpkg_download_distfile(PATCH_PR_7868_FIX_GSTX265ENC_C
+    URLS https://gitlab.freedesktop.org/gstreamer/gstreamer/-/commit/ee3802cf71b386194e2a6318765e0547b37f52c8.diff
+    SHA512 3cd7395562a563f474ddb535d307e0a6aa30027a8c1cf5efea7560d989c28761eb9afa8dc89d7aee66364118c7ed1cef9a3766129bb830cc3ca6b8742b20fd4c
+    FILENAME gstreamer-gstreamer-1.25.1-ee3802cf71b386194e2a6318765e0547b37f52c8.patch
+)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,7 +29,8 @@ vcpkg_from_gitlab(
         fix-bz2-windows-debug-dependency.patch
         no-downloads.patch
         ${PATCHES}
-		fix-multiple-def.patch
+        fix-multiple-def.patch
+        "${PATCH_PR_7868_FIX_GSTX265ENC_C}"
 )
 
 vcpkg_find_acquire_program(FLEX)
