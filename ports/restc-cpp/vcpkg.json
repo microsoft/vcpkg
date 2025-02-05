@@ -1,7 +1,6 @@
 {
   "name": "restc-cpp",
-  "version-semver": "0.10.0",
-  "port-version": 4,
+  "version-semver": "1.0.0",
   "description": "Modern C++ REST Client library",
   "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
@@ -12,6 +11,7 @@
     "boost-coroutine",
     "boost-date-time",
     "boost-filesystem",
+    "boost-log",
     "boost-program-options",
     "boost-system",
     "boost-uuid",
@@ -30,12 +30,6 @@
     "zlib"
   ],
   "features": {
-    "boost-log": {
-      "description": "Use boost-log for logging.",
-      "dependencies": [
-        "boost-log"
-      ]
-    },
     "openssl": {
       "description": "OpenSSL support.",
       "dependencies": [

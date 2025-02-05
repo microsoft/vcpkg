@@ -2,16 +2,10 @@ diff --git a/meson.build b/meson.build
 index b253927..312fbdc 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -254,9 +254,9 @@ endif
+@@ -254,5 +254,5 @@ endif
  pkgconfig_variables = [
    'datadir=' + '${prefix}' / get_option('datadir'),
-   'bindir=' + '${prefix}' / get_option('bindir'),
--  'g_ir_scanner=${bindir}/g-ir-scanner',
--  'g_ir_compiler=${bindir}/g-ir-compiler@0@'.format(exe_ext),
--  'g_ir_generate=${bindir}/g-ir-generate@0@'.format(exe_ext),
-+  'g_ir_scanner=${prefix}/tools/gobject-introspection/g-ir-scanner',
-+  'g_ir_compiler=${prefix}/tools/gobject-introspection/g-ir-compiler@0@'.format(exe_ext),
-+  'g_ir_generate=${prefix}/tools/gobject-introspection/g-ir-generate@0@'.format(exe_ext),
-   'gidatadir=${datadir}/gobject-introspection-1.0',
-   'girdir=' + gir_dir_pc_prefix / 'gir-1.0',
-   'typelibdir=${libdir}/girepository-1.0',
+-  'bindir=' + '${prefix}' / get_option('bindir'),
++  'bindir=' + '${prefix}/tools/gobject-introspection',
+   'g_ir_scanner=${bindir}/g-ir-scanner',
+   'g_ir_compiler=${bindir}/g-ir-compiler@0@'.format(exe_ext),

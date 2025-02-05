@@ -13,6 +13,7 @@ vcpkg_from_github(
         graphite.patch
         vulkan-headers.patch
         pdfsubsetfont-uwp.diff
+        skparagraph-dllexport.patch
 )
 
 # De-vendor
@@ -119,7 +120,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false")
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND OPTIONS " skia_enable_skparagraph=false")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
 endif()

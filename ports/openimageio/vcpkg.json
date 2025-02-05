@@ -1,6 +1,7 @@
 {
   "name": "openimageio",
   "version": "3.0.1.0",
+  "port-version": 1,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "license": "BSD-3-Clause",
@@ -82,7 +83,12 @@
       "dependencies": [
         {
           "name": "opencv",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "fs",
+            "intrinsics",
+            "thread"
+          ]
         }
       ]
     },

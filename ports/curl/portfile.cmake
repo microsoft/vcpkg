@@ -13,6 +13,7 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
+        rtmp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,6 +37,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gssapi      CURL_USE_GSSAPI
         gsasl       CURL_USE_GSASL
         gnutls      CURL_USE_GNUTLS
+        rtmp        USE_LIBRTMP
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
