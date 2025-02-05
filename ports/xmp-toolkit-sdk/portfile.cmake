@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO adobe/XMP-Toolkit-SDK
-    REF v2023.12
+    REF "v${VERSION}"
     SHA512 1ab987cdf50fdd0d28e2d0f97dba3cf30fe23dd1ff700d39bdf1fda7c3ae6ce1aa71806dbd77cec84ffcd7672a0a4545007c9dbcac99c83d17b4c1aa7d6b31fb
     PATCHES
         prepare-for-getting-zlib-and-expat-from-vcpkg.patch
@@ -10,6 +10,7 @@ vcpkg_from_github(
 set(pdf_handler_mini_pdfl_dir "windows")
 set(pdf_handler_resource_dir "win")
 
+# The XMPFilesPlugins folder provides the support code and resources you need to build handlers for custom file formats.
 set(plugin_sdk_directory "${CURRENT_PACKAGES_DIR}/src/${PORT}/plugin-sdk")
 file(MAKE_DIRECTORY "${plugin_sdk_directory}/XMPFilesPlugins/PDF_Handler/resource")
 file(COPY "${SOURCE_PATH}/XMPFilesPlugins/api" DESTINATION "${plugin_sdk_directory}/XMPFilesPlugins")
