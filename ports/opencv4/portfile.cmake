@@ -418,24 +418,24 @@ vcpkg_cmake_configure(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
         ###### customized properties
-        ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DWITH_QT=${WITH_QT}
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_PNG=${WITH_PNG}
-        -DWITH_MATLAB=OFF
+        -DWITH_QT=${WITH_QT}
+        -DWITH_AVIF=OFF
         -DWITH_CPUFEATURES=OFF
-        -DWITH_OPENCLAMDFFT=OFF
-        -DWITH_OPENCLAMDBLAS=OFF
-        -DWITH_OPENCL_D3D11_NV=OFF
         -DWITH_ITT=OFF
+        -DWITH_LAPACK=OFF
+        -DWITH_MATLAB=OFF
         -DWITH_NVCUVID=OFF
         -DWITH_NVCUVENC=OFF
-        -DWITH_AVIF=OFF
+        -DWITH_OBSENSOR=OFF
+        -DWITH_OPENCL_D3D11_NV=OFF
+        -DWITH_OPENCLAMDFFT=OFF
+        -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
-        -DWITH_OBSENSOR=OFF
-        -DWITH_LAPACK=OFF
+        -DWITH_ZLIB_NG=OFF
         ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
@@ -479,11 +479,9 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
   endif()
 endif()
 find_dependency(Threads)")
-if("tiff" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
-endif()
-if("ffmpeg" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
+
+if("ade" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(ade)")
 endif()
 if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_IOS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
   string(APPEND DEPS_STRING "
@@ -492,23 +490,20 @@ enable_language(C)
 find_dependency(HDF5)
 find_dependency(Tesseract)")
 endif()
-if("freetype" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
-endif()
-if("tbb" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
-endif()
-if("vtk" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
-endif()
-if("sfm" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
-endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
 endif()
-if("openvino" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
+if("ffmpeg" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
+endif()
+if("freetype" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
+endif()
+if("gdcm" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+endif()
+if("omp" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
 endif()
 if("openexr" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
@@ -516,14 +511,11 @@ endif()
 if("openjpeg" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
 endif()
-if("omp" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
+if("openvino" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
 endif()
 if("ovis" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OGRE)")
-endif()
-if("quirc" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
 endif()
 if("qt" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "
@@ -538,11 +530,23 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent 
 find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT})")
   endif()
 endif()
-if("ade" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(ade)")
+if("quirc" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
 endif()
-if("gdcm" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+if("sfm" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
+endif()
+if("spng" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(SPNG)")
+endif()
+if("tbb" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
+endif()
+if("tiff" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+endif()
+if("vtk" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
 endif()
 
 string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
