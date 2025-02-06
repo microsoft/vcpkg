@@ -552,6 +552,10 @@
       "baseline": "2.0.0.1",
       "port-version": 2
     },
+    "babl": {
+      "baseline": "0.1.110",
+      "port-version": 0
+    },
     "backward-cpp": {
       "baseline": "2023-11-24",
       "port-version": 1
@@ -1442,7 +1446,7 @@
     },
     "c-ares": {
       "baseline": "1.34.4",
-      "port-version": 0
+      "port-version": 1
     },
     "c-dbg-macro": {
       "baseline": "2020-02-29",
@@ -2122,7 +2126,7 @@
     },
     "curl": {
       "baseline": "8.11.1",
-      "port-version": 1
+      "port-version": 2
     },
     "curlcpp": {
       "baseline": "3.1",
@@ -4774,7 +4778,7 @@
     },
     "libmagic": {
       "baseline": "5.46",
-      "port-version": 0
+      "port-version": 1
     },
     "libmariadb": {
       "baseline": "3.4.1",
@@ -5062,7 +5066,7 @@
     },
     "librtmp": {
       "baseline": "2024-03-01",
-      "port-version": 0
+      "port-version": 1
     },
     "librtpi": {
       "baseline": "1.0.1",
@@ -5182,7 +5186,7 @@
     },
     "libssh2": {
       "baseline": "1.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libstemmer": {
       "baseline": "2021.2.2.0",
@@ -8737,8 +8741,8 @@
       "port-version": 0
     },
     "starlink-ast": {
-      "baseline": "9.2.10",
-      "port-version": 1
+      "baseline": "9.2.12",
+      "port-version": 0
     },
     "staticjson": {
       "baseline": "1.0.0",
