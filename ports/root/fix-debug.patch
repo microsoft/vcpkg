@@ -1,0 +1,26 @@
+diff --git a/cmake/modules/FindLZ4.cmake b/cmake/modules/FindLZ4.cmake
+index 221775a10..3ad09a70d 100644
+--- a/cmake/modules/FindLZ4.cmake
++++ b/cmake/modules/FindLZ4.cmake
+@@ -36,7 +36,7 @@
+ find_path(LZ4_INCLUDE_DIR NAME lz4.h PATH_SUFFIXES include)
+ 
+ if(NOT LZ4_LIBRARY)
+-  find_library(LZ4_LIBRARY NAMES lz4 PATH_SUFFIXES lib)
++  find_library(LZ4_LIBRARY NAMES lz4 lz4d PATH_SUFFIXES lib NAMES_PER_DIR)
+ endif()
+ 
+ mark_as_advanced(LZ4_INCLUDE_DIR)
+diff --git a/cmake/modules/FindPCRE.cmake b/cmake/modules/FindPCRE.cmake
+index a0d72ed05..75fcb96c9 100644
+--- a/cmake/modules/FindPCRE.cmake
++++ b/cmake/modules/FindPCRE.cmake
+@@ -58,7 +58,7 @@ endif()
+ 
+ if(NOT PCRE_PCRE_LIBRARY)
+   find_library(PCRE_PCRE_LIBRARY_RELEASE NAMES pcre)
+-  find_library(PCRE_PCRE_LIBRARY_DEBUG NAMES pcre${CMAKE_DEBUG_POSTFIX} pcred)
++  find_library(PCRE_PCRE_LIBRARY_DEBUG NAMES pcred pcre${CMAKE_DEBUG_POSTFIX})
+   include(SelectLibraryConfigurations)
+   select_library_configurations(PCRE_PCRE)
+ endif()

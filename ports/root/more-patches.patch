@@ -1,0 +1,39 @@
+diff --git a/cmake/modules/RootMacros.cmake b/cmake/modules/RootMacros.cmake
+index 64e60c216..ad00f6939 100644
+--- a/cmake/modules/RootMacros.cmake
++++ b/cmake/modules/RootMacros.cmake
+@@ -1842,8 +1842,8 @@ function(ROOT_ADD_GTEST test_suite)
+   endif(ARG_INCLUDE_DIRS)
+ 
+   if(MSVC)
+-    set(test_exports "/EXPORT:_Init_thread_abort /EXPORT:_Init_thread_epoch
+-        /EXPORT:_Init_thread_footer /EXPORT:_Init_thread_header /EXPORT:_tls_index")
++    set(test_exports /EXPORT:_Init_thread_abort /EXPORT:_Init_thread_epoch
++        /EXPORT:_Init_thread_footer /EXPORT:_Init_thread_header /EXPORT:_tls_index)
+     set_property(TARGET ${test_suite} APPEND_STRING PROPERTY LINK_FLAGS ${test_exports})
+   endif()
+ 
+diff --git a/core/rootcling_stage1/CMakeLists.txt b/core/rootcling_stage1/CMakeLists.txt
+index 75f2415e5..0e95489d6 100644
+--- a/core/rootcling_stage1/CMakeLists.txt
++++ b/core/rootcling_stage1/CMakeLists.txt
+@@ -36,5 +36,5 @@ target_include_directories(rootcling_stage1 PRIVATE
+    ${CMAKE_BINARY_DIR}/ginclude         # for RConfigure.h
+ )
+ 
+-set_target_properties(rootcling_stage1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY src)
++#set_target_properties(rootcling_stage1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY src)
+ add_dependencies(rootcling_stage1 ClingUtils)
+diff --git a/graf3d/gl/CMakeLists.txt b/graf3d/gl/CMakeLists.txt
+index a874da9e1..e341225dd 100644
+--- a/graf3d/gl/CMakeLists.txt
++++ b/graf3d/gl/CMakeLists.txt
+@@ -231,7 +231,7 @@ endif()
+ 
+ 
+ if(MSVC)
+-  target_compile_definitions (RGL PRIVATE "GLEW_STATIC")
++  #target_compile_definitions (RGL PRIVATE "GLEW_STATIC")
+ endif()
+ 
+ if(MACOSX_GLU_DEPRECATED)
