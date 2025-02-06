@@ -1,0 +1,64 @@
+diff --git a/XMPCore/build/CMakeListsCommon.txt b/XMPCore/build/CMakeListsCommon.txt
+index db06d91..a98b5d5 100644
+--- a/XMPCore/build/CMakeListsCommon.txt
++++ b/XMPCore/build/CMakeListsCommon.txt
+@@ -89,16 +89,8 @@ source_group("Source Files\\Core Classes" FILES ${CORECLASS_SOURCE_FILES})
+ 
+ file (GLOB ZUID_SOURCE_FILES ${TP_ZUID_PATH}/*.cpp)
+ list (APPEND THIRDPARTY_SOURCE_FILES
+-	${TP_EXPAT_PATH}/xmlparse.c
+-	${TP_EXPAT_PATH}/xmlrole.c
+-	${TP_EXPAT_PATH}/xmltok.c
+ 	${ZUID_SOURCE_FILES}
+ 	)
+-if(WIN32)
+-	list (APPEND THIRDPARTY_SOURCE_FILES ${RESOURCE_ROOT}/win/expat_config.h)
+-else()
+-	list (APPEND THIRDPARTY_SOURCE_FILES ${RESOURCE_ROOT}/${XMP_PLATFORM_SHORT}/expat_config.h)
+-endif()
+ source_group("Source Files\\Third Party" FILES ${THIRDPARTY_SOURCE_FILES})
+ 
+ list (APPEND UTILITY_SOURCE_FILES
+@@ -237,7 +229,7 @@ set(FRAMEWORK_LIST "ALL:CoreFoundation" "Mac:CoreServices")
+ AddMacFramework(${TARGET_NAME} FRAMEWORK_LIST)
+ if(WIN32)
+ 	SetWinLinkFlags(${TARGET_NAME} "rpcrt4.lib ole32.lib" "${XMPCORE_LIB}")
+-else(WIN32)
++else()
+ 	if(UNIX AND NOT APPLE)
+ 		SetWinLinkFlags(${TARGET_NAME} "-Xlinker --version-script -Xlinker \"${RESOURCE_ROOT}/${XMP_PLATFORM_SHORT}/${TARGET_NAME}.exp\"" "")
+ 	else()
+diff --git a/XMPFiles/build/CMakeListsCommon.txt b/XMPFiles/build/CMakeListsCommon.txt
+index ce3b9c7..5c46613 100644
+--- a/XMPFiles/build/CMakeListsCommon.txt
++++ b/XMPFiles/build/CMakeListsCommon.txt
+@@ -200,7 +200,6 @@ list(APPEND SOURCE_FILES
+ 	${INTERNAL_HEADER_PLUGINHANDLER}
+ 	${PUBLIC_HEADER_CLIENTGLUE}
+ 	${PUBLIC_HEADER}
+-	${HEADERFILES_THIRDPARTY_ZLIB}
+ 	${HEADERFILES}
+ 	${RESOURCE_FILES}
+ 	${SOURCEFILES_COMMONCODE_NMDS}
+@@ -213,8 +212,6 @@ list(APPEND SOURCE_FILES
+ 	${SOURCEFILES_PLUGINHANDLER}
+ 	${PUBLIC_XMPCOMMON_CLIENTGLUE_FILES}
+ 	${PUBLIC_XMPCORE_CLIENTGLUE_FILES}
+-	${HEADERFILES_THIRDPARTY_ZLIB}
+-	${FILES_THIRDPARTY_EXPAT}
+ 	)
+ 
+ # include directories
+diff --git a/build/XMP_ConfigCommon.cmake b/build/XMP_ConfigCommon.cmake
+index c101725..de48e15 100644
+--- a/build/XMP_ConfigCommon.cmake
++++ b/build/XMP_ConfigCommon.cmake
+@@ -17,7 +17,7 @@ else(ANDROID)
+ endif(ANDROID)
+ 
+ #add definition specific to XMP and shared by all projects
+-add_definitions(-DXML_STATIC=1 -DHAVE_EXPAT_CONFIG_H=1 )
++add_definitions(-DHAVE_EXPAT_CONFIG_H=1 )
+ if(XMP_BUILD_STATIC)
+ 	add_definitions(-DXMP_StaticBuild=1)
+ else()
