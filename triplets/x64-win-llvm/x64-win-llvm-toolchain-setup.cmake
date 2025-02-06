@@ -14,7 +14,7 @@ function(clean_env)
     message(STATUS "ENV{${env_var}}:$ENV{${env_var}}")
     if(NOT "${env_var}" IN_LIST ENV_WHITELIST)
       message(STATUS "Unsetting ${env_var}")
-      unset(ENV{${env_var}})
+      #unset(ENV{${env_var}})
     endif()
   endforeach()
 
