@@ -1,0 +1,10 @@
+include_guard(GLOBAL)
+
+function(setup_llvm_env)
+    if(NOT DEFINED ENV{LLVMInstallDir})
+        set(CUDA_PATH "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../compiler/cuda")
+        cmake_path(NORMAL_PATH CUDA_PATH)
+        set(ENV{CUDA_PATH} "${CUDA_PATH}")
+        set(ENV{PATH} "$ENV{PATH};$ENV{CUDA_PATH}/bin")
+    endif()
+endfunction()
