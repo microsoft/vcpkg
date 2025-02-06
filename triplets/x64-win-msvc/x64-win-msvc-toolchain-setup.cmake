@@ -10,8 +10,10 @@ function(clean_env)
 
   include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/env-whitelist.cmake")
   foreach(env_var IN LISTS env_vars)
+    message(STATUS "ENV{${env_var}}:$ENV{${env_var}}")
     if(NOT "${env_var}" IN_LIST ENV_WHITELIST)
-      unset(ENV{${env_var}})
+      message(STATUS "Unsetting ${env_var}")
+      #unset(ENV{${env_var}})
     endif()
   endforeach()
 
