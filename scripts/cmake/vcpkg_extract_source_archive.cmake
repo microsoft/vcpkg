@@ -28,7 +28,7 @@ function(vcpkg_extract_source_archive)
 
     set(out_source_path "${ARGV0}")
     cmake_parse_arguments(PARSE_ARGV 1 "arg"
-        "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK;Z_ALLOW_OLD_PARAMETER_NAMES"
+        "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK;Z_ALLOW_OLD_PARAMETER_NAMES;X_PATCHES_IGNORE_WHITESPACE"
         "ARCHIVE;SOURCE_BASE;BASE_DIRECTORY;WORKING_DIRECTORY;REF"
         "PATCHES"
     )
@@ -144,8 +144,15 @@ function(vcpkg_extract_source_archive)
         set(quiet_param "")
     endif()
 
+    if(arg_X_PATCHES_IGNORE_WHITESPACE)
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE X_PATCHES_IGNORE_WHITESPACE)
+    else()
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE "")
+    endif()
+
     z_vcpkg_apply_patches(
         SOURCE_PATH "${temp_source_path}"
+        ${argument_opt_X_PATCHES_IGNORE_WHITESPACE}
         PATCHES ${arg_PATCHES}
         ${quiet_param}
     )

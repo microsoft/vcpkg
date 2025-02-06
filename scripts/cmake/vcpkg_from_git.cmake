@@ -1,6 +1,6 @@
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "X_PATCHES_IGNORE_WHITESPACE"
         "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS"
         "PATCHES"
     )
@@ -175,10 +175,17 @@ SHA is in the history. For example, you may be able to fix this error by changin
         message(STATUS "Using cached ${archive}")
     endif()
 
+    if(arg_X_PATCHES_IGNORE_WHITESPACE)
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE X_PATCHES_IGNORE_WHITESPACE)
+    else()
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE "")
+    endif()
+
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${archive}"
         REF "${sanitized_ref}"
+        ${argument_opt_X_PATCHES_IGNORE_WHITESPACE}
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
         ${extract_working_directory_param}

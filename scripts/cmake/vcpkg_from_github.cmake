@@ -1,6 +1,6 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "X_PATCHES_IGNORE_WHITESPACE"
         "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
@@ -110,10 +110,18 @@ Error was: ${head_version_err}
         ${sha512_param}
         ${redownload_param}
     )
+
+    if(arg_X_PATCHES_IGNORE_WHITESPACE)
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE X_PATCHES_IGNORE_WHITESPACE)
+    else()
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE "")
+    endif()
+
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${archive}"
         REF "${sanitized_ref}"
+        ${argument_opt_X_PATCHES_IGNORE_WHITESPACE}
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
         ${skip_patch_check_param}
