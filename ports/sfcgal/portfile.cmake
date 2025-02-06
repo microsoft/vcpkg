@@ -1,0 +1,31 @@
+# Header only
+vcpkg_buildpath_length_warning(37)
+
+vcpkg_from_gitlab(
+	GITLAB_URL https://gitlab.com
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO SFCGAL/SFCGAL
+	REF v2.0.0
+	SHA512 c22dcb67cd79e31361e02164f6054cdcf64b341fb95d63b5082bf71cf5fccb310304826c554c60a0c8f0bdf3369515de56d41309b835133076133a908e3cf768
+	HEAD_REF master
+	)
+
+set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
+
+vcpkg_cmake_configure(
+	SOURCE_PATH "${SOURCE_PATH}"
+	OPTIONS
+	-DSFCGAL_BUILD_TESTS=OFF
+	-DSFCGAL_USE_STATIC_LIBS=ON
+	-DBUILD_TESTING=OFF
+	)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH bin/sfcgal-config)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
