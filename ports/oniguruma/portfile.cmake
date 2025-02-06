@@ -3,8 +3,8 @@ vcpkg_from_github(
     REPO kkos/oniguruma
     REF "v${VERSION}"
     SHA512 60975b876662dec8701cca5d8d4027c0a36b8effe7dd32679395ed473e26b3d6b72d7f6eb63bd4dc96c3774b594e56808ce14f993f127a5d04363232586160e4
-    HEAD_REF master
-    PATCHES
+    HEAD_REF master 
+    PATCHES 
         fix-uwp.patch
 )
 
