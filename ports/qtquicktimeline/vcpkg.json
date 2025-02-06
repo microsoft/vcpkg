@@ -1,6 +1,6 @@
 {
   "name": "qtquicktimeline",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "The Qt Quick Timeline module enables keyframe-based animations and parameterization.",
   "homepage": "https://www.qt.io/",
   "license": null,
