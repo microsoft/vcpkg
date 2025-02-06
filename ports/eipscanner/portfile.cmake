@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         package.patch
 )
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
