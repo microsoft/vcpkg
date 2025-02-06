@@ -1,0 +1,22 @@
+{
+  "name": "future-config",
+  "version": "0.1.0",
+  "description": "C++ implementation of the Future Config configuration system",
+  "homepage": "https://github.com/F-I-D-O/Future-Config",
+  "license": "LGPL-3.0-or-later",
+  "dependencies": [
+    "fmt",
+    "inja",
+    "spdlog",
+    "tclap",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "yaml-cpp"
+  ]
+}
