@@ -1,5 +1,5 @@
 function(z_vcpkg_apply_patches)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "QUIET" "SOURCE_PATH" "PATCHES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "QUIET;X_PATCHES_IGNORE_WHITESPACE" "SOURCE_PATH" "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "internal error: z_vcpkg_apply_patches was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -12,6 +12,13 @@ function(z_vcpkg_apply_patches)
         unset(git_config_nosystem_backup)
     endif()
 
+    if(arg_X_PATCHES_IGNORE_WHITESPACE)
+        set(whitespace_options --ignore-whitespace --whitespace=nowarn)
+        message(WARNING "Ignoring whitespace mismatches in patches")
+    else()
+        set(whitespace_options "")
+    endif()
+
     set(ENV{GIT_CONFIG_NOSYSTEM} 1)
     set(patchnum 0)
     foreach(patch IN LISTS arg_PATCHES)
@@ -19,7 +26,7 @@ function(z_vcpkg_apply_patches)
         message(STATUS "Applying patch ${patch}")
         set(logname "patch-${TARGET_TRIPLET}-${patchnum}")
         vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false -c core.filemode=true --work-tree=. --git-dir=.git apply "${absolute_patch}" --ignore-whitespace --whitespace=nowarn --verbose
+            COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false -c core.filemode=true --work-tree=. --git-dir=.git apply "${absolute_patch}" ${whitespace_options} --verbose
             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${logname}-out.log"
             ERROR_VARIABLE error
             WORKING_DIRECTORY "${arg_SOURCE_PATH}"

@@ -17,7 +17,7 @@ endfunction()
 
 function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "X_PATCHES_IGNORE_WHITESPACE"
         "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
         "PATCHES")
 
@@ -117,10 +117,18 @@ function(vcpkg_from_gitlab)
         ${sha512_param}
         ${redownload_param}
     )
+
+    if(arg_X_PATCHES_IGNORE_WHITESPACE)
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE X_PATCHES_IGNORE_WHITESPACE)
+    else()
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE "")
+    endif()
+
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${archive}"
         REF "${sanitized_ref}"
+        ${argument_opt_X_PATCHES_IGNORE_WHITESPACE}
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
     )

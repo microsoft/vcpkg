@@ -1,6 +1,6 @@
 function(vcpkg_from_sourceforge)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "DISABLE_SSL;NO_REMOVE_ONE_LEVEL"
+        "DISABLE_SSL;NO_REMOVE_ONE_LEVEL;X_PATCHES_IGNORE_WHITESPACE"
         "OUT_SOURCE_PATH;REPO;REF;SHA512;FILENAME;WORKING_DIRECTORY"
         "PATCHES")
 
@@ -33,12 +33,20 @@ function(vcpkg_from_sourceforge)
     if(DEFINED arg_WORKING_DIRECTORY)
         set(working_directory_param "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
     endif()
+
+    if(arg_X_PATCHES_IGNORE_WHITESPACE)
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE X_PATCHES_IGNORE_WHITESPACE)
+    else()
+        set(argument_opt_X_PATCHES_IGNORE_WHITESPACE "")
+    endif()
+
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
         REF "${sanitized_ref}"
         ${no_remove_one_level_param}
         ${working_directory_param}
+        ${argument_opt_X_PATCHES_IGNORE_WHITESPACE}
         PATCHES ${arg_PATCHES}
     )
 
