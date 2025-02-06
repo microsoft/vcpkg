@@ -183,7 +183,7 @@ if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/0.3.0/kleidicv-0.3.0.tar.gz"
     FILENAME "opencv-cache/kleidicv/51a77b0185c2bac2a968a2163869b1ed-kleidicv-0.3.0.tar.gz"
-    SHA512 63e420f38d646193071bc2c7a0bb10f7560b7aa44bd74ba6ce608bdc329aacc0b45cd26178ccc6c13645d792c26ac83007b693fab35793c6ebb9d96e6b2fc74b
+    SHA512 9d4bf9db3134c1904656e781fdd58bbfe75cf1f23e551fad93b6df47bd1b00b0d62f05ee49c002e331b39ccbb911075c5fae5c291119d141025058dcb4bd5955
   )
 endif()
 
