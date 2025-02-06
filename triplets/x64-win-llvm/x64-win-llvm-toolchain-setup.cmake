@@ -5,15 +5,15 @@ function(clean_env)
   execute_process(
       COMMAND "${pwsh_exe}" -ExecutionPolicy Bypass -Command "[System.Environment]::GetEnvironmentVariables().Keys | ForEach-Object { \"$_\" }"
       OUTPUT_VARIABLE env_vars
-      OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   string(REPLACE "\n" ";" env_vars "${env_vars}")
+  string(REGEX REPLACE ";$" "" env_vars "${env_vars}")
 
   include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/env-whitelist.cmake")
   foreach(env_var IN LISTS env_vars)
     message(STATUS "ENV{${env_var}}:$ENV{${env_var}}")
     if(NOT "${env_var}" IN_LIST ENV_WHITELIST)
-      message(STATUS "Unsetting ${env_var}")
+      message(STATUS "Unsetting ${env_var}}")
       unset(ENV{${env_var}})
     endif()
   endforeach()
