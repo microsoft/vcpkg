@@ -1,0 +1,31 @@
+{
+  "name": "librecad",
+  "version-string": "2.2.1",
+  "description": "Cross-platform 2D CAD drawing tool.",
+  "homepage": "librecad.org/",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    "boost-ublas",
+    "boost-math",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    {
+      "name": "qt5-svg",
+      "default-features": false
+    },
+    {
+      "name": "qt5-tools",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

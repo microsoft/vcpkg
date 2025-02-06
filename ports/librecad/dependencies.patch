@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -22,10 +22,10 @@
+ set(CMAKE_AUTORCC ON)
+ add_compile_definitions(DWGSUPPORT)
+ add_compile_definitions(MUPARSER_STATIC)
+ 
+-find_package(Qt5 COMPONENTS Gui Core Widgets PrintSupport SVG REQUIRED)
+-find_package(Boost REQUIRED COMPONENTS)
++find_package(Qt5 COMPONENTS Gui Core Widgets PrintSupport Svg REQUIRED)
++find_package(Boost REQUIRED COMPONENTS numeric_ublas math)
+ 
+ #qt5_wrap_cpp(plugins/asciifile.cpp)
+ 
+ include_directories(${MIN_GW_PATH_PREFIX}\\include\\QtSvg)
+@@ -1040,5 +1040,6 @@
+         #        tools/ttf2lff/main.cpp )
+ )
+ 
+ 
+-target_link_libraries(LibreCAD Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport Qt5::Svg)
++target_link_libraries(LibreCAD Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport Qt5::Svg Boost::numeric_ublas Boost::math)
++install(TARGETS LibreCAD RUNTIME DESTINATION bin)
