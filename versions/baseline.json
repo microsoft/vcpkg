@@ -6609,7 +6609,7 @@
       "port-version": 1
     },
     "oniguruma": {
-      "baseline": "6.9.9",
+      "baseline": "6.9.10",
       "port-version": 0
     },
     "onnx": {
