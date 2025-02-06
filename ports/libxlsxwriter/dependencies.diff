@@ -1,8 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e444dcc..68ef7b8 100644
+index e444dcc..2511007 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -240,8 +240,8 @@ if(USE_SYSTEM_MINIZIP)
+@@ -225,7 +225,7 @@ enable_language(CXX)
+ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+ 
+ # ZLIB
+-if(PKG_CONFIG_FOUND)
++if(0)
+     pkg_check_modules(ZLIB zlib)
+     list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
+ else(NOT ZLIB_FOUND)
+@@ -236,12 +236,12 @@ endif()
+ 
+ # MINIZIP
+ if(USE_SYSTEM_MINIZIP)
+-    if(PKG_CONFIG_FOUND)
++    if(0)
          pkg_check_modules(MINIZIP minizip)
          list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS}/..)
      else(NOT MINIZIP_FOUND)
