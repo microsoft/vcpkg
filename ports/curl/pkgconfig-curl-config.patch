@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0cba6f626..02ead7e23 100644
+index b6b74c1..d01a127 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2118,6 +2118,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2260,6 +2260,7 @@ if(NOT CURL_DISABLE_INSTALL)
    endforeach()
  
    foreach(_libdir IN LISTS _custom_libdirs CURL_LIBDIRS)
@@ -10,7 +10,7 @@ index 0cba6f626..02ead7e23 100644
      list(FIND _sys_libdirs "${_libdir}" _libdir_index)
      if(_libdir_index LESS 0)
        list(APPEND _ldflags "-L${_libdir}")
-@@ -2129,7 +2130,30 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2271,7 +2272,30 @@ if(NOT CURL_DISABLE_INSTALL)
      set(_implicit_libs ${CMAKE_C_IMPLICIT_LINK_LIBRARIES})
    endif()
  
@@ -42,7 +42,7 @@ index 0cba6f626..02ead7e23 100644
      if(TARGET "${_lib}")
        set(_libname "${_lib}")
        get_target_property(_imported "${_libname}" IMPORTED)
-@@ -2144,6 +2168,10 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2286,6 +2310,10 @@ if(NOT CURL_DISABLE_INSTALL)
          continue()
        endif()
      endif()
@@ -52,8 +52,8 @@ index 0cba6f626..02ead7e23 100644
 +    endif()
      if(_lib MATCHES "^-")  # '-framework <name>'
        list(APPEND _ldflags "${_lib}")
-     elseif(_lib MATCHES ".*/.*")
-@@ -2152,17 +2180,24 @@ if(NOT CURL_DISABLE_INSTALL)
+     elseif(_lib MATCHES "/")
+@@ -2294,17 +2322,24 @@ if(NOT CURL_DISABLE_INSTALL)
        get_filename_component(_libdir ${_lib} DIRECTORY)
        get_filename_component(_libname ${_lib} NAME_WE)
        if(_libname MATCHES "^lib")
@@ -81,7 +81,7 @@ index 0cba6f626..02ead7e23 100644
      endif()
    endforeach()
  
-@@ -2188,11 +2223,11 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2330,11 +2365,11 @@ if(NOT CURL_DISABLE_INSTALL)
      set(LIBCURL_PC_REQUIRES "")
      set(LIBCURL_PC_LIBS     "")
      set(LIBCURL_PC_CFLAGS   "")
@@ -97,19 +97,18 @@ index 0cba6f626..02ead7e23 100644
    if(BUILD_STATIC_LIBS)
      set(ENABLE_STATIC       "yes")
 diff --git a/curl-config.in b/curl-config.in
-index e89c25639..e389f0d52 100644
+index 5518416..e418afc 100644
 --- a/curl-config.in
 +++ b/curl-config.in
-@@ -161,7 +161,7 @@ while test "$#" -gt 0; do
-       CURLLIBDIR=''
+@@ -156,6 +156,7 @@ while test "$#" -gt 0; do
      fi
      if test 'X@ENABLE_SHARED@' = 'Xno'; then
--      echo "${CURLLIBDIR}-lcurl @LIBCURL_PC_LIBS_PRIVATE@"
+       echo "${curllibdir}-lcurl @LIBCURL_PC_LIBS_PRIVATE@"
 +      echo "@libdir@/libcurl.@libext@ @LIBCURL_PC_LDFLAGS_PRIVATE@ @CURL_CONFIG_LIBS_PRIVATE@ @LIBCURL_PC_LIBS_PRIVATE@"
      else
-       echo "${CURLLIBDIR}-lcurl"
+       echo "${curllibdir}-lcurl"
      fi
-@@ -173,7 +173,7 @@ while test "$#" -gt 0; do
+@@ -167,7 +168,7 @@ while test "$#" -gt 0; do
  
    --static-libs)
      if test 'X@ENABLE_STATIC@' != 'Xno'; then

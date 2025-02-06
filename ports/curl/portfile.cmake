@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 ab54562a70209da20fa3d797029dc7022a37b7c501e50250503721251cbf209938fb37ffc1dc9d82c451b1da1b76c79f35c53953b029b5b000903db98aee5840
+    SHA512 e7fabe3403096fdab7e9a817499c541a965c456ab07ffe981b58bed11bad62f9efa201d93d92e5f35503a5a30b25fc430ca7d7a5556eaffffd9bf98c163b667f
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
