@@ -5518,7 +5518,7 @@
     },
     "libzip": {
       "baseline": "1.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libzippp": {
       "baseline": "7.1-1.10.1",
