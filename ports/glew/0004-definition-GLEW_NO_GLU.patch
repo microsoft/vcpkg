@@ -1,0 +1,12 @@
+diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
+index 25fb90b..68b977d 100644
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -155,6 +155,7 @@ if(CMAKE_VERSION VERSION_LESS 2.8.12)
+ else()
+   target_compile_definitions(glew_s INTERFACE "GLEW_STATIC")
+   foreach(t glew glew_s)
++    target_compile_definitions(${t} PUBLIC $<INSTALL_INTERFACE:GLEW_NO_GLU>)
+     target_include_directories(${t} PUBLIC $<INSTALL_INTERFACE:include>)
+   endforeach()
+   set(MAYBE_EXPORT EXPORT glew-targets)

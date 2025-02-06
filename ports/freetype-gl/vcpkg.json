@@ -1,6 +1,7 @@
 {
   "name": "freetype-gl",
   "version": "1.0",
+  "port-version": 1,
   "description": "OpenGL text using one vertex buffer, one texture and FreeType",
   "homepage": "https://github.com/rougier/freetype-gl",
   "dependencies": [
