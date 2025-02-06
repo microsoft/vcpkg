@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         001-cmake-install.patch
         002-lib-suffix-option.patch
+        003-arm64-osx.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_INSTALL_STATIC)
