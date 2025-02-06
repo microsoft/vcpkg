@@ -1,0 +1,31 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index 169bfbe1a..cdb0f30ee 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -1321,6 +1321,11 @@ if(BUILD_GUI)
+             # search path. LLVM version must be >= 7 to compile Filament.
+             if (NOT CLANG_LIBDIR)
+                 set(ubuntu_default_llvm_lib_dirs
++                    /usr/lib/llvm-20/lib
++                    /usr/lib/llvm-19/lib
++                    /usr/lib/llvm-18/lib
++                    /usr/lib/llvm-17/lib
++                    /usr/lib/llvm-16/lib
+                     /usr/lib/llvm-15/lib
+                     /usr/lib/llvm-14/lib
+                     /usr/lib/llvm-13/lib
+@@ -1347,6 +1352,11 @@ if(BUILD_GUI)
+             # is not enforced by CMake.
+             if (NOT CLANG_LIBDIR)
+                 find_library(CPPABI_LIBRARY c++abi PATH_SUFFIXES
++                             llvm-20/lib
++                             llvm-19/lib
++                             llvm-18/lib
++                             llvm-17/lib
++                             llvm-16/lib
+                              llvm-15/lib
+                              llvm-14/lib
+                              llvm-13/lib
+-- 
+2.45.2
+
