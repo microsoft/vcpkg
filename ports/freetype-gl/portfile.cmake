@@ -12,6 +12,7 @@ vcpkg_from_github(
         0003-Add-exports.patch
         0004-Change-install-dir-for-pkgconfig.patch
         0005-add-version.patch
+        0006-link-targets-glew.patch
 )
 
 vcpkg_check_features(

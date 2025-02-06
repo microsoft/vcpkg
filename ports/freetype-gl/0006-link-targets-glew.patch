@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4f8d7dd..40d72f8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,7 +112,7 @@ include_directories(
+     ${OPENGL_INCLUDE_DIRS}
+     ${FREETYPE_INCLUDE_DIRS}
+     ${CMAKE_CURRENT_SOURCE_DIR}
+-    ${GLEW_INCLUDE_PATH}
++
+     ${PROJECT_BINARY_DIR}
+ )
+ 
+@@ -196,7 +196,7 @@ target_link_libraries(freetype-gl
+                       ${OPENGL_LIBRARY}
+                       ${FREETYPE_LIBRARIES}
+                       ${MATH_LIBRARY}
+-                      ${GLEW_LIBRARY}
++                      GLEW::GLEW
+ )
+ 
+ if(freetype-gl_BUILD_MAKEFONT)
+@@ -207,7 +207,7 @@ if(freetype-gl_BUILD_MAKEFONT)
+         ${OPENGL_LIBRARY}
+         ${FREETYPE_LIBRARIES}
+         ${MATH_LIBRARY}
+-        ${GLEW_LIBRARY}
++        GLEW::GLEW
+     )
+ 
+     if(MSVC AND NOT (MSVC_VERSION LESS 1900))
