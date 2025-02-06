@@ -26,8 +26,8 @@ if (@IMGUI_FREETYPE@)
     find_dependency(freetype CONFIG)
 endif()
 
-if (@IMGUI_FREETYPE_LUNASVG@)
-    find_dependency(unofficial-lunasvg CONFIG)
+if (@IMGUI_FREETYPE_SVG@)
+    find_dependency(plutosvg CONFIG)
 endif()
 
 if (@IMGUI_BUILD_ALLEGRO5_BINDING@)
