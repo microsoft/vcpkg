@@ -1,36 +1,32 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e444dcc..134a762 100644
+index e444dcc..2511007 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -225,24 +225,13 @@ enable_language(CXX)
+@@ -225,7 +225,7 @@ enable_language(CXX)
  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
  
  # ZLIB
 -if(PKG_CONFIG_FOUND)
--    pkg_check_modules(ZLIB zlib)
--    list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
--else(NOT ZLIB_FOUND)
--    find_package(ZLIB "1.0" REQUIRED)
--    list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
--    message("zlib version: " ${ZLIB_VERSION})
--endif()
-+find_package(ZLIB REQUIRED)
-+set(ZLIB_LIBRARIES ZLIB::ZLIB)
++if(0)
+     pkg_check_modules(ZLIB zlib)
+     list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
+ else(NOT ZLIB_FOUND)
+@@ -236,12 +236,12 @@ endif()
  
  # MINIZIP
  if(USE_SYSTEM_MINIZIP)
 -    if(PKG_CONFIG_FOUND)
--        pkg_check_modules(MINIZIP minizip)
--        list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS}/..)
--    else(NOT MINIZIP_FOUND)
++    if(0)
+         pkg_check_modules(MINIZIP minizip)
+         list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS}/..)
+     else(NOT MINIZIP_FOUND)
 -        find_package(MINIZIP "1.0" REQUIRED)
 -        list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS})
--    endif()
-+    find_package(MINIZIP "1.0" REQUIRED)
-+    list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS})
++        find_package(MINIZIP NAMES unofficial-minizip REQUIRED)
++        set(MINIZIP_LIBRARIES unofficial::minizip::minizip)
+     endif()
  endif()
  
- # LIBRARY
 diff --git a/dev/release/pkg-config.txt b/dev/release/pkg-config.txt
 index a87d080..fa58047 100644
 --- a/dev/release/pkg-config.txt
