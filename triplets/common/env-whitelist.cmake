@@ -47,3 +47,19 @@ set(ENV_WHITELIST
   "HTTP_PROXY"
   "HTTPS_PROXY"
 )
+
+find_program(pwsh_exe NAMES pwsh powershell)
+execute_process(
+    COMMAND "${pwsh_exe}" -ExecutionPolicy Bypass -Command "[System.Environment]::GetEnvironmentVariables().Keys | ForEach-Object { \"$_\" }"
+    OUTPUT_VARIABLE env_vars
+)
+string(REPLACE "\n" ";" env_vars "${env_vars}")
+string(REGEX REPLACE ";$" "" env_vars "${env_vars}")
+
+foreach(env_var IN LISTS env_vars)
+  #message(STATUS "ENV{${env_var}}:$ENV{${env_var}}")
+  if(NOT "${env_var}" IN_LIST ENV_WHITELIST)
+    #message(STATUS "Unsetting ${env_var}")
+    unset(ENV{${env_var}})
+  endif()
+endforeach()

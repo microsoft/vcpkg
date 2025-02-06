@@ -1,22 +1,7 @@
 include_guard(GLOBAL)
 
 function(clean_env)
-  find_program(pwsh_exe NAMES pwsh powershell)
-  execute_process(
-      COMMAND "${pwsh_exe}" -ExecutionPolicy Bypass -Command "[System.Environment]::GetEnvironmentVariables().Keys | ForEach-Object { \"$_\" }"
-      OUTPUT_VARIABLE env_vars
-  )
-  string(REPLACE "\n" ";" env_vars "${env_vars}")
-  string(REGEX REPLACE ";$" "" env_vars "${env_vars}")
-
   include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../common/env-whitelist.cmake")
-  foreach(env_var IN LISTS env_vars)
-    message(STATUS "ENV{${env_var}}:$ENV{${env_var}}")
-    if(NOT "${env_var}" IN_LIST ENV_WHITELIST)
-      message(STATUS "Unsetting ${env_var}")
-      unset(ENV{${env_var}})
-    endif()
-  endforeach()
 
   set(systemroot "$ENV{SystemRoot}")
   string(REPLACE "\\" "/" systemroot "${systemroot}")
@@ -51,6 +36,7 @@ endfunction()
 
 function(setup_cuda)
   if(EXISTS "${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/env-setup/cuda-env.cmake")
+    message("Loading CUDA environment ....")
     include("${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/env-setup/cuda-env.cmake")
     setup_cuda_env()
   endif()
