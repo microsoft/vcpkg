@@ -1,7 +1,7 @@
 The package sfml provides CMake targets:
 
-    find_package(SFML COMPONENTS system window graphics audio CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sfml-system sfml-network sfml-graphics sfml-window sfml-audio)
+    find_package(SFML COMPONENTS Network Graphics Window Audio System CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE SFML::Network SFML::Graphics SFML::Window SFML::Audio SFML::System)
 
     # If you want SFML to provide an implementation of main():
-    target_link_libraries(main PRIVATE sfml-main)
+    target_link_libraries(main PRIVATE SFML::Main)
