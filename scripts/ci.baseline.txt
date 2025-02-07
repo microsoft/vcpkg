@@ -136,7 +136,6 @@ lapack-reference:x64-osx=skip
 lapack-reference:x64-uwp=skip
 #openblas:arm64-osx=skip
 #openblas:x64-osx=skip
-#openblas:x64-windows-release=skip
 #openblas:x64-windows-static-md=skip
 #openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
