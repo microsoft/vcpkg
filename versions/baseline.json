@@ -8766,7 +8766,7 @@
     },
     "steam-audio": {
       "baseline": "4.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "stftpitchshift": {
       "baseline": "1.4.1",
