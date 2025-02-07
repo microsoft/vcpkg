@@ -120,11 +120,11 @@ if ($IsWindows) {
     rmdir empty
 }
 
-$override_ndk = 'r28-beta3'
+$override_ndk = 'r28'
 if ($IsLinux -and $Triplet -match 'android' -and $override_ndk -ne '')
 {
-    $override_ndk_url = 'https://dl.google.com/android/repository/android-ndk-r28-beta3-linux.zip'
-    $override_ndk_sha512 = '9c4a733579336583ea656baf623dcb12300e467ff0b65869cb925cd44152101e372c696776dc7689fc8f1f2e053fdf1798b4c22a9d1f005ff498cbc4161ad0b2'
+    $override_ndk_url = 'https://dl.google.com/android/repository/android-ndk-r28-linux.zip'
+    $override_ndk_sha512 = '9ea527ddfd1cdffa4fd73b5cb74bece38494ba3245d0b6784bd47c472cf0b50b32e84aa7168768358daae077eff43de41985d310f1885445122bd8482bd10cbe'
     Write-Host "Downloading Android NDK $override_ndk"
     & "./vcpkg" x-download android-ndk-$override_ndk-linux.zip "--sha512=$override_ndk_sha512" "--url=$override_ndk_url" @cachingArgs
     Write-Host "Unpacking"
