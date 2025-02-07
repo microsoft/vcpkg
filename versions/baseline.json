@@ -5618,7 +5618,7 @@
     },
     "loguru": {
       "baseline": "2.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lpeg": {
       "baseline": "1.1.0",
