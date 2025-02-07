@@ -1502,7 +1502,7 @@
     },
     "casadi": {
       "baseline": "3.6.7",
-      "port-version": 0
+      "port-version": 1
     },
     "casclib": {
       "baseline": "2024-06-05",
