@@ -1,6 +1,3 @@
-# Header only
-vcpkg_buildpath_length_warning(37)
-
 vcpkg_from_gitlab(
 	GITLAB_URL https://gitlab.com
 	OUT_SOURCE_PATH SOURCE_PATH
@@ -10,7 +7,6 @@ vcpkg_from_gitlab(
 	HEAD_REF master
 	)
 
-set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
 
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
