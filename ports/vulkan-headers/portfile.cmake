@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "vulkan-sdk-${VERSION}"
     SHA512 25a1afe5383e640c28d56d4b04e80be80d8db248ee38e7c7e1a7cb2d5052a505cf4ea0c6b2c5c12b6616f7f391d2a729e9a3b497ad1b0f39ce049846da5de946
     HEAD_REF main
+    PATCHES fix-headers.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
