@@ -1,6 +1,6 @@
 {
   "name": "cpp-httplib",
-  "version": "0.18.5",
+  "version": "0.18.6",
   "description": "A single file C++11 header-only HTTP/HTTPS server and client library",
   "homepage": "https://github.com/yhirose/cpp-httplib",
   "license": "MIT",
