@@ -10,9 +10,6 @@ vcpkg_from_github(
     PATCHES relocatable.patch disable_fortran.patch
 )
 
-# Pending upstream fix https://github.com/casadi/casadi/issues/3896
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
