@@ -1,6 +1,6 @@
 {
   "name": "bgfx",
-  "version": "1.128.8808-482",
+  "version": "1.129.8866-491",
   "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",

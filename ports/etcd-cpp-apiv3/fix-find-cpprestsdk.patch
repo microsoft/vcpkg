@@ -1,0 +1,19 @@
+diff --git a/etcd-cpp-api-config.in.cmake b/etcd-cpp-api-config.in.cmake
+index c1a9047..c12b748 100644
+--- a/etcd-cpp-api-config.in.cmake
++++ b/etcd-cpp-api-config.in.cmake
+@@ -15,9 +15,11 @@ if(NOT gRPC_FOUND)
+     find_dependency(GRPC)
+ endif()
+ 
+-find_dependency(cpprestsdk)
+-if(cpprestsdk_FOUND)
+-    set(CPPREST_LIB cpprestsdk::cpprest)
++if (NOT @BUILD_ETCD_CORE_ONLY@)
++    find_dependency(cpprestsdk)
++    if(cpprestsdk_FOUND)
++        set(CPPREST_LIB cpprestsdk::cpprest)
++    endif()
+ endif()
+ 
+ set(ETCD_CPP_HOME "${CMAKE_CURRENT_LIST_DIR}/../../..")

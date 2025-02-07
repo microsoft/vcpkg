@@ -2,9 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO deepmind/mujoco
     REF ${VERSION}
-    SHA512 518b9ae09ea7cd4d2095df1be985a30957c6d57846933e111c326e45b61ac002bea014cd0d7902653c85e61ef0ba156b3324eff0edb5613467fe8e07e92dd6da
+    SHA512 db8b80b33a8a2cf08d5cb70114def49cf529f0a05de379e303086d73e9dd652ed0a4839a1ea8bba79e9a7f7d05421d7c34bfa47b128d444fbb83c3831b87e1c3
     PATCHES
         fix_dependencies.patch
+        mesh.patch
 )
 
 vcpkg_cmake_configure(

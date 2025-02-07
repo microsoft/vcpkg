@@ -1,6 +1,6 @@
 {
   "name": "protozero",
-  "version-semver": "1.7.1",
+  "version-semver": "1.8.0",
   "description": "Minimalist protocol buffer decoder and encoder in C++",
   "homepage": "https://github.com/mapbox/protozero",
   "license": "BSD-2-Clause",
