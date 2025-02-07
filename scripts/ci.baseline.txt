@@ -772,6 +772,13 @@ nana:x64-linux=fail
 nana:x64-osx=fail
 nana:arm64-osx=fail
 nanodbc:x64-linux=skip
+# Requires full C++20 support, currently absent from CI for these triplets.
+neoslippi:arm-neon-android=fail
+neoslippi:arm64-android=fail
+neoslippi:x64-android=fail
+neoslippi:x64-linux=fail
+neoslippi:x64-osx=fail
+neoslippi:arm64-osx=fail
 netcdf-c:arm-neon-android=fail
 netcdf-c:arm64-android=fail
 netcdf-c:x64-android=fail
