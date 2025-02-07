@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.10.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -23,6 +23,10 @@
   "default-features": [
     "calib3d",
     {
+      "name": "directml",
+      "platform": "windows & !uwp & !mingw"
+    },
+    {
       "name": "dnn",
       "platform": "!android"
     },
@@ -42,6 +46,10 @@
     "highgui",
     "intrinsics",
     "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !uwp & !mingw"
+    },
     "png",
     "quirc",
     "thread",
@@ -116,6 +124,10 @@
       "dependencies": [
         "libdc1394"
       ]
+    },
+    "directml": {
+      "description": "Build with DirectML support",
+      "supports": "windows & !uwp & !mingw"
     },
     "dnn": {
       "description": "Enable dnn module",
@@ -251,13 +263,6 @@
       "description": "JPEG support for opencv",
       "dependencies": [
         "libjpeg-turbo"
-      ]
-    },
-    "lapack": {
-      "description": "LAPACK support for opencv",
-      "dependencies": [
-        "blas",
-        "lapack"
       ]
     },
     "msmf": {
