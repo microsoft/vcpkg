@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function(clean_env)
-  include("${CMAKE_CURRENT_FUNCTION_LIST_DIR/../common/env-whitelist.cmake")
+  include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../common/env-whitelist.cmake")
 
   set(systemroot "$ENV{SystemRoot}")
   string(REPLACE "\\" "/" systemroot "${systemroot}")
