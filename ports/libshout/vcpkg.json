@@ -16,9 +16,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "speex"
-  ],
   "features": {
     "speex": {
       "description": "Enable support for Speex codec",
