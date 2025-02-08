@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.xiph.org
     OUT_SOURCE_PATH SOURCE_PATH_COMMON
     REPO xiph/icecast-common
-    REF 5de3e8b3
+    REF 5de3e8b3b063002d8a9f52122e97f721e1742531
     HEAD_REF master
     SHA512 eb505b9019a97a91e10fa505225dde4f9950f6ae50b54c7afd806f6eebeb865862de85e9d0a114f2e8c4f974c4db60622e71f52f5e758cdb0efcda735bb7ab51
 )
