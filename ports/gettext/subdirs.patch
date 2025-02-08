@@ -7,7 +7,7 @@ index e8295a8..ecb03a1 100644
  AUTOMAKE_OPTIONS = 1.5 gnu
  ACLOCAL_AMFLAGS = -I m4
 -SUBDIRS = gnulib-local gettext-runtime libtextstyle gettext-tools
-+SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS)
++SUBDIRS = gnulib-local $(VCPKG_GETTEXT_SUBDIRS)
  changelog_etc = \
    gettext-runtime/ChangeLog.0 \
    gettext-runtime/doc/ChangeLog.0 \
