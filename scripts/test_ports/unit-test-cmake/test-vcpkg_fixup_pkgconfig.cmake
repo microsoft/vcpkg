@@ -154,13 +154,13 @@ unit_test_pkgconfig_check_key("release" "datadir=" [[${datarootdir}/unit-test-cm
 
 if(NOT VCPKG_BUILD_TYPE)
     write_pkgconfig(
-    "prefix=${CURRENT_PACKAGES_DIR}/debug
-    execprefix=\${prefix}
-    libdir=${CURRENT_PACKAGES_DIR}/debug/lib
-    includedir=${CURRENT_PACKAGES_DIR}/include
-    datarootdir=${CURRENT_PACKAGES_DIR}/share
-    datadir=\${datarootdir}/${PORT}
-    ")
+"prefix=${CURRENT_PACKAGES_DIR}/debug
+execprefix=\${prefix}
+libdir=${CURRENT_PACKAGES_DIR}/debug/lib
+includedir=${CURRENT_PACKAGES_DIR}/include
+datarootdir=${CURRENT_PACKAGES_DIR}/share
+datadir=\${datarootdir}/${PORT}
+")
     unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
     unit_test_pkgconfig_check_key("debug" "prefix=" [[${pcfiledir}/../..]])
     unit_test_pkgconfig_check_key("debug" "execprefix=" [[${prefix}]])
