@@ -13,10 +13,10 @@ set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
-    FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 bdccfdf9441e704862745098014aa02a27c6a4cbcefbbf430496169d30be6b72d91081754666ceb4f1a79daceb26de1da149627f205121ee1a83efe33e354525
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
+    FILENAME "gettext-${VERSION}.tar.xz"
+    SHA512 d75908f73eabe36c01d72d342ca694dbefad5f43da54f0ccb43bfd0518baff5becc8f50e787f21fadb7c29b3123638e4559334ea4f8e48a97107e8c5e22453b6
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
