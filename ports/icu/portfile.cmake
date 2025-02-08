@@ -79,12 +79,9 @@ elseif(VCPKG_CROSSCOMPILING)
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
 endif()
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH source
-    AUTOCONFIG
-    DETERMINE_BUILD_TRIPLET
-    ADDITIONAL_MSYS_PACKAGES autoconf-archive
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}/source"
+    AUTORECONF
     OPTIONS
         ${CONFIGURE_OPTIONS}
         --disable-samples
@@ -97,7 +94,7 @@ vcpkg_configure_make(
         --enable-debug
         --disable-release
 )
-vcpkg_install_make(OPTIONS ${BUILD_OPTIONS})
+vcpkg_make_install(OPTIONS ${BUILD_OPTIONS})
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share"
@@ -158,6 +155,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_HOST_INSTALLED_DIR}" "`dirname $0`/../../../../${_HOST_TRIPLET}/" IGNORE_UNCHANGED)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
