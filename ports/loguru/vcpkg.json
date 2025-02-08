@@ -1,7 +1,7 @@
 {
   "name": "loguru",
   "version": "2.1.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "A lightweight and flexible C++ logging library",
   "homepage": "https://github.com/emilk/loguru",
   "dependencies": [
