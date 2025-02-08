@@ -26,7 +26,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         uwp.patch
         rel_path.patch
         subdirs.patch
-        parallel-gettext-tools.patch
+#        parallel-gettext-tools.patch
         config-step-order.patch
         iconv-ostream-flush.diff
         # Doesn't do the same detection as other configure scripts
