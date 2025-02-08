@@ -104,6 +104,8 @@ if(subdirs)
         # Until vcpkg builds GNU libiconv for macOS, this port keeps the previous behavior.
         list(APPEND OPTIONS
             am_cv_func_iconv=yes
+            am_cv_func_iconv_summary=system_iconv_forced_by_vcpkg
+            am_cv_func_iconv_works=yes
             am_cv_lib_iconv=yes
         )
     endif()
@@ -124,9 +126,6 @@ if(subdirs)
         )
         if(NOT VCPKG_TARGET_IS_MINGW)
             list(APPEND OPTIONS
-                # Misdetected (?) with gettext-0.23 gnulib (libtextstyle?)
-                ac_cv_func_unsetenv=no
-                ac_cv_have_decl_unsetenv=no
                 # Don't take from port dirent
                 ac_cv_header_dirent_h=no
                 # Don't take from port getopt-win32
