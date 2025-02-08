@@ -1,6 +1,7 @@
 {
   "name": "steam-audio",
   "version": "4.5.3",
+  "port-version": 1,
   "description": "Valve's steam audio library",
   "homepage": "https://github.com/ValveSoftware/steam-audio",
   "license": "Apache-2.0",
