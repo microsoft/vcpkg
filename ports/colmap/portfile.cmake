@@ -1,4 +1,5 @@
-set(COLMAP_REF "aa087848a8bd09cebf3e3cc8a5732552f30c51ad") # v3.11.1
+# Update both, literally.
+set(COLMAP_REF 3.11.1 "682ea9ac4020a143047758739259b3ff04dabe8d")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -17,8 +18,10 @@ endif()
 # set GIT_COMMIT_ID and GIT_COMMIT_DATE
 if(DEFINED VCPKG_HEAD_VERSION)
     set(GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
+elseif(NOT VERSION IN_LIST COLMAP_REF)
+    message(FATAL_ERROR "Version ${VERSION} missing in COLMAP_REF (${COLMAP_REF})")
 else()
-    set(GIT_COMMIT_ID "${COLMAP_REF}")
+    list(GET COLMAP_REF 1 GIT_COMMIT_ID)
 endif()
 
 string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")
