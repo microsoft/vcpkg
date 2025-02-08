@@ -108,15 +108,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT VCP
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-static " "-lSDL2-staticd " IGNORE_UNCHANGED)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl2.pc" "-lSDL2-static " " ")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-staticd " " ")
-    endif()
-endif()
-
 if(VCPKG_TARGET_IS_UWP)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl2.pc" "$<$<CONFIG:Debug>:d>.lib" "")
