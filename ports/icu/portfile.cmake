@@ -79,12 +79,10 @@ elseif(VCPKG_CROSSCOMPILING)
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
 endif()
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH source
-    AUTOCONFIG
-    DETERMINE_BUILD_TRIPLET
-    ADDITIONAL_MSYS_PACKAGES autoconf-archive
+set(msys_require_packages autoconf-archive)
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}/source"
+    AUTORECONF
     OPTIONS
         ${CONFIGURE_OPTIONS}
         --disable-samples
@@ -97,7 +95,7 @@ vcpkg_configure_make(
         --enable-debug
         --disable-release
 )
-vcpkg_install_make(OPTIONS ${BUILD_OPTIONS})
+vcpkg_make_install(OPTIONS ${BUILD_OPTIONS})
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share"

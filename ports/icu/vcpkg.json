@@ -12,6 +12,10 @@
       "features": [
         "tools"
       ]
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ],
   "features": {
