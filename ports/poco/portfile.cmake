@@ -15,6 +15,9 @@ vcpkg_from_github(
         0007-find-pcre2.patch
         # MSYS2 repo was used as a source. Thanks MSYS2 team: https://github.com/msys2/MINGW-packages/blob/6e7fba42b7f50e1111b7c0ef50048832243b0ac4/mingw-w64-poco/001-fix-build-on-mingw.patch
         0008-fix-mingw-compilation.patch
+        # Should be dropped when upgrading to POC 1.14.1
+        # https://github.com/pocoproject/poco/pull/4811
+        0009-remove-libatomic-dependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")

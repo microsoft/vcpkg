@@ -1,11 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(XPSDK_VERSION "401")
+string(REPLACE "." "" XPSDK_VERSION "${VERSION}")
 vcpkg_download_distfile(
     XPLANE_SDK_ZIP
-    URLS "https://developer.x-plane.com/wp-content/plugins/code-sample-generation/sample_templates/XPSDK${XPSDK_VERSION}.zip"
+    URLS "https://developer.x-plane.com/wp-content/plugins/code-sample-generation/sdk_zip_files/XPSDK${XPSDK_VERSION}.zip"
     FILENAME "XPSDK${XPSDK_VERSION}.zip"
-    SHA512 8e00789befd15f5b1cb4f426ddf9c3f7f021c5fba50b907e8af5fbf09abbc362804b5d1543332855d01e8ae91b9c50a55933e63df6e11e88e58c10ca8f949bf4
+    SHA512 3ad66ce34b9e1e6dfba0c4547f3976b4a9862bdea0c498f43f3eedfb164d4e1b357e631b72b572b7646bffaa4ffe38698000a63dea1ae8f4c50c4037b8b6471a
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

@@ -1,6 +1,6 @@
 {
   "name": "ade",
-  "version-string": "0.1.2d",
+  "version-string": "0.1.2e",
   "description": "ADE Framework is a graph construction, manipulation, and processing framework. ADE Framework is suitable for organizing data flow processing and execution.",
   "dependencies": [
     {

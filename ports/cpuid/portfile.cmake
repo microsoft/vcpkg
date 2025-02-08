@@ -13,7 +13,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_DOCS=OFF
+        -DLIBCPUID_ENABLE_DOCS=OFF
 )
 
 vcpkg_cmake_install()

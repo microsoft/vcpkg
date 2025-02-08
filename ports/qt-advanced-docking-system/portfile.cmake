@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
     REF "${VERSION}"
-    SHA512 ee78b1c7f6164b06ce9c193aa5dfa19281a1c894cd8a8cbcae6d137abc13417f32e0f2a05f9d91557e14ced91b3b541991065d0ee190ea5ad2623c3848674eaf
+    SHA512 57ffa7280741744edeb5c808589b9724c6b074d0e9031ae2e2ae6ccc404f11a35a2201baf16c4bfc9ee04d0c971e0c60d00bf7712bd7335aa41e1da5b97d272a
     HEAD_REF master
 )
 
@@ -22,9 +22,9 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC=${BUILD_STATIC}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "qt6advanceddocking" CONFIG_PATH "lib/cmake/qt6advanceddocking")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "qtadvanceddocking-qt6" CONFIG_PATH "lib/cmake/qtadvanceddocking-qt6")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/qt6advanceddocking/qt6advanceddockingConfig.cmake"
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/qtadvanceddocking-qt6/qtadvanceddocking-qt6Config.cmake"
 "include(CMakeFindDependencyMacro)"
 [[include(CMakeFindDependencyMacro)
 find_dependency(Qt6 COMPONENTS Core Gui Widgets)]])

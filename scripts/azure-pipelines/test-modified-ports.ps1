@@ -132,6 +132,7 @@ $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+    $headTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
 
     # Prefetch tools for better output
     foreach ($tool in @('cmake', 'ninja', 'git')) {
@@ -154,7 +155,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 
     $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    if ($parentBaseline -eq $headBaseline)
+    $parentTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
+    if (($parentBaseline -eq $headBaseline) -and ($parentTool -eq $headTool))
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
@@ -173,7 +175,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
     else
     {
-        Write-Host "CI baseline was modified, not using parent hashes"
+        Write-Host "Tool or baseline modified, not using parent hashes"
     }
 
     Write-Host "Running CI for HEAD"

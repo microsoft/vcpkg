@@ -1,6 +1,7 @@
 {
   "name": "qt5compat",
   "version": "6.8.1",
+  "port-version": 1,
   "description": "The Qt 5 Core Compat module contains the Qt 5 Core APIs that were removed in Qt 6. The module facilitates the transition to Qt 6.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -13,7 +14,6 @@
   "default-features": [
     "big-codecs",
     "codecs",
-    "default-features",
     "qml",
     "textcodec"
   ],
@@ -41,9 +41,6 @@
           ]
         }
       ]
-    },
-    "default-features": {
-      "description": "Platform-dependent default features"
     },
     "iconv": {
       "description": "Provides internationalization on Unix.",

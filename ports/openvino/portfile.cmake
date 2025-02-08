@@ -1,15 +1,68 @@
+vcpkg_download_distfile(PATCH_002_PROTOBUF # https://github.com/openvinotoolkit/openvino/pull/27510
+    URLS https://github.com/openvinotoolkit/openvino/commit/103c3b72259648c990970afb8ce2bec489fcf583.patch?full_index=1
+    SHA512 315eb2f651b55fc70a4d6faeb1ac1b5d90d53b9010fdc98f3417beb86854ed733eba105ea51de8795471c5e84340b96cf17d511ea3fe3447c5f961ded661a947
+    FILENAME openvinotoolkit-openvino-103c3b72259648c990970afb8ce2bec489fcf583.patch
+)
+
+vcpkg_download_distfile(PATCH_003_CODE_SNIPPETS_TEMPALTE # https://github.com/openvinotoolkit/openvino/pull/28172
+    URLS https://github.com/openvinotoolkit/openvino/commit/8d74cbb8e1af7c66ccee202fec5a18565e5b37b0.patch?full_index=1
+    SHA512 24640b608c2eb78b948c257a8bc9bb0c2f05e4d6cb04c23cf7546a3191a73e163b4732590eb8e5b834765bb78472e1454785c20c74a4dcbaf40a34ff14fafc83
+    FILENAME openvinotoolkit-openvino-8d74cbb8e1af7c66ccee202fec5a18565e5b37b0.patch
+)
+
+vcpkg_download_distfile(PATCH_004_ADD_CHRONO # https://github.com/openvinotoolkit/openvino/pull/28192
+    URLS https://github.com/openvinotoolkit/openvino/commit/9d78056f243b1f8d5c0331420416c98a005e5945.patch?full_index=1
+    SHA512 8b44e04ed88945174b17c6dada2ce3065340b6278a140717599ec0c33f548679424c5acd36b5edc10f2ed74c3288626c2b47a1af0ab530ed6a7ca868fe88ad4b
+    FILENAME openvinotoolkit-openvino-9d78056f243b1f8d5c0331420416c98a005e5945.patch
+)
+
+vcpkg_download_distfile(PATCH_005_LEVEL_ZERO_FROM_SYSTEM # https://github.com/openvinotoolkit/openvino/pull/27633
+    URLS https://github.com/openvinotoolkit/openvino/commit/5c2b9ac6b4daffc24762aea2f6dacdaa70d5ae8c.patch?full_index=1
+    SHA512 85c2422ef78b853dd9937319cf16c915c3ce4a143f3a0628ffd4edf0ceac4c26d90e3ffd9d6c7f4f3f72fc631c4860fcfcbf96ce37134b31fc45ccae4f3df308
+    FILENAME openvinotoolkit-openvino-5c2b9ac6b4daffc24762aea2f6dacdaa70d5ae8c.patch
+)
+
+vcpkg_download_distfile(PATCH_006_LEVEL_ZERO_AT_RUNTIME # https://github.com/openvinotoolkit/openvino/pull/27659
+    URLS https://github.com/openvinotoolkit/openvino/commit/99d7cd4bc4492b81a99bc41e2d2469da1a929491.patch?full_index=1
+    SHA512 091ad0328feb0ec9a59a9728ede444c408db9e7532b7a85b62b63f059fa766833b9c0b2d1c8e5972476652b24d62cf8bdb0313b197e2ea5e0b64c79a0a0da1b1
+    FILENAME openvinotoolkit-openvino-99d7cd4bc4492b81a99bc41e2d2469da1a929491.patch
+)
+
+vcpkg_download_distfile(PATCH_007_OPENCL_V2024_10_24 # https://github.com/openvinotoolkit/openvino/pull/28275
+    URLS https://github.com/openvinotoolkit/openvino/commit/120ad760494eeb513ea957bdbc655b6ad07bce42.patch?full_index=1
+    SHA512 45a06bf54cef7d619b862f3219dd1225fb38bb653b2f09191d57e945a2df08621b15a27463429d5d72a18dfe05b113b94555cea0cabab0da36c9d89a2757196a
+    FILENAME openvinotoolkit-openvino-120ad760494eeb513ea957bdbc655b6ad07bce42.patch
+)
+
+vcpkg_download_distfile(PATCH_008_FIX_LEVEL_ZERO_SYSTEM # https://github.com/openvinotoolkit/openvino/pull/28241
+    URLS https://github.com/openvinotoolkit/openvino/commit/65f6ce8c5cd0ac5ae5f64fc1c533cc621475a105.patch?full_index=1
+    SHA512 e756d181658dee933ffb727d004276a8fc37f9cfc473b25b0e0b5043234b1b2f021e1b26aa6513f7f40a9897d3c96b652aa7d81521205602f673d73a74cb5621
+    FILENAME openvinotoolkit-openvino-65f6ce8c5cd0ac5ae5f64fc1c533cc621475a105.patch
+)
+
+vcpkg_download_distfile(PATCH_009_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG # https://github.com/openvinotoolkit/openvino/pull/28816
+    URLS https://github.com/openvinotoolkit/openvino/commit/d51bcdb17ca9f010e761c1e55198743242c4e186.patch?full_index=1
+    SHA512 67c03d2e13ebeaa275dbe856a833032d478d125f5e6d19c3475f064bddf74225490960fabf159935a045bceb4f449983badd9e6fb0fc2b96f9faebea20d2f81f
+    FILENAME openvinotoolkit-openvino-d51bcdb17ca9f010e761c1e55198743242c4e186.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 2bf3f00589d825b7f4ca40d43129d81af4ba62382f98b283a3a206e7661a7a69f178c6afafdde646db8d68cb7fc54ec5280d2f4ff4fbbffe24082cf6649dda29
+    SHA512 5bfe9c0b79b8f8bed7f39b78003424d4b7146d7c6afafc668752a0c8c45558fc8f37cfc26f783beb73c6919cb65313f24fd2e30c81651b34abf74c43c3bb7e32
     HEAD_REF master
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
-        002-fix-onnx.patch
-        003-protobuf.patch
-        add-include-chrono.patch #https://github.com/openvinotoolkit/openvino/pull/27782
+        "${PATCH_002_PROTOBUF}"
+        "${PATCH_003_CODE_SNIPPETS_TEMPALTE}"
+        "${PATCH_004_ADD_CHRONO}"
+        "${PATCH_005_LEVEL_ZERO_FROM_SYSTEM}"
+        "${PATCH_006_LEVEL_ZERO_AT_RUNTIME}"
+        "${PATCH_007_OPENCL_V2024_10_24}"
+        "${PATCH_008_FIX_LEVEL_ZERO_SYSTEM}"
+        "${PATCH_009_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,8 +91,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 4ccd07e3a10e1c08075cf824ac14708245fbc334
-        SHA512 c9a28f8427b5cd9c057a546b0b62303026f848045b26e0c9705e2f64d5bc84424ee15935d3bf5ee120d3c430a9dd41b7a6e26ef4fc0c53a2154ce83fcaee8b5a
+        REF 0f269193c7466313888d3338209d0d06a22cc6fa
+        SHA512 892a32b930fbba3364e2ea9ee47bf6faba3b36cb99e836bcc5d57a30a368e5061bb7194219f30dbcede18e3ad5e671c9cfa4192799ac53cfa71706e03556e5bd
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -52,8 +105,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF c8ae8d96e963bd04214858319fa334968e5e73c9
-        SHA512 6877ca37c3678e738fa94767b70432d3fff73305342164d0902875d9bcce3fe12abaf52bfc6ae0ef288532324e746b01e604ab7e47f198e7776352b8f5b6f009
+        REF c60a9946aa2386890e5c9f5587974facb7624227
+        SHA512 cc91f5b2ece1c3f14af308e3da436447d07964fa5ffa848c571fe67197a367673bf7bf9cd979fab0c9b216f92c611bd8df7018ec8e080f10759582629c10cb9d
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -76,31 +129,28 @@ if(ENABLE_INTEL_CPU)
             OUT_PYTHON_VAR OV_PYTHON_WITH_SCONS
         )
 
+        list(APPEND FEATURE_OPTIONS "-DPython3_EXECUTABLE=${OV_PYTHON_WITH_SCONS}")
+
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v24.08
-            SHA512 82debaf8d8345b79b112afdabf6019c7ad8a9b30161d3061320a3da3040b2ad49153cc508caafe9fb1182c2669c958785acf2c361382080af273465d1727a71c
+            REF v24.09
+            SHA512 c755da7d576b9bc1f33c9505efe4ce9e50cb927978f929d61f31b213904dca45ddb78b7c0cf9b215e37d2028e0404f4e3435678c120bba16263b55fd701eb4f1
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
     endif()
 endif()
 
 if(ENABLE_INTEL_NPU)
-    list(APPEND FEATURE_OPTIONS "-DENABLE_INTEL_NPU_INTERNAL=OFF")
-    vcpkg_from_github(
-        OUT_SOURCE_PATH DEP_SOURCE_PATH
-        REPO oneapi-src/level-zero
-        REF v1.17.6
-        SHA512 bb412e875d97d1c80a0e67087e6dac1a6ffb91fa50e22deb7649ee3250c0937679d225419b52bfd7938f71a66ac15742a6a215cee7714c27e0f935e04df5b88e
-    )
-    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero")
+    list(APPEND FEATURE_OPTIONS
+        "-DENABLE_INTEL_NPU_INTERNAL=OFF"
+        "-DENABLE_SYSTEM_LEVEL_ZERO=ON")
 
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 16c85231a82ee1a0b06ed7ab7da3f411a0878ed7
-        SHA512 983468c7706dc44cfc248c491cf51d2f69181c16ae1e400ca689df39c51112e03227c2f311173b1665115cdd33fa7d51d48e75adaf8353564a980b37c16aaa66
+        REF 110f48ee8eda22d8b40daeeecdbbed0fc3b08f8b
+        SHA512 aaaeecad6c00489b652cd94d63ed0c1e59eb0eaed8b463198b40f1af3944004b072808ccc3074b71d825e9f0f37bf76fedf296961bb18959ef66a699b71fec41
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
@@ -139,6 +189,7 @@ vcpkg_cmake_configure(
         "-DENABLE_SYSTEM_TBB=ON"
         "-DENABLE_TBBBIND_2_5=OFF"
         "-DENABLE_TEMPLATE=OFF"
+        "-DENABLE_OV_JAX_FRONTEND=OFF"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 

@@ -9,6 +9,14 @@
    include(cmake/OpenCVDetectPython.cmake)
  endif()
  
+@@ -730,6 +730,7 @@ endif()
+ # ----------------------------------------------------------------------------
+ #       CHECK FOR SYSTEM LIBRARIES, OPTIONS, ETC..
+ # ----------------------------------------------------------------------------
++find_package(PkgConfig REQUIRED)
+ if(UNIX OR MINGW)
+   if(NOT APPLE_FRAMEWORK OR OPENCV_ENABLE_PKG_CONFIG)
+     if(CMAKE_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG_LIBDIR} AND NOT DEFINED ENV{PKG_CONFIG_SYSROOT_DIR}
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
 @@ -300,7 +300,6 @@ if(MSVC)

@@ -1,10 +1,9 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO tree-sitter/tree-sitter
-  REF ccd6bf554d922596ce905730d98a77af368bba5c #v0.20.6
-  SHA512 ab7eeecafc9d7d17093e25479903fa8c77a84ce4c3a41d737d49bcf9348ab6cc55cf3d6cce0229781292c2b05342fbf45641e40545ea3fde09e441e02f2cdb83
+  REF "v${VERSION}"
+  SHA512 9861b18c7209e3c37d180a399bcae181cea46c4e58eff743ff6044ed0f2923ee838fa88993f1266272e07163748d5df1bef7d7dc6d8800e004e8af1227e489af
   HEAD_REF master
-  PATCHES pkgconfig.patch
 )
 
 # currently not supported upstream

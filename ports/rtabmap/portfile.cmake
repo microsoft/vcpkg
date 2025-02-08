@@ -1,3 +1,15 @@
+vcpkg_download_distfile(CERES_21_PATCH_1
+    URLS https://patch-diff.githubusercontent.com/raw/introlab/rtabmap/pull/1405.patch
+    SHA512 c586885683807b3a3853fd09f46942f1599c8d3c3869388338cab97f0c09f51bf55726aad62ee883fbe3ce1734ab3c4c2e23a8ea7f2e5c01e0a7df8f9dc1e94b
+    FILENAME rtabmap-1405.patch
+)
+
+vcpkg_download_distfile(CERES_21_PATCH_2
+    URLS https://patch-diff.githubusercontent.com/raw/introlab/rtabmap/pull/1437.patch
+    SHA512 d5400fdfd35594912af0d463e360a2b79739d18d4eb487f81486af67bc80e4c2d26c3bf3b94dbb51dfa159bb02a70196c6d42c9aca4b789b0026c009b1645296
+    FILENAME rtabmap-1437.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
@@ -5,18 +17,20 @@ vcpkg_from_github(
     SHA512 2b424f5b6458cf0f976e711985708f104b56d11921c9c43c6a837f9d3dc9e9e802308f1aa2b6d0e7e6ddf13623ff1ad2922b5f54254d16ee5811e786d27b9f98
     HEAD_REF master
     PATCHES
-        apple.patch
-        fix_link.patch
-        link-keywords.patch
-        multi-definition.patch
-        rtabmap-res-tool.patch
-        gklib.patch
-        ceres-manifold.patch
-        fix-find-g2o.patch
+        ${CERES_21_PATCH_1}
+        ${CERES_21_PATCH_2}
+        0001-cmakelists-fixes.patch
+        0002-fix-link.patch
+        0003-multi-definition.patch
+        0004-fix-manfold-typo.patch
+        0005-fix-opencv3-aruco.patch
+        0006-remove-apple-sys-path.patch
+        0007-fix-g2o.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        openmp      WITH_OPENMP
         gui         WITH_QT
         k4w2        WITH_K4W2
         octomap     WITH_OCTOMAP
@@ -34,13 +48,17 @@ vcpkg_cmake_configure(
         -DBUILD_APP=OFF
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DRTABMAP_RES_TOOL=${CURRENT_HOST_INSTALLED_DIR}/tools/rtabmap-res-tool/rtabmap-res_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        -DRTABMAP_QT_VERSION=6
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
-        -DRTABMAP_QT_VERSION=6
-        "-DRTABMAP_RES_TOOL=${CURRENT_HOST_INSTALLED_DIR}/tools/rtabmap-res-tool/rtabmap-res_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        ## always on feats
+        -DWITH_G2O=ON
+        -DWITH_CERES=ON
+        -DWITH_ORB_OCTREE=ON   # GPLv3
+        ## always off feats
         -DWITH_ALICE_VISION=OFF
         -DWITH_CCCORELIB=OFF
-        -DWITH_CERES=ON
         -DWITH_CPUTSDF=OFF
         -DWITH_CVSBA=OFF
         -DWITH_DC1394=OFF
@@ -51,24 +69,25 @@ vcpkg_cmake_configure(
         -DWITH_FOVIS=OFF
         -DWITH_FREENECT=OFF
         -DWITH_FREENECT2=OFF
-        -DWITH_G2O=ON
+        -DWITH_GRIDMAP=OFF
         -DWITH_GTSAM=OFF
         -DWITH_K4A=OFF
         -DWITH_LOAM=OFF
         -DWITH_MADGWICK=OFF
+        -DWITH_MRPT=OFF
         -DWITH_MSCKF_VIO=OFF
         -DWITH_MYNTEYE=OFF
         -DWITH_OKVIS=OFF
         -DWITH_OPENCHISEL=OFF
+        -DWITH_OPENGV=OFF
         -DWITH_OPENVINS=OFF
-        -DWITH_ORB_OCTREE=ON   # GPLv3
         -DWITH_ORB_SLAM=OFF
         -DWITH_PDAL=OFF
         -DWITH_POINTMATCHER=OFF
-        -DWITH_PYTHON_THREADING=OFF
         -DWITH_PYTHON=OFF
-        -DWITH_REALSENSE_SLAM=OFF
+        -DWITH_PYTHON_THREADING=OFF
         -DWITH_REALSENSE=OFF
+        -DWITH_REALSENSE_SLAM=OFF
         -DWITH_TORCH=OFF
         -DWITH_VERTIGO=OFF
         -DWITH_VINS=OFF
@@ -114,6 +133,7 @@ if("tools" IN_LIST FEATURES)
             rtabmap-calibration
             rtabmap-databaseViewer
             rtabmap-dataRecorder
+            rtabmap-lidar_viewer
             rtabmap-odometryViewer
             rtabmap-rgbd_camera
         AUTO_CLEAN
@@ -128,5 +148,5 @@ vcpkg_install_copyright(
 The RTAB-Map main license is BSD-3-Clause, but some parts of the
 source code are under other licenses possibly including GPL-3.0-only.
 ]]
-    FILE_LIST "${SOURCE_PATH}/LICENSE" 
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
 )

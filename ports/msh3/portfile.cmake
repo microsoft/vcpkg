@@ -4,15 +4,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nibanks/msh3
     REF v${VERSION}
-    SHA512 dedd8be43e44b4bebbf601d76b1f3b0135501330ed128ca710de942ef7d9142a21f1c1eb9efecf57881e72d93d68c7c2c085bc35d402eac5eabc57e77773be6b
+    SHA512 0573647b2bea669b34343379319702513da884949b45b2e678aa6c9677ed8e5947ef85e6dcf47f5e5b798c9bfff62b41df53f65848a465b4b37596f5fefebbe6
     HEAD_REF main
     PATCHES
         dependencies_fix.patch
-        width-exceeds-type.diff
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DMSH3_INSTALL_PKGCONFIG=ON
+        -DMSH3_USE_EXTERNAL_LSQPACK=ON
+        -DMSH3_USE_EXTERNAL_MSQUIC=ON
 )
 
 vcpkg_cmake_install()

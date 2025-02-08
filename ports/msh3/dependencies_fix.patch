@@ -1,100 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d8a81ab..edf5651 100644
+index c4c0814..f400566 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,9 +28,6 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+@@ -36,9 +36,6 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
  if (WIN32)
 -    # Statically link the OS included part of the runtime.
 -    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 -    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libucrt.lib /DEFAULTLIB:ucrt.lib")
-     set(QUIC_COMMON_DEFINES WIN32_LEAN_AND_MEAN SECURITY_WIN32)
-     # TODO - Get these to work on Linux
-     list(APPEND MSH3_COMMON_DEFINES VER_BUILD_ID=${MSH3_VER_BUILD_ID})
-@@ -66,7 +63,8 @@ target_include_directories(msh3_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
- set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
- option(LSQPACK_TESTS "Build tests" OFF)
- option(LSQPACK_BIN "Build binaries" OFF)
--add_subdirectory(ls-qpack)
-+find_package(ls-qpack CONFIG REQUIRED)
-+add_library(ls-qpack ALIAS ls-qpack::ls-qpack)
  
- # Configure and build msquic dependency.
- if (WIN32)
-@@ -76,9 +74,11 @@ else()
- endif()
- set(QUIC_BUILD_SHARED ON CACHE BOOL "Builds MsQuic as a dynamic library")
- set(QUIC_ENABLE_LOGGING ON CACHE BOOL "Enable MsQuic logging")
--set(CMAKE_BUILD_TYPE "Release")
--add_subdirectory(msquic)
--target_compile_features(inc INTERFACE cxx_std_20)
-+find_package(msquic CONFIG REQUIRED)
-+# polyfill
-+add_library(inc ALIAS msquic)
-+add_library(platform ALIAS msquic)
-+add_library(warnings ALIAS msquic)
- 
- # Build msh3 library (and cmd line tool).
- add_subdirectory(lib)
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 4d7aeb7..6da8e1a 100644
---- a/lib/CMakeLists.txt
-+++ b/lib/CMakeLists.txt
-@@ -7,6 +7,8 @@ else()
-     set(SOURCES msh3.cpp)
- endif()
- add_library(msh3 SHARED ${SOURCES})
-+target_compile_features(msh3 PRIVATE cxx_std_20)
-+target_include_directories(msh3 PUBLIC $<INSTALL_INTERFACE:include>)
- target_link_libraries(msh3 PRIVATE inc warnings msquic ls-qpack msh3_headers)
- if (NOT BUILD_SHARED_LIBS)
-     target_link_libraries(msh3 PRIVATE base_link)
-@@ -24,12 +26,16 @@ elseif (CX_PLATFORM STREQUAL "darwin")
-         PROPERTIES LINK_FLAGS "-exported_symbols_list \"${CMAKE_CURRENT_SOURCE_DIR}/darwin/exports.txt\"")
- endif()
- 
--install(TARGETS msh3 EXPORT msh3 DESTINATION lib)
-+install(TARGETS msh3 EXPORT msh3
-+    RUNTIME DESTINATION bin
-+    ARCHIVE DESTINATION lib
-+    LIBRARY DESTINATION lib
-+)
- install(FILES ../msh3.h DESTINATION include)
--configure_file(msh3-config.cmake.in ${CMAKE_BINARY_DIR}/msh3-config.cmake)
-+configure_file(msh3-config.cmake.in ${CMAKE_BINARY_DIR}/msh3-config.cmake @ONLY)
- install(FILES ${CMAKE_BINARY_DIR}/msh3-config.cmake DESTINATION share/msh3)
- install(EXPORT msh3 DESTINATION share/msh3)
--configure_file(libmsh3.pc.in ${CMAKE_BINARY_DIR}/libmsh3.pc)
--if(NOT WIN32)
-+configure_file(libmsh3.pc.in ${CMAKE_BINARY_DIR}/libmsh3.pc @ONLY)
-+if(1)
-     install(FILES ${CMAKE_BINARY_DIR}/libmsh3.pc DESTINATION lib/pkgconfig)
- endif()
-diff --git a/lib/libmsh3.pc.in b/lib/libmsh3.pc.in
-index f156204..aad76ab 100644
---- a/lib/libmsh3.pc.in
-+++ b/lib/libmsh3.pc.in
-@@ -4,10 +4,10 @@
- prefix=/usr/local
- exec_prefix=${prefix}
- libdir=${exec_prefix}/lib
--includedir=${exec_prefix}/include
-+includedir=${prefix}/include
- 
- Name: libmsh3
- Description: Minimal HTTP/3 client on top of MsQuic
- Version: 0.1.0
- Libs: -L${libdir} -lmsh3
--Cflags: -I${includedir}/libmsh3
-+Cflags: -I${includedir}
-diff --git a/lib/msh3-config.cmake.in b/lib/msh3-config.cmake.in
-index b4a54bf..540d56d 100644
---- a/lib/msh3-config.cmake.in
-+++ b/lib/msh3-config.cmake.in
-@@ -1,4 +1,4 @@
- include(CMakeFindDependencyMacro)
- @FILENAME_DEP_REPLACE@
- 
--include(${SELF_DIR}/msh3.cmake)
-+include("${CMAKE_CURRENT_LIST_DIR}/msh3.cmake")
+     add_compile_definitions(WIN32_LEAN_AND_MEAN)
+     if(HAS_SPECTRE)
+@@ -76,6 +73,7 @@ endif()
+ option(MSH3_USE_EXTERNAL_MSQUIC "Use an external msquic installation")
+ if(MSH3_USE_EXTERNAL_MSQUIC)
+     find_package(msquic CONFIG REQUIRED)
++    add_library(msquic_platform ALIAS msquic) # with ports/msquic/exports-for-msh3.diff
+ else()
+     # Configure and build
+     if (WIN32)

@@ -1,7 +1,7 @@
 {
   "name": "libcaer",
   "version": "3.3.15",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Minimal C library to access, configure and get data from neuromorphic sensors and processors.",
   "homepage": "https://gitlab.com/inivation/dv/libcaer",
   "license": "BSD-2-Clause AND Apache-2.0",
@@ -27,7 +27,12 @@
       "dependencies": [
         {
           "name": "opencv4",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "fs",
+            "intrinsics",
+            "thread"
+          ]
         }
       ]
     }

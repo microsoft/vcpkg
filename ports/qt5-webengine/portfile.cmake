@@ -45,12 +45,26 @@ vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
+vcpkg_execute_in_download_mode(
+    COMMAND "${NINJA}" --version
+    OUTPUT_VARIABLE ninja_version
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+)
+if(ninja_version VERSION_GREATER_EQUAL "1.12.1")
+    message(WARNING
+        "Found ninja version ${ninja_version} which may fail to build ${PORT}."
+        "You can supply a different filepath using per-port customization of CMake variable NINJA."
+    )
+endif()
+
 set(PATCHES common.pri.patch
             gl.patch
             build_1.patch
             0001-Support-ICU-74-in-LazyTextBreakIterator.patch
             workaround-protobuf-issue.patch
             0001-Fix-jumbo-build-error-due-to-ResolveColor-redefiniti.patch
+	    fix-spellcheck-buildflags.patch
             )
 
 set(OPTIONS)

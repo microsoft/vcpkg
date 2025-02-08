@@ -1,5 +1,17 @@
 set(USE_QT_VERSION "6")
 
+vcpkg_download_distfile(ADD_INCLUDE_CHRONO
+    URLS https://github.com/opencv/opencv/commit/96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch
+    SHA512 d333ef445bf7ef5da76d101ba2400a3eb3bc7bd0aaf4594c92696001d254415b0f0cc31d8420e3f1afb867ccc5a5c53d8276e89e4ec5c216aa7cfc5e6ada974e
+    FILENAME 96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch
+)
+
+vcpkg_download_distfile(CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS
+    URLS https://github.com/opencv/opencv_contrib/commit/b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
+    SHA512 170a06d903d50fdcb2082b13015f6efb2bd2d8bbcc203e9c254f26575113a773304e9777b5d72a7b39c52f93fcbb5158fb8579d8da3337e1774079b345d0ea93
+    FILENAME b236c71c2f8d983403c35a0cea8bec0432a4b0fe.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -23,7 +35,13 @@ vcpkg_from_github(
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
       0020-miss-openexr.patch
+      "${ADD_INCLUDE_CHRONO}"
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
@@ -60,6 +78,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"       ENABLE_CUDA_FIRST_CLASS_LANGUAGE
  "cudnn"      WITH_CUDNN
  "dc1394"     WITH_1394
+ "directml"   WITH_DIRECTML
  "dnn"        BUILD_opencv_dnn
  "dnn"        PROTOBUF_UPDATE_FILES
  "dnn"        UPDATE_PROTO_FILES
@@ -78,15 +97,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ipp"        BUILD_IPP_IW
  "highgui"    BUILD_opencv_highgui
  "intrinsics" CV_ENABLE_INTRINSICS
- "jasper"     WITH_JASPER
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
- "lapack"     WITH_LAPACK
- "lapack"     DOPENCV_LAPACK_FIND_PACKAGE_ONLY
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
- "fs"         OPENCV_ENABLE_FILESYSTEM_SUPPORT
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
  "opencl"     WITH_OPENCL
  "openvino"   WITH_OPENVINO
@@ -108,6 +123,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"       WITH_WEBP
  "win32ui"    WITH_WIN32UI
  "world"      BUILD_opencv_world
+ INVERTED_FEATURES
+ "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
 )
 
 if("dnn" IN_LIST FEATURES)
@@ -119,15 +136,17 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(OPENCV_LAPACK_SHARED_LIBS OFF)
-else()
-  set(OPENCV_LAPACK_SHARED_LIBS ON)
-endif()
-
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
+endif()
+
+set(WITH_JASPER OFF)
+if(("jasper" IN_LIST FEATURES) AND NOT ("openjpeg" IN_LIST FEATURES)) # jasper is mutually exclusive with openjpeg
+  set(WITH_JASPER ON)
+  message(STATUS "Jasper is enabled, but is deprecated and will be removed in a future release.")
+elseif("jasper" IN_LIST FEATURES AND ("openjpeg" IN_LIST FEATURES))
+  message(WARNING "Both Jasper and OpenJPEG are enabled. OpenJPEG will be used and Jasper will be ignored.")
 endif()
 
 if("python" IN_LIST FEATURES)
@@ -178,6 +197,7 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      ${CONTRIB_FIX_COMPATIBILITY_OLDER_CUDA_VERSIONS}
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
@@ -388,15 +408,12 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
-        ###### PROTOBUF
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        # ENABLE
-        -DENABLE_CXX11=ON
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
@@ -405,8 +422,8 @@ vcpkg_cmake_configure(
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
+        -DWITH_JASPER=${WITH_JASPER}
         -DWITH_MATLAB=OFF
-        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_SPNG=OFF
         -DWITH_OPENCLAMDFFT=OFF
@@ -419,20 +436,15 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_OBSENSOR=OFF
+        -DWITH_LAPACK=OFF
         ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
         ###### Additional build flags
-        -DOPENCV_LAPACK_SHARED_LIBS=${OPENCV_LAPACK_SHARED_LIBS}
-        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
-        -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
-        ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
-        ###### Python install path
         ${PYTHON_EXTRA_DEFINES_RELEASE}
     OPTIONS_DEBUG
-        ###### Python install path
         ${PYTHON_EXTRA_DEFINES_DEBUG}
 )
 
@@ -495,9 +507,6 @@ if("sfm" IN_LIST FEATURES)
 endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
-endif()
-if("lapack" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
 endif()
 if("openvino" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")

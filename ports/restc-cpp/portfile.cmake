@@ -4,15 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jgaa/restc-cpp
     REF "v${VERSION}"
-    SHA512 0f74d825d3958810c270748c2810953fe394d0bf1f147d81b9177803e29a86c702715d5995c5966c4fe671b7689f26d9a0fad4e82d111277bbd3ddce1a68f73a
+    SHA512 c0c3795161654b91283b1536ba744ce50be248ebd68c2c28a1d29783d06adcfea16b1ca5b1eff27ff62f8bb347fbf3f56c6b49ee5b5875eb4eecf6824caca129
     HEAD_REF master
-    PATCHES
-        0001-exclude-cmake-external-projects.patch
-
-        # This patch is a combination of these two commits:
-        # https://github.com/jgaa/restc-cpp/commit/f6144b1a93a00e11335e2cfa724da91925b08adb
-        # https://github.com/jgaa/restc-cpp/commit/5470ee36b973fac960b3566e47efe873c21b43fa
-        boost-1.86-fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -20,7 +13,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openssl       RESTC_CPP_WITH_TLS
         zlib          RESTC_CPP_WITH_ZLIB
         threaded-ctx  RESTC_CPP_THREADED_CTX
-        boost-log     RESTC_CPP_LOG_WITH_BOOST_LOG
 )
 
 vcpkg_cmake_configure(

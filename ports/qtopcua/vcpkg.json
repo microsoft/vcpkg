@@ -1,6 +1,7 @@
 {
   "name": "qtopcua",
   "version": "6.8.1",
+  "port-version": 1,
   "description": "The Qt OPC UA module implements a Qt API to interact with OPC UA on top of a 3rd party OPC UA stack.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -19,15 +20,11 @@
     }
   ],
   "default-features": [
-    "default-features",
     "gds",
     "ns0idnames",
     "open62541"
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    },
     "gds": {
       "description": "Support for global discovery server"
     },

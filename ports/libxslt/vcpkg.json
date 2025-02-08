@@ -1,6 +1,7 @@
 {
   "name": "libxslt",
   "version": "1.1.42",
+  "port-version": 1,
   "description": "Libxslt is a XSLT library implemented in C for XSLT 1.0 and most of EXSLT",
   "homepage": "https://github.com/GNOME/libxslt",
   "license": null,
@@ -39,7 +40,16 @@
     },
     "python": {
       "description": "Builds with python support",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "libxslt",
+          "default-features": false,
+          "features": [
+            "profiler"
+          ]
+        }
+      ]
     },
     "thread": {
       "description": "Enable multi-threading support"

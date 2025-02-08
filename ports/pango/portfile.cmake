@@ -4,7 +4,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
     REF "${VERSION}"
-    SHA512 1c5f5f2de778b2ca157a4f3eb8bbbba1a79f5f9d60aac678e9c213005f1d8bedfc027ee5c1cebb07dc0eb8c308c38c37beb05293ef2cbe4ac9a0b481176934bb
+    SHA512 c980cfed2a4811c32ba473846d7d075e0b949a833089f4cafb436ce7442719307a60eb68956606c315dd6185cb8753df87d4bac140d752eaeaf0b67b17afbd79
     HEAD_REF master
 ) 
 
@@ -40,7 +40,7 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
         "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
-        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
         "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
 )
 

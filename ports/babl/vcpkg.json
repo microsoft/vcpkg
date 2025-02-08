@@ -1,0 +1,17 @@
+{
+  "name": "babl",
+  "version": "0.1.110",
+  "description": "Pixel format conversion library.",
+  "homepage": "https://gegl.org/babl/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "glib",
+    "lcms",
+    "librsvg",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
