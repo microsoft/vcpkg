@@ -374,7 +374,7 @@ gamenetworkingsockets:x64-android=fail
 # There is an open PR that try to fix that.
 gazebo:x64-windows=fail
 gazebo:x64-windows-static-md=fail
-gazebo:x86-windows=fail
+gazebo:x86-windows=skip
 gazebo:x64-linux=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
@@ -536,8 +536,6 @@ libdc1394:arm64-android=fail
 libflac:arm-neon-android=fail
 libfreenect2:arm64-windows=fail
 libfreenect2:arm64-windows-static-md=fail
-# inline assembly requires more registers than available
-libgcrypt:x64-android=fail
 # error: call to undeclared function 'mktime_z'
 libgnutls:arm-neon-android=fail
 libgnutls:arm64-android=fail
@@ -786,10 +784,8 @@ nrf-ble-driver:arm64-android=fail
 nrf-ble-driver:x64-android=fail
 nvtt:x64-android=fail
 oatpp-libressl:x64-android=fail
-octave:x86-windows=fail
-octave:x64-windows=fail
-octave:x64-windows-static=fail
-octave:x64-windows-static-md=fail
+# needs gnu-sed
+octave:arm64-osx=fail
 octave:x64-osx=fail
 ode:arm64-windows=fail
 ode:arm64-windows-static-md=fail
@@ -868,8 +864,6 @@ paho-mqtt:x64-uwp=fail
 pango:arm-neon-android=fail
 pango:arm64-android=fail
 pango:x64-android=fail
-pcl:arm-neon-android=fail
-pcl:arm64-android=fail
 pcl:x64-android=fail
 pdal:arm-neon-android=fail
 pdal:arm64-android=fail
@@ -917,12 +911,13 @@ qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
+# Skipped to avoid exceeding the 48 hour time limit in CI
+# May also need an older ninja version
+qt5-webengine:x64-windows=skip
+qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=skip
 qt5-x11extras:arm64-osx=skip
-# Skipped to avoid exceeding the 48 hour time limit in CI
-qt5-webengine:x86-windows=skip
-qt5-webengine:x64-windows=skip
 # Missing system libraries
 qtwayland:x64-osx=skip
 qtwayland:arm64-osx=skip
@@ -1090,6 +1085,19 @@ spscqueue:x64-android=fail
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-neon-android=fail
+# _Interlocked* intrinsic functions are not available on x86
+suitesparse-graphblas:x86-windows=fail
+# "ninja: error: failed recompaction: Permission denied"
+# See https://gist.github.com/valgur/a27f15e16efe93b1ed589703c3cb22cd for the build logs
+suitesparse-graphblas:arm64-windows=fail
+suitesparse-graphblas:arm64-windows-static-md=fail
+# uwp: "unresolved external symbol __imp_RoInitialize referenced in function __scrt_initialize_winrt"
+suitesparse-graphblas:x64-uwp=fail
+suitesparse-graphblas:arm64-uwp=fail
+# Android API level 23 or newer is required for complex math support
+suitesparse-graphblas:arm-neon-android=fail
+suitesparse-graphblas:arm64-android=fail
+suitesparse-graphblas:x64-android=fail
 systemc:arm64-windows=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail
@@ -1252,6 +1260,8 @@ vcpkg-ci-curl:x64-android=pass
 vcpkg-ci-curl:x64-linux=pass
 vcpkg-ci-curl:arm64-osx=pass
 vcpkg-ci-curl:x64-osx=pass
+vcpkg-ci-curl:arm64-uwp=pass
+vcpkg-ci-curl:x64-uwp=pass
 vcpkg-ci-curl:arm64-windows=pass
 vcpkg-ci-curl:arm64-windows-static-md=pass
 vcpkg-ci-curl:x64-windows-static-md=pass

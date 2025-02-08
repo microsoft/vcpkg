@@ -3,8 +3,8 @@ set(USE_QT_VERSION "5")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF "${VERSION}"
-    SHA512 96bbeb9525325f17ba635a0b75126aae0a7b0daef211af45057a97abd5d31a57fc50f0e889a6dab614df9b7621a145e06c0d240f0a218f33df1217d9a19c510d
+    REF af32659937b6a23af04954a23a4a31ea520ceabc  #3.4.20
+    SHA512 e7efc912113f27428fb85f033e8b18146c9a5899bf10e687f8c279ed736ee3006ac330e843979df7572f046f41cb8820e291b4303dcfdc4f12deb6df0e0be27b
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -20,9 +20,14 @@ vcpkg_from_github(
       0012-fix-zlib.patch
       0014-fix-pkgconf-name.patch
       0015-fix-supportqnx.patch
-      0017-missing-include.patch
-      0019-fix-tbb.patch
+      0017-enable-gtk.patch
+      0019-enable-pkgconf.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
@@ -65,7 +70,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ipp"             BUILD_IPP_IW
  "jasper"          WITH_JASPER
  "jpeg"            WITH_JPEG
- "lapack"          WITH_LAPACK
  "line-descriptor" BUILD_opencv_line_descriptor
  "msmf"            WITH_MSMF
  "nonfree"         OPENCV_ENABLE_NONFREE
@@ -125,14 +129,13 @@ if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
-    REF "${VERSION}"
-    SHA512 a051497e61ae55f86c224044487fc2247a3bba1aa27031c4997c981ddf8402edf82f1dd0d307f562c638bc021cfd8bd42a723973f00ab25131495f84d33c5383
+    REF ae9a95ecdd8b4014a45b38c5576adf73c5d96f35
+    SHA512 98f4e3113fb65b6d52d39388ae616d3107969040dc70248be194566904cf8a4f165a61fd5e88b1d799d7bc8107f1a3c3951365de45f3b19cb8b888a63c6d8f2d
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
-      0013-contrib-fix-ceres.patch
+      0013-contrib-fix-tesseract.patch
       0016-contrib-fix-freetype.patch
-      0018-contrib-fix-tesseract.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -180,36 +183,36 @@ endif()
 if("ipp" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/a56b6ac6f030c312b2dce17430eef13aed9af274/ippicv/ippicv_2020_mac_intel64_20191018_general.tgz"
-      FILENAME "opencv-cache/ippicv/1c3d675c2a2395d094d523024896e01b-ippicv_2020_mac_intel64_20191018_general.tgz"
-      SHA512 454dfaaa245e3a3b2f1ffb1aa8e27e280b03685009d66e147482b14e5796fdf2d332cac0f9b0822caedd5760fda4ee0ce2961889597456bbc18202f10bf727cd
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
     )
   elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/a56b6ac6f030c312b2dce17430eef13aed9af274/ippicv/ippicv_2020_lnx_intel64_20191018_general.tgz"
-        FILENAME "opencv-cache/ippicv/7421de0095c7a39162ae13a6098782f9-ippicv_2020_lnx_intel64_20191018_general.tgz"
-        SHA512 de6d80695cd6deef359376476edc4ff85fdddcf94972b936e0017f8a48aaa5d18f55c4253ae37deb83bff2f71410f68408063c88b5f3bf4df3c416aa93ceca87
-    )
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
+          FILENAME "opencv-cache/ippicv/0f2745ff705ecae31176dad437608f6f-ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
+          SHA512 74cba99a1d2c40a125b23d42de555548fecd22c8fea5ed68ab7f887b1f208bd7f2906a64d40bac71ea82190e5389fb92d3c72b6d47c8c05a2e9b9b909a82ce47
+      )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/a56b6ac6f030c312b2dce17430eef13aed9af274/ippicv/ippicv_2020_lnx_ia32_20191018_general.tgz"
-        FILENAME "opencv-cache/ippicv/ad189a940fb60eb71f291321322fe3e8-ippicv_2020_lnx_ia32_20191018_general.tgz"
-        SHA512 5ca9dafc3a634e2a5f83f6a498611c990ef16d54358e9b44574b01694e9d64b118d46d6e2011506e40d37e5a9865f576f790e37ff96b7c8b503507633631a296
-    )
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
+          FILENAME "opencv-cache/ippicv/63e381bf08076ca34fd5264203043a45-ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
+          SHA512 37484704754f9553b04c8da23864af3217919a11a9dbc92427e6326d6104bab7f1983c98c78ec52cda2d3eb93dc1fd98d0b780e3b7a98e703010c5ee1b421426
+      )
     endif()
   elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/a56b6ac6f030c312b2dce17430eef13aed9af274/ippicv/ippicv_2020_win_intel64_20191018_general.zip"
-        FILENAME "opencv-cache/ippicv/879741a7946b814455eee6c6ffde2984-ippicv_2020_win_intel64_20191018_general.zip"
-        SHA512 50c4af4b7fe2161d652264230389dad2330e8c95b734d04fb7565bffdab855c06d43085e480da554c56b04f8538087d49503538d5943221ee2a772ee7be4c93c
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_intel64_20240201_general.zip"
+          FILENAME "opencv-cache/ippicv/59d154bf54a1e3eea20d7248f81a2a8e-ippicv_2021.11.0_win_intel64_20240201_general.zip"
+          SHA512 686ddbafa3f24c598d94589fca6937f90a4fb25e3dabea3b276709e55cbc2636aba8d73fadd336775f8514ff8e2e1b20e749264a7f11243190d54467f9a3f895
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/a56b6ac6f030c312b2dce17430eef13aed9af274/ippicv/ippicv_2020_win_ia32_20191018_general.zip"
-        FILENAME "opencv-cache/ippicv/cd39bdf0c2e1cac9a61101dad7a2413e-ippicv_2020_win_ia32_20191018_general.zip"
-        SHA512 058d00775d9f16955c7a557d554b8c2976ab9dbad4ba3fdb9823c0f768809edbd835e4397f01dc090a9bc80d81de834375e7006614d2a898f42e8004de0e04bf
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_ia32_20240201_general.zip"
+          FILENAME "opencv-cache/ippicv/7a6d8ac5825c02fea6cbfc1201b521b5-ippicv_2021.11.0_win_ia32_20240201_general.zip"
+          SHA512 0e151e34cee01a3684d3be3c2c75b0fac5f303bfd8c08685981a3d4a25a19a9bb454da26d2965aab915adc209accca17b6a4b6d7726c004cd7841daf180bbd3a
       )
     endif()
   endif()
@@ -274,7 +277,6 @@ vcpkg_cmake_configure(
         -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
         -DBUILD_ZLIB=OFF
-        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_java=OFF
@@ -319,6 +321,7 @@ vcpkg_cmake_configure(
         -DWITH_FFMPEG=OFF
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
+        -DWITH_LAPACK=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
@@ -392,17 +395,11 @@ endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
 endif()
-if("lapack" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
-endif()
 if("openvino" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
 endif()
 if("openexr" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
-endif()
-if("openjpeg" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
 endif()
 if("omp" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")

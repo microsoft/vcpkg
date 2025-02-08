@@ -1,26 +1,13 @@
 diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
-index c2a97e1..8c5b2ea 100644
+index a7d3c7c..2a7f111 100644
 --- a/src/libgit2/CMakeLists.txt
 +++ b/src/libgit2/CMakeLists.txt
-@@ -2,7 +2,7 @@
- # git library functionality.
+@@ -60,7 +60,7 @@ target_link_libraries(libgit2package ${LIBGIT2_SYSTEM_LIBS})
+ target_include_directories(libgit2package SYSTEM PRIVATE ${LIBGIT2_INCLUDES})
+ target_include_directories(libgit2package INTERFACE $<INSTALL_INTERFACE:./include/git2>)
  
- add_library(libgit2 OBJECT)
--set_target_properties(libgit2 PROPERTIES C_STANDARD 90)
-+set_target_properties(libgit2 PROPERTIES C_STANDARD 99)
- set_target_properties(libgit2 PROPERTIES C_EXTENSIONS OFF)
- 
- include(PkgBuildConfig)
-diff --git a/src/util/CMakeLists.txt b/src/util/CMakeLists.txt
-index ee35eb9..158fac2 100644
---- a/src/util/CMakeLists.txt
-+++ b/src/util/CMakeLists.txt
-@@ -1,7 +1,7 @@
- # util: a shared library for common utility functions for libgit2 projects
- 
- add_library(util OBJECT)
--set_target_properties(util PROPERTIES C_STANDARD 90)
-+set_target_properties(util PROPERTIES C_STANDARD 99)
- set_target_properties(util PROPERTIES C_EXTENSIONS OFF)
- 
- configure_file(git2_features.h.in git2_features.h)
+-set_target_properties(libgit2package PROPERTIES C_STANDARD 90)
++set_target_properties(libgit2package PROPERTIES C_STANDARD 99)
+ set_target_properties(libgit2package PROPERTIES C_EXTENSIONS OFF)
+ set_target_properties(libgit2package PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+ set_target_properties(libgit2package PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

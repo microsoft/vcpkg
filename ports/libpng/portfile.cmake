@@ -12,7 +12,7 @@ if ("apng" IN_LIST FEATURES)
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
         URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 ea89018a02ed171b82af9644ec2ff658c8a288e99b5470c7a3fd142c6fa95bbe19cd34c4fae654bc8783b41c3eb3b2d15b486bda3b0307ec3090e99f34465e20
+        SHA512 60a0b3072f4d1fddcce79eaa89f461d27c32e4c1a4cf3e6dc30ff1091aeceeb2fbfacf830bdb59bad98e39091fdd47458589411b59f94e2d4fc9c121b0545291
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -28,17 +28,13 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO glennrp/libpng
+    REPO pnggroup/libpng
     REF v${VERSION}
-    SHA512 c023bc7dcf3d0ea045a63204f2266b2c53b601b99d7c5f5a7b547bc9a48b205a277f699eefa47f136483f495175b226527097cd447d6b0fbceb029eb43638f63
+    SHA512 b999c241ce5d95dfae5bb2c71e8b686a1c4af69b67262bda309a58c83967b5f3eacd7987d6990f71ebc16aa89f4f7a59c846857d56c80bca7e9ec657caff62c7
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
-        libm.patch
-        pkgconfig.patch
-        fix-msa-support-for-mips.patch
-        fix-tools-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PNG_SHARED)
