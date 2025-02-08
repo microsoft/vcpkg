@@ -1,18 +1,3 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "${PORT} currently requires the following programs from the system package manager:
-    autoconf automake autoconf-archive
-On Debian and Ubuntu derivatives:
-    sudo apt-get install autoconf automake autoconf-archive
-On recent Red Hat and Fedora derivatives:
-    sudo dnf install autoconf automake autoconf-archive
-On Arch Linux and derivatives:
-    sudo pacman -S autoconf automake autoconf-archive
-On Alpine:
-    apk add autoconf automake autoconf-archive
-On macOS:
-    brew install autoconf automake autoconf-archive\n")
-endif()
-
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
 string(REPLACE "." "_" VERSION2 "${VERSION}")
 string(REPLACE "." "-" VERSION3 "${VERSION}")
@@ -47,12 +32,12 @@ vcpkg_list(SET BUILD_OPTIONS)
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-extras)
-    vcpkg_list(APPEND BUILD_OPTIONS "PKGDATA_OPTS=--without-assembly -O ../data/icupkg.inc")
+    vcpkg_list(APPEND BUILD_OPTIONS "\"PKGDATA_OPTS=--without-assembly -O ../data/icupkg.inc\"")
 elseif(VCPKG_TARGET_IS_UWP)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-extras ac_cv_func_tzset=no ac_cv_func__tzset=no)
     string(APPEND VCPKG_C_FLAGS " -DU_PLATFORM_HAS_WINUWP_API=1")
     string(APPEND VCPKG_CXX_FLAGS " -DU_PLATFORM_HAS_WINUWP_API=1")
-    vcpkg_list(APPEND BUILD_OPTIONS "PKGDATA_OPTS=--windows-uwp-build -O ../data/icupkg.inc")
+    vcpkg_list(APPEND BUILD_OPTIONS "\"PKGDATA_OPTS=--windows-uwp-build -O ../data/icupkg.inc\"")
 elseif(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-rpath)
     if(DEFINED CMAKE_INSTALL_NAME_DIR)
