@@ -593,25 +593,32 @@ function(vcpkg_configure_make)
         # whenever --host is set, --build must be too (for historical reasons).
         # See https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/Specifying-Target-Triplets.html
         # -> Use config.guess to determine build triplet
-        if (CMAKE_HOST_WIN32)
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -c "./config.guess"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "config.guess-${TARGET_TRIPLET}"
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE BUILD_TRIPLET
-            )
-        else()
-            vcpkg_execute_required_process(
-                COMMAND "./config.guess"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "config.guess-${TARGET_TRIPLET}"
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE BUILD_TRIPLET
-            )
-        endif()
+        if (EXISTS "config.guess")
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_required_process(
+                    COMMAND ${base_cmd} -c "./config.guess"
+                    WORKING_DIRECTORY "${src_dir}"
+                    LOGNAME "config.guess-${TARGET_TRIPLET}"
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    OUTPUT_VARIABLE BUILD_TRIPLET
+                )
+            else()
+                vcpkg_execute_required_process(
+                    COMMAND "./config.guess"
+                    WORKING_DIRECTORY "${src_dir}"
+                    LOGNAME "config.guess-${TARGET_TRIPLET}"
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    OUTPUT_VARIABLE BUILD_TRIPLET
+                )
+            endif()
 
-        string(APPEND arg_BUILD_TRIPLET " --build=${BUILD_TRIPLET}")
+            string(APPEND arg_BUILD_TRIPLET " --build=${BUILD_TRIPLET}")
+        else()
+            # For the time being we'll assume that for projects that don't have a config.guess
+            # file, target triplets aren't that important and hence we can get away with not
+            # defining --build in addition to --host
+            debug_message("vcpkg will run configure with the --host option but without --build, which may cause issues")
+        endif()
     endif()
 
     list(FILTER z_vcm_all_tools INCLUDE REGEX " ")
