@@ -28,9 +28,16 @@ vcpkg_from_gitlab(
 file(COPY ${SOURCE_PATH_COMMON}/ DESTINATION ${SOURCE_PATH}/src/common)
 file(COPY ${SOURCE_PATH_M4}/ DESTINATION ${SOURCE_PATH}/m4)
 
+set(FEATURE_OPTIONS "")
+if(NOT "speex" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "--disable-speex")
+endif()
+
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_make_install()
