@@ -20,7 +20,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.xiph.org
     OUT_SOURCE_PATH SOURCE_PATH_M4
     REPO xiph/icecast-m4
-    REF 57027c6c
+    REF 57027c6cc3f8b26d59e9560b4ac72a1a06d643b9
     HEAD_REF master
     SHA512 d2a9507a5a0d36134c4dc37fe38b3cb4d954dee3ffa5fd2b1bb4cd8af1e7804248e234e55fbcfba20fecec4bf159b2616d14ac537d03ffbff095a02d5f4bf201
 )
