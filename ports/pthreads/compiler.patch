@@ -1,0 +1,22 @@
+diff --git a/Makefile b/Makefile
+index 007f7a0b1d..726d9904ad 100644
+--- a/Makefile
++++ b/Makefile
+@@ -23,7 +23,7 @@ SMALL_STATIC_STAMPS		= pthreadVCE$(PTW32_VER).small_static_stamp pthreadVSE$(PTW
+ 						  pthreadVC$(PTW32_VER).small_static_stamp pthreadVCE$(PTW32_VER_DEBUG).small_static_stamp \
+ 						  pthreadVSE$(PTW32_VER_DEBUG).small_static_stamp pthreadVC$(PTW32_VER_DEBUG).small_static_stamp
+ 
+-CC	= cl /errorReport:none /nologo
++CC	= $(CC) /errorReport:none /nologo
+ CPPFLAGS = /I. /DHAVE_CONFIG_H
+ XCFLAGS = 
+ CFLAGS	= /W3 /O2 /Ob2 $(XCFLAGS)
+@@ -234,7 +234,7 @@ install:
+ 	copy semaphore.h "$(HDRDEST)"
+ 
+ $(DLLS): $(DLL_OBJS)
+-	$(CC) /LDd /Zi $(DLL_OBJS) /link /implib:$*.lib $(XLIBS) /out:$@
++	$(CC) /LDd /Z7 $(DLL_OBJS) /link /implib:$*.lib $(XLIBS) /out:$@
+ 
+ $(INLINED_STATIC_STAMPS): $(STATIC_OBJS)
+ 	if exist $*.lib del $*.lib
