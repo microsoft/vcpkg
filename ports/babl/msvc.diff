@@ -1,0 +1,13 @@
+diff --git a/babl/meson.build b/babl/meson.build
+index b98df1a..7d7a9b7 100644
+--- a/babl/meson.build
++++ b/babl/meson.build
+@@ -45,6 +45,8 @@ elif cc.get_id() == 'clang'
+     # Clang on msys/mingw
+     babl_link_args = []
+   endif
++elif cc.get_id() == 'msvc'
++  # Let's build a static lib at least.
+ else
+   error(
+     'Linker doesn\'t support --version-script or -exported_symbols_list'
