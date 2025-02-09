@@ -9477,7 +9477,7 @@
       "port-version": 0
     },
     "vcpkg-get-python": {
-      "baseline": "2024-06-22",
+      "baseline": "2025-02-09",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
