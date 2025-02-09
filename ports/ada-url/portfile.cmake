@@ -8,8 +8,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 3a81da352ad47395d83172f1477e8165483c5dc30923ba4387463a03aa01df5d6718dd54d22f568a654300e777b3eafce7f266504a27bfeb1f8de57503670dc4
     HEAD_REF main
-    PATCHES
-        no-cpm.patch
 )
 
 vcpkg_check_features(
@@ -22,6 +20,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
+        -DCPM_USE_LOCAL_PACKAGES=ON
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DADA_TOOLS=OFF
