@@ -8,12 +8,18 @@ vcpkg_from_github(
       0001-install-options.patch
       0002-fix-paths-containing-symbols.patch
       0003-force-package-requirements.patch
+      0004-enable-pkgconf.patch
+      0005-fix-config.patch
       0006-fix-jasper.patch
-      0007-fix-config.patch
-      0019-fix-openexr.patch
-      0020-missing-include.patch
-      0021-pkgconfig-suffix.patch
+      0007-fix-openexr.patch
+      0008-missing-include.patch
+      0009-pkgconfig-suffix.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
@@ -22,7 +28,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
  "eigen"    WITH_EIGEN
- "gtk"      WITH_GTK
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
  "msmf"     WITH_MSMF
@@ -76,7 +81,7 @@ vcpkg_cmake_configure(
         -DWITH_ZLIB=ON
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=OFF
-        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
+        -DWITH_GTK=OFF
 )
 
 vcpkg_cmake_install()
