@@ -5,6 +5,7 @@
   "homepage": "https://yourwaifu.dev/sleepy-discord/",
   "dependencies": [
     "boost-asio",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
