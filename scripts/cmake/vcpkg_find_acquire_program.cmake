@@ -104,9 +104,10 @@ function(z_use_vcpkg_fetch program)
       string(TOLOWER "${program}" arg_FETCH_NAME)
     endif()
     vcpkg_execute_in_download_mode(
-        COMMAND "$ENV{VCPKG_COMMAND}" fetch "${arg_FETCH_NAME}"
+        COMMAND "$ENV{VCPKG_COMMAND}" fetch "${arg_FETCH_NAME}" --x-stderr-status
         RESULT_VARIABLE error_code
         OUTPUT_VARIABLE ${program}
+        ERROR_VARIABLE error_pipe
         OUTPUT_STRIP_TRAILING_WHITESPACE
         WORKING_DIRECTORY "${DOWNLOADS}"
     )
