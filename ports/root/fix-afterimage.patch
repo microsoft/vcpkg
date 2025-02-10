@@ -1,0 +1,73 @@
+diff --git a/cmake/modules/FindAfterImage.cmake b/cmake/modules/FindAfterImage.cmake
+index fe814152e..1582f79f9 100644
+--- a/cmake/modules/FindAfterImage.cmake
++++ b/cmake/modules/FindAfterImage.cmake
+@@ -25,7 +25,7 @@
+ find_program(AFTERIMAGE_CONFIG_EXECUTABLE afterimage-config)
+ mark_as_advanced(AFTERIMAGE_CONFIG_EXECUTABLE)
+ 
+-if(AFTERIMAGE_CONFIG_EXECUTABLE)
++if(0)
+   execute_process(COMMAND ${AFTERIMAGE_CONFIG_EXECUTABLE} --version
+     OUTPUT_VARIABLE AFTERIMAGE_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+   execute_process(COMMAND ${AFTERIMAGE_CONFIG_EXECUTABLE} --cflags
+@@ -37,6 +37,15 @@ if(AFTERIMAGE_CONFIG_EXECUTABLE)
+   string(REGEX MATCH "-I[^;]+" AFTERIMAGE_INCLUDE_DIR "${AFTERIMAGE_CFLAGS}")
+   string(REPLACE "-I" "" AFTERIMAGE_INCLUDE_DIR "${AFTERIMAGE_INCLUDE_DIR}")
+ endif()
++find_path(AFTERIMAGE_INCLUDE_DIR NAMES afterimage.h PATH_SUFFIXES libAfterImage)
++find_library(AFTERIMAGE_LIBRARY NAMES AfterImage libAfterImage)
++find_package(ZLIB REQUIRED)
++find_package(JPEG REQUIRED)
++find_package(TIFF REQUIRED)
++find_package(PNG REQUIRED)
++set(AFTERIMAGE_VERSION 1.21)
++
++set(AFTERIMAGE_LIBRARIES "${AFTERIMAGE_LIBRARY}" JPEG::JPEG TIFF::TIFF PNG::PNG ZLIB::ZLIB)
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(AfterImage
+diff --git a/graf2d/asimage/src/TASImage.cxx b/graf2d/asimage/src/TASImage.cxx
+index db81f2308..ab503775c 100644
+--- a/graf2d/asimage/src/TASImage.cxx
++++ b/graf2d/asimage/src/TASImage.cxx
+@@ -105,9 +105,8 @@ ROOT tutorials: `$ROOTSYS/tutorials/image/`
+ #endif
+ #   include <afterbase.h>
+ #else
+-#   include <win32/config.h>
+-#   include <win32/afterbase.h>
+ #   define X_DISPLAY_MISSING 1
++#   include <afterbase.h>
+ #endif
+ #   include <afterimage.h>
+ #   include <bmp.h>
+diff --git a/graf2d/asimage/src/TASPaletteEditor.cxx b/graf2d/asimage/src/TASPaletteEditor.cxx
+index 58d597120..47d8814de 100644
+--- a/graf2d/asimage/src/TASPaletteEditor.cxx
++++ b/graf2d/asimage/src/TASPaletteEditor.cxx
+@@ -45,8 +45,8 @@ It is called by a pull down menu item of TASImage.
+ #ifndef WIN32
+ #   include <afterbase.h>
+ #else
+-#   include <win32/config.h>
+-#   include <win32/afterbase.h>
++#   define X_DISPLAY_MISSING 1
++#   include <afterbase.h>
+ #endif
+ #   include <afterimage.h>
+ extern "C" {
+diff --git a/graf2d/asimage/src/TASPluginGS.cxx b/graf2d/asimage/src/TASPluginGS.cxx
+index 4bfcc4288..58e9114e8 100644
+--- a/graf2d/asimage/src/TASPluginGS.cxx
++++ b/graf2d/asimage/src/TASPluginGS.cxx
+@@ -33,8 +33,7 @@ Allows to read PS/EPS/PDF files via GhostScript
+ #ifndef WIN32
+ #   include <afterbase.h>
+ #else
+-#   include <win32/config.h>
+-#   include <win32/afterbase.h>
++#   include <afterbase.h>
+ #   define X_DISPLAY_MISSING 1
+ #endif
+ #   include <import.h>
