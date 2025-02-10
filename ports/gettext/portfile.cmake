@@ -30,7 +30,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         config-step-order.patch
         iconv-ostream-flush.diff
         # Doesn't do the same detection as other configure scripts
-        libtextstyle-unsetenv.diff
+#        libtextstyle-unsetenv.diff
 )
 
 set(subdirs "")
@@ -49,6 +49,7 @@ if(subdirs)
     vcpkg_add_to_path("${BISON_PATH}")
 
     if(VCPKG_HOST_IS_WINDOWS)
+elseif(0)
         message(STATUS "Modifying build system for less forks")
         set(ENV{CONFIG_SHELL} "/usr/bin/bash")
         vcpkg_execute_required_process(
@@ -183,6 +184,7 @@ if(subdirs)
         file(WRITE "${file}" "${rules}")
     endforeach()
 
+    set(VCPKG_CONCURRENCY 1)
     vcpkg_install_make()
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
