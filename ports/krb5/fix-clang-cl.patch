@@ -1,7 +1,7 @@
-diff --git a/21.3-final-51c4e8475b.clean/src/appl/gss-sample/gss-client.c b/21.3-final-51c4e8475b/src/appl/gss-sample/gss-client.c
+diff --git a/src/appl/gss-sample/gss-client.c b/src/appl/gss-sample/gss-client.c
 index 6e2aa33690..0686be9570 100644
---- a/21.3-final-51c4e8475b.clean/src/appl/gss-sample/gss-client.c
-+++ b/21.3-final-51c4e8475b/src/appl/gss-sample/gss-client.c
+--- a/src/appl/gss-sample/gss-client.c
++++ b/src/appl/gss-sample/gss-client.c
 @@ -690,7 +690,7 @@ parse_oid(char *mechanism, gss_OID * oid)
  static int max_threads = 1;
  
@@ -11,10 +11,10 @@ index 6e2aa33690..0686be9570 100644
  static HANDLE hMutex = NULL;
  static HANDLE hEvent = NULL;
  
-diff --git a/21.3-final-51c4e8475b.clean/src/appl/gss-sample/gss-server.c b/21.3-final-51c4e8475b/src/appl/gss-sample/gss-server.c
+diff --git a/src/appl/gss-sample/gss-server.c b/src/appl/gss-sample/gss-server.c
 index 9b6ce9ffb3..8336682f66 100644
---- a/21.3-final-51c4e8475b.clean/src/appl/gss-sample/gss-server.c
-+++ b/21.3-final-51c4e8475b/src/appl/gss-sample/gss-server.c
+--- a/src/appl/gss-sample/gss-server.c
++++ b/src/appl/gss-sample/gss-server.c
 @@ -574,7 +574,7 @@ sign_server(int s, gss_cred_id_t server_creds, int export)
  static int max_threads = 1;
  
@@ -24,10 +24,10 @@ index 9b6ce9ffb3..8336682f66 100644
  static HANDLE hMutex = NULL;
  static HANDLE hEvent = NULL;
  
-diff --git a/21.3-final-51c4e8475b.clean/src/ccapi/lib/win/ccs_reply_proc.c b/21.3-final-51c4e8475b/src/ccapi/lib/win/ccs_reply_proc.c
+diff --git a/src/ccapi/lib/win/ccs_reply_proc.c b/src/ccapi/lib/win/ccs_reply_proc.c
 index b4dbc0d19f..9cb166ca82 100644
---- a/21.3-final-51c4e8475b.clean/src/ccapi/lib/win/ccs_reply_proc.c
-+++ b/21.3-final-51c4e8475b/src/ccapi/lib/win/ccs_reply_proc.c
+--- a/src/ccapi/lib/win/ccs_reply_proc.c
++++ b/src/ccapi/lib/win/ccs_reply_proc.c
 @@ -36,11 +36,11 @@
  
  void ccs_rpc_request_reply(
@@ -54,10 +54,10 @@ index b4dbc0d19f..9cb166ca82 100644
      const long  srvStartTime,   /* Server Start Time */
      long*       status ) {      /* Return code */
  
-diff --git a/21.3-final-51c4e8475b.clean/src/ccapi/server/win/ccs_request_proc.c b/21.3-final-51c4e8475b/src/ccapi/server/win/ccs_request_proc.c
+diff --git a/src/ccapi/server/win/ccs_request_proc.c b/src/ccapi/server/win/ccs_request_proc.c
 index c0328ea7ea..d7ad3ec257 100644
---- a/21.3-final-51c4e8475b.clean/src/ccapi/server/win/ccs_request_proc.c
-+++ b/21.3-final-51c4e8475b/src/ccapi/server/win/ccs_request_proc.c
+--- a/src/ccapi/server/win/ccs_request_proc.c
++++ b/src/ccapi/server/win/ccs_request_proc.c
 @@ -34,10 +34,10 @@
  
  void ccs_rpc_request(
@@ -83,10 +83,10 @@ index c0328ea7ea..d7ad3ec257 100644
      long*       return_status ) {   /* Return code */
  
      UINT64*     p       = (UINT64*)(tspHandle);
-diff --git a/21.3-final-51c4e8475b.clean/src/clients/kcpytkt/kcpytkt.c b/21.3-final-51c4e8475b/src/clients/kcpytkt/kcpytkt.c
+diff --git a/src/clients/kcpytkt/kcpytkt.c b/src/clients/kcpytkt/kcpytkt.c
 index 0b8802261e..2865205c13 100644
---- a/21.3-final-51c4e8475b.clean/src/clients/kcpytkt/kcpytkt.c
-+++ b/21.3-final-51c4e8475b/src/clients/kcpytkt/kcpytkt.c
+--- a/src/clients/kcpytkt/kcpytkt.c
++++ b/src/clients/kcpytkt/kcpytkt.c
 @@ -18,7 +18,7 @@ xusage()
  }
  
@@ -96,10 +96,10 @@ index 0b8802261e..2865205c13 100644
             int flags);
  
  int
-diff --git a/21.3-final-51c4e8475b.clean/src/clients/kdeltkt/kdeltkt.c b/21.3-final-51c4e8475b/src/clients/kdeltkt/kdeltkt.c
+diff --git a/src/clients/kdeltkt/kdeltkt.c b/src/clients/kdeltkt/kdeltkt.c
 index cd0bf637db..d130acb226 100644
---- a/21.3-final-51c4e8475b.clean/src/clients/kdeltkt/kdeltkt.c
-+++ b/21.3-final-51c4e8475b/src/clients/kdeltkt/kdeltkt.c
+--- a/src/clients/kdeltkt/kdeltkt.c
++++ b/src/clients/kdeltkt/kdeltkt.c
 @@ -18,7 +18,7 @@ xusage()
  }
  
@@ -109,10 +109,10 @@ index cd0bf637db..d130acb226 100644
  
  int
  main(int argc, char *argv[])
-diff --git a/21.3-final-51c4e8475b.clean/src/config/win-pre.in b/21.3-final-51c4e8475b/src/config/win-pre.in
+diff --git a/src/config/win-pre.in b/src/config/win-pre.in
 index 8ac5fa2f86..c9eb63221a 100644
---- a/21.3-final-51c4e8475b.clean/src/config/win-pre.in
-+++ b/21.3-final-51c4e8475b/src/config/win-pre.in
+--- a/src/config/win-pre.in
++++ b/src/config/win-pre.in
 @@ -114,7 +114,7 @@ KFWFLAGS=-DUSE_LEASH=1 -DDEBUG -D_CRTDBG_MAP_ALLOC
  #
  # The name of the C compiler for the target
@@ -122,10 +122,10 @@ index 8ac5fa2f86..c9eb63221a 100644
  
  PDB_OPTS=-Fd$(OUTPRE)\ -FD
  CPPFLAGS=-I$(top_srcdir)\include -I$(top_srcdir)\include\krb5 $(DNSFLAGS) -DWIN32_LEAN_AND_MEAN -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE -D_CRT_SECURE_NO_DEPRECATE $(KFWFLAGS) $(TIME_T_FLAGS)
-diff --git a/21.3-final-51c4e8475b.clean/src/lib/gssapi/krb5/acquire_cred.c b/21.3-final-51c4e8475b/src/lib/gssapi/krb5/acquire_cred.c
+diff --git a/src/lib/gssapi/krb5/acquire_cred.c b/src/lib/gssapi/krb5/acquire_cred.c
 index 006eba114d..77305aa872 100644
---- a/21.3-final-51c4e8475b.clean/src/lib/gssapi/krb5/acquire_cred.c
-+++ b/21.3-final-51c4e8475b/src/lib/gssapi/krb5/acquire_cred.c
+--- a/src/lib/gssapi/krb5/acquire_cred.c
++++ b/src/lib/gssapi/krb5/acquire_cred.c
 @@ -261,7 +261,7 @@ get_ccache_leash(krb5_context context, krb5_principal desired_princ,
      if (hLeashDLL == INVALID_HANDLE_VALUE) {
          hLeashDLL = LoadLibrary(LEASH_DLL);
@@ -135,10 +135,10 @@ index 006eba114d..77305aa872 100644
                  GetProcAddress(hLeashDLL, "not_an_API_Leash_AcquireInitialTicketsIfNeeded");
          }
      }
-diff --git a/21.3-final-51c4e8475b.clean/src/lib/krb5/ccache/ccdefault.c b/21.3-final-51c4e8475b/src/lib/krb5/ccache/ccdefault.c
+diff --git a/src/lib/krb5/ccache/ccdefault.c b/src/lib/krb5/ccache/ccdefault.c
 index 1d3625c4d9..5904d9b758 100644
---- a/21.3-final-51c4e8475b.clean/src/lib/krb5/ccache/ccdefault.c
-+++ b/21.3-final-51c4e8475b/src/lib/krb5/ccache/ccdefault.c
+--- a/src/lib/krb5/ccache/ccdefault.c
++++ b/src/lib/krb5/ccache/ccdefault.c
 @@ -76,7 +76,7 @@ krb5int_cc_default(krb5_context context, krb5_ccache *ccache)
      if ( hLeashDLL == INVALID_HANDLE_VALUE ) {
          hLeashDLL = LoadLibrary(LEASH_DLL);
@@ -148,10 +148,10 @@ index 1d3625c4d9..5904d9b758 100644
                  GetProcAddress(hLeashDLL, "not_an_API_Leash_AcquireInitialTicketsIfNeeded");
          }
      }
-diff --git a/21.3-final-51c4e8475b.clean/src/lib/krb5/os/read_pwd.c b/21.3-final-51c4e8475b/src/lib/krb5/os/read_pwd.c
+diff --git a/src/lib/krb5/os/read_pwd.c b/src/lib/krb5/os/read_pwd.c
 index 4a5337f3f2..8c68efc2a3 100644
---- a/21.3-final-51c4e8475b.clean/src/lib/krb5/os/read_pwd.c
-+++ b/21.3-final-51c4e8475b/src/lib/krb5/os/read_pwd.c
+--- a/src/lib/krb5/os/read_pwd.c
++++ b/src/lib/krb5/os/read_pwd.c
 @@ -199,7 +199,7 @@ cleanup:
  }
  #endif
@@ -170,10 +170,10 @@ index 4a5337f3f2..8c68efc2a3 100644
  {
      DLGPROC dlgproc;
      HINSTANCE hinst;
-diff --git a/21.3-final-51c4e8475b.clean/src/util/et/et_h.awk b/21.3-final-51c4e8475b/src/util/et/et_h.awk
+diff --git a/src/util/et/et_h.awk b/src/util/et/et_h.awk
 index 95940d1b3b..6bbcd17a5a 100644
---- a/21.3-final-51c4e8475b.clean/src/util/et/et_h.awk
-+++ b/21.3-final-51c4e8475b/src/util/et/et_h.awk
+--- a/src/util/et/et_h.awk
++++ b/src/util/et/et_h.awk
 @@ -145,7 +145,12 @@ END {
  	}
  	print "#define ERROR_TABLE_BASE_" table_name " (" base ")" > outfile
@@ -188,10 +188,10 @@ index 95940d1b3b..6bbcd17a5a 100644
  	print "" > outfile
  	print "#if !defined(_WIN32)" > outfile
  	print "/* for compatibility with older versions... */" > outfile
-diff --git a/21.3-final-51c4e8475b.clean/src/util/support/gettimeofday.c b/21.3-final-51c4e8475b/src/util/support/gettimeofday.c
+diff --git a/src/util/support/gettimeofday.c b/src/util/support/gettimeofday.c
 index 8d8fcd84f5..f14f4c2eb7 100644
---- a/21.3-final-51c4e8475b.clean/src/util/support/gettimeofday.c
-+++ b/21.3-final-51c4e8475b/src/util/support/gettimeofday.c
+--- a/src/util/support/gettimeofday.c
++++ b/src/util/support/gettimeofday.c
 @@ -56,12 +56,14 @@
   * SUCH DAMAGE.
   */
@@ -209,10 +209,10 @@ index 8d8fcd84f5..f14f4c2eb7 100644
  int
  krb5int_gettimeofday (struct timeval *tp, void *ignore)
  {
-diff --git a/21.3-final-51c4e8475b.clean/src/windows/kfwlogon/kfwlogon.h b/21.3-final-51c4e8475b/src/windows/kfwlogon/kfwlogon.h
+diff --git a/src/windows/kfwlogon/kfwlogon.h b/src/windows/kfwlogon/kfwlogon.h
 index 622d5665c6..c9f9ca66f4 100644
---- a/21.3-final-51c4e8475b.clean/src/windows/kfwlogon/kfwlogon.h
-+++ b/21.3-final-51c4e8475b/src/windows/kfwlogon/kfwlogon.h
+--- a/src/windows/kfwlogon/kfwlogon.h
++++ b/src/windows/kfwlogon/kfwlogon.h
 @@ -47,7 +47,7 @@ SOFTWARE.
  #include <tchar.h>
  #include <strsafe.h>
@@ -222,10 +222,10 @@ index 622d5665c6..c9f9ca66f4 100644
  
  #include <loadfuncs-lsa.h>
  #include <krb5.h>
-diff --git a/21.3-final-51c4e8475b.clean/src/windows/ms2mit/mit2ms.c b/21.3-final-51c4e8475b/src/windows/ms2mit/mit2ms.c
+diff --git a/src/windows/ms2mit/mit2ms.c b/src/windows/ms2mit/mit2ms.c
 index 24153cec99..85a7833732 100644
---- a/21.3-final-51c4e8475b.clean/src/windows/ms2mit/mit2ms.c
-+++ b/21.3-final-51c4e8475b/src/windows/ms2mit/mit2ms.c
+--- a/src/windows/ms2mit/mit2ms.c
++++ b/src/windows/ms2mit/mit2ms.c
 @@ -37,7 +37,7 @@ xusage(void)
      exit(1);
  }
