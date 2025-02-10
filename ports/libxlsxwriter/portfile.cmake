@@ -17,6 +17,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
         -DUSE_SYSTEM_MINIZIP=1
         -DWINDOWSSTORE=${USE_WINDOWSSTORE}
 )
