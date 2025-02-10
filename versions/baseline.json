@@ -2674,7 +2674,7 @@
     },
     "fast-float": {
       "baseline": "8.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fastcdr": {
       "baseline": "2.2.4",
