@@ -8481,8 +8481,8 @@
       "port-version": 0
     },
     "sleepy-discord": {
-      "baseline": "2022-02-05",
-      "port-version": 2
+      "baseline": "2025-02-08",
+      "port-version": 0
     },
     "slikenet": {
       "baseline": "2021-06-07",
