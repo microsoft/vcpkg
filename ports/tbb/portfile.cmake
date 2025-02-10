@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-lang.patch # https://github.com/uxlfoundation/oneTBB/pull/1606
+        fix-gcc-without-gas.patch # https://github.com/uxlfoundation/oneTBB/pull/1603
 )
 
 vcpkg_check_features(
