@@ -8477,7 +8477,7 @@
       "port-version": 2
     },
     "sleef": {
-      "baseline": "3.7",
+      "baseline": "3.8",
       "port-version": 0
     },
     "sleepy-discord": {
