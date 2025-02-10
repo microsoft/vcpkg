@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         always-generate-pdb.patch # https://github.com/intel/intel-ipsec-mb/pull/93
+        allow_cc.patch
 )
 
 vcpkg_find_acquire_program(NASM)

@@ -113,7 +113,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         set(CHARSET_FLAG "")
     endif()
 
-    set(common_flags "/nologo /DWIN32 /D_WINDOWS -Wno-implicit-function-declaration${CHARSET_FLAG} -msse4.2 -m64 -Wno-error")
+    set(common_flags "/nologo /DWIN32 /D_WINDOWS -Wno-implicit-function-declaration${CHARSET_FLAG} -msse4.2 -m64 -maes -Wno-error")
 
     set(CMAKE_CXX_FLAGS "${common_flags} /GR /EHsc ${VCPKG_CXX_FLAGS}" CACHE STRING "")
     set(CMAKE_C_FLAGS "${common_flags} ${VCPKG_C_FLAGS}" CACHE STRING "")
