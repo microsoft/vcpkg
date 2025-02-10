@@ -13,7 +13,7 @@ vcpkg_from_gitlab(
     REPO xiph/icecast-common
     REF 5de3e8b3b063002d8a9f52122e97f721e1742531
     HEAD_REF master
-    SHA512 eb505b9019a97a91e10fa505225dde4f9950f6ae50b54c7afd806f6eebeb865862de85e9d0a114f2e8c4f974c4db60622e71f52f5e758cdb0efcda735bb7ab51
+    SHA512 f064e2b2dd686c7647ba4c5afb9ca7e85b2015643d7a185cc319f47461aacc765e7f9b3e9576e09a73a8af0724a54fafdd7c064756d3c6e97329bb5f77806933
 )
 
 vcpkg_from_gitlab(
@@ -22,7 +22,7 @@ vcpkg_from_gitlab(
     REPO xiph/icecast-m4
     REF 57027c6cc3f8b26d59e9560b4ac72a1a06d643b9
     HEAD_REF master
-    SHA512 d2a9507a5a0d36134c4dc37fe38b3cb4d954dee3ffa5fd2b1bb4cd8af1e7804248e234e55fbcfba20fecec4bf159b2616d14ac537d03ffbff095a02d5f4bf201
+    SHA512 67fe6fad8bf86990b5da311d729b9a746849f3d920c018112b4625b5e0d37a85444be16367967cb18a871c1ca1d679f5924ad3fc8547fbb30746b7e1f4b396bc
 )
 
 file(COPY ${SOURCE_PATH_COMMON}/ DESTINATION ${SOURCE_PATH}/src/common)
