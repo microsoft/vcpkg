@@ -7,7 +7,10 @@
   "supports": "!windows",
   "dependencies": [
     "armadillo",
-    "freeglut",
+    {
+      "name": "freeglut",
+      "platform": "linux"
+    },
     "freetype",
     "glfw3",
     "hdf5",
