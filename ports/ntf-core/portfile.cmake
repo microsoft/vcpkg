@@ -46,12 +46,12 @@ fix_install_dir("debug/lib" "dbg_exc_mt")
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake" PACKAGE_NAME nts)
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ntc")
-file(COPY "F:/vcpkg/packages/ntf-core_x64-windows/share/nts/ntc/"
-     DESTINATION "F:/vcpkg/packages/ntf-core_x64-windows/share/ntc/")
-file(COPY "F:/vcpkg/packages/ntf-core_x64-windows/share/nts/nts/"
-     DESTINATION "F:/vcpkg/packages/ntf-core_x64-windows/share/nts/")
-file(REMOVE_RECURSE "F:/vcpkg/packages/ntf-core_x64-windows/share/nts/ntc")
-file(REMOVE_RECURSE "F:/vcpkg/packages/ntf-core_x64-windows/share/nts/nts")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/nts/ntc/"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/ntc/")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/nts/nts/"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/nts/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/nts/ntc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/nts/nts")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
