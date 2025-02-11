@@ -1,8 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c8d45d2..673fb08 100644
+index c8d45d2..aa06ce1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -222,12 +222,14 @@ add_subdirectory(tests)
+@@ -216,18 +216,23 @@ add_subdirectory(morph)
+ add_subdirectory(include)
+ 
+ # Unit testing using the ctest framework
+-enable_testing()
+-add_subdirectory(tests)
++option(BUILD_TESTS "Build tests" OFF)
++if(BUILD_TESTS)
++  enable_testing()
++  add_subdirectory(tests)
++endif(BUILD_TESTS)
+ 
  # incbin for Visual Studio
  add_subdirectory(buildtools)
  

@@ -6,7 +6,7 @@ vcpkg_from_github(
     PATCHES
         remove_number_type.patch
 	fix_nlohmann_include.patch
-	prevent_examples.patch
+	prevent_examples_and_tests.patch
 )
 
 vcpkg_cmake_configure(
