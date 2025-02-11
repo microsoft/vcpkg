@@ -1,5 +1,5 @@
 diff --git a/src/thirdparty/SiftGPU/GlobalUtil.cpp b/src/thirdparty/SiftGPU/GlobalUtil.cpp
-index e98ef6b..10fb19b 100644
+index e98ef6b..39435db 100644
 --- a/src/thirdparty/SiftGPU/GlobalUtil.cpp
 +++ b/src/thirdparty/SiftGPU/GlobalUtil.cpp
 @@ -137,7 +137,7 @@ void GlobalUtil::CheckErrorsGL(const char* location)
@@ -7,7 +7,7 @@ index e98ef6b..10fb19b 100644
  	while (errnum = glGetError())
  	{
 -		errstr = (const char *)(gluErrorString(errnum));
-+		errstr = (const char *)(glewGetErrorString(errnum));
++		errstr = nullptr; // just print errnum
  		if(errstr) {
  			std::cerr << errstr;
  		}
