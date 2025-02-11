@@ -9089,7 +9089,7 @@
       "port-version": 0
     },
     "tinyexif": {
-      "baseline": "2024-09-03",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "tinyexpr": {
