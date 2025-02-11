@@ -8,9 +8,10 @@ vcpkg_from_github(
         install.patch
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DWILDCARDS_BUILD_TESTS=OFF
         -DWILDCARDS_BUILD_EXAMPLES=OFF
