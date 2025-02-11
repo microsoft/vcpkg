@@ -9,6 +9,7 @@
     "freetype",
     "glfw3",
     "hdf5",
+    "nlohmann-json",
     "opengl",
     {
       "name": "vcpkg-cmake",

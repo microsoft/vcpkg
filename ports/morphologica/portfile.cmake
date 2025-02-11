@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         remove_number_type.patch
         egl_fix.patch
+	fix_nlohmann_include.patch
 )
 
 vcpkg_cmake_configure(
