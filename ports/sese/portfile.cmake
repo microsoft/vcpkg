@@ -22,7 +22,7 @@ vcpkg_download_distfile(PATCH_FIX_ENV_STATEMENT
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO libsese/sese
-        REF "refs/tags/${VERSION}"
+        REF ${VERSION}
         SHA512 a1008c351ea3e8745d629bdcceb4a6d089ae5a84137bbd49b8abbbb271032ddf279e9b20f155181b6a7d3d8cb17c2ec2f1b7a12464fb0cac8402628e473966cb
         PATCHES
             ${PATCH_FIX_ENV_STATEMENT}
