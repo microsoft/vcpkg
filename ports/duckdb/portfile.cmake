@@ -6,6 +6,7 @@ vcpkg_from_github(
         HEAD_REF master
 	PATCHES
 	    unvendor_icu.patch
+	    bigobj.patch
 )
 
 # Remove vendored dependencies which are not properly namespaced
