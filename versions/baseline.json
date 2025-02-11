@@ -4716,6 +4716,10 @@
       "baseline": "2023-05-13",
       "port-version": 2
     },
+    "libisptr": {
+      "baseline": "1.6",
+      "port-version": 0
+    },
     "libjpeg-turbo": {
       "baseline": "3.1.0",
       "port-version": 1
