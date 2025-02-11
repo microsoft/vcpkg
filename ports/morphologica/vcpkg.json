@@ -7,6 +7,7 @@
   "supports": "!windows",
   "dependencies": [
     "armadillo",
+    "freeglut",
     "freetype",
     "glfw3",
     "hdf5",
