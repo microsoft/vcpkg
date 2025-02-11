@@ -1,0 +1,12 @@
+diff --git a/include/vulkan/vulkan.cppm b/include/vulkan/vulkan.cppm
+index e48a653..ea57dfe 100644
+--- a/include/vulkan/vulkan.cppm
++++ b/include/vulkan/vulkan.cppm
+@@ -2698,7 +2698,6 @@ export namespace VULKAN_HPP_NAMESPACE
+   using VULKAN_HPP_NAMESPACE::PFN_InternalAllocationNotification;
+   using VULKAN_HPP_NAMESPACE::PFN_InternalFreeNotification;
+   using VULKAN_HPP_NAMESPACE::PFN_ReallocationFunction;
+-  using VULKAN_HPP_NAMESPACE::PFN_VoidFunction;
+ 
+   //=== VK_EXT_debug_report ===
+   using VULKAN_HPP_NAMESPACE::PFN_DebugReportCallbackEXT;
