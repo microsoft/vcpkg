@@ -1,11 +1,11 @@
 {
   "name": "sleepy-discord",
-  "version-date": "2022-02-05",
-  "port-version": 2,
+  "version-date": "2025-02-08",
   "description": "C++ library for the Discord chat client",
   "homepage": "https://yourwaifu.dev/sleepy-discord/",
   "dependencies": [
     "boost-asio",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,8 +16,7 @@
     }
   ],
   "default-features": [
-    "cpr",
-    "websocketpp"
+    "cpr"
   ],
   "features": {
     "compression": {
@@ -37,13 +36,6 @@
       "dependencies": [
         "libsodium",
         "opus"
-      ]
-    },
-    "websocketpp": {
-      "description": "Use Websocketpp for handling WebSockets",
-      "dependencies": [
-        "boost-random",
-        "websocketpp"
       ]
     }
   }

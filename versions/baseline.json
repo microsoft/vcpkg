@@ -1661,7 +1661,7 @@
       "port-version": 0
     },
     "clap-cleveraudio": {
-      "baseline": "1.2.2",
+      "baseline": "1.2.3",
       "port-version": 0
     },
     "clapack": {
@@ -1881,7 +1881,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.18.6",
+      "baseline": "0.18.7",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -3881,7 +3881,7 @@
       "port-version": 7
     },
     "jsoncons": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "jsoncpp": {
@@ -3898,7 +3898,7 @@
     },
     "juce": {
       "baseline": "8.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "jwt-cpp": {
       "baseline": "0.7.0",
@@ -4497,7 +4497,7 @@
       "port-version": 0
     },
     "libenvpp": {
-      "baseline": "1.4.1",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "libepoxy": {
@@ -4985,7 +4985,7 @@
       "port-version": 1
     },
     "libpng": {
-      "baseline": "1.6.45",
+      "baseline": "1.6.46",
       "port-version": 0
     },
     "libpopt": {
@@ -5685,7 +5685,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.651",
+      "baseline": "0.660",
       "port-version": 0
     },
     "luminoengine": {
@@ -6190,7 +6190,7 @@
     },
     "msquic": {
       "baseline": "2.4.7",
-      "port-version": 2
+      "port-version": 3
     },
     "mstch": {
       "baseline": "1.0.2",
@@ -7229,7 +7229,7 @@
       "port-version": 0
     },
     "presentmon": {
-      "baseline": "2.1.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "proj": {
@@ -7586,7 +7586,7 @@
     },
     "qtbase": {
       "baseline": "6.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.8.2",
@@ -8457,7 +8457,7 @@
       "port-version": 0
     },
     "simsimd": {
-      "baseline": "5.7.3",
+      "baseline": "6.0.0",
       "port-version": 0
     },
     "sjpeg": {
@@ -8481,8 +8481,8 @@
       "port-version": 0
     },
     "sleepy-discord": {
-      "baseline": "2022-02-05",
-      "port-version": 2
+      "baseline": "2025-02-08",
+      "port-version": 0
     },
     "slikenet": {
       "baseline": "2021-06-07",
@@ -8697,7 +8697,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.48.0",
+      "baseline": "3.49.0",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -9373,11 +9373,11 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "24.11",
-      "port-version": 1
+      "baseline": "25.2",
+      "port-version": 0
     },
     "usearch": {
-      "baseline": "2.3.2",
+      "baseline": "2.17.2",
       "port-version": 0
     },
     "usockets": {
@@ -9901,7 +9901,7 @@
       "port-version": 0
     },
     "xbyak": {
-      "baseline": "7.23",
+      "baseline": "7.23.1",
       "port-version": 0
     },
     "xcb": {
