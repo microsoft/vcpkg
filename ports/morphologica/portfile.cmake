@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 6f26b9fb19587308613c7ba5b89ce894025a271edda4f1262daf2fff68336cbc9d14e744aced18d78282178a04bc2076ad893d800ed20105045f8f236272ebe9
     PATCHES
         remove_number_type.patch
+	fix_egl.patch
 	fix_nlohmann_include.patch
 	prevent_examples_and_tests.patch
 )
