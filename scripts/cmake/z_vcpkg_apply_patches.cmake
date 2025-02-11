@@ -17,15 +17,29 @@ function(z_vcpkg_apply_patches)
     foreach(patch IN LISTS arg_PATCHES)
         get_filename_component(absolute_patch "${patch}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
         message(STATUS "Applying patch ${patch}")
-        set(logname "patch-${TARGET_TRIPLET}-${patchnum}")
+
+        set(_first_apply_logname "patch-${TARGET_TRIPLET}-${patchnum}-0")
         vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false -c core.filemode=true --work-tree=. --git-dir=.git apply "${absolute_patch}" --ignore-whitespace --whitespace=nowarn --verbose
-            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${logname}-out.log"
-            ERROR_VARIABLE error
+            COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false -c core.filemode=true --work-tree=. --git-dir=.git apply "${absolute_patch}" --verbose
+            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${_first_apply_logname}-out.log"
+            ERROR_VARIABLE _first_apply_error_var
             WORKING_DIRECTORY "${arg_SOURCE_PATH}"
-            RESULT_VARIABLE error_code
+            RESULT_VARIABLE _first_apply_error_code
         )
-        file(WRITE "${CURRENT_BUILDTREES_DIR}/${logname}-err.log" "${error}")
+        file(WRITE "${CURRENT_BUILDTREES_DIR}/${_first_apply_logname}-err.log" "${_first_apply_error_var}")
+
+        if(_first_apply_error_code)
+            message(WARNING "Ignoring whitespace mismatches in patch ${patch}")
+            set(_second_apply_logname "patch-${TARGET_TRIPLET}-${patchnum}-1")
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false -c core.filemode=true --work-tree=. --git-dir=.git apply "${absolute_patch}" --ignore-whitespace --whitespace=nowarn --verbose
+                OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${_second_apply_logname}-out.log"
+                ERROR_VARIABLE error
+                WORKING_DIRECTORY "${arg_SOURCE_PATH}"
+                RESULT_VARIABLE error_code
+            )
+            file(WRITE "${CURRENT_BUILDTREES_DIR}/${_second_apply_logname}-err.log" "${error}")
+        endif()
 
         if(error_code)
             if(arg_QUIET)
