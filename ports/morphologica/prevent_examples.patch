@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c8d45d2..673fb08 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -222,12 +222,14 @@ add_subdirectory(tests)
+ # incbin for Visual Studio
+ add_subdirectory(buildtools)
+ 
+-# Install the font files, for the examples, which seek to work with an
+-# *installed* morphologica, as opposed to an in-tree morphologica.
+-add_subdirectory(fonts)
+-
+-# Example code (you can also see tests/ for examples)
+-add_subdirectory(examples)
++option(BUILD_EXAMPLES "Build examples" OFF)
++if(BUILD_EXAMPLES)
++  # Install the font files, for the examples, which seek to work with an
++  # *installed* morphologica, as opposed to an in-tree morphologica.
++  add_subdirectory(fonts)
++  # Example code (you can also see tests/ for examples)
++  add_subdirectory(examples)
++endif(BUILD_EXAMPLES)
+ 
+ # first we can indicate the documentation build as an option and set it to ON by default
+ option(BUILD_DOC "Build documentation" OFF)

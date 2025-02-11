@@ -7,6 +7,7 @@ vcpkg_from_github(
         remove_number_type.patch
         egl_fix.patch
 	fix_nlohmann_include.patch
+	prevent_examples.patch
 )
 
 vcpkg_cmake_configure(
