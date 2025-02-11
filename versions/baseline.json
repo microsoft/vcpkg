@@ -6781,8 +6781,8 @@
       "port-version": 4
     },
     "openssl": {
-      "baseline": "3.4.0",
-      "port-version": 2
+      "baseline": "3.4.1",
+      "port-version": 0
     },
     "opensubdiv": {
       "baseline": "3.5.0",
