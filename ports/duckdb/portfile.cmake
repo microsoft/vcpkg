@@ -1,10 +1,11 @@
-set(DUCKDB_SHORT_HASH 401c8061c6)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 ecd036ff975e90c4e9cc3a25784169f5938db19eacd2abc201719d329ec1055608bb2270de22bf409d828196ede6ffe95369154c916916e13a7a14071b05652e
+        SHA512 f5bca7a3b6f763b4b1a1f39e53c6f818925584fb44886e291ac3546fe50de545e80d16b4120f0126020e44b601a1b9193f4faad7a3dc8799cda843b1965038f2
         HEAD_REF master
+	PATCHES
+	    unvendor_icu.patch
 )
 
 # Remove vendored dependencies which are not properly namespaced
@@ -18,19 +19,15 @@ file(REMOVE_RECURSE
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUCKDB_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DUCKDB_BUILD_DYNAMIC)
 
-set(EXTENSION_LIST "autocomplete;httpfs;icu;json;parquet;tpcds;tpch")
-set(EXTENSION_LOAD_LIST "")
+set(EXTENSION_LIST "autocomplete;httpfs;icu;json;tpcds;tpch")
+set(BUILD_EXTENSIONS "")
 foreach(EXT ${EXTENSION_LIST})
     if(${EXT} IN_LIST FEATURES)
-        list(APPEND EXTENSION_LOAD_LIST ${EXT})
+        list(APPEND BUILD_EXTENSIONS ${EXT})
     endif()
 endforeach()
-if(NOT "${EXTENSION_LOAD_LIST}" STREQUAL "")
-    set(LOAD_EXTENSIONS_FLAG "-DBUILD_EXTENSIONS='${EXTENSION_LOAD_LIST}'")
-endif()
-
-if(NOT "parquet" IN_LIST FEATURES)
-    set(SKIP_PARQUET_FLAG "-DSKIP_EXTENSIONS=parquet")
+if(NOT "${BUILD_EXTENSIONS}" STREQUAL "")
+    set(BUILD_EXTENSIONS_FLAG "-DBUILD_EXTENSIONS='${BUILD_EXTENSIONS}'")
 endif()
 
 vcpkg_cmake_configure(
@@ -40,8 +37,7 @@ vcpkg_cmake_configure(
             -DDUCKDB_EXPLICIT_VERSION=v${VERSION}
             -DBUILD_UNITTESTS=OFF
             -DBUILD_SHELL=FALSE
-            "${SKIP_PARQUET_FLAG}"
-            "${LOAD_EXTENSIONS_FLAG}"
+            "${BUILD_EXTENSIONS_FLAG}"
             -DENABLE_EXTENSION_AUTOLOADING=1
             -DENABLE_EXTENSION_AUTOINSTALL=1
 	    -DENABLE_SANITIZER=OFF

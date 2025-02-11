@@ -1,6 +1,6 @@
 {
   "name": "duckdb",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": "MIT",
@@ -15,9 +15,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "parquet"
-  ],
   "features": {
     "autocomplete": {
       "description": "Statically link the autocomplete extension into DuckDB"
@@ -29,13 +26,13 @@
       ]
     },
     "icu": {
-      "description": "Statically link the icu extension into DuckDB"
+      "description": "Statically link the icu extension into DuckDB",
+      "dependencies": [
+        "icu"
+      ]
     },
     "json": {
       "description": "Statically link the json extension into DuckDB"
-    },
-    "parquet": {
-      "description": "Statically link the parquet extension into DuckDB"
     },
     "tpcds": {
       "description": "Statically link the tpcds extension into DuckDB"
