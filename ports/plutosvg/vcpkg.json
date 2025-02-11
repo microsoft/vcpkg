@@ -1,8 +1,8 @@
 {
-  "name": "lunasvg",
-  "version": "3.1.1",
-  "description": "lunasvg is a standalone SVG rendering library in C++",
-  "homepage": "https://github.com/sammycage/lunasvg",
+  "name": "plutosvg",
+  "version": "0.0.4",
+  "description": "Tiny SVG rendering library in C",
+  "homepage": "https://github.com/sammycage/plutosvg",
   "license": "MIT",
   "dependencies": [
     "plutovg",
