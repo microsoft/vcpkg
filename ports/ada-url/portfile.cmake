@@ -19,6 +19,8 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DADA_BENCHMARKS=OFF
+        -DADA_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
         -DCPM_USE_LOCAL_PACKAGES=ON
         ${FEATURE_OPTIONS}
