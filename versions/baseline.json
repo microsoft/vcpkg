@@ -5553,8 +5553,8 @@
       "port-version": 0
     },
     "lilv": {
-      "baseline": "0.24.24",
-      "port-version": 1
+      "baseline": "0.24.26",
+      "port-version": 0
     },
     "linalg": {
       "baseline": "2.2",
@@ -8357,7 +8357,7 @@
       "port-version": 3
     },
     "serd": {
-      "baseline": "0.32.2",
+      "baseline": "0.32.4",
       "port-version": 0
     },
     "serdepp": {
@@ -8597,7 +8597,7 @@
       "port-version": 4
     },
     "sord": {
-      "baseline": "0.16.16",
+      "baseline": "0.16.18",
       "port-version": 0
     },
     "soundtouch": {
@@ -8741,8 +8741,8 @@
       "port-version": 0
     },
     "sratom": {
-      "baseline": "0.6.16",
-      "port-version": 1
+      "baseline": "0.6.18",
+      "port-version": 0
     },
     "srell": {
       "baseline": "3.010",
@@ -10125,8 +10125,8 @@
       "port-version": 1
     },
     "zix": {
-      "baseline": "0.4.2",
-      "port-version": 1
+      "baseline": "0.6.2",
+      "port-version": 0
     },
     "zkpp": {
       "baseline": "0.2.3",
