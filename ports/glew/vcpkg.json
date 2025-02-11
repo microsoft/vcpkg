@@ -1,7 +1,7 @@
 {
   "name": "glew",
   "version": "2.2.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The OpenGL Extension Wrangler Library (GLEW) is a cross-platform open-source C/C++ extension loading library.",
   "homepage": "https://github.com/nigels-com/glew",
   "supports": "!android",

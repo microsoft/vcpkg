@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-LNK2019.patch
         base_address.patch # Accepted upstream as https://github.com/nigels-com/glew/commit/ef7d12ecb7f1f336f6d3a80cebd6163b2c094108
+        0004-definition-GLEW_NO_GLU.patch
 )
 
 vcpkg_cmake_configure(
