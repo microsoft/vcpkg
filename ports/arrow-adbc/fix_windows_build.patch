@@ -1,0 +1,13 @@
+diff --git a/c/driver_manager/adbc_driver_manager.cc b/c/driver_manager/adbc_driver_manager.cc
+index 0ce173a..2a7fef8 100644
+--- a/c/driver_manager/adbc_driver_manager.cc
++++ b/c/driver_manager/adbc_driver_manager.cc
+@@ -675,7 +675,7 @@ std::string AdbcDriverManagerDefaultEntrypoint(const std::string& driver) {
+     // if pos == npos this is the entire filename
+     std::string token = filename.substr(prev, pos - prev);
+     // capitalize first letter
+-    token[0] = std::toupper(static_cast<unsigned char>(token[0]));
++    token[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(token[0])));
+ 
+     entrypoint += token;
+ 
