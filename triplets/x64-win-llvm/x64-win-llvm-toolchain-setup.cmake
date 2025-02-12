@@ -6,8 +6,13 @@ function(clean_env)
   set(systemroot "$ENV{SystemRoot}")
   string(REPLACE "\\" "/" systemroot "${systemroot}")
 
-  set(PATH_VAR 
-      ${pwsh_path}
+  find_program(pwsh_exe NAMES pwsh powershell)
+  cmake_path(GET pwsh_exe PARENT_PATH pwsh_path)
+  cmake_path(GET CMAKE_COMMAND PARENT_PATH cmake_path)
+
+  set(PATH_VAR
+      "${pwsh_path}"
+      "${cmake_path}"
       "${systemroot}/Microsoft.NET/Framework64/v4.0.30319"
       "${systemroot}/system32"
       "${systemroot}"
@@ -15,7 +20,8 @@ function(clean_env)
       "${systemroot}/System32/WindowsPowerShell/v1.0/"
   )
 
-  cmake_path(CONVERT "${PATH_VAR}" TO_NATIVE_PATH_LIST ENV{PATH} NORMALIZE)
+  cmake_path(CONVERT "${PATH_VAR}" TO_NATIVE_PATH_LIST path_tmp NORMALIZE)
+  set(ENV{PATH} "${path_tmp}")
 endfunction()
 
 function(setup_msvc)
