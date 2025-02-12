@@ -17,9 +17,6 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         unset(MSBUILD_EXE CACHE)
     endif()
 
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
-    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "")
-
     macro(toolchain_set_cmake_policy_new)
     if(POLICY ${ARGN})
         cmake_policy(SET ${ARGN} NEW)
@@ -32,12 +29,18 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     toolchain_set_cmake_policy_new(CMP0126)
     toolchain_set_cmake_policy_new(CMP0117)
     toolchain_set_cmake_policy_new(CMP0092)
-    toolchain_set_cmake_policy_new(CMP0091)
+    #toolchain_set_cmake_policy_new(CMP0091)
     toolchain_set_cmake_policy_new(CMP0067)
     toolchain_set_cmake_policy_new(CMP0066)
     toolchain_set_cmake_policy_new(CMP0056)
     toolchain_set_cmake_policy_new(CMP0012)
     unset(toolchain_set_cmake_policy_new)
+
+    message(STATUS "")
+
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "")
 
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
        VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE VCPKG_SET_CHARSET_FLAG
