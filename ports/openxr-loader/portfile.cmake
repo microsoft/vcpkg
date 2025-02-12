@@ -22,6 +22,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DYNAMIC_LOADER)
 
 vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -31,7 +33,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
         -DCMAKE_INSTALL_INCLUDEDIR=include
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
-        "-DPYTHON3_EXECUTABLE=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
