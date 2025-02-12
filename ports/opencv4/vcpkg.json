@@ -1,7 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.10.0",
-  "port-version": 5,
+  "version": "4.11.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -265,6 +264,12 @@
         "libjpeg-turbo"
       ]
     },
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",
       "supports": "windows & !uwp & !mingw"
@@ -274,6 +279,7 @@
     },
     "opencl": {
       "description": "Enable opencl support",
+      "supports": "!osx",
       "dependencies": [
         "opencl"
       ]
@@ -286,6 +292,7 @@
     },
     "opengl": {
       "description": "opengl support for opencv",
+      "supports": "!osx",
       "dependencies": [
         "opengl"
       ]
@@ -429,6 +436,12 @@
             "eigen"
           ]
         }
+      ]
+    },
+    "spng": {
+      "description": "Enable libspng integration",
+      "dependencies": [
+        "libspng"
       ]
     },
     "tbb": {
