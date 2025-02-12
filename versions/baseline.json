@@ -4556,6 +4556,10 @@
       "baseline": "1.15.0",
       "port-version": 1
     },
+    "libfilezilla": {
+      "baseline": "0.49.0-2",
+      "port-version": 0
+    },
     "libflac": {
       "baseline": "1.4.3",
       "port-version": 2
