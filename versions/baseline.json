@@ -7277,7 +7277,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "5.29.2",
+      "baseline": "5.29.3",
       "port-version": 0
     },
     "protobuf-c": {
@@ -9413,7 +9413,7 @@
       "port-version": 4
     },
     "utf8-range": {
-      "baseline": "5.29.1",
+      "baseline": "5.29.3",
       "port-version": 0
     },
     "utf8h": {

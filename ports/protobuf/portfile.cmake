@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 2f8b1c52fae3cea6188d2ea10da90314167eb150b23005928b4d2186a81b33c4ba0d79967fc1637ed3f96f9fb3b365433cbd4a1ce01d4c319927538cd63852ec
+    SHA512 0c776133f5789d21baa8860cb41e7926a162d74810a01722b762a78f93e559494e903fcaa092515bfe2ce057fd065a5dd000b316edb1af32c2ef9dbadf02b4c6
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -43,6 +43,7 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/python"
     "${SOURCE_PATH}/ruby"
     "${SOURCE_PATH}/rust"
+    "${SOURCE_PATH}/go"
 )
 
 vcpkg_cmake_configure(
