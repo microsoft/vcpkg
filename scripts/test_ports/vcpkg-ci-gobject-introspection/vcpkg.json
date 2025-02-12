@@ -42,13 +42,6 @@
           "features": [
             "introspection"
           ]
-        },
-        {
-          "name": "graphene",
-          "default-features": false,
-          "features": [
-            "introspection"
-          ]
         }
       ]
     },

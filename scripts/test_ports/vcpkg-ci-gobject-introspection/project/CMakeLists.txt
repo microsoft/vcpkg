@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.30)
 project(gobject-introspection-test C)
 
+option(RUN_TEST "Run the test program")
+set(GI_TYPELIB_PATH "" CACHE STRING "Introspection data dir")
+
 set(CMAKE_SKIP_RPATH FALSE)
 
 find_package(PkgConfig REQUIRED)
@@ -11,8 +14,11 @@ target_link_libraries(main-pkgconfig PRIVATE
     PkgConfig::gobject-introspection_pc
 )
 
-OPTION(RUN_TEST "Run the test program")
+add_custom_target(run-test
+    COMMAND "${CMAKE_COMMAND}" -E env "GI_TYPELIB_PATH=${GI_TYPELIB_PATH}" "$<TARGET_FILE:main-pkgconfig>"
+    COMMENT "Running the test program"
+)
+
 if(RUN_TEST)
-    # NB: Building with gobject-introspection implies being able to run binaries.
-    add_custom_target(run-test ALL main-pkgconfig)
+    set_target_properties(run-test PROPERTIES EXCLUDE_FROM_ALL 0)
 endif()

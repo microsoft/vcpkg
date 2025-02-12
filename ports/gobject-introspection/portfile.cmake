@@ -19,11 +19,10 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 set(additional_binaries "")
 set(options "")
-set(options_release "")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(STATUS "Static triplet. Not building introspection data.")
-    list(APPEND options_release -Dbuild_introspection_data=false)
+    list(APPEND options -Dbuild_introspection_data=false)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 elseif(VCPKG_CROSSCOMPILING)
     message(STATUS "Cross build. Building introspection data supported only if the host can execute target binaries.")
@@ -45,12 +44,15 @@ elseif(VCPKG_CROSSCOMPILING)
         "g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'"
     )
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/gobject-introspection-1.0/gdump.c" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gobject-introspection-1.0")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/gobject-introspection-1.0/gdump.c" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/gobject-introspection-1.0")
+    endif()
 endif()
 
 if("cairo" IN_LIST FEATURES)
-    list(APPEND options_release -Dcairo=enabled)
+    list(APPEND options -Dcairo=enabled)
 else()
-    list(APPEND options_release -Dcairo=disabled)
+    list(APPEND options -Dcairo=disabled)
 endif()
 
 vcpkg_configure_meson(
@@ -60,22 +62,13 @@ vcpkg_configure_meson(
         -Dgtk_doc=false
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         ${options}
-    OPTIONS_DEBUG
-        -Dbuild_introspection_data=false
-        -Dcairo=disabled
-    OPTIONS_RELEASE
-        ${options_release}
     ADDITIONAL_BINARIES
         "python='${PYTHON3}'"
         ${additional_binaries}
 )
 
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 # VCPKG_GI_... variables are used by, and scoped to, giscanner
-set(ENV{VCPKG_GI_LIBDIR} "${CURRENT_INSTALLED_DIR}/lib")
-set(ENV{VCPKG_GI_DATADIR} "${CURRENT_PACKAGES_DIR}/share")
-file(MAKE_DIRECTORY "$ENV{VCPKG_GI_DATADIR}/gir-1.0")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{VCPKG_GI_LIBDIR_VAR} "LIB")
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
@@ -83,17 +76,34 @@ elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 else()
     set(ENV{VCPKG_GI_LIBDIR_VAR} "LD_LIBRARY_PATH")
 endif()
-vcpkg_install_meson(ADD_BIN_TO_PATH)
+set(subdir_debug "/debug")
+set(subdir_release "")
+set(short_debug "dbg")
+set(short_release "rel")
+foreach(buildtype IN ITEMS "debug" "release")
+    if(DEFINED VCPKG_BUILD_TYPE AND NOT VCPKG_BUILD_TYPE STREQUAL buildtype)
+        continue()
+    endif()
+    set(ENV{VCPKG_GI_LIBDIR} "${CURRENT_INSTALLED_DIR}${subdir_${buildtype}}/lib")
+    set(ENV{VCPKG_GI_DATADIR} "${CURRENT_PACKAGES_DIR}${subdir_${buildtype}}/share")
+    block(SCOPE_FOR VARIABLES)
+        vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "$ENV{VCPKG_GI_LIBDIR}/pkgconfig")
+        file(MAKE_DIRECTORY "$ENV{VCPKG_GI_DATADIR}/gir-1.0")
+        set(VCPKG_BUILD_TYPE "${buildtype}")
+        vcpkg_install_meson(ADD_BIN_TO_PATH)
+        vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
+    endblock()
+    # Cf. https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/517
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_${buildtype}}/gir")
+        foreach(lib IN ITEMS GLib-2.0 GObject-2.0 GModule-2.0 Gio-2.0)
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_${buildtype}}/gir/${lib}.gir" DESTINATION "${CURRENT_PACKAGES_DIR}${subdir_${buildtype}}/share/gir-1.0")
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_${buildtype}}/gir/${lib}.typelib" DESTINATION "${CURRENT_PACKAGES_DIR}${subdir_${buildtype}}/lib/girepository-1.0")
+        endforeach()
+    endif()
+endforeach()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-# Cf. https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/517
-if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gir")
-    foreach(lib IN ITEMS GLib-2.0 GObject-2.0 GModule-2.0 Gio-2.0)
-        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gir/${lib}.gir" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gir-1.0")
-        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gir/${lib}.typelib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/girepository-1.0")
-    endforeach()
-endif()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 foreach(script IN ITEMS g-ir-annotation-tool g-ir-scanner)
