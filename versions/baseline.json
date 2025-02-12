@@ -2420,6 +2420,10 @@
       "baseline": "1.21",
       "port-version": 0
     },
+    "duckdb": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "duckx": {
       "baseline": "1.2.2",
       "port-version": 1
