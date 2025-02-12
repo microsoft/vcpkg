@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c8d45d2..aa06ce1 100644
+index c8d45d2..366e213 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -216,18 +216,23 @@ add_subdirectory(morph)
+@@ -216,8 +216,11 @@ add_subdirectory(morph)
  add_subdirectory(include)
  
  # Unit testing using the ctest framework
@@ -16,18 +16,14 @@ index c8d45d2..aa06ce1 100644
  
  # incbin for Visual Studio
  add_subdirectory(buildtools)
+@@ -226,8 +229,11 @@ add_subdirectory(buildtools)
+ # *installed* morphologica, as opposed to an in-tree morphologica.
+ add_subdirectory(fonts)
  
--# Install the font files, for the examples, which seek to work with an
--# *installed* morphologica, as opposed to an in-tree morphologica.
--add_subdirectory(fonts)
--
 -# Example code (you can also see tests/ for examples)
 -add_subdirectory(examples)
 +option(BUILD_EXAMPLES "Build examples" OFF)
 +if(BUILD_EXAMPLES)
-+  # Install the font files, for the examples, which seek to work with an
-+  # *installed* morphologica, as opposed to an in-tree morphologica.
-+  add_subdirectory(fonts)
 +  # Example code (you can also see tests/ for examples)
 +  add_subdirectory(examples)
 +endif(BUILD_EXAMPLES)
