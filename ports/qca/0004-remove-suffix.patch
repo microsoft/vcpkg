@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7a1680f90a..76d5a79cdd 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -83,7 +83,7 @@ else()
+ endif()
+ 
+ set(QCA_SUFFIX "${QCA_SUFFIX}" CACHE STRING "QCA common suffix")
+-if(QCA_SUFFIX)
++if(0)
+   set(QCA_LIB_NAME qca-${QCA_SUFFIX})
+   set(QCA_TOOL_NAME qcatool-${QCA_SUFFIX})
+   set(MOZCERTS_NAME mozcerts-${QCA_SUFFIX})

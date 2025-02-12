@@ -1,10 +1,6 @@
 cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
 include(GNUInstallDirs)
 
-if(WIN32)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
-endif()
-
 project(tinkerforge LANGUAGES C VERSION 2.1.25)
 
 if(NOT CONFIG_INSTALL_DIR)
@@ -25,7 +21,7 @@ file(GLOB DEF_FILE source/*.def)
 add_library(${PROJECT_NAME} ${CPP_FILES} ${H_FILES} ${DEF_FILE})
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source>
-    $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}>)
+    $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>)
     
 find_package(Threads)
 target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads)
