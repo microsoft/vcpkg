@@ -7404,6 +7404,10 @@
       "baseline": "0.1.7",
       "port-version": 0
     },
+    "qpdf": {
+      "baseline": "11.10.0",
+      "port-version": 0
+    },
     "qpid-proton": {
       "baseline": "0.38.0",
       "port-version": 2
