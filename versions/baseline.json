@@ -3868,6 +3868,10 @@
       "baseline": "0.3.4",
       "port-version": 0
     },
+    "json-glib": {
+      "baseline": "1.10.6",
+      "port-version": 0
+    },
     "json-rpc-cxx": {
       "baseline": "0.3.2",
       "port-version": 0
