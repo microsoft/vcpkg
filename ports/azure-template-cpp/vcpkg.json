@@ -3,21 +3,21 @@
     "NOTE: All changes made to this file will get overwritten by the next port release.",
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
-  "name": "azure-security-attestation-cpp",
-  "version-semver": "1.2.0-beta.1",
+  "name": "azure-template-cpp",
+  "version-semver": "1.1.0-beta.4554994",
   "description": [
-    "Microsoft Azure Attestation Service SDK for C++",
-    "This library provides API access to the Microsoft Azure Attestation service."
+    "Microsoft Azure Template SDK for C++",
+    "This is a template library meant to illustrate initial client library development process for Azure SDK.",
+    "It is not meant to be published to vcpkg."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/attestation/azure-security-attestation",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/template/azure-template",
   "license": "MIT",
   "dependencies": [
     {
       "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.8.0"
+      "version>=": "1.3.1"
     },
-    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
