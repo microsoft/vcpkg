@@ -42,9 +42,9 @@ vcpkg_cmake_configure(
             -DENABLE_EXTENSION_AUTOLOADING=1
             -DENABLE_EXTENSION_AUTOINSTALL=1
             -DWITH_INTERNAL_ICU=OFF
-        -DENABLE_SANITIZER=OFF
+            -DENABLE_SANITIZER=OFF
             -DENABLE_THREAD_SANITIZER=OFF
-        -DENABLE_UBSAN=OFF
+            -DENABLE_UBSAN=OFF
 )
 
 vcpkg_cmake_install()
