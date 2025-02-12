@@ -4,9 +4,9 @@ vcpkg_from_github(
         REF v${VERSION}
         SHA512 f5bca7a3b6f763b4b1a1f39e53c6f818925584fb44886e291ac3546fe50de545e80d16b4120f0126020e44b601a1b9193f4faad7a3dc8799cda843b1965038f2
         HEAD_REF master
-	PATCHES
-	    unvendor_icu.patch
-	    bigobj.patch
+    PATCHES
+        bigobj.patch
+        unvendor_icu_and_find_dependency.patch # https://github.com/duckdb/duckdb/pull/16176 + https://github.com/duckdb/duckdb/pull/16197
 )
 
 # Remove vendored dependencies which are not properly namespaced
@@ -41,10 +41,12 @@ vcpkg_cmake_configure(
             "${BUILD_EXTENSIONS_FLAG}"
             -DENABLE_EXTENSION_AUTOLOADING=1
             -DENABLE_EXTENSION_AUTOINSTALL=1
-	    -DENABLE_SANITIZER=OFF
+            -DWITH_INTERNAL_ICU=OFF
+        -DENABLE_SANITIZER=OFF
             -DENABLE_THREAD_SANITIZER=OFF
-	    -DENABLE_UBSAN=OFF
+        -DENABLE_UBSAN=OFF
 )
+
 vcpkg_cmake_install()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
