@@ -31,7 +31,6 @@ endif()
 if("glib" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dglib=enabled) # Enable GLib unicode functions
     list(APPEND FEATURE_OPTIONS -Dgobject=enabled) #Enable GObject bindings
-    list(APPEND FEATURE_OPTIONS -Dchafa=disabled)
 else()
     list(APPEND FEATURE_OPTIONS -Dglib=disabled)
     list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
@@ -54,37 +53,25 @@ endif()
 if("gdi" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
 endif()
-
 if("introspection" IN_LIST FEATURES)
-    list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
-    list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+    list(APPEND FEATURE_OPTIONS -Dintrospection=enabled)
 else()
-    list(APPEND OPTIONS -Dintrospection=disabled)
-endif()
-
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+    list(APPEND FEATURE_OPTIONS -Dintrospection=disabled)
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -Dchafa=disabled
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
-        ${OPTIONS}
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
