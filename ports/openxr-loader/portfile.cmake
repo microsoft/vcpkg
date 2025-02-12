@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
         -DCMAKE_INSTALL_INCLUDEDIR=include
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
-        "-DPYTHON_EXECUTABLE=${PYTHON3}"
+        "-DPYTHON3_EXECUTABLE=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
