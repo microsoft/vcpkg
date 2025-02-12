@@ -3694,7 +3694,7 @@
     },
     "imgui": {
       "baseline": "1.91.8",
-      "port-version": 1
+      "port-version": 2
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -7130,7 +7130,7 @@
     },
     "plutosvg": {
       "baseline": "0.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "plutovg": {
       "baseline": "0.0.12",
