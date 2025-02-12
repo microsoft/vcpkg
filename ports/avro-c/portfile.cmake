@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         avro.patch          # Private vcpkg build fixes
+        clang-cl-type-fix.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,0 +1,22 @@
+diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
+index 276f10b14d..8afe0646be 100644
+--- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
++++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
+@@ -93,7 +93,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+     add_definitions(-DBOOST_LOG_DYN_LINK)
+   endif()
+   add_definitions(-D_TURN_OFF_PLATFORM_STRING)
+-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
++elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC)
+   message("-- Setting clang options")
+ 
+   set(WARNINGS "-Wall -Wextra -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wpacked -Wredundant-decls")
+@@ -109,7 +109,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+     add_definitions(-DBOOST_LOG_DYN_LINK)
+   endif()
+   add_definitions(-D_TURN_OFF_PLATFORM_STRING)
+-elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
++elseif(MSVC)
+   message("-- Setting MSVC options")
+   add_compile_options(/bigobj)
+   add_compile_options(/MP)
