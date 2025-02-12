@@ -28,7 +28,10 @@
     "icu": {
       "description": "Statically link the icu extension into DuckDB",
       "dependencies": [
-        "icu"
+        {
+          "name": "icu",
+          "default-features": false
+        }
       ]
     },
     "json": {
