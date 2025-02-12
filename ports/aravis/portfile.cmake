@@ -35,8 +35,8 @@ vcpkg_configure_meson(
     OPTIONS
         ${OPTIONS}
     ADDITIONAL_BINARIES
-        glib-mkenums='${GLIB_TOOLS_DIR}/glib-mkenums'
-        glib-compile-resources='${GLIB_TOOLS_DIR}/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        "glib-mkenums='${GLIB_TOOLS_DIR}/glib-mkenums'"
+        "glib-compile-resources='${GLIB_TOOLS_DIR}/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
 )
 vcpkg_install_meson()
 
