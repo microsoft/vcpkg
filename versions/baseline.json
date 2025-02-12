@@ -8393,7 +8393,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2025.3.1",
+      "baseline": "2025.5",
       "port-version": 0
     },
     "shaderc": {
