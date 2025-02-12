@@ -1,7 +1,7 @@
 {
   "name": "imgui",
   "version": "1.91.8",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -60,7 +60,12 @@
             "freetype"
           ]
         },
-        "plutosvg"
+        {
+          "name": "plutosvg",
+          "features": [
+            "freetype"
+          ]
+        }
       ]
     },
     "glfw-binding": {
