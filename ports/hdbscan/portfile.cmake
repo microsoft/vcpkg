@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ooraloo/hdbscan-cpp-vcpkg
     REF "v${VERSION}"
-    SHA512 d46b2c1f6eea353cedb2a734fb5fbed40ec42b90c931174e120fd4a97ca417d6eb11590c0cc89ee89cde6213043c6f1698d5c281c894ff11e7f1743deead473c
+    SHA512 4cf8cc82abd92080cfa4c75fe742770ea5f12bf36c2c81370a301dd82b0cc89357c104995f1050a09a1ab7d5a87b92e20c3d79e4d81e467cc98b744e89dd8c3a
     HEAD_REF "master"
 )
 
