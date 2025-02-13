@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd349bf..e91afdd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMORPH_FONTS_DIR=\"\\\"${PROJECT_SOURCE
+ 
+ # Lib finding
+ find_package(OpenCV QUIET) # No longer required for morph::Visual, used by some tests
+-if(APPLE)
++if(APPLE OR WIN32)
+   find_package(OpenGL REQUIRED)
+ else()
+   find_package(OpenGL REQUIRED EGL) # GL ES 3.1 used in one gl compute example
