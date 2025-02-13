@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
+        dont-include-unknwn-h.patch
 )
 
 set(LANGUAGES C CXX)
