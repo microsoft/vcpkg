@@ -1,7 +1,6 @@
 {
   "name": "hdbscan",
-  "version": "1.0.0",
-  "port-version": 1,
+  "version": "1.0.1",
   "description": "A C++ implementation of HDBSCAN clustering adapted from https://github.com/rohanmohapatra/hdbscan-cpp",
   "homepage": "https://github.com/ooraloo/hdbscan-cpp-vcpkg",
   "license": "MIT",
