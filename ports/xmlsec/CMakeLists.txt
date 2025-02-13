@@ -98,7 +98,7 @@ target_compile_definitions(xmlsec1
     PRIVATE $<$<PLATFORM_ID:Windows>:XMLSEC_DL_WIN32>
     PUBLIC XMLSEC_NO_XSLT XMLSEC_CRYPTO_OPENSSL
 )
-target_compile_definitions(xmlsec1-openssl PUBLIC XMLSEC_NO_GOST XMLSEC_NO_GOST2012)
+target_compile_definitions(xmlsec1-openssl PUBLIC XMLSEC_NO_MD5 XMLSEC_NO_RIPEMD160 XMLSEC_NO_GOST XMLSEC_NO_GOST2012)
 
 install(TARGETS xmlsec1 xmlsec1-openssl
     EXPORT unofficial-xmlsec-targets
@@ -156,11 +156,10 @@ set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
 set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
 set(VERSION ${XMLSEC_VERSION})
 set(LIBXML_MIN_VERSION ${LIBXML2_VERSION_STRING})
-set(OPENSSL_LIBS "-lcrypto")
 set(XMLSEC_CORE_CFLAGS "${XMLSEC_CORE_CFLAGS} -I\${includedir}/xmlsec1 -DXMLSEC_CRYPTO_OPENSSL=1")
 set(XMLSEC_CORE_LIBS "-lxmlsec1 -lltdl")
 set(XMLSEC_OPENSSL_CFLAGS "${XMLSEC_OPENSSL_CFLAGS} -I\${includedir}/xmlsec1")
-set(XMLSEC_OPENSSL_LIBS "-L\${libdir} -lxmlsec1-openssl ${XMLSEC_CORE_LIBS} ${OPENSSL_LIBS}")
+set(XMLSEC_OPENSSL_LIBS "-L\${libdir} -lxmlsec1-openssl ${XMLSEC_CORE_LIBS} -lcrypto")
 
 configure_file(${PROJECT_SOURCE_DIR}/xmlsec.pc.in ${PROJECT_BINARY_DIR}/xmlsec1.pc @ONLY)
 configure_file(${PROJECT_SOURCE_DIR}/xmlsec-openssl.pc.in ${PROJECT_BINARY_DIR}/xmlsec1-openssl.pc @ONLY)
