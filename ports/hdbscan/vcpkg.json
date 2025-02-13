@@ -1,17 +1,17 @@
 {
-    "name": "hdbscan",
-    "version": "1.0.0",
-    "description": "A C++ implementation of HDBSCAN clustering adapted from https://github.com/rohanmohapatra/hdbscan-cpp",
-    "homepage": "https://github.com/ooraloo/hdbscan-cpp-vcpkg",
-    "license": "MIT",
-    "dependencies": [
-        {
-            "name": "vcpkg-cmake",
-            "host": true
-        },
-        {
-            "name": "vcpkg-cmake-config",
-            "host": true
-        }
-    ]
+  "name": "hdbscan",
+  "version": "1.0.0",
+  "description": "A C++ implementation of HDBSCAN clustering adapted from https://github.com/rohanmohapatra/hdbscan-cpp",
+  "homepage": "https://github.com/ooraloo/hdbscan-cpp-vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
