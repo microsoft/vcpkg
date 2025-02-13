@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       remove-hardcoded-platform-details.patch
+      remove-sdk-hardcoding.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
