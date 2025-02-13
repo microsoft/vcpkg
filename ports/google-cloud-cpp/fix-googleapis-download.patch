@@ -1,0 +1,37 @@
+diff --git a/external/googleapis/CMakeLists.txt b/external/googleapis/CMakeLists.txt
+index 5e93f522..30132c06 100644
+--- a/external/googleapis/CMakeLists.txt
++++ b/external/googleapis/CMakeLists.txt
+@@ -114,7 +114,7 @@ include(GoogleCloudCppCommonOptions)
+ # the generated libraries.  The Conan packages (https://conan.io), will need to
+ # patch this value.  Setting the value in a single place makes such patching
+ # easier.
+-set(EXTERNAL_GOOGLEAPIS_PREFIX "${PROJECT_BINARY_DIR}/external/googleapis")
++set(EXTERNAL_GOOGLEAPIS_PREFIX "${CMAKE_SOURCE_DIR}/external/googleapis")
+ set(EXTERNAL_GOOGLEAPIS_SOURCE
+     "${EXTERNAL_GOOGLEAPIS_PREFIX}/src/googleapis_download"
+     PARENT_SCOPE)
+@@ -138,6 +138,7 @@ foreach (file IN LISTS protolists)
+     endforeach ()
+ endforeach ()
+ 
++if(0)
+ include(ExternalProject)
+ 
+ externalproject_add(
+@@ -163,6 +164,7 @@ externalproject_add(
+     INSTALL_COMMAND ""
+     BUILD_BYPRODUCTS ${EXTERNAL_GOOGLEAPIS_BYPRODUCTS}
+     LOG_DOWNLOAD OFF)
++endif()
+ 
+ google_cloud_cpp_find_proto_include_dir(PROTO_INCLUDE_DIR)
+ 
+@@ -204,7 +206,6 @@ function (external_googleapis_add_library proto)
+ endfunction ()
+ 
+ function (external_googleapis_set_version_and_alias short_name)
+-    add_dependencies("google_cloud_cpp_${short_name}" googleapis_download)
+     set_target_properties(
+         "google_cloud_cpp_${short_name}"
+         PROPERTIES EXPORT_NAME google-cloud-cpp::${short_name}
