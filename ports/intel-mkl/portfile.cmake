@@ -250,11 +250,11 @@ file(INSTALL "${mkl_dir}/licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/$
 file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.product,v=2023.0.0-*")
 vcpkg_install_copyright(FILE_LIST "${package_path}/licenses/license.htm")
 
-#file(REMOVE_RECURSE
-#    "${extract_0_dir}"
-#    "${extract_1_dir}"
-#    "${CURRENT_PACKAGES_DIR}/lib/intel64/cmake"
-#    "${CURRENT_PACKAGES_DIR}/lib/intel64/pkgconfig"
-#)
+file(REMOVE_RECURSE
+    "${extract_0_dir}"
+    "${extract_1_dir}"
+    "${CURRENT_PACKAGES_DIR}/lib/intel64/cmake"
+    "${CURRENT_PACKAGES_DIR}/lib/intel64/pkgconfig"
+)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
