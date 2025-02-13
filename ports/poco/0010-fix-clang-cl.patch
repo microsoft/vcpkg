@@ -1,0 +1,14 @@
+diff --git a/Foundation/include/Poco/Platform.h b/Foundation/include/Poco/Platform.h
+index 8caa6de064..6993539a2a 100644
+--- a/Foundation/include/Poco/Platform.h	
++++ b/Foundation/include/Poco/Platform.h
+@@ -250,7 +250,9 @@
+ 
+ #if defined(__clang__)
+ 	#define POCO_COMPILER_CLANG
++#ifndef _MSC_VER
+ 	#define POCO_HAVE_CXXABI_H
++#endif
+ #elif defined(_MSC_VER)
+ 	#define POCO_COMPILER_MSVC
+ #elif defined (__GNUC__)
