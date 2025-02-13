@@ -1965,7 +1965,7 @@
       "port-version": 0
     },
     "cppmicroservices": {
-      "baseline": "3.8.4",
+      "baseline": "3.8.6",
       "port-version": 0
     },
     "cppp-reiconv": {
