@@ -3772,6 +3772,10 @@
       "baseline": "0.1.0",
       "port-version": 0
     },
+    "iperf3": {
+      "baseline": "3.18",
+      "port-version": 0
+    },
     "irrlicht": {
       "baseline": "1.8.5",
       "port-version": 0
