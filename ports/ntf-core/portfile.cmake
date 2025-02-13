@@ -45,13 +45,10 @@ fix_install_dir("lib" "opt_exc_mt")
 fix_install_dir("debug/lib" "dbg_exc_mt")
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake" PACKAGE_NAME nts)
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ntc")
-file(COPY "${CURRENT_PACKAGES_DIR}/share/nts/ntc/"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/ntc/")
-file(COPY "${CURRENT_PACKAGES_DIR}/share/nts/nts/"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/nts/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/nts/ntc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/nts/nts")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/nts" "${CURRENT_PACKAGES_DIR}/share/nts_original")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/nts_original/ntc" "${CURRENT_PACKAGES_DIR}/share/ntc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/nts_original/nts" "${CURRENT_PACKAGES_DIR}/share/nts")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/nts_original")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
