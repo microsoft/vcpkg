@@ -3458,7 +3458,7 @@
     },
     "hdbscan": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hdf5": {
       "baseline": "1.14.4.3",
