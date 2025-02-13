@@ -9,7 +9,8 @@ vcpkg_from_github(
     PATCHES
         0005_remove_imp_suffix.patch
         export-components.patch
-        dependencies.patch
+        export-libdirs.patch
+        find-brotli.patch
         pkgconfig-curl-config.patch
         cmake-config.patch
 )
