@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES fix-googleapis-download.patch
 )
 
+# On update, update REF according to $/cmake/GoogleapisConfig.cmake 's
+# set(_GOOGLE_CLOUD_CPP_GOOGLEAPIS_COMMIT_SHA
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_GOOGLEAPIS
     REPO googleapis/googleapis
