@@ -68,19 +68,22 @@ target_include_directories(xmlsec1 PUBLIC
 target_link_libraries(xmlsec1 PUBLIC LibXml2::LibXml2)
 target_link_libraries(xmlsec1-openssl PUBLIC xmlsec1 OpenSSL::Crypto)
 
-add_compile_definitions(inline=__inline)
-add_compile_definitions(PACKAGE="xmlsec1")
-add_compile_definitions(HAVE_STDIO_H)
-add_compile_definitions(HAVE_STDLIB_H)
-add_compile_definitions(HAVE_STRING_H)
-add_compile_definitions(HAVE_CTYPE_H)
-add_compile_definitions(HAVE_MALLOC_H)
-add_compile_definitions(HAVE_MEMORY_H)
-add_compile_definitions(XMLSEC_DEFAULT_CRYPTO="openssl")
-add_compile_definitions(UNICODE)
-add_compile_definitions(_UNICODE)
-add_compile_definitions(_MBCS)
-add_compile_definitions(_REENTRANT)
+add_compile_definitions(
+	inline=__inline
+	PACKAGE="xmlsec1"
+	HAVE_STDIO_H
+	HAVE_STDLIB_H
+	HAVE_STRING_H
+	HAVE_CTYPE_H
+	HAVE_MALLOC_H
+	HAVE_MEMORY_H
+	XMLSEC_DEFAULT_CRYPTO="openssl"
+	UNICODE
+	_UNICODE
+	_MBCS
+	_REENTRANT
+	WIN32_LEAN_AND_MEAN
+)
 
 set_target_properties(xmlsec1 xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 
