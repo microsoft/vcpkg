@@ -5013,7 +5013,7 @@
       "port-version": 0
     },
     "libpqxx": {
-      "baseline": "7.9.2",
+      "baseline": "7.10.0",
       "port-version": 0
     },
     "libprotobuf-mutator": {
