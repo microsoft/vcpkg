@@ -2,15 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ABRG-Models/morphologica
     REF "v${VERSION}"
-    SHA512 6f26b9fb19587308613c7ba5b89ce894025a271edda4f1262daf2fff68336cbc9d14e744aced18d78282178a04bc2076ad893d800ed20105045f8f236272ebe9
-    PATCHES
-        remove_number_type.patch
-	fix_nlohmann_include.patch
-	prevent_examples_and_tests.patch
+    SHA512 f2413220e324abdb9d8f8aac757d0235835c9f094919a74309a68d59f0b36bb4fa9742fc29a4d44e98150b63926d4d25c1821df6e824834cb77685ddb36ff8f4 
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_EXAMPLES=OFF
 )
 vcpkg_cmake_install()
 
