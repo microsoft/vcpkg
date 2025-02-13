@@ -237,11 +237,12 @@ endif()
 file(COPY "${mkl_dir}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}" "bin")
+if(NOT BUILD_SHARED_LIBS)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "define_param(MKL_LINK DEFAULT_MKL_LINK MKL_LINK_LIST)" 
 [[define_param(MKL_LINK DEFAULT_MKL_LINK MKL_LINK_LIST)
-if(NOT BUILD_SHARED_LIBS)
  set(MKL_LINK "static")
-endif()]])
+]])
+endif()
 #TODO: Hardcode settings from portfile in config.cmake
 #TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
 
@@ -249,11 +250,11 @@ file(INSTALL "${mkl_dir}/licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/$
 file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.product,v=2023.0.0-*")
 vcpkg_install_copyright(FILE_LIST "${package_path}/licenses/license.htm")
 
-file(REMOVE_RECURSE
-    "${extract_0_dir}"
-    "${extract_1_dir}"
-    "${CURRENT_PACKAGES_DIR}/lib/intel64/cmake"
-    "${CURRENT_PACKAGES_DIR}/lib/intel64/pkgconfig"
-)
+#file(REMOVE_RECURSE
+#    "${extract_0_dir}"
+#    "${extract_1_dir}"
+#    "${CURRENT_PACKAGES_DIR}/lib/intel64/cmake"
+#    "${CURRENT_PACKAGES_DIR}/lib/intel64/pkgconfig"
+#)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
