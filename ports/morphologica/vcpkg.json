@@ -1,11 +1,15 @@
 {
   "name": "morphologica",
-  "version": "3.3.1",
+  "version": "3.4",
   "description": "C++ header-only graphing and data visualization with Modern OpenGL",
   "homepage": "https://github.com/ABRG-Models/morphologica",
   "license": "Apache-2.0",
   "dependencies": [
     "armadillo",
+    {
+      "name": "egl",
+      "platform": "linux"
+    },
     {
       "name": "freeglut",
       "platform": "linux"
@@ -15,6 +19,7 @@
     "hdf5",
     "nlohmann-json",
     "opengl",
+    "rapidxml",
     {
       "name": "vcpkg-cmake",
       "host": true
