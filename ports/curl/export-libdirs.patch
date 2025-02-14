@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 86add74..2781ff2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2039,6 +2039,8 @@ if(HAVE_MANUAL_TOOLS)
+   add_subdirectory(docs)
+ endif()
+ 
++list(REMOVE_DUPLICATES CURL_LIBDIRS)
++
+ add_subdirectory(lib)
+ 
+ if(BUILD_CURL_EXE)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 91758b4..0add984 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -135,6 +135,7 @@ if(BUILD_STATIC_LIBS)
+     set_property(TARGET ${LIB_STATIC} APPEND PROPERTY COMPILE_DEFINITIONS "CURL_STATICLIB")
+   endif()
+   target_link_libraries(${LIB_STATIC} PRIVATE ${CURL_LIBS})
++  target_link_directories(${LIB_STATIC} INTERFACE ${CURL_LIBDIRS})
+   # Remove the "lib" prefix since the library is already named "libcurl".
+   set_target_properties(${LIB_STATIC} PROPERTIES
+     PREFIX "" OUTPUT_NAME "${LIBCURL_OUTPUT_NAME}"
