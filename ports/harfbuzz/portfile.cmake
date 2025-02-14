@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
+        fix-build-ffmpeg-failed.patch
 )
 
 if("icu" IN_LIST FEATURES)

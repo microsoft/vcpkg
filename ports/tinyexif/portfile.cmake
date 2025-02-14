@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/TinyEXIF
-    REF ccd676f1b91d59da40b4f9c1edda4408fb65e62e #2024-09-03
-    SHA512 3e0017372ca98c9746833c73b27d598b947e169e9b27b55f3d2229da61edc1fa2b3929435c647a618558bed7ff3e124358eb615a565704f96635f2345cfd557a
+    REF ${VERSION}
+    SHA512 1285566c70f4de3c882a433d65595f18d848ecf8e9b16e1ea3aa7a1773fb70ba090c7cc726238132cccfc403c3750950175c675d25206be38cddb64f16193795
     HEAD_REF master
 )
 
@@ -23,5 +23,11 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(READ "${CURRENT_PACKAGES_DIR}/share/tinyexif/TinyEXIFConfig.cmake" _contents)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/tinyexif/TinyEXIFConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(tinyxml2)
+${_contents}")
+
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md")
