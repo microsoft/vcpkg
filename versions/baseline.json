@@ -7065,8 +7065,8 @@
       "port-version": 0
     },
     "pistache": {
-      "baseline": "2021-03-31",
-      "port-version": 3
+      "baseline": "0.4.25",
+      "port-version": 0
     },
     "pixel": {
       "baseline": "2022-03-15",
