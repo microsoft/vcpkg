@@ -289,7 +289,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "9.0.2",
+      "baseline": "10.0.0",
       "port-version": 0
     },
     "async-simple": {
@@ -2129,8 +2129,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.12.0",
-      "port-version": 1
+      "baseline": "8.12.1",
+      "port-version": 0
     },
     "curlcpp": {
       "baseline": "3.1",
@@ -2821,7 +2821,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "24.12.23",
+      "baseline": "25.1.21",
       "port-version": 0
     },
     "flatbush": {
@@ -2834,7 +2834,7 @@
     },
     "flint": {
       "baseline": "2.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fltk": {
       "baseline": "1.3.9",
@@ -3096,6 +3096,10 @@
       "baseline": "2017-10-14",
       "port-version": 6
     },
+    "gexiv2": {
+      "baseline": "0.14.3",
+      "port-version": 0
+    },
     "gflags": {
       "baseline": "2.2.2",
       "port-version": 9
@@ -3278,7 +3282,7 @@
     },
     "grpc": {
       "baseline": "1.70.0",
-      "port-version": 0
+      "port-version": 1
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3438,7 +3442,7 @@
     },
     "harfbuzz": {
       "baseline": "10.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "hash-library": {
       "baseline": "8",
@@ -3758,7 +3762,7 @@
     },
     "intel-mkl": {
       "baseline": "2023.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
@@ -4137,7 +4141,7 @@
       "port-version": 0
     },
     "kfr": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "kinectsdk1": {
@@ -4361,7 +4365,7 @@
       "port-version": 4
     },
     "libbson": {
-      "baseline": "1.29.2",
+      "baseline": "1.30.0",
       "port-version": 0
     },
     "libcaer": {
@@ -4614,7 +4618,7 @@
     },
     "libgit2": {
       "baseline": "1.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libgme": {
       "baseline": "0.6.3",
@@ -6073,7 +6077,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "1.29.2",
+      "baseline": "1.30.0",
       "port-version": 0
     },
     "mongo-cxx-driver": {
@@ -6421,7 +6425,7 @@
       "port-version": 1
     },
     "nlopt": {
-      "baseline": "2.8.0",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "nmslib": {
@@ -6481,8 +6485,8 @@
       "port-version": 3
     },
     "ntf-core": {
-      "baseline": "2.1.0",
-      "port-version": 1
+      "baseline": "2.5.4",
+      "port-version": 0
     },
     "nu-book-zxing-cpp": {
       "baseline": "2.3.0",
@@ -6900,6 +6904,10 @@
       "baseline": "2020-12-14",
       "port-version": 4
     },
+    "p-ranav-glob": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "pagmo2": {
       "baseline": "2.19.1",
       "port-version": 0
@@ -6985,7 +6993,7 @@
       "port-version": 0
     },
     "pdal": {
-      "baseline": "2.8.3",
+      "baseline": "2.8.4",
       "port-version": 0
     },
     "pdal-c": {
@@ -6993,7 +7001,7 @@
       "port-version": 0
     },
     "pdal-dimbuilder": {
-      "baseline": "2.8.3",
+      "baseline": "2.8.4",
       "port-version": 0
     },
     "pdcurses": {
@@ -7285,7 +7293,7 @@
       "port-version": 0
     },
     "protobuf-c": {
-      "baseline": "1.5.0",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "protopuf": {
@@ -7813,7 +7821,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "8.1.0",
+      "baseline": "8.1.1",
       "port-version": 0
     },
     "quirc": {
@@ -7865,7 +7873,7 @@
       "port-version": 0
     },
     "rapidfuzz": {
-      "baseline": "3.3.1",
+      "baseline": "3.3.2",
       "port-version": 0
     },
     "rapidhash": {
@@ -8397,7 +8405,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2025.3.1",
+      "baseline": "2025.5",
       "port-version": 0
     },
     "shaderc": {
@@ -8982,7 +8990,7 @@
     },
     "tbb": {
       "baseline": "2022.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tcb-span": {
       "baseline": "2022-06-15",
@@ -9906,7 +9914,7 @@
     },
     "x-plane": {
       "baseline": "4.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "x264": {
       "baseline": "0.164.3108",
