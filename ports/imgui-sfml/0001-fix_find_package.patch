@@ -1,37 +1,39 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 075d793..9bc635a 100644
+index 7945482..1c91277 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,13 +41,14 @@ if (IMGUI_SFML_FIND_SFML)
-   if (NOT BUILD_SHARED_LIBS)
-     set(SFML_STATIC_LIBRARIES ON)
-   endif()
--  find_package(SFML 2.5 COMPONENTS graphics system window)
-+  find_package(SFML COMPONENTS graphics system window)
- 
-   if(NOT SFML_FOUND)
-     message(FATAL_ERROR "SFML 2 directory not found. Set SFML_DIR to directory where SFML was built (or one which contains SFMLConfig.cmake)")
-   endif()
+@@ -29,16 +29,7 @@ if(IMGUI_SFML_FIND_SFML)
+   find_package(SFML 3 REQUIRED COMPONENTS Graphics)
  endif()
  
-+if(0)
- # ImGui does not provide native support for CMakeLists, workaround for now to have
- # users specify IMGUI_DIR. Waiting for this PR to get merged...
- #    https://github.com/ocornut/imgui/pull/1713
-@@ -69,6 +70,8 @@ set(IMGUI_PUBLIC_HEADERS
-   ${IMGUI_INCLUDE_DIR}/imstb_truetype.h
-   ${IMGUI_INCLUDE_DIR}/misc/cpp/imgui_stdlib.h
+-# ImGui does not provide native support for CMakeLists, workaround for now to have
+-# users specify IMGUI_DIR. Waiting for this PR to get merged...
+-#    https://github.com/ocornut/imgui/pull/1713
+-if(NOT IMGUI_DIR)
+-  set(IMGUI_DIR "" CACHE PATH "imgui top-level directory")
+-  message(FATAL_ERROR "ImGui directory not found. Set IMGUI_DIR to imgui's top-level path (containing 'imgui.h' and other files).\n")
+-endif()
+-
+-# This uses FindImGui.cmake provided in ImGui-SFML repo for now
+-find_package(ImGui 1.91.1 REQUIRED)
++find_package(ImGui CONFIG REQUIRED)
+ 
+ # These headers will be installed alongside ImGui-SFML
+ set(IMGUI_PUBLIC_HEADERS
+@@ -70,7 +61,7 @@ target_include_directories(ImGui-SFML PUBLIC
+   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
  )
-+endif()
-+find_package(imgui CONFIG REQUIRED)
- 
- if (IMGUI_SFML_IMGUI_DEMO)
-   list(APPEND IMGUI_SOURCES ${IMGUI_DEMO_SOURCES})
-@@ -93,6 +96,7 @@ add_library(ImGui-SFML::ImGui-SFML ALIAS ImGui-SFML)
- 
- target_link_libraries(ImGui-SFML
-   PUBLIC
-+    imgui::imgui
-     sfml-graphics
-     sfml-system
-     sfml-window
+-target_link_libraries(ImGui-SFML PUBLIC SFML::Graphics OpenGL::GL)
++target_link_libraries(ImGui-SFML PUBLIC imgui::imgui SFML::Graphics OpenGL::GL)
+ if(WIN32 AND MINGW)
+   target_link_libraries(ImGui-SFML PUBLIC imm32)
+ endif()
+@@ -113,7 +104,6 @@ target_compile_definitions(ImGui-SFML PUBLIC IMGUI_USER_CONFIG="${IMGUI_SFML_CON
+ set(IMGUI_SFML_PUBLIC_HEADERS
+   ${PROJECT_SOURCE_DIR}/imgui-SFML.h
+   ${PROJECT_SOURCE_DIR}/imgui-SFML_export.h
+-  ${IMGUI_PUBLIC_HEADERS}
+ )
+ if(IMGUI_SFML_USE_DEFAULT_CONFIG OR (NOT DEFINED "${IMGUI_SFML_CONFIG_INSTALL_DIR}"))
+   list(APPEND IMGUI_SFML_PUBLIC_HEADERS "${IMGUI_SFML_CONFIG_DIR}/${IMGUI_SFML_CONFIG_NAME}")
