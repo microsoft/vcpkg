@@ -1,8 +1,10 @@
 {
   "name": "jhasse-poly2tri",
   "version-date": "2023-12-27",
+  "port-version": 1,
   "description": "Sweep-line algorithm for constrained Delaunay triangulation",
   "homepage": "https://github.com/jhasse/poly2tri",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     {
