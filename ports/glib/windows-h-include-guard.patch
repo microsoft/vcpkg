@@ -1,0 +1,11 @@
+diff --git a/glib/gwin32.h b/glib/gwin32.h
+--- a/glib/gwin32.h
++++ b/glib/gwin32.h
+@@ -45,7 +45,6 @@
+ 
+ /* needed include for C++ builds; including this in C mode will cause havoc of type conflicts */
+ #ifdef __cplusplus
+-#include <unknwn.h>
+ #endif
+ 
+ /*
