@@ -1,0 +1,51 @@
+diff --git a/lib/win_x64.mak b/lib/win_x64.mak
+index a9658d077c..6e054bd971 100644
+--- a/lib/win_x64.mak
++++ b/lib/win_x64.mak
+@@ -96,7 +96,7 @@ DCFLAGS = $(DCFLAGS) /DSAFE_LOOKUP
+ DAFLAGS = $(DAFLAGS) -DSAFE_LOOKUP
+ !endif
+ 
+-CC = cl
++CC = $(CC)
+ CFLAGS_ALL = $(EXTRA_CFLAGS) /DNO_COMPAT_IMB_API_053 /I. /Iinclude /Ino-aesni \
+ 	/nologo /Y- /W3 /WX- /Gm- /fp:precise /EHsc /Z7
+ 
+diff --git a/mkdep.bat b/mkdep.bat
+index c43581df23..346952e6de 100644
+--- a/mkdep.bat
++++ b/mkdep.bat
+@@ -38,6 +38,6 @@ REM //   - 'cl' command is hardcoded below
+ REM //
+ 
+ @echo %1 : \
+-@for /f "tokens=1,2,3,*" %%g in ('cl /Zs /showIncludes /nologo %~3 /c %1') do @if not "%%j"=="" echo   "%%j" \
++@for /f "tokens=1,2,3,*" %%g in ('%CC% /Zs /showIncludes /nologo %~3 /c %1') do @if not "%%j"=="" echo   "%%j" \
+ @echo.
+ @echo %2 : %1
+diff --git a/perf/win_x64.mak b/perf/win_x64.mak
+index a388ff518a..b343607b96 100644
+--- a/perf/win_x64.mak
++++ b/perf/win_x64.mak
+@@ -60,7 +60,7 @@ DCFLAGS = /O2 /Oi
+ DLFLAGS =
+ !endif
+ 
+-CC = cl
++CC = $(CC)
+ # _CRT_SECURE_NO_WARNINGS disables warning C4996 about unsecure strtok() being used
+ CFLAGS = /nologo /DNO_COMPAT_IMB_API_053 /D_CRT_SECURE_NO_WARNINGS $(DCFLAGS) /Y- /W3 /WX- /Gm- /fp:precise /EHsc $(EXTRA_CFLAGS) $(INCDIR)
+ 
+diff --git a/test/win_x64.mak b/test/win_x64.mak
+index e28e6a7cd8..3ca7552bbe 100644
+--- a/test/win_x64.mak
++++ b/test/win_x64.mak
+@@ -57,7 +57,7 @@ DLFLAGS =
+ !endif
+ 
+ # compiler
+-CC = cl
++CC = $(CC)
+ # _CRT_SECURE_NO_WARNINGS disables warning C4996 about unsecure snprintf() being used
+ CFLAGS = /nologo /DNO_COMPAT_IMB_API_053 /D_CRT_SECURE_NO_WARNINGS $(DCFLAGS) /Y- /W3 /WX- /Gm- /fp:precise /EHsc $(EXTRA_CFLAGS) $(INCDIR)
+ 

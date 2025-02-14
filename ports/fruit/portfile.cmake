@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 82e86b939ce7d1c0f092255211cd0825e7cf96e56b4af44dcbb67c863c41cb398afbbf9098a934b7eea848acc0b48d3dee3a67cf907f9b9ef2a0d59d92507f30
     HEAD_REF master
+    PATCHES
+      exports-clang-cl.patch
 )
 
 # TODO: Make boost an optional dependency?

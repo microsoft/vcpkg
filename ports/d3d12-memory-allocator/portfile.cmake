@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-output-dirs.patch
         0002-Fix-32b-compilation.patch
+        0003-fix-clang-cl.patch
 )
 
 vcpkg_cmake_configure(

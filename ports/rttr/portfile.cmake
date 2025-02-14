@@ -10,6 +10,7 @@ vcpkg_from_github(
         remove-owner-read-perms.patch
         disable-unsupport-header.patch
         disable-werrorr.patch
+        clang-cl-export.patch
 )
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
