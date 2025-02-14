@@ -38,6 +38,6 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 # CppMicroServices uses a custom resource compiler to compile resources
 # the zipped resources are then appended to the target which cause the linker to crash
 # when compiling a static library
-if(NOT BUILD_SHARED_LIBS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()
