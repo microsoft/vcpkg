@@ -7,14 +7,18 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
 
+# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "20.04") and format to "2004"
+UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
+
 ## CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
-mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /"
+wget "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
+mv "cuda-ubuntu${NVIDIA_REPO_VERSION}.pin" /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/3bf863cc.pub"
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/ /"
 
 ## PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb
+wget -q https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
