@@ -114,8 +114,8 @@ APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
 ## CUDA
 APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driver-dev-12-8 \
-  cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev libnccl2 \
-  libnccl-dev"
+  cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev-cuda-12 \
+  libnccl2 libnccl-dev"
 
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
