@@ -1,0 +1,5 @@
+
+libgit2 provides a CMake config file:
+
+    find_package("libgit2" CONFIG REQUIRED)
+    target_include_directories("main" PRIVATE "libgit2::libgit2package")

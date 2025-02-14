@@ -112,3 +112,8 @@ These source files are part of ntlmclient, distributed under the MIT license.
     list(APPEND file_list "${CURRENT_BUILDTREES_DIR}/Notice for ntlmclient")
 endif()
 vcpkg_install_copyright(FILE_LIST ${file_list})
+
+file(
+    INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
