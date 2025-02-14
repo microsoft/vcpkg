@@ -224,6 +224,16 @@ coroutine:arm64-osx=fail
 cpp-ipc:arm-neon-android=fail
 cpp-ipc:arm64-android=fail
 cpp-ipc:x64-android=fail
+# std::char_traits<unsigned int>
+cpp-netlib:arm-neon-android=fail
+cpp-netlib:arm64-android=fail
+cpp-netlib:x64-android=fail
+cppcoro:arm-neon-android=fail
+cppcoro:arm64-android=fail
+cppcoro:arm64-osx=fail
+cppcoro:x64-android=fail
+cppcoro:x64-linux=fail
+cppcoro:x64-osx=fail
 cppmicroservices:arm-neon-android=fail
 cppmicroservices:arm64-android=fail
 cppmicroservices:arm64-windows=fail
@@ -231,14 +241,12 @@ cppmicroservices:arm64-windows-static-md=fail
 cppmicroservices:arm64-uwp=fail
 cppmicroservices:x64-android=fail
 cppmicroservices:x64-uwp=fail
+# std::char_traits<unsigned char>; upstream in maintenance mode
+cpprestsdk:arm-neon-android=fail
+cpprestsdk:arm64-android=fail
+cpprestsdk:x64-android=fail
 # Requires full C++20 support, currently absent from CI for these triplets.
 cppslippi:x64-linux=fail
-cppcoro:arm-neon-android=fail
-cppcoro:arm64-android=fail
-cppcoro:arm64-osx=fail
-cppcoro:x64-android=fail
-cppcoro:x64-linux=fail
-cppcoro:x64-osx=fail
 cpputest:arm-neon-android=fail
 crashpad:x64-linux=fail #Compilation failed due to the lack of Clang++ compiler.
 cserialport:arm-neon-android=fail
@@ -641,6 +649,10 @@ libtomcrypt:arm64-windows-static-md=fail
 libtomcrypt:arm64-uwp=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
+# pthread_barrier_*, needs android-24
+libuv:arm-neon-android=fail
+libuv:arm64-android=fail
+libuv:x64-android=fail
 # needs android-26
 libvhdi:arm-neon-android=fail
 libvhdi:arm64-android=fail
@@ -688,6 +700,10 @@ log4cpp:x64-linux=fail # dynamic exception specifications
 # 32-bit needs android-24
 lua:arm-neon-android=fail
 magma:x64-linux=fail
+# std::char_traits<unsigned char>
+mapnik:arm-neon-android=fail
+mapnik:arm64-android=fail
+mapnik:x64-android=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
 mchehab-zbar:x64-android=fail
@@ -762,6 +778,10 @@ mpir:x64-linux=skip
 msmpi:arm64-windows=fail
 msmpi:arm64-windows-static-md=fail
 munit:x64-android=fail
+# std::char_traits<unsigned short>
+mygui:arm-neon-android=fail
+mygui:arm64-android=fail
+mygui:x64-android=fail
 nana:arm-neon-android=fail
 nana:arm64-android=fail
 nana:x64-android=fail
@@ -853,7 +873,11 @@ optional-bare:x86-windows=skip
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
+# paho-mqtt android: std::char_traits<unsigned char>
+paho-mqtt:arm-neon-android=fail
+paho-mqtt:arm64-android=fail
 paho-mqtt:arm64-uwp=fail
+paho-mqtt:x64-android=fail
 paho-mqtt:x64-uwp=fail
 pango:arm-neon-android=fail
 pango:arm64-android=fail
@@ -874,6 +898,10 @@ plplot:arm64-windows-static-md=fail
 pmdk:x64-android=fail
 pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
+# std::char_traits<unsigned short>
+poppler:arm-neon-android=fail
+poppler:arm64-android=fail
+poppler:x64-android=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-linux=fail # segfaults :(
 ptex:arm-neon-android=fail
@@ -1095,7 +1123,10 @@ systemc:arm64-windows-static-md=fail
 systemc:arm64-uwp=fail
 systemc:x64-uwp=fail
 teemo:x64-android=fail
-
+# std::char_traits<unsigned char>
+telnetpp:arm-neon-android=fail
+telnetpp:arm64-android=fail
+telnetpp:x64-android=fail
 # tensorflow does not support VS2022
 tensorflow:x64-android=fail
 tensorflow:x64-windows-static-md=fail
