@@ -8,9 +8,15 @@ vcpkg_from_github(
         find-package-plutovg.diff
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        freetype PLUTOSVG_ENABLE_FREETYPE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DPLUTOSVG_BUILD_EXAMPLES=OFF
 )
 vcpkg_cmake_install()

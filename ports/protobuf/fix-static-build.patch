@@ -2,7 +2,7 @@ diff --git a/cmake/install.cmake b/cmake/install.cmake
 index 65765ca29..f5ad69102 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -61,7 +61,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+@@ -65,7 +65,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
      endforeach ()
    endif ()
    foreach (binary IN LISTS _protobuf_binaries)
@@ -11,11 +11,12 @@ index 65765ca29..f5ad69102 100644
        set_property(TARGET ${binary}
          PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
      elseif (APPLE)
-@@ -81,7 +81,6 @@ set(protobuf_HEADERS
+@@ -85,7 +85,5 @@ set(protobuf_HEADERS
    ${cpp_features_proto_proto_srcs}
    ${descriptor_proto_proto_srcs}
    ${plugin_proto_proto_srcs}
 -  ${java_features_proto_proto_srcs}
+-  ${go_features_proto_proto_srcs}
  )
  if (protobuf_BUILD_LIBUPB)
    list(APPEND protobuf_HEADERS ${libupb_hdrs})

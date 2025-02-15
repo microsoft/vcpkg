@@ -1,20 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cb97dd5..7f3b25d 100644
+index be7b193..a3f5918 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2258,8 +2258,10 @@ if(NOT CURL_DISABLE_INSTALL)
-       endif()
-     endif()
-   endforeach()
-+  list(APPEND _sys_libdirs ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
- 
-   foreach(_libdir IN LISTS _custom_libdirs CURL_LIBDIRS)
-+    cmake_path(SET _libdir NORMALIZE "${_libdir}")
-     list(FIND _sys_libdirs "${_libdir}" _libdir_index)
-     if(_libdir_index LESS 0)
-       list(APPEND _ldflags "-L${_libdir}")
-@@ -2271,7 +2273,30 @@ if(NOT CURL_DISABLE_INSTALL)
-     set(_implicit_libs ${CMAKE_C_IMPLICIT_LINK_LIBRARIES})
+@@ -2280,7 +2280,30 @@ if(NOT CURL_DISABLE_INSTALL)
+     set(_implicit_libs "${CMAKE_C_IMPLICIT_LINK_LIBRARIES}")
    endif()
  
 -  foreach(_lib IN LISTS _implicit_libs _custom_libs CURL_LIBS)
@@ -45,7 +34,7 @@ index cb97dd5..7f3b25d 100644
      if(TARGET "${_lib}")
        set(_libname "${_lib}")
        get_target_property(_imported "${_libname}" IMPORTED)
-@@ -2286,6 +2311,10 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2295,6 +2318,10 @@ if(NOT CURL_DISABLE_INSTALL)
          continue()
        endif()
      endif()
@@ -56,13 +45,7 @@ index cb97dd5..7f3b25d 100644
      if(_lib MATCHES "^-")  # '-framework <name>'
        list(APPEND _ldflags "${_lib}")
      elseif(_lib MATCHES "/")
-@@ -2294,17 +2323,24 @@ if(NOT CURL_DISABLE_INSTALL)
-       get_filename_component(_libdir ${_lib} DIRECTORY)
-       get_filename_component(_libname ${_lib} NAME_WE)
-       if(_libname MATCHES "^lib")
-+        cmake_path(SET _libdir NORMALIZE "${_libdir}")
-         list(FIND _sys_libdirs "${_libdir}" _libdir_index)
-         if(_libdir_index LESS 0)
+@@ -2311,12 +2338,18 @@ if(NOT CURL_DISABLE_INSTALL)
            list(APPEND _ldflags "-L${_libdir}")
          endif()
          string(REGEX REPLACE "^lib" "" _libname "${_libname}")
@@ -84,7 +67,7 @@ index cb97dd5..7f3b25d 100644
      endif()
    endforeach()
  
-@@ -2330,11 +2366,11 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2342,11 +2375,11 @@ if(NOT CURL_DISABLE_INSTALL)
      set(LIBCURL_PC_REQUIRES "")
      set(LIBCURL_PC_LIBS     "")
      set(LIBCURL_PC_CFLAGS   "")

@@ -126,10 +126,6 @@ if ($lastLastExitCode -ne 0)
     exit $lastLastExitCode
 }
 
-# The vcpkg.cmake toolchain file is not part of ABI hashing,
-# but changes must trigger at least some testing.
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
 & "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
 $lastLastExitCode = $LASTEXITCODE
 
