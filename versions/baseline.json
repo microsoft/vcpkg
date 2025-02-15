@@ -7877,7 +7877,7 @@
       "port-version": 0
     },
     "rapidhash": {
-      "baseline": "2024-06-08",
+      "baseline": "1.0",
       "port-version": 0
     },
     "rapidjson": {
