@@ -7174,7 +7174,7 @@
     },
     "polyclipping": {
       "baseline": "6.4.2",
-      "port-version": 12
+      "port-version": 13
     },
     "polyhook2": {
       "baseline": "2024-06-03",
