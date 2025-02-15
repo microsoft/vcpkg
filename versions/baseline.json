@@ -8320,6 +8320,10 @@
       "baseline": "3.2.0",
       "port-version": 0
     },
+    "sdl3-ttf": {
+      "baseline": "3.1.0",
+      "port-version": 0
+    },
     "seacas": {
       "baseline": "2022-11-22",
       "port-version": 8
