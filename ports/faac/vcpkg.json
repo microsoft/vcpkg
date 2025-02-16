@@ -1,0 +1,18 @@
+{
+  "name": "faac",
+  "version": "1.30",
+  "description": "Freeware Advanced Audio (AAC) Encoder",
+  "homepage": "https://sourceforge.net/projects/faac/",
+  "supports": "!(android | osx | uwp | (arm & windows))",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "cli": {
+      "description": "Build the embedded encoder executable"
+    }
+  }
+}
