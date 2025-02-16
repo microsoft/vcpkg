@@ -9734,7 +9734,7 @@
     },
     "vxl": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wabt": {
       "baseline": "1.0.36",
