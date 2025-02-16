@@ -8,7 +8,7 @@ index 6f50798ebf..2f1a2d6e69 100644
  # Cygwin's ar can't handle Win64 right now. So we use Microsoft's tool instead.
 -AR = LIB.EXE#M#
 -ARFLAGS := -nologo $(ARFLAGS:r=)#M#
-+AR = ar-lib lib.exe#M#
++AR := $(AR)#M#
 +ARFLAGS := $(ARFLAGS)#M#
  RANLIB = ls -s#M#
  AR_OUTOPT = -OUT:#M#
