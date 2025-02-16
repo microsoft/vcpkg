@@ -6888,6 +6888,10 @@
       "baseline": "4.6.1",
       "port-version": 0
     },
+    "osqp": {
+      "baseline": "0.6.3",
+      "port-version": 0
+    },
     "otl": {
       "baseline": "4.0.480",
       "port-version": 0
