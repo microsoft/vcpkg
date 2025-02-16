@@ -1,0 +1,5 @@
+sqlcipher is compatible with built-in CMake targets:
+
+  find_package(sqlcipher REQUIRED)
+  target_link_libraries(main PRIVATE sqlcipher::sqlcipher)
+
