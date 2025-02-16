@@ -1,4 +1,4 @@
-#[[ 
+#[[
     vcpkg overloads find_package().
     mysql-connector-cpp overloads find_dependency().
 
