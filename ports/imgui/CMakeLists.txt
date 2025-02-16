@@ -99,6 +99,18 @@ if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp)
 endif()
 
+if(IMGUI_BUILD_SDL3_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp)
+endif()
+
+if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
+endif()
+
 if(IMGUI_BUILD_VULKAN_BINDING)
     find_package(Vulkan REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Vulkan)
@@ -235,6 +247,14 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.h DESTINATION include)
+    endif()
+    
+    if(IMGUI_BUILD_SDL3_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_VULKAN_BINDING)
