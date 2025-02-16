@@ -4292,6 +4292,10 @@
       "baseline": "2.3.2",
       "port-version": 0
     },
+    "lhasa": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "libaaplus": {
       "baseline": "2.36",
       "port-version": 1
