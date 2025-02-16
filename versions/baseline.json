@@ -6258,7 +6258,7 @@
     },
     "mysql-connector-cpp": {
       "baseline": "9.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "nameof": {
       "baseline": "0.10.4",
@@ -9650,7 +9650,7 @@
     },
     "vowpal-wabbit": {
       "baseline": "9.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vs-yasm": {
       "baseline": "0.5.0",
