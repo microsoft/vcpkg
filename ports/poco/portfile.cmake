@@ -33,10 +33,15 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        crypto      ENABLE_CRYPTO
-        netssl      ENABLE_NETSSL
-        pdf         ENABLE_PDF
-        postgresql  ENABLE_DATA_POSTGRESQL
+        activerecord    ENABLE_ACTIVERECORD
+        cppparser       ENABLE_CPPPARSER
+        crypto          ENABLE_CRYPTO
+        mongodb         ENABLE_MONGODB
+        netssl          ENABLE_NETSSL
+        pdf             ENABLE_PDF
+        pocodoc         ENABLE_POCODOC
+        postgresql      ENABLE_DATA_POSTGRESQL
+        sqlite3         ENABLE_DATA_SQLITE
 )
 
 # POCO_ENABLE_NETSSL_WIN: 
@@ -63,18 +68,16 @@ vcpkg_cmake_configure(
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
         # Allow enabling and disabling components
+        -DENABLE_ACTIVERECORD_COMPILER=${ENABLE_ACTIVERECORD}
         -DENABLE_ENCODINGS=ON
         -DENABLE_ENCODINGS_COMPILER=ON
         -DENABLE_XML=ON
         -DENABLE_JSON=ON
-        -DENABLE_MONGODB=ON
         -DENABLE_REDIS=ON
         -DENABLE_UTIL=ON
         -DENABLE_NET=ON
         -DENABLE_SEVENZIP=ON
         -DENABLE_ZIP=ON
-        -DENABLE_CPPPARSER=ON
-        -DENABLE_POCODOC=ON
         -DENABLE_PAGECOMPILER=ON
         -DENABLE_PAGECOMPILER_FILE2PAGE=ON
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
@@ -90,7 +93,14 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec poco-arc AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp tec AUTO_CLEAN)
+if (ENABLE_ACTIVERECORD STREQUAL "ON")
+    vcpkg_copy_tools(TOOL_NAMES poco-arc AUTO_CLEAN)
+endif()
+if (ENABLE_POCODOC STREQUAL "ON")
+    vcpkg_copy_tools(TOOL_NAMES PocoDoc AUTO_CLEAN)
+endif()
+
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
