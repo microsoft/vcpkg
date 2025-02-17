@@ -1,10 +1,40 @@
+function(find_files_with_pattern source_dir pattern result)
+    find_program(PWSH_PATH pwsh)
+    vcpkg_execute_required_process(
+        COMMAND "${PWSH_PATH}" -Command "(Get-ChildItem -Path . -Recurse -File | ForEach-Object {  if ($_.Extension -match '\.hpp$|\.cpp') { if (Select-String -Path $_.FullName -Pattern \'${pattern}\' -Quiet) { $_.FullName } } }) -join ';'"
+        WORKING_DIRECTORY "${source_dir}"
+        LOGNAME "find-files-with-pattern"
+        OUTPUT_VARIABLE files
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(${result} "${files}" PARENT_SCOPE)
+endfunction()
+
+function(replace_vendored_header source_dir vendored_header vcpkg_header)
+    find_files_with_pattern("${source_dir}" "${vendored_header}" files)
+    foreach(file ${files})
+        vcpkg_replace_string("${file}" "#include \"${vendored_header}\"" "#include <${vcpkg_header}>")
+    endforeach()
+endfunction()
+
+function(use_md5_from_openssl source_dir)
+    replace_vendored_header("${source_dir}" "third-party/zuid/interfaces/MD5.h" "openssl/md5.h")
+    find_files_with_pattern("${source_dir}" "MD5Init|MD5Update|MD5Final" files)
+    foreach(file ${files})
+        vcpkg_replace_string("${file}" "MD5Init" "MD5_Init" IGNORE_UNCHANGED)
+        vcpkg_replace_string("${file}" "MD5Update" "MD5_Update" IGNORE_UNCHANGED)
+        vcpkg_replace_string("${file}" "MD5Final" "MD5_Final" IGNORE_UNCHANGED)
+    endforeach()
+endfunction()
+
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO adobe/XMP-Toolkit-SDK
     REF "v${VERSION}"
     SHA512 1ab987cdf50fdd0d28e2d0f97dba3cf30fe23dd1ff700d39bdf1fda7c3ae6ce1aa71806dbd77cec84ffcd7672a0a4545007c9dbcac99c83d17b4c1aa7d6b31fb
     PATCHES
-        prepare-for-getting-zlib-and-expat-from-vcpkg.patch
+       prepare-for-getting-zlib-and-expat-from-vcpkg.patch
 )
 
 set(pdf_handler_mini_pdfl_dir "windows")
@@ -22,7 +52,7 @@ file(COPY "${SOURCE_PATH}/public" DESTINATION "${plugin_sdk_directory}")
 
 if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
     set(arch_64_bit "ON")
-    set(lib_path "${SOURCE_PATH}/public/libraries/windows_x64")    
+    set(lib_path "${SOURCE_PATH}/public/libraries/windows_x64")
 else()
     set(arch_64_bit "OFF")
     set(lib_path "${SOURCE_PATH}/public/libraries/windows")
@@ -30,29 +60,14 @@ endif()
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
     set(build_static "On")
-    if("${VCPKG_CRT_LINKAGE}" STREQUAL "static")
-        set(expat_debug_lib "libexpatdMT.lib")
-        set(expat_release_lib "libexpatMT.lib")
-    else()
-        set(expat_debug_lib "libexpatdMD.lib")
-        set(expat_release_lib "libexpatMD.lib")
-    endif()
 else()
     set(build_static "Off")
-    set(expat_debug_lib "libexpatd.lib")
-    set(expat_release_lib "libexpat.lib")
 endif()
 
-# Redirect build to use expat library from vcpkg
-configure_file(${CURRENT_PORT_DIR}/expat.h ${SOURCE_PATH}/third-party/expat/lib/expat.h @ONLY)
-string(APPEND VCPKG_LINKER_FLAGS_DEBUG " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/debug/lib/${expat_debug_lib} ")
-string(APPEND VCPKG_LINKER_FLAGS_RELEASE " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/lib/${expat_release_lib} ")
-
-# Redirect build to use zlib library from vcpkg
-configure_file(${CURRENT_PORT_DIR}/zlib.h ${SOURCE_PATH}/third-party/zlib/zlib.h @ONLY)
-string(APPEND VCPKG_LINKER_FLAGS_DEBUG " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/debug/lib/zlibd.lib ")
-string(APPEND VCPKG_LINKER_FLAGS_RELEASE " ${CURRENT_INSTALLED_DIR}/${TRIPLET}/lib/zlib.lib ")
-
+file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
+replace_vendored_header("${SOURCE_PATH}" "third-party/expat/lib/expat.h" "expat.h")
+replace_vendored_header("${SOURCE_PATH}" "third-party/zlib/zlib.h" "zlib.h")
+use_md5_from_openssl("${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build"
@@ -60,12 +75,11 @@ vcpkg_cmake_configure(
     OPTIONS
         -DXMP_CMAKEFOLDER_NAME="msbuild"
         -DCMAKE_CL_64=${arch_64_bit}
-        -DXMP_BUILD_WARNING_AS_ERROR=On 
+        -DXMP_BUILD_WARNING_AS_ERROR=On
         -DXMP_BUILD_STATIC=${build_static}
 )
 
 vcpkg_cmake_build()
-
 
 file(RENAME "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/copyright")
 file(COPY "${SOURCE_PATH}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
