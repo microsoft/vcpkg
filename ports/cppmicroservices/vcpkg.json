@@ -5,6 +5,7 @@
   "homepage": "https://github.com/CppMicroServices/CppMicroServices",
   "license": "Apache-2.0",
   "dependencies": [
+    "abseil",
     "boost-asio",
     "boost-nowide",
     "gtest",
