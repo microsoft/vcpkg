@@ -9,6 +9,8 @@ vcpkg_from_github(
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
+        fix-comment.diff
+        fix-include-path.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"
