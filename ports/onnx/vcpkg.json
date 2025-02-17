@@ -1,18 +1,14 @@
 {
   "name": "onnx",
-  "version-semver": "1.16.2",
+  "version-semver": "1.17.0",
+  "port-version": 1,
   "description": "Open standard for machine learning interoperability",
   "homepage": "https://onnx.ai",
   "license": "Apache-2.0",
-  "supports": "!uwp",
   "dependencies": [
     "protobuf",
     {
       "name": "protobuf",
-      "host": true
-    },
-    {
-      "name": "python3",
       "host": true
     },
     {
@@ -23,13 +19,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "pybind11": {
-      "description": "Build Python binaries",
-      "dependencies": [
-        "pybind11"
-      ]
-    }
-  }
+  ]
 }

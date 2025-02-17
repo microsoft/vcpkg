@@ -1,6 +1,6 @@
 {
   "name": "folly",
-  "version-string": "2024.12.16.00",
+  "version-string": "2025.02.10.00",
   "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
   "homepage": "https://github.com/facebook/folly",
   "license": "Apache-2.0",
@@ -38,9 +38,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
-  ],
-  "default-features": [
+    },
     "zlib"
   ],
   "features": {
@@ -86,12 +84,6 @@
       "description": "Support Snappy for compression",
       "dependencies": [
         "snappy"
-      ]
-    },
-    "zlib": {
-      "description": "Support zlib for compression",
-      "dependencies": [
-        "zlib"
       ]
     },
     "zstd": {

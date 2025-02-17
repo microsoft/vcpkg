@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 5408d001f60cf1d097af8c3702bddd966b725b0d78b71248a582f9f54b5d5f196fa1e7dc99ca1ef0a7d051c80cb3cd1b892790b9d56f5d197e889ffb7b5c8f4e
+    SHA512 fff86fb0ca866f51cacc878c650114e706672ed4caa8a9ce1fe589884775cd1dd3edbc06bfb90156f528bd136fb791a562b40be87362b5fb0185cbd9e20bd46c
     HEAD_REF main
     PATCHES
         fix-windows-minmax.patch
@@ -42,7 +42,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         "liburing"   WITH_liburing
         "libaio"     WITH_libaio
     INVERTED_FEATURES
@@ -60,6 +59,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_INSTALL_DIR=share/folly
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_RUNTIME

@@ -1,10 +1,11 @@
 {
   "name": "dartsim",
-  "version": "6.12.2",
-  "port-version": 3,
+  "version": "6.15.0",
+  "port-version": 1,
   "description": "Dynamic Animation and Robotics Toolkit",
   "homepage": "https://dartsim.github.io/",
   "license": "BSD-2-Clause",
+  "supports": "!x86",
   "dependencies": [
     "assimp",
     "boost-algorithm",
@@ -24,6 +25,7 @@
     "octomap",
     "ode",
     "opengl",
+    "osg",
     "tinyxml2",
     "urdfdom",
     {

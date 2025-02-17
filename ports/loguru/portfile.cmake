@@ -12,13 +12,11 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fmt BUILD_WITH_FMT
+        fmt LOGURU_USE_FMTLIB
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
     OPTIONS
         ${FEATURE_OPTIONS}
  )
