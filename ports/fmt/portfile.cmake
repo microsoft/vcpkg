@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
     REF "${VERSION}"
-    SHA512 97570686251e9122fd49a869c0be2340b5a32917f5e184bc55fde565fe06d5bd6a2f95fc7d8ea09f0a847d65482d3524bfe478aee3b82bbdc6d3af094ee3815f
+    SHA512 c1b94ab149d8b1c750dc91fcc1dc9b680d4bd01a9da1e5e74151b2e2f82f811e845e3362922e75b12fcca172ee3f2606e061c001bfa358a86f25cce4ff2d36ef
     HEAD_REF master
     PATCHES
         fix-write-batch.patch
