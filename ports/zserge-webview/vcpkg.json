@@ -3,15 +3,5 @@
   "version": "0.12.0",
   "description": "Tiny cross-platform webview library for C/C++/Golang.",
   "homepage": "https://github.com/webview/webview",
-  "license": "MIT",
-  "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  "license": "MIT"
 }
