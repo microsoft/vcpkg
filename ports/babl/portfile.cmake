@@ -1,5 +1,7 @@
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.gimp.org/pub/babl/0.1/babl-${VERSION}.tar.xz"
+    URLS "https://download.gimp.org/pub/babl/${VERSION_MAJOR_MINOR}/babl-${VERSION}.tar.xz"
     FILENAME "babl-${VERSION}.tar.xz"
     SHA512 20e40baa6654785d69642e6e85542968db3c5d08da630adc590ff066a52c5938f4ce8a77c0097e00010a905c8c31d8f131eb0308a3f8b6439ab6be4133eae246
 )
