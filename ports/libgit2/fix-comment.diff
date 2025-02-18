@@ -1,0 +1,13 @@
+diff --git a/include/git2/stdint.h b/include/git2/stdint.h
+index 4b235c73f..4f532e13c 100644
+--- a/include/git2/stdint.h
++++ b/include/git2/stdint.h
+@@ -221,7 +221,7 @@ typedef uint64_t  uintmax_t;
+ #endif /* __STDC_LIMIT_MACROS ] */
+ 
+ 
+-/* 7.18.4 Limits of other integer types
++/* 7.18.4 Limits of other integer types */
+ 
+ #if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS) /* [    See footnote 224 at page 260 */
+ 

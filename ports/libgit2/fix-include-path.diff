@@ -1,0 +1,13 @@
+diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
+index a7d3c7ca4..f8a8910f8 100644
+--- a/src/libgit2/CMakeLists.txt
++++ b/src/libgit2/CMakeLists.txt
+@@ -58,7 +58,7 @@ set(LIBGIT2_SYSTEM_LIBS ${LIBGIT2_SYSTEM_LIBS} PARENT_SCOPE)
+ add_library(libgit2package ${SRC_RC} ${LIBGIT2_OBJECTS})
+ target_link_libraries(libgit2package ${LIBGIT2_SYSTEM_LIBS})
+ target_include_directories(libgit2package SYSTEM PRIVATE ${LIBGIT2_INCLUDES})
+-target_include_directories(libgit2package INTERFACE $<INSTALL_INTERFACE:./include/git2>)
++target_include_directories(libgit2package INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ set_target_properties(libgit2package PROPERTIES C_STANDARD 99)
+ set_target_properties(libgit2package PROPERTIES C_EXTENSIONS OFF)

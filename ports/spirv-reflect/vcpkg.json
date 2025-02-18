@@ -1,6 +1,6 @@
 {
   "name": "spirv-reflect",
-  "version": "1.4.304.0",
+  "version": "1.4.304.1",
   "description": "SPIRV-Reflect is a lightweight library that provides a C/C++ reflection API for SPIR-V shader bytecode in Vulkan applications.",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Reflect",
   "license": "Apache-2.0",
