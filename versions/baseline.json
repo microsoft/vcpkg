@@ -8349,8 +8349,8 @@
       "port-version": 4
     },
     "sfgui": {
-      "baseline": "0.4.0",
-      "port-version": 6
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "sfml": {
       "baseline": "3.0.0",
