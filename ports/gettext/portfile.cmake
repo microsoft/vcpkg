@@ -13,10 +13,10 @@ set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
-    FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
+    FILENAME "gettext-${VERSION}.tar.xz"
+    SHA512 d75908f73eabe36c01d72d342ca694dbefad5f43da54f0ccb43bfd0518baff5becc8f50e787f21fadb7c29b3123638e4559334ea4f8e48a97107e8c5e22453b6
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -26,8 +26,11 @@ vcpkg_extract_source_archive(SOURCE_PATH
         uwp.patch
         rel_path.patch
         subdirs.patch
-        parallel-gettext-tools.patch
+#        parallel-gettext-tools.patch
         config-step-order.patch
+        iconv-ostream-flush.diff
+        # Doesn't do the same detection as other configure scripts
+#        libtextstyle-unsetenv.diff
 )
 
 set(subdirs "")
@@ -46,6 +49,7 @@ if(subdirs)
     vcpkg_add_to_path("${BISON_PATH}")
 
     if(VCPKG_HOST_IS_WINDOWS)
+elseif(0)
         message(STATUS "Modifying build system for less forks")
         set(ENV{CONFIG_SHELL} "/usr/bin/bash")
         vcpkg_execute_required_process(
@@ -94,6 +98,17 @@ if(subdirs)
     else()
         # Relying on gettext-libintl
         list(APPEND OPTIONS --with-included-gettext=no)
+    endif()
+    if(VCPKG_TARGET_IS_OSX)
+        # Pristine gnulib no longer accepts iconv in macOS 14.4,
+        # https://lists.gnu.org/archive/html/bug-gnulib/2024-05/msg00375.html
+        # Until vcpkg builds GNU libiconv for macOS, this port keeps the previous behavior.
+        list(APPEND OPTIONS
+            am_cv_func_iconv=yes
+            am_cv_func_iconv_summary=system_iconv_forced_by_vcpkg
+            am_cv_func_iconv_works=yes
+            am_cv_lib_iconv=yes
+        )
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND OPTIONS
@@ -148,6 +163,12 @@ if(subdirs)
         OPTIONS_RELEASE
             "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
+    foreach(subdir IN ITEMS gettext-runtime libtextstyle gettext-tools)
+        file(COPY_FILE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}/config.log"
+            "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-${subdir}-config.log"
+        )
+    endforeach()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
@@ -163,6 +184,7 @@ if(subdirs)
         file(WRITE "${file}" "${rules}")
     endforeach()
 
+    set(VCPKG_CONCURRENCY 1)
     vcpkg_install_make()
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
@@ -178,7 +200,8 @@ if(subdirs)
 endif()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/libexec/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/libexec/gettext")
 else()
     # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
@@ -191,12 +214,13 @@ endif()
 file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/build-to-host.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/glibc2.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/nls.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/host-cpu-c-abi.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/iconv.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/intlmacosx.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
