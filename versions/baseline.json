@@ -2865,8 +2865,8 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "11.0.2",
-      "port-version": 1
+      "baseline": "11.1.3",
+      "port-version": 0
     },
     "folly": {
       "baseline": "2025.02.10.00",
@@ -9881,8 +9881,8 @@
       "port-version": 0
     },
     "wpilib": {
-      "baseline": "2023-08-24",
-      "port-version": 1
+      "baseline": "2025-02-01",
+      "port-version": 0
     },
     "wren": {
       "baseline": "0.4.0",
