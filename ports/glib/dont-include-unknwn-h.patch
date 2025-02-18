@@ -15,7 +15,7 @@ diff --git a/glib/gwin32.h b/glib/gwin32.h
   * so we need to have a C++ version for this
   */
 -template <typename com_interface>
-+template <typename com_interface, TUnknown = IUnknown>
++template <typename com_interface, typename TUnknown = IUnknown>
  static inline void
  g_win32_clear_com (com_interface **com_obj)
  {
