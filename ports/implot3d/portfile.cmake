@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brenocq/implot3d
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 163aeb62d7d4bd4cac0ea0bad26b4d2dd399ac078cfa6fb414b969006ef3683c3865f5db322fd8d46d7b74e32d7492cd0574fbf30fcd6ac5696f1f1d04e0f7cb
     HEAD_REF master
 )
