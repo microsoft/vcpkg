@@ -96,10 +96,6 @@ vcpkg_make_configure(
 
 vcpkg_make_install()
 
-if("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -122,6 +118,11 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
+
+file(COPY "${CURRENT_PACKAGES_DIR}/tools/x264/bin/libx264-164.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_fixup_pkgconfig()
 
