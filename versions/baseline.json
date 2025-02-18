@@ -10181,7 +10181,7 @@
       "port-version": 0
     },
     "zserge-webview": {
-      "baseline": "2023-04-15",
+      "baseline": "0.12.0",
       "port-version": 0
     },
     "zstd": {
