@@ -98,6 +98,14 @@ vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    if (NOT VCPKG_BUILD_TYPE)
+        file(COPY "${CURRENT_PACKAGES_DIR}/tools/x264/bin/libx264-164.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+        file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x264.pc" "-lx264" "-llibx264")
     if(NOT VCPKG_BUILD_TYPE)
@@ -118,11 +126,6 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
-
-file(COPY "${CURRENT_PACKAGES_DIR}/tools/x264/bin/libx264-164.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_fixup_pkgconfig()
 
