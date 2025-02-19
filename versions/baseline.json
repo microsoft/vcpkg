@@ -3086,7 +3086,7 @@
     },
     "gettext-libintl": {
       "baseline": "0.22.5",
-      "port-version": 2
+      "port-version": 3
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -3574,7 +3574,7 @@
     },
     "icu": {
       "baseline": "74.2",
-      "port-version": 4
+      "port-version": 5
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
@@ -9525,8 +9525,8 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-01-13",
-      "port-version": 1
+      "baseline": "2025-02-08",
+      "port-version": 0
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
