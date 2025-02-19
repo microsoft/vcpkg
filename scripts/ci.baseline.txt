@@ -686,6 +686,10 @@ libwandio:arm-neon-android=fail
 libwandio:arm64-android=fail
 libwandio:x64-android=fail
 libxaw:x64-windows-static=skip
+# Clang 19 thinks inline asm in this port is malformed:
+libxt:x64-windows-release=fail
+libxt:x64-windows=fail
+# Inline asm used doesn't appear to support arm64-windows:
 libxt:arm64-windows=fail
 libxt:arm64-windows-static-md=fail
 libzen:arm-neon-android=fail
