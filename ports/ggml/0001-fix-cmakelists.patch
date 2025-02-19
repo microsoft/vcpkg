@@ -1,0 +1,55 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -202,7 +202,7 @@ option(GGML_BUILD_EXAMPLES "ggml: build examples" ${GGML_STANDALONE})
+ set(CMAKE_C_STANDARD 11)
+ set(CMAKE_C_STANDARD_REQUIRED true)
+ 
+-set(CMAKE_CXX_STANDARD 17)
++set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED true)
+ 
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+@@ -238,6 +238,7 @@ include(CMakePackageConfigHelpers)
+ # all public headers
+ set(GGML_PUBLIC_HEADERS
+     include/ggml.h
++    include/ggml-cpp.h
+     include/ggml-cpu.h
+     include/ggml-alloc.h
+     include/ggml-backend.h
+@@ -245,6 +246,7 @@ set(GGML_PUBLIC_HEADERS
+     include/ggml-cann.h
+     include/ggml-cuda.h
+     include/ggml-kompute.h
++    include/ggml-opencl.h
+     include/ggml-opt.h
+     include/ggml-metal.h
+     include/ggml-rpc.h
+@@ -272,27 +274,6 @@ endif()
+ # Create CMake package
+ #
+ 
+-# Generate version info based on git commit.
+-
+-if(NOT DEFINED GGML_BUILD_NUMBER)
+-    find_program(GIT_EXE NAMES git git.exe REQUIRED NO_CMAKE_FIND_ROOT_PATH)
+-    execute_process(COMMAND ${GIT_EXE} rev-list --count HEAD
+-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-        OUTPUT_VARIABLE GGML_BUILD_NUMBER
+-        OUTPUT_STRIP_TRAILING_WHITESPACE
+-    )
+-
+-    if(GGML_BUILD_NUMBER EQUAL 1)
+-        message(WARNING "GGML build version fixed at 1 likely due to a shallow clone.")
+-    endif()
+-
+-    execute_process(COMMAND ${GIT_EXE} rev-parse --short HEAD
+-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-        OUTPUT_VARIABLE GGML_BUILD_COMMIT
+-        OUTPUT_STRIP_TRAILING_WHITESPACE
+-    )
+-endif()
+-
+ 
+ # Capture variables prefixed with GGML_.
+ 

@@ -1,0 +1,98 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -145,10 +145,7 @@ endif()
+ # 3rd-party
+ #
+ 
+-if (NOT TARGET ggml)
+-    add_subdirectory(ggml)
+-    # ... otherwise assume ggml is added by a parent CMakeLists.txt
+-endif()
++find_package(ggml CONFIG REQUIRED)
+ 
+ #
+ # build the library
+--- a/cmake/common.cmake
++++ b/cmake/common.cmake
+@@ -8,26 +8,4 @@ function(llama_add_compile_flags)
+         endif()
+     endif()
+ 
+-    if (LLAMA_ALL_WARNINGS)
+-        if (NOT MSVC)
+-            list(APPEND C_FLAGS -Wshadow -Wstrict-prototypes -Wpointer-arith -Wmissing-prototypes
+-                                -Werror=implicit-int -Werror=implicit-function-declaration)
+-
+-            list(APPEND CXX_FLAGS -Wmissing-declarations -Wmissing-noreturn)
+-
+-            list(APPEND WARNING_FLAGS -Wall -Wextra -Wpedantic -Wcast-qual -Wno-unused-function)
+-
+-            list(APPEND C_FLAGS   ${WARNING_FLAGS})
+-            list(APPEND CXX_FLAGS ${WARNING_FLAGS})
+-
+-            ggml_get_flags(${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION})
+-
+-            add_compile_options("$<$<COMPILE_LANGUAGE:C>:${C_FLAGS};${GF_C_FLAGS}>"
+-                                "$<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS};${GF_CXX_FLAGS}>")
+-        else()
+-            # todo : msvc
+-            set(C_FLAGS   "" PARENT_SCOPE)
+-            set(CXX_FLAGS "" PARENT_SCOPE)
+-        endif()
+-    endif()
+ endfunction()
+--- a/examples/gguf-hash/CMakeLists.txt
++++ b/examples/gguf-hash/CMakeLists.txt
+@@ -18,5 +18,5 @@ endif()
+ add_library(sha256 OBJECT deps/sha256/sha256.c deps/sha256/sha256.h)
+ target_link_libraries(${TARGET} PRIVATE sha256)
+ 
+-target_link_libraries(${TARGET} PRIVATE ggml ${CMAKE_THREAD_LIBS_INIT})
++target_link_libraries(${TARGET} PRIVATE ggml::all ${CMAKE_THREAD_LIBS_INIT})
+ target_compile_features(${TARGET} PRIVATE cxx_std_17)
+--- a/examples/gguf/CMakeLists.txt
++++ b/examples/gguf/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ set(TARGET llama-gguf)
+ add_executable(${TARGET} gguf.cpp)
+ install(TARGETS ${TARGET} RUNTIME)
+-target_link_libraries(${TARGET} PRIVATE ggml ${CMAKE_THREAD_LIBS_INIT})
++target_link_libraries(${TARGET} PRIVATE ggml::all ${CMAKE_THREAD_LIBS_INIT})
+ target_compile_features(${TARGET} PRIVATE cxx_std_17)
+--- a/examples/llava/CMakeLists.txt
++++ b/examples/llava/CMakeLists.txt
+@@ -5,7 +5,7 @@ add_library(llava OBJECT
+             clip.h
+             )
+ 
+-target_link_libraries(llava PRIVATE ggml llama ${CMAKE_THREAD_LIBS_INIT})
++target_link_libraries(llava PRIVATE ggml::all llama ${CMAKE_THREAD_LIBS_INIT})
+ 
+ target_include_directories(llava PUBLIC .)
+ target_include_directories(llava PUBLIC ../..)
+@@ -18,7 +18,7 @@ if (BUILD_SHARED_LIBS)
+     set_target_properties(llava PROPERTIES POSITION_INDEPENDENT_CODE ON)
+     target_compile_definitions(llava PRIVATE LLAMA_SHARED LLAMA_BUILD)
+     add_library(llava_shared SHARED $<TARGET_OBJECTS:llava>)
+-    target_link_libraries(llava_shared PRIVATE ggml llama ${CMAKE_THREAD_LIBS_INIT})
++    target_link_libraries(llava_shared PRIVATE ggml::all llama ${CMAKE_THREAD_LIBS_INIT})
+     install(TARGETS llava_shared LIBRARY)
+ endif()
+ 
+--- a/examples/rpc/CMakeLists.txt
++++ b/examples/rpc/CMakeLists.txt
+@@ -1,2 +1,2 @@
+ add_executable(rpc-server rpc-server.cpp)
+-target_link_libraries(rpc-server PRIVATE ggml llama)
++target_link_libraries(rpc-server PRIVATE ggml::all llama)
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -32,7 +32,7 @@ add_library(llama
+ target_include_directories(llama PUBLIC . ../include ../common)
+ target_compile_features   (llama PUBLIC cxx_std_17) # don't bump
+ 
+-target_link_libraries(llama PUBLIC ggml)
++target_link_libraries(llama PUBLIC ggml::all)
+ 
+ if (BUILD_SHARED_LIBS)
+     set_target_properties(llama PROPERTIES POSITION_INDEPENDENT_CODE ON)
