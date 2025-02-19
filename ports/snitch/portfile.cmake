@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO snitch-org/snitch
     REF "v${VERSION}"
     SHA512 bb51c7ec51ab934ccd05b8e653ba3da8f321702307fa28b11b8a7ec31e170e337c2ccbe8f4895a25e4fdec1358f90d11a51c489511af95a65311c57e4a4164ef
+    PATCHES
+      fix-order-of-attributes.patch # Required for clang-cl builds which complains about it
 )
 
 vcpkg_cmake_configure(

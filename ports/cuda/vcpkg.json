@@ -7,6 +7,9 @@
   "license": null,
   "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
   "dependencies": [
-    "compiler-cuda"
+    {
+      "name": "compiler-cuda",
+      "host": true
+    }
   ]
 }

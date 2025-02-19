@@ -1,6 +1,7 @@
 {
   "name": "snitch",
   "version": "1.2.5",
+  "port-version": 1,
   "description": "Lightweight C++20 testing framework.",
   "homepage": "https://github.com/snitch-org/snitch",
   "license": "BSL-1.0",
