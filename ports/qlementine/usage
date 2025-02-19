@@ -1,4 +1,4 @@
 qlementine provides CMake targets:
 
-    find_package(Qlementine CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE oclero::qlementine)
+  find_package(Qlementine CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::qlementine::qlementine)

@@ -23,15 +23,15 @@ index 0000000..ea5a843
 +
 +find_dependency(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
 +
-+check_required_components(qlementine)
++check_required_components(@LIB_TARGET_NAME@)
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index 05ee9a6..5939bb2 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -118,10 +118,12 @@ qt_add_library(${LIB_TARGET_NAME} STATIC
  
- # Create a target alias.
- add_library(${PROJECT_NAMESPACE}::${LIB_TARGET_NAME} ALIAS ${LIB_TARGET_NAME})
+-# Create a target alias.
+-add_library(${PROJECT_NAMESPACE}::${LIB_TARGET_NAME} ALIAS ${LIB_TARGET_NAME})
 +include(CMakePackageConfigHelpers)
  
  target_include_directories(${LIB_TARGET_NAME}
@@ -51,6 +51,6 @@ index 05ee9a6..5939bb2 100644
 +write_basic_package_version_file("${CMAKE_BINARY_DIR}/cmake/${LIB_TARGET_NAME}ConfigVersion.cmake" VERSION "${PROJECT_VERSION}" COMPATIBILITY AnyNewerVersion)
 +install(TARGETS ${LIB_TARGET_NAME} EXPORT "${LIB_TARGET_NAME}Targets" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 +install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/")
-+install(EXPORT "${LIB_TARGET_NAME}Targets" FILE "${LIB_TARGET_NAME}Targets.cmake" NAMESPACE ${PROJECT_NAMESPACE}:: DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${LIB_TARGET_NAME}")
++install(EXPORT "${LIB_TARGET_NAME}Targets" FILE "${LIB_TARGET_NAME}Targets.cmake" NAMESPACE unofficial::${PROJECT_NAME}:: DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${LIB_TARGET_NAME}")
 +install(FILES "${CMAKE_BINARY_DIR}/cmake/${LIB_TARGET_NAME}Config.cmake" "${CMAKE_BINARY_DIR}/cmake/${LIB_TARGET_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${LIB_TARGET_NAME}")
-+export(EXPORT "${LIB_TARGET_NAME}Targets" FILE "${CMAKE_BINARY_DIR}/cmake/${LIB_TARGET_NAME}Targets.cmake" NAMESPACE ${PROJECT_NAMESPACE}::)
++export(EXPORT "${LIB_TARGET_NAME}Targets" FILE "${CMAKE_BINARY_DIR}/cmake/${LIB_TARGET_NAME}Targets.cmake" NAMESPACE unofficial::${PROJECT_NAME}::)
