@@ -6,7 +6,9 @@ vcpkg_from_gitlab(
     SHA512 6f317d08ad7d003bc6664da147321eb87c924978f32bd28780a8ebf015e251019046b0cb16b78e776cd1957a7701215667f64686efb8e5c6bae7c08528cede56
     PATCHES
         cmake-config.patch
-        static-shared.patch)
+        static-shared.patch
+        fix-header-file-conflicts.patch
+    )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" AEC_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" AEC_BUILD_STATIC)
@@ -25,4 +27,4 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
+vcpkg_cmake_config_fixup()

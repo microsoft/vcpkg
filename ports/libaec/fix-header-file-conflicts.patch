@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a885024..f33cf02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -69,13 +69,9 @@ endif()
+ set(libaec_CONFIG_IN  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libaec-config.cmake.in)
+ set(libaec_CONFIG_OUT ${CMAKE_CURRENT_BINARY_DIR}/cmake/libaec-config.cmake)
+ configure_file(${libaec_CONFIG_IN} ${libaec_CONFIG_OUT} @ONLY)
+-install(FILES ${libaec_CONFIG_OUT}
+-        DESTINATION cmake)
+ write_basic_package_version_file(
+   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+   COMPATIBILITY SameMajorVersion)
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+-        DESTINATION cmake)
+ 
+ # Cpack configuration mainly for Windows installer
+ set(CPACK_PACKAGE_NAME "libaec")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 44887f8..e54d1e1 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -42,7 +42,7 @@ set_target_properties(aec_shared
+ target_compile_definitions(aec_shared PRIVATE LIBAEC_BUILD PUBLIC LIBAEC_SHARED)
+ endif()
+ 
+-set_target_properties(aec PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h")
++target_include_directories(aec PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include> $<INSTALL_INTERFACE:include>)
+ 
+ # Wrapper for compatibility with szip
+ add_library(sz OBJECT sz_compat.c)
+@@ -73,7 +73,7 @@ set_target_properties(sz_shared
+ target_compile_definitions(sz_shared PUBLIC LIBAEC_SHARED)
+ endif()
+ 
+-set_target_properties(sz PROPERTIES PUBLIC_HEADER "../include/szlib.h")
++target_include_directories(sz PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include> $<INSTALL_INTERFACE:include>)
+ 
+ # Simple executable for testing and benchmarking.
+ add_executable(graec graec.c)
+@@ -99,12 +99,11 @@ if (AEC_BUILD_SHARED)
+   set(TARGETS_EXPORT ${TARGETS_EXPORT} aec_shared sz_shared)
+ endif()
+ 
++install(FILES "${CMAKE_CURRENT_LIST_DIR}/../include/szlib.h" DESTINATION "include/libaec")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h" DESTINATION "include/libaec")
+ install(TARGETS aec sz ${TARGETS_EXPORT}
+-        EXPORT ${PROJECT_NAME}Targets
+-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-
+-install(
+-  EXPORT ${PROJECT_NAME}Targets
+-  FILE ${PROJECT_NAME}-targets.cmake
+-  NAMESPACE ${PROJECT_NAME}::
+-  DESTINATION cmake)
++        EXPORT ${PROJECT_NAME}Config
++        ARCHIVE DESTINATION lib
++		LIBRARY DESTINATION lib
++		RUNTIME DESTINATION bin)
++install(EXPORT ${PROJECT_NAME}Config DESTINATION share/libaec)
