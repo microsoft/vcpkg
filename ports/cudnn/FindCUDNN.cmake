@@ -24,6 +24,11 @@
 
 include(FindPackageHandleStandardArgs)
 
+file(GLOB CUDNN_VERSION_DIRS
+  LIST_DIRECTORIES true
+  "$ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v[1-9]*.[1-9]*"
+)
+
 find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
   PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
   PATH_SUFFIXES include )
