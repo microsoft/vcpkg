@@ -8772,6 +8772,10 @@
       "baseline": "1.8.0",
       "port-version": 0
     },
+    "ssp": {
+      "baseline": "1.8.0",
+      "port-version": 0
+    },
     "stackwalker": {
       "baseline": "2023-06-24",
       "port-version": 0
