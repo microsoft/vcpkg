@@ -2592,10 +2592,6 @@
       "baseline": "3.14.0",
       "port-version": 0
     },
-    "epsilon": {
-      "baseline": "0.9.2",
-      "port-version": 8
-    },
     "ereignis": {
       "baseline": "2.3",
       "port-version": 0
