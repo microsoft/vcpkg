@@ -7964,6 +7964,10 @@
       "baseline": "7.0.0",
       "port-version": 0
     },
+    "red0124-ssp": {
+      "baseline": "1.8.0",
+      "port-version": 0
+    },
     "redis-plus-plus": {
       "baseline": "1.3.13",
       "port-version": 0
@@ -8769,10 +8773,6 @@
       "port-version": 1
     },
     "sse2neon": {
-      "baseline": "1.8.0",
-      "port-version": 0
-    },
-    "ssp": {
       "baseline": "1.8.0",
       "port-version": 0
     },
