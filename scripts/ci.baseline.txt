@@ -863,6 +863,9 @@ openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows=fail
 openturns:arm64-windows-static-md=fail
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+openvino:arm64-windows=fail
+openvino:arm64-windows-static-md=fail
 openvr:x64-windows-static=fail
 # Conflicts with optional-lite, by the same author
 optional-bare:arm-neon-android=skip
