@@ -1,5 +1,5 @@
 {
-  "name": "isptr",
+  "name": "intrusive-shared-ptr",
   "version": "1.6",
   "description": "Intrusive reference counting smart pointer, highly configurable reference counted base class and various adapters.",
   "homepage": "https://github.com/gershnik/intrusive_shared_ptr",
