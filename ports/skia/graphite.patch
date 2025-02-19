@@ -10,4 +10,3 @@ index 24f1483f46..2a6d93e4c4 100644
  #include "include/gpu/graphite/Recording.h"
  #include "include/private/base/SingleOwner.h"
  #include "include/private/base/SkTArray.h"
- 

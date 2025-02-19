@@ -10,4 +10,3 @@ index 307c4304a2..db723bcd42 100644
  sk_sp<SkData> SkPDFSubsetFont(const SkTypeface&, const SkPDFGlyphUse&) {
      return nullptr;
  }
- 

@@ -11,4 +11,3 @@ index 7a1078b629..bd5605ae91 100644
  #include "include/core/SkImage.h"
  #include "include/gpu/ganesh/GrTypes.h"
  #include "include/gpu/ganesh/d3d/GrD3DTypes.h"
- 

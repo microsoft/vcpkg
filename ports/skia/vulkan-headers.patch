@@ -41,4 +41,3 @@ index 487ea7cee4..9662c8cbf6 100644
  #ifdef GR_NEEDED_TO_DEFINE_VULKAN_H
  #undef VULKAN_H_
  #endif
- 
