@@ -51,6 +51,11 @@ declare_external_from_git(markupsafe
     REF "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
     LICENSE_FILE LICENSE
 )
+declare_external_from_git(partition_alloc
+    URL "https://chromium.googlesource.com/chromium/src/base/allocator/partition_allocator.git"
+    REF "ce13777cb731e0a60c606d1741091fd11a0574d7"
+    LICENSE_FILE LICENSE
+)
 declare_external_from_git(piex
     URL "https://android.googlesource.com/platform/external/piex.git"
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
