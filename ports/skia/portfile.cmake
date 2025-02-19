@@ -233,6 +233,7 @@ They can be installed on Debian based systems via
 ## Remove
         abseil-cpp
 ## REMOVE ^
+        partition_alloc
         dawn
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/externals/opengl-registry")
