@@ -280,6 +280,10 @@
       "baseline": "2022-11-06",
       "port-version": 1
     },
+    "asock": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "assimp": {
       "baseline": "5.4.3",
       "port-version": 0
