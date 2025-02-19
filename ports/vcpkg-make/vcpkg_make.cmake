@@ -120,8 +120,8 @@ endfunction()
 
 function(z_vcpkg_make_get_configure_triplets out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        ""
-        "COMPILER_NAME"
+        "AVOID_BUILD_TRIPLET"
+        "COMPILER_NAME;CONFIG_DIR"
         ""
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -140,7 +140,7 @@ function(z_vcpkg_make_get_configure_triplets out)
         set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32") 
     endif()
 
-    set(host_triplet "")
+    set(host_triplet_opt "")
     if(VCPKG_CROSSCOMPILING)
         if(VCPKG_TARGET_IS_WINDOWS)
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32)
@@ -155,6 +155,41 @@ function(z_vcpkg_make_get_configure_triplets out)
             if("${arg_COMPILER_NAME}" MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1 AND NOT CMAKE_MATCH_1 MATCHES "^gcc")
                 set(host_triplet_opt "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
+        endif()
+    endif()
+
+    if (host_triplet_opt AND NOT build_triplet_opt AND NOT arg_AVOID_BUILD_TRIPLET)
+        # According to the autoconf manual, when specifying --host, one should always also specify
+        # --build. It is mentioned that this was due to historic reasons and that it will be fixed
+        # in some future version but for now, we should do exactly as recommended.
+        if (arg_CONFIG_DIR)
+            cmake_path(ABSOLUTE_PATH "config.guess" BASE_DIRECTORY "${arg_CONFIG_DIR}" OUTPUT_VARIABLE config_guess_file)
+        endif()
+
+        if (EXISTS "${config_guess_file}")
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_required_process(
+                    COMMAND ${base_cmd} -c "${config_guess_file}"
+                    LOGNAME "config.guess-${TARGET_TRIPLET}"
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    OUTPUT_VARIABLE BUILD_TRIPLET
+                )
+            else()
+                vcpkg_execute_required_process(
+                    COMMAND "${config_guess_file}"
+                    LOGNAME "config.guess-${TARGET_TRIPLET}"
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    OUTPUT_VARIABLE BUILD_TRIPLET
+                )
+            endif()
+
+            set(build_triplet_opt "--build=${BUILD_TRIPLET}")
+        elseif (VCPKG_HOST_IS_WINDOWS)
+            set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32")
+        elseif (VCPKG_HOST_IS_LINUX)
+            set(build_triplet_opt "--build=${BUILD_ARCH}-pc-linux")
+        elseif (VCPKG_HOST_IS_IOS OR VCPKG_HOST_IS_OSX)
+            set(build_triplet_opt "--build=${BUILD_ARCH}-apple-darwin")
         endif()
     endif()
 
