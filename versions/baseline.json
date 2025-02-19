@@ -8505,8 +8505,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "134",
-      "port-version": 0
+      "baseline": "129",
+      "port-version": 3
     },
     "skyr-url": {
       "baseline": "1.13.0",
