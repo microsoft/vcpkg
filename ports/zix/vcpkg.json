@@ -1,7 +1,6 @@
 {
   "name": "zix",
-  "version": "0.4.2",
-  "port-version": 1,
+  "version": "0.6.2",
   "description": "Zix is a lightweight C library of portability wrappers and data structures.",
   "homepage": "https://github.com/drobilla/zix",
   "supports": "!uwp",

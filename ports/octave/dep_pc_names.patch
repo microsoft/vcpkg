@@ -1,0 +1,14 @@
+diff --git a/configure.ac b/configure.ac
+--- a/configure.ac
++++ b/configure.ac
+@@ -1520,9 +1520,9 @@
+ ### Check for BZIP2 library.
+ 
+ OCTAVE_CHECK_LIB(bz2, BZIP2,
+   [BZIP2 library not found.  Octave will not be able to compress or decompress bzip2 files.],
+-  [bzlib.h], [BZ2_bzCompressInit])
++  [bzlib.h], [BZ2_bzCompressInit],[],[],[],[bzip2])
+ 
+ ### Check for HDF5 library.
+ 
+ save_CPPFLAGS="$CPPFLAGS"
