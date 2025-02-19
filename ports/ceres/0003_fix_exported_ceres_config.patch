@@ -2,7 +2,19 @@ diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
 index ceb7e269..5dee7e3c 100644
 --- a/cmake/CeresConfig.cmake.in
 +++ b/cmake/CeresConfig.cmake.in
-@@ -195,7 +195,7 @@
+@@ -178,7 +178,10 @@
+ include(CMakeFindDependencyMacro)
+ # Optional dependencies
+ @METIS_DEPENDENCY@
+-@SuiteSparse_DEPENDENCY@
++if (@SUITESPARSE@)
++  find_dependency(CHOLMOD)
++  find_dependency(SPQR)
++endif()
+ @CUDAToolkit_DEPENDENCY@
+ @Threads_DEPENDENCY@
+ 
+@@ -195,7 +198,7 @@
  # Search quietly to control the timing of the error message if not found. The
  # search should be for an exact match, but for usability reasons do a soft
  # match and reject with an explanation below.
@@ -11,7 +23,7 @@ index ceb7e269..5dee7e3c 100644
  if (Eigen3_FOUND)
    if (NOT Eigen3_VERSION VERSION_EQUAL CERES_EIGEN_VERSION)
      # CMake's VERSION check in FIND_PACKAGE() will accept any version >= the
-@@ -217,55 +217,7 @@
+@@ -217,55 +220,7 @@
  endif (Eigen3_FOUND)
  
  # glog (and maybe gflags).
