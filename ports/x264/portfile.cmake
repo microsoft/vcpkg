@@ -86,6 +86,7 @@ vcpkg_make_configure(
         --disable-gpac
         --disable-lsmash
         --disable-bashcompletion
+        --bindir=[debug/]bin
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
         --enable-strip
@@ -97,14 +98,6 @@ vcpkg_make_configure(
 vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if (NOT VCPKG_BUILD_TYPE)
-        file(COPY "${CURRENT_PACKAGES_DIR}/tools/x264/bin/libx264-164.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-        file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
-    endif()
-endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x264.pc" "-lx264" "-llibx264")
@@ -125,6 +118,13 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(COPY "${CURRENT_PACKAGES_DIR}/tools/x264/bin/libx264-164.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
