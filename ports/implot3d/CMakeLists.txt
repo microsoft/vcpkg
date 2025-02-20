@@ -1,23 +1,20 @@
 cmake_minimum_required(VERSION 3.8)
 project(implot3d CXX)
 
-find_package(imgui CONFIG REQUIRED)
-get_target_property(IMGUI_INCLUDE_DIRS imgui::imgui
-    INTERFACE_INCLUDE_DIRECTORIES
-)
-
 set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+
+find_package(imgui CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC imgui::imgui)
+
 target_include_directories(
 	${PROJECT_NAME}
 	PUBLIC
 	   	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 		$<INSTALL_INTERFACE:include>
-	PRIVATE
-		${IMGUI_INCLUDE_DIRS}
 )
 
 target_sources(
