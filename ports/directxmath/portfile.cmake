@@ -21,9 +21,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmath)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         SAL_HEADER
-        URLS "https://raw.githubusercontent.com/dotnet/runtime/v8.0.1/src/coreclr/pal/inc/rt/sal.h"
+        URLS "https://raw.githubusercontent.com/dotnet/runtime/v9.0.2/src/coreclr/pal/inc/rt/sal.h"
         FILENAME "sal.h"
-        SHA512 0f5a80b97564217db2ba3e4624cc9eb308e19cc9911dae21d983c4ab37003f4756473297ba81b386c498514cedc1ef5a3553d7002edc09aeb6a1335df973095f
+        SHA512 8085f67bfa4ce01ae89461cadf72454a9552fde3f08b2dcc3de36b9830e29ce7a6192800f8a5cb2a66af9637be0017e85719826a4cfdade508ae97f319e0ee8e
     )
 
     file(INSTALL

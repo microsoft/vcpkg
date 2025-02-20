@@ -23,13 +23,13 @@ function(vcpkg_make_install)
 
     # Can be set in the triplet to append options for configure
     if(DEFINED VCPKG_MAKE_OPTIONS)
-        list(APPEND arg_OPTIONS ${VCPKG_MAKE_OPTIONS})
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_MAKE_OPTIONS})
     endif()
     if(DEFINED VCPKG_MAKE_OPTIONS_RELEASE)
-        list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MAKE_OPTIONS_RELEASE})
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MAKE_OPTIONS_RELEASE})
     endif()
     if(DEFINED VCPKG_MAKE_OPTIONS_DEBUG)
-        list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_OPTIONS_DEBUG})
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_OPTIONS_DEBUG})
     endif()
 
     if(CMAKE_HOST_WIN32)
