@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         harfbuzz SDLTTF_HARFBUZZ
-	svg SDLTTF_PLUTOSVG
+	svg      SDLTTF_PLUTOSVG
 )
 
 vcpkg_cmake_configure(
@@ -22,9 +22,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME SDL3_ttf CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME sdl3_ttf CONFIG_PATH cmake)
 else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME SDL3_ttf CONFIG_PATH lib/cmake/SDL3_ttf)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME sdl3_ttf CONFIG_PATH lib/cmake/SDL3_ttf)
 endif()
 
 vcpkg_fixup_pkgconfig()

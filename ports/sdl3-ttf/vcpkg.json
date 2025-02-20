@@ -5,7 +5,10 @@
   "homepage": "https://www.libsdl.org/projects/SDL_ttf/",
   "license": "Zlib",
   "dependencies": [
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     {
       "name": "sdl3",
       "default-features": false
