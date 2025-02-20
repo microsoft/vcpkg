@@ -3,7 +3,12 @@ project(implot3d CXX)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-add_library(${PROJECT_NAME} "")
+add_library(${PROJECT_NAME} ""
+		${CMAKE_CURRENT_SOURCE_DIR}/implot3d.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/implot3d_items.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/implot3d_demo.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/implot3d_meshes.cpp
+)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 
@@ -15,15 +20,6 @@ target_include_directories(
 	PUBLIC
 	   	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 		$<INSTALL_INTERFACE:include>
-)
-
-target_sources(
-	${PROJECT_NAME}
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/implot3d.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/implot3d_items.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/implot3d_demo.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/implot3d_meshes.cpp
 )
 
 install(
