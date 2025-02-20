@@ -42,8 +42,8 @@ index 44887f8..e54d1e1 100644
    set(TARGETS_EXPORT ${TARGETS_EXPORT} aec_shared sz_shared)
  endif()
  
-+install(FILES "${CMAKE_CURRENT_LIST_DIR}/../include/szlib.h" DESTINATION "include/libaec")
-+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h" DESTINATION "include/libaec")
++install(FILES "${CMAKE_CURRENT_LIST_DIR}/../include/szlib.h" DESTINATION "include")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h" DESTINATION "include")
  install(TARGETS aec sz ${TARGETS_EXPORT}
 -        EXPORT ${PROJECT_NAME}Targets
 -        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

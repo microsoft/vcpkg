@@ -7,7 +7,7 @@ vcpkg_from_gitlab(
     PATCHES
         cmake-config.patch
         static-shared.patch
-        fix-header-file-conflicts.patch
+        fix-usage.patch
     )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" AEC_BUILD_SHARED)
