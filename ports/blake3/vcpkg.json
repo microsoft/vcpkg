@@ -1,6 +1,6 @@
 {
   "name": "blake3",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "BLAKE3 cryptographic hash function.",
   "homepage": "https://github.com/BLAKE3-team/BLAKE3",
   "license": "CC0-1.0 OR Apache-2.0",

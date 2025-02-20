@@ -1,3 +1,9 @@
+vcpkg_download_distfile(PATCH_MISSING_CHRONO_INCLUDE
+    URLS https://github.com/wolfpld/tracy/commit/50ff279aaddfd91dc3cdcfd5b7aec3978e63da25.diff?full_index=1
+    SHA512 f9594297ea68612b68bd631497cd312ea01b34280a0f098de0d2b99810149345251a8985a6430337d0b55d2f181ceac10d563b64cfe48f78959f79ec7a6ea3b5
+    FILENAME wolfpld-tracy-PR982.diff
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
@@ -6,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         build-tools.patch
+		"${PATCH_MISSING_CHRONO_INCLUDE}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,17 +1,23 @@
 {
   "name": "babl",
   "version": "0.1.110",
-  "description": "Pixel format conversion library.",
+  "port-version": 2,
+  "description": "A pixel encoding and color space conversion engine.",
   "homepage": "https://gegl.org/babl/",
   "license": "LGPL-3.0-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
-    "glib",
-    "lcms",
-    "librsvg",
     {
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cmyk-icc": {
+      "description": "Support CMYK ICC profiles.",
+      "dependencies": [
+        "lcms"
+      ]
+    }
+  }
 }

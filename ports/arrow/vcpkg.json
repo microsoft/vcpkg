@@ -1,7 +1,6 @@
 {
   "name": "arrow",
-  "version": "19.0.0",
-  "port-version": 1,
+  "version": "19.0.1",
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",

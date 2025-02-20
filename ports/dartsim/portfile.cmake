@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
         -DDART_SKIP_IPOPT=ON
         -DDART_SKIP_NLOPT=ON
         -DDART_SKIP_pagmo=ON
-        -DDART_SKIP_spdlog=ON
         -Durdfdom_headers_VERSION_MAJOR=1 # urdfdom-headers does not expose a header macro for its version.
         -Durdfdom_headers_VERSION_MINOR=0 # versions of at least 1.0.0 use std:: constructs in their ABI instead of boost:: ones.
         -Durdfdom_headers_VERSION_PATCH=0
