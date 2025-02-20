@@ -37,7 +37,7 @@
       "port-version": 17
     },
     "ada-url": {
-      "baseline": "2.9.2",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "ade": {
