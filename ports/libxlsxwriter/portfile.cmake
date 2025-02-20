@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jmcnamara/libxlsxwriter
     REF "v${VERSION}"
-    SHA512 4d1df3b66e694629025ba4154a746d896f9fa32c727267cfbeacf72a3fc70d1b34c7bc767a03bca81395bbe2ff366fc4f4184c2c40126bc6b2d58b33a758cc8f
+    SHA512 cca431b04eb51444f4dd8f096d50061726277a72e9ec216f9ac88b89dca1b227949ce3aa652bb2e81d1244b04ecdef791b0abde1dcc5b206aa36079a962aaab3
     HEAD_REF main
     PATCHES
         dependencies.diff
@@ -16,7 +16,8 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
         -DUSE_SYSTEM_MINIZIP=1
         -DWINDOWSSTORE=${USE_WINDOWSSTORE}
 )

@@ -15,6 +15,8 @@ vcpkg_from_github(
         fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
         uwp-link-libs.diff
         exports-for-msh3.diff
+        no-werror.patch
+        avoid-w-invalid-unevaluated-string.patch
 )
 
 set(QUIC_TLS "schannel")

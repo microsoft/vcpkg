@@ -78,12 +78,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
     REF "${VERSION}"
-    SHA512 56a8ae1912da50e95ecae2368615da9a5d74191ed8b84e343e5b06adda981969d0c9b2a2228a1f4669918b71e8a942f4757fc712cbe995be6e3aca863ad72a04
-    HEAD_REF master
-    PATCHES
-        008-build-static-llvm.patch
-        012-remove-wrong-llvm-cxx-standard.patch
-        013-openimageio-3.0.patch
+    SHA512 879566a5d70d181d090ae896e585a977ea5048c3e70c9da7058a8ce1b286132dab4e7ad6ccdb019a4d6e43dcc4195659cfbca504d93dbd0f58407001563b5315
+    HEAD_REF release/2024.1
 )
 
 vcpkg_find_acquire_program(PYTHON3)

@@ -1,7 +1,7 @@
 {
   "name": "icu",
   "version": "74.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "https://icu.unicode.org/home",
   "license": "ICU",
@@ -12,6 +12,10 @@
       "features": [
         "tools"
       ]
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ],
   "features": {

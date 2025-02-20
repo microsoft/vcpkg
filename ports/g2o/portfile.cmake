@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
         -DBUILD_LGPL_SHARED_LIBS=${BUILD_LGPL_SHARED_LIBS}
         -DG2O_BUILD_EXAMPLES=OFF
         -DG2O_BUILD_APPS=OFF
+        -DBUILD_CSPARSE=OFF
 )
 
 vcpkg_cmake_install()

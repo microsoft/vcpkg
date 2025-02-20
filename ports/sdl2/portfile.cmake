@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 91fd9fddf8b15d82de1674c734698b20ad2c08cebb3d4d18062dcc1c250864ae8bfa03fb570ca31742d5f0ada49d5fccc9019640bcec5fa99492bed8dcb151a6
+    SHA512 16300440cd47d0ee35cde8a05acdc5987246e2812d844a6b94b18dda389a9e5b9377f1cbba7033ebd755226605e7cbad8f4e6a345eb7db7b1890d83a5f155333
     HEAD_REF main
     PATCHES
         deps.patch
@@ -106,15 +106,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT VCP
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2main" "-lSDL2maind" IGNORE_UNCHANGED)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2 " "-lSDL2d " IGNORE_UNCHANGED)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-static " "-lSDL2-staticd " IGNORE_UNCHANGED)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl2.pc" "-lSDL2-static " " ")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2-staticd " " ")
-    endif()
 endif()
 
 if(VCPKG_TARGET_IS_UWP)

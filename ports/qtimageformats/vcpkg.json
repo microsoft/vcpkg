@@ -1,6 +1,6 @@
 {
   "name": "qtimageformats",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "The Qt Image Formats add-on module provides optional support for other image file formats.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -14,15 +14,11 @@
     }
   ],
   "default-features": [
-    "default-features",
     "jasper",
     "tiff",
     "webp"
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    },
     "jasper": {
       "description": "Use jasper",
       "dependencies": [
