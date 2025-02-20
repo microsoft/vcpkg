@@ -3652,6 +3652,10 @@
       "baseline": "0.16",
       "port-version": 0
     },
+    "implot3d": {
+      "baseline": "0.2",
+      "port-version": 0
+    },
     "indicators": {
       "baseline": "2.3",
       "port-version": 0
