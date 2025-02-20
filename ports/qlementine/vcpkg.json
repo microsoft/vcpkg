@@ -7,7 +7,13 @@
   "license": "MIT",
   "supports": "windows | linux | osx",
   "dependencies": [
-    "qtbase",
+    {
+        "name": "qtbase",
+        "default-features": false,
+        "features": [
+            "widgets"
+        ]
+    },
     "qtsvg",
     {
       "name": "vcpkg-cmake",
