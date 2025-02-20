@@ -8,6 +8,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 36afceae9a03c1543adb9c92fb9a9320b312282bfc8ac8db7b43983c2797c63f13ce94b8ae7aab2afa94ce68d53b6aa7a69efd8ab6b3711c072b89940d4ee734
     HEAD_REF master
+    PATCHES
+      remove-hardcoded-platform-details.patch
+      remove-sdk-hardcoding.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

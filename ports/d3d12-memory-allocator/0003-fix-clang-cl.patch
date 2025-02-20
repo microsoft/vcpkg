@@ -1,0 +1,35 @@
+diff --git a/include/D3D12MemAlloc.h b/include/D3D12MemAlloc.h
+index 92e2e9fe2f..049e33b719 100644
+--- a/include/D3D12MemAlloc.h
++++ b/include/D3D12MemAlloc.h
+@@ -145,7 +145,7 @@ public:
+ protected:
+     virtual void ReleaseThis() { delete this; }
+ private:
+-    D3D12MA_ATOMIC_UINT32 m_RefCount = 1;
++    D3D12MA_ATOMIC_UINT32 m_RefCount {1};
+ };
+ } // namespace D3D12MA
+ 
+diff --git a/src/D3D12MemAlloc.cpp b/src/D3D12MemAlloc.cpp
+index e2d444e771..eeb8d1d473 100644
+--- a/src/D3D12MemAlloc.cpp
++++ b/src/D3D12MemAlloc.cpp
+@@ -6120,7 +6120,7 @@ private:
+     D3D12MA_ATOMIC_UINT64 m_BlockBytes[DXGI_MEMORY_SEGMENT_GROUP_COUNT] = {};
+     D3D12MA_ATOMIC_UINT64 m_AllocationBytes[DXGI_MEMORY_SEGMENT_GROUP_COUNT] = {};
+ 
+-    D3D12MA_ATOMIC_UINT32 m_OperationsSinceBudgetFetch = 0;
++    D3D12MA_ATOMIC_UINT32 m_OperationsSinceBudgetFetch {0};
+     D3D12MA_RW_MUTEX m_BudgetMutex;
+     UINT64 m_D3D12Usage[DXGI_MEMORY_SEGMENT_GROUP_COUNT] = {};
+     UINT64 m_D3D12Budget[DXGI_MEMORY_SEGMENT_GROUP_COUNT] = {};
+@@ -6355,7 +6355,7 @@ class AllocatorPimpl
+     friend class Allocator;
+     friend class Pool;
+ public:
+-    std::atomic_uint32_t m_RefCount = 1;
++    std::atomic_uint32_t m_RefCount {1};
+     CurrentBudgetData m_Budget;
+ 
+     AllocatorPimpl(const ALLOCATION_CALLBACKS& allocationCallbacks, const ALLOCATOR_DESC& desc);

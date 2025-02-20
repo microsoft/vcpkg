@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 49706838563c92fab7334376848d0f374efcbc1729ef511e967c908fd2ecd40e8d197f1d85da6553b3a7026bdbc17e5a76595319858af26ce58cb9a4c3854897
     HEAD_REF master
     PATCHES
+        0001-fix-missing-avx2-flag.patch
         0002-Fix-nasm-debug-format-flag.patch
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch

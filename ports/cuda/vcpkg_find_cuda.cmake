@@ -14,6 +14,7 @@ function(vcpkg_find_cuda)
             ENV CUDA_TOOLKIT_ROOT_DIR)
 
     if (VCPKG_TARGET_IS_WINDOWS)
+        message(STATUS "CUDA_PATH:$ENV{CUDA_PATH}")
         find_program(NVCC
             NAMES nvcc.exe
             PATHS

@@ -1,8 +1,10 @@
+
+string(REPLACE "-rc1" "rc1" VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-mpi/hwloc
     REF "hwloc-${VERSION}"
-    SHA512 1ed47955d4a3ecf66636f1c5a89648ef055aa4f26fac9b9bc64d6f7715d671dc823337ebf38df53d60b50d697eccadfbd48d28b4540a5153c59d7eecd347f91c
+    SHA512 d30ce938fc399bef1d370e85e623ccf6a62202f4cff21844ac59e5e065d0812e6bb431d38e49f79dfecb85dc1a13d470d18b032630b81d2f680f6153e12c52cd
     PATCHES
         fix_shared_win_build.patch
         stdout_fileno.patch
@@ -10,7 +12,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(OPTIONS ac_cv_prog_cc_c99= # To avoid the compiler check for C99 which will fail for MSVC
-                --disable-plugin-dlopen) 
+                --disable-plugin-dlopen)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

@@ -9,7 +9,7 @@ parameters:
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
-    default: '-'
+    default: 'x64-windows'
 
 jobs:
 - template: windows/azure-pipelines.yml
@@ -33,12 +33,6 @@ jobs:
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: x64_windows_static
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static_md
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
