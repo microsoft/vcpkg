@@ -1,7 +1,6 @@
 {
   "name": "openxr-loader",
-  "version": "1.0.34",
-  "port-version": 1,
+  "version": "1.1.45",
   "description": "A royalty-free, open standard that provides high-performance access to Augmented Reality (AR) and Virtual Reality (VR)—collectively known as XR—platforms and devices",
   "homepage": "https://github.com/KhronosGroup/OpenXR-SDK",
   "license": "Apache-2.0",

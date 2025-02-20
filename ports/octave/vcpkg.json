@@ -1,10 +1,12 @@
 {
   "name": "octave",
   "version": "9.3.0",
+  "port-version": 2,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
+  "documentation": "https://docs.octave.org/latest/",
   "license": "GPL-3.0-or-later",
-  "supports": "!arm",
+  "supports": "!windows | mingw",
   "dependencies": [
     "blas",
     "fftw3",
@@ -13,17 +15,126 @@
     "libsndfile",
     "opengl",
     "pcre2",
-    "portaudio",
     "readline",
-    "sundials",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
     "zlib"
-  ]
+  ],
+  "features": {
+    "amd": {
+      "description": "suitesparse-amd support",
+      "dependencies": [
+        {
+          "name": "suitesparse-amd",
+          "default-features": false
+        }
+      ]
+    },
+    "bz2": {
+      "description": "bzip2 support",
+      "dependencies": [
+        {
+          "name": "bzip2",
+          "default-features": false
+        }
+      ]
+    },
+    "camd": {
+      "description": "suitesparse-camd support",
+      "dependencies": [
+        {
+          "name": "suitesparse-camd",
+          "default-features": false
+        }
+      ]
+    },
+    "ccolamd": {
+      "description": "suitesparse-ccolamd support",
+      "dependencies": [
+        {
+          "name": "suitesparse-ccolamd",
+          "default-features": false
+        }
+      ]
+    },
+    "cholmod": {
+      "description": "suitesparse-cholmod support",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "default-features": false
+        }
+      ]
+    },
+    "colamd": {
+      "description": "suitesparse-colamd support",
+      "dependencies": [
+        {
+          "name": "suitesparse-colamd",
+          "default-features": false
+        }
+      ]
+    },
+    "cxsparse": {
+      "description": "suitesparse-cxsparse support",
+      "dependencies": [
+        {
+          "name": "suitesparse-cxsparse",
+          "default-features": false
+        }
+      ]
+    },
+    "fltk": {
+      "description": "fltk support",
+      "dependencies": [
+        {
+          "name": "fltk",
+          "default-features": false
+        }
+      ]
+    },
+    "fontconfig": {
+      "description": "fontconfig support",
+      "dependencies": [
+        {
+          "name": "fontconfig",
+          "default-features": false
+        }
+      ]
+    },
+    "freetype": {
+      "description": "freetype support",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "hdf5": {
+      "description": "hdf5 support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
+      ]
+    },
+    "klu": {
+      "description": "suitesparse-klu support",
+      "dependencies": [
+        {
+          "name": "suitesparse-klu",
+          "default-features": false
+        }
+      ]
+    },
+    "umfpack": {
+      "description": "suitesparse-umfpack support",
+      "dependencies": [
+        {
+          "name": "suitesparse-umfpack",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

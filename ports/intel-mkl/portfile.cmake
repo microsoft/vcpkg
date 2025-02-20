@@ -237,6 +237,12 @@ endif()
 file(COPY "${mkl_dir}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}" "bin")
+if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "define_param(MKL_LINK DEFAULT_MKL_LINK MKL_LINK_LIST)" 
+[[define_param(MKL_LINK DEFAULT_MKL_LINK MKL_LINK_LIST)
+ set(MKL_LINK "static")
+]])
+endif()
 #TODO: Hardcode settings from portfile in config.cmake
 #TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
 

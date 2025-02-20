@@ -1,7 +1,7 @@
 {
   "name": "etcd-cpp-apiv3",
   "version": "0.15.4",
-  "port-version": 1,
+  "port-version": 3,
   "description": "The etcd-cpp-apiv3 is a C++ API for etcd's v3 client API, i.e., ETCDCTL_API=3.",
   "homepage": "https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3",
   "license": "BSD-3-Clause",
@@ -10,10 +10,6 @@
     "boost-random",
     "boost-system",
     "boost-thread",
-    {
-      "name": "cpprestsdk",
-      "default-features": false
-    },
     "grpc",
     "openssl",
     "protobuf",
@@ -25,5 +21,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "async"
+  ],
+  "features": {
+    "async": {
+      "description": "Enable async features supported by cpprestsdk.",
+      "dependencies": [
+        {
+          "name": "cpprestsdk",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

@@ -39,6 +39,7 @@ vcpkg_from_github(
         opencascade-7.8.0.patch
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
+		fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
 )
 
 # =============================================================================
@@ -241,11 +242,25 @@ else()
     )
 endif()
 
+if("tbb" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=TBB
+	)
+endif()
+
+if("openmp" IN_LIST FEATURES)
+	list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=OpenMP
+	)
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
     "mpi"          VTK_USE_MPI
     "all"          VTK_BUILD_ALL_MODULES
+	"tbb"          VTK_SMP_ENABLE_TBB
+	"openmp"       VTK_SMP_ENABLE_OPENMP      
 )
 
 # =============================================================================

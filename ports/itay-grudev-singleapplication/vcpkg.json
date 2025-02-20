@@ -1,6 +1,6 @@
 {
   "name": "itay-grudev-singleapplication",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "description": "Replacement of QtSingleApplication for Qt 5 and Qt 6 with support for inter-instance communication",
   "homepage": "https://github.com/itay-grudev/SingleApplication",
   "license": "MIT",
