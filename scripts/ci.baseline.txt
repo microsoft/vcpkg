@@ -43,6 +43,8 @@
 ace:arm-neon-android=fail
 ace:arm64-android=fail
 ace:x64-android=fail
+# ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
+ada-url:x64-linux=fail
 # Needs SDK (in ENV{ANDROID_HOME})
 allegro5:arm-neon-android=fail
 allegro5:arm64-android=fail
@@ -311,8 +313,6 @@ elfutils:arm64-android=fail
 elfutils:x64-android=fail
 elfutils:x64-osx=fail
 elfutils:arm64-osx=fail
-epsilon:arm64-uwp=fail
-epsilon:x64-uwp=fail
 evpp:arm-neon-android=fail
 evpp:arm64-android=fail
 evpp:x64-android=fail
@@ -383,14 +383,6 @@ gainput:x64-android=fail
 gamenetworkingsockets:arm-neon-android=fail
 gamenetworkingsockets:arm64-android=fail
 gamenetworkingsockets:x64-android=fail
-# VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
-# gazebo is broken due it depend on old ports that already in the new versions.
-# There is an open PR that try to fix that.
-gazebo:x64-linux=fail
-gazebo:x64-windows-release=fail
-gazebo:x64-windows-static-md=fail
-gazebo:x64-windows=fail
-gazebo:x86-windows=skip
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
 gdk-pixbuf:x64-android=fail
@@ -441,7 +433,6 @@ gstreamer:x64-windows-static-md = skip
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
-# see ignition skips below
 gz-tools2:arm-neon-android=fail
 gz-tools2:x64-android=fail
 gz-tools2:arm64-android=fail
@@ -459,20 +450,6 @@ hyperscan:x64-android=fail
 iceoryx:x64-android=fail
 iceoryx:arm64-android=fail
 iceoryx:arm-neon-android=fail
-ignition-msgs1:arm-neon-android=fail
-ignition-msgs1:arm64-android=fail
-ignition-msgs1:arm64-windows=fail
-ignition-msgs1:arm64-windows-static-md=fail
-ignition-msgs1:arm64-uwp=fail
-ignition-msgs1:x64-android=fail
-ignition-msgs1:x64-uwp=fail
-ignition-msgs5:x64-android=fail
-ignition-msgs5:x64-osx=skip
-# Conflicts with libjpeg-turbo, mozjpeg
-ignition-msgs6:x64-android=fail
-ignition-tools:arm-neon-android=fail
-ignition-tools:arm64-android=fail
-ignition-tools:x64-android=fail
 ijg-libjpeg:arm-neon-android=skip
 ijg-libjpeg:arm64-android=skip
 ijg-libjpeg:arm64-osx= skip
