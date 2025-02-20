@@ -8,11 +8,11 @@
   "supports": "windows | linux | osx",
   "dependencies": [
     {
-        "name": "qtbase",
-        "default-features": false,
-        "features": [
-            "widgets"
-        ]
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "widgets"
+      ]
     },
     "qtsvg",
     {
