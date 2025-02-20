@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jeremyko/ASockLib
     REF "${VERSION}"
-    SHA512 54049e9a87ce37420358fdef6fa3efa06510383d52adc38805439433b4fbaf344e2e9aa2abfcec4eb45c350e550e20b1b63292643c25f7073a9751e13d66b1cc
+    SHA512 5dc8e516f681c6faa9acfce367684fdca5cdd7a34adf42715b588943e0653a503c9b5c1781194aa1fe6612df8cab9001f86da0a99b7d96a0453104ef1cf5210c
     HEAD_REF master
 )
 vcpkg_cmake_configure(
