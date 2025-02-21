@@ -1,10 +1,10 @@
 {
-  "name": "vcpkg-ci-fastdds",
+  "name": "vcpkg-ci-libaec",
   "version-string": "ci",
   "description": "Testing packages which provide fastdds",
   "license": null,
   "dependencies": [
-    "fastdds",
+    "libaec",
     {
       "name": "vcpkg-cmake",
       "host": true

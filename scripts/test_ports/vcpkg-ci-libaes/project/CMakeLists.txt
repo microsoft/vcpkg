@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)  
 
-project(vcpkg-ci-fastdds C)
+project(vcpkg-ci-libaec C)
 
 find_package(libaec CONFIG REQUIRED)
   
