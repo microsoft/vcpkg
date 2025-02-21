@@ -1,0 +1,15 @@
+diff --git a/winpr/include/config/build-config.h.in b/winpr/include/config/build-config.h.in
+index 4a9bfbb..9fb7e8a 100644
+--- a/winpr/include/config/build-config.h.in
++++ b/winpr/include/config/build-config.h.in
+@@ -5,8 +5,8 @@
+ #define WINPR_KEYMAP_PATH "${WINPR_KEYMAP_PATH}"
+ #define WINPR_PLUGIN_PATH "${WINPR_PLUGIN_PATH}"
+ 
+-#define WINPR_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
+-#define WINPR_INSTALL_SYSCONFDIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
++#define WINPR_INSTALL_PREFIX ""
++#define WINPR_INSTALL_SYSCONFDIR ""
+ 
+ #define WINPR_LIBRARY_PATH "${WINPR_LIBRARY_PATH}"
+ 
