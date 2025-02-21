@@ -27,6 +27,12 @@ else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME sdl3_ttf CONFIG_PATH lib/cmake/SDL3_ttf)
 endif()
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/sdl3_ttf/SDL3_ttfConfig.cmake"
+"# sdl3_ttf cmake project-config input for CMakeLists.txt script"
+[[# sdl3_ttf cmake project-config input for CMakeLists.txt script
+include(CMakeFindDependencyMacro)
+find_dependency(SDL3 CONFIG)]])
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
