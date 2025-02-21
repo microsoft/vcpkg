@@ -1,0 +1,17 @@
+{
+  "name": "xmp-toolkit-sdk",
+  "version": "2023.12",
+  "description": "The XMP Toolkit allows you to integrate XMP functionality into your product or solution.",
+  "homepage": "https://www.adobe.com/devnet/xmp.html",
+  "license": "BSD-3-Clause",
+  "supports": "windows & !arm64 & !uwp",
+  "dependencies": [
+    "expat",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}
