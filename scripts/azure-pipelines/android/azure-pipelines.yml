@@ -27,7 +27,7 @@ jobs:
   - name: ANDROID_NDK_HOME
     value: /android-ndk-r27c
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-01-20'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-02-14'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |

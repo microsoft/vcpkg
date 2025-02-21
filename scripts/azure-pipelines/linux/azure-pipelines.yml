@@ -20,6 +20,7 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: PrLin-WUS
+    demands: ImageOverride -equals PrLin-WUS-Ubuntu-22-04
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
