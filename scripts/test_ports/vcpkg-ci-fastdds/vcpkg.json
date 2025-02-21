@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-fastdds",
+  "version-string": "ci",
+  "description": "Testing packages which provide fastdds",
+  "license": null,
+  "dependencies": [
+    "fastdds",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
