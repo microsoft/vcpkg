@@ -1,3 +1,6 @@
+set(wxWidgets_PREV_MODULE_PATH "${CMAKE_MODULE_PATH}")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+
 cmake_policy(PUSH)
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
@@ -79,3 +82,6 @@ if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_L
 endif()
 
 cmake_policy(POP)
+
+set(CMAKE_MODULE_PATH "${wxWidgets_PREV_MODULE_PATH}")
+unset(wxWidgets_PREV_MODULE_PATH)
