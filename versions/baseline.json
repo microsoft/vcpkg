@@ -6202,7 +6202,7 @@
     },
     "mysql-connector-cpp": {
       "baseline": "9.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "nameof": {
       "baseline": "0.10.4",
@@ -7825,8 +7825,8 @@
       "port-version": 0
     },
     "rapidjson": {
-      "baseline": "2023-07-17",
-      "port-version": 2
+      "baseline": "2025-02-05",
+      "port-version": 0
     },
     "rapidxml": {
       "baseline": "1.13",
@@ -9586,7 +9586,7 @@
     },
     "vowpal-wabbit": {
       "baseline": "9.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vs-yasm": {
       "baseline": "0.5.0",

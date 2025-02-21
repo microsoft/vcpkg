@@ -24,7 +24,6 @@ if(NOT TARGET ext::protoc)
 endif()
 
 find_package(RapidJSON CONFIG REQUIRED)
-add_library(RapidJSON::rapidjson ALIAS rapidjson)
 
 find_package(ZLIB REQUIRED)
 add_library(ext::z ALIAS ZLIB::ZLIB)
