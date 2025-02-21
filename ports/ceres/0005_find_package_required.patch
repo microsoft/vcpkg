@@ -1,0 +1,56 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -211,7 +211,7 @@
+     # elsewhere, emulate the effects of FindCUDAToolkit locally in terms of the
+     # expected CMake imported targets and defined variables. This can be removed
+     # from as soon as the min CMake version is >= 3.17.
+-    find_package(CUDA QUIET)
++    find_package(CUDA REQUIRED)
+     if (CUDA_FOUND)
+       message("-- Found CUDA version ${CUDA_VERSION} installed in: "
+         "${CUDA_TOOLKIT_ROOT_DIR} via legacy (< 3.17) CMake module. "
+@@ -240,7 +240,7 @@
+       update_cache_variable(USE_CUDA OFF)
+     endif (CUDA_FOUND)
+   else (CMAKE_VERSION VERSION_LESS 3.17)
+-    find_package(CUDAToolkit QUIET)
++    find_package(CUDAToolkit REQUIRED)
+     if (CUDAToolkit_FOUND)
+       message("-- Found CUDA version ${CUDAToolkit_VERSION} installed in: "
+         "${CUDAToolkit_TARGET_DIR}")
+@@ -270,7 +270,7 @@
+ endif (NOT USE_CUDA)
+ 
+ if (LAPACK)
+-  find_package(LAPACK QUIET)
++  find_package(LAPACK REQUIRED)
+   if (LAPACK_FOUND)
+     message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
+   else (LAPACK_FOUND)
+@@ -323,7 +323,7 @@
+ endif (NOT SuiteSparse_Partition_FOUND)
+ 
+ if (EIGENMETIS)
+-  find_package (METIS)
++  find_package (METIS REQUIRED)
+   if (METIS_FOUND)
+     # Since METIS is a private dependency of Ceres, it requires access to the
+     # link-only METIS::METIS target to avoid undefined linker errors in projects
+@@ -346,7 +346,7 @@
+ endif (EIGENMETIS)
+ 
+ if (ACCELERATESPARSE)
+-  find_package(AccelerateSparse)
++  find_package(AccelerateSparse REQUIRED)
+   if (AccelerateSparse_FOUND)
+     message("-- Found Apple's Accelerate framework with sparse solvers, "
+       "building with Accelerate sparse support.")
+@@ -395,7 +395,7 @@
+ # GFlags.
+ if (GFLAGS)
+   # Don't search with REQUIRED as we can continue without gflags.
+-  find_package(gflags 2.2.0)
++  find_package(gflags 2.2.0 REQUIRED)
+   if (gflags_FOUND)
+     if (TARGET gflags)
+       message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
