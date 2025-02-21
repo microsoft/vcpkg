@@ -4,6 +4,7 @@
   "description": "Rapid YAML library",
   "homepage": "https://github.com/biojppm/rapidyaml",
   "license": "MIT",
+  "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     {
       "name": "c4core",
