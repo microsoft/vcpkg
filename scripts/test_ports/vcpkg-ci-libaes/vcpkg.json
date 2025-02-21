@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-ci-libaec",
   "version-string": "ci",
-  "description": "Testing packages which provide fastdds",
+  "description": "Testing packages which provide libaec",
   "license": null,
   "dependencies": [
     "libaec",
