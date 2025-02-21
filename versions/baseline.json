@@ -3044,6 +3044,10 @@
       "baseline": "2.42.12",
       "port-version": 2
     },
+    "gegl": {
+      "baseline": "0.4.54",
+      "port-version": 0
+    },
     "gemmlowp": {
       "baseline": "2021-09-28",
       "port-version": 0
