@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "open3d",
+  "version-semver": "0.18.0",
+  "description": "Open3D is an open-source library that supports rapid development of software that deals with 3D data",
+  "homepage": "https://www.open3d.org",
+  "dependencies": [
+    "assimp",
+    "cppzmq",
+    "curl",
+    "eigen3",
+    "embree3",
+    "fmt",
+    "glew",
+    "glfw3",
+    "jsoncpp",
+    "libjpeg-turbo",
+    "liblzf",
+    "minizip",
+    "msgpack",
+    "nanoflann",
+    "opengl",
+    "poissonrecon",
+    "qhull",
+    "tbb",
+    "tinygltf",
+    "tinyobjloader",
+    "uvatlas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vtk"
+  ],
+  "default-features": [
+    "blas",
+    "gui",
+    "openmp"
+  ],
+  "features": {
+    "azure-kinect": {
+      "description": "Build support for Azure Kinect sensor",
+      "dependencies": [
+        "azure-kinect-sensor-sdk"
+      ]
+    },
+    "blas": {
+      "description": "Use BLAS, LAPACK, and LAPACKE",
+      "dependencies": [
+        "blas",
+        {
+          "name": "lapack-reference",
+          "features": [
+            "lapacke"
+          ]
+        },
+        "parallelstl"
+      ]
+    },
+    "gui": {
+      "description": "Build the new GUI for Open3D",
+      "dependencies": [
+        "imgui"
+      ]
+    },
+    "intel-oneapi": {
+      "description": "Use Intel OneAPI MKL",
+      "dependencies": [
+        "intel-mkl"
+      ]
+    },
+    "openmp": {
+      "description": "Use OpenMP multi-threading"
+    },
+    "python": {
+      "description": "Build the python module",
+      "dependencies": [
+        "pybind11"
+      ]
+    },
+    "realsense": {
+      "description": "Build support for Intel RealSense camera",
+      "dependencies": [
+        "realsense2"
+      ]
+    },
+    "sycl": {
+      "description": "Enable SYCL module"
+    }
+  }
+}
