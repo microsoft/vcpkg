@@ -1,6 +1,6 @@
 {
   "name": "cista",
-  "version": "0.14",
+  "version": "0.15",
   "description": "Cista is a simple, high-performance, zero-copy C++ serialization & reflection library.",
   "homepage": "https://github.com/felixguendling/cista",
   "license": "MIT",

@@ -21,8 +21,10 @@ set(${PORT}_PATCHES
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
         fix_deploy_windows.patch
-        )
-
+        fix-link-lib-discovery.patch
+        macdeployqt-symlinks.patch
+)
+ 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
@@ -137,11 +139,13 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
     "securetransport"     FEATURE_securetransport
+    "dnslookup"           FEATURE_dnslookup
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
+    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolve
     )
 
 if("openssl" IN_LIST FEATURES)
@@ -150,9 +154,12 @@ else()
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=no)
 endif()
 
+if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_NET_OPTIONS -DFEATURE_libresolv:BOOL=ON)
+endif()
+
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
-list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapResolv:BOOL=ON)
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
@@ -338,6 +345,7 @@ file(COPY
 file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
 set(other_files qt-cmake
+                qt-cmake-create
                 qt-cmake-private
                 qt-cmake-standalone-test
                 qt-configure-module
@@ -349,7 +357,8 @@ set(other_files qt-cmake
                 qmake6
                 qtpaths
                 qtpaths6
-                 )
+)
+
 if(CMAKE_HOST_WIN32)
     set(script_suffix ".bat")
 else()
@@ -357,17 +366,18 @@ else()
 endif()
 list(TRANSFORM other_files APPEND "${script_suffix}")
 
-list(APPEND other_files 
+list(APPEND other_files
                 android_cmakelist_patcher.sh
                 android_emulator_launcher.sh
                 ensure_pro_file.cmake
-                syncqt.pl
-                target_qt.conf
+                qt-android-runner.py
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
-                sanitizer-testrunner.py
                 qt-wasmtestrunner.py
-                )
+                sanitizer-testrunner.py
+                syncqt.pl
+                target_qt.conf
+)
 
 foreach(_config debug release)
     if(_config MATCHES "debug")

@@ -1,6 +1,6 @@
 {
   "name": "asio-grpc",
-  "version": "3.1.0",
+  "version": "3.4.1",
   "description": "Asynchronous gRPC with Asio/unified executors",
   "homepage": "https://github.com/Tradias/asio-grpc",
   "license": "Apache-2.0",

@@ -117,6 +117,13 @@ vcpkg_download_distfile(WK_ANGLE_CMAKE_WEBKITCOMPILERFLAGS
 )
 file(COPY "${WK_ANGLE_CMAKE_WEBKITCOMPILERFLAGS}" DESTINATION "${SOURCE_PATH}/cmake")
 
+vcpkg_download_distfile(WK_ANGLE_CMAKE_DETECTSSE2
+    URLS "https://github.com/WebKit/WebKit/raw/${ANGLE_WEBKIT_BUILDSYSTEM_COMMIT}/Source/cmake/DetectSSE2.cmake"
+    FILENAME "DetectSSE2.cmake"
+    SHA512 219a4c8591ee31d11eb3d1e4803cc3c9d4573984bb25ecac6f2c76e6a3dab598c00b0157d0f94b18016de6786e49d8b29a161693a5ce23d761c8fe6a798c1bca
+)
+file(COPY "${WK_ANGLE_CMAKE_DETECTSSE2}" DESTINATION "${SOURCE_PATH}/cmake")
+
 vcpkg_download_distfile(WK_ANGLE_CMAKE_WEBKITMACROS
     URLS "https://github.com/WebKit/WebKit/raw/${ANGLE_WEBKIT_BUILDSYSTEM_COMMIT}/Source/cmake/WebKitMacros.cmake"
     FILENAME "WebKitMacros.cmake"

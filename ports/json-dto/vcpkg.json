@@ -1,6 +1,6 @@
 {
   "name": "json-dto",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A small header-only library for converting data between json representation and c++ structs.",
   "homepage": "https://github.com/Stiffstream/json_dto",
   "license": "BSD-3-Clause",

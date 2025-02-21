@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${VERSION}.tar.xz"
          "https://www.mirrorservice.org/sites/ftp.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${VERSION}.tar.xz"
     FILENAME "libcap-${VERSION}.tar.xz"
-    SHA512 647c307dc451517da9d089495ab959b4a6fbbe41c79f4e1e9bb663569dad630ead0c2e413dfb393319e3ea14dc9848c81b392107fe3382ce1813d278c3394a7f
+    SHA512 8ab72cf39bf029656b2a4a5972a0da4ab4b46a3d8a8da66d6cde925e06fe34df2fa5fc4d0b62c9cec4972b0b2678fdac6ef9421b6fb83c2a5bf869cf8d5fdb16
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -17,6 +17,13 @@ if(VCPKG_CROSSCOMPILING)
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/include/sys/libcap-private/cap_names.h" DESTINATION "${SOURCE_PATH}/libcap/")
     file(TOUCH "${SOURCE_PATH}/libcap/cap_names.h")
 endif()
+
+block(SCOPE_FOR VARIABLES)
+    set(VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_VARS_TO_CHECK=CMAKE_OBJCOPY")
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    set(ENV{OBJCOPY} "${VCPKG_DETECTED_CMAKE_OBJCOPY}")
+endblock()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"

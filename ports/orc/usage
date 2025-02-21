@@ -1,4 +1,4 @@
 orc provides CMake targets:
 
-    find_package(unofficial-orc CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::orc::orc)
+    find_package(orc CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE orc::orc)

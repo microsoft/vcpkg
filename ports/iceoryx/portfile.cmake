@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-iceoryx/iceoryx
     REF "v${VERSION}"
-    SHA512 0fc259147cb60137891ea005eda683245b6ef38c3b35fd8735d2a89f8f1d1fe5096ad1075a918277ee58f3f50c2b145dc3dc6de9484843bfc0398c80b7940e2b
+    SHA512 708c113f8b4e5a23830172cd67414cb6fa389f9bc34a5979b27131c3180d6758ca50257baa86cb6f74bcff71b24237cffc0e697964a7c0326e9018fbf7885c09
     HEAD_REF master
     PATCHES
         acl.patch
+        add-include-chrono.patch # https://github.com/eclipse-iceoryx/iceoryx/pull/2378
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

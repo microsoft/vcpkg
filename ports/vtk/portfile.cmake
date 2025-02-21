@@ -37,6 +37,9 @@ vcpkg_from_github(
         remove-prefix-changes.patch
         hdf5helper.patch
         opencascade-7.8.0.patch
+        no-libharu-for-ioexport.patch
+        no-libproj-for-netcdf.patch
+		fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
 )
 
 # =============================================================================
@@ -120,6 +123,38 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
         "ioocct"      VTK_MODULE_ENABLE_VTK_IOOCCT
+        "libtheora"   VTK_MODULE_ENABLE_VTK_IOOggTheora
+        "libharu"     VTK_MODULE_ENABLE_VTK_IOExportPDF
+        "cgns"        VTK_MODULE_ENABLE_VTK_IOCGNSReader
+        "seacas"      VTK_MODULE_ENABLE_VTK_IOIOSS
+        "seacas"      VTK_MODULE_ENABLE_VTK_IOExodus
+        "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
+        "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
+        "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
+        "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
+        "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
+)
+
+# Require port features to prevent accidental finding of transitive dependencies
+vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
+  FEATURES
+    "libtheora" CMAKE_REQUIRE_FIND_PACKAGE_THEORA
+    "libharu" CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
+    "cgns" CMAKE_REQUIRE_FIND_PACKAGE_CGNS
+    "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
+    "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
+    "sql" CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
+    "proj" CMAKE_REQUIRE_FIND_PACKAGE_PROJ
+    "netcdf" CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
+  INVERTED_FEATURES
+    "libtheora" CMAKE_DISABLE_FIND_PACKAGE_THEORA
+    "libharu" CMAKE_DISABLE_FIND_PACKAGE_LibHaru
+    "cgns" CMAKE_DISABLE_FIND_PACKAGE_CGNS
+    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
+    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
+    "sql" CMAKE_DISABLE_FIND_PACKAGE_SQLite3
+    "proj" CMAKE_DISABLE_FIND_PACKAGE_PROJ
+    "netcdf" CMAKE_DISABLE_FIND_PACKAGE_NetCDF
 )
 
 # Replace common value to vtk value
@@ -138,21 +173,19 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
+    # This sections relies on target package python3.
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
-        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
-        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
-        set(python_ver "3.${PYTHON_VERSION_MINOR}")
+        set(python_ver "3")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
-        -DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
+        "-DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
@@ -209,11 +242,25 @@ else()
     )
 endif()
 
+if("tbb" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=TBB
+	)
+endif()
+
+if("openmp" IN_LIST FEATURES)
+	list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=OpenMP
+	)
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
     "mpi"          VTK_USE_MPI
     "all"          VTK_BUILD_ALL_MODULES
+	"tbb"          VTK_SMP_ENABLE_TBB
+	"openmp"       VTK_SMP_ENABLE_OPENMP      
 )
 
 # =============================================================================
@@ -227,6 +274,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
+        ${PACKAGE_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
@@ -254,6 +302,24 @@ vcpkg_cmake_configure(
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_QT_VERSION # Only with Qt
         CMAKE_INSTALL_QMLDIR
+        # When working properly these should be unused
+        CMAKE_DISABLE_FIND_PACKAGE_CGNS
+        CMAKE_DISABLE_FIND_PACKAGE_LibHaru
+        CMAKE_DISABLE_FIND_PACKAGE_NetCDF
+        CMAKE_DISABLE_FIND_PACKAGE_PROJ
+        CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
+        CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
+        CMAKE_DISABLE_FIND_PACKAGE_SQLite3
+        CMAKE_DISABLE_FIND_PACKAGE_THEORA
+        CMAKE_REQUIRE_FIND_PACKAGE_CGNS
+        CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
+        CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
+        CMAKE_REQUIRE_FIND_PACKAGE_PROJ
+        CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
+        CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
+        CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
+        CMAKE_REQUIRE_FIND_PACKAGE_THEORA
+
 )
 
 vcpkg_cmake_install()
@@ -365,15 +431,16 @@ endforeach()
 # Use vcpkg provided find method
 file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
-
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing" IGNORE_UNCHANGED)
 endif()
-# =============================================================================
-# Usage
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-properties.cmake" "_vtk_module_import_prefix}/lib/vtk-9.3/hierarchy" "_vtk_module_import_prefix}$<$<CONFIG:Debug>:/debug>/lib/vtk-9.3/hierarchy")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt" COMMENT [[
+This file presents the top-level Copyright.txt.
+Additional licenses and notes are located in the licenses directory.
+]])

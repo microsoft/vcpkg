@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0063385..64458ef 100644
+index 0063385..f1522bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,6 +10,15 @@ project(onnx_optimizer C CXX)
@@ -33,36 +33,15 @@ index 0063385..64458ef 100644
  
  file(READ "${PROJECT_SOURCE_DIR}/VERSION_NUMBER" ONNX_OPTIMIZER_VERSION)
  string(STRIP "${ONNX_OPTIMIZER_VERSION}" ONNX_OPTIMIZER_VERSION)
-@@ -70,7 +77,7 @@ if(BUILD_ONNX_PYTHON)
-       set(PY_EXT_SUFFIX ".so")
-     endif()
-   endif()
--  find_package(Python COMPONENTS Interpreter REQUIRED)
-+  find_package(Python3 COMPONENTS Development REQUIRED)
+@@ -41,7 +48,7 @@ file(GLOB onnx_opt_srcs "onnxoptimizer/*.cc"
+ list(REMOVE_ITEM onnx_opt_srcs "${PROJECT_SOURCE_DIR}/onnxoptimizer/cpp2py_export.cc")
  
-   onnxopt_add_library(onnx_opt_cpp2py_export MODULE "onnxoptimizer/cpp2py_export.cc")
-   set_target_properties(onnx_opt_cpp2py_export PROPERTIES PREFIX "")
-@@ -84,7 +91,7 @@ if(BUILD_ONNX_PYTHON)
-                              $<INSTALL_INTERFACE:include>
-                              ${Python_INCLUDE_DIR})
-   # pybind11 is a header only lib
--  find_package(pybind11 2.2)
-+  find_package(pybind11 2.2 CONFIG REQUIRED)
-   if(pybind11_FOUND)
-     target_include_directories(onnx_opt_cpp2py_export PUBLIC
-       ${pybind11_INCLUDE_DIRS})
-@@ -121,9 +128,9 @@ if(BUILD_ONNX_PYTHON)
- 
-   target_link_libraries(onnx_opt_cpp2py_export PRIVATE onnx_optimizer)
- 
-+  target_link_directories(onnx_opt_cpp2py_export PRIVATE ${Python3_LIBRARY_DIRS})
-+  target_link_libraries(onnx_opt_cpp2py_export PRIVATE ${Python3_LIBRARIES})
-   if(MSVC)
--    find_package(Python COMPONENTS Interpreter Development REQUIRED)
--    target_link_libraries(onnx_opt_cpp2py_export PRIVATE ${Python_LIBRARIES})
-     target_compile_options(onnx_opt_cpp2py_export
-                            PRIVATE /MP
-                                    /WX
+ onnxopt_add_library(onnx_optimizer ${onnx_opt_srcs})
+-target_link_libraries(onnx_optimizer PUBLIC ${ONNX_TARGET_NAME})
++target_link_libraries(onnx_optimizer PUBLIC ONNX::onnx ONNX::onnx_proto)
+ target_include_directories(onnx_optimizer PUBLIC
+     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+     $<INSTALL_INTERFACE:include>
 diff --git a/cmake/utils.cmake b/cmake/utils.cmake
 index 6cca9f3..9d79f1a 100644
 --- a/cmake/utils.cmake
@@ -73,3 +52,17 @@ index 6cca9f3..9d79f1a 100644
  # Poor man's FetchContent
  function(add_subdirectory_if_no_target dir target)
    if (NOT TARGET ${target})
+diff --git a/cmake/ONNXOptimizerConfig.cmake.in b/cmake/ONNXOptimizerConfig.cmake.in
+index 72dcc88..c5639c8 100644
+--- a/cmake/ONNXOptimizerConfig.cmake.in
++++ b/cmake/ONNXOptimizerConfig.cmake.in
+@@ -3,6 +3,9 @@
+ #   ONNX_OPTIMIZER_INCLUDE_DIRS     - include directories for onnx optimizer
+ # as well as ONNX Optimizer targets for other cmake libraries to use.
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(protobuf CONFIG)
++find_dependency(ONNX CONFIG)
+ # library version information
+ set(ONNX_OPTIMIZER_VERSION "@ONNX_OPTIMIZER_VERSION@")
+ 

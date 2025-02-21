@@ -1,3 +1,4 @@
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake-get-vars/vcpkg-port-config.cmake")
 # Overwrite builtin scripts
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake")
@@ -9,11 +10,11 @@ set(program MESON)
 set(program_version @VERSION@)
 set(program_name meson)
 set(search_names meson meson.py)
-set(ref 614d436232d3a86518164cbe2b8af12db3bde009)
+set(ref "${program_version}")
 set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}-${meson_short_hash}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 c087da0113e76501fff66e68ac9ef7aede5e6672f1dc7201608cce9e5e1d202d3f4bf92beec1a5e4e8169f6ed1cedbb44b57ede2753437a61a13578de8d22040)
+set(download_sha512 541a610a7b49bfcf63502403c9b987178234cddddc181fad588c99f773a68a9fd91cf0629ec6bb424b3c931afee90b96f979ce7e8d990d53f644ac457d342b7f)
 
 find_program(SCRIPT_MESON NAMES ${search_names} PATHS "${path_to_search}" NO_DEFAULT_PATH) # NO_DEFAULT_PATH due top patching
 

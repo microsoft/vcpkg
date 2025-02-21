@@ -2,9 +2,8 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO geographiclib
     REF distrib-C++
-    FILENAME "GeographicLib-2.3.tar.gz"
-    SHA512 1a1bd0fc2dc3e1372cf22618af3a4340bbc6497f94c64226c97654dfff92a4bf3acf47d91592741fe0c643d401d9721f680bdb4974b8ee258fb09d525fbaec67
-    PATCHES remove-broken-and-unnecessary-cross-compile-check.patch
+    FILENAME "GeographicLib-${VERSION}.tar.gz"
+    SHA512 c165115228b775a4a95b318c1bac1d2871e45ea21f20043c9c9f1c165efb6848c027b883f7b19dcce8c86e71ded56eb5fdcde39f1ff94d61fdc98c9206abd1ae
     )
 
 vcpkg_check_features(

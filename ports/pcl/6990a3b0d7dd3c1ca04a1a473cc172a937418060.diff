@@ -1,0 +1,24 @@
+diff --git a/outofcore/include/pcl/outofcore/impl/octree_disk_container.hpp b/outofcore/include/pcl/outofcore/impl/octree_disk_container.hpp
+index 28b25de7f51..642aced2853 100644
+--- a/outofcore/include/pcl/outofcore/impl/octree_disk_container.hpp
++++ b/outofcore/include/pcl/outofcore/impl/octree_disk_container.hpp
+@@ -48,6 +48,7 @@
+ // Boost
+ #include <boost/random/bernoulli_distribution.hpp>
+ #include <boost/random/uniform_int.hpp>
++#include <boost/random/variate_generator.hpp> // for boost::variate_generator
+ #include <boost/uuid/uuid_io.hpp>
+ 
+ // PCL
+diff --git a/outofcore/include/pcl/outofcore/octree_disk_container.h b/outofcore/include/pcl/outofcore/octree_disk_container.h
+index 0f9c0acf310..9ca3d5d99e0 100644
+--- a/outofcore/include/pcl/outofcore/octree_disk_container.h
++++ b/outofcore/include/pcl/outofcore/octree_disk_container.h
+@@ -44,6 +44,7 @@
+ #include <string>
+ 
+ // Boost
++#include <boost/random/mersenne_twister.hpp> // for boost::mt19937
+ #include <boost/uuid/random_generator.hpp>
+ 
+ #include <pcl/common/utils.h> // pcl::utils::ignore

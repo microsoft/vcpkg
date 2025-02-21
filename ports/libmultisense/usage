@@ -1,0 +1,4 @@
+libmultisense provides CMake targets:
+
+    find_package(MultiSense)
+    target_link_libraries(main PRIVATE MultiSense)

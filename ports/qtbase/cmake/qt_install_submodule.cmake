@@ -26,7 +26,7 @@ function(qt_download_submodule_impl)
         if(PORT STREQUAL "qttools") # Keep this for beta & rc's
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
-                URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
+                URL https://code.qt.io/playground/qlitehtml.git
                 REF "${${PORT}_qlitehtml_REF}"
                 FETCH_REF master
                 HEAD_REF master
@@ -44,7 +44,7 @@ function(qt_download_submodule_impl)
         elseif(PORT STREQUAL "qtwebengine")
             vcpkg_from_git(
                 OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
-                URL git://code.qt.io/qt/qtwebengine-chromium.git
+                URL https://code.qt.io/qt/qtwebengine-chromium.git
                 REF "${${PORT}_chromium_REF}"
             )
             if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
@@ -144,11 +144,16 @@ function(qt_cmake_configure)
         list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
     endif()
 
+    if(NOT DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+        list(APPEND _qarg_OPTIONS "-DCMAKE_OSX_DEPLOYMENT_TARGET=14")
+    endif()
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         ${ninja_option}
         ${disable_parallel}
         OPTIONS
+            -DQT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK=ON
             -DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON
             -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to mess with users toolchain settings.
             -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Because Qt doesn't correctly scope find_package calls. 
@@ -192,6 +197,7 @@ function(qt_cmake_configure)
             HOST_PERL
             QT_SYNCQT
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
+            QT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK
             ${_qarg_OPTIONS_MAYBE_UNUSED}
             INPUT_bundled_xcb_xinput
             INPUT_freetype

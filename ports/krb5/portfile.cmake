@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO krb5/krb5
     REF krb5-${VERSION}-final
-    SHA512 184ef8645d7e17f30a8e3d4005364424d2095b3d0c96f26ecef0c2dd2f3a096a0dd40558ed113121483717e44f6af41e71be0e5e079c76a205535d0c11a2ea34
+    SHA512 82ea07acbc91a0352579aeec4f20d1c6d2c3f024640eaaa046f3ec5852d5d9c84143a1e0d04a5cf146f90c3406830823845eb608907f4060d7f765dfe0fb10a8
     HEAD_REF master
     PATCHES
         static-deps.diff
@@ -51,7 +51,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     vcpkg_copy_tools(
         TOOL_NAMES ${tools}
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"        
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         AUTO_CLEAN
     )
     foreach(tool_name ${tools})
@@ -110,6 +110,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/debug/lib/krb5/"
         "${CURRENT_PACKAGES_DIR}/lib/krb5/"
     )
+endif()
+
+if(VCPKG_BUILD_TYPE)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE")

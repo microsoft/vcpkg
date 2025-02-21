@@ -37,6 +37,12 @@ else()
     list(APPEND OPTIONS -Djpeg=disabled)
 endif()
 
+if("others" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dothers=enabled)
+else()
+    list(APPEND OPTIONS -Dothers=disabled)
+endif()
+
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
 else()
@@ -67,7 +73,7 @@ vcpkg_configure_meson(
         glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
         g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)

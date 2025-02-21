@@ -11,6 +11,21 @@
         },
         {
             "name": "linux-install-powershell"
+        },
+        {
+            "name": "linux-azcli"
+        },
+        {
+            "name": "linux-bash-command",
+            "parameters": {
+                "command": "apt-get update -y"
+            }
+        },
+        {
+            "name": "linux-bash-command",
+            "parameters": {
+                "command": "apt-get upgrade -y"
+            }
         }
     ]
 }

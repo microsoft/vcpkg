@@ -4,22 +4,16 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mpusz/units
+    REPO mpusz/mp-units
     REF "v${VERSION}"
-    SHA512 5e01cc4ee6cbbaf81f02c9268dfa8f0ca348925a85f84704f06405874edb478437837900e6fbe882aba9e9040235310d82b6420fd81b39eb1cc8d38570e48613
+    SHA512 7e3a897a0df438d43dc860febe813f84b671caa26195cea1e8df75769d418d5456852200b8f546107c97214e88e77015e044a95d0c45d4c19341288136e11fbc
     PATCHES
       config.patch
 )
 
-set(USE_LIBFMT OFF)
-if ("use-libfmt" IN_LIST FEATURES)
-    set(USE_LIBFMT ON)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
-    OPTIONS
-      -DMP_UNITS_USE_LIBFMT=${USE_LIBFMT}
 )
 
 vcpkg_cmake_install()

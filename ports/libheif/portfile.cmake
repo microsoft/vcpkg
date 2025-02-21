@@ -1,16 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  strukturag/libheif 
+    REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 e8f7a9d8d7af1947e9ca43e8387fc082551c884bb66fef7484c82748f3b81524efa7a2988f31d059a85a10539ff42bd3125b0f066f7b8b652bd9450737b2bc89
+    SHA512 ff6aedef3e848efed8dd274cb8bfd84fc9d08591ce1d4cba7a88f11625dc875eb5f53d7d14bab01693859f1518ae54f958b66ea7d86f3a1791eb07c05a3b0358
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
+        fix-gcc8.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-	FEATURES
-		hevc    WITH_X265
+    FEATURES
+        hevc        WITH_X265
+        aom         WITH_AOM_DECODER
+        aom         WITH_AOM_ENCODER
+        openjpeg    WITH_OpenJPEG_DECODER
+        openjpeg    WITH_OpenJPEG_ENCODER
+        jpeg        WITH_JPEG_DECODER
+        jpeg        WITH_JPEG_ENCODER
+        iso23001-17 WITH_UNCOMPRESSED_CODEC
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +26,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
-        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        -DBUILD_TESTING=OFF
+        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
@@ -33,9 +42,9 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "defined(_MSC_VER) && !defined(LIBHEIF_STATIC_BUILD)" "defined(_WIN32)")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
 else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "defined(_MSC_VER) && !defined(LIBHEIF_STATIC_BUILD)" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "#ifdef LIBHEIF_EXPORTS" "#if 0")
 

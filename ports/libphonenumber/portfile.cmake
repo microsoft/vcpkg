@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/libphonenumber
     REF "v${VERSION}"
-    SHA512 a672304611be3cfba8cc35a6b4ab8e6b84269577803a0517258f019fbd69785e800ce905220d86426d2c1b19debf5ed8d019d9c3e21be47d270f62b692f2f9f9
+    SHA512 8cc5be5aaaf832288ac011131b41026a44dba702b96a4dbdafcd55e43c870130a089e96187fa4fb8df75e5065185a2eb9af25ece4a7d5b1fcc459b875dceb662
     HEAD_REF master
     PATCHES 
         fix-re2-identifiers.patch

@@ -1,0 +1,47 @@
+diff --git a/CMake/realsense2Config.cmake.in b/CMake/realsense2Config.cmake.in
+index b7319a6..f1301ab 100644
+--- a/CMake/realsense2Config.cmake.in
++++ b/CMake/realsense2Config.cmake.in
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(nlohmann_json)
++
+ @PACKAGE_INIT@
+ 
+ set(realsense2_VERSION_MAJOR "@REALSENSE_VERSION_MAJOR@")
+diff --git a/third-party/CMakeLists.txt b/third-party/CMakeLists.txt
+index c703140..e1fe5b9 100644
+--- a/third-party/CMakeLists.txt
++++ b/third-party/CMakeLists.txt
+@@ -1,7 +1,5 @@
+ string(REPLACE ${PROJECT_SOURCE_DIR}/ "" _rel_path ${CMAKE_CURRENT_LIST_DIR})
+ 
+-include(CMake/external_json.cmake)
+-
+ add_subdirectory( "${CMAKE_CURRENT_LIST_DIR}/rsutils" )
+ 
+ # Add additional include directories to allow file to include rosbag headers
+diff --git a/third-party/rsutils/CMakeLists.txt b/third-party/rsutils/CMakeLists.txt
+index b0fc310..95e8a46 100644
+--- a/third-party/rsutils/CMakeLists.txt
++++ b/third-party/rsutils/CMakeLists.txt
+@@ -4,15 +4,16 @@ cmake_minimum_required(VERSION 3.8.0)  # source_group(TREE)
+ project( rsutils )
+ 
+ add_library( ${PROJECT_NAME} STATIC "" )
+-# We cannot directly interface with nlohmann_json (doesn't work on bionic)
+-#target_link_libraries( ${PROJECT_NAME} PUBLIC nlohmann_json )
++
++find_package(nlohmann_json CONFIG REQUIRED)
++target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json)
++
+ target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_14 )
+ set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER Library )
+ 
+ target_include_directories( ${PROJECT_NAME}
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/third-party/json/include>
+ )
+ 
+ # Headers -----------------------------------------------------------------------------------

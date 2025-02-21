@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e8ac94c..027ee22 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,14 +29,7 @@ set(VCPKG_BUILD_TYPE ${CMAKE_BUILD_TYPE})
+ message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+ message("VCPKG_BUILD_TYPE: ${VCPKG_BUILD_TYPE}")
+ 
+-find_path(UWEBSOCKETS_INCLUDE_DIRS "uwebsockets/App.h")
+-message("µWebsockets include dir: ${UWEBSOCKETS_INCLUDE_DIRS}")
+-if(WIN32)
+-    find_library(LIBUSOCKETS_STATIC uSockets.lib)
+-else(WIN32)
+-    find_library(LIBUSOCKETS_STATIC libuSockets.a)
+-endif(WIN32)
+-message(${LIBUSOCKETS_STATIC})
++find_package(unofficial-uwebsockets CONFIG REQUIRED)
+ 
+ find_path(MDNS_INCLUDE_DIRS "mdns.h")
+ message("mdns include dir: ${MDNS_INCLUDE_DIRS}")
+@@ -44,8 +37,6 @@ message("mdns include dir: ${MDNS_INCLUDE_DIRS}")
+ find_package(mdns REQUIRED)
+ find_package(nlohmann_json 3.11.2 REQUIRED)
+ find_package(nlohmann_json_schema_validator REQUIRED)
+-find_package(libuv REQUIRED NO_MODULE)
+-find_package(ZLIB REQUIRED)
+ 
+ if(WT_WITH_SSL)
+     find_package(OpenSSL REQUIRED)
+@@ -68,5 +59,10 @@ target_include_directories(webthing-cpp INTERFACE
+     $<BUILD_INTERFACE:"${CMAKE_CURRENT_SOURCE_DIR}/include}"> 
+     $<INSTALL_INTERFACE:include>
+ )
++target_link_libraries(webthing-cpp INTERFACE
++    nlohmann_json_schema_validator::validator
++    nlohmann_json::nlohmann_json
++    unofficial::uwebsockets::uwebsockets
++)
+ 
+ install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_PREFIX}/include")

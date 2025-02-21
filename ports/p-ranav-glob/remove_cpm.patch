@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2549fb6..7de93f2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,14 +21,9 @@ endif()
+ # ---- Add dependencies via CPM ----
+ # see https://github.com/TheLartians/CPM.cmake for more info
+ 
+-include(cmake/CPM.cmake)
+ 
+ # PackageProject.cmake will be used to make our target installable
+-CPMAddPackage(
+-  NAME PackageProject.cmake
+-  GITHUB_REPOSITORY TheLartians/PackageProject.cmake
+-  VERSION 1.3
+-)
++include(PackageProject.cmake)
+ 
+ # ---- Add source files ----
+ 

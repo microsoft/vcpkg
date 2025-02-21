@@ -45,8 +45,7 @@ vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
     set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
     set(OPENSSL_ARCH "android-${VCPKG_DETECTED_CMAKE_ANDROID_ARCH}")
-    # asm on arm32 NEON is broken, https://github.com/openssl/openssl/pull/21583#issuecomment-1727057735
-    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" #[[AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON]])
+    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
         vcpkg_list(APPEND CONFIGURE_OPTIONS no-asm)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -90,13 +89,19 @@ elseif(VCPKG_TARGET_IS_MINGW)
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
-        threads
         no-engine
         no-asm
         no-sse2
         no-srtp
         --cross-compile-prefix=
     )
+    # Cf. https://emscripten.org/docs/porting/pthreads.html:
+    # For Pthreads support, not just openssl but everything
+    # must be compiled and linked with `-pthread`.
+    # This makes it a triplet/toolchain-wide setting.
+    if(NOT " ${VCPKG_DETECTED_CMAKE_C_FLAGS} " MATCHES " -pthread ")
+        vcpkg_list(APPEND CONFIGURE_OPTIONS no-threads)
+    endif()
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
