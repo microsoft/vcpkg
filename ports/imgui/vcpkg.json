@@ -113,6 +113,18 @@
         "sdl2"
       ]
     },
+    "sdl3-binding": {
+      "description": "Make available SDL3 binding",
+      "dependencies": [
+        "sdl3"
+      ]
+    },
+    "sdl3-renderer-binding": {
+      "description": "Make available SDL3 Renderer binding",
+      "dependencies": [
+        "sdl3"
+      ]
+    },
     "test-engine": {
       "description": "Build test engine",
       "supports": "!uwp",

@@ -18,6 +18,10 @@ if (@IMGUI_BUILD_SDL2_BINDING@ OR @IMGUI_BUILD_SDL2_RENDERER_BINDING@)
     find_dependency(SDL2 CONFIG)
 endif()
 
+if (@IMGUI_BUILD_SDL3_BINDING@ OR @IMGUI_BUILD_SDL3_RENDERER_BINDING@)
+    find_dependency(SDL3 CONFIG)
+endif()
+
 if (@IMGUI_BUILD_VULKAN_BINDING@)
     find_dependency(Vulkan)
 endif()
