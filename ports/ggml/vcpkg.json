@@ -15,5 +15,39 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cuda": {
+      "description": "Enable CUDA support",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "hip": {
+      "description": "Enable HIP support"
+    },
+    "metal": {
+      "description": "Enable Metal support",
+      "supports": "osx"
+    },
+    "opencl": {
+      "description": "Enable OpenCL support",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support",
+      "supports": "!osx"
+    },
+    "sycl": {
+      "description": "Enable SYCL support"
+    },
+    "vulkan": {
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "vulkan"
+      ]
+    }
+  }
 }

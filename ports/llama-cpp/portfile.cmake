@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
       -DGGML_CCACHE=OFF
       -DLLAMA_BUILD_TESTS=OFF
+      -DLLAMA_ALL_WARNINGS=OFF
 )
 
 vcpkg_cmake_install()

@@ -9,17 +9,27 @@ vcpkg_from_github(
         0002-fix-tests.patch
 )
 
-if(VCPKG_TARGET_IS_OSX)
-    set(GGML_OPENMP OFF)
-else()
-    set(GGML_OPENMP ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cuda     GGML_CUDA
+        hip      GGML_HIP
+        vulkan   GGML_VULKAN
+        metal    GGML_METAL
+        sycl     GGML_SYCL
+        opencl   GGML_OPENCL
+        openmp   GGML_OPENMP
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  GGML_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+      -DGGML_STATIC=${GGML_STATIC}
       -DGGML_CCACHE=OFF
       -DGGML_OPENMP=${GGML_OPENMP}
+      -DGGML_BUILD_NUMBER=1
+      ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
