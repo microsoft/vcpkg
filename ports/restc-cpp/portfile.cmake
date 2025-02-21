@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 c0c3795161654b91283b1536ba744ce50be248ebd68c2c28a1d29783d06adcfea16b1ca5b1eff27ff62f8bb347fbf3f56c6b49ee5b5875eb4eecf6824caca129
     HEAD_REF master
-        fix-asio-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
