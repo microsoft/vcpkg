@@ -1,0 +1,17 @@
+{
+  "name": "intrusive-shared-ptr",
+  "version": "1.6",
+  "description": "Intrusive reference counting smart pointer, highly configurable reference counted base class and various adapters. Also known as libisptr.",
+  "homepage": "https://github.com/gershnik/intrusive_shared_ptr",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
