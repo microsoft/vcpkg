@@ -1,9 +1,9 @@
 {
   "name": "sfgui",
-  "version": "0.4.0",
-  "port-version": 6,
-  "description": "simple and fast graphical user interface library",
+  "version": "1.0.0",
+  "description": "Simple and Fast Graphical User Interface Library",
   "homepage": "https://github.com/TankOs/SFGUI",
+  "license": "Zlib",
   "dependencies": [
     "sfml",
     {
