@@ -1989,7 +1989,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.8.0",
+      "baseline": "0.8.1",
       "port-version": 0
     },
     "cppunit": {
