@@ -1,0 +1,268 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85b58b2..1b2f9e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ project(hazelcast-cpp-client
+         LANGUAGES CXX)
+ 
+ # Set the C++ standard
+-set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ # Set the default build type for single-config generators if not given
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 71591f6..72ad23d 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -21,7 +21,7 @@ project (hazelcast-cpp-client-examples
+          DESCRIPTION "Hazelcast C++ Client Code Examples"
+          LANGUAGES CXX)
+ 
+-set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ if (NOT TARGET hazelcast-cpp-client)
+diff --git a/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h b/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h
+index a87fdcd..30dbefa 100644
+--- a/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h
++++ b/hazelcast/include/hazelcast/client/connection/ClientConnectionManagerImpl.h
+@@ -295,7 +295,7 @@ private:
+     std::unique_ptr<internal::socket::SocketFactory> socket_factory_;
+     HeartbeatManager heartbeat_;
+     std::thread io_thread_;
+-    std::unique_ptr<boost::asio::io_context::work> io_guard_;
++    std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> io_guard_;
+     const bool async_start_;
+     const config::client_connection_strategy_config::reconnect_mode
+       reconnect_mode_;
+diff --git a/hazelcast/include/hazelcast/client/internal/nearcache/impl/DefaultNearCache.h b/hazelcast/include/hazelcast/client/internal/nearcache/impl/DefaultNearCache.h
+index e94d2db..a9a5176 100644
+--- a/hazelcast/include/hazelcast/client/internal/nearcache/impl/DefaultNearCache.h
++++ b/hazelcast/include/hazelcast/client/internal/nearcache/impl/DefaultNearCache.h
+@@ -124,8 +124,7 @@ public:
+     {
+         expiration_cancelled_.store(true);
+         if (expiration_timer_) {
+-            boost::system::error_code ignored;
+-            expiration_timer_->cancel(ignored);
++            expiration_timer_->cancel();
+         }
+         near_cache_record_store_->destroy();
+     }
+diff --git a/hazelcast/include/hazelcast/client/internal/socket/BaseSocket.h b/hazelcast/include/hazelcast/client/internal/socket/BaseSocket.h
+index 718eccb..d305f1b 100644
+--- a/hazelcast/include/hazelcast/client/internal/socket/BaseSocket.h
++++ b/hazelcast/include/hazelcast/client/internal/socket/BaseSocket.h
+@@ -76,7 +76,7 @@ public:
+       const std::shared_ptr<connection::Connection> connection) override
+     {
+         boost::asio::steady_timer connectTimer(io_);
+-        connectTimer.expires_from_now(connect_timeout_);
++        connectTimer.expires_after(connect_timeout_);
+         connectTimer.async_wait([=](const boost::system::error_code& ec) {
+             if (ec == boost::asio::error::operation_aborted) {
+                 return;
+@@ -117,7 +117,7 @@ public:
+     {
+         check_connection(connection, invocation);
+         auto message = invocation->get_client_message();
+-        socket_strand_.post([connection, invocation, message, this]() mutable {
++        boost::asio::post(socket_strand_, [connection, invocation, message, this]() mutable {
+             if (!check_connection(connection, invocation)) {
+                 return;
+             }
+diff --git a/hazelcast/include/hazelcast/client/internal/socket/SSLSocket.h b/hazelcast/include/hazelcast/client/internal/socket/SSLSocket.h
+index c8aa41d..d83358a 100644
+--- a/hazelcast/include/hazelcast/client/internal/socket/SSLSocket.h
++++ b/hazelcast/include/hazelcast/client/internal/socket/SSLSocket.h
+@@ -45,7 +45,7 @@ public:
+         std::string description;
+     };
+ 
+-    SSLSocket(boost::asio::io_context& io_service,
++    SSLSocket(boost::asio::io_context& io_context,
+               boost::asio::ssl::context& context,
+               const client::address& address,
+               client::config::socket_options& socket_options,
+diff --git a/hazelcast/include/hazelcast/client/spi/impl/ClientExecutionServiceImpl.h b/hazelcast/include/hazelcast/client/spi/impl/ClientExecutionServiceImpl.h
+index 123e79f..16e60b3 100644
+--- a/hazelcast/include/hazelcast/client/spi/impl/ClientExecutionServiceImpl.h
++++ b/hazelcast/include/hazelcast/client/spi/impl/ClientExecutionServiceImpl.h
+@@ -96,9 +96,9 @@ private:
+       std::shared_ptr<boost::asio::steady_timer> timer)
+     {
+         if (delay.count() > 0) {
+-            timer->expires_from_now(delay);
++            timer->expires_after(delay);
+         } else {
+-            timer->expires_from_now(period);
++            timer->expires_after(period);
+         }
+ 
+         timer->async_wait([=](boost::system::error_code ec) {
+diff --git a/hazelcast/include/hazelcast/util/SyncHttpClient.h b/hazelcast/include/hazelcast/util/SyncHttpClient.h
+index 6b405d3..04e5491 100644
+--- a/hazelcast/include/hazelcast/util/SyncHttpClient.h
++++ b/hazelcast/include/hazelcast/util/SyncHttpClient.h
+@@ -39,7 +39,7 @@ public:
+ private:
+     std::string server_;
+     std::string uri_path_;
+-    boost::asio::io_service io_service_;
++    boost::asio::io_context io_service_;
+     boost::asio::ip::tcp::socket socket_;
+     boost::asio::streambuf response_;
+     std::istream response_stream_;
+diff --git a/hazelcast/include/hazelcast/util/SyncHttpsClient.h b/hazelcast/include/hazelcast/util/SyncHttpsClient.h
+index 941f251..9ed10f5 100644
+--- a/hazelcast/include/hazelcast/util/SyncHttpsClient.h
++++ b/hazelcast/include/hazelcast/util/SyncHttpsClient.h
+@@ -48,7 +48,7 @@ private:
+     std::chrono::steady_clock::duration timeout_;
+     std::string secret_removal_;
+ 
+-    boost::asio::io_service io_service_;
++    boost::asio::io_context io_service_;
+     boost::asio::ip::tcp::resolver resolver_;
+ 
+     boost::asio::ssl::context ssl_context_;
+diff --git a/hazelcast/src/hazelcast/client/network.cpp b/hazelcast/src/hazelcast/client/network.cpp
+index 980082e..51f7a66 100644
+--- a/hazelcast/src/hazelcast/client/network.cpp
++++ b/hazelcast/src/hazelcast/client/network.cpp
+@@ -119,7 +119,7 @@ ClientConnectionManagerImpl::start()
+       new boost::asio::ip::tcp::resolver(io_context_->get_executor()));
+     socket_factory_.reset(new internal::socket::SocketFactory(
+       client_, *io_context_, *io_resolver_));
+-    io_guard_.reset(new boost::asio::io_context::work(*io_context_));
++    io_guard_.reset(new boost::asio::executor_work_guard<boost::asio::io_context::executor_type>(io_context_->get_executor()));
+ 
+     if (!socket_factory_->start()) {
+         return false;
+@@ -153,7 +153,7 @@ ClientConnectionManagerImpl::schedule_connect_to_all_members()
+         return;
+     }
+ 
+-    connect_to_members_timer_->expires_from_now(
++    connect_to_members_timer_->expires_after(
+       boost::asio::chrono::seconds(1));
+     connect_to_members_timer_->async_wait([=](boost::system::error_code ec) {
+         if (ec == boost::asio::error::operation_aborted) {
+@@ -1234,7 +1234,7 @@ Connection::schedule_periodic_backup_cleanup(
+         return;
+     }
+ 
+-    backup_timer_->expires_from_now(backup_timeout);
++    backup_timer_->expires_after(backup_timeout);
+     backup_timer_->async_wait(
+       socket_->get_executor().wrap([=](boost::system::error_code ec) {
+           if (ec) {
+@@ -1273,8 +1273,7 @@ Connection::close(const std::string& reason, std::exception_ptr cause)
+         std::chrono::steady_clock::now().time_since_epoch()));
+ 
+     if (backup_timer_) {
+-        boost::system::error_code ignored;
+-        backup_timer_->cancel(ignored);
++        backup_timer_->cancel();
+     }
+ 
+     close_cause_ = cause;
+@@ -1631,8 +1630,7 @@ void
+ HeartbeatManager::shutdown()
+ {
+     if (timer_) {
+-        boost::system::error_code ignored;
+-        timer_->cancel(ignored);
++        timer_->cancel();
+     }
+ }
+ 
+@@ -1826,7 +1824,7 @@ SocketFactory::create(const address& address,
+ 
+ #ifdef HZ_BUILD_WITH_SSL
+ 
+-SSLSocket::SSLSocket(boost::asio::io_context& io_service,
++SSLSocket::SSLSocket(boost::asio::io_context& io_context,
+                      boost::asio::ssl::context& ssl_context,
+                      const client::address& address,
+                      client::config::socket_options& socket_options,
+@@ -1836,7 +1834,7 @@ SSLSocket::SSLSocket(boost::asio::io_context& io_service,
+       resolver,
+       address,
+       socket_options,
+-      io_service,
++      io_context,
+       connect_timeout_in_millis,
+       ssl_context)
+ {}
+diff --git a/hazelcast/src/hazelcast/client/stats.cpp b/hazelcast/src/hazelcast/client/stats.cpp
+index b41dae2..9b23210 100644
+--- a/hazelcast/src/hazelcast/client/stats.cpp
++++ b/hazelcast/src/hazelcast/client/stats.cpp
+@@ -96,8 +96,7 @@ void
+ Statistics::shutdown()
+ {
+     if (send_task_timer_) {
+-        boost::system::error_code ignored;
+-        send_task_timer_->cancel(ignored);
++        send_task_timer_->cancel();
+     }
+ }
+ 
+diff --git a/hazelcast/src/hazelcast/util/util.cpp b/hazelcast/src/hazelcast/util/util.cpp
+index e775dc2..3b6f7ad 100644
+--- a/hazelcast/src/hazelcast/util/util.cpp
++++ b/hazelcast/src/hazelcast/util/util.cpp
+@@ -36,9 +36,9 @@
+ #include <boost/algorithm/string/classification.hpp>
+ 
+ #ifdef HZ_BUILD_WITH_SSL
+-#include <boost/asio/io_service.hpp>
++#include <boost/asio/io_context.hpp>
+ #include <boost/asio/ip/basic_resolver.hpp>
+-#include <boost/asio/ssl/rfc2818_verification.hpp>
++#include <boost/asio/ssl/host_name_verification.hpp>
+ #include <boost/asio/ip/tcp.hpp>
+ #include <boost/system/system_error.hpp>
+ #endif // HZ_BUILD_WITH_SSL
+@@ -126,12 +126,10 @@ boost::asio::ip::address
+ AddressUtil::get_by_name(const std::string& host, const std::string& service)
+ {
+     try {
+-        boost::asio::io_service ioService;
++        boost::asio::io_context ioService;
+         boost::asio::ip::tcp::resolver res(ioService);
+-        boost::asio::ip::tcp::resolver::query query(host, service);
+-        boost::asio::ip::basic_resolver<boost::asio::ip::tcp>::iterator
+-          iterator = res.resolve(query);
+-        return iterator->endpoint().address();
++        auto results = res.resolve(host, service);
++        return results.begin()->endpoint().address();
+     } catch (boost::system::system_error& e) {
+         std::ostringstream out;
+         out << "Address " << host << " ip number is not available. "
+@@ -168,7 +166,7 @@ SyncHttpsClient::SyncHttpsClient(const std::string& server_ip,
+ 
+     ssl_context_.set_verify_mode(boost::asio::ssl::verify_peer);
+     ssl_context_.set_verify_callback(
+-      boost::asio::ssl::rfc2818_verification(server_));
++      boost::asio::ssl::host_name_verification(server_));
+     socket_ =
+       std::unique_ptr<boost::asio::ssl::stream<boost::asio::ip::tcp::socket>>(
+         new boost::asio::ssl::stream<boost::asio::ip::tcp::socket>(
+@@ -544,11 +542,9 @@ SyncHttpClient::open_connection()
+     try {
+         // Get a list of endpoints corresponding to the server name.
+         boost::asio::ip::tcp::resolver resolver(io_service_);
+-        boost::asio::ip::tcp::resolver::query query(server_, "http");
+-        boost::asio::ip::tcp::resolver::iterator endpoint_iterator =
+-          resolver.resolve(query);
++        auto results = resolver.resolve(server_, "http");
+ 
+-        boost::asio::connect(socket_, endpoint_iterator);
++        boost::asio::connect(socket_, results);
+ 
+         socket_.lowest_layer().set_option(boost::asio::ip::tcp::no_delay(true));
+ 

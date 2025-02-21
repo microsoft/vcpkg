@@ -1,0 +1,136 @@
+diff --git a/RobotRaconteurCore/src/HardwareTransport_libusb.cpp b/RobotRaconteurCore/src/HardwareTransport_libusb.cpp
+index cd42753c..2012083f 100644
+--- a/RobotRaconteurCore/src/HardwareTransport_libusb.cpp
++++ b/RobotRaconteurCore/src/HardwareTransport_libusb.cpp
+@@ -212,7 +212,7 @@ void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer&
+         throw SystemResourceException("Memory error");
+     this->data_buf = buf;
+ 
+-    libusb_fill_bulk_transfer(transfer, device_handle.get(), ep, boost::asio::buffer_cast<uint8_t*>(buf),
++    libusb_fill_bulk_transfer(transfer, device_handle.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(uint8_t*, buf),
+                               boost::numeric_cast<int>(boost::asio::buffer_size(buf)),
+                               &LibUsbDeviceManager::transfer_complete, this, 0);
+ 
+diff --git a/RobotRaconteurCore/src/OpenSSLAuthContext.cpp b/RobotRaconteurCore/src/OpenSSLAuthContext.cpp
+index ccdf08c0..fb3d7228 100644
+--- a/RobotRaconteurCore/src/OpenSSLAuthContext.cpp
++++ b/RobotRaconteurCore/src/OpenSSLAuthContext.cpp
+@@ -60,7 +60,7 @@ struct x509_stack_cleanup
+ BIO* make_buffer_bio(const boost::asio::const_buffer& b)
+ {
+     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+-    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)),
++    return ::BIO_new_mem_buf(const_cast<void*>(RR_BOOST_ASIO_BUFFER_CAST(const void*, b)),
+                              boost::numeric_cast<int>(boost::asio::buffer_size(b)));
+ }
+ 
+diff --git a/RobotRaconteurCore/src/TcpTransport.cpp b/RobotRaconteurCore/src/TcpTransport.cpp
+index 350495f6..c2b49ba0 100644
+--- a/RobotRaconteurCore/src/TcpTransport.cpp
++++ b/RobotRaconteurCore/src/TcpTransport.cpp
+@@ -1713,7 +1713,11 @@ void TcpWSSWebSocketConnector::Connect2(
+ 
+         context->set_verify_mode(boost::asio::ssl::verify_peer);
+ #ifndef ROBOTRACONTEUR_APPLE
++#if BOOST_ASIO_VERSION < 101601
+         context->set_verify_callback(boost::asio::ssl::rfc2818_verification(servername));
++#else
++        context->set_verify_callback(boost::asio::ssl::host_name_verification(servername));
++#endif
+ #else
+         context->set_verify_callback(boost::bind(&TcpWSSWebSocketConnector::verify_callback, RR_BOOST_PLACEHOLDERS(_1),
+                                                  RR_BOOST_PLACEHOLDERS(_2), servername));
+diff --git a/RobotRaconteurCore/src/websocket_stream.hpp b/RobotRaconteurCore/src/websocket_stream.hpp
+index 458f5dd2..60cc0f77 100644
+--- a/RobotRaconteurCore/src/websocket_stream.hpp
++++ b/RobotRaconteurCore/src/websocket_stream.hpp
+@@ -1740,6 +1740,14 @@ class websocket_stream : private boost::noncopyable
+         boost::range::copy(buffers, std::back_inserter(b));
+         async_write_some(b, handler);
+     }
++
++    template <typename Handler>
++    void async_write_some(const boost::asio::const_buffer& buffer, BOOST_ASIO_MOVE_ARG(Handler) handler)
++    {
++        const_buffers b;
++        b.push_back(buffer);
++        async_write_some(b, handler);
++    }
+ };
+ 
+ class websocket_tcp_connector : public boost::enable_shared_from_this<websocket_tcp_connector>
+diff --git a/RobotRaconteurGen/CMakeLists.txt b/RobotRaconteurGen/CMakeLists.txt
+index afd0df87..fee9c0ab 100644
+--- a/RobotRaconteurGen/CMakeLists.txt
++++ b/RobotRaconteurGen/CMakeLists.txt
+@@ -1,3 +1,31 @@
++if(NOT EMSCRIPTEN)
++    set(Boost_USE_MULTITHREADED ON)
++    set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
++    find_package(
++        Boost
++        COMPONENTS date_time
++                   filesystem
++                   system
++                   regex
++                   chrono
++                   atomic
++                   thread
++                   random
++                   program_options
++        REQUIRED)
++else()
++    find_package(
++        Boost
++        COMPONENTS date_time
++                   filesystem
++                   system
++                   regex
++                   chrono
++                   random
++                   program_options
++        REQUIRED)
++endif()
++
+ set(RobotRaconteurGen_src
+     CPPServiceLangGen.cpp CSharpServiceLangGen.cpp
+     # VBNETServiceLangGen.cpp
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index e917ef37..f198102a 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -2,6 +2,34 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/macros.cmake)
+ 
+ find_package(GTest)
+ 
++if(NOT EMSCRIPTEN)
++    set(Boost_USE_MULTITHREADED ON)
++    set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
++    find_package(
++        Boost
++        COMPONENTS date_time
++                   filesystem
++                   system
++                   regex
++                   chrono
++                   atomic
++                   thread
++                   random
++                   program_options
++        REQUIRED)
++else()
++    find_package(
++        Boost
++        COMPONENTS date_time
++                   filesystem
++                   system
++                   regex
++                   chrono
++                   random
++                   program_options
++        REQUIRED)
++endif()
++
+ add_subdirectory(robdef)
+ add_subdirectory(lfsr)
+ 

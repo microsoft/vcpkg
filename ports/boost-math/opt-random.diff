@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cf695409e4..ea9ffdf8eb 100644
---- a/CMakeLists.txt	
+index 7965bd1..4e6c492 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -34,7 +34,7 @@ else()
+@@ -38,7 +38,7 @@ else()
        Boost::integer
        Boost::lexical_cast
        Boost::predef
