@@ -3700,6 +3700,10 @@
       "baseline": "20U2",
       "port-version": 6
     },
+    "intrusive-shared-ptr": {
+      "baseline": "1.6",
+      "port-version": 0
+    },
     "io2d": {
       "baseline": "2020-09-14",
       "port-version": 5
