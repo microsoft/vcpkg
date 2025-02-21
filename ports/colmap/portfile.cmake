@@ -1,4 +1,5 @@
-set(COLMAP_REF "aa087848a8bd09cebf3e3cc8a5732552f30c51ad") # v3.11.1
+# Update both, literally.
+set(COLMAP_REF 3.11.1 "682ea9ac4020a143047758739259b3ff04dabe8d")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,6 +7,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 1260db4346cc33c6c35efdee0157450fccef67dbc9de876fdc997c7cb90daec716e5ccec97df0a77e3e8686f43ec79f2c0a1523ea12eca2ee158347cb52dea48
     HEAD_REF main
+    PATCHES
+        no-glu.diff
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -15,8 +18,10 @@ endif()
 # set GIT_COMMIT_ID and GIT_COMMIT_DATE
 if(DEFINED VCPKG_HEAD_VERSION)
     set(GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
+elseif(NOT VERSION IN_LIST COLMAP_REF)
+    message(FATAL_ERROR "Version ${VERSION} missing in COLMAP_REF (${COLMAP_REF})")
 else()
-    set(GIT_COMMIT_ID "${COLMAP_REF}")
+    list(GET COLMAP_REF 1 GIT_COMMIT_ID)
 endif()
 
 string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")

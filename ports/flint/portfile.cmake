@@ -1,6 +1,6 @@
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.flintlib.org/flint-${VERSION}.zip"
+    URLS "https://flintlib.org/download/flint-${VERSION}.zip"
     FILENAME "flint-${VERSION}.zip"
     SHA512 3dd9a4e79e08ab6bc434a786c8d4398eba6cb04e57bcb8d01677f4912cddf20ed3a971160a3e2d533d9a07b728678b0733cc8315bcb39a3f13475b6efa240062
 )

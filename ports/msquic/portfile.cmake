@@ -16,6 +16,7 @@ vcpkg_from_github(
         uwp-link-libs.diff
         exports-for-msh3.diff
         no-werror.patch
+        avoid-w-invalid-unevaluated-string.patch
 )
 
 set(QUIC_TLS "schannel")

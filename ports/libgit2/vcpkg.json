@@ -1,6 +1,7 @@
 {
   "name": "libgit2",
   "version-semver": "1.9.0",
+  "port-version": 1,
   "description": "A C library implementing the Git core methods with a solid API",
   "homepage": "https://github.com/libgit2/libgit2",
   "license": null,
