@@ -5,7 +5,6 @@
   "homepage": "https://github.com/oclero/qlementine/",
   "documentation": "https://oclero.github.io/qlementine/",
   "license": "MIT",
-  "supports": "windows | linux | osx",
   "dependencies": [
     {
       "name": "qtbase",
