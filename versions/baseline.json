@@ -1993,7 +1993,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.7.5",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "cppunit": {
@@ -2221,7 +2221,7 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "2.118.0",
+      "baseline": "2.123.2",
       "port-version": 0
     },
     "daw-json-link": {
@@ -2413,7 +2413,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.9.9",
+      "baseline": "1.9.10",
       "port-version": 0
     },
     "dstorage": {
@@ -3654,6 +3654,10 @@
     },
     "implot": {
       "baseline": "0.16",
+      "port-version": 0
+    },
+    "implot3d": {
+      "baseline": "0.2",
       "port-version": 0
     },
     "indicators": {
@@ -6677,7 +6681,7 @@
       "port-version": 1
     },
     "openh264": {
-      "baseline": "2.5.0",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "openigtlink": {
@@ -7245,7 +7249,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "3.2.0",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "proxygen": {
@@ -7900,6 +7904,10 @@
       "baseline": "7.0.0",
       "port-version": 0
     },
+    "red0124-ssp": {
+      "baseline": "1.8.0",
+      "port-version": 0
+    },
     "redis-plus-plus": {
       "baseline": "1.3.13",
       "port-version": 0
@@ -8121,7 +8129,7 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.8",
       "port-version": 0
     },
     "sajson": {
@@ -8217,7 +8225,7 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.30.12",
+      "baseline": "2.32.0",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -8657,7 +8665,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.49.0",
+      "baseline": "3.49.1",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -9181,7 +9189,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.22",
+      "baseline": "1.5.23",
       "port-version": 0
     },
     "tre": {
@@ -9581,7 +9589,7 @@
       "port-version": 2
     },
     "vsg": {
-      "baseline": "1.1.8",
+      "baseline": "1.1.10",
       "port-version": 0
     },
     "vsgimgui": {
@@ -9813,7 +9821,7 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.11.2",
+      "baseline": "4.11.3",
       "port-version": 0
     },
     "wtl": {
