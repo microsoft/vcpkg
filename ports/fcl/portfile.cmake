@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 0.7.0
     SHA512 95612476f4706fcd60812204ec7495a956c4e318cc6ace9526ac93dc765605ddf73b2d0d9ff9f4c9c739e43c5f8e24670113c86e02868a2949ab234c3bf82374
     HEAD_REF master
+    PATCHES
+        dont-lower-c++-std.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FCL_STATIC_LIBRARY)
