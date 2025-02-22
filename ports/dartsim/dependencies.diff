@@ -1,0 +1,27 @@
+diff --git a/cmake/DARTConfig.cmake.in b/cmake/DARTConfig.cmake.in
+index a66736f..226d86e 100644
+--- a/cmake/DARTConfig.cmake.in
++++ b/cmake/DARTConfig.cmake.in
+@@ -20,6 +20,9 @@ else()
+   endif()
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(assimp CONFIG)
++
+ #===============================================================================
+ # Helper Function Definitions
+ #===============================================================================
+diff --git a/cmake/Findassimp.cmake b/cmake/Findassimp.cmake
+index b5c1c66..099a3b4 100644
+--- a/cmake/Findassimp.cmake
++++ b/cmake/Findassimp.cmake
+@@ -25,7 +25,7 @@ find_path(ASSIMP_INCLUDE_DIRS assimp/scene.h
+     PATHS "${CMAKE_INSTALL_PREFIX}/include")
+ 
+ # Libraries
+-if(MSVC)
++if(1)
+   find_package(assimp QUIET CONFIG)
+   if(TARGET assimp::assimp)
+     set(ASSIMP_LIBRARIES "assimp::assimp")

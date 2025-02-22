@@ -8,6 +8,7 @@ vcpkg_from_github(
     SHA512 3c621245c5dc1bf26932c33c940e2b09aaebd1a15f3620616c60296f18a67e1044728543b4f640f92caf8f98295e350679b70eb11aecadea9e4a28aaf370ea75
     HEAD_REF main
     PATCHES
+        dependencies.diff
         disable_unit_tests_examples_and_tutorials.patch
 )
 
