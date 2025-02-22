@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
         disable_unit_tests_examples_and_tutorials.patch
+        pkgconfig.diff
 )
 
 vcpkg_cmake_configure(
@@ -25,12 +26,14 @@ vcpkg_cmake_configure(
         -Durdfdom_headers_VERSION_MAJOR=1 # urdfdom-headers does not expose a header macro for its version.
         -Durdfdom_headers_VERSION_MINOR=0 # versions of at least 1.0.0 use std:: constructs in their ABI instead of boost:: ones.
         -Durdfdom_headers_VERSION_PATCH=0
+    OPTIONS_DEBUG
+        -DDART_PKG_DEBUG_POSTFIX=d
     MAYBE_UNUSED_VARIABLES
         DART_MSVC_DEFAULT_OPTIONS
 )
 
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/dart/cmake PACKAGE_NAME dart)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
