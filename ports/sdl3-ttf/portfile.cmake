@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         harfbuzz SDLTTF_HARFBUZZ
-	svg      SDLTTF_PLUTOSVG
+        svg      SDLTTF_PLUTOSVG
 )
 
 vcpkg_cmake_configure(
