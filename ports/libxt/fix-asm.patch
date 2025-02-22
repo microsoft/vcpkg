@@ -1,0 +1,86 @@
+diff --git a/configure.ac b/configure.ac
+index d7c7dc040c..0704ca7f77 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -86,6 +86,8 @@ DEFAULT_CFLAGS_FOR_BUILD="${CFLAGS} ${CWARNFLAGS}"
+ AC_SUBST(CFLAGS_FOR_BUILD)
+ AC_SUBST(LDFLAGS_FOR_BUILD)
+ 
++AM_PROG_AS
++
+ # Map function checks to old Imake #defines
+ case $host_os in
+ 	# darwin through Snow Leopard has poll() but can't be used to poll character devices.
+diff --git a/src/Initialize.c b/src/Initialize.c
+index 445df3eac8..b94961606e 100644
+--- a/src/Initialize.c
++++ b/src/Initialize.c
+@@ -246,21 +246,6 @@ _XtInherit(void)
+  * cygwin-xfree: http://www.cygwin.com/ml/cygwin-xfree/2003-10/msg00000.html
+  */
+ 
+-#if defined(__x86_64__) || defined(_M_X64)
+-asm(".section .trampoline, \"dwx\" \n\
+- .globl _XtInherit        \n\
+- _XtInherit:              \n\
+-    jmp *_y(%rip)         \n\
+-_y: .quad __XtInherit     \n\
+-    .text                 \n");
+-#else
+-asm(".data\n\
+- .globl __XtInherit        \n\
+- __XtInherit:      jmp *_y \n\
+-  _y: .long ___XtInherit   \n\
+-    .text                 \n");
+-#endif
+-
+ #define _XtInherit __XtInherit
+ #endif
+ 
+diff --git a/src/Initialize_asm.S b/src/Initialize_asm.S
+new file mode 100644
+index 0000000000..e5639c1c5e
+--- /dev/null
++++ b/src/Initialize_asm.S
+@@ -0,0 +1,17 @@
++#ifdef __x86_64__
++.section .trampoline, "dwx"
++.globl _XtInherit
++_XtInherit:
++    jmp *_y(%rip)
++_y:
++    .quad __XtInherit
++.text
++#else
++.data
++.globl __XtInherit
++__XtInherit:
++    jmp *_y
++_y:
++    .long ___XtInherit
++.text
++#endif
+\ No newline at end of file
+diff --git a/src/Makefile.am b/src/Makefile.am
+index a26e10d7ad..2ccf809870 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -40,6 +40,7 @@ libXt_la_SOURCES = \
+ 	HookObj.c \
+ 	Hooks.c \
+ 	Initialize.c \
++	Initialize_asm.S \
+ 	Intrinsic.c \
+ 	Keyboard.c \
+ 	Manage.c \
+@@ -70,6 +71,10 @@ libXt_la_SOURCES = \
+ 	Vendor.c \
+ 	sharedlib.c
+ 
++# Define a custom rule to compile .S files with the ASM compiler
++#.S.o:
++#    $(CCAS) $(CCASFLAGS) -c $< -o $@
++
+ DISTCLEANFILES = StringDefs.c
+ 
+ libXt_la_LIBADD = @XT_LIBS@
