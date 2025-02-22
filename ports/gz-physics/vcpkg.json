@@ -1,0 +1,22 @@
+{
+  "name": "gz-physics",
+  "version": "6.5.1",
+  "description": "component of Gazebo, provides an abstract physics interface designed to support simulation and rapid development of robot applications.",
+  "homepage": "https://gazebosim.org/libs/physics",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "bullet3",
+    "dartsim",
+    "eigen3",
+    "gz-cmake",
+    "gz-common",
+    "gz-math",
+    "gz-plugin",
+    "gz-utils",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    "sdformat"
+  ]
+}

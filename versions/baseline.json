@@ -3364,55 +3364,55 @@
       "baseline": "0.12.3",
       "port-version": 0
     },
-    "gz-cmake3": {
+    "gz-cmake": {
       "baseline": "3.4.1",
-      "port-version": 5
+      "port-version": 0
     },
-    "gz-common5": {
+    "gz-common": {
       "baseline": "5.4.1",
-      "port-version": 3
+      "port-version": 0
     },
-    "gz-fuel-tools8": {
+    "gz-fuel-tools": {
       "baseline": "8.1.0",
       "port-version": 0
     },
-    "gz-gui7": {
+    "gz-gui": {
       "baseline": "7.2.1",
       "port-version": 0
     },
-    "gz-math7": {
+    "gz-math": {
       "baseline": "7.3.0",
       "port-version": 0
     },
-    "gz-msgs9": {
+    "gz-msgs": {
       "baseline": "9.5.0",
       "port-version": 0
     },
-    "gz-physics6": {
+    "gz-physics": {
       "baseline": "6.5.1",
-      "port-version": 2
+      "port-version": 0
     },
-    "gz-plugin2": {
+    "gz-plugin": {
       "baseline": "2.0.1",
       "port-version": 0
     },
-    "gz-rendering7": {
+    "gz-rendering": {
       "baseline": "7.4.1",
-      "port-version": 1
+      "port-version": 0
     },
-    "gz-sensors7": {
+    "gz-sensors": {
       "baseline": "7.3.0",
       "port-version": 0
     },
-    "gz-tools2": {
+    "gz-tools": {
       "baseline": "2.0.0",
-      "port-version": 1
+      "port-version": 0
     },
-    "gz-transport12": {
+    "gz-transport": {
       "baseline": "12.2.1",
       "port-version": 0
     },
-    "gz-utils2": {
+    "gz-utils": {
       "baseline": "2.0.0",
       "port-version": 0
     },
@@ -8228,7 +8228,7 @@
       "baseline": "2025-01-25",
       "port-version": 0
     },
-    "sdformat13": {
+    "sdformat": {
       "baseline": "13.6.0",
       "port-version": 0
     },

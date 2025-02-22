@@ -1,0 +1,22 @@
+{
+  "name": "gz-transport",
+  "version": "12.2.1",
+  "description": "Transport middleware for robotics",
+  "license": null,
+  "dependencies": [
+    "cppzmq",
+    "gz-cmake",
+    "gz-msgs",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp & !osx"
+    },
+    "protobuf",
+    "sqlite3",
+    "zeromq"
+  ]
+}
