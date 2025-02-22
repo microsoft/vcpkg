@@ -1,6 +1,6 @@
 {
   "name": "mongo-c-driver",
-  "version": "1.29.2",
+  "version": "1.30.0",
   "description": "Client library written in C for MongoDB.",
   "homepage": "https://github.com/mongodb/mongo-c-driver",
   "license": null,

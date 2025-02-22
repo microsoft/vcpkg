@@ -8,11 +8,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND components dxc)
 endif()
 
+# FindVulkan.cmake checks the version of the Vulkan SDK by comparing the version string with the version of the vulkan-headers.
+# Vulkan headers dont use the build number, so even if they technically tag new version number with a build number, it cannot be parsed correctly by FindVulkan.cmake.
+string(REGEX REPLACE "^([0-9]+\\.[0-9]+\\.[0-9]+)(\\.[0-9]+)?$" "\\1" VERSION_TRIMMED "${VERSION}")
 set(vulkan_result_file "${CURRENT_BUILDTREES_DIR}/vulkan-${TARGET_TRIPLET}.cmake.log")
 vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_INSTALLED_DIR}/share/vulkan/detect-vulkan"
     OPTIONS
-        "-DVCPKG_VULKAN_VERSION=${VERSION}"
+        "-DVCPKG_VULKAN_VERSION=${VERSION_TRIMMED}"
         "-DVCPKG_VULKAN_COMPONENTS=${components}"
     OPTIONS_RELEASE
         "-DOUTFILE=${vulkan_result_file}"

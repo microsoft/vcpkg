@@ -1,31 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b206edb6..1db4099d 100644
+index 1b55e39..23ce61f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -30,7 +30,6 @@ option(ADA_TESTING "Build tests" ${BUILD_TESTING})
+@@ -22,7 +22,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake)
  # errors due to CPM, so this is here to support disabling all the testing
  # and tooling for ada if one only wishes to use the ada library.
  if(ADA_TESTING OR ADA_BENCHMARKS OR ADA_TOOLS)
 -  include(cmake/CPM.cmake)
    # CPM requires git as an implicit dependency
-   find_package(Git QUIET)
    # We use googletest in the tests
+   if(ADA_TESTING)
 diff --git a/tools/cli/CMakeLists.txt b/tools/cli/CMakeLists.txt
-index ff57220b..a6d90f29 100644
+index 397b428..5860fd1 100644
 --- a/tools/cli/CMakeLists.txt
 +++ b/tools/cli/CMakeLists.txt
-@@ -8,12 +8,8 @@ if(MSVC AND BUILD_SHARED_LIBS)
+@@ -8,12 +8,7 @@ if(MSVC AND BUILD_SHARED_LIBS)
          "$<TARGET_FILE:ada>"      # <--this is in-file
          "$<TARGET_FILE_DIR:adaparse>")                 # <--this is out-file path
  endif()
--CPMAddPackage("gh:fmtlib/fmt#10.2.1")
+-CPMAddPackage("gh:fmtlib/fmt#11.0.2")
 -CPMAddPackage(
 -  GITHUB_REPOSITORY jarro2783/cxxopts
 -  VERSION 3.2.0
 -  OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 -)
 +find_package(fmt CONFIG REQUIRED)
-+find_package(cxxopts CONFIG REQUIRED)
  target_link_libraries(adaparse PRIVATE cxxopts::cxxopts fmt::fmt)
  
  if(MSVC OR MINGW)

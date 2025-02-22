@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
     REF "release-${VERSION}"
-    SHA512 c2cfab927e6ff8a5a7b90360c99192ae9cd598614965fbd4816361b19c5bf25e5524f0e73ce56774e32903addbce8a8dbcb9520203f845421d33cb33f832977b
+    SHA512 9d7548e6d992cde412e331fc6253960d37897cc4b55cafdc07f7d0a14a70d5ec8534b33f3bb537c797306035cb80aa1b3abf2656ed9d4a6e43e375f5f6e1e2a4
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -12,8 +12,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH HPP_SOURCE_PATH
     REPO KhronosGroup/OpenXR-hpp
-    REF 63db9919822f8af6f7bf7416ba6a015d4617202e
-    SHA512 9e768f485d1631f8e74f35f028a64e2d64e33d362c53ae1c54427a10786e3befdd24089927319aa1a4b4c3e010247bd6cb3394bcee460c467c637ab6bc7bec90
+    REF af6f069aa1e003041311090237bb41471c776ff6
+    SHA512 986d214a7f725c9b8000a61d8614ecaa0495173a1683a5e1bec636be22f6617551ae43e3e0fd2b0cba6e427f6ed6014daa56deed8497b32cb1236cd35ed8788c
     HEAD_REF master
     PATCHES
         python3_8_compatibility.patch
@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_INCLUDEDIR=include
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
