@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
         -DDART_VERBOSE=ON
         -DDART_MSVC_DEFAULT_OPTIONS=ON
         -DDART_SKIP_DOXYGEN=ON
-        -DDART_SKIP_FLANN=ON
         -DDART_SKIP_IPOPT=ON
         -DDART_SKIP_NLOPT=ON
         -DDART_SKIP_pagmo=ON
@@ -46,5 +45,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_LOCAL_PATH \"${SOURCE_PATH}/data/\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_GLOBAL_PATH                                                  \\\n  \"${CURRENT_PACKAGES_DIR}/share/doc/dart/data/\"" "")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
