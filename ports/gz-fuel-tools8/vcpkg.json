@@ -1,0 +1,11 @@
+{
+  "name": "gz-fuel-tools8",
+  "version": "8.1.0",
+  "port-version": 1,
+  "description": "Tools for using fuel API to download robot models",
+  "homepage": "https://gazebosim.org/libs/fuel_tools",
+  "license": null,
+  "dependencies": [
+    "gz-fuel-tools"
+  ]
+}
