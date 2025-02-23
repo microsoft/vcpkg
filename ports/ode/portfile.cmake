@@ -2,9 +2,8 @@ vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odedevs/ode
     REF ${VERSION}
-    SHA512 683869e6c7a39ea8dc6666b47633199111d1c0f2516cacb534ec57f6025a5780d85b2e59095a736790662280e4e4c9a2cd44b2cafaa34669e6861cce5b32e76b
+    SHA512 c9160d9b7419c74c700d9efe5cdb82e70cab867a10f03fe8b99c32ed946ee4ecb50e055a6c11495dd9ed4754110ef0d071fbcfbf4cc6b67841607ed90b1ce35b
     HEAD_REF master
-    PATCHES
 )
 
 vcpkg_cmake_configure(
