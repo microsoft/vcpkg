@@ -16,19 +16,9 @@ vcpkg_from_github(
     PATCHES
         reuse-ompl.diff
         export-targets.diff
-#        fix_dependency.patch
-#        ${STATIC_PATCH}
-#        add-include-chrono.patch #https://github.com/ompl/ompl/pull/1201
 )
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH OMPL_SOURCE_PATH
-    REPO ompl/ompl
-    REF "${VERSION}"
-    SHA512 d1024d7cc8e309a1df94a950be67eefae1e66abaccd6b6b8980939559aee3d73c05c838ab24c818b6b57ce6c4b3181fde7595d3d1dd36d6cd0c6d125338084ac
-    HEAD_REF main
-)
-file(COPY "${OMPL_SOURCE_PATH}/CMakeModules" DESTINATION "${SOURCE_PATH}/ompl")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/ompl/CMakeModules" DESTINATION "${SOURCE_PATH}/ompl")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -52,17 +42,13 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_MORSE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_ODE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_PQP=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_pypy=ON
-        #-DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
-        #"-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake" # python noop polyfill
         -DCMAKE_DISABLE_FIND_PACKAGE_spot=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Triangle=ON
-        -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 
 vcpkg_cmake_install()
 
-# Add-on to ompl
+# Extending the ompl CMake package
 vcpkg_cmake_config_fixup(PACKAGE_NAME ompl)
 file(COPY "${CURRENT_PORT_DIR}/omplapp-dependencies.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ompl")
 

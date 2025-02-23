@@ -20,10 +20,13 @@ vcpkg_from_github(
         0004_include_chrono.patch # https://github.com/ompl/ompl/pull/1201
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/external")
+# The ompl/omplapp ports don't support python features.
+file(COPY "${CURRENT_PORT_DIR}/FindPython.cmake" DESTINATION "${SOURCE_PATH}/CMakeModules")
 
 set(ENV{PYTHON_EXEC} "PYTHON_EXEC-NOTFOUND")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DOMPL_VERSIONED_INSTALL=OFF
         -DOMPL_REGISTRATION=OFF
@@ -38,11 +41,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_flann=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_MORSE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_ODE=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
-        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake" # python noop polyfill
         -DCMAKE_DISABLE_FIND_PACKAGE_spot=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Triangle=ON
-        -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 
 vcpkg_cmake_install()
@@ -55,5 +55,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/share/ompl/demos"
 )
+
+# Used by port omplapp
+file(COPY "${SOURCE_PATH}/CMakeModules" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ompl")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
