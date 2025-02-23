@@ -17,6 +17,8 @@ vcpkg_from_github(
         reuse-ompl.diff
         export-targets.diff
 )
+file(GLOB find_modules "${SOURCE_PATH}/CMakeModules/Find*.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/external" ${find_modules})
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/ompl/CMakeModules" DESTINATION "${SOURCE_PATH}/ompl")
 
