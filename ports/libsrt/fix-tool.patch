@@ -24,7 +24,7 @@ index 7ed11ef..794028a 100644
  		#srt_add_application(srt-multiplex ${VIRTUAL_srtsupport})
 -		srt_add_application(srt-tunnel ${VIRTUAL_srtsupport})
 +		srt_add_application(srt-tunnel ${VIRTUAL_srtsupport} ${VIRTUAL_srt})
-+		target_link_libraries(srt-file-transmit ${SSL_LIBRARIES})
++		target_link_libraries(srt-tunnel ${SSL_LIBRARIES})
  	endif()
  
  	if (ENABLE_TESTING)
