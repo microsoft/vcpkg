@@ -26,8 +26,6 @@
           "default-features": false,
           "features": [
             "collision-bullet",
-            "collision-ode",
-            "gui",
             "spdlog",
             "utils"
           ]
@@ -44,6 +42,15 @@
           "name": "dartsim",
           "default-features": false,
           "features": [
+            "collision-ode"
+          ],
+          "platform": "!(arm & windows)"
+        },
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "gui",
             "gui-osg"
           ],
           "platform": "!arm & !android"
