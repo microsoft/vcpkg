@@ -16,6 +16,7 @@ vcpkg_from_github(
     PATCHES
         reuse-ompl.diff
         export-targets.diff
+        boost-program-options.diff
 )
 file(GLOB find_modules "${SOURCE_PATH}/CMakeModules/Find*.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/external" ${find_modules})
