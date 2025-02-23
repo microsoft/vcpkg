@@ -4,6 +4,8 @@ vcpkg_from_bitbucket(
     REF ${VERSION}
     SHA512 c9160d9b7419c74c700d9efe5cdb82e70cab867a10f03fe8b99c32ed946ee4ecb50e055a6c11495dd9ed4754110ef0d071fbcfbf4cc6b67841607ed90b1ce35b
     HEAD_REF master
+    PATCHES
+        arm64-msvc.diff
 )
 
 vcpkg_cmake_configure(
