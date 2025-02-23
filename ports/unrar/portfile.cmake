@@ -10,6 +10,8 @@ vcpkg_download_distfile(ARCHIVE
     URLS ${UNRAR_URL}
     FILENAME ${UNRAR_FILENAME}
     SHA512 ${UNRAR_SHA512}
+    PATCHES
+      remove-flags.patch
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

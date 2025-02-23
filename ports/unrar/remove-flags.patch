@@ -1,0 +1,156 @@
+diff --git a/UnRAR.vcxproj b/UnRAR.vcxproj
+index 512bcf15da..9e3f7d0b9b 100644
+--- a/UnRAR.vcxproj
++++ b/UnRAR.vcxproj
+@@ -99,7 +99,6 @@
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -125,7 +125,6 @@
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -156,7 +156,6 @@
+       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+       <FloatingPointModel>Precise</FloatingPointModel>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -190,7 +190,6 @@
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+diff --git a/UnRARDll.vcxproj b/UnRARDll.vcxproj
+index 72cecd8dba..9af2d14880 100644
+--- a/UnRARDll.vcxproj
++++ b/UnRARDll.vcxproj
+@@ -131,7 +131,7 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
++      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>RARDLL;UNRAR;SILENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <MinimalRebuild>false</MinimalRebuild>
+@@ -140,7 +140,6 @@
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <StructMemberAlignment>Default</StructMemberAlignment>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -161,7 +160,7 @@
+       <TargetEnvironment>X64</TargetEnvironment>
+     </Midl>
+     <ClCompile>
+-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
++      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>RARDLL;UNRAR;SILENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <MinimalRebuild>false</MinimalRebuild>
+@@ -170,7 +169,6 @@
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <StructMemberAlignment>Default</StructMemberAlignment>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -188,7 +186,7 @@
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <ClCompile>
+-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
++      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>MaxSpeed</Optimization>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+@@ -204,7 +202,6 @@
+       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+       <FloatingPointModel>Precise</FloatingPointModel>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -228,14 +225,13 @@
+       <TargetEnvironment>X64</TargetEnvironment>
+     </Midl>
+     <ClCompile>
+-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
++      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>MaxSpeed</Optimization>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+       <OmitFramePointers>true</OmitFramePointers>
+       <WholeProgramOptimization>false</WholeProgramOptimization>
+       <PreprocessorDefinitions>RARDLL;UNRAR;SILENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <StringPooling>false</StringPooling>
+       <MinimalRebuild>false</MinimalRebuild>
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+@@ -243,7 +239,6 @@
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -264,7 +259,7 @@
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_nocrypt|Win32'">
+     <ClCompile>
+-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
++      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>MaxSpeed</Optimization>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+@@ -280,7 +275,6 @@
+       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+       <FloatingPointModel>Precise</FloatingPointModel>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -304,14 +298,13 @@
+       <TargetEnvironment>X64</TargetEnvironment>
+     </Midl>
+     <ClCompile>
+-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
++      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>MaxSpeed</Optimization>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+       <OmitFramePointers>true</OmitFramePointers>
+       <WholeProgramOptimization>false</WholeProgramOptimization>
+       <PreprocessorDefinitions>RARDLL;UNRAR;SILENT;RAR_NOCRYPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <StringPooling>false</StringPooling>
+       <MinimalRebuild>false</MinimalRebuild>
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+@@ -319,7 +312,6 @@
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+-      <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>

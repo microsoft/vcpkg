@@ -5,6 +5,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         REF "v${VERSION}-win"
         SHA512 c34518ca35f19ab5539ea82cc73ecbc9828413530cec8dbbe56b17517ec6b7b0326a29e5b343b950afe128829c8e23e75d19494e17f7be4fce9edb524c44ee56
         HEAD_REF windows
+        PATCHES
+          fix-sizeof.patch
     )
 else()
     vcpkg_from_github(

@@ -1,0 +1,32 @@
+diff --git a/include/vsg/core/Object.h b/include/vsg/core/Object.h
+index fce17f532b..e26bc80233 100644
+--- a/include/vsg/core/Object.h	
++++ b/include/vsg/core/Object.h
+@@ -125,7 +125,7 @@ namespace vsg
+         void setValue(const std::string& key, const T& value);
+ 
+         /// specialization of setValue to handle passing C strings
+-        void setValue(const std::string& key, const char* value) { setValue(key, value ? std::string(value) : std::string()); }
++        inline void setValue(const std::string& key, const char* value) { setValue(key, value ? std::string(value) : std::string()); }
+ 
+         /// get specified value type, return false if value associated with key is not assigned or is not the correct type
+         template<typename T>
+diff --git a/src/vsg/core/Object.cpp b/src/vsg/core/Object.cpp
+index 8b39dedfb0..7f6e9b17de 100644
+--- a/src/vsg/core/Object.cpp	
++++ b/src/vsg/core/Object.cpp
+@@ -14,6 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
+ #include <vsg/core/Auxiliary.h>
+ #include <vsg/core/ConstVisitor.h>
+ #include <vsg/core/Object.h>
++#include <vsg/core/Value.h>
+ #include <vsg/core/Visitor.h>
+ 
+ #include <vsg/io/Input.h>
+@@ -242,3 +243,6 @@ void Object::operator delete(void* ptr)
+ {
+     vsg::deallocate(ptr);
+ }
++
++// Explicitly instantiate the function template for std::string
++template void vsg::Object::setValue<std::string>(const std::string& key, const std::string& value);

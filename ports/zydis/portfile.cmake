@@ -12,6 +12,10 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYDIS_BUILD_SHARED_LIB)
 
+file(READ "${SOURCE_PATH}/resources/VersionInfo.rc" contents) #Convert UTF-16-BOM file to UTF-8
+file(REMOVE "${SOURCE_PATH}/resources/VersionInfo.rc")
+file(WRITE "${SOURCE_PATH}/resources/VersionInfo.rc" "${contents}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

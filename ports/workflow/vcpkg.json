@@ -1,6 +1,7 @@
 {
   "name": "workflow",
   "version": "0.10.9",
+  "port-version": 1,
   "description": "About C++ Parallel Computing and Asynchronous Networking Engine",
   "homepage": "https://github.com/sogou/workflow",
   "license": "Apache-2.0",
