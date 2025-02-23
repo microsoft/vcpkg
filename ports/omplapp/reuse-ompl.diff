@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 83a921a..a267cc6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -249,18 +249,12 @@ if(PQP_FOUND)
+     set(OMPLAPP_LIBRARIES ${OMPLAPP_LIBRARIES} ${PQP_LIBRARY})
+ endif()
+ 
+-add_subdirectory(ompl/doc)
+-add_subdirectory(ompl/src)
+-add_subdirectory(ompl/py-bindings)
+-add_subdirectory(ompl/tests)
+-add_subdirectory(ompl/demos)
+-add_subdirectory(ompl/scripts)
++find_package(ompl CONFIG REQUIRED)
+ add_subdirectory(gui)
+ add_subdirectory(doc)
+ add_subdirectory(src)
+ add_subdirectory(demos)
+ add_subdirectory(benchmark)
+-add_subdirectory(py-bindings)
+ 
+ install(DIRECTORY resources
+     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/ompl"
+@@ -287,6 +281,8 @@ if(OMPL_BUILD_PYBINDINGS)
+     endif()
+ endif()
+ 
++return()
++
+ if(OPENGL_FOUND AND NOT MSVC)
+     target_link_flags(ompl ompl_app_base ompl_app)
+     set(PKG_NAME "ompl")
