@@ -11,6 +11,7 @@
     "eigen3",
     "fcl",
     "fmt",
+    "lodepng",
     "octomap",
     {
       "name": "vcpkg-cmake",

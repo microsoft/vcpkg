@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         dependencies.diff
+        devendor-lodepng.diff
         disable_unit_tests_examples_and_tutorials.patch
         pkgconfig.diff
 )
