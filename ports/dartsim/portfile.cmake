@@ -1,5 +1,7 @@
-# Shared library support is broken upstream (https://github.com/dartsim/dart/issues/1005#issuecomment-375406260)
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+# DLL support is broken upstream (https://github.com/dartsim/dart/issues/1005#issuecomment-375406260)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -48,10 +50,6 @@ vcpkg_cmake_configure(
         -DDART_SKIP_NLOPT=ON
         -DDART_SKIP_pagmo=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
-        #-Durdfdom_headers_VERSION_MAJOR=1 # urdfdom-headers does not expose a header macro for its version.
-        #-Durdfdom_headers_VERSION_MINOR=0 # versions of at least 1.0.0 use std:: constructs in their ABI instead of boost:: ones.
-        #-Durdfdom_headers_VERSION_PATCH=0
-        -DVCPKG_TRACE_FIND_PACKAGE=ON
     OPTIONS_DEBUG
         -DDART_PKG_DEBUG_POSTFIX=d
     MAYBE_UNUSED_VARIABLES
@@ -65,7 +63,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/dart/cmake PACKAGE_NAME dart)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/dart/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -77,4 +75,12 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_LOCAL_PATH \"${SOURCE_PATH}/data/\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dart/config.hpp" "#define DART_DATA_GLOBAL_PATH                                                  \\\n  \"${CURRENT_PACKAGES_DIR}/share/doc/dart/data/\"" "")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(COPY_FILE "${SOURCE_PATH}/dart/external/convhull_3d/convhull_3d.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/convhull_3d LICENSE")
+vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/convhull_3d LICENSE" [[[*]/.*]] [[*/]] REGEX)
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/convhull_3d LICENSE"
+)
