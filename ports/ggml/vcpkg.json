@@ -23,9 +23,6 @@
         "cuda"
       ]
     },
-    "hip": {
-      "description": "Enable HIP support"
-    },
     "metal": {
       "description": "Enable Metal support",
       "supports": "osx"
@@ -40,13 +37,10 @@
       "description": "Enable OpenMP support",
       "supports": "!osx"
     },
-    "sycl": {
-      "description": "Enable SYCL support"
-    },
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
-        "vulkan"
+        "vulkan-sdk-components"
       ]
     }
   }

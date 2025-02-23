@@ -12,10 +12,10 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cuda     GGML_CUDA
-        hip      GGML_HIP
+        hip      GGML_HIP     # needs ROCm/HIP port, missing in vcpkg.json to forcefully disable the feature for now
         vulkan   GGML_VULKAN
         metal    GGML_METAL
-        sycl     GGML_SYCL
+        sycl     GGML_SYCL    # needs oneAPI compiler and -fsycl commmand line option, missing in vcpkg.json to forcefully disable the feature for now
         opencl   GGML_OPENCL
         openmp   GGML_OPENMP
 )
@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
     OPTIONS
       -DGGML_STATIC=${GGML_STATIC}
       -DGGML_CCACHE=OFF
-      -DGGML_OPENMP=${GGML_OPENMP}
       -DGGML_BUILD_NUMBER=1
       ${FEATURE_OPTIONS}
 )
@@ -50,6 +49,11 @@ endif()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ggml.pc")
 vcpkg_fixup_pkgconfig()
+
+if ("vulkan" IN_LIST FEATURES)
+  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES vulkan-shaders-gen)
+endif()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
