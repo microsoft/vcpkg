@@ -36,7 +36,7 @@
       ]
     },
     "gui": {
-      "description": "Build dart-gui",
+      "description": "Build dart-gui library",
       "dependencies": [
         {
           "name": "dartsim",
@@ -50,7 +50,7 @@
       ]
     },
     "gui-osg": {
-      "description": "Build osgDart library",
+      "description": "Build dart-gui-osg library",
       "dependencies": [
         {
           "name": "dartsim",

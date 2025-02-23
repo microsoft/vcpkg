@@ -22,7 +22,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         collision-bullet    CMAKE_REQUIRE_FIND_PACKAGE_BULLET
         collision-ode       CMAKE_REQUIRE_FIND_PACKAGE_ODE
         gui                 CMAKE_REQUIRE_FIND_PACKAGE_GLUT
-        #gui                 CMAKE_REQUIRE_FIND_PACKAGE_OpenGL
         gui-osg             DART_BUILD_GUI_OSG
         spdlog              CMAKE_REQUIRE_FIND_PACKAGE_spdlog
         utils               CMAKE_REQUIRE_FIND_PACKAGE_tinyxml2
