@@ -6,11 +6,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 block(SCOPE_FOR VARIABLES)
     find_package(DART CONFIG REQUIRED)
+    add_library(target::dart ALIAS dart)
 
-    add_library(assert_target_dart ALIAS dart)
+    add_executable(main-dart main.cpp)
+    target_link_libraries(main-dart PRIVATE target::dart)
 
-    add_executable(main main.cpp)
-    target_link_libraries(main PRIVATE dart)
+    # check link libs from all components
+    file(GLOB components RELATIVE "${DART_DIR}" "${DART_DIR}/dart_*Component.cmake")
+    list(TRANSFORM components REPLACE "^dart_(.*)Component.cmake\$" "\\1")
+    find_package(DART CONFIG COMPONENTS ${components})
+
+    add_executable(main-all main.cpp)
+    target_link_libraries(main-all PRIVATE ${DART_LIBRARIES})
 endblock()
 
 block(SCOPE_FOR VARIABLES)
