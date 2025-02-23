@@ -27,7 +27,7 @@ function(vcpkg_make_configure)
 
     set(prepare_flags_opts "")
     if(arg_DISABLE_MSVC_WRAPPERS)
-        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")        
+        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")
     endif()
     if(arg_DISABLE_CPPFLAGS)
         list(APPEND prepare_flags_opts "DISABLE_CPPFLAGS")
