@@ -5,7 +5,7 @@
   "description": "Dynamic Animation and Robotics Toolkit",
   "homepage": "https://dartsim.github.io/",
   "license": "BSD-2-Clause",
-  "supports": "!x86",
+  "supports": "!x86 & !arm32",
   "dependencies": [
     "assimp",
     "eigen3",

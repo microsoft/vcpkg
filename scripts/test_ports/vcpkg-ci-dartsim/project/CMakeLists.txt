@@ -4,6 +4,12 @@ project(dartsim-test CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+# https://github.com/dartsim/dart/issues/753#issuecomment-264694898
+# https://github.com/dartsim/dart/pull/956/files
+if(MSVC)
+    add_compile_options("/permissive-")
+endif()
+
 block(SCOPE_FOR VARIABLES)
     find_package(DART CONFIG REQUIRED)
     add_library(target::dart ALIAS dart)

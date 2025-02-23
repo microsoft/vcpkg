@@ -27,10 +27,26 @@
           "features": [
             "collision-bullet",
             "collision-ode",
-            "gui-osg",
+            "gui",
             "spdlog",
-            "utils-urdf"
+            "utils"
           ]
+        },
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "utils-urdf"
+          ],
+          "platform": "!staticcrt"
+        },
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "gui-osg"
+          ],
+          "platform": "!arm & !android"
         }
       ]
     }
