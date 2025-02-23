@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 eb32cc1418bbfd0907e7bc09080001b47f5c39a44b2693a2e3127a928d78a9e80ac4356b63fe4cd8bfb16f4bf829ea56eaaa0e878380fbfe06268962331cd86b
     HEAD_REF master
+    PATCHES
+      fix-lld-link-error.patch
 )
 
 # added -DGLSLANG_MIN_VERSION=15 to sync with vcpkg version of glslang

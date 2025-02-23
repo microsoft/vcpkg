@@ -89,6 +89,7 @@ function(vcpkg_cmake_config_fixup)
         file(READ "${release_target}" contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
         string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
+        string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${_IMPORT_PREFIX}\..\${_HOST_TRIPLET}" contents "${contents}")
         file(WRITE "${release_target}" "${contents}")
     endforeach()
 
@@ -102,6 +103,7 @@ function(vcpkg_cmake_config_fixup)
             file(READ "${debug_target}" contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
             string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
+            string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${_IMPORT_PREFIX}\..\${_HOST_TRIPLET}" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" contents "${contents}")
             file(WRITE "${release_share}/${debug_target_rel}" "${contents}")
@@ -188,6 +190,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         #This happens if vcpkg built libraries are directly linked to a target instead of using
         #an imported target.
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
+        string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\\${VCPKG_IMPORT_PREFIX}/../${_HOST_TRIPLET}" contents "${contents}")
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
         string(REPLACE "${cmake_current_packages_dir}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
         # If ${VCPKG_IMPORT_PREFIX} was actually used, inject a definition of it:

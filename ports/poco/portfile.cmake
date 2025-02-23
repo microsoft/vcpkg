@@ -18,6 +18,7 @@ vcpkg_from_github(
         # Should be dropped when upgrading to POC 1.14.1
         # https://github.com/pocoproject/poco/pull/4811
         0009-remove-libatomic-dependency.patch
+        0010-fix-clang-cl.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")

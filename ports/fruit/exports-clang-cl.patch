@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0e328cf6dc..14daf0f037 100644
+--- a/src/CMakeLists.txt	
++++ b/src/CMakeLists.txt
+@@ -14,7 +14,7 @@ semistatic_graph.cpp)
+ if("${BUILD_SHARED_LIBS}")
+     add_library(fruit SHARED ${FRUIT_SOURCES})
+ 
+-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
++    if (MSVC)
+         set_target_properties(fruit PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+     endif()
+ else()

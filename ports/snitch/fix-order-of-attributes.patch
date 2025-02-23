@@ -1,0 +1,91 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 95b8d9a5d0..889ed46072 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -119,7 +119,7 @@ endif()
+ function(configure_snitch_exports TARGET)
+     if (BUILD_SHARED_LIBS)
+         target_compile_definitions(${TARGET} PRIVATE SNITCH_EXPORTS)
+-        if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR MINGW)
++        if (MSVC OR MINGW)
+             # Nothing to do; default is already to hide symbols unless exported.
+         elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
+             CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR
+diff --git a/include/snitch/snitch_append.hpp b/include/snitch/snitch_append.hpp
+index 1a0f4f7fb7..ea0808b106 100644
+--- a/include/snitch/snitch_append.hpp
++++ b/include/snitch/snitch_append.hpp
+@@ -25,12 +25,12 @@ static_assert(
+ } // namespace snitch
+ 
+ namespace snitch::impl {
+-SNITCH_EXPORT [[nodiscard]] bool append_fast(small_string_span ss, std::string_view str) noexcept;
+-SNITCH_EXPORT [[nodiscard]] bool append_fast(small_string_span ss, const void* ptr) noexcept;
+-SNITCH_EXPORT [[nodiscard]] bool append_fast(small_string_span ss, large_uint_t i) noexcept;
+-SNITCH_EXPORT [[nodiscard]] bool append_fast(small_string_span ss, large_int_t i) noexcept;
+-SNITCH_EXPORT [[nodiscard]] bool append_fast(small_string_span ss, float f) noexcept;
+-SNITCH_EXPORT [[nodiscard]] bool append_fast(small_string_span ss, double f) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool append_fast(small_string_span ss, std::string_view str) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool append_fast(small_string_span ss, const void* ptr) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool append_fast(small_string_span ss, large_uint_t i) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool append_fast(small_string_span ss, large_int_t i) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool append_fast(small_string_span ss, float f) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool append_fast(small_string_span ss, double f) noexcept;
+ 
+ [[nodiscard]] constexpr bool append_constexpr(small_string_span ss, std::string_view str) noexcept {
+     const bool        could_fit  = str.size() <= ss.available();
+diff --git a/include/snitch/snitch_registry.hpp b/include/snitch/snitch_registry.hpp
+index a1858a651e..dd6df12555 100644
+--- a/include/snitch/snitch_registry.hpp
++++ b/include/snitch/snitch_registry.hpp
+@@ -71,19 +71,19 @@ struct filter_result {
+     bool implicit = false;
+ };
+ 
+-SNITCH_EXPORT [[nodiscard]] filter_result
++[[nodiscard]] SNITCH_EXPORT filter_result
+ filter_result_and(filter_result first, filter_result second) noexcept;
+ 
+-SNITCH_EXPORT [[nodiscard]] filter_result
++[[nodiscard]] SNITCH_EXPORT filter_result
+ filter_result_or(filter_result first, filter_result second) noexcept;
+ 
+-SNITCH_EXPORT [[nodiscard]] filter_result
++[[nodiscard]] SNITCH_EXPORT filter_result
+ is_filter_match_name(std::string_view name, std::string_view filter) noexcept;
+ 
+-SNITCH_EXPORT [[nodiscard]] filter_result
++[[nodiscard]] SNITCH_EXPORT filter_result
+ is_filter_match_tags(std::string_view tags, std::string_view filter) noexcept;
+ 
+-SNITCH_EXPORT [[nodiscard]] filter_result
++[[nodiscard]] SNITCH_EXPORT filter_result
+ is_filter_match_id(std::string_view name, std::string_view tags, std::string_view filter) noexcept;
+ 
+ using print_function  = function_ref<void(std::string_view) noexcept>;
+diff --git a/include/snitch/snitch_string_utility.hpp b/include/snitch/snitch_string_utility.hpp
+index f34b1e6071..0f85ad4904 100644
+--- a/include/snitch/snitch_string_utility.hpp
++++ b/include/snitch/snitch_string_utility.hpp
+@@ -51,17 +51,17 @@ constexpr small_string<N> resize_or_truncate(const small_string<M>& str) noexcep
+     }
+ }
+ 
+-SNITCH_EXPORT [[nodiscard]] bool replace_all(
++[[nodiscard]] SNITCH_EXPORT bool replace_all(
+     small_string_span string, std::string_view pattern, std::string_view replacement) noexcept;
+ 
+ // Requires: replacement.length() > pattern.length()
+-SNITCH_EXPORT [[nodiscard]] bool escape_all_or_truncate(
++[[nodiscard]] SNITCH_EXPORT bool escape_all_or_truncate(
+     small_string_span string, std::string_view pattern, std::string_view replacement);
+ 
+-SNITCH_EXPORT [[nodiscard]] std::size_t
++[[nodiscard]] SNITCH_EXPORT std::size_t
+ find_first_not_escaped(std::string_view str, char c) noexcept;
+ 
+-SNITCH_EXPORT [[nodiscard]] bool is_match(std::string_view string, std::string_view regex) noexcept;
++[[nodiscard]] SNITCH_EXPORT bool is_match(std::string_view string, std::string_view regex) noexcept;
+ } // namespace snitch
+ 
+ #endif

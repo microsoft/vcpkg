@@ -76,6 +76,7 @@ vcpkg_cmake_configure(
         "-DSeacas_ENABLE_Fortran:BOOL=OFF"
         #"-DCGNS_ALLOW_PREDEFIND:BOOL=NO"
         #"-DSeacas_ENABLE_ALL_PACKAGES:BOOL=ON"
+        -DCMAKE_CXX_STANDARD=14
         ${proj_options}
         ${tpl_options}
 )

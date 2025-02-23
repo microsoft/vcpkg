@@ -1,0 +1,25 @@
+diff --git a/cmake/GinkgoConfig.cmake.in b/cmake/GinkgoConfig.cmake.in
+index a5ead102c2..74b4588246 100644
+--- a/cmake/GinkgoConfig.cmake.in	
++++ b/cmake/GinkgoConfig.cmake.in
+@@ -20,7 +20,7 @@ set(GINKGO_BUILD_SHARED_LIBS "@BUILD_SHARED_LIBS@")
+ set(GINKGO_DEBUG_POSTFIX "@CMAKE_DEBUG_POSTFIX@")
+ 
+ # Compiler configuration
+-set(GINKGO_CXX_COMPILER "@CMAKE_CXX_COMPILER@")
++set(GINKGO_CXX_COMPILER "@GINKGO_CXX_COMPILER@")
+ set(GINKGO_CXX_COMPILER_VERSION @CMAKE_CXX_COMPILER_VERSION@)
+ 
+ set(GINKGO_CXX_FLAGS "@CMAKE_CXX_FLAGS@")
+diff --git a/cmake/install_helpers.cmake b/cmake/install_helpers.cmake
+index 7165cad0c2..a9fb9caa48 100644
+--- a/cmake/install_helpers.cmake	
++++ b/cmake/install_helpers.cmake
+@@ -122,6 +122,7 @@ function(ginkgo_install)
+         VERSION "${PROJECT_VERSION}"
+         COMPATIBILITY SameMajorVersion
+         )
++    cmake_path(GET CMAKE_CXX_COMPILER FILENAME GINKGO_CXX_COMPILER)
+     configure_package_config_file(
+         "${Ginkgo_SOURCE_DIR}/cmake/GinkgoConfig.cmake.in"
+         "${Ginkgo_BINARY_DIR}/cmake/GinkgoConfig.cmake"
