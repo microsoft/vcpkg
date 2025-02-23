@@ -12,23 +12,54 @@ vcpkg_from_github(
         disable_unit_tests_examples_and_tutorials.patch
         pkgconfig.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/dart/external/imgui")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        collision-bullet    CMAKE_REQUIRE_FIND_PACKAGE_BULLET
+        collision-ode       CMAKE_REQUIRE_FIND_PACKAGE_ODE
+        gui                 CMAKE_REQUIRE_FIND_PACKAGE_GLUT
+        #gui                 CMAKE_REQUIRE_FIND_PACKAGE_OpenGL
+        gui-osg             DART_BUILD_GUI_OSG
+        spdlog              CMAKE_REQUIRE_FIND_PACKAGE_spdlog
+        utils               CMAKE_REQUIRE_FIND_PACKAGE_tinyxml2
+        utils-urdf          CMAKE_REQUIRE_FIND_PACKAGE_urdfdom
+    INVERTED_FEATURES
+        collision-bullet    CMAKE_DISABLE_FIND_PACKAGE_BULLET
+        collision-ode       DART_SKIP_ODE
+        gui                 DART_SKIP_GLUT
+        gui                 DART_SKIP_OPENGL
+        spdlog              DART_SKIP_spdlog
+        utils               DART_SKIP_TINYXML2
+        utils-urdf          CMAKE_DISABLE_FIND_PACKAGE_urdfdom
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -DDART_VERBOSE=ON
         -DDART_MSVC_DEFAULT_OPTIONS=ON
+        -DDART_USE_SYSTEM_IMGUI=ON
+        -DDART_BUILD_DARTPY=OFF
         -DDART_SKIP_DOXYGEN=ON
         -DDART_SKIP_IPOPT=ON
         -DDART_SKIP_NLOPT=ON
         -DDART_SKIP_pagmo=ON
-        -Durdfdom_headers_VERSION_MAJOR=1 # urdfdom-headers does not expose a header macro for its version.
-        -Durdfdom_headers_VERSION_MINOR=0 # versions of at least 1.0.0 use std:: constructs in their ABI instead of boost:: ones.
-        -Durdfdom_headers_VERSION_PATCH=0
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
+        #-Durdfdom_headers_VERSION_MAJOR=1 # urdfdom-headers does not expose a header macro for its version.
+        #-Durdfdom_headers_VERSION_MINOR=0 # versions of at least 1.0.0 use std:: constructs in their ABI instead of boost:: ones.
+        #-Durdfdom_headers_VERSION_PATCH=0
+        -DVCPKG_TRACE_FIND_PACKAGE=ON
     OPTIONS_DEBUG
         -DDART_PKG_DEBUG_POSTFIX=d
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_urdfdom
+        CMAKE_REQUIRE_FIND_PACKAGE_GLUT
+        CMAKE_REQUIRE_FIND_PACKAGE_urdfdom
         DART_MSVC_DEFAULT_OPTIONS
+        DART_SKIP_GLUT
+        DART_SKIP_OPENGL
 )
 
 vcpkg_cmake_install()

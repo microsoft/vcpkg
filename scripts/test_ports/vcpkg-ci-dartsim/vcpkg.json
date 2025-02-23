@@ -23,7 +23,13 @@
       "dependencies": [
         {
           "name": "dartsim",
+          "default-features": false,
           "features": [
+            "collision-bullet",
+            "collision-ode",
+            "gui-osg",
+            "spdlog",
+            "utils-urdf"
           ]
         }
       ]

@@ -8,19 +8,10 @@
   "supports": "!x86",
   "dependencies": [
     "assimp",
-    "bullet3",
-    "ccd",
     "eigen3",
     "fcl",
     "fmt",
-    "freeglut",
     "octomap",
-    "ode",
-    "opengl",
-    "osg",
-    "spdlog",
-    "tinyxml2",
-    "urdfdom",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -29,5 +20,81 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "collision-bullet": {
+      "description": "Build dart-collision-bullet library",
+      "dependencies": [
+        "bullet3"
+      ]
+    },
+    "collision-ode": {
+      "description": "Build dart-collision-ode library",
+      "dependencies": [
+        "ode"
+      ]
+    },
+    "gui": {
+      "description": "Build dart-gui",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "utils"
+          ]
+        },
+        "freeglut",
+        "opengl"
+      ]
+    },
+    "gui-osg": {
+      "description": "Build osgDart library",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "imgui",
+          "default-features": false,
+          "features": [
+            "opengl2-binding"
+          ]
+        },
+        {
+          "name": "osg",
+          "default-features": false
+        }
+      ]
+    },
+    "spdlog": {
+      "description": "Support spdlog as underlying logging framework",
+      "dependencies": [
+        "spdlog"
+      ]
+    },
+    "utils": {
+      "description": "Build dart-utils library",
+      "dependencies": [
+        "tinyxml2"
+      ]
+    },
+    "utils-urdf": {
+      "description": "Build dart-utils-urdf library",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "utils"
+          ]
+        },
+        "urdfdom"
+      ]
+    }
+  }
 }
