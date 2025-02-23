@@ -51,6 +51,11 @@
           "platform": "!mingw & !uwp"
         },
         {
+          "$package": "GLEW",
+          "name": "glew",
+          "platform": "!android & !uwp"
+        },
+        {
           "$package": "GLUT",
           "name": "freeglut",
           "platform": "!uwp & !osx"
