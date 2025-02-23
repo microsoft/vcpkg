@@ -19,7 +19,8 @@ vcpkg_from_github(
         0003_disable-pkgconfig.patch
         0004_include_chrono.patch # https://github.com/ompl/ompl/pull/1201
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/src/external")
+file(GLOB find_modules "${SOURCE_PATH}/CMakeModules/Find*.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/external" ${find_modules})
 # The ompl/omplapp ports don't support python features.
 file(COPY "${CURRENT_PORT_DIR}/FindPython.cmake" DESTINATION "${SOURCE_PATH}/CMakeModules")
 
@@ -57,6 +58,7 @@ file(REMOVE_RECURSE
 )
 
 # Used by port omplapp
-file(COPY "${SOURCE_PATH}/CMakeModules" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ompl")
+file(GLOB cmake_modules "${SOURCE_PATH}/CMakeModules/*.cmake")
+file(COPY ${cmake_modules} DESTINATION "${CURRENT_PACKAGES_DIR}/share/ompl/CMakeModules")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
