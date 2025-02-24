@@ -1,0 +1,16 @@
+diff --git a/cmake/Modules/FindUDev.cmake b/cmake/Modules/FindUDev.cmake
+index d4fb21339..83647bd6f 100644
+--- a/cmake/Modules/FindUDev.cmake
++++ b/cmake/Modules/FindUDev.cmake
+@@ -9,6 +9,11 @@
+ # Redistribution and use of this file is allowed according to the terms of the BSD license.
+ #
+ 
++if(TARGET UDev::UDev)
++    message(STATUS "UDev::UDev target has already been found")
++    return()
++endif()
++
+ find_path(
+     UDEV_INCLUDE_DIR
+     libudev.h
