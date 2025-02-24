@@ -16,7 +16,8 @@
     }
   ],
   "default-features": [
-    "date"
+    "date",
+    "large-int-placeholder"
   ],
   "features": {
     "date": {
@@ -24,6 +25,9 @@
       "dependencies": [
         "date"
       ]
+    },
+    "large-int-placeholder": {
+      "description": "use types without api for big integers"
     }
   }
 }
