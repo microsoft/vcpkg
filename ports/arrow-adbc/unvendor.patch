@@ -57,3 +57,38 @@ index 751eda3..5739e4e 100644
  
  if(ADBC_BUILD_TESTS)
    add_test_case(driver_common_test
+diff --git a/c/driver/postgresql/CMakeLists.txt b/c/driver/postgresql/CMakeLists.txt
+index a720696..32af4ac 100644
+--- a/c/driver/postgresql/CMakeLists.txt
++++ b/c/driver/postgresql/CMakeLists.txt
+@@ -46,13 +46,11 @@ add_arrow_lib(adbc_driver_postgresql
+               SHARED_LINK_LIBS
+               adbc_driver_common
+               adbc_driver_framework
+-              nanoarrow
+               ${LIBPQ_LINK_LIBRARIES}
+               STATIC_LINK_LIBS
+               ${LIBPQ_LINK_LIBRARIES}
+               adbc_driver_common
+               adbc_driver_framework
+-              nanoarrow
+               ${LIBPQ_STATIC_LIBRARIES})
+ 
+ foreach(LIB_TARGET ${ADBC_LIBRARIES})
+diff --git a/c/driver/sqlite/CMakeLists.txt b/c/driver/sqlite/CMakeLists.txt
+index d0c45b7..bb0772b 100644
+--- a/c/driver/sqlite/CMakeLists.txt
++++ b/c/driver/sqlite/CMakeLists.txt
+@@ -52,12 +52,10 @@ add_arrow_lib(adbc_driver_sqlite
+               ${SQLite3_LINK_LIBRARIES}
+               adbc_driver_common
+               adbc_driver_framework
+-              nanoarrow
+               STATIC_LINK_LIBS
+               ${SQLite3_LINK_LIBRARIES}
+               adbc_driver_common
+               adbc_driver_framework
+-              nanoarrow
+               ${LIBPQ_STATIC_LIBRARIES})
+ 
+ foreach(LIB_TARGET ${ADBC_LIBRARIES})

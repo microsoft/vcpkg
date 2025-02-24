@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DNANOARROW_ARROW_STATIC=${NANOARROW_ARROW_STATIC}
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_cmake_install()
@@ -29,15 +30,16 @@ vcpkg_cmake_config_fixup(
     DO_NOT_DELETE_PARENT_CONFIG_PATH
 )
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/nanoarrow.dll")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/nanoarrow.dll" "${CURRENT_PACKAGES_DIR}/bin/nanoarrow.dll")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/nanoarrow.dll")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/nanoarrow.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/nanoarrow.dll")
-endif()
-
+# if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/nanoarrow.dll")
+#     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+#     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/nanoarrow.dll" "${CURRENT_PACKAGES_DIR}/bin/nanoarrow.dll")
+#     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/nanoarrow.lib" "${CURRENT_PACKAGES_DIR}/bin/nanoarrow.lib")
+# endif()
+# if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/nanoarrow.dll")
+# file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+#     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/nanoarrow.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/nanoarrow.dll")
+#     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/nanoarrow.lib" "${CURRENT_PACKAGES_DIR}/debug/bin/nanoarrow.lib")
+# endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake")
