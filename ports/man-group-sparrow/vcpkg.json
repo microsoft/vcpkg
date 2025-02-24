@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "C++20 idiomatic APIs for the Apache Arrow Columnar Format",
   "homepage": "https://github.com/man-group/sparrow",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -14,6 +14,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
+  ],
+  "default-features": [
+    "date"
   ],
   "features": {
     "date": {
