@@ -53,12 +53,18 @@ vcpkg_download_distfile(archive_path
 )
 message(STATUS "archive_path: '${archive_path}'")
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/bazel")
 file(INSTALL "${archive_path}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools"
-    RENAME "${program}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/bazel"
+    RENAME "${program}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
     FILE_PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE
+)
+
+file(INSTALL 
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
+    DESTINATION 
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )

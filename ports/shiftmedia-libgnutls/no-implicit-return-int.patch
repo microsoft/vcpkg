@@ -1,0 +1,13 @@
+diff --git a/SMP/gnulib/lib/sys/time.h b/SMP/gnulib/lib/sys/time.h
+index f60f09ae0d..15259836c9 100644
+--- a/SMP/gnulib/lib/sys/time.h
++++ b/SMP/gnulib/lib/sys/time.h
+@@ -31,7 +31,7 @@
+ #include <winsock2.h>
+ #include <winapifamily.h>
+ 
+-extern rpl_gettimeofday(struct timeval *restrict, void *restrict);
++extern int rpl_gettimeofday(struct timeval *restrict, void *restrict);
+ #define gettimeofday rpl_gettimeofday
+ 
+ #endif /* _MSC_VER */
