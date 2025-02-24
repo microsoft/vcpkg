@@ -1,6 +1,6 @@
 {
   "name": "uwebsockets",
-  "version-semver": "20.71.0",
+  "version-semver": "20.74.0",
   "description": "Simple, secure & standards compliant web I/O for the most demanding of applications",
   "homepage": "https://github.com/uWebSockets/uWebSockets",
   "license": "Apache-2.0",
@@ -8,6 +8,12 @@
     "usockets"
   ],
   "features": {
+    "libdeflate": {
+      "description": "Enable libdeflate support",
+      "dependencies": [
+        "libdeflate"
+      ]
+    },
     "ssl": {
       "description": "Enable SSL support",
       "dependencies": [
