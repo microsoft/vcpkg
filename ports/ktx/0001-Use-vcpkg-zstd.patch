@@ -24,7 +24,7 @@ index 9a56491..d7ca937 100644
  
 +    # Use vcpkg zstd
 +    find_package(zstd CONFIG REQUIRED)
-+    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
++    set(ZSTD_LIBRARIES "zstd::libzstd")
 +    target_link_libraries(${target} PRIVATE ${ZSTD_LIBRARIES})
 +
      if(WIN32)
