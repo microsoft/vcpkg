@@ -6345,7 +6345,7 @@
       "port-version": 1
     },
     "nghttp3": {
-      "baseline": "1.7.0",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "ngspice": {
