@@ -70,6 +70,7 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"        WITH_ADE
+ "aravis"     WITH_ARAVIS
  "calib3d"    BUILD_opencv_calib3d
  "carotene"   WITH_CAROTENE
  "contrib"    WITH_CONTRIB

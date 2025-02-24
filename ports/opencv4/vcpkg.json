@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.10.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -65,6 +65,15 @@
       "description": "graph api",
       "dependencies": [
         "ade"
+      ]
+    },
+    "aravis": {
+      "description": "aravis",
+      "dependencies": [
+        {
+          "name": "aravis",
+          "default-features": false
+        }
       ]
     },
     "calib3d": {
