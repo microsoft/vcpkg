@@ -19,7 +19,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mysql-connector-cpp-targets.cmake"
 if(NOT UNOFFICIAL_MYSQL_CONNECTOR_CPP_INITIALIZED)
     if(NOT "@BUILD_SHARED_LIBS@")
         set_target_properties(unofficial::mysql-connector-cpp::connector PROPERTIES
-            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:Threads::Threads>;$<LINK_ONLY:OpenSSL::SSL>;$<LINK_ONLY:RapidJSON::rapidjson>;$<LINK_ONLY:ZLIB::ZLIB>;$<LINK_ONLY:>;$<LINK_ONLY:lz4::lz4>;$<LINK_ONLY:zstd::libzstd>"
+            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:Threads::Threads>;$<LINK_ONLY:OpenSSL::SSL>;$<LINK_ONLY:RapidJSON>;$<LINK_ONLY:ZLIB::ZLIB>;$<LINK_ONLY:>;$<LINK_ONLY:lz4::lz4>;$<LINK_ONLY:zstd::libzstd>"
         )
         # Cf. mysql-concpp-config.cmake.in
         if(WIN32)
