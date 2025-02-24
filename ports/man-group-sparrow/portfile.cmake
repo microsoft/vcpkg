@@ -14,7 +14,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        date       USE_DATE_POLYFILL
+        date                  USE_DATE_POLYFILL
+        large-int-placeholder USE_LARGE_INT_PLACEHOLDERS
 )
 
 vcpkg_cmake_configure(
