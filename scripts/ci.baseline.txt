@@ -643,8 +643,6 @@ log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
 magma:x64-linux=fail
-# man-group-sparrow requires gcc12 and clang18 or later. linux-x64 always fails because it uses gcc11.
-man-group-sparrow:x64-linux=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
 mchehab-zbar:x64-android=fail
