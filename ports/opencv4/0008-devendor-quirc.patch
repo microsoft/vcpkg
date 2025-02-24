@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -935,7 +935,7 @@ if(WITH_OPENVX)
+@@ -905,7 +905,7 @@ if(WITH_OPENVX)
  endif()
  
  if(WITH_QUIRC)
