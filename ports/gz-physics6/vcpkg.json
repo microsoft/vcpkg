@@ -1,7 +1,7 @@
 {
   "name": "gz-physics6",
   "version": "6.5.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "component of Gazebo, provides an abstract physics interface designed to support simulation and rapid development of robot applications.",
   "homepage": "https://gazebosim.org/libs/physics",
   "license": "Apache-2.0",
