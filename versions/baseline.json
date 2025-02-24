@@ -7356,6 +7356,10 @@
       "baseline": "8.0.2",
       "port-version": 5
     },
+    "qlementine": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "qmex": {
       "baseline": "2024-10-31",
       "port-version": 0
