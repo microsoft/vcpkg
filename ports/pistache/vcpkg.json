@@ -1,15 +1,56 @@
 {
   "name": "pistache",
-  "version-date": "2021-03-31",
-  "port-version": 3,
-  "description": "Pistache is a modern and elegant HTTP and REST framework for C++. It is entirely written in pure-C++11 and provides a clear and pleasant API",
-  "homepage": "https://github.com/oktal/pistache",
-  "supports": "linux",
+  "version": "0.4.25",
+  "description": "Pistache is a modern and elegant HTTP and REST framework for C++. It is entirely written in pure-C++17 and provides a clear and pleasant API",
+  "homepage": "https://github.com/pistacheio/pistache",
+  "license": "Apache-2.0",
+  "supports": "!(uwp | android)",
   "dependencies": [
-    "rapidjson",
+    "date",
     {
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "rapidjson"
+  ],
+  "features": {
+    "brotli": {
+      "description": "add support for Brotli compressed content encoding",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "deflate": {
+      "description": "add support for deflate compressed content encoding",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "libevent": {
+      "description": "force use of libevent",
+      "dependencies": [
+        "libevent"
+      ]
+    },
+    "rapidjson": {
+      "description": "add support for rapidjson",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "ssl": {
+      "description": "add support for SSL server",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "zstd": {
+      "description": "add support for Zstandard compressed content encoding",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }
