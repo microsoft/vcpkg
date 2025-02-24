@@ -5,5 +5,8 @@ project(vcpkg-ci-libaec C)
 find_package(libaec CONFIG REQUIRED)
   
 add_executable(compression main.c)
-target_link_libraries(compression PRIVATE sz aec sz_shared aec_shared)
-
+if(BUILD_SHARED_LIBS)
+    target_link_libraries(compression PRIVATE sz aec sz_shared aec_shared)
+else()
+    target_link_libraries(compression PRIVATE sz aec sz_static aec_static)
+endif()
