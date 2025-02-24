@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("Warning: `sparrow` requires Clang12+ or GCC 11+ on Linux")
+    message("Warning: `sparrow` requires Clang18+ or GCC 12+ on Linux")
 endif()
 
 vcpkg_from_github(
