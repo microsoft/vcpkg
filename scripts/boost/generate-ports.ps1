@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.86.0",
+    $version = "1.87.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
@@ -28,10 +28,6 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost'                 = 1;
-    'boost-build'           = 1;
-    'boost-cobalt'          = 1;
-    'boost-function'          = 1
 }
 
 function Get-PortVersion {

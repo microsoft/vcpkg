@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-std-headers.patch
         uri_facade_win.patch
         boost-compatibility.patch
+        fix-asio-error.patch
 )
 
 vcpkg_cmake_configure(

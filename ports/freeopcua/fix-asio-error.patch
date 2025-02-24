@@ -1,0 +1,66 @@
+diff --git a/include/opc/ua/services/services.h b/include/opc/ua/services/services.h
+index 4732a59..87b0ce4 100644
+--- a/include/opc/ua/services/services.h
++++ b/include/opc/ua/services/services.h
+@@ -26,7 +26,19 @@
+ #include <vector>
+ 
+ #include <boost/version.hpp>
+-#include <boost/asio/io_service.hpp>
++#if BOOST_VERSION >= 108700
++  #include <boost/asio/io_context.hpp>
++#else
++  #include <boost/asio/io_service.hpp>
++#endif
++
++#if BOOST_VERSION >= 108700
++namespace boost {
++  namespace asio {
++    using io_service = boost::asio::io_context;
++  }
++}
++#endif
+ 
+ namespace OpcUa
+ {
+diff --git a/src/server/asio_addon.cpp b/src/server/asio_addon.cpp
+index 532ac3c..e44a2a4 100644
+--- a/src/server/asio_addon.cpp
++++ b/src/server/asio_addon.cpp
+@@ -29,7 +29,7 @@ class AsioAddonImpl : public OpcUa::Server::AsioAddon
+ {
+ public:
+   AsioAddonImpl()
+-    : Work(IoService)
++    : Work(IoService.get_executor())
+   {
+   }
+ 
+@@ -84,7 +84,7 @@ public:
+ 
+ private:
+   boost::asio::io_service IoService;
+-  boost::asio::io_service::work Work;
++  boost::asio::executor_work_guard<boost::asio::io_context::executor_type> Work;
+   std::vector<std::thread> Threads;
+ };
+ }
+diff --git a/src/server/opc_tcp_async.cpp b/src/server/opc_tcp_async.cpp
+index c761a9e..f3da206 100644
+--- a/src/server/opc_tcp_async.cpp
++++ b/src/server/opc_tcp_async.cpp
+@@ -313,12 +313,12 @@ OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::Sha
+ 
+   else if (params.Host == "localhost")
+     {
+-      ep = tcp::endpoint(ip::address::from_string("127.0.0.1"), params.Port);
++      ep = tcp::endpoint(ip::make_address("127.0.0.1"), params.Port);
+     }
+ 
+   else
+     {
+-      ep = tcp::endpoint(ip::address::from_string(params.Host), params.Port);
++      ep = tcp::endpoint(ip::make_address(params.Host), params.Port);
+     }
+ 
+   acceptor.open(ep.protocol());

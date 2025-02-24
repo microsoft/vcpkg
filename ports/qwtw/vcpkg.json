@@ -1,7 +1,7 @@
 {
   "name": "qwtw",
   "version": "3.1.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "qwt-based 2D plotting library",
   "homepage": "https://github.com/ig-or/qwtw",
   "supports": "windows & x64 & !static",

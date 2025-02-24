@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         0001-Fix-exception-in-server.patch
         0002-Honor-BUILD_SHARED_LIBS.patch
+        fix-asio-error.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" ENABLE_STATIC_CRT)
