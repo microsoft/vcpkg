@@ -3038,7 +3038,7 @@
     },
     "gdal": {
       "baseline": "3.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm": {
       "baseline": "3.0.24",
@@ -5130,7 +5130,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libspnav": {
       "baseline": "0.2.3",
