@@ -13,6 +13,7 @@
     }
   ],
   "default-features": [
+    "libevent",
     "rapidjson"
   ],
   "features": {
