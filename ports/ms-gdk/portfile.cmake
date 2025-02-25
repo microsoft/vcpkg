@@ -1,9 +1,9 @@
-set(GDK_EDITION_NUMBER 241000)
+set(GDK_EDITION_NUMBER 241001)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.PC/${VERSION}"
     FILENAME "ms-gdk.${VERSION}.zip"
-    SHA512 a3ff91cb033a33e971db0b25285f665c80f3e5b97cd5e1b1859ed0a9b3da77285359665a9d0a7f3b5473ac094ed7351c3e6534c656cc5e54daf69af0890ba3e8
+    SHA512 47cd422fddce2594626c3c0319965a66bdd422dde79474d2ba1993feaeb9d7dadc684f7cd297d13e14fe526f06d64856f5de70b97242ba529777a3101423a3bc
 )
 
 vcpkg_extract_source_archive(
