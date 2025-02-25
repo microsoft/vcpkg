@@ -1457,7 +1457,7 @@
       "port-version": 0
     },
     "c4core": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.5",
       "port-version": 0
     },
     "c89stringutils": {
@@ -8125,7 +8125,7 @@
       "port-version": 2
     },
     "ryml": {
-      "baseline": "0.7.2",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "ryu": {
