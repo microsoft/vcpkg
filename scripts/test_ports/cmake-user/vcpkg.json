@@ -23,6 +23,11 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "ALSA",
+          "name": "alsa",
+          "platform": "linux"
+        },
+        {
           "$package": "Boost",
           "name": "boost",
           "platform": "!uwp"

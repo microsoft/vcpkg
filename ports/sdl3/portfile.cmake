@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF "preview-3.1.6"
-    SHA512 a0ca7263cd2f1b883829c39ae0ee2ea18d814f8dde768c8be9a49487193bc856bb45870764fd70169e75d2ec80457e5b45811c07a926479f1ac4f9d3157f40a4
+    REF "release-${VERSION}"
+    SHA512 627f8e519f3426df28935c94999f311ade0deec36bfdc120e5edcb8ffc358c543f9c0f9d9ddbe0d8f005bb30a11f223d8f34388dc3a19aefe6a83cddeaa95402
     HEAD_REF main
 )
 
@@ -48,13 +48,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-# Subject to https://github.com/libsdl-org/SDL/pull/11492
-set(config_path "share/${PORT}/SDL3")
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(config_path "share/${PORT}")
-endif()
-vcpkg_cmake_config_fixup(CONFIG_PATH "${config_path}")
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
