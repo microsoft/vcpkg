@@ -86,6 +86,7 @@ vcpkg_make_configure(
         --disable-gpac
         --disable-lsmash
         --disable-bashcompletion
+        --bindir=[debug/]bin
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
         --enable-strip
@@ -95,10 +96,6 @@ vcpkg_make_configure(
 )
 
 vcpkg_make_install()
-
-if("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -121,6 +118,13 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(COPY "${CURRENT_PACKAGES_DIR}/tools/x264/bin/libx264-164.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
