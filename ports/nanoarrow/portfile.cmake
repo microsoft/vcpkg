@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix_install_dir.patch
+        no_werror.patch
 )
 
 
