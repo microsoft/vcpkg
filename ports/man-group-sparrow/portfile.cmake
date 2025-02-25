@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
     REF "${VERSION}"
-    SHA512 f60cf7386955793b34720a2c24ecf29ad2568855c7344a6ab3e72c8bde2899cc9ea0ed880cc84b95feeb32413941e5c895d740c04cd2efd3fecd9b109adac317
+    SHA512 587c7b5abea6eb856d0bd664e23d63ae4878f3b2991de4b014221096eb5ee0844bafe2c0ca18f58ad19b564073a1c07a70297ae40d4635534e44d23c539f5efa
     HEAD_REF main
     PATCHES
         find-date.patch
@@ -18,10 +18,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         large-int-placeholder USE_LARGE_INT_PLACEHOLDERS
 )
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(SPARROW_BUILD_SHARED ON)
+else()
+    set(SPARROW_BUILD_SHARED OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DSPARROW_BUILD_SHARED=${SPARROW_BUILD_SHARED}
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
 )
