@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
     REF "${VERSION}"
-    SHA512 47ff6d289dcc22681eea6da465b0348172921e7cafff8fd57a1540d3232cc6b53250a4625c954ee0944c87963b17680ecbc3ea123e43c2c822efe0dc6fa6cef3
+    SHA512 c1b94ab149d8b1c750dc91fcc1dc9b680d4bd01a9da1e5e74151b2e2f82f811e845e3362922e75b12fcca172ee3f2606e061c001bfa358a86f25cce4ff2d36ef
     HEAD_REF master
     PATCHES
         fix-write-batch.patch
-        fix-pass-utf-8-only-if-the-compiler-is-MSVC-at-build.patch # remove in next release
 )
 
 vcpkg_cmake_configure(
