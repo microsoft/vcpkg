@@ -1,7 +1,6 @@
 {
   "name": "opencv",
-  "version": "4.10.0",
-  "port-version": 2,
+  "version": "4.11.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -300,6 +299,18 @@
         }
       ]
     },
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "jpegxl"
+          ]
+        }
+      ]
+    },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",
       "dependencies": [
@@ -488,6 +499,18 @@
           "default-features": false,
           "features": [
             "sfm"
+          ]
+        }
+      ]
+    },
+    "spng": {
+      "description": "SPNG support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "spng"
           ]
         }
       ]
