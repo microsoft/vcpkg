@@ -1,6 +1,6 @@
 {
   "name": "sfml",
-  "version": "2.6.2",
+  "version": "3.0.0",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
@@ -27,7 +27,7 @@
         "libflac",
         "libogg",
         "libvorbis",
-        "openal-soft"
+        "miniaudio"
       ]
     },
     "graphics": {
