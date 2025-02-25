@@ -1,0 +1,29 @@
+{
+  "name": "sdl2-compat",
+  "version": "2.32.50",
+  "description": "An SDL2 compatibility layer that uses SDL3 behind the scenes.",
+  "homepage": "https://www.libsdl.org",
+  "license": "Zlib",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "sdl3",
+      "default-features": false,
+      "version>=": "3.2.4"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "x11": {
+      "description": "Build with X11 support",
+      "supports": "!windows"
+    }
+  }
+}
