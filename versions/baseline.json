@@ -281,7 +281,7 @@
       "port-version": 1
     },
     "asock": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "assimp": {
