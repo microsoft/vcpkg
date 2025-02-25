@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       cxx20.patch
+      fix-asio-error.patch
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
