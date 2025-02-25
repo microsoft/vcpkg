@@ -1,8 +1,8 @@
 diff --git a/sparrowConfig.cmake.in b/sparrowConfig.cmake.in
-index 07a688f..cadb864 100644
+index 8b46226..a13454b 100644
 --- a/sparrowConfig.cmake.in
 +++ b/sparrowConfig.cmake.in
-@@ -18,6 +18,10 @@
+@@ -22,6 +22,10 @@
  
  include(CMakeFindDependencyMacro)
  
@@ -10,6 +10,6 @@ index 07a688f..cadb864 100644
 +    find_dependency(date)
 +endif()
 +
- if(NOT TARGET @PROJECT_NAME@)
+ if(NOT TARGET sparrow::sparrow)
      include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
-     get_target_property(@PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@ INTERFACE_INCLUDE_DIRECTORIES)
+     get_target_property(@PROJECT_NAME@_INCLUDE_DIRS sparrow::sparrow INTERFACE_INCLUDE_DIRECTORIES)
