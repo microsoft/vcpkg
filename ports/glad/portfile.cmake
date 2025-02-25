@@ -3,13 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
-    REF 1ecd45775d96f35170458e6b148eb0708967e402 # 0.1.36
-    SHA512 f6292e9dbce503a95b6eca927a90cf8a06f5e3de39b84f9a47e0d9273a6ea3f6591a64d35f2e33b5ea353e0c784f15c38579fc15aa6c5b180154e241ccbb16fe
-    HEAD_REF master
-    PATCHES 
-        encoding.patch
-        find_python.patch
+    REF "v${VERSION}"
+    SHA512 328d0dbe33e69f846d1c54226c6675694404f41e53c4762e6013c7bfe76b0700f0b28f4117a2018a09c9c23ccb6ad94d7b20882fefc2513941a4515686c9b9e7
+    HEAD_REF glad2
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if(NOT GLAD_PROFILE)
     set(GLAD_PROFILE "compatibility")
