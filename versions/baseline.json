@@ -3418,7 +3418,7 @@
     },
     "gz-physics6": {
       "baseline": "6.5.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gz-plugin": {
       "baseline": "2.0.1",
