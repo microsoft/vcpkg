@@ -1,0 +1,40 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index c3dc38855..69a4821e1 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -1521,14 +1521,25 @@ endif()
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_CUSTOM Open3D::3rdparty_vtk)
+
+ # UVAtlas
+-include(${Open3D_3RDPARTY_DIR}/uvatlas/uvatlas.cmake)
+-open3d_import_3rdparty_library(3rdparty_uvatlas
+-    HIDDEN
+-    INCLUDE_DIRS ${UVATLAS_INCLUDE_DIRS}
+-    LIB_DIR      ${UVATLAS_LIB_DIR}
+-    LIBRARIES    ${UVATLAS_LIBRARIES}
+-    DEPENDS      ext_uvatlas
+-)
++if(USE_SYSTEM_UVATLAS)
++    open3d_find_package_3rdparty_library(3rdparty_uvatlas
++        PACKAGE uvatlas
++        TARGETS Microsoft::UVAtlas
++    )
++    if(NOT 3rdparty_uvatlas_FOUND)
++        set(USE_SYSTEM_UVATLAS OFF)
++    endif()
++endif()
++if(NOT USE_SYSTEM_UVATLAS)
++    include(${Open3D_3RDPARTY_DIR}/uvatlas/uvatlas.cmake)
++    open3d_import_3rdparty_library(3rdparty_uvatlas
++        HIDDEN
++        INCLUDE_DIRS ${UVATLAS_INCLUDE_DIRS}
++        LIB_DIR      ${UVATLAS_LIB_DIR}
++        LIBRARIES    ${UVATLAS_LIBRARIES}
++        DEPENDS      ext_uvatlas
++    )
++endif()
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS_FROM_CUSTOM Open3D::3rdparty_uvatlas)
+
+
+--
+2.45.2

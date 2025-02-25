@@ -1,0 +1,50 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index 169bfbe1a..5415f7c6d 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -1619,14 +1619,22 @@ else() # if(OPEN3D_USE_ONEAPI_PACKAGES)
+     endif()
+
+     # parallelstl
+-    include(${Open3D_3RDPARTY_DIR}/parallelstl/parallelstl.cmake)
+-    open3d_import_3rdparty_library(3rdparty_parallelstl
+-    PUBLIC
+-    INCLUDE_DIRS ${PARALLELSTL_INCLUDE_DIRS}
+-    INCLUDE_ALL
+-    DEPENDS      ext_parallelstl
+-    )
+-    list(APPEND Open3D_3RDPARTY_PUBLIC_TARGETS_FROM_SYSTEM Open3D::3rdparty_parallelstl)
++    option(USE_SYSTEM_PARALLELSTL "Use parallelstl from the system" OFF)
++    if(USE_SYSTEM_PARALLELSTL)
++        find_package(ParallelSTL CONFIG REQUIRED)
++        target_compile_definitions(pstl::ParallelSTL INTERFACE _GLIBCXX_USE_TBB_PAR_BACKEND=0)
++        target_compile_definitions(pstl::ParallelSTL INTERFACE PSTL_USE_PARALLEL_POLICIES=0)
++        list(APPEND Open3D_3RDPARTY_PUBLIC_TARGETS_FROM_SYSTEM pstl::ParallelSTL)
++    else()
++        include(${Open3D_3RDPARTY_DIR}/parallelstl/parallelstl.cmake)
++        open3d_import_3rdparty_library(3rdparty_parallelstl
++        PUBLIC
++        INCLUDE_DIRS ${PARALLELSTL_INCLUDE_DIRS}
++        INCLUDE_ALL
++        DEPENDS      ext_parallelstl
++        )
++        list(APPEND Open3D_3RDPARTY_PUBLIC_TARGETS_FROM_SYSTEM Open3D::3rdparty_parallelstl)
++    endif()
+
+     # MKL/BLAS
+     if(USE_BLAS)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a87d542b5..805668cac 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -296,7 +296,7 @@ endif()
+ # This does not affect 3rd party libraries.
+ # Tensorflow 2.9+ requires cxx_17, but MSVC 19.29 throws errors with C++17
+ # enabled.
+-if (BUILD_SYCL_MODULE OR BUILD_TENSORFLOW_OPS)
++if (BUILD_SYCL_MODULE OR BUILD_TENSORFLOW_OPS OR USE_SYSTEM_PARALLELSTL)
+     set(CMAKE_CXX_STANDARD 17)
+ else()
+     set(CMAKE_CXX_STANDARD 14)
+--
+2.45.2
