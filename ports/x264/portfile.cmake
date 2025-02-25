@@ -97,7 +97,7 @@ vcpkg_make_configure(
 vcpkg_make_install()
 
 if("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
