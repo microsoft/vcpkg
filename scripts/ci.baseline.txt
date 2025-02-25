@@ -980,6 +980,7 @@ rpclib:x64-uwp=fail
 rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
+safetyhook:x64-linux=fail
 salome-medcoupling:x64-linux=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
