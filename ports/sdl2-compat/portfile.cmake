@@ -35,6 +35,8 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/bin/sdl2-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config"
 )
 
 vcpkg_copy_pdbs()
