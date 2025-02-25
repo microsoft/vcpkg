@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 697205a571bb3d52d83598e8511e2e21e7cd15630aac32d8deb4354e462efda6a5ce46510cf4a1c18365dffe935cf2e4f1fda65d1779f17c9bb60c503315bf5c
+    SHA512 4ff03cc8b7899ae063d263dd484363e045bf4a47711cc857276b8d77fc0c1d944c4041bad3df0b013cbfc835087e14993e3e33c2811d004d98185926c3051301
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
-        fix-build-ffmpeg-failed.patch
 )
 
 if("icu" IN_LIST FEATURES)
