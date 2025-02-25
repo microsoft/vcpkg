@@ -5,14 +5,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
     REF "release-${VERSION}"
-    SHA512 2dfeeed9fdc6db62a6620e7c846dbe0bf97dacce3077832e314a35bf16ba6a45803373188a7b3954eada5829385b9914241270b71f12aaf3e9e3df45eb2b1b95
+    SHA512 b18ff6322349af4416a37d28c4f42ebe355260786ed42bdd54dcc20dc92db1a38a8db74e6d637fdff8f320bdd51e2515c0fa939d30679c5f22ea99fb32c97204
     PATCHES
         dependencies.patch
         config-path.patch
         include.patch
         fix-system-link.patch
         math-h-polyfill.patch
-        fix-build-executable.patch #https://github.com/fltk/fltk/commit/63d7c71e1a926f487f22aa26042a2582624b3b17
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"

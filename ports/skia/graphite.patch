@@ -1,5 +1,5 @@
 diff --git a/include/gpu/graphite/Recorder.h b/include/gpu/graphite/Recorder.h
-index 64e9fad..44a9aca 100644
+index 24f1483f46..2a6d93e4c4 100644
 --- a/include/gpu/graphite/Recorder.h
 +++ b/include/gpu/graphite/Recorder.h
 @@ -11,6 +11,7 @@
