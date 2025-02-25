@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-libaec",
+  "version-string": "ci",
+  "description": "Testing packages which provide libaec",
+  "license": null,
+  "dependencies": [
+    "libaec",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
