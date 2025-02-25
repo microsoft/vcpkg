@@ -4,7 +4,7 @@
   "description": "An SDL2 compatibility layer that uses SDL3 behind the scenes.",
   "homepage": "https://www.libsdl.org",
   "license": "Zlib",
-  "supports": "!uwp",
+  "supports": "!uwp & (linux | !static)",
   "dependencies": [
     {
       "name": "sdl3",
