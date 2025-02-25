@@ -8072,6 +8072,10 @@
       "baseline": "9.10.0",
       "port-version": 1
     },
+    "rohanmohapatra-hdbscan": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "rpclib": {
       "baseline": "2.3.0",
       "port-version": 2
