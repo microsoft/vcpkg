@@ -127,6 +127,7 @@ else
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
 fi
 
-apt-get -y --no-install-recommends install $APT_PACKAGES
+# Put --no-install-recommends back next month
+apt-get -y install $APT_PACKAGES
 
 az --version
