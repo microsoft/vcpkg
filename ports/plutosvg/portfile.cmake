@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DPLUTOSVG_BUILD_EXAMPLES=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_plutovg=1
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
