@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
     REF "pcl-${VERSION}"
-    SHA512 8e2d2839fe73a955d49b9a72861de2becf2da9a0dc906bd10ab8a3518e270a2f1900d801922d02871d704f2ed380273d35c2d0e04d8da7e24a21eb351c43c00b
+    SHA512 a1ab4858b8e5bde5b21bb3e04dcdcd9ca69204aa37a90dee336d4da452cb4be0a5b6a2b2b477668d4e82891955398825e97009fb5805df931af3c7d253e9100e
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
@@ -11,11 +11,6 @@ vcpkg_from_github(
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        gh-5985-inline.patch
-        io_ply.patch
-        6053.diff # https://github.com/PointCloudLibrary/pcl/pull/6053
-        6990a3b0d7dd3c1ca04a1a473cc172a937418060.diff # https://github.com/PointCloudLibrary/pcl/pull/6105
-        0012-msvc-optimizer-workaround.patch # backport pcl #6143 and #6154
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -57,6 +52,7 @@ vcpkg_cmake_configure(
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         -DPCL_ENABLE_MARCHNATIVE=OFF
         ${PCL_DONT_TRY_SSE}
+        -DUSE_HOMEBREW_FALLBACK=OFF
         # WITH
         -DWITH_DAVIDSDK=OFF
         -DWITH_DOCS=OFF
