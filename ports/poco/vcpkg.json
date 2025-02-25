@@ -8,7 +8,6 @@
   "dependencies": [
     "expat",
     "pcre2",
-    "sqlite3",
     "utf8proc",
     {
       "name": "vcpkg-cmake",
@@ -20,7 +19,20 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "activerecord",
+    "cppparser",
+    "mongodb",
+    "pocodoc",
+    "sqlite3"
+  ],
   "features": {
+    "activerecord": {
+      "description": "ActiveRecord support for POCO"
+    },
+    "cppparser": {
+      "description": "C++ parser support for POCO"
+    },
     "crypto": {
       "description": "Crypto support",
       "dependencies": [
@@ -32,6 +44,9 @@
       "dependencies": [
         "libmariadb"
       ]
+    },
+    "mongodb": {
+      "description": "MongoDB support for POCO"
     },
     "mysql": {
       "description": "Mysql support for POCO",
@@ -60,10 +75,19 @@
         "libharu"
       ]
     },
+    "pocodoc": {
+      "description": "PocoDoc tool support"
+    },
     "postgresql": {
       "description": "PostgreSQL support for POCO",
       "dependencies": [
         "libpqxx"
+      ]
+    },
+    "sqlite3": {
+      "description": "sqlite3 support for POCO",
+      "dependencies": [
+        "sqlite3"
       ]
     }
   }
