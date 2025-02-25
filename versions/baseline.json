@@ -4501,7 +4501,7 @@
       "port-version": 0
     },
     "libffi": {
-      "baseline": "3.4.6",
+      "baseline": "3.4.7",
       "port-version": 0
     },
     "libfido2": {
