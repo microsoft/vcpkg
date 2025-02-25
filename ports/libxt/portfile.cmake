@@ -25,6 +25,7 @@ vcpkg_from_gitlab(
         globals.patch
         getcwd.patch
         add-missing-process-h.patch
+        fix-asm.patch
         ${PATCHES}
 ) 
 
@@ -39,29 +40,63 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-        vcpkg_find_acquire_program(CLANG)
-        cmake_path(GET CLANG PARENT_PATH CLANG_PARENT_PATH)
-        set(CLANG_CL "${CLANG_PARENT_PATH}/clang-cl.exe")
-        file(READ "${cmake_vars_file}" contents)
-        string(APPEND contents "\nset(VCPKG_DETECTED_CMAKE_C_COMPILER \"${CLANG_CL}\")")
-        string(APPEND contents "\nset(VCPKG_DETECTED_CMAKE_CXX_COMPILER \"${CLANG_CL}\")")
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            string(APPEND contents "\nstring(APPEND VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG \" -m32\")")
-            string(APPEND contents "\nstring(APPEND VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE \" -m32\")")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            string(APPEND contents "\nstring(PREPEND VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG \"--target=arm64-pc-win32 \")")
-            string(APPEND contents "\nstring(PREPEND VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE \"--target=arm64-pc-win32 \")")
-        endif()
-        file(WRITE "${cmake_vars_file}" "${contents}")
-    endif()
+    # z_vcpkg_get_cmake_vars(cmake_vars_file)
+    # include("${cmake_vars_file}")
+    # if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    #     vcpkg_find_acquire_program(CLANG)
+    #     cmake_path(GET CLANG PARENT_PATH CLANG_PARENT_PATH)
+    #     set(CLANG_CL "${CLANG_PARENT_PATH}/clang-cl.exe")
+    #     file(READ "${cmake_vars_file}" contents)
+    #     string(APPEND contents "\nset(VCPKG_DETECTED_CMAKE_C_COMPILER \"${CLANG_CL}\")")
+    #     string(APPEND contents "\nset(VCPKG_DETECTED_CMAKE_CXX_COMPILER \"${CLANG_CL}\")")
+    #     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    #         string(APPEND contents "\nstring(APPEND VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG \" -m32\")")
+    #         string(APPEND contents "\nstring(APPEND VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE \" -m32\")")
+    #     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+    #         string(APPEND contents "\nstring(PREPEND VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG \"--target=arm64-pc-win32 \")")
+    #         string(APPEND contents "\nstring(PREPEND VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE \"--target=arm64-pc-win32 \")")
+    #     endif()
+    #     file(WRITE "${cmake_vars_file}" "${contents}")
+    # endif()
+
     set(cmake_vars_file "${cmake_vars_file}" CACHE INTERNAL "") # Don't run z_vcpkg_get_cmake_vars twice
     set(OPTIONS --disable-selective-werror)
+    set(disable_assembly OFF)
+    set(ccas "")
+    set(asmflags "")
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            string(APPEND asmflags " --target=i686-pc-windows-msvc")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            string(APPEND asmflags " --target=x86_64-pc-windows-msvc")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            string(APPEND asmflags " --target=arm64-pc-windows-msvc")
+        else()
+            set(disable_assembly ON)
+        endif()
+        if(NOT disable_assembly)
+            vcpkg_find_acquire_program(CLANG)
+            set(ccas "${CLANG}")
+        endif()
+    elseif(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        # not exporting asm functions
+        set(disable_assembly ON)
+    elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+        vcpkg_list(APPEND OPTIONS "ABI=32")
+        string(APPEND asmflags " -m32")
+    else()
+        set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    endif()
+    
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 endif()
-
-
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -81,7 +116,7 @@ if(VCPKG_CROSSCOMPILING)
     endif()
 endif()
 
-vcpkg_install_make()
+vcpkg_install_make(DISABLE_PARALLEL)
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)

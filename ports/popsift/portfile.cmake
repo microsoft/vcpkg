@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         "-DCUDA_TOOLKIT_ROOT_DIR=${CUDA_TOOLKIT_ROOT}"
+        #"-DPopSift_USE_NVTX_PROFILING=ON" # won't compile otherwise with newer CUDA
 )
 
 vcpkg_cmake_install()

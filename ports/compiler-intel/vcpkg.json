@@ -1,0 +1,8 @@
+{
+  "name": "compiler-intel",
+  "version": "2025.0.0",
+  "license": "MIT",
+  "dependencies": [
+    "vcpkg-tool-lessmsi"
+  ]
+}

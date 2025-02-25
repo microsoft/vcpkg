@@ -1,6 +1,7 @@
 {
   "name": "kfr",
   "version-semver": "6.0.3",
+  "port-version": 1,
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": null,

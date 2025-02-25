@@ -1,0 +1,12 @@
+diff --git a/msvc/Configuration.Base.props b/msvc/Configuration.Base.props
+index aeb2785d71..130c42d410 100644
+--- a/msvc/Configuration.Base.props	
++++ b/msvc/Configuration.Base.props
+@@ -25,7 +25,4 @@
+    <WindowsTargetPlatformVersion Condition="'$(LibusbPlatformToolsetVersion)'=='141' And $(Platform)=='ARM64'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(LibusbPlatformToolsetVersion)'!='141' Or $(Platform)!='ARM64'">$(WindowsSDKVersion)</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+-   <PropertyGroup Label="Globals" Condition="'$(LibusbPlatformToolsetVersion)'&gt;='142'">
+-     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+-   </PropertyGroup>
+ </Project>

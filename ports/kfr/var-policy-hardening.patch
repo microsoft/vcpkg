@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0f663c0bd4..a5b7784281 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -257,6 +257,7 @@ if (KFR_ARCH IN_LIST DETECT_NAMES)
+         set(KFR_ARCH
+             ${RUN_OUT}
+             CACHE STRING "Detected CPU" FORCE)
++        set(KFR_ARCH ${RUN_OUT})
+     else ()
+         message(STATUS COMPILE_RESULT = ${COMPILE_RESULT})
+         message(STATUS RUN_RESULT = ${RUN_RESULT})
