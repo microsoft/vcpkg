@@ -1,39 +1,53 @@
 {
+  "$comment": "TODO: Move arm to ci.baseline.txt",
   "name": "gobject-introspection",
-  "version": "1.72.0",
-  "port-version": 9,
-  "description": "A middleware layer between C libraries (using GObject) and language bindings.",
+  "version": "1.80.1",
+  "description": [
+    "A middleware layer between C libraries (using GObject) and language bindings.",
+    "gobject-introspection is based on dynamic library linkage. With static library linkage, this port only install tools.",
+    "Program giscanner runs executables for the target system. This limits actual cross-build support."
+  ],
   "homepage": "https://gi.readthedocs.io/en/latest/",
   "license": null,
-  "supports": "!static & (native | (windows & x86))",
+  "supports": "!(static & staticcrt) & !uwp & !(arm & windows)",
   "dependencies": [
-    {
-      "name": "cairo",
-      "default-features": false,
-      "features": [
-        "gobject"
-      ]
-    },
     "glib",
-    {
-      "name": "glib",
-      "host": true
-    },
     {
       "name": "gobject-introspection",
       "host": true,
-      "platform": "!(windows & x86)"
+      "features": [
+        "tools"
+      ]
     },
     "libffi",
-    "python3",
     {
       "name": "python3",
-      "host": true,
-      "platform": "!(windows & x86)"
+      "host": true
     },
     {
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cairo": {
+      "description": "Install introspection data for cairo.",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "gobject"
+          ]
+        }
+      ]
+    },
+    "tools": {
+      "description": "Install tools which on the target platform.",
+      "dependencies": [
+        "python3"
+      ]
+    }
+  }
 }
