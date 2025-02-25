@@ -3,7 +3,7 @@ set(GDK_EDITION_NUMBER 241000)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.PC/${VERSION}"
     FILENAME "ms-gdk.${VERSION}.zip"
-    SHA512 0
+    SHA512 a3ff91cb033a33e971db0b25285f665c80f3e5b97cd5e1b1859ed0a9b3da77285359665a9d0a7f3b5473ac094ed7351c3e6534c656cc5e54daf69af0890ba3e8
 )
 
 vcpkg_extract_source_archive(
@@ -49,6 +49,8 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/lib/Microsoft.Xbox.Services.GDK.C.Thunks.debug.lib"
     "${CURRENT_PACKAGES_DIR}/lib/Microsoft.Xbox.Services.GDK.C.Thunks.debug.pdb"
     )
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST
     "${PACKAGE_PATH}/LICENSE.md"
