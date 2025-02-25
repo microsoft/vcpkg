@@ -50,9 +50,6 @@ function(vcpkg_make_configure)
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
     endif()
-    if(NOT DEFINED BUILD_TRIPLET)
-        z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}")
-    endif()
 
     if(NOT arg_DISABLE_MSVC_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
         # Lets assume that wrappers are only required for MSVC like frontends.
@@ -90,6 +87,10 @@ function(vcpkg_make_configure)
         if(arg_COPY_SOURCE)
             file(COPY "${src_dir}/" DESTINATION "${target_dir}")
             set(relative_build_path ".")
+        endif()
+
+        if(NOT DEFINED BUILD_TRIPLET)
+            z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}" CONFIG_DIR "${target_dir}")
         endif()
 
         z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}" BUILD_TRIPLET "${BUILD_TRIPLET}")
