@@ -11,8 +11,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL2COMPAT_STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         x11               CMAKE_REQUIRE_FIND_PACKAGE_X11
-    INVERTED_FEATURES
-        x11               CMAKE_DISABLE_FIND_PACKAGE_X11
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -30,7 +28,6 @@ vcpkg_cmake_configure(
         -DSDL_REVISION=vcpkg
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_X11
-        CMAKE_DISABLE_FIND_PACKAGE_X11
 )
 
 vcpkg_cmake_install()
@@ -42,6 +39,30 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/bin/sdl2-config"
     "${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config"
 )
+
+file(GLOB BINS "${CURRENT_PACKAGES_DIR}/debug/bin/*" "${CURRENT_PACKAGES_DIR}/bin/*")
+if(NOT BINS)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_MINGW)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/SDL2main.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDL2main.lib")
+    endif()
+
+    file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
+    foreach(SHARE_FILE ${SHARE_FILES})
+        vcpkg_replace_string("${SHARE_FILE}" "lib/SDL2main" "lib/manual-link/SDL2main" IGNORE_UNCHANGED)
+    endforeach()
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
