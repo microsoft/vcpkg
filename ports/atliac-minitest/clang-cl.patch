@@ -1,0 +1,13 @@
+diff --git a/minitest/include/Atliac/minitest.h b/minitest/include/Atliac/minitest.h
+index 59b6ffb900..27c83be21f 100644
+--- a/minitest/include/Atliac/minitest.h
++++ b/minitest/include/Atliac/minitest.h
+@@ -22,7 +22,7 @@
+ #include <cxxabi.h>
+ #endif
+ 
+-#if defined(_WIN32) && (!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL)
++#if defined(_WIN32) && (!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL) && !defined(__clang__)
+ #error The conforming preprocessor is required. Use '/Zc:preprocessor' compiler option to enable it.
+ #endif // defined(_WIN32) &&(!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL)
+ 

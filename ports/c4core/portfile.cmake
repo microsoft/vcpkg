@@ -8,7 +8,8 @@ vcpkg_from_github(
     SHA512 14cd0afbe5c1907ae150fa916354bfb16849d8faadd569b26d4ca05d425d78a12b2af51a49301c1bcad18b840fa46ba1076fcdd5f5baf07677ec0ced4a9b23de
     HEAD_REF master
     PATCHES
-        disable-cpack.patch
+      fix-clang-cl.patch
+      disable_cpack.patch
 )
 
 set(CM_COMMIT_HASH b8e95acb1bdd564e47ac57d903a483604d90cbfa)

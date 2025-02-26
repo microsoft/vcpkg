@@ -1,0 +1,37 @@
+diff --git a/Common7/Tools/vsdevcmd/core/winsdk.bat b/Common7/Tools/vsdevcmd/core/winsdk.bat
+index af0949477b..a758d11bfe 100644
+--- a/Common7/Tools/vsdevcmd/core/winsdk.bat	
++++ b/Common7/Tools/vsdevcmd/core/winsdk.bat
+@@ -62,13 +62,13 @@ exit /B 0
+ @REM ---------------------------------------------------------------------------
+ :GetWin10SdkDir
+ 
+-if "%VSCMD_DEBUG%" GEQ "3" goto :GetWin10SdkDirVerbose
++pushd "%~dp0..\..\..\..\.."
++set "WindowsSdkDir=%CD%\WinSDK\Windows Kits\10\"
++popd
+ 
+-call :GetWin10SdkDirHelper HKLM\SOFTWARE\Wow6432Node > nul 2>&1
+-if errorlevel 1 call :GetWin10SdkDirHelper HKCU\SOFTWARE\Wow6432Node > nul 2>&1
+-if errorlevel 1 call :GetWin10SdkDirHelper HKLM\SOFTWARE > nul 2>&1
+-if errorlevel 1 call :GetWin10SdkDirHelper HKCU\SOFTWARE > nul 2>&1
++call :GetWin10SdkDirHelper
+ if errorlevel 1 exit /B 1
++
+ exit /B 0
+ 
+ :GetWin10SdkDirVerbose
+@@ -83,13 +83,6 @@ exit /B 0
+ 
+ :GetWin10SdkDirHelper
+ 
+-@REM Get Windows 10 SDK installed folder
+-for /F "tokens=1,2*" %%i in ('reg query "%1\Microsoft\Microsoft SDKs\Windows\v10.0" /v "InstallationFolder"') DO (
+-    if "%%i"=="InstallationFolder" (
+-        SET WindowsSdkDir=%%~k
+-    )
+-)
+-
+ @REM get windows 10 sdk version number
+ setlocal enableDelayedExpansion
+ 

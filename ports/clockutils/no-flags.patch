@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 89b42c8398..3dfe33375c 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -61,6 +61,7 @@ IF(WITH_TESTING AND UNIX)
+ ENDIF(WITH_TESTING AND UNIX)
+ set (CLANG_FLAGS "-Wstring-plus-int")
+ 
++if(0)
+ IF(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
+ 	set (CMAKE_CXX_FLAGS_DEBUG		"${CXX_FLAGS} ${CLANG_FLAGS} -g")
+ 	set (CMAKE_CXX_FLAGS_MINSIZEREL		"${CXX_FLAGS} ${CLANG_FLAGS} -0s -DNDEBUG")
+@@ -80,6 +81,7 @@ ELSEIF(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+ ELSE()
+ 	message (SEND_INFO "Unknown C++ compiler \"${CMAKE_CXX_COMPILER_ID}\". Only GNU, Clang and MSVC are completely supported.")
+ ENDIF()
++endif()
+ 
+ # Setting current version
+ SET(VERSION_MAJOR 1)

@@ -1,0 +1,34 @@
+diff --git a/Common7/Tools/vsdevcmd/ext/netfxsdk.bat b/Common7/Tools/vsdevcmd/ext/netfxsdk.bat
+index 24213fae9c..b718bad467 100644
+--- a/Common7/Tools/vsdevcmd/ext/netfxsdk.bat	
++++ b/Common7/Tools/vsdevcmd/ext/netfxsdk.bat
+@@ -77,23 +77,11 @@ exit /B 0
+ 
+ @REM -----------------------------------------------------------------------
+ :GetNetFxSdkPathsFromRegistryHelper
+-for /F "tokens=1,2*" %%i in ('reg query "%~1\WinSDK-NetFx40Tools-x86" /v "InstallationFolder"') DO (
+-    if "%%i"=="InstallationFolder" (
+-        SET "WindowsSDK_ExecutablePath_x86=%%k"
+-    )
+-)
+-
+-for /F "tokens=1,2*" %%i in ('reg query "%~1\WinSDK-NetFx40Tools-x64" /v "InstallationFolder"') DO (
+-    if "%%i"=="InstallationFolder" (
+-        SET "WindowsSDK_ExecutablePath_x64=%%k"
+-    )
+-)
+-
+-for /F "tokens=1,2*" %%i in ('reg query "%~1" /v "KitsInstallationFolder"') DO (
+-    if "%%i"=="KitsInstallationFolder" (
+-        SET "NETFXSDKDir=%%k"
+-    )
+-)
++pushd "%~dp0..\..\..\..\.."
++set "NETFXSDKDir=%CD%\WinSDK\Windows Kits\NETFXSDK\4.8.1"
++SET "WindowsSDK_ExecutablePath_x86=%CD%\WinSDK\Windows\v10.0A\bin\NETFX 4.8.1 Tools\"
++SET "WindowsSDK_ExecutablePath_x64=%CD%\WinSDK\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\"
++popd
+ 
+ if "%NETFXSDKDir%"=="" exit /B 1
+ exit /B 0
+
