@@ -6,6 +6,12 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(BISON)
+    get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
