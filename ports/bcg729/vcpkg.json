@@ -1,7 +1,7 @@
 {
   "name": "bcg729",
   "version": "1.1.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Bcg729 is an open source implementation of the ITU G.729 Annex A and B codec.",
   "homepage": "https://github.com/BelledonneCommunications/bcg729",
   "dependencies": [

@@ -141,6 +141,10 @@ lapack-reference:x64-uwp=skip
 #openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
 ################################################################
+# Bug in VS2022 17.13 where <wchar.h> breaks with -Zc:arm64-aliased-neon-types-
+blend2d:arm64-uwp=fail
+blend2d:arm64-windows=fail
+blend2d:arm64-windows-static-md=fail
 blitz:x64-android=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
@@ -663,6 +667,10 @@ libwandio:arm-neon-android=fail
 libwandio:arm64-android=fail
 libwandio:x64-android=fail
 libxaw:x64-windows-static=skip
+# Clang 19 thinks inline asm in this port is malformed:
+libxt:x64-windows-release=fail
+libxt:x64-windows=fail
+# Inline asm used doesn't appear to support arm64-windows:
 libxt:arm64-windows=fail
 libxt:arm64-windows-static-md=fail
 libzen:arm-neon-android=fail
@@ -822,6 +830,9 @@ openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows=fail
 openturns:arm64-windows-static-md=fail
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+openvino:arm64-windows=fail
+openvino:arm64-windows-static-md=fail
 openvr:x64-windows-static=fail
 # Conflicts with optional-lite, by the same author
 optional-bare:arm-neon-android=skip
@@ -863,8 +874,11 @@ plplot:arm64-windows-static-md=fail
 pmdk:x64-android=fail
 pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
+# popsift is broken with CUDA 12.6 and later, and we test with 12.8, see https://github.com/alicevision/popsift/issues/161
+popsift:x64-windows-release=fail
 popsift:x64-windows-static-md=fail
-popsift:x64-linux=fail # segfaults :(
+popsift:x64-windows-static=fail
+popsift:x64-windows=fail
 ptex:arm-neon-android=fail
 ptex:arm64-android=fail
 ptex:x64-android=fail
@@ -967,15 +981,6 @@ rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
-# Visual Studio 17.12 compiler bug, fixed in 17.13: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2242053
-saucer:arm64-windows-static-md=fail
-saucer:arm64-windows-static-md=fail
-saucer:arm64-windows=fail
-saucer:arm64-windows=fail
-saucer:x64-windows-static-md=fail
-saucer:x64-windows-static=fail
-saucer:x64-windows=fail
-saucer:x86-windows=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
@@ -1329,9 +1334,13 @@ vcpkg-ci-mathgl:x86-windows=pass
 vcpkg-ci-opencv:arm-neon-android=pass
 vcpkg-ci-opencv:arm64-android=pass
 vcpkg-ci-opencv:arm64-osx=pass
-vcpkg-ci-opencv:arm64-uwp=pass
-vcpkg-ci-opencv:arm64-windows-static-md=pass
-vcpkg-ci-opencv:arm64-windows=pass
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+#vcpkg-ci-opencv:arm64-uwp=pass
+opencv4:arm64-uwp=fail
+#vcpkg-ci-opencv:arm64-windows-static-md=pass
+opencv4:arm64-windows-static-md=fail
+#vcpkg-ci-opencv:arm64-windows=pass
+opencv4:arm64-windows=fail
 vcpkg-ci-opencv:x64-android=pass
 vcpkg-ci-opencv:x64-linux=pass
 vcpkg-ci-opencv:x64-osx=pass
@@ -1341,9 +1350,7 @@ vcpkg-ci-opencv:x64-windows-static-md=pass
 vcpkg-ci-opencv:x64-windows-static=pass
 vcpkg-ci-opencv:x64-windows=pass
 vcpkg-ci-opencv:x86-windows=pass
-vcpkg-ci-openimageio:x86-windows=pass
-vcpkg-ci-openimageio:x64-windows=pass
-vcpkg-ci-openimageio:x64-windows-static=pass
+vcpkg-ci-openimageio:x64-windows-release=pass
 vcpkg-ci-openimageio:x64-windows-static-md=pass
 vcpkg-ci-openimageio:x64-windows-static=pass
 vcpkg-ci-openimageio:x64-windows=pass
