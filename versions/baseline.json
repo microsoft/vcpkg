@@ -37,7 +37,7 @@
       "port-version": 17
     },
     "ada-url": {
-      "baseline": "3.1.0",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "ade": {
@@ -281,7 +281,7 @@
       "port-version": 1
     },
     "asock": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "assimp": {
@@ -578,7 +578,7 @@
     },
     "bcg729": {
       "baseline": "1.1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "bddisasm": {
       "baseline": "2.2.0",
@@ -1717,7 +1717,7 @@
       "port-version": 2
     },
     "clipper2": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "clockutils": {
@@ -3260,6 +3260,10 @@
       "baseline": "2020-05-20",
       "port-version": 4
     },
+    "graaf": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "grantlee": {
       "baseline": "5.3.1",
       "port-version": 2
@@ -3278,7 +3282,7 @@
     },
     "graphviz": {
       "baseline": "10.0.1",
-      "port-version": 2
+      "port-version": 3
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -3645,8 +3649,8 @@
       "port-version": 2
     },
     "imgui-sfml": {
-      "baseline": "2.6",
-      "port-version": 1
+      "baseline": "3.0",
+      "port-version": 0
     },
     "imguizmo": {
       "baseline": "2024-05-29",
@@ -4122,7 +4126,7 @@
     },
     "ktx": {
       "baseline": "4.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "kubazip": {
       "baseline": "0.3.3",
@@ -4174,7 +4178,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 6
+      "port-version": 7
     },
     "lcms": {
       "baseline": "2.16",
@@ -4841,7 +4845,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2025.1.0",
+      "baseline": "2025.2.0",
       "port-version": 0
     },
     "libnoise": {
@@ -6758,7 +6762,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.19.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentelemetry-cpp-contrib-version": {
       "baseline": "2025-02-03",
@@ -7090,7 +7094,7 @@
     },
     "plplot": {
       "baseline": "5.15.0",
-      "port-version": 2
+      "port-version": 3
     },
     "plustache": {
       "baseline": "0.4.0",
@@ -8349,11 +8353,11 @@
       "port-version": 4
     },
     "sfgui": {
-      "baseline": "0.4.0",
-      "port-version": 6
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "sfml": {
-      "baseline": "2.6.2",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "sfsexp": {
@@ -9370,7 +9374,7 @@
     },
     "usearch": {
       "baseline": "2.17.2",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.8",
@@ -9838,7 +9842,7 @@
     },
     "wpilib": {
       "baseline": "2023-08-24",
-      "port-version": 1
+      "port-version": 2
     },
     "wren": {
       "baseline": "0.4.0",
@@ -10141,7 +10145,7 @@
       "port-version": 0
     },
     "zstd": {
-      "baseline": "1.5.6",
+      "baseline": "1.5.7",
       "port-version": 0
     },
     "zstr": {

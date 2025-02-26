@@ -3,6 +3,11 @@
 FROM ubuntu:noble-20241118.1
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
+ADD https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.25+9/openlogic-openjdk-11.0.25+9-linux-x64.tar.gz /openlogic-openjdk-11.0.25+9-linux-x64.tar.gz
+ADD https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip /sdk-commandlinetools-linux-10406996_latest.zip
+ADD https://dl.google.com/android/repository/build-tools_r34-linux.zip /build-tools_r34-linux.zip
+ADD https://dl.google.com/android/repository/platform-34-ext7_r03.zip /platform-34-ext7_r03.zip
+ADD https://dl.google.com/android/repository/platform-tools_r35.0.1-linux.zip /platform-tools_r35.0.1-linux.zip
 ADD https://dl.google.com/android/repository/android-ndk-r27c-linux.zip /android-ndk-r27c-linux.zip
 
 # Add apt packages
@@ -59,10 +64,33 @@ apt-get -y dist-upgrade
 
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
+# OpenJDK
+tar xzf openlogic-openjdk-11.0.25+9-linux-x64.tar.gz
+rm openlogic-openjdk-11.0.25+9-linux-x64.tar.gz
+
+# Android SDK
+unzip -q sdk-commandlinetools-linux-10406996_latest.zip -d android-sdk
+rm sdk-commandlinetools-linux-10406996_latest.zip
+
+unzip -q build-tools_r34-linux.zip -d android-sdk/build-tools
+mv android-sdk/build-tools/android-14 android-sdk/build-tools/34.0.0
+rm build-tools_r34-linux.zip
+
+unzip -q platform-34-ext7_r03.zip -d android-sdk/platforms
+rm platform-34-ext7_r03.zip
+
+unzip -q platform-tools_r35.0.1-linux.zip -d android-sdk
+rm platform-tools_r35.0.1-linux.zip
+
 # Android NDK
 unzip /android-ndk-r27c-linux.zip
 rm -f android-ndk-r27c-linux.zip
+
 END_OF_SCRIPT
+
+ENV JAVA_HOME /openlogic-openjdk-11.0.25+9-linux-x64
+
+ENV ANDROID_HOME /android-sdk
 
 ENV ANDROID_NDK_HOME /android-ndk-r27c
 
