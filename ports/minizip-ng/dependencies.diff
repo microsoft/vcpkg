@@ -7,7 +7,7 @@ index c684e3e..c3b6fff 100644
          list(APPEND MINIZIP_LBD ${BZIP2_LIBRARY_DIRS})
  
 -        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -lbz2")
-+        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} bzip2")
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} bzip2")
      elseif(MZ_FETCH_LIBS)
          clone_repo(bzip2 https://sourceware.org/git/bzip2.git master)
  
@@ -24,7 +24,7 @@ index c684e3e..c3b6fff 100644
          list(APPEND MINIZIP_LBD ${LIBLZMA_LIBRARY_DIRS})
  
 -        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -llzma")
-+        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} liblzma")
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} liblzma")
      elseif(MZ_FETCH_LIBS)
          set(BUILD_TESTING OFF CACHE BOOL "Build lzma tests" FORCE)
  
@@ -45,7 +45,7 @@ index c684e3e..c3b6fff 100644
          list(APPEND MINIZIP_LBD ${ZSTD_LIBRARY_DIRS})
  
 -        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -lzstd")
-+        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} libzstd")
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} libzstd")
      elseif(MZ_FETCH_LIBS)
          set(ZSTD_BUILD_PROGRAMS OFF CACHE BOOL "Build zstd programs")
  
