@@ -25,11 +25,23 @@
     }
   ],
   "features": {
+    "bigquery": {
+      "description": "Enable bigquery support",
+      "supports": "!windows"
+    },
+    "flightsql": {
+      "description": "Enable flightsql support",
+      "supports": "!windows"
+    },
     "postgresql": {
       "description": "Enable PostgreSQL support",
       "dependencies": [
         "libpq"
       ]
+    },
+    "snowflake": {
+      "description": "Enable snowflake support",
+      "supports": "!windows"
     },
     "sqlite": {
       "description": "Enable SQLite support",

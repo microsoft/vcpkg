@@ -13,18 +13,19 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-	    "sqlite" "ADBC_DRIVER_SQLITE"
+        "sqlite" "ADBC_DRIVER_SQLITE"
         "postgresql" "ADBC_DRIVER_POSTGRESQL"
-#        "flightsql" "ADBC_DRIVER_FLIGHTSQL"
-#        "snowflake" "ADBC_DRIVER_SNOWFLAKE"
-#        "bigquery" "ADBC_DRIVER_BIGQUERY"
+        "flightsql" "ADBC_DRIVER_FLIGHTSQL"
+        "snowflake" "ADBC_DRIVER_SNOWFLAKE"
+        "bigquery" "ADBC_DRIVER_BIGQUERY"
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ADBC_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ADBC_BUILD_STATIC)
 
 # Required for flightsql, snowflake and bigquery
-# Currently fails on windows with
+# If ever we can enable these features on windows, the following will be required.
+# Currently fails with
 #     cgo: C compiler "gcc" not found: exec: "gcc": executable file not found in %PATH%
 
 #vcpkg_find_acquire_program(GO)
