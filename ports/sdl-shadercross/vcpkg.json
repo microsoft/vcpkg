@@ -1,0 +1,33 @@
+{
+  "name": "sdl-shadercross",
+  "version": "3.0.0-preview1",
+  "description": "This is a library for translating shaders to different formats, intended for use with SDL's GPU API. It takes SPIRV or HLSL as the source and outputs DXBC, DXIL, SPIRV, MSL, or HLSL.",
+  "homepage": "https://www.libsdl.org",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "directx-dxc",
+      "version>=": "2025-02-20"
+    },
+    {
+      "name": "sdl3",
+      "default-features": false,
+      "features": [
+        "vulkan"
+      ],
+      "version>=": "3.2.4"
+    },
+    {
+      "name": "spirv-cross",
+      "version>=": "1.4.304.1"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
