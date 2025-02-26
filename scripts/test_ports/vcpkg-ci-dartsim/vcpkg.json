@@ -26,6 +26,7 @@
           "default-features": false,
           "features": [
             "collision-bullet",
+            "collision-ode",
             "spdlog",
             "utils"
           ]
@@ -37,14 +38,6 @@
             "utils-urdf"
           ],
           "platform": "!staticcrt"
-        },
-        {
-          "name": "dartsim",
-          "default-features": false,
-          "features": [
-            "collision-ode"
-          ],
-          "platform": "!(arm & windows)"
         },
         {
           "name": "dartsim",
