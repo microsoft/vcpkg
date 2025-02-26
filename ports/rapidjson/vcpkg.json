@@ -1,7 +1,6 @@
 {
   "name": "rapidjson",
-  "version-date": "2023-07-17",
-  "port-version": 2,
+  "version-date": "2025-02-26",
   "description": "A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>",
   "homepage": "http://rapidjson.org/",
   "license": "MIT",
