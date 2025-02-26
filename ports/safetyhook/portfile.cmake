@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 29fe65c6c6a5fbf6c9fc8effbd33a04b08c88c09d009e2ea55a5d459ca0feaac4c8d09621b983f607f30fcb1a56a45f4e4843731362ff8375b6d1dcf84126f25
     HEAD_REF main
+    PATCHES
+        "fix-cmake-install.patch"
 )
 
 vcpkg_find_acquire_program(GIT)
