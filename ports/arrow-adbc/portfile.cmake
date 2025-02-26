@@ -23,15 +23,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ADBC_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ADBC_BUILD_STATIC)
 
-# Required for flightsql, snowflake and bigquery
-# If ever we can enable these features on windows, the following will be required.
-# Currently fails with
-#     cgo: C compiler "gcc" not found: exec: "gcc": executable file not found in %PATH%
-
-#vcpkg_find_acquire_program(GO)
-#get_filename_component(GO_EXE_PATH "${GO}" DIRECTORY)
-#vcpkg_add_to_path("${GO_EXE_PATH}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/c
     OPTIONS
