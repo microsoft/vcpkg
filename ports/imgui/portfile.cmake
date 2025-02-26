@@ -36,6 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
     sdl3-binding                IMGUI_BUILD_SDL3_BINDING
+    sdlgpu3-binding             IMGUI_BUILD_SDLGPU3_BINDING
     sdl3-renderer-binding       IMGUI_BUILD_SDL3_RENDERER_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
