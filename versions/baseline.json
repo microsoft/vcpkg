@@ -9370,7 +9370,7 @@
     },
     "usearch": {
       "baseline": "2.17.2",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.8",
