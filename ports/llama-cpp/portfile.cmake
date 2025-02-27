@@ -33,6 +33,7 @@ if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llama/llama-config.cmake"
         "set_and_check(LLAMA_BIN_DIR     \"${PACKAGE_PREFIX_DIR}/bin\")"
         ""
+        IGNORE_UNCHANGED
     )
 endif()
 
