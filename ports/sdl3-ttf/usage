@@ -1,0 +1,4 @@
+sdl3-ttf provides CMake targets:
+
+  find_package(SDL3_ttf CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SDL3_ttf::SDL3_ttf>,SDL3_ttf::SDL3_ttf,SDL3_ttf::SDL3_ttf-static>)

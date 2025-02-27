@@ -1,32 +1,20 @@
 {
   "name": "omplapp",
-  "version": "1.5.1",
-  "port-version": 6,
+  "version": "1.6.0",
   "description": "Use OMPL for reading meshes and performing collision checking",
   "homepage": "https://ompl.kavrakilab.org/",
   "license": null,
   "dependencies": [
     "assimp",
-    "boost-dynamic-bitset",
     "boost-filesystem",
-    "boost-graph",
-    "boost-odeint",
+    "boost-math",
     "boost-program-options",
     "boost-serialization",
     "boost-system",
-    "boost-test",
-    "boost-timer",
-    "boost-ublas",
     "ccd",
     "eigen3",
     "fcl",
-    {
-      "name": "omplapp",
-      "features": [
-        "threads"
-      ],
-      "platform": "linux"
-    },
+    "ompl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -37,22 +25,10 @@
     }
   ],
   "features": {
-    "ode": {
-      "description": "Build with Open Dynamics Engine support",
-      "dependencies": [
-        "ode"
-      ]
-    },
     "opengl": {
       "description": "Build with OpenGL support",
       "dependencies": [
         "opengl"
-      ]
-    },
-    "threads": {
-      "description": "Build with Threads support",
-      "dependencies": [
-        "pthreads"
       ]
     }
   }

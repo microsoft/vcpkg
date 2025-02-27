@@ -1,7 +1,6 @@
 {
   "name": "ncnn",
-  "version": "20240102",
-  "port-version": 1,
+  "version": "20241226",
   "description": "ncnn is a high-performance neural network inference computing framework.",
   "homepage": "https://github.com/Tencent/ncnn",
   "license": "BSD-3-Clause",

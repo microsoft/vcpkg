@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         cmake-quirks.diff
+        fix-target_link.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,6 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
         user-events WITH_USER_EVENTS
+        opentracing WITH_OPENTRACING
     INVERTED_FEATURES
         user-events BUILD_TRACEPOINTS
 )
