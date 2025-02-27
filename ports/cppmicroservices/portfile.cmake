@@ -8,6 +8,7 @@ vcpkg_from_github(
         werror.patch
         fix_strnicmp.patch
         devendor_boost_absl.patch
+        reomve-ut-macros.patch
 )
 
 # TODO: De-vendor everything
