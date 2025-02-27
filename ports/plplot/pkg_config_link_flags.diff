@@ -1,0 +1,42 @@
+diff --git a/cmake/modules/pkg-config.cmake b/cmake/modules/pkg-config.cmake
+index a0ca6b2..9106631 100644
+--- a/cmake/modules/pkg-config.cmake
++++ b/cmake/modules/pkg-config.cmake
+@@ -210,12 +210,36 @@ function(pkg_config_link_flags link_flags_out link_flags_in)
+   set(_link_flags)
+   foreach(link_flag IN LISTS link_flags)
+     #message(STATUS "link_flag = ${link_flag}")
++    if(TARGET "${link_flag}")
++      string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
++      foreach(key IN ITEMS IMPORTED_IMPLIB_${config} IMPORTED_LOCATION_${config} IMPORTED_IMPLIB IMPORTED_LOCATION)
++        get_target_property(lib "${link_flag}" "${key}")
++        if(lib)
++          set(link_flag "${lib}")
++          break()
++        endif()
++      endforeach()
++      # sorry, no transitive deps for now.
++    endif()    
+     if(WIN32_OR_CYGWIN)
+       # Look for colon-delimited drive-letter form on these platforms.
+       string(REGEX REPLACE "^([a-zA-Z]:/.*)/lib(.*)${suffix_pattern}$" "-L\"\\1\" -l\\2" link_flag "${link_flag}")
+     endif(WIN32_OR_CYGWIN)
+     # Look for form starting with "/" on all platforms.
+-    string(REGEX REPLACE "^(/.*)/lib(.*)${suffix_pattern}$" "-L\"\\1\" -l\\2" link_flag "${link_flag}")
++    if(link_flag MATCHES "^(/.*)/lib(.*)${suffix_pattern}$")
++      if(CMAKE_MATCH_2 IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++      endif()
++      set(link_flag "-l${CMAKE_MATCH_2}")
++      if(NOT CMAKE_MATCH_1 IN_LIST CMAKE_C_IMPLICIT_LINK_DIRECTORIES)
++        set(lib_dir_flag "-L\"${CMAKE_MATCH_1}\"")
++        if(NOT lib_dir_flag IN_LIST _link_flags)
++          list(APPEND _link_flags "${lib_dir_flag}")
++        endif()
++      endif()
++    elseif(NOT link_flag MATCHES "^-|/")  # e.g. 'm'
++      set(link_flag "-l${link_flag}")
++    endif()
+     #message(STATUS "(-L form of link_flag = ${link_flag}")
+     list(APPEND _link_flags ${link_flag})
+   endforeach(link_flag IN LISTS link_flags)
