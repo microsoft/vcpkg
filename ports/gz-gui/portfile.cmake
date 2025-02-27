@@ -28,6 +28,3 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Lacking pc files for Qt
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
-
-# preserve the original port behavior
-file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}/")

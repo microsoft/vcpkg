@@ -10,6 +10,3 @@ ignition_modular_library(
    OPTIONS 
    PATCHES
 )
-
-# preserve the original port behavior
-file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}/")

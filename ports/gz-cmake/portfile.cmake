@@ -15,6 +15,3 @@ ignition_modular_library(
 
 file(COPY "${CURRENT_PORT_DIR}/vcpkg" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cmake/${PORT}/${PACKAGE_NAME}${VERSION_MAJOR}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
-
-# preserve the original port behavior
-file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}/")

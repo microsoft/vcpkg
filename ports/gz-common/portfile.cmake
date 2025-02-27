@@ -27,6 +27,3 @@ foreach(component IN ITEMS av events geospatial graphics io profiler testing)
       message(FATAL_ERROR "Failed to install component ${component}. Check configuration logs for missing dependencies.")
    endif()
 endforeach()
-
-# preserve the original port behavior
-file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}/")

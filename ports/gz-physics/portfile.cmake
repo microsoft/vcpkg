@@ -25,6 +25,3 @@ if(VCPKG_TARGET_IS_WINDOWS)
       file(REMOVE ${plugins_debug})
    endif()
 endif()
-
-# preserve the original port behavior
-file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}/")

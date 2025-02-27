@@ -3657,7 +3657,7 @@
       "port-version": 2
     },
     "ignition-modularscripts": {
-      "baseline": "2023-05-05",
+      "baseline": "2025-02-27",
       "port-version": 0
     },
     "igraph": {
