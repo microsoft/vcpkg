@@ -9726,7 +9726,7 @@
     },
     "vulkan-memory-allocator-hpp": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-sdk-components": {
       "baseline": "1.4.304.1",
