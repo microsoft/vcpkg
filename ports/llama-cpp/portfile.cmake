@@ -29,6 +29,21 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME llama CONFIG_PATH "lib/cmake/llama")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llama/llama-config.cmake"
+        "set_and_check(LLAMA_BIN_DIR     \"${PACKAGE_PREFIX_DIR}/bin\")"
+        ""
+    )
+endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llama/llama-config.cmake"
+    "add_library(llama UNKNOWN IMPORTED)"
+    "if (NOT TARGET llama)
+    add_library(llama UNKNOWN IMPORTED)
+endif()
+"
+)
+
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/convert_hf_to_gguf.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/convert-hf-to-gguf.py")
 file(INSTALL "${SOURCE_PATH}/gguf-py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")

@@ -42,6 +42,34 @@ if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
     )
 endif()
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
+    "add_library(ggml::ggml UNKNOWN IMPORTED)"
+    "if (NOT TARGET ggml::ggml)
+    add_library(ggml::ggml UNKNOWN IMPORTED)
+endif()"
+)
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
+    "add_library(ggml::ggml-base UNKNOWN IMPORTED)"
+    "if (NOT TARGET ggml::ggml-base)
+    add_library(ggml::ggml-base UNKNOWN IMPORTED)
+endif()"
+)
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
+    "add_library(ggml::\${_ggml_backend} UNKNOWN IMPORTED)"
+    "if (NOT TARGET ggml::\${_ggml_backend})
+        add_library(ggml::\${_ggml_backend} UNKNOWN IMPORTED)
+    endif()"
+)
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
+    "add_library(ggml::all INTERFACE IMPORTED)"
+    "if (NOT TARGET ggml::all)
+    add_library(ggml::all INTERFACE IMPORTED)
+endif()"
+)
+
 if (NOT VCPKG_BUILD_TYPE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ggml.pc")
