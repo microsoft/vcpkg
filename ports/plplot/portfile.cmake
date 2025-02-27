@@ -22,6 +22,12 @@ vcpkg_check_features(
         x11       CMAKE_DISABLE_FIND_PACKAGE_X11
 )
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_NATIVE_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+    # Necessary to skip a try_run which isn't used anyways due to PL_HAVE_QHULL=OFF
+    list(APPEND FEATURE_OPTIONS "-DNaNAwareCCompiler=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -67,6 +73,24 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if(NOT VCPKG_CROSSCOMPILING)
+    function(copy_tool name subdir cmake_name)
+        vcpkg_copy_tools(
+            TOOL_NAMES "${name}"
+            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${subdir}"
+        )
+        configure_file(
+            "${CURRENT_PORT_DIR}/native-tool.cmake"
+            "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${subdir}/${cmake_name}"
+            @ONLY
+        )
+    endfunction()
+    copy_tool(plhershey-unicode-gen "include" "ImportExecutables.cmake")
+    copy_tool(tai-utc-gen "lib/qsastime" "tai-utc-gen.cmake")
+    copy_tool(deltaT-gen "lib/qsastime" "deltaT-gen.cmake")
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(
