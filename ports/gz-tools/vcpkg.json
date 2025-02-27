@@ -1,0 +1,15 @@
+{
+  "name": "gz-tools",
+  "version": "2.0.0",
+  "description": "Gazebo tools provide the ign command line tool that accepts multiple subcommands.",
+  "homepage": "https://gazebosim.org",
+  "license": "Apache-2.0",
+  "supports": "!(arm & windows) & !uwp",
+  "dependencies": [
+    "gz-cmake",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    }
+  ]
+}
