@@ -6993,7 +6993,7 @@
       "port-version": 1
     },
     "pfring": {
-      "baseline": "8.4.0",
+      "baseline": "8.8.0",
       "port-version": 0
     },
     "pfultz2-linq": {
