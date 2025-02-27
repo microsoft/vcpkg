@@ -51,15 +51,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/plplot)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 
 if("wxwidgets" IN_LIST FEATURES)
     file(GLOB _pkg_components "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
-    foreach(_pkg_comp ${_pkg_components})
-        file(READ ${_pkg_comp} _content)
-        string(REPLACE "mswu" "mswud" _content ${_content})
-        file(WRITE ${_pkg_comp} ${_content})
+    foreach(_pkg_comp IN ITEMS ${_pkg_components})
+        vcpkg_replace_string("${_pkg_comp}" "mswu" "mswud" IGNORE_UNCHANGED)
     endforeach()
 endif()
 
