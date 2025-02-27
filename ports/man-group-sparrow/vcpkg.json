@@ -19,7 +19,7 @@
     "date",
     {
       "name": "large-int-placeholder",
-      "platform": "windows"
+      "platform": "windows | (arm & android)"
     }
   ],
   "features": {
