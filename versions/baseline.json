@@ -10197,7 +10197,7 @@
       "port-version": 4
     },
     "zpp-bits": {
-      "baseline": "4.4.17",
+      "baseline": "4.5",
       "port-version": 0
     },
     "zserge-webview": {
