@@ -3502,7 +3502,7 @@
     },
     "harfbuzz": {
       "baseline": "10.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "hash-library": {
       "baseline": "8",
@@ -6946,7 +6946,7 @@
     },
     "pangomm": {
       "baseline": "2.56.1",
-      "port-version": 0
+      "port-version": 1
     },
     "parallel-hashmap": {
       "baseline": "2.0.0",
@@ -7146,7 +7146,7 @@
     },
     "plplot": {
       "baseline": "5.15.0",
-      "port-version": 4
+      "port-version": 5
     },
     "plustache": {
       "baseline": "0.4.0",
