@@ -41,7 +41,8 @@
       "description": "Enable Vulkan support",
       "dependencies": [
         "vulkan-sdk-components"
-      ]
+      ],
+      "supports": "!x86"
     }
   }
 }

@@ -70,6 +70,15 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
 endif()"
 )
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
+    "if (NOT GGML_SHARED_LIB)"
+    "if (NOT GGML_SHARED_LIB)
+    if (GGML_OPENCL)
+        find_package(OpenCL REQUIRED)
+        list(APPEND GGML_CPU_INTERFACE_LINK_LIBRARIES OpenCL::OpenCL)
+    endif()"
+)
+
 if (NOT VCPKG_BUILD_TYPE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ggml.pc")
