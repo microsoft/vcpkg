@@ -39,10 +39,10 @@
     },
     "vulkan": {
       "description": "Enable Vulkan support",
+      "supports": "!x86",
       "dependencies": [
         "vulkan-sdk-components"
-      ],
-      "supports": "!x86"
+      ]
     }
   }
 }
