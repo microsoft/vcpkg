@@ -11,6 +11,7 @@ vcpkg_from_github(
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
+        add-chrono-includes.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
