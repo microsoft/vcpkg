@@ -4,7 +4,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
          "https://ftp.gnu.org/gnu/octave/octave-${VERSION}.tar.xz"
     FILENAME "octave-${VERSION}.tar.xz"
-    SHA512 9550162681aee88b4bcb94c5081ed0470df0d3f7c5307b25878b94b19f1282002ba69f0c4c79877e81f61122bfba1b2671ed5007a28fbb2d755bda466a3c46d8
+    SHA512 f0a5ec7d3a14ee18c9a48bab240004ed67ce475b7d5f67037a102d20585b2a78475f260efac33396697dac12c3c49cbabdb2c1370e608ca9ae8ef7954a4e2d92
 )
 
 vcpkg_extract_source_archive(
