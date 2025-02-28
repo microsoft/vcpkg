@@ -3,13 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flann-lib/flann
-    REF  1d04523268c388dabf1c0865d69e1b638c8c7d9d
-    SHA512 61e322222c2daa0b9677095e5ca231cba7c305ce754ad8e659eee350111c1e04351181c3af04e45ab6e5c9edea49c7b9ec6499bb0dbc080b87af36eb11c6ef7c
+    REF  f9caaf609d8b8cb2b7104a85cf59eb92c275a25d
+    SHA512 14cd7d3249109ce66c43258f8b9d158efa3b57f654708e76751290eba25e2cb7fc8044a1d882c6b24d0cda1a8b206709acdb5338086ca1f2d60fef35f0fa85be
     HEAD_REF master
     PATCHES
-        fix-build-error.patch
         fix-dependency-hdf5.patch
-        fix_undefined_pot_t.patch # https://github.com/opencv/opencv/pull/13270/
+        fix-dep-lz4.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
