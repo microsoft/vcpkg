@@ -2733,7 +2733,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.02.10.00",
+      "baseline": "2025.02.24.00",
       "port-version": 0
     },
     "fcl": {
@@ -2785,7 +2785,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.02.10.00",
+      "baseline": "2025.02.24.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2869,7 +2869,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.02.10.00",
+      "baseline": "2025.02.24.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3368,57 +3368,109 @@
       "baseline": "0.12.3",
       "port-version": 0
     },
+    "gz-cmake": {
+      "baseline": "3.4.1",
+      "port-version": 0
+    },
     "gz-cmake3": {
       "baseline": "3.4.1",
-      "port-version": 5
+      "port-version": 6
+    },
+    "gz-common": {
+      "baseline": "5.4.1",
+      "port-version": 0
     },
     "gz-common5": {
       "baseline": "5.4.1",
-      "port-version": 3
+      "port-version": 4
+    },
+    "gz-fuel-tools": {
+      "baseline": "8.1.0",
+      "port-version": 0
     },
     "gz-fuel-tools8": {
       "baseline": "8.1.0",
+      "port-version": 1
+    },
+    "gz-gui": {
+      "baseline": "7.2.1",
       "port-version": 0
     },
     "gz-gui7": {
       "baseline": "7.2.1",
+      "port-version": 1
+    },
+    "gz-math": {
+      "baseline": "7.3.0",
       "port-version": 0
     },
     "gz-math7": {
       "baseline": "7.3.0",
+      "port-version": 1
+    },
+    "gz-msgs": {
+      "baseline": "9.5.0",
       "port-version": 0
     },
     "gz-msgs9": {
       "baseline": "9.5.0",
+      "port-version": 1
+    },
+    "gz-physics": {
+      "baseline": "6.5.1",
       "port-version": 0
     },
     "gz-physics6": {
       "baseline": "6.5.1",
-      "port-version": 2
+      "port-version": 3
+    },
+    "gz-plugin": {
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "gz-plugin2": {
       "baseline": "2.0.1",
+      "port-version": 1
+    },
+    "gz-rendering": {
+      "baseline": "7.4.1",
       "port-version": 0
     },
     "gz-rendering7": {
       "baseline": "7.4.1",
-      "port-version": 1
+      "port-version": 2
+    },
+    "gz-sensors": {
+      "baseline": "7.3.0",
+      "port-version": 0
     },
     "gz-sensors7": {
       "baseline": "7.3.0",
+      "port-version": 1
+    },
+    "gz-tools": {
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "gz-tools2": {
       "baseline": "2.0.0",
-      "port-version": 1
+      "port-version": 2
+    },
+    "gz-transport": {
+      "baseline": "12.2.1",
+      "port-version": 0
     },
     "gz-transport12": {
       "baseline": "12.2.1",
+      "port-version": 1
+    },
+    "gz-utils": {
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "gz-utils2": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gzip-hpp": {
       "baseline": "0.1.0",
@@ -3609,7 +3661,7 @@
       "port-version": 2
     },
     "ignition-modularscripts": {
-      "baseline": "2023-05-05",
+      "baseline": "2025-02-27",
       "port-version": 0
     },
     "igraph": {
@@ -3642,7 +3694,7 @@
     },
     "imgui": {
       "baseline": "1.91.8",
-      "port-version": 3
+      "port-version": 4
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -4285,7 +4337,7 @@
       "port-version": 0
     },
     "libassert": {
-      "baseline": "2.1.4",
+      "baseline": "2.1.5",
       "port-version": 0
     },
     "libassuan": {
@@ -5409,7 +5461,7 @@
       "port-version": 0
     },
     "libxlsxwriter": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libxml2": {
@@ -5953,7 +6005,7 @@
       "port-version": 4
     },
     "miniaudio": {
-      "baseline": "0.11.21",
+      "baseline": "0.11.22",
       "port-version": 0
     },
     "minifb": {
@@ -5993,7 +6045,7 @@
       "port-version": 1
     },
     "minizip-ng": {
-      "baseline": "4.0.7",
+      "baseline": "4.0.8",
       "port-version": 0
     },
     "mio": {
@@ -6205,7 +6257,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.02.10.00",
+      "baseline": "2025.02.24.00",
       "port-version": 0
     },
     "mygui": {
@@ -6545,8 +6597,8 @@
       "port-version": 0
     },
     "octave": {
-      "baseline": "9.3.0",
-      "port-version": 2
+      "baseline": "9.4.0",
+      "port-version": 0
     },
     "octomap": {
       "baseline": "1.10.0",
@@ -6762,7 +6814,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.19.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opentelemetry-cpp-contrib-version": {
       "baseline": "2025-02-03",
@@ -6993,7 +7045,7 @@
       "port-version": 1
     },
     "pfring": {
-      "baseline": "8.4.0",
+      "baseline": "8.8.0",
       "port-version": 0
     },
     "pfultz2-linq": {
@@ -7094,15 +7146,15 @@
     },
     "plplot": {
       "baseline": "5.15.0",
-      "port-version": 3
+      "port-version": 4
     },
     "plustache": {
       "baseline": "0.4.0",
       "port-version": 4
     },
     "plutosvg": {
-      "baseline": "0.0.4",
-      "port-version": 1
+      "baseline": "0.0.6",
+      "port-version": 0
     },
     "plutovg": {
       "baseline": "0.0.12",
@@ -7273,7 +7325,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.02.10.00",
+      "baseline": "2025.02.24.00",
       "port-version": 0
     },
     "psimd": {
@@ -7362,6 +7414,10 @@
     },
     "qlementine": {
       "baseline": "1.0.2",
+      "port-version": 0
+    },
+    "qlementine-icons": {
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "qmex": {
@@ -8232,9 +8288,13 @@
       "baseline": "2025-01-25",
       "port-version": 0
     },
-    "sdformat13": {
+    "sdformat": {
       "baseline": "13.6.0",
       "port-version": 0
+    },
+    "sdformat13": {
+      "baseline": "13.6.0",
+      "port-version": 1
     },
     "sdl1": {
       "baseline": "1.2.15",
@@ -9670,7 +9730,7 @@
     },
     "vulkan-memory-allocator-hpp": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-sdk-components": {
       "baseline": "1.4.304.1",
@@ -9705,7 +9765,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.02.10.00",
+      "baseline": "2025.02.24.00",
       "port-version": 0
     },
     "wasmedge": {

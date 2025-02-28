@@ -93,6 +93,12 @@ if(IMGUI_BUILD_SDL3_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp)
 endif()
 
+if(IMGUI_BUILD_SDLGPU3_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3.cpp)
+endif()
+
 if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
     find_package(SDL3 CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
@@ -231,6 +237,16 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_SDL3_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_SDLGPU3_BINDING)
+        install(
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3_shaders.h
+            DESTINATION
+                include
+        )
     endif()
 
     if(IMGUI_BUILD_SDL3_RENDERER_BINDING)

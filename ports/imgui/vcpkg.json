@@ -1,7 +1,7 @@
 {
   "name": "imgui",
   "version": "1.91.8",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -110,6 +110,18 @@
     "sdl3-renderer-binding": {
       "description": "Make available SDL3 Renderer binding",
       "dependencies": [
+        "sdl3"
+      ]
+    },
+    "sdlgpu3-binding": {
+      "description": "Make available SDLGPU3 binding",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "sdl3-binding"
+          ]
+        },
         "sdl3"
       ]
     },
