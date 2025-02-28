@@ -1,0 +1,12 @@
+diff --git a/lib/expr/expr.h b/lib/expr/expr.h
+index 3d7fbd6..d6cfb53 100644
+--- a/lib/expr/expr.h
++++ b/lib/expr/expr.h
+@@ -36,6 +36,7 @@ extern "C" {
+ #include <stddef.h>
+ #include <stdio.h>
+ #include <vmalloc/vmalloc.h>
++#include <wchar.h>
+ 
+ #define EX_VERSION	20000101L
+ 

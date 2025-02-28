@@ -141,6 +141,10 @@ lapack-reference:x64-uwp=skip
 #openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
 ################################################################
+# Bug in VS2022 17.13 where <wchar.h> breaks with -Zc:arm64-aliased-neon-types-
+blend2d:arm64-uwp=fail
+blend2d:arm64-windows=fail
+blend2d:arm64-windows-static-md=fail
 blitz:x64-android=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
@@ -386,6 +390,8 @@ gamenetworkingsockets:x64-android=fail
 gdk-pixbuf:arm-neon-android=fail
 gdk-pixbuf:arm64-android=fail
 gdk-pixbuf:x64-android=fail
+gegl:x64-osx=fail
+gegl:arm64-osx=fail
 gemmlowp:arm-neon-android=fail
 gemmlowp:arm64-android=fail
 gemmlowp:x64-android=fail
@@ -428,15 +434,15 @@ gstreamer:arm-neon-android=fail
 gstreamer:arm64-android=fail
 gstreamer:x64-android=fail
 # upstream issue https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1629.
-gstreamer:x64-windows-static = skip
-gstreamer:x64-windows-static-md = skip
+gstreamer:x64-windows-static=skip
+gstreamer:x64-windows-static-md=skip
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
-gz-tools2:arm-neon-android=fail
-gz-tools2:x64-android=fail
-gz-tools2:arm64-android=fail
-gz-gui7:x64-osx=fail
+gz-tools:arm-neon-android=fail
+gz-tools:x64-android=fail
+gz-tools:arm64-android=fail
+gz-gui:x64-osx=fail
 halide:x64-windows-static=fail
 hexl:x64-android=fail
 highs:arm-neon-android=fail
@@ -452,12 +458,12 @@ iceoryx:arm64-android=fail
 iceoryx:arm-neon-android=fail
 ijg-libjpeg:arm-neon-android=skip
 ijg-libjpeg:arm64-android=skip
-ijg-libjpeg:arm64-osx= skip
+ijg-libjpeg:arm64-osx=skip
 ijg-libjpeg:arm64-uwp=skip
 ijg-libjpeg:arm64-windows-static-md=skip
 ijg-libjpeg:arm64-windows=skip
 ijg-libjpeg:x64-android=skip
-ijg-libjpeg:x64-linux= skip
+ijg-libjpeg:x64-linux=skip
 ijg-libjpeg:x64-osx=skip
 ijg-libjpeg:x64-uwp=skip
 ijg-libjpeg:x64-windows-release=skip
@@ -661,6 +667,10 @@ libwandio:arm-neon-android=fail
 libwandio:arm64-android=fail
 libwandio:x64-android=fail
 libxaw:x64-windows-static=skip
+# Clang 19 thinks inline asm in this port is malformed:
+libxt:x64-windows-release=fail
+libxt:x64-windows=fail
+# Inline asm used doesn't appear to support arm64-windows:
 libxt:arm64-windows=fail
 libxt:arm64-windows-static-md=fail
 libzen:arm-neon-android=fail
@@ -785,28 +795,10 @@ nrf-ble-driver:arm64-android=fail
 nrf-ble-driver:x64-android=fail
 nvtt:x64-android=fail
 oatpp-libressl:x64-android=fail
-ode:arm64-windows=fail
-ode:arm64-windows-static-md=fail
 offscale-libetcd-cpp:arm64-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
 ois:x64-android=fail
-# ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
-# does not resolve the issue
-# src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
-# -L/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib   -L/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib
-# -Wl,-rpath,/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib:/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib::::::::::::::::::::::::::::::::::::::::::::::::
-# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a
-# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a
-# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_system.a  -lpthread && :
-# /usr/bin/ld: cannot find -lode
-ompl:arm-neon-android=fail
-ompl:arm64-android=fail
-ompl:x64-android=fail
-# failed with FILE_CONFLICTS https://github.com/microsoft/vcpkg/pull/40151
-omplapp:arm64-osx=skip
-omplapp:x64-osx=skip
-omplapp:x64-linux=skip
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
@@ -838,6 +830,9 @@ openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows=fail
 openturns:arm64-windows-static-md=fail
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+openvino:arm64-windows=fail
+openvino:arm64-windows-static-md=fail
 openvr:x64-windows-static=fail
 # Conflicts with optional-lite, by the same author
 optional-bare:arm-neon-android=skip
@@ -879,8 +874,11 @@ plplot:arm64-windows-static-md=fail
 pmdk:x64-android=fail
 pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
+# popsift is broken with CUDA 12.6 and later, and we test with 12.8, see https://github.com/alicevision/popsift/issues/161
+popsift:x64-windows-release=fail
 popsift:x64-windows-static-md=fail
-popsift:x64-linux=fail # segfaults :(
+popsift:x64-windows-static=fail
+popsift:x64-windows=fail
 ptex:arm-neon-android=fail
 ptex:arm64-android=fail
 ptex:x64-android=fail
@@ -983,15 +981,6 @@ rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
-# Visual Studio 17.12 compiler bug, fixed in 17.13: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2242053
-saucer:arm64-windows-static-md=fail
-saucer:arm64-windows-static-md=fail
-saucer:arm64-windows=fail
-saucer:arm64-windows=fail
-saucer:x64-windows-static-md=fail
-saucer:x64-windows-static=fail
-saucer:x64-windows=fail
-saucer:x86-windows=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
@@ -1345,9 +1334,13 @@ vcpkg-ci-mathgl:x86-windows=pass
 vcpkg-ci-opencv:arm-neon-android=pass
 vcpkg-ci-opencv:arm64-android=pass
 vcpkg-ci-opencv:arm64-osx=pass
-vcpkg-ci-opencv:arm64-uwp=pass
-vcpkg-ci-opencv:arm64-windows-static-md=pass
-vcpkg-ci-opencv:arm64-windows=pass
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+#vcpkg-ci-opencv:arm64-uwp=pass
+opencv4:arm64-uwp=fail
+#vcpkg-ci-opencv:arm64-windows-static-md=pass
+opencv4:arm64-windows-static-md=fail
+#vcpkg-ci-opencv:arm64-windows=pass
+opencv4:arm64-windows=fail
 vcpkg-ci-opencv:x64-android=pass
 vcpkg-ci-opencv:x64-linux=pass
 vcpkg-ci-opencv:x64-osx=pass
@@ -1357,9 +1350,7 @@ vcpkg-ci-opencv:x64-windows-static-md=pass
 vcpkg-ci-opencv:x64-windows-static=pass
 vcpkg-ci-opencv:x64-windows=pass
 vcpkg-ci-opencv:x86-windows=pass
-vcpkg-ci-openimageio:x86-windows=pass
-vcpkg-ci-openimageio:x64-windows=pass
-vcpkg-ci-openimageio:x64-windows-static=pass
+vcpkg-ci-openimageio:x64-windows-release=pass
 vcpkg-ci-openimageio:x64-windows-static-md=pass
 vcpkg-ci-openimageio:x64-windows-static=pass
 vcpkg-ci-openimageio:x64-windows=pass
