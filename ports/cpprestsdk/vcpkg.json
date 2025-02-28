@@ -80,38 +80,6 @@
       "dependencies": [
         "zlib"
       ]
-    },
-    "websockets": {
-      "description": "Websockets support",
-      "dependencies": [
-        {
-          "name": "boost-date-time",
-          "platform": "!uwp"
-        },
-        {
-          "name": "boost-regex",
-          "platform": "!uwp"
-        },
-        {
-          "name": "boost-system",
-          "platform": "!uwp"
-        },
-        {
-          "name": "cpprestsdk",
-          "default-features": false,
-          "features": [
-            "compression"
-          ]
-        },
-        {
-          "name": "openssl",
-          "platform": "!uwp"
-        },
-        {
-          "name": "websocketpp",
-          "platform": "!uwp"
-        }
-      ]
     }
   }
 }
