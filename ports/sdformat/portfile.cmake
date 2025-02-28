@@ -4,16 +4,21 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gazebosim/${PORT}
     REF ${PORT}${VERSION_MAJOR}_${VERSION}
-    SHA512 10c56fab3957fff759c3ff7db401e162c5d353221e3895617182031be41e10a5234607fb7d1afb0ec453f3e1f20ddcc36b8488ed3d1cc2d1d0e915fc3a74ddbd
+    SHA512 8e3bd85b5e567286110ed53ef4b800922a2c4df21aa61d4591141f6fb02d9629d8be0fb3e8bb9fb1e02c95e8064b381f1349d086e1e991aa91b512cff94cdf06
     HEAD_REF sdf${VERSION_MAJOR}
     PATCHES
         no-absolute.patch
         cmake-config.patch
-        fix-find-urdfdom.patch
 )
 
 # Ruby is required by the sdformat build process
 vcpkg_find_acquire_program(RUBY)
+
+# Python is required to generate the EmbeddedSdf.cc file, which contains all the supported SDF
+# descriptions in a map of strings. The parser.cc file uses EmbeddedSdf.hh.
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -23,7 +28,6 @@ vcpkg_cmake_configure(
         -DSKIP_PYBIND11=ON
         -DUSE_INTERNAL_URDF=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
 )
 
 vcpkg_cmake_install()

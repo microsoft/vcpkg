@@ -1,23 +1,24 @@
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3465a8f..2b57440 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -26,6 +26,7 @@ else()
-   target_link_libraries(using_parser_urdf INTERFACE
-     GzURDFDOM::GzURDFDOM)
- endif()
-+install(TARGETS using_parser_urdf EXPORT ${PROJECT_LIBRARY_TARGET_NAME} COMPONENT libraries)
- 
- if (BUILD_TESTING)
-   # Build this test file only if Gazebo Tools is installed.
-
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0fedcd42..8b28fdcc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -58,6 +58,6 @@
+@@ -63,7 +63,18 @@ if (BUILD_SDF)
+   #  2. if USE_INTERNAL_URDF is set to True, use the internal copy
+   #  3. if USE_INTERNAL_URDF is set to False, force to search system installation, fail on error
    if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
 -    gz_find_package(GzURDFDOM VERSION 1.0 QUIET)
-+    gz_find_package(GzURDFDOM)
++    find_package(urdfdom CONFIG REQUIRED)
++    add_library(GzURDFDOM::GzURDFDOM INTERFACE IMPORTED)
++    target_link_libraries(GzURDFDOM::GzURDFDOM
++      INTERFACE
++        urdfdom::urdfdom_model
++        urdfdom::urdfdom_world
++        urdfdom::urdfdom_sensor
++        urdfdom::urdfdom_model_state
++    )
++    include(FindPackageHandleStandardArgs)
++    find_package_handle_standard_args(GzURDFDOM DEFAULT_MSG)
++    
      if (NOT GzURDFDOM_FOUND)
        if (NOT DEFINED USE_INTERNAL_URDF)
          # fallback to internal urdf
-         set(USE_INTERNAL_URDF ON)

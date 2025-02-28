@@ -1,32 +1,40 @@
 diff --git a/include/sdf/config.hh.in b/include/sdf/config.hh.in
-index d1b3db53..9a9ce91d 100644
+index 456eb12c..9a9ce91d 100644
 --- a/include/sdf/config.hh.in
 +++ b/include/sdf/config.hh.in
-@@ -48,5 +48,3 @@ 
+@@ -47,12 +47,5 @@
+ 
  #cmakedefine SDFORMAT_DISABLE_CONSOLE_LOGFILE 1
  
--#define SDF_SHARE_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/"
--#define SDF_VERSION_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${SDF_MAJOR_VERSION}/${SDF_PKG_VERSION}"
+-#ifndef SDF_SHARE_PATH
+-#define SDF_SHARE_PATH _Pragma ("GCC warning \"'SDF_SHARE_PATH' macro is deprecated, use sdf::getSharePath() function instead. \"") "${CMAKE_INSTALL_FULL_DATAROOTDIR}/"
+-#endif
+-
+-#ifndef SDF_VERSION_PATH
+-#define SDF_VERSION_PATH _Pragma ("GCC warning \"'SDF_VERSION_PATH' macro is deprecated and should not be used. \"") "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${PROJECT_VERSION_MAJOR}/${PROJECT_VERSION}"
+-#endif
  
+ #endif  // #ifndef SDF_CONFIG_HH_
 diff --git a/src/SDF.cc b/src/SDF.cc
-index 07056d7..57e8a2c 100644
+index 04fc5374..9cb98399 100644
 --- a/src/SDF.cc
 +++ b/src/SDF.cc
-@@ -108,24 +108,8 @@ std::string findFile(const std::string &_filename, bool _searchLocalPath,
+@@ -150,25 +150,8 @@ std::string findFile(sdf::Errors &_errors, const std::string &_filename,
      }
    }
  
 -  // Next check the install path.
--  std::string path = sdf::filesystem::append(SDF_SHARE_PATH, filename);
+-  std::string path = sdf::filesystem::append(sdfSharePath(), filename);
 -  if (sdf::filesystem::exists(path))
 -  {
 -    return path;
 -  }
 -
 -  // Next check the versioned install path.
--  path = sdf::filesystem::append(SDF_SHARE_PATH,
--                                 "sdformat" SDF_MAJOR_VERSION_STR,
--                                 sdf::SDF::Version(), filename);
+-  path = sdf::filesystem::append(sdfSharePath(),
+-    "sdformat" + std::string(SDF_MAJOR_VERSION_STR),
+-    sdf::SDF::Version(), filename);
+-
 -  if (sdf::filesystem::exists(path))
 -  {
 -    return path;
