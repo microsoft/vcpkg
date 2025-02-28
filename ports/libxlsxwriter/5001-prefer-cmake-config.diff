@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c9ceb6c..724bd6c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -309,7 +309,7 @@ list(APPEND LXW_PRIVATE_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
+ 
+ # Set the minizip includes.
+ if(USE_SYSTEM_MINIZIP)
+-    if(MSVC)
++    if(1)
+         find_package(MINIZIP NAMES unofficial-minizip REQUIRED)
+         set(MINIZIP_LIBRARIES unofficial::minizip::minizip)
+     else()
