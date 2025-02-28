@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
         install-interface-include-directories.patch
         use-math-h-nan.patch
         fix-pc-absolute.patch
+        pkgconfig-template.diff
 )
 
 vcpkg_check_features(
