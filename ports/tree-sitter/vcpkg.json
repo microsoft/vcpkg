@@ -13,5 +13,58 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "bash": {
+      "description": "Tree-sitter bash language grammar"
+    },
+    "c": {
+      "description": "Tree-sitter c language grammar"
+    },
+    "cpp": {
+      "description": "Tree-sitter cpp language grammar"
+    },
+    "csharp": {
+      "description": "Tree-sitter csharp language grammar"
+    },
+    "css": {
+      "description": "Tree-sitter css language grammar"
+    },
+    "go": {
+      "description": "Tree-sitter go language grammar"
+    },
+    "html": {
+      "description": "Tree-sitter html language grammar"
+    },
+    "java": {
+      "description": "Tree-sitter java language grammar"
+    },
+    "javascript": {
+      "description": "Tree-sitter javascript language grammar"
+    },
+    "json": {
+      "description": "Tree-sitter json language grammar"
+    },
+    "php": {
+      "description": "Tree-sitter php language grammar"
+    },
+    "python": {
+      "description": "Tree-sitter python language grammar"
+    },
+    "ruby": {
+      "description": "Tree-sitter ruby language grammar"
+    },
+    "rust": {
+      "description": "Tree-sitter rust language grammar"
+    },
+    "typescript": {
+      "description": "Tree-sitter typescript language grammar"
+    },
+    "toml": {
+      "description": "Tree-sitter toml language grammar"
+    },
+    "yaml": {
+      "description": "Tree-sitter yaml language grammar"
+    }
+  }
 }
