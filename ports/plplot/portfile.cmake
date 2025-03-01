@@ -44,6 +44,7 @@ vcpkg_cmake_configure(
         -DPLD_aqt=OFF   # needs aquaterm framework
         -DPLD_pdf=OFF   # needs haru
         -DPLD_psttf=OFF # needs lasi (in addition to pango)
+        -DPLD_psttfc=OFF # needs lasi (in addition to pango)
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
@@ -81,7 +82,7 @@ if(NOT VCPKG_CROSSCOMPILING)
             DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${subdir}"
         )
         configure_file(
-            "${CURRENT_PORT_DIR}/native-tool.cmake"
+            "${CURRENT_PORT_DIR}/host-tool.cmake"
             "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${subdir}/${cmake_name}"
             @ONLY
         )
