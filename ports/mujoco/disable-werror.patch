@@ -1,0 +1,24 @@
+diff --git a/cmake/MujocoOptions.cmake b/cmake/MujocoOptions.cmake
+index de146d8..7657fa5 100644
+--- a/cmake/MujocoOptions.cmake
++++ b/cmake/MujocoOptions.cmake
+@@ -86,7 +86,6 @@ get_mujoco_extra_link_options(EXTRA_LINK_OPTIONS)
+ 
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC))
+   set(EXTRA_COMPILE_OPTIONS
+-      -Werror
+       -Wall
+       -Wpedantic
+       -Wimplicit-fallthrough
+diff --git a/simulate/cmake/SimulateOptions.cmake b/simulate/cmake/SimulateOptions.cmake
+index de146d8..7657fa5 100644
+--- a/simulate/cmake/SimulateOptions.cmake
++++ b/simulate/cmake/SimulateOptions.cmake
+@@ -86,7 +86,6 @@ get_mujoco_extra_link_options(EXTRA_LINK_OPTIONS)
+ 
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC))
+   set(EXTRA_COMPILE_OPTIONS
+-      -Werror
+       -Wall
+       -Wpedantic
+       -Wimplicit-fallthrough
