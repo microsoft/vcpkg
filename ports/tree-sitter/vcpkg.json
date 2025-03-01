@@ -1,6 +1,7 @@
 {
   "name": "tree-sitter",
   "version-semver": "0.25.1",
+  "port-version": 1,
   "description": "An incremental parsing system for programming tools.",
   "homepage": "https://github.com/tree-sitter/tree-sitter",
   "license": "MIT",
@@ -57,11 +58,11 @@
     "rust": {
       "description": "Tree-sitter rust language grammar"
     },
-    "typescript": {
-      "description": "Tree-sitter typescript language grammar"
-    },
     "toml": {
       "description": "Tree-sitter toml language grammar"
+    },
+    "typescript": {
+      "description": "Tree-sitter typescript language grammar"
     },
     "yaml": {
       "description": "Tree-sitter yaml language grammar"
