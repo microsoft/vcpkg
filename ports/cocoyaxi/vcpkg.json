@@ -1,7 +1,6 @@
 {
   "name": "cocoyaxi",
-  "version": "3.0.0",
-  "port-version": 1,
+  "version": "3.0.2",
   "description": "A go-style coroutine library in C++11 and more",
   "homepage": "https://github.com/idealvin/cocoyaxi",
   "license": "MIT",

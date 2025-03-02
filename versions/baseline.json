@@ -1761,8 +1761,8 @@
       "port-version": 1
     },
     "cocoyaxi": {
-      "baseline": "3.0.0",
-      "port-version": 1
+      "baseline": "3.0.2",
+      "port-version": 0
     },
     "coin": {
       "baseline": "4.0.3",
