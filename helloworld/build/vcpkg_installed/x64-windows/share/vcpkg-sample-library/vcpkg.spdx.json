@@ -1,0 +1,1210 @@
+{
+  "$schema": "https://raw.githubusercontent.com/spdx/spdx-spec/v2.2.1/schemas/spdx-schema.json",
+  "spdxVersion": "SPDX-2.2",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "documentNamespace": "https://spdx.org/spdxdocs/vcpkg-sample-library-x64-windows-1.0.2-ae043c7e-9809-414b-996e-9d828f94bceb",
+  "name": "vcpkg-sample-library:x64-windows@1.0.2 2dea7e3d226cad9ef393cb6f092263a6ddc5418b5a3edc6686ed8f81d5085c7c",
+  "creationInfo": {
+    "creators": [
+      "Tool: vcpkg-2025-02-11-bec4296bf5289dc9ce83b4f5095943e44162f9c2"
+    ],
+    "created": "2025-03-01T13:01:10Z"
+  },
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "GENERATES",
+      "relatedSpdxElement": "SPDXRef-binary"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-0"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-1"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-2"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-3"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-4"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-5"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-6"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-7"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-8"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-9"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-10"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-11"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-12"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-13"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-14"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-15"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-16"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-17"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-18"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-19"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-20"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-21"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-22"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-23"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-24"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-25"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-26"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-27"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-28"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-29"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-30"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-31"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-32"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-33"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-34"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-35"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-36"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-37"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-38"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-39"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-40"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-41"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-42"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-43"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-44"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-45"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-46"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-47"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-48"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-49"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-50"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-51"
+    },
+    {
+      "spdxElementId": "SPDXRef-binary",
+      "relationshipType": "GENERATED_FROM",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-0",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-1",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-2",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-3",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-4",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-5",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-6",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-7",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-8",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-9",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-10",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-11",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-12",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-13",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-14",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-15",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-16",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-17",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-18",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-19",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-20",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-21",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-22",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-23",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-24",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-25",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-26",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-27",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-28",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-29",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-30",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-31",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-32",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-33",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-34",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-35",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-36",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-37",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-38",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-39",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-40",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-41",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-42",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-43",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-44",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-45",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-46",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-47",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-48",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-49",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-50",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-51",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    }
+  ],
+  "packages": [
+    {
+      "name": "vcpkg-sample-library",
+      "SPDXID": "SPDXRef-port",
+      "versionInfo": "1.0.2",
+      "downloadLocation": "NOASSERTION",
+      "homepage": "https://github.com/microsoft/vcpkg-docs/tree/cmake-sample-lib",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "description": "A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.",
+      "comment": "This is the port (recipe) consumed by vcpkg."
+    },
+    {
+      "name": "vcpkg-sample-library:x64-windows",
+      "SPDXID": "SPDXRef-binary",
+      "versionInfo": "2dea7e3d226cad9ef393cb6f092263a6ddc5418b5a3edc6686ed8f81d5085c7c",
+      "downloadLocation": "NONE",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "comment": "This is a binary package built by vcpkg."
+    },
+    {
+      "SPDXID": "SPDXRef-resource-0",
+      "name": "Microsoft/vcpkg-docs",
+      "downloadLocation": "git+https://github.com/Microsoft/vcpkg-docs@1.0.2",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "4202125968a01219deeee14b81e1d476dab18d968425ba36d640816b0b3db6168f8ccf4120ba20526e9930c8c7294e64d43900ad2aef9d5f28175210d0c3a417"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/portfile.cmake",
+      "SPDXID": "SPDXRef-file-0",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f13dfd93666048e01630b9cc02fe0b8c170d11bae25c3eba696428933b2ce578"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/usage.txt",
+      "SPDXID": "SPDXRef-file-1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c4e3de4d8275461102b216e0f6de8fd771ac3900dda5ad2a8ca56f17ba9477a9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg.json",
+      "SPDXID": "SPDXRef-file-2",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "69b719ea75edf941060dda965d65e71a7c9875233273d24c3276c754282a6ffc"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/vcpkg/compiler-file-hash-cache.json",
+      "SPDXID": "SPDXRef-file-3",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6e1b010255282e39d59b52b1d617cc5d182a2f891c8d1cd533dae53980b6ea24"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/vcpkg/info/fmt_11.0.2_x64-windows.list",
+      "SPDXID": "SPDXRef-file-4",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2ced6aea1cb1f0ac47745972fee49d3c8ca98a056808f4b39bd84c755d81d84e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/vcpkg/info/vcpkg-cmake-config_2024-05-23_x64-windows.list",
+      "SPDXID": "SPDXRef-file-5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "69e0644c7bb61ef1acf15e336db105a5b11e5756bc379cf07d2e89a1b486e033"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/vcpkg/info/vcpkg-cmake_2024-04-23_x64-windows.list",
+      "SPDXID": "SPDXRef-file-6",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c6e412bc967c160e890fcd791ab7d07e6cf2325d3fed4f3d731ac8e268d0f335"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/vcpkg/manifest-info.json",
+      "SPDXID": "SPDXRef-file-7",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5f816514f65c6be01dcff2db68de1979e8987196e5d4261974368266c8cbbe31"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/vcpkg/status",
+      "SPDXID": "SPDXRef-file-8",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "8472ec835e834852b48ddd27369cda3055f24cb836644fadf84a8e761c18d3e2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/bin/fmt.dll",
+      "SPDXID": "SPDXRef-file-9",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "49e399e263f716d2df1b4fb21308200fef9911f0fc165afdcbdf8fd6c088cf37"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/bin/fmt.pdb",
+      "SPDXID": "SPDXRef-file-10",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d2e49206986d8aafb4274db60b3ee065f97e7d050dd769c04b8553a84536cd1e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/debug/bin/fmtd.dll",
+      "SPDXID": "SPDXRef-file-11",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7c312901aff918af7ff59a233369f7fa5c1c02e5d7fd6cf6f931bc5fbc747e80"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/debug/bin/fmtd.pdb",
+      "SPDXID": "SPDXRef-file-12",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c9025a871c33cddff1a781e19e51ae82fadc7c17e1a625bef0292bc3ad112975"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/debug/lib/fmtd.lib",
+      "SPDXID": "SPDXRef-file-13",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "618eb4a3dd15d749ea8b9eb8fceb3276e6920a6b737904a26cfcdd0c2e493921"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/debug/lib/pkgconfig/fmt.pc",
+      "SPDXID": "SPDXRef-file-14",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "aab894e0519db735b26adee85d8f986465d2323af53020090e5bbf2e32f494cd"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/args.h",
+      "SPDXID": "SPDXRef-file-15",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "45ed7137c9170e7efeae7c78bd69a05c2b25feb79e9db0ea8c9eedbca283dddb"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/base.h",
+      "SPDXID": "SPDXRef-file-16",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "959d86e06105e15138dea3bb8858e215dee878ed71d5ad9de6674a9db3e1c6eb"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/chrono.h",
+      "SPDXID": "SPDXRef-file-17",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3f5ac1cc711652b6f19c6c765a95e82b79b7d5bdcc2f96697c2b5bfe366ac91c"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/color.h",
+      "SPDXID": "SPDXRef-file-18",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "949ab64c24d0bca26e936c7939477dba0906652b6386691b4c2f7a7054150213"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/compile.h",
+      "SPDXID": "SPDXRef-file-19",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b377419913ea34296fedca99ebd65835908925c36df5373432755e3ebc4395de"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/core.h",
+      "SPDXID": "SPDXRef-file-20",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b2b6692145b11c7c2774db106078c97575a47d18e80c7783c68566475325ebb4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/format-inl.h",
+      "SPDXID": "SPDXRef-file-21",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cb9ddc93e2daa1fecddd43b43a924dac8fa7300672285f36671d9457f0ffc3a8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/format.h",
+      "SPDXID": "SPDXRef-file-22",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b2119dab01c5f640651f92f5e37cc0e8bb7ddcca50b2f6a7a67b662ffbebee00"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/os.h",
+      "SPDXID": "SPDXRef-file-23",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d78fbed2326220b5d33f5a20040b4802a90815583a568cf26e406f3689d744ab"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/ostream.h",
+      "SPDXID": "SPDXRef-file-24",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b4f5e56ba47df860a28f3ca6948fc24d1c396db55239264442428757e957d875"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/printf.h",
+      "SPDXID": "SPDXRef-file-25",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "76aa2c5c59d34d9f9985e0bf30f3c86dc416ddfc5fbaff252ec346d13fbd30b6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/ranges.h",
+      "SPDXID": "SPDXRef-file-26",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c66af3fee29e25c953fdbde449a88fbd50028203186ba990cce1f18134a40d27"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/std.h",
+      "SPDXID": "SPDXRef-file-27",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "ac3f3726e2d326b358095f3900ec6145f8639fe334df92bf3c53ee6fdc416dbb"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/include/fmt/xchar.h",
+      "SPDXID": "SPDXRef-file-28",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "93ef925a6fa09731860c4277db303f13ac5aec3c18bac7df921b52b15fae53e2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/lib/fmt.lib",
+      "SPDXID": "SPDXRef-file-29",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "46656a5291ca2d88ecf99e6432390484b0df62b0b399a4b377c8c58a2c781965"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/lib/pkgconfig/fmt.pc",
+      "SPDXID": "SPDXRef-file-30",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d19700284c34ded18ba0b783a454a68f8abcd455a375aef10ccef95e780f683b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/copyright",
+      "SPDXID": "SPDXRef-file-31",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "07580f2a3b35709ce703d523f447b242f6dfec7582a8c0df102c7fa2849375f8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/fmt-config-version.cmake",
+      "SPDXID": "SPDXRef-file-32",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "36ed3160b4bcda615ba08fa9570fe03b319c9bc1c28bdabc999195eac9504b79"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/fmt-config.cmake",
+      "SPDXID": "SPDXRef-file-33",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d0dc2342114ccd4691a0125767e9411670a0b3bf2295b8212d9afc0de2fb2b58"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/fmt-targets-debug.cmake",
+      "SPDXID": "SPDXRef-file-34",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6198b2149492d2c8a8f5fc9ff50a423dd4bdb9159855d4ee26f49aaddd08ce85"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/fmt-targets-release.cmake",
+      "SPDXID": "SPDXRef-file-35",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3ca9c8de395e936802ba7e8f09ea889f324a117781e992d3f958afcb8361ff95"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/fmt-targets.cmake",
+      "SPDXID": "SPDXRef-file-36",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9ba38d1560efb8ee487b60b3c283a60f543e8c994467e9fae69eb5857033db76"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/usage",
+      "SPDXID": "SPDXRef-file-37",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "ece096518c58df58cfc60f5ad8120d248a86383482455f539d91b8ca6eac14a7"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/vcpkg.spdx.json",
+      "SPDXID": "SPDXRef-file-38",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "705cbb0a5b8086c58c89bab4e95665de74bcf3a9fdd22eed5956701c75c51c27"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/fmt/vcpkg_abi_info.txt",
+      "SPDXID": "SPDXRef-file-39",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "59a2df314d193bce31b1eba06988c02b695a617cd7b5f8d19190180232cd92bf"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/copyright",
+      "SPDXID": "SPDXRef-file-40",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1ee376fc340e0aa6ad6a3581c94126e741468705096ac92263048a21daa86460"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg-port-config.cmake",
+      "SPDXID": "SPDXRef-file-41",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f0a30f77c8f5e3ac40436fe2518a61ad067f2955c7ef3be6d6a0ca4b81cd2a45"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg.spdx.json",
+      "SPDXID": "SPDXRef-file-42",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "34877dbadd4d50896810dcf9de4b16673d4bce2ce8f546fca8f301c7d6372a52"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg_abi_info.txt",
+      "SPDXID": "SPDXRef-file-43",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "409e179674dfd202130d64136e6fcd15f4f04c8e6bfadfe7a5bb414a89149179"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg_cmake_build.cmake",
+      "SPDXID": "SPDXRef-file-44",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6d1c27080fe3e768b5e7b968d6a28a37db154ebcb214297de25f10b6713511e1"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg_cmake_configure.cmake",
+      "SPDXID": "SPDXRef-file-45",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a8bc92be2faf621d6183ed1f3eb2ac3b103f4418b95f8695cf0dc7f7c5e8f724"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake/vcpkg_cmake_install.cmake",
+      "SPDXID": "SPDXRef-file-46",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3ae7886dc8434fac6f1e61190cc355fdec5fbd4f60758e2de20423cf49c91369"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake-config/copyright",
+      "SPDXID": "SPDXRef-file-47",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "04b60f99a43bfd7fefdc8364b24aac704a2160cef969b75ba6a38b62dc4c4b70"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake-config/vcpkg-port-config.cmake",
+      "SPDXID": "SPDXRef-file-48",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "72bc3093337e633bdd19fe5d4dd1f38ca1918def49608d676a9c98c686d38b1e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake-config/vcpkg.spdx.json",
+      "SPDXID": "SPDXRef-file-49",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0760ae7af378460005aa270dce6184f14652b53598e6e01743fbbd989c036b53"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake-config/vcpkg_abi_info.txt",
+      "SPDXID": "SPDXRef-file-50",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d2a395942f62684c7c0de3206c4fcae9e8ebecf59bcf649467b9e190bc93abda"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/31026/vcpkg/helloworld/../custom-overlay/vcpkg-sample-library/vcpkg_installed/x64-windows/share/vcpkg-cmake-config/vcpkg_cmake_config_fixup.cmake",
+      "SPDXID": "SPDXRef-file-51",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f3880578674f1bdbc54b67c5fc3787aaab8ee8bcf4e3e6e008204bf4ab67aa0b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    }
+  ]
+}
