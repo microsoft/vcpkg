@@ -1,6 +1,6 @@
 {
   "name": "cppmicroservices",
-  "version": "3.8.4",
+  "version": "3.8.6",
   "description": "An OSGi-like C++ dynamic module system and service registry",
   "homepage": "https://github.com/CppMicroServices/CppMicroServices",
   "license": "Apache-2.0",

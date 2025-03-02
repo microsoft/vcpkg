@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/minizip-ng
     REF "${VERSION}"
-    SHA512 af9c8743d34bbc8f371a018debfab5f857aadb9a1129b048dbce9085122bef209ade34837784f91424c9eba92406d2e222476d9f8038839908679f7b7dc9e3eb
+    SHA512 673798114e29a41ce87906b705dd92c5dc1ed1798aefaa20f0e3d7c1f27b9593e0c4c1271e02585ecc234ce835b14b02227c37f1a7fba4c7a98b822f10711b85
     HEAD_REF master
     PATCHES
         dependencies.diff
