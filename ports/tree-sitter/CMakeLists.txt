@@ -52,6 +52,8 @@ target_include_directories(
   PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
+target_link_libraries(tree-sitter INTERFACE ${PARSER_TARGETS})
+
 set_target_properties(
   tree-sitter
   PROPERTIES C_STANDARD 99
