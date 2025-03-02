@@ -13,10 +13,7 @@
         "gui"
       ]
     },
-    {
-      "name": "qtsvg",
-      "host": true
-    },
+    "qtsvg",
     {
       "name": "vcpkg-cmake",
       "host": true
