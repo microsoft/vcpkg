@@ -1,10 +1,12 @@
---- a/CMakeLists.txt	2020-05-09 16:43:10.000000000 +0200
-+++ b/CMakeLists.txt	2020-06-03 20:57:17.026182500 +0200
-@@ -619,6 +619,7 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e91617..52cd05d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -770,6 +770,7 @@ endif()
  
- IF(MSVC)
-   ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
+ if(MSVC)
+   add_compile_definitions(_CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS)
 +  add_compile_options(/wd4146)
- ENDIF(MSVC)
+ endif()
  
- SET(CMAKE_INCLUDE_CURRENT_DIR 1)
+ set(CMAKE_INCLUDE_CURRENT_DIR 1)
