@@ -1,0 +1,4 @@
+sdl3-shadercross provides CMake targets:
+
+  find_package(SDL3_shadercross CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SDL3_shadercross::SDL3_shadercross)

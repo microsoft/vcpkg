@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_shadercross
-    REF e1000de7d174af8f84935db9a59b365d1ae55d32
-    SHA512 ef0a167fdc9f4903719132f4d4108d286fe29f0773788730106cc2b41fa551d0920f9fc332e2c17b1aed2442a04d4abf84983a36c456191a5f7bb7e8c1cf9f8d
+    REF ba0ed2701477b6ae61f851f52875daf4cee141ca
+    SHA512 b30c74773002a1d21bd12ca9c92c0a254d0681827fb5a442addf2f61b6d1de55548f1fbefdeb87e7c5e765e6ddaa7d92008795067c04385108e05ddebf04255a
     HEAD_REF main
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(BISON)
     get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+    vcpkg_add_to_path("${BISON_DIR}")
 endif()
 
 vcpkg_cmake_configure(
@@ -18,25 +18,22 @@ vcpkg_cmake_configure(
         -DSDLSHADERCROSS_SPIRVCROSS_SHARED=OFF
         -DSDLSHADERCROSS_INSTALL=ON
         -DSDLSHADERCROSS_INSTALL_CMAKEDIR_ROOT=share/${PORT}
+        -DSDLSHADERCROSS_INSTALL_RUNTIME=OFF
+        -DSDLSHADERCROSS_VENDORED=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-set(config_path "share/${PORT}/SDL3_shadercross")
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(config_path "share/${PORT}")
-endif()
-vcpkg_cmake_config_fixup(CONFIG_PATH "${config_path}")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT} PACKAGE_NAME "sdl3_shadercross")
+
+vcpkg_copy_tools(TOOL_NAMES shadercross AUTO_CLEAN)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
-
-vcpkg_copy_tools(TOOL_NAMES shadercross AUTO_CLEAN)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
