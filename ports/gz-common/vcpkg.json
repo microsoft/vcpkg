@@ -13,7 +13,6 @@
     "ffmpeg",
     "freeimage",
     "gdal",
-    "gts",
     "gz-cmake",
     "gz-math",
     "gz-utils",
