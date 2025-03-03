@@ -1,7 +1,6 @@
 {
   "name": "opencascade",
-  "version": "7.8.1",
-  "port-version": 1,
+  "version": "7.9.0",
   "description": "Open CASCADE Technology (OCCT) is an open-source software development platform for 3D CAD, CAM, CAE.",
   "homepage": "https://github.com/Open-Cascade-SAS/OCCT",
   "license": "LGPL-2.1-only",
