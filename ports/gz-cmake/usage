@@ -1,3 +1,3 @@
-The package gz-cmake3 provides CMake integration:
+The package @PORT@@VERSION_MAJOR@ provides CMake integration:
 
-    find_package(gz-cmake3 CONFIG REQUIRED)
+    find_package(@PORT@@VERSION_MAJOR@ CONFIG REQUIRED)
