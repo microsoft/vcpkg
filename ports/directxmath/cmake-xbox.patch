@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7041f14..baa06bd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,10 @@ cmake_minimum_required (VERSION 3.20)
+ 
+ set(DIRECTXMATH_VERSION 3.20)
+ 
++if(WINDOWS_STORE OR (DEFINED XBOX_CONSOLE_TARGET))
++  set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
++endif()
++
+ project(DirectXMath
+   VERSION ${DIRECTXMATH_VERSION}
+   DESCRIPTION "DirectXMath SIMD C++ math library"
+-- 
+2.48.1.windows.1
+
