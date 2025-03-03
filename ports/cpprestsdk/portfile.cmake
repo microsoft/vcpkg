@@ -10,15 +10,8 @@ vcpkg_from_github(
         fix-uwp.patch
         fix-clang-dllimport.patch # workaround for https://github.com/microsoft/cpprestsdk/issues/1710
         silence-stdext-checked-array-iterators-warning.patch
+        fix-asio-error.patch
 )
-
-set(OPTIONS)
-if(NOT VCPKG_TARGET_IS_UWP)
-    SET(WEBSOCKETPP_PATH "${CURRENT_INSTALLED_DIR}/share/websocketpp")
-    list(APPEND OPTIONS
-        -DWEBSOCKETPP_CONFIG=${WEBSOCKETPP_PATH}
-        -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,7 +29,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Release"
     ${configure_opts}
     OPTIONS
-        ${OPTIONS}
         ${FEATURE_OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
