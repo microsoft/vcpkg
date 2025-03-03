@@ -1,12 +1,3 @@
-From 16453a55b4e894435de82ca0a1d4a89c570aff18 Mon Sep 17 00:00:00 2001
-From: Chuck Walbourn <chuckw@microsoft.com>
-Date: Sun, 2 Mar 2025 11:34:45 -0800
-Subject: [PATCH] CMake update for Xbox scenarios
-
----
- CMakeLists.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7041f14..baa06bd 100644
 --- a/CMakeLists.txt
