@@ -293,7 +293,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "10.0.0",
+      "baseline": "10.1.0",
       "port-version": 0
     },
     "async-simple": {
