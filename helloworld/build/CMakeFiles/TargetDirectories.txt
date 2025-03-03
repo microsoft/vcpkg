@@ -1,0 +1,3 @@
+C:/Users/31026/vcpkg/helloworld/build/CMakeFiles/HelloWorld.dir
+C:/Users/31026/vcpkg/helloworld/build/CMakeFiles/edit_cache.dir
+C:/Users/31026/vcpkg/helloworld/build/CMakeFiles/rebuild_cache.dir
