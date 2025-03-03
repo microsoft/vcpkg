@@ -1,4 +1,4 @@
 qlementine-icons provides CMake targets:
 
   find_package(qlementine-icons CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE unofficial::qlementine-icons::qlementine-icons)
+  target_link_libraries(main PRIVATE qlementine-icons::qlementine-icons)
