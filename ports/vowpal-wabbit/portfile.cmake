@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DVW_STRING_VIEW_LITE_SYS_DEP=ON
         -DVW_SSE2NEON_SYS_DEP=ON
+        -DVW_CXX_STANDARD=14 # boost-math require c++14
 )
 vcpkg_cmake_install()
 
