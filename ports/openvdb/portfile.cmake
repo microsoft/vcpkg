@@ -21,11 +21,11 @@ vcpkg_check_features(
         "tools" OPENVDB_BUILD_TOOLS
         "ax"    OPENVDB_BUILD_AX
         "nanovdb" OPENVDB_BUILD_NANOVDB
+        "nanovdb-tools" NANOVDB_BUILD_TOOLS
 )
 
 if (OPENVDB_BUILD_NANOVDB)
     set(NANOVDB_OPTIONS
-    -DNANOVDB_BUILD_TOOLS=OFF
     -DNANOVDB_USE_INTRINSICS=ON
     -DNANOVDB_USE_CUDA=ON
     -DNANOVDB_CUDA_KEEP_PTX=ON
