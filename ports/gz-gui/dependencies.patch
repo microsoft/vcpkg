@@ -11,7 +11,7 @@ index c7c7f509..2f2265a0 100644
 -gz_find_package (Qt${QT_MAJOR_VERSION}
 -  VERSION ${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}
 +set(qt_pkgconfig "Qt5Core Qt5Quick Qt5QuickControls2 Qt5Widgets")
-+if (WIN32)
++if(WIN32 OR APPLE)
 +set(qt_pkgconfig "")
 +endif()
 +gz_find_package (Qt5
