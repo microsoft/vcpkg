@@ -1753,7 +1753,7 @@
       "port-version": 3
     },
     "cnats": {
-      "baseline": "3.9.2",
+      "baseline": "3.9.3",
       "port-version": 0
     },
     "cnl": {
