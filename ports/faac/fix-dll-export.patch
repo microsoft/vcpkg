@@ -1,0 +1,136 @@
+diff --git a/include/faac.h b/include/faac.h
+index f30299f..620d532 100644
+--- a/include/faac.h
++++ b/include/faac.h
+@@ -27,15 +27,16 @@ extern "C" {
+ #endif /* __cplusplus */
+ 
+ 
+-#if !defined(FAACAPI) && defined(__GNUC__) && (__GNUC__ >= 4)
++#if defined(FAACEXPORT)
+ # if defined(_WIN32)
+-#  define FAACAPI __stdcall __declspec(dllexport)
+-# else
++#  define FAACAPI __declspec(dllexport)
++# elif defined(__GNUC__) && (__GNUC__ >= 4)
+ #  define FAACAPI __attribute__((visibility("default")))
+-# endif
+-#endif
+-#ifndef FAACAPI
++# else
+ #  define FAACAPI
++# endif
++#else
++# define FAACAPI
+ #endif
+ 
+ #pragma pack(push, 1)
+@@ -58,34 +59,34 @@ typedef void *faacEncHandle;
+ 
+ 	Returns FAAC_CFG_VERSION.
+ */
+-int FAACAPI faacEncGetVersion(char **faac_id_string,
++FAACAPI int faacEncGetVersion(char **faac_id_string,
+ 			      char **faac_copyright_string);
+ 
+ 
+-faacEncConfigurationPtr FAACAPI
++FAACAPI faacEncConfigurationPtr
+   faacEncGetCurrentConfiguration(faacEncHandle hEncoder);
+ 
+ 
+-int FAACAPI faacEncSetConfiguration(faacEncHandle hEncoder,
++FAACAPI int faacEncSetConfiguration(faacEncHandle hEncoder,
+ 				    faacEncConfigurationPtr config);
+ 
+ 
+-faacEncHandle FAACAPI faacEncOpen(unsigned long sampleRate,
++FAACAPI faacEncHandle faacEncOpen(unsigned long sampleRate,
+ 				  unsigned int numChannels,
+ 				  unsigned long *inputSamples,
+                                   unsigned long *maxOutputBytes
+                                  );
+ 
+-int FAACAPI faacEncGetDecoderSpecificInfo(faacEncHandle hEncoder, unsigned char **ppBuffer,
++FAACAPI int faacEncGetDecoderSpecificInfo(faacEncHandle hEncoder, unsigned char **ppBuffer,
+ 					  unsigned long *pSizeOfDecoderSpecificInfo);
+ 
+ 
+-int FAACAPI faacEncEncode(faacEncHandle hEncoder, int32_t * inputBuffer, unsigned int samplesInput,
++FAACAPI int faacEncEncode(faacEncHandle hEncoder, int32_t * inputBuffer, unsigned int samplesInput,
+ 			 unsigned char *outputBuffer,
+ 			 unsigned int bufferSize);
+ 
+ 
+-int FAACAPI faacEncClose(faacEncHandle hEncoder);
++FAACAPI int faacEncClose(faacEncHandle hEncoder);
+ 
+ 
+ 
+diff --git a/libfaac/frame.c b/libfaac/frame.c
+index a65468a..baed73f 100644
+--- a/libfaac/frame.c
++++ b/libfaac/frame.c
+@@ -56,7 +56,7 @@ static const struct {
+     double freq;
+ } g_bw = {0.42, 18000};
+ 
+-int FAACAPI faacEncGetVersion( char **faac_id_string,
++int faacEncGetVersion( char **faac_id_string,
+ 			      				char **faac_copyright_string)
+ {
+   if (faac_id_string)
+@@ -69,7 +69,7 @@ int FAACAPI faacEncGetVersion( char **faac_id_string,
+ }
+ 
+ 
+-int FAACAPI faacEncGetDecoderSpecificInfo(faacEncHandle hpEncoder,unsigned char** ppBuffer,unsigned long* pSizeOfDecoderSpecificInfo)
++int faacEncGetDecoderSpecificInfo(faacEncHandle hpEncoder,unsigned char** ppBuffer,unsigned long* pSizeOfDecoderSpecificInfo)
+ {
+     faacEncStruct* hEncoder = (faacEncStruct*)hpEncoder;
+     BitStream* pBitStream = NULL;
+@@ -101,7 +101,7 @@ int FAACAPI faacEncGetDecoderSpecificInfo(faacEncHandle hpEncoder,unsigned char*
+ }
+ 
+ 
+-faacEncConfigurationPtr FAACAPI faacEncGetCurrentConfiguration(faacEncHandle hpEncoder)
++faacEncConfigurationPtr faacEncGetCurrentConfiguration(faacEncHandle hpEncoder)
+ {
+     faacEncStruct* hEncoder = (faacEncStruct*)hpEncoder;
+     faacEncConfigurationPtr config = &(hEncoder->config);
+@@ -109,7 +109,7 @@ faacEncConfigurationPtr FAACAPI faacEncGetCurrentConfiguration(faacEncHandle hpE
+     return config;
+ }
+ 
+-int FAACAPI faacEncSetConfiguration(faacEncHandle hpEncoder,
++int faacEncSetConfiguration(faacEncHandle hpEncoder,
+                                     faacEncConfigurationPtr config)
+ {
+     faacEncStruct* hEncoder = (faacEncStruct*)hpEncoder;
+@@ -233,7 +233,7 @@ int FAACAPI faacEncSetConfiguration(faacEncHandle hpEncoder,
+     return 1;
+ }
+ 
+-faacEncHandle FAACAPI faacEncOpen(unsigned long sampleRate,
++faacEncHandle faacEncOpen(unsigned long sampleRate,
+                                   unsigned int numChannels,
+                                   unsigned long *inputSamples,
+                                   unsigned long *maxOutputBytes)
+@@ -324,7 +324,7 @@ faacEncHandle FAACAPI faacEncOpen(unsigned long sampleRate,
+     return hEncoder;
+ }
+ 
+-int FAACAPI faacEncClose(faacEncHandle hpEncoder)
++int faacEncClose(faacEncHandle hpEncoder)
+ {
+     faacEncStruct* hEncoder = (faacEncStruct*)hpEncoder;
+     unsigned int channel;
+@@ -358,7 +358,7 @@ int FAACAPI faacEncClose(faacEncHandle hpEncoder)
+     return 0;
+ }
+ 
+-int FAACAPI faacEncEncode(faacEncHandle hpEncoder,
++int faacEncEncode(faacEncHandle hpEncoder,
+                           int32_t *inputBuffer,
+                           unsigned int samplesInput,
+                           unsigned char *outputBuffer,
