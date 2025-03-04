@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+x_vcpkg_get_legacy_cmake_3(SET_CMAKE_COMMAND)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
