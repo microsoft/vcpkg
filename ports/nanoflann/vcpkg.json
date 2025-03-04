@@ -1,6 +1,6 @@
 {
   "name": "nanoflann",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "nanoflann is a C++11 header-only library for building KD-Trees of datasets with different topologies: R2, R3 (point clouds), SO(2) and SO(3) (2D and 3D rotation groups).",
   "homepage": "https://github.com/jlblancoc/nanoflann",
   "license": "BSD-3-Clause",

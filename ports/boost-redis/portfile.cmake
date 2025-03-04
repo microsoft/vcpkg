@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/redis
     REF boost-${VERSION}
-    SHA512 918ad6b11a787125d344fad9b62d83e4ab7a4ba098e37be854345befb4e48bcd3b56fc6c2797fc454e3ca2ac1d26b1a5f958720e81e0bd71d1a0b308cdb215bc
+    SHA512 84c36606241d6e6fe39b8fbc097b2dfe72f07ac46e30ff57243565b8803f0073b53b56f77e37fa2c4b44c7d0f866df3b16a1e5830fdf0b4a93496acce522cd9e
     HEAD_REF master
 )
 

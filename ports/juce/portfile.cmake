@@ -16,6 +16,7 @@ vcpkg_from_github(
     missing-modules.diff
     prefer-cmake.diff
     vcpkg-compile-definitions.diff
+    avoid-macos-15-deprecations.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/modules/juce_audio_devices/native/oboe")
 

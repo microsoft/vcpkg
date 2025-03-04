@@ -1,7 +1,7 @@
 {
   "name": "opencv",
   "version": "4.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -80,6 +80,18 @@
           "default-features": false,
           "features": [
             "dc1394"
+          ]
+        }
+      ]
+    },
+    "directml": {
+      "description": "Build with DirectML support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "directml"
           ]
         }
       ]
@@ -284,18 +296,6 @@
           "default-features": false,
           "features": [
             "jpeg"
-          ]
-        }
-      ]
-    },
-    "lapack": {
-      "description": "LAPACK support for opencv",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "lapack"
           ]
         }
       ]

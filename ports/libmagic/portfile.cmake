@@ -22,7 +22,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
     REF FILE5_46
-    SHA512 9165bb5bdbe7b8fccac0c8675d4eb251a286ab2ab7a79e6f8ed98d36fa0928b889cf109c1da3a5cfff64d1b1006b5d73934c2d420484adae6f4c8e26a9ede18f
+    SHA512 fb8157ee8065feaf57412ccdeee57cd8fc853b54ac49b0ddc818eeb1ca3555a7cfd25dea08996503f7c565dcba8c57fd7e4dc5fe3452872c617f5612a94a8f0e
     HEAD_REF master
     PATCHES ${PATCHES}
 )

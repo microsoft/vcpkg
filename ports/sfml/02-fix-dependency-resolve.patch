@@ -1,0 +1,30 @@
+diff --git a/cmake/SFMLConfig.cmake.in b/cmake/SFMLConfig.cmake.in
+index 855f8a273..ea473f4f8 100644
+--- a/cmake/SFMLConfig.cmake.in
++++ b/cmake/SFMLConfig.cmake.in
+@@ -81,6 +81,11 @@ foreach(component ${SFML_FIND_COMPONENTS})
+     endif()
+ endforeach()
+ 
++set(SFML_STATIC_LIBRARIES false)
++if(NOT "@BUILD_SHARED_LIBS@")
++    set(SFML_STATIC_LIBRARIES true)
++endif()
++
+ set(FIND_SFML_PATHS
+     "${CMAKE_CURRENT_LIST_DIR}/../../.."
+     ~/Library/Frameworks
+diff --git a/src/SFML/Graphics/CMakeLists.txt b/src/SFML/Graphics/CMakeLists.txt
+index 4886ac71f..8018937ee 100644
+--- a/src/SFML/Graphics/CMakeLists.txt
++++ b/src/SFML/Graphics/CMakeLists.txt
+@@ -93,7 +93,8 @@ sfml_add_library(Graphics
+ target_link_libraries(sfml-graphics PUBLIC SFML::Window)
+ 
+ # stb_image sources
+-target_include_directories(sfml-graphics SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/stb_image")
++find_path(STB_INCLUDE_DIR stb_image.h REQUIRED)
++target_include_directories(sfml-graphics SYSTEM PRIVATE "${STB_INCLUDE_DIR}")
+ 
+ # glad sources
+ target_include_directories(sfml-graphics SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/glad/include")

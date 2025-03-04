@@ -1,6 +1,6 @@
 {
   "name": "libmupdf",
-  "version": "1.25.2",
+  "version": "1.25.4",
   "description": "a lightweight PDF, XPS, and E-book library",
   "homepage": "https://github.com/ArtifexSoftware/mupdf",
   "license": "AGPL-3.0-only",

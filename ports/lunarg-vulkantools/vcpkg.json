@@ -1,6 +1,6 @@
 {
   "name": "lunarg-vulkantools",
-  "version": "1.4.304.0",
+  "version": "1.4.304.1",
   "description": "Tools to aid in Vulkan development",
   "homepage": "https://github.com/LunarG/VulkanTools",
   "license": null,
