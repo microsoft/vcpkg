@@ -1385,8 +1385,8 @@
       "port-version": 5
     },
     "breakpad": {
-      "baseline": "2023-06-01",
-      "port-version": 2
+      "baseline": "2024-02-16",
+      "port-version": 0
     },
     "brigand": {
       "baseline": "1.3.0",
