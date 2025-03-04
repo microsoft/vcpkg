@@ -52,6 +52,8 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     )
 endif()
 
+x_vcpkg_get_legacy_cmake_3(SET_CMAKE_COMMAND)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
