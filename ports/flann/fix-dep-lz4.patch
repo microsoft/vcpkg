@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5fd73ba..d196cf1 100644
+index 5fd73ba..ff357f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -155,8 +155,8 @@ if (BUILD_CUDA_LIB)
@@ -13,25 +13,50 @@ index 5fd73ba..d196cf1 100644
  include_directories(${LZ4_INCLUDE_DIRS})
  
  #set the C/C++ include path to the "include" directory
-@@ -169,7 +169,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "MSVC" OR CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-     # lots of warnings with cl.exe right now, use /W1
-     add_definitions("/W1 -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS /bigobj")
- else()
--    add_definitions( "-Wall -Wno-unknown-pragmas -Wno-unused-function" )
-+    add_definitions( "-Wall -Wno-unknown-pragmas -Wno-unused-function -Wa,-mbig-obj" )
- endif()
- 
- # install and export variables
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
-index 6b95a71..c50f432 100644
+index 6b95a71..d78c74a 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
-@@ -1,5 +1,8 @@
+@@ -1,5 +1,10 @@
  @PACKAGE_INIT@
-
+ 
 +include(CMakeFindDependencyMacro)
 +find_dependency(lz4 CONFIG)
-+find_dependency(HDF5 CONFIG)
++if(@WITH_HDF5@)
++  find_dependency(HDF5 CONFIG)
++endif()
  include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
  check_required_components("flann")
+ 
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index 7603abc..ce9fc40 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -18,8 +18,11 @@ if (CMAKE_BUILD_STATIC_LIBS)
+ else()
+     set_target_properties(flann_cpp_s PROPERTIES EXCLUDE_FROM_ALL true)
+ endif()
+-
+-add_library(flann_cpp SHARED ${CPP_SOURCES})
++if(CMAKE_BUILD_STATIC_LIBS)
++    add_library(flann_cpp STATIC ${CPP_SOURCES})
++else()
++    add_library(flann_cpp SHARED ${CPP_SOURCES})
++endif()
+ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
+ # export lz4 headers, so that MSVC to creates flann_cpp.lib
+ set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
+@@ -91,8 +94,11 @@ if (BUILD_C_BINDINGS)
+     else()
+         set_target_properties(flann_s PROPERTIES EXCLUDE_FROM_ALL true)
+     endif()
+-
+-    add_library(flann SHARED ${C_SOURCES})
++    if(CMAKE_BUILD_STATIC_LIBS)
++        add_library(flann STATIC ${C_SOURCES})
++    else()
++        add_library(flann SHARED ${C_SOURCES})
++    endif()
+     target_link_libraries(flann ${LZ4_LINK_LIBRARIES})
+     list(APPEND flann_install_targets flann)
  

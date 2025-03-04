@@ -16,6 +16,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         hdf5    WITH_HDF5
         cuda    BUILD_CUDA_LIB
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+   set(LINK_STATIC ON)
+else()
+   set(LINK_STATIC OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -27,6 +32,7 @@ vcpkg_cmake_configure(
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_MATLAB_BINDINGS=OFF
         -DUSE_OPENMP=OFF
+        -DCMAKE_BUILD_STATIC_LIBS=${LINK_STATIC}
     OPTIONS_DEBUG 
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -35,9 +41,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-endif()
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
