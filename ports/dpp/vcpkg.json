@@ -1,10 +1,10 @@
 {
   "name": "dpp",
-  "version": "10.0.35",
+  "version": "10.1.0",
   "description": "D++ Extremely Lightweight C++ Discord Library.",
   "homepage": "https://dpp.dev/",
   "license": "Apache-2.0",
-  "supports": "(windows & !static & !uwp) | linux | osx",
+  "supports": "(windows & !uwp) | linux | osx",
   "dependencies": [
     "nlohmann-json",
     "openssl",
@@ -18,5 +18,10 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "coro": {
+      "description": "Enable coroutine support (requires a C++20 compiler)"
+    }
+  }
 }
