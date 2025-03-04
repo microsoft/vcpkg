@@ -9,7 +9,6 @@ vcpkg_from_sourceforge(
         install-interface-include-directories.patch
         use-math-h-nan.patch
         fix-pc-absolute.patch
-        pkgconfig-template.diff
 )
 
 vcpkg_check_features(
@@ -22,12 +21,6 @@ vcpkg_check_features(
     INVERTED_FEATURES
         x11       CMAKE_DISABLE_FIND_PACKAGE_X11
 )
-
-if(VCPKG_CROSSCOMPILING)
-    list(APPEND FEATURE_OPTIONS "-DCMAKE_NATIVE_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
-    # Necessary to skip a try_run which isn't used anyways due to PL_HAVE_QHULL=OFF
-    list(APPEND FEATURE_OPTIONS "-DNaNAwareCCompiler=ON")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -44,7 +37,6 @@ vcpkg_cmake_configure(
         -DPLD_aqt=OFF   # needs aquaterm framework
         -DPLD_pdf=OFF   # needs haru
         -DPLD_psttf=OFF # needs lasi (in addition to pango)
-        -DPLD_psttfc=OFF # needs lasi (in addition to pango)
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
@@ -64,8 +56,8 @@ vcpkg_fixup_pkgconfig()
 
 if("wxwidgets" IN_LIST FEATURES)
     file(GLOB pkg_files "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
-    foreach(pkg_file IN LISTS pkg_files)
-        vcpkg_replace_string("${pkg_file}" [[${prefix}/lib/mswu]] [[${prefix}/lib/mswud]] IGNORE_UNCHANGED)
+    foreach(pkg_file IN ITEMS ${pkg_files})
+        vcpkg_replace_string("${pkg_file}" "${prefix}/lib/mswu" "${prefix}/lib/mswud" IGNORE_UNCHANGED)
     endforeach()
 endif()
 
@@ -73,24 +65,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-if(NOT VCPKG_CROSSCOMPILING)
-    function(copy_tool name subdir cmake_name)
-        vcpkg_copy_tools(
-            TOOL_NAMES "${name}"
-            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${subdir}"
-        )
-        configure_file(
-            "${CURRENT_PORT_DIR}/host-tool.cmake"
-            "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${subdir}/${cmake_name}"
-            @ONLY
-        )
-    endfunction()
-    copy_tool(plhershey-unicode-gen "include" "ImportExecutables.cmake")
-    copy_tool(tai-utc-gen "lib/qsastime" "tai-utc-gen.cmake")
-    copy_tool(deltaT-gen "lib/qsastime" "deltaT-gen.cmake")
-endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(
