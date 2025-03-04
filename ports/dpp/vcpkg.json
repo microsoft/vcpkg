@@ -18,10 +18,5 @@
       "host": true
     },
     "zlib"
-  ],
-  "features": {
-    "coro": {
-      "description": "Enable coroutine support (requires a C++20 compiler)"
-    }
-  }
+  ]
 }

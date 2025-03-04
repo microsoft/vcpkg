@@ -7,26 +7,14 @@ vcpkg_from_github(
         "include.patch"
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        coro DPP_FORMATTERS # Using coro requires C++20, so let's enable formatters as well since we are using C++20
-    INVERTED_FEATURES
-        coro DPP_NO_CORO
-)
-
-if("coro" IN_LIST FEATURES)
-    set(CXX_STANDARD 20)
-else()
-    set(CXX_STANDARD 17)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
+        -DCMAKE_CXX_STANDARD=20
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
         -DDPP_BUILD_TEST=OFF
-        ${FEATURE_OPTIONS}
+        -DDPP_FORMATTERS=ON
+        -DDPP_NO_CORO=OFF
 )
 
 vcpkg_cmake_install()
