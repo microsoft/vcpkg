@@ -2,17 +2,14 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 d8a8bee3aa9acda4609104c2a9d4a2512e4be6d6e85fd4b24c287c03f60cfb888e669e61bfac4113dae35f0c3492559b65b3453baf38766d8c0223d9ab77aada
+    SHA512 116b934950b02639aa0924cdf6ceaf34518be7f94037e77e52f374aa0a03403487ef58384137569d930961c7d65291a7f0bbddcf1eaf4260086f49afbfae1f27
     PATCHES
-        fix-dependencies.patch
-        fix-dep-openal.patch
+        01-fix-findudev-module.patch
+        02-fix-dependency-resolve.patch
 )
 
-# The embedded FindFreetype doesn't properly handle debug libraries
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules/FindFreetype.cmake")
-
 if(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
+    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxi\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxi-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
 endif()
 
 vcpkg_check_features(
@@ -31,11 +28,9 @@ vcpkg_cmake_configure(
         -DSFML_USE_SYSTEM_DEPS=ON
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
-        -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         SFML_MISC_INSTALL_PREFIX
-        SFML_WARNINGS_AS_ERRORS
 )
 
 vcpkg_cmake_install()

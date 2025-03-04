@@ -1,0 +1,11 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,7 +82,6 @@
+ #--------------------------------------
+ # Find bullet for the bullet plugin wrapper
+ gz_find_package(GzBullet
+   VERSION 2.87
+   REQUIRED_BY bullet bullet-featherstone
+-  PKGCONFIG bullet
+   PKGCONFIG_VER_COMPARISON >=)
