@@ -19,8 +19,8 @@ index cd90abd..1087088 100644
 -        EXPORT nanoarrow-exports)
 +        EXPORT nanoarrow-exports
 +        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
  if(NANOARROW_CODE_COVERAGE)
    target_compile_options(nanoarrow_coverage_config INTERFACE -O0 -g --coverage)
@@ -32,8 +32,8 @@ index cd90abd..1087088 100644
 -            EXPORT nanoarrow-exports)
 +            EXPORT nanoarrow-exports
 +            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
    elseif(NOT NANOARROW_FLATCC_ROOT_DIR)
      add_library(flatccrt STATIC IMPORTED)
@@ -43,8 +43,8 @@ index cd90abd..1087088 100644
  
 -  install(TARGETS nanoarrow_ipc DESTINATION lib)
 +  install(TARGETS nanoarrow_ipc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
    install(FILES src/nanoarrow/nanoarrow_ipc.h src/nanoarrow/nanoarrow_ipc.hpp
                  src/nanoarrow/ipc/flatcc_generated.h DESTINATION include/nanoarrow)
  endif()
@@ -56,8 +56,8 @@ index cd90abd..1087088 100644
 -            EXPORT nanoarrow-exports)
 +            EXPORT nanoarrow-exports
 +            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
      set(NANOARROW_DEVICE_SOURCES_METAL src/nanoarrow/device/metal.cc)
      set(NANOARROW_DEVICE_DEFS_METAL "NANOARROW_DEVICE_WITH_METAL")
@@ -67,8 +67,8 @@ index cd90abd..1087088 100644
  
 -  install(TARGETS nanoarrow_device DESTINATION lib)
 +  install(TARGETS nanoarrow_device RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
    install(FILES src/nanoarrow/nanoarrow_device.h src/nanoarrow/nanoarrow_device.hpp
            DESTINATION include/nanoarrow)
  endif()
@@ -80,8 +80,8 @@ index cd90abd..1087088 100644
 -          EXPORT nanoarrow-exports)
 +          EXPORT nanoarrow-exports
 +          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
    add_library(nanoarrow_testing src/nanoarrow/testing/testing.cc)
    target_include_directories(nanoarrow_testing
