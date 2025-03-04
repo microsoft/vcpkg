@@ -9,7 +9,6 @@
     "eigen3",
     "fmt",
     "libuv",
-    "protobuf",
     {
       "name": "vcpkg-cmake",
       "host": true

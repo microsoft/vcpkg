@@ -1,11 +1,14 @@
-string(REPLACE "-0" "." temp_date ${VERSION})
-string(REPLACE "-" "." formatted_date ${temp_date})
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wpilibsuite/allwpilib
-    REF "v${formatted_date}"
-    SHA512 729ab66a39725551e36bce26ffb6dd9f40f941f432322e9733f4652dae294dafe2544647c6f05c7f301955429b1aca8549f5b7f17bacd50524bfe1ad4ae1d2ee
+    REF 165ebe4c79c437c7ba6c03af4a88a8c8680f742a
+    SHA512 f6ee07db0a119a7ac5876c4b0cf74abfb6af635d3d3ba913300138c450f62f6595ac4849bc499346f9f0179cc563f548a5e8a9a47122af593b425af453afd99f
+    PATCHES
+        no-werror.patch
+        windows-install-location.patch
+        missing-find_dependency.patch
+        fix-usage.patch
+        fix-build-error-with-fmt11.patch
         fix-fmt.patch #https://github.com/wpilibsuite/allwpilib/pull/6796
 )
 

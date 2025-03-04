@@ -1,5 +1,5 @@
 diff --git a/ntcore/src/dev/native/cpp/main.cpp b/ntcore/src/dev/native/cpp/main.cpp
-index d724bbe..425bc4d 100644
+index 6e43fdb..ad93644 100644
 --- a/ntcore/src/dev/native/cpp/main.cpp
 +++ b/ntcore/src/dev/native/cpp/main.cpp
 @@ -13,6 +13,7 @@
@@ -9,82 +9,6 @@ index d724bbe..425bc4d 100644
 +#include <fmt/ranges.h>
  #include <wpi/Synchronization.h>
  #include <wpi/timestamp.h>
- 
-diff --git a/ntcore/src/main/native/cpp/LocalStorage.cpp b/ntcore/src/main/native/cpp/LocalStorage.cpp
-index 7d1c3e4..0bf2711 100644
---- a/ntcore/src/main/native/cpp/LocalStorage.cpp
-+++ b/ntcore/src/main/native/cpp/LocalStorage.cpp
-@@ -10,6 +10,7 @@
- #include <wpi/SmallString.h>
- #include <wpi/StringExtras.h>
- #include <wpi/json.h>
-+#include <fmt/ranges.h>
- 
- #include "IListenerStorage.h"
- #include "Log.h"
-diff --git a/ntcore/src/main/native/cpp/net/ServerImpl.cpp b/ntcore/src/main/native/cpp/net/ServerImpl.cpp
-index 0a9071d..9917605 100644
---- a/ntcore/src/main/native/cpp/net/ServerImpl.cpp
-+++ b/ntcore/src/main/native/cpp/net/ServerImpl.cpp
-@@ -20,6 +20,7 @@
- #include <wpi/json.h>
- #include <wpi/raw_ostream.h>
- #include <wpi/timestamp.h>
-+#include <fmt/ranges.h>
- 
- #include "IConnectionList.h"
- #include "Log.h"
-diff --git a/wpimath/src/main/native/include/frc/geometry/Translation2d.h b/wpimath/src/main/native/include/frc/geometry/Translation2d.h
-index 9d9a77c..60a58ec 100644
---- a/wpimath/src/main/native/include/frc/geometry/Translation2d.h
-+++ b/wpimath/src/main/native/include/frc/geometry/Translation2d.h
-@@ -87,7 +87,7 @@ class WPILIB_DLLEXPORT Translation2d {
-    *
-    * @return A Vector representation of this translation.
-    */
--  constexpr Eigen::Vector2d ToVector() const;
-+  inline Eigen::Vector2d ToVector() const;
- 
-   /**
-    * Returns the norm, or distance from the origin to the translation.
-diff --git a/wpimath/src/main/native/include/frc/geometry/Translation2d.inc b/wpimath/src/main/native/include/frc/geometry/Translation2d.inc
-index 6b291e1..30ddcd4 100644
---- a/wpimath/src/main/native/include/frc/geometry/Translation2d.inc
-+++ b/wpimath/src/main/native/include/frc/geometry/Translation2d.inc
-@@ -16,7 +16,7 @@ constexpr Translation2d::Translation2d(units::meter_t distance,
-                                        const Rotation2d& angle)
-     : m_x{distance * angle.Cos()}, m_y{distance * angle.Sin()} {}
- 
--constexpr Eigen::Vector2d Translation2d::ToVector() const {
-+Eigen::Vector2d Translation2d::ToVector() const {
-   return Eigen::Vector2d{{m_x.value(), m_y.value()}};
- }
- 
-diff --git a/wpimath/src/main/native/include/frc/geometry/Translation3d.h b/wpimath/src/main/native/include/frc/geometry/Translation3d.h
-index b83b661..fa4d4d2 100644
---- a/wpimath/src/main/native/include/frc/geometry/Translation3d.h
-+++ b/wpimath/src/main/native/include/frc/geometry/Translation3d.h
-@@ -94,7 +94,7 @@ class WPILIB_DLLEXPORT Translation3d {
-    *
-    * @return A Vector representation of this translation.
-    */
--  constexpr Eigen::Vector3d ToVector() const;
-+  inline Eigen::Vector3d ToVector() const;
- 
-   /**
-    * Returns the norm, or distance from the origin to the translation.
-diff --git a/wpimath/src/main/native/include/frc/geometry/Translation3d.inc b/wpimath/src/main/native/include/frc/geometry/Translation3d.inc
-index 19268e6..2ec96f3 100644
---- a/wpimath/src/main/native/include/frc/geometry/Translation3d.inc
-+++ b/wpimath/src/main/native/include/frc/geometry/Translation3d.inc
-@@ -19,7 +19,7 @@ constexpr Translation2d Translation3d::ToTranslation2d() const {
-   return Translation2d{m_x, m_y};
- }
- 
--constexpr Eigen::Vector3d Translation3d::ToVector() const {
-+Eigen::Vector3d Translation3d::ToVector() const {
-   return Eigen::Vector3d{{m_x.value(), m_y.value(), m_z.value()}};
- }
  
 diff --git a/wpiutil/examples/printlog/printlog.cpp b/wpiutil/examples/printlog/printlog.cpp
 index cb89934..4fe4817 100644
@@ -99,22 +23,14 @@ index cb89934..4fe4817 100644
  #include "wpi/DataLogReader.h"
  #include "wpi/DenseMap.h"
 diff --git a/wpiutil/src/main/native/include/wpi/Logger.h b/wpiutil/src/main/native/include/wpi/Logger.h
-index 01a02fd..45b576d 100644
+index 01a02fd..bd524a9 100644
 --- a/wpiutil/src/main/native/include/wpi/Logger.h
 +++ b/wpiutil/src/main/native/include/wpi/Logger.h
-@@ -66,11 +66,10 @@ class Logger {
- #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
- #endif
+@@ -9,6 +9,7 @@
+ #include <utility>
  
--#define WPI_LOG(logger_inst, level, format, ...)                         \
--  if ((logger_inst).HasLogger() && level >= (logger_inst).min_level()) { \
--    (logger_inst)                                                        \
--        .Log(level, __FILE__, __LINE__,                                  \
--             FMT_STRING(format) __VA_OPT__(, ) __VA_ARGS__);             \
-+#define WPI_LOG(logger_inst, level, format, ...)                            \
-+  if ((logger_inst).HasLogger() && level >= (logger_inst).min_level()) {    \
-+    (logger_inst)                                                           \
-+        .Log(level, __FILE__, __LINE__, format __VA_OPT__(, ) __VA_ARGS__); \
-   }
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
  
- #define WPI_ERROR(inst, format, ...) \
+ namespace wpi {
+ 
