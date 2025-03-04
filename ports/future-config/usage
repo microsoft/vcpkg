@@ -7,11 +7,6 @@ find_package(future-config CONFIG REQUIRED) # Find the future-config package
 
 target_link_libraries(<your target> PRIVATE future-config::future-config) # Link the library
 
-run_fconfig_builder( # Run the builder tool that generates the config classes
-	<optional arguments here>
-)
+run_fconfig_builder(...)
 
-The run_fconfig_builder function has the following arguments:
-- MAIN_CONFIG_FILE: the path to the main config file. By default, it is <CMakelists.txt directory>/data/config.yaml.
-- ROOT_CONFIG_CLASS_NAME: the name of the root config class. By default, it is the name of the <Project name>_config.
-- SOURCE_DIR: the directory for the generated config classes. By default, it is <CMakeLists.txt directory>/src.
+copy_master_config(...)
