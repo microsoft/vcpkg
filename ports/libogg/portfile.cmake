@@ -14,9 +14,12 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
         -DINSTALL_DOCS=OFF
         -DINSTALL_PKG_CONFIG_MODULE=ON
         -DBUILD_TESTING=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_POLICY_VERSION_MINIMUM
 )
 
 vcpkg_cmake_install()
