@@ -9081,8 +9081,8 @@
       "port-version": 4
     },
     "tgui": {
-      "baseline": "1.7.0",
-      "port-version": 1
+      "baseline": "1.8.0",
+      "port-version": 0
     },
     "think-cell-range": {
       "baseline": "2023.1",
