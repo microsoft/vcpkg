@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "release-${VERSION}"
     SHA512 98333b3f323a20d5218fc29d217bd4188363a517246b67df86da631463ed19c711f3018e67cdc78565a1ed5913a839d575198dd1a546e98d6a3f68c8f40ef393 
     HEAD_REF main
+    PATCHES
+        fix-findplutosvg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
