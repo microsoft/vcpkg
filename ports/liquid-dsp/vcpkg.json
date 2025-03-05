@@ -4,7 +4,7 @@
   "description": "Digital signal processing library for software-defined radios.",
   "homepage": "https://liquidsdr.org/",
   "license": "MIT",
-  "supports": "linux | osx | android",
+  "supports": "linux | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
