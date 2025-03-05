@@ -32,9 +32,11 @@ else()
                 "sources/android/cpufeatures" # NDK r27c
             NO_DEFAULT_PATH
         )
-        list(APPEND OPTIONS
-            "-Dcpu-features-path=${cpu_features_dir}"
-        )
+        if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON AND cpu_features_dir)
+            list(APPEND OPTIONS
+                "-Dcpu-features-path=${cpu_features_dir}"
+            )
+        endif()
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         # -Darm-simd=enabled does not work with arm64-windows
@@ -60,4 +62,11 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+set(licenses "${SOURCE_PATH}/COPYING")
+if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON AND cpu_features_dir)
+    file(READ "${cpu_features_dir}/cpu-features.c" cpu_features_c)
+    string(REGEX REPLACE "[*]/.*" "*/\n" cpu_features_license "${cpu_features_c}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/${TARGET_TRIPLET}-rel/cpu-features (BSD-2-Clause)" "${cpu_features_license}")
+    list(APPEND licenses "${CURRENT_PACKAGES_DIR}/${TARGET_TRIPLET}-rel/cpu-features (BSD-2-Clause)")
+endif()
+vcpkg_install_copyright(FILE_LIST ${licenses})
