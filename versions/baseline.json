@@ -7097,8 +7097,8 @@
       "port-version": 1
     },
     "pixman": {
-      "baseline": "0.43.4",
-      "port-version": 1
+      "baseline": "0.44.2",
+      "port-version": 0
     },
     "pkgconf": {
       "baseline": "2.3.0",

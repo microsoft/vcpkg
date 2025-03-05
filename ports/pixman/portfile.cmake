@@ -22,6 +22,20 @@ else()
         -Dsse2=disabled
         -Dssse3=disabled
     )
+    if(VCPKG_TARGET_IS_ANDROID)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        find_path(cpu_features_dir
+            NAMES cpu-features.c
+            PATHS "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}"
+            PATH_SUFFIXES
+                "sources/android/cpufeatures" # NDK r27c
+            NO_DEFAULT_PATH
+        )
+        list(APPEND OPTIONS
+            "-Dcpu-features-path=${cpu_features_dir}"
+        )
+    endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         # -Darm-simd=enabled does not work with arm64-windows
         list(APPEND OPTIONS
