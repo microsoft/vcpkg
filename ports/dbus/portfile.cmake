@@ -89,4 +89,4 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 
-vcpkg_install_copyright(FILE_LSIT "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
