@@ -2,12 +2,12 @@ diff --git a/build-cmake/CMakeLists.txt b/build-cmake/CMakeLists.txt
 index ba0b730..a5161cf 100644
 --- a/build-cmake/CMakeLists.txt
 +++ b/build-cmake/CMakeLists.txt
-@@ -15,7 +15,7 @@ if (MSVC AND NOT BUILD_SHARED_LIBS)
- 	SET(Protobuf_USE_STATIC_LIBS ON)
- endif (MSVC AND NOT BUILD_SHARED_LIBS)
+@@ -15,7 +15,7 @@ if(MSVC AND NOT BUILD_SHARED_LIBS)
+   set(Protobuf_USE_STATIC_LIBS ON)
+ endif()
  
--FIND_PACKAGE(Protobuf REQUIRED)
-+find_package(protobuf CONFIG REQUIRED)
- file(REAL_PATH "${PROTOBUF_INCLUDE_DIR}" PROTOBUF_INCLUDE_DIR)
- INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
- 
+-find_package(Protobuf CONFIG)
++find_package(Protobuf CONFIG REQUIRED)
+ if(Protobuf_FOUND)
+   # Keep compatibility with FindProtobuf CMake module
+   set(PROTOBUF_PROTOC_EXECUTABLE $<TARGET_FILE:protobuf::protoc>)

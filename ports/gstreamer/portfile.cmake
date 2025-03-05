@@ -4,18 +4,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
-vcpkg_download_distfile(PATCH_PR_7868_FIX_GSTX265ENC_C
-    URLS https://gitlab.freedesktop.org/gstreamer/gstreamer/-/commit/ee3802cf71b386194e2a6318765e0547b37f52c8.diff
-    SHA512 3cd7395562a563f474ddb535d307e0a6aa30027a8c1cf5efea7560d989c28761eb9afa8dc89d7aee66364118c7ed1cef9a3766129bb830cc3ca6b8742b20fd4c
-    FILENAME gstreamer-gstreamer-1.25.1-ee3802cf71b386194e2a6318765e0547b37f52c8.patch
-)
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 c181c8048ef859dfdd17d2bf1487d078704fdd289fed4e13fc00aebca055965c186286e60f3703c69d816734ef4be344b32650058d72517576927f9df18db2df
+    SHA512 5ca978cad5a661b081528be0fa74e199115c186afa1a0c9f55a9238fb2b452b680e75e8721a54077b9f4d717da5ef5801c359a0a89a5a02056caea067adab88f
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -30,7 +24,6 @@ vcpkg_from_gitlab(
         no-downloads.patch
         ${PATCHES}
         fix-multiple-def.patch
-        "${PATCH_PR_7868_FIX_GSTX265ENC_C}"
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -210,7 +203,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:pulse=auto
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:shout2=disabled
-        #-Dgst-plugins-good:soup=disabled 
+        #-Dgst-plugins-good:soup=disabled
         -Dgst-plugins-good:twolame=disabled
         -Dgst-plugins-good:waveform=auto
         -Dgst-plugins-good:wavpack=disabled # Error during plugin build
@@ -420,10 +413,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc" [[${libinc}]] "")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc" [[-I${libdir}/gstreamer-1.0/include]] "")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc" [[${libinc}]] "")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc" [[-I${libdir}/gstreamer-1.0/include]] "")
 endif()
 
 vcpkg_fixup_pkgconfig()

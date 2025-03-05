@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 076610c92fc05bbf716d2ba2d031f478ea533c40342d20eda16c174a91441ca1a221c1b9d1f795cf7d3484f16de5f8339479b3a75d7a2fd72abe6f79297628ea 
+    SHA512 35382987b33abb57a27105570c91db048853d95111f125bc6fac8a25f758c29ab2c699c63330b445b0a08f04c9dbc4dfa1dc0c33a7e2d8ea99d06d884a3c9852 
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -16,7 +16,6 @@ vcpkg_from_github(
         00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00019-protobuf-generate-with-import-path-correction.patch
 )
 # Ensure de-vendoring
 file(REMOVE_RECURSE

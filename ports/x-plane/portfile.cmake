@@ -22,6 +22,13 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-x-plane)
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  file(COPY "${SOURCE_PATH}/Libraries/Win/XPLM_64.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(COPY "${SOURCE_PATH}/Libraries/Win/XPLM_64.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  file(COPY "${SOURCE_PATH}/Libraries/Win/XPWidgets_64.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(COPY "${SOURCE_PATH}/Libraries/Win/XPWidgets_64.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
