@@ -56,14 +56,14 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     if (DEFINED ENV{GXDKLatest})
         cmake_path(SET _vcpkg_gxdk "$ENV{GXDKLatest}")
 
-        if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+        if(VCPKG_XBOX_CONSOLE_TARGET STREQUAL "scarlett")
             list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
             link_directories(BEFORE "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
-        elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+        elseif(VCPKG_XBOX_CONSOLE_TARGET STREQUAL "xboxone")
             list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
@@ -99,12 +99,12 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
 
     # Add the Microsoft GDK Xbox Extensions if present
     if (DEFINED _vcpkg_gxdk)
-        if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+        if(VCPKG_XBOX_CONSOLE_TARGET STREQUAL "scarlett")
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_SCARLETT")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
             set(_vcpkg_default_lib xgameplatform.lib)
-        elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+        elseif(VCPKG_XBOX_CONSOLE_TARGET STREQUAL "xboxone")
             string(APPEND _vcpkg_cpp_flags " /D_GAMING_XBOX /D_GAMING_XBOX_XBOXONE")
 
             set(_vcpkg_core_libs "xgameplatform.lib xgameruntime.lib")
@@ -128,9 +128,9 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
         message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
     endif()
 
-    if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+    if(VCPKG_XBOX_CONSOLE_TARGET STREQUAL "scarlett")
         string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX2")
-    elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+    elseif(VCPKG_XBOX_CONSOLE_TARGET STREQUAL "xboxone")
         string(APPEND _vcpkg_common_flags " /favor:AMD64 /arch:AVX")
     endif()
 
