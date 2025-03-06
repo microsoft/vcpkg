@@ -1705,8 +1705,8 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "2.4.2",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "clickhouse-cpp": {
       "baseline": "2.5.1",
@@ -6962,7 +6962,7 @@
     },
     "paraview": {
       "baseline": "5.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "parmetis": {
       "baseline": "2022-07-27",
