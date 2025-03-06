@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-tool-legacy-cmake-3",
+  "version-semver": "3.30.1",
+  "description": "https://cmake.org/",
+  "supports": "native"
+}
