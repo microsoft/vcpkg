@@ -29,34 +29,44 @@ index 6b95a71..d78c74a 100644
  check_required_components("flann")
  
 diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
-index 7603abc..ce9fc40 100644
+index 7603abc..cb31f6f 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
-@@ -18,8 +18,11 @@ if (CMAKE_BUILD_STATIC_LIBS)
- else()
-     set_target_properties(flann_cpp_s PROPERTIES EXCLUDE_FROM_ALL true)
- endif()
--
--add_library(flann_cpp SHARED ${CPP_SOURCES})
-+if(CMAKE_BUILD_STATIC_LIBS)
-+    add_library(flann_cpp STATIC ${CPP_SOURCES})
-+else()
-+    add_library(flann_cpp SHARED ${CPP_SOURCES})
-+endif()
- target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
+@@ -24,7 +24,9 @@ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
  # export lz4 headers, so that MSVC to creates flann_cpp.lib
  set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
-@@ -91,8 +94,11 @@ if (BUILD_C_BINDINGS)
-     else()
-         set_target_properties(flann_s PROPERTIES EXCLUDE_FROM_ALL true)
-     endif()
--
--    add_library(flann SHARED ${C_SOURCES})
-+    if(CMAKE_BUILD_STATIC_LIBS)
-+        add_library(flann STATIC ${C_SOURCES})
-+    else()
-+        add_library(flann SHARED ${C_SOURCES})
-+    endif()
-     target_link_libraries(flann ${LZ4_LINK_LIBRARIES})
-     list(APPEND flann_install_targets flann)
  
+-set(flann_install_targets flann_cpp)
++if (NOT CMAKE_BUILD_STATIC_LIBS)
++    set(flann_install_targets flann_cpp)
++endif()
+ 
+ if (BUILD_CUDA_LIB)
+     SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-DFLANN_USE_CUDA;-Xcudafe \"--diag_suppress=partial_override\" ;-gencode=arch=compute_52,code=\"sm_52,compute_52\";-gencode=arch=compute_61,code=\"sm_61,compute_61\"")
+@@ -45,9 +47,12 @@ if (BUILD_CUDA_LIB)
+     endif()
+ 
+     cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
+-    list(APPEND flann_install_targets flann_cuda)
+-    set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
++    if (NOT CMAKE_BUILD_STATIC_LIBS)
++        list(APPEND flann_install_targets flann_cuda)
++        set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
++    endif()
+     set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC FLANN_USE_CUDA)
++    
+ else()
+     set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
+ endif()
+@@ -94,8 +99,9 @@ if (BUILD_C_BINDINGS)
+ 
+     add_library(flann SHARED ${C_SOURCES})
+     target_link_libraries(flann ${LZ4_LINK_LIBRARIES})
+-    list(APPEND flann_install_targets flann)
+-
++    if (NOT CMAKE_BUILD_STATIC_LIBS)
++        list(APPEND flann_install_targets flann)
++    endif()
+     if(MINGW AND OPENMP_FOUND)
+         target_link_libraries(flann gomp)
+     endif()
