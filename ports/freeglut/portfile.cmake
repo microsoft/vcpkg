@@ -6,10 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         android.patch
-       # gles.patch # amends https://github.com/freeglut/freeglut/commit/093a5a46
         x11-dependencies-export.patch
         fix-debug-macro.patch
-       # no_x64_enforcement.patch
         windows-output-name.patch
 )
 
