@@ -1,0 +1,6 @@
+node provides CMake targets:
+
+    find_package(node CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE node)
+
+You can also start with example project in example dir.
