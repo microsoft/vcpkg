@@ -1,0 +1,29 @@
+{
+  "name": "avahi",
+  "version": "0.7",
+  "description": "Avahi is a free, LGPL implementation of DNS Service Discovery (DNS-SD RFC 6763) over Multicast DNS (mDNS RFC 6762), commonly known as and compatible with Apple Bonjour primarily targeting Linux.",
+  "homepage": "https://github.com/avahi/avahi",
+  "license": "LGPL-2.1-only",
+  "supports": "linux",
+  "dependencies": [
+    "gdbm",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "glib",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
+  "features": {
+    "client": {
+      "description": "Avahi client library"
+    }
+  }
+}
