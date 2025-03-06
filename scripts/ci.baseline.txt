@@ -1003,6 +1003,8 @@ sdl1:arm-neon-android=fail
 sdl1:arm64-android=fail
 sdl1:x64-android=fail
 septag-sx:x64-android=fail
+sfgui:arm64-android
+sfgui:x64-android
 shader-slang:x64-windows-static=fail
 shogun:arm64-android=skip
 shogun:arm64-osx=skip
@@ -1113,7 +1115,8 @@ tensorflow:arm64-osx=skip
 tensorflow:x64-osx=skip
 tensorflow-cc:arm64-osx=skip
 tensorflow-cc:x64-osx=skip
-
+tgui:arm64-android
+tgui:x64-android
 thorvg:arm-neon-android=fail
 tinycthread:arm-neon-android=fail
 tinycthread:arm64-android=fail
