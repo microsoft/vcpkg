@@ -21,7 +21,10 @@
     "client": {
       "description": "Avahi client library",
       "dependencies": [
-        "dbus"
+        {
+          "name": "dbus",
+          "default-features": false
+        }
       ]
     }
   }
