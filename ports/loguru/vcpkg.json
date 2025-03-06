@@ -20,6 +20,9 @@
       "dependencies": [
         "fmt"
       ]
+    },
+    "stream": {
+      "description": "Build with support for stream style logging"
     }
   }
 }
