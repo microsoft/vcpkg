@@ -3706,7 +3706,7 @@
     },
     "imgui-sfml": {
       "baseline": "3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "imguizmo": {
       "baseline": "2024-05-29",
