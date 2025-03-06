@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8a11523e..1142e414 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -221,12 +221,23 @@ if(SFML_INSTALL_PKGCONFIG_FILES)
+ 
+     sfml_set_option(SFML_PKGCONFIG_INSTALL_DIR "${SFML_PKGCONFIG_DIR}" PATH "Install directory for SFML's pkg-config .pc files")
+ 
+-    foreach(sfml_module IN ITEMS all system window graphics audio network)
++    set(SFML_CREATED_MODULES "system")
++    foreach(SFML_MODULE IN ITEMS "window" "graphics" "audio" "network")
++        string(TOUPPER "SFML_BUILD_${SFML_MODULE}" SFML_MODULE_OPT)
++        if(${SFML_MODULE_OPT})
++            list(APPEND SFML_CREATED_MODULES "${SFML_MODULE}")
++        endif()
++    endforeach()
++    list(LENGTH SFML_CREATED_MODULES SFML_CREATED_MODULES_LEN)
++    if(SFML_CREATED_MODULES_LEN EQUAL "5")
++        list(APPEND SFML_CREATED_MODULES "all")
++    endif()
++    foreach(SFML_MODULE IN ITEMS ${SFML_CREATED_MODULES})
+         configure_file(
+-            "tools/pkg-config/sfml-${sfml_module}.pc.in"
+-            "tools/pkg-config/sfml-${sfml_module}.pc"
++            "tools/pkg-config/sfml-${SFML_MODULE}.pc.in"
++            "tools/pkg-config/sfml-${SFML_MODULE}.pc"
+             @ONLY)
+-        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tools/pkg-config/sfml-${sfml_module}.pc"
++        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tools/pkg-config/sfml-${SFML_MODULE}.pc"
+             DESTINATION "${SFML_PKGCONFIG_INSTALL_DIR}")
+     endforeach()
+ endif()
