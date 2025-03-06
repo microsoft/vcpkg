@@ -19,7 +19,10 @@
   ],
   "features": {
     "client": {
-      "description": "Avahi client library"
+      "description": "Avahi client library",
+      "dependencies": [
+        "dbus"
+      ]
     }
   }
 }
