@@ -9,11 +9,7 @@
     "gdbm",
     {
       "name": "gettext",
-      "host": true,
-      "default-features": false,
-      "features": [
-        "tools"
-      ]
+      "host": true
     },
     "glib",
     {
