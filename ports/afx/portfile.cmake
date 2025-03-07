@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "AFX" CONFIG_PATH "share/cmake/AFX")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/AFX")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
