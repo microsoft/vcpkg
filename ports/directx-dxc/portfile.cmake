@@ -56,7 +56,11 @@ if (VCPKG_TARGET_IS_LINUX)
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/"
+    FILE_PERMISSIONS
+        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE)
 
   set(dll_name_dxc "libdxcompiler.so")
   set(dll_name_dxil "libdxil.so")
