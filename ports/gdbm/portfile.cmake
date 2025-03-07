@@ -11,24 +11,21 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_list(SET options
-    "--enable-gdbmtool-debug=no"
-)
+vcpkg_list(SET options)
 
 if("libgdbm-compat" IN_LIST FEATURES)
     list(APPEND options "--enable-libgdbm-compat=yes")
 endif()
 
-# By default, gdbm is built with readline support. If the readline feature is not enabled, we need to disable it manually.
-# See: https://git.gnu.org.ua/gdbm.git/tree/README?h=v1.24#n44
-if(NOT "readline" IN_LIST FEATURES)
+if("readline" IN_LIST FEATURES)
+    list(APPEND options "--with-readline")
+else()
     list(APPEND options "--without-readline")
 endif()
 
-# By default, gdbm is built with memory-mapped I/O support if mmap is available on the system.
-# If the memory-mapped-io feature is not enabled, we need to disable it manually. This is done to avoid using mmap implicitly.
-# See: https://git.gnu.org.ua/gdbm.git/tree/README?h=v1.24#n30
-if(NOT "memory-mapped-io" IN_LIST FEATURES)
+if("memory-mapped-io" IN_LIST FEATURES)
+    list(APPEND options "--enable-memory-mapped-io")
+else()
     list(APPEND options "--disable-memory-mapped-io")
 endif()
 
