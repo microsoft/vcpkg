@@ -865,6 +865,7 @@ platform-folders:x64-uwp=fail
 plib:arm-neon-android=fail
 plib:arm64-android=fail
 plib:x64-android=fail
+plplot:arm-neon-android=fail
 plplot:arm64-android=fail
 plplot:arm64-windows-static-md=fail
 plplot:arm64-windows=fail
