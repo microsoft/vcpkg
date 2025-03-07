@@ -10,7 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     PACKAGE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
 
