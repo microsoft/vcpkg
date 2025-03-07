@@ -36,10 +36,18 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "opencl",
+        "jpegxl",
         "openexr"
       ],
       "platform": "!uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "opencl"
+      ],
+      "platform": "!uwp & !osx"
     },
     {
       "name": "opencv",
@@ -100,7 +108,8 @@
       "features": [
         "cuda",
         "cudnn",
-        "dnn-cuda"
+        "dnn-cuda",
+        "spng"
       ],
       "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
     },
@@ -111,7 +120,6 @@
         "freetype",
         "gdcm",
         "ipp",
-        "opengl",
         "openjpeg",
         "qt",
         "sfm",
@@ -119,6 +127,14 @@
         "vulkan"
       ],
       "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "opengl"
+      ],
+      "platform": "!uwp & !android & !osx"
     },
     {
       "name": "opencv2",
