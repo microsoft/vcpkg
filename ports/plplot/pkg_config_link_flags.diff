@@ -1,5 +1,5 @@
 diff --git a/cmake/modules/pkg-config.cmake b/cmake/modules/pkg-config.cmake
-index a0ca6b2..9106631 100644
+index a0ca6b2..181c33d 100644
 --- a/cmake/modules/pkg-config.cmake
 +++ b/cmake/modules/pkg-config.cmake
 @@ -210,12 +210,36 @@ function(pkg_config_link_flags link_flags_out link_flags_in)
@@ -16,7 +16,7 @@ index a0ca6b2..9106631 100644
 +        endif()
 +      endforeach()
 +      # sorry, no transitive deps for now.
-+    endif()    
++    endif()
      if(WIN32_OR_CYGWIN)
        # Look for colon-delimited drive-letter form on these platforms.
        string(REGEX REPLACE "^([a-zA-Z]:/.*)/lib(.*)${suffix_pattern}$" "-L\"\\1\" -l\\2" link_flag "${link_flag}")
@@ -34,9 +34,18 @@ index a0ca6b2..9106631 100644
 +          list(APPEND _link_flags "${lib_dir_flag}")
 +        endif()
 +      endif()
-+    elseif(NOT link_flag MATCHES "^-|/")  # e.g. 'm'
++    elseif(NOT link_flag MATCHES "^-|/" AND NOT _link_flags MATCHES "-framework\$")  # e.g. 'm'
 +      set(link_flag "-l${link_flag}")
 +    endif()
      #message(STATUS "(-L form of link_flag = ${link_flag}")
      list(APPEND _link_flags ${link_flag})
    endforeach(link_flag IN LISTS link_flags)
+@@ -301,7 +325,7 @@ macro(cmake_link_flags _link_flags_out _link_flags_in)
+       list(GET _link_flags_list ${_list_index} _list_element)
+       string(REGEX REPLACE "^-l" "" _list_element1 "${_list_element}")
+       if(_list_element STREQUAL "-l${_list_element1}")
+-        set(_library_pathname "_library_pathname-NOTFOUND")
++        unset(_library_pathname CACHE)
+         find_library(
+          _library_pathname
+          ${_list_element1}

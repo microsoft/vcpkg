@@ -31,6 +31,8 @@ if(VCPKG_CROSSCOMPILING)
     list(APPEND FEATURE_OPTIONS "-DNaNAwareCCompiler=ON")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -47,6 +49,7 @@ vcpkg_cmake_configure(
         -DPLD_pdf=OFF   # needs haru
         -DPLD_psttf=OFF # needs lasi (in addition to pango)
         -DPLD_psttfc=OFF # needs lasi (in addition to pango)
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON

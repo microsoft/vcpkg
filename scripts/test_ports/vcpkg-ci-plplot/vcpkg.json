@@ -25,7 +25,8 @@
           "name": "plplot",
           "features": [
             "wxwidgets"
-          ]
+          ],
+          "platform": "!android"
         }
       ]
     }
