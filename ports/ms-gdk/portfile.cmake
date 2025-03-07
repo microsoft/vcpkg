@@ -1,5 +1,6 @@
 set(GDK_EDITION_NUMBER 241001)
 
+# The GDK contains a combination of static C++ libraries and DLL-based extension libraries.
 set(VCPKG_LIBRARY_LINKAGE dynamic)
 
 vcpkg_download_distfile(ARCHIVE
