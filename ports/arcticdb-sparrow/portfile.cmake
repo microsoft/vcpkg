@@ -8,8 +8,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 587c7b5abea6eb856d0bd664e23d63ae4878f3b2991de4b014221096eb5ee0844bafe2c0ca18f58ad19b564073a1c07a70297ae40d4635534e44d23c539f5efa
     HEAD_REF main
-    PATCHES
-        find-date.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
