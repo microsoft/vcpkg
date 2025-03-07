@@ -25,10 +25,18 @@
     "fmt",
     "gflags",
     "glog",
+    {
+      "name": "libaio",
+      "platform": "linux"
+    },
     "libevent",
     "liblzma",
     {
       "name": "libunwind",
+      "platform": "linux"
+    },
+    {
+      "name": "liburing",
       "platform": "linux"
     },
     "openssl",
@@ -49,24 +57,10 @@
         "bzip2"
       ]
     },
-    "libaio": {
-      "description": "Support compile with libaio",
-      "supports": "linux",
-      "dependencies": [
-        "libaio"
-      ]
-    },
     "libsodium": {
       "description": "Support libsodium for cryto",
       "dependencies": [
         "libsodium"
-      ]
-    },
-    "liburing": {
-      "description": "Support compile with liburing",
-      "supports": "linux",
-      "dependencies": [
-        "liburing"
       ]
     },
     "lz4": {
