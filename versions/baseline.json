@@ -9317,7 +9317,7 @@
       "port-version": 4
     },
     "triton": {
-      "baseline": "2023-08-16",
+      "baseline": "2025-02-15",
       "port-version": 0
     },
     "trompeloeil": {
