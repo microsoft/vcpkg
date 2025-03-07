@@ -2988,6 +2988,10 @@
       "baseline": "6.0",
       "port-version": 6
     },
+    "fxaudio": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "fxdiv": {
       "baseline": "2021-02-21",
       "port-version": 2
