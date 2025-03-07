@@ -1,6 +1,6 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "USE_TARBALL_API"
         "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
@@ -103,7 +103,7 @@ Error was: ${head_version_err}
         set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
     endif()
 
-    if("${arg_AUTHORIZATION_TOKEN}" MATCHES "^github_pat_")
+    if(arg_USE_TARBALL_API)
         # With PAT, with fine grained permissions, and with SSO authentication:
         #  - classic GitHub API 'archive' is not supported.
         #  - therefore we use the GitHub API 'tarball' instead.
