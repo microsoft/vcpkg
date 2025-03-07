@@ -41,15 +41,14 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "liburing"   WITH_liburing
-        "libaio"     WITH_libaio
     INVERTED_FEATURES
         "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
         "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
         "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
         "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        "libaio"     CMAKE_DISABLE_FIND_PACKAGE_LibAIO
         "libsodium"  CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium
+        "liburing"   CMAKE_DISABLE_FIND_PACKAGE_LibUring
 )
 
 vcpkg_cmake_configure(
