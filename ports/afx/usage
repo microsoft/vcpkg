@@ -1,4 +1,4 @@
 afx library provides CMake targets:
 
-find_package(AFX CONFIG REQUIRED)
-target_link_libraries(main PRIVATE AFX::AFX)
+  find_package(AFX CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE AFX::AFX)
