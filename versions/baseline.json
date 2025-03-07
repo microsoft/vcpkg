@@ -242,7 +242,7 @@
     },
     "arrayfire": {
       "baseline": "3.8.0",
-      "port-version": 7
+      "port-version": 8
     },
     "arrow": {
       "baseline": "19.0.1",
@@ -2112,10 +2112,6 @@
       "baseline": "2.0.3.2",
       "port-version": 0
     },
-    "cub": {
-      "baseline": "2.1.0",
-      "port-version": 0
-    },
     "cubeb": {
       "baseline": "2023-09-26",
       "port-version": 1
@@ -2810,7 +2806,7 @@
     },
     "flashlight-cuda": {
       "baseline": "0.3",
-      "port-version": 6
+      "port-version": 7
     },
     "flashlight-sequence": {
       "baseline": "0.0.1",
