@@ -22,7 +22,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
     "z3"
   ],
   "features": {
