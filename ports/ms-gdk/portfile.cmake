@@ -17,7 +17,7 @@ vcpkg_extract_source_archive(
 set(GRDK_PATH "${PACKAGE_PATH}/native/${GDK_EDITION_NUMBER}/GRDK")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${GRDK_PATH}
+    SOURCE_PATH "${GRDK_PATH}"
 )
 
 vcpkg_cmake_install()
