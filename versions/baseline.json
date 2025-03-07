@@ -3373,7 +3373,7 @@
       "port-version": 0
     },
     "gz-cmake": {
-      "baseline": "3.4.1",
+      "baseline": "4.1.1",
       "port-version": 0
     },
     "gz-cmake3": {
@@ -3381,7 +3381,7 @@
       "port-version": 6
     },
     "gz-common": {
-      "baseline": "5.4.1",
+      "baseline": "6.0.2",
       "port-version": 0
     },
     "gz-common5": {
@@ -3389,7 +3389,7 @@
       "port-version": 4
     },
     "gz-fuel-tools": {
-      "baseline": "8.1.0",
+      "baseline": "10.0.0",
       "port-version": 0
     },
     "gz-fuel-tools8": {
@@ -3397,7 +3397,7 @@
       "port-version": 1
     },
     "gz-gui": {
-      "baseline": "7.2.1",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "gz-gui7": {
@@ -3405,7 +3405,7 @@
       "port-version": 1
     },
     "gz-math": {
-      "baseline": "7.3.0",
+      "baseline": "8.1.0",
       "port-version": 0
     },
     "gz-math7": {
@@ -3413,7 +3413,7 @@
       "port-version": 1
     },
     "gz-msgs": {
-      "baseline": "9.5.0",
+      "baseline": "11.0.2",
       "port-version": 0
     },
     "gz-msgs9": {
@@ -3421,7 +3421,7 @@
       "port-version": 1
     },
     "gz-physics": {
-      "baseline": "6.5.1",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "gz-physics6": {
@@ -3429,7 +3429,7 @@
       "port-version": 3
     },
     "gz-plugin": {
-      "baseline": "2.0.1",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "gz-plugin2": {
@@ -3437,7 +3437,7 @@
       "port-version": 1
     },
     "gz-rendering": {
-      "baseline": "7.4.1",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "gz-rendering7": {
@@ -3445,7 +3445,7 @@
       "port-version": 2
     },
     "gz-sensors": {
-      "baseline": "7.3.0",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "gz-sensors7": {
@@ -3453,7 +3453,7 @@
       "port-version": 1
     },
     "gz-tools": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "gz-tools2": {
@@ -3461,7 +3461,7 @@
       "port-version": 2
     },
     "gz-transport": {
-      "baseline": "12.2.1",
+      "baseline": "14.0.0",
       "port-version": 0
     },
     "gz-transport12": {
@@ -3469,7 +3469,7 @@
       "port-version": 1
     },
     "gz-utils": {
-      "baseline": "2.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "gz-utils2": {
@@ -8301,7 +8301,7 @@
       "port-version": 0
     },
     "sdformat": {
-      "baseline": "13.6.0",
+      "baseline": "15.1.1",
       "port-version": 0
     },
     "sdformat13": {

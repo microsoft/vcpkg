@@ -1,6 +1,6 @@
 {
   "name": "gz-transport",
-  "version": "12.2.1",
+  "version": "14.0.0",
   "description": "Transport middleware for robotics",
   "license": null,
   "dependencies": [

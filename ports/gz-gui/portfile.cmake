@@ -1,12 +1,16 @@
-string(REGEX MATCH "^[1-9]+" VERSION_MAJOR ${VERSION})
-string(REGEX MATCH "^gz-([a-z]+)" MATCHED_VALUE ${PORT})
+string(REGEX MATCH "^[0-9]+" VERSION_MAJOR ${VERSION})
+string(REGEX MATCH "^gz-([a-z-]+)" MATCHED_VALUE ${PORT})
 set(PACKAGE_NAME ${CMAKE_MATCH_1})
+
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 ignition_modular_library(
    NAME ${PACKAGE_NAME}
    REF ${PORT}${VERSION_MAJOR}_${VERSION}
    VERSION ${VERSION}
-   SHA512 29f37a31bbf90dd35f37e80053c1aff9fb404b7a09c8c10e640da505cc6261387e6ce77e3bf379a911e6131c684f866cf1ef8d83777112b3c7f148b1f95cc72f
+   SHA512 c90c72a700889289aec71582c6484c6c7a5d06cfa2d01f3634fa194b4271fc1723c6746ed82610dc8463c0f3eb146b46111ba90e2c30f44cafc63d1fa46b56f4
    OPTIONS 
    PATCHES
       dependencies.patch
