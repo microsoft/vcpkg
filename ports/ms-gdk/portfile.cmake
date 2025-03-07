@@ -1,6 +1,6 @@
 set(GDK_EDITION_NUMBER 241001)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+set(VCPKG_LIBRARY_LINKAGE dynamic)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.PC/${VERSION}"
