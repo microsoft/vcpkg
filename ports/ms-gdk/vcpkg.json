@@ -5,7 +5,7 @@
   "homepage": "https://aka.ms/gdkx",
   "documentation": "https://aka.ms/gamedevdocs",
   "license": null,
-  "supports": "windows & x64 & !uwp & !xbox",
+  "supports": "windows & x64 & !uwp & !xbox & !staticcrt",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
