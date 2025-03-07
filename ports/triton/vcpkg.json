@@ -22,11 +22,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "vcpkg-get-python",
-      "host": true
-    },
+    }
     "z3"
   ],
   "features": {

@@ -19,7 +19,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 set(ADDITIONAL_OPTIONS "")
 if(PYTHON_BINDINGS)
-    include("${CURRENT_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
     vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
