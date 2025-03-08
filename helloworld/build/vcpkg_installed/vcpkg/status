@@ -1,0 +1,33 @@
+Package: vcpkg-cmake-config
+Version: 2022-02-06
+Port-Version: 1
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 298c3aaed0d5d1907c7727d15d730ab844bdd18678750b2379df0a5a7863a503
+Status: install ok installed
+
+Package: vcpkg-cmake
+Version: 2023-05-04
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 72a75078d22785b622ffc8a13e5b1301cb81795dc282d015fe7e1ebc198dbde4
+Status: install ok installed
+
+Package: fmt
+Version: 10.1.1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: eb64d0706762d2b58e0a4d7397ca7a22731101db6f39a5130895dbfc49e81dbd
+Description: Formatting library for C++. It can be used as a safe alternative to printf or as a fast alternative to IOStreams.
+Status: install ok installed
+
+Package: vcpkg-sample-library
+Version: 1.0.2
+Depends: fmt, vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 2dea7e3d226cad9ef393cb6f092263a6ddc5418b5a3edc6686ed8f81d5085c7c
+Description: A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.
+Status: install ok installed
+
