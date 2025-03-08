@@ -7,6 +7,13 @@ vcpkg_from_github(
     SHA512 b44741e27278974f6a545a3143abd18027d98503cc912085e08528c467197fb208d2d4876e483f74e518f3dfc14d12c3579e379b9939dc364a1fff4ee98bb8f5
     HEAD_REF master
 )
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/external/imgui"
+    "${SOURCE_PATH}/external/nlohmann_json"
+    "${SOURCE_PATH}/external/OpenGL_Loaders"
+    "${SOURCE_PATH}/external/stb_hello_imgui/stb_image.h"
+    "${SOURCE_PATH}/external/stb_hello_imgui/stb_image_write.h"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
