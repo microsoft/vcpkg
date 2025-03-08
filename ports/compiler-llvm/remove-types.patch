@@ -1,7 +1,7 @@
-diff --git a/lib/clang/19/include/stdatomic.h b/lib/clang/19/include/stdatomic.h
+diff --git a/lib/clang/20/include/stdatomic.h b/lib/clang/20/include/stdatomic.h
 index 8ecef1a059..f1512689c8 100644
---- a/lib/clang/19/include/stdatomic.h	
-+++ b/lib/clang/19/include/stdatomic.h
+--- a/lib/clang/20/include/stdatomic.h	
++++ b/lib/clang/20/include/stdatomic.h
 @@ -78,9 +78,11 @@ typedef enum memory_order {
  
  /* 7.17.4 Fences */

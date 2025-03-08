@@ -6,7 +6,7 @@ vcpkg_download_distfile(
     llvm_installer
     URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/LLVM-${VERSION}-win64.exe"
     FILENAME "LLVM-${VERSION}-win64.exe"
-    SHA512 04eece3e10da85cacba397609245f6761b0b56d6743b56e25f984db252cdd26dddc13a3e4381c394dd381769832a6bc5cf41ab04bd70fd5526958ff08c1bd24d
+    SHA512 d90ab2990d787b681b91ca11ae8ac118d28967105790945674c07a1cbd4d7fa608677c199f8538a54387866edde40814e031bd8c9551f6aa7c80620a3ee0515f
 )
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
