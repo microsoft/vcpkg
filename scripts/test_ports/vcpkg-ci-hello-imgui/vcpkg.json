@@ -24,7 +24,50 @@
         {
           "name": "hello-imgui",
           "features": [
-          ]
+            "freetype",
+            "glfw-binding",
+            "opengl3-binding"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "hello-imgui",
+          "features": [
+            "freetype",
+            "opengl3-binding"
+          ],
+          "platform": "android"
+        },
+        {
+          "name": "hello-imgui",
+          "features": [
+            "metal-binding"
+          ],
+          "platform": "ios | osx"
+        },
+        {
+          "name": "hello-imgui",
+          "features": [
+            "freetype",
+            "opengl3-binding"
+          ],
+          "platform": "x64 & windows"
+        },
+        {
+          "name": "hello-imgui",
+          "features": [
+            "experimental-dx11-binding",
+            "freetype"
+          ],
+          "platform": "x86 & windows"
+        },
+        {
+          "name": "hello-imgui",
+          "features": [
+            "experimental-vulkan-binding",
+            "freetype"
+          ],
+          "platform": "arm64 & windows"
         }
       ]
     }
