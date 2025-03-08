@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 f5bca7a3b6f763b4b1a1f39e53c6f818925584fb44886e291ac3546fe50de545e80d16b4120f0126020e44b601a1b9193f4faad7a3dc8799cda843b1965038f2
+        SHA512 7e2ec4f6d6be6d500b148bd845cc51fe8985190eed8ab6f6fe79012c216cad5592ab3329e2df6b091abcc6ea8937d66f47272baead798c7d711e5d73aa9ffaa7
         HEAD_REF master
     PATCHES
         bigobj.patch
