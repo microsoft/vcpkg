@@ -16,8 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "experimental-dx11-binding" HELLOIMGUI_HAS_DIRECTX11
     "experimental-dx12-binding" HELLOIMGUI_HAS_DIRECTX12
     "glfw-binding" HELLOIMGUI_USE_GLFW3
-    "sdl2-binding" HELLOIMGUI_USE_SDL2
-    "freetype-lunasvg" HELLOIMGUI_USE_FREETYPE # When hello_imgui is built with freetype, it will also build with lunasvg
+    "freetype-plutosvg" HELLOIMGUI_USE_FREETYPE # When hello_imgui is built with freetype, it will also build with plutosvg
 )
 
 if (NOT HELLOIMGUI_HAS_OPENGL3

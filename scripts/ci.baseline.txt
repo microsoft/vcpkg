@@ -439,7 +439,6 @@ gstreamer:x64-windows-static=skip
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
-gz-gui:x64-osx=fail
 gz-tools:arm-neon-android=fail
 gz-tools:arm64-android=fail
 gz-tools:x64-android=fail
