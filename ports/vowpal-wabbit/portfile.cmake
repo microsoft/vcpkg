@@ -6,9 +6,10 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 f87229caf65c6c32fb863fa426a39592d41990a43ce4d79f0a076323e47cd3d1a8bd02884afceb662527c87d290e68c51df6263d6a97f3a044f3f7254a38f86a
     HEAD_REF master
-    PATCHES 
+    PATCHES
         cmake_remove_bin_targets.patch
         fix-build-error-with-fmt11.patch
+        fix-rapidjson-target.patch
 )
 
 vcpkg_cmake_configure(
@@ -25,6 +26,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DVW_STRING_VIEW_LITE_SYS_DEP=ON
         -DVW_SSE2NEON_SYS_DEP=ON
+        -DVW_CXX_STANDARD=14 # boost-math require c++14
 )
 vcpkg_cmake_install()
 

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 fc57a4faee31cdfe192593c721460adb2227634cf34ac59fd6ab2689f1ec6de1a05de3293749b9f0e3a9826be7ce6bfa0a906ebe8793b8fd78b61067684ab8ed
+    SHA512 b77749b0f35a51dc68dcce1048a18e806b00085646765a2ece7dda093ed5c47756889a5f89f795a56ccb632b8e64e5d9f11eb5db64d23f8e5462f87a6e3e5ccb
     HEAD_REF main
     PATCHES
         fix-deps.patch
@@ -71,6 +71,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/capi/benchmark"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/adapters"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/cpp_conversion"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation"

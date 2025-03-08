@@ -1,0 +1,45 @@
+diff --git a/adm/cmake/occt_macros.cmake b/adm/cmake/occt_macros.cmake
+index 3d4c95b584..bf3e7c8d81 100644
+--- a/adm/cmake/occt_macros.cmake
++++ b/adm/cmake/occt_macros.cmake
+@@ -437,7 +437,7 @@ function (COLLECT_AND_INSTALL_OCCT_HEADER_FILES THE_ROOT_TARGET_OCCT_DIR THE_OCC
+     foreach(OCCT_PACKAGE ${USED_PACKAGES})
+       EXTRACT_PACKAGE_FILES (${THE_RELATIVE_PATH} ${OCCT_PACKAGE} ALL_FILES _)
+       set (HEADER_FILES_FILTERING ${ALL_FILES})
+-      list (FILTER HEADER_FILES_FILTERING INCLUDE REGEX ".+[.](h|g|p|lxx)")
++      list (FILTER HEADER_FILES_FILTERING INCLUDE REGEX ".+[.](h|g|p|lxx|hxx|pxx|hpp|gxx)$")
+       list (APPEND OCCT_HEADER_FILES_COMPLETE ${HEADER_FILES_FILTERING})
+     endforeach()
+   endforeach()
+@@ -477,7 +477,7 @@ function (COLLECT_AND_INSTALL_OCCT_HEADER_FILES THE_ROOT_TARGET_OCCT_DIR THE_OCC
+   endforeach()
+ 
+   set (OCCT_HEADER_FILES_INSTALLATION ${OCCT_HEADER_FILES_COMPLETE})
+-  list (FILTER OCCT_HEADER_FILES_INSTALLATION INCLUDE REGEX ".*[.](h|lxx)")
++  list (FILTER OCCT_HEADER_FILES_INSTALLATION INCLUDE REGEX ".*[.](h|hxx|lxx)$")
+   install (FILES ${OCCT_HEADER_FILES_INSTALLATION} DESTINATION "${INSTALL_DIR}/${THE_OCCT_INSTALL_DIR_PREFIX}")
+ endfunction()
+ 
+diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
+index a2009e65b9..41bc03fc9a 100644
+--- a/adm/cmake/occt_toolkit.cmake
++++ b/adm/cmake/occt_toolkit.cmake
+@@ -63,13 +63,13 @@ foreach (OCCT_PACKAGE ${USED_PACKAGES})
+ 
+   set (HEADER_FILES_FILTERING ${ALL_FILES})
+   set (SOURCE_FILES_FILTERING ${ALL_FILES})
+-  
+-  list (FILTER HEADER_FILES_FILTERING INCLUDE REGEX ".+[.](h|p|g|lxx)")
+-  
++
++  list (FILTER HEADER_FILES_FILTERING INCLUDE REGEX ".+[.](h|p|g|lxx|hxx|pxx|hpp|gxx)$")
++    
+   if(APPLE)
+-    list (FILTER SOURCE_FILES_FILTERING INCLUDE REGEX ".+[.](c|mm)")
++    list (FILTER SOURCE_FILES_FILTERING INCLUDE REGEX ".+[.](c|cxx|cpp|mm)$")
+   else()
+-    list (FILTER SOURCE_FILES_FILTERING INCLUDE REGEX ".+[.](c)")
++    list (FILTER SOURCE_FILES_FILTERING INCLUDE REGEX ".+[.](c|cpp|cxx)$")
+   endif()
+ 
+   list (APPEND HEADER_FILES ${HEADER_FILES_FILTERING})
