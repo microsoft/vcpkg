@@ -1,0 +1,32 @@
+{
+  "name": "vcpkg-ci-hello-imgui",
+  "version-string": "ci",
+  "description": "Port to force features of hello-imgui within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "hello-imgui",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "hello-imgui",
+          "features": [
+          ]
+        }
+      ]
+    }
+  }
+}
