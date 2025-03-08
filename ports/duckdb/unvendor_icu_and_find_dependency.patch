@@ -16,26 +16,28 @@ index ef61b6b..2e5270e 100644
  get_filename_component(DuckDB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
  set(DuckDB_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 diff --git a/extension/icu/CMakeLists.txt b/extension/icu/CMakeLists.txt
-index 65cbe38..6a38f93 100644
+index 65cbe38..b5585e4 100644
 --- a/extension/icu/CMakeLists.txt
 +++ b/extension/icu/CMakeLists.txt
-@@ -3,10 +3,13 @@ cmake_minimum_required(VERSION 2.8.12...3.29)
+@@ -3,11 +3,14 @@ cmake_minimum_required(VERSION 2.8.12...3.29)
  project(ICUExtension)
  
  include_directories(include)
 -include_directories(third_party/icu/common)
 -include_directories(third_party/icu/i18n)
+-
+-add_subdirectory(third_party)
 +option(WITH_INTERNAL_ICU "Use vendored copy of icu" TRUE)
 +if(WITH_INTERNAL_ICU)
 +    include_directories(third_party/icu/common)
 +    include_directories(third_party/icu/i18n)
  
--add_subdirectory(third_party)
 +    add_subdirectory(third_party)
 +endif()
- 
++    
  set(ICU_EXTENSION_FILES
      ${ICU_LIBRARY_FILES}
+     icu_extension.cpp
 @@ -26,6 +29,10 @@ set(ICU_EXTENSION_FILES
  
  build_static_extension(icu ${ICU_EXTENSION_FILES})
@@ -48,15 +50,15 @@ index 65cbe38..6a38f93 100644
  set(PARAMETERS "-no-warnings")
  build_loadable_extension(icu ${PARAMETERS} ${ICU_EXTENSION_FILES})
 diff --git a/extension/icu/icu-datefunc.cpp b/extension/icu/icu-datefunc.cpp
-index 995f594..a8092b6 100644
+index 0c38827..c744b68 100644
 --- a/extension/icu/icu-datefunc.cpp
 +++ b/extension/icu/icu-datefunc.cpp
 @@ -72,7 +72,7 @@ unique_ptr<FunctionData> ICUDateFunc::Bind(ClientContext &context, ScalarFunctio
  }
  
- void ICUDateFunc::SetTimeZone(icu::Calendar *calendar, const string_t &tz_id) {
+ bool ICUDateFunc::TrySetTimeZone(icu::Calendar *calendar, const string_t &tz_id) {
 -	auto tz = icu_66::TimeZone::createTimeZone(icu::UnicodeString::fromUTF8(icu::StringPiece(tz_id.GetString())));
 +	auto tz = icu::TimeZone::createTimeZone(icu::UnicodeString::fromUTF8(icu::StringPiece(tz_id.GetString())));
  	if (*tz == icu::TimeZone::getUnknown()) {
  		delete tz;
- 		throw NotImplementedException("Unknown TimeZone '%s'", tz_id.GetString());
+ 		return false;
