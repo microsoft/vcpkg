@@ -1,7 +1,7 @@
 {
   "name": "hello-imgui",
   "version": "1.6.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Hello ImGui: unleash your creativity in app development and prototyping",
   "homepage": "https://pthom.github.io/hello_imgui/",
   "license": "MIT",
@@ -56,14 +56,13 @@
         }
       ]
     },
-    "freetype-plutosvg": {
-      "description": "Improve font rendering and use colored fonts with freetype and plutosvg",
+    "freetype": {
+      "description": "Use freetype for text rendering",
       "dependencies": [
         {
           "name": "imgui",
           "features": [
-            "freetype",
-            "freetype-svg"
+            "freetype"
           ]
         }
       ]
