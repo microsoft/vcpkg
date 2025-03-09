@@ -45,6 +45,7 @@ set(PATCHES
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
     0019-fix-ssl-linkage.patch
+    0020-clang-cl-fix.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

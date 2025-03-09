@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e9afc9e9f30007d3adb4299edde1fcd5f45135415ed6fd78d64c5dc12d1930d61db11bde89964b34f28afebd9784e734cd2c90f0e846763f198e2e5cc6364874
     HEAD_REF master
+    PATCHES
+      fix-define-for-clang-cl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" dynamic ZYCORE_BUILD_SHARED)

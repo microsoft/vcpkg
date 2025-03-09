@@ -9,11 +9,14 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
 
     string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${prefix}]] contents "${contents}")
     string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] contents "${contents}")
+    string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${prefix}/../${_HOST_TRIPLET}" contents "${contents}")
     if(VCPKG_HOST_IS_WINDOWS)
         string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_packages_dir "${CURRENT_PACKAGES_DIR}")
         string(REPLACE "${unix_packages_dir}" [[${prefix}]] contents "${contents}")
         string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_installed_dir "${CURRENT_INSTALLED_DIR}")
         string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
+        string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_host_installed_dir "${CURRENT_HOST_INSTALLED_DIR}")
+        string(REPLACE "${unix_host_installed_dir}" "\${prefix}/../${_HOST_TRIPLET}" contents "${contents}")
     endif()
 
     string(REGEX REPLACE "\n[\t ]*prefix[\t ]*=[^\n]*" "" contents "prefix=${arg_prefix}${contents}")

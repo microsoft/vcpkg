@@ -1,0 +1,12 @@
+
+{
+    "installer_comment" : "The download URL is from https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#release-dates-and-build-numbers",
+    "installer_url" : "https://download.visualstudio.microsoft.com/download/pr/f2819554-a618-400d-bced-774bb5379965/cc7231dc668ec1fb92f694c66b5d67cba1a9e21127a6e0b31c190f772bd442f2/vs_BuildTools.exe",
+    "installer_sha256_comment" : "SHA256 of the installer is within the URL itself",
+    "seven_zip_url" : "https://github.com/ip7z/7zip/releases/download/24.09/7zr.exe" ,
+    "seven_zip_sha256" : "d2c0045523cf053a6b43f9315e9672fc2535f06aeadd4ffa53c729cd8b2b6dfe",
+    "installer_json_path" : "vs_bootstrapper_d15/vs_setup_bootstrapper.json",
+    "target_json_name" : "vs-bootstrapper.json",
+    "vs_config_path" : "vsconfig-with-net",
+    "vs_config_path_only_msbuild" : "vsconfig-only-msbuild"
+}

@@ -56,13 +56,19 @@ function(vcpkg_build_nmake)
         vcpkg_find_acquire_program(JOM)
         get_filename_component(JOM_EXE_PATH "${JOM}" DIRECTORY)
         vcpkg_add_to_path("${JOM_EXE_PATH}")
-        if(arg_CL_LANGUAGE AND "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_COMPILER_ID}" STREQUAL "MSVC")
+        if(arg_CL_LANGUAGE AND "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FRONTEND_VARIANT}" STREQUAL "MSVC")
             string(REGEX REPLACE " [/-]MP[0-9]* " " " VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_DEBUG " ${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_DEBUG} /FS")
             string(REGEX REPLACE " [/-]MP[0-9]* " " " VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_RELEASE " ${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_RELEASE} /FS")
         endif()
     else()
         set(arg_PREFER_JOM FALSE)
     endif()
+
+    cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME c_compiler)
+    cmake_path(GET VCPKG_DETECTED_CMAKE_CXX_COMPILER FILENAME cxx_compiler)
+
+    set(ENV{CC} "${c_compiler}")
+    set(ENV{CXX} "${cxx_compiler}")
 
     # Add subpath to work directory
     if(DEFINED arg_PROJECT_SUBPATH)
