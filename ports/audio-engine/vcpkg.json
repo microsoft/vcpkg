@@ -1,0 +1,16 @@
+{
+  "name": "audio-engine",
+  "version-string": "v1.1",
+  "homepage": "https://github.com/Darkx32/AudioEngine",
+  "description": "AudioEngine created using C++, FFMPEG and OpenAL for a student",
+  "license": "MIT",
+  "supports": "x64 & (windows | linux)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "ffmpeg",
+    "openal-soft"
+  ]
+}
