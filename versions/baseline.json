@@ -3632,6 +3632,10 @@
       "baseline": "2.32.0",
       "port-version": 0
     },
+    "icecream-cpp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "iceoryx": {
       "baseline": "2.0.6",
       "port-version": 1
