@@ -88,11 +88,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/hello-imgui/hello_imgui_cmake/ios-cmake"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 if (no_rendering_backend OR no_platform_backend)
-    message(STATUS "
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "
     ########################################################################
        !!!!                    WARNING                              !!!!!
        !!!!   Installed hello-imgui without a viable backend        !!!!!
@@ -122,3 +120,5 @@ if (no_rendering_backend OR no_platform_backend)
     ########################################################################
     ")
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
