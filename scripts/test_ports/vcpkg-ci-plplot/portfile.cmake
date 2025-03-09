@@ -5,7 +5,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_PORT_DIR}/project"
     OPTIONS
-        ${options}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        --trace-expand
 )
 vcpkg_cmake_build()
