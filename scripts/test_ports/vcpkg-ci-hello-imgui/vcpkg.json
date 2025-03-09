@@ -24,16 +24,16 @@
         {
           "name": "hello-imgui",
           "features": [
-            "freetype",
             "glfw-binding",
-            "opengl3-binding"
+            "opengl3-binding",
+            "test-engine"
           ],
           "platform": "linux"
         },
         {
+          "$comment": "No platform backend available since removal of imgui[sdl2-binding]",
           "name": "hello-imgui",
           "features": [
-            "freetype",
             "opengl3-binding"
           ],
           "platform": "android"
@@ -41,6 +41,7 @@
         {
           "name": "hello-imgui",
           "features": [
+            "glfw-binding",
             "metal-binding"
           ],
           "platform": "ios | osx"
@@ -48,7 +49,7 @@
         {
           "name": "hello-imgui",
           "features": [
-            "freetype",
+            "glfw-binding",
             "opengl3-binding"
           ],
           "platform": "x64 & windows"
@@ -57,7 +58,7 @@
           "name": "hello-imgui",
           "features": [
             "experimental-dx11-binding",
-            "freetype"
+            "glfw-binding"
           ],
           "platform": "x86 & windows"
         },
@@ -65,7 +66,8 @@
           "name": "hello-imgui",
           "features": [
             "experimental-vulkan-binding",
-            "freetype"
+            "glfw-binding",
+            "test-engine"
           ],
           "platform": "arm64 & windows"
         }
