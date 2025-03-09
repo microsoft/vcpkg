@@ -1,4 +1,6 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,16 +11,10 @@ vcpkg_from_github(
     PATCHES
         fix_install_dir.patch
 )
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" FLATCC_DYNAMIC)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND EXTRA_OPTIONS "-DFLATCC_INSTALL_LIB=bin")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_SHARED_LIBS=${FLATCC_DYNAMIC}
         -DFLATCC_INSTALL=ON
         -DFLATCC_ALLOW_WERROR=OFF
         -DFLATCC_TEST=OFF
