@@ -1,4 +1,5 @@
 set(VCPKG_POLICY_ALLOW_DEBUG_INCLUDE enabled)
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
 vcpkg_from_github(
    OUT_SOURCE_PATH SOURCE_PATH
@@ -17,6 +18,6 @@ vcpkg_cmake_install()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
