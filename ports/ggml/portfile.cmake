@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix-cmakelists.patch
-        0002-fix-tests.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,10 +24,12 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  GGML_STATIC)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DGGML_STATIC=${GGML_STATIC}
-      -DGGML_CCACHE=OFF
-      -DGGML_BUILD_NUMBER=1
-      ${FEATURE_OPTIONS}
+        -DGGML_STATIC=${GGML_STATIC}
+        -DGGML_CCACHE=OFF
+        -DGGML_BUILD_NUMBER=1
+        -DGGML_BUILD_TESTS=OFF
+        -DGGML_BUILD_EXAMPLES=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

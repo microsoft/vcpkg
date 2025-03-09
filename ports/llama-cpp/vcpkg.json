@@ -15,10 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "tools": {
-      "description": "Enable tools"
-    }
-  }
+  ]
 }
