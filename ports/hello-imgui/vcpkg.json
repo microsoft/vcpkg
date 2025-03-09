@@ -12,6 +12,7 @@
         "docking-experimental"
       ]
     },
+    "nlohmann-json",
     "stb",
     {
       "name": "vcpkg-cmake",
