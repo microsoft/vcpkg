@@ -17,15 +17,18 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/external/stb_hello_imgui/stb_image_write.h"
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
-    "opengl3-binding" HELLOIMGUI_HAS_OPENGL3
-    "metal-binding" HELLOIMGUI_HAS_METAL
-    "experimental-vulkan-binding" HELLOIMGUI_HAS_VULKAN
-    "experimental-dx11-binding" HELLOIMGUI_HAS_DIRECTX11
-    "experimental-dx12-binding" HELLOIMGUI_HAS_DIRECTX12
-    "glfw-binding" HELLOIMGUI_USE_GLFW3
-    "freetype" HELLOIMGUI_USE_FREETYPE
+        # "target platforms"
+        opengl3-binding     HELLOIMGUI_HAS_OPENGL3
+        metal-binding       HELLOIMGUI_HAS_METAL
+        experimental-vulkan-binding HELLOIMGUI_HAS_VULKAN
+        experimental-dx11-binding   HELLOIMGUI_HAS_DIRECTX11
+        experimental-dx12-binding   HELLOIMGUI_HAS_DIRECTX12
+        # "platform backend"
+        glfw-binding        HELLOIMGUI_USE_GLFW3
+        # other
+        freetype            HELLOIMGUI_USE_FREETYPE
 )
 
 if (NOT HELLOIMGUI_HAS_OPENGL3
@@ -41,11 +44,10 @@ if (NOT HELLOIMGUI_USE_GLFW3 AND NOT HELLOIMGUI_USE_SDL2)
 endif()
 
 
-set(platform_options "")
 if(VCPKG_TARGET_IS_WINDOWS)
     # Standard win32 options (these are the defaults for HelloImGui)
     # we could add a vcpkg feature for this, but it would have to be platform specific
-    list(APPEND platform_options
+    list(APPEND options
         -DHELLOIMGUI_WIN32_NO_CONSOLE=ON
         -DHELLOIMGUI_WIN32_AUTO_WINMAIN=ON
     )
@@ -54,7 +56,7 @@ endif()
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Standard macOS options (these are the defaults for HelloImGui)
     # we could add a vcpkg feature for this, but it would have to be platform specific
-    list(APPEND platform_options
+    list(APPEND options
         -DHELLOIMGUI_MACOS_NO_BUNDLE=OFF
     )
 endif()
@@ -63,6 +65,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -DHELLOIMGUI_BUILD_DEMOS=OFF
         -DHELLOIMGUI_BUILD_DOCS=OFF
         -DHELLOIMGUI_BUILD_TESTS=OFF
@@ -73,19 +76,6 @@ vcpkg_cmake_configure(
         -DHELLOIMGUI_USE_IMGUI_CMAKE_PACKAGE=ON
         -DHELLO_IMGUI_IMGUI_SHARED=OFF
         -DHELLOIMGUI_BUILD_IMGUI=OFF
-
-        ${platform_options}
-
-        # Rendering backends
-        -DHELLOIMGUI_HAS_OPENGL3=${HELLOIMGUI_HAS_OPENGL3}
-        -DHELLOIMGUI_HAS_METAL=${HELLOIMGUI_HAS_METAL}
-        -DHELLOIMGUI_HAS_VULKAN=${HELLOIMGUI_HAS_VULKAN}
-        -DHELLOIMGUI_HAS_DIRECTX11=${HELLOIMGUI_HAS_DIRECTX11}
-        -DHELLOIMGUI_HAS_DIRECTX12=${HELLOIMGUI_HAS_DIRECTX12}
-
-        # Platform backends
-        -DHELLOIMGUI_USE_GLFW3=${HELLOIMGUI_USE_GLFW3}
-        -DHELLOIMGUI_USE_SDL2=${HELLOIMGUI_USE_SDL2}
 )
 
 vcpkg_cmake_install()
