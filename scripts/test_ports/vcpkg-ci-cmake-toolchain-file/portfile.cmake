@@ -28,7 +28,7 @@ include("${CURRENT_HOST_INSTALLED_DIR}/share/unit-test-cmake/test-macros.cmake")
 
 function(send_error summary)
     set_has_error()
-    string(SHA1 id "${utecf}")
+    string(SHA1 id "${summary}")
     string(SUBSTRING "${id}" 0 6 id)
     set(log_base "${CURRENT_BUILDTREES_DIR}/test-${TARGET_TRIPLET}-${id}")
     set(log_files "")
