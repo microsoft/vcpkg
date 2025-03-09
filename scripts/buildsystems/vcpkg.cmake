@@ -786,7 +786,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
 
     if(z_vcpkg_find_package_backup_id EQUAL "1")
         # This is the top-level find_package call
-        if("VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+        if("${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
             # Avoid CMake warning when both REQUIRED and CMAKE_REQUIRE_FIND_PACKAGE_<Pkg> are used
             if(NOT "REQUIRED" IN_LIST "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN")
                 list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
