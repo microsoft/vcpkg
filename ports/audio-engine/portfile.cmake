@@ -1,16 +1,10 @@
 set(VCPKG_POLICY_ALLOW_DEBUG_INCLUDE enabled)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_LINUX)
-    message(FATAL_ERROR "minha-biblioteca only supports Windows and Linux")
-endif()
-
 vcpkg_from_github(
    OUT_SOURCE_PATH SOURCE_PATH
    REPO Darkx32/AudioEngine
    REF "${VERSION}"
-   SHA512 56025f415f6f45e8085f476e98335e922c97e47844bc12f9fc3c14cf108a1934cbb02a67e9a765c1ceb27d3f26b665e47ed4a03539dd50946c20cca980d706d0
+   SHA512 66d3fd1beacafd7269cd548d4f3d06e5a13fb1aa44559105c20348d0e3e9592bffa45b7327d787a63ce18fd3b4d6b1aa56dfca9dd48dd0b7514e9856eaa8572e
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +15,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
