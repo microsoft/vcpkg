@@ -11,10 +11,8 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cuda     GGML_CUDA
-        hip      GGML_HIP     # needs ROCm/HIP port, missing in vcpkg.json to forcefully disable the feature for now
         vulkan   GGML_VULKAN
         metal    GGML_METAL
-        sycl     GGML_SYCL    # needs oneAPI compiler and -fsycl commmand line option, missing in vcpkg.json to forcefully disable the feature for now
         opencl   GGML_OPENCL
         openmp   GGML_OPENMP
 )
@@ -29,6 +27,8 @@ vcpkg_cmake_configure(
         -DGGML_BUILD_NUMBER=1
         -DGGML_BUILD_TESTS=OFF
         -DGGML_BUILD_EXAMPLES=OFF
+        -DGGML_HIP=OFF
+        -DGGML_SYCL=OFF
         ${FEATURE_OPTIONS}
 )
 
