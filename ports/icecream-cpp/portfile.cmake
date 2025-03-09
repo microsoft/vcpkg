@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if(MSVC)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
