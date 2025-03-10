@@ -734,7 +734,7 @@
     },
     "boost": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-accumulators": {
       "baseline": "1.87.0",
@@ -758,7 +758,7 @@
     },
     "boost-asio": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-assert": {
       "baseline": "1.87.0",
@@ -770,7 +770,7 @@
     },
     "boost-atomic": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-beast": {
       "baseline": "1.87.0",
@@ -810,7 +810,7 @@
     },
     "boost-cobalt": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-compat": {
       "baseline": "1.87.0",
@@ -822,7 +822,7 @@
     },
     "boost-compute": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-concept-check": {
       "baseline": "1.87.0",
@@ -842,7 +842,7 @@
     },
     "boost-context": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-contract": {
       "baseline": "1.87.0",
@@ -910,7 +910,7 @@
     },
     "boost-flyweight": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-foreach": {
       "baseline": "1.87.0",
@@ -982,7 +982,7 @@
     },
     "boost-interprocess": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-interval": {
       "baseline": "1.87.0",
@@ -1006,7 +1006,7 @@
     },
     "boost-json": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lambda": {
       "baseline": "1.87.0",
@@ -1022,7 +1022,7 @@
     },
     "boost-lexical-cast": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-local-function": {
       "baseline": "1.87.0",
@@ -1034,7 +1034,7 @@
     },
     "boost-lockfree": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-log": {
       "baseline": "1.87.0",
@@ -1102,7 +1102,7 @@
     },
     "boost-optional": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-outcome": {
       "baseline": "1.87.0",
@@ -1118,7 +1118,7 @@
     },
     "boost-parser": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-pfr": {
       "baseline": "1.87.0",
@@ -1150,7 +1150,7 @@
     },
     "boost-process": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-program-options": {
       "baseline": "1.87.0",
@@ -1206,7 +1206,7 @@
     },
     "boost-regex": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-safe-numerics": {
       "baseline": "1.87.0",
@@ -1322,7 +1322,7 @@
     },
     "boost-unordered": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-url": {
       "baseline": "1.87.0",
