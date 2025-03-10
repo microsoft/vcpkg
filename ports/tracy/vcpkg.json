@@ -1,7 +1,7 @@
 {
   "name": "tracy",
   "version": "0.11.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "license": "BSD-3-Clause",
@@ -79,6 +79,12 @@
           "platform": "!windows"
         }
       ]
+    },
+    "no-callstack": {
+      "description": "Disable all callstack related functionality"
+    },
+    "no-sampling": {
+      "description": "Disable call stack sampling"
     },
     "on-demand": {
       "description": "Enable on-demand profiling"
