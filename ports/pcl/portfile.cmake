@@ -12,7 +12,7 @@ vcpkg_from_github(
         install-examples.patch
         fix-clang-cl.patch
         add-chrono-includes.patch
-        fix-GL.patch
+        fix-no-gl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
