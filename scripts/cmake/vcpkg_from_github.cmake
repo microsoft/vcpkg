@@ -104,12 +104,16 @@ Error was: ${head_version_err}
     endif()
 
     if(arg_USE_TARBALL_API)
-        # With PAT, with fine grained permissions, and with SSO authentication:
-        #  - classic GitHub API 'archive' is not supported.
-        #  - therefore we use the GitHub API 'tarball' instead.
-        set(download_url "${github_api_url}/repos/${org_name}/${repo_name}/tarball/${ref_to_use}")
+        # This alternative endpoint has a better support for GitHub's personal
+        # access tokens (for instance when there is SSO enabled within the
+        # organization).
+        set(download_url
+            "${github_api_url}/repos/${org_name}/${repo_name}/tarball/${ref_to_use}"
+        )
     else()
-        set(download_url "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz")
+        set(download_url
+            "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+        )
     endif()
 
     # Try to download the file information from github
