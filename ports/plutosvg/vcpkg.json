@@ -1,0 +1,26 @@
+{
+  "name": "plutosvg",
+  "version": "0.0.6",
+  "description": "Tiny SVG rendering library in C",
+  "homepage": "https://github.com/sammycage/plutosvg",
+  "license": "MIT",
+  "dependencies": [
+    "plutovg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "freetype": {
+      "description": "Enable Freetype integration",
+      "dependencies": [
+        "freetype"
+      ]
+    }
+  }
+}

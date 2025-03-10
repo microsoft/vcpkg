@@ -1,0 +1,19 @@
+{
+  "name": "safetyhook",
+  "version-semver": "0.6.5",
+  "description": "C++23 procedure hooking library.",
+  "homepage": "https://github.com/cursey/safetyhook",
+  "license": "BSL-1.0",
+  "supports": "(windows | linux) & !arm & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zydis"
+  ]
+}

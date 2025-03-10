@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
     use-vcpkg-deps.patch
     fix-arm64-windows.patch
+    add-include-chrono.patch
 )
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)

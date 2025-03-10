@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NickvisionApps/libnick
     REF "${VERSION}"
-    SHA512 9398493a987b6dec57ea07a2b95104f91eb48df9a6f6e752532356a76eb8a2ddd0f13c63f34e5ba90f555c597afd0dc96885ca3974e1c6264fba4a2f07e9214d
+    SHA512 6ec1e26e43ed7ad250bf26d3e32d68f8c57b7116bb19b5c12d480263218e05c9abbeea92adab78014bdbda3bf2b8b611bc2a8648db422352325ad2db60f5d0d7
     HEAD_REF main
 )
 
@@ -27,6 +27,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

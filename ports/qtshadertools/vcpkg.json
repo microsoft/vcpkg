@@ -1,6 +1,6 @@
 {
   "name": "qtshadertools",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "The Qt Shader Tools module is designed to provide a set of tools and utilities to work with graphics shaders.",
   "homepage": "https://www.qt.io/",
   "license": null,
