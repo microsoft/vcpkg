@@ -1,0 +1,13 @@
+diff --git a/simulation/src/glsl_shader.cpp b/simulation/src/glsl_shader.cpp
+index 4eed218..dc85f94 100644
+--- a/simulation/src/glsl_shader.cpp
++++ b/simulation/src/glsl_shader.cpp
+@@ -160,7 +160,7 @@ pcl::simulation::gllib::getGLError()
+   GLenum error = glGetError();
+   while (error != GL_NO_ERROR) {
+     last_error = error;
+-    std::cout << "Error: OpenGL: " << gluErrorString(error) << std::endl;
++    std::cout << "Error: OpenGL: " << glewGetErrorString(error) << std::endl;
+     error = glGetError();
+   }
+   return last_error;
