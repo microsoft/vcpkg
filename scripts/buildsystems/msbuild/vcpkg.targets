@@ -168,6 +168,15 @@
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
   </ItemGroup>
 
+  <!-- Import 'support\Bootstrap.targets' to bootstrap Vcpkg if we can. Only import if:
+    1. If VcpkgEnableManifest is true - Vcpkg needs to be bootstrapped only in manifest mode.
+    2. If VcpkgAutoBootstrap is true - VcpkgAutoBootstrap allows consumers to opt-out.
+    3. If MSBuild is 16.5 or higher - IBuildEngine6 is needed, which first shipped in MSBuild 16.5.
+    4. The OS is Windows.
+  -->
+  <Import Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgAutoBootstrap)' == 'true' and $([System.Version]::new($(MSBuildVersion))) >= $([System.Version]::new(16, 5)) and $([MSBuild]::IsOSPlatform('Windows'))"
+          Project="$(MSBuildThisFileDirectory)\support\Bootstrap.targets" />
+
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
           Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
