@@ -9561,7 +9561,7 @@
       "port-version": 0
     },
     "vcpkg-msbuild": {
-      "baseline": "2023-08-08",
+      "baseline": "2025-03-10",
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
