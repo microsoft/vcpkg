@@ -1,22 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c7c7f509..2f2265a0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -80,13 +80,17 @@
- set(GZ_TOOLS_VER 2)
+@@ -81,10 +81,11 @@ set(GZ_TOOLS_VER 2)
  
  #--------------------------------------
  # Find QT
+-set(QT_MAJOR_VERSION 5)
+-set(QT_MINOR_VERSION 15)
+-gz_find_package (Qt${QT_MAJOR_VERSION}
+-  VERSION ${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}
 +set(qt_pkgconfig "Qt5Core Qt5Quick Qt5QuickControls2 Qt5Widgets")
-+if (WIN32)
++if(WIN32 OR APPLE)
 +set(qt_pkgconfig "")
 +endif()
- gz_find_package (Qt5
++gz_find_package (Qt5
    COMPONENTS
      Core
      Quick
-     QuickControls2
+@@ -92,8 +93,7 @@ gz_find_package (Qt${QT_MAJOR_VERSION}
      Widgets
+     Test
    REQUIRED
--  PKGCONFIG "Qt5Core Qt5Quick Qt5QuickControls2 Qt5Widgets"
-+  PKGCONFIG ${qt_pkgconfig}
- )
+-  PKGCONFIG_VER_COMPARISON >=
+-  PKGCONFIG "Qt${QT_MAJOR_VERSION}Core Qt${QT_MAJOR_VERSION}Quick Qt${QT_MAJOR_VERSION}QuickControls2 Qt${QT_MAJOR_VERSION}Widgets")
++  PKGCONFIG ${qt_pkgconfig})
+ add_compile_definitions(QT_DISABLE_DEPRECATED_UP_TO=0x050F00)
+ 
+ set(GZ_GUI_PLUGIN_RELATIVE_INSTALL_DIR
