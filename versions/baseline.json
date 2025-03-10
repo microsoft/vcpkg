@@ -6176,6 +6176,10 @@
       "baseline": "alias",
       "port-version": 1
     },
+    "ms-gdk": {
+      "baseline": "2410.1.1897",
+      "port-version": 0
+    },
     "ms-gdkx": {
       "baseline": "1.0.0",
       "port-version": 1
