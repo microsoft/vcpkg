@@ -1,12 +1,22 @@
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO imneme/pcg-cpp
-    REF ffd522e7188bef30a00c74dc7eb9de5faff90092
-    SHA512 e96e40bf63ddb29ebf8679ddaabbf5dc934173f38cb5ed97c5efe068a742a715daa05e38d9ae322a10fa538c8ec7a271622bfb6569256a471fe5e1c9a83f9e3f
-    HEAD_REF master
-)
+  OUT_SOURCE_PATH
+  SOURCE_PATH
+  REPO
+  imneme/pcg-cpp
+  REF
+  428802d1a5634f96bcd0705fab379ff0113bcf13
+  SHA512
+  6d952737f61778f1d5c7f6bba0ebc3164e84fc0b1369186cd9c9aa880ec7ab3ea2a7066012c9094bc697a0093fe24d316bf83bd2842eb9433f4533782bb50a39
+  HEAD_REF
+  master)
 
-file(INSTALL ${SOURCE_PATH}/include/pcg_extras.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/include/pcg_random.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/include/pcg_uint128.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE-MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/include/pcg_extras.hpp
+     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/include/pcg_random.hpp
+     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/include/pcg_uint128.hpp
+     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(
+  INSTALL ${SOURCE_PATH}/LICENSE-MIT.txt
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+  RENAME copyright)
