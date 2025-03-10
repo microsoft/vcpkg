@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2520e4ed..2a911674 100644
+index 2520e4ed..7209b4e9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -69,11 +69,14 @@ elseif(${JWT_SSL_LIBRARY} MATCHES "wolfSSL")
+@@ -69,11 +69,11 @@ elseif(${JWT_SSL_LIBRARY} MATCHES "wolfSSL")
    list(TRANSFORM wolfssl_INCLUDE_DIRS APPEND "/wolfssl") # This is required to access OpenSSL compatibility API
  endif()
  
@@ -12,10 +12,29 @@ index 2520e4ed..2a911674 100644
  endif()
  
 -if(JWT_BUILD_EXAMPLES OR JWT_BUILD_TESTS)
-+find_path(PICOJSON_INCLUDE_DIR "picojson/picojson.h" REQUIRED)
-+target_include_directories(jwt-cpp INTERFACE "${PICOJSON_INCLUDE_DIR}")
-+
 +if(0)
    if(JWT_EXTERNAL_NLOHMANN_JSON)
      message(STATUS "jwt-cpp: using find_package for nlohmann-json required for tests")
      find_package(nlohmann_json CONFIG REQUIRED)
+@@ -131,9 +131,11 @@ if(${JWT_SSL_LIBRARY} MATCHES "wolfSSL")
+   target_compile_definitions(jwt-cpp INTERFACE EXTERNAL_OPTS_OPENVPN)
+ endif()
+ 
+-if(NOT JWT_DISABLE_PICOJSON AND JWT_EXTERNAL_PICOJSON)
++if(0)
+   target_link_libraries(jwt-cpp INTERFACE picojson::picojson>)
+ endif()
++find_path(PICOJSON_INCLUDE_DIR "picojson/picojson.h" REQUIRED)
++target_include_directories(jwt-cpp INTERFACE "${PICOJSON_INCLUDE_DIR}")
+ 
+ # Hunter needs relative paths so the files are placed correctly
+ if(NOT JWT_CMAKE_FILES_INSTALL_DIR)
+@@ -150,7 +152,7 @@ install(TARGETS jwt-cpp EXPORT jwt-cpp-targets PUBLIC_HEADER DESTINATION ${CMAKE
+ install(EXPORT jwt-cpp-targets NAMESPACE jwt-cpp:: FILE jwt-cpp-targets.cmake
+         DESTINATION ${JWT_CMAKE_FILES_INSTALL_DIR})
+ install(DIRECTORY ${JWT_INCLUDE_PATH}/jwt-cpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-if(NOT JWT_EXTERNAL_PICOJSON AND NOT JWT_DISABLE_PICOJSON)
++if(0)
+   install(FILES ${JWT_INCLUDE_PATH}/picojson/picojson.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/picojson)
+ endif()
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jwt-cpp-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/jwt-cpp-config-version.cmake
