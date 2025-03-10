@@ -1,8 +1,9 @@
 {
   "name": "simdutf",
-  "version-semver": "6.1.1",
+  "version-semver": "6.3.1",
   "description": "Unicode validation and transcoding at billions of characters per second",
   "homepage": "https://github.com/simdutf/simdutf",
+  "license": "Apache-2.0 OR MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

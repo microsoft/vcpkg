@@ -1,6 +1,6 @@
 {
   "name": "asock",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A simple portable socket library",
   "homepage": "https://github.com/jeremyko/ASockLib",
   "license": "MIT",
