@@ -1,12 +1,13 @@
-diff --git a/include/vulkan/vulkan.cppm b/include/vulkan/vulkan.cppm
-index e48a653..ea57dfe 100644
---- a/include/vulkan/vulkan.cppm
-+++ b/include/vulkan/vulkan.cppm
-@@ -2698,7 +2698,6 @@ export namespace VULKAN_HPP_NAMESPACE
-   using VULKAN_HPP_NAMESPACE::PFN_InternalAllocationNotification;
-   using VULKAN_HPP_NAMESPACE::PFN_InternalFreeNotification;
-   using VULKAN_HPP_NAMESPACE::PFN_ReallocationFunction;
--  using VULKAN_HPP_NAMESPACE::PFN_VoidFunction;
+diff --git a/include/vulkan/vulkan_handles.hpp b/include/vulkan/vulkan_handles.hpp
+index 304e9ed..4fd23cf 100644
+--- a/include/vulkan/vulkan_handles.hpp
++++ b/include/vulkan/vulkan_handles.hpp
+@@ -2085,6 +2085,8 @@ namespace VULKAN_HPP_NAMESPACE
+   class IndirectCommandsLayoutEXT;
+   class IndirectExecutionSetEXT;
  
-   //=== VK_EXT_debug_report ===
-   using VULKAN_HPP_NAMESPACE::PFN_DebugReportCallbackEXT;
++  typedef void( VKAPI_PTR * PFN_VoidFunction )();
++
+ #ifndef VULKAN_HPP_NO_SMART_HANDLE
+   //======================
+   //=== UNIQUE HANDLEs ===
