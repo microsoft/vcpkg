@@ -1,0 +1,16 @@
+diff --git a/mesonbuild/compilers/mixins/clike.py b/mesonbuild/compilers/mixins/clike.py
+index f0515a9..4f01b5c 100644
+--- a/mesonbuild/compilers/mixins/clike.py
++++ b/mesonbuild/compilers/mixins/clike.py
+@@ -1121,7 +1121,10 @@ class CLikeCompiler(Compiler):
+         # search for .a. This is only allowed if libtype is LibType.PREFER_SHARED
+         if ((not extra_dirs and libtype is LibType.PREFER_SHARED) or
+                 libname in self.internal_libs):
+-            cargs = ['-l' + libname]
++            if cc.get_argument_syntax() == 'msvc':
++                cargs = [libname + '.lib']
++            else:
++                cargs = ['-l' + libname]
+             largs = self.get_linker_always_args() + self.get_allow_undefined_link_args()
+             extra_args = cargs + self.linker_to_compiler_args(largs)
+ 

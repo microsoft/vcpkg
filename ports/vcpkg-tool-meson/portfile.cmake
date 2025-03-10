@@ -9,6 +9,7 @@ set(patches
   adjust-python-dep.patch
   adjust-args.patch
   remove-freebsd-pcfile-specialization.patch
+  msvc-find-library.diff
 )
 set(scripts
   vcpkg-port-config.cmake
