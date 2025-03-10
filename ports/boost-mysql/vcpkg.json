@@ -23,6 +23,10 @@
       "version>=": "1.87.0"
     },
     {
+      "name": "boost-compat",
+      "version>=": "1.87.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.87.0"
     },
