@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO renatoGarcia/icecream-cpp
     REF "v${VERSION}"
     SHA512 57410045b5dce11da3bba423347a0b7e861a1ce7eaae4317b08e366ff79530985fc300d12ef5ce9388bc44574cc03fd0b3c2a9b80a3949f41620778b18fd9ace
-    HEAD_REF main
+    HEAD_REF master
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only
