@@ -6989,8 +6989,8 @@
       "port-version": 0
     },
     "pcg": {
-      "baseline": "2021-04-06",
-      "port-version": 2
+      "baseline": "2022-04-09",
+      "port-version": 0
     },
     "pciids": {
       "baseline": "2023-04-11",
