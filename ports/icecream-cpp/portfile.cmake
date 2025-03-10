@@ -22,5 +22,4 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
