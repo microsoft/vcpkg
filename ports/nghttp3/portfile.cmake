@@ -1,25 +1,17 @@
-vcpkg_download_distfile(MSVC_ARM64_INTRINSICS_FIX
-    URLS https://github.com/ngtcp2/nghttp3/commit/2c4a3816bbeab45e7c9092aecc915b54a3c88ccb.patch?full_index=1
-    SHA512 ccdd14a71bfa51f3480252faf2a4664544e1e11f3c5b6be9bfe577d46f0fc6c22e22f86b721987d6d1ca17d96ba2e55e32b0d01a6c291ab9ba2fc2279275aeae
-    FILENAME nghttp3-msvc-arm64-intrinsicis-2c4a3816bbeab45e7c9092aecc915b54a3c88ccb.patch.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/nghttp3
     REF v${VERSION}
-    SHA512 d8b6db7a1323e036cd2d1aab1ded299e83024ce451cddbfe0ea102d968bdcb57221dbcc231b73880e0987cf3ed7ecd2c2b5f53b10947d9accb7603d7c3fcbb95
+    SHA512 b5c766918af3a60a11920d4e88893a21b0ce3de7d6f15f2a07e6890057a2f6ccb48ef8d8c8622d4d3d83acb6af093b4a5ebc84cfc81ef7722d7028e3337e6908
     HEAD_REF main
     PATCHES
-        fix-include-usage.patch
-        "${MSVC_ARM64_INTRINSICS_FIX}"
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SFPARSE_SOURCE_PATH
     REPO ngtcp2/sfparse
-    REF c2e010d064d58f7775aca1aa29df20dd2f534a9a
-    SHA512 5556878d9bfd190e537064e069ca71e76aa0e3bc9fc1d5eef24f1b413a6d3abc584024fb81e188d8ae148673db279e665064cb9971cf04568148782152bd9702
+    REF 930bdf8421f29cf0109f0f1baaafffa376973ed5
+    SHA512 67e1005d4ccf054a47dcb5f813429c7fc12e708cff19f5144447bf1d0863b107dec66e402e1cb223f1492762d38420b48b1e4c03849d69db1ebbb265e7b891ac
     HEAD_REF main
 )
 

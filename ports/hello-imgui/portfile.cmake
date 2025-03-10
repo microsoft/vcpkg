@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthom/hello_imgui
     REF "v${VERSION}"
-    SHA512 cc39a7d1a6b360afb26305bcca4d4c83fce69fb7babc26e452160985c127771b24b51de7c1a85c53b93e6fa1bc87bfc7a57e6fb7216e5bf4136c449771d8bcc4
+    SHA512 b44741e27278974f6a545a3143abd18027d98503cc912085e08528c467197fb208d2d4876e483f74e518f3dfc14d12c3579e379b9939dc364a1fff4ee98bb8f5
     HEAD_REF master
-    PATCHES
-        fix-upw.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,8 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "experimental-dx11-binding" HELLOIMGUI_HAS_DIRECTX11
     "experimental-dx12-binding" HELLOIMGUI_HAS_DIRECTX12
     "glfw-binding" HELLOIMGUI_USE_GLFW3
-    "sdl2-binding" HELLOIMGUI_USE_SDL2
-    "freetype-lunasvg" HELLOIMGUI_USE_FREETYPE # When hello_imgui is built with freetype, it will also build with lunasvg
+    "freetype-plutosvg" HELLOIMGUI_USE_FREETYPE # When hello_imgui is built with freetype, it will also build with plutosvg
 )
 
 if (NOT HELLOIMGUI_HAS_OPENGL3

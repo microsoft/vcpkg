@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 891a7339122f60b1796bb24d29ab75d0316717c2a64a45bade805242b70cb8713abc7642cdf0ec646ab9e80085d65117f0ea9b1e671d76bcd54038b0ea9bc868
+    SHA512 5912a6a375c2b94398bf9c214ace1eee5dac3bd83162e915c5e86ee0b5fa3704f103ccdcfe3d4f2532b7022e9d9c34f225d1f52c7cb7ac7ddc6111b06f771cc0
     HEAD_REF main
-    PATCHES
-        openssl_required.patch
-        popcnt_intrinsic.patch # https://github.com/ngtcp2/ngtcp2/pull/1351
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)

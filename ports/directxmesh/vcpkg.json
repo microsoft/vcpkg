@@ -1,6 +1,6 @@
 {
   "name": "directxmesh",
-  "version-date": "2024-09-04",
+  "version-date": "2024-10-28",
   "description": "DirectXMesh geometry processing library",
   "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",

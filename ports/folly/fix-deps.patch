@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 0b96f0a10..ce7ce6b3f 100644
+index 0b96f0a..34f5b53 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -29,10 +29,30 @@ endif()
+@@ -29,10 +29,31 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -12,6 +12,7 @@ index 0b96f0a10..ce7ce6b3f 100644
 +find_dependency(glog CONFIG)
 +find_dependency(gflags CONFIG)
 +find_dependency(Libevent CONFIG)
++find_dependency(FastFloat CONFIG)
 +if (NOT @CMAKE_DISABLE_FIND_PACKAGE_Zstd@)
 +    find_dependency(zstd CONFIG)
 +endif()
@@ -36,7 +37,7 @@ index 0b96f0a10..ce7ce6b3f 100644
      context
      filesystem
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index d51f11128..776102d4d 100644
+index 6ce4c67..701bb55 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -35,7 +35,7 @@ else()
@@ -48,7 +49,7 @@ index d51f11128..776102d4d 100644
    COMPONENTS
      context
      filesystem
-@@ -45,40 +45,40 @@ find_package(Boost 1.51.0 MODULE
+@@ -45,40 +45,41 @@ find_package(Boost 1.51.0 MODULE
      thread
    REQUIRED
  )
@@ -59,10 +60,10 @@ index d51f11128..776102d4d 100644
 -find_package(DoubleConversion MODULE REQUIRED)
 -list(APPEND FOLLY_LINK_LIBRARIES ${DOUBLE_CONVERSION_LIBRARY})
 -list(APPEND FOLLY_INCLUDE_DIRECTORIES ${DOUBLE_CONVERSION_INCLUDE_DIR})
- 
- find_package(FastFloat MODULE REQUIRED)
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${FASTFLOAT_INCLUDE_DIR})
- 
+-
+-find_package(FastFloat MODULE REQUIRED)
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${FASTFLOAT_INCLUDE_DIR})
+-
 -find_package(Gflags MODULE)
 -set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
 -if(LIBGFLAGS_FOUND)
@@ -70,9 +71,20 @@ index d51f11128..776102d4d 100644
 -  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBGFLAGS_INCLUDE_DIR})
 -  set(FOLLY_LIBGFLAGS_LIBRARY ${LIBGFLAGS_LIBRARY})
 -  set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
--endif()
++
++
 +find_package(double-conversion CONFIG REQUIRED)
 +list(APPEND FOLLY_LINK_LIBRARIES double-conversion::double-conversion)
++
++find_package(FastFloat CONFIG REQUIRED)
++list(APPEND FOLLY_LINK_LIBRARIES FastFloat::fast_float)
++
++find_package(gflags CONFIG)
++if(TARGET gflags::gflags)
++  set(FOLLY_HAVE_LIBGFLAGS 1)
++  list(APPEND FOLLY_LINK_LIBRARIES gflags::gflags)
++  set(FOLLY_LIBGFLAGS_LIBRARY gflags::gflags)
+ endif()
  
 -find_package(Glog MODULE)
 -set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
@@ -85,11 +97,10 @@ index d51f11128..776102d4d 100644
 -find_package(LibEvent MODULE REQUIRED)
 -list(APPEND FOLLY_LINK_LIBRARIES ${LIBEVENT_LIB})
 -list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
-+find_package(gflags CONFIG)
-+if(TARGET gflags::gflags)
-+  set(FOLLY_HAVE_LIBGFLAGS 1)
-+  list(APPEND FOLLY_LINK_LIBRARIES gflags::gflags)
-+  set(FOLLY_LIBGFLAGS_LIBRARY gflags::gflags)
++find_package(Libevent CONFIG REQUIRED)
++list(APPEND FOLLY_LINK_LIBRARIES libevent::core libevent::extra)
++if(NOT WIN32)
++  list(APPEND FOLLY_LINK_LIBRARIES libevent::pthreads)
 +endif()
  
 -find_package(ZLIB MODULE)
@@ -98,12 +109,6 @@ index d51f11128..776102d4d 100644
 -  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
 -  list(APPEND FOLLY_LINK_LIBRARIES ${ZLIB_LIBRARIES})
 -  list(APPEND CMAKE_REQUIRED_LIBRARIES ${ZLIB_LIBRARIES})
-+find_package(Libevent CONFIG REQUIRED)
-+list(APPEND FOLLY_LINK_LIBRARIES libevent::core libevent::extra)
-+if(NOT WIN32)
-+  list(APPEND FOLLY_LINK_LIBRARIES libevent::pthreads)
-+endif()
-+
 +if (CMAKE_REQUIRE_FIND_PACKAGE_ZLIB)
 +  find_package(ZLIB MODULE REQUIRED)
 +  set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
@@ -115,7 +120,7 @@ index d51f11128..776102d4d 100644
  endif()
  
  find_package(OpenSSL 1.1.1 MODULE REQUIRED)
-@@ -106,25 +106,29 @@ if (LIBLZMA_FOUND)
+@@ -106,25 +107,29 @@ if (LIBLZMA_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
  endif()
  
@@ -160,7 +165,7 @@ index d51f11128..776102d4d 100644
  endif()
  
  find_package(LibDwarf)
-@@ -135,17 +139,24 @@ find_package(Libiberty)
+@@ -135,17 +140,24 @@ find_package(Libiberty)
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
  
@@ -194,7 +199,7 @@ index d51f11128..776102d4d 100644
  
  list(APPEND FOLLY_LINK_LIBRARIES ${CMAKE_DL_LIBS})
  list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
-@@ -156,10 +167,10 @@ if (PYTHON_EXTENSIONS)
+@@ -156,10 +168,10 @@ if (PYTHON_EXTENSIONS)
  endif ()
  
  find_package(LibUnwind)
@@ -207,7 +212,7 @@ index d51f11128..776102d4d 100644
  endif()
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
    list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
-@@ -301,11 +312,7 @@ endif()
+@@ -310,11 +322,7 @@ endif()
  
  add_library(folly_deps INTERFACE)
  

@@ -1,0 +1,11 @@
+get_filename_component(_wpix_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
+get_filename_component(_wpix_root "${_wpix_root}" PATH)
+
+add_library(Microsoft::WinPixEventRuntime SHARED IMPORTED)
+set_target_properties(Microsoft::WinPixEventRuntime PROPERTIES
+  IMPORTED_LOCATION                    "${_wpix_root}/bin/@WINPIXEVENTRUNTIME@.dll"
+  IMPORTED_IMPLIB                      "${_wpix_root}/lib/@WINPIXEVENTRUNTIME@.lib"
+  INTERFACE_INCLUDE_DIRECTORIES        "${_wpix_root}/include"
+  IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+unset(_wpix_root)

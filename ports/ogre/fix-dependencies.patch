@@ -1,5 +1,5 @@
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 804602e0f..e7b665004 100644
+index 21590f4..4b46a29 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
 @@ -210,11 +210,14 @@ endif()
@@ -19,7 +19,7 @@ index 804602e0f..e7b665004 100644
  macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org")
  
  # Find X11
-@@ -270,13 +273,17 @@ endif ()
+@@ -281,13 +284,17 @@ endif ()
  macro_log_feature(ENV{VULKAN_SDK} "Vulkan SDK" "Vulkan RenderSystem, glslang Plugin. Alternatively use system packages" "https://vulkan.lunarg.com/")
  
  # OpenEXR
@@ -40,7 +40,7 @@ index 804602e0f..e7b665004 100644
  macro_log_feature(PYTHONLIBS_FOUND "Python" "Language bindings to use OGRE from Python" "http://www.python.org/")
  
  # SWIG
-@@ -284,7 +291,7 @@ find_package(SWIG 3.0.8 QUIET)
+@@ -295,7 +302,7 @@ find_package(SWIG 3.0.8 QUIET)
  macro_log_feature(SWIG_FOUND "SWIG" "Language bindings (Python, Java, C#) for OGRE" "http://www.swig.org/")
  
  # pugixml
@@ -49,7 +49,7 @@ index 804602e0f..e7b665004 100644
  macro_log_feature(pugixml_FOUND "pugixml" "Needed for XMLConverter and DotScene Plugin" "https://pugixml.org/")
  
  # Find zlib
-@@ -292,7 +299,7 @@ find_package(ZLIB)
+@@ -303,7 +310,7 @@ find_package(ZLIB)
  macro_log_feature(ZLIB_FOUND "zlib" "Simple data compression library" "http://www.zlib.net")
  
  # Assimp
@@ -58,7 +58,7 @@ index 804602e0f..e7b665004 100644
  macro_log_feature(assimp_FOUND "Assimp" "Needed for the AssimpLoader Plugin" "https://www.assimp.org/")
  
  # Bullet
-@@ -300,6 +307,8 @@ find_package(Bullet QUIET)
+@@ -311,6 +318,8 @@ find_package(Bullet QUIET)
  macro_log_feature(BULLET_FOUND "Bullet" "Bullet physics" "https://pybullet.org")
  
  if(assimp_FOUND)
@@ -67,7 +67,7 @@ index 804602e0f..e7b665004 100644
    # workaround horribly broken assimp cmake, fixed with assimp 5.1
    add_library(fix::assimp INTERFACE IMPORTED)
    set_target_properties(fix::assimp PROPERTIES
-@@ -318,7 +327,7 @@ endif()
+@@ -329,7 +338,7 @@ endif()
  # Find sdl2
  if(NOT ANDROID AND NOT EMSCRIPTEN)
    # find script does not work in cross compilation environment
@@ -77,7 +77,7 @@ index 804602e0f..e7b665004 100644
    if(SDL2_FOUND AND NOT TARGET SDL2::SDL2)
      add_library(SDL2::SDL2 INTERFACE IMPORTED)
 diff --git a/CMake/Templates/OGREConfig.cmake.in b/CMake/Templates/OGREConfig.cmake.in
-index 2047f6648..a5c7cd006 100644
+index 2047f66..a5c7cd0 100644
 --- a/CMake/Templates/OGREConfig.cmake.in
 +++ b/CMake/Templates/OGREConfig.cmake.in
 @@ -35,6 +35,25 @@ set(OGRE_LIBRARIES)
@@ -107,24 +107,37 @@ index 2047f6648..a5c7cd006 100644
      list(APPEND OGRE_INCLUDE_DIRS @Boost_INCLUDE_DIRS@)
  endif()
 diff --git a/Components/Bites/CMakeLists.txt b/Components/Bites/CMakeLists.txt
-index 59756c148..9d7cc07ca 100644
+index 9e990b8..16c0ae4 100644
 --- a/Components/Bites/CMakeLists.txt
 +++ b/Components/Bites/CMakeLists.txt
-@@ -177,6 +177,12 @@ if(SDL2_FOUND)
- elseif(NOT EMSCRIPTEN)
+@@ -185,6 +185,12 @@ elseif(NOT EMSCRIPTEN)
    message(WARNING "SDL2 not found - no input handling and reduced window creation capabilites")
  endif()
-+ 
+ 
 +if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
 +  find_package(imgui CONFIG REQUIRED)
 +  find_path(IMGUI_DIR NAMES imgui.h)
 +  target_link_libraries(OgreBites PRIVATE imgui::imgui)
 +endif()
- 
++
  generate_export_header(OgreBites 
      EXPORT_MACRO_NAME _OgreBitesExport
+     EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreBitesPrerequisites.h)
+diff --git a/Components/Bites/src/OgreImGuiInputListener.cpp b/Components/Bites/src/OgreImGuiInputListener.cpp
+index 3cb2379..5629bb5 100644
+--- a/Components/Bites/src/OgreImGuiInputListener.cpp
++++ b/Components/Bites/src/OgreImGuiInputListener.cpp
+@@ -116,7 +116,7 @@ static bool keyEvent(const KeyboardEvent& arg)
+     if (key == ImGuiKey_None)
+         return io.WantCaptureKeyboard;
+ 
+-    io.AddKeyEvent(ImGuiKey(key), arg.type == OgreBites::KEYDOWN);
++    io.AddKeyEvent(static_cast<ImGuiKey>(key), arg.type == OgreBites::KEYDOWN);
+     return io.WantCaptureKeyboard;
+ }
+ 
 diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
-index 257a30c0c..cdeb6e129 100644
+index 41bd634..87f1406 100644
 --- a/Components/Overlay/CMakeLists.txt
 +++ b/Components/Overlay/CMakeLists.txt
 @@ -19,6 +19,8 @@ list(APPEND HEADER_FILES
@@ -133,7 +146,7 @@ index 257a30c0c..cdeb6e129 100644
  if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
 +  find_package(imgui CONFIG REQUIRED)
 +elseif(0)
-   set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.90.4" CACHE PATH "")
+   set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.91.2" CACHE PATH "")
    if(NOT EXISTS ${IMGUI_DIR})
      message(STATUS "Downloading imgui")
 @@ -63,6 +65,8 @@ elseif(UNIX)
@@ -146,7 +159,7 @@ index 257a30c0c..cdeb6e129 100644
      PUBLIC "$<BUILD_INTERFACE:${IMGUI_DIR}>"
      PRIVATE "$<BUILD_INTERFACE:${IMGUI_DIR}/misc/freetype>")
 diff --git a/PlugIns/EXRCodec/src/OgreEXRCodec.cpp b/PlugIns/EXRCodec/src/OgreEXRCodec.cpp
-index efd4b32de..1e3ea2316 100644
+index efd4b32..1e3ea23 100644
 --- a/PlugIns/EXRCodec/src/OgreEXRCodec.cpp
 +++ b/PlugIns/EXRCodec/src/OgreEXRCodec.cpp
 @@ -36,6 +36,9 @@ THE SOFTWARE.
@@ -160,7 +173,7 @@ index efd4b32de..1e3ea2316 100644
  #include <ImfInputFile.h>
  #include <ImfChannelList.h>
 diff --git a/PlugIns/STBICodec/CMakeLists.txt b/PlugIns/STBICodec/CMakeLists.txt
-index 10283f51e..e7edfd32e 100644
+index 10283f5..e7edfd3 100644
 --- a/PlugIns/STBICodec/CMakeLists.txt
 +++ b/PlugIns/STBICodec/CMakeLists.txt
 @@ -19,8 +19,10 @@ endif()
@@ -175,7 +188,7 @@ index 10283f51e..e7edfd32e 100644
  
  if(CMAKE_COMPILER_IS_GNUCXX)
 diff --git a/PlugIns/STBICodec/src/OgreSTBICodec.cpp b/PlugIns/STBICodec/src/OgreSTBICodec.cpp
-index f89e9a16c..df648d700 100644
+index c5a4d4b..df648d7 100644
 --- a/PlugIns/STBICodec/src/OgreSTBICodec.cpp
 +++ b/PlugIns/STBICodec/src/OgreSTBICodec.cpp
 @@ -40,7 +40,7 @@ THE SOFTWARE.
@@ -200,21 +213,8 @@ index f89e9a16c..df648d700 100644
          stbi_convert_iphone_png_to_rgb(1);
          stbi_set_unpremultiply_on_load(1);
  
--        LogManager::getSingleton().logMessage("stb_image - v2.28 - public domain image loader");
+-        LogManager::getSingleton().logMessage("stb_image - v2.30 - public domain image loader");
 +        LogManager::getSingleton().logMessage("stb_image - public domain image loader");
          
          // Register codecs
          String exts = "jpeg,jpg,png,bmp,psd,tga,gif,pic,ppm,pgm,hdr";
-diff --git a/Components/Bites/src/OgreImGuiInputListener.cpp b/Components/Bites/src/OgreImGuiInputListener.cpp
-index 3cb237946..5629bb5d7 100644
---- a/Components/Bites/src/OgreImGuiInputListener.cpp
-+++ b/Components/Bites/src/OgreImGuiInputListener.cpp
-@@ -116,7 +116,7 @@ static bool keyEvent(const KeyboardEvent& arg)
-     if (key == ImGuiKey_None)
-         return io.WantCaptureKeyboard;
- 
--    io.AddKeyEvent(ImGuiKey(key), arg.type == OgreBites::KEYDOWN);
-+    io.AddKeyEvent(static_cast<ImGuiKey>(key), arg.type == OgreBites::KEYDOWN);
-     return io.WantCaptureKeyboard;
- }
- 

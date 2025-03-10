@@ -1,0 +1,31 @@
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index 701bb55..e41c128 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -100,6 +100,13 @@ if (BZIP2_FOUND)
+   list(APPEND FOLLY_LINK_LIBRARIES ${BZIP2_LIBRARIES})
+ endif()
+ 
++find_package(LibUnwind)
++if (LIBUNWIND_FOUND)
++  set(FOLLY_HAVE_LIBUNWIND ON)
++  list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
++  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
++endif()
++
+ find_package(LibLZMA MODULE)
+ set(FOLLY_HAVE_LIBLZMA ${LIBLZMA_FOUND})
+ if (LIBLZMA_FOUND)
+@@ -167,12 +174,6 @@ if (PYTHON_EXTENSIONS)
+   find_package(Cython 0.26 REQUIRED)
+ endif ()
+ 
+-find_package(LibUnwind)
+-if (LIBUNWIND_FOUND)
+-  set(FOLLY_HAVE_LIBUNWIND ON)
+-  list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
+-endif()
+ if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+   list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
+ endif ()

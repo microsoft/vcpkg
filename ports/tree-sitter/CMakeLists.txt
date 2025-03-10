@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(
   tree-sitter
   LANGUAGES C
-  VERSION 0.20.6
+  VERSION 0.25.1
 )
 
 set(TS_SOVERSION_MAJOR 0)
@@ -39,7 +39,6 @@ install(
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
 install(FILES "${PROJECT_SOURCE_DIR}/include/tree_sitter/api.h"
-              "${PROJECT_SOURCE_DIR}/include/tree_sitter/parser.h"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tree_sitter")
 
 install(

@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
+if(POLICY CMP0174)
+    # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
+    cmake_policy(SET CMP0174 NEW)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
@@ -121,8 +125,15 @@ file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
 
 set(CURRENT_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}" CACHE PATH "Location to install final packages")
 
-if(PORT)
+if(DEFINED CURRENT_BUILDTREES_DIR)
+    file(TO_CMAKE_PATH "${CURRENT_BUILDTREES_DIR}" CURRENT_BUILDTREES_DIR)
+elseif(PORT)
     set(CURRENT_BUILDTREES_DIR "${BUILDTREES_DIR}/${PORT}")
+endif()
+
+if(DEFINED CURRENT_PACKAGES_DIR)
+    file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CURRENT_PACKAGES_DIR)
+elseif(PORT)
     set(CURRENT_PACKAGES_DIR "${PACKAGES_DIR}/${PORT}_${TARGET_TRIPLET}")
     set(Z_CURRENT_SOURCELINK_FILE ${BUILDTREES_DIR}/${PORT}/sourcelink/${PORT}.json)
 endif()

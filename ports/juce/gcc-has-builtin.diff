@@ -1,0 +1,12 @@
+diff --git a/modules/juce_graphics/juce_graphics_Harfbuzz.cpp b/modules/juce_graphics/juce_graphics_Harfbuzz.cpp
+index a491af9..44e934a 100644
+--- a/modules/juce_graphics/juce_graphics_Harfbuzz.cpp
++++ b/modules/juce_graphics/juce_graphics_Harfbuzz.cpp
+@@ -84,7 +84,6 @@ JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wdeprecated-declarations",
+ // -Wexpansion-to-defined on gcc 7. There's no way to turn that warning off
+ // locally, so we sidestep it.
+ #if ! defined(__has_builtin) && defined(__GNUC__) && __GNUC__ >= 5
+- #define __has_builtin(x) 1
+ #endif
+ 
+ #include <utility>

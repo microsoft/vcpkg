@@ -1,6 +1,6 @@
 {
   "name": "kealib",
-  "version": "1.5.3",
+  "version": "1.6.1",
   "description": "KEALib provides an implementation of the GDAL data model using HDF5.",
   "homepage": "https://github.com/ubarsc/kealib",
   "license": "MIT",

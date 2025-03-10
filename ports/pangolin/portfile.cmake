@@ -6,12 +6,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
-    REF v0.8
-    SHA512 d4ca405097e8c439a4f74495f374bc5d5e4febafcf59ee88d985a8764ed36da1753ca4a3a73476dfb74c7d92df31a99242df6e1b47c648e860eee835a6f4f434
+    REF "v${VERSION}"
+    SHA512 554a262bfba533926eb691cb41aa73d3b0af710fba324a877fddd9a7b7d89fb067cff04ee130c070c124740f0a84c42f83dfcc7da78ae6b5118e451d332fdc9b
     HEAD_REF master
     PATCHES
         devendor-palsigslot.patch
-        ffmpeg-vxmc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

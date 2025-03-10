@@ -7,6 +7,7 @@ vcpkg_from_github(
   PATCHES
     fix-include-path.patch
     add-include-string.patch
+    add-include-chrono.patch # https://github.com/David-Haim/concurrencpp/pull/170
 )
 
 vcpkg_cmake_configure(

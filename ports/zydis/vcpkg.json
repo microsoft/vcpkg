@@ -1,6 +1,6 @@
 {
   "name": "zydis",
-  "version-semver": "4.1.0",
+  "version-semver": "4.1.1",
   "description": "Fast and lightweight x86/x86-64 disassembler library.",
   "homepage": "https://zydis.re",
   "license": "MIT",

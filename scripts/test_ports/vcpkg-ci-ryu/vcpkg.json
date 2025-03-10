@@ -1,0 +1,11 @@
+{
+  "name": "vcpkg-ci-ryu",
+  "version-date": "2024-12-17",
+  "dependencies": [
+    "ryu",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

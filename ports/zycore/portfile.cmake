@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zyantific/zycore-c
     REF "v${VERSION}"
-    SHA512 f57af4e5c6f919299e673ff4afd19a7e3cc01acaf5cde73db47063eb30881487fa33d2fd5707a3e55a8cd8df4bb4b668bc7273b8b8b5eebea1e78c1c36f715b2
+    SHA512 e9afc9e9f30007d3adb4299edde1fcd5f45135415ed6fd78d64c5dc12d1930d61db11bde89964b34f28afebd9784e734cd2c90f0e846763f198e2e5cc6364874
     HEAD_REF master
 )
 

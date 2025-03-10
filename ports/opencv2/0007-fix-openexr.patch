@@ -1,0 +1,26 @@
+--- a/cmake/OpenCVFindLibsGrfmt.cmake
++++ b/cmake/OpenCVFindLibsGrfmt.cmake
+@@ -151,7 +151,12 @@ if(WITH_OPENEXR)
+   if(BUILD_OPENEXR)
+     ocv_clear_vars(OPENEXR_FOUND)
+   else()
+-    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
++    find_package(Imath CONFIG REQUIRED)
++    find_package(OpenEXR CONFIG REQUIRED)
++    set(OPENEXR_LIBRARIES Imath::Imath OpenEXR::OpenEXR)
++    set(OPENEXR_INCLUDE_PATHS "")
++    set(OPENEXR_VERSION "${OpenEXR_VERSION}")
++    set(OPENEXR_FOUND 1)
+   endif()
+ 
+   if(NOT OPENEXR_FOUND)
+--- a/modules/highgui/src/grfmt_exr.cpp
++++ b/modules/highgui/src/grfmt_exr.cpp
+@@ -57,6 +57,7 @@
+ #include <ImfOutputFile.h>
+ #include <ImfChannelList.h>
+ #include <ImfStandardAttributes.h>
++#include <ImfFrameBuffer.h>
+ #include <half.h>
+ #include "grfmt_exr.hpp"
+ 

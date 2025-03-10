@@ -1,11 +1,10 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO  "lsalzman/enet"
-    REF e0e7045b7e056b454b5093cb34df49dc4cee0bee # v1.3.17
+    REF "v${VERSION}"
     HEAD_REF master
-    SHA512 006a78edcc2059d8cee47a163d308dd02120a54f9c203401b83eb6cb4ab3e56cf09988d3c35b436a1e9f74c01296995ae6fdd46f6d354fe8261cf19cdde3df5d
+    SHA512 a0d2fa8c957704dd49e00a726284ac5ca034b50b00d2b20a94fa1bbfbb80841467834bfdc84aa0ed0d6aab894608fd6c86c3b94eee46343f0e6d9c22e391dbf9
+    PATCHES fix-export.patch
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -21,4 +20,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

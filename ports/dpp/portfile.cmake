@@ -2,12 +2,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brainboxdotcc/DPP
     REF "v${VERSION}"
-    SHA512 0aac06f8ee67e3b4c430c9844beb6bdc3e31adebfcb2c077d18be8a8295451d70735f96dd5316d299df30b4cc4229180ffbad5095e51b49adf182290a8133a90
+    SHA512 91c28f5ec96e3cb8312a01dffe03c0a4280d0499a310c594954ff1967d25f919805dfd069df2a77ad7e12d187438eba33763e433f8ed524ae48e73f976a5a2c7
+    PATCHES
+        "include.patch"
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=20
+        -DCMAKE_CXX_STANDARD_REQUIRED=ON
+        -DDPP_BUILD_TEST=OFF
+        -DDPP_FORMATTERS=ON
+        -DDPP_NO_CORO=OFF
 )
 
 vcpkg_cmake_install()

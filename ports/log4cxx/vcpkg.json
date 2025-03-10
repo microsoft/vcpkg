@@ -1,6 +1,6 @@
 {
   "name": "log4cxx",
-  "version": "1.2.0",
+  "version": "1.3.1",
   "description": "Apache log4cxx is a logging framework for C++ patterned after Apache log4j, which uses Apache Portable Runtime for most platform-specific code and should be usable on any platform supported by APR",
   "homepage": "https://logging.apache.org/log4cxx",
   "license": "Apache-2.0",
@@ -17,5 +17,22 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "fmt": {
+      "description": "Include the log4cxx::FMTLayout class that uses libfmt to layout messages",
+      "dependencies": [
+        "fmt"
+      ]
+    },
+    "qt": {
+      "description": "Allow QString values in the LOG4CXX_WARN, LOG4CXX_INFO, LOG4CXX_DEBUG etc. macros",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

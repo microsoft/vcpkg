@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${VERSION}
-    SHA512 332a00c39c1510ce8526e68fffe73afe9079c3e7cfb2d84471cfb9da484244cdb287b4a8d7b677ea716174aa4af5e53cfd3b6a5ebf161088b7f1296ea100a6ba
+    SHA512 6684fa1954f75b6d4e0007622a4fe44f105a3cee05a39c8ed20e252ab3f9aa4bb23450b085d0e241ed14a02d9b37393d831025e1df7572e92215530906252ea5
     HEAD_REF master
     PATCHES
         0002-fix-get-version.patch
@@ -27,7 +27,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
     URLS "https://raw.githubusercontent.com/boostorg/boost/boost-${BOOST_VERSION}/boostcpp.jam"
     FILENAME "boost-${BOOST_VERSION}-boostcpp.jam"
-    SHA512 32feae4e13418f68702b18964b17e706255429dd881a098355a0b644da11a97c42aa7eeffa5cc4e30aa8a370dde2097aecc62175fb37cd5cf9766e7fc6303da7
+    SHA512 8bbd436749a1079ad2fb77cdf65b893f35260a9bdd52b360180780e83ff0f90595693f27641745d6db3a7dbc0e3ba5947e23790e99a8aeb94bfc5fb910d16df6
 )
 
 # https://github.com/boostorg/boost/pull/206

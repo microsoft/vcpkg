@@ -4,20 +4,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 d8d0cdd291f37a6364201fc47e87302604ca5cb10a109818eb4bdd0215e16b6a56aac69f825417166d168f944b638fd15097f665e6e6933cd1a61ca341c3cb26
+    SHA512 04f6160c3c63c59e80987df61959bf0079c5be1d63bc40189933cebd3046850d680f1e030e8e7cd7f04417146982c6410ba70c8441af75d43b7b24fc7fbcb1d2
     HEAD_REF master
     PATCHES
         0005_remove_imp_suffix.patch
-        0020-fix-pc-file.patch
-        0022-deduplicate-libs.patch
         export-components.patch
         dependencies.patch
+        pkgconfig-curl-config.patch
         cmake-config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
@@ -31,25 +29,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
         psl         CURL_USE_LIBPSL
         gssapi      CURL_USE_GSSAPI
         gsasl       CURL_USE_GSASL
         gnutls      CURL_USE_GNUTLS
+        rtmp        USE_LIBRTMP
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
+        websockets  CURL_DISABLE_WEBSOCKETS
 )
-
-# Add warning on build failuer when using wolfssl and openssl features togther.
-if("openssl" IN_LIST FEATURES AND "wolfssl" IN_LIST FEATURES)
-    message(WARNING "Adding OpenSSL and WolfSSL simultaneously will result in a build failure. \
-                     Please remove one of these features from your build process.\
-                     If you are using OpenSSL version 1.1, you may disregard this warning."
-    )
-endif()
 
 set(OPTIONS "")
 
@@ -81,11 +72,10 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
+        -DSHARE_LIB_OBJECT=OFF
         -DCURL_CA_FALLBACK=ON
-        -DCURL_USE_PKGCONFIG=OFF
+        -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-    OPTIONS_DEBUG
-        -DENABLE_DEBUG=ON
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
 )
@@ -111,13 +101,14 @@ endif()
 #Fix install path
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix=\"\${prefix}\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix='\${prefix}'" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/curl-config")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix=\"\${prefix}/debug\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix='\${prefix}/debug'" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nexec_prefix=\"\${prefix}\"" "\nexec_prefix=\"\${prefix}/debug\"")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-l${namespec}-d")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "curl." "curl-d.")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")

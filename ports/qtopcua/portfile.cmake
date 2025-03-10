@@ -35,7 +35,4 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}
-                        "-DPYTHON_EXECUTABLE=${PYTHON3}"
-                     CONFIGURE_OPTIONS_RELEASE
-                     CONFIGURE_OPTIONS_DEBUG
                     )

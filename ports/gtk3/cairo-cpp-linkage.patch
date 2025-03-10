@@ -57,6 +57,6 @@ index 287f0cb..d35106f 100644
 @@ -1,4 +1,4 @@
 -project('gtk+', 'c',
 +project('gtk+', 'c', 'cpp',
-   version: '3.24.38',
+   version: '3.24.43',
    default_options: [
      'buildtype=debugoptimized',

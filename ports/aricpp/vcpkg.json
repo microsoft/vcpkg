@@ -1,6 +1,6 @@
 {
   "name": "aricpp",
-  "version-semver": "1.1.3",
+  "version-semver": "1.2.1",
   "description": "Asterisk ARI interface bindings for modern C++",
   "homepage": "https://github.com/daniele77/aricpp",
   "license": "BSL-1.0",

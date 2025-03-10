@@ -1,7 +1,6 @@
 {
   "name": "dbus",
-  "version": "1.15.8",
-  "port-version": 5,
+  "version": "1.16.2",
   "description": "D-Bus specification and reference implementation, including libdbus and dbus-daemon",
   "homepage": "https://gitlab.freedesktop.org/dbus/dbus",
   "license": "AFL-2.1 OR GPL-2.0-or-later",

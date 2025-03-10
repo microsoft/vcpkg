@@ -1,6 +1,6 @@
 {
   "name": "jsonifier",
-  "version": "0.9.96",
+  "version": "0.9.98",
   "description": "A few classes for parsing and serializing json - very rapidly.",
   "homepage": "https://github.com/realtimechris/jsonifier",
   "license": "MIT",

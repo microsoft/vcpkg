@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index a60ef0c..eeb6715 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -63,6 +63,7 @@ AS_CASE([$host],
+   [*mingw32* | *cygwin*], [AC_CHECK_FUNCS(gettimeofday)])
+ 
+ AS_CASE([$host],
++  [*mingw32*], LDFLAGS="-no-undefined $LDFLAGS",
+   [*-os2-*], LDFLAGS="-no-undefined -Zbin-files $LDFLAGS")
+ 
+ AS_CASE([$host],

@@ -1,38 +1,30 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4c06409..29f53c0 100644
+index 16382c1..7e14ab3 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -95,6 +95,12 @@ ADD_LIBRARY(common_obj_static OBJECT ${common_src})
- SET_TARGET_PROPERTIES(common_obj_static PROPERTIES
-     POSITION_INDEPENDENT_CODE ON
-     COMPILE_DEFINITIONS "PAHO_MQTT_STATIC=1")
+@@ -98,6 +98,12 @@ endif()
+ if(PAHO_BUILD_STATIC)
+   add_library(common_obj_static OBJECT ${common_src})
+   set_target_properties(common_obj_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
++  IF(WIN32 OR APPLE)
++  ELSE()
++    find_package(unofficial-libuuid CONFIG REQUIRED)
++    target_link_libraries(common_obj_static PRIVATE unofficial::UUID::uuid)
++    target_compile_definitions(common_obj_static PUBLIC LIBUUID)
++  ENDIF()
+   target_compile_definitions(common_obj_static PRIVATE PAHO_MQTT_STATIC=1)
+ endif()
+ 
+@@ -317,6 +323,12 @@ if(PAHO_WITH_SSL OR PAHO_WITH_LIBRESSL)
+     target_include_directories(common_ssl_obj_static PUBLIC ${SSL_INCLUDE_DIR})
+ 
+     set_property(TARGET common_ssl_obj_static PROPERTY POSITION_INDEPENDENT_CODE ON)
 +    IF(WIN32 OR APPLE)
 +    ELSE()
 +        find_package(unofficial-libuuid CONFIG REQUIRED)
-+        target_link_libraries(common_obj_static PRIVATE unofficial::UUID::uuid)
-+        target_compile_definitions(common_obj_static PUBLIC LIBUUID)
++        target_link_libraries(common_ssl_obj_static PRIVATE unofficial::UUID::uuid)
++        target_compile_definitions(common_ssl_obj_static PUBLIC LIBUUID)
 +    ENDIF()
- ENDIF()
- 
- IF (PAHO_BUILD_SHARED)
-@@ -149,7 +155,6 @@ ENDIF()
- IF (PAHO_BUILD_STATIC)
-     ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj_static> MQTTClient.c)
-     ADD_LIBRARY(paho-mqtt3a-static STATIC $<TARGET_OBJECTS:common_obj_static> MQTTAsync.c MQTTAsyncUtils.c)
--
-     TARGET_LINK_LIBRARIES(paho-mqtt3c-static ${LIBS_SYSTEM})
-     TARGET_LINK_LIBRARIES(paho-mqtt3a-static ${LIBS_SYSTEM})
-     IF (NOT WIN32)
-@@ -249,6 +254,12 @@ IF (PAHO_WITH_SSL)
-     	TARGET_INCLUDE_DIRECTORIES(common_ssl_obj_static PUBLIC ${OPENSSL_INCLUDE_DIR})
-     	SET_PROPERTY(TARGET common_ssl_obj_static PROPERTY POSITION_INDEPENDENT_CODE ON)
-     	SET_PROPERTY(TARGET common_ssl_obj_static PROPERTY COMPILE_DEFINITIONS "OPENSSL=1;PAHO_MQTT_STATIC=1")
-+        IF(WIN32 OR APPLE)
-+        ELSE()
-+            find_package(unofficial-libuuid CONFIG REQUIRED)
-+            target_link_libraries(common_ssl_obj_static PRIVATE unofficial::UUID::uuid)
-+            target_compile_definitions(common_ssl_obj_static PUBLIC LIBUUID)
-+        ENDIF()
+     target_compile_definitions(common_ssl_obj_static PRIVATE OPENSSL=1 PAHO_MQTT_STATIC=1)
      
-         ADD_LIBRARY(paho-mqtt3cs-static STATIC $<TARGET_OBJECTS:common_ssl_obj_static> MQTTClient.c SSLSocket.c)
-         ADD_LIBRARY(paho-mqtt3as-static STATIC $<TARGET_OBJECTS:common_ssl_obj_static> MQTTAsync.c MQTTAsyncUtils.c SSLSocket.c)
+     add_library(paho-mqtt3cs-static STATIC
