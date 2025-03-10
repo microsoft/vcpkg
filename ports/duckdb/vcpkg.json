@@ -1,6 +1,6 @@
 {
   "name": "duckdb",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": "MIT",
