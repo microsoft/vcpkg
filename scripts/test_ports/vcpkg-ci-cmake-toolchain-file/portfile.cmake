@@ -101,7 +101,7 @@ unit_test_ensure_cmake_error([[
 
 unit_test_ensure_cmake_success([[
     # Core capability: a smart CMAKE_DISABLE_FIND_PACKAGE_<Pkg>
-    # Requiring only the available direct package
+    # Disabling only the direct package
     set(VCPKG_LOCK_FIND_PACKAGE_directPackageX 0)
     find_package(directPackageX) # optional
     find_package(transitivePackageX REQUIRED)
@@ -150,7 +150,7 @@ unit_test_ensure_cmake_success([[
 
 unit_test_ensure_cmake_success([[
     # Core capability: a smart CMAKE_REQUIRE_FIND_PACKAGE_<Pkg>
-    # Requiring only the absent direct package
+    # Requiring only the direct package
     set(VCPKG_LOCK_FIND_PACKAGE_absentPackageX 1)
     find_package(transitiveOptionalAbsentPackageX REQUIRED)
 ]])
