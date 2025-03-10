@@ -1,16 +1,16 @@
 plplot provides CMake targets:
 
-    find_package(plplot CONFIG REQUIRED)
-    # C API, PLplot Core Library
-    target_link_libraries(main PRIVATE PLPLOT::plplot)
-    # C++ binding
-    target_link_libraries(main PRIVATE PLPLOT::plplotcxx)
-    # wxWidgets GUI binding (optional, feature "wxwidgets")
-    target_link_libraries(main PRIVATE PLPLOT::plplotwxwidgets)
-    # CSIRO Cubic Spline Approximation Library
-    target_link_libraries(main PRIVATE PLPLOT::csirocsa)
-    # QSAS Time Format Conversion Library
-    target_link_libraries(main PRIVATE PLPLOT::qsastime)
+  find_package(plplot CONFIG REQUIRED)
+  # C API, PLplot Core Library
+  target_link_libraries(main PRIVATE PLPLOT::plplot)
+  # C++ binding
+  target_link_libraries(main PRIVATE PLPLOT::plplotcxx)
+  # wxWidgets GUI binding (optional, feature "wxwidgets")
+  target_link_libraries(main PRIVATE PLPLOT::plplotwxwidgets)
+  # CSIRO Cubic Spline Approximation Library
+  target_link_libraries(main PRIVATE PLPLOT::csirocsa)
+  # QSAS Time Format Conversion Library
+  target_link_libraries(main PRIVATE PLPLOT::qsastime)
 
 plplot provides pkg-config modules:
 
