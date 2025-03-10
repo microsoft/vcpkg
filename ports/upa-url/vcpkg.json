@@ -1,8 +1,9 @@
 {
   "name": "upa-url",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "An implementation of the WHATWG URL Standard in C++",
   "homepage": "https://github.com/upa-url/upa",
+  "documentation": "https://upa-url.github.io/docs/",
   "license": "BSD-2-Clause",
   "dependencies": [
     {
