@@ -36,7 +36,7 @@
       "version": "4.0.0-rc3",
       "executable": "cmake-4.0.0-rc3-windows-arm64/bin/cmake.exe",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc3/cmake-4.0.0-rc3-windows-arm64.zip",
-      "sha512": "40bcdeff5ff40044629f49e0effc958a719353330ea39876b919fb7c2d441885c884acf43e644ab5dedcb95503d211c895da1c0b6360e71449bea6a981f8e128",
+      "sha512": "835345f30240b8f38ee5d80ecee2884e16d422671cfeaa7cd9aea8e4b67445ba7b0c82f72626ac525c702f41a066bc7ef179f714c168748c21c7acdc837a0ba7",
       "archive": "cmake-4.0.0-rc3-windows-arm64.zip"
     },
     {
@@ -45,7 +45,7 @@
       "version": "4.0.0-rc3",
       "executable": "cmake-4.0.0-rc3-macos-universal/CMake.app/Contents/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc3/cmake-4.0.0-rc3-macos-universal.tar.gz",
-      "sha512": "71290d3b5e51724711e8784f5b21100cb0cffdbb889da7572a26dd171d9052601496de8d39c42d76ef3a9245af2ab35a590bf53ad68d7bb8a2047b64272d2647",
+      "sha512": "6cce5e41c54241a252a43b292ed2e35718c4fd981ce118d6f83ab9a52775e61edfd61e414c9dbc784c57154442740059504db7e36962ebe0ec8333999e9d839d",
       "archive": "cmake-4.0.0-rc3-macos-universal.tar.gz"
     },
     {
@@ -55,7 +55,7 @@
       "version": "4.0.0-rc3",
       "executable": "cmake-4.0.0-rc3-linux-aarch64/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc3/cmake-4.0.0-rc3-linux-aarch64.tar.gz",
-      "sha512": "ec6c1c682dda2381aa5ebef98a2597e4ab6b4563639c28b2f30c20360694b902a7b33c175c796169a9f99ed139f053916042caed58d83298680894c2840dbb87",
+      "sha512": "0077fc2ec1f42127758f4c1c3012e7194185ff8c7e7f69f7381ac5ac89ac32a57471f2f96ea36b51fd0a37efd0176e4b546631b5bfb1595bd225d6ed9b63436b",
       "archive": "cmake-4.0.0-rc3-linux-aarch64.tar.gz"
     },
     {
@@ -65,7 +65,7 @@
       "arch": "amd64",
       "executable": "cmake-4.0.0-rc3-linux-x86_64/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc3/cmake-4.0.0-rc3-linux-x86_64.tar.gz",
-      "sha512": "84ce1333ed696a1736986fba2853c5d8db0e4c9addaf4a4723911248c6d49ecf545adf8bd46091d198fc7bd1e6c896798661463aa1ce3a726a093883aaa19adf",
+      "sha512": "f99cfb0d8b796c0a9f948fa143cd24d969d89e3748eecf0ede0a12b13157227aa7ca037772be5df521ac6816ac3db975bae485c146955756e720e9807e1f554f",
       "archive": "cmake-4.0.0-rc3-linux-x86_64.tar.gz"
     },
     {
