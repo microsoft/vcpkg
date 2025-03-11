@@ -2005,8 +2005,8 @@
       "port-version": 4
     },
     "cpputest": {
-      "baseline": "2019-9-16",
-      "port-version": 3
+      "baseline": "4.0",
+      "port-version": 0
     },
     "cppwinrt": {
       "baseline": "2.0.240405.15",
