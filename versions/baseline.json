@@ -349,7 +349,7 @@
       "port-version": 0
     },
     "audio-engine": {
-      "baseline": "v1.1",
+      "baseline": "1.1",
       "port-version": 0
     },
     "audiofile": {
