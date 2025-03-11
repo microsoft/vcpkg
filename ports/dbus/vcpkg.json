@@ -36,11 +36,9 @@
     },
     "x11": {
       "description": "Build with X11 autolaunch support",
+      "supports": "linux",
       "dependencies": [
-        {
-          "name": "libx11",
-          "platform": "linux"
-        }
+        "libx11"
       ]
     }
   }
