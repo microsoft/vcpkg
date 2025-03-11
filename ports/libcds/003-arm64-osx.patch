@@ -1,0 +1,24 @@
+diff --git a/build/cmake/TargetArch.cmake b/build/cmake/TargetArch.cmake
+index 026eace0..685820a3 100644
+--- a/build/cmake/TargetArch.cmake
++++ b/build/cmake/TargetArch.cmake
+@@ -80,6 +80,8 @@ function(target_architecture output_var)
+                 set(osx_arch_x86_64 TRUE)
+             elseif("${osx_arch}" STREQUAL "ppc64" AND ppc_support)
+                 set(osx_arch_ppc64 TRUE)
++            elseif("${osx_arch}" STREQUAL "arm64")
++                set(osx_arch_arm64 TRUE)
+             else()
+                 message(FATAL_ERROR "Invalid OS X arch name: ${osx_arch}")
+             endif()
+@@ -101,6 +103,10 @@ function(target_architecture output_var)
+         if(osx_arch_ppc64)
+             list(APPEND ARCH ppc64)
+         endif()
++
++        if(osx_arch_arm64)
++            list(APPEND ARCH arm64)
++        endif()
+     else()
+         file(WRITE "${CMAKE_BINARY_DIR}/arch.c" "${archdetect_c_code}")
+ 
