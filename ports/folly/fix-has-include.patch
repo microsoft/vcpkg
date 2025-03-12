@@ -1,0 +1,71 @@
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index e41c128..cdba5d8 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -151,12 +151,14 @@ if(WITH_libaio)
+   find_package(LibAIO)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LIBAIO_LIBRARIES})
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBAIO_INCLUDE_DIRS})
++  add_compile_options(-DFOLLY_WITH_LIBAIO)
+ endif()
+ 
+ if(WITH_liburing)
+   find_package(LibUring)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
++  add_compile_options(-DFOLLY_WITH_LIBURING)
+ endif()
+ 
+ if(NOT CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium)
+diff --git a/folly/io/async/AsyncIO.cpp b/folly/io/async/AsyncIO.cpp
+index 93cda44..b2b466b 100644
+--- a/folly/io/async/AsyncIO.cpp
++++ b/folly/io/async/AsyncIO.cpp
+@@ -35,7 +35,7 @@
+ #include <sys/eventfd.h>
+ #endif
+ 
+-#if __has_include(<libaio.h>)
++#if __has_include(<libaio.h>) && defined FOLLY_WITH_LIBAIO
+ 
+ // debugging helpers
+ namespace {
+diff --git a/folly/io/async/AsyncIO.h b/folly/io/async/AsyncIO.h
+index b1a6f52..2d1d99c 100644
+--- a/folly/io/async/AsyncIO.h
++++ b/folly/io/async/AsyncIO.h
+@@ -18,7 +18,7 @@
+ 
+ #include <folly/experimental/io/AsyncBase.h>
+ 
+-#if __has_include(<libaio.h>)
++#if __has_include(<libaio.h>) && defined FOLLY_WITH_LIBAIO
+ 
+ #include <libaio.h>
+ 
+diff --git a/folly/io/async/Liburing.h b/folly/io/async/Liburing.h
+index 8e81aaa..92f0ddf 100644
+--- a/folly/io/async/Liburing.h
++++ b/folly/io/async/Liburing.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#if defined(__linux__) && __has_include(<liburing.h>)
++#if defined(__linux__) && __has_include(<liburing.h>) && defined FOLLY_WITH_LIBURING
+ #define FOLLY_HAS_LIBURING 1
+ #else
+ #define FOLLY_HAS_LIBURING 0
+diff --git a/folly/io/async/SimpleAsyncIO.cpp b/folly/io/async/SimpleAsyncIO.cpp
+index 807a2be..442c9ad 100644
+--- a/folly/io/async/SimpleAsyncIO.cpp
++++ b/folly/io/async/SimpleAsyncIO.cpp
+@@ -25,7 +25,7 @@
+ 
+ namespace folly {
+ 
+-#if __has_include(<libaio.h>)
++#if __has_include(<libaio.h>) && defined FOLLY_WITH_LIBAIO
+ static constexpr bool has_aio = true;
+ using aio_type = AsyncIO;
+ #else

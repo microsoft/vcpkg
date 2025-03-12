@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-unistd-include.patch
         fix-libunwind.patch
         fix-absolute-dir.patch
+        fix-has-include.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
@@ -41,6 +42,9 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "liburing"   WITH_liburing
+        "libaio"     WITH_libaio
     INVERTED_FEATURES
         "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
         "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4

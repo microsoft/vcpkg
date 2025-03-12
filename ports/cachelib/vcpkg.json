@@ -1,7 +1,6 @@
 {
   "name": "cachelib",
   "version-string": "2024.07.15.00",
-  "port-version": 1,
   "description": "Pluggable caching engine to build and scale high performance cache services.",
   "homepage": "https://github.com/facebook/CacheLib",
   "license": "Apache-2.0",
@@ -12,7 +11,9 @@
     "fmt",
     {
       "name": "folly",
-      "platform": "linux"
+      "features": [
+        "libaio"
+      ]
     },
     "gflags",
     "glog",
