@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a06f8a8c88..de45605c62 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
+ 
+ if (NOT DEFINED BUILD_USE_VCPKG)
+   set (BUILD_USE_VCPKG OFF CACHE BOOL "Use vcpkg for 3rdparty libraries.")
+-  if (CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake")
+-    set (BUILD_USE_VCPKG ON)
+-  endif()
+ endif()
+ 
+ if (BUILD_USE_VCPKG)

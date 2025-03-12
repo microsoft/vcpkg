@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5fd2c6f..d8a1b2c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -714,7 +714,10 @@ include_directories(api/include)
+ add_subdirectory(api)
+ 
+ if(WITH_OPENTRACING)
+-  find_package(OpenTracing CONFIG QUIET)
++  find_package(OpenTracing CONFIG REQUIRED)
++  if(NOT TARGET OpenTracing::opentracing AND TARGET OpenTracing::opentracing-static)
++    add_library(OpenTracing::opentracing ALIAS OpenTracing::opentracing-static)
++  endif()
+   if(NOT OpenTracing_FOUND)
+     set(OPENTRACING_DIR "third_party/opentracing-cpp")
+     message(STATUS "Trying to use local ${OPENTRACING_DIR} from submodule")

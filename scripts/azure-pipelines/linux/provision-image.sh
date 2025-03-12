@@ -7,14 +7,18 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
 
+# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "20.04") and format to "2004"
+UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
+
 ## CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+wget "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
+mv "cuda-ubuntu${NVIDIA_REPO_VERSION}.pin" /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/3bf863cc.pub"
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/ /"
 
 ## PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+wget -q https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
@@ -109,9 +113,9 @@ APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
 ## CUDA
-APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
-  cuda-cudart-dev-12-1 libcublas-12-1 libcurand-dev-12-1 cuda-nvml-dev-12-1 libcudnn8-dev libnccl2 \
-  libnccl-dev"
+APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driver-dev-12-8 \
+  cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev-cuda-12 \
+  libnccl2 libnccl-dev"
 
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
@@ -123,6 +127,7 @@ else
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
 fi
 
-apt-get -y --no-install-recommends install $APT_PACKAGES
+# Put --no-install-recommends back next month
+apt-get -y install $APT_PACKAGES
 
 az --version

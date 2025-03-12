@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/multiprecision
     REF boost-${VERSION}
-    SHA512 e9f8f86180abcb2d9c7762cbf0200868645a9c99a792a5bd5b52df5e3038263a69ebdc12436284c8fc3982dab02bacf157120e838ecc432f99f749d4fc2d6bbd
+    SHA512 29021190146bfdfa73b07dac916cc75bbec3dc8687fe2ed01db26d35d38bf02b24f2d701521cd8e5f05914d22ff7fd3e3ece590dfe6d7d3d76f22b2aaf316991
     HEAD_REF master
     PATCHES
         remove-random.diff

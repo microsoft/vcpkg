@@ -1,7 +1,6 @@
 {
   "name": "plutosvg",
-  "version": "0.0.4",
-  "port-version": 1,
+  "version": "0.0.6",
   "description": "Tiny SVG rendering library in C",
   "homepage": "https://github.com/sammycage/plutosvg",
   "license": "MIT",

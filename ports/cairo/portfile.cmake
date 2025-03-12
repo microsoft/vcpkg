@@ -3,6 +3,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND EXTRA_PATCHES fix_clang-cl_build.patch)
 endif()
 
+list(APPEND EXTRA_PATCHES dw-extra.patch)
+
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org

@@ -1,6 +1,6 @@
 {
   "name": "tdscpp",
-  "version": "20240707",
+  "version": "20250301",
   "description": "C++ library to communicate with Microsoft SQL Server",
   "homepage": "https://github.com/maharmstone/tdscpp",
   "license": "LGPL-3.0",

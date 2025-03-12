@@ -1,0 +1,13 @@
+diff --git a/src/connection.cpp b/src/connection.cpp
+index da2c556..a6cd8ca 100644
+--- a/src/connection.cpp
++++ b/src/connection.cpp
+@@ -276,7 +276,7 @@ Connection::SslAdapter::SslAdapter(tcp_socket& wrapped_socket, const std::string
+     if (verify_host) {
+         m_context.set_default_verify_paths();
+         m_context.set_verify_mode(ssl::verify_peer);
+-        m_context.set_verify_callback(ssl::rfc2818_verification(host));
++        m_context.set_verify_callback(ssl::host_name_verification(host));
+     }
+     m_stream = std::make_unique<ssl_stream>(wrapped_socket, m_context);
+ }

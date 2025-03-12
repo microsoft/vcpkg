@@ -2,8 +2,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 27a009d..0306afb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1122,6 +1122,7 @@ if(SDLIMAGE_INSTALL)
-       set(SDL_PKGCONFIG_PREFIX "${CMAKE_INSTALL_PREFIX}")
+@@ -1122,6 +1122,7 @@ else()
+       set(LIBDIR_FOR_PKG_CONFIG "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
      endif()
  
 +    get_target_property(PC_LIB_NAME "${sdl3_image_target_name}" OUTPUT_NAME)

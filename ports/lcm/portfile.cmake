@@ -9,7 +9,11 @@ vcpkg_from_github(
         fix-build-error.patch
         glib.link.patch
         disable-docs.patch
+        avoid-fake-stdint-h.patch # https://github.com/lcm-proj/lcm/pull/563
 )
+
+# Remove fake stdint.h that conficts with the real one in VS2022 17.13 targeting arm64
+file(REMOVE "${SOURCE_PATH}/WinSpecific/include/inttypes.h" "${SOURCE_PATH}/WinSpecific/include/stdint.h")
 
 vcpkg_cmake_configure(
      SOURCE_PATH "${SOURCE_PATH}"

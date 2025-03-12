@@ -1,6 +1,6 @@
 {
   "name": "cnats",
-  "version": "3.9.2",
+  "version": "3.10.0",
   "description": "A C client for the NATS messaging system",
   "homepage": "https://github.com/nats-io/nats.c",
   "license": "Apache-2.0",

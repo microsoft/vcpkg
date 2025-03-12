@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
     REF "poco-${VERSION}-release"
-    SHA512 4475a0ede5d06e4ce9537295fec92fa39b8fd5635d1cfb38498be4f707bc62b4a8b57672d2a15b557114e4115cc45480d27d0c856b7bd982eeec7adad9ff2582
+    SHA512 e192818a5f731ec6f6bddf062573d7bedfd15754157f145882c2c9d9bce497b92cf23f639f989d9e5605cb83029c4f303752cab655b525b5a5b5e5b704714725
     HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -15,9 +15,6 @@ vcpkg_from_github(
         0007-find-pcre2.patch
         # MSYS2 repo was used as a source. Thanks MSYS2 team: https://github.com/msys2/MINGW-packages/blob/6e7fba42b7f50e1111b7c0ef50048832243b0ac4/mingw-w64-poco/001-fix-build-on-mingw.patch
         0008-fix-mingw-compilation.patch
-        # Should be dropped when upgrading to POC 1.14.1
-        # https://github.com/pocoproject/poco/pull/4811
-        0009-remove-libatomic-dependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
