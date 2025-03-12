@@ -1,6 +1,6 @@
 {
     "name": "vcpkg-make-tests",
-    "version-string": "0",
+    "version-string": "1",
     "description": "Ensures that the vcpkg-make port functions are unit tested.",
     "license": "MIT",
     "dependencies": [
