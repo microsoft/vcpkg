@@ -126,7 +126,7 @@ if ($lastLastExitCode -ne 0)
     exit $lastLastExitCode
 }
 
-& "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
+& "./vcpkg$executableExtension" x-test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
 $lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = True
