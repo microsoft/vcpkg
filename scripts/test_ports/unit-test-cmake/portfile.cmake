@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-file(INSTALL "${CURRENT_PORT_DIR}/test-macros.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/test-macros.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-include("${CURRENT_PORT_DIR}/test-macros.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/test-macros.cmake")
 
 if("minimum-required" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_minimum_required.cmake")
