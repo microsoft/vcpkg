@@ -6205,8 +6205,8 @@
       "port-version": 1
     },
     "ms-gltf": {
-      "baseline": "2022-06-28",
-      "port-version": 2
+      "baseline": "2024-09-05",
+      "port-version": 0
     },
     "ms-gsl": {
       "baseline": "4.2.0",
