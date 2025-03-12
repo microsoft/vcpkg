@@ -1,0 +1,246 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6095da..d212785 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -89,6 +89,7 @@ set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
+ if ( WIN32 )
+ 	# Workaround to avoid name clash of static lib and dynamic import lib under windows.
+ 	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-shared" )
++    target_compile_definitions(${SHARED_LIBRARY_NAME} PUBLIC RESTBED_SHARED)
+ else ( )
+ 	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
+ endif ( )	
+diff --git a/source/corvusoft/restbed/context_placeholder.hpp b/source/corvusoft/restbed/context_placeholder.hpp
+index 9389dbf..9872eae 100644
+--- a/source/corvusoft/restbed/context_placeholder.hpp
++++ b/source/corvusoft/restbed/context_placeholder.hpp
+@@ -13,7 +13,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define CONTEXT_PLACEHOLDER_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/context_placeholder_base.hpp b/source/corvusoft/restbed/context_placeholder_base.hpp
+index 475e035..e067c6d 100644
+--- a/source/corvusoft/restbed/context_placeholder_base.hpp
++++ b/source/corvusoft/restbed/context_placeholder_base.hpp
+@@ -12,7 +12,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define CONTEXT_PLACEHOLDER_BASE_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/context_value.hpp b/source/corvusoft/restbed/context_value.hpp
+index af094c3..140b94e 100644
+--- a/source/corvusoft/restbed/context_value.hpp
++++ b/source/corvusoft/restbed/context_value.hpp
+@@ -17,7 +17,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define CONTEXT_VALUE_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/http.hpp b/source/corvusoft/restbed/http.hpp
+index 934744f..50ea959 100644
+--- a/source/corvusoft/restbed/http.hpp
++++ b/source/corvusoft/restbed/http.hpp
+@@ -17,7 +17,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define HTTP_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/logger.hpp b/source/corvusoft/restbed/logger.hpp
+index 9c3fd97..8661170 100644
+--- a/source/corvusoft/restbed/logger.hpp
++++ b/source/corvusoft/restbed/logger.hpp
+@@ -17,7 +17,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define LOGGER_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/request.hpp b/source/corvusoft/restbed/request.hpp
+index 7772d1b..2d7bdd3 100644
+--- a/source/corvusoft/restbed/request.hpp
++++ b/source/corvusoft/restbed/request.hpp
+@@ -21,7 +21,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define REQUEST_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/resource.hpp b/source/corvusoft/restbed/resource.hpp
+index d402100..15c68d4 100644
+--- a/source/corvusoft/restbed/resource.hpp
++++ b/source/corvusoft/restbed/resource.hpp
+@@ -15,7 +15,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define RESOURCE_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/response.hpp b/source/corvusoft/restbed/response.hpp
+index e484020..a8bddca 100644
+--- a/source/corvusoft/restbed/response.hpp
++++ b/source/corvusoft/restbed/response.hpp
+@@ -19,7 +19,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define RESPONSE_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/rule.hpp b/source/corvusoft/restbed/rule.hpp
+index aeec175..092c2e1 100644
+--- a/source/corvusoft/restbed/rule.hpp
++++ b/source/corvusoft/restbed/rule.hpp
+@@ -13,7 +13,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define RULE_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/service.hpp b/source/corvusoft/restbed/service.hpp
+index 6d33084..1caa732 100644
+--- a/source/corvusoft/restbed/service.hpp
++++ b/source/corvusoft/restbed/service.hpp
+@@ -17,7 +17,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define SERVICE_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/session.hpp b/source/corvusoft/restbed/session.hpp
+index 2b6625f..b917bfa 100644
+--- a/source/corvusoft/restbed/session.hpp
++++ b/source/corvusoft/restbed/session.hpp
+@@ -20,7 +20,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define SESSION_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/session_manager.hpp b/source/corvusoft/restbed/session_manager.hpp
+index 08bee4e..e2751ca 100644
+--- a/source/corvusoft/restbed/session_manager.hpp
++++ b/source/corvusoft/restbed/session_manager.hpp
+@@ -13,7 +13,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define SESSION_MANAGER_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/settings.hpp b/source/corvusoft/restbed/settings.hpp
+index 34b4fc8..6bcf156 100644
+--- a/source/corvusoft/restbed/settings.hpp
++++ b/source/corvusoft/restbed/settings.hpp
+@@ -16,7 +16,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define SETTINGS_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/ssl_settings.hpp b/source/corvusoft/restbed/ssl_settings.hpp
+index 4a92759..6697d79 100644
+--- a/source/corvusoft/restbed/ssl_settings.hpp
++++ b/source/corvusoft/restbed/ssl_settings.hpp
+@@ -14,7 +14,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define SSL_SETTINGS_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/string.hpp b/source/corvusoft/restbed/string.hpp
+index 6e74f61..025a8d0 100644
+--- a/source/corvusoft/restbed/string.hpp
++++ b/source/corvusoft/restbed/string.hpp
+@@ -16,7 +16,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define STRING_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/uri.hpp b/source/corvusoft/restbed/uri.hpp
+index 680c9c9..57e5beb 100644
+--- a/source/corvusoft/restbed/uri.hpp
++++ b/source/corvusoft/restbed/uri.hpp
+@@ -16,7 +16,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define URI_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/web_socket.hpp b/source/corvusoft/restbed/web_socket.hpp
+index 3938d5b..c9d3e00 100644
+--- a/source/corvusoft/restbed/web_socket.hpp
++++ b/source/corvusoft/restbed/web_socket.hpp
+@@ -16,7 +16,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define WEB_SOCKET_EXPORT __declspec(dllexport)
+ 	#else
+diff --git a/source/corvusoft/restbed/web_socket_message.hpp b/source/corvusoft/restbed/web_socket_message.hpp
+index 3594d26..2590f64 100644
+--- a/source/corvusoft/restbed/web_socket_message.hpp
++++ b/source/corvusoft/restbed/web_socket_message.hpp
+@@ -17,7 +17,7 @@
+ //External Includes
+ 
+ //Windows DLL Exports
+-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
++#if defined(RESTBED_SHARED) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64))
+ 	#ifdef WIN_DLL_EXPORT
+ 		#define WEB_SOCKET_MESSAGE_EXPORT __declspec(dllexport)
+ 	#else
