@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
     REF v${VERSION}
-    SHA512 396ce2a36937d49ec96eb239312118c736f46383d2906b7142d9695e795f310af28255d8827cc98ad76ae4e6d5a22faf1188b7dd286791e3c85f22c96d0114b3
+    SHA512 78dd94a86428dec2e8d38e1c3b29c7eef19c51f3ffd3caa69d15f5cd776b5044d40d1630043b508f0aaaad00485e63ec330f6e680c7fb142ce40726304f52dba
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
@@ -19,7 +19,6 @@ vcpkg_from_github(
         library-linkage.diff
         cmake-export.diff
         no-abs-path.diff
-        ushort-check.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindIconv.cmake"
