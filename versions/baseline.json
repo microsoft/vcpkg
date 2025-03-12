@@ -8350,7 +8350,7 @@
     },
     "sdl2-image": {
       "baseline": "2.8.8",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-mixer": {
       "baseline": "2.8.1",

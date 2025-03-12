@@ -14,6 +14,7 @@ vcpkg_check_features(
         libjpeg-turbo SDL2IMAGE_JPG
         libwebp       SDL2IMAGE_WEBP
         tiff          SDL2IMAGE_TIF
+        avif          SDL2IMAGE_AVIF
 )
 
 vcpkg_cmake_configure(
