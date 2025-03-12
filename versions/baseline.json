@@ -3124,6 +3124,10 @@
       "baseline": "2.2.2",
       "port-version": 9
     },
+    "ggml": {
+      "baseline": "2025-02-12",
+      "port-version": 0
+    },
     "ghc-filesystem": {
       "baseline": "1.5.14",
       "port-version": 0
@@ -5614,6 +5618,10 @@
     },
     "live555": {
       "baseline": "2024-11-28",
+      "port-version": 0
+    },
+    "llama-cpp": {
+      "baseline": "4743",
       "port-version": 0
     },
     "llfio": {
