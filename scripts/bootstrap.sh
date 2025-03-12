@@ -211,14 +211,14 @@ else
     rm -rf "$baseBuildDir"
     mkdir -p "$buildDir"
     vcpkgExtractTar "$tarballPath" "$srcBaseDir"
-    cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
 
     if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
-        cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+        cmake -S "${srcDir}" -B "${buildDir}" --preset "bootstrap.sh parallel build" || exit 1
+    else
+        cmake -S "${srcDir}" -B "${buildDir}" --preset "bootstrap.sh" || exit 1
     fi
 
-    (cd "$buildDir" && eval cmake "$srcDir" $cmakeConfigOptions) || exit 1
-    (cd "$buildDir" && cmake --build .) || exit 1
+    cmake --build "${buildDir}" || exit 1
 
     rm -rf "$vcpkgRootDir/vcpkg"
     cp "$buildDir/vcpkg" "$vcpkgRootDir/"
