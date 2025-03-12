@@ -1474,7 +1474,7 @@
     },
     "cachelib": {
       "baseline": "2024.07.15.00",
-      "port-version": 1
+      "port-version": 0
     },
     "caf": {
       "baseline": "1.0.2",
