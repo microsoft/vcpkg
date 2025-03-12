@@ -248,6 +248,10 @@
       "baseline": "19.0.1",
       "port-version": 0
     },
+    "arrow-adbc": {
+      "baseline": "16",
+      "port-version": 0
+    },
     "arsenalgear": {
       "baseline": "2.1.1",
       "port-version": 0
@@ -2826,6 +2830,10 @@
     },
     "flatbush": {
       "baseline": "1.2.1",
+      "port-version": 0
+    },
+    "flatcc": {
+      "baseline": "0.6.1",
       "port-version": 0
     },
     "flecs": {
@@ -6291,6 +6299,10 @@
     "nano-signal-slot": {
       "baseline": "2.0.1",
       "port-version": 2
+    },
+    "nanoarrow": {
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "nanobench": {
       "baseline": "4.3.11",
