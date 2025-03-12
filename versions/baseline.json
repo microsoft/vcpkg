@@ -6970,7 +6970,7 @@
     },
     "pangolin": {
       "baseline": "0.9.3",
-      "port-version": 0
+      "port-version": 1
     },
     "pangomm": {
       "baseline": "2.56.1",
