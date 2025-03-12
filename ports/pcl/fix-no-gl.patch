@@ -7,7 +7,7 @@ index 4eed218..dc85f94 100644
    while (error != GL_NO_ERROR) {
      last_error = error;
 -    std::cout << "Error: OpenGL: " << gluErrorString(error) << std::endl;
-+    std::cout << "Error: OpenGL: " << glewGetErrorString(error) << std::endl;
++    std::cout << "Error: OpenGL: " << error << std::endl;
      error = glGetError();
    }
    return last_error;
