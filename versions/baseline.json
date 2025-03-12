@@ -7033,7 +7033,7 @@
       "port-version": 7
     },
     "pcre2": {
-      "baseline": "10.43",
+      "baseline": "10.45",
       "port-version": 0
     },
     "pdal": {
@@ -7218,7 +7218,7 @@
     },
     "poco": {
       "baseline": "1.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "podofo": {
       "baseline": "0.10.4",
