@@ -4449,8 +4449,8 @@
       "port-version": 0
     },
     "libcopp": {
-      "baseline": "2.2.0",
-      "port-version": 1
+      "baseline": "2.3.1",
+      "port-version": 0
     },
     "libcoro": {
       "baseline": "0.14.1",
