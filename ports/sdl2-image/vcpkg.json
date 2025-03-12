@@ -21,6 +21,12 @@
     }
   ],
   "features": {
+    "avif": {
+      "description": "Support for AVIF image format",
+      "dependencies": [
+        "libavif"
+      ]
+    },
     "libjpeg-turbo": {
       "description": "Support for JPEG image format",
       "dependencies": [
@@ -40,12 +46,6 @@
           "name": "tiff",
           "default-features": false
         }
-      ]
-    },
-    "avif": {
-      "description": "Support for AVIF image format",
-      "dependencies": [
-        "libavif"
       ]
     }
   }
