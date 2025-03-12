@@ -564,6 +564,19 @@ function(vcpkg_add_sourcelink_link_options target)
         CMAKE_VERSION VERSION_GREATER_EQUAL 3.13.5)
         # Support added in Visual Studio 2017 Version 15.8.
 
+        # This function will be called many times, at least once per referenced target and dependency
+        # - The first time it is called, gather ALL of the sourcelink files
+        #   and store in Z_VCPKG_SOURCELINK_LINK_OPTS for the eventual link steps.
+        # - Subsequent invocations add no new information, but do add the cached
+        #   information to each target's link options
+        # - Because these are all collected in bulk, this will often contain extra sourcelink details
+        #   from ports that are not necessarily relevant.  Fixing the over-collection would require
+        #   changing from an up-front collection to an approach where each depenency is appended to a
+        #   growing set for this target.
+        #
+        # Note: This is an excellent location to consider a future enhancement where
+        #       each of the discovered json files could be combined into a single sourcelink
+        #       file that covers all of the dependencies.
         if(NOT DEFINED Z_VCPKG_SOURCELINK_LINK_OPTS)
             if(CMAKE_GENERATOR MATCHES "Visual Studio")
                 set(pass_sourcelink_directly 1)
@@ -577,6 +590,8 @@ function(vcpkg_add_sourcelink_link_options target)
                 file(WRITE "${sourcelink_rsp_tmp}" "")
             endif()
 
+            # This explicit file is provided for port builds via ports.cmake (typically via vcpkg_cmake_configure)
+            # That file is not installed yet, so this is the only way to pick up the file.
             if(VCPKG_SOURCELINK_FILE)
                 if(pass_sourcelink_directly)
                     list(APPEND Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${VCPKG_SOURCELINK_FILE}")
@@ -584,6 +599,11 @@ function(vcpkg_add_sourcelink_link_options target)
                     file(APPEND "${sourcelink_rsp_tmp}" "/sourcelink:\"${VCPKG_SOURCELINK_FILE}\"\n")
                 endif()
             endif()
+
+            # Search all of the installed sourcelink files and add them into the link step.
+            # NOTE: This is the opportunity to parse the JSON contents and augment them with the installed header location,
+            #       rather than simply including the originally-built location.  
+            #       This improvement is necessary in order to support resolving inline header content.
             file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
             if(sourcelink_files)
                 foreach(sourcelink_file ${sourcelink_files})
@@ -724,8 +744,9 @@ function(add_library)
         if(NOT VCPKG_DISABLE_SOURCELINK)
             vcpkg_add_sourcelink_link_options("${target_name}")
         endif()
-    elseif(INTERFACE_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
+    elseif(ALIAS_IDX EQUAL "-1")
         if(NOT VCPKG_DISABLE_SOURCELINK)
+            # Provide sourcelink for both IMPORTED and INTERFACE cases
             vcpkg_add_sourcelink_link_options("${target_name}")
         endif()
     endif()
