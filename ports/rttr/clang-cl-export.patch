@@ -1,0 +1,33 @@
+diff --git a/CMake/config.cmake b/CMake/config.cmake
+index e46570944c..fc586c527c 100644
+--- a/CMake/config.cmake
++++ b/CMake/config.cmake
+@@ -125,6 +125,7 @@ message(STATUS "using C++: ${MAX_CXX_STANDARD}")
+ 
+ # RelWithDepInfo should have the same option like the Release build
+ # but of course with Debug informations
++if(0)
+ if(MSVC)
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE}")
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Zi /DEBUG")
+@@ -157,6 +158,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+     set(CLANG_STATIC_LINKER_FLAGS "-stdlib=libc++ -static-libstdc++")
+ endif()
++endif()
+ 
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(
+diff --git a/src/rttr/detail/base/core_prerequisites.h b/src/rttr/detail/base/core_prerequisites.h
+index 601ddeb9a9..7afb50bf9a 100644
+--- a/src/rttr/detail/base/core_prerequisites.h
++++ b/src/rttr/detail/base/core_prerequisites.h
+@@ -112,7 +112,7 @@ namespace rttr
+ /////////////////////////////////////////////////////////////////////////////////////////
+ // Compiler specific cmds for export and import code to DLL
+ /////////////////////////////////////////////////////////////////////////////////////////
+-#if RTTR_COMPILER == RTTR_COMPILER_MSVC || __MINGW32__ || __CYGWIN__
++#if RTTR_COMPILER == RTTR_COMPILER_MSVC || __MINGW32__ || __CYGWIN__ || _MSC_VER
+ #     define RTTR_HELPER_DLL_IMPORT __declspec( dllimport )
+ #     define RTTR_HELPER_DLL_EXPORT __declspec( dllexport )
+ #     define RTTR_HELPER_DLL_LOCAL

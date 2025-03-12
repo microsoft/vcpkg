@@ -23,6 +23,7 @@ set(${PORT}_PATCHES
         fix_deploy_windows.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
+        55c53f9.diff
 )
  
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

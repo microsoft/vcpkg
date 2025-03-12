@@ -1,0 +1,358 @@
+diff --git a/cspice/src/cspice/dfe.c b/cspice/src/cspice/dfe.c
+index 38bda7fdc9..8b1fa69a67 100644
+--- a/cspice/src/cspice/dfe.c
++++ b/cspice/src/cspice/dfe.c
+@@ -2,7 +2,7 @@
+ #include "fio.h"
+ #include "fmt.h"
+ 
+-y_rsk(Void)
++int y_rsk(Void)
+ {
+ 	if(f__curunit->uend || f__curunit->url <= f__recpos
+ 		|| f__curunit->url == 1) return 0;
+@@ -11,7 +11,7 @@ y_rsk(Void)
+ 	} while(++f__recpos < f__curunit->url);
+ 	return 0;
+ }
+-y_getc(Void)
++int y_getc(Void)
+ {
+ 	int ch;
+ 	if(f__curunit->uend) return(-1);
+@@ -63,7 +63,7 @@ y_newrec(Void)
+ #ifdef KR_headers
+ c_dfe(a) cilist *a;
+ #else
+-c_dfe(cilist *a)
++int c_dfe(cilist *a)
+ #endif
+ {
+ 	f__sequential=0;
+diff --git a/cspice/src/cspice/due.c b/cspice/src/cspice/due.c
+index fce750c2ee..45cf517b4f 100644
+--- a/cspice/src/cspice/due.c
++++ b/cspice/src/cspice/due.c
+@@ -4,7 +4,7 @@
+ #ifdef KR_headers
+ c_due(a) cilist *a;
+ #else
+-c_due(cilist *a)
++int c_due(cilist *a)
+ #endif
+ {
+ 	if(!f__init) f_init();
+diff --git a/cspice/src/cspice/fmt.c b/cspice/src/cspice/fmt.c
+index 7bb6f3d296..138123f6a1 100644
+--- a/cspice/src/cspice/fmt.c
++++ b/cspice/src/cspice/fmt.c
+@@ -40,7 +40,7 @@ char *ap_end(char *s)
+ 	f__fatal(100, "bad string");
+ 	/*NOTREACHED*/ return 0;
+ }
+- static
++ static int
+ #ifdef KR_headers
+ op_gen(a,b,c,d)
+ #else
+@@ -107,7 +107,7 @@ char *f_s(char *s, int curloc)
+ 	return(s);
+ }
+ 
+- static
++ static int
+ #ifdef KR_headers
+ ne_d(s,p) char *s,**p;
+ #else
+@@ -199,7 +199,7 @@ ne_d(char *s, char **p)
+ 	return(1);
+ }
+ 
+- static
++ static int
+ #ifdef KR_headers
+ e_d(s,p) char *s,**p;
+ #else
+@@ -359,6 +359,7 @@ char *f_list(char *s)
+ 	return(NULL);
+ }
+ 
++int
+ #ifdef KR_headers
+ pars_f(s) char *s;
+ #else
+@@ -376,7 +377,7 @@ pars_f(char *s)
+ int f__cnt[STKSZ],f__ret[STKSZ],f__cp,f__rp;
+ flag f__workdone, f__nonl;
+ 
+- static
++ static int
+ #ifdef KR_headers
+ type_f(n)
+ #else
+@@ -504,7 +505,7 @@ loop:	switch(type_f((p= &f__syl[f__pc])->op))
+ 	}
+ 	return(0);
+ }
+-en_fio(Void)
++int en_fio(Void)
+ {	ftnint one=1;
+ 	return(do_fio(&one,(char *)NULL,(ftnint)0));
+ }
+diff --git a/cspice/src/cspice/iio.c b/cspice/src/cspice/iio.c
+index 7d91162e39..84d2cd8f28 100644
+--- a/cspice/src/cspice/iio.c
++++ b/cspice/src/cspice/iio.c
+@@ -6,7 +6,7 @@ char *f__icend;
+ extern icilist *f__svic;
+ int f__icnum;
+ extern int f__hiwater;
+-z_getc(Void)
++int z_getc(Void)
+ {
+ 	if(f__recpos++ < f__svic->icirlen) {
+ 		if(f__icptr >= f__icend) err(f__svic->iciend,(EOF),"endfile");
+@@ -25,7 +25,7 @@ z_putc(int c)
+ 	if (f__icptr < f__icend && f__recpos++ < f__svic->icirlen)
+ 		*f__icptr++ = c;
+ }
+-z_rnew(Void)
++int z_rnew(Void)
+ {
+ 	f__icptr = f__svic->iciunit + (++f__icnum)*f__svic->icirlen;
+ 	f__recpos = 0;
+@@ -44,7 +44,7 @@ z_endp(Void)
+ #ifdef KR_headers
+ c_si(a) icilist *a;
+ #else
+-c_si(icilist *a)
++int c_si(icilist *a)
+ #endif
+ {
+ 	f__elist = (cilist *)a;
+@@ -92,7 +92,7 @@ integer s_rsfi(icilist *a)
+ 	return(0);
+ }
+ 
+-z_wnew(Void)
++int z_wnew(Void)
+ {
+ 	if (f__recpos < f__hiwater) {
+ 		f__icptr += f__hiwater - f__recpos;
+diff --git a/cspice/src/cspice/lread.c b/cspice/src/cspice/lread.c
+index bde8cd1661..8469bb9c2e 100644
+--- a/cspice/src/cspice/lread.c
++++ b/cspice/src/cspice/lread.c
+@@ -73,7 +73,7 @@ extern int ungetc(int, FILE*);	/* for systems with a buggy stdio.h */
+ #endif
+ #endif
+ 
+-t_getc(Void)
++int t_getc(Void)
+ {	int ch;
+ 	if(f__curunit->uend) return(EOF);
+ 	if((ch=getc(f__cf))!=EOF) return(ch);
+@@ -522,6 +522,7 @@ l_CHAR(Void)
+ 		}
+ 	}
+ }
++int
+ #ifdef KR_headers
+ c_le(a) cilist *a;
+ #else
+@@ -542,6 +543,7 @@ c_le(cilist *a)
+ 	if(!f__curunit->ufmt) err(a->cierr,103,"lio")
+ 	return(0);
+ }
++int
+ #ifdef KR_headers
+ l_read(number,ptr,len,type) ftnint *number,type; char *ptr; ftnlen len;
+ #else
+diff --git a/cspice/src/cspice/lwrite.c b/cspice/src/cspice/lwrite.c
+index fb18d07c3c..fc202323b9 100644
+--- a/cspice/src/cspice/lwrite.c
++++ b/cspice/src/cspice/lwrite.c
+@@ -231,6 +231,7 @@ lwrt_C(double a, double b)
+ 	l_put(bb);
+ 	PUT(')');
+ }
++int
+ #ifdef KR_headers
+ l_write(number,ptr,len,type) ftnint *number,type; char *ptr; ftnlen len;
+ #else
+diff --git a/cspice/src/cspice/open.c b/cspice/src/cspice/open.c
+index e91f358635..33f858a6a6 100644
+--- a/cspice/src/cspice/open.c
++++ b/cspice/src/cspice/open.c
+@@ -418,7 +418,7 @@ static void
+ 
+ 
+ 
+-
++int
+ #ifdef KR_headers
+ 
+    fk_open( seq, fmt, n) ftnint n;
+diff --git a/cspice/src/cspice/rdfmt.c b/cspice/src/cspice/rdfmt.c
+index bb120af5b8..a37f8a2316 100644
+--- a/cspice/src/cspice/rdfmt.c
++++ b/cspice/src/cspice/rdfmt.c
+@@ -386,6 +386,7 @@ rd_POS(char *s)
+ 		else *s = ch=='\n'?' ':ch;
+ 	return(1);
+ }
++int
+ #ifdef KR_headers
+ rd_ed(p,ptr,len) struct syl *p; char *ptr; ftnlen len;
+ #else
+@@ -449,6 +450,7 @@ rd_ed(struct syl *p, char *ptr, ftnlen len)
+ 		clearerr(f__cf);
+ 	return(errno);
+ }
++int
+ #ifdef KR_headers
+ rd_ned(p) struct syl *p;
+ #else
+diff --git a/cspice/src/cspice/rsfe.c b/cspice/src/cspice/rsfe.c
+index 5332c980d4..6d9847cb68 100644
+--- a/cspice/src/cspice/rsfe.c
++++ b/cspice/src/cspice/rsfe.c
+@@ -116,7 +116,7 @@ void    zzsetnnread_( logical * on );
+ -&
+ */
+ 
+-xrd_SL(Void)
++int xrd_SL(Void)
+    {
+ 
+    int ch;
+@@ -143,7 +143,7 @@ xrd_SL(Void)
+    }
+ 
+ 
+-x_getc(Void)
++int x_getc(Void)
+    {
+    
+    int ch;
+@@ -187,13 +187,13 @@ x_getc(Void)
+    }
+ 
+ 
+-x_endp(Void)
++int x_endp(Void)
+    {
+    xrd_SL();
+    return f__curunit->uend == 1 ? EOF : 0;
+    }
+ 
+-x_rev(Void)
++int x_rev(Void)
+    {
+    (void) xrd_SL();
+    return(0);
+diff --git a/cspice/src/cspice/rsne.c b/cspice/src/cspice/rsne.c
+index 0096f4c923..1bab03b481 100644
+--- a/cspice/src/cspice/rsne.c
++++ b/cspice/src/cspice/rsne.c
+@@ -36,7 +36,7 @@
+ 
+  extern flag f__lquit;
+  extern int f__lcount, nml_read;
+- extern t_getc(Void);
++ extern int t_getc(Void);
+ 
+ #ifdef KR_headers
+  extern char *malloc(), *memset();
+@@ -290,6 +290,7 @@ print_ne(cilist *a)
+ 
+  static char where0[] = "namelist read start ";
+ 
++ int
+ #ifdef KR_headers
+ x_rsne(a) cilist *a;
+ #else
+diff --git a/cspice/src/cspice/sfe.c b/cspice/src/cspice/sfe.c
+index d1fdea9c63..ee9d74bc00 100644
+--- a/cspice/src/cspice/sfe.c
++++ b/cspice/src/cspice/sfe.c
+@@ -10,6 +10,7 @@ integer e_rsfe(Void)
+ 	f__fmtbuf=NULL;
+ 	return(n);
+ }
++int
+ #ifdef KR_headers
+ c_sfe(a) cilist *a; /* check */
+ #else
+diff --git a/cspice/src/cspice/sue.c b/cspice/src/cspice/sue.c
+index 0d2f4c5d52..9f50ac34df 100644
+--- a/cspice/src/cspice/sue.c
++++ b/cspice/src/cspice/sue.c
+@@ -3,6 +3,7 @@
+ extern uiolen f__reclen;
+ long f__recloc;
+ 
++int
+ #ifdef KR_headers
+ c_sue(a) cilist *a;
+ #else
+diff --git a/cspice/src/cspice/uio.c b/cspice/src/cspice/uio.c
+index d3bb6fc86b..6c0def8ebc 100644
+--- a/cspice/src/cspice/uio.c
++++ b/cspice/src/cspice/uio.c
+@@ -2,6 +2,7 @@
+ #include "fio.h"
+ uiolen f__reclen;
+ 
++int
+ #ifdef KR_headers
+ do_us(number,ptr,len) ftnint *number; char *ptr; ftnlen len;
+ #else
+diff --git a/cspice/src/cspice/wref.c b/cspice/src/cspice/wref.c
+index 5740931013..0c4d6befbd 100644
+--- a/cspice/src/cspice/wref.c
++++ b/cspice/src/cspice/wref.c
+@@ -15,6 +15,7 @@
+ #include "ctype.h"
+ #endif
+ 
++int
+ #ifdef KR_headers
+ wrt_E(p,w,d,e,len) ufloat *p; ftnlen len;
+ #else
+@@ -191,6 +192,7 @@ nogood:
+ 	return 0;
+ 	}
+ 
++int
+ #ifdef KR_headers
+ wrt_F(p,w,d,len) ufloat *p; ftnlen len;
+ #else
+diff --git a/cspice/src/cspice/wrtfmt.c b/cspice/src/cspice/wrtfmt.c
+index 8d72800207..c9f8a944f6 100644
+--- a/cspice/src/cspice/wrtfmt.c
++++ b/cspice/src/cspice/wrtfmt.c
+@@ -217,6 +217,7 @@ wrt_H(int a, char *s)
+ 	while(a--) (*f__putn)(*s++);
+ 	return(1);
+ }
++int
+ #ifdef KR_headers
+ wrt_L(n,len, sz) Uint *n; ftnlen sz;
+ #else
+@@ -289,6 +290,7 @@ wrt_G(ufloat *p, int w, int d, int e, ftnlen len)
+ 	}
+ 	return(wrt_E(p,w,d,e,len));
+ }
++int
+ #ifdef KR_headers
+ w_ed(p,ptr,len) struct syl *p; char *ptr; ftnlen len;
+ #else
+@@ -335,6 +337,7 @@ w_ed(struct syl *p, char *ptr, ftnlen len)
+ 		return(wrt_Z((Uint *)ptr,p->p1,p->p2.i[0],len));
+ 	}
+ }
++int
+ #ifdef KR_headers
+ w_ned(p) struct syl *p;
+ #else

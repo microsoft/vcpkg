@@ -275,7 +275,7 @@ else() # VCPKG_TARGET_IS_WINDOWS
     # Build Ice
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
+        PROJECT_SUBPATH "cpp/msbuild/ice.v143.sln" # Platform toolset is controlled by vcpkg_msbuild_install
         TARGET "C++11\\ice++11"
         OPTIONS
             ${MSBUILD_OPTIONS}

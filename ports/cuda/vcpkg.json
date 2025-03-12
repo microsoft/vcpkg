@@ -1,9 +1,15 @@
 {
   "name": "cuda",
   "version": "10.1",
-  "port-version": 13,
+  "port-version": 14,
   "description": "A parallel computing platform and programming model",
   "homepage": "https://developer.nvidia.com/cuda-toolkit",
   "license": null,
-  "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)"
+  "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
+  "dependencies": [
+    {
+      "name": "compiler-cuda",
+      "host": true
+    }
+  ]
 }

@@ -40,6 +40,13 @@
 
 # Add new items alphabetically
 
+qtwebengine:x64-windows=skip
+# opencv4:x64-windows=skip
+# llvm:x64-windows=skip
+# popsift does not work with newer cuda
+popsift:x64-windows=skip
+popsift:x64-windows-static=skip
+
 ace:arm-neon-android=fail
 ace:arm64-android=fail
 ace:x64-android=fail

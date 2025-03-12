@@ -1,0 +1,18 @@
+diff --git a/lang/c/src/datafile.c b/lang/c/src/datafile.c
+index c9d4dfeb68..870ff9a4d2 100644
+--- a/lang/c/src/datafile.c	
++++ b/lang/c/src/datafile.c
+@@ -81,11 +81,12 @@ static int write_header(avro_file_writer_t w)
+ 	avro_writer_t schema_writer;
+ 	const avro_encoding_t *enc = &avro_binary_encoding;
+ 	int64_t schema_len;
++	const char* obj = "Obj";
+ 
+ 	/* Generate random sync */
+ 	generate_sync(w);
+ 
+-	check(rval, avro_write(w->writer, "Obj", 3));
++	check(rval, avro_write(w->writer, (void *)obj, 3));
+ 	check(rval, avro_write(w->writer, &version, 1));
+ 
+ 	check(rval, enc->write_long(w->writer, 2));

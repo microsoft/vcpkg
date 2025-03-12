@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         external-libtasn1.patch
         pkgconfig.patch
+        no-implicit-return-int.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")

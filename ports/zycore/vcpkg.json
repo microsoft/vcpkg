@@ -1,6 +1,7 @@
 {
   "name": "zycore",
   "version": "1.5.1",
+  "port-version": 1,
   "description": "Provides platform independent types, macros and a fallback for environments without LibC.",
   "homepage": "https://github.com/zyantific/zycore-c",
   "license": "MIT",

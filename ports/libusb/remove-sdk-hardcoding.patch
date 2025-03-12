@@ -1,0 +1,26 @@
+diff --git a/msvc/Configuration.Base.props b/msvc/Configuration.Base.props
+index 7cdb4763db..8e0a17f194 100644
+--- a/msvc/Configuration.Base.props
++++ b/msvc/Configuration.Base.props
+@@ -25,20 +25,4 @@
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+   </ItemDefinitionGroup>
+-  <PropertyGroup Label="Globals" Condition="'$(LibusbPlatformToolsetVersion)'&lt;'142'">
+-    <!--
+-      WindowsSDKDesktopARMSupport and WindowsSDKDesktopARM64Support are
+-      required to enable downlevel Windows SDKs to build "desktop" arm/arm64
+-      binaries.
+-      -->
+-    <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
+-    <WindowsSDKDesktopARM64Support>true</WindowsSDKDesktopARM64Support>
+-    <!--
+-      WindowsTargetPlatformVersion must be set to explicit value for older
+-      PlatformToolsets. Fetch it from environment variable.
+-      vs2017/arm64 needs to be special cased to select 10.x SDK instead of 8.x
+-    -->
+-    <WindowsTargetPlatformVersion Condition="'$(LibusbPlatformToolsetVersion)'=='141' And $(Platform)=='ARM64'">10.0.19041.0</WindowsTargetPlatformVersion>
+-    <WindowsTargetPlatformVersion Condition="'$(LibusbPlatformToolsetVersion)'!='141' Or $(Platform)!='ARM64'">$(WindowsSDKVersion)</WindowsTargetPlatformVersion>
+-  </PropertyGroup>
+ </Project>
+\ No newline at end of file

@@ -1,10 +1,5 @@
-set(TF_VERSION 2.10.0)
-set(TF_VERSION_SHORT 2.10)
-
-find_program(BAZEL bazel PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools" REQUIRED)
-get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${BAZEL_DIR}")
-set(ENV{BAZEL_BIN_PATH} "${BAZEL_DIR}")
+set(TF_VERSION 2.18.0)
+set(TF_VERSION_SHORT 2.18)
 
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	file(REMOVE_RECURSE ${PATH_TO_REMOVE})
@@ -168,12 +163,12 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 bf8a6f16393499c227fc70f27bcfb6d44ada53325aee2b217599309940f60db8ee00dd90e3d82b87d9c309f5621c404edab55e97ab8bfa09e4fc67859b9e3967
+		SHA512 177decaafcdef27afee84a17268f473141d2d0c092d5f3fe33c9cdd3ce4fd52f6b4b83bc41b4b005c8889f5e65602a57ae3eba8f63e0c527feaf83917453f4e6
 		HEAD_REF master
 		PATCHES
-			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			${STATIC_ONLY_PATCHES}
-			${WINDOWS_ONLY_PATCHES}
+			#"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
+			#${STATIC_ONLY_PATCHES}
+			#${WINDOWS_ONLY_PATCHES}
 	)
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -207,7 +202,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	set(COPTS)
 	set(CXXOPTS)
 	set(LINKOPTS)
-	set(BUILD_OPTS --jobs ${VCPKG_CONCURRENCY})
+	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY})
 	message(STATUS "Build Tensorflow with concurrent level: ${VCPKG_CONCURRENCY}")
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(PLATFORM_COMMAND WINDOWS_COMMAND)
@@ -274,6 +269,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(JOIN COPTS " " COPTS)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
+      list(JOIN BUILD_OPTS " " BUILD_OPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
 				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
@@ -299,6 +295,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(JOIN COPTS " " COPTS)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
+      list(JOIN BUILD_OPTS " " BUILD_OPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
 				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"

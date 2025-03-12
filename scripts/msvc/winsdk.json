@@ -1,0 +1,2453 @@
+{
+  "id": "Win11SDK_10.0.26100",
+  "version": "10.0.26100.7",
+  "type": "Exe",
+  "productArch": "neutral",
+  "payloads": [
+    {
+      "fileName": "winsdksetup.exe",
+      "sha256": "A8E6B6CC2DCEC9FDD4C35553A4CBF288C9CE5E4761D7A2762F06A3A95F1E530D",
+      "size": 1446968,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/26f7378a16d3fc8a422a6cdf82273684/winsdksetup.exe",
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\03fbc2dfe9d3e7bb2389c7ed18c6ad3e.cab",
+      "sha256": "F91845C77D95ECB6D5FCB054F76871303255FE92714A0F9CF9345C3E0D6949CB",
+      "size": 748790,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2a844a9cef97854895ec028230e782b7/03fbc2dfe9d3e7bb2389c7ed18c6ad3e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\05047a45609f311645eebcac2739fc4c.cab",
+      "sha256": "D1FBCF20511DBE551CB63773DCE5482AD17AA98ED54829EA1639511D9E1C3C08",
+      "size": 227597,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/5306aed3e1a38d1e8bef5934edeb2a9b/05047a45609f311645eebcac2739fc4c.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\05254f60ea43b4e3959b17cdb03268c0.cab",
+      "sha256": "AF2507A11F1C5614B5981C9A6B011A3E0D7FA3735B0EB9FB08E964F5142730F9",
+      "size": 672189,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b07fc62a067d83b61782b86de99e407e/05254f60ea43b4e3959b17cdb03268c0.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\07a57cdb41ba28cced14005f087267be.cab",
+      "sha256": "AD5EF684350D322E81B8C3A345B30C77C7AD68EE8FFB50A825D15F11977500D7",
+      "size": 101668,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/62002abc878f47546609645e89885d73/07a57cdb41ba28cced14005f087267be.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\08e9468089f54c8455f59fd9bb48fcec.cab",
+      "sha256": "632842A6C6A16B57EBAF2DAE3027E7F9CCB241A5290D0879224ABF9E741129EB",
+      "size": 71672,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0d30cdf06cb5974a438e0123ea606674/08e9468089f54c8455f59fd9bb48fcec.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\126c039acc6f1c0a9426a128efb713e7.cab",
+      "sha256": "5B77805722F9031A966886BFA81E6661121C0B3B615267A49F96A82755170D41",
+      "size": 1560882,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/74346ad2d6329d2ba947f95206b1ab3e/126c039acc6f1c0a9426a128efb713e7.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\12a529d45b148a2d28290a8a7535b37b.cab",
+      "sha256": "80DBB0D1A1F743B2A5AC05BD9C677D5B304C55B410B1533E2599E89ACE2A0D03",
+      "size": 1075637,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cb158cd2c1437dd0b5835f29a9f2d885/12a529d45b148a2d28290a8a7535b37b.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\13bf5f9b75a9d1c9f44ba5d34a14227f.cab",
+      "sha256": "C73B13D2E7E6B82956042A331AE01E2EC4B6C5FA1903E918FD197191778543DC",
+      "size": 93450,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/029010528c3f5c47a7952bdc1487e7a9/13bf5f9b75a9d1c9f44ba5d34a14227f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\13d68b8a7b6678a368e2d13ff4027521.cab",
+      "sha256": "9D2CA5EEC78AB824BD7B030ACAA8E1AF505AE63E3ADF8E1DBDC7CB1AEF7FC8A0",
+      "size": 387147,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/13c8a73a0f5a6474040b26d016a26fab/13d68b8a7b6678a368e2d13ff4027521.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\15369c02f0856bfd3d570cd8a8107b55.cab",
+      "sha256": "B5E5D98C1F28598A118AC0F10C4F8AC5AD50F13C5B260AFC16EAB1DF41495D4A",
+      "size": 909707,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/effe277cbedb9e563b837f8a901630e3/15369c02f0856bfd3d570cd8a8107b55.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\1623efce9d1a46396798f44a7bc769e9.cab",
+      "sha256": "24A21854EE76837D536E0BEDB7F1F47AE093E6376BBADB76B1F3B6799672C4C0",
+      "size": 455190,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/1a3d7bbb817e798022ad15e201441270/1623efce9d1a46396798f44a7bc769e9.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\16ab2ea2187acffa6435e334796c8c89.cab",
+      "sha256": "45A915F60968AD3C6648B7D92E1B082D7DAF2CCDB12E175E3D3A2ECA090B70BC",
+      "size": 672348,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b1aa09b90fe314aceb090f6ec7626624/16ab2ea2187acffa6435e334796c8c89.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\19248fabbb2098a7b88c4a2786066bcc.cab",
+      "sha256": "9B2CAA7AB410010F2B882977ACBF24FA281378B64D0C63585FDE23A02FA9E0A6",
+      "size": 779769,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cd9c305e96c20618c21eea3ebe95cedc/19248fabbb2098a7b88c4a2786066bcc.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\1de82860db02f762c5f65a73daa31f3e.cab",
+      "sha256": "88FE25318B7087EC9F36B9FC7152CE94AB0600D593409671A8F048627FB6FF9E",
+      "size": 14272257,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bbc21080b07af83401e2141a89bb1d14/1de82860db02f762c5f65a73daa31f3e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\1f32e9acf0bb1e6a5f485cd8670cd8e1.cab",
+      "sha256": "F6E685B7A9B75E18541EC5CB0E2540A6FF76B639C10607AAD9BCA8DA74877B89",
+      "size": 20019,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/6244bffe14fe65a1b613b31b42f9ac52/1f32e9acf0bb1e6a5f485cd8670cd8e1.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\20e79882c0bf37840a94a4ce06bc571e.cab",
+      "sha256": "13A6C636DA8F80699DDD78C008A45CE89B7483A2261937BBDF50E5F0BF830C75",
+      "size": 1965957,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/138b33affdde90d9e0cab5179662626a/20e79882c0bf37840a94a4ce06bc571e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\220daf459e79c5d26366654b1b482e87.cab",
+      "sha256": "24E17E9630E64E08AF63380F678277048F11EE4DF4F2045B505F3370FE26CD8C",
+      "size": 95602,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/740d4e952bc6b3e4eedfc0aeed95e8f4/220daf459e79c5d26366654b1b482e87.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\262fa3187c00a1f695e0c3eeb7ecf423.cab",
+      "sha256": "9FB2F59955D711C929674DD5998FEA7E44FB41F9A9623FF6DEA1EE9B77E439E8",
+      "size": 1604348,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/536c20d67cc5bf0f333f516e03f9bbd8/262fa3187c00a1f695e0c3eeb7ecf423.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\2630bae9681db6a9f6722366f47d055c.cab",
+      "sha256": "71935C54E75EC402615A132C4FF17B68CFCC6BFC4E1F67EEADEE3E69B4586ED3",
+      "size": 7684170,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/24f3b8f9d86a35de61ffe688ea5b1a87/2630bae9681db6a9f6722366f47d055c.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\263104e5ce3a72f68151a93d88a3f22f.cab",
+      "sha256": "6275B6A0B3AA182979ED9A8F84ED8AE6496E0CFD2E2D7E5F8E32C35542C930EE",
+      "size": 17266,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7da961b23a666d8b71485848ef81d1de/263104e5ce3a72f68151a93d88a3f22f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\26ea25236f12b23db661acf268a70cfa.cab",
+      "sha256": "8C97810088F558BC548400DAF1D1B4211D7A42E132AA66B56311692396415CCE",
+      "size": 91014,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/238b5c47d858d3cff409b910cb6c0168/26ea25236f12b23db661acf268a70cfa.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\2a30b5d1115d515c6ddd8cd6b5173835.cab",
+      "sha256": "D9085F4013A09209F058D48904D6562F7106FBBB98BE19FC6A1A022348449FEC",
+      "size": 91021,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/de771a207427617cd935113961c9df18/2a30b5d1115d515c6ddd8cd6b5173835.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\2dd914bb5abd9365f932d15eede09c52.cab",
+      "sha256": "9B51A1D0AF591C6F364A81A8EEF52611A1A32C6D3162CC537DA61D55EDA16A47",
+      "size": 1366367,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0051213c97b177738c7eff2d2f4113df/2dd914bb5abd9365f932d15eede09c52.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\2e876dd22fa5e6785f137e3422dd50ec.cab",
+      "sha256": "D179A91B6797F8FF02140F138FD0A5AC0F4E8500D0B3165929C2F2FA3A3E6B01",
+      "size": 9221849,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/211f799fae428adc4cf9357c54457693/2e876dd22fa5e6785f137e3422dd50ec.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\306e26e920fd32cb02bf538b4e799a0d.cab",
+      "sha256": "D8ECBE301BC2E66DECC3FC2DB91B2D5BA7997C8CF2BB5BD1CE13C772A501F2C2",
+      "size": 166247,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e61f7d801d1ce77220cf9d8c9a638b55/306e26e920fd32cb02bf538b4e799a0d.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\353be8f91891a6a5761b9ac157fa2ff1.cab",
+      "sha256": "35E6B88D2397E8B02C5B8182FFE5695CCC889356A601B542FC318CB7C47AB8B1",
+      "size": 66047,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2bb6fb5745da4c4c8dc6d589d216888b/353be8f91891a6a5761b9ac157fa2ff1.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\3e2f7be479e3679d700ce0782e4cc318.cab",
+      "sha256": "836D4C723D5D36CD77EBFEFA92F388FCF7E69D0B4E85A6C61DE55C4233951D0C",
+      "size": 32157463,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/19de98ed4a79938d0045d19c047936b3/3e2f7be479e3679d700ce0782e4cc318.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4035a83dc8e73244d15d1196d55059c3.cab",
+      "sha256": "CDAF5A47E4F43ECB7C1CA68D9E6EE5B8C14F47F2A03DE94BEDED710E0EF83ED8",
+      "size": 17433,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2c80032efa2e6a5f87b4ab68ca1e8623/4035a83dc8e73244d15d1196d55059c3.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\40d92f424eff54b03db4c51669f9a8d6.cab",
+      "sha256": "1F7DD98338D91EC504B50F852B817DD4AA11A80DA547805B116C27BBF2BC7C15",
+      "size": 191101,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bb1cde45e4d4a5b725cdddf4d61a09e5/40d92f424eff54b03db4c51669f9a8d6.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\43d52fdb99b86048e15fbd34f5b99cb5.cab",
+      "sha256": "875C22C8EE78119CF721CE2532099C8B719891016EB27AE61456149C65DE79AF",
+      "size": 251201,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7bd825876e60b7936843c03ea6084b97/43d52fdb99b86048e15fbd34f5b99cb5.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\43fd989a0684600a8c4dda7a6373eb59.cab",
+      "sha256": "747AE5CF12B6F1660697A56E269B8330E5E6A79D7853C4A69C6BB3DA6F2CCC62",
+      "size": 45622,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0f92577f4eaa2010c4b50b7ebf9ee274/43fd989a0684600a8c4dda7a6373eb59.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\441901505fcd0b2e997ea7d954f04171.cab",
+      "sha256": "94482B4BAFF330AD2F1AB6EC1781129147729CB8ED5E66427FA9405F1306ACCC",
+      "size": 19392,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c034ba0f106318f1fa3114fe1bbefe21/441901505fcd0b2e997ea7d954f04171.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\44472e2321abba45e828de25827264a3.cab",
+      "sha256": "27530D0AD63C1E9CBD5C4B1A79234D65D1A4F659CDA61BC276A54EFFCF6972AE",
+      "size": 21243,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3240b3e098c90c27d41e5aaa5a7f8c42/44472e2321abba45e828de25827264a3.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\463ad1b0783ebda908fd6c16a4abfe93.cab",
+      "sha256": "70861D4CD997D6D8674507FF2FDB59F39ADFE132876D2179E7EC4CE8EEA6BDD5",
+      "size": 215326,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/149578fb3b621cdb61ee1813b9b3e791/463ad1b0783ebda908fd6c16a4abfe93.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\47133212c2f5ccf49392d7762293a075.cab",
+      "sha256": "6D44FFA98B2B4F4DF7F191C5638605682395D1224F75CC2A60F8EBEDD5D82EAB",
+      "size": 1630473,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/1996f9fc899ce8e5d93aa7c5bc1433f4/47133212c2f5ccf49392d7762293a075.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4a4c678668584fc994ead5b99ccf7f03.cab",
+      "sha256": "22103B41F79173A10AD1C537D5F877017709A4F4D3DC8A071C387F6FF175E3B9",
+      "size": 431453,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/1b0fa886e5b69d9951a5723e4a4a1e8a/4a4c678668584fc994ead5b99ccf7f03.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4ad4df991deb0eaa1f79f896b959d580.cab",
+      "sha256": "8F68871ECEDD4E0268B5DCDF5C1E7B7242E2A7310668D6CF0D494235306C3442",
+      "size": 1544991,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/878b92b7af900bcb2d24069b08cb9b55/4ad4df991deb0eaa1f79f896b959d580.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4c59234340aaf3a96ec480c1aad8d179.cab",
+      "sha256": "4C7B2C9EDB999A024A5A2B067552794D8A3E3BB17DFCAF43FFD07016673EED70",
+      "size": 614495,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/54888898c0ef991bb30e249e54a484da/4c59234340aaf3a96ec480c1aad8d179.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4dc69cc131b3f4fdde53e76d759509dc.cab",
+      "sha256": "AA72C6ECA179F41D0E7A07DC408B2DBE57AC1CA140D0F014D807E6A79840502B",
+      "size": 453322,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/61437a2160ee1d949dac4e6623ff516c/4dc69cc131b3f4fdde53e76d759509dc.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4e2dea081242e821596b58b31bc22cca.cab",
+      "sha256": "006DEA54F6A9EBD5EF7F88B23CC69F0A07031D4C40E0390D6BAB5D964F901E0F",
+      "size": 16711,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/1b8b2005e9205eb3e4d136cfae2180f8/4e2dea081242e821596b58b31bc22cca.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4ec14c5368b7642563c070cd168960a8.cab",
+      "sha256": "EF68A468485F0F2461DA8816A6A0F8D28688F9B067C71ACDB894A06F839FEDC4",
+      "size": 1872901,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f8cf15ab9368d101bbf1c84c90b38a4f/4ec14c5368b7642563c070cd168960a8.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\4fe4c8b88812f5339018c0eef95acdb9.cab",
+      "sha256": "A1E28AE9DC0E8045C8FA4904401FE6C705C86151C6A77F3BB3F34BE319BD89BD",
+      "size": 24554,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7b3359b9a3570657e53f365d91f0a67a/4fe4c8b88812f5339018c0eef95acdb9.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\50ce7925226cb6ab8e0fe9ad9fd58433.cab",
+      "sha256": "4F59F68411D3093C20FE12DB1B36EB70B45A244F21250A7BE176A8820CCB7D3D",
+      "size": 7359691,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7e001568cc7a5886bc497ce7efd65922/50ce7925226cb6ab8e0fe9ad9fd58433.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\52a8e5203ade8fe7174c590308f2e44a.cab",
+      "sha256": "72A349F552466BDBF0D5C119E76ED94095242BEF90419FE5082A60541D25230E",
+      "size": 464534,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/453636a17c956aa0b8a9954149fbbf08/52a8e5203ade8fe7174c590308f2e44a.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\53174a8154da07099db041b9caffeaee.cab",
+      "sha256": "8B6BF7DCCB73BB1DCA6D354B640B78D6DFBE6942947BEE89CBF71BB7A6F0D36A",
+      "size": 15399375,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/8ce0117dcb7784e118402af117f48884/53174a8154da07099db041b9caffeaee.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\5509e4710313421be8d5e7cfbfde4d30.cab",
+      "sha256": "66D14C33F14B3053AB55CD7D4B36E3CE6EEAF0D59913161B717C9BEC6583F5C1",
+      "size": 1039080,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3a2b75ce686988fb9728a3a592cd7c6d/5509e4710313421be8d5e7cfbfde4d30.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\559dbc3a49a69c6adf60b1c87b4df71b.cab",
+      "sha256": "BDC8927A7A61A28BFA46C039BF69D2AAA568FF4584D934DB6DC5920583BA44D1",
+      "size": 16575,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f0723fdd3eb4428ba3e22bf90c6ef279/559dbc3a49a69c6adf60b1c87b4df71b.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\563138901adf40a699df4654138ac397.cab",
+      "sha256": "F5D02AE24BD7F172ECDE17562C0397D523A4562827625E5E1D87B371C4F70717",
+      "size": 1432709,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c34fc279b9d873c3a032d6134fd955d9/563138901adf40a699df4654138ac397.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\56a114848fda9a7e47bad4b3fc4be9a6.cab",
+      "sha256": "7F2A88F8C6896246A38EFB78EFFB2063F1F84E924D0E731E3900840575976E87",
+      "size": 7732064,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/dbcfca1e1ff6d52dc705f653e2db0ce2/56a114848fda9a7e47bad4b3fc4be9a6.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\576cff9c50e8085ab8d9c28ee12bac3e.cab",
+      "sha256": "F94BE0EB56A5BEAE61B8750B89D0EDF0E73C8DDF6AA3344E51A9CDFAA39F3625",
+      "size": 672303,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ed269dd61e51186f90ae15b2003e7fac/576cff9c50e8085ab8d9c28ee12bac3e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\58314d0646d7e1a25e97c902166c3155.cab",
+      "sha256": "7857B1964EFB5D5326559F1C3FBF1AB94145B872ABC3B57466A5A044E6379400",
+      "size": 16310749,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/d3a7df4ca3303a698640a29e558a5e5b/58314d0646d7e1a25e97c902166c3155.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\590d28783ff280b8b0016c3492433241.cab",
+      "sha256": "2607ED993821A5CA86848425A7C68C2BB3CE3CFD364744EB53C1C302449324EB",
+      "size": 9323764,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/27c5182c4b43450ef5b2fc81bd836f3d/590d28783ff280b8b0016c3492433241.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\598442d9f84639d200d4f3af477da95c.cab",
+      "sha256": "C4E9995DEF4134DE2F63EE45450CFDB71B5BCC39F4A24AEA05D22EB30D328DBB",
+      "size": 57086,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/12fe0984011338226477b6f5583f612b/598442d9f84639d200d4f3af477da95c.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\5a22e5cde814b041749fb271547f4dd5.cab",
+      "sha256": "23E1AB4CB22A334AC45A5E152949313D043D442F2BB0F5CADF4AF80E0E653743",
+      "size": 15195129,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/5c986c4f393c6b09d5aec3b539e9fb4a/5a22e5cde814b041749fb271547f4dd5.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\5c9ecffb06ed5f4fe5fb7db86bf7328b.cab",
+      "sha256": "38EFCC6D585F67791FE5CF9D3E45023FAF00D12079A6A718E57969D2A33DD140",
+      "size": 366461,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b975e3a181918cebef1e5f2d42b00909/5c9ecffb06ed5f4fe5fb7db86bf7328b.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\5cf1d61a223a02ff2f52fe05f058d52e.cab",
+      "sha256": "E1766FC2D60EBAE877DE8FF995600B3F44EDE9A87E1CC0BBC2A3609E101B5143",
+      "size": 1237200,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/acc8357f81d5449997a87cc6af756f3d/5cf1d61a223a02ff2f52fe05f058d52e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\5f6cfec263cd265cf3b0d97fd78ddf05.cab",
+      "sha256": "CD73A20C60CACC84EE852ADAAAE3DF10D588A39D906F8C96375BB0C68C6C6871",
+      "size": 3098365,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7a0c2c2f99b6dabe73d8107d8ae4f096/5f6cfec263cd265cf3b0d97fd78ddf05.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\61d57a7a82309cd161a854a6f4619e52.cab",
+      "sha256": "738E7D9A758B5C484BEF4732E8280E2A867FA39036E333ACBFE6ABD2E6435C96",
+      "size": 9505394,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/87f8a73eb1850c5995b0029e5ba5f0c0/61d57a7a82309cd161a854a6f4619e52.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\66c7c64126fbf84f47ccec556d149b12.cab",
+      "sha256": "61CE84851A5F6827AE01E5B5C20310826B23387068E4A65993D750E9D2C4F244",
+      "size": 17067,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cc7890bfc1968585cf44fc6f5d15e60e/66c7c64126fbf84f47ccec556d149b12.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\67c9fd1fab36154e6e7e429610cd67c8.cab",
+      "sha256": "E1BF1574871B1BBFCAF39CB6474AEBEF07C96059A9686C5FFD6065CCD0645F66",
+      "size": 768149,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/112faf3926d4f8cb6523c2e502544886/67c9fd1fab36154e6e7e429610cd67c8.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\67fb2af3d2219b403e419535a547c019.cab",
+      "sha256": "8361C85FF6D4F109912E49A4EFF7D55C2B5080177E576C014319D0D2360EC520",
+      "size": 97402,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4a8c22408b784ec39c64f7ca2ab2781d/67fb2af3d2219b403e419535a547c019.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\685f3d4691f444bc382762d603a99afc.cab",
+      "sha256": "4D0161C2788C15DD464E3006102A587FACEEE7EBB9FEAE41D54AFE9B0CCE6B29",
+      "size": 1142427,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/6a8fd46d9bfae7461eef0d8a5cbf5cec/685f3d4691f444bc382762d603a99afc.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\68a5a2b14625f935761325cddfadca11.cab",
+      "sha256": "67C5976648071B66C4BBAFC6AB82BDD0E6AD24AFFAAF79BECE0A16DC7EA14D2F",
+      "size": 2375957,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ff32215e8914c46770fe325c1fbe615a/68a5a2b14625f935761325cddfadca11.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\68de71e3e2fb9941ee5b7c77500c0508.cab",
+      "sha256": "A5CECD18F2B4EEF6A185604255A975B27D6271D39ECE8E7A836D4A3E4788F048",
+      "size": 16748933,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/5dc40d435cada5b8a213ff0d5502b0e3/68de71e3e2fb9941ee5b7c77500c0508.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\69661e20556b3ca9456b946c2c881ddd.cab",
+      "sha256": "1E95B1C14E6FB5637EBC559141AC868E76356FD44A7F542E8173E28B563A039A",
+      "size": 18616195,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0417a8847834a603b98d266fab55a983/69661e20556b3ca9456b946c2c881ddd.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\6b12414fdb1b4978419abcd383206c09.cab",
+      "sha256": "8676EB388CCAD171A225638C8DD26A72AF846948CE3BF314E8B516B5B2A09D4B",
+      "size": 16726,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b214ff7193299befc1ac6930fece80d3/6b12414fdb1b4978419abcd383206c09.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\6b5a91701fdb98ac8bc4af6e238e0390.cab",
+      "sha256": "849E80EF7C9E0025E89F2229A1C2C130C82E16C69DC9DDBCC83ED5406D10C392",
+      "size": 1987690,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/9b65c13a7c6900316ca916acc3ec4b90/6b5a91701fdb98ac8bc4af6e238e0390.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\6e86d5003787b5a44d77f0142b20f2ff.cab",
+      "sha256": "2A3547CA33DF4B31C733235339A056B19EC386BFF44F08E7779EA805BA44D8A1",
+      "size": 102324,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/349bd0eee3be6a501de9ccbb0f4d6f62/6e86d5003787b5a44d77f0142b20f2ff.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\6ee7bbee8435130a869cf971694fd9e2.cab",
+      "sha256": "A93B6CEBCC3C18FECEC0F44EEB498426C5685001D212AB2E822E2ACF0E29F67B",
+      "size": 25386643,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/400609bb0ff5804e36dbe6dcd42a7f01/6ee7bbee8435130a869cf971694fd9e2.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\703316c9de0a32acf316d03b1cffc559.cab",
+      "sha256": "B8327A80A8ACA32C146356718AD0E1A3756BC1F296C166B97A5228114793128D",
+      "size": 9942917,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f0670621c3f8838ea7149cce3d9bb5c7/703316c9de0a32acf316d03b1cffc559.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\73b80f421d7f3df5a71bd772f56bf3ae.cab",
+      "sha256": "AEC99E68D2AA4C5BDE4E5129C7259C7AFDD0CC75D65A629535EFE9B255C31A53",
+      "size": 96193,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/46116b2f5567ac1f060dcfc534737066/73b80f421d7f3df5a71bd772f56bf3ae.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\766c0ffd568bbb31bf7fb6793383e24a.cab",
+      "sha256": "F5B24D8E57DEFAC8252EE5041312C8509A2E1A27ACBA03BDC339FAB45A833356",
+      "size": 7996026,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e0dc3811d92ab96fcb72bf63d6c08d71/766c0ffd568bbb31bf7fb6793383e24a.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\78fa3c824c2c48bd4a49ab5969adaaf7.cab",
+      "sha256": "BD2FB5A51595CAA882DE63AC290B1552A619D6994EB7188E98B3DA17F16197BE",
+      "size": 53079901,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2ac327317abb865a0e3f56b2faefa918/78fa3c824c2c48bd4a49ab5969adaaf7.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\7afc7b670accd8e3cc94cfffd516f5cb.cab",
+      "sha256": "511D83518C353BC06132F7EF9BEFF0A49E4B077E8CC0533C472DAF6555D8CD10",
+      "size": 1075607,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f034bc0b2680f67dccd4bfeea3d0f932/7afc7b670accd8e3cc94cfffd516f5cb.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\7c3667a45d36470bf3cb648878a6ac2e.cab",
+      "sha256": "9836B9AF977A139BBE312D4AA18C1F814A543415B10D21016BE6F8A6DFECD720",
+      "size": 775173,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/30b028a205ab49861b1e76f555681461/7c3667a45d36470bf3cb648878a6ac2e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8016f7584c8fbeff0b032c65f4173e78.cab",
+      "sha256": "9652E5FA9CCB7FB6F67096CBD33E2AA42FAD979C06E75E2C35B9DD132BE981FF",
+      "size": 39254,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/d511cab4427d0145b9ad616c4ad5efe3/8016f7584c8fbeff0b032c65f4173e78.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8038f3cc95dc4b7d0346cb2ab7e044ff.cab",
+      "sha256": "3A7CC690362B3010D8DBC46CA5EB91D3DDE29FD4888D560A699C1240D238786E",
+      "size": 1075656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ec5e684f9841788b340380f376a0e9df/8038f3cc95dc4b7d0346cb2ab7e044ff.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8125ee239710f33ea485965f76fae646.cab",
+      "sha256": "2B79B17E3E6090020CD8311C77B23B0A5B432D2144017FA84E584327D327814F",
+      "size": 5718263,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/613503da4b5628768497822826aed39f/8125ee239710f33ea485965f76fae646.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\818d2d3634f0efb6e64d7e7c8ca5f98b.cab",
+      "sha256": "0110B0012A5044752FAFBA08434302F8C1FE6A646DD77A9D1988A2AF28F81780",
+      "size": 112004,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4e32a61f81ddaaad820888a3ca26eb72/818d2d3634f0efb6e64d7e7c8ca5f98b.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\838060235bcd28bf40ef7532c50ee032.cab",
+      "sha256": "230656FCE95CBC717A5A1BD7F5959A44279356CA4C5285638F7B5A6150ADE7DA",
+      "size": 17382,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f2e54d2c5ab04a7aa55bd7a685f3ad20/838060235bcd28bf40ef7532c50ee032.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\89d9bbd87f7a5560bafa520a4ebfdf17.cab",
+      "sha256": "949ED796AABC477E330377C81E9EB1131AF586112DE1C2608F31FD8285560967",
+      "size": 89641,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/9237ab1a31dbce6a042a4710677693b2/89d9bbd87f7a5560bafa520a4ebfdf17.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8ce0662e0e014576121e526f53d8f6b5.cab",
+      "sha256": "E3748ECCA2E726199174527280574847A225F46EDC2E57FDE3844B0C1CB56245",
+      "size": 444284,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7a7dbb3e97ca28b1c8e0c25049955da3/8ce0662e0e014576121e526f53d8f6b5.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8da73ae89e24f0b5cdf1787799c2a65f.cab",
+      "sha256": "1471702A22ACB21B987B1BACCF645832B2F90092E30463049977B6558308BC50",
+      "size": 1501786,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/1298c66549778cdc17e6048688f5d8d9/8da73ae89e24f0b5cdf1787799c2a65f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8daf1f236e631041cdaa802ddb9ccc3d.cab",
+      "sha256": "7C42A5CEF8664E698E3DFB5A40CFC78AB0902F3F89712D7F080ADBCC7EA2DCFB",
+      "size": 107649,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3c6fcf65053683e6363788a1a88a7954/8daf1f236e631041cdaa802ddb9ccc3d.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8e4755178e6b5bcba8d3538c3630b7a5.cab",
+      "sha256": "32198C94023C43D88535C9C42585F4AB8CF2D560EC18A8F4FC46D21B54B0C8CA",
+      "size": 1138931,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/915a19b7d784be996369ceac4d9b1a98/8e4755178e6b5bcba8d3538c3630b7a5.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\8fe3c1ca244ece932599eb0b61855d8f.cab",
+      "sha256": "4903556C55FFFD4DC7BB55018502F40ED8F0DDC362328BCFF093B1FAE42336CA",
+      "size": 93331,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/70e5e20c2302655629eefcbef8a04cb3/8fe3c1ca244ece932599eb0b61855d8f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\90e1202895672ce81992e71be30528cc.cab",
+      "sha256": "82C1F90C027B03B527EF690DBB0ECAA1A17BBEE286A55FB026AC452BDD5CA4BD",
+      "size": 355660,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cbf1970aff70bd64204228a49a93b192/90e1202895672ce81992e71be30528cc.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\931721e121ef91707ddcb6cac354d95c.cab",
+      "sha256": "B3B027B24CFC7041489FC2C114B6141B0B8E2FD7B963FF066E5186F295038322",
+      "size": 16860,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e69e84a3c6cfce15ec1a36681cf8e2e3/931721e121ef91707ddcb6cac354d95c.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\93a74a1d34a22ae9d2e1ccc5208ad21a.cab",
+      "sha256": "310E28754CBDB8FB803C467A8BE9DE2A0D0A25BB6A978ABA3A3EE78D40E97C7E",
+      "size": 480798,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2d9643215870de171ad92dcf3d44672e/93a74a1d34a22ae9d2e1ccc5208ad21a.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\94521fd1a9c57258998d60ce60dc43c3.cab",
+      "sha256": "128E92FA6E2300BB3F995F5C89B503043F51AA64A1E4DCDF59903DF761D1ADA9",
+      "size": 1903740,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/25806622f6cbf9c2e3a55176f7ab78bd/94521fd1a9c57258998d60ce60dc43c3.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\948a611cd2aca64b1e5113ffb7b95d5f.cab",
+      "sha256": "F3CE85419F9F11AED8A804351661BDF06F1DA1A30B301B33DA8B60ADA48A29FB",
+      "size": 851066,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/a919c6b526a2a9da15245a4e3a01b36e/948a611cd2aca64b1e5113ffb7b95d5f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\96076045170fe5db6d5dcf14b6f6688e.cab",
+      "sha256": "B7EED9C1F9B502DDFD6AB64E74D630730882F29D18AB02E2C37705D834F2EFEA",
+      "size": 675699,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7ed5e12f9d50f80825a8b27838cf4c7f/96076045170fe5db6d5dcf14b6f6688e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\9a7145bc3b132e5da6d44c0ab4a1af70.cab",
+      "sha256": "88BA9260889409385CECECA41BBF06FEBFB7C8BAAB9AA0F53D507B5EAEEFDB6B",
+      "size": 8200779,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/83d4781aaeb4bcc1079e570fdc1ee5bd/9a7145bc3b132e5da6d44c0ab4a1af70.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\9ba47e440ec2fbe9a3d32a53bf0f68dc.cab",
+      "sha256": "043FBA4BCDABE2681C745C93BB1C72F8506FC00ACEDDB5BAECE03A49826F505E",
+      "size": 468160,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ed76b8685e26dd1c862cbe2c1bb68ac8/9ba47e440ec2fbe9a3d32a53bf0f68dc.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\a17683486ace64c3f9a1cacb81ee0260.cab",
+      "sha256": "EBDC2F38359CCD1B74FD5D41BA1505B4E62BE46E2C083367E3F44E716340131E",
+      "size": 99694,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3e4abeb7c4f4887a3d15ca8745d61735/a17683486ace64c3f9a1cacb81ee0260.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\a1e2a83aa8a71c48c742eeaff6e71928.cab",
+      "sha256": "D3999246C65188CC219077BEB75A50878B6C71CBAA5E6D7B8F46AD63E2568DE4",
+      "size": 26871634,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/764edc185a696bda9e07df8891dddbbb/a1e2a83aa8a71c48c742eeaff6e71928.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\a330840cf08ad4d210703c9acd1bf2b8.cab",
+      "sha256": "61720BD4826632F4A0CC098EE6F79C530239AA38C43C9570D23947705CC1D18B",
+      "size": 1074921,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f60f18deca1864d983043883fa8288e8/a330840cf08ad4d210703c9acd1bf2b8.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\a35cd6c9233b6ba3da66eecaa9190436.cab",
+      "sha256": "70054826EA73C65F785FAD82FC1EE739312026E8C6AFFBDFDC0CB5E5C7FFC1FB",
+      "size": 1914486,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c5749a33e06e8bddef2c705072913ed1/a35cd6c9233b6ba3da66eecaa9190436.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\a68c0988d16ee124783efd98074dcbf9.cab",
+      "sha256": "561A03F733AEA03F6F2F9754D88EE0E958087A7B01401DB2ECAC3C9263541010",
+      "size": 17390,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/de3d4b995507a597f13f4d9ec728f0d1/a68c0988d16ee124783efd98074dcbf9.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\a76e4219ecb0f1c0006a6fe080c54ad9.cab",
+      "sha256": "6CC03D3DBB87DBFD7FA5F696DA7C530681669F0AD7811C861C44158944F64B49",
+      "size": 8777665,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/87573bbec709d38ae61cdb27eed3403b/a76e4219ecb0f1c0006a6fe080c54ad9.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\aa9c58552bdb82dae4ed48ece081cfe3.cab",
+      "sha256": "D9CE7AB82036DA9C161FBC5E1C6E23F4D6EE38ECD499308C457BFB548B24826F",
+      "size": 1573888,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/593e4ae0b7437a1893a6a99e16aa88f5/aa9c58552bdb82dae4ed48ece081cfe3.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ac4ddfcf1101c483559a5f6e36f1ef2d.cab",
+      "sha256": "AEED40C47B501C2DB75980E9F019BF23218B1ACBCCE637CD16DD8C996502D996",
+      "size": 19122,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b0c6520bb661c9d0b79f1094f270fb41/ac4ddfcf1101c483559a5f6e36f1ef2d.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\Application Verifier arm64 External Package (DesktopEditions)-arm64_en-us.msi",
+      "sha256": "54DF3BA68BEE86950979D30D7B72572BE41CAD97F823B4BB343D0740E22D162F",
+      "size": 585728,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/d92a3e44d61a5d0e0769b2e28ca14c67/application%20verifier%20arm64%20external%20package%20%28desktopeditions%29-arm64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "6"
+      }
+    },
+    {
+      "fileName": "Installers\\Application Verifier arm64 External Package (OnecoreUAP)-arm64_en-us.msi",
+      "sha256": "6F53B0B2F591955A5DFA92D8D8895B09D169A536657A9DB940E0A935C3949E3B",
+      "size": 1613824,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/42bdf6071cd1ee4236c796f9292e94a2/application%20verifier%20arm64%20external%20package%20%28onecoreuap%29-arm64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "6"
+      }
+    },
+    {
+      "fileName": "Installers\\Application Verifier x64 External Package (DesktopEditions)-x64_en-us.msi",
+      "sha256": "076E4AF6442458454C9102B3F81E93EA72AFC3A6BD680CD10FFE3E1284FD215D",
+      "size": 684032,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0191a9dd6a6c37a4565939f4a6ed895c/application%20verifier%20x64%20external%20package%20%28desktopeditions%29-x64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Application Verifier x64 External Package (OnecoreUAP)-x64_en-us.msi",
+      "sha256": "DE8AA36F1ACBDB8589D059F79745B7409313143D424929757423CF695F90AA08",
+      "size": 2441216,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4f4379bb09d4bc20a2cb12694ef41ca7/application%20verifier%20x64%20external%20package%20%28onecoreuap%29-x64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Application Verifier x86 External Package (DesktopEditions)-x86_en-us.msi",
+      "sha256": "7184B5065523DFEF50C982F28A5C518547DFE9AB32440EAD1ACDAC25045457DA",
+      "size": 561152,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/a14bc9510f69f17597cdc59d07a60985/application%20verifier%20x86%20external%20package%20%28desktopeditions%29-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Application Verifier x86 External Package (OnecoreUAP)-x86_en-us.msi",
+      "sha256": "E72DF7EB3BB870581A499C503724B036199A06505C8D3B0DCCC88B8598819F0B",
+      "size": 1372160,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/64f9752aff4a6688a2ecf722ecf6b1c2/application%20verifier%20x86%20external%20package%20%28onecoreuap%29-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\b0656253ef2f688d2982eafa2e73f621.cab",
+      "sha256": "AF2BA7C869C35F23831E8325CBF472D3DC675A26EE1346C10AC3252FDDA5370A",
+      "size": 30836,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ab768670c412b3ae113358e8d07cca4f/b0656253ef2f688d2982eafa2e73f621.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b1a824e2952532fe8fd0145f5d148d25.cab",
+      "sha256": "5D89566BC940C332106570D88DFCF5A3624220839D0A2FB9CA078C3283187EA1",
+      "size": 398664,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/eda55ca6b5764b86d101d8798eef530d/b1a824e2952532fe8fd0145f5d148d25.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b1a8ecf890b4ffddd05e8c9422f55db7.cab",
+      "sha256": "1D647DF1C0A50BBC3C67B14DDB38763C061BE61DA127E4C39FAE52B5759A52E4",
+      "size": 156524,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4092410481acc35aa40169ea1cba9c9b/b1a8ecf890b4ffddd05e8c9422f55db7.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b2f03f34ff83ec013b9e45c7cd8e8a73.cab",
+      "sha256": "31B5FC93DAAA542FF578E6B00CA7477891735EF7B390CA81DA82528D4F6109D7",
+      "size": 153142,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/66854bedc6dbd5ccb5dd82c8e2412231/b2f03f34ff83ec013b9e45c7cd8e8a73.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b4eea6c909a31ab051e6f9b6218beec8.cab",
+      "sha256": "B0D36FB32FF8BBB7555452512BD47D19F714E73A6145AAA5B7EA77397EB36A9C",
+      "size": 376961,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/8c6c2b02f8db69d9f74c00b28bfc6b3e/b4eea6c909a31ab051e6f9b6218beec8.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b5f177b84c0ec473cbd69557634b27cd.cab",
+      "sha256": "9BA328CE78875322BA225773D401DC969C0C7ED7E5B2B470B0C4BFE480C4B067",
+      "size": 16737,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f65f54acc614ebadfee0810befc06cbc/b5f177b84c0ec473cbd69557634b27cd.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b80b7321357f7c9f281536f9440dfe68.cab",
+      "sha256": "AAF77A891287E525B56CE5797810D900406EDF2553E6403E06FCB1BFE95C340A",
+      "size": 17078,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b1f8f6f75868691f1da91d3edd68016f/b80b7321357f7c9f281536f9440dfe68.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b82881a61b7477bd4eb5de2cd5037fe2.cab",
+      "sha256": "D72726BCCC8A3872A134E430DCC88110BC11C80A42BB3DCE0947B44CDFF73250",
+      "size": 25742298,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2a1a587fc15d0443fcff501b2c1791b2/b82881a61b7477bd4eb5de2cd5037fe2.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\b913ca15956d14df2d4b1f11ae07885b.cab",
+      "sha256": "3A419896033F5714A0E04642813CCCDA647B49CA3E69C5B97495A2C492BD5AE1",
+      "size": 224650,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2ba64ce4b735c249e8d35484174b6a2c/b913ca15956d14df2d4b1f11ae07885b.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\be06eca425b0c3c2f4de61cbfe9bc7a7.cab",
+      "sha256": "59818446E19881374315E02691A45E9AADD9EFD601ED397DE2D8105A127E2B9D",
+      "size": 224788,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/37784af4fb1414ba9cf7c88015a54116/be06eca425b0c3c2f4de61cbfe9bc7a7.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\beb5360d2daaa3167dea7ad16c28f996.cab",
+      "sha256": "8FBEAC2FE3320736CCDD3C5220E477D8F60D236441DA726AAB2205D10E8DB3BD",
+      "size": 613840,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/879a8d8635de514d07bd9cef9fe1798f/beb5360d2daaa3167dea7ad16c28f996.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\c0aa6d435b0851bf34365aadabd0c20f.cab",
+      "sha256": "00F1CC30C57F4C51C7BA53863458D27ACD04470E5D5598D43239FDB81AA0002D",
+      "size": 4258763,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bfe0acf995624f45bdf64d4044b4f99e/c0aa6d435b0851bf34365aadabd0c20f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\c1be9e93e88be3f6207f5cc074775d81.cab",
+      "sha256": "8332449475C4CBBA6603238ACEBAD50A0D820F2073E905B62AE14BD01A46AA2E",
+      "size": 95706,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/432a31cf6a861491f7219946b5c5418e/c1be9e93e88be3f6207f5cc074775d81.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\c2aabf6ea5c1d348ec22f3aeb92f8656.cab",
+      "sha256": "3C70B96674D2AC82648DE209C10F7A7E06C4EA7359257EEE97D5845A1587DC04",
+      "size": 17051,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/275775f4054055dc798567a985ea65b2/c2aabf6ea5c1d348ec22f3aeb92f8656.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\c4d38a2c963178a1a3469ca3d913768e.cab",
+      "sha256": "B743E9FF718D41BD6D77CBF6DC9F6060D530167761C4D60E6F0D86E276E130CC",
+      "size": 19217,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/fa5cc1edf9e99bda366b7358ba69cbe4/c4d38a2c963178a1a3469ca3d913768e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\cd9128b760c06a010e1621af6528432e.cab",
+      "sha256": "63735A0E294F186966A040FA40B9B0423ED17B845A59D08B3064385AA368AD7B",
+      "size": 62585,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/893b34d63f5af5fee57b3f4587ba4f85/cd9128b760c06a010e1621af6528432e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\cdea5502a35d09ddfbcda12e3a391dc0.cab",
+      "sha256": "74F2B7ED37233CE0BAF26C544943E8A8DDC67A463DFA21EFCED68436A1157A8B",
+      "size": 7486410,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/5ff892f515b968f5911b048d0e1dac57/cdea5502a35d09ddfbcda12e3a391dc0.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\d117bb4bc77abadc7c603552e122e513.cab",
+      "sha256": "58D9C34C53ED4FA17C0C5BB03AE816E1DF7813895FF3CC67F8B95A14F011DEEE",
+      "size": 580984,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/86b4798945114f1123f793afed28e13d/d117bb4bc77abadc7c603552e122e513.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\d1de88680a8e53fe75e01e94dc0ed767.cab",
+      "sha256": "C4F8624EEFC288DE11FCE393A155EB33D10EFAF4DCE5725E92802B4047773889",
+      "size": 20065,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7f50eed7e7b056e04fdc020c2a8f77b1/d1de88680a8e53fe75e01e94dc0ed767.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\d3e405ab232f8aca8c5b6a48a913d6b0.cab",
+      "sha256": "5AFA569952C8680F1F5A941AA82EF55ACC7518814B926A5CC18B82B9173C70D8",
+      "size": 929349,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/52f1e87348c9b943850b47affc60e88d/d3e405ab232f8aca8c5b6a48a913d6b0.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\d67259e233ce975d91c3b02d483becad.cab",
+      "sha256": "FF699ACF1BB8FD53DE0083684C194537FC47E885DA7DEE68B7FEEE7251B94C49",
+      "size": 13754875,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ff7e9d517b3b6f6c95b760cf45089acf/d67259e233ce975d91c3b02d483becad.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\d95da93904819b1f7e68adb98b49a9c7.cab",
+      "sha256": "8027299BF16102E6D7355C06A1988EE76732D4BF4D77350A47F9F0F7439F01D7",
+      "size": 40212,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0eeae527e6c4d432977b6a7f5c4ef327/d95da93904819b1f7e68adb98b49a9c7.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\dcfb1aa345e349091a44e86ce1766566.cab",
+      "sha256": "4C998D1BAA6781B2C513EF8AEC875A3F9AD9FA69C1CD79B1CBACA03B3E01A140",
+      "size": 90876,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/0dc8270e9c87ad873828b94710d705f3/dcfb1aa345e349091a44e86ce1766566.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\de111c3d435b0785b31b28c386ee691f.cab",
+      "sha256": "7BAF285B09FFA499B19B15F568BD9E9E003F6B5C77392C5A37FA699EB8FE9BFE",
+      "size": 17166,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4c322b4ec89092c9a364333daaccb80e/de111c3d435b0785b31b28c386ee691f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e10768bb6e9d0ea730280336b697da66.cab",
+      "sha256": "4EE5F49B6C1192DBB4352EC0D204A174169129B737F57361F6F3BD4971108831",
+      "size": 7208227,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bfc3904a0195453419ae4dfea7abd6fb/e10768bb6e9d0ea730280336b697da66.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e10f8811d44b50885777f56f8272f66b.cab",
+      "sha256": "9F2593C937D81FA152AB914A6210372BFD8752F5A34780F4EBADCA0E46902100",
+      "size": 614109,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/afae3eda7739ea0126a2c9e45885fce5/e10f8811d44b50885777f56f8272f66b.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e24dd258b3bbfa69c0842948fe0dd670.cab",
+      "sha256": "55D1EDE82A7891DA0F62D3266F9660982B94F66B0AD194B3C48394772A5CF931",
+      "size": 163675,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/150e48a815cb54eae779b52ded03524d/e24dd258b3bbfa69c0842948fe0dd670.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e3bfdbe21d5f48f62e6347294e6e8492.cab",
+      "sha256": "917393AAEE3B1497382597D5D893CBF07002175A8185D307E8C59D65D2BEBE47",
+      "size": 104777,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/479218e2d6f8264340cc1c609dbe14bd/e3bfdbe21d5f48f62e6347294e6e8492.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e3d1b35aecfccda1b4af6fe5988ac4be.cab",
+      "sha256": "396E5948B119B8CB69B07F1F2A25453724005E4A27B96F8B7FFBB8FCC081D186",
+      "size": 15410926,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b65014407ea2f8cee5b5399db7d32358/e3d1b35aecfccda1b4af6fe5988ac4be.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e59830bab4961666e8d8c2af1e5fa771.cab",
+      "sha256": "565867773D17370E6FC5FD9D15D496323B5B58D719642B84D7F9DBEE8B08ADA5",
+      "size": 167672,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/8600324635a65f19badde08f29ab33b2/e59830bab4961666e8d8c2af1e5fa771.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e5c4b31ff9997ac5603f4f28cd7df602.cab",
+      "sha256": "FB3C7557755F982647206088B69F7A325B818661827A75EAC0671DEE2A8F6950",
+      "size": 1913446,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b8c0745db4fc360e7780faf90d714382/e5c4b31ff9997ac5603f4f28cd7df602.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e87de81a902e0c8cde9e1355c3ff5f3f.cab",
+      "sha256": "050CC2139A00C614CAE3A57E39622459F55622723066B08DA7648A715AFC2B79",
+      "size": 1707043,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ad7270fd39bd02699da0f820c886d424/e87de81a902e0c8cde9e1355c3ff5f3f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e89e3dcbb016928c7e426238337d69eb.cab",
+      "sha256": "BD013EBF817A6EE04ACF130B34BDAB470BDA335B74DEFF9115FC069C55D35DF8",
+      "size": 913157,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/766e04beecdfccff39e91dd9eb32834a/e89e3dcbb016928c7e426238337d69eb.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\e98fa5eb5fee6ce17a7a69d585870b7c.cab",
+      "sha256": "481341ADC9121861CD70E5C7A0DC7218483B017DE86035813C1426FCD636F239",
+      "size": 1417284,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ec6d21496e8ddba75a1d24af0302cbcd/e98fa5eb5fee6ce17a7a69d585870b7c.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ec0637c03f99046936d32d51e13a392a.cab",
+      "sha256": "7A75DAB3319B9D8C0041DC95ACCDFC04157C7DC79256B2E23095553612337120",
+      "size": 16733,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/221fe30f41203381c5ab62411e206a87/ec0637c03f99046936d32d51e13a392a.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ec9ab4bbb809719605d27da343b909e8.cab",
+      "sha256": "12F4B631F032D51370AB5B013939196EADFE546755CF18FB4226934D5FA966A8",
+      "size": 104872,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/169889995363a05493deb1951ea27fa3/ec9ab4bbb809719605d27da343b909e8.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ec9d39539c27e8cf5ad39bffce00c34e.cab",
+      "sha256": "AB048F7EA8C449679B2F6AA2A438087C6D02B380D8DF51D9A0E02AFD27032CC9",
+      "size": 229216,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/23a8216338d8768d7bb30fe674a637a9/ec9d39539c27e8cf5ad39bffce00c34e.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\eca0aa33de85194cd50ed6e0aae0156f.cab",
+      "sha256": "82C5ACF1816F2B737A4CB0027214B9577BF99A2CD9E6F9BB761D26536FD033C2",
+      "size": 40213,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3d39d96c516322a4570cd3fe5fa2da9f/eca0aa33de85194cd50ed6e0aae0156f.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ed4d1c6b9811d81e3cebc553ae604f0d.cab",
+      "sha256": "F811718ED443E542FF7772746F06B1DE52C46B14D81FF1704D218D123BED8680",
+      "size": 16876,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/56e49d0d87a05bf4592bd63b98ad5670/ed4d1c6b9811d81e3cebc553ae604f0d.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ed5aa2f399092df3084cce671f072cac.cab",
+      "sha256": "D36BC2928DE87F6E3334F5E6B1D157E2A45D0E3C45CD056E7B919448C115A094",
+      "size": 1516536,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/69748600bde441bed8a1b100bc27e452/ed5aa2f399092df3084cce671f072cac.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ef4472fd7552490fd759075186ed2ec8.cab",
+      "sha256": "EF83C7F2ACAF7F43C6DB9965DBAE590A63349934012A58B6311BB8257118AB29",
+      "size": 258973,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4362e220f88fcfad6a3bd654d2506791/ef4472fd7552490fd759075186ed2ec8.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f105a73f98cfc88c7b64d8f7b39a474c.cab",
+      "sha256": "3034E66900FE1C5B4F4C8948B9CED563ABEAD896FB70456375F8550D41016323",
+      "size": 57333,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/77352d8aa105dd4927f5e1c7e38914fb/f105a73f98cfc88c7b64d8f7b39a474c.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f2e05dfd38ed343d3de77209cf3ecdae.cab",
+      "sha256": "9A60241D142177CE5305EAF7D08ECD60A08FEB307ADAF5040682C8210CD20FDE",
+      "size": 1227892,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/d9155b3b2cf212b4f279ea0d3e0aeccc/f2e05dfd38ed343d3de77209cf3ecdae.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f4661eda3692e166927c14c96164150a.cab",
+      "sha256": "5F967634FA2B387BAA755BD9E679188CD4786411A16D66E827E6AD84208C9D8B",
+      "size": 979726,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/79128c75fbfd5ee2dc301d6e4de66103/f4661eda3692e166927c14c96164150a.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f7b25543b47329ef932ad391c72c4ab7.cab",
+      "sha256": "E0752F5D8B728BDC33EE96531F194DDB8AD1408BD8509A4AC540126A9540FC2A",
+      "size": 85707,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c574fd7f300d6ac2de31d60bf023b374/f7b25543b47329ef932ad391c72c4ab7.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f87007e985bc5453a0f01ed1a5510abe.cab",
+      "sha256": "0B99C5E1A52C0F8346D61FFCF49FEABEA8E12C0288D87F447FCC8268AEC3C92F",
+      "size": 19259,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e85beb0ca28ffe1ad4f3bc5c644b8615/f87007e985bc5453a0f01ed1a5510abe.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f9b24c8280986c0683fbceca5326d806.cab",
+      "sha256": "A1FC49A5BC39F7C8AE312C1CE497452CCD153C21410E0E026F74814CA60609F6",
+      "size": 7121758,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/637f9f3be880c71f9e3ca07b4d67345c/f9b24c8280986c0683fbceca5326d806.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\f9ff50431335056fb4fbac05b8268204.cab",
+      "sha256": "A8589018731437D77B9B22557ED422613EC68834D119E03DF8A15372D4840D6E",
+      "size": 17344,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/d2d836d361e69be61ea868f993b5a80b/f9ff50431335056fb4fbac05b8268204.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\fe38b2fd0d440e3c6740b626f51a22fc.cab",
+      "sha256": "501F4B1C0E6D372BA084651A9BB285695510E4C4A4C283AADB6CA1619703A1B9",
+      "size": 17110,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/590f21bbb4595304aacc1ff6f39235c8/fe38b2fd0d440e3c6740b626f51a22fc.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\fef2cfedd6135e0ed85290b83f3682c3.cab",
+      "sha256": "622348C242C3CA0C344EB6CAD35A943783FD518E977F0065DEF01747132E96F5",
+      "size": 720759,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/6f18bc1c2ab8556cfba8525db8e59106/fef2cfedd6135e0ed85290b83f3682c3.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\ff8dd5a961e46b5d05906ac4b7a5ba37.cab",
+      "sha256": "C75E8AB92348B08B6C2780EE4A0099B961F692C91C26770CF9401B417308B89D",
+      "size": 16470,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/fcdaec48e7859113ffcdb39b7187468a/ff8dd5a961e46b5d05906ac4b7a5ba37.cab",
+      "cache": false,
+      "signer": {
+        "$ref": "3"
+      }
+    },
+    {
+      "fileName": "Installers\\Kits Configuration Installer-x86_en-us.msi",
+      "sha256": "74220ECB2CE67EB754C96E645661445CE67E0D9806E2520CB944E9DEE9E53157",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/68d36da265675756a97003e10147faa0/kits%20configuration%20installer-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\MSI Development Tools-x86_en-us.msi",
+      "sha256": "D9C89D343C774A0EEECF56212AA1D3AA911150A2CEB2D624E4DC6F7FED9ED83A",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/561b044e8c690bc76af2caeb48ce89e1/msi%20development%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\MsiVal2-x86_en-us.msi",
+      "sha256": "BD81D24D94B63C96D2697D3EAD6B38A5DB7B7818E40025A91ADEA5207C6D3DD9",
+      "size": 655360,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c148ae91485df324572edaa7d859ecc4/msival2-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Orca-x86_en-us.msi",
+      "sha256": "66A164661A79C8888DE4D770C4E40B69E010D0F33B1EFE172CE1518E2CF8E424",
+      "size": 655360,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7a5d796c39efcb14c16ccfd6088496a0/orca-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\SDK ARM64 Additions-x86_en-us.msi",
+      "sha256": "90B666E6E4D34AEF845F6E55643DFE0D232DB2ABB7BC5E21E6A07B85C362DF27",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/16d10f5d25dfa4c4e63cedd86b2b378e/sdk%20arm64%20additions-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\SDK ARM64 Redistributables-x86_en-us.msi",
+      "sha256": "221166205C59D4D5FF2EAD20FC59DDDE786D9B28E9236D28451E2196E10E295D",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/13c904c21ae839ff731b9e9be6f39223/sdk%20arm64%20redistributables-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal CRT Extension SDK-x86_en-us.msi",
+      "sha256": "9E794D551AB73F43FEA343263D79ED9679CBD4DDB875C5D8FAF2560620744ADA",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/fe0b8c699ee0d62ae5b494be9917b271/universal%20crt%20extension%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "sha256": "5BFF65E2A6EE9B13BEA45907F6BE225E46E4613603D0D32F0B36524BDFBF8D13",
+      "size": 589824,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2ee3a5fc6e9fc832af7295b138e93839/universal%20crt%20headers%20libraries%20and%20sources-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal CRT Redistributable-x86_en-us.msi",
+      "sha256": "1D79F5C134FD2A802D79459F7AC4D84DC40E6DB48C8C3CAE7175E595838C9BDB",
+      "size": 475136,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c1574c55fdbae2e26d5ffef5b4f430c8/universal%20crt%20redistributable-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal CRT Tools arm64-arm64_en-us.msi",
+      "sha256": "B0135F42AC396678919E0810ABDB9AB597CFE31E3394B466828780D96BA5CD36",
+      "size": 471040,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2740125f1a7959e19ea1dd399f66ea6c/universal%20crt%20tools%20arm64-arm64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "6"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal CRT Tools x64-x64_en-us.msi",
+      "sha256": "ADCC9AADD8308FC4C534547B0AE55E9AD477B003FCFC4A947E5304E477D30512",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/a982413898372a05c661fdc37ad30b64/universal%20crt%20tools%20x64-x64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal CRT Tools x86-x86_en-us.msi",
+      "sha256": "1D6562D81CFB97B3FA4960BF5554ECC4080961632978D4B96F24CCE94824F0BD",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/015cc7c7fa2dd6adaa169aeb3f4de387/universal%20crt%20tools%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Universal General MIDI DLS Extension SDK-x86_en-us.msi",
+      "sha256": "AF4BAD7CCDE02A8505D3CB69033EDEDB472D3EE927C8C7F7B14F3D3EF7C99DAD",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c29acf9489fc59991872a00b96380afd/universal%20general%20midi%20dls%20extension%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinAppDeploy-x86_en-us.msi",
+      "sha256": "C4DC1FA54437E64E8410F6EE16386C13BF626A4D45CA1F3777447DCA0C71A9C9",
+      "size": 1953792,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f314bdd25465edad5416142daff9cc35/winappdeploy-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit Native Components-x64_en-us.msi",
+      "sha256": "4F3A1300443FD399AB4B2A69B7B3F64BDC1AB643B9AFB6298509B987E909A511",
+      "size": 512000,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/9639a3255cfb290bd06e6f27f1dd9aa9/windows%20app%20certification%20kit%20native%20components-x64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit Native Components-x86_en-us.msi",
+      "sha256": "773807D521FBB92D6CF11C09250E0EA3096CF6868BD0AB35F786805C2665600C",
+      "size": 512000,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/9971df9b1fbd00423cd3126714a6262c/windows%20app%20certification%20kit%20native%20components-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit SupportedApiList x86-x86_en-us.msi",
+      "sha256": "A61E5D67F851E58105A1330423F9D0AA99C92FF6D1535B0123C429D0A6BEAE9B",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/25443612a8371d29454b8a96ae9ed8ee/windows%20app%20certification%20kit%20supportedapilist%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit x64 (OnecoreUAP)-x86_en-us.msi",
+      "sha256": "6A123DDB76C98FE232FA5C436C578F8C7F4DCED185520C950251E240F30BA37A",
+      "size": 462848,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bb02099ac3f6083af6323764e12a857c/windows%20app%20certification%20kit%20x64%20%28onecoreuap%29-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit x64-x86_en-us.msi",
+      "sha256": "EECD99B5422CC793176F9775A3C001312A99FA1B97B82F49BEE10AB62D113632",
+      "size": 585728,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3a114d513de18bfbe214c2c92d1f1a40/windows%20app%20certification%20kit%20x64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit x86 (OnecoreUAP)-x86_en-us.msi",
+      "sha256": "74667C5CEC9B945601F521165B139712DE0325D80AE79347C886512C93266E97",
+      "size": 462848,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f44e7c5acd5853f576e8d7f9bf4bf50c/windows%20app%20certification%20kit%20x86%20%28onecoreuap%29-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows App Certification Kit x86-x86_en-us.msi",
+      "sha256": "E3D32CE87F8236186B38A14078CF841066A8FDF865E1DB1729AD42EED8ECAECA",
+      "size": 585728,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4372ed2d668651fcba01ef9df3321d54/windows%20app%20certification%20kit%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows Desktop Extension SDK Contracts-x86_en-us.msi",
+      "sha256": "44F671F15019D5A9CEA2870B45F54943A49C71A1D25DDD552A025DC147DFB8EB",
+      "size": 475136,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/95f666241fa80bd519db02aa09c35536/windows%20desktop%20extension%20sdk%20contracts-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows Desktop Extension SDK-x86_en-us.msi",
+      "sha256": "C5CFE8A5DBA9DEE908068BBD7559F6634EB8772CE95475E98B48134A77B7281C",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/04044cdeb63b8f043af8d9a6cc24ae80/windows%20desktop%20extension%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows IoT Extension SDK Contracts-x86_en-us.msi",
+      "sha256": "97E6D080E42BE83896B2C2D8185DDB7E2CEA5F798558F58023B2787F89440370",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bc09747c236fe775b9b77c390e4c7a9b/windows%20iot%20extension%20sdk%20contracts-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows IoT Extension SDK-x86_en-us.msi",
+      "sha256": "D1B2DB936ED6BAB85359789F419864C398B70BDCEBCFB038D79FD796DC6DC057",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/66004e225c889a1826a54648cb493e23/windows%20iot%20extension%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows Mobile Extension SDK Contracts-x86_en-us.msi",
+      "sha256": "84F3BE2B6931FEBEA544D6742165DBB18EDBE823E01DF242F033F1CEB7AED194",
+      "size": 454656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/c8cdbf29068a6a14010728493f27594a/windows%20mobile%20extension%20sdk%20contracts-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows Mobile Extension SDK-x86_en-us.msi",
+      "sha256": "ECEE2791B31CE07E64E03BABE04B4FF98A438D52283C71649FECB5D02DFED00E",
+      "size": 462848,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ca2a656da297d3e657fb2100322eec01/windows%20mobile%20extension%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK ARM64 Desktop Tools-x86_en-us.msi",
+      "sha256": "D77ED157327BD82D971C6E67F4E9E7CC638AD9134E4131DACC521CCB08991B84",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/743bbd3ec7fa9a6ee0dbda151d91b21c/windows%20sdk%20arm64%20desktop%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Headers arm64-x86_en-us.msi",
+      "sha256": "39FB28E101EB9D4E842F1326F196BB6608850E12D0FB0EBC982FFBEB6A0D30A3",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/5b8ffffd9ba0d257a881e4a93d27f762/windows%20sdk%20desktop%20headers%20arm64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Headers x64-x86_en-us.msi",
+      "sha256": "C51D9CBBCF38E846F63F5005C1DFD68BF9B5DCF615CED65F9CEB457350E6EA58",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/5c9818f8ada2dc0ef9dbcb531b04671b/windows%20sdk%20desktop%20headers%20x64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Headers x86-x86_en-us.msi",
+      "sha256": "E49FEA7F27D0371D97F007F6DA08E63FF916BCE78C76222090D2E0B497B3E835",
+      "size": 790528,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4c1273439dca44ecb130b172958ea7a7/windows%20sdk%20desktop%20headers%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Libs arm64-x86_en-us.msi",
+      "sha256": "A9CFB665870396A0B16CE5EFFFEAAD3F2C676FE75FAFA6312FEC811FED03F2D4",
+      "size": 528384,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/7a332420d812f7c1d41da865ae5a7c52/windows%20sdk%20desktop%20libs%20arm64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Libs x64-x86_en-us.msi",
+      "sha256": "CFEF3C1BF3428984791736AC2348A4846BD44F3E4C041B6965AF80D58A90A5A6",
+      "size": 528384,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/9f51690d5aa804b1340ce12d1ec80f89/windows%20sdk%20desktop%20libs%20x64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Libs x86-x86_en-us.msi",
+      "sha256": "7FE6FF8CE40797BE7D5CCC75A6765432143524E9564966C853AD4465286CC544",
+      "size": 528384,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cf33607e4c58b936ba3aa3bd4ff02bb9/windows%20sdk%20desktop%20libs%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Tools arm64-x86_en-us.msi",
+      "sha256": "0DC93861C54C0D37B2A88747B5975491200733E1872EF4F0CAAAFBBBD0110B22",
+      "size": 471040,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/40cb306de81a6a2064865e49b92638ef/windows%20sdk%20desktop%20tools%20arm64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Tools x64-x86_en-us.msi",
+      "sha256": "BC1C11D1A688C75F7E479BAB30F487BBB4BB403D15CD4D7B365B4F80F89AD235",
+      "size": 475136,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e31a2802039aa9558a81d4488874a7da/windows%20sdk%20desktop%20tools%20x64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Desktop Tools x86-x86_en-us.msi",
+      "sha256": "35AD4C3F93C51098702FD18DD6AFEAFC03BBC2902D15CBCE6488B2488122E556",
+      "size": 475136,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3f91b573a7742cae9979a981ccfb6b70/windows%20sdk%20desktop%20tools%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK DirectX x64 Remote-x64_en-us.msi",
+      "sha256": "A60BFB36FA591F0FE3744CDD5710F1F23A397541C4D828116B10F94A99675127",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/78dde2550220480f222d52bd91c0d0ac/windows%20sdk%20directx%20x64%20remote-x64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK DirectX x86 Remote-x86_en-us.msi",
+      "sha256": "76547D3A2471A0369F0F135183EF7D5F182C7DD6083BED358232DE30EAF0CA73",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e034b8464f29a6acc03b2fb744cdf08d/windows%20sdk%20directx%20x86%20remote-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK EULA-x86_en-us.msi",
+      "sha256": "2827D05F1C4C5B2347DB28D2AF6A759F31C08C952DEAD8F75596C9E23E14BE01",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/bcf03858ac328a1d8e29d557256b830e/windows%20sdk%20eula-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Facade Windows WinMD Versioned-x86_en-us.msi",
+      "sha256": "8D5432FE1DCD5EBBB2182198686F856D6A17851AAB3CD61FFEBD3D74EED6CADF",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b0acb57492cf018ea3b6ee8c9649b479/windows%20sdk%20facade%20windows%20winmd%20versioned-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Contracts-x86_en-us.msi",
+      "sha256": "50FC85F7BE053DB24EF8549B5A8F6DF2FC484D63395D1104F66FE6A48444F75E",
+      "size": 466944,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cea3ad6083c416d0c17136570a630366/windows%20sdk%20for%20windows%20store%20apps%20contracts-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps DirectX x64 Remote-x64_en-us.msi",
+      "sha256": "5CCC6651161E8067F6A990A67B470F019A941212DA177228CAE420842F7DDAE3",
+      "size": 454656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4bf4de0bb5a3687a8586ad0832f9e610/windows%20sdk%20for%20windows%20store%20apps%20directx%20x64%20remote-x64_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps DirectX x86 Remote-x86_en-us.msi",
+      "sha256": "A21199D5C055A0623609495C17E1F101D15C0A0CC56B2007D5044F537F8D749E",
+      "size": 454656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ada1c7ad29ba6a8e958135ba41c45184/windows%20sdk%20for%20windows%20store%20apps%20directx%20x86%20remote-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Headers OnecoreUap-x86_en-us.msi",
+      "sha256": "1954A659A15797E6F4A3B06485974939606C494CCE1B0066CEF7194DC4DB0CE9",
+      "size": 471040,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/122979f0348d3a2a36b6aa1a111d5d0c/windows%20sdk%20for%20windows%20store%20apps%20headers%20onecoreuap-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Headers-x86_en-us.msi",
+      "sha256": "66575FCFB5D745F9EF5BC21341CD2BEC0A8F247AAF644F9FCF01927EB21691D2",
+      "size": 1036288,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b286efac4d83a54fc49190bddef1edc9/windows%20sdk%20for%20windows%20store%20apps%20headers-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Legacy Tools-x86_en-us.msi",
+      "sha256": "D4FEDEF28CC353D67269A73B087EA5116428CFE58631F836C10BE360F4D9E0B2",
+      "size": 454656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/f1ad2fcc8e8d371ab5bc029ba15fa51e/windows%20sdk%20for%20windows%20store%20apps%20legacy%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "sha256": "8A9A6621DFAC88BBB8CF620E31C60247FDFF8A8FFBBBE650F221F2D4824E385C",
+      "size": 528384,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/944c4153b849a1f7d0c0404a4f1c05ea/windows%20sdk%20for%20windows%20store%20apps%20libs-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Metadata-x86_en-us.msi",
+      "sha256": "F532457F55AFCECB816217687E5DC344D271AA3BA47A49C15945ADD7CCC5111A",
+      "size": 454656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/900e09949167b43bd7206ad1676236a4/windows%20sdk%20for%20windows%20store%20apps%20metadata-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "sha256": "118D2F066D1BD834A6426348EDAFFF7F07E38B40A9DE777C4277C76DEAD4E100",
+      "size": 516096,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/2d230678b1f76cfb97f85e8cb447df3a/windows%20sdk%20for%20windows%20store%20apps%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Apps-x86_en-us.msi",
+      "sha256": "EE04E525E990F27251608BBC3E778E1338E76CC958076292EFBE8B4E48AF058F",
+      "size": 462848,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/08f01ee6c27a95cd6a4090fed084d8d8/windows%20sdk%20for%20windows%20store%20apps-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK for Windows Store Managed Apps Libs-x86_en-us.msi",
+      "sha256": "BAB0CB535233645F702D71F5CBCD81F3BD9D58BEB4330D9177D3A775963C0C70",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ac2f097e72e55eba0c2b7ff3702c95eb/windows%20sdk%20for%20windows%20store%20managed%20apps%20libs-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Modern Non-Versioned Developer Tools-x86_en-us.msi",
+      "sha256": "C1B2A026C82E62BA52DCB3C77682DF2F7569469A089DDEB21BA2624D089EB1BB",
+      "size": 458752,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/494a9232a613a275d21096f7f89cd2eb/windows%20sdk%20modern%20non-versioned%20developer%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Modern Versioned Developer Tools-x86_en-us.msi",
+      "sha256": "1D531C7B589889BBCB15167AB0780D5C3FF0946D1D3CBBF9A4990C997AE9647F",
+      "size": 458752,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ec418bf46cf08e10080b800139dd33fc/windows%20sdk%20modern%20versioned%20developer%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK OnecoreUap Headers arm64-x86_en-us.msi",
+      "sha256": "CE6E58371A855FF902299014937D0A29ACAE8AFAD2D75BCB4B8D4057B1BCE388",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b8e363cfc843473b54fb4e7a4584a7ba/windows%20sdk%20onecoreuap%20headers%20arm64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK OnecoreUap Headers x64-x86_en-us.msi",
+      "sha256": "D532FB85F968E47DEECE1D1D495C0305BEAC6641383535D1C6E7590DBF1C1D4A",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ce7c11b668674e7a92c4192ba99b0e1c/windows%20sdk%20onecoreuap%20headers%20x64-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK OnecoreUap Headers x86-x86_en-us.msi",
+      "sha256": "A85A2352EF17EBB95086C2CF2675AD296F637A37339E92F4B9B1AB0CD4E73DC6",
+      "size": 495616,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/6630d1fc9a77f4c314824b8c55410a92/windows%20sdk%20onecoreuap%20headers%20x86-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Redistributables-x86_en-us.msi",
+      "sha256": "8612AB194F4A270286E770DCAB99F06B0413B68D64CA8945ECAD8F394CFEF752",
+      "size": 450560,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/df81cc3d3c47c9503862a7b071c99bcc/windows%20sdk%20redistributables-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK Signing Tools-x86_en-us.msi",
+      "sha256": "2300105F2B131ACB2630F00481D32972148F0FD50A93046EC62E8808CC77CC73",
+      "size": 462848,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/d3a896cef2a5f1245a0e6165f3e6a960/windows%20sdk%20signing%20tools-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows SDK-x86_en-us.msi",
+      "sha256": "0187245232609E0DDB78E858C8707DC6848EDB9F79F7580B49E0A23E3C9BEE80",
+      "size": 462848,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/e39e353b036f180f809e2330e59c3a01/windows%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows Team Extension SDK Contracts-x86_en-us.msi",
+      "sha256": "451928ACA22EE3775D31343D11D5ACEAE22C774AA420CFBC8C9327CF3241986E",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/cb0313a9d460a9d8abfc99055f093fdc/windows%20team%20extension%20sdk%20contracts-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\Windows Team Extension SDK-x86_en-us.msi",
+      "sha256": "22F5BBBDC9F1676740E05CC08D584DE8FB0320F800BD89DFA4AF1769E0554AE0",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/4bee9a73211ee0fddeba3aa8cb99a038/windows%20team%20extension%20sdk-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense Desktop - en-us-x86_en-us.msi",
+      "sha256": "04818F8E94CCAAF712D516DF4651B4E71AD4E84C60C544BBC3233A8F7067EDD5",
+      "size": 495616,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ce8fc9f9f7f2380618c809cbe9561b72/winrt%20intellisense%20desktop%20-%20en-us-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense Desktop - Other Languages-x86_en-us.msi",
+      "sha256": "BA24ED614DDB065AA571E131024325E8FC077AF73B22CE82425903CF4243E620",
+      "size": 602112,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3abe2cc277968e25ebb43ac843e979a5/winrt%20intellisense%20desktop%20-%20other%20languages-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense IoT - en-us-x86_en-us.msi",
+      "sha256": "6E9BD1C4559A06CCC9282B093C8AAD870F8949C44D8ED71DA76E32FFFBA5131D",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/8d501be22e060de8b2d5d24d9835e580/winrt%20intellisense%20iot%20-%20en-us-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense IoT - Other Languages-x86_en-us.msi",
+      "sha256": "1F2A20A0216EE5716F95E78B6EAD8B87C13B99A24B18C3B780EAE2C3C8360EE7",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/3d7a162349791985e8eddcd8cd3b28c0/winrt%20intellisense%20iot%20-%20other%20languages-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense Mobile - en-us-x86_en-us.msi",
+      "sha256": "6936ECD95309BDCD1503B4732CD0296BAF997FF04F7093E2949F94944E04A3BC",
+      "size": 454656,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b842b77a2dc8bdf528ac7629585f3415/winrt%20intellisense%20mobile%20-%20en-us-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense PPI - en-us-x86_en-us.msi",
+      "sha256": "5DE60442B8AE749149FBAE260A12ED41B92D7E47207DBD238BE06F0B90C167D0",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/95c9fbc47052f2edf68e3e46ac37333c/winrt%20intellisense%20ppi%20-%20en-us-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense PPI - Other Languages-x86_en-us.msi",
+      "sha256": "A808C26D725E810FCF0B3DF2F5601BC2532755586B641B45BBEE11DDC1F14344",
+      "size": 446464,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/dcf5bf98654b16e3381f39cd8caf41cb/winrt%20intellisense%20ppi%20-%20other%20languages-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense UAP - en-us-x86_en-us.msi",
+      "sha256": "868A98FA0E1FA33A80CE2349062AEAD02329B74CFED8274A3ED2BB919172EF6B",
+      "size": 483328,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/b58f93733f51ed8bb2559a9bbc5170c4/winrt%20intellisense%20uap%20-%20en-us-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Installers\\WinRT Intellisense UAP - Other Languages-x86_en-us.msi",
+      "sha256": "B429750EAD5B319952A18FC5A33DC137E1528BFE4B74D5D41B408457119D0CEA",
+      "size": 552960,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/8495a05ead925777308741587c09f53c/winrt%20intellisense%20uap%20-%20other%20languages-x86_en-us.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "4"
+      }
+    },
+    {
+      "fileName": "Redistributable\\10.1.0.0\\UAPSDKAddOn-x86.msi",
+      "sha256": "373EE8B91DD19E330A7621E70EF667569EE3499BD0D3838753D6F53074A2131D",
+      "size": 237568,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/32863b8d-a46d-4231-8e84-0888519d20a9/ce41439b1b81fa30357f5d610effa1c3/uapsdkaddon-x86.msi",
+      "cache": false,
+      "signer": {
+        "$ref": "6"
+      }
+    },
+    {
+      "fileName": "WinSdkInstaller.exe",
+      "sha256": "25C1E69EE65DD53311DD24F08F1DD6006E1078D749AD7022D0EFD0D5B6C1E757",
+      "size": 41904,
+      "url": "https://download.visualstudio.microsoft.com/download/pr/ce9ebac5-d0b0-4a01-9e8d-97679b3d5515/412cd86a46f13f60c4937d984139f106/winsdkinstaller.exe",
+      "signer": {
+        "$ref": "3"
+      }
+    }
+  ],
+  "installParams": {
+    "fileName": "WinSdkInstaller.exe",
+    "parameters": "SetupExe=winsdksetup.exe LogFile=\"[LogFile]\" SetupLogFolder=windowssdk CeipSetting=\"[CEIPConsentOnOff]\" ProgramFilesOrSharedDriveSdkPath=\"[ProgramFilesOrSharedDrive]\\Windows Kits\\10\" SetupParameters=\"/features OptionId.AvrfExternal OptionId.UWPManaged OptionId.WindowsSoftwareLogoToolkit OptionId.SigningTools OptionId.UWPLocalized OptionId.UWPCPP OptionId.DesktopCPPx64 OptionId.DesktopCPPx86 OptionID.DesktopCPPARM64 OptionId.MSIInstallTools /quiet /norestart\""
+  },
+  "uninstallParams": {
+    "fileName": "WinSdkInstaller.exe",
+    "parameters": "SetupExe=winsdksetup.exe LogFile=\"[LogFile]\" SetupLogFolder=windowssdk CeipSetting=\"[CEIPConsentOnOff]\" ProgramFilesOrSharedDriveSdkPath=\"[ProgramFilesOrSharedDrive]\\Windows Kits\\10\" SetupParameters=\"/features OptionId.AvrfExternal OptionId.UWPManaged OptionId.WindowsSoftwareLogoToolkit OptionId.SigningTools OptionId.UWPLocalized OptionId.UWPCPP OptionId.DesktopCPPx64 OptionId.DesktopCPPx86 OptionID.DesktopCPPARM64 OptionId.MSIInstallTools /quiet /norestart /uninstall\""
+  },
+  "providerKey": "Win11SDK_10.0.26100,en,10.0.26100",
+  "propertyInitializers": [
+    {
+      "key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots",
+      "value": "KitsRoot10",
+      "property": "Win10KitsInstallDir",
+      "defaultValue": "[ProgramFilesOrSharedDrive]\\Windows Kits\\10"
+    }
+  ],
+  "installSizes": {
+    "win10KitsInstallDir": 1718181284
+  },
+  "logFiles": [
+    {
+      "directory": "windowssdk",
+      "pattern": "*Win11SDK_10.0.26100.winsdksetup*log"
+    },
+    {
+      "directory": "StandaloneSDK\\UnionWinmdWorkingFolder\\logs"
+    },
+    {
+      "directory": "[Windows]\\logs\\CBS",
+      "pattern": "cbs.log"
+    },
+    {
+      "directory": "[Windows]\\logs\\DISM",
+      "pattern": "dism.log"
+    },
+    {
+      "pattern": "dd_setup_*Win11SDK_10.0.26100.log"
+    }
+  ],
+  "detectConditions": {
+    "expression": "(BundleRegKeyNative Or BundleRegKeyWoW) And (UwpManagedFeatureRegKeyNative Or UwpManagedFeatureRegKeyWoW) And (UWPNativeFeatureRegKeyNative Or UWPNativeFeatureRegKeyWoW) And (Desktopx64FeatureRegKeyNative Or Desktopx64FeatureRegKeyWoW) And (DesktopArm64FeatureRegKeyNative Or DesktopArm64FeatureRegKeyWoW) And VersionedBinFile",
+    "conditions": [
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8f220346-a8e7-401e-81b8-a0c5d7308086}",
+        "id": "BundleRegKeyNative",
+        "registryValue": "BundleVersion",
+        "registryData": "10.1.26100.1742"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8f220346-a8e7-401e-81b8-a0c5d7308086}",
+        "id": "BundleRegKeyWoW",
+        "registryValue": "BundleVersion",
+        "registryData": "10.1.26100.1742"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "UwpManagedFeatureRegKeyNative",
+        "registryValue": "OptionId.UWPManaged",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "UwpManagedFeatureRegKeyWoW",
+        "registryValue": "OptionId.UWPManaged",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "UWPNativeFeatureRegKeyNative",
+        "registryValue": "OptionId.UWPCPP",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "UWPNativeFeatureRegKeyWoW",
+        "registryValue": "OptionId.UWPCPP",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "Desktopx64FeatureRegKeyNative",
+        "registryValue": "OptionId.DesktopCPPx64",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "Desktopx64FeatureRegKeyWoW",
+        "registryValue": "OptionId.DesktopCPPx64",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "DesktopArm64FeatureRegKeyNative",
+        "registryValue": "OptionId.DesktopCPPARM64",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "registryKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows Kits\\Installed Roots\\10.0.26100.0\\Installed Options",
+        "id": "DesktopArm64FeatureRegKeyWoW",
+        "registryValue": "OptionId.DesktopCPPARM64",
+        "registryType": "Integer",
+        "registryData": "1"
+      },
+      {
+        "filePath": "[Win10KitsInstallDir]\\bin\\10.0.26100.0\\x64\\makeappx.exe",
+        "id": "VersionedBinFile"
+      }
+    ]
+  }
+}

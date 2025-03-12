@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-dependency-libuv.patch
         fix-build-error.patch
         export-include-path.patch
+        remove-wx.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
@@ -149,6 +150,8 @@ vcpkg_cmake_configure(
         -DLWS_WITH_HTTP2=ON
         -DLWS_WITH_HTTP_STREAM_COMPRESSION=ON # Since zlib is already a dependency
         -DLWS_WITH_EXTERNAL_POLL=ON
+        -DDISABLE_WERROR=ON
+        --trace-expand
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )

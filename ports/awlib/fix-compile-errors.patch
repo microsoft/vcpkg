@@ -1,0 +1,31 @@
+diff --git a/types/include/aw/types/bits/variant_dispatch.h b/types/include/aw/types/bits/variant_dispatch.h
+index 9d5dc3baa2..95a9394107 100644
+--- a/types/include/aw/types/bits/variant_dispatch.h	
++++ b/types/include/aw/types/bits/variant_dispatch.h
+@@ -71,11 +71,11 @@ struct vh_recursive {
+ 		if constexpr (Length_left > 0)
+ 		{
+ 			if (index < Mid)
+-				return vh_recursive<Start,Mid,Ts...>::template dispatch(index, storage, f);
++				return vh_recursive<Start,Mid,Ts...>::dispatch(index, storage, f);
+ 		}
+ 
+ 		if constexpr (Length_right > 1)
+-			return vh_recursive<Mid+1,End,Ts...>::template dispatch(index, storage, f);
++			return vh_recursive<Mid+1,End,Ts...>::dispatch(index, storage, f);
+ 
+ 		_unreachable();
+ 	}
+diff --git a/types/include/aw/types/containers/queue.h b/types/include/aw/types/containers/queue.h
+index af8f13bbf5..e5869c5409 100644
+--- a/types/include/aw/types/containers/queue.h	
++++ b/types/include/aw/types/containers/queue.h
+@@ -96,7 +96,7 @@ protected:
+ 	queue_base(queue_base&& other, Allocator const& alloc) noexcept
+ 		: impl(alloc)
+ 	{
+-		if (alloc == other.alloc)
++		if (alloc == other.alloc())
+ 			impl.swap(other.impl);
+ 		else
+ 			create_storage(other.allocated_size());

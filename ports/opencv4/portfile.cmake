@@ -601,7 +601,12 @@ foreach(PYTHON3_SITE_FILE_DEBUG ${PYTHON3_SITE_FILES_DEBUG})
     IGNORE_UNCHANGED
   )
 endforeach()
-
+if("cuda" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+  set(pyfile "${CURRENT_PACKAGES_DIR}/tools/python3/Lib/site-packages/cv2/config.py")
+  file(READ "${pyfile}" contents)
+  string(REGEX REPLACE "'CUDA_PATH', '[^']+'" "'CUDA_PATH', 'do-no-use-set-CUDA_PATH-env'" contents "${contents}")
+  file(WRITE "${pyfile}" "${contents}")
+endif()
 if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
     "-lQt6::Core5Compat"

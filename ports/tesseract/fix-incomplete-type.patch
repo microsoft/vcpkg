@@ -1,0 +1,20 @@
+diff --git a/src/ccstruct/imagedata.h b/src/ccstruct/imagedata.h
+index 625c17769a..dd180b541d 100644
+--- a/src/ccstruct/imagedata.h	
++++ b/src/ccstruct/imagedata.h
+@@ -21,6 +21,7 @@
+ 
+ #include "image.h"
+ #include "points.h" // for FCOORD
++#include "rect.h"   // for TBOX
+ 
+ #include <mutex>  // for std::mutex
+ #include <thread> // for std::thread
+@@ -31,7 +32,6 @@ namespace tesseract {
+ 
+ class TFile;
+ class ScrollView;
+-class TBOX;
+ 
+ // Amount of padding to apply in output pixels in feature mode.
+ const int kFeaturePadding = 2;

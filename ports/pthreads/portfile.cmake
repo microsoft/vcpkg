@@ -29,6 +29,7 @@ vcpkg_from_sourceforge(
     fix-install.patch
     whitespace_in_path.patch
     ${PATCH_FILES}
+    compiler.patch
 )
 
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" DESTROOT_DEBUG)

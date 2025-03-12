@@ -1,8 +1,7 @@
 {
   "name": "cudnn",
-  "version": "7.6.5",
-  "port-version": 15,
-  "description": "NVIDIA's cuDNN deep neural network acceleration library.",
+  "version": "9.7.1.26",
+  "description": "NVIDIA cuDNN is a GPU-accelerated library of primitives for deep neural networks.",
   "homepage": "https://developer.nvidia.com/cudnn",
   "license": null,
   "supports": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)",

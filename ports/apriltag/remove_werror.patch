@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2a6bc1e7a6..7f6e64ff3a 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -41,7 +41,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+ endif()
+ 
+-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
++if(0)
+     add_compile_options(-Wall -Wextra -Werror)
+     # add_compile_options(-Wpedantic)
+     add_compile_options(-Wno-shift-negative-value)

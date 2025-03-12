@@ -1,6 +1,7 @@
 {
   "name": "apriltag",
   "version": "3.4.3",
+  "port-version": 1,
   "description": "AprilTag is a visual fiducial system popular for robotics research.",
   "homepage": "https://april.eecs.umich.edu/software/apriltag",
   "license": "BSD-2-Clause",

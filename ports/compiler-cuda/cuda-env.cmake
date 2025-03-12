@@ -1,0 +1,10 @@
+include_guard(GLOBAL)
+
+function(setup_cuda_env)
+    if(NOT DEFINED ENV{CUDA_PATH})
+        set(CUDA_PATH "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../compiler/cuda")
+        cmake_path(NORMAL_PATH CUDA_PATH OUTPUT_VARIABLE cuda_path_norm)
+        set(ENV{CUDA_PATH} "${cuda_path_norm}")
+        set(ENV{PATH} "$ENV{PATH};$ENV{cuda_path_norm}/bin")
+    endif()
+endfunction()

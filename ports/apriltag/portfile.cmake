@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 861f473ab861dfe749084aefccf52299bdbdf067cff539098a87d007b65711f2e3549ec442fa71011992ea37772fa1e97f1b22a2b130753694a0b8d5d798423e
     HEAD_REF master
+    PATCHES
+      remove_werror.patch
 )
 
 vcpkg_cmake_configure(

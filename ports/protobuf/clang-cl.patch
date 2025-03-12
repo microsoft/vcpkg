@@ -1,0 +1,86 @@
+diff --git a/src/google/protobuf/map_field.h b/src/google/protobuf/map_field.h
+index 0e37a16d7b..069cd62e64 100644
+--- a/src/google/protobuf/map_field.h
++++ b/src/google/protobuf/map_field.h
+@@ -692,7 +692,7 @@ bool AllAreInitialized(const TypeDefinedMapFieldBase<Key, T>& field) {
+   return true;
+ }
+ 
+-class PROTOBUF_EXPORT DynamicMapField final
++class DynamicMapField final
+     : public TypeDefinedMapFieldBase<MapKey, MapValueRef> {
+  public:
+   explicit DynamicMapField(const Message* default_entry);
+diff --git a/src/google/protobuf/port.h b/src/google/protobuf/port.h
+index 3a0162ca94..2461623548 100644
+--- a/src/google/protobuf/port.h
++++ b/src/google/protobuf/port.h
+@@ -53,7 +53,7 @@ inline PROTOBUF_ALWAYS_INLINE void StrongPointer(T* var) {
+ }
+ 
+ #if defined(__x86_64__) && defined(__linux__) && !defined(__APPLE__) && \
+-    !defined(__ANDROID__) && defined(__clang__) && __clang_major__ >= 19
++    !defined(__ANDROID__) && defined(__clang__) && __clang_major__ >= 19 && !defined(_MSC_VER)
+ // Optimized implementation for clang where we can generate a relocation without
+ // adding runtime instructions.
+ template <typename T, T ptr>
+diff --git a/src/google/protobuf/stubs/platform_macros.h b/src/google/protobuf/stubs/platform_macros.h
+index ab51c7face..19d5c2ae3c 100644
+--- a/src/google/protobuf/stubs/platform_macros.h
++++ b/src/google/protobuf/stubs/platform_macros.h
+@@ -63,7 +63,7 @@
+ #elif defined(__GNUC__)
+ # if (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4))
+ // We fallback to the generic Clang/GCC >= 4.7 implementation in atomicops.h
+-# elif defined(__clang__)
++# elif defined(__clang__) && !defined(_MSC_VER)
+ #  if !__has_extension(c_atomic)
+ GOOGLE_PROTOBUF_PLATFORM_ERROR
+ #  endif
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index 56f995e45e..675a2184e4 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -435,7 +435,7 @@ static_assert(PROTOBUF_ABSL_MIN(20230125, 3),
+ #endif
+ 
+ // Lexan sets both MSV_VER and clang, so handle it with the clang path.
+-#if defined(_MSC_VER) && !defined(__clang__)
++#if defined(_MSC_VER) && (!defined(__clang__) || defined(PROTOBUF_USE_DLLS))
+ // MSVC 17 currently seems to raise an error about constant-initialized pointers.
+ # if PROTOBUF_MSC_VER_MIN(1930)
+ #  define PROTOBUF_CONSTINIT
+diff --git a/src/google/protobuf/unknown_field_set.cc b/src/google/protobuf/unknown_field_set.cc
+index 2f33555a16..cd4bc4622e 100644
+--- a/src/google/protobuf/unknown_field_set.cc
++++ b/src/google/protobuf/unknown_field_set.cc
+@@ -35,6 +35,12 @@
+ namespace google {
+ namespace protobuf {
+ 
++const UnknownFieldSet& UnknownFieldSet::default_instance() {
++  PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT static const UnknownFieldSet
++      instance;
++  return instance;
++}
++
+ void UnknownFieldSet::ClearFallback() {
+   ABSL_DCHECK(!fields_.empty());
+   if (arena() == nullptr) {
+diff --git a/src/google/protobuf/unknown_field_set.h b/src/google/protobuf/unknown_field_set.h
+index aeac15f44e..7856ce3eff 100644
+--- a/src/google/protobuf/unknown_field_set.h
++++ b/src/google/protobuf/unknown_field_set.h
+@@ -317,12 +317,6 @@ constexpr UnknownFieldSet::UnknownFieldSet() = default;
+ 
+ inline UnknownFieldSet::~UnknownFieldSet() { Clear(); }
+ 
+-inline const UnknownFieldSet& UnknownFieldSet::default_instance() {
+-  PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT static const UnknownFieldSet
+-      instance;
+-  return instance;
+-}
+-
+ inline void UnknownFieldSet::ClearAndFreeMemory() { Clear(); }
+ 
+ inline void UnknownFieldSet::Clear() {
