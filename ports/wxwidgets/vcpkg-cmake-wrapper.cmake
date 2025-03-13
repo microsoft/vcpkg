@@ -51,8 +51,8 @@ set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
 # FindwxWidgets is trying to find every library returned by `wx-config --libs`.
 # `atomic` library cannot be found using CMake's `find_library`.
 # Unfortunately, it's not possible to fix this by preseeding the cache variable.
-# The check is copied directly from FindwxWidgets.cmake.
-if(WIN32 AND NOT CYGWIN AND NOT MSYS AND NOT CMAKE_CROSSCOMPILING)
+# The condition is copied directly from FindwxWidgets.cmake.
+if(NOT (WIN32 AND NOT CYGWIN AND NOT MSYS AND NOT CMAKE_CROSSCOMPILING))
     function(find_library)
         z_vcpkg_function_arguments(ARGS)
 
@@ -67,7 +67,7 @@ endif()
 
 _find_package(${ARGS})
 
-if(WIN32 AND NOT CYGWIN AND NOT MSYS AND NOT CMAKE_CROSSCOMPILING)
+if(NOT (WIN32 AND NOT CYGWIN AND NOT MSYS AND NOT CMAKE_CROSSCOMPILING))
     function(find_library)
         z_vcpkg_function_arguments(ARGS)
         __find_library(${ARGS})
