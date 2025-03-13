@@ -34,8 +34,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       OSGEARTH_BUILD_TOOLS
         blend2d     WITH_BLEND2D
-        examples    WITH_EXAMPLES
-        controls    WITH_CONTROLS
+        examples    OSGEARTH_BUILD_EXAMPLES
+        controls    OSGEARTH_BUILD_LEGACY_CONTROLS_API
 )
 
 vcpkg_cmake_configure(
