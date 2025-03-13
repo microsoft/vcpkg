@@ -1,6 +1,3 @@
-set(wxWidgets_PREV_MODULE_PATH "${CMAKE_MODULE_PATH}")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
-
 cmake_policy(PUSH)
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
@@ -51,7 +48,31 @@ else()
 endif()
 set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
 
+# FindwxWidgets is trying to find every library returned by `wx-config --libs`.
+# `atomic` library cannot be found using CMake's `find_library`.
+# Unfortunately, it's not possible to fix this by preseeding the cache variable.
+# The check is copied directly from FindwxWidgets.cmake.
+if(WIN32 AND NOT CYGWIN AND NOT MSYS AND NOT CMAKE_CROSSCOMPILING)
+    function(find_library)
+        z_vcpkg_function_arguments(ARGS)
+
+        if("atomic" IN_LIST ARGS)
+            set("${ARGV0}" "" CACHE)
+            return()
+        endif()
+
+        _find_library(${ARGS})
+    endfunction()
+endif()
+
 _find_package(${ARGS})
+
+if(WIN32 AND NOT CYGWIN AND NOT MSYS AND NOT CMAKE_CROSSCOMPILING)
+    function(find_library)
+        z_vcpkg_function_arguments(ARGS)
+        __find_library(${ARGS})
+    endfunction()
+endif()
 
 if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
     set(CMAKE_CROSSCOMPILING "${_vcpkg_wxwidgets_backup_crosscompiling}")
@@ -82,6 +103,3 @@ if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_L
 endif()
 
 cmake_policy(POP)
-
-set(CMAKE_MODULE_PATH "${wxWidgets_PREV_MODULE_PATH}")
-unset(wxWidgets_PREV_MODULE_PATH)
