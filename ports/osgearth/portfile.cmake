@@ -34,6 +34,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       OSGEARTH_BUILD_TOOLS
         blend2d     WITH_BLEND2D
+        examples    WITH_EXAMPLES
+        controls    WITH_CONTROLS
 )
 
 vcpkg_cmake_configure(
@@ -42,7 +44,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DLIB_POSTFIX=
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
-        -DOSGEARTH_BUILD_EXAMPLES=OFF
+        -DOSGEARTH_BUILD_EXAMPLES=${WITH_EXAMPLES}
         -DOSGEARTH_BUILD_TESTS=OFF
         -DOSGEARTH_BUILD_DOCS=OFF
         -DOSGEARTH_BUILD_PROCEDURAL_NODEKIT=OFF
@@ -51,10 +53,15 @@ vcpkg_cmake_configure(
         -DOSGEARTH_BUILD_ZIP_PLUGIN=OFF		
         -DWITH_EXTERNAL_TINYXML=ON
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
+        -DOSGEARTH_BUILD_LEGACY_CONTROLS_API=${WITH_CONTROLS}
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
         LIB_POSTFIX
+        WITH_BLEND2D
+        WITH_EXAMPLES
+        WITH_EXTERNAL_TINYXML
+        WITH_CONTROLS
 )
 
 vcpkg_cmake_install()

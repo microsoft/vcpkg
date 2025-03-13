@@ -50,6 +50,12 @@
     },
     "tools": {
       "description": "Build tools"
+    },
+    "examples": {
+      "description": "Build examples"
+    },
+    "controls": {
+      "description": "BUILD_LEGACY_CONTROLS_API"
     }
   }
 }
