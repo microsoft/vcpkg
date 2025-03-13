@@ -55,7 +55,7 @@
       "description": "Build examples"
     },
     "controls": {
-      "description": "BUILD_LEGACY_CONTROLS_API"
+      "description": "support for the old Controls API (superceded by imgui)"
     }
   }
 }
