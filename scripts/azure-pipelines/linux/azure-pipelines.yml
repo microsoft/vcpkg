@@ -37,6 +37,10 @@ jobs:
       sudo rm -rf ${{ variables.WORKING_ROOT }}/failure-logs
       sudo mkdir ${{ variables.WORKING_ROOT }}/failure-logs -m=777
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      # Move the docker layers to the temp disk.
+      sudo mkdir -p /etc/docker
+      echo '{"data-root": "/mnt/docker"}' | sudo tee /etc/docker/daemon.json
+      sudo systemctl restart docker
       exit 0
     displayName: 'Create working directories'
   - bash: ./bootstrap-vcpkg.sh -skipDependencyChecks
