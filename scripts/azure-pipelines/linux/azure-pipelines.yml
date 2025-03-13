@@ -19,7 +19,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrAnd-WUS-Gen2  # The "android" pool name is something of a misnomer; the pool is named that way due to Android being our first dockerized platform
+    name: PrAnd-WUS  # The "android" pool name is something of a misnomer; the pool is named that way due to Android being our first dockerized platform
   timeoutInMinutes: 1440 # 1 day
   variables:
   - name: WORKING_ROOT

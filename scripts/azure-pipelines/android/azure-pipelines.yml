@@ -18,7 +18,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrAnd-WUS-Gen2
+    name: PrAnd-WUS
   timeoutInMinutes: 1440 # 1 day
   variables:
   - name: WORKING_ROOT
