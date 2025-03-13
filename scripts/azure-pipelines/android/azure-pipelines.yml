@@ -44,18 +44,15 @@ jobs:
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
-        az acr login --name vcpkgandroidwus
-        docker pull ${{ variables.ANDROID_DOCKER_IMAGE }}
-        docker run --rm \
-          --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-          ${{ variables.ANDROID_DOCKER_IMAGE }} \
-          ./bootstrap-vcpkg.sh
+        ./bootstrap-vcpkg.sh -skipDependencyChecks
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
         assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
         binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
         echo Minting SAS tokens valid through $end
         USER=$(id --user)
-        docker run --init -i \
+        az acr login --name vcpkgandroidwus
+        docker pull ${{ variables.ANDROID_DOCKER_IMAGE }}
+        docker run --init -i --rm \
         -a stderr \
         -a stdout \
         --user $USER \
