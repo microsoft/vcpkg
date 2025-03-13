@@ -59,9 +59,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         LIB_POSTFIX
         WITH_BLEND2D
-        WITH_EXAMPLES
         WITH_EXTERNAL_TINYXML
-        WITH_CONTROLS
 )
 
 vcpkg_cmake_install()
