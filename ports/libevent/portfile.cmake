@@ -42,6 +42,9 @@ vcpkg_cmake_configure(
         -DEVENT__DISABLE_REGRESS=ON
         -DEVENT__DISABLE_SAMPLES=ON
         -DEVENT__DISABLE_MBEDTLS=ON
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 # https://github.com/libevent/libevent/issues/1782
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_POLICY_VERSION_MINIMUM
 )
 
 vcpkg_cmake_install()
