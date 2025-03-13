@@ -3,6 +3,10 @@
 #
 
 parameters:
+  - name: vcpkgToolSha
+    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+    type: string
+    default: 'use default'
   - name: jobName
     type: string
   - name: tripletPattern
@@ -16,7 +20,6 @@ jobs:
   pool:
     name: PrAnd-WUS-Gen2
   timeoutInMinutes: 1440 # 1 day
-  cancelTimeoutInMinutes: 1
   variables:
   - name: WORKING_ROOT
     value: /mnt/vcpkg-ci
@@ -26,6 +29,8 @@ jobs:
     value: /android-ndk-r27c
   - name: ANDROID_DOCKER_IMAGE
     value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-03-12'
+  - name: LINUX_DOCKER_IMAGE
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-03-12'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -37,6 +42,26 @@ jobs:
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
     displayName: 'Create working directories'
+  - bash: ./bootstrap-vcpkg.sh -skipDependencyChecks
+    displayName: 'Bootstrap vcpkg'
+    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
+  - task: AzureCLI@2
+    displayName: 'Build vcpkg with CMake'
+    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+    inputs:
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: 'pscore'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        # This is a second pull but the vcpkgToolSha setting is used rarely.
+        az acr login --name vcpkgandroidwus
+        docker pull ${{ variables.LINUX_DOCKER_IMAGE }}
+        docker run --init -i --rm \
+        -a stderr \
+        -a stdout \
+        --user $USER \
+        --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+        /vcpkg/scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
@@ -44,7 +69,6 @@ jobs:
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
-        ./bootstrap-vcpkg.sh -skipDependencyChecks
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
         assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
         binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
