@@ -1,7 +1,7 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;RAW_INCLUDE_MAPPING;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;GITHUB_HOST_RAW;RAW_INCLUDE_MAPPING;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -29,8 +29,12 @@ function(vcpkg_from_github)
     else()
         set(github_host "${arg_GITHUB_HOST}")
         set(github_api_url "${arg_GITHUB_HOST}/api/v3")
-        message(WARNING "vcpkg_from_github does not know the RAW content URL for: ${arg_GITHUB_HOST}")
-        set(github_raw_url "https://raw.githubusercontent.com")
+        if(NOT DEFINED arg_GITHUB_HOST_RAW)
+            message(STATUS "vcpkg_from_github using default RAW URL because GITHUB_HOST_RAW is not specified: ${arg_GITHUB_HOST}/raw")
+            set(github_raw_url "${arg_GITHUB_HOST}/raw")
+        else()
+            set(github_raw_url "${arg_GITHUB_HOST_RAW}")
+        endif()
     endif()
 
     set(headers_param "")
