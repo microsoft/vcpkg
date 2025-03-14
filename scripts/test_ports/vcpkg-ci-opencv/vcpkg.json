@@ -132,9 +132,9 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "opengl"
+        "aravis"
       ],
-      "platform": "!uwp & !android & !osx"
+      "platform": "!android & !uwp"
     },
     {
       "name": "opencv2",

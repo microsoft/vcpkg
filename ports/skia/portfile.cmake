@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
     REF "chrome/m${VERSION}"
-    SHA512 3147cdd4636feeba1f3a1c9026b8d5d9e500e5cc4d99281a6f7fc36962e5365cbc45d358732381bd42ee8c721ca2c8ba963e5ba1344750c9e3a54be697f0e0f9
+    SHA512 3364983567b91ec6f03a148e4c1dee6eeb132b1e3d21bcbc94a5fd2ab16f22fe62a8b0e9392da67a55c4e665031de65c252f68ddc1b02700b9ede773a8ec0934
     PATCHES
         disable-msvc-env-setup.patch
         # disable-dev-test.patch

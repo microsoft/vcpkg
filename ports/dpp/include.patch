@@ -1,0 +1,13 @@
+diff --git a/src/dpp/socketengine.cpp b/src/dpp/socketengine.cpp
+index 81c5fc92..025c534c 100644
+--- a/src/dpp/socketengine.cpp
++++ b/src/dpp/socketengine.cpp
+@@ -23,7 +23,7 @@
+ #include <dpp/exception.h>
+ #include <csignal>
+ #include <memory>
+-#include <sslclient.h>
++#include <dpp/sslclient.h>
+ #include <iostream>
+ #include <dpp/cache.h>
+ #include <dpp/cluster.h>
