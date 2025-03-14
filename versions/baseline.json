@@ -4188,6 +4188,10 @@
       "baseline": "2024-01-20",
       "port-version": 0
     },
+    "kleidiai": {
+      "baseline": "1.5.0",
+      "port-version": 0
+    },
     "klein": {
       "baseline": "2021-05-09",
       "port-version": 0
