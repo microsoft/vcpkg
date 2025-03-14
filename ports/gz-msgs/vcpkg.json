@@ -1,6 +1,6 @@
 {
   "name": "gz-msgs",
-  "version": "9.5.0",
+  "version": "11.0.2",
   "description": "Middleware protobuf messages for robotics",
   "license": "Apache-2.0",
   "supports": "!(android | arm | uwp)",

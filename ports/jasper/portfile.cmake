@@ -16,11 +16,6 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JAS_ENABLE_SHARED)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        opengl    JAS_ENABLE_OPENGL
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -29,6 +24,7 @@ vcpkg_cmake_configure(
         -DJAS_ENABLE_LIBJPEG=ON
         -DJAS_ENABLE_DOC=OFF
         -DJAS_ENABLE_LATEX=OFF
+        -DJAS_ENABLE_OPENGL=OFF  # only used by programs, which are turned off
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
     OPTIONS_DEBUG
