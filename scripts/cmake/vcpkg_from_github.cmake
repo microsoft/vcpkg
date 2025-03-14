@@ -1,7 +1,7 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;RAW_INCLUDE_MAPPING;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -122,9 +122,28 @@ Error was: ${head_version_err}
         ${skip_patch_check_param}
     )
 
+    # Use the provided mapping, or else provide a sensible default
+    if(DEFINED arg_RAW_INCLUDE_MAPPING)
+        list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
+        if (${num_mappings} LESS "2")
+            message(FATAL_ERROR "vcpkg_from_github was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
+        endif()
+        set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+    else()
+        # Establish a sensible default (2 locations) if none was provided
+        #   From:
+        #     (INSTALLED_TRIPLET)\include\${PORT}\* 
+        #   To:
+        #     (SERVER_PATH)/include/${repo_name}/*
+        #     (SERVER_PATH)/*
+        list(APPEND raw_include_mapping "${PORT}/*" "include/${repo_name}/*")
+        list(APPEND raw_include_mapping "${PORT}/*" "*")
+    endif()
+
     vcpkg_write_sourcelink_file(
         SOURCE_PATH "${SOURCE_PATH}/*"
         SERVER_PATH "${github_raw_url}/${org_name}/${repo_name}/${ref_to_use}/*"
+        RAW_INCLUDE_MAPPING "${raw_include_mapping}"
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
