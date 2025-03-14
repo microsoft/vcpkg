@@ -24,7 +24,7 @@ diff --git a/cmake/system.cmake b/cmake/system.cmake
 index 683c318..eae7436 100644
 --- a/cmake/system.cmake
 +++ b/cmake/system.cmake
-@@ -502,7 +502,7 @@ if (USE_SIMPLE_THREADED_LEVEL3)
+@@ -507,7 +507,7 @@ if (USE_SIMPLE_THREADED_LEVEL3)
    set(CCOMMON_OPT "${CCOMMON_OPT} -DUSE_SIMPLE_THREADED_LEVEL3")
  endif ()
  
@@ -33,7 +33,7 @@ index 683c318..eae7436 100644
  if (DEFINED MAX_STACK_ALLOC)
  if (NOT ${MAX_STACK_ALLOC} EQUAL 0)
  set(CCOMMON_OPT "${CCOMMON_OPT} -DMAX_STACK_ALLOC=${MAX_STACK_ALLOC}")
-@@ -511,7 +511,7 @@ else ()
+@@ -516,7 +516,7 @@ else ()
  set(CCOMMON_OPT "${CCOMMON_OPT} -DMAX_STACK_ALLOC=2048")
  endif ()
  endif ()
@@ -42,7 +42,7 @@ index 683c318..eae7436 100644
  if (DEFINED BLAS3_MEM_ALLOC_THRESHOLD)
  if (NOT ${BLAS3_MEM_ALLOC_THRESHOLD} EQUAL 32)
  set(CCOMMON_OPT "${CCOMMON_OPT} -DBLAS3_MEM_ALLOC_THRESHOLD=${BLAS3_MEM_ALLOC_THRESHOLD}")
-@@ -628,7 +628,7 @@ endif()
+@@ -633,7 +633,7 @@ endif()
  set(LAPACK_FPFLAGS "${LAPACK_FPFLAGS} ${FPFLAGS}")
  
  #Disable -fopenmp for LAPACK Fortran codes on Windows.
@@ -51,7 +51,7 @@ index 683c318..eae7436 100644
    set(FILTER_FLAGS "-fopenmp;-mp;-openmp;-xopenmp=parallel")
    foreach (FILTER_FLAG ${FILTER_FLAGS})
      string(REPLACE ${FILTER_FLAG} "" LAPACK_FFLAGS ${LAPACK_FFLAGS})
-@@ -660,11 +660,11 @@ if (INTERFACE64)
+@@ -665,11 +665,11 @@ if (INTERFACE64)
    set(LAPACK_CFLAGS "${LAPACK_CFLAGS} -DLAPACK_ILP64")
  endif ()
  
@@ -64,4 +64,4 @@ index 683c318..eae7436 100644
 +if (${CMAKE_C_COMPILER} STREQUAL "LSB" OR WIN32)
    set(LAPACK_CFLAGS "${LAPACK_CFLAGS} -DLAPACK_COMPLEX_STRUCTURE")
  endif ()
- 
+ if (${CMAKE_C_COMPILER_ID} MATCHES "IntelLLVM" AND ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")

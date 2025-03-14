@@ -12,7 +12,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO texus/TGUI
     REF "v${VERSION}"
-    SHA512 24aa59b5eb225987247384dfdfc8bdce1d755cc7daeda6fdff9046eea77a0f2e686d5b03d24cbbd20e7d6d90ae809eae90467a2b1d923de1e2ecf668e28bcff4
+    SHA512 54d46e3604ebe3f3f2ff845da9348152e780a2e67eddc9d6476f5b66b24a3930ced34ac097f4006c9475d7d963d87076dd4ee4cc47aad23b501f14663be5745e
     HEAD_REF 1.x
     PATCHES
         devendor-stb.patch
@@ -31,6 +31,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     sdl2    TGUI_HAS_BACKEND_SDL_RENDERER
     sfml    TGUI_HAS_BACKEND_SFML_GRAPHICS
     tool    TGUI_BUILD_GUI_BUILDER
+    sdl3    TGUI_USE_SDL3
+    raylib  TGUI_HAS_BACKEND_RAYLIB
 )
 
 vcpkg_cmake_configure(

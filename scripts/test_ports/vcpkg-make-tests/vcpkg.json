@@ -5,6 +5,10 @@
     "license": "MIT",
     "dependencies": [
         {
+            "name": "unit-test-cmake",
+            "host": true
+        },
+        {
             "name": "vcpkg-make",
             "host": true
         }

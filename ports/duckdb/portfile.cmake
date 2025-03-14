@@ -2,12 +2,13 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 f5bca7a3b6f763b4b1a1f39e53c6f818925584fb44886e291ac3546fe50de545e80d16b4120f0126020e44b601a1b9193f4faad7a3dc8799cda843b1965038f2
+        SHA512 7e2ec4f6d6be6d500b148bd845cc51fe8985190eed8ab6f6fe79012c216cad5592ab3329e2df6b091abcc6ea8937d66f47272baead798c7d711e5d73aa9ffaa7
         HEAD_REF master
     PATCHES
         bigobj.patch
         unvendor_icu_and_find_dependency.patch # https://github.com/duckdb/duckdb/pull/16176 + https://github.com/duckdb/duckdb/pull/16197
-)
+        httpfs.patch
+        )
 
 # Remove vendored dependencies which are not properly namespaced
 file(REMOVE_RECURSE
@@ -16,6 +17,16 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/third_party/snowball"
     "${SOURCE_PATH}/third_party/tpce-tool"
 )
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
+    REPO duckdb/duckdb_httpfs
+    REF 85ac4667bcb0d868199e156f8dd918b0278db7b9
+    SHA512 5790ed795d394dd1b512aac0d1f1dc5976588d93b34381cab1d78c256428f3047682c7b662b1c855d3b19a9dbf99a6c64f32152dba347c18f2a36e19bcc3c5df
+    HEAD_REF main
+)
+
+file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/httpfs")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUCKDB_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DUCKDB_BUILD_DYNAMIC)

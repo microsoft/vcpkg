@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         marmasm.patch
-        
 )
 
 set(FEATURE_OPTIONS "")

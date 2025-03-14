@@ -1,7 +1,7 @@
 {
   "name": "loguru",
   "version": "2.1.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "A lightweight and flexible C++ logging library",
   "homepage": "https://github.com/emilk/loguru",
   "dependencies": [
@@ -20,6 +20,9 @@
       "dependencies": [
         "fmt"
       ]
+    },
+    "stream": {
+      "description": "Build with support for stream style logging"
     }
   }
 }

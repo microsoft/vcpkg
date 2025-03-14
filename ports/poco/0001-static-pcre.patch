@@ -1,8 +1,8 @@
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 5898d22..d8df9dc 100644
+index d5f3b26..cb29e69 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
-@@ -101,6 +101,23 @@ set_target_properties(Foundation
+@@ -101,6 +101,31 @@ set_target_properties(Foundation
  if(POCO_UNBUNDLED)
  	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB Utf8Proc::Utf8Proc)
  	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
@@ -22,7 +22,15 @@ index 5898d22..d8df9dc 100644
 +		-D_pcre2_utt_8=_poco_pcre2_utt_8
 +		-D_pcre2_utt_names_8=_poco_pcre2_utt_names_8
 +		-D_pcre2_utt_size_8=_poco_pcre2_utt_size_8
-+	)
++		-D_pcre2_unicode_version_8=_poco_pcre2_unicode_version_8
++		-D_pcre2_ucd_caseless_sets_8=_poco_pcre2_ucd_caseless_sets_8
++		-D_pcre2_ucd_digit_sets_8=_poco_pcre2_ucd_digit_sets_8
++		-D_pcre2_ucd_script_sets_8=_poco_pcre2_ucd_script_sets_8
++		-D_pcre2_ucd_boolprop_sets_8=_poco_pcre2_ucd_boolprop_sets_8
++		-D_pcre2_ucd_records_8=_poco_pcre2_ucd_records_8
++		-D_pcre2_ucd_stage1_8=_poco_pcre2_ucd_stage1_8
++		-D_pcre2_ucd_stage2_8=_poco_pcre2_ucd_stage2_8
++)
  else()
  	target_compile_definitions(Foundation PUBLIC UTF8PROC_STATIC)
  endif(POCO_UNBUNDLED)

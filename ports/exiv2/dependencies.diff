@@ -1,24 +1,24 @@
 diff --git a/cmake/exiv2Config.cmake.in b/cmake/exiv2Config.cmake.in
-index c9e2eba..ca170e1 100644
+index db579cc..fa6da4e 100644
 --- a/cmake/exiv2Config.cmake.in
 +++ b/cmake/exiv2Config.cmake.in
-@@ -8,7 +8,15 @@ if(@EXIV2_ENABLE_PNG@) # if(EXIV2_ENABLE_PNG)
- endif()
+@@ -15,7 +15,15 @@ if(NOT @BUILD_SHARED_LIBS@) # if(NOT BUILD_SHARED_LIBS)
+   endif()
  
- if(@EXIV2_ENABLE_XMP@) # if(EXIV2_ENABLE_XMP)
--  find_dependency(EXPAT REQUIRED)
-+  find_dependency(expat CONFIG)
-+endif()
+   if(@EXIV2_ENABLE_XMP@) # if(EXIV2_ENABLE_XMP)
+-    find_dependency(EXPAT REQUIRED)
++    find_dependency(expat CONFIG)
++  endif()
 +
-+if(@EXIV2_ENABLE_BMFF@ AND @EXIV2_ENABLE_BROTLI@)
-+  find_dependency(unofficial-brotli)
-+endif()
++  if(@EXIV2_ENABLE_BMFF@ AND @EXIV2_ENABLE_BROTLI@)
++    find_dependency(unofficial-brotli)
++  endif()
 +
-+if(@EXIV2_ENABLE_INIH@)
-+  find_dependency(unofficial-inih)
- endif()
++  if(@EXIV2_ENABLE_INIH@)
++    find_dependency(unofficial-inih)
+   endif()
  
- include("${CMAKE_CURRENT_LIST_DIR}/exiv2Export.cmake")
+   if(@EXIV2_ENABLE_NLS@) # if(EXIV2_ENABLE_NLS)
 diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
 index b0897c3..e559666 100644
 --- a/cmake/findDependencies.cmake
@@ -56,14 +56,15 @@ index b0897c3..e559666 100644
    message ( "-- inih_LIBRARIES : " ${inih_LIBRARIES} )
    message ( "-- inih_inireader_INCLUDE_DIRS : " ${inih_inireader_INCLUDE_DIRS} )
 diff --git a/xmpsdk/CMakeLists.txt b/xmpsdk/CMakeLists.txt
-index 87c59c0..d2f23e6 100644
+index 87c59c0..613c49b 100644
 --- a/xmpsdk/CMakeLists.txt
 +++ b/xmpsdk/CMakeLists.txt
-@@ -31,6 +31,7 @@ target_include_directories(exiv2-xmp SYSTEM
-         ${PROJECT_SOURCE_DIR}/xmpsdk/include
+@@ -32,6 +32,8 @@ target_include_directories(exiv2-xmp SYSTEM
          ${EXPAT_INCLUDE_DIRS}
  )
-+target_link_libraries(exiv2-xmp PRIVATE expat::expat)
  
++target_link_libraries(exiv2-xmp PRIVATE expat::expat)
++
  # Prevent a denial-service-attack related to XML entity expansion
  # ("billion laughs attack").
+ # See https://bugzilla.redhat.com/show_bug.cgi?id=888769
