@@ -3866,7 +3866,7 @@
     },
     "jhasse-poly2tri": {
       "baseline": "2023-12-27",
-      "port-version": 1
+      "port-version": 2
     },
     "jigson": {
       "baseline": "0.1.3",
