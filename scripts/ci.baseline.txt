@@ -1337,9 +1337,13 @@ vcpkg-ci-mathgl:x86-windows=pass
 vcpkg-ci-opencv:arm-neon-android=pass
 vcpkg-ci-opencv:arm64-android=pass
 vcpkg-ci-opencv:arm64-osx=pass
-vcpkg-ci-opencv:arm64-uwp=pass
-vcpkg-ci-opencv:arm64-windows-static-md=pass
-vcpkg-ci-opencv:arm64-windows=pass
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+#vcpkg-ci-opencv:arm64-uwp=pass
+opencv4:arm64-uwp=fail
+#vcpkg-ci-opencv:arm64-windows-static-md=pass
+opencv4:arm64-windows-static-md=fail
+#vcpkg-ci-opencv:arm64-windows=pass
+opencv4:arm64-windows=fail
 vcpkg-ci-opencv:x64-android=pass
 vcpkg-ci-opencv:x64-linux=pass
 vcpkg-ci-opencv:x64-osx=pass
