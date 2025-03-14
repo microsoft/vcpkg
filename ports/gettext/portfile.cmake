@@ -28,6 +28,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         parallel-gettext-tools.patch
         config-step-order.patch
+        0001-xgettext-Fix-some-test-failures-on-MSVC.patch
 )
 
 set(subdirs "")
