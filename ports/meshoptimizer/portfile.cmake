@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
     REF v${VERSION}
-    SHA512 6fbb9c5a98dad8616562d60ed5eb08030c101edd81fb028d906ea0aa8261369e942c0eeadf163283c8acac7858728b9277ef557cb8d38e972c7fe97771c0b4c4
+    SHA512 f2f1d951bfb5c9b51d1a8485b3ce5e6ba4b5d3475fbefb0129fd54ce6dfaaeb923ad03c603733ba3865cb7ff6516da92ccdf326e5d672ef2114f515fd3582395
     HEAD_REF master
 )
 
