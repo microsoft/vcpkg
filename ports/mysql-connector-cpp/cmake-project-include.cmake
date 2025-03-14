@@ -1,4 +1,4 @@
-#[[ 
+#[[
     vcpkg overloads find_package().
     mysql-connector-cpp overloads find_dependency().
 
@@ -24,7 +24,7 @@ if(NOT TARGET ext::protoc)
 endif()
 
 find_package(RapidJSON CONFIG REQUIRED)
-add_library(RapidJSON::rapidjson ALIAS rapidjson)
+add_library(RapidJSON::rapidjson ALIAS RapidJSON)
 
 find_package(ZLIB REQUIRED)
 add_library(ext::z ALIAS ZLIB::ZLIB)
