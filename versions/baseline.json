@@ -9017,8 +9017,8 @@
       "port-version": 2
     },
     "systemc": {
-      "baseline": "2.3.3",
-      "port-version": 8
+      "baseline": "2.3.4",
+      "port-version": 0
     },
     "tabulate": {
       "baseline": "1.5",
