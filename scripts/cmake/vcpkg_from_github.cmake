@@ -126,7 +126,9 @@ Error was: ${head_version_err}
         ${skip_patch_check_param}
     )
 
-    # Use the provided mapping, or else provide a sensible default
+    # Forward any provided mapping after a quick sanity check.
+    # If nothing is passed into vcpkg_write_sourcelink_file, then it will 
+    # attempt to set a sensible default based upon the contents of the extracted repo.
     if(DEFINED arg_RAW_INCLUDE_MAPPING)
         list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
         if (${num_mappings} LESS "2")
@@ -134,19 +136,19 @@ Error was: ${head_version_err}
         endif()
         set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
     else()
-        # Establish a sensible default (2 locations) if none was provided
-        #   From:
-        #     (INSTALLED_TRIPLET)\include\${PORT}\* 
-        #   To:
-        #     (SERVER_PATH)/include/${repo_name}/*
-        #     (SERVER_PATH)/*
-        list(APPEND raw_include_mapping "${PORT}/*" "include/${repo_name}/*")
-        list(APPEND raw_include_mapping "${PORT}/*" "*")
+        # Special-case checks
+        if("${org_name}" STREQUAL "boostorg" AND IS_DIRECTORY "${SOURCE_PATH}/include/boost/${repo_name}")
+            # Special case for boost instead of adding overrides to the huge number of repos under that umbrella
+            # - Note that this intentionally omits the top-level convenience headers because they
+            #   are of lower importance while debugging and add unnecessary complexity
+            list(APPEND raw_include_mapping "boost/${repo_name}/*" "include/boost/${repo_name}/*")
+        endif()
     endif()
 
     vcpkg_write_sourcelink_file(
-        SOURCE_PATH "${SOURCE_PATH}/*"
+        SOURCE_PATH "${SOURCE_PATH}"
         SERVER_PATH "${github_raw_url}/${org_name}/${repo_name}/${ref_to_use}/*"
+        RAW_SEARCH_REPO_NAME "${repo_name}"
         RAW_INCLUDE_MAPPING "${raw_include_mapping}"
     )
 

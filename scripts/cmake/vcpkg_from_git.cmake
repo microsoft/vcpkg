@@ -201,27 +201,21 @@ SHA is in the history. For example, you may be able to fix this error by changin
             message(FATAL_ERROR "RAW_ACCESS_URL was provided, but does not contain required '*' character: ${arg_RAW_ACCESS_URL}")
         endif()
 
-        # Use the provided mapping, or else provide a sensible default
+        # Forward any provided mapping after a quick sanity check.
+        # If nothing is passed into vcpkg_write_sourcelink_file, then it will 
+        # attempt to set a sensible default based upon the contents of the extracted repo.
         if(DEFINED arg_RAW_INCLUDE_MAPPING)
             list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
             if (${num_mappings} LESS "2")
                 message(FATAL_ERROR "vcpkg_from_github was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
             endif()
             set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
-        else()
-            # Establish a sensible default (2 locations) if none was provided
-            #   From:
-            #     (INSTALLED_TRIPLET)\include\${PORT}\* 
-            #   To:
-            #     (SERVER_PATH)/include /*
-            #     (SERVER_PATH)/*
-            list(APPEND raw_include_mapping "${PORT}/*" "include/*")
-            list(APPEND raw_include_mapping "${PORT}/*" "*")
         endif()
 
         vcpkg_write_sourcelink_file(
-            SOURCE_PATH "${SOURCE_PATH}/*"
+            SOURCE_PATH "${SOURCE_PATH}"
             SERVER_PATH "${arg_RAW_ACCESS_URL}"
+            RAW_SEARCH_REPO_NAME "${PORT}"
             RAW_INCLUDE_MAPPING "${raw_include_mapping}"
         )
     endif()

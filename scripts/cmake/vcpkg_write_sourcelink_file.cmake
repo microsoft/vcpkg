@@ -8,6 +8,7 @@ Write a Source Link file (if enabled). Internal function not for direct use by p
 vcpkg_write_sourcelink_file(
      SOURCE_PATH <path>
      SERVER_PATH <URL>
+     RAW_SEARCH_REPO_NAME <repo_name>
      RAW_INCLUDE_MAPPING <list_of_mapping_pairs>
 )
 ```
@@ -19,9 +20,14 @@ Specifies the local location of the sources used for build.
 ### SERVER_PATH
 Specified the permanent location of the corresponding sources.
 
+### RAW_SEARCH_REPO_NAME
+Optional repo name to use during include-mapping search, if none is provided.
+This is used to check for the existence of some directories below SOURCE_PATH,
+such as `include/${RAW_SEARCH_REPO_NAME}/`
+
 ### RAW_INCLUDE_MAPPING
 Mapping of installed headers to the raw repo paths, which allows identification of inlined code from those headers.
-This is optional - if not specified, then these entries will not be added.
+This is optional - if not specified, then an automatic entry will be added after inspecting the extracted directories below SOURCE_PATH.
 
 Each mapping consists of a pair of strings, which are then embedded into the file after some formatting.
 - First string is *from*, which represents the path below the `include` folder after installation
@@ -47,34 +53,92 @@ This also allows individual files to be overridden, even the uncommon situation 
     list(APPEND raw_include_mapping "${PORT}.h" "${PORT}.h")
 ```
 
+## Resulting output:
+Below is a sample output from the `fmt` project that illustrates several things:
+- The first entry represents the build-time location of the port itself.
+  - This is critical for debugging into the library itself, and only depends on the SERVER_PATH being valid
+  - If a Shared library is produced, then this is embedded into the PDB (on Windows)
+  - If a Static library is produced, then the JSON will be embedded in the eventual executable or shared library that uses it
+- The remaining entries are prefixed with `__VCPKG_INSTALLED_TRIPLET_DIR__`, which serves as a placeholder
+  - As illustrated below, when headers are installed into the target location, they are relocated from their original location within the repository.
+    - See the optional RAW_INCLUDE_MAPPING parameter
+  - These must be substituted when incorporating this into a target build with the combination of VCPKG_INSTALLED_DIR and VCPKG_TARGET_TRIPLET
+    - See `vcpkg_add_sourcelink_link_options` in `buildsystems/vcpkg.cmake` for one example of how these can be prepared for use
+  - If no substitution is done, then these embedded paths are harmlessly ignored by the eventual consumer because none of the embedded filenames actually start with the string `__VCPKG_INSTALLED_TRIPLET_DIR__`
+
+```json
+{"documents":{ 
+ "D:\\mydev\\vcpkg\\buildtrees\\fmt\\src\\10.2.1-a991065f88.clean\\*": "https://raw.githubusercontent.com/fmtlib/fmt/10.2.1/*",
+ "__VCPKG_INSTALLED_TRIPLET_DIR__\\include\\fmt\\*": "https://raw.githubusercontent.com/fmtlib/fmt/10.2.1/include/fmt/*"
+}}
+```
+
 #]===]
 
 
 function(vcpkg_write_sourcelink_file)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;SERVER_PATH;RAW_INCLUDE_MAPPING" "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;SERVER_PATH;RAW_SEARCH_REPO_NAME;RAW_INCLUDE_MAPPING" "")
 
     if(NOT DEFINED arg_SOURCE_PATH OR NOT DEFINED arg_SERVER_PATH)
         message(FATAL_ERROR "SOURCE_PATH and SERVER_PATH must be specified.")
     endif()
 
+    if(DEFINED arg_RAW_INCLUDE_MAPPING AND NOT "${arg_RAW_INCLUDE_MAPPING}" STREQUAL "")
+        set(raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+    else()
+        # Establish a sensible default if none was provided by searching the extracted source.
+        # Because this is represented as JSON key/value pairs, there can be only one entry per key.
+        #
+        # For example
+        #   From:
+        #     (INSTALLED_TRIPLET)\include\${PORT}\* 
+        #   To:
+        #     (SERVER_PATH)/include/${repo_name}/*
+
+        # The checks that include the repo name only make sense if it's populated
+        if (DEFINED arg_RAW_SEARCH_REPO_NAME AND NOT "${arg_RAW_SEARCH_REPO_NAME}" STREQUAL "")
+            set(check_repo_name True)
+        endif()
+
+        # The order is relevant here, so the most deply-nested items or most interesting are found first
+        if(check_repo_name AND IS_DIRECTORY "${arg_SOURCE_PATH}/include/${arg_RAW_SEARCH_REPO_NAME}")
+            list(APPEND raw_include_mapping "${PORT}/*" "include/${arg_RAW_SEARCH_REPO_NAME}/*")
+        elseif(IS_DIRECTORY  "${arg_SOURCE_PATH}/include")
+            list(APPEND raw_include_mapping "${PORT}/*" "include/*")
+        elseif(check_repo_name AND IS_DIRECTORY "${arg_SOURCE_PATH}/${arg_RAW_SEARCH_REPO_NAME}")
+            list(APPEND raw_include_mapping "${PORT}/*" "${arg_RAW_SEARCH_REPO_NAME}/*")
+        elseif(IS_DIRECTORY  "${arg_SOURCE_PATH}/src")
+            list(APPEND raw_include_mapping "${PORT}/*" "src/*")
+        elseif(IS_DIRECTORY  "${arg_SOURCE_PATH}/source")
+            list(APPEND raw_include_mapping "${PORT}/*" "source/*")
+        else()
+            # If all else fails, at least map to the top of the repo
+            list(APPEND raw_include_mapping "${PORT}/*" "*")
+        endif()
+    endif()
+
     # Normalize and escape (for JSON) the source path.
-    file(TO_NATIVE_PATH "${arg_SOURCE_PATH}" sourcelink_source_path)
+    # - Adding the '*' wildcard explicitly here because we are passed the plain SOURCE_PATH
+    # - Both here and below, the path formatting handles either native path format
+    #   by creating the initial path with forward-slash, converting to native,
+    #   and then escaping any backslashes (if they are present)
+    file(TO_NATIVE_PATH "${arg_SOURCE_PATH}/*" sourcelink_source_path)
     string(REGEX REPLACE "\\\\" "\\\\\\\\" sourcelink_source_path "${sourcelink_source_path}")
 
     # Write the first line of the file, which is used for the immediate build of this port
     file(WRITE "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\"")
 
     # If specified, add the mappings
-    if (DEFINED arg_RAW_INCLUDE_MAPPING)
-        list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
+    if (DEFINED raw_include_mapping)
+        list(LENGTH raw_include_mapping num_mappings)
         foreach(i RANGE 0 ${num_mappings} 2)
             if (${i}+1 LESS ${num_mappings})
-                list(POP_FRONT arg_RAW_INCLUDE_MAPPING item_from item_to)
+                list(POP_FRONT raw_include_mapping item_from item_to)
 
                 file(TO_NATIVE_PATH "__VCPKG_INSTALLED_TRIPLET_DIR__/include/${item_from}" adjusted_item_from)
                 string(REGEX REPLACE "\\\\" "\\\\\\\\" adjusted_item_from "${adjusted_item_from}")
 
-                # SourceLink strings are allows to have either 0 or 1 wildcards, so a simple replace is suitable.
+                # SourceLink strings are allowed to have either 0 or 1 wildcards, so a simple replace is suitable.
                 string(REPLACE "*" "${item_to}" adjusted_item_to "${arg_SERVER_PATH}")
 
                 file(APPEND "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
