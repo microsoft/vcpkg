@@ -18,7 +18,7 @@ endfunction()
 function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
+        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;RAW_INCLUDE_MAPPING;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -124,5 +124,32 @@ function(vcpkg_from_gitlab)
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
     )
+
+    # Use the provided mapping, or else provide a sensible default
+    if(DEFINED arg_RAW_INCLUDE_MAPPING)
+        list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
+        if (${num_mappings} LESS "2")
+            message(FATAL_ERROR "vcpkg_from_gitlab was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
+        endif()
+        set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+    else()
+        # Establish sensible defaults if none were provided
+        #   From:
+        #     (INSTALLED_TRIPLET)\include\${PORT}\* 
+        #   To:
+        #     (SERVER_PATH)/include/${repo_name}/*
+        #     (SERVER_PATH)/${repo_name}/*
+        #     (SERVER_PATH)/*
+        list(APPEND raw_include_mapping "${PORT}/*" "include/${repo_name}/*")
+        list(APPEND raw_include_mapping "${PORT}/*" "${repo_name}/*")
+        list(APPEND raw_include_mapping "${PORT}/*" "*")
+    endif()
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}/*"
+        SERVER_PATH "${gitlab_link}/-/raw/${ref_to_use}/*"
+        RAW_INCLUDE_MAPPING "${raw_include_mapping}"
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
