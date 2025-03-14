@@ -356,6 +356,10 @@
       "baseline": "2024-01-03",
       "port-version": 0
     },
+    "audioengine": {
+      "baseline": "1.1",
+      "port-version": 0
+    },
     "audiofile": {
       "baseline": "1.1.2",
       "port-version": 0
