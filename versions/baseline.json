@@ -3138,7 +3138,7 @@
     },
     "giflib": {
       "baseline": "5.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ginkgo": {
       "baseline": "1.9.0",
