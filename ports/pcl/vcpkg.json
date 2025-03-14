@@ -1,7 +1,7 @@
 {
   "name": "pcl",
   "version": "1.15.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Point Cloud Library (PCL) is open source library for 2D/3D image and point cloud processing.",
   "homepage": "https://github.com/PointCloudLibrary/pcl",
   "license": "BSD-3-Clause",
