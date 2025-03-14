@@ -1,7 +1,7 @@
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS"
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS;RAW_ACCESS_URL;RAW_INCLUDE_MAPPING"
         "PATCHES"
     )
 
@@ -184,6 +184,47 @@ SHA is in the history. For example, you may be able to fix this error by changin
         ${extract_working_directory_param}
         ${skip_patch_check_param}
     )
+
+    # Sourcelink can only be enabled for generic git repos if the URL for raw retrieval is provided.
+    # - The provided string must fully-specify the access URL for a given file, including
+    #   the wildcard '*' which is where the relative path within the repo is provided.
+    #
+    # - The format of this string varies substantially.  Some examples:
+    #   - github:    "${github_raw_url}/${arg_REPO}/${arg_REF}/*"
+    #   - gitlab:    "${arg_GITLAB_URL}/${arg_REPO}/-/raw/${arg_REF}/*"
+    #   - bitbucket: "https://bitbucket.com/${org_name}/${repo_name}/raw/${ref_to_use}/*"
+    #   - self-hosted bitbucket: "${baseUrl}/projects/${project_name}/repos/${repo_name}/raw/*?at=${arg_REF}"
+    # 
+    if(DEFINED arg_RAW_ACCESS_URL)
+        string(FIND ${arg_RAW_ACCESS_URL} "*" found_wildcard)
+        if (${found_wildcard} EQUAL "-1")
+            message(FATAL_ERROR "RAW_ACCESS_URL was provided, but does not contain required '*' character: ${arg_RAW_ACCESS_URL}")
+        endif()
+
+        # Use the provided mapping, or else provide a sensible default
+        if(DEFINED arg_RAW_INCLUDE_MAPPING)
+            list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
+            if (${num_mappings} LESS "2")
+                message(FATAL_ERROR "vcpkg_from_github was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
+            endif()
+            set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+        else()
+            # Establish a sensible default (2 locations) if none was provided
+            #   From:
+            #     (INSTALLED_TRIPLET)\include\${PORT}\* 
+            #   To:
+            #     (SERVER_PATH)/include /*
+            #     (SERVER_PATH)/*
+            list(APPEND raw_include_mapping "${PORT}/*" "include/*")
+            list(APPEND raw_include_mapping "${PORT}/*" "*")
+        endif()
+
+        vcpkg_write_sourcelink_file(
+            SOURCE_PATH "${SOURCE_PATH}/*"
+            SERVER_PATH "${arg_RAW_ACCESS_URL}"
+            RAW_INCLUDE_MAPPING "${raw_include_mapping}"
+        )
+    endif()
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

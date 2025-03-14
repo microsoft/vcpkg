@@ -1,7 +1,7 @@
 function(vcpkg_from_bitbucket)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF"
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;RAW_INCLUDE_MAPPING"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
