@@ -259,7 +259,6 @@ cppcoro:x64-android=fail
 cppcoro:x64-linux=fail
 cppcoro:x64-osx=fail
 cppslippi:x64-linux=fail
-cpputest:arm-neon-android=fail
 crashpad:x64-linux=fail #Compilation failed due to the lack of Clang++ compiler.
 cserialport:arm-neon-android=fail
 cserialport:arm64-android=fail
@@ -741,14 +740,11 @@ moos-essential:x64-windows-release=fail
 moos-essential:x64-windows-static-md=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
-# ms-gdkx and ms-gltf require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+# ms-gdkx require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
 ms-gdkx:x64-windows-release=fail
 ms-gdkx:x64-windows-static-md=fail
 ms-gdkx:x64-windows-static=fail
 ms-gdkx:x64-windows=fail
-ms-gltf:arm-neon-android=fail
-ms-gltf:arm64-android=fail
-ms-gltf:x64-android=fail
 # Conflicts with libjpeg-turbo
 mozjpeg:arm-neon-android=fail
 mozjpeg:arm64-android=fail
