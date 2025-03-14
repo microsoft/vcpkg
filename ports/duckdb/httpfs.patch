@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4496860..fdda539 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1257,7 +1257,14 @@ endforeach()
+ # Load extensions passed through cmake config var
+ foreach(EXT IN LISTS BUILD_EXTENSIONS)
+   if(NOT "${EXT}" STREQUAL "")
+-    duckdb_extension_load(${EXT})
++    if("${EXT}" STREQUAL "httpfs")
++      duckdb_extension_load(${EXT} 
++        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/httpfs
++        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/httpfs/extension/httpfs/include
++      )
++    else()
++      duckdb_extension_load(${EXT})
++    endif()
+   endif()
+ endforeach()
+ 

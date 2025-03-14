@@ -1,0 +1,43 @@
+{
+  "name": "aravis",
+  "version": "0.8.34",
+  "description": " A vision library for genicam based cameras.",
+  "homepage": "https://github.com/AravisProject/aravis",
+  "license": "LGPL-2.0-or-later",
+  "dependencies": [
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "libxml2",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "usb"
+  ],
+  "features": {
+    "fast-heartbeat": {
+      "description": "Enable faster heartbeat rate"
+    },
+    "introspection": {
+      "description": "Build introspection data",
+      "dependencies": [
+        "gobject-introspection"
+      ]
+    },
+    "packet-socket": {
+      "description": "Enable packet socket support"
+    },
+    "usb": {
+      "description": "Enable USB support",
+      "dependencies": [
+        "libusb"
+      ]
+    }
+  }
+}
