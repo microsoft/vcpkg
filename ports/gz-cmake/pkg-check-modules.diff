@@ -1,0 +1,17 @@
+diff --git a/cmake/GzPkgConfig.cmake b/cmake/GzPkgConfig.cmake
+index 5fcdb76..f3250e1 100644
+--- a/cmake/GzPkgConfig.cmake
++++ b/cmake/GzPkgConfig.cmake
+@@ -155,11 +155,7 @@ macro(gz_pkg_check_modules_quiet package signature)
+       #
+       # TODO: How would we deal with multiple modules that are in different
+       # directories? How does cmake-3.6+ handle that situation?
+-      _gz_pkgconfig_find_libraries(
+-        ${package}_LIBRARIES
+-        ${package}
+-        "${${package}_LIBRARIES}"
+-        "${${package}_LIBRARY_DIRS}")
++      #[[ obsolete, broken ]]
+ 
+       include(GzImportTarget)
+       gz_import_target(${package} ${_gz_pkg_check_modules_interface_option}
