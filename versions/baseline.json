@@ -6102,7 +6102,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "modern-cpp-kafka": {
       "baseline": "2024.07.03",
