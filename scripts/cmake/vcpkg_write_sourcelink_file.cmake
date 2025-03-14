@@ -71,20 +71,18 @@ function(vcpkg_write_sourcelink_file)
             if (${i}+1 LESS ${num_mappings})
                 list(POP_FRONT arg_RAW_INCLUDE_MAPPING item_from item_to)
 
-                file(TO_NATIVE_PATH "${item_from}" adjusted_item_from)
+                file(TO_NATIVE_PATH "__VCPKG_INSTALLED_TRIPLET_DIR__/include/${item_from}" adjusted_item_from)
                 string(REGEX REPLACE "\\\\" "\\\\\\\\" adjusted_item_from "${adjusted_item_from}")
 
                 # SourceLink strings are allows to have either 0 or 1 wildcards, so a simple replace is suitable.
                 string(REPLACE "*" "${item_to}" adjusted_item_to "${arg_SERVER_PATH}")
 
-                file(APPEND "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" ", \"__VCPKG_INSTALLED_TRIPLET_DIR__\\\\include\\\\${adjusted_item_from}\": \"${adjusted_item_to}\"")
+                file(APPEND "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
             endif()
         endforeach()
     endif()
 
     # Append the closing braces the the file
     file(APPEND "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "}}")
-
-    message(STATUS "SOURCELINK: Wrote for ${CURRENT_PACKAGES_DIR}")
 
 endfunction()
