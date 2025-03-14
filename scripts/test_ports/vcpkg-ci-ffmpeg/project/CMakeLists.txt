@@ -15,7 +15,9 @@ if(UNIX AND NOT BUILD_SHARED_LIBS)
     target_include_directories(shared PRIVATE ${FFMPEG_INCLUDE_DIRS})
     target_link_directories(shared PRIVATE ${FFMPEG_LIBRARY_DIRS})
     target_link_libraries(shared PRIVATE ${FFMPEG_LIBRARIES})
-    target_link_options(shared PRIVATE -Wl,-Bsymbolic)
+    if(NOT APPLE)
+        target_link_options(shared PRIVATE -Wl,-Bsymbolic)
+    endif()
 endif()
 
 
