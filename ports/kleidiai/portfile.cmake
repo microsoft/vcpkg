@@ -17,9 +17,7 @@ vcpkg_cmake_configure(
     WINDOWS_USE_MSBUILD
     OPTIONS
         -DKLEIDIAI_BUILD_TESTS=OFF
-        -DKLEIDIAI_BUILD_EXAMPLES=OFF
-        -DKLEIDIAI_BUILD_TOOLS=OFF
-        -DKLEIDIAI_WITH_TESTS=OFF
+        -DKLEIDIAI_BUILD_BENCHMARK=OFF
 )
 
 vcpkg_cmake_install()
