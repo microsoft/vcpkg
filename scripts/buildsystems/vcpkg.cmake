@@ -556,9 +556,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     endif()
 endif()
 
-set(Z_VCPKG_SOURCELINK_RSP "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.rsp" CACHE INTERNAL "")
 set(Z_VCPKG_SOURCELINK_FRAGMENTS "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.fragments" CACHE INTERNAL "")
-set(Z_VCPKG_SOURCELINK_INSTALLED "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.installed" CACHE INTERNAL "")
+set(Z_VCPKG_SOURCELINK_JSON "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.json" CACHE INTERNAL "")
 
 function(vcpkg_add_sourcelink_link_options target)
     if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND
@@ -566,32 +565,12 @@ function(vcpkg_add_sourcelink_link_options target)
         CMAKE_VERSION VERSION_GREATER_EQUAL 3.19.0)
         # Support added in Visual Studio 2017 Version 15.8.
 
-        # This function will be called many times, at least once per referenced target and dependency
-        # - The first time it is called, gather ALL of the sourcelink files
-        #   and store in Z_VCPKG_SOURCELINK_LINK_OPTS for the eventual link steps.
-        # - Subsequent invocations add no new information, but do add the cached
-        #   information to each target's link options
-        # - Because these are all collected in bulk, this will often contain extra sourcelink details
-        #   from ports that are not necessarily relevant.  Fixing the over-collection would require
-        #   changing from an up-front collection to an approach where each depenency is appended to a
-        #   growing set for this target.
-        #
-        # Note: This is an excellent location to consider a future enhancement where
-        #       each of the discovered json files could be combined into a single sourcelink
-        #       file that covers all of the dependencies.
-        #if(NOT DEFINED Z_VCPKG_SOURCELINK_LINK_OPTS)
-        if(True)
-            if(CMAKE_GENERATOR MATCHES "Visual Studio")
-                set(pass_sourcelink_directly 1)
-            else()
-                # Due to cmd.exe command line length limitations (encountered by e.g. Ninja), /sourcelink
-                # parameters are passed indirectly through a response file.
-                set(pass_sourcelink_directly 0)
-
-                set(sourcelink_rsp_tmp "${Z_VCPKG_SOURCELINK_RSP}.tmp")
-
-                file(WRITE "${sourcelink_rsp_tmp}" "")
-            endif()
+        # This function will be called for each referenced target and all their dependencies
+        # - Subsequent invocations usually add no new information, but those calls
+        #   are necessary to update that target's link optons to include the sourcelink file.
+        # - Because these are all collected in bulk, extra sourcelink details are typically included
+        #   from ports that are not necessarily relevant to the specific target. 
+        if(NOT DEFINED Z_VCPKG_SOURCELINK_LINK_OPTS)
 
             # Set up the substitution to VCPKG_INSTALLED_DIR/VCPKG_TARGET_TRIPLET which will be used for each file below
             set(installed_triplet_dir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
@@ -612,7 +591,7 @@ function(vcpkg_add_sourcelink_link_options target)
             #   but the extra complexity didn't seem worth the trade-off.
             file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
 
-            # This explicit file is provided during port builds via ports.cmake (typically via vcpkg_cmake_configure).
+            # This is provided during port builds via ports.cmake (typically via vcpkg_cmake_configure).
             # The referenced file is not installed yet, so this is the only way to pick up these contents.
             if(VCPKG_SOURCELINK_FILE)
                 list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
@@ -675,37 +654,17 @@ function(vcpkg_add_sourcelink_link_options target)
                     file(REMOVE "${sourcelink_fragments_tmp}")
                 endif()
 
-                file(WRITE "${Z_VCPKG_SOURCELINK_INSTALLED}" "{\"documents\":{ \n")
+                file(WRITE "${Z_VCPKG_SOURCELINK_JSON}" "{\"documents\":{ \n")
                 file(READ ${Z_VCPKG_SOURCELINK_FRAGMENTS} sourcelink_all_fragments)
-                file(APPEND "${Z_VCPKG_SOURCELINK_INSTALLED}" "${sourcelink_all_fragments}")
-                file(APPEND "${Z_VCPKG_SOURCELINK_INSTALLED}" "}}")
+                file(APPEND "${Z_VCPKG_SOURCELINK_JSON}" "${sourcelink_all_fragments}")
+                file(APPEND "${Z_VCPKG_SOURCELINK_JSON}" "}}")
  
                 set(Z_VCPKG_SOURCELINK_LINK_OPTS "")
-                if(pass_sourcelink_directly)
-                    list(APPEND Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${Z_VCPKG_SOURCELINK_INSTALLED}")
-                else()
-                    file(APPEND "${sourcelink_rsp_tmp}" "/sourcelink:\"${Z_VCPKG_SOURCELINK_INSTALLED}\"\n")
-                endif()
-
-            endif()
-
-            if(NOT pass_sourcelink_directly)
-                if(NOT EXISTS "${Z_VCPKG_SOURCELINK_RSP}")
-                    set(sourcelink_rsp_hash "0")
-                else()
-                    file(MD5 "${Z_VCPKG_SOURCELINK_RSP}" sourcelink_rsp_hash)
-                endif()
-                file(MD5 "${sourcelink_rsp_tmp}" sourcelink_rsp_tmp_hash)
-
-                if(NOT sourcelink_rsp_hash STREQUAL sourcelink_rsp_tmp_hash)
-                    file(RENAME "${sourcelink_rsp_tmp}" "${Z_VCPKG_SOURCELINK_RSP}")
-                else()
-                    file(REMOVE "${sourcelink_rsp_tmp}")
-                endif()
-                list(APPEND Z_VCPKG_SOURCELINK_LINK_OPTS "@${Z_VCPKG_SOURCELINK_RSP}")
+                list(APPEND Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${Z_VCPKG_SOURCELINK_JSON}")
             endif()
             set(Z_VCPKG_SOURCELINK_LINK_OPTS "${Z_VCPKG_SOURCELINK_LINK_OPTS}" CACHE INTERNAL "Link options to enable sourcelink from vcpkg")
         endif()
+
         if(Z_VCPKG_SOURCELINK_LINK_OPTS)
             set_property( TARGET ${target} APPEND PROPERTY LINK_OPTIONS "${Z_VCPKG_SOURCELINK_LINK_OPTS}")
         endif()
