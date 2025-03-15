@@ -58,14 +58,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-  "${SOURCE_PATH}/lib/CMakeLists.txt"
-  @ONLY
-)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/lib")
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}/lib"
+  OPTIONS
+    "-DPARSERS=${PROTO_PARSERS}"
 )
 
 vcpkg_cmake_install()

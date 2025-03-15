@@ -12,7 +12,7 @@ set(TS_SOVERSION_MINOR 0)
 include(GNUInstallDirs)
 
 #create parser targets
-set(PARSERS @PROTO_PARSERS@)
+set(PARSERS "" CACHE STRING "The desired list fo parsers")
 set(PARSER_TARGETS "")
 set(PARSER_PKG_LIBS "")
 foreach(PARSER_STRING IN LISTS PARSERS)
