@@ -11,3 +11,6 @@ pkg_check_modules(gz-common_pc gz-common6-av REQUIRED IMPORTED_TARGET)
 
 add_executable(main-pkconfig main.cpp)
 target_link_libraries(main-pkconfig PRIVATE PkgConfig::gz-common_pc)
+if(MSVC)
+    target_compile_features(main-pkconfig PRIVATE cxx_std_17)
+endif()

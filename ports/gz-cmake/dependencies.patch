@@ -57,7 +57,7 @@ index 70f7a76..c870e92 100644
  set(GzBullet_FOUND false)
  # create Bullet target
 diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
-index 2decd84..97d1c09 100644
+index 2decd84..dd2c2c2 100644
 --- a/cmake/FindGzOGRE2.cmake
 +++ b/cmake/FindGzOGRE2.cmake
 @@ -146,7 +146,7 @@ endmacro()
@@ -77,6 +77,20 @@ index 2decd84..97d1c09 100644
        set(OGRE2_LIBRARIES ${${GZ_OGRE2_PROJECT_NAME}_LIBRARIES})  # sync possible Ogre-Next ot OGRE2
      else()
        # look for OGRE2 installed from source
+@@ -264,10 +265,10 @@ if (PkgConfig_FOUND)
+       get_filename_component(dir_name "${dir}" NAME)
+       if ("${dir_name}" STREQUAL ${GZ_PKG_NAME})
+         set(dir_include "${dir}/RenderSystems/GL3Plus")
+-      else()
+-        set(dir_include "${dir}")
++        if(EXISTS "${dir_include}")
++          list(APPEND OGRE2_INCLUDE_DIRS "${dir_include}")
++        endif()
+       endif()
+-      list(APPEND OGRE2_INCLUDE_DIRS ${dir_include})
+     endforeach()
+ 
+     file(READ ${OGRE2_INCLUDE}/OgrePrerequisites.h OGRE_TEMP_VERSION_CONTENT)
 @@ -309,6 +310,9 @@ if (PkgConfig_FOUND)
            "${OGRE2LIBNAME}${component}_d"
            "${OGRE2LIBNAME}${component}.${OGRE2_VERSION}"
@@ -128,14 +142,14 @@ index 2decd84..97d1c09 100644
            HINTS
                ${OGRE2_LIBRARY_DIRS}
            NO_DEFAULT_PATH)
-@@ -510,6 +522,7 @@ else() #PkgConfig_FOUND
-   ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
-   ogre_find_plugin(RenderSystem_GL3Plus OgreGL3PlusRenderSystem.h RenderSystems/GL3Plus/include)
-   ogre_find_plugin(RenderSystem_Direct3D11 OgreD3D11RenderSystem.h RenderSystems/Direct3D11/include)
+@@ -506,6 +518,7 @@ else() #PkgConfig_FOUND
+   ogre_find_component(Overlay OgreOverlaySystem.h "Overlay")
+   ogre_find_component(HlmsPbs OgreHlmsPbs.h Hlms/Pbs/)
+   ogre_find_component(HlmsUnlit OgreHlmsUnlit.h Hlms/Unlit)
 +  ogre_find_component(PlanarReflections OgrePlanarReflections.h PlanarReflections)
  
-   foreach(component ${GzOGRE2_FIND_COMPONENTS})
-     set(PREFIX OGRE2_${component})
+   ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
+   ogre_find_plugin(RenderSystem_GL3Plus OgreGL3PlusRenderSystem.h RenderSystems/GL3Plus/include)
 @@ -521,7 +534,7 @@ else() #PkgConfig_FOUND
        if(${HLMS_POS} GREATER -1)
          foreach (dir ${OGRE2_INCLUDE_DIRS})
