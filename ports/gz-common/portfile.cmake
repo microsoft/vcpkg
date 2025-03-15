@@ -11,6 +11,7 @@ ignition_modular_library(
       -DBUILD_TESTING=OFF
       "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
    PATCHES
+      gz-utils3-log.diff
       gz_remotery_vis.patch
       003-include-chrono.patch
       detect_tinyxml.patch
