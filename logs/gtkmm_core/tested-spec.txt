@@ -1,0 +1,1 @@
+gtkmm[core]:arm64-osx

@@ -1,0 +1,1 @@
+qtopcua[core]:arm64-osx
