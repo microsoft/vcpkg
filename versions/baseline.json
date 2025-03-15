@@ -9734,7 +9734,7 @@
     },
     "vst3sdk": {
       "baseline": "v3.7.12_build_20",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",

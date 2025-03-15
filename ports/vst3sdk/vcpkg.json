@@ -1,7 +1,7 @@
 {
   "name": "vst3sdk",
   "version-string": "v3.7.12_build_20",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Virtual Studio Technology (VST) is an audio plug-in software interface that facilitates the integration of software synthesizers and effects in digital audio workstations (DAW)",
   "homepage": "https://steinbergmedia.github.io/vst3_dev_portal/pages/Technical+Documentation/API+Documentation/Index.html",
   "license": "GPL-3.0-only",
