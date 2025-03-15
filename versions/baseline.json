@@ -5749,7 +5749,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.660",
+      "baseline": "0.665",
       "port-version": 0
     },
     "luminoengine": {
