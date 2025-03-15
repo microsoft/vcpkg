@@ -110,7 +110,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
-    <_ZVcpkgSourceLinkFiles Include="$(_ZVcpkgRoot)sourcelink\*.json"/>
+    <_ZVcpkgSourceLinkFiles Include="$(_ZVcpkgCurrentInstalledDir)sourcelink\*.json"/>
   </ItemGroup>
   <PropertyGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
     <_ZVcpkgSourceLinkOpts>@(_ZVcpkgSourceLinkFiles->'/SOURCELINK:&quot;%(Identity)&quot;', ' ')</_ZVcpkgSourceLinkOpts>
