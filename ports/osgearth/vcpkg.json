@@ -50,6 +50,12 @@
     },
     "tools": {
       "description": "Build tools"
+    },
+    "examples": {
+      "description": "Build examples"
+    },
+    "controls": {
+      "description": "support for the old Controls API (superceded by imgui)"
     }
   }
 }
