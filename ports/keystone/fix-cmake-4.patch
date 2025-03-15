@@ -1,0 +1,80 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb52c1992b..d6b23540db 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ # Keystone Assembler Engine (www.keystone-engine.org)
+ # By Nguyen Anh Quynh, 2016
+ 
+-cmake_minimum_required(VERSION 2.8.7)
++cmake_minimum_required(VERSION 3.5)
+ project(keystone)
+ 
+ set(KEYSTONE_VERSION_MAJOR 0)
+@@ -14,23 +14,6 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_BUILD_TYPE "Debug")
+ endif()
+ 
+-if (POLICY CMP0022)
+-  cmake_policy(SET CMP0022 NEW) # automatic when 2.8.12 is required
+-endif()
+-
+-if (POLICY CMP0051)
+-  # CMake 3.1 and higher include generator expressions of the form
+-  # $<TARGETLIB:obj> in the SOURCES property.  These need to be
+-  # stripped everywhere that access the SOURCES property, so we just
+-  # defer to the OLD behavior of not including generator expressions
+-  # in the output for now.
+-  cmake_policy(SET CMP0051 OLD)
+-endif()
+-
+-if (POLICY CMP0063)
+-  set(CMAKE_POLICY_DEFAULT_CMP0063 NEW) # automatic when 3.3.2 is required
+-endif()
+-
+ if (CMAKE_VERSION VERSION_LESS 3.1.20141117)
+   set(cmake_3_2_USES_TERMINAL)
+ else()
+diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
+index e324ef397d..40682dcdc1 100644
+--- a/llvm/CMakeLists.txt
++++ b/llvm/CMakeLists.txt
+@@ -9,18 +9,6 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_BUILD_TYPE "Debug")
+ endif()
+ 
+-if(POLICY CMP0022)
+-  cmake_policy(SET CMP0022 NEW) # automatic when 2.8.12 is required
+-endif()
+-
+-if (POLICY CMP0051)
+-  # CMake 3.1 and higher include generator expressions of the form
+-  # $<TARGETLIB:obj> in the SOURCES property.  These need to be
+-  # stripped everywhere that access the SOURCES property, so we just
+-  # defer to the OLD behavior of not including generator expressions
+-  # in the output for now.
+-  cmake_policy(SET CMP0051 OLD)
+-endif()
+ 
+ if(CMAKE_VERSION VERSION_LESS 3.1.20141117)
+   set(cmake_3_2_USES_TERMINAL)
+diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/__init__.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000..86f70af01f
+Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/__init__.cpython-312.pyc differ
+diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/componentinfo.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/componentinfo.cpython-312.pyc
+new file mode 100644
+index 0000000000..be31aacfc0
+Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/componentinfo.cpython-312.pyc differ
+diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/configutil.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/configutil.cpython-312.pyc
+new file mode 100644
+index 0000000000..b3086cd8dd
+Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/configutil.cpython-312.pyc differ
+diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/main.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/main.cpython-312.pyc
+new file mode 100644
+index 0000000000..148265189b
+Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/main.cpython-312.pyc differ
+diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/util.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/util.cpython-312.pyc
+new file mode 100644
+index 0000000000..734aa39543
+Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/util.cpython-312.pyc differ

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8df871cf74..bb7a879f81 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,8 +1,8 @@
+-PROJECT(yasm)
+ CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+ if (COMMAND cmake_policy)
+     cmake_policy(SET CMP0003 NEW)
+ endif (COMMAND cmake_policy)
++PROJECT(yasm)
+ 
+ OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
+ 

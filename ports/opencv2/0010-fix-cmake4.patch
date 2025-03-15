@@ -1,0 +1,16 @@
+diff --git a/2.4.13.7-aa92628bc4.clean/CMakeLists.txt b/2.4.13.7-aa92628bc4/CMakeLists.txt
+index 940a018373..0e84287be9 100644
+--- a/2.4.13.7-aa92628bc4.clean/CMakeLists.txt
++++ b/2.4.13.7-aa92628bc4/CMakeLists.txt
+@@ -48,11 +48,6 @@ if(POLICY CMP0026)
+   cmake_policy(SET CMP0026 NEW)
+ endif()
+ 
+-if (POLICY CMP0042)
+-  # silence cmake 3.0+ warnings about MACOSX_RPATH
+-  cmake_policy(SET CMP0042 OLD)
+-endif()
+-
+ # must go before the project command
+ set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
+ if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
