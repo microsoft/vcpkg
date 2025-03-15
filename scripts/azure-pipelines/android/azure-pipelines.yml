@@ -3,6 +3,10 @@
 #
 
 parameters:
+  - name: vcpkgToolSha
+    displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+    type: string
+    default: 'use default'
   - name: jobName
     type: string
   - name: tripletPattern
@@ -15,10 +19,7 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: PrAnd-WUS
-  workspace:
-    clean: resources
   timeoutInMinutes: 1440 # 1 day
-  cancelTimeoutInMinutes: 1
   variables:
   - name: WORKING_ROOT
     value: /mnt/vcpkg-ci
@@ -27,7 +28,9 @@ jobs:
   - name: ANDROID_NDK_HOME
     value: /android-ndk-r27c
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-02-14'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-03-12'
+  - name: LINUX_DOCKER_IMAGE
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-03-12'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -37,8 +40,35 @@ jobs:
       sudo rm -rf ${{ variables.WORKING_ROOT }}/failure-logs
       sudo mkdir ${{ variables.WORKING_ROOT }}/failure-logs -m=777
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      # Move the docker layers to the temp disk.
+      sudo mkdir -p /etc/docker
+      echo '{"data-root": "/mnt/docker"}' | sudo tee /etc/docker/daemon.json
+      sudo systemctl restart docker
       exit 0
     displayName: 'Create working directories'
+  - bash: ./bootstrap-vcpkg.sh -skipDependencyChecks
+    displayName: 'Bootstrap vcpkg'
+    condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
+  - task: AzureCLI@2
+    displayName: 'Build vcpkg with CMake'
+    condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
+    inputs:
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: bash
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        # This is a second pull but the vcpkgToolSha setting is used rarely.
+        USER=$(id --user)
+        az acr login --name vcpkgandroidwus
+        docker pull ${{ variables.LINUX_DOCKER_IMAGE }}
+        docker run --init -i --rm \
+        -a stderr \
+        -a stdout \
+        --user $USER \
+        --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+        --workdir /vcpkg \
+        ${{ variables.LINUX_DOCKER_IMAGE }} \
+        /vcpkg/scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
@@ -46,18 +76,14 @@ jobs:
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
-        az acr login --name vcpkgandroidwus
-        docker pull ${{ variables.ANDROID_DOCKER_IMAGE }}
-        docker run --rm \
-          --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
-          ${{ variables.ANDROID_DOCKER_IMAGE }} \
-          ./bootstrap-vcpkg.sh
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
         assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
         binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
         echo Minting SAS tokens valid through $end
         USER=$(id --user)
-        docker run --init -i \
+        az acr login --name vcpkgandroidwus
+        docker pull ${{ variables.ANDROID_DOCKER_IMAGE }}
+        docker run --init -i --rm \
         -a stderr \
         -a stdout \
         --user $USER \
@@ -66,9 +92,10 @@ jobs:
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
         --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite" \
         --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
+        --workdir /vcpkg \
         ${{ variables.ANDROID_DOCKER_IMAGE }} \
         pwsh \
-         -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
+         -File scripts/azure-pipelines/test-modified-ports.ps1 \
          -Triplet ${{ replace(parameters.jobName, '_', '-') }} \
          -BuildReason $(Build.Reason) \
          -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" \

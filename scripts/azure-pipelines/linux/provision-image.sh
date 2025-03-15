@@ -11,22 +11,22 @@ export DEBIAN_FRONTEND=noninteractive
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
 
+# Apt dependencies; needed for add-apt-repository and curl downloads to work
+apt-get -y update
+apt-get --no-install-recommends -y install ca-certificates curl apt-transport-https lsb-release gnupg software-properties-common
+
 ## CUDA
-wget "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
-mv "cuda-ubuntu${NVIDIA_REPO_VERSION}.pin" /etc/apt/preferences.d/cuda-repository-pin-600
+curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
 apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/3bf863cc.pub"
 add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/ /"
 
 ## PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
+curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
 
 ## Azure CLI
-apt-get -qq update
-apt-get -qq install ca-certificates curl apt-transport-https lsb-release gnupg
-
 mkdir -p /etc/apt/keyrings
 curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
     gpg --dearmor |
@@ -38,7 +38,7 @@ echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsof
     tee /etc/apt/sources.list.d/azure-cli.list
 
 apt-get -y update
-apt-get -y dist-upgrade
+apt-get -y upgrade
 
 # Add apt packages
 
@@ -127,7 +127,6 @@ else
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
 fi
 
-# Put --no-install-recommends back next month
-apt-get -y install $APT_PACKAGES
+apt-get --no-install-recommends -y install $APT_PACKAGES
 
 az --version

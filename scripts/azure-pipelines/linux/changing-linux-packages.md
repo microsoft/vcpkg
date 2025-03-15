@@ -1,5 +1,0 @@
-- [ ] Update `provision-image.sh` to add the new apt package.
-- [ ] Update `managed-image.json` to add the new apt package to the very long line of packages.
-- [ ] Create a new managed image CPP_GITHUB\PrLin-WUS\name it, choose the base image you want and copy the contents of managed-image.json into the Settings\Artifacts text box.
-- [ ] Change the 1ES Hosted Pool for Linux to add that image to it.
-- [ ] Change ImageOverride in $/scripts/azure-pipelines/linux/azure-pipelines.yml to the name you picked.
