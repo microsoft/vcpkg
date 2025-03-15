@@ -8582,7 +8582,7 @@
     },
     "sleef": {
       "baseline": "3.8",
-      "port-version": 0
+      "port-version": 1
     },
     "sleepy-discord": {
       "baseline": "2025-02-08",
