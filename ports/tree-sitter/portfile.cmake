@@ -38,7 +38,6 @@ foreach(PARSER_STRING IN LISTS PARSERS)
 
   set(PARSER_NAME "tree-sitter-${PARSER_FEATURE_NAME}")
 
-  message(STATUS "FEATURES: ${FEATURES}")
   # Check if the feature is enabled
   if(PARSER_FEATURE_NAME IN_LIST FEATURES)
     message(STATUS "Processing parser: ${PARSER_NAME}")

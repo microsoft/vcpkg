@@ -67,7 +67,7 @@ set_target_properties(
              POSITION_INDEPENDENT_CODE ON
              SOVERSION ${TS_SOVERSION_MAJOR}.${TS_SOVERSION_MINOR})
 
-string(REPLACE ";" " " PARSER_PKG_LIBS "${PARSER_PKG_LIBS}")
+list(JOIN PARSER_PKG_LIBS " " PARSER_PKG_LIBS)
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/tree-sitter.pc.in" PKG_CONFIG_CONTENT)
 string(REPLACE "Libs: -L\${libdir} -ltree-sitter" 
   "Libs: -L\${libdir} -ltree-sitter \@PARSER_PKG_LIBS\@" PKG_CONFIG_CONTENT ${PKG_CONFIG_CONTENT})
