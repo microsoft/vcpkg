@@ -3885,8 +3885,8 @@
       "port-version": 1
     },
     "joltphysics": {
-      "baseline": "5.2.0",
-      "port-version": 1
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "josuttis-jthread": {
       "baseline": "2020-07-21",
