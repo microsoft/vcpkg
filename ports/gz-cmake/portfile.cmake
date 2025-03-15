@@ -10,6 +10,7 @@ ignition_modular_library(
     PATCHES
         dependencies.patch
         ffempg_depends_interface.patch
+        pkg-check-modules.diff
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
