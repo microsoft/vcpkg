@@ -216,11 +216,24 @@
           Outputs="$(_ZVcpkgSourceLinkInstalledPath)">
     <PropertyGroup>
       <_ZVcpkgSourcelinkPowerShellArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)sourcelink_process_installed.ps1" -RelativeScan "sourcelink" -RelativeOutFile "..\$(_ZVcpkgSourceLinkFilename)" -InstalledTripletPath "$(_ZVcpkgInstalledDir)$(VcpkgTriplet)"</_ZVcpkgSourcelinkPowerShellArguments>
-    </PropertyGroup>
+    </PropertyGroup> 
+    
     <Message Text="Processing vcpkg sourcelink files" Importance="high" />
+
+    <!-- Search %PATH% for pwsh.exe (Powershell Core from the App Store) if it is available. -->
     <Exec
+      Command="pwsh.exe $(_ZVcpkgAppLocalPowerShellCommonArguments)"
+      IgnoreExitCode="true"
+      StandardErrorImportance="low"
+      UseCommandProcessor="false">
+      <Output TaskParameter="ExitCode"
+              PropertyName="_ZVcpkgSourcelinkExitCode" />
+    </Exec>
+    <Exec
+      Condition="$(_ZVcpkgSourcelinkExitCode) == 9009"
       Command="%22$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe%22 $(_ZVcpkgSourcelinkPowerShellArguments)"
       IgnoreExitCode="true"
+      StandardErrorImportance="high"
       UseCommandProcessor="false">
       <Output TaskParameter="ExitCode"
               PropertyName="_ZVcpkgSourcelinkExitCode" />
