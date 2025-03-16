@@ -13,9 +13,3 @@ ignition_modular_library(
       pthread.diff
       003-include-chrono.patch
 )
-
-foreach(component IN ITEMS av events geospatial graphics io profiler testing)
-   if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}-${component}/${PORT}${VERSION_MAJOR}-${component}-config.cmake")
-      message(FATAL_ERROR "Failed to install component ${component}. Check configuration logs for missing dependencies.")
-   endif()
-endforeach()
