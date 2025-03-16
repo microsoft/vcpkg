@@ -92,8 +92,8 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
     }
     elseif ($BuildReason -eq 'PullRequest') {
-        Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailuresArg = @('--skip-failures')
+        #Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
+        #$skipFailuresArg = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
