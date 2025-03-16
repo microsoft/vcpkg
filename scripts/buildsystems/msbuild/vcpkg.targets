@@ -220,15 +220,16 @@
     
     <Message Text="Processing vcpkg sourcelink files" Importance="high" />
 
-    <!-- Search %PATH% for pwsh.exe (Powershell Core from the App Store) if it is available. -->
+    <!-- Search %PATH% for pwsh.exe (Powershell from the Windows Store) if it is available. -->
     <Exec
-      Command="pwsh.exe $(_ZVcpkgAppLocalPowerShellCommonArguments)"
+      Command="pwsh.exe $(_ZVcpkgSourcelinkPowerShellArguments)"
       IgnoreExitCode="true"
       StandardErrorImportance="low"
       UseCommandProcessor="false">
       <Output TaskParameter="ExitCode"
               PropertyName="_ZVcpkgSourcelinkExitCode" />
     </Exec>
+    <!-- Otherwise use the system powershell. -->
     <Exec
       Condition="$(_ZVcpkgSourcelinkExitCode) == 9009"
       Command="%22$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe%22 $(_ZVcpkgSourcelinkPowerShellArguments)"
@@ -244,7 +245,7 @@
     </CreateProperty>
   </Target>
   
-  <!-- Write an empty fallback file if the sourcelink processing fails -->
+  <!-- Write an empty fallback file if the sourcelink processing fails to prevent unnecessary link-time failure -->
   <Target Name="VcpkgSourcelinkWriteEmptyFallback" BeforeTargets="ClCompile" AfterTargets="VcpkgSourcelinkPrep"
           Condition="'$(_ZVcpkgSourceLink)' == 'true'"
           Outputs="$(_ZVcpkgSourceLinkInstalledPath)">
