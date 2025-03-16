@@ -9137,7 +9137,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "0.15.9",
+      "baseline": "0.15.11",
       "port-version": 0
     },
     "threadpool": {
