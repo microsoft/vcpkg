@@ -4360,6 +4360,10 @@
       "baseline": "3.7.7",
       "port-version": 2
     },
+    "libaribcaption": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "libass": {
       "baseline": "0.17.3",
       "port-version": 0
