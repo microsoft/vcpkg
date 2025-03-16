@@ -1,5 +1,8 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-file(INSTALL "${CURRENT_PORT_DIR}/test-macros.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if(NOT VCPKG_CROSSCOMPILING)
+    file(INSTALL "${CURRENT_PORT_DIR}/test-macros.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
 
 include("${CURRENT_PORT_DIR}/test-macros.cmake")
 
