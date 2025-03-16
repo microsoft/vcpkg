@@ -1,5 +1,5 @@
 diff --git a/cmake/FindFreeImage.cmake b/cmake/FindFreeImage.cmake
-index 8a5836e..7b826c5 100644
+index 8a5836e..d7e41d2 100644
 --- a/cmake/FindFreeImage.cmake
 +++ b/cmake/FindFreeImage.cmake
 @@ -23,7 +23,23 @@ set(minor_version ${FreeImage_FIND_VERSION_MINOR})
@@ -8,7 +8,7 @@ index 8a5836e..7b826c5 100644
  
 -if (NOT WIN32)
 +if(1)
-+  find_package(freeimage CONFIG) # using different name to avoid version check
++  find_package(freeimage CONFIG) # not using NAMES to avoid version check
 +  if(freeimage_FOUND)
 +    set(FreeImage_FOUND 1)
 +    set(FreeImage_LIBRARIES freeimage::FreeImage)
@@ -41,16 +41,13 @@ index b400483..48cf9f7 100644
    include(GzPkgConfig)
    gz_pkg_check_modules(GTS gts)
 diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
-index 70f7a76..c870e92 100644
+index 70f7a76..e39a3fd 100644
 --- a/cmake/FindGzBullet.cmake
 +++ b/cmake/FindGzBullet.cmake
-@@ -28,10 +28,7 @@ if(GzBullet_FIND_QUIETLY)
-   set(gz_quiet_arg QUIET)
- endif()
- 
--# Bullet. Force MODULE mode to use the FindBullet.cmake file distributed with
--# CMake. Otherwise, we may end up using the BulletConfig.cmake file distributed
--# with Bullet, which uses relative paths and may break transitive dependencies.
+@@ -31,7 +31,7 @@ endif()
+ # Bullet. Force MODULE mode to use the FindBullet.cmake file distributed with
+ # CMake. Otherwise, we may end up using the BulletConfig.cmake file distributed
+ # with Bullet, which uses relative paths and may break transitive dependencies.
 -find_package(Bullet MODULE ${gz_quiet_arg})
 +find_package(BULLET NAMES Bullet ${gz_quiet_arg})
  
@@ -159,25 +156,3 @@ index 2decd84..dd2c2c2 100644
              set(dir_include "${dir}/Hlms/Common")
              if (EXISTS ${dir_include})
                list(APPEND component_INCLUDE_DIRS ${dir_include})
-diff --git a/cmake/GzFindPackage.cmake b/cmake/GzFindPackage.cmake
-index 93da803..c16e3ba 100644
---- a/cmake/GzFindPackage.cmake
-+++ b/cmake/GzFindPackage.cmake
-@@ -177,6 +177,8 @@ macro(gz_find_package PACKAGE_NAME_)
- 
-   if(gz_find_package_EXACT)
-     list(APPEND ${PACKAGE_NAME}_find_package_args EXACT)
-+  elseif(gz_find_package_VERSION AND NOT gz_find_package_PKGCONFIG_VER_COMPARISON)
-+    set(gz_find_package_PKGCONFIG_VER_COMPARISON >=)
-   endif()
- 
-   if(gz_find_package_CONFIG)
-@@ -344,7 +346,7 @@ macro(gz_find_package PACKAGE_NAME_)
-       # ${component}_CMAKE_DEPENDENCIES variables that are specific to those
-       # componenets
-       foreach(component ${gz_find_package_REQUIRED_BY})
--        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE)
-+        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE OR NOT BUILD_SHARED_LIBS)
-           gz_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
-         endif()
-       endforeach()

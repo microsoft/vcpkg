@@ -8,7 +8,10 @@ ignition_modular_library(
     VERSION ${VERSION}
     SHA512 d761aba28fc79af6bbb021215367e48e1b7449885d0410a0cabd09674a59b17132810ebb796fe0e1ddefc1510aba832fb192cc908156d8eae15e35c1afe464c7
     PATCHES
-        dependencies.patch
+        find-modules.diff
+        gz-find-package.diff
+        gz-import-target.diff
+        lock-dependencies.diff
         pkg-check-modules.diff
 )
 
