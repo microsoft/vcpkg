@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config.diff
         imgui-test-engine.diff
+        support-imgui-1_91_9.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/external/imgui"
