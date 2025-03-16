@@ -1,31 +1,34 @@
+diff --git a/DuckDBConfig.cmake.in b/DuckDBConfig.cmake.in
+index 2e5270e..7c5ce31 100644
+--- a/DuckDBConfig.cmake.in
++++ b/DuckDBConfig.cmake.in
+@@ -7,7 +7,7 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Threads)
+ if(NOT @WITH_INTERNAL_ICU@)
+-    find_dependency(ICU COMPONENTS i18n uc)
++    find_dependency(ICU COMPONENTS i18n uc data)
+ endif()
+ 
+ # Compute paths
 diff --git a/extension/icu/CMakeLists.txt b/extension/icu/CMakeLists.txt
-index b5585e4..b620f9a 100644
+index b5585e4..e3ae9cf 100644
 --- a/extension/icu/CMakeLists.txt
 +++ b/extension/icu/CMakeLists.txt
-@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.12...3.29)
- 
- project(ICUExtension)
- 
-+include(CMakePrintHelpers)
-+
- include_directories(include)
- option(WITH_INTERNAL_ICU "Use vendored copy of icu" TRUE)
- if(WITH_INTERNAL_ICU)
-@@ -30,12 +32,16 @@ set(ICU_EXTENSION_FILES
+@@ -30,12 +30,15 @@ set(ICU_EXTENSION_FILES
  build_static_extension(icu ${ICU_EXTENSION_FILES})
  link_threads(icu_extension)
  if(NOT WITH_INTERNAL_ICU)
 -    find_package(ICU COMPONENTS i18n uc REQUIRED)
 -    target_link_libraries(icu_extension ICU::i18n ICU::uc)
 +    find_package(ICU COMPONENTS i18n uc data REQUIRED)
-+    cmake_print_properties(TARGETS ICU::i18n ICU::uc PROPERTIES INTERFACE_INCLUDE_DIRECTORIES INTERFACE_LINK_LIBRARIES INTERFACE_COMPILE_DEFINITIONS)
 +    target_link_libraries(icu_extension ICU::i18n ICU::uc ICU::data)
  endif()
  disable_target_warnings(icu_extension)
  set(PARAMETERS "-no-warnings")
  build_loadable_extension(icu ${PARAMETERS} ${ICU_EXTENSION_FILES})
 +if(NOT WITH_INTERNAL_ICU)
-+    target_link_libraries(icu_loadable_extension ICU::i18n ICU::uc ICU::data)
++  target_link_libraries(icu_loadable_extension ICU::i18n ICU::uc ICU::data)
 +endif()
  install(
    TARGETS icu_extension

@@ -8,7 +8,7 @@ vcpkg_from_github(
         bigobj.patch
         unvendor_icu_and_find_dependency.patch # https://github.com/duckdb/duckdb/pull/16176 + https://github.com/duckdb/duckdb/pull/16197
         httpfs.patch
-        test.patch
+        t-external-icu.patch # from https://github.com/duckdb/duckdb/pull/16676
         )
 
 # Remove vendored dependencies which are not properly namespaced
