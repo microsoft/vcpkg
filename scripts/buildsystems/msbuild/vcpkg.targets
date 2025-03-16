@@ -109,11 +109,11 @@
     </PropertyPageSchema>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
-    <_ZVcpkgSourceLinkFiles Include="$(_ZVcpkgCurrentInstalledDir)sourcelink\*.json"/>
-  </ItemGroup>
+  <!-- Set up the generated sourcelink target, which has an automatic fallback in case the script fails -->
   <PropertyGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
-    <_ZVcpkgSourceLinkOpts>@(_ZVcpkgSourceLinkFiles->'/SOURCELINK:&quot;%(Identity)&quot;', ' ')</_ZVcpkgSourceLinkOpts>
+    <_ZVcpkgSourceLinkFilename>.vcpkg_sourcelink.json</_ZVcpkgSourceLinkFilename>
+    <_ZVcpkgSourceLinkInstalledPath>$(_ZVcpkgInstalledDir)$(_ZVcpkgSourceLinkFilename)</_ZVcpkgSourceLinkInstalledPath>
+    <_ZVcpkgSourceLinkOpts>/SOURCELINK:$(_ZVcpkgSourceLinkInstalledPath) </_ZVcpkgSourceLinkOpts>
   </PropertyGroup>
 
   <!-- Install settings to get headers and import libs for the currently selected _ZVcpkgCurrentInstalledDir -->
@@ -208,6 +208,40 @@
       <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
     </CreateProperty>
   </Target>
+
+  <!-- Process all of the sourcelink files to adjust them for the installed location -->
+  <Target Name="VcpkgSourcelinkPrep" BeforeTargets="ClCompile" AfterTargets="VcpkgInstallManifestDependencies"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(_ZVcpkgSourceLink)' == 'true'"
+          Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
+          Outputs="$(_ZVcpkgSourceLinkInstalledPath)">
+    <PropertyGroup>
+      <_ZVcpkgSourcelinkPowerShellArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)sourcelink_process_installed.ps1" -RelativeScan "sourcelink" -RelativeOutFile "..\$(_ZVcpkgSourceLinkFilename)" -InstalledTripletPath "$(_ZVcpkgInstalledDir)$(VcpkgTriplet)"</_ZVcpkgSourcelinkPowerShellArguments>
+    </PropertyGroup>
+    <Message Text="Processing vcpkg sourcelink files" Importance="high" />
+    <Exec
+      Command="%22$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe%22 $(_ZVcpkgSourcelinkPowerShellArguments)"
+      IgnoreExitCode="true"
+      UseCommandProcessor="false">
+      <Output TaskParameter="ExitCode"
+              PropertyName="_ZVcpkgSourcelinkExitCode" />
+    </Exec>
+    <Message Text="Finished processing vcpkg sourcelink files" Importance="low" />
+    <CreateProperty Value="false">
+      <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
+    </CreateProperty>
+  </Target>
+  
+  <!-- Write an empty fallback file if the sourcelink processing fails -->
+  <Target Name="VcpkgSourcelinkWriteEmptyFallback" BeforeTargets="ClCompile" AfterTargets="VcpkgSourcelinkPrep"
+          Condition="'$(_ZVcpkgSourceLink)' == 'true'"
+          Outputs="$(_ZVcpkgSourceLinkInstalledPath)">
+    <WriteLinesToFile File="$(_ZVcpkgSourceLinkInstalledPath)"
+                      Lines="{}"
+                      Encoding="ASCII"
+                      Overwrite="false"
+                      Condition="'$(_ZVcpkgSourceLink)' == 'true' and !Exists('$(_ZVcpkgSourceLinkInstalledPath)')"/>
+  </Target>
+
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
           Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true' and '@(Link)' != ''">
