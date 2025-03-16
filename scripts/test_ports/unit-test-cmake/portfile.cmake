@@ -38,6 +38,4 @@ if("execute-required-process" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_execute_required_process.cmake")
 endif()
 
-if(Z_VCPKG_UNIT_TEST_HAS_ERROR)
-    _message(FATAL_ERROR "At least one test failed")
-endif()
+unit_test_report_result()
