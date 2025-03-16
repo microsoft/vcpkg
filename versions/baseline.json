@@ -3721,8 +3721,8 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.91.8",
-      "port-version": 4
+      "baseline": "1.91.9",
+      "port-version": 0
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
