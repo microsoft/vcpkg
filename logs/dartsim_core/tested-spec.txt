@@ -1,1 +1,0 @@
-dartsim[core]:arm64-osx
