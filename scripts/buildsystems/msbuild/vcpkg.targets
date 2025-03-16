@@ -285,6 +285,7 @@
       Condition="'$(VcpkgXUseBuiltInApplocalDeps)' != 'true'"
       Command="pwsh.exe $(_ZVcpkgAppLocalPowerShellCommonArguments)"
       IgnoreExitCode="true"
+      StandardErrorImportance="low"
       UseCommandProcessor="false">
       <Output TaskParameter="ExitCode"
               PropertyName="_ZVcpkgAppLocalExitCode" />
