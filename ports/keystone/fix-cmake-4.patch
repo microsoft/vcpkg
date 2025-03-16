@@ -58,23 +58,3 @@ index e324ef397d..40682dcdc1 100644
  
  if(CMAKE_VERSION VERSION_LESS 3.1.20141117)
    set(cmake_3_2_USES_TERMINAL)
-diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/__init__.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/__init__.cpython-312.pyc
-new file mode 100644
-index 0000000000..86f70af01f
-Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/__init__.cpython-312.pyc differ
-diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/componentinfo.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/componentinfo.cpython-312.pyc
-new file mode 100644
-index 0000000000..be31aacfc0
-Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/componentinfo.cpython-312.pyc differ
-diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/configutil.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/configutil.cpython-312.pyc
-new file mode 100644
-index 0000000000..b3086cd8dd
-Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/configutil.cpython-312.pyc differ
-diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/main.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/main.cpython-312.pyc
-new file mode 100644
-index 0000000000..148265189b
-Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/main.cpython-312.pyc differ
-diff --git a/llvm/utils/llvm-build/llvmbuild/__pycache__/util.cpython-312.pyc b/llvm/utils/llvm-build/llvmbuild/__pycache__/util.cpython-312.pyc
-new file mode 100644
-index 0000000000..734aa39543
-Binary files /dev/null and b/llvm/utils/llvm-build/llvmbuild/__pycache__/util.cpython-312.pyc differ
