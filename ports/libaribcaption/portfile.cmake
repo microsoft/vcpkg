@@ -9,10 +9,9 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        directwrite ARIBCC_USE_DIRECTWRITE
-        gdi         ARIBCC_USE_GDI_FONT
+        gdi      ARIBCC_USE_GDI_FONT
     INVERTED_FEATURES
-        renderer    ARIBCC_NO_RENDERER
+        renderer ARIBCC_NO_RENDERER
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ARIBCC_SHARED_LIBRARY)

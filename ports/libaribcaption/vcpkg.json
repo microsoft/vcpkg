@@ -15,26 +15,9 @@
     }
   ],
   "default-features": [
-    {
-      "name": "directwrite",
-      "platform": "windows"
-    },
     "renderer"
   ],
   "features": {
-    "directwrite": {
-      "description": "Enable DirectWrite text rendering backend",
-      "supports": "windows",
-      "dependencies": [
-        {
-          "name": "libaribcaption",
-          "default-features": false,
-          "features": [
-            "renderer"
-          ]
-        }
-      ]
-    },
     "gdi": {
       "description": "Enable Win32 GDI font provider",
       "supports": "windows",
