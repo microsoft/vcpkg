@@ -54,7 +54,24 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
 endif()
 
-vcpkg_configure_meson(
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Emscripten")
+
+    vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
+        -Dtests=disabled
+        -Dzlib=enabled
+        -Dpng=enabled
+        -Dspectre=auto
+        -Dgtk2-utils=disabled
+        -Dsymbol-lookup=disabled
+        -Dc_link_args='-Wl,--no-check-features'
+)
+
+else() 
+
+    vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
@@ -65,6 +82,8 @@ vcpkg_configure_meson(
         -Dgtk2-utils=disabled
         -Dsymbol-lookup=disabled
 )
+
+endif()
 vcpkg_install_meson()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
