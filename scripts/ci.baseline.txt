@@ -76,13 +76,10 @@ bde:x64-windows-static-md=skip
 bde:x64-windows-static=skip
 bde:x64-windows=skip
 bde:x86-windows=skip
-benchmark:arm-neon-android=fail
-bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
-bit7z:arm-neon-android=fail
 ################################################################
 # <BLAS+LAPACK>
 # These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
@@ -498,8 +495,6 @@ libcpplocate:x64-android=fail
 libdc1394:arm-neon-android=fail
 libdc1394:arm64-android=fail
 libdc1394:x64-android=fail
-# 32-bit needs android-24
-libflac:arm-neon-android=fail
 libfreenect2:arm64-windows-static-md=fail
 libfreenect2:arm64-windows=fail
 # error: call to undeclared function 'mktime_z'
@@ -573,8 +568,6 @@ libqcow:x64-windows-static-md=skip
 libqcow:x64-windows-static=skip
 libqcow:x64-windows=skip
 libqcow:x86-windows=skip
-# 32-bit needs android-24
-libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
 libressl:arm64-android=skip
@@ -627,7 +620,6 @@ libxt:x64-windows=fail
 # Inline asm used doesn't appear to support arm64-windows:
 libxt:arm64-windows-static-md=fail
 libxt:arm64-windows=fail
-libzen:arm-neon-android=fail
 linenoise-ng:arm64-uwp=fail
 linenoise-ng:x64-uwp=fail
 linenoise-ng:x64-windows-static-md=fail
@@ -645,8 +637,6 @@ llvm:x64-android=fail
 log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
-# 32-bit needs android-24
-lua:arm-neon-android=fail
 magma:x64-linux=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
@@ -723,7 +713,9 @@ mpir:x64-windows=skip
 mpir:x86-windows=skip
 msmpi:arm64-windows-static-md=fail
 msmpi:arm64-windows=fail
-munit:x64-android=fail
+msquic:arm-neon-android=fail
+msquic:arm64-android=fail
+msquic:x64-android=fail
 nana:arm-neon-android=fail
 nana:arm64-android=fail
 nana:arm64-osx=fail
@@ -801,6 +793,9 @@ optional-bare:x86-windows=skip
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
+outcome:arm-neon-android=fail
+outcome:arm64-android=fail
+outcome:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
 pcl:x64-android=fail
@@ -1014,7 +1009,6 @@ spscqueue:x64-android=fail
 # sqlpp11-connector-mysql: CI issues resolved by overlay port
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
-stxxl:arm-neon-android=fail
 # _Interlocked* intrinsic functions are not available on x86
 suitesparse-graphblas:x86-windows=fail
 # "ninja: error: failed recompaction: Permission denied"
@@ -1049,7 +1043,6 @@ tensorflow:x64-osx=skip
 tensorflow-cc:arm64-osx=skip
 tensorflow-cc:x64-osx=skip
 
-thorvg:arm-neon-android=fail
 tinycthread:arm-neon-android=fail
 tinycthread:arm64-android=fail
 tinycthread:x64-android=fail
@@ -1083,8 +1076,6 @@ vst3sdk:x64-osx=fail
 vulkan-extensionlayer:x64-windows-static=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
-# 32-bit needs android-24
-wcslib:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows-release=skip
 winpcap:x64-windows=skip
