@@ -8974,7 +8974,7 @@
     },
     "suitesparse-lagraph": {
       "baseline": "1.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "suitesparse-ldl": {
       "baseline": "3.3.2",
