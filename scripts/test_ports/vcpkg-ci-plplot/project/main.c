@@ -1,4 +1,9 @@
+
+#ifdef USING_CMAKE
 #include <plplot/plplot.h>
+#else
+#include <plplot.h>
+#endif
 
 int main()
 {

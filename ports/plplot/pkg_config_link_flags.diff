@@ -1,5 +1,5 @@
 diff --git a/cmake/modules/pkg-config.cmake b/cmake/modules/pkg-config.cmake
-index a0ca6b2..1e0be74 100644
+index a0ca6b2..32e8566 100644
 --- a/cmake/modules/pkg-config.cmake
 +++ b/cmake/modules/pkg-config.cmake
 @@ -194,10 +194,14 @@ function(pkg_config_link_flags link_flags_out link_flags_in)
@@ -49,7 +49,7 @@ index a0ca6b2..1e0be74 100644
 +          list(APPEND _link_flags "${lib_dir_flag}")
 +        endif()
 +      endif()
-+    elseif(NOT link_flag MATCHES "^-|/" AND NOT _link_flags MATCHES "[.]framework\$")  # e.g. 'm'
++    elseif(NOT link_flag MATCHES "^-|/")  # e.g. 'm'
 +      set(link_flag "-l${link_flag}")
 +    endif()
      #message(STATUS "(-L form of link_flag = ${link_flag}")
@@ -63,12 +63,3 @@ index a0ca6b2..1e0be74 100644
      # Derive ${_link_flags_out} from _link_flags_list with -l options
      # replaced by complete pathname of library.
      list(LENGTH _link_flags_list _link_flags_length)
-@@ -301,7 +329,7 @@ macro(cmake_link_flags _link_flags_out _link_flags_in)
-       list(GET _link_flags_list ${_list_index} _list_element)
-       string(REGEX REPLACE "^-l" "" _list_element1 "${_list_element}")
-       if(_list_element STREQUAL "-l${_list_element1}")
--        set(_library_pathname "_library_pathname-NOTFOUND")
-+        unset(_library_pathname CACHE)
-         find_library(
-          _library_pathname
-          ${_list_element1}
