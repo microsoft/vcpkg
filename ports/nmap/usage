@@ -1,5 +1,0 @@
-The package nmap is compatible with built-in CMake targets:
-
-    find_package(NMAP REQUIRED)
-    target_link_libraries(main PRIVATE ${NMAP_LIBRARIES})
-    target_include_directories(main PRIVATE ${NMAP_INCLUDE_DIRS})

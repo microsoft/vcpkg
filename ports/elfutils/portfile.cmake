@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceware.org/pub/elfutils/${VERSION}/elfutils-${VERSION}.tar.bz2"
          "https://www.mirrorservice.org/sites/sourceware.org/pub/elfutils/${VERSION}/elfutils-${VERSION}.tar.bz2"
     FILENAME "elfutils-${VERSION}.tar.bz2"
-    SHA512 e22d85f25317a79b36d370347e50284c9120c86f9830f08791b7b6a7b4ad89b9bf4c7c71129133b8d193a0edffb2a2c17987b7e48428b9670aff5ce918777e04
+    SHA512 543188f5f2cfe5bc7955a878416c5f252edff9926754e5de0c6c57b132f21d9285c9b29e41281e93baad11d4ae7efbbf93580c114579c182103565fe99bd3909
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

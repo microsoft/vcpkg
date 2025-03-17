@@ -1,0 +1,20 @@
+{
+  "name": "gz-plugin",
+  "version": "3.0.0",
+  "description": "Library for registering plugin libraries and dynamically loading them at runtime",
+  "homepage": "https://ignitionrobotics.org/libs/plugin",
+  "license": null,
+  "supports": "!arm & !android",
+  "dependencies": [
+    {
+      "name": "dlfcn-win32",
+      "platform": "windows | uwp"
+    },
+    "gz-cmake",
+    "gz-utils",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    }
+  ]
+}

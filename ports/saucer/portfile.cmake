@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         fix_findpkg.patch
+        fix-build-error-with-fmt11.patch
 )
 
 vcpkg_cmake_configure(

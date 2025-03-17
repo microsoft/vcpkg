@@ -1,4 +1,4 @@
-set(DIRECTXMESH_TAG jun2024)
+set(DIRECTXMESH_TAG oct2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF ${DIRECTXMESH_TAG}
-    SHA512 883149da7eefbff7630aa1d5b0e0104dbb7eca9153d385dd35b82319d3091f7ff75a353ef29f1f3ec5f34b4a89f5d08d4a69bd70842134db5ebe36111c654e71
+    SHA512 a7d6eca75315a8f24fdc7753fd0e0b26b1b170ef0ffa1954065164f5da567ba09d1605c45cae91cf73dccc04f52162c3ad62f6a83eddf33c076e6ffb4723276d
     HEAD_REF main
 )
 
@@ -41,7 +41,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
-      SHA512 fe1b2faab2f138a09706c956b5283a8f6e915bc57e670243f1ef21be85c6d030e45eff8b4e46551b7ccaa70e99651efbe99c63a927a24125f4bf1567d9f7698d
+      SHA512 6b437004ee3b8a44d475db51f01558d777bf3c65b1ea132606b9b682ab6310dbdf0c939ecdf7b621255b6130a424de6db368dd73b8d22393bd932342fd3f45e0
     )
 
     file(INSTALL
@@ -50,13 +50,13 @@ if("tools" IN_LIST FEATURES)
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-${DIRECTXMESH_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe")
 
-  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+  elseif((VCPKG_TARGET_ARCHITECTURE STREQUAL arm64) OR (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64ec))
 
     vcpkg_download_distfile(
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert_arm64.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}-arm64.exe"
-      SHA512 d4be686a2e65f1385e71ed0a23e17827ae4717ab61e54c80c72170df60cc29cb3f5408b04ce9bec562519c0238c05ed976e04a58ec327775bc0d26cf13971c73
+      SHA512 e4f9eb983ea6cfbf18c342d5f1a52210d933ca6bbe7fe5dbca4fee516106f02ac4936804ab222c337ac42eb809c16f06132d51ffa44fb67315c2f28f282afdf3
     )
 
     file(INSTALL

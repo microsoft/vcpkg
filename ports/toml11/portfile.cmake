@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ToruNiina/toml11
     REF "v${VERSION}"
-    SHA512 1d7d38c32af178e15b007f5c7a69f4789ba8b0c1ee1e2dc6b853fd38d5794944305baff86e97c9b49b28dbeadec6165273a7de16b94c06be9fc5a46d27cbec3e
+    SHA512 2ceed4f5783a88f9bfb6d044cbf3d1d5dd2b061d4cbe89e9c4e8773b85d37005562365e5e61e68a345867d1c2b3ab9c5ecdc98356b3cdb944b94201ed5edd00b
     HEAD_REF master
 )
 

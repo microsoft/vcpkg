@@ -58,13 +58,13 @@ Param(
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
-    throw
+    exit 1
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
     if ((-Not [string]::IsNullOrWhiteSpace($BinarySourceStub))) {
         Write-Error "Only one binary caching setting may be used."
-        throw
+        exit 1
     }
 
     $BinarySourceStub = "files,$ArchivesRoot"
@@ -121,29 +121,48 @@ if ($IsWindows) {
 }
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
-if ($LASTEXITCODE -ne 0)
+$lastLastExitCode = $LASTEXITCODE
+if ($lastLastExitCode -ne 0)
 {
-    throw "vcpkg clean failed"
+    Write-Error "vcpkg clean failed"
+    exit $lastLastExitCode
+}
+
+if ($Triplet -eq 'x64-windows-release') {
+    $tripletSwitch = "--host-triplet=$Triplet"
+} else {
+    $tripletSwitch = "--triplet=$Triplet"
 }
 
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+    $headTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
 
     # Prefetch tools for better output
     foreach ($tool in @('cmake', 'ninja', 'git')) {
         & "./vcpkg$executableExtension" fetch $tool
-        if ($LASTEXITCODE -ne 0)
+        $lastLastExitCode = $LASTEXITCODE
+        if ($lastLastExitCode -ne 0)
         {
-            throw "Failed to fetch $tool"
+            Write-Error "Failed to fetch $tool"
+            exit $lastLastExitCode
         }
     }
 
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
+    $lastLastExitCode = $LASTEXITCODE
+    if ($lastLastExitCode -ne 0)
+    {
+        Write-Error "git revert failed"
+        exit $lastLastExitCode
+    }
+
     $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    if ($parentBaseline -eq $headBaseline)
+    $parentTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
+    if (($parentBaseline -eq $headBaseline) -and ($parentTool -eq $headTool))
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
@@ -152,28 +171,44 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         # but changes must trigger at least some testing.
         Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
         Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-        & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        & "./vcpkg$executableExtension" ci $tripletSwitch --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        $lastLastExitCode = $LASTEXITCODE
+        if ($lastLastExitCode -ne 0)
+        {
+            Write-Error "Generating parent hashes failed; this is usually an infrastructure problem with vcpkg"
+            exit $lastLastExitCode
+        }
     }
     else
     {
-        Write-Host "CI baseline was modified, not using parent hashes"
+        Write-Host "Tool or baseline modified, not using parent hashes"
     }
+
     Write-Host "Running CI for HEAD"
     & git reset --hard HEAD
+    $lastLastExitCode = $LASTEXITCODE
+    if ($lastLastExitCode -ne 0)
+    {
+        Write-Error "git reset failed"
+        exit $lastLastExitCode
+    }
 }
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" ci $tripletSwitch --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+$lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
-if ($LASTEXITCODE -ne 0)
+Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
+
+if ($lastLastExitCode -ne 0)
 {
-    throw "vcpkg ci failed"
+    Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
 }
 
-Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
+exit $lastLastExitCode

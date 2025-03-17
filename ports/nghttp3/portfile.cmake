@@ -2,15 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/nghttp3
     REF v${VERSION}
-    SHA512 56b5ac28f01a9210f0bd3de06dabe9f34867b72c68df0776f8faf3f03a4b82185fd16891f67f710b8c7db56523e29a7c51e4b2337ea9e5331bc6c21a26ed12dd
+    SHA512 b5c766918af3a60a11920d4e88893a21b0ce3de7d6f15f2a07e6890057a2f6ccb48ef8d8c8622d4d3d83acb6af093b4a5ebc84cfc81ef7722d7028e3337e6908
     HEAD_REF main
+    PATCHES
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SFPARSE_SOURCE_PATH
     REPO ngtcp2/sfparse
-    REF c669673012f9d535ec3bcf679fe911c8c75a479f
-    SHA512 0b16569665d794384704d95317211ad6b8ab32f1aa3ee4823450f325caaef58ca7155a83f37f7ceeb0da574e15a462b47f1dc01563f5b2f899b9386053200ea7
+    REF 930bdf8421f29cf0109f0f1baaafffa376973ed5
+    SHA512 67e1005d4ccf054a47dcb5f813429c7fc12e708cff19f5144447bf1d0863b107dec66e402e1cb223f1492762d38420b48b1e4c03849d69db1ebbb265e7b891ac
     HEAD_REF main
 )
 
@@ -37,6 +38,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/nghttp3")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -55,3 +57,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

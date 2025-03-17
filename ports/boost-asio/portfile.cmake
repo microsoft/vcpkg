@@ -4,10 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/asio
     REF boost-${VERSION}
-    SHA512 bbde7c60f208733d48713d2dcfe5be0e18b8372ecaae51055225e5da6bf3e4671e53da8917d27c17f84e34be858d3002c3ac62cdecfd8e3e3861edf365256bee
+    SHA512 5bd17f3667f85c65f7ac25665231743e64f4060b358d7756a3eddab30c22cf7fcfb774cd65a863fd957ed735249b028dd7d43adba928c7722e4da99bca1306a0
     HEAD_REF master
     PATCHES
-        windows_alloca_header.patch
         opt-dep.diff
 )
 

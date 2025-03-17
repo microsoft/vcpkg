@@ -1,5 +1,5 @@
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index e391ddf..c926c49 100644
+index e391ddfe8e..c926c499ac 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
 @@ -24,6 +24,7 @@ set (OpenCASCADE_DEVELOPMENT_VERSION "@OCC_VERSION_DEVELOPMENT@")
@@ -10,6 +10,3 @@ index e391ddf..c926c49 100644
  if (OpenCASCADE_INSTALL_PREFIX MATCHES "/cmake$")
    get_filename_component (OpenCASCADE_INSTALL_PREFIX "${OpenCASCADE_INSTALL_PREFIX}" PATH)
  endif()
--- 
-2.14.3.windows.1
-

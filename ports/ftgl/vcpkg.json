@@ -1,7 +1,7 @@
 {
   "name": "ftgl",
-  "version-date": "2022-05-18",
-  "port-version": 1,
+  "version": "2.4.0",
+  "port-version": 5,
   "description": [
     "FTGL is a free open source library to enable developers to use arbitrary fonts in their OpenGL (www.opengl.org) applications.",
     "Unlike other OpenGL font libraries FTGL uses standard font file formats so doesn't need a preprocessing step to convert the high quality font data into a lesser quality, proprietary format.",
@@ -10,7 +10,10 @@
   "homepage": "https://github.com/frankheckenbach/ftgl",
   "license": "MIT",
   "dependencies": [
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     "opengl",
     {
       "name": "vcpkg-cmake",

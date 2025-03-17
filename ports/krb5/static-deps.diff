@@ -1,5 +1,17 @@
+diff --git a/src/aclocal.m4 b/src/aclocal.m4
+index 3d66a87..cf3e3e6 100644
+--- a/src/aclocal.m4
++++ b/src/aclocal.m4
+@@ -226,6 +226,7 @@ old_CFLAGS="$CFLAGS"
+ # On Solaris, -pthreads is added to CFLAGS, no extra explicit libraries.
+ CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+ AC_SUBST(PTHREAD_CFLAGS)
++AC_SUBST(PTHREAD_LIBS)
+ old_LIBS="$LIBS"
+ LIBS="$PTHREAD_LIBS $LIBS"
+ AC_MSG_NOTICE(rechecking with PTHREAD_... options)
 diff --git a/src/build-tools/mit-krb5.pc.in b/src/build-tools/mit-krb5.pc.in
-index fdc5577..dc9c4b9 100644
+index fdc5577..745d5ec 100644
 --- a/src/build-tools/mit-krb5.pc.in
 +++ b/src/build-tools/mit-krb5.pc.in
 @@ -12,4 +12,4 @@ Description: An implementation of Kerberos network authentication
@@ -7,7 +19,7 @@ index fdc5577..dc9c4b9 100644
  Cflags: -I${includedir}
  Libs: -L${libdir} -lkrb5 -lk5crypto @COM_ERR_LIB@
 -Libs.private: -lkrb5support
-+Libs.private: -lkrb5support @GEN_LIB@ @MACOS_FRAMEWORK@ @LIBS@ @DL_LIB@
++Libs.private: -lkrb5support @GEN_LIB@ @MACOS_FRAMEWORK@ @LIBS@ @DL_LIB@ @PTHREAD_CFLAGS@ @PTHREAD_LIBS@
 diff --git a/src/config/pre.in b/src/config/pre.in
 index a0c60c7..a8432a8 100644
 --- a/src/config/pre.in

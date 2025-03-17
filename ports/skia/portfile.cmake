@@ -3,16 +3,17 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "1c8089adffdabe3790cc4ca4fb36e24c2f6ab792"
-    SHA512 ef7c278802145215408646d564fd6b398c68a9c0ae7fb937e1517ac152fdf25a262896c78025b96a19ad965904ade37bc3de2de6f8255573301ca86e1271a022
+    REF "aefbd9403c1b3032ad4cd0281ef312ed262c7125"
+    SHA512 8d1af006d4974c919c5760f4e461331db5dcf8ad4c4ee91c12433a88b15ea186a8932b7cd241ce47b012eb0fa5ed28f5d5d9ad187abb2bfd45a6ece8edb48d19
     PATCHES
         disable-msvc-env-setup.patch
-        disable-dev-test.patch
+        # disable-dev-test.patch
         skia-include-string.patch
         bentleyottmann-build.patch
         graphite.patch
         vulkan-headers.patch
         pdfsubsetfont-uwp.diff
+        skparagraph-dllexport.patch
 )
 
 # De-vendor
@@ -32,7 +33,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "51d873f3e0d0e0dcc5c3a6b56019983a5a4cd155"
+    REF "acd89d9f169a9d09b9ada09d1bd80350376b8544"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
@@ -50,6 +51,11 @@ declare_external_from_git(markupsafe
     REF "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
     LICENSE_FILE LICENSE
 )
+declare_external_from_git(partition_alloc
+    URL "https://chromium.googlesource.com/chromium/src/base/allocator/partition_allocator.git"
+    REF "ce13777cb731e0a60c606d1741091fd11a0574d7"
+    LICENSE_FILE LICENSE
+)
 declare_external_from_git(piex
     URL "https://android.googlesource.com/platform/external/piex.git"
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
@@ -62,12 +68,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "eb49bb7b1136298b77945c52b4bbbc433f7885de"
+    REF "e7294a8ebed84f8c5bd3686c68dbe12a4e65b644"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "ce46482db7ab3ea9c52fce832d27ca40b14f8e87"
+    REF "ce37fd67f83cd1e8793b988d2e4126bbf72b19dd"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -119,7 +125,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false")
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND OPTIONS " skia_enable_skparagraph=false")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
 endif()
@@ -228,6 +233,7 @@ They can be installed on Debian based systems via
 ## Remove
         abseil-cpp
 ## REMOVE ^
+        partition_alloc
         dawn
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/externals/opengl-registry")
@@ -262,7 +268,9 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
+    string(REGEX REPLACE "[\\]\$" "" WIN_SDK "$ENV{WindowsSdkDir}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS " win_sdk=\"${WIN_SDK}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " ndk=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\" ndk_api=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 else()

@@ -1,6 +1,7 @@
 {
   "name": "rsm-bsa",
   "version-semver": "4.1.0",
+  "port-version": 1,
   "description": "A C++ library for working with the Bethesda archive file format",
   "homepage": "https://github.com/Ryan-rsm-McKenzie/bsa",
   "documentation": "https://ryan-rsm-mckenzie.github.io/bsa/",

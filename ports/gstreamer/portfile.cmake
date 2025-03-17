@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 0d69896d0a83452320df0d0f56c710df1365a259cd3f48dc7cd4df18d45b27caea7174aafa15ae5eb8637ccdef192c1047185b369b7232db4eaacbc57ffaaa22
+    SHA512 5ca978cad5a661b081528be0fa74e199115c186afa1a0c9f55a9238fb2b452b680e75e8721a54077b9f4d717da5ef5801c359a0a89a5a02056caea067adab88f
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -21,9 +21,9 @@ vcpkg_from_gitlab(
         gstreamer-disable-no-unused.patch
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
-        base-must-be-enabled.patch
         no-downloads.patch
         ${PATCHES}
+        fix-multiple-def.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -156,7 +156,6 @@ vcpkg_configure_meson(
         -Dlibnice=disabled
         -Ddevtools=disabled
         -Drtsp_server=disabled
-        -Domx=disabled
         -Dvaapi=disabled
         -Dsharp=disabled
         -Drs=disabled
@@ -179,6 +178,7 @@ vcpkg_configure_meson(
         -Dgstreamer:coretracers=disabled
         -Dgstreamer:benchmarks=disabled
         -Dgstreamer:gst_debug=true
+        -Dgstreamer:ptp-helper=disabled  # needs rustc toolchain setup
         # gst-plugins-base
         -Dgst-plugins-base:gl_winsys=${PLUGIN_BASE_WINDOW_SYSTEM}
         -Dgst-plugins-base:gl_platform=${PLUGIN_BASE_GL_PLATFORM}
@@ -203,14 +203,12 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:pulse=auto
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:shout2=disabled
-        #-Dgst-plugins-good:soup=disabled 
+        #-Dgst-plugins-good:soup=disabled
         -Dgst-plugins-good:twolame=disabled
         -Dgst-plugins-good:waveform=auto
         -Dgst-plugins-good:wavpack=disabled # Error during plugin build
         # gst-plugins-ugly
         -Dgst-plugins-ugly:a52dec=disabled
-        -Dgst-plugins-ugly:amrnb=disabled
-        -Dgst-plugins-ugly:amrwbdec=disabled
         -Dgst-plugins-ugly:cdio=disabled
         -Dgst-plugins-ugly:dvdread=disabled
         -Dgst-plugins-ugly:mpeg2dec=disabled # libmpeg2 not found
@@ -240,7 +238,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:gsm=disabled
         -Dgst-plugins-bad:ipcpipeline=auto
         -Dgst-plugins-bad:iqa=disabled
-        -Dgst-plugins-bad:kate=disabled
         -Dgst-plugins-bad:kms=disabled
         -Dgst-plugins-bad:ladspa=disabled
         -Dgst-plugins-bad:ldac=disabled
@@ -306,7 +303,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
 
-if(NOT VCPKG_TARGET_IS_LINUX AND "plugins-base" IN_LIST FEATURES)
+if("plugins-base" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
                 "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
     )
@@ -413,6 +410,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endif()
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-gl-1.0.pc" [[-I${libdir}/gstreamer-1.0/include]] "")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-gl-1.0.pc" [[-I${libdir}/gstreamer-1.0/include]] "")
 endif()
 
 vcpkg_fixup_pkgconfig()

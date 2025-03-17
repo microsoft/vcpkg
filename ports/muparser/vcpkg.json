@@ -1,6 +1,6 @@
 {
   "name": "muparser",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "Fast math parser library",
   "homepage": "https://github.com/beltoforion/muparser",
   "license": "BSD-2-Clause",
@@ -14,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP for multithreading"
+    }
+  }
 }

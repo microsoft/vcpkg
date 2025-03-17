@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
     REF "v${VERSION}"
-    SHA512 e2a614f4fc526ce07bfe1e1bc79efd3c87acbdb93aee7b42994d4855abd2593f36b5ca1edb53c7dcd470d5fbe14a3e394bd75dcebb4458cc0aeb33d622a3c662
+    SHA512 809366e176f4459ee3010b7c3e2c7e6f800fdf0c5cc2d39846885e793fd933602176aeecbfbdc92aec7dadbcd54fc8ba0d57741c034251078136262bdac10ce8
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch

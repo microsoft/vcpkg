@@ -1,24 +1,26 @@
 opencl provides CMake targets:
 
-  # Khronos OpenCL Headers
-  find_package(OpenCLHeaders CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE OpenCL::Headers)
-
-  # Khronos OpenCL C++ Headers
-  find_package(OpenCLHeadersCpp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE OpenCL::HeadersCpp)
+  find_package(OpenCL CONFIG REQUIRED)
 
   # Khronos OpenCL ICD Loader
-  find_package(OpenCLICDLoader CONFIG REQUIRED)
   target_link_libraries(main PRIVATE OpenCL::OpenCL)
+
+  # Khronos OpenCL Headers and C++ bindings
+  target_link_libraries(main PRIVATE OpenCL::Headers)
+  target_link_libraries(main PRIVATE OpenCL::HeadersCpp)
+
+  # OpenCL Utility Library and C++ bindings
+  target_link_libraries(main PRIVATE OpenCL::Utils)
+  target_link_libraries(main PRIVATE OpenCL::UtilsCpp)
 
 opencl provides pkg-config modules:
 
-  # Khronos OpenCL Headers
-  OpenCL-Headers
-
   # Khronos OpenCL ICD Loader
   OpenCL
+
+  # Khronos OpenCL Headers and C++ bindings
+  OpenCL-Headers
+  OpenCL-CLHPP
 
 This package is only an OpenCL SDK. To actually run OpenCL code you also need to install an implementation.
 

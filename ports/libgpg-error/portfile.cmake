@@ -4,15 +4,18 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
     FILENAME "libgpg-error-${VERSION}.tar.bz2"
-    SHA512 bbb4b15dae75856ee5b1253568674b56ad155524ae29a075cb5b0a7e74c4af685131775c3ea2226fff2f84ef80855e77aa661645d002b490a795c7ae57b66a30
+    SHA512 4489f615c6a0389577a7d1fd7d3917517bb2fe032abd9a6d87dfdbd165dabcf53f8780645934020bf27517b67a064297475888d5b368176cf06bc22f1e735e2b
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
+        android.diff
         cross-tools.patch
         gpgrt-config.patch
+        mingw.diff
         pkgconfig-libintl.patch
+        win32-nls.diff
 )
 
 vcpkg_list(SET options)
@@ -27,13 +30,17 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND options "--disable-threads")
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${options}
-        --disable-tests
         --disable-doc
+        --disable-tests
 )
 
 vcpkg_install_make()

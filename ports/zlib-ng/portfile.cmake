@@ -2,9 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/zlib-ng
     REF "${VERSION}"
-    SHA512 9212d87c63a2da4e5355a7a1c75380aeba40fbd0ea3d71d3784cb3eac94237f9bea2a1b7993a08f39d4197725c4c133087d3a9d213d3944aa48a7559de2be920
+    SHA512 e71e8972ec2c4dec9eaa2c8f550185f13d0f5c411c38061d1aaf78ca8e522fa3d53f005296e574af7f152e7da3a78adf97ae4bb638b7fd277ef57bba26370b7d
     HEAD_REF develop
 )
+
+# Set ZLIB_COMPAT in the triplet file to turn on
+if(NOT DEFINED ZLIB_COMPAT)
+    set(ZLIB_COMPAT OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -12,6 +17,7 @@ vcpkg_cmake_configure(
         "-DZLIB_FULL_VERSION=${ZLIB_FULL_VERSION}"
         -DZLIB_ENABLE_TESTS=OFF
         -DWITH_NEW_STRATEGIES=ON
+        -DZLIB_COMPAT=${ZLIB_COMPAT}
     OPTIONS_RELEASE
         -DWITH_OPTIM=ON
 )
@@ -46,6 +52,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND (NOT (VCPKG_LIBRARY_LINKAGE STREQUAL static AND V
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+if(ZLIB_COMPAT)
+    set(_cmake_dir "ZLIB")
+else()
+    set(_cmake_dir "zlib-ng")
+endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${_cmake_dir})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"

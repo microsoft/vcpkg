@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
     REF "v${VERSION}"
-    SHA512 1316b6df0400bc0b67c88b3e7fbf9ca689f248a57c7b6a5564a96552313c68df9e4aaeedcd8f71254b8acf34cf830ce8e8a1b198cd1bea32967a4adb0fd73493
+    SHA512 023b2fc7248fe38b758ef93dd8436677ff0f5d08b1061e7eab0adb9e38ad92d523e0ab69016ee69bd35c1fd53c10f61e99b01f7a2987a1f1d492e1f7216a0a9c
     HEAD_REF master
 )
 
@@ -18,9 +18,9 @@ file(GLOB TCLSH_CMD
 file(TO_NATIVE_PATH "${TCLSH_CMD}" TCLSH_CMD)
 file(TO_NATIVE_PATH "${SOURCE_PATH}" SOURCE_PATH_NAT)
 
-# Determine TCL version (e.g. [path]tclsh90s.exe -> 90)
+# Determine TCL version (e.g. [path]tclsh90sx.exe -> 90)
 string(REGEX REPLACE ^.*tclsh "" TCLVERSION ${TCLSH_CMD})
-string(REGEX REPLACE [A-Za-z]?${VCPKG_HOST_EXECUTABLE_SUFFIX}$ "" TCLVERSION ${TCLVERSION})
+string(REGEX REPLACE [A-Za-z]*${VCPKG_HOST_EXECUTABLE_SUFFIX}$ "" TCLVERSION ${TCLVERSION})
 
 list(APPEND NMAKE_OPTIONS
 		TCLSH_CMD="${TCLSH_CMD}"

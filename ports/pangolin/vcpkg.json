@@ -1,7 +1,7 @@
 {
   "name": "pangolin",
-  "version": "0.8",
-  "port-version": 3,
+  "version": "0.9.3",
+  "port-version": 1,
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
   "license": "MIT",
@@ -9,6 +9,7 @@
   "dependencies": [
     "eigen3",
     "glew",
+    "libepoxy",
     "palsigslot",
     {
       "name": "vcpkg-cmake",

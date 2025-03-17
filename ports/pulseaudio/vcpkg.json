@@ -1,7 +1,7 @@
 {
   "name": "pulseaudio",
   "version": "17.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "PulseAudio is a sound server, originally created to overcome the limitations of the Enlightened Sound Daemon (EsounD)",
   "homepage": "https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Community/",
   "license": null,
@@ -28,11 +28,17 @@
     "libatomic-ops",
     "libiconv",
     {
+      "name": "libsndfile",
+      "default-features": false,
+      "features": [
+        "external-libs"
+      ]
+    },
+    {
       "name": "openssl",
       "default-features": false
     },
     "orc",
-    "sndfile",
     "soxr",
     "speex",
     {

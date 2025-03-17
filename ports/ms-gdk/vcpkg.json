@@ -1,0 +1,19 @@
+{
+  "name": "ms-gdk",
+  "version": "2410.1.1897",
+  "description": "Microsoft Game Development Kit (GDK)",
+  "homepage": "https://aka.ms/gdkx",
+  "documentation": "https://aka.ms/gamedevdocs",
+  "license": null,
+  "supports": "windows & x64 & !uwp & !xbox & !staticcrt",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

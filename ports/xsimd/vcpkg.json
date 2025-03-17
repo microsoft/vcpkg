@@ -1,6 +1,6 @@
 {
   "name": "xsimd",
-  "version": "13.0.0",
+  "version": "13.1.0",
   "description": "Modern, portable C++ wrappers for SIMD intrinsics",
   "homepage": "https://github.com/xtensor-stack/xsimd",
   "license": "BSD-3-Clause",

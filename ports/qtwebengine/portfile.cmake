@@ -4,7 +4,8 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
       "clang-cl.patch"
       "fix-error2275-2672.patch"
-      "add-include-string.patch"
+      "blink-include-fixes.patch"
+      "fix_another_missing_inc.patch"
 )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)

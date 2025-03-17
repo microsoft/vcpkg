@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
     REF "pkgconf-${VERSION}"
-    SHA512 2747bd2dd09c15ad883ab9a00c89899eb409bc832e68fcb512a548f324351cad53e516090a2be3c3e81e61a748a02082f453ffbde6f159b8e07fb7587ecf6e07
+    SHA512 0759e63b9bfdc1e0b2f95e4c5c7be24b4ffa22e06a08cfad7f8e8be9faf99c256b1cbc72159e4ec805791d6b507a80fc344d05d63a1d273c3285dac868bf6ca0
     HEAD_REF master
 )
 

@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMath
-    REF feb2024b
-    SHA512 c1d9eebebc6ad049ba8999f04a31e8b240783f597776ea3b38512ec6b272f27b233d1aea80fa0e4dac01ff3d52d33a0e800150383572d0d4def979dd74e6fbde
+    REF oct2024
+    SHA512 501a3c8b51cd6d3d4fbcc511c2c37f1d0511bd84d546d5254c2bc81238c11242b9d62c7a153ee110dc9d96a0c7d2544428d8de832c943b680b0cb09d8e3760f2
     HEAD_REF main
+    PATCHES include-path-fix.patch
 )
 
 vcpkg_cmake_configure(
@@ -20,14 +21,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmath)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         SAL_HEADER
-        URLS "https://raw.githubusercontent.com/dotnet/runtime/v8.0.1/src/coreclr/pal/inc/rt/sal.h"
+        URLS "https://raw.githubusercontent.com/dotnet/runtime/v9.0.2/src/coreclr/pal/inc/rt/sal.h"
         FILENAME "sal.h"
-        SHA512 0f5a80b97564217db2ba3e4624cc9eb308e19cc9911dae21d983c4ab37003f4756473297ba81b386c498514cedc1ef5a3553d7002edc09aeb6a1335df973095f
+        SHA512 8085f67bfa4ce01ae89461cadf72454a9552fde3f08b2dcc3de36b9830e29ce7a6192800f8a5cb2a66af9637be0017e85719826a4cfdade508ae97f319e0ee8e
     )
 
     file(INSTALL
       ${DOWNLOADS}/sal.h
-      DESTINATION ${CURRENT_PACKAGES_DIR}/include/directxmath)
+      DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

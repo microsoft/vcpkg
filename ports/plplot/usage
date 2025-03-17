@@ -11,3 +11,12 @@ plplot provides CMake targets:
     target_link_libraries(main PRIVATE PLPLOT::csirocsa)
     # QSAS Time Format Conversion Library
     target_link_libraries(main PRIVATE PLPLOT::qsastime)
+
+plplot provides pkg-config modules:
+
+  # C++ binding
+  plplot-c++
+  # Core C library
+  plplot
+  # WxWidgets binding, optional, feature "wxwidgets"
+  plplot-wxwidgets

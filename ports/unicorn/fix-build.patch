@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4110ae5..a86b207 100644
+index 3fcde11..1acc0b5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -109,7 +109,7 @@ if(MSVC)
-     add_compile_options($<$<COMPILE_LANGUAGE:C>:/wd4267>)
- 
+@@ -128,7 +128,7 @@ if(MSVC)
      # handle msvcrt setting being passed in CMAKE_C_FLAGS
--    if(DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
-+    if(NOT CMAKE_MSVC_RUNTIME_LIBRARY)
-         # do not support other methods of setting this (it would be more conformant, tho)
-         message(FATAL_ERROR "please set msvcrt via CMAKE_C_FLAGS")
-     endif()
-@@ -1431,7 +1431,7 @@ if(UNICORN_BUILD_TESTS)
+     if(CMAKE_C_FLAGS MATCHES "[/-]M[TD]d?")
+         # ensure CMAKE_MSVC_RUNTIME_LIBRARY is not already defined
+-        if(DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
++        if(NOT CMAKE_MSVC_RUNTIME_LIBRARY)
+             message(FATAL_ERROR "please set the runtime library via either CMAKE_C_FLAGS or CMAKE_MSVC_RUNTIME_LIBRARY, not both")
+         endif()
+ 
+@@ -1486,7 +1486,7 @@ if(UNICORN_BUILD_TESTS)
  endif()
  
  

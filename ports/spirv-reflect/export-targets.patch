@@ -2,13 +2,15 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 040c818..0e1476c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -111,8 +111,20 @@ if(SPIRV_REFLECT_STATIC_LIB)
+@@ -111,10 +111,20 @@ if(SPIRV_REFLECT_STATIC_LIB)
      add_library(spirv-reflect-static STATIC ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h
                                       ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.c)
  
 -    target_include_directories(spirv-reflect-static
 -                               PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
--    install(TARGETS spirv-reflect-static LIBRARY DESTINATION lib)
+-    install(TARGETS spirv-reflect-static
+-            LIBRARY DESTINATION lib
+-            ARCHIVE DESTINATION lib)
 +    target_include_directories(spirv-reflect-static INTERFACE $<INSTALL_INTERFACE:include/spirv-reflect>)
 +                               
 +    set_target_properties(spirv-reflect-static PROPERTIES EXPORT_NAME spirv-reflect)
