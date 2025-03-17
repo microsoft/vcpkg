@@ -255,6 +255,7 @@ cserialport:arm64-android=fail
 cserialport:x64-android=fail
 ctbench:arm64-osx=fail
 ctbench:x64-osx=fail
+ctp:x64-android=fail
 czmq:arm-neon-android=fail
 czmq:arm64-android=fail
 czmq:x64-android=fail
@@ -306,6 +307,7 @@ elfutils:arm64-android=fail
 elfutils:arm64-osx=fail
 elfutils:x64-android=fail
 elfutils:x64-osx=fail
+fastdds:arm-neon-android=fail
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
@@ -423,6 +425,9 @@ gz-tools:arm-neon-android=fail
 gz-tools:arm64-android=fail
 gz-tools:x64-android=fail
 halide:x64-windows-static=fail
+hello-imgui:arm-neon-android=fail
+hello-imgui:arm64-android=fail
+hello-imgui:x64-android=fail
 hexl:x64-android=fail
 hpx:x64-windows-static=fail
 hwloc:arm-neon-android=fail
@@ -655,7 +660,10 @@ memorymodule:arm-neon-android=fail
 memorymodule:arm64-android=fail
 memorymodule:x64-android=fail
 # Missing dependent libraries.
+mesa:arm-neon-android=fail
+mesa:arm64-android=fail
 mesa:arm64-osx=fail
+mesa:x64-android=fail
 mesa:x64-linux=fail
 mesa:x64-osx=fail
 minifb:arm-neon-android=fail
@@ -738,6 +746,7 @@ oatpp-libressl:x64-android=fail
 offscale-libetcd-cpp:arm64-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
+ogre-next:arm-neon-android=fail
 ois:x64-android=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
@@ -1074,6 +1083,7 @@ vowpal-wabbit:x64-android=fail
 vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
 vulkan-extensionlayer:x64-windows-static=fail
+wasmedge:arm-neon-android=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
 # Collides with libpcap -> similar headers
