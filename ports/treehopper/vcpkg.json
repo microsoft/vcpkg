@@ -4,7 +4,7 @@
   "port-version": 10,
   "description": "Treehopper connects the physical world to your computer, tablet, or smartphone.",
   "homepage": "https://treehopper.io",
-  "supports": "!uwp",
+  "supports": "!uwp & !(static & staticcrt)",
   "dependencies": [
     {
       "name": "libusb",
