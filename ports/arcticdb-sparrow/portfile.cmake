@@ -10,12 +10,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        date                  USE_DATE_POLYFILL
-        large-int-placeholder USE_LARGE_INT_PLACEHOLDERS
-)
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(SPARROW_BUILD_SHARED ON)
 else()

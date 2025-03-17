@@ -14,23 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "date",
-    {
-      "name": "large-int-placeholder",
-      "platform": "windows | (arm & android)"
-    }
-  ],
-  "features": {
-    "date": {
-      "description": "Use date polyfill implementation",
-      "dependencies": [
-        "date"
-      ]
-    },
-    "large-int-placeholder": {
-      "description": "use types without api for big integers"
-    }
-  }
+  ]
 }
