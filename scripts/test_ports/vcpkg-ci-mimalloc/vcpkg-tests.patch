@@ -50,5 +50,6 @@ index 5905613c..776f18ef 100644
 +target_link_libraries(static-override-cxx PRIVATE Threads::Threads)
 +endif()
  
++include("${VCPKG_TESTS}")
  
  ## test memory errors
