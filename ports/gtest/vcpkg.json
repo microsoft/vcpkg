@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cxx17": {
+      "description": "Enable compiler C++17."
+    }
+  }
 }
