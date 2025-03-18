@@ -600,6 +600,10 @@
       "baseline": "4.6.2",
       "port-version": 0
     },
+    "beman-exemplar": {
+      "baseline": "2.0.0",
+      "port-version": 0
+    },
     "benchmark": {
       "baseline": "1.9.1",
       "port-version": 0
