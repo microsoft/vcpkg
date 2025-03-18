@@ -2845,7 +2845,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "4.0.4",
+      "baseline": "4.0.5",
       "port-version": 0
     },
     "flint": {
