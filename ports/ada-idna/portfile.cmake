@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ada-idna)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 vcpkg_install_copyright(
     COMMENT "ada-idna is dual licensed under Apache-2.0 and MIT"
     FILE_LIST
