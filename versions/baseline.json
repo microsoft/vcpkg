@@ -4413,8 +4413,8 @@
       "port-version": 0
     },
     "libcbor": {
-      "baseline": "0.11.0",
-      "port-version": 1
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "libcds": {
       "baseline": "2.3.3",
