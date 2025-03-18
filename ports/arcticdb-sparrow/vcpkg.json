@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
+    "date",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,7 +14,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "date"
+    }
   ]
 }
