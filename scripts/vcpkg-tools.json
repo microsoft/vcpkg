@@ -23,11 +23,11 @@
       "name": "cmake",
       "os": "windows",
       "arch": "amd64",
-      "version": "4.0.0-rc3",
-      "executable": "cmake-4.0.0-rc3-windows-x86_64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc3/cmake-4.0.0-rc3-windows-x86_64.zip",
-      "sha512": "671b960024fe8e0bba38fb9dd72ace06cdb4d6110ba1581b585c419689d811995d61608c855ada73cd59f914d5ea17f01d45d02c63f20bdddf9f4e405d34a646",
-      "archive": "cmake-4.0.0-rc3-windows-x86_64.zip"
+      "version": "4.0.0-rc4",
+      "executable": "cmake-4.0.0-rc4-windows-x86_64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc4/cmake-4.0.0-rc4-windows-x86_64.zip",
+      "sha512": "6aa8a389d4c2fbf8a007e52482bfb5665fc639a0dacd1df68d834ba6ca305530561963ef04cd1f4dcff00d28fa3dae953873c6104fe417521b7be21c697d2ddb",
+      "archive": "cmake-4.0.0-rc4-windows-x86_64.zip"
     },
     {
       "name": "cmake",
