@@ -2833,7 +2833,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "25.1.21",
+      "baseline": "25.2.10",
       "port-version": 0
     },
     "flatbush": {
