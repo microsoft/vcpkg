@@ -1,0 +1,18 @@
+{
+    "name": "beman-exemplar",
+    "version": "2.0.0",
+    "homepage": "https://github.com/bemanproject/exemplar",
+    "description": "A Beman Library Exemplar",
+    "license": "Apache-2.0",
+    "dependencies": [
+      {
+        "name": "vcpkg-cmake",
+        "host": true
+      },
+      {
+        "name": "vcpkg-cmake-config",
+        "host": true
+      },
+      "gtest"
+    ]
+  }
