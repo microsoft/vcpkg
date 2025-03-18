@@ -5766,7 +5766,7 @@
     },
     "lunasvg": {
       "baseline": "3.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "luv": {
       "baseline": "1.44.2",
@@ -7202,7 +7202,7 @@
     },
     "plutosvg": {
       "baseline": "0.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "plutovg": {
       "baseline": "1.0.0",
