@@ -1,5 +1,5 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 5905613c..776f18ef 100644
+index 5905613c..19e8ac34 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -43,13 +43,17 @@ index 5905613c..776f18ef 100644
  # overriding with a static library works too if using the `mimalloc-override.h`
  # header to redefine malloc/free. (the library already overrides new/delete)
  add_executable(static-override-static main-override-static.c)
-@@ -49,6 +54,8 @@ target_link_libraries(static-override PUBLIC mimalloc-static)
+@@ -49,8 +54,12 @@ target_link_libraries(static-override PUBLIC mimalloc-static)
  
  add_executable(static-override-cxx  main-override.cpp)
  target_link_libraries(static-override-cxx PUBLIC mimalloc-static)
 +target_link_libraries(static-override-cxx PRIVATE Threads::Threads)
 +endif()
  
-+include("${VCPKG_TESTS}")
  
  ## test memory errors
+ add_executable(test-wrong  test-wrong.c)
+ target_link_libraries(test-wrong PUBLIC mimalloc)
++
++include("${VCPKG_TESTS}")
+\ No newline at end of file
