@@ -6110,7 +6110,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "modern-cpp-kafka": {
       "baseline": "2024.07.03",
@@ -8142,7 +8142,7 @@
     },
     "robotraconteur": {
       "baseline": "1.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "robotraconteur-companion": {
       "baseline": "0.4.1",
