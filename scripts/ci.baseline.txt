@@ -1097,16 +1097,16 @@ systemc:x64-uwp=fail
 teemo:x64-android=fail
 
 # tensorflow does not support VS2022
-tensorflow:x64-android=fail
-tensorflow:x64-windows-release=fail
-tensorflow:x64-windows-static-md=fail
-tensorflow:x64-windows-static=fail
-tensorflow:x64-windows=fail
-tensorflow-cc:x64-android=fail
-tensorflow-cc:x64-windows-release=fail
-tensorflow-cc:x64-windows-static-md=fail
-tensorflow-cc:x64-windows-static=fail
-tensorflow-cc:x64-windows=fail
+tensorflow:x64-android=skip
+tensorflow:x64-windows-release=skip
+tensorflow:x64-windows-static-md=skip
+tensorflow:x64-windows-static=skip
+tensorflow:x64-windows=skip
+tensorflow-cc:x64-android=skip
+tensorflow-cc:x64-windows-release=skip
+tensorflow-cc:x64-windows-static-md=skip
+tensorflow-cc:x64-windows-static=skip
+tensorflow-cc:x64-windows=skip
 # tensorflow is broken with system libraries on macOS 13.5
 # Also skipping because our macOS machines are relatively underpowered and this saves 8 hours of CI
 # time for a relatively unpopular library / system combo.
@@ -1114,6 +1114,10 @@ tensorflow:arm64-osx=skip
 tensorflow:x64-osx=skip
 tensorflow-cc:arm64-osx=skip
 tensorflow-cc:x64-osx=skip
+# Building tensorflow inside docker fails with
+# FATAL: $USER is not set, and unable to look up name of current user: (error: 0): Success
+tensorflow:x64-linux=skip
+tensorflow-cc:x64-linux=skip
 
 thorvg:arm-neon-android=fail
 tinycthread:arm-neon-android=fail

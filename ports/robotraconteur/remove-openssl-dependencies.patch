@@ -1,0 +1,19 @@
+diff --git a/RobotRaconteurCore/CMakeLists.txt b/RobotRaconteurCore/CMakeLists.txt
+index fbef9b4..85054f5 100644
+--- a/RobotRaconteurCore/CMakeLists.txt
++++ b/RobotRaconteurCore/CMakeLists.txt
+@@ -336,12 +336,12 @@ if(UNIX AND NOT APPLE AND NOT ANDROID)
+ 
+         target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
+                                                               ${LIBUSB_INCLUDE_DIR})
+-        target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
++        target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+         target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+     else()
+         target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
+                                                               ${LIBUSB_INCLUDE_DIR})
+-        target_link_libraries(RobotRaconteurCore PUBLIC OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
++        target_link_libraries(RobotRaconteurCore PUBLIC OpenSSL::SSL OpenSSL::Crypto)
+         target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_USE_OPENSSL)
+     endif()
+ 
