@@ -2,7 +2,6 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrkit-platform/irsdk-cpp
     REF "v${VERSION}"
-    # REF master
     SHA512 0a04336b350bc345d8c3d85d58d556680dcd2c13079c3eee1906230a4754b08088f71496c2e19433a7fbaacb1213deb40911321f921e15777614b3dd4bc892f9
     HEAD_REF master
 )
