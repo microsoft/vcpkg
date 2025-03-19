@@ -556,111 +556,95 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     endif()
 endif()
 
-set(Z_VCPKG_SOURCELINK_FRAGMENTS "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.fragments" CACHE INTERNAL "")
 set(Z_VCPKG_SOURCELINK_JSON "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.json" CACHE INTERNAL "")
-
 function(vcpkg_add_sourcelink_link_options target)
     if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND
         MSVC AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0" OR CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0") AND
         CMAKE_VERSION VERSION_GREATER_EQUAL 3.19.0)
-        # Support added in Visual Studio 2017 Version 15.8.
+        # Sourcelink support added in Visual Studio 2017 Version 15.8.
 
-        # This function will be called for each referenced target and all their dependencies
-        # - Subsequent invocations usually add no new information, but those calls
-        #   are necessary to update that target's link optons to include the sourcelink file.
-        # - Because these are all collected in bulk, extra sourcelink details are typically included
-        #   from ports that are not necessarily relevant to the specific target. 
-        if(NOT DEFINED Z_VCPKG_SOURCELINK_LINK_OPTS)
+        # Search all of the installed sourcelink files from each port (already installed into the target)
+        # - Called for each referenced target and when each of the ports are built.
+        # - This will collect more files than strictly necessary when building the dependent ports
+        #   because it scans the entire directory needed for the target (not specific to each port).
+        # - For MSBuild targets, see `vcpkg.targets` which handles this via a powershell script.
+        file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
 
+        # Extra item provided during port builds (via vcpkg_cmake_configure in ports.cmake).
+        # The referenced file is not installed yet, so this is the only way to pick up the
+        # contents when linking each port.
+        if(VCPKG_SOURCELINK_FILE)
+            list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
+        endif()
+
+        if(sourcelink_files)
             # Set up the substitution to VCPKG_INSTALLED_DIR/VCPKG_TARGET_TRIPLET which will be used for each file below
             set(installed_triplet_dir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
             file(TO_NATIVE_PATH "${installed_triplet_dir}" installed_triplet_dir)
 
-            # Establish the empty fragments file, which will eventually contain the details
-            # from each of the sourcelink JSON files produced by vcpkg_write_sourcelink_file.
-            # - This is produced each time through this code, but then compared to the existing
-            #   file, which avoids unnecessary updates to the file if nothing changed.
-            set(sourcelink_fragments_tmp "${Z_VCPKG_SOURCELINK_FRAGMENTS}.tmp")
-            file(WRITE "${sourcelink_fragments_tmp}" "")
-            set(sourcelink_fragments_empty True)
+            # Incorporate the contents of each sourcelink JSON file (produced by vcpkg_write_sourcelink_file).
+            # - This is checked each time in a temporary copy, then compared to the existing contents,
+            #   which avoids unnecessary updates if nothing changed.
+            set(sourcelink_fragments "")
 
-            # Search all of the installed sourcelink files from each port (already installed into the target)
-            # - This will collect more files than strictly necessary for many of the 
-            #   dependent libraries because it scans the entire directory needed for the target.
-            # - Trimming this might be possible by mapping ${target} to the port name and then filtering,
-            #   but the extra complexity didn't seem worth the trade-off.
-            file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
+            foreach(sourcelink_file ${sourcelink_files})
+                file(READ ${sourcelink_file} sourcelink_contents)
+                string(JSON content_type TYPE ${sourcelink_contents})
 
-            # This is provided during port builds via ports.cmake (typically via vcpkg_cmake_configure).
-            # The referenced file is not installed yet, so this is the only way to pick up these contents.
-            if(VCPKG_SOURCELINK_FILE)
-                list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
-            endif()
+                if(content_type STREQUAL "OBJECT")
+                    string(JSON documents GET "${sourcelink_contents}" "documents")
+                else()
+                    message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
+                    continue()
+                endif()
 
-            if(sourcelink_files)
-                foreach(sourcelink_file ${sourcelink_files})
-                    file(READ ${sourcelink_file} sourcelink_contents)
-                    string(JSON content_type TYPE ${sourcelink_contents})
+                string(JSON imax LENGTH "${documents}")
+                if ("${i}" LESS "1")
+                    message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
+                    continue()
+                endif()
+                math(EXPR imax "${imax} - 1")
 
-                    if(content_type STREQUAL "OBJECT")
-                        string(JSON documents GET "${sourcelink_contents}" "documents")
+                foreach(i RANGE ${imax})
+                    string(JSON entry_key MEMBER "${documents}" ${i})
+                    string(JSON entry_value GET "${documents}" "${entry_key}")
+
+                    # Both the entry_key and installed_triplet_dir are already using the native path format,
+                    # so simply replace the strings in-place
+                    string(REPLACE "__VCPKG_INSTALLED_TRIPLET_DIR__" "${installed_triplet_dir}" entry_key "${entry_key}")
+
+                    # CMake treats the embedded '*' as a wildcard, which we simply want to set as a literal, so escape
+                    # manually instead of setting the string using CMake's JSON capabilities
+                    string(REGEX REPLACE "\\\\" "\\\\\\\\" entry_key "${entry_key}")
+
+                    if ("${sourcelink_fragments}" STREQUAL "")
+                        set(sourcelink_fragments " \"${entry_key}\" : \"${entry_value}\"\n")
                     else()
-                        message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
-                        continue()
+                        string(APPEND sourcelink_fragments ",\"${entry_key}\" : \"${entry_value}\"\n")
                     endif()
-
-                    string(JSON imax LENGTH "${documents}")
-                    if ("${i}" LESS "1")
-                        message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
-                        continue()
-                    endif()
-                    math(EXPR imax "${imax} - 1")
-
-                    foreach(i RANGE ${imax})
-                        string(JSON entry_key MEMBER "${documents}" ${i})
-                        string(JSON entry_value GET "${documents}" "${entry_key}")
-
-                        # Both the entry_key and installed_triplet_dir are already using the native path format,
-                        # so simply replace the strings in-place
-                        string(REPLACE "__VCPKG_INSTALLED_TRIPLET_DIR__" "${installed_triplet_dir}" entry_key "${entry_key}")
-
-                        # CMake treats the embedded '*' as a wildcard, which we simply want to set as a literal.. so escape it manually
-                        # instead of setting the string using CMake's JSON capabilities
-                        string(REGEX REPLACE "\\\\" "\\\\\\\\" entry_key "${entry_key}")
-
-                        # Add each item to the fragments file (including a newline for easier readability)
-                        if (${sourcelink_fragments_empty})
-                            set (sourcelink_fragments_empty False)
-                            file(APPEND "${sourcelink_fragments_tmp}" " ")
-                        else()
-                            file(APPEND "${sourcelink_fragments_tmp}" ",")
-                        endif()
-                        file(APPEND "${sourcelink_fragments_tmp}" "\"${entry_key}\" : \"${entry_value}\"\n")
-                    endforeach()
                 endforeach()
-            endif()
+            endforeach()
 
-            if(NOT ${sourcelink_fragments_empty})
-                if(NOT EXISTS "${Z_VCPKG_SOURCELINK_FRAGMENTS}")
-                    set(sourcelink_fragment_hash "0")
+            if (NOT "${sourcelink_fragments}" STREQUAL "")
+                if(EXISTS "${Z_VCPKG_SOURCELINK_JSON}")
+                    file(MD5 "${Z_VCPKG_SOURCELINK_JSON}" sourcelink_json_hash)
                 else()
-                    file(MD5 "${Z_VCPKG_SOURCELINK_FRAGMENTS}" sourcelink_fragment_hash)
-                endif()
-                file(MD5 "${sourcelink_fragments_tmp}" sourcelink_fragments_tmp_hash)
-
-                if(NOT sourcelink_fragment_hash STREQUAL sourcelink_fragments_tmp_hash)
-                    file(RENAME "${sourcelink_fragments_tmp}" "${Z_VCPKG_SOURCELINK_FRAGMENTS}")
-                else()
-                    file(REMOVE "${sourcelink_fragments_tmp}")
+                    set(sourcelink_json_hash "missing")
                 endif()
 
-                file(WRITE "${Z_VCPKG_SOURCELINK_JSON}" "{\"documents\":{ \n")
-                file(READ ${Z_VCPKG_SOURCELINK_FRAGMENTS} sourcelink_all_fragments)
-                file(APPEND "${Z_VCPKG_SOURCELINK_JSON}" "${sourcelink_all_fragments}")
-                file(APPEND "${Z_VCPKG_SOURCELINK_JSON}" "}}")
- 
-                set(Z_VCPKG_SOURCELINK_LINK_OPTS "")
-                list(APPEND Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${Z_VCPKG_SOURCELINK_JSON}")
+                set(sourcelink_json_tmp "${Z_VCPKG_SOURCELINK_JSON}.tmp")
+                file(WRITE "${sourcelink_json_tmp}" "{\"documents\":{ \n")
+                file(APPEND "${sourcelink_json_tmp}" "${sourcelink_fragments}")
+                file(APPEND "${sourcelink_json_tmp}" "}}")
+                file(MD5 "${sourcelink_json_tmp}" sourcelink_json_tmp_hash)
+
+                if(NOT sourcelink_json_hash STREQUAL sourcelink_json_tmp_hash)
+                    file(RENAME "${sourcelink_json_tmp}" "${Z_VCPKG_SOURCELINK_JSON}")
+                else()
+                    file(REMOVE "${sourcelink_json_tmp}")
+                endif()
+
+                set(Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${Z_VCPKG_SOURCELINK_JSON}")
             endif()
             set(Z_VCPKG_SOURCELINK_LINK_OPTS "${Z_VCPKG_SOURCELINK_LINK_OPTS}" CACHE INTERNAL "Link options to enable sourcelink from vcpkg")
         endif()
