@@ -9261,7 +9261,7 @@
       "port-version": 10
     },
     "tinyxml2": {
-      "baseline": "10.1.0",
+      "baseline": "11.0.0",
       "port-version": 0
     },
     "tl-expected": {
