@@ -137,7 +137,7 @@
       "port-version": 10
     },
     "ankurvdev-embedresource": {
-      "baseline": "0.0.11",
+      "baseline": "0.0.12",
       "port-version": 0
     },
     "annoy": {
@@ -354,6 +354,10 @@
     },
     "aubio": {
       "baseline": "2024-01-03",
+      "port-version": 0
+    },
+    "audioengine": {
+      "baseline": "1.1",
       "port-version": 0
     },
     "audiofile": {
@@ -1901,7 +1905,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.19.0",
+      "baseline": "0.20.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2693,8 +2697,8 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.0.0",
-      "port-version": 1
+      "baseline": "8.0.2",
+      "port-version": 0
     },
     "fastcdr": {
       "baseline": "2.2.6",
@@ -2762,7 +2766,7 @@
     },
     "ffmpeg": {
       "baseline": "7.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ffnvcodec": {
       "baseline": "12.2.72.0",
@@ -2829,7 +2833,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "25.1.21",
+      "baseline": "25.2.10",
       "port-version": 0
     },
     "flatbush": {
@@ -2841,7 +2845,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "4.0.4",
+      "baseline": "4.0.5",
       "port-version": 0
     },
     "flint": {
@@ -2857,7 +2861,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.4.3",
+      "baseline": "2.4.4",
       "port-version": 0
     },
     "flux": {
@@ -3106,7 +3110,7 @@
     },
     "gettext": {
       "baseline": "0.22.5",
-      "port-version": 1
+      "port-version": 2
     },
     "gettext-libintl": {
       "baseline": "0.22.5",
@@ -3241,7 +3245,7 @@
       "port-version": 9
     },
     "godot-cpp": {
-      "baseline": "4.3",
+      "baseline": "4.4",
       "port-version": 0
     },
     "google-cloud-cpp": {
@@ -3309,7 +3313,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.70.1",
+      "baseline": "1.71.0",
       "port-version": 0
     },
     "grppi": {
@@ -3753,8 +3757,8 @@
       "port-version": 0
     },
     "influxdb-cxx": {
-      "baseline": "0.7.2",
-      "port-version": 1
+      "baseline": "0.7.4",
+      "port-version": 0
     },
     "infoware": {
       "baseline": "2023-04-12",
@@ -3881,8 +3885,8 @@
       "port-version": 1
     },
     "joltphysics": {
-      "baseline": "5.2.0",
-      "port-version": 1
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "josuttis-jthread": {
       "baseline": "2020-07-21",
@@ -4356,6 +4360,10 @@
       "baseline": "3.7.7",
       "port-version": 2
     },
+    "libaribcaption": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "libass": {
       "baseline": "0.17.3",
       "port-version": 0
@@ -4405,8 +4413,8 @@
       "port-version": 0
     },
     "libcbor": {
-      "baseline": "0.11.0",
-      "port-version": 1
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "libcds": {
       "baseline": "2.3.3",
@@ -5429,8 +5437,8 @@
       "port-version": 0
     },
     "libxcrypt": {
-      "baseline": "4.4.36",
-      "port-version": 2
+      "baseline": "4.4.38",
+      "port-version": 0
     },
     "libxcvt": {
       "baseline": "0.1.2",
@@ -5745,7 +5753,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.660",
+      "baseline": "0.665",
       "port-version": 0
     },
     "luminoengine": {
@@ -5757,8 +5765,8 @@
       "port-version": 0
     },
     "lunasvg": {
-      "baseline": "3.2.0",
-      "port-version": 0
+      "baseline": "3.2.1",
+      "port-version": 1
     },
     "luv": {
       "baseline": "1.44.2",
@@ -6102,7 +6110,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "modern-cpp-kafka": {
       "baseline": "2024.07.03",
@@ -6337,7 +6345,7 @@
       "port-version": 8
     },
     "nanoflann": {
-      "baseline": "1.7.0",
+      "baseline": "1.7.1",
       "port-version": 0
     },
     "nanogui": {
@@ -7025,8 +7033,8 @@
       "port-version": 0
     },
     "pcg": {
-      "baseline": "2021-04-06",
-      "port-version": 2
+      "baseline": "2022-04-09",
+      "port-version": 0
     },
     "pciids": {
       "baseline": "2023-04-11",
@@ -7194,10 +7202,10 @@
     },
     "plutosvg": {
       "baseline": "0.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "plutovg": {
-      "baseline": "0.0.13",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "pmdk": {
@@ -7321,7 +7329,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.5.1",
+      "baseline": "9.6.0",
       "port-version": 0
     },
     "projectm": {
@@ -8037,7 +8045,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.17.0",
+      "baseline": "0.18.0",
       "port-version": 0
     },
     "refprop-headers": {
@@ -8118,7 +8126,7 @@
     },
     "rmqcpp": {
       "baseline": "1.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "roaring": {
       "baseline": "4.2.1",
@@ -8134,7 +8142,7 @@
     },
     "robotraconteur": {
       "baseline": "1.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "robotraconteur-companion": {
       "baseline": "0.4.1",
@@ -8354,7 +8362,7 @@
     },
     "sdl2": {
       "baseline": "2.32.2",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -8570,7 +8578,7 @@
     },
     "skia": {
       "baseline": "134",
-      "port-version": 1
+      "port-version": 2
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -8578,7 +8586,7 @@
     },
     "sleef": {
       "baseline": "3.8",
-      "port-version": 0
+      "port-version": 1
     },
     "sleepy-discord": {
       "baseline": "2025-02-08",
@@ -9133,7 +9141,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "0.15.9",
+      "baseline": "0.15.11",
       "port-version": 0
     },
     "threadpool": {
@@ -9177,8 +9185,8 @@
       "port-version": 3
     },
     "tinycbor": {
-      "baseline": "0.6.0",
-      "port-version": 1
+      "baseline": "0.6.1",
+      "port-version": 0
     },
     "tinycthread": {
       "baseline": "2019-08-06",
@@ -9537,7 +9545,7 @@
       "port-version": 8
     },
     "valijson": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "value-ptr-lite": {
@@ -9734,7 +9742,7 @@
     },
     "vst3sdk": {
       "baseline": "v3.7.12_build_20",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
@@ -9841,8 +9849,8 @@
       "port-version": 4
     },
     "webthing-cpp": {
-      "baseline": "1.0.5",
-      "port-version": 1
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "webui": {
       "baseline": "2.4.2",

@@ -22,6 +22,13 @@ macro(message level msg)
     endif()
 endmacro()
 
+# Call this at the end of testing.
+macro(unit_test_report_result)
+    if(Z_VCPKG_UNIT_TEST_HAS_ERROR)
+        _message(FATAL_ERROR "At least one test failed")
+    endif()
+endmacro()
+
 set(Z_VCPKG_UNIT_TEST_HAS_ERROR OFF CACHE BOOL "" FORCE)
 unset_fatal_error()
 
