@@ -23,8 +23,8 @@ index 0353b0c..5c0cd33 100644
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::encoder>
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::decoder>
 +		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlicommon>
-+		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotliencoder>
-+		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlidecoder>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlienc>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlidec>
  		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
  		$<$<BOOL:${HTTPLIB_IS_USING_ZSTD}>:zstd::libzstd>
  		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
