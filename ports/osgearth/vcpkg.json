@@ -1,7 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.7",
-  "port-version": 1,
+  "port-version": 2,
   "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
@@ -48,14 +48,14 @@
         "blend2d"
       ]
     },
-    "tools": {
-      "description": "Build tools"
+    "controls": {
+      "description": "Support for the old Controls API (superceded by imgui)"
     },
     "examples": {
       "description": "Build examples"
     },
-    "controls": {
-      "description": "support for the old Controls API (superceded by imgui)"
+    "tools": {
+      "description": "Build tools"
     }
   }
 }

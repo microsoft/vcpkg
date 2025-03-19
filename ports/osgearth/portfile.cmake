@@ -82,9 +82,7 @@ if("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
     if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)
-        vcpkg_copy_tools(TOOL_NAMES osgearth_createtile
-            AUTO_CLEAN
-        )
+        vcpkg_copy_tools(TOOL_NAMES osgearth_createtile AUTO_CLEAN)
     endif()
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
@@ -133,11 +131,9 @@ if("examples" IN_LIST FEATURES)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_tracksd.exe")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_transformd.exe")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_videod.exe")
-
-    
+ 
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
-
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
