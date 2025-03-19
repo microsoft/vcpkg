@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0353b0c..2dce6dd 100644
+index 0353b0c..5c0cd33 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -151,10 +151,10 @@ endif()
@@ -22,9 +22,9 @@ index 0353b0c..2dce6dd 100644
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::common>
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::encoder>
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::decoder>
-+		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::common>
-+		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::encoder>
-+		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::decoder>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlicommon>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotliencoder>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlidecoder>
  		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
  		$<$<BOOL:${HTTPLIB_IS_USING_ZSTD}>:zstd::libzstd>
  		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
@@ -39,15 +39,17 @@ index 0353b0c..2dce6dd 100644
  	)
  
 diff --git a/cmake/httplibConfig.cmake.in b/cmake/httplibConfig.cmake.in
-index bf57364..00044f4 100644
+index bf57364..1c6fe62 100644
 --- a/cmake/httplibConfig.cmake.in
 +++ b/cmake/httplibConfig.cmake.in
-@@ -34,7 +34,7 @@ if(@HTTPLIB_IS_USING_BROTLI@)
+@@ -34,8 +34,8 @@ if(@HTTPLIB_IS_USING_BROTLI@)
  	# Note that the FindBrotli.cmake file is installed in the same dir as this file.
  	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
  	set(BROTLI_USE_STATIC_LIBS @BROTLI_USE_STATIC_LIBS@)
 -	find_dependency(Brotli COMPONENTS common encoder decoder)
+-	set(httplib_Brotli_FOUND ${Brotli_FOUND})
 +	find_dependency(unofficial-brotli COMPONENTS common encoder decoder)
- 	set(httplib_Brotli_FOUND ${Brotli_FOUND})
++	set(httplib_Brotli_FOUND ${unofficial-brotli_FOUND})
  endif()
  
+ if(@HTTPLIB_IS_USING_ZSTD@)
