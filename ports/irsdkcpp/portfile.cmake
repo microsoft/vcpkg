@@ -1,4 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrkit-platform/irsdk-cpp
@@ -19,8 +18,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/irsdkcpp)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
