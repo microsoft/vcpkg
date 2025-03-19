@@ -1,7 +1,7 @@
 {
   "name": "plutovg",
-  "version": "0.0.13",
-  "description": " Tiny 2D vector graphics library in C",
+  "version": "1.0.0",
+  "description": "Tiny 2D vector graphics library in C",
   "homepage": "https://github.com/sammycage/plutovg",
   "license": "MIT",
   "dependencies": [
