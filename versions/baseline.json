@@ -2605,7 +2605,7 @@
       "port-version": 6
     },
     "entt": {
-      "baseline": "3.14.0",
+      "baseline": "3.15.0",
       "port-version": 0
     },
     "ereignis": {
