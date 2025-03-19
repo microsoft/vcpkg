@@ -81,8 +81,63 @@ if("tools" IN_LIST FEATURES)
         osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
+    if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)
+        vcpkg_copy_tools(TOOL_NAMES osgearth_createtile
+            AUTO_CLEAN
+        )
+    endif()
 	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
+
+if("examples" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+        file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${osg_plugins_subdir}")
+        if(NOT VCPKG_BUILD_TYPE)
+            file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+            file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
+        endif()
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES osgearth_simple osgearth_features osgearth_featurefilter osgearth_los
+        osgearth_terrainprofile osgearth_map osgearth_annotation osgearth_occlusionculling osgearth_minimap osgearth_mrt
+        osgearth_skyview osgearth_infinitescroll osgearth_video osgearth_heatmap
+        AUTO_CLEAN
+    )
+
+    if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)
+        vcpkg_copy_tools(TOOL_NAMES osgearth_cluster osgearth_eci osgearth_ephemeris osgearth_graticule
+            osgearth_magnify osgearth_manip osgearth_tracks osgearth_transform
+            AUTO_CLEAN
+        )
+    endif()
+    
+	file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_annotationd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_clusterd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_ecid.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_ephemerisd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_featurefilterd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_featuresd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_graticuled.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_heatmapd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_infinitescrolld.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_losd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_magnifyd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_manipd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_mapd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_minimapd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_mrtd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_occlusioncullingd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_simpled.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_skyviewd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_terrainprofiled.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_tracksd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_transformd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_videod.exe")
+
+    
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+endif()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
