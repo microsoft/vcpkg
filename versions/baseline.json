@@ -3266,7 +3266,7 @@
     },
     "gperf": {
       "baseline": "3.1",
-      "port-version": 6
+      "port-version": 7
     },
     "gperftools": {
       "baseline": "2.16",
