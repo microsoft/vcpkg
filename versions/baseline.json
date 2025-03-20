@@ -1502,7 +1502,7 @@
     },
     "calceph": {
       "baseline": "4.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "camport3": {
       "baseline": "1.6.2",
@@ -2954,7 +2954,7 @@
     },
     "freexl": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fribidi": {
       "baseline": "1.0.16",
@@ -4722,7 +4722,7 @@
     },
     "libiconv": {
       "baseline": "1.18",
-      "port-version": 0
+      "port-version": 1
     },
     "libics": {
       "baseline": "1.6.8",
@@ -5218,7 +5218,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -5242,7 +5242,7 @@
     },
     "libssh": {
       "baseline": "0.10.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libssh2": {
       "baseline": "1.11.1",
@@ -8650,7 +8650,7 @@
     },
     "sockpp": {
       "baseline": "1.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "soem": {
       "baseline": "2023-06-09",
@@ -8978,7 +8978,7 @@
     },
     "suitesparse-lagraph": {
       "baseline": "1.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "suitesparse-ldl": {
       "baseline": "3.3.2",
@@ -9350,7 +9350,7 @@
     },
     "treehopper": {
       "baseline": "1.11.3",
-      "port-version": 9
+      "port-version": 10
     },
     "triangle": {
       "baseline": "1.6",
