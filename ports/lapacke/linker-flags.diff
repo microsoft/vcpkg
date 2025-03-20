@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 32de6a4..5418c35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -222,6 +222,47 @@ if(NOT (BUILD_SINGLE OR BUILD_DOUBLE OR BUILD_COMPLEX OR BUILD_COMPLEX16))
+ endif()
+ 
+ 
++macro(x_add_linker_flags _linker_flags_var)
++  string(REPLACE "LINKER_FLAGS" "LIBRARIES" _lib_var "${_linker_flags_var}")
++  message(STATUS "${_lib_var}: ${${_lib_var}}")
++  # CMAKE_<bin>_LINKER_FLAGS_<config> is a command line string w/o generator expressions.
++  # BLAS/LAPACK_LINKER_FLAGS from Find<Pkg>.cmake is a CMake list, possibly carrying
++  # libraries(!), keywords and generator expressions.
++  message(STATUS "${_linker_flags_var}: ${${_linker_flags_var}}")
++  set(_keywords general optimized debug)
++  set(_keyword_seen "")
++  foreach(_item IN LISTS "${_linker_flags_var}")
++    if(_item IN_LIST _keywords)
++      set(_keyword_seen "${_item}")
++      continue()
++    endif()
++    if(_item MATCHES [[^[$]<[$]<CONFIG:DEBUG>:(.*)>$]])
++      set(_keyword_seen "debug")
++      set(_item "${CMAKE_MATCH_1}")
++    elseif(_item MATCHES [[^[$]<[$]<NOT:[$]<CONFIG:DEBUG>>:(.*)>$]])
++      set(_keyword_seen "optimized")
++      set(_item "${CMAKE_MATCH_1}")
++    endif()
++    if(TARGET "${_item}")
++      message(STATUS ".. target: ${_item}")
++      # out of order
++      link_libraries("${_item}")
++    else()
++      # using per-config flags for in-order construction
++      if(NOT _keyword_seen STREQUAL "optimized" )
++        string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " ${_item}")
++        string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG " ${_item}")
++        string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG " ${_item}")
++      else()
++        string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " ${_item}")
++        string(APPEND CMAKE_MODULE_LINKER_FLAGS_RELEASE " ${_item}")
++        string(APPEND CMAKE_SHARED_LINKER_FLAGS_RELEASE " ${_item}")
++      endif()
++    endif()
++    set(_keyword_seen "")
++  endforeach()
++endmacro()
++
+ # --------------------------------------------------
+ # Subdirectories that need to be processed
+ option(USE_OPTIMIZED_BLAS "Whether or not to use an optimized BLAS library instead of included netlib BLAS" OFF)
+@@ -251,6 +292,8 @@ if(NOT BLAS_FOUND)
+   message(STATUS "Using supplied NETLIB BLAS implementation")
+   add_subdirectory(BLAS)
+   set(BLAS_LIBRARIES ${BLASLIB})
++elseif(1)
++  x_add_linker_flags(BLAS_LINKER_FLAGS)
+ else()
+   set(CMAKE_EXE_LINKER_FLAGS
+     "${CMAKE_EXE_LINKER_FLAGS} ${BLAS_LINKER_FLAGS}"
+@@ -341,6 +384,8 @@ if(NOT LATESTLAPACK_FOUND)
+   set(DSECOND_SRC ${LAPACK_SOURCE_DIR}/INSTALL/dsecnd_${TIME_FUNC}.f)
+ 
+   add_subdirectory(SRC)
++elseif(1)
++  x_add_linker_flags(LAPACK_LINKER_FLAGS)
+ else()
+   set(CMAKE_EXE_LINKER_FLAGS
+     "${CMAKE_EXE_LINKER_FLAGS} ${LAPACK_LINKER_FLAGS}"

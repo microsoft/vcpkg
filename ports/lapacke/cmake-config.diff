@@ -1,0 +1,16 @@
+diff --git a/LAPACKE/cmake/lapacke-config-install.cmake.in b/LAPACKE/cmake/lapacke-config-install.cmake.in
+index 0eafa39..3392b30 100644
+--- a/LAPACKE/cmake/lapacke-config-install.cmake.in
++++ b/LAPACKE/cmake/lapacke-config-install.cmake.in
+@@ -1,9 +1,8 @@
+ # Compute locations from <prefix>/@{LIBRARY_DIR@/cmake/lapacke-<v>/<self>.cmake
+ get_filename_component(_LAPACKE_SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ 
+-# Load the LAPACK package with which we were built.
+-set(LAPACK_DIR "@CMAKE_INSTALL_FULL_LIBDIR@/cmake/@LAPACKLIB@-@LAPACK_VERSION@")
+-find_package(LAPACK NO_MODULE)
++include(CMakeFindDependencyMacro)
++find_dependency(LAPACK)
+ 
+ # Load lapacke targets from the install tree.
+ if(NOT TARGET @LAPACKELIB@)
