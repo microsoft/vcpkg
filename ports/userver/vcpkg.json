@@ -1,0 +1,94 @@
+{
+  "name": "userver",
+  "version": "2.6",
+  "description": "The C++ Asynchronous Framework",
+  "homepage": "https://userver.tech/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "amqpcpp",
+    "boost-context",
+    "boost-core",
+    "boost-coroutine",
+    "boost-coroutine2",
+    "boost-endian",
+    "boost-filesystem",
+    "boost-iostreams",
+    "boost-locale",
+    "boost-lockfree",
+    "boost-multiprecision",
+    "boost-program-options",
+    "boost-stacktrace",
+    "boost-uuid",
+    "c-ares",
+    "cctz",
+    {
+      "name": "curl",
+      "features": [
+        "openssl"
+      ]
+    },
+    "fmt",
+    "gtest",
+    "http-parser",
+    "libev",
+    "nghttp2",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "yaml-cpp"
+  ],
+  "default-features": [
+    "cryptopp-base64-url"
+  ],
+  "features": {
+    "cryptopp-base64-url": {
+      "description": "Provide wrappers for Base64 URL decoding and encoding algorithms of crypto++",
+      "dependencies": [
+        "cryptopp"
+      ]
+    },
+    "postgresql": {
+      "description": "Provide asynchronous driver for PostgreSQL",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "redis": {
+      "description": "Provide asynchronous driver for Redis",
+      "dependencies": [
+        "boost-crc",
+        "boost-signals2",
+        "hiredis"
+      ]
+    },
+    "redis-tls": {
+      "description": "SSL/TLS support for Redis driver",
+      "dependencies": [
+        {
+          "name": "hiredis",
+          "features": [
+            "ssl"
+          ]
+        },
+        {
+          "name": "userver",
+          "features": [
+            "redis"
+          ]
+        }
+      ]
+    },
+    "utest": {
+      "description": "Provide 'utest' and 'ubench' for gtest and gbenchmark integration",
+      "dependencies": [
+        "benchmark"
+      ]
+    }
+  }
+}
