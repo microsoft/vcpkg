@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4496860..fdda539 100644
+index 4496860..e1f58c3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1257,7 +1257,14 @@ endforeach()
+@@ -1257,7 +1257,19 @@ endforeach()
  # Load extensions passed through cmake config var
  foreach(EXT IN LISTS BUILD_EXTENSIONS)
    if(NOT "${EXT}" STREQUAL "")
@@ -11,6 +11,11 @@ index 4496860..fdda539 100644
 +      duckdb_extension_load(${EXT} 
 +        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/httpfs
 +        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/httpfs/extension/httpfs/include
++      )
++    elseif("${EXT}" STREQUAL "excel")
++      duckdb_extension_load(${EXT} 
++        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/excel
++        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/excel/src/excel/include
 +      )
 +    else()
 +      duckdb_extension_load(${EXT})
