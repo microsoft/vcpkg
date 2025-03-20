@@ -14,8 +14,9 @@ if(VCPKG_TARGET_IS_LINUX)
 "Irrlicht currently requires the following libraries from the system package manager:
     libgl1-mesa
     xf86vmode
+    libxft
 
-These can be installed on Ubuntu systems via sudo apt-get install libgl1-mesa-dev libxxf86vm-dev")
+These can be installed on Ubuntu systems via sudo apt-get install libgl1-mesa-dev libxxf86vm-dev libxft-dev")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
@@ -30,11 +31,13 @@ vcpkg_check_features(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
 
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DIRR_SHARED_LIB=${SHARED_LIB}
         ${FEATURE_OPTIONS}
+		"-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
