@@ -3,8 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "chrome/m${VERSION}"
-    SHA512 3147cdd4636feeba1f3a1c9026b8d5d9e500e5cc4d99281a6f7fc36962e5365cbc45d358732381bd42ee8c721ca2c8ba963e5ba1344750c9e3a54be697f0e0f9
+    REF "aefbd9403c1b3032ad4cd0281ef312ed262c7125"
+    SHA512 8d1af006d4974c919c5760f4e461331db5dcf8ad4c4ee91c12433a88b15ea186a8932b7cd241ce47b012eb0fa5ed28f5d5d9ad187abb2bfd45a6ece8edb48d19
     PATCHES
         disable-msvc-env-setup.patch
         # disable-dev-test.patch

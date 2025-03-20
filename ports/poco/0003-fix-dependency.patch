@@ -44,7 +44,7 @@ index 861c27c..d2701ce 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -260,6 +253,9 @@ include(DefinePlatformSpecific)
+@@ -266,6 +259,9 @@ include(DefinePlatformSpecific)
  # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
  set(Poco_COMPONENTS "")
  
@@ -54,7 +54,7 @@ index 861c27c..d2701ce 100644
  if(ENABLE_TESTS)
  	add_subdirectory(CppUnit)
  	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
-@@ -392,8 +388,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
+@@ -398,8 +394,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
  	list(APPEND Poco_COMPONENTS "Prometheus")
  endif()
  
@@ -194,10 +194,11 @@ diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/Poco
 index 82c5788..739adef 100644
 --- a/Foundation/cmake/PocoFoundationConfig.cmake
 +++ b/Foundation/cmake/PocoFoundationConfig.cmake
-@@ -3,6 +3,7 @@ if(@POCO_UNBUNDLED@)
+@@ -3,7 +3,7 @@ if(@POCO_UNBUNDLED@)
  	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
  	find_dependency(ZLIB REQUIRED)
  	find_dependency(PCRE2 REQUIRED)
+-	find_dependency(Utf8Proc REQUIRED)
 +	find_dependency(unofficial-utf8proc REQUIRED)
  endif()
  

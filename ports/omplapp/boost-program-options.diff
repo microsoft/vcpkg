@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34bf0b4..b49b47f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,7 +38,6 @@ set(OMPL_CMAKE_UTIL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ompl/CMakeModules"
+ 
+ if(MSVC)
+     add_definitions(-DBOOST_ALL_NO_LIB)
+-    add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
+ endif(MSVC)
+ # Ensure dynamic linking with boost unit_test_framework
+ add_definitions(-DBOOST_TEST_DYN_LINK)

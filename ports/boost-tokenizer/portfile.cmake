@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/tokenizer
     REF boost-${VERSION}
-    SHA512 9aff6bdee0abcfd25febef7bf94bff96f6146356ea3c83549f11e6b05c730cce8c24c88fb1bf325f4f69a4aaea9de37be11d73f12c6844c9e56dfa46068b217e
+    SHA512 fe5856edf63dbf58a4e27c37f813b56b058459fdc84d2f160613150b834ca823e7fc48f6baf241db1bf2734f6997c4d3aa6dfe542aab03dbe8d16000ab599609
     HEAD_REF master
 )
 

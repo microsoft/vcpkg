@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PJK/libcbor
     REF "v${VERSION}"
-    SHA512 c14aaa55c0c82e09b9eb2cc6847951d1bac8a081a247776c507d5450367da5717b1056bad09fb0f0178311de8754e8f89c060e0fc0f400fafdc42de441421e66
+    SHA512 07fcf4e758742e6d430eaab0b333e8f836587c6eeb3f15eea094f8e7881804998382335737df6e2a5d0f570eb9cb46bae6c6d1058aeca8fa29b973a98ae6b69b
     HEAD_REF master
-    PATCHES cmake-config.diff
 )
 
 vcpkg_cmake_configure(

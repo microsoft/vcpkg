@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
     REF "${VERSION}"
-    SHA512 31bc3c2f461a00241fb8f69ca6ea8cc590af6618856b1b84a048bde924e4b474fd883ad5d54dbfbdd1e5b59015889e15ffc4fbafccb3e42e052a02071f2017b1
+    SHA512 0a285589451334eac3fcb9135c17f8938d6110fc6950f1b9061bc98450132b88a205ed0318ca5d810d537406c96b397384936d2268f79fb4c8a1c3fd049ebc41
     HEAD_REF master
-    PATCHES
-        fix_uwp.patch #https://github.com/Tencent/ncnn/pull/5328
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)

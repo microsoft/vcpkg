@@ -1,7 +1,6 @@
 {
   "name": "projectm-eval",
-  "version": "1.0.0",
-  "port-version": 1,
+  "version": "1.0.1",
   "description": "The projectM Expression Evaluation Library. A portable drop-in replacement of Milkdrop's \"ns-eel2\" expression parser for use in Milkdrop, projectM and other applications.",
   "homepage": "https://github.com/projectM-visualizer/projectm-eval",
   "license": "MIT",

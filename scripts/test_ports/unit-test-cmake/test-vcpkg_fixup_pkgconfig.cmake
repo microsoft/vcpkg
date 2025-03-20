@@ -198,3 +198,5 @@ Libs: -L${prefix}/lib -lgeneralinfod
 ]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ "-L${prefix}/lib" -lgeneralinfod]])
+
+file(REMOVE_RECURSE "${pc_file_release}" "${pc_file_debug}")

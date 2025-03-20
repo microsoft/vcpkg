@@ -1,0 +1,18 @@
+diff --git a/cmake/Modules/FindUDev.cmake b/cmake/Modules/FindUDev.cmake
+index d4fb21339..c501129b3 100644
+--- a/cmake/Modules/FindUDev.cmake
++++ b/cmake/Modules/FindUDev.cmake
+@@ -55,7 +55,9 @@ find_package_handle_standard_args(UDev DEFAULT_MSG UDEV_INCLUDE_DIR UDEV_LIBRARI
+ 
+ mark_as_advanced(UDEV_INCLUDE_DIR UDEV_LIBRARIES)
+ 
+-add_library(UDev::UDev IMPORTED UNKNOWN)
+-set_target_properties(UDev::UDev PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES ${UDEV_INCLUDE_DIR}
+-    IMPORTED_LOCATION ${UDEV_LIBRARIES})
++if(NOT TARGET UDev::UDev)
++    add_library(UDev::UDev IMPORTED UNKNOWN)
++    set_target_properties(UDev::UDev PROPERTIES
++        INTERFACE_INCLUDE_DIRECTORIES ${UDEV_INCLUDE_DIR}
++        IMPORTED_LOCATION ${UDEV_LIBRARIES})
++endif()

@@ -1,7 +1,6 @@
 {
   "name": "joltphysics",
-  "version": "5.2.0",
-  "port-version": 1,
+  "version": "5.3.0",
   "description": "A multi core friendly rigid body physics and collision detection library suitable for games and VR applications",
   "homepage": "https://github.com/jrouwe/JoltPhysics",
   "license": "MIT",

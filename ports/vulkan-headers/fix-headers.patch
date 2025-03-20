@@ -1,0 +1,13 @@
+diff --git a/include/vulkan/vulkan_handles.hpp b/include/vulkan/vulkan_handles.hpp
+index 304e9ed..4fd23cf 100644
+--- a/include/vulkan/vulkan_handles.hpp
++++ b/include/vulkan/vulkan_handles.hpp
+@@ -2085,6 +2085,8 @@ namespace VULKAN_HPP_NAMESPACE
+   class IndirectCommandsLayoutEXT;
+   class IndirectExecutionSetEXT;
+ 
++  typedef void( VKAPI_PTR * PFN_VoidFunction )();
++
+ #ifndef VULKAN_HPP_NO_SMART_HANDLE
+   //======================
+   //=== UNIQUE HANDLEs ===
