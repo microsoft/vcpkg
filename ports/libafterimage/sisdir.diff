@@ -1,0 +1,14 @@
+diff --git a/libAfterImage/import.c b/libAfterImage/import.c
+index fb7089ca4..22fc62617 100644
+--- a/libAfterImage/import.c	
++++ b/libAfterImage/import.c
+@@ -28,6 +28,9 @@
+ 
+ #ifdef _WIN32
+ #include "win32/config.h"
++#include <sys/stat.h>
++#define _S_ISTYPE(mode, mask)  (((mode) & _S_IFMT) == (mask))
++#define S_ISDIR(mode) _S_ISTYPE((mode), _S_IFDIR)
+ #else
+ #include "config.h"
+ #endif
