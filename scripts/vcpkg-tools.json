@@ -45,7 +45,7 @@
       "version": "4.0.0-rc4",
       "executable": "cmake-4.0.0-rc4-macos-universal/CMake.app/Contents/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc4/cmake-4.0.0-rc4-macos-universal.tar.gz",
-      "sha512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "sha512": "1d4ec18fdde51a805ae6fcc33150bf417841236221203340bda4eee77532f1fa405e62f5cf75830d3daf64197b209192f6c6ab87eb17cf8370d68c70ffca193f",
       "archive": "cmake-4.0.0-rc4-macos-universal.tar.gz"
     },
     {
@@ -55,7 +55,7 @@
       "version": "4.0.0-rc4",
       "executable": "cmake-4.0.0-rc4-linux-aarch64/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc4/cmake-4.0.0-rc4-linux-aarch64.tar.gz",
-      "sha512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "sha512": "bb4ab7fe4dd71f9375a2cb42cd72f6ee4ede9b0cdf988d077e03b90a16fb88c297c0cbb94ec2fb46cc25dd40956561da446107b4ccc79bc69e36d297ad2bc585",
       "archive": "cmake-4.0.0-rc4-linux-aarch64.tar.gz"
     },
     {
@@ -65,7 +65,7 @@
       "arch": "amd64",
       "executable": "cmake-4.0.0-rc4-linux-x86_64/bin/cmake",
       "url": "https://github.com/Kitware/CMake/releases/download/v4.0.0-rc4/cmake-4.0.0-rc4-linux-x86_64.tar.gz",
-      "sha512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "sha512": "83461edf2f355af02719f9fb750cb0b045f833ccb1a7856f76d7c8c36b14c7e73ff21637672278ddecaf3069dca0ad04afbc0ce0e31a90c6307aca728854f1f3",
       "archive": "cmake-4.0.0-rc4-linux-x86_64.tar.gz"
     },
     {
