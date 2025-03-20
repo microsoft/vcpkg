@@ -207,7 +207,7 @@ SHA is in the history. For example, you may be able to fix this error by changin
         if(DEFINED arg_RAW_INCLUDE_MAPPING)
             list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
             if (${num_mappings} LESS "2")
-                message(FATAL_ERROR "vcpkg_from_github was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
+                message(FATAL_ERROR "vcpkg_from_git was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
             endif()
             set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
         endif()
