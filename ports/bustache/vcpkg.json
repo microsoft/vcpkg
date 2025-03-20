@@ -1,13 +1,10 @@
 {
   "name": "bustache",
-  "version": "1.1.0",
-  "port-version": 2,
-  "description": "C++11 implementation of {{ mustache }}",
+  "version": "2024-09-04.0.1.0",
+  "description": "C++20 implementation of {{ mustache }}",
   "homepage": "https://github.com/jamboree/bustache",
   "license": "BSL-1.0",
   "dependencies": [
-    "boost-unordered",
-    "boost-utility",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,5 +13,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "fmt": {
+      "description": "Build with fmtlib",
+      "dependencies": [
+        "fmt"
+      ]
+    }
+  }
 }
