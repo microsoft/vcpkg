@@ -2,9 +2,9 @@ diff --git a/cmake/headers.cmake b/cmake/headers.cmake
 index 3924a2a..f1e32d9 100644
 --- a/cmake/headers.cmake
 +++ b/cmake/headers.cmake
-@@ -15,8 +15,4 @@ set(quickcpplib_HEADERS
+@@ -15,8 +15,5 @@ set(quickcpplib_HEADERS
    "include/quickcpplib/boost/test/unit_test.hpp"
--  "include/quickcpplib/byte.hpp"
+   "include/quickcpplib/byte.hpp"
 -  "include/quickcpplib/byte/include/nonstd/byte.hpp"
 -  "include/quickcpplib/byte/test/byte-main.t.hpp"
 -  "include/quickcpplib/byte/test/lest/lest_cpp03.hpp"
