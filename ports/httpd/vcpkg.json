@@ -1,0 +1,43 @@
+{
+  "name": "httpd",
+  "version": "2.4.62",
+  "description": "The Apache HTTP Server Project is an effort to develop and maintain an open-source HTTP server for modern operating systems including UNIX and Windows. The goal of this project is to provide a secure, efficient and extensible server that provides HTTP services in sync with the current HTTP standards.",
+  "homepage": "https://httpd.apache.org/",
+  "license": "Apache-2.0",
+  "supports": "windows & !static & !staticcrt",
+  "dependencies": [
+    {
+      "name": "apr",
+      "features": [
+        "private-headers"
+      ]
+    },
+    "apr-util",
+    "curl",
+    "pcre2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "manual": {
+      "description": "Install manual"
+    },
+    "pdb": {
+      "description": "Install .pdb files (if generated)"
+    },
+    "with-ssl": {
+      "description": "Build modules that require OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "with-zlib": {
+      "description": "Build modules that require ZLIB",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}
