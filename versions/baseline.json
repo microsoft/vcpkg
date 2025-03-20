@@ -2712,6 +2712,14 @@
       "baseline": "3.1.2",
       "port-version": 1
     },
+    "fastdds-monitor": {
+      "baseline": "3.1.0",
+      "port-version": 0
+    },
+    "fastdds-statistics-backend": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "fastfeat": {
       "baseline": "391d5e9",
       "port-version": 4
