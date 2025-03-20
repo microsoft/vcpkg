@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        avif          SDL2IMAGE_AVIF
         libjpeg-turbo SDL2IMAGE_JPG
         libwebp       SDL2IMAGE_WEBP
         tiff          SDL2IMAGE_TIF
