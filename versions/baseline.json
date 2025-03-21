@@ -3813,7 +3813,7 @@
       "port-version": 1
     },
     "irsdkcpp": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "isal": {
