@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
         -DDPP_BUILD_TEST=OFF
         -DDPP_FORMATTERS=ON
-        -DDPP_NO_CORO=OFF    
+        -DDPP_NO_CORO=OFF
 )
 
 vcpkg_cmake_install()
