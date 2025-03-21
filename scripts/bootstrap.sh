@@ -183,7 +183,7 @@ elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
     vcpkgToolName="vcpkg-glibc"
-elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "Arm64" ]; then
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
     echo "Downloading vcpkg-arm64-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_ARM64_SHA
     vcpkgToolName="vcpkg-glibc-arm64"
