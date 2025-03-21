@@ -1,6 +1,6 @@
 {
   "name": "tinyxml2",
-  "version-semver": "10.1.0",
+  "version-semver": "11.0.0",
   "description": "A simple, small, efficient, C++ XML parser",
   "homepage": "https://github.com/leethomason/tinyxml2",
   "license": "Zlib",

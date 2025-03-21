@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sammycage/plutovg
     REF "v${VERSION}"
-    SHA512 1abf7da813d00987dcf724c50e924659d76d49d13c9e37219ec151f3a7357501ae6b9c220613104623d9021db14eaa6c7cf81a79ecafd589eeaeab50a63f7031
-    HEAD_REF master
+    SHA512 4f472542686f9ee949e6cba621f338128aaaee25e2dfde848713333eedc6de4f896bb55aac4b8296bdada73ae3327da1fd06055ef93acc920ed55bf123731f74
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

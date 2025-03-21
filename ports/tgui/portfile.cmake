@@ -1,5 +1,12 @@
-if(NOT "sdl2" IN_LIST FEATURES AND NOT "sfml" IN_LIST FEATURES)
-    message(FATAL_ERROR "At least one of the backend features must be selected: sdl2 sfml")
+
+set(BACKEND_LST "sfml" "sdl2" "sdl3" "raylib")
+foreach(BACKEND IN LISTS BACKEND_LST)
+    if(BACKEND IN_LIST FEATURES)
+        set(HAS_BACKEND ON)
+    endif()
+endforeach()
+if(NOT HAS_BACKEND)
+    message(FATAL_ERROR "At least one of the backend features must be selected: ${BACKEND_LST}")
 endif()
 
 if(VCPKG_TARGET_IS_ANDROID)

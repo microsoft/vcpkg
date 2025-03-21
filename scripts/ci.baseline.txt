@@ -55,18 +55,11 @@ apr:arm64-android=fail
 apr:x64-android=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
-# needs NDK w/ API level >=24, CI currently has API level 21
-aravis:arm-neon-android=fail
-aravis:arm64-android=fail
-aravis:x64-android=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
 avro-c:arm-neon-android=fail
 avro-c:arm64-android=fail
 avro-c:x64-android=fail
-azure-identity-cpp:arm-neon-android=fail
-azure-identity-cpp:arm64-android=fail
-azure-identity-cpp:x64-android=fail
 # C++20 conformant compiler required
 atliac-minitest:arm64-uwp=fail
 atliac-minitest:x64-linux=fail
@@ -83,13 +76,10 @@ bde:x64-windows-static-md=skip
 bde:x64-windows-static=skip
 bde:x64-windows=skip
 bde:x86-windows=skip
-benchmark:arm-neon-android=fail
-bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
-bit7z:arm-neon-android=fail
 ################################################################
 # <BLAS+LAPACK>
 # These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
@@ -265,10 +255,7 @@ cserialport:arm64-android=fail
 cserialport:x64-android=fail
 ctbench:arm64-osx=fail
 ctbench:x64-osx=fail
-# Needs android-28 (hidden before NDK r26)
-cyclonedds:arm-neon-android=fail
-cyclonedds:arm64-android=fail
-cyclonedds:x64-android=fail
+ctp:x64-android=fail
 czmq:arm-neon-android=fail
 czmq:arm64-android=fail
 czmq:x64-android=fail
@@ -320,12 +307,7 @@ elfutils:arm64-android=fail
 elfutils:arm64-osx=fail
 elfutils:x64-android=fail
 elfutils:x64-osx=fail
-evpp:arm-neon-android=fail
-evpp:arm64-android=fail
-evpp:x64-android=fail
 fastdds:arm-neon-android=fail
-fastdds:arm64-android=fail
-fastdds:x64-android=fail
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
@@ -354,9 +336,6 @@ fluidlite:x64-windows-static-md=skip
 fluidlite:x64-windows-static=skip
 fluidlite:x64-windows=skip
 fluidlite:x86-windows=skip
-fmem:arm-neon-android=fail
-fmem:arm64-android=fail
-fmem:x64-android=fail
 fmi4cpp:arm64-uwp=fail
 fmi4cpp:x64-uwp=fail
 folly:arm64-android=fail
@@ -446,10 +425,10 @@ gz-tools:arm-neon-android=fail
 gz-tools:arm64-android=fail
 gz-tools:x64-android=fail
 halide:x64-windows-static=fail
+hello-imgui:arm-neon-android=fail
+hello-imgui:arm64-android=fail
+hello-imgui:x64-android=fail
 hexl:x64-android=fail
-highs:arm-neon-android=fail
-highs:arm64-android=fail
-highs:x64-android=fail
 hpx:x64-windows-static=fail
 hwloc:arm-neon-android=fail
 hwloc:arm64-android=fail
@@ -512,27 +491,15 @@ lcm:x64-windows-static=fail
 leptonica:arm64-uwp=fail
 leptonica:x64-uwp=fail
 libaiff:x64-linux=fail
-libbson:arm-neon-android=fail
-libbson:arm64-android=fail
-libbson:x64-android=fail
-# needs android-28
-libcaer:arm-neon-android=fail
-libcaer:arm64-android=fail
-libcaer:x64-android=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
 libcpplocate:arm-neon-android=fail
 libcpplocate:arm64-android=fail
 libcpplocate:x64-android=fail
-libcrafter:arm-neon-android=fail
-libcrafter:arm64-android=fail
-libcrafter:x64-android=fail
 libdc1394:arm-neon-android=fail
 libdc1394:arm64-android=fail
 libdc1394:x64-android=fail
-# 32-bit needs android-24
-libflac:arm-neon-android=fail
 libfreenect2:arm64-windows-static-md=fail
 libfreenect2:arm64-windows=fail
 # error: call to undeclared function 'mktime_z'
@@ -542,10 +509,6 @@ libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-android=fail
 libgo:x64-osx=fail
-# Missing system libraries on linux to run/prepare autoconf
-libgxps:arm-neon-android=fail
-libgxps:arm64-android=fail
-libgxps:x64-android=fail
 libgxps:x64-windows-static=fail
 libhdfs3:arm-neon-android=fail
 libhdfs3:arm64-android=fail
@@ -553,16 +516,9 @@ libhdfs3:arm64-osx=fail
 libhdfs3:x64-android=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
-# needs android-24
-libimobiledevice-glue:arm-neon-android=fail
-libimobiledevice-glue:arm64-android=fail
-libimobiledevice-glue:x64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
-liblo:arm-neon-android=fail
-liblo:arm64-android=fail
 liblo:arm64-uwp=fail
-liblo:x64-android=fail
 liblo:x64-uwp=fail
 # libmariadb conflicts with libmysql
 libmariadb:arm64-osx=skip
@@ -617,8 +573,6 @@ libqcow:x64-windows-static-md=skip
 libqcow:x64-windows-static=skip
 libqcow:x64-windows=skip
 libqcow:x86-windows=skip
-# 32-bit needs android-24
-libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
 libressl:arm64-android=skip
@@ -647,10 +601,6 @@ libtomcrypt:arm64-windows-static-md=fail
 libtomcrypt:arm64-windows=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
-# needs android-26
-libvhdi:arm-neon-android=fail
-libvhdi:arm64-android=fail
-libvhdi:x64-android=fail
 # upstream issue https://github.com/microsoft/vcpkg/pull/13765#issuecomment-699710253
 libvmdk:arm-neon-android=skip
 libvmdk:arm64-android=skip
@@ -675,14 +625,10 @@ libxt:x64-windows=fail
 # Inline asm used doesn't appear to support arm64-windows:
 libxt:arm64-windows-static-md=fail
 libxt:arm64-windows=fail
-libzen:arm-neon-android=fail
 linenoise-ng:arm64-uwp=fail
 linenoise-ng:x64-uwp=fail
 linenoise-ng:x64-windows-static-md=fail
-live555:arm-neon-android=fail
-live555:arm64-android=fail
 live555:arm64-uwp=fail
-live555:x64-android=fail
 live555:x64-uwp=fail
 llfio:arm-neon-android=fail
 llfio:arm64-android=fail
@@ -696,8 +642,6 @@ llvm:x64-android=fail
 log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
-# 32-bit needs android-24
-lua:arm-neon-android=fail
 magma:x64-linux=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
@@ -716,7 +660,10 @@ memorymodule:arm-neon-android=fail
 memorymodule:arm64-android=fail
 memorymodule:x64-android=fail
 # Missing dependent libraries.
+mesa:arm-neon-android=fail
+mesa:arm64-android=fail
 mesa:arm64-osx=fail
+mesa:x64-android=fail
 mesa:x64-linux=fail
 mesa:x64-osx=fail
 minifb:arm-neon-android=fail
@@ -774,7 +721,9 @@ mpir:x64-windows=skip
 mpir:x86-windows=skip
 msmpi:arm64-windows-static-md=fail
 msmpi:arm64-windows=fail
-munit:x64-android=fail
+msquic:arm-neon-android=fail
+msquic:arm64-android=fail
+msquic:x64-android=fail
 nana:arm-neon-android=fail
 nana:arm64-android=fail
 nana:arm64-osx=fail
@@ -797,6 +746,7 @@ oatpp-libressl:x64-android=fail
 offscale-libetcd-cpp:arm64-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
+ogre-next:arm-neon-android=fail
 ois:x64-android=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
@@ -852,6 +802,9 @@ optional-bare:x86-windows=skip
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
+outcome:arm-neon-android=fail
+outcome:arm64-android=fail
+outcome:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
 pcl:x64-android=fail
@@ -864,11 +817,6 @@ platform-folders:x64-uwp=fail
 plib:arm-neon-android=fail
 plib:arm64-android=fail
 plib:x64-android=fail
-plplot:arm-neon-android=fail
-plplot:arm64-android=fail
-plplot:arm64-windows-static-md=fail
-plplot:arm64-windows=fail
-plplot:x64-android=fail
 pmdk:x64-android=fail
 pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
@@ -877,19 +825,13 @@ popsift:x64-windows-release=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-windows-static=fail
 popsift:x64-windows=fail
-ptex:arm-neon-android=fail
-ptex:arm64-android=fail
-ptex:x64-android=fail
 python2:arm-neon-android=fail
 python2:arm64-android=fail
 python2:x64-android=fail
 python3:arm-neon-android=fail
 python3:arm64-android=fail
 python3:x64-android=fail
-qpid-proton:arm-neon-android=fail
-qpid-proton:arm64-android=fail
 qpid-proton:arm64-uwp=fail
-qpid-proton:x64-android=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm-neon-android=fail
@@ -921,9 +863,6 @@ qtwayland:x64-osx=skip
 quickfix:arm-neon-android=fail
 quickfix:arm64-android=fail
 qwt-qt6:x64-osx=fail
-rabit:arm-neon-android=fail
-rabit:arm64-android=fail
-rabit:x64-android=fail
 range-v3-vs2015:arm-neon-android=skip
 range-v3-vs2015:arm64-android=skip
 range-v3-vs2015:arm64-osx=skip
@@ -964,9 +903,6 @@ rbdl-orb:x64-windows-static-md=skip
 rbdl-orb:x64-windows-static=skip
 rbdl-orb:x64-windows=skip
 rbdl-orb:x86-windows=skip
-replxx:arm-neon-android=fail
-replxx:arm64-android=fail
-replxx:x64-android=fail
 restbed:arm-neon-android=fail
 restbed:arm64-android=fail
 restbed:arm64-uwp=fail
@@ -1076,7 +1012,6 @@ spscqueue:x64-android=fail
 # sqlpp11-connector-mysql: CI issues resolved by overlay port
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
-stxxl:arm-neon-android=fail
 # _Interlocked* intrinsic functions are not available on x86
 suitesparse-graphblas:x86-windows=fail
 # "ninja: error: failed recompaction: Permission denied"
@@ -1086,10 +1021,6 @@ suitesparse-graphblas:arm64-windows=fail
 # uwp: "unresolved external symbol __imp_RoInitialize referenced in function __scrt_initialize_winrt"
 suitesparse-graphblas:arm64-uwp=fail
 suitesparse-graphblas:x64-uwp=fail
-# Android API level 23 or newer is required for complex math support
-suitesparse-graphblas:arm-neon-android=fail
-suitesparse-graphblas:arm64-android=fail
-suitesparse-graphblas:x64-android=fail
 systemc:arm64-uwp=fail
 systemc:arm64-windows-static-md=fail
 systemc:arm64-windows=fail
@@ -1119,7 +1050,6 @@ tensorflow-cc:x64-osx=skip
 tensorflow:x64-linux=skip
 tensorflow-cc:x64-linux=skip
 
-thorvg:arm-neon-android=fail
 tinycthread:arm-neon-android=fail
 tinycthread:arm64-android=fail
 tinycthread:x64-android=fail
@@ -1137,10 +1067,6 @@ tvision:x64-android=fail
 urho3d:x64-osx=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
-# needs android-24
-usrsctp:arm-neon-android=fail
-usrsctp:arm64-android=fail
-usrsctp:x64-android=fail
 # the version of v8 we have in the repo doesn't support VS2022
 v8:x64-android=fail
 v8:x64-windows-release=fail
@@ -1154,28 +1080,10 @@ vowpal-wabbit:x64-android=fail
 # vst3sdk CMake files work only with the GUI version of Xcode
 vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
-vtk-m:arm-neon-android=fail
-vtk-m:arm64-android=fail
-vtk-m:x64-android=fail
-# Needs android-24 to supply a vulkan loader library
-vulkan:arm-neon-android=fail
-vulkan:arm64-android=fail
-vulkan:x64-android=fail
-vulkan-extensionlayer:arm-neon-android=fail
-vulkan-extensionlayer:arm64-android=fail
-vulkan-extensionlayer:x64-android=fail
 vulkan-extensionlayer:x64-windows-static=fail
-# Needs android-26
-vulkan-validationlayers:arm-neon-android=fail
-vulkan-validationlayers:arm64-android=fail
-vulkan-validationlayers:x64-android=fail
 wasmedge:arm-neon-android=fail
-wasmedge:arm64-android=fail
-wasmedge:x64-android=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
-# 32-bit needs android-24
-wcslib:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows-release=skip
 winpcap:x64-windows=skip

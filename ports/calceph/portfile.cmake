@@ -1,14 +1,14 @@
-set(CALCEPH_HASH 81cddae9fa0d06758dbbb5fae486bd64eb087dc2ebf2d7b17fa89b6689b86e0e84d1412e6852e980ebed00a4c84a3b1b4ac00b89021f6d0bb2f370a98a6dad25)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
     FILENAME "calceph-${VERSION}.tar.gz"
-    SHA512 ${CALCEPH_HASH}
+    SHA512 81cddae9fa0d06758dbbb5fae486bd64eb087dc2ebf2d7b17fa89b6689b86e0e84d1412e6852e980ebed00a4c84a3b1b4ac00b89021f6d0bb2f370a98a6dad25
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        disable-gnu-source.diff
 )
 
 vcpkg_cmake_configure(
@@ -28,4 +28,10 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING_CECILL_B.LIB")
+vcpkg_install_copyright(
+    COMMENT "The CALCEPH library is triple-licensed (CECILL-2.1 OR CECILL-B OR CECILL-C)."
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING_CECILL_V2.1.LIB"
+        "${SOURCE_PATH}/COPYING_CECILL_B.LIB"
+        "${SOURCE_PATH}/COPYING_CECILL_C.LIB"
+)

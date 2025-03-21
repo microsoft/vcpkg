@@ -47,6 +47,13 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
 
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
 
+    # We can assume DOWNLOADS already exists if we are running, but `arg_FILENAME` may have /s in it
+    # where the caller expects subdirectories to be created.
+    get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
+    if (NOT "${directory_component}" STREQUAL "")
+        file(MAKE_DIRECTORY "${DOWNLOADS}/${directory_component}")
+    endif()
+
     if(EXISTS "${downloaded_file_path}")
         if(arg_SKIP_SHA512)
             if(NOT arg_ALWAYS_REDOWNLOAD)
@@ -70,9 +77,12 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
             # into the file name and try again to hopefully not conflict.
             get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
             get_filename_component(extension_component "${arg_FILENAME}" EXT)
-            get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
             string(SUBSTRING "${arg_SHA512}" 0 8 hash)
-            set(arg_FILENAME "${directory_component}${filename_component}-${hash}${extension_component}")
+            set(arg_FILENAME "${filename_component}-${hash}${extension_component}")
+            if (NOT "${directory_component}" STREQUAL "")
+                set(arg_FILENAME "${directory_component}/${arg_FILENAME}")
+            endif()
+
             set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
             if(EXISTS "${downloaded_file_path}")
                 if(_VCPKG_NO_DOWNLOADS)
@@ -104,7 +114,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
         message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
     endif()
 
-    vcpkg_list(SET params "x-download" "${downloaded_file_path}")
+    vcpkg_list(SET params "x-download" "${arg_FILENAME}")
     foreach(url IN LISTS arg_URLS)
         vcpkg_list(APPEND params "--url=${url}")
     endforeach()
@@ -119,7 +129,9 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
         vcpkg_list(APPEND params "--sha512=${arg_SHA512}")
     endif()
 
-    vcpkg_execute_in_download_mode(COMMAND "$ENV{VCPKG_COMMAND}" ${params} RESULT_VARIABLE error_code)
+    # Setting WORKING_DIRECTORY and passing the relative FILENAME allows vcpkg x-download to print
+    # the full relative path if FILENAME has /s in it.
+    vcpkg_execute_in_download_mode(COMMAND "$ENV{VCPKG_COMMAND}" ${params} RESULT_VARIABLE error_code WORKING_DIRECTORY "${DOWNLOADS}")
     if(NOT "${error_code}" EQUAL "0")
         message(FATAL_ERROR "Download failed, halting portfile.")
     endif()

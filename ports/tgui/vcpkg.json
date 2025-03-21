@@ -1,6 +1,7 @@
 {
   "name": "tgui",
   "version": "1.8.0",
+  "port-version": 1,
   "description": "TGUI is an easy to use, cross-platform, C++ GUI for SFML.",
   "homepage": "https://tgui.eu",
   "license": "Zlib",

@@ -4,6 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f0f2251cfb91f48b125299ec910d64181f03c14e683e1d497e2aa3f17713f5c7848247e3b7bdb6cf0dee8d98a7d25e85f7fcc440cbe55401c16fe5d1f0df1a10
     HEAD_REF master
+    PATCHES
+        # temporary patch. It should be removed once the new version of plutosvg is released.
+        fix-plutovg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
