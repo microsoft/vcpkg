@@ -15,7 +15,7 @@ Set-Content -LiteralPath "$PSScriptRoot\vcpkg-tool-metadata.txt" -Value $metadat
     "--url=https://github.com/microsoft/vcpkg-tool/releases/download/$Date/vcpkg-arm64.exe" --skip-sha512
 
 # Linux Binaries
-foreach ($binary in @('macos', 'muslc', 'glibc')) {
+foreach ($binary in @('macos', 'muslc', 'glibc', 'glibc-arm64')) {
     $caps = $binary.ToUpperInvariant()
     & $vcpkg x-download "$PSScriptRoot\vcpkg-$binary" `
       "--url=https://github.com/microsoft/vcpkg-tool/releases/download/$Date/vcpkg-$binary" --skip-sha512
@@ -36,6 +36,7 @@ Remove-Item @(
     "$PSScriptRoot\vcpkg-macos",
     "$PSScriptRoot\vcpkg-muslc",
     "$PSScriptRoot\vcpkg-glibc",
+    "$PSScriptRoot\vcpkg-glibc-arm64",
     "$PSScriptRoot\$sourceName"
 )
 
