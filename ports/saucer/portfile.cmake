@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix_findpkg.patch
 )
-
+vcpkg_find_acquire_program(GIT)
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH} 
     OPTIONS
@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -Dsaucer_serializer=Rflpp
         -Dsaucer_tests=OFF
         -Dsaucer_examples=OFF
+        "-DGIT_EXECUTABLE=${GIT}"
     MAYBE_UNUSED_VARIABLES
         saucer_remote_webview2
 )
@@ -28,4 +29,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/reflectcpp")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/ereignis")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/flagpp")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/lockpp")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
