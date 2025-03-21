@@ -21,6 +21,7 @@ vcpkg_from_github(
         disable-tests-and-examples.patch
         ${SYNC_ZCRX_CHANGES_1}
         ${SYNC_ZCRX_CHANGES_2}
+        add-basic-support.patch # https://github.com/axboe/liburing/commit/d7ec4ce3421fbbdaba07426d589b72e204ac92e9
 )
 
 # https://github.com/axboe/liburing/blob/liburing-2.8/src/Makefile#L13
