@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ffaf5290c..cff390bef 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,6 +6,7 @@
+ # policies up to CMake 3.27
+ cmake_minimum_required(VERSION 3.15...3.27)
+ 
++if(NOT WINDOWS_STORE)  # removed for vcpkg uwp build (arm64 and x64)
+ # set preference for clang compiler and intel compiler over gcc and other compilers
+ include(Platform/${CMAKE_SYSTEM_NAME}-Determine-C OPTIONAL)
+ include(Platform/${CMAKE_SYSTEM_NAME}-C OPTIONAL)
+@@ -14,7 +15,7 @@ set(CMAKE_C_COMPILER_NAMES clang gcc icx cc ${CMAKE_C_COMPILER_NAMES})
+ include(Platform/${CMAKE_SYSTEM_NAME}-Determine-CXX OPTIONAL)
+ include(Platform/${CMAKE_SYSTEM_NAME}-CXX OPTIONAL)
+ set(CMAKE_CXX_COMPILER_NAMES clang++ g++ icpx c++ ${CMAKE_CXX_COMPILER_NAMES})
+-
++endif()
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+ include(set-version)
