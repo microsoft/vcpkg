@@ -4,7 +4,7 @@ index 8a9ec44542..54f000c6d4 100644
 +++ b/source/CMakeLists.txt
 @@ -1,4 +1,5 @@
  # vim: syntax=cmake
-+cmake_minimum_required (VERSION 3.10) # OBJECT libraries require 2.8.8
++cmake_minimum_required (VERSION 3.10)
  if(NOT CMAKE_BUILD_TYPE)
      # default to Release build for GCC builds
      set(CMAKE_BUILD_TYPE Release CACHE STRING
@@ -33,16 +33,7 @@ index 8a9ec44542..54f000c6d4 100644
  endif()
  
 -if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
++if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      set(CLANG 1)
  endif()
  if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
-@@ -617,7 +609,7 @@ endif(ARM64)
- 
- option(WARNINGS_AS_ERRORS "Stop compiles on first warning" OFF)
- if(WARNINGS_AS_ERRORS)
--    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
-         add_definitions(-Werror)
-         add_definitions(-Wno-unused)
-     elseif(MSVC)
