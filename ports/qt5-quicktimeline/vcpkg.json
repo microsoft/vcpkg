@@ -1,0 +1,14 @@
+{
+  "name": "qt5-quicktimeline",
+  "version": "5.15.16",
+  "description": "The Qt Quick Timeline module enables keyframe-based animations and parameterization.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-imageformats"
+  ]
+}
