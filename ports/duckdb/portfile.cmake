@@ -3,11 +3,12 @@ vcpkg_from_github(
         REPO duckdb/duckdb
         REF v${VERSION}
         SHA512 7e2ec4f6d6be6d500b148bd845cc51fe8985190eed8ab6f6fe79012c216cad5592ab3329e2df6b091abcc6ea8937d66f47272baead798c7d711e5d73aa9ffaa7
-        HEAD_REF master
+        HEAD_REF main
     PATCHES
         bigobj.patch
         unvendor_icu_and_find_dependency.patch # https://github.com/duckdb/duckdb/pull/16176 + https://github.com/duckdb/duckdb/pull/16197
         httpfs.patch
+        t-external-icu.patch # from https://github.com/duckdb/duckdb/pull/16676
         )
 
 # Remove vendored dependencies which are not properly namespaced
