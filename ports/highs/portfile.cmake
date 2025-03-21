@@ -6,7 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-hconfig-path.patch
-        fix-compiler.patch
+        fix-uwp.patch
+        fix-cuda.patch
 )
 
 vcpkg_cmake_configure(
@@ -20,7 +21,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tools(TOOL_NAMES highs AUTO_CLEAN)
+
+# the highs tool has a dependency on CLI11 (!uwp), but rest of the library does not
+if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    vcpkg_copy_tools(TOOL_NAMES highs AUTO_CLEAN)
+endif()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/highs")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
