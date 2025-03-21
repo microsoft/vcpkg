@@ -1094,7 +1094,6 @@ wordnet:x64-android=fail
 workflow:arm-neon-android=fail
 workflow:arm64-android=fail
 workflow:x64-android=fail
-workflow:x64-uwp=fail
 wpilib:arm-neon-android=fail # requires full c++20 support
 wpilib:arm64-android=fail # requires full c++20 support
 wpilib:x64-android=fail # requires full c++20 support
