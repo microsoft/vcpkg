@@ -6,7 +6,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 e6c7876c0f3d756f3a6969cad9a8909e535eeaac352f3a721338b9cbd56864bf7414469d29ec843462997815d2ca9d0dab06d38c37cdd4d8feb28ad04d8781b0
+    SHA512 a47d6d9c327d037a05ea43d1d1a06b2fd757cc02a94f7c1a238f35cfc3dfd4ab78d0612790f3a3cca0292c77412a9c2c15c8f24b718f79a857e007e66f07e7cd
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -21,7 +21,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-win-build.patch
         vcpkg-cross-data.patch
         darwin-rpath.patch
-        mingw-strict-ansi.diff # backport of https://github.com/unicode-org/icu/pull/3003
         cleanup_msvc.patch
 )
 
