@@ -25,7 +25,7 @@ index 7945482..1c91277 100644
    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
  )
 -target_link_libraries(ImGui-SFML PUBLIC SFML::Graphics OpenGL::GL)
-+target_link_libraries(ImGui-SFML PUBLIC imgui::imgui SFML::Graphics OpenGL::GL)
++target_link_libraries(ImGui-SFML PUBLIC imgui::imgui SFML::Graphics ${OPENGL_LIBRARIES})
  if(WIN32 AND MINGW)
    target_link_libraries(ImGui-SFML PUBLIC imm32)
  endif()

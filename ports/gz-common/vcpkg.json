@@ -1,6 +1,6 @@
 {
   "name": "gz-common",
-  "version": "5.4.1",
+  "version": "6.0.2",
   "description": "Common libraries for robotics applications",
   "homepage": "https://ignitionrobotics.org/libs/common",
   "license": "Apache-2.0",
@@ -13,9 +13,9 @@
     "ffmpeg",
     "freeimage",
     "gdal",
-    "gts",
     "gz-cmake",
     "gz-math",
+    "gz-utils",
     {
       "name": "ignition-modularscripts",
       "host": true

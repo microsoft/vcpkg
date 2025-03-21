@@ -35,3 +35,15 @@ index 5e93f522..30132c06 100644
      set_target_properties(
          "google_cloud_cpp_${short_name}"
          PROPERTIES EXPORT_NAME google-cloud-cpp::${short_name}
+diff --git a/protos/google/cloud/compute/CMakeLists.txt b/protos/google/cloud/compute/CMakeLists.txt
+index 0a3b1ed..c054bc3 100644
+--- a/protos/google/cloud/compute/CMakeLists.txt
++++ b/protos/google/cloud/compute/CMakeLists.txt
+@@ -56,7 +56,6 @@ google_cloud_cpp_install_proto_library_headers(compute_protos)
+ # `*.proto` files. We achieve this by having this target depend on all proto
+ # libraries. It has to be defined at the top level of the project.
+ add_dependencies(google-cloud-cpp-protos compute_protos)
+-add_dependencies(compute_protos googleapis_download)
+ 
+ # Get the destination directories based on the GNU recommendations.
+ include(GNUInstallDirs)
