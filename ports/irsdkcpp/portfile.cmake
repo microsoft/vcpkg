@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" IRSDKCPP_BUILD_STATIC)
+# string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" IRSDKCPP_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IRSDKCPP_BUILD_SHARED)
 
 vcpkg_cmake_configure(
@@ -17,13 +17,15 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
         -DIRSDKCPP_BUILD_SHARED=${IRSDKCPP_BUILD_SHARED}
-        -DIRSDKCPP_BUILD_STATIC=${IRSDKCPP_BUILD_STATIC}
+        -DIRSDKCPP_BUILD_STATIC=ON
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/irsdkcpp)
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
