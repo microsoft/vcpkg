@@ -1,11 +1,10 @@
 {
   "name": "dpp",
-  "version": "10.1.0",
-  "port-version": 1,
+  "version": "10.1.2",
   "description": "D++ Extremely Lightweight C++ Discord Library.",
   "homepage": "https://dpp.dev/",
   "license": "Apache-2.0",
-  "supports": "(windows & !uwp) | linux | osx",
+  "supports": "(windows & !static & !uwp) | linux | osx",
   "dependencies": [
     "nlohmann-json",
     "openssl",
