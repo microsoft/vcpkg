@@ -6,6 +6,14 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
 
+if (VCPKG_TARGET_IS_XBOX)
+    list(APPEND SCARLETT_PATCH 013-scarlett-support.patch)
+endif()
+
+if (CMAKE_CXX_STANDARD EQUAL 20)
+    list(APPEND CXX_STANDARD_PATCH 014-upgrade_to_cxx_standard_20.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
@@ -23,6 +31,8 @@ vcpkg_from_github(
         010-cmake_export_plugin_as_modules.patch
         011-TBB-2022.patch
         012-fix-find-vulkan.patch
+        ${SCARLETT_PATCH}
+        ${CXX_STANDARD_PATCH}
 )
 
 # Changes accompanying 006-vcpkg_find_spirv-reflect.patch
