@@ -21,7 +21,11 @@
       "description": "Statically link the autocomplete extension into DuckDB"
     },
     "excel": {
-      "description": "Statically link the excel extension into DuckDB"
+      "description": "Statically link the excel extension into DuckDB",
+      "dependencies": [
+        "expat",
+        "minizip-ng"
+      ]
     },
     "httpfs": {
       "description": "Statically link the httpfs extension into DuckDB",

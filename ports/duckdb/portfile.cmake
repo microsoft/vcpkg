@@ -9,7 +9,7 @@ vcpkg_from_github(
         unvendor_icu_and_find_dependency.patch # https://github.com/duckdb/duckdb/pull/16176 + https://github.com/duckdb/duckdb/pull/16197
         extensions.patch
         t-external-icu.patch # from https://github.com/duckdb/duckdb/pull/16676
-        )
+)
 
 # Remove vendored dependencies which are not properly namespaced
 file(REMOVE_RECURSE
@@ -26,6 +26,8 @@ if("excel" IN_LIST FEATURES)
         REF f14e7c3beaf379c54b47b996aa896a1d814e1be8
         SHA512 d2e97cfd59fc08d86f6e4a6fe35dc7dd6435ef1750b334d4b422555987d55eef67a9eb1b1859cacc46addd7a6f848de4e5e092d694fc4ccd7cf24fcf8298012e
         HEAD_REF main
+        PATCHES
+            excel-libname.patch
     )
     file(RENAME "${DUCKDB_EXCCEL_SOURCE_PATH}" "${SOURCE_PATH}/extension/excel")
 endif()
