@@ -5222,7 +5222,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libspnav": {
       "baseline": "0.2.3",
