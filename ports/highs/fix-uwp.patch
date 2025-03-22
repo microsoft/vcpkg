@@ -1,0 +1,16 @@
+diff --git a/app/CMakeLists.txt b/app/CMakeLists.txt
+index e26139c4b..db15778fe 100644
+--- a/app/CMakeLists.txt
++++ b/app/CMakeLists.txt
+@@ -1,3 +1,4 @@
++if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL WindowsStore)
+ if(FAST_BUILD)
+   if (BUILD_CXX)
+     # create highs binary using library without pic
+@@ -68,4 +69,5 @@ endif()
+ if(EMSCRIPTEN AND EMSCRIPTEN_HTML)
+   set(CMAKE_EXECUTABLE_SUFFIX ".html")
+   set_target_properties(highs PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/highs_webdemo_shell.html)
++endif()
+ endif()
+\ No newline at end of file
