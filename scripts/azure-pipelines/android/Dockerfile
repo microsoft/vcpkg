@@ -3,7 +3,7 @@
 FROM ubuntu:noble-20250127
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
-ADD https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.25+9/openlogic-openjdk-11.0.25+9-linux-x64.tar.gz /openlogic-openjdk-11.0.25+9-linux-x64.tar.gz
+ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
 ADD https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip /sdk-commandlinetools-linux-10406996_latest.zip
 ADD https://dl.google.com/android/repository/build-tools_r34-linux.zip /build-tools_r34-linux.zip
 ADD https://dl.google.com/android/repository/platform-34-ext7_r03.zip /platform-34-ext7_r03.zip
@@ -66,8 +66,8 @@ apt-get -y dist-upgrade
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # OpenJDK
-tar xzf openlogic-openjdk-11.0.25+9-linux-x64.tar.gz
-rm openlogic-openjdk-11.0.25+9-linux-x64.tar.gz
+tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
+rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
 
 # Android SDK
 unzip -q sdk-commandlinetools-linux-10406996_latest.zip -d android-sdk
@@ -91,7 +91,7 @@ rm -f android-ndk-r27c-linux.zip
 
 END_OF_SCRIPT
 
-ENV JAVA_HOME /openlogic-openjdk-11.0.25+9-linux-x64
+ENV JAVA_HOME /jdk-17.0.14+7
 
 ENV ANDROID_HOME /android-sdk
 
