@@ -3816,6 +3816,10 @@
       "baseline": "0",
       "port-version": 1
     },
+    "irsdkcpp": {
+      "baseline": "1.0.5",
+      "port-version": 0
+    },
     "isal": {
       "baseline": "2.30.0",
       "port-version": 0
