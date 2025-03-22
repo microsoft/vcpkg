@@ -2337,11 +2337,11 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-20",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-20",
       "port-version": 0
     },
     "dirent": {
@@ -3021,7 +3021,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "0.2303.22621.3038",
+      "baseline": "1.0.26100.3987",
       "port-version": 0
     },
     "gamenetworkingsockets": {
