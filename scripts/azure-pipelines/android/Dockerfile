@@ -85,6 +85,10 @@ find android-sdk/platforms -type f -exec chmod o+r '{}' ';'
 unzip -q platform-tools_r35.0.1-linux.zip -d android-sdk
 rm platform-tools_r35.0.1-linux.zip
 
+# JRE for sdk setup
+export JAVA_HOME=/jdk-17.0.14+7
+yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses
+
 # Android NDK
 unzip -q /android-ndk-r27c-linux.zip
 rm -f android-ndk-r27c-linux.zip
