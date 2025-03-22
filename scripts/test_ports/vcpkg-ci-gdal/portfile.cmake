@@ -1,6 +1,6 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-file(COPY_FILE "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/gdal.pc" "${CURRENT_BUILDTREES_DIR}/gdal.pc.log")
+file(COPY_FILE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/gdal.pc" "${CURRENT_BUILDTREES_DIR}/gdal.pc.log")
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
