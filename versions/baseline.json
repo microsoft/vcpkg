@@ -693,7 +693,7 @@
       "port-version": 0
     },
     "blake3": {
-      "baseline": "1.6.0",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "blas": {
@@ -2337,11 +2337,11 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-20",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-20",
       "port-version": 0
     },
     "dirent": {
@@ -2797,7 +2797,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.03.10.00",
+      "baseline": "2025.03.17.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2885,7 +2885,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.03.10.00",
+      "baseline": "2025.03.17.00",
       "port-version": 0
     },
     "font-chef": {
@@ -2926,7 +2926,7 @@
     },
     "freeglut": {
       "baseline": "3.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "freeimage": {
       "baseline": "3.18.0",
@@ -3021,7 +3021,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "0.2303.22621.3038",
+      "baseline": "1.0.26100.3987",
       "port-version": 0
     },
     "gamenetworkingsockets": {
@@ -5222,7 +5222,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -5277,7 +5277,7 @@
       "port-version": 1
     },
     "libtcod": {
-      "baseline": "1.24.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "libtess2": {
@@ -6305,7 +6305,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.03.10.00",
+      "baseline": "2025.03.17.00",
       "port-version": 0
     },
     "mygui": {
@@ -6882,7 +6882,7 @@
     },
     "openvdb": {
       "baseline": "12.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvino": {
       "baseline": "2025.0.0",
@@ -7198,7 +7198,7 @@
     },
     "plplot": {
       "baseline": "5.15.0",
-      "port-version": 4
+      "port-version": 5
     },
     "plustache": {
       "baseline": "0.4.0",
@@ -7377,7 +7377,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.03.10.00",
+      "baseline": "2025.03.17.00",
       "port-version": 0
     },
     "psimd": {
@@ -7425,7 +7425,7 @@
       "port-version": 2
     },
     "pulzed-mini": {
-      "baseline": "0.9.14",
+      "baseline": "0.9.17",
       "port-version": 0
     },
     "pybind11": {
@@ -9465,7 +9465,7 @@
       "port-version": 0
     },
     "upa-url": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "urdfdom": {
@@ -9821,7 +9821,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.03.10.00",
+      "baseline": "2025.03.17.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9921,7 +9921,7 @@
       "port-version": 0
     },
     "wintoast": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.1",
       "port-version": 0
     },
     "wmipp": {

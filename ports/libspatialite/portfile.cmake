@@ -160,6 +160,8 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         # Avoid system libs (as detected by cmake) in exported pc files
         set(SYSTEM_LIBS "")
+    elseif(VCPKG_TARGET_IS_ANDROID)
+        set(SYSTEM_LIBS "\$LIBS -llog")
     else()
         set(SYSTEM_LIBS "\$LIBS")
     endif()
