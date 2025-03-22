@@ -38,16 +38,12 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
 endif()
 
-foreach (FEATURE ${FEATURE_OPTIONS})
-    message(STATUS "${FEATURE}")
-endforeach()
-
 set(USE_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
     set(USE_CUDA ON)
 endif()
 
-set(TARGET_OPTIONS )
+set(TARGET_OPTIONS "")
 if(VCPKG_TARGET_IS_IOS)
     # Note: CMake uses "OSX" not just for macOS, but also iOS, watchOS and tvOS.
     list(APPEND TARGET_OPTIONS "-DIOS_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
