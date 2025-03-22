@@ -1,0 +1,12 @@
+diff --git a/cmake/Findplutosvg.cmake b/cmake/Findplutosvg.cmake
+index a3c6832..d7c0496 100644
+--- a/cmake/Findplutosvg.cmake
++++ b/cmake/Findplutosvg.cmake
+@@ -11,7 +11,6 @@ find_library(plutosvg_LIBRARY
+ 
+ find_path(plutosvg_INCLUDE_PATH
+     NAMES plutosvg.h
+-    PATH_SUFFIXES plutosvg
+     HINTS ${PC_PLUTOSVG_INCLUDEDIR}
+ )
+ 
