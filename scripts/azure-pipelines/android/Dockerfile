@@ -86,7 +86,7 @@ unzip -q platform-tools_r35.0.1-linux.zip -d android-sdk
 rm platform-tools_r35.0.1-linux.zip
 
 # Android NDK
-unzip /android-ndk-r27c-linux.zip
+unzip -q /android-ndk-r27c-linux.zip
 rm -f android-ndk-r27c-linux.zip
 
 END_OF_SCRIPT
