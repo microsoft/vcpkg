@@ -47,10 +47,10 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
 
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
 
-    # We can assume DOWNLOADS already exists if we are running, but `arg_FILENAME` may have /s in it
-    # where the caller expects subdirectories to be created.
     get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
-    if (NOT "${directory_component}" STREQUAL "")
+    if ("${directory_component}" STREQUAL "")
+        file(MAKE_DIRECTORY "${DOWNLOADS}")
+    else()
         file(MAKE_DIRECTORY "${DOWNLOADS}/${directory_component}")
     endif()
 
