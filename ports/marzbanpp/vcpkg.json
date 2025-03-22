@@ -5,7 +5,10 @@
   "homepage": "https://github.com/andrascii/marzbanpp",
   "license": "MIT",
   "dependencies": [
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false
+    },
     "cxxopts",
     "date",
     "fmt",
