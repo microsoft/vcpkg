@@ -134,6 +134,37 @@ if ($Triplet -eq 'x64-windows-release') {
     $tripletSwitch = "--triplet=$Triplet"
 }
 
+if ($Triplet -match 'android') {
+    Write-Host "Downloading the JRE"
+    $JREVersion = '17.0.13+11' # for sdkmanager
+    $JREFile = "openlogic-openjdk-jre-$JREVersion-linux-x64.tar.gz"
+    $JREUrl = "https://builds.openlogic.com/downloadJDK/openlogic-openjdk-jre/$JREVersion/$JREFile"
+    & "./vcpkg" x-download $JREFile "--sha512=5ef4d02923e24875d80a920a3c1c55b45f958f579c38bffe42bd02afc67ea16c3f67bcbe994bbce72fd98584485ef108d7aec8a2e90fc4df9402e0201420eb10" "--url=$JREUrl" @cachingArgs
+
+    $java_home_bak = $env:JAVA_HOME
+    $env:JAVA_HOME = Join-Path $Pwd "openlogic-openjdk-jre-$JREVersion-linux-x64"
+    Write-Host "Setting up the JRE in $env:JAVA_HOME"
+    & tar -xzf $JREFile
+
+    & bash -c 'ls -la "$ANDROID_HOME/platforms" "$ANDROID_HOME/platforms/android-34"'
+    Write-Host "Fixing SDK root"
+    & bash -c 'cp -a "$ANDROID_HOME" android-sdk-rw ; rm -Rf android-sdk-rw/platforms'
+    $filename = 'platform-34-ext7_r03.zip'
+    Write-Host "Adding $filename"
+    & "./vcpkg" x-download $filename "--sha512=7d7feb2b04326578cc37fd80e9a8b604aa8bcd8360de160eadedf2a5f28f62a809d3bd6e386d72ba9d32cacbf0a0e3417d54c4195d5091d86d40b29404b222bb" "--url=https://dl.google.com/android/repository/$filename"
+    New-Item -Name android-sdk-rw/platforms -Type Directory
+    & unzip -q $filename -d android-sdk-rw/platforms
+    $env:ANDROID_HOME = Join-Path $Pwd "android-sdk-rw"
+
+    Write-Host "Completing SDK setup"
+    & bash -c '"$ANDROID_HOME/cmdline-tools/bin/sdkmanager" "--sdk_root=$ANDROID_HOME" --list_installed --verbose'
+    Write-Host "##[group]SDK licenses"
+    & bash -c 'yes | "$ANDROID_HOME/cmdline-tools/bin/sdkmanager" "--sdk_root=$ANDROID_HOME" --licenses'
+    Write-Host "##[endgroup]"
+
+    $env:JAVA_HOME = $java_home_bak
+}
+
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
