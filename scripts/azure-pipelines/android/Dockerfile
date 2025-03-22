@@ -63,6 +63,9 @@ rm -f packages-microsoft-prod.deb
 apt-get -y update
 apt-get -y dist-upgrade
 
+## required by qtwayland (transitive dependency)
+APT_PACKAGES="$APT_PACKAGES libwayland-dev"
+
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # OpenJDK
