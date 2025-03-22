@@ -58,7 +58,6 @@ apt-get -y --no-install-recommends install ca-certificates
 ## PowerShell
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
-add-apt-repository universe
 
 # Run apt things
 apt-get -y update
