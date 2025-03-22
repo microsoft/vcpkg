@@ -7690,7 +7690,7 @@
     },
     "qtapplicationmanager": {
       "baseline": "6.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtbase": {
       "baseline": "6.8.2",
