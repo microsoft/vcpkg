@@ -10,10 +10,11 @@ vcpkg_from_github(
         "fix-encoding.patch"
         "enable-static.patch"
         "enable-unicode-for-vcpkg.patch"
+        "disable_demos.patch"
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/DuiLib"
+    SOURCE_PATH "${SOURCE_PATH}"
     NO_CHARSET_FLAG
 )
 

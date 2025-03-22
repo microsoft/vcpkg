@@ -6,6 +6,7 @@ vcpkg_from_sourceforge(
     SHA512 0cdbd46ccd048d70bea3c35d22080dc5dd21fc3b9c415fe464847e60775954f57e9c8344506f0f94f16e90e8bdaa9cc6d84d3aa65191501e52ee8dfc639f0398
     PATCHES
         fix_link_msvcrt.patch
+        fix-cmake4.patch
 )
 
 vcpkg_cmake_configure(
