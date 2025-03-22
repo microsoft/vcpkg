@@ -860,6 +860,10 @@ qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:arm64-osx=skip
 qt5-x11extras:x64-osx=skip
+# Transitive need for host libwayland-dev
+qtapplicationmanager:arm-neon-android=skip
+qtapplicationmanager:arm64-android=skip
+qtapplicationmanager:x64-android=skip
 qtmultimedia:arm-neon-android=fail
 qtmultimedia:arm64-android=fail
 qtmultimedia:x64-android=fail
