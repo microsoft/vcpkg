@@ -1,28 +1,34 @@
 diff --git a/cmake/FindFreeImage.cmake b/cmake/FindFreeImage.cmake
-index 8a5836e..7f926cc 100644
+index 8a5836e..d7e41d2 100644
 --- a/cmake/FindFreeImage.cmake
 +++ b/cmake/FindFreeImage.cmake
-@@ -23,7 +23,17 @@ set(minor_version ${FreeImage_FIND_VERSION_MINOR})
+@@ -23,7 +23,23 @@ set(minor_version ${FreeImage_FIND_VERSION_MINOR})
  # Set the full version number
  set(full_version ${major_version}.${minor_version})
  
 -if (NOT WIN32)
-+if(FreeImage_FOUND)
-+  # done  
-+elseif(1)
-+  find_package(freeimage CONFIG)
++if(1)
++  find_package(freeimage CONFIG) # not using NAMES to avoid version check
 +  if(freeimage_FOUND)
 +    set(FreeImage_FOUND 1)
 +    set(FreeImage_LIBRARIES freeimage::FreeImage)
 +    include(GzImportTarget)
 +    gz_import_target(FreeImage INTERFACE)
++    # sorry, no transitive link libs for pkgconfig
++    include(GzPkgConfig)
++    find_library(FreeImage_LIBRARY NAMES FreeImage FreeImaged NAMES_PER_DIR)
++    if(FreeImage_LIBRARY MATCHES "FreeImaged[^/]*\$")
++      gz_pkg_config_library_entry(FreeImage "FreeImaged")
++    else()
++      gz_pkg_config_library_entry(FreeImage "FreeImage")
++    endif()
 +  endif()
 +elseif(0)
    include(GzPkgConfig)
    gz_pkg_config_library_entry(FreeImage freeimage)
  
 diff --git a/cmake/FindGTS.cmake b/cmake/FindGTS.cmake
-index b400483..77f1247 100644
+index b400483..48cf9f7 100644
 --- a/cmake/FindGTS.cmake
 +++ b/cmake/FindGTS.cmake
 @@ -16,7 +16,7 @@
@@ -30,12 +36,12 @@ index b400483..77f1247 100644
  # Find GNU Triangulation Surface Library
  
 -if (NOT WIN32)
-+if (1)
++if(1)
    # Configuration using pkg-config modules
    include(GzPkgConfig)
    gz_pkg_check_modules(GTS gts)
 diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
-index 70f7a76..4a334d9 100644
+index 70f7a76..e39a3fd 100644
 --- a/cmake/FindGzBullet.cmake
 +++ b/cmake/FindGzBullet.cmake
 @@ -31,7 +31,7 @@ endif()
@@ -43,28 +49,17 @@ index 70f7a76..4a334d9 100644
  # CMake. Otherwise, we may end up using the BulletConfig.cmake file distributed
  # with Bullet, which uses relative paths and may break transitive dependencies.
 -find_package(Bullet MODULE ${gz_quiet_arg})
-+find_package(Bullet CONFIG REQUIRED)
++find_package(BULLET NAMES Bullet ${gz_quiet_arg})
  
  set(GzBullet_FOUND false)
  # create Bullet target
-@@ -39,6 +39,7 @@ if(BULLET_FOUND)
-   set(GzBullet_FOUND true)
- 
-   gz_import_target(GzBullet
-+    INTERFACE
-     TARGET_NAME GzBullet::GzBullet
-     LIB_VAR BULLET_LIBRARIES
-     INCLUDE_VAR BULLET_INCLUDE_DIRS
 diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
-index 2decd84..3b71698 100644
+index 2decd84..dd2c2c2 100644
 --- a/cmake/FindGzOGRE2.cmake
 +++ b/cmake/FindGzOGRE2.cmake
-@@ -144,9 +144,9 @@ macro(get_preprocessor_entry CONTENTS KEYWORD VARIABLE)
- endmacro()
- 
+@@ -146,7 +146,7 @@ endmacro()
  find_package(PkgConfig QUIET)
--if (PkgConfig_FOUND)
-+if (UNIX AND NOT APPLE)
+ if (PkgConfig_FOUND)
    set(PKG_CONFIG_PATH_ORIGINAL $ENV{PKG_CONFIG_PATH})
 -  foreach (GZ_OGRE2_PROJECT_NAME "OGRE2" "OGRE-Next")
 +  foreach (GZ_OGRE2_PROJECT_NAME "OGRE-Next")
@@ -79,33 +74,49 @@ index 2decd84..3b71698 100644
        set(OGRE2_LIBRARIES ${${GZ_OGRE2_PROJECT_NAME}_LIBRARIES})  # sync possible Ogre-Next ot OGRE2
      else()
        # look for OGRE2 installed from source
-@@ -309,6 +310,8 @@ if (PkgConfig_FOUND)
+@@ -264,10 +265,10 @@ if (PkgConfig_FOUND)
+       get_filename_component(dir_name "${dir}" NAME)
+       if ("${dir_name}" STREQUAL ${GZ_PKG_NAME})
+         set(dir_include "${dir}/RenderSystems/GL3Plus")
+-      else()
+-        set(dir_include "${dir}")
++        if(EXISTS "${dir_include}")
++          list(APPEND OGRE2_INCLUDE_DIRS "${dir_include}")
++        endif()
+       endif()
+-      list(APPEND OGRE2_INCLUDE_DIRS ${dir_include})
+     endforeach()
+ 
+     file(READ ${OGRE2_INCLUDE}/OgrePrerequisites.h OGRE_TEMP_VERSION_CONTENT)
+@@ -309,6 +310,9 @@ if (PkgConfig_FOUND)
            "${OGRE2LIBNAME}${component}_d"
            "${OGRE2LIBNAME}${component}.${OGRE2_VERSION}"
            "${OGRE2LIBNAME}${component}"
 +          "${OGRE2LIBNAME}${component}Static"
-+          "${OGRE2LIBNAME}${component}Static_d"          
++          "${OGRE2LIBNAME}${component}Static_d"
++        NAMES_PER_DIR
          HINTS ${OGRE2_LIBRARY_DIRS})
        if (NOT "${OGRE2-${component}}" STREQUAL "OGRE2-${component}-NOTFOUND")
          message(STATUS "  + component ${component}: found")
-@@ -404,13 +407,21 @@ else() #PkgConfig_FOUND
+@@ -400,17 +404,22 @@ else() #PkgConfig_FOUND
+   set(OGRE2_VERSION_MINOR "")
+   set(OGRE2_RESOURCE_PATH "")
+ 
+-  set(OGRE2_SEARCH_VER "OGRE-${GzOGRE2_FIND_VERSION_MAJOR}.${GzOGRE2_FIND_VERSION_MINOR}")
++  set(OGRE2_SEARCH_VER "OGRE-Next")
    set(OGRE2_PATHS "")
    set(OGRE2_INC_PATHS "")
    foreach(_rootPath ${VCPKG_CMAKE_FIND_ROOT_PATH})
 -      list(APPEND OGRE2_PATHS "${_rootPath}/lib/${OGRE2_SEARCH_VER}/")
 -      list(APPEND OGRE2_PATHS "${_rootPath}/lib/${OGRE2_SEARCH_VER}/manual-link/")
--      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/${OGRE2_SEARCH_VER}")
-+      get_filename_component(debug_dir "${_rootPath}" NAME)
-+      if(debug_dir MATCHES "debug" AND CMAKE_BUILD_TYPE MATCHES Debug OR NOT debug_dir MATCHES "debug" AND CMAKE_BUILD_TYPE MATCHES Release)
-+        list(APPEND OGRE2_PATHS "${_rootPath}/lib/")
-+        list(APPEND OGRE2_PATHS "${_rootPath}/lib/manual-link/")
-+      endif()
-+      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/OGRE-Next")
++      list(APPEND OGRE2_PATHS "${_rootPath}/lib")
++      list(APPEND OGRE2_PATHS "${_rootPath}/lib/manual-link")
+       list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/${OGRE2_SEARCH_VER}")
    endforeach()
  
    find_library(OGRE2_LIBRARY
 -    NAMES "OgreMain"
-+    NAMES 
++    NAMES
 +     "OgreNextMain"
 +     "OgreNextMainStatic"
 +     "OgreNextMain_d"
@@ -114,7 +125,7 @@ index 2decd84..3b71698 100644
      HINTS ${OGRE2_PATHS}
      NO_DEFAULT_PATH)
  
-@@ -450,8 +461,11 @@ else() #PkgConfig_FOUND
+@@ -450,8 +459,11 @@ else() #PkgConfig_FOUND
  
        find_library(${PREFIX}_LIBRARY
            NAMES
@@ -124,19 +135,19 @@ index 2decd84..3b71698 100644
 +              "OgreNext${COMPONENT}_d"
 +              "OgreNext${COMPONENT}Static"
 +              "OgreNext${COMPONENT}Static_d"
-+              NAMES_PER_DIR
++          NAMES_PER_DIR
            HINTS
                ${OGRE2_LIBRARY_DIRS}
            NO_DEFAULT_PATH)
-@@ -510,6 +524,7 @@ else() #PkgConfig_FOUND
-   ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
-   ogre_find_plugin(RenderSystem_GL3Plus OgreGL3PlusRenderSystem.h RenderSystems/GL3Plus/include)
-   ogre_find_plugin(RenderSystem_Direct3D11 OgreD3D11RenderSystem.h RenderSystems/Direct3D11/include)
+@@ -506,6 +518,7 @@ else() #PkgConfig_FOUND
+   ogre_find_component(Overlay OgreOverlaySystem.h "Overlay")
+   ogre_find_component(HlmsPbs OgreHlmsPbs.h Hlms/Pbs/)
+   ogre_find_component(HlmsUnlit OgreHlmsUnlit.h Hlms/Unlit)
 +  ogre_find_component(PlanarReflections OgrePlanarReflections.h PlanarReflections)
  
-   foreach(component ${GzOGRE2_FIND_COMPONENTS})
-     set(PREFIX OGRE2_${component})
-@@ -521,7 +536,7 @@ else() #PkgConfig_FOUND
+   ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
+   ogre_find_plugin(RenderSystem_GL3Plus OgreGL3PlusRenderSystem.h RenderSystems/GL3Plus/include)
+@@ -521,7 +534,7 @@ else() #PkgConfig_FOUND
        if(${HLMS_POS} GREATER -1)
          foreach (dir ${OGRE2_INCLUDE_DIRS})
            get_filename_component(dir_name "${dir}" NAME)
@@ -145,56 +156,3 @@ index 2decd84..3b71698 100644
              set(dir_include "${dir}/Hlms/Common")
              if (EXISTS ${dir_include})
                list(APPEND component_INCLUDE_DIRS ${dir_include})
-diff --git a/cmake/FindTINYXML2.cmake b/cmake/FindTINYXML2.cmake
-index 5a5a147..68ba2a3 100644
---- a/cmake/FindTINYXML2.cmake
-+++ b/cmake/FindTINYXML2.cmake
-@@ -18,11 +18,16 @@
- 
- include(GzPkgConfig)
- 
--# Use pkg_check_modules to start
--gz_pkg_check_modules_quiet(TINYXML2 tinyxml2)
- 
- # If that failed, then fall back to manual detection (necessary for MacOS)
- if(NOT TINYXML2_FOUND)
-+  find_package(TINYXML2 NAMES tinyxml2)
-+  if(TINYXML2_FOUND)
-+    set(TINYXML2_LIBRARIES tinyxml2::tinyxml2)
-+    include(GzImportTarget)
-+    gz_import_target(TINYXML2 INTERFACE)
-+  endif()
-+elseif(0)
- 
-   if(NOT TINYXML2_FIND_QUIETLY)
-     message(STATUS "Attempting manual search for tinyxml2")
-diff --git a/cmake/GzFindPackage.cmake b/cmake/GzFindPackage.cmake
-index 93da803..22fdec8 100644
---- a/cmake/GzFindPackage.cmake
-+++ b/cmake/GzFindPackage.cmake
-@@ -163,6 +163,7 @@ macro(gz_find_package PACKAGE_NAME_)
-   # Parse the arguments
-   _gz_cmake_parse_arguments(gz_find_package "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
- 
-+  include("${CMAKE_CURRENT_LIST_DIR}/vcpkg/${PACKAGE_NAME}.cmake" OPTIONAL)
-   #------------------------------------
-   # Construct the arguments to pass to find_package
-   set(${PACKAGE_NAME}_find_package_args ${PACKAGE_NAME})
-@@ -177,6 +178,8 @@ macro(gz_find_package PACKAGE_NAME_)
- 
-   if(gz_find_package_EXACT)
-     list(APPEND ${PACKAGE_NAME}_find_package_args EXACT)
-+  elseif(gz_find_package_VERSION AND NOT gz_find_package_PKGCONFIG_VER_COMPARISON)
-+    set(gz_find_package_PKGCONFIG_VER_COMPARISON >=)
-   endif()
- 
-   if(gz_find_package_CONFIG)
-@@ -344,7 +347,7 @@ macro(gz_find_package PACKAGE_NAME_)
-       # ${component}_CMAKE_DEPENDENCIES variables that are specific to those
-       # componenets
-       foreach(component ${gz_find_package_REQUIRED_BY})
--        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE)
-+        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE OR NOT BUILD_SHARED_LIBS)
-           gz_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
-         endif()
-       endforeach()
