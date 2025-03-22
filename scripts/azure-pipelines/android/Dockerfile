@@ -45,6 +45,8 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
 ENV APT_PACKAGES="$APT_PACKAGES powershell"
 
 RUN <<END_OF_SCRIPT bash
+set -e
+
 export DEBIAN_FRONTEND=noninteractive
 
 # Apt prereqs itself
