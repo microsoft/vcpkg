@@ -409,6 +409,11 @@ foreach(_config debug release)
         endif()
     endforeach()
 endforeach()
+if(VCPKG_CROSSCOMPILING AND NOT CMAKE_HOST_WIN32)
+    foreach(name IN ITEMS qmake qmake6 qtpaths qtpaths6)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${name}" "${CURRENT_HOST_INSTALLED_DIR}/" "\"\$script_dir_path\"/../../../../${HOST_TRIPLET}/")
+    endforeach()
+endif()
 
 # Fixup qt.toolchain.cmake
 set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
@@ -583,10 +588,4 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endforeach()
   file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
-endif()
-
-if(VCPKG_TARGET_IS_ANDROID) # or crosscompiling?
-    foreach(name IN ITEMS qmake qmake6 qtpaths qtpaths6)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${name}" "${CURRENT_HOST_INSTALLED_DIR}/" "\"\$script_dir_path\"/../../../../${HOST_TRIPLET}/")
-    endforeach()
 endif()
