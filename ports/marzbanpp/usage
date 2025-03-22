@@ -1,0 +1,4 @@
+marzbanpp provides CMake targets:
+
+  find_package(marzbanpp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE marzbanpp::marzbanpp)
