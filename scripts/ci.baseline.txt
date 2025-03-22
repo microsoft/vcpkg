@@ -45,10 +45,6 @@ ace:arm64-android=fail
 ace:x64-android=fail
 # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 ada-url:x64-linux=fail
-# Needs SDK (in ENV{ANDROID_HOME})
-allegro5:arm-neon-android=fail
-allegro5:arm64-android=fail
-allegro5:x64-android=fail
 angelscript:x64-osx=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
