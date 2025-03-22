@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO andrascii/marzbanpp
     REF "1.0.1"
-    SHA512 8db3ca283d119efadf9f9ba5d573263c92402a2dda82683499918a5889ddff502a0bcff0658a26b927f2d3a373e42dbcf59cf7aad2fab6313210eb39fff78b00
+    SHA512 c3b0b9d89a877cf5f2cdfe1d5dd70282e96c0bf2a676bfbfac11b421d7a623ffa8c5618429d2f1037164c1ba7fa500247065226efb1268348c2df8ee106da1c7
     HEAD_REF marzbanpp
 )
 
