@@ -78,6 +78,8 @@ rm build-tools_r34-linux.zip
 
 unzip -q platform-34-ext7_r03.zip -d android-sdk/platforms
 rm platform-34-ext7_r03.zip
+find android-sdk/platforms -type d -exec chmod o+rx '{}' ';'
+find android-sdk/platforms -type f -exec chmod o+r '{}' ';'
 
 unzip -q platform-tools_r35.0.1-linux.zip -d android-sdk
 rm platform-tools_r35.0.1-linux.zip
