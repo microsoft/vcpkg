@@ -2886,7 +2886,7 @@
     },
     "folly": {
       "baseline": "2025.03.17.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -5353,7 +5353,7 @@
       "port-version": 3
     },
     "liburing": {
-      "baseline": "2.8",
+      "baseline": "2.9",
       "port-version": 0
     },
     "libusb": {
