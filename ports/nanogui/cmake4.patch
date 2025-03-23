@@ -11,3 +11,12 @@ index 22dc16fc59..894fcce2ad 100644
    CHECK_CXX_COMPILER_FLAG("-std=c++14" HAS_CPP14_FLAG)
    CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CPP11_FLAG)
  
+@@ -131,7 +131,7 @@ endif()
+ 
+ # Various optimizations for shared library release builds
+ if (NANOGUI_BUILD_SHARED)
+-  if (U_CMAKE_BUILD_TYPE MATCHES REL AND CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
++  if (U_CMAKE_BUILD_TYPE MATCHES REL AND CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+     # Set the default symbol visibility to hidden
+     if (NOT CMAKE_CXX_FLAGS MATCHES "-fvisibility")
+       set(CMAKE_CXX_FLAGS "-fvisibility=hidden ${CMAKE_CXX_FLAGS}")
