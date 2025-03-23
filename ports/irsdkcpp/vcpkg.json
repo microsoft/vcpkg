@@ -1,9 +1,9 @@
 {
   "name": "irsdkcpp",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "iRacing Modern C++ SDK",
   "license": "MIT",
-  "supports": "windows & x64",
+  "supports": "windows & !uwp & x64",
   "dependencies": [
     {
       "name": "fmt",
