@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Fidelxyz/DXCam-CPP",
   "documentation": "https://dxcam-cpp.readthedocs.io/en/latest/",
   "license": "MIT",
-  "supports": "windows",
+  "supports": "windows & !uwp",
   "dependencies": [
     "opencv4",
     {
