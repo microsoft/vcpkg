@@ -217,6 +217,14 @@ function(qt_cmake_configure)
             INPUT_xcb
             INPUT_xkbcommon
     )
+    foreach(suffix IN ITEMS dbg rel)
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix}/config.summary")
+            file(COPY_FILE
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix}/config.summary"
+                "${CURRENT_BUILDTREES_DIR}/config.summary-${TARGET_TRIPLET}-${suffix}.log"
+            )
+        endif()
+    endforeach()
 endfunction()
 
 function(qt_fix_prl_files)
