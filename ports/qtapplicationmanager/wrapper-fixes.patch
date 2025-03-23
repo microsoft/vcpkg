@@ -1,5 +1,5 @@
 diff --git a/cmake/FindWrapLibArchive.cmake b/cmake/FindWrapLibArchive.cmake
-index 67e4ce0..887b766 100644
+index 58c13f4..7be4931 100644
 --- a/cmake/FindWrapLibArchive.cmake
 +++ b/cmake/FindWrapLibArchive.cmake
 @@ -16,3 +16,24 @@ add_library(WrapLibArchive::WrapLibArchive INTERFACE IMPORTED)
@@ -27,30 +27,34 @@ index 67e4ce0..887b766 100644
 +if(TARGET ZLIB::ZLIB)
 +	set_property(TARGET ZLIB::ZLIB PROPERTY _qt_no_promote_global TRUE)
 +endif()
+diff --git a/cmake/FindWrapLibSystemd.cmake b/cmake/FindWrapLibSystemd.cmake
+index c681dae..c6252b1 100644
+--- a/cmake/FindWrapLibSystemd.cmake
++++ b/cmake/FindWrapLibSystemd.cmake
+@@ -15,5 +15,6 @@ if (NOT pc_libsystemd_FOUND)
+ endif()
+ 
+ add_library(WrapLibSystemd::WrapLibSystemd INTERFACE IMPORTED)
+-target_link_libraries(WrapLibSystemd::WrapLibSystemd INTERFACE ${pc_libsystemd_LIBRARIES})
++target_link_libraries(WrapLibSystemd::WrapLibSystemd INTERFACE ${pc_libsystemd_LINK_LIBRARIES})
++target_include_directories(WrapLibSystemd::WrapLibSystemd INTERFACE ${pc_libsystemd_INCLUDE_DIRS})
+ set(WrapLibSystemd_FOUND TRUE)
 diff --git a/cmake/FindWrapLibYaml.cmake b/cmake/FindWrapLibYaml.cmake
-index 1dab912..c09e97f 100644
+index c2a2c62..80285b5 100644
 --- a/cmake/FindWrapLibYaml.cmake
 +++ b/cmake/FindWrapLibYaml.cmake
-@@ -10,10 +10,17 @@ pkg_check_modules(pc_libyaml yaml-0.1 IMPORTED_TARGET)
- 
- 
- if (NOT pc_libyaml_FOUND)
--    set(WrapLibYaml_FOUND FALSE)
--    return()
-+    find_package(yaml)
-+    if(yaml_FOUND)
-+        add_library(WrapLibYaml::WrapLibYaml INTERFACE IMPORTED)
-+        target_link_libraries(WrapLibYaml::WrapLibYaml INTERFACE ${yaml_LIBRARIES})
-+    else()
-+        set(WrapLibYaml_FOUND FALSE)
-+        return()
-+    endif()
-+else()
-+    add_library(WrapLibYaml::WrapLibYaml INTERFACE IMPORTED)
-+    target_link_libraries(WrapLibYaml::WrapLibYaml INTERFACE PkgConfig::pc_libyaml)
+@@ -5,6 +5,14 @@ if(TARGET WrapLibYaml::WrapLibYaml)
+     return()
  endif()
--
--add_library(WrapLibYaml::WrapLibYaml INTERFACE IMPORTED)
--target_link_libraries(WrapLibYaml::WrapLibYaml INTERFACE ${pc_libyaml_LIBRARIES})
- set(WrapLibYaml_FOUND TRUE)
+ 
++find_package(yaml CONFIG)
++if(yaml_FOUND)
++    add_library(WrapLibYaml::WrapLibYaml INTERFACE IMPORTED)
++    target_link_libraries(WrapLibYaml::WrapLibYaml INTERFACE yaml)
++    set(WrapLibYaml_FOUND TRUE)
++    return()
++endif()
 +
+ find_package(PkgConfig)
+ pkg_check_modules(pc_libyaml yaml-0.1>=0.2.2 IMPORTED_TARGET)
+ 
