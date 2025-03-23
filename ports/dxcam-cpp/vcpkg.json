@@ -8,7 +8,10 @@
   "license": "MIT",
   "supports": "windows & !uwp",
   "dependencies": [
-    "opencv4",
+    {
+      "name": "opencv4",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,5 +1,4 @@
 dxcam-cpp provides CMake targets:
 
-find_package(DXCam CONFIG REQUIRED)
-target_include_directories(main PRIVATE ${DXCam_INCLUDE_DIRS})
-target_link_libraries(main PRIVATE ${DXCam_LIBS})
+    find_package(DXCam CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE DXCam::DXCam)
