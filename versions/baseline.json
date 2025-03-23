@@ -86,7 +86,7 @@
     },
     "allegro5": {
       "baseline": "5.2.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "alpaca": {
       "baseline": "0.2.1",
@@ -2409,8 +2409,8 @@
       "port-version": 0
     },
     "dpp": {
-      "baseline": "10.1.0",
-      "port-version": 1
+      "baseline": "10.1.2",
+      "port-version": 0
     },
     "draco": {
       "baseline": "1.5.7",
@@ -2886,7 +2886,7 @@
     },
     "folly": {
       "baseline": "2025.03.17.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -5353,7 +5353,7 @@
       "port-version": 3
     },
     "liburing": {
-      "baseline": "2.8",
+      "baseline": "2.9",
       "port-version": 0
     },
     "libusb": {
