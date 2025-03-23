@@ -9,6 +9,7 @@ vcpkg_from_github(
         x11-dependencies-export.patch
         fix-debug-macro.patch
         windows-output-name.patch
+        cmake-version.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)

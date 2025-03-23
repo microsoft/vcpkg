@@ -4,6 +4,9 @@ vcpkg_from_github(
   REF "v${VERSION}"
   SHA512 6ea8ef74a18047e2714aacc6c162c42519246c38061290053461e7c5c0922234534a031bdb84eaff7bea46da4d8edd1e3cdd00d710c066600c9024fa2a134a03
   HEAD_REF master
+  PATCHES
+    # temporary patch. It should be removed once the new version of lunasvg is released.
+    fix-plutovg.patch
 )
 
 vcpkg_cmake_configure(

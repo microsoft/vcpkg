@@ -1,6 +1,7 @@
 {
   "name": "freexl",
   "version": "2.0.0",
+  "port-version": 1,
   "description": "FreeXL is an open source library to extract valid data from within an Excel (.xls) spreadsheet",
   "homepage": "https://www.gaia-gis.it/gaia-sins/freexl-sources",
   "license": "MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later",
