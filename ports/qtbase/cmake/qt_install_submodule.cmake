@@ -217,7 +217,6 @@ function(qt_cmake_configure)
             INPUT_xcb
             INPUT_xkbcommon
     )
-    set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()
 
 function(qt_fix_prl_files)
