@@ -6,6 +6,10 @@
   "supports": "windows & !uwp & x64",
   "dependencies": [
     {
+      "name": "cppwinrt",
+      "version>=": "2.0.240111.5"
+    },
+    {
       "name": "fmt",
       "version>=": "10.1.1"
     },
