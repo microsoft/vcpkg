@@ -698,7 +698,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 2
+      "port-version": 3
     },
     "blaze": {
       "baseline": "3.8.2",
