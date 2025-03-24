@@ -6981,7 +6981,7 @@
       "port-version": 0
     },
     "paho-mqttpp3": {
-      "baseline": "1.5.0",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "palsigslot": {
