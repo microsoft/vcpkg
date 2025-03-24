@@ -1,7 +1,7 @@
 {
   "name": "gperf",
   "version": "3.1",
-  "port-version": 6,
+  "port-version": 7,
   "description": "GNU perfect hash function generator",
   "homepage": "https://www.gnu.org/software/gperf/",
   "dependencies": [
