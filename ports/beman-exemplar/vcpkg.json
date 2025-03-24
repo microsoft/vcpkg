@@ -5,7 +5,6 @@
   "homepage": "https://github.com/bemanproject/exemplar",
   "license": "Apache-2.0",
   "dependencies": [
-    "gtest",
     {
       "name": "vcpkg-cmake",
       "host": true
