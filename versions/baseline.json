@@ -4242,7 +4242,7 @@
     },
     "lapack-reference": {
       "baseline": "3.11.0",
-      "port-version": 6
+      "port-version": 7
     },
     "lastools": {
       "baseline": "2.0.3",
