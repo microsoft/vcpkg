@@ -10,6 +10,9 @@ vcpkg_from_github(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/matioCppConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
