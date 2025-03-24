@@ -92,12 +92,6 @@
         "realsense2"
       ]
     },
-    "test": {
-      "description": "Build Tests",
-      "dependencies": [
-        "catch2"
-      ]
-    },
     "tiff": {
       "description": "Build support for libtiff image input",
       "dependencies": [
