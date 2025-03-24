@@ -116,7 +116,7 @@ file(GLOB headers "${BINDIST_PATH}/include/*.h")
 file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 set(SLANG_CONFIG_CONTENT "
-add_library(slang::slang SHARED IMPORTED)
+add_library(unofficial::slang::slang SHARED IMPORTED)
 
 # Compute the installation prefix relative to this file.
 get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)
@@ -136,7 +136,7 @@ file(GLOB dyn_libs
 
 string(APPEND SLANG_CONFIG_CONTENT "
 
-set_target_properties(slang::slang PROPERTIES
+set_target_properties(unofficial::slang::slang PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\"
   IMPORTED_LOCATION \"\${dyn_libs}\" ")
 
@@ -149,7 +149,7 @@ string(APPEND SLANG_CONFIG_CONTENT "
 )
 ")
 
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/shader-slangConfig.cmake" "${SLANG_CONFIG_CONTENT}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-shader-slangConfig.cmake" "${SLANG_CONFIG_CONTENT}")
 
 vcpkg_install_copyright(
 	FILE_LIST "${BINDIST_PATH}/LICENSE"
