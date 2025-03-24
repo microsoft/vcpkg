@@ -1,6 +1,7 @@
 {
   "name": "matio-cpp",
   "version-string": "v0.3.0",
+  "port-version": 1,
   "description": "A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.",
   "homepage": "https://github.com/ami-iit/matio-cpp",
   "license": "BSD-2-Clause",
