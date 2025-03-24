@@ -6,7 +6,7 @@ index 3122c15..f64d695 100644
            gz_string_append(skip_msg "by user request")
          elseif(${component}_MISSING_DEPS)
            gz_string_append(skip_msg "because the following packages are missing: ${${component}_MISSING_DEPS}")
-+          if(DEFINED GZ_LOCK_DEPENDENCIES AND NOT GZ_LOCK_DEPENDENCIES)
++          if(NOT DEFINED GZ_LOCK_DEPENDENCIES OR "${GZ_LOCK_DEPENDENCIES}")
 +            message(SEND_ERROR "Vcpkg ports must lock dependencies."
 +              "  To enable ${component}, provide missing dependencies."
 +              "  To disable ${component}, pass -DSKIP_${component}=true."
