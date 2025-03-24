@@ -1,4 +1,4 @@
-result is header-only and can be used from CMake via:
+resultlib is header-only and can be used from CMake via:
 
     find_path(RESULT_INCLUDE_DIR "result.h")
     target_include_directories(my_exe PRIVATE ${RESULT_INCLUDE_DIR})
