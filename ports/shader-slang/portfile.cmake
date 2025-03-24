@@ -115,6 +115,42 @@ vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
 file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
+set(SLANG_CONFIG_CONTENT "
+add_library(slang::slang SHARED IMPORTED)
+
+# Compute the installation prefix relative to this file.
+get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)
+get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)
+get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)
+if(_IMPORT_PREFIX STREQUAL \"/\")
+  set(_IMPORT_PREFIX \"\")
+endif()
+
+file(GLOB libs \"\${_IMPORT_PREFIX}/lib/slang.lib\")
+
+file(GLOB dyn_libs
+  \"\${_IMPORT_PREFIX}/lib/libslang.dylib\"
+  \"\${_IMPORT_PREFIX}/lib/libslang.so\"
+  \"\${_IMPORT_PREFIX}/lib/slang.dll\"
+) ")
+
+string(APPEND SLANG_CONFIG_CONTENT "
+
+set_target_properties(slang::slang PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\"
+  IMPORTED_LOCATION \"\${dyn_libs}\" ")
+
+if (VCPKG_TARGET_IS_WINDOWS)
+  string(APPEND SLANG_CONFIG_CONTENT "
+  IMPORTED_IMPLIB \"\${libs}\"  ")
+endif()
+
+string(APPEND SLANG_CONFIG_CONTENT "
+)
+")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/shader-slangConfig.cmake" "${SLANG_CONFIG_CONTENT}")
+
 vcpkg_install_copyright(
 	FILE_LIST "${BINDIST_PATH}/LICENSE"
 	COMMENT #[[ from README ]] [[
