@@ -571,10 +571,32 @@ function(vcpkg_add_sourcelink_link_options target)
         file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
 
         # Extra item provided during port builds (via vcpkg_cmake_configure in ports.cmake).
-        # The referenced file is not installed yet, so this is the only way to pick up the
+        # The referenced file is not installed yet, so this is the best way to pick up the
         # contents when linking each port.
         if(VCPKG_SOURCELINK_FILE)
             list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
+        else()
+            # If the above was not provided on the commandline, then attempt to discover
+            # any extra sourcelink files in the package directory.
+            # - This extra step has been necessary because VCPKG_SOURCELINK_FILE is not always
+            #   set by the calling script (e.g. when building some ports), particularly during
+            #   the initial roll-out of sourcelink support.  Ideally this extra check could
+            #   be removed if the VCPKG_SOURCELINK_FILE value reliably provides the necessary path
+            #   when building ports.
+            # - This is only done when the install prefix is within the vcpkg root directory,
+            #   to avoid picking up files during normal builds of the top-level target.
+            string(FIND "${CMAKE_INSTALL_PREFIX}" "${Z_VCPKG_ROOT_DIR}" pos)
+            if ("${pos}" GREATER "-1")
+                if ("${CMAKE_INSTALL_PREFIX}" MATCHES "/debug$")
+                    set(xxx "${CMAKE_INSTALL_PREFIX}/..")
+                else()
+                    set(xxx "${CMAKE_INSTALL_PREFIX}")
+                endif()
+                file(GLOB extra_sourcelink_files "${xxx}/sourcelink/*.json")
+                if (extra_sourcelink_files)
+                    list(APPEND sourcelink_files "${extra_sourcelink_files}")
+                endif()
+            endif()
         endif()
 
         if(sourcelink_files)
