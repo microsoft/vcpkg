@@ -1,0 +1,6 @@
+In order to use matio-cpp in your project, add the following in your CMakeLists.txt
+
+```
+find_package(matioCpp REQUIRED)
+target_link_libraries(yourTarget PRIVATE matioCpp::matioCpp)
+```

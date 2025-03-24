@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(PkgConfig)
+pkg_check_modules(matio REQUIRED IMPORTED_TARGET matio)
+find_package(unofficial-visit_struct)
+find_package(Eigen3)
+
+if(NOT TARGET matioCpp::matioCpp)
+  include("${CMAKE_CURRENT_LIST_DIR}/matioCppTargets.cmake")
+endif()
