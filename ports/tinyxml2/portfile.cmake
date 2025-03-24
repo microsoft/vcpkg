@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leethomason/tinyxml2
     REF "${VERSION}"
-    SHA512 acdd42c7431de65272fdcb2cdf64beb44efc97deffed45f9933453883182238a60071bec5dda2f87d166dd8455e8cd3118af6937ddd7c6abacafda2a060f6cc6
+    SHA512 8a6ddd48c96bc4287437d5b5ca62c131c4416c57310b664c9088ca9c1ac9f4d43d16c1bad03f82dc5588d9486752f510d631609a3930f1d4243f12184ad1c5f9
     HEAD_REF master
     PATCHES
         0001-fix-do-not-force-export-the-symbols-when-building-st.patch
