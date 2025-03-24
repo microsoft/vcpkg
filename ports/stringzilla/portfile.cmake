@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/StringZilla
     REF "v${VERSION}"
-    SHA512 9310283057aec46c8d83b7e1f2d7d4d9a1d551e3617ed98f5fa8d43e9ddfc49ddf6662d5ef1a0db8fa32bff05f3af31b4c4cb17d2d83f421a9371beab716280a
+    SHA512 436b2b639d9d66d62d618d07174231f4e4dd9855edc6e03a5746c8c2f5205c2af9be9dfbf88a95fc12bb8d4abfffdf925fd85c0bd14b5ab3734d2f1105990f41
     HEAD_REF master
 )
 
