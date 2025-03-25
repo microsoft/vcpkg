@@ -479,7 +479,7 @@ if(BLAS_FOUND)
         "${BLAS_LIBRARIES}"
       )
     endif()
-	if(NOT LAPACK_LIBRARIES)
+    if(NOT LAPACK_LIBRARIES)
       check_lapack_libraries(
         LAPACK_LIBRARIES
         LAPACK
