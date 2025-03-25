@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-deps.patch
         fix-test.patch
+        fix-bigobj.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
