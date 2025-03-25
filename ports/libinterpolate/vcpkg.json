@@ -6,14 +6,14 @@
   "license": "MIT",
   "dependencies": [
     {
-      "name": "boost",
+      "name": "boost-headers",
       "host": true,
-      "version>=": "1.87.0"
+      "version>=": "1.85.0"
     },
     {
       "name": "eigen3",
       "host": true,
-      "version>=": "3.3.7"
+      "version>=": "3.4.0"
     },
     {
       "name": "vcpkg-cmake",
