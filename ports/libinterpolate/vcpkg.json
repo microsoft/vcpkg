@@ -5,11 +5,7 @@
   "homepage": "https://github.com/CD3/libInterpolate",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "boost-headers",
-      "host": true,
-      "version>=": "1.85.0"
-    },
+    "boost",
     {
       "name": "eigen3",
       "host": true,
