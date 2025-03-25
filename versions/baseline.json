@@ -5036,6 +5036,10 @@
       "baseline": "1.10.5",
       "port-version": 0
     },
+    "libpeconv": {
+      "baseline": "2025-03-25",
+      "port-version": 0
+    },
     "libpff": {
       "baseline": "2021-11-14",
       "port-version": 2
