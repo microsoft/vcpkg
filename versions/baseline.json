@@ -2329,7 +2329,7 @@
       "port-version": 1
     },
     "directxmesh": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-24",
       "port-version": 0
     },
     "directxsdk": {
@@ -2337,7 +2337,7 @@
       "port-version": 8
     },
     "directxtex": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-24",
       "port-version": 0
     },
     "directxtk": {
