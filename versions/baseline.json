@@ -6810,7 +6810,7 @@
     },
     "openh264": {
       "baseline": "2.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openigtlink": {
       "baseline": "3.0",
