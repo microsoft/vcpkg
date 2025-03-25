@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CD3/libInterpolate
     REF ${VERSION}
-    SHA512 0  
+    SHA512 6d53e1fb3af3067ddd13e491563e8da5af9756efba5a2def486f014c23969633ca73cf43dd2f93047716ebb6565f5e9911b6ab85abef2db3b9faefc26ab3aa59  
     HEAD_REF master
 )
 
