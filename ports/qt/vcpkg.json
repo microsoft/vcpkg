@@ -1,6 +1,7 @@
 {
   "name": "qt",
   "version": "6.8.2",
+  "port-version": 1,
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -29,7 +30,22 @@
         "textcodec"
       ]
     },
-    "qtapplicationmanager",
+    {
+      "name": "qtapplicationmanager",
+      "default-features": false,
+      "features": [
+        "systemd-watchdog"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "qtapplicationmanager",
+      "features": [
+        "installer",
+        "package-server"
+      ],
+      "platform": "android | ios | linux | osx | qnx | (windows & !uwp & (arm64 | x64))"
+    },
     {
       "name": "qtbase",
       "default-features": false
