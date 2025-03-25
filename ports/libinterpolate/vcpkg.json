@@ -5,7 +5,15 @@
   "homepage": "https://github.com/CD3/libInterpolate",
   "license": "MIT",
   "dependencies": [
-    "boost",
+    "boost-geometry",
+    "boost-headers",
+    "boost-lexical-cast",
+    "boost-mpl",
+    "boost-program-options",
+    "boost-range",
+    "boost-tokenizer",
+    "boost-type-erasure",
+    "boost-type-traits",
     {
       "name": "eigen3",
       "host": true,
