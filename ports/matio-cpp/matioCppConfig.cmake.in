@@ -2,8 +2,7 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(PkgConfig)
-pkg_check_modules(matio REQUIRED IMPORTED_TARGET matio)
+# matio already included with targets
 find_package(unofficial-visit_struct)
 find_package(Eigen3)
 
