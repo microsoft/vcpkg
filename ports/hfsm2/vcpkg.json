@@ -1,6 +1,17 @@
 {
   "name": "hfsm2",
-  "version": "1.10.1",
-  "description": "Header-only heriarchical FSM framework in C++14, with fully statically-defined structure (no dynamic allocations), built with variadic templates.",
-  "homepage": "https://github.com/andrew-gresyk/HFSM2"
+  "version": "2.6.1",
+  "description": "Header-only heriarchical FSM framework in C++11, with fully statically-defined structure (no dynamic allocations), built with variadic templates.",
+  "homepage": "https://github.com/andrew-gresyk/HFSM2",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -1,6 +1,7 @@
 {
   "name": "qt5-base",
   "version": "5.15.16",
+  "port-version": 1,
   "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -27,7 +28,6 @@
       "name": "opengl",
       "platform": "!windows"
     },
-    "openssl",
     {
       "name": "pcre2",
       "default-features": false
@@ -49,6 +49,9 @@
     "zlib",
     "zstd"
   ],
+  "default-features": [
+    "openssl"
+  ],
   "features": {
     "icu": {
       "description": "Enable ICU support",
@@ -66,6 +69,12 @@
       "description": "Build the sql plugin for connecting to mysql databases",
       "dependencies": [
         "libmysql"
+      ]
+    },
+    "openssl": {
+      "description": "Build with OpenSSL support",
+      "dependencies": [
+        "openssl"
       ]
     },
     "postgresqlplugin": {
