@@ -4,6 +4,7 @@
   "description": "A library to load, manipulate, dump PE files",
   "homepage": "https://github.com/hasherezade/libpeconv",
   "license": "BSD-2-Clause",
+  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
