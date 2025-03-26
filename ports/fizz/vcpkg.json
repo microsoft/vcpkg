@@ -1,6 +1,6 @@
 {
   "name": "fizz",
-  "version-string": "2025.03.17.00",
+  "version-string": "2025.03.24.00",
   "description": "a TLS 1.3 implementation by Facebook",
   "homepage": "https://github.com/facebookincubator/fizz",
   "license": "BSD-3-Clause",
