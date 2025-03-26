@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
         -DSLEEF_BUILD_TESTS=OFF
         -DSLEEF_ENABLE_TLFLOAT=OFF
         -DSLEEF_ENABLE_TESTER4=OFF
+        -DSLEEF_DISABLE_MPFR=ON
         ${CROSSCOMP_OPTIONS}
 )
 
