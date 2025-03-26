@@ -1,3 +1,4 @@
-The package @PORT@@VERSION_MAJOR@ provides CMake integration:
+gz-cmake provides CMake integration:
 
-    find_package(@PORT@@VERSION_MAJOR@ CONFIG REQUIRED)
+  find_package(gz-cmake@VERSION_MAJOR@ REQUIRED)
+  gz_configure_project(...)

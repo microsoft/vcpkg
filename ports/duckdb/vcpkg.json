@@ -1,7 +1,7 @@
 {
   "name": "duckdb",
   "version": "1.2.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": "MIT",
@@ -19,6 +19,13 @@
   "features": {
     "autocomplete": {
       "description": "Statically link the autocomplete extension into DuckDB"
+    },
+    "excel": {
+      "description": "Statically link the excel extension into DuckDB",
+      "dependencies": [
+        "expat",
+        "minizip-ng"
+      ]
     },
     "httpfs": {
       "description": "Statically link the httpfs extension into DuckDB",
