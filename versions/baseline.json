@@ -4576,6 +4576,10 @@
       "baseline": "4.33",
       "port-version": 3
     },
+    "libevdev": {
+      "baseline": "1.13.4",
+      "port-version": 0
+    },
     "libevent": {
       "baseline": "2.1.12+20230128",
       "port-version": 1
