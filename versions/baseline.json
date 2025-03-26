@@ -7157,7 +7157,7 @@
       "port-version": 0
     },
     "pkgconf": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.3",
       "port-version": 0
     },
     "plasma-wayland-protocols": {
