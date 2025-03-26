@@ -10,9 +10,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        examples   LIBBASE_BUILD_EXAMPLES
-        unittests  LIBBASE_BUILD_TESTS
-        perftests  LIBBASE_BUILD_PERFORMANCE_TESTS
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +18,9 @@ vcpkg_cmake_configure(
         -DLIBBASE_CODE_COVERAGE=OFF
         -DLIBBASE_BUILD_DOCS=OFF
         -DLIBBASE_CLANG_TIDY=OFF
+        -DLIBBASE_BUILD_EXAMPLES=OFF
+        -DLIBBASE_BUILD_TESTS=OFF
+        -DLIBBASE_BUILD_PERFORMANCE_TESTS=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -29,4 +29,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME "libbase")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

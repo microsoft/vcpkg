@@ -1,5 +1,5 @@
 {
-  "name": "libbase",
+  "name": "ripper37-libbase",
   "version": "1.0.1",
   "description": "Standalone reimplementation of //base module from Chromium",
   "homepage": "https://github.com/RippeR37/libbase",
@@ -20,22 +20,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "examples": {
-      "description": "Build examples"
-    },
-    "perftests": {
-      "description": "Build performance tests",
-      "dependencies": [
-        "benchmark"
-      ]
-    },
-    "unittests": {
-      "description": "Build unit tests",
-      "dependencies": [
-        "gtest"
-      ]
-    }
-  }
+  ]
 }
