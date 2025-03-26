@@ -8601,8 +8601,8 @@
       "port-version": 2
     },
     "sleef": {
-      "baseline": "3.8",
-      "port-version": 1
+      "baseline": "3.9.0",
+      "port-version": 0
     },
     "sleepy-discord": {
       "baseline": "2025-02-08",
