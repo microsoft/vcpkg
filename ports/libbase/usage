@@ -1,8 +1,4 @@
-The package libbase provides CMake targets:
+libbase provides CMake targets:
 
-    find_package(libbase CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE libbase::libbase)
-
-For more information, see the documentation at:
-
-    https://ripper37.github.io/libbase/
+  find_package(libbase CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE libbase::libbase)
