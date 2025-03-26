@@ -1,0 +1,21 @@
+diff --git a/meson.build b/meson.build
+index 9d7cb81..837a38f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -54,7 +54,7 @@ event_names_h = configure_file(input: 'libevdev/libevdev.h',
+ # libevdev.so
+ install_headers('libevdev/libevdev.h',
+ 		'libevdev/libevdev-uinput.h',
+-		subdir: 'libevdev-1.0/libevdev')
++		subdir: 'libevdev')
+ src_libevdev = [event_names_h] + files(
+ 	'libevdev/libevdev.h',
+ 	'libevdev/libevdev-int.h',
+@@ -90,7 +90,6 @@ pkgconfig.generate(
+ 	description: 'Handler library for evdev events',
+ 	version: meson.project_version(),
+ 	libraries: lib_libevdev,
+-	subdirs: 'libevdev-1.0',
+ )
+ 
+ man_config = configuration_data()
