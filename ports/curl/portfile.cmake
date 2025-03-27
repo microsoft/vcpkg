@@ -3,11 +3,12 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF ${curl_version}
-    SHA512 04f6160c3c63c59e80987df61959bf0079c5be1d63bc40189933cebd3046850d680f1e030e8e7cd7f04417146982c6410ba70c8441af75d43b7b24fc7fbcb1d2
+    #REF ${curl_version}
+    #SHA512 04f6160c3c63c59e80987df61959bf0079c5be1d63bc40189933cebd3046850d680f1e030e8e7cd7f04417146982c6410ba70c8441af75d43b7b24fc7fbcb1d2
+    REF 39931f7 # 8.13.0 rc3
+    SHA512 60665355d72e60ac20e37f1290be979e8c1a1824fd3dc23ba53239ebc9f725df448b33b449dcc6ef2f8fbac3622d28bdb3e7fddc77aef6870d1ff018364ce20b
     HEAD_REF master
     PATCHES
-        0005_remove_imp_suffix.patch
         export-components.patch
         dependencies.patch
         pkgconfig-curl-config.patch
@@ -72,6 +73,7 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
+        -DIMPORT_LIB_SUFFIX=   # empty
         -DSHARE_LIB_OBJECT=OFF
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_PKGCONFIG=ON
