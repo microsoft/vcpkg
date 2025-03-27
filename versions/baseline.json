@@ -5932,10 +5932,6 @@
       "baseline": "1.5.28",
       "port-version": 0
     },
-    "matio-cpp": {
-      "baseline": "v0.3.0",
-      "port-version": 0
-    },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
       "port-version": 2
