@@ -1,7 +1,7 @@
 {
   "name": "libmatio-cpp",
   "version": "0.3.0",
-  "description": "A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.",
+  "description": "matio-cpp is a C++ wrapper for the matio library, automatically dealing with memory allocation and deallocation. It can be used for reading and writing binary MATLAB .mat files from C++, without the need to access or rely on MATLAB's own shared libraries.",
   "homepage": "https://github.com/ami-iit/matio-cpp",
   "license": "BSD-2-Clause",
   "dependencies": [
