@@ -2314,7 +2314,7 @@
     },
     "directx-dxc": {
       "baseline": "2025-02-20",
-      "port-version": 1
+      "port-version": 2
     },
     "directx-headers": {
       "baseline": "1.615.0",
