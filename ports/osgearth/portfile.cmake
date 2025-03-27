@@ -54,6 +54,7 @@ vcpkg_cmake_configure(
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
+        -DOSGEARTH_BUILD_EXAMPLES=OFF
     MAYBE_UNUSED_VARIABLES
         LIB_POSTFIX
         WITH_BLEND2D
