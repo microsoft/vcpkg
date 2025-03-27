@@ -1,5 +1,5 @@
 {
-  "name": "matio-cpp",
+  "name": "libmatio-cpp",
   "version": "0.3.0",
   "description": "A sample C++ library designed to serve as a foundational example for a tutorial on packaging libraries with vcpkg.",
   "homepage": "https://github.com/ami-iit/matio-cpp",
