@@ -8100,6 +8100,10 @@
       "baseline": "0.7.4",
       "port-version": 0
     },
+    "resultlib": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "rexo": {
       "baseline": "0.2.2",
       "port-version": 0
