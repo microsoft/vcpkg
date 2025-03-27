@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jcelerier/libremidi
     REF "v${VERSION}"
-    SHA512 120067904d925a36f0b41a082e6fa119cd2ac2166db6b64bdab2b267c866d6847b6302001f9d9aa014b07a9316f2ca0b1043308648b6e6c88ff7b161670d4e57
+    SHA512 8a9608eaabcf23866ee69e7f7999f8017f7f032003c33003b62b7891672d2a9d2609422bb1f509b3bd5647f628ed0707b14d188a8c44b27bd2ea54199ede8f32
     HEAD_REF master
-    PATCHES
-        add-windowsapp.patch
 )
 
 vcpkg_list(SET options)
