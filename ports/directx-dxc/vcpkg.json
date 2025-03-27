@@ -6,7 +6,7 @@
   "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
   "documentation": "https://github.com/microsoft/DirectXShaderCompiler/wiki",
   "license": null,
-  "supports": "(windows & !arm32 & !uwp & !xbox) | (linux & x64)",
+  "supports": "(windows & !arm32 & !uwp & !xbox) | (linux & x64) | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
