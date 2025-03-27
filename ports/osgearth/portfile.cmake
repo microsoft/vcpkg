@@ -109,7 +109,7 @@ if("examples" IN_LIST FEATURES)
         )
     endif()
     
-	file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_annotationd.exe")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_annotationd.exe")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_clusterd.exe")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_ecid.exe")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/osgearth_ephemerisd.exe")
