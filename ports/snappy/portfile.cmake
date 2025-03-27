@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 0c1e1019e1bec9281f9877996d896e59e1533456130143224acb9cbfc35c1b0dd9de0a76e4a36494844d9ec58c295eed8c50bdf6dbabe47cf679652eb24b1281
     HEAD_REF master
     PATCHES
-        fix_clang-cl_build.patch
         no-werror.patch
         pkgconfig.diff
 )
