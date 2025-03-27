@@ -21,8 +21,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "matioCpp"
-CONFIG_PATH share/matioCpp)
+vcpkg_cmake_config_fixup(PACKAGE_NAME matioCpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
