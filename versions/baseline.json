@@ -4768,6 +4768,10 @@
       "baseline": "2023-05-13",
       "port-version": 0
     },
+    "libinterpolate": {
+      "baseline": "2.7.1",
+      "port-version": 0
+    },
     "libirecovery": {
       "baseline": "2023-05-13",
       "port-version": 2
