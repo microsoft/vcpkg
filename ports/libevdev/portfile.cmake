@@ -5,7 +5,6 @@ vcpkg_from_gitlab(
     REF "libevdev-${VERSION}"
     SHA512 9f5496e3a158a41078285741861382b5fb48679b78065e6313b985de8b1832d1a5cb21954e15f4ab69d1c97093c925a51a2263228c5b0d59f3a90a29e374f1d0
     HEAD_REF master
-    PATCHES change-header-install-dir.patch
 )
 
 vcpkg_configure_meson(
