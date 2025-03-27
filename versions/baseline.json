@@ -2149,7 +2149,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.12.1",
+      "baseline": "8.13.0",
       "port-version": 0
     },
     "curlcpp": {
