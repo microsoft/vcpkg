@@ -1,0 +1,23 @@
+diff --git a/cmake/libremidi.winmidi.cmake b/cmake/libremidi.winmidi.cmake
+index 6dbaf8c..d34345f 100644
+--- a/cmake/libremidi.winmidi.cmake
++++ b/cmake/libremidi.winmidi.cmake
+@@ -66,3 +66,6 @@ target_include_directories(libremidi SYSTEM ${_public}
+ target_compile_definitions(libremidi ${_public} LIBREMIDI_WINMIDI)
+ set(LIBREMIDI_HAS_WINMIDI 1)
+ target_link_libraries(libremidi INTERFACE RuntimeObject)
++if(MSVC)
++  target_link_libraries(libremidi ${_public} windowsapp)
++endif()
+diff --git a/cmake/libremidi.winuwp.cmake b/cmake/libremidi.winuwp.cmake
+index 4aee246..849ac71 100644
+--- a/cmake/libremidi.winuwp.cmake
++++ b/cmake/libremidi.winuwp.cmake
+@@ -23,6 +23,7 @@ if(CPPWINRT_PATH)
+   # We don't need /ZW option here (support for C++/CX)' as we use C++/WinRT
+   if(MSVC)
+     target_compile_options(libremidi ${_public} /EHsc)
++    target_link_libraries(libremidi ${_public} windowsapp)
+   endif()
+ else()
+   message(STATUS "libremidi: Failed to find Windows SDK, UWP MIDI backend will not be available")
