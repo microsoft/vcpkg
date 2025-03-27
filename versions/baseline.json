@@ -4844,6 +4844,10 @@
       "baseline": "3.4.1",
       "port-version": 0
     },
+    "libmatio-cpp": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "libmaxminddb": {
       "baseline": "1.12.2",
       "port-version": 0
