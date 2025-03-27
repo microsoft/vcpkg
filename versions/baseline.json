@@ -8154,7 +8154,7 @@
     },
     "robotraconteur": {
       "baseline": "1.2.4",
-      "port-version": 2
+      "port-version": 3
     },
     "robotraconteur-companion": {
       "baseline": "0.4.1",
