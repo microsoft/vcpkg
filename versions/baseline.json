@@ -4520,6 +4520,10 @@
       "baseline": "0.24.3",
       "port-version": 0
     },
+    "libdmtx": {
+      "baseline": "0.7.7",
+      "port-version": 0
+    },
     "libdmx": {
       "baseline": "1.1.5",
       "port-version": 0
