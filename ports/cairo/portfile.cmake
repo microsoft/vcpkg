@@ -54,7 +54,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
 endif()
 
-vcpkg_configure_meson(
+    vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
@@ -64,6 +64,7 @@ vcpkg_configure_meson(
         -Dspectre=auto
         -Dgtk2-utils=disabled
         -Dsymbol-lookup=disabled
+        -Dc_link_args='-Wl,--no-check-features'
 )
 vcpkg_install_meson()
 
