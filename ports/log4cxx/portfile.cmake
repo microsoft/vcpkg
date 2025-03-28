@@ -4,6 +4,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 625495e8399a49ac84707a7213980f6d0776cdeab142d3c3e0805258a533e3bbc50b8d429c623642b481367705a086855135faa398f9ed63a24dea751607dc6f
 )
 
+vcpkg_extract_source_archive(
+    SOURCE_PATH ARCHIVE "${ARCHIVE}"
+)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         qt        LOG4CXX_QT_SUPPORT
