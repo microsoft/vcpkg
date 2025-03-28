@@ -9493,7 +9493,7 @@
       "port-version": 0
     },
     "upa-url": {
-      "baseline": "1.2.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "urdfdom": {
