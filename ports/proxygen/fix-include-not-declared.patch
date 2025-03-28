@@ -1,0 +1,13 @@
+diff --git a/proxygen/lib/CMakeLists.txt b/proxygen/lib/CMakeLists.txt
+index 7f25b20..c7a2958 100644
+--- a/proxygen/lib/CMakeLists.txt
++++ b/proxygen/lib/CMakeLists.txt
+@@ -4,6 +4,8 @@
+ # This source code is licensed under the BSD-style license found in the
+ # LICENSE file in the root directory of this source tree.
+ 
++add_compile_options(-DFOLLY_WITH_LIBURING=1)
++
+ file(
+     MAKE_DIRECTORY
+     ${PROXYGEN_GENERATED_ROOT}/proxygen/lib/http
