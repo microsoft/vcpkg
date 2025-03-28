@@ -1,6 +1,6 @@
 {
   "name": "aws-sdk-cpp",
-  "version": "1.11.474",
+  "version": "1.11.534",
   "description": "AWS SDK for C++",
   "homepage": "https://github.com/aws/aws-sdk-cpp",
   "license": "Apache-2.0",
