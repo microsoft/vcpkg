@@ -6,7 +6,7 @@ index 7f25b20..c7a2958 100644
  # This source code is licensed under the BSD-style license found in the
  # LICENSE file in the root directory of this source tree.
  
-+add_compile_options(-DFOLLY_WITH_LIBURING=1)
++add_compile_options(-DFOLLY_HAS_LIBURING=1)
 +
  file(
      MAKE_DIRECTORY
