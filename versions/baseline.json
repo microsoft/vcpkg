@@ -7612,11 +7612,19 @@
       "baseline": "5.15.16",
       "port-version": 0
     },
+    "qt5-quick3d": {
+      "baseline": "5.15.16",
+      "port-version": 0
+    },
     "qt5-quickcontrols": {
       "baseline": "5.15.16",
       "port-version": 0
     },
     "qt5-quickcontrols2": {
+      "baseline": "5.15.16",
+      "port-version": 0
+    },
+    "qt5-quicktimeline": {
       "baseline": "5.15.16",
       "port-version": 0
     },
