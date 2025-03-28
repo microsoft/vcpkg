@@ -20,13 +20,13 @@
   "default-features": [
     {
       "name": "hwloc",
-      "platform": "!static & !osx & !uwp"
+      "platform": "!static & !osx & !uwp & !xbox"
     }
   ],
   "features": {
     "hwloc": {
       "description": "Builds TBB with TBBBind support for Hybrid CPUs or NUMA architectures.",
-      "supports": "!static & !osx & !uwp",
+      "supports": "!static & !osx & !uwp & !xbox",
       "dependencies": [
         "hwloc"
       ]
