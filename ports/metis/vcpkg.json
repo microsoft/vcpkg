@@ -14,5 +14,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "i64": {
+      "description": "Use 64-bit integer indices"
+    },
+    "fp64": {
+      "description": "Use 64-bit float point (double)"
+    }
+  },
+  "default-features": []
 }
