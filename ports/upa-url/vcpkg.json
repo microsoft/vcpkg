@@ -1,6 +1,6 @@
 {
   "name": "upa-url",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "An implementation of the WHATWG URL Standard in C++",
   "homepage": "https://github.com/upa-url/upa",
   "documentation": "https://upa-url.github.io/docs/",
@@ -14,10 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "cxx11": {
-      "description": "Compile library with C++11 (for use in C++11 and C++14 projects)"
-    }
-  }
+  ]
 }
