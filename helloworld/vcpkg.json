@@ -1,0 +1,6 @@
+{
+  "dependencies": [
+    "fmt",
+    "vcpkg-sample-library"
+  ]
+}
