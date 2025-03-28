@@ -5,8 +5,8 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF "v${VERSION}"
-    SHA512 4e30976758015c76a146acc1bfc8501e2e5c61b81db77d253de0d58a8edef987669243f232210667b32ef8da3a33286642acb56ba526fd24c4ba925b44403730
+    REF "v${VERSION}-beta"
+    SHA512 ee9a0d1c348a409744009be2a3e4e8a0329a967b4523d489aab1b8e9d382e602d42a3d03beee09218fe65cdee27891d2af476e3d57ae1de1079343f5a343cea4
     HEAD_REF master
     PATCHES
         vcpkg-tests.patch
