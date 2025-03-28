@@ -8492,6 +8492,10 @@
       "baseline": "0.2.0",
       "port-version": 4
     },
+    "sfcgal": {
+      "baseline": "2.0.0",
+      "port-version": 0
+    },
     "sfgui": {
       "baseline": "1.0.0",
       "port-version": 0
