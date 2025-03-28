@@ -4854,7 +4854,7 @@
     },
     "libmagic": {
       "baseline": "5.46",
-      "port-version": 1
+      "port-version": 2
     },
     "libmariadb": {
       "baseline": "3.4.1",
