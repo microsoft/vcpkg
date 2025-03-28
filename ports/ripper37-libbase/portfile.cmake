@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
         -DLIBBASE_BUILD_EXAMPLES=OFF
         -DLIBBASE_BUILD_TESTS=OFF
         -DLIBBASE_BUILD_PERFORMANCE_TESTS=OFF
-        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
