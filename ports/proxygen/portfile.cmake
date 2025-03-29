@@ -8,6 +8,7 @@ vcpkg_from_github(
         remove-register.patch
         fix-zstd-zlib-dependency.patch
         fix-dependency.patch
+        fix-include-not-declared.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
