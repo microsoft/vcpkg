@@ -1,6 +1,6 @@
 {
   "name": "sentry-native",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
