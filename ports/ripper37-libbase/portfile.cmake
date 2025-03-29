@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         01_fix_output_lib_name_conflict.patch
+        02_remove_unneeded_find_dependency_calls.patch
 )
 
 vcpkg_cmake_configure(
