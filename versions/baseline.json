@@ -4370,7 +4370,7 @@
     },
     "libarchive": {
       "baseline": "3.7.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libaribcaption": {
       "baseline": "1.1.1",
