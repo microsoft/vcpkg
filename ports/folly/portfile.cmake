@@ -35,22 +35,17 @@ file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(MSVC_USE_STATIC_RUNTIME ON)
-else()
-    set(MSVC_USE_STATIC_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "liburing"   WITH_liburing
         "libaio"     WITH_libaio
-    INVERTED_FEATURES
-        "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
-        "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
-        "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
-        "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
-        "libsodium"  CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium
+        "bzip2"      VCPKG_LOCK_FIND_PACKAGE_BZip2
+        "lz4"        VCPKG_LOCK_FIND_PACKAGE_LZ4
+        "zstd"       VCPKG_LOCK_FIND_PACKAGE_Zstd
+        "snappy"     VCPKG_LOCK_FIND_PACKAGE_Snappy
+        "libsodium"  VCPKG_LOCK_FIND_PACKAGE_unofficial-sodium
 )
 
 vcpkg_cmake_configure(
@@ -67,7 +62,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
@@ -77,14 +72,12 @@ vcpkg_cmake_config_fixup()
 # Release folly-targets.cmake does not link to the right libraries in debug mode.
 # We substitute with generator expressions so that the right libraries are linked for debug and release.
 set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
-FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
+file(READ ${FOLLY_TARGETS_CMAKE} _contents)
 string(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
-STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
-STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+string(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+string(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
-FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 
 set(WITH_LIBURING 0)
 if("liburing" IN_LIST FEATURES)
@@ -92,7 +85,6 @@ if("liburing" IN_LIST FEATURES)
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/folly/io/async/Liburing.h" "__has_include(<liburing.h>" "(${WITH_LIBURING})")
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
