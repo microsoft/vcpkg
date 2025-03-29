@@ -6665,7 +6665,7 @@
       "port-version": 3
     },
     "ocilib": {
-      "baseline": "4.7.6",
+      "baseline": "4.7.7",
       "port-version": 0
     },
     "octave": {
