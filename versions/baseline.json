@@ -9377,7 +9377,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.25.1",
+      "baseline": "0.25.3",
       "port-version": 0
     },
     "treehh": {
