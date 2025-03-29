@@ -5,14 +5,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
     REF "release-${VERSION}"
-    SHA512 b18ff6322349af4416a37d28c4f42ebe355260786ed42bdd54dcc20dc92db1a38a8db74e6d637fdff8f320bdd51e2515c0fa939d30679c5f22ea99fb32c97204
+    SHA512 7630d0b02ff09c277d5641e10631514e5e3d8087e81f5254f38a8adb05c39ed0092ae81697085ed0dd859f0b826f94626d698090153c5e9a655f5e36263b2915
     PATCHES
         dependencies.patch
         config-path.patch
-        include.patch
-        fix-system-link.patch
-        math-h-polyfill.patch
 )
+
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"
     "${SOURCE_PATH}/png"
@@ -22,12 +20,12 @@ file(REMOVE_RECURSE
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opengl  OPTION_USE_GL
+        opengl  FLTK_USE_GL
 )
 
 set(fluid_path_param "")
 if(VCPKG_CROSSCOMPILING)
-    set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    set(fluid_path_param "-DFLTK_FLUID_HOST=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 set(runtime_dll "ON")
@@ -40,12 +38,14 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DFLTK_BUILD_TEST=OFF
-        -DOPTION_LARGE_FILE=ON
+        -DFLTK_OPTION_LARGE_FILE=ON
         -DHAVE_ALSA_ASOUNDLIB_H=OFF # tests only
-        -DOPTION_USE_SYSTEM_ZLIB=ON
-        -DOPTION_USE_SYSTEM_LIBPNG=ON
-        -DOPTION_USE_SYSTEM_LIBJPEG=ON
-        -DOPTION_BUILD_SHARED_LIBS=OFF
+        -DFLTK_USE_SYSTEM_ZLIB=ON
+        -DFLTK_USE_SYSTEM_LIBPNG=ON
+        -DFLTK_USE_SYSTEM_LIBJPEG=ON
+        -DFLTK_BUILD_SHARED_LIBS=OFF
+        -DFLTK_BUILD_FLTK_OPTIONS=ON
+        -DFLTK_BUILD_FLUID=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
         ${fluid_path_param}
@@ -73,10 +73,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fltk-config")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config" "{prefix}/include" "{prefix}/../include")
     endif()
 endif()
+
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fluid${VCPKG_TARGET_EXECUTABLE_SUFFIX}" OR
    EXISTS "${CURRENT_PACKAGES_DIR}/bin/fluid${VCPKG_TARGET_BUNDLE_SUFFIX}")
    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/fluid.icns" "${CURRENT_PACKAGES_DIR}/debug/bin/fluid.icns")
    vcpkg_copy_tools(TOOL_NAMES fluid AUTO_CLEAN)
+   vcpkg_copy_tools(TOOL_NAMES fluid-cmd AUTO_CLEAN)
+   vcpkg_copy_tools(TOOL_NAMES fltk-options AUTO_CLEAN)
+   vcpkg_copy_tools(TOOL_NAMES fltk-options-cmd AUTO_CLEAN)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -87,16 +91,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-foreach(FILE IN ITEMS Fl_Export.H fl_utf8.h)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/FL/${FILE}" "defined(FL_DLL)" "0")
-    else()
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/FL/${FILE}" "defined(FL_DLL)" "1")
-    endif()
-endforeach()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fltk/UseFLTK.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel;${SOURCE_PATH}" [[${CMAKE_CURRENT_LIST_DIR}/../../include]])
 
 set(copyright_files "${SOURCE_PATH}/COPYING")
 if("opengl" IN_LIST FEATURES)

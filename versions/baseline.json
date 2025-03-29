@@ -2861,7 +2861,7 @@
       "port-version": 1
     },
     "fltk": {
-      "baseline": "1.3.11",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "fluidlite": {

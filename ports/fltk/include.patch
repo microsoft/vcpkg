@@ -1,13 +1,13 @@
 diff --git a/CMake/fl_add_library.cmake b/CMake/fl_add_library.cmake
-index 29baa95..7e3490b 100644
+index c4e5f91c4..5bb4eafad 100644
 --- a/CMake/fl_add_library.cmake
 +++ b/CMake/fl_add_library.cmake
-@@ -37,6 +37,8 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
+@@ -65,7 +65,7 @@ function(fl_add_library LIBNAME LIBTYPE SOURCES)
  
-   add_library(${TARGET_NAME} ${LIBTYPE} ${LIBFILES})
+   set(OUTPUT_NAME_RELEASE "${LIBNAME}")
  
+-  add_library(${TARGET_NAME} ${LIBTYPE} ${SOURCES})
 +  target_include_directories(${TARGET_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
-+
-   # target properties for all libraries
  
-   set_target_properties(${TARGET_NAME}
+   # Create an alias 'fltk::alias_name' for the library
+   # where 'alias_name' is the library name without the prefix 'fltk_'
