@@ -702,7 +702,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 2
+      "port-version": 3
     },
     "blaze": {
       "baseline": "3.8.2",
@@ -2329,7 +2329,7 @@
       "port-version": 1
     },
     "directxmesh": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-24",
       "port-version": 0
     },
     "directxsdk": {
@@ -2337,7 +2337,7 @@
       "port-version": 8
     },
     "directxtex": {
-      "baseline": "2024-10-28",
+      "baseline": "2025-03-24",
       "port-version": 0
     },
     "directxtk": {
@@ -2649,7 +2649,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.6.4",
+      "baseline": "2.7.0",
       "port-version": 0
     },
     "expected-lite": {
@@ -3177,7 +3177,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.0.1",
+      "baseline": "5.0.2",
       "port-version": 0
     },
     "glbinding": {
@@ -4250,7 +4250,7 @@
     },
     "lapack-reference": {
       "baseline": "3.11.0",
-      "port-version": 6
+      "port-version": 7
     },
     "lastools": {
       "baseline": "2.0.3",
@@ -4520,6 +4520,10 @@
       "baseline": "0.24.3",
       "port-version": 0
     },
+    "libdmtx": {
+      "baseline": "0.7.7",
+      "port-version": 0
+    },
     "libdmx": {
       "baseline": "1.1.5",
       "port-version": 0
@@ -4575,6 +4579,10 @@
     "libev": {
       "baseline": "4.33",
       "port-version": 3
+    },
+    "libevdev": {
+      "baseline": "1.13.4",
+      "port-version": 0
     },
     "libevent": {
       "baseline": "2.1.12+20230128",
@@ -4768,6 +4776,10 @@
       "baseline": "2023-05-13",
       "port-version": 0
     },
+    "libinterpolate": {
+      "baseline": "2.7.1",
+      "port-version": 0
+    },
     "libirecovery": {
       "baseline": "2023-05-13",
       "port-version": 2
@@ -4842,10 +4854,14 @@
     },
     "libmagic": {
       "baseline": "5.46",
-      "port-version": 1
+      "port-version": 2
     },
     "libmariadb": {
       "baseline": "3.4.1",
+      "port-version": 0
+    },
+    "libmatio-cpp": {
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "libmaxminddb": {
@@ -5410,7 +5426,7 @@
     },
     "libvorbis": {
       "baseline": "1.3.7",
-      "port-version": 3
+      "port-version": 4
     },
     "libvpx": {
       "baseline": "1.13.1",
@@ -5693,7 +5709,7 @@
       "port-version": 0
     },
     "log4cxx": {
-      "baseline": "1.3.1",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "loguru": {
@@ -5765,7 +5781,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.665",
+      "baseline": "0.666",
       "port-version": 0
     },
     "luminoengine": {
@@ -6014,7 +6030,7 @@
     },
     "mfx-dispatch": {
       "baseline": "1.35.1",
-      "port-version": 4
+      "port-version": 5
     },
     "mgnlibs": {
       "baseline": "2019-09-29",
@@ -6653,7 +6669,7 @@
       "port-version": 3
     },
     "ocilib": {
-      "baseline": "4.7.6",
+      "baseline": "4.7.7",
       "port-version": 0
     },
     "octave": {
@@ -7702,7 +7718,7 @@
     },
     "qtbase": {
       "baseline": "6.8.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.8.2",
@@ -8094,6 +8110,10 @@
     },
     "restinio": {
       "baseline": "0.7.4",
+      "port-version": 0
+    },
+    "resultlib": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "rexo": {
@@ -8633,7 +8653,7 @@
       "port-version": 2
     },
     "snappy": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "snitch": {
@@ -8685,7 +8705,7 @@
       "port-version": 0
     },
     "sol2": {
-      "baseline": "3.3.1",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "solid3": {
@@ -9541,7 +9561,7 @@
       "port-version": 1
     },
     "uvatlas": {
-      "baseline": "2024-10-29",
+      "baseline": "2025-03-26",
       "port-version": 0
     },
     "uvw": {
