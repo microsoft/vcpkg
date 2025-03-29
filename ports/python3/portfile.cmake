@@ -212,6 +212,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
         file(GLOB_RECURSE PYTHON_EXTENSIONS_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.pyd")
         file(COPY ${PYTHON_EXTENSIONS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY ${PYTHON_EXTENSIONS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/DLLs")
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/DLLs")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/DLLs/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll")
     endif()
 
     file(COPY "${SOURCE_PATH}/Include/" "${SOURCE_PATH}/PC/pyconfig.h"
@@ -219,6 +222,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         FILES_MATCHING PATTERN *.h
     )
     file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.
@@ -227,7 +231,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib"
     )
     list(FILTER PYTHON_LIBS EXCLUDE REGEX [[python[0-9]*(_d)?\.lib$]])
-    file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
+    file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe" "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
     # pkg-config files
@@ -240,9 +244,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         make_python_pkgconfig(FILE python.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
-            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+            EXEC_PREFIX "\${prefix}/../debug/tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
         make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
-            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+            EXEC_PREFIX "\${prefix}/../debug/tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
     endif()
 
     vcpkg_fixup_pkgconfig()
@@ -304,6 +308,7 @@ else()
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
 
     # Makefiles, c files, __pycache__, and other junk.
     file(GLOB PYTHON_LIB_DIRS LIST_DIRECTORIES true
@@ -401,6 +406,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
   file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
+  file(COPY_FILE "${CURRENT_PACKAGES_DIR}/debug/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/debug/tools/python3/python3d")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
