@@ -6,11 +6,14 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 7a1c77815634b8b07f324bcd6bb4a9b0804edb216bdd3f444265c97efdfc1dadd5fb2cf132987626872170ef6fcff5e16e3e1a79246c6107f91cb3192bf1b679
     HEAD_REF master
+    PATCHES
+        01_fix_output_lib_name_conflict.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DLIBBASE_OUTPUT_NAME=ripper37-libbase
         -DLIBBASE_CODE_COVERAGE=OFF
         -DLIBBASE_BUILD_DOCS=OFF
         -DLIBBASE_CLANG_TIDY=OFF
@@ -20,7 +23,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "libbase")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "ripper37-libbase")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
