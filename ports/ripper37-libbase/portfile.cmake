@@ -23,7 +23,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "libbase")
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME "libbase"
+    CONFIG_PATH "share/libbase"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
