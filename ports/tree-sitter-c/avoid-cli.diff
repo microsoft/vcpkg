@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8ef5453..1f61a60 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,7 +17,7 @@ endif()
+ 
+ find_program(TREE_SITTER_CLI tree-sitter DOC "Tree-sitter CLI")
+ 
+-add_custom_command(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/parser.c"
++add_custom_command(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/parser.c.unused"
+                    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/grammar.json"
+                    COMMAND "${TREE_SITTER_CLI}" generate src/grammar.json
+                             --abi=${TREE_SITTER_ABI_VERSION}
