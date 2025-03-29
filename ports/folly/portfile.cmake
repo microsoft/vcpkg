@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 44191ae7bb0e9acb2b36fd0a2040c555158152274eaa2fadfd929bc029fc848a46ca87d5b39304ee42c659e27252255fe55122fafcaec232087e8c54526c2381
+    SHA512 f63240c41b7c74b3db305a132bcd0a1ea02eeecaeb88d9b27b380526006f66fab93edb9bc5202214e6fc625509d55e93bb29b8a33a876f759b4781919b14e7c7
     HEAD_REF main
     PATCHES
         fix-windows-minmax.patch
@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-unistd-include.patch
         fix-libunwind.patch
         fix-absolute-dir.patch
+        fix-has-include.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
@@ -42,7 +43,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         "liburing"   WITH_liburing
         "libaio"     WITH_libaio
     INVERTED_FEATURES
@@ -60,6 +60,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_INSTALL_DIR=share/folly
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_RUNTIME

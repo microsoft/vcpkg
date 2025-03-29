@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.86.0",
+    $version = "1.87.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
@@ -13,12 +13,12 @@ param (
 
 $ErrorActionPreference = 'Stop'
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsBoostDir = split-path -parent $MyInvocation.MyCommand.Definition
 if ($null -eq $portsDir) {
-    $portsDir = "$scriptsDir/../../ports"
+    $portsDir = "$scriptsBoostDir/../../ports"
 }
 if ($null -eq $vcpkg) {
-    $vcpkg = "$scriptsDir/../../vcpkg"
+    $vcpkg = "$scriptsBoostDir/../../vcpkg"
 }
 
 
@@ -28,10 +28,23 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost'                 = 1;
-    'boost-build'           = 1;
-    'boost-cobalt'          = 1;
-    'boost-function'          = 1
+    'boost' = 1;
+    'boost-asio' = 1;
+    'boost-atomic' = 1;
+    'boost-cobalt' = 1;
+    'boost-compute' = 1;
+    'boost-context' = 1;
+    'boost-flyweight' = 1;
+    'boost-interprocess' = 1;
+    'boost-json' = 1;
+    'boost-lexical-cast' = 1;
+    'boost-lockfree' = 1;
+    'boost-mysql' = 1;
+    'boost-optional' = 1;
+    'boost-parser' = 1;
+    'boost-process' = 1;
+    'boost-regex' = 1;
+    'boost-unordered' = 1;
 }
 
 function Get-PortVersion {
@@ -69,7 +82,7 @@ $portData = @{
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
-    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
+    "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-fiber"            = @{
@@ -82,6 +95,7 @@ $portData = @{
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
     "boost-function"         = @{ "dependencies" = @("boost-type-traits"); };
+    "boost-geometry"         = @{ "dependencies" = @("boost-crc", "boost-program-options"); };
     "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
@@ -134,7 +148,7 @@ $portData = @{
             }
         }
     };
-    "boost-mysql"           = @{ "dependencies" = @("openssl"); };
+    "boost-mysql"            = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
         "features" = @{
             "mpi" = @{
@@ -364,30 +378,29 @@ function GeneratePort() {
         ""
     )
 
-    if ($Library -eq "system") {
-        $portfileLines += @(
-            "vcpkg_buildpath_length_warning(37)"
-            ""
-        )
+    if (Test-Path "$scriptsBoostDir/pre-source-stubs/$Library.cmake") {
+        $portfileLines += @(Get-Content "$scriptsBoostDir/pre-source-stubs/$Library.cmake")
     }
 
     $portfileLines += @(
-        "vcpkg_from_github("
-        "    OUT_SOURCE_PATH SOURCE_PATH"
-        "    REPO boostorg/$Library"
-        "    REF boost-`${VERSION}"
-        "    SHA512 $Hash"
+        "vcpkg_from_github(",
+        "    OUT_SOURCE_PATH SOURCE_PATH",
+        "    REPO boostorg/$Library",
+        "    REF boost-`${VERSION}",
+        "    SHA512 $Hash",
         "    HEAD_REF master"
     )
-    [Array]$patches = Get-Item -Path "$portsDir/$portName/*.patch"
-    [Array]$diffs = Get-Item -Path "$portsDir/$portName/*.diff"
-    [Array]$allmods = $patches + $diffs
-    if ($null -eq $allmods -or $allmods.Count -eq 0) {
+
+    [string[]]$allmods = @()
+    $allmods += Get-ChildItem -Path "$portsDir/$portName/*" -Name -Include @('*.patch', '*.diff')
+    if (Test-Path "$scriptsBoostDir/patch-stubs/$Library.txt") {
+        $allmods +=  Get-Content "$scriptsBoostDir/patch-stubs/$Library.txt"
     }
-    else {
+
+    if ($allmods.Length -ne 0) {
         $portfileLines += @("    PATCHES")
         foreach ($patch in $allmods) {
-            $portfileLines += @("        $($patch.name)")
+            $portfileLines += "        $patch"
         }
     }
     $portfileLines += @(
@@ -395,8 +408,8 @@ function GeneratePort() {
         ""
     )
 
-    if (Test-Path "$scriptsDir/post-source-stubs/$Library.cmake") {
-        $portfileLines += @(Get-Content "$scriptsDir/post-source-stubs/$Library.cmake")
+    if (Test-Path "$scriptsBoostDir/post-source-stubs/$Library.cmake") {
+        $portfileLines += @(Get-Content "$scriptsBoostDir/post-source-stubs/$Library.cmake")
     }
 
     $portfileLines += @(
@@ -408,6 +421,10 @@ function GeneratePort() {
         )
     }
 
+    if (Test-Path "$scriptsBoostDir/pre-build-stubs/$Library.cmake") {
+        $portfileLines += Get-Content "$scriptsBoostDir/pre-build-stubs/$Library.cmake"
+    }
+
     $portfileLines += @(
         "boost_configure_and_install("
         "    SOURCE_PATH `"`${SOURCE_PATH}`""
@@ -415,8 +432,8 @@ function GeneratePort() {
         ")"
     )
 
-    if (Test-Path "$scriptsDir/post-build-stubs/$Library.cmake") {
-        $portfileLines += @(Get-Content "$scriptsDir/post-build-stubs/$Library.cmake")
+    if (Test-Path "$scriptsBoostDir/post-build-stubs/$Library.cmake") {
+        $portfileLines += @(Get-Content "$scriptsBoostDir/post-build-stubs/$Library.cmake")
     }
 
     $portfileLines += @("")
@@ -426,9 +443,9 @@ function GeneratePort() {
         -NoNewline
 }
 
-if (!(Test-Path "$scriptsDir/boost")) {
+if (!(Test-Path "$scriptsBoostDir/boost")) {
     "Cloning boost..."
-    Push-Location $scriptsDir
+    Push-Location $scriptsBoostDir
     try {
         git clone https://github.com/boostorg/boost --branch boost-$version
     }
@@ -437,7 +454,7 @@ if (!(Test-Path "$scriptsDir/boost")) {
     }
 }
 else {
-    Push-Location $scriptsDir/boost
+    Push-Location $scriptsBoostDir/boost
     try {
         git fetch
         git checkout -f boost-$version
@@ -447,7 +464,7 @@ else {
     }
 }
 
-$foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Object name | ForEach-Object {
+$foundLibraries = Get-ChildItem $scriptsBoostDir/boost/libs -directory | ForEach-Object name | ForEach-Object {
     if ($_ -eq "numeric") {
         "numeric_conversion"
         "interval"
@@ -459,7 +476,7 @@ $foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Obje
     }
 }
 
-$downloads = "$scriptsDir/../../downloads"
+$downloads = "$scriptsBoostDir/../../downloads"
 New-Item -ItemType "Directory" $downloads -erroraction SilentlyContinue | out-null
 
 $updateServicePorts = $false
@@ -485,11 +502,11 @@ foreach ($library in $libraries) {
         $hash = $hash[1]
     }
 
-    $unpacked = "$scriptsDir/libs/$library-boost-$version"
+    $unpacked = "$scriptsBoostDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked)) {
         "Unpacking boost/$library..."
-        New-Item -ItemType "Directory" $scriptsDir/libs -erroraction SilentlyContinue | out-null
-        Push-Location $scriptsDir/libs
+        New-Item -ItemType "Directory" $scriptsBoostDir/libs -erroraction SilentlyContinue | out-null
+        Push-Location $scriptsBoostDir/libs
         try {
             cmake -E tar xf $archive
         }

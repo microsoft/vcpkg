@@ -1,6 +1,6 @@
 {
   "name": "sdflib",
-  "version-date": "2024-09-06",
+  "version-date": "2025-01-25",
   "description": "Library for accelerating the queries of signed distance fields from triangle meshes.",
   "homepage": "https://github.com/UPC-ViRVIG/SdfLib",
   "license": "MIT",

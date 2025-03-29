@@ -1,6 +1,7 @@
 {
   "name": "open62541",
   "version": "1.3.15",
+  "port-version": 2,
   "description": "open62541 is an open source C (C99) implementation of OPC UA licensed under the Mozilla Public License v2.0.",
   "homepage": "https://open62541.org",
   "license": "MPL-2.0",
@@ -25,13 +26,29 @@
       "description": "Concatenate the library to a single file open62541.h/.c"
     },
     "diagnostics": {
-      "description": "Enable diagnostics information exposed by the server"
+      "description": "Enable diagnostics information exposed by the server",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "features": [
+            "subscriptions-events"
+          ]
+        }
+      ]
     },
     "discovery": {
       "description": "Enable Discovery Service (LDS)"
     },
     "historizing": {
-      "description": "Enable basic support for historical access (client and server)"
+      "description": "Enable basic support for historical access (client and server)",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "features": [
+            "subscriptions-events"
+          ]
+        }
+      ]
     },
     "mbedtls": {
       "description": "Enable encryption support (uses MbedTLS)",
@@ -41,6 +58,17 @@
     },
     "methodcalls": {
       "description": "Enable the Method service set"
+    },
+    "multithreading": {
+      "description": "Enable multi threading support",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "features": [
+            "methodcalls"
+          ]
+        }
+      ]
     },
     "openssl": {
       "description": "Enable encryption support (uses OpenSSL)",
@@ -52,7 +80,15 @@
       "description": "Enable subscriptions support"
     },
     "subscriptions-events": {
-      "description": "Enable event monitoring"
+      "description": "Enable event monitoring",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "features": [
+            "subscriptions"
+          ]
+        }
+      ]
     }
   }
 }

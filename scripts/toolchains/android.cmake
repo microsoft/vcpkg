@@ -31,6 +31,11 @@ endif()
 
 include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
 
+# find_library must ignore host libs
+if(ANDROID_TOOLCHAIN_ROOT AND EXISTS "${ANDROID_TOOLCHAIN_ROOT}/lib")
+    list(APPEND CMAKE_SYSTEM_IGNORE_PATH "${ANDROID_TOOLCHAIN_ROOT}/lib")
+endif()
+
 if(NOT _VCPKG_ANDROID_TOOLCHAIN)
     set(_VCPKG_ANDROID_TOOLCHAIN 1)
 

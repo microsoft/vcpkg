@@ -7,22 +7,26 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
 
+# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "20.04") and format to "2004"
+UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
+
+# Apt dependencies; needed for add-apt-repository and curl downloads to work
+apt-get -y update
+apt-get --no-install-recommends -y install ca-certificates curl apt-transport-https lsb-release gnupg software-properties-common
+
 ## CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
+apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/3bf863cc.pub"
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/ /"
 
 ## PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
 
 ## Azure CLI
-apt-get -qq update
-apt-get -qq install ca-certificates curl apt-transport-https lsb-release gnupg
-
 mkdir -p /etc/apt/keyrings
 curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
     gpg --dearmor |
@@ -34,7 +38,7 @@ echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsof
     tee /etc/apt/sources.list.d/azure-cli.list
 
 apt-get -y update
-apt-get -y dist-upgrade
+apt-get -y upgrade
 
 # Add apt packages
 
@@ -109,9 +113,9 @@ APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
 ## CUDA
-APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
-  cuda-cudart-dev-12-1 libcublas-12-1 libcurand-dev-12-1 cuda-nvml-dev-12-1 libcudnn8-dev libnccl2 \
-  libnccl-dev"
+APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driver-dev-12-8 \
+  cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev-cuda-12 \
+  libnccl2 libnccl-dev"
 
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
@@ -123,6 +127,6 @@ else
 APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
 fi
 
-apt-get -y --no-install-recommends install $APT_PACKAGES
+apt-get --no-install-recommends -y install $APT_PACKAGES
 
 az --version

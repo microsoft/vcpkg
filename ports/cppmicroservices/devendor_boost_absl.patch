@@ -1,13 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55b99bb765..85b4484990 100644
+index 87cfb37..d7fbd20 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -692,9 +692,9 @@ endif()
- #-----------------------------------------------------------------------------
+@@ -693,7 +693,7 @@ endif()
  # Compile libraries here if you do not want -Werror or /WX on
  #-----------------------------------------------------------------------------
--add_subdirectory(third_party/absl)
-+find_package(absl CONFIG REQUIRED)
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 -add_subdirectory(third_party/boost/nowide)
 +find_package(Boost COMPONENTS nowide CONFIG REQUIRED)
@@ -15,7 +12,7 @@ index 55b99bb765..85b4484990 100644
  #-----------------------------------------------------------------------------
  
 diff --git a/cmake/usBundleConfig.cmake.in b/cmake/usBundleConfig.cmake.in
-index c9cf743790..078c5b3fad 100644
+index c9cf743..f0ab1ca 100644
 --- a/cmake/usBundleConfig.cmake.in
 +++ b/cmake/usBundleConfig.cmake.in
 @@ -3,6 +3,10 @@
@@ -30,7 +27,7 @@ index c9cf743790..078c5b3fad 100644
    include("${CMAKE_CURRENT_LIST_DIR}/us@PROJECT_NAME@Targets.cmake")
  endif()
 diff --git a/compendium/CMakeLists.txt b/compendium/CMakeLists.txt
-index a5713313ec..d26ac7e4fe 100644
+index a571331..d26ac7e 100644
 --- a/compendium/CMakeLists.txt
 +++ b/compendium/CMakeLists.txt
 @@ -1,3 +1,4 @@
@@ -39,7 +36,7 @@ index a5713313ec..d26ac7e4fe 100644
    add_subdirectory(test_bundles)
  endif()
 diff --git a/compendium/ConfigurationAdmin/src/CMAsyncWorkService.cpp b/compendium/ConfigurationAdmin/src/CMAsyncWorkService.cpp
-index 50f02e6e1f..fdfa45d991 100644
+index 50f02e6..fdfa45d 100644
 --- a/compendium/ConfigurationAdmin/src/CMAsyncWorkService.cpp
 +++ b/compendium/ConfigurationAdmin/src/CMAsyncWorkService.cpp
 @@ -22,10 +22,10 @@
@@ -58,10 +55,10 @@ index 50f02e6e1f..fdfa45d991 100644
  namespace cppmicroservices
  {
 diff --git a/compendium/ConfigurationAdmin/src/CMakeLists.txt b/compendium/ConfigurationAdmin/src/CMakeLists.txt
-index f2eca66ce7..8d7c8bd671 100644
+index a079c20..2657610 100644
 --- a/compendium/ConfigurationAdmin/src/CMakeLists.txt
 +++ b/compendium/ConfigurationAdmin/src/CMakeLists.txt
-@@ -25,7 +25,7 @@ set(_private_headers
+@@ -28,7 +28,7 @@ set(_private_headers
    )
  
  add_library(ConfigurationAdminObjs OBJECT ${_srcs} ${_private_headers})
@@ -71,7 +68,7 @@ index f2eca66ce7..8d7c8bd671 100644
    get_property(_compile_flags TARGET ConfigurationAdminObjs PROPERTY COMPILE_FLAGS)
    set_property(TARGET ConfigurationAdminObjs PROPERTY COMPILE_FLAGS "${_compile_flags} -fPIC")
 diff --git a/compendium/DeclarativeServices/CMakeLists.txt b/compendium/DeclarativeServices/CMakeLists.txt
-index 24f2820fa5..cb518781b4 100644
+index 2920189..810b00b 100755
 --- a/compendium/DeclarativeServices/CMakeLists.txt
 +++ b/compendium/DeclarativeServices/CMakeLists.txt
 @@ -37,14 +37,14 @@ endif()
@@ -81,7 +78,7 @@ index 24f2820fa5..cb518781b4 100644
 -
 +find_package(Boost COMPONENTS asio CONFIG REQUIRED)
  usMacroCreateBundle(DeclarativeServices
-   VERSION "1.5.10"
+   VERSION "1.5.13"
    DEPENDS Framework
    TARGET DeclarativeServices
    SYMBOLIC_NAME declarative_services
@@ -92,22 +89,23 @@ index 24f2820fa5..cb518781b4 100644
    SOURCES $<TARGET_OBJECTS:DeclarativeServicesObjs> src/SCRActivator.cpp
    BINARY_RESOURCES manifest.json
 diff --git a/compendium/DeclarativeServices/src/CMakeLists.txt b/compendium/DeclarativeServices/src/CMakeLists.txt
-index d25961b6d7..9283babe46 100644
+index 726d402..4e075d5 100644
 --- a/compendium/DeclarativeServices/src/CMakeLists.txt
 +++ b/compendium/DeclarativeServices/src/CMakeLists.txt
-@@ -79,8 +79,9 @@ set(_private_headers
+@@ -80,9 +80,9 @@ set(_private_headers
    metadata/ServiceMetadata.hpp
    metadata/Util.hpp
    )
 -  
 +find_package(Boost COMPONENTS asio CONFIG REQUIRED)
  add_library(DeclarativeServicesObjs OBJECT ${_srcs} ${_private_headers})
+-
 +target_link_libraries(DeclarativeServicesObjs PUBLIC Boost::asio)
- 
  if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
    get_property(_compile_flags TARGET DeclarativeServicesObjs PROPERTY COMPILE_FLAGS)
+   set_property(TARGET DeclarativeServicesObjs PROPERTY COMPILE_FLAGS "${_compile_flags} -fPIC")
 diff --git a/compendium/DeclarativeServices/src/SCRAsyncWorkService.cpp b/compendium/DeclarativeServices/src/SCRAsyncWorkService.cpp
-index ffc93e9e86..1b9af7bd6c 100644
+index ffc93e9..1b9af7b 100644
 --- a/compendium/DeclarativeServices/src/SCRAsyncWorkService.cpp
 +++ b/compendium/DeclarativeServices/src/SCRAsyncWorkService.cpp
 @@ -22,10 +22,10 @@
@@ -126,7 +124,7 @@ index ffc93e9e86..1b9af7bd6c 100644
  namespace cppmicroservices
  {
 diff --git a/compendium/DeclarativeServices/src/manager/ComponentConfigurationImpl.cpp b/compendium/DeclarativeServices/src/manager/ComponentConfigurationImpl.cpp
-index c4483a98c1..84d4217e7a 100644
+index c4483a9..84d4217 100644
 --- a/compendium/DeclarativeServices/src/manager/ComponentConfigurationImpl.cpp
 +++ b/compendium/DeclarativeServices/src/manager/ComponentConfigurationImpl.cpp
 @@ -30,7 +30,7 @@
@@ -139,14 +137,13 @@ index c4483a98c1..84d4217e7a 100644
  #include "states/CCUnsatisfiedReferenceState.hpp"
  #include "states/ComponentConfigurationState.hpp"
 diff --git a/tools/rc/CMakeLists.txt b/tools/rc/CMakeLists.txt
-index c4a36f8dd1..ffcf13e44a 100644
+index c4a36f8..8844292 100755
 --- a/tools/rc/CMakeLists.txt
 +++ b/tools/rc/CMakeLists.txt
-@@ -19,9 +19,8 @@ set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} PROPERTY OUTPUT_NAME ${US_RCC_EX
- if(WIN32)
+@@ -20,8 +20,8 @@ if(WIN32)
      target_link_libraries(${US_RCC_EXECUTABLE_TARGET} Shlwapi)
  endif()
--
+ 
 -target_link_libraries(${US_RCC_EXECUTABLE_TARGET} nowide::nowide)
 -target_include_directories(${US_RCC_EXECUTABLE_TARGET} PRIVATE ${CppMicroServices_SOURCE_DIR}/third_party/boost/nowide/include)
 +find_package(Boost COMPONENTS nowide CONFIG REQUIRED)
@@ -155,7 +152,7 @@ index c4a36f8dd1..ffcf13e44a 100644
  set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} APPEND PROPERTY
               COMPILE_DEFINITIONS "MINIZ_NO_ARCHIVE_READING_API;MINIZ_NO_ZLIB_COMPATIBLE_NAMES")
 diff --git a/tools/rc/ResourceCompiler.cpp b/tools/rc/ResourceCompiler.cpp
-index a5b81d3522..4e92db4e3a 100644
+index a5b81d3..4e92db4 100755
 --- a/tools/rc/ResourceCompiler.cpp
 +++ b/tools/rc/ResourceCompiler.cpp
 @@ -37,9 +37,12 @@

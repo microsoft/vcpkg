@@ -1,6 +1,6 @@
 {
   "name": "qttranslations",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "Qt translations.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -16,13 +16,5 @@
         "linguist"
       ]
     }
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    }
-  }
+  ]
 }

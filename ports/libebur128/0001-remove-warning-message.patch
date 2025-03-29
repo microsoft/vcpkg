@@ -1,0 +1,11 @@
+--- a/ebur128/ebur128.c	2021-02-14 15:31:05.000000000 +0100
++++ b/ebur128/ebur128.c	2025-01-28 10:43:26.975886500 +0100
+@@ -606,7 +606,7 @@
+ #define TURN_OFF_FTZ _mm_setcsr(mxcsr);
+ #define FLUSH_MANUALLY
+ #else
+-#warning "manual FTZ is being used, please enable SSE2 (-msse2 -mfpmath=sse)"
++//#warning "manual FTZ is being used, please enable SSE2 (-msse2 -mfpmath=sse)"
+ #define TURN_ON_FTZ
+ #define TURN_OFF_FTZ
+ #define FLUSH_MANUALLY                                                         \

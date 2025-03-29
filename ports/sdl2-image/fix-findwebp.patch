@@ -1,18 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 65a8811..1f29faa 100644
+index 4ceee1d..9354718 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -690,7 +690,7 @@ if(SDL2IMAGE_WEBP)
+@@ -810,7 +810,7 @@ if(SDL2IMAGE_WEBP)
+         set_target_properties(webp PROPERTIES EXPORT_NAME "external_libwebp")
          add_library(SDL2_image::external_libwebp ALIAS webp)
      else()
-         message(STATUS "${PROJECT_NAME}: Using system libwebp")
--        find_package(webp REQUIRED)
-+        find_package(webp NAMES WebP CONFIG REQUIRED)
-         list(APPEND PC_REQUIRES libwebp libwebpdemux)
-     endif()
-     if(SDL2IMAGE_WEBP_SHARED)
+-        find_package(webp ${required})
++        find_package(webp NAMES WebP CONFIG ${required})
+         if(webp_FOUND)
+             set(SDL2IMAGE_WEBP_ENABLED TRUE)
+             message(STATUS "${PROJECT_NAME}: Using system libwebp")
 diff --git a/SDL2_imageConfig.cmake.in b/SDL2_imageConfig.cmake.in
-index c59e844..7b16a60 100644
+index 7c7efab..925bbc4 100644
 --- a/SDL2_imageConfig.cmake.in
 +++ b/SDL2_imageConfig.cmake.in
 @@ -74,7 +74,7 @@ endif()
