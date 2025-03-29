@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-warningC4643.patch
         add-missing-thread-header.patch
+        cmake4.patch
 )
 
 set(SHARED_FLAG OFF)

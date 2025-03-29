@@ -17,6 +17,7 @@ vcpkg_from_github(
         exports-for-msh3.diff
         no-werror.patch
         avoid-w-invalid-unevaluated-string.patch
+        cmake4.patch
 )
 
 set(QUIC_TLS "schannel")

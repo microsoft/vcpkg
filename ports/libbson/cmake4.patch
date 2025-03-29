@@ -1,0 +1,16 @@
+diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
+index 829d77c88c..8b87297c11 100644
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -33,11 +33,6 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ # potentially co-locate additional future major versions.
+ set (BSON_API_VERSION 1.0)
+ 
+-if (APPLE)
+-   cmake_policy (SET CMP0042 OLD)
+-endif ()
+-
+-
+ #  .d8888b.           888    888    d8b
+ # d88P  Y88b          888    888    Y8P
+ # Y88b.               888    888

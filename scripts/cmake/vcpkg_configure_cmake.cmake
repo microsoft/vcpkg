@@ -217,6 +217,7 @@ function(vcpkg_configure_cmake)
     endif()
 
     vcpkg_list(APPEND arg_OPTIONS
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_SET_CHARSET_FLAG=${vcpkg_set_charset_flag}"
