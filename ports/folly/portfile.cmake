@@ -86,6 +86,12 @@ FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+set(WITH_LIBURING 0)
+if("liburing" IN_LIST FEATURES)
+    set(WITH_LIBURING 1)
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/folly/io/async/Liburing.h" "__has_include(<liburing.h>" "(${WITH_LIBURING})")
+
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
