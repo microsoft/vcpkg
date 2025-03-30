@@ -1,0 +1,23 @@
+{
+    "name": "kf5kirigami",
+    "version": "5.116.0",
+    "port-version": 1,
+    "description": "A QtQuick based components set",
+    "homepage": "https://api.kde.org/frameworks/kirigami/html/index.html",
+    "license": "LGPL-2.0-or-later",
+    "supports": "!xbox",
+    "dependencies": [
+        "ecm",
+        "qt5-base",
+        "qt5-quickcontrols",
+        "qt5-quickcontrols2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        }
+    ]
+}
