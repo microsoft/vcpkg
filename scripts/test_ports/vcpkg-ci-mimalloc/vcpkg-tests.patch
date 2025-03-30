@@ -2,13 +2,7 @@ diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
 index 5905613c..19e8ac34 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -1,4 +1,4 @@
--cmake_minimum_required(VERSION 3.18)
-+cmake_minimum_required(VERSION 3.5)
- project(mimalloc-test C CXX)
- 
- set(CMAKE_C_STANDARD 11)
-@@ -16,10 +16,13 @@ if (NOT CMAKE_BUILD_TYPE)
+@@ -16,10 +16,11 @@ if (NOT CMAKE_BUILD_TYPE)
  endif()
  
  # Import mimalloc (if installed)
@@ -16,20 +10,18 @@ index 5905613c..19e8ac34 100644
 +find_package(mimalloc 3.0 CONFIG REQUIRED)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
  
-+set(THREADS_PREFER_PTHREAD_FLAG 1)
-+find_package(Threads REQUIRED)
  
 +if(BUILD_SHARED_LIBS)
  # link with a dynamic shared library
  # use `LD_PRELOAD` to actually override malloc/free at runtime with mimalloc
  add_executable(dynamic-override  main-override.c)
-@@ -27,15 +30,17 @@ target_link_libraries(dynamic-override PUBLIC mimalloc)
+@@ -27,15 +28,19 @@ target_link_libraries(dynamic-override PUBLIC mimalloc)
  
  add_executable(dynamic-override-cxx  main-override.cpp)
  target_link_libraries(dynamic-override-cxx PUBLIC mimalloc)
 +endif()
  
--
+ 
 +if(0)
  # overriding with a static object file works reliable as the symbols in the
  # object file have priority over those in library files
@@ -38,22 +30,18 @@ index 5905613c..19e8ac34 100644
  target_link_libraries(static-override-obj PUBLIC mimalloc-static)
 +endif()
  
--
+ 
 +if(NOT BUILD_SHARED_LIBS)
  # overriding with a static library works too if using the `mimalloc-override.h`
  # header to redefine malloc/free. (the library already overrides new/delete)
  add_executable(static-override-static main-override-static.c)
-@@ -49,8 +54,12 @@ target_link_libraries(static-override PUBLIC mimalloc-static)
+@@ -49,7 +52,9 @@ target_link_libraries(static-override PUBLIC mimalloc-static)
  
  add_executable(static-override-cxx  main-override.cpp)
  target_link_libraries(static-override-cxx PUBLIC mimalloc-static)
-+target_link_libraries(static-override-cxx PRIVATE Threads::Threads)
 +endif()
  
- 
++include("${VCPKG_TESTS}")
+
  ## test memory errors
  add_executable(test-wrong  test-wrong.c)
- target_link_libraries(test-wrong PUBLIC mimalloc)
-+
-+include("${VCPKG_TESTS}")
-\ No newline at end of file
