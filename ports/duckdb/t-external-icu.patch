@@ -10,7 +10,7 @@ index 2e5270e..7c5ce31 100644
 +    find_dependency(ICU COMPONENTS i18n uc data)
  endif()
  
- # Compute paths
+ set(EXTENSION_LIST "@BUILD_EXTENSIONS@")
 diff --git a/extension/icu/CMakeLists.txt b/extension/icu/CMakeLists.txt
 index b5585e4..e3ae9cf 100644
 --- a/extension/icu/CMakeLists.txt
