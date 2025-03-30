@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF "v${VERSION}-beta"
-    SHA512 ee9a0d1c348a409744009be2a3e4e8a0329a967b4523d489aab1b8e9d382e602d42a3d03beee09218fe65cdee27891d2af476e3d57ae1de1079343f5a343cea4
+    REF "v${VERSION}"
+    SHA512 fa47dd7ecfe8e8afb691490a3317ce89e92c4d322624d4373a113beb10d4aa44b43359fea84beb43ad9be5cddd4f262a5c933177c6096b70d2cee53cb6e9620b
     HEAD_REF master
 )
 
