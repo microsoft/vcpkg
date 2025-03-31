@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-buildflag-and-install.patch
         fix-utils.patch
         fix-dependencies.patch
+        fix-xmlfree.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 

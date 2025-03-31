@@ -1,0 +1,12 @@
+diff --git a/src/common/elements.h b/src/common/elements.h
+index a8f1cee..5be4e7c 100644
+--- a/src/common/elements.h
++++ b/src/common/elements.h
+@@ -29,6 +29,7 @@
+ 
+ #include <libxml/xmlreader.h>
+ #include <libxml/xmlwriter.h>
++#include <libxml/xmlmemory.h>
+ #include <stdbool.h>
+ #include <time.h>
+ #include "public/oscap.h"
