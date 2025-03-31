@@ -1,0 +1,12 @@
+diff --git a/src/gaiageo/gg_xml.c b/src/gaiageo/gg_xml.c
+index b8b741a..c68f28a 100644
+--- a/src/gaiageo/gg_xml.c
++++ b/src/gaiageo/gg_xml.c
+@@ -61,6 +61,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
+ #include <libxml/xmlschemas.h>
+ #include <libxml/xpath.h>
+ #include <libxml/xpathInternals.h>
++#include <libxml/xmlmemory.h>
+ 
+ #include <spatialite_private.h>
+ #include <spatialite/sqlite.h>
