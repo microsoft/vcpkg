@@ -8,6 +8,7 @@ vcpkg_from_github(
         deps.patch
         alsa-dep-fix.patch
         cxx-linkage-pkgconfig.diff
+        fix-pipewire.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)

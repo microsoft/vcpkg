@@ -1,6 +1,7 @@
 {
   "name": "libssh",
   "version": "0.10.6",
+  "port-version": 1,
   "description": "libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side",
   "homepage": "https://www.libssh.org/",
   "license": "LGPL-2.1-only",
