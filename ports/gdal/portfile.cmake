@@ -74,12 +74,6 @@ endif()
 
 string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(USE_STATIC_LIBRARIES ON)
-else()
-    set(USE_STATIC_LIBRARIES OFF)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -106,7 +100,6 @@ vcpkg_cmake_configure(
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
-        -DARROW_USE_STATIC_LIBRARIES=${USE_STATIC_LIBRARIES}
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
     MAYBE_UNUSED_VARIABLES
