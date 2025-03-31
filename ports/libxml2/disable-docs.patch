@@ -1,16 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f99fd368..38dcd377 100644
+index 327c2a4..909d71c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -586,17 +586,6 @@ if(LIBXML2_WITH_PYTHON)
+@@ -564,20 +564,6 @@ if(LIBXML2_WITH_PYTHON)
      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2.py DESTINATION ${LIBXML2_PYTHON_INSTALL_DIR} COMPONENT runtime)
  endif()
  
 -install(FILES doc/xml2-config.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
--install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
--install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-if(LIBXML2_WITH_PROGRAMS)
+-    install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-    install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-endif()
 -install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT documentation
 -    PATTERN "Makefile.*" EXCLUDE
+-    PATTERN "meson.build" EXCLUDE
 -    PATTERN "*.1" EXCLUDE
 -    PATTERN "*.py" EXCLUDE
 -    PATTERN "*.res" EXCLUDE

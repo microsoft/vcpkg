@@ -1,7 +1,6 @@
 {
   "name": "libxml2",
-  "version": "2.13.5",
-  "port-version": 1,
+  "version": "2.14.0",
   "description": "Libxml2 is the XML C parser and toolkit developed for the Gnome project (but usable outside of the Gnome platform).",
   "homepage": "https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home",
   "license": "MIT",
@@ -21,10 +20,6 @@
     "zlib"
   ],
   "features": {
-    "ftp": {
-      "description": "Add the FTP support",
-      "supports": "!uwp"
-    },
     "http": {
       "description": "Add the HTTP support",
       "supports": "!uwp"
