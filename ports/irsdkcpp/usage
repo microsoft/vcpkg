@@ -1,15 +1,7 @@
 irsdkcpp provides CMake targets:
 
   find_package(irsdkcpp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:irsdkcpp::irsdkcpp_shared>,irsdkcpp::irsdkcpp_shared,irsdkcpp::irsdkcpp_static>)
 
-  # STATIC/DYNAMIC LINKAGE (NOTE: Generator checks for target)
-  target_link_libraries(
-    main 
-    PRIVATE 
-    $<IF:$<TARGET_EXISTS:irsdkcpp::irsdkcpp_shared>,irsdkcpp::irsdkcpp_shared,irsdkcpp::irsdkcpp_static>)
-
-  
 irsdkcpp provides pkg-config modules:
-# NOTE: The pkg-config modules require explicit linkage to either `irsdkcpp_shared` or `irsdkcpp_static`.  
-#   Additionally `DEBUG` builds have a `d` suffix
   irsdkcpp
