@@ -18,7 +18,7 @@ vcpkg_from_git(
     REF c8015cb75d7d3b3c499ec86b84d099c4c1ab942b
     HEAD_REF master
 )
-file(COPY ${SOURCE_PATH_LIBSTUDXML}/ DESTINATION ${SOURCE_PATH}/third-party/libstudxml)
+file(COPY "${SOURCE_PATH_LIBSTUDXML}/" DESTINATION "${SOURCE_PATH}/third-party/libstudxml")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(STATIC OFF)
@@ -39,7 +39,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/xlnt)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_copy_pdbs()
