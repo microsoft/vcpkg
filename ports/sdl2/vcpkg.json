@@ -35,12 +35,8 @@
   "features": {
     "alsa": {
       "description": "Support for alsa audio",
-      "supports": "linux",
       "dependencies": [
-        {
-          "name": "alsa",
-          "platform": "linux"
-        }
+        "alsa"
       ]
     },
     "dbus": {
