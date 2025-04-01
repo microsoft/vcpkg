@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       0001-fix-CMake-config.patch
+      0002-fix-CMake-version.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC_STATIC)
