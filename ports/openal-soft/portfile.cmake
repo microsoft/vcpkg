@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
     REF ${VERSION}
-    SHA512 e0b1cb08fe65e71ffd49a1dd90a1b1d2119a1dd8e5d1e10850d6c5bf04eea3335cc3051636a0479617ee5af95536a09fcad2a80d8009a10bc1fbe35a42cfe611
+    SHA512 3eebd18de4984691136738e8fe5851ac5dbdc8f17916cc9dcc599bd3bafc400c9dad9dc88844a9b77b1e8e372a041af342421bdf23746dffe4760f8385bd1e53
     HEAD_REF master
 )
 
