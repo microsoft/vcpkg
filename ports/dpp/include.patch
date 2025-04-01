@@ -1,13 +1,12 @@
-diff --git a/src/dpp/socketengine.cpp b/src/dpp/socketengine.cpp
-index 81c5fc92..025c534c 100644
---- a/src/dpp/socketengine.cpp
-+++ b/src/dpp/socketengine.cpp
-@@ -23,7 +23,7 @@
+diff --git a/src/dpp/socketengines/poll.cpp b/src/dpp/socketengines/poll.cpp
+index f08acef0..61c98daa 100644
+--- a/src/dpp/socketengines/poll.cpp
++++ b/src/dpp/socketengines/poll.cpp
+@@ -19,6 +19,7 @@
+  *
+  ************************************************************************************/
+
++#include <dpp/cluster.h>
+ #include <dpp/socketengine.h>
  #include <dpp/exception.h>
- #include <csignal>
- #include <memory>
--#include <sslclient.h>
-+#include <dpp/sslclient.h>
- #include <iostream>
- #include <dpp/cache.h>
- #include <dpp/cluster.h>
+ #include <vector>

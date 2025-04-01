@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e390ac4b3..7117609d2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -154,7 +154,9 @@ else()
+     # $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/highs>
+   )
+ 
++  if (CUPDLP_GPU)
+   target_include_directories(highs PUBLIC "${CMAKE_CUDA_PATH}/include")
++  endif()
+ 
+   # target_include_directories(highs PRIVATE
+   #   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interfaces>

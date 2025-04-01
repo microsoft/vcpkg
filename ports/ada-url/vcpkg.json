@@ -1,6 +1,6 @@
 {
   "name": "ada-url",
-  "version": "3.1.3",
+  "version": "3.2.1",
   "description": "WHATWG-compliant and fast URL parser written in modern C++",
   "homepage": "https://ada-url.com/",
   "license": "MIT OR Apache-2.0",

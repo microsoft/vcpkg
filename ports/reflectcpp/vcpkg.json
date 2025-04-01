@@ -1,6 +1,6 @@
 {
   "name": "reflectcpp",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "A C++ library for serialization and deserialization using reflection. Supports JSON, Avro, BSON, Cap'n Proto, CBOR, flexbuffers, msgpack, TOML, UBJSON, XML, YAML.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
@@ -65,6 +65,15 @@
         {
           "name": "msgpack-c",
           "version>=": "6.0.0"
+        }
+      ]
+    },
+    "toml": {
+      "description": "Support for the TOML format",
+      "dependencies": [
+        {
+          "name": "toml11",
+          "version>=": "4.2.0"
         }
       ]
     },
