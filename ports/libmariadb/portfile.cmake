@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ebrinette/mariadb-connector-c
     REF v${VERSION}
-    SHA512 731e7c12fdc4d37991ccab6f30f95f33b80615af3dda7c872463c246c82b8f02f9ef2272a2bf0fff7b913a03474c76b6f995476cdefbf9b034f627bd4b34a14f
+    SHA512 a6b222b664a1331de39887d466a6afb3d7a33ed2fae317e2b34ba289089be9c191d1393b799933dc8494d0f6d8e72b7d947d27b1d246e0a8e980f1ca6e1bcb3c
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
