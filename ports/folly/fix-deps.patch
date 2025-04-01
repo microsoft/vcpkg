@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 0b96f0a..92016e1 100644
+index 0b96f0a..d5a200f 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -29,10 +29,27 @@ endif()
+@@ -29,10 +29,31 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -10,9 +10,13 @@ index 0b96f0a..92016e1 100644
 +find_dependency(fmt CONFIG)
 +find_dependency(double-conversion CONFIG)
 +find_dependency(FastFloat CONFIG)
++set(z_vcpkg_folly_gflags_backup ${GFLAGS_USE_TARGET_NAMESPACE})
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
 +find_dependency(gflags CONFIG)
++set(GFLAGS_USE_TARGET_NAMESPACE ${z_vcpkg_folly_gflags_backup})
 +find_dependency(glog CONFIG)
 +find_dependency(Libevent CONFIG)
++find_dependency(ZLIB)
 +if("@VCPKG_LOCK_FIND_PACKAGE_LZ4@")
 +  find_dependency(lz4 CONFIG)
 +endif()
@@ -47,7 +51,7 @@ index 9a309fb..7e6e05f 100644
  #include <TargetConditionals.h> // @manual
  #endif
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 6ce4c67..9cf3840 100644
+index 6ce4c67..a347cf0 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -35,7 +35,7 @@ else()
@@ -85,7 +89,7 @@ index 6ce4c67..9cf3840 100644
  set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
  if(LIBGFLAGS_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
-@@ -64,12 +68,17 @@ if(LIBGFLAGS_FOUND)
+@@ -64,16 +68,22 @@ if(LIBGFLAGS_FOUND)
    set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
  endif()
  
@@ -105,7 +109,12 @@ index 6ce4c67..9cf3840 100644
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBEVENT_LIB})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
  
-@@ -106,21 +115,24 @@ if (LIBLZMA_FOUND)
+ find_package(ZLIB MODULE)
++set(ZLIB_LIBRARIES ZLIB::ZLIB)  # consistent with proxygen
+ set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
+ if (ZLIB_FOUND)
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
+@@ -106,21 +116,24 @@ if (LIBLZMA_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
  endif()
  
@@ -133,7 +142,7 @@ index 6ce4c67..9cf3840 100644
  set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
  if (SNAPPY_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
-@@ -136,14 +148,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
+@@ -136,14 +149,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
  
  find_package(LibAIO)
@@ -154,7 +163,7 @@ index 6ce4c67..9cf3840 100644
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBSODIUM_INCLUDE_DIRS})
  
-@@ -160,6 +177,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+@@ -160,6 +178,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
  if (LIBUNWIND_FOUND)
    set(FOLLY_HAVE_LIBUNWIND ON)
