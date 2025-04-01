@@ -17,10 +17,11 @@ vcpkg_from_github(
         limits.diff
         mingw.diff
         openjpeg.diff
+        triangle.diff
 )
 file(GLOB_RECURSE vendored_sources "${SOURCE_PATH}/v3p/*.c" "${SOURCE_PATH}/v3p/*.cpp" "${SOURCE_PATH}/v3p/*.cxx")
 list(FILTER vendored_sources EXCLUDE REGEX "/(netlib|openjpeg2)/")
-file(REMOVE_RECURSE ${vendored_sources})
+file(REMOVE_RECURSE ${vendored_sources} "${SOURCE_PATH}/v3p/netlib/triangle.c" "${SOURCE_PATH}/v3p/netlib/triangle.h")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
