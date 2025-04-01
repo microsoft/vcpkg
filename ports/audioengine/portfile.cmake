@@ -2,7 +2,7 @@ vcpkg_from_github(
    OUT_SOURCE_PATH SOURCE_PATH
    REPO Darkx32/AudioEngine
    REF "v${VERSION}"
-   SHA512 66d3fd1beacafd7269cd548d4f3d06e5a13fb1aa44559105c20348d0e3e9592bffa45b7327d787a63ce18fd3b4d6b1aa56dfca9dd48dd0b7514e9856eaa8572e
+   SHA512 3f2144ea2bd833c4f567e64a20c9411dca9d07a6a81ca236086d65b76c6b9e91937139b9f73fbc531fecb2f6327cd5d180887122053f91d0c33ef0c04aa9edcd
 )
 
 vcpkg_cmake_configure(
