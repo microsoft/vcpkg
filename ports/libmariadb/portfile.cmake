@@ -8,9 +8,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mariadb-corporation/mariadb-connector-c
+    REPO ebrinette/mariadb-connector-c
     REF v${VERSION}
-    SHA512 396ce2a36937d49ec96eb239312118c736f46383d2906b7142d9695e795f310af28255d8827cc98ad76ae4e6d5a22faf1188b7dd286791e3c85f22c96d0114b3
+    SHA512 731e7c12fdc4d37991ccab6f30f95f33b80615af3dda7c872463c246c82b8f02f9ef2272a2bf0fff7b913a03474c76b6f995476cdefbf9b034f627bd4b34a14f
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
