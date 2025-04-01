@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 08cde3b092..3f538e405c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,7 @@
+ # (3) Do the usual "make clean all" to build the library
+ # (4) To install either "make install" or "make install DESTDIR=<your directory>"
+ # (5) Need to include changes in include/log4cpp/Portability.hh for OSX to build
+-
++cmake_minimum_required(VERSION 3.10)
+ PROJECT ( LOG4CPP )
+ 
+ INCLUDE_DIRECTORIES ( include )

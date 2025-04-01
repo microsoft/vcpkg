@@ -1,6 +1,7 @@
 {
   "name": "physx",
   "version": "5.5.0",
+  "port-version": 1,
   "description": "The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs. This is the latest NVIDIA official version of the PhysX engine which also directly integrates into Omniverse. This port is NOT officially supported by NVIDIA.",
   "homepage": "https://github.com/NVIDIA-Omniverse/PhysX",
   "license": "BSD-3-Clause",

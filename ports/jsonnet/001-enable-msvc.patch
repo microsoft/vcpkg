@@ -73,9 +73,11 @@ index a481d9f..2f58d2f 100644
  # Custom command that will only build stdlib when it changes.
  add_custom_command(
  	OUTPUT ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
-@@ -13,3 +14,4 @@ add_custom_command(
+@@ -13,3 +14,6 @@ add_custom_command(
  # Standard library build target that libjsonnet can depend on.
  add_custom_target(stdlib ALL
  	DEPENDS ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h)
++else()
++add_custom_target(stdlib)
 +endif()
 \ No newline at end of file

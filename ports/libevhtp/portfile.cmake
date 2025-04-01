@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF  e200bfa85bf253e9cfe1c1a9e705fccb176b9171
     SHA512 d77d6d12dcc2762c8311a04cd3d33c7dfde7b406dbbb544d683e6a3b8e5912ba37a196470bc5aca92b58bd9659fbb396e5a11234b98435534f535046d6dab6eb
     HEAD_REF master
+    PATCHES
+        fix-cmake4.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

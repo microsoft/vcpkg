@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 4.0)
 project(lemon-parser-generator C)
 add_executable(lemon lemon.c)
 install(TARGETS lemon
