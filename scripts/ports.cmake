@@ -3,7 +3,7 @@ if(POLICY CMP0174)
     # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
     cmake_policy(SET CMP0174 NEW)
 endif()
-if(CMAKE_VERSION GREATER_EQUAL "4.0")
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
     set(ENV{CMAKE_POLICY_VERSION_MINIMUM} 3.5)
 endif()
 
