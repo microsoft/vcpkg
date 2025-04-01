@@ -108,8 +108,7 @@
       "features": [
         "cuda",
         "cudnn",
-        "dnn-cuda",
-        "spng"
+        "dnn-cuda"
       ],
       "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
     },

@@ -97,13 +97,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "opengl"     WITH_OPENGL
  "ovis"       CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "ovis"       BUILD_opencv_ovis
+ "png"        WITH_PNG
  "python"     BUILD_opencv_python3
  "python"     WITH_PYTHON
  "quality"    BUILD_opencv_quality
  "quirc"      WITH_QUIRC
  "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
- "spng"       WITH_SPNG
  "tbb"        WITH_TBB
  "tiff"       WITH_TIFF
  "vtk"        WITH_VTK
@@ -127,21 +127,6 @@ endif()
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
-endif()
-
-set(WITH_JASPER OFF)
-if(("jasper" IN_LIST FEATURES) AND NOT ("openjpeg" IN_LIST FEATURES)) # jasper is mutually exclusive with openjpeg
-  set(WITH_JASPER ON)
-  message(STATUS "Jasper is enabled, but is deprecated and will be removed in a future release.")
-elseif("jasper" IN_LIST FEATURES AND ("openjpeg" IN_LIST FEATURES))
-  message(WARNING "Both Jasper and OpenJPEG are enabled. OpenJPEG will be used and Jasper will be ignored.")
-endif()
-
-set(WITH_PNG OFF)
-if(("png" IN_LIST FEATURES) AND NOT ("spng" IN_LIST FEATURES)) # png is mutually exclusive with spng
-  set(WITH_PNG ON)
-elseif(("png" IN_LIST FEATURES) AND ("spng" IN_LIST FEATURES))
-  message(WARNING "Both PNG and SPNG are enabled. SPNG will be used and PNG will be ignored.")
 endif()
 
 if("python" IN_LIST FEATURES)
@@ -428,12 +413,11 @@ vcpkg_cmake_configure(
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
         ###### customized properties
         ${FEATURE_OPTIONS}
-        -DWITH_JASPER=${WITH_JASPER}
-        -DWITH_PNG=${WITH_PNG}
         -DWITH_QT=${WITH_QT}
         -DWITH_AVIF=OFF
         -DWITH_CPUFEATURES=OFF
         -DWITH_ITT=OFF
+        -DWITH_JASPER=OFF #Jasper is deprecated and will be removed in a future release, and is mutually exclusive with openjpeg that is preferred
         -DWITH_LAPACK=OFF
         -DWITH_MATLAB=OFF
         -DWITH_NVCUVID=OFF
@@ -442,12 +426,10 @@ vcpkg_cmake_configure(
         -DWITH_OPENCL_D3D11_NV=OFF
         -DWITH_OPENCLAMDFFT=OFF
         -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_SPNG=OFF #spng is mutually exclusive with png, which has been chosen since it's more widely used
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_ZLIB_NG=OFF
-        ###### modules which require special treatment
-        -DBUILD_opencv_quality=${BUILD_opencv_quality}
-        -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
@@ -544,9 +526,6 @@ if("quirc" IN_LIST FEATURES)
 endif()
 if("sfm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
-endif()
-if("spng" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(SPNG)")
 endif()
 if("tbb" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(TBB)")

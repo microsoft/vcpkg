@@ -261,12 +261,6 @@
       "description": "Enable Intel Integrated Performance Primitives",
       "supports": "(osx & x64) | (windows & (x64 | x86)) | (linux & (x64 | x86))"
     },
-    "jasper": {
-      "description": "JPEG 2000 support for opencv (deprecated)",
-      "dependencies": [
-        "jasper"
-      ]
-    },
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
@@ -445,12 +439,6 @@
             "eigen"
           ]
         }
-      ]
-    },
-    "spng": {
-      "description": "Enable libspng integration",
-      "dependencies": [
-        "libspng"
       ]
     },
     "tbb": {
