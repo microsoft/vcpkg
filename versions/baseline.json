@@ -2870,7 +2870,7 @@
     },
     "fluidsynth": {
       "baseline": "2.4.4",
-      "port-version": 0
+      "port-version": 1
     },
     "flux": {
       "baseline": "0.4.0",
