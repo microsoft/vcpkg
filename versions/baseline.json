@@ -7489,7 +7489,7 @@
       "port-version": 5
     },
     "qlementine": {
-      "baseline": "1.1.2",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "qlementine-icons": {
