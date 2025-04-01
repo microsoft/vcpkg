@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-buildsystem.patch
         fix-cpu-set.patch
         fix-deps.patch
+        fix-cmake-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
