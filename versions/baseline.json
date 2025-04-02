@@ -8069,7 +8069,7 @@
       "port-version": 0
     },
     "redis-plus-plus": {
-      "baseline": "1.3.13",
+      "baseline": "1.3.14",
       "port-version": 0
     },
     "refl-cpp": {
