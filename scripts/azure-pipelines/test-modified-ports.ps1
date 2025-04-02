@@ -112,14 +112,6 @@ if ($IsWindows) {
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
-if ($IsWindows) {
-    mkdir empty
-    cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
-    cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"
-    cmd /c "robocopy.exe empty `"$installRoot`" /MIR /NFL /NDL /NC /NP > nul"
-    rmdir empty
-}
-
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
