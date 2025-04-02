@@ -5,7 +5,7 @@ set(DIRECTX_DXC_VERSION 2025_02_20)
 
 # for macOS platform:
 # since vcpkg_from_github() does not support submodules, we need to checkout the submodules manually
-# check for newest hash values by the link blow, REMEMBER to update the version tag in the URL
+# check for newest hash values by the link below, REMEMBER to update the version tag in the URL
 # https://github.com/microsoft/DirectXShaderCompiler/tree/release-1.8.2502/external
 set(DX_HEADERS_MODULE_HASH 980971e835876dc0cde415e8f9bc646e64667bf7)
 set(SPIRV_HEADERS_MODULE_HASH 3f17b2af6784bfa2c5aa5dbb8e0e74a607dd8b3b)
@@ -32,7 +32,23 @@ elseif (VCPKG_TARGET_IS_OSX)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO "microsoft/DirectXShaderCompiler"
         REF "release-${DIRECTX_DXC_TAG}"
+        PATCHES osx-conditional-customized-submodule-path.patch
         SHA512 720301093c9e04c23518fdf50aec110bc1a4eafc9d585e73652b7db06c86185e0eca7dd75d4b97f13bdd4e6362ebc0ecc61a5a65f90e193a82dc0bbb48e09b3b
+    )
+    vcpkg_download_distfile(DX_HEADERS_ARCHIVE
+        URLS "https://github.com/microsoft/DirectX-Headers/archive/${DX_HEADERS_MODULE_HASH}.zip"
+        FILENAME "DirectX-Headers.zip"
+        SHA512 b7f01f9bc3cf6f9600f6a75513e62fcf65d719ca0addac216ec3c1e498696b945146c855097868d0a16e3764278710dcb092748e2dd70fcfe25f4373fae51f63
+    )
+    vcpkg_download_distfile(SPIRV_HEADERS_ARCHIVE
+        URLS "https://github.com/KhronosGroup/SPIRV-Headers/archive/${SPIRV_HEADERS_MODULE_HASH}.zip"
+        FILENAME "SPIRV-Headers.zip"
+        SHA512 f777f152a3c7ff313edc7c7789d15ad50a168523b589b2da10c0f65bce1523e551f621ad46445bca27c8ece8f913683bd8b2f6c8d75fd56ea481b134eaed39aa
+    )
+    vcpkg_download_distfile(SPIRV_TOOLS_ARCHIVE
+        URLS "https://github.com/KhronosGroup/SPIRV-Tools/archive/${SPIRV_TOOLS_MODULE_HASH}.zip"
+        FILENAME "SPIRV-Tools.zip"
+        SHA512 1979e722157a11ab4cd50492ae60e46142dfb682bbb6d9cf8adb5732b13c1ec30dc52464d4eb23e3ad4d5960095589bb072a87033ac153790f4af51b220cd341
     )
 endif ()
 
@@ -50,38 +66,25 @@ if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_WINDOWS)
         NO_REMOVE_ONE_LEVEL
     )
 else ()
-    vcpkg_execute_required_process(
-        COMMAND git clone https://github.com/microsoft/DirectX-Headers.git external/DirectX-Headers
-        WORKING_DIRECTORY ${SOURCE_PATH}/
-        LOGNAME fetch-submodule-dx-headers
+    vcpkg_extract_source_archive(
+            DX_HEADERS_PATH
+            ARCHIVE ${DX_HEADERS_ARCHIVE}
     )
-    vcpkg_execute_required_process(
-        COMMAND git clone https://github.com/KhronosGroup/SPIRV-Headers.git external/SPIRV-Headers
-        WORKING_DIRECTORY ${SOURCE_PATH}/
-        LOGNAME fetch-submodule-spirv-headers
+    vcpkg_extract_source_archive(
+            SPIRV_HEADERS_PATH
+            ARCHIVE ${SPIRV_HEADERS_ARCHIVE}
     )
-    vcpkg_execute_required_process(
-        COMMAND git clone https://github.com/KhronosGroup/SPIRV-Tools.git external/SPIRV-Tools
-        WORKING_DIRECTORY ${SOURCE_PATH}/
-        LOGNAME fetch-submodule-spirv-tools
+    vcpkg_extract_source_archive(
+            SPIRV_TOOLS_PATH
+            ARCHIVE ${SPIRV_TOOLS_ARCHIVE}
     )
-    vcpkg_execute_required_process(
-        COMMAND git checkout ${DX_HEADERS_MODULE_HASH}
-        WORKING_DIRECTORY ${SOURCE_PATH}/external/DirectX-Headers
-        LOGNAME checkout-submodule-dx-headers
-    )
-    vcpkg_execute_required_process(
-        COMMAND git checkout ${SPIRV_HEADERS_MODULE_HASH}
-        WORKING_DIRECTORY ${SOURCE_PATH}/external/SPIRV-Headers
-        LOGNAME checkout-submodule-spirv-headers
-    )
-    vcpkg_execute_required_process(
-        COMMAND git checkout ${SPIRV_TOOLS_MODULE_HASH}
-        WORKING_DIRECTORY ${SOURCE_PATH}/external/SPIRV-Tools
-        LOGNAME checkout-submodule-spirv-tools
-    )
-    vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS "-C ${SOURCE_PATH}/cmake/caches/PredefinedParams.cmake")
-    vcpkg_cmake_build()
+
+    message(STATUS "PATHS: ${DX_HEADERS_PATH}, ${SPIRV_HEADERS_PATH}, ${SPIRV_TOOLS_PATH}")
+    message(STATUS "SOURCES: ${SOURCE_PATH}")
+
+    set(PACKAGE_PATH ${CURRENT_BUILDTREES_DIR}/inst)
+    vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS "-C ${SOURCE_PATH}/cmake/caches/PredefinedParams.cmake" "-DDIRECTX_HEADER_INCLUDE_DIR=${DX_HEADERS_PATH}/include" "-DDXC_SPIRV_HEADERS_DIR=${SPIRV_HEADERS_PATH}" "-DDXC_SPIRV_TOOLS_DIR=${SPIRV_TOOLS_PATH}" "-DCMAKE_INSTALL_PREFIX=${PACKAGE_PATH}")
+    vcpkg_cmake_build(TARGET install-distribution)
 endif ()
 
 
@@ -166,44 +169,30 @@ elseif (VCPKG_TARGET_IS_WINDOWS)
   set(lib_name "dxcompiler.lib")
   set(tool_path "tools/${PORT}/dxc.exe")
 elseif (VCPKG_TARGET_IS_OSX)
-    set(PACKAGE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    set(PACKAGE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    if (VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(PACKAGE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    endif ()
+  file(INSTALL
+    "${PACKAGE_PATH}/include/dxc/dxcapi.h"
+    "${PACKAGE_PATH}/include/dxc/dxcerrors.h"
+    "${PACKAGE_PATH}/include/dxc/dxcisense.h"
+    "${PACKAGE_PATH}/include/dxc/WinAdapter.h"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
-    file(INSTALL
-            "${SOURCE_PATH}/include/dxc/dxcapi.h"
-            "${SOURCE_PATH}/include/dxc/dxcerrors.h"
-            "${SOURCE_PATH}/include/dxc/dxcisense.h"
-            "${SOURCE_PATH}/include/dxc/WinAdapter.h"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+  file(INSTALL
+    "${PACKAGE_PATH}/lib/libdxcompiler.dylib"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
-    file(INSTALL
-            "${PACKAGE_PATH}/lib/libdxcompiler.dylib"
-            "${PACKAGE_PATH}/lib/libdxil.dylib"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(INSTALL
+    "${PACKAGE_PATH}/bin/dxc"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/"
+    FILE_PERMISSIONS
+    OWNER_READ OWNER_WRITE OWNER_EXECUTE
+    GROUP_READ GROUP_EXECUTE
+    WORLD_READ WORLD_EXECUTE)
 
-    if (NOT DEFINED VCPKG_BUILD_TYPE)
-        file(INSTALL
-                "${PACKAGE_PATH}/lib/libdxcompiler.dylib"
-                "${PACKAGE_PATH}/lib/libdxil.dylib"
-                DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    endif ()
-
-    file(INSTALL
-            "${PACKAGE_PATH}/bin/dxc"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/"
-            FILE_PERMISSIONS
-            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-            GROUP_READ GROUP_EXECUTE
-            WORLD_READ WORLD_EXECUTE)
-
-    set(dll_name_dxc "libdxcompiler.dylib")
-    set(dll_name_dxil "libdxil.dylib")
-    set(dll_dir "lib")
-    set(lib_name "libdxcompiler.dylib")
-    set(tool_path "tools/${PORT}/dxc")
+  set(dll_name_dxc "libdxcompiler.dylib")
+  set(dll_name_dxil "libdxcompiler.dylib")
+  set(dll_dir "lib")
+  set(lib_name "libdxcompiler.dylib")
+  set(tool_path "tools/${PORT}/dxc")
 endif ()
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
