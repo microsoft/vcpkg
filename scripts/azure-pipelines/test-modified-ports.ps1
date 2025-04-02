@@ -56,6 +56,13 @@ Param(
     [switch]$PassingIsPassing = $false
 )
 
+function Add-ToolchainToTestCMake {
+    # The vcpkg.cmake toolchain file is not part of ABI hashing,
+    # but changes must trigger at least some testing.
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+}
+
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
     exit 1
@@ -159,11 +166,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
         $parentHashes = @("--parent-hashes=$parentHashesFile")
-        # The vcpkg.cmake toolchain file is not part of ABI hashing,
-        # but changes must trigger at least some testing.
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
         & "./vcpkg$executableExtension" ci $tripletSwitch --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        Add-ToolchainToTestCMake
         $lastLastExitCode = $LASTEXITCODE
         if ($lastLastExitCode -ne 0)
         {
@@ -186,11 +190,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 }
 
-# The vcpkg.cmake toolchain file is not part of ABI hashing,
-# but changes must trigger at least some testing.
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
 & "./vcpkg$executableExtension" ci $tripletSwitch --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+Add-ToolchainToTestCMake
 $lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
