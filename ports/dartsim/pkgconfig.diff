@@ -1,0 +1,12 @@
+diff --git a/cmake/dart.pc.in b/cmake/dart.pc.in
+index 402c496..9814576 100644
+--- a/cmake/dart.pc.in
++++ b/cmake/dart.pc.in
+@@ -8,5 +8,6 @@ Name: @PROJECT_NAME@
+ Description: @DART_PKG_DESC@
+ Version: @DART_VERSION@
+ Requires: @DART_PKG_EXTERNAL_DEPS@
+-Libs: -L${libdir} -ldart
++Libs: -L${libdir} -ldart@DART_PKG_DEBUG_POSTFIX@
++Libs.private: -ldart-external-odelcpsolver@DART_PKG_DEBUG_POSTFIX@
+ Cflags: @CMAKE_CXX_FLAGS@

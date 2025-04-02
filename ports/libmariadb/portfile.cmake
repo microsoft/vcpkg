@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
     REF v${VERSION}
-    SHA512 78dd94a86428dec2e8d38e1c3b29c7eef19c51f3ffd3caa69d15f5cd776b5044d40d1630043b508f0aaaad00485e63ec330f6e680c7fb142ce40726304f52dba
+    SHA512 be848c5f1ab3bdc7fe9826418cd5b6fc688dbcf452976039f7ca924acd4f529cd057b840b2135aadcbc8731baf46da15abbe440e57b016731d9ec159a06a45f1
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff

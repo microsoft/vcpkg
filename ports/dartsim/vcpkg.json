@@ -1,34 +1,18 @@
 {
   "name": "dartsim",
   "version": "6.15.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Dynamic Animation and Robotics Toolkit",
   "homepage": "https://dartsim.github.io/",
   "license": "BSD-2-Clause",
-  "supports": "!x86",
+  "supports": "!x86 & !arm32",
   "dependencies": [
     "assimp",
-    "boost-algorithm",
-    "boost-filesystem",
-    "boost-functional",
-    "boost-lexical-cast",
-    "boost-math",
-    "boost-optional",
-    "boost-regex",
-    "boost-system",
-    "bullet3",
-    "ccd",
     "eigen3",
     "fcl",
     "fmt",
-    "freeglut",
+    "lodepng",
     "octomap",
-    "ode",
-    "opengl",
-    "osg",
-    "spdlog",
-    "tinyxml2",
-    "urdfdom",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -37,5 +21,81 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "collision-bullet": {
+      "description": "Build dart-collision-bullet library",
+      "dependencies": [
+        "bullet3"
+      ]
+    },
+    "collision-ode": {
+      "description": "Build dart-collision-ode library",
+      "dependencies": [
+        "ode"
+      ]
+    },
+    "gui": {
+      "description": "Build dart-gui library",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "utils"
+          ]
+        },
+        "freeglut",
+        "opengl"
+      ]
+    },
+    "gui-osg": {
+      "description": "Build dart-gui-osg library",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "imgui",
+          "default-features": false,
+          "features": [
+            "opengl2-binding"
+          ]
+        },
+        {
+          "name": "osg",
+          "default-features": false
+        }
+      ]
+    },
+    "spdlog": {
+      "description": "Support spdlog as underlying logging framework",
+      "dependencies": [
+        "spdlog"
+      ]
+    },
+    "utils": {
+      "description": "Build dart-utils library",
+      "dependencies": [
+        "tinyxml2"
+      ]
+    },
+    "utils-urdf": {
+      "description": "Build dart-utils-urdf library",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "utils"
+          ]
+        },
+        "urdfdom"
+      ]
+    }
+  }
 }

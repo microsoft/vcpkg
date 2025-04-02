@@ -1,6 +1,6 @@
 {
   "name": "libtcod",
-  "version": "1.24.0",
+  "version-semver": "2.0.0",
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
@@ -31,9 +31,9 @@
       ]
     },
     "sdl": {
-      "description": "Support for SDL2 windows and events with the libtcod context.",
+      "description": "Support for SDL windows and events with the libtcod context.",
       "dependencies": [
-        "sdl2"
+        "sdl3"
       ]
     },
     "threads": {
