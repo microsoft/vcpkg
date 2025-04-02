@@ -1,0 +1,25 @@
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index e41c128..5117a65 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -157,6 +157,7 @@ if(WITH_liburing)
+   find_package(LibUring)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
++  add_compile_options(-DFOLLY_WITH_LIBURING)
+ endif()
+ 
+ if(NOT CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium)
+diff --git a/folly/io/async/Liburing.h b/folly/io/async/Liburing.h
+index 8e81aaa..bb6060e 100644
+--- a/folly/io/async/Liburing.h
++++ b/folly/io/async/Liburing.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#if defined(__linux__) && __has_include(<liburing.h>)
++#if defined(__linux__) && __has_include(<liburing.h>) && defined FOLLY_WITH_LIBURING
+ #define FOLLY_HAS_LIBURING 1
+ #else
+ #define FOLLY_HAS_LIBURING 0

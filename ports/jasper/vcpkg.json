@@ -1,7 +1,7 @@
 {
   "name": "jasper",
   "version": "4.2.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
   "homepage": "https://github.com/jasper-software/jasper",
   "license": null,
@@ -15,26 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    {
-      "name": "opengl",
-      "platform": "!(windows & arm) & !uwp & !ios"
-    }
-  ],
-  "features": {
-    "opengl": {
-      "description": "Enable the use of the OpenGL/GLUT Library",
-      "dependencies": [
-        {
-          "name": "freeglut",
-          "platform": "!osx & !(windows & arm) & !uwp"
-        },
-        {
-          "name": "opengl",
-          "platform": "!(windows & arm) & !uwp"
-        }
-      ]
-    }
-  }
+  ]
 }

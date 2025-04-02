@@ -1,0 +1,21 @@
+diff --git a/src/omplapp/CMakeLists.txt b/src/omplapp/CMakeLists.txt
+index 2d0c8e5..9cd902f 100644
+--- a/src/omplapp/CMakeLists.txt
++++ b/src/omplapp/CMakeLists.txt
+@@ -39,6 +39,7 @@ foreach(_target ${OMPLAPP_TARGETS})
+     endif(WIN32)
+ 
+     install(TARGETS ${_target}
++        EXPORT omplapp
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         COMPONENT omplapp)
+     if(NOT MSVC)
+@@ -54,3 +55,8 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/config.h"
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/omplapp"
+     COMPONENT omplapp)
++
++install(EXPORT omplapp
++    FILE omplapp-targets.cmake
++    DESTINATION "share/ompl"
++)

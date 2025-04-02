@@ -1,27 +1,20 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a9bb05f..31fab8c 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -215,6 +215,10 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/omplConfig.cmake
-     ${CMAKE_CURRENT_BINARY_DIR}/omplConfigVersion.cmake
-     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/ompl/cmake
+diff --git a/src/ompl/CMakeLists.txt b/src/ompl/CMakeLists.txt
+index 8e19b30..df38912 100644
+--- a/src/ompl/CMakeLists.txt
++++ b/src/ompl/CMakeLists.txt
+@@ -84,9 +84,15 @@ else (MSVC)
+ endif (MSVC)
+ 
+ # install the library
++target_include_directories(ompl PUBLIC $<INSTALL_INTERFACE:include>)
+ install(TARGETS ompl
++    EXPORT ompl
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
      COMPONENT ompl)
 +install(EXPORT ompl
 +    DESTINATION "share/ompl"
 +    FILE ompl-targets.cmake
 +)
- 
- # script to install ompl on Ubuntu
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/install-ompl-ubuntu.sh.in"
-diff --git a/src/ompl/CMakeLists.txt b/src/ompl/CMakeLists.txt
-index 9ea130e..6dda4df 100644
---- a/src/ompl/CMakeLists.txt
-+++ b/src/ompl/CMakeLists.txt
-@@ -83,6 +83,7 @@ endif (MSVC)
- 
- # install the library
- install(TARGETS ompl
-+    EXPORT ompl
-     DESTINATION ${CMAKE_INSTALL_LIBDIR}
-     COMPONENT ompl)
  if (NOT MSVC)
+     add_custom_command(TARGET ompl POST_BUILD
+         COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:ompl>"

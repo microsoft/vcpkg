@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO JonathanSalwan/Triton
-  REF a61651ce331ac53ec09e1d8fef5eab744e98c9de
-  SHA512 b53befe232e986409789533ac39b371b5701d9b9b72ee47c6486408c57f72800d2192b0f65bd0cc751147fbea2f8c0ef5b6375c913bd1d57393236a619f319c9
+  REF e312eafcdf507d9aebd0f8a7daf2eb4c28a19d30
+  SHA512 eb184859fe3023f188f7828335924da36c45dea90dc1ece7d8cf770dc7951022d4e51647cdd520e9bc91a8e01cab4a8801808e469900bdbbc3806624c132ad8d
   HEAD_REF master
   PATCHES
     fix_bin_path.patch
@@ -19,7 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 set(ADDITIONAL_OPTIONS "")
 if(PYTHON_BINDINGS)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
     )
@@ -48,4 +48,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -6,173 +6,191 @@
   "dependencies": [
     {
       "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "avcodec",
-        "avdevice",
-        "avfilter",
-        "avformat",
-        "avresample",
-        "bzip2",
-        "freetype",
-        "gpl",
-        "iconv",
-        "lzma",
-        "mp3lame",
-        "nonfree",
-        "openh264",
-        "openjpeg",
-        "openmpt",
-        "openssl",
-        "opus",
-        "postproc",
-        "snappy",
-        "soxr",
-        "speex",
-        "swresample",
-        "swscale",
-        "theora",
-        "vorbis",
-        "vpx",
-        "webp",
-        "xml2",
-        "zlib"
-      ]
+      "default-features": false
     },
     {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "alsa"
-      ],
-      "platform": "linux"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "drawtext"
-      ],
-      "platform": "!(uwp | android)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "sdl2"
-      ],
-      "platform": "!osx"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "ass",
-        "dvdvideo",
-        "ffmpeg",
-        "fontconfig",
-        "fribidi",
-        "modplug",
-        "opencl",
-        "srt"
-      ],
-      "platform": "!uwp"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "fdk-aac"
-      ],
-      "platform": "!android"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "ilbc"
-      ],
-      "platform": "!(arm & uwp)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "ssh"
-      ],
-      "platform": "!(uwp | arm)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "x264"
-      ],
-      "platform": "!(arm & windows)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "aom"
-      ],
-      "platform": "!(windows & arm) & !uwp"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "dav1d"
-      ],
-      "platform": "!(uwp | arm | x86 | osx)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "x265"
-      ],
-      "platform": "!uwp & !(arm & windows)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "avisynthplus"
-      ],
-      "platform": "windows & !arm & !uwp & !static"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "tesseract"
-      ],
-      "platform": "!(windows & arm) & !static & !uwp"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "opengl"
-      ],
-      "platform": "!uwp & !(arm64 & windows) & !android"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "qsv"
-      ],
-      "platform": "!arm & (android | linux | windows) & !uwp"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "nvcodec"
-      ],
-      "platform": "!android & !osx & !uwp & !(arm64 & windows)"
+      "name": "vcpkg-cmake",
+      "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "vcpkg CI feature configuration",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avdevice",
+            "avfilter",
+            "avformat",
+            "avresample",
+            "bzip2",
+            "freetype",
+            "gpl",
+            "iconv",
+            "lzma",
+            "mp3lame",
+            "nonfree",
+            "openh264",
+            "openjpeg",
+            "openmpt",
+            "openssl",
+            "opus",
+            "postproc",
+            "snappy",
+            "soxr",
+            "speex",
+            "swresample",
+            "swscale",
+            "theora",
+            "vorbis",
+            "vpx",
+            "webp",
+            "xml2",
+            "zlib"
+          ]
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "alsa"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "sdl2"
+          ],
+          "platform": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "ass",
+            "dvdvideo",
+            "ffmpeg",
+            "fontconfig",
+            "fribidi",
+            "modplug",
+            "opencl",
+            "srt"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "fdk-aac"
+          ],
+          "platform": "!android"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "ilbc"
+          ],
+          "platform": "!(arm & uwp)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "ssh"
+          ],
+          "platform": "!(uwp | arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "x264"
+          ],
+          "platform": "!(arm & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "drawtext"
+          ],
+          "platform": "!(uwp | android)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "dav1d"
+          ],
+          "platform": "!(uwp | arm | x86 | osx)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "aom"
+          ],
+          "platform": "!(windows & arm) & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "x265"
+          ],
+          "platform": "!uwp & !(arm & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avisynthplus"
+          ],
+          "platform": "windows & !arm & !uwp & !static"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "tesseract"
+          ],
+          "platform": "!(windows & arm) & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!uwp & !(arm64 & windows) & !android"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "qsv"
+          ],
+          "platform": "!arm & (android | linux | windows) & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "nvcodec"
+          ],
+          "platform": "!android & !osx & !uwp & !(arm64 & windows)"
+        }
+      ]
+    }
+  }
 }

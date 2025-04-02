@@ -1,6 +1,6 @@
 {
   "name": "log4cxx",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "Apache log4cxx is a logging framework for C++ patterned after Apache log4j, which uses Apache Portable Runtime for most platform-specific code and should be usable on any platform supported by APR",
   "homepage": "https://logging.apache.org/log4cxx",
   "license": "Apache-2.0",

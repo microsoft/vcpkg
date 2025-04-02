@@ -10,7 +10,7 @@
       "features": [
         "mpi"
       ],
-      "platform": "!staticcrt & !(arm & windows) & !uwp"
+      "platform": "!staticcrt & !android & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-asio",
@@ -41,7 +41,7 @@
       "features": [
         "python3"
       ],
-      "platform": "!staticcrt & !static & !uwp & !(arm & windows)"
+      "platform": "!staticcrt & !static & !android & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-odeint",
@@ -49,7 +49,7 @@
       "features": [
         "mpi"
       ],
-      "platform": "!staticcrt & !uwp & !(windows & arm)"
+      "platform": "!staticcrt & !android & !(windows & arm) & !uwp"
     },
     {
       "name": "boost-python",

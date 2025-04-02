@@ -48,7 +48,13 @@ else()
 endif()
 set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
 
+# https://gitlab.kitware.com/cmake/cmake/-/issues/26718
+# Instead of special-casing the `atomic` library, we skip the checks entirely.
+set(_wx_lib_found TRUE)
+
 _find_package(${ARGS})
+
+unset(_wx_lib_found)
 
 if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
     set(CMAKE_CROSSCOMPILING "${_vcpkg_wxwidgets_backup_crosscompiling}")

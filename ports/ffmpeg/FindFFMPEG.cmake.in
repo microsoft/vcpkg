@@ -55,7 +55,7 @@ function(append_dependencies out)
     endif()
     set(pass_through
         ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES}
-        advapi32 bcrypt crypt32 gdi32 mfuuid ole32 oleaut32 psapi secur32 shlwapi strmiids user32 uuid vfw32 ws2_32
+        advapi32 bcrypt crypt32 gdi32 mfuuid ole32 oleaut32 psapi secur32 shlwapi strmiids user32 uuid vfw32 ws2_32 usp10 cfgmgr32 rpcrt4
         -pthread -pthreads pthread atomic m
     )
     cmake_policy(SET CMP0057 NEW)

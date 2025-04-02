@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 fbeecf8d8ca90a58d77aa187a7312261b7428b47f41d662db209731fc2c35ebeb61d94f27aa97a1d47fed46bfa4a9c1cab6ead50fa329ad80d9d63dea51b2fd4
+    SHA512 b87edd87520498d0134afd4966d0d0a2d85f7bdbf1b289891d29fa89dc4f52d0c19ba81d86b9ae03730f73b07cc5c9d4f0070687afb0727e15638f5154e2da8a
     HEAD_REF main
 )
 

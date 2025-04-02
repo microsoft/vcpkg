@@ -1,7 +1,7 @@
 {
   "name": "graphviz",
   "version-semver": "10.0.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",

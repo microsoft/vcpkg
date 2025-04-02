@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO maharmstone/tdscpp
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 62cab90e17394a5f1c4058bc3a606c1f9542fbad4a749032964ae76dfbcf903f7ff1b20a459c2b3d784c4abb31b5abe7e582b30eaebd83ac9887629221f4a694
+    SHA512 6f7f36918e1047355dc948a803b786df2aacc006654d0604e7af627c8c7d28a5e2fdbd52b306811e0da5ccca044ce231606d9208a04d5358aac62b9e1f9b3139
 )
 
 set(BUILD_tdscpp_ssl OFF)

@@ -1,7 +1,7 @@
 {
   "name": "libe57",
   "version-semver": "1.1.332",
-  "port-version": 4,
+  "port-version": 5,
   "description": "An open source implementation of the ASTM E2807 Standard Specification for 3D Imaging Data Exchange in the C++ language.",
   "homepage": "http://www.libe57.org/",
   "license": "BSL-1.0",
