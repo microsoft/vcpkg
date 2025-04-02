@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 9152489b1482a1f1cc52aae9de59e1c174b2309da78d7a5367059e2117dd8df97f3ea04aeca67ef90348dc2c241b55f0107dba3dd6500134bb143498802d8edf
+        SHA512 3a019533e638b2023e0c71d0455561ee9d589ff33b677c8135345e85c28edb7b83580271d49a787e0e838fd6217d1625baad65e6559ae7faec53f3a309917ecd 
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 f66c8ebef332d62f9aaaea59367c9118e86e2cefbc64c651a9a0a00435b8462246aae57a7fde3066db224000826bac9f0c3d46f033e1ebfc7735559ed677a4c4
+        SHA512 c9393bd9f6b49b036ad6ab3ba4d972876c6f60ce7f5c13a7a56ff11b3559ea3211b0caa03eed10b4f4fbe9c371e14f7f24866bd476652f543f3ed3aa878ea930
         HEAD_REF master
     )
 endif()
@@ -35,12 +35,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
     opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
-    sdl2-binding                IMGUI_BUILD_SDL2_BINDING
-    sdl2-renderer-binding       IMGUI_BUILD_SDL2_RENDERER_BINDING
+    sdl3-binding                IMGUI_BUILD_SDL3_BINDING
+    sdlgpu3-binding             IMGUI_BUILD_SDLGPU3_BINDING
+    sdl3-renderer-binding       IMGUI_BUILD_SDL3_RENDERER_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
-    freetype-lunasvg            IMGUI_FREETYPE_LUNASVG
+    freetype-svg                IMGUI_FREETYPE_SVG
     wchar32                     IMGUI_USE_WCHAR32
     test-engine                 IMGUI_TEST_ENGINE
 )
@@ -63,7 +64,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 4e496075417852a57fed73b34b27a7d4983be9d5a5e95dd854c6c1d3796f96fd43a48166cb07f74e8e50de0ce28c55a4fbf08d2cb4114f1225adc931f9fbae75
+        SHA512 44d6fd1c26c9c2cb3fcbd1560dba8e056f84dc170051dcb8db5d642945fb26475006a8166486f7f62e900a97d65f2f98d364ac06c121a57309b3229cc41556a4
         HEAD_REF master
     )
 
@@ -88,8 +89,8 @@ vcpkg_cmake_install()
 if ("freetype" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE\n" "#define IMGUI_ENABLE_FREETYPE\n")
 endif()
-if ("freetype-lunasvg" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_LUNASVG" "#define IMGUI_ENABLE_FREETYPE_LUNASVG")
+if ("freetype-svg" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_PLUTOSVG" "#define IMGUI_ENABLE_FREETYPE_PLUTOSVG")
 endif()
 if ("wchar32" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")

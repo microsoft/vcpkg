@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
@@ -402,6 +402,12 @@
     "securetransport": {
       "description": "Enable Secure Transport",
       "supports": "ios | osx"
+    },
+    "shared-mime-info": {
+      "description": "Use GPL licensed shared-mime-info port from freedesktop.org",
+      "dependencies": [
+        "shared-mime-info"
+      ]
     },
     "sql": {
       "description": "Qt Sql",

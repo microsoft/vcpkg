@@ -1,0 +1,11 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6719a189..0fee41d5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ #
+-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12 FATAL_ERROR)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
+ if(APPLE AND CMAKE_VERSION VERSION_LESS "3.17.0")
+   message(WARNING "CMake>=3.17.0 required to make the generated shared library have the same Mach-O headers as autotools")
+ endif()

@@ -1,22 +1,14 @@
-vcpkg_download_distfile(ARM64_WINDOWS_UWP_PATCH
-    URLS "https://patch-diff.githubusercontent.com/raw/OpenMathLib/OpenBLAS/pull/4926.diff?full_index=1"
-    FILENAME "openblas-fix-arm64-windows-uwp.patch"
-    SHA512 808d375628499641f1134b4751c9861384b719dae14cf6bd4d9d4b09c9bfd9f8b13b2663e9fa9d09867b5b40817c26387ac659d2f6459d40a46455b2f540d018
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 358301c8a60bedf920c07a110c772feb639e52412bd783789741fd2fd0686aac97e6b17ebcdf01ce48a2a15841058f82df0fee551af952f6e70b58140c055133
+    SHA512 046316b4297460bffca09c890ecad17ea39d8b3db92ff445d03b547dd551663d37e40f38bce8ae11e2994374ff01e622b408da27aa8e40f4140185ee8f001a60
     HEAD_REF develop
     PATCHES
-        arm32-asm-function.diff
         disable-testing.diff
         getarch.diff
         system-check-msvc.diff
         win32-uwp.diff
-        ${ARM64_WINDOWS_UWP_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -56,7 +48,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -DCMAKE_POLICY_DEFAULT_CMP0054=NEW
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DBUILD_TESTING=OFF
         -DBUILD_WITHOUT_LAPACK=ON

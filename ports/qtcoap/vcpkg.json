@@ -1,6 +1,6 @@
 {
   "name": "qtcoap",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "Qt CoAP implements the client side of CoAP.",
   "homepage": "https://www.qt.io/",
   "license": null,

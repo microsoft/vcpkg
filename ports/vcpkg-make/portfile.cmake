@@ -27,6 +27,7 @@ file(INSTALL
 file(INSTALL 
         "${automake_source}/lib/ar-lib"
         "${automake_source}/lib/compile"
+        "${CMAKE_CURRENT_LIST_DIR}/wrappers/"
     DESTINATION 
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/wrappers"
 )

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ankurvdev/embedresource
     REF "v${VERSION}"
-    SHA512 90b4e40b84cd5b6de155a17890b5d8094cf772f56657230ad13a0c51a332e84fa4a38d8640a3890ae4b521a2eb897666d8c3f58e7cd9dc98e6eb3d55c84dfe44
+    SHA512 0a26a0b554e743b4f4987c4414cfcca6d2207e8ac038a1701cdb5068ddc6cc9438deda8037ce93145c4f1434ae97d7737bbc875d7367aa14726fd16511e8421a
     HEAD_REF main)
 
 vcpkg_cmake_configure(
@@ -15,12 +15,16 @@ vcpkg_copy_pdbs()
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-vcpkg_copy_tools(TOOL_NAMES embedresource AUTO_CLEAN)
+if(HOST_TRIPLET STREQUAL TARGET_TRIPLET) # Otherwise fails on wasm32-emscripten
+    vcpkg_copy_tools(TOOL_NAMES embedresource AUTO_CLEAN)
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/embedresource/EmbedResourceConfig.cmake" config_contents)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/embedresource/EmbedResourceConfig.cmake"
 "find_program(
-    EMBEDRESOURCE_EXECUTABLE embedresource
+    embedresource_EXECUTABLE embedresource
     PATHS
         \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/tools/${PORT}\"
     NO_DEFAULT_PATH

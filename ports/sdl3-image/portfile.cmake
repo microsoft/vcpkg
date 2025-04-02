@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
-    REF "prerelease-${VERSION}"
-    SHA512 d11764142798e9c3cbb2fcfb123a5d6e5192d45011118f5a76f63b9ba100119799aacf9cd64835a9c504d3040116202f44aba9df1fc851afc1fdfb3b498c56a2
+    REF "release-${VERSION}"
+    SHA512 397ff126f6f95351d9addb3ac2d2c228fa2e4c513ca46525b326a64c6e73c40fd651d232d503fd757a03c55a7fa372a885f07d5f72d80dd17a2850816295d82e
     HEAD_REF main
     PATCHES
         dependencies.diff
