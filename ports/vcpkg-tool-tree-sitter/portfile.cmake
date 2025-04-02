@@ -79,15 +79,15 @@ endif()
 
 file(COPY "${archive_path}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 cmake_path(GET archive_path FILENAME archive_name)
-set(gunzip gunzip)
+set(gunzip_command_line gunzip "${archive_name}")
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT)
     vcpkg_host_path_list(APPEND ENV{PATH} "${MSYS_ROOT}/usr/bin")
-	set(gunzip sh -c gunzip)
+	set(gunzip_command_line sh -c "gunzip '${archive_name}'")
 endif()
 vcpkg_execute_required_process(
     ALLOW_IN_DOWNLOAD_MODE
-    COMMAND ${gunzip} "${archive_name}"
+    COMMAND ${gunzip_command_line}
     WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
     LOGNAME "gunzip-${TARGET_TRIPLET}"
 )
