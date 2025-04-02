@@ -1,24 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9a56491..d7ca937 100644
+index 2f141ac..f34503b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -345,7 +345,6 @@ set(KTX_MAIN_SRC
-     lib/basisu/transcoder/basisu_transcoder.cpp
-     lib/basisu/transcoder/basisu_transcoder.h
-     lib/basisu/transcoder/basisu.h
--    lib/basisu/zstd/zstd.c
+@@ -383,7 +383,6 @@ set(KTX_MAIN_SRC
+     external/basisu/transcoder/basisu_transcoder.cpp
+     external/basisu/transcoder/basisu_transcoder.h
+     external/basisu/transcoder/basisu.h
+-    external/basisu/zstd/zstd.c
      lib/checkheader.c
-     lib/dfdutils/createdfd.c
-     lib/dfdutils/colourspaces.c
-@@ -532,7 +531,6 @@ macro(common_libktx_settings target enable_write library_type)
-         $<INSTALL_INTERFACE:lib/basisu/transcoder>
+     external/dfdutils/createdfd.c
+     external/dfdutils/colourspaces.c
+@@ -588,7 +587,6 @@ macro(common_libktx_settings target enable_write library_type)
+         external
  
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/basisu/zstd>
--        $<INSTALL_INTERFACE:lib/basisu/zstd>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/basisu/zstd>
+-        $<INSTALL_INTERFACE:external/basisu/zstd>
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utils>
          $<INSTALL_INTERFACE:utils>
-@@ -627,6 +625,11 @@ macro(common_libktx_settings target enable_write library_type)
+@@ -707,6 +705,11 @@ macro(common_libktx_settings target enable_write library_type)
          target_compile_definitions(${target} PUBLIC KTX_FEATURE_KTX2)
      endif()
  
@@ -45,10 +45,10 @@ index 6386ba2..537bf4f 100644
 +find_dependency(zstd CONFIG)
  
  include("${CMAKE_CURRENT_LIST_DIR}/KtxTargets.cmake")
-diff --git a/lib/basisu/CMakeLists.txt b/lib/basisu/CMakeLists.txt
+diff --git a/external/basisu/CMakeLists.txt b/external/basisu/CMakeLists.txt
 index 492233a..152ceb5 100644
---- a/lib/basisu/CMakeLists.txt
-+++ b/lib/basisu/CMakeLists.txt
+--- a/external/basisu/CMakeLists.txt
++++ b/external/basisu/CMakeLists.txt
 @@ -145,9 +145,6 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}
  	transcoder/basisu_transcoder.cpp
  	)
@@ -70,10 +70,10 @@ index 492233a..152ceb5 100644
  if (NOT MSVC)
  	# For Non-Windows builds, let cmake try and find the system OpenCL headers/libs for us.
  	if (OPENCL_FOUND)
-diff --git a/lib/basisu/webgl/encoder/CMakeLists.txt b/lib/basisu/webgl/encoder/CMakeLists.txt
+diff --git a/external/basisu/webgl/encoder/CMakeLists.txt b/external/basisu/webgl/encoder/CMakeLists.txt
 index 588d91b..a337b13 100644
---- a/lib/basisu/webgl/encoder/CMakeLists.txt
-+++ b/lib/basisu/webgl/encoder/CMakeLists.txt
+--- a/external/basisu/webgl/encoder/CMakeLists.txt
++++ b/external/basisu/webgl/encoder/CMakeLists.txt
 @@ -34,9 +34,6 @@ if (EMSCRIPTEN)
    )
  
@@ -95,10 +95,10 @@ index 588d91b..a337b13 100644
  
    set_target_properties(basis_encoder.js PROPERTIES
        OUTPUT_NAME "basis_encoder"
-diff --git a/lib/basisu/webgl/transcoder/CMakeLists.txt b/lib/basisu/webgl/transcoder/CMakeLists.txt
+diff --git a/external/basisu/webgl/transcoder/CMakeLists.txt b/external/basisu/webgl/transcoder/CMakeLists.txt
 index 372653d..5ebc3cf 100644
---- a/lib/basisu/webgl/transcoder/CMakeLists.txt
-+++ b/lib/basisu/webgl/transcoder/CMakeLists.txt
+--- a/external/basisu/webgl/transcoder/CMakeLists.txt
++++ b/external/basisu/webgl/transcoder/CMakeLists.txt
 @@ -28,9 +28,6 @@ if (EMSCRIPTEN)
    endif()
    
