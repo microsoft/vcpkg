@@ -79,9 +79,6 @@ else ()
             ARCHIVE ${SPIRV_TOOLS_ARCHIVE}
     )
 
-    message(STATUS "PATHS: ${DX_HEADERS_PATH}, ${SPIRV_HEADERS_PATH}, ${SPIRV_TOOLS_PATH}")
-    message(STATUS "SOURCES: ${SOURCE_PATH}")
-
     set(PACKAGE_PATH ${CURRENT_BUILDTREES_DIR}/inst)
     vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS "-C ${SOURCE_PATH}/cmake/caches/PredefinedParams.cmake" "-DDIRECTX_HEADER_INCLUDE_DIR=${DX_HEADERS_PATH}/include" "-DDXC_SPIRV_HEADERS_DIR=${SPIRV_HEADERS_PATH}" "-DDXC_SPIRV_TOOLS_DIR=${SPIRV_TOOLS_PATH}" "-DCMAKE_INSTALL_PREFIX=${PACKAGE_PATH}")
     vcpkg_cmake_build(TARGET install-distribution)
