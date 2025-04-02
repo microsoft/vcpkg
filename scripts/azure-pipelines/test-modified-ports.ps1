@@ -141,17 +141,6 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
     $headTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
 
-    # Prefetch tools for better output
-    foreach ($tool in @('cmake', 'ninja', 'git')) {
-        & "./vcpkg$executableExtension" fetch $tool
-        $lastLastExitCode = $LASTEXITCODE
-        if ($lastLastExitCode -ne 0)
-        {
-            Write-Error "Failed to fetch $tool"
-            exit $lastLastExitCode
-        }
-    }
-
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
     $lastLastExitCode = $LASTEXITCODE
