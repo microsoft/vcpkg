@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8f7db9978..a81440dad 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -814,7 +814,7 @@ endif()
+ include(CoverageReport)
+ 
+ # HLSL Change begin - Set default distribution value.
+-set(LLVM_DISTRIBUTION_COMPONENTS "dxc;dxcompiler;dxc-headers" CACHE STRING "")
++set(LLVM_DISTRIBUTION_COMPONENTS "dxc;dxil;dxcompiler;dxc-headers" CACHE STRING "")
+ # HLSL Change end - Set default distribution value.
+ 
+ # This must be at the end of the LLVM root CMakeLists file because it must run
+diff --git a/external/CMakeLists.txt b/external/CMakeLists.txt
+index a8b2638e3..c146612d5 100644
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -21,10 +21,14 @@ endif(NOT DIRECTX_HEADER_INCLUDE_DIR)
+ # Enabling SPIR-V codegen requires SPIRV-Headers for spirv.hpp and
+ # SPIRV-Tools for SPIR-V disassembling functionality.
+ if (${ENABLE_SPIRV_CODEGEN})
+-  set(DXC_SPIRV_HEADERS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Headers"
+-      CACHE STRING "Location of SPIRV-Headers source")
+-  set(DXC_SPIRV_TOOLS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Tools"
+-      CACHE STRING "Location of SPIRV-Tools source")
++  if (NOT DEFINED DXC_SPIRV_HEADERS_DIR)
++    set(DXC_SPIRV_HEADERS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Headers"
++        CACHE STRING "Location of SPIRV-Headers source")
++  endif ()
++  if (NOT DEFINED DXC_SPIRV_TOOLS_DIR)
++    set(DXC_SPIRV_TOOLS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Tools"
++        CACHE STRING "Location of SPIRV-Tools source")
++  endif ()
+ 
+   if (NOT DEFINED SPIRV-Headers_SOURCE_DIR)
+     if (IS_DIRECTORY ${DXC_SPIRV_HEADERS_DIR})
+diff --git a/tools/clang/tools/dxildll/CMakeLists.txt b/tools/clang/tools/dxildll/CMakeLists.txt
+index 67a24d110..0113dbc3c 100644
+--- a/tools/clang/tools/dxildll/CMakeLists.txt
++++ b/tools/clang/tools/dxildll/CMakeLists.txt
+@@ -84,3 +84,19 @@ set_target_properties(dxildll
+   PROPERTIES
+   OUTPUT_NAME "dxil"
+ )
++
++if (WIN32)
++  set(install_dest RUNTIME DESTINATION bin)
++else()
++  set(install_dest LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX})
++endif()
++
++install(TARGETS dxildll
++        ${install_dest}
++        COMPONENT dxildll)
++
++add_custom_target(install-dxil
++        DEPENDS dxildll
++        COMMAND "${CMAKE_COMMAND}"
++        -DCMAKE_INSTALL_COMPONENT=dxildll
++        -P "${CMAKE_BINARY_DIR}/cmake_install.cmake")
+\ No newline at end of file

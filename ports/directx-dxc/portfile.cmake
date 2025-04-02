@@ -32,7 +32,7 @@ elseif (VCPKG_TARGET_IS_OSX)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO "microsoft/DirectXShaderCompiler"
         REF "release-${DIRECTX_DXC_TAG}"
-        PATCHES osx-conditional-customized-submodule-path.patch
+        PATCHES osx-config-and-install.patch
         SHA512 720301093c9e04c23518fdf50aec110bc1a4eafc9d585e73652b7db06c86185e0eca7dd75d4b97f13bdd4e6362ebc0ecc61a5a65f90e193a82dc0bbb48e09b3b
     )
     vcpkg_download_distfile(DX_HEADERS_ARCHIVE
@@ -178,7 +178,15 @@ elseif (VCPKG_TARGET_IS_OSX)
 
   file(INSTALL
     "${PACKAGE_PATH}/lib/libdxcompiler.dylib"
+    "${PACKAGE_PATH}/lib/libdxil.dylib"
     DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/lib/libdxcompiler.dylib"
+      "${PACKAGE_PATH}/lib/libdxil.dylib"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
@@ -189,7 +197,7 @@ elseif (VCPKG_TARGET_IS_OSX)
     WORLD_READ WORLD_EXECUTE)
 
   set(dll_name_dxc "libdxcompiler.dylib")
-  set(dll_name_dxil "libdxcompiler.dylib")
+  set(dll_name_dxil "libdxil.dylib")
   set(dll_dir "lib")
   set(lib_name "libdxcompiler.dylib")
   set(tool_path "tools/${PORT}/dxc")
