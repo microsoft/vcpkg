@@ -6,11 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/libprotobuf-mutator
     REF "v${VERSION}"
-    SHA512 9c752cf2bdbf9228ba5a7c1e7a552ea7e12bda226ad8268e4cb9f135a79aee9c3ff0c1f2dfebe5d011282835a63d3b9cf3b3f642f02a3e00bb0b5eee9580a3dd
+    SHA512 7a5e0700a2bb1bcff7a43593ec3908ffc204a936536cb88e5f37858721659c3ebbb495eb0121362b6b87436cebfe3c3732d05f4a8b5eb39dc346997ca10f4dc3
     HEAD_REF master
     PATCHES
         protobuf-cmake.patch
-        werror.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
