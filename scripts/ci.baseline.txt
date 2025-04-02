@@ -930,7 +930,6 @@ septag-sx:x64-android=fail
 sfml:arm-neon-android=fail
 sfml:arm64-android=fail
 sfml:x64-android=fail
-shader-slang:x64-windows-static=fail
 shogun:arm64-android=skip
 shogun:arm64-osx=skip
 shogun:arm64-uwp=skip
