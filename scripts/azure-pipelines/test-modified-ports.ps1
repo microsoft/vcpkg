@@ -87,9 +87,9 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
-$cachingArgs = @()
 
-$skipFailuresArg = @()
+$cachingArgs = @()
+$skipFailuresArgs = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs = @('--no-binarycaching')
 } else {
@@ -100,26 +100,28 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     }
     elseif ($BuildReason -eq 'PullRequest') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailuresArg = @('--skip-failures')
+        $skipFailuresArgs = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
         $binaryCachingMode = 'write'
     }
 
-    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    $cachingArgs += "--binarysource=clear;$BinarySourceStub,$binaryCachingMode"
 }
 
 if ($IsWindows) {
-    $executableExtension = '.exe'
+    $vcpkgExe = './vcpkg.exe'
 } else {
-    $executableExtension = [string]::Empty
+    $vcpkgExe = './vcpkg'
 }
+
+$ciBaselineArg = "--ci-baseline=$PSScriptRoot/../ci.baseline.txt"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
-& "./vcpkg$executableExtension" x-ci-clean @commonArgs
+& $vcpkgExe x-ci-clean @commonArgs
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
 {
@@ -128,12 +130,12 @@ if ($lastLastExitCode -ne 0)
 }
 
 if ($Triplet -eq 'x64-windows-release') {
-    $tripletSwitch = "--host-triplet=$Triplet"
+    $tripletArg = "--host-triplet=$Triplet"
 } else {
-    $tripletSwitch = "--triplet=$Triplet"
+    $tripletArg = "--triplet=$Triplet"
 }
 
-$parentHashes = @()
+$parentHashesArgs = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
@@ -165,9 +167,9 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
-        $parentHashes = @("--parent-hashes=$parentHashesFile")
-        & "./vcpkg$executableExtension" ci $tripletSwitch --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        $parentHashesArgs += "--parent-hashes=$parentHashesFile"
         Add-ToolchainToTestCMake
+        & $vcpkgExe ci $tripletArg --dry-run $ciBaselineArg @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
         $lastLastExitCode = $LASTEXITCODE
         if ($lastLastExitCode -ne 0)
         {
@@ -190,8 +192,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 }
 
-& "./vcpkg$executableExtension" ci $tripletSwitch --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 Add-ToolchainToTestCMake
+& $vcpkgExe ci $tripletArg "--failure-logs=$failureLogs" "--x-xunit=$xunitFile" $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs
 $lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
