@@ -9696,6 +9696,10 @@
       "baseline": "2.7.18",
       "port-version": 1
     },
+    "vcpkg-tool-tree-sitter": {
+      "baseline": "0.25.3",
+      "port-version": 0
+    },
     "vectorclass": {
       "baseline": "2.02.00",
       "port-version": 0
