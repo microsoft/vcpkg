@@ -77,17 +77,17 @@ if(VCPKG_TREE_SITTER_UPDATE)
     message(FATAL_ERROR "Stopping due to VCPKG_TREE_SITTER_UPDATE being enabled.")
 endif()
 
-message(STATUS "archive_path: '${archive_path}'")
-
 file(COPY "${archive_path}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 cmake_path(GET archive_path FILENAME archive_name)
+set(gunzip gunzip)
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT)
     vcpkg_host_path_list(APPEND ENV{PATH} "${MSYS_ROOT}/usr/bin")
+	set(gunzip sh -c gunzip)
 endif()
 vcpkg_execute_required_process(
     ALLOW_IN_DOWNLOAD_MODE
-    COMMAND gunzip "${archive_name}"
+    COMMAND ${gunzip} "${archive_name}"
     WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
     LOGNAME "gunzip-${TARGET_TRIPLET}"
 )
