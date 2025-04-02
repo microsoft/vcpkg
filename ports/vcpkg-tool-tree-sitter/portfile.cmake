@@ -82,7 +82,7 @@ message(STATUS "archive_path: '${archive_path}'")
 file(COPY "${archive_path}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 cmake_path(GET archive_path FILENAME archive_name)
 if(CMAKE_HOST_WIN32)
-    vcpkg_acquire_msys2(MSYS_ROOT)
+    vcpkg_acquire_msys(MSYS_ROOT)
     vcpkg_host_path_list(APPEND ENV{PATH} "${MSYS_ROOT}/usr/bin")
 endif()
 vcpkg_execute_required_process(
