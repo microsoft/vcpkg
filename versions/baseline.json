@@ -6348,6 +6348,10 @@
       "baseline": "9.1.0",
       "port-version": 4
     },
+    "mysvac-cpp-jsonlib": {
+      "baseline": "4.0.0",
+      "port-version": 0
+    },
     "nameof": {
       "baseline": "0.10.4",
       "port-version": 0
