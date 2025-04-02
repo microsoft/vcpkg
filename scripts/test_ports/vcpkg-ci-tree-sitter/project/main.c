@@ -1,7 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 #include <tree_sitter/api.h>
-
-const TSLanguage *tree_sitter_c(void);
+#include <tree_sitter/tree-sitter-c.h>
 
 int main()
 {
@@ -16,6 +16,6 @@ int main()
 
     free(string);
     ts_tree_delete(tree);
-    ts_parser_delete(parser)
+    ts_parser_delete(parser);
     return 0;
 }

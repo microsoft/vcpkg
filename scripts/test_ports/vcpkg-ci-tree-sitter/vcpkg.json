@@ -5,6 +5,7 @@
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
+    "tree-sitter",
     "tree-sitter-c",
     {
       "name": "vcpkg-cmake",
