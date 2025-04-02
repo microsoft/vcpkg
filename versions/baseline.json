@@ -7381,7 +7381,7 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "5.29.3",
+      "baseline": "6.30.2",
       "port-version": 0
     },
     "protobuf-c": {
