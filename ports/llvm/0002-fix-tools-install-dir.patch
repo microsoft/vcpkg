@@ -12,10 +12,10 @@ index c7ac662c6..f5a7e7c01 100644
  
      if(NOT LLVM_ENABLE_IDE)
 diff --git a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
-index b220cbea8..b94501ec8 100644
+index 0d4501d1e..a6ff0261f 100644
 --- a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
 +++ b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
-@@ -65,6 +65,6 @@ install(PROGRAMS clang-tidy-diff.py
+@@ -66,6 +66,6 @@ install(PROGRAMS clang-tidy-diff.py
    DESTINATION "${CMAKE_INSTALL_DATADIR}/clang"
    COMPONENT clang-tidy)
  install(PROGRAMS run-clang-tidy.py
@@ -35,10 +35,10 @@ index eb5383c3a..39a34dfe8 100644
 +        RUNTIME DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
          COMPONENT clang-extras)
 diff --git a/clang/cmake/modules/AddClang.cmake b/clang/cmake/modules/AddClang.cmake
-index 9d09be193..73a238d32 100644
+index cdc8bd5cd..848aca4bb 100644
 --- a/clang/cmake/modules/AddClang.cmake
 +++ b/clang/cmake/modules/AddClang.cmake
-@@ -124,7 +124,7 @@ macro(add_clang_library name)
+@@ -136,7 +136,7 @@ macro(add_clang_library name)
            ${export_to_clangtargets}
            LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
            ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
@@ -48,10 +48,10 @@ index 9d09be193..73a238d32 100644
          if (NOT LLVM_ENABLE_IDE)
            add_llvm_install_targets(install-${lib}
 diff --git a/clang/tools/c-index-test/CMakeLists.txt b/clang/tools/c-index-test/CMakeLists.txt
-index 0ae1b4e55..7774cd27a 100644
+index 24e7c9692..841f49cd5 100644
 --- a/clang/tools/c-index-test/CMakeLists.txt
 +++ b/clang/tools/c-index-test/CMakeLists.txt
-@@ -49,7 +49,7 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+@@ -48,7 +48,7 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
      set_property(TARGET c-index-test APPEND PROPERTY INSTALL_RPATH
         "@executable_path/../../lib")
    else()
@@ -61,18 +61,17 @@ index 0ae1b4e55..7774cd27a 100644
  
    install(TARGETS c-index-test
 diff --git a/clang/tools/clang-format/CMakeLists.txt b/clang/tools/clang-format/CMakeLists.txt
-index 1c61a3c8f..4220d9027 100644
+index 1c61a3c8f..64390d6bb 100644
 --- a/clang/tools/clang-format/CMakeLists.txt
 +++ b/clang/tools/clang-format/CMakeLists.txt
-@@ -36,7 +36,7 @@ install(FILES clang-format.py
-   DESTINATION "${CMAKE_INSTALL_DATADIR}/clang"
-   COMPONENT clang-format)
- install(PROGRAMS git-clang-format
--  DESTINATION "${CMAKE_INSTALL_BINDIR}"
-+  DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
-   COMPONENT clang-format)
+@@ -41,6 +41,6 @@ install(PROGRAMS git-clang-format
  
  if (WIN32 AND NOT CYGWIN)
+   install(PROGRAMS git-clang-format.bat
+-    DESTINATION "${CMAKE_INSTALL_BINDIR}"
++    DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+     COMPONENT clang-format)
+ endif()
 diff --git a/clang/tools/scan-build-py/CMakeLists.txt b/clang/tools/scan-build-py/CMakeLists.txt
 index 9273eb5ed..f9abcb2ca 100644
 --- a/clang/tools/scan-build-py/CMakeLists.txt
@@ -108,11 +107,24 @@ index ef687b0e9..47f31efc9 100644
              COMPONENT scan-build)
    endforeach()
  
+diff --git a/clang/tools/scan-view/CMakeLists.txt b/clang/tools/scan-view/CMakeLists.txt
+index 07aec76ee..55a945bb2 100644
+--- a/clang/tools/scan-view/CMakeLists.txt
++++ b/clang/tools/scan-view/CMakeLists.txt
+@@ -20,7 +20,7 @@ if(CLANG_INSTALL_SCANVIEW)
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/${BinFile})
+     list(APPEND Depends ${CMAKE_BINARY_DIR}/bin/${BinFile})
+     install(PROGRAMS bin/${BinFile}
+-            DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+             COMPONENT scan-view)
+   endforeach()
+ 
 diff --git a/flang/cmake/modules/AddFlang.cmake b/flang/cmake/modules/AddFlang.cmake
-index 9ed1a3050..8c56414bd 100644
+index 1f1787720..4fcb41fbd 100644
 --- a/flang/cmake/modules/AddFlang.cmake
 +++ b/flang/cmake/modules/AddFlang.cmake
-@@ -77,7 +77,7 @@ function(add_flang_library name)
+@@ -80,7 +80,7 @@ function(add_flang_library name)
          ${export_to_flangtargets}
          LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
          ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
@@ -121,16 +133,32 @@ index 9ed1a3050..8c56414bd 100644
  
        if (NOT LLVM_ENABLE_IDE)
          add_llvm_install_targets(install-${name}
+diff --git a/flang/tools/f18/CMakeLists.txt b/flang/tools/f18/CMakeLists.txt
+index cc2bc5b8e..f5c9d71ce 100644
+--- a/flang/tools/f18/CMakeLists.txt
++++ b/flang/tools/f18/CMakeLists.txt
+@@ -124,7 +124,7 @@ if (NOT CMAKE_CROSSCOMPILING)
+       DEPENDS flang ${FLANG_SOURCE_DIR}/module/${filename}.f90 ${FLANG_SOURCE_DIR}/module/__fortran_builtins.f90 ${depends}
+     )
+     list(APPEND MODULE_FILES ${base}.mod)
+-    install(FILES ${base}.mod DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/flang")
++    install(FILES ${base}.mod DESTINATION "${FLANG_TOOLS_INSTALL_DIR}")
+ 
+     # If a module has been compiled into an object file, add the file to
+     # the link line for the FortranRuntime library.
 diff --git a/flang/tools/flang-driver/CMakeLists.txt b/flang/tools/flang-driver/CMakeLists.txt
-index 9f33cdfe3..908b874c6 100644
+index 06b61e595..9107a75a2 100644
 --- a/flang/tools/flang-driver/CMakeLists.txt
 +++ b/flang/tools/flang-driver/CMakeLists.txt
-@@ -35,4 +35,4 @@ if(FLANG_PLUGIN_SUPPORT)
-   export_executable_symbols_for_plugins(flang-new)
+@@ -42,7 +42,7 @@ if(FLANG_PLUGIN_SUPPORT)
+   export_executable_symbols_for_plugins(flang)
  endif()
  
--install(TARGETS flang-new DESTINATION "${CMAKE_INSTALL_BINDIR}")
-+install(TARGETS flang-new DESTINATION "${FLANG_TOOLS_INSTALL_DIR}")
+-install(TARGETS flang DESTINATION "${CMAKE_INSTALL_BINDIR}")
++install(TARGETS flang DESTINATION "${FLANG_TOOLS_INSTALL_DIR}")
+ 
+ # Keep "flang-new" as a symlink for backwards compatiblity. Remove once "flang"
+ # is a widely adopted name.
 diff --git a/lld/cmake/modules/AddLLD.cmake b/lld/cmake/modules/AddLLD.cmake
 index 9f2684b6f..dfb55d99a 100644
 --- a/lld/cmake/modules/AddLLD.cmake
@@ -145,7 +173,7 @@ index 9f2684b6f..dfb55d99a 100644
      if (${ARG_SHARED} AND NOT CMAKE_CONFIGURATION_TYPES)
        add_llvm_install_targets(install-${name}
 diff --git a/lldb/cmake/modules/AddLLDB.cmake b/lldb/cmake/modules/AddLLDB.cmake
-index 538029037..97b566b7d 100644
+index 0a81ec509..5554db79e 100644
 --- a/lldb/cmake/modules/AddLLDB.cmake
 +++ b/lldb/cmake/modules/AddLLDB.cmake
 @@ -219,7 +219,7 @@ function(add_lldb_executable name)

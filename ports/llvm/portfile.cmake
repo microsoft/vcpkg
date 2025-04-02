@@ -4,14 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 775a3f7cdcc71c7a104f25d33094d82534f4d9fe0a227adeab12c51d3d579f7fdae2b8ba78c9c30b59ee55934d542241c8d2a090215adf14678354bd83aec9c7 
+    SHA512 0550571718623a16d85b58222bc61bd6a47ab7a8d9183e58d3b66f33424ed0bfa45c75687312b43515a00815e955f64328db214f4ea4656dcfd652cea949467e
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
         0002-fix-tools-install-dir.patch
         0003-fix-llvm-config.patch
         0004-disable-libomp-aliases.patch
-        0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
 )
 

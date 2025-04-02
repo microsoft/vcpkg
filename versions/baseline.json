@@ -5685,7 +5685,7 @@
       "port-version": 0
     },
     "llvm": {
-      "baseline": "19.1.7",
+      "baseline": "20.1.2",
       "port-version": 0
     },
     "lmdb": {
