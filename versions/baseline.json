@@ -3197,8 +3197,8 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.80.0",
-      "port-version": 1
+      "baseline": "2.83.4",
+      "port-version": 0
     },
     "glib-networking": {
       "baseline": "2.78.0",
@@ -10018,7 +10018,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "wyhash": {
       "baseline": "2023-12-03",
