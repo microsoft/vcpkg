@@ -116,7 +116,9 @@ if ($IsWindows) {
     $vcpkgExe = './vcpkg'
 }
 
-$ciBaselineArg = "--ci-baseline=$PSScriptRoot/../ci.baseline.txt"
+$ciBaselineFile = "$PSScriptRoot/../ci.baseline.txt"
+$ciBaselineArg = "--ci-baseline=$ciBaselineFile"
+$toolMetadataFile = "$PSScriptRoot/../vcpkg-tool-metadata.txt"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
@@ -125,7 +127,7 @@ $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
 {
-    Write-Error "vcpkg clean failed"
+    Write-Error "vcpkg x-ci-clean failed"
     exit $lastLastExitCode
 }
 
@@ -138,20 +140,20 @@ if ($Triplet -eq 'x64-windows-release') {
 $parentHashesArgs = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
-    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    $headTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
+    $headBaseline = Get-Content $ciBaselineFile -Raw
+    $headTool = Get-Content $toolMetadataFile  -Raw
 
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
     $lastLastExitCode = $LASTEXITCODE
     if ($lastLastExitCode -ne 0)
     {
-        Write-Error "git revert failed"
+        Write-Error "git revert -n -m 1 HEAD failed"
         exit $lastLastExitCode
     }
 
-    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    $parentTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
+    $parentBaseline = Get-Content $ciBaselineFile -Raw
+    $parentTool = Get-Content $toolMetadataFile  -Raw
     if (($parentBaseline -eq $headBaseline) -and ($parentTool -eq $headTool))
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
@@ -176,7 +178,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     $lastLastExitCode = $LASTEXITCODE
     if ($lastLastExitCode -ne 0)
     {
-        Write-Error "git reset failed"
+        Write-Error "git reset --hard HEAD failed"
         exit $lastLastExitCode
     }
 }
@@ -185,7 +187,7 @@ Add-ToolchainToTestCMake
 & $vcpkgExe ci $tripletArg "--failure-logs=$failureLogs" "--x-xunit=$xunitFile" $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs
 $lastLastExitCode = $LASTEXITCODE
 
-$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
