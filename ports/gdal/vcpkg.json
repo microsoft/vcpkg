@@ -1,6 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.10.2",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -72,6 +73,15 @@
       "dependencies": [
         {
           "name": "libarchive",
+          "default-features": false
+        }
+      ]
+    },
+    "arrow": {
+      "description": "Enable arrow support",
+      "dependencies": [
+        {
+          "name": "arrow",
           "default-features": false
         }
       ]
@@ -216,6 +226,25 @@
       "description": "Use OpenSSL library",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "parquet": {
+      "description": "Enable parquet reading support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "parquet"
+          ]
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "arrow"
+          ]
+        }
       ]
     },
     "pcre2": {
