@@ -13,5 +13,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tbb": {
+      "description": "Enable TBB multi-threading API support",
+      "dependencies": [
+        {
+          "name": "tbb",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

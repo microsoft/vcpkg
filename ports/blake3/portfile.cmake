@@ -8,9 +8,16 @@ vcpkg_from_github(
         fix-windows-arm-build-error.patch
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS BLAKE3_FEATURE_OPTIONS
+    FEATURES
+        tbb BLAKE3_USE_TBB
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/c"
     OPTIONS
+        ${BLAKE3_FEATURE_OPTIONS}
         -DBLAKE3_FETCH_TBB=OFF
         -DBLAKE3_EXAMPLES=OFF
 )
