@@ -5837,7 +5837,7 @@
       "port-version": 0
     },
     "maddy": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "magic-enum": {
