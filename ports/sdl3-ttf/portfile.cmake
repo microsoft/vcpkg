@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  libsdl-org/SDL_ttf
     REF "release-${VERSION}"
-    SHA512 98333b3f323a20d5218fc29d217bd4188363a517246b67df86da631463ed19c711f3018e67cdc78565a1ed5913a839d575198dd1a546e98d6a3f68c8f40ef393 
+    SHA512 b9adc28d584759b1cc1072d071caad95ade263a1fb24e294d66fc15e132d44bc62925875cb1f1b596089def9b47d7b73f42ffa4e120ee51982f993dc7a7d3bd7 
     HEAD_REF main
     PATCHES
         fix-findplutosvg.patch
