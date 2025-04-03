@@ -9,6 +9,14 @@
   "supports": "(windows & !arm32 & !uwp & !xbox) | (linux & x64) | osx",
   "dependencies": [
     {
+      "name": "spirv-headers",
+      "platform": "osx"
+    },
+    {
+      "name": "spirv-tools",
+      "platform": "osx"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -19,14 +27,6 @@
     {
       "name": "zlib",
       "platform": "linux & !static"
-    },
-    {
-      "name": "spirv-headers",
-      "platform": "osx"
-    },
-    {
-      "name": "spirv-tools",
-      "platform": "osx"
     }
   ]
 }
