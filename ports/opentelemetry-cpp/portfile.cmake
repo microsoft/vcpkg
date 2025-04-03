@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 639ca462dc2f3633f6b9c7b89000276d08ddbe1ee9d4322ac6568ad07d198000cf3c7c5d940e10db8142494b984f1f969956524cc2df4a65d072f4c10f367ddb
+    SHA512 db9745be96907431c32a69230b29a5bddba0654f3f379f6cd0827f44895ef39c9612381303ec239d6ad98920bcc4006a90e25b715ade9ddf30aff843d1931416
     HEAD_REF main
     PATCHES
         cmake-quirks.diff
