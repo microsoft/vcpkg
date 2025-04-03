@@ -8666,7 +8666,7 @@
     },
     "snappy": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "snitch": {
       "baseline": "1.2.5",
