@@ -5146,7 +5146,7 @@
     },
     "librsvg": {
       "baseline": "2.40.21",
-      "port-version": 0
+      "port-version": 1
     },
     "librsync": {
       "baseline": "2.3.4",
@@ -5250,7 +5250,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -5529,8 +5529,8 @@
       "port-version": 0
     },
     "libxml2": {
-      "baseline": "2.13.5",
-      "port-version": 1
+      "baseline": "2.14.0",
+      "port-version": 0
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -6878,7 +6878,7 @@
     },
     "openscap": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openslide": {
       "baseline": "3.4.1",

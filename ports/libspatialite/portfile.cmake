@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
         fix-mingw.patch
         fix-utf8-source.patch
         android-builtin-iconv.diff
+        fix-xmlfree.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused

@@ -1,32 +1,16 @@
-vcpkg_download_distfile(FIX_COMPATIBILITY_PATCH
-    URLS https://github.com/GNOME/libxml2/commit/b347a008a745778630a9eb4fbd29694f3c135bfa.diff?full_index=1
-    FILENAME Fix-compatibility-in-package-version-file.patch
-    SHA512 7f5e5f53444c12924b0fefdf3013fa4dab76fb17f552dd827628739a6e65c9817ae7182e1817cea2317e2fc9b8a200ecce4f8cb5661a2614c0548a5b3e508b66
-)
-
-vcpkg_download_distfile(ADD_MISSING_BCRYPT_PATCH
-    URLS https://github.com/GNOME/libxml2/commit/fe1ee0f25f43e33a9981fd6fe7b0483a8c8b5e8d.diff?full_index=1
-    FILENAME Add-missing-Bcrypt-link.patch
-    SHA512 22bc2fe4c365a2c9991508484daa3d884ff91803df48b3847f71b2283e240ef3ce4fdc1d230932d837ff94dc02fc53e76e2e5a1c956ef037caacb13d8f9b3982
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 dfe0529dd2fbb7dc9e79505b9c6ff7f29979fa4392d534c1b8859fa9934c2e7d4da3429265d718292056809a58080af32b130263625cdeb358123774c27da7c6
+    SHA512 f651a0b280ea5760c727d2b175a47e601db4ef9f1108d9a2be126164edeff4b0890b909134f06d787b47a7551848b0ffa1a1e9c1ef94fb2a4d41184c936d22b9
     HEAD_REF master
     PATCHES
         disable-docs.patch
         fix_cmakelist.patch
-        fix_ios_compilation.patch
-        ${FIX_COMPATIBILITY_PATCH}
-        ${ADD_MISSING_BCRYPT_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "ftp" LIBXML2_WITH_FTP
         "http" LIBXML2_WITH_HTTP
         "iconv" LIBXML2_WITH_ICONV
         "legacy" LIBXML2_WITH_LEGACY
@@ -60,7 +44,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_SCHEMATRON=ON
         -DLIBXML2_WITH_THREADS=ON
         -DLIBXML2_WITH_THREAD_ALLOC=OFF
-        -DLIBXML2_WITH_TREE=ON
         -DLIBXML2_WITH_VALID=ON
         -DLIBXML2_WITH_WRITER=ON
         -DLIBXML2_WITH_XINCLUDE=ON

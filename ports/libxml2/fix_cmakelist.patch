@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f99fd368..3246a42c 100644
+index 909d71c..25c696c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -438,7 +438,7 @@ set_target_properties(
-     SOVERSION ${LIBXML_MAJOR_VERSION}
+@@ -421,7 +421,7 @@ set_target_properties(
+     SOVERSION ${LIBXML_SOVERSION}
  )
  
 -if(MSVC)
@@ -11,7 +11,7 @@ index f99fd368..3246a42c 100644
      if(BUILD_SHARED_LIBS)
          set_target_properties(
              LibXml2
-@@ -653,7 +653,11 @@ list(JOIN XML_PRIVATE_LIBS " " XML_PRIVATE_LIBS)
+@@ -616,7 +616,11 @@ list(JOIN XML_PRIVATE_LIBS " " XML_PRIVATE_LIBS)
  
  set(XML_INCLUDEDIR "-I\${includedir}/libxml2")
  set(XML_LIBDIR "-L\${libdir}")
@@ -23,7 +23,7 @@ index f99fd368..3246a42c 100644
  
  if(BUILD_SHARED_LIBS)
      set(XML_PC_PRIVATE ".private")
-@@ -679,7 +683,7 @@ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+@@ -651,7 +655,7 @@ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
  configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml-2.0.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT development)
  
