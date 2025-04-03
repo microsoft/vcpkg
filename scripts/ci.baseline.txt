@@ -821,7 +821,6 @@ popsift:x64-windows-release=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-windows-static=fail
 popsift:x64-windows=fail
-proxygen:x64-linux=fail
 python2:arm-neon-android=fail
 python2:arm64-android=fail
 python2:x64-android=fail
