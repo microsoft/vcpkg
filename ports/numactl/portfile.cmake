@@ -24,4 +24,5 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md" "${SOURCE_PATH}/LICENSE.LGPL2.1" "${SOURCE_PATH}/LICENSE.GPL2")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" ".*# License" "# License" REGEX)
