@@ -1,15 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8f7db9978..dcac2e931 100644
+index 8f7db9978..51f31bbbf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -686,6 +686,15 @@ add_subdirectory(include/dxc)
+@@ -686,6 +686,14 @@ add_subdirectory(include/dxc)
  # really depend on anything else in the build it is safe.
  list(APPEND LLVM_COMMON_DEPENDS HCTGen) 
  
 +find_package(SPIRV-Headers CONFIG REQUIRED)
 +link_libraries(SPIRV-Headers::SPIRV-Headers)
 +get_target_property(SPIRV_HEADERS_INCLUDE_PATH SPIRV-Headers::SPIRV-Headers INTERFACE_INCLUDE_DIRECTORIES)
-+# get parent directory path for SPIRV_HEADERS_INCLUDE_PATH
 +get_filename_component(SPIRV-Headers_SOURCE_DIR "${SPIRV_HEADERS_INCLUDE_PATH}" DIRECTORY)
 +find_package(SPIRV-Tools CONFIG REQUIRED)
 +find_package(SPIRV-Tools-opt CONFIG REQUIRED)
@@ -18,7 +17,7 @@ index 8f7db9978..dcac2e931 100644
  if(EXISTS "${LLVM_MAIN_SRC_DIR}/external")
    add_subdirectory(external) # SPIRV change
  endif()
-@@ -814,7 +823,7 @@ endif()
+@@ -814,7 +822,7 @@ endif()
  include(CoverageReport)
  
  # HLSL Change begin - Set default distribution value.
@@ -27,29 +26,6 @@ index 8f7db9978..dcac2e931 100644
  # HLSL Change end - Set default distribution value.
  
  # This must be at the end of the LLVM root CMakeLists file because it must run
-diff --git a/external/CMakeLists.txt b/external/CMakeLists.txt
-index a8b2638e3..c146612d5 100644
---- a/external/CMakeLists.txt
-+++ b/external/CMakeLists.txt
-@@ -21,10 +21,14 @@ endif(NOT DIRECTX_HEADER_INCLUDE_DIR)
- # Enabling SPIR-V codegen requires SPIRV-Headers for spirv.hpp and
- # SPIRV-Tools for SPIR-V disassembling functionality.
- if (${ENABLE_SPIRV_CODEGEN})
--  set(DXC_SPIRV_HEADERS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Headers"
--      CACHE STRING "Location of SPIRV-Headers source")
--  set(DXC_SPIRV_TOOLS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Tools"
--      CACHE STRING "Location of SPIRV-Tools source")
-+  if (NOT DEFINED DXC_SPIRV_HEADERS_DIR)
-+    set(DXC_SPIRV_HEADERS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Headers"
-+        CACHE STRING "Location of SPIRV-Headers source")
-+  endif ()
-+  if (NOT DEFINED DXC_SPIRV_TOOLS_DIR)
-+    set(DXC_SPIRV_TOOLS_DIR "${DXC_EXTERNAL_ROOT_DIR}/SPIRV-Tools"
-+        CACHE STRING "Location of SPIRV-Tools source")
-+  endif ()
- 
-   if (NOT DEFINED SPIRV-Headers_SOURCE_DIR)
-     if (IS_DIRECTORY ${DXC_SPIRV_HEADERS_DIR})
 diff --git a/tools/clang/tools/dxildll/CMakeLists.txt b/tools/clang/tools/dxildll/CMakeLists.txt
 index 67a24d110..0113dbc3c 100644
 --- a/tools/clang/tools/dxildll/CMakeLists.txt
