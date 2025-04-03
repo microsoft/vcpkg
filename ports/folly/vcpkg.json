@@ -84,7 +84,12 @@
     "snappy": {
       "description": "Support Snappy for compression",
       "dependencies": [
-        "snappy"
+        {
+          "name": "snappy",
+          "features": [
+            "rtti"
+          ]
+        }
       ]
     },
     "zstd": {
