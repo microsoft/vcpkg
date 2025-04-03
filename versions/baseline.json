@@ -2982,7 +2982,7 @@
     },
     "ftgl": {
       "baseline": "2.4.0",
-      "port-version": 5
+      "port-version": 6
     },
     "ftxui": {
       "baseline": "6.0.2",
