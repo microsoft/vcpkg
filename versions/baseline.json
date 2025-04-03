@@ -6593,7 +6593,7 @@
       "port-version": 0
     },
     "numactl": {
-      "baseline": "2.0.18",
+      "baseline": "2.0.19",
       "port-version": 0
     },
     "numcpp": {
