@@ -1,0 +1,22 @@
+diff -Naur lzo-2.10.orig/CMakeLists.txt lzo-2.10/CMakeLists.txt
+--- lzo-2.10.orig/CMakeLists.txt	2017-03-01 20:54:14.000000000 +0100
++++ lzo-2.10/CMakeLists.txt	2025-04-03 14:47:42.849234478 +0200
+@@ -8,7 +8,7 @@
+ # All Rights Reserved.
+ #
+ 
+-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
++cmake_minimum_required(VERSION 3.4.3...4.0)
+ 
+ #
+ # simple usage example (Unix):
+@@ -56,9 +56,6 @@
+ if(NOT ENABLE_STATIC AND NOT ENABLE_SHARED)
+     set(ENABLE_STATIC ON)
+ endif()
+-if(ENABLE_SHARED AND WIN32)
+-    cmake_minimum_required(VERSION 3.4.3 FATAL_ERROR) # needed for WINDOWS_EXPORT_ALL_SYMBOLS
+-endif()
+ 
+ # install directories
+ if(NOT CMAKE_INSTALL_PREFIX)

@@ -5826,7 +5826,7 @@
     },
     "lzo": {
       "baseline": "2.10",
-      "port-version": 9
+      "port-version": 10
     },
     "lzokay": {
       "baseline": "2023-10-22",
