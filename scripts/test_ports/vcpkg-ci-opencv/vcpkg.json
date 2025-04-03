@@ -74,10 +74,17 @@
       "default-features": false,
       "features": [
         "gapi",
-        "gstreamer",
-        "python"
+        "gstreamer"
       ],
       "platform": "!uwp & !(windows & static) & !android"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "python"
+      ],
+      "platform": "!uwp & !(windows & static) & !android & !linux"
     },
     {
       "name": "opencv",
@@ -112,6 +119,14 @@
         "vulkan"
       ],
       "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "aravis"
+      ],
+      "platform": "!android & !uwp"
     },
     {
       "name": "opencv2",

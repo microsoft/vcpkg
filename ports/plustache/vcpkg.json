@@ -1,7 +1,7 @@
 {
   "name": "plustache",
   "version": "0.4.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "{{mustaches}} for C++",
   "dependencies": [
     "boost-algorithm",

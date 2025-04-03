@@ -13,6 +13,8 @@ vcpkg_from_github(
         0006-fix-ios-install.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
+file(REMOVE_RECURSE "${SOURCE_PATH}/external/basisu/zstd")
+file(REMOVE_RECURSE "${SOURCE_PATH}/lib/basisu/zstd")
 
 vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_WINDOWS)
