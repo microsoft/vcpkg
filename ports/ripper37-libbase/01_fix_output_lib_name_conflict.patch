@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9395f76..cc1f9b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,9 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
+ # Build options
+ #
+
++set(LIBBASE_OUTPUT_NAME "libbase" CACHE STRING
++  "The library's output basename. Modify to resolve name clashes.")
++
+ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+   option(LIBBASE_BUILD_EXAMPLES "Build examples." ON)
+   option(LIBBASE_BUILD_TESTS "Build unit tests." ON)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b38937c..d362c26 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -14,13 +14,13 @@ endif()
+ #
+
+ add_library(libbase STATIC "")
+-
+ target_compile_features(libbase PUBLIC cxx_std_17)
+ target_compile_options(libbase PRIVATE ${LIBBASE_COMPILE_FLAGS})
+ target_compile_definitions(libbase PUBLIC
+   ${LIBBASE_DEFINES}
+   ${LIBBASE_FEATURE_DEFINES})
+ set_target_properties(libbase PROPERTIES
++  OUTPUT_NAME "${LIBBASE_OUTPUT_NAME}"
+   CXX_EXTENSIONS ON
+   ${LIBBASE_OPT_CLANG_TIDY_PROPERTIES})
+
