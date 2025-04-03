@@ -4,12 +4,10 @@ set(DIRECTX_DXC_TAG 1.8.2502)
 set(DIRECTX_DXC_VERSION 2025_02_20)
 
 # for macOS platform:
-# since vcpkg_from_github() does not support submodules, we need to checkout the submodules manually
-# check for newest hash values by the link below, REMEMBER to update the version tag in the URL
+# The DirectX Headers module seems not working with the latest version
+# Therefore we manually download the specific version according to the original DXC repo
 # https://github.com/microsoft/DirectXShaderCompiler/tree/release-1.8.2502/external
 set(DX_HEADERS_MODULE_HASH 980971e835876dc0cde415e8f9bc646e64667bf7)
-set(SPIRV_HEADERS_MODULE_HASH 3f17b2af6784bfa2c5aa5dbb8e0e74a607dd8b3b)
-set(SPIRV_TOOLS_MODULE_HASH 4d2f0b40bfe290dea6c6904dafdf7fd8328ba346)
 
 if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
    message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
@@ -40,16 +38,6 @@ elseif (VCPKG_TARGET_IS_OSX)
         FILENAME "DirectX-Headers.zip"
         SHA512 b7f01f9bc3cf6f9600f6a75513e62fcf65d719ca0addac216ec3c1e498696b945146c855097868d0a16e3764278710dcb092748e2dd70fcfe25f4373fae51f63
     )
-    vcpkg_download_distfile(SPIRV_HEADERS_ARCHIVE
-        URLS "https://github.com/KhronosGroup/SPIRV-Headers/archive/${SPIRV_HEADERS_MODULE_HASH}.zip"
-        FILENAME "SPIRV-Headers.zip"
-        SHA512 f777f152a3c7ff313edc7c7789d15ad50a168523b589b2da10c0f65bce1523e551f621ad46445bca27c8ece8f913683bd8b2f6c8d75fd56ea481b134eaed39aa
-    )
-    vcpkg_download_distfile(SPIRV_TOOLS_ARCHIVE
-        URLS "https://github.com/KhronosGroup/SPIRV-Tools/archive/${SPIRV_TOOLS_MODULE_HASH}.zip"
-        FILENAME "SPIRV-Tools.zip"
-        SHA512 1979e722157a11ab4cd50492ae60e46142dfb682bbb6d9cf8adb5732b13c1ec30dc52464d4eb23e3ad4d5960095589bb072a87033ac153790f4af51b220cd341
-    )
 endif ()
 
 vcpkg_download_distfile(
@@ -70,17 +58,17 @@ else ()
             DX_HEADERS_PATH
             ARCHIVE ${DX_HEADERS_ARCHIVE}
     )
-    vcpkg_extract_source_archive(
-            SPIRV_HEADERS_PATH
-            ARCHIVE ${SPIRV_HEADERS_ARCHIVE}
-    )
-    vcpkg_extract_source_archive(
-            SPIRV_TOOLS_PATH
-            ARCHIVE ${SPIRV_TOOLS_ARCHIVE}
-    )
 
     set(PACKAGE_PATH ${CURRENT_BUILDTREES_DIR}/inst)
-    vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS "-C ${SOURCE_PATH}/cmake/caches/PredefinedParams.cmake" "-DDIRECTX_HEADER_INCLUDE_DIR=${DX_HEADERS_PATH}/include" "-DDXC_SPIRV_HEADERS_DIR=${SPIRV_HEADERS_PATH}" "-DDXC_SPIRV_TOOLS_DIR=${SPIRV_TOOLS_PATH}" "-DCMAKE_INSTALL_PREFIX=${PACKAGE_PATH}")
+    vcpkg_cmake_configure(
+            SOURCE_PATH ${SOURCE_PATH}
+            OPTIONS
+            "-C ${SOURCE_PATH}/cmake/caches/PredefinedParams.cmake"
+            "-DDIRECTX_HEADER_INCLUDE_DIR=${DX_HEADERS_PATH}/include"
+#            "-DDXC_SPIRV_HEADERS_DIR=${SPIRV_HEADERS_PATH}"
+#            "-DDXC_SPIRV_TOOLS_DIR=${SPIRV_TOOLS_PATH}"
+            "-DCMAKE_INSTALL_PREFIX=${PACKAGE_PATH}"
+    )
     vcpkg_cmake_build(TARGET install-distribution)
 endif ()
 

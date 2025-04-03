@@ -19,6 +19,14 @@
     {
       "name": "zlib",
       "platform": "linux & !static"
+    },
+    {
+      "name": "spirv-headers",
+      "platform": "osx"
+    },
+    {
+      "name": "spirv-tools",
+      "platform": "osx"
     }
   ]
 }
