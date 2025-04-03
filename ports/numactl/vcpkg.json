@@ -4,5 +4,11 @@
   "description": "NUMA support for Linux",
   "homepage": "https://github.com/numactl/numactl",
   "license": null,
-  "supports": "linux"
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
 }
