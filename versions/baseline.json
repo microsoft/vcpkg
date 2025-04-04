@@ -6129,7 +6129,7 @@
       "port-version": 0
     },
     "mlpack": {
-      "baseline": "4.5.1",
+      "baseline": "4.6.0",
       "port-version": 0
     },
     "mman": {
