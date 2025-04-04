@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DLIB_POSTFIX=
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DOSGEARTH_BUILD_EXAMPLES=OFF
         -DOSGEARTH_BUILD_TESTS=OFF
@@ -29,8 +28,6 @@ vcpkg_cmake_configure(
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
-    MAYBE_UNUSED_VARIABLES
-        LIB_POSTFIX
 )
 
 vcpkg_cmake_install()
