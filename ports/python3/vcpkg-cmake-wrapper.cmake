@@ -62,12 +62,19 @@ if(_PythonFinder_WantLibs)
             PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3"
             NO_DEFAULT_PATH
         )
+        find_program(
+            _@PythonFinder_PREFIX@_EXECUTABLE_DEBUG
+            NAMES "python_d" "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@d"
+            PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/tools/python3"
+            NO_DEFAULT_PATH
+        )
     endif()
 
     # These are duplicated as normal variables to nullify FindPython's checksum verifications.
     set(_@PythonFinder_PREFIX@_INCLUDE_DIR "${_@PythonFinder_PREFIX@_INCLUDE_DIR}")
     set(_@PythonFinder_PREFIX@_LIBRARY_RELEASE "${_@PythonFinder_PREFIX@_LIBRARY_RELEASE}")
     set(_@PythonFinder_PREFIX@_LIBRARY_DEBUG "${_@PythonFinder_PREFIX@_LIBRARY_DEBUG}")
+    set(_@PythonFinder_PREFIX@_EXECUTABLE_DEBUG "${_@PythonFinder_PREFIX@_EXECUTABLE_DEBUG}")
 
     _find_package(${ARGS})
 
