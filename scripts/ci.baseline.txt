@@ -51,8 +51,6 @@ apr:arm64-android=fail
 apr:x64-android=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
-# arcticdb-sparrow requires gcc13 and clang17 or later. linux-x64 always fails because it uses gcc11.
-arcticdb-sparrow:x64-linux=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
 avro-c:arm-neon-android=fail
@@ -823,6 +821,7 @@ popsift:x64-windows-release=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-windows-static=fail
 popsift:x64-windows=fail
+proxygen:x64-linux=fail
 python2:arm-neon-android=fail
 python2:arm64-android=fail
 python2:x64-android=fail
