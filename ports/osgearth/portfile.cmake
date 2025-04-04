@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF "osgearth-${VERSION}"
     SHA512 4a2b80c907ebf2b56966598f9e134ad910d3271757496fb1d906cc413eb2ad09da366a96635f0195696efe16ef1a649e13b6ec1d901a39ced0465be797f14221
     HEAD_REF master
-    PATCHES patch-vcpkg-port-on.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -26,6 +25,7 @@ vcpkg_cmake_configure(
         -DOSGEARTH_BUILD_TRITON_NODEKIT=OFF
         -DOSGEARTH_BUILD_SILVERLINING_NODEKIT=OFF
         -DOSGEARTH_BUILD_ZIP_PLUGIN=OFF
+        -DBUILDING_VCPKG_PORT=ON
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
