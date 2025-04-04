@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3f7e095..02e1cc6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -509,7 +509,7 @@ if(WIN32)
+ else()
+   find_link_library("pthread" MI_LIB_PTHREAD)
+   if(MI_LIB_PTHREAD)
+-    list(APPEND mi_libraries "${MI_LIB_PTHREAD}")
++    list(APPEND mi_lib_pthread "${MI_LIB_PTHREAD}")
+   endif()
+   find_link_library("rt" MI_LIB_RT)
+   if(MI_LIB_RT)
+@@ -598,6 +598,7 @@ if(MI_BUILD_SHARED)
+   target_compile_definitions(mimalloc PRIVATE ${mi_defines} MI_SHARED_LIB MI_SHARED_LIB_EXPORT)
+   target_compile_options(mimalloc PRIVATE ${mi_cflags} ${mi_cflags_dynamic})
+   target_link_libraries(mimalloc PRIVATE ${mi_libraries})
++  target_link_libraries(mimalloc PUBLIC ${mi_lib_pthread})
+   target_include_directories(mimalloc PUBLIC
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+       $<INSTALL_INTERFACE:${mi_install_incdir}>
+@@ -650,6 +651,7 @@ if (MI_BUILD_STATIC)
+   target_compile_definitions(mimalloc-static PRIVATE ${mi_defines} MI_STATIC_LIB)
+   target_compile_options(mimalloc-static PRIVATE ${mi_cflags} ${mi_cflags_static})
+   target_link_libraries(mimalloc-static PRIVATE ${mi_libraries})
++  target_link_libraries(mimalloc-static PUBLIC ${mi_lib_pthread})
+   target_include_directories(mimalloc-static PUBLIC
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+       $<INSTALL_INTERFACE:${mi_install_incdir}>
+@@ -709,6 +711,9 @@ foreach(item IN LISTS mi_libraries)
+     set(mi_pc_libraries "${mi_pc_libraries} -l${item}")
+   endif()
+ endforeach()
++if(mi_lib_pthread)
++  set(mi_pc_lib_pthread "-l${mi_lib_pthread}")
++endif()
+ 
+ include("cmake/JoinPaths.cmake")
+ join_paths(mi_pc_includedir "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
+diff --git a/mimalloc.pc.in b/mimalloc.pc.in
+index 8092225..0156f48 100644
+--- a/mimalloc.pc.in
++++ b/mimalloc.pc.in
+@@ -6,6 +6,6 @@ Name: @PROJECT_NAME@
+ Description: A compact general purpose allocator with excellent performance
+ Version: @PACKAGE_VERSION@
+ URL: https://github.com/microsoft/mimalloc/
+-Libs: -L${libdir} -l@mi_libname@
++Libs: -L${libdir} -l@mi_libname@ @mi_pc_lib_pthread@
+ Libs.private: @mi_pc_libraries@
+ Cflags: -I${includedir}
