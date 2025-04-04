@@ -9392,6 +9392,14 @@
       "baseline": "0.25.3",
       "port-version": 0
     },
+    "tree-sitter-c": {
+      "baseline": "0.23.5",
+      "port-version": 0
+    },
+    "tree-sitter-cli": {
+      "baseline": "0.25.3",
+      "port-version": 0
+    },
     "treehh": {
       "baseline": "3.18",
       "port-version": 0
