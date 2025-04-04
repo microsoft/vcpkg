@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/atomic
     REF boost-${VERSION}
-    SHA512 c9be2087ffed6b1711c4777328732a91526eab985c767c3357284cb05e56da4a2ea64554ef2d070d01d9a2e457f413c27016c4050114fdb76d3b609089f2c80b
+    SHA512 9c376536f88fccb44c0d6d37e10b6ae666c7e9f8a13e75bb5bdd88509dc88faede0d2c6230501dc9594abadf41098117b9bd7d46a3cce927011c8f8e12d17aa9
     HEAD_REF master
     PATCHES
         fix-include.patch
