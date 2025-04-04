@@ -121,6 +121,14 @@
       "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
     },
     {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "aravis"
+      ],
+      "platform": "!android & !uwp"
+    },
+    {
       "name": "opencv2",
       "default-features": false,
       "features": [

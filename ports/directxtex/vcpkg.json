@@ -1,6 +1,6 @@
 {
   "name": "directxtex",
-  "version-date": "2024-10-28",
+  "version-date": "2025-03-24",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
@@ -26,11 +26,15 @@
     }
   ],
   "default-features": [
-    "dx11"
+    {
+      "name": "dx11",
+      "platform": "windows & !xbox"
+    }
   ],
   "features": {
     "dx11": {
-      "description": "Build with DirectX11 support"
+      "description": "Build with DirectX11 support",
+      "supports": "windows & !xbox"
     },
     "dx12": {
       "description": "Build with DirectX12 support for Windows 10/Windows 11",

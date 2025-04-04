@@ -1,64 +1,53 @@
-if(VCPKG_TARGET_IS_UWP)
-    list(APPEND OPTIONS
-            -Dmmx=disabled
-            -Dsse2=disabled
-            -Dssse3=disabled)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-        set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
-    endif()
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}")
-    endif()
-    list(APPEND OPTIONS
-            -Dmmx=enabled
-            -Dsse2=enabled
-            -Dssse3=enabled)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    #x64 in general has all those intrinsics. (except for UWP for some reason)
-    list(APPEND OPTIONS
-            -Dmmx=enabled
-            -Dsse2=enabled
-            -Dssse3=enabled)
-elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    list(APPEND OPTIONS
-            #-Darm-simd=enabled does not work with arm64-windows
-            -Dmmx=disabled
-            -Dsse2=disabled
-            -Dssse3=disabled)
-elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
-    list(APPEND OPTIONS
-            -Dmmx=disabled
-            -Dsse2=disabled
-            -Dssse3=disabled)
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    list(APPEND OPTIONS
-                -Da64-neon=disabled
-                -Darm-simd=disabled
-                -Dneon=disabled
-                )
-endif()
-
-if(VCPKG_TARGET_IS_OSX)
-    # https://github.com/microsoft/vcpkg/issues/29168
-    list(APPEND OPTIONS -Da64-neon=disabled)
-endif()
-
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org
     REPO pixman/pixman
     REF "pixman-${VERSION}"
-    SHA512 daeb25d91e9cb8d450a6f050cbec1d91e239a03188e993ceb6286605c5ed33d97e08d6f57efaf1d5c6a8a1eedb1ebe6c113849a80d9028d5ea189c54601be424
+    SHA512 a878d866fbd4d609fabac6a5acac4d0a5ffd0226d926c09d3557261b770f1ad85b2f2d90a48b7621ad20654e52ecccbca9f1a57a36bd5e58ecbe59cca9e3f25d
     PATCHES
         no-host-cpu-checks.patch
-        fix_clang-cl.patch
         missing_intrin_include.patch
 )
 
-# Meson install wrongly pkgconfig file!
+set(x86_architectures x86 x64)
+if(VCPKG_TARGET_ARCHITECTURE IN_LIST x86_architectures AND NOT VCPKG_TARGET_IS_UWP)
+    list(APPEND OPTIONS
+        -Dmmx=enabled
+        -Dsse2=enabled
+        -Dssse3=enabled
+    )
+else()
+    list(APPEND OPTIONS
+        -Dmmx=disabled
+        -Dsse2=disabled
+        -Dssse3=disabled
+    )
+    if(VCPKG_TARGET_IS_ANDROID)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        find_path(cpu_features_dir
+            NAMES cpu-features.c
+            PATHS "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}"
+            PATH_SUFFIXES
+                "sources/android/cpufeatures" # NDK r27c
+            NO_DEFAULT_PATH
+        )
+        if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON AND cpu_features_dir)
+            list(APPEND OPTIONS
+                "-Dcpu-features-path=${cpu_features_dir}"
+            )
+        endif()
+    endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
+        # -Darm-simd=enabled does not work with arm64-windows
+        list(APPEND OPTIONS
+            -Da64-neon=disabled
+            -Darm-simd=disabled
+            -Dneon=disabled
+        )
+    endif()
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
@@ -73,6 +62,11 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
+set(licenses "${SOURCE_PATH}/COPYING")
+if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON AND cpu_features_dir)
+    file(READ "${cpu_features_dir}/cpu-features.c" cpu_features_c)
+    string(REGEX REPLACE "[*]/.*" "*/\n" cpu_features_license "${cpu_features_c}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/${TARGET_TRIPLET}-rel/cpu-features (BSD-2-Clause)" "${cpu_features_license}")
+    list(APPEND licenses "${CURRENT_PACKAGES_DIR}/${TARGET_TRIPLET}-rel/cpu-features (BSD-2-Clause)")
+endif()
+vcpkg_install_copyright(FILE_LIST ${licenses})

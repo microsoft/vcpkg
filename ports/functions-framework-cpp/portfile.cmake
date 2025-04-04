@@ -7,7 +7,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 3832e205a2505152ed6955d7cf5630b2045133221ddd96e2bef62e66cad58cea326f32428e2f494bbe1a10f5d66453d09ae46e6b972a7ed13f211efbb79527a8
     HEAD_REF main
-    PATCHES fix-integral-include.patch
+    PATCHES 
+        fix-integral-include.patch
+        fix-asio-error.patch
 )
 
 vcpkg_cmake_configure(

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nghttp2/nghttp2
     REF "v${VERSION}"
-    SHA512 35f8230a0fa2825f0bc400d4852d8e8b484f659c67b00639ccd074a0029088f016e967db2f62b6b64af1f8ef684f5809a833e7f922e38b9405f7cc7756bcfb75
+    SHA512 caadc645eea3769eecf5ed7efc72041fa069db4d8906861e2770965b3b5d5fc595a6160b2608d10f957efa89c1c31a55e3ef7fe8618a5a1973b0cc45a3f1dcef
     HEAD_REF master
 )
 
@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_LibXml2=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Jemalloc=ON
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_Libngtcp2_crypto_quictls
         ENABLE_STATIC_CRT
 )
 vcpkg_cmake_install()

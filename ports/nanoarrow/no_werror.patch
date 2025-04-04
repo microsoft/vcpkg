@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d3a43e1..8c803d2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -397,31 +397,6 @@ foreach(target
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+-    # For debug builds, ensure we aggressively set compiler warning flags and
+-    # error for any compiler warnings
+-    if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+-      target_compile_options(${target}
+-                             PRIVATE $<$<CONFIG:Debug>:-Wall
+-                                     -Werror
+-                                     -Wextra
+-                                     -Wpedantic
+-                                     -Wno-type-limits
+-                                     -Wmaybe-uninitialized
+-                                     -Wunused-result
+-                                     -Wconversion
+-                                     -Wno-sign-conversion>)
+-      target_compile_options(${target} PRIVATE -Wno-misleading-indentation)
+-    elseif(CMAKE_C_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_C_COMPILER_ID STREQUAL
+-                                                        "Clang")
+-      target_compile_options(${target}
+-                             PRIVATE $<$<CONFIG:Debug>:-Wall
+-                                     -Werror
+-                                     -Wextra
+-                                     -Wpedantic
+-                                     -Wdocumentation
+-                                     -Wconversion
+-                                     -Wno-sign-conversion>)
+-    endif()
+   endif()
+ endforeach()
+ 
