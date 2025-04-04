@@ -4553,7 +4553,7 @@
       "port-version": 0
     },
     "libdwarf": {
-      "baseline": "0.11.1",
+      "baseline": "0.12.0",
       "port-version": 0
     },
     "libe57": {
