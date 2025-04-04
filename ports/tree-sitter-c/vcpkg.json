@@ -10,7 +10,7 @@
       "host": true
     },
     {
-      "name": "vcpkg-tool-tree-sitter",
+      "name": "tree-sitter-cli",
       "host": true
     }
   ]

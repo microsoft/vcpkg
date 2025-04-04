@@ -15,7 +15,7 @@ vcpkg_download_distfile(license
 
 set(archive_path NOTFOUND)
 # For convenient updates, use 
-# vcpkg install vcpkg-tool-tree-sitter --cmake-args=-DVCPKG_TREE_SITTER_UPDATE=1
+# vcpkg install tree-sitter-cli --cmake-args=-DVCPKG_TREE_SITTER_UPDATE=1
 if(key STREQUAL "Linux-arm64" OR VCPKG_TREE_SITTER_UPDATE)
     set(filename "tree-sitter-${VERSION}-linux-arm64.gz")
     vcpkg_download_distfile(archive_path

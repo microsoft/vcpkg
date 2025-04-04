@@ -15,7 +15,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DTREE_SITTER_CLI=${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-tree-sitter/tree-sitter${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DTREE_SITTER_CLI=${CURRENT_HOST_INSTALLED_DIR}/tools/tree-sitter-cli/tree-sitter${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DTREE_SITTER_REUSE_ALLOCATOR=ON
 )
 vcpkg_cmake_install()
