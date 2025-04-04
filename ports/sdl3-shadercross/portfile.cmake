@@ -6,27 +6,22 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(BISON)
-    get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
-    vcpkg_add_to_path("${BISON_DIR}")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSDLSHADERCROSS_INSTALL=ON
-        -DSDLSHADERCROSS_INSTALL_CMAKEDIR_ROOT=share/${PORT}
+        -DSDLSHADERCROSS_INSTALL_CMAKEDIR_ROOT=share/sdl3_shadercross
         -DSDLSHADERCROSS_INSTALL_RUNTIME=OFF
         -DSDLSHADERCROSS_SPIRVCROSS_SHARED=OFF
         -DSDLSHADERCROSS_VENDORED=OFF
+        -DDirectXShaderCompiler_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include/directx-dxc
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT} PACKAGE_NAME "sdl3_shadercross")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "sdl3_shadercross")
 
 vcpkg_copy_tools(TOOL_NAMES shadercross AUTO_CLEAN)
 
