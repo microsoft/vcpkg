@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         dependencies.patch
         config-path.patch
+        fix-fluid-cmd.patch
 )
 
 file(REMOVE_RECURSE
