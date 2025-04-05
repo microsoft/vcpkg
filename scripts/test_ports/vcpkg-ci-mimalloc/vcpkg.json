@@ -8,5 +8,29 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "Test feature permutation",
+      "dependencies": [
+        {
+          "name": "mimalloc",
+          "features": [
+            "override"
+          ],
+          "platform": "windows & staticcrt"
+        },
+        {
+          "name": "mimalloc",
+          "features": [
+            "secure"
+          ],
+          "platform": "arm64 & static"
+        }
+      ]
+    }
+  }
 }

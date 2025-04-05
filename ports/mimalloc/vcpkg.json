@@ -16,14 +16,12 @@
     }
   ],
   "features": {
-    "asm": {
-      "description": "Generate assembly files"
-    },
     "override": {
-      "description": "Override the standard malloc interface"
+      "description": "Override the standard malloc interface (i.e. define entry points for 'malloc', 'free', etc)",
+      "supports": "!windows | !static"
     },
     "secure": {
-      "description": "Use security mitigations (like guard pages and randomization)"
+      "description": "Use full security mitigations (like guard pages, allocation randomization, double-free mitigation, and free-list corruption detection)"
     }
   }
 }
