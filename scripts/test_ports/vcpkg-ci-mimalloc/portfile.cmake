@@ -10,8 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         build-type.diff
-        vcpkg-tests.diff
-trace.diff
 )
 # Ensure that the test uses the installed mimalloc only
 file(REMOVE_RECURSE
@@ -23,8 +21,8 @@ file(REMOVE_RECURSE
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        "-DVCPKG_TESTS=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
 )
 
 set(ENV{MIMALLOC_VERBOSE} 1)
@@ -33,7 +31,9 @@ set(ENV{MIMALLOC_DISABLE_REDIRECT} 1)
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_copy_tools(TOOL_NAMES pkgconfig-override-cxx AUTO_CLEAN)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES pkgconfig-override-cxx AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

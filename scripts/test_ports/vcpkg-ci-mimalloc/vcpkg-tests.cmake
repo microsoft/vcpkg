@@ -1,3 +1,5 @@
+macro(deferred_tests)
+
 find_package(PkgConfig REQUIRED)
 
 # Legacy variables
@@ -50,4 +52,10 @@ endif()
 
 if(TARGET pkgconfig-override-cxx)
     install(TARGETS pkgconfig-override-cxx)
+else()
+    install(CODE [[ # placeholder # ]])
 endif()
+
+endmacro()
+
+cmake_language(DEFER CALL deferred_tests)
