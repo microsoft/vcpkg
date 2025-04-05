@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 57da160192dd8b70d85886102bedf5f65520120ddb1fbcf4fce64ed9c56271159c3344480b56b462a712edff904bc2ae284adae1a05db7ad043e4ce5119a4463
     HEAD_REF master
+    PATCHES
+        fix-msvc-build.diff
 )
 
 set(FEATURE_OPTIONS "")
