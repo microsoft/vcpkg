@@ -29,7 +29,22 @@
         "textcodec"
       ]
     },
-    "qtapplicationmanager",
+    {
+      "name": "qtapplicationmanager",
+      "default-features": false,
+      "features": [
+        "systemd-watchdog"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "qtapplicationmanager",
+      "features": [
+        "installer",
+        "package-server"
+      ],
+      "platform": "android | ios | linux | osx | qnx | (windows & !uwp & (arm64 | x64))"
+    },
     {
       "name": "qtbase",
       "default-features": false
