@@ -1,6 +1,6 @@
 {
   "name": "qtspeech",
-  "version": "6.8.2",
+  "version": "6.8.3",
   "description": "The Qt Speech module enables a Qt application to support accessibility features such as text-to-speech, which is useful for end-users who are visually challenged or cannot access the application for whatever reason.",
   "homepage": "https://www.qt.io/",
   "license": null,
