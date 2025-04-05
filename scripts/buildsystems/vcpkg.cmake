@@ -556,6 +556,127 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     endif()
 endif()
 
+set(Z_VCPKG_SOURCELINK_JSON "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.json" CACHE INTERNAL "")
+function(vcpkg_add_sourcelink_link_options target)
+    if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND
+        MSVC AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0" OR CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0") AND
+        CMAKE_VERSION VERSION_GREATER_EQUAL 3.19.0)
+        # Sourcelink support added in Visual Studio 2017 Version 15.8.
+
+        # Search all of the installed sourcelink files from each port (already installed into the target)
+        # - Called for each referenced target and when each of the ports are built.
+        # - This will collect more files than strictly necessary when building the dependent ports
+        #   because it scans the entire directory needed for the target (not specific to each port).
+        # - For MSBuild targets, see `vcpkg.targets` which handles this via a powershell script.
+        file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
+
+        # Extra item provided during port builds (via vcpkg_cmake_configure in ports.cmake).
+        # The referenced file is not installed yet, so this is the best way to pick up the
+        # contents when linking each port.
+        if(VCPKG_SOURCELINK_FILE)
+            list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
+        else()
+            # If the above was not provided on the commandline, then attempt to discover
+            # any extra sourcelink files in the package directory.
+            # - This extra step has been necessary because VCPKG_SOURCELINK_FILE is not always
+            #   set by the calling script (e.g. when building some ports), particularly during
+            #   the initial roll-out of sourcelink support.  Ideally this extra check could
+            #   be removed if the VCPKG_SOURCELINK_FILE value reliably provides the necessary path
+            #   when building ports.
+            # - This is only done when the install prefix is within the vcpkg root directory,
+            #   to avoid picking up files during normal builds of the top-level target.
+            string(FIND "${CMAKE_INSTALL_PREFIX}" "${Z_VCPKG_ROOT_DIR}" pos)
+            if ("${pos}" GREATER "-1")
+                if ("${CMAKE_INSTALL_PREFIX}" MATCHES "/debug$")
+                    set(xxx "${CMAKE_INSTALL_PREFIX}/..")
+                else()
+                    set(xxx "${CMAKE_INSTALL_PREFIX}")
+                endif()
+                file(GLOB extra_sourcelink_files "${xxx}/sourcelink/*.json")
+                if (extra_sourcelink_files)
+                    list(APPEND sourcelink_files "${extra_sourcelink_files}")
+                endif()
+            endif()
+        endif()
+
+        if(sourcelink_files)
+            # Set up the substitution to VCPKG_INSTALLED_DIR/VCPKG_TARGET_TRIPLET which will be used for each file below
+            set(installed_triplet_dir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+            file(TO_NATIVE_PATH "${installed_triplet_dir}" installed_triplet_dir)
+
+            # Incorporate the contents of each sourcelink JSON file (produced by vcpkg_write_sourcelink_file).
+            # - This is checked each time in a temporary copy, then compared to the existing contents,
+            #   which avoids unnecessary updates if nothing changed.
+            set(sourcelink_fragments "")
+
+            foreach(sourcelink_file ${sourcelink_files})
+                file(READ ${sourcelink_file} sourcelink_contents)
+                string(JSON content_type TYPE ${sourcelink_contents})
+
+                if(content_type STREQUAL "OBJECT")
+                    string(JSON documents GET "${sourcelink_contents}" "documents")
+                else()
+                    message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
+                    continue()
+                endif()
+
+                string(JSON imax LENGTH "${documents}")
+                if ("${i}" LESS "1")
+                    message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
+                    continue()
+                endif()
+                math(EXPR imax "${imax} - 1")
+
+                foreach(i RANGE ${imax})
+                    string(JSON entry_key MEMBER "${documents}" ${i})
+                    string(JSON entry_value GET "${documents}" "${entry_key}")
+
+                    # Both the entry_key and installed_triplet_dir are already using the native path format,
+                    # so simply replace the strings in-place
+                    string(REPLACE "__VCPKG_INSTALLED_TRIPLET_DIR__" "${installed_triplet_dir}" entry_key "${entry_key}")
+
+                    # CMake treats the embedded '*' as a wildcard, which we simply want to set as a literal, so escape
+                    # manually instead of setting the string using CMake's JSON capabilities
+                    string(REGEX REPLACE "\\\\" "\\\\\\\\" entry_key "${entry_key}")
+
+                    if ("${sourcelink_fragments}" STREQUAL "")
+                        set(sourcelink_fragments " \"${entry_key}\" : \"${entry_value}\"\n")
+                    else()
+                        string(APPEND sourcelink_fragments ",\"${entry_key}\" : \"${entry_value}\"\n")
+                    endif()
+                endforeach()
+            endforeach()
+
+            if (NOT "${sourcelink_fragments}" STREQUAL "")
+                if(EXISTS "${Z_VCPKG_SOURCELINK_JSON}")
+                    file(MD5 "${Z_VCPKG_SOURCELINK_JSON}" sourcelink_json_hash)
+                else()
+                    set(sourcelink_json_hash "missing")
+                endif()
+
+                set(sourcelink_json_tmp "${Z_VCPKG_SOURCELINK_JSON}.tmp")
+                file(WRITE "${sourcelink_json_tmp}" "{\"documents\":{ \n")
+                file(APPEND "${sourcelink_json_tmp}" "${sourcelink_fragments}")
+                file(APPEND "${sourcelink_json_tmp}" "}}")
+                file(MD5 "${sourcelink_json_tmp}" sourcelink_json_tmp_hash)
+
+                if(NOT sourcelink_json_hash STREQUAL sourcelink_json_tmp_hash)
+                    file(RENAME "${sourcelink_json_tmp}" "${Z_VCPKG_SOURCELINK_JSON}")
+                else()
+                    file(REMOVE "${sourcelink_json_tmp}")
+                endif()
+
+                set(Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${Z_VCPKG_SOURCELINK_JSON}")
+            endif()
+            set(Z_VCPKG_SOURCELINK_LINK_OPTS "${Z_VCPKG_SOURCELINK_LINK_OPTS}" CACHE INTERNAL "Link options to enable sourcelink from vcpkg")
+        endif()
+
+        if(Z_VCPKG_SOURCELINK_LINK_OPTS)
+            set_property( TARGET ${target} APPEND PROPERTY LINK_OPTIONS "${Z_VCPKG_SOURCELINK_LINK_OPTS}")
+        endif()
+    endif()
+endfunction()
+
 option(VCPKG_SETUP_CMAKE_PROGRAM_PATH  "Enable the setup of CMAKE_PROGRAM_PATH to vcpkg paths" ON)
 set(VCPKG_CAN_USE_HOST_TOOLS OFF)
 if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
@@ -631,6 +752,9 @@ function(add_executable)
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
         set_target_properties("${target_name}" PROPERTIES VS_GLOBAL_VcpkgEnabled false)
+        if(NOT VCPKG_DISABLE_SOURCELINK)
+            vcpkg_add_sourcelink_link_options("${target_name}")
+        endif()
     endif()
 endfunction()
 
@@ -656,6 +780,14 @@ function(add_library)
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
         set_target_properties("${target_name}" PROPERTIES VS_GLOBAL_VcpkgEnabled false)
+        if(NOT VCPKG_DISABLE_SOURCELINK)
+            vcpkg_add_sourcelink_link_options("${target_name}")
+        endif()
+    elseif(ALIAS_IDX EQUAL "-1")
+        if(NOT VCPKG_DISABLE_SOURCELINK)
+            # Provide sourcelink for both IMPORTED and INTERFACE cases
+            vcpkg_add_sourcelink_link_options("${target_name}")
+        endif()
     endif()
 endfunction()
 
