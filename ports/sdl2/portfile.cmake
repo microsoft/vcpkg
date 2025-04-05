@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 aee6de1223929ba29408b46753b4012cd3425b347f174af8a8344dbda167302ff14d0106e796f652af88c5ae9941199e29b872c75a3467073dcd88d71a8941b4
+    SHA512 3d051d966bc60cacbba5e662868493a5de32d1101d110af0bc26cfbb75694dc482b54ef8e8c850edf069c7be61b2cd7dbd48107a71e25ecfeb9071252cb2ee0e
     HEAD_REF main
     PATCHES
         deps.patch
         alsa-dep-fix.patch
         cxx-linkage-pkgconfig.diff
-        fix-pipewire.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)

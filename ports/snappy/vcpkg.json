@@ -1,6 +1,7 @@
 {
   "name": "snappy",
   "version": "1.2.2",
+  "port-version": 1,
   "description": "A fast compressor/decompressor.",
   "homepage": "https://github.com/google/snappy",
   "license": null,
@@ -13,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "rtti": {
+      "description": "Build with dynamic typeinfo."
+    }
+  }
 }
