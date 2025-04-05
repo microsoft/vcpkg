@@ -1,7 +1,6 @@
 {
   "name": "qtapplicationmanager",
-  "version": "6.8.2",
-  "port-version": 1,
+  "version": "6.8.3",
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
   "license": null,
