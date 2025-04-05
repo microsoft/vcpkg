@@ -81,7 +81,7 @@ index 7fef0e7..f8e5dcf 100644
   modifications on other architectures.
  --------------------------------------------------------------------------*/
 -//#define IDXTYPEWIDTH 32
-+#define IDXTYPEWIDTH 32
++#define IDXTYPEWIDTH @IDXWIDTH@
  
  
  /*--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ index 7fef0e7..f8e5dcf 100644
     64 : double precission floating point (double)
  --------------------------------------------------------------------------*/
 -//#define REALTYPEWIDTH 32
-+#define REALTYPEWIDTH 32
++#define REALTYPEWIDTH @REALWIDTH@
  
  
  
