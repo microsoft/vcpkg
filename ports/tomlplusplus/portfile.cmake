@@ -18,6 +18,14 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tomlplusplus)
+# Fixup link lib name and multi-config
+find_library(lib NAMES tomlplusplus PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH REQUIRED)
+cmake_path(GET lib FILENAME name)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tomlplusplus/tomlplusplusConfig.cmake"
+    [[(IMPORTED_LOCATION "..PACKAGE_PREFIX_DIR./lib/)[^"]*"]]
+    " \\1${name}\""
+    REGEX
+)
 if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tomlplusplus/tomlplusplusConfig.cmake"
         [[IMPORTED_LOCATION ("..PACKAGE_PREFIX_DIR.)(/lib/[^"]*")]]
