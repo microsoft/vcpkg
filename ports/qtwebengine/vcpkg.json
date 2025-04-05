@@ -1,8 +1,7 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.8.2",
-  "port-version": 1,
+  "version": "6.8.3",
   "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
   "homepage": "https://www.qt.io/",
   "license": null,
