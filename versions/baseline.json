@@ -1494,7 +1494,7 @@
     },
     "cachelib": {
       "baseline": "2025.03.31.00",
-      "port-version": 0
+      "port-version": 1
     },
     "caf": {
       "baseline": "1.0.2",
@@ -2758,7 +2758,7 @@
     },
     "fbthrift": {
       "baseline": "2025.03.31.00",
-      "port-version": 0
+      "port-version": 1
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2898,7 +2898,7 @@
     },
     "folly": {
       "baseline": "2025.03.31.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -7414,7 +7414,7 @@
     },
     "proxygen": {
       "baseline": "2025.03.31.00",
-      "port-version": 0
+      "port-version": 1
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -8670,7 +8670,7 @@
     },
     "snappy": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "snitch": {
       "baseline": "1.2.5",
