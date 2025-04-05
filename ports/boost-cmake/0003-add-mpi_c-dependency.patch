@@ -1,8 +1,8 @@
 diff --git a/include/BoostInstall.cmake b/include/BoostInstall.cmake
-index 47f3eb756e..49c0086fea 100644
---- a/include/BoostInstall.cmake	
+index 91d3a86..a98a3fb 100644
+--- a/include/BoostInstall.cmake
 +++ b/include/BoostInstall.cmake
-@@ -336,6 +336,13 @@ function(boost_install_target)
+@@ -367,6 +367,12 @@ function(boost_install_target)
  
          string(APPEND CONFIG_FILE_CONTENTS "find_dependency(zstd CONFIG)\n")
  
@@ -11,7 +11,6 @@ index 47f3eb756e..49c0086fea 100644
 +        # COMPONENTS requires 3.9, but the imported target also requires 3.9
 +        string(APPEND CONFIG_FILE_CONTENTS "enable_language(C)\n")
 +        string(APPEND CONFIG_FILE_CONTENTS "find_dependency(MPI COMPONENTS C)\n")
-+
 +
        elseif(dep STREQUAL "MPI::MPI_CXX")
  

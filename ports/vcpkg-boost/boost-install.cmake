@@ -31,24 +31,23 @@ function(boost_configure_and_install)
     file(RENAME "${arg_SOURCE_PATH}.tmp/" "${target_path}")
   endif()
 
-  file(WRITE "${arg_SOURCE_PATH}/CMakeLists.txt" " \
-  cmake_minimum_required(VERSION 3.25) \n\
- \n\
-  project(Boost VERSION ${VERSION} LANGUAGES CXX) \n\
- \n\
-  set(BOOST_SUPERPROJECT_VERSION \${PROJECT_VERSION}) \n\
-  set(BOOST_SUPERPROJECT_SOURCE_DIR \"\${PROJECT_SOURCE_DIR}\") \n\
- \n\
-  list(APPEND CMAKE_MODULE_PATH \"${CURRENT_INSTALLED_DIR}/share/boost/cmake-build\") \n\
- \n\
-  include(BoostRoot) \n\
-  ")
+  # Beta builds contains a text in the version string
+  string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" SEMVER_VERSION "${VERSION}")
 
-  if("${PORT}" MATCHES "boost-(mpi|graph-parallel|property-map-parallel)")
+  file(WRITE "${arg_SOURCE_PATH}/CMakeLists.txt" "\
+cmake_minimum_required(VERSION 3.25)\n\
+project(Boost VERSION ${SEMVER_VERSION} LANGUAGES CXX)\n\
+set(BOOST_SUPERPROJECT_VERSION \${PROJECT_VERSION})\n\
+set(BOOST_SUPERPROJECT_SOURCE_DIR \"\${PROJECT_SOURCE_DIR}\")\n\
+list(APPEND CMAKE_MODULE_PATH \"${CURRENT_INSTALLED_DIR}/share/boost/cmake-build\")\n\
+include(BoostRoot)\n"
+  )
+
+  if(PORT MATCHES "boost-(mpi|graph-parallel|property-map-parallel)")
     list(APPEND arg_OPTIONS -DBOOST_ENABLE_MPI=ON)
   endif()
 
-  if("${PORT}" MATCHES "boost-(python|parameter-python)")
+  if(PORT MATCHES "boost-(python|parameter-python)")
     list(APPEND arg_OPTIONS -DBOOST_ENABLE_PYTHON=ON)
   endif()
 
@@ -66,32 +65,27 @@ function(boost_configure_and_install)
 
   file(GLOB cmake_paths "${CURRENT_PACKAGES_DIR}/lib/cmake/*" LIST_DIRECTORIES true)
   file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/lib/cmake/*" LIST_DIRECTORIES false)
-  list(REMOVE_ITEM cmake_paths "${cmake_files}" "${CURRENT_PACKAGES_DIR}/lib/cmake/boost_${boost_lib_name_config}-${VERSION}")
+  list(REMOVE_ITEM cmake_paths "${cmake_files}" "${CURRENT_PACKAGES_DIR}/lib/cmake/boost_${boost_lib_name_config}-${SEMVER_VERSION}")
   foreach(config_path IN LISTS cmake_paths)
-    string(REPLACE "-${VERSION}" "" config_path "${config_path}")
+    string(REPLACE "-${SEMVER_VERSION}" "" config_path "${config_path}")
     string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/cmake/" "" config_name "${config_path}")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME ${config_name} CONFIG_PATH lib/cmake/${config_name}-${VERSION} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME ${config_name} CONFIG_PATH lib/cmake/${config_name}-${SEMVER_VERSION} DO_NOT_DELETE_PARENT_CONFIG_PATH)
   endforeach()
-  if(NOT PORT MATCHES "boost-(stacktrace|test)") 
-    vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
-  else()
+
+  if(PORT MATCHES "boost-(stacktrace|test)") 
     # These ports have no cmake config agreeing with the port name
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+  else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${SEMVER_VERSION})
   endif()
 
   if(headers_only)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
   endif()
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
-                      "${CURRENT_PACKAGES_DIR}/debug/include"
-      )
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
   vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake/copyright")
 
   # Install port specific usage
-  string(REPLACE "-" "_" PORT_UNDERSCORE "${PORT}")
-  string(REPLACE "boost_" "" BOOST_PORT_NAME "${PORT_UNDERSCORE}")
-  if(PORT MATCHES "boost-(ublas|odeint|interval)")
-    string(PREPEND BOOST_PORT_NAME "numeric_")
-  endif()
+  set(BOOST_PORT_NAME "${boost_lib_name_config}")
   configure_file("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost/usage.in" "${CURRENT_INSTALLED_DIR}/share/${PORT}/usage")
 endfunction()

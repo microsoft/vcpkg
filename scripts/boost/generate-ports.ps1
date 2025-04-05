@@ -1,12 +1,11 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.87.0",
-# 1: boost-cmake/ref_sha.cmake needs manual updating
-# 2: This script treats support statements as platform expressions. This is incorrect
-#    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
-#    boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
-#    don't blindly stage/commit changes containing platform expressions in dependencies.
+    $version = "1.88.0.beta1",
+# This script treats support statements as platform expressions. This is incorrect
+# in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
+# boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
+# don't blindly stage/commit changes containing platform expressions in dependencies.
     $portsDir = $null,
     $vcpkg = $null
 )
@@ -21,30 +20,12 @@ if ($null -eq $vcpkg) {
     $vcpkg = "$scriptsBoostDir/../../vcpkg"
 }
 
-
 # Beta builds contains a text in the version string
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost' = 1;
-    'boost-asio' = 1;
-    'boost-atomic' = 1;
-    'boost-cobalt' = 1;
-    'boost-compute' = 1;
-    'boost-context' = 1;
-    'boost-flyweight' = 1;
-    'boost-interprocess' = 1;
-    'boost-json' = 1;
-    'boost-lexical-cast' = 1;
-    'boost-lockfree' = 1;
-    'boost-mysql' = 1;
-    'boost-optional' = 1;
-    'boost-parser' = 1;
-    'boost-process' = 1;
-    'boost-regex' = 1;
-    'boost-unordered' = 1;
 }
 
 function Get-PortVersion {
@@ -82,6 +63,7 @@ $portData = @{
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
+    "boost-cmake"            = @{ "dependencies" = @(@{ "name" = "vcpkg-boost"; "host" = $true }); };
     "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
@@ -204,25 +186,36 @@ function GeneratePortName() {
     "boost-" + ($Library -replace "_", "-")
 }
 
+function GeneratePortHash() {
+  param (
+      [string]$Archive
+  )
+  $hash = & $vcpkg --x-wait-for-lock hash $Archive
+  # Remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
+  if ($hash -is [Object[]]) {
+      $hash = $hash[1]
+  }
+  return $hash
+}
+
 function GetPortHomepage() {
     param (
         [string]$Library
     )
-
     $specicalHomepagePaths = @{
-        "interval"           = "numeric/interval";
-        "numeric_conversion" = "numeric/conversion";
-        "odeint"             = "numeric/odeint";
-        "ublas"              = "numeric/ublas";
+        "build"              = "https://github.com/boostorg/build";
+        "cmake"              = "https://github.com/boostorg/cmake";
+        "interval"           = "https://www.boost.org/libs/numeric/interval";
+        "numeric_conversion" = "https://www.boost.org/libs/numeric/conversion";
+        "odeint"             = "https://www.boost.org/libs/numeric/odeint";
+        "ublas"              = "https://www.boost.org/libs/numeric/ublas";
     }
-
     if ($specicalHomepagePaths.ContainsKey($Library)) {
         $homepagePath = $specicalHomepagePaths[$Library]
     } else {
-        $homepagePath = $Library
+        $homepagePath = "https://www.boost.org/libs/" + $Library
     }
-
-    "https://www.boost.org/libs/" + $homepagePath
+    return $homepagePath
 }
 
 function GeneratePortDependency() {
@@ -243,8 +236,7 @@ function GeneratePortDependency() {
     }
     elseif ($ForLibrary -eq '' -and $suppressPlatformForDependency.Contains($PortName)) {
         # For 'boost'.
-        $platform = `
-            $suppressPlatformForDependency[$PortName] `
+        $platform = $suppressPlatformForDependency[$PortName] `
         | ForEach-Object { (GeneratePortDependency -PortName $_).platform } `
         | Group-Object -NoElement `
         | Join-String -Property Name -Separator ' & '
@@ -356,12 +348,14 @@ function GeneratePortManifest() {
 function GeneratePort() {
     param (
         [string]$Library,
-        [string]$Hash,
+        [string]$Archive,
+        [bool]$NeedsBuild = $true,
         $Dependencies = @()
     )
 
     $portName = GeneratePortName $Library
-    $homepage = GetPortHomepage  $Library
+    $portHash = GeneratePortHash $Archive
+    $homepage = GetPortHomepage $Library
 
     New-Item -ItemType "Directory" "$portsDir/$portName" -erroraction SilentlyContinue | out-null
 
@@ -379,7 +373,10 @@ function GeneratePort() {
     )
 
     if (Test-Path "$scriptsBoostDir/pre-source-stubs/$Library.cmake") {
-        $portfileLines += @(Get-Content "$scriptsBoostDir/pre-source-stubs/$Library.cmake")
+        $portfileLines += @(
+            Get-Content "$scriptsBoostDir/pre-source-stubs/$Library.cmake"
+            ""
+        )
     }
 
     $portfileLines += @(
@@ -387,19 +384,19 @@ function GeneratePort() {
         "    OUT_SOURCE_PATH SOURCE_PATH",
         "    REPO boostorg/$Library",
         "    REF boost-`${VERSION}",
-        "    SHA512 $Hash",
+        "    SHA512 $portHash",
         "    HEAD_REF master"
     )
 
-    [string[]]$allmods = @()
-    $allmods += Get-ChildItem -Path "$portsDir/$portName/*" -Name -Include @('*.patch', '*.diff')
+    [string[]]$patches = @()
+    $patches += Get-ChildItem -Path "$portsDir/$portName/*" -Name -Include @('*.patch', '*.diff')
     if (Test-Path "$scriptsBoostDir/patch-stubs/$Library.txt") {
-        $allmods +=  Get-Content "$scriptsBoostDir/patch-stubs/$Library.txt"
+        $patches += Get-Content "$scriptsBoostDir/patch-stubs/$Library.txt"
     }
 
-    if ($allmods.Length -ne 0) {
+    if ($patches.Length -ne 0) {
         $portfileLines += @("    PATCHES")
-        foreach ($patch in $allmods) {
+        foreach ($patch in $patches) {
             $portfileLines += "        $patch"
         }
     }
@@ -412,28 +409,30 @@ function GeneratePort() {
         $portfileLines += @(Get-Content "$scriptsBoostDir/post-source-stubs/$Library.cmake")
     }
 
-    $portfileLines += @(
-        "set(FEATURE_OPTIONS `"`")"
-    )
-    if (Test-Path "$portsDir/$portName/features.cmake") {
+    if ($NeedsBuild) {
         $portfileLines += @(
-            "include(`"`${CMAKE_CURRENT_LIST_DIR}/features.cmake`")"
+            "set(FEATURE_OPTIONS `"`")"
         )
-    }
+        if (Test-Path "$portsDir/$portName/features.cmake") {
+            $portfileLines += @(
+                "include(`"`${CMAKE_CURRENT_LIST_DIR}/features.cmake`")"
+            )
+        }
 
-    if (Test-Path "$scriptsBoostDir/pre-build-stubs/$Library.cmake") {
-        $portfileLines += Get-Content "$scriptsBoostDir/pre-build-stubs/$Library.cmake"
-    }
+        if (Test-Path "$scriptsBoostDir/pre-build-stubs/$Library.cmake") {
+            $portfileLines += Get-Content "$scriptsBoostDir/pre-build-stubs/$Library.cmake"
+        }
 
-    $portfileLines += @(
-        "boost_configure_and_install("
-        "    SOURCE_PATH `"`${SOURCE_PATH}`""
-        "    OPTIONS `${FEATURE_OPTIONS}"
-        ")"
-    )
+        $portfileLines += @(
+            "boost_configure_and_install("
+            "    SOURCE_PATH `"`${SOURCE_PATH}`""
+            "    OPTIONS `${FEATURE_OPTIONS}"
+            ")"
+        )
 
-    if (Test-Path "$scriptsBoostDir/post-build-stubs/$Library.cmake") {
-        $portfileLines += @(Get-Content "$scriptsBoostDir/post-build-stubs/$Library.cmake")
+        if (Test-Path "$scriptsBoostDir/post-build-stubs/$Library.cmake") {
+            $portfileLines += @(Get-Content "$scriptsBoostDir/post-build-stubs/$Library.cmake")
+        }
     }
 
     $portfileLines += @("")
@@ -472,12 +471,14 @@ $foundLibraries = Get-ChildItem $scriptsBoostDir/boost/libs -directory | ForEach
         "ublas"
     }
     else {
-        $_
+        $_.ToString()
     }
 }
 
-$downloads = "$scriptsBoostDir/../../downloads"
-New-Item -ItemType "Directory" $downloads -erroraction SilentlyContinue | out-null
+$tools = @("build", "cmake")
+
+$foundLibraries += $tools
+$foundLibraries = $foundLibraries | Sort-Object
 
 $updateServicePorts = $false
 
@@ -485,6 +486,9 @@ if ($libraries.Length -eq 0) {
     $libraries = $foundLibraries
     $updateServicePorts = $true
 }
+
+$downloads = "$scriptsBoostDir/../../downloads"
+New-Item -ItemType "Directory" $downloads -erroraction SilentlyContinue | out-null
 
 $boostPortDependencies = @()
 
@@ -495,11 +499,6 @@ foreach ($library in $libraries) {
         "Downloading boost/$library..."
         Invoke-WebRequest -Uri "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile "$archive"
         "Downloaded boost/$library..."
-    }
-    $hash = & $vcpkg --x-wait-for-lock hash $archive
-    # Remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
-    if ($hash -is [Object[]]) {
-        $hash = $hash[1]
     }
 
     $unpacked = "$scriptsBoostDir/libs/$library-boost-$version"
@@ -659,30 +658,34 @@ foreach ($library in $libraries) {
             }
         )
 
-        # Add dependency to the config for all libraries except the config library itself
-        if ($library -ne 'config' -and $library -ne 'headers') {
-            # Note: CMake's built-in finder (FindBoost.cmake) looks for Boost header files (boost/version.h or boost/config.h)
-            # and stores the result in the Boost_INCLUDE_DIR variable. The files boost/version.h or boost/config.h are owned by the config library.
-            # Without these files, the Boost_INCLUDE_DIR variable will not be set and the Boost version will not be detected.
-            $deps += @('config')
-            $deps = $deps | Select-Object -Unique
+        $needsBuild = $true
+
+        if ($tools -contains $library) {
+            $needsBuild = $false
+            $deps += @('uninstall')
         }
-
-        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library })
-
-        if ($library -ne 'cmake') {
-            $deps += @("boost-cmake")
+        else {
+            $deps += @('cmake')
             if ($library -ne 'headers') {
-                $deps += @("boost-headers")
+                $deps += @("headers")
+                if ($library -ne 'config') {
+                    # Note: CMake's built-in finder (FindBoost.cmake) looks for Boost header files (boost/version.h or boost/config.h)
+                    # and stores the result in the Boost_INCLUDE_DIR variable. The files boost/version.h or boost/config.h are owned by the config library.
+                    # Without these files, the Boost_INCLUDE_DIR variable will not be set and the Boost version will not be detected.
+                    $deps += @('config')
+                }
             }
+            $boostPortDependencies += @(GeneratePortDependency $library)
         }
+
+        $deps = $deps | Select-Object -Unique
+        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ -ForLibrary $library })
 
         GeneratePort `
             -Library $library `
-            -Hash $hash `
+            -Archive $archive `
+            -NeedsBuild $needsBuild `
             -Dependencies $deps
-
-        $boostPortDependencies += @(GeneratePortDependency $library)
     }
     finally {
         Pop-Location
@@ -708,22 +711,4 @@ if ($updateServicePorts) {
         -PortName "boost-uninstall" `
         -Description "Internal vcpkg port used to uninstall Boost" `
         -License "MIT"
-
-    # Generate manifest files for boost-vcpkg-helpers
-    GeneratePortManifest `
-        -PortName "boost-cmake" `
-        -Homepage "https://github.com/boostorg/cmake" `
-        -Description "Boost CMake support infrastructure" `
-        -License "BSL-1.0" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-boost"; host = $true }, @{ name = "vcpkg-cmake"; host = $true }, @{ name = "vcpkg-cmake-config"; host = $true })
-
-
-    # Generate manifest files for boost-build
-    GeneratePortManifest `
-        -PortName "boost-build" `
-        -Homepage "https://github.com/boostorg/build" `
-        -Description "Boost.Build" `
-        -License "BSL-1.0" `
-        -Dependencies @("boost-uninstall")
-
 }
