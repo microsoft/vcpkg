@@ -1,54 +1,37 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 112b36b..30e466a 100644
+index dde1bcd..f72165b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -69,7 +69,10 @@ endif()
- find_package(fmt REQUIRED)
- find_package(folly REQUIRED)
- find_package(wangle REQUIRED)
+@@ -71,11 +71,11 @@ endif()
+ #
+ # IMPORTANT: If you change this, make the analogous update in:
+ #   cmake/proxygen-config.cmake.in
+-find_package(fmt REQUIRED)
+-find_package(folly REQUIRED)
+-find_package(wangle REQUIRED)
 -find_package(mvfst REQUIRED)
+-find_package(Zstd REQUIRED)
 +find_package(fmt CONFIG REQUIRED)
 +find_package(folly CONFIG REQUIRED)
 +find_package(wangle CONFIG REQUIRED)
 +find_package(mvfst CONFIG REQUIRED)
- find_package(zstd CONFIG REQUIRED)
++find_package(zstd CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
  find_package(OpenSSL REQUIRED)
-@@ -124,27 +127,8 @@ SET(GFLAG_DEPENDENCIES "")
+ find_package(Threads)
+@@ -130,6 +130,7 @@ SET(GFLAG_DEPENDENCIES "")
  SET(PROXYGEN_EXTRA_LINK_LIBRARIES "")
  SET(PROXYGEN_EXTRA_INCLUDE_DIRECTORIES "")
  
--find_package(gflags CONFIG QUIET)
--if (gflags_FOUND)
--  message("module path: ${CMAKE_MODULE_PATH}")
--  message(STATUS "Found gflags from package config")
--  if (TARGET gflags-shared)
--    list(APPEND GFLAG_DEPENDENCIES gflags-shared)
--  elseif (TARGET gflags)
--    list(APPEND GFLAG_DEPENDENCIES gflags)
--  else()
--    message(FATAL_ERROR
--            "Unable to determine the target name for the GFlags package.")
--  endif()
--  list(APPEND CMAKE_REQUIRED_LIBRARIES ${GFLAGS_LIBRARIES})
--  list(APPEND CMAKE_REQUIRED_INCLUDES ${GFLAGS_INCLUDE_DIR})
--else()
--  find_package(Gflags REQUIRED MODULE)
--  list(APPEND PROXYGEN_EXTRA_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
--  list(APPEND PROXYGEN_EXTRA_INCLUDE_DIRECTORIES ${LIBGFLAGS_INCLUDE_DIR})
--  list(APPEND CMAKE_REQUIRED_LIBRARIES ${LIBGFLAGS_LIBRARY})
--  list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
--endif()
-+find_package(gflags CONFIG REQUIRED)
-+list(APPEND CMAKE_REQUIRED_LIBRARIES gflags::gflags)
- 
- include(ProxygenTest)
- 
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
+ find_package(gflags CONFIG QUIET)
+ if (gflags_FOUND)
+   message("module path: ${CMAKE_MODULE_PATH}")
 diff --git a/cmake/proxygen-config.cmake.in b/cmake/proxygen-config.cmake.in
-index c79875d..0e002b9 100644
+index 6849b0a..1d2cad2 100644
 --- a/cmake/proxygen-config.cmake.in
 +++ b/cmake/proxygen-config.cmake.in
-@@ -17,17 +17,18 @@
+@@ -17,17 +17,21 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
@@ -62,7 +45,10 @@ index c79875d..0e002b9 100644
 +find_dependency(wangle CONFIG)
 +find_dependency(mvfst CONFIG)
 +find_dependency(fizz CONFIG)
++set(z_vcpkg_proxygen_gflags_backup ${GFLAGS_USE_TARGET_NAMESPACE})
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
 +find_dependency(gflags CONFIG)
++set(GFLAGS_USE_TARGET_NAMESPACE ${z_vcpkg_proxygen_gflags_backup})
  # For now, anything that depends on Proxygen has to copy its FindZstd.cmake
  # and issue a `find_package(Zstd)`.  Uncommenting this won't work because
  # this Zstd module exposes a library called `zstd`.  The right fix is
@@ -73,3 +59,20 @@ index c79875d..0e002b9 100644
  find_dependency(ZLIB)
  find_dependency(OpenSSL)
  find_dependency(Threads)
+diff --git a/proxygen/lib/CMakeLists.txt b/proxygen/lib/CMakeLists.txt
+index 74a0284..71039e7 100644
+--- a/proxygen/lib/CMakeLists.txt
++++ b/proxygen/lib/CMakeLists.txt
+@@ -250,10 +250,10 @@ target_link_libraries(
+     Folly::folly
+     fizz::fizz
+     wangle::wangle
+-    zstd
++    zstd::libzstd
+     Boost::boost
+     Boost::iostreams
+-    -lz
++    ZLIB::ZLIB
+     ${HTTP3_DEPEND_LIBS}
+ )
+ 

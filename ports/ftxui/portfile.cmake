@@ -4,8 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
     REF "v${VERSION}"
-    SHA512 be5ed7f2b3c90a7de874115a131c75c69ad9dd6db4c3bc0cfd7036cfe449b8d16af3df8f1aa1bcb057347bd726837e3f1c42e30a06cf3ad34b50e7bd26ba4883
-    HEAD_REF master
+    SHA512 237ca39aaf1e46023e941d8a2eacf33e3c4535e6e8c77b29bfd0c5229c98548d160df2aaef35e8fe0c5a9cf765f89b7db355443089c2c13bd7c0ff006c6c287b
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

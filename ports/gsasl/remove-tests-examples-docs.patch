@@ -1,5 +1,5 @@
 diff --git a/Makefile.am b/Makefile.am
-index 04c2ece7..9b8fe573 100644
+index 016e0ed7..54121ff1 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -19,7 +19,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --with-gssapi-impl=no
@@ -10,4 +10,4 @@ index 04c2ece7..9b8fe573 100644
 +SUBDIRS = lib po gl src
  
  EXTRA_DIST = cfg.mk maint.mk CONTRIBUTING.md
- EXTRA_DIST += build-aux/git2cl
+ EXTRA_DIST += m4/gnulib-cache.m4

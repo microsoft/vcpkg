@@ -1,7 +1,7 @@
 {
   "name": "pangolin",
   "version": "0.9.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
   "license": "MIT",
@@ -91,9 +91,6 @@
       "dependencies": [
         "realsense2"
       ]
-    },
-    "test": {
-      "description": "Build Tests"
     },
     "tiff": {
       "description": "Build support for libtiff image input",

@@ -169,6 +169,7 @@ vcpkgExtractTar()
 # Linux
 #   useMuslC -> download vcpkg-muslc
 #   amd64 -> download vcpkg-glibc
+#   arm64 -> download vcpkg-glibc-arm64
 # Otherwise
 #   Download and build from source
 
@@ -188,6 +189,10 @@ elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
     vcpkgToolName="vcpkg-glibc"
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    echo "Downloading vcpkg-arm64-glibc..."
+    vcpkgToolReleaseSha=$VCPKG_GLIBC_ARM64_SHA
+    vcpkgToolName="vcpkg-glibc-arm64"
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
     vcpkgDownloadTool="OFF"

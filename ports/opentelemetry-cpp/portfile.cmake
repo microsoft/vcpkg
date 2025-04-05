@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 639ca462dc2f3633f6b9c7b89000276d08ddbe1ee9d4322ac6568ad07d198000cf3c7c5d940e10db8142494b984f1f969956524cc2df4a65d072f4c10f367ddb
+    SHA512 db9745be96907431c32a69230b29a5bddba0654f3f379f6cd0827f44895ef39c9612381303ec239d6ad98920bcc4006a90e25b715ade9ddf30aff843d1931416
     HEAD_REF main
     PATCHES
         cmake-quirks.diff
@@ -30,11 +30,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.4.0")
+    set(OTEL_PROTO_VERSION "1.5.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 9837485d7b9f7b95330a9a48f133b2a36ed5b670a6f0fe1e3bd23def46210a681525d47c7633b3c8bec2cc7ece4dfc373c859539a2729812ce7ceafc6d4c6896
+        SHA512 8a3f95543c6093300f0c54f31bf050137d0c6f1d867a7cda7af066b83572643e636b33a9b53e297f8c309bc262dde63cf7c10f515e0fe0cbbce1d12fafbe2482
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")

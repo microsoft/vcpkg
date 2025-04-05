@@ -1,6 +1,6 @@
 {
   "name": "qlementine",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Modern QStyle for desktop Qt6 applications.",
   "homepage": "https://github.com/oclero/qlementine/",
   "documentation": "https://oclero.github.io/qlementine/",

@@ -1,0 +1,47 @@
+diff --git a/src/include/liburing.h b/src/include/liburing.h
+index 49b4edf..a15bc33 100644
+--- a/src/include/liburing.h
++++ b/src/include/liburing.h
+@@ -132,6 +132,16 @@ struct io_uring {
+ 	unsigned pad2;
+ };
+ 
++struct io_uring_zcrx_rq {
++ 	__u32 *khead;
++ 	__u32 *ktail;
++ 	__u32 rq_tail;
++ 	unsigned ring_entries;
++ 
++ 	struct io_uring_zcrx_rqe *rqes;
++ 	void *ring_ptr;
++ };
++
+ /*
+  * Library interface
+  */
+@@ -265,6 +275,8 @@ int io_uring_register_file_alloc_range(struct io_uring *ring,
+ 
+ int io_uring_register_napi(struct io_uring *ring, struct io_uring_napi *napi);
+ int io_uring_unregister_napi(struct io_uring *ring, struct io_uring_napi *napi);
++int io_uring_register_ifq(struct io_uring *ring,
++ 			  struct io_uring_zcrx_ifq_reg *reg);
+ 
+ int io_uring_register_clock(struct io_uring *ring,
+ 			    struct io_uring_clock_register *arg);
+diff --git a/src/register.c b/src/register.c
+index 0fff208..20a624c 100644
+--- a/src/register.c
++++ b/src/register.c
+@@ -422,6 +422,12 @@ int io_uring_clone_buffers(struct io_uring *dst, struct io_uring *src)
+ 	return io_uring_clone_buffers_offset(dst, src, 0, 0, 0, 0);
+ }
+ 
++int io_uring_register_ifq(struct io_uring *ring,
++ 			  struct io_uring_zcrx_ifq_reg *reg)
++ {
++ 	return do_register(ring, IORING_REGISTER_ZCRX_IFQ, reg, 1);
++ }
++
+ int io_uring_resize_rings(struct io_uring *ring, struct io_uring_params *p)
+ {
+ 	unsigned sq_head, sq_tail;

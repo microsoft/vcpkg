@@ -19,12 +19,13 @@ vcpkg_download_distfile(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TsudaKageyu/minhook
-    REF v1.3.3
+    REF "v${VERSION}"
     SHA512 9f10c92a926a06cde1e4092b664a3aab00477e8b9f20cee54e1d2b3747fad91043d199a2753f7e083497816bbefc5d75d9162d2098dd044420dbca555e80b060
     HEAD_REF master
     PATCHES
         "${CMAKE_SUPPORT_PATCH}"
         fix-usage.patch
+        fix-cmake-version.patch
 )
 
 vcpkg_cmake_configure(
@@ -37,4 +38,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/minhook)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

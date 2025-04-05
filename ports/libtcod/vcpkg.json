@@ -1,6 +1,6 @@
 {
   "name": "libtcod",
-  "version-semver": "2.0.0",
+  "version-semver": "2.1.1",
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
