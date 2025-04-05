@@ -1,0 +1,15 @@
+diff --git a/test/main-override.cpp b/test/main-override.cpp
+index 0fbb58e..04f2d88 100644
+--- a/test/main-override.cpp
++++ b/test/main-override.cpp
+@@ -114,8 +114,10 @@ static void various_tests() {
+   t->~Test();
+   delete[] tbuf;
+ 
++  #ifdef _WIN32
+   const char* ptr = ::_Getdays();  // test _base overrid
+   free((void*)ptr);
++  #endif
+ }
+ 
+ class Static {

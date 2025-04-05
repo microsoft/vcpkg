@@ -50,16 +50,3 @@ index e76ffa6..a925a37 100644
  
  
  ## test memory errors
-diff --git a/test/main-override.cpp b/test/main-override.cpp
-index c1607b6..9e9824c 100644
---- a/test/main-override.cpp
-+++ b/test/main-override.cpp
-@@ -19,7 +19,7 @@
- #endif
- 
- #ifdef _WIN32
--#include <Windows.h>
-+#include <windows.h>
- static void msleep(unsigned long msecs) { Sleep(msecs); }
- #else
- #include <unistd.h>
