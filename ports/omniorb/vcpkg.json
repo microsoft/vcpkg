@@ -1,7 +1,7 @@
 {
   "name": "omniorb",
   "version": "4.3.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "omniORB is a robust high performance CORBA ORB for C++",
   "homepage": "https://omniorb.sourceforge.io/",
   "license": "LGPL-2.1-or-later",

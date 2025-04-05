@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-nanobind",
-  "version": "0.0.1",
+  "version-date": "2025-04-03",
   "description": "A nanobind example project",
   "homepage": "https://nanobind.readthedocs.io/en/latest/",
   "license": "BSD-3-Clause",
