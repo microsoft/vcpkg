@@ -15,6 +15,7 @@ vcpkg_extract_source_archive(
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
         0003-fix-paths.patch
+        0004-fastcall.patch # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/498
 )
 
 vcpkg_find_acquire_program(FLEX)
