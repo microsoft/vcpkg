@@ -2648,10 +2648,6 @@
       "baseline": "0.7.0",
       "port-version": 8
     },
-    "exiftool": {
-      "baseline": "1.8.0",
-      "port-version": 0
-    },
     "exiv2": {
       "baseline": "0.28.5",
       "port-version": 0
