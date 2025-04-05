@@ -27,8 +27,8 @@ target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
 endif()
 
 if(BUILD_SHARED_LIBS OR NOT WIN32)
-add_executable(pkgconfig-override-cxx main-override.cpp)
-target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
+    add_executable(pkgconfig-override-cxx main-override.cpp)
+    target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
 endif()
 
 # Runtime
@@ -48,4 +48,6 @@ endif()
 
 # Deployment
 
-install(TARGETS pkgconfig-override-cxx)
+if(TARGET pkgconfig-override-cxx)
+    install(TARGETS pkgconfig-override-cxx)
+endif()
