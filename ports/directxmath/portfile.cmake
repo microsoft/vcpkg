@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        xdsp BUILD_XSDP
+        xdsp BUILD_XDSP
         dx11 BUILD_DX11
         dx12 BUILD_DX12
 )
@@ -17,12 +17,15 @@ vcpkg_check_features(
 set(EXTRA_OPTIONS "")
 
 if(("dx11" IN_LIST FEATURES) OR ("dx12" IN_LIST FEATURES))
-    list(APPEND EXTRA_OPTIONS BUILD_SHMATH=ON)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+    list(APPEND EXTRA_OPTIONS -DBUILD_SHMATH=ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
+    MAYBE_UNUSED_VARIABLES BUILD_DX11 BUILD_DX12
 )
 
 vcpkg_cmake_install()
@@ -31,6 +34,14 @@ file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/DirectXMath.pc" DE
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmath)
+
+if(("dx11" IN_LIST FEATURES) OR ("dx12" IN_LIST FEATURES))
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/directxsh)
+endif()
+
+if("xdsp" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/xdsp)
+endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
@@ -45,7 +56,17 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
       DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+if(("dx11" IN_LIST FEATURES) OR ("dx12" IN_LIST FEATURES))
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if(("dx11" IN_LIST FEATURES) OR ("dx12" IN_LIST FEATURES))
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/shmathusage" USAGE_CONTENT)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" ${USAGE_CONTENT})
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
