@@ -56,6 +56,13 @@ Param(
     [switch]$PassingIsPassing = $false
 )
 
+function Add-ToolchainToTestCMake {
+    # The vcpkg.cmake toolchain file is not part of ABI hashing,
+    # but changes must trigger at least some testing.
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+}
+
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
     exit 1
@@ -80,9 +87,9 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
-$cachingArgs = @()
 
-$skipFailuresArg = @()
+$cachingArgs = @()
+$skipFailuresArgs = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs = @('--no-binarycaching')
 } else {
@@ -93,85 +100,67 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     }
     elseif ($BuildReason -eq 'PullRequest') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailuresArg = @('--skip-failures')
+        $skipFailuresArgs = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
         $binaryCachingMode = 'write'
     }
 
-    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    $cachingArgs += "--binarysource=clear;$BinarySourceStub,$binaryCachingMode"
 }
 
 if ($IsWindows) {
-    $executableExtension = '.exe'
+    $vcpkgExe = './vcpkg.exe'
 } else {
-    $executableExtension = [string]::Empty
+    $vcpkgExe = './vcpkg'
 }
+
+$ciBaselineFile = "$PSScriptRoot/../ci.baseline.txt"
+$ciBaselineArg = "--ci-baseline=$ciBaselineFile"
+$toolMetadataFile = "$PSScriptRoot/../vcpkg-tool-metadata.txt"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
-if ($IsWindows) {
-    mkdir empty
-    cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
-    cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"
-    cmd /c "robocopy.exe empty `"$installRoot`" /MIR /NFL /NDL /NC /NP > nul"
-    rmdir empty
-}
-
-& "./vcpkg$executableExtension" x-ci-clean @commonArgs
+& $vcpkgExe x-ci-clean @commonArgs
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
 {
-    Write-Error "vcpkg clean failed"
+    Write-Error "vcpkg x-ci-clean failed"
     exit $lastLastExitCode
 }
 
 if ($Triplet -eq 'x64-windows-release') {
-    $tripletSwitch = "--host-triplet=$Triplet"
+    $tripletArg = "--host-triplet=$Triplet"
 } else {
-    $tripletSwitch = "--triplet=$Triplet"
+    $tripletArg = "--triplet=$Triplet"
 }
 
-$parentHashes = @()
+$parentHashesArgs = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
-    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    $headTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
-
-    # Prefetch tools for better output
-    foreach ($tool in @('cmake', 'ninja', 'git')) {
-        & "./vcpkg$executableExtension" fetch $tool
-        $lastLastExitCode = $LASTEXITCODE
-        if ($lastLastExitCode -ne 0)
-        {
-            Write-Error "Failed to fetch $tool"
-            exit $lastLastExitCode
-        }
-    }
+    $headBaseline = Get-Content $ciBaselineFile -Raw
+    $headTool = Get-Content $toolMetadataFile  -Raw
 
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
     $lastLastExitCode = $LASTEXITCODE
     if ($lastLastExitCode -ne 0)
     {
-        Write-Error "git revert failed"
+        Write-Error "git revert -n -m 1 HEAD failed"
         exit $lastLastExitCode
     }
 
-    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    $parentTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
+    $parentBaseline = Get-Content $ciBaselineFile -Raw
+    $parentTool = Get-Content $toolMetadataFile  -Raw
     if (($parentBaseline -eq $headBaseline) -and ($parentTool -eq $headTool))
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
-        $parentHashes = @("--parent-hashes=$parentHashesFile")
-        # The vcpkg.cmake toolchain file is not part of ABI hashing,
-        # but changes must trigger at least some testing.
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-        & "./vcpkg$executableExtension" ci $tripletSwitch --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        $parentHashesArgs += "--parent-hashes=$parentHashesFile"
+        Add-ToolchainToTestCMake
+        & $vcpkgExe ci $tripletArg --dry-run $ciBaselineArg @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
         $lastLastExitCode = $LASTEXITCODE
         if ($lastLastExitCode -ne 0)
         {
@@ -189,19 +178,16 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     $lastLastExitCode = $LASTEXITCODE
     if ($lastLastExitCode -ne 0)
     {
-        Write-Error "git reset failed"
+        Write-Error "git reset --hard HEAD failed"
         exit $lastLastExitCode
     }
 }
 
-# The vcpkg.cmake toolchain file is not part of ABI hashing,
-# but changes must trigger at least some testing.
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci $tripletSwitch --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+Add-ToolchainToTestCMake
+& $vcpkgExe ci $tripletArg "--failure-logs=$failureLogs" "--x-xunit=$xunitFile" $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs
 $lastLastExitCode = $LASTEXITCODE
 
-$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
