@@ -63,6 +63,12 @@ elseif(VCPKG_CROSSCOMPILING)
     # convert to unix path
     string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" _VCPKG_TOOL_PATH "${TOOL_PATH}")
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
+
+    # Workaround for cross-compiling for arm64-linux on x64-linux
+    if(HOST_TRIPLET STREQUAL "x64-linux" AND TARGET_TRIPLET STREQUAL "arm64-linux")
+        # autoconf "host" corresponds to cmake/vcpkg "target", cf. https://www.gnu.org/software/autoconf/manual/autoconf-2.71/html_node/Hosts-and-Cross_002dCompilation.html
+        list(APPEND CONFIGURE_OPTIONS "--host=aarch64-linux-gnu")
+    endif()
 endif()
 
 vcpkg_make_configure(
