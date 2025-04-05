@@ -4861,7 +4861,7 @@
       "port-version": 1
     },
     "liblzma": {
-      "baseline": "5.8.0",
+      "baseline": "5.8.1",
       "port-version": 0
     },
     "libmad": {
