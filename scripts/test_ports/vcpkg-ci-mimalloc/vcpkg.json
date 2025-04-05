@@ -21,7 +21,7 @@
           "features": [
             "override"
           ],
-          "platform": "windows & staticcrt"
+          "platform": "native & !(windows & static)"
         },
         {
           "name": "mimalloc",

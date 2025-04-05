@@ -26,8 +26,10 @@ add_executable(pkgconfig-override $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,main-overrid
 target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
 endif()
 
+if(BUILD_SHARED_LIBS OR NOT WIN32)
 add_executable(pkgconfig-override-cxx main-override.cpp)
 target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
+endif()
 
 # Runtime
 
@@ -35,11 +37,13 @@ if(NOT CMAKE_CROSSCOMPILING)
     if(BUILD_SHARED_LIBS)
         add_custom_target(run-dynamic-override ALL COMMAND $<TARGET_NAME:dynamic-override>)
         add_custom_target(run-dynamic-override-cxx ALL COMMAND $<TARGET_NAME:dynamic-override-cxx>)
-    else()
+    elseif(NOT WIN32)
         add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
         add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
     endif()
-    add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+    if(TARGET pkgconfig-override-cxx)
+        add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+    endif()
 endif()
 
 # Deployment
