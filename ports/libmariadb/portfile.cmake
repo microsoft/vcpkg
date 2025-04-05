@@ -8,9 +8,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mariadb-corporation/mariadb-connector-c
+    REPO ebrinette/mariadb-connector-c
     REF v${VERSION}
-    SHA512 396ce2a36937d49ec96eb239312118c736f46383d2906b7142d9695e795f310af28255d8827cc98ad76ae4e6d5a22faf1188b7dd286791e3c85f22c96d0114b3
+    SHA512 a6b222b664a1331de39887d466a6afb3d7a33ed2fae317e2b34ba289089be9c191d1393b799933dc8494d0f6d8e72b7d947d27b1d246e0a8e980f1ca6e1bcb3c
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
@@ -19,7 +19,6 @@ vcpkg_from_github(
         library-linkage.diff
         cmake-export.diff
         no-abs-path.diff
-        ushort-check.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindIconv.cmake"
