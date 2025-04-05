@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "8.13.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -70,6 +71,9 @@
         },
         "nghttp2"
       ]
+    },
+    "httpsrr": {
+      "description": "enable support for HTTPS RR"
     },
     "idn": {
       "description": "Default IDN support",
@@ -205,6 +209,18 @@
             "openssl"
           ],
           "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
+        }
+      ]
+    },
+    "ssls-export": {
+      "description": "SSL session import/export",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
         }
       ]
     },
