@@ -54,7 +54,8 @@
           "default-features": false,
           "features": [
             "network",
-            "png"
+            "png",
+            "widgets"
           ]
         }
       ]
