@@ -331,6 +331,7 @@
     },
     {
       "name": "boost-mqtt5",
+      "platform": "!uwp",
       "version>=": "1.88.0"
     },
     {

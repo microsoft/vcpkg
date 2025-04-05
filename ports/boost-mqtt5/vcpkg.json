@@ -15,11 +15,6 @@
       "version>=": "1.88.0"
     },
     {
-      "name": "boost-beast",
-      "platform": "!emscripten",
-      "version>=": "1.88.0"
-    },
-    {
       "name": "boost-cmake",
       "version>=": "1.88.0"
     },
@@ -53,7 +48,6 @@
     },
     {
       "name": "boost-random",
-      "platform": "!uwp",
       "version>=": "1.88.0"
     },
     {

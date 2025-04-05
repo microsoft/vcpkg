@@ -175,6 +175,7 @@ $suppressPlatformForDependency = @{
     "boost-coroutine2"            = @("boost-context");
     "boost-dll"                   = @("boost-filesystem");
     "boost-graph"                 = @("boost-random");
+    "boost-mqtt5"                 = @("boost-random");
     "boost-parameter-python"      = @("boost-python");
     "boost-property-map-parallel" = @("boost-mpi");
 }
@@ -644,19 +645,24 @@ foreach ($library in $libraries) {
 
         $deps = @($usedLibraries | Where-Object { $foundLibraries -contains $_ })
 
-        # Remove optional dependencies that are only used for tests or examples
-        $deps = @($deps | Where-Object {
-                -not (
-                ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
-                )
+        # Remove optional dependencies
+        $deps = @($deps
+            | Where-Object {
+                # Boost.Filesystem only used for tests or examples
+                # See https://github.com/boostorg/gil#requirements
+                -not ($library -eq 'gil' -and $_ -eq 'filesystem')
             }
-        )
-        $deps = @($deps | Where-Object {
-                -not (
-                ($library -eq 'mysql' -and $_ -eq 'pfr')
-                )
+            | Where-Object {
+                # Note that Boost.Pfr is not listed because it's a peer dependency
+                # See CMakeLists.txt
+                -not ($library -eq 'mysql' -and $_ -eq 'pfr')
             }
-        )
+            | Where-Object {
+                # Boost.Beast only used for MQTT connections over WebSocket
+                # See CMakeLists.txt
+                -not ($library -eq 'mqtt5' -and $_ -eq 'beast')
+          }
+      )
 
         $needsBuild = $true
 

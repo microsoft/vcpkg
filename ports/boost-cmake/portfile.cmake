@@ -11,7 +11,6 @@ vcpkg_from_github(
     PATCHES
         0001-vcpkg-build.patch
         0002-remove-prefix-and-suffix.patch
-        0003-add-mpi_c-dependency.patch
 )
 
 # Beta builds contains a text in the version string
