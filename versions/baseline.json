@@ -7461,7 +7461,7 @@
       "port-version": 2
     },
     "pulzed-mini": {
-      "baseline": "0.9.17",
+      "baseline": "0.9.18",
       "port-version": 0
     },
     "pybind11": {
