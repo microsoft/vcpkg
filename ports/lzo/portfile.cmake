@@ -7,7 +7,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES always_install_pc.patch
+    PATCHES
+      always_install_pc.patch
+      cmake_minimum_required.patch
 )
 
 set(LZO_STATIC OFF)
