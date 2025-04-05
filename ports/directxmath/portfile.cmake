@@ -1,14 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMath
-    REF oct2024
-    SHA512 501a3c8b51cd6d3d4fbcc511c2c37f1d0511bd84d546d5254c2bc81238c11242b9d62c7a153ee110dc9d96a0c7d2544428d8de832c943b680b0cb09d8e3760f2
+    REF apr2025
+    SHA512 c7d3b107180b269c5c4e823fa51d96a316dc35cace3cb13f030022d9096c9465e8a770559419176692b047574fd67c96d8527abd8817998264a149eee0b88c9d
     HEAD_REF main
-    PATCHES include-path-fix.patch
 )
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        xdsp BUILD_XSDP
+        dx11 BUILD_DX11
+        dx12 BUILD_DX12
+)
+
+set(EXTRA_OPTIONS "")
+
+if(("dx11" IN_LIST FEATURES) OR ("dx12" IN_LIST FEATURES))
+    list(APPEND EXTRA_OPTIONS BUILD_SHMATH=ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
 vcpkg_cmake_install()
