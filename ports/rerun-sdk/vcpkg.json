@@ -1,5 +1,5 @@
 {
-  "name": "rerun",
+  "name": "rerun-sdk",
   "version": "0.22.1",
   "description": "Open source log handling and visualization for spatial and embodied AI. Managed infrastructure to ingest, store, analyze, and stream data at scale with built-in visual debugging. Fast, flexible, and easy to use.",
   "homepage": "https://rerun.io",

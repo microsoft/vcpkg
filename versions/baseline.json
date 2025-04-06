@@ -8108,7 +8108,7 @@
       "baseline": "14.2.5",
       "port-version": 0
     },
-    "rerun": {
+    "rerun-sdk": {
       "baseline": "0.22.1",
       "port-version": 0
     },
