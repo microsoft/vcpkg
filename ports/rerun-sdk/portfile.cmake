@@ -61,6 +61,12 @@ vcpkg_replace_string(
     "\${CURRENT_PACKAGES_DIR}/lib/${LIBRERUN_C_FILE}"
 )
 
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
+    "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../..\")"
+    "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../lib\")"
+)
+
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE-MIT"
     "${SOURCE_PATH}/LICENSE-APACHE"
