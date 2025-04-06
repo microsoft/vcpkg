@@ -9,9 +9,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "ci"
-  ],
   "features": {
     "ci": {
       "description": "Test feature permutation",
