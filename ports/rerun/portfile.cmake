@@ -15,19 +15,46 @@ vcpkg_extract_source_archive(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF
+    OPTIONS
+    -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF
 )
-
-message(STATUS "Packages directory: ${PACKAGE_PREFIX_DIR}")
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME rerun_sdk CONFIG_PATH "lib/cmake/rerun_sdk")
 
+# Determine the correct library file based on the platform and architecture
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(LIBRERUN_C_FILE "rerun_c__win_x64.lib")
+    else()
+        message(FATAL_ERROR "Unsupported Windows architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
+elseif(VCPKG_TARGET_IS_LINUX)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(LIBRERUN_C_FILE "librerun_c__linux_x64.a")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(LIBRERUN_C_FILE "librerun_c__linux_arm64.a")
+    else()
+        message(FATAL_ERROR "Unsupported Linux architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
+elseif(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(LIBRERUN_C_FILE "librerun_c__macos_arm64.a")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(LIBRERUN_C_FILE "librerun_c__macos_x64.a")
+    else()
+        message(FATAL_ERROR "Unsupported macOS architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
+else()
+    message(FATAL_ERROR "Unsupported platform")
+endif()
+
+# Replace the string for the librerun_c library
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
-    "${SOURCE_PATH}/lib/librerun_c__macos_arm64.a"
-    "\${CURRENT_PACKAGES_DIR}/lib/librerun_c__macos_arm64.a"
+    "${SOURCE_PATH}/lib/${LIBRERUN_C_FILE}"
+    "\${CURRENT_PACKAGES_DIR}/lib/${LIBRERUN_C_FILE}"
 )
 
 vcpkg_install_copyright(FILE_LIST
