@@ -22,12 +22,12 @@ message(STATUS "Packages directory: ${PACKAGE_PREFIX_DIR}")
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME rerun CONFIG_PATH "lib/cmake/rerun_sdk")
+vcpkg_cmake_config_fixup(PACKAGE_NAME rerun_sdk CONFIG_PATH "lib/cmake/rerun_sdk")
 
 vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/rerun/rerun_sdkConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
     "${SOURCE_PATH}/lib/librerun_c__macos_arm64.a"
-    "\${PACKAGE_PREFIX_DIR}/lib/librerun_c__macos_arm64.a"
+    "\${CURRENT_PACKAGES_DIR}/lib/librerun_c__macos_arm64.a"
 )
 
 vcpkg_install_copyright(FILE_LIST
