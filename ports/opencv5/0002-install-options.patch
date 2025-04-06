@@ -1,0 +1,64 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -638,7 +638,7 @@ set(OPENCV_EXTRA_MODULES_PATH "" CACHE PATH "Where to look for additional OpenCV
+ ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
+ 
+ # --- Python Support ---
+-if(NOT IOS AND NOT XROS)
++if(WITH_PYTHON)
+   include(cmake/OpenCVDetectPython.cmake)
+ endif()
+ 
+@@ -730,6 +730,7 @@ endif()
+ # ----------------------------------------------------------------------------
+ #       CHECK FOR SYSTEM LIBRARIES, OPTIONS, ETC..
+ # ----------------------------------------------------------------------------
++find_package(PkgConfig REQUIRED)
+ if(UNIX OR MINGW)
+   if(NOT APPLE_FRAMEWORK OR OPENCV_ENABLE_PKG_CONFIG)
+     if(CMAKE_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG_LIBDIR} AND NOT DEFINED ENV{PKG_CONFIG_SYSROOT_DIR}
+--- a/cmake/OpenCVCompilerOptions.cmake
++++ b/cmake/OpenCVCompilerOptions.cmake
+@@ -306,7 +306,6 @@ if(MSVC)
+   #endif()
+ 
+   if(BUILD_WITH_DEBUG_INFO)
+-    set(OPENCV_EXTRA_FLAGS_RELEASE "${OPENCV_EXTRA_FLAGS_RELEASE} /Zi")
+     set(OPENCV_EXTRA_EXE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_EXE_LINKER_FLAGS_RELEASE} /debug")
+     set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
+     set(OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE} /debug")
+--- a/cmake/OpenCVGenConfig.cmake
++++ b/cmake/OpenCVGenConfig.cmake
+@@ -118,18 +118,18 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+   endif()
+ endfunction()
+ 
+-if((CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" OR UNIX) AND NOT ANDROID)
++if(TRUE)
+   ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "" "")
+ endif()
+ 
+-if(ANDROID)
++if(FALSE)
+   ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "abi-${ANDROID_NDK_ABI_NAME}" "OpenCVConfig.root-ANDROID.cmake.in")
+ endif()
+ 
+ # --------------------------------------------------------------------------------------------
+ #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
+ # --------------------------------------------------------------------------------------------
+-if(WIN32)
++if(FALSE)
+   if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows AND NOT OPENCV_SKIP_CMAKE_ROOT_CONFIG)
+     ocv_gen_config("${CMAKE_BINARY_DIR}/win-install"
+                    "${OPENCV_INSTALL_BINARIES_PREFIX}${OPENCV_INSTALL_BINARIES_SUFFIX}"
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -1,8 +1,6 @@
+ file(GLOB HAAR_CASCADES haarcascades/*.xml)
+ file(GLOB LBP_CASCADES lbpcascades/*.xml)
+ 
+-install(FILES ${HAAR_CASCADES} DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/haarcascades COMPONENT libs)
+-install(FILES ${LBP_CASCADES}  DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/lbpcascades  COMPONENT libs)
+ 
+ if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
+   install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")
