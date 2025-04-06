@@ -1,6 +1,6 @@
 {
   "name": "maddy",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "C++ Markdown to HTML header-only parser library",
   "homepage": "https://github.com/progsource/maddy",
   "license": "MIT",
