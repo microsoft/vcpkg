@@ -1,6 +1,6 @@
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
-@@ -869,6 +869,7 @@ macro(ocv_glob_module_sources)
+@@ -868,6 +868,7 @@ macro(ocv_glob_module_sources)
      set(OCL_NAME opencl_kernels_${name})
      add_custom_command(
        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${OCL_NAME}.cpp"  # don't add .hpp file here to optimize build process

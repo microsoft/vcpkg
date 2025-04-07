@@ -1,7 +1,7 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -801,6 +801,9 @@ include(cmake/OpenCVFindLibsPerf.cmake)
- include(cmake/OpenCVFindLAPACK.cmake)
+@@ -735,6 +735,9 @@ if(WITH_LAPACK)
+ endif()
  include(cmake/OpenCVFindProtobuf.cmake)
  include(cmake/OpenCVDetectFlatbuffers.cmake)
 +if(WITH_OPENEXR)

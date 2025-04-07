@@ -16,12 +16,16 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-remove-python2.patch
       0012-miss-openexr.patch
       0014-fix-cmake-in-list.patch
-      0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
+)
+
+vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/vpisarev/opencv_3rdparty/cc7d85179d69a704bee209aa37ce8a657f2f8b34/WenQuanYiMicroHei.ttf.gz"
+    FILENAME "opencv-cache/unifont/fb79cf5b4f4c89414f1233f14c2eb273-WenQuanYiMicroHei.ttf.gz"
+    SHA512 29821d27f85450f5d94ea893e9ac57ca12034db2990b2379290dd148ba6f1c6d974126d759d4581709ebb3287f8d12ce5a8ff153d610fc544f91f6916a3286a3
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -178,11 +182,12 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 a5ebb6810a3b5e40858b7fd533f9eb7b3d475dfda843a489bc5168e72c5eaad0a7a23629aace1f43e1b62d9c24e5e1923d841059c297728fac464e00759886c2
+    SHA512 e16bfc35a148e4380dc38bef2d64a83b86311d958b9cbed23f80aea02686c05c8608c7533434db12e6b981650e1ea0d0079ff8b7cfb1eaa574819d05f0972bd3
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-ogre.patch
+      0015-contrib-fix-freetype.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
   )
