@@ -1,9 +1,4 @@
-# Enforce static linking and compilation
-set(VCPKG_CRT_LINKAGE static)
-set(VCPKG_LIBRARY_LINKAGE static)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+# Download the Rerun SDK source archive
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip" # Replace with the actual URL of the zip file
@@ -11,20 +6,27 @@ vcpkg_download_distfile(
     SHA512 1351dd0937d6ddf73622b69a803a7233eb92e5ec52607fc1c775accd015d52eaf3259c0aea64cfac3109f1c55218fb6a4597bff5b067ccdd194cd8695b3f4c8c
 )
 
-# Extract the zip file
+# Extract the downloaded archive
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
 )
 
+# Check if the build is static or shared
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ARROW_LINK_SHARED)
+
+# Configure the build system using CMake
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF
+    -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF # Disable downloading and building Arrow
+    -DRERUN_ARROW_LINK_SHARED=${ARROW_LINK_SHARED} # Enable shared linking if not static
 )
 
+# Install the built files into the vcpkg installation directory
 vcpkg_cmake_install()
 
+# Fix up the CMake configuration files for compatibility with vcpkg
 vcpkg_cmake_config_fixup(PACKAGE_NAME rerun_sdk CONFIG_PATH "lib/cmake/rerun_sdk")
 
 # Determine the correct library file based on the platform and architecture
@@ -43,10 +45,10 @@ elseif(VCPKG_TARGET_IS_LINUX)
         message(FATAL_ERROR "Unsupported Linux architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(LIBRERUN_C_FILE "librerun_c__macos_arm64.a")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(LIBRERUN_C_FILE "librerun_c__macos_x64.a")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(LIBRERUN_C_FILE "librerun_c__macos_arm64.a")
     else()
         message(FATAL_ERROR "Unsupported macOS architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
@@ -54,23 +56,28 @@ else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
-# Replace the string for the librerun_c library
+# Replace the string for the librerun_c library in the rerun_sdkConfig.cmake file
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
     "${SOURCE_PATH}/lib/${LIBRERUN_C_FILE}"
     "\${CURRENT_PACKAGES_DIR}/lib/${LIBRERUN_C_FILE}"
 )
 
+# Replace the RERUN_LIB_DIR variable in the rerun_sdkConfig.cmake file
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
     "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../..\")"
     "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../lib\")"
 )
 
+# Install license files for the Rerun SDK
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE-MIT"
     "${SOURCE_PATH}/LICENSE-APACHE"
 )
 
-# Cleanup
+# Install the usage file to provide information about how to use the library
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# Cleanup unnecessary debug files from the installation directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
