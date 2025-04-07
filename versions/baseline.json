@@ -4905,7 +4905,7 @@
       "port-version": 1
     },
     "libmidi2": {
-      "baseline": "0.13",
+      "baseline": "0.15",
       "port-version": 0
     },
     "libmikmod": {
