@@ -21,4 +21,8 @@ if("z-vcpkg-make-z-adapt-lib-link-names" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-z_adapt_lib_link_names.cmake")
 endif()
 
+if("z-vcpkg-make-get-configure-triplets" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_make_get_configure_triplets.cmake")
+endif()
+
 unit_test_report_result()

@@ -1,7 +1,6 @@
 {
   "name": "opencv",
-  "version": "4.10.0",
-  "port-version": 3,
+  "version": "4.11.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -288,18 +287,6 @@
         }
       ]
     },
-    "jasper": {
-      "description": "JPEG 2000 support for opencv (deprecated)",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "jasper"
-          ]
-        }
-      ]
-    },
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
@@ -308,6 +295,18 @@
           "default-features": false,
           "features": [
             "jpeg"
+          ]
+        }
+      ]
+    },
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "jpegxl"
           ]
         }
       ]
