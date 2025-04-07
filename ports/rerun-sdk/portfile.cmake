@@ -60,8 +60,6 @@ vcpkg_replace_string(
     "${SOURCE_PATH}/lib/${LIBRERUN_C_FILE}"
     "\${CURRENT_PACKAGES_DIR}/lib/${LIBRERUN_C_FILE}"
 )
-
-# Replace the RERUN_LIB_DIR variable in the rerun_sdkConfig.cmake file
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
     "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../..\")"
