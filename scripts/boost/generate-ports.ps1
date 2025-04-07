@@ -18,6 +18,9 @@ if ($null -eq $portsDir) {
 }
 if ($null -eq $vcpkg) {
     $vcpkg = "$scriptsBoostDir/../../vcpkg"
+    if ($IsWindows) {
+        $vcpkg = "$vcpkg.exe"
+    }
 }
 
 # Beta builds contains a text in the version string
@@ -47,10 +50,6 @@ $portData = @{
             "mpi" = @{
                 "description"  = "Build with MPI support";
                 "dependencies" = @("boost-mpi", "boost-graph-parallel", "boost-property-map-parallel");
-            };
-            "cobalt" = @{
-                "description"  = "Build boost-cobalt";
-                "dependencies" = @(@{ "name" = "boost-cobalt"; "platform" = "!osx & !ios & !android & !uwp" });
             }
         }
     };
@@ -646,23 +645,23 @@ foreach ($library in $libraries) {
         $deps = @($usedLibraries | Where-Object { $foundLibraries -contains $_ })
 
         # Remove optional dependencies
-        $deps = @($deps
+        $deps = @($deps `
             | Where-Object {
                 # Boost.Filesystem only used for tests or examples
                 # See https://github.com/boostorg/gil#requirements
                 -not ($library -eq 'gil' -and $_ -eq 'filesystem')
-            }
+            } `
             | Where-Object {
                 # Note that Boost.Pfr is not listed because it's a peer dependency
                 # See CMakeLists.txt
                 -not ($library -eq 'mysql' -and $_ -eq 'pfr')
-            }
+            } `
             | Where-Object {
                 # Boost.Beast only used for MQTT connections over WebSocket
                 # See CMakeLists.txt
                 -not ($library -eq 'mqtt5' -and $_ -eq 'beast')
-          }
-      )
+            }
+        )
 
         $needsBuild = $true
 
