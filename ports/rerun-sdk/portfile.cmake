@@ -51,7 +51,6 @@ else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
-# Replace the string for the librerun_c library in the rerun_sdkConfig.cmake file
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
     "${SOURCE_PATH}/lib/${LIBRERUN_C_FILE}"
