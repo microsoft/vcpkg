@@ -26,7 +26,6 @@ vcpkg_cmake_install()
 # Fix up the CMake configuration files for compatibility with vcpkg
 vcpkg_cmake_config_fixup(PACKAGE_NAME rerun_sdk CONFIG_PATH "lib/cmake/rerun_sdk")
 
-# Determine the correct library file based on the platform and architecture
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(LIBRERUN_C_FILE "rerun_c__win_x64.lib")
