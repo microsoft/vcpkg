@@ -1,7 +1,7 @@
 # Must download SDK distfile because some binaries are prebuilt from Rust.
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip" # Replace with the actual URL of the zip file
+    URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip"
     FILENAME rerun_cpp_sdk.zip
     SHA512 1351dd0937d6ddf73622b69a803a7233eb92e5ec52607fc1c775accd015d52eaf3259c0aea64cfac3109f1c55218fb6a4597bff5b067ccdd194cd8695b3f4c8c
 )
