@@ -6361,7 +6361,7 @@
       "port-version": 4
     },
     "mysvac-jsonlib": {
-      "baseline": "1.0.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "nameof": {
