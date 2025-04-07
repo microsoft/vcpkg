@@ -48,4 +48,16 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+if("tool" IN_LIST FEATURES)
+    list(APPEND tool_license_file "${SOURCE_PATH}/COPYING")
+    set(tools_license_comment [[The GNU SASL Library is licensed under the GNU Lesser General Public License (LGPL) version 2.1 (or later).
+The command-line application is licensed under the GNU General Public License license version 3.0 (or later).]]
+)
+endif()
+
+vcpkg_install_copyright(
+    COMMENT "${tool_license_comment}"
+    FILE_LIST
+    "${SOURCE_PATH}/COPYING.LESSER"
+    ${tool_license_file}
+)
