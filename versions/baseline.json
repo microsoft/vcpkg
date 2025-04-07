@@ -8609,7 +8609,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "6.4.1",
+      "baseline": "6.4.2",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
