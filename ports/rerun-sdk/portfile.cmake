@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
     -DRERUN_ARROW_LINK_SHARED=${ARROW_LINK_SHARED} # Enable shared linking if not static
 )
 
-# Install the built files into the vcpkg installation directory
 vcpkg_cmake_install()
 
 # Fix up the CMake configuration files for compatibility with vcpkg
