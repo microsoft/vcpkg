@@ -13,7 +13,6 @@ vcpkg_extract_source_archive(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ARROW_LINK_SHARED)
 
-# Configure the build system using CMake
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
