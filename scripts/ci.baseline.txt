@@ -51,8 +51,6 @@ apr:arm64-android=fail
 apr:x64-android=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
-# arcticdb-sparrow requires gcc13 and clang17 or later. linux-x64 always fails because it uses gcc11.
-arcticdb-sparrow:x64-linux=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
 avro-c:arm-neon-android=fail
@@ -1137,14 +1135,15 @@ gtk:x64-windows-release=pass
 gtk:x64-windows-static-md=pass
 gtk:x64-windows=pass
 gtk:x86-windows=pass
+qt:arm64-osx=pass
+qt:arm64-windows-static-md=pass
 qt:arm64-windows=pass
 qt:x64-linux=pass
+qt:x64-osx=pass
 qt:x64-windows-release=pass
+qt:x64-windows-static-md=pass
 qt:x64-windows-static=pass
 qt:x64-windows=pass
-# qt:x64-windows-static-md=pass # hunspell is fail so this cannot pass.
-# qt:arm64-windows-static-md=pass # hunspell is fail so this cannot pass.
-# qt:x64-osx=pass # gstreamer issues preventing qtmultimedia
 vcpkg-ci-arrow:x64-linux=pass
 vcpkg-ci-arrow:x64-osx=pass
 vcpkg-ci-arrow:x64-windows-release=pass

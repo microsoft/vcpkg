@@ -1,34 +1,76 @@
 {
   "name": "qtapplicationmanager",
   "version": "6.8.2",
+  "port-version": 1,
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!(windows & x86)",
+  "supports": "android | ios | linux | osx | qnx | (windows & !uwp & (arm64 | x64))",
   "dependencies": [
-    "libarchive",
     "libyaml",
-    {
-      "name": "qtapplicationmanager",
-      "host": true,
-      "default-features": false
-    },
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "widgets"
+        "concurrent"
       ]
     },
     {
       "name": "qtdeclarative",
       "default-features": false
-    },
-    "qthttpserver",
-    {
-      "name": "qtwayland",
-      "default-features": false,
-      "platform": "!windows"
     }
-  ]
+  ],
+  "features": {
+    "installer": {
+      "description": "Enable the installer component.",
+      "supports": "!ios",
+      "dependencies": [
+        {
+          "name": "libarchive",
+          "default-features": false
+        },
+        {
+          "name": "qtapplicationmanager",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "installer"
+          ]
+        }
+      ]
+    },
+    "multi-process": {
+      "description": "Support running system UI and applications in individual processes.",
+      "supports": "linux & !static",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
+        },
+        "qtwayland"
+      ]
+    },
+    "package-server": {
+      "description": "Build the package-server.",
+      "dependencies": [
+        {
+          "name": "qtapplicationmanager",
+          "default-features": false,
+          "features": [
+            "installer"
+          ]
+        },
+        "qthttpserver"
+      ]
+    },
+    "systemd-watchdog": {
+      "description": "Enable the systemd-watchdog component.",
+      "dependencies": [
+        "libsystemd"
+      ]
+    }
+  }
 }
