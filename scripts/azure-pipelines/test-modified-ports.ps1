@@ -91,9 +91,9 @@ $commonArgs = @(
 $cachingArgs = @()
 $skipFailuresArgs = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
-    $cachingArgs = @('--no-binarycaching')
+    $cachingArgs = @('--binarysource', 'clear')
 } else {
-    $cachingArgs = @('--binarycaching')
+    $cachingArgs = @()
     $binaryCachingMode = 'readwrite'
     if ([string]::IsNullOrWhiteSpace($BuildReason)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
