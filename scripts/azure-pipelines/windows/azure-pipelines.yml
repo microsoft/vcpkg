@@ -69,8 +69,16 @@ jobs:
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
           $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite"
+          $binarySourceStub = "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas"
+          $triplet = "${{ replace(parameters.jobName, '_', '-') }}"
           ./vcpkg.exe fetch python3
-          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+          $failureLogs = '$(Build.ArtifactStagingDirectory)/failure-logs'
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet $triplet -BuildReason $(Build.Reason) -BinarySourceStub $binarySourceStub -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
+          if ('$(Build.Reason)' -eq 'PullRequest') {
+            & scripts/azure-pipelines/test-modified-features.ps1 -Triplet $triplet -BinarySourceStub $binarySourceStub -WorkingRoot $env:WORKING_ROOT -FailureLogs $failureLogs
+          }
+          $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
+          Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
   - task: PowerShell@2
     displayName: 'Validate version files'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
