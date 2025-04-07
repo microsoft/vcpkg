@@ -1,4 +1,4 @@
-# Download the Rerun SDK source archive
+# Must download SDK distfile because some binaries are prebuilt from Rust.
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip" # Replace with the actual URL of the zip file
