@@ -69,7 +69,6 @@ vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE-APACHE"
 )
 
-# Install the usage file to provide information about how to use the library
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Cleanup unnecessary debug files from the installation directory
