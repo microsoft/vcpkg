@@ -1,6 +1,7 @@
 {
   "name": "libarchive",
   "version": "3.7.8",
+  "port-version": 1,
   "description": "Library for reading and writing streaming archives",
   "homepage": "https://www.libarchive.org",
   "license": null,
