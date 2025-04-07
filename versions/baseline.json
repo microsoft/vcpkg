@@ -3004,6 +3004,10 @@
       "baseline": "1.2.0",
       "port-version": 1
     },
+    "future-config": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "fuzzylite": {
       "baseline": "6.0",
       "port-version": 6
