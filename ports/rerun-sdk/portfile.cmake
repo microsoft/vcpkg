@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Fix up the CMake configuration files for compatibility with vcpkg
 vcpkg_cmake_config_fixup(PACKAGE_NAME rerun_sdk CONFIG_PATH "lib/cmake/rerun_sdk")
 
 if(VCPKG_TARGET_IS_WINDOWS)
