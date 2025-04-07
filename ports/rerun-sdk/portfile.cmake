@@ -65,7 +65,6 @@ vcpkg_replace_string(
     "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../lib\")"
 )
 
-# Install license files for the Rerun SDK
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE-MIT"
     "${SOURCE_PATH}/LICENSE-APACHE"
