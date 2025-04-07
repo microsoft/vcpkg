@@ -7,7 +7,7 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-file(GLOB COMMATA_INCLUDES "${SOURCE_PATH}/include/commata/*")
-file(INSTALL ${COMMATA_INCLUDES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/commata")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/commata" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
