@@ -24,31 +24,10 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME rerun_sdk CONFIG_PATH "lib/cmake/rerun_sdk")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(LIBRERUN_C_FILE "rerun_c__win_x64.lib")
-    else()
-        message(FATAL_ERROR "Unsupported Windows architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()
-elseif(VCPKG_TARGET_IS_LINUX)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(LIBRERUN_C_FILE "librerun_c__linux_x64.a")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(LIBRERUN_C_FILE "librerun_c__linux_arm64.a")
-    else()
-        message(FATAL_ERROR "Unsupported Linux architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()
-elseif(VCPKG_TARGET_IS_OSX)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(LIBRERUN_C_FILE "librerun_c__macos_x64.a")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(LIBRERUN_C_FILE "librerun_c__macos_arm64.a")
-    else()
-        message(FATAL_ERROR "Unsupported macOS architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()
-else()
-    message(FATAL_ERROR "Unsupported platform")
-endif()
+file(GLOB LIBRERUN_C_FILE
+    RELATIVE "${CURRENT_PACKAGES_DIR}/lib"
+    "${CURRENT_PACKAGES_DIR}/lib/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}rerunc_c_-*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
+)
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
