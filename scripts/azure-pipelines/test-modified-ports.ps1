@@ -32,7 +32,7 @@ binary caching will be in write-only mode.
 .PARAMETER NoParentHashes
 Indicates to not use parent hashes even for pull requests.
 
-.PARAMETER PassingIsPassing
+.PARAMETER AllowUnexpectedPassing
 Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
 when using vcpkg to test a prerelease MSVC++ compiler)
 #>
@@ -53,7 +53,7 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$PassingIsPassing = $false
+    [switch]$AllowUnexpectedPassing = $false
 )
 
 function Add-ToolchainToTestCMake {
@@ -183,8 +183,13 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 }
 
+$allowUnexpectedPassingArgs = @()
+if ($AllowUnexpectedPassing) {
+    $allowUnexpectedPassingArgs = @('--allow-unexpected-passing')
+}
+
 Add-ToolchainToTestCMake
-& $vcpkgExe ci $tripletArg "--failure-logs=$failureLogs" "--x-xunit=$xunitFile" $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs
+& $vcpkgExe ci $tripletArg "--failure-logs=$failureLogs" "--x-xunit=$xunitFile" $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @allowUnexpectedPassingArgs
 $lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
