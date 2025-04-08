@@ -2,7 +2,7 @@
   "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "blas",
   "version-date": "2023-04-14",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Metapackage for packages which provide BLAS",
   "license": null,
   "dependencies": [
@@ -11,11 +11,11 @@
       "features": [
         "cblas"
       ],
-      "platform": "!osx & !ios & !uwp & !(windows & arm) & windows & static"
+      "platform": "!osx & !ios & !uwp & !(windows & arm) & windows & static & !mingw"
     },
     {
       "name": "openblas",
-      "platform": "!osx & !ios & (uwp | (windows & arm) | !windows | !static)"
+      "platform": "!osx & !ios & (uwp | (windows & arm) | !windows | !static | mingw)"
     },
     {
       "name": "vcpkg-cmake",

@@ -64,7 +64,7 @@ vcpkg_cmake_configure(
         -DUSE_TBB=OFF
         -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
-        -DINTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
+        -DOIIO_INTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
@@ -80,7 +80,6 @@ vcpkg_cmake_configure(
         BUILD_MISSING_DEPS
         BUILD_MISSING_FMT
         BUILD_MISSING_ROBINMAP
-        INTERNALIZE_FMT
         REQUIRED_DEPS
 )
 

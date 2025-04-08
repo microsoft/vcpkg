@@ -1,6 +1,6 @@
 {
   "name": "xtensor",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "C++ tensors with broadcasting and lazy computing",
   "homepage": "https://github.com/xtensor-stack/xtensor",
   "license": "BSD-3-Clause",

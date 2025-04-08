@@ -2,27 +2,13 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO upa-url/upa
   REF "v${VERSION}"
-  SHA512 e3110a0714bcb28c9c740aae0345a016816d9872cbec61321fce6d3be6132bcf01fbed55310013b84b6c37bf25c818de4ff7c328ac8e772c745316fca49f65ef
+  SHA512 26af05d36b1ae147594630a23d258ed55328940a23560afcbb31e132b2fa6360c16f4ff09568787d0d39b8a351cdb90dc4c5a0a237b782a743a343992ee7ca4f
   HEAD_REF main
-  PATCHES
-    cxx-standard.patch
-)
-
-if("cxx11" IN_LIST FEATURES)
-  set(UPA_CXX_STANDARD 11)
-else()
-  set(UPA_CXX_STANDARD 17)
-endif()
-
-vcpkg_replace_string(${SOURCE_PATH}/include/upa/config.h
-  "@UPA_CXX_STANDARD@" "${UPA_CXX_STANDARD}"
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DCMAKE_CXX_STANDARD=${UPA_CXX_STANDARD}
-    -DCMAKE_CXX_STANDARD_REQUIRED=ON
     -DUPA_BUILD_TESTS=OFF
 )
 

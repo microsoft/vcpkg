@@ -11,3 +11,8 @@ if(GDAL_USE_WEBP)
     set(GDAL_CHECK_PACKAGE_WebP_NAMES WebP CACHE INTERNAL "vcpkg")
     set(GDAL_CHECK_PACKAGE_WebP_TARGETS WebP::webp CACHE INTERNAL "vcpkg")
 endif()
+
+if(GDAL_USE_ARROW)
+    find_package(Arrow REQUIRED)
+    set(ARROW_USE_STATIC_LIBRARIES "${ARROW_BUILD_STATIC}" CACHE BOOL "")
+endif()

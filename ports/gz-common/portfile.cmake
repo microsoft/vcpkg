@@ -7,17 +7,9 @@ ignition_modular_library(
    REF ${PORT}${VERSION_MAJOR}_${VERSION}
    VERSION ${VERSION}
    SHA512 0c652285b32d2d2f781595416fd80d6e52a6b765ba968d0018accc3688f4ee9d6ce62dbea74b98fa43ea40641c47020246e13645eac7940aa483057c958d3807
-   OPTIONS 
-      -DBUILD_TESTING=OFF
-      "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
    PATCHES
+      gz-utils3-log.diff
       gz_remotery_vis.patch
+      pthread.diff
       003-include-chrono.patch
-      detect_tinyxml.patch
 )
-
-foreach(component IN ITEMS av events geospatial graphics io profiler testing)
-   if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}${VERSION_MAJOR}-${component}/${PORT}${VERSION_MAJOR}-${component}-config.cmake")
-      message(FATAL_ERROR "Failed to install component ${component}. Check configuration logs for missing dependencies.")
-   endif()
-endforeach()

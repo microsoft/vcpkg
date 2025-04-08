@@ -1,6 +1,6 @@
 {
   "name": "inih",
-  "version": "58",
+  "version": "59",
   "description": "Simple .INI file parser",
   "homepage": "https://github.com/benhoyt/inih",
   "license": "BSD-3-Clause",

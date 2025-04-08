@@ -1,8 +1,9 @@
+# vcpkg_from_* is not used because the project uses submodules.
 string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 1514d62aeb4c4a1a1048ae0f84f7db7f0dbf355772b2dadf6a34ec547045b163a5e28331b096e7616fe3c9c19bed98025a0202b05073f5d7ee901d0efaffe143
+    SHA512 39e1ade8ba5a43e6dbd4c60b48327a87d50755be96eddfffce824bd5d417f6d3a9b80e6b307b47c3a74d52e726954f7c38e3245f87f32ef4dccb3f0a51eabc1e
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -10,7 +11,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        0005-pr-4133-4143-avoid-package-packaging.patch # Backport from 2.81.1
 )
 
 set(LANGUAGES C CXX)

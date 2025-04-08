@@ -8,10 +8,12 @@ vcpkg_from_github(
         do-not-copy-pdbs-to-lib.patch
         msvc-arm64-atomic.patch
         minimp3-fix.patch
+        android-glext-prototypes.diff
+        skip-android-aar.diff          # Building AAR, not needed for vcpkg
 )
 
-if(VCPKG_TARGET_IS_ANDROID AND NOT ENV{ANDROID_HOME})
-    message(FATAL_ERROR "${PORT} requires environment variable ANDROID_HOME to be set." )
+if(VCPKG_TARGET_IS_ANDROID AND "$ENV{ANDROID_HOME}" STREQUAL "")
+    message(FATAL_ERROR "${PORT} requires environment variable ANDROID_HOME to be set.")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -49,6 +51,8 @@ vcpkg_cmake_configure(
         -DWANT_POPUP_EXAMPLES=OFF
         -DWANT_TESTS=OFF
         -DWANT_TREMOR=OFF # Not yet available on vcpkg
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()

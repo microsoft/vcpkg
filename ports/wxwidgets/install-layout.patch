@@ -1,16 +1,3 @@
-diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
-index 7d3f88d..576a28c 100644
---- a/build/cmake/functions.cmake
-+++ b/build/cmake/functions.cmake
-@@ -453,7 +453,7 @@ macro(wx_add_library name)
-             # configure puts the .dll in the bin directory
-             set(runtime_dir "bin")
-         else()
--            set(runtime_dir "lib")
-+            set(runtime_dir "bin")
-         endif()
-         wx_install(TARGETS ${name}
-             EXPORT wxWidgetsTargets
 diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
 index e76dff6..eb4edc0 100644
 --- a/build/cmake/init.cmake

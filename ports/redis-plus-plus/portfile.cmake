@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
     REF "${VERSION}"
-    SHA512 c2892ec1b2f242ee19c727cd9dd1bc4e08b9f515f5736bffee5b5a12a2f1b2eddec0ebeba7998a5abc5620bdff37b5d745abdf0d7586b89535ce0ae035988ef4
+    SHA512 62dbba8e641fbac71ea322e2f7766360c601959c371bfde2ab9cb0613f65eb42b442e76ef4130d64ece4058b4f4d7872503d4774a505ab0616955e95706143c8
     HEAD_REF master
     PATCHES
         fix-conversion.patch

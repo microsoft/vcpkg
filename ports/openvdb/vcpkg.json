@@ -1,6 +1,7 @@
 {
   "name": "openvdb",
   "version": "12.0.0",
+  "port-version": 1,
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
   "license": "MPL-2.0",
@@ -42,6 +43,17 @@
       "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications",
       "dependencies": [
         "cuda"
+      ]
+    },
+    "nanovdb-tools": {
+      "description": "NanoVDB tools: print, validate, and convert.",
+      "dependencies": [
+        {
+          "name": "openvdb",
+          "features": [
+            "nanovdb"
+          ]
+        }
       ]
     },
     "tools": {

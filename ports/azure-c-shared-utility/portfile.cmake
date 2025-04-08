@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-c-shared-utility
-    REF 51d6f3f7246876051f713c7abed28f909bf604e3
-    SHA512 f0d88f10905739c30f43bf20861d99e7146d95ae80f1bd56979b22ef57fbbe9825bf3be9b937806e65c881ef1ba4932dc783fbabfa8ca80cc80329a409f8c20b
+    REF 772a4f8bc338140b4a0f404cf9c344283c5c937f
+    SHA512 cd81698e58ad14b17ca87ce2ff80fd48f5bf4b6dded9d311f9ce0822b90f0f874d99210a019e00aa9a2e1c48914a4c2934f4d935638af68d2f88c5bdb26669dd
     HEAD_REF master
     PATCHES
         fix-install-location.patch

@@ -11,9 +11,6 @@ vcpkg_from_github(
         cmake-config.patch
 )
 
-# Ruby is required by the sdformat build process
-vcpkg_find_acquire_program(RUBY)
-
 # Python is required to generate the EmbeddedSdf.cc file, which contains all the supported SDF
 # descriptions in a map of strings. The parser.cc file uses EmbeddedSdf.hh.
 vcpkg_find_acquire_program(PYTHON3)
@@ -23,7 +20,6 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DRUBY=${RUBY}"
         -DBUILD_TESTING=OFF
         -DSKIP_PYBIND11=ON
         -DUSE_INTERNAL_URDF=OFF

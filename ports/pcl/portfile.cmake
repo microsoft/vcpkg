@@ -1,3 +1,8 @@
+vcpkg_download_distfile(NO_GLU_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/pull/6253/commits/011905f3387e45b66828d81dacaafdde8893fdcb.patch?full_index=1
+    FILENAME fix-no-gluErrorString.patch
+    SHA512 8bf795a0c0da667bae38a3293643bd92817f30ab0f8a56b065bbb7cfa0b8f125210a317ee9cd868911b87546b1a05c322280f159802f820fef886109b938635b
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
@@ -12,6 +17,7 @@ vcpkg_from_github(
         install-examples.patch
         fix-clang-cl.patch
         add-chrono-includes.patch
+        "${NO_GLU_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
