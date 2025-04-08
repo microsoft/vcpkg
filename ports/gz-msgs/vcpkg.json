@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "Protobuf messages and functions for robot applications",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     "gz-cmake",
     "gz-math",

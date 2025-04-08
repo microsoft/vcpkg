@@ -18,6 +18,7 @@ ignition_modular_library(
    SHA512 b96ec15d2ef46eebab6bebb6ffbd8f11b7bd9ed27156e753343603546d49db41afb3cf926b72de7eb9f702c40ad7e029dd3ddfe3e00d6d503cc45c1a0b8761d9
    OPTIONS
       ${options}
+      "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
       "-DPython3_EXECUTABLE=${PYTHON3}"
    PATCHES
       remove_ruby.patch
