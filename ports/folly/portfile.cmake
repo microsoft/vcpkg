@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 c5ac6133e6161c8c2244feee30b4924df85a8b3586eb42aede6c0092a3ef6fd1fa5acac407fa7d21585bf9d856bbdb95c87ee1cdc7880ded97e0026b4a4948f6
+    SHA512 813b9c010ff6a325b188cd8de30e068de33919f7f96fc025396eca6004f0a0416a12ea63ea6a6bc9f011e2b99f2d810496efa78c5044e86b01e67979168bb7b7
     HEAD_REF main
     PATCHES
         fix-deps.patch
