@@ -16,8 +16,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ARROW_LINK_SHARED)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF # Disable downloading and building Arrow
-    -DRERUN_ARROW_LINK_SHARED=${ARROW_LINK_SHARED} # Enable shared linking if not static
+        -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF # Disable downloading and building Arrow
+        -DRERUN_ARROW_LINK_SHARED=${ARROW_LINK_SHARED} # Enable shared linking if not static
 )
 
 vcpkg_cmake_install()
