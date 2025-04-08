@@ -3446,7 +3446,7 @@
     },
     "gz-gui": {
       "baseline": "9.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-gui7": {
       "baseline": "7.2.1",
@@ -3499,6 +3499,10 @@
     "gz-sensors7": {
       "baseline": "7.3.0",
       "port-version": 1
+    },
+    "gz-sim": {
+      "baseline": "9.0.0",
+      "port-version": 0
     },
     "gz-tools": {
       "baseline": "2.0.1",
