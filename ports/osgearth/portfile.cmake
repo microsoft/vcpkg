@@ -30,10 +30,6 @@ vcpkg_cmake_configure(
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
     OPTIONS_DEBUG
         -DOSGEARTH_BUILD_TOOLS=OFF
-    MAYBE_UNUSED_VARIABLES
-        LIB_POSTFIX
-        WITH_BLEND2D
-        WITH_EXTERNAL_TINYXML
 )
 
 vcpkg_cmake_install()
