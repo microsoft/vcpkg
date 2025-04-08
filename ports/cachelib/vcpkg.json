@@ -27,6 +27,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "wangle"
+    "wangle",
+    "xxhash"
   ]
 }
