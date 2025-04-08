@@ -9,15 +9,15 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        arrow-use-built-linkage.diff # https://github.com/rerun-io/rerun/pull/9550
+        arrow-use-find-dependency.diff # https://github.com/rerun-io/rerun/pull/9548
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ARROW_LINK_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF # Disable downloading and building Arrow
-        -DRERUN_ARROW_LINK_SHARED=${ARROW_LINK_SHARED} # Enable shared linking if not static
 )
 
 vcpkg_cmake_install()
@@ -31,13 +31,14 @@ file(GLOB LIBRERUN_C_FILE
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
-    "${SOURCE_PATH}/lib/${LIBRERUN_C_FILE}"
-    "\${CURRENT_PACKAGES_DIR}/lib/${LIBRERUN_C_FILE}"
-)
-vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
     "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../..\")"
     "set(RERUN_LIB_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../lib\")"
+)
+
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/rerun_sdk/rerun_sdkConfig.cmake"
+    "${SOURCE_PATH}/lib/${LIBRERUN_C_FILE}"
+    "\${CMAKE_CURRENT_LIST_DIR}/../../lib/${LIBRERUN_C_FILE}"
 )
 
 vcpkg_install_copyright(FILE_LIST
