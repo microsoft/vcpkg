@@ -2337,8 +2337,8 @@
       "port-version": 0
     },
     "directxmath": {
-      "baseline": "2024-12-02",
-      "port-version": 1
+      "baseline": "2025-04-03",
+      "port-version": 0
     },
     "directxmesh": {
       "baseline": "2025-03-24",
