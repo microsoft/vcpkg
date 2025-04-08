@@ -1493,8 +1493,8 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2025.03.31.00",
-      "port-version": 1
+      "baseline": "2025.04.07.00",
+      "port-version": 0
     },
     "caf": {
       "baseline": "1.0.2",
@@ -2765,8 +2765,8 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.03.31.00",
-      "port-version": 1
+      "baseline": "2025.04.07.00",
+      "port-version": 0
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2817,7 +2817,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.03.31.00",
+      "baseline": "2025.04.07.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2905,8 +2905,8 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.03.31.00",
-      "port-version": 1
+      "baseline": "2025.04.07.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -6353,7 +6353,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.03.31.00",
+      "baseline": "2025.04.07.00",
       "port-version": 0
     },
     "mygui": {
@@ -7429,8 +7429,8 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.03.31.00",
-      "port-version": 1
+      "baseline": "2025.04.07.00",
+      "port-version": 0
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -9897,7 +9897,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.03.31.00",
+      "baseline": "2025.04.07.00",
       "port-version": 0
     },
     "wasmedge": {
