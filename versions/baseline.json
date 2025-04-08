@@ -3454,7 +3454,7 @@
     },
     "gz-msgs": {
       "baseline": "11.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gz-msgs9": {
       "baseline": "9.5.0",
