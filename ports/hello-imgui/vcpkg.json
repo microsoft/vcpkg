@@ -1,7 +1,7 @@
 {
   "name": "hello-imgui",
   "version": "1.6.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": [
     "Hello ImGui: unleash your creativity in app development and prototyping",
     "Note that at least on renderer backend and at least one platform backend must be chosen."
