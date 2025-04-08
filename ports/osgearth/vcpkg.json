@@ -32,12 +32,6 @@
     }
   ],
   "features": {
-    "blend2d": {
-      "description": "Enable Blend2D support",
-      "dependencies": [
-        "blend2d"
-      ]
-    },
     "controls": {
       "description": "Support for the old Controls API (superceded by imgui)"
     },
