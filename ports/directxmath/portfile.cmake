@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         MinGW-fix.patch
+        Linux-SHMath-SAL.patch
 )
 
 vcpkg_check_features(

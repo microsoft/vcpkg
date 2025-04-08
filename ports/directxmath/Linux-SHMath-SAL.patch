@@ -1,0 +1,24 @@
+diff --git a/SHMath/CMakeLists.txt b/SHMath/CMakeLists.txt
+index 8a21ee7..ab0bbfc 100644
+--- a/SHMath/CMakeLists.txt
++++ b/SHMath/CMakeLists.txt
+@@ -217,3 +217,16 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+         target_compile_options(${PROJECT_NAME} PRIVATE $<$<VERSION_GREATER_EQUAL:${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION},10.0.22000>:/Zc:templateScope>)
+     endif()
+ endif()
++
++if(NOT WIN32)
++    include(FetchContent)
++    FetchContent_Declare(
++        salheader
++        URL https://raw.githubusercontent.com/dotnet/runtime/v9.0.2/src/coreclr/pal/inc/rt/sal.h
++        URL_HASH SHA512=8085f67bfa4ce01ae89461cadf72454a9552fde3f08b2dcc3de36b9830e29ce7a6192800f8a5cb2a66af9637be0017e85719826a4cfdade508ae97f319e0ee8e
++        DOWNLOAD_NO_EXTRACT ON
++    )
++    FetchContent_MakeAvailable(salheader)
++
++    target_include_directories(${PROJECT_NAME} PRIVATE ${salheader_SOURCE_DIR})
++endif()
+--
+2.49.0.windows.1
+
