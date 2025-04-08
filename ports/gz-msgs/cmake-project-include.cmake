@@ -1,3 +1,3 @@
 if(MSVC)
-    string(APPEND CMAKE_CXX_FLAGS " /bigobj")
+    add_compile_options("/bigobj")
 endif()
