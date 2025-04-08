@@ -2025,7 +2025,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.8.2",
+      "baseline": "0.8.3",
       "port-version": 0
     },
     "cppunit": {
