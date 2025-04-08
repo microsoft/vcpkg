@@ -2,3 +2,17 @@ The package libpq provides CMake integration:
 
     find_package(PostgreSQL REQUIRED)
     target_link_libraries(main PRIVATE PostgreSQL::PostgreSQL)
+
+libpq provides pkg-config modules:
+
+  # PostgreSQL libecpg library
+  libecpg
+
+  # PostgreSQL libecpg_compat library
+  libecpg_compat
+
+  # PostgreSQL libpgtypes library
+  libpgtypes
+
+  # PostgreSQL libpq library
+  libpq
