@@ -3502,7 +3502,7 @@
     },
     "gz-transport": {
       "baseline": "14.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-transport12": {
       "baseline": "12.2.1",

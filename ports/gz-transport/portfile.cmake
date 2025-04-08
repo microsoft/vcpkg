@@ -12,5 +12,6 @@ ignition_modular_library(
       "-DPython3_EXECUTABLE=${PYTHON3}"
       -DSKIP_PYBIND11=ON
    PATCHES
+      nanoseconds.diff
       uuid-osx.patch
 )
