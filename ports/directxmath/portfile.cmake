@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF apr2025
     SHA512 c7d3b107180b269c5c4e823fa51d96a316dc35cace3cb13f030022d9096c9465e8a770559419176692b047574fd67c96d8527abd8817998264a149eee0b88c9d
     HEAD_REF main
+    PATCHES
+        MinGW-fix.patch
 )
 
 vcpkg_check_features(
