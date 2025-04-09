@@ -8,6 +8,7 @@
     "eigen3",
     "libuv",
     "fmt",
+    "mpi",
     "libssh",
     "opencv",
     "protobuf",
