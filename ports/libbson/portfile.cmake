@@ -25,7 +25,6 @@ vcpkg_cmake_configure(
         "-DBUILD_VERSION=${VERSION}"
         -DENABLE_BSON=ON
         -DENABLE_EXAMPLES=OFF
-        -DENABLE_ICU=OFF
         -DENABLE_MONGOC=OFF
         -DENABLE_SASL=OFF
         -DENABLE_SNAPPY=OFF
@@ -34,15 +33,12 @@ vcpkg_cmake_configure(
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_ZSTD=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
-    MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_Python
-        ENABLE_ICU
 )
+
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
