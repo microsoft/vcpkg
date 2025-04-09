@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 72d978326a3641e69706c158cd5c4b1a4138dedbe1bf8c0f1c02fbb03291c1a49ff36afdaf8cf432fee84952bbaecf8801efa3f1afb50f600490e36ec3d577ef
+    SHA512 f9a84d60198f69ecea477e1a63c635674cac4952c9897586f85f4e2a6e9445de09cf9736cd51e274a29a24d2ec8eb1a0d00b9cc0caa55839a205790e261f29af
     HEAD_REF master
     PATCHES
         dependencies.patch
+        ffmpeg.diff
         install-layout.patch
-        windows-linkage.patch
+        # TODO windows-linkage.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
@@ -18,6 +19,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        ffmpeg      WITH_DSP_FFMPEG
         ffmpeg      WITH_FFMPEG
         ffmpeg      WITH_SWSCALE
         server      WITH_SERVER
@@ -29,7 +31,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_list(SET GENERATOR_OPTION)
 if(VCPKG_TARGET_IS_OSX)
-    list(APPEND GENERATOR_OPTION GENERATOR "Unix Makefiles")
+#    list(APPEND GENERATOR_OPTION GENERATOR "Unix Makefiles")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -42,6 +44,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DCMAKE_REQUIRE_FIND_PACKAGE_cJSON=ON
         -DUSE_VERSION_FROM_GIT_TAG=OFF
+        -DWITH_ABSOLUTE_PLUGIN_LOAD_PATHS=OFF
         -DWITH_AAD=ON
         -DWITH_CCACHE=OFF
         -DWITH_CLANG_FORMAT=OFF
@@ -52,7 +55,6 @@ vcpkg_cmake_configure(
         -DWITH_CLIENT=OFF
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         # Uncontrolled dependencies w.r.t. vcpkg ports, system libs, or tools
         # Can be overriden in custom triplet file
         -DUSE_UNWIND=OFF
@@ -70,7 +72,10 @@ vcpkg_cmake_configure(
         -DWITH_PROXY_MODULES=OFF
         -DWITH_PULSE=OFF
         -DWITH_URIPARSER=OFF
-        -DVCPKG_TRACE_FIND_PACKAGE=ON
+-DVCPKG_TRACE_FIND_PACKAGE=ON
+--trace-expand
+    OPTIONS_RELEASE
+        -DWITH_VERBOSE_WINPR_ASSERT=OFF
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
 )
