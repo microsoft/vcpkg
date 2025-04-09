@@ -14,9 +14,6 @@ vcpkg_cmake_configure(
 	-DWITH_GUI=OFF
 	-DNO_WERROR=ON
         -DWITH_SIMULATION_MODULES=OFF
-	-DUSE_SYSTEM_EIGEN=ON
-	-DUSE_SYSTEM_LIBUV=ON
-	-DUSE_SYSTEM_FMTLIB=ON
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
