@@ -19,6 +19,9 @@
     "zlib"
   ],
   "features": {
+    "client": {
+      "description": "Build client components"
+    },
     "ffmpeg": {
       "description": "Enable image scaling, video and audio with ffmpeg",
       "supports": "!windows",
@@ -51,13 +54,6 @@
       "description": "USB redirection channel support",
       "dependencies": [
         "libusb"
-      ]
-    },
-    "wayland": {
-      "description": "Enable wayland support",
-      "supports": "!android & !ios & !openbsd & !osx & !windows",
-      "dependencies": [
-        "wayland"
       ]
     },
     "winpr-tools": {

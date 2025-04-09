@@ -19,20 +19,27 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG
         ffmpeg      WITH_FFMPEG
         ffmpeg      WITH_SWSCALE
         server      WITH_SERVER
         urbdrc      CHANNEL_URBDRC
-        wayland     WITH_WAYLAND
         winpr-tools WITH_WINPR_TOOLS
         x11         WITH_X11
         x11         VCPKG_LOCK_FIND_PACKAGE_X11
 )
 
-vcpkg_list(SET GENERATOR_OPTION)
-if(VCPKG_TARGET_IS_OSX)
-#    list(APPEND GENERATOR_OPTION GENERATOR "Unix Makefiles")
+if(WITH_SERVER)
+    # actual shadow platform subsystem
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS # implementation unmaintained
+       OR NOT WITH_X11) # dependency
+        list(APPEND FEATURE_OPTIONS -DWITH_SHADOW_SUBSYSTEM=OFF)
+    endif()
+    # actual platform server implementation
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS) # implementation unmaintained
+        list(APPEND FEATURE_OPTIONS -DWITH_PLATFORM_SERVER=OFF)
+    endif()
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -53,9 +60,11 @@ vcpkg_cmake_configure(
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
         -DWITH_UNICODE_BUILTIN=ON
-        -DWITH_CLIENT=OFF
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        # Unmaintained
+        -DWITH_CLIENT_WINDOWS=OFF
+        -DWITH_WAYLAND=OFF
         # Uncontrolled dependencies w.r.t. vcpkg ports, system libs, or tools
         # Can be overriden in custom triplet file
         -DUSE_UNWIND=OFF
@@ -74,11 +83,12 @@ vcpkg_cmake_configure(
         -DWITH_PULSE=OFF
         -DWITH_URIPARSER=OFF
 -DVCPKG_TRACE_FIND_PACKAGE=ON
---trace-expand
+#--trace-expand
     OPTIONS_RELEASE
         -DWITH_VERBOSE_WINPR_ASSERT=OFF
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
+        WITH_CLIENT_WINDOWS
 )
 
 vcpkg_cmake_install()
@@ -86,14 +96,8 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_list(SET tools)
-if(VCPKG_TARGET_IS_WINDOWS)
-    if("server" IN_LIST FEATURES)
-        list(APPEND tools wfreerdp-server-cli)
-    endif()
-elseif(VCPKG_TARGET_IS_OSX)
-    if("server" IN_LIST FEATURES)
-        list(APPEND tools mfreerdp-server)
-    endif()
+if("client" IN_LIST FEATURES AND "x11" IN_LIST FEATURES)
+    list(APPEND tools xfreerdp)
 endif()
 if("server" IN_LIST FEATURES)
     list(APPEND tools freerdp-proxy freerdp-shadow-cli)
@@ -101,9 +105,6 @@ if("server" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Server3 PACKAGE_NAME freerdp-server3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endif()
-if("wayland" IN_LIST FEATURES)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/uwac0 PACKAGE_NAME uwac0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 if("winpr-tools" IN_LIST FEATURES)
     list(APPEND tools winpr-hash winpr-makecert)
