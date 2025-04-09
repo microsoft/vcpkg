@@ -1,0 +1,4 @@
+cpp-kana provides CMake targets:
+
+  find_package(cpp-kana CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE cpp-kana::cpp-kana)

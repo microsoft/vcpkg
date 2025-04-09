@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uclouvain/openjpeg
     REF "v${VERSION}"
-    SHA512 24c058b3e0710e689ba7fd6bce8a88353ce64e825b2e5bbf6b00ca3f2a2ec1e9c70a72e0252a5c89d10c537cf84d55af54bf2f16c58ca01db98c2018cf132e1a
+    SHA512 22378f5c38c1eb8ade853716897201d8a253024638bdf94fd9851d6a456601071e705c797c5ffeeb6924be14d7356f9a67f15c2b99e96f7d27fc375a9d94505a
     HEAD_REF master
     PATCHES
         third-party.diff
-        openjpip-static.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)

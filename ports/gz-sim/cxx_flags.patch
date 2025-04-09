@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -23,8 +23,16 @@
+ #============================================================================
+ # Set project-specific options
+ #============================================================================
+ 
++if(WIN32)
++  set(CMAKE_CXX_FLAGS "/bigobj ${CMAKE_CXX_FLAGS}")
++endif()
++
++if(UNIX AND NOT APPLE)
++  set(CMAKE_CXX_FLAGS "-Wl,-Bsymbolic ${CMAKE_CXX_FLAGS}")
++endif()
++
+ option(ENABLE_PROFILER "Enable Gazebo Profiler" FALSE)
+ 
+ if(ENABLE_PROFILER)
+   add_definitions("-DGZ_PROFILER_ENABLE=1")

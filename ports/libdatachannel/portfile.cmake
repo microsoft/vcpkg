@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 fd0d66bb932e29abc01e9f1a8b16ccb79012a7e3901e2e0f882f56ab2f090260945e1556c85ad07ef897b8c70fcdd44cdeead9955a9bca7afe1dda8900c473cc
+    SHA512 8cffb3656cd06196061f0e98e786b79ab2f64721068ff27723f76e55a2d0f8290423bd4f70cbeaf26519ffa6cf31220854680787278461c734a823939c514f71
     HEAD_REF master
     PATCHES 
         dependencies.diff
-        library-linkage.diff
         uwp-warnings.patch
 )
 
@@ -29,7 +28,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LibDataChannel)
-vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/common.hpp" "#ifdef RTC_STATIC" "#if 1")

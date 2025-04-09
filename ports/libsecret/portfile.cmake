@@ -20,9 +20,8 @@ vcpkg_configure_meson(
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(TOOL_NAMES secret-tool AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-# There is no option to disable building secret-tool, so remove the executable.
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

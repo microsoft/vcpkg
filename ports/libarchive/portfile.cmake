@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 7d77e70a3ceaa69f25edaf82d371899340a4713db0101d2058273cff675d57867242f23983c71a9482fae922734807ae06387381e76eae963b7c8af6a26fa66b
+    SHA512 5ce1fb0b0108a1f5a1547fbecc261e0438b449eee7253eec0b66452462c052b09c8e6cccd0ed9e7fd0c55e5862b334519b17da4f72b1e0196e73bc90ad97c983
     HEAD_REF master
     PATCHES
         disable-warnings.patch
         fix-buildsystem.patch
         fix-cpu-set.patch
         fix-deps.patch
+        fix-cmake-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -56,6 +57,7 @@ vcpkg_cmake_configure(
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
         -DENABLE_CNG=OFF
+        -DENABLE_UNZIP=OFF
         -DENABLE_TAR=OFF
         -DENABLE_CPIO=OFF
         -DENABLE_CAT=OFF

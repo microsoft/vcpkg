@@ -1,0 +1,32 @@
+{
+  "name": "projectm",
+  "version": "4.1.4",
+  "description": "The projectM Music Visualizer. A cross-platform, OpenGL-based reimplementation of Milkdrop as a reusable library.",
+  "homepage": "https://github.com/projectM-visualizer/projectm",
+  "license": "LGPL-2.1-only AND MIT AND MIT-0",
+  "dependencies": [
+    {
+      "name": "glew",
+      "platform": "windows"
+    },
+    "glm",
+    "opengl",
+    "projectm-eval",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "boost-filesystem": {
+      "description": "Use boost::filesystem instead of std::filesystem to target toolchains and platforms without C++17 support",
+      "dependencies": [
+        "boost-filesystem"
+      ]
+    }
+  }
+}

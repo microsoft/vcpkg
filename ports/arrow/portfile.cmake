@@ -2,16 +2,20 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 4e2a617b8deeb9f94ee085653a721904a75696f0827bcba82b535cc7f4f723066a09914c7fa83c593e51a8a4031e8bf99e563cac1ebb1d89604cb406975d4864
+    SHA512 524187c6f12bbb677b5d4a53e1608c69b56c83a5c8667bfe82d5a10232c33f151a8a7b5e6e26af48d1e0ca25a5d3dc885b27d9b5e798c7e07f115df8f0779516
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
-        android.patch
-        msvc-static-name.patch
-        utf8proc.patch
-        thrift.patch
+        0001-msvc-static-name.patch
+        0002-thrift.patch
+        0003-utf8proc.patch
+        0004-android-musl.patch
+        0005-android-datetime.patch
+        0006-cmake-msvcruntime.patch
+        0007-fix-path.patch # From https://github.com/apache/arrow/issues/39023#issuecomment-1835390089
+        0008-arrow-parquet-size-statistics-include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

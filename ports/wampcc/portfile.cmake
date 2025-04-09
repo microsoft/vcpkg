@@ -7,11 +7,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO darrenjs/wampcc
-    REF 43d10a7ccf37ec1b895742712dd4a05577b73ff1
-    SHA512 e830d26de00e8f5f378145f06691cb16121c40d3bd2cd663fad9a97db37251a11b56053178b619e3a2627f0cd518b6290a8381b26e517a9f16f0246d2f91958e
+    REF 2963fd47b6775122aa45f83ed50a58ce2444ec64
+    SHA512 19883f1dffb1967e6da9f613bb1aff93693e66c2617e8ff53eabe7965a2a9ac83d6da67e1629666cbc8f349eba0466f54edd22fc3c0fe0b4bf7e6a6f33c9e25b
     HEAD_REF master
     PATCHES
-        gcc-11.patch # https://github.com/darrenjs/wampcc/commit/d1a8c6dcabcc32e9d9774f306555e9080d871c2f
+        add-include-chrono.patch #https://github.com/darrenjs/wampcc/pull/85
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,7 +34,9 @@ if("utils" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES admin AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/wampcc")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

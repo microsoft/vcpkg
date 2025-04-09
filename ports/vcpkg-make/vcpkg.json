@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-make",
+  "version-date": "2025-04-02",
+  "documentation": "https://learn.microsoft.com/vcpkg/maintainers/functions/vcpkg_make_configure",
+  "license": null,
+  "supports": "native",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
+}

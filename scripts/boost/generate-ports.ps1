@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.85.0",
+    $version = "1.87.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
@@ -13,12 +13,12 @@ param (
 
 $ErrorActionPreference = 'Stop'
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsBoostDir = split-path -parent $MyInvocation.MyCommand.Definition
 if ($null -eq $portsDir) {
-    $portsDir = "$scriptsDir/../../ports"
+    $portsDir = "$scriptsBoostDir/../../ports"
 }
 if ($null -eq $vcpkg) {
-    $vcpkg = "$scriptsDir/../../vcpkg"
+    $vcpkg = "$scriptsBoostDir/../../vcpkg"
 }
 
 
@@ -26,41 +26,25 @@ if ($null -eq $vcpkg) {
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 0
 $portVersions = @{
-    'boost-asio'            = 2
-    'boost-beast'           = 2
-    'boost-bimap'           = 2
-    'boost-build'           = 2
-    'boost-cmake'           = 2
-    'boost-cobalt'          = 2
-    'boost-compat'          = 2
-    'boost-core'            = 2
-    'boost-describe'        = 2
-    'boost-filesystem'      = 2
-    'boost-geometry'        = 2
-    'boost-intrusive'       = 2
-    'boost-json'            = 2
-    'boost-locale'          = 2
-    'boost-log'             = 2
-    'boost-math'            = 2
-    'boost-mpi'             = 2
-    'boost-msm'             = 2
-    'boost-multi-index'     = 2
-    'boost-multiprecision'  = 2
-    'boost-mysql'           = 2
-    'boost-nowide'          = 2
-    'boost-outcome'         = 2
-    'boost-pfr'             = 2
-    'boost-process'         = 2
-    'boost-program-options' = 2
-    'boost-python'          = 2
-    'boost-redis'           = 2
-    'boost-stacktrace'      = 4
-    'boost-timer'           = 2
-    'boost-unordered'       = 2
-    'boost-variant2'        = 2
-    'boost-wave'            = 2
+    'boost' = 1;
+    'boost-asio' = 1;
+    'boost-atomic' = 1;
+    'boost-cobalt' = 1;
+    'boost-compute' = 1;
+    'boost-context' = 1;
+    'boost-flyweight' = 1;
+    'boost-interprocess' = 1;
+    'boost-json' = 1;
+    'boost-lexical-cast' = 1;
+    'boost-lockfree' = 1;
+    'boost-mysql' = 1;
+    'boost-optional' = 1;
+    'boost-parser' = 1;
+    'boost-process' = 1;
+    'boost-regex' = 1;
+    'boost-unordered' = 1;
 }
 
 function Get-PortVersion {
@@ -82,6 +66,10 @@ $portData = @{
             "mpi" = @{
                 "description"  = "Build with MPI support";
                 "dependencies" = @("boost-mpi", "boost-graph-parallel", "boost-property-map-parallel");
+            };
+            "cobalt" = @{
+                "description"  = "Build boost-cobalt";
+                "dependencies" = @(@{ "name" = "boost-cobalt"; "platform" = "!osx & !ios & !android & !uwp" });
             }
         }
     };
@@ -94,7 +82,7 @@ $portData = @{
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
-    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
+    "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-fiber"            = @{
@@ -106,6 +94,8 @@ $portData = @{
         }
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
+    "boost-function"         = @{ "dependencies" = @("boost-type-traits"); };
+    "boost-geometry"         = @{ "dependencies" = @("boost-crc", "boost-program-options"); };
     "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
@@ -158,7 +148,7 @@ $portData = @{
             }
         }
     };
-    "boost-mysql"           = @{ "dependencies" = @("openssl"); };
+    "boost-mysql"            = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
         "features" = @{
             "mpi" = @{
@@ -167,7 +157,7 @@ $portData = @{
             }
         }
     };
-    "boost-process"          = @{ "supports" = "!emscripten" };
+    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !android" };
     "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
@@ -212,6 +202,27 @@ function GeneratePortName() {
         [string]$Library
     )
     "boost-" + ($Library -replace "_", "-")
+}
+
+function GetPortHomepage() {
+    param (
+        [string]$Library
+    )
+
+    $specicalHomepagePaths = @{
+        "interval"           = "numeric/interval";
+        "numeric_conversion" = "numeric/conversion";
+        "odeint"             = "numeric/odeint";
+        "ublas"              = "numeric/ublas";
+    }
+
+    if ($specicalHomepagePaths.ContainsKey($Library)) {
+        $homepagePath = $specicalHomepagePaths[$Library]
+    } else {
+        $homepagePath = $Library
+    }
+
+    "https://www.boost.org/libs/" + $homepagePath
 }
 
 function GeneratePortDependency() {
@@ -350,13 +361,14 @@ function GeneratePort() {
     )
 
     $portName = GeneratePortName $Library
+    $homepage = GetPortHomepage  $Library
 
     New-Item -ItemType "Directory" "$portsDir/$portName" -erroraction SilentlyContinue | out-null
 
     # Generate vcpkg.json
     GeneratePortManifest `
         -PortName $portName `
-        -Homepage "https://www.boost.org/libs/$Library" `
+        -Homepage $homepage `
         -Description "Boost $Library module" `
         -License "BSL-1.0" `
         -Dependencies $Dependencies
@@ -366,30 +378,29 @@ function GeneratePort() {
         ""
     )
 
-    if ($Library -eq "system") {
-        $portfileLines += @(
-            "vcpkg_buildpath_length_warning(37)"
-            ""
-        )
+    if (Test-Path "$scriptsBoostDir/pre-source-stubs/$Library.cmake") {
+        $portfileLines += @(Get-Content "$scriptsBoostDir/pre-source-stubs/$Library.cmake")
     }
 
     $portfileLines += @(
-        "vcpkg_from_github("
-        "    OUT_SOURCE_PATH SOURCE_PATH"
-        "    REPO boostorg/$Library"
-        "    REF boost-`${VERSION}"
-        "    SHA512 $Hash"
+        "vcpkg_from_github(",
+        "    OUT_SOURCE_PATH SOURCE_PATH",
+        "    REPO boostorg/$Library",
+        "    REF boost-`${VERSION}",
+        "    SHA512 $Hash",
         "    HEAD_REF master"
     )
-    [Array]$patches = Get-Item -Path "$portsDir/$portName/*.patch"
-    [Array]$diffs = Get-Item -Path "$portsDir/$portName/*.diff"
-    [Array]$allmods = $patches + $diffs
-    if ($null -eq $allmods -or $allmods.Count -eq 0) {
+
+    [string[]]$allmods = @()
+    $allmods += Get-ChildItem -Path "$portsDir/$portName/*" -Name -Include @('*.patch', '*.diff')
+    if (Test-Path "$scriptsBoostDir/patch-stubs/$Library.txt") {
+        $allmods +=  Get-Content "$scriptsBoostDir/patch-stubs/$Library.txt"
     }
-    else {
+
+    if ($allmods.Length -ne 0) {
         $portfileLines += @("    PATCHES")
         foreach ($patch in $allmods) {
-            $portfileLines += @("        $($patch.name)")
+            $portfileLines += "        $patch"
         }
     }
     $portfileLines += @(
@@ -397,8 +408,8 @@ function GeneratePort() {
         ""
     )
 
-    if (Test-Path "$scriptsDir/post-source-stubs/$Library.cmake") {
-        $portfileLines += @(Get-Content "$scriptsDir/post-source-stubs/$Library.cmake")
+    if (Test-Path "$scriptsBoostDir/post-source-stubs/$Library.cmake") {
+        $portfileLines += @(Get-Content "$scriptsBoostDir/post-source-stubs/$Library.cmake")
     }
 
     $portfileLines += @(
@@ -410,6 +421,10 @@ function GeneratePort() {
         )
     }
 
+    if (Test-Path "$scriptsBoostDir/pre-build-stubs/$Library.cmake") {
+        $portfileLines += Get-Content "$scriptsBoostDir/pre-build-stubs/$Library.cmake"
+    }
+
     $portfileLines += @(
         "boost_configure_and_install("
         "    SOURCE_PATH `"`${SOURCE_PATH}`""
@@ -417,8 +432,8 @@ function GeneratePort() {
         ")"
     )
 
-    if (Test-Path "$scriptsDir/post-build-stubs/$Library.cmake") {
-        $portfileLines += @(Get-Content "$scriptsDir/post-build-stubs/$Library.cmake")
+    if (Test-Path "$scriptsBoostDir/post-build-stubs/$Library.cmake") {
+        $portfileLines += @(Get-Content "$scriptsBoostDir/post-build-stubs/$Library.cmake")
     }
 
     $portfileLines += @("")
@@ -428,9 +443,9 @@ function GeneratePort() {
         -NoNewline
 }
 
-if (!(Test-Path "$scriptsDir/boost")) {
+if (!(Test-Path "$scriptsBoostDir/boost")) {
     "Cloning boost..."
-    Push-Location $scriptsDir
+    Push-Location $scriptsBoostDir
     try {
         git clone https://github.com/boostorg/boost --branch boost-$version
     }
@@ -439,7 +454,7 @@ if (!(Test-Path "$scriptsDir/boost")) {
     }
 }
 else {
-    Push-Location $scriptsDir/boost
+    Push-Location $scriptsBoostDir/boost
     try {
         git fetch
         git checkout -f boost-$version
@@ -449,7 +464,7 @@ else {
     }
 }
 
-$foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Object name | ForEach-Object {
+$foundLibraries = Get-ChildItem $scriptsBoostDir/boost/libs -directory | ForEach-Object name | ForEach-Object {
     if ($_ -eq "numeric") {
         "numeric_conversion"
         "interval"
@@ -461,7 +476,7 @@ $foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Obje
     }
 }
 
-$downloads = "$scriptsDir/../../downloads"
+$downloads = "$scriptsBoostDir/../../downloads"
 New-Item -ItemType "Directory" $downloads -erroraction SilentlyContinue | out-null
 
 $updateServicePorts = $false
@@ -487,11 +502,11 @@ foreach ($library in $libraries) {
         $hash = $hash[1]
     }
 
-    $unpacked = "$scriptsDir/libs/$library-boost-$version"
+    $unpacked = "$scriptsBoostDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked)) {
         "Unpacking boost/$library..."
-        New-Item -ItemType "Directory" $scriptsDir/libs -erroraction SilentlyContinue | out-null
-        Push-Location $scriptsDir/libs
+        New-Item -ItemType "Directory" $scriptsBoostDir/libs -erroraction SilentlyContinue | out-null
+        Push-Location $scriptsBoostDir/libs
         try {
             cmake -E tar xf $archive
         }
@@ -634,6 +649,12 @@ foreach ($library in $libraries) {
         $deps = @($deps | Where-Object {
                 -not (
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
+                )
+            }
+        )
+        $deps = @($deps | Where-Object {
+                -not (
+                ($library -eq 'mysql' -and $_ -eq 'pfr')
                 )
             }
         )

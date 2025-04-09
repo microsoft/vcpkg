@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/AMF
     REF "v${VERSION}"
-    SHA512 8a2aa3a358a7c0cfac47f545b8a375de86652d6590795161ad592e49219f54f5ec8dd06d5d48ea9e091fac09e83dbac2044d7ed551898f907cc1b30eea66b7ab
+    SHA512 589fccabaadb27e48e9adb1d3594db2adadee343c966f8db99ff29a92ec78ae6b0c42f13113a4fc66da0044ee660cfa1caf6867c508af044935646c09f5af50e
     HEAD_REF master
 )
 

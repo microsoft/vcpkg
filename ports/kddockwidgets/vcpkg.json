@@ -1,9 +1,13 @@
 {
   "name": "kddockwidgets",
   "version": "2.1.0",
+  "port-version": 1,
   "description": "KDAB's Dock Widget Framework for Qt",
   "homepage": "https://www.kdab.com/development-resources/qt-tools/kddockwidgets/",
+  "license": "GPL-2.0-only OR GPL-3.0-only",
   "dependencies": [
+    "kdbindings",
+    "nlohmann-json",
     {
       "name": "qtbase",
       "default-features": false,

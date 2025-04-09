@@ -1,0 +1,55 @@
+{
+  "name": "duckdb",
+  "version": "1.2.1",
+  "port-version": 2,
+  "description": "High-performance in-process analytical database system",
+  "homepage": "https://duckdb.org",
+  "license": "MIT",
+  "supports": "!(uwp | android | (windows & arm64))",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "autocomplete": {
+      "description": "Statically link the autocomplete extension into DuckDB"
+    },
+    "excel": {
+      "description": "Statically link the excel extension into DuckDB",
+      "dependencies": [
+        "expat",
+        "minizip-ng"
+      ]
+    },
+    "httpfs": {
+      "description": "Statically link the httpfs extension into DuckDB",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "icu": {
+      "description": "Statically link the icu extension into DuckDB",
+      "dependencies": [
+        {
+          "name": "icu",
+          "default-features": false
+        }
+      ]
+    },
+    "json": {
+      "description": "Statically link the json extension into DuckDB"
+    },
+    "tpcds": {
+      "description": "Statically link the tpcds extension into DuckDB"
+    },
+    "tpch": {
+      "description": "Statically link the tpch extension into DuckDB"
+    }
+  }
+}

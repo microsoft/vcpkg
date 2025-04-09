@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
     REF "${release_tag}"
-    SHA512 8574eca37c0be55126e50a76322f96171c9d82dbdd793fdbc26430526488e69db8b41351f136f77bd36f8a3ea238c350bc62dd99214b8348b65dd8055a1c6148
+    SHA512 28130c10d79f652e3533e6ede5fdaab0f6db5a4bbaaca4713b62df9af2ae2d5314acf82d01f344f87faf95c12099fd77e0858cbe5232a96de1d531e6284ede1b
     HEAD_REF master
     PATCHES 
         pkgconfig_fixes.patch
@@ -26,5 +26,6 @@ vcpkg_copy_pdbs()
 # unofficial legacy usage
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/xmlsec-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-xmlsec-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-xmlsec")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

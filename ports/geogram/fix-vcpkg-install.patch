@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1fd796c..05bd735 100644
+index 6934fca..c2f855d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -53,7 +53,7 @@ endif()
- include(cmake/geogram.cmake)
+@@ -68,7 +68,7 @@ set(GEOGRAM_INSTALL_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH "
+ set(GEOGRAM_INSTALL_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/modules CACHE PATH "CMake file install destination")
  
  
 -set(VORPALINE_INCLUDE_SUBPATH geogram${VORPALINE_VERSION_MAJOR})
@@ -11,19 +11,19 @@ index 1fd796c..05bd735 100644
  
  # Determine the current Build-OS (Build-platform without the compiler info)
  string(REGEX REPLACE "-[^-]+$" "" VORPALINE_OS ${VORPALINE_PLATFORM})
-@@ -115,6 +115,7 @@ endif()
+@@ -130,6 +130,7 @@ endif()
  add_subdirectory(src/lib/third_party)
  
  if(GEOGRAM_WITH_GRAPHICS)
-+  find_package(GLFW3 REQUIRED)
-   add_subdirectory(src/lib/geogram_gfx)
++find_package(GLFW3 REQUIRED)
+ add_subdirectory(src/lib/geogram_gfx)
  endif()
  
-@@ -145,7 +146,44 @@ file(REMOVE ${CMAKE_BINARY_DIR}/doc/LICENSE.txt)
+@@ -160,7 +161,44 @@ file(REMOVE ${CMAKE_BINARY_DIR}/doc/LICENSE.txt)
  
  # FindGeogram.cmake
  
--install(FILES cmake/FindGeogram.cmake DESTINATION lib/cmake/modules COMPONENT devkit)
+-install(FILES cmake/FindGeogram.cmake DESTINATION ${GEOGRAM_INSTALL_CMAKE_DIR} COMPONENT devkit)
 +# This installation is not suitable for vcpkg
 +# install(FILES cmake/FindGeogram.cmake DESTINATION lib/cmake/modules COMPONENT devkit)
 +
@@ -66,10 +66,10 @@ index 1fd796c..05bd735 100644
  # Configure CPack
  
 diff --git a/src/lib/geogram/CMakeLists.txt b/src/lib/geogram/CMakeLists.txt
-index ed2dca0..30f87b7 100644
+index d50b3d2..41ec3e4 100644
 --- a/src/lib/geogram/CMakeLists.txt
 +++ b/src/lib/geogram/CMakeLists.txt
-@@ -45,7 +45,7 @@ target_include_directories(geogram PRIVATE
+@@ -69,7 +69,7 @@ endif()
  # path for targets that depend on geogram.
  # See: https://cmake.org/cmake/help/v3.3/command/target_include_directories.html
  # https://stackoverflow.com/questions/26243169/cmake-target-include-directories-meaning-of-scope
@@ -77,15 +77,20 @@ index ed2dca0..30f87b7 100644
 +target_include_directories(geogram PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib>)
  
  if(ANDROID)
-   target_include_directories(geogram PRIVATE
-@@ -72,8 +72,19 @@ if(WIN32)
-     target_link_libraries(geogram psapi)
+ target_include_directories(geogram PRIVATE
+@@ -78,6 +78,9 @@ ${ANDROID_NDK}/sources/android/native_app_glue
+ message(STATUS "building for Android")
  endif()
  
 +if(WIN32 AND VORPALINE_BUILD_DYNAMIC)
 +    target_compile_definitions(geogram PUBLIC GEO_DYNAMIC_LIBS)
 +endif()
-+
+ 
+ set_target_properties(geogram PROPERTIES
+ VERSION ${VORPALINE_VERSION}
+@@ -101,7 +104,14 @@ target_link_libraries(geogram ${GEOGRAMPLUS_LIBS})
+ endif()
+ 
  # Install the library
 -install_devkit_targets(geogram)
 +install(
@@ -100,10 +105,10 @@ index ed2dca0..30f87b7 100644
  # Install include files for the standard devkit
  install(
 diff --git a/src/lib/geogram_gfx/CMakeLists.txt b/src/lib/geogram_gfx/CMakeLists.txt
-index a6f8372..195b1e2 100644
+index 391e607..13b6bcb 100644
 --- a/src/lib/geogram_gfx/CMakeLists.txt
 +++ b/src/lib/geogram_gfx/CMakeLists.txt
-@@ -52,14 +52,21 @@ if(VORPALINE_BUILD_DYNAMIC)
+@@ -52,14 +52,21 @@ target_link_libraries(geogram_gfx ${OPENGL_LIBRARIES})
  endif()
  
  # Install the library
@@ -119,20 +124,20 @@ index a6f8372..195b1e2 100644
  
  # Install include files for the standard devkit
  install(
-     DIRECTORY .
-     DESTINATION include/${VORPALINE_INCLUDE_SUBPATH}/geogram_gfx
-     COMPONENT devkit
--    FILES_MATCHING PATTERN *.h
-+    FILES_MATCHING PATTERN *.h PATTERN *.xpm # xpm is the colrbar file
+ DIRECTORY .
+ DESTINATION include/${VORPALINE_INCLUDE_SUBPATH}/geogram_gfx
+ COMPONENT devkit
+-FILES_MATCHING PATTERN *.h
++FILES_MATCHING PATTERN *.h PATTERN *.xpm # xpm is the colrbar file
  )
  
  # Install include files for the full devkit
 @@ -67,7 +74,7 @@ install(
-     DIRECTORY .
-     DESTINATION include/${VORPALINE_INCLUDE_SUBPATH}/geogram_gfx
-     COMPONENT devkit-full
--    FILES_MATCHING PATTERN *.h
-+    FILES_MATCHING PATTERN *.h PATTERN *.xpm # xpm is the colrbar file
+ DIRECTORY .
+ DESTINATION include/${VORPALINE_INCLUDE_SUBPATH}/geogram_gfx
+ COMPONENT devkit-full
+-FILES_MATCHING PATTERN *.h
++FILES_MATCHING PATTERN *.h PATTERN *.xpm # xpm is the colrbar file
  )
  
  install(

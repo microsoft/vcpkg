@@ -3,12 +3,11 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF "v${VERSION}"
-    SHA512 ef2f1d424219d9e245069b7d23e78f5e817cf6ee516d46694915ab6c8909522166f84997513d20a702f4e52c3f18467813935b328fafa34bea5156dee00f66fa
+    SHA512 924bcd0fe19c03f65ffc068719371ab582057bf95c3847efd3bd03eaff1eb409ec3f22c9d373fafd9f993dd031a161850f0db082cb7068195c7c5c564fa222fc
     HEAD_REF master
     PATCHES
         FindCMath.patch
         prefer-config.diff
-        requires-lerc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -74,9 +73,22 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES
+        fax2ps
+        fax2tiff
+        pal2rgb
+        ppm2tiff
+        raw2tiff
+        tiff2bw
+        tiff2pdf
+        tiff2ps
+        tiff2rgba
+        tiffcmp
         tiffcp
+        tiffcrop
+        tiffdither
         tiffdump
         tiffinfo
+        tiffmedian
         tiffset
         tiffsplit
         AUTO_CLEAN

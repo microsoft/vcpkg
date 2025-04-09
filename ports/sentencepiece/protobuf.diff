@@ -1,0 +1,19 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6ef8aa9..d983089 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -70,12 +70,11 @@ if (SPM_PROTOBUF_PROVIDER STREQUAL "internal")
+   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../third_party/protobuf-lite)
+   include_directories(builtin_pb)
+ elseif (SPM_PROTOBUF_PROVIDER STREQUAL "package")
+-  find_package(Protobuf REQUIRED)
+-  include_directories(${Protobuf_INCLUDE_DIRS})
++  find_package(protobuf CONFIG REQUIRED)
++  set(PROTOBUF_LITE_LIBRARY protobuf::libprotobuf-lite)
+   protobuf_generate_cpp(SPM_PROTO_SRCS SPM_PROTO_HDRS sentencepiece.proto)
+   protobuf_generate_cpp(SPM_MODEL_PROTO_SRCS SPM_MODEL_PROTO_HDRS sentencepiece_model.proto)
+   set(PROTOBUF_LITE_SRCS "")
+-  include_directories(${PROTOBUF_INCLUDE_DIR})
+   if (MSVC)
+     add_definitions("/D_USE_EXTERNAL_PROTOBUF")
+   else()

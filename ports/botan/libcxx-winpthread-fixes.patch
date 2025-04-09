@@ -1,8 +1,8 @@
 diff --git a/src/tests/tests.h b/src/tests/tests.h
-index d198376..12f001a 100644
+index 284cf28..ad4996b 100644
 --- a/src/tests/tests.h
 +++ b/src/tests/tests.h
-@@ -17,7 +17,9 @@
+@@ -18,7 +18,9 @@
  #include <map>
  #include <memory>
  #include <optional>
@@ -10,5 +10,5 @@ index d198376..12f001a 100644
  #include <ranges>
 +#endif
  #include <set>
+ #include <span>
  #include <sstream>
- #include <string>

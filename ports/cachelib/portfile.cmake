@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
     REF "v${VERSION}"
-    SHA512 0d67a5086222cf787d8f6205f68b783b462b4e7baed437caac9dc3952605b6fe392829a6802e4bd3ad366915f687c7d89dae1f5b903479aad7e8c5592adbabf7
+    SHA512 44187042d78eb589735fd9e3c051d1f407eb47b0c29c5be0b95c03e0c6690b3f7868359884aa03439198b4906cb693563eb30fa5238bdf89fafa5c89e2c86485
     HEAD_REF main
     PATCHES
         fix-build.patch
         fix-glog.patch
-        fix-fmt.patch
 )
 
 FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h
@@ -25,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTS=OFF
         -DCMAKE_INSTALL_DIR=share/cachelib
+        -DVCPKG_LOCK_FIND_PACKAGE_uring=OFF
 )
 
 vcpkg_cmake_install()

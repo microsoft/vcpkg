@@ -13,6 +13,6 @@ INVERTED_FEATURES
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
-                     CONFIGURE_OPTIONS_RELEASE
-                     CONFIGURE_OPTIONS_DEBUG
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED
+                        CMAKE_REQUIRE_FIND_PACKAGE_WebEngineCore
                     )

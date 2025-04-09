@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         context_syntax.patch
         useragent.patch
+        set_version.patch
 )
 
 if(EXISTS "${SOURCE_PATH}/sdk/attestation/azure-security-attestation")

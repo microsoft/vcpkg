@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpi
     REF boost-${VERSION}
-    SHA512 923b0f898d9ce29a04ed99a757caada4a502a6289572f4fd1604bc03d6bb3c9096ce8ccfe37d18196efa9b0a3f658be3a039205025cd6ec1a2a9c2ea9d8016f0
+    SHA512 648129db77e1bb67f282eb13670c25f3e906b7b5f10e5fd71dec8dda69d0f0bd5dd7529a3405b753513bd7731e6fadd9b295b04a7bc68209aec8acea2832ec40
     HEAD_REF master
 )
 

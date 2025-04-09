@@ -128,10 +128,17 @@ if ($lastLastExitCode -ne 0)
     exit $lastLastExitCode
 }
 
+if ($Triplet -eq 'x64-windows-release') {
+    $tripletSwitch = "--host-triplet=$Triplet"
+} else {
+    $tripletSwitch = "--triplet=$Triplet"
+}
+
 $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+    $headTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
 
     # Prefetch tools for better output
     foreach ($tool in @('cmake', 'ninja', 'git')) {
@@ -154,7 +161,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 
     $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    if ($parentBaseline -eq $headBaseline)
+    $parentTool = Get-Content "$PSScriptRoot/../vcpkg-tool-metadata.txt" -Raw
+    if (($parentBaseline -eq $headBaseline) -and ($parentTool -eq $headTool))
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
         $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
@@ -163,7 +171,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         # but changes must trigger at least some testing.
         Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
         Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-        & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        & "./vcpkg$executableExtension" ci $tripletSwitch --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
         $lastLastExitCode = $LASTEXITCODE
         if ($lastLastExitCode -ne 0)
         {
@@ -173,7 +181,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
     else
     {
-        Write-Host "CI baseline was modified, not using parent hashes"
+        Write-Host "Tool or baseline modified, not using parent hashes"
     }
 
     Write-Host "Running CI for HEAD"
@@ -190,7 +198,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" ci $tripletSwitch --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 $lastLastExitCode = $LASTEXITCODE
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))

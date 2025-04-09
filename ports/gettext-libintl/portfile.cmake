@@ -90,9 +90,8 @@ endif()
 
 file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
 file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-dbg.log")
-vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime/intl"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}/gettext-runtime/intl"
     OPTIONS
         ${OPTIONS}
     OPTIONS_RELEASE
@@ -116,7 +115,7 @@ foreach(file IN LISTS makefiles)
     file(WRITE "${file}" "${rules}")
 endforeach()
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -10,17 +10,18 @@ index b4fcea410..91958e554 100644
  find_path(Open62541_INCLUDE_DIRS
      NAMES open62541.h
      HINTS "${OPEN62541_INCDIR}")
-@@ -46,6 +47,14 @@ if (Open62541_FOUND)
+@@ -46,6 +47,15 @@ if (Open62541_FOUND)
  endif()
  
  mark_as_advanced(Open62541_INCLUDE_DIRS Open62541_LIBRARIES)
-+elseif()
++else()
 +    find_package(open62541 CONFIG REQUIRED)
 +    if(NOT TARGET open62541)
 +        add_library(open62541 INTERFACE IMPORTED)
 +        set_property(TARGET open62541 APPEND PROPERTY
 +            INTERFACE_LINK_LIBRARIES open62541::open62541)
 +    endif()
++    set(Open62541_FOUND ON)
 +endif()
  
  include(FeatureSummary)

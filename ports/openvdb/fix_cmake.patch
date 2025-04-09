@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8329dda9..71f45701 100644
+index 34df130..70351ef 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -284,12 +284,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+@@ -311,12 +311,9 @@ endif()
  
  if(OPENVDB_INSTALL_CMAKE_MODULES)
    set(OPENVDB_CMAKE_MODULES
@@ -16,19 +16,19 @@ index 8329dda9..71f45701 100644
      cmake/OpenVDBHoudiniSetup.cmake
      cmake/OpenVDBMayaSetup.cmake
 diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
-index c4213c85..86b24e9d 100644
+index 33b0838..c1e9d00 100644
 --- a/cmake/FindOpenVDB.cmake
 +++ b/cmake/FindOpenVDB.cmake
-@@ -490,7 +490,7 @@ endif()
+@@ -488,7 +488,7 @@ endif()
  
  # Add standard dependencies
  
 -find_package(TBB REQUIRED COMPONENTS tbb)
 +find_package(TBB CONFIG REQUIRED)
- find_package(Boost REQUIRED COMPONENTS iostreams)
  
  # Add deps for pyopenvdb
-@@ -641,7 +641,7 @@ elseif(NOT OPENVDB_USE_STATIC_LIBS)
+ 
+@@ -613,7 +613,7 @@ elseif(NOT OPENVDB_USE_STATIC_LIBS)
  endif()
  
  if(OpenVDB_USES_BLOSC)
@@ -37,7 +37,7 @@ index c4213c85..86b24e9d 100644
  endif()
  
  if(OpenVDB_USES_ZLIB)
-@@ -694,7 +694,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
+@@ -670,7 +670,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
  
  if(NOT OPENVDB_USE_STATIC_LIBS)
    if(OpenVDB_USES_BLOSC)
@@ -46,11 +46,43 @@ index c4213c85..86b24e9d 100644
    endif()
    if(OpenVDB_USES_ZLIB)
      list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
+diff --git a/nanovdb/nanovdb/CMakeLists.txt b/nanovdb/nanovdb/CMakeLists.txt
+index 4e0284e..ca3449b 100644
+--- a/nanovdb/nanovdb/CMakeLists.txt
++++ b/nanovdb/nanovdb/CMakeLists.txt
+@@ -122,15 +122,15 @@ if(NANOVDB_USE_OPENVDB)
+ endif()
+ 
+ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
+-  find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED)
++  find_package(TBB CONFIG REQUIRED)
+ endif()
+ 
+ if(NANOVDB_USE_BLOSC AND NOT TARGET Blosc::blosc)
+-  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
++  find_package(blosc CONFIG REQUIRED)
+ endif()
+ 
+ if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
+-  find_package(ZLIB ${MINIMUM_ZLIB_VERSION} REQUIRED)
++  find_package(ZLIB REQUIRED)
+ endif()
+ 
+ if(NANOVDB_USE_MAGICAVOXEL)
+@@ -290,7 +290,7 @@ if(NANOVDB_USE_TBB)
+ endif()
+ 
+ if(NANOVDB_USE_BLOSC)
+-  target_link_libraries(nanovdb INTERFACE Blosc::blosc)
++  target_link_libraries(nanovdb INTERFACE $<IF:$<TARGET_EXISTS:blosc_shared>,blosc_shared,blosc_static>)
+   target_compile_definitions(nanovdb INTERFACE -DNANOVDB_USE_BLOSC)
+ endif()
+ 
 diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
-index 33d4e5cc..63699b2c 100644
+index 3db0e4e..9475709 100644
 --- a/openvdb/openvdb/CMakeLists.txt
 +++ b/openvdb/openvdb/CMakeLists.txt
-@@ -123,7 +123,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BOOST_VERSION)
+@@ -121,7 +121,7 @@ if(OPENVDB_USE_DELAYED_LOADING)
    endif()
  endif()
  
@@ -59,35 +91,24 @@ index 33d4e5cc..63699b2c 100644
  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
    if(${TBB_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
      message(DEPRECATION "Support for TBB versions < ${FUTURE_MINIMUM_TBB_VERSION} "
-@@ -152,26 +152,7 @@ endif()
+@@ -150,6 +150,7 @@ endif()
  
  if(USE_BLOSC)
    # Find Blosc libraries
--  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
--  if(Blosc_VERSION)
--    if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BLOSC_VERSION)
--      if(${Blosc_VERSION} VERSION_LESS FUTURE_MINIMUM_BLOSC_VERSION)
--        message(DEPRECATION "Support for Blosc versions < ${FUTURE_MINIMUM_BLOSC_VERSION} "
--          "is deprecated and will be removed.")
--      endif()
--    endif()
--    # Print a warning if using of the blosc versions with regression issues
--    # with Blosc 1.5.0 caches.
--    if((Blosc_VERSION VERSION_GREATER_EQUAL 1.11.0 AND
--        Blosc_VERSION VERSION_LESS 1.14.0) OR
--       (Blosc_VERSION VERSION_GREATER_EQUAL 1.16.0 AND
--        Blosc_VERSION VERSION_LESS 1.16.2))
--      message(WARNING "The following Blosc versions are incompatible with the "
--        "recommended builds of OpenVDB: [1.11.0 -> 1.14.0) [1.16.0, 1.16.1]. "
--        "Found Blosc version '${Blosc_VERSION}' which falls in this range. We "
--        "strongly recommend using the new future minimum version '${FUTURE_MINIMUM_BLOSC_VERSION}'")
--    endif()
--  endif()
++  if(0)
+   find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
+   if(Blosc_VERSION)
+     if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BLOSC_VERSION)
+@@ -170,6 +171,8 @@ if(USE_BLOSC)
+         "strongly recommend using the new future minimum version '${FUTURE_MINIMUM_BLOSC_VERSION}'")
+     endif()
+   endif()
++  endif()
 +  find_package(blosc CONFIG REQUIRED)
  else()
    message(WARNING "Blosc support is disabled. It is strongly recommended to "
      "enable blosc for optimal builds of OpenVDB and to support compatible "
-@@ -228,7 +209,11 @@ endif()
+@@ -226,7 +229,11 @@ endif()
  # /usr/local
  
  if(USE_BLOSC)
@@ -101,7 +122,7 @@ index 33d4e5cc..63699b2c 100644
  
  if(USE_BLOSC OR USE_ZLIB)
 diff --git a/openvdb_cmd/CMakeLists.txt b/openvdb_cmd/CMakeLists.txt
-index c4351f49..b4803341 100644
+index edbb1a4..463d3ed 100644
 --- a/openvdb_cmd/CMakeLists.txt
 +++ b/openvdb_cmd/CMakeLists.txt
 @@ -53,7 +53,7 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")

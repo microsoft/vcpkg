@@ -1,0 +1,16 @@
+{
+  "name": "libmypaint",
+  "version": "1.6.1",
+  "description": "Brush library used by MyPaint",
+  "homepage": "mypaint.org",
+  "license": "ISC",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "glib",
+    "json-c",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}
