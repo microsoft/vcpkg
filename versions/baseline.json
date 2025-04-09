@@ -2361,7 +2361,7 @@
       "port-version": 0
     },
     "dirent": {
-      "baseline": "1.24",
+      "baseline": "1.25",
       "port-version": 0
     },
     "discord-game-sdk": {
