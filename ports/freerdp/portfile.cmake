@@ -8,7 +8,7 @@ vcpkg_from_github(
         dependencies.patch
         ffmpeg.diff
         install-layout.patch
-        # TODO windows-linkage.patch
+        windows-linkage.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
