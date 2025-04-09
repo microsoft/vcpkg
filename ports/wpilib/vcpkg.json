@@ -10,9 +10,9 @@
     "libssh",
     "libuv",
     "mpi",
-    "pthreads",
     "opencv",
     "protobuf",
+    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true
