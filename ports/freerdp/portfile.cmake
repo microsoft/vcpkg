@@ -27,6 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wayland     WITH_WAYLAND
         winpr-tools WITH_WINPR_TOOLS
         x11         WITH_X11
+        x11         VCPKG_LOCK_FIND_PACKAGE_X11
 )
 
 vcpkg_list(SET GENERATOR_OPTION)
