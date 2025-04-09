@@ -30,11 +30,20 @@ if (WIN32)
 endif()
 add_library(tre ${SRCS})
 
+target_include_directories(tre PUBLIC "$<INSTALL_INTERFACE:include>")
+
 install(
   TARGETS tre
+  EXPORT unofficial-tre-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+install(
+  EXPORT unofficial-tre-targets
+  NAMESPACE unofficial::tre::
+  FILE unofficial-tre-config.cmake
+  DESTINATION share/unofficial-tre)
 
 install(FILES ${HEADERS} DESTINATION include/tre)

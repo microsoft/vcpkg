@@ -1,14 +1,13 @@
 diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
-index bed8c4e..772809e 100644
+index 3b2cbba..18dd8d0 100644
 --- a/subprojects/gstreamer/meson.build
 +++ b/subprojects/gstreamer/meson.build
-@@ -435,8 +435,8 @@ if cc.has_header('execinfo.h')
-   endif
+@@ -493,7 +493,7 @@ if cc.has_header('execinfo.h')
  endif
  
  gst_debug = get_option('gst_debug')
 -if not gst_debug
 +if not gst_debug and cc.has_argument('-Wno-unused')
-   add_project_arguments(['-Wno-unused'], language: 'c')
- endif
- 
+   if cc.get_argument_syntax() == 'msvc'
+     msvc_args = cc.get_supported_arguments([
+       '/wd4101', # 'identifier' : unreferenced local variable

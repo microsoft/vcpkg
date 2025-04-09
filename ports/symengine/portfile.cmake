@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF "v${VERSION}"
-    SHA512 076aac35428589c5b3524a46bd939a3a3a7da44b1c866b5f71487678b27b6e48b4da034029f1630881d7713a9252e905411a04b8016c9ec56a608b6de23365ac
+    REF 450a0277e1116ab8c52582df9c77d42f9db3092a # unreleased version with LLVM 18 support
+    SHA512 fb9bfe3cf6d48051b86f28c749cfdc19a2d5c1fc750f3c45c422559e9b8b9736d1cb542af5023a876640d917ad2198b24385fd085d8e20ff97e7ee660e056605
     HEAD_REF master
 )
 
@@ -56,6 +56,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cm
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cmake"
     [[${SYMENGINE_CMAKE_DIR}/../../../include]]
     [[${SYMENGINE_CMAKE_DIR}/../../include]]
+    IGNORE_UNCHANGED
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

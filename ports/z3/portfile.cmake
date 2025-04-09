@@ -5,12 +5,11 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
-  REF z3-4.12.2
-  SHA512 375477cbbc9837b44e752c89916409d07bf6a73830b52878aab4f376f08b37dd5ab485da225744d394ab15f2a7e1014edc3be5eb9962934c440a8d55259317e2
+  REF z3-${VERSION}
+  SHA512 5a3de3207b5c05f77f8369d7fdbb9e13a7db850f8c3edaa8f2adfcf58b186d34409e4a56d44646f853027850941135be5042e67a53ddf3302dc3b645c1ab3db4
   HEAD_REF master
   PATCHES
       fix-install-path.patch
-      fix-cstdint-include.patch
       remove-flag-overrides.patch
 )
 

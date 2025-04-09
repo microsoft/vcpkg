@@ -1,20 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO max0x7ba/atomic_queue
-    REF 7619054490efdbfe377bd528bc09b21f5cd38a02
-    SHA512 0d145f461a5c978c4d6f6d8ec1f06f0c61f3d009e65eac12db806c2aa7941461f881b34b9c4dd9aeebd3206a4598e6081f89f983c389b2f5aecefefcbddd94b6
+    REF "v${VERSION}"
+    SHA512 2c1813074fd166f1d3491527a1faac1cc297f0b0e15fedf66a64465efc310256cce657e7205e41d277fa513bb322d18a273c6a9a6ce85ec8d182a2c81f90c35c
     HEAD_REF master
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 file(
-    COPY 
-        ${SOURCE_PATH}/include/atomic_queue/atomic_queue.h 
-        ${SOURCE_PATH}/include/atomic_queue/atomic_queue_mutex.h 
-        ${SOURCE_PATH}/include/atomic_queue/barrier.h 
-        ${SOURCE_PATH}/include/atomic_queue/defs.h 
-        ${SOURCE_PATH}/include/atomic_queue/spinlock.h 
-    DESTINATION 
-        ${CURRENT_PACKAGES_DIR}/include/atomic_queue
+    COPY
+        "${SOURCE_PATH}/include/atomic_queue/atomic_queue.h"
+        "${SOURCE_PATH}/include/atomic_queue/atomic_queue_mutex.h"
+        "${SOURCE_PATH}/include/atomic_queue/barrier.h"
+        "${SOURCE_PATH}/include/atomic_queue/defs.h"
+        "${SOURCE_PATH}/include/atomic_queue/spinlock.h"
+    DESTINATION
+        "${CURRENT_PACKAGES_DIR}/include/atomic_queue"
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

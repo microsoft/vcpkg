@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3730326..0c2b87c 100644
+index d3fbad30..9cf01cf5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,7 +66,7 @@ include(cmakescripts/PackageInfo.cmake)
+@@ -89,7 +89,7 @@ include(cmakescripts/PackageInfo.cmake)
  
  # Detect CPU type and whether we're building 64-bit or 32-bit code
  math(EXPR BITS "${CMAKE_SIZEOF_VOID_P} * 8")

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1369bd1..bcb58e3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,7 +48,7 @@ if(WIN32)
+     )
+ endif()
+ 
+-if(WIN32)
++if(MSVC)
+     target_compile_options(ls-qpack PRIVATE
+         /Wall
+         /wd4100 # unreffed parameter

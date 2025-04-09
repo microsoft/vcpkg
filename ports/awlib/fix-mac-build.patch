@@ -1,0 +1,44 @@
+diff --git a/io/include/aw/io/mmap_file.h b/io/include/aw/io/mmap_file.h
+index 98469732..65e82aac 100644
+--- a/io/include/aw/io/mmap_file.h
++++ b/io/include/aw/io/mmap_file.h
+@@ -83,18 +83,18 @@ using win32::file_mapping;
+ inline file_mode get_file_mode(map_perms perms)
+ {
+ 	using mp = map_perms;
+-	switch (perms) {
+-	case mp::none:
+-	case mp::none|mp::exec:
++	switch (static_cast<unsigned>(perms)) {
++	case static_cast<unsigned>(mp::none):
++	case static_cast<unsigned>(mp::none|mp::exec):
+ 		return file_mode::none;
+-	case mp::read:
+-	case mp::read|mp::exec:
++	case static_cast<unsigned>(mp::read):
++	case static_cast<unsigned>(mp::read|mp::exec):
+ 		return file_mode::read;
+-	case mp::write:
++	case static_cast<unsigned>(mp::write):
+ 		return file_mode::write;
+-	case mp::write|mp::exec:
+-	case mp::rdwr:
+-	case mp::rdwr|mp::exec:
++	case static_cast<unsigned>(mp::write|mp::exec):
++	case static_cast<unsigned>(mp::rdwr):
++	case static_cast<unsigned>(mp::rdwr|mp::exec):
+ 		return file_mode::read|file_mode::write;
+ 	}
+ 
+diff --git a/types/include/aw/types/byte_buffer.h b/types/include/aw/types/byte_buffer.h
+index 82f46934..b38c46a9 100644
+--- a/types/include/aw/types/byte_buffer.h
++++ b/types/include/aw/types/byte_buffer.h
+@@ -8,6 +8,7 @@
+  */
+ #ifndef aw_types_byte_buffer_h
+ #define aw_types_byte_buffer_h
++#include <cstdlib>
+ #include <memory>
+ namespace aw {
+ /**

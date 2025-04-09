@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8e021dc..6dbac46 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -149,9 +149,9 @@ endif()
+ # Pulse
+ if (RTAUDIO_API_PULSE)
+   set(NEED_PTHREAD ON)
+-  find_library(PULSE_LIB pulse)
+-  find_library(PULSESIMPLE_LIB pulse-simple)
+-  list(APPEND LINKLIBS ${PULSE_LIB} ${PULSESIMPLE_LIB})
++  find_package(PkgConfig)
++  pkg_check_modules(pulse-simple REQUIRED IMPORTED_TARGET libpulse-simple)
++  list(APPEND LINKLIBS PkgConfig::pulse-simple)
+   list(APPEND PKGCONFIG_REQUIRES "libpulse-simple")
+   list(APPEND API_DEFS "-D__LINUX_PULSE__")
+   list(APPEND API_LIST "pulse")
+@@ -323,6 +323,10 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/RtAudioConfig.cmake.in "@PACKAGE_INIT@\n"
+ if(NEED_PTHREAD)
+   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/RtAudioConfig.cmake.in "find_package(Threads REQUIRED)\n")
+ endif()
++if (RTAUDIO_API_PULSE)
++  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/RtAudioConfig.cmake.in "find_package(PkgConfig)\n")
++  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/RtAudioConfig.cmake.in "pkg_check_modules(pulse-simple REQUIRED IMPORTED_TARGET libpulse-simple)\n")
++endif()
+ 
+ file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/RtAudioConfig.cmake.in "include(\${CMAKE_CURRENT_LIST_DIR}/RtAudioTargets.cmake)")
+ 

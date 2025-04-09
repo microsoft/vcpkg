@@ -1,6 +1,6 @@
 include(CMakeFindDependencyMacro)
-find_dependency(libsbml-static CONFIG)
+find_dependency(@name@ CONFIG)
 if(NOT TARGET libsbml)
     add_library(libsbml INTERFACE IMPORTED)
-    target_link_libraries(libsbml INTERFACE libsbml-static)
+    target_link_libraries(libsbml INTERFACE $<TARGET_NAME:@name@>)
 endif()

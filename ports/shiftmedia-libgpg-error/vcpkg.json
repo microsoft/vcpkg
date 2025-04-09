@@ -1,6 +1,7 @@
 {
   "name": "shiftmedia-libgpg-error",
   "version": "1.45",
+  "port-version": 1,
   "description": "An unofficial libgpg-error with added native Visual Studio project system",
   "homepage": "https://github.com/ShiftMediaProject/libgpg-error",
   "license": "LGPL-2.1-only",

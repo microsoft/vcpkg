@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SergiusTheBest/plog
-    REF 1.1.9
-    SHA512 d979fdf0011ef9bb94a2271da5d17058dbab5bc47438a13769d084fdebe5e169e7c05a043d69acceb752896df7cdae4433f32bfbcc81e055dffd9c701be88003
+    REF ${VERSION}
+    SHA512 b1d55baadbd16bafa5165b05352f367455b51f2eec2102f1ebad2e6a049954d1b87ffdd96811b0acea2313877db1db837f780971fd027d0db683fe42aeb29573
     HEAD_REF master
 )
 

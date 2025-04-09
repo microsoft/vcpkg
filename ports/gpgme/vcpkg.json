@@ -1,6 +1,6 @@
 {
   "name": "gpgme",
-  "version": "1.22.0",
+  "version": "1.23.2",
   "description": "A library designed to make access to GnuPG easier for applications",
   "homepage": "https://gnupg.org/software/gpgme/",
   "license": null,

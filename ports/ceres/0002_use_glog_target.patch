@@ -1,10 +1,10 @@
 diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
-index 0e33263..299b373 100644
+index f9fc2415..0aaabe4d 100644
 --- a/internal/ceres/CMakeLists.txt
 +++ b/internal/ceres/CMakeLists.txt
-@@ -101,17 +101,9 @@ endif()
- find_package(Threads QUIET)
- list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES Threads::Threads)
+@@ -85,17 +85,9 @@ endif (SCHUR_SPECIALIZATIONS)
+ set_source_files_properties(${CERES_INTERNAL_SCHUR_FILES} PROPERTIES
+   SKIP_UNITY_BUILD_INCLUSION ON)
  
 -if (NOT MINIGLOG AND GLOG_FOUND)
 -  list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES ${GLOG_LIBRARIES})

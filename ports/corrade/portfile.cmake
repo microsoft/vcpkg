@@ -20,7 +20,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
     # Final feature is empty, ignore it
-    if(_feature)
+    if(_feature AND NOT "${_feature}" STREQUAL "dynamic-pluginmanager")
         list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
     endif()
 endforeach()

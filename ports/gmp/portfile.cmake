@@ -2,8 +2,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/
     message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_download_distfile(
     ARCHIVE
     URLS
@@ -11,7 +9,7 @@ vcpkg_download_distfile(
         "https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz"
         "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
     FILENAME "gmp-${VERSION}.tar.xz"
-    SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
+    SHA512 e85a0dab5195889948a3462189f0e0598d331d3457612e2d3350799dba2e244316d256f8161df5219538eb003e4b5343f989aaa00f96321559063ed8c8f29fd2
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -23,7 +21,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         msvc_symbol.patch
         arm64-coff.patch
-        gmp-arm64-asm-fix-5f32dbc41afc.patch # Avoid the x18 register since it is reserved on arm64 osx and windows. Source: https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
+        remove_compiler_info.patch
 )
 
 vcpkg_list(SET OPTIONS)
@@ -82,9 +80,17 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
+if(VCPKG_HOST_IS_WINDOWS)
+    # dumpbin detection fails with autoconf 2.72
+    set(ENV{WANT_AUTOCONF} 2.71)
+endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    ADDITIONAL_MSYS_PACKAGES
+        DIRECT_PACKAGES
+            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
+            dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
     OPTIONS
         ${OPTIONS}
         --enable-cxx
@@ -102,6 +108,7 @@ if(NOT VCPKG_CROSSCOMPILING)
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-fib${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-jacobitab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-psqr${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-sieve${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-trialdivtab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
         USE_SOURCE_PERMISSIONS

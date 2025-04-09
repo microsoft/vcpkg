@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jmcnamara/libxlsxwriter
-    REF "RELEASE_${VERSION}"
-    SHA512 bd7db0fcf25ebf492b4d8f7da8fdb6cc79400d7d0fa5856ddae259cb24817034fc97d4828cbde42434f41198dcfb6732ac63c756abd962689f4249ca64bf19c6
-    HEAD_REF master
-    PATCHES
-        dependencies.diff
-        fix-zlib-ver-required.patch
+    REF "v${VERSION}"
+    SHA512 f89a5ec32526ecc080037710e328467f2231b0f99be5f3b8336fb3be45f0786761fdcf28db57f27f85ece62e88830d770547fdde38545327299f7d041becbaf5
+    HEAD_REF main
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/minizip")
 
@@ -17,7 +14,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DUSE_SYSTEM_MINIZIP=1
         -DWINDOWSSTORE=${USE_WINDOWSSTORE}
 )

@@ -1,0 +1,4 @@
+small-gicp provides CMake targets:
+
+  find_package(small_gicp REQUIRED)
+  target_link_libraries(main PRIVATE small_gicp::small_gicp)

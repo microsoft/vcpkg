@@ -1,11 +1,11 @@
-
-set(GI_MAJOR_MINOR 1.72)
+# vcpkg_from_* is not used because the project uses submodules.
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" GI_MAJOR_MINOR "${VERSION}")
 set(GI_PATCH 0)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.gnome.org/sources/gobject-introspection/${GI_MAJOR_MINOR}/gobject-introspection-${GI_MAJOR_MINOR}.${GI_PATCH}.tar.xz"
-    FILENAME "gobject-introspection-${GI_MAJOR_MINOR}.${GI_PATCH}.tar.xz"
-    SHA512 b8fba2bd12e93776c55228acf3487bef36ee40b1abdc7f681b827780ac94a8bfa1f59b0c30d60fa5a1fea2f610de78b9e52029f411128067808f17eb6374cdc5
+    URLS "https://download.gnome.org/sources/gobject-introspection/${GI_MAJOR_MINOR}/gobject-introspection-${VERSION}.tar.xz"
+    FILENAME "gobject-introspection-${VERSION}.tar.xz"
+    SHA512 e139fadb4174c72b648914f3774d89fc0e5eaee45bba0c13edf05de883664dad8276dbc34006217bb09871ed4bad23adab51ff232a17b9eb131329b2926cafb7
 )
 
 vcpkg_extract_source_archive(
@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
         0003-fix-paths.patch
-        python.patch
+        0004-fastcall.patch # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/498
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -23,10 +23,28 @@ vcpkg_find_acquire_program(BISON)
 
 set(OPTIONS_DEBUG -Dbuild_introspection_data=false)
 set(OPTIONS_RELEASE -Dbuild_introspection_data=true)
-if(VCPKG_CROSSCOMPILING AND
-   NOT (CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"))
-    list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(PYTHON_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(PYTHON_DIR ${CURRENT_HOST_INSTALLED_DIR})
+
+    if(VCPKG_CROSSCOMPILING)
+        # this is work in progress
+        list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
+    endif()
 endif()
+
+find_file(INITIAL_PYTHON3
+    NAMES "python3${VCPKG_HOST_EXECUTABLE_SUFFIX}" "python${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    PATHS "${PYTHON_DIR}/tools/python3"
+    NO_DEFAULT_PATH
+    REQUIRED
+)
+x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3
+    PYTHON_EXECUTABLE "${INITIAL_PYTHON3}"
+    PYTHON_VERSION "3"
+    PACKAGES setuptools
+)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -40,6 +58,7 @@ vcpkg_configure_meson(
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
         g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
         g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'
+        python='${PYTHON3}'
 )
 
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")

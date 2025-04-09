@@ -1,23 +1,19 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.linuxsampler.org/packages/libgig-4.3.0.tar.bz2"
-    FILENAME "libgig-4.3.0.tar.bz2"
-    SHA512 683c09b1d17acf69020c631452b7dfb25ac54c3701db5e97471d4e7973e9a06267667bf19bfe4eb00d2964223e8446f248d93b4cf29c062dec2588758b4dfba2
+    URLS "https://download.linuxsampler.org/packages/libgig-${VERSION}.tar.bz2"
+    FILENAME "libgig-${VERSION}.tar.bz2"
+    SHA512 7844d31acba4bd2f2a499511c3f45ec0a883336193a1422d6d0cd1a8d0c2e97f9f89230176969e5a80b483890914d424eb778338afd583197fdea8bee3c08627
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        0001-msvc-fix-ssize_t.patch
-        0002-cmake-fixes.patch
-        0003-fix-usage.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} dynamic LIBGIG_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        extra-tools LIBGIG_BUILD_TOOLS
+        tools LIBGIG_BUILD_TOOLS
         tests LIBGIG_ENABLE_TESTING
 )
 

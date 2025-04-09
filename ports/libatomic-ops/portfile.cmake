@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ivmai/libatomic_ops
     REF "v${VERSION}"
-    SHA512 2b33aaaef0b4ed995044ba818b6acfedf1a70efea419338eece90b3cb453d7dba6ca55cd7fb36dce6143ede511284e75b6e17cd773d8da8f32d7888cb029dfd1
+    SHA512 6b0ab1c01600346413184f66eaff1f707d1bc46fad9fd52ac855f2c66a55097dfad620c68b898459527142c1eb7ba50fde34498f962f24cec83268500c5bcccb
     HEAD_REF master
 )
 

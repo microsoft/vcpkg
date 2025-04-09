@@ -37,7 +37,7 @@ if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 3.7.2)
+cmake_policy(VERSION 3.16)
 
 include(CMakeDependentOption)
 
@@ -190,7 +190,7 @@ function(z_vcpkg_set_powershell_path)
             set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
         else()
             message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
-            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
+            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell)
             if(Z_VCPKG_BUILTIN_POWERSHELL_PATH)
                 set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
             else()
@@ -218,15 +218,15 @@ endif()
 #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES or the targets IMPORTED_CONFIGURATIONS.
 #In most cases this is the debug configuration which is wrong.
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
-    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
+    set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;None;")
     if(VCPKG_VERBOSE)
-        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;None;")
     endif()
 endif()
 if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
-    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
+    set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;None;")
     if(VCPKG_VERBOSE)
-        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
+        message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;None;")
     endif()
 endif()
 
@@ -364,6 +364,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
     endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD"))
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT openbsd)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Android" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Android"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT android)
 endif()
@@ -591,8 +593,6 @@ endif()
 
 cmake_policy(POP)
 
-# Any policies applied to the below macros and functions appear to leak into consumers
-
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
     _add_executable(${ARGS})
@@ -736,7 +736,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                     set(modifier "${arg}")
                     continue()
                 endif()
-                if(arg MATCHES "^(TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT)$")
+                if(arg MATCHES "^(TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT|FILE_SET)$")
                     set(last_command "${arg}")
                     continue()
                 endif()
@@ -784,6 +784,37 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
 
+    if(z_vcpkg_find_package_backup_id EQUAL "1")
+        # This is the top-level find_package call
+        if("${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+            # Avoid CMake warning when both REQUIRED and CMAKE_REQUIRE_FIND_PACKAGE_<Pkg> are used
+            if(NOT "REQUIRED" IN_LIST "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN")
+                list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                if(DEFINED "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                    set("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" "${CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+                endif()
+                set("CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" 1)
+            endif()
+            if(VCPKG_TRACE_FIND_PACKAGE)
+                message(STATUS "  (required by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}=${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}})")
+            endif()
+        elseif(DEFINED "VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+            list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+            if(DEFINED "CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                set("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" "${CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+            endif()
+            # We don't need to worry about clearing this for transitive users because
+            # once this top level find_package is disabled, we immediately will return
+            # not found and not try to visit transitive dependencies in the first place.
+            set("CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" 1)
+            if(VCPKG_TRACE_FIND_PACKAGE)
+                message(STATUS "  (disabled by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}=${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}})")
+            endif()
+        elseif(VCPKG_TRACE_FIND_PACKAGE)
+            message(STATUS "  (could be controlled by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name})")
+        endif()
+    endif()
+
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
     # the ROOT_PATH at apple OS initialization phase.
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
@@ -799,7 +830,10 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     string(TOLOWER "${z_vcpkg_find_package_package_name}" z_vcpkg_find_package_lowercase_package_name)
     set(z_vcpkg_find_package_vcpkg_cmake_wrapper_path
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
-    if(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+    if(CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name})
+        # Skip wrappers, fail if REQUIRED.
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
+    elseif(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
         if(VCPKG_TRACE_FIND_PACKAGE)
             string(REPEAT "  " "${z_vcpkg_find_package_backup_id}" z_vcpkg_find_package_indent)
             message(STATUS "${z_vcpkg_find_package_indent}using share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
@@ -875,7 +909,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
 endmacro()
 
 cmake_policy(PUSH)
-cmake_policy(VERSION 3.7.2)
+cmake_policy(VERSION 3.16)
 
 set(VCPKG_TOOLCHAIN ON)
 set(Z_VCPKG_UNUSED "${CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION}")
@@ -884,15 +918,20 @@ set(Z_VCPKG_UNUSED "${CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY}")
 set(Z_VCPKG_UNUSED "${CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY}")
 set(Z_VCPKG_UNUSED "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP}")
 
-# Propogate these values to try-compile configurations so the triplet and toolchain load
+# Propagate these values to try-compile configurations so the triplet and toolchain load
 if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
         VCPKG_TARGET_TRIPLET
         VCPKG_TARGET_ARCHITECTURE
-        VCPKG_APPLOCAL_DEPS
+        VCPKG_HOST_TRIPLET
+        VCPKG_INSTALLED_DIR
+        VCPKG_PREFER_SYSTEM_LIBS
+        # VCPKG_APPLOCAL_DEPS # This should be off within try_compile!
         VCPKG_CHAINLOAD_TOOLCHAIN_FILE
         Z_VCPKG_ROOT_DIR
     )
+else()
+    set(VCPKG_APPLOCAL_DEPS OFF)
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)

@@ -1,0 +1,13 @@
+diff --git a/src/osgPlugins/osga/OSGA_Archive.cpp b/src/osgPlugins/osga/OSGA_Archive.cpp
+index b9f518a..19186a7 100644
+--- a/src/osgPlugins/osga/OSGA_Archive.cpp
++++ b/src/osgPlugins/osga/OSGA_Archive.cpp
+@@ -77,7 +77,7 @@ inline OSGA_Archive::pos_type ARCHIVE_POS( const std::streampos & pos )
+ #else // older Dinkumware (eg: one included in Win Server 2003 Platform SDK )
+ 	fpos_t position = pos.get_fpos_t();
+ #endif
+-    std::streamoff offset = pos.operator std::streamoff( ) - _FPOSOFF( position );
++    std::streamoff offset = 0;
+ 
+     return OSGA_Archive::pos_type( position + offset );
+ }

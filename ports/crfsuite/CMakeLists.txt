@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 PROJECT(crfsuite)
 
+if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS 28)
+    set(CMAKE_C_STANDARD 99) # no aligned_alloc
+endif()
+
 file(GLOB SOURCE_FILE_CQDB
     "lib/cqdb/src/*.c"
 )

@@ -1,0 +1,26 @@
+{
+  "name": "qlementine-icons",
+  "version": "1.8.0",
+  "description": "Modern icon set for desktop Qt applications.",
+  "homepage": "https://github.com/oclero/qlementine-icons/",
+  "documentation": "https://oclero.github.io/qlementine-icons/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    "qtsvg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4d53fa6..c426e70 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -218,7 +218,7 @@ target_compile_features(telnetpp
+ target_include_directories(telnetpp
+     PUBLIC
+         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+-        $<INSTALL_INTERFACE:include/telnetpp-${TELNETPP_VERSION}>
++        $<INSTALL_INTERFACE:include>
+ )
+ 
+ generate_export_header(telnetpp

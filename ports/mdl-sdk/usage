@@ -1,0 +1,8 @@
+mdl-sdk provides CMake targets:
+
+  find_package(mdl CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE mdl::mdl_sdk)
+
+  # Or if you want to use only the MDL Core library:
+  find_package(mdl CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE mdl::mdl_core)

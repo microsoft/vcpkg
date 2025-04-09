@@ -1,0 +1,20 @@
+{
+  "name": "vulkan-tools",
+  "version": "1.4.304.1",
+  "description": "Vulkan Development Tools",
+  "homepage": "https://github.com/KhronosGroup/Vulkan-Tools",
+  "license": "Apache-2.0",
+  "supports": "!osx",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "volk",
+    "vulkan-headers"
+  ]
+}

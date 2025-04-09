@@ -1,0 +1,17 @@
+diff --git a/build/cmake/lz4Config.cmake.in b/build/cmake/lz4Config.cmake.in
+index e9c9473..4b48032 100644
+--- a/build/cmake/lz4Config.cmake.in
++++ b/build/cmake/lz4Config.cmake.in
+@@ -1,2 +1,10 @@
+ @PACKAGE_INIT@
+-include( "${CMAKE_CURRENT_LIST_DIR}/lz4Targets.cmake" )
+\ No newline at end of file
++include( "${CMAKE_CURRENT_LIST_DIR}/lz4Targets.cmake" )
++if(NOT TARGET lz4::lz4)
++    add_library(lz4::lz4 INTERFACE IMPORTED)
++    if("@BUILD_SHARED_LIBS@")
++        set_target_properties(lz4::lz4 PROPERTIES INTERFACE_LINK_LIBRARIES LZ4::lz4_shared)
++    else()
++        set_target_properties(lz4::lz4 PROPERTIES INTERFACE_LINK_LIBRARIES LZ4::lz4_static)
++    endif()
++endif()

@@ -1,0 +1,12 @@
+diff --git a/third_party/utf8_range/CMakeLists.txt b/third_party/utf8_range/CMakeLists.txt
+index 344952d38..dd855df17 100644
+--- a/third_party/utf8_range/CMakeLists.txt
++++ b/third_party/utf8_range/CMakeLists.txt
+@@ -63,6 +63,7 @@ if (utf8_range_ENABLE_INSTALL)
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+   )
+ 
+   configure_package_config_file(

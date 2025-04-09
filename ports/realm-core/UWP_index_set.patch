@@ -1,0 +1,13 @@
+diff --git a/src/realm/object-store/index_set.hpp b/src/realm/object-store/index_set.hpp
+index d61e78221..a95338967 100644
+--- a/src/realm/object-store/index_set.hpp
++++ b/src/realm/object-store/index_set.hpp
+@@ -387,7 +387,7 @@ inline ChunkedRangeVectorIterator<T> ChunkedRangeVectorIterator<T>::operator--(i
+ }
+ 
+ template <typename T>
+-#if REALM_WINDOWS && REALM_ARCHITECTURE_ARM64
++#if defined(_MSC_VER) && REALM_ARCHITECTURE_ARM64
+ // Inlining this function crashes msvc when targeting arm64 in as of 19.39.33523
+ __declspec(noinline)
+ #endif

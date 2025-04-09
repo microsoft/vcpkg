@@ -1,6 +1,7 @@
 {
   "name": "curl",
-  "version": "8.4.0",
+  "version": "8.13.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -32,6 +33,32 @@
         "c-ares"
       ]
     },
+    "gnutls": {
+      "description": "SSL support (gnutls)",
+      "dependencies": [
+        {
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
+    "gsasl": {
+      "description": "GSASL support (libgsasl)",
+      "dependencies": [
+        "gsasl"
+      ]
+    },
+    "gssapi": {
+      "description": "krb5 support",
+      "supports": "!windows",
+      "dependencies": [
+        "krb5"
+      ]
+    },
     "http2": {
       "description": "HTTP2 support",
       "dependencies": [
@@ -44,6 +71,9 @@
         },
         "nghttp2"
       ]
+    },
+    "httpsrr": {
+      "description": "enable support for HTTPS RR"
     },
     "idn": {
       "description": "Default IDN support",
@@ -72,6 +102,23 @@
         "libidn2"
       ]
     },
+    "ldap": {
+      "description": "LDAP support",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        },
+        {
+          "name": "openldap",
+          "platform": "!windows"
+        }
+      ]
+    },
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
       "dependencies": [
@@ -85,6 +132,18 @@
       "description": "SSL support (OpenSSL)",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "psl": {
+      "description": "Use psl support (libpsl)",
+      "dependencies": [
+        "libpsl"
+      ]
+    },
+    "rtmp": {
+      "description": "RTMP support",
+      "dependencies": [
+        "librtmp"
       ]
     },
     "schannel": {
@@ -153,6 +212,18 @@
         }
       ]
     },
+    "ssls-export": {
+      "description": "SSL session import/export",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    },
     "sspi": {
       "description": "SSPI support",
       "supports": "windows & !uwp"
@@ -162,21 +233,20 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support (experimental)"
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",
       "supports": "windows"
     },
     "winldap": {
-      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
-      "supports": "windows & !uwp",
+      "description": "Obsolete. Use feature 'ldap' instead.",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "non-http"
+            "ldap"
           ]
         }
       ]

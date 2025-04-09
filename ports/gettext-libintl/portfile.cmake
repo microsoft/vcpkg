@@ -1,11 +1,22 @@
-if(VCPKG_TARGET_IS_LINUX)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    if(NOT EXISTS "/usr/include/libintl.h")
+if(VCPKG_TARGET_IS_LINUX AND NOT X_VCPKG_FORCE_VCPKG_GETTEXT_LIBINTL)
+    set(detection_results "${CURRENT_BUILDTREES_DIR}/detected-intl-${TARGET_TRIPLET}.cmake.log")
+    file(REMOVE "${detection_results}")
+    block(SCOPE_FOR VARIABLES)
+        set(VCPKG_BUILD_TYPE release)
+        vcpkg_cmake_configure(SOURCE_PATH "${CURRENT_PORT_DIR}/detect" OPTIONS "-DOUTFILE=${detection_results}")
+    endblock()
+    include("${detection_results}")
+    message(STATUS "libintl header: ${VCPKG_DETECTED_LIBINTL_H}")
+    if(NOT VCPKG_DETECTED_LIBINTL_H)
         message(FATAL_ERROR
-            "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
-            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+            "When targeting Linux, `libintl.h` is expected to come from a system package. "
+            "Please use the following commands or the equivalent to install development files.\n"
+            "On Debian and Ubuntu derivatives: \"sudo apt-get install libc-dev\"\n"
+            "On Alpine: \"apk add gettext-dev\"\n"
         )
     endif()
+
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
 endif()
@@ -16,14 +27,12 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 ccd43a43fab3c90ed99b3e27628c9aeb7186398153b137a4997f8c7ddfd9729b0ba9d15348567e5206af50ac027673d2b8a3415bb3fc65f87ad778f85dc03a05
+    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        # Shared with port gettext
-        android.patch
         uwp.patch
         0003-Fix-win-unicode-paths.patch
 )
@@ -43,32 +52,25 @@ endif()
 set(OPTIONS
     --no-recursion
     --enable-relocatable #symbol duplication with glib-init.c?
-    --enable-c++
-    --disable-acl
-    --disable-csharp
-    --disable-curses
-    --disable-java
-    --disable-libasprintf
-    --disable-openmp
     --with-included-gettext
     --without-libintl-prefix
-    --disable-dependency-tracking # Faster ?
-    ac_cv_path_DVIPS=:
-    ac_cv_path_GMSGFMT=:
-    ac_cv_path_MSGFMT=:
-    ac_cv_path_MSGMERGE=:
-    ac_cv_path_TEXI2PDF=:
-    ac_cv_path_XGETTEXT=:
-    ac_cv_prog_INTLBISON=:
+    --disable-dependency-tracking
+    ac_cv_path_GMSGFMT=false
+    ac_cv_path_MSGFMT=false
+    ac_cv_path_MSGMERGE=false
+    ac_cv_path_XGETTEXT=false
+    ac_cv_prog_INTLBISON=false
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
         # Avoid unnecessary tests.
         am_cv_func_iconv_works=yes
-        "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
-        ## This is required. For some reason these do not get correctly identified for release builds.
+        # This is required. For some reason these do not get correctly identified for release builds.
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
+        # May trigger debugger window in debug builds, even in unattended builds.
+        # Cf. https://github.com/microsoft/vcpkg/issues/35974
+        gl_cv_func_printf_directive_n=no
     )
     if(NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND OPTIONS
@@ -88,9 +90,8 @@ endif()
 
 file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
 file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-dbg.log")
-vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}/gettext-runtime/intl"
     OPTIONS
         ${OPTIONS}
     OPTIONS_RELEASE
@@ -103,17 +104,18 @@ vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
 # - Avoid an extra command to move a temporary file, we are building out of source.
 # - Avoid a subshell just to add comments, the build dir is temporary.
 # - Avoid cygpath -w when other tools handle this for us.
-file(GLOB_RECURSE makefiles "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}*/intl/Makefile")
+file(GLOB_RECURSE makefiles "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}*/Makefile")
 foreach(file IN LISTS makefiles)
     file(READ "${file}" rules)
     string(REGEX REPLACE "(\n\ttest -d [^ ]* [|][|] [\$][(]MKDIR_P[)][^\n;]*)(\n\t)" "\\1 || exit 1 ; \\\\\\2" rules "${rules}")
     string(REGEX REPLACE "(\n\t){ echo '/[*] [^*]* [*]/'; \\\\\n\t  cat ([^;\n]*); \\\\\n\t[}] > [\$]@-t\n\tmv -f [\$]@-t ([\$]@\n)" "\\1cp \\2 \\3" rules "${rules}")
     string(REGEX REPLACE " > [\$]@-t\n\t[\$][(]AM_V_at[)]mv [\$]@-t ([\$]@\n)" "> \\1" rules "${rules}")
     string(REGEX REPLACE "([\$}[(]COMPILE[)] -c -o [\$]@) `[\$][(]CYGPATH_W[)] '[\$]<'`" "\\1 \$<" rules "${rules}")
+    string(REPLACE "  ../config.h" "  config.h" rules "${rules}")
     file(WRITE "${file}" "${rules}")
 endforeach()
 
-vcpkg_install_make(SUBPATH intl)
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

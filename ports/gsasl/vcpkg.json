@@ -1,0 +1,8 @@
+{
+  "name": "gsasl",
+  "version": "2.2.2",
+  "description": "Simple Authentication and Security Layer framework and a few common SASL mechanisms",
+  "homepage": "https://www.gnu.org/software/gsasl/",
+  "license": "GPL-3.0-or-later",
+  "supports": "!uwp"
+}

@@ -1,0 +1,11 @@
+diff --git a/gwenhywfar.pc.in b/gwenhywfar.pc.in
+index d4c61d8..72a4ef4 100644
+--- a/gwenhywfar.pc.in
++++ b/gwenhywfar.pc.in
+@@ -31,3 +31,6 @@ Version: @VERSION@
+ Libs: @gwenhywfar_ldflags@ @gwenhywfar_libs@
+ Cflags: -I@gwenhywfar_headerdir@
+ 
++Libs.private: @all_libraries@
++@WITH_LIBXML2_CODE_FALSE@Requires.private: libgcrypt, gnutls
++@WITH_LIBXML2_CODE_TRUE@Requires.private: libgcrypt, gnutls, libxml-2.0

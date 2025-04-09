@@ -2,7 +2,8 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
-    devendor-litehtml.patch)
+    devendor-litehtml.patch
+  )
 
 #TODO check features and setup: (means force features!)
 
@@ -82,13 +83,20 @@ elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND TOOL_NAMES macdeployqt)
 endif()
 
+set(unused "")
+if(NOT "assistant" IN_LIST FEATURES)
+  list(APPEND unused QLITEHTML_USE_SYSTEM_LITEHTML CMAKE_REQUIRE_FIND_PACKAGE_litehtml)
+endif()
+
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS 
                            ${FEATURE_OPTIONS}
                            -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
-                     CONFIGURE_OPTIONS_RELEASE
-                     CONFIGURE_OPTIONS_DEBUG
+                           -DQLITEHTML_USE_SYSTEM_LITEHTML:BOOL=ON
+                           -DCMAKE_REQUIRE_FIND_PACKAGE_litehtml:BOOL=ON
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED
+                            ${unused}
                     )
 
 if(VCPKG_TARGET_IS_OSX)

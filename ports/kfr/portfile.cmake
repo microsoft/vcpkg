@@ -3,9 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kfrlib/kfr
-    REF 5.0.1
-    SHA512 e2d19813fd80bfc19e05576103d0500637bc30f7e7780fbe80e9ab5126a9530188965e5cb63d5de508beaceb94c6ff5c2dcf5d5f81fc5aa6122c707e0e155113
-    HEAD_REF master
+    REF "${VERSION}"
+    SHA512 f494aa700cbfb95da8d55f818cafa976a346ef4880b2f85f7c8af8f731b1b48487f10d4ad44a9b2e8cefd08383035173c0487f22080e6f1375f013c556bdb045
+    HEAD_REF main
 )
 
 vcpkg_check_features(
@@ -13,7 +13,6 @@ vcpkg_check_features(
     FEATURES
         capi KFR_ENABLE_CAPI_BUILD
         dft KFR_ENABLE_DFT
-        dft-np KFR_ENABLE_DFT_NP
 )
 
 vcpkg_cmake_configure(
@@ -30,6 +29,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    COMMENT [[
+KFR is distributed under dual GPLv2/v3 and commercial license.
+https://kfrlib.com/purchase
+]]
+    FILE_LIST "${SOURCE_PATH}/LICENSE.txt"
+)

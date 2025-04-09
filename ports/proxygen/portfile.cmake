@@ -2,35 +2,32 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
     REF "v${VERSION}"
-    SHA512 83b294895878c556b855688a78da524d7034a6dc4f1ed9c2b0e73a1bad55df2c4aae94921eb45e173ac0b53ed3ee885194caf37f0dff442f5a343701e4c0ccd8
-    HEAD_REF master
+    SHA512 c0e620097eb7820e4cc9e89ea616c4870b47cb5dcfe8f449bda6cf32412af6d5450c70ce0bb92cbaff01306dcd6c31d649f94ab8751b3dc7a661605d96f65996
+    HEAD_REF main
     PATCHES
         remove-register.patch
-        fix-zstd-zlib-dependency.patch
+        folly-has-liburing.diff
         fix-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_PATH})
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DPROXYGEN_PYTHON=${PYTHON3}"
+        -DVCPKG_LOCK_FIND_PACKAGE_gflags=ON
+        -DCMAKE_INSTALL_DIR=share/proxygen
 )
 
 vcpkg_cmake_install()
-
-vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
+
+vcpkg_copy_tools(TOOL_NAMES hq proxygen_curl proxygen_echo proxygen_h3datagram_client proxygen_httperf2 proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

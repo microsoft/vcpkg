@@ -2,7 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brainboxdotcc/DPP
     REF "v${VERSION}"
-    SHA512 5fa1e807eaeb8ecf53d55e537a804ae1135018008d7b6f4e42225ee21ca975b7f3662f60777527395f8f0672a66077f2a3e95c9a3074f819187921e114ac03f5
+    SHA512 3ebbe762cc8aaa606a5eaef06b9c2de7986decfe380f7348d5393a550af2d01ba7c6505271dad60e0fe0acb1904268eac5cf4981fe2f5042e06293aaa45ab523
+    PATCHES
+        "include.patch"
 )
 
 vcpkg_cmake_configure(

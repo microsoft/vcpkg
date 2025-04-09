@@ -1,0 +1,34 @@
+{
+  "name": "kf5texteditor",
+  "version": "5.98.0",
+  "port-version": 2,
+  "description": "Full text editor component",
+  "homepage": "https://api.kde.org/frameworks/ktexteditor/html/",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
+    "kf5archive",
+    "kf5config",
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5kio",
+    "kf5parts",
+    "kf5sonnet",
+    "kf5syntaxhighlighting",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

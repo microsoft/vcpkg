@@ -1,0 +1,22 @@
+diff --git a/cmake/install_macros.cmake b/cmake/install_macros.cmake
+index c45fda7..b862597 100644
+--- a/cmake/install_macros.cmake
++++ b/cmake/install_macros.cmake
+@@ -46,7 +46,7 @@ MACRO(INSTALL_DEBUG_SYMBOLS target)
+     # No .pdb file for static libraries.
+     IF(NOT type MATCHES "STATIC_LIBRARY")
+       INSTALL(FILES $<TARGET_PDB_FILE:${target}>
+-        DESTINATION ${INSTALL_LOCATION} COMPONENT ${comp})
++        DESTINATION bin COMPONENT ${comp})
+     ENDIF()
+   ENDIF()
+ ENDMACRO()
+@@ -307,7 +307,7 @@ FUNCTION(INSTALL_DEBUG_TARGET target)
+     ENDIF()
+ 
+     INSTALL(FILES ${debug_pdb_target_location}
+-      DESTINATION ${ARG_DESTINATION}
++      DESTINATION bin
+       ${PDB_RENAME_PARAM}
+       CONFIGURATIONS Release RelWithDebInfo
+       COMPONENT ${ARG_COMPONENT}

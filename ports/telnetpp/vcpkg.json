@@ -1,11 +1,11 @@
 {
   "name": "telnetpp",
-  "version": "2.1.2",
-  "port-version": 3,
-  "description": "Telnet++ is an implementation of the Telnet Session Layer protocol using C++14",
+  "version": "3.1.0",
+  "description": "Telnet++ is an implementation of the Telnet Session Layer protocol using C++17",
   "homepage": "https://github.com/KazDragon/telnetpp",
   "supports": "!uwp",
   "dependencies": [
+    "boost-algorithm",
     "boost-container",
     "boost-exception",
     "boost-range",

@@ -13,13 +13,13 @@ vcpkg_extract_source_archive(
         gaiaconfig-msvc.patch
         fix-mingw.patch
         fix-utf8-source.patch
+        android-builtin-iconv.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
     FEATURES
         freexl          ENABLE_FREEXL
         gcp             ENABLE_GCP
-        geocallbacks    ENABLE_GEOCALLBACKS
         rttopo          ENABLE_RTTOPO
 )
 
@@ -38,9 +38,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     if(ENABLE_GCP)
         string(APPEND CL_FLAGS " /DENABLE_GCP")
-    endif()
-    if(NOT ENABLE_GEOCALLBACKS)
-        string(APPEND CL_FLAGS " /DOMIT_GEOCALLBACKS")
     endif()
     if(ENABLE_RTTOPO)
         string(APPEND CL_FLAGS " /DENABLE_RTTOPO")
@@ -163,6 +160,8 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         # Avoid system libs (as detected by cmake) in exported pc files
         set(SYSTEM_LIBS "")
+    elseif(VCPKG_TARGET_IS_ANDROID)
+        set(SYSTEM_LIBS "\$LIBS -llog")
     else()
         set(SYSTEM_LIBS "\$LIBS")
     endif()
@@ -184,10 +183,10 @@ else()
             ${TARGET_ALIAS}
             ${FREEXL_OPTION}
             ${GCP_OPTION}
-            ${GEOCALLBACKS_OPTION}
             ${RTTOPO_OPTION}
             "--disable-examples"
             "--disable-minizip"
+            "cross_compiling=yes" # avoid conftest rpath trouble
         OPTIONS_DEBUG
             "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
         OPTIONS_RELEASE
@@ -201,7 +200,7 @@ else()
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Makefile"
     )
     foreach(makefile IN LISTS makefiles)
-        vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers")
+        vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers" IGNORE_UNCHANGED)
     endforeach()
 
     vcpkg_install_make()

@@ -1,12 +1,11 @@
 diff --git a/include/pqxx/internal/header-pre.hxx b/include/pqxx/internal/header-pre.hxx
-index abc1a39..cba0242 100644
+index 833d583..21b7400 100644
 --- a/include/pqxx/internal/header-pre.hxx
 +++ b/include/pqxx/internal/header-pre.hxx
-@@ -90,6 +90,12 @@
+@@ -101,6 +101,11 @@
  // Workarounds for Microsoft Visual C++
  #  ifdef _MSC_VER
  
-+ 
 +// Workarounds for deprecated attribute syntax error in Visual Studio 2017.
 +#    if _MSC_VER < 1920
 +#      define PQXX_DEPRECATED(MESSAGE) __declspec(deprecated( #MESSAGE ))
@@ -15,7 +14,7 @@ index abc1a39..cba0242 100644
  // Suppress vtables on abstract classes.
  #    define PQXX_NOVTABLE __declspec(novtable)
  
-@@ -159,6 +165,10 @@
+@@ -170,6 +175,10 @@
  #  define PQXX_NOVTABLE /* novtable */
  #endif
  
@@ -27,7 +26,7 @@ index abc1a39..cba0242 100644
  #if defined(PQXX_HAVE_LIKELY)
  #  define PQXX_LIKELY [[likely]]
 diff --git a/include/pqxx/stream_from.hxx b/include/pqxx/stream_from.hxx
-index 1e8a272..299248c 100644
+index b275a7f..c63a80f 100644
 --- a/include/pqxx/stream_from.hxx
 +++ b/include/pqxx/stream_from.hxx
 @@ -160,7 +160,7 @@ public:
@@ -73,10 +72,10 @@ index 1e8a272..299248c 100644
      Iter columns_end);
  
 diff --git a/include/pqxx/stream_to.hxx b/include/pqxx/stream_to.hxx
-index 2a49d8f..06e602e 100644
+index 281af28..838003d 100644
 --- a/include/pqxx/stream_to.hxx
 +++ b/include/pqxx/stream_to.hxx
-@@ -169,7 +169,7 @@ public:
+@@ -248,7 +248,7 @@ public:
     * your data fields and the table is explicit in your code, and not hidden
     * in an "implicit contract" between your code and your schema.
     */
@@ -85,7 +84,7 @@ index 2a49d8f..06e602e 100644
      transaction_base &tx, std::string_view table_name) :
            stream_to{tx, table_name, ""sv}
    {}
-@@ -178,14 +178,14 @@ public:
+@@ -257,7 +257,7 @@ public:
    /** @deprecated Use @ref table or @ref raw_table as a factory.
     */
    template<typename Columns>
@@ -93,12 +92,4 @@ index 2a49d8f..06e602e 100644
 +  PQXX_DEPRECATED("Use table() or raw_table() factory.") stream_to(
      transaction_base &, std::string_view table_name, Columns const &columns);
  
-   /// Create a stream, specifying column names as a sequence of strings.
-   /** @deprecated Use @ref table or @ref raw_table as a factory.
-    */
-   template<typename Iter>
--  [[deprecated("Use table() or raw_table() factory.")]] stream_to(
-+  PQXX_DEPRECATED("Use table() or raw_table() factory.") stream_to(
-     transaction_base &, std::string_view table_name, Iter columns_begin,
-     Iter columns_end);
- 
+ private:

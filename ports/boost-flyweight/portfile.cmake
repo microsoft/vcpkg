@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/flyweight
-    REF boost-1.83.0
-    SHA512 c054403707a0574c0b2e5c7f34521153f604ae17d10a52ed7ff8e222d006ff4875d3e479abacce18c59edd2d44d8fec63f22a806d7a203094ce9e885ffbd903b
+    REF boost-${VERSION}
+    SHA512 a2c6fe6a70278afdea514c9bba15b4e5075e3dd1d7a3137a95bad4813e46d1de82f26436185ab36f5528f4cb0e2fc805e236eb3b1dd6b9ecfc3e35ed019a966e
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

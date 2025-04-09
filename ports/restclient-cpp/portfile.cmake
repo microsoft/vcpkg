@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mrtazz/restclient-cpp
-    REF b782bd26539a3d1a8edcb6d8a3493b111f8fac66 #v2022-02-009
-    SHA512 992b2c067c7b672432a202fea6b5263ff51ca77facace5078077e77e57390d3ddcb99e0e20ad1a1595612efbb625d34f4d2cd8c4a2ac4bb33e3f9d5d28c2c579
+    REF fdf722bbab55d0838200dfbf2c3a2815741c8a7e #v2024-01-09
+    SHA512 da1c0286b782c7baa3c40bf5bede5c78e0adde9a3172233cbdede792705b074c26e746f192cccb2eded4bf528f10d1fd5bc276fc1b6a3b9cc695fbeb9feadfff
     HEAD_REF master
 )
 

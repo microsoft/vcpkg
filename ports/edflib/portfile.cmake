@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Teuniz/EDFlib
     REF "v${VERSION}"
-    SHA512 3994d108efa45f49c4b9b68e6cfd10997b0c379631c1096dad7dd637cabe69c946d02e4204883308439ee5c9fe2382fc2f533ea14fe36bbbe6cedbaf04736b67
+    SHA512 ad5f9be5a10d0e83a80242cdb088db8ae697ee6e723a7c5459cef95b5eba16c54d8bc2493b66d5114a8d1782505b2d2c63c9a5ce96c09dcca89489cd43fa6012
     HEAD_REF master
 )
 
@@ -46,4 +46,4 @@ if ("tools" IN_LIST FEATURES)
     )
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,6 @@
 {
   "name": "cgns",
-  "version-semver": "4.4.0",
+  "version-semver": "4.5.0",
   "description": "The CFD General Notation System (CGNS) provides a standard for recording and recovering computer data associated with the numerical solution of fluid dynamics equations.",
   "homepage": "http://cgns.org/",
   "license": "Zlib",
@@ -16,7 +16,10 @@
   ],
   "default-features": [
     "hdf5",
-    "lfsselector"
+    {
+      "name": "lfs",
+      "platform": "!osx"
+    }
   ],
   "features": {
     "fortran": {
@@ -27,10 +30,7 @@
       "dependencies": [
         {
           "name": "hdf5",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
+          "default-features": false
         }
       ]
     },
@@ -40,22 +40,16 @@
     "lfs": {
       "description": "Enable LFS support"
     },
-    "lfsselector": {
-      "description": "Selector for LFS",
+    "mpi": {
+      "description": "Enable MPI support",
       "dependencies": [
         {
           "name": "cgns",
           "default-features": false,
           "features": [
-            "lfs"
-          ],
-          "platform": "!osx"
-        }
-      ]
-    },
-    "mpi": {
-      "description": "Enable MPI support",
-      "dependencies": [
+            "hdf5"
+          ]
+        },
         {
           "name": "hdf5",
           "default-features": false,
@@ -67,9 +61,6 @@
     },
     "tests": {
       "description": "Build tests"
-    },
-    "tools": {
-      "description": "No effects, preserved for upgrade compatibility"
     }
   }
 }

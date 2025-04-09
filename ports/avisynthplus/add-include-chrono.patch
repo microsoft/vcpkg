@@ -1,0 +1,24 @@
+diff --git a/avs_core/core/avisynth.cpp b/avs_core/core/avisynth.cpp
+index c66d39e..5bc61a3 100644
+--- a/avs_core/core/avisynth.cpp
++++ b/avs_core/core/avisynth.cpp
+@@ -45,6 +45,7 @@
+ #include "FilterConstructor.h"
+ #include "PluginManager.h"
+ #include "MappedList.h"
++#include <chrono>
+ #include <vector>
+ #include <iostream>
+ #include <fstream>
+diff --git a/avs_core/core/cache.cpp b/avs_core/core/cache.cpp
+index 76eb7cf..957e102 100644
+--- a/avs_core/core/cache.cpp
++++ b/avs_core/core/cache.cpp
+@@ -38,6 +38,7 @@
+ #include "InternalEnvironment.h"
+ #include "DeviceManager.h"
+ #include <cassert>
++#include <chrono>
+ #include <cstdio>
+ 
+ #ifdef X86_32

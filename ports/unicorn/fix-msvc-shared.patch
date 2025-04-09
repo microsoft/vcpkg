@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1acc0b5..a4b70d4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1427,9 +1427,8 @@ endif()
+ if (BUILD_SHARED_LIBS)
+     if (MSVC)
+         # Avoid the import lib built by MVSC clash with our archive.
+-        set_target_properties(unicorn PROPERTIES ARCHIVE_OUTPUT_NAME "unicorn-import")
++        set_target_properties(unicorn PROPERTIES ARCHIVE_OUTPUT_NAME "unicorn")
+     endif()
+-    bundle_static_library(unicorn_static unicorn_archive unicorn)
+ else()
+     # Rename the "static" lib to avoid filename clash.
+     set_target_properties(unicorn PROPERTIES OUTPUT_NAME "unicorn-static")
+@@ -1496,7 +1495,9 @@ if(UNICORN_INSTALL)
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         )
+     endif()
+-    install(FILES $<TARGET_FILE:unicorn_archive> DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    if(NOT(BUILD_SHARED_LIBS))
++        install(FILES $<TARGET_FILE:unicorn_archive> DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    endif()
+     install(FILES ${UNICORN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/unicorn)
+     if (ATOMIC_LINKAGE_FIX)
+         set(ATOMIC_LINK_PKG_CONFIG " -latomic")

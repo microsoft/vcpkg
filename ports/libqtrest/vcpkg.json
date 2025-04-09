@@ -1,0 +1,29 @@
+{
+  "name": "libqtrest",
+  "version": "0.4.0",
+  "description": "Small and simple REST API (Json/Xml) client for any Qt/QML C++ application",
+  "homepage": "https://github.com/qtrest/qtrest",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Enable QML support to compile with required dependencies",
+      "dependencies": [
+        {
+          "name": "qt5-declarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

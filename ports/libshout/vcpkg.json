@@ -1,0 +1,27 @@
+{
+  "name": "libshout",
+  "version": "2.4.6",
+  "description": "A library for communicating with and sending data to an Icecast server.",
+  "homepage": "https://gitlab.xiph.org/xiph/icecast-libshout",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!windows",
+  "dependencies": [
+    "libogg",
+    "libtheora",
+    "libvorbis",
+    "openssl",
+    "pthread",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
+  "features": {
+    "speex": {
+      "description": "Enable support for Speex codec",
+      "dependencies": [
+        "speex"
+      ]
+    }
+  }
+}

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO benhoyt/inih
-    REF r57
-    SHA512 9f758df876df54ed7e228fd82044f184eefbe47e806cd1e6d62e1b0ea28e2c08e67fa743042d73b4baef0b882480e6afe2e72878b175822eb2bdbb6d89c0e411
+    REF "r${VERSION}"
+    SHA512 cd5ee8796c1be1ff7f589069ec90fee6fc4464ae7b2f0b39600ab08cf01cda9e4c006aa1cba0ee3c78df0111de5da23fa314816bfd327e34211a0dfcfa1d993b
     HEAD_REF master
 )
 

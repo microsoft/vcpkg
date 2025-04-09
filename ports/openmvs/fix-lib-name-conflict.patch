@@ -1,0 +1,12 @@
+diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
+index 18899af..1dd2c8d 100644
+--- a/libs/Common/CMakeLists.txt
++++ b/libs/Common/CMakeLists.txt
+@@ -16,6 +16,7 @@ TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
+ 
+ # Install
+ SET_TARGET_PROPERTIES(Common PROPERTIES
++	OUTPUT_NAME "OpenMVS_Common"
+ 	PUBLIC_HEADER "${LIBRARY_FILES_H}")
+ INSTALL(TARGETS Common
+ 	EXPORT OpenMVSTargets

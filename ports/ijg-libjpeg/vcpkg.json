@@ -1,7 +1,7 @@
 {
   "name": "ijg-libjpeg",
   "version-string": "9e",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Independent JPEG Group's JPEG software",
   "homepage": "http://www.ijg.org/",
   "license": null,

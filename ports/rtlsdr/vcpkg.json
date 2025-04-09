@@ -1,15 +1,16 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "rtlsdr",
-  "version-date": "2020-04-16",
-  "port-version": 4,
+  "version": "2.0.2",
   "description": "rtl-sdr is a library that turns your Realtek RTL2832 based DVB dongle into a SDR receiver",
   "homepage": "https://osmocom.org/projects/rtl-sdr",
-  "supports": "windows & (x86 | x64)",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp",
   "dependencies": [
     "libusb",
     {
       "name": "pthreads",
-      "platform": "windows"
+      "platform": "windows & !mingw"
     },
     {
       "name": "vcpkg-cmake",
@@ -19,5 +20,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "supports": "!android"
+    }
+  }
 }

@@ -1,7 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+param([string]$SasToken)
+
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
 <#
 .SYNOPSIS

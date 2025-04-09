@@ -1,0 +1,16 @@
+diff --git a/Makefile.am b/Makefile.am
+index c004167..0fafe72 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,10 +2,9 @@
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = m4 build util gmime tests docs
++SUBDIRS = m4 build util gmime
+ 
+ if !PLATFORM_WIN32
+-SUBDIRS += examples
+ endif
+ 
+ SUBDIRS += tools .

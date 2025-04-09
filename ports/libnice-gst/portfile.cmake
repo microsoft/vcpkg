@@ -2,11 +2,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libnice/libnice
-    REF 0.1.21
-    SHA512 8808523d663da5974e81ffeef10812b758792b1f762edc1f3713d09962598a8a30d17ac1985438361d2a284b9bc82b5ba1e8d73c6e1ca86c93901bc06b634e9a
+    REF 0.1.22
+    SHA512 545c759a827e039d0aed262a4ec31b17610f7e67d93389c939763ed3d99530a4a6c3d13864ff05a2011fb3c3847ce3380a988e554de0f92b1348ebb76f5e3da4
     HEAD_REF master
     PATCHES
-    skip_libnice.patch
+       skip_libnice.patch
 )
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
@@ -64,10 +64,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}"
                     "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        if(VCPKG_TARGET_IS_WINDOWS)
+        if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb"
                         "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/gstnice.pdb")
-        else()
+        endif()
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
 
@@ -77,10 +78,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins/gstreamer")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}"
                     "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        if(VCPKG_TARGET_IS_WINDOWS)
+        if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb"
                         "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/gstnice.pdb")
-        else()
+        endif()
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
         endif()
 

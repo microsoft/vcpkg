@@ -14,8 +14,12 @@ file(COPY "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h" DESTINATION "${SO
 
 vcpkg_find_acquire_program(PYTHON3)
 
+if("ext" IN_LIST FEATURES)
+    set(EXT "--ext")
+endif()
+
 vcpkg_execute_required_process(
-  COMMAND "${PYTHON3}" "${SOURCE_PATH}/gl3w_gen.py"
+  COMMAND "${PYTHON3}" "${SOURCE_PATH}/gl3w_gen.py" "${EXT}"
   WORKING_DIRECTORY "${SOURCE_PATH}"
   LOGNAME gl3w-gen
 )

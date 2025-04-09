@@ -1,0 +1,47 @@
+{
+  "$comment": "Dependencies extracted from e.g. https://sdk.lunarg.com/sdk/download/1.3.290.0/windows/config.json",
+  "name": "vulkan-sdk-components",
+  "version": "1.4.304.1",
+  "description": "Installs packages which are part of the Vulkan SDK.",
+  "license": null,
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "directx-dxc",
+      "platform": "windows"
+    },
+    "glm",
+    "glslang",
+    "jsoncpp",
+    {
+      "name": "mimalloc",
+      "platform": "windows"
+    },
+    "robin-hood-hashing",
+    "sdl2",
+    "shaderc",
+    "spirv-cross",
+    "spirv-headers",
+    "valijson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "volk",
+    "vulkan",
+    "vulkan-memory-allocator",
+    "vulkan-utility-libraries",
+    "vulkan-validationlayers"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build Vulkan related tools",
+      "dependencies": [
+        "lunarg-vulkantools",
+        "spirv-reflect",
+        "spirv-tools",
+        "vulkan-tools"
+      ]
+    }
+  }
+}

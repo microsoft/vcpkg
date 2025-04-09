@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ableton/link
-    REF Link-3.0.6
-    SHA512 7dd811d3b7792722a8754cd0875777b8cf4902a0babff2822a6fd997137eb5feac576263169c71fca24358189e56b5106a32ae1313b33fb6148eb845691a6438
+    REF "Link-${VERSION}"
+    SHA512 889aa8cf56df19631a15cc4e245f3b7165a1d08aa199446de3b209c5be58904c11776899e9202900e73cc90ea63d366c6c3b2628657dac96db5a16a5217b3df7
     HEAD_REF master
     PATCHES
         replace_local_asiostandalone_by_vcpkg_asio.patch
@@ -39,7 +39,7 @@ endif()
 
 set(NEED_ASIOSDK OFF)
 if ("hut" IN_LIST FEATURES)
-  if(WIN32)
+  if(VCPKG_TARGET_IS_WINDOWS)
     # Need Steinberg ASIO audio driver SDK (only this low-latency audio driver makes the developer tool 'hut' useful on Windows)
     set(NEED_ASIOSDK ON)
   endif()
@@ -76,8 +76,8 @@ vcpkg_apply_patches(
         correct_cmake_include_directory.patch
 )
 
-file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
-file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake_include/")
+file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink")
+file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink/cmake_include/")
 file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" PATTERN "CMakeLists.txt" EXCLUDE)
 
 # Handle copyright

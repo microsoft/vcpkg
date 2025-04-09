@@ -1,7 +1,7 @@
 {
   "name": "libopnmidi",
   "version": "1.5.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "libOPNMIDI is a free Software MIDI synthesizer library with OPN2 (YM2612) and OPNA (YM2608) emulation",
   "homepage": "https://github.com/Wohlstand/libOPNMIDI",
   "license": "LGPL-2.1-or-later OR GPL-2.0-or-later OR GPL-3.0-or-later OR MIT",

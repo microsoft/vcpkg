@@ -3,15 +3,15 @@
 
 if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://bcms.bloomberg.com/BLPAPI-Generic/blpapi_cpp_3.20.2.1-linux.tar.gz"
-        FILENAME "blpapi_cpp_3.20.2.1-linux.tar.gz"
-        SHA512 4d4cf999d6cc2bf924dfb79fdabd2a30c2d1251e4e56fe856684c4f8e0be03dcd33f69d75f8706d381bb35ad4b1ad954a5cc88156a80e053f2601d8257815863
+        URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_${VERSION}.1-linux.tar.gz"
+        FILENAME "blpapi_cpp_${VERSION}.1-linux.tar.gz"
+        SHA512 3D1FC0E8E37E21EE53310649EA7D915A4E991DD2FCA400FCD5E490C4533F6C83710426C5D98927631BBDB2622D9FFA864096C82F275DC1C547FCAFE9D1013895
     )
 elseif (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://bcms.bloomberg.com/BLPAPI-Generic/blpapi_cpp_3.20.2.2-windows.zip"
-        FILENAME "blpapi_cpp_3.20.2.2-windows.zip"
-        SHA512 f6e66d75a8f16c014737ae813c65304e38423e5ab955eb98fb7f487eecda06bcc9d84733b55957ac577f689da2af753fdeb132feb0eb02a9ec38e8f3868ad795
+        URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_${VERSION}.1-windows.zip"
+        FILENAME "blpapi_cpp_${VERSION}.1-windows.zip"
+        SHA512 ED57BF390417D6ED189A3D4379DAE5716441627B20C63B8BEBAAC0AD66C32B89D17697B1C5CE79010F7FFF3F71BC6EC57D15A5D79B597F3507A0A4D2658A6103
     )
 endif()
 
@@ -57,4 +57,4 @@ file(COPY ${CMAKE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

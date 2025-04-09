@@ -1,0 +1,16 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 73fc68c..4a606d6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -90,6 +90,11 @@ IF (BUILD_SHARED_LIBS)
+         OUTPUT_NAME ${LIBRARY_DYN_NAME} CLEAN_DIRECT_OUTPUT 1
+     )
+ 
++    TARGET_INCLUDE_DIRECTORIES(libwildmidi INTERFACE
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++        $<INSTALL_INTERFACE:include>
++    )
++
+     IF (WIN32)
+         SET_TARGET_PROPERTIES(libwildmidi PROPERTIES
+             DEFINE_SYMBOL DLL_EXPORT

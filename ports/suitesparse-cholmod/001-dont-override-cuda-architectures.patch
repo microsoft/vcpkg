@@ -1,0 +1,47 @@
+Respect CMAKE_CUDA_ARCHITECTURES, so they can be set by the user in the triplet file.
+
+Also make the CUDA warnings fatal since we are always strictly enabling/disabling CUDA.
+
+--- a/SuiteSparse_config/cmake_modules/SuiteSparsePolicy.cmake
++++ b/SuiteSparse_config/cmake_modules/SuiteSparsePolicy.cmake
+@@ -321,7 +321,7 @@
+ if ( SUITESPARSE_USE_CUDA )
+ 
+     # try finding CUDA
+-    check_language ( CUDA )
++    enable_language ( CUDA )
+     # message ( STATUS "Looking for CUDA" )
+     if ( CMAKE_CUDA_COMPILER )
+         # with CUDA:
+@@ -334,7 +334,7 @@
+         message ( STATUS "CUDA toolkit lib: " ${CUDAToolkit_LIBRARY_DIR} )
+         if ( CUDAToolkit_VERSION VERSION_LESS "11.2" )
+             # CUDA is present but too old
+-            message ( STATUS "CUDA:               not enabled (CUDA 11.2 or later required)" )
++            message ( FATAL_ERROR "CUDA 11.2 or later is required" )
+             set ( SUITESPARSE_HAS_CUDA OFF )
+         else ( )
+             # CUDA 11.2 or later present
+@@ -343,7 +343,7 @@
+         endif ( )
+     else ( )
+         # without CUDA:
+-        message ( STATUS "CUDA:             not found" )
++        message ( FATAL_ERROR "CUDA not found" )
+         set ( SUITESPARSE_HAS_CUDA OFF )
+     endif ( )
+ 
+@@ -354,13 +354,6 @@
+ 
+ endif ( )
+ 
+-if ( SUITESPARSE_HAS_CUDA )
+-    message ( STATUS "CUDA:             enabled" )
+-    set ( SUITESPARSE_CUDA_ARCHITECTURES "52;75;80" CACHE STRING "CUDA architectures" )
+-    set ( CMAKE_CUDA_ARCHITECTURES ${SUITESPARSE_CUDA_ARCHITECTURES} )
+-else ( )
+-    message ( STATUS "CUDA:             not enabled" )
+-endif ( )
+ 
+ # check for strict usage
+ if ( SUITESPARSE_USE_STRICT AND SUITESPARSE_USE_CUDA AND NOT SUITESPARSE_HAS_CUDA )

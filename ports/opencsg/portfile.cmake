@@ -1,23 +1,25 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+string(REPLACE "." "-" VERSION_CSG "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO floriankirsch/OpenCSG
-    REF "opencsg-1-4-2-release"
-    SHA512 df117a1b7153a95332d236918d1547b0afe6f3ead46af2733c5feee6e25cec984b21affc41fd8320a45be9292bd3b32e21ed8bb3d08371ddd657f659b9bb932a
+    REF "opencsg-${VERSION_CSG}-release"
+    SHA512 9c674553ff0bccd35b34475019f53f4dda900c4b26635e6f52871b81e974a9c6319891c1d42e387606ccb0a890dcbb286baa424ce240f78493ef6f920c0bcb3a
     HEAD_REF master
-    PATCHES illegal_char.patch
+    PATCHES
+        illegal_char.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DUNICODE=1 -D_UNICODE=1
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS_DEBUG
+        -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/license/gpl-2.0.txt" "${SOURCE_PATH}/doc/license/gpl-3.0.txt")

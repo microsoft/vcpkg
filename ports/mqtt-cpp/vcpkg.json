@@ -1,6 +1,6 @@
 {
   "name": "mqtt-cpp",
-  "version-semver": "13.1.0",
+  "version-semver": "13.2.1",
   "description": "Header-only MQTT client/server for C++14 based on Boost.Asio.",
   "homepage": "https://github.com/redboltz/mqtt_cpp",
   "license": "BSL-1.0",

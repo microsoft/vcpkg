@@ -1,6 +1,6 @@
 {
   "name": "paraview",
-  "version": "5.11.0",
+  "version": "5.12.1",
   "port-version": 4,
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",

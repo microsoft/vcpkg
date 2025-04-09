@@ -5,61 +5,61 @@ index adab7a58d..f6dc2278e 100644
 +++ b/config.h
 @@ -11,19 +11,19 @@
  
- /* Define to 1 if you have the declaration of `acosh', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'acosh', and to 0 if you don't.
     */
 -#undef HAVE_DECL_ACOSH
 +#define HAVE_DECL_ACOSH 1
  
- /* Define to 1 if you have the declaration of `asinh', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'asinh', and to 0 if you don't.
     */
 -#undef HAVE_DECL_ASINH
 +#define HAVE_DECL_ASINH 1
  
- /* Define to 1 if you have the declaration of `atanh', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'atanh', and to 0 if you don't.
     */
 -#undef HAVE_DECL_ATANH
 +#define HAVE_DECL_ATANH 1
  
- /* Define to 1 if you have the declaration of `expm1', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'expm1', and to 0 if you don't.
     */
 -#undef HAVE_DECL_EXPM1
 +#define HAVE_DECL_EXPM1 1
  
- /* Define to 1 if you have the declaration of `feenableexcept', and to 0 if
+ /* Define to 1 if you have the declaration of 'feenableexcept', and to 0 if
     you don't. */
 @@ -43,31 +43,31 @@
  
- /* Define to 1 if you have the declaration of `frexp', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'frexp', and to 0 if you don't.
     */
 -#undef HAVE_DECL_FREXP
 +#define HAVE_DECL_FREXP 1
  
- /* Define to 1 if you have the declaration of `hypot', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'hypot', and to 0 if you don't.
     */
 -#undef HAVE_DECL_HYPOT
 +#define HAVE_DECL_HYPOT 1
  
- /* Define to 1 if you have the declaration of `isfinite', and to 0 if you
+ /* Define to 1 if you have the declaration of 'isfinite', and to 0 if you
     don't. */
 -#undef HAVE_DECL_ISFINITE
 +#define HAVE_DECL_ISFINITE 1
  
- /* Define to 1 if you have the declaration of `isinf', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'isinf', and to 0 if you don't.
     */
 -#undef HAVE_DECL_ISINF
 +#define HAVE_DECL_ISINF 1
  
- /* Define to 1 if you have the declaration of `isnan', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'isnan', and to 0 if you don't.
     */
 -#undef HAVE_DECL_ISNAN
 +#define HAVE_DECL_ISNAN 1
  
- /* Define to 1 if you have the declaration of `ldexp', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'ldexp', and to 0 if you don't.
     */
 -#undef HAVE_DECL_LDEXP
 +#define HAVE_DECL_LDEXP 1
  
- /* Define to 1 if you have the declaration of `log1p', and to 0 if you don't.
+ /* Define to 1 if you have the declaration of 'log1p', and to 0 if you don't.
     */
 -#undef HAVE_DECL_LOG1P
 +#define HAVE_DECL_LOG1P 1
@@ -89,14 +89,14 @@ index adab7a58d..f6dc2278e 100644
 -#undef HAVE_INTTYPES_H
 +#define HAVE_INTTYPES_H 1
  
- /* Define to 1 if you have the `m' library (-lm). */
+ /* Define to 1 if you have the 'm' library (-lm). */
  #undef HAVE_LIBM
  
- /* Define to 1 if you have the `memcpy' function. */
+ /* Define to 1 if you have the 'memcpy' function. */
 -#undef HAVE_MEMCPY
 +#define HAVE_MEMCPY 1
  
- /* Define to 1 if you have the `memmove' function. */
+ /* Define to 1 if you have the 'memmove' function. */
 -#undef HAVE_MEMMOVE
 +#define HAVE_MEMMOVE 1
  
@@ -115,7 +115,7 @@ index adab7a58d..f6dc2278e 100644
 -#undef HAVE_STDLIB_H
 +#define HAVE_STDLIB_H 1
  
- /* Define to 1 if you have the `strdup' function. */
+ /* Define to 1 if you have the 'strdup' function. */
 -#undef HAVE_STRDUP
 +#define HAVE_STRDUP 1
  
@@ -126,11 +126,11 @@ index adab7a58d..f6dc2278e 100644
 -#undef HAVE_STRING_H
 +#define HAVE_STRING_H 1
  
- /* Define to 1 if you have the `strtol' function. */
+ /* Define to 1 if you have the 'strtol' function. */
 -#undef HAVE_STRTOL
 +#define HAVE_STRTOL 1
  
- /* Define to 1 if you have the `strtoul' function. */
+ /* Define to 1 if you have the 'strtoul' function. */
 -#undef HAVE_STRTOUL
 +#define HAVE_STRTOUL 1
  
@@ -139,14 +139,14 @@ index adab7a58d..f6dc2278e 100644
 @@ -145,7 +145,7 @@
  #undef HAVE_UNISTD_H
  
- /* Define to 1 if you have the `vprintf' function. */
+ /* Define to 1 if you have the 'vprintf' function. */
 -#undef HAVE_VPRINTF
 +#define HAVE_VPRINTF 1
  
  /* Define if you need to hide the static definitions of inline functions */
  #undef HIDE_INLINE_STATIC
 @@ -180,7 +180,7 @@
- /* Define to 1 if all of the C90 standard headers exist (not just the ones
+ /* Define to 1 if all of the C89 standard headers exist (not just the ones
     required in a freestanding environment). This macro is provided for
     backward compatibility; new code need not use it. */
 -#undef STDC_HEADERS

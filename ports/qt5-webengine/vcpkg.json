@@ -1,13 +1,18 @@
 {
   "name": "qt5-webengine",
-  "version": "5.15.11",
-  "description": "Qt5 webengine Module;",
+  "version": "5.15.16",
+  "port-version": 3,
+  "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
   "license": null,
   "supports": "!static",
   "dependencies": [
     {
-      "name": "atlmfc",
+      "name": "atl",
       "platform": "windows"
+    },
+    {
+      "name": "dbus",
+      "platform": "!windows"
     },
     {
       "name": "ffmpeg",
@@ -15,8 +20,15 @@
       "platform": "!windows"
     },
     {
+      "name": "icu",
+      "platform": "!windows"
+    },
+    {
       "name": "qt5-base",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "openssl"
+      ]
     },
     "qt5-declarative",
     "qt5-location",

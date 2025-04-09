@@ -1,0 +1,36 @@
+diff --git a/build/cmake/aom_install.cmake b/build/cmake/aom_install.cmake
+index 2c263e9..fc9c2ca 100644
+--- a/build/cmake/aom_install.cmake
++++ b/build/cmake/aom_install.cmake
+@@ -91,8 +91,31 @@ macro(setup_aom_install_targets)
+     install(FILES "${AOM_PKG_CONFIG_FILE}"
+             DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+     install(TARGETS ${AOM_INSTALL_LIBS};${AOM_INSTALL_BINS}
++            EXPORT unofficial-aom-targets
+             RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+             LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+             ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++    target_include_directories(aom PUBLIC $<INSTALL_INTERFACE:include>)
++    install(EXPORT unofficial-aom-targets
++      FILE unofficial-aom-targets.cmake
++      NAMESPACE unofficial::
++      DESTINATION share/aom)
++    include(CMakePackageConfigHelpers)
++    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/aom-config.cmake.in [[
++@PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++set(THREADS_PREFER_PTHREAD_FLAG ON)
++find_dependency(Threads)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-aom-targets.cmake")
++]])
++    configure_package_config_file(${CMAKE_CURRENT_BINARY_DIR}/aom-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/aom-config.cmake
++      INSTALL_DESTINATION lib/cmake/aom
++      NO_SET_AND_CHECK_MACRO
++      NO_CHECK_REQUIRED_COMPONENTS_MACRO)
++    write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/aom-config-version.cmake
++      VERSION ${SO_FILE_VERSION}
++      COMPATIBILITY SameMajorVersion)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/aom-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/aom-config-version.cmake
++      DESTINATION share/aom)
+   endif()
+ endmacro()

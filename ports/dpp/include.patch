@@ -1,0 +1,12 @@
+diff --git a/src/dpp/socketengines/poll.cpp b/src/dpp/socketengines/poll.cpp
+index f08acef0..61c98daa 100644
+--- a/src/dpp/socketengines/poll.cpp
++++ b/src/dpp/socketengines/poll.cpp
+@@ -19,6 +19,7 @@
+  *
+  ************************************************************************************/
+
++#include <dpp/cluster.h>
+ #include <dpp/socketengine.h>
+ #include <dpp/exception.h>
+ #include <vector>

@@ -1,12 +1,11 @@
 {
   "name": "sophus",
-  "version": "1.22.10",
+  "version": "1.24.6-r1",
   "description": "Lie group library for C++",
   "homepage": "https://github.com/strasdat/Sophus",
   "license": "MIT",
   "dependencies": [
     "eigen3",
-    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true

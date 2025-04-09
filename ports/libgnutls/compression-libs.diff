@@ -1,0 +1,21 @@
+diff --git a/configure.ac b/configure.ac
+index 95ec4c1..67fa771 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1157,6 +1157,8 @@ if test x$ac_brotli != xno; then
+     fi
+ else
+     AC_MSG_RESULT(no)
++    with_libbrotlienc=no
++    with_libbrotlidec=no
+ fi
+ AM_CONDITIONAL(HAVE_LIBBROTLI, test "$with_libbrotlienc" != "no" && test "$with_libbrotlidec" != "no")
+ 
+@@ -1202,6 +1204,7 @@ if test x$ac_zstd != xno; then
+     fi
+ else
+     AC_MSG_RESULT(no)
++    with_libzstd=no
+ fi
+ AM_CONDITIONAL(HAVE_LIBZSTD, test "$with_libzstd" != "no")
+ 

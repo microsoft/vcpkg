@@ -9,7 +9,7 @@ index 98a2a4a..e810c36 100644
 +#elif 0
  #pragma comment( lib, "cgraph.lib" )
  #pragma comment( lib, "gvc.lib" )
- #pragma comment( lib, "ingraphs.lib" )
+ #endif
 diff --git a/plugin/gdk/gvloadimage_gdk.c b/plugin/gdk/gvloadimage_gdk.c
 index 84c6a6a..0d3ec64 100644
 --- a/plugin/gdk/gvloadimage_gdk.c

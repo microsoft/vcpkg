@@ -1,0 +1,19 @@
+{
+  "name": "libdwarf",
+  "version": "0.12.0",
+  "description": "A library for reading DWARF2 and later DWARF.",
+  "homepage": "https://github.com/davea42/libdwarf-code",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ]
+}

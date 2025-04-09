@@ -24,18 +24,20 @@ index 2a3a91b..523fa72 100644
  	list(APPEND LIBGIT2_SYSTEM_LIBS ${PCRE_LIBRARIES})
  	list(APPEND LIBGIT2_PC_REQUIRES "libpcre")
 diff --git a/cmake/SelectSSH.cmake b/cmake/SelectSSH.cmake
-index 23dfc97..f481527 100644
+index 079857f50..a2e2bd212 100644
 --- a/cmake/SelectSSH.cmake
 +++ b/cmake/SelectSSH.cmake
-@@ -1,6 +1,10 @@
- # Optional external dependency: libssh2
- if(USE_SSH)
+@@ -4,7 +4,11 @@ if(USE_SSH STREQUAL "exec")
+
+ 	add_feature_info(SSH ON "using OpenSSH exec support")
+ elseif(USE_SSH STREQUAL ON OR USE_SSH STREQUAL "libssh2")
 -	find_pkglibraries(LIBSSH2 libssh2)
 +	find_package(PkgConfig REQUIRED)
 +	pkg_check_modules(LIBSSH2 REQUIRED libssh2)
 +	set(LIBSSH2_LIBRARIES "${LIBSSH2_LINK_LIBRARIES}")
 +	set(LIBSSH2_LDFLAGS "")
 +	list(APPEND LIBGIT2_PC_REQUIRES "libssh2")
+
  	if(NOT LIBSSH2_FOUND)
  		find_package(LibSSH2)
- 		set(LIBSSH2_INCLUDE_DIRS ${LIBSSH2_INCLUDE_DIR})
+

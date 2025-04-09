@@ -1,0 +1,13 @@
+diff --git a/configure.py b/configure.py
+index fcf9e7e..c0f72df 100755
+--- a/configure.py
++++ b/configure.py
+@@ -2351,6 +2351,8 @@ def create_template_vars(source_paths, build_paths, options, modules, disabled_m
+         # just transfer them over to just the compiler invocations
+         variables['cc_compile_flags'] = '%s %s' % (variables['cxx_abi_flags'], variables['cc_compile_flags'])
+         variables['cxx_abi_flags'] = ''
++    else:
++        variables['ldflags'] = '%s %s' % (variables['ldflags'], variables['cc_compile_flags'])
+ 
+     variables['lib_flags'] = cc.gen_lib_flags(options, variables)
+ 

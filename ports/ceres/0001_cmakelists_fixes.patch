@@ -1,11 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 33e98b1..f275d68 100644
+index 8e49c19e..f8c61d92 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -426,27 +426,7 @@ if (MINIGLOG)
+@@ -430,28 +430,7 @@ if (MINIGLOG)
+   mark_as_advanced(FORCE GLOG_INCLUDE_DIR
                           GLOG_LIBRARY)
  else (MINIGLOG)
-   unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
+-  unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
 -  # Don't search with REQUIRED so that configuration continues if not found and
 -  # we can output an error messages explaining MINIGLOG option.
 -  find_package(Glog)
@@ -29,9 +30,18 @@ index 33e98b1..f275d68 100644
 -  message("-- Found Google Log (glog)." ${GLOG_GFLAGS_DEPENDENCY_MESSAGE})
 +  find_package(Glog REQUIRED)
  endif (MINIGLOG)
-
+ 
  if (NOT SCHUR_SPECIALIZATIONS)
-@@ -760,12 +740,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
+@@ -466,7 +445,7 @@ endif (NOT CUSTOM_BLAS)
+ 
+ if (BUILD_BENCHMARKS)
+   # Version 1.3 was first to provide import targets
+-  find_package(benchmark 1.3 QUIET)
++  find_package(benchmark CONFIG REQUIRED)
+   if (benchmark_FOUND)
+      message("-- Found Google benchmark library. Building Ceres benchmarks.")
+   else()
+@@ -722,12 +705,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
  install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
@@ -41,6 +51,6 @@ index 33e98b1..f275d68 100644
 -  install(FILES "${Ceres_SOURCE_DIR}/cmake/FindGlog.cmake"
 -          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -endif()
-
+ 
  if (PROVIDE_UNINSTALL_TARGET)
    # Create an uninstall target to remove all installed files.

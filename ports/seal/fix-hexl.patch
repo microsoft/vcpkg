@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index edf69a3..e64672e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -223,7 +223,7 @@ if(SEAL_USE_INTEL_HEXL)
+         message(STATUS "Intel HEXL: download ...")
+         seal_fetch_thirdparty_content(ExternalIntelHEXL)
+     else()
+-        find_package(HEXL 1.2.4)
++        find_package(HEXL CONFIG REQUIRED)
+         if (NOT TARGET HEXL::hexl)
+             message(FATAL_ERROR "Intel HEXL: not found")
+         endif()

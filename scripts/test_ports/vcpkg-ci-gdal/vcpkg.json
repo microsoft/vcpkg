@@ -1,0 +1,55 @@
+{
+  "name": "vcpkg-ci-gdal",
+  "version-date": "2023-12-28",
+  "description": "Port to force features of certain ports within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "gdal",
+      "features": [
+        "archive",
+        "freexl"
+      ]
+    },
+    {
+      "name": "gdal",
+      "features": [
+        "postgresql"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "gdal",
+      "features": [
+        "cfitsio",
+        "kea",
+        "poppler"
+      ],
+      "platform": "native"
+    },
+    {
+      "name": "gdal",
+      "features": [
+        "mysql-libmariadb"
+      ],
+      "platform": "windows & x86"
+    },
+    {
+      "name": "gdal",
+      "features": [
+        "aws-ec2-windows"
+      ],
+      "platform": "windows & !mingw"
+    },
+    {
+      "name": "tiff",
+      "features": [
+        "lerc",
+        "libdeflate",
+        "webp",
+        "zstd"
+      ]
+    }
+  ]
+}

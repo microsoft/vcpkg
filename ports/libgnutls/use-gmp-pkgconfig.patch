@@ -1,8 +1,8 @@
 diff --git a/m4/hooks.m4 b/m4/hooks.m4
-index e1248c7..4656c3a 100644
+index e026dd1..cf6064c 100644
 --- a/m4/hooks.m4
 +++ b/m4/hooks.m4
-@@ -91,13 +91,14 @@ AC_MSG_ERROR([[
+@@ -91,6 +91,7 @@ AC_MSG_ERROR([[
        mini_nettle=$withval,
        mini_nettle=no)
  
@@ -10,11 +10,3 @@ index e1248c7..4656c3a 100644
    AC_ARG_VAR(GMP_CFLAGS, [C compiler flags for gmp])
    AC_ARG_VAR(GMP_LIBS, [linker flags for gmp])
    if test "$mini_nettle" != no;then
-     GMP_CFLAGS=""
-     GMP_LIBS=""
-   else
--    if test x$GMP_LIBS = x; then
-+    if test "x$GMP_LIBS" = "x"; then
- 	AC_CHECK_LIB(gmp, __gmpz_cmp, [GMP_LIBS="-lgmp"], [AC_MSG_ERROR([[
- ***
- *** gmp was not found.

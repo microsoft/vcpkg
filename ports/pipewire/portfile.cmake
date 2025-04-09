@@ -1,10 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pipewire/pipewire
-    REF ${VERSION}
-    SHA512 94d23a3660f76624abc18a1716519b4d18258a0a4c3047438df231f813df760f21f65b80c174f34b4de111da28b49ae3a46de961637e89828d67ecf614b17ba2
+    REF "${VERSION}"
+    SHA512 a921bcc56626a90b4195f98cb47934d1e4eeda9d2fb76ea93ef49b56bf2b080ec711d93dfd47833bcdbc9c4623bad16c93f00828d214439aee06ab9a31f21ffd
     HEAD_REF master # branch name
 )
 
@@ -12,7 +11,7 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dalsa=disabled
-        -Daudioconvert=disabled
+        -Daudioconvert=enabled
         -Daudiomixer=disabled
         -Daudiotestsrc=disabled
         -Davahi=disabled
@@ -44,6 +43,7 @@ vcpkg_configure_meson(
         -Dlibusb=disabled
         -Dlv2=disabled
         -Dman=disabled
+        -Dopus=disabled
         -Dpipewire-alsa=disabled
         -Dpipewire-jack=disabled
         -Dpipewire-v4l2=disabled
@@ -71,12 +71,13 @@ vcpkg_configure_meson(
         -Dx11-xfixes=disabled
         -Dx11=disabled
         -Dsession-managers=[]
+        -Dc_args=-Wno-strict-prototypes
 )
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -86,9 +87,9 @@ endif()
 # remove absolute paths
 file(GLOB config_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.conf")
 foreach(file ${config_files})
-    vcpkg_replace_string("${file}" "in ${CURRENT_PACKAGES_DIR}/etc/pipewire for system-wide changes\n# or" "")
+    vcpkg_replace_string("${file}" "in ${CURRENT_PACKAGES_DIR}/etc/pipewire for system-wide changes\n# or" "" IGNORE_UNCHANGED)
     cmake_path(GET file FILENAME filename)
-    vcpkg_replace_string("${file}" "# ${CURRENT_PACKAGES_DIR}/etc/pipewire/${filename}.d/ for system-wide changes or in" "")
+    vcpkg_replace_string("${file}" "# ${CURRENT_PACKAGES_DIR}/etc/pipewire/${filename}.d/ for system-wide changes or in" "" IGNORE_UNCHANGED)
 endforeach()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pipewire/pipewire.conf" "${CURRENT_PACKAGES_DIR}/bin" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pipewire/minimal.conf" "${CURRENT_PACKAGES_DIR}/bin" "")

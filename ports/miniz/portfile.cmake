@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DINSTALL_PROJECT=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
 )
 
 vcpkg_cmake_install()

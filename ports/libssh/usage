@@ -1,4 +1,0 @@
-libssh provides CMake targets:
-
-    find_package(libssh CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ssh)

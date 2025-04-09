@@ -1,0 +1,53 @@
+{
+  "name": "pulseaudio",
+  "version": "17.0",
+  "port-version": 2,
+  "description": "PulseAudio is a sound server, originally created to overcome the limitations of the Enlightened Sound Daemon (EsounD)",
+  "homepage": "https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Community/",
+  "license": null,
+  "supports": "!windows & !osx",
+  "dependencies": [
+    {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
+      "name": "dbus",
+      "default-features": false
+    },
+    "fftw3",
+    {
+      "name": "glib",
+      "default-features": false
+    },
+    {
+      "name": "gstreamer",
+      "default-features": false
+    },
+    "jack2",
+    "libatomic-ops",
+    "libiconv",
+    {
+      "name": "libsndfile",
+      "default-features": false,
+      "features": [
+        "external-libs"
+      ]
+    },
+    {
+      "name": "openssl",
+      "default-features": false
+    },
+    "orc",
+    "soxr",
+    "speex",
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

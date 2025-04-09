@@ -1,12 +1,16 @@
 {
   "name": "libhdfs3",
   "version-date": "2019-11-05",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Native Hadoop RPC protocol and HDFS data transfer protocol implementation",
   "homepage": "https://github.com/erikmuttersbach/libhdfs3",
   "supports": "!windows",
   "dependencies": [
-    "boost",
+    "boost-atomic",
+    "boost-chrono",
+    "boost-iostreams",
+    "boost-system",
+    "boost-thread",
     {
       "name": "libuuid",
       "platform": "!windows & !osx"

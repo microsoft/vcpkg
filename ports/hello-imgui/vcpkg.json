@@ -1,0 +1,114 @@
+{
+  "name": "hello-imgui",
+  "version": "1.6.0",
+  "port-version": 3,
+  "description": [
+    "Hello ImGui: unleash your creativity in app development and prototyping",
+    "Note that at least on renderer backend and at least one platform backend must be chosen."
+  ],
+  "homepage": "https://pthom.github.io/hello_imgui/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental"
+      ]
+    },
+    "nlohmann-json",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "experimental-dx11-binding": {
+      "description": "Use DirectX11 renderer backend (Windows only, experimental)",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "dx11-binding"
+          ]
+        }
+      ]
+    },
+    "experimental-dx12-binding": {
+      "description": "Use DirectX12 renderer backend (Windows only, experimental)",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "dx12-binding"
+          ]
+        }
+      ]
+    },
+    "experimental-vulkan-binding": {
+      "description": "Use Vulkan renderer backend (Windows/Linux/macOS, experimental)",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "vulkan-binding"
+          ]
+        }
+      ]
+    },
+    "glfw-binding": {
+      "description": "Use GLFW platform backend (default)",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "glfw-binding"
+          ]
+        }
+      ]
+    },
+    "metal-binding": {
+      "description": "Use Metal renderer backend (macOS/iOS only)",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "metal-binding"
+          ]
+        }
+      ]
+    },
+    "opengl3-binding": {
+      "description": "Use OpenGL3/ES2 renderer backend (default)",
+      "dependencies": [
+        {
+          "name": "glad",
+          "features": [
+            "gl-api-43"
+          ]
+        },
+        {
+          "name": "imgui",
+          "features": [
+            "opengl3-binding"
+          ]
+        }
+      ]
+    },
+    "test-engine": {
+      "description": "Build test engine",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "test-engine"
+          ]
+        }
+      ]
+    }
+  }
+}

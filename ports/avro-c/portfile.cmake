@@ -6,8 +6,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/avro
-    REF 4e1fefca493029ace961b7ef8889a3722458565a #release-1.11.0
-    SHA512 6e787983d68bc6ecffd14ca585917f695bc1ae554de9146a436d342f32321c3e7878cdfa32989742e682ac12a6eb914b3e3b515ca3164f386c0281c8b50b53ad
+    REF "release-${VERSION}"
+    SHA512 8cc6ef3cf1e0a919118c8ba5817a1866dc4f891fa95873c0fe1b4b388858fbadee8ed50406fa0006882cab40807fcf00c5a2dcd500290f3868d9d06b287eacb6
     HEAD_REF master
     PATCHES
         avro.patch          # Private vcpkg build fixes
@@ -39,4 +39,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/lang/c/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lang/c/LICENSE")

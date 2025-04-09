@@ -1,23 +1,23 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e513f6..049ac34 100644
+index 30c0154..d55cef4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1727,8 +1727,17 @@ if(CURL_ENABLE_EXPORT_TARGET)
-   )
- endif()
+@@ -2437,7 +2437,17 @@ if(NOT CURL_DISABLE_INSTALL)
+       DESTINATION ${_install_cmake_dir})
+   endif()
  
-+set(components_file "${CMAKE_CURRENT_BINARY_DIR}/CURLConfigComponents.cmake")
-+file(CONFIGURE OUTPUT "${components_file}" CONTENT [[
-+foreach(z_vcpkg_curl_component IN ITEMS @SUPPORT_FEATURES@ @SUPPORT_PROTOCOLS@)
-+  if(z_vcpkg_curl_component MATCHES "^[-_a-zA-Z0-9]*$")
-+    set(CURL_${z_vcpkg_curl_component}_FOUND TRUE)
-+  endif()
-+endforeach()
-+]] @ONLY)
++  set(components_file "${CMAKE_CURRENT_BINARY_DIR}/CURLConfigComponents.cmake")
++  file(CONFIGURE OUTPUT "${components_file}" CONTENT [[
++  foreach(z_vcpkg_curl_component IN ITEMS @SUPPORT_FEATURES@ @SUPPORT_PROTOCOLS@)
++    if(z_vcpkg_curl_component MATCHES "^[-_a-zA-Z0-9]*$")
++      set(CURL_${z_vcpkg_curl_component}_FOUND TRUE)
++    endif()
++  endforeach()
++  ]] @ONLY)
 +
- install(
--        FILES ${version_config} ${project_config}
-+        FILES ${version_config} ${project_config} ${components_file}
-         DESTINATION ${CURL_INSTALL_CMAKE_DIR}
- )
+   install(FILES ${_version_config} ${_project_config}
++                ${components_file}
+     DESTINATION ${_install_cmake_dir})
  
+   if(NOT TARGET curl_uninstall)
+

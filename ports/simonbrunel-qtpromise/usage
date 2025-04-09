@@ -1,0 +1,4 @@
+simonbrunel-qtpromise provides CMake targets:
+
+find_package(unofficial-simonbrunel-qtpromise CONFIG REQUIRED)
+target_link_libraries(main PRIVATE unofficial-simonbrunel-qtpromise)

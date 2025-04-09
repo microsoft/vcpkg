@@ -1,0 +1,33 @@
+diff --git a/app/CLI11.hpp b/app/CLI11.hpp
+index 3268232dc..2ed2fd7c8 100644
+--- a/app/CLI11.hpp
++++ b/app/CLI11.hpp
+@@ -434,6 +434,19 @@ CLI11_INLINE std::vector<std::string> compute_win32_argv();
+ namespace detail {
+ 
+ #ifdef _WIN32
++    #ifdef WINAPI_FAMILY
++        #if WINAPI_FAMILY == WINAPI_FAMILY_APP  // window store app
++CLI11_INLINE std::vector<std::string> compute_win32_argv() {
++    std::vector<std::string> result;
++
++    result.reserve(static_cast<size_t>(__argc));
++    for(size_t i = 0; i < static_cast<size_t>(__argc); ++i) {
++        result.push_back(std::string(__argv[i]));
++    }
++
++    return result;
++}
++        #else
+ CLI11_INLINE std::vector<std::string> compute_win32_argv() {
+     std::vector<std::string> result;
+     int argc = 0;
+@@ -454,6 +467,8 @@ CLI11_INLINE std::vector<std::string> compute_win32_argv() {
+ 
+     return result;
+ }
++        #endif
++    #endif
+ #endif
+ 
+ }  // namespace detail

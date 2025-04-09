@@ -19,8 +19,9 @@ cat > Makefile.vcpkg <<END_MAKEFILE ;
 
 BUILD_OPTIONS = \
     "AR=$AR" \
-    "BUILD_CC=$CC_FOR_BUILD" \
+    "BUILD_CC=$CC" \
     "CC=$CC" \
+    "OBJCOPY=$OBJCOPY" \
     "RANLIB=$RANLIB" \
     "lib=lib" \
     "prefix=$prefix"

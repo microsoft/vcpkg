@@ -1,8 +1,9 @@
+string(REGEX REPLACE "^([0-9]+)[.]([1-9])\$" "\\1.0\\2" VERSION_STR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO herumi/xbyak
-    REF v6.69
-    SHA512 c202e5c3688c4dc8cd26d4371c511ffc0fd0885c4d31a6a5fa955c39ae6fcc98f5f0ac2b88c087e10b71b24a91c0e7f082683cd6be67c29a19170723d966a585
+    REF "v${VERSION_STR}"
+    SHA512 d8bcf248b4506f09ee70431f6c38d0d2eb7c3dfa110cbe700e7ae689e0a640f77ec337aeafda93d0f4fd7e9139a8e46dbf1cb99dd4a576667d71b05992a618b8
     HEAD_REF master
 )
 
@@ -16,4 +17,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib"
 )
 
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")

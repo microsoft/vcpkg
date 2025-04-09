@@ -10,14 +10,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openMVG/openMVG
-    REF d0fe73dd426ae4001631a51272cff71047522df9  # v2.0
-    SHA512 1d5c68971ad63ced46d8b9070bdacc1065b4ba950fe919e11f952a004def87d4d83a474d48aee714c21b12106d7d81187d3670d8a2e6daf2d3c5fceb008a5de3
+    REF 01193a245ee3c36458e650b1cf4402caad8983ef  # v2.1
+    SHA512 ee98ca26426e7129917c920cd59817cb5d4faf1f5aa12f4085f9ac431875e9ec23ffee7792d65286bad4b922c474c56d5c2f2008b38fddf1ede096644f13ad47
     PATCHES
         build_fixes.patch
         0001-eigen_3.4.0.patch
-        0002-eigen-3.4.patch
         no-absolute-paths.patch
-        fix-coinutils.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
@@ -77,17 +75,24 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/openMVG/cmake)
 
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG-targets.cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG-targets-debug.cmake")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/openMVG/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/share/openMVG/cmake")
+if(NOT VCPKG_BUILD_TYPE)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/cmake")
 endif()
-file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/openMVG-targets.cmake" "${CURRENT_PACKAGES_DIR}/lib/openMVG-targets-release.cmake")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
-                    "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"
-                    "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl")
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE
+     "${CURRENT_PACKAGES_DIR}/debug/include"
+     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/cereal" 
+     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/glfw"
+     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/osi_clp"
+     "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
+     "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"
+     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl")
 
 if(OpenMVG_BUILD_SHARED)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -129,6 +134,7 @@ if("software" IN_LIST FEATURES)
         openMVG_main_ComputeMatches
         openMVG_main_ComputeSfM_DataColor
         openMVG_main_ComputeStructureFromKnownPoses
+        openMVG_main_ComputeVLAD
         openMVG_main_ConvertList
         openMVG_main_ConvertSfM_DataFormat
         openMVG_main_evalQuality

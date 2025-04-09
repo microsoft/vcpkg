@@ -7,8 +7,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libice
-    REF 8e6a14c63d6b73cde87cb331439f2a4d19cba5b9 # 1.0.10
-    SHA512  ad79cfbc3b1d51fb1f019bc088999ac8a64062a71667dbb4ffb62fe6d1b7dba7665944f64be6dcd27de08cc77e91512de97231db1e4ac018088727e90113d040
+    REF be1888a46e446dfcaa62ac0a97d96bb77b6816d4 # 1.1.1
+    SHA512  0892ee9210302e787297763bcf0c7788bcd5f5572d5fd86472e8104dc291e7e190effc0100bbca98c6b048b445bd9e8bdf490287e1dbf2a64693aa1895950610
     HEAD_REF master
     PATCHES fix_build.patch
             replace_macros.patch

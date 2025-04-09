@@ -1,5 +1,5 @@
 diff --git a/Makefile.in b/Makefile.in
-index 6e1585b..88c8b05 100644
+index 3194735..669bdfe 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -29,8 +29,9 @@ include config.make
@@ -13,7 +13,7 @@ index 6e1585b..88c8b05 100644
  
  getopt_SOURCES = getopt.c getopt1.c
  getopt_TARGETS = $(getopt_SOURCES:.c=.$(OBJEXT))
-@@ -279,13 +280,13 @@ nettle_OBJS = $(nettle_SOURCES:.c=.$(OBJEXT)) \
+@@ -288,13 +289,13 @@ nettle_OBJS = $(nettle_SOURCES:.c=.$(OBJEXT)) \
  hogweed_OBJS = $(hogweed_SOURCES:.c=.$(OBJEXT)) \
  	       $(OPT_HOGWEED_OBJS) @IF_MINI_GMP@ mini-gmp.$(OBJEXT)
  
@@ -29,7 +29,7 @@ index 6e1585b..88c8b05 100644
  	-rm -f $@
  	$(AR) $(ARFLAGS) $@ $(hogweed_OBJS)
  	$(RANLIB) $@
-@@ -491,8 +492,8 @@ install-static: $(LIBTARGETS)
+@@ -500,8 +501,8 @@ install-static: $(LIBTARGETS)
  	done
  
  install-dll-nettle:
@@ -40,7 +40,7 @@ index 6e1585b..88c8b05 100644
  
  install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
  	$(MKDIR_P) $(DESTDIR)$(libdir)
-@@ -504,8 +505,8 @@ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
+@@ -513,8 +514,8 @@ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
  		&& $(LN_S) $(LIBNETTLE_FILE) $(LIBNETTLE_FORLINK))
  
  install-dll-hogweed:
@@ -52,10 +52,10 @@ index 6e1585b..88c8b05 100644
  install-shared-hogweed: $(LIBHOGWEED_FORLINK) @IF_DLL@ install-dll-hogweed
  	$(MKDIR_P) $(DESTDIR)$(libdir)
 diff --git a/configure.ac b/configure.ac
-index d50d1f5..2464514 100644
+index 7a17853..c854679 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -877,6 +877,27 @@ case "$host_os" in
+@@ -907,6 +907,27 @@ case "$host_os" in
      LIBHOGWEED_LIBS='libnettle.so $(LIBS)'
      ;;
  esac
@@ -83,3 +83,17 @@ index d50d1f5..2464514 100644
  
  ASM_SYMBOL_PREFIX=''
  ASM_ELF_STYLE='no'
+diff --git a/getopt.c b/getopt.c
+index 9d29de7..42df5a6 100644
+--- a/getopt.c
++++ b/getopt.c
+@@ -32,7 +32,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ 
+ 
+ /* Comment out all this code if we are using the GNU C Library, and are not

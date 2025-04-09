@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ce0d53..d2b91f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -268,8 +268,8 @@ check_cxx_source_compiles(
+ 	CPPCMS_HAVE_FSEEKI64
+ )
+ if(NOT DISABLE_GZIP)
+-	find_library(ZLIB NAMES z zdll zlib${ZLIB_SUFFIX} zlib)
+-	find_path(ZLIB_INCLUDE_DIR zlib.h)
++	find_package(ZLIB REQUIRED)
++	set(ZLIB "${ZLIB_LIBRARIES}")
+ 	if(NOT ZLIB OR NOT ZLIB_INCLUDE_DIR)
+ 		message(FATAL_ERROR "Can't fild zlib")
+ 	endif()
+@@ -423,8 +423,8 @@ if(NOT DISABLE_GCRYPT)
+ endif()
+ 
+ if(NOT DISABLE_OPENSSL)
+-	find_path(OPENSSL_INCLUDE_DIR openssl/aes.h)
+-	find_library(LIB_OPENSSL NAMES crypto libcrypto libeay32)
++	find_package(OpenSSL REQUIRED)
++	set(LIB_OPENSSL "${OPENSSL_CRYPTO_LIBRARIES}")
+ endif()
+ 
+ if (OPENSSL_INCLUDE_DIR AND LIB_OPENSSL)
+diff --git a/booster/CMakeLists.txt b/booster/CMakeLists.txt
+index 4f81833..822c470 100644
+--- a/booster/CMakeLists.txt
++++ b/booster/CMakeLists.txt
+@@ -123,6 +123,10 @@ endif()
+ 
+ if(NOT DISABLE_ICU_LOCALE)
+ 	message("-- Looking for ICU libraries")
++	find_package(ICU REQUIRED COMPONENTS i18n uc data)
++	include_directories(${ICU_INCLUDE_DIRS})
++	set(ICU_I18N "${ICU_LIBRARIES}")
++elseif(0)
+ 
+ 	if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+ 		if(MSVC)

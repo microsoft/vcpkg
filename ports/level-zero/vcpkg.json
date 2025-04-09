@@ -1,0 +1,19 @@
+{
+  "name": "level-zero",
+  "version": "1.20.5",
+  "description": "oneAPI Level Zero Specification Headers and Loader.",
+  "homepage": "https://github.com/oneapi-src/level-zero",
+  "license": "MIT",
+  "supports": "x64 & !static & (linux | (windows & !uwp))",
+  "dependencies": [
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

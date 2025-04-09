@@ -1,16 +1,20 @@
 {
   "name": "elements",
-  "version-date": "2022-12-07",
+  "version-date": "2024-09-12",
   "description": "Elements is a lightweight, fine-grained, resolution independent, modular GUI library.",
   "homepage": "https://cycfi.github.io/elements",
   "license": "MIT",
+  "supports": "(windows & staticcrt) | osx | linux",
   "dependencies": [
     "asio",
     "cairo",
+    "fontconfig",
+    "freetype",
     {
       "name": "gtk3",
-      "platform": "linux"
+      "platform": "!osx & !windows"
     },
+    "libwebp",
     {
       "name": "vcpkg-cmake",
       "host": true

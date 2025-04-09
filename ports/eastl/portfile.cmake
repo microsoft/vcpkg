@@ -4,9 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
     REF "${VERSION}"
-    SHA512 412f894a1d1d0fdcc8f5ae130e977872a8ff243691cf9dfc76a520389f514739511afca63e1aeaaf127132f5dfc3dd482af3e5f80844b5d6d33eae1c68628267
+    SHA512 b061660b58aea8944b7b1488bbf344d004a93a06c89fa43881a02cdaf9d0fce5db3db3c5efd9c09e3e000b502c5dc197ab57b298d1bc935fc7603d285f8563db
     HEAD_REF master
-    PATCHES 
+    PATCHES
         0001-fix-cmake-install.patch
         0002-fix-error-C2338.patch
 )

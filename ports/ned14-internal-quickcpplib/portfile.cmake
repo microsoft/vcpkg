@@ -39,16 +39,6 @@ vcpkg_from_github(
         quicklib-depheaders.patch
 )
 
-# Quickcpplib deploys subsets of the dependency headers into a private subdirectory
-if (NOT QUICKCPPLIB_REQUIRE_CXX17)
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/nonstd/byte.hpp"
-        DESTINATION "${SOURCE_PATH}/include/quickcpplib/byte/include/nonstd")
-endif()
-if (NOT QUICKCPPLIB_REQUIRE_CXX20)
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/nonstd/span.hpp"
-        DESTINATION "${SOURCE_PATH}/include/quickcpplib/span-lite/include/nonstd")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH OPT_SOURCE_PATH
     REPO akrzemi1/Optional
@@ -66,7 +56,9 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPROJECT_IS_DEPENDENCY=On
+        -Dquickcpplib_IS_DEPENDENCY=ON
+        -DQUICKCPPLIB_USE_SYSTEM_BYTE_LITE=ON
+        -DQUICKCPPLIB_USE_SYSTEM_SPAN_LITE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         "-DCMAKE_INSTALL_DATADIR=${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib"
@@ -76,20 +68,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-if (QUICKCPPLIB_REQUIRE_CXX17)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/byte.hpp" "#if QUICKCPPLIB_USE_STD_BYTE" "#if 1")
-else ()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/byte.hpp" "#if QUICKCPPLIB_USE_STD_BYTE" "#if 0")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/byte.hpp" "#include \"byte/include/nonstd/byte.hpp\"" "#include <nonstd/byte.hpp>")
-endif()
-if (QUICKCPPLIB_REQUIRE_CXX20)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/span.hpp" "#ifdef QUICKCPPLIB_USE_STD_SPAN" "#if 1")
-else ()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/span.hpp" "#ifdef QUICKCPPLIB_USE_STD_SPAN" "#if 0")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/span.hpp" "#elif(_HAS_CXX20 || __cplusplus >= 202002) && __has_include(<span>)" "#elif 0")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/quickcpplib/span.hpp" "#include \"span-lite/include/nonstd/span.hpp\"" "#include <nonstd/span.hpp>")
-endif()
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME quickcpplib

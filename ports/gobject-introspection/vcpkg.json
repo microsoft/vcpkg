@@ -1,7 +1,6 @@
 {
   "name": "gobject-introspection",
-  "version": "1.72.0",
-  "port-version": 5,
+  "version": "1.82.0",
   "description": "A middleware layer between C libraries (using GObject) and language bindings.",
   "homepage": "https://gi.readthedocs.io/en/latest/",
   "license": null,
@@ -21,10 +20,20 @@
     },
     {
       "name": "gobject-introspection",
-      "host": true
+      "host": true,
+      "platform": "!(windows & x86)"
     },
     "libffi",
     "python3",
+    {
+      "name": "python3",
+      "host": true,
+      "platform": "!(windows & x86)"
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

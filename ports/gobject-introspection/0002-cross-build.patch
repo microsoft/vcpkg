@@ -1,7 +1,7 @@
 --- a/gir/meson.build	2021-09-17 23:02:42.502052000 +0700
 +++ b/gir/meson.build	2022-01-05 02:31:25.960457800 +0700
 @@ -42,7 +42,7 @@
- install_data(gir_files, install_dir: girdir)
+ install_data(installed_gir_files, install_dir: girdir)
  
  scanner_command = [
 -  find_program('g-ir-scanner', native: true),
@@ -15,11 +15,11 @@
  typelibs = []
 +gircompiler = find_program('g-ir-compiler')
  if get_option('gi_cross_binary_wrapper') != ''
-     gircompiler_command = [get_option('gi_cross_binary_wrapper'), gircompiler.full_path(), ]
+   gircompiler_command = [get_option('gi_cross_binary_wrapper'), gircompiler.full_path(), ]
  else
 @@ -510,7 +511,7 @@
-   typelibs += custom_target('generate-typelib-@0@'.format(gir).underscorify(),
-     input: gir,
+   typelibs += custom_target(
+     input: gir.get('file'),
      output: '@BASENAME@.typelib',
 -    depends: [gobject_gir, gircompiler, ],
 +    depends: [gobject_gir, ],
@@ -39,7 +39,7 @@
  
  girgenerate = executable('g-ir-generate', 'generate.c',
    dependencies: [
-@@ -74,11 +76,15 @@
+@@ -74,14 +76,18 @@
    install: true,
    c_args: custom_c_args,
  )
@@ -49,7 +49,10 @@
 +endif
  
  girinspect = executable('g-ir-inspect', 'g-ir-inspect.c',
-   dependencies: girepo_dep,
+   dependencies: [
+     girepo_dep,
+     gio_dep,
+   ],
    install: true,
    c_args: custom_c_args,
  )

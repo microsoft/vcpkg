@@ -1,0 +1,12 @@
+diff --git a/libsrc/core/logging.hpp b/libsrc/core/logging.hpp
+index adfed7e..d34d3e9 100644
+--- a/libsrc/core/logging.hpp	
++++ b/libsrc/core/logging.hpp
+@@ -6,6 +6,7 @@
+ #include <memory>
+ #include <string>
+ #include <vector>
++#include <filesystem>
+ 
+ #include "exception.hpp"
+ #include "ngcore_api.hpp"

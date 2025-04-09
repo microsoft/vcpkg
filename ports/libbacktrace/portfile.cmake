@@ -5,15 +5,15 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ianlancetaylor/libbacktrace
-    REF 4f57c999716847e45505b3df170150876b545088
-    SHA512 1df2c9d3c119a2ec7b8b8940bff7ba6d28fe99587f565066ae25c216021431d3c26c8b336c38dd0490165244c66d68f9cba20dfc7836042b62f9d588946be4b5
+    REF 1db85642e3fca189cf4e076f840a45d6934b2456
+    SHA512 a7f7a1233f551326e4ae1ba91db0fb905cf2737c20284c9aaf26cfe448b2a54efeaaa678e3abccbe0856c2a19019412208da7c1a82d319a58fe4d66d0a952aa0
 )
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
 )
-
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

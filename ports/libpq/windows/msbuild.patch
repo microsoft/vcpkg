@@ -396,16 +396,3 @@ index b6d31c3..27d89fc 100644
  	}
  	if ($self->{options}->{uuid})
  	{
-diff --git a/src/tools/msvc/gendef.pl b/src/tools/msvc/gendef.pl
-index cf83d7d..2d9a4ec 100644
---- a/src/tools/msvc/gendef.pl
-+++ b/src/tools/msvc/gendef.pl
-@@ -122,7 +122,7 @@ sub writedef
- 
- 		# Strip the leading underscore for win32, but not x64
- 		$f =~ s/^_//
--		  unless ($arch eq "x86_64");
-+		  if ($arch eq "Win32");
- 
- 		# Emit just the name if it's a function symbol, or emit the name
- 		# decorated with the DATA option for variables.

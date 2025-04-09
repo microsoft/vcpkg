@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         add-feature-tools.patch
         fix-arm-cross-build.patch
+        fix-overlay-pdb.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

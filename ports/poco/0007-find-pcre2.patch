@@ -1,29 +1,15 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8842c76..b887168 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -491,6 +491,11 @@ install(
- 		Devel
- )
- 
-+if(POCO_UNBUNDLED)
-+	install(FILES cmake/FindPCRE2.cmake
-+			DESTINATION "${PocoConfigPackageLocation}")
-+endif()
-+
- message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
- message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
- if(BUILD_SHARED_LIBS)
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 226dadb..a3765a7 100644
+index d8df9dc..fe2b000 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
-@@ -35,8 +35,11 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
+@@ -27,9 +27,12 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
  # If POCO_UNBUNDLED is enabled we try to find the required packages
  # The configuration will fail if the packages are not found
  if(POCO_UNBUNDLED)
 -	find_package(PCRE2 REQUIRED)
  	find_package(ZLIB REQUIRED)
+-	find_package(Utf8Proc REQUIRED)
++	find_package(unofficial-utf8proc CONFIG REQUIRED)
 +	include(SelectLibraryConfigurations)
 +	find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-8d pcre2-8-staticd HINTS ${INSTALLED_LIB_PATH})
 +	find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-8 pcre2-8-static HINTS ${INSTALLED_LIB_PATH})
@@ -31,12 +17,12 @@ index 226dadb..a3765a7 100644
  
  	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
  	POCO_SOURCES(SRCS RegExp
-@@ -107,7 +110,7 @@ set_target_properties(Foundation
+@@ -99,7 +102,7 @@ set_target_properties(Foundation
  )
  
  if(POCO_UNBUNDLED)
--	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB)
-+	target_link_libraries(Foundation PUBLIC ${PCRE2_LIBRARY} ZLIB::ZLIB)
+-	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB Utf8Proc::Utf8Proc)
++	target_link_libraries(Foundation PUBLIC ${PCRE2_LIBRARY} ZLIB::ZLIB utf8proc)
  	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
  	add_definitions(
  		-D_pcre2_utf8_table1=_poco_pcre2_utf8_table1

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BrunoLevy/geogram
     REF "v${VERSION}"
-    SHA512 ae3d95be1c5061ace92921b3fcfb0027d23c595b131b0d31f1788adbe0d8f92367bef71736d6c936504bd37eba5fcdae658369f03734e233bf3eab14bca6f9e5
+    SHA512 19cf5720496172a144b2c5725a0a9763fde730ee14af75d92598973ff84106619e564d34746fd7b3da7d56f0cf52654fa656e3228fb32c0897f3aba178421f28
     PATCHES
         fix-vcpkg-install.patch
 )
@@ -11,16 +11,16 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH AMGCL_SOURCE_PATH
     REPO ddemidov/amgcl
-    REF 8083b23fbe69c43cee0d4bc17e4334572e292c93
-    SHA512 1b29871ace68c53b46711012921261929f8bd612f93b47d2c59523cd3d68366956fe1c9ec81a94b3aaab63357001799c9e34af79376b940fa6b7a53cdf136897
+    REF a705f0822a332e215c41bccbeb6a7d92e90c49f2
+    SHA512 09dda0eb318ee4cd74af9ea67d9fcdce8a4399ab08b08cd72e2c7de953ad584204402b932c2a3222b7c74b25934267230bbc333a377e25f87ad045087ace2000
 )
 
 #third_party: libMeshb
 vcpkg_from_github(
     OUT_SOURCE_PATH LIBMESHB_SOURCE_PATH
     REPO LoicMarechal/libMeshb
-    REF b4a91513317119ff71a1186906a052da0e535913
-    SHA512 bff30a233c2746a454d552be66f5654bf4af995d6f1eb00a4d21ed10c86234a5be4d6f31282645858e0a829b10fd98cad7188c69be65cdabbd18478fc26bad1f
+    REF e3678731ef14497c720ee7017a14450eba2602d2
+    SHA512 5c8f25805ce02cb48600914893f24ecd2dcbb8226692d47089605ff99db8785781407ec9152e29b0c3bc44d16f6d893cd171e5337c3cb1861468da05471872b6
 )
 
 #third_party: rply
@@ -122,7 +122,8 @@ vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake"
     [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
     [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]]
-    )
+    IGNORE_UNCHANGED
+)
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/devkit/license.dox")

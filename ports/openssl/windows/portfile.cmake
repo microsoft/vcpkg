@@ -1,10 +1,14 @@
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
+# Need cmd to pass quoted CC from nmake to mkbuildinf.pl, GH-37134
+find_program(CMD_EXECUTABLE cmd HINTS ENV PATH NO_DEFAULT_PATH REQUIRED)
+cmake_path(NATIVE_PATH CMD_EXECUTABLE cmd)
+set(ENV{COMSPEC} "${cmd}")
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -13,7 +17,13 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(OPENSSL_ARCH VC-WIN32-ARM)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(OPENSSL_ARCH VC-WIN64-ARM)
+    if(VCPKG_TARGET_IS_UWP)
+        set(OPENSSL_ARCH VC-WIN64-ARM)
+    elseif(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
+        set(OPENSSL_ARCH VC-CLANG-WIN64-CLANGASM-ARM)
+    else()
+        set(OPENSSL_ARCH VC-WIN64-CLANGASM-ARM)
+    endif()
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
@@ -33,17 +43,31 @@ endif()
 
 cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR NORMALIZE install_dir_native)
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
 # Clang always uses /Z7;  Patching /Zi /Fd<Name> out of openssl requires more work.
 set(OPENSSL_BUILD_MAKES_PDBS ON)
 if (VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang" OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPENSSL_BUILD_MAKES_PDBS OFF)
 endif()
 
-cmake_path(NATIVE_PATH NASM NORMALIZE as)
 cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_C_COMPILER NORMALIZE cc)
+if(OPENSSL_ARCH MATCHES "CLANG")
+    vcpkg_find_acquire_program(CLANG)
+    cmake_path(GET CLANG PARENT_PATH clang_path)
+    vcpkg_add_to_path("${clang_path}")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
+        string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " --target=aarch64-win32-msvc")
+        string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " --target=aarch64-win32-msvc")
+    endif()
+endif()
+if(OPENSSL_ARCH MATCHES "CLANGASM")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS "ASFLAGS=--target=aarch64-win32-msvc")
+else()
+    vcpkg_find_acquire_program(NASM)
+    cmake_path(NATIVE_PATH NASM NORMALIZE as)
+    cmake_path(GET NASM PARENT_PATH nasm_path)
+    vcpkg_add_to_path("${nasm_path}") # Needed by Configure
+endif()
+
 cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_AR NORMALIZE ar)
 cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_LINKER NORMALIZE ld)
 
@@ -113,13 +137,14 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/certs"
     "${CURRENT_PACKAGES_DIR}/misc"
-	"${CURRENT_PACKAGES_DIR}/private"
-	"${CURRENT_PACKAGES_DIR}/lib/engines-3"
-	"${CURRENT_PACKAGES_DIR}/debug/certs"
+    "${CURRENT_PACKAGES_DIR}/private"
+    "${CURRENT_PACKAGES_DIR}/lib/engines-3"
+    "${CURRENT_PACKAGES_DIR}/debug/certs"
     "${CURRENT_PACKAGES_DIR}/debug/misc"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/engines-3"
-	"${CURRENT_PACKAGES_DIR}/debug/private"
-	"${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3"
+    "${CURRENT_PACKAGES_DIR}/debug/private"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 
 project(librtmp C)
 
@@ -7,8 +7,6 @@ find_package(OpenSSL REQUIRED)
 
 include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-set(CMAKE_DEBUG_POSTFIX "d")
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
@@ -43,13 +41,26 @@ if(MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
 endif()
 
-add_library(librtmp ${SRCS} ${HEADERS} ${SRCS_MSVC})
+add_library(rtmp ${SRCS} ${HEADERS} ${SRCS_MSVC})
 
-target_include_directories(librtmp PRIVATE ./librtmp)
-target_link_libraries(librtmp PRIVATE ${ZLIB_LIBRARIES} ${OPENSSL_LIBRARIES})
-target_link_libraries(librtmp PRIVATE Ws2_32.lib Winmm.lib)
+target_include_directories(rtmp PRIVATE ./librtmp)
+target_link_libraries(rtmp PRIVATE ${ZLIB_LIBRARIES} ${OPENSSL_LIBRARIES})
+if(MSVC OR MINGW)
+    target_link_libraries(rtmp PRIVATE Ws2_32.lib Winmm.lib)
+endif()
 
-install(TARGETS librtmp
+set(libdir [[${prefix}/lib]])
+set(VERSION 2.6) # from ChangeLog
+set(CRYPTO_REQ "libssl,libcrypto")
+if(MSVC OR MINGW)
+    set(PRIVATE_LIBS "-lWS2_32 -lWinMM")
+endif()
+configure_file(librtmp/librtmp.pc.in librtmp.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/librtmp.pc
+        DESTINATION lib/pkgconfig
+)
+
+install(TARGETS rtmp
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)

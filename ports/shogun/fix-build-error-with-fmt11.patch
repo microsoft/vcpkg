@@ -1,0 +1,24 @@
+diff --git a/src/shogun/labels/BinaryLabelEncoder.h b/src/shogun/labels/BinaryLabelEncoder.h
+index 5bcd57e..69ed63e 100644
+--- a/src/shogun/labels/BinaryLabelEncoder.h
++++ b/src/shogun/labels/BinaryLabelEncoder.h
+@@ -14,6 +14,7 @@
+ #include <shogun/labels/LabelEncoder.h>
+ #include <shogun/lib/SGVector.h>
+ #include <unordered_set>
++#include <fmt/ranges.h>
+ namespace shogun
+ {
+ 	/** @brief Implements a reversible mapping from
+diff --git a/src/shogun/labels/MulticlassLabelsEncoder.h b/src/shogun/labels/MulticlassLabelsEncoder.h
+index 41e9855..04151e4 100644
+--- a/src/shogun/labels/MulticlassLabelsEncoder.h
++++ b/src/shogun/labels/MulticlassLabelsEncoder.h
+@@ -13,6 +13,7 @@
+ #include <shogun/labels/LabelEncoder.h>
+ #include <shogun/labels/MulticlassLabels.h>
+ #include <shogun/lib/SGVector.h>
++#include <fmt/ranges.h>
+ 
+ namespace shogun
+ {

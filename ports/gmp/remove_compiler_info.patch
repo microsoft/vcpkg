@@ -1,0 +1,15 @@
+diff --git a/gmp-h.in b/gmp-h.in
+index 648c933582..fa37296fe4 100644
+--- a/gmp-h.in	
++++ b/gmp-h.in
+@@ -2330,10 +2330,6 @@ enum
+   GMP_ERROR_MPZ_OVERFLOW = 16
+ };
+ 
+-/* Define CC and CFLAGS which were used to build this version of GMP */
+-#define __GMP_CC "@CC@"
+-#define __GMP_CFLAGS "@CFLAGS@"
+-
+ /* Major version number is the value of __GNU_MP__ too, above. */
+ #define __GNU_MP_VERSION            6
+ #define __GNU_MP_VERSION_MINOR      3

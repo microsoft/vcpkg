@@ -1,8 +1,8 @@
-diff --git a/lib/relocatable.c b/lib/relocatable.c
-index 89b6c27..1561894 100644
---- a/lib/relocatable.c
-+++ b/lib/relocatable.c
-@@ -329,7 +329,7 @@ DllMain (HINSTANCE module_handle, DWORD event, LPVOID reserved)
+diff --git a/srclib/relocatable.c b/srclib/relocatable.c
+index 365c085..4e08fdc 100644
+--- a/srclib/relocatable.c
++++ b/srclib/relocatable.c
+@@ -338,7 +338,7 @@ DllMain (HINSTANCE module_handle, DWORD event, LPVOID reserved)
        /* The DLL is being loaded into an application's address range.  */
        static char location[MAX_PATH];
  

@@ -13,11 +13,16 @@ vcpkg_from_github(
         ${STATIC_PATCH}
         002-detect_sinf.patch
         003-use-static-cast-for-ctype.patch
-        004-export-pkgconfig.patch  # https://github.com/Konstanty/libmodplug/pull/59
+        004-export-pkgconfig.patch
         005-fix-install-paths.patch # https://github.com/Konstanty/libmodplug/pull/61
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+set(EXTRA_OPTIONS "-DCMAKE_CXX_STANDARD=11")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${EXTRA_OPTIONS}
+)
 
 vcpkg_cmake_install()
 

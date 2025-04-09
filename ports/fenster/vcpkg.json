@@ -1,0 +1,7 @@
+{
+  "name": "fenster",
+  "version-date": "2024-08-19",
+  "description": "The most minimal cross-platform GUI library",
+  "homepage": "https://github.com/zserge/fenster",
+  "license": "MIT"
+}

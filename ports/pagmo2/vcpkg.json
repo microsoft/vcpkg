@@ -1,7 +1,6 @@
 {
   "name": "pagmo2",
-  "version": "2.19.0",
-  "port-version": 2,
+  "version": "2.19.1",
   "description": "A C++ platform to perform parallel computations of optimization tasks (global and local) via the asynchronous generalized island model.",
   "homepage": "https://esa.github.io/pagmo2/",
   "license": "GPL-3.0-or-later OR LGPL-3.0-or-later",

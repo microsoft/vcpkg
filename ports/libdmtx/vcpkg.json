@@ -1,0 +1,14 @@
+{
+  "name": "libdmtx",
+  "version": "0.7.7",
+  "port-version": 1,
+  "description": "Software library that enables programs to read and write Data Matrix barcodes of the modern ECC200 variety",
+  "homepage": "https://github.com/dmtx/libdmtx",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -6,6 +6,7 @@ file(REMOVE_RECURSE "${git_test_repo}")
 # LFS expects a URL for a local repository
 set(git_remote "file:///${git_test_repo}")
 
+message(STATUS "Creating test git repository")
 vcpkg_find_acquire_program(GIT)
 vcpkg_list(SET git_config
     -c core.autocrlf=false
@@ -75,7 +76,7 @@ if(NOT "${error_code}" EQUAL "0")
 endif()
 string(STRIP "${head_ref}" head_ref)
 
-# test regular mode
+message(STATUS "Testing regular mode")
 set(VCPKG_USE_HEAD_VERSION OFF)
 vcpkg_from_git(
     OUT_SOURCE_PATH source_path
@@ -90,7 +91,22 @@ ${contents}
 ")
 endif()
 
-# test regular mode with FETCH_REF
+message(STATUS "Testing regular mode that happens to match HEAD")
+set(VCPKG_USE_HEAD_VERSION OFF)
+vcpkg_from_git(
+    OUT_SOURCE_PATH source_path
+    URL "${git_remote}"
+    REF "${head_ref}"
+    HEAD_REF main
+)
+file(READ "${source_path}/README.txt" contents)
+if(NOT "${contents}" STREQUAL "second commit")
+    message(FATAL_ERROR "Failed to checkout the second commit. Contents were:
+${contents}
+")
+endif()
+
+message(STATUS "Testing regular mode with FETCH_REF")
 vcpkg_execute_required_process(
     COMMAND ${git} config uploadpack.allowReachableSHA1InWant false
     WORKING_DIRECTORY "${git_test_repo}"
@@ -111,13 +127,29 @@ ${contents}
 ")
 endif()
 
+message(STATUS "Testing regular mode with FETCH_REF that happens to match HEAD")
+set(VCPKG_USE_HEAD_VERSION OFF)
+vcpkg_from_git(
+    OUT_SOURCE_PATH source_path
+    URL "${git_remote}"
+    REF "${head_ref}"
+    FETCH_REF main
+    HEAD_REF main
+)
+file(READ "${source_path}/README.txt" contents)
+if(NOT "${contents}" STREQUAL "second commit")
+    message(FATAL_ERROR "Failed to checkout the second commit. Contents were:
+${contents}
+")
+endif()
+
 vcpkg_execute_required_process(
     COMMAND ${git} config uploadpack.allowReachableSHA1InWant true
     WORKING_DIRECTORY "${git_test_repo}"
     LOGNAME "git-config"
 )
 
-# test head mode
+message(STATUS "Testing head mode")
 set(VCPKG_USE_HEAD_VERSION ON)
 vcpkg_from_git(
     OUT_SOURCE_PATH source_path
@@ -138,7 +170,7 @@ if(NOT "${VCPKG_HEAD_VERSION}" STREQUAL "${head_ref}")
 ")
 endif()
 
-# test head mode + no HEAD_REF -> just uses REF
+message(STATUS "Testing head mode + no HEAD_REF -> just uses REF")
 set(VCPKG_USE_HEAD_VERSION ON)
 vcpkg_from_git(
     OUT_SOURCE_PATH source_path
@@ -152,7 +184,7 @@ ${contents}
 ")
 endif()
 
-# test new head ref
+message(STATUS "Testing new head ref")
 file(WRITE "${git_test_repo}/README.txt" "third commit")
 vcpkg_execute_required_process(
     COMMAND ${git} add "README.txt"
@@ -195,7 +227,7 @@ if(NOT "${VCPKG_HEAD_VERSION}" STREQUAL "${new_head_ref}")
 ")
 endif()
 
-# test LFS support
+message(STATUS "Testing LFS support")
 vcpkg_execute_in_download_mode(
     COMMAND "${GIT}" lfs --version
     OUTPUT_VARIABLE lfs_version_output
@@ -211,7 +243,7 @@ if(NOT lfs_version_result)
     )
     file(WRITE "${git_test_repo}/.gitattributes" "* text=auto\n*.bin filter=lfs diff=lfs merge=lfs -text\n")
 
-    # test fetching with the same Git and LFS urls
+    message(STATUS "Testing fetching with the same Git and LFS urls")
     file(WRITE "${git_test_repo}/lfs_file.bin" "fourth commit")
     vcpkg_execute_required_process(
         COMMAND ${git} add ".gitattributes" "lfs_file.bin"
@@ -263,7 +295,7 @@ ${contents}
     ")
     endif()
 
-    # test fetching from different Git and LFS urls
+    message(STATUS "Testing fetching from different Git and LFS urls")
     # requires LFS 3.0.0 or later for "--force" on prune
     string(REGEX MATCH "git-lfs/([0-9\\.]+) " lfs_version "${lfs_version_output}")
     set(lfs_version "${CMAKE_MATCH_1}")

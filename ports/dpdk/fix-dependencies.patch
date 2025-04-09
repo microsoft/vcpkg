@@ -1,8 +1,8 @@
 diff --git a/config/meson.build b/config/meson.build
-index 0dde249..64f7d1c 100644
+index 722e114..0eb717b 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -181,12 +181,10 @@ if meson.is_cross_build() and not meson.get_cross_property('numa', true)
+@@ -234,12 +234,10 @@ if meson.is_cross_build() and not meson.get_cross_property('numa', true)
      find_libnuma = false
  endif
  if find_libnuma
@@ -11,54 +11,31 @@ index 0dde249..64f7d1c 100644
 +    numa_dep = dependency('numa', method: 'pkg-config')
 +    if numa_dep.found()
          dpdk_conf.set10('RTE_HAS_LIBNUMA', true)
-         has_libnuma = 1
+         has_libnuma = true
 -        add_project_link_arguments('-lnuma', language: 'c')
 -        dpdk_extra_ldflags += '-lnuma'
      endif
  endif
  
-@@ -211,8 +209,6 @@ if libarchive.found()
-     # Push libarchive link dependency at the project level to support
-     # statically linking dpdk apps. Details at:
-     # https://inbox.dpdk.org/dev/20210605004024.660267a1@sovereign/
--    add_project_link_arguments('-larchive', language: 'c')
--    dpdk_extra_ldflags += '-larchive'
- endif
- 
- # check for libbsd
 diff --git a/lib/eal/linux/meson.build b/lib/eal/linux/meson.build
-index 65f2ac6..3e023f8 100644
+index e99ebed..672c705 100644
 --- a/lib/eal/linux/meson.build
 +++ b/lib/eal/linux/meson.build
-@@ -23,5 +23,6 @@ sources += files(
+@@ -21,5 +21,6 @@ sources += files(
  
  deps += ['kvargs', 'telemetry']
- if has_libnuma == 1
+ if has_libnuma
 +    ext_deps += numa_dep
      dpdk_conf.set10('RTE_EAL_NUMA_AWARE_HUGEPAGES', true)
  endif
-diff --git a/lib/eal/meson.build b/lib/eal/meson.build
-index 056beb9..04bd3fe 100644
---- a/lib/eal/meson.build
-+++ b/lib/eal/meson.build
-@@ -29,6 +29,9 @@ endif
- if dpdk_conf.has('RTE_USE_LIBBSD')
-     ext_deps += libbsd
- endif
-+if dpdk_conf.has('RTE_HAS_LIBARCHIVE')
-+    ext_deps += libarchive
-+endif
- if cc.has_function('getentropy', prefix : '#include <unistd.h>')
-     cflags += '-DRTE_LIBEAL_USE_GETENTROPY'
- endif
 diff --git a/lib/vhost/meson.build b/lib/vhost/meson.build
-index bc72720..83970c7 100644
+index 41b622a..afff033 100644
 --- a/lib/vhost/meson.build
 +++ b/lib/vhost/meson.build
 @@ -6,6 +6,7 @@ if not is_linux
      reason = 'only supported on Linux'
  endif
- if has_libnuma == 1
+ if has_libnuma
 +    ext_deps += numa_dep
      dpdk_conf.set10('RTE_LIBRTE_VHOST_NUMA', true)
  endif

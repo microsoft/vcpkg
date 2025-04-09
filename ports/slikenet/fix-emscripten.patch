@@ -1,0 +1,208 @@
+diff --git a/Source/include/slikenet/LinuxStrings.h b/Source/include/slikenet/LinuxStrings.h
+index c0fd72bee..53e02c834 100644
+--- a/Source/include/slikenet/LinuxStrings.h
++++ b/Source/include/slikenet/LinuxStrings.h
+@@ -23,7 +23,7 @@
+ 	int _strnicmp(const char* s1, const char* s2, size_t n);
+ 	char *_strlwr(char * str );
+ #else
+- #if (defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__) ) && !defined(_WIN32)
++ #if (defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__) ) && !defined(_WIN32)
+ 		#ifndef _stricmp
+ 			int _stricmp(const char* s1, const char* s2);
+ 		#endif 
+diff --git a/Source/include/slikenet/NativeTypes.h b/Source/include/slikenet/NativeTypes.h
+index 0b1305e31..1a1112d63 100644
+--- a/Source/include/slikenet/NativeTypes.h
++++ b/Source/include/slikenet/NativeTypes.h
+@@ -16,7 +16,7 @@
+ #ifndef __NATIVE_TYPES_H
+ #define __NATIVE_TYPES_H
+ 
+-#if defined(__GNUC__) || defined(__GCCXML__) || defined(__SNC__) || defined(__S3E__)
++#if defined(__EMSCRIPTEN__) || defined(__GNUC__) || defined(__GCCXML__) || defined(__SNC__) || defined(__S3E__)
+ #include <stdint.h>
+ #elif !defined(_STDINT_H) && !defined(_SN_STDINT_H) && !defined(_SYS_STDINT_H_) && !defined(_STDINT) && !defined(_MACHTYPES_H_) && !defined(_STDINT_H_)
+ 	typedef unsigned char       uint8_t;
+diff --git a/Source/include/slikenet/_FindFirst.h b/Source/include/slikenet/_FindFirst.h
+index 74f5d8aa0..8906063aa 100644
+--- a/Source/include/slikenet/_FindFirst.h
++++ b/Source/include/slikenet/_FindFirst.h
+@@ -16,7 +16,7 @@
+ #ifndef GCC_FINDFIRST_H
+ #define GCC_FINDFIRST_H
+ 
+-#if (defined(__GNUC__) || defined(__ARMCC_VERSION) || defined(__GCCXML__) || defined(__S3E__) ) && !defined(__WIN32)
++#if (defined(__EMSCRIPTEN__) || defined(__GNUC__) || defined(__ARMCC_VERSION) || defined(__GCCXML__) || defined(__S3E__) ) && !defined(__WIN32)
+ 
+ #include <dirent.h>
+ 
+diff --git a/Source/include/slikenet/linux_adapter.h b/Source/include/slikenet/linux_adapter.h
+index b8a228f2d..1b578d9e5 100644
+--- a/Source/include/slikenet/linux_adapter.h
++++ b/Source/include/slikenet/linux_adapter.h
+@@ -9,7 +9,7 @@
+  */
+ #pragma once
+ 
+-#ifdef __linux__
++#if defined(__linux__) || defined(__EMSCRIPTEN__)
+ #define _TRUNCATE ((size_t)-1)
+ typedef int errno_t;
+ 
+diff --git a/Source/include/slikenet/socket2.h b/Source/include/slikenet/socket2.h
+index fde1ee471..52514512b 100644
+--- a/Source/include/slikenet/socket2.h
++++ b/Source/include/slikenet/socket2.h
+@@ -354,7 +354,7 @@ class RNS2_Berkley : public IRNS2_Berkley
+ 
+ 
+ 
+-#if defined(_WIN32) || defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__)
++#if defined(_WIN32) || defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__)
+ class RNS2_Windows_Linux_360
+ {
+ public:
+diff --git a/Source/src/FileList.cpp b/Source/src/FileList.cpp
+index 514d2aa88..77c6bf12a 100644
+--- a/Source/src/FileList.cpp
++++ b/Source/src/FileList.cpp
+@@ -25,7 +25,7 @@
+ #include <io.h>
+ 
+ 
+-#elif !defined ( __APPLE__ ) && !defined ( __APPLE_CC__ ) && !defined ( __PPC__ ) && !defined ( __FreeBSD__ ) && !defined ( __S3E__ )
++#elif !defined ( __EMSCRIPTEN__ ) && !defined ( __APPLE__ ) && !defined ( __APPLE_CC__ ) && !defined ( __PPC__ ) && !defined ( __FreeBSD__ ) && !defined ( __S3E__ )
+ #include <sys/io.h>
+ #endif
+ 
+diff --git a/Source/src/GetTime.cpp b/Source/src/GetTime.cpp
+index 6e30e255c..67d69ace0 100644
+--- a/Source/src/GetTime.cpp
++++ b/Source/src/GetTime.cpp
+@@ -182,7 +182,7 @@ SLNet::TimeUS GetTimeUS_Windows( void )
+ 	return curTime;
+ #endif // #if defined(GET_TIME_SPIKE_LIMIT) && GET_TIME_SPIKE_LIMIT>0
+ }
+-#elif defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__)
++#elif defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__)
+ SLNet::TimeUS GetTimeUS_Linux( void )
+ {
+ 	timeval tp;
+diff --git a/Source/src/LinuxStrings.cpp b/Source/src/LinuxStrings.cpp
+index 0a5583a0c..95bb2a093 100644
+--- a/Source/src/LinuxStrings.cpp
++++ b/Source/src/LinuxStrings.cpp
+@@ -13,7 +13,7 @@
+  *  license found in the license.txt file in the root directory of this source tree.
+  */
+ 
+-#if (defined(__GNUC__) || defined(__ARMCC_VERSION) || defined(__GCCXML__) || defined(__S3E__) ) && !defined(_WIN32)
++#if (defined(__EMSCRIPTEN__) || defined(__GNUC__) || defined(__ARMCC_VERSION) || defined(__GCCXML__) || defined(__S3E__) ) && !defined(_WIN32)
+ #include <string.h>
+ #ifndef _stricmp
+ int _stricmp(const char* s1, const char* s2)
+diff --git a/Source/src/RakNetSocket2_Berkley.cpp b/Source/src/RakNetSocket2_Berkley.cpp
+index 0592beed1..1a4aac8a2 100644
+--- a/Source/src/RakNetSocket2_Berkley.cpp
++++ b/Source/src/RakNetSocket2_Berkley.cpp
+@@ -203,7 +203,7 @@ RNS2BindResult RNS2_Berkley::BindSharedIPV4( RNS2_BerkleyBindParameters *bindPar
+ #if defined(_WIN32)
+ 		closesocket__(rns2Socket);
+ 		return BR_FAILED_TO_BIND_SOCKET;
+-#elif (defined(__GNUC__) || defined(__GCCXML__) ) && !defined(_WIN32)
++#elif (defined(__EMSCRIPTEN__) || defined(__GNUC__) || defined(__GCCXML__) ) && !defined(_WIN32)
+ 		closesocket__(rns2Socket);
+ 		switch (errno)
+ 		{
+diff --git a/Source/src/RakNetSocket2_Windows_Linux_360.cpp b/Source/src/RakNetSocket2_Windows_Linux_360.cpp
+index ee7aedad9..de4e95628 100644
+--- a/Source/src/RakNetSocket2_Windows_Linux_360.cpp
++++ b/Source/src/RakNetSocket2_Windows_Linux_360.cpp
+@@ -20,7 +20,7 @@
+ #ifndef RAKNETSOCKET2_WINDOWS_LINUX_360_CPP
+ #define RAKNETSOCKET2_WINDOWS_LINUX_360_CPP
+ 
+-#if (defined(_WIN32) || defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__) ) && !defined(WINDOWS_STORE_RT) && !defined(__native_client__)
++#if (defined(_WIN32) || defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__) || defined(__S3E__) ) && !defined(WINDOWS_STORE_RT) && !defined(__native_client__)
+ 
+ RNS2SendResult RNS2_Windows_Linux_360::Send_Windows_Linux_360NoVDP( RNS2Socket rns2Socket, RNS2_SendParameters *sendParameters, const char *file, unsigned int line ) {
+ 
+diff --git a/Source/src/SignaledEvent.cpp b/Source/src/SignaledEvent.cpp
+index 5577cb442..3f623fcf8 100644
+--- a/Source/src/SignaledEvent.cpp
++++ b/Source/src/SignaledEvent.cpp
+@@ -17,7 +17,7 @@
+ #include "slikenet/assert.h"
+ #include "slikenet/sleep.h"
+ 
+-#if defined(__GNUC__) 
++#if defined(__GNUC__) || defined(__EMSCRIPTEN__)
+ #include <sys/time.h>
+ #include <unistd.h>
+ #endif
+diff --git a/Source/src/SocketLayer.cpp b/Source/src/SocketLayer.cpp
+index fd6722e7c..1a50128b4 100644
+--- a/Source/src/SocketLayer.cpp
++++ b/Source/src/SocketLayer.cpp
+@@ -26,7 +26,7 @@
+ #include "slikenet/SocketDefines.h"
+ #include "slikenet/linux_adapter.h"
+ #include "slikenet/osx_adapter.h"
+-#if (defined(__GNUC__)  || defined(__GCCXML__)) && !defined(__WIN32__)
++#if (defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__)) && !defined(__WIN32__)
+ #include <netdb.h>
+ #endif
+ 
+diff --git a/Source/src/TCPInterface.cpp b/Source/src/TCPInterface.cpp
+index 0ca8a868d..ec3f181ee 100644
+--- a/Source/src/TCPInterface.cpp
++++ b/Source/src/TCPInterface.cpp
+@@ -44,7 +44,7 @@
+ #include "slikenet/Itoa.h"
+ #include "slikenet/SocketLayer.h"
+ #include "slikenet/SocketDefines.h"
+-#if (defined(__GNUC__)  || defined(__GCCXML__)) && !defined(__WIN32__)
++#if (defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__)) && !defined(__WIN32__)
+ #include <netdb.h>
+ #endif
+ 
+diff --git a/Source/src/UDPForwarder.cpp b/Source/src/UDPForwarder.cpp
+index 317dc9f8b..20d067531 100644
+--- a/Source/src/UDPForwarder.cpp
++++ b/Source/src/UDPForwarder.cpp
+@@ -212,7 +212,7 @@ void UDPForwarder::RecvFrom(SLNet::TimeMS curTime, ForwardEntry *forwardEntry)
+ 	sockAddrIn.sin_family = AF_INET;
+ #endif
+ 
+-#if defined(__GNUC__)
++#if defined(__GNUC__) || defined(__EMSCRIPTEN__)
+ 	#if defined(MSG_DONTWAIT)
+ 		const int flag=MSG_DONTWAIT;
+ 	#else
+diff --git a/Source/src/_FindFirst.cpp b/Source/src/_FindFirst.cpp
+index 10fab3462..1bc7990c7 100644
+--- a/Source/src/_FindFirst.cpp
++++ b/Source/src/_FindFirst.cpp
+@@ -12,7 +12,7 @@
+ * Original file by the_viking, fixed by Rv¥mulo Fernandes, fixed by Emmanuel Nars
+ * Should emulate windows finddata structure
+ */
+-#if (defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_WIN32)
++#if (defined(__EMSCRIPTEN__) || defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_WIN32)
+ #include "slikenet/_FindFirst.h"
+ #include "slikenet/DS_List.h"
+ 
+diff --git a/Source/src/linux_adapter.cpp b/Source/src/linux_adapter.cpp
+index fe25abe96..9d1f66e71 100644
+--- a/Source/src/linux_adapter.cpp
++++ b/Source/src/linux_adapter.cpp
+@@ -8,7 +8,7 @@
+  *  This file defines adapters for all MS-specific functions used throughout SLikeNet.
+  */
+ 
+-#ifdef __linux__
++#if defined(__linux__) || defined(__EMSCRIPTEN__)
+ #include "slikenet/linux_adapter.h"
+ 
+ #include <algorithm>	// for std::max, std::min
