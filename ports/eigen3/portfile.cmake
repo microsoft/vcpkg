@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     REPO libeigen/eigen
     REF "${VERSION}"
     SHA512 b258dcafe52153c3698c43c13abfd73d7f8d8c81970247f867aadadd4c602800015abe0403904cbbb3a4cb195bad9527734033970c197f3bb057c8345094a7bb
-    HEAD_REF 3.4.1
+    HEAD_REF master
     PATCHES
         remove_configure_checks.patch # This removes unnecessary configure checks. Eigen3 just installs headers not anything more.
         update-warning-suppression-to-latest.patch
