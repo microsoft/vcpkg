@@ -6913,7 +6913,7 @@
       "port-version": 4
     },
     "openssl": {
-      "baseline": "3.4.1",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "opensubdiv": {
