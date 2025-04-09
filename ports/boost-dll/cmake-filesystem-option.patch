@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 25d59ff..4739e61 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,8 @@ project(boost_dll VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
+ add_library(boost_dll INTERFACE)
+ add_library(Boost::dll ALIAS boost_dll)
+ 
++option(BOOST_DLL_USE_STD_FS "Use std::filesystem instead of Boost.Filesystem" OFF)
++
+ target_include_directories(boost_dll INTERFACE include)
+ 
+ target_link_libraries(boost_dll
+@@ -17,7 +19,6 @@ target_link_libraries(boost_dll
+     Boost::assert
+     Boost::config
+     Boost::core
+-    Boost::filesystem
+     Boost::function
+     Boost::move
+     Boost::predef
+@@ -30,6 +31,12 @@ target_link_libraries(boost_dll
+     Boost::winapi
+ )
+ 
++if (BOOST_DLL_USE_STD_FS)
++  target_compile_definitions(boost_dll INTERFACE BOOST_DLL_USE_STD_FS)
++else()
++  target_link_libraries(boost_dll INTERFACE Boost::filesystem)
++endif()
++
+ if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
+ 
+   add_subdirectory(test)

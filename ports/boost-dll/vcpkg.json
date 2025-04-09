@@ -55,5 +55,19 @@
       "name": "boost-winapi",
       "version>=": "1.88.0"
     }
-  ]
+  ],
+  "default-features": [
+    "boost-filesystem"
+  ],
+  "features": {
+    "boost-filesystem": {
+      "description": "use boost-filesystem",
+      "dependencies": [
+        {
+          "name": "boost-filesystem",
+          "version>=": "1.87.0"
+        }
+      ]
+    }
+  }
 }
