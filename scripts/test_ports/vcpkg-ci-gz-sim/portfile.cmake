@@ -8,7 +8,11 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/examples/standalone/light_control"
+    OPTIONS
+        "-DPython3_EXECUTABLE=${PYTHON3}"
 )
 vcpkg_cmake_build()
