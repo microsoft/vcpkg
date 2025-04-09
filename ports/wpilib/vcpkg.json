@@ -5,6 +5,9 @@
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,
   "dependencies": [
+    "eigen3",
+    "libuv",
+    "fmt",
     "libssh",
     "opencv",
     "protobuf",
