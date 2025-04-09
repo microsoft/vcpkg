@@ -7413,7 +7413,7 @@
       "port-version": 0
     },
     "protobuf-c": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "protopuf": {
