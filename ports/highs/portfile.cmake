@@ -1,13 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ERGO-Code/HiGHS
-    REF "v${VERSION}"
-    SHA512 b6155859fda446725406fb062c7e89ea90b254767c680f31e1581eca6cdb3e68f6cf74abefac9c095a54a6dde6d6b14bec5e2429c79506acff9d5b0586e53a57
+    # REF f06916c288543f77901321ce14f5b44b6be663ff
+    # "v${VERSION}"
+    REF 9b8de43c566f5e875656d3f8b19e1562337603de 
+    SHA512 f45735f94324cff0a3e1b67a6dfe8a08763298a182d0fce24e04bd2450476daaf5265e9878dcfc594616cc9cbb2ab832035162b72a5d97a31a41625d18021494
+    # SHA512 0
     HEAD_REF master
     PATCHES
         fix-hconfig-path.patch
-        fix-uwp.patch
-        fix-cuda.patch
+        # fix-uwp.patch
+        # fix-cuda.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,7 +19,8 @@ vcpkg_cmake_configure(
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        # -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        -DZLIB=OFF
 )
 
 vcpkg_cmake_install()

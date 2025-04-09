@@ -1,7 +1,7 @@
-diff --git a/src/HConfig.h.in b/src/HConfig.h.in
-index 13470d465..734dcf382 100644
---- a/src/HConfig.h.in
-+++ b/src/HConfig.h.in
+diff --git a/highs/HConfig.h.in b/highs/HConfig.h.in
+index 7edbce5e2..734dcf382 100644
+--- a/highs/HConfig.h.in
++++ b/highs/HConfig.h.in
 @@ -7,7 +7,7 @@
  #cmakedefine CUPDLP_GPU
  #cmakedefine CUPDLP_FORCE_NATIVE
@@ -15,7 +15,7 @@ index 13470d465..734dcf382 100644
  #define HIGHS_VERSION_MAJOR @HIGHS_VERSION_MAJOR@
  #define HIGHS_VERSION_MINOR @HIGHS_VERSION_MINOR@
  #define HIGHS_VERSION_PATCH @HIGHS_VERSION_PATCH@
--#define HIGHS_DIR "@CMAKE_SOURCE_DIR@"
+-#define HIGHS_DIR "@PROJECT_SOURCE_DIR@"
 +#define HIGHS_DIR ""
  
  #endif /* HCONFIG_H_ */
