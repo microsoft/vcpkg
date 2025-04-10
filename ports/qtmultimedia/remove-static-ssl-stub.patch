@@ -12,8 +12,8 @@ index 5778ae4d23..8c0df4b44d 100644
 +          set(openssl_is_shared OFF)
 +        endif()
          get_filename_component(ssl_lib_realpath "${OPENSSL_SSL_LIBRARY}" REALPATH)
-         string(REGEX MATCH "[0-9]+(\\.[0-9]+)*$" ssl_soversion "${ssl_lib_realpath}")
-         string(REGEX REPLACE "^3(\\..*|$)" "3" ssl_soversion "${ssl_soversion}")
+ 
+         string(REGEX MATCH "[0-9]+(\\.[0-9]+)*[a-z]?$" ssl_soversion "${ssl_lib_realpath}")
 @@ -187,6 +190,9 @@ function(qt_internal_multimedia_add_ffmpeg_stubs)
  
      if (ffmpeg_has_openssl)
