@@ -25,10 +25,10 @@ index a4f5b35ef3..eeb0bb0b8f 100644
      target_link_libraries( ${EXE} tester lapacktest magma )
      list( APPEND testing ${EXE} )
  endforeach()
-@@ -749,6 +750,7 @@ endif()
+@@ -749,6 +750,6 @@ endif()
  
  set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SPARSE_TEST_DIR}" )
- cmake_policy( SET CMP0037 OLD)
+-cmake_policy( SET CMP0037 OLD)
 +set(sparse_testing_all "")
  foreach( TEST ${sparse_testing_all} )
      string( REGEX REPLACE "\\.(cpp|f90|F90)"     "" EXE ${TEST} )

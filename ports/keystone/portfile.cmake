@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF dc7932ef2b2c4a793836caec6ecab485005139d6 # 0.9.2
     SHA512 ebcdb1cca6dfdf76e0ad2a42a667044806e5c083c07357908298c6ef23d15960f887efa05c1cb3dee90ebdcd5af819bcf8af0fa1aa068aa9a0c6703dee29514e
     HEAD_REF master
+    PATCHES
+      fix-cmake-4.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

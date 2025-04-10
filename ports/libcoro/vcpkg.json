@@ -1,6 +1,7 @@
 {
   "name": "libcoro",
   "version": "0.14.1",
+  "port-version": 1,
   "description": "C++20 coroutine library",
   "homepage": "https://github.com/jbaldwin/libcoro",
   "license": "Apache-2.0",

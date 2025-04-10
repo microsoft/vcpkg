@@ -1,7 +1,7 @@
 {
   "name": "llvm",
   "version": "18.1.6",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0 WITH LLVM-exception",

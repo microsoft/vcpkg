@@ -1,0 +1,12 @@
+diff --git a/submodules/CMakeLists.txt b/submodules/CMakeLists.txt
+index b0f0e2d1ee..1fa98fa430 100644
+--- a/submodules/CMakeLists.txt
++++ b/submodules/CMakeLists.txt
+@@ -257,7 +257,6 @@ else()
+             message(ERROR "WTF ${CX_PLATFORM} ${CMAKE_TARGET_ARCHITECTURE}")
+             set(OPENSSL_CONFIG_CMD ${CMAKE_CURRENT_SOURCE_DIR}/${QUIC_OPENSSL}/config)
+         endif()
+-        list(APPEND OPENSSL_CONFIG_FLAGS -isysroot ${CMAKE_OSX_SYSROOT})
+         if(SDK_NAME)
+             list(APPEND OPENSSL_CONFIG_FLAGS "-m${SDK_NAME}-version-min=${DEPLOYMENT_TARGET}")
+         elseif(CMAKE_OSX_DEPLOYMENT_TARGET)

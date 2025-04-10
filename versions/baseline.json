@@ -1698,7 +1698,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 23
+      "port-version": 24
     },
     "clara": {
       "baseline": "1.1.5",
@@ -1746,7 +1746,7 @@
     },
     "clockutils": {
       "baseline": "1.1.1",
-      "port-version": 2
+      "port-version": 3
     },
     "clrng": {
       "baseline": "2020-12-01",
@@ -2462,7 +2462,7 @@
     },
     "duilib": {
       "baseline": "2019-04-28",
-      "port-version": 6
+      "port-version": 7
     },
     "dukglue": {
       "baseline": "2022-11-08",
@@ -2546,7 +2546,7 @@
     },
     "ecm": {
       "baseline": "6.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ecos": {
       "baseline": "2.0.10",
@@ -3986,7 +3986,7 @@
     },
     "jsonnet": {
       "baseline": "0.20.0",
-      "port-version": 1
+      "port-version": 2
     },
     "juce": {
       "baseline": "8.0.4",
@@ -4058,7 +4058,7 @@
     },
     "keystone": {
       "baseline": "0.9.2",
-      "port-version": 3
+      "port-version": 4
     },
     "kf5archive": {
       "baseline": "5.98.0",
@@ -4322,7 +4322,7 @@
     },
     "lemon-parser-generator": {
       "baseline": "3.39.3",
-      "port-version": 0
+      "port-version": 1
     },
     "lensfun": {
       "baseline": "0.3.4",
@@ -4442,7 +4442,7 @@
     },
     "libbson": {
       "baseline": "1.30.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libcaer": {
       "baseline": "3.3.15",
@@ -4486,7 +4486,7 @@
     },
     "libcoro": {
       "baseline": "0.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libcorrect": {
       "baseline": "2018-10-11",
@@ -4630,7 +4630,7 @@
     },
     "libevhtp": {
       "baseline": "1.2.18",
-      "port-version": 5
+      "port-version": 6
     },
     "libexif": {
       "baseline": "0.6.25",
@@ -4706,7 +4706,7 @@
     },
     "libgme": {
       "baseline": "0.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libgnutls": {
       "baseline": "3.8.7.1",
@@ -4838,7 +4838,7 @@
     },
     "liblas": {
       "baseline": "1.8.1",
-      "port-version": 15
+      "port-version": 16
     },
     "liblbfgs": {
       "baseline": "1.10",
@@ -4850,7 +4850,7 @@
     },
     "liblemon": {
       "baseline": "2019-06-13",
-      "port-version": 9
+      "port-version": 10
     },
     "liblinear": {
       "baseline": "243",
@@ -5714,7 +5714,7 @@
     },
     "llvm": {
       "baseline": "18.1.6",
-      "port-version": 4
+      "port-version": 5
     },
     "lmdb": {
       "baseline": "0.9.33",
@@ -5874,7 +5874,7 @@
     },
     "magma": {
       "baseline": "2.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "magnum": {
       "baseline": "2020.06",
@@ -6326,7 +6326,7 @@
     },
     "msquic": {
       "baseline": "2.4.8",
-      "port-version": 0
+      "port-version": 1
     },
     "mstch": {
       "baseline": "1.0.2",
@@ -6414,7 +6414,7 @@
     },
     "nanogui": {
       "baseline": "2019-09-23",
-      "port-version": 5
+      "port-version": 6
     },
     "nanojsonc": {
       "baseline": "1.1.0",
@@ -6478,7 +6478,7 @@
     },
     "ned14-internal-quickcpplib": {
       "baseline": "2023-11-22",
-      "port-version": 0
+      "port-version": 1
     },
     "neon2sse": {
       "baseline": "2024-11-24",
@@ -6730,7 +6730,7 @@
     },
     "ogre": {
       "baseline": "14.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ogre-next": {
       "baseline": "2.3.3",
@@ -6738,7 +6738,7 @@
     },
     "ois": {
       "baseline": "1.5.1",
-      "port-version": 1
+      "port-version": 2
     },
     "omniorb": {
       "baseline": "4.3.0",
@@ -6830,7 +6830,7 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 24
+      "port-version": 25
     },
     "opencv3": {
       "baseline": "3.4.20",
@@ -7018,7 +7018,7 @@
     },
     "outcome": {
       "baseline": "2.2.9",
-      "port-version": 0
+      "port-version": 1
     },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
@@ -7178,7 +7178,7 @@
     },
     "physx": {
       "baseline": "5.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "picojson": {
       "baseline": "1.3.0",
@@ -7506,7 +7506,7 @@
     },
     "qca": {
       "baseline": "2.3.7",
-      "port-version": 3
+      "port-version": 4
     },
     "qcoro": {
       "baseline": "0.11.0",
@@ -8346,7 +8346,7 @@
     },
     "salome-configuration": {
       "baseline": "9.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "salome-med-fichier": {
       "baseline": "4.1.1",
@@ -8466,7 +8466,7 @@
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 11
+      "port-version": 12
     },
     "sdl3": {
       "baseline": "3.2.10",
@@ -8506,7 +8506,7 @@
     },
     "sentry-native": {
       "baseline": "0.8.3",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-dmon": {
       "baseline": "2022-02-08",
@@ -8782,7 +8782,7 @@
     },
     "spaceland": {
       "baseline": "7.8.2",
-      "port-version": 10
+      "port-version": 11
     },
     "span-lite": {
       "baseline": "0.11.0",
@@ -9402,7 +9402,7 @@
     },
     "torch-th": {
       "baseline": "2019-04-19",
-      "port-version": 4
+      "port-version": 5
     },
     "tracy": {
       "baseline": "0.11.1",
@@ -10086,7 +10086,7 @@
     },
     "x265": {
       "baseline": "4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "x86-simd-sort": {
       "baseline": "5.0",
@@ -10230,7 +10230,7 @@
     },
     "yajl": {
       "baseline": "2.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "yalantinglibs": {
       "baseline": "0.4.0",
@@ -10250,7 +10250,7 @@
     },
     "yasm": {
       "baseline": "1.3.0",
-      "port-version": 6
+      "port-version": 7
     },
     "yasm-tool": {
       "baseline": "2021-12-14",
@@ -10314,7 +10314,7 @@
     },
     "zkpp": {
       "baseline": "0.2.3",
-      "port-version": 3
+      "port-version": 4
     },
     "zlib": {
       "baseline": "1.3.1",

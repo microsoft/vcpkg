@@ -40,7 +40,7 @@ index eb7686c..326125c 100644
  
  # CMake prepends CMAKE_SHARED_LIBRARY_PREFIX to shared libraries, so without
  # this step the output would be |liblibjsonnet|.
-@@ -24,6 +24,7 @@ install(TARGETS libjsonnet++
+@@ -24,11 +24,11 @@ install(TARGETS libjsonnet++
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  target_include_directories(libjsonnet++ INTERFACE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
@@ -48,6 +48,11 @@ index eb7686c..326125c 100644
  
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
+     add_library(libjsonnet++_static STATIC ${LIBJSONNETPP_SOURCE})
+-    add_dependencies(libjsonnet++_static jsonnet)
+     target_link_libraries(libjsonnet++_static libjsonnet_static)
+     set_target_properties(libjsonnet++_static PROPERTIES OUTPUT_NAME jsonnet++)
+     install(TARGETS libjsonnet++_static DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 @@ -42,6 +43,7 @@ else()
      add_library(libjsonnet++_for_binaries ALIAS libjsonnet++_static)
  endif()

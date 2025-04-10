@@ -1,7 +1,7 @@
 {
   "name": "ois",
   "version": "1.5.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cross Platform Object Oriented Input Lib System. Meant to be very robust and compatible with many systems and operating systems.",
   "homepage": "https://wgois.github.io/OIS/",
   "license": "Zlib",

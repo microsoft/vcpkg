@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c41eff65e5..2d2652ae78 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,7 @@ add_definitions(-DUNICODE -D_UNICODE)
+ 
+ # add each CMake file
+ add_subdirectory(duilib)
++if(0)
+ add_subdirectory(360SafeDemo)
+ add_subdirectory(FlashDemo)
+ add_subdirectory(GameDemo)
+@@ -24,3 +25,4 @@ add_subdirectory(ListDemo)
+ # add_subdirectory(MenuDemo) the sources in this project has error
+ add_subdirectory(QQDemo)
+ add_subdirectory(RichListDemo)
++endif()
+\ No newline at end of file
