@@ -9577,8 +9577,8 @@
       "port-version": 0
     },
     "usearch": {
-      "baseline": "2.17.2",
-      "port-version": 1
+      "baseline": "2.17.6",
+      "port-version": 0
     },
     "usockets": {
       "baseline": "0.8.8",
