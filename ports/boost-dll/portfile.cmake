@@ -6,9 +6,16 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 c0a7a3f241bf7b0bcd5902d2b603f9c32835f3aaff66a1d14ba6f52bb29f5db60437b760c77654984b25d982ffef044df83dfb71308be080f5558499cf912b0e
     HEAD_REF master
+    PATCHES
+        cmake-filesystem-option.patch
 )
 
-set(FEATURE_OPTIONS "")
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS
+    FEATURE_OPTIONS
+    INVERTED_FEATURES
+        "boost-filesystem"    BOOST_DLL_USE_STD_FS
+)
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
