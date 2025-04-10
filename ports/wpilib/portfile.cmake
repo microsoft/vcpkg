@@ -25,7 +25,7 @@ vcpkg_cmake_configure(
         -DWITH_SIMULATION_MODULES=OFF
 	-DUSE_SYSTEM_FMTLIB=ON
 	-DUSE_SYSTEM_LIBUV=ON
-	_DUSE_SYSTEM_EIGEN=ON
+	_DUSE_SYSTEM_EIGEN=OFF # need the vendored dep which has constexpr constructors for Eigen::Matrix while eigen3 from vcpkg does not have them, which results in build failures
 )
 
 vcpkg_cmake_install()
