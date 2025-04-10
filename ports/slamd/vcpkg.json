@@ -1,29 +1,29 @@
 {
-    "name": "slamd",
-    "version-string": "0.1.0",
-    "homepage": "https://github.com/Robertleoj/slam_dunk",
-    "description": "3D visualization library targeted at SLAM applications",
-    "license": "Apache-2.0",
-    "dependencies": [
-        "spdlog",
-        "glbinding",
-        "glfw3",
-        "glm",
-        {
-            "name": "imgui",
-            "features": [
-                "glfw-binding",
-                "opengl3-binding",
-                "docking-experimental"
-            ]
-        },
-        {
-            "name": "vcpkg-cmake",
-            "host": true
-        },
-        {
-            "name": "vcpkg-cmake-config",
-            "host": true
-        }
-    ]
+  "name": "slamd",
+  "version-string": "0.1.0",
+  "description": "3D visualization library targeted at SLAM applications",
+  "homepage": "https://github.com/Robertleoj/slam_dunk",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "glbinding",
+    "glfw3",
+    "glm",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "glfw-binding",
+        "opengl3-binding"
+      ]
+    },
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

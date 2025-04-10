@@ -8668,6 +8668,10 @@
       "baseline": "1.13.0",
       "port-version": 2
     },
+    "slamd": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "sleef": {
       "baseline": "3.8",
       "port-version": 1
