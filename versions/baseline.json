@@ -9008,6 +9008,26 @@
       "baseline": "2020-09-14",
       "port-version": 4
     },
+    "stub-gz-sim": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "stub-libtorch": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "stub-llvm": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "stub-mesa": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "stub-octave": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "stx": {
       "baseline": "1.0.5",
       "port-version": 0
