@@ -30,7 +30,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11         VCPKG_LOCK_FIND_PACKAGE_X11
 )
 
-if(WITH_SERVER)
+if("client" IN_LIST FEATURES)
+    # Xcode dependency and untested installation paths
+    if(VCPKG_TARGET_IS_IOS)
+        message(STATUS "Not building native client components.")
+        list(APPEND FEATURE_OPTIONS -DWITH_CLIENT_IOS=OFF)
+    elseif(VCPKG_TARGET_IS_OSX)
+        message(STATUS "Not building native client components.")
+        list(APPEND FEATURE_OPTIONS -DWITH_CLIENT_MAC=OFF)
+    endif()
+endif()
+
+if("server" IN_LIST FEATURES)
     # actual shadow platform subsystem
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS # implementation unmaintained
        OR NOT WITH_X11) # dependency
