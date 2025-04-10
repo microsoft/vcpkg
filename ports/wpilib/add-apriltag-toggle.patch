@@ -1,0 +1,35 @@
+From 7d472b6eaa57d039247f48df8eeab4f2954e24ad Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Thu, 10 Apr 2025 08:36:23 -0400
+Subject: [PATCH] add apriltag toggle option
+
+---
+ CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9448fc87b..a828c49b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -96,6 +96,7 @@ option(WITH_PROTOBUF "Build protobuf support" ON)
+ option(USE_SYSTEM_FMTLIB "Use system fmtlib" OFF)
+ option(USE_SYSTEM_LIBUV "Use system libuv" OFF)
+ option(USE_SYSTEM_EIGEN "Use system eigen" OFF)
++option(WITH_APRILTAG "Build with apriltags" OFF)
+ 
+ # Options for location of OpenCV Java.
+ set(OPENCV_JAVA_INSTALL_DIR "" CACHE PATH "Location to search for the OpenCV jar file")
+@@ -347,7 +348,9 @@ if(WITH_WPILIB)
+     set(WPILIBC_DEP_REPLACE "find_dependency(wpilibc)")
+     set(WPILIBJ_DEP_REPLACE "find_dependency(wpilibj)")
+     set(WPILIBNEWCOMMANDS_DEP_REPLACE "find_dependency(wpilibNewCommands)")
+-    add_subdirectory(apriltag)
++    if(WITH_APRILTAG)
++        add_subdirectory(apriltag)
++    endif()
+     add_subdirectory(wpilibj)
+     add_subdirectory(wpilibc)
+     add_subdirectory(wpilibNewCommands)
+-- 
+2.47.1.windows.2
+
