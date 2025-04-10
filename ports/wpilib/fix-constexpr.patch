@@ -1,19 +1,19 @@
-From 378b82f3c0b8ddc8db870ac9e2c1211cfe0a8489 Mon Sep 17 00:00:00 2001
+From 2a03aa711b2dc1ef68c80a0076a870a972689bd3 Mon Sep 17 00:00:00 2001
 From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
-Date: Wed, 9 Apr 2025 11:39:43 -0400
-Subject: [PATCH] fix constexpr eigen
+Date: Wed, 9 Apr 2025 19:02:57 -0400
+Subject: [PATCH] fix eigen constexpr
 
 ---
- wpimath/src/main/native/include/frc/geometry/Pose2d.h        | 2 +-
- wpimath/src/main/native/include/frc/geometry/Pose3d.h        | 4 ++--
- wpimath/src/main/native/include/frc/geometry/Quaternion.h    | 2 +-
- wpimath/src/main/native/include/frc/geometry/Rotation2d.h    | 2 +-
- wpimath/src/main/native/include/frc/geometry/Rotation3d.h    | 4 ++--
- wpimath/src/main/native/include/frc/geometry/Transform2d.h   | 2 +-
- wpimath/src/main/native/include/frc/geometry/Transform3d.h   | 2 +-
- wpimath/src/main/native/include/frc/geometry/Translation2d.h | 2 +-
- wpimath/src/main/native/include/frc/geometry/Translation3d.h | 2 +-
- 9 files changed, 11 insertions(+), 11 deletions(-)
+ wpimath/src/main/native/include/frc/geometry/Pose2d.h       | 2 +-
+ wpimath/src/main/native/include/frc/geometry/Pose3d.h       | 4 ++--
+ wpimath/src/main/native/include/frc/geometry/Quaternion.h   | 2 +-
+ wpimath/src/main/native/include/frc/geometry/Rotation2d.h   | 2 +-
+ wpimath/src/main/native/include/frc/geometry/Rotation3d.h   | 6 +++---
+ wpimath/src/main/native/include/frc/geometry/Transform2d.h  | 2 +-
+ wpimath/src/main/native/include/frc/geometry/Transform3d.h  | 2 +-
+ .../src/main/native/include/frc/geometry/Translation2d.h    | 2 +-
+ .../src/main/native/include/frc/geometry/Translation3d.h    | 2 +-
+ 9 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/wpimath/src/main/native/include/frc/geometry/Pose2d.h b/wpimath/src/main/native/include/frc/geometry/Pose2d.h
 index 2d8825caa..de6d5c9d2 100644
@@ -77,7 +77,7 @@ index 82d9e39d7..6f769cb92 100644
      //     [sinθ   cosθ]
      return Eigen::Matrix2d{{m_cos, -m_sin}, {m_sin, m_cos}};
 diff --git a/wpimath/src/main/native/include/frc/geometry/Rotation3d.h b/wpimath/src/main/native/include/frc/geometry/Rotation3d.h
-index 8d1e97529..903592bcb 100644
+index 8d1e97529..0de491d33 100644
 --- a/wpimath/src/main/native/include/frc/geometry/Rotation3d.h
 +++ b/wpimath/src/main/native/include/frc/geometry/Rotation3d.h
 @@ -389,7 +389,7 @@ class WPILIB_DLLEXPORT Rotation3d {
@@ -98,6 +98,15 @@ index 8d1e97529..903592bcb 100644
      double w = m_q.W();
      double x = m_q.X();
      double y = m_q.Y();
+@@ -429,7 +429,7 @@ class WPILIB_DLLEXPORT Rotation3d {
+    *
+    * @return Rotation vector representation of this rotation.
+    */
+-  constexpr Eigen::Vector3d ToVector() const { return m_q.ToRotationVector(); }
++  Eigen::Vector3d ToVector() const { return m_q.ToRotationVector(); }
+ 
+   /**
+    * Returns a Rotation2d representing this Rotation3d projected into the X-Y
 diff --git a/wpimath/src/main/native/include/frc/geometry/Transform2d.h b/wpimath/src/main/native/include/frc/geometry/Transform2d.h
 index 88c00550d..a4b857f3b 100644
 --- a/wpimath/src/main/native/include/frc/geometry/Transform2d.h
