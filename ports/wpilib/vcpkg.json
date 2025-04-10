@@ -21,8 +21,8 @@
     }
   ],
   "features": {
-	  "apriltag": {
-		  "description": "Enables the building of the apriltag library",
-	  }
+    "apriltag": {
+      "description": "Enables the building of the apriltag library"
+    }
   }
 }
