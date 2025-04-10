@@ -5,7 +5,6 @@
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,
   "dependencies": [
-    "eigen3",
     "fmt",
     "libssh",
     "libuv",
