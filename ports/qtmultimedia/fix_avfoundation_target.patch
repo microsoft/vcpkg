@@ -9,4 +9,4 @@ index a1a0cb1..242ceac 100644
 +        ${FWAVFoundation}
  )
  
- qt_internal_extend_target(QDarwinMediaPlugin CONDITION NOT TVOS
+ qt_internal_extend_target(QDarwinMediaPlugin CONDITION NOT TVOS AND NOT VISIONOS
