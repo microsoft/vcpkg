@@ -1,18 +1,26 @@
 {
   "name": "gz-msgs",
   "version": "11.0.2",
-  "port-version": 1,
-  "description": "Middleware protobuf messages for robotics",
+  "port-version": 2,
+  "description": "Protobuf messages and functions for robot applications",
   "license": "Apache-2.0",
-  "supports": "!(android | arm | uwp)",
+  "supports": "!uwp",
   "dependencies": [
     "gz-cmake",
     "gz-math",
+    {
+      "name": "gz-msgs",
+      "host": true
+    },
     {
       "name": "ignition-modularscripts",
       "host": true
     },
     "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
     "tinyxml2"
   ]
 }
