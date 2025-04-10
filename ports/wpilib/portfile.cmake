@@ -21,18 +21,10 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME wpilib)
-vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
-vcpkg_cmake_config_fixup(PACKAGE_NAME cameraserver)
-vcpkg_cmake_config_fixup(PACKAGE_NAME cscore)
-vcpkg_cmake_config_fixup(PACKAGE_NAME hal)
 vcpkg_cmake_config_fixup(PACKAGE_NAME ntcore)
-vcpkg_cmake_config_fixup(PACKAGE_NAME romiVendordep)
-vcpkg_cmake_config_fixup(PACKAGE_NAME wpilibc)
-vcpkg_cmake_config_fixup(PACKAGE_NAME wpilibNewCommands)
 vcpkg_cmake_config_fixup(PACKAGE_NAME wpimath)
 vcpkg_cmake_config_fixup(PACKAGE_NAME wpinet)
 vcpkg_cmake_config_fixup(PACKAGE_NAME wpiutil)
-vcpkg_cmake_config_fixup(PACKAGE_NAME xrpVendordep)
 
 vcpkg_copy_pdbs()
 
