@@ -35,6 +35,10 @@ Indicates to not use parent hashes even for pull requests.
 .PARAMETER AllowUnexpectedPassing
 Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
 when using vcpkg to test a prerelease MSVC++ compiler)
+
+.Parameter KnownFailuresAbiLog
+If present, the path to a file containing a list of known ABI failing ABI hashes, typically generated
+by the `vcpkg x-check-features` command.
 #>
 
 [CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
@@ -53,7 +57,10 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$AllowUnexpectedPassing = $false
+    [switch]$AllowUnexpectedPassing = $false,
+    [Parameter(Mandatory = $false)]
+    [ValidateScript({ $null -ne $_ -or (Test-Path $_ -PathType Leaf) })]
+    [string]$KnownFailuresAbiLog = $null
 )
 
 function Add-ToolchainToTestCMake {
@@ -87,6 +94,10 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
+
+if (-Not [string]::IsNullOrWhiteSpace($KnownFailuresAbiLog)) {
+    $commonArgs + "--known-failures-from=$KnownFailuresAbiLog"
+}
 
 $cachingArgs = @()
 $skipFailuresArgs = @()

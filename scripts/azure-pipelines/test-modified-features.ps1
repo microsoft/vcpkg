@@ -21,6 +21,9 @@ Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
 .PARAMETER BinarySourceStub
 The type and parameters of the binary source. Shared across runs of this script. If
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
+
+.Parameter KnownFailuresAbiLog
+If present, the location to write a failing ABI log.
 #>
 
 [CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
@@ -36,7 +39,8 @@ Param(
     [Parameter(ParameterSetName='ArchivesRoot')]
     $ArchivesRoot = $null,
     [Parameter(ParameterSetName='BinarySourceStub')]
-    $BinarySourceStub = $null
+    $BinarySourceStub = $null,
+    [string]$KnownFailuresAbiLog = $null
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -63,6 +67,10 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
+
+if (-Not [string]::IsNullOrWhiteSpace($KnownFailuresAbiLog)) {
+    $commonArgs += "--failing-abi-log=$KnownFailuresAbiLog"
+}
 
 $cachingArgs = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
