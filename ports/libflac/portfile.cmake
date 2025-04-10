@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 c8e119462205cfd8bbe22b0aff112625d3e51ca11de97e4de06a46fb43a0768d7ec9c245b299b09b7aa4d811c6fc7b57856eaa1c217e82cca9b3ad1c0e545cbe
     HEAD_REF master
     PATCHES
+        android-cmake.diff
         fix-compile-options.patch
         fix-find-threads.patch
 )
