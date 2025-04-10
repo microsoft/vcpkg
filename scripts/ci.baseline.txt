@@ -1329,12 +1329,5 @@ vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
 marzbanpp:x64-linux=fail # triplet supported but vcpkg toolchain is too old (requires GCC 12+/Clang 19+)
-marzbanpp:x86-windows=pass
-marzbanpp:x64-windows=pass
-marzbanpp:x64-windows-release=pass
-marzbanpp:x64-windows-static=pass
-marzbanpp:x64-windows-static-md=pass
-marzbanpp:arm64-windows=pass
-marzbanpp:arm64-windows-static-md=pass
 marzbanpp:arm-neon-android=fail
 
