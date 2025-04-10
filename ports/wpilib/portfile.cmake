@@ -29,7 +29,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
+if("apriltag" IN_LIST FEATURES)
+	vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
+endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME cameraserver)
 vcpkg_cmake_config_fixup(PACKAGE_NAME cscore)
 vcpkg_cmake_config_fixup(PACKAGE_NAME hal)
