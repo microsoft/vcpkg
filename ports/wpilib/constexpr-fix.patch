@@ -1,0 +1,24 @@
+From 3d4cc133a392711d808fbbd7e80cf4183b50318d Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Wed, 9 Apr 2025 20:39:02 -0400
+Subject: [PATCH] constexpr fix
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9448fc87b..63df45397 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -283,6 +283,7 @@ endif()
+ 
+ if(USE_SYSTEM_EIGEN)
+     set(EIGEN_SYSTEM_REPLACE "find_package(Eigen3 CONFIG)")
++    add_compile_definitions(EIGEN_HAS_CONSTEXPR=1)
+ endif()
+ 
+ set(FILENAME_DEP_REPLACE "get_filename_component(SELF_DIR \"$\{CMAKE_CURRENT_LIST_FILE\}\" PATH)")
+-- 
+2.47.1.windows.2
+
