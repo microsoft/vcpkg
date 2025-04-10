@@ -3829,7 +3829,7 @@
       "port-version": 6
     },
     "intrusive-shared-ptr": {
-      "baseline": "1.6",
+      "baseline": "1.7",
       "port-version": 0
     },
     "io2d": {
