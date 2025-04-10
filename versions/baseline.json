@@ -2361,7 +2361,7 @@
       "port-version": 0
     },
     "dirent": {
-      "baseline": "1.24",
+      "baseline": "1.25",
       "port-version": 0
     },
     "discord-game-sdk": {
@@ -2918,7 +2918,7 @@
     },
     "fontconfig": {
       "baseline": "2.15.0",
-      "port-version": 2
+      "port-version": 3
     },
     "foonathan-lexy": {
       "baseline": "2022.12.1",
@@ -3462,7 +3462,7 @@
     },
     "gz-msgs": {
       "baseline": "11.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gz-msgs9": {
       "baseline": "9.5.0",
@@ -3514,7 +3514,7 @@
     },
     "gz-transport": {
       "baseline": "14.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-transport12": {
       "baseline": "12.2.1",
@@ -3829,7 +3829,7 @@
       "port-version": 6
     },
     "intrusive-shared-ptr": {
-      "baseline": "1.6",
+      "baseline": "1.7",
       "port-version": 0
     },
     "io2d": {
@@ -4441,7 +4441,7 @@
       "port-version": 4
     },
     "libbson": {
-      "baseline": "1.30.2",
+      "baseline": "1.30.3",
       "port-version": 1
     },
     "libcaer": {
@@ -6181,7 +6181,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "1.30.2",
+      "baseline": "1.30.3",
       "port-version": 0
     },
     "mongo-cxx-driver": {
