@@ -563,27 +563,25 @@ function(vcpkg_add_sourcelink_link_options target)
         CMAKE_VERSION VERSION_GREATER_EQUAL 3.19.0)
         # Sourcelink support added in Visual Studio 2017 Version 15.8.
 
-        # Search all of the installed sourcelink files from each port (already installed into the target)
-        # - Called for each referenced target and when each of the ports are built.
+        # Discover the sourcelink information for all dependencies (but not the current target)
+        # - Search all of the installed sourcelink files from each port (already installed into the target)
+        #   - Note that this is called for each referenced target and when each of the ports are built.
         # - This will collect more files than strictly necessary when building the dependent ports
-        #   because it scans the entire directory needed for the target (not specific to each port).
+        #   because it scans the entire directory populated for the target (not specific to each port).
+        #   There is insufficient information at this point in the build to directly reduce to the minimum set
+        #   of sourcelink entries for each individual port.  This does leak some of the unrelated dependency
+        #   information into the embedded sourcelink contents (which could be inserted into the binary cache).
         # - For MSBuild targets, see `vcpkg.targets` which handles this via a powershell script.
         file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
 
-        # Extra item provided during port builds (via vcpkg_cmake_configure in ports.cmake).
-        # The referenced file is not installed yet, so this is the best way to pick up the
-        # contents when linking each port.
+        # Discover the sourcelink information for the current build target itself.
+        # - Unlike for dependencies, this file is not installed yet, so it must be picked up directly when linking each port.
+		# - This could be optionally specified via "VCPKG_SOURCELINK_FILE" (via vcpkg_cmake_configure and ports.cmake).
         if(VCPKG_SOURCELINK_FILE)
             list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
         else()
-            # If the above was not provided on the commandline, then attempt to discover
-            # any extra sourcelink files in the package directory.
-            # - This extra step has been necessary because VCPKG_SOURCELINK_FILE is not always
-            #   set by the calling script (e.g. when building some ports), particularly during
-            #   the initial roll-out of sourcelink support.  Ideally this extra check could
-            #   be removed if the VCPKG_SOURCELINK_FILE value reliably provides the necessary path
-            #   when building ports.
-            # - This is only done when the install prefix is within the vcpkg root directory,
+            # Attempt to discover any extra sourcelink files in the package directory for the current build.
+            # - This is only done when the install prefix is within the vcpkg root directory
             #   to avoid picking up files during normal builds of the top-level target.
             string(FIND "${CMAKE_INSTALL_PREFIX}" "${Z_VCPKG_ROOT_DIR}" pos)
             if ("${pos}" GREATER "-1")
@@ -599,14 +597,15 @@ function(vcpkg_add_sourcelink_link_options target)
             endif()
         endif()
 
+        # Using the identified sourcelink files, combine them into a single sourcelink JSON file, while updating
+		# the contents to reference the installed location of the files.
+		# - This substitution of __VCPKG_INSTALLED_TRIPLET_DIR__ is what allows inlined headers to later be resolved correctly.
         if(sourcelink_files)
             # Set up the substitution to VCPKG_INSTALLED_DIR/VCPKG_TARGET_TRIPLET which will be used for each file below
             set(installed_triplet_dir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
             file(TO_NATIVE_PATH "${installed_triplet_dir}" installed_triplet_dir)
 
             # Incorporate the contents of each sourcelink JSON file (produced by vcpkg_write_sourcelink_file).
-            # - This is checked each time in a temporary copy, then compared to the existing contents,
-            #   which avoids unnecessary updates if nothing changed.
             set(sourcelink_fragments "")
 
             foreach(sourcelink_file ${sourcelink_files})
@@ -647,6 +646,9 @@ function(vcpkg_add_sourcelink_link_options target)
                 endforeach()
             endforeach()
 
+            # Output the combined sourcelink JSON file
+			# - The new contents are produced into a temporary file and then compared to the existing contents (if any),
+            #   which avoids unnecessary updates if nothing changed.
             if (NOT "${sourcelink_fragments}" STREQUAL "")
                 if(EXISTS "${Z_VCPKG_SOURCELINK_JSON}")
                     file(MD5 "${Z_VCPKG_SOURCELINK_JSON}" sourcelink_json_hash)

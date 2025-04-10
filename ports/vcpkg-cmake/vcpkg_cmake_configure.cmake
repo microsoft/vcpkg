@@ -176,17 +176,6 @@ function(vcpkg_cmake_configure)
         z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
-
-    if(EXISTS ${Z_CURRENT_SOURCELINK_FILE})
-        # Provide sourcelink for the current port being built, which requires
-        # knowing the location of the just-produced file (which has not yet been installed).
-        #
-        # Note that dependencies for this port will be collected in the subsequent step, and
-        # their sourcelink JSON files have already been installed in the target folder.
-        # Therefore those will be handled by vcpkg_add_sourcelink_link_options
-        vcpkg_list(APPEND arg_OPTIONS "-DVCPKG_SOURCELINK_FILE=${Z_CURRENT_SOURCELINK_FILE}")
-    endif()
-
     list(JOIN VCPKG_TARGET_ARCHITECTURE "\;" target_architecture_string)
     vcpkg_list(APPEND arg_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
