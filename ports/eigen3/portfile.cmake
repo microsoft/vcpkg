@@ -8,11 +8,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libeigen/eigen
     REF "${VERSION}"
-    SHA512 ba75ecb760e32acf4ceaf27115468e65d4f77c44f8d519b5a13e7940af2c03a304ad433368cb6d55431f307c5c39e2666ab41d34442db3cf441638e51f5c3b6a
+    SHA512 b258dcafe52153c3698c43c13abfd73d7f8d8c81970247f867aadadd4c602800015abe0403904cbbb3a4cb195bad9527734033970c197f3bb057c8345094a7bb
     HEAD_REF master
     PATCHES
         remove_configure_checks.patch # This removes unnecessary configure checks. Eigen3 just installs headers not anything more.
-        fix-vectorized-reductions-half.patch # Remove this patch in the next update
         update-warning-suppression-to-latest.patch
 )
 
