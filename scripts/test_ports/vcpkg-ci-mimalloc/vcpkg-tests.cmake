@@ -23,10 +23,8 @@ find_library(mimalloc_lib NAMES ${names} PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFA
 
 pkg_check_modules(PC_MIMALLOC mimalloc IMPORTED_TARGET REQUIRED)
 
-if(EXPECTED_FAILURE_DUE_TO_CXX_LINKAGE_OF_MIMALLOC)
 add_executable(pkgconfig-override $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,main-override.c,main-override-static.c>)
 target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
-endif()
 
 if(BUILD_SHARED_LIBS OR NOT WIN32)
     add_executable(pkgconfig-override-cxx main-override.cpp)
