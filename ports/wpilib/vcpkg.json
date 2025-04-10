@@ -19,5 +19,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+	  "apriltag": {
+		  "description": "Enables the building of the apriltag library",
+	  }
+  }
 }
