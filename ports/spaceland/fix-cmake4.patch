@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3fb062c7e4..5a93a8c4c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -211,7 +211,7 @@ ADD_CUSTOM_TARGET(uninstall
+ # Compiler dependent definitions
+ 
+ 
+-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
++if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?Clang")
+   # using Clang
+     MESSAGE("-- Current build compiler is Clang")
+     ADD_DEFINITIONS(-D_ISOC9X_SOURCE) 
