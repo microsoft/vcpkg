@@ -2354,11 +2354,11 @@
     },
     "directxtk": {
       "baseline": "2025-03-20",
-      "port-version": 0
+      "port-version": 1
     },
     "directxtk12": {
       "baseline": "2025-03-20",
-      "port-version": 0
+      "port-version": 1
     },
     "dirent": {
       "baseline": "1.25",
