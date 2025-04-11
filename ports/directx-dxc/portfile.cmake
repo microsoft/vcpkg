@@ -105,7 +105,6 @@ if (VCPKG_TARGET_IS_LINUX)
   set(lib_name "libdxcompiler.so")
   set(tool_path "tools/${PORT}/dxc")
 elseif (VCPKG_TARGET_IS_WINDOWS)
-  # VCPKG_TARGET_IS_WINDOWS
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
       set(DXC_ARCH arm64)
   elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
