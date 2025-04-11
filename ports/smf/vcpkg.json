@@ -1,6 +1,6 @@
 {
   "name": "smf",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "State machine framework",
   "homepage": "https://github.com/vpetrigo/smf",
   "license": "Apache-2.0",
