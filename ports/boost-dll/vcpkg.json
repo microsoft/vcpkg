@@ -5,6 +5,7 @@
   "description": "Boost dll module",
   "homepage": "https://www.boost.org/libs/dll",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-assert",
@@ -20,10 +21,6 @@
     },
     {
       "name": "boost-core",
-      "version>=": "1.88.0"
-    },
-    {
-      "name": "boost-filesystem",
       "version>=": "1.88.0"
     },
     {
@@ -54,5 +51,19 @@
       "name": "boost-winapi",
       "version>=": "1.88.0"
     }
-  ]
+  ],
+  "default-features": [
+    "boost-filesystem"
+  ],
+  "features": {
+    "boost-filesystem": {
+      "description": "Use Boost.Filesystem instead of std::filesystem",
+      "dependencies": [
+        {
+          "name": "boost-filesystem",
+          "version>=": "1.88.0"
+        }
+      ]
+    }
+  }
 }

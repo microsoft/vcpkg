@@ -45,7 +45,7 @@ function Get-PortVersion {
 }
 
 $portData = @{
-    "boost"                  = @{
+    "boost" = @{
         "features" = @{
             "mpi" = @{
                 "description"  = "Build with MPI support";
@@ -53,7 +53,7 @@ $portData = @{
             }
         }
     };
-    "boost-asio"             = @{
+    "boost-asio" = @{
         "features" = @{
             "ssl" = @{
                 "description"  = "Build with SSL support";
@@ -66,7 +66,17 @@ $portData = @{
     "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-fiber"            = @{
+    "boost-dll" = @{
+        "default-features" = @("boost-filesystem");
+        "supports" = "!uwp"
+        "features" = @{
+            "boost-filesystem" = @{
+                "description" = "Use Boost.Filesystem instead of std::filesystem";
+                "dependencies" = @("boost-filesystem");
+            };
+        };
+    };
+    "boost-fiber" = @{
         "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
             "numa" = @{
@@ -75,7 +85,6 @@ $portData = @{
         }
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
-    "boost-function"         = @{ "dependencies" = @("boost-type-traits"); };
     "boost-geometry"         = @{ "dependencies" = @("boost-crc", "boost-program-options"); };
     "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-iostreams"        = @{
@@ -138,7 +147,16 @@ $portData = @{
             }
         }
     };
-    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !android" };
+    "boost-process" = @{
+        "default-features" = @("boost-filesystem");
+        "supports" = "!uwp & !emscripten & !android"
+        "features" = @{
+            "boost-filesystem" = @{
+                "description" = "Use Boost.Filesystem instead of std::filesystem";
+                "dependencies" = @("boost-filesystem");
+            };
+        };
+    };
     "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
@@ -172,7 +190,6 @@ $portData = @{
 # and no "platform" field shall be added to the dependency.
 $suppressPlatformForDependency = @{
     "boost-coroutine2"            = @("boost-context");
-    "boost-dll"                   = @("boost-filesystem");
     "boost-graph"                 = @("boost-random");
     "boost-mqtt5"                 = @("boost-random");
     "boost-parameter-python"      = @("boost-python");
