@@ -1,0 +1,26 @@
+--- a/cmake/OpenCVFindProtobuf.cmake
++++ b/cmake/OpenCVFindProtobuf.cmake
+@@ -34,7 +34,7 @@ else()
+   set(protobuf_MODULE_COMPATIBLE ON)
+ 
+   unset(Protobuf_VERSION CACHE)
+-  find_package(Protobuf QUIET CONFIG)
++  find_package(Protobuf CONFIG REQUIRED)
+   if(NOT Protobuf_FOUND)
+     find_package(Protobuf QUIET)
+   endif()
+@@ -97,6 +97,7 @@ if(HAVE_PROTOBUF)
+     unset( __location)
+     if(TARGET "${Protobuf_LIBRARIES}")
+       get_target_property(__location "${Protobuf_LIBRARIES}" IMPORTED_LOCATION_RELEASE)
++      get_target_property(__location_debug "${Protobuf_LIBRARIES}" IMPORTED_LOCATION_DEBUG)
+       if(NOT __location)
+         get_target_property(__location "${Protobuf_LIBRARIES}" IMPORTED_LOCATION)
+       endif()
+@@ -112,5 +113,5 @@ if(HAVE_PROTOBUF)
+   endif()
+   list(APPEND CUSTOM_STATUS_protobuf "    Protobuf:"
+     BUILD_PROTOBUF THEN "build (${Protobuf_VERSION})"
+-    ELSE "${__location} (${Protobuf_VERSION})")
++    ELSE "optimized ${__location} debug ${__location_debug} ; version (${Protobuf_VERSION})")
+ endif()
