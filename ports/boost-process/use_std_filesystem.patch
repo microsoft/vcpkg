@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 19826d3..3486701 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,6 +7,8 @@ cmake_minimum_required(VERSION 3.5...3.16)
+ 
+ project(boost_process VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
+ 
++option(BOOST_PROCESS_USE_STD_FS "Use std::filesystem instead of Boost.Filesystem" OFF)
++
+ add_library(boost_process
+         src/detail/environment_posix.cpp
+         src/detail/environment_win.cpp
+@@ -49,13 +51,14 @@ target_compile_definitions(boost_process
+         PRIVATE BOOST_PROCESS_SOURCE=1
+ )
+ 
+-if (BOOST_PROCESS_USE_STD_FS)
+-  target_compile_definitions(boost_process PUBLIC BOOST_PROCESS_USE_STD_FS=1 )
++if(BOOST_PROCESS_USE_STD_FS)
++  target_compile_definitions(boost_process PUBLIC BOOST_PROCESS_USE_STD_FS)
++  target_compile_features(boost_process PUBLIC cxx_std_17)
+ else()
+   target_link_libraries(boost_process PUBLIC Boost::filesystem)
+ endif()
+ 
+-if (WIN32)
++if(WIN32)
+   target_link_libraries(boost_process PUBLIC ntdll shell32 advapi32 user32 ws2_32)
+ endif()
+ 

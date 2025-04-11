@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/type_erasure
     REF boost-${VERSION}
-    SHA512 7c7ad9d3f66e00cba445fcec70347ee003319c20dba004324ee5107f881ced505d993ae9d01d6b3579b768aefebd2564a90fa8882ce780d8ecd64d5065604a7a
+    SHA512 9892283a3741720f76e3c5592c4e51c96dbe2dc6c5dbecc3e8b789f2838fb7bd6c5f3447fca16c216d965c20cbadd7c926e501a203ba4261d23db363f3819fba
     HEAD_REF master
 )
 

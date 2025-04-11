@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 include(CMakePackageConfigHelpers)
 
-project(Boost VERSION @VERSION@ LANGUAGES NONE)
+project(Boost VERSION @SEMVER_VERSION@ LANGUAGES NONE)
 
 set(CONFIG_VERSION_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/tmpinst/BoostConfigVersion.cmake")
 
