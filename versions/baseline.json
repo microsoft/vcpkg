@@ -8697,7 +8697,7 @@
       "port-version": 0
     },
     "smf": {
-      "baseline": "0.2.0",
+      "baseline": "0.2.2",
       "port-version": 0
     },
     "smpeg2": {
