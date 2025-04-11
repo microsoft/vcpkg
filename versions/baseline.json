@@ -9926,7 +9926,7 @@
     },
     "websocketpp": {
       "baseline": "0.8.2",
-      "port-version": 4
+      "port-version": 0
     },
     "webthing-cpp": {
       "baseline": "1.2.0",

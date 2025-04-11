@@ -1,0 +1,17 @@
+{
+  "name": "websocketpp",
+  "version": "0.8.2",
+  "description": "C++ websocket client/server library",
+  "homepage": "https://github.com/zaphoyd/websocketpp",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
