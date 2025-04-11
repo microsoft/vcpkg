@@ -7586,7 +7586,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.16",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7652,11 +7652,19 @@
       "baseline": "5.15.16",
       "port-version": 0
     },
+    "qt5-quick3d": {
+      "baseline": "5.15.16",
+      "port-version": 0
+    },
     "qt5-quickcontrols": {
       "baseline": "5.15.16",
       "port-version": 0
     },
     "qt5-quickcontrols2": {
+      "baseline": "5.15.16",
+      "port-version": 0
+    },
+    "qt5-quicktimeline": {
       "baseline": "5.15.16",
       "port-version": 0
     },
