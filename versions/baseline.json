@@ -9813,7 +9813,7 @@
       "port-version": 0
     },
     "vmaware-vm-detection": {
-      "baseline": "2.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "volk": {
