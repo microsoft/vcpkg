@@ -11,6 +11,9 @@ set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        BUILD_EXAMPLES=OFF
+        BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
