@@ -16,9 +16,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake/)
-vcpkg_cmake_config_fixup(PACKAGE_NAME websocketpp)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/websocketpp/)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
