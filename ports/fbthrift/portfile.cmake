@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 0d98e6aefbf6e2d5aa7358c7dbba66df2e3065eb7b6b2a0d49fa908ebd6ac30900ca486945bd624d0f9690b0eab65616559479412a3e4ec5e9aaf95c931b88a0
+    SHA512 fdb8cace5e0b31ce11e47c647390bf5c8f3eda3dc00e66581b7f68a110fe786b0c82f46d027652acfce79b6b8b5607cbc995cdbe34d41abce144fcdb2717ff61
     HEAD_REF main
     PATCHES
         fix-deps.patch
         fix-test.patch
+        folly-has-liburing.diff
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -92,5 +93,4 @@ endif()
 # Only used internally and removed in master
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "" IGNORE_UNCHANGED)
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

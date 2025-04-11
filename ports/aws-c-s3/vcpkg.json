@@ -1,6 +1,6 @@
 {
   "name": "aws-c-s3",
-  "version": "0.7.7",
+  "version": "0.7.13",
   "description": "C99 library implementation for communicating with the S3 service, designed for maximizing throughput on high bandwidth EC2 instances.",
   "homepage": "https://github.com/awslabs/aws-c-s3",
   "license": "Apache-2.0",

@@ -3,6 +3,9 @@ if(POLICY CMP0174)
     # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
     cmake_policy(SET CMP0174 NEW)
 endif()
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
+    set(ENV{CMAKE_POLICY_VERSION_MINIMUM} 3.5)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
