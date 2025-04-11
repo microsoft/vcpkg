@@ -1,6 +1,6 @@
 {
   "name": "llnl-units",
-  "version": "0.9.1",
+  "version": "0.13.0",
   "description": "A run-time C++ library for working with units of measurement and conversions between them and with string representations of units and measurements",
   "homepage": "https://github.com/LLNL/units",
   "dependencies": [
