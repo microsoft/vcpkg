@@ -1018,8 +1018,6 @@ suitesparse-graphblas:arm64-windows=fail
 suitesparse-graphblas:arm64-uwp=fail
 suitesparse-graphblas:x64-uwp=fail
 systemc:arm64-uwp=fail
-systemc:arm64-windows-static-md=fail
-systemc:arm64-windows=fail
 systemc:x64-uwp=fail
 teemo:x64-android=fail
 
