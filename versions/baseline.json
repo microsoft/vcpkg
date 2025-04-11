@@ -10197,7 +10197,7 @@
       "port-version": 4
     },
     "xsimd": {
-      "baseline": "13.1.0",
+      "baseline": "13.2.0",
       "port-version": 0
     },
     "xtensor": {
