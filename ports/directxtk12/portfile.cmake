@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF ${DIRECTXTK_TAG}
     SHA512 d6071bd9493f69357dd5a0c2020a9e78154619dc443e6bdd2e1498ceff0650655c67798968a15377a8904d00e06220ae86fe94d01f7f8afb202bee3d4361a163
     HEAD_REF main
+    PATCHES
+      XAudio2Redist-ARM64.patch
 )
 
 vcpkg_check_features(
