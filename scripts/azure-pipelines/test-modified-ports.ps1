@@ -132,6 +132,14 @@ $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $failureLogsArg = "--failure-logs=$failureLogs"
 $knownFailuresFromArgs = @()
 if ($testFeatures) {
+    & $vcpkgExe x-ci-clean @commonArgs
+    $lastLastExitCode = $LASTEXITCODE
+    if ($lastLastExitCode -ne 0)
+    {
+        Write-Error "vcpkg x-ci-clean failed. This is usually an infrastructure problem; trying again may help."
+        exit $lastLastExitCode
+    }
+
     $ciFeatureBaselineFile = "$PSScriptRoot/../ci.feature.baseline.txt"
     $ciFeatureBaselineArg = "--ci-feature-baseline=$ciFeatureBaselineFile"
     $knownFailingAbisFile = Join-Path $ArtifactStagingDirectory 'failing-abi-log.txt'
@@ -156,7 +164,7 @@ $toolMetadataFile = "$PSScriptRoot/../vcpkg-tool-metadata.txt"
 $lastLastExitCode = $LASTEXITCODE
 if ($lastLastExitCode -ne 0)
 {
-    Write-Error "vcpkg x-ci-clean failed"
+    Write-Error "vcpkg x-ci-clean failed. This is usually an infrastructure problem; trying again may help."
     exit $lastLastExitCode
 }
 
