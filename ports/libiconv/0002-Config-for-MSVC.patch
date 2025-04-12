@@ -1,16 +1,3 @@
-diff --git "a/lib/loop_wchar.h" "b/lib/loop_wchar.h"
-index 6dc011b..158ccdd 100644
---- "a/lib/loop_wchar.h"
-+++ "b/lib/loop_wchar.h"	
-@@ -37,7 +37,7 @@
- # include <wchar.h>
- # define BUF_SIZE 64  /* assume MB_LEN_MAX <= 64 */
-   /* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
--  extern size_t mbrtowc ();
-+//  extern size_t mbrtowc ();
- # ifdef mbstate_t
- #  define mbrtowc(pwc, s, n, ps) (mbrtowc)(pwc, s, n, 0)
- #  define mbsinit(ps) 1
 diff --git a/srclib/fcntl.c b/srclib/fcntl.c
 index f9753c4..02fc8be 100644
 --- a/srclib/fcntl.c

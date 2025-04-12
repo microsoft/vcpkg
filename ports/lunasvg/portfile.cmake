@@ -2,8 +2,11 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sammycage/lunasvg
   REF "v${VERSION}"
-  SHA512 d79c7e35164df971a29145427316adca778416866635a97050f090ffdea1c313cba11255d9993ba7e4cbb3c7faa5b6ff0767e8c7739a680d34be377e6b9c5091
+  SHA512 6ea8ef74a18047e2714aacc6c162c42519246c38061290053461e7c5c0922234534a031bdb84eaff7bea46da4d8edd1e3cdd00d710c066600c9024fa2a134a03
   HEAD_REF master
+  PATCHES
+    # temporary patch. It should be removed once the new version of lunasvg is released.
+    fix-plutovg.patch
 )
 
 vcpkg_cmake_configure(

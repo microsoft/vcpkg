@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odygrd/quill
     REF v${VERSION}
-    SHA512 41f867be728b6e78e8c70e43a7ef97f11ca1f364481810fbac20c48873e1d252ae89caccc480117fad7699fad4283403f307be64651ba5fb92d6e5532e9ca0df
+    SHA512 9cf2e89eb4ccda23ec2965b3b51390e06bef04dec269ce45e45d67fa964a571b19f22c6f4a3003d19ca8029c57b58047261ab860b4b8ef873345e99f2b6321b9
     HEAD_REF master
 )
 
@@ -15,14 +15,6 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS ${ADDITIONAL_OPTIONS}
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/quill)
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-endif()
 
 vcpkg_fixup_pkgconfig()
 

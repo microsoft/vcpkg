@@ -1,7 +1,7 @@
 {
   "name": "gettext-libintl",
   "version": "0.22.5",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The libintl C library from GNU gettext-runtime.",
   "homepage": "https://www.gnu.org/software/gettext/",
   "license": "LGPL-2.1-or-later",
@@ -12,9 +12,8 @@
       "platform": "!linux"
     },
     {
-      "name": "vcpkg-cmake",
-      "host": true,
-      "platform": "linux"
+      "name": "vcpkg-make",
+      "host": true
     }
   ]
 }

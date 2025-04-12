@@ -1,6 +1,6 @@
 {
   "name": "daw-json-link",
-  "version": "3.29.2",
+  "version": "3.30.2",
   "description": "Perhaps the fastest JSON deserializer/serializer posssible or at least close to it.",
   "homepage": "https://github.com/beached/daw_json_link",
   "license": "BSL-1.0",

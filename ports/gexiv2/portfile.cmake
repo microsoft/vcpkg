@@ -1,5 +1,7 @@
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.gnome.org/sources/gexiv2/0.14/gexiv2-${VERSION}.tar.xz"
+    URLS "https://download.gnome.org/sources/gexiv2/${VERSION_MAJOR_MINOR}/gexiv2-${VERSION}.tar.xz"
     FILENAME "gexiv2-${VERSION}.tar.xz"
     SHA512 24c97fa09b9ee32cb98da4637ea78eb72ae7e2d1792f9ebb31d63e305b3e0e1f6935b8647589c76c39ba631a15c1d8d2f3879c7dff81433786e9533b6348b6a0
 )
