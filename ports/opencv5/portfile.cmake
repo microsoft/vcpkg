@@ -186,9 +186,9 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
+      0011-contrib-add-chrono.patch
       0013-contrib-fix-ogre.patch
       0015-contrib-fix-freetype.patch
-      0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
   )
 
@@ -372,7 +372,7 @@ vcpkg_cmake_configure(
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
         -DCMAKE_DEBUG_POSTFIX=d
-        -DOPENCV_DLLVERSION=4
+        -DOPENCV_DLLVERSION=5
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
         -DOPENCV_GENERATE_PKGCONFIG=ON

@@ -113,7 +113,7 @@ if("python" IN_LIST FEATURES)
     "-DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}"
   )
   if(EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/cv2")
-    message(FATAL_ERROR "You cannot install opencv3[python] if opencv4[python] is already present.")
+    message(FATAL_ERROR "You cannot install opencv3[python] if opencv4[python] or opencv5[python] is already present.")
   endif()
 endif()
 
