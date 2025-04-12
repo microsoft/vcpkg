@@ -9,6 +9,16 @@ vcpkg_from_github(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_program(BISON)
+
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PACKAGES "jinja2 yaml ply"
+)
+
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
