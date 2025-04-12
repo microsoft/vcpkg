@@ -8,6 +8,14 @@
     "libgnutls",
     "libunwind",
     "libyaml",
+    "libdwarf",
+    "libevent",
+    "gtest",
+    "tiff",
+    "qt",
+    "glib",
+    "gstreamer",
+    "python3",
     {
       "name": "vcpkg-tool-meson",
       "host": true
