@@ -1,6 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.7.2",
+  "port-version": 1,
   "description": "osgEarth - 3D Maps for OpenSceneGraph / C++14",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
@@ -32,6 +33,9 @@
     }
   ],
   "features": {
+    "controls": {
+      "description": "Support for the old Controls API (superceded by imgui)"
+    },
     "tools": {
       "description": "Build command-line tools"
     }
