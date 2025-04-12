@@ -1,6 +1,6 @@
 {
   "name": "kf5parts",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "port-version": 1,
   "description": "Plugin framework for user interface component",
   "homepage": "https://api.kde.org/frameworks/kparts/html/index.html",

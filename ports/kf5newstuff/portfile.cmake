@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knewstuff
-    REF v5.98.0
-    SHA512 dadbd4bcd6408e6b8afba4155a164563b2f3303162edd2f9cd193ab6e6677ce857e4455ccffee8ee289b1c8e634d7b3e5fe1e842efc4c89e67bd25ea103a9f50
+    REF v5.116.0
+    SHA512 7734b5403720e4031d30844361251f744364d109c60dd59e6424cf1aa2f7a5b87f5f81893c0cab5721dc0875fc5e9b6e510436e4485776ec3f30d6d36ffca476
     HEAD_REF master
-    PATCHES
-        0001-Fix-KF5NewStuffWidgets_EXPORTS-is-not-defined-on-cla.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure

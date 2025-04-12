@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcompletion
-    REF v5.98.0
-    SHA512 16cc4518e0db6f5583ce0ee24cb1f0f8f2812890bc1ed0d9f519cdeeeea79d5eb1fe82408fc5e101fbb2278bff00a61786e95189ffe2180ee289e7ed10ba6ac9
+    REF v5.116.0
+    SHA512 3a886b6d0dd92b3f418197af04faa56a2e8eefb0432db4323e5d38cca351125bc102ed1a6a8128bc7297cd7caa6ad236edbecd63ea956e053b828b7692eead35
     HEAD_REF master
 )
 

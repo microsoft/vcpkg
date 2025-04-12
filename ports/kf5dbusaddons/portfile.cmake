@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.98.0
-    SHA512 e92d54b41ed65be517c4d8d46ed98f4b4a5df7ed66ef490f340e44a2ee230236b738d06c980f44dbe93bbbbcbdba387f60f5fbdde8e77d4df4f1d0433b4f0255
+    REF v5.116.0
+    SHA512 823ca3d3996be26aafb4c56f9ea588a8c8467e852d9d6f8a3ddafa9d1403a5707bcdc52df0b0834fbafe4cbe968d5482930e4d67698233cf7dd1783a5bcad2b5
     HEAD_REF master
-    PATCHES
-        fix_static_build.patch  # https://invent.kde.org/frameworks/kdbusaddons/-/merge_requests/26
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
