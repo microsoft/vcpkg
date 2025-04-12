@@ -5,6 +5,9 @@
   "homepage": "https://github.com/libcamera-org/libcamera",
   "supports": "linux",
   "dependencies": [
+    "libgnutls",
+    "libunwind",
+    "libyaml",
     {
       "name": "vcpkg-tool-meson",
       "host": true
