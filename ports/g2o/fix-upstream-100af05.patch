@@ -1,0 +1,21 @@
+From 100af05931ae3497f39ab42cbeba240f50cc7b66 Mon Sep 17 00:00:00 2001
+From: Sebastian Kasperski <sebastian.kasperski@dfki.de>
+Date: Thu, 20 Mar 2025 09:09:28 +0100
+Subject: [PATCH] Install cholmod api header.
+
+---
+ g2o/solvers/cholmod/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/g2o/solvers/cholmod/CMakeLists.txt b/g2o/solvers/cholmod/CMakeLists.txt
+index 49f8f4b915206336490eba37220c72a58bb9cd8b..6bbf078ce92fa01c3abc3997b5f6bafc56a59ce8 100644
+--- a/g2o/solvers/cholmod/CMakeLists.txt
++++ b/g2o/solvers/cholmod/CMakeLists.txt
+@@ -5,6 +5,7 @@ endif()
+ set(PUBLIC_HEADERS
+ 	linear_solver_cholmod.h
+ 	cholmod_wrapper.h
++	g2o_cholmod_api.h
+ )
+ 
+ add_library(solver_cholmod ${G2O_LIB_TYPE}

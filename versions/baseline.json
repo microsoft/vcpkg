@@ -3030,7 +3030,7 @@
     },
     "g2o": {
       "baseline": "2024-12-14",
-      "port-version": 3
+      "port-version": 4
     },
     "g3log": {
       "baseline": "2.4",
