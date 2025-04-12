@@ -57,10 +57,7 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$AllowUnexpectedPassing = $false,
-    [Parameter(Mandatory = $false)]
-    [ValidateScript({ $null -ne $_ -or (Test-Path $_ -PathType Leaf) })]
-    [string]$KnownFailuresAbiLog = $null
+    [switch]$AllowUnexpectedPassing = $false
 )
 
 function Add-ToolchainToTestCMake {
@@ -95,10 +92,7 @@ $commonArgs = @(
     "--overlay-ports=scripts/test_ports"
 )
 
-if (-Not [string]::IsNullOrWhiteSpace($KnownFailuresAbiLog)) {
-    $commonArgs + "--known-failures-from=$KnownFailuresAbiLog"
-}
-
+$testFeatures = $false
 $cachingArgs = @()
 $skipFailuresArgs = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
@@ -110,8 +104,9 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
     }
     elseif ($BuildReason -eq 'PullRequest') {
-        Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
+        Write-Host 'Build reason was Pull Request, using binary caching in read write mode, testing features, skipping failures.'
         $skipFailuresArgs = @('--skip-failures')
+        $testFeatures = $true
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -127,12 +122,35 @@ if ($IsWindows) {
     $vcpkgExe = './vcpkg'
 }
 
+if ($Triplet -eq 'x64-windows-release') {
+    $tripletArg = "--host-triplet=$Triplet"
+} else {
+    $tripletArg = "--triplet=$Triplet"
+}
+
+$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
+$failureLogsArg = "--failure-logs=$failureLogs"
+$knownFailuresFromArgs = @()
+if ($testFeatures) {
+    $ciFeatureBaselineFile = "$PSScriptRoot/../ci.feature.baseline.txt"
+    $ciFeatureBaselineArg = "--ci-feature-baseline=$ciFeatureBaselineFile"
+    $knownFailingAbisFile = Join-Path $ArtifactStagingDirectory 'failing-abi-log.txt'
+    $failingAbiLogArg = "--failing-abi-log=$knownFailingAbisFile"
+    & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg @commonArgs @cachingArgs
+    $lastLastExitCode = $LASTEXITCODE
+    if ($lastLastExitCode -ne 0)
+    {
+        Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
+        Write-Error "vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. Check for failure logs attached to the run in Azure Pipelines."
+        exit $lastLastExitCode
+    }
+
+    $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+}
+
 $ciBaselineFile = "$PSScriptRoot/../ci.baseline.txt"
 $ciBaselineArg = "--ci-baseline=$ciBaselineFile"
 $toolMetadataFile = "$PSScriptRoot/../vcpkg-tool-metadata.txt"
-
-$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
-$xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 
 & $vcpkgExe x-ci-clean @commonArgs
 $lastLastExitCode = $LASTEXITCODE
@@ -140,12 +158,6 @@ if ($lastLastExitCode -ne 0)
 {
     Write-Error "vcpkg x-ci-clean failed"
     exit $lastLastExitCode
-}
-
-if ($Triplet -eq 'x64-windows-release') {
-    $tripletArg = "--host-triplet=$Triplet"
-} else {
-    $tripletArg = "--triplet=$Triplet"
 }
 
 $parentHashesArgs = @()
@@ -200,9 +212,12 @@ if ($AllowUnexpectedPassing) {
 }
 
 Add-ToolchainToTestCMake
-& $vcpkgExe ci $tripletArg "--failure-logs=$failureLogs" "--x-xunit=$xunitFile" $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @allowUnexpectedPassingArgs
+$xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
+$xunitArg = "--x-xunit=$xunitFile"
+& $vcpkgExe ci $tripletArg $failureLogsArg $xunitArg $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @knownFailuresFromArgs @allowUnexpectedPassingArgs
 $lastLastExitCode = $LASTEXITCODE
-
+$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
+Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
 
 if ($lastLastExitCode -ne 0)

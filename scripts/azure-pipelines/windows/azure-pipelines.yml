@@ -69,19 +69,8 @@ jobs:
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
           $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite"
-          $binarySourceStub = "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas"
-          $triplet = "${{ replace(parameters.jobName, '_', '-') }}"
           ./vcpkg.exe fetch python3
-          $failureLogs = '$(Build.ArtifactStagingDirectory)/failure-logs'
-          if ('$(Build.Reason)' -eq 'PullRequest') {
-            $knownFailuresAbiLog = '$(Build.ArtifactStagingDirectory)/failing-abi-log.txt'
-            & scripts/azure-pipelines/test-modified-features.ps1 -Triplet $triplet -BinarySourceStub $binarySourceStub -WorkingRoot $env:WORKING_ROOT -FailureLogs $failureLogs -KnownFailuresAbiLog $knownFailuresAbiLog
-            & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet $triplet -BuildReason $(Build.Reason) -BinarySourceStub $binarySourceStub -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -KnownFailuresAbiLog $knownFailuresAbiLog
-          } else {
-            & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet $triplet -BuildReason $(Build.Reason) -BinarySourceStub $binarySourceStub -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
-          }
-          $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
-          Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
+          & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
   - task: PowerShell@2
     displayName: 'Validate version files'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
