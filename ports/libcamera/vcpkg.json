@@ -19,6 +19,14 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
+    },
+    {
+      "name": "vcpkg-get-python",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
     }
   ]
 }
