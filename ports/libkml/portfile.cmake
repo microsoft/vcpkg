@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         # libkml uses std::unary_function that was deprecated in C++11 and removed in C++17
         # compilers are starting to ship C++17 as the defualt so explicitly set C++11
         -DCMAKE_CXX_STANDARD=11
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 )
 
 vcpkg_cmake_install()

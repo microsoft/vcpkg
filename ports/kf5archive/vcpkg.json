@@ -9,6 +9,7 @@
     "dependencies": [
         "ecm",
         "qt5-base",
+        "qt5-translations",
         {
             "name": "vcpkg-cmake",
             "host": true
