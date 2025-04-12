@@ -19,14 +19,14 @@ vcpkg_from_github(
         0004_remove_broken_fake_ba_jac.patch
         0005_find_package_required.patch
         0006_use_official_suitesparse_config.patch
+        0007_use_metis_config.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
-# The official metisConfig.cmake does not define a *_VERSION variable required by Ceres.
-# file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
