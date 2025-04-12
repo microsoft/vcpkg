@@ -1,0 +1,13 @@
+{
+  "name": "libcamera",
+  "version": "0.5.0",
+  "description": "A complex camera support library for Linux, Android, and ChromeOS",
+  "homepage": "https://github.com/libcamera-org/libcamera",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
