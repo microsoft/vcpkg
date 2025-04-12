@@ -6,17 +6,17 @@ vcpkg_from_github(
 	HEAD_REF master
 )
 
-vcpkg_configure_meson(
-    SOURCE_PATH "${SOURCE_PATH}"
-)
-
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_find_acquire_program(BISON)
+vcpkg_find_acquire_program(MESON)
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
     PYTHON_EXECUTABLE "${PYTHON3}"
     PACKAGES "jinja2 yaml ply"
+)
+
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_install_meson()
