@@ -1,8 +1,6 @@
-diff --git a/configure.ac b/configure.ac
-index 7f97248..48ff1a1 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -19,7 +19,8 @@ m4_pattern_forbid(^PGAC_)dnl to catch undefined macros
+--- configure.ac.orig	2025-02-17 16:11:21.000000000 -0500
++++ configure.ac	2025-04-12 19:20:25.488358770 -0400
+@@ -19,7 +19,8 @@
  
  AC_INIT([PostgreSQL], [17.4], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
  
@@ -12,8 +10,8 @@ index 7f97248..48ff1a1 100644
  Untested combinations of 'autoconf' and PostgreSQL versions are not
  recommended.  You can remove the check from 'configure.ac' but it is then
  your responsibility whether the result works or not.])])
-@@ -1311,7 +1312,8 @@ if test "$enable_thread_safety" = yes; then
- fi
+@@ -1286,7 +1287,8 @@
+ AC_SEARCH_LIBS(pthread_barrier_wait, pthread)
  
  if test "$with_readline" = yes; then
 -  PGAC_CHECK_READLINE
@@ -22,7 +20,7 @@ index 7f97248..48ff1a1 100644
    if test x"$pgac_cv_check_readline" = x"no"; then
      AC_MSG_ERROR([readline library not found
  If you have readline already installed, see config.log for details on the
-@@ -1321,7 +1323,7 @@ Use --without-readline to disable readline support.])
+@@ -1296,7 +1298,7 @@
  fi
  
  if test "$with_zlib" = yes; then
@@ -31,25 +29,7 @@ index 7f97248..48ff1a1 100644
                 [AC_MSG_ERROR([zlib library not found
  If you have zlib already installed, see config.log for details on the
  failure.  It is possible the compiler isn't looking in the proper directory.
-@@ -1370,6 +1372,9 @@ if test "$with_ssl" = openssl ; then
-   # Minimum required OpenSSL version is 1.0.1
-   AC_DEFINE(OPENSSL_API_COMPAT, [0x10001000L],
-             [Define to the OpenSSL API version in use. This avoids deprecation warnings from newer OpenSSL versions.])
-+  PKG_CHECK_MODULES([CRYPTO_new_ex_data], [libcrypto], [LIBS="$CRYPTO_new_ex_data_LIBS $LIBS"], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
-+  PKG_CHECK_MODULES([SSL_new], [libssl], [LIBS="$SSL_new_LIBS $LIBS"], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
-+  if false ; then
-   if test "$PORTNAME" != "win32"; then
-      AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
-      AC_CHECK_LIB(ssl,    SSL_new, [], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
-@@ -1377,6 +1382,7 @@ if test "$with_ssl" = openssl ; then
-      AC_SEARCH_LIBS(CRYPTO_new_ex_data, [eay32 crypto], [], [AC_MSG_ERROR([library 'eay32' or 'crypto' is required for OpenSSL])])
-      AC_SEARCH_LIBS(SSL_new, [ssleay32 ssl], [], [AC_MSG_ERROR([library 'ssleay32' or 'ssl' is required for OpenSSL])])
-   fi
-+  fi
-   # Functions introduced in OpenSSL 1.0.2. LibreSSL does not have
-   # SSL_CTX_set_cert_cb().
-   AC_CHECK_FUNCS([X509_get_signature_nid SSL_CTX_set_cert_cb])
-@@ -1403,19 +1409,23 @@ if test "$with_pam" = yes ; then
+@@ -1377,19 +1379,23 @@
  fi
  
  if test "$with_libxml" = yes ; then
@@ -76,4 +56,4 @@ index 7f97248..48ff1a1 100644
 +  LIBS="$ZSTD_LIBS $LIBS"
  fi
  
- # Note: We can test for libldap_r only after we know PTHREAD_LIBS;
+ # Note: We can test for libldap_r only after we know PTHREAD_LIBS
