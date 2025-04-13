@@ -7,12 +7,21 @@ vcpkg_from_github(
     PATCHES
         # https://github.com/troldal/OpenXLSX/pull/354
         fix-internal-headers.patch
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libzip       OPENXLSX_ENABLE_LIBZIP
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/external/nowide")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(OPENXLSX_LIBRARY_TYPE "STATIC")
+else()
+    set(OPENXLSX_LIBRARY_TYPE "SHARED")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -21,6 +30,7 @@ vcpkg_cmake_configure(
         -DOPENXLSX_CREATE_DOCS=OFF
         -DOPENXLSX_BUILD_SAMPLES=OFF
         -DOPENXLSX_BUILD_TESTS=OFF
+        -DOPENXLSX_LIBRARY_TYPE="${OPENXLSX_LIBRARY_TYPE}"
 )
 
 vcpkg_cmake_install()

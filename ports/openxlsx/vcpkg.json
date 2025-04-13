@@ -6,6 +6,10 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     {
+      "name": "nowide",
+      "platform": "windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
