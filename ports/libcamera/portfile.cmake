@@ -12,7 +12,7 @@ vcpkg_find_acquire_program(MESON)
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
     PYTHON_EXECUTABLE "${PYTHON3}"
-    REQUIREMENTS "./requirements.txt"
+    PACKAGES "jinja2" "PyYaml" "ply"
 )
 
 vcpkg_install_meson()
