@@ -24,4 +24,4 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.rst")
