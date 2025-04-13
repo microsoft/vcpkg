@@ -15,6 +15,10 @@ x_vcpkg_get_python_packages(
     PACKAGES "jinja2" "PyYaml" "ply"
 )
 
+vcpkg_configure_meson(
+	SOURCE_PATH "${SOURCE_PATH}"
+)
+
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
