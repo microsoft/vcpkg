@@ -1,6 +1,6 @@
 {
   "name": "intrusive-shared-ptr",
-  "version": "1.6",
+  "version": "1.7",
   "description": "Intrusive reference counting smart pointer, highly configurable reference counted base class and various adapters. Also known as libisptr.",
   "homepage": "https://github.com/gershnik/intrusive_shared_ptr",
   "license": "MIT",
