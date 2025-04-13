@@ -2,3 +2,9 @@ ripper37-libbase provides CMake targets:
 
   find_package(libbase CONFIG REQUIRED)
   target_link_libraries(main PRIVATE libbase::libbase)
+
+if enabled, it also provides some of these optional CMake targets:
+
+  target_link_libraries(main PRIVATE libbase::libbase_net)
+  target_link_libraries(main PRIVATE libbase::libbase_win)
+  target_link_libraries(main PRIVATE libbase::libbase_wx)
