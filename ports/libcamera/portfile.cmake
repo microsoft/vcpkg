@@ -12,7 +12,19 @@ vcpkg_find_acquire_program(MESON)
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
     PYTHON_EXECUTABLE "${PYTHON3}"
-    PACKAGES "jinja2 yaml ply"
+    PACKAGES "jinja2"
+)
+
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PACKAGES "yaml"
+)
+
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PACKAGES "ply"
 )
 
 vcpkg_configure_meson(
