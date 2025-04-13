@@ -5,6 +5,11 @@
   "homepage": "https://github.com/libcamera-org/libcamera",
   "supports": "linux",
   "dependencies": [
+    "libgnutls",
+    "libunwind",
+    "libyaml",
+    "libyuv",
+    "openssl",
     {
       "name": "vcpkg-get-python",
       "host": true
