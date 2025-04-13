@@ -1,0 +1,27 @@
+diff --git a/src/interfaces/libpq/Makefile b/src/interfaces/libpq/Makefile
+index b36a765764..730c62412e 100644
+--- a/src/interfaces/libpq/Makefile
++++ b/src/interfaces/libpq/Makefile
+@@ -112,6 +112,7 @@ backend_src = $(top_srcdir)/src/backend
+ # Also skip the test on platforms where libpq infrastructure may be provided
+ # by statically-linked libraries, as we can't expect them to honor this
+ # coding rule.
++ifeq ($(LIBPQ_LIBRARY_TYPE), shared)
+ libpq-refs-stamp: $(shlib)
+ ifneq ($(enable_coverage), yes)
+ ifeq (,$(filter solaris,$(PORTNAME)))
+@@ -121,7 +122,13 @@ ifeq (,$(filter solaris,$(PORTNAME)))
+ endif
+ endif
+ 	touch $@
+-
++else
++.PHONY: libpq-refs-stamp
++libpq-refs-stamp:
++endif
++ 
++ # Make dependencies on pg_config_paths.h visible in all builds.
++ fe-connect.o: fe-connect.c $(top_builddir)/src/port/pg_config_paths.h
+ # Make dependencies on pg_config_paths.h visible in all builds.
+ fe-connect.o: fe-connect.c $(top_builddir)/src/port/pg_config_paths.h
+ fe-misc.o: fe-misc.c $(top_builddir)/src/port/pg_config_paths.h

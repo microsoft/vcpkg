@@ -1,16 +1,16 @@
 diff --git a/src/Makefile.shlib b/src/Makefile.shlib
-index f94d59d1c597..8ca51ca03f75 100644
+index fa81f6ffdd..a9675ab88c 100644
 --- a/src/Makefile.shlib
 +++ b/src/Makefile.shlib
-@@ -183,6 +183,11 @@ endif
- ifeq ($(PORTNAME), linux)
-   LINK.shared		= $(COMPILER) -shared
+@@ -108,6 +108,11 @@ endif
+ 
+ ifeq ($(PORTNAME), darwin)
    ifdef soname
 +    ifneq (,$(findstring linux-android,$(host_os)))
 +      # Android uses unversioned shared libraries
-+      shlib		= $(shlib_bare)
-+      soname		= $(shlib_bare)
++      shlib            = $(shlib_bare)
++     soname           = $(shlib_bare)
 +    endif
-     LINK.shared		+= -Wl,-soname,$(soname)
-   endif
-   BUILD.exports		= ( echo '{ global:'; $(AWK) '/^[^\#]/ {printf "%s;\n",$$1}' $<; echo ' local: *; };' ) >$@
+     # linkable library
+     ifneq ($(SO_MAJOR_VERSION), 0)
+       version_link	= -compatibility_version $(SO_MAJOR_VERSION) -current_version $(SO_MAJOR_VERSION).$(SO_MINOR_VERSION)
