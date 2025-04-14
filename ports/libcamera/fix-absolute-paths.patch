@@ -1,0 +1,36 @@
+From 87c90a845cb7f98047e5f379dc9c706d036ad1c5 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Sun, 13 Apr 2025 20:22:35 -0400
+Subject: [PATCH] try fix abs paths
+
+---
+ src/v4l2/libcamerify.in | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/src/v4l2/libcamerify.in b/src/v4l2/libcamerify.in
+index c4ea273f..7691c540 100755
+--- a/src/v4l2/libcamerify.in
++++ b/src/v4l2/libcamerify.in
+@@ -37,9 +37,17 @@ done
+ [ "$loglevel" != "" ] && export LIBCAMERA_LOG_LEVELS=$loglevel
+ 
+ if [ "$LD_PRELOAD" = "" ] ; then
+-   LD_PRELOAD='@LIBCAMERA_V4L2_SO@'
++   if [ $debug = 0 ] ; then
++   	LD_PRELOAD= realpath './../v412-compat.so'
++   else
++	LD_PRELOAD= realpath '../../v412-compat.so'
++   fi
+ else
+-   LD_PRELOAD="$LD_PRELOAD "'@LIBCAMERA_V4L2_SO@'
++   if [ $debug = 0 ] ; then
++   	LD_PRELOAD="$LD_PRELOAD " realpath './../v412-compat.so'
++   else
++	LD_PRELOAD="$LD_PRELOAD " realpath './../../v412-compat.so'
++   fi
+ fi
+ 
+ export LD_PRELOAD
+-- 
+2.47.1.windows.2
+
