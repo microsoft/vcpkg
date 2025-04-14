@@ -1,10 +1,10 @@
 vcpkg_from_git(
-	OUT_SOURCE_PATH SOURCE_PATH
-	URL https://git.libcamera.org/libcamera/libcamera.git
-	REF 058f589ae36170935e537910f2c303b1c3ea03b3
-	HEAD_REF master
-	PATCHES
-		fix-absolute-paths.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    URL https://git.libcamera.org/libcamera/libcamera.git
+    REF 058f589ae36170935e537910f2c303b1c3ea03b3
+    HEAD_REF master
+    PATCHES
+        fix-absolute-paths.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -17,7 +17,7 @@ x_vcpkg_get_python_packages(
 )
 
 vcpkg_configure_meson(
-	SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_install_meson()
