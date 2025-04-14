@@ -5,6 +5,10 @@
   "homepage": "https://github.com/KDE/extra-cmake-modules",
   "dependencies": [
     {
+      "name": "libmount",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
