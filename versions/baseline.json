@@ -37,7 +37,7 @@
       "port-version": 17
     },
     "ada-idna": {
-      "baseline": "0.3.2",
+      "baseline": "0.3.3",
       "port-version": 0
     },
     "ada-url": {

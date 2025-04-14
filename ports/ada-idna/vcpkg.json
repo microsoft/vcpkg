@@ -1,6 +1,6 @@
 {
   "name": "ada-idna",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "C++ library implementing the to_ascii and to_unicode functions from the Unicode Technical Standard.",
   "homepage": "https://github.com/ada-url/idna",
   "license": "Apache-2.0 AND MIT",
