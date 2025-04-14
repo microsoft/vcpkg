@@ -643,6 +643,8 @@ log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
 magma:x64-linux=fail
+marzbanpp:arm-neon-android=fail
+marzbanpp:x64-linux=fail # triplet supported but vcpkg toolchain is too old (requires GCC 12+/Clang 19+)
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
 mchehab-zbar:x64-android=fail
@@ -1328,6 +1330,3 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
-marzbanpp:x64-linux=fail # triplet supported but vcpkg toolchain is too old (requires GCC 12+/Clang 19+)
-marzbanpp:arm-neon-android=fail
-
