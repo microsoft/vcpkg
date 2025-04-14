@@ -1,19 +1,14 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cdf73fa..9fea965 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -30,9 +30,6 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX   reldbg)
- # Add main tcp_pubsub library
- add_subdirectory(tcp_pubsub)
- 
--# Recycle dependency. It's header only and not in the API, so we add it with EXCLUDE_FOR_ALL, so it won't be installed
--add_subdirectory(thirdparty/recycle EXCLUDE_FROM_ALL)
--
- # Generic samples
- if (TCP_PUBSUB_BUILD_SAMPLES)
-     add_subdirectory(samples/performance_publisher)
+From 23277e275fe3b255a2d8ff40ef501e7b95047a6f Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Mon, 14 Apr 2025 11:35:20 -0400
+Subject: [PATCH] fix-deps
+
+---
+ tcp_pubsub/CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/tcp_pubsub/CMakeLists.txt b/tcp_pubsub/CMakeLists.txt
-index d2a5777..772319a 100644
+index 2ef4582..0f8cc58 100644
 --- a/tcp_pubsub/CMakeLists.txt
 +++ b/tcp_pubsub/CMakeLists.txt
 @@ -10,8 +10,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -35,16 +30,14 @@ index d2a5777..772319a 100644
  )
  
  target_compile_definitions(${PROJECT_NAME}
-@@ -100,6 +99,7 @@ target_include_directories(${PROJECT_NAME}
-     $<INSTALL_INTERFACE:include>
-   PRIVATE
-     src/
-+    ${RECYCLE_INCLUDE_DIRS}
+@@ -81,6 +80,7 @@ target_compile_definitions(${PROJECT_NAME}
+         ASIO_STANDALONE
+         ASIO_DISABLE_VISIBILITY
+         _WIN32_WINNT=0x0601
++	${RECYCLE_INCLUDE_DIRS}
  )
  
- set_target_properties(${PROJECT_NAME} PROPERTIES
-@@ -177,4 +177,3 @@ install(
-   DESTINATION ${TCP_PUBSUB_INSTALL_CMAKE_DIR}
-   COMPONENT tcp_pubsub_dev
- )
--
+ # Check if tcp_pubsub is an object library. If so, define TCP_PUBSUB_STATIC_DEFINE,
+-- 
+2.47.1.windows.2
+
