@@ -1,6 +1,6 @@
-vcpkg_from_github(
+vcpkg_from_git(
 	OUT_SOURCE_PATH SOURCE_PATH
-	REPO libcamera-org/libcamera
+	URL https://git.libcamera.org/libcamera/libcamera.git
 	REF "v${VERSION}"
 	SHA512 251e6436cb6d41cf80a502889dcbfa2925fc1a9addecce16f9d38b4cd6b8a9bb519553b917315e21b61ec90349d7aa6132c071071aacc7040dc7ab9108abd51d
 	HEAD_REF master
