@@ -2729,8 +2729,8 @@
       "port-version": 5
     },
     "fastdds": {
-      "baseline": "3.1.2",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "fastfeat": {
       "baseline": "391d5e9",
