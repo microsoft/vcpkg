@@ -10,4 +10,4 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/spimpl.h")
 
 file(INSTALL "${SOURCE_PATH}/spimpl.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/spimpl")
 
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md")
