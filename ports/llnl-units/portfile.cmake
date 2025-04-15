@@ -21,15 +21,18 @@ vcpkg_cmake_configure(
         -DUNITS_BUILD_FUZZ_TARGETS=OFF
         -DLLNL-UNITS_ENABLE_ERROR_ON_WARNINGS=OFF
         -DLLNL-UNITS_ENABLE_EXTRA_COMPILER_WARNINGS=OFF
+    OPTIONS_DEBUG
+        -DUNITS_BUILD_CONVERTER_APP=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME llnl-units CONFIG_PATH lib/cmake/llnl-units)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/llnl-units)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES units_convert AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
