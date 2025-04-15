@@ -1,6 +1,10 @@
 
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
+# TBB static library is strongly not recommended
+# It can result in thread oversubscription and crash at exit in case TBB is used in multiple shared libraries
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
