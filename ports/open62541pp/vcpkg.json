@@ -14,13 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "nodesetloader": {
-      "description": "Load `NodeSet2.xml` files at runtime (uses libxml2)",
-      "dependencies": [
-        "libxml2"
-      ]
-    }
-  }
+  ]
 }
