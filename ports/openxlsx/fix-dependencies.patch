@@ -1,43 +1,89 @@
 diff --git a/OpenXLSX/CMakeLists.txt b/OpenXLSX/CMakeLists.txt
-index 9bfe1f8..3b054a6 100644
+index 95c56f9..5fcc8e7 100644
 --- a/OpenXLSX/CMakeLists.txt
 +++ b/OpenXLSX/CMakeLists.txt
-@@ -117,6 +117,10 @@ set(OPENXLSX_SOURCES
+@@ -40,11 +40,6 @@ set(OPENXLSX_LIBRARY_TYPE "STATIC" CACHE STRING "Set the library type to SHARED
+ #   INTERFACE libraries should be defined.
+ #=======================================================================================================================
+ 
+-if (OPENXLSX_ENABLE_NOWIDE)
+-    add_library(NoWide INTERFACE IMPORTED)
+-    target_include_directories(NoWide SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/external/nowide/>)
+-endif()
+-
+ add_library(Zippy INTERFACE IMPORTED)
+ target_include_directories(Zippy SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/external/zippy/>)
+ if (OPENXLSX_ENABLE_NOWIDE)
+@@ -118,6 +113,9 @@ set(OPENXLSX_SOURCES
          ${CMAKE_CURRENT_LIST_DIR}/sources/XLZipArchive.cpp
          )
  
-+
 +if(OPENXLSX_ENABLE_NOWIDE)
 +        find_package(nowide CONFIG REQUIRED)
 +endif()
  
  #=======================================================================================================================
  # STATIC AND SHARED LIBRARY
-@@ -142,12 +146,12 @@ if ("${OPENXLSX_LIBRARY_TYPE}" STREQUAL "STATIC")
-     target_link_libraries(OpenXLSX
-             PRIVATE
-             $<BUILD_INTERFACE:Zippy>
-            $<BUILD_INTERFACE:PugiXML>)
+@@ -147,8 +145,8 @@ if ("${OPENXLSX_LIBRARY_TYPE}" STREQUAL "STATIC")
  
      if (OPENXLSX_ENABLE_NOWIDE)
          target_link_libraries(OpenXLSX
-                 PRIVATE
+-                PRIVATE
 -                $<BUILD_INTERFACE:NoWide>)
++                PUBLIC
 +                nowide::nowide)
      endif ()
  
      target_compile_definitions(OpenXLSX PUBLIC OPENXLSX_STATIC_DEFINE)
-@@ -170,12 +174,12 @@ if ("${OPENXLSX_LIBRARY_TYPE}" STREQUAL "SHARED")
-     target_link_libraries(OpenXLSX
-             PRIVATE
-             $<BUILD_INTERFACE:Zippy>
-             $<BUILD_INTERFACE:PugiXML>)
+@@ -175,8 +173,8 @@ if ("${OPENXLSX_LIBRARY_TYPE}" STREQUAL "SHARED")
  
      if (OPENXLSX_ENABLE_NOWIDE)
          target_link_libraries(OpenXLSX
-                 PRIVATE
+-                PRIVATE
 -                $<BUILD_INTERFACE:NoWide>)
++                PUBLIC
 +                nowide::nowide)
      endif ()
  
      # Enable Link-Time Optimization (LTO)
+@@ -324,19 +322,20 @@ write_basic_package_version_file(
+         VERSION ${OpenXLSX_VERSION}
+         COMPATIBILITY AnyNewerVersion
+ )
+-install(
+-        FILES
+-        OpenXLSXConfig.cmake
+-        "${CMAKE_CURRENT_BINARY_DIR}/OpenXLSX/OpenXLSXConfigVersion.cmake"
+-        DESTINATION ${ConfigPackageLocation}
+-)
+ 
+ # Package configuration
+ configure_file(OpenXLSXConfig.cmake
+         "${CMAKE_CURRENT_BINARY_DIR}/OpenXLSX/OpenXLSXConfig.cmake"
+-        COPYONLY
++        @ONLY
+         )
+ 
++install(
++        FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/OpenXLSX/OpenXLSXConfig.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/OpenXLSX/OpenXLSXConfigVersion.cmake"
++        DESTINATION ${ConfigPackageLocation}
++)
++
+ # Package export targets
+ export(
+         EXPORT OpenXLSXTargets
+diff --git a/OpenXLSX/OpenXLSXConfig.cmake b/OpenXLSX/OpenXLSXConfig.cmake
+index 9a9f90d..1cdb304 100644
+--- a/OpenXLSX/OpenXLSXConfig.cmake
++++ b/OpenXLSX/OpenXLSXConfig.cmake
+@@ -1 +1,6 @@
+-include("${CMAKE_CURRENT_LIST_DIR}/OpenXLSXTargets.cmake")
+\ No newline at end of file
++include(CMakeFindDependencyMacro)
++if(@OPENXLSX_ENABLE_NOWIDE@)
++    find_dependency(nowide CONFIG)
++endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/OpenXLSXTargets.cmake")
