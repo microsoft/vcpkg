@@ -1,6 +1,6 @@
 {
   "name": "openxlsx",
-  "version-date": "2025-03-24",
+  "version-date": "2025-04-12",
   "description": "A C++ library for reading, writing, creating and modifying Microsoft Excel® (.xlsx) files.",
   "homepage": "https://github.com/troldal/OpenXLSX",
   "license": "BSD-3-Clause",

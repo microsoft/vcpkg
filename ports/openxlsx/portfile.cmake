@@ -1,12 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO troldal/OpenXLSX
-    REF f11bc0990526b70bd7b59a6fe4ce084aee7b87c3
-    SHA512 1fea91a26593f4335e2875544b88aae23d6207b23e93310b2eaa9171614cb60f5445968a8904efdecbf9c94d55ee80867544b0f569f35f14c76acb28873dc002
+    REF 0b146076a162ad38b3f3342dc758938f83947dd1
+    SHA512 94d0631bf15e5fa5c6992f89a647b6561967f303fe1b6b2e8517e9c77336cafdf28eadfdbeadb96824a490c3774e07dd0270ccae31686680d3bd74155e4ab8c0
     HEAD_REF master
     PATCHES
-        # https://github.com/troldal/OpenXLSX/pull/354
-        fix-internal-headers.patch
         fix-dependencies.patch
 )
 
