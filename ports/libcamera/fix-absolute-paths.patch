@@ -39,6 +39,3 @@ index c4ea273f..d4e39c1b 100755
  fi
  
  export LD_PRELOAD
--- 
-2.47.1.windows.2
-
