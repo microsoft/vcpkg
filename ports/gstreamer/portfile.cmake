@@ -113,6 +113,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11-bad         gst-plugins-bad:x11
         x265            gst-plugins-bad:x265
         asio            gst-plugins-bad:asio
+        amd-amf         gst-plugins-bad:amfcodec
 )
 
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
