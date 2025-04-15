@@ -1,12 +1,3 @@
-From 3da76358b4a1461907d6fff7e4ff8e12c1c84a60 Mon Sep 17 00:00:00 2001
-From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
-Date: Sun, 13 Apr 2025 21:06:12 -0400
-Subject: [PATCH] fix absolute path errors
-
----
- src/v4l2/libcamerify.in | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
 diff --git a/src/v4l2/libcamerify.in b/src/v4l2/libcamerify.in
 index c4ea273f..d4e39c1b 100755
 --- a/src/v4l2/libcamerify.in
