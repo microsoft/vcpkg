@@ -17,10 +17,6 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    },
-    {
-      "name": "vcpkg-tool-ninja",
-      "host": true
     }
   ]
 }
