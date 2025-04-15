@@ -11,10 +11,6 @@
     "libyuv",
     "openssl",
     {
-      "name": "vcpkg-get-python",
-      "host": true
-    },
-    {
       "name": "vcpkg-get-python-packages",
       "host": true
     },
