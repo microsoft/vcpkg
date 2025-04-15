@@ -3,20 +3,11 @@ vcpkg_from_github(
     REPO wpilibsuite/allwpilib
     REF 49b4b064cf98c0e367f54ac8719779cc158eba3a
     SHA512 fe73f09f37cd79e9d6f6f5a4a1a98286f10b12406c1bd7f0d1daf0377d8c7c28217afc97b07842e5c483a2a08586ac699b30ec0d030255f8ab31831aefa6ab58
-    PATCHES
-    	constexpr-fix.patch
-	add-apriltag-toggle.patch
-)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-	FEATURES
-		apriltag WITH_APRILTAG
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    	${FEATURE_OPTIONS}
         -DWITH_JAVA=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_TESTS=OFF
@@ -25,13 +16,12 @@ vcpkg_cmake_configure(
         -DWITH_SIMULATION_MODULES=OFF
 	-DUSE_SYSTEM_FMTLIB=ON
 	-DUSE_SYSTEM_LIBUV=ON
-	_DUSE_SYSTEM_EIGEN=OFF # need the vendored dep which has constexpr constructors for Eigen::Matrix while eigen3 from vcpkg does not have them, which results in build failures
+	-DUSE_SYSTEM_EIGEN=ON
 )
 
 vcpkg_cmake_install()
-if("apriltag" IN_LIST FEATURES)
-	vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
-endif()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
 vcpkg_cmake_config_fixup(PACKAGE_NAME cameraserver)
 vcpkg_cmake_config_fixup(PACKAGE_NAME cscore)
 vcpkg_cmake_config_fixup(PACKAGE_NAME hal)

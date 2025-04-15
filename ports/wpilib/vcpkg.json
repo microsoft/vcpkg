@@ -5,6 +5,7 @@
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,
   "dependencies": [
+    "eigen3",
     "fmt",
     "libssh",
     "libuv",
@@ -18,10 +19,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "apriltag": {
-      "description": "Enables the building of the apriltag library"
-    }
-  }
+  ]
 }
