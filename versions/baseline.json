@@ -4369,8 +4369,8 @@
       "port-version": 1
     },
     "libadlmidi": {
-      "baseline": "1.5.1",
-      "port-version": 1
+      "baseline": "2025-04-14",
+      "port-version": 0
     },
     "libadwaita": {
       "baseline": "1.3.2",
