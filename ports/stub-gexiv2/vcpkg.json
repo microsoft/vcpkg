@@ -1,0 +1,9 @@
+{
+  "name": "stub-gexiv2",
+  "version": "1.0.0",
+  "port-version": 4,
+  "description": "A stub to connect large ci library to upload them to cache binary.",
+  "dependencies": [
+    "gexiv2"
+  ]
+}
