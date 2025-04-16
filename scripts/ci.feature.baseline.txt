@@ -24,7 +24,7 @@
 ##        combination-fails - The listed combination of features will fail to build.
 ##                     skip - The listed features are not tested in the CI system.
 ##                  cascade - The listed features are cascading.
-## no-separate-feature-test - The listed features are not tested in the "seperate" feature test.
+## no-separate-feature-test - The listed features are not tested in the "separate" feature test.
 ##                  options - The listed features are mutually exclusive and can not be selected together.
 ##                            The first feature in the list is added to every test combination. Use the `core`
 ##                            feature as first one to add no feature to every test combination.
@@ -44,8 +44,8 @@
 ##    entt[experimental] = skip # required head build
 ##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports native & windows
 ##
-##    # Testing all targets seperatly would be too time consuming:
-##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test 
+##    # Testing all targets separately would be too time consuming:
+##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test
 
 halide = skip
 llvm = skip
@@ -175,8 +175,8 @@ jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
 kfr:arm-uwp=fail
 kfr:arm64-windows=fail
-kfr[core,capi](windows)=fail
-kfr[core,capi,dft](windows)=cascade
+kfr[capi](windows)=fail
+kfr[capi,dft](windows)=cascade
 lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 lcm:x64-windows-static-md=fail
