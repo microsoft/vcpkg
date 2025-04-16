@@ -1,6 +1,5 @@
 vcpkg_buildpath_length_warning(37)
-
-block(SCOPE_FOR VARIABLES PROPAGATE SOURCE_PATH)
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
@@ -17,22 +16,24 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DEIGEN_BUILD_DOC=OFF
         -DEIGEN_BUILD_PKGCONFIG=ON
-        "-DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/eigen3"
-        "-DPKGCONFIG_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+	"-DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/eigen3"
+	"-DPKGCONFIG_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-endblock()
 
 if(NOT VCPKG_BUILD_TYPE)
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/eigen3.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+	    file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/eigen3.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(GLOB INCLUDES "${CURRENT_PACKAGES_DIR}/include/eigen3/*")
 # Copy the eigen header files to conventional location for user-wide MSBuild integration
 file(COPY ${INCLUDES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
+
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.README")
