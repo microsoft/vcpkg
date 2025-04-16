@@ -50,7 +50,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if("tool" IN_LIST FEATURES)
     list(APPEND tool_license_file "${SOURCE_PATH}/COPYING")
-    set(tools_license_comment [[The GNU SASL Library is licensed under the GNU Lesser General Public License (LGPL) version 2.1 (or later).
+    set(tool_license_comment [[The GNU SASL Library is licensed under the GNU Lesser General Public License (LGPL) version 2.1 (or later).
 The command-line application is licensed under the GNU General Public License license version 3.0 (or later).]]
 )
 endif()
