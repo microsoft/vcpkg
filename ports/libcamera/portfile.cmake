@@ -16,8 +16,24 @@ x_vcpkg_get_python_packages(
     PACKAGES "jinja2" "PyYaml" "ply"
 )
 
+if(VCPKG_TARGET_IS_ANDROID)
+    set(ANDROID_OPTIONS "-Dandroid=ON")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+    ${ANDROID_OPTIONS}
+    -Dcam=OFF # This is a test application
+	-Ddocumentation=OFF
+	-Dgstreamer=ON
+	-Dlc-compliance=OFF # Test appplication
+	-Dpycamera=OFF # experimental feature, going to leave for later
+	-Dqcam=OFF # Test application
+	-Dtest=OFF # Unit tests
+	-Dv4l2=ON
+    -Dtracing=ON
+    -Dudev=ON
 )
 
 vcpkg_install_meson()
