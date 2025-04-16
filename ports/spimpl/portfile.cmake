@@ -16,6 +16,8 @@ vcpkg_cmake_install()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/spimpl.h")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md")
+file(READ "${SOURCE_PATH}/spimpl.h" file_content)
+string(REGEX REPLACE "\\*/.*" "*/" new_content "${file_content}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${new_content}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
