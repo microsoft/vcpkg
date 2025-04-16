@@ -18,7 +18,7 @@ index c4ea273f..d4e39c1b 100755
 +   if [ $debug = 0 ] ; then
 +   	LD_PRELOAD="$SCRIPTPATH/../v412-compat.so"
 +   else
-+	LD_PRELOAD="$SCRIPTPATH/../../v412-compat.so"
++   	LD_PRELOAD="$SCRIPTPATH/../../v412-compat.so"
 +   fi
  else
 -   LD_PRELOAD="$LD_PRELOAD "'@LIBCAMERA_V4L2_SO@'
