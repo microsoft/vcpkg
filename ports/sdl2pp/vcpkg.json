@@ -1,7 +1,7 @@
 {
   "name": "sdl2pp",
   "version": "0.16.1",
-  "port-version": 11,
+  "port-version": 12,
   "description": "C++11 bindings/wrapper for SDL2",
   "homepage": "https://sdl2pp.amdmi3.ru",
   "license": "Zlib",

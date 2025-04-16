@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7a1680f..9a70ccd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,10 +15,6 @@ set(QCA_LIB_MAJOR_VERSION "2")
+ set(QCA_LIB_MINOR_VERSION "3")
+ set(QCA_LIB_PATCH_VERSION "7")
+ 
+-if(POLICY CMP0042)
+-  cmake_policy(SET CMP0042 OLD)
+-endif()
+-
+ option(BUILD_WITH_QT6 "Build with Qt 6" OFF)
+ option(BUILD_TESTS "Create test" ON)
+ option(BUILD_TOOLS "Compile mozcerts and qcatool" ON)
