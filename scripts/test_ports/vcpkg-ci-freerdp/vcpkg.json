@@ -7,17 +7,16 @@
     {
       "name": "freerdp",
       "features": [
-        "wayland",
-        "x11"
-      ],
-      "platform": "linux"
+        "client",
+        "ffmpeg"
+      ]
     },
     {
       "name": "freerdp",
       "features": [
-        "ffmpeg"
+        "x11"
       ],
-      "platform": "linux | osx"
+      "platform": "linux"
     },
     {
       "name": "freerdp",
@@ -26,7 +25,7 @@
         "urbdrc",
         "winpr-tools"
       ],
-      "platform": "linux | osx | windows"
+      "platform": "!android & !ios & !uwp"
     }
   ]
 }
