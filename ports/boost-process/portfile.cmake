@@ -7,11 +7,10 @@ vcpkg_from_github(
     SHA512 78cf46c86ba59a92cec4427c2ef0937bf682d1294c15a5d4a9bd9015cba4cc2b92e97a4b8b448bb279eedf70a48038bd8ff2f1dda1ccad0c9107bdb93e37c877
     HEAD_REF master
     PATCHES
-        use_std_filesystem.patch
+        opt-filesystem.patch
 )
 
 set(FEATURE_OPTIONS "")
-include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}

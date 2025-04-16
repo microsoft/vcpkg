@@ -66,17 +66,8 @@ $portData = @{
     "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-dll" = @{
-        "default-features" = @("boost-filesystem");
-        "supports" = "!uwp"
-        "features" = @{
-            "boost-filesystem" = @{
-                "description" = "Use Boost.Filesystem instead of std::filesystem";
-                "dependencies" = @("boost-filesystem");
-            };
-        };
-    };
-    "boost-fiber" = @{
+    "boost-dll"              = @{ "supports" = "!uwp" };
+    "boost-fiber"            = @{
         "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
             "numa" = @{
@@ -147,16 +138,7 @@ $portData = @{
             }
         }
     };
-    "boost-process" = @{
-        "default-features" = @("boost-filesystem");
-        "supports" = "!uwp & !emscripten & !android"
-        "features" = @{
-            "boost-filesystem" = @{
-                "description" = "Use Boost.Filesystem instead of std::filesystem";
-                "dependencies" = @("boost-filesystem");
-            };
-        };
-    };
+    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !android" };
     "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
@@ -190,10 +172,14 @@ $portData = @{
 # and no "platform" field shall be added to the dependency.
 $suppressPlatformForDependency = @{
     "boost-coroutine2"            = @("boost-context");
+    "boost-dll"                   = @("boost-filesystem");
+    "boost-process"               = @("boost-filesystem");
     "boost-graph"                 = @("boost-random");
+    "boost-log"                   = @("boost-filesystem");
     "boost-mqtt5"                 = @("boost-random");
     "boost-parameter-python"      = @("boost-python");
     "boost-property-map-parallel" = @("boost-mpi");
+    "boost-wave"                  = @("boost-filesystem");
 }
 
 function GeneratePortName() {

@@ -29,7 +29,6 @@
     },
     {
       "name": "boost-filesystem",
-      "platform": "!uwp",
       "version>=": "1.88.0"
     },
     {
