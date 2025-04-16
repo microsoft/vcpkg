@@ -10,11 +10,21 @@
       "name": "acl",
       "platform": "linux"
     },
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false
+    },
     "glib",
     "libpopt",
-    "libxml2",
-    "libxslt",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
+    {
+      "name": "libxslt",
+      "default-features": false
+    },
+    "libyaml",
     "libzip",
     "openssl",
     "pcre",
@@ -24,18 +34,49 @@
       "host": true
     },
     "xmlsec",
-    "zlib"
+    {
+      "name": "zlib",
+      "platform": "windows"
+    }
   ],
   "features": {
+    "crypto": {
+      "description": "Build with crypto support",
+      "dependencies": [
+        {
+          "name": "libgcrypt",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgcrypt",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
     "python": {
-      "description": "build with python3"
+      "description": "Build Python SWIG bindings",
+      "dependencies": [
+        {
+          "name": "openscap",
+          "features": [
+            "crypto"
+          ]
+        },
+        "python3"
+      ]
     },
     "util": {
-      "description": "build available utils",
+      "description": "Build the oscap utility",
       "dependencies": [
         {
           "name": "getopt-win32",
           "platform": "windows"
+        },
+        {
+          "name": "openscap",
+          "features": [
+            "crypto"
+          ]
         }
       ]
     }
