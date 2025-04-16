@@ -33,7 +33,6 @@ vcpkg_fixup_pkgconfig()
 file(GLOB INCLUDES "${CURRENT_PACKAGES_DIR}/include/eigen3/*")
 # Copy the eigen header files to conventional location for user-wide MSBuild integration
 file(COPY ${INCLUDES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
 
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.README")
