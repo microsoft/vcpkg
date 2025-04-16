@@ -1,7 +1,6 @@
 vcpkg_buildpath_length_warning(37)
 
 block(SCOPE_FOR VARIABLES PROPAGATE SOURCE_PATH)
-set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
