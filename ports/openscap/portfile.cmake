@@ -69,6 +69,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_SELinux=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_RPM=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_Popt=OFF
+        -DWANT_BASE64=OFF  # clash with base64 in gsasl (transitive dep of curl)
     OPTIONS_RELEASE
         "-DPYTHON_SITE_PACKAGES_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/site-packages"
     OPTIONS_DEBUG

@@ -2246,8 +2246,8 @@ opencv2[world] = feature-fails # See https://github.com/microsoft/vcpkg/issues/2
 opencv3[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv3. See https://github.com/microsoft/vcpkg/issues/32150
 opencv3[halide](osx) = feature-fails # Same as opencv4[halide]
 openmvg(windows & arm) = fail # nmmintrin.h(17): fatal error C1189: #error:  This header is specific to X86, X64, ARM64, and ARM64EC targets. See https://github.com/microsoft/vcpkg/issues/33746
-openscap(osx) = fail # src/OVAL/oval_session.c:423:12: error: use of undeclared identifier 'PATH_MAX'
 openscap(uwp) = cascade
+openscap[python](!windows) = fail # CI image lacks swig
 opentelemetry-cpp[otlp](uwp) = feature-fails # --grpc_out: protoc-gen-grpc: The system cannot find the file specified. See https://github.com/microsoft/vcpkg/issues/34847
 openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
