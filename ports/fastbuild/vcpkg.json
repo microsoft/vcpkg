@@ -1,0 +1,8 @@
+{
+  "name": "fastbuild",
+  "version": "1.10",
+  "description": "FASTBuild is a high performance, open-source build system for Windows, Linux and OS X. It supports highly scalable compilation, caching and network distribution.",
+  "homepage": "https://www.fastbuild.org",
+  "license": null,
+  "supports": "((x64 & (windows | linux | osx)) | (arm64 & osx)) & !uwp"
+}
