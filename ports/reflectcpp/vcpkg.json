@@ -72,8 +72,8 @@
       "description": "Support for the TOML format",
       "dependencies": [
         {
-          "name": "toml11",
-          "version>=": "4.2.0"
+          "name": "tomlplusplus",
+          "version>=": "3.4.0#1"
         }
       ]
     },
