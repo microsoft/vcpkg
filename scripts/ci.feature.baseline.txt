@@ -175,7 +175,6 @@ jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
 kfr:arm-uwp=fail
 kfr:arm64-windows=fail
-kfr:x64-linux=fail
 kfr[core,capi](windows)=fail
 kfr[core,capi,dft](windows)=cascade
 lastools:arm-uwp=fail
