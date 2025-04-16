@@ -1493,7 +1493,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "caf": {
@@ -2445,8 +2445,8 @@
       "port-version": 0
     },
     "dstorage": {
-      "baseline": "1.2.3",
-      "port-version": 1
+      "baseline": "1.2.4",
+      "port-version": 0
     },
     "dtl": {
       "baseline": "1.21",
@@ -2765,7 +2765,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "fcl": {
@@ -2817,7 +2817,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2905,7 +2905,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3977,7 +3977,7 @@
       "port-version": 7
     },
     "jsoncons": {
-      "baseline": "1.3.1",
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "jsoncpp": {
@@ -4254,7 +4254,7 @@
     },
     "ktx": {
       "baseline": "4.3.2",
-      "port-version": 1
+      "port-version": 2
     },
     "kubazip": {
       "baseline": "0.3.3",
@@ -4373,8 +4373,8 @@
       "port-version": 1
     },
     "libadlmidi": {
-      "baseline": "1.5.1",
-      "port-version": 1
+      "baseline": "2025-04-14",
+      "port-version": 0
     },
     "libadwaita": {
       "baseline": "1.3.2",
@@ -5157,7 +5157,7 @@
       "port-version": 0
     },
     "libraw": {
-      "baseline": "0.21.3",
+      "baseline": "0.21.4",
       "port-version": 0
     },
     "librdkafka": {
@@ -5714,7 +5714,7 @@
     },
     "llnl-units": {
       "baseline": "0.13.1",
-      "port-version": 0
+      "port-version": 1
     },
     "llvm": {
       "baseline": "18.1.6",
@@ -6369,7 +6369,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "mygui": {
@@ -6793,7 +6793,7 @@
       "port-version": 2
     },
     "open62541pp": {
-      "baseline": "0.17.0",
+      "baseline": "0.18.0",
       "port-version": 0
     },
     "openal-soft": {
@@ -7445,7 +7445,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "psimd": {
@@ -8165,7 +8165,7 @@
       "port-version": 0
     },
     "restinio": {
-      "baseline": "0.7.5",
+      "baseline": "0.7.6",
       "port-version": 0
     },
     "resultlib": {
@@ -9925,7 +9925,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.04.07.00",
+      "baseline": "2025.04.14.00",
       "port-version": 0
     },
     "wasmedge": {
