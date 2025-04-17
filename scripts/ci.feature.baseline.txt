@@ -175,6 +175,8 @@ jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
 kfr:arm-uwp=fail
 kfr:arm64-windows=fail
+kfr[capi](windows & static) = feature-fails # feature emits DLL even when built static
+kfr(uwp) = fail # CMake Error: try_run() invoked in cross-compiling mode
 lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 lcm:x64-windows-static-md=fail
@@ -2208,8 +2210,6 @@ igraph[openmp](osx) = feature-fails # openmp setup needed
 imgui[core,sdl2-binding](uwp) = options # sdl2-binding fails to build when build together with docking-experimental => exclude from all
 irrlicht[tools](osx) = feature-fails # X11 installation required
 ixwebsocket[core,mbedtls,openssl,sectransp,ssl] = options # you can only choose one ssl backend or none
-kfr[capi](windows & !uwp) = feature-fails # internal compiler error
-kfr(uwp) = fail # CMake Error: try_run() invoked in cross-compiling mode
 kissfft[openmp](osx) = feature-fails # No openmp on osx
 ktx[tools](uwp) = feature-fails # build error. See https://github.com/microsoft/vcpkg/issues/33687
 lapack-reference[core,cblas,noblas] = options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
