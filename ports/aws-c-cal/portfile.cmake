@@ -7,12 +7,16 @@ vcpkg_from_github(
     PATCHES remove-libcrypto-messages.patch
 )
 
+if (NOT (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX))
+    set(USE_OPENSSL ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
-        -DUSE_OPENSSL=ON
+        -DUSE_OPENSSL=${USE_OPENSSL}
 )
 
 vcpkg_cmake_install()

@@ -1,12 +1,16 @@
 {
   "name": "aws-c-cal",
   "version": "0.8.8",
+  "port-version": 1,
   "description": "C99 wrapper for cryptography primitives.",
   "homepage": "https://github.com/awslabs/aws-c-cal",
   "license": "Apache-2.0",
   "dependencies": [
     "aws-c-common",
-    "openssl",
+    {
+      "name": "openssl",
+      "platform": "!windows & !osx"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
