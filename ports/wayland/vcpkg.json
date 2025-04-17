@@ -17,6 +17,13 @@
         {
           "name": "vcpkg-tool-meson",
           "host": true
+        },
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "force-build"
+          ]
         }
       ]
     }
