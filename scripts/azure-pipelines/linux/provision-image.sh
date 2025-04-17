@@ -47,10 +47,8 @@ APT_PACKAGES="git curl zip unzip tar"
 
 ## essentials
 APT_PACKAGES="$APT_PACKAGES \
-  at \
   autoconf autoconf-archive \
   build-essential \
-  cifs-utils \
   cmake \
   gcc g++ gfortran \
   libnuma1 libnuma-dev \
@@ -63,11 +61,12 @@ APT_PACKAGES="$APT_PACKAGES \
   bison libbison-dev \
   flex \
   gperf \
-  meson \
   nasm \
   ninja-build \
-  pkg-config \ 
+  pkg-config \
+  python3 \
   ruby-full \
+  swig \
   yasm \
 "
 
