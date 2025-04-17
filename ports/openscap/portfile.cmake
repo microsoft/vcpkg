@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
         install-dirs.diff
+        python-win32.diff
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
