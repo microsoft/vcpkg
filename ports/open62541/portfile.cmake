@@ -55,7 +55,6 @@ vcpkg_cmake_configure(
         -DUA_ENABLE_DEBUG_SANITIZER=OFF
         -DUA_MSVC_FORCE_STATIC_CRT=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        -DUA_ENABLE_AMALGAMATION=OFF
 )
 
 vcpkg_cmake_install()
