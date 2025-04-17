@@ -9157,8 +9157,8 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2022.0.0",
-      "port-version": 2
+      "baseline": "2022.1.0",
+      "port-version": 0
     },
     "tcb-span": {
       "baseline": "2022-06-15",
