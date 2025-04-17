@@ -17,8 +17,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland
-    REF  8135e856ebd79872f886466e9cee39affb7d9ee8
-    SHA512 c4115187826083e5f01a24dad0c4377458b7ca22973ea161ec9d4aeeb21869bdb9acd7ba7e89aba964571ce2fde319cb01808e94e502ff09061bf5fbd3a60079
+    REF  ${VERSION}
+    SHA512 454a4d7cab9fb9eafe3505114e9dfafed94c985fb7f156eb2d67f258bf2bf8418598ab75c237aa75fabe81a811981dbc72363870f2f81ddcbfb3adfaa95d4947
     HEAD_REF master
 )
 
