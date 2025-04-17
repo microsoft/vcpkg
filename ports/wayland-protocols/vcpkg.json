@@ -23,6 +23,13 @@
           "features": [
             "force-build"
           ]
+        },
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "force-build"
+          ]
         }
       ]
     }

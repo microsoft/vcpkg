@@ -23,12 +23,16 @@ vcpkg_from_gitlab(
     REF ${VERSION}
     SHA512 bcc938a5bac59020ded9c653a4d65cafc42eed7d72518125b6d3d710b468ab3db71d514437cbe80d24821fb65eb2b078cd906c18f35245b0c99ad892b0ba50d0
     HEAD_REF master
+    PATCHES
+        cross-build.diff
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dtests=false
+    ADDITIONAL_BINARIES
+        "wayland_scanner = ['${CURRENT_HOST_INSTALLED_DIR}/tools/wayland/wayland-scanner${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
