@@ -1598,7 +1598,7 @@
     },
     "ceres": {
       "baseline": "2.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -6054,7 +6054,7 @@
     },
     "metis": {
       "baseline": "2022-07-27",
-      "port-version": 0
+      "port-version": 1
     },
     "metrohash": {
       "baseline": "1.1.3",
