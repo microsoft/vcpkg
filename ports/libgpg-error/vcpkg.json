@@ -9,6 +9,10 @@
     {
       "name": "libgpg-error",
       "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ],
   "features": {
