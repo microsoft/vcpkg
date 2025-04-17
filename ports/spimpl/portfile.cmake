@@ -24,8 +24,4 @@ file(INSTALL "${SOURCE_PATH}/spimpl.h" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/spimpl.h")
-
-file(READ "${SOURCE_PATH}/spimpl.h" file_content)
-string(REGEX REPLACE "\\*/.*" "*/" new_content "${file_content}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${new_content}")
-
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "[*]/.*" "*/" REGEX)
