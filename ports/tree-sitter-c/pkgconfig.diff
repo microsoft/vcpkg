@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6a23ee..f45024d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,15 +41,15 @@ set_target_properties(tree-sitter-c
+                       SOVERSION "${TREE_SITTER_ABI_VERSION}.${PROJECT_VERSION_MAJOR}"
+                       DEFINE_SYMBOL "")
+ 
++include(GNUInstallDirs)
++
+ configure_file(bindings/c/tree-sitter-c.pc.in
+                "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter-c.pc" @ONLY)
+ 
+-include(GNUInstallDirs)
+-
+ install(FILES bindings/c/tree-sitter-c.h
+         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tree_sitter")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter-c.pc"
+-        DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig")
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ install(TARGETS tree-sitter-c
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ 

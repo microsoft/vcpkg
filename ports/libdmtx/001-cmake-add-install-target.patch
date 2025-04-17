@@ -8,23 +8,14 @@ index 6420a813c1..749bd8d680 100644
  project(DMTX VERSION 0.7.5 LANGUAGES C)
  
  # DMTX library
-@@ -26,3 +26,19 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+@@ -26,3 +26,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
        add_subdirectory("test")
      endif()
  endif()
 +
 +# Add install rules
-+if(DMTX_SHARED)
-+  if(WIN32)
-+    install(TARGETS dmtx
-+            RUNTIME DESTINATION bin
-+            ARCHIVE DESTINATION lib)
-+  else()
-+    install(TARGETS dmtx
-+            LIBRARY DESTINATION lib)
-+  endif()
-+else()
-+  install(TARGETS dmtx
-+          ARCHIVE DESTINATION lib)
-+endif()
-+install(FILES "dmtx.h" "dmtxstatic.h" DESTINATION include)
++install(TARGETS dmtx
++        RUNTIME DESTINATION bin
++        ARCHIVE DESTINATION lib
++        LIBRARY DESTINATION lib)
++install(FILES "dmtx.h" DESTINATION include)

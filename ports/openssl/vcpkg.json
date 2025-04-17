@@ -1,6 +1,6 @@
 {
   "name": "openssl",
-  "version": "3.4.1",
+  "version": "3.5.0",
   "description": "OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.",
   "homepage": "https://www.openssl.org",
   "license": "Apache-2.0",
