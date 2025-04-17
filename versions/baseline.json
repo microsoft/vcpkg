@@ -3918,7 +3918,7 @@
     },
     "jemalloc": {
       "baseline": "5.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "jhasse-poly2tri": {
       "baseline": "2023-12-27",
