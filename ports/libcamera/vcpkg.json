@@ -8,6 +8,8 @@
     "libgnutls",
     "libunwind",
     "libyaml",
+    "glib",
+    "gstreamer",
     "libyuv",
     "openssl",
     {
