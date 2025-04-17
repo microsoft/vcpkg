@@ -1,0 +1,11 @@
+--- a/internal/ceres/CMakeLists.txt
++++ b/internal/ceres/CMakeLists.txt
+@@ -112,7 +112,7 @@
+ if (SuiteSparse_Partition_FOUND OR EIGENMETIS)
+   # Define version information for use in Solver::FullReport.
+   add_definitions(-DCERES_METIS_VERSION="${METIS_VERSION}")
+-  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES METIS::METIS)
++  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES metis)
+ endif (SuiteSparse_Partition_FOUND OR EIGENMETIS)
+ 
+ if (ACCELERATESPARSE AND AccelerateSparse_FOUND)

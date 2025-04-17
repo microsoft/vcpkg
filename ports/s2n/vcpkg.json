@@ -1,7 +1,6 @@
 {
   "name": "s2n",
-  "version": "1.5.9",
-  "port-version": 1,
+  "version": "1.5.15",
   "description": "C99 implementation of the TLS/SSL protocols.",
   "homepage": "https://github.com/aws/s2n-tls",
   "license": "Apache-2.0",

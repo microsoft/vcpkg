@@ -21,7 +21,6 @@ vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        amalgamation UA_ENABLE_AMALGAMATION
         diagnostics UA_ENABLE_DIAGNOSTICS
         discovery UA_ENABLE_DISCOVERY
         historizing UA_ENABLE_HISTORIZING

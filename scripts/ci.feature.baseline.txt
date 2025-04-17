@@ -24,7 +24,7 @@
 ##        combination-fails - The listed combination of features will fail to build.
 ##                     skip - The listed features are not tested in the CI system.
 ##                  cascade - The listed features are cascading.
-## no-separate-feature-test - The listed features are not tested in the "seperate" feature test.
+## no-separate-feature-test - The listed features are not tested in the "separate" feature test.
 ##                  options - The listed features are mutually exclusive and can not be selected together.
 ##                            The first feature in the list is added to every test combination. Use the `core`
 ##                            feature as first one to add no feature to every test combination.
@@ -44,8 +44,8 @@
 ##    entt[experimental] = skip # required head build
 ##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports native & windows
 ##
-##    # Testing all targets seperatly would be too time consuming:
-##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test 
+##    # Testing all targets separately would be too time consuming:
+##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test
 
 halide = skip
 llvm = skip
@@ -175,7 +175,7 @@ jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
 kfr:arm-uwp=fail
 kfr:arm64-windows=fail
-kfr:x64-linux=fail
+kfr[capi](windows) = feature-fails # feature emits DLL even when built static
 lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 lcm:x64-windows-static-md=fail
@@ -1508,6 +1508,14 @@ netcdf-c[hdf5]:x64-uwp = cascade
 netcdf-cxx4:arm64-uwp = cascade
 netcdf-cxx4:arm64-windows = cascade
 netcdf-cxx4:x64-uwp = cascade
+ngtcp2[gnutls]:arm-neon-android=cascade
+ngtcp2[gnutls]:arm64-android=cascade
+ngtcp2[gnutls]:arm64-uwp=cascade
+ngtcp2[gnutls]:arm64-windows-static-md=cascade
+ngtcp2[gnutls]:arm64-windows=cascade
+ngtcp2[gnutls]:x64-android=cascade
+ngtcp2[gnutls,wolfssl]:x64-uwp=cascade
+ngtcp2[wolfssl]:arm64-uwp=cascade
 nmap:arm64-uwp = cascade
 nmap:arm64-windows = cascade
 nmap:x64-uwp = cascade
@@ -2105,8 +2113,9 @@ wangle:arm64-uwp = cascade
 wangle:arm64-windows = cascade
 wangle:x64-uwp = cascade
 wangle:x86-windows = cascade
-wayland-protocols[force-build] = cascade # because the following dependencies did not build: wayland[core,force-build]
-wayland-protocols(windows | osx) = cascade
+wayland[force-build](!native) = cascade    # needs wayland[force-build](native)
+wayland-protocols[force-build] = cascade   # needs wayland[force-build](native)
+wayland-protocols(windows | osx) = cascade # needs wayland
 wpilib:arm64-uwp = cascade
 wpilib:x64-uwp = cascade
 wt:arm64-uwp = cascade
@@ -2164,7 +2173,7 @@ ableton-link[hut](linux) = feature-fails # libportaudiocpp0 must be installed in
 adios2[python](!uwp) = feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
 arrayfire[opencl](windows & !uwp) = feature-fails # build errror: See https://github.com/microsoft/vcpkg/issues/33464
 ashes[core](windows) = combination-fails # CMake Error: INSTALL(EXPORT) given unknown export "AshesRenderers". One render backend must be selected 
-atk[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
+atk[introspection](windows & arm & !static) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 azure-kinect-sensor-sdk[tool](windows & !uwp) = feature-fails # Waits for https://github.com/microsoft/vcpkg/pull/33231
 # boost-python[core](!linux) = combination-fails
 awlib[graphics] = feature-fails # Broken code. See https://github.com/microsoft/vcpkg/issues/39849
@@ -2200,7 +2209,7 @@ grpc[codegen](uwp) = feature-fails # linker errors. See https://github.com/micro
 gstreamer[chromaprint](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
 gstreamer[openal](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/43419
 gstreamer[x11-bad](osx) = feature-fails # no x11 on macOS
-harfbuzz[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
+harfbuzz[introspection](windows & arm & !static) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 hdf5[core,cpp,fortran,map,parallel,szip,threadsafe,tools,utils,zlib](!windows & arm) = combination-fails # some features are mutually exclusive
 hdf5[fortran](windows) = feature-fails # No fortan compiler
 highway[contrib](osx) = feature-fails # clang: fatal error: error in backend: Calling convention SVE_VectorCall is unsupported on Darwin.
@@ -2209,8 +2218,6 @@ igraph[openmp](osx) = feature-fails # openmp setup needed
 imgui[core,sdl2-binding](uwp) = options # sdl2-binding fails to build when build together with docking-experimental => exclude from all
 irrlicht[tools](osx) = feature-fails # X11 installation required
 ixwebsocket[core,mbedtls,openssl,sectransp,ssl] = options # you can only choose one ssl backend or none
-kfr[capi,dft](windows & !uwp) = feature-fails # internal compiler error
-kfr(uwp) = fail # CMake Error: try_run() invoked in cross-compiling mode
 kissfft[openmp](osx) = feature-fails # No openmp on osx
 ktx[tools](uwp) = feature-fails # build error. See https://github.com/microsoft/vcpkg/issues/33687
 lapack-reference[core,cblas,noblas] = options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
@@ -2278,7 +2285,7 @@ vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX
 vtk[all](!windows) = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
 vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
 wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See https://github.com/microsoft/vcpkg/issues/32146
-wayland[force-build] = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
+wayland[force-build](native) = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
 
@@ -2294,7 +2301,7 @@ magnum[anyshaderconverter,shadertools,shaderconverter,vk-info] = skip # only ava
 magnum-plugins[cgltfimporter,glslangshaderconverter,ktximageconverter,ktximporter,openexrimageconverter,openexrimporter,spirvtoolsshaderconverter,stbdxtimageconverter] = skip # only available in head build
 openjpeg[tools] = skip # fails and is deprecated
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 on macOS
-s2n = skip # builds to slow
+s2n = skip # builds too slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
 shogun = skip # shogun is not compatible with c++17 because it uses dynamic exception specifications but the dependency abseil requires c++17
 winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215 
