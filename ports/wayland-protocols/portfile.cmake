@@ -20,7 +20,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland-protocols
     REF ${VERSION}
-    SHA512 cb0d38fada64832f8f7c71c1fcdd16fc3013cd81ac7146edbc4361328c9e5f02e31e0ba3b5219e85103fdc35aee49d54f9be537594d3618c5fb27de7375f84e1
+    SHA512 bcc938a5bac59020ded9c653a4d65cafc42eed7d72518125b6d3d710b468ab3db71d514437cbe80d24821fb65eb2b078cd906c18f35245b0c99ad892b0ba50d0
     HEAD_REF master
 )
 
