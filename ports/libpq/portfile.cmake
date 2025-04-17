@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
          "https://www.mirrorservice.org/sites/ftp.postgresql.org/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 f2070299f0857a270317ac984f8393374cf00d4f32a082fe3c5481e36c560595ea711fed95e40d1bc90c5089edf8f165649d443d8b9c68614e1c83fc91268e96
+    SHA512 43288a297c753d075405a7bd3fce17f6a260d6b0a80a156c1e6267e0ebd40c85b7bb929e893956a109eda4d93fa8936f43e981242c1fd67a91012cba5472026c
 )
 
 vcpkg_extract_source_archive(
@@ -12,12 +12,11 @@ vcpkg_extract_source_archive(
         unix/installdirs.patch
         unix/fix-configure.patch
         unix/single-linkage.patch
+        unix/single-linkage-2.patch
         unix/no-server-tools.patch
         unix/mingw-install.patch
         unix/python.patch
         windows/macro-def.patch
-        windows/win_bison_flex.patch
-        windows/msbuild.patch
         windows/spin_delay.patch
         android/unversioned_so.patch
 )

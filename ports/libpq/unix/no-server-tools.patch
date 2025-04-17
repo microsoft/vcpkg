@@ -1,8 +1,8 @@
 diff --git a/src/bin/Makefile b/src/bin/Makefile
-index 7f9dde9..bc6d835 100644
+index fc789da17b..98177bd11a 100644
 --- a/src/bin/Makefile
 +++ b/src/bin/Makefile
-@@ -13,29 +13,20 @@ subdir = src/bin
+@@ -13,31 +13,22 @@ subdir = src/bin
  top_builddir = ../..
  include $(top_builddir)/src/Makefile.global
  
@@ -15,6 +15,7 @@ index 7f9dde9..bc6d835 100644
 -	pg_archivecleanup \
  	pg_basebackup \
 -	pg_checksums \
+ 	pg_combinebackup \
  	pg_config \
 -	pg_controldata \
 -	pg_ctl \
@@ -26,6 +27,7 @@ index 7f9dde9..bc6d835 100644
 -	pg_upgrade \
  	pg_verifybackup \
 -	pg_waldump \
+ 	pg_walsummary \
  	pgbench \
  	psql \
  	scripts
