@@ -14,7 +14,6 @@
       "dependencies": [
         "expat",
         "libffi",
-        "libxml2",
         {
           "name": "vcpkg-tool-meson",
           "host": true
