@@ -5421,8 +5421,8 @@
       "port-version": 0
     },
     "libusb": {
-      "baseline": "1.0.27",
-      "port-version": 2
+      "baseline": "1.0.28",
+      "port-version": 0
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
