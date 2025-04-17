@@ -11,11 +11,3 @@ index cdd05b905..d98b78c6f 100644
          list(APPEND open62541_LIBRARIES "rt")
      endif()
  elseif("${UA_ARCHITECTURE}" STREQUAL "win32")
-@@ -664,6 +664,7 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-
-     # Debug
-     if(UA_ENABLE_DEBUG_SANITIZER AND BUILD_TYPE_LOWER_CASE STREQUAL "debug" AND UNIX AND NOT UA_BUILD_OSS_FUZZ AND
-+       UA_ENABLE_DEBUG_SANITIZER AND
-        CMAKE_C_COMPILER_ID STREQUAL "Clang" AND NOT UA_ENABLE_UNIT_TESTS_MEMCHECK)
-         # Add default sanitizer settings when using clang and Debug build.
-         # This allows e.g. CLion to find memory locations for SegFaults
