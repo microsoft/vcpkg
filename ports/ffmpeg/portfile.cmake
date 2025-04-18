@@ -853,7 +853,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         # pc files generally use non-msvc syntax with -Lfoo -lbar.
         file(READ "${file}" content)
         foreach(entry IN ITEMS Libs Libs.private)
-            if(content MATCHES "${entry}: ([^\n]*)")
+            if(content MATCHES "${entry}:([^\n]*)")
                 set(old_value "${CMAKE_MATCH_1}")
                 string(REGEX REPLACE "-libpath:" "-L" new_value "${old_value}")
                 string(REGEX REPLACE " ([^ /]+)[.]lib" " -l\\1" new_value "${new_value}")
