@@ -11,11 +11,17 @@
       "name": "glib",
       "host": true
     },
+    "libjpeg",
+    "libpng",
+    "libsoup",
+    "nettle",
     {
       "name": "opengl",
       "platform": "windows | osx"
     },
+    "openssl",
     "pcre2",
+    "qt",
     {
       "name": "vcpkg-tool-meson",
       "host": true
