@@ -24,7 +24,7 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
     ${ANDROID_OPTIONS}
-    -Dcam=OFF # This is a test application
+    -Dcam=disabled # This is a test application
     -Ddocumentation=disabled
     -Dgstreamer=enabled
     -Dlc-compliance=disabled # Test appplication

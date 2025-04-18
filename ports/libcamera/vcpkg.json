@@ -5,11 +5,11 @@
   "homepage": "https://git.libcamera.org/libcamera/libcamera.git/",
   "supports": "linux | android",
   "dependencies": [
+    "glib",
+    "gstreamer",
     "libgnutls",
     "libunwind",
     "libyaml",
-    "glib",
-    "gstreamer",
     "libyuv",
     "openssl",
     {
