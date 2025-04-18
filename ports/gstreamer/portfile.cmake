@@ -3,6 +3,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         plugin-base-disable-no-unused.patch
     )
 endif()
+if(VCPKG_TARGET_IS_OSX)
+vcpkg_find_acquire_program(BISON)
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
