@@ -22,7 +22,7 @@ vcpkg_from_gitlab(
         srtp_fix.patch
         ${PATCHES}
         fix-multiple-def.patch
-	fix-bz2-windows-debug-dependency.patch
+	fix-bz2-dep.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
