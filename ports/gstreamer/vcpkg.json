@@ -6,6 +6,7 @@
   "license": "LGPL-2.0-only",
   "supports": "!uwp & !xbox",
   "dependencies": [
+    "asio",
     "glib",
     {
       "name": "glib",
