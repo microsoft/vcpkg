@@ -15,6 +15,7 @@
       "name": "opengl",
       "platform": "windows | osx"
     },
+    "pcre2",
     {
       "name": "vcpkg-tool-meson",
       "host": true
