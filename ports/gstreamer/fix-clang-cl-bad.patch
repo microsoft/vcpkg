@@ -1,8 +1,20 @@
+From f99f307c77e7252df2ca0bed8bd51febd38106c6 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Thu, 17 Apr 2025 19:52:44 -0400
+Subject: [PATCH] fix-clang-cl-bad
+
+---
+ subprojects/gst-plugins-bad/ext/dts/meson.build   | 2 +-
+ subprojects/gst-plugins-bad/meson.build           | 2 +-
+ subprojects/gst-plugins-bad/sys/d3d11/meson.build | 4 ++--
+ subprojects/gst-plugins-bad/sys/msdk/meson.build  | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
 diff --git a/subprojects/gst-plugins-bad/ext/dts/meson.build b/subprojects/gst-plugins-bad/ext/dts/meson.build
-index c4868a4..6b34cb7 100644
+index dc884e03ab..82bfc53ba6 100644
 --- a/subprojects/gst-plugins-bad/ext/dts/meson.build
 +++ b/subprojects/gst-plugins-bad/ext/dts/meson.build
-@@ -20,7 +20,7 @@ if not dca_dep.found()
+@@ -37,7 +37,7 @@ if not dca_dep.found()
  endif
  
  no_warn_c_args = []
@@ -12,36 +24,32 @@ index c4868a4..6b34cb7 100644
    # can point to a non-existing location (/usr/include/dca)
    no_warn_c_args = ['-Wno-missing-include-dirs']
 diff --git a/subprojects/gst-plugins-bad/meson.build b/subprojects/gst-plugins-bad/meson.build
-index 6707dce..b8c6018 100644
+index c0695768ea..ad9ae5077d 100644
 --- a/subprojects/gst-plugins-bad/meson.build
 +++ b/subprojects/gst-plugins-bad/meson.build
 @@ -54,7 +54,7 @@ endif
+ 
  cdata = configuration_data()
- cdata.set('ENABLE_NLS', 1)
  
 -if cc.get_id() == 'msvc'
 +if cc.get_argument_syntax() == 'msvc'
    msvc_args = [
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
-diff --git a/subprojects/gst-plugins-bad/sys/asio/meson.build b/subprojects/gst-plugins-bad/sys/asio/meson.build
-index c61ad4e..b30793c 100644
---- a/subprojects/gst-plugins-bad/sys/asio/meson.build
-+++ b/subprojects/gst-plugins-bad/sys/asio/meson.build
-@@ -15,7 +15,7 @@ endif
- 
- # FIXME: non-msvc is not tested, and unlikely supported yet because of
- # tool-chain issue
--if cxx.get_id() != 'msvc'
-+if cxx.get_argument_syntax() != 'msvc'
-   if asio_option.enabled()
-     error('asio plugin can only be built with MSVC')
-   else
 diff --git a/subprojects/gst-plugins-bad/sys/d3d11/meson.build b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
-index ff557be..d5bf0db 100644
+index 2859ea3ea5..7cf1e11741 100644
 --- a/subprojects/gst-plugins-bad/sys/d3d11/meson.build
 +++ b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
-@@ -118,7 +118,7 @@ endif
+@@ -152,7 +152,7 @@ endif
+ if d3d11_winapi_app
+   d3d11_sources += winapi_app_sources
+   extra_dep += [runtimeobject_lib]
+-  if cc.get_id() == 'msvc' and get_option('b_sanitize') == 'address'
++  if cc.get_argument_syntax() == 'msvc' and get_option('b_sanitize') == 'address'
+     extra_args += ['/bigobj']
+   endif
+ endif
+@@ -175,7 +175,7 @@ endif
  
  # MinGW 32bits compiler seems to be complaining about redundant-decls
  # when ComPtr is in use. Let's just disable the warning
@@ -49,25 +57,12 @@ index ff557be..d5bf0db 100644
 +if cc.get_argument_syntax() != 'msvc'
    extra_mingw_args = cc.get_supported_arguments([
      '-Wno-redundant-decls',
-   ])
-diff --git a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
-index 6b9a059..40713ce 100644
---- a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
-+++ b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
-@@ -54,7 +54,7 @@ if host_system != 'windows' or mf_option.disabled()
-   subdir_done()
- endif
- 
--if cc.get_id() != 'msvc'
-+if cc.get_argument_syntax() != 'msvc'
-   if mf_option.enabled()
-     error('mediafoundation plugin can only be built with MSVC')
-   endif
+     # include/directxmath/DirectXMathMatrix.inl:1161:16: error: variable 'aa' set but not used
 diff --git a/subprojects/gst-plugins-bad/sys/msdk/meson.build b/subprojects/gst-plugins-bad/sys/msdk/meson.build
-index 51bf953..e30e138 100644
+index 79e7200da5..4aad1d7de0 100644
 --- a/subprojects/gst-plugins-bad/sys/msdk/meson.build
 +++ b/subprojects/gst-plugins-bad/sys/msdk/meson.build
-@@ -175,12 +175,12 @@ if use_onevpl and have_mfx_ver205
+@@ -243,12 +243,12 @@ if use_onevpl and have_mfx_ver205
  endif
  
  if host_machine.system() == 'windows'
@@ -78,7 +73,10 @@ index 51bf953..e30e138 100644
    legacy_stdio_dep = cc.find_library('legacy_stdio_definitions', required: get_option('msdk'))
    msdk_deps = declare_dependency(dependencies: [gstd3d11_dep, legacy_stdio_dep])
 -  msdk_deps_found = gstd3d11_dep.found() and legacy_stdio_dep.found() and cc.get_id() == 'msvc'
-+  msdk_deps_found = d3d11_dep.found() and legacy_stdio_dep.found() and cc.get_argument_syntax() == 'msvc'
++  msdk_deps_found = gstd3d11_dep.found() and legacy_stdio_dep.found() and cc.get_argument_syntax() == 'msvc'
  else
    libdl_dep = cc.find_library('dl', required: get_option('msdk'))
    libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'), allow_fallback: true)
+-- 
+2.47.1.windows.2
+
