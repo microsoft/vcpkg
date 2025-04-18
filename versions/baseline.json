@@ -2461,8 +2461,8 @@
       "port-version": 1
     },
     "duilib": {
-      "baseline": "2019-04-28",
-      "port-version": 6
+      "baseline": "2024-12-23",
+      "port-version": 0
     },
     "dukglue": {
       "baseline": "2022-11-08",
