@@ -55,6 +55,41 @@ jobs:
       targetPath: '$(DiffFile)'
       artifact: 'format.diff'
   - task: AzureCLI@2
+    displayName: 'set_curl'
+    inputs:
+      azureSubscription: 'VcpkgPrFleet'
+      scriptType: 'pscore'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+          $curlUrl = "https://curl.se/windows/dl-8.13.0_1/curl-8.13.0_1-win64-mingw.zip"
+          $zipPath = "$env:TEMP\curl.zip"
+          $extractPath = "$env:TEMP\curl-8.13.0"
+
+          # Download the zip file
+          Invoke-WebRequest -Uri $curlUrl -OutFile $zipPath
+
+          # Extract the zip file
+          Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+
+          # Path to the bin directory inside the extracted curl
+          $curlBinPath = Get-ChildItem -Path $extractPath -Directory | Where-Object { $_.Name -like "curl*" } | ForEach-Object { Join-Path $_.FullName "bin" }
+
+          # Add curl bin to the beginning of the PATH for this session
+          $env:PATH = "$curlBinPath;$env:PATH"
+
+          # Prepend the bin directory to the PATH for the whole job
+          Write-Host "##vso[task.prependpath]$curlBinPath"
+
+          Write-Host "##vso[task.setvariable variable=CURL_BIN]$curlBinPath"
+
+          echo curl.exe
+          curl.exe --version
+
+          echo curlBinPath: $curlBinPath
+          echo CURL_BIN: $CURL_BIN
+          echo env:CURL_BINCURL_BIN: $env:CURL_BIN
+
+  - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
       azureSubscription: 'VcpkgPrFleet'
@@ -69,6 +104,12 @@ jobs:
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
           $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite"
+          
+          echo curl.exe
+          curl.exe --version
+
+          echo CURL_BIN: $CURL_BIN
+
           ./vcpkg.exe fetch python3
           & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
   - task: PowerShell@2
