@@ -7965,7 +7965,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "9.0.1",
+      "baseline": "9.0.2",
       "port-version": 0
     },
     "quirc": {
@@ -8237,7 +8237,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "10.0.1",
+      "baseline": "10.1.3",
       "port-version": 0
     },
     "rpclib": {
