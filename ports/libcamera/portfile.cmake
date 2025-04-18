@@ -31,9 +31,9 @@ vcpkg_configure_meson(
     -Dpycamera=disabled # experimental feature, going to leave for later
     -Dqcam=disabled # Test application
     -Dtest=false # Unit tests
-    #-Dv4l2=enabled
-    #-Dtracing=enabled
-    #-Dudev=enabled
+    -Dv4l2=enabled
+    -Dtracing=enabled
+    -Dudev=enabled
 )
 
 vcpkg_install_meson()
