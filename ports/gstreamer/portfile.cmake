@@ -3,13 +3,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
         plugin-base-disable-no-unused.patch
     )
 endif()
+if(VCPKG_TARGET_IS_OSX)
+vcpkg_find_acquire_program(BISON)
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 5ca978cad5a661b081528be0fa74e199115c186afa1a0c9f55a9238fb2b452b680e75e8721a54077b9f4d717da5ef5801c359a0a89a5a02056caea067adab88f
+    SHA512 d6d5aba18e735a02f333dcb38c56adb5e8a1b913c2a0a9a830b70b850f8f78d638dc6491e9596ae2ae87fe7f1a7b0c1ca750dfa15e4980234502f7c367a8c20e
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -20,8 +23,6 @@ vcpkg_from_gitlab(
         fix-clang-cl-ugly.patch
         gstreamer-disable-no-unused.patch
         srtp_fix.patch
-        fix-bz2-windows-debug-dependency.patch
-        no-downloads.patch
         ${PATCHES}
         fix-multiple-def.patch
 )
@@ -302,12 +303,6 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
-
-if("plugins-base" IN_LIST FEATURES)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
-                "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
-    )
-endif()
 
 list(APPEND GST_BIN_TOOLS
     gst-inspect-1.0

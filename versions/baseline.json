@@ -3377,7 +3377,7 @@
       "port-version": 2
     },
     "gstreamer": {
-      "baseline": "1.24.12",
+      "baseline": "1.26.0",
       "port-version": 0
     },
     "gtest": {
@@ -4455,6 +4455,10 @@
     "libcaer": {
       "baseline": "3.3.15",
       "port-version": 2
+    },
+    "libcamera": {
+      "baseline": "0.5.0",
+      "port-version": 0
     },
     "libcanberra": {
       "baseline": "0.30",
