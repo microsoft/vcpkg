@@ -1,3 +1,5 @@
+macro(deferred_tests)
+
 find_package(PkgConfig REQUIRED)
 
 # Legacy variables
@@ -21,13 +23,13 @@ find_library(mimalloc_lib NAMES ${names} PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFA
 
 pkg_check_modules(PC_MIMALLOC mimalloc IMPORTED_TARGET REQUIRED)
 
-if(EXPECTED_FAILURE_DUE_TO_CXX_LINKAGE_OF_MIMALLOC)
 add_executable(pkgconfig-override $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,main-override.c,main-override-static.c>)
 target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
-endif()
 
-add_executable(pkgconfig-override-cxx main-override.cpp)
-target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC Threads::Threads)
+if(BUILD_SHARED_LIBS OR NOT WIN32)
+    add_executable(pkgconfig-override-cxx main-override.cpp)
+    target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
+endif()
 
 # Runtime
 
@@ -35,13 +37,23 @@ if(NOT CMAKE_CROSSCOMPILING)
     if(BUILD_SHARED_LIBS)
         add_custom_target(run-dynamic-override ALL COMMAND $<TARGET_NAME:dynamic-override>)
         add_custom_target(run-dynamic-override-cxx ALL COMMAND $<TARGET_NAME:dynamic-override-cxx>)
-    else()
+    elseif(NOT WIN32)
         add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
         add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
     endif()
-    add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+    if(TARGET pkgconfig-override-cxx)
+        add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+    endif()
 endif()
 
 # Deployment
 
-install(TARGETS pkgconfig-override-cxx)
+if(TARGET pkgconfig-override-cxx)
+    install(TARGETS pkgconfig-override-cxx)
+else()
+    install(CODE [[ # placeholder # ]])
+endif()
+
+endmacro()
+
+cmake_language(DEFER CALL deferred_tests)

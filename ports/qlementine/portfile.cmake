@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oclero/qlementine
     REF "v${VERSION}"
-    SHA512 c10eec27cc6d36e9f6625587b930a5f12e24f54631168d8e84235d27a4f404bf06a89434f84d19fc9ba4b89625510867d9b91ee0cbe4d96c65eb8454b4e970c3
+    SHA512 dcba4b7a29352533ad63b4de22ab40985e84d08d5ad87b22a061c9bc0ed4d52bcc0277ef3ad20db4291c4dd9480a170323f6343e818badc0361457fc9ec6d2f1
 )
 
 vcpkg_cmake_configure(

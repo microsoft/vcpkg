@@ -1,6 +1,6 @@
 {
   "name": "python3",
-  "version": "3.11.11",
+  "version": "3.12.9",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -48,9 +48,6 @@
     }
   ],
   "features": {
-    "deprecated-win7-support": {
-      "description": "Deprecated support for the Windows 7 platform -- may be removed at any time."
-    },
     "extensions": {
       "description": "Allow the build and usage of python extensions. On windows this requires python to be a dynamic library!",
       "supports": "!(staticcrt & windows)",

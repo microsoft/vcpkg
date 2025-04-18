@@ -21,7 +21,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test        BUILD_TESTS
         tools       BUILD_TOOLS
         examples    BUILD_EXAMPLES
         pybind11    BUILD_PANGOLIN_PYTHON

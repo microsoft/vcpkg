@@ -1,27 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0a44b35..49e987a 100644
+index 04ab111..9ae59af 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -666,6 +666,9 @@ else()
- 		set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/${FREERDP_MAJOR_DIR}")
- 	endif()
- endif()
-+set(FREERDP_DATA_PATH "share/freerdp")
-+set(FREERDP_LIBRARY_PATH "${CMAKE_INSTALL_LIBDIR}")
-+set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/freerdp${FREERDP_VERSION_MAJOR}")
- set(FREERDP_ADDIN_PATH "${FREERDP_PLUGIN_PATH}")
+@@ -483,12 +483,12 @@ endif()
+ option(WITH_ABSOLUTE_PLUGIN_LOAD_PATHS "Load plugins with absolute paths" ${PLUGIN_ABS_PATHS_DEFAULT})
  
- # Path to put extensions
-diff --git a/client/Windows/CMakeLists.txt b/client/Windows/CMakeLists.txt
-index 72d3ca6..9e2bc12 100644
---- a/client/Windows/CMakeLists.txt
-+++ b/client/Windows/CMakeLists.txt
-@@ -77,7 +77,7 @@ target_link_libraries(${MODULE_NAME} PUBLIC ${PUB_LIBS})
- target_link_libraries(${MODULE_NAME} PRIVATE ${PRIV_LIBS})
- 
- if(WITH_CLIENT_INTERFACE)
--	install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
-+	install(TARGETS ${MODULE_NAME} COMPONENT libraries)
- endif()
- add_subdirectory(cli)
- 
+ if(NOT WITH_ABSOLUTE_PLUGIN_LOAD_PATHS)
+-  set(FREERDP_DATA_PATH "share")
++  set(FREERDP_DATA_PATH "share/freerdp")
+   if(NOT FREERDP_INSTALL_PREFIX)
+     set(FREERDP_INSTALL_PREFIX ".")
+   endif()
+-  set(FREERDP_LIBRARY_PATH ".")
+-  set(FREERDP_PLUGIN_PATH ".")
++  set(FREERDP_LIBRARY_PATH "${CMAKE_INSTALL_LIBDIR}")
++  set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/freerdp${FREERDP_VERSION_MAJOR}")
+ else()
+   set(FREERDP_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/${FREERDP_MAJOR_DIR}")
+   if(NOT FREERDP_INSTALL_PREFIX)

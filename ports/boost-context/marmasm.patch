@@ -1,16 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dca534962d..bf02ea3425 100644
---- a/CMakeLists.txt	
+index 5870537..1408856 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,7 +142,11 @@ if(BOOST_CONTEXT_IMPLEMENTATION STREQUAL "fcontext")
-       enable_language(ASM)
+@@ -146,7 +146,11 @@ if(BOOST_CONTEXT_IMPLEMENTATION STREQUAL "fcontext")
+       set(ASM_LANGUAGE ASM)
      endif()
    elseif(BOOST_CONTEXT_ASSEMBLER STREQUAL armasm)
-+   if(MSVC)
-+    enable_language(ASM_MARMASM)
-+   else()
-     enable_language(ASM_ARMASM)
-+   endif()
+-    set(ASM_LANGUAGE ASM_ARMASM)
++    if(MSVC)
++      set(ASM_LANGUAGE ASM_MARMASM)
++    else()
++      set(ASM_LANGUAGE ASM_ARMASM)
++    endif()
    else()
-     enable_language(ASM_MASM)
+     set(ASM_LANGUAGE ASM_MASM)
    endif()
