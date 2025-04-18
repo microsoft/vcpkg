@@ -1,6 +1,6 @@
 {
   "name": "libgpg-error",
-  "version": "1.51",
+  "version": "1.54",
   "description": "A runtime library for GnuPG and other software which likes to use it.",
   "homepage": "https://gnupg.org/software/libgpg-error/",
   "license": "LGPL-2.1-or-later",
@@ -8,6 +8,10 @@
   "dependencies": [
     {
       "name": "libgpg-error",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
       "host": true
     }
   ],
