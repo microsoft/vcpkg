@@ -4,10 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/tcp_pubsub
     REF "v${VERSION}"
-    SHA512 f89b9d9cdbd8e5787ac8923ec65cc2fc259e7d12269b1466a4c29657d8d466e39b95ec8b8483e975bf393f71b5c2d8f59cfd3d955e4e72d69716ec59fe0429af
+    SHA512 f8dfe5d506449c641fdb1876cbee144ca72a96fc829f2294c51a46ed2b3b0987356b36356ce43d44360ee36546f9e2af584631ddc851b89c9e9a22ced6d55f74
     PATCHES
-        "fix-package-config-file.patch"
-        "use-ports-for-asio-and-recycle.patch"
+        fix-finding-asio-recycle-deps.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,6 +14,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DTCP_PUBSUB_BUILD_SAMPLES=OFF
         -DTCP_PUBSUB_BUILD_ECAL_SAMPLES=OFF
+	-DTCP_PUBSUB_USE_BUILTIN_RECYCLE=OFF # A bit confusing, this means to use recycle that is installed on the system
+	-DTCP_PUBSUB_USE_BUILTIN_ASIO=OFF # A bit confusing, this means to use asio that is installed on the system
 )
 
 vcpkg_cmake_install()
