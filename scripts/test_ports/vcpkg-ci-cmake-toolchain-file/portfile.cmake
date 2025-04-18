@@ -160,3 +160,5 @@ unit_test_ensure_cmake_error([[
     set(CMAKE_REQUIRE_FIND_PACKAGE_absentPackageX 1)
     find_package(transitiveOptionalAbsentPackageX REQUIRED)
 ]])
+
+unit_test_report_result()

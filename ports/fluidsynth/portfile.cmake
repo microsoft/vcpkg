@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 847d2f4529ac1bad735b71b57067c50586df7e2526c6311925c209c0635ee1e1dca1bd77dc6006181fc19a616738c8de1242bfb209707c8dbea9d7e2acc61017
+    SHA512 cf41eb338fccaafaa6961b8ca9eec6e8f0e35d25ec8f1d6f621fc73bd4b43b301dfe027db4252424118d1772568b949542820777a74b651a3f32c5028a34ed61
     HEAD_REF master
     PATCHES
         gentables.patch
@@ -32,7 +32,7 @@ set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
     enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
-    enable-profiling enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
+    enable-profiling enable-readline enable-sdl2 enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})
@@ -49,7 +49,7 @@ elseif(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 foreach(_option IN LISTS OPTIONS_TO_ENABLE)
-    list(APPEND ENABLED_OPTIONS "-D{_option}:BOOL=ON")
+    list(APPEND ENABLED_OPTIONS "-D${_option}:BOOL=ON")
 endforeach()
     
 foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)

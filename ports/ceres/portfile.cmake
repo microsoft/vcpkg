@@ -17,13 +17,16 @@ vcpkg_from_github(
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
         0004_remove_broken_fake_ba_jac.patch
+        0005_find_package_required.patch
+        0006_use_official_suitesparse_config.patch
+        0007_use_metis_config.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
