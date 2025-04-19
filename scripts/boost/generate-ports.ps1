@@ -66,7 +66,15 @@ $portData = @{
     "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-dll"              = @{ "supports" = "!uwp" };
+    "boost-dll"              = @{ 
+        "supports" = "!uwp"; 
+        "default-features" = @("boost-filesystem");
+        "features" = @{
+            "boost-filesystem" = @{
+                "description" = "Use Boost.Filesystem instead of std::filesystem";
+            };
+        };
+    };
     "boost-fiber"            = @{
         "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
