@@ -1,6 +1,6 @@
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://iausofa.org/2023_1011_C/sofa_c-${VERSION}.tar.gz"
+    URLS "http://iausofa.org/2023_1011_C/sofa_c-${VERSION}.tar.gz"
     FILENAME "sofa_c-${VERSION}.tar.gz"
     SHA512 8e7d67f7ac7a285a96160c96d16b1921ccb7a9324b83280b1594efcbbd7eb78c4d41898c1e5acfa5081842e4aeee15a96572d21b466bfda7ef7582c58624d376
 )
