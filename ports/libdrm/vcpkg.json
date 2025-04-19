@@ -1,0 +1,14 @@
+{
+  "name": "libdrm",
+  "version": "2.4.121",
+  "description": "Userspace library for accessing the direct rendering manager (DRM)",
+  "homepage": "https://cgit.freedesktop.org/drm/libdrm/tree/README.rst",
+  "license": null,
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
