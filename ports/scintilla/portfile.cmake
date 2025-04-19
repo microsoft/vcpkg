@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://www.scintilla.org/scintilla551.zip"
-  FILENAME "scintilla551.zip"
-  SHA512 00a230cbdd6e41925eec71566143f4a0fc8e4a87eddb459e3b547835e0cc1a8773e450112468acddacebbf0d4252c9b7edc9d813804a144d6f090f96441b7e1b
+  URLS "https://www.scintilla.org/scintilla556.zip"
+  FILENAME "scintilla556.zip"
+  SHA512 8e845a94379fff88222fa9e4e5f534f62595420dd933166e4d9cc67b197c79f578405cb020892142ead1afd85bd42f1dc4361a339134a087e14760ff33d0a1cf
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -15,7 +15,7 @@ endif()
 vcpkg_extract_source_archive(
   SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  SOURCE_BASE 5.5.0
+  SOURCE_BASE 5.5.6
   PATCHES ${PATCHES}
 )
 
