@@ -4464,6 +4464,10 @@
       "baseline": "2.73",
       "port-version": 0
     },
+    "libcargs": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libcbor": {
       "baseline": "0.12.0",
       "port-version": 0
