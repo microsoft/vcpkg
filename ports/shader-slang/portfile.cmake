@@ -75,6 +75,12 @@ if(VCPKG_SHADER_SLANG_UPDATE)
 	message(FATAL_ERROR "Stopping due to VCPKG_SHADER_SLANG_UPDATE being enabled.")
 endif()
 
+file(GLOB slang_cmake_configs
+		"${BINDIST_PATH}/cmake/*.cmake"
+)
+
+file(INSTALL ${slang_cmake_configs} DESTINATION "${CURRENT_PACKAGES_DIR}/share/slang")
+
 file(GLOB libs
 	"${BINDIST_PATH}/lib/*.lib"
 	"${BINDIST_PATH}/lib/*.dylib"
