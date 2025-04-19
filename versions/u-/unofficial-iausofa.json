@@ -1,11 +1,7 @@
 {
   "versions": [
     {
-<<<<<<< HEAD
       "git-tree": "a37ddea9ae9059052127b2e51afd364535d5c5aa",
-=======
-      "git-tree": "60b16f76e8ceac169980d65cc8b418f76d62a0f1",
->>>>>>> 6ffe27bd397eb9d631f2aa500e682a1db9ae9c11
       "version": "20231011",
       "port-version": 0
     }
