@@ -1,0 +1,29 @@
+{
+  "name": "openxlsx",
+  "version-date": "2025-04-12",
+  "description": "A C++ library for reading, writing, creating and modifying Microsoft Excel® (.xlsx) files.",
+  "homepage": "https://github.com/troldal/OpenXLSX",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "nowide",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "libzip": {
+      "description": "Enable using libzip",
+      "dependencies": [
+        "libzip"
+      ]
+    }
+  }
+}
