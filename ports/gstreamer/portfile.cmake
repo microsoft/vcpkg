@@ -216,7 +216,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:avtp=disabled
         -Dgst-plugins-bad:androidmedia=auto
         -Dgst-plugins-bad:applemedia=auto
-        -Dgst-plugins-bad:asio-sdk-path=${PLUGIN_BAD_ASIO_SDK_PATH}
         -Dgst-plugins-bad:bluez=disabled
         -Dgst-plugins-bad:bs2b=disabled
         -Dgst-plugins-bad:curl=disabled # Error during plugin build
