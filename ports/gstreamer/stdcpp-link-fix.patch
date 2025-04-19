@@ -1,0 +1,37 @@
+From 5e89dd66bcea40d1396f5bdd50218c71219f7144 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Fri, 18 Apr 2025 21:29:59 -0400
+Subject: [PATCH] link with stdcpp
+
+---
+ subprojects/gst-plugins-bad/ext/chromaprint/meson.build | 1 +
+ subprojects/gst-plugins-bad/ext/openal/meson.build      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/subprojects/gst-plugins-bad/ext/chromaprint/meson.build b/subprojects/gst-plugins-bad/ext/chromaprint/meson.build
+index 3dbfee6940..6dfd8fd6f9 100644
+--- a/subprojects/gst-plugins-bad/ext/chromaprint/meson.build
++++ b/subprojects/gst-plugins-bad/ext/chromaprint/meson.build
+@@ -23,6 +23,7 @@ if chromaprint_dep.found()
+     c_args : gst_plugins_bad_args,
+     include_directories : [configinc],
+     dependencies : [gstaudio_dep, chromaprint_dep],
++    link_with: [stdc++],
+     install : true,
+     install_dir : plugins_install_dir,
+   )
+diff --git a/subprojects/gst-plugins-bad/ext/openal/meson.build b/subprojects/gst-plugins-bad/ext/openal/meson.build
+index 94cb5ce047..7f42b432b6 100644
+--- a/subprojects/gst-plugins-bad/ext/openal/meson.build
++++ b/subprojects/gst-plugins-bad/ext/openal/meson.build
+@@ -28,6 +28,7 @@ if openal_dep.found()
+     c_args: gst_plugins_bad_args,
+     include_directories: [configinc, libsinc],
+     dependencies: [gstaudio_dep, openal_dep],
++    link_with: [stdc++],
+     install: true,
+     install_dir: plugins_install_dir,
+   )
+-- 
+2.47.1.windows.2
+

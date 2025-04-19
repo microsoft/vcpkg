@@ -1,10 +1,20 @@
+From bcc40f0d16e6a02ec82e78821a8b3fb75a57108a Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Fri, 18 Apr 2025 18:06:52 -0400
+Subject: [PATCH] fix bz2 dep
+
+---
+ subprojects/gst-plugins-bad/ext/bz2/meson.build       | 2 +-
+ subprojects/gst-plugins-good/gst/matroska/meson.build | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/subprojects/gst-plugins-bad/ext/bz2/meson.build b/subprojects/gst-plugins-bad/ext/bz2/meson.build
-index 08d1596..be5fa02 100644
+index e7d8feb962..9908a4ca81 100644
 --- a/subprojects/gst-plugins-bad/ext/bz2/meson.build
 +++ b/subprojects/gst-plugins-bad/ext/bz2/meson.build
-@@ -4,7 +4,7 @@ bz2_sources = [
-   'gstbz2enc.c',
- ]
+@@ -18,7 +18,7 @@ plugin_sources += {
+   'bz2': pathsep.join(doc_sources)
+ }
  
 -bz2_dep = cc.find_library('bz2', required : get_option('bz2'))
 +bz2_dep = dependency('bzip2', required : get_option('bz2'))
@@ -12,15 +22,18 @@ index 08d1596..be5fa02 100644
  if bz2_dep.found() and cc.has_header_symbol('bzlib.h', 'BZ2_bzlibVersion')
    gstbz2 = library('gstbz2',
 diff --git a/subprojects/gst-plugins-good/gst/matroska/meson.build b/subprojects/gst-plugins-good/gst/matroska/meson.build
-index d8a6a96..dd03de2 100644
+index 3dc9292f40..747e608edc 100644
 --- a/subprojects/gst-plugins-good/gst/matroska/meson.build
 +++ b/subprojects/gst-plugins-good/gst/matroska/meson.build
-@@ -12,7 +12,7 @@ matroska_sources = [
-   'lzo.c',
- ]
+@@ -39,7 +39,7 @@ if get_option('matroska').disabled()
+   subdir_done()
+ endif
  
 -bz2_dep = cc.find_library('bz2', required : get_option('bz2'))
 +bz2_dep = dependency('bzip2', required : get_option('bz2'))
  cdata.set('HAVE_BZ2', bz2_dep.found() and cc.has_header('bzlib.h'))
  
  gstmatroska = library('gstmatroska',
+-- 
+2.47.1.windows.2
+
