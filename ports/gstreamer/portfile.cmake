@@ -23,6 +23,7 @@ vcpkg_from_gitlab(
         ${PATCHES}
         fix-multiple-def.patch
 	fix-bz2-dep.patch
+	stdcpp-link-fix.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
