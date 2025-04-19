@@ -1,13 +1,16 @@
 {
   "name": "duilib",
-  "version-date": "2019-04-28",
-  "port-version": 6,
+  "version-date": "2024-12-23",
   "description": "Duilib is a free open source DirectUI interface library under Windows. It is widely accepted by major Internet companies due to its simple and easy to expand design and stable and efficient implementation. It is widely used in IM, video client, stock market software, navigation software, and mobile phone assistive software. Duilib is still evolving, and will continue to improve in many aspects such as documentation, examples, animations, and rendering engines.",
   "homepage": "https://github.com/duilib/duilib",
   "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
