@@ -55,7 +55,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11             gst-plugins-base:xshm
 
         plugins-good    good
-        bzip2-good      gst-plugins-good:bz2
+        bzip2           gst-plugins-good:bz2
         cairo           gst-plugins-good:cairo
         flac            gst-plugins-good:flac
         gdk-pixbuf      gst-plugins-good:gdk-pixbuf
@@ -73,7 +73,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         aes             gst-plugins-bad:aes
         aom             gst-plugins-bad:aom
         assrender       gst-plugins-bad:assrender
-        bzip2-bad       gst-plugins-bad:bz2
+        bzip2           gst-plugins-bad:bz2
         chromaprint     gst-plugins-bad:chromaprint
         closedcaption   gst-plugins-bad:closedcaption
         colormanagement gst-plugins-bad:colormanagement

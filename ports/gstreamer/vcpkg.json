@@ -94,30 +94,10 @@
         "libass"
       ]
     },
-    "bzip2-bad": {
-      "description": "Enable bzip2 stream compression in bad plugins",
+    "bzip2": {
+      "description": "Enable bzip2 stream compression in plugins",
       "dependencies": [
-        "bzip2",
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "plugins-bad"
-          ]
-        }
-      ]
-    },
-    "bzip2-good": {
-      "description": "Enable bzip2 stream compression in good plugins",
-      "dependencies": [
-        "bzip2",
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "plugins-good"
-          ]
-        }
+        "bzip2"
       ]
     },
     "cairo": {
