@@ -108,10 +108,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 string(REPLACE "ON" "enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+# Align with dependencies of feature gl.
+if(NOT "gl" IN_LIST FEATURES)
+    set(PLUGIN_BASE_GL_API "")
+    set(PLUGIN_BASE_WINDOW_SYSTEM "")
+    set(PLUGIN_BASE_GL_PLATFORM "")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(PLUGIN_BASE_GL_API gles2)
+    set(PLUGIN_BASE_WINDOW_SYSTEM android,egl)
+    set(PLUGIN_BASE_GL_PLATFORM egl)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BASE_GL_API opengl)
     set(PLUGIN_BASE_WINDOW_SYSTEM win32)
     set(PLUGIN_BASE_GL_PLATFORM wgl)
 else()
+    set(PLUGIN_BASE_GL_API opengl)
     set(PLUGIN_BASE_WINDOW_SYSTEM auto)
     set(PLUGIN_BASE_GL_PLATFORM auto)
 endif()
@@ -172,6 +183,7 @@ vcpkg_configure_meson(
         -Dgstreamer:gst_debug=true
         -Dgstreamer:ptp-helper=disabled  # needs rustc toolchain setup
         # gst-plugins-base
+        -Dgst-plugins-base:gl_api=${PLUGIN_BASE_GL_API}
         -Dgst-plugins-base:gl_winsys=${PLUGIN_BASE_WINDOW_SYSTEM}
         -Dgst-plugins-base:gl_platform=${PLUGIN_BASE_GL_PLATFORM}
         -Dgst-plugins-base:cdparanoia=disabled

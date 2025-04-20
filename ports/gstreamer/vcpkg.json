@@ -304,6 +304,10 @@
       "description": "Enable OpenGL integration library and OpenGL plugin",
       "dependencies": [
         {
+          "name": "egl",
+          "platform": "android"
+        },
+        {
           "name": "gstreamer",
           "default-features": false,
           "features": [
@@ -312,7 +316,7 @@
         },
         {
           "name": "opengl",
-          "platform": "windows | osx"
+          "platform": "!android"
         }
       ]
     },
