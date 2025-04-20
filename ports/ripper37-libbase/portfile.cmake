@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 af360ec0c0181f711ee66fd7157d5e8dc38f5d78df97bce4ff4cb2c4d8ef270e76b0254be4f920eee74a0026845f805955a208b76f48ca38ba925169e4f05e03
     HEAD_REF master
+    PATCHES
+        01_patch_fix_curl_dep_linux.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,0 +1,46 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 545a5bd..1672c4f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,7 +169,7 @@ install(EXPORT libbase_targets
+ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}-config.cmake"
+ "include(CMakeFindDependencyMacro)\n"
+ "find_dependency(glog)\n"
+-"find_package(curl)\n"
++"find_package(CURL)\n"
+ "find_package(wxWidgets)\n"
+ "find_package(GTest)\n"
+ "find_package(benchmark)\n"
+diff --git a/examples/wxwidgets_integration/CMakeLists.txt b/examples/wxwidgets_integration/CMakeLists.txt
+index 8438903..4752036 100644
+--- a/examples/wxwidgets_integration/CMakeLists.txt
++++ b/examples/wxwidgets_integration/CMakeLists.txt
+@@ -1,3 +1,5 @@
++find_package(wxWidgets CONFIG REQUIRED)
++
+ add_executable(wxwidgets_integration_example WIN32 "")
+ 
+ target_compile_options(wxwidgets_integration_example
+@@ -9,6 +11,7 @@ target_link_libraries(wxwidgets_integration_example
+   PRIVATE
+     libbase
+     libbase_wx
++    wxWidgets::wxWidgets
+ )
+ 
+ target_sources(wxwidgets_integration_example
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4b643b0..d677116 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -246,8 +246,8 @@ if(LIBBASE_BUILD_MODULE_WX)
+     libbase
+     Threads::Threads
+     glog::glog
+-    wx::core
+-    wx::base)
++    PRIVATE
++      wxWidgets::wxWidgets)
+ 
+   target_sources(libbase_wx
+     PRIVATE
