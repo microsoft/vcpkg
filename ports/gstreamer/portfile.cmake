@@ -1,9 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES
-        plugin-base-disable-no-unused.patch
-    )
-endif()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,8 +9,6 @@ vcpkg_from_gitlab(
         fix-clang-cl.patch
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
-        no-downloads.patch
-        ${PATCHES}
         fix-multiple-def.patch
 )
 
