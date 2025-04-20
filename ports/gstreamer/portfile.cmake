@@ -44,6 +44,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ges             ges
 
         plugins-base    base
+        gl              gst-plugins-base:gl
         gl-graphene     gst-plugins-base:gl-graphene
         alsa            gst-plugins-base:alsa
         ogg             gst-plugins-base:ogg
@@ -294,7 +295,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
 
-if("plugins-base" IN_LIST FEATURES)
+if("gl" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
                 "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
     )

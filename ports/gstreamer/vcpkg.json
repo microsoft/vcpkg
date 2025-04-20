@@ -13,10 +13,6 @@
       "host": true
     },
     {
-      "name": "opengl",
-      "platform": "windows | osx"
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
@@ -304,6 +300,22 @@
         }
       ]
     },
+    "gl": {
+      "description": "Enable OpenGL integration library and OpenGL plugin",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        },
+        {
+          "name": "opengl",
+          "platform": "windows | osx"
+        }
+      ]
+    },
     "gl-graphene": {
       "description": "Use Graphene in OpenGL plugin",
       "dependencies": [
@@ -312,7 +324,7 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "plugins-base"
+            "gl"
           ]
         }
       ]
