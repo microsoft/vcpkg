@@ -4,6 +4,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
+set(VCPKG_BUILD_TYPE release) # Debug fails to build for various reasons, like missing libdrm which vcpkg does not have.
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
