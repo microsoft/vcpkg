@@ -5273,8 +5273,8 @@
       "port-version": 0
     },
     "libsoundio": {
-      "baseline": "2.0.0",
-      "port-version": 7
+      "baseline": "2.0.1-7",
+      "port-version": 0
     },
     "libsoup": {
       "baseline": "3.6.0",
