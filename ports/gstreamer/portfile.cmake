@@ -36,6 +36,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gpl             gpl
+        introspection   introspection
         libav           libav
         nls             nls
         ges             ges
