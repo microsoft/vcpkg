@@ -9,7 +9,7 @@
     "fmt",
     "libssh",
     "libuv",
-    "opencv",
+    "opencv4",
     "protobuf",
     {
       "name": "vcpkg-cmake",
