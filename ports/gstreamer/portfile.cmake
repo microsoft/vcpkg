@@ -35,6 +35,8 @@ endif()
 # General features
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        core            tools
+
         gpl             gpl
         introspection   introspection
         libav           libav
@@ -298,15 +300,18 @@ if("plugins-base" IN_LIST FEATURES)
     )
 endif()
 
-list(APPEND GST_BIN_TOOLS
-    gst-inspect-1.0
-    gst-launch-1.0
-    gst-stats-1.0
-    gst-typefind-1.0
-)
-list(APPEND GST_LIBEXEC_TOOLS
-    gst-plugin-scanner
-)
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static") # AND tools
+    list(APPEND GST_BIN_TOOLS
+        gst-inspect-1.0
+        gst-launch-1.0
+        gst-stats-1.0
+        gst-typefind-1.0
+    )
+    list(APPEND GST_LIBEXEC_TOOLS
+        gst-completion-helper
+        gst-plugin-scanner
+    )
+endif()
 
 if("ges" IN_LIST FEATURES)
     list(APPEND GST_BIN_TOOLS ges-launch-1.0)
@@ -326,16 +331,13 @@ if("plugins-bad" IN_LIST FEATURES)
     )
 endif()
 
-vcpkg_copy_tools(
-    TOOL_NAMES ${GST_BIN_TOOLS}
-    AUTO_CLEAN
-)
+if(GST_BIN_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${GST_BIN_TOOLS} AUTO_CLEAN)
+endif()
 
-vcpkg_copy_tools(
-    TOOL_NAMES ${GST_LIBEXEC_TOOLS}
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0"
-    AUTO_CLEAN
-)
+if(GST_LIBEXEC_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${GST_LIBEXEC_TOOLS} SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0" AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/libexec"
