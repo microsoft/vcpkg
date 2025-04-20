@@ -147,6 +147,7 @@ vcpkg_configure_meson(
         ${FEATURE_OPTIONS}
         # General options
         -Dauto_features=disabled
+        -Dbuild-tools-source=system
         -Dpython=disabled
         -Dlibnice=disabled
         -Ddevtools=disabled
