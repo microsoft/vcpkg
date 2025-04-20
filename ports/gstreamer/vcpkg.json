@@ -802,23 +802,8 @@
         "wildmidi"
       ]
     },
-    "x11-bad": {
-      "description": "Enable support for X11 in bad plugins",
-      "supports": "!windows",
-      "dependencies": [
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "plugins-bad"
-          ]
-        },
-        "libxkbcommon",
-        "xcb"
-      ]
-    },
-    "x11-base": {
-      "description": "Enable support for X11 in base plugins",
+    "x11": {
+      "description": "Enable X11 support in libraries and plugins",
       "supports": "!windows",
       "dependencies": [
         {
@@ -829,7 +814,9 @@
           ]
         },
         "libx11",
-        "libxext"
+        "libxext",
+        "libxkbcommon",
+        "xcb"
       ]
     },
     "x264": {

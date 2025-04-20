@@ -51,8 +51,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opus-base       gst-plugins-base:opus
         pango           gst-plugins-base:pango
         vorbis          gst-plugins-base:vorbis
-        x11-base        gst-plugins-base:x11
-        x11-base        gst-plugins-base:xshm
+        x11             gst-plugins-base:x11
+        x11             gst-plugins-base:xshm
 
         plugins-good    good
         bzip2-good      gst-plugins-good:bz2
@@ -100,7 +100,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         webp            gst-plugins-bad:webp
         webrtc          gst-plugins-bad:webrtc
         wildmidi        gst-plugins-bad:wildmidi
-        x11-bad         gst-plugins-bad:x11
+        x11             gst-plugins-bad:x11
         x265            gst-plugins-bad:x265
         asio            gst-plugins-bad:asio
 )
