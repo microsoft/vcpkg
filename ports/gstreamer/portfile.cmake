@@ -7,7 +7,6 @@ vcpkg_from_gitlab(
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
-        srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         fix-multiple-def.patch
 )
