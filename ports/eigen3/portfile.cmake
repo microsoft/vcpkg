@@ -1,5 +1,4 @@
 vcpkg_buildpath_length_warning(37)
-set(VCPKG_BUILD_TYPE release)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
