@@ -1,8 +1,8 @@
 {
   "name": "iausofa",
-  "version": "2023.10.11",
-  "description": "This is a vcpkg library package based on the C version of IAU sofa software.",
-  "homepage": "https://github.com/longzhmm/vcpkg_iausofa",
+  "version": "20231011",
+  "description": "This is C version of IAU sofa software.",
+  "homepage": "https://iausofa.org",
   "license": "MIT",
   "dependencies": [
     {

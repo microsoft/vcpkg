@@ -1,25 +1,25 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO longzhmm/vcpkg_iausofa
-    REF 8058fedf19ae2563dc643c04fde1d5f2b1057176
-    SHA512 de13bb1786e1c4b7556e8b53ac42c2b6a466c960ee69f85714e6f33aee72cfa9804edf43595f43bb660274c88ad2cd3a88f8675705bfdfb73cd08e3d6d5a93e4  
-    HEAD_REF main
+vcpkg_download_distfile(
+    ARCHIVE
+    URLS "http://iausofa.org/2023_1011_C/sofa_c-${VERSION}.tar.gz"
+    FILENAME "sofa_c-${VERSION}.tar.gz"
+    SHA512 8e7d67f7ac7a285a96160c96d16b1921ccb7a9324b83280b1594efcbbd7eb78c4d41898c1e5acfa5081842e4aeee15a96572d21b466bfda7ef7582c58624d376
 )
 
+vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-)
+set(SOURCE_SUBDIR "${SOURCE_PATH}/${VERSION}/c")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_SUBDIR}")
+
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_SUBDIR}")
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "iausofa")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-iausofa")
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
