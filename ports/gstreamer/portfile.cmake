@@ -13,7 +13,6 @@ vcpkg_from_gitlab(
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
-        gstreamer-disable-no-unused.patch
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         no-downloads.patch
