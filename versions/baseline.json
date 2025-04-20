@@ -8353,7 +8353,7 @@
       "port-version": 0
     },
     "safetyhook": {
-      "baseline": "0.6.5",
+      "baseline": "0.6.6",
       "port-version": 0
     },
     "sail": {
