@@ -14,10 +14,7 @@
     "libpng",
     "libsoup",
     "nettle",
-    {
-      "name": "opengl",
-      "platform": "windows | osx"
-    },
+    "opengl",
     "openssl",
     "pcre2",
     {
