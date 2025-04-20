@@ -312,25 +312,25 @@ if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static") # AND tools
         gst-completion-helper
         gst-plugin-scanner
     )
+    if("ges" IN_LIST FEATURES)
+        list(APPEND GST_BIN_TOOLS
+            ges-launch-1.0
+        )
+    endif()
+    if("plugins-base" IN_LIST FEATURES)
+        list(APPEND GST_BIN_TOOLS
+            gst-device-monitor-1.0
+            gst-discoverer-1.0
+            gst-play-1.0
+        )
+    endif()
+    if("plugins-bad" IN_LIST FEATURES)
+        list(APPEND GST_BIN_TOOLS
+            gst-transcoder-1.0
+        )
+    endif()
 endif()
 
-if("ges" IN_LIST FEATURES)
-    list(APPEND GST_BIN_TOOLS ges-launch-1.0)
-endif()
-
-if("plugins-base" IN_LIST FEATURES)
-    list(APPEND GST_BIN_TOOLS
-        gst-device-monitor-1.0
-        gst-discoverer-1.0
-        gst-play-1.0
-    )
-endif()
-
-if("plugins-bad" IN_LIST FEATURES)
-    list(APPEND GST_BIN_TOOLS
-        gst-transcoder-1.0
-    )
-endif()
 
 if(GST_BIN_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${GST_BIN_TOOLS} AUTO_CLEAN)
