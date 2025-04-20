@@ -34,18 +34,16 @@ endif()
 # General features
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        core            tools
-
+        ges             ges
         gpl             gpl
         introspection   introspection
         libav           libav
         nls             nls
-        ges             ges
 
         plugins-base    base
+        alsa            gst-plugins-base:alsa
         gl              gst-plugins-base:gl
         gl-graphene     gst-plugins-base:gl-graphene
-        alsa            gst-plugins-base:alsa
         ogg             gst-plugins-base:ogg
         opus-base       gst-plugins-base:opus
         pango           gst-plugins-base:pango
@@ -71,6 +69,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         plugins-bad     bad
         aes             gst-plugins-bad:aes
         aom             gst-plugins-bad:aom
+        asio            gst-plugins-bad:asio
         assrender       gst-plugins-bad:assrender
         bzip2           gst-plugins-bad:bz2
         chromaprint     gst-plugins-bad:chromaprint
@@ -82,6 +81,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         faad            gst-plugins-bad:faad
         fdkaac          gst-plugins-bad:fdkaac
         fluidsynth      gst-plugins-bad:fluidsynth
+        gl              gst-plugins-bad:gl
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
@@ -96,12 +96,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         soundtouch      gst-plugins-bad:soundtouch
         srt             gst-plugins-bad:srt
         srtp            gst-plugins-bad:srtp
+        vulkan          gst-plugins-bad:vulkan
+        wayland         gst-plugins-bad:wayland
         webp            gst-plugins-bad:webp
         webrtc          gst-plugins-bad:webrtc
         wildmidi        gst-plugins-bad:wildmidi
         x11             gst-plugins-bad:x11
         x265            gst-plugins-bad:x265
-        asio            gst-plugins-bad:asio
 )
 
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
@@ -151,8 +152,8 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+
         # General options
-        -Dauto_features=disabled
         -Dbuild-tools-source=system
         -Dpython=disabled
         -Dlibnice=disabled
@@ -203,7 +204,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:oss4=disabled
         -Dgst-plugins-good:osxaudio=auto
         -Dgst-plugins-good:osxvideo=auto
-        -Dgst-plugins-good:pulse=auto
+        -Dgst-plugins-good:pulse=disabled # Port pulseaudio depends on gstreamer
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:shout2=disabled
         #-Dgst-plugins-good:soup=disabled
@@ -274,7 +275,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:va=disabled
         -Dgst-plugins-bad:voaacenc=disabled
         -Dgst-plugins-bad:voamrwbenc=disabled
-        -Dgst-plugins-bad:vulkan=auto
         -Dgst-plugins-bad:wasapi=auto
         -Dgst-plugins-bad:wasapi2=auto
         -Dgst-plugins-bad:wayland=auto

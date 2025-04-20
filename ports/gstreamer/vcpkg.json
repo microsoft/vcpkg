@@ -441,7 +441,7 @@
     },
     "nvcodec": {
       "description": "Enable support for the NVCODEC encoders and decoders",
-      "supports": "!osx & !ios & !android & !emscripten",
+      "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
       "dependencies": [
         {
           "name": "gstreamer",
@@ -741,6 +741,32 @@
           ]
         },
         "libvpx"
+      ]
+    },
+    "vulkan": {
+      "description": "Enable Vulkan video sink plugin",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        "vulkan"
+      ]
+    },
+    "wayland": {
+      "description": "Enable Wayland plugin/library",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        "wayland"
       ]
     },
     "webp": {
