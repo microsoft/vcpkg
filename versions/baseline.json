@@ -9941,7 +9941,7 @@
       "port-version": 0
     },
     "wavpack": {
-      "baseline": "5.7.0",
+      "baseline": "5.8.1",
       "port-version": 0
     },
     "wayland": {

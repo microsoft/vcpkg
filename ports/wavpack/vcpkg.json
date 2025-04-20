@@ -1,10 +1,10 @@
 {
   "name": "wavpack",
-  "version": "5.7.0",
+  "version": "5.8.1",
   "description": "WavPack encode/decode library, command-line programs, and several plugins",
   "homepage": "https://github.com/dbry/WavPack",
   "license": "BSD-3-Clause",
-  "supports": "!(windows & arm)",
+  "supports": "!android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
