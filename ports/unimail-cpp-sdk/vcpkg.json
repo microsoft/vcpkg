@@ -5,7 +5,7 @@
   "homepage": "https://github.com/unimails/unimail-cpp-sdk",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "nlohmann",
+    "nlohmann-json",
     "restclient-cpp",
     {
       "name": "vcpkg-cmake",
